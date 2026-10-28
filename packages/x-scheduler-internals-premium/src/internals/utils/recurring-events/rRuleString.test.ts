@@ -3,7 +3,8 @@ import type {
   RecurringEventByDayValue,
   SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
-import { describe, it, expect } from 'vitest';
+import { afterEach, describe, it, expect, vi } from 'vitest';
+import { isJSDOM } from 'test/utils/skipIf';
 import { parseRRule, serializeRRule } from './rRuleString';
 
 describe('recurring-events/rRuleString', () => {
@@ -56,17 +57,53 @@ describe('recurring-events/rRuleString', () => {
       });
     });
 
-    it('should parse BYMONTH correctly', () => {
-      const result = parseRRule(adapter, 'FREQ=YEARLY;BYMONTH=1,6,12', 'default');
-      expect(result).to.deep.equal({
-        freq: 'YEARLY',
-        byMonth: [1, 6, 12],
-      });
-    });
-
     it('should parse UNTIL correctly', () => {
       const result = parseRRule(adapter, 'FREQ=DAILY;UNTIL=20250315T000000Z', 'default');
       expect(adapter.isValid(result.until!)).to.equal(true);
+    });
+
+    it('should read a UNTIL ending in Z as a UTC instant, like the object input', () => {
+      const fromString = parseRRule(
+        adapter,
+        'FREQ=DAILY;UNTIL=20250315T000000Z',
+        'America/New_York',
+      );
+      const fromObject = parseRRule(
+        adapter,
+        { freq: 'DAILY', until: '2025-03-15T00:00:00Z' },
+        'America/New_York',
+      );
+
+      expect(adapter.getTime(fromString.until!)).to.equal(adapter.getTime(fromObject.until!));
+      expect(adapter.getTimezone(fromString.until!)).to.equal('America/New_York');
+    });
+
+    describe('with a host timezone that observes daylight saving time', () => {
+      afterEach(() => {
+        vi.unstubAllEnvs();
+      });
+
+      // `TZ` only changes the host timezone under Node.
+      it.skipIf(!isJSDOM)(
+        'should not let the host timezone shift a UNTIL in its daylight saving gap',
+        () => {
+          // 02:30 on March 9th 2025 does not exist in New York (clocks jump from 02:00 to 03:00).
+          vi.stubEnv('TZ', 'America/New_York');
+
+          const fromString = parseRRule(
+            adapter,
+            'FREQ=DAILY;UNTIL=20250309T023000Z',
+            'America/Sao_Paulo',
+          );
+          const fromObject = parseRRule(
+            adapter,
+            { freq: 'DAILY', until: '2025-03-09T02:30:00Z' },
+            'America/Sao_Paulo',
+          );
+
+          expect(adapter.getTime(fromString.until!)).to.equal(adapter.getTime(fromObject.until!));
+        },
+      );
     });
 
     it('should sort BYDAY values in standard order regardless of input order', () => {
@@ -74,19 +111,9 @@ describe('recurring-events/rRuleString', () => {
       expect(result.byDay).to.deep.equal(['MO', 'WE', 'FR']);
     });
 
-    it('should sort BYDAY with ordinals correctly', () => {
-      const result = parseRRule(adapter, 'FREQ=MONTHLY;BYDAY=2TU,-1FR,1MO', 'default');
-      expect(result.byDay).to.deep.equal(['1MO', '2TU', '-1FR']);
-    });
-
     it('should sort BYMONTHDAY numerically', () => {
       const result = parseRRule(adapter, 'FREQ=MONTHLY;BYMONTHDAY=28,5,15', 'default');
       expect(result.byMonthDay).to.deep.equal([5, 15, 28]);
-    });
-
-    it('should sort BYMONTH numerically', () => {
-      const result = parseRRule(adapter, 'FREQ=YEARLY;BYMONTH=12,1,6', 'default');
-      expect(result.byMonth).to.deep.equal([1, 6, 12]);
     });
 
     it('should throw when the input is empty', () => {
@@ -108,6 +135,26 @@ describe('recurring-events/rRuleString', () => {
       expect(() => parseRRule(adapter, 'FREQ=DAILY;UNTIL=not-a-date', 'default')).to.throw(
         'MUI X Scheduler: Invalid UNTIL date "NOT-A-DATE". The UNTIL value must be a valid date in ISO format. Provide a valid date string.',
       );
+    });
+
+    it('should read a UNTIL in a year below 100 as that year', () => {
+      const result = parseRRule(adapter, 'FREQ=DAILY;UNTIL=00990315T000000Z', 'default');
+      expect(adapter.getYear(result.until!)).to.equal(99);
+    });
+
+    it('should throw when UNTIL is a date that does not exist', () => {
+      for (const until of [
+        '20250231T000000Z',
+        '20251301T000000Z',
+        '20250001T000000Z',
+        '20250100T000000Z',
+        '20250101T240000Z',
+        '20250101T006000Z',
+      ]) {
+        expect(() => parseRRule(adapter, `FREQ=DAILY;UNTIL=${until}`, 'default')).to.throw(
+          `MUI X Scheduler: Invalid UNTIL date "${until}".`,
+        );
+      }
     });
 
     it('should throw when FREQ is missing', () => {
@@ -168,10 +215,30 @@ describe('recurring-events/rRuleString', () => {
       );
     });
 
+    it('should throw for INTERVAL values that are not finite integers', () => {
+      expect(() => parseRRule(adapter, 'FREQ=DAILY;INTERVAL=1.5', 'default')).to.throw(
+        'MUI X Scheduler: Invalid INTERVAL value "1.5".',
+      );
+      expect(() => parseRRule(adapter, 'FREQ=DAILY;INTERVAL=1e999', 'default')).to.throw(
+        'MUI X Scheduler: Invalid INTERVAL value "1E999".',
+      );
+    });
+
     it('should throw for invalid BYMONTHDAY values', () => {
       expect(() => parseRRule(adapter, 'FREQ=MONTHLY;BYMONTHDAY=0,50', 'default')).to.throw(
         'MUI X Scheduler: Invalid BYMONTHDAY values "0,50". BYMONTHDAY values must be integers between 1 and 31. Provide valid day of month values.',
       );
+      expect(() => parseRRule(adapter, 'FREQ=MONTHLY;BYMONTHDAY=1.5', 'default')).to.throw(
+        'MUI X Scheduler: Invalid BYMONTHDAY values "1.5".',
+      );
+    });
+
+    it('should throw for byMonthDay values of a rule object that are not integers between 1 and 31', () => {
+      for (const byMonthDay of [[-1], [0], [1.5], [32], [1, NaN]]) {
+        expect(() => parseRRule(adapter, { freq: 'MONTHLY', byMonthDay }, 'default')).to.throw(
+          `MUI X Scheduler: Invalid BYMONTHDAY values "${byMonthDay.join(',')}". BYMONTHDAY values must be integers between 1 and 31.`,
+        );
+      }
     });
 
     it('should throw for invalid BYMONTH values', () => {
@@ -183,6 +250,66 @@ describe('recurring-events/rRuleString', () => {
     it('should throw for invalid COUNT value', () => {
       expect(() => parseRRule(adapter, 'FREQ=DAILY;COUNT=-2', 'default')).to.throw(
         'MUI X Scheduler: Invalid COUNT value "-2". COUNT must be a positive integer (1 or greater). Provide a valid count value.',
+      );
+    });
+
+    describe('rules whose occurrences cannot be computed', () => {
+      it.each([
+        [
+          'COUNT and UNTIL',
+          'FREQ=DAILY;COUNT=3;UNTIL=20250315T000000Z',
+          { freq: 'DAILY', count: 3, until: '2025-03-15T00:00:00Z' },
+          /both count and until/,
+        ],
+        [
+          'ordinal BYDAY in a weekly rule',
+          'FREQ=WEEKLY;BYDAY=1MO',
+          { freq: 'WEEKLY', byDay: ['1MO'] },
+          /without ordinals/,
+        ],
+        [
+          'BYDAY and BYMONTHDAY in a monthly rule',
+          'FREQ=MONTHLY;BYDAY=2TU;BYMONTHDAY=10',
+          { freq: 'MONTHLY', byDay: ['2TU'], byMonthDay: [10] },
+          /both byDay and byMonthDay/,
+        ],
+        [
+          'several BYDAY values in a monthly rule',
+          'FREQ=MONTHLY;BYDAY=2TU,-1FR',
+          { freq: 'MONTHLY', byDay: ['2TU', '-1FR'] },
+          /single element with an ordinal/,
+        ],
+        [
+          'several BYMONTHDAY values in a monthly rule with COUNT',
+          'FREQ=MONTHLY;BYMONTHDAY=1,15;COUNT=5',
+          { freq: 'MONTHLY', byMonthDay: [1, 15], count: 5 },
+          /single byMonthDay value/,
+        ],
+        [
+          'BYMONTH in a yearly rule',
+          'FREQ=YEARLY;BYMONTH=6',
+          { freq: 'YEARLY', byMonth: [6] },
+          /Yearly recurrences only support/,
+        ],
+      ] as const)(
+        'should throw for %s, from a string or an object',
+        (_name, string, object, message) => {
+          expect(() => parseRRule(adapter, string, 'default')).to.throw(message);
+          expect(() =>
+            parseRRule(adapter, object as SchedulerEventRecurrenceRule, 'default'),
+          ).to.throw(message);
+        },
+      );
+    });
+
+    it('should count an object INTERVAL below 1 as 1 and truncate a fractional one', () => {
+      expect(parseRRule(adapter, { freq: 'DAILY', interval: 0 }, 'default').interval).to.equal(1);
+      expect(parseRRule(adapter, { freq: 'DAILY', interval: 2.5 }, 'default').interval).to.equal(2);
+    });
+
+    it('should throw for an object INTERVAL that is not finite', () => {
+      expect(() => parseRRule(adapter, { freq: 'DAILY', interval: Infinity }, 'default')).to.throw(
+        'MUI X Scheduler: Invalid INTERVAL value "Infinity".',
       );
     });
 
@@ -249,6 +376,13 @@ describe('recurring-events/rRuleString', () => {
       const rule = { freq: 'DAILY' as const, until };
       const result = serializeRRule(adapter, rule);
       expect(result).to.equal('FREQ=DAILY;UNTIL=20250315T000000Z', 'default');
+    });
+
+    it('should serialize the minutes and seconds of UNTIL', () => {
+      const until = adapter.date('2025-03-15T13:45:30Z', 'default');
+      const rule = { freq: 'DAILY' as const, until };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=DAILY;UNTIL=20250315T134530Z');
     });
 
     it('should combine multiple properties correctly', () => {

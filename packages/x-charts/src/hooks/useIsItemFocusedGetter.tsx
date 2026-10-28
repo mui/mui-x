@@ -1,5 +1,5 @@
 'use client';
-import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
+import { fastObjectShallowCompare } from '@base-ui/utils/fastObjectShallowCompare';
 import type { FocusedItemIdentifier } from '../models/seriesType';
 import type { ChartSeriesType } from '../models/seriesType/config';
 import { useFocusedItem } from './useFocusedItem';

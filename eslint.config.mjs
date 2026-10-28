@@ -200,7 +200,6 @@ export default defineConfig(
       // TODO move to @mui/internal-code-infra/eslint, these are false positive
       'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
       // migration rules
-      '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-require-imports': 'off',
       'react-hooks/exhaustive-deps': [
         'error',
@@ -279,6 +278,17 @@ export default defineConfig(
     },
   },
   {
+    // A copy of BaseTemporal from the Base UI version, which keeps its code style.
+    files: [
+      `packages/x-scheduler-internals/src/internals/utils/base-temporal/*${EXTENSION_TS}`,
+      `packages/x-scheduler-internals/src/internals/utils/internals/temporal-utils/*${EXTENSION_TS}`,
+    ],
+    rules: {
+      'import/consistent-type-specifier-style': 'off',
+      'jsdoc/no-bad-blocks': 'off',
+    },
+  },
+  {
     files: [`**/*${EXTENSION_TEST_FILE}`, `test/**/*${EXTENSION_TS}`],
     rules: {
       'no-restricted-imports': [
@@ -306,6 +316,13 @@ export default defineConfig(
         tsconfigRootDir: dirname,
         projectService: true,
       },
+    },
+  },
+
+  {
+    files: [`packages/**/*${EXTENSION_TS}`],
+    rules: {
+      'mui-x/no-computed-key-with-rest': 'error',
     },
   },
 
@@ -372,11 +389,26 @@ export default defineConfig(
   // Common config from core start
   {
     files: [`docs/**/*${EXTENSION_TS}`],
+    ignores: ['**/*.config.*', '**/scripts/**'],
     extends: createDocsConfig(),
     rules: {
       '@next/next/no-img-element': 'off',
       'react/jsx-filename-extension': 'off',
       'react-hooks/set-state-in-effect': 'off',
+    },
+  },
+
+  // Type-aware docs linting exceeds CI memory: JS demo twins fall outside the
+  // docs project and each gets an inferred one.
+  {
+    files: [`docs/**/*${EXTENSION_TS}`],
+    languageOptions: {
+      parserOptions: {
+        projectService: false,
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-deprecated': 'off',
     },
   },
 

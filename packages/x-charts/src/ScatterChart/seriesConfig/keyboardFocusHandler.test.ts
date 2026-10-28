@@ -34,10 +34,14 @@ const state = {
 } as any;
 
 function move(
-  direction: 'ArrowRight' | 'ArrowLeft',
+  direction: 'ArrowRight' | 'ArrowLeft' | 'End',
   initialFocus: FocusedItemIdentifier<'scatter'> | null,
+  { ctrlKey = false, chartState = state }: { ctrlKey?: boolean; chartState?: any } = {},
 ) {
-  return keyboardFocusHandler({ key: direction } as KeyboardEvent)?.(initialFocus, state);
+  return keyboardFocusHandler({ key: direction, ctrlKey } as KeyboardEvent)?.(
+    initialFocus,
+    chartState,
+  );
 }
 
 describe('<Scatter /> - keyboard navigation', () => {
@@ -62,6 +66,39 @@ describe('<Scatter /> - keyboard navigation', () => {
       type: 'scatter',
       seriesId: 'short',
       dataIndex: 0,
+    });
+  });
+
+  it('should move to the last item of a shorter series on End', () => {
+    expect(move('End', { type: 'scatter', seriesId: 'short', dataIndex: 0 })).to.deep.equal({
+      type: 'scatter',
+      seriesId: 'short',
+      dataIndex: 1,
+    });
+  });
+
+  it('should move to the last item of a shorter last series on Ctrl+End', () => {
+    const reversedState = {
+      ...state,
+      series: {
+        defaultizedSeries: {
+          scatter: {
+            ...state.series.defaultizedSeries.scatter,
+            seriesOrder: ['long', 'short'],
+          },
+        },
+      },
+    };
+    expect(
+      move(
+        'End',
+        { type: 'scatter', seriesId: 'long', dataIndex: 0 },
+        { ctrlKey: true, chartState: reversedState },
+      ),
+    ).to.deep.equal({
+      type: 'scatter',
+      seriesId: 'short',
+      dataIndex: 1,
     });
   });
 });

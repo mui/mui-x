@@ -47,9 +47,9 @@ const frFRPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Choix des ${views[view]}. ${!formattedTime ? 'Aucune heure choisie' : `L'heure choisie est ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} heures`,
-  minutesClockNumberText: (minutes) => `${minutes} minutes`,
-  secondsClockNumberText: (seconds) => `${seconds} secondes`,
+  hoursClockNumberText: (hours) => `${hours} ${Number(hours) > 1 ? 'heures' : 'heure'}`,
+  minutesClockNumberText: (minutes) => `${minutes} ${Number(minutes) > 1 ? 'minutes' : 'minute'}`,
+  secondsClockNumberText: (seconds) => `${seconds} ${Number(seconds) > 1 ? 'secondes' : 'seconde'}`,
 
   // Digital clock labels
   selectViewText: (view) => `Choisir ${views[view]}`,

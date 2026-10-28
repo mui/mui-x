@@ -164,6 +164,7 @@
     "groupingColDef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
     "headerFilterHeight": { "type": { "name": "number" } },
     "headerFilters": { "type": { "name": "bool" }, "default": "false" },
+    "height": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
     "hideFooter": { "type": { "name": "bool" }, "default": "false" },
     "hideFooterPagination": { "type": { "name": "bool" }, "default": "false" },
     "hideFooterRowCount": { "type": { "name": "bool" }, "default": "false" },
@@ -779,6 +780,12 @@
       "class": null
     },
     {
+      "name": "filterFormColumnInput",
+      "description": "Column input component rendered in each filter form of the filter panel.",
+      "default": "GridFilterFormColumnInput",
+      "class": "MuiDataGridPro-filterFormColumnInput"
+    },
+    {
       "name": "columnsPanel",
       "description": "GridColumns panel component rendered when clicking the columns button.",
       "default": "GridColumnsPanel",
@@ -1357,6 +1364,18 @@
       "isGlobal": false
     },
     {
+      "key": "cell--computed",
+      "className": "MuiDataGridPro-cell--computed",
+      "description": "Styles applied to the cell element if the cell belongs to a computed column (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--computedError",
+      "className": "MuiDataGridPro-cell--computedError",
+      "description": "Styles applied to the cell element if the formula of its computed column evaluates to an error for the row (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
       "key": "cell--editable",
       "className": "MuiDataGridPro-cell--editable",
       "description": "Styles applied to the cell element if the cell is editable.",
@@ -1555,6 +1574,18 @@
       "isGlobal": false
     },
     {
+      "key": "columnHeader--computed",
+      "className": "MuiDataGridPro-columnHeader--computed",
+      "description": "Styles applied to the column header if the column is a computed column (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
+      "key": "columnHeader--computedInvalid",
+      "className": "MuiDataGridPro-columnHeader--computedInvalid",
+      "description": "Styles applied to the column header if the formula of its computed column is invalid (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
       "key": "columnHeader--dragging",
       "className": "MuiDataGridPro-columnHeader--dragging",
       "description": "Styles applied to the floating column header element when it is dragged.",
@@ -1747,6 +1778,84 @@
       "isGlobal": false
     },
     {
+      "key": "computedColumnHeaderBadge",
+      "className": "MuiDataGridPro-computedColumnHeaderBadge",
+      "description": "Styles applied to the `ƒx` badge in the column header of a computed column (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanel",
+      "className": "MuiDataGridPro-computedColumnsPanel",
+      "description": "Styles applied to the computed columns panel root element (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelEditor",
+      "className": "MuiDataGridPro-computedColumnsPanelEditor",
+      "description": "Styles applied to the computed columns panel editor view element.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelEmpty",
+      "className": "MuiDataGridPro-computedColumnsPanelEmpty",
+      "description": "Styles applied to the empty state of the computed columns panel list.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelField",
+      "className": "MuiDataGridPro-computedColumnsPanelField",
+      "description": "Styles applied to the field rows of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelFooter",
+      "className": "MuiDataGridPro-computedColumnsPanelFooter",
+      "description": "Styles applied to the footer of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelFormula",
+      "className": "MuiDataGridPro-computedColumnsPanelFormula",
+      "description": "Styles applied to the formula surface of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelHeader",
+      "className": "MuiDataGridPro-computedColumnsPanelHeader",
+      "description": "Styles applied to the computed columns panel header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelList",
+      "className": "MuiDataGridPro-computedColumnsPanelList",
+      "description": "Styles applied to the computed columns panel list view element.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelListItem",
+      "className": "MuiDataGridPro-computedColumnsPanelListItem",
+      "description": "Styles applied to each item of the computed columns panel list.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelPreview",
+      "className": "MuiDataGridPro-computedColumnsPanelPreview",
+      "description": "Styles applied to the preview element of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelReference",
+      "className": "MuiDataGridPro-computedColumnsPanelReference",
+      "description": "Styles applied to the reference pane (columns and functions to insert) of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelValidation",
+      "className": "MuiDataGridPro-computedColumnsPanelValidation",
+      "description": "Styles applied to the validation block of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
       "key": "container--bottom",
       "className": "MuiDataGridPro-container--bottom",
       "description": "Styles applied to the bottom container.",
@@ -1852,12 +1961,6 @@
       "key": "filterForm",
       "className": "MuiDataGridPro-filterForm",
       "description": "Styles applied to the root of the filter form component.",
-      "isGlobal": false
-    },
-    {
-      "key": "filterFormColumnInput",
-      "className": "MuiDataGridPro-filterFormColumnInput",
-      "description": "Styles applied to the column input of the filter form component.",
       "isGlobal": false
     },
     {

@@ -2,7 +2,7 @@ import { warnOnce } from '@mui/x-internals/warning';
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerEvent, SchedulerProcessedEvent } from '../models';
 import { processDate } from '../process-date';
-import { normalizeAllDayBounds } from '../internals/utils/date-utils';
+import { normalizeAllDayBounds } from '../internals/utils/plain-date-utils/adapter';
 import type { Adapter } from '../use-adapter';
 import type { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
 import { resolveEventDate } from './resolveEventDate';
@@ -35,10 +35,12 @@ export function processEvent(
 
   if (recurringEventsPlugin == null && model.rrule != null) {
     if (process.env.NODE_ENV !== 'production') {
-      warnOnce([
-        'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-        'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
-      ]);
+      warnOnce(
+        [
+          'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+        ].join('\n'),
+      );
     }
   }
 

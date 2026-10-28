@@ -40,6 +40,7 @@ import {
   rowsMetaStateInitializer,
   rowSelectionStateInitializer,
   useGridColumnReorder,
+  useGridColumnReorderPointer,
   columnReorderStateInitializer,
   useGridColumnResize,
   columnResizeStateInitializer,
@@ -54,6 +55,7 @@ import {
   useGridInfiniteLoader,
   useGridColumnSpanning,
   useGridRowReorder,
+  useGridRowReorderPointer,
   useGridRowReorderPreProcessors,
   useGridRowPinning,
   useGridRowPinningPreProcessors,
@@ -77,9 +79,9 @@ import {
   listViewStateInitializer,
   propsStateInitializer,
   rowReorderStateInitializer,
-  useFirstRender,
   registerMultiSelectColumnType,
 } from '@mui/x-data-grid-pro/internals';
+import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import type { GridConfiguration } from '@mui/x-data-grid-pro/internals';
 import { useGridSelector } from '@mui/x-data-grid-pro';
 import { warnOnce } from '@mui/x-internals/warning';
@@ -126,6 +128,10 @@ import {
   useGridChartsIntegration,
 } from '../hooks/features/chartsIntegration/useGridChartsIntegration';
 import { historyStateInitializer, useGridHistory } from '../hooks/features/history/useGridHistory';
+import {
+  computedColumnsStateInitializer,
+  useGridComputedColumns,
+} from '../hooks/features/computedColumns/useGridComputedColumns';
 
 registerMultiSelectColumnType();
 
@@ -171,11 +177,13 @@ export const useDataGridPremiumComponent = (
   const formulaFeature = React.useRef(props.featureDependencies?.formula).current;
   if (process.env.NODE_ENV !== 'production') {
     if (props.featureDependencies?.formula !== formulaFeature) {
-      warnOnce([
-        'MUI X Data Grid: The `featureDependencies` prop changed after the first render.',
-        'Injected features are captured once when the grid mounts, so the change is ignored.',
-        'Provide a stable `featureDependencies` object, or remount the grid to apply the change.',
-      ]);
+      warnOnce(
+        [
+          'MUI X Data Grid: The `featureDependencies` prop changed after the first render.',
+          'Injected features are captured once when the grid mounts, so the change is ignored.',
+          'Provide a stable `featureDependencies` object, or remount the grid to apply the change.',
+        ].join('\n'),
+      );
     }
   }
   useGridMissingFormulaFeatureWarning(props, formulaFeature !== undefined);
@@ -202,8 +210,11 @@ export const useDataGridPremiumComponent = (
   useGridRowSelectionPreProcessors(apiRef, props);
   useGridLazyLoaderPreProcessors(apiRef, props);
   useGridRowPinningPreProcessors(apiRef);
-  useGridAggregationPreProcessors(apiRef, props);
+  // Before the aggregation pre-processors: the computed columns injected by the
+  // formula feature must exist by the time aggregation wraps the aggregated columns.
+  // The two features wrap disjoint column properties, so their order is otherwise free.
   useFormulaPreProcessors(apiRef, props);
+  useGridAggregationPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
   useGridColumnPinningPreProcessors(apiRef, props);
   useGridRowsPreProcessors(apiRef);
@@ -220,6 +231,9 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(cellSelectionStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props, key);
+  // Before `columnsStateInitializer`: the computed columns are injected from
+  // the model while the columns state initializes.
+  useGridInitializeState(computedColumnsStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props, key);
   useGridInitializeState(sidebarStateInitializer, apiRef, props);
   useGridInitializeState(pivotingStateInitializer, apiRef, props);
@@ -250,6 +264,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(historyStateInitializer, apiRef, props);
 
   useGridSidebar(apiRef, props);
+  useGridComputedColumns(apiRef, props);
   useGridPivoting(apiRef, props, inProps.columns, inProps.rows);
   useGridRowGrouping(apiRef, props);
   useGridHeaderFiltering(apiRef, props);
@@ -280,9 +295,11 @@ export const useDataGridPremiumComponent = (
   useGridSorting(apiRef, props);
   useGridDensity(apiRef, props);
   useGridColumnReorder(apiRef, props);
+  useGridColumnReorderPointer(apiRef, props);
   useGridColumnResize(apiRef, props);
   useGridPagination(apiRef, props);
   useGridRowReorder(apiRef, props);
+  useGridRowReorderPointer(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
   useGridLazyLoader(apiRef, props);
@@ -306,7 +323,7 @@ export const useDataGridPremiumComponent = (
   useGridPivotingExportState(apiRef);
 
   // Should be the last thing to run, because all pre-processors should have been registered by now.
-  useFirstRender(() => {
+  useOnFirstRender(() => {
     apiRef.current.runAppliersForPendingProcessors();
   });
   React.useEffect(() => {

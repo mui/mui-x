@@ -47,6 +47,10 @@
         "description": "{ canHaveMultipleResources?: bool, duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
       }
     },
+    "eventDeletion": {
+      "type": { "name": "union", "description": "{ confirmation?: bool }<br>&#124;&nbsp;bool" },
+      "default": "true"
+    },
     "eventModelStructure": { "type": { "name": "object" } },
     "events": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
@@ -96,7 +100,12 @@
         "description": "'agenda'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'week'"
       }
     },
-    "viewConfig": { "type": { "name": "object" } },
+    "viewConfig": {
+      "type": {
+        "name": "shape",
+        "description": "{ agenda?: { dayCount?: 'month'<br>&#124;&nbsp;number } }"
+      }
+    },
     "views": {
       "type": {
         "name": "arrayOf",

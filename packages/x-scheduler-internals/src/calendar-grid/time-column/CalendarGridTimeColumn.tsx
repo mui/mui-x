@@ -4,10 +4,18 @@ import { useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useCompositeListItem } from '@base-ui/react/internals/composite';
+import { useDirection } from '@base-ui/react/direction-provider';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import { useAdapterContext } from '../../use-adapter-context';
-import { schedulerNowSelectors } from '../../scheduler-selectors';
+import type { SchedulerEvent } from '../../models';
+import { schedulerNowSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import { EVENT_CREATION_PRECISION_MINUTE } from '../../constants';
+import {
+  floorToWallClockMinutes,
+  toEpochMs,
+  toPlainDateTime,
+} from '../../internals/utils/plain-date-utils/timeZone';
+import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
+import type { TimelineAxis } from '../../internals/utils/timeline-axis';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
 import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
@@ -29,16 +37,17 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     start,
     end,
     dayStartMinute = 0,
-    dayEndMinute = 24 * 60,
+    dayEndMinute = FULL_DAY_MINUTES,
     addPropertiesToDroppedEvent,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
-  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { focusedCell, setFocusedCell, rowTypes, rowsPerType } = useCalendarGridRootContext();
+  const isRtl = useDirection() === 'rtl';
   const isCurrentDay = useStore(store, schedulerNowSelectors.isCurrentDay, start);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const { ref: listItemRef, index } = useCompositeListItem();
   const cellsRefs = useCalendarGridCellsRefsContext();
 
@@ -48,42 +57,43 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     focusedCell?.rowIndex === 0 &&
     focusedCell?.columnIndex === index;
 
+  const axis: TimelineAxis = React.useMemo(
+    () => ({ start, end, timezone: displayTimezone, dayStartMinute, dayEndMinute }),
+    [start, end, displayTimezone, dayStartMinute, dayEndMinute],
+  );
+
   const {
     getCursorPositionInElementMs,
-    getDateAtPointer,
+    getTimestampAtPointer,
     ref: dropTargetRef,
-  } = useTimeDropTarget({
-    start,
-    end,
-    addPropertiesToDroppedEvent,
-  });
+  } = useTimeDropTarget({ axis, addPropertiesToDroppedEvent });
 
-  const eventCreationProps = useEventCreation(({ event, creationConfig }) => {
+  const eventCreationProps = useEventCreation(({ event, creationConfig, timezone }) => {
     const offsetMs = getCursorPositionInElementMs({
       input: { clientY: event.clientY },
       elementRef: dropTargetRef,
     });
-    const anchor = adapter.addMilliseconds(start, offsetMs);
-    const startDate = adapter.addMinutes(
-      anchor,
-      -(adapter.getMinutes(anchor) % EVENT_CREATION_PRECISION_MINUTE),
+    const startTimestamp = floorToWallClockMinutes(
+      start + offsetMs,
+      EVENT_CREATION_PRECISION_MINUTE,
+      timezone,
     );
     return {
       surfaceType: 'time-grid' as const,
-      start: startDate,
-      end: adapter.addMinutes(startDate, creationConfig.duration),
+      start: startTimestamp,
+      end: startTimestamp + creationConfig.duration * 60_000,
       resourceId: null,
     };
   });
 
-  const triggerKeyboardCreation = useKeyboardEventCreation(({ creationConfig }) => {
-    const noon = adapter.setHours(adapter.setMinutes(start, 0), 12);
+  const triggerKeyboardCreation = useKeyboardEventCreation(({ creationConfig, timezone }) => {
+    const noon = toEpochMs(toPlainDateTime(start, timezone).date, 12 * 60 * 60_000, timezone);
     // Keep the default creation anchor inside the visible window when the view limits its hour range.
-    const anchor = adapter.isBefore(noon, start) || !adapter.isBefore(noon, end) ? start : noon;
+    const anchor = noon < start || noon >= end ? start : noon;
     return {
       surfaceType: 'time-grid' as const,
       start: anchor,
-      end: adapter.addMinutes(anchor, creationConfig.duration),
+      end: anchor + creationConfig.duration * 60_000,
       resourceId: null,
     };
   });
@@ -100,6 +110,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
       columnCount: cellsRefs.current.length,
       rowTypes,
       rowsPerType,
+      isRtl,
     });
     if (target) {
       event.preventDefault();
@@ -128,25 +139,12 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
 
   const contextValue: CalendarGridTimeColumnContext = React.useMemo(
     () => ({
-      start,
-      end,
-      dayStartMinute,
-      dayEndMinute,
-      index,
+      axis,
       hasFocus,
       getCursorPositionInElementMs,
-      getDateAtPointer,
+      getTimestampAtPointer,
     }),
-    [
-      start,
-      end,
-      dayStartMinute,
-      dayEndMinute,
-      index,
-      hasFocus,
-      getCursorPositionInElementMs,
-      getDateAtPointer,
-    ],
+    [axis, hasFocus, getCursorPositionInElementMs, getTimestampAtPointer],
   );
 
   const keyboardProps = {
@@ -181,7 +179,16 @@ export namespace CalendarGridTimeColumn {
     current: boolean;
   }
 
-  export interface Props extends BaseUIComponentProps<'div', State>, useTimeDropTarget.Parameters {
+  export interface Props extends BaseUIComponentProps<'div', State> {
+    /**
+     * The first instant of the column, as a timestamp read in the display timezone.
+     */
+    start: number;
+    /**
+     * The end of the column, as a timestamp read in the display timezone: the last instant of its
+     * day when the whole day is displayed, otherwise the exclusive end of its hour window.
+     */
+    end: number;
     /**
      * First displayed minute of the day, as an offset from midnight.
      * Derived from the view's whole-hour window so it stays aligned with the
@@ -196,5 +203,9 @@ export namespace CalendarGridTimeColumn {
      * @default 1440
      */
     dayEndMinute?: number;
+    /**
+     * Add properties to the event dropped in the column before storing it in the store.
+     */
+    addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>;
   }
 }

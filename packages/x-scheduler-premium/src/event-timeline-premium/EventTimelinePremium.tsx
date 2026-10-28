@@ -16,6 +16,7 @@ import {
   ErrorContainer,
   SharedComponentsStyledContext,
   SchedulerSlotsProvider,
+  SchedulerDirectionProvider,
   eventDialogSlots,
   eventContextMenuSlots,
   EventEditingStyledContext,
@@ -108,7 +109,8 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
   const store = useEventTimelinePremium(parameters);
   const classes = useUtilityClasses(classesProp);
 
-  const { localeText, resourceColumnLabel, apiRef, slots, slotProps, ...other } = forwardedProps;
+  const { localeText, resourceColumnLabel, getEventAriaLabel, apiRef, slots, slotProps, ...other } =
+    forwardedProps;
   useInitializeApiRef(store, apiRef);
 
   const schedulerId = useId();
@@ -119,8 +121,14 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
   );
 
   const timelineStyledContextValue = React.useMemo(
-    () => ({ schedulerId, classes, localeText: mergedLocaleText, resourceColumnLabel }),
-    [schedulerId, classes, mergedLocaleText, resourceColumnLabel],
+    () => ({
+      schedulerId,
+      classes,
+      localeText: mergedLocaleText,
+      resourceColumnLabel,
+      getEventAriaLabel,
+    }),
+    [schedulerId, classes, mergedLocaleText, resourceColumnLabel, getEventAriaLabel],
   );
 
   const editingStyledContextValue = React.useMemo(
@@ -136,15 +144,17 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
         <EventEditingStyledContext.Provider value={editingStyledContextValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
             <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
-              <EventTimelinePremiumRoot
-                ref={forwardedRef}
-                className={clsx(classes.root, className)}
-                {...other}
-              >
-                <EventTimelinePremiumContent />
-                <ErrorContainer />
-                {watermark}
-              </EventTimelinePremiumRoot>
+              <SchedulerDirectionProvider>
+                <EventTimelinePremiumRoot
+                  ref={forwardedRef}
+                  className={clsx(classes.root, className)}
+                  {...other}
+                >
+                  <EventTimelinePremiumContent />
+                  <ErrorContainer />
+                  {watermark}
+                </EventTimelinePremiumRoot>
+              </SchedulerDirectionProvider>
             </SchedulerSlotsProvider>
           </SharedComponentsStyledContext.Provider>
         </EventEditingStyledContext.Provider>
@@ -267,7 +277,8 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    * "locale" (use the user's current locale timezone),
    * or "UTC".
    *
-   * This timezone only affects rendering, events keep their original data timezone.
+   * Events keep their original data timezone. The visible range starts on the day of the visible
+   * date in this timezone, and the next and previous navigation return dates in this timezone.
    * @default "default"
    */
   displayTimezone: PropTypes.string,
@@ -305,6 +316,19 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
     PropTypes.bool,
   ]),
   /**
+   * Configures how events are deleted.
+   * If `false`, event deletion is disabled.
+   * If `true`, event deletion is enabled with default configuration.
+   * If an object, event deletion is enabled with the provided configuration.
+   * @default true
+   */
+  eventDeletion: PropTypes.oneOfType([
+    PropTypes.shape({
+      confirmation: PropTypes.bool,
+    }),
+    PropTypes.bool,
+  ]),
+  /**
    * The structure of the event model.
    * It defines how to read and write the properties of the event model.
    * If not provided, the event model is assumed to match the `CalendarEvent` interface.
@@ -318,6 +342,13 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    * @default []
    */
   events: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * Returns the accessible name of an event block.
+   * Use it to announce details rendered through the `timelineEventContent` slot.
+   * @param {EventTimelineGetEventAriaLabelParameters} parameters The occurrence, its row resource and the default name.
+   * @returns {string} The accessible name of the event block.
+   */
+  getEventAriaLabel: PropTypes.func,
   /**
    * Set the locale text of the Event Timeline.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)

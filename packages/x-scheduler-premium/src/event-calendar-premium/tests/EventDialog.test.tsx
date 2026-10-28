@@ -4,10 +4,12 @@ import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   adapter,
   createSchedulerRenderer,
+  dateLocaleFr,
   EventBuilder,
   utcJuly4AllDayBuilder,
   ResourceBuilder,
   SchedulerStoreRunner,
+  setSystemTimezone,
   StateWatcher,
   StoreSpy,
 } from 'test/utils/scheduler';
@@ -95,7 +97,11 @@ describe('<EventDialogContent open />', () => {
   const { render } = createSchedulerRenderer();
 
   // An event opened from a calendar displayed in another timezone.
-  function renderCrossTimezoneDialog(builder: EventBuilder, displayTimezone: TemporalTimezone) {
+  function renderCrossTimezoneDialog(
+    builder: EventBuilder,
+    displayTimezone: TemporalTimezone,
+    providerProps?: Partial<React.ComponentProps<typeof EventCalendarProvider>>,
+  ) {
     const onEventsChange = vi.fn();
     const event = builder.withDisplayTimezone(displayTimezone).build();
     const { user, setProps } = render(
@@ -105,6 +111,7 @@ describe('<EventDialogContent open />', () => {
         storeClass={PremiumTestStore}
         displayTimezone={displayTimezone}
         onEventsChange={onEventsChange}
+        {...providerProps}
       >
         <TestEventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
       </EventCalendarProvider>,
@@ -135,8 +142,8 @@ describe('<EventDialogContent open />', () => {
     const placeholder: SchedulerOccurrencePlaceholderCreation = {
       type: 'creation',
       surfaceType: 'time-grid' as const,
-      start,
-      end,
+      start: adapter.getTime(start),
+      end: adapter.getTime(end),
       lockSurfaceType: false,
       resourceId: null,
     };
@@ -207,6 +214,7 @@ describe('<EventDialogContent open />', () => {
     // The failing field lives in the General tab, so the dialog switches back to it.
     expect(generalPanel).not.to.have.attribute('hidden');
     expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
+    expect(document.activeElement).to.equal(screen.getByRole('combobox', { name: /resource/i }));
   });
 
   it('should return to the General tab when only a custom validator fails', async () => {
@@ -587,6 +595,9 @@ describe('<EventDialogContent open />', () => {
   });
 
   it('should call "onEventsChange" with the updated values when delete button is clicked', async () => {
+    // `TestEventDialogContent` doesn't mount `DeleteConfirmationDialog` (that only happens through
+    // `EventDialogProvider`), so the confirmation is opted out of here to keep testing this
+    // component's own direct wiring to the store.
     const onEventsChange = vi.fn();
     const { user } = render(
       <EventCalendarProvider
@@ -594,6 +605,7 @@ describe('<EventDialogContent open />', () => {
         onEventsChange={onEventsChange}
         resources={resources}
         storeClass={PremiumTestStore}
+        eventDeletion={{ confirmation: false }}
       >
         <TestEventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
@@ -611,6 +623,7 @@ describe('<EventDialogContent open />', () => {
         resources={resources}
         storeClass={PremiumTestStore}
         onEventsChange={() => {}}
+        eventDeletion={{ confirmation: false }}
       >
         <StoreSpy
           Context={SchedulerStoreContext}
@@ -1198,8 +1211,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1233,8 +1246,8 @@ describe('<EventDialogContent open />', () => {
       const placeholder: SchedulerOccurrencePlaceholderCreation = {
         type: 'creation',
         surfaceType: 'time-grid' as const,
-        start,
-        end,
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
         lockSurfaceType: false,
         resourceId: null,
       };
@@ -1639,8 +1652,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1684,8 +1697,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1728,8 +1741,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'day-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1771,8 +1784,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: true,
                 resourceId: null,
               })
@@ -1813,8 +1826,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1845,8 +1858,8 @@ describe('<EventDialogContent open />', () => {
       const placeholder: SchedulerOccurrencePlaceholderCreation = {
         type: 'creation',
         surfaceType: 'time-grid' as const,
-        start,
-        end,
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
         lockSurfaceType: false,
         resourceId: null,
       };
@@ -1915,8 +1928,8 @@ describe('<EventDialogContent open />', () => {
       const placeholder: SchedulerOccurrencePlaceholderCreation = {
         type: 'creation',
         surfaceType: 'time-grid' as const,
-        start,
-        end,
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
         lockSurfaceType: false,
         resourceId: null,
       };
@@ -2697,6 +2710,27 @@ describe('<EventDialogContent open />', () => {
         expect(updated.rrule).to.deep.include({ freq: 'WEEKLY', byDay: ['FR'] });
       });
 
+      it('should label each weekday once when the timezone skips a day of the week', async () => {
+        // Pacific/Apia skips Friday, December 30th, 2011.
+        const { user } = renderCrossTimezoneDialog(
+          EventBuilder.new()
+            .title('Standup')
+            .withDataTimezone('Pacific/Apia')
+            .span('2011-12-28T09:00:00', '2011-12-28T09:30:00'),
+          'Pacific/Apia',
+          { visibleDate: adapter.date('2011-12-28T12:00:00', 'Pacific/Apia') },
+        );
+
+        await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+        await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+        await user.click(
+          await screen.findByRole('option', { name: 'Repeats weekly on Wednesday' }),
+        );
+
+        expect(screen.getAllByRole('checkbox', { name: 'Friday' })).to.have.length(1);
+        expect(screen.getAllByRole('checkbox', { name: 'Saturday' })).to.have.length(1);
+      });
+
       it('should re-anchor the weekday of a picked preset when the start is edited afterwards', async () => {
         const { user, event, onEventsChange } = renderCrossTimezoneDialog(
           lateCallBuilder(),
@@ -2914,10 +2948,7 @@ describe('<EventDialogContent open />', () => {
               onMount={(mountedStore) => {
                 store = mountedStore;
                 (mountedStore as any).lazyLoading.queueDataFetchForRange(
-                  {
-                    start: adapter.date('2025-05-26T00:00:00', 'UTC'),
-                    end: adapter.date('2025-05-26T00:00:00', 'UTC'),
-                  },
+                  { start: Date.UTC(2025, 4, 26), end: Date.UTC(2025, 4, 26) },
                   true,
                 );
               }}
@@ -3340,6 +3371,16 @@ describe('<EventDialogContent open />', () => {
       });
 
       describe('Recurrence Custom behavior', () => {
+        async function openCustomMonthly(user: ReturnType<typeof render>['user']) {
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          await user.click(within(repeatGroup).getByRole('combobox'));
+          await user.click(await screen.findByRole('option', { name: /months/i }));
+        }
+
         it('should render recurrence fields as disabled when not recurrent', async () => {
           const { user } = render(
             <EventCalendarProvider
@@ -3664,6 +3705,64 @@ describe('<EventDialogContent open />', () => {
           expect(updated.rrule?.until).to.equal('2025-07-06T23:59:59');
         });
 
+        describe('on a day whose last hour a DST transition repeats', () => {
+          // Santiago leaves summer time at the end of April 4th, 2026, when 24:00 becomes 23:00.
+          // The event is stored as instants, in the default timezone of the system.
+          async function renderSantiagoSystemDialog(start: string, end: string) {
+            setSystemTimezone('America/Santiago');
+            const { user, onEventsChange } = renderCrossTimezoneDialog(
+              EventBuilder.new().title('Run').span(start, end),
+              'default',
+            );
+            await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+            await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+            await user.click(await screen.findByRole('option', { name: /custom/i }));
+            return { user, onEventsChange };
+          }
+
+          it.skipIf(!isJSDOM)(
+            'should pre-fill "Until" with the later 23:59:59.999 of the last day',
+            async () => {
+              const { user, onEventsChange } = await renderSantiagoSystemDialog(
+                '2026-04-04T14:00:00Z',
+                '2026-04-04T15:00:00Z',
+              );
+              const endsFieldset = screen.getByRole('group', { name: /ends/i });
+              await user.click(within(endsFieldset).getByRole('radio', { name: /until/i }));
+              const dateInput = endsFieldset.querySelector(
+                'input[type="date"]',
+              ) as HTMLInputElement;
+              expect(dateInput.value).to.equal('2026-04-04');
+              await user.click(screen.getByRole('button', { name: /save/i }));
+
+              const updated = onEventsChange.mock.calls[0][0][0];
+              expect(updated.rrule?.until).to.equal('2026-04-05T03:59:59.999Z');
+            },
+          );
+
+          it.skipIf(!isJSDOM)(
+            'should end the series on the later 23:59:59.999 of the "Until" day',
+            async () => {
+              // On April 3rd, so that the pre-filled day differs from the typed one.
+              const { user, onEventsChange } = await renderSantiagoSystemDialog(
+                '2026-04-03T14:00:00Z',
+                '2026-04-03T15:00:00Z',
+              );
+              const endsFieldset = screen.getByRole('group', { name: /ends/i });
+              await user.click(within(endsFieldset).getByRole('radio', { name: /until/i }));
+              const dateInput = endsFieldset.querySelector(
+                'input[type="date"]',
+              ) as HTMLInputElement;
+              await user.clear(dateInput);
+              await user.type(dateInput, '2026-04-04');
+              await user.click(screen.getByRole('button', { name: /save/i }));
+
+              const updated = onEventsChange.mock.calls[0][0][0];
+              expect(updated.rrule?.until).to.equal('2026-04-05T03:59:59.999Z');
+            },
+          );
+        });
+
         it('should pre-fill the "Until" input with the stored day in the event timezone', async () => {
           // A New York rule ending on July 20 opened from Tokyo, where that instant is July 21.
           const { user } = renderCrossTimezoneDialog(
@@ -3766,6 +3865,7 @@ describe('<EventDialogContent open />', () => {
           expect(screen.getByRole('tabpanel', { name: /recurrence/i })).not.to.have.attribute(
             'hidden',
           );
+          expect(document.activeElement).to.equal(dateInput);
         });
 
         it('should keep the Recurrence tab visible when a recurrence control is natively invalid', async () => {
@@ -3917,6 +4017,110 @@ describe('<EventDialogContent open />', () => {
             interval: 1,
             byDay: ['-1MO'],
           });
+        });
+
+        it('should build the monthly last week labels from the date locale, not from the weekday token', async () => {
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              dateLocale={dateLocaleFr}
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await openCustomMonthly(user);
+
+          // The aria label takes the full weekday name, the visible label the 3-letter one.
+          const toggle = screen.getByRole('button', {
+            name: 'lundi of the last week of the month',
+          });
+          expect(toggle).to.have.text('lun. last week');
+        });
+
+        it('should pass the weekday token and name to the monthly last week locale callbacks', async () => {
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              localeText={{
+                recurrenceMonthlyLastWeekAriaLabel: ({ weekday, weekdayName }) =>
+                  `aria:${weekday}:${weekdayName}`,
+                recurrenceMonthlyLastWeekLabel: ({ weekday, weekdayName }) =>
+                  `label:${weekday}:${weekdayName}`,
+              }}
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await openCustomMonthly(user);
+
+          // DEFAULT_EVENT is on Monday 2025-05-26, the last Monday of the month.
+          const toggle = screen.getByRole('button', { name: 'aria:monday:Monday' });
+          expect(toggle).to.have.text('label:monday:Mon');
+        });
+
+        it('should pass the weekday token and name to the monthly week number locale callbacks', async () => {
+          // 2025-05-05 is the first Monday of the month, so the ordinal is 1 instead of -1.
+          const builder = EventBuilder.new()
+            .title('Running')
+            .singleDay('2025-05-05T07:30:00Z', 45)
+            .resource(personalResource);
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[builder.build()]}
+              resources={resources}
+              localeText={{
+                recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekday, weekdayName }) =>
+                  `aria:${ord}:${weekday}:${weekdayName}`,
+                recurrenceMonthlyWeekNumberLabel: ({ ord, weekday, weekdayName }) =>
+                  `label:${ord}:${weekday}:${weekdayName}`,
+              }}
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+            </EventCalendarProvider>,
+          );
+
+          await openCustomMonthly(user);
+
+          const toggle = screen.getByRole('button', { name: 'aria:1:monday:Monday' });
+          expect(toggle).to.have.text('label:1:monday:Mon');
+        });
+
+        it('should derive the weekday token, name and saved rule from the event timezone', async () => {
+          // Tuesday 01:00 in Auckland is Monday 13:00 in UTC, both the display and the test timezone.
+          const builder = EventBuilder.new()
+            .title('Early call')
+            .withDataTimezone('Pacific/Auckland')
+            .span('2025-05-27T01:00:00', '2025-05-27T01:45:00')
+            .resource(personalResource);
+
+          const { user, onEventsChange } = renderCrossTimezoneDialog(builder, 'UTC', {
+            localeText: {
+              recurrenceMonthlyLastWeekAriaLabel: ({ weekday, weekdayName }) =>
+                `aria:${weekday}:${weekdayName}`,
+              recurrenceMonthlyLastWeekLabel: ({ weekday, weekdayName }) =>
+                `label:${weekday}:${weekdayName}`,
+            },
+          });
+
+          await openCustomMonthly(user);
+
+          // 2025-05-27 is the last Tuesday of May.
+          const toggle = screen.getByRole('button', { name: 'aria:tuesday:Tuesday' });
+          expect(toggle).to.have.text('label:tuesday:Tue');
+
+          await user.click(toggle);
+          await user.click(screen.getByRole('button', { name: /save/i }));
+
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          expect(onEventsChange.mock.calls[0][0][0].rrule.byDay).to.deep.equal(['-1TU']);
         });
 
         it('should flip the recurrence Select to "Custom" when a detail field is edited', async () => {

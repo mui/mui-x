@@ -1,7 +1,5 @@
 'use client';
-import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isBuiltInEventProperty } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
@@ -15,13 +13,12 @@ import {
   BUILT_IN_FORM_KEYS,
   FORM_KEY_TO_EVENT_PROPERTY,
 } from '../internals/components/event-dialog/utils';
-import { eventDialogFormSelectors } from '../internals/components/event-dialog/form/EventDialogFormStore';
 import type {
   EventDialogFormErrorMessage,
-  EventDialogFormValidator,
   EventDialogFormValidatorResult,
 } from '../internals/components/event-dialog/form/EventDialogFormStore';
 import { useEventDialogFormContext } from '../internals/components/event-dialog/form/EventDialogFormContext';
+import { useSchedulerFormField } from '../internals/components/scheduler-form/useSchedulerFormField';
 
 /**
  * Built-in form keys get autocompleted, any other string is a custom field.
@@ -76,8 +73,6 @@ export interface UseEventDialogFormFieldReturnValue<T> {
   readOnly: boolean;
 }
 
-const NO_ERRORS: EventDialogFormErrorMessage[] = [];
-
 // Rejects built-in form keys, so a mistyped parameter cannot silently fall
 // through from the built-in overload to the custom-key one, and the reserved
 // `SchedulerEvent` properties, whose writes are dropped on save. `Extract`
@@ -114,24 +109,28 @@ export function useEventDialogFormField(
 ): UseEventDialogFormFieldReturnValue<unknown> {
   if (process.env.NODE_ENV !== 'production') {
     if (!BUILT_IN_FORM_KEYS.has(key) && isBuiltInEventProperty(key)) {
-      warnOnce([
-        `MUI X Scheduler: useEventDialogFormField() received the key "${key}", which is a built-in event property.`,
-        'The edit is dropped on save, so the field cannot be persisted.',
-        'Use a custom key that does not collide with the event model.',
-      ]);
+      warnOnce(
+        [
+          `MUI X Scheduler: useEventDialogFormField() received the key "${key}", which is a built-in event property.`,
+          'The edit is dropped on save, so the field cannot be persisted.',
+          'Use a custom key that does not collide with the event model.',
+        ].join('\n'),
+      );
     }
     if (BUILT_IN_FORM_KEYS.has(key) && parameters.defaultValue !== undefined) {
-      warnOnce([
-        `MUI X Scheduler: useEventDialogFormField() received a \`defaultValue\` for the built-in key "${key}".`,
-        'Built-in keys are always seeded from the event being edited, so the default is never applied.',
-        'Remove the `defaultValue`, or use a custom key if you meant to add a field of your own.',
-      ]);
+      warnOnce(
+        [
+          `MUI X Scheduler: useEventDialogFormField() received a \`defaultValue\` for the built-in key "${key}".`,
+          'Built-in keys are always seeded from the event being edited, so the default is never applied.',
+          'Remove the `defaultValue`, or use a custom key if you meant to add a field of your own.',
+        ].join('\n'),
+      );
     }
   }
 
   const store = useEventDialogFormContext();
   const schedulerStore = useSchedulerStoreContext();
-  const { defaultValue } = parameters;
+  const field = useSchedulerFormField(store, key, parameters);
 
   const isPropertyReadOnly = useStore(
     schedulerStore,
@@ -142,43 +141,5 @@ export function useEventDialogFormField(
     ? isPropertyReadOnly(FORM_KEY_TO_EVENT_PROPERTY[key as keyof EventDialogBuiltInFormValues])
     : false;
 
-  const storedValue = useStore(store, eventDialogFormSelectors.value, key);
-  const isSeeded = useStore(store, eventDialogFormSelectors.hasValue, key);
-  // The store is only seeded in an effect, so fall back until the key exists.
-  // Once seeded, an explicit `undefined` write must not resurrect the default.
-  const value = storedValue === undefined && !isSeeded ? defaultValue : storedValue;
-  const errorList = useStore(store, eventDialogFormSelectors.error, key);
-
-  const setValue = useStableCallback((newValue: unknown) => store.setValue(key, newValue));
-
-  const hasValidator = parameters.validate != null;
-  const validate: EventDialogFormValidator = useStableCallback((fieldValue, allValues) =>
-    parameters.validate ? parameters.validate(fieldValue, allValues) : null,
-  );
-
-  React.useEffect(() => {
-    if (defaultValue !== undefined) {
-      store.seedDefault(key, defaultValue);
-    }
-  }, [store, key, defaultValue]);
-
-  React.useEffect(() => {
-    if (!hasValidator) {
-      return undefined;
-    }
-    store.registerValidator(key, validate);
-    return () => store.unregisterValidator(key, validate);
-  }, [store, key, hasValidator, validate]);
-
-  // A new closure over new props changes the rule behind the stable wrapper's
-  // identity, so a pending validateAll must restart to resolve against it.
-  const lastValidateRef = React.useRef(parameters.validate);
-  React.useEffect(() => {
-    if (lastValidateRef.current !== parameters.validate) {
-      lastValidateRef.current = parameters.validate;
-      store.touchValidators();
-    }
-  });
-
-  return { value, setValue, error: errorList?.[0], errors: errorList ?? NO_ERRORS, readOnly };
+  return { ...field, readOnly };
 }

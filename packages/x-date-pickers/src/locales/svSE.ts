@@ -47,9 +47,10 @@ const svSEPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Välj ${timeViews[view]}. ${!formattedTime ? 'Ingen tid vald' : `Vald tid är ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} timmar`,
-  minutesClockNumberText: (minutes) => `${minutes} minuter`,
-  secondsClockNumberText: (seconds) => `${seconds} sekunder`,
+  hoursClockNumberText: (hours) => `${hours} ${Number(hours) === 1 ? 'timme' : 'timmar'}`,
+  minutesClockNumberText: (minutes) => `${minutes} ${Number(minutes) === 1 ? 'minut' : 'minuter'}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${Number(seconds) === 1 ? 'sekund' : 'sekunder'}`,
 
   // Digital clock labels
   selectViewText: (view) => `Välj ${timeViews[view]}`,

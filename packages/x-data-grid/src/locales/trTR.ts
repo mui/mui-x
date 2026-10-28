@@ -1,14 +1,17 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization } from '../utils/getGridLocalization';
+import { getGridLocalization, buildLocaleFormat } from '../utils/getGridLocalization';
 import type { Localization } from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('tr-TR');
 
 const trTRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Satır yok',
   noResultsOverlayLabel: 'Sonuç bulunamadı.',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
-  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
+  noColumnsOverlayLabel: 'Sütun yok',
+  noColumnsOverlayManageColumns: 'Sütunları yönet',
+  emptyPivotOverlayLabel:
+    'Pivot tablo oluşturmak için satırlara, sütunlara ve değerlere alan ekleyin',
 
   // Density selector toolbar button text
   toolbarDensity: 'Yoğunluk',
@@ -45,22 +48,89 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Excel olarak aktar',
 
   // Toolbar pivot button
-  // toolbarPivot: 'Pivot',
+  toolbarPivot: 'Pivot',
 
   // Toolbar charts button
-  // toolbarCharts: 'Charts',
+  toolbarCharts: 'Grafikler',
 
   // Toolbar AI Assistant button
-  // toolbarAssistant: 'AI Assistant',
+  toolbarAssistant: 'Yapay Zeka Asistanı',
 
   // Formula bar (Premium formulas)
-  // formulaBarLabel: 'Formula bar',
-  // formulaBarInputLabel: 'Formula',
-  // formulaBarAddressLabel: 'Active cell',
+  formulaBarLabel: 'Formül çubuğu',
+  formulaBarInputLabel: 'Formül',
+  formulaBarAddressLabel: 'Etkin hücre',
+
+  // Computed columns (Premium)
+  // columnMenuAddComputedColumn: 'Add computed column',
+  // columnMenuEditComputedColumn: 'Edit computed column',
+  // columnMenuViewComputedColumn: 'View computed column',
+  // columnMenuRemoveComputedColumn: 'Remove computed column',
+  // toolbarComputedColumns: 'Computed columns',
+  // computedColumnsPanelTitle: 'Computed columns',
+  // computedColumnsPanelCloseButton: 'Close computed columns panel',
+  // computedColumnsPanelBackButton: 'Back to the list',
+  // computedColumnsPanelEmpty: 'No computed columns yet',
+  // computedColumnsPanelAddButton: 'Add computed column',
+  // computedColumnsPanelItemMenuLabel: 'Computed column actions',
+  // computedColumnsPanelItemReadOnlyLabel: 'Read-only',
+  // computedColumnEditorNewTitle: 'New computed column',
+  // computedColumnEditorEditTitle: 'Edit computed column',
+  // computedColumnEditorViewTitle: 'View computed column',
+  // computedColumnReadOnlyHint: 'This computed column cannot be edited.',
+  // computedColumnNameLabel: 'Name',
+  // computedColumnFieldLabel: 'Field',
+  // computedColumnFormulaLabel: 'Formula',
+  // computedColumnTypeLabel: 'Result type',
+  // computedColumnTypeNumber: 'Number',
+  // computedColumnTypeString: 'Text',
+  // computedColumnTypeBoolean: 'Boolean',
+  // computedColumnTypeDate: 'Date',
+  // computedColumnTypeDateTime: 'Date and time',
+  // computedColumnFormatLabel: 'Format',
+  // computedColumnFormatStyleDecimal: 'Number',
+  // computedColumnFormatStylePercent: 'Percent',
+  // computedColumnFormatStyleCurrency: 'Currency',
+  // computedColumnFormatCurrencyLabel: 'Currency code',
+  // computedColumnFormatDecimalsLabel: 'Decimals',
+  // computedColumnFormatGroupingLabel: 'Thousands separator',
+  // computedColumnPreviewLabel: 'Preview',
+  // computedColumnPreviewRow: rowIndex => `Row ${rowIndex}`,
+  // computedColumnPreviewNoRows: 'No rows to preview',
+  // computedColumnReferenceTitle: 'Insert',
+  // computedColumnReferenceColumns: 'Columns',
+  // computedColumnReferenceFunctions: 'Functions',
+  // computedColumnReferenceSearchPlaceholder: 'Search',
+  // computedColumnReferenceNoResults: 'No matches',
+  // computedColumnApplyButton: 'Apply',
+  // computedColumnAddButton: 'Add column',
+  // computedColumnCancelButton: 'Cancel',
+  // computedColumnCloseButton: 'Close',
+  // computedColumnDeleteButton: 'Delete column',
+  // computedColumnHeaderLabel: 'Computed column',
+  // computedColumnHeaderInvalidLabel: 'Computed column with an invalid formula',
+  // computedColumnErrorNameRequired: 'Enter a name.',
+  // computedColumnErrorFieldRequired: 'Enter a field name.',
+  // computedColumnErrorFieldInvalid: 'Use letters, digits and underscores, starting with a letter or an underscore.',
+  // computedColumnErrorFieldExists: field => `A column with the field "${field}" already exists.`,
+  // computedColumnErrorFieldA1Like: 'This field name reads as a cell address. Choose a longer name.',
+  // computedColumnErrorFormulaRequired: 'Enter a formula.',
+  // computedColumnErrorParse: message => `Formula error: ${message}`,
+  // computedColumnErrorUnknownFunction: name => `Unknown function ${name}.`,
+  // computedColumnErrorUnsupportedReference: 'Computed columns can only reference columns of the same row. Use bare field names.',
+  // computedColumnErrorUnknownField: field => `Column "${field}" does not exist.`,
+  // computedColumnErrorSelfReference: 'A computed column cannot reference itself.',
+  // computedColumnErrorCycle: path => `Circular reference: ${path}.`,
+  // computedCellErrorDivByZero: 'Division by zero in this row. Wrap the division in IFERROR(…, 0) to provide a fallback.',
+  // computedCellErrorValue: 'A value in this row has the wrong type for this operation.',
+  // computedCellErrorRef: 'A referenced column does not exist.',
+  // computedCellErrorName: 'The formula uses an unknown function.',
+  // computedCellErrorCycle: 'The formula depends on itself.',
+  // computedCellErrorGeneric: 'The formula could not be evaluated for this row.',
 
   // Columns management text
   columnsManagementSearchTitle: 'Arama',
-  columnsManagementNoColumns: 'Kolon yok',
+  columnsManagementNoColumns: 'Sütun yok',
   columnsManagementShowHideAllText: 'Hepsini Göster/Gizle',
   columnsManagementReset: 'Sıfırla',
   columnsManagementDeleteIconLabel: 'Temizle',
@@ -122,7 +192,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Büyük veya eşit',
   'headerFilterOperator<': 'Küçüktür',
   'headerFilterOperator<=': 'Küçük veya eşit',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: 'Filtreyi temizle',
 
   // Filter values text
   filterValueAny: 'herhangi',
@@ -131,7 +201,7 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menü',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
+  columnMenuAriaLabel: (columnName: string) => `${columnName} sütun menüsü`,
   columnMenuShowColumns: 'Sütunları göster',
   columnMenuManageColumns: 'Sütunları yönet',
   columnMenuFilter: 'Filtre Ekle',
@@ -139,8 +209,8 @@ const trTRGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Varsayılan Sıralama',
   columnMenuSortAsc: 'Sırala - Artan',
   columnMenuSortDesc: 'Sırala - Azalan',
-  // columnMenuManagePivot: 'Manage pivot',
-  // columnMenuManageCharts: 'Manage charts',
+  columnMenuManagePivot: 'Pivotu yönet',
+  columnMenuManageCharts: 'Grafikleri yönet',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} filtre aktif`,
@@ -197,19 +267,17 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Sayfa başına satır:',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   const unknownRowCount = count == null || count === -1;
-  //   if (!estimated) {
-  //     return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : `more than ${formatNumber(to)}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${formatNumber(estimated)}` : `more than ${formatNumber(to)}`;
-  //   return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    const unknownRowCount = count == null || count === -1;
+    if (!estimated) {
+      return `${formatNumber(from)}–${formatNumber(to)} / ${!unknownRowCount ? formatNumber(count) : `${formatNumber(to)} üzeri`}`;
+    }
+    const estimatedLabel =
+      estimated && estimated > to
+        ? `yaklaşık ${formatNumber(estimated)}`
+        : `${formatNumber(to)} üzeri`;
+    return `${formatNumber(from)}–${formatNumber(to)} / ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'İlk sayfaya git';
@@ -229,116 +297,134 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Toplama',
-  // aggregationFunctionLabelNone: 'none',
+  aggregationFunctionLabelNone: 'yok',
   aggregationFunctionLabelSum: 'top',
   aggregationFunctionLabelAvg: 'ort',
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'maks',
-  aggregationFunctionLabelSize: 'boyut',
+  aggregationFunctionLabelSize: 'adet',
 
   // Pivot panel
-  // pivotToggleLabel: 'Pivot',
-  // pivotRows: 'Rows',
-  // pivotColumns: 'Columns',
-  // pivotValues: 'Values',
-  // pivotCloseButton: 'Close pivot settings',
-  // pivotSearchButton: 'Search fields',
-  // pivotSearchControlPlaceholder: 'Search fields',
-  // pivotSearchControlLabel: 'Search fields',
-  // pivotSearchControlClear: 'Clear search',
-  // pivotNoFields: 'No fields',
-  // pivotMenuMoveUp: 'Move up',
-  // pivotMenuMoveDown: 'Move down',
-  // pivotMenuMoveToTop: 'Move to top',
-  // pivotMenuMoveToBottom: 'Move to bottom',
-  // pivotMenuRows: 'Rows',
-  // pivotMenuColumns: 'Columns',
-  // pivotMenuValues: 'Values',
-  // pivotMenuOptions: 'Field options',
-  // pivotMenuAddToRows: 'Add to Rows',
-  // pivotMenuAddToColumns: 'Add to Columns',
-  // pivotMenuAddToValues: 'Add to Values',
-  // pivotMenuRemove: 'Remove',
-  // pivotDragToRows: 'Drag here to create rows',
-  // pivotDragToColumns: 'Drag here to create columns',
-  // pivotDragToValues: 'Drag here to create values',
-  // pivotYearColumnHeaderName: '(Year)',
-  // pivotQuarterColumnHeaderName: '(Quarter)',
+  pivotToggleLabel: 'Pivot',
+  pivotRows: 'Satırlar',
+  pivotColumns: 'Sütunlar',
+  pivotValues: 'Değerler',
+  pivotCloseButton: 'Pivot ayarlarını kapat',
+  pivotSearchButton: 'Alanlarda ara',
+  pivotSearchControlPlaceholder: 'Alanlarda ara',
+  pivotSearchControlLabel: 'Alanlarda ara',
+  pivotSearchControlClear: 'Aramayı temizle',
+  pivotNoFields: 'Alan yok',
+  pivotMenuMoveUp: 'Yukarı taşı',
+  pivotMenuMoveDown: 'Aşağı taşı',
+  pivotMenuMoveToTop: 'En üste taşı',
+  pivotMenuMoveToBottom: 'En alta taşı',
+  pivotMenuRows: 'Satırlar',
+  pivotMenuColumns: 'Sütunlar',
+  pivotMenuValues: 'Değerler',
+  pivotMenuOptions: 'Alan seçenekleri',
+  pivotMenuAddToRows: 'Satırlara ekle',
+  pivotMenuAddToColumns: 'Sütunlara ekle',
+  pivotMenuAddToValues: 'Değerlere ekle',
+  pivotMenuRemove: 'Kaldır',
+  pivotDragToRows: 'Satır oluşturmak için buraya sürükleyin',
+  pivotDragToColumns: 'Sütun oluşturmak için buraya sürükleyin',
+  pivotDragToValues: 'Değer oluşturmak için buraya sürükleyin',
+  pivotYearColumnHeaderName: '(Yıl)',
+  pivotQuarterColumnHeaderName: '(Çeyrek)',
 
   // Charts configuration panel
-  // chartsNoCharts: 'There are no charts available',
-  // chartsChartNotSelected: 'Select a chart type to configure its options',
-  // chartsTabChart: 'Chart',
-  // chartsTabFields: 'Fields',
-  // chartsTabCustomize: 'Customize',
-  // chartsCloseButton: 'Close charts configuration',
-  // chartsSyncButtonLabel: 'Sync chart',
-  // chartsSearchPlaceholder: 'Search fields',
-  // chartsSearchLabel: 'Search fields',
-  // chartsSearchClear: 'Clear search',
-  // chartsNoFields: 'No fields',
-  // chartsFieldBlocked: 'This field cannot be added to any section',
-  // chartsCategories: 'Categories',
-  // chartsSeries: 'Series',
-  // chartsMenuAddToDimensions: (dimensionLabel: string) => `Add to ${dimensionLabel}`,
-  // chartsMenuAddToValues: (valuesLabel: string) => `Add to ${valuesLabel}`,
-  // chartsMenuMoveUp: 'Move up',
-  // chartsMenuMoveDown: 'Move down',
-  // chartsMenuMoveToTop: 'Move to top',
-  // chartsMenuMoveToBottom: 'Move to bottom',
-  // chartsMenuOptions: 'Field options',
-  // chartsMenuRemove: 'Remove',
-  // chartsDragToDimensions: (dimensionLabel: string) => `Drag here to use column as ${dimensionLabel}`,
-  // chartsDragToValues: (valuesLabel: string) => `Drag here to use column as ${valuesLabel}`,
+  chartsNoCharts: 'Kullanılabilir grafik yok',
+  chartsChartNotSelected: 'Seçeneklerini yapılandırmak için bir grafik türü seçin',
+  chartsTabChart: 'Grafik',
+  chartsTabFields: 'Alanlar',
+  chartsTabCustomize: 'Özelleştir',
+  chartsCloseButton: 'Grafik yapılandırmasını kapat',
+  chartsSyncButtonLabel: 'Grafiği senkronize et',
+  chartsSearchPlaceholder: 'Alanlarda ara',
+  chartsSearchLabel: 'Alanlarda ara',
+  chartsSearchClear: 'Aramayı temizle',
+  chartsNoFields: 'Alan yok',
+  chartsFieldBlocked: 'Bu alan hiçbir bölüme eklenemez',
+  chartsCategories: 'Kategoriler',
+  chartsSeries: 'Seriler',
+  chartsMenuAddToDimensions: (dimensionLabel: string) => `${dimensionLabel} bölümüne ekle`,
+  chartsMenuAddToValues: (valuesLabel: string) => `${valuesLabel} bölümüne ekle`,
+  chartsMenuMoveUp: 'Yukarı taşı',
+  chartsMenuMoveDown: 'Aşağı taşı',
+  chartsMenuMoveToTop: 'En üste taşı',
+  chartsMenuMoveToBottom: 'En alta taşı',
+  chartsMenuOptions: 'Alan seçenekleri',
+  chartsMenuRemove: 'Kaldır',
+  chartsDragToDimensions: (dimensionLabel: string) =>
+    `Sütunu ${dimensionLabel} olarak kullanmak için buraya sürükleyin`,
+  chartsDragToValues: (valuesLabel: string) =>
+    `Sütunu ${valuesLabel} olarak kullanmak için buraya sürükleyin`,
 
   // AI Assistant panel
-  // aiAssistantPanelTitle: 'AI Assistant',
-  // aiAssistantPanelClose: 'Close AI Assistant',
-  // aiAssistantPanelNewConversation: 'New conversation',
-  // aiAssistantPanelConversationHistory: 'Conversation history',
-  // aiAssistantPanelEmptyConversation: 'No prompt history',
-  // aiAssistantSuggestions: 'Suggestions',
+  aiAssistantPanelTitle: 'Yapay Zeka Asistanı',
+  aiAssistantPanelClose: 'Yapay Zeka Asistanını kapat',
+  aiAssistantPanelNewConversation: 'Yeni sohbet',
+  aiAssistantPanelConversationHistory: 'Sohbet geçmişi',
+  aiAssistantPanelEmptyConversation: 'İstem geçmişi yok',
+  aiAssistantSuggestions: 'Öneriler',
 
   // Prompt field
   promptFieldLabel: 'İstem girişi',
   promptFieldPlaceholder: 'Bir istem yazın…',
   promptFieldPlaceholderWithRecording: 'Bir istem yazın veya kaydedin…',
   promptFieldPlaceholderListening: 'İstem dinleniyor…',
-  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  promptFieldSpeechRecognitionNotSupported: 'Bu tarayıcı konuşma tanımayı desteklemiyor',
   promptFieldSend: 'Gönder',
-  promptFieldRecord: 'Kaydet',
+  promptFieldRecord: 'Kaydı başlat',
   promptFieldStopRecording: 'Kaydı durdur',
 
   // Prompt
-  // promptRerun: 'Run again',
-  // promptProcessing: 'Processing…',
-  // promptAppliedChanges: 'Applied changes',
+  promptRerun: 'Yeniden çalıştır',
+  promptProcessing: 'İşleniyor…',
+  promptAppliedChanges: 'Uygulanan değişiklikler',
 
   // Prompt changes
-  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
-  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
-  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
-  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
-  //   if (operator === 'is any of') {
-  //     return `${column} is any of: ${value}`;
-  //   }
-  //   return `${column} ${operator} ${value}`;
-  // },
-  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
-  //   if (operator === 'is any of') {
-  //     return `Filter where ${column} is any of: ${value}`;
-  //   }
-  //   return `Filter where ${column} ${operator} ${value}`;
-  // },
-  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
-  // promptChangePivotEnableLabel: 'Pivot',
-  // promptChangePivotEnableDescription: 'Enable pivot',
-  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
-  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
-  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
-  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
-  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
-  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
+  promptChangeGroupDescription: (column: string) => `${column} sütununa göre grupla`,
+  promptChangeAggregationLabel: (column: string, aggregation: string) =>
+    `${column} (${aggregation})`,
+  promptChangeAggregationDescription: (column: string, aggregation: string) =>
+    `${column} sütununda toplama uygula (${aggregation})`,
+  promptChangeFilterLabel: (
+    column: string,
+    operator: string,
+    value: string,
+    operatorValue?: string,
+  ) => {
+    if (operatorValue === 'isAnyOf') {
+      return `${column} şunlardan biri: ${value}`;
+    }
+    return `${column} ${operator} ${value}`;
+  },
+  promptChangeFilterDescription: (
+    column: string,
+    operator: string,
+    value: string,
+    operatorValue?: string,
+  ) => {
+    if (operatorValue === 'isAnyOf') {
+      return `${column} değeri şunlardan biri olan satırları filtrele: ${value}`;
+    }
+    return `Filtrele: ${column} ${operator} ${value}`;
+  },
+  promptChangeSortDescription: (column: string, direction: string) =>
+    `${column} sütununa göre sırala (${direction})`,
+  promptChangePivotEnableLabel: 'Pivot',
+  promptChangePivotEnableDescription: 'Pivotu etkinleştir',
+  promptChangePivotColumnsLabel: (count: number) => `Sütunlar (${count})`,
+  promptChangePivotColumnsDescription: (column: string, direction: string) =>
+    `${column}${direction ? ` (${direction})` : ''}`,
+  promptChangePivotRowsLabel: (count: number) => `Satırlar (${count})`,
+  promptChangePivotValuesLabel: (count: number) => `Değerler (${count})`,
+  promptChangePivotValuesDescription: (column: string, aggregation: string) =>
+    `${column} (${aggregation})`,
+  promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) =>
+    `Boyutlar (${dimensionsCount}), Değerler (${valuesCount})`,
 };
 
 export const trTR: Localization = getGridLocalization(trTRGrid);

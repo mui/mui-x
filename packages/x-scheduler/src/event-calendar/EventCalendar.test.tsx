@@ -8,6 +8,7 @@ import {
   ResourceBuilder,
   withinMonthView,
   dateLocaleFr,
+  setSystemTimezone,
 } from 'test/utils/scheduler';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import type { EventCalendarPreferences } from '@mui/x-scheduler/models';
@@ -38,6 +39,56 @@ describe('EventCalendar', () => {
     .span('2025-05-27T16:00:00Z', '2025-05-27T17:00:00Z')
     .build();
 
+  it('should announce the primary resource of the event', () => {
+    const sport = ResourceBuilder.new().id('sport').title('Sport').build();
+    const other = ResourceBuilder.new().id('other').title('Other').build();
+    const running = EventBuilder.new()
+      .title('Running')
+      .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+      .resources([sport, other])
+      .build();
+
+    render(<EventCalendar events={[running]} resources={[sport, other]} />);
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Running, 7:30 AM to 8:15 AM, Monday, May 26th, 2025, Resource: Sport',
+      }),
+    ).not.to.equal(null);
+  });
+
+  it('should keep the resource color indicator out of the accessibility tree', () => {
+    const sport = ResourceBuilder.new().id('sport').title('Sport').build();
+    const running = EventBuilder.new()
+      .title('Running')
+      .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+      .resource(sport)
+      .build();
+
+    render(<EventCalendar events={[running]} resources={[sport]} defaultView="month" />);
+
+    const indicators = document.querySelectorAll(`.${eventCalendarClasses.eventColorIndicator}`);
+    expect(indicators.length).to.be.greaterThan(0);
+    indicators.forEach((indicator) => {
+      expect(indicator).to.have.attribute('aria-hidden', 'true');
+      expect(indicator).not.to.have.attribute('role');
+      expect(indicator).not.to.have.attribute('aria-label');
+    });
+  });
+
+  it('should translate the event accessible name through localeText', () => {
+    render(
+      <EventCalendar
+        events={[event1]}
+        localeText={{ eventAriaLabelTimeRange: (start, end) => `de ${start} a ${end}` }}
+      />,
+    );
+
+    expect(
+      screen.getByRole('button', { name: 'Running, de 7:30 AM a 8:15 AM, Monday, May 26th, 2025' }),
+    ).not.to.equal(null);
+  });
+
   // TODO: Move in a test file specific to the TimeGrid component.
   it('should render events in the correct column', () => {
     render(<EventCalendar events={[event1, event2]} />);
@@ -51,8 +102,15 @@ describe('EventCalendar', () => {
     expect(mondayEvent.textContent).to.equal('Running 7:30 AM');
     expect(tuesdayEvent.textContent).to.equal('Weekly4:00 PM - 5:00 PM');
 
-    expect(mondayEvent.getAttribute('aria-labelledby')).to.include('header-cell-1');
-    expect(tuesdayEvent.getAttribute('aria-labelledby')).to.include('header-cell-2');
+    expect(mondayEvent).to.have.attribute(
+      'aria-label',
+      'Running, 7:30 AM to 8:15 AM, Monday, May 26th, 2025',
+    );
+    expect(tuesdayEvent).to.have.attribute(
+      'aria-label',
+      'Weekly, 4:00 PM to 5:00 PM, Tuesday, May 27th, 2025',
+    );
+    expect(mondayEvent).not.to.have.attribute('aria-labelledby');
 
     expect(screen.getByRole('columnheader', { name: /Monday 26/i })).not.to.equal(null);
     expect(screen.getByRole('columnheader', { name: /Tuesday 27/i })).not.to.equal(null);
@@ -162,6 +220,42 @@ describe('EventCalendar', () => {
       expect(view.queryByRole('button', { name: /Morning Run/i })).to.equal(null);
     },
   );
+
+  describe('current day', () => {
+    // Browsers cannot change their timezone through process.env.TZ.
+    it.skipIf(!isJSDOM).each([
+      { view: 'month', viewLabel: '30', currentColumnCount: 0 },
+      { view: 'week', viewLabel: 'Friday 30', currentColumnCount: 1 },
+      { view: 'agenda', viewLabel: 'Friday 30', currentColumnCount: 0 },
+    ] as const)(
+      'should mark the current day of the display timezone in the $view view, whatever the timezone of the system',
+      ({ view, viewLabel, currentColumnCount }) => {
+        // Pacific/Apia skipped December 30th, 2011. On a system there, `adapter.isSameDay()` reads
+        // December 30th and 31st as the same day in the other timezones.
+        setSystemTimezone('Pacific/Apia');
+        // It's still December 30th at 21:00 in New York, but December 31st in UTC and in Apia.
+        const now = new Date('2011-12-31T02:00:00Z');
+        vi.setSystemTime(now);
+        render(
+          <EventCalendar
+            events={[]}
+            view={view}
+            visibleDate={now}
+            displayTimezone="America/New_York"
+          />,
+        );
+
+        // The mini calendar of the side panel marks the current day too.
+        const currentLabels = Array.from(document.querySelectorAll('[aria-current="date"]')).map(
+          (element) => element.getAttribute('aria-label') ?? element.textContent,
+        );
+        expect(currentLabels).to.deep.equal(['Friday, December 30th, 2011', viewLabel]);
+        expect(
+          document.querySelectorAll(`.${eventCalendarClasses.dayTimeGridColumn}[data-current]`),
+        ).to.have.length(currentColumnCount);
+      },
+    );
+  });
 
   describe('Preferences Menu', () => {
     it('should call onPreferencesChange and apply the change when preferences are controlled', async () => {
@@ -316,7 +410,7 @@ describe('EventCalendar', () => {
     });
 
     it('should allow to change the time format using the UI in the week view', async () => {
-      const { user } = render(<EventCalendar events={[]} />);
+      const { user } = render(<EventCalendar events={[event1]} />);
 
       // 12 hours format should be visible by default
       await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
@@ -328,6 +422,11 @@ describe('EventCalendar', () => {
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
+
+      expect(screen.getByRole('button', { name: /^Running,/ })).to.have.attribute(
+        'aria-label',
+        'Running, 7:30 to 8:15, Monday, May 26th, 2025',
+      );
 
       // Show 12 hours format again
       await openPreferencesMenu(user);
@@ -351,6 +450,10 @@ describe('EventCalendar', () => {
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
+      expect(screen.getByRole('button', { name: /^Running,/ })).to.have.attribute(
+        'aria-label',
+        'Running, 7:30 to 8:15, Monday, May 26th, 2025',
+      );
 
       // Show 12 hours format again
       await openPreferencesMenu(user);
@@ -472,6 +575,20 @@ describe('EventCalendar', () => {
       const eventElement = document.querySelector('.agenda-class');
       expect(eventElement).not.to.equal(null);
       expect(eventElement?.textContent).to.include('Agenda Event');
+    });
+  });
+
+  describe('classes property', () => {
+    it('should apply the responsiveTypographyContainer class to the responsive container', () => {
+      render(
+        <EventCalendar events={[]} classes={{ responsiveTypographyContainer: 'custom-class' }} />,
+      );
+
+      const element = document.querySelector('.custom-class');
+      expect(element).not.to.equal(null);
+      expect(
+        element?.classList.contains(eventCalendarClasses.responsiveTypographyContainer),
+      ).to.equal(true);
     });
   });
 

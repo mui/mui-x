@@ -18,7 +18,7 @@ describe('findInvalidRangeField', () => {
     allDay: false,
   };
   const run = (overrides: Partial<typeof base>) =>
-    findInvalidRangeField(adapter, { ...base, ...overrides }, 'default');
+    findInvalidRangeField({ ...base, ...overrides }, 'default');
 
   describe('date boundaries', () => {
     const validDates = ['2024-02-29', '2000-02-29', '2025-02-28', '2025-01-31', '2025-04-30'];
@@ -66,6 +66,10 @@ describe('findInvalidRangeField', () => {
     it('should ignore the time fields of an all-day range', () => {
       expect(run({ startTime: '24:00', allDay: true })).to.equal(null);
     });
+  });
+
+  it('should reject the dates when the display timezone is unknown', () => {
+    expect(findInvalidRangeField(base, 'Not/A_Timezone')).to.equal('startDate');
   });
 });
 

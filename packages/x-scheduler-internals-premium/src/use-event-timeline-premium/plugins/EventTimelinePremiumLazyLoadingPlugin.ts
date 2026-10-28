@@ -5,6 +5,8 @@ import type {
 } from '../EventTimelinePremiumStore.types';
 import type { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
+import { getDateRangeKey } from '../../internals/utils/queue';
+import type { DateRange } from '../../internals/utils/queue';
 
 /**
  * The first fetch is gated on `state.hasInitialized`: without it, the selector
@@ -28,8 +30,7 @@ export class EventTimelinePremiumLazyLoadingPlugin<
           if (!state.hasInitialized) {
             return null;
           }
-          const config = eventTimelinePremiumPresetSelectors.config(state);
-          return `${state.adapter.getTime(config.start)}|${state.adapter.getTime(config.end)}`;
+          return getDateRangeKey(getRangeToFetch(state));
         },
 
         (previousKey, nextKey) => {
@@ -37,12 +38,17 @@ export class EventTimelinePremiumLazyLoadingPlugin<
             return;
           }
 
-          this.scheduleFetch(() => {
-            const config = eventTimelinePremiumPresetSelectors.config(store.state);
-            return { start: config.start, end: config.end };
-          }, previousKey === null);
+          this.scheduleFetch(() => getRangeToFetch(store.state), previousKey === null);
         },
       ),
     );
   }
+}
+
+/**
+ * Returns the days of the visible range of the preset.
+ */
+function getRangeToFetch(state: EventTimelinePremiumState): DateRange {
+  const axis = eventTimelinePremiumPresetSelectors.axis(state);
+  return { start: axis.start, end: axis.end };
 }

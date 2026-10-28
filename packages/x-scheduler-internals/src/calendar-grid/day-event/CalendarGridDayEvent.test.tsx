@@ -3,13 +3,44 @@ import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import { adapter, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
+import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import { describe, it, expect } from 'vitest';
+import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/adapter';
 
 describe('<CalendarGrid.DayEvent />', () => {
   const { render } = createSchedulerRenderer();
 
   const eventStart = processDate(adapter.now('default'), adapter);
   const eventEnd = processDate(adapter.addHours(eventStart.value, 1), adapter);
+
+  type ProviderProps = React.ComponentProps<typeof EventCalendarProvider>;
+
+  // Mounts the event in the row and cell contexts it needs. The cell is the first day of the row.
+  function renderEvent(
+    node: React.ReactElement,
+    options: Partial<Pick<ProviderProps, 'events' | 'resources'>> & {
+      rowStart?: TemporalSupportedObject;
+      rowEnd?: TemporalSupportedObject;
+    } = {},
+  ) {
+    const {
+      events = [],
+      resources = [],
+      rowStart = eventStart.value,
+      rowEnd = eventEnd.value,
+    } = options;
+    return render(
+      <EventCalendarProvider events={events} resources={resources}>
+        <CalendarGrid.Root>
+          <CalendarGrid.DayRow start={adapter.getTime(rowStart)} end={adapter.getTime(rowEnd)}>
+            <CalendarGrid.DayCell value={buildTemporalPlainDate(adapter, rowStart)}>
+              {node}
+            </CalendarGrid.DayCell>
+          </CalendarGrid.DayRow>
+        </CalendarGrid.Root>
+      </EventCalendarProvider>,
+    );
+  }
 
   describeConformance(
     <CalendarGrid.DayEvent
@@ -23,15 +54,7 @@ describe('<CalendarGrid.DayEvent />', () => {
     () => ({
       refInstanceof: window.HTMLDivElement,
       render(node) {
-        return render(
-          <EventCalendarProvider events={[]}>
-            <CalendarGrid.Root>
-              <CalendarGrid.DayRow start={eventStart.value} end={eventEnd.value}>
-                <CalendarGrid.DayCell value={eventStart.value}>{node}</CalendarGrid.DayCell>
-              </CalendarGrid.DayRow>
-            </CalendarGrid.Root>
-          </EventCalendarProvider>,
-        );
+        return renderEvent(node);
       },
     }),
   );
@@ -42,24 +65,17 @@ describe('<CalendarGrid.DayEvent />', () => {
     const rowEnd = adapter.endOfDay(adapter.date('2025-07-13T00:00:00Z', 'default'));
 
     function renderDayEvent(start: string, end: string) {
-      return render(
-        <EventCalendarProvider events={[]}>
-          <CalendarGrid.Root>
-            <CalendarGrid.DayRow start={rowStart} end={rowEnd}>
-              <CalendarGrid.DayCell value={rowStart}>
-                <CalendarGrid.DayEvent
-                  eventId="fake-id"
-                  occurrenceKey="fake-key"
-                  dataTimezone={undefined}
-                  start={processDate(adapter.date(start, 'default'), adapter)}
-                  end={processDate(adapter.date(end, 'default'), adapter)}
-                  renderDragPreview={() => null}
-                  data-testid="event"
-                />
-              </CalendarGrid.DayCell>
-            </CalendarGrid.DayRow>
-          </CalendarGrid.Root>
-        </EventCalendarProvider>,
+      return renderEvent(
+        <CalendarGrid.DayEvent
+          eventId="fake-id"
+          occurrenceKey="fake-key"
+          dataTimezone={undefined}
+          start={processDate(adapter.date(start, 'default'), adapter)}
+          end={processDate(adapter.date(end, 'default'), adapter)}
+          renderDragPreview={() => null}
+          data-testid="event"
+        />,
+        { rowStart, rowEnd },
       );
     }
 
@@ -74,5 +90,23 @@ describe('<CalendarGrid.DayEvent />', () => {
       renderDayEvent('2025-07-12T20:00:00Z', '2025-07-14T10:00:00Z');
       expect(screen.getByTestId('event')).to.have.attribute('data-ending-after-edge');
     });
+  });
+
+  it('should leave the accessible name to the consumer', () => {
+    renderEvent(
+      <CalendarGrid.DayEvent
+        eventId="fake-id"
+        occurrenceKey="fake-key"
+        dataTimezone={undefined}
+        start={eventStart}
+        end={eventEnd}
+        renderDragPreview={() => null}
+        data-testid="event"
+      />,
+    );
+
+    const event = screen.getByTestId('event');
+    expect(event).not.to.have.attribute('aria-label');
+    expect(event).not.to.have.attribute('aria-labelledby');
   });
 });

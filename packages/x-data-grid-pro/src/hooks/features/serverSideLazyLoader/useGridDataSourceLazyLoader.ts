@@ -32,6 +32,8 @@ import {
   runIf,
   DataSourceRowsUpdateStrategy,
   useGridDataSourceFilterModelChange,
+  useGridDataSourcePolling,
+  asReplaceUpdates,
 } from '@mui/x-data-grid/internals';
 import type { GridStrategyProcessor, GridPipeProcessor } from '@mui/x-data-grid/internals';
 import type { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
@@ -107,7 +109,6 @@ export const useGridDataSourceLazyLoader = (
     props.paginationMeta?.hasNextPage ?? props.initialState?.pagination?.meta?.hasNextPage ?? true,
   );
   const draggedRowId = React.useRef<GridRowId | null>(null);
-  const pollingIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
 
   const fetchRows = React.useCallback(
     (params: Partial<GridGetRowsParams>) => {
@@ -137,24 +138,15 @@ export const useGridDataSourceLazyLoader = (
     debouncedFetchRows(params);
   });
 
-  const stopPolling = React.useCallback(() => {
-    if (pollingIntervalRef.current !== null) {
-      clearInterval(pollingIntervalRef.current);
-      pollingIntervalRef.current = null;
-    }
-  }, []);
-
-  const startPolling = useEventCallback((params: Partial<GridGetRowsParams>) => {
-    stopPolling();
-
-    if (props.dataSourceRevalidateMs <= 0) {
-      return;
-    }
-
-    pollingIntervalRef.current = setInterval(() => {
-      revalidate(params);
-    }, props.dataSourceRevalidateMs);
+  const { startPolling: startPollingWith, stopPolling } = useGridDataSourcePolling({
+    revalidateMs: props.dataSourceRevalidateMs,
+    isActive: isStrategyActive,
   });
+
+  const startPolling = React.useCallback(
+    (params: Partial<GridGetRowsParams>) => startPollingWith(() => revalidate(params)),
+    [startPollingWith, revalidate],
+  );
 
   const resetGrid = React.useCallback(() => {
     privateApiRef.current.setLoading(true);
@@ -341,7 +333,7 @@ export const useGridDataSourceLazyLoader = (
             }
 
             // Efficient data-only update — no tree restructuring needed
-            privateApiRef.current.updateRows(changedRows);
+            privateApiRef.current.updateRows(asReplaceUpdates(changedRows));
             // Cache is already updated by fetchRows in useGridDataSourceBase
           } else {
             // DIFFERENT ROW IDs — server returned new rows for this range
@@ -488,19 +480,21 @@ export const useGridDataSourceLazyLoader = (
         return;
       }
 
-      const renderContext = gridRenderContextSelector(privateApiRef);
-      if (previousLastRowIndex.current >= renderContext.lastRowIndex) {
+      // The trigger is placed after the last row, which is not necessarily rendered
+      // when the trigger enters the `scrollEndThreshold` area.
+      const lastRowIndex = getVisibleRows(privateApiRef).rows.length;
+      if (previousLastRowIndex.current >= lastRowIndex) {
         return;
       }
 
-      previousLastRowIndex.current = renderContext.lastRowIndex;
+      previousLastRowIndex.current = lastRowIndex;
 
       const paginationModel = gridPaginationModelSelector(privateApiRef);
       const sortModel = gridSortModelSelector(privateApiRef);
       const filterModel = gridFilterModelSelector(privateApiRef);
       const getRowsParams: GridGetRowsParams = {
-        start: renderContext.lastRowIndex,
-        end: renderContext.lastRowIndex + paginationModel.pageSize - 1,
+        start: lastRowIndex,
+        end: lastRowIndex + paginationModel.pageSize - 1,
         sortModel,
         filterModel,
       };
@@ -587,20 +581,16 @@ export const useGridDataSourceLazyLoader = (
   );
 
   React.useEffect(() => {
+    const rootElement = privateApiRef.current.rootElementRef?.current ?? null;
     return () => {
       throttledHandleRenderedRowsIntervalChange.clear();
       stopPolling();
+      // `<Activity mode="hidden">` keeps the root connected and lets the queued fetch run.
+      if (!rootElement?.isConnected) {
+        debouncedFetchRows.clear();
+      }
     };
-  }, [throttledHandleRenderedRowsIntervalChange, stopPolling]);
-
-  // Stop polling when dataSourceRevalidateMs is set to 0
-  React.useEffect(() => {
-    if (props.dataSourceRevalidateMs <= 0) {
-      stopPolling();
-    }
-  }, [props.dataSourceRevalidateMs, stopPolling]);
-
-  React.useEffect(() => stopPolling, [stopPolling]);
+  }, [privateApiRef, throttledHandleRenderedRowsIntervalChange, stopPolling, debouncedFetchRows]);
 
   // A new `dataSource` reference is a full restart in `useGridDataSourceBase` (rows and cache
   // cleared, first page refetched), so end-of-data must be re-evaluated like on a re-query.

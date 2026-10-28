@@ -8,12 +8,22 @@ import type { UpdateEventsParameters } from '../utils/SchedulerStore/SchedulerSt
 export interface SchedulerSchedulingPluginInterface {
   /**
    * Reacts to event mutations.
-   * Called inside `updateEvents` before the batch is merged: the returned entries
-   * (`{ id, start, end }` only) fold into the same update and the same `onEventsChange`
-   * emission, overriding the dates of an entry already in the batch. `rejected` vetoes
+   * Called inside `updateEvents` before the batch is merged: the returned entries (`id` plus
+   * whichever of `start` / `end` it actually moves — omit a bound that doesn't change, the same
+   * way a direct caller would) fold into the same update and the same `onEventsChange` emission,
+   * overriding only the bound(s) present on an entry already in the batch. `rejected` vetoes
    * the whole batch: nothing is applied or emitted, and the caller surfaces `error`.
+   *
+   * `updateEvents` can still refuse the merged batch afterward (e.g. a date
+   * `eventModelStructure` can't write back) for a reason this hook has no way to predict, so any
+   * of its own side effects (such as dropping dependencies that reference a deleted event) must
+   * not happen here — return them from `commit` instead, called only once the batch is confirmed
+   * to go ahead.
    */
   handleEventsUpdate: (
     parameters: UpdateEventsParameters,
-  ) => { updated: SchedulerEventUpdatedProperties[] } | { rejected: true; error: Error } | void;
+  ) =>
+    | { updated?: SchedulerEventUpdatedProperties[]; commit?: () => void }
+    | { rejected: true; error: Error }
+    | void;
 }

@@ -1,4 +1,3 @@
-import { warn } from '@base-ui/utils/warn';
 import { warnOnce } from '@mui/x-internals/warning';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
@@ -14,7 +13,11 @@ import type {
   SchedulerParametersToStateMapper,
   SchedulerInstanceName,
 } from '../internals/utils/SchedulerStore';
-import { DEFAULT_SCHEDULER_PREFERENCES, SchedulerStore } from '../internals/utils/SchedulerStore';
+import {
+  DEFAULT_SCHEDULER_PREFERENCES,
+  getShouldEventRequireResource,
+  SchedulerStore,
+} from '../internals/utils/SchedulerStore';
 import type { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
 import type { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 
@@ -54,27 +57,15 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
   return { views, viewConfig: parameters.viewConfig ?? EMPTY_OBJECT };
 };
 
-function warnIfShouldEventRequireResourceMisconfigured(
-  shouldEventRequireResource: boolean,
-  resources: readonly unknown[] | undefined,
-) {
-  if (shouldEventRequireResource && (resources == null || resources.length === 0)) {
-    warnOnce([
-      'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
-      'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
-      'Either provide at least one resource, or set `shouldEventRequireResource={false}`.',
-    ]);
-  }
-}
-
 const mapper: SchedulerParametersToStateMapper<
   EventCalendarState,
   EventCalendarParameters<any, any>
 > = {
   getInitialState: (schedulerInitialState, parameters) => {
-    const shouldEventRequireResource =
-      parameters.shouldEventRequireResource ?? DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE;
-    warnIfShouldEventRequireResourceMisconfigured(shouldEventRequireResource, parameters.resources);
+    const shouldEventRequireResource = getShouldEventRequireResource(
+      parameters,
+      DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE,
+    );
     return {
       ...schedulerInitialState,
       ...deriveStateFromParameters(parameters),
@@ -92,9 +83,10 @@ const mapper: SchedulerParametersToStateMapper<
     };
   },
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
-    const shouldEventRequireResource =
-      parameters.shouldEventRequireResource ?? DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE;
-    warnIfShouldEventRequireResourceMisconfigured(shouldEventRequireResource, parameters.resources);
+    const shouldEventRequireResource = getShouldEventRequireResource(
+      parameters,
+      DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE,
+    );
     const newState: Partial<EventCalendarState> = {
       ...newSchedulerState,
       ...deriveStateFromParameters(parameters),
@@ -201,7 +193,7 @@ export class ExtendableEventCalendarStore<
   private setSiblingVisibleDate = (delta: 1 | -1, event: React.UIEvent) => {
     const siblingVisibleDateGetter = this.state.viewDefinition?.siblingVisibleDateGetter;
     if (!siblingVisibleDateGetter) {
-      warn(
+      warnOnce(
         'MUI X Scheduler: No definition found for the current view. Please use useEventCalendarView in your custom view.',
       );
       return;
@@ -219,7 +211,7 @@ export class ExtendableEventCalendarStore<
   public setView = (view: CalendarView, event: Event) => {
     const { view: viewProp, onViewChange } = this.parameters;
     if (process.env.NODE_ENV !== 'production' && viewProp !== undefined && !onViewChange) {
-      warn(
+      warnOnce(
         'MUI X Scheduler: EventCalendar is controlled (received a `view` prop) but `onViewChange` is not provided. View changes will be silently ignored.',
       );
     }
@@ -262,7 +254,7 @@ export class ExtendableEventCalendarStore<
       preferencesProp !== undefined &&
       !onPreferencesChange
     ) {
-      warn(
+      warnOnce(
         'MUI X Scheduler: EventCalendar is controlled (received a `preferences` prop) but `onPreferencesChange` is not provided. Preference changes will be silently ignored.',
       );
     }

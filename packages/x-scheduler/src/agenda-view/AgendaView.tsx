@@ -2,18 +2,28 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
-import type { EventCalendarViewDefinition } from '@mui/x-scheduler-internals/models';
+import type {
+  EventCalendarViewDefinition,
+  SchedulerEventOccurrence,
+  SchedulerProcessedDate,
+} from '@mui/x-scheduler-internals/models';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
 import { sortEventOccurrences } from '@mui/x-scheduler-internals/sort-event-occurrences';
 import {
   eventCalendarAgendaSelectors,
   eventCalendarPreferenceSelectors,
+  eventCalendarViewSelectors,
 } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { AGENDA_VIEW_DAYS_AMOUNT } from '@mui/x-scheduler-internals/constants';
-import { getStartOfWeek, getWeekNumber } from '@mui/x-scheduler-internals/internals';
+import {
+  addToAdapterDate,
+  getPlainDateWeekStart,
+  getWeekNumber,
+  toPlainDateTime,
+} from '@mui/x-scheduler-internals/internals';
+import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
@@ -23,6 +33,7 @@ import type { AgendaViewProps } from './AgendaView.types';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
 import { EventSkeleton } from '../internals/components/event-skeleton';
 import { useEventCalendarStyledContext } from '../event-calendar/EventCalendarStyledContext';
+import { getSiblingMonthStart } from '../internals/utils/date-utils';
 import { EventContextMenuTrigger } from '../internals/components/event-context-menu';
 
 const AgendaViewRoot = styled('div', {
@@ -54,7 +65,7 @@ const DayHeaderCell = styled('header', {
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'flex-start',
-  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+  borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
   padding: theme.spacing(2),
   gap: theme.spacing(0.5),
   '&[data-current]': {
@@ -155,13 +166,37 @@ const AgendaViewWeekNumberRow = styled('div', {
   }),
 }));
 
+const AgendaViewEmptyState = styled('p', {
+  name: 'MuiEventCalendar',
+  slot: 'AgendaViewEmptyState',
+})(({ theme }) => ({
+  margin: 0,
+  padding: theme.spacing(4, 2),
+  textAlign: 'center',
+  fontSize: theme.typography.body2.fontSize,
+  color: (theme.vars || theme).palette.text.secondary,
+}));
+
+interface AgendaDay {
+  date: SchedulerProcessedDate;
+  occurrences: SchedulerEventOccurrence[];
+  weekNumber: number;
+  isFirstDayOfWeek: boolean;
+  plainDate: PlainDate;
+}
+
 const AGENDA_VIEW_DEFINITION: EventCalendarViewDefinition = {
-  siblingVisibleDateGetter: ({ state, delta }) =>
-    state.adapter.addDays(
-      schedulerOtherSelectors.visibleDate(state),
-      AGENDA_VIEW_DAYS_AMOUNT * delta,
-    ),
+  siblingVisibleDateGetter: ({ state, delta }) => {
+    const dayCount = eventCalendarViewSelectors.agendaDayCount(state);
+    if (dayCount === 'month') {
+      return getSiblingMonthStart(state, delta);
+    }
+    return addToAdapterDate(state.adapter, schedulerOtherSelectors.visibleDate(state), {
+      days: dayCount * delta,
+    });
+  },
   visibleDaysSelector: eventCalendarAgendaSelectors.visibleDays,
+  fetchRangeSelector: eventCalendarAgendaSelectors.fetchRange,
 };
 
 /**
@@ -178,32 +213,45 @@ export const AgendaView = React.memo(
     const store = useEventCalendarStoreContext();
 
     // Selector hooks
-    const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+    const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
+    const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
     const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
     const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
 
     // Feature hooks
-    const { days } = useEventCalendarView(AGENDA_VIEW_DEFINITION);
-    const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
+    const { days: visibleDays } = useEventCalendarView(AGENDA_VIEW_DEFINITION);
 
     // Selector hooks
     const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
+    const baseVisibleDays = useStore(store, eventCalendarAgendaSelectors.baseVisibleDays);
 
-    const daysWithOccurrences = React.useMemo(
-      () =>
-        days.map((date, index) => {
-          const occurrences = sortEventOccurrences(occurrencesMap.get(date.key) || []);
-          const weekNumber = getWeekNumber(adapter, date.value, weekStartsOn);
-          const isFirstDayOfWeek =
-            index === 0 ||
-            !adapter.isSameDay(
-              getStartOfWeek(adapter, date.value, weekStartsOn),
-              getStartOfWeek(adapter, days[index - 1].value, weekStartsOn),
-            );
-          return { date, occurrences, weekNumber, isFirstDayOfWeek };
-        }),
-      [adapter, days, occurrencesMap, weekStartsOn],
-    );
+    // While loading with no day to show, render the base days so the skeletons have rows.
+    const days = isLoading && visibleDays.length === 0 ? baseVisibleDays : visibleDays;
+    const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
+
+    const daysWithOccurrences = React.useMemo(() => {
+      // The week number heads the first day of each week, so it's only computed when shown.
+      const result: AgendaDay[] = [];
+      let previousWeekStartDayNumber: number | null = null;
+      for (const date of days) {
+        const occurrences = sortEventOccurrences(occurrencesMap.get(date.key) || []);
+        const plainDate = toPlainDateTime(date.timestamp, displayTimezone).date;
+        let weekNumber = 0;
+        let isFirstDayOfWeek = false;
+        if (showWeekNumber) {
+          const weekStartDayNumber = getPlainDateWeekStart(
+            adapter,
+            plainDate,
+            weekStartsOn,
+          ).dayNumber;
+          weekNumber = getWeekNumber(adapter, date.value, weekStartsOn);
+          isFirstDayOfWeek = weekStartDayNumber !== previousWeekStartDayNumber;
+          previousWeekStartDayNumber = weekStartDayNumber;
+        }
+        result.push({ date, occurrences, weekNumber, isFirstDayOfWeek, plainDate });
+      }
+      return result;
+    }, [adapter, days, displayTimezone, occurrencesMap, showWeekNumber, weekStartsOn]);
 
     return (
       <AgendaViewRoot
@@ -211,74 +259,80 @@ export const AgendaView = React.memo(
         ref={forwardedRef}
         className={clsx(props.className, classes.agendaView)}
       >
-        {daysWithOccurrences.map(({ date, occurrences, isFirstDayOfWeek, weekNumber }) => (
-          <React.Fragment key={date.key}>
-            {showWeekNumber && isFirstDayOfWeek && (
-              <AgendaViewWeekNumberRow className={classes.agendaViewWeekNumberRow}>
-                <AgendaViewWeekNumberLabel
-                  className={classes.agendaViewWeekNumberLabel}
-                  aria-label={localeText.weekNumberAriaLabel(weekNumber)}
-                >
-                  {`${localeText.week} ${weekNumber}`}
-                </AgendaViewWeekNumberLabel>
-              </AgendaViewWeekNumberRow>
-            )}
-            <AgendaViewRow
-              className={classes.agendaViewRow}
-              id={`${schedulerId}-AgendaViewRow-${date.key}`}
-              aria-labelledby={`${schedulerId}-DayHeaderCell-${date.key}`}
-            >
-              <DayHeaderCell
-                className={classes.agendaViewDayHeaderCell}
-                id={`${schedulerId}-DayHeaderCell-${date.key}`}
-                aria-label={`${adapter.format(date.value, 'weekday')} ${adapter.format(date.value, 'dayOfMonth')}`}
-                data-current={adapter.isSameDay(date.value, now) ? '' : undefined}
-              >
-                <DayNumberCell
-                  className={classes.agendaViewDayNumberCell}
-                  data-current={adapter.isSameDay(date.value, now) ? '' : undefined}
-                >
-                  {adapter.format(date.value, 'dayOfMonth')}
-                </DayNumberCell>
-                <WeekDayCell className={classes.agendaViewWeekDayCell}>
-                  <AgendaWeekDayNameLabel
-                    className={classes.agendaViewWeekDayNameLabel}
-                    style={{ '--number-of-lines': 1 } as React.CSSProperties}
-                  >
-                    {adapter.format(date.value, 'weekday')}
-                  </AgendaWeekDayNameLabel>
-                  <AgendaYearAndMonthLabel
-                    className={classes.agendaViewYearAndMonthLabel}
-                    style={{ '--number-of-lines': 1 } as React.CSSProperties}
-                  >
-                    {adapter.format(date.value, 'monthFullLetter')},{' '}
-                    {adapter.format(date.value, 'yearPadded')}
-                  </AgendaYearAndMonthLabel>
-                </WeekDayCell>
-              </DayHeaderCell>
-              <EventsList className={classes.agendaViewEventsList}>
-                {isLoading && (
-                  <li className={classes.agendaViewEventListItem}>
-                    <EventSkeleton data-variant="agenda" />
-                  </li>
+        {!isLoading && days.length === 0 && (
+          <AgendaViewEmptyState className={classes.agendaViewEmptyState} role="status">
+            {localeText.agendaViewEmptyStateLabel}
+          </AgendaViewEmptyState>
+        )}
+        {daysWithOccurrences.map(
+          ({ date, occurrences, isFirstDayOfWeek, weekNumber, plainDate }) => {
+            const isToday = plainDate.dayNumber === nowDayNumber;
+            return (
+              <React.Fragment key={date.key}>
+                {showWeekNumber && isFirstDayOfWeek && (
+                  <AgendaViewWeekNumberRow className={classes.agendaViewWeekNumberRow}>
+                    <AgendaViewWeekNumberLabel
+                      className={classes.agendaViewWeekNumberLabel}
+                      aria-label={localeText.weekNumberAriaLabel(weekNumber)}
+                    >
+                      {`${localeText.week} ${weekNumber}`}
+                    </AgendaViewWeekNumberLabel>
+                  </AgendaViewWeekNumberRow>
                 )}
-                {!isLoading &&
-                  occurrences.map((occurrence) => (
-                    <li key={occurrence.key} className={classes.agendaViewEventListItem}>
-                      <EventContextMenuTrigger occurrence={occurrence}>
-                        <EventItem
-                          occurrence={occurrence}
-                          date={date}
-                          variant="regular"
-                          ariaLabelledBy={`${schedulerId}-DayHeaderCell-${date.key}`}
-                        />
-                      </EventContextMenuTrigger>
-                    </li>
-                  ))}
-              </EventsList>
-            </AgendaViewRow>
-          </React.Fragment>
-        ))}
+                <AgendaViewRow
+                  className={classes.agendaViewRow}
+                  id={`${schedulerId}-AgendaViewRow-${date.key}`}
+                  aria-labelledby={`${schedulerId}-DayHeaderCell-${date.key}`}
+                >
+                  <DayHeaderCell
+                    className={classes.agendaViewDayHeaderCell}
+                    id={`${schedulerId}-DayHeaderCell-${date.key}`}
+                    aria-label={`${adapter.format(date.value, 'weekday')} ${adapter.format(date.value, 'dayOfMonth')}`}
+                    data-current={isToday ? '' : undefined}
+                    aria-current={isToday ? 'date' : undefined}
+                  >
+                    <DayNumberCell
+                      className={classes.agendaViewDayNumberCell}
+                      data-current={isToday ? '' : undefined}
+                    >
+                      {adapter.format(date.value, 'dayOfMonth')}
+                    </DayNumberCell>
+                    <WeekDayCell className={classes.agendaViewWeekDayCell}>
+                      <AgendaWeekDayNameLabel
+                        className={classes.agendaViewWeekDayNameLabel}
+                        style={{ '--number-of-lines': 1 } as React.CSSProperties}
+                      >
+                        {adapter.format(date.value, 'weekday')}
+                      </AgendaWeekDayNameLabel>
+                      <AgendaYearAndMonthLabel
+                        className={classes.agendaViewYearAndMonthLabel}
+                        style={{ '--number-of-lines': 1 } as React.CSSProperties}
+                      >
+                        {adapter.format(date.value, 'monthFullLetter')},{' '}
+                        {adapter.format(date.value, 'yearPadded')}
+                      </AgendaYearAndMonthLabel>
+                    </WeekDayCell>
+                  </DayHeaderCell>
+                  <EventsList className={classes.agendaViewEventsList}>
+                    {isLoading && (
+                      <li className={classes.agendaViewEventListItem}>
+                        <EventSkeleton data-variant="agenda" />
+                      </li>
+                    )}
+                    {!isLoading &&
+                      occurrences.map((occurrence) => (
+                        <li key={occurrence.key} className={classes.agendaViewEventListItem}>
+                          <EventContextMenuTrigger occurrence={occurrence}>
+                            <EventItem occurrence={occurrence} date={date} variant="regular" />
+                          </EventContextMenuTrigger>
+                        </li>
+                      ))}
+                  </EventsList>
+                </AgendaViewRow>
+              </React.Fragment>
+            );
+          },
+        )}
       </AgendaViewRoot>
     );
   }),

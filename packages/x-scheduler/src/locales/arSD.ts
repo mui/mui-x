@@ -1,85 +1,115 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerDialogTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const arSDDialog: Partial<EventEditingLocaleText> = {
+const arSDDialog: SchedulerDialogTranslations = {
   // EventDialog
-  colorPickerLabel: 'لون الحدث',
-  colorSectionLabel: 'اللون',
-  dateTimeSectionLabel: 'الوقت و التاريخ',
-  resourceColorSectionLabel: 'مورد و لون',
-  allDayLabel: 'طوال اليوم',
-  closeButtonAriaLabel: 'إغلاق',
-  closeButtonLabel: 'إغلاق',
-  editEventButtonAriaLabel: 'تعديل الحدث',
-  deleteEventButtonAriaLabel: 'حذف الحدث',
-  eventActionsToolbarAriaLabel: 'إجراءات الحدث',
-  deleteEvent: 'حذف الحدث',
-  editEvent: 'تعديل الحدث',
-  showEventDetails: 'التفاصيل',
-  eventContextMenuAriaLabel: 'إجراءات الحدث',
-  descriptionLabel: 'الوصف',
-  endDateLabel: 'تاريخ النهاية',
-  endTimeLabel: 'وقت النهاية',
-  eventTitleAriaLabel: 'عنوان الحدث',
-  generalTabLabel: 'عام',
-  labelNoResource: 'لا يوجد موارد',
-  labelInvalidResource: 'مورد غير صالح',
-  recurrenceLabel: 'التكرار',
-  recurrenceNoRepeat: 'لا تكرر',
-  recurrenceCustomRepeat: 'قاعدة تكرار مخصصة',
-  recurrenceDailyPresetLabel: 'تكرار يومي',
-  recurrenceDailyFrequencyLabel: 'الايم',
-  recurrenceEndsLabel: 'النهاية',
-  recurrenceEndsAfterLabel: 'بعد',
-  recurrenceEndsNeverLabel: 'لا تنتهي',
-  recurrenceEndsUntilLabel: 'حتى',
-  recurrenceEndsTimesLabel: 'اوقات',
-  recurrenceEveryLabel: 'كل',
-  recurrenceRepeatLabel: 'تكرار',
-  recurrenceTabLabel: 'التكرار',
-  recurrenceTimezoneLabel: (timezone) => `المنطقة الزمنية: ${timezone}`,
-  recurrenceLabelTimezoneSuffix: (timezone) => `(${timezone})`,
-  recurrenceMainSelectCustomLabel: 'التكرار',
-  recurrenceWeeklyFrequencyLabel: 'الاسابيع',
-  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `يتكرر اسبوعيا في ${weekdayName}`,
-  recurrenceMonthlyFrequencyLabel: 'شهور',
-  recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `يوم ${dayNumber}`,
-  recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} من الاسبوع الاخير في الشهر`,
-  recurrenceMonthlyLastWeekLabel: (weekDay) => `${weekDay} الاسبوع الاخير`,
-  recurrenceMonthlyPresetLabel: (dayNumber) => `يتكرر شهريا في يوم ${dayNumber}`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) => `${weekDay} الايبوع ${ord} من الشهر`,
-  recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => `${weekDay} الاسبوع ${ord}`,
-  recurrenceWeeklyMonthlySpecificInputsLabel: 'في',
-  recurrenceYearlyFrequencyLabel: 'سنوات',
-  recurrenceYearlyPresetLabel: (date) => `يتكرر سنويا في ${date}`,
-  noResourceAriaLabel: 'لا يوجد مورد محدد',
-  selectColorAriaLabel: (color) => `اختار ${color} كلون الحدث`,
-  resourceLabel: 'مورد',
-  invalidDateError: 'ادخل تاريخ صالح.',
-  invalidTimeError: 'ادخل وقت صالح.',
-  requiredResourceError: 'المورد مطلوب.',
-  saveChanges: 'حفظ',
-  startDateAfterEndDateError: 'تاريخ الانتهاء لا يمكن ان يكون قبل تاريخ البدأ.',
-  startDateLabel: 'تاريخ البدأ',
-  startTimeAfterEndTimeError: 'وقت الانتهاء يجب ان يكون بعد وقت البدأ..',
-  startTimeLabel: 'وقت البدأ',
-
+  // colorPickerLabel: 'Event color',
+  // colorSectionLabel: 'Color',
+  // dateTimeSectionLabel: 'Date & time',
+  // resourceColorSectionLabel: 'Resource & color',
+  // allDayLabel: 'All Day',
+  // closeButtonAriaLabel: 'Close',
+  // closeButtonLabel: 'Close',
+  // editEventButtonAriaLabel: 'Edit event',
+  // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
+  // deleteEvent: 'Delete event',
+  // deleteConfirmationTitle: 'Delete this event?',
+  // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  // cancel: 'Cancel',
+  // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
+  // eventContextMenuAriaLabel: 'Event actions',
+  // descriptionLabel: 'Description',
+  // endDateLabel: 'End date',
+  // endTimeLabel: 'End time',
+  // eventTitleAriaLabel: 'Event title',
+  // generalTabLabel: 'General',
+  // labelNoResource: 'No resource',
+  // labelInvalidResource: 'Invalid resource',
+  // recurrenceLabel: 'Recurrence',
+  // recurrenceNoRepeat: "Don't repeat",
+  // recurrenceCustomRepeat: 'Custom repeat rule',
+  // recurrenceDailyPresetLabel: 'Repeats daily',
+  // recurrenceDailyFrequencyLabel: 'days',
+  // recurrenceEndsLabel: 'Ends',
+  // recurrenceEndsAfterLabel: 'After',
+  // recurrenceEndsNeverLabel: 'Never',
+  // recurrenceEndsUntilLabel: 'Until',
+  // recurrenceEndsTimesLabel: 'times',
+  // recurrenceEveryLabel: 'Every',
+  // recurrenceRepeatLabel: 'Repeat',
+  // recurrenceTabLabel: 'Recurrence',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
+  // recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
+  // recurrenceMainSelectCustomLabel: 'Recurrence',
+  // recurrenceWeeklyFrequencyLabel: 'weeks',
+  // recurrenceWeeklyPresetLabel: ({
+  //   weekdayName
+  // }) => `Repeats weekly on ${weekdayName}`,
+  // recurrenceMonthlyFrequencyLabel: 'months',
+  // recurrenceMonthlyDayOfMonthLabel: dayNumber => `Day ${dayNumber}`,
+  // recurrenceMonthlyLastWeekAriaLabel: ({
+  //   weekdayName
+  // }) => `${weekdayName} of the last week of the month`,
+  // recurrenceMonthlyLastWeekLabel: ({
+  //   weekdayName
+  // }) => `${weekdayName} last week`,
+  // recurrenceMonthlyPresetLabel: dayNumber => `Repeats monthly on day ${dayNumber}`,
+  // recurrenceMonthlyWeekNumberAriaLabel: ({
+  //   ord,
+  //   weekdayName
+  // }) => `${weekdayName} week ${ord} of the month`,
+  // recurrenceMonthlyWeekNumberLabel: ({
+  //   ord,
+  //   weekdayName
+  // }) => `${weekdayName} week ${ord}`,
+  // recurrenceWeeklyMonthlySpecificInputsLabel: 'On',
+  // recurrenceYearlyFrequencyLabel: 'years',
+  // recurrenceYearlyPresetLabel: date => `Repeats annually on ${date}`,
+  // noResourceAriaLabel: 'No specific resource',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
+  // resourceLabel: 'Resource',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
+  // requiredResourceError: 'A resource is required.',
+  // saveChanges: 'Save',
+  // startDateAfterEndDateError: 'End date cannot be before start date.',
+  // startDateLabel: 'Start date',
+  // startTimeAfterEndTimeError: 'End time must be after start time.',
+  // startTimeLabel: 'Start time',
   // RecurringScopeDialog
-  all: 'كل الاحداث',
-  cancel: 'إلغاء',
-  confirm: 'تأكيد',
-  onlyThis: 'هذا الحدث فقط',
-  radioGroupAriaLabel: 'نطاق تعديل الأحداث المتكررة',
-  thisAndFollowing: 'هذا الحدث والأحداث التالية',
-  title: 'طبّق هذا التغيير على:',
+  // all: 'All events',
+  // confirm: 'Confirm',
+  // onlyThis: 'Only this event',
+  // radioGroupAriaLabel: 'Editing recurring events scope',
+  // thisAndFollowing: 'This and following events',
+  // title: 'Apply this change to:',
 };
 
-const arSDCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const arSDEvent: SchedulerEventTranslations = {
+  // Event accessible name
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
+  // resourceAriaLabel: resourceName => `Resource: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const arSDCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'الموارد',
 
@@ -118,14 +148,15 @@ const arSDCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   weekdaySaturday: 'السبت',
 
   // WeekView
-  allDay: 'طوال اليوم',
-  hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} المزيد..`,
-  nextTimeSpan: (timeSpan) => `التالي ${timeSpan}`,
-  previousTimeSpan: (timeSpan) => `السابق ${timeSpan}`,
-  resourceAriaLabel: (resourceName) => `المورد: ${resourceName}`,
-  weekAbbreviation: 'W',
-  weekNumberAriaLabel: (weekNumber) => `أسبوع ${weekNumber}`,
-
+  // allDay: 'All day',
+  // dayGridLabel: 'All-day and multi-day events',
+  // hiddenEvents: hiddenEventsCount => `${hiddenEventsCount} more..`,
+  // nextTimeSpan: timeSpan => `Next ${timeSpan}`,
+  // previousTimeSpan: timeSpan => `Previous ${timeSpan}`,
+  // weekAbbreviation: 'W',
+  // weekNumberAriaLabel: weekNumber => `Week ${weekNumber}`,
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
   // EventItem
   eventItemMultiDayLabel: (endDate) => `ينتهي في ${endDate}`,
 
@@ -141,13 +172,14 @@ const arSDCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'عنوان المورد',
 };
 
-const arSDTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const arSDTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'عنوان المورد',
 };
 
 export const arSD: SchedulerLocalization = getSchedulerLocalization({
   dialog: arSDDialog,
+  event: arSDEvent,
   calendar: arSDCalendar,
   timeline: arSDTimeline,
 });

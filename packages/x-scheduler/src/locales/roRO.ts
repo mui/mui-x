@@ -1,12 +1,13 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerDialogTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const roRODialog: Partial<EventEditingLocaleText> = {
+const roRODialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: 'Culoarea evenimentului',
   // colorSectionLabel: 'Color',
@@ -19,6 +20,9 @@ const roRODialog: Partial<EventEditingLocaleText> = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Șterge evenimentul',
+  // deleteConfirmationTitle: 'Delete this event?',
+  // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  cancel: 'Anulează',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
@@ -49,11 +53,13 @@ const roRODialog: Partial<EventEditingLocaleText> = {
   recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Se repetă săptămânal în ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'luni',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Ziua ${dayNumber}`,
-  recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} din ultima săptămână a lunii`,
-  recurrenceMonthlyLastWeekLabel: (weekDay) => `${weekDay} ultima săptămână`,
+  recurrenceMonthlyLastWeekAriaLabel: ({ weekdayName }) =>
+    `${weekdayName} din ultima săptămână a lunii`,
+  recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `${weekdayName} ultima săptămână`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Se repetă lunar în ziua ${dayNumber}`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) => `${weekDay} săptămâna ${ord} a lunii`,
-  recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => `${weekDay} săptămâna ${ord}`,
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekdayName }) =>
+    `${weekdayName} săptămâna ${ord} a lunii`,
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekdayName }) => `${weekdayName} săptămâna ${ord}`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'În',
   recurrenceYearlyFrequencyLabel: 'ani',
   recurrenceYearlyPresetLabel: (date) => `Se repetă anual pe ${date}`,
@@ -71,7 +77,6 @@ const roRODialog: Partial<EventEditingLocaleText> = {
 
   // RecurringScopeDialog
   all: 'Toate evenimentele',
-  cancel: 'Anulează',
   confirm: 'Confirmă',
   onlyThis: 'Doar acest eveniment',
   radioGroupAriaLabel: 'Aria de aplicare a modificării evenimentelor recurente',
@@ -79,7 +84,23 @@ const roRODialog: Partial<EventEditingLocaleText> = {
   title: 'Aplică această modificare la:',
 };
 
-const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const roROEvent: SchedulerEventTranslations = {
+  // Event accessible name
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `Resursă: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const roROCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'Resurse',
 
@@ -119,12 +140,15 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
 
   // WeekView
   allDay: 'Toată ziua',
+  // dayGridLabel: 'All-day and multi-day events',
   hiddenEvents: (hiddenEventsCount) => `Încă ${hiddenEventsCount}..`,
   nextTimeSpan: (timeSpan) => `${timeSpan} următoare`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterioară`,
-  resourceAriaLabel: (resourceName) => `Resursă: ${resourceName}`,
   weekAbbreviation: 'S',
   weekNumberAriaLabel: (weekNumber) => `Săptămâna ${weekNumber}`,
+
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
 
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Se termină pe ${endDate}`,
@@ -141,13 +165,14 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'Titlul resursei',
 };
 
-const roROTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const roROTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titlul resursei',
 };
 
 export const roRO: SchedulerLocalization = getSchedulerLocalization({
   dialog: roRODialog,
+  event: roROEvent,
   calendar: roROCalendar,
   timeline: roROTimeline,
 });

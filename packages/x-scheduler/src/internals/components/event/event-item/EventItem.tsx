@@ -2,31 +2,24 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { useId } from '@base-ui/utils/useId';
 import { useStore } from '@base-ui/utils/store';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
-  schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { Button } from '@base-ui/react/button';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { getPrimaryResourceId } from '@mui/x-scheduler-internals/internals';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
+import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
 import type { EventItemProps } from './EventItem.types';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import type { PaletteName } from '../../../utils/tokens';
 import { getPaletteVariants } from '../../../utils/tokens';
-import {
-  ARROW_DEPTH,
-  LEFT_ARROW_CLIP,
-  RIGHT_ARROW_CLIP,
-  BOTH_ARROWS_CLIP,
-  getArrowFocusVisibleStyles,
-} from '../arrowClips';
+import { getArrowEdgeStyles, getArrowFocusVisibleStyles } from '../arrowClips';
+import { isOccurrenceMultiDay } from '../../../utils/event-utils';
 
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
@@ -59,21 +52,7 @@ const EventItemCard = styled('div', {
         backgroundColor: 'var(--event-surface-selected-hover)',
       },
     },
-    '&[data-starting-before-edge]': {
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
-      clipPath: LEFT_ARROW_CLIP,
-      paddingLeft: ARROW_DEPTH,
-    },
-    '&[data-ending-after-edge]': {
-      borderTopRightRadius: 0,
-      borderBottomRightRadius: 0,
-      clipPath: RIGHT_ARROW_CLIP,
-      paddingRight: ARROW_DEPTH,
-    },
-    '&[data-starting-before-edge][data-ending-after-edge]': {
-      clipPath: BOTH_ARROWS_CLIP,
-    },
+    ...getArrowEdgeStyles(theme),
     ...getArrowFocusVisibleStyles(theme.shape.borderRadius),
   },
   '&[data-editing]': {
@@ -186,58 +165,35 @@ export const EventItem = React.forwardRef(function EventItem(
   props: EventItemProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const {
-    occurrence,
-    date,
-    ariaLabelledBy,
-    id: idProp,
-    variant = 'regular',
-    className,
-    onClick,
-    ...other
-  } = props;
+  const { occurrence, date, variant = 'regular', className, onClick, ...other } = props;
 
   // Context hooks
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
   const isEditing = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
 
-  // State hooks
-  const id = useId(idProp);
-
   // Selector hooks
-  const resource = useStore(
-    store,
-    schedulerResourceSelectors.processedResource,
-    getPrimaryResourceId(occurrence.resource),
-  );
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
 
   const formatTime = useFormatTime();
+  const accessibleName = useEventAccessibleName({
+    occurrence,
+    isRecurring,
+    localeText,
+  });
 
-  const adapter = useAdapterContext();
-  const startsBeforeDay =
-    !adapter.isSameDay(occurrence.displayTimezone.start.value, date.value) &&
-    adapter.isBefore(occurrence.displayTimezone.start.value, date.value);
-  const endsAfterDay =
-    !adapter.isSameDay(occurrence.displayTimezone.end.value, date.value) &&
-    adapter.isAfter(occurrence.displayTimezone.end.value, date.value);
+  // The keys of the processed dates only depend on their day in the display timezone.
+  const { start, end } = occurrence.displayTimezone;
+  const startsBeforeDay = start.key !== date.key && start.timestamp < date.timestamp;
+  const endsAfterDay = end.key !== date.key && end.timestamp > date.timestamp;
 
   const content = React.useMemo(() => {
     switch (variant) {
       case 'compact':
         return (
           <React.Fragment>
-            <ResourceLegendColor
-              className={classes.resourceLegendColor}
-              role="img"
-              aria-label={
-                resource?.title
-                  ? localeText.resourceAriaLabel(resource.title)
-                  : localeText.noResourceAriaLabel
-              }
-            />
+            <ResourceLegendColor className={classes.resourceLegendColor} aria-hidden="true" />
             <EventItemLinesClamp
               className={classes.eventItemLinesClamp}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
@@ -266,15 +222,7 @@ export const EventItem = React.forwardRef(function EventItem(
       case 'regular':
         return (
           <React.Fragment>
-            <ResourceLegendColor
-              className={classes.resourceLegendColor}
-              role="img"
-              aria-label={
-                resource?.title
-                  ? localeText.resourceAriaLabel(resource.title)
-                  : localeText.noResourceAriaLabel
-              }
-            />
+            <ResourceLegendColor className={classes.resourceLegendColor} aria-hidden="true" />
             <EventItemLinesClamp
               className={classes.eventItemLinesClamp}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
@@ -295,7 +243,7 @@ export const EventItem = React.forwardRef(function EventItem(
             'Check the component documentation for supported variants.',
         );
     }
-  }, [variant, resource?.title, localeText, formatTime, occurrence, classes]);
+  }, [variant, formatTime, occurrence, classes]);
 
   return (
     <Button
@@ -304,11 +252,14 @@ export const EventItem = React.forwardRef(function EventItem(
       render={
         <EventItemCard
           ref={forwardedRef}
-          id={id}
           data-variant={variant}
           data-palette={color}
           data-editing={isEditing || undefined}
-          aria-labelledby={`${ariaLabelledBy} ${id}`}
+          // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
+          data-event-id={occurrence.id}
+          // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
+          data-occurrence-timestamp={occurrence.dataTimezone.start.timestamp}
+          aria-label={accessibleName}
           {...(startsBeforeDay ? { 'data-starting-before-edge': '' } : {})}
           {...(endsAfterDay ? { 'data-ending-after-edge': '' } : {})}
           {...other}
@@ -339,9 +290,7 @@ function MultiDayDateLabel(props: {
   const adapter = useAdapterContext();
   const { classes, localeText } = useEventCalendarStyledContext();
 
-  if (
-    !adapter.isSameDay(occurrence.displayTimezone.start.value, occurrence.displayTimezone.end.value)
-  ) {
+  if (isOccurrenceMultiDay(occurrence)) {
     const format = `${adapter.formats.dayOfMonth} ${adapter.formats.month3Letters}`;
     return (
       <EventItemTime className={classes.eventItemTime} as="span">

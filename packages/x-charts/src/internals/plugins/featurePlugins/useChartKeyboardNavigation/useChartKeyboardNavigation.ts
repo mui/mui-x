@@ -2,7 +2,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
+import { fastObjectShallowCompare } from '@base-ui/utils/fastObjectShallowCompare';
 import { selectorChartDefaultizedSeries } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 import { cleanIdentifier } from '../../corePlugins/useChartSeriesConfig/utils/cleanIdentifier';
@@ -340,9 +340,11 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     }
 
     function keyboardHandler(event: KeyboardEvent) {
-      // Item navigation only uses unmodified keys.
+      // Item navigation only uses unmodified keys, except `ControlOrMeta` + `Home`/`End`.
       // Modified ones are left to the browser, and to chart interactions such as keyboard zoom and pan.
-      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
+      const isCtrlHomeEnd =
+        (event.ctrlKey || event.metaKey) && (event.key === 'Home' || event.key === 'End');
+      if (event.altKey || event.shiftKey || ((event.ctrlKey || event.metaKey) && !isCtrlHomeEnd)) {
         return;
       }
 
@@ -368,6 +370,10 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
         return;
       }
 
+      // The chart handles this key, so it should never also scroll the page, even when the focus
+      // does not move because it already is at a boundary.
+      event.preventDefault();
+
       newFocusedItem = calculateFocusedItem(newFocusedItem, store.state);
 
       const keyboardNavigation = store.state.keyboardNavigation;
@@ -376,8 +382,6 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       if (newFocusedItem === keyboardNavigation.item && keyboardNavigation.isFocusVisible) {
         return;
       }
-
-      event.preventDefault();
 
       updateFocus(newFocusedItem, true);
     }

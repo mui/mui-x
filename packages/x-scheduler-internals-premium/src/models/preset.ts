@@ -1,6 +1,7 @@
 import type * as React from 'react';
 import type { TemporalAdapter, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
+import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 
 export type EventTimelinePremiumPreset =
   'dayAndHour' | 'dayAndMonth' | 'dayAndWeek' | 'monthAndYear' | 'year';
@@ -17,9 +18,16 @@ export interface IteratedCell {
   /**
    * Aligned start of the cell at its unit boundary (e.g. first day of month for a
    * `month` row). Always `<= start`; for a partial first cell it sits before the
-   * visible range, so use `start` / `end` for layout math and `date` for labels.
+   * visible range, so use `start` / `end` for layout math.
+   * The date skipped by a DST transition normalizes to the next one, so build date labels
+   * from `plainDate`.
    */
   date: TemporalSupportedObject;
+  /**
+   * Wall-clock date of the aligned start. Unlike `date`, it keeps the date skipped by a DST
+   * transition.
+   */
+  plainDate: PlainDate;
   /** Clamped start, always within the visible range. */
   start: TemporalSupportedObject;
   /** Clamped end (exclusive), always within the visible range. */

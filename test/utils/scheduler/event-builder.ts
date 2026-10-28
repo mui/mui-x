@@ -43,7 +43,7 @@ function toInstantString(adapter: Adapter, value: Parameters<Adapter['toJsDate']
  * - Can optionally derive a SchedulerEventOccurrence via .toOccurrence().
  */
 export class EventBuilder {
-  protected event: SchedulerEvent;
+  declare protected event: SchedulerEvent;
 
   protected displayTimezone: TemporalTimezone = 'default';
 

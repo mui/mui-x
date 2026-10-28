@@ -15,5 +15,6 @@ export * from './storeClasses';
 export * from './dom-queries';
 export * from './dnd';
 export * from './pointer';
+export * from './system-timezone';
 
 export type AnyEventCalendarStore = EventCalendarStore<any, any>;

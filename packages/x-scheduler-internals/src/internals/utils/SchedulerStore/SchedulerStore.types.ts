@@ -19,6 +19,8 @@ import type {
   SchedulerSelection,
   TemporalSupportedObject,
   SchedulerEventSide,
+  SchedulerEventDeletionConfig,
+  RecurringEventScope,
 } from '../../../models';
 import type { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
@@ -162,9 +164,10 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   occurrencePlaceholder: SchedulerOccurrencePlaceholder | null;
   /**
-   * The current date and time, updated every minute.
+   * The timestamp of the current date and time, updated every minute.
+   * Read it in the display timezone.
    */
-  nowUpdatedEveryMinute: TemporalSupportedObject;
+  nowTimestamp: number;
   /**
    * Whether the calendar is in read-only mode.
    * @default false
@@ -195,7 +198,8 @@ export interface SchedulerState<TEvent extends object = any> {
    * "locale" (use the user's current locale timezone),
    * or "UTC".
    *
-   * This timezone only affects rendering, events keep their original data timezone.
+   * Events keep their original data timezone. The visible range starts on the day of the visible
+   * date in this timezone, and the next and previous navigation return dates in this timezone.
    */
   displayTimezone: TemporalTimezone;
   /**
@@ -228,6 +232,15 @@ export interface SchedulerState<TEvent extends object = any> {
    * Plugin that provides recurring-events support. `null` when not attached.
    */
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
+  /**
+   * Configures how events are deleted, normalized from the `eventDeletion` parameter.
+   * `false` when event deletion is disabled.
+   */
+  eventDeletion: SchedulerEventDeletionConfig | false;
+  /**
+   * The event for which the delete confirmation dialog is open, if any. `null` when the dialog is closed.
+   */
+  pendingDeleteConfirmation: { eventId: SchedulerEventId; onSubmit?: () => void } | null;
 }
 
 /**
@@ -409,7 +422,8 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * "locale" (use the user's current locale timezone),
    * or "UTC".
    *
-   * This timezone only affects rendering, events keep their original data timezone.
+   * Events keep their original data timezone. The visible range starts on the day of the visible
+   * date in this timezone, and the next and previous navigation return dates in this timezone.
    * @default "default"
    */
   displayTimezone?: TemporalTimezone;
@@ -420,6 +434,15 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * @default enUS (English)
    */
   dateLocale?: DateLocale;
+
+  /**
+   * Configures how events are deleted.
+   * If `false`, event deletion is disabled.
+   * If `true`, event deletion is enabled with default configuration.
+   * If an object, event deletion is enabled with the provided configuration.
+   * @default true
+   */
+  eventDeletion?: Partial<SchedulerEventDeletionConfig> | boolean;
 }
 
 /**
@@ -457,7 +480,21 @@ export type DeleteRecurringEventParameters = {
    */
   eventId: SchedulerEventId;
   /**
-   * Callback fired when the user submits the recurring scope dialog.
+   * Callback fired when the user submits the recurring scope dialog, with the scope they picked.
+   */
+  onSubmit?: (scope: RecurringEventScope) => void;
+};
+
+/**
+ * Parameters for requesting an event deletion.
+ */
+export type RequestEventDeletionParameters = {
+  /**
+   * The id of the event to delete.
+   */
+  eventId: SchedulerEventId;
+  /**
+   * Callback fired after the deletion is submitted.
    */
   onSubmit?: () => void;
 };

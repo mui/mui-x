@@ -62,10 +62,22 @@
         "description": "{ canHaveMultipleResources?: bool, duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
       }
     },
+    "eventDeletion": {
+      "type": { "name": "union", "description": "{ confirmation?: bool }<br>&#124;&nbsp;bool" },
+      "default": "true"
+    },
     "eventModelStructure": { "type": { "name": "object" } },
     "events": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "default": "[]"
+    },
+    "getEventAriaLabel": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(parameters: EventTimelineGetEventAriaLabelParameters) => string",
+        "describedArgs": ["parameters"],
+        "returned": "string"
+      }
     },
     "localeText": { "type": { "name": "object" } },
     "onCollapsedResourcesChange": { "type": { "name": "func" } },
@@ -135,13 +147,13 @@
     },
     {
       "name": "timelineEventContent",
-      "description": "The content of an event block.\nIt replaces the title text and is rendered inside the block, so the block keeps its\ngeometry, its drag and resize handles, and its button semantics.\nThe content is part of the accessible name of the event.",
+      "description": "The content of an event block.\nIt replaces the title text and is rendered inside the block, so the block keeps its\ngeometry, its drag and resize handles, and its button semantics.\nThe content doesn't change the accessible name of the event, which is built from its data:\nuse `getEventAriaLabel` to announce the details it adds.",
       "default": "the occurrence title",
       "class": null
     },
     {
       "name": "timelineResourceTitle",
-      "description": "The content of a resource title cell.\nIt replaces the title text and is rendered next to the legend color and the collapse toggle.\nThe content is part of the accessible name of every event in the row.",
+      "description": "The content of a resource title cell.\nIt replaces the title text and is rendered next to the legend color and the collapse toggle.\nThe events of the row announce the resource through their own accessible name, so the\ncontent doesn't change it.",
       "default": "the resource title",
       "class": null
     }
@@ -149,559 +161,559 @@
   "classes": [
     {
       "key": "anchoredEventToolbar",
-      "className": "MuiEventTimelinePremium-anchoredEventToolbar",
+      "className": "MuiEventTimeline-anchoredEventToolbar",
       "description": "Styles applied to the anchored (desktop) armed-event toolbar wrapper element.",
       "isGlobal": false
     },
     {
       "key": "compactDayTimeGrid",
-      "className": "MuiEventTimelinePremium-compactDayTimeGrid",
+      "className": "MuiEventTimeline-compactDayTimeGrid",
       "description": "Styles applied to the compact (touch) day time grid root element.",
       "isGlobal": false
     },
     {
       "key": "compactDayTimeGridContent",
-      "className": "MuiEventTimelinePremium-compactDayTimeGridContent",
+      "className": "MuiEventTimeline-compactDayTimeGridContent",
       "description": "Styles applied to the compact (touch) day time grid content element.",
       "isGlobal": false
     },
     {
       "key": "compactEventDrawer",
-      "className": "MuiEventTimelinePremium-compactEventDrawer",
+      "className": "MuiEventTimeline-compactEventDrawer",
       "description": "Styles applied to the compact editing drawer root element.",
       "isGlobal": false
     },
     {
       "key": "compactEventDrawerContent",
-      "className": "MuiEventTimelinePremium-compactEventDrawerContent",
+      "className": "MuiEventTimeline-compactEventDrawerContent",
       "description": "Styles applied to the compact editing drawer content element.",
       "isGlobal": false
     },
     {
       "key": "compactEventDrawerReadonlyHeader",
-      "className": "MuiEventTimelinePremium-compactEventDrawerReadonlyHeader",
+      "className": "MuiEventTimeline-compactEventDrawerReadonlyHeader",
       "description": "Styles applied to the compact editing drawer read-only header element.",
       "isGlobal": false
     },
     {
       "key": "compactEventDrawerReadonlyTitle",
-      "className": "MuiEventTimelinePremium-compactEventDrawerReadonlyTitle",
+      "className": "MuiEventTimeline-compactEventDrawerReadonlyTitle",
       "description": "Styles applied to the compact editing drawer read-only title element.",
       "isGlobal": false
     },
     {
       "key": "compactEventToolbarDock",
-      "className": "MuiEventTimelinePremium-compactEventToolbarDock",
+      "className": "MuiEventTimeline-compactEventToolbarDock",
       "description": "Styles applied to the compact (touch) armed-event toolbar dock element.",
       "isGlobal": false
     },
     {
       "key": "content",
-      "className": "MuiEventTimelinePremium-content",
+      "className": "MuiEventTimeline-content",
       "description": "Styles applied to the content section element.",
       "isGlobal": false
     },
     {
       "key": "currentTimeIndicator",
-      "className": "MuiEventTimelinePremium-currentTimeIndicator",
+      "className": "MuiEventTimeline-currentTimeIndicator",
       "description": "Styles applied to the current time indicator element.",
       "isGlobal": false
     },
     {
       "key": "currentTimeIndicatorCircle",
-      "className": "MuiEventTimelinePremium-currentTimeIndicatorCircle",
+      "className": "MuiEventTimeline-currentTimeIndicatorCircle",
       "description": "Styles applied to the current time indicator circle element.",
       "isGlobal": false
     },
     {
       "key": "errorAlert",
-      "className": "MuiEventTimelinePremium-errorAlert",
+      "className": "MuiEventTimeline-errorAlert",
       "description": "Styles applied to the error alert element.",
       "isGlobal": false
     },
     {
       "key": "errorContainer",
-      "className": "MuiEventTimelinePremium-errorContainer",
+      "className": "MuiEventTimeline-errorContainer",
       "description": "Styles applied to the error container element.",
       "isGlobal": false
     },
     {
       "key": "errorMessage",
-      "className": "MuiEventTimelinePremium-errorMessage",
+      "className": "MuiEventTimeline-errorMessage",
       "description": "Styles applied to the error message element.",
       "isGlobal": false
     },
     {
       "key": "event",
-      "className": "MuiEventTimelinePremium-event",
+      "className": "MuiEventTimeline-event",
       "description": "Styles applied to event elements.",
       "isGlobal": false
     },
     {
       "key": "eventContextMenu",
-      "className": "MuiEventTimelinePremium-eventContextMenu",
+      "className": "MuiEventTimeline-eventContextMenu",
       "description": "Styles applied to the event context menu root element.",
       "isGlobal": false
     },
     {
       "key": "eventContextMenuDeleteItem",
-      "className": "MuiEventTimelinePremium-eventContextMenuDeleteItem",
+      "className": "MuiEventTimeline-eventContextMenuDeleteItem",
       "description": "Styles applied to the event context menu delete item element.",
       "isGlobal": false
     },
     {
       "key": "eventContextMenuEditItem",
-      "className": "MuiEventTimelinePremium-eventContextMenuEditItem",
+      "className": "MuiEventTimeline-eventContextMenuEditItem",
       "description": "Styles applied to the event context menu edit item element.",
       "isGlobal": false
     },
     {
       "key": "eventContextMenuShowDetailsItem",
-      "className": "MuiEventTimelinePremium-eventContextMenuShowDetailsItem",
+      "className": "MuiEventTimeline-eventContextMenuShowDetailsItem",
       "description": "Styles applied to the event context menu show details item element (read-only events).",
       "isGlobal": false
     },
     {
       "key": "eventDialog",
-      "className": "MuiEventTimelinePremium-eventDialog",
+      "className": "MuiEventTimeline-eventDialog",
       "description": "Styles applied to the event dialog root element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogActions",
-      "className": "MuiEventTimelinePremium-eventDialogActions",
+      "className": "MuiEventTimeline-eventDialogActions",
       "description": "Styles applied to the event dialog actions element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogCloseAction",
-      "className": "MuiEventTimelinePremium-eventDialogCloseAction",
+      "className": "MuiEventTimeline-eventDialogCloseAction",
       "description": "Styles applied to the event dialog close action button element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogCloseButton",
-      "className": "MuiEventTimelinePremium-eventDialogCloseButton",
+      "className": "MuiEventTimeline-eventDialogCloseButton",
       "description": "Styles applied to the event dialog close button element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogContent",
-      "className": "MuiEventTimelinePremium-eventDialogContent",
+      "className": "MuiEventTimeline-eventDialogContent",
       "description": "Styles applied to the event dialog content element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogDateTimeContainer",
-      "className": "MuiEventTimelinePremium-eventDialogDateTimeContainer",
+      "className": "MuiEventTimeline-eventDialogDateTimeContainer",
       "description": "Styles applied to the event dialog date time container element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogDateTimeFieldsContainer",
-      "className": "MuiEventTimelinePremium-eventDialogDateTimeFieldsContainer",
+      "className": "MuiEventTimeline-eventDialogDateTimeFieldsContainer",
       "description": "Styles applied to the event dialog date time fields container element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogDateTimeFieldsRow",
-      "className": "MuiEventTimelinePremium-eventDialogDateTimeFieldsRow",
+      "className": "MuiEventTimeline-eventDialogDateTimeFieldsRow",
       "description": "Styles applied to the event dialog date time fields row element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogDateTimeIcon",
-      "className": "MuiEventTimelinePremium-eventDialogDateTimeIcon",
+      "className": "MuiEventTimeline-eventDialogDateTimeIcon",
       "description": "Styles applied to the event dialog date time icon element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogDateTimeLabel",
-      "className": "MuiEventTimelinePremium-eventDialogDateTimeLabel",
+      "className": "MuiEventTimeline-eventDialogDateTimeLabel",
       "description": "Styles applied to the event dialog date time label element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogDeleteButton",
-      "className": "MuiEventTimelinePremium-eventDialogDeleteButton",
+      "className": "MuiEventTimeline-eventDialogDeleteButton",
       "description": "Styles applied to the event dialog delete button element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogDescriptionLabel",
-      "className": "MuiEventTimelinePremium-eventDialogDescriptionLabel",
+      "className": "MuiEventTimeline-eventDialogDescriptionLabel",
       "description": "Styles applied to the event dialog description label element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogEndsRadioGroup",
-      "className": "MuiEventTimelinePremium-eventDialogEndsRadioGroup",
+      "className": "MuiEventTimeline-eventDialogEndsRadioGroup",
       "description": "Styles applied to the event dialog ends radio group element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogForm",
-      "className": "MuiEventTimelinePremium-eventDialogForm",
+      "className": "MuiEventTimeline-eventDialogForm",
       "description": "Styles applied to the event dialog form element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogFormActions",
-      "className": "MuiEventTimelinePremium-eventDialogFormActions",
+      "className": "MuiEventTimeline-eventDialogFormActions",
       "description": "Styles applied to the event dialog form actions element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogFormDivider",
-      "className": "MuiEventTimelinePremium-eventDialogFormDivider",
+      "className": "MuiEventTimeline-eventDialogFormDivider",
       "description": "Styles applied to the event dialog form divider element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogFrequencySelect",
-      "className": "MuiEventTimelinePremium-eventDialogFrequencySelect",
+      "className": "MuiEventTimeline-eventDialogFrequencySelect",
       "description": "Styles applied to the event dialog frequency select element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogHeader",
-      "className": "MuiEventTimelinePremium-eventDialogHeader",
+      "className": "MuiEventTimeline-eventDialogHeader",
       "description": "Styles applied to the event dialog header element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogHeaderActions",
-      "className": "MuiEventTimelinePremium-eventDialogHeaderActions",
+      "className": "MuiEventTimeline-eventDialogHeaderActions",
       "description": "Styles applied to the event dialog header actions container element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogInlineRow",
-      "className": "MuiEventTimelinePremium-eventDialogInlineRow",
+      "className": "MuiEventTimeline-eventDialogInlineRow",
       "description": "Styles applied to the event dialog inline row element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogPaper",
-      "className": "MuiEventTimelinePremium-eventDialogPaper",
+      "className": "MuiEventTimeline-eventDialogPaper",
       "description": "Styles applied to the event dialog paper element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogRadioButtonLabel",
-      "className": "MuiEventTimelinePremium-eventDialogRadioButtonLabel",
+      "className": "MuiEventTimeline-eventDialogRadioButtonLabel",
       "description": "Styles applied to the event dialog radio button label element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogReadonlyContent",
-      "className": "MuiEventTimelinePremium-eventDialogReadonlyContent",
+      "className": "MuiEventTimeline-eventDialogReadonlyContent",
       "description": "Styles applied to the event dialog readonly content element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogRecurrenceIcon",
-      "className": "MuiEventTimelinePremium-eventDialogRecurrenceIcon",
+      "className": "MuiEventTimeline-eventDialogRecurrenceIcon",
       "description": "Styles applied to the event dialog recurrence icon element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogRecurrenceLabel",
-      "className": "MuiEventTimelinePremium-eventDialogRecurrenceLabel",
+      "className": "MuiEventTimeline-eventDialogRecurrenceLabel",
       "description": "Styles applied to the event dialog recurrence label element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogRecurrenceLabelContainer",
-      "className": "MuiEventTimelinePremium-eventDialogRecurrenceLabelContainer",
+      "className": "MuiEventTimeline-eventDialogRecurrenceLabelContainer",
       "description": "Styles applied to the event dialog recurrence label container element in the readonly content.",
       "isGlobal": false
     },
     {
       "key": "eventDialogRecurrenceSelectorContainer",
-      "className": "MuiEventTimelinePremium-eventDialogRecurrenceSelectorContainer",
+      "className": "MuiEventTimeline-eventDialogRecurrenceSelectorContainer",
       "description": "Styles applied to the event dialog recurrence selector container element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogRecurrenceSelectorToggleGroup",
-      "className": "MuiEventTimelinePremium-eventDialogRecurrenceSelectorToggleGroup",
+      "className": "MuiEventTimeline-eventDialogRecurrenceSelectorToggleGroup",
       "description": "Styles applied to the event dialog recurrence selector toggle group element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogRecurrenceTimezoneLabel",
-      "className": "MuiEventTimelinePremium-eventDialogRecurrenceTimezoneLabel",
+      "className": "MuiEventTimeline-eventDialogRecurrenceTimezoneLabel",
       "description": "Styles applied to the recurrence timezone note and label suffix elements.",
       "isGlobal": false
     },
     {
       "key": "eventDialogRepeatSectionContent",
-      "className": "MuiEventTimelinePremium-eventDialogRepeatSectionContent",
+      "className": "MuiEventTimeline-eventDialogRepeatSectionContent",
       "description": "Styles applied to the event dialog repeat section content element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogRepeatSectionFieldset",
-      "className": "MuiEventTimelinePremium-eventDialogRepeatSectionFieldset",
+      "className": "MuiEventTimeline-eventDialogRepeatSectionFieldset",
       "description": "Styles applied to the event dialog repeat section fieldset element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogRepeatSectionLabel",
-      "className": "MuiEventTimelinePremium-eventDialogRepeatSectionLabel",
+      "className": "MuiEventTimeline-eventDialogRepeatSectionLabel",
       "description": "Styles applied to the event dialog repeat section label element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogResourceContainer",
-      "className": "MuiEventTimelinePremium-eventDialogResourceContainer",
+      "className": "MuiEventTimeline-eventDialogResourceContainer",
       "description": "Styles applied to the event dialog resource container element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogResourceLegendColor",
-      "className": "MuiEventTimelinePremium-eventDialogResourceLegendColor",
+      "className": "MuiEventTimeline-eventDialogResourceLegendColor",
       "description": "Styles applied to the event dialog resource legend color element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogResourceLegendContainer",
-      "className": "MuiEventTimelinePremium-eventDialogResourceLegendContainer",
+      "className": "MuiEventTimeline-eventDialogResourceLegendContainer",
       "description": "Styles applied to the event dialog resource legend container element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogResourceMenuColorDot",
-      "className": "MuiEventTimelinePremium-eventDialogResourceMenuColorDot",
+      "className": "MuiEventTimeline-eventDialogResourceMenuColorDot",
       "description": "Styles applied to the event dialog resource menu color dot element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogResourceMenuColorToggle",
-      "className": "MuiEventTimelinePremium-eventDialogResourceMenuColorToggle",
+      "className": "MuiEventTimeline-eventDialogResourceMenuColorToggle",
       "description": "Styles applied to the event dialog resource menu color toggle element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogResourceMenuColorToggleGroup",
-      "className": "MuiEventTimelinePremium-eventDialogResourceMenuColorToggleGroup",
+      "className": "MuiEventTimeline-eventDialogResourceMenuColorToggleGroup",
       "description": "Styles applied to the event dialog resource menu color toggle group element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogResourceMenuItem",
-      "className": "MuiEventTimelinePremium-eventDialogResourceMenuItem",
+      "className": "MuiEventTimeline-eventDialogResourceMenuItem",
       "description": "Styles applied to the event dialog resource menu item element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogResourceMenuListSubheader",
-      "className": "MuiEventTimelinePremium-eventDialogResourceMenuListSubheader",
+      "className": "MuiEventTimeline-eventDialogResourceMenuListSubheader",
       "description": "Styles applied to the event dialog resource menu list subheader element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogResourceTitle",
-      "className": "MuiEventTimelinePremium-eventDialogResourceTitle",
+      "className": "MuiEventTimeline-eventDialogResourceTitle",
       "description": "Styles applied to the event dialog resource title element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogSaveButton",
-      "className": "MuiEventTimelinePremium-eventDialogSaveButton",
+      "className": "MuiEventTimeline-eventDialogSaveButton",
       "description": "Styles applied to the event dialog save button element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogSectionFieldset",
-      "className": "MuiEventTimelinePremium-eventDialogSectionFieldset",
+      "className": "MuiEventTimeline-eventDialogSectionFieldset",
       "description": "Styles applied to the event dialog section fieldset element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogSectionHeaderTitle",
-      "className": "MuiEventTimelinePremium-eventDialogSectionHeaderTitle",
+      "className": "MuiEventTimeline-eventDialogSectionHeaderTitle",
       "description": "Styles applied to the event dialog section header title element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogSmallNumberField",
-      "className": "MuiEventTimelinePremium-eventDialogSmallNumberField",
+      "className": "MuiEventTimeline-eventDialogSmallNumberField",
       "description": "Styles applied to the event dialog small number field element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogTab",
-      "className": "MuiEventTimelinePremium-eventDialogTab",
+      "className": "MuiEventTimeline-eventDialogTab",
       "description": "Styles applied to the event dialog tab elements.",
       "isGlobal": false
     },
     {
       "key": "eventDialogTabContent",
-      "className": "MuiEventTimelinePremium-eventDialogTabContent",
+      "className": "MuiEventTimeline-eventDialogTabContent",
       "description": "Styles applied to the event dialog tab content element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogTabPanel",
-      "className": "MuiEventTimelinePremium-eventDialogTabPanel",
+      "className": "MuiEventTimeline-eventDialogTabPanel",
       "description": "Styles applied to the event dialog tab panel element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogTabsContainer",
-      "className": "MuiEventTimelinePremium-eventDialogTabsContainer",
+      "className": "MuiEventTimeline-eventDialogTabsContainer",
       "description": "Styles applied to the event dialog tabs container element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogTitle",
-      "className": "MuiEventTimelinePremium-eventDialogTitle",
+      "className": "MuiEventTimeline-eventDialogTitle",
       "description": "Styles applied to the event dialog title element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogWeekDaySelectorCheckbox",
-      "className": "MuiEventTimelinePremium-eventDialogWeekDaySelectorCheckbox",
+      "className": "MuiEventTimeline-eventDialogWeekDaySelectorCheckbox",
       "description": "Styles applied to the event dialog week day selector form group element.",
       "isGlobal": false
     },
     {
       "key": "eventLinesClamp",
-      "className": "MuiEventTimelinePremium-eventLinesClamp",
+      "className": "MuiEventTimeline-eventLinesClamp",
       "description": "Styles applied to event lines clamp elements.",
       "isGlobal": false
     },
     {
       "key": "eventPlaceholder",
-      "className": "MuiEventTimelinePremium-eventPlaceholder",
+      "className": "MuiEventTimeline-eventPlaceholder",
       "description": "Styles applied to event placeholder elements.",
       "isGlobal": false
     },
     {
       "key": "eventRecurringIcon",
-      "className": "MuiEventTimelinePremium-eventRecurringIcon",
+      "className": "MuiEventTimeline-eventRecurringIcon",
       "description": "Styles applied to event recurring icon elements.",
       "isGlobal": false
     },
     {
       "key": "eventResizeHandler",
-      "className": "MuiEventTimelinePremium-eventResizeHandler",
+      "className": "MuiEventTimeline-eventResizeHandler",
       "description": "Styles applied to event resize handler elements.",
       "isGlobal": false
     },
     {
       "key": "eventsCell",
-      "className": "MuiEventTimelinePremium-eventsCell",
+      "className": "MuiEventTimeline-eventsCell",
       "description": "Styles applied to the events cell element in a body row.",
       "isGlobal": false
     },
     {
       "key": "eventsHeaderCell",
-      "className": "MuiEventTimelinePremium-eventsHeaderCell",
+      "className": "MuiEventTimeline-eventsHeaderCell",
       "description": "Styles applied to the events header cell element.",
       "isGlobal": false
     },
     {
       "key": "eventsHeaderCellContent",
-      "className": "MuiEventTimelinePremium-eventsHeaderCellContent",
+      "className": "MuiEventTimeline-eventsHeaderCellContent",
       "description": "Styles applied to the events header cell content element.",
       "isGlobal": false
     },
     {
       "key": "eventSkeleton",
-      "className": "MuiEventTimelinePremium-eventSkeleton",
+      "className": "MuiEventTimeline-eventSkeleton",
       "description": "Styles applied to the event skeleton element.",
       "isGlobal": false
     },
     {
       "key": "eventToolbar",
-      "className": "MuiEventTimelinePremium-eventToolbar",
+      "className": "MuiEventTimeline-eventToolbar",
       "description": "Styles applied to the armed-event toolbar root element.",
       "isGlobal": false
     },
     {
       "key": "eventToolbarDeleteButton",
-      "className": "MuiEventTimelinePremium-eventToolbarDeleteButton",
+      "className": "MuiEventTimeline-eventToolbarDeleteButton",
       "description": "Styles applied to the armed-event toolbar delete button element.",
       "isGlobal": false
     },
     {
       "key": "eventToolbarEditButton",
-      "className": "MuiEventTimelinePremium-eventToolbarEditButton",
+      "className": "MuiEventTimeline-eventToolbarEditButton",
       "description": "Styles applied to the armed-event toolbar edit button element.",
       "isGlobal": false
     },
     {
       "key": "grid",
-      "className": "MuiEventTimelinePremium-grid",
+      "className": "MuiEventTimeline-grid",
       "description": "Styles applied to the grid element.",
       "isGlobal": false
     },
     {
       "key": "header",
-      "className": "MuiEventTimelinePremium-header",
+      "className": "MuiEventTimeline-header",
       "description": "Styles applied to the generic header (wraps all level rows).",
       "isGlobal": false
     },
     {
       "key": "headerCell",
-      "className": "MuiEventTimelinePremium-headerCell",
+      "className": "MuiEventTimeline-headerCell",
       "description": "Styles applied to each cell inside a header level row.",
       "isGlobal": false
     },
     {
       "key": "headerCellLabel",
-      "className": "MuiEventTimelinePremium-headerCellLabel",
+      "className": "MuiEventTimeline-headerCellLabel",
       "description": "Styles applied to the label element inside a header cell.",
       "isGlobal": false
     },
     {
       "key": "headerLevelRow",
-      "className": "MuiEventTimelinePremium-headerLevelRow",
+      "className": "MuiEventTimeline-headerLevelRow",
       "description": "Styles applied to each level row inside the generic header.",
       "isGlobal": false
     },
     {
       "key": "headerRow",
-      "className": "MuiEventTimelinePremium-headerRow",
+      "className": "MuiEventTimeline-headerRow",
       "description": "Styles applied to the top row of the grid (contains the title and events headers).",
       "isGlobal": false
     },
     {
       "key": "root",
-      "className": "MuiEventTimelinePremium-root",
+      "className": "MuiEventTimeline-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
       "key": "titleCell",
-      "className": "MuiEventTimelinePremium-titleCell",
+      "className": "MuiEventTimeline-titleCell",
       "description": "Styles applied to the title cell element.",
       "isGlobal": false
     },
     {
       "key": "titleCellContent",
-      "className": "MuiEventTimelinePremium-titleCellContent",
+      "className": "MuiEventTimeline-titleCellContent",
       "description": "Styles applied to the title cell content wrapper element.",
       "isGlobal": false
     },
     {
       "key": "titleCellLegendColor",
-      "className": "MuiEventTimelinePremium-titleCellLegendColor",
+      "className": "MuiEventTimeline-titleCellLegendColor",
       "description": "Styles applied to the title cell legend color element.",
       "isGlobal": false
     },
     {
       "key": "titleCellRow",
-      "className": "MuiEventTimelinePremium-titleCellRow",
+      "className": "MuiEventTimeline-titleCellRow",
       "description": "Styles applied to the title cell row element.",
       "isGlobal": false
     },
     {
       "key": "titleHeaderCell",
-      "className": "MuiEventTimelinePremium-titleHeaderCell",
+      "className": "MuiEventTimeline-titleHeaderCell",
       "description": "Styles applied to the title header cell element.",
       "isGlobal": false
     }

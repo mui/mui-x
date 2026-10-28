@@ -2,6 +2,7 @@ import type {
   EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
+  SchedulerEventLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
@@ -19,6 +20,9 @@ const enUSDialog: EventEditingLocaleText = {
   deleteEventButtonAriaLabel: 'Delete event',
   eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Delete event',
+  deleteConfirmationTitle: 'Delete this event?',
+  deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  cancel: 'Cancel',
   editEvent: 'Edit event',
   showEventDetails: 'Show details',
   eventContextMenuAriaLabel: 'Event actions',
@@ -49,11 +53,13 @@ const enUSDialog: EventEditingLocaleText = {
   recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Repeats weekly on ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'months',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Day ${dayNumber}`,
-  recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} of the last week of the month`,
-  recurrenceMonthlyLastWeekLabel: (weekDay) => `${weekDay} last week`,
+  recurrenceMonthlyLastWeekAriaLabel: ({ weekdayName }) =>
+    `${weekdayName} of the last week of the month`,
+  recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `${weekdayName} last week`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Repeats monthly on day ${dayNumber}`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) => `${weekDay} week ${ord} of the month`,
-  recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => `${weekDay} week ${ord}`,
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekdayName }) =>
+    `${weekdayName} week ${ord} of the month`,
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekdayName }) => `${weekdayName} week ${ord}`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'On',
   recurrenceYearlyFrequencyLabel: 'years',
   recurrenceYearlyPresetLabel: (date) => `Repeats annually on ${date}`,
@@ -71,7 +77,6 @@ const enUSDialog: EventEditingLocaleText = {
 
   // RecurringScopeDialog
   all: 'All events',
-  cancel: 'Cancel',
   confirm: 'Confirm',
   onlyThis: 'Only this event',
   radioGroupAriaLabel: 'Editing recurring events scope',
@@ -79,7 +84,21 @@ const enUSDialog: EventEditingLocaleText = {
   title: 'Apply this change to:',
 };
 
-const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventEditingLocaleText> = {
+const enUSEvent: SchedulerEventLocaleText = {
+  // Event accessible name
+  eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  eventAriaLabelAllDay: 'All day',
+  eventAriaLabelRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `Resource: ${resourceName}`,
+  eventAriaLabel: ({ title, when, date, resource, recurring }) =>
+    [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const enUSCalendar: Omit<
+  EventCalendarLocaleText,
+  keyof EventEditingLocaleText | keyof SchedulerEventLocaleText
+> = {
   // ResourcesTree
   resourcesLabel: 'Resources',
 
@@ -119,13 +138,16 @@ const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventEditingLocaleText> 
 
   // WeekView
   allDay: 'All day',
+  dayGridLabel: 'All-day and multi-day events',
 
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} more..`,
   nextTimeSpan: (timeSpan) => `Next ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Previous ${timeSpan}`,
-  resourceAriaLabel: (resourceName) => `Resource: ${resourceName}`,
   weekAbbreviation: 'W',
   weekNumberAriaLabel: (weekNumber) => `Week ${weekNumber}`,
+
+  // AgendaView
+  agendaViewEmptyStateLabel: 'No upcoming events',
 
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Ends ${endDate}`,
@@ -142,13 +164,17 @@ const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventEditingLocaleText> 
   timelineResourceTitleHeader: 'Resource title',
 };
 
-const enUSTimeline: Omit<EventTimelineLocaleText, keyof EventEditingLocaleText> = {
+const enUSTimeline: Omit<
+  EventTimelineLocaleText,
+  keyof EventEditingLocaleText | keyof SchedulerEventLocaleText
+> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Resource title',
 };
 
 export const enUS: SchedulerLocalization = getSchedulerLocalization({
   dialog: enUSDialog,
+  event: enUSEvent,
   calendar: enUSCalendar,
   timeline: enUSTimeline,
 });

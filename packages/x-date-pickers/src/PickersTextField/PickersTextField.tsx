@@ -75,12 +75,14 @@ const PickersTextField = React.forwardRef(function PickersTextField(
       legacyProps.InputLabelProps ||
       legacyProps.FormHelperTextProps
     ) {
-      warnOnce([
-        'MUI X: `PickersTextField` no longer supports the `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props.',
-        'They are silently dropped, which can hide configuration bugs in JavaScript codebases that do not benefit from TypeScript checks.',
-        'Use `slotProps.input`, `slotProps.htmlInput`, `slotProps.inputLabel` and `slotProps.formHelperText` instead.',
-        'You can run the `migrate-text-field-props` codemod to migrate automatically.',
-      ]);
+      warnOnce(
+        [
+          'MUI X: `PickersTextField` no longer supports the `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props.',
+          'They are silently dropped, which can hide configuration bugs in JavaScript codebases that do not benefit from TypeScript checks.',
+          'Use `slotProps.input`, `slotProps.htmlInput`, `slotProps.inputLabel` and `slotProps.formHelperText` instead.',
+          'You can run the `migrate-text-field-props` codemod to migrate automatically.',
+        ].join('\n'),
+      );
     }
   }
 
@@ -124,7 +126,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     // Slot system
     slots,
     slotProps,
-    // @ts-ignore
+    // @ts-expect-error Range pickers pass this internal data attribute outside the public text-field props.
     'data-active-range-position': dataActiveRangePosition,
     ...other
   } = props;

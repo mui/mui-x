@@ -28,7 +28,7 @@ import {
   getTreeNodeDescendants,
 } from '@mui/x-data-grid/internals';
 import type { GridDataSourceBaseOptions, GridStrategyProcessor } from '@mui/x-data-grid/internals';
-import { warnOnce } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { NestedDataManager, RequestStatus, getGroupKeys } from './utils';
@@ -44,6 +44,18 @@ import { gridDataSourceErrorsSelector } from './gridDataSourceSelector';
 export const INITIAL_STATE = {
   loading: {},
   errors: {},
+};
+
+// Fetched rows are full snapshots: replace them so fields the server no longer returns are dropped.
+// A row returned as the stored object itself is merged instead, so it gets a new reference and repaints.
+const getFetchedRowsUpdates = (
+  apiRef: RefObject<GridPrivateApiPro>,
+  rows: GridGetRowsResponsePro['rows'],
+): Array<GridRowModelUpdate | GridRowModelReplace> => {
+  const rowsLookup = gridRowsLookupSelector(apiRef);
+  return rows.map((row) =>
+    rowsLookup[gridRowIdSelector(apiRef, row)] === row ? row : { _action: 'replace', row },
+  );
 };
 
 export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
@@ -140,7 +152,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       if (rowsToDelete.length > 0) {
         apiRef.current.updateNestedRows(rowsToDelete, groupPath);
       }
-      apiRef.current.updateNestedRows(rows, groupPath);
+      apiRef.current.updateNestedRows(getFetchedRowsUpdates(apiRef, rows), groupPath);
     },
     [apiRef],
   );
@@ -239,13 +251,12 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
             }),
           );
         } else if (process.env.NODE_ENV !== 'production') {
-          warnOnce(
+          errorOnce(
             [
               'MUI X: A call to `dataSource.getRows()` threw an error which was not handled because `onDataSourceError()` is missing.',
               'To handle the error pass a callback to the `onDataSourceError` prop, for example `<DataGrid onDataSourceError={(error) => ...} />`.',
               'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
-            ],
-            'error',
+            ].join('\n'),
           );
         }
       } finally {
@@ -394,7 +405,10 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
             rowsToDelete.push({ ...rowsLookup[parentRowId], _action: 'delete' });
           });
         }
-        apiRef.current.updateRows(response.rows.concat(rowsToDelete));
+        apiRef.current.updateRows([
+          ...getFetchedRowsUpdates(apiRef, response.rows),
+          ...rowsToDelete,
+        ]);
       }
 
       apiRef.current.unstable_applyPipeProcessors(

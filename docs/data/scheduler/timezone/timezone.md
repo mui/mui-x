@@ -56,6 +56,7 @@ const event = {
 ```
 
 This event always happens at 09:00 in New York, regardless of DST changes.
+A local time that a DST transition skips or repeats follows the same rules as the [occurrences of recurring events](#recurring-events-and-timezones).
 
 {{"demo": "TimezoneDatasetWallTime.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -77,8 +78,8 @@ If no `timezone` is set, the component uses the default timezone of your date li
 
 The `displayTimezone` prop controls how all events are rendered in the UI.
 
-Changing `displayTimezone` only affects the visual representation.
-It does not modify the event data or change when an event occurs.
+Changing `displayTimezone` does not modify the event data or change when an event occurs.
+The visible date is read in `displayTimezone` too: the visible range starts on the day of `visibleDate` in that timezone, and the next and previous buttons pass a date in that timezone to `onVisibleDateChange`.
 
 ```tsx
 <EventCalendar
@@ -130,6 +131,10 @@ to happen at 09:00 local time in Europe/Paris.
 
 The Scheduler uses the event's `timezone` to interpret and expand
 the recurrence pattern correctly across DST boundaries.
+
+When a DST transition skips the local time of an occurrence, the occurrence moves forward by the length of the gap: a daily event at 02:30 in `Europe/Paris` happens at 03:30 on the day clocks spring forward.
+When a transition repeats the local time, the occurrence happens the first time the clock shows it.
+Both rules follow the [RFC 5545](https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.5) specification.
 
 The event dialog reads and writes the recurrence rule in the event's `timezone` too: the weekday and day of month it offers, and the "Until" day, are the ones of the event in that timezone, which can differ from the day the occurrence is displayed on.
 When the event's timezone differs from the `displayTimezone`, the Recurrence tab shows a "Timezone: …" note under the recurrence selector and the read-only details append the timezone name to the recurrence label.
