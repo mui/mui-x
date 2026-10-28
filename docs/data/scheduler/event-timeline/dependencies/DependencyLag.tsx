@@ -8,8 +8,8 @@ const features = { dependencies: dependenciesFeature };
 const presetConfig = { dayAndHour: { startTime: 8, endTime: 20 } };
 
 const resources: SchedulerResource[] = [
-  { id: 'production', title: 'Production' },
-  { id: 'shipping', title: 'Shipping' },
+  { id: 'production', title: 'Production', eventColor: 'orange' },
+  { id: 'shipping', title: 'Shipping', eventColor: 'teal' },
 ];
 
 const initialEvents: SchedulerEvent[] = [

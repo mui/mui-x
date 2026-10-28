@@ -8,9 +8,9 @@ const features = { dependencies: dependenciesFeature };
 const presetConfig = { dayAndHour: { startTime: 8, endTime: 18 } };
 
 const resources: SchedulerResource[] = [
-  { id: 'build', title: 'Build' },
-  { id: 'release', title: 'Release' },
-  { id: 'ops', title: 'Ops' },
+  { id: 'build', title: 'Build', eventColor: 'blue' },
+  { id: 'release', title: 'Release', eventColor: 'green' },
+  { id: 'ops', title: 'Ops', eventColor: 'teal' },
 ];
 
 const initialEvents: SchedulerEvent[] = [

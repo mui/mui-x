@@ -7,9 +7,9 @@ const features = { dependencies: dependenciesFeature };
 const presetConfig = { dayAndHour: { startTime: 8, endTime: 18 } };
 
 const resources = [
-  { id: 'design', title: 'Design' },
-  { id: 'development', title: 'Development' },
-  { id: 'qa', title: 'QA' },
+  { id: 'design', title: 'Design', eventColor: 'purple' },
+  { id: 'development', title: 'Development', eventColor: 'blue' },
+  { id: 'qa', title: 'QA', eventColor: 'amber' },
 ];
 
 const initialEvents = [
