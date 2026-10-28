@@ -7,9 +7,11 @@ import {
   buildTemporalPlainDate,
   createAdapterDate,
   createAdapterDateFromWallTime,
+  createLabelDate,
   createProcessedDate,
   getDateKey,
 } from './adapter';
+import { PlainDate } from '../base-temporal/PlainDate';
 import type { TemporalSupportedObject } from '../../../models';
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
 
@@ -172,6 +174,19 @@ describe('base-temporal adapter bridge', () => {
       expect(resolve('2025-01-01 09:00', 'UTC')).to.equal(null);
       expect(resolve('20250101', 'UTC')).to.equal(null);
       expect(resolve('2025-01-01T09:00', 'Not/A_Timezone')).to.equal(null);
+    });
+  });
+
+  describe('createLabelDate', () => {
+    // Browsers cannot change their timezone through process.env.TZ.
+    it.skipIf(!isJSDOM)('should label the date itself, whatever the system timezone', () => {
+      // Los Angeles is still on Saturday at midnight in UTC.
+      setSystemTimezone('America/Los_Angeles');
+      // A new adapter, as adapters cache data computed in the current system timezone.
+      const systemAdapter = new TemporalAdapterDateFns();
+      const labelDate = createLabelDate(systemAdapter, PlainDate.from('2026-03-08'));
+      expect(systemAdapter.format(labelDate, 'weekday')).to.equal('Sunday');
+      expect(systemAdapter.getTimezone(labelDate)).to.equal('UTC');
     });
   });
 });

@@ -5,3 +5,6 @@ export { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from './eventDialogOptionalRe
 // lets an experiment recreate the timeline with the internal store parameters.
 export { EventTimelinePremiumContent } from '../event-timeline-premium/content';
 export { EventTimelinePremiumStyledContext } from '../event-timeline-premium/EventTimelinePremiumStyledContext';
+export { dependenciesFeature } from '../event-timeline-premium/content/timeline-dependencies/dependenciesFeature';
+export { EventTimelinePremiumFeaturesContext } from '../event-timeline-premium/features/EventTimelinePremiumFeaturesContext';
+export { useFrozenEventTimelinePremiumFeatures } from '../event-timeline-premium/features/useFrozenEventTimelinePremiumFeatures';

@@ -1,5 +1,5 @@
 import type { TemporalAdapter, TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { SchedulerProcessedDate } from '../models';
+import type { SchedulerProcessedDay } from '../models';
 import type { PlainDate } from '../internals/utils/base-temporal/PlainDate';
 import { createProcessedDate } from '../internals/utils/plain-date-utils/adapter';
 import { getSkippedDays, toEpochMs } from '../internals/utils/plain-date-utils/timeZone';
@@ -14,11 +14,11 @@ export function getDayListFromPlainDates(parameters: {
   lastPlainDate: PlainDate;
   timezone: TemporalTimezone;
   excludeWeekends?: boolean;
-}): GetDaytListReturnValue {
+}): SchedulerProcessedDay[] {
   const { adapter, firstPlainDate, lastPlainDate, timezone, excludeWeekends } = parameters;
   // A day the timezone skips, like December 30th, 2011 in Pacific/Apia, has no instant.
   const skippedDays = getSkippedDays(firstPlainDate, lastPlainDate.add({ days: 1 }), timezone);
-  const days: SchedulerProcessedDate[] = [];
+  const days: SchedulerProcessedDay[] = [];
   for (
     let plainDate = firstPlainDate;
     plainDate.dayNumber <= lastPlainDate.dayNumber;
@@ -28,11 +28,12 @@ export function getDayListFromPlainDates(parameters: {
       !skippedDays.has(plainDate.dayNumber) &&
       !(excludeWeekends && isWeekendPlainDate(plainDate))
     ) {
-      days.push(createProcessedDate(adapter, toEpochMs(plainDate, 0, timezone), timezone));
+      days.push({
+        ...createProcessedDate(adapter, toEpochMs(plainDate, 0, timezone), timezone),
+        plainDate,
+      });
     }
   }
 
   return days;
 }
-
-export type GetDaytListReturnValue = SchedulerProcessedDate[];

@@ -2,11 +2,9 @@ import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/i
 import type {
   RecurringEventPresetKey,
   RecurringEventScope,
-  RecurringEventWeekDayCode,
   SchedulerEventOccurrence,
   SchedulerEventRecurrenceRule,
   SchedulerEventUpdatedProperties,
-  SchedulerProcessedDate,
   SchedulerProcessedEvent,
   SchedulerProcessedEventRecurrenceRule,
 } from '../../models';
@@ -76,22 +74,20 @@ export interface SchedulerRecurringEventsPluginInterface {
   /**
    * Builds the recurrence presets (Daily / Weekly / Monthly / Yearly)
    * the user can choose from when editing an event.
-   * `date` is the event's start in its own timezone.
+   * `plainDate` is the date of the event's start in its own timezone.
    */
   computePresets(
-    adapter: Adapter,
-    date: SchedulerProcessedDate,
+    plainDate: PlainDate,
   ): Record<RecurringEventPresetKey, SchedulerProcessedEventRecurrenceRule>;
 
   /**
    * Determines which preset (if any) the given rule corresponds to.
    * Returns 'custom' if the rule does not match any preset, or `null` if no rule is provided.
-   * `occurrenceStart` is the occurrence's start in the event's timezone.
+   * `occurrenceStartPlainDate` is the date of the occurrence's start in the event's timezone.
    */
   getDefaultPresetKey(
-    adapter: Adapter,
     rule: SchedulerProcessedEventRecurrenceRule | undefined,
-    occurrenceStart: SchedulerProcessedDate,
+    occurrenceStartPlainDate: PlainDate,
   ): RecurringEventPresetKey | 'custom' | null;
 
   /**
@@ -102,26 +98,4 @@ export interface SchedulerRecurringEventsPluginInterface {
     rruleA: SchedulerProcessedEventRecurrenceRule | undefined,
     rruleB: SchedulerProcessedEventRecurrenceRule | undefined,
   ): boolean;
-
-  /**
-   * Returns the 7 week days with their code and date,
-   * starting at the start of the week containing `visiblePlainDate`.
-   */
-  getWeeklyDays(
-    adapter: Adapter,
-    visiblePlainDate: PlainDate,
-  ): { code: RecurringEventWeekDayCode; date: PlainDate }[];
-
-  /**
-   * Returns month reference for the given occurrence: dayOfMonth, weekday code and ordinal.
-   */
-  getMonthlyReference(
-    adapter: Adapter,
-    date: SchedulerProcessedDate,
-  ): {
-    dayOfMonth: number;
-    code: RecurringEventWeekDayCode;
-    ord: number;
-    date: TemporalSupportedObject;
-  };
 }

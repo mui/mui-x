@@ -27,6 +27,8 @@ import { EventTimelinePremiumContent } from './content';
 import type { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses';
 import { getEventTimelinePremiumUtilityClass } from './eventTimelinePremiumClasses';
 import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledContext';
+import { EventTimelinePremiumFeaturesContext } from './features/EventTimelinePremiumFeaturesContext';
+import { useFrozenEventTimelinePremiumFeatures } from './features/useFrozenEventTimelinePremiumFeatures';
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
@@ -104,9 +106,14 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
 
   const {
     parameters,
-    forwardedProps: { className, classes: classesProp, ...forwardedProps },
+    forwardedProps: { className, classes: classesProp, features: featuresProp, ...forwardedProps },
   } = useExtractEventTimelinePremiumParameters<TEvent, TResource, typeof props>(props);
-  const store = useEventTimelinePremium(parameters);
+  const { features, storeFeatures } = useFrozenEventTimelinePremiumFeatures(featuresProp);
+  const storeParameters = React.useMemo(
+    () => ({ ...parameters, storeFeatures }),
+    [parameters, storeFeatures],
+  );
+  const store = useEventTimelinePremium(storeParameters);
   const classes = useUtilityClasses(classesProp);
 
   const { localeText, resourceColumnLabel, getEventAriaLabel, apiRef, slots, slotProps, ...other } =
@@ -140,25 +147,27 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
 
   return (
     <SchedulerStoreContext.Provider value={store as any}>
-      <EventTimelinePremiumStyledContext.Provider value={timelineStyledContextValue}>
-        <EventEditingStyledContext.Provider value={editingStyledContextValue}>
-          <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
-            <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
-              <SchedulerDirectionProvider>
-                <EventTimelinePremiumRoot
-                  ref={forwardedRef}
-                  className={clsx(classes.root, className)}
-                  {...other}
-                >
-                  <EventTimelinePremiumContent />
-                  <ErrorContainer />
-                  {watermark}
-                </EventTimelinePremiumRoot>
-              </SchedulerDirectionProvider>
-            </SchedulerSlotsProvider>
-          </SharedComponentsStyledContext.Provider>
-        </EventEditingStyledContext.Provider>
-      </EventTimelinePremiumStyledContext.Provider>
+      <EventTimelinePremiumFeaturesContext.Provider value={features}>
+        <EventTimelinePremiumStyledContext.Provider value={timelineStyledContextValue}>
+          <EventEditingStyledContext.Provider value={editingStyledContextValue}>
+            <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
+              <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
+                <SchedulerDirectionProvider>
+                  <EventTimelinePremiumRoot
+                    ref={forwardedRef}
+                    className={clsx(classes.root, className)}
+                    {...other}
+                  >
+                    <EventTimelinePremiumContent />
+                    <ErrorContainer />
+                    {watermark}
+                  </EventTimelinePremiumRoot>
+                </SchedulerDirectionProvider>
+              </SchedulerSlotsProvider>
+            </SharedComponentsStyledContext.Provider>
+          </EventEditingStyledContext.Provider>
+        </EventTimelinePremiumStyledContext.Provider>
+      </EventTimelinePremiumFeaturesContext.Provider>
     </SchedulerStoreContext.Provider>
   );
 }) as EventTimelinePremiumComponent;
@@ -342,6 +351,29 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    * @default []
    */
   events: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * The optional features of the Event Timeline.
+   * They are read once when the component mounts, later changes are ignored.
+   * @example { recurringEvents: recurringEventsFeature }
+   */
+  features: PropTypes.shape({
+    recurringEvents: PropTypes.shape({
+      optionalRenderers: PropTypes.shape({
+        recurrenceTab: PropTypes.elementType,
+        recurringScopeDialog: PropTypes.elementType,
+      }).isRequired,
+      store: PropTypes.shape({
+        applyDataTimezoneToEventUpdate: PropTypes.func.isRequired,
+        computePresets: PropTypes.func.isRequired,
+        deleteRecurringEvent: PropTypes.func.isRequired,
+        getDefaultPresetKey: PropTypes.func.isRequired,
+        getOccurrencesForVisibleDays: PropTypes.func.isRequired,
+        isSameRRule: PropTypes.func.isRequired,
+        parseRRule: PropTypes.func.isRequired,
+        updateRecurringEvent: PropTypes.func.isRequired,
+      }).isRequired,
+    }),
+  }),
   /**
    * Returns the accessible name of an event block.
    * Use it to announce details rendered through the `timelineEventContent` slot.

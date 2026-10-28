@@ -12,10 +12,9 @@ import { EVENT_CREATION_PRECISION_MINUTE } from '../../constants';
 import {
   floorToWallClockMinutes,
   toEpochMs,
-  toPlainDateTime,
 } from '../../internals/utils/plain-date-utils/timeZone';
-import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
-import type { TimelineAxis } from '../../internals/utils/timeline-axis';
+import { FULL_DAY_MINUTES, getPlainDateTimelineAxis } from '../../internals/utils/timeline-axis';
+import type { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
 import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
@@ -34,8 +33,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     render,
     style,
     // Internal props
-    start,
-    end,
+    value,
     dayStartMinute = 0,
     dayEndMinute = FULL_DAY_MINUTES,
     addPropertiesToDroppedEvent,
@@ -46,7 +44,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
   const store = useEventCalendarStoreContext();
   const { focusedCell, setFocusedCell, rowTypes, rowsPerType } = useCalendarGridRootContext();
   const isRtl = useDirection() === 'rtl';
-  const isCurrentDay = useStore(store, schedulerNowSelectors.isCurrentDay, start);
+  const isCurrentDay = useStore(store, schedulerNowSelectors.nowDayNumber) === value.dayNumber;
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const { ref: listItemRef, index } = useCompositeListItem();
   const cellsRefs = useCalendarGridCellsRefsContext();
@@ -57,10 +55,11 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     focusedCell?.rowIndex === 0 &&
     focusedCell?.columnIndex === index;
 
-  const axis: TimelineAxis = React.useMemo(
-    () => ({ start, end, timezone: displayTimezone, dayStartMinute, dayEndMinute }),
-    [start, end, displayTimezone, dayStartMinute, dayEndMinute],
+  const axis = React.useMemo(
+    () => getPlainDateTimelineAxis(value, { dayStartMinute, dayEndMinute }, displayTimezone),
+    [value, displayTimezone, dayStartMinute, dayEndMinute],
   );
+  const { start, end } = axis;
 
   const {
     getCursorPositionInElementMs,
@@ -87,7 +86,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
   });
 
   const triggerKeyboardCreation = useKeyboardEventCreation(({ creationConfig, timezone }) => {
-    const noon = toEpochMs(toPlainDateTime(start, timezone).date, 12 * 60 * 60_000, timezone);
+    const noon = toEpochMs(value, 12 * 60 * 60_000, timezone);
     // Keep the default creation anchor inside the visible window when the view limits its hour range.
     const anchor = noon < start || noon >= end ? start : noon;
     return {
@@ -139,12 +138,13 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
 
   const contextValue: CalendarGridTimeColumnContext = React.useMemo(
     () => ({
+      plainDate: value,
       axis,
       hasFocus,
       getCursorPositionInElementMs,
       getTimestampAtPointer,
     }),
-    [axis, hasFocus, getCursorPositionInElementMs, getTimestampAtPointer],
+    [value, axis, hasFocus, getCursorPositionInElementMs, getTimestampAtPointer],
   );
 
   const keyboardProps = {
@@ -181,14 +181,10 @@ export namespace CalendarGridTimeColumn {
 
   export interface Props extends BaseUIComponentProps<'div', State> {
     /**
-     * The first instant of the column, as a timestamp read in the display timezone.
+     * The date of the column, in the display timezone.
+     * Keep its identity stable: the column rebuilds its axis and its context when it changes.
      */
-    start: number;
-    /**
-     * The end of the column, as a timestamp read in the display timezone: the last instant of its
-     * day when the whole day is displayed, otherwise the exclusive end of its hour window.
-     */
-    end: number;
+    value: PlainDate;
     /**
      * First displayed minute of the day, as an offset from midnight.
      * Derived from the view's whole-hour window so it stays aligned with the

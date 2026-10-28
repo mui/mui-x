@@ -6,7 +6,7 @@ import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import type {
   EventCalendarViewDefinition,
   GridRowType,
-  SchedulerProcessedDate,
+  SchedulerProcessedDay,
 } from '@mui/x-scheduler-internals/models';
 import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
 import {
@@ -175,7 +175,7 @@ export const MonthView = React.memo(
 
     const weeks = React.useMemo(() => {
       const chunkSize = showWeekends ? 7 : 5;
-      const result: SchedulerProcessedDate[][] = [];
+      const result: SchedulerProcessedDay[][] = [];
       for (let i = 0; i < days.length; i += chunkSize) {
         result.push(days.slice(i, i + chunkSize));
       }

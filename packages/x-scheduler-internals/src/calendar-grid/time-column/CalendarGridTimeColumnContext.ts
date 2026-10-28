@@ -1,8 +1,13 @@
 'use client';
 import * as React from 'react';
 import type { TimelineAxis } from '../../internals/utils/timeline-axis';
+import type { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
 
 export interface CalendarGridTimeColumnContext {
+  /**
+   * The date of the column, in the display timezone.
+   */
+  plainDate: PlainDate;
   /**
    * The axis of the column: its bounds, read in the display timezone, and the hour window of the
    * view.

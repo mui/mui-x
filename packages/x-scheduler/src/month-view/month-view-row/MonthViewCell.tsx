@@ -5,7 +5,7 @@ import { useStore } from '@base-ui/utils/store';
 import Button from '@mui/material/Button';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { isWeekendPlainDate, toPlainDateTime } from '@mui/x-scheduler-internals/internals';
+import { isWeekendPlainDate } from '@mui/x-scheduler-internals/internals';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
@@ -178,7 +178,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   // Selector hooks
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
   const visiblePlainDate = useStore(store, schedulerOtherSelectors.visiblePlainDate);
-  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const isCreatingAnEvent = useStore(
     store,
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
@@ -192,11 +191,10 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const cellRef = React.useRef<HTMLDivElement | null>(null);
   const handleRef = useMergedRefs(ref, cellRef);
 
-  const dayPlainDate = toPlainDateTime(day.timestamp, displayTimezone).date;
   const isCurrentMonth =
-    dayPlainDate.year === visiblePlainDate.year && dayPlainDate.month === visiblePlainDate.month;
-  const isFirstDayOfMonth = dayPlainDate.day === 1;
-  const isToday = dayPlainDate.dayNumber === nowDayNumber;
+    day.plainDate.year === visiblePlainDate.year && day.plainDate.month === visiblePlainDate.month;
+  const isFirstDayOfMonth = day.plainDate.day === 1;
+  const isToday = day.plainDate.dayNumber === nowDayNumber;
 
   const inBoundOccurrences = day.withPosition.filter((o) => o.position.index <= maxEvents);
   const hasOverflow = inBoundOccurrences.length < day.withPosition.length;
@@ -231,13 +229,13 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       className={classes.monthViewCell}
       ref={handleRef}
       key={day.key}
-      value={dayPlainDate}
+      value={day.plainDate}
       aria-colindex={colIndex}
       aria-labelledby={ariaLabelledBy}
       data-current={isToday || undefined}
       aria-current={isToday ? 'date' : undefined}
       data-other-month={!isCurrentMonth || undefined}
-      data-weekend={isWeekendPlainDate(dayPlainDate) || undefined}
+      data-weekend={isWeekendPlainDate(day.plainDate) || undefined}
       lockSurfaceType
       style={{ '--row-count': rowCount } as React.CSSProperties}
     >

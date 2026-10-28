@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
+import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { DataGridPremium, gridClasses } from '@mui/x-data-grid-premium';
 import type {
   DataGridPremiumProps,
@@ -179,6 +179,36 @@ describe('<DataGridPremium /> - Pivoting', () => {
     expect(getRowValues(3)).to.deep.equal(['AMZN (2)', '6,000']);
     expect(getRowValues(4)).to.deep.equal(['US_TREASURY_2Y (1)', '1,000']);
     expect(getRowValues(5)).to.deep.equal(['US_TREASURY_10Y (1)', '750']);
+  });
+
+  it('should keep the ids of the pivot panel when pivoting is turned on and off', async () => {
+    render(
+      <Test
+        initialState={{
+          pivoting: {
+            model: {
+              rows: [{ field: 'ticker' }],
+              columns: [],
+              values: [{ field: 'volume', aggFunc: 'sum' }],
+            },
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Pivot' }));
+    const pivotSwitch = screen.getByRole('switch', { name: 'Pivot' }) as HTMLInputElement;
+    fireEvent.click(pivotSwitch);
+    expect(pivotSwitch.checked).to.equal(true);
+    // Turning pivoting off restores the state exported when it was turned on.
+    fireEvent.click(pivotSwitch);
+    expect(pivotSwitch.checked).to.equal(false);
+
+    const pivotButton = screen.getByRole('button', { name: 'Pivot' });
+    const sidebar = document.querySelector<HTMLElement>(`.${gridClasses.sidebar}`)!;
+    expect(sidebar.id).not.to.equal('');
+    expect(pivotButton.getAttribute('aria-controls')).to.equal(sidebar.id);
+    expect(sidebar.getAttribute('aria-labelledby')).to.equal(pivotButton.id);
   });
 
   it('should pivot the data with 2 pivot values', async () => {

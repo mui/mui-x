@@ -1,30 +1,7 @@
 import { adapter, adapterFr } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import { isWeekend } from './useAdapter';
 
 describe('date-utils', () => {
-  describe('isWeekend', () => {
-    it('returns false for weekday (e.g. Wednesday)', () => {
-      const wed = adapter.date('2025-01-08T12:00:00Z', 'default');
-      expect(isWeekend(adapter, wed)).to.equal(false);
-    });
-
-    it('returns true for Saturday or Sunday', () => {
-      const sat = adapter.date('2025-01-11T12:00:00Z', 'default');
-      expect(isWeekend(adapter, sat)).to.equal(true);
-
-      const sun = adapter.date('2025-01-12T12:00:00Z', 'default');
-      expect(isWeekend(adapter, sun)).to.equal(true);
-    });
-
-    it('reads the day in the timezone of the date', () => {
-      // Saturday 04:00 in UTC is Friday 23:00 in New York.
-      const instant = adapter.date('2025-01-11T04:00:00Z', 'default');
-      expect(isWeekend(adapter, adapter.setTimezone(instant, 'UTC'))).to.equal(true);
-      expect(isWeekend(adapter, adapter.setTimezone(instant, 'America/New_York'))).to.equal(false);
-    });
-  });
-
   describe('dateLocale', () => {
     it('formats weekday in English by default', () => {
       const monday = adapter.date('2025-01-06T12:00:00Z', 'default');

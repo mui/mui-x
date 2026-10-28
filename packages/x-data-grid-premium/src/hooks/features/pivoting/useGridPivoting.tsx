@@ -155,7 +155,12 @@ export const useGridPivoting = (
 
   const getInitialData = React.useCallback(() => {
     if (!exportedStateRef.current) {
-      exportedStateRef.current = apiRef.current.exportState();
+      // The computed columns model is not pivot state: it stays live while pivoting is
+      // active (the columns are only injected again once it is deactivated), so a
+      // definition added, edited or removed in the meantime is neither replayed away nor
+      // hidden from `exportState()`.
+      const { computedColumns, ...exportedState } = apiRef.current.exportState();
+      exportedStateRef.current = exportedState;
     }
 
     let rows: GridRowModel[] = [];

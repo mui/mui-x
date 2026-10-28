@@ -526,11 +526,13 @@ export interface SchedulerParametersToStateMapper<
   ) => State;
   /**
    * Updates the state based on the new parameters.
+   * `currentState` is the state before the update.
    */
   updateStateFromParameters: (
     newState: Partial<SchedulerState>,
     parameters: Parameters,
     updateModel: SchedulerModelUpdater<State, Parameters>,
+    currentState: State,
   ) => Partial<State>;
 }
 

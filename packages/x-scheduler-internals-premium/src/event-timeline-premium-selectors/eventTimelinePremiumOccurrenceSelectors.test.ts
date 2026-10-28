@@ -134,7 +134,7 @@ describe('eventTimelinePremiumOccurrenceSelectors', () => {
         computeElementPositionInCollection({
           start: occurrence.displayTimezone.start,
           end: occurrence.displayTimezone.end,
-          collection: config.axis,
+          collection: config,
         }),
       );
     });
@@ -198,7 +198,7 @@ describe('eventTimelinePremiumOccurrenceSelectors', () => {
         computeElementPositionInCollection({
           start: occurrence.displayTimezone.start,
           end: occurrence.displayTimezone.end,
-          collection: config.axis,
+          collection: config,
           durationMs: config.durationMs,
         }),
       );

@@ -20,14 +20,16 @@ import type { FormulaCellRef, FormulaScalar } from './engine';
 import type { GridFormulaResult } from './gridFormulaInterfaces';
 import { gridFormulaLookupSelector } from './gridFormulaSelectors';
 import { gridFormulaA1PositionContextSelector } from './gridFormulaPositionContext';
+import { resolveComputedCellValue } from './gridComputedColumnsRuntime';
 
 /**
  * Evaluates a DRAFT formula source against the current grid data without
  * committing anything — the formula bar's on-the-fly result preview. Reads are
  * strictly side-effect free: formula-cell dependencies resolve from the
  * committed lookup (state), raw dependencies through `valueGetter` from row
- * data, positions from the live view position context. Nothing is written to
- * the evaluation cache or its invalidation bookkeeping.
+ * data, computed cells from their typed result (the memo the cells share),
+ * positions from the live view position context. Nothing is written to the
+ * evaluation cache or its invalidation bookkeeping.
  *
  * @param {RefObject<GridPrivateApiPremium>} apiRef The private grid api.
  * @param {{ id: GridRowId; field: string }} cell The cell the draft belongs to.
@@ -117,6 +119,9 @@ export function previewFormulaResult(
       const colDef = columnsLookup[ref.field];
       if (colDef === undefined) {
         return undefined;
+      }
+      if (colDef.computed) {
+        return resolveComputedCellValue(apiRef, row, ref.field);
       }
       return getRowValueUtil(row, colDef, apiRef) as FormulaScalar;
     },

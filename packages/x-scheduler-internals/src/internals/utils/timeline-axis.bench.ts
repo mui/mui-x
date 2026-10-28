@@ -1,12 +1,8 @@
 import { describe, test } from 'vitest';
-import { adapter } from 'test/utils/scheduler';
+import { adapter, createTimelineAxis } from 'test/utils/scheduler';
 import { processDate } from '../../process-date';
 import { computeElementPositionInCollection } from './useElementPositionInCollection';
-import {
-  getTimelineAxis,
-  getTimelineAxisDurationMs,
-  timelineAxisOffsetToTimestamp,
-} from './timeline-axis';
+import { getTimelineAxisDurationMs, timelineAxisOffsetToTimestamp } from './timeline-axis';
 
 const occurrenceCount = 1_000;
 
@@ -17,7 +13,7 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
   const start = adapter.startOfDay(
     adapter.setTimezone(adapter.date('2026-03-02T12:00:00Z', 'default'), timezone),
   );
-  const axis = getTimelineAxis(adapter, {
+  const axis = createTimelineAxis({
     start,
     end: adapter.endOfDay(adapter.addDays(start, 6)),
     dayStartMinute: 0,
