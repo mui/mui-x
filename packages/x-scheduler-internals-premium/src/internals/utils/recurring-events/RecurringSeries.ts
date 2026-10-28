@@ -480,7 +480,9 @@ export class RecurringSeries {
       const startDayNumber = getDayNumber(startDay);
       const days = getDayNumber(date) - startDayNumber;
       count = days > 0 ? Math.min(this.count, Math.ceil(days / ruleDays.interval)) : 0;
-      lastDay = plainDateFromDayNumber(startDayNumber + (count - 1) * ruleDays.interval);
+      if (count > 0) {
+        lastDay = plainDateFromDayNumber(startDayNumber + (count - 1) * ruleDays.interval);
+      }
     } else {
       count = countDays(() => false);
     }

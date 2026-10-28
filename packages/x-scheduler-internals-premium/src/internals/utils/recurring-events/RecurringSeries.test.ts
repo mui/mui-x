@@ -205,6 +205,17 @@ describe('recurring-events/RecurringSeries', () => {
       ).to.equal(100);
     });
 
+    it('should return count when target is before start with an interval of millennia', () => {
+      expect(
+        countRemaining(
+          createRule(1_000_000),
+          adapter.date('2025-03-10', 'UTC'),
+          adapter.date('2025-03-09T23:59:59', 'UTC'),
+          100,
+        ),
+      ).to.equal(100);
+    });
+
     it('should return the remaining occurrences after an inclusive day span (interval=1)', () => {
       expect(
         countRemaining(
