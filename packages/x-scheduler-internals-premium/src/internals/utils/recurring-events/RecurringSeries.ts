@@ -8,6 +8,7 @@ import {
   getStartOfWeekDayNumber,
   LAST_SUPPORTED_DAY,
   plainDateFromDayNumber,
+  toLocalDayNumber,
   toMsInDay,
   toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
@@ -78,14 +79,6 @@ function getNthWeekdayOfMonth(
   return day >= 1 && day <= daysInMonth
     ? plainDateFromDayNumber(getDayNumber(monthStart) + day - 1)
     : null;
-}
-
-/**
- * RFC 5545 weeks start on Monday (WKST=MO) whatever the locale, otherwise BYDAY like SU+TU can go
- * backwards.
- */
-function getStartOfRRuleWeek(date: BaseTemporal.PlainDate): BaseTemporal.PlainDate {
-  return plainDateFromDayNumber(getStartOfWeekDayNumber(getDayNumber(date), 1));
 }
 
 /**
@@ -188,18 +181,19 @@ class RuleDays {
 
     switch (this.rule.freq) {
       case 'DAILY': {
+        const seriesStartDayNumber = getDayNumber(seriesStart);
         const first = plainDateFromDayNumber(
-          getDayNumber(seriesStart) + skip(getDayNumber(date) - getDayNumber(seriesStart)),
+          seriesStartDayNumber + skip(getDayNumber(date) - seriesStartDayNumber),
         );
         return BaseTemporal.PlainDate.compare(first, date) < 0 ? addDays(first, interval) : first;
       }
       case 'WEEKLY': {
-        const seriesWeekStart = getStartOfRRuleWeek(seriesStart);
+        // RFC 5545 weeks start on Monday (WKST=MO) whatever the locale, otherwise BYDAY like SU+TU
+        // can go backwards.
+        const seriesWeekStartDayNumber = getStartOfWeekDayNumber(getDayNumber(seriesStart), 1);
         const weeksDiff =
-          (getDayNumber(getStartOfRRuleWeek(date)) - getDayNumber(seriesWeekStart)) / 7;
-        const startingWeek = plainDateFromDayNumber(
-          getDayNumber(seriesWeekStart) + 7 * skip(weeksDiff),
-        );
+          (getStartOfWeekDayNumber(getDayNumber(date), 1) - seriesWeekStartDayNumber) / 7;
+        const startingWeek = plainDateFromDayNumber(seriesWeekStartDayNumber + 7 * skip(weeksDiff));
         const first = this.findFirstInWeek(startingWeek, minDate);
         if (first !== null) {
           return first;
@@ -338,7 +332,9 @@ export class RecurringSeries {
     // A fractional COUNT is rounded up.
     this.count = Math.ceil(rule.count ?? Infinity);
     this.untilDay = rule.until ? toDay(rule.until) : null;
-    this.excludedDays = new Set(parameters.exDates?.map((exDate) => getDayNumber(toDay(exDate))));
+    this.excludedDays = new Set(
+      parameters.exDates?.map((exDate) => toLocalDayNumber(adapter.getTime(exDate), timezone)),
+    );
   }
 
   /**
@@ -381,7 +377,7 @@ export class RecurringSeries {
   public countOccurrencesBefore(day: BaseTemporal.PlainDate): number {
     const end =
       this.untilDay !== null && BaseTemporal.PlainDate.compare(this.untilDay, day) < 0
-        ? plainDateFromDayNumber(getDayNumber(this.untilDay) + 1)
+        ? this.untilDay.add({ days: 1 })
         : day;
     return this.countBefore(end);
   }
@@ -390,7 +386,7 @@ export class RecurringSeries {
    * Returns whether an occurrence that isn't excluded falls before `day`.
    */
   public hasOccurrenceBefore(day: BaseTemporal.PlainDate): boolean {
-    return this.hasOccurrenceUntil(plainDateFromDayNumber(getDayNumber(day) - 1));
+    return this.hasOccurrenceUntil(day.add({ days: -1 }));
   }
 
   /**
@@ -484,16 +480,16 @@ export class RecurringSeries {
     // ones only, so that an expired series doesn't look them up until `date`.
     let count: number;
     if (ruleDays.rule.freq === 'DAILY') {
-      const days = getDayNumber(date) - getDayNumber(startDay);
+      const startDayNumber = getDayNumber(startDay);
+      const days = getDayNumber(date) - startDayNumber;
       count = days > 0 ? Math.min(this.count, Math.ceil(days / ruleDays.interval)) : 0;
-      lastDay = plainDateFromDayNumber(getDayNumber(startDay) + (count - 1) * ruleDays.interval);
+      lastDay = plainDateFromDayNumber(startDayNumber + (count - 1) * ruleDays.interval);
     } else {
       count = countDays(() => false);
     }
     if (
       count === 0 ||
-      getSkippedDays(startDay, plainDateFromDayNumber(getDayNumber(lastDay) + 1), this.timezone)
-        .size === 0
+      getSkippedDays(startDay, lastDay.add({ days: 1 }), this.timezone).size === 0
     ) {
       return count;
     }
@@ -502,7 +498,8 @@ export class RecurringSeries {
   }
 
   private isSkippedDay(day: BaseTemporal.PlainDate): boolean {
-    const period = Math.floor(getDayNumber(day) / SKIPPED_DAYS_PERIOD);
+    const dayNumber = getDayNumber(day);
+    const period = Math.floor(dayNumber / SKIPPED_DAYS_PERIOD);
     let skippedDays = this.skippedDaysByPeriod.get(period);
     if (skippedDays === undefined) {
       skippedDays = getSkippedDays(
@@ -512,6 +509,6 @@ export class RecurringSeries {
       );
       this.skippedDaysByPeriod.set(period, skippedDays);
     }
-    return skippedDays.has(getDayNumber(day));
+    return skippedDays.has(dayNumber);
   }
 }

@@ -1,5 +1,6 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { MS_PER_DAY } from './base-temporal/iso';
+import type { BaseTemporal } from './base-temporal';
 import {
   localToEpochMs,
   toEpochMs,
@@ -7,7 +8,6 @@ import {
   toLocalMs,
   toMsInDay,
 } from './plain-date-utils/timeZone';
-import type { BaseTemporal } from './base-temporal';
 
 const MINUTE_MS = 60_000;
 export const FULL_DAY_MINUTES = 24 * 60;

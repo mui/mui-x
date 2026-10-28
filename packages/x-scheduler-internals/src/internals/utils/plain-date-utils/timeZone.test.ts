@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
+import { BaseTemporal } from '../base-temporal';
 import {
   addDaysOnWallClock,
   differenceInDays,
@@ -12,7 +13,6 @@ import {
   toPlainDate,
   toWallClockIsoString,
 } from './timeZone';
-import { BaseTemporal } from '../base-temporal';
 
 const HOUR = 3_600_000;
 

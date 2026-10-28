@@ -37,7 +37,10 @@ function createPlainDateRange(
 /**
  * The number of days of the range, `endPlainDate` being the date after it.
  */
-function getDayCount(startPlainDate: BaseTemporal.PlainDate, endPlainDate: BaseTemporal.PlainDate) {
+export function getDayCount(
+  startPlainDate: BaseTemporal.PlainDate,
+  endPlainDate: BaseTemporal.PlainDate,
+) {
   return getDayNumber(endPlainDate) - getDayNumber(startPlainDate);
 }
 

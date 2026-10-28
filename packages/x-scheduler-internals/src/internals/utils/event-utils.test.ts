@@ -16,8 +16,8 @@ import {
   getResourceSelectionMode,
 } from './event-utils';
 import { getDayListFromPlainDates } from '../../get-day-list';
-import { createEventRangeIndex } from './event-range-index';
 import { BaseTemporal } from './base-temporal';
+import { createEventRangeIndex } from './event-range-index';
 
 describe('event-utils', () => {
   describe('getDaysTheOccurrenceIsVisibleOn', () => {

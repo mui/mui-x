@@ -14,6 +14,8 @@ import {
   toEpochMs,
 } from '../../internals/utils/plain-date-utils/timeZone';
 import { FULL_DAY_MINUTES, getPlainDateTimelineAxis } from '../../internals/utils/timeline-axis';
+import type { BaseTemporal } from '../../internals/utils/base-temporal';
+import { getDayNumber } from '../../internals/utils/base-temporal/PlainDate';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
 import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
@@ -21,8 +23,6 @@ import { useCalendarGridCellsRefsContext } from '../../internals/utils/CalendarG
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useTimeDropTarget } from './useTimeDropTarget';
-import type { BaseTemporal } from '../../internals/utils/base-temporal';
-import { getDayNumber } from '../../internals/utils/base-temporal/PlainDate';
 
 export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTimeColumn(
   componentProps: CalendarGridTimeColumn.Props,

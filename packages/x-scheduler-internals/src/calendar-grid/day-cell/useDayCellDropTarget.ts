@@ -3,6 +3,8 @@ import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import type { SchedulerEvent } from '../../models';
+import type { BaseTemporal } from '../../internals/utils/base-temporal';
+import { getDayNumber } from '../../internals/utils/base-temporal/PlainDate';
 import {
   addDaysOnWallClock,
   getEndOfDayMs,
@@ -11,8 +13,6 @@ import {
   toLocalDayNumber,
 } from '../../internals/utils/plain-date-utils/timeZone';
 import { useDropTarget } from '../../internals/utils/useDropTarget';
-import type { BaseTemporal } from '../../internals/utils/base-temporal';
-import { getDayNumber } from '../../internals/utils/base-temporal/PlainDate';
 
 const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridDayEvent',

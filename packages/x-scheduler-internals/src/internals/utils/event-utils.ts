@@ -117,13 +117,14 @@ export function getDaysTheOccurrenceIsVisibleOn(
 
   const dayKeys: string[] = [];
   for (let index = 0; index < days.length; index += 1) {
+    const dayNumber = getDayNumber(days[index].plainDate);
     // If the day is before the event start, skip to the next day
-    if (getDayNumber(days[index].plainDate) < startDayNumber) {
+    if (dayNumber < startDayNumber) {
       continue;
     }
 
     // If the day is after the event end, break as the days are sorted by start date
-    if (getDayNumber(days[index].plainDate) > endDayNumber) {
+    if (dayNumber > endDayNumber) {
       break;
     }
     dayKeys.push(days[index].key);

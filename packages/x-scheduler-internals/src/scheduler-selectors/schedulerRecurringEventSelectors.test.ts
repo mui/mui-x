@@ -1,8 +1,8 @@
 import { adapter, premiumStoreClasses } from 'test/utils/scheduler';
 import type { SchedulerProcessedEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
+import { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
 import { schedulerRecurringEventSelectors } from './schedulerRecurringEventSelectors';
-import { BaseTemporal } from '../internals/utils/base-temporal';
 
 describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClass] as const))(
   `Recurring event - %s`,

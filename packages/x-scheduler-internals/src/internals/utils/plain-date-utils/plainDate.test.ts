@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { getPlainDateKey, isWeekendPlainDate, plainDateFromDayNumber } from './plainDate';
 import { BaseTemporal } from '../base-temporal';
+import { getPlainDateKey, isWeekendPlainDate, plainDateFromDayNumber } from './plainDate';
 
 describe('getPlainDateKey', () => {
   it('should return the ISO date of the day, also once the cache is full', () => {

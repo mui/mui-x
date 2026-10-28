@@ -1,8 +1,8 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { formatIsoTime, MS_PER_DAY, toDayNumber } from '../base-temporal/iso';
-import { plainDateFromDayNumber } from './plainDate';
 import type { BaseTemporal } from '../base-temporal';
 import { getDayNumber } from '../base-temporal/PlainDate';
+import { plainDateFromDayNumber } from './plainDate';
 
 interface TimezoneOffsets {
   format: (epochMs: number) => string;
@@ -299,9 +299,11 @@ export function getSkippedDays(
   // A skipped day makes the days of a period last a day longer than the time elapsed between their
   // starts, when DST transitions change it by hours. The periods are a month long, as a timezone
   // never skipped and repeated a day within a month, which would cancel out.
-  let periodStartMs = getStartMs(getDayNumber(from));
-  for (let start = getDayNumber(from); start < getDayNumber(to); start += 31) {
-    const end = Math.min(start + 31, getDayNumber(to));
+  const fromDayNumber = getDayNumber(from);
+  const endDayNumber = getDayNumber(to);
+  let periodStartMs = getStartMs(fromDayNumber);
+  for (let start = fromDayNumber; start < endDayNumber; start += 31) {
+    const end = Math.min(start + 31, endDayNumber);
     const periodEndMs = getStartMs(end);
     if ((end - start) * MS_PER_DAY - (periodEndMs - periodStartMs) >= MS_PER_DAY / 2) {
       for (let dayNumber = start; dayNumber < end; dayNumber += 1) {

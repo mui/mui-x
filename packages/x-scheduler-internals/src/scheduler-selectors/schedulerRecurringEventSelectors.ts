@@ -1,6 +1,6 @@
 import type { RecurringEventPresetKey, SchedulerProcessedEventRecurrenceRule } from '../models';
-import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import type { BaseTemporal } from '../internals/utils/base-temporal';
+import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 
 const selectRecurringEventsPlugin = (state: State) => state.recurringEventsPlugin;
 

@@ -1,6 +1,7 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../../models';
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
+import type { BaseTemporal } from '../base-temporal';
 import type { PlainDateDuration } from '../base-temporal/PlainDate';
 import { MS_PER_DAY } from '../base-temporal/iso';
 import {
@@ -13,7 +14,6 @@ import {
   toPlainDate,
 } from './timeZone';
 import { getPlainDateKey, plainDateFromDayNumber } from './plainDate';
-import type { BaseTemporal } from '../base-temporal';
 
 // Translates between the adapter's date objects and plain dates, so that code working on plain dates
 // receives and returns the same values as the rest of the Scheduler.

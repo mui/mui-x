@@ -24,7 +24,7 @@ import {
   formatWeekdayMonthAndDayOfMonth,
   formatWeekNumber,
   getDayNumber,
-  getPlainDateWeekStart,
+  getStartOfWeekDayNumber,
   getWeekNumber,
 } from '@mui/x-scheduler-internals/internals';
 import {
@@ -239,8 +239,9 @@ export const AgendaView = React.memo(
         let weekNumber = 0;
         let isFirstDayOfWeek = false;
         if (showWeekNumber) {
-          const weekStartDayNumber = getDayNumber(
-            getPlainDateWeekStart(date.plainDate, weekInfo.firstDay),
+          const weekStartDayNumber = getStartOfWeekDayNumber(
+            getDayNumber(date.plainDate),
+            weekInfo.firstDay,
           );
           isFirstDayOfWeek = weekStartDayNumber !== previousWeekStartDayNumber;
           if (isFirstDayOfWeek) {

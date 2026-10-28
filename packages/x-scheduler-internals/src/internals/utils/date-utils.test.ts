@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { adapter } from 'test/utils/scheduler';
+import { BaseTemporal } from './base-temporal';
 import { getPlainDateWeekStart, getWeekNumber } from './date-utils';
 import { normalizeAllDayBounds } from './plain-date-utils/adapter';
-import { BaseTemporal } from './base-temporal';
 
 const wednesdayPlainDate = BaseTemporal.PlainDate.from('2025-01-08');
 

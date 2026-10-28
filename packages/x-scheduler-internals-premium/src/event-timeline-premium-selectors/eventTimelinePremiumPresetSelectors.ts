@@ -4,7 +4,6 @@ import {
   schedulerPreferenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
-  getDayNumber,
   getDisplayedHourRange,
   getTimelineAxisDayMs,
   FULL_DAY_MINUTES,
@@ -13,7 +12,10 @@ import {
 import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import type { EventTimelinePremiumPresetConfig } from '../models/preset';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
-import { EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS } from '../internals/utils/preset-utils';
+import {
+  EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS,
+  getDayCount,
+} from '../internals/utils/preset-utils';
 
 export const eventTimelinePremiumPresetSelectors = {
   preset: (state: State) => state.preset,
@@ -91,8 +93,7 @@ export const eventTimelinePremiumPresetSelectors = {
         timeResolution,
         // Precomputed once per config change: per-row hooks read it on every render. One day of
         // the window per date, like the header and the ticks, even for a date the timezone skips.
-        durationMs:
-          (getDayNumber(endPlainDate) - getDayNumber(startPlainDate)) * getTimelineAxisDayMs(axis),
+        durationMs: getDayCount(startPlainDate, endPlainDate) * getTimelineAxisDayMs(axis),
       };
     },
   ),

@@ -9,8 +9,8 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
 } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
-import type { UpdateEventsParameters } from '../utils/SchedulerStore/SchedulerStore.types';
 import type { BaseTemporal } from '../utils/base-temporal';
+import type { UpdateEventsParameters } from '../utils/SchedulerStore/SchedulerStore.types';
 
 /** Contract implemented by the premium recurring-events plugin. */
 export interface SchedulerRecurringEventsPluginInterface {

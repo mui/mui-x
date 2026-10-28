@@ -10,13 +10,13 @@ import {
   toLocalMs,
   toMsInDay,
 } from '@mui/x-scheduler-internals/internals';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import type {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
   TemporalSupportedObject,
   SchedulerProcessedEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
-import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 
 /**
  * Creates the adapter value of the first instant of the last day before a plain date that exists

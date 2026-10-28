@@ -1,11 +1,11 @@
 import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
+import { BaseTemporal } from './base-temporal';
 import { getDayNumber, getStartOfWeek as getStartOfWeekDayNumber } from './base-temporal/PlainDate';
 import { plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import type { WeekInfo } from './date-locale';
 import { toWallClockIsoString } from './plain-date-utils/timeZone';
-import { BaseTemporal } from './base-temporal';
 
 /**
  * Converts a `TemporalSupportedObject` back to a string, respecting the

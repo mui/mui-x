@@ -13,6 +13,7 @@ import {
   getRecurringOccurrenceKeyFromDateKey,
   getStartOfDayMs,
   toEpochMs,
+  toLocalDayNumber,
   toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import { RecurringSeries } from './RecurringSeries';
@@ -40,7 +41,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
 
   // Adjust scan range to catch multi-day events starting before visible range
   const durationInDays =
-    getDayNumber(toPlainDate(event.dataTimezone.end.timestamp, dataTimezone)) -
+    toLocalDayNumber(event.dataTimezone.end.timestamp, dataTimezone) -
     getDayNumber(series.startPlainDate) +
     1;
   const scanFirstDay = toPlainDate(start, dataTimezone).add({ days: 1 - durationInDays });

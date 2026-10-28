@@ -12,8 +12,7 @@ import {
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
-import { BaseTemporal } from '../../internals/utils/base-temporal';
+import { BaseTemporal, buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
 
 describe('<CalendarGrid.TimeColumn />', () => {
   const { render } = createSchedulerRenderer();

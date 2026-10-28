@@ -2,10 +2,10 @@ import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { describe, it, expect } from 'vitest';
 import { getDayListFromPlainDates } from '../get-day-list';
+import { BaseTemporal } from '../internals/utils/base-temporal';
 import { innerGetEventOccurrencesGroupedByDay } from './useEventOccurrencesGroupedByDay';
 import type { SchedulerProcessedDay, SchedulerProcessedEvent } from '../models';
 import { createEventRangeIndex } from '../internals/utils/event-range-index';
-import { BaseTemporal } from '../internals/utils/base-temporal';
 
 describe('innerGetEventOccurrencesGroupedByDay', () => {
   const day0Str = '2024-01-10T00:00:00Z';

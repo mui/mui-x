@@ -1,6 +1,6 @@
 import { createPlainDate, getDayNumber } from '../base-temporal/PlainDate';
-import { ISO_CALENDAR_ID } from '../base-temporal/calendar';
 import type { BaseTemporal } from '../base-temporal';
+import { ISO_CALENDAR_ID } from '../base-temporal/calendar';
 
 /**
  * The plain date of a day number, in the ISO calendar.
@@ -29,13 +29,14 @@ const plainDateKeys = new Map<number, string>();
  * calendar, as all the plain dates of the Scheduler share one, the ISO calendar for now.
  */
 export function getPlainDateKey(plainDate: BaseTemporal.PlainDate): string {
-  let key = plainDateKeys.get(getDayNumber(plainDate));
+  const dayNumber = getDayNumber(plainDate);
+  let key = plainDateKeys.get(dayNumber);
   if (key === undefined) {
     if (plainDateKeys.size >= MAX_CACHED_KEYS) {
       plainDateKeys.clear();
     }
     key = plainDate.toString();
-    plainDateKeys.set(getDayNumber(plainDate), key);
+    plainDateKeys.set(dayNumber, key);
   }
   return key;
 }
