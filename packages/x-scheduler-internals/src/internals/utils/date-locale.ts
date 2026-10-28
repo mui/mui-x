@@ -57,7 +57,12 @@ export function getLocaleWeekInfo(locale: string): WeekInfo {
     weekInfo = {
       // Like the ISO 8601 weeks, for the browsers that know neither.
       firstDay: (intlWeekInfo?.firstDay ?? 1) as WeekStartsOn,
-      minimalDays: region !== undefined && FOUR_MINIMAL_DAYS_REGIONS.has(region) ? 4 : 1,
+      // The ISO 8601 calendar has the ISO 8601 first week, whatever the region.
+      minimalDays:
+        intlLocale.calendar === 'iso8601' ||
+        (region !== undefined && FOUR_MINIMAL_DAYS_REGIONS.has(region))
+          ? 4
+          : 1,
     };
     weekInfoLookup.set(locale, weekInfo);
   }

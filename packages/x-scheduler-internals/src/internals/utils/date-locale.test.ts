@@ -28,6 +28,17 @@ describe('date-locale', () => {
       expect(getLocaleWeekInfo('en-US-x-rg-gbzzzz').minimalDays).to.equal(1);
     });
 
+    it('should use the first week of ISO 8601 with the ISO 8601 calendar', () => {
+      expect(getLocaleWeekInfo('en-US-u-ca-iso8601')).to.deep.equal({
+        firstDay: 1,
+        minimalDays: 4,
+      });
+      expect(getLocaleWeekInfo('fr-CA-u-ca-iso8601')).to.deep.equal({
+        firstDay: 1,
+        minimalDays: 4,
+      });
+    });
+
     it('should start the weeks on Monday when the runtime knows no week of the locales', () => {
       const prototype = Intl.Locale.prototype as Record<string, any>;
       const getWeekInfo = Object.getOwnPropertyDescriptor(prototype, 'getWeekInfo');
