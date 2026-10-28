@@ -159,7 +159,7 @@ In the demo above, try linking **Testing** to **Wireframes**, linking the end of
 - Dependencies on recurring events are ignored: they don't render and don't move events.
 - A negative lag (a lead) isn't supported.
   A negative or fractional lag, or an unknown `lagUnit`, is ignored, with a warning in development.
-- Events that aren't loaded yet, with [lazy loading](/x/react-scheduler/event-timeline/lazy-loading/), don't move.
+- With [lazy loading](/x/react-scheduler/event-timeline/lazy-loading/), a dependency only applies once both of its events are loaded: until then it has no arrow and doesn't move either event.
 
 ## Accessibility
 
