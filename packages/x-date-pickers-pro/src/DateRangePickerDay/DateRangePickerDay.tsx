@@ -4,13 +4,17 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license/internals';
 import type { CSSInterpolation, Theme } from '@mui/material/styles';
-import { styled, useThemeProps } from '@mui/material/styles';
+import {
+  styled,
+  useThemeProps,
+  private_applyChildrenFocusVisible as applyChildrenFocusVisible,
+  private_applyInsetFocusVisible as applyInsetFocusVisible,
+} from '@mui/material/styles';
 import ButtonBase, { buttonBaseClasses } from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { MuiEvent } from '@mui/x-internals/types';
-import { applyChildrenFocusVisible, applyInsetFocusVisible } from '@mui/x-internals/focusVisible';
 import { usePickerDayOwnerState } from '@mui/x-date-pickers/internals';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import type {

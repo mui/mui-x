@@ -1,10 +1,13 @@
 'use client';
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import {
+  styled,
+  private_applyChildrenFocusVisible as applyChildrenFocusVisible,
+  private_applyInsetFocusVisible as applyInsetFocusVisible,
+} from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { applyChildrenFocusVisible, applyInsetFocusVisible } from '@mui/x-internals/focusVisible';
 import type {
   YearButtonOwnerState,
   YearCalendarSlotProps,

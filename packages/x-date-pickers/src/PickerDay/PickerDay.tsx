@@ -3,13 +3,17 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { CSSInterpolation } from '@mui/material/styles';
-import { styled, useThemeProps } from '@mui/material/styles';
+import {
+  styled,
+  useThemeProps,
+  private_applyChildrenFocusVisible as applyChildrenFocusVisible,
+  private_applyInsetFocusVisible as applyInsetFocusVisible,
+} from '@mui/material/styles';
 import ButtonBase, { buttonBaseClasses } from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { MuiEvent } from '@mui/x-internals/types';
-import { applyChildrenFocusVisible, applyInsetFocusVisible } from '@mui/x-internals/focusVisible';
 import { DAY_MARGIN, DAY_SIZE } from '../internals/constants/dimensions';
 import type { PickerDayClassKey, PickerDayClasses } from './pickerDayClasses';
 import { pickerDayClasses, getPickerDayUtilityClass } from './pickerDayClasses';

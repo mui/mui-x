@@ -1,14 +1,17 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
+import {
+  styled,
+  useThemeProps,
+  private_applyChildrenFocusVisible as applyChildrenFocusVisible,
+} from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { applyChildrenFocusVisible } from '@mui/x-internals/focusVisible';
 import type { MultiSectionDigitalClockSectionClasses } from './multiSectionDigitalClockSectionClasses';
 import { getMultiSectionDigitalClockSectionUtilityClass } from './multiSectionDigitalClockSectionClasses';
 import type {

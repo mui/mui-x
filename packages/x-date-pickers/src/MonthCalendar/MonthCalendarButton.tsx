@@ -1,9 +1,8 @@
 'use client';
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, private_outsetFocusRing as outsetFocusRing } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
-import { outsetFocusRing } from '@mui/x-internals/focusVisible';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type {
   MonthCalendarSlotProps,

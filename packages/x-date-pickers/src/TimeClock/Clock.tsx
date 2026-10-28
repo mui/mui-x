@@ -4,12 +4,15 @@ import clsx from 'clsx';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import type { Theme } from '@mui/material/styles';
-import { styled, useThemeProps } from '@mui/material/styles';
+import {
+  styled,
+  useThemeProps,
+  private_outsetFocusRing as outsetFocusRing,
+} from '@mui/material/styles';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
 import composeClasses from '@mui/utils/composeClasses';
-import { outsetFocusRing } from '@mui/x-internals/focusVisible';
 import { ClockPointer } from './ClockPointer';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';

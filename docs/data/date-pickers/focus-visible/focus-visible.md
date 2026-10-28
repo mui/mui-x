@@ -8,7 +8,7 @@ title: Date and Time Pickers - Focus visible
 
 ## Prerequisite
 
-This feature requires Material UI 9.4 or later, and MUI X 9.17 or later.
+This feature requires Material UI 9.5 or later, and MUI X 9.17 or later.
 
 Turn it on in the Material UI theme.
 The Pickers use it automatically, so you don't need to set any prop on the picker:

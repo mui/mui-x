@@ -10,7 +10,7 @@ import MuiCheckbox from '@mui/material/Checkbox';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import composeClasses from '@mui/utils/composeClasses';
-import { applyInsetFocusVisible } from '@mui/x-internals/focusVisible';
+import { private_applyInsetFocusVisible as applyInsetFocusVisible } from '@mui/material/styles';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import type { TreeItemProps } from './TreeItem.types';
 import type { UseTreeItemLabelSlotOwnProps, UseTreeItemStatus } from '../useTreeItem';

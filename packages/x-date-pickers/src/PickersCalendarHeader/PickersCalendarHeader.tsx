@@ -3,10 +3,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Fade from '@mui/material/Fade';
-import { styled, useThemeProps } from '@mui/material/styles';
+import {
+  styled,
+  useThemeProps,
+  private_applyInsetFocusVisible as applyInsetFocusVisible,
+} from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
-import { applyInsetFocusVisible } from '@mui/x-internals/focusVisible';
 import IconButton from '@mui/material/IconButton';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { PickersFadeTransitionGroup } from '../DateCalendar/PickersFadeTransitionGroup';
