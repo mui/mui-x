@@ -157,7 +157,7 @@ export type SchedulerAddDependencyResult =
   | { status: 'rejected'; reason: 'cyclicDependency' }
   | { status: 'rejected'; reason: 'readOnly' }
   | { status: 'rejected'; reason: 'featureDisabled' }
-  | SchedulerDependencyCascadeBlockedRejection;
+  | SchedulerDependencyCascadeRejection;
 
 /**
  * Properties to change on an existing dependency with `updateDependency()`.

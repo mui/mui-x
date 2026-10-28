@@ -708,7 +708,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .id('b')
         .span('2025-07-03T10:00:00Z', '2025-07-05T23:59:59.999Z')
         .build();
-      const store = new EventTimelinePremiumStore(
+      const store = new EventTimelinePremiumStoreWithFeatures(
         { ...DEFAULT_PARAMS, events: [eventA, longSuccessor], eventModelStructure, onEventsChange },
         adapter,
       );
@@ -736,7 +736,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .id('b')
         .span('2025-07-03T00:00:00Z', '2025-07-03T12:00:00Z', { allDay: true })
         .build();
-      const store = new EventTimelinePremiumStore(
+      const store = new EventTimelinePremiumStoreWithFeatures(
         {
           ...DEFAULT_PARAMS,
           events: [lateEndingPredecessor, allDaySuccessor],
@@ -761,7 +761,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const onEventsChange = vi.fn();
       const onDependenciesChange = vi.fn();
       const overlapping = EventBuilder.new().id('c').singleDay('2025-07-03T09:30:00Z').build();
-      const store = new EventTimelinePremiumStore(
+      const store = new EventTimelinePremiumStoreWithFeatures(
         {
           ...DEFAULT_PARAMS,
           events: [eventA, overlapping],
@@ -792,7 +792,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const onEventsChange = vi.fn();
       const onDependenciesChange = vi.fn();
       const overlapping = EventBuilder.new().id('b').singleDay('2025-07-03T09:30:00Z').build();
-      const store = new EventTimelinePremiumStore(
+      const store = new EventTimelinePremiumStoreWithFeatures(
         {
           ...DEFAULT_PARAMS,
           events: [eventA, overlapping],

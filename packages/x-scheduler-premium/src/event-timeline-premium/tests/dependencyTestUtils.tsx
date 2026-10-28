@@ -113,6 +113,7 @@ export function TestTimeline({
   dependencies: initialDependencies,
   presetConfig,
   readOnly,
+  eventModelStructure,
   features: featuresProp = defaultFeatures,
   onDependenciesChange,
   onStoreReady,
@@ -180,6 +181,10 @@ interface RenderTimelineParameters {
   dependencies?: SchedulerDependency[];
   presetConfig?: PresetConfig;
   readOnly?: boolean;
+  /**
+   * Pass a module-scope value: the store compares it by reference.
+   */
+  eventModelStructure?: EventModelStructure;
   features?: EventTimelinePremiumInternalFeatures;
   onDependenciesChange?: (dependencies: SchedulerDependency[]) => void;
   /**
@@ -204,6 +209,7 @@ function TimelineHost({
   dependencies,
   presetConfig,
   readOnly,
+  eventModelStructure,
   features,
   onDependenciesChange,
   onStoreReady,
@@ -234,6 +240,7 @@ function TimelineHost({
             dependencies={dependencies}
             presetConfig={presetConfig}
             readOnly={readOnly}
+            eventModelStructure={eventModelStructure}
             features={features}
             onDependenciesChange={onDependenciesChange}
             onStoreReady={onStoreReady}
