@@ -808,6 +808,25 @@ describe('<EventTimelinePremium /> dependency editor', () => {
   });
 
   describe('context menu', () => {
+    it('should use the localeText in the menu and the dialog', async () => {
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        localeText: {
+          dependencyEditTitle: 'Modifier la dépendance',
+          dependencyTypeLabel: 'Genre',
+          dependencyTypeFinishToStart: 'Fin à début',
+        },
+      });
+
+      fireEvent.contextMenu(getHitArea('dep-1'));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Modifier la dépendance' }));
+      const dialog = screen.getByRole('dialog');
+
+      expect(within(dialog).getByText('Modifier la dépendance')).not.to.equal(null);
+      expect(within(dialog).getByRole('combobox', { name: 'Genre' })).to.have.text('Fin à début');
+    });
+
     it('should open the dialog from Edit dependency', async () => {
       await renderTimeline({
         events: [eventA, eventB],

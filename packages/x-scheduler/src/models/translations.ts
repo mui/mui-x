@@ -283,7 +283,52 @@ export interface EventCalendarLocaleText extends EventEditingLocaleText, Schedul
   timelineResourceTitleHeader: string;
 }
 
+export interface SchedulerDependencyDescriptionParams {
+  /**
+   * The title of the event the occurrence waits on.
+   */
+  title: string;
+  /**
+   * The formatted lag, from `dependencyLag`, or `null` when the dependency has none.
+   */
+  lag: string | null;
+}
+
 export interface EventTimelineLocaleText extends EventEditingLocaleText, SchedulerEventLocaleText {
   // Timeline title sub grid
   timelineResourceTitleHeader: string;
+
+  // Dependency dialog
+  dependencyEditTitle: string;
+  dependencyDetailsTitle: string;
+  dependencySourceLabel: string;
+  dependencyTargetLabel: string;
+  dependencyTypeLabel: string;
+  dependencyLagLabel: string;
+  dependencyLagUnitLabel: string;
+  dependencyNoLag: string;
+  dependencyInvalidLagError: string;
+  dependencyAllDayLagIgnored: string;
+  dependencyAllDayLagRounded: (lag: string) => string;
+  dependencyDelete: string;
+  dependencyUpdateCascadeBlockedError: string;
+  dependencyNotFoundError: string;
+  dependencyTypeFinishToStart: string;
+  dependencyTypeStartToStart: string;
+  dependencyTypeFinishToFinish: string;
+  dependencyTypeStartToFinish: string;
+  dependencyLagUnitMinutes: string;
+  dependencyLagUnitHours: string;
+  dependencyLagUnitDays: string;
+  dependencyLagUnitWeeks: string;
+  dependencyLag: (amount: number, unit: 'minute' | 'hour' | 'day' | 'week') => string;
+
+  // Dependency context menu (shown on right-click of an arrow)
+  dependencyActionsAriaLabel: string;
+
+  // Accessible description of an event that waits on dependencies
+  dependencyFinishToStartDescription: (params: SchedulerDependencyDescriptionParams) => string;
+  dependencyStartToStartDescription: (params: SchedulerDependencyDescriptionParams) => string;
+  dependencyFinishToFinishDescription: (params: SchedulerDependencyDescriptionParams) => string;
+  dependencyStartToFinishDescription: (params: SchedulerDependencyDescriptionParams) => string;
 }

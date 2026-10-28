@@ -10,6 +10,7 @@ import type {
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 import {
   EventEditingStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
@@ -94,6 +95,10 @@ interface TestTimelineProps {
    */
   features?: EventTimelinePremiumInternalFeatures;
   /**
+   * Merged into the default locale text.
+   */
+  localeText?: Partial<EventTimelineLocaleText>;
+  /**
    * Observes the dependency changes on top of the controlled loop.
    */
   onDependenciesChange?: (dependencies: SchedulerDependency[]) => void;
@@ -111,6 +116,7 @@ export function TestTimeline({
   presetConfig,
   readOnly,
   features: featuresProp = defaultFeatures,
+  localeText,
   onDependenciesChange,
   onStoreReady,
 }: TestTimelineProps) {
@@ -128,6 +134,17 @@ export function TestTimeline({
   const dependenciesEnabled = dependencies !== undefined;
 
   const { features, storeFeatures } = useFrozenEventTimelinePremiumFeatures(featuresProp);
+
+  const styledContext = React.useMemo(
+    () =>
+      localeText === undefined
+        ? styledContextValue
+        : {
+            ...styledContextValue,
+            localeText: { ...EVENT_TIMELINE_DEFAULT_LOCALE_TEXT, ...localeText },
+          },
+    [localeText],
+  );
 
   const parameters: EventTimelinePremiumStoreParameters<SchedulerEvent, SchedulerResource> = {
     events,
@@ -158,8 +175,8 @@ export function TestTimeline({
   return (
     <SchedulerStoreContext.Provider value={storeContextValue}>
       <EventTimelinePremiumFeaturesContext.Provider value={features}>
-        <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-          <EventEditingStyledContext.Provider value={styledContextValue}>
+        <EventTimelinePremiumStyledContext.Provider value={styledContext}>
+          <EventEditingStyledContext.Provider value={styledContext}>
             <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
               <EventTimelinePremiumContent />
             </SharedComponentsStyledContext.Provider>
@@ -177,6 +194,7 @@ interface RenderTimelineParameters {
   presetConfig?: PresetConfig;
   readOnly?: boolean;
   features?: EventTimelinePremiumInternalFeatures;
+  localeText?: Partial<EventTimelineLocaleText>;
   onDependenciesChange?: (dependencies: SchedulerDependency[]) => void;
   /**
    * Sets the theme direction and the `dir` attribute, like a consumer does.
@@ -201,6 +219,7 @@ function TimelineHost({
   presetConfig,
   readOnly,
   features,
+  localeText,
   onDependenciesChange,
   onStoreReady,
   direction = 'ltr',
@@ -231,6 +250,7 @@ function TimelineHost({
             presetConfig={presetConfig}
             readOnly={readOnly}
             features={features}
+            localeText={localeText}
             onDependenciesChange={onDependenciesChange}
             onStoreReady={onStoreReady}
           />

@@ -14,6 +14,7 @@ import type {
   SchedulerDependencyEditor,
   SchedulerDependencyId,
 } from '@mui/x-scheduler-internals-premium/models';
+import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 
 export interface DependencyContextMenuState {
   /**
@@ -34,14 +35,6 @@ interface EventTimelinePremiumDependencyContextMenuProps {
   onClose: () => void;
 }
 
-// TODO(dependencies public flip, #23420): move to localeText.
-const DEPENDENCY_CONTEXT_MENU_TEXT = {
-  ariaLabel: 'Dependency actions',
-  edit: 'Edit dependency',
-  showDetails: 'Show details',
-  delete: 'Delete',
-};
-
 /**
  * Right-click menu of a dependency arrow: Edit and Delete, or Show details when read-only.
  */
@@ -50,6 +43,7 @@ export function EventTimelinePremiumDependencyContextMenu(
 ) {
   const { state, onClose } = props;
   const store = useEventTimelinePremiumStoreContext();
+  const { localeText } = useEventTimelinePremiumStyledContext();
   const isReadOnly = useStore(store, eventTimelinePremiumDependencySelectors.isReadOnly);
 
   if (state === null) {
@@ -72,16 +66,14 @@ export function EventTimelinePremiumDependencyContextMenu(
       onClose={onClose}
       anchorReference="anchorPosition"
       anchorPosition={state.anchorPosition}
-      slotProps={{ list: { 'aria-label': DEPENDENCY_CONTEXT_MENU_TEXT.ariaLabel } }}
+      slotProps={{ list: { 'aria-label': localeText.dependencyActionsAriaLabel } }}
     >
       <MenuItem onClick={handleEdit}>
         <ListItemIcon>
           {isReadOnly ? <SearchRounded fontSize="small" /> : <EditRounded fontSize="small" />}
         </ListItemIcon>
         <ListItemText>
-          {isReadOnly
-            ? DEPENDENCY_CONTEXT_MENU_TEXT.showDetails
-            : DEPENDENCY_CONTEXT_MENU_TEXT.edit}
+          {isReadOnly ? localeText.showEventDetails : localeText.dependencyEditTitle}
         </ListItemText>
       </MenuItem>
       {!isReadOnly && (
@@ -89,7 +81,7 @@ export function EventTimelinePremiumDependencyContextMenu(
           <ListItemIcon>
             <DeleteRounded fontSize="small" />
           </ListItemIcon>
-          <ListItemText>{DEPENDENCY_CONTEXT_MENU_TEXT.delete}</ListItemText>
+          <ListItemText>{localeText.dependencyDelete}</ListItemText>
         </MenuItem>
       )}
     </Menu>

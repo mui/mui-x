@@ -418,6 +418,21 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       );
     });
 
+    it('should describe a dependency with the localeText', async () => {
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [
+          { ...buildDependency('dep-1', 'event-a', 'event-b'), lag: 2, lagUnit: 'hour' },
+        ],
+        localeText: {
+          dependencyLag: (amount, unit) => `${amount}${unit[0]}`,
+          dependencyFinishToStartDescription: ({ title, lag }) => `${title} + ${lag}`,
+        },
+      });
+
+      expect(getEventElement('Event B')).toHaveAccessibleDescription('Event A + 2h');
+    });
+
     it('should describe a lagged dependency of every type with its lag', async () => {
       const eventD = EventBuilder.new()
         .id('event-d')

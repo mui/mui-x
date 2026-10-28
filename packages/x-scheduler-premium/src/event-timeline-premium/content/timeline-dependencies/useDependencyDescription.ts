@@ -3,27 +3,28 @@ import { useStore } from '@base-ui/utils/store';
 import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencySourceDescription } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
-import type { SchedulerDependencyType } from '@mui/x-scheduler-internals-premium/models';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
+import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
+import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 
-// TODO(dependencies public flip, #23420): move to localeText, together with the lag sentence
-// built below, whose unit names and plural are English too. Hardcoded while the feature has
-// no public API.
-const DEPENDENCY_SOURCE_DESCRIPTIONS: Record<
-  SchedulerDependencyType,
-  (title: string, lag: string) => string
-> = {
-  FinishToStart: (title, lag) => `Cannot start until ${lag}${title} finishes.`,
-  StartToStart: (title, lag) => `Cannot start until ${lag}${title} starts.`,
-  FinishToFinish: (title, lag) => `Cannot finish until ${lag}${title} finishes.`,
-  StartToFinish: (title, lag) => `Cannot finish until ${lag}${title} starts.`,
-};
-
-function describeDependencySource(source: SchedulerDependencySourceDescription): string {
-  const { lag } = source;
-  const lagText =
-    lag === null ? '' : `${lag.amount} ${lag.unit}${lag.amount === 1 ? '' : 's'} after `;
-  return DEPENDENCY_SOURCE_DESCRIPTIONS[source.type](source.title, lagText);
+function describeDependencySource(
+  localeText: EventTimelineLocaleText,
+  source: SchedulerDependencySourceDescription,
+): string {
+  const params = {
+    title: source.title,
+    lag: source.lag === null ? null : localeText.dependencyLag(source.lag.amount, source.lag.unit),
+  };
+  switch (source.type) {
+    case 'FinishToStart':
+      return localeText.dependencyFinishToStartDescription(params);
+    case 'StartToStart':
+      return localeText.dependencyStartToStartDescription(params);
+    case 'FinishToFinish':
+      return localeText.dependencyFinishToFinishDescription(params);
+    default:
+      return localeText.dependencyStartToFinishDescription(params);
+  }
 }
 
 /**
@@ -31,10 +32,13 @@ function describeDependencySource(source: SchedulerDependencySourceDescription):
  */
 export function useDependencyDescription(occurrenceId: SchedulerEventId): string | null {
   const store = useEventTimelinePremiumStoreContext();
+  const { localeText } = useEventTimelinePremiumStyledContext();
   const sources = useStore(
     store,
     eventTimelinePremiumDependencySelectors.activeSourcesForTarget,
     occurrenceId,
   );
-  return sources.length > 0 ? sources.map(describeDependencySource).join(' ') : null;
+  return sources.length > 0
+    ? sources.map((source) => describeDependencySource(localeText, source)).join(' ')
+    : null;
 }
