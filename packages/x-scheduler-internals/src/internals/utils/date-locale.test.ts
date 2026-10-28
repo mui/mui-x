@@ -78,6 +78,16 @@ describe('date-locale', () => {
         expect(getLocaleWeekInfo('dv-MV-x-fallback').firstDay).to.equal(5);
         // The extensions of the first day of the week and of the region.
         expect(getLocaleWeekInfo('de-DE-u-fw-sun-x-fallback').firstDay).to.equal(7);
+        // The ISO 8601 calendar starts the weeks on Monday, after the `fw` and `rg` extensions.
+        expect(getLocaleWeekInfo('en-US-u-ca-iso8601-x-fallback')).to.deep.equal({
+          firstDay: 1,
+          minimalDays: 4,
+        });
+        expect(getLocaleWeekInfo('en-US-u-ca-iso8601-fw-sun-x-fallback').firstDay).to.equal(7);
+        expect(getLocaleWeekInfo('en-US-u-ca-iso8601-rg-egzzzz-x-fallback')).to.deep.equal({
+          firstDay: 6,
+          minimalDays: 4,
+        });
         expect(getLocaleWeekInfo('de-DE-u-rg-uszzzz-x-fallback')).to.deep.equal({
           firstDay: 7,
           minimalDays: 1,
@@ -236,6 +246,17 @@ describe('date-locale', () => {
 
     it('should not warn for a supported locale', () => {
       expect(() => checkDateLocale('fr-FR')).not.toWarnDev();
+    });
+
+    it('should check a locale once', () => {
+      const spy = vi.spyOn(Intl, 'getCanonicalLocales');
+      try {
+        checkDateLocale('de-CH-x-once');
+        checkDateLocale('de-CH-x-once');
+        expect(spy.mock.calls.length).to.equal(1);
+      } finally {
+        spy.mockRestore();
+      }
     });
   });
 });

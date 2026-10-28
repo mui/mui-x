@@ -22,6 +22,8 @@ export interface WeekInfo {
   minimalDays: number;
 }
 
+const checkedDateLocales = new Set<string>();
+
 /**
  * Warns when `dateLocale` isn't a language tag that `Intl` knows: an invalid tag, like `en_US`,
  * makes the views throw, and an unknown one formats the dates in the default locale of `Intl`
@@ -29,6 +31,11 @@ export interface WeekInfo {
  */
 export function checkDateLocale(dateLocale: string) {
   if (process.env.NODE_ENV !== 'production') {
+    // The store checks its parameters on every render.
+    if (checkedDateLocales.has(dateLocale)) {
+      return;
+    }
+    checkedDateLocales.add(dateLocale);
     let isValid = true;
     try {
       Intl.getCanonicalLocales(dateLocale);
@@ -121,15 +128,18 @@ export function getLocaleWeekInfo(locale: string): WeekInfo {
     // Older browsers have a `weekInfo` accessor instead of `getWeekInfo()`.
     const intlWeekInfo = intlLocale.getWeekInfo?.() ?? intlLocale.weekInfo;
     // The `rg` extension overrides the region of the week, as in `getWeekInfo()`.
-    const region =
-      getUnicodeExtension(tag, 'rg')
-        ?.match(/^[a-z]{2}/)?.[0]
-        .toUpperCase() ?? intlLocale.maximize().region;
+    const regionExtension = getUnicodeExtension(tag, 'rg')
+      ?.match(/^[a-z]{2}/)?.[0]
+      .toUpperCase();
+    const region = regionExtension ?? intlLocale.maximize().region;
     weekInfo = {
-      // The browsers without `getWeekInfo()` read the `fw` extension and the region.
+      // The browsers without `getWeekInfo()` read, like it, the `fw` extension, then the `rg`
+      // extension, then the Monday of the ISO 8601 calendar, then the region of the locale.
       firstDay: (intlWeekInfo?.firstDay ??
         (FIRST_DAY_EXTENSION_VALUES.indexOf(getUnicodeExtension(tag, 'fw') ?? '') + 1 ||
-          getRegionFirstDay(region))) as WeekStartsOn,
+          (regionExtension === undefined && intlLocale.calendar === 'iso8601'
+            ? 1
+            : getRegionFirstDay(region)))) as WeekStartsOn,
       // The ISO 8601 calendar has the ISO 8601 first week, whatever the region.
       minimalDays:
         intlLocale.calendar === 'iso8601' ||
