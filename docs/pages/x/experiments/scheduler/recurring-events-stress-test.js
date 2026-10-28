@@ -8,9 +8,9 @@ export default function RecurringEventsStressTestExperiment() {
     <Stack spacing={2}>
       <Typography>
         A company with offices in 8 timezones shares one calendar. Each team has a standup, sprint
-        ceremonies, 1:1s, an on-call rotation and birthdays, as recurring series that started as
-        early as 2019. Every event uses the timezone of its office. The standups exclude the office
-        holidays, and some series end with a COUNT or an UNTIL in the past.
+        ceremonies, 1:1s, quarterly offsites, birthdays and part-time days off, as recurring series
+        that started as early as 2019. Every event uses the timezone of its office. The standups
+        exclude the office holidays, and some series end with a COUNT or an UNTIL in the past.
       </Typography>
       <Typography>
         The live updates mimic a calendar sync. They cancel and move occurrences, split series like

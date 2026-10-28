@@ -2,17 +2,18 @@
 // Changes a calendar sync could push to the global company dataset.
 
 import {
+  createProjectSeries,
+  createRandom,
+  createTeamMeeting,
   formatDateTime,
   formatDay,
-  getDayOfWeek,
+  formatEndOfDay,
   getMonday,
   getNextWeekday,
-  MEETINGS,
+  getWeekDay,
   parseDay,
   parseMinutes,
-  PROJECTS,
   timed,
-  WEEK_DAYS,
 } from './globalCompanyDataset';
 
 function getDuration(event) {
@@ -36,7 +37,7 @@ function shiftMinutes(minutes, random) {
 function getWeeklyOccurrenceDays(series, rule, firstDay, lastDay) {
   const seriesStart = parseDay(series.start);
   const interval = rule.interval ?? 1;
-  const weekDays = rule.byDay ?? [WEEK_DAYS[getDayOfWeek(seriesStart)]];
+  const weekDays = rule.byDay ?? [getWeekDay(seriesStart)];
   const excludedDays = new Set(series.exDates?.map(parseDay));
   const until =
     rule.until == null ? lastDay : Math.min(parseDay(rule.until), lastDay);
@@ -45,7 +46,7 @@ function getWeeklyOccurrenceDays(series, rule, firstDay, lastDay) {
     const weeks = (getMonday(day) - getMonday(seriesStart)) / 7;
     if (
       weeks % interval === 0 &&
-      weekDays.includes(WEEK_DAYS[getDayOfWeek(day)]) &&
+      weekDays.includes(getWeekDay(day)) &&
       !excludedDays.has(day)
     ) {
       days.push(day);
@@ -82,8 +83,24 @@ function pickWeeklyOccurrence(events, context) {
   return null;
 }
 
+function pickTeamDay(context) {
+  const { random } = context;
+  return {
+    team: random.pick(context.teams),
+    day: getNextWeekday(random.int(context.firstDay, context.lastDay)),
+  };
+}
+
 function replaceEvent(events, event) {
   return events.map((item) => (item.id === event.id ? event : item));
+}
+
+function excludeOccurrence(events, series, day) {
+  const exDate = formatDateTime(day, parseMinutes(series.start));
+  return replaceEvent(events, {
+    ...series,
+    exDates: [...(series.exDates ?? []), exDate],
+  });
 }
 
 const cancelOccurrence = (events, context) => {
@@ -92,36 +109,41 @@ const cancelOccurrence = (events, context) => {
     return null;
   }
   const { series, day } = occurrence;
-  const exDate = formatDateTime(day, parseMinutes(series.start));
   return {
-    events: replaceEvent(events, {
-      ...series,
-      exDates: [...(series.exDates ?? []), exDate],
-    }),
+    events: excludeOccurrence(events, series, day),
     description: `Cancelled "${series.title}" on ${formatDay(day)}`,
   };
 };
 
-// Like undoing a cancellation.
+// Like undoing a cancellation or a move.
 const restoreOccurrence = (events, context) => {
-  const candidates = events.flatMap((series) =>
-    (series.exDates ?? [])
-      .filter((exDate) => {
-        const day = parseDay(exDate);
-        return day >= context.firstDay && day <= context.lastDay;
-      })
-      .map((exDate) => ({ series, exDate })),
-  );
+  // The dates start with the day, so comparing the strings compares the days.
+  const firstKey = formatDay(context.firstDay);
+  const endKey = formatDay(context.lastDay + 1);
+  const candidates = [];
+  events.forEach((series) => {
+    series.exDates?.forEach((exDate) => {
+      if (exDate >= firstKey && exDate < endKey) {
+        candidates.push({ series, exDate });
+      }
+    });
+  });
   if (candidates.length === 0) {
     return null;
   }
+
   const { series, exDate } = context.random.pick(candidates);
+  const day = exDate.slice(0, 10);
+  const isMovedOccurrence = (event) =>
+    event.extractedFromId === series.id &&
+    event.rrule == null &&
+    event.start.startsWith(day);
   return {
     events: replaceEvent(events, {
       ...series,
       exDates: series.exDates?.filter((value) => value !== exDate),
-    }),
-    description: `Restored "${series.title}" on ${exDate.slice(0, 10)}`,
+    }).filter((event) => !isMovedOccurrence(event)),
+    description: `Restored "${series.title}" on ${day}`,
   };
 };
 
@@ -140,15 +162,8 @@ const moveOccurrence = (events, context) => {
     ...timed(day, minutes, getDuration(series)),
     extractedFromId: series.id,
   };
-  const exDate = formatDateTime(day, parseMinutes(series.start));
   return {
-    events: [
-      ...replaceEvent(events, {
-        ...series,
-        exDates: [...(series.exDates ?? []), exDate],
-      }),
-      standalone,
-    ],
+    events: [...excludeOccurrence(events, series, day), standalone],
     description: `Moved "${series.title}" on ${formatDay(day)} to ${standalone.start.slice(11, 16)}`,
   };
 };
@@ -183,7 +198,7 @@ const splitSeries = (events, context) => {
     events: [
       ...replaceEvent(events, {
         ...series,
-        rrule: { ...rule, until: `${formatDay(day - 1)}T23:59:59` },
+        rrule: { ...rule, until: formatEndOfDay(day - 1) },
         exDates: preceding,
       }),
       { ...followingSeries, id: context.createId(), extractedFromId: series.id },
@@ -193,18 +208,11 @@ const splitSeries = (events, context) => {
 };
 
 const createSeries = (events, context) => {
-  const { random } = context;
-  const team = random.pick(context.teams);
-  const day = getNextWeekday(random.int(context.firstDay, context.lastDay));
-  const count = random.pick([undefined, 4, 8, 12]);
-  const series = {
-    id: context.createId(),
-    title: `${random.pick(PROJECTS)} sync · ${team.title}`,
-    timezone: team.office.timezone,
-    resource: team.id,
-    ...timed(day, random.int(18, 34) * 30, random.pick([30, 45, 60])),
-    rrule: { freq: 'WEEKLY', byDay: [WEEK_DAYS[getDayOfWeek(day)]], count },
-  };
+  const { team, day } = pickTeamDay(context);
+  const count = context.random.pick([undefined, 4, 8, 12]);
+  const series = createProjectSeries(team, day, context.createId(), context.random, {
+    count,
+  });
   return {
     events: [...events, series],
     description: `Created the weekly "${series.title}" from ${formatDay(day)}`,
@@ -212,16 +220,8 @@ const createSeries = (events, context) => {
 };
 
 const createEvent = (events, context) => {
-  const { random } = context;
-  const team = random.pick(context.teams);
-  const day = getNextWeekday(random.int(context.firstDay, context.lastDay));
-  const event = {
-    id: context.createId(),
-    title: random.pick(MEETINGS),
-    timezone: team.office.timezone,
-    resource: team.id,
-    ...timed(day, random.int(18, 34) * 30, random.pick([30, 60, 90])),
-  };
+  const { team, day } = pickTeamDay(context);
+  const event = createTeamMeeting(team, day, context.createId(), context.random);
   return {
     events: [...events, event],
     description: `Created "${event.title}" for ${team.title} on ${formatDay(day)}`,
@@ -254,7 +254,7 @@ const deleteEvent = (events, context) => {
 };
 
 // The standalone events created balance the ones deleted, and the restored occurrences balance the
-// cancelled ones, so the calendar keeps roughly its size.
+// cancelled and moved ones, so the calendar keeps roughly its size.
 const LIVE_UPDATERS = [
   [cancelOccurrence, 3],
   [restoreOccurrence, 3],
@@ -263,19 +263,30 @@ const LIVE_UPDATERS = [
   [createSeries, 1],
   [createEvent, 2],
   [renameEvent, 2],
-  [deleteEvent, 5],
+  [deleteEvent, 4],
 ];
 
-const TOTAL_WEIGHT = LIVE_UPDATERS.reduce((total, [, weight]) => total + weight, 0);
+const UPDATERS = LIVE_UPDATERS.map(([updater]) => updater);
+const WEIGHTS = LIVE_UPDATERS.map(([, weight]) => weight);
 
-export function applyLiveUpdate(events, context) {
-  let target = context.random.int(0, TOTAL_WEIGHT - 1);
-  const [updater] =
-    LIVE_UPDATERS.find(([, weight]) => {
-      target -= weight;
-      return target < 0;
-    }) ?? LIVE_UPDATERS[0];
+/**
+ * Returns a function that applies a random change to the events between `firstDay` and `lastDay`.
+ * A seed always gives the same sequence of changes.
+ */
+export function createLiveUpdates(teams, seed) {
+  const random = createRandom(seed);
+  let idCounter = 0;
+  const createId = () => {
+    idCounter += 1;
+    return `live-${idCounter}`;
+  };
 
-  // Renaming always works, when no event matches the update.
-  return updater(events, context) ?? renameEvent(events, context);
+  return (events, firstDay, lastDay) => {
+    const context = { random, teams, firstDay, lastDay, createId };
+    // Renaming always works, when no event matches the update.
+    return (
+      random.weighted(UPDATERS, WEIGHTS)(events, context) ??
+      renameEvent(events, context)
+    );
+  };
 }

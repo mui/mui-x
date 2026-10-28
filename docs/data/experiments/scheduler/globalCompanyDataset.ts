@@ -155,7 +155,7 @@ const FIRST_NAMES = [
   'Felix',
 ];
 
-export const PROJECTS = [
+const PROJECTS = [
   'Atlas',
   'Beacon',
   'Comet',
@@ -168,7 +168,7 @@ export const PROJECTS = [
   'Juniper',
 ];
 
-export const MEETINGS = [
+const MEETINGS = [
   'Design review',
   'Customer call',
   'Interview',
@@ -181,19 +181,19 @@ export const MEETINGS = [
   'Roadmap review',
 ];
 
-export const WEEK_DAYS: WeekDayCode[] = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+const WEEK_DAYS: WeekDayCode[] = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 
 /**
  * A seeded random generator, so that a seed always builds the same calendar.
  */
 export function createRandom(seed: number) {
   const chance = new Chance(seed);
-  const int = (min: number, max: number) => chance.integer({ min, max });
 
   return {
     bool: (probability: number) => chance.bool({ likelihood: probability * 100 }),
-    int,
-    pick: <T>(items: readonly T[]): T => items[int(0, items.length - 1)],
+    int: (min: number, max: number) => chance.integer({ min, max }),
+    pick: <T>(items: readonly T[]): T => chance.pickone(items),
+    weighted: <T>(items: T[], weights: number[]): T => chance.weighted(items, weights),
   };
 }
 
@@ -224,8 +224,16 @@ export function formatDateTime(day: number, minutes: number) {
   return `${formatDay(day)}T${hours}:${String(minutes % 60).padStart(2, '0')}:00`;
 }
 
-export function getDayOfWeek(day: number) {
+export function formatEndOfDay(day: number) {
+  return `${formatDay(day)}T23:59:59`;
+}
+
+function getDayOfWeek(day: number) {
   return new Date(day * DAY_MS).getUTCDay();
+}
+
+export function getWeekDay(day: number) {
+  return WEEK_DAYS[getDayOfWeek(day)];
 }
 
 export function getMonday(day: number) {
@@ -247,18 +255,52 @@ export function timed(day: number, minutes: number, duration: number) {
 function allDay(firstDay: number, lastDay: number = firstDay) {
   return {
     start: formatDateTime(firstDay, 0),
-    end: `${formatDay(lastDay)}T23:59:59`,
+    end: formatEndOfDay(lastDay),
     allDay: true,
   };
 }
 
 const FIRST_DAY = parseDay('2019-01-01');
 
+export function createTeamMeeting(
+  team: Team,
+  day: number,
+  id: string,
+  random: Random,
+): SchedulerEvent {
+  return {
+    id,
+    title: random.pick(MEETINGS),
+    timezone: team.office.timezone,
+    resource: team.id,
+    ...timed(day, random.int(18, 34) * 30, random.pick([30, 60, 90])),
+  };
+}
+
+/**
+ * Creates a weekly sync on the weekday of `day`, which ends with `end`.
+ */
+export function createProjectSeries(
+  team: Team,
+  day: number,
+  id: string,
+  random: Random,
+  end: Pick<SchedulerEventRecurrenceRule, 'until' | 'count'>,
+): SchedulerEvent {
+  return {
+    id,
+    title: `${random.pick(PROJECTS)} sync · ${team.title}`,
+    timezone: team.office.timezone,
+    resource: team.id,
+    ...timed(day, random.int(18, 34) * 30, 45),
+    rrule: { freq: 'WEEKLY', byDay: [getWeekDay(day)], ...end },
+  };
+}
+
 interface CalendarBuilder {
   random: Random;
   today: number;
-  addSeries: (event: SchedulerEvent & { rrule: SchedulerEventRecurrenceRule }) => void;
-  addEvent: (event: SchedulerEvent) => void;
+  add: (event: SchedulerEvent) => void;
 }
 
 /**
@@ -282,14 +324,14 @@ function getHolidayExDates(office: Office, firstDay: number, lastDay: number, mi
 function addOfficeEvents(office: Office, calendar: CalendarBuilder) {
   const base = { timezone: office.timezone, resource: office.id };
 
-  calendar.addSeries({
+  calendar.add({
     ...base,
     id: `${office.id}-all-hands`,
     title: `All hands · ${office.title}`,
     ...timed(parseDay('2019-01-03'), 16 * 60, 60),
     rrule: { freq: 'MONTHLY', byDay: ['1TH'] },
   });
-  calendar.addSeries({
+  calendar.add({
     ...base,
     id: `${office.id}-it-office-hours`,
     title: `IT office hours · ${office.title}`,
@@ -297,7 +339,7 @@ function addOfficeEvents(office: Office, calendar: CalendarBuilder) {
     rrule: { freq: 'WEEKLY', byDay: ['TU', 'TH'] },
   });
   office.holidays.forEach((holiday) => {
-    calendar.addSeries({
+    calendar.add({
       ...base,
       id: `${office.id}-holiday-${holiday}`,
       title: `Office closed · ${office.title}`,
@@ -316,7 +358,7 @@ function addTeamEvents(team: Team, calendar: CalendarBuilder) {
 
   const standupDay = getNextWeekday(teamStart);
   const standupMinutes = random.pick([540, 555, 570, 585, 600]);
-  calendar.addSeries({
+  calendar.add({
     ...base,
     id: `${team.id}-standup`,
     title: `Standup · ${team.title}`,
@@ -326,21 +368,21 @@ function addTeamEvents(team: Team, calendar: CalendarBuilder) {
   });
 
   const sprintStart = getMonday(teamStart) + 7;
-  calendar.addSeries({
+  calendar.add({
     ...base,
     id: `${team.id}-sprint-planning`,
     title: `Sprint planning · ${team.title}`,
     ...timed(sprintStart, 10 * 60 + 30, 60),
     rrule: { freq: 'WEEKLY', interval: 2, byDay: ['MO'] },
   });
-  calendar.addSeries({
+  calendar.add({
     ...base,
     id: `${team.id}-retro`,
     title: `Retro · ${team.title}`,
     ...timed(sprintStart + 11, 15 * 60, 60),
     rrule: { freq: 'WEEKLY', interval: 2, byDay: ['FR'] },
   });
-  calendar.addSeries({
+  calendar.add({
     ...base,
     id: `${team.id}-monthly-sync`,
     title: `Monthly sync · ${team.title}`,
@@ -352,7 +394,7 @@ function addTeamEvents(team: Team, calendar: CalendarBuilder) {
       ],
     },
   });
-  calendar.addSeries({
+  calendar.add({
     ...base,
     id: `${team.id}-lunch`,
     title: `Team lunch · ${team.title}`,
@@ -360,22 +402,48 @@ function addTeamEvents(team: Team, calendar: CalendarBuilder) {
     rrule: { freq: 'MONTHLY', byMonthDay: [random.int(1, 28)] },
   });
 
+  // A two-day offsite every quarter.
+  if (random.bool(0.5)) {
+    calendar.add({
+      ...base,
+      id: `${team.id}-offsite`,
+      title: `Offsite · ${team.title}`,
+      ...allDay(teamStart, teamStart + 1),
+      rrule: { freq: 'MONTHLY', interval: 3, byDay: ['2TU'] },
+    });
+  }
+
   people.forEach((person, index) => {
     const joinDay = index === 0 ? teamStart : random.int(teamStart, today - 14);
 
-    // Everyone is on call one week out of the size of the team.
-    const onCallMonday = getMonday(teamStart) + 7 * index;
-    calendar.addSeries({
-      ...base,
-      id: `${team.id}-on-call-${index}`,
-      title: `On call · ${person}`,
-      ...allDay(onCallMonday, onCallMonday + 6),
-      rrule: { freq: 'WEEKLY', interval: people.length },
-    });
+    // A part-time schedule, with a day off every week or every other week.
+    if (random.bool(0.15)) {
+      calendar.add({
+        ...base,
+        id: `${team.id}-day-off-${index}`,
+        title: `Day off · ${person}`,
+        ...allDay(joinDay),
+        rrule: {
+          freq: 'WEEKLY',
+          interval: random.pick([1, 2]),
+          byDay: [random.pick(['WE', 'FR'] as const)],
+        },
+      });
+    }
+
+    if (random.bool(0.3)) {
+      const firstDay = getNextWeekday(today + random.int(-28, 28));
+      calendar.add({
+        ...base,
+        id: `${team.id}-time-off-${index}`,
+        title: `Time off · ${person}`,
+        ...allDay(firstDay, firstDay + random.int(1, 11)),
+      });
+    }
 
     const birthYear = new Date(joinDay * DAY_MS).getUTCFullYear();
     const birthday = `${birthYear}-${String(random.int(1, 12)).padStart(2, '0')}-${String(random.int(1, 28)).padStart(2, '0')}`;
-    calendar.addSeries({
+    calendar.add({
       ...base,
       id: `${team.id}-birthday-${index}`,
       title: `${person}'s birthday`,
@@ -385,12 +453,12 @@ function addTeamEvents(team: Team, calendar: CalendarBuilder) {
 
     if (index > 0) {
       const day = getNextWeekday(joinDay);
-      calendar.addSeries({
+      calendar.add({
         ...base,
         id: `${team.id}-one-on-one-${index}`,
         title: `1:1 ${manager} / ${person}`,
         ...timed(day, random.int(20, 34) * 30, 30),
-        rrule: { freq: 'WEEKLY', interval: 2, byDay: [WEEK_DAYS[getDayOfWeek(day)]] },
+        rrule: { freq: 'WEEKLY', interval: 2, byDay: [getWeekDay(day)] },
       });
     }
   });
@@ -398,45 +466,36 @@ function addTeamEvents(team: Team, calendar: CalendarBuilder) {
   // A project that ended, or ends soon.
   if (random.bool(0.7)) {
     const day = getNextWeekday(random.int(teamStart, today - 60));
-    calendar.addSeries({
-      ...base,
-      id: `${team.id}-project`,
-      title: `${random.pick(PROJECTS)} sync · ${team.title}`,
-      ...timed(day, random.int(18, 34) * 30, 45),
-      rrule: {
-        freq: 'WEEKLY',
-        byDay: [WEEK_DAYS[getDayOfWeek(day)]],
-        until: `${formatDay(day + 7 * random.int(8, 40))}T23:59:59`,
-      },
-    });
+    const until = formatEndOfDay(day + 7 * random.int(8, 40));
+    calendar.add(createProjectSeries(team, day, `${team.id}-project`, random, { until }));
   }
 
   // A recent hire with a fixed number of onboarding sessions.
   if (random.bool(0.5)) {
     const day = getNextWeekday(today - random.int(0, 70));
-    calendar.addSeries({
+    calendar.add({
       ...base,
       id: `${team.id}-onboarding`,
       title: `Onboarding · ${random.pick(FIRST_NAMES)}`,
       ...timed(day, 11 * 60, 60),
-      rrule: { freq: 'WEEKLY', byDay: [WEEK_DAYS[getDayOfWeek(day)]], count: 12 },
+      rrule: { freq: 'WEEKLY', byDay: [getWeekDay(day)], count: 12 },
     });
   }
 
   // A COUNT that started years ago: the occurrences before the visible days still count.
   if (random.bool(0.3)) {
     const day = getNextWeekday(random.int(FIRST_DAY, FIRST_DAY + 700));
-    calendar.addSeries({
+    calendar.add({
       ...base,
       id: `${team.id}-mentoring`,
       title: `Mentoring · ${random.pick(people)}`,
       ...timed(day, 17 * 60, 45),
-      rrule: { freq: 'WEEKLY', byDay: [WEEK_DAYS[getDayOfWeek(day)]], count: 400 },
+      rrule: { freq: 'WEEKLY', byDay: [getWeekDay(day)], count: 400 },
     });
   }
 
   if (random.bool(0.3)) {
-    calendar.addSeries({
+    calendar.add({
       ...base,
       id: `${team.id}-handover`,
       title: `On-call handover · ${team.title}`,
@@ -448,12 +507,7 @@ function addTeamEvents(team: Team, calendar: CalendarBuilder) {
   const meetingCount = random.int(6, 12);
   for (let index = 0; index < meetingCount; index += 1) {
     const day = getNextWeekday(today + random.int(-28, 28));
-    calendar.addEvent({
-      ...base,
-      id: `${team.id}-meeting-${index}`,
-      title: random.pick(MEETINGS),
-      ...timed(day, random.int(18, 34) * 30, random.pick([30, 60, 90])),
-    });
+    calendar.add(createTeamMeeting(team, day, `${team.id}-meeting-${index}`, random));
   }
 }
 
@@ -470,17 +524,16 @@ export function createGlobalCompanyDataset(
   const calendar: CalendarBuilder = {
     random: createRandom(seed),
     today: toDay(new Date()),
-    addSeries: (event) => {
+    add: (event) => {
       events.push(event);
-      currentSeriesCount += 1;
-    },
-    addEvent: (event) => {
-      events.push(event);
+      if (event.rrule != null) {
+        currentSeriesCount += 1;
+      }
     },
   };
 
   const officeIds = OFFICES.map((office) => office.id);
-  calendar.addSeries({
+  calendar.add({
     id: 'company-all-hands',
     title: 'Company all hands',
     timezone: 'America/Los_Angeles',
@@ -488,7 +541,7 @@ export function createGlobalCompanyDataset(
     ...timed(parseDay('2019-01-09'), 9 * 60, 60),
     rrule: { freq: 'MONTHLY', byDay: ['2WE'] },
   });
-  calendar.addSeries({
+  calendar.add({
     id: 'quarterly-business-review',
     title: 'Quarterly business review',
     timezone: 'America/New_York',
