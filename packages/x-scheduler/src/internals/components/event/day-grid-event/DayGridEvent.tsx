@@ -364,8 +364,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   }, [
     variant,
     occurrence.title,
-    occurrence.displayTimezone.start.value,
-    occurrence.displayTimezone.end.value,
+    occurrence.displayTimezone.start,
+    occurrence.displayTimezone.end,
     isRecurring,
     formatTime,
     classes,

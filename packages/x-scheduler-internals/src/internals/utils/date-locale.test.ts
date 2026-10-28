@@ -21,6 +21,13 @@ describe('date-locale', () => {
       expect(getLocaleWeekInfo('en-GB').minimalDays).to.equal(4);
     });
 
+    it('should read the first week of the year of the region of the locale extension', () => {
+      expect(getLocaleWeekInfo('en-US-u-rg-gbzzzz')).to.deep.equal({ firstDay: 1, minimalDays: 4 });
+      expect(getLocaleWeekInfo('en-GB-u-rg-uszzzz')).to.deep.equal({ firstDay: 7, minimalDays: 1 });
+      // Not an extension.
+      expect(getLocaleWeekInfo('en-US-x-rg-gbzzzz').minimalDays).to.equal(1);
+    });
+
     it('should start the weeks on Monday when the runtime knows no week of the locales', () => {
       const prototype = Intl.Locale.prototype as Record<string, any>;
       const getWeekInfo = Object.getOwnPropertyDescriptor(prototype, 'getWeekInfo');

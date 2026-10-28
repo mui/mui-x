@@ -48,7 +48,12 @@ export function getLocaleWeekInfo(locale: string): WeekInfo {
     const intlLocale = new Intl.Locale(locale) as Intl.Locale & IntlLocaleWithWeekInfo;
     // Older browsers have a `weekInfo` accessor instead of `getWeekInfo()`.
     const intlWeekInfo = intlLocale.getWeekInfo?.() ?? intlLocale.weekInfo;
-    const region = intlLocale.maximize().region;
+    // The `rg` extension overrides the region of the week, as in `getWeekInfo()`. The private use
+    // subtags, after `-x-`, are not extensions.
+    const region =
+      /-u-(?:[a-z0-9-]*-)?rg-([a-z]{2})/i
+        .exec(intlLocale.toString().split('-x-')[0])?.[1]
+        .toUpperCase() ?? intlLocale.maximize().region;
     weekInfo = {
       // Like the ISO 8601 weeks, for the browsers that know neither.
       firstDay: (intlWeekInfo?.firstDay ?? 1) as WeekStartsOn,
