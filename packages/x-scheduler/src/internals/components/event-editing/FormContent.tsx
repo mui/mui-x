@@ -63,6 +63,7 @@ import { eventDialogFormSelectors } from '../event-dialog/form/EventDialogFormSt
 import { usePushPlaceholder } from '../event-dialog/usePushPlaceholder';
 import { focusFirstInvalid } from '../scheduler-form/focusFirstInvalid';
 import { deleteOccurrenceAndRestoreFocus } from '../../utils/focus-utils';
+import { dialogContentBaseStyles } from '../../utils/dialog-styles';
 
 export const EventDialogFormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
@@ -72,21 +73,13 @@ export const EventDialogFormActions = styled(DialogActions, {
   gap: theme.spacing(2),
 }));
 
-export const EventDialogContentRoot = styled(MuiDialogContent, {
+const EventDialogContentRoot = styled(MuiDialogContent, {
   name: 'MuiEventDialog',
   slot: 'DialogContent',
 })({
-  cursor: 'default',
-  userSelect: 'text',
-  padding: 0,
+  ...dialogContentBaseStyles,
   minWidth: 360,
   width: 450,
-  // Shrink to fit the paper (capped at the viewport) so the form doesn't overflow on mobile screens.
-  maxWidth: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  overflow: 'hidden',
-  maxHeight: '100%',
 });
 
 export const EventDialogForm = styled('form', {

@@ -6,7 +6,11 @@ import MuiDialogContent from '@mui/material/DialogContent';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyEditor } from '@mui/x-scheduler-internals-premium/models';
-import { EventDialogDraggablePaper, EventDialogRoot } from '@mui/x-scheduler/internals';
+import {
+  dialogContentBaseStyles,
+  EventDialogDraggablePaper,
+  EventDialogRoot,
+} from '@mui/x-scheduler/internals';
 import type { EventDialogDraggablePaperProps } from '@mui/x-scheduler/internals';
 import { useEventTimelinePremiumStyledContext } from '../../../EventTimelinePremiumStyledContext';
 import { useDependencyGeometry } from '../EventTimelinePremiumDependencyGeometry';
@@ -29,16 +33,8 @@ const DependencyDialogContentRoot = styled(MuiDialogContent, {
   name: 'MuiEventTimeline',
   slot: 'DependencyDialogContent',
 })({
-  cursor: 'default',
-  userSelect: 'text',
-  padding: 0,
+  ...dialogContentBaseStyles,
   width: 345,
-  // Shrinks to fit the paper on small screens.
-  maxWidth: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  overflow: 'hidden',
-  maxHeight: '100%',
 });
 
 /**
