@@ -1,16 +1,12 @@
 'use client';
 import * as React from 'react';
-import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
+import MuiDialogContent from '@mui/material/DialogContent';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyEditor } from '@mui/x-scheduler-internals-premium/models';
-import {
-  EventDialogDraggablePaper,
-  EventDialogContentRoot,
-  EventDialogRoot,
-} from '@mui/x-scheduler/internals';
+import { EventDialogDraggablePaper, EventDialogRoot } from '@mui/x-scheduler/internals';
 import type { EventDialogDraggablePaperProps } from '@mui/x-scheduler/internals';
 import { useEventTimelinePremiumStyledContext } from '../../../EventTimelinePremiumStyledContext';
 import { useDependencyGeometry } from '../EventTimelinePremiumDependencyGeometry';
@@ -28,13 +24,22 @@ const DependencyDialogAnchor = styled('span', {
   pointerEvents: 'none',
 });
 
+// Its own styles rather than the event dialog's, so styling one doesn't change the other.
 // Narrower than the event dialog: it only has four fields.
-const DependencyDialogContentRoot = styled(EventDialogContentRoot, {
+const DependencyDialogContentRoot = styled(MuiDialogContent, {
   name: 'MuiEventTimeline',
   slot: 'DependencyDialogContent',
 })({
-  minWidth: 0,
+  cursor: 'default',
+  userSelect: 'text',
+  padding: 0,
   width: 345,
+  // Shrinks to fit the paper on small screens.
+  maxWidth: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  overflow: 'hidden',
+  maxHeight: '100%',
 });
 
 /**
@@ -89,9 +94,7 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
         } as EventDialogDraggablePaperProps,
       }}
     >
-      <DependencyDialogContentRoot
-        className={clsx(classes.eventDialogContent, classes.dependencyDialogContent)}
-      >
+      <DependencyDialogContentRoot className={classes.dependencyDialogContent}>
         {isReadOnly ? (
           <DependencyDialogReadonlyContent {...viewProps} />
         ) : (
