@@ -1,0 +1,11 @@
+<DependenciesTimeline
+  events={events}
+  onEventsChange={setEvents}
+  resources={resources}
+  dependencies={dependencies}
+  onDependenciesChange={setDependencies}
+  features={features}
+  defaultVisibleDate={new Date('2025-07-03T00:00:00')}
+  defaultPreset="dayAndHour"
+  presetConfig={{ dayAndHour: { startTime: 8, endTime: 18 } }}
+/>
