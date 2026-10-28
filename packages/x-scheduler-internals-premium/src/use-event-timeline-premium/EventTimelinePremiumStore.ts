@@ -270,6 +270,11 @@ export class EventTimelinePremiumStore<
     this.schedulingPlugin = this.scheduling;
     this.lazyLoading = this.disposables.use(new EventTimelinePremiumLazyLoadingPlugin(this));
 
+    // The feature is frozen at construction: without it, no dependency is ever selected or edited.
+    if (dependenciesFeature === null) {
+      return;
+    }
+
     // Clear (not just mask) the selection and the dialog of a removed or deactivated
     // dependency: with masking alone, a dependency coming back (a re-added id, an endpoint
     // event re-fetched or no longer recurring) would bring them back.
