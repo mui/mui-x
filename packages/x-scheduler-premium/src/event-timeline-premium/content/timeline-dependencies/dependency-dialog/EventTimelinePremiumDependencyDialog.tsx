@@ -24,7 +24,6 @@ const DependencyDialogAnchor = styled('span', {
   pointerEvents: 'none',
 });
 
-// Its own styles rather than the event dialog's, so styling one doesn't change the other.
 // Narrower than the event dialog: it only has four fields.
 const DependencyDialogContentRoot = styled(MuiDialogContent, {
   name: 'MuiEventTimeline',
