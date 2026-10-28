@@ -100,8 +100,8 @@ StandaloneWeekViewPremium.propTypes /* remove-proptypes */ = {
   /**
    * The locale of the dates, as a BCP 47 language tag such as `"fr-FR"`, like the locales of
    * `Intl.DateTimeFormat`.
-   * This affects day names, month names, the first day of the week, week numbers and the other
-   * locale-dependent formatting.
+   * This affects day names, month names, the first day of the week, week numbers, the 12-hour
+   * or 24-hour clock and the other locale-dependent formatting.
    * @default "en-US"
    */
   dateLocale: PropTypes.string,

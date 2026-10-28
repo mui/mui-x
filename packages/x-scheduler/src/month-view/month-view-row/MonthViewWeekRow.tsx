@@ -7,7 +7,11 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-eve
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { getEndOfDayMs, getWeekNumber } from '@mui/x-scheduler-internals/internals';
+import {
+  formatWeekNumber,
+  getEndOfDayMs,
+  getWeekNumber,
+} from '@mui/x-scheduler-internals/internals';
 import type { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
 import { MonthViewCell } from './MonthViewCell';
 import { useEventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
@@ -45,6 +49,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const store = useEventCalendarStoreContext();
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
   const weekInfo = useStore(store, eventCalendarPreferenceSelectors.weekInfo);
+  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
   const occurrences = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap, maxEvents });
   const weekNumber = getWeekNumber(days[0].plainDate, weekInfo);
@@ -73,7 +78,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
           aria-label={localeText.weekNumberAriaLabel(weekNumber)}
           aria-hidden="true"
         >
-          {weekNumber}
+          {formatWeekNumber(locale, weekNumber)}
         </MonthViewWeekNumberCell>
       )}
       {occurrences.days.map((day, dayIdx) => (

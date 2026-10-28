@@ -24,7 +24,7 @@
       "description": "Data source for fetching events asynchronously. When provided, events are fetched through the data source instead of the <code>events</code> prop."
     },
     "dateLocale": {
-      "description": "The locale of the dates, as a BCP 47 language tag such as <code>&quot;fr-FR&quot;</code>, like the locales of <code>Intl.DateTimeFormat</code>. This affects day names, month names, the first day of the week, week numbers and the other locale-dependent formatting."
+      "description": "The locale of the dates, as a BCP 47 language tag such as <code>&quot;fr-FR&quot;</code>, like the locales of <code>Intl.DateTimeFormat</code>. This affects day names, month names, the first day of the week, week numbers, the 12-hour or 24-hour clock and the other locale-dependent formatting."
     },
     "defaultCollapsedResources": {
       "description": "The resources initially collapsed. To render a controlled scheduler, use the <code>collapsedResources</code> prop."

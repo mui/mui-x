@@ -274,7 +274,7 @@ describe('<WeekView />', () => {
       );
       expect(currentElements.length).to.equal(1);
       expect(currentElements[0]).to.have.attribute('role', 'columnheader');
-      expect(currentElements[0]).to.have.attribute('aria-label', 'Sunday 4');
+      expect(currentElements[0]).to.have.attribute('aria-label', 'Sunday, May 4');
       expect(currentElements[0]).to.have.attribute('aria-current', 'date');
       expect(currentElements[0]).to.have.attribute('data-current');
     });
@@ -420,7 +420,7 @@ describe('<WeekView />', () => {
       return within(dayTimeGrid).getAllByRole('columnheader')[0];
     }
 
-    it('shows Sunday as the first column when weekStartsOn is 0', () => {
+    it('shows Sunday as the first column when weekStartsOn is 7', () => {
       render(
         <EventCalendar
           events={[]}
@@ -457,6 +457,14 @@ describe('<WeekView />', () => {
       );
 
       expect(getFirstDayColumnHeader().getAttribute('aria-label')).to.match(/saturday/i);
+    });
+
+    it('starts the weeks on the first day of the week of the date locale by default', () => {
+      render(
+        <EventCalendar events={[]} visibleDate={visibleDate} view="week" dateLocale="fr-FR" />,
+      );
+
+      expect(getFirstDayColumnHeader().getAttribute('aria-label')).to.match(/^lundi/);
     });
 
     it('renders exactly 7 day columns regardless of weekStartsOn', () => {

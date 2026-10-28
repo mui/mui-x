@@ -74,7 +74,7 @@ import {
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
 import { createStartOfPlainDate } from '../plain-date-utils/adapter';
-import { DEFAULT_DATE_LOCALE } from '../date-locale';
+import { checkDateLocale, DEFAULT_DATE_LOCALE } from '../date-locale';
 import { toPlainDate } from '../plain-date-utils/timeZone';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
@@ -311,9 +311,11 @@ export class SchedulerStore<
     parameters: SchedulerParameters<TEvent, TResource>,
     adapter: Adapter,
   ) {
+    const dateLocale = parameters.dateLocale ?? DEFAULT_DATE_LOCALE;
+    checkDateLocale(dateLocale);
     return {
       adapter,
-      dateLocale: parameters.dateLocale ?? DEFAULT_DATE_LOCALE,
+      dateLocale,
       areEventsDraggable: parameters.areEventsDraggable ?? true,
       areEventsResizable: parameters.areEventsResizable ?? true,
       canDragEventsFromTheOutside: parameters.canDragEventsFromTheOutside ?? false,

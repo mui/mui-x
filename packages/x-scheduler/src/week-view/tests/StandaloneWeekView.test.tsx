@@ -113,7 +113,7 @@ describe('<StandaloneWeekView />', () => {
 
       expect(
         // French uses a 24-hour clock.
-        screen.getByRole('button', { name: 'Courir, de 7:30 à 8:30, jeudi 3 juillet 2025' }),
+        screen.getByRole('button', { name: 'Courir, de 07:30 à 08:30, jeudi 3 juillet 2025' }),
       ).not.to.equal(null);
     });
 

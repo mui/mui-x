@@ -49,5 +49,32 @@ storeClasses.forEach((storeClass) => {
         expect(ampm).to.equal(true);
       });
     });
+
+    describe('weekInfo', () => {
+      it('should follow the weeks of the date locale when weekStartsOn is not set', () => {
+        const state = new storeClass.Value({ ...BASE_PARAMS }, adapter).state;
+        expect(schedulerPreferenceSelectors.weekInfo(state)).to.deep.equal({
+          firstDay: 7,
+          minimalDays: 1,
+        });
+        const frenchState = new storeClass.Value({ ...BASE_PARAMS, dateLocale: 'fr-FR' }, adapter)
+          .state;
+        expect(schedulerPreferenceSelectors.weekInfo(frenchState)).to.deep.equal({
+          firstDay: 1,
+          minimalDays: 4,
+        });
+      });
+
+      it('should start the weeks on weekStartsOn and keep the first week of the locale', () => {
+        const state = new storeClass.Value(
+          { ...BASE_PARAMS, preferences: { weekStartsOn: 1 } },
+          adapter,
+        ).state;
+        expect(schedulerPreferenceSelectors.weekInfo(state)).to.deep.equal({
+          firstDay: 1,
+          minimalDays: 1,
+        });
+      });
+    });
   });
 });

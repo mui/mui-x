@@ -1,10 +1,12 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { PlainDate } from '@mui/x-scheduler-internals/internals';
+import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../../constants/defaultLocaleText';
 import {
   findInvalidRangeField,
   getEditedRangeBounds,
   getEventTimezonePlainDate,
+  getRecurrenceLabel,
   getRecurrenceRuleBound,
   getRecurrenceTimezoneName,
   getResentRangeBounds,
@@ -120,6 +122,19 @@ describe('getEditedRangeBounds', () => {
       startEdited: true,
       endEdited: true,
     });
+  });
+});
+
+describe('getRecurrenceLabel', () => {
+  it('should write the yearly date in the order of the locale', () => {
+    const startPlainDate = PlainDate.from('2025-07-03');
+    const localeText = EVENT_CALENDAR_DEFAULT_LOCALE_TEXT;
+    expect(getRecurrenceLabel('en-US', startPlainDate, 'YEARLY', localeText)).to.equal(
+      localeText.recurrenceYearlyPresetLabel('July 3'),
+    );
+    expect(getRecurrenceLabel('fr-FR', startPlainDate, 'YEARLY', localeText)).to.equal(
+      localeText.recurrenceYearlyPresetLabel('3 juillet'),
+    );
   });
 });
 

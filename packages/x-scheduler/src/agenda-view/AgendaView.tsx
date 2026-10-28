@@ -21,6 +21,8 @@ import {
   formatDayOfMonth,
   formatMonthAndYear,
   formatWeekday,
+  formatWeekdayMonthAndDayOfMonth,
+  formatWeekNumber,
   getPlainDateWeekStart,
   getWeekNumber,
 } from '@mui/x-scheduler-internals/internals';
@@ -33,7 +35,7 @@ import type { AgendaViewProps } from './AgendaView.types';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
 import { EventSkeleton } from '../internals/components/event-skeleton';
 import { useEventCalendarStyledContext } from '../event-calendar/EventCalendarStyledContext';
-import { formatWeekdayAndDayOfMonth, getSiblingMonthStart } from '../internals/utils/date-utils';
+import { getSiblingMonthStart } from '../internals/utils/date-utils';
 import { EventContextMenuTrigger } from '../internals/components/event-context-menu';
 
 const AgendaViewRoot = styled('div', {
@@ -272,7 +274,7 @@ export const AgendaView = React.memo(
                     className={classes.agendaViewWeekNumberLabel}
                     aria-label={localeText.weekNumberAriaLabel(weekNumber)}
                   >
-                    {`${localeText.week} ${weekNumber}`}
+                    {`${localeText.week} ${formatWeekNumber(locale, weekNumber)}`}
                   </AgendaViewWeekNumberLabel>
                 </AgendaViewWeekNumberRow>
               )}
@@ -284,7 +286,7 @@ export const AgendaView = React.memo(
                 <DayHeaderCell
                   className={classes.agendaViewDayHeaderCell}
                   id={`${schedulerId}-DayHeaderCell-${date.key}`}
-                  aria-label={formatWeekdayAndDayOfMonth(locale, date.plainDate)}
+                  aria-label={formatWeekdayMonthAndDayOfMonth(locale, date.plainDate)}
                   data-current={isToday ? '' : undefined}
                   aria-current={isToday ? 'date' : undefined}
                 >

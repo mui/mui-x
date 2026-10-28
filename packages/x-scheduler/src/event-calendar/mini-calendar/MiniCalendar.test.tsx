@@ -276,7 +276,7 @@ describe('MiniCalendar', () => {
       return within(miniCalendar).getAllByRole('columnheader')[0];
     }
 
-    it('should show Sunday as the first weekday header when weekStartsOn is 0', () => {
+    it('should show Sunday as the first weekday header when weekStartsOn is 7', () => {
       render(<EventCalendar events={[]} defaultPreferences={{ weekStartsOn: 7 }} />);
 
       expect(getFirstWeekdayHeader().getAttribute('aria-label')).to.match(/sunday/i);

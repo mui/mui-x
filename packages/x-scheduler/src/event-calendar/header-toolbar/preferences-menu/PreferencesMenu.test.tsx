@@ -195,6 +195,48 @@ describe('<PreferencesMenu />', () => {
     expect(screen.queryByRole('menuitemcheckbox', { name: /show empty days/i })).to.equal(null);
   });
 
+  describe('defaults of the locale', () => {
+    const isChecked = (name: RegExp) =>
+      screen.getByRole('menuitemradio', { name }).getAttribute('aria-checked');
+
+    it('should check Sunday and the 12-hour clock in English (United States)', async () => {
+      const { user } = render(
+        <EventCalendarProvider
+          events={[]}
+          preferencesMenuConfig={{ toggleWeekStartsOn: true, toggleAmpm: true }}
+        >
+          <PreferencesMenu />
+        </EventCalendarProvider>,
+      );
+
+      await openPreferencesMenu(user);
+
+      expect(isChecked(/sunday/i)).to.equal('true');
+      expect(isChecked(/monday/i)).to.equal('false');
+      expect(isChecked(/12-hour/i)).to.equal('true');
+      expect(isChecked(/24-hour/i)).to.equal('false');
+    });
+
+    it('should check Monday and the 24-hour clock in French', async () => {
+      const { user } = render(
+        <EventCalendarProvider
+          events={[]}
+          dateLocale="fr-FR"
+          preferencesMenuConfig={{ toggleWeekStartsOn: true, toggleAmpm: true }}
+        >
+          <PreferencesMenu />
+        </EventCalendarProvider>,
+      );
+
+      await openPreferencesMenu(user);
+
+      expect(isChecked(/monday/i)).to.equal('true');
+      expect(isChecked(/sunday/i)).to.equal('false');
+      expect(isChecked(/24-hour/i)).to.equal('true');
+      expect(isChecked(/12-hour/i)).to.equal('false');
+    });
+  });
+
   describe('weekStartsOn submenu', () => {
     it('should render Sunday, Monday, Saturday radios when toggleWeekStartsOn is true', async () => {
       const { user } = render(

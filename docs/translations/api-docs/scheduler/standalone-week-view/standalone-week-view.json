@@ -14,7 +14,7 @@
       "description": "Whether events can be dragged from inside of the calendar and dropped outside of it. If true, when the mouse leaves the calendar, the event won&#39;t be rendered inside the calendar anymore. If false, when the mouse leaves the calendar, the event will be rendered in its last valid position inside the calendar."
     },
     "dateLocale": {
-      "description": "The locale of the dates, as a BCP 47 language tag such as <code>&quot;fr-FR&quot;</code>, like the locales of <code>Intl.DateTimeFormat</code>. This affects day names, month names, the first day of the week, week numbers and the other locale-dependent formatting."
+      "description": "The locale of the dates, as a BCP 47 language tag such as <code>&quot;fr-FR&quot;</code>, like the locales of <code>Intl.DateTimeFormat</code>. This affects day names, month names, the first day of the week, week numbers, the 12-hour or 24-hour clock and the other locale-dependent formatting."
     },
     "defaultPreferences": {
       "description": "The default preferences for the calendar. To use controlled preferences, use the <code>preferences</code> prop."

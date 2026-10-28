@@ -105,6 +105,17 @@ describe('date-utils', () => {
       expect(getWeekNumber(wednesdayPlainDate, { firstDay: 7, minimalDays: 1 })).to.equal(2);
     });
 
+    it('keeps the first week of the year when the weeks start on another day', () => {
+      // The first week of the United States holds January 1st, whatever day the weeks start on.
+      const mondayWeekInfo = { firstDay: 1, minimalDays: 1 } as const;
+      expect(getWeekNumber(PlainDate.from('2026-12-27'), mondayWeekInfo)).to.equal(52);
+      expect(getWeekNumber(PlainDate.from('2026-12-28'), mondayWeekInfo)).to.equal(1);
+      expect(getWeekNumber(PlainDate.from('2027-01-01'), mondayWeekInfo)).to.equal(1);
+      const saturdayWeekInfo = { firstDay: 6, minimalDays: 1 } as const;
+      expect(getWeekNumber(PlainDate.from('2026-12-25'), saturdayWeekInfo)).to.equal(52);
+      expect(getWeekNumber(PlainDate.from('2026-12-26'), saturdayWeekInfo)).to.equal(1);
+    });
+
     it('returns week 48 for 2012-11-23 with weekStartsOn=5 (Fri)', () => {
       // Fri-week 1 of 2012 starts on Friday, December 30th, 2011, and holds January 4th.
       expect(getWeekNumber(PlainDate.from('2012-11-23'), { firstDay: 5, minimalDays: 4 })).to.equal(

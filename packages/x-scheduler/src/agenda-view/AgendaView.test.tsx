@@ -84,7 +84,9 @@ describe('<AgendaView />', () => {
     expect(currentElements[0]).to.have.class(eventCalendarClasses.agendaViewDayHeaderCell);
     expect(currentElements[0]).to.have.attribute(
       'aria-label',
-      `${adapter.format(today, 'weekday')} ${adapter.format(today, 'dayOfMonth')}`,
+      new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric' }).format(
+        today,
+      ),
     );
   });
 
@@ -119,6 +121,15 @@ describe('<AgendaView />', () => {
       expect(secondDay).not.to.have.attribute('data-ending-after-edge');
     },
   );
+
+  it('should label each day with its month and year', () => {
+    render(<EventCalendar events={[]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} view="agenda" />);
+
+    const labels = document.querySelectorAll(
+      `.${eventCalendarClasses.agendaViewYearAndMonthLabel}`,
+    );
+    expect(labels[0]).to.have.text('July 2025');
+  });
 
   it('should name each event with its title, time range and date', () => {
     const event = EventBuilder.new().title('My Event').build();

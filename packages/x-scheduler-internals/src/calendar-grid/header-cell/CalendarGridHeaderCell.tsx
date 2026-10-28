@@ -113,7 +113,8 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
       {
         role: 'columnheader',
         id,
-        'aria-label': formatWeekday(locale, date.plainDate),
+        // The `aria-label` of the caller wins, so the weekday is only formatted without one.
+        'aria-label': elementProps['aria-label'] ?? formatWeekday(locale, date.plainDate),
         'aria-colindex': index + 1,
         'aria-current': isCurrentDay ? 'date' : undefined,
       },

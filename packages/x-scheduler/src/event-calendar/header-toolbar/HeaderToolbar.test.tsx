@@ -279,6 +279,55 @@ describe('week number badge', () => {
       ).to.have.text(expected);
     },
   );
+
+  it('keeps the first week of the locale when the weeks start on another day', () => {
+    // January 1st stays in the first week of English (United States) with weeks starting on Monday.
+    render(
+      <EventCalendar
+        events={[]}
+        visibleDate={adapter.date('2027-01-01T12:00:00Z', 'default')}
+        view="week"
+        dateLocale="en-US"
+        preferences={{ showWeekNumber: true, weekStartsOn: 1 }}
+      />,
+    );
+
+    expect(document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`)).to.have.text(
+      'Week 1',
+    );
+  });
+
+  it('writes the week number in the digits of the locale', () => {
+    render(
+      <EventCalendar
+        events={[]}
+        visibleDate={adapter.date('2025-07-16T12:00:00Z', 'default')}
+        view="week"
+        dateLocale="ar-EG"
+        preferences={{ showWeekNumber: true }}
+      />,
+    );
+
+    expect(document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`)).to.have.text(
+      'Week ٢٩',
+    );
+  });
+
+  it('formats the month of the visible date in the display timezone', () => {
+    // July 31st at 23:00 in UTC is August 1st in Tokyo.
+    render(
+      <EventCalendar
+        events={[]}
+        visibleDate={adapter.date('2025-07-31T23:00:00Z', 'default')}
+        displayTimezone="Asia/Tokyo"
+        view="week"
+      />,
+    );
+
+    expect(document.querySelector(`.${eventCalendarClasses.headerToolbarLabel}`)).to.have.text(
+      'August 2025',
+    );
+  });
 });
 
 describe('side panel toggle', () => {

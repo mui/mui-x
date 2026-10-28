@@ -24,6 +24,7 @@ import {
 import {
   formatDayOfMonth,
   formatTime,
+  formatWeekdayMonthAndDayOfMonth,
   formatWeekdayShort,
   getDisplayedHourRange,
   getEndOfDayMs,
@@ -37,7 +38,6 @@ import { DayGridCell } from './DayGridCell';
 import { useEventEditingContext } from '../event-editing';
 import { useDisarmOnOutsidePointer } from '../armed-occurrence';
 import { isOccurrenceInDayGrid } from '../../utils/event-utils';
-import { formatWeekdayAndDayOfMonth } from '../../utils/date-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 import { eventCalendarContentCompactQuery } from '../../constants/responsiveTypography';
@@ -481,7 +481,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             key={day.key}
             className={classes.dayTimeGridHeaderCell}
             date={day}
-            aria-label={formatWeekdayAndDayOfMonth(locale, day.plainDate)}
+            aria-label={formatWeekdayMonthAndDayOfMonth(locale, day.plainDate)}
             aria-colindex={index + 1}
             data-has-scroll={(index === days.length - 1 && hasScroll) || undefined}
           >
