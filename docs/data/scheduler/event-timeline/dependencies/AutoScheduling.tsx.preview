@@ -1,4 +1,4 @@
-<DependenciesTimeline
+<EventTimelinePremium
   events={events}
   onEventsChange={setEvents}
   resources={resources}
@@ -7,4 +7,5 @@
   features={features}
   defaultVisibleDate={new Date('2025-07-03T00:00:00')}
   defaultPreset="dayAndHour"
+  presetConfig={presetConfig}
 />

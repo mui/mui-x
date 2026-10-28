@@ -1,9 +1,10 @@
 import * as React from 'react';
 
 import { dependenciesFeature } from '@mui/x-scheduler-premium/internals';
-import { DependenciesTimeline } from './DependenciesTimeline';
+import { EventTimelinePremium } from './DependenciesTimeline';
 
 const features = { dependencies: dependenciesFeature };
+const presetConfig = { dayAndHour: { startTime: 8, endTime: 18 } };
 
 const resources = [
   { id: 'build', title: 'Build' },
@@ -16,66 +17,66 @@ const initialEvents = [
   {
     id: 'plan',
     title: 'Plan',
-    start: '2025-07-03T01:00:00',
-    end: '2025-07-03T02:00:00',
+    start: '2025-07-03T09:00:00',
+    end: '2025-07-03T10:00:00',
     resource: 'build',
   },
   {
     id: 'build',
     title: 'Build',
-    start: '2025-07-03T03:00:00',
-    end: '2025-07-03T04:30:00',
+    start: '2025-07-03T11:00:00',
+    end: '2025-07-03T12:30:00',
     resource: 'build',
   },
   {
     id: 'deploy',
     title: 'Deploy',
-    start: '2025-07-03T05:00:00',
-    end: '2025-07-03T06:00:00',
+    start: '2025-07-03T13:00:00',
+    end: '2025-07-03T14:00:00',
     resource: 'build',
   },
   // Diamond: design → front / back → integrate.
   {
     id: 'design',
     title: 'Design',
-    start: '2025-07-03T01:00:00',
-    end: '2025-07-03T02:00:00',
+    start: '2025-07-03T09:00:00',
+    end: '2025-07-03T10:00:00',
     resource: 'release',
   },
   {
     id: 'front',
     title: 'Front-end',
-    start: '2025-07-03T02:30:00',
-    end: '2025-07-03T05:00:00',
+    start: '2025-07-03T10:30:00',
+    end: '2025-07-03T13:00:00',
     resource: 'release',
   },
   {
     id: 'back',
     title: 'Back-end',
-    start: '2025-07-03T02:30:00',
-    end: '2025-07-03T03:30:00',
+    start: '2025-07-03T10:30:00',
+    end: '2025-07-03T11:30:00',
     resource: 'ops',
   },
   {
     id: 'integrate',
     title: 'Integrate',
-    start: '2025-07-03T05:30:00',
-    end: '2025-07-03T06:30:00',
+    start: '2025-07-03T13:30:00',
+    end: '2025-07-03T14:30:00',
     resource: 'release',
   },
   // A read-only successor never moves: a change that would need to move it is rejected.
   {
     id: 'setup',
     title: 'Setup',
-    start: '2025-07-03T01:30:00',
-    end: '2025-07-03T02:30:00',
+    start: '2025-07-03T09:30:00',
+    end: '2025-07-03T10:30:00',
     resource: 'ops',
   },
   {
     id: 'audit',
     title: 'Audit (read-only)',
-    start: '2025-07-03T04:00:00',
-    end: '2025-07-03T05:00:00',
+    start: '2025-07-03T12:00:00',
+    end: '2025-07-03T13:00:00',
     resource: 'ops',
     readOnly: true,
   },
@@ -115,7 +116,7 @@ export default function AutoScheduling() {
 
   return (
     <div style={{ height: '500px', width: '100%' }}>
-      <DependenciesTimeline
+      <EventTimelinePremium
         events={events}
         onEventsChange={setEvents}
         resources={resources}
@@ -124,6 +125,7 @@ export default function AutoScheduling() {
         features={features}
         defaultVisibleDate={new Date('2025-07-03T00:00:00')}
         defaultPreset="dayAndHour"
+        presetConfig={presetConfig}
       />
     </div>
   );

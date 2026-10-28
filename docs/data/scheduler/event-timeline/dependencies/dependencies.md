@@ -1,7 +1,7 @@
 ---
 productId: x-scheduler
 title: React Scheduler component
-packageName: '@mui/x-scheduler'
+packageName: '@mui/x-scheduler-premium'
 githubLabel: 'scope: scheduler'
 ---
 
@@ -74,34 +74,38 @@ The `type` sets which edge of each event the dependency constrains:
 ## Create dependencies
 
 Hover an event to show a terminal on each of its edges.
+Recurring events have no terminals.
 Drag from a terminal and drop it on another event to create a dependency:
 
 - Dropping it on a terminal links the two edges: from the end of an event to the start of another creates a `FinishToStart` dependency.
 - Dropping it on the event itself links to its start.
 
-Press <kbd class="key">Escape</kbd>, or drop it on an empty area, to cancel.
+Press <kbd class="key">Escape</kbd>, or drop it on an empty area or on the same event, to cancel.
 
 {{"demo": "DependencyCreation.js", "bg": "inline"}}
 
 If the new dependency is already broken, the successor moves to respect it, as described in [Auto-scheduling](#auto-scheduling).
+The same happens when you edit a dependency into a stricter one.
 
 ## Edit and delete dependencies
 
-Click an arrow to select it, then:
+Click an arrow to select it, and press <kbd class="key">Escape</kbd> to deselect it.
 
-- Double-click it, or right-click it and pick **Edit dependency**, to change its type and lag.
-- Press <kbd class="key">Delete</kbd> or <kbd class="key">Backspace</kbd>, or click the × at its end, to delete it.
+- Double-click an arrow, or right-click it and pick **Edit dependency**, to change its type and lag.
+- Select it and press <kbd class="key">Delete</kbd> or <kbd class="key">Backspace</kbd>, click the × at its end, or pick **Delete** in the right-click menu or the dialog, to delete it.
 
 {{"demo": "DependencyEditing.js", "bg": "inline"}}
 
-When the Event Timeline is `readOnly`, the dialog shows the dependency without letting you edit it, and dependencies can't be created or deleted.
+An edit that would need to move a read-only event, or that duplicates another dependency, isn't applied, and the dialog explains why.
+
+When the Event Timeline is [read-only](/x/react-scheduler/event-timeline/editing/#read-only), the terminals and the × are hidden, and the right-click menu offers **Show details** instead: the dialog shows the dependency without letting you edit it.
 
 Deleting an event also deletes its dependencies, in the same `onDependenciesChange` call.
 
 ## Auto-scheduling
 
 When an event moves or is resized, the Event Timeline moves its successors later as needed to respect their dependencies, and carries the change through the whole chain.
-The moved events keep their duration, and every moved event is reported in the same `onEventsChange` call.
+The pushed successors keep their duration, and every moved event is reported in the same `onEventsChange` call.
 
 {{"demo": "AutoScheduling.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -109,7 +113,7 @@ The scheduling only ever pushes events later:
 
 - Moving a predecessor earlier doesn't pull its successors back.
 - Moving a successor earlier than its dependencies allow places it at the earliest allowed date instead.
-- A dependency that is already broken in your data stays broken until one of its events moves.
+- A dependency that is already broken in your data stays broken until the successor moves, or the predecessor moves later.
 
 :::warning
 Read-only events never move.
@@ -128,15 +132,16 @@ It must be a whole number of 0 or more, in the unit set by `lagUnit`: `'minute'`
 Days and weeks keep the time of day, even across a daylight saving time change.
 The lag is applied in the successor's timezone.
 
-An all-day successor can only wait whole days, so a lag in minutes or hours is rounded down to whole days.
+Minutes and hours count elapsed time.
+An all-day successor can only wait whole days, so a lag in minutes or hours is rounded down to whole days, and a lag shorter than a day adds no wait.
 The dependency dialog shows how the lag applies in that case.
 
 ## Rejected dependencies
 
 The Event Timeline doesn't create a dependency that:
 
-- links an event to itself, or closes a cycle between events
-- has the same type, predecessor, and successor as an existing dependency
+- closes a cycle between events
+- has the same type, predecessor, and successor as an existing dependency: the existing one is selected instead
 - involves a recurring event
 - would need to move a read-only event
 
@@ -144,12 +149,13 @@ A message explains why the dependency wasn't created.
 
 {{"demo": "DependencyRejections.js", "bg": "inline", "defaultCodeOpen": false}}
 
-In the demo above, try linking **Testing** to **Wireframes**, linking **Wireframes** to **Mockups** a second time, or linking **Mockups** to **Review (read-only)**.
+In the demo above, try linking **Testing** to **Wireframes**, linking the end of **Wireframes** to the start of **Mockups** a second time, or linking **Mockups** to **Review (read-only)**.
 
 ## Limitations
 
 - Dependencies on recurring events are ignored: they don't render and don't move events.
-- A negative lag (a lead) isn't supported: it's ignored, with a warning in development.
+- A negative lag (a lead) isn't supported.
+  A negative or fractional lag, or an unknown `lagUnit`, is ignored, with a warning in development.
 - Events that aren't loaded yet, with [lazy loading](/x/react-scheduler/event-timeline/lazy-loading/), don't move.
 
 ## Accessibility

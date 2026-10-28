@@ -1,9 +1,10 @@
 import * as React from 'react';
 
 import { dependenciesFeature } from '@mui/x-scheduler-premium/internals';
-import { DependenciesTimeline } from './DependenciesTimeline';
+import { EventTimelinePremium } from './DependenciesTimeline';
 
 const features = { dependencies: dependenciesFeature };
+const presetConfig = { dayAndHour: { startTime: 8, endTime: 18 } };
 
 const resources = [
   { id: 'backend', title: 'Backend' },
@@ -143,7 +144,7 @@ export default function DependenciesOverview() {
 
   return (
     <div style={{ height: '500px', width: '100%' }}>
-      <DependenciesTimeline
+      <EventTimelinePremium
         events={events}
         onEventsChange={setEvents}
         resources={resources}
@@ -152,7 +153,7 @@ export default function DependenciesOverview() {
         features={features}
         defaultVisibleDate={new Date('2025-07-03T00:00:00')}
         defaultPreset="dayAndHour"
-        presetConfig={{ dayAndHour: { startTime: 8, endTime: 18 } }}
+        presetConfig={presetConfig}
       />
     </div>
   );

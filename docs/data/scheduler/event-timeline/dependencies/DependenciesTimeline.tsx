@@ -1,9 +1,10 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import {
   eventTimelinePremiumClasses,
   EventTimelinePremiumFeatures,
-  EventTimelinePremiumProps,
+  EventTimelinePremiumProps as BaseEventTimelinePremiumProps,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
   EventTimelinePremiumContent,
@@ -27,13 +28,13 @@ import {
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
 
-export interface DependenciesTimelineProps<
+export interface EventTimelinePremiumProps<
   TEvent extends object,
   TResource extends object,
 >
   extends
     Omit<
-      EventTimelinePremiumProps<TEvent, TResource>,
+      BaseEventTimelinePremiumProps<TEvent, TResource>,
       'apiRef' | 'classes' | 'features'
     >,
     SchedulerDependenciesParameters {
@@ -43,7 +44,10 @@ export interface DependenciesTimelineProps<
 }
 
 // Same styles as the root of `EventTimelinePremium`.
-const DependenciesTimelineRoot = styled('div')(({ theme }) => ({
+const DependenciesTimelineRoot = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'Root',
+})(({ theme }) => ({
   boxSizing: 'border-box',
   '*, *::before, *::after': {
     boxSizing: 'inherit',
@@ -64,11 +68,12 @@ const sharedStyledContextValue = { classes: eventTimelinePremiumClasses };
 /**
  * Stands in for `EventTimelinePremium`, which doesn't accept the `dependencies` props yet.
  * Renders the same content and providers from the same store.
+ * Exported under the same name, so a demo only changes its import once the props are public.
  */
-export function DependenciesTimeline<
+export function EventTimelinePremium<
   TEvent extends object,
   TResource extends object,
->(props: DependenciesTimelineProps<TEvent, TResource>) {
+>(props: EventTimelinePremiumProps<TEvent, TResource>) {
   const {
     parameters,
     forwardedProps: {
@@ -80,6 +85,7 @@ export function DependenciesTimeline<
       getEventAriaLabel,
       slots,
       slotProps,
+      className,
       ...other
     },
   } = useExtractEventTimelinePremiumParameters<TEvent, TResource, typeof props>(
@@ -115,7 +121,7 @@ export function DependenciesTimeline<
               <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
                 <SchedulerDirectionProvider>
                   <DependenciesTimelineRoot
-                    className={eventTimelinePremiumClasses.root}
+                    className={clsx(eventTimelinePremiumClasses.root, className)}
                     {...other}
                   >
                     <EventTimelinePremiumContent />
