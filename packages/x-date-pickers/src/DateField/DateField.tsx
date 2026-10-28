@@ -87,9 +87,6 @@ DateField.propTypes /* remove-proptypes */ = {
    * @default 'primary'
    */
   color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
-  /**
-   * @ignore
-   */
   component: PropTypes.elementType,
   /**
    * The default value. Use when the component is not controlled.

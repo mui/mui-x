@@ -287,9 +287,6 @@ PickersTextField.propTypes /* remove-proptypes */ = {
    * @default 'primary'
    */
   color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
-  /**
-   * @ignore
-   */
   component: PropTypes.elementType,
   /**
    * If true, the whole element is editable.

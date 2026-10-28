@@ -63,9 +63,6 @@ MultiInputTimeRangeField.propTypes /* remove-proptypes */ = {
    * A CSS class name applied to the root element.
    */
   className: PropTypes.string,
-  /**
-   * @ignore
-   */
   component: PropTypes.elementType,
   /**
    * String displayed between the start and the end dates.

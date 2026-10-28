@@ -95,9 +95,6 @@ SingleInputTimeRangeField.propTypes /* remove-proptypes */ = {
    * @default 'primary'
    */
   color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
-  /**
-   * @ignore
-   */
   component: PropTypes.elementType,
   /**
    * String displayed between the start and the end dates.

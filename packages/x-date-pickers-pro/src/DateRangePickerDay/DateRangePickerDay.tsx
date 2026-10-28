@@ -616,9 +616,6 @@ DateRangePickerDayRaw.propTypes /* remove-proptypes */ = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  /**
-   * @ignore
-   */
   component: PropTypes.elementType,
   /**
    * The date to show.
@@ -800,7 +797,7 @@ DateRangePickerDayRaw.propTypes /* remove-proptypes */ = {
     PropTypes.object,
   ]),
   /**
-   * @ignore
+   * @default 0
    */
   tabIndex: PropTypes.number,
   /**
