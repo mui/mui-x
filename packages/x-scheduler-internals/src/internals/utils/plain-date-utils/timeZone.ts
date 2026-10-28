@@ -1,5 +1,5 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import { BaseTemporal } from '../base-temporal';
+import type { BaseTemporal } from '../base-temporal';
 import { isoDateToDayNumber, MS_PER_DAY } from './dayNumber';
 import { getDayNumber, plainDateFromDayNumber } from './plainDate';
 
@@ -141,11 +141,13 @@ export function toWallClockIsoString(epochMs: number, timezone: TemporalTimezone
   const localMs = toLocalMs(epochMs, timezone);
   const dayNumber = Math.floor(localMs / MS_PER_DAY);
   const msInDay = localMs - dayNumber * MS_PER_DAY;
-  const time = new BaseTemporal.PlainTime(
+  const time = [
     Math.floor(msInDay / 3_600_000),
     Math.floor(msInDay / 60_000) % 60,
     Math.floor(msInDay / 1000) % 60,
-  ).toString();
+  ]
+    .map((part) => String(part).padStart(2, '0'))
+    .join(':');
   return `${plainDateFromDayNumber(dayNumber).toString()}T${time}`;
 }
 
