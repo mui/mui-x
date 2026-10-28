@@ -1,8 +1,7 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import { formatIsoTime, MS_PER_DAY, toDayNumber } from '../base-temporal/iso';
-import type { BaseTemporal } from '../base-temporal';
-import { getDayNumber } from '../base-temporal/PlainDate';
-import { plainDateFromDayNumber } from './plainDate';
+import { BaseTemporal } from '../base-temporal';
+import { isoDateToDayNumber, MS_PER_DAY } from './dayNumber';
+import { getDayNumber, plainDateFromDayNumber } from './plainDate';
 
 interface TimezoneOffsets {
   format: (epochMs: number) => string;
@@ -57,7 +56,7 @@ function getSystemTimezoneOffsetMs(epochMs: number): number {
     return -date.getTimezoneOffset() * 60_000;
   }
   const localMs =
-    toDayNumber(date.getFullYear(), date.getMonth() + 1, date.getDate()) * MS_PER_DAY +
+    isoDateToDayNumber(date.getFullYear(), date.getMonth() + 1, date.getDate()) * MS_PER_DAY +
     ((date.getHours() * 60 + date.getMinutes()) * 60 + date.getSeconds()) * 1000 +
     date.getMilliseconds();
   return localMs - epochMs;
@@ -142,14 +141,11 @@ export function toWallClockIsoString(epochMs: number, timezone: TemporalTimezone
   const localMs = toLocalMs(epochMs, timezone);
   const dayNumber = Math.floor(localMs / MS_PER_DAY);
   const msInDay = localMs - dayNumber * MS_PER_DAY;
-  const time = formatIsoTime({
-    hour: Math.floor(msInDay / 3_600_000),
-    minute: Math.floor(msInDay / 60_000) % 60,
-    second: Math.floor(msInDay / 1000) % 60,
-    millisecond: 0,
-    microsecond: 0,
-    nanosecond: 0,
-  });
+  const time = new BaseTemporal.PlainTime(
+    Math.floor(msInDay / 3_600_000),
+    Math.floor(msInDay / 60_000) % 60,
+    Math.floor(msInDay / 1000) % 60,
+  ).toString();
   return `${plainDateFromDayNumber(dayNumber).toString()}T${time}`;
 }
 

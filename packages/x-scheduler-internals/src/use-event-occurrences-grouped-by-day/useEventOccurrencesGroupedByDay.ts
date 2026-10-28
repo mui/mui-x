@@ -8,7 +8,7 @@ import {
 } from '../internals/utils/event-utils';
 import { useAdapterContext } from '../use-adapter-context';
 import { getEndOfDayMs } from '../internals/utils/plain-date-utils/timeZone';
-import { getDayNumber } from '../internals/utils/base-temporal/PlainDate';
+import { getDayNumber } from '../internals/utils/plain-date-utils/plainDate';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
 import {
   schedulerEventSelectors,

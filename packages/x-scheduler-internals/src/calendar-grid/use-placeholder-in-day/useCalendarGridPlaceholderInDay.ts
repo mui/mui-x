@@ -10,7 +10,7 @@ import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calenda
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
 import { createProcessedDate } from '../../internals/utils/plain-date-utils/adapter';
 import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
-import { getDayNumber } from '../../internals/utils/base-temporal/PlainDate';
+import { getDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
 
 export function useCalendarGridPlaceholderInDay(
   day: SchedulerProcessedDay,

@@ -15,7 +15,7 @@ import {
 } from '../../internals/utils/plain-date-utils/timeZone';
 import { FULL_DAY_MINUTES, getPlainDateTimelineAxis } from '../../internals/utils/timeline-axis';
 import type { BaseTemporal } from '../../internals/utils/base-temporal';
-import { getDayNumber } from '../../internals/utils/base-temporal/PlainDate';
+import { getDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
 import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';

@@ -318,6 +318,36 @@ export default defineConfig(
     },
   },
   {
+    // The Scheduler only uses the public API of the BaseTemporal copy: the `BaseTemporal` namespace
+    // of its index. Its other modules are internals of the library.
+    files: [`packages/x-scheduler*/src/**/*${EXTENSION_TS}`],
+    ignores: [
+      'packages/x-scheduler-internals/src/internals/utils/base-temporal/**',
+      'packages/x-scheduler-internals/src/internals/utils/internals/temporal-utils/**',
+    ],
+    rules: {
+      'import/no-restricted-paths': [
+        'error',
+        {
+          zones: [
+            {
+              target: './packages',
+              from: './packages/x-scheduler-internals/src/internals/utils/base-temporal',
+              except: ['./index.ts'],
+              message:
+                'Import `BaseTemporal` from the index of the copy, and the day number helpers from `plain-date-utils`.',
+            },
+            {
+              target: './packages',
+              from: './packages/x-scheduler-internals/src/internals/utils/internals/temporal-utils',
+              message: 'These are internals of the BaseTemporal copy.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: [`**/*${EXTENSION_TEST_FILE}`, `test/**/*${EXTENSION_TS}`],
     rules: {
       'no-restricted-imports': [

@@ -1,5 +1,5 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import { MS_PER_DAY } from './base-temporal/iso';
+import { MS_PER_DAY } from './plain-date-utils/dayNumber';
 import type { BaseTemporal } from './base-temporal';
 import {
   localToEpochMs,

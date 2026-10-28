@@ -1,6 +1,48 @@
 import { describe, it, expect } from 'vitest';
 import { BaseTemporal } from '../base-temporal';
-import { getPlainDateKey, isWeekendPlainDate, plainDateFromDayNumber } from './plainDate';
+import {
+  getDayNumber,
+  getPlainDateKey,
+  isWeekendPlainDate,
+  plainDateFromDayNumber,
+} from './plainDate';
+
+describe('plainDateFromDayNumber', () => {
+  it('should return the plain date of a day number, in the ISO calendar', () => {
+    expect(plainDateFromDayNumber(0)).toEqualPlainDate('1970-01-01');
+    expect(plainDateFromDayNumber(-1)).toEqualPlainDate('1969-12-31');
+    expect(plainDateFromDayNumber(20_000).calendarId).to.equal('iso8601');
+  });
+
+  it('should return the same plain date for a day number', () => {
+    expect(plainDateFromDayNumber(20_000)).to.equal(plainDateFromDayNumber(20_000));
+  });
+
+  it('should throw for a day after the supported dates', () => {
+    expect(() => plainDateFromDayNumber(3_000_000)).to.throw();
+  });
+});
+
+describe('getDayNumber', () => {
+  it('should return the number of days from January 1st, 1970', () => {
+    expect(getDayNumber(BaseTemporal.PlainDate.from('1970-01-01'))).to.equal(0);
+    expect(getDayNumber(BaseTemporal.PlainDate.from('1969-12-31'))).to.equal(-1);
+    expect(getDayNumber(BaseTemporal.PlainDate.from('2024-02-29'))).to.equal(19_782);
+    expect(getDayNumber(plainDateFromDayNumber(20_000))).to.equal(20_000);
+  });
+
+  it('should read the dates created by the methods of the plain dates', () => {
+    const plainDate = BaseTemporal.PlainDate.from('2024-02-29');
+    expect(getDayNumber(plainDate.add({ days: 1 }))).to.equal(19_783);
+    expect(getDayNumber(plainDate.with({ day: 1 }))).to.equal(19_754);
+  });
+
+  it('should read the ISO date of a date in another calendar', () => {
+    // The copy only builds in the ISO and Gregorian calendars.
+    const plainDate = BaseTemporal.PlainDate.from('2024-02-29').withCalendar('gregory');
+    expect(getDayNumber(plainDate)).to.equal(19_782);
+  });
+});
 
 describe('getPlainDateKey', () => {
   it('should return the ISO date of the day, also once the cache is full', () => {

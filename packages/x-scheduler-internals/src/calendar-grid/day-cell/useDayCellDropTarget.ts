@@ -4,7 +4,7 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import type { SchedulerEvent } from '../../models';
 import type { BaseTemporal } from '../../internals/utils/base-temporal';
-import { getDayNumber } from '../../internals/utils/base-temporal/PlainDate';
+import { getDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
 import {
   addDaysOnWallClock,
   getEndOfDayMs,

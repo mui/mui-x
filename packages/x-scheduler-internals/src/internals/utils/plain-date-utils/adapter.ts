@@ -2,8 +2,8 @@ import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../../models';
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
 import type { BaseTemporal } from '../base-temporal';
-import type { PlainDateDuration } from '../base-temporal/PlainDate';
-import { MS_PER_DAY } from '../base-temporal/iso';
+import { MS_PER_DAY } from './dayNumber';
+import type { PlainDateDuration } from './plainDate';
 import {
   getEndOfDayMs,
   getStartOfDayMs,

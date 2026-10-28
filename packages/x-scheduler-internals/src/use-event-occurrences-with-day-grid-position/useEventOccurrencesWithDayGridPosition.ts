@@ -7,7 +7,7 @@ import type {
 import type { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { sortEventOccurrences } from '../sort-event-occurrences';
 import { differenceInDays, toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
-import { getDayNumber } from '../internals/utils/base-temporal/PlainDate';
+import { getDayNumber } from '../internals/utils/plain-date-utils/plainDate';
 
 /**
  * The number of full days an occurrence spans in the display timezone.

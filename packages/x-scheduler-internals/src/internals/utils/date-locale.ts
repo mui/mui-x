@@ -1,8 +1,8 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import type { WeekStartsOn } from '../../models';
-import { MS_PER_DAY } from './base-temporal/iso';
 import type { BaseTemporal } from './base-temporal';
-import { getDayNumber } from './base-temporal/PlainDate';
+import { MS_PER_DAY } from './plain-date-utils/dayNumber';
+import { getDayNumber } from './plain-date-utils/plainDate';
 
 /**
  * The locale of the dates when the `dateLocale` prop isn't set.

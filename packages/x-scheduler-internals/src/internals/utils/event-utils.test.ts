@@ -17,7 +17,7 @@ import {
 } from './event-utils';
 import { getDayListFromPlainDates } from '../../get-day-list';
 import { BaseTemporal } from './base-temporal';
-import { getDayNumber } from './base-temporal/PlainDate';
+import { getDayNumber } from './plain-date-utils/plainDate';
 import { createEventRangeIndex } from './event-range-index';
 
 describe('event-utils', () => {

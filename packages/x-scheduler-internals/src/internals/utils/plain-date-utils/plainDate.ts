@@ -1,12 +1,52 @@
-import { createPlainDate, getDayNumber } from '../base-temporal/PlainDate';
-import type { BaseTemporal } from '../base-temporal';
-import { ISO_CALENDAR_ID } from '../base-temporal/calendar';
+import { BaseTemporal } from '../base-temporal';
+import { dayNumberToIsoDate, isoDateToDayNumber } from './dayNumber';
+
+/**
+ * The durations that `BaseTemporal.PlainDate#add()` takes.
+ */
+export type PlainDateDuration = Parameters<BaseTemporal.PlainDate['add']>[0];
+
+const ISO_CALENDAR_ID = 'iso8601';
+
+const MAX_CACHED_PLAIN_DATES = 10_000;
+// The plain dates are immutable, so a day number keeps its plain date: the views build the same
+// days on every render, and a lookup is faster than creating one.
+const plainDateLookup = new Map<number, BaseTemporal.PlainDate>();
+// The day number of a plain date, read once from its fields.
+const dayNumberLookup = new WeakMap<BaseTemporal.PlainDate, number>();
 
 /**
  * The plain date of a day number, in the ISO calendar.
  */
 export function plainDateFromDayNumber(dayNumber: number): BaseTemporal.PlainDate {
-  return createPlainDate(dayNumber, ISO_CALENDAR_ID);
+  let plainDate = plainDateLookup.get(dayNumber);
+  if (plainDate === undefined) {
+    if (plainDateLookup.size >= MAX_CACHED_PLAIN_DATES) {
+      plainDateLookup.clear();
+    }
+    const isoDate = dayNumberToIsoDate(dayNumber);
+    plainDate = new BaseTemporal.PlainDate(isoDate.year, isoDate.month, isoDate.day);
+    plainDateLookup.set(dayNumber, plainDate);
+    dayNumberLookup.set(plainDate, dayNumber);
+  }
+  return plainDate;
+}
+
+/**
+ * The day number of `plainDate`: the number of days since January 1st, 1970.
+ * It's read from the ISO fields of the date, so it only uses the public API of the plain dates.
+ */
+export function getDayNumber(plainDate: BaseTemporal.PlainDate): number {
+  let dayNumber = dayNumberLookup.get(plainDate);
+  if (dayNumber === undefined) {
+    const isoPlainDate =
+      plainDate.calendarId === ISO_CALENDAR_ID
+        ? plainDate
+        : plainDate.withCalendar(ISO_CALENDAR_ID);
+    dayNumber = isoDateToDayNumber(isoPlainDate.year, isoPlainDate.month, isoPlainDate.day);
+    dayNumberLookup.set(plainDate, dayNumber);
+  }
+  return dayNumber;
 }
 
 /**
