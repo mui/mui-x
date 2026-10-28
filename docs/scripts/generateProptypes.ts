@@ -94,12 +94,22 @@ function makePropTypesDeterministic(components: any[]): void {
 }
 
 /**
+ * Props the API docs builder already hides: `className`, `style`, `ref`, and undocumented event handlers.
+ */
+function isHiddenByApiDocsBuilder(name: string): boolean {
+  return ['className', 'style', 'ref'].includes(name) || /^on[A-Z]/.test(name);
+}
+
+/**
  * Hides props without JSDoc that are only declared in dependencies (React, Material UI).
  * Props declared in MUI X must be documented, or explicitly marked `@ignore`.
  */
 function ignoreUndocumentedExternalProps(components: any[]): void {
   components.forEach((component) => {
     component.types?.forEach((definition: any) => {
+      if (isHiddenByApiDocsBuilder(definition.name)) {
+        return;
+      }
       const filenames: string[] = Array.from(definition.filenames ?? []);
       const hasDescription = (definition.jsDoc ?? '')
         .split('\n')

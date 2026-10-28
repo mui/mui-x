@@ -232,9 +232,6 @@ MultiInputDateRangeField.propTypes /* remove-proptypes */ = {
    * The ref object used to interact with the start field imperatively.
    */
   startFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-  /**
-   * @ignore
-   */
   style: PropTypes.object,
   /**
    * The system prop, which allows defining system overrides as well as additional CSS styles.

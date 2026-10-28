@@ -279,9 +279,6 @@ PickersTextField.propTypes /* remove-proptypes */ = {
    * For a range value, it means that `value === [null, null]`
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
-  /**
-   * @ignore
-   */
   className: PropTypes.string,
   /**
    * The color of the component.
@@ -416,9 +413,6 @@ PickersTextField.propTypes /* remove-proptypes */ = {
    * Start `InputAdornment` for this component.
    */
   startAdornment: PropTypes.node,
-  /**
-   * @ignore
-   */
   style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.

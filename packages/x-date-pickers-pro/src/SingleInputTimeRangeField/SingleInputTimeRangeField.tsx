@@ -76,9 +76,6 @@ SingleInputTimeRangeField.propTypes /* remove-proptypes */ = {
    * @default false
    */
   autoFocus: PropTypes.bool,
-  /**
-   * @ignore
-   */
   className: PropTypes.string,
   /**
    * If `true`, a clear button will be shown in the field allowing value clearing.
@@ -333,9 +330,6 @@ SingleInputTimeRangeField.propTypes /* remove-proptypes */ = {
    * Start `InputAdornment` for this component.
    */
   startAdornment: PropTypes.node,
-  /**
-   * @ignore
-   */
   style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.

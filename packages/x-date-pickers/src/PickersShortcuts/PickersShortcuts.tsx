@@ -122,9 +122,6 @@ PickersShortcuts.propTypes /* remove-proptypes */ = {
    * @default "accept"
    */
   changeImportance: PropTypes.oneOf(['accept', 'set']),
-  /**
-   * @ignore
-   */
   className: PropTypes.string,
   /**
    * @ignore
@@ -154,9 +151,6 @@ PickersShortcuts.propTypes /* remove-proptypes */ = {
       label: PropTypes.string.isRequired,
     }),
   ),
-  /**
-   * @ignore
-   */
   style: PropTypes.object,
   /**
    * The content of the subheader, normally `ListSubheader`.
