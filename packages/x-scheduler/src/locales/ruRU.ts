@@ -145,6 +145,7 @@ const ruRUCalendar: SchedulerCalendarTranslations = {
   months: 'Месяцы',
   weeks: 'Недели',
   years: 'Годы',
+  // viewSwitcherAriaLabel: 'Views',
 
   // DateNavigator
   closeSidePanel: 'Закрыть боковую панель',

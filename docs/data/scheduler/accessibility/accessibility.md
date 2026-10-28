@@ -179,6 +179,7 @@ When a month cell has more events than can be displayed, a **"X more"** button o
 
 The view switcher button exposes `aria-haspopup="true"`, `aria-expanded`, and `aria-controls`.
 Inside the menu, each view uses `role="menuitemradio"` with `aria-checked`, so the current view is announced as checked.
+When the calendar is narrow, the side panel drawer lists the views with the same semantics.
 
 ## Preferences menu
 
@@ -249,6 +250,7 @@ The following keys are specifically relevant to accessibility:
   nextTimeSpan: (timeSpan) => `Next ${timeSpan}`,
   openSidePanel: 'Open side panel',
   closeSidePanel: 'Close side panel',
+  viewSwitcherAriaLabel: 'Views',
 }
 ```
 

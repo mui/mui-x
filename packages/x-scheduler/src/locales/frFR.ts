@@ -116,6 +116,7 @@ const frFRCalendar: SchedulerCalendarTranslations = {
   months: 'Mois',
   weeks: 'Semaines',
   years: 'Années',
+  // viewSwitcherAriaLabel: 'Views',
 
   // DateNavigator
   closeSidePanel: 'Fermer le panneau latéral',
