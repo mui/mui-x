@@ -30,13 +30,11 @@ const baseRange = createSelectorMemoized(
 );
 
 const baseVisibleDays = createSelectorMemoized(
-  (state: State) => state.adapter,
   baseRange,
   schedulerOtherSelectors.displayTimezone,
   eventCalendarPreferenceSelectors.showWeekends,
-  (adapter, range, displayTimezone, showWeekends) =>
+  (range, displayTimezone, showWeekends) =>
     getDayListFromPlainDates({
-      adapter,
       firstPlainDate: range.start,
       lastPlainDate: range.end,
       timezone: displayTimezone,
@@ -132,7 +130,6 @@ const visibleDays = createSelectorMemoized(
           : horizonPlainDate;
 
       const more = getDayListFromPlainDates({
-        adapter,
         firstPlainDate: nextStartPlainDate,
         lastPlainDate: scannedUntilPlainDate,
         timezone: displayTimezone,

@@ -404,8 +404,8 @@ export function getRecurrenceUntil(
 ): TemporalSupportedObject {
   const plainDate = readDateField(rawDate);
   return plainDate == null
-    ? createAdapterDate(adapter, NaN, eventTimezone)
-    : createEndOfPlainDate(adapter, plainDate, eventTimezone);
+    ? createAdapterDate(NaN)
+    : createEndOfPlainDate(plainDate, eventTimezone);
 }
 
 /**

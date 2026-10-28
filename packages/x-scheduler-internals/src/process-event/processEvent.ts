@@ -21,17 +21,13 @@ export function processEvent(
     ? model.exDates.map((exDate) => resolveEventDate(exDate, dataTimezone, adapter, model.id))
     : undefined;
 
-  const startInDisplayTz = adapter.setTimezone(startInstant, displayTimezone);
-  const endInDisplayTz = adapter.setTimezone(endInstant, displayTimezone);
   const displayBounds = normalizeAllDayBounds(
     adapter,
-    startInDisplayTz,
-    endInDisplayTz,
+    startInstant,
+    endInstant,
     model.allDay,
+    displayTimezone,
   );
-  const exDatesInDisplayTz = resolvedExDates
-    ? resolvedExDates.map((exDate) => adapter.setTimezone(exDate, displayTimezone))
-    : undefined;
 
   if (recurringEventsPlugin == null && model.rrule != null) {
     if (process.env.NODE_ENV !== 'production') {
@@ -54,17 +50,17 @@ export function processEvent(
     title: model.title,
     description: model.description,
     dataTimezone: {
-      start: processDate(startInstant, adapter),
-      end: processDate(endInstant, adapter),
+      start: processDate(startInstant, adapter, dataTimezone),
+      end: processDate(endInstant, adapter, dataTimezone),
       timezone: dataTimezone,
       rrule: parsedDataRRule,
       exDates: resolvedExDates,
     },
     displayTimezone: {
-      start: processDate(displayBounds.start, adapter),
-      end: processDate(displayBounds.end, adapter),
+      start: processDate(displayBounds.start, adapter, displayTimezone),
+      end: processDate(displayBounds.end, adapter, displayTimezone),
       timezone: displayTimezone,
-      exDates: exDatesInDisplayTz,
+      exDates: resolvedExDates,
     },
     resource: model.resource,
     allDay: model.allDay ?? false,

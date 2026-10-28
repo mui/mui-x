@@ -20,7 +20,7 @@ export function dateToEventString(
   dataTimezone: TemporalTimezone,
 ): string {
   if (originalString.endsWith('Z')) {
-    return adapter.toJsDate(date).toISOString();
+    return new Date(adapter.getTime(date)).toISOString();
   }
   return toWallClockIsoString(adapter.getTime(date), dataTimezone);
 }

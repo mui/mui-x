@@ -24,8 +24,12 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
   const occurrences = Array.from({ length: occurrenceCount }, (_, index) => {
     const occurrenceStart = adapter.addMinutes(start, index * 10);
     return {
-      start: processDate(occurrenceStart, adapter),
-      end: processDate(adapter.addMinutes(occurrenceStart, 30 + (index % 10) * 30), adapter),
+      start: processDate(occurrenceStart, adapter, 'default'),
+      end: processDate(
+        adapter.addMinutes(occurrenceStart, 30 + (index % 10) * 30),
+        adapter,
+        'default',
+      ),
     };
   });
 

@@ -16,7 +16,6 @@ describe('getDayListFromPlainDates', () => {
 
   it('should return no day when the last date is before the first one', () => {
     const days = getDayListFromPlainDates({
-      adapter,
       firstPlainDate: plainDate,
       lastPlainDate: plainDate.add({ days: -5 }),
       timezone: 'default',
@@ -27,7 +26,6 @@ describe('getDayListFromPlainDates', () => {
 
   it('should return one day when the first and last dates are equal', () => {
     const days = getDayListFromPlainDates({
-      adapter,
       firstPlainDate: plainDate,
       lastPlainDate: plainDate,
       timezone: 'default',
@@ -40,7 +38,6 @@ describe('getDayListFromPlainDates', () => {
 
   it('should return consecutive days', () => {
     const days = getDayListFromPlainDates({
-      adapter,
       firstPlainDate: plainDate,
       lastPlainDate: plainDate.add({ days: 3 }),
       timezone: 'default',
@@ -57,7 +54,6 @@ describe('getDayListFromPlainDates', () => {
   it('should exclude weekends when excludeWeekends=true', () => {
     // From Sunday, June 29th to Saturday, July 5th, 2025.
     const days = getDayListFromPlainDates({
-      adapter,
       firstPlainDate: plainDate.add({ days: -4 }),
       lastPlainDate: plainDate.add({ days: 2 }),
       timezone: 'default',
@@ -75,7 +71,6 @@ describe('getDayListFromPlainDates', () => {
   it('should skip the days the timezone skips', () => {
     // Pacific/Apia skipped December 30th, 2011.
     const days = getDayListFromPlainDates({
-      adapter,
       firstPlainDate: BaseTemporal.PlainDate.from('2011-12-29'),
       lastPlainDate: BaseTemporal.PlainDate.from('2011-12-31'),
       timezone: 'Pacific/Apia',
@@ -87,7 +82,6 @@ describe('getDayListFromPlainDates', () => {
     // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
     const firstPlainDate = BaseTemporal.PlainDate.from('2026-03-07');
     const days = getDayListFromPlainDates({
-      adapter,
       firstPlainDate,
       lastPlainDate: firstPlainDate.add({ days: 3 }),
       timezone: 'America/Havana',
@@ -109,7 +103,6 @@ describe('getDayListFromPlainDates', () => {
     setSystemTimezone('Australia/Lord_Howe');
     const firstPlainDate = BaseTemporal.PlainDate.from('2026-03-30');
     const days = getDayListFromPlainDates({
-      adapter,
       firstPlainDate,
       lastPlainDate: firstPlainDate.add({ days: 34 }),
       timezone: 'America/Santiago',

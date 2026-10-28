@@ -23,7 +23,6 @@ import { createEventRangeIndex } from './event-range-index';
 describe('event-utils', () => {
   describe('getDaysTheOccurrenceIsVisibleOn', () => {
     const days = getDayListFromPlainDates({
-      adapter,
       firstPlainDate: BaseTemporal.PlainDate.from('2024-01-14'),
       lastPlainDate: BaseTemporal.PlainDate.from('2024-01-18'),
       timezone: 'default',

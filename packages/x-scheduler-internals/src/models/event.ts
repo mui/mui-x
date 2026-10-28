@@ -396,7 +396,8 @@ export type SchedulerOccurrencePlaceholder =
 
 export interface SchedulerProcessedDate {
   /**
-   * The date object.
+   * The `Date` of the instant. Its getters read the timezone of the system: use `key`,
+   * `minutesInDay` or `timestamp` to read it in the timezone of the processed date.
    */
   value: TemporalSupportedObject;
   /**

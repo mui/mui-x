@@ -219,16 +219,16 @@ storeClasses.forEach((storeClass) => {
         expect(result).toEqualDateTime(visibleDate);
       });
 
-      it('should apply the configured display timezone to the visibleDate', () => {
-        const visibleDate = adapter.date('2025-07-03T12:00:00Z', 'default');
+      it('should return a Date of the instant of the visibleDate', () => {
+        const visibleDate = adapter.date('2025-07-03T12:00:00Z', 'America/New_York');
         const state = new storeClass.Value(
           { ...BASE_PARAMS, visibleDate, displayTimezone: 'America/New_York' },
           adapter,
         ).state;
         const result = schedulerOtherSelectors.visibleDate(state);
 
-        // The result should have the timezone applied
-        expect(adapter.getTimezone(result)).to.equal('America/New_York');
+        expect(result).to.be.instanceOf(Date);
+        expect(adapter.getTime(result)).to.equal(adapter.getTime(visibleDate));
       });
 
       it('should return same reference when inputs have not changed', () => {
@@ -253,7 +253,7 @@ storeClasses.forEach((storeClass) => {
         expect(result2).toEqualDateTime(newVisibleDate);
       });
 
-      it('should return a new reference when display timezone changes', () => {
+      it('should keep the reference when display timezone changes', () => {
         const visibleDate = adapter.date('2025-07-03T12:00:00Z', 'default');
         const store = new storeClass.Value(
           { ...BASE_PARAMS, visibleDate, displayTimezone: 'default' },
@@ -267,8 +267,8 @@ storeClasses.forEach((storeClass) => {
         );
         const result2 = schedulerOtherSelectors.visibleDate(store.state);
 
-        expect(result1).to.not.equal(result2);
-        expect(adapter.getTimezone(result2)).to.equal('America/New_York');
+        // The instant is the same.
+        expect(result1).to.equal(result2);
       });
     });
   });

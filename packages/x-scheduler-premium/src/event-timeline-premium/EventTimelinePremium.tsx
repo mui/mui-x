@@ -385,7 +385,6 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
         recurringScopeDialog: PropTypes.elementType,
       }).isRequired,
       store: PropTypes.shape({
-        applyDataTimezoneToEventUpdate: PropTypes.func.isRequired,
         computePresets: PropTypes.func.isRequired,
         deleteRecurringEvent: PropTypes.func.isRequired,
         getDefaultPresetKey: PropTypes.func.isRequired,

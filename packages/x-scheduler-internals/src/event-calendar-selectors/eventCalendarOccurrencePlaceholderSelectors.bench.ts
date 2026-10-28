@@ -15,9 +15,9 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
   const firstPlainDate = buildTemporalPlainDate(
     adapter,
     adapter.startOfWeek(adapter.startOfMonth(visibleDate)),
+    'default',
   );
   const days = getDayListFromPlainDates({
-    adapter,
     firstPlainDate,
     lastPlainDate: firstPlainDate.add({ days: 41 }),
     timezone,

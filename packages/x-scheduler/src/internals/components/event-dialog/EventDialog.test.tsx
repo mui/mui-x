@@ -168,14 +168,12 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       const onEventsChange = vi.fn();
       const event: SchedulerEvent = builder.withDisplayTimezone(displayTimezone).build();
       const occurrence = builder.toOccurrence();
-      const rawStart = adapter.setTimezone(occurrence.dataTimezone.start.value, displayTimezone);
-      const rawEnd = adapter.setTimezone(occurrence.dataTimezone.end.value, displayTimezone);
       const snapshot = {
         ...occurrence,
         displayTimezone: {
           ...occurrence.displayTimezone,
-          start: processDate(rawStart, adapter),
-          end: processDate(rawEnd, adapter),
+          start: processDate(occurrence.dataTimezone.start.value, adapter, displayTimezone),
+          end: processDate(occurrence.dataTimezone.end.value, adapter, displayTimezone),
         },
       };
 
@@ -1152,10 +1150,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(onRender.mock.calls.length).to.equal(rendersBefore);
 
       expect(
-        adapter.formatByString(
-          createAdapterDate(adapter, getPlaceholder().start, 'default'),
-          'yyyy-MM-dd',
-        ),
+        adapter.formatByString(createAdapterDate(getPlaceholder().start), 'yyyy-MM-dd'),
       ).to.equal('2025-05-27');
     });
 

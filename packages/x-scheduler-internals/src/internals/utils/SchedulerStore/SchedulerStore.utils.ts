@@ -207,7 +207,7 @@ export function createEventModel<TEvent extends object>(
     if (typeof value === 'string') {
       return value;
     }
-    return adapter.toJsDate(value).toISOString();
+    return new Date(adapter.getTime(value)).toISOString();
   };
 
   // Internal callers (e.g. FormContent) may pass rrule.until as a TemporalSupportedObject.

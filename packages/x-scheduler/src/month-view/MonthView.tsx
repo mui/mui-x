@@ -124,7 +124,6 @@ const EVENT_GAP = 4; // theme.spacing(0.5) = 4px
 const MONTH_VIEW_DEFINITION: EventCalendarViewDefinition = {
   siblingVisibleDateGetter: ({ state, delta }) => getSiblingMonthStart(state, delta),
   visibleDaysSelector: createSelectorMemoized(
-    (state: State) => state.adapter,
     // The day number of the first day of the month, so a move inside the month keeps the days.
     (state: State) => {
       const visiblePlainDate = schedulerOtherSelectors.visiblePlainDate(state);
@@ -133,11 +132,10 @@ const MONTH_VIEW_DEFINITION: EventCalendarViewDefinition = {
     schedulerOtherSelectors.displayTimezone,
     eventCalendarPreferenceSelectors.showWeekends,
     eventCalendarPreferenceSelectors.weekStartsOn,
-    (adapter, firstDayNumber, timezone, showWeekends, weekStartsOn) => {
+    (firstDayNumber, timezone, showWeekends, weekStartsOn) => {
       const firstOfMonth = plainDateFromDayNumber(firstDayNumber);
       const lastOfMonth = firstOfMonth.with({ day: firstOfMonth.daysInMonth });
       return getDayListFromPlainDates({
-        adapter,
         firstPlainDate: getPlainDateWeekStart(firstOfMonth, weekStartsOn),
         lastPlainDate: getPlainDateWeekStart(lastOfMonth, weekStartsOn).add({ days: 6 }),
         timezone,

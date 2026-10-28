@@ -485,7 +485,9 @@ describe('eventCalendarEventSelectors', () => {
       const fetchRange = eventCalendarAgendaSelectors.fetchRange(state);
 
       expect(
-        fetchRange.end.equals(buildTemporalPlainDate(adapter, visibleDate).add({ days: 199 })),
+        fetchRange.end.equals(
+          buildTemporalPlainDate(adapter, visibleDate, 'default').add({ days: 199 }),
+        ),
       ).to.equal(true);
     });
   });

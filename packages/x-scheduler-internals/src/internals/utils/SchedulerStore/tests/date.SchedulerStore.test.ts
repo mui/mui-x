@@ -75,10 +75,12 @@ storeClasses.forEach((storeClass) => {
 
         const expected = adapter.startOfDay(adapter.now(displayTimezone));
 
-        expect(store.state.visibleDate).toEqualDateTime(expected);
+        expect(adapter.getTime(store.state.visibleDate)).to.equal(adapter.getTime(expected));
         expect(store.state.displayTimezone).to.equal(displayTimezone);
         expect(onVisibleDateChange.mock.calls.length).to.equal(1);
-        expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(expected);
+        expect(adapter.getTime(onVisibleDateChange.mock.lastCall?.[0])).to.equal(
+          adapter.getTime(expected),
+        );
       });
 
       // Browsers cannot change their timezone through process.env.TZ.

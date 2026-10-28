@@ -4,15 +4,12 @@ import type { SchedulerEventId } from '../models';
 import { createAdapterDateFromWallTime } from '../internals/utils/plain-date-utils/adapter';
 
 /**
- * Resolves an event date string to a `TemporalSupportedObject`.
+ * Resolves an event date string to a `TemporalSupportedObject`, the `Date` of its instant.
  *
  * - Strings ending with `"Z"` are treated as instants (UTC).
  * - Strings without `"Z"` are treated as wall-time and interpreted in `dataTimezone`.
  *   A wall-clock time skipped by a DST transition moves forward by the length of the gap, and a
  *   repeated one refers to its first instant, whatever the timezone of the system (RFC 5545).
- *
- * The result carries the `dataTimezone` label, so day and weekday math runs in the
- * event's timezone for both formats.
  */
 export function resolveEventDate(
   value: string,
@@ -22,9 +19,9 @@ export function resolveEventDate(
 ): TemporalSupportedObject {
   let date: TemporalSupportedObject | null = null;
   if (value.endsWith('Z')) {
-    date = adapter.setTimezone(adapter.date(value, 'default'), dataTimezone);
+    date = adapter.date(value, 'default');
   } else if (dataTimezone !== 'default' && dataTimezone !== 'system') {
-    date = createAdapterDateFromWallTime(adapter, value, dataTimezone);
+    date = createAdapterDateFromWallTime(value, dataTimezone);
   }
   // `Date` already resolves the wall-clock times of the system timezone like RFC 5545.
   date ??= adapter.date(value, dataTimezone);

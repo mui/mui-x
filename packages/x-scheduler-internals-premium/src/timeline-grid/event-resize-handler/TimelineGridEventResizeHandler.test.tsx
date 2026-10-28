@@ -14,8 +14,8 @@ import { describe, it, expect } from 'vitest';
 describe('<TimelineGrid.EventResizeHandler />', () => {
   const { render } = createSchedulerRenderer();
 
-  const start = processDate(adapter.startOfDay(adapter.now('default')), adapter);
-  const end = processDate(adapter.endOfDay(adapter.now('default')), adapter);
+  const start = processDate(adapter.startOfDay(adapter.now('default')), adapter, 'default');
+  const end = processDate(adapter.endOfDay(adapter.now('default')), adapter, 'default');
 
   describeConformance(<TimelineGrid.EventResizeHandler side="start" />, () => ({
     refInstanceof: window.HTMLDivElement,
@@ -64,8 +64,8 @@ describe('<TimelineGrid.EventResizeHandler />', () => {
                     eventId="fake-id"
                     occurrenceKey="fake-key"
                     dataTimezone={undefined}
-                    start={processDate(eventStart, adapter)}
-                    end={processDate(eventEnd, adapter)}
+                    start={processDate(eventStart, adapter, 'default')}
+                    end={processDate(eventEnd, adapter, 'default')}
                     renderDragPreview={() => null}
                   >
                     <TimelineGrid.EventResizeHandler side="end" data-testid="resize-end" />
