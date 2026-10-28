@@ -248,6 +248,22 @@ describe('<DataGridPremium /> - Pivot panel with pointer events', () => {
       expect(getPreview()).to.equal(null);
     });
 
+    it('should drag a field after the panel was closed and opened again', async () => {
+      render(<Test />);
+
+      // The panel body unmounts and mounts again, after the grid root
+      act(() => apiRef.current!.setPivotPanelOpen(false));
+      expect(document.querySelector(`.${gridClasses.pivotPanelBody}`)).to.equal(null);
+      act(() => apiRef.current!.setPivotPanelOpen(true));
+
+      const handle = await startTouchDrag('year');
+      expect(getPanel().getAttribute('data-dragging')).to.equal('true');
+      const target = getPoint(getPlaceholder('columns'));
+      fireEvent.pointerMove(handle, pointer('touch', target.x, target.y));
+      fireEvent.pointerUp(handle, pointer('touch', target.x, target.y));
+      expect(getModel().columns.map((item) => item.field)).to.deep.equal(['year']);
+    });
+
     it('should show a drag preview while dragging, and remove it on release', async () => {
       render(<Test />);
 

@@ -1788,9 +1788,9 @@
       "nodeName": "the pivot panel field"
     },
     "pivotPanelField--dragging": {
-      "description": "Styles applied to {{nodeName}}, {{conditions}}.",
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the drag preview of a pivot panel field",
-      "conditions": "while it&#39;s dragged with touch or pen"
+      "conditions": "it&#39;s dragged with touch or pen"
     },
     "pivotPanelField--sorted": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",

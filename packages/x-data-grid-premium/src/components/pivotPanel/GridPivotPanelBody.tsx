@@ -212,10 +212,8 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
     setDrag(INITIAL_DRAG_STATE);
   };
 
-  // Touch and pen drags. They apply the same rules as the HTML drag and drop handlers below:
-  // a drop on a field inserts above or below it, a drop on a zone appends to its section.
-  // The presses on the fields are handled on the panel, through `pointerDrag.panelRef`.
-  const pointerDrag = usePanelFieldPointerDrag<FieldTransferObject['modelKey']>({
+  // Touch and pen drags, with the drop rules of the HTML drag and drop handlers below
+  usePanelFieldPointerDrag<FieldTransferObject['modelKey']>({
     apiRef,
     zoneSelector: ZONE_SELECTOR,
     fieldSelector: FIELD_SELECTOR,
@@ -306,7 +304,6 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
       className={classes.root}
       data-dragging={drag.active}
       onDragLeave={handleDragLeave}
-      ref={pointerDrag.panelRef}
     >
       <GridPivotPanelAvailableFields
         ownerState={rootProps}

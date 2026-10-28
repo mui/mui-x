@@ -1000,7 +1000,7 @@ export interface GridClasses {
    */
   'pivotPanelField--sorted': string;
   /**
-   * Styles applied to the drag preview of a pivot panel field, while it's dragged with touch or pen.
+   * Styles applied to the drag preview of a pivot panel field when it's dragged with touch or pen.
    */
   'pivotPanelField--dragging': string;
   /**

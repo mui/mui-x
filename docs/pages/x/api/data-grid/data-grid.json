@@ -2082,7 +2082,7 @@
     {
       "key": "pivotPanelField--dragging",
       "className": "MuiDataGrid-pivotPanelField--dragging",
-      "description": "Styles applied to the drag preview of a pivot panel field, while it's dragged with touch or pen.",
+      "description": "Styles applied to the drag preview of a pivot panel field when it's dragged with touch or pen.",
       "isGlobal": false
     },
     {

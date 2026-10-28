@@ -2,8 +2,7 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { gridClasses } from '@mui/x-data-grid';
-import { useGridNativeEventListener } from '@mui/x-data-grid/internals';
+import { gridClasses, useGridEventPriority } from '@mui/x-data-grid';
 import type { GridPrivateApiPro } from '../../models/gridApiPro';
 
 /**
@@ -14,6 +13,43 @@ import type { GridPrivateApiPro } from '../../models/gridApiPro';
  */
 export function isElementInGrid(root: Element | null | undefined, element: Element): boolean {
   return !!root && element.closest(`.${gridClasses.root}`) === root;
+}
+
+/**
+ * Binds a native listener to the grid root.
+ * Feature hooks run before the root mounts and bind on `rootMount`. A side panel mounts later and binds right away.
+ * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
+ * @param {K} eventName The event to listen to.
+ * @param {Function} handler The listener. It must keep its identity, with `useEventCallback`.
+ * @param {HTMLElementEventMap[K]} event The event the listener receives.
+ * @param {boolean} capture Whether to listen in the capture phase.
+ */
+function useGridRootNativeEventListener<K extends keyof HTMLElementEventMap>(
+  apiRef: RefObject<GridPrivateApiPro>,
+  eventName: K,
+  handler: (event: HTMLElementEventMap[K]) => void,
+  capture = false,
+) {
+  const boundRootRef = React.useRef<HTMLElement | null>(null);
+
+  const bind = useEventCallback((root: HTMLElement | null | undefined) => {
+    if (!root || boundRootRef.current === root) {
+      return;
+    }
+    boundRootRef.current?.removeEventListener(eventName, handler, capture);
+    root.addEventListener(eventName, handler, capture);
+    boundRootRef.current = root;
+  });
+
+  useGridEventPriority(apiRef, 'rootMount', bind);
+
+  React.useEffect(() => {
+    bind(apiRef.current.rootElementRef?.current);
+    return () => {
+      boundRootRef.current?.removeEventListener(eventName, handler, capture);
+      boundRootRef.current = null;
+    };
+  }, [apiRef, bind, eventName, handler, capture]);
 }
 
 // Allowlist, not `!== 'mouse'`: an empty or missing `pointerType` must keep HTML drag and drop
@@ -78,18 +114,6 @@ export function useGridPointerDragRouting(
     }
   });
 
-  useGridNativeEventListener(
-    apiRef,
-    () => apiRef.current.rootElementRef?.current,
-    'pointerdown',
-    handlePointerDown,
-  );
-
-  useGridNativeEventListener(
-    apiRef,
-    () => apiRef.current.rootElementRef?.current,
-    'dragstart',
-    handleNativeDragStart,
-    { capture: true },
-  );
+  useGridRootNativeEventListener(apiRef, 'pointerdown', handlePointerDown);
+  useGridRootNativeEventListener(apiRef, 'dragstart', handleNativeDragStart, true);
 }

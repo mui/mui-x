@@ -1,11 +1,13 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import useEventCallback from '@mui/utils/useEventCallback';
 import {
   createDragPreview,
   getEdgeScrollDelta,
   getElementAtPoint,
+  hasReachedAutoScrollDistance,
+  isElementInGrid,
+  useGridPointerDragRouting,
   usePointerDrag,
   vars,
 } from '@mui/x-data-grid-pro/internals';
@@ -46,7 +48,7 @@ export interface UsePanelFieldPointerDragOptions<Section> {
   zoneSelector: string;
   /**
    * Selector of the fields. The `data-field` attribute of a field is its field.
-   * A field with `draggable="false"` can't be dragged.
+   * Only a field with `draggable="true"` is dragged, from anywhere on it but its controls.
    */
   fieldSelector: string;
   /**
@@ -76,14 +78,6 @@ export interface UsePanelFieldPointerDragOptions<Section> {
   onDragEnd: () => void;
 }
 
-export interface UsePanelFieldPointerDragReturnValue {
-  /**
-   * Ref of the panel element.
-   * Touch and pen presses on its fields start a pointer drag, and only the zones inside it are drop targets.
-   */
-  panelRef: RefObject<HTMLDivElement | null>;
-}
-
 interface DragData<Section> extends PanelFieldDragData<Section> {
   handle: HTMLElement;
 }
@@ -101,16 +95,8 @@ interface DragSession<Section> {
   frame: number | undefined;
 }
 
-// Allowlist, not `!== 'mouse'`: an empty or missing `pointerType` must keep HTML drag and drop
-const isPointerDragType = (pointerType: string | null | undefined) =>
-  pointerType === 'touch' || pointerType === 'pen';
-
 // A slow tap on a control of the field, like its menu button or its aggregation chip, must stay a tap.
 const INTERACTIVE_CONTROL_SELECTOR = 'button, a, input, select, textarea, [role="button"]';
-
-// A long press starts the drag in place, maybe inside an edge scroll zone.
-// Auto-scroll waits until the pointer moves this far, so picking up a field at an edge doesn't scroll.
-const AUTO_SCROLL_ACTIVATION_DISTANCE = 10;
 
 /**
  * Styles of a field root that can be dragged with `usePanelFieldPointerDrag`.
@@ -147,17 +133,14 @@ function isSameTarget<Section>(
 
 /**
  * Drag and drop of the fields of a side panel, like the pivot panel, with pointer events, for touch and pen input.
- * Mouse input keeps using the HTML drag and drop handlers of the panel, which work on desktop but not on all touch devices.
- * The presses are handled on the panel: a field is found from its `data-field` attribute, and its section from the
- * `data-section` attribute of its zone, like the HTML drag and drop handlers do on drop.
- * A field can be dropped on a zone, or on another field of a zone, above or below it.
+ * Mouse input keeps the HTML drag and drop handlers of the panel, which don't work on all touch devices.
+ * A field can be dropped on a zone, or above or below another field of a zone.
  */
 export function usePanelFieldPointerDrag<Section>(
   options: UsePanelFieldPointerDragOptions<Section>,
-): UsePanelFieldPointerDragReturnValue {
+): void {
   const { apiRef } = options;
   const optionsRef = React.useRef(options);
-  const panelRef = React.useRef<HTMLDivElement>(null);
   const sessionRef = React.useRef<DragSession<Section> | null>(null);
 
   React.useEffect(() => {
@@ -170,7 +153,11 @@ export function usePanelFieldPointerDrag<Section>(
   ): PanelFieldDropTarget<Section> | null => {
     const { zoneSelector, fieldSelector } = optionsRef.current;
     const zone = elementAtPoint?.closest(zoneSelector);
-    if (!elementAtPoint || !zone || !panelRef.current?.contains(zone)) {
+    if (
+      !elementAtPoint ||
+      !zone ||
+      !isElementInGrid(apiRef.current.rootElementRef?.current, zone)
+    ) {
       return null;
     }
     const section = (zone.getAttribute('data-section') ?? null) as Section;
@@ -202,11 +189,10 @@ export function usePanelFieldPointerDrag<Section>(
     }
   };
 
-  // Scrolls the container under the pointer when the pointer is close to one of its edges.
-  // With pointer capture, the container doesn't scroll on its own.
+  // With pointer capture, the container under the pointer doesn't scroll on its own
   const autoScroll = (session: DragSession<Section>, elementAtPoint: Element | null) => {
     const scrollArea = elementAtPoint?.closest<HTMLElement>(optionsRef.current.scrollAreaSelector);
-    if (!scrollArea || !panelRef.current?.contains(scrollArea)) {
+    if (!scrollArea || !isElementInGrid(apiRef.current.rootElementRef?.current, scrollArea)) {
       return false;
     }
     const rect = scrollArea.getBoundingClientRect();
@@ -219,7 +205,7 @@ export function usePanelFieldPointerDrag<Section>(
     return scrollArea.scrollTop !== scrollTop;
   };
 
-  // Runs on every frame of the drag, like `dragover` in HTML drag and drop, which keeps firing while the pointer holds still
+  // Like `dragover` in HTML drag and drop, the target is evaluated while the pointer holds still
   const onDragFrame = () => {
     const session = sessionRef.current;
     const root = apiRef.current.rootElementRef?.current;
@@ -274,8 +260,12 @@ export function usePanelFieldPointerDrag<Section>(
     session.clientY = position.clientY;
     if (
       !session.canAutoScroll &&
-      Math.hypot(session.clientX - session.startClientX, session.clientY - session.startClientY) >
-        AUTO_SCROLL_ACTIVATION_DISTANCE
+      hasReachedAutoScrollDistance(
+        session.startClientX,
+        session.startClientY,
+        session.clientX,
+        session.clientY,
+      )
     ) {
       session.canAutoScroll = true;
     }
@@ -320,58 +310,23 @@ export function usePanelFieldPointerDrag<Section>(
     onDragCancel: cancelDrag,
   });
 
-  // Touch and pen presses on a field start a pointer drag. Mouse presses keep using HTML drag and drop.
-  const handleFieldPress = useEventCallback((event: PointerEvent) => {
-    if (!isPointerDragType(event.pointerType)) {
-      return;
-    }
-    const target = event.target as Element | null;
-    const { fieldSelector, zoneSelector } = optionsRef.current;
-    const fieldElement = target?.closest?.<HTMLElement>(fieldSelector);
-    const field = fieldElement?.getAttribute('data-field');
-    if (!fieldElement || field == null || fieldElement.getAttribute('draggable') !== 'true') {
-      return;
-    }
-    const control = target!.closest(INTERACTIVE_CONTROL_SELECTOR);
-    if (control && fieldElement.contains(control)) {
-      return;
-    }
-    const zone = fieldElement.closest(zoneSelector);
-    const section = (zone?.getAttribute('data-section') ?? null) as Section;
-    pointerDrag.onPointerDown(event, { field, section, handle: fieldElement });
-  });
-
-  // A long press on a draggable element starts a native drag on some browsers (Chrome on Android).
-  // It would cancel the pointer events, so it's blocked when the field was pressed with touch or pen.
-  // `pointerdown` always comes before `dragstart`, so the pointer type is the one of the last press.
-  // Stopping the propagation in the capture phase also keeps the HTML drag and drop handlers from seeing it.
-  React.useEffect(() => {
-    const panel = panelRef.current;
-    if (!panel) {
-      return undefined;
-    }
-    // Recorded for every press, including the ones that don't start a drag: a blocked field, or a control of a field
-    let lastPointerType: string | null = null;
-    const handlePointerDown = (event: PointerEvent) => {
-      lastPointerType = event.pointerType;
-      handleFieldPress(event);
-    };
-    const handleNativeDragStart = (event: DragEvent) => {
-      if (
-        isPointerDragType(lastPointerType) &&
-        (event.target as Element | null)?.closest?.(optionsRef.current.fieldSelector)
-      ) {
-        event.preventDefault();
-        event.stopPropagation();
+  useGridPointerDragRouting(apiRef, {
+    // The charts panel sets `draggable` to `false` on a blocked field
+    handleSelector: `${options.fieldSelector}[draggable="true"]`,
+    onPointerDown: (event, handle) => {
+      const control = (event.target as Element | null)?.closest?.(INTERACTIVE_CONTROL_SELECTOR);
+      if (control && handle.contains(control)) {
+        return;
       }
-    };
-    panel.addEventListener('pointerdown', handlePointerDown, true);
-    panel.addEventListener('dragstart', handleNativeDragStart, true);
-    return () => {
-      panel.removeEventListener('pointerdown', handlePointerDown, true);
-      panel.removeEventListener('dragstart', handleNativeDragStart, true);
-    };
-  }, [handleFieldPress]);
+      const field = handle.getAttribute('data-field');
+      if (field === null) {
+        return;
+      }
+      const zone = handle.closest(optionsRef.current.zoneSelector);
+      const section = (zone?.getAttribute('data-section') ?? null) as Section;
+      pointerDrag.onPointerDown(event, { field, section, handle });
+    },
+  });
 
   React.useEffect(() => {
     return () => {
@@ -384,6 +339,4 @@ export function usePanelFieldPointerDrag<Section>(
       }
     };
   }, []);
-
-  return { panelRef };
 }
