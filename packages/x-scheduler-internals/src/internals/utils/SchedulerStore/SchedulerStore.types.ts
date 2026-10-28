@@ -26,34 +26,28 @@ import type { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types'
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 
 /**
- * The params of each user-facing error code. Every code is a `localeText` key, so the UI shows
- * the error in the user's language.
+ * The user-facing errors whose message needs no params. Every code is a `localeText` key, so the
+ * UI shows the error in the user's language.
  */
-export interface SchedulerUserFacingErrorParams {
-  somethingWentWrongError: undefined;
-  eventNotLoadedError: undefined;
-  eventChangedWhileConfirmingError: undefined;
-  datesNotWritableError: undefined;
-  eventNotCreatableError: undefined;
-  readOnlyEventMovedError: { title: string };
-  dependencyCascadeBlockedError: undefined;
-  dependencyCycleError: undefined;
-  dependencyDuplicateError: undefined;
-  dependencyRecurringEventError: undefined;
-  dependencyReadOnlyError: undefined;
-  dependencyUnknownEventError: undefined;
-}
-
-export type SchedulerUserFacingErrorCode = keyof SchedulerUserFacingErrorParams;
+export type SchedulerUserFacingErrorCode =
+  | 'somethingWentWrongError'
+  | 'eventNotLoadedError'
+  | 'eventChangedWhileConfirmingError'
+  | 'datesNotWritableError'
+  | 'eventNotCreatableError'
+  | 'dependencyCascadeBlockedError'
+  | 'dependencyCycleError'
+  | 'dependencyDuplicateError'
+  | 'dependencyRecurringEventError'
+  | 'dependencyReadOnlyError'
+  | 'dependencyUnknownEventError';
 
 /**
  * An error to show to the user: a `localeText` key and the params its message needs.
  */
-export type SchedulerUserFacingErrorDescriptor = {
-  [Code in SchedulerUserFacingErrorCode]: SchedulerUserFacingErrorParams[Code] extends undefined
-    ? { code: Code; params?: undefined }
-    : { code: Code; params: SchedulerUserFacingErrorParams[Code] };
-}[SchedulerUserFacingErrorCode];
+export type SchedulerUserFacingErrorDescriptor =
+  | { code: SchedulerUserFacingErrorCode; params?: undefined }
+  | { code: 'readOnlyEventMovedError'; params: { title: string } };
 
 export type UserFacingError = SchedulerUserFacingErrorDescriptor & {
   /**
