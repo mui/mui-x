@@ -15,6 +15,7 @@ export * from './useOriginalOccurrence';
 export * from './useElementDragMarker';
 export * from './useTimelineDragAutoScroll';
 export * from './TimeoutManager';
+export * from './date-locale';
 export * from './date-utils';
 export * from './plain-date-utils';
 export {

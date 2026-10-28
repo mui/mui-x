@@ -7,7 +7,6 @@ import {
   EventBuilder,
   ResourceBuilder,
   withinMonthView,
-  dateLocaleFr,
   setSystemTimezone,
 } from 'test/utils/scheduler';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
@@ -52,7 +51,7 @@ describe('EventCalendar', () => {
 
     expect(
       screen.getByRole('button', {
-        name: 'Running, 7:30 AM to 8:15 AM, Monday, May 26th, 2025, Resource: Sport',
+        name: 'Running, 7:30 AM to 8:15 AM, Monday, May 26, 2025, Resource: Sport',
       }),
     ).not.to.equal(null);
   });
@@ -85,7 +84,7 @@ describe('EventCalendar', () => {
     );
 
     expect(
-      screen.getByRole('button', { name: 'Running, de 7:30 AM a 8:15 AM, Monday, May 26th, 2025' }),
+      screen.getByRole('button', { name: 'Running, de 7:30 AM a 8:15 AM, Monday, May 26, 2025' }),
     ).not.to.equal(null);
   });
 
@@ -104,16 +103,16 @@ describe('EventCalendar', () => {
 
     expect(mondayEvent).to.have.attribute(
       'aria-label',
-      'Running, 7:30 AM to 8:15 AM, Monday, May 26th, 2025',
+      'Running, 7:30 AM to 8:15 AM, Monday, May 26, 2025',
     );
     expect(tuesdayEvent).to.have.attribute(
       'aria-label',
-      'Weekly, 4:00 PM to 5:00 PM, Tuesday, May 27th, 2025',
+      'Weekly, 4:00 PM to 5:00 PM, Tuesday, May 27, 2025',
     );
     expect(mondayEvent).not.to.have.attribute('aria-labelledby');
 
-    expect(screen.getByRole('columnheader', { name: /Monday 26/i })).not.to.equal(null);
-    expect(screen.getByRole('columnheader', { name: /Tuesday 27/i })).not.to.equal(null);
+    expect(screen.getByRole('columnheader', { name: /Monday, May 26/i })).not.to.equal(null);
+    expect(screen.getByRole('columnheader', { name: /Tuesday, May 27/i })).not.to.equal(null);
   });
 
   it('should allow to show / hide resources using the UI', async () => {
@@ -225,8 +224,8 @@ describe('EventCalendar', () => {
     // Browsers cannot change their timezone through process.env.TZ.
     it.skipIf(!isJSDOM).each([
       { view: 'month', viewLabel: '30', currentColumnCount: 0 },
-      { view: 'week', viewLabel: 'Friday 30', currentColumnCount: 1 },
-      { view: 'agenda', viewLabel: 'Friday 30', currentColumnCount: 0 },
+      { view: 'week', viewLabel: 'Friday, December 30', currentColumnCount: 1 },
+      { view: 'agenda', viewLabel: 'Friday, December 30', currentColumnCount: 0 },
     ] as const)(
       'should mark the current day of the display timezone in the $view view, whatever the timezone of the system',
       ({ view, viewLabel, currentColumnCount }) => {
@@ -249,7 +248,7 @@ describe('EventCalendar', () => {
         const currentLabels = Array.from(document.querySelectorAll('[aria-current="date"]')).map(
           (element) => element.getAttribute('aria-label') ?? element.textContent,
         );
-        expect(currentLabels).to.deep.equal(['Friday, December 30th, 2011', viewLabel]);
+        expect(currentLabels).to.deep.equal(['Friday, December 30, 2011', viewLabel]);
         expect(
           document.querySelectorAll(`.${eventCalendarClasses.dayTimeGridColumn}[data-current]`),
         ).to.have.length(currentColumnCount);
@@ -278,7 +277,7 @@ describe('EventCalendar', () => {
 
       const { user } = render(<ControlledCalendar />);
 
-      expect(screen.getByRole('columnheader', { name: /Sunday 25/i })).not.to.equal(null);
+      expect(screen.getByRole('columnheader', { name: /Sunday, May 25/i })).not.to.equal(null);
 
       await openPreferencesMenu(user);
       await toggleShowWeekends(user);
@@ -287,15 +286,15 @@ describe('EventCalendar', () => {
 
       expect(onPreferencesChange.mock.calls.length).to.equal(1);
       expect(onPreferencesChange.mock.lastCall?.[0]).to.deep.equal({ showWeekends: false });
-      expect(screen.queryByRole('columnheader', { name: /Sunday 25/i })).to.equal(null);
+      expect(screen.queryByRole('columnheader', { name: /Sunday, May 25/i })).to.equal(null);
     });
 
     it('should allow to show / hide the weekends using the UI in the week view', async () => {
       const { user } = render(<EventCalendar events={[]} />);
 
       // Weekends should be visible by default
-      expect(screen.getByRole('columnheader', { name: /Sunday 25/i })).not.to.equal(null);
-      expect(screen.getByRole('columnheader', { name: /Saturday 31/i })).not.to.equal(null);
+      expect(screen.getByRole('columnheader', { name: /Sunday, May 25/i })).not.to.equal(null);
+      expect(screen.getByRole('columnheader', { name: /Saturday, May 31/i })).not.to.equal(null);
 
       // Wait for component to fully render before opening preferences menu
       await waitFor(() =>
@@ -310,8 +309,8 @@ describe('EventCalendar', () => {
       // Wait for menu to close
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
-      expect(screen.queryByRole('columnheader', { name: /Sunday 25/i })).to.equal(null);
-      expect(screen.queryByRole('columnheader', { name: /Saturday 31/i })).to.equal(null);
+      expect(screen.queryByRole('columnheader', { name: /Sunday, May 25/i })).to.equal(null);
+      expect(screen.queryByRole('columnheader', { name: /Saturday, May 31/i })).to.equal(null);
 
       // Show the weekends again
       await openPreferencesMenu(user);
@@ -319,8 +318,8 @@ describe('EventCalendar', () => {
       await user.keyboard('{Escape}');
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
-      expect(screen.getByRole('columnheader', { name: /Sunday 25/i })).not.to.equal(null);
-      expect(screen.getByRole('columnheader', { name: /Saturday 31/i })).not.to.equal(null);
+      expect(screen.getByRole('columnheader', { name: /Sunday, May 25/i })).not.to.equal(null);
+      expect(screen.getByRole('columnheader', { name: /Saturday, May 31/i })).not.to.equal(null);
     });
 
     it('should allow to show / hide the weekends using the UI in the month view', async () => {
@@ -361,8 +360,8 @@ describe('EventCalendar', () => {
       const { user } = render(<EventCalendar events={[]} defaultView="agenda" />);
 
       // Weekends should be visible by default
-      expect(screen.getByLabelText(/Saturday 31/i)).not.to.equal(null);
-      expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
+      expect(screen.getByLabelText('Saturday, May 31')).not.to.equal(null);
+      expect(screen.getByLabelText('Sunday, June 1')).not.to.equal(null);
 
       // Hide the weekends
       await openPreferencesMenu(user);
@@ -370,8 +369,8 @@ describe('EventCalendar', () => {
       await user.keyboard('{Escape}');
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
-      expect(screen.queryByLabelText(/Saturday 31/i)).to.equal(null);
-      expect(screen.queryByLabelText(/Sunday 1/i)).to.equal(null);
+      expect(screen.queryByLabelText('Saturday, May 31')).to.equal(null);
+      expect(screen.queryByLabelText('Sunday, June 1')).to.equal(null);
 
       // Show the weekends again
       await openPreferencesMenu(user);
@@ -379,8 +378,8 @@ describe('EventCalendar', () => {
       await user.keyboard('{Escape}');
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
-      expect(screen.getByLabelText(/Saturday 31/i)).not.to.equal(null);
-      expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
+      expect(screen.getByLabelText('Saturday, May 31')).not.to.equal(null);
+      expect(screen.getByLabelText('Sunday, June 1')).not.to.equal(null);
     });
 
     it('should allow to show / hide the week number using the UI in the month view', async () => {
@@ -425,7 +424,7 @@ describe('EventCalendar', () => {
 
       expect(screen.getByRole('button', { name: /^Running,/ })).to.have.attribute(
         'aria-label',
-        'Running, 7:30 to 8:15, Monday, May 26th, 2025',
+        'Running, 07:30 to 08:15, Monday, May 26, 2025',
       );
 
       // Show 12 hours format again
@@ -452,7 +451,7 @@ describe('EventCalendar', () => {
       await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
       expect(screen.getByRole('button', { name: /^Running,/ })).to.have.attribute(
         'aria-label',
-        'Running, 7:30 to 8:15, Monday, May 26th, 2025',
+        'Running, 07:30 to 08:15, Monday, May 26, 2025',
       );
 
       // Show 12 hours format again
@@ -496,7 +495,7 @@ describe('EventCalendar', () => {
       );
 
       // Empty days should be visible by default
-      expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
+      expect(screen.getByLabelText('Sunday, June 1')).not.to.equal(null);
 
       // Hide empty days
       await openPreferencesMenu(user);
@@ -504,7 +503,7 @@ describe('EventCalendar', () => {
       await user.keyboard('{Escape}');
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
-      expect(screen.queryByLabelText(/Sunday 1/i)).to.equal(null);
+      expect(screen.queryByLabelText('Sunday, June 1')).to.equal(null);
 
       // Show empty days again
       await openPreferencesMenu(user);
@@ -512,21 +511,21 @@ describe('EventCalendar', () => {
       await user.keyboard('{Escape}');
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
-      expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
+      expect(screen.getByLabelText('Sunday, June 1')).not.to.equal(null);
     });
   });
 
   describe('dateLocale', () => {
-    it('should render day headers in French when dateLocale is set to fr', () => {
-      render(<EventCalendar events={[]} dateLocale={dateLocaleFr} />);
+    it('should render day headers in French when dateLocale is fr-FR', () => {
+      render(<EventCalendar events={[]} dateLocale="fr-FR" />);
 
       // In French, Monday is "lundi" and week starts on Monday by default
       expect(screen.getByRole('columnheader', { name: /lundi 26/i })).not.to.equal(null);
       expect(screen.getByRole('columnheader', { name: /mardi 27/i })).not.to.equal(null);
     });
 
-    it('should render month view headers in French when dateLocale is set to fr', () => {
-      render(<EventCalendar events={[]} defaultView="month" dateLocale={dateLocaleFr} />);
+    it('should render month view headers in French when dateLocale is fr-FR', () => {
+      render(<EventCalendar events={[]} defaultView="month" dateLocale="fr-FR" />);
 
       const monthView = withinMonthView();
 
