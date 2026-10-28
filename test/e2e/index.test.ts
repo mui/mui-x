@@ -870,6 +870,24 @@ async function initializeEnvironment(
           const endButton = page.getByTestId('end-btn');
           expect(await endButton.evaluate((el) => document.activeElement === el)).to.equal(true);
         });
+
+        it('should move the focus to the open picker button when pressing Tab from the last section', async () => {
+          // Firefox starts the sequential focus navigation from the document selection:
+          // with the content of a section selected, Tab used to move the focus to the top of the page.
+          await renderFixture('DatePicker/DesktopDatePickerTabNavigation');
+
+          await page.getByRole('spinbutton', { name: 'Month' }).click();
+          await page.keyboard.type('04112022');
+          expect(
+            await page.evaluate(() => document.activeElement?.getAttribute('aria-label')),
+          ).to.equal('Year');
+
+          await page.keyboard.press('Tab');
+
+          expect(
+            await page.evaluate(() => document.activeElement?.getAttribute('aria-label')),
+          ).to.match(/^Choose date/);
+        });
       });
 
       describe('<MobileDatePicker />', () => {
