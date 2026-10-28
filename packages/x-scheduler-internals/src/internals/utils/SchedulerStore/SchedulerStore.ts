@@ -160,26 +160,22 @@ function datesNotWritableReason(state: SchedulerState): string {
 }
 
 /**
- * Surfaced to the user (like `createEventNotLoadedError`): a plain sentence, not the
+ * Surfaced to the user (like `EVENT_NOT_LOADED_ERROR`): a plain sentence, not the
  * `eventModelStructure` / `setter` explanation, which belongs in the dev warning instead — the
  * end user looking at a field error or a toast has no `setter` to add.
  */
-function createDatesNotWritableError(): Error {
-  return /* minify-error-disabled */ new Error(
-    "This date can't be changed, so the change was not applied.",
-  );
-}
+const DATES_NOT_WRITABLE_ERROR: SchedulerUserFacingErrorDescriptor = {
+  code: 'datesNotWritableError',
+};
 
 /**
  * Surfaced to the user, for a refused creation — unlike a move, nothing the user did
  * necessarily touched a date: a recurring split detaching an occurrence hits this from an edit
  * to any field (the title, say), so the message doesn't blame "this date" for it.
  */
-function createEventNotCreatableError(): Error {
-  return /* minify-error-disabled */ new Error(
-    "This can't be saved as a new event, so the change was not applied.",
-  );
-}
+const EVENT_NOT_CREATABLE_ERROR: SchedulerUserFacingErrorDescriptor = {
+  code: 'eventNotCreatableError',
+};
 
 /**
  * Whether `changes` is a move of both bounds, as opposed to a resize that only submits one. A
@@ -897,7 +893,9 @@ export class SchedulerStore<
    * plugin's own side effects (e.g. the dependency cleanup for a deleted event in the same batch)
    * go out first only to refuse the batch a moment later.
    */
-  private checkCreatedDatesWritable(created: SchedulerEventCreationProperties[]): Error | null {
+  private checkCreatedDatesWritable(
+    created: SchedulerEventCreationProperties[],
+  ): SchedulerUserFacingErrorDescriptor | null {
     if (created.length === 0 || schedulerEventSelectors.canWriteEventDates(this.state)) {
       return null;
     }
@@ -913,7 +911,7 @@ export class SchedulerStore<
         ].join('\n'),
       );
     }
-    return createEventNotCreatableError();
+    return EVENT_NOT_CREATABLE_ERROR;
   }
 
   /**
@@ -926,7 +924,7 @@ export class SchedulerStore<
    */
   private checkUpdatedDatesWritable(
     updated: Iterable<SchedulerEventUpdatedProperties>,
-  ): Error | null {
+  ): SchedulerUserFacingErrorDescriptor | null {
     if (schedulerEventSelectors.canWriteEventDates(this.state)) {
       return null;
     }
@@ -941,7 +939,7 @@ export class SchedulerStore<
             ].join('\n'),
           );
         }
-        return createDatesNotWritableError();
+        return DATES_NOT_WRITABLE_ERROR;
       }
     }
 
@@ -1123,7 +1121,7 @@ export class SchedulerStore<
         // message — and a resize is stripped the same way too.
         const rejection = this.checkUpdatedDatesWritable([changesInDataTimezone]);
         if (rejection) {
-          this.pushError(rejection, { transient: true });
+          this.pushUserFacingError(rejection, { transient: true });
           return;
         }
         changesInDataTimezone = this.removeUnwritableDates(changesInDataTimezone);
@@ -1140,7 +1138,7 @@ export class SchedulerStore<
     const { created: createdIds, rejection } = this.updateEvents(updatedEvents);
     if (rejection) {
       // No other surface for the rejection; the scope dialog already closed.
-      this.pushError(rejection, { transient: true });
+      this.pushUserFacingError(rejection, { transient: true });
       return;
     }
 

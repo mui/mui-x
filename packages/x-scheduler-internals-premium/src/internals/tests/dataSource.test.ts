@@ -713,7 +713,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       const initialIds = [...store.state.eventIdList];
 
-      let createdId!: SchedulerEventId;
+      let createdId: SchedulerEventId | undefined;
       await expect(async () => {
         createdId = store.createEvent({
           start: '2025-07-02T09:00:00.000Z',

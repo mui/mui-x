@@ -276,11 +276,12 @@ storeClasses.forEach((storeClass) => {
           ]);
 
           expect(result!.applied).to.equal(false);
-          // Plain, end-user text — the `eventModelStructure` / `setter` explanation belongs in
-          // the dev warning above, not in the message shown in the dialog or a toast.
-          expect((result! as { rejection: Error }).rejection.message).to.equal(
-            "This date can't be changed, so the change was not applied.",
-          );
+          // The `eventModelStructure` / `setter` explanation belongs in the dev warning above,
+          // not in what the dialog or a toast shows.
+          expect(result!).to.deep.equal({
+            applied: false,
+            rejection: { code: 'datesNotWritableError' },
+          });
           expect(onEventsChange.mock.calls.length).to.equal(0);
         });
 

@@ -31,14 +31,18 @@ export interface SchedulerErrorLocaleText {
   somethingWentWrongError: string;
   eventNotLoadedError: string;
   eventChangedWhileConfirmingError: string;
+  datesNotWritableError: string;
+  eventNotCreatableError: string;
   /**
    * Shown when a change would move a read-only event through its dependencies.
    */
   readOnlyEventMovedError: (title: string) => string;
+  dependencyCascadeBlockedError: string;
   dependencyCycleError: string;
   dependencyDuplicateError: string;
+  dependenciesDisabledError: string;
   dependencyRecurringEventError: string;
-  dependencyReadOnlyEventError: string;
+  dependencyReadOnlyError: string;
   dependencyUnknownEventError: string;
 }
 

@@ -33,11 +33,15 @@ export interface SchedulerUserFacingErrorParams {
   somethingWentWrongError: undefined;
   eventNotLoadedError: undefined;
   eventChangedWhileConfirmingError: undefined;
+  datesNotWritableError: undefined;
+  eventNotCreatableError: undefined;
   readOnlyEventMovedError: { title: string };
+  dependencyCascadeBlockedError: undefined;
   dependencyCycleError: undefined;
   dependencyDuplicateError: undefined;
+  dependenciesDisabledError: undefined;
   dependencyRecurringEventError: undefined;
-  dependencyReadOnlyEventError: undefined;
+  dependencyReadOnlyError: undefined;
   dependencyUnknownEventError: undefined;
 }
 
