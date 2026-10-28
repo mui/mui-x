@@ -63,7 +63,7 @@ import { eventDialogFormSelectors } from '../event-dialog/form/EventDialogFormSt
 import { usePushPlaceholder } from '../event-dialog/usePushPlaceholder';
 import { focusFirstInvalid } from '../scheduler-form/focusFirstInvalid';
 import { deleteOccurrenceAndRestoreFocus } from '../../utils/focus-utils';
-import { dialogContentBaseStyles } from '../../utils/dialog-styles';
+import { dialogContentBaseStyles } from '../../constants/dialogStyles';
 
 export const EventDialogFormActions = styled(DialogActions, {
   name: 'MuiEventDialog',

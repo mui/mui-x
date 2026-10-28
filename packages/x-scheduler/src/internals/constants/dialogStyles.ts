@@ -1,8 +1,10 @@
+import type { CSSObject } from '@mui/material/styles';
+
 /**
  * Styles shared by the content of the scheduler dialogs. Each dialog spreads them into its own
  * styled component, so theming one dialog doesn't change the others.
  */
-export const dialogContentBaseStyles = {
+export const dialogContentBaseStyles: CSSObject = {
   cursor: 'default',
   userSelect: 'text',
   padding: 0,
@@ -12,4 +14,4 @@ export const dialogContentBaseStyles = {
   flexDirection: 'column',
   overflow: 'hidden',
   maxHeight: '100%',
-} as const;
+};

@@ -34,8 +34,8 @@ const DEPENDENCY_DELETE_BUTTON_CROSS_RADIUS = 2.5;
  * surface stays out of the `pointerEvents: 'none'` svg.
  * Same z-index as the arrows overlay and after it in the DOM, so it paints above the
  * arrow strokes — but before the terminals overlay, whose revealed terminals must win
- * the clicks over a crossing band. Below the pinned title cells (z-index 3), which cover it on horizontal
- * scroll instead of leaking their clicks to the arrows underneath.
+ * the clicks over a crossing band. Below the pinned title cells (z-index 3), which
+ * cover it on horizontal scroll instead of leaking their clicks to the arrows underneath.
  */
 const DependencyInteractionsSvg = styled('svg', {
   name: 'MuiEventTimeline',
