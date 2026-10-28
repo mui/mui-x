@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import * as materialStyles from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -10,7 +11,6 @@ import MuiCheckbox from '@mui/material/Checkbox';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import composeClasses from '@mui/utils/composeClasses';
-import { private_applyInsetFocusVisible as applyInsetFocusVisible } from '@mui/material/styles';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import type { TreeItemProps } from './TreeItem.types';
 import type { UseTreeItemLabelSlotOwnProps, UseTreeItemStatus } from '../useTreeItem';
@@ -68,7 +68,7 @@ export const TreeItemContent = styled('div', {
   ...(theme.focusVisible
     ? {
         '[role="treeitem"]:focus-visible > &': {
-          ...applyInsetFocusVisible(1),
+          ...materialStyles.private_applyInsetFocusVisible?.(1),
           ...theme.focusVisible,
         },
       }

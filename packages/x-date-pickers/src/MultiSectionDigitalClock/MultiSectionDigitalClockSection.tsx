@@ -1,11 +1,8 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import {
-  styled,
-  useThemeProps,
-  private_applyChildrenFocusVisible as applyChildrenFocusVisible,
-} from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
+import * as materialStyles from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
@@ -121,7 +118,7 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
     ...(theme.focusVisible && {
-      '&.Mui-focusVisible': applyChildrenFocusVisible(
+      '&.Mui-focusVisible': materialStyles.private_applyChildrenFocusVisible?.(
         `0 0 0 4px ${(theme.vars || theme).palette.primary.contrastText}`,
       ),
     }),

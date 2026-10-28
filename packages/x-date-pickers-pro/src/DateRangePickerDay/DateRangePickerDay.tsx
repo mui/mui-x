@@ -4,12 +4,8 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license/internals';
 import type { CSSInterpolation, Theme } from '@mui/material/styles';
-import {
-  styled,
-  useThemeProps,
-  private_applyChildrenFocusVisible as applyChildrenFocusVisible,
-  private_applyInsetFocusVisible as applyInsetFocusVisible,
-} from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
+import * as materialStyles from '@mui/material/styles';
 import ButtonBase, { buttonBaseClasses } from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
@@ -142,7 +138,7 @@ const selectedDayStyles = (theme: Theme) => ({
   },
   ...(theme.focusVisible
     ? {
-        [`&.${buttonBaseClasses.focusVisible}`]: applyChildrenFocusVisible(
+        [`&.${buttonBaseClasses.focusVisible}`]: materialStyles.private_applyChildrenFocusVisible?.(
           `0 0 0 4px ${(theme.vars || theme).palette.primary.contrastText}`,
         ),
       }
@@ -217,7 +213,7 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
     ? {
         [`&.${buttonBaseClasses.focusVisible}`]: {
           ...theme.focusVisible,
-          ...applyInsetFocusVisible(1),
+          ...materialStyles.private_applyInsetFocusVisible?.(1),
         },
       }
     : {
@@ -271,7 +267,7 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
         ...(theme.focusVisible && {
           [`&.${buttonBaseClasses.focusVisible}`]: {
             ...theme.focusVisible,
-            ...applyInsetFocusVisible(2),
+            ...materialStyles.private_applyInsetFocusVisible?.(2),
             boxShadow: `inset 0 0 0 1px ${(theme.vars || theme).palette.text.secondary}`,
           },
         }),

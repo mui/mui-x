@@ -3,11 +3,8 @@ import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
-import {
-  styled,
-  useThemeProps,
-  private_applyChildrenFocusVisible as applyChildrenFocusVisible,
-} from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
+import * as materialStyles from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
 import MenuItem from '@mui/material/MenuItem';
@@ -93,7 +90,7 @@ export const DigitalClockItem = styled(MenuItem, {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
     ...(theme.focusVisible && {
-      '&.Mui-focusVisible': applyChildrenFocusVisible(
+      '&.Mui-focusVisible': materialStyles.private_applyChildrenFocusVisible?.(
         `0 0 0 4px ${(theme.vars || theme).palette.primary.contrastText}`,
       ),
     }),

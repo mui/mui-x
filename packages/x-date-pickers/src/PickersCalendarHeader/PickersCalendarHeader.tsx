@@ -3,11 +3,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Fade from '@mui/material/Fade';
-import {
-  styled,
-  useThemeProps,
-  private_applyInsetFocusVisible as applyInsetFocusVisible,
-} from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
+import * as materialStyles from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import IconButton from '@mui/material/IconButton';
@@ -89,7 +86,7 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
   ownerState: PickerOwnerState & { view: DateView };
 }>(({ theme }) => ({
   marginRight: 'auto',
-  ...(theme.focusVisible && applyInsetFocusVisible(1)),
+  ...(theme.focusVisible && materialStyles.private_applyInsetFocusVisible?.(1)),
   variants: [
     {
       props: { view: 'year' },

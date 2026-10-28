@@ -4,11 +4,8 @@ import clsx from 'clsx';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import type { Theme } from '@mui/material/styles';
-import {
-  styled,
-  useThemeProps,
-  private_outsetFocusRing as outsetFocusRing,
-} from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
+import * as materialStyles from '@mui/material/styles';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
@@ -119,7 +116,7 @@ const ClockWrapper = styled('div', {
     outline: 'none',
   },
   ...(theme.focusVisible && {
-    '&:focus-visible': { ...outsetFocusRing, ...theme.focusVisible },
+    '&:focus-visible': { ...materialStyles.private_outsetFocusRing, ...theme.focusVisible },
   }),
 }));
 

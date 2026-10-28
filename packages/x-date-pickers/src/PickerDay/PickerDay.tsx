@@ -3,12 +3,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { CSSInterpolation } from '@mui/material/styles';
-import {
-  styled,
-  useThemeProps,
-  private_applyChildrenFocusVisible as applyChildrenFocusVisible,
-  private_applyInsetFocusVisible as applyInsetFocusVisible,
-} from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
+import * as materialStyles from '@mui/material/styles';
 import ButtonBase, { buttonBaseClasses } from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
@@ -91,7 +87,7 @@ const PickerDayRoot = styled(ButtonBase, {
     ? {
         [`&.${buttonBaseClasses.focusVisible}`]: {
           ...theme.focusVisible,
-          ...applyInsetFocusVisible(1),
+          ...materialStyles.private_applyInsetFocusVisible?.(1),
         },
       }
     : {
@@ -117,9 +113,10 @@ const PickerDayRoot = styled(ButtonBase, {
         },
         ...(theme.focusVisible
           ? {
-              [`&.${buttonBaseClasses.focusVisible}`]: applyChildrenFocusVisible(
-                `0 0 0 4px ${(theme.vars || theme).palette.primary.contrastText}`,
-              ),
+              [`&.${buttonBaseClasses.focusVisible}`]:
+                materialStyles.private_applyChildrenFocusVisible?.(
+                  `0 0 0 4px ${(theme.vars || theme).palette.primary.contrastText}`,
+                ),
             }
           : {
               '&:focus': {
@@ -166,7 +163,7 @@ const PickerDayRoot = styled(ButtonBase, {
         ...(theme.focusVisible && {
           [`&.${buttonBaseClasses.focusVisible}`]: {
             ...theme.focusVisible,
-            ...applyInsetFocusVisible(2),
+            ...materialStyles.private_applyInsetFocusVisible?.(2),
             boxShadow: `inset 0 0 0 1px ${(theme.vars || theme).palette.text.secondary}`,
           },
         }),

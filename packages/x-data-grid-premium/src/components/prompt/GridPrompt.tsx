@@ -10,11 +10,8 @@ import type { GridSingleSelectColDef } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 
-import {
-  keyframes,
-  styled,
-  private_applyInsetFocusVisible as applyInsetFocusVisible,
-} from '@mui/material/styles';
+import { keyframes, styled } from '@mui/material/styles';
+import * as materialStyles from '@mui/material/styles';
 import { getValueOptions, isSingleSelectColDef, vars } from '@mui/x-data-grid-pro/internals';
 import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -187,7 +184,7 @@ const PromptChangesToggle = styled('button', {
   },
   ...(theme.focusVisible
     ? {
-        ...applyInsetFocusVisible(1),
+        ...materialStyles.private_applyInsetFocusVisible?.(1),
         '&:focus-visible': theme.focusVisible,
       }
     : {

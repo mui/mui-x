@@ -1,10 +1,7 @@
 'use client';
 import * as React from 'react';
-import {
-  styled,
-  private_applyChildrenFocusVisible as applyChildrenFocusVisible,
-  private_applyInsetFocusVisible as applyInsetFocusVisible,
-} from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import * as materialStyles from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
@@ -77,7 +74,7 @@ const DefaultYearButton = styled('button', {
   ...(theme.focusVisible && {
     '&:focus-visible': {
       backgroundColor: 'transparent',
-      ...applyInsetFocusVisible(1),
+      ...materialStyles.private_applyInsetFocusVisible?.(1),
       ...theme.focusVisible,
     },
   }),
@@ -101,7 +98,7 @@ const DefaultYearButton = styled('button', {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
     ...(theme.focusVisible && {
-      '&:focus-visible': applyChildrenFocusVisible(
+      '&:focus-visible': materialStyles.private_applyChildrenFocusVisible?.(
         `0 0 0 4px ${(theme.vars || theme).palette.primary.contrastText}`,
       ),
     }),
