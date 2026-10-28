@@ -37,12 +37,12 @@ import {
 } from '@mui/x-scheduler/internals';
 import { useEventTimelinePremiumStyledContext } from '../../../EventTimelinePremiumStyledContext';
 import {
+  DEPENDENCY_LAG_UNIT_KEYS,
   DEPENDENCY_LAG_UNITS,
   DEPENDENCY_TYPES,
+  DEPENDENCY_UPDATE_REJECTION_KEYS,
   getAllDayLagNote,
-  getDependencyLagUnitLabel,
   getDependencyTypeLabel,
-  getDependencyUpdateRejectionMessage,
   isSameLag,
   isValidLagAmount,
   toLagDraft,
@@ -168,7 +168,7 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
         ReactDOM.flushSync(() =>
           formStore.setError(
             isLagRejected ? 'lagAmount' : 'type',
-            getDependencyUpdateRejectionMessage(localeText, result.reason),
+            localeText[DEPENDENCY_UPDATE_REJECTION_KEYS[result.reason]],
           ),
         );
         focusFirstInvalid(form);
@@ -255,7 +255,7 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
                   >
                     {DEPENDENCY_LAG_UNITS.map((option) => (
                       <MenuItem key={option} value={option}>
-                        {getDependencyLagUnitLabel(localeText, option)}
+                        {localeText[DEPENDENCY_LAG_UNIT_KEYS[option]]}
                       </MenuItem>
                     ))}
                   </DependencyDialogLagUnit>

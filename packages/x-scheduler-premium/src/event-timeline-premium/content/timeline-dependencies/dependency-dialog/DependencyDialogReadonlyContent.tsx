@@ -18,7 +18,7 @@ import {
   useEventEditingStyledContext,
 } from '@mui/x-scheduler/internals';
 import { useEventTimelinePremiumStyledContext } from '../../../EventTimelinePremiumStyledContext';
-import { formatLag, getAllDayLagNote, getDependencyTypeLabel } from './dependencyDialogUtils';
+import { getAllDayLagNote, getDependencyTypeLabel } from './dependencyDialogUtils';
 import {
   DependencyDialogBody,
   DependencyDialogDetails,
@@ -67,7 +67,9 @@ export function DependencyDialogReadonlyContent(props: DependencyDialogViewProps
           </Typography>
           <Typography component="dt">{localeText.dependencyLagLabel}</Typography>
           <Typography component="dd">
-            {lag === null ? localeText.dependencyNoLag : formatLag(localeText, lag)}
+            {lag === null
+              ? localeText.dependencyNoLag
+              : localeText.dependencyLag(lag.amount, lag.unit)}
             {allDayLagNote !== null && (
               <DependencyDialogLagNote>{allDayLagNote}</DependencyDialogLagNote>
             )}

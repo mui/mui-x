@@ -8,7 +8,7 @@ import { getDependencyLagIssue } from '@mui/x-scheduler-internals-premium/intern
 import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 
 // Exhaustive on the unions: a new unit, type or reason fails to compile until it brings a key.
-const DEPENDENCY_LAG_UNIT_KEYS = {
+export const DEPENDENCY_LAG_UNIT_KEYS = {
   minute: 'dependencyLagUnitMinutes',
   hour: 'dependencyLagUnitHours',
   day: 'dependencyLagUnitDays',
@@ -22,7 +22,7 @@ const DEPENDENCY_TYPE_KEYS = {
   StartToFinish: 'dependencyTypeStartToFinish',
 } as const satisfies Record<SchedulerDependencyType, keyof EventTimelineLocaleText>;
 
-const DEPENDENCY_UPDATE_REJECTION_KEYS = {
+export const DEPENDENCY_UPDATE_REJECTION_KEYS = {
   cascadeBlocked: 'dependencyUpdateCascadeBlockedError',
   duplicateDependency: 'dependencyDuplicateError',
   readOnly: 'dependencyReadOnlyError',
@@ -35,40 +35,17 @@ const DEPENDENCY_UPDATE_REJECTION_KEYS = {
   keyof EventTimelineLocaleText
 >;
 
-export type DependencyUpdateRejectionReason = keyof typeof DEPENDENCY_UPDATE_REJECTION_KEYS;
-
 export const DEPENDENCY_LAG_UNITS = Object.keys(
   DEPENDENCY_LAG_UNIT_KEYS,
 ) as SchedulerDependencyLagUnit[];
 
 export const DEPENDENCY_TYPES = Object.keys(DEPENDENCY_TYPE_KEYS) as SchedulerDependencyType[];
 
-export function getDependencyLagUnitLabel(
-  localeText: EventTimelineLocaleText,
-  unit: SchedulerDependencyLagUnit,
-) {
-  return localeText[DEPENDENCY_LAG_UNIT_KEYS[unit]];
-}
-
 export function getDependencyTypeLabel(
   localeText: EventTimelineLocaleText,
   type: SchedulerDependencyType,
 ) {
   return localeText[DEPENDENCY_TYPE_KEYS[type]];
-}
-
-export function getDependencyUpdateRejectionMessage(
-  localeText: EventTimelineLocaleText,
-  reason: DependencyUpdateRejectionReason,
-) {
-  return localeText[DEPENDENCY_UPDATE_REJECTION_KEYS[reason]];
-}
-
-export function formatLag(
-  localeText: EventTimelineLocaleText,
-  lag: SchedulerResolvedDependencyLag,
-) {
-  return localeText.dependencyLag(lag.amount, lag.unit);
 }
 
 export interface DependencyFormValues extends Record<string, unknown> {
@@ -108,5 +85,7 @@ export function getAllDayLagNote(
   }
   return effectiveLag === null
     ? localeText.dependencyAllDayLagIgnored
-    : localeText.dependencyAllDayLagRounded(formatLag(localeText, effectiveLag));
+    : localeText.dependencyAllDayLagRounded(
+        localeText.dependencyLag(effectiveLag.amount, effectiveLag.unit),
+      );
 }

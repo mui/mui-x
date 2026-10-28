@@ -135,16 +135,16 @@ export function TestTimeline({
 
   const { features, storeFeatures } = useFrozenEventTimelinePremiumFeatures(featuresProp);
 
-  const styledContext = React.useMemo(
-    () =>
-      localeText === undefined
-        ? styledContextValue
-        : {
-            ...styledContextValue,
-            localeText: { ...EVENT_TIMELINE_DEFAULT_LOCALE_TEXT, ...localeText },
-          },
-    [localeText],
-  );
+  const [styledContext, sharedStyledContext] = React.useMemo(() => {
+    if (localeText === undefined) {
+      return [styledContextValue, sharedStyledContextValue];
+    }
+    const mergedLocaleText = { ...EVENT_TIMELINE_DEFAULT_LOCALE_TEXT, ...localeText };
+    return [
+      { ...styledContextValue, localeText: mergedLocaleText },
+      { ...sharedStyledContextValue, localeText: mergedLocaleText },
+    ];
+  }, [localeText]);
 
   const parameters: EventTimelinePremiumStoreParameters<SchedulerEvent, SchedulerResource> = {
     events,
@@ -177,7 +177,7 @@ export function TestTimeline({
       <EventTimelinePremiumFeaturesContext.Provider value={features}>
         <EventTimelinePremiumStyledContext.Provider value={styledContext}>
           <EventEditingStyledContext.Provider value={styledContext}>
-            <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
+            <SharedComponentsStyledContext.Provider value={sharedStyledContext}>
               <EventTimelinePremiumContent />
             </SharedComponentsStyledContext.Provider>
           </EventEditingStyledContext.Provider>
