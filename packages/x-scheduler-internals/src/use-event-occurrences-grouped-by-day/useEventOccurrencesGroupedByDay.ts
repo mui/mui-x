@@ -8,6 +8,7 @@ import {
 } from '../internals/utils/event-utils';
 import { useAdapterContext } from '../use-adapter-context';
 import { getEndOfDayMs } from '../internals/utils/plain-date-utils/timeZone';
+import { getDayNumber } from '../internals/utils/base-temporal/PlainDate';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
 import {
   schedulerEventSelectors,
@@ -94,8 +95,9 @@ export function innerGetEventOccurrencesGroupedByDay(
     recurringEventsPlugin,
   });
 
+  const dayNumbers = days.map((day) => getDayNumber(day.plainDate));
   for (const occurrence of occurrences) {
-    const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, days);
+    const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, days, dayNumbers);
     for (const dayKey of eventDays) {
       occurrenceMap.get(dayKey)!.push(occurrence);
     }

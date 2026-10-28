@@ -14,7 +14,6 @@ import type { Adapter } from '../../use-adapter/useAdapter.types';
 import { getDateKey } from './plain-date-utils/adapter';
 import { toLocalDayNumber } from './plain-date-utils/timeZone';
 import type { SchedulerEventRangeIndex } from './event-range-index';
-import { getDayNumber } from './base-temporal/PlainDate';
 
 /**
  * Whether the occurrence is a persisted event occurrence, as opposed to a
@@ -105,11 +104,13 @@ export function generateOccurrenceFromEvent({
 }
 
 /**
- *  Returns the key of the days an event occurrence should be visible on.
+ * Returns the key of the days an event occurrence should be visible on.
+ * `dayNumbers` are the day numbers of `days`, read once for all the occurrences of the days.
  */
 export function getDaysTheOccurrenceIsVisibleOn(
   event: SchedulerEventOccurrence,
   days: SchedulerProcessedDay[],
+  dayNumbers: readonly number[],
 ) {
   const { start, end, timezone } = event.displayTimezone;
   const startDayNumber = toLocalDayNumber(start.timestamp, timezone);
@@ -117,7 +118,7 @@ export function getDaysTheOccurrenceIsVisibleOn(
 
   const dayKeys: string[] = [];
   for (let index = 0; index < days.length; index += 1) {
-    const dayNumber = getDayNumber(days[index].plainDate);
+    const dayNumber = dayNumbers[index];
     // If the day is before the event start, skip to the next day
     if (dayNumber < startDayNumber) {
       continue;
