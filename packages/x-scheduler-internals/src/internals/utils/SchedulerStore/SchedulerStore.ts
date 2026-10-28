@@ -74,7 +74,7 @@ import {
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
 import { createStartOfPlainDate } from '../plain-date-utils/adapter';
-import { toPlainDateTime } from '../plain-date-utils/timeZone';
+import { toPlainDate } from '../plain-date-utils/timeZone';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
@@ -83,7 +83,7 @@ const ONE_MINUTE_IN_MS = 60 * 1000;
  * the end of the gap.
  */
 function createStartOfToday(adapter: Adapter, nowTimestamp: number, timezone: TemporalTimezone) {
-  return createStartOfPlainDate(adapter, toPlainDateTime(nowTimestamp, timezone).date, timezone);
+  return createStartOfPlainDate(adapter, toPlainDate(nowTimestamp, timezone), timezone);
 }
 
 /**
@@ -290,9 +290,7 @@ export class SchedulerStore<
       this.registerStoreEffect(schedulerOtherSelectors.visibleTimestamp, this.stopEditing),
     );
 
-    const currentDate = new Date();
-    const timeUntilNextMinuteMs =
-      ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
+    const timeUntilNextMinuteMs = ONE_MINUTE_IN_MS - (Date.now() % ONE_MINUTE_IN_MS);
 
     this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
       this.set('nowTimestamp', Date.now());
@@ -417,6 +415,7 @@ export class SchedulerStore<
       newSchedulerState,
       parameters,
       updateModel,
+      this.state,
     );
 
     this.update(newState as State);
@@ -848,7 +847,7 @@ export class SchedulerStore<
         warnOnce(
           [
             'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+            'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events`, to enable recurring events.',
           ].join('\n'),
         );
       }
@@ -969,13 +968,13 @@ export class SchedulerStore<
         warnOnce(
           [
             'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+            'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events`, to enable recurring events.',
           ].join('\n'),
         );
       }
-      return toUpdateEventResult(
-        this.updateEvents({ updated: [{ ...calendarEvent, rrule: undefined }] }),
-      );
+      // Drop the key rather than sending `undefined`, which would remove the stored rule.
+      const { rrule, ...changes } = calendarEvent;
+      return toUpdateEventResult(this.updateEvents({ updated: [changes] }));
     }
 
     return toUpdateEventResult(this.updateEvents({ updated: [calendarEvent] }));
@@ -990,7 +989,7 @@ export class SchedulerStore<
         warnOnce(
           [
             'MUI X Scheduler: Recurring event updates are a premium feature.',
-            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+            'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events`, to enable recurring events.',
           ].join('\n'),
         );
       }
@@ -1008,7 +1007,7 @@ export class SchedulerStore<
         warnOnce(
           [
             'MUI X Scheduler: Recurring event deletions are a premium feature.',
-            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+            'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events`, to enable recurring events.',
           ].join('\n'),
         );
       }

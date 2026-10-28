@@ -11,6 +11,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   ResourceBuilder,
 } from 'test/utils/scheduler';
+import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 import type {
   EventTimelinePremiumPreset,
   EventTimelinePremiumPresetConfig,
@@ -48,8 +49,9 @@ describe('<EventTimelinePremiumHeader />', () => {
   async function renderHeader(options: {
     preset: EventTimelinePremiumPreset;
     presets?: EventTimelinePremiumPreset[];
-    defaultPreferences?: { ampm: boolean };
+    defaultPreferences?: { ampm?: boolean; weekStartsOn?: WeekStartsOn };
     visibleDate?: typeof DEFAULT_TESTING_VISIBLE_DATE;
+    displayTimezone?: string;
     presetConfig?: EventTimelinePremiumPresetConfig;
   }) {
     // The grid is virtualized; sizing the host wide enough to fit the largest preset
@@ -65,6 +67,7 @@ describe('<EventTimelinePremiumHeader />', () => {
           presets={options.presets ?? [options.preset]}
           presetConfig={options.presetConfig}
           defaultPreferences={options.defaultPreferences}
+          displayTimezone={options.displayTimezone}
         />
       </div>,
     );
@@ -197,12 +200,31 @@ describe('<EventTimelinePremiumHeader />', () => {
       await renderHeader({
         preset: 'dayAndWeek',
         visibleDate: adapter.date('2011-12-28T00:00:00', 'Pacific/Apia'),
+        displayTimezone: 'Pacific/Apia',
       });
 
       const friday = Array.from(
         document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="day"]`),
       ).find((cell) => cell.querySelector('time')!.getAttribute('datetime') === '2011-12-30T00:00');
       expect(friday!.dataset.weekend).to.equal(undefined);
+    });
+  });
+
+  describe('`dayAndWeek` week row', () => {
+    it('should end the label of a week on its last date, even one its timezone skips', async () => {
+      // Pacific/Apia skipped Friday, December 30th, 2011, the last date of a week starting on
+      // Saturday.
+      await renderHeader({
+        preset: 'dayAndWeek',
+        visibleDate: adapter.date('2011-12-28T00:00:00', 'Pacific/Apia'),
+        displayTimezone: 'Pacific/Apia',
+        defaultPreferences: { weekStartsOn: 6 },
+      });
+
+      const weekCell = document.querySelector<HTMLElement>(
+        `.${classes.headerCell}[data-unit="week"][data-index="0"]`,
+      );
+      expect(weekCell!.textContent).to.equal('Sat, Dec 24 - Fri, Dec 30');
     });
   });
 

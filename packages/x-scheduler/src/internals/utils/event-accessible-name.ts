@@ -3,8 +3,9 @@ import type {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import { formatHourAndMinutes } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEventLocaleText } from '../../models/translations';
-import { formatFullDate, formatHourAndMinutes } from './date-utils';
+import { formatFullDate } from './date-utils';
 import { isOccurrenceMultiDay } from './event-utils';
 
 export interface GetEventAccessibleNameParameters {
@@ -32,7 +33,7 @@ export function getEventAccessibleName(parameters: GetEventAccessibleNameParamet
 
   const formatDate = (date: TemporalSupportedObject) => formatFullDate(date, adapter);
   const formatDateTime = (date: TemporalSupportedObject) =>
-    `${formatDate(date)} ${formatHourAndMinutes(date, adapter, ampm)}`;
+    `${formatDate(date)} ${formatHourAndMinutes(adapter, date, ampm)}`;
 
   // A multi-day timed event carries its times inside the date range, since they belong to
   // different days, so it has no separate `when`.
@@ -44,8 +45,8 @@ export function getEventAccessibleName(parameters: GetEventAccessibleNameParamet
       return undefined;
     }
     return localeText.eventAriaLabelTimeRange(
-      formatHourAndMinutes(start, adapter, ampm),
-      formatHourAndMinutes(end, adapter, ampm),
+      formatHourAndMinutes(adapter, start, ampm),
+      formatHourAndMinutes(adapter, end, ampm),
     );
   })();
 

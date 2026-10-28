@@ -19,6 +19,7 @@
     "./event-calendar-premium": "./src/event-calendar-premium/index.ts",
     "./event-timeline-premium": "./src/event-timeline-premium/index.ts",
     "./month-view-premium": "./src/month-view-premium/index.ts",
+    "./recurring-events": "./src/recurring-events/index.ts",
     "./use-event-calendar-premium-api-ref": "./src/use-event-calendar-premium-api-ref/index.ts",
     "./use-event-timeline-premium-api-ref": "./src/use-event-timeline-premium-api-ref/index.ts",
     "./week-view-premium": "./src/week-view-premium/index.ts",

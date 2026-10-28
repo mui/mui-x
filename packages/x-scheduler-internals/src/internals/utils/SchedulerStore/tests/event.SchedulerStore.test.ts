@@ -996,6 +996,30 @@ storeClasses.forEach((storeClass) => {
         },
       );
 
+      it.skipIf(storeClass.name !== 'EventCalendarStore')(
+        'should keep the stored rrule when updating with a new rrule without the recurring events plugin',
+        () => {
+          const onEventsChange = vi.fn();
+          const event = EventBuilder.new().recurrent('DAILY').build();
+
+          let store: any;
+          expect(() => {
+            store = new storeClass.Value(
+              { resources: TEST_RESOURCES, events: [event], onEventsChange },
+              adapter,
+            );
+          }).toWarnDev([
+            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+          ]);
+
+          store.updateEvent({ id: event.id, title: 'updated', rrule: { freq: 'WEEKLY' } });
+
+          const updated = onEventsChange.mock.lastCall?.[0][0];
+          expect(updated.title).to.equal('updated');
+          expect(updated.rrule).to.deep.equal(event.rrule);
+        },
+      );
+
       it('should warn in dev when the same id is in both `deleted` and `updated`', () => {
         const event = EventBuilder.new().build();
         const store = new storeClass.Value(

@@ -1,7 +1,6 @@
 import { adapter, premiumStoreClasses } from 'test/utils/scheduler';
 import type { SchedulerProcessedEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
-import { getWeekDayCode } from '@mui/x-scheduler-internals-premium/internals';
+import { PlainDate } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
 import { schedulerRecurringEventSelectors } from './schedulerRecurringEventSelectors';
 
@@ -12,8 +11,8 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
       const state = new storeClass.Value({ events: [] }, adapter).state;
 
       it('returns daily, weekly, monthly and yearly presets', () => {
-        const start = processDate(adapter.date('2025-08-05T09:00:00Z', 'default'), adapter); // Tuesday
-        const presets = schedulerRecurringEventSelectors.presets(state, start)!;
+        const startPlainDate = PlainDate.from('2025-08-05'); // Tuesday
+        const presets = schedulerRecurringEventSelectors.presets(state, startPlainDate)!;
 
         expect(presets.DAILY).to.deep.equal({
           freq: 'DAILY',
@@ -22,7 +21,7 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
         expect(presets.WEEKLY).to.deep.equal({
           freq: 'WEEKLY',
           interval: 1,
-          byDay: [getWeekDayCode(adapter, start.value)],
+          byDay: ['TU'],
         });
         expect(presets.MONTHLY).to.deep.equal({
           freq: 'MONTHLY',
@@ -38,27 +37,27 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
 
     describe('Selector: defaultRecurrencePresetKey', () => {
       const state = new storeClass.Value({ events: [] }, adapter).state;
-      const start = processDate(adapter.date('2025-08-05T09:00:00', 'default'), adapter); // Tuesday
-      const presets = schedulerRecurringEventSelectors.presets(state, start)!;
+      const startPlainDate = PlainDate.from('2025-08-05'); // Tuesday
+      const presets = schedulerRecurringEventSelectors.presets(state, startPlainDate)!;
 
       it('returns null when rule undefined', () => {
-        expect(schedulerRecurringEventSelectors.defaultPresetKey(state, undefined, start)).to.equal(
-          null,
-        );
+        expect(
+          schedulerRecurringEventSelectors.defaultPresetKey(state, undefined, startPlainDate),
+        ).to.equal(null);
       });
 
       it('detects daily, weekly, monthly and yearly presets', () => {
         expect(
-          schedulerRecurringEventSelectors.defaultPresetKey(state, presets.DAILY, start),
+          schedulerRecurringEventSelectors.defaultPresetKey(state, presets.DAILY, startPlainDate),
         ).to.equal('DAILY');
         expect(
-          schedulerRecurringEventSelectors.defaultPresetKey(state, presets.WEEKLY, start),
+          schedulerRecurringEventSelectors.defaultPresetKey(state, presets.WEEKLY, startPlainDate),
         ).to.equal('WEEKLY');
         expect(
-          schedulerRecurringEventSelectors.defaultPresetKey(state, presets.MONTHLY, start),
+          schedulerRecurringEventSelectors.defaultPresetKey(state, presets.MONTHLY, startPlainDate),
         ).to.equal('MONTHLY');
         expect(
-          schedulerRecurringEventSelectors.defaultPresetKey(state, presets.YEARLY, start),
+          schedulerRecurringEventSelectors.defaultPresetKey(state, presets.YEARLY, startPlainDate),
         ).to.equal('YEARLY');
       });
 
@@ -68,7 +67,7 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
           interval: 2,
         };
         expect(
-          schedulerRecurringEventSelectors.defaultPresetKey(state, ruleInterval2, start),
+          schedulerRecurringEventSelectors.defaultPresetKey(state, ruleInterval2, startPlainDate),
         ).to.equal('custom');
 
         const ruleFiniteCount: SchedulerProcessedEventRecurrenceRule = {
@@ -76,7 +75,7 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
           count: 5,
         };
         expect(
-          schedulerRecurringEventSelectors.defaultPresetKey(state, ruleFiniteCount, start),
+          schedulerRecurringEventSelectors.defaultPresetKey(state, ruleFiniteCount, startPlainDate),
         ).to.equal('custom');
       });
 
@@ -85,9 +84,9 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
           ...presets.WEEKLY,
           byDay: ['TU', 'WE'],
         };
-        expect(schedulerRecurringEventSelectors.defaultPresetKey(state, rule, start)).to.equal(
-          'custom',
-        );
+        expect(
+          schedulerRecurringEventSelectors.defaultPresetKey(state, rule, startPlainDate),
+        ).to.equal('custom');
       });
 
       it('classifies monthly with different day or with interval>1 as custom', () => {
@@ -96,7 +95,11 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
           byMonthDay: [26],
         };
         expect(
-          schedulerRecurringEventSelectors.defaultPresetKey(state, ruleDifferentDay, start),
+          schedulerRecurringEventSelectors.defaultPresetKey(
+            state,
+            ruleDifferentDay,
+            startPlainDate,
+          ),
         ).to.equal('custom');
 
         const ruleInterval2: SchedulerProcessedEventRecurrenceRule = {
@@ -104,15 +107,15 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
           interval: 2,
         };
         expect(
-          schedulerRecurringEventSelectors.defaultPresetKey(state, ruleInterval2, start),
+          schedulerRecurringEventSelectors.defaultPresetKey(state, ruleInterval2, startPlainDate),
         ).to.equal('custom');
       });
 
       it('classifies yearly interval>1 as custom', () => {
         const rule: SchedulerProcessedEventRecurrenceRule = { ...presets.YEARLY, interval: 2 };
-        expect(schedulerRecurringEventSelectors.defaultPresetKey(state, rule, start)).to.equal(
-          'custom',
-        );
+        expect(
+          schedulerRecurringEventSelectors.defaultPresetKey(state, rule, startPlainDate),
+        ).to.equal('custom');
       });
     });
   },

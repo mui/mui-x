@@ -97,7 +97,7 @@ export const eventTimelinePremiumDependencySelectors = {
   ): readonly SchedulerDependencySourceDescription[] =>
     activeSourcesByTargetSelector(state).get(eventId) ?? EMPTY_ARRAY,
   /**
-   * Whether the dependencies feature is enabled (internal parameters provided).
+   * Whether the store received the dependencies feature and the `dependencies` parameter.
    */
   enabled: (state: State) => state.areDependenciesEnabled,
   /**

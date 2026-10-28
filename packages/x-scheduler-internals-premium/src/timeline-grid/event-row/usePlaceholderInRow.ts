@@ -55,7 +55,7 @@ export function usePlaceholderInRow(
     const renderedPosition = computeElementPositionInCollection({
       start: startProcessed,
       end: endProcessed,
-      collection: config.axis,
+      collection: config,
       durationMs: config.durationMs,
     });
     if (renderedPosition.duration === 0) {

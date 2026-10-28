@@ -1,13 +1,13 @@
 import type {
   EventCalendarTimeGridEvents,
-  SchedulerProcessedDate,
+  SchedulerProcessedDay,
 } from '@mui/x-scheduler-internals/models';
 
 export interface DayTimeGridProps extends ExportedDayTimeGridProps {
   /**
    * The days to render in the time grid view.
    */
-  days: SchedulerProcessedDate[];
+  days: SchedulerProcessedDay[];
   /**
    * Inclusive start of the hour range displayed in the time grid (whole hour between
    * 0 and 24, validated by `getDisplayedHourRange`).

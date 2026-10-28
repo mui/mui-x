@@ -59,6 +59,7 @@ const REJECTION_MESSAGES: Record<SchedulerDependencyRejectionReason, string> = {
   cascadeBlocked: 'This dependency would move a read-only event, so it was not created.',
   cyclicDependency: 'This dependency would create a cycle between events.',
   duplicateDependency: 'A dependency of this type already exists between these two events.',
+  featureDisabled: 'Dependencies are not enabled on this timeline.',
   recurringEvent: 'Dependencies cannot involve recurring events.',
   readOnly: 'Dependencies cannot be changed while the scheduler is read-only.',
   unknownEvent: 'This dependency cannot be created because one of its events no longer exists.',

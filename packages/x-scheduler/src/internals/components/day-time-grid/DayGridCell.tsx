@@ -3,13 +3,11 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
-import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { isWeekendPlainDate } from '@mui/x-scheduler-internals/internals';
 import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { toPlainDateTime } from '@mui/x-scheduler-internals/internals';
 import { DayGridEvent } from '../event';
 import { useEventEditingContext } from '../event-editing';
 import { EventContextMenuTrigger } from '../event-context-menu';
@@ -60,7 +58,6 @@ export function DayGridCell(props: DayGridCellProps) {
   const { day, row, colIndex } = props;
 
   // Context hooks
-  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { startEditing } = useEventEditingContext();
   const { schedulerId, classes } = useEventCalendarStyledContext();
@@ -76,7 +73,6 @@ export function DayGridCell(props: DayGridCellProps) {
   );
   const placeholder = CalendarGrid.usePlaceholderInDay(day, row);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
-  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
   const rowCount = Math.max(row.maxIndex, placeholder?.position.index ?? 0);
 
@@ -92,7 +88,7 @@ export function DayGridCell(props: DayGridCellProps) {
     <DayTimeGridAllDayEventsCell
       className={classes.dayTimeGridAllDayEventsCell}
       ref={cellRef}
-      value={toPlainDateTime(day.timestamp, displayTimezone).date}
+      value={day.plainDate}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       style={
         {
@@ -102,7 +98,7 @@ export function DayGridCell(props: DayGridCellProps) {
       aria-labelledby={`${schedulerId}-DayTimeGridAllDayEventsHeaderCell`}
       aria-colindex={colIndex}
       role="gridcell"
-      data-weekend={isWeekend(adapter, day.value) || undefined}
+      data-weekend={isWeekendPlainDate(day.plainDate) || undefined}
     >
       <DayTimeGridAllDayEventsCellEvents className={classes.dayTimeGridAllDayEventsCellEvents}>
         {isLoading && <EventSkeleton data-variant="day-grid" />}

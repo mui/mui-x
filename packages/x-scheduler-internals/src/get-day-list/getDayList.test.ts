@@ -1,9 +1,13 @@
-import { adapter, DEFAULT_TESTING_VISIBLE_DATE, setSystemTimezone } from 'test/utils/scheduler';
+import {
+  adapter,
+  DEFAULT_TESTING_VISIBLE_DATE,
+  processDay,
+  setSystemTimezone,
+} from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 import { getDayListFromPlainDates } from './getDayList';
-import { isWeekend } from '../use-adapter';
-import { processDate } from '../process-date';
+import { isWeekendPlainDate } from '../internals/utils/plain-date-utils/plainDate';
 import { PlainDate } from '../internals/utils/base-temporal/PlainDate';
 
 describe('getDayListFromPlainDates', () => {
@@ -29,7 +33,7 @@ describe('getDayListFromPlainDates', () => {
       timezone: 'default',
     });
 
-    const expectedDays = [processDate(adapter.startOfDay(DEFAULT_TESTING_VISIBLE_DATE), adapter)];
+    const expectedDays = [processDay(adapter.startOfDay(DEFAULT_TESTING_VISIBLE_DATE), adapter)];
 
     expect(days).to.deep.equal(expectedDays);
   });
@@ -44,7 +48,7 @@ describe('getDayListFromPlainDates', () => {
 
     const start = adapter.startOfDay(DEFAULT_TESTING_VISIBLE_DATE);
     const expectedDays = Array.from({ length: 4 }, (_, i) =>
-      processDate(adapter.addDays(start, i), adapter),
+      processDay(adapter.addDays(start, i), adapter),
     );
 
     expect(days).to.deep.equal(expectedDays);
@@ -62,8 +66,8 @@ describe('getDayListFromPlainDates', () => {
 
     const start = adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
     const expectedDays = Array.from({ length: 7 }, (_, i) =>
-      processDate(adapter.addDays(start, i), adapter),
-    ).filter((day) => !isWeekend(adapter, day.value));
+      processDay(adapter.addDays(start, i), adapter),
+    ).filter((day) => !isWeekendPlainDate(day.plainDate));
 
     expect(days).to.deep.equal(expectedDays);
   });

@@ -17,6 +17,12 @@ import {
 } from './updateRecurringEvent';
 import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventOccurrencesForVisibleDays';
 
+// The store gives the events it creates their own id.
+function withoutId<T extends { id: unknown }>(model: T): Omit<T, 'id'> {
+  const { id: unusedId, ...rest } = model;
+  return rest;
+}
+
 describe('recurring-events/updateRecurringEvent', () => {
   const defaultEvent = EventBuilder.new()
     .singleDay('2025-01-01T09:00:00Z')
@@ -260,11 +266,10 @@ describe('recurring-events/updateRecurringEvent', () => {
       ]);
       expect(updatedEvents.created).to.deep.equal([
         {
-          ...defaultEvent.modelInBuiltInFormat,
+          ...withoutId(defaultEvent.modelInBuiltInFormat),
           title: 'Edited Event',
           start: changes.start!.toISOString(),
           end: changes.end!.toISOString(),
-          id: `${defaultEvent.id}::2025-01-05`,
           extractedFromId: defaultEvent.id,
           rrule: {
             ...defaultEvent.dataTimezone.rrule,
@@ -342,11 +347,10 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updatedEvents.updated).to.equal(undefined);
       expect(updatedEvents.created).to.deep.equal([
         {
-          ...original.modelInBuiltInFormat,
+          ...withoutId(original.modelInBuiltInFormat),
           title: 'Edited First',
           start: changes.start!.toISOString(),
           end: changes.end!.toISOString(),
-          id: `${original.id}::2025-01-10`,
           extractedFromId: original.id,
           rrule: {
             ...original.dataTimezone.rrule,
