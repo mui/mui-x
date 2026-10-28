@@ -445,7 +445,7 @@ TimeClock.propTypes /* remove-proptypes */ = {
    */
   classes: PropTypes.object,
   /**
-   * A CSS class name applied to the root element.
+   * @ignore
    */
   className: PropTypes.string,
   /**

@@ -124,7 +124,7 @@ export interface PickersInputBaseProps
     PickersInputPropsUsedByField {
   ownerState?: PickerTextFieldOwnerState;
   /**
-   * A CSS class name applied to the root element.
+   * @ignore
    */
   className?: string;
   classes?: Record<string, string>;

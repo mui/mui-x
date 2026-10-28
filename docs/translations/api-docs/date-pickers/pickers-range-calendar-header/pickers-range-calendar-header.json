@@ -3,7 +3,6 @@
   "propDescriptions": {
     "calendars": { "description": "The number of calendars rendered." },
     "classes": { "description": "Override or extend the styles applied to the component." },
-    "className": { "description": "A CSS class name applied to the root element." },
     "currentMonth": { "description": "The month currently displayed." },
     "disabled": { "description": "If <code>true</code>, the view switch button is hidden." },
     "disableFuture": {

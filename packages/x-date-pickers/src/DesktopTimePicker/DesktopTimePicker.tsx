@@ -134,7 +134,7 @@ DesktopTimePicker.propTypes /* remove-proptypes */ = {
    */
   autoFocus: PropTypes.bool,
   /**
-   * A CSS class name applied to the root element.
+   * @ignore
    */
   className: PropTypes.string,
   /**

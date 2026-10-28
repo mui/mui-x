@@ -64,7 +64,7 @@ DateTimeRangePicker.propTypes /* remove-proptypes */ = {
    */
   calendars: PropTypes.oneOf([1, 2, 3]),
   /**
-   * A CSS class name applied to the root element.
+   * @ignore
    */
   className: PropTypes.string,
   /**

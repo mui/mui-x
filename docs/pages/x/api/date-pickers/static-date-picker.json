@@ -1,7 +1,6 @@
 {
   "props": {
     "autoFocus": { "type": { "name": "bool" } },
-    "className": { "type": { "name": "string" } },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
       "default": "(date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",

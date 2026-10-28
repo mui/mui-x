@@ -112,7 +112,7 @@ export interface DateRangeCalendarProps
    */
   calendars?: 1 | 2 | 3;
   /**
-   * A CSS class name applied to the root element.
+   * @ignore
    */
   className?: string;
   /**
