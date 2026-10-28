@@ -811,8 +811,8 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   );
   const gridMergedRef = useMergedRefs(scrollerProps.ref as React.Ref<HTMLDivElement>, gridRef);
 
-  // Reset horizontal scroll when navigating to a new time period, or switching to a preset that
-  // starts at the same instant.
+  // Reset the horizontal scroll whenever the config changes: a new period, another preset or
+  // another hour window.
   useIsoLayoutEffect(() => {
     const grid = gridRef.current;
     if (grid) {

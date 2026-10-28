@@ -66,6 +66,13 @@ describe('timeZone', () => {
       expect(toPlainDate(epochMs, 'America/Los_Angeles').toString()).to.equal('2025-03-02');
       expect(toMsInDay(epochMs, 'America/Los_Angeles')).to.equal((16 * 60 + 30) * 60_000);
     });
+
+    it('should read the date and wall-clock time of a day whose midnight a DST transition skips', () => {
+      // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
+      const epochMs = Date.UTC(2026, 2, 8, 5);
+      expect(toPlainDate(epochMs, 'America/Havana').toString()).to.equal('2026-03-08');
+      expect(toMsInDay(epochMs, 'America/Havana')).to.equal(HOUR);
+    });
   });
 
   describe('toWallClockIsoString', () => {
@@ -73,6 +80,13 @@ describe('timeZone', () => {
       // 01:30:15.999Z is the second 02:30 of the night Paris falls back.
       expect(toWallClockIsoString(Date.UTC(2026, 9, 25, 1, 30, 15, 999), 'Europe/Paris')).to.equal(
         '2026-10-25T02:30:15',
+      );
+    });
+
+    it('should write the wall-clock time in a timezone with a half-hour offset', () => {
+      // Asia/Kolkata is at +05:30, which moves the instant to the next day.
+      expect(toWallClockIsoString(Date.UTC(2025, 0, 15, 18, 45, 10, 500), 'Asia/Kolkata')).to.equal(
+        '2025-01-16T00:15:10',
       );
     });
   });

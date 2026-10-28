@@ -14,8 +14,8 @@ import { toWallClockIsoString } from './plain-date-utils/timeZone';
  * @example "1:30 PM" or "13:30"
  */
 export function formatHourAndMinutes(
-  date: TemporalSupportedObject,
   adapter: Adapter,
+  date: TemporalSupportedObject,
   ampm: boolean,
 ): string {
   const f = adapter.formats;
@@ -31,8 +31,8 @@ const hourLabels = new WeakMap<Adapter, string[]>();
 /**
  * Formats a wall-clock hour, like `9:00 AM`, rather than an instant: the hour that a
  * spring-forward transition skips has no instant on that day. The label is built on a date in
- * UTC, which has no DST transition. The labels are cached per adapter, as the headers build one
- * label per hour on every render.
+ * UTC, which has no DST transition. The labels are cached per adapter, which carries the locale,
+ * as the Timeline header and the time grid build one label per hour on every render.
  */
 export function formatWallClockHour(adapter: Adapter, hour: number, ampm: boolean): string {
   let labels = hourLabels.get(adapter);
@@ -40,10 +40,10 @@ export function formatWallClockHour(adapter: Adapter, hour: number, ampm: boolea
     labels = [];
     hourLabels.set(adapter, labels);
   }
-  const index = ampm ? hour + 24 : hour;
+  const index = hour * 2 + Number(ampm);
   labels[index] ??= formatHourAndMinutes(
-    createAdapterDate(adapter, Date.UTC(2020, 0, 1, hour), 'UTC'),
     adapter,
+    createAdapterDate(adapter, Date.UTC(2020, 0, 1, hour), 'UTC'),
     ampm,
   );
   return labels[index];

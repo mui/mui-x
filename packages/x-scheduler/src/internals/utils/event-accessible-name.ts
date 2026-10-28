@@ -33,7 +33,7 @@ export function getEventAccessibleName(parameters: GetEventAccessibleNameParamet
 
   const formatDate = (date: TemporalSupportedObject) => formatFullDate(date, adapter);
   const formatDateTime = (date: TemporalSupportedObject) =>
-    `${formatDate(date)} ${formatHourAndMinutes(date, adapter, ampm)}`;
+    `${formatDate(date)} ${formatHourAndMinutes(adapter, date, ampm)}`;
 
   // A multi-day timed event carries its times inside the date range, since they belong to
   // different days, so it has no separate `when`.
@@ -45,8 +45,8 @@ export function getEventAccessibleName(parameters: GetEventAccessibleNameParamet
       return undefined;
     }
     return localeText.eventAriaLabelTimeRange(
-      formatHourAndMinutes(start, adapter, ampm),
-      formatHourAndMinutes(end, adapter, ampm),
+      formatHourAndMinutes(adapter, start, ampm),
+      formatHourAndMinutes(adapter, end, ampm),
     );
   })();
 
