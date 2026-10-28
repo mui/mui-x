@@ -7,68 +7,61 @@ import type {
 import { getDependencyLagIssue } from '@mui/x-scheduler-internals-premium/internals';
 import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 
-export const DEPENDENCY_LAG_UNITS: SchedulerDependencyLagUnit[] = ['minute', 'hour', 'day', 'week'];
+// Exhaustive on the unions: a new unit, type or reason fails to compile until it brings a key.
+const DEPENDENCY_LAG_UNIT_KEYS = {
+  minute: 'dependencyLagUnitMinutes',
+  hour: 'dependencyLagUnitHours',
+  day: 'dependencyLagUnitDays',
+  week: 'dependencyLagUnitWeeks',
+} as const satisfies Record<SchedulerDependencyLagUnit, keyof EventTimelineLocaleText>;
 
-export const DEPENDENCY_TYPES: SchedulerDependencyType[] = [
-  'FinishToStart',
-  'StartToStart',
-  'FinishToFinish',
-  'StartToFinish',
-];
+const DEPENDENCY_TYPE_KEYS = {
+  FinishToStart: 'dependencyTypeFinishToStart',
+  StartToStart: 'dependencyTypeStartToStart',
+  FinishToFinish: 'dependencyTypeFinishToFinish',
+  StartToFinish: 'dependencyTypeStartToFinish',
+} as const satisfies Record<SchedulerDependencyType, keyof EventTimelineLocaleText>;
+
+const DEPENDENCY_UPDATE_REJECTION_KEYS = {
+  cascadeBlocked: 'dependencyUpdateCascadeBlockedError',
+  duplicateDependency: 'dependencyDuplicateError',
+  readOnly: 'dependencyReadOnlyError',
+  unknownDependency: 'dependencyUpdateNotFoundError',
+} as const satisfies Record<
+  Exclude<
+    Extract<SchedulerUpdateDependencyResult, { status: 'rejected' }>['reason'],
+    'featureDisabled'
+  >,
+  keyof EventTimelineLocaleText
+>;
+
+export type DependencyUpdateRejectionReason = keyof typeof DEPENDENCY_UPDATE_REJECTION_KEYS;
+
+export const DEPENDENCY_LAG_UNITS = Object.keys(
+  DEPENDENCY_LAG_UNIT_KEYS,
+) as SchedulerDependencyLagUnit[];
+
+export const DEPENDENCY_TYPES = Object.keys(DEPENDENCY_TYPE_KEYS) as SchedulerDependencyType[];
 
 export function getDependencyLagUnitLabel(
   localeText: EventTimelineLocaleText,
   unit: SchedulerDependencyLagUnit,
 ) {
-  switch (unit) {
-    case 'minute':
-      return localeText.dependencyLagUnitMinutes;
-    case 'hour':
-      return localeText.dependencyLagUnitHours;
-    case 'day':
-      return localeText.dependencyLagUnitDays;
-    default:
-      return localeText.dependencyLagUnitWeeks;
-  }
+  return localeText[DEPENDENCY_LAG_UNIT_KEYS[unit]];
 }
 
 export function getDependencyTypeLabel(
   localeText: EventTimelineLocaleText,
   type: SchedulerDependencyType,
 ) {
-  switch (type) {
-    case 'FinishToStart':
-      return localeText.dependencyTypeFinishToStart;
-    case 'StartToStart':
-      return localeText.dependencyTypeStartToStart;
-    case 'FinishToFinish':
-      return localeText.dependencyTypeFinishToFinish;
-    default:
-      return localeText.dependencyTypeStartToFinish;
-  }
+  return localeText[DEPENDENCY_TYPE_KEYS[type]];
 }
 
-/**
- * The message of a rejected dependency update.
- * `featureDisabled` can't happen here: the dialog only exists when the dependencies feature is provided.
- */
 export function getDependencyUpdateRejectionMessage(
   localeText: EventTimelineLocaleText,
-  reason: Exclude<
-    Extract<SchedulerUpdateDependencyResult, { status: 'rejected' }>['reason'],
-    'featureDisabled'
-  >,
+  reason: DependencyUpdateRejectionReason,
 ) {
-  switch (reason) {
-    case 'cascadeBlocked':
-      return localeText.dependencyUpdateCascadeBlockedError;
-    case 'duplicateDependency':
-      return localeText.dependencyDuplicateError;
-    case 'readOnly':
-      return localeText.dependencyReadOnlyError;
-    default:
-      return localeText.dependencyNotFoundError;
-  }
+  return localeText[DEPENDENCY_UPDATE_REJECTION_KEYS[reason]];
 }
 
 export function formatLag(

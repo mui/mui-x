@@ -73,7 +73,7 @@ export function EventTimelinePremiumDependencyContextMenu(
           {isReadOnly ? <SearchRounded fontSize="small" /> : <EditRounded fontSize="small" />}
         </ListItemIcon>
         <ListItemText>
-          {isReadOnly ? localeText.showEventDetails : localeText.dependencyEditTitle}
+          {isReadOnly ? localeText.showDependencyDetails : localeText.editDependency}
         </ListItemText>
       </MenuItem>
       {!isReadOnly && (
@@ -81,7 +81,7 @@ export function EventTimelinePremiumDependencyContextMenu(
           <ListItemIcon>
             <DeleteRounded fontSize="small" />
           </ListItemIcon>
-          <ListItemText>{localeText.dependencyDelete}</ListItemText>
+          <ListItemText>{localeText.deleteDependency}</ListItemText>
         </MenuItem>
       )}
     </Menu>

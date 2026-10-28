@@ -305,14 +305,16 @@ export interface EventTimelineLocaleText extends EventEditingLocaleText, Schedul
   dependencyTargetLabel: string;
   dependencyTypeLabel: string;
   dependencyLagLabel: string;
-  dependencyLagUnitLabel: string;
+  dependencyLagUnitAriaLabel: string;
   dependencyNoLag: string;
   dependencyInvalidLagError: string;
   dependencyAllDayLagIgnored: string;
+  /**
+   * @param {string} lag The lag the all-day event waits, formatted by `dependencyLag`.
+   */
   dependencyAllDayLagRounded: (lag: string) => string;
-  dependencyDelete: string;
   dependencyUpdateCascadeBlockedError: string;
-  dependencyNotFoundError: string;
+  dependencyUpdateNotFoundError: string;
   dependencyTypeFinishToStart: string;
   dependencyTypeStartToStart: string;
   dependencyTypeFinishToFinish: string;
@@ -321,12 +323,22 @@ export interface EventTimelineLocaleText extends EventEditingLocaleText, Schedul
   dependencyLagUnitHours: string;
   dependencyLagUnitDays: string;
   dependencyLagUnitWeeks: string;
+  /**
+   * Formats a lag, for example "2 hours".
+   * @param {number} amount The number of units.
+   * @param {'minute' | 'hour' | 'day' | 'week'} unit The unit, as a code: the locale handles its plural.
+   */
   dependencyLag: (amount: number, unit: 'minute' | 'hour' | 'day' | 'week') => string;
 
-  // Dependency context menu (shown on right-click of an arrow)
+  // Dependency context menu (shown on right-click of an arrow) and dialog actions
   dependencyActionsAriaLabel: string;
+  editDependency: string;
+  // Replaces `editDependency` on a read-only dependency.
+  showDependencyDetails: string;
+  deleteDependency: string;
 
-  // Accessible description of an event that waits on dependencies
+  // Accessible description of an event that waits on dependencies, for example
+  // "Cannot start until 2 hours after Design finishes."
   dependencyFinishToStartDescription: (params: SchedulerDependencyDescriptionParams) => string;
   dependencyStartToStartDescription: (params: SchedulerDependencyDescriptionParams) => string;
   dependencyFinishToFinishDescription: (params: SchedulerDependencyDescriptionParams) => string;

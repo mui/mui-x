@@ -196,16 +196,15 @@ const enUSTimeline: Omit<
   dependencyTargetLabel: 'To',
   dependencyTypeLabel: 'Type',
   dependencyLagLabel: 'Lag',
-  dependencyLagUnitLabel: 'Lag unit',
+  dependencyLagUnitAriaLabel: 'Lag unit',
   dependencyNoLag: 'None',
   dependencyInvalidLagError: 'Enter a whole number, 0 or more.',
   dependencyAllDayLagIgnored:
     'An all-day event can only wait whole days, so this lag adds no wait.',
   dependencyAllDayLagRounded: (lag) => `An all-day event can only wait whole days: ${lag}.`,
-  dependencyDelete: 'Delete',
   dependencyUpdateCascadeBlockedError:
     'This change would move a read-only event, so it was not applied.',
-  dependencyNotFoundError: 'This dependency no longer exists.',
+  dependencyUpdateNotFoundError: 'This dependency no longer exists.',
   dependencyTypeFinishToStart: 'Finish to start',
   dependencyTypeStartToStart: 'Start to start',
   dependencyTypeFinishToFinish: 'Finish to finish',
@@ -216,8 +215,11 @@ const enUSTimeline: Omit<
   dependencyLagUnitWeeks: 'weeks',
   dependencyLag: (amount, unit) => `${amount} ${unit}${amount === 1 ? '' : 's'}`,
 
-  // Dependency context menu
+  // Dependency context menu and dialog actions
   dependencyActionsAriaLabel: 'Dependency actions',
+  editDependency: 'Edit dependency',
+  showDependencyDetails: 'Show details',
+  deleteDependency: 'Delete',
 
   // Accessible description of an event that waits on dependencies
   dependencyFinishToStartDescription: ({ title, lag }) =>

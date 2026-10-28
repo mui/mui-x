@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import * as ReactDOM from 'react-dom';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
@@ -100,11 +101,10 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
     formStore,
     'lagUnit',
   );
-  // Memoized: a new validator restarts a pending validation.
-  const validateLagAmount = React.useCallback(
-    (lagAmount: string, values: DependencyFormValues) =>
-      isValidLagAmount(lagAmount, values.lagUnit) ? null : localeText.dependencyInvalidLagError,
-    [localeText],
+  // Stable: a new validator restarts a pending validation, and an inline `localeText` changes
+  // on every render.
+  const validateLagAmount = useStableCallback((lagAmount: string, values: DependencyFormValues) =>
+    isValidLagAmount(lagAmount, values.lagUnit) ? null : localeText.dependencyInvalidLagError,
   );
   const lagAmountField = useSchedulerFormField<DependencyFormValues, string>(
     formStore,
@@ -238,7 +238,7 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
                     variant="standard"
                     disableUnderline
                     value={lagUnitField.value}
-                    inputProps={{ 'aria-label': localeText.dependencyLagUnitLabel }}
+                    inputProps={{ 'aria-label': localeText.dependencyLagUnitAriaLabel }}
                     SelectDisplayProps={{
                       'aria-describedby': lagHelperText === null ? undefined : lagHelperId,
                     }}
@@ -268,7 +268,7 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
       <Divider className={classes.eventDialogFormDivider} />
       <EventDialogFormActions className={classes.eventDialogFormActions}>
         <Button color="error" type="button" onClick={handleDelete} disabled={isSubmitting}>
-          {localeText.dependencyDelete}
+          {localeText.deleteDependency}
         </Button>
         <Button variant="contained" type="submit" disabled={isSubmitting}>
           {localeText.saveChanges}

@@ -813,6 +813,7 @@ describe('<EventTimelinePremium /> dependency editor', () => {
         events: [eventA, eventB],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
         localeText: {
+          editDependency: 'Modifier',
           dependencyEditTitle: 'Modifier la dépendance',
           dependencyTypeLabel: 'Genre',
           dependencyTypeFinishToStart: 'Fin à début',
@@ -820,10 +821,12 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       });
 
       fireEvent.contextMenu(getHitArea('dep-1'));
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Modifier la dépendance' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Modifier' }));
       const dialog = screen.getByRole('dialog');
 
-      expect(within(dialog).getByText('Modifier la dépendance')).not.to.equal(null);
+      expect(within(dialog).getByRole('heading', { name: 'Modifier la dépendance' })).not.to.equal(
+        null,
+      );
       expect(within(dialog).getByRole('combobox', { name: 'Genre' })).to.have.text('Fin à début');
     });
 
