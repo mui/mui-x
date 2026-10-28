@@ -29,6 +29,7 @@ import {
   DependencyDialogEndpoints,
 } from './DependencyDialogDetails';
 import type { DependencyDialogViewProps } from './DependencyDialogDetails';
+import { useEventTimelinePremiumStyledContext } from '../../../EventTimelinePremiumStyledContext';
 
 const DependencyDialogLagNote = styled('span', {
   name: 'MuiEventTimeline',
@@ -42,7 +43,8 @@ const DependencyDialogLagNote = styled('span', {
 export function DependencyDialogReadonlyContent(props: DependencyDialogViewProps) {
   const { dependency, titleId, dragHandlerRef, onClose } = props;
   const store = useEventTimelinePremiumStoreContext();
-  const { classes, localeText } = useEventEditingStyledContext();
+  const { localeText } = useEventEditingStyledContext();
+  const { classes } = useEventTimelinePremiumStyledContext();
   const lag = getDependencyLag(dependency);
   const isTargetAllDay = useStore(
     store,
@@ -60,8 +62,8 @@ export function DependencyDialogReadonlyContent(props: DependencyDialogViewProps
           {DEPENDENCY_DIALOG_TEXT.detailsTitle}
         </Typography>
       </EventDialogHeader>
-      <DependencyDialogBody>
-        <DependencyDialogDetails>
+      <DependencyDialogBody className={classes.dependencyDialogBody}>
+        <DependencyDialogDetails className={classes.dependencyDialogDetails}>
           <DependencyDialogEndpoints {...props} />
           <Typography component="dt">{DEPENDENCY_DIALOG_TEXT.typeLabel}</Typography>
           <Typography component="dd">{DEPENDENCY_TYPE_LABELS[dependency.type]}</Typography>
@@ -69,7 +71,9 @@ export function DependencyDialogReadonlyContent(props: DependencyDialogViewProps
           <Typography component="dd">
             {lag === null ? DEPENDENCY_DIALOG_TEXT.noLag : formatLag(lag)}
             {allDayLagNote !== null && (
-              <DependencyDialogLagNote>{allDayLagNote}</DependencyDialogLagNote>
+              <DependencyDialogLagNote className={classes.dependencyDialogLagNote}>
+                {allDayLagNote}
+              </DependencyDialogLagNote>
             )}
           </Typography>
         </DependencyDialogDetails>

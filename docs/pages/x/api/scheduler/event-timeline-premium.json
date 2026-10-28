@@ -232,6 +232,72 @@
       "isGlobal": false
     },
     {
+      "key": "dependencyArrows",
+      "className": "MuiEventTimeline-dependencyArrows",
+      "description": "Styles applied to the dependency arrows overlay element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogAnchor",
+      "className": "MuiEventTimeline-dependencyDialogAnchor",
+      "description": "Styles applied to the dependency dialog anchor element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogBody",
+      "className": "MuiEventTimeline-dependencyDialogBody",
+      "description": "Styles applied to the dependency dialog body element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogContent",
+      "className": "MuiEventTimeline-dependencyDialogContent",
+      "description": "Styles applied to the dependency dialog content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogDetails",
+      "className": "MuiEventTimeline-dependencyDialogDetails",
+      "description": "Styles applied to the dependency dialog details element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogEventChip",
+      "className": "MuiEventTimeline-dependencyDialogEventChip",
+      "description": "Styles applied to the dependency dialog event chip elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogLag",
+      "className": "MuiEventTimeline-dependencyDialogLag",
+      "description": "Styles applied to the dependency dialog lag field element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogLagNote",
+      "className": "MuiEventTimeline-dependencyDialogLagNote",
+      "description": "Styles applied to the dependency dialog lag note element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogLagUnit",
+      "className": "MuiEventTimeline-dependencyDialogLagUnit",
+      "description": "Styles applied to the dependency dialog lag unit select element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyInteractions",
+      "className": "MuiEventTimeline-dependencyInteractions",
+      "description": "Styles applied to the dependency interactions overlay element (arrow hit areas and delete button).",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyTerminals",
+      "className": "MuiEventTimeline-dependencyTerminals",
+      "description": "Styles applied to the dependency terminals overlay element.",
+      "isGlobal": false
+    },
+    {
       "key": "errorAlert",
       "className": "MuiEventTimeline-errorAlert",
       "description": "Styles applied to the error alert element.",
@@ -277,6 +343,12 @@
       "key": "eventContextMenuShowDetailsItem",
       "className": "MuiEventTimeline-eventContextMenuShowDetailsItem",
       "description": "Styles applied to the event context menu show details item element (read-only events).",
+      "isGlobal": false
+    },
+    {
+      "key": "eventDependencyTerminal",
+      "className": "MuiEventTimeline-eventDependencyTerminal",
+      "description": "Styles applied to event dependency terminal elements.",
       "isGlobal": false
     },
     {

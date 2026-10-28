@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
@@ -12,6 +13,7 @@ import {
   useEventEditingStyledContext,
 } from '@mui/x-scheduler/internals';
 import type { EventDialogDraggablePaperProps } from '@mui/x-scheduler/internals';
+import { useEventTimelinePremiumStyledContext } from '../../../EventTimelinePremiumStyledContext';
 import { useDependencyGeometry } from '../EventTimelinePremiumDependencyGeometry';
 import { DependencyDialogFormContent } from './DependencyDialogFormContent';
 import { DependencyDialogReadonlyContent } from './DependencyDialogReadonlyContent';
@@ -27,19 +29,15 @@ const DependencyDialogAnchor = styled('span', {
   pointerEvents: 'none',
 });
 
-// TODO(dependencies public flip, #23420): settle the width with the dialog's own styles.
+// The event dialog's own styles, under a slot of its own for the theme.
 const DependencyDialogContentRoot = styled(EventDialogContentRoot, {
   name: 'MuiEventTimeline',
   slot: 'DependencyDialogContent',
-})({
-  minWidth: 0,
-  width: 345,
-});
+})({});
 
 /**
  * Dialog to edit a dependency, or show its details when read-only.
  * Opens on double click on an arrow or from its context menu.
- * TODO(dependencies public flip, #23420): add the utility classes of the dialog.
  */
 export function EventTimelinePremiumDependencyDialog() {
   const store = useEventTimelinePremiumStoreContext();
@@ -66,7 +64,8 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
 ) {
   const { anchor, ...other } = props;
   const store = useEventTimelinePremiumStoreContext();
-  const { schedulerId, classes } = useEventEditingStyledContext();
+  const { schedulerId } = useEventEditingStyledContext();
+  const { classes } = useEventTimelinePremiumStyledContext();
   const isReadOnly = useStore(store, eventTimelinePremiumDependencySelectors.isReadOnly);
   const dragHandlerRef = React.useRef<HTMLElement>(null);
   const titleId = `${schedulerId}-dependency-dialog-title`;
@@ -89,7 +88,9 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
         } as EventDialogDraggablePaperProps,
       }}
     >
-      <DependencyDialogContentRoot className={classes.eventDialogContent}>
+      <DependencyDialogContentRoot
+        className={clsx(classes.eventDialogContent, classes.dependencyDialogContent)}
+      >
         {isReadOnly ? (
           <DependencyDialogReadonlyContent {...viewProps} />
         ) : (
@@ -107,6 +108,7 @@ function DependencyDialog({ editor }: { editor: SchedulerDependencyEditor }) {
     eventTimelinePremiumDependencySelectors.model,
     editor.dependencyId,
   );
+  const { classes } = useEventTimelinePremiumStyledContext();
   const { offsetTop } = useDependencyGeometry();
   const [anchor, setAnchor] = React.useState<HTMLSpanElement | null>(null);
 
@@ -118,6 +120,7 @@ function DependencyDialog({ editor }: { editor: SchedulerDependencyEditor }) {
     <React.Fragment>
       <DependencyDialogAnchor
         ref={setAnchor}
+        className={classes.dependencyDialogAnchor}
         data-dependency-dialog-anchor=""
         style={{
           insetInlineStart: `calc(var(--title-column-width) + ${editor.anchor.x}px)`,

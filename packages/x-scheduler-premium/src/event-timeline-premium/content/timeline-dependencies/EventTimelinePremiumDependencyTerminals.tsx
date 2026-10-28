@@ -16,6 +16,7 @@ import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-intern
 import { getDependencyEdges } from '@mui/x-scheduler-internals-premium/internals';
 import type { SchedulerDependencyCreation } from '@mui/x-scheduler-internals-premium/models';
 import { getPaletteVariants } from '@mui/x-scheduler/internals';
+import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { useDependencyGeometry } from './EventTimelinePremiumDependencyGeometry';
 
 /**
@@ -53,10 +54,6 @@ const DependencyTerminalsLayer = styled('div', {
   zIndex: 2,
 });
 
-// TODO(dependencies public flip, #23420): add an `eventDependencyTerminal` utility class (the
-// key paired with the `EventDependencyTerminal` slot, like `eventResizeHandler`) and a
-// `dependencyTerminals` one for the layer; both only carry data attributes while the
-// feature has no public API.
 const EventTimelinePremiumDependencyTerminal = styled(TimelineGrid.EventDependencyTerminal, {
   name: 'MuiEventTimeline',
   slot: 'EventDependencyTerminal',
@@ -145,8 +142,10 @@ interface DependencyTerminalProps {
 const DependencyTerminal = React.memo(function DependencyTerminal(props: DependencyTerminalProps) {
   const { eventId, occurrenceKey, resourceId, side, color, inlineStart, top, gestureRole, muted } =
     props;
+  const { classes } = useEventTimelinePremiumStyledContext();
   return (
     <EventTimelinePremiumDependencyTerminal
+      className={classes.eventDependencyTerminal}
       eventId={eventId}
       occurrenceKey={occurrenceKey}
       resourceId={resourceId}
@@ -192,6 +191,7 @@ export function EventTimelinePremiumDependencyTerminals() {
 
 function DependencyTerminalsLayerImpl() {
   const store = useEventTimelinePremiumStoreContext();
+  const { classes } = useEventTimelinePremiumStyledContext();
 
   const creation = useStore(store, eventTimelinePremiumDependencySelectors.creation);
   const selected = useStore(store, eventTimelinePremiumDependencySelectors.selectedModel);
@@ -423,7 +423,11 @@ function DependencyTerminalsLayerImpl() {
   }
 
   return (
-    <DependencyTerminalsLayer ref={layerRef} style={{ width: eventsWidth, height }}>
+    <DependencyTerminalsLayer
+      ref={layerRef}
+      className={classes.dependencyTerminals}
+      style={{ width: eventsWidth, height }}
+    >
       {terminals}
     </DependencyTerminalsLayer>
   );

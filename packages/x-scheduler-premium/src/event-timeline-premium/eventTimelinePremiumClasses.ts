@@ -61,6 +61,30 @@ export interface EventTimelinePremiumClasses
   eventLinesClamp: string;
   /** Styles applied to event recurring icon elements. */
   eventRecurringIcon: string;
+  /** Styles applied to the dependency arrows overlay element. */
+  dependencyArrows: string;
+  /** Styles applied to the dependency interactions overlay element (arrow hit areas and delete button). */
+  dependencyInteractions: string;
+  /** Styles applied to the dependency terminals overlay element. */
+  dependencyTerminals: string;
+  /** Styles applied to event dependency terminal elements. */
+  eventDependencyTerminal: string;
+  /** Styles applied to the dependency dialog anchor element. */
+  dependencyDialogAnchor: string;
+  /** Styles applied to the dependency dialog content element. */
+  dependencyDialogContent: string;
+  /** Styles applied to the dependency dialog body element. */
+  dependencyDialogBody: string;
+  /** Styles applied to the dependency dialog details element. */
+  dependencyDialogDetails: string;
+  /** Styles applied to the dependency dialog event chip elements. */
+  dependencyDialogEventChip: string;
+  /** Styles applied to the dependency dialog lag field element. */
+  dependencyDialogLag: string;
+  /** Styles applied to the dependency dialog lag unit select element. */
+  dependencyDialogLagUnit: string;
+  /** Styles applied to the dependency dialog lag note element. */
+  dependencyDialogLagNote: string;
 }
 
 export type EventTimelinePremiumClassKey = keyof EventTimelinePremiumClasses;
@@ -95,6 +119,18 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'eventResizeHandler',
     'eventLinesClamp',
     'eventRecurringIcon',
+    'dependencyArrows',
+    'dependencyInteractions',
+    'dependencyTerminals',
+    'eventDependencyTerminal',
+    'dependencyDialogAnchor',
+    'dependencyDialogContent',
+    'dependencyDialogBody',
+    'dependencyDialogDetails',
+    'dependencyDialogEventChip',
+    'dependencyDialogLag',
+    'dependencyDialogLagUnit',
+    'dependencyDialogLagNote',
     ...errorContainerClassKeys,
     ...eventSkeletonClassKeys,
     ...eventDialogClassKeys,

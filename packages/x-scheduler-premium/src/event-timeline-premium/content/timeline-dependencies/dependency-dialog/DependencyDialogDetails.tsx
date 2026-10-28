@@ -10,6 +10,7 @@ import type {
   SchedulerDependencyEditor,
 } from '@mui/x-scheduler-internals-premium/models';
 import { getPaletteVariants } from '@mui/x-scheduler/internals';
+import { useEventTimelinePremiumStyledContext } from '../../../EventTimelinePremiumStyledContext';
 import { DEPENDENCY_DIALOG_TEXT } from './dependencyDialogUtils';
 
 export const DependencyDialogBody = styled('div', {
@@ -83,6 +84,7 @@ function DependencyDialogEvent(props: {
 }) {
   const { eventId, resourceId } = props;
   const store = useEventTimelinePremiumStoreContext();
+  const { classes } = useEventTimelinePremiumStyledContext();
   const title = useStore(
     store,
     (state) => schedulerEventSelectors.processedEvent(state, eventId)?.title ?? '',
@@ -91,7 +93,11 @@ function DependencyDialogEvent(props: {
 
   return (
     <Typography component="dd">
-      <DependencyDialogEventChip data-palette={color} title={title}>
+      <DependencyDialogEventChip
+        className={classes.dependencyDialogEventChip}
+        data-palette={color}
+        title={title}
+      >
         {title}
       </DependencyDialogEventChip>
     </Typography>

@@ -53,6 +53,7 @@ import {
   DependencyDialogEndpoints,
 } from './DependencyDialogDetails';
 import type { DependencyDialogViewProps } from './DependencyDialogDetails';
+import { useEventTimelinePremiumStyledContext } from '../../../EventTimelinePremiumStyledContext';
 
 // Same right inset as the Type select, so both arrows line up.
 const DependencyDialogLag = styled(TextField, {
@@ -76,7 +77,8 @@ const DependencyDialogLagUnit = styled(Select, {
 export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
   const { dependency, titleId, dragHandlerRef, onClose } = props;
   const store = useEventTimelinePremiumStoreContext();
-  const { schedulerId, classes, localeText } = useEventEditingStyledContext();
+  const { schedulerId, localeText } = useEventEditingStyledContext();
+  const { classes } = useEventTimelinePremiumStyledContext();
   const isTargetAllDay = useStore(
     store,
     (state) => schedulerEventSelectors.processedEvent(state, dependency.target)?.allDay ?? false,
@@ -185,8 +187,8 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
           {DEPENDENCY_DIALOG_TEXT.editTitle}
         </Typography>
       </EventDialogHeader>
-      <DependencyDialogBody>
-        <DependencyDialogDetails>
+      <DependencyDialogBody className={classes.dependencyDialogBody}>
+        <DependencyDialogDetails className={classes.dependencyDialogDetails}>
           <DependencyDialogEndpoints {...props} />
         </DependencyDialogDetails>
         <FormControl fullWidth size="small" error={typeField.error !== undefined}>
@@ -210,6 +212,7 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
         </FormControl>
         <DependencyDialogLag
           id={lagId}
+          className={classes.dependencyDialogLag}
           fullWidth
           size="small"
           label={DEPENDENCY_DIALOG_TEXT.lagLabel}
@@ -227,6 +230,7 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
               endAdornment: (
                 <InputAdornment position="end">
                   <DependencyDialogLagUnit
+                    className={classes.dependencyDialogLagUnit}
                     variant="standard"
                     disableUnderline
                     value={lagUnitField.value}

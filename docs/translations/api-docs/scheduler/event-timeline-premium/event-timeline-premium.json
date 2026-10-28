@@ -166,6 +166,50 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the current time indicator circle element"
     },
+    "dependencyArrows": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency arrows overlay element"
+    },
+    "dependencyDialogAnchor": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog anchor element"
+    },
+    "dependencyDialogBody": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog body element"
+    },
+    "dependencyDialogContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog content element"
+    },
+    "dependencyDialogDetails": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog details element"
+    },
+    "dependencyDialogEventChip": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog event chip elements"
+    },
+    "dependencyDialogLag": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog lag field element"
+    },
+    "dependencyDialogLagNote": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog lag note element"
+    },
+    "dependencyDialogLagUnit": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog lag unit select element"
+    },
+    "dependencyInteractions": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency interactions overlay element (arrow hit areas and delete button)"
+    },
+    "dependencyTerminals": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency terminals overlay element"
+    },
     "errorAlert": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the error alert element"
@@ -194,6 +238,10 @@
     "eventContextMenuShowDetailsItem": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event context menu show details item element (read-only events)"
+    },
+    "eventDependencyTerminal": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "event dependency terminal elements"
     },
     "eventDialog": {
       "description": "Styles applied to {{nodeName}}.",
