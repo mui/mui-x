@@ -117,6 +117,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     value,
     onChange,
     fullWidth,
+    readOnly,
     id: idProp,
     name,
     // Props used by FormHelperText
@@ -144,7 +145,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
   const fieldOwnerState = useFieldOwnerState({
     disabled: props.disabled,
     required: props.required,
-    readOnly: inputSlotProps?.readOnly,
+    readOnly: inputSlotProps?.readOnly ?? readOnly,
   });
   const ownerState = React.useMemo<PickerTextFieldOwnerState>(
     () => ({
@@ -238,6 +239,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
           onChange={onChange}
           id={id}
           fullWidth={fullWidth}
+          readOnly={readOnly}
           inputRef={inputRef}
           sectionListRef={sectionListRef}
           label={label}
