@@ -140,6 +140,12 @@ describe('date-locale', () => {
       expect(formatWeekdayMonthAndDayOfMonth('ja-JP', plainDate)).to.equal('7月13日日曜日');
     });
 
+    it('should format the month and the year with the standalone month name of the locale', () => {
+      // Polish and Czech inflect the month name when it follows a day ("13 lipca").
+      expect(formatMonthAndYear('pl-PL', plainDate)).to.equal('lipiec 2025');
+      expect(formatMonthAndYear('cs-CZ', plainDate)).to.equal('červenec 2025');
+    });
+
     it('should format the day of the month without the literal of the locale', () => {
       expect(formatDayOfMonth('en-US', plainDate)).to.equal('13');
       expect(formatDayOfMonth('da-DK', plainDate)).to.equal('13');

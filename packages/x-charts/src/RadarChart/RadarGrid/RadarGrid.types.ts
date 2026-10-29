@@ -21,6 +21,9 @@ export interface RadarGridProps {
 }
 
 export interface RadarGridRenderProps {
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<RadarClasses>;
   center: {
     x: number;
@@ -34,6 +37,9 @@ export interface RadarGridRenderProps {
 
 export interface RadarGridStripeRenderProps {
   stripeColor?: RadarGridProps['stripeColor'];
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<RadarClasses>;
   center: {
     x: number;

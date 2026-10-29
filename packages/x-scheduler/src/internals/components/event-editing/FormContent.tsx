@@ -68,6 +68,7 @@ import {
   dialogFormBaseStyles,
   getDialogFormActionsBaseStyles,
 } from '../../constants/dialogStyles';
+import { getUserFacingErrorMessage } from '../../utils/user-facing-error';
 
 const EventDialogFormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
@@ -513,7 +514,10 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           // editing the dates clears it.
           const rejectedField = values.allDay ? 'endDate' : 'endTime';
           warnUnvalidatedField(rejectedField, 'The save was rejected');
-          formStore.setError(rejectedField, result.rejection.message);
+          formStore.setError(
+            rejectedField,
+            getUserFacingErrorMessage(localeText, result.rejection),
+          );
           ReactDOM.flushSync(() => setTabValue('general'));
           focusFirstInvalid(form);
           return;

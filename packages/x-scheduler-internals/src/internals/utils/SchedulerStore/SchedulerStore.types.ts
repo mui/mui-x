@@ -25,17 +25,37 @@ import type {
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 
-export interface StoredError {
-  /**
-   * The error itself. Non-Error rejections are wrapped, preserving the original via `cause`.
-   */
-  error: Error;
+/**
+ * The user-facing errors whose message needs no params. Every code is a `localeText` key, so the
+ * UI shows the error in the user's language.
+ */
+export type SchedulerUserFacingErrorCode =
+  | 'somethingWentWrongError'
+  | 'eventNotLoadedError'
+  | 'eventChangedWhileConfirmingError'
+  | 'datesNotWritableError'
+  | 'eventNotCreatableError'
+  | 'dependencyCascadeBlockedError'
+  | 'dependencyCycleError'
+  | 'dependencyDuplicateError'
+  | 'dependencyRecurringEventError'
+  | 'dependencyReadOnlyError'
+  | 'dependencyUnknownEventError';
+
+/**
+ * An error to show to the user: a `localeText` key and the params its message needs.
+ */
+export type SchedulerUserFacingErrorDescriptor =
+  | { code: SchedulerUserFacingErrorCode; params?: undefined }
+  | { code: 'readOnlyEventMovedError'; params: { title: string } };
+
+export type UserFacingError = SchedulerUserFacingErrorDescriptor & {
   /**
    * Stable identifier assigned at push time. Suitable as a React key and as the
    * argument to `store.dismissError(key)`.
    */
   key: string;
-}
+};
 
 /**
  * Which face the edited occurrence is in:
@@ -231,7 +251,7 @@ export interface SchedulerState<TEvent extends object = any> {
    * Each entry carries a stable `key` assigned at push time so the UI can use it
    * directly as a React key and as the argument to `store.dismissError(key)`.
    */
-  errors: readonly StoredError[];
+  errors: readonly UserFacingError[];
   /**
    * Plugin that provides recurring-events support. `null` when not attached.
    */
@@ -259,8 +279,8 @@ export interface SchedulerDataSource<TEvent extends object> {
   /**
    * Called when events are created, updated or deleted so the consumer can persist them.
    *
-   * Throw to surface a custom error in `state.errors`. Return `{ success: false }`
-   * to abort the cache/state update with a generic error.
+   * Throw or return `{ success: false }` to abort the cache/state update. The user then sees a
+   * generic error, and the cause is logged to the console.
    */
   persistEvents: (parameters: {
     deleted: SchedulerEventId[];
@@ -562,7 +582,7 @@ export interface UpdateEventsParameters {
  */
 export type SchedulerUpdateEventResult =
   | { applied: true; changes: SchedulerEventUpdatedProperties }
-  | { applied: false; rejection: Error };
+  | { applied: false; rejection: SchedulerUserFacingErrorDescriptor };
 
 export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
 

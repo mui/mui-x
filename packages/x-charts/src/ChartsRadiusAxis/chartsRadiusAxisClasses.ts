@@ -3,6 +3,9 @@ import { getRadialAxisUtilityClass } from './sharedRadialAxisClasses';
 import type { ChartsRadialAxisClasses } from './sharedRadialAxisClasses';
 
 export const useUtilityClasses = (props: {
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<ChartsRadialAxisClasses>;
   isCentered?: boolean;
 }) => {
