@@ -24,6 +24,8 @@ export type {
   ChatComposerHelperTextProps,
   ChatComposerHelperTextSlots,
 } from './ChatComposerHelperText';
+export { ChatComposerLabel } from './ChatComposerLabel';
+export type { ChatComposerLabelProps, ChatComposerLabelSlots } from './ChatComposerLabel';
 export {
   chatComposerClasses,
   getChatComposerUtilityClass,
