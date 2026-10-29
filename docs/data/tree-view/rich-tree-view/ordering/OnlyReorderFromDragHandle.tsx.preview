@@ -1,6 +1,0 @@
-<RichTreeViewPro
-  items={MUI_X_PRODUCTS}
-  defaultExpandedItems={['grid', 'pickers']}
-  itemsReordering
-  slots={{ item: CustomTreeItem }}
-/>

@@ -16,7 +16,7 @@ The built-in conversation list appears only when you opt in with `features={{ co
 - Minimal props: an `adapter` and a container size
 - No extra feature flags needed for a focused single-thread surface
 
-{{"demo": "ThreadOnly.js", "bg": "inline"}}
+{{"component": "file://./demos/thread-only/index.ts", "bg": "inline"}}
 
 ## When to use this layout
 

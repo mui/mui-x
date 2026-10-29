@@ -28,7 +28,7 @@ The demo below shows:
 - A center cross marking the middle of the drawing area
 - Real-time dimension and center point information
 
-{{"demo": "UseDrawingArea.js"}}
+{{"component": "file://./demos/use-drawing-area/index.ts"}}
 
 ## Return value
 

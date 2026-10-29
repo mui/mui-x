@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridRowId, GridRowParams } from '@mui/x-data-grid-premium';
+import type { GridRowId, GridRowParams } from '@mui/x-data-grid-premium';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import List from '@mui/material/List';
@@ -12,8 +12,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import OpenIcon from '@mui/icons-material/Visibility';
 import { FileIcon } from './FileIcon';
 import { formatDate, formatSize } from '../utils';
-import { Drawer, DrawerHeader, DrawerProps } from './Drawer';
-import { RowModel } from '../types';
+import type { DrawerProps } from './Drawer';
+import { Drawer, DrawerHeader } from './Drawer';
+import type { RowModel } from '../types';
 
 interface ActionDrawerProps extends DrawerProps {
   params: Pick<GridRowParams<RowModel>, 'row'> | null;

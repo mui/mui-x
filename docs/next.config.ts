@@ -30,11 +30,35 @@ declare global {
   }
 }
 
+// Match the collapsed snippet length used by the legacy demo previews.
+const DEMO_FOCUS_MAX_LINES = 16;
+const demoHighlighterOptions = {
+  deferPrecompute: true,
+  emphasisOptions: {
+    emitFrameIndent: true,
+    focusFramesMaxSize: DEMO_FOCUS_MAX_LINES,
+    oversizedFocus: 'hide',
+  },
+  requireClient: '@mui/internal-core-docs/utils/createDemoClient',
+  transformTypescriptToJavascript: true,
+};
+
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 const currentDirectory = url.fileURLToPath(new URL('.', import.meta.url));
 
 const require = createRequire(import.meta.url);
+
+// The pinned core-docs preview ships these files but omits their export entries.
+// Keep these aliases until the preview package exports its demo factories.
+const coreDocsDirectory = path.dirname(require.resolve('@mui/internal-core-docs/package.json'));
+const demoFactoryAliases = {
+  '@mui/internal-core-docs/utils/createDemo': path.join(coreDocsDirectory, 'utils/createDemo.js'),
+  '@mui/internal-core-docs/utils/createDemoClient': path.join(
+    coreDocsDirectory,
+    'utils/createDemoClient.js',
+  ),
+};
 
 const WORKSPACE_ROOT = path.resolve(currentDirectory, '../');
 
@@ -111,14 +135,10 @@ export default withDeploymentConfig({
   reactStrictMode: true,
   experimental: {
     esmExternals: undefined,
-    // Run each webpack compilation in a separate, disposable worker process so
-    // its memory is released before static generation instead of accumulating
-    // in the long-lived build process. This is off by default whenever a custom
-    // `webpack` config is present (Next resolves the `undefined` default to
-    // `false` when `config.webpack` is set), so it must be enabled explicitly.
-    // Cuts peak docs-build RSS from ~10 GB to ~4 GB, keeping it well under the
-    // Netlify build container limit that the static export was hitting.
+    // Dispose compiler memory before static generation.
     webpackBuildWorker: true,
+    // Avoid duplicate source buffers when compiling all docs demos.
+    webpackMemoryOptimizations: true,
     // The TS7 side-by-side alias (@typescript/typescript6) ships no `tsc` bin,
     // which the Next.js >= 16.3 CLI checker requires. Use the TS6 JS API instead.
     useTypeScriptCli: false,
@@ -152,6 +172,7 @@ export default withDeploymentConfig({
     MUI_CHAT_SCOPES: 'x-data-grid,x-date-pickers,x-charts,x-tree-view',
   },
   turbopack: {
+    resolveAlias: demoFactoryAliases,
     resolveExtensions: ['.mjs', '.tsx', '.ts', '.jsx', '.js', '.json'],
     rules: {
       // `.md?muiMarkdown` → markdown loader (mirrors the webpack `oneOf` branch).
@@ -163,6 +184,23 @@ export default withDeploymentConfig({
           as: '*.js',
         },
       ],
+      '**/@mui/internal-core-docs/MarkdownDocs/RichMarkdownElement.js': {
+        loaders: [path.join(currentDirectory, 'scripts/loadMigratedMarkdown.cjs')],
+      },
+      '**/DemoContent/exportConfig.js': {
+        loaders: [path.join(currentDirectory, 'scripts/loadDemoExportDeps.cjs')],
+      },
+      './**/demos/*/index.ts': {
+        loaders: [
+          {
+            loader: '@mui/internal-docs-infra/pipeline/loadPrecomputedCodeHighlighter',
+            options: demoHighlighterOptions,
+          },
+        ],
+      },
+      './**/demos/*/client.ts': {
+        loaders: ['@mui/internal-docs-infra/pipeline/loadPrecomputedCodeHighlighterClient'],
+      },
       // Token replacement that webpack does via `string-replace-loader`.
       // `{ not: 'foreign' }` keeps it off node_modules; the tokens only live in
       // first-party source (`docs/` and `packages/*/src`).
@@ -183,6 +221,11 @@ export default withDeploymentConfig({
     },
   },
   webpack: (config, options) => {
+    // Keep compiler caches out of CI build memory.
+    if (process.env.CI === 'true' && !options.dev) {
+      config.cache = false;
+    }
+
     const plugins = config.plugins.slice();
 
     if (process.env.DOCS_STATS_ENABLED) {
@@ -201,6 +244,10 @@ export default withDeploymentConfig({
     return {
       ...config,
       plugins,
+      resolve: {
+        ...config.resolve,
+        alias: { ...config.resolve.alias, ...demoFactoryAliases },
+      },
       module: {
         ...config.module,
         rules: config.module.rules.concat([
@@ -223,6 +270,31 @@ export default withDeploymentConfig({
                   },
                 ],
               },
+            ],
+          },
+          {
+            test: /[/\\]@mui[/\\]internal-core-docs[/\\]MarkdownDocs[/\\]RichMarkdownElement\.js$/,
+            use: [path.join(currentDirectory, 'scripts/loadMigratedMarkdown.cjs')],
+          },
+          {
+            test: /[/\\]@mui[/\\]internal-core-docs[/\\]DemoContent[/\\]exportConfig\.js$/,
+            use: [path.join(currentDirectory, 'scripts/loadDemoExportDeps.cjs')],
+          },
+          {
+            test: /[/\\]demos[/\\][^/\\]+[/\\]index\.ts$/,
+            use: [
+              options.defaultLoaders.babel,
+              {
+                loader: '@mui/internal-docs-infra/pipeline/loadPrecomputedCodeHighlighter',
+                options: demoHighlighterOptions,
+              },
+            ],
+          },
+          {
+            test: /[/\\]demos[/\\][^/\\]+[/\\]client\.ts$/,
+            use: [
+              options.defaultLoaders.babel,
+              '@mui/internal-docs-infra/pipeline/loadPrecomputedCodeHighlighterClient',
             ],
           },
           {

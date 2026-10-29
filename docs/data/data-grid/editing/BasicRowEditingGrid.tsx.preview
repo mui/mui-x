@@ -1,1 +1,0 @@
-<DataGrid editMode="row" rows={rows} columns={columns} />

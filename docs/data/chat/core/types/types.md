@@ -14,7 +14,7 @@ Your app-specific types flow through the entire stack—messages, stream chunks,
 
 The demo below shows type augmentation in practice:
 
-{{"demo": "../examples/type-augmentation/TypeAugmentationHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
+{{"component": "file://../examples/type-augmentation/demos/type-augmentation-headless-chat/index.ts", "bg": "inline", "hideToolbar": true, "collapseToEmpty": true}}
 
 ## Registry interface reference
 

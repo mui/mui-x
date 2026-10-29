@@ -26,7 +26,7 @@ You can use the Charts Panel Trigger and [Toolbar](/x/react-data-grid/components
 
 The demo below shows how to add a Charts Panel Trigger to a custom toolbar.
 
-{{"demo": "GridChartsPanelTrigger.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-charts-panel-trigger/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Anatomy
 

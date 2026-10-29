@@ -14,7 +14,7 @@ components: ChatBox
 
 The following demo shows a custom-themed chat surface:
 
-{{"demo": "../examples/custom-theme/CustomTheme.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
+{{"component": "file://../examples/custom-theme/demos/custom-theme/index.ts", "bg": "inline", "hideToolbar": true, "collapseToEmpty": true}}
 
 ## sx prop
 

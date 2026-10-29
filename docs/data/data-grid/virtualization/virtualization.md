@@ -29,7 +29,7 @@ Column virtualization is the insertion and removal of columns as the Data Grid s
 
 By default, columns coming under 150 pixels region are rendered outside of the viewport. You can change this option with the `columnBufferPx` prop. As for `rowBufferPx`, the value may be ignored in some situations. The following demo renders 1,000 columns in total:
 
-{{"demo": "ColumnVirtualizationGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/column-virtualization-grid/index.ts", "bg": "inline"}}
 
 You can disable column virtualization by calling `apiRef.current.unstable_setColumnVirtualization(false)`, or by setting the [`columnBufferPx`](/x/api/data-grid/data-grid/#data-grid-prop-columnBufferPx) to a high value.
 
@@ -68,7 +68,7 @@ Use the `virtualizerLayoutMode` key inside `experimentalFeatures` to opt in to t
 The demo below lets you switch between modes and scroll quickly to see the difference.
 If you don't see the difference, consider setting [CPU Throttling in Chrome Dev Tools](https://developer.chrome.com/docs/devtools/settings/throttling) to simulate a lower-end device.
 
-{{"demo": "VirtualizerLayoutMode.js", "bg": "inline"}}
+{{"component": "file://./demos/virtualizer-layout-mode/index.ts", "bg": "inline"}}
 
 ## Disable virtualization
 

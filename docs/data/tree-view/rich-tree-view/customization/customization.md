@@ -21,7 +21,7 @@ See [Common concepts—Slots and subcomponents](/x/common-concepts/custom-compon
 Use the `collapseIcon` slot, the `expandIcon` slot and the `defaultEndIcon` prop to customize `RichTreeView` icons.
 The demo below shows how to add icons using both an existing icon library, such as [Material Icons](/material-ui/material-icons/), and creating an icon from scratch using Material UI's [`SvgIcon`](/material-ui/icons/#svgicon).
 
-{{"demo": "CustomIcons.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/custom-icons/index.ts", "collapseToEmpty": true}}
 
 ### Custom toggle animations
 
@@ -39,18 +39,18 @@ To use animations that rely on the nested `groupTransition` slot, disable virtua
 
 :::
 
-{{"demo": "CustomAnimation.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/custom-animation/index.ts", "collapseToEmpty": true}}
 
 ### Custom styling
 
 Use `treeItemClasses` to target internal elements of a `TreeItem` and change its styles.
 The DOM structure affects which styling patterns are available: nested DOM lets you style child groups from their parent item, while flat DOM renders every visible item as a sibling.
 
-{{"demo": "CustomStyling.js"}}
+{{"component": "file://./demos/custom-styling/index.ts"}}
 
 `RichTreeViewPro` defaults to flat DOM, so use `domStructure="nested"` with virtualization disabled for nested-DOM styling patterns, or adapt the styles to the flat DOM structure.
 
-{{"demo": "CustomStylingRichTreeViewPro.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/custom-styling-rich-tree-view-pro/index.ts", "collapseToEmpty": true}}
 
 ### Sticky headers
 
@@ -69,7 +69,7 @@ It has no effect with the flat DOM structure.
 
 :::
 
-{{"demo": "StickyHeaders.js"}}
+{{"component": "file://./demos/sticky-headers/index.ts"}}
 
 ### Custom Tree Item
 
@@ -82,7 +82,7 @@ See [Tree Item customization](/x/react-tree-view/tree-item-customization/) to le
 Use the `useTreeItem()` hook to create your own fully custom component.
 The demo below shows how to add an avatar and custom typography elements.
 
-{{"demo": "HeadlessAPI.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/headless-api/index.ts", "collapseToEmpty": true}}
 
 ## Common examples
 
@@ -90,4 +90,4 @@ The demo below shows how to add an avatar and custom typography elements.
 
 The file explorer demo below leverages many of the customization options described above to make `RichTreeView` look significantly different than its default design:
 
-{{"demo": "FileExplorer.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/file-explorer/index.ts", "collapseToEmpty": true}}

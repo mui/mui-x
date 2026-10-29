@@ -11,7 +11,7 @@ githubLabel: 'scope: chat'
 
 The demo below shows the agent plan animating through each step inside the conversation:
 
-{{"demo": "PlanTask.js", "bg": "inline"}}
+{{"component": "file://./demos/plan-task/index.ts", "bg": "inline"}}
 
 ## Rendering tasks inside a tool call
 

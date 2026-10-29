@@ -16,19 +16,19 @@ components: ChatMessageList, ChatMessageGroup, ChatMessageAvatar, ChatMessageAut
 
 Toggle role, status, density, and grouping on a single `ChatMessage` bubble:
 
-{{"demo": "ChatMessagePlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-message-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Group playground
 
 `ChatMessageGroup` collapses consecutive messages from the same author into a single visual cluster:
 
-{{"demo": "ChatMessageGroupPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-message-group-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### List playground
 
 `ChatMessageList` virtualizes rendering, manages auto-scroll, and can insert opt-in dividers between days:
 
-{{"demo": "ChatMessageListPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-message-list-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## The `ChatMessage` data model
 
@@ -159,7 +159,7 @@ The message list is a single Tab stop: a roving tabindex over the `role="article
 - The scroller is a `role="log"` polite live region, and a visually hidden `role="status"` region announces streaming transitions ("Assistant is responding" / "Response complete") exactly once each.
 - The thread, composer, and conversation list are exposed as labeled landmarks.
 
-{{"demo": "../../material/message-list/KeyboardNavigation.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://../../material/message-list/demos/keyboard-navigation/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 Set `enableRovingFocus={false}` on the message list to opt out, and use the `useMessageContentTabIndex()` hook from `@mui/x-chat/headless` to let custom interactive content participate.
 
@@ -170,7 +170,7 @@ See the complete model—including the drill-in lifecycle, per-list focus memory
 When building a custom layout outside of `ChatBox`, render `ChatMessageList` inside `ChatConversation` within a `ChatProvider`.
 The demo below isolates the message surface with only the provider, an active conversation scope, a bounded frame, and the message list composition:
 
-{{"demo": "StandaloneMessages.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/standalone-messages/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Message slots
 
@@ -180,28 +180,28 @@ Each slot inside the `ChatMessage` row has its own playground—iterate on a sin
 
 The author avatar slot—falls back to initials when no `avatarUrl` is set.
 
-{{"demo": "ChatMessageAvatarPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-message-avatar-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 #### Author label
 
 Displays the author name above grouped messages.
 
-{{"demo": "ChatMessageAuthorLabelPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-message-author-label-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 #### Content
 
 The bubble interior—renders markdown, code fences, and tool or source parts.
 
-{{"demo": "ChatMessageContentPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-message-content-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 #### Meta
 
 External timestamp and delivery status, used by compact bubbles.
 
-{{"demo": "ChatMessageMetaPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-message-meta-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 #### Inline meta
 
 Telegram-style timestamp and status flowing inside the bubble.
 
-{{"demo": "ChatMessageInlineMetaPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-message-inline-meta-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}

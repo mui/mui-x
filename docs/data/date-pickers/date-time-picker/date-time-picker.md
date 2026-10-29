@@ -13,7 +13,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 ## Basic usage
 
-{{"demo": "BasicDateTimePicker.js"}}
+{{"component": "file://./demos/basic-date-time-picker/index.ts"}}
 
 ## Component composition
 
@@ -32,7 +32,7 @@ Some [DateTimeField props](/x/api/date-pickers/date-time-field/#props) are not a
 
 The value of the component can be uncontrolled or controlled.
 
-{{"demo": "DateTimePickerValue.js"}}
+{{"component": "file://./demos/date-time-picker-value/index.ts"}}
 
 :::info
 
@@ -56,7 +56,7 @@ The component is available in four variants:
 
 - The `StaticDateTimePicker` component which renders without the popover/modal and field.
 
-{{"demo": "ResponsiveDateTimePickers.js"}}
+{{"component": "file://./demos/responsive-date-time-pickers/index.ts"}}
 
 By default, the `DateTimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
@@ -70,7 +70,7 @@ Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-cave
 
 The component supports the `disabled`, `readOnly` and `name` form props:
 
-{{"demo": "FormPropsDateTimePickers.js"}}
+{{"component": "file://./demos/form-props-date-time-pickers/index.ts"}}
 
 ## Views
 
@@ -79,12 +79,12 @@ The component supports six views: `day`, `month`, `year`, `hours`, `minutes` and
 By default, the `year`, `day`, `hours`, and `minutes` views are enabled.
 Use the `views` prop to change this behavior:
 
-{{"demo": "DateTimePickerViews.js"}}
+{{"component": "file://./demos/date-time-picker-views/index.ts"}}
 
 By default, the component renders the `day` view on mount.
 Use the `openTo` prop to change this behavior:
 
-{{"demo": "DateTimePickerOpenTo.js"}}
+{{"component": "file://./demos/date-time-picker-open-to/index.ts"}}
 
 :::success
 The views will appear in the order defined by the `views` array.
@@ -98,7 +98,7 @@ By default, the Date Time Picker component automatically sets the orientation ba
 
 You can force a specific orientation using the `orientation` prop.
 
-{{"demo": "StaticDateTimePickerLandscape.js", "bg": true}}
+{{"component": "file://./demos/static-date-time-picker-landscape/index.ts", "bg": true}}
 
 :::info
 You can find more information about the layout customization in the [custom layout page](/x/react-date-pickers/custom-layout/).
@@ -109,7 +109,7 @@ You can find more information about the layout customization in the [custom layo
 You can use the `viewRenderers` prop to change the view that is used for rendering a view.
 You might be interested in using the [Time Clock](/x/react-date-pickers/time-clock/) instead of the [Digital Clock](/x/react-date-pickers/digital-clock/) or removing the time view rendering altogether in favor of only using the field to input the time.
 
-{{"demo": "DateTimePickerViewRenderers.js"}}
+{{"component": "file://./demos/date-time-picker-view-renderers/index.ts"}}
 
 ## Localization
 

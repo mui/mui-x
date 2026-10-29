@@ -88,7 +88,7 @@ Wire composition events on your input element:
 
 The demo below shows the full composer wired up with attachments, image previews, and IME-safe submission:
 
-{{"demo": "ComposerHeadlessChat.js"}}
+{{"component": "file://./demos/composer-headless-chat/index.ts"}}
 
 ## See also
 

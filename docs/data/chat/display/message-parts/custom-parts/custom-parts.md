@@ -87,7 +87,7 @@ Custom parts are included in the `ChatMessagePart` union, so they appear in `mes
 
 A renderer is a function that receives the part and returns the JSX to display in its place. The following demo registers a `data-ticket-status` renderer that turns the raw payload into a colored status badge—send a message to see new badges stream in instead of the default JSON fallback.
 
-{{"demo": "CustomDataPartChat.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/custom-data-part-chat/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### With `ChatProvider`
 

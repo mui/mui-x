@@ -29,7 +29,7 @@ const event = {
 
 Use the [`eventModelStructure`](#store-data-in-custom-properties) property to switch the resource between several fields:
 
-{{"demo": "DynamicResourceProperty.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/dynamic-resource-property/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### All day
 
@@ -42,7 +42,7 @@ const event = {
 };
 ```
 
-{{"demo": "AllDay.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/all-day/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 In the day and week views, all-day events are rendered in the day grid above the time grid.
 See the `timeGridEvents` option of the [Week view](/x/react-scheduler/event-calendar/views/#week-view) to choose where timed events that cross midnight are rendered.
@@ -73,7 +73,7 @@ const event = {
 
 The available color palettes are shown below:
 
-{{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/color-palettes/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::info
 Event colors can also be defined on the resources or at the component level.
@@ -112,7 +112,7 @@ const event = {
 };
 ```
 
-{{"demo": "ClassNameProperty.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/class-name-property/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 When defined, it applies to the event root DOM element in all views (Week, Month, Day, and Agenda views).
 
@@ -191,7 +191,7 @@ function Calendar() {
 }
 ```
 
-{{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/title-property/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 A property declared with a `getter` but no `setter` is read-only: the Event Calendar displays it but never writes it back to your model. When `start` or `end` is read-only, events can't be dragged or created, and only the other edge can be resized. Saving an occurrence of a recurring event with the "Only this event" or "This and following events" scope is refused with an error, since it needs to write a new date.
 

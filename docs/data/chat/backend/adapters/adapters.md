@@ -110,7 +110,7 @@ For the full chunk type reference, see [Streaming](/x/react-chat/behavior/stream
 
 Here is the same protocol running live — type a message and watch the chunks arrive:
 
-{{"demo": "MinimalAdapterDemo.js", "bg": "inline"}}
+{{"component": "file://./demos/minimal-adapter-demo/index.ts", "bg": "inline"}}
 
 ### Abort signal
 

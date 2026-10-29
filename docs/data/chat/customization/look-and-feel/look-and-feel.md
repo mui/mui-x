@@ -16,7 +16,7 @@ components: ChatBox
 
 The same `ChatBox` re-themes itself when you swap the layout variant, density, primary color, or border radius—every change comes from a single Material UI theme and two top-level props (`variant` and `density`):
 
-{{"demo": "LookAndFeelPlayground.js", "bg": "inline"}}
+{{"component": "file://./demos/look-and-feel-playground/index.ts", "bg": "inline"}}
 
 :::warning
 Own-message bubbles use `palette.primary.main` as their background with `palette.primary.contrastText` text—when picking a brand primary, check the pair meets WCAG contrast.
@@ -36,11 +36,11 @@ The `variant` prop controls how messages and the composer are arranged:
 
 The same conversation rendered with each variant—`default` uses colored bubbles with own messages on the trailing edge; `compact` drops the bubble and shows the author inline:
 
-{{"demo": "MessageVariantsDemo.js", "bg": "inline"}}
+{{"component": "file://./demos/message-variants-demo/index.ts", "bg": "inline"}}
 
 The demo below shows how the same `variant` prop drives the composer's two stock layouts:
 
-{{"demo": "ComposerVariantsDemo.js", "bg": "inline"}}
+{{"component": "file://./demos/composer-variants-demo/index.ts", "bg": "inline"}}
 
 ## Choosing a density
 
@@ -54,13 +54,13 @@ The `density` prop controls vertical spacing between messages:
 
 `standard` is the default when the prop is omitted.
 
-{{"demo": "DensityComparisonDemo.js", "bg": "inline"}}
+{{"component": "file://./demos/density-comparison-demo/index.ts", "bg": "inline"}}
 
 ## Message states
 
 `ChatMessage` adapts to the role and status it reads from the store—no extra props required:
 
-{{"demo": "MessageStatesDemo.js", "bg": "inline"}}
+{{"component": "file://./demos/message-states-demo/index.ts", "bg": "inline"}}
 
 ## Applying one-off styles with `sx`
 
@@ -126,7 +126,7 @@ Style any internal subcomponent without replacing it:
 
 Both techniques applied to a live `ChatBox`—the theme override rounds every bubble, and `slotProps` restyles the send button and placeholder:
 
-{{"demo": "ThemeAndSlotsDemo.js", "bg": "inline"}}
+{{"component": "file://./demos/theme-and-slots-demo/index.ts", "bg": "inline"}}
 
 To replace subcomponents entirely, see [Slot overrides](/x/react-chat/material/slot-overrides/).
 

@@ -58,7 +58,7 @@ The result: sibling message rows and the parent thread component stay untouched 
 
 The demo below renders the same conversation twice from one shared runtime — send a message and watch which render counters increment while the reply streams.
 
-{{"demo": "RenderIsolationComparison.js", "bg": "inline"}}
+{{"component": "file://./demos/render-isolation-comparison/index.ts", "bg": "inline"}}
 
 ### Why `useChat()` is less efficient for lists
 

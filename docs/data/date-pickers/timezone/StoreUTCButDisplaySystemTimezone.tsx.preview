@@ -1,4 +1,0 @@
-<DateTimePicker value={value} onChange={setValue} timezone="system" />
-<Typography>
-  Stored value: {value == null ? 'null' : value.format()}
-</Typography>

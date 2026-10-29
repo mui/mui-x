@@ -1,8 +1,0 @@
-<DatePicker
-  label="Helper text example"
-  slotProps={{
-    textField: {
-      helperText: 'MM/DD/YYYY',
-    },
-  }}
-/>

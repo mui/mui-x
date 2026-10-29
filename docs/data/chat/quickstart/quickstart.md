@@ -85,14 +85,14 @@ import { ChatBox, createEchoAdapter } from '@mui/x-chat';
 The example below uses the built-in `createEchoAdapter` so it works directly in the docs.
 In your app, replace it with an adapter that calls your API.
 
-{{"demo": "RenderChatBox.js", "defaultCodeOpen": true, "bg": "inline"}}
+{{"component": "file://./demos/render-chat-box/index.ts", "bg": "inline", "initialExpanded": true}}
 
 `ChatBox` renders a full chat surface—conversation header, message list, and composer—in a single component. See [Components](/x/react-chat/all-components/) for the full anatomy.
 Enable the built-in conversation list explicitly with `features={{ conversationList: true }}` when you want an inbox-style layout.
 The list only renders once at least one conversation exists (for example via `initialConversations`), so enabling the flag on an empty chat shows no sidebar.
 All visual styles are derived from your active Material UI theme.
 
-{{"demo": "../material/examples/multi-conversation/MultiConversation.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
+{{"component": "file://../material/examples/multi-conversation/demos/multi-conversation/index.ts", "bg": "inline", "hideToolbar": true, "collapseToEmpty": true}}
 
 See [Conversation list](/x/react-chat/multi-conversation/conversation-list/) for the full feature documentation.
 

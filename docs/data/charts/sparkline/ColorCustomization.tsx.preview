@@ -1,1 +1,0 @@
-<SparkLineChart data={values} color="green" {...settings} />

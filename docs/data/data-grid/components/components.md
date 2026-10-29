@@ -40,19 +40,19 @@ function CustomPagination() {
 
 In the following demo, the columns panel is replaced with a custom component that represents the [column groups](/x/react-data-grid/column-groups/) as a nested list.
 
-{{"demo": "CustomColumnsPanel.js", "bg": "inline"}}
+{{"component": "file://./demos/custom-columns-panel/index.ts", "bg": "inline"}}
 
 ### Column menu
 
 As mentioned above, the column menu is a component slot that can be recomposed easily and customized on each column as in the demo below.
 
-{{"demo": "CustomColumnMenu.js", "bg": "inline"}}
+{{"component": "file://./demos/custom-column-menu/index.ts", "bg": "inline"}}
 
 ### Toolbar
 
 Pass the `showToolbar` prop to the `<DataGrid />` component to enable the default toolbar.
 
-{{"demo": "ToolbarGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/toolbar-grid/index.ts", "bg": "inline"}}
 
 You can also compose your own toolbar using the [Toolbar component](/x/react-data-grid/components/toolbar/).
 
@@ -91,7 +91,7 @@ function CustomToolbar() {
 }
 ```
 
-{{"demo": "CustomToolbarGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/custom-toolbar-grid/index.ts", "bg": "inline"}}
 
 ### Footer
 
@@ -102,7 +102,7 @@ The grid exposes props to hide specific elements of the UI:
 - `hideFooterSelectedRowCount`: If `true`, the selected row count in the footer is hidden.
 - `hideFooterPagination`: If `true`, the pagination component in the footer is hidden.
 
-{{"demo": "CustomFooter.js", "bg": "inline"}}
+{{"component": "file://./demos/custom-footer/index.ts", "bg": "inline"}}
 
 ### Pagination
 
@@ -112,7 +112,7 @@ You can replace the pagination component completely or reuse the default one.
 
 The next demo reuses `GridPagination` but replaces the previous and next page buttons with [Pagination](/material-ui/react-pagination/), which renders a dedicated button for each page.
 
-{{"demo": "CustomPaginationGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/custom-pagination-grid/index.ts", "bg": "inline"}}
 
 ### Row
 
@@ -120,20 +120,20 @@ The `slotProps.row` prop can be used to pass additional props to the row compone
 One common use case might be to listen for events not exposed by [default](/x/react-data-grid/events/#catalog-of-events).
 The demo below shows a context menu when a row is right-clicked.
 
-{{"demo": "RowContextMenu.js", "bg": "inline"}}
+{{"component": "file://./demos/row-context-menu/index.ts", "bg": "inline"}}
 
 ### Cell
 
 The following demo uses the `slotProps.cell` prop to listen for specific events emitted by the cells.
 Try it by hovering a cell with the mouse and it should display the number of characters each cell has.
 
-{{"demo": "CellWithPopover.js", "bg": "inline"}}
+{{"component": "file://./demos/cell-with-popover/index.ts", "bg": "inline"}}
 
 ### Icons
 
 As any component slot, every icon can be customized. However, it is not yet possible to use the `slotProps` with icons.
 
-{{"demo": "CustomSortIcons.js", "bg": "inline"}}
+{{"component": "file://./demos/custom-sort-icons/index.ts", "bg": "inline"}}
 
 :::warning
 Material UI icons need to be passed like `Icon as any` due to typing issues that might be resolved in a later version.
@@ -245,7 +245,7 @@ declare module '@mui/x-data-grid-premium' {
 
 This demo below shows how to use the `slotProps` prop and module augmentation to pass a new prop `status` to the `footer` slot.
 
-{{"demo": "CustomFooter.js", "bg": "inline"}}
+{{"component": "file://./demos/custom-footer/index.ts", "bg": "inline"}}
 
 ## API
 

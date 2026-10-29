@@ -132,7 +132,7 @@ When writing a custom step delimiter, preserve the `role="separator"` semantics 
 Material UI's `Divider` renders `role="separator"` automatically.
 :::
 
-{{"demo": "StepTrackingDemo.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/step-tracking-demo/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Step delimiter renderer
 

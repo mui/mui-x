@@ -34,7 +34,7 @@ When both cell selection and row selection are enabled, this shortcut selects ce
 
 Try out the various actions to select cells in the demo below—you can toggle [row selection](/x/react-data-grid/row-selection/) on and off to see how these two selection features can work in parallel.
 
-{{"demo": "CellSelectionGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/cell-selection-grid/index.ts", "bg": "inline"}}
 
 ## Controlling cell selection
 
@@ -57,7 +57,7 @@ Use this value to update the current model.
 
 The following demo shows how these props can be combined to create an Excel-like formula field—try updating multiple cells at once by selecting them and entering a new value in the field at the top.
 
-{{"demo": "CellSelectionFormulaField.js", "bg": "inline"}}
+{{"component": "file://./demos/cell-selection-formula-field/index.ts", "bg": "inline"}}
 
 ## Customizing range styles
 
@@ -74,7 +74,7 @@ When a single cell is selected, all classes above are applied to that element.
 
 You can use these classes to create CSS selectors targeting specific corners of each range—for example, the demo below adds a border around the outside of the range.
 
-{{"demo": "CellSelectionRangeStyling.js", "bg": "inline"}}
+{{"component": "file://./demos/cell-selection-range-styling/index.ts", "bg": "inline"}}
 
 ## apiRef
 
@@ -86,7 +86,7 @@ See [API object](/x/react-data-grid/api-object/) for more details.
 This API should only be used as a last resort when the Data Grid's built-in props aren't sufficient for your specific use case.
 :::
 
-{{"demo": "CellSelectionApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "file://./demos/cell-selection-api-no-snap/index.ts", "bg": "inline", "hideToolbar": true}}
 
 ## API
 
