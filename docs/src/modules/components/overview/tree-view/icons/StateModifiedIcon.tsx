@@ -1,5 +1,6 @@
 import { useTheme } from '@mui/material/styles';
-import SvgIcon, { SvgIconOwnProps } from '@mui/material/SvgIcon';
+import type { SvgIconOwnProps } from '@mui/material/SvgIcon';
+import SvgIcon from '@mui/material/SvgIcon';
 
 export default function StateModifiedIcon(props: SvgIconOwnProps) {
   const theme = useTheme();

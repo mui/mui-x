@@ -23,6 +23,9 @@ import type { ScatterPropsOverrides } from '../models/chartsSlotsComponentsProps
 const EMPTY_SERIES_IDS: readonly SeriesId[] = [];
 
 export interface ScatterPlotSlots extends ScatterSlots {
+  /**
+   * The component that renders the scatter markers.
+   */
   scatter?: React.JSXElementConstructor<ScatterProps & ScatterPropsOverrides>;
 }
 
@@ -30,6 +33,9 @@ export interface ScatterPlotSlotProps extends ScatterSlotProps {
   // Not widened with `data-*`: none of the default renderers (svg-single
   // `Scatter`, svg-batch `BatchScatter`, progressive `ScatterAsync`) spread
   // unknown props onto an element, so `data-*` here never reaches the DOM.
+  /**
+   * The props used for the `scatter` slot.
+   */
   scatter?: Partial<ScatterProps> & ScatterPropsOverrides;
 }
 
@@ -163,6 +169,9 @@ ScatterPlot.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
   /**

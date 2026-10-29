@@ -9,7 +9,7 @@ import transformReplaceAxisClickHandler from '../remove-on-axis-click-handler';
 import transformRenameUnstableUseSeries from '../rename-unstable-use-series';
 import transformReplaceLegendHiddenSlotProp from '../replace-legend-hidden-slot-prop';
 
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   file.source = transformLegendToSlots(file, api, options);

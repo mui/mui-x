@@ -70,7 +70,8 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import yargs, { ArgumentsCamelCase } from 'yargs';
+import type { ArgumentsCamelCase } from 'yargs';
+import yargs from 'yargs';
 import { kebabCase } from 'es-toolkit/string';
 import * as prettier from 'prettier';
 import { processMarkdownFile, processApiJson } from '@mui/internal-scripts/generate-llms-txt';

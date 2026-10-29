@@ -11,13 +11,14 @@ import {
 import buildExportsDocumentation from './buildExportsDocumentation';
 import buildGridSelectorsDocumentation from './buildGridSelectorsDocumentation';
 import buildGridEventsDocumentation from './buildGridEventsDocumentation';
+import type { XTypeScriptProjects } from '../createXTypeScriptProjects';
 import {
-  XTypeScriptProjects,
   createXTypeScriptProjects,
   datagridApiToDocument,
   interfacesToDocument,
 } from '../createXTypeScriptProjects';
-import { DocumentedInterfaces, writePrettifiedFile } from './utils';
+import type { DocumentedInterfaces } from './utils';
+import { writePrettifiedFile } from './utils';
 
 const bracketsRegexp = /\[\[([^\]]+)\]\]/g;
 

@@ -1,8 +1,10 @@
-import {
+import type {
   GridHistoryEventHandler,
   GridCellEditStopParams,
   GridRowId,
   GridApiPremium,
+} from '@mui/x-data-grid-premium';
+import {
   gridExpandedSortedRowIdsSelector,
   gridVisibleColumnFieldsSelector,
   gridPaginationModelSelector,

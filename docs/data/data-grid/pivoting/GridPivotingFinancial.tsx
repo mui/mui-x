@@ -1,9 +1,5 @@
-import {
-  DataGridPremium,
-  GridColDef,
-  GridPivotModel,
-  GridSidebarValue,
-} from '@mui/x-data-grid-premium';
+import type { GridColDef, GridPivotModel } from '@mui/x-data-grid-premium';
+import { DataGridPremium, GridSidebarValue } from '@mui/x-data-grid-premium';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },

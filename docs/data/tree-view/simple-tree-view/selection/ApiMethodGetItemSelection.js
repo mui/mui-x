@@ -5,7 +5,6 @@ import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-
 import { useSimpleTreeViewApiRef } from '@mui/x-tree-view/hooks';
 
 export default function ApiMethodGetItemSelection() {

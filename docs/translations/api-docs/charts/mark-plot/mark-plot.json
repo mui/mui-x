@@ -16,5 +16,5 @@
     "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {},
-  "slotDescriptions": { "mark": "" }
+  "slotDescriptions": { "mark": "The component that renders the marks." }
 }

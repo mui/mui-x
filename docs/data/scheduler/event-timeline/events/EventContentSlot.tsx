@@ -1,12 +1,10 @@
 import * as React from 'react';
 import FlagRounded from '@mui/icons-material/FlagRounded';
 import BuildRounded from '@mui/icons-material/BuildRounded';
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
-import {
-  EventTimelinePremium,
-  EventTimelineGetEventAriaLabelParameters,
-} from '@mui/x-scheduler-premium/event-timeline-premium';
-import { TimelineEventContentProps } from '@mui/x-scheduler-premium/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import type { EventTimelineGetEventAriaLabelParameters } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+import type { TimelineEventContentProps } from '@mui/x-scheduler-premium/models';
 import { defaultVisibleDate } from '../../datasets/company-roadmap';
 
 interface DemoEvent extends SchedulerEvent {

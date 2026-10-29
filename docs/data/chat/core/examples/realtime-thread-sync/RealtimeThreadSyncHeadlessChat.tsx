@@ -1,11 +1,10 @@
 import * as React from 'react';
-import {
-  ChatProvider,
-  useChat,
-  type ChatAdapter,
-  type ChatConversation,
-  type ChatMessage,
-  type ChatRealtimeEvent,
+import { ChatProvider, useChat } from '@mui/x-chat/headless';
+import type {
+  ChatAdapter,
+  ChatConversation,
+  ChatMessage,
+  ChatRealtimeEvent,
 } from '@mui/x-chat/headless';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';

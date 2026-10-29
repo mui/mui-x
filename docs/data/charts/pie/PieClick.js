@@ -6,7 +6,6 @@ import IconButton from '@mui/material/IconButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
-
 import { mobileAndDesktopOS, platforms, valueFormatter } from './webUsageStats';
 
 export default function PieClick() {

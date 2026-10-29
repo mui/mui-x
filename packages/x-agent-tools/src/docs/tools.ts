@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type PQueueType from 'p-queue';
-import { LRUCache, resolveCache } from '../utils/cache';
+import type { LRUCache } from '../utils/cache';
+import { resolveCache } from '../utils/cache';
 import type { Logger, PackageData, ToolOverrides } from '../types';
 import { wrapTool } from '../utils/wrap-tool';
 import { isUrlLike } from '../utils/url';

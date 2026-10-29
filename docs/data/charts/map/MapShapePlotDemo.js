@@ -6,7 +6,6 @@ import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium }
 import { GeoDataPlot, MapShapePlot } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsTooltip } from '@mui/x-charts-premium/ChartsTooltip';
-
 import { EU_COUNTRIES, countryData } from '../dataset/countryData';
 
 const countries = topojsonFeature(countriesTopology, 'countries');

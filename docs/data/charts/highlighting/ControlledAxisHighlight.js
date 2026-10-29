@@ -7,7 +7,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
-
 import { LineChart } from '@mui/x-charts/LineChart';
 
 export default function ControlledAxisHighlight() {

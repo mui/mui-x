@@ -3,12 +3,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import {
-  DigitalClockItem,
-  DigitalClockItemProps,
-} from '@mui/x-date-pickers/DigitalClock';
-import { DateTime } from 'luxon';
-import { DateRange, RangePosition } from '@mui/x-date-pickers-pro/models';
+import type { DigitalClockItemProps } from '@mui/x-date-pickers/DigitalClock';
+import { DigitalClockItem } from '@mui/x-date-pickers/DigitalClock';
+import type { DateTime } from 'luxon';
+import type { DateRange, RangePosition } from '@mui/x-date-pickers-pro/models';
 
 function CustomDigitalClockItem(
   props: DigitalClockItemProps & {

@@ -3,10 +3,8 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
-import {
-  BarChartPremium,
-  RangeBarSeries,
-} from '@mui/x-charts-premium/BarChartPremium';
+import type { RangeBarSeries } from '@mui/x-charts-premium/BarChartPremium';
+import { BarChartPremium } from '@mui/x-charts-premium/BarChartPremium';
 
 const series = [
   {

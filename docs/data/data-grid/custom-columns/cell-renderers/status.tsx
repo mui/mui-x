@@ -4,16 +4,19 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import type { MenuProps } from '@mui/material/Menu';
-import Select, { SelectProps } from '@mui/material/Select';
+import type { SelectProps } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import InfoIcon from '@mui/icons-material/Info';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import DoneIcon from '@mui/icons-material/Done';
-import {
-  GridEditModes,
+import type {
   GridRenderCellParams,
   GridRenderEditCellParams,
+} from '@mui/x-data-grid';
+import {
+  GridEditModes,
   useGridApiContext,
   useGridRootProps,
 } from '@mui/x-data-grid';

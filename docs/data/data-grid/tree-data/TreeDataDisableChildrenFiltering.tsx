@@ -1,12 +1,11 @@
 import * as React from 'react';
-import {
-  DataGridPro,
+import type {
   GridColDef,
   GridFilterModel,
-  GridLogicOperator,
   GridRowsProp,
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridLogicOperator } from '@mui/x-data-grid-pro';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
