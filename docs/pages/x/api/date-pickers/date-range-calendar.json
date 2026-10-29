@@ -10,6 +10,7 @@
       "default": "2"
     },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "compact": { "type": { "name": "bool" }, "default": "false" },
     "currentMonthCalendarPosition": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "1"

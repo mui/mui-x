@@ -52,6 +52,19 @@ const PickersCalendarHeaderRoot = styled('div', {
   // prevent jumping in safari
   maxHeight: 40,
   minHeight: 40,
+  variants: [
+    {
+      props: { isPickerCompact: true },
+      style: {
+        marginTop: 6,
+        marginBottom: 2,
+        paddingLeft: 12,
+        paddingRight: 6,
+        maxHeight: 32,
+        minHeight: 32,
+      },
+    },
+  ],
 });
 
 const PickersCalendarHeaderLabelContainer = styled('div', {
@@ -150,11 +163,16 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader(
     className,
     classes: classesProp,
     timezone,
+    compact,
     format = `${adapter.formats.month} ${adapter.formats.year}`,
     ...other
   } = props;
 
-  const { ownerState } = usePickerPrivateContext();
+  const { ownerState: pickerOwnerState } = usePickerPrivateContext();
+  const ownerState: PickerOwnerState = {
+    ...pickerOwnerState,
+    isPickerCompact: compact ?? pickerOwnerState.isPickerCompact,
+  };
   const classes = useUtilityClasses(classesProp);
 
   const SwitchViewButton = slots?.switchViewButton ?? PickersCalendarHeaderSwitchViewButton;
@@ -273,6 +291,11 @@ PickersCalendarHeader.propTypes /* remove-proptypes */ = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * If `true`, the picker uses compact dimensions following the Material Design spec.
+   * @default false
+   */
+  compact: PropTypes.bool,
   currentMonth: PropTypes.object.isRequired,
   disabled: PropTypes.bool,
   disableFuture: PropTypes.bool,

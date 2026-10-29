@@ -7,9 +7,10 @@ import type { PaperProps as MuiPaperProps } from '@mui/material/Paper';
 import type { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { styled } from '@mui/material/styles';
 import type { WithDataAttributes } from '@mui/utils/types';
-import { DIALOG_WIDTH } from '../constants/dimensions';
+import { DIALOG_WIDTH, DIALOG_WIDTH_COMPACT } from '../constants/dimensions';
 import { usePickerContext } from '../../hooks';
 import { usePickerPrivateContext } from '../hooks/usePickerPrivateContext';
+import type { PickerOwnerState } from '../../models';
 
 export interface PickersModalDialogSlots {
   /**
@@ -59,7 +60,7 @@ export interface PickersModalDialogProps {
 
 const PickersModalDialogRoot = styled(MuiDialog, {
   slot: 'internal',
-})({
+})<{ ownerState?: PickerOwnerState }>({
   [`& .${dialogClasses.container}`]: {
     outline: 0,
   },
@@ -67,6 +68,12 @@ const PickersModalDialogRoot = styled(MuiDialog, {
     outline: 0,
     minWidth: DIALOG_WIDTH,
   },
+  variants: [
+    {
+      props: ({ ownerState }) => !!ownerState?.isPickerCompact,
+      style: { [`& .${dialogClasses.paper}`]: { minWidth: DIALOG_WIDTH_COMPACT } },
+    },
+  ],
 });
 
 const PickersModalDialogContent = styled(DialogContent, {
@@ -81,7 +88,7 @@ export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDi
   const { children, slots, slotProps } = props;
 
   const { open } = usePickerContext();
-  const { dismissViews, onPopperExited } = usePickerPrivateContext();
+  const { ownerState, dismissViews, onPopperExited } = usePickerPrivateContext();
 
   const Dialog = slots?.dialog ?? PickersModalDialogRoot;
 
@@ -92,6 +99,7 @@ export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDi
         dismissViews();
         onPopperExited?.();
       }}
+      {...(Dialog === PickersModalDialogRoot && { ownerState })}
       {...slotProps?.dialog}
       PaperComponent={slots?.mobilePaper}
       slots={{

@@ -240,6 +240,7 @@ export const usePicker = <
       isPickerReadOnly: props.readOnly ?? false,
       pickerOrientation: orientation,
       pickerVariant: variant,
+      isPickerCompact: props.compact ?? false,
     }),
     [
       adapter,
@@ -250,6 +251,7 @@ export const usePicker = <
       variant,
       props.disabled,
       props.readOnly,
+      props.compact,
     ],
   );
 

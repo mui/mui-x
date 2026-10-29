@@ -14,7 +14,7 @@ import type { ExportedPickerDayProps } from '../PickerDay/PickerDay.types';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { useNow } from '../internals/hooks/useUtils';
 import type { PickerOnChangeFn } from '../internals/hooks/useViews';
-import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
+import { DAY_SIZE, DAY_MARGIN, DAY_SIZE_COMPACT } from '../internals/constants/dimensions';
 import type { SlideDirection, SlideTransitionProps } from './PickersSlideTransition';
 import { PickersSlideTransition } from './PickersSlideTransition';
 import type {
@@ -132,6 +132,7 @@ const useUtilityClasses = (classes: Partial<DateCalendarClasses> | undefined) =>
 };
 
 const weeksContainerHeight = (DAY_SIZE + DAY_MARGIN * 2) * 6;
+const weeksContainerHeightCompact = (DAY_SIZE_COMPACT + DAY_MARGIN * 2) * 6;
 
 const PickerCalendarDayRoot = styled('div', {
   name: 'MuiDayCalendar',
@@ -150,7 +151,7 @@ const PickerCalendarDayHeader = styled('div', {
 const PickerCalendarWeekDayLabel = styled(Typography, {
   name: 'MuiDayCalendar',
   slot: 'WeekDayLabel',
-})(({ theme }) => ({
+})<{ ownerState: { compact: boolean } }>(({ theme }) => ({
   width: 36,
   height: 40,
   margin: '0 2px',
@@ -159,12 +160,18 @@ const PickerCalendarWeekDayLabel = styled(Typography, {
   justifyContent: 'center',
   alignItems: 'center',
   color: (theme.vars || theme).palette.text.secondary,
+  variants: [
+    {
+      props: { compact: true },
+      style: { width: DAY_SIZE_COMPACT, height: DAY_SIZE_COMPACT + DAY_MARGIN * 2 },
+    },
+  ],
 }));
 
 const PickerCalendarWeekNumberLabel = styled(Typography, {
   name: 'MuiDayCalendar',
   slot: 'WeekNumberLabel',
-})(({ theme }) => ({
+})<{ ownerState: { compact: boolean } }>(({ theme }) => ({
   width: 36,
   height: 40,
   margin: '0 2px',
@@ -173,12 +180,18 @@ const PickerCalendarWeekNumberLabel = styled(Typography, {
   justifyContent: 'center',
   alignItems: 'center',
   color: (theme.vars || theme).palette.text.disabled,
+  variants: [
+    {
+      props: { compact: true },
+      style: { width: DAY_SIZE_COMPACT, height: DAY_SIZE_COMPACT + DAY_MARGIN * 2 },
+    },
+  ],
 }));
 
 const PickerCalendarWeekNumber = styled(Typography, {
   name: 'MuiDayCalendar',
   slot: 'WeekNumber',
-})(({ theme }) => ({
+})<{ ownerState: { compact: boolean } }>(({ theme }) => ({
   ...theme.typography.caption,
   width: DAY_SIZE,
   height: DAY_SIZE,
@@ -189,23 +202,41 @@ const PickerCalendarWeekNumber = styled(Typography, {
   alignItems: 'center',
   justifyContent: 'center',
   display: 'inline-flex',
+  variants: [
+    {
+      props: { compact: true },
+      style: { width: DAY_SIZE_COMPACT, height: DAY_SIZE_COMPACT },
+    },
+  ],
 }));
 
 const PickerCalendarLoadingContainer = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'LoadingContainer',
-})({
+})<{ ownerState: { compact: boolean } }>({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   minHeight: weeksContainerHeight,
+  variants: [
+    {
+      props: { compact: true },
+      style: { minHeight: weeksContainerHeightCompact },
+    },
+  ],
 });
 
 const PickerCalendarSlideTransition = styled(PickersSlideTransition, {
   name: 'MuiDayCalendar',
   slot: 'SlideTransition',
-})({
+})<{ ownerState: { compact: boolean } }>({
   minHeight: weeksContainerHeight,
+  variants: [
+    {
+      props: { compact: true },
+      style: { minHeight: weeksContainerHeightCompact },
+    },
+  ],
 });
 
 const PickerCalendarWeekContainer = styled('div', {
@@ -242,6 +273,7 @@ function WrappedDay({
 }) {
   const {
     currentMonth,
+    compact,
     disabled,
     disableHighlightToday,
     isMonthSwitchingAnimating,
@@ -275,6 +307,7 @@ function WrappedDay({
     outsideCurrentMonth: isOutsideCurrentMonth,
     disableHighlightToday,
     showDaysOutsideCurrentMonth,
+    compact,
   });
 
   const Day = slots?.day ?? PickerDay;
@@ -283,6 +316,7 @@ function WrappedDay({
     elementType: Day,
     externalSlotProps: slotProps?.day,
     additionalProps: {
+      compact,
       disableHighlightToday,
       showDaysOutsideCurrentMonth,
       role: 'gridcell',
@@ -336,6 +370,7 @@ export function DayCalendar(inProps: DayCalendarProps) {
   const adapter = usePickerAdapter();
 
   const {
+    compact = false,
     onFocusedDayChange,
     className,
     classes: classesProp,
@@ -365,6 +400,8 @@ export function DayCalendar(inProps: DayCalendarProps) {
     fixedWeekNumber,
     timezone,
   } = props;
+
+  const ownerState = { compact };
 
   const now = useNow(timezone);
   const classes = useUtilityClasses(classesProp);
@@ -529,6 +566,7 @@ export function DayCalendar(inProps: DayCalendarProps) {
       <PickerCalendarDayHeader role="row" aria-rowindex={1} className={classes.header}>
         {displayWeekNumber && (
           <PickerCalendarWeekNumberLabel
+            ownerState={ownerState}
             variant="caption"
             role="columnheader"
             aria-colindex={1}
@@ -540,6 +578,7 @@ export function DayCalendar(inProps: DayCalendarProps) {
         )}
         {getWeekdays(adapter, now).map((weekday, i) => (
           <PickerCalendarWeekDayLabel
+            ownerState={ownerState}
             key={i.toString()}
             variant="caption"
             role="columnheader"
@@ -553,11 +592,15 @@ export function DayCalendar(inProps: DayCalendarProps) {
       </PickerCalendarDayHeader>
 
       {loading ? (
-        <PickerCalendarLoadingContainer className={classes.loadingContainer}>
+        <PickerCalendarLoadingContainer
+          ownerState={ownerState}
+          className={classes.loadingContainer}
+        >
           {renderLoading()}
         </PickerCalendarLoadingContainer>
       ) : (
         <PickerCalendarSlideTransition
+          ownerState={ownerState}
           transKey={transitionKey}
           onExited={onMonthSwitchingAnimationEnd}
           reduceAnimations={reduceAnimations}
@@ -582,6 +625,7 @@ export function DayCalendar(inProps: DayCalendarProps) {
               >
                 {displayWeekNumber && (
                   <PickerCalendarWeekNumber
+                    ownerState={ownerState}
                     className={classes.weekNumber}
                     role="rowheader"
                     aria-colindex={1}

@@ -17,6 +17,7 @@ import {
 import type { DateRangePickerDayProps } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
 import type { PickerValidDate } from '@mui/x-date-pickers/models';
+import { DAY_SIZE, DAY_SIZE_COMPACT } from '@mui/x-date-pickers/internals';
 import { vi, describe, it, expect } from 'vitest';
 import type { RangePosition } from '../models';
 
@@ -944,6 +945,24 @@ describe('<DateRangeCalendar />', () => {
       // sticking with `fireEvent` for simplified performance test
       fireEvent.click(getPickerDay('4'));
       expect(renderCount.mock.calls.length - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
+    });
+  });
+
+  describe('Compact', () => {
+    it('should use the default day size when `compact` is not set', () => {
+      render(<DateRangeCalendar referenceDate={adapterToUse.date('2018-01-01')} />);
+
+      const day = getPickerDay('1');
+      expect(getComputedStyle(day).getPropertyValue('--PickerDay-size')).to.equal(`${DAY_SIZE}px`);
+    });
+
+    it('should use the compact day size when `compact` is `true`', () => {
+      render(<DateRangeCalendar compact referenceDate={adapterToUse.date('2018-01-01')} />);
+
+      const day = getPickerDay('1');
+      expect(getComputedStyle(day).getPropertyValue('--PickerDay-size')).to.equal(
+        `${DAY_SIZE_COMPACT}px`,
+      );
     });
   });
 });
