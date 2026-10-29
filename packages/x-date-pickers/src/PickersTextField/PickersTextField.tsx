@@ -295,6 +295,10 @@ PickersTextField.propTypes /* remove-proptypes */ = {
    * Useful when all the sections are selected.
    */
   contentEditable: PropTypes.bool.isRequired,
+  /**
+   * If `true`, the component is disabled.
+   * @default false
+   */
   disabled: PropTypes.bool.isRequired,
   /**
    * The elements to render.
@@ -358,20 +362,50 @@ PickersTextField.propTypes /* remove-proptypes */ = {
    * Name attribute of the `input` element.
    */
   name: PropTypes.string,
+  /**
+   * @ignore
+   */
   onBlur: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onChange: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onClick: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onFocus: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onInput: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onKeyDown: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onMouseDown: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onPaste: PropTypes.func.isRequired,
+  /**
+   * If `true`, the component is read-only.
+   */
   readOnly: PropTypes.bool,
   /**
    * If `true`, the label will indicate that the `input` is required.
    * @default false
    */
   required: PropTypes.bool,
+  /**
+   * @ignore
+   */
   sectionListRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({
@@ -411,6 +445,9 @@ PickersTextField.propTypes /* remove-proptypes */ = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The value of the hidden `input` element.
+   */
   value: PropTypes.string.isRequired,
   /**
    * The variant to use.
