@@ -267,6 +267,7 @@ export const useGridRowEditing = (
           reason = GridRowEditStartReasons.printableKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridRowEditStartReasons.enterKeyDown;
+          event.preventDefault();
         } else if (event.key === 'Backspace' || event.key === 'Delete') {
           reason = GridRowEditStartReasons.deleteKeyDown;
         }

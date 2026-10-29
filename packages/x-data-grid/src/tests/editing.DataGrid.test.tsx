@@ -10,7 +10,6 @@ import type {
 } from '@mui/x-data-grid';
 import { getCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
-import { typeWithBrowserTiming } from 'test/utils/typeWithBrowserTiming';
 import { describe, it, expect } from 'vitest';
 
 describe('<DataGrid /> - Cell editable state', () => {
@@ -109,15 +108,33 @@ describe('<DataGrid /> - Cell editable state', () => {
   });
 });
 
+declare global {
+  // eslint-disable-next-line vars-on-top
+  var IS_REACT_ACT_ENVIRONMENT: boolean | undefined;
+}
+
 // `user.keyboard` renders all pending updates between `keydown` and the text insertion.
-// A real browser does not, so these tests use `typeWithBrowserTiming`.
-describe.skipIf(isJSDOM)('<DataGrid /> - Start editing with a printable key', () => {
+// A real browser does not, so these tests send real keys without `act()`.
+async function pressKeyWithBrowserTiming(key: string) {
+  const { userEvent } = await import('vitest/browser');
+  const previousActEnvironment = globalThis.IS_REACT_ACT_ENVIRONMENT;
+  globalThis.IS_REACT_ACT_ENVIRONMENT = false;
+  try {
+    await userEvent.keyboard(key);
+  } finally {
+    globalThis.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
+  }
+}
+
+describe.skipIf(isJSDOM)('<DataGrid /> - Start editing with a key', () => {
   const { render } = createRenderer();
 
   const rows: GridRowsProp = [{ id: 1, name: 'Nike' }];
   const columns: GridColDef[] = [{ field: 'name', editable: true }];
 
-  function ControlledGrid(props: Pick<DataGridProps, 'editMode'>) {
+  type GridProps = Pick<DataGridProps, 'editMode'> & Partial<Pick<DataGridProps, 'columns'>>;
+
+  function ControlledGrid(props: GridProps) {
     const [cellModesModel, setCellModesModel] = React.useState<GridCellModesModel>({});
     const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
     return (
@@ -135,7 +152,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Start editing with a printable key', ()
     );
   }
 
-  function UncontrolledGrid(props: Pick<DataGridProps, 'editMode'>) {
+  function UncontrolledGrid(props: GridProps) {
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid rows={rows} columns={columns} {...props} />
@@ -153,10 +170,27 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Start editing with a printable key', ()
         const cell = getCell(0, 0);
         await user.click(cell);
 
-        await typeWithBrowserTiming(cell, 'x');
+        await pressKeyWithBrowserTiming('x');
 
         expect(cell).to.have.class(gridClasses['cell--editing']);
         expect(cell.querySelector('input')!.value).to.equal('x');
+      });
+
+      it(`does not insert the Enter key with the ${name} ${editMode} modes model`, async () => {
+        const { user } = render(
+          <Grid
+            editMode={editMode}
+            columns={[{ field: 'name', type: 'longText', editable: true }]}
+          />,
+        );
+        const cell = getCell(0, 0);
+        await user.click(cell);
+
+        await pressKeyWithBrowserTiming('{Enter}');
+
+        expect(cell).to.have.class(gridClasses['cell--editing']);
+        expect(document.activeElement!.tagName).to.equal('TEXTAREA');
+        expect((document.activeElement as HTMLTextAreaElement).value).to.equal('Nike');
       });
     });
   });
