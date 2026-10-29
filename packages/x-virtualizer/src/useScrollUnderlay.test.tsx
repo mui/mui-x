@@ -16,12 +16,13 @@ const PERIOD = BAND_ITEM_COUNT * ITEM_HEIGHT;
 
 type ListProps = {
   itemCount?: number;
+  isRtl?: boolean;
   getUnderlayContent: (params: UnderlayParams) => UnderlayContent | null;
   rebuildRef?: React.RefObject<(() => void) | null>;
 };
 
 function List(props: ListProps) {
-  const { itemCount = ITEM_COUNT, getUnderlayContent, rebuildRef } = props;
+  const { itemCount = ITEM_COUNT, isRtl = false, getUnderlayContent, rebuildRef } = props;
   const scrollerRef = React.useRef<HTMLDivElement>(null);
   const underlayRef = React.useRef<HTMLDivElement>(null);
   const { rebuild } = useScrollUnderlay({
@@ -29,6 +30,7 @@ function List(props: ListProps) {
     underlayRef,
     itemHeight: ITEM_HEIGHT,
     itemCount,
+    isRtl,
     getUnderlayContent,
   });
 
@@ -48,7 +50,10 @@ function List(props: ListProps) {
   }
 
   return (
-    <div style={{ position: 'relative', width: VIEWPORT_WIDTH, height: VIEWPORT_HEIGHT }}>
+    <div
+      dir={isRtl ? 'rtl' : undefined}
+      style={{ position: 'relative', width: VIEWPORT_WIDTH, height: VIEWPORT_HEIGHT }}
+    >
       <div
         ref={underlayRef}
         data-testid="underlay"
@@ -76,6 +81,11 @@ function createUnderlayContent(): UnderlayContent {
 function bands() {
   const [top, bottom] = Array.from(screen.getByTestId('underlay').children) as HTMLElement[];
   return { top, bottom };
+}
+
+function translation(element: Element) {
+  const matrix = new DOMMatrix(getComputedStyle(element).transform);
+  return { x: matrix.m41, y: matrix.m42 };
 }
 
 // Two frames: the scroll-driven animations pick up a new scroll position in the next one.
@@ -146,12 +156,8 @@ describe.skipIf(isJSDOM)('useScrollUnderlay', () => {
     scroller.scrollTop = 2 * ITEM_HEIGHT + 5;
     scroller.scrollLeft = 50;
     await waitForFrames();
-    expect(getComputedStyle(bands().bottom).transform).to.equal(
-      `matrix(1, 0, 0, 1, 0, ${-(2 * ITEM_HEIGHT + 5)})`,
-    );
-    expect(getComputedStyle(bands().top.firstElementChild!).transform).to.equal(
-      'matrix(1, 0, 0, 1, -50, 0)',
-    );
+    expect(translation(bands().bottom).y).to.be.closeTo(-(2 * ITEM_HEIGHT + 5), 0.5);
+    expect(translation(bands().top.firstElementChild!).x).to.be.closeTo(-50, 0.5);
 
     // Once the scroll stops, each band waits past its edge of the new position.
     const scrollTop = 10 * ITEM_HEIGHT + 20;
@@ -167,13 +173,66 @@ describe.skipIf(isJSDOM)('useScrollUnderlay', () => {
     expect(bands().top.style.top).to.equal(
       `${(Math.ceil(scrollTop / ITEM_HEIGHT) - BAND_ITEM_COUNT) * ITEM_HEIGHT - scrollTop}px`,
     );
+    // One iteration per band height, to each end of the scroll range.
     const scrollTopMax = scroller.scrollHeight - scroller.clientHeight;
     const [bottomAfter] = bands().bottom.getAnimations();
-    expect(bottomAfter.effect!.getTiming().iterations).to.equal(
-      Math.floor((scrollTopMax - scrollTop) / PERIOD),
+    expect(bottomAfter.effect!.getTiming().iterations).to.be.closeTo(
+      (scrollTopMax - scrollTop) / PERIOD,
+      1e-9,
     );
     const [topAfter] = bands().top.getAnimations();
-    expect(topAfter.effect!.getTiming().iterations).to.equal(Math.floor(scrollTop / PERIOD));
+    const before = scrollTop / PERIOD;
+    expect(topAfter.effect!.getTiming().iterations).to.be.closeTo(before, 1e-9);
+    expect(topAfter.effect!.getTiming().iterationStart).to.be.closeTo(
+      Math.ceil(before) - before,
+      1e-9,
+    );
+  });
+
+  it('moves the bands with the items within a band height of either end', async () => {
+    const getUnderlayContent = vi.fn(createUnderlayContent);
+    render(<List getUnderlayContent={getUnderlayContent} />);
+    await waitFor(() => {
+      expect(getUnderlayContent.mock.calls.length).to.be.greaterThan(0);
+    });
+    const scroller = screen.getByTestId('scroller');
+    const scrollTopMax = scroller.scrollHeight - scroller.clientHeight;
+    const restAt = async (scrollTop: number) => {
+      const builds = getUnderlayContent.mock.calls.length;
+      act(() => {
+        scroller.scrollTop = scrollTop;
+        scroller.dispatchEvent(new Event('scroll'));
+      });
+      await waitFor(() => {
+        expect(getUnderlayContent.mock.calls.length).to.be.greaterThan(builds);
+      });
+    };
+
+    await restAt(scrollTopMax - 90);
+    scroller.scrollTop = scrollTopMax - 40;
+    await waitForFrames();
+    expect(translation(bands().bottom).y).to.be.closeTo(-50, 0.5);
+
+    await restAt(110);
+    scroller.scrollTop = 80;
+    await waitForFrames();
+    expect(translation(bands().top).y).to.be.closeTo(30, 0.5);
+  });
+
+  it('lines the content up with right-to-left items', async () => {
+    const getUnderlayContent = vi.fn(createUnderlayContent);
+    render(<List isRtl getUnderlayContent={getUnderlayContent} />);
+    await waitFor(() => {
+      expect(getUnderlayContent.mock.calls.length).to.be.greaterThan(0);
+    });
+    const scroller = screen.getByTestId('scroller');
+    const scrollLeftMax = scroller.scrollWidth - scroller.clientWidth;
+
+    // The content's left edge starts a whole scroll range left of the viewport.
+    expect(translation(bands().top.firstElementChild!).x).to.be.closeTo(-scrollLeftMax, 0.5);
+    scroller.scrollLeft = -50;
+    await waitForFrames();
+    expect(translation(bands().top.firstElementChild!).x).to.be.closeTo(-scrollLeftMax + 50, 0.5);
   });
 
   it('hides the band past the bottom edge when the items end above it', async () => {

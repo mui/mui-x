@@ -152,7 +152,8 @@ export function useScrollUnderlay(
 
     // Each band starts at the item its edge cuts and reaches BAND_ITEM_COUNT items past it.
     // Scrolling from here towards its edge, it moves with the items, one iteration per band
-    // height, so each jump back lands on the same items.
+    // height, so each jump back lands on the same items. The iterations run to the end of
+    // the scroll range, the last one partial.
     const { scrollTop } = scroller;
     const period = BAND_ITEM_COUNT * itemHeight;
     const bottomEdgeItem = Math.floor((scrollTop + underlay.clientHeight) / itemHeight);
@@ -164,38 +165,41 @@ export function useScrollUnderlay(
     // No items past the edge: the band would show where the items end above it.
     bottom.band.hidden = bottomEdgeItem >= itemCount;
 
-    const after = Math.floor((scroller.scrollHeight - scroller.clientHeight - scrollTop) / period);
+    const scrollTopMax = scroller.scrollHeight - scroller.clientHeight;
+    const after = (scrollTopMax - scrollTop) / period;
     if (after > 0) {
       bands.animations.push(
         bottom.band.animate([{ transform: 'none' }, { transform: `translateY(${-period}px)` }], {
           timeline: bands.y,
           rangeStart: `${scrollTop}px`,
-          rangeEnd: `${scrollTop + after * period}px`,
+          rangeEnd: `${scrollTopMax}px`,
           iterations: after,
         }),
       );
     }
-    const before = Math.floor(scrollTop / period);
+    const before = scrollTop / period;
     if (before > 0) {
       bands.animations.push(
         top.band.animate([{ transform: `translateY(${period}px)` }, { transform: 'none' }], {
           timeline: bands.y,
-          rangeStart: `${scrollTop - before * period}px`,
+          rangeStart: '0px',
           rangeEnd: `${scrollTop}px`,
           iterations: before,
+          // Iterations count from the start of the range: the partial one goes first, so that
+          // an iteration ends where the scroll stopped.
+          iterationStart: Math.ceil(before) - before,
         }),
       );
     }
     const scrollLeftMax = scroller.scrollWidth - scroller.clientWidth;
     if (scrollLeftMax > 0) {
-      const x = isRtl ? scrollLeftMax : -scrollLeftMax;
+      // The box follows the left edge of the scrolled content, which starts a whole scroll
+      // range left of the viewport in right-to-left content.
+      const keyframes = isRtl
+        ? [{ transform: `translateX(${-scrollLeftMax}px)` }, { transform: 'none' }]
+        : [{ transform: 'none' }, { transform: `translateX(${-scrollLeftMax}px)` }];
       [top, bottom].forEach((band) => {
-        bands.animations.push(
-          band.content.animate([{ transform: 'none' }, { transform: `translateX(${x}px)` }], {
-            timeline: bands.x,
-            fill: 'both',
-          }),
-        );
+        bands.animations.push(band.content.animate(keyframes, { timeline: bands.x, fill: 'both' }));
       });
     }
   });
