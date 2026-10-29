@@ -14,7 +14,7 @@ githubLabel: 'scope: scheduler'
 A dependency links two events: the predecessor (`source`) and the successor (`target`).
 The Event Timeline draws each dependency as an arrow.
 A dependency is broken when the successor starts or finishes earlier than its type allows.
-When a change would break a dependency, the Event Timeline moves the successor later to respect it.
+Moving or resizing an event, creating a dependency, or making one stricter moves the successor later to respect it, as described in [Auto-scheduling](#auto-scheduling).
 
 {{"demo": "DependenciesOverview.js", "bg": "inline", "defaultCodeOpen": false}}
 
