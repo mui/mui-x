@@ -103,6 +103,10 @@ Same changes as in `@mui/x-tree-view@9.16.1`.
 
 - The unused `DEFAULT_PREFERENCES` export of the Timeline store has been removed.
 
+- Recurring events and dependencies are now opt-in in the Event Timeline. Without the feature, each event with an `rrule` renders once:
+
+  
+
 #### `@mui/x-scheduler@9.0.0-beta.15`
 
 - [scheduler] Add `timeGridEvents` option to keep overnight timed events in the time grid (#23749) @Anexus5919
