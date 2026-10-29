@@ -1,5 +1,5 @@
 import { PieChart } from '@mui/x-charts/PieChart';
-import { ChartsLabelCustomMarkProps } from '@mui/x-charts/ChartsLabel';
+import type { ChartsLabelCustomMarkProps } from '@mui/x-charts/ChartsLabel';
 
 function HTMLDiamond({ className, color }: ChartsLabelCustomMarkProps) {
   return (

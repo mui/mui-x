@@ -2,12 +2,11 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
-import {
-  DataGridPremium,
+import type {
   GridCellSelectionModel,
   GridRowModelUpdate,
-  useGridApiRef,
 } from '@mui/x-data-grid-premium';
+import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function CellSelectionFormulaField() {

@@ -1,10 +1,10 @@
 import { gridRowNodeSelector } from '@mui/x-data-grid';
 import * as React from 'react';
+import type { GridEventListener } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
-  GridEventListener,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 

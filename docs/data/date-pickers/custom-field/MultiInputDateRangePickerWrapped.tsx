@@ -1,10 +1,8 @@
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import {
-  MultiInputDateRangeField,
-  MultiInputDateRangeFieldProps,
-} from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
+import type { MultiInputDateRangeFieldProps } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
+import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 
 function WrappedMultiInputDateRangeField(props: MultiInputDateRangeFieldProps) {

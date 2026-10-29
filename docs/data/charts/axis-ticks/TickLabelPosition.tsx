@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import { ShowMarkParams } from '@mui/x-charts/models';
+import type { ShowMarkParams } from '@mui/x-charts/models';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 export default function TickLabelPosition() {

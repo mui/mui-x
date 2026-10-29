@@ -1,7 +1,7 @@
 import * as React from 'react';
+import type { GridFilterModel } from '@mui/x-data-grid-pro';
 import {
   DataGridPro,
-  GridFilterModel,
   gridFilterModelSelector,
   GridFilterPanel,
   useGridApiContext,

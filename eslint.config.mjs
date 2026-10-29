@@ -266,6 +266,8 @@ export default defineConfig(
       `packages/x-scheduler{,-*}/**/*${EXTENSION_TS}`,
       `packages/x-tree-view{,-*}/**/*${EXTENSION_TS}`,
       `packages/x-chat{,-*}/**/*${EXTENSION_TS}`,
+      `docs/**/*${EXTENSION_TS}`,
+      `scripts/**/*${EXTENSION_TS}`,
     ],
     rules: {
       '@typescript-eslint/consistent-type-imports': [

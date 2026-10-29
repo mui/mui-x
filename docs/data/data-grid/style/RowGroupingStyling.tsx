@@ -1,9 +1,9 @@
 import * as React from 'react';
+import type { GridRowClassNameParams } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
-  GridRowClassNameParams,
   gridRowNodeSelector,
   gridRowSelector,
 } from '@mui/x-data-grid-premium';

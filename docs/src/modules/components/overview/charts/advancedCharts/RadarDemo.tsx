@@ -1,6 +1,7 @@
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { RadarChart, RadarSeries, radarClasses } from '@mui/x-charts/RadarChart';
+import type { RadarSeries } from '@mui/x-charts/RadarChart';
+import { RadarChart, radarClasses } from '@mui/x-charts/RadarChart';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 
 // Taken from https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_base_stats_in_Generation_I

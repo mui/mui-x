@@ -6,7 +6,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
+import type { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
 
 function ActionList(props: PickersActionBarProps) {

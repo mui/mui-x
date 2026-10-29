@@ -1,4 +1,4 @@
-import { PTOData } from '../types/pto';
+import type { PTOData } from '../types/pto';
 
 const year = new Date().getFullYear();
 const today = new Date();
