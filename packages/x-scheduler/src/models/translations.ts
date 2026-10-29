@@ -284,7 +284,64 @@ export interface EventCalendarLocaleText extends EventEditingLocaleText, Schedul
   timelineResourceTitleHeader: string;
 }
 
+export interface SchedulerDependencyDescriptionParams {
+  /**
+   * The title of the event the occurrence waits on.
+   */
+  title: string;
+  /**
+   * The formatted lag, from `dependencyLag`, or `null` when the dependency has none.
+   */
+  lag: string | null;
+}
+
 export interface EventTimelineLocaleText extends EventEditingLocaleText, SchedulerEventLocaleText {
   // Timeline title sub grid
   timelineResourceTitleHeader: string;
+
+  // Dependency dialog
+  dependencyEditTitle: string;
+  dependencyDetailsTitle: string;
+  dependencySourceLabel: string;
+  dependencyTargetLabel: string;
+  dependencyTypeLabel: string;
+  dependencyLagLabel: string;
+  dependencyLagUnitAriaLabel: string;
+  dependencyNoLag: string;
+  dependencyInvalidLagError: string;
+  dependencyAllDayLagIgnored: string;
+  /**
+   * @param {string} lag The lag the all-day event waits, formatted by `dependencyLag`.
+   */
+  dependencyAllDayLagRounded: (lag: string) => string;
+  dependencyUpdateCascadeBlockedError: string;
+  dependencyUpdateNotFoundError: string;
+  dependencyTypeFinishToStart: string;
+  dependencyTypeStartToStart: string;
+  dependencyTypeFinishToFinish: string;
+  dependencyTypeStartToFinish: string;
+  dependencyLagUnitMinutes: string;
+  dependencyLagUnitHours: string;
+  dependencyLagUnitDays: string;
+  dependencyLagUnitWeeks: string;
+  /**
+   * Formats a lag, for example "2 hours".
+   * @param {number} amount The number of units.
+   * @param {'minute' | 'hour' | 'day' | 'week'} unit The unit, as a code: the locale handles its plural.
+   */
+  dependencyLag: (amount: number, unit: 'minute' | 'hour' | 'day' | 'week') => string;
+
+  // Dependency context menu (shown on right-click of an arrow) and dialog actions
+  dependencyActionsAriaLabel: string;
+  editDependency: string;
+  // Replaces `editDependency` on a read-only dependency.
+  showDependencyDetails: string;
+  deleteDependency: string;
+
+  // Accessible description of an event that waits on dependencies, for example
+  // "Cannot start until 2 hours after Design finishes."
+  dependencyFinishToStartDescription: (params: SchedulerDependencyDescriptionParams) => string;
+  dependencyStartToStartDescription: (params: SchedulerDependencyDescriptionParams) => string;
+  dependencyFinishToFinishDescription: (params: SchedulerDependencyDescriptionParams) => string;
+  dependencyStartToFinishDescription: (params: SchedulerDependencyDescriptionParams) => string;
 }
