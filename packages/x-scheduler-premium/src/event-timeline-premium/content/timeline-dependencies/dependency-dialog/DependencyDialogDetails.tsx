@@ -11,7 +11,6 @@ import type {
 } from '@mui/x-scheduler-internals-premium/models';
 import { getPaletteVariants } from '@mui/x-scheduler/internals';
 import { useEventTimelinePremiumStyledContext } from '../../../EventTimelinePremiumStyledContext';
-import { DEPENDENCY_DIALOG_TEXT } from './dependencyDialogUtils';
 
 export const DependencyDialogBody = styled('div', {
   name: 'MuiEventTimeline',
@@ -111,12 +110,13 @@ export function DependencyDialogEndpoints(
   props: Pick<DependencyDialogViewProps, 'dependency' | 'sourceResourceId' | 'targetResourceId'>,
 ) {
   const { dependency, sourceResourceId, targetResourceId } = props;
+  const { localeText } = useEventTimelinePremiumStyledContext();
 
   return (
     <React.Fragment>
-      <Typography component="dt">{DEPENDENCY_DIALOG_TEXT.sourceLabel}</Typography>
+      <Typography component="dt">{localeText.dependencySourceLabel}</Typography>
       <DependencyDialogEvent eventId={dependency.source} resourceId={sourceResourceId} />
-      <Typography component="dt">{DEPENDENCY_DIALOG_TEXT.targetLabel}</Typography>
+      <Typography component="dt">{localeText.dependencyTargetLabel}</Typography>
       <DependencyDialogEvent eventId={dependency.target} resourceId={targetResourceId} />
     </React.Fragment>
   );
