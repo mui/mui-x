@@ -2,7 +2,7 @@
 
 ## 9.16.1
 <!-- generated comparing v9.16.0..master -->
-_Oct 29, 2026_
+_Oct 30, 2026_
 
 We'd like to extend a big thank you to the 18 contributors who made this release possible. Here are some highlights ✨:
 
