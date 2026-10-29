@@ -1,5 +1,12 @@
 {
   "props": {
+    "data": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ color: string, endAngle: number, formattedValue: string, hidden: bool, id?: number<br>&#124;&nbsp;string, index: number, label?: func<br>&#124;&nbsp;string, labelMarkType?: 'circle'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'line+mark'<br>&#124;&nbsp;'square'<br>&#124;&nbsp;func, padAngle: number, startAngle: number, value: number }&gt;"
+      },
+      "required": true
+    },
     "outerRadius": { "type": { "name": "number" }, "required": true },
     "seriesId": { "type": { "name": "string" }, "required": true },
     "arcLabel": {
@@ -44,7 +51,14 @@
     "import { PieArcLabelPlot } from '@mui/x-charts-pro';",
     "import { PieArcLabelPlot } from '@mui/x-charts-premium';"
   ],
-  "slots": [{ "name": "pieArcLabel", "description": "", "class": null }],
+  "slots": [
+    {
+      "name": "pieArcLabel",
+      "description": "The component that renders the pie arc labels.",
+      "default": "PieArcLabel",
+      "class": null
+    }
+  ],
   "classes": [],
   "muiName": "MuiPieArcLabelPlot",
   "filename": "/packages/x-charts/src/PieChart/PieArcLabelPlot.tsx",

@@ -1,5 +1,5 @@
 {
-  "props": {},
+  "props": { "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } } },
   "name": "RadialLinePlot",
   "imports": [
     "import { RadialLinePlot } from '@mui/x-charts-premium/RadialLineChart';",
