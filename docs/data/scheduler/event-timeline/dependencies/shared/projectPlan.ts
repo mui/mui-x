@@ -1,5 +1,8 @@
-import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
-import type { SchedulerDependency } from '@mui/x-scheduler-premium/models';
+import type {
+  SchedulerDependency,
+  SchedulerEvent,
+  SchedulerResource,
+} from '@mui/x-scheduler-premium/models';
 
 // A small project plan shared by the editing and rejection demos.
 
