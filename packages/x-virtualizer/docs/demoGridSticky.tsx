@@ -9,7 +9,9 @@ import {
   Virtualization,
   Dimensions,
   LayoutGridSticky,
+  useScrollUnderlay,
 } from '@mui/x-virtualizer';
+import { clone, createItemsBox, pickTypical } from './underlay';
 
 const ROW_COUNT = 100_000;
 const COLUMN_COUNT = 40;
@@ -48,13 +50,20 @@ const cellStyle: React.CSSProperties = {
   whiteSpace: 'nowrap',
 };
 
-/* Pinned cells are sticky elements in the flow of the row: their constraints resolve
- * against the scrollport, so they compose with the horizontally-sticky window. */
+/* Pinned cells of the header and the pinned rows are sticky elements in the flow of the
+ * row: their constraints resolve against the scrollport, so they compose with the
+ * horizontally-sticky window. */
 const pinnedCellStyle: React.CSSProperties = {
   ...cellStyle,
   position: 'sticky',
   zIndex: 1,
   background: '#f5f5f5',
+};
+
+// Holds a pinned cell's place in a window row: `PinnedColumns` draws the cell.
+const pinnedPlaceholderStyle: React.CSSProperties = {
+  flex: '0 0 auto',
+  width: COLUMN_WIDTH,
 };
 
 /* Covers the scrollbar lane in the top band — the only region the lane mask keeps
@@ -103,6 +112,37 @@ const lastRowStyle: React.CSSProperties = {
   borderBottomWidth: 'min(1px, var(--lane-bottom, 0px))',
 };
 
+// A pinned cell with its row's bottom border, as the pinned columns stack them.
+const stackedCellStyle: React.CSSProperties = {
+  ...cellStyle,
+  height: ROW_HEIGHT,
+  borderBottom: `1px solid ${borderColor}`,
+  background: '#f5f5f5',
+};
+const stackedLastCellStyle: React.CSSProperties = { ...stackedCellStyle, ...lastColumnStyle };
+
+// Zero height, so the rows still start at its top; the columns overflow it.
+const pinnedColumnsStyle: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'flex-start',
+  height: 0,
+};
+// Sticky like the pinned cells, so they hold the same place.
+const pinnedLeftColumnStyle: React.CSSProperties = {
+  flex: '0 0 auto',
+  width: COLUMN_WIDTH,
+  position: 'sticky',
+  left: 0,
+  zIndex: 1,
+};
+const pinnedRightColumnStyle: React.CSSProperties = {
+  flex: '0 0 auto',
+  width: COLUMN_WIDTH,
+  position: 'sticky',
+  right: 'var(--pinned-right)',
+  zIndex: 1,
+};
+
 const containerSx = {
   height: 480,
   border: `1px solid ${borderColor}`,
@@ -147,13 +187,16 @@ const Row = React.memo(function Row(props: {
   background?: string;
   isLastRow?: boolean;
   laneFiller?: boolean;
+  isPinnedRow?: boolean;
 }) {
-  const { id, firstColumnIndex, lastColumnIndex, background, isLastRow, laneFiller } = props;
+  const { id, firstColumnIndex, lastColumnIndex, background, isLastRow, laneFiller, isPinnedRow } =
+    props;
 
+  // `data-colindex` and `data-rowindex` (window rows only) let `getUnderlayRows` find the cells.
   const cells = [];
   for (let i = firstColumnIndex; i < lastColumnIndex; i += 1) {
     cells.push(
-      <div key={i} style={cellStyle}>
+      <div key={i} style={cellStyle} data-colindex={i}>
         {id} × {i}
       </div>,
     );
@@ -163,12 +206,23 @@ const Row = React.memo(function Row(props: {
   const base = isLastRow ? { ...rowStyle, ...lastRowStyle } : rowStyle;
 
   return (
-    <div style={background ? { ...base, background } : base}>
-      <div style={{ ...pinnedStyle, left: 0 }}>{id} × 0</div>
+    <div
+      style={background ? { ...base, background } : base}
+      data-rowindex={isPinnedRow ? undefined : id}
+    >
+      {isPinnedRow ? (
+        <div style={{ ...pinnedStyle, left: 0 }}>{id} × 0</div>
+      ) : (
+        <div style={pinnedPlaceholderStyle} />
+      )}
       {cells}
-      <div style={{ ...pinnedStyle, ...lastColumnStyle, right: 'var(--pinned-right)' }}>
-        {id} × {COLUMN_COUNT - 1}
-      </div>
+      {isPinnedRow ? (
+        <div style={{ ...pinnedStyle, ...lastColumnStyle, right: 'var(--pinned-right)' }}>
+          {id} × {COLUMN_COUNT - 1}
+        </div>
+      ) : (
+        <div style={pinnedPlaceholderStyle} />
+      )}
       {laneFiller ? <div style={{ ...laneFillerStyle, background }} /> : null}
     </div>
   );
@@ -212,6 +266,93 @@ const HeaderRow = React.memo(function HeaderRow() {
     />
   );
 });
+
+// The window rows' pinned cells, as one sticky column per side. A sticky cell per row is a
+// layer per cell, which Chrome rasterizes after its row, so on a fast scroll a drawn row
+// can show without its pinned cells. First in the window content, with a z-index, so the
+// columns paint over the rows' unpinned cells. Anchored like the rows: the pad holds each
+// cell at a fixed offset in its column, so an update repaints only the cells it adds.
+const PinnedColumns = React.memo(function PinnedColumns() {
+  const virtualizer = React.useContext(VirtualizerContext);
+  const renderContext = virtualizer.store.use(Virtualization.selectors.renderContext);
+  const windowContentProps = virtualizer.store.use(LayoutGridSticky.selectors.windowContentProps);
+  const padTop = windowContentProps.style.paddingTop as number;
+
+  const left = [];
+  const right = [];
+  const lastRowIndex = Math.min(renderContext.lastRowIndex, rows.length);
+  for (let index = renderContext.firstRowIndex; index < lastRowIndex; index += 1) {
+    const { id } = rows[index];
+    left.push(
+      <div key={id} style={stackedCellStyle} data-colindex={0}>
+        {id} × 0
+      </div>,
+    );
+    right.push(
+      <div key={id} style={stackedLastCellStyle} data-colindex={COLUMN_COUNT - 1}>
+        {id} × {COLUMN_COUNT - 1}
+      </div>,
+    );
+  }
+
+  const anchorStyle = { marginTop: -padTop, paddingTop: padTop };
+  return (
+    <div style={pinnedColumnsStyle}>
+      <div style={{ ...pinnedLeftColumnStyle, ...anchorStyle }}>{left}</div>
+      {/* The unpinned cells' width, so the right column starts where its placeholders do. */}
+      <div style={{ flex: 1 }} />
+      <div style={{ ...pinnedRightColumnStyle, ...anchorStyle }}>{right}</div>
+    </div>
+  );
+});
+
+// The underlay content (see `useScrollUnderlay`): copies of a rendered row, each cell
+// swapped for a copy of a rendered cell of its column, picked per column among those of
+// typical width, so no underlay row repeats a real one. The pinned columns' cells stack at
+// their side.
+function getUnderlayRows(windowContent: HTMLElement, scroller: HTMLElement, count: number) {
+  const rowElements = windowContent.querySelectorAll<HTMLElement>('[data-rowindex]');
+  if (rowElements.length === 0) {
+    return null;
+  }
+  const cellsByColumn = new Map<number, HTMLElement[]>();
+  windowContent.querySelectorAll<HTMLElement>('[data-colindex]').forEach((cell) => {
+    const column = Number(cell.dataset.colindex);
+    const cells = cellsByColumn.get(column);
+    if (cells) {
+      cells.push(cell);
+    } else {
+      cellsByColumn.set(column, [cell]);
+    }
+  });
+  const picks = new Map<number, HTMLElement[]>();
+  cellsByColumn.forEach((cells, column) => picks.set(column, pickTypical(cells, count)));
+
+  const underlayRows = createItemsBox(rowElements[0], scroller);
+  for (let index = 0; index < count; index += 1) {
+    const underlayRow = clone(rowElements[0]);
+    underlayRow.querySelectorAll<HTMLElement>('[data-colindex]').forEach((cell) => {
+      const pick = picks.get(Number(cell.dataset.colindex));
+      if (pick) {
+        cell.replaceWith(clone(pick[index]));
+      }
+    });
+    underlayRows.append(underlayRow);
+  }
+
+  const pinnedColumn = (column: number, side: 'insetInlineStart' | 'insetInlineEnd') => {
+    const stack = windowContent.ownerDocument.createElement('div');
+    stack.style.position = 'absolute';
+    stack.style.top = '0';
+    stack.style[side] = '0';
+    picks.get(column)?.forEach((cell) => stack.append(clone(cell)));
+    return stack;
+  };
+  return {
+    content: [underlayRows],
+    pinned: [pinnedColumn(0, 'insetInlineStart'), pinnedColumn(COLUMN_COUNT - 1, 'insetInlineEnd')],
+  };
+}
 
 // The geometry is derived from the dimensions the grid already reads: the widget
 // collapses to 0 on a non-scrolling axis, so the scrollbar-size probe can still measure inside it.
@@ -272,6 +413,8 @@ function Grid() {
     scrollbarVertical: React.useRef<HTMLDivElement>(null),
     scrollbarHorizontal: React.useRef<HTMLDivElement>(null),
   };
+  const windowContentRef = React.useRef<HTMLDivElement>(null);
+  const underlayRef = React.useRef<HTMLDivElement>(null);
   const layout = useLazyRef(() => new LayoutGridSticky(refs)).current;
   const virtualizer = useVirtualizer({
     layout,
@@ -300,11 +443,22 @@ function Grid() {
         background={typeof params.id === 'string' ? '#fff8e0' : undefined}
         isLastRow={params.id === 'pinned-bottom'}
         laneFiller={params.id === 'pinned-top'}
+        isPinnedRow={typeof params.id === 'string'}
       />
     ),
   });
 
   useJank(refs.scroller);
+  useScrollUnderlay({
+    scrollerRef: refs.scroller,
+    underlayRef,
+    itemHeight: ROW_HEIGHT,
+    itemCount: rows.length,
+    getUnderlayContent: ({ itemCount }) =>
+      windowContentRef.current && refs.scroller.current
+        ? getUnderlayRows(windowContentRef.current, refs.scroller.current, itemCount)
+        : null,
+  });
 
   const containerProps = virtualizer.store.use(LayoutGridSticky.selectors.containerProps);
   const dimensions = virtualizer.store.use(Dimensions.selectors.dimensions);
@@ -366,9 +520,26 @@ function Grid() {
     } as React.CSSProperties;
   }, [scrollerProps.style, dimensions]);
 
+  // Behind the scroller, over the rows: between the top and bottom containers, clear of the
+  // scrollbar lanes.
+  const underlayStyle = React.useMemo<React.CSSProperties>(
+    () => ({
+      position: 'absolute',
+      top: dimensions.topContainerHeight,
+      bottom:
+        dimensions.bottomContainerHeight + (dimensions.hasScrollX ? dimensions.scrollbarSize : 0),
+      left: 0,
+      right: dimensions.hasScrollY ? dimensions.scrollbarSize : 0,
+      overflow: 'hidden',
+      pointerEvents: 'none',
+    }),
+    [dimensions],
+  );
+
   return (
     <VirtualizerContext.Provider value={virtualizer}>
       <Box {...containerProps} style={containerStyle} sx={containerSx}>
+        <div className="Grid--underlay" ref={underlayRef} style={underlayStyle} />
         <Box className="Grid--scroller" {...scrollerProps} style={scrollerStyle} sx={scrollerSx}>
           <div className="Grid--content" {...contentProps}>
             <div className="Grid--topContainer" {...topContainerProps}>
@@ -382,7 +553,8 @@ function Grid() {
             <div className="Grid--window" {...windowProps}>
               <div {...spacerLeftProps} />
               <div className="Grid--innerWindow" {...innerWindowProps}>
-                <div className="Grid--windowContent" {...windowContentProps}>
+                <div className="Grid--windowContent" {...windowContentProps} ref={windowContentRef}>
+                  <PinnedColumns />
                   {getRows()}
                 </div>
               </div>
