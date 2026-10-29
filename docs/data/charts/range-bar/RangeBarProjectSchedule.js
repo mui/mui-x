@@ -13,7 +13,6 @@ import {
   useItemTooltip,
 } from '@mui/x-charts/ChartsTooltip';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
-
 import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
 import { ChartsWrapper } from '@mui/x-charts-pro/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts-pro/ChartsSurface';

@@ -4,7 +4,6 @@ import Stack from '@mui/material/Stack';
 import { randomId, randomName } from '@mui/x-data-grid-generator';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { useRichTreeViewProApiRef } from '@mui/x-tree-view-pro/hooks';
-
 import { DataSourceCacheDefault } from '@mui/x-tree-view/utils';
 import * as React from 'react';
 
