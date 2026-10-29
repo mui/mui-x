@@ -42,7 +42,7 @@ function App() {
 }
 ```
 
-The dependencies are only enabled with both the feature and a `dependencies` value, even an empty array.
+The dependencies are only enabled when both the feature and a `dependencies` value, even an empty array, are provided.
 Without one of them, the arrows don't render and users can't create dependencies.
 A `dependencies` value without the feature logs a warning in development.
 
