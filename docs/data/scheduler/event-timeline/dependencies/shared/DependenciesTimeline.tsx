@@ -63,8 +63,6 @@ const DependenciesTimelineRoot = styled('div', {
   fontSize: theme.typography.body2.fontSize,
 }));
 
-const sharedStyledContextValue = { classes: eventTimelinePremiumClasses };
-
 /**
  * Stands in for `EventTimelinePremium`, which doesn't accept the `dependencies` props yet.
  * Renders the same content and providers from the same store.
@@ -100,15 +98,23 @@ export function EventTimelinePremium<
   const store = useEventTimelinePremium(storeParameters);
 
   const schedulerId = React.useId();
+  const mergedLocaleText = React.useMemo(
+    () => ({ ...EVENT_TIMELINE_DEFAULT_LOCALE_TEXT, ...localeText }),
+    [localeText],
+  );
   const styledContextValue = React.useMemo(
     () => ({
       schedulerId,
       classes: eventTimelinePremiumClasses,
-      localeText: { ...EVENT_TIMELINE_DEFAULT_LOCALE_TEXT, ...localeText },
+      localeText: mergedLocaleText,
       resourceColumnLabel,
       getEventAriaLabel,
     }),
-    [schedulerId, localeText, resourceColumnLabel, getEventAriaLabel],
+    [schedulerId, mergedLocaleText, resourceColumnLabel, getEventAriaLabel],
+  );
+  const sharedStyledContextValue = React.useMemo(
+    () => ({ classes: eventTimelinePremiumClasses, localeText: mergedLocaleText }),
+    [mergedLocaleText],
   );
 
   return (
