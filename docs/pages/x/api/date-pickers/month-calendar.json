@@ -3,14 +3,11 @@
     "autoFocus": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "className": { "type": { "name": "string" } },
-    "currentMonth": { "type": { "name": "object" } },
     "defaultValue": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
-    "gridLabelId": { "type": { "name": "string" } },
-    "hasFocus": { "type": { "name": "bool" } },
     "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
     "minDate": { "type": { "name": "object" }, "default": "1900-01-01" },
     "monthsPerRow": {
@@ -23,14 +20,6 @@
         "type": "function(value: PickerValidDate) => void",
         "describedArgs": ["value"]
       }
-    },
-    "onFocusedViewChange": {
-      "type": { "name": "func" },
-      "signature": { "type": "function(hasFocus: boolean) => void", "describedArgs": ["hasFocus"] }
-    },
-    "onMonthFocus": {
-      "type": { "name": "func" },
-      "signature": { "type": "function(month: number) => void", "describedArgs": ["month"] }
     },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {

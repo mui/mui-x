@@ -9,12 +9,18 @@ import type { PickerTextFieldOwnerState } from '../../models/fields';
 
 export interface PickersInputPropsUsedByField extends Pick<
   PickersSectionListProps,
-  'elements' | 'sectionListRef' | 'contentEditable' | 'tabIndex'
+  'contentEditable' | 'tabIndex'
 > {
   /**
-   * Is `true` if the current values equals the empty value.
-   * For a single item value, it means that `value === null`
-   * For a range value, it means that `value === [null, null]`
+   * @ignore
+   */
+  elements: PickersSectionListProps['elements'];
+  /**
+   * @ignore
+   */
+  sectionListRef: PickersSectionListProps['sectionListRef'];
+  /**
+   * @ignore
    */
   areAllSectionsEmpty: boolean;
 
@@ -49,7 +55,7 @@ export interface PickersInputPropsUsedByField extends Pick<
   startAdornment?: React.ReactNode;
 
   /**
-   * The value of the hidden `input` element.
+   * @ignore
    */
   value: string;
   /**

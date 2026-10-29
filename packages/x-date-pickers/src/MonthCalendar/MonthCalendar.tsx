@@ -354,8 +354,7 @@ MonthCalendar.propTypes /* remove-proptypes */ = {
    */
   className: PropTypes.string,
   /**
-   * The month currently displayed in the calendar.
-   * The months shown belong to its year.
+   * @ignore
    */
   currentMonth: PropTypes.object,
   /**
@@ -385,13 +384,11 @@ MonthCalendar.propTypes /* remove-proptypes */ = {
    */
   disablePast: PropTypes.bool,
   /**
-   * The id of the element that labels the month grid.
-   * It is used as the `aria-labelledby` of the grid.
+   * @ignore
    */
   gridLabelId: PropTypes.string,
   /**
-   * If `true`, the component has keyboard focus.
-   * Use with `onFocusedViewChange` to control the focus.
+   * @ignore
    */
   hasFocus: PropTypes.bool,
   /**
@@ -415,13 +412,11 @@ MonthCalendar.propTypes /* remove-proptypes */ = {
    */
   onChange: PropTypes.func,
   /**
-   * Callback fired when the component gains or loses keyboard focus.
-   * @param {boolean} hasFocus `true` if the component has focus.
+   * @ignore
    */
   onFocusedViewChange: PropTypes.func,
   /**
-   * Callback fired when a month receives focus.
-   * @param {number} month The focused month.
+   * @ignore
    */
   onMonthFocus: PropTypes.func,
   /**

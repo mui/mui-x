@@ -109,11 +109,12 @@ PickersRangeCalendarHeader.propTypes /* remove-proptypes */ = {
    */
   className: PropTypes.string,
   /**
-   * The month currently displayed.
+   * The first visible month.
    */
   currentMonth: PropTypes.object.isRequired,
   /**
-   * If `true`, the view switch button is hidden.
+   * If `true`, the view cannot be switched.
+   * The switch button is hidden and a click on the label does nothing.
    */
   disabled: PropTypes.bool,
   /**

@@ -1,15 +1,6 @@
 {
   "props": {
-    "areAllSectionsEmpty": { "type": { "name": "bool" }, "required": true },
     "contentEditable": { "type": { "name": "bool" }, "required": true },
-    "elements": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ after: object, before: object, container: object, content: object }&gt;"
-      },
-      "required": true
-    },
-    "value": { "type": { "name": "string" }, "required": true },
     "color": {
       "type": {
         "name": "enum",
@@ -37,12 +28,6 @@
     "name": { "type": { "name": "string" } },
     "readOnly": { "type": { "name": "bool" } },
     "required": { "type": { "name": "bool" }, "default": "false" },
-    "sectionListRef": {
-      "type": {
-        "name": "union",
-        "description": "func<br>&#124;&nbsp;{ current?: { getRoot: func, getSectionContainer: func, getSectionContent: func, getSectionIndexFromDOMElement: func } }"
-      }
-    },
     "size": {
       "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" },
       "default": "'medium'"

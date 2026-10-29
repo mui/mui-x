@@ -55,11 +55,12 @@ export interface PickersCalendarHeaderProps
    */
   slotProps?: PickersCalendarHeaderSlotProps;
   /**
-   * The month currently displayed.
+   * The first visible month.
    */
   currentMonth: PickerValidDate;
   /**
-   * If `true`, the view switch button is hidden.
+   * If `true`, the view cannot be switched.
+   * The switch button is hidden and a click on the label does nothing.
    */
   disabled?: boolean;
   /**

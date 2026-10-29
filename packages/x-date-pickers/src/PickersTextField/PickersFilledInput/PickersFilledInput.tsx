@@ -273,9 +273,7 @@ PickersFilledInput.propTypes /* remove-proptypes */ = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Is `true` if the current values equals the empty value.
-   * For a single item value, it means that `value === null`
-   * For a range value, it means that `value === [null, null]`
+   * @ignore
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
   classes: PropTypes.object,
@@ -291,8 +289,7 @@ PickersFilledInput.propTypes /* remove-proptypes */ = {
   'data-multi-input': PropTypes.string,
   disableUnderline: PropTypes.bool,
   /**
-   * The elements to render.
-   * Each element contains the prop to edit a section of the value.
+   * @ignore
    */
   elements: PropTypes.arrayOf(
     PropTypes.shape({
@@ -360,7 +357,7 @@ PickersFilledInput.propTypes /* remove-proptypes */ = {
   readOnly: PropTypes.bool,
   renderSuffix: PropTypes.func,
   /**
-   * The ref used to access the DOM elements of the sections.
+   * @ignore
    */
   sectionListRef: PropTypes.oneOfType([
     PropTypes.func,
@@ -397,7 +394,7 @@ PickersFilledInput.propTypes /* remove-proptypes */ = {
     PropTypes.object,
   ]),
   /**
-   * The value of the hidden `input` element.
+   * @ignore
    */
   value: PropTypes.string.isRequired,
 } as any;

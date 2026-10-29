@@ -66,9 +66,7 @@ SingleInputTimeRangeField.propTypes /* remove-proptypes */ = {
    */
   ampm: PropTypes.bool,
   /**
-   * Is `true` if the current values equals the empty value.
-   * For a single item value, it means that `value === null`
-   * For a range value, it means that `value === [null, null]`
+   * @ignore
    */
   areAllSectionsEmpty: PropTypes.bool,
   /**

@@ -21,30 +21,11 @@
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components."
     },
-    "gridLabelId": {
-      "description": "The id of the element that labels the year grid. It is used as the <code>aria-labelledby</code> of the grid."
-    },
-    "hasFocus": {
-      "description": "If <code>true</code>, the component has keyboard focus. Use with <code>onFocusedViewChange</code> to control the focus."
-    },
     "maxDate": { "description": "Maximal selectable date." },
     "minDate": { "description": "Minimal selectable date." },
     "onChange": {
       "description": "Callback fired when the value changes.",
       "typeDescriptions": { "value": { "name": "value", "description": "The new value." } }
-    },
-    "onFocusedViewChange": {
-      "description": "Callback fired when the component gains or loses keyboard focus.",
-      "typeDescriptions": {
-        "hasFocus": {
-          "name": "hasFocus",
-          "description": "<code>true</code> if the component has focus."
-        }
-      }
-    },
-    "onYearFocus": {
-      "description": "Callback fired when a year receives focus.",
-      "typeDescriptions": { "year": { "name": "year", "description": "The focused year." } }
     },
     "readOnly": {
       "description": "If <code>true</code>, the component is read-only. When read-only, the value cannot be changed but the user can interact with the interface."
