@@ -57,9 +57,9 @@ To change them, remount the Event Timeline, for example with a `key`.
 
 ```ts
 const dependency = {
-  id: 'd1',
-  source: 'design', // The id of the predecessor event
-  target: 'build', // The id of the successor event
+  id: '1',
+  source: '12', // The id of the predecessor event
+  target: '13', // The id of the successor event
   type: 'FinishToStart',
   lag: 2, // Optional, defaults to 0
   lagUnit: 'day', // Optional, defaults to 'day'
