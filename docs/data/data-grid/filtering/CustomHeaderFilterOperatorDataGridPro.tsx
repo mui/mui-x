@@ -16,16 +16,7 @@ function RatingInputValue(
     clearButton: React.ReactNode;
   },
 ) {
-  const { item, applyValue, focusElementRef, headerFilterMenu, clearButton } = props;
-
-  const ratingRef: React.Ref<any> = React.useRef(null);
-  React.useImperativeHandle(focusElementRef, () => ({
-    focus: () => {
-      ratingRef.current
-        .querySelector(`input[value="${Number(item.value) || ''}"]`)
-        .focus();
-    },
-  }));
+  const { item, applyValue, headerFilterMenu, clearButton } = props;
 
   const handleFilterChange: RatingProps['onChange'] = (event, newValue) => {
     applyValue({ ...item, value: newValue });
@@ -45,7 +36,6 @@ function RatingInputValue(
         value={Number(item.value)}
         onChange={handleFilterChange}
         precision={0.5}
-        ref={ratingRef}
         sx={{ mr: 0.5 }}
       />
       {headerFilterMenu}
