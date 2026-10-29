@@ -1,17 +1,21 @@
 import { move } from './gestures/MoveUserGesture';
-import { MoveUserGestureOptions, MoveUserGestureRoot } from './gestures/MoveUserGesture.types';
+import type { MoveUserGestureOptions, MoveUserGestureRoot } from './gestures/MoveUserGesture.types';
 import { pan } from './gestures/PanUserGesture';
 import type { PanUserGestureOptions, PanUserGestureRoot } from './gestures/PanUserGesture.types';
 import { press } from './gestures/PressUserGesture';
-import { PressUserGestureOptions, PressUserGestureRoot } from './gestures/PressUserGesture.types';
+import type {
+  PressUserGestureOptions,
+  PressUserGestureRoot,
+} from './gestures/PressUserGesture.types';
 import { tap } from './gestures/TapUserGesture';
-import { TapUserGestureOptions, TapUserGestureRoot } from './gestures/TapUserGesture.types';
+import type { TapUserGestureOptions, TapUserGestureRoot } from './gestures/TapUserGesture.types';
 import { turnWheel } from './gestures/TurnWheelUserGesture';
-import {
+import type {
   TurnWheelUserGestureOptions,
   TurnWheelUserGestureRoot,
 } from './gestures/TurnWheelUserGesture.types';
-import { UserGesture, UserGestureOptions } from './UserGesture';
+import type { UserGestureOptions } from './UserGesture';
+import { UserGesture } from './UserGesture';
 import { createProxy } from './utils/createProxy';
 
 /**

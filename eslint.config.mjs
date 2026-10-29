@@ -260,12 +260,7 @@ export default defineConfig(
   },
   {
     files: [
-      `packages/x-charts{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-data-grid{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-date-pickers{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-scheduler{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-tree-view{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-chat{,-*}/**/*${EXTENSION_TS}`,
+      `packages/**/*${EXTENSION_TS}`,
       `docs/**/*${EXTENSION_TS}`,
       `scripts/**/*${EXTENSION_TS}`,
       `test/**/*${EXTENSION_TS}`,
