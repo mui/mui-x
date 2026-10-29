@@ -35,6 +35,21 @@ Screen reader announcements are mirrored above the Data Grid.
 
 {{"demo": "KeyboardReordering.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Alternative: highlight with the arrow keys at the edge
+
+The demo below is the same prototype with a different way to turn the highlight on.
+Instead of <kbd class="key">Esc</kbd>, the arrow key that points out of the Data Grid highlights the row or column the focus is in:
+
+- On the first cell of a row, <kbd class="key">Arrow Left</kbd> highlights the row. The focus stays on the cell.
+  <kbd class="key">Arrow Right</kbd> clears the highlight, and the focus still stays on the cell. <kbd class="key">Arrow Right</kbd> again moves the focus to the second cell.
+- On a column header, <kbd class="key">Arrow Up</kbd> highlights the column. The focus stays on the header.
+  <kbd class="key">Arrow Down</kbd> clears the highlight, and <kbd class="key">Arrow Down</kbd> again moves the focus into the first row.
+
+<kbd class="key">Esc</kbd> only clears an existing highlight in this variant, so it keeps closing a surrounding dialog.
+Extending with <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow</kbd></kbd> and moving with <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow</kbd></kbd> are unchanged.
+
+{{"demo": "KeyboardReorderingEdgeArrows.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Keyboard interaction
 
 :::info
@@ -91,7 +106,8 @@ Everything the [accessibility page](/x/react-data-grid/accessibility/#keyboard-n
 - Column groups, pinned columns, pinned rows, tree data and row grouping aren't handled yet. The real implementation reuses the same rules as drag-and-drop reordering for all of them.
 - Right-to-left layouts aren't handled: <kbd class="key">Arrow Left</kbd> always moves toward lower column indexes.
 - A block move is performed as a sequence of single moves, so `onRowOrderChange` and `onColumnOrderChange` are called once per row or column of the block.
-- <kbd class="key">Esc</kbd> is consumed by the Data Grid both to highlight and to clear. Inside a dialog, closing the dialog with <kbd class="key">Esc</kbd> from a cell needs a highlight to be cleared first.
+- <kbd class="key">Esc</kbd> is consumed by the Data Grid both to highlight and to clear in the first demo. Inside a dialog, closing the dialog with <kbd class="key">Esc</kbd> from a cell needs a highlight to be cleared first. The arrow-key variant doesn't have this problem.
+- In the arrow-key variant, <kbd class="key">Arrow Up</kbd> on a column header no longer reaches column group headers; the demo has none.
 - <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow</kbd></kbd> on a body cell is swallowed: it neither moves the focus nor navigates the browser history.
 - With NVDA or JAWS, <kbd class="key">Esc</kbd> may leave focus mode. Testing with those screen readers is part of the evaluation of this prototype.
 
