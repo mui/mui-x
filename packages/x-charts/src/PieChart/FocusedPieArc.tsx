@@ -85,10 +85,25 @@ FocusedPieArc.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
+  /**
+   * The radius applied to arc corners (similar to border radius).
+   */
   cornerRadius: PropTypes.number,
+  /**
+   * The radius between circle center and the beginning of the arc.
+   */
   innerRadius: PropTypes.number,
+  /**
+   * The radius between circle center and the end of the arc.
+   */
   outerRadius: PropTypes.number,
+  /**
+   * The padding angle (deg) between two arcs.
+   */
   paddingAngle: PropTypes.number,
   /**
    * If `true`, the animation is disabled.
