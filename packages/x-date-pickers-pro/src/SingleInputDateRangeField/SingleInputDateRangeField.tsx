@@ -61,7 +61,9 @@ SingleInputDateRangeField.propTypes /* remove-proptypes */ = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * @ignore
+   * Is `true` if the current values equals the empty value.
+   * For a single item value, it means that `value === null`
+   * For a range value, it means that `value === [null, null]`
    */
   areAllSectionsEmpty: PropTypes.bool,
   /**

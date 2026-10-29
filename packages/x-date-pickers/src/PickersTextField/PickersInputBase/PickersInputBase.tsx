@@ -518,7 +518,9 @@ PickersInputBase.propTypes /* remove-proptypes */ = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * @ignore
+   * Is `true` if the current values equals the empty value.
+   * For a single item value, it means that `value === null`
+   * For a range value, it means that `value === [null, null]`
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
   classes: PropTypes.object,
@@ -533,7 +535,8 @@ PickersInputBase.propTypes /* remove-proptypes */ = {
   contentEditable: PropTypes.bool.isRequired,
   'data-multi-input': PropTypes.string,
   /**
-   * @ignore
+   * The elements to render.
+   * Each element contains the prop to edit a section of the value.
    */
   elements: PropTypes.arrayOf(
     PropTypes.shape({
@@ -637,7 +640,7 @@ PickersInputBase.propTypes /* remove-proptypes */ = {
     PropTypes.object,
   ]),
   /**
-   * @ignore
+   * The value of the hidden `input` element.
    */
   value: PropTypes.string.isRequired,
 } as any;

@@ -1,6 +1,9 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "areAllSectionsEmpty": {
+      "description": "Is <code>true</code> if the current values equals the empty value. For a single item value, it means that <code>value === null</code> For a range value, it means that <code>value === [null, null]</code>"
+    },
     "color": {
       "description": "The color of the component. It supports both default and custom theme colors, which can be added as shown in the <a href=\"https://mui.com/material-ui/customization/palette/#custom-colors\">palette customization guide</a>."
     },
@@ -8,6 +11,9 @@
       "description": "If true, the whole element is editable. Useful when all the sections are selected."
     },
     "disabled": { "description": "If <code>true</code>, the component is disabled." },
+    "elements": {
+      "description": "The elements to render. Each element contains the prop to edit a section of the value."
+    },
     "endAdornment": { "description": "End <code>InputAdornment</code> for this component." },
     "error": {
       "description": "If <code>true</code>, the <code>input</code> will indicate an error."
@@ -40,6 +46,7 @@
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
+    "value": { "description": "The value of the hidden <code>input</code> element." },
     "variant": { "description": "The variant to use." }
   },
   "classDescriptions": {

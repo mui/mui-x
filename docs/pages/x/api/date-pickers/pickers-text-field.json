@@ -1,6 +1,15 @@
 {
   "props": {
+    "areAllSectionsEmpty": { "type": { "name": "bool" }, "required": true },
     "contentEditable": { "type": { "name": "bool" }, "required": true },
+    "elements": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ after: object, before: object, container: object, content: object }&gt;"
+      },
+      "required": true
+    },
+    "value": { "type": { "name": "string" }, "required": true },
     "color": {
       "type": {
         "name": "enum",
