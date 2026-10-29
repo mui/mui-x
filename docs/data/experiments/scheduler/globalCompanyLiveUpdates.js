@@ -58,6 +58,8 @@ function getWeeklyOccurrenceDays(series, rule, firstDay, lastDay) {
 /**
  * Picks an occurrence of a timed weekly series in the targeted days.
  * The other series need a full recurrence engine to find their occurrences.
+ * The series created from the calendar UI are skipped: their dates are UTC strings,
+ * while the updates read the dates as wall times.
  */
 function pickWeeklyOccurrence(events, context) {
   for (let attempt = 0; attempt < 50; attempt += 1) {
@@ -67,7 +69,8 @@ function pickWeeklyOccurrence(events, context) {
       typeof rule === 'object' &&
       rule.freq === 'WEEKLY' &&
       rule.count == null &&
-      !series.allDay
+      !series.allDay &&
+      !series.start.endsWith('Z')
     ) {
       const days = getWeeklyOccurrenceDays(
         series,
@@ -84,11 +87,23 @@ function pickWeeklyOccurrence(events, context) {
 }
 
 function pickTeamDay(context) {
-  const { random } = context;
+  const weekdays = [];
+  for (let day = context.firstDay; day <= context.lastDay; day += 1) {
+    if (getNextWeekday(day) === day) {
+      weekdays.push(day);
+    }
+  }
   return {
-    team: random.pick(context.teams),
-    day: getNextWeekday(random.int(context.firstDay, context.lastDay)),
+    team: context.random.pick(context.teams),
+    day: context.random.pick(weekdays),
   };
+}
+
+/**
+ * Whether `event` is a standalone event that replaces an occurrence moved from `series`.
+ */
+function isMovedFrom(series, event) {
+  return event.extractedFromId === series.id && event.rrule == null;
 }
 
 function replaceEvent(events, event) {
@@ -116,6 +131,7 @@ const cancelOccurrence = (events, context) => {
 };
 
 // Like undoing a cancellation or a move.
+// It can also restore a standup on an office holiday.
 const restoreOccurrence = (events, context) => {
   // The dates start with the day, so comparing the strings compares the days.
   const firstKey = formatDay(context.firstDay);
@@ -134,15 +150,13 @@ const restoreOccurrence = (events, context) => {
 
   const { series, exDate } = context.random.pick(candidates);
   const day = exDate.slice(0, 10);
-  const isMovedOccurrence = (event) =>
-    event.extractedFromId === series.id &&
-    event.rrule == null &&
-    event.start.startsWith(day);
   return {
     events: replaceEvent(events, {
       ...series,
       exDates: series.exDates?.filter((value) => value !== exDate),
-    }).filter((event) => !isMovedOccurrence(event)),
+    }).filter(
+      (event) => !(isMovedFrom(series, event) && event.start.startsWith(day)),
+    ),
     description: `Restored "${series.title}" on ${day}`,
   };
 };
@@ -195,11 +209,6 @@ const splitSeries = (events, context) => {
   }
 
   const followingId = context.createId();
-  // The occurrences moved from the following days now belong to the new series.
-  const isFollowingMovedOccurrence = (event) =>
-    event.extractedFromId === series.id &&
-    event.rrule == null &&
-    parseDay(event.start) >= day;
   return {
     events: [
       ...events.map((event) => {
@@ -210,7 +219,8 @@ const splitSeries = (events, context) => {
             exDates: preceding,
           };
         }
-        return isFollowingMovedOccurrence(event)
+        // The occurrences moved from the following days now belong to the new series.
+        return isMovedFrom(series, event) && parseDay(event.start) >= day
           ? { ...event, extractedFromId: followingId }
           : event;
       }),
@@ -245,11 +255,9 @@ const deleteSeries = (events, context) => {
     return null;
   }
   const series = context.random.pick(candidates);
-  const isMovedOccurrence = (event) =>
-    event.extractedFromId === series.id && event.rrule == null;
   return {
     events: events.filter(
-      (event) => event.id !== series.id && !isMovedOccurrence(event),
+      (event) => event.id !== series.id && !isMovedFrom(series, event),
     ),
     description: `Deleted the weekly "${series.title}"`,
   };
@@ -294,14 +302,14 @@ const deleteEvent = (events, context) => {
 // The splits add series, but they don't add occurrences.
 const LIVE_UPDATERS = [
   [cancelOccurrence, 3],
-  [restoreOccurrence, 3],
+  [restoreOccurrence, 6],
   [moveOccurrence, 3],
   [splitSeries, 1],
   [createSeries, 1],
   [deleteSeries, 1],
   [createEvent, 2],
   [renameEvent, 2],
-  [deleteEvent, 4],
+  [deleteEvent, 3],
 ];
 
 const UPDATERS = LIVE_UPDATERS.map(([updater]) => updater);

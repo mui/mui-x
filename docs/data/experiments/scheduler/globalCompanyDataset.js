@@ -194,9 +194,9 @@ export function formatDay(day) {
   return new Date(day * DAY_MS).toISOString().slice(0, 10);
 }
 
+// The minutes past the end of the day roll over to the next days.
 export function formatDateTime(day, minutes) {
-  const hours = String(Math.floor(minutes / 60)).padStart(2, '0');
-  return `${formatDay(day)}T${hours}:${String(minutes % 60).padStart(2, '0')}:00`;
+  return new Date(day * DAY_MS + minutes * 60 * 1000).toISOString().slice(0, 19);
 }
 
 export function formatEndOfDay(day) {
@@ -239,6 +239,12 @@ function allDay(firstDay, lastDay = firstDay) {
 }
 
 const FIRST_DAY = parseDay('2019-01-01');
+
+/**
+ * The day the dataset treats as today.
+ * It's fixed, so the calendar and its updates don't change from one day to the next.
+ */
+export const TODAY = parseDay('2026-10-29');
 
 export function createTeamMeeting(team, day, id, random) {
   return {
@@ -405,12 +411,13 @@ function addTeamEvents(team, calendar) {
     }
 
     const birthYear = new Date(joinDay * DAY_MS).getUTCFullYear();
-    const birthday = `${birthYear}-${String(random.int(1, 12)).padStart(2, '0')}-${String(random.int(1, 28)).padStart(2, '0')}`;
+    const birthday =
+      Date.UTC(birthYear, random.int(0, 11), random.int(1, 28)) / DAY_MS;
     calendar.add({
       ...base,
       id: `${team.id}-birthday-${index}`,
       title: `${person}'s birthday`,
-      ...allDay(parseDay(birthday)),
+      ...allDay(birthday),
       rrule: { freq: 'YEARLY' },
     });
 
@@ -487,7 +494,7 @@ export function createGlobalCompanyDataset(seriesCount, seed) {
   let currentSeriesCount = 0;
   const calendar = {
     random: createRandom(seed),
-    today: toDay(new Date()),
+    today: TODAY,
     add: (event) => {
       events.push(event);
       if (event.rrule != null) {

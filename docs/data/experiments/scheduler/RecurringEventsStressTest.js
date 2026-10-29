@@ -12,8 +12,10 @@ import Typography from '@mui/material/Typography';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
 import {
   createGlobalCompanyDataset,
+  formatDay,
   getMonday,
   toDay,
+  TODAY,
 } from './globalCompanyDataset';
 import { createLiveUpdates } from './globalCompanyLiveUpdates';
 
@@ -28,8 +30,15 @@ const DISPLAY_TIMEZONES = [
 ];
 
 const SAMPLE_COUNT = 100;
+// Noon UTC is on the same day in the display timezones of the experiment.
+const DEFAULT_VISIBLE_DATE = new Date(`${formatDay(TODAY)}T12:00:00Z`);
+// The visible weeks start on Monday, like the weeks the updates target.
+const DEFAULT_PREFERENCES = { weekStartsOn: 1 };
 
 // The durations run from the change to the next frame after the calendar renders it.
+
+// The changes waiting to be measured, keyed by the events they commit.
+const pendingChanges = new WeakMap();
 
 function createStats(lastUpdate) {
   return { loadDuration: undefined, durations: [], updateCount: 0, lastUpdate };
@@ -44,8 +53,8 @@ function getP95(values) {
 }
 
 /**
- * Reads the stats and counts the events twice per second,
- * with the frames per second since the last read.
+ * Reads the stats and counts the events twice per second, with the frames per second since
+ * the last read. The updates per second cover two seconds, as low rates need a longer window.
  */
 function useStatsSnapshot(statsRef, eventsRef) {
   const [snapshot, setSnapshot] = React.useState(null);
@@ -53,17 +62,27 @@ function useStatsSnapshot(statsRef, eventsRef) {
   React.useEffect(() => {
     let frameCount = 0;
     let windowStart = performance.now();
+    let rateStart = windowStart;
+    let rateUpdateCount = statsRef.current.updateCount;
+    let updatesPerSecond = 0;
     let frame = requestAnimationFrame(function countFrame(now) {
       frameCount += 1;
       if (now - windowStart >= 500) {
         const { durations, ...stats } = statsRef.current;
         const events = eventsRef.current;
         const seriesCount = events.filter((event) => event.rrule != null).length;
+        if (now - rateStart >= 2000) {
+          updatesPerSecond =
+            ((stats.updateCount - rateUpdateCount) * 1000) / (now - rateStart);
+          rateStart = now;
+          rateUpdateCount = stats.updateCount;
+        }
         setSnapshot({
           ...stats,
           lastDuration: durations.at(-1),
           p95Duration: getP95(durations),
           framesPerSecond: Math.round((frameCount * 1000) / (now - windowStart)),
+          updatesPerSecond,
           seriesCount,
           standaloneCount: events.length - seriesCount,
           exDateCount: events.reduce(
@@ -108,6 +127,9 @@ const StatsPanel = React.memo(function StatsPanel(props) {
           Frames per second: <b>{snapshot.framesPerSecond}</b>
         </Typography>
         <Typography variant="body2">
+          Updates per second: <b>{snapshot.updatesPerSecond.toFixed(1)}</b>
+        </Typography>
+        <Typography variant="body2">
           Updates: <b>{snapshot.updateCount}</b>
         </Typography>
         <Typography variant="body2">
@@ -124,6 +146,8 @@ const StatsPanel = React.memo(function StatsPanel(props) {
 });
 
 // The controls live in the parent, so the updates only render the calendar.
+// The parent mounts a new one for each series count, so the updates and measures of the
+// previous dataset stop with it.
 function StressTestCalendar(props) {
   const { seriesCount, isLive, updateRate, displayTimezone } = props;
   const [scenario, setScenario] = React.useState(null);
@@ -131,11 +155,10 @@ function StressTestCalendar(props) {
 
   const eventsRef = React.useRef(events);
   const statsRef = React.useRef(createStats('No update yet'));
-  const pendingRef = React.useRef(null);
-  const visibleDayRef = React.useRef(toDay(new Date()));
+  const visibleDayRef = React.useRef(TODAY);
 
   const commitEvents = React.useCallback((nextEvents, isLoad) => {
-    pendingRef.current = { start: performance.now(), isLoad };
+    pendingChanges.set(nextEvents, { start: performance.now(), isLoad });
     eventsRef.current = nextEvents;
     setEvents(nextEvents);
   }, []);
@@ -149,7 +172,8 @@ function StressTestCalendar(props) {
     [commitEvents],
   );
 
-  // The dataset depends on the current date, so it's only built in the browser.
+  // The dataset is built after the mount, so the server doesn't render thousands of events
+  // and the load time starts right before the calendar renders them.
   React.useEffect(() => {
     const dataset = createGlobalCompanyDataset(seriesCount, SEED);
     setScenario({
@@ -163,14 +187,18 @@ function StressTestCalendar(props) {
   }, [seriesCount, commitEvents]);
 
   React.useEffect(() => {
-    const pending = pendingRef.current;
+    const pending = pendingChanges.get(events);
     if (pending == null) {
       return;
     }
-    pendingRef.current = null;
+    pendingChanges.delete(events);
+    // A hidden tab runs no frame, so the duration would include the time it stays hidden.
+    if (document.visibilityState !== 'visible') {
+      return;
+    }
+    const stats = statsRef.current;
     requestAnimationFrame(() => {
       const duration = performance.now() - pending.start;
-      const stats = statsRef.current;
       if (pending.isLoad) {
         stats.loadDuration = duration;
       } else {
@@ -188,7 +216,7 @@ function StressTestCalendar(props) {
     }
 
     const interval = setInterval(() => {
-      // The updates target the two weeks starting with the visible week.
+      // Most updates target the two weeks starting with the visible week.
       const firstDay = getMonday(visibleDayRef.current);
       const update = scenario.applyLiveUpdate(
         eventsRef.current,
@@ -222,7 +250,9 @@ function StressTestCalendar(props) {
             onEventsChange={handleEventsChange}
             resources={scenario.resources}
             displayTimezone={displayTimezone}
+            defaultVisibleDate={DEFAULT_VISIBLE_DATE}
             onVisibleDateChange={handleVisibleDateChange}
+            defaultPreferences={DEFAULT_PREFERENCES}
           />
         )}
       </Box>
@@ -294,6 +324,7 @@ export default function RecurringEventsStressTest() {
         </TextField>
       </Stack>
       <StressTestCalendar
+        key={seriesCount}
         seriesCount={seriesCount}
         isLive={isLive}
         updateRate={updateRate}
