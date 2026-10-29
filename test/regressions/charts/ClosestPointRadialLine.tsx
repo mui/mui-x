@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useDrawingArea } from '@mui/x-charts/hooks';
-import { UseChartPolarAxisSignature, useChartsContext } from '@mui/x-charts/internals';
+import type { UseChartPolarAxisSignature } from '@mui/x-charts/internals';
+import { useChartsContext } from '@mui/x-charts/internals';
 import { getRadialLineItemAtPosition } from '@mui/x-charts-premium/internals';
 import { RadialLineChart } from '@mui/x-charts-premium/RadialLineChart';
 
