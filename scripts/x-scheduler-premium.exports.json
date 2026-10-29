@@ -9,6 +9,7 @@
   { "name": "eventTimelinePremiumClasses", "kind": "Variable" },
   { "name": "EventTimelinePremiumClasses", "kind": "Interface" },
   { "name": "EventTimelinePremiumClassKey", "kind": "TypeAlias" },
+  { "name": "EventTimelinePremiumDependenciesFeature", "kind": "Interface" },
   { "name": "EventTimelinePremiumFeatures", "kind": "Interface" },
   { "name": "EventTimelinePremiumProps", "kind": "Interface" },
   { "name": "EventTimelinePremiumRecurringEventsFeature", "kind": "Interface" },

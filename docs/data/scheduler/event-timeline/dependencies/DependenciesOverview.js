@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { dependenciesFeature } from '@mui/x-scheduler-premium/internals';
-import { EventTimelinePremium } from './shared/DependenciesTimeline';
+import { dependenciesFeature } from '@mui/x-scheduler-premium/dependencies';
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 
 const features = { dependencies: dependenciesFeature };
 

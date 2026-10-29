@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
-import { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
-import { dependenciesFeature } from '@mui/x-scheduler-premium/internals';
-import { EventTimelinePremium } from './shared/DependenciesTimeline';
+import { SchedulerDependency } from '@mui/x-scheduler-premium/models';
+import { dependenciesFeature } from '@mui/x-scheduler-premium/dependencies';
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 
 const features = { dependencies: dependenciesFeature };
 

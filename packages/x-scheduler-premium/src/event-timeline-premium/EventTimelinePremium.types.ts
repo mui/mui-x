@@ -15,6 +15,7 @@ import type { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses'
 import type { EventTimelinePremiumFeatures } from './features/EventTimelinePremiumFeatures.types';
 
 export type {
+  EventTimelinePremiumDependenciesFeature,
   EventTimelinePremiumFeatures,
   EventTimelinePremiumRecurringEventsFeature,
 } from './features/EventTimelinePremiumFeatures.types';
@@ -81,7 +82,7 @@ export interface EventTimelinePremiumProps<TEvent extends object, TResource exte
   /**
    * The optional features of the Event Timeline.
    * They are read once when the component mounts, later changes are ignored.
-   * @example { recurringEvents: recurringEventsFeature }
+   * @example { recurringEvents: recurringEventsFeature, dependencies: dependenciesFeature }
    */
   features?: EventTimelinePremiumFeatures;
   /**

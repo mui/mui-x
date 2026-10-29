@@ -2,6 +2,7 @@ import * as React from 'react';
 import { act, screen, waitFor } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
+import { dependenciesFeature } from '@mui/x-scheduler-premium/dependencies';
 import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
@@ -200,5 +201,19 @@ describe('EventTimelinePremium - features', () => {
 
     expect(getArrowPaths()).to.have.length(1);
     expect(document.querySelector('[data-dependency-terminal]')).not.to.equal(null);
+  });
+
+  it('should render the arrows from the public `dependencies` and `features` props', async () => {
+    await renderSettled(
+      <Timeline
+        resources={[resource1]}
+        events={[predecessor, successor]}
+        features={{ dependencies: dependenciesFeature }}
+        dependencies={[buildDependency('dep-1', 'event-a', 'event-b')]}
+        onDependenciesChange={() => {}}
+      />,
+    );
+
+    expect(getArrowPaths()).to.have.length(1);
   });
 });

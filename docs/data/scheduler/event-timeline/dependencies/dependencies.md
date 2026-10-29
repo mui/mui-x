@@ -3,6 +3,7 @@ productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler-premium'
 githubLabel: 'scope: scheduler'
+components: EventTimelinePremium
 ---
 
 # Event Timeline - Dependencies
@@ -56,7 +57,9 @@ To change them, remount the Event Timeline, for example with a `key`.
 ## Dependency model
 
 ```ts
-const dependency = {
+import { SchedulerDependency } from '@mui/x-scheduler-premium/models';
+
+const dependency: SchedulerDependency = {
   id: 'd1',
   source: 'design', // The id of the predecessor event
   target: 'build', // The id of the successor event
@@ -145,6 +148,7 @@ The Event Timeline doesn't create a dependency that:
 - would need to move a read-only event
 
 A message explains why the dependency wasn't created.
+Its text, like every dependency text, comes from the [locale text](/x/react-scheduler/event-timeline/localization/#locale-text).
 
 {{"demo": "DependencyRejections.js", "bg": "inline", "defaultCodeOpen": false}}
 

@@ -16,6 +16,7 @@
     "./compact-three-day-view-premium": "./src/compact-three-day-view-premium/index.ts",
     "./compact-week-view-premium": "./src/compact-week-view-premium/index.ts",
     "./day-view-premium": "./src/day-view-premium/index.ts",
+    "./dependencies": "./src/dependencies/index.ts",
     "./event-calendar-premium": "./src/event-calendar-premium/index.ts",
     "./event-timeline-premium": "./src/event-timeline-premium/index.ts",
     "./month-view-premium": "./src/month-view-premium/index.ts",

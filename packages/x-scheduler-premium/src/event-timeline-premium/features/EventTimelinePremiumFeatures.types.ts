@@ -15,10 +15,11 @@ export interface EventTimelinePremiumRecurringEventsFeature {
   optionalRenderers: EventEditingOptionalRenderers;
 }
 
-/**
- * @internal
- */
 export interface EventTimelinePremiumDependenciesFeature {
+  /**
+   * Holds the dependencies, keeps the successors after their predecessors, and creates, edits
+   * and deletes the dependencies.
+   */
   store: EventTimelinePremiumDependenciesStoreFeature;
   /**
    * Renders the dependency arrows, dialog, interactions and terminals around the rows.
@@ -35,11 +36,8 @@ export interface EventTimelinePremiumFeatures {
    * Recurring events support. Import it from `@mui/x-scheduler-premium/recurring-events`.
    */
   recurringEvents?: EventTimelinePremiumRecurringEventsFeature;
-}
-
-/**
- * @internal
- */
-export interface EventTimelinePremiumInternalFeatures extends EventTimelinePremiumFeatures {
+  /**
+   * Dependencies between events. Import it from `@mui/x-scheduler-premium/dependencies`.
+   */
   dependencies?: EventTimelinePremiumDependenciesFeature;
 }

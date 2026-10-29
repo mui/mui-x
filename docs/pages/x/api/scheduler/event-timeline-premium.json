@@ -48,6 +48,12 @@
       "type": { "name": "object" },
       "default": "{} - all resources are visible"
     },
+    "dependencies": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ id: number<br>&#124;&nbsp;string, lag?: number, lagUnit?: 'day'<br>&#124;&nbsp;'hour'<br>&#124;&nbsp;'minute'<br>&#124;&nbsp;'week', source: number<br>&#124;&nbsp;string, target: number<br>&#124;&nbsp;string, type: 'FinishToFinish'<br>&#124;&nbsp;'FinishToStart'<br>&#124;&nbsp;'StartToFinish'<br>&#124;&nbsp;'StartToStart' }&gt;"
+      }
+    },
     "displayTimezone": { "type": { "name": "string" }, "default": "\"default\"" },
     "eventColor": {
       "type": {
@@ -74,7 +80,7 @@
     "features": {
       "type": {
         "name": "shape",
-        "description": "{ recurringEvents?: { optionalRenderers: { recurrenceTab?: elementType, recurringScopeDialog?: elementType }, store: { applyDataTimezoneToEventUpdate: func, computePresets: func, deleteRecurringEvent: func, getDefaultPresetKey: func, getOccurrencesForVisibleDays: func, isSameRRule: func, parseRRule: func, updateRecurringEvent: func } } }"
+        "description": "{ dependencies?: { Layer?: elementType, store: { buildState: func, createSchedulingPlugin: func, isDependencyActive: func, useCreationMonitor: func, useEventDropTarget: func }, useDescription: func }, recurringEvents?: { optionalRenderers: { recurrenceTab?: elementType, recurringScopeDialog?: elementType }, store: { applyDataTimezoneToEventUpdate: func, computePresets: func, deleteRecurringEvent: func, getDefaultPresetKey: func, getOccurrencesForVisibleDays: func, isSameRRule: func, parseRRule: func, updateRecurringEvent: func } } }"
       }
     },
     "getEventAriaLabel": {
@@ -87,6 +93,7 @@
     },
     "localeText": { "type": { "name": "object" } },
     "onCollapsedResourcesChange": { "type": { "name": "func" } },
+    "onDependenciesChange": { "type": { "name": "func" } },
     "onEventEditingStart": { "type": { "name": "func" } },
     "onEventsChange": { "type": { "name": "func" } },
     "onPresetChange": { "type": { "name": "func" } },
@@ -838,5 +845,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-scheduler-premium/src/event-timeline-premium/EventTimelinePremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-scheduler/components/event-dialog/\">Scheduler - Event dialog</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/drag-interactions/\">Event Timeline - Drag Interactions</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/editing/\">Event Timeline - Editing</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/events/\">Event Timeline - Events</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/lazy-loading/\">Event Timeline - Lazy loading events</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/localization/\">Event Timeline - Localization</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/navigation/\">Event Timeline - Navigation</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/preferences/\">Event Timeline - Preferences</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/presets/\">Event Timeline - Presets</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/resources/\">Event Timeline - Resources</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-scheduler/components/event-dialog/\">Scheduler - Event dialog</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/dependencies/\">Event Timeline - Dependencies</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/drag-interactions/\">Event Timeline - Drag Interactions</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/editing/\">Event Timeline - Editing</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/events/\">Event Timeline - Events</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/lazy-loading/\">Event Timeline - Lazy loading events</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/localization/\">Event Timeline - Localization</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/navigation/\">Event Timeline - Navigation</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/preferences/\">Event Timeline - Preferences</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/presets/\">Event Timeline - Presets</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/resources/\">Event Timeline - Resources</a></li></ul>"
 }

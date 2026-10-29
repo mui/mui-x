@@ -299,6 +299,22 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    */
   defaultVisibleResources: PropTypes.object,
   /**
+   * The dependencies between events. Ignored unless the dependencies feature is provided.
+   * With it, providing a value — even an empty array — enables terminals, arrows and
+   * selection.
+   */
+  dependencies: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      lag: PropTypes.number,
+      lagUnit: PropTypes.oneOf(['day', 'hour', 'minute', 'week']),
+      source: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      target: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.oneOf(['FinishToFinish', 'FinishToStart', 'StartToFinish', 'StartToStart'])
+        .isRequired,
+    }),
+  ),
+  /**
    * The timezone used to display events in the scheduler.
    *
    * Accepts any valid IANA timezone name
@@ -376,9 +392,20 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
   /**
    * The optional features of the Event Timeline.
    * They are read once when the component mounts, later changes are ignored.
-   * @example { recurringEvents: recurringEventsFeature }
+   * @example { recurringEvents: recurringEventsFeature, dependencies: dependenciesFeature }
    */
   features: PropTypes.shape({
+    dependencies: PropTypes.shape({
+      Layer: PropTypes.elementType,
+      store: PropTypes.shape({
+        buildState: PropTypes.func.isRequired,
+        createSchedulingPlugin: PropTypes.func.isRequired,
+        isDependencyActive: PropTypes.func.isRequired,
+        useCreationMonitor: PropTypes.func.isRequired,
+        useEventDropTarget: PropTypes.func.isRequired,
+      }).isRequired,
+      useDescription: PropTypes.func.isRequired,
+    }),
     recurringEvents: PropTypes.shape({
       optionalRenderers: PropTypes.shape({
         recurrenceTab: PropTypes.elementType,
@@ -413,6 +440,10 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    * Event handler called when the collapsed resources change.
    */
   onCollapsedResourcesChange: PropTypes.func,
+  /**
+   * Event handler called when the dependencies change.
+   */
+  onDependenciesChange: PropTypes.func,
   /**
    * Event handler called right before the built-in event dialog (or its mobile drawer variant) opens,
    * regardless of what triggered it (pointer, keyboard, the armed toolbar's Edit action or event creation).
