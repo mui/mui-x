@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "apiRef": { "description": "The ref object that exposes the chart API methods." },
     "axisHighlight": {
       "description": "The configuration of axes highlight. Default is set to &#39;band&#39; in the bar direction. Depends on <code>layout</code> prop.",
       "seeMoreText": "See {{link}} for more details."
@@ -99,6 +100,12 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "theme": {
+      "description": "The color mode passed to <code>colors</code> when it is a function. Defaults to the mode of the Material UI theme."
+    },
     "title": {
       "description": "The title of the chart. Used to provide an accessible label for the chart."
     },
@@ -113,10 +120,10 @@
     "axisLine": "Custom component for the axis main line.",
     "axisTick": "Custom component for the axis tick.",
     "axisTickLabel": "Custom component for tick label.",
-    "baseButton": "",
-    "baseIconButton": "",
+    "baseButton": "The component used for buttons.",
+    "baseIconButton": "The component used for icon buttons.",
     "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps &amp; BaseToggleButtonPropsOverrides&gt;</code>.",
-    "baseToggleButtonGroup": "",
+    "baseToggleButtonGroup": "The component used for toggle button groups.",
     "funnelSection": "Custom component for funnel section.",
     "funnelSectionLabel": "Custom component for funnel section label.",
     "legend": "Custom rendering of the legend.",
