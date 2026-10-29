@@ -5,7 +5,7 @@ import { DataGrid, useGridApiContext } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function AutocompleteColumnInput(props) {
-  const { columns, value, onChange, disabled, className } = props;
+  const { columns, value, onChange, disabled, className, focusElementRef } = props;
   const apiRef = useGridApiContext();
   const selectedColumn =
     columns.find((column) => column.field === value) ?? columns[0];
@@ -25,6 +25,7 @@ function AutocompleteColumnInput(props) {
       renderInput={(params) => (
         <TextField
           {...params}
+          inputRef={focusElementRef}
           label={apiRef.current.getLocaleText('filterPanelColumn')}
         />
       )}

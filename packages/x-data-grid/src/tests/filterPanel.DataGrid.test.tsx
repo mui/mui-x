@@ -475,6 +475,21 @@ describe('<DataGrid /> - Filter panel', () => {
     expect(screen.queryAllByRole('dialog').length).to.deep.equal(0);
   });
 
+  // See https://github.com/mui/mui-x/issues/24012
+  it('should focus the column input when the panel opens', () => {
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+      />,
+    );
+    expect(screen.getByRole('combobox', { name: 'Column' })).toHaveFocus();
+  });
+
   // See https://github.com/mui/mui-x/issues/5402
   it('should not remove `isEmpty` filter from model when filter panel is opened through column menu', () => {
     render(

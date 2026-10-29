@@ -240,11 +240,15 @@ const GridFilterFormBase = forwardRef<HTMLDivElement, GridFilterFormBaseProps>(
     const operatorSelectLabelId = useId();
     const rootProps = useGridRootProps();
     const classes = useUtilityClasses(rootProps);
-    const valueRef = React.useRef<any>(null);
+    const logicOperatorRef = React.useRef<any>(null);
+    const columnInputRef = React.useRef<any>(null);
     const filterSelectorRef = React.useRef<HTMLInputElement>(null);
     const multiFilterOperator = filterModel.logicOperator ?? GridLogicOperator.And;
 
     const hasLogicOperatorColumn: boolean = hasMultipleFilters && logicOperators.length > 0;
+    const isLogicOperatorDisabled = !!disableMultiFilterOperator || logicOperators.length === 1;
+    const isLogicOperatorFocusable =
+      hasLogicOperatorColumn && !!showMultiFilterOperators && !isLogicOperatorDisabled;
 
     const baseSelectProps = rootProps.slotProps?.baseSelect || {};
     const isBaseSelectNative = baseSelectProps.native ?? false;
@@ -436,18 +440,19 @@ const GridFilterFormBase = forwardRef<HTMLDivElement, GridFilterFormBaseProps>(
       deleteFilter(item);
     };
 
+    // Focus the first enabled control, so the column and operator are announced before the value.
     React.useImperativeHandle(
       focusElementRef,
       () => ({
         focus: () => {
-          if (currentOperator?.InputComponent) {
-            valueRef?.current?.focus();
+          if (isLogicOperatorFocusable) {
+            logicOperatorRef.current?.focus();
           } else {
-            filterSelectorRef.current!.focus();
+            (columnInputRef.current ?? filterSelectorRef.current)?.focus();
           }
         },
       }),
-      [currentOperator],
+      [isLogicOperatorFocusable],
     );
 
     return (
@@ -504,8 +509,9 @@ const GridFilterFormBase = forwardRef<HTMLDivElement, GridFilterFormBaseProps>(
           }}
           value={multiFilterOperator ?? ''}
           onChange={changeLogicOperator}
-          disabled={!!disableMultiFilterOperator || logicOperators.length === 1}
+          disabled={isLogicOperatorDisabled}
           native={isBaseSelectNative}
+          inputRef={logicOperatorRef}
           {...rootProps.slotProps?.baseSelect}
         >
           {logicOperators.map((logicOperator) => (
@@ -532,6 +538,7 @@ const GridFilterFormBase = forwardRef<HTMLDivElement, GridFilterFormBaseProps>(
           value={selectedField}
           onChange={changeColumn}
           disabled={readOnly}
+          focusElementRef={columnInputRef}
         />
         <FilterFormOperatorInput
           as={rootProps.slots.baseSelect}
@@ -573,7 +580,6 @@ const GridFilterFormBase = forwardRef<HTMLDivElement, GridFilterFormBaseProps>(
               apiRef={apiRef}
               item={item}
               applyValue={applyFilterChanges}
-              focusElementRef={valueRef}
               disabled={readOnly}
               disableDebounce={disableDebounce}
               key={item.field}
