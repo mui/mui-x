@@ -3,8 +3,8 @@
   "name": "MessageContent",
   "imports": ["import { MessageContent } from '@mui/x-chat/headless';"],
   "slots": [
-    { "name": "content", "description": "", "class": null },
-    { "name": "bubble", "description": "", "class": null }
+    { "name": "content", "description": "The component that renders the content.", "class": null },
+    { "name": "bubble", "description": "The component that renders the bubble.", "class": null }
   ],
   "classes": [],
   "muiName": "MuiMessageContent",

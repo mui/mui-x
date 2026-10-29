@@ -2,10 +2,14 @@
   "componentDescription": "",
   "propDescriptions": {
     "cancelLabel": { "description": "Label for the cancel button." },
+    "classes": { "description": "Override or extend the styles applied to the component." },
     "confirmLabel": { "description": "Label for the confirm button." },
     "message": { "description": "The question or warning message to display. Required." },
     "onCancel": { "description": "Called when the user clicks the cancel button." },
-    "onConfirm": { "description": "Called when the user clicks the confirm button." }
+    "onConfirm": { "description": "Called when the user clicks the confirm button." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    }
   },
   "classDescriptions": {
     "actions": {

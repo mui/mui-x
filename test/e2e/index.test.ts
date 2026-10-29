@@ -1,16 +1,13 @@
 import { platform } from 'node:os';
-import {
-  chromium,
-  webkit,
-  firefox,
-  devices,
-  type Page,
-  type Browser,
-  type BrowserContext,
-  type BrowserContextOptions,
-  type BrowserType,
-  type WebError,
-  type Locator,
+import { chromium, webkit, firefox, devices } from '@playwright/test';
+import type {
+  Page,
+  Browser,
+  BrowserContext,
+  BrowserContextOptions,
+  BrowserType,
+  WebError,
+  Locator,
 } from '@playwright/test';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 import { pickersOutlinedInputClasses } from '@mui/x-date-pickers/PickersTextField';

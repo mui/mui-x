@@ -1001,9 +1001,7 @@ premiumStoreClasses.forEach((storeClass) => {
         ]);
 
         expect(store.state.errors).to.have.length(1);
-        expect(store.state.errors[0].error.message).to.equal(
-          "This can't be saved as a new event, so the change was not applied.",
-        );
+        expect(store.state.errors[0].code).to.equal('eventNotCreatableError');
       });
 
       it('should refuse a "this-and-following" split and leave the series untouched', () => {

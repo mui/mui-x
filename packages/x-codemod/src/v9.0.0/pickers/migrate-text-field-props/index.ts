@@ -1,5 +1,5 @@
 import path from 'path';
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import readFile from '../../../util/readFile';
 import { transformNestedProp, addItemToObject } from '../../../util/addComponentsSlots';
 import removeProps from '../../../util/removeProps';

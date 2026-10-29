@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { eventTimelinePremiumClasses } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
   EventTimelinePremiumContent,
@@ -9,7 +8,6 @@ import {
   useFrozenEventTimelinePremiumFeatures,
 } from '@mui/x-scheduler-premium/internals';
 import { useEventTimelinePremium } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
-
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   ErrorContainer,
@@ -158,7 +156,10 @@ const styledContextValue = {
   classes: eventTimelinePremiumClasses,
   localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 };
-const sharedStyledContextValue = { classes: eventTimelinePremiumClasses };
+const sharedStyledContextValue = {
+  classes: eventTimelinePremiumClasses,
+  localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+};
 
 export default function TimelineDependencyArrows() {
   const [events, setEvents] = React.useState(initialEvents);

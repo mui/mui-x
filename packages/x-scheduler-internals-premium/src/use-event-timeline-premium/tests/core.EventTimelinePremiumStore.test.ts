@@ -24,6 +24,7 @@ describe('Core - EventTimelinePremiumStore', () => {
 
       const expectedState = {
         adapter,
+        dateLocale: 'en-US',
         areDependenciesEnabled: false,
         areEventsDraggable: true,
         areEventsResizable: true,

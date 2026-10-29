@@ -4,12 +4,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import PrintIcon from '@mui/icons-material/Print';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import {
-  DataGridPro,
-  GridColDef,
-  GridRowsProp,
-  useGridApiRef,
-} from '@mui/x-data-grid-pro';
+import type { GridColDef, GridRowsProp } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomTraderName,

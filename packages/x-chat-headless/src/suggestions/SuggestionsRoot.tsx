@@ -15,7 +15,13 @@ function normalizeSuggestion(item: ChatSuggestion | string): ChatSuggestion {
 }
 
 export interface SuggestionsRootSlots {
+  /**
+   * The component that renders the root.
+   */
   root: React.ElementType;
+  /**
+   * The component that renders each suggestion.
+   */
   item: React.ElementType;
 }
 
@@ -28,7 +34,15 @@ export interface SuggestionsRootProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   'children'
 > {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<SuggestionsRootSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: SuggestionsRootSlotProps;
   /**
    * Suggestion items. Strings are normalized to `{ value, label }`.
@@ -48,6 +62,9 @@ export interface SuggestionsRootProps extends Omit<
    * @default false
    */
   alwaysVisible?: boolean;
+  /**
+   * The suggestions to render, instead of `suggestions`.
+   */
   children?: React.ReactNode;
 }
 

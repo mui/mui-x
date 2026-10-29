@@ -63,41 +63,31 @@ import { eventDialogFormSelectors } from '../event-dialog/form/EventDialogFormSt
 import { usePushPlaceholder } from '../event-dialog/usePushPlaceholder';
 import { focusFirstInvalid } from '../scheduler-form/focusFirstInvalid';
 import { deleteOccurrenceAndRestoreFocus } from '../../utils/focus-utils';
+import {
+  dialogContentBaseStyles,
+  dialogFormBaseStyles,
+  getDialogFormActionsBaseStyles,
+} from '../../constants/dialogStyles';
+import { getUserFacingErrorMessage } from '../../utils/user-facing-error';
 
-export const EventDialogFormActions = styled(DialogActions, {
+const EventDialogFormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
   slot: 'FormActions',
-})(({ theme }) => ({
-  padding: theme.spacing(3),
-  gap: theme.spacing(2),
-}));
+})(({ theme }) => getDialogFormActionsBaseStyles(theme));
 
-export const EventDialogContentRoot = styled(MuiDialogContent, {
+const EventDialogContentRoot = styled(MuiDialogContent, {
   name: 'MuiEventDialog',
   slot: 'DialogContent',
 })({
-  cursor: 'default',
-  userSelect: 'text',
-  padding: 0,
+  ...dialogContentBaseStyles,
   minWidth: 360,
   width: 450,
-  // Shrink to fit the paper (capped at the viewport) so the form doesn't overflow on mobile screens.
-  maxWidth: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  overflow: 'hidden',
-  maxHeight: '100%',
 });
 
-export const EventDialogForm = styled('form', {
+const EventDialogForm = styled('form', {
   name: 'MuiEventDialog',
   slot: 'Form',
-})({
-  display: 'flex',
-  flexDirection: 'column',
-  flex: 1,
-  minHeight: 0,
-});
+})(dialogFormBaseStyles);
 
 const EventDialogTabsContainer = styled('div', {
   name: 'MuiEventDialog',
@@ -524,7 +514,10 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           // editing the dates clears it.
           const rejectedField = values.allDay ? 'endDate' : 'endTime';
           warnUnvalidatedField(rejectedField, 'The save was rejected');
-          formStore.setError(rejectedField, result.rejection.message);
+          formStore.setError(
+            rejectedField,
+            getUserFacingErrorMessage(localeText, result.rejection),
+          );
           ReactDOM.flushSync(() => setTabValue('general'));
           focusFirstInvalid(form);
           return;

@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "d": { "description": "The SVG path of the element." },
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." }
   },
   "classDescriptions": {}

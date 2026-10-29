@@ -2,7 +2,6 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import Skeleton from '@mui/material/Skeleton';
-
 import { useSpring, animated } from '@react-spring/web';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';

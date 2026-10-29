@@ -9,7 +9,6 @@ import {
   useYAxis,
   useYAxisCoordinates,
 } from '@mui/x-charts/hooks';
-
 import { useTheme } from '@mui/material/styles';
 
 const lineData = [2, 5, 3, 8, 4];

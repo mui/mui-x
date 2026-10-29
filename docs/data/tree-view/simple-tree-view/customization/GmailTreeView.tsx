@@ -11,7 +11,7 @@ import ForumIcon from '@mui/icons-material/Forum';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import { SvgIconProps } from '@mui/material/SvgIcon';
+import type { SvgIconProps } from '@mui/material/SvgIcon';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import {
   TreeItemContent,
@@ -19,7 +19,8 @@ import {
   TreeItemRoot,
   TreeItemGroupTransition,
 } from '@mui/x-tree-view/TreeItem';
-import { useTreeItem, UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
+import type { UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
+import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 

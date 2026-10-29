@@ -1,13 +1,8 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
-import {
-  useVirtualizer,
-  Virtualization,
-  LayoutGridSticky,
-  Dimensions,
-  type Virtualizer,
-} from '@mui/x-virtualizer';
+import { useVirtualizer, Virtualization, LayoutGridSticky, Dimensions } from '@mui/x-virtualizer';
+import type { Virtualizer } from '@mui/x-virtualizer';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect, vi } from 'vitest';
 

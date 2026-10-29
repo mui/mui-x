@@ -4,10 +4,10 @@ import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Typography from '@mui/material/Typography';
+import type { Virtualizer } from '@mui/x-virtualizer';
 import {
   useVirtualizer,
   useScrollUnderlay,
-  Virtualizer,
   Dimensions,
   LayoutList,
   LayoutListSticky,

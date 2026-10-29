@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as childProcess from 'child_process';
-import { type Browser, chromium, type ConsoleMessage, type Page } from '@playwright/test';
+import { chromium } from '@playwright/test';
+import type { Browser, ConsoleMessage, Page } from '@playwright/test';
 import fs from 'node:fs/promises';
 import { describe, expect, it, test as base, afterAll, beforeEach, afterEach } from 'vitest';
 import { minimatch } from 'minimatch';

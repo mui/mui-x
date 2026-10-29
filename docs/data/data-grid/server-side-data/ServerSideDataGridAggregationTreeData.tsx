@@ -1,10 +1,6 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
-  useGridApiRef,
-  GridDataSource,
-  GridGetRowsResponse,
-} from '@mui/x-data-grid-premium';
+import type { GridDataSource, GridGetRowsResponse } from '@mui/x-data-grid-premium';
+import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 const dataSetOptions = {

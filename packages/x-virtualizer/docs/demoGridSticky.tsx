@@ -3,9 +3,9 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import type { Virtualizer } from '@mui/x-virtualizer';
 import {
   useVirtualizer,
-  Virtualizer,
   Virtualization,
   Dimensions,
   LayoutGridSticky,

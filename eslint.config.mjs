@@ -88,6 +88,37 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/x-scheduler-internals-premium',
 ];
 
+// React APIs missing from React 17, which the peer range still supports.
+const REACT_17_MISSING_APIS = [
+  {
+    property: 'useId',
+    message: 'Use `@mui/utils/useId` or `@base-ui/utils/useId` instead.',
+  },
+  {
+    property: 'useSyncExternalStore',
+    message: "Use `useSyncExternalStore` from 'use-sync-external-store/shim' instead.",
+  },
+  ...[
+    'useInsertionEffect',
+    'useTransition',
+    'startTransition',
+    'useDeferredValue',
+    'use',
+    'useActionState',
+    'useOptimistic',
+    'useEffectEvent',
+    'Activity',
+    'cache',
+  ].map((property) => ({
+    property,
+    message: 'Read it from `SafeReact` (`@base-ui/utils/safeReact`) and add a fallback.',
+  })),
+].map(({ property, message }) => ({
+  object: 'React',
+  property,
+  message: `\`React.${property}\` does not exist in React 17. ${message}`,
+}));
+
 const packageFilesWithReactCompiler = getReactCompilerFilesForPackages([
   {
     packagesNames: CHARTS_PACKAGES,
@@ -260,12 +291,10 @@ export default defineConfig(
   },
   {
     files: [
-      `packages/x-charts{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-data-grid{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-date-pickers{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-scheduler{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-tree-view{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-chat{,-*}/**/*${EXTENSION_TS}`,
+      `packages/**/*${EXTENSION_TS}`,
+      `docs/**/*${EXTENSION_TS}`,
+      `scripts/**/*${EXTENSION_TS}`,
+      `test/**/*${EXTENSION_TS}`,
     ],
     rules: {
       '@typescript-eslint/consistent-type-imports': [
@@ -359,6 +388,7 @@ export default defineConfig(
         },
       ],
       'mui/disallow-react-api-in-server-components': 'error',
+      'no-restricted-properties': ['error', ...REACT_17_MISSING_APIS],
     },
   },
 
@@ -512,6 +542,32 @@ export default defineConfig(
     files: ['packages/x-telemetry/**/*{.tsx,.ts,.js}'],
     rules: {
       'no-console': 'off',
+    },
+  },
+  // `@mui/internal-code-infra` lints the sources of packages that declare `engines.node` with
+  // `n/no-unsupported-features/node-builtins`. It also reports APIs that exist on every version in
+  // the range but were still documented as experimental there. Only the APIs below are ignored, so
+  // anything else is still checked. Options here replace code-infra's `ignores` (browser globals
+  // such as `localStorage`), which these packages don't reference.
+  {
+    files: [`packages/x-codemod/src/**/*${EXTENSION_TS}`],
+    rules: {
+      // `import.meta.dirname` exists since Node.js 20.11 but not in 21.0 and 21.1, which
+      // `>=20.19` allows. It is only read in each codemod's `testConfig`, which only `*.test.ts`
+      // files call, so it runs on the repo's Node.js and never in the published CLI.
+      'n/no-unsupported-features/node-builtins': ['error', { ignores: ['import.meta.dirname'] }],
+    },
+  },
+  {
+    files: [`packages/x-telemetry/src/**/*${EXTENSION_TS}`],
+    rules: {
+      // `fetch` and `Response` (Node.js 18) and the global `crypto` (Node.js 19) work without flags
+      // on every version in `>=20`. The rule reports them because Node.js only marked them stable
+      // in 21 and 23.
+      'n/no-unsupported-features/node-builtins': [
+        'error',
+        { ignores: ['fetch', 'Response', 'crypto'] },
+      ],
     },
   },
   {

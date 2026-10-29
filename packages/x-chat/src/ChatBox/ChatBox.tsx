@@ -196,7 +196,14 @@ ChatBox.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The id of the active conversation.
+   * Use with `onActiveConversationChange` to control it.
+   */
   activeConversationId: PropTypes.string,
+  /**
+   * The adapter that connects the chat to your backend.
+   */
   adapter: PropTypes.shape({
     addToolApprovalResponse: PropTypes.func,
     listConversations: PropTypes.func,
@@ -210,13 +217,24 @@ ChatBox.propTypes /* remove-proptypes */ = {
     stop: PropTypes.func,
     subscribe: PropTypes.func,
   }).isRequired,
+  /**
+   * The content of the component.
+   */
   children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * The value of the composer.
+   * Use with `onComposerValueChange` to control it.
+   */
   composerValue: PropTypes.string,
+  /**
+   * The conversations.
+   * Use with `onConversationsChange` to control them.
+   */
   conversations: PropTypes.arrayOf(
     PropTypes.shape({
       avatarUrl: PropTypes.string,
@@ -475,6 +493,9 @@ ChatBox.propTypes /* remove-proptypes */ = {
     overlay: PropTypes.number,
     split: PropTypes.number,
   }),
+  /**
+   * The props used for the locale text slot.
+   */
   localeText: PropTypes.object,
   /**
    * Known chat participants.
@@ -491,6 +512,10 @@ ChatBox.propTypes /* remove-proptypes */ = {
       role: PropTypes.oneOf(['assistant', 'system', 'user']),
     }),
   ),
+  /**
+   * The messages of the active conversation.
+   * Use with `onMessagesChange` to control them.
+   */
   messages: PropTypes.arrayOf(
     PropTypes.shape({
       author: PropTypes.shape({
@@ -610,14 +635,49 @@ ChatBox.propTypes /* remove-proptypes */ = {
       updatedAt: PropTypes.string,
     }),
   ),
+  /**
+   * Callback fired when the active conversation changes.
+   * @param {string | undefined} conversationId The id of the new active conversation.
+   */
   onActiveConversationChange: PropTypes.func,
+  /**
+   * Callback fired when the composer value changes.
+   * @param {string} value The new composer value.
+   */
   onComposerValueChange: PropTypes.func,
+  /**
+   * Callback fired when the conversations change.
+   * @param {ChatConversation[]} conversations The new conversations.
+   */
   onConversationsChange: PropTypes.func,
+  /**
+   * Callback fired when a data part is received.
+   * @param {ChatDataMessagePart} part The data part.
+   */
   onData: PropTypes.func,
+  /**
+   * Callback fired when an error occurs.
+   * @param {ChatError} error The error.
+   */
   onError: PropTypes.func,
+  /**
+   * Callback fired when the assistant finishes a response, including when it is aborted, disconnected, or fails.
+   * @param {ChatOnFinishPayload} payload The final message and how the response ended.
+   */
   onFinish: PropTypes.func,
+  /**
+   * Callback fired when the messages change.
+   * @param {ChatMessage[]} messages The new messages.
+   */
   onMessagesChange: PropTypes.func,
+  /**
+   * Callback fired when the assistant calls a tool.
+   * @param {ChatOnToolCallPayload} payload The tool call.
+   */
   onToolCall: PropTypes.func,
+  /**
+   * Custom renderers for message parts, by part type.
+   */
   partRenderers: PropTypes.shape({
     'dynamic-tool': PropTypes.func,
     file: PropTypes.func,
@@ -697,6 +757,9 @@ ChatBox.propTypes /* remove-proptypes */ = {
    * @default false
    */
   suggestionsAutoSubmit: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

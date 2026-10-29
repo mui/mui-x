@@ -1,12 +1,13 @@
 import { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
-import { Gesture } from './Gesture';
+import type { Gesture } from './Gesture';
 import { KeyboardManager } from './KeyboardManager';
-import { PointerManager, PointerManagerOptions } from './PointerManager';
-import { GestureElement } from './types/GestureElement';
-import { MergeUnions } from './types/MergeUnions';
-import { OmitNever } from './types/OmitNever';
-import { Simplify } from './types/Simplify';
-import { TargetElement } from './types/TargetElement';
+import type { PointerManagerOptions } from './PointerManager';
+import { PointerManager } from './PointerManager';
+import type { GestureElement } from './types/GestureElement';
+import type { MergeUnions } from './types/MergeUnions';
+import type { OmitNever } from './types/OmitNever';
+import type { Simplify } from './types/Simplify';
+import type { TargetElement } from './types/TargetElement';
 
 /**
  * Configuration options for initializing the GestureManager

@@ -80,10 +80,15 @@ function GridMenu(props: GridMenuProps) {
     }
   }, [open]);
 
+  // Emit menuOpen or menuClose events only when `open` changes.
+  // Menus mount closed, so a closed menu on mount is not a close.
+  const prevOpenRef = React.useRef(false);
   React.useEffect(() => {
-    // Emit menuOpen or menuClose events
-    const eventName = open ? 'menuOpen' : 'menuClose';
-    apiRef.current.publishEvent(eventName, { target });
+    if (prevOpenRef.current === open) {
+      return;
+    }
+    prevOpenRef.current = open;
+    apiRef.current.publishEvent(open ? 'menuOpen' : 'menuClose', { target });
   }, [apiRef, open, target]);
 
   const handleClickAway = (event: MouseEvent | TouchEvent) => {

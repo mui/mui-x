@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import {
   gridClasses,
@@ -126,7 +127,7 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
   const { className, onKeyDown, onMouseDown, ...other } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
-  const popupId = React.useId();
+  const popupId = useId();
   const rootRef = React.useRef<HTMLDivElement | null>(null);
   // Registration for the `canUpdateFocus` veto follows the ELEMENT lifecycle
   // through this callback ref, not the component's: the bar stays mounted while

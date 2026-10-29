@@ -1,7 +1,7 @@
 import * as React from 'react';
+import type { GridSlotProps } from '@mui/x-data-grid';
 import {
   DataGrid,
-  GridSlotProps,
   Toolbar,
   ToolbarButton,
   FilterPanelTrigger,

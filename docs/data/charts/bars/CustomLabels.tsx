@@ -1,4 +1,5 @@
-import { BarChart, BarItem, BarLabelContext } from '@mui/x-charts/BarChart';
+import type { BarItem, BarLabelContext } from '@mui/x-charts/BarChart';
+import { BarChart } from '@mui/x-charts/BarChart';
 
 function barLabel(item: BarItem, context: BarLabelContext) {
   if ((item.value ?? 0) > 10) {

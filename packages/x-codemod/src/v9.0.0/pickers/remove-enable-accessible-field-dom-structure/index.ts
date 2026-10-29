@@ -1,5 +1,5 @@
 import path from 'path';
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import removeProps from '../../../util/removeProps';
 import readFile from '../../../util/readFile';
 

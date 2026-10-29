@@ -20,8 +20,17 @@ TreeItemProvider.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The content of the component.
+   */
   children: PropTypes.node,
+  /**
+   * The id attribute of the item.
+   */
   id: PropTypes.string,
+  /**
+   * The id of the item.
+   */
   itemId: PropTypes.string.isRequired,
 } as any;
 
