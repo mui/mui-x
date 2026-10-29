@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 
 export type PropsFromSlot<
   Slot extends React.JSXElementConstructor<any> | React.ElementType | null | undefined,

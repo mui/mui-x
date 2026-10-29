@@ -57,7 +57,7 @@ To change them, remount the Event Timeline, for example with a `key`.
 ## Dependency model
 
 ```ts
-import { SchedulerDependency } from '@mui/x-scheduler-premium/models';
+import type { SchedulerDependency } from '@mui/x-scheduler-premium/models';
 
 const dependency: SchedulerDependency = {
   id: '1',

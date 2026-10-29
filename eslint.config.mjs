@@ -88,6 +88,37 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/x-scheduler-internals-premium',
 ];
 
+// React APIs missing from React 17, which the peer range still supports.
+const REACT_17_MISSING_APIS = [
+  {
+    property: 'useId',
+    message: 'Use `@mui/utils/useId` or `@base-ui/utils/useId` instead.',
+  },
+  {
+    property: 'useSyncExternalStore',
+    message: "Use `useSyncExternalStore` from 'use-sync-external-store/shim' instead.",
+  },
+  ...[
+    'useInsertionEffect',
+    'useTransition',
+    'startTransition',
+    'useDeferredValue',
+    'use',
+    'useActionState',
+    'useOptimistic',
+    'useEffectEvent',
+    'Activity',
+    'cache',
+  ].map((property) => ({
+    property,
+    message: 'Read it from `SafeReact` (`@base-ui/utils/safeReact`) and add a fallback.',
+  })),
+].map(({ property, message }) => ({
+  object: 'React',
+  property,
+  message: `\`React.${property}\` does not exist in React 17. ${message}`,
+}));
+
 const packageFilesWithReactCompiler = getReactCompilerFilesForPackages([
   {
     packagesNames: CHARTS_PACKAGES,
@@ -260,12 +291,10 @@ export default defineConfig(
   },
   {
     files: [
-      `packages/x-charts{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-data-grid{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-date-pickers{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-scheduler{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-tree-view{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-chat{,-*}/**/*${EXTENSION_TS}`,
+      `packages/**/*${EXTENSION_TS}`,
+      `docs/**/*${EXTENSION_TS}`,
+      `scripts/**/*${EXTENSION_TS}`,
+      `test/**/*${EXTENSION_TS}`,
     ],
     rules: {
       '@typescript-eslint/consistent-type-imports': [
@@ -359,6 +388,7 @@ export default defineConfig(
         },
       ],
       'mui/disallow-react-api-in-server-components': 'error',
+      'no-restricted-properties': ['error', ...REACT_17_MISSING_APIS],
     },
   },
 

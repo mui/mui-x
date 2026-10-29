@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGrid, GridDensity, Toolbar, ToolbarButton } from '@mui/x-data-grid';
+import type { GridDensity } from '@mui/x-data-grid';
+import { DataGrid, Toolbar, ToolbarButton } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Tooltip from '@mui/material/Tooltip';
 import SettingsIcon from '@mui/icons-material/Settings';

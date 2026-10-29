@@ -5,7 +5,10 @@ import clsx from 'clsx';
 import type { SxProps, Theme } from '@mui/system';
 import IconButton from '@mui/material/IconButton';
 import { ScrollToBottomAffordance } from '@mui/x-chat-headless';
-import type { ScrollToBottomAffordanceProps } from '@mui/x-chat-headless';
+import type {
+  ScrollToBottomAffordanceProps,
+  ScrollToBottomAffordanceSlots,
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatScrollToBottomAffordanceUtilityClasses } from './chatScrollToBottomAffordanceClasses';
@@ -13,9 +16,17 @@ import type { ChatScrollToBottomAffordanceClasses } from './chatScrollToBottomAf
 
 const useThemeProps = createUseThemeProps('MuiChatScrollToBottomAffordance');
 
+export interface ChatScrollToBottomAffordanceSlots extends ScrollToBottomAffordanceSlots {}
+
 export interface ChatScrollToBottomAffordanceProps extends ScrollToBottomAffordanceProps {
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<ChatScrollToBottomAffordanceClasses>;
 }
 
@@ -96,11 +107,28 @@ ChatScrollToBottomAffordance.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * The scroll behavior used when the button scrolls to the bottom.
+   */
   scrollBehavior: PropTypes.oneOf(['auto', 'instant', 'smooth']),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

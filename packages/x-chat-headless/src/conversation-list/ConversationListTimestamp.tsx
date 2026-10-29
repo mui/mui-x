@@ -7,19 +7,45 @@ import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import type { ConversationListTimestampOwnerState } from './conversationList.types';
 
 export interface ConversationListTimestampSlots {
+  /**
+   * The component that renders the root.
+   */
   root: React.ElementType;
 }
 
 export interface ConversationListTimestampSlotProps {
+  /**
+   * The props used for the root slot.
+   */
   root?: SlotComponentProps<'div', {}, ConversationListTimestampOwnerState>;
 }
 
 export interface ConversationListTimestampProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * The conversation the item renders.
+   */
   conversation: ChatConversation;
+  /**
+   * If `true`, the conversation is selected.
+   */
   selected?: boolean;
+  /**
+   * If `true`, the conversation has unread messages.
+   */
   unread?: boolean;
+  /**
+   * If `true`, the item has keyboard focus.
+   */
   focused?: boolean;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<ConversationListTimestampSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ConversationListTimestampSlotProps;
 }
 

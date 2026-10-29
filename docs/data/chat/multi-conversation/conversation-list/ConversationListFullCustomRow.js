@@ -4,7 +4,6 @@ import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { ChatConversationList } from '@mui/x-chat';
-
 import { ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
 import { directoryConversations } from 'docs/src/modules/components/chat-playground/sharedFixtures';
 

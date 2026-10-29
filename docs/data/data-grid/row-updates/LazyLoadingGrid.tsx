@@ -1,15 +1,9 @@
 import * as React from 'react';
 import debounce from '@mui/utils/debounce';
-import {
-  DataGridPro,
-  GridFetchRowsParams,
-  useGridApiRef,
-} from '@mui/x-data-grid-pro';
-import {
-  createFakeServer,
-  loadServerRows,
-  UseDemoDataOptions,
-} from '@mui/x-data-grid-generator';
+import type { GridFetchRowsParams } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import type { UseDemoDataOptions } from '@mui/x-data-grid-generator';
+import { createFakeServer, loadServerRows } from '@mui/x-data-grid-generator';
 
 const DATASET_OPTION: UseDemoDataOptions = {
   dataSet: 'Employee',

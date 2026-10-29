@@ -1,4 +1,4 @@
-import { PointerManager } from '../PointerManager';
+import type { PointerManager } from '../PointerManager';
 import type { TurnWheelUserGestureOptions } from './TurnWheelUserGesture.types';
 
 /**

@@ -39,6 +39,9 @@ const useUtilityClasses = (classes: Partial<DateTimeRangePickerToolbarClasses> |
 
 export interface DateTimeRangePickerToolbarProps
   extends BaseToolbarProps, ExportedDateTimeRangePickerToolbarProps {
+  /**
+   * 12h/24h view for hour selection clock.
+   */
   ampm?: boolean;
 }
 
@@ -206,11 +209,17 @@ DateTimeRangePickerToolbar.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * 12h/24h view for hour selection clock.
+   */
   ampm: PropTypes.bool,
   /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   /**
    * If `true`, show the toolbar even in desktop mode.
@@ -225,6 +234,10 @@ DateTimeRangePickerToolbar.propTypes /* remove-proptypes */ = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The id of the toolbar title element.
+   * The picker uses it to label its popup.
+   */
   titleId: PropTypes.string,
   /**
    * Toolbar date format.

@@ -17,7 +17,6 @@ import {
   TreeItemRoot,
   TreeItemCheckbox,
 } from '@mui/x-tree-view/TreeItem';
-
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';

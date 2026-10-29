@@ -1,5 +1,6 @@
 import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
-import renameIdentifiers, { PreRequisiteUsage } from '../../../util/renameIdentifiers';
+import type { PreRequisiteUsage } from '../../../util/renameIdentifiers';
+import renameIdentifiers from '../../../util/renameIdentifiers';
 
 const renamedIdentifiers = {
   columnField: 'field',

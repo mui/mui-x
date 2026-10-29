@@ -7,6 +7,7 @@ import type {
   MessageContentProps,
   ToolPartOwnerState,
   ToolPartSectionOwnerState,
+  MessageContentSlots,
 } from '@mui/x-chat-headless';
 import { useToolDisclosure } from '@mui/x-chat-headless/internals';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
@@ -154,6 +155,8 @@ function CheckSvgIcon() {
 }
 
 const useThemeProps = createUseThemeProps('MuiChatMessageContent');
+
+export interface ChatMessageContentSlots extends MessageContentSlots {}
 
 export interface ChatMessageContentProps extends MessageContentProps {
   className?: string;
@@ -1359,14 +1362,22 @@ ChatMessageContent.propTypes /* remove-proptypes */ = {
     }),
   }),
   /**
-   * @deprecated Use `partProps` instead.
    * Callback to resolve a built-in part renderer for a given part type.
+   * @deprecated Use `partProps` instead.
    * @param {ChatMessagePart} part The message part to resolve a renderer for.
    * @param {ChatLocaleText} localeText The locale text for the chat.
    * @returns {ChatPartRenderer<ChatMessagePart> | null} A renderer or null.
    */
   resolveBuiltInPartRenderer: PropTypes.func,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
 } as any;
 

@@ -1,11 +1,13 @@
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import {
-  DataGrid,
+import type {
   GridColDef,
   GridColumnGroupHeaderParams,
   GridColumnGroupingModel,
+} from '@mui/x-data-grid';
+import {
+  DataGrid,
   gridColumnVisibilityModelSelector,
   useGridApiContext,
 } from '@mui/x-data-grid';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
-import { PickerRangeValue } from '@mui/x-date-pickers/internals';
+import type { PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   adapterToUse,
   getExpectedOnChangeCount,
@@ -8,7 +8,7 @@ import {
   isPickerRangeType,
 } from 'test/utils/pickers';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { DescribeValueTestSuite } from './describeValue.types';
+import type { DescribeValueTestSuite } from './describeValue.types';
 
 export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
   ElementToTest,

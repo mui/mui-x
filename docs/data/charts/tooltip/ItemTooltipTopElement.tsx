@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ScaleBand } from '@mui/x-charts-vendor/d3-scale';
+import type { ScaleBand } from '@mui/x-charts-vendor/d3-scale';
 import NoSsr from '@mui/material/NoSsr';
 import Popper from '@mui/material/Popper';
 import { useItemTooltip } from '@mui/x-charts/ChartsTooltip';

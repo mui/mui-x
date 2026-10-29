@@ -7,7 +7,8 @@ import {
   injectPropTypesInFile,
 } from '@mui/internal-scripts/typescript-to-proptypes';
 import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/internal-docs-utils';
-import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
+import type { XTypeScriptProject } from './createXTypeScriptProjects';
+import { createXTypeScriptProjects } from './createXTypeScriptProjects';
 import { resolvePrettierConfigPath } from './utils';
 
 const COMPONENTS_WITHOUT_PROPTYPES = [

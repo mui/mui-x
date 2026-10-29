@@ -10,7 +10,6 @@ import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium }
 import { MapShapePlot, Graticule } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsTooltip } from '@mui/x-charts-premium/ChartsTooltip';
-
 import tectonicPlates from '../dataset/tectonicPlates.json';
 
 const plates = tectonicPlates;

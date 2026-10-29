@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import { createChunkStream } from 'docs/data/chat/core/examples/shared/demoUtils';
 

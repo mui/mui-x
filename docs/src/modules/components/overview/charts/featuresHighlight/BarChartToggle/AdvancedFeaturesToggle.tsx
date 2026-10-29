@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup, { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
 import Paper from '@mui/material/Paper';
-import { SelectOptions } from './types';
+import type { SelectOptions } from './types';
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   gap: theme.spacing(0.5),

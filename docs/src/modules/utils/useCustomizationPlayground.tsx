@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { pick } from 'es-toolkit/object';
 import { blue, pink } from '@mui/material/colors';
-import { BoxProps } from '@mui/material/Box';
-import { createTheme, ThemeProvider, styled, useTheme, Theme } from '@mui/material/styles';
+import type { BoxProps } from '@mui/material/Box';
+import type { Theme } from '@mui/material/styles';
+import { createTheme, ThemeProvider, styled, useTheme } from '@mui/material/styles';
 
 export type CustomizationLabelType = {
   [k in 'customTheme' | 'styledComponents' | 'sxProp']: string;

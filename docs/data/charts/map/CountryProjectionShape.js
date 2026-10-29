@@ -11,7 +11,6 @@ import countriesTopology from 'visionscarto-world-atlas/world/110m.json';
 import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
 import { GeoDataPlot, Graticule } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-
 import { useGeoPath } from '@mui/x-charts-premium/hooks';
 
 const countries = topojsonFeature(countriesTopology, 'countries');

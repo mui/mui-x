@@ -1,6 +1,7 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { RangeBarPlot, RangeBarSeries } from '@mui/x-charts-premium/BarChartPremium';
+import type { RangeBarSeries } from '@mui/x-charts-premium/BarChartPremium';
+import { RangeBarPlot } from '@mui/x-charts-premium/BarChartPremium';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
@@ -13,11 +14,12 @@ import {
   useItemTooltip,
 } from '@mui/x-charts/ChartsTooltip';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
-import { ScatterValueType, XAxis, YAxis } from '@mui/x-charts/models';
+import type { ScatterValueType, XAxis, YAxis } from '@mui/x-charts/models';
 import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
 import { ChartsWrapper } from '@mui/x-charts-pro/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts-pro/ChartsSurface';
-import { ScatterPlot, ScatterSeries } from '@mui/x-charts/ScatterChart';
+import type { ScatterSeries } from '@mui/x-charts/ScatterChart';
+import { ScatterPlot } from '@mui/x-charts/ScatterChart';
 import { ChartsDataProviderPremium } from '@mui/x-charts-premium/ChartsDataProviderPremium';
 
 const importantHappeningsLabels = [

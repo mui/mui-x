@@ -1,4 +1,4 @@
-import { float, integer } from '@mui/x-internals/types';
+import type { float, integer } from '@mui/x-internals/types';
 
 export type ColumnIndex = number;
 export type CellColSpanInfo =

@@ -8,10 +8,16 @@ import { useComposerContext } from './internals/ComposerContext';
 import type { ComposerSendButtonOwnerState } from './composer.types';
 
 export interface ComposerSendButtonSlots {
+  /**
+   * The component that renders the send button.
+   */
   sendButton: React.ElementType;
 }
 
 export interface ComposerSendButtonSlotProps {
+  /**
+   * The props used for the send button slot.
+   */
   sendButton?: SlotComponentProps<'button', {}, ComposerSendButtonOwnerState>;
 }
 
@@ -19,7 +25,15 @@ export interface ComposerSendButtonProps extends Omit<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   'type'
 > {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<ComposerSendButtonSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ComposerSendButtonSlotProps;
 }
 

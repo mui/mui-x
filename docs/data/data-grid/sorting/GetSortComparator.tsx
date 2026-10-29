@@ -1,8 +1,5 @@
-import {
-  DataGrid,
-  GridColDef,
-  gridStringOrNumberComparator,
-} from '@mui/x-data-grid';
+import type { GridColDef } from '@mui/x-data-grid';
+import { DataGrid, gridStringOrNumberComparator } from '@mui/x-data-grid';
 import {
   randomQuantity,
   randomId,

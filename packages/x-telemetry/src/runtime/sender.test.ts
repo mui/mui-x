@@ -1,6 +1,8 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
+import type * as MuiXTelemetry from '@mui/x-telemetry';
 import telemetryContext from '../context';
+import type * as ConfigModule from './config';
 
 vi.mock('../context', () => ({
   default: {
@@ -33,8 +35,8 @@ describe.runIf(isJSDOM)('Telemetry: sendMuiXTelemetryEvent', () => {
   let fetchSpy: ReturnType<typeof vi.fn>;
   // Imported after the reset: `./config` caches env in module scope, so a reference held
   // across the reset is not the one `./sender` reads.
-  let muiXTelemetrySettings: typeof import('@mui/x-telemetry').muiXTelemetrySettings;
-  let getTelemetryEnvConfig: typeof import('./config').getTelemetryEnvConfig;
+  let muiXTelemetrySettings: typeof MuiXTelemetry.muiXTelemetrySettings;
+  let getTelemetryEnvConfig: typeof ConfigModule.getTelemetryEnvConfig;
 
   beforeEach(async () => {
     ({ muiXTelemetrySettings } = await import('@mui/x-telemetry'));
