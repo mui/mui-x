@@ -2,7 +2,13 @@
   "props": {},
   "name": "ComposerAttachmentList",
   "imports": ["import { ComposerAttachmentList } from '@mui/x-chat/headless';"],
-  "slots": [{ "name": "attachmentList", "description": "", "class": null }],
+  "slots": [
+    {
+      "name": "attachmentList",
+      "description": "The component that renders the attachment list.",
+      "class": null
+    }
+  ],
   "classes": [],
   "muiName": "MuiComposerAttachmentList",
   "filename": "/packages/x-chat-headless/src/composer/ComposerAttachmentList.tsx",

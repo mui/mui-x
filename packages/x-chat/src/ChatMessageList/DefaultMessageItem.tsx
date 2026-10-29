@@ -110,7 +110,15 @@ export interface DefaultMessageItemProps {
   index?: number;
   /** The rendered list's message ids. Forwarded to the group alongside `index`. */
   items?: string[];
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: ChatMessageRowSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ChatMessageRowSlotProps;
   /**
    * Opt-in row dividers. Both are disabled by default; pass `{ dateDivider: true }`

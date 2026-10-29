@@ -3,9 +3,9 @@
   "name": "MessageListDateDivider",
   "imports": ["import { MessageListDateDivider } from '@mui/x-chat/headless';"],
   "slots": [
-    { "name": "divider", "description": "", "class": null },
-    { "name": "line", "description": "", "class": null },
-    { "name": "label", "description": "", "class": null }
+    { "name": "divider", "description": "The component that renders the divider.", "class": null },
+    { "name": "line", "description": "The component that renders the line.", "class": null },
+    { "name": "label", "description": "The component that renders the label.", "class": null }
   ],
   "classes": [],
   "spread": true,

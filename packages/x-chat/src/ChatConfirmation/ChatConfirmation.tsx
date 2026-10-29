@@ -32,7 +32,13 @@ export interface ChatConfirmationProps {
    */
   onCancel?: React.MouseEventHandler<HTMLButtonElement>;
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<ChatConfirmationClasses>;
 }
 
@@ -209,6 +215,9 @@ ChatConfirmation.propTypes /* remove-proptypes */ = {
    * @default 'Cancel'
    */
   cancelLabel: PropTypes.string,
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
@@ -228,6 +237,9 @@ ChatConfirmation.propTypes /* remove-proptypes */ = {
    * Called when the user clicks the confirm button.
    */
   onConfirm: PropTypes.func,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
