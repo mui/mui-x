@@ -184,7 +184,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     expect(dataSource.getEvents.mock.calls.length).to.equal(2);
   });
 
-  it('should not pushError when persistEvents rejects after dispose', async () => {
+  it('should not push a user-facing error when persistEvents rejects after dispose', async () => {
     const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     let rejectPersist!: (reason: unknown) => void;

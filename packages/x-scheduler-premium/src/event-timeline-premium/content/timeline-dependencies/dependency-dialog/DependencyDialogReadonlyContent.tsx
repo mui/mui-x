@@ -17,12 +17,8 @@ import {
   EventDialogHeader,
   useEventEditingStyledContext,
 } from '@mui/x-scheduler/internals';
-import {
-  DEPENDENCY_DIALOG_TEXT,
-  DEPENDENCY_TYPE_LABELS,
-  formatLag,
-  getAllDayLagNote,
-} from './dependencyDialogUtils';
+import { useEventTimelinePremiumStyledContext } from '../../../EventTimelinePremiumStyledContext';
+import { getAllDayLagNote, getDependencyTypeLabel } from './dependencyDialogUtils';
 import {
   DependencyDialogBody,
   DependencyDialogDetails,
@@ -42,13 +38,15 @@ const DependencyDialogLagNote = styled('span', {
 export function DependencyDialogReadonlyContent(props: DependencyDialogViewProps) {
   const { dependency, titleId, dragHandlerRef, onClose } = props;
   const store = useEventTimelinePremiumStoreContext();
-  const { classes, localeText } = useEventEditingStyledContext();
+  const { classes } = useEventEditingStyledContext();
+  const { localeText } = useEventTimelinePremiumStyledContext();
   const lag = getDependencyLag(dependency);
   const isTargetAllDay = useStore(
     store,
     (state) => schedulerEventSelectors.processedEvent(state, dependency.target)?.allDay ?? false,
   );
   const allDayLagNote = getAllDayLagNote(
+    localeText,
     lag,
     getEffectiveDependencyLag(dependency, isTargetAllDay),
   );
@@ -57,17 +55,21 @@ export function DependencyDialogReadonlyContent(props: DependencyDialogViewProps
     <EventDialogForm as="section" className={classes.eventDialogForm}>
       <EventDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
         <Typography variant="h6" id={titleId} className={classes.eventDialogTitle}>
-          {DEPENDENCY_DIALOG_TEXT.detailsTitle}
+          {localeText.dependencyDetailsTitle}
         </Typography>
       </EventDialogHeader>
       <DependencyDialogBody>
         <DependencyDialogDetails>
           <DependencyDialogEndpoints {...props} />
-          <Typography component="dt">{DEPENDENCY_DIALOG_TEXT.typeLabel}</Typography>
-          <Typography component="dd">{DEPENDENCY_TYPE_LABELS[dependency.type]}</Typography>
-          <Typography component="dt">{DEPENDENCY_DIALOG_TEXT.lagLabel}</Typography>
+          <Typography component="dt">{localeText.dependencyTypeLabel}</Typography>
           <Typography component="dd">
-            {lag === null ? DEPENDENCY_DIALOG_TEXT.noLag : formatLag(lag)}
+            {getDependencyTypeLabel(localeText, dependency.type)}
+          </Typography>
+          <Typography component="dt">{localeText.dependencyLagLabel}</Typography>
+          <Typography component="dd">
+            {lag === null
+              ? localeText.dependencyNoLag
+              : localeText.dependencyLag(lag.amount, lag.unit)}
             {allDayLagNote !== null && (
               <DependencyDialogLagNote>{allDayLagNote}</DependencyDialogLagNote>
             )}

@@ -63,6 +63,7 @@ import { eventDialogFormSelectors } from '../event-dialog/form/EventDialogFormSt
 import { usePushPlaceholder } from '../event-dialog/usePushPlaceholder';
 import { focusFirstInvalid } from '../scheduler-form/focusFirstInvalid';
 import { deleteOccurrenceAndRestoreFocus } from '../../utils/focus-utils';
+import { getUserFacingErrorMessage } from '../../utils/user-facing-error';
 
 export const EventDialogFormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
@@ -524,7 +525,10 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           // editing the dates clears it.
           const rejectedField = values.allDay ? 'endDate' : 'endTime';
           warnUnvalidatedField(rejectedField, 'The save was rejected');
-          formStore.setError(rejectedField, result.rejection.message);
+          formStore.setError(
+            rejectedField,
+            getUserFacingErrorMessage(localeText, result.rejection),
+          );
           ReactDOM.flushSync(() => setTabValue('general'));
           focusFirstInvalid(form);
           return;
