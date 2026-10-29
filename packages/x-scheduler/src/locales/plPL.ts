@@ -127,6 +127,7 @@ const plPLCalendar: SchedulerCalendarTranslations = {
   months: 'Miesiące',
   weeks: 'Tygodnie',
   years: 'Lata',
+  // viewSwitcherAriaLabel: 'Views',
 
   // DateNavigator
   closeSidePanel: 'Zamknij panel boczny',

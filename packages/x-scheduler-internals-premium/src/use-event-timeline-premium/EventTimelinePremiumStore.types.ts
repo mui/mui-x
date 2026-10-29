@@ -94,7 +94,7 @@ export interface EventTimelinePremiumParameters<TEvent extends object, TResource
   /**
    * The default preferences for the timeline.
    * To use controlled preferences, use the `preferences` prop.
-   * @default { ampm: true }
+   * @default {}
    */
   defaultPreferences?: Partial<EventTimelinePremiumPreferences>;
   /**

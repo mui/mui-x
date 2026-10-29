@@ -46,7 +46,8 @@ export interface PresetHeaderCellState extends IteratedCell {
   level: number;
   /** The unit this row operates on. */
   unit: PresetHeaderUnit;
-  adapter: TemporalAdapter;
+  /** The locale the labels are formatted in. */
+  locale: string;
   /** `true` if hour labels should be rendered with AM/PM. */
   ampm: boolean;
 }
@@ -60,17 +61,17 @@ interface PresetHeaderLevelConfigBase {
 
 /**
  * Configuration for one header row of a preset. Each level must provide either
- * `formatDate` (text-only label) or `renderCell` (full React render), never both.
+ * `format` (text-only label) or `renderCell` (full React render), never both.
  */
 export type PresetHeaderLevelConfig = PresetHeaderLevelConfigBase &
   (
     | {
         /** Formats the date of the aligned start of the cell into a string label. */
-        formatDate: (adapter: TemporalAdapter, plainDate: PlainDate) => string;
+        format: (locale: string, plainDate: PlainDate) => string;
         renderCell?: undefined;
       }
     | {
-        formatDate?: undefined;
+        format?: undefined;
         /**
          * Renders the cell label from the full cell state. Use this when the
          * label needs more than the date of the aligned start (e.g. a range, multiple
@@ -108,11 +109,7 @@ export interface PresetDefinition {
    * Returns the first date of the visible range, from the date of the visible date in the
    * display timezone.
    */
-  getStartPlainDate: (
-    adapter: TemporalAdapter,
-    visiblePlainDate: PlainDate,
-    weekStartsOn: WeekStartsOn | undefined,
-  ) => PlainDate;
+  getStartPlainDate: (visiblePlainDate: PlainDate, weekStartsOn: WeekStartsOn) => PlainDate;
   /**
    * Returns the date after the last date of the visible range, `unitCount` periods after its
    * first date.

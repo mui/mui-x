@@ -19,7 +19,7 @@ export function useEventCalendar<TEvent extends object, TResource extends object
   parameters: EventCalendarParameters<TEvent, TResource>,
   StoreClass?: EventCalendarStoreConstructor<TEvent, TResource>,
 ): ExtendableEventCalendarStore<TEvent, TResource> {
-  const adapter = useAdapter(parameters.dateLocale);
+  const adapter = useAdapter();
   const ResolvedStoreClass = StoreClass ?? EventCalendarStore;
   const store = useDisposable(() => new ResolvedStoreClass(parameters, adapter));
 

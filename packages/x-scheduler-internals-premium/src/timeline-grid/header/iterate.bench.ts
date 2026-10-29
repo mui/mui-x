@@ -1,5 +1,4 @@
 import { describe, test } from 'vitest';
-import { adapter } from 'test/utils/scheduler';
 import { PlainDate } from '@mui/x-scheduler-internals/internals';
 import { iterate } from './iterate';
 import type { IteratedRange } from './iterate';
@@ -20,15 +19,15 @@ describe('iterate', () => {
   const presets = {
     dayAndHour: () => {
       const range = toRange(visiblePlainDate, visiblePlainDate.add({ days: 4 }));
-      return [iterate(adapter, 'day', 'hour', range), iterate(adapter, 'hour', 'hour', range)];
+      return [iterate('day', 'hour', range, 1), iterate('hour', 'hour', range, 1)];
     },
     dayAndMonth: () => {
       const range = toRange(visiblePlainDate, visiblePlainDate.add({ days: 8 * 7 }));
-      return [iterate(adapter, 'month', 'day', range), iterate(adapter, 'day', 'day', range)];
+      return [iterate('month', 'day', range, 1), iterate('day', 'day', range, 1)];
     },
     monthAndYear: () => {
       const range = toRange(monthStartPlainDate, monthStartPlainDate.add({ months: 3 * 12 }));
-      return [iterate(adapter, 'year', 'day', range), iterate(adapter, 'month', 'day', range)];
+      return [iterate('year', 'day', range, 1), iterate('month', 'day', range, 1)];
     },
   };
 
