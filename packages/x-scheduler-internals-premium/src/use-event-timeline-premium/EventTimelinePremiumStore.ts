@@ -140,7 +140,7 @@ const deriveAreDependenciesEnabled = (
         [
           'MUI X Scheduler: A `dependencies` value was provided, but the dependencies feature is missing.',
           'Without it, the dependencies are ignored: no arrows render and events do not move with their predecessors.',
-          'Pass the dependencies feature through the `features` prop.',
+          'Pass `dependenciesFeature` from `@mui/x-scheduler-premium/dependencies` to the `features` prop.',
         ].join('\n'),
       );
     }

@@ -78,7 +78,7 @@ The resource color indicator inside an event is decorative (`aria-hidden="true"`
 
 Recurring event icons are `aria-hidden="true"` as they are decorative.
 
-In the Event Timeline, dependency arrows are hidden from assistive technologies.
+On the Event Timeline, dependency arrows are hidden from assistive technologies.
 Instead, each successor describes the dependencies it waits on, for example "Cannot start until Design finishes.", through `aria-describedby`.
 
 ### Agenda view
@@ -265,9 +265,9 @@ See the [Event Calendar localization page](/x/react-scheduler/event-calendar/loc
 
 The mini calendar in the side panel exposes `role="grid"` and a roving `tabIndex` on the active date, but arrow key navigation between day cells is not implemented. Clicking a date or using the previous/next month buttons are the only supported interaction methods.
 
-### No keyboard interactions for dependencies
+### No keyboard interactions for Event Timeline dependencies
 
-Dependencies can't be created, selected, or edited with the keyboard yet.
+Dependencies can't be created, selected, or edited with the keyboard.
 
 ## API
 

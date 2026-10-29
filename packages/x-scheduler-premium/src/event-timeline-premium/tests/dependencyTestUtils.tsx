@@ -23,7 +23,7 @@ import { EventTimelinePremiumContent } from '../content';
 import { EventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
 import { recurringEventsFeature } from '../../recurring-events';
-import { dependenciesFeature } from '../../dependencies/dependenciesFeature';
+import { dependenciesFeature } from '../../dependencies';
 import { EventTimelinePremiumFeaturesContext } from '../features/EventTimelinePremiumFeaturesContext';
 import { useFrozenEventTimelinePremiumFeatures } from '../features/useFrozenEventTimelinePremiumFeatures';
 import type { EventTimelinePremiumFeatures } from '../features/EventTimelinePremiumFeatures.types';

@@ -87,6 +87,24 @@ describe('useExtractEventTimelinePremiumParameters', () => {
     expect(result.current.forwardedProps).to.not.have.property('onEventEditingStart');
   });
 
+  it('should forward `dependencies` and `onDependenciesChange` to the parameters object instead of the forwarded props', () => {
+    const dependencies: never[] = [];
+    const onDependenciesChange = () => {};
+    const { result } = renderHook(() =>
+      useExtractEventTimelinePremiumParameters({
+        events: [],
+        resources: [ResourceBuilder.new().build()],
+        dependencies,
+        onDependenciesChange,
+      }),
+    );
+
+    expect(result.current.parameters.dependencies).to.equal(dependencies);
+    expect(result.current.parameters.onDependenciesChange).to.equal(onDependenciesChange);
+    expect(result.current.forwardedProps).to.not.have.property('dependencies');
+    expect(result.current.forwardedProps).to.not.have.property('onDependenciesChange');
+  });
+
   it('should not forward any parameter to the forwarded props', () => {
     const { result } = renderHook(() =>
       useExtractEventTimelinePremiumParameters({

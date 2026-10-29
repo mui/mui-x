@@ -299,9 +299,9 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    */
   defaultVisibleResources: PropTypes.object,
   /**
-   * The dependencies between events. Ignored unless the dependencies feature is provided.
-   * With it, providing a value — even an empty array — enables terminals, arrows and
-   * selection.
+   * The dependencies between events.
+   * Requires the `dependencies` feature from `@mui/x-scheduler-premium/dependencies`.
+   * With it, any value, even an empty array, lets users create dependencies.
    */
   dependencies: PropTypes.arrayOf(
     PropTypes.shape({
@@ -394,35 +394,7 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    * They are read once when the component mounts, later changes are ignored.
    * @example { recurringEvents: recurringEventsFeature, dependencies: dependenciesFeature }
    */
-  features: PropTypes.shape({
-    dependencies: PropTypes.shape({
-      Layer: PropTypes.elementType,
-      store: PropTypes.shape({
-        buildState: PropTypes.func.isRequired,
-        createSchedulingPlugin: PropTypes.func.isRequired,
-        isDependencyActive: PropTypes.func.isRequired,
-        useCreationMonitor: PropTypes.func.isRequired,
-        useEventDropTarget: PropTypes.func.isRequired,
-      }).isRequired,
-      useDescription: PropTypes.func.isRequired,
-    }),
-    recurringEvents: PropTypes.shape({
-      optionalRenderers: PropTypes.shape({
-        recurrenceTab: PropTypes.elementType,
-        recurringScopeDialog: PropTypes.elementType,
-      }).isRequired,
-      store: PropTypes.shape({
-        applyDataTimezoneToEventUpdate: PropTypes.func.isRequired,
-        computePresets: PropTypes.func.isRequired,
-        deleteRecurringEvent: PropTypes.func.isRequired,
-        getDefaultPresetKey: PropTypes.func.isRequired,
-        getOccurrencesForVisibleDays: PropTypes.func.isRequired,
-        isSameRRule: PropTypes.func.isRequired,
-        parseRRule: PropTypes.func.isRequired,
-        updateRecurringEvent: PropTypes.func.isRequired,
-      }).isRequired,
-    }),
-  }),
+  features: PropTypes.object,
   /**
    * Returns the accessible name of an event block.
    * Use it to announce details rendered through the `timelineEventContent` slot.
