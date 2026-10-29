@@ -44,6 +44,7 @@ Same changes as in `@mui/x-data-grid@9.16.1`.
 Same changes as in `@mui/x-data-grid-pro@9.16.1`, plus:
 
 - [DataGridPremium] Computed columns (#23646) @MBilalShafi
+- [DataGridPremium] Fix React 17 crashes (#24038) @LukasTy
 
 ### Date and Time Pickers
 
@@ -62,6 +63,7 @@ Same changes as in `@mui/x-date-pickers@9.16.1`.
 #### `@mui/x-charts@9.16.1`
 
 - [charts] Document undocumented props and slots (#24033) @Janpot
+- [charts] Fix React 17 crashes (#24038) @LukasTy
 
 #### `@mui/x-charts-pro@9.16.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -119,6 +121,7 @@ Same changes as in `@mui/x-tree-view@9.16.1`.
 - [scheduler] Compute the fields of PlainDate when they are read (#23969) @flaviendelangle
 - [scheduler] Detect the text direction and pass it to the timeline virtualizer (#23898) @rita-codes
 - [scheduler] Fetch the ranges of the lazy loading as timestamps (#23998) @flaviendelangle
+- [scheduler] Fix React 17 crashes (#24038) @LukasTy
 - [scheduler] Fix recurring events across timezones and DST transitions (#23943) @flaviendelangle
 - [scheduler] Fix the dependency engine across DST transitions and speed it up (#23963) @flaviendelangle
 - [scheduler] Fix the drag and drop of the day grid across DST transitions and speed up its preview (#23964) @flaviendelangle
@@ -180,6 +183,7 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.15`, plus:
 ### Miscellaneous
 
 - [chat] Fix `ChatBox` ignoring `features.attachments` (#23946) @JCQuintas
+- [chat] Fix React 17 crashes (#24038) @LukasTy
 - [x-internals] Re-export the utilities shared with @base-ui/utils (#23374) @romgrk
 
 ## 9.16.0
