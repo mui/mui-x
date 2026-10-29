@@ -60,10 +60,13 @@ const pinnedCellStyle: React.CSSProperties = {
   background: '#f5f5f5',
 };
 
-// Holds a pinned cell's place in a window row: `PinnedColumns` draws the cell.
+// Holds a pinned cell's place in a window row: `PinnedColumns` draws the cell. Pinned gray,
+// so where a pinned column is drawn after its rows, the row shows an empty pinned cell
+// rather than white.
 const pinnedPlaceholderStyle: React.CSSProperties = {
   flex: '0 0 auto',
   width: COLUMN_WIDTH,
+  background: '#f5f5f5',
 };
 
 /* Covers the scrollbar lane in the top band — the only region the lane mask keeps
