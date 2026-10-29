@@ -440,7 +440,7 @@ const GridFilterFormBase = forwardRef<HTMLDivElement, GridFilterFormBaseProps>(
       deleteFilter(item);
     };
 
-    // Focus the first enabled control, so the column and operator are announced before the value.
+    // Focus the first enabled field, so the column and operator are announced before the value.
     React.useImperativeHandle(
       focusElementRef,
       () => ({

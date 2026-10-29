@@ -214,7 +214,7 @@ describe('<DataGridPro /> - Filter', () => {
   });
 
   // See https://github.com/mui/mui-x/issues/24012
-  it('should focus the first enabled control of an added filter', () => {
+  it('should focus the first enabled field of an added filter', () => {
     render(
       <TestCase
         initialState={{
