@@ -14,11 +14,7 @@ import type { EventTimelinePremiumSlotsAndSlotProps } from '../models/slots';
 import type { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses';
 import type { EventTimelinePremiumFeatures } from './features/EventTimelinePremiumFeatures.types';
 
-export type {
-  EventTimelinePremiumDependenciesFeature,
-  EventTimelinePremiumFeatures,
-  EventTimelinePremiumRecurringEventsFeature,
-} from './features/EventTimelinePremiumFeatures.types';
+export type { EventTimelinePremiumFeatures } from './features/EventTimelinePremiumFeatures.types';
 
 export type EventTimelinePremiumApiRef<
   TEvent extends object = any,
