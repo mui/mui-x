@@ -1,5 +1,181 @@
 # Changelog
 
+## 9.16.1
+<!-- generated comparing v9.16.0..master -->
+_Oct 29, 2026_
+
+We'd like to extend a big thank you to the 18 contributors who made this release possible. Here are some highlights ✨:
+
+- 🧮 Computed columns in the Data Grid Premium
+
+  https://github.com/user-attachments/assets/a96a8366-41df-4fe8-8e25-e517c914b372
+
+- 👆 Data Grid column reordering on touch and pen devices
+- ↔️ Right-to-left (RTL) support in the Event Calendar and the Event Timeline
+- 🕒 Fix recurring events, drag and drop, and the time axis of the Scheduler across DST transitions
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to these community members for their valuable contributions:
+@adamowski10, @Anexus5919, @b84330808, @chanellebingham, @costajohnt, @dasjideepak, @mateuseap, @mustafajw07
+
+The following team members contributed to this release:
+@flaviendelangle, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @romgrk, @ZeeshanTamboli
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.16.1`
+
+- [DataGrid] Add `filterFormColumnInput` slot (#23871) @michelengelen
+- [DataGrid] Fire `onMenuClose` only when a menu actually closes (#23873) @michelengelen
+- [DataGrid] Fix stale values when server-side aggregation is removed (#23973) @JCQuintas
+- [DataGrid] Focus the column header when clicking the sort icon (#23947) @JCQuintas
+- [DataGrid] Show the column header icons on keyboard focus (#23699) @dasjideepak
+- [DataGrid] Touch column reorder with pointer events (#23928) @noraleonte
+
+#### `@mui/x-data-grid-pro@9.16.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.16.1`.
+
+#### `@mui/x-data-grid-premium@9.16.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.16.1`, plus:
+
+- [DataGridPremium] Computed columns (#23646) @MBilalShafi
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.16.1`
+
+- [pickers] Document undocumented props and slots (#24031) @Janpot
+- [pickers] Forward `readOnly` to the input in `PickersTextField` (#24042) @LukasTy
+- [pickers] Only scroll the Digital Clock when its active item changes (#23942) @b84330808
+
+#### `@mui/x-date-pickers-pro@9.16.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.16.1`.
+
+### Charts
+
+#### `@mui/x-charts@9.16.1`
+
+- [charts] Document undocumented props and slots (#24033) @Janpot
+
+#### `@mui/x-charts-pro@9.16.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.16.1`.
+
+#### `@mui/x-charts-premium@9.16.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.16.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@9.16.1`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.16.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.16.1`.
+
+### Scheduler
+
+#### Breaking changes
+
+- The `headerToolbarLeftElement` class of the Event Calendar has been renamed to `headerToolbarStart`.
+  Update your style overrides and class selectors:
+
+  ```diff
+   const theme = createTheme({
+     components: {
+       MuiEventCalendar: {
+         styleOverrides: {
+  -        headerToolbarLeftElement: { gap: 8 },
+  +        headerToolbarStart: { gap: 8 },
+         },
+       },
+     },
+   });
+  ```
+
+- The unused `DEFAULT_PREFERENCES` export of the Timeline store has been removed.
+
+#### `@mui/x-scheduler@9.0.0-beta.15`
+
+- [scheduler] Add `timeGridEvents` option to keep overnight timed events in the time grid (#23749) @Anexus5919
+- [scheduler] Add an RTL demo and visual regression tests (#23975) @rita-codes
+- [scheduler] Add regression tests for standalone month names in headers (#22841) @adamowski10
+- [scheduler] Add store-level tests for the clamped resize with unwritable dates (#23952) @mustafajw07
+- [scheduler] Add utility classes to the dependency UI (#24035) @rita-codes
+- [scheduler] Allow disabling event deletion with `eventDeletion={false}` (#23988) @mustafajw07
+- [scheduler] Build the date keys from plain dates (#24010) @flaviendelangle
+- [scheduler] Compute the fields of PlainDate when they are read (#23969) @flaviendelangle
+- [scheduler] Detect the text direction and pass it to the timeline virtualizer (#23898) @rita-codes
+- [scheduler] Fetch the ranges of the lazy loading as timestamps (#23998) @flaviendelangle
+- [scheduler] Fix recurring events across timezones and DST transitions (#23943) @flaviendelangle
+- [scheduler] Fix the dependency engine across DST transitions and speed it up (#23963) @flaviendelangle
+- [scheduler] Fix the drag and drop of the day grid across DST transitions and speed up its preview (#23964) @flaviendelangle
+- [scheduler] Fix the edits of recurring series across DST transitions (#23965) @flaviendelangle
+- [scheduler] Fix the navigation of the Timeline presets across DST transitions (#23966) @flaviendelangle
+- [scheduler] Fix the time axis across DST transitions and speed it up (#23962) @flaviendelangle
+- [scheduler] Format the dates with Intl and number the weekdays like ISO 8601 (#24021) @flaviendelangle
+- [scheduler] Give the view switcher and the drawer view list an accessible name (#23996) @chanellebingham
+- [scheduler] Keep the "+N more" popover and the event context menu in sync with removed events (#23800) @rita-codes
+- [scheduler] Make every user-facing store error translatable through `localeText` (#24026) @rita-codes
+- [scheduler] Make the agenda view day count configurable (#23815) @costajohnt
+- [scheduler] Mirror arrow key navigation in RTL (#23954) @rita-codes
+- [scheduler] Mirror navigation icons, popups and dialogs in RTL (#23955) @rita-codes
+- [scheduler] Move the day math of the Event Calendar views to plain dates (#23999) @flaviendelangle
+- [scheduler] Move the placeholder of the drag and drop to timestamps (#23997) @flaviendelangle
+- [scheduler] Pass timestamps and plain dates to the CalendarGrid (#24007) @flaviendelangle
+- [scheduler] Process dates without the getters of the adapter (#23984) @flaviendelangle
+- [scheduler] Read more internal dates as plain dates and timestamps (#24014) @flaviendelangle
+- [scheduler] Read the Timeline presets, the recurrence presets and the time columns on plain dates (#24015) @flaviendelangle
+- [scheduler] Read the bounds of the time axis as timestamps (#24006) @flaviendelangle
+- [scheduler] Read the dates of the event dialog as plain dates (#24003) @flaviendelangle
+- [scheduler] Read the timestamps of the processed dates in the recurring events (#24004) @flaviendelangle
+- [scheduler] Refuse writes atomically when a date can't be written back (#23553) @mustafajw07
+- [scheduler] Remove the unused `DEFAULT_PREFERENCES` export of the Timeline store (#24013) @flaviendelangle
+- [scheduler] Rename `headerToolbarLeftElement` to `headerToolbarStart` (#23897) @rita-codes
+- [scheduler] Speed up the day grid and fix day lists across DST transitions (#23961) @flaviendelangle
+- [scheduler] Store the current time as a timestamp and compare the days of the occurrences (#24005) @flaviendelangle
+- [scheduler] Support RTL in the Event Timeline dependency arrows (#23974) @rita-codes
+- [scheduler] Support RTL pointer and scroll interactions in the Event Timeline (#23972) @rita-codes
+- [scheduler] Support RTL when dragging multi-day events in the Event Calendar (#23953) @rita-codes
+- [scheduler] Use logical CSS properties in the Event Calendar and Event Timeline (#23899) @rita-codes
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.15` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.15`, plus:
+
+- [scheduler-premium] Draw dependency arrows to events outside the visible range (#23790) @rita-codes
+- [scheduler-premium] Fix the Event Timeline features after the plain-date migration (#24020) @flaviendelangle
+- [scheduler-premium] Make recurring events and dependencies opt-in in the Event Timeline (#24011) @rita-codes
+- [scheduler-premium] Move the dependency UI strings to `localeText` (#24027) @rita-codes
+- [scheduler-premium] Scroll virtualized timeline rows into view on arrow-key navigation (#23860) @rita-codes
+
+### Docs
+
+- [docs] Add a shared experiments area and migrate Scheduler experiments (#23979) @flaviendelangle
+- [docs] Enforce top-level type imports in docs and scripts (#24046) @Janpot
+- [docs] Follow the docs direction in the scheduler overview demos (#23968) @rita-codes
+- [docs] Add the Event Timeline dependencies page, unlisted until the feature is public (#24032) @rita-codes
+
+### Core
+
+- [code-infra] Enforce top-level type imports in all packages (#24045) @Janpot
+- [code-infra] Enforce top-level type imports in test (#24047) @Janpot
+- [code-infra] Remove redundant `only-allow` preinstall hook (#23956) @Janpot
+- [code-infra] Remove redundant enablePrePostScripts setting (#24000) @Janpot
+- [code-infra] Skip empty internal package changelogs (#23648) @mateuseap
+- [code-infra] Include resolution settings in lockfile (#23944) @ZeeshanTamboli
+
+### Miscellaneous
+
+- [chat] Fix `ChatBox` ignoring `features.attachments` (#23946) @JCQuintas
+- [x-internals] Re-export the utilities shared with @base-ui/utils (#23374) @romgrk
+
 ## 9.16.0
 
 _Oct 20, 2026_
@@ -114,7 +290,7 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.14`, plus:
 - [scheduler-premium] Document `weekStartsOn` and export `EventTimelinePremiumPreferences` (#23811) @rita-codes
 - [scheduler-premium] Include the community models and theme augmentation in the Premium package (#23813) @rita-codes
 - [scheduler-premium] Dependencies - Edit the type and lag from the arrow, cascade on create and edit (#23726) @rita-codes
-- [scheduler-premium] Fix agenda focus skipping surviving occurrences after deleting a recurring event (#23903) @mustafajw07 
+- [scheduler-premium] Fix agenda focus skipping surviving occurrences after deleting a recurring event (#23903) @mustafajw07
 
 
 ### Chat
