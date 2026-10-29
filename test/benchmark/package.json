@@ -1,0 +1,23 @@
+{
+  "name": "@mui-x-internal/benchmark",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "benchmark": "benchmark"
+  },
+  "devDependencies": {
+    "@emotion/react": "catalog:",
+    "@emotion/styled": "catalog:",
+    "@mui/internal-benchmark": "0.1.1-canary.11",
+    "@mui/material": "catalog:",
+    "@mui/x-charts": "workspace:^",
+    "@mui/x-charts-premium": "workspace:^",
+    "@mui/x-charts-pro": "workspace:^",
+    "@mui/x-license": "workspace:^",
+    "@playwright/test": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "vite": "catalog:"
+  }
+}

@@ -2420,6 +2420,45 @@ importers:
         specifier: ^4.4.0
         version: 4.4.0
 
+  test/benchmark:
+    devDependencies:
+      '@emotion/react':
+        specifier: 'catalog:'
+        version: 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
+      '@emotion/styled':
+        specifier: 'catalog:'
+        version: 11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
+      '@mui/internal-benchmark':
+        specifier: 0.1.1-canary.11
+        version: 0.1.1-canary.11(@playwright/test@1.64.1)(@vitest/browser-playwright@5.0.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vite@8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.0.5)
+      '@mui/material':
+        specifier: 'catalog:'
+        version: 9.5.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@mui/x-charts':
+        specifier: workspace:^
+        version: link:../../packages/x-charts/build
+      '@mui/x-charts-premium':
+        specifier: workspace:^
+        version: link:../../packages/x-charts-premium/build
+      '@mui/x-charts-pro':
+        specifier: workspace:^
+        version: link:../../packages/x-charts-pro/build
+      '@mui/x-license':
+        specifier: workspace:^
+        version: link:../../packages/x-license/build
+      '@playwright/test':
+        specifier: 'catalog:'
+        version: 1.64.1
+      react:
+        specifier: 'catalog:'
+        version: 19.3.1
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.3.1(react@19.3.1)
+      vite:
+        specifier: 'catalog:'
+        version: 8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
+
   test/bundle-size:
     dependencies:
       '@mui/x-charts':
@@ -2533,42 +2572,6 @@ importers:
       tsx:
         specifier: 'catalog:'
         version: 4.23.15
-
-  test/performance-charts:
-    devDependencies:
-      '@emotion/react':
-        specifier: 'catalog:'
-        version: 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
-      '@mui/internal-benchmark':
-        specifier: 0.1.1-canary.11
-        version: 0.1.1-canary.11(@playwright/test@1.64.1)(@vitest/browser-playwright@5.0.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vite@8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.0.5)
-      '@mui/x-charts':
-        specifier: workspace:^
-        version: link:../../packages/x-charts/build
-      '@mui/x-charts-premium':
-        specifier: workspace:^
-        version: link:../../packages/x-charts-premium/build
-      '@mui/x-charts-pro':
-        specifier: workspace:^
-        version: link:../../packages/x-charts-pro/build
-      '@vitejs/plugin-react':
-        specifier: 'catalog:'
-        version: 6.1.2(babel-plugin-react-compiler@1.0.0)(vite@8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
-      '@vitest/browser-playwright':
-        specifier: 'catalog:'
-        version: 5.0.5(playwright@1.64.1)(vite@8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.0.5)
-      react:
-        specifier: 'catalog:'
-        version: 19.3.1
-      react-dom:
-        specifier: 'catalog:'
-        version: 19.3.1(react@19.3.1)
-      vite:
-        specifier: 'catalog:'
-        version: 8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
-      vitest:
-        specifier: 'catalog:'
-        version: 5.0.5(@types/node@22.20.5)(@vitest/browser-playwright@5.0.5)(@vitest/coverage-v8@5.0.5)(@vitest/ui@5.0.5)(jsdom@30.1.3)(vite@8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
 
   test/regressions:
     devDependencies:
