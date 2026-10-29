@@ -71,6 +71,17 @@ function getReactCompilerFilesForPackages(packageInfo) {
     );
 }
 
+const INTERNALS_INDEX_RESTRICTED_ZONES = [
+  ...CHARTS_PACKAGES,
+  ...PICKERS_PACKAGES,
+  ...TREE_VIEW_PACKAGES,
+  ...SCHEDULER_PACKAGES,
+].map((packageName) => ({
+  target: `./packages/${packageName}/src/**/!(*.test.*|*.spec.*)`,
+  from: `./packages/${packageName}/src/internals/index.ts`,
+  message: `Use a more specific import instead. E.g. import { MyInternal } from '../internals/MyInternal';`,
+}));
+
 const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/material',
   '@mui/utils',
@@ -190,16 +201,7 @@ export default defineConfig(
       'import/no-restricted-paths': [
         'error',
         {
-          zones: [
-            ...CHARTS_PACKAGES,
-            ...PICKERS_PACKAGES,
-            ...TREE_VIEW_PACKAGES,
-            ...SCHEDULER_PACKAGES,
-          ].map((packageName) => ({
-            target: `./packages/${packageName}/src/**/!(*.test.*|*.spec.*)`,
-            from: `./packages/${packageName}/src/internals/index.ts`,
-            message: `Use a more specific import instead. E.g. import { MyInternal } from '../internals/MyInternal';`,
-          })),
+          zones: INTERNALS_INDEX_RESTRICTED_ZONES,
         },
       ],
       'no-restricted-imports': 'off',
@@ -330,6 +332,8 @@ export default defineConfig(
         'error',
         {
           zones: [
+            // This entry replaces the rule of all the files, so it repeats their zones.
+            ...INTERNALS_INDEX_RESTRICTED_ZONES,
             {
               target: './packages',
               from: './packages/x-scheduler-internals/src/internals/utils/base-temporal',
