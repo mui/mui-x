@@ -82,6 +82,20 @@ const esESDialog: SchedulerDialogTranslations = {
   radioGroupAriaLabel: 'Alcance de edición de eventos recurrentes',
   thisAndFollowing: 'Este y los eventos siguientes',
   title: 'Aplicar este cambio a:',
+
+  // Errors
+  // somethingWentWrongError: 'Something went wrong. Try again.',
+  // eventNotLoadedError: 'This event is still being saved, so the change was not applied. Try again once it is saved.',
+  // eventChangedWhileConfirmingError: 'This event changed while the delete confirmation was open, so the deletion was not applied. Try deleting it again.',
+  // datesNotWritableError: "This date can't be changed, so the change was not applied.",
+  // eventNotCreatableError: "This can't be saved as a new event, so the change was not applied.",
+  // readOnlyEventMovedError: title => `This change would move the read-only event "${title}", so it was not applied.`,
+  // dependencyCascadeBlockedError: 'This dependency would move a read-only event, so it was not created.',
+  // dependencyCycleError: 'This dependency would create a cycle between events.',
+  // dependencyDuplicateError: 'A dependency of this type already exists between these two events.',
+  // dependencyRecurringEventError: 'Dependencies cannot involve recurring events.',
+  // dependencyReadOnlyError: 'Dependencies cannot be changed while the scheduler is read-only.',
+  // dependencyUnknownEventError: 'This dependency cannot be created because one of its events no longer exists.',
 };
 
 const esESEvent: SchedulerEventTranslations = {
@@ -116,6 +130,7 @@ const esESCalendar: SchedulerCalendarTranslations = {
   months: 'Meses',
   weeks: 'Semanas',
   years: 'Años',
+  // viewSwitcherAriaLabel: 'Views',
 
   // DateNavigator
   closeSidePanel: 'Cerrar panel lateral',

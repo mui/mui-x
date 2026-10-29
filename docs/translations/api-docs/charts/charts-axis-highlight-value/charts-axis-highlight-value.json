@@ -6,6 +6,9 @@
     "labelPosition": {
       "description": "The position of the label relative to the drawing area. - <code>&#39;start&#39;</code>: at the beginning of the drawing area (top for x-axis, left for y-axis). - <code>&#39;end&#39;</code>: at the end of the drawing area (bottom for x-axis, right for y-axis). - <code>&#39;both&#39;</code>: at both positions. - <code>&#39;none&#39;</code>: no label is displayed."
     },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
     "value": {
       "description": "The value to display. If not defined, tracks the axis highlight value from user interaction."
     },
