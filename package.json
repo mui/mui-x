@@ -1,5 +1,5 @@
 {
-  "version": "9.16.1",
+  "version": "9.17.0",
   "private": true,
   "scripts": {
     "start": "pnpm i && pnpm docs:dev",

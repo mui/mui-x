@@ -1,7 +1,7 @@
 # Changelog
 
-## 9.16.1
-<!-- generated comparing v9.16.0..master -->
+## 9.17.0
+
 _Oct 30, 2026_
 
 We'd like to extend a big thank you to the 18 contributors who made this release possible. Here are some highlights ✨:
@@ -26,7 +26,7 @@ The following team members contributed to this release:
 
 ### Data Grid
 
-#### `@mui/x-data-grid@9.16.1`
+#### `@mui/x-data-grid@9.17.0`
 
 - [DataGrid] Add `filterFormColumnInput` slot (#23871) @michelengelen
 - [DataGrid] Fire `onMenuClose` only when a menu actually closes (#23873) @michelengelen
@@ -35,53 +35,53 @@ The following team members contributed to this release:
 - [DataGrid] Show the column header icons on keyboard focus (#23699) @dasjideepak
 - [DataGrid] Touch column reorder with pointer events (#23928) @noraleonte
 
-#### `@mui/x-data-grid-pro@9.16.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@9.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@9.16.1`.
+Same changes as in `@mui/x-data-grid@9.17.0`.
 
-#### `@mui/x-data-grid-premium@9.16.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@9.17.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@9.16.1`, plus:
+Same changes as in `@mui/x-data-grid-pro@9.17.0`, plus:
 
 - [DataGridPremium] Computed columns (#23646) @MBilalShafi
 - [DataGridPremium] Fix React 17 crashes (#24038) @LukasTy
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@9.16.1`
+#### `@mui/x-date-pickers@9.17.0`
 
 - [pickers] Document undocumented props and slots (#24031) @Janpot
 - [pickers] Forward `readOnly` to the input in `PickersTextField` (#24042) @LukasTy
 - [pickers] Only scroll the Digital Clock when its active item changes (#23942) @b84330808
 
-#### `@mui/x-date-pickers-pro@9.16.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@9.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@9.16.1`.
+Same changes as in `@mui/x-date-pickers@9.17.0`.
 
 ### Charts
 
-#### `@mui/x-charts@9.16.1`
+#### `@mui/x-charts@9.17.0`
 
 - [charts] Document undocumented props and slots (#24033) @Janpot
 - [charts] Fix React 17 crashes (#24038) @LukasTy
 
-#### `@mui/x-charts-pro@9.16.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@9.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@9.16.1`.
+Same changes as in `@mui/x-charts@9.17.0`.
 
-#### `@mui/x-charts-premium@9.16.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-charts-premium@9.17.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-charts-pro@9.16.1`.
+Same changes as in `@mui/x-charts-pro@9.17.0`.
 
 ### Tree View
 
-#### `@mui/x-tree-view@9.16.1`
+#### `@mui/x-tree-view@9.17.0`
 
 Internal changes.
 
-#### `@mui/x-tree-view-pro@9.16.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-tree-view-pro@9.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-tree-view@9.16.1`.
+Same changes as in `@mui/x-tree-view@9.17.0`.
 
 ### Scheduler
 
