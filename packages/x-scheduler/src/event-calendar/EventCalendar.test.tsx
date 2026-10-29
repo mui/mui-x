@@ -12,10 +12,12 @@ import {
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import type { EventCalendarPreferences } from '@mui/x-scheduler/models';
 import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
+import type { SchedulerUserFacingErrorDescriptor } from '@mui/x-scheduler-internals/internals';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { vi, describe, it, expect } from 'vitest';
 import { ErrorContainer } from '../internals/components/error-container';
 import { SharedComponentsStyledContext } from '../internals/components/SharedComponentsStyledContext';
+import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../internals/constants/defaultLocaleText';
 import {
   changeTo24HoursFormat,
   changeTo12HoursFormat,
@@ -533,6 +535,21 @@ describe('EventCalendar', () => {
       // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within month view (mini calendar also has column headers)
       expect(monthView.getByRole('columnheader', { name: /lundi/i })).not.to.equal(null);
     });
+
+    it('should render the calendar header with a standalone month name in Polish when dateLocale is pl-PL', () => {
+      render(
+        <EventCalendar
+          events={[]}
+          defaultVisibleDate={new Date('2026-06-01T00:00:00Z')}
+          dateLocale="pl-PL"
+        />,
+      );
+
+      const header = document.querySelector(`.${eventCalendarClasses.headerToolbar}`);
+      const headerLabel = header?.querySelector('[aria-live="polite"]');
+      expect(headerLabel).not.to.equal(null);
+      expect(headerLabel).to.have.text('czerwiec 2026');
+    });
   });
 
   describe('className property', () => {
@@ -718,18 +735,23 @@ describe('EventCalendar', () => {
   });
 
   describe('ErrorContainer', () => {
-    function renderErrorContainer(initialErrors: Error[]) {
+    function renderErrorContainer(
+      initialErrors: SchedulerUserFacingErrorDescriptor[],
+      localeText = EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
+    ) {
       const store = new EventCalendarStore({ events: [] }, adapter);
       store.set(
         'errors',
-        initialErrors.map((error, index) => ({ error, key: String(index) })),
+        initialErrors.map((error, index) => ({ ...error, key: String(index) })),
       );
 
       return {
         store,
         ...render(
           <SchedulerStoreContext.Provider value={store as any}>
-            <SharedComponentsStyledContext.Provider value={{ classes: eventCalendarClasses }}>
+            <SharedComponentsStyledContext.Provider
+              value={{ classes: eventCalendarClasses, localeText }}
+            >
               <ErrorContainer />
             </SharedComponentsStyledContext.Provider>
           </SchedulerStoreContext.Provider>,
@@ -737,16 +759,39 @@ describe('EventCalendar', () => {
       };
     }
 
+    const notLoaded = EVENT_CALENDAR_DEFAULT_LOCALE_TEXT.eventNotLoadedError;
+    const failure = EVENT_CALENDAR_DEFAULT_LOCALE_TEXT.somethingWentWrongError;
+
     it('should render multiple alerts when state.errors contains multiple errors', () => {
-      renderErrorContainer([new Error('First error'), new Error('Second error')]);
+      renderErrorContainer([{ code: 'eventNotLoadedError' }, { code: 'somethingWentWrongError' }]);
 
       expect(document.querySelectorAll(`.${eventCalendarClasses.errorAlert}`).length).to.equal(2);
-      expect(screen.getByText('First error')).not.to.equal(null);
-      expect(screen.getByText('Second error')).not.to.equal(null);
+      expect(screen.getByText(notLoaded)).not.to.equal(null);
+      expect(screen.getByText(failure)).not.to.equal(null);
+    });
+
+    it('should render the message of each code from the localeText', () => {
+      renderErrorContainer(
+        [
+          { code: 'somethingWentWrongError' },
+          { code: 'readOnlyEventMovedError', params: { title: 'Standup' } },
+        ],
+        {
+          ...EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
+          somethingWentWrongError: 'Algo salió mal.',
+          readOnlyEventMovedError: (title) => `No se puede mover "${title}".`,
+        },
+      );
+
+      expect(screen.getByText('Algo salió mal.')).not.to.equal(null);
+      expect(screen.getByText('No se puede mover "Standup".')).not.to.equal(null);
     });
 
     it('should remove only the dismissed alert and keep the others', async () => {
-      const { user } = renderErrorContainer([new Error('First error'), new Error('Second error')]);
+      const { user } = renderErrorContainer([
+        { code: 'eventNotLoadedError' },
+        { code: 'somethingWentWrongError' },
+      ]);
 
       const closeButtons = screen.getAllByRole('button', { name: /close/i });
       expect(closeButtons.length).to.equal(2);
@@ -756,25 +801,24 @@ describe('EventCalendar', () => {
       await waitFor(() => {
         expect(document.querySelectorAll(`.${eventCalendarClasses.errorAlert}`).length).to.equal(1);
       });
-      expect(screen.queryByText('First error')).to.equal(null);
-      expect(screen.getByText('Second error')).not.to.equal(null);
+      expect(screen.queryByText(notLoaded)).to.equal(null);
+      expect(screen.getByText(failure)).not.to.equal(null);
     });
 
-    it('should re-display the same Error instance after dismiss when pushed again with a new key', async () => {
-      const sharedError = new Error('Shared error');
-      const { store, user } = renderErrorContainer([sharedError]);
+    it('should re-display the same error after dismiss when pushed again with a new key', async () => {
+      const { store, user } = renderErrorContainer([{ code: 'somethingWentWrongError' }]);
 
       await user.click(screen.getByRole('button', { name: /close/i }));
       await waitFor(() => {
-        expect(screen.queryByText('Shared error')).to.equal(null);
+        expect(screen.queryByText(failure)).to.equal(null);
       });
 
       await act(async () => {
-        store.set('errors', [{ error: sharedError, key: 'fresh' }]);
+        store.set('errors', [{ code: 'somethingWentWrongError', key: 'fresh' }]);
       });
 
       await waitFor(() => {
-        expect(screen.getByText('Shared error')).not.to.equal(null);
+        expect(screen.getByText(failure)).not.to.equal(null);
       });
     });
   });

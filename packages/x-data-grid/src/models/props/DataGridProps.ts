@@ -745,14 +745,16 @@ export interface DataGridPropsWithoutDefaultValue<
    */
   onPreferencePanelOpen?: GridEventListener<'preferencePanelOpen', Api>;
   /**
-   * Callback fired when the menu is opened.
+   * Callback fired when a grid menu is opened.
+   * This includes the column menu, the actions cell menu, and the toolbar menus.
    * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onMenuOpen?: GridEventListener<'menuOpen', Api>;
   /**
-   * Callback fired when the menu is closed.
+   * Callback fired when a grid menu is closed.
+   * This includes the column menu, the actions cell menu, and the toolbar menus.
    * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.

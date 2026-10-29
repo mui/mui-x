@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "apiRef": { "description": "The ref object that exposes the chart API methods." },
     "axesGap": {
       "description": "A gap added between axes when multiple axes are rendered on the same side of the chart."
     },
@@ -10,6 +11,7 @@
     },
     "borderRadius": { "description": "Defines the border radius of the bar element." },
     "brushConfig": { "description": "Configuration for the brush interaction." },
+    "children": { "description": "The content of the component." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
@@ -138,6 +140,12 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "theme": {
+      "description": "The color mode passed to <code>colors</code> when it is a function. Defaults to the mode of the Material UI theme."
+    },
     "title": {
       "description": "The title of the chart. Used to provide an accessible label for the chart."
     },
@@ -166,15 +174,15 @@
     "axisTickLabel": "Custom component for tick label.",
     "bar": "The component that renders the bar.",
     "barLabel": "The component that renders the bar label.",
-    "baseButton": "",
-    "baseDivider": "",
-    "baseIconButton": "",
-    "baseMenuItem": "",
-    "baseMenuList": "",
-    "basePopper": "",
+    "baseButton": "The component used for buttons.",
+    "baseDivider": "The component used for dividers.",
+    "baseIconButton": "The component used for icon buttons.",
+    "baseMenuItem": "The component used for menu items.",
+    "baseMenuList": "The component used for menu lists.",
+    "basePopper": "The component used for poppers.",
     "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps &amp; BaseToggleButtonPropsOverrides&gt;</code>.",
-    "baseToggleButtonGroup": "",
-    "baseTooltip": "",
+    "baseToggleButtonGroup": "The component used for toggle button groups.",
+    "baseTooltip": "The component used for tooltips.",
     "exportIcon": "Icon displayed on the toolbar&#39;s export button.",
     "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",

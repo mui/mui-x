@@ -62,6 +62,24 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     eventResizeHandler: ['eventResizeHandler'],
     eventLinesClamp: ['eventLinesClamp'],
     eventRecurringIcon: ['eventRecurringIcon'],
+    dependencyArrows: ['dependencyArrows'],
+    dependencyTerminals: ['dependencyTerminals'],
+    eventDependencyTerminal: ['eventDependencyTerminal'],
+    dependencyDialog: ['dependencyDialog'],
+    dependencyDialogPaper: ['dependencyDialogPaper'],
+    dependencyDialogHeader: ['dependencyDialogHeader'],
+    dependencyDialogTitle: ['dependencyDialogTitle'],
+    dependencyDialogCloseButton: ['dependencyDialogCloseButton'],
+    dependencyDialogContent: ['dependencyDialogContent'],
+    dependencyDialogForm: ['dependencyDialogForm'],
+    dependencyDialogBody: ['dependencyDialogBody'],
+    dependencyDialogDetails: ['dependencyDialogDetails'],
+    dependencyDialogEventChip: ['dependencyDialogEventChip'],
+    dependencyDialogLag: ['dependencyDialogLag'],
+    dependencyDialogLagUnit: ['dependencyDialogLagUnit'],
+    dependencyDialogLagNote: ['dependencyDialogLagNote'],
+    dependencyDialogDivider: ['dependencyDialogDivider'],
+    dependencyDialogActions: ['dependencyDialogActions'],
     eventSkeleton: ['eventSkeleton'],
     errorContainer: ['errorContainer'],
     errorAlert: ['errorAlert'],
@@ -143,7 +161,10 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
     [schedulerId, classes, mergedLocaleText],
   );
 
-  const sharedComponentsStyledContextValue = React.useMemo(() => ({ classes }), [classes]);
+  const sharedComponentsStyledContextValue = React.useMemo(
+    () => ({ classes, localeText: mergedLocaleText }),
+    [classes, mergedLocaleText],
+  );
 
   return (
     <SchedulerStoreContext.Provider value={store as any}>
