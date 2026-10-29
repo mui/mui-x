@@ -56,6 +56,13 @@
     "columnBufferPx": { "type": { "name": "number" }, "default": "150" },
     "columnFilterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "columnGroupHeaderHeight": { "type": { "name": "number" } },
+    "columnGroupingModel": {
+      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-data-grid/column-groups/",
+        "text": "column grouping docs"
+      }
+    },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnVisibilityModel": { "type": { "name": "object" } },
     "computedColDef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
@@ -2134,13 +2141,13 @@
     {
       "key": "columnHeader--pinnedLeft",
       "className": "MuiDataGridPremium-columnHeader--pinnedLeft",
-      "description": "",
+      "description": "Styles applied to the column header if it is pinned to the left.",
       "isGlobal": false
     },
     {
       "key": "columnHeader--pinnedRight",
       "className": "MuiDataGridPremium-columnHeader--pinnedRight",
-      "description": "",
+      "description": "Styles applied to the column header if it is pinned to the right.",
       "isGlobal": false
     },
     {
@@ -2158,7 +2165,7 @@
     {
       "key": "columnHeader--withLeftBorder",
       "className": "MuiDataGridPremium-columnHeader--withLeftBorder",
-      "description": "",
+      "description": "Styles applied to the column header if it has a left border.",
       "isGlobal": false
     },
     {
@@ -2602,7 +2609,7 @@
     {
       "key": "mainContent",
       "className": "MuiDataGridPremium-mainContent",
-      "description": "",
+      "description": "Styles applied to the element that wraps the main content of the grid.",
       "isGlobal": false
     },
     {
@@ -3208,7 +3215,7 @@
     {
       "key": "withSidePanel",
       "className": "MuiDataGridPremium-withSidePanel",
-      "description": "",
+      "description": "Styles applied to the root element if a side panel is open.",
       "isGlobal": false
     },
     {
