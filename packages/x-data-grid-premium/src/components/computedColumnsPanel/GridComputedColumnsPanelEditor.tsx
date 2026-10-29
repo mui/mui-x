@@ -14,6 +14,7 @@ import {
 import type { GridColDef, GridEventListener, GridRowId } from '@mui/x-data-grid-pro';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import composeClasses from '@mui/utils/composeClasses';
+import useId from '@mui/utils/useId';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
@@ -475,7 +476,7 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
-  const id = React.useId();
+  const id = useId();
   const editableRef = React.useRef<GridFormulaEditableHandle | null>(null);
   const nameInputRef = React.useRef<HTMLInputElement | null>(null);
   const rootRef = React.useRef<HTMLDivElement | null>(null);
