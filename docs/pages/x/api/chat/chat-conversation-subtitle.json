@@ -20,6 +20,13 @@
     "import { ChatConversationSubtitle } from '@mui/x-chat/ChatConversation';",
     "import { ChatConversationSubtitle } from '@mui/x-chat';"
   ],
+  "slots": [
+    {
+      "name": "subtitle",
+      "description": "The component that renders the subtitle.",
+      "class": "MuiChatConversationSubtitle-subtitle"
+    }
+  ],
   "classes": [
     {
       "key": "header",
@@ -43,12 +50,6 @@
       "key": "root",
       "className": "MuiChatConversationSubtitle-root",
       "description": "Styles applied to the conversation root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "subtitle",
-      "className": "MuiChatConversationSubtitle-subtitle",
-      "description": "Styles applied to the conversation subtitle element.",
       "isGlobal": false
     },
     {

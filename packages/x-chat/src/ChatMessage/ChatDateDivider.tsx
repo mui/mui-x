@@ -4,12 +4,17 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { SxProps, Theme } from '@mui/system';
 import { MessageListDateDivider } from '@mui/x-chat-headless';
-import type { MessageListDateDividerProps } from '@mui/x-chat-headless';
+import type {
+  MessageListDateDividerProps,
+  MessageListDateDividerSlots,
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses } from './chatMessageClasses';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatDateDivider');
+
+export interface ChatDateDividerSlots extends MessageListDateDividerSlots {}
 
 export interface ChatDateDividerProps extends MessageListDateDividerProps {
   className?: string;

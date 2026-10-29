@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { SxProps, Theme } from '@mui/system';
 import { ComposerTextArea } from '@mui/x-chat-headless';
-import type { ComposerTextAreaProps } from '@mui/x-chat-headless';
+import type { ComposerTextAreaProps, ComposerTextAreaSlots } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatComposerUtilityClasses } from './chatComposerClasses';
@@ -13,6 +13,8 @@ import type { ChatComposerClasses } from './chatComposerClasses';
 const useThemeProps = createUseThemeProps('MuiChatComposerTextArea');
 
 const MAX_ROWS_STYLE = { minHeight: 'unset', margin: 'auto 0px', height: '28px' } as const;
+
+export interface ChatComposerTextAreaSlots extends ComposerTextAreaSlots {}
 
 export interface ChatComposerTextAreaProps extends ComposerTextAreaProps {
   className?: string;

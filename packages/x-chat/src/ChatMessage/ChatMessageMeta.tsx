@@ -4,13 +4,15 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { SxProps, Theme } from '@mui/system';
 import { MessageMeta } from '@mui/x-chat-headless';
-import type { MessageMetaProps } from '@mui/x-chat-headless';
+import type { MessageMetaProps, MessageMetaSlots } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { DefaultDoneIcon, DefaultDoneAllIcon } from '../icons/icons';
 import { useChatMessageUtilityClasses } from './chatMessageClasses';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageMeta');
+
+export interface ChatMessageMetaSlots extends MessageMetaSlots {}
 
 export interface ChatMessageMetaProps extends MessageMetaProps {
   className?: string;

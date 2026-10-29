@@ -4,13 +4,15 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { SxProps, Theme } from '@mui/system';
 import { ComposerAttachButton } from '@mui/x-chat-headless';
-import type { ComposerAttachButtonProps } from '@mui/x-chat-headless';
+import type { ComposerAttachButtonProps, ComposerAttachButtonSlots } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses } from './chatComposerClasses';
 import type { ChatComposerClasses } from './chatComposerClasses';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerAttachButton');
+
+export interface ChatComposerAttachButtonSlots extends ComposerAttachButtonSlots {}
 
 export interface ChatComposerAttachButtonProps extends ComposerAttachButtonProps {
   className?: string;

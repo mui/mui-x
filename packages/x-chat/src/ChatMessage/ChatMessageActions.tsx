@@ -7,7 +7,12 @@ import type { SxProps, Theme } from '@mui/system';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import { MessageActions, useChatActions } from '@mui/x-chat-headless';
-import type { ChatMessage, ChatRuntimeActions, MessageActionsProps } from '@mui/x-chat-headless';
+import type {
+  ChatMessage,
+  ChatRuntimeActions,
+  MessageActionsProps,
+  MessageActionsSlots,
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses } from './chatMessageClasses';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
@@ -33,6 +38,8 @@ export interface ChatMessageExtraAction {
     context: ChatMessageExtraActionContext,
   ) => void;
 }
+
+export interface ChatMessageActionsSlots extends MessageActionsSlots {}
 
 export interface ChatMessageActionsProps extends MessageActionsProps {
   className?: string;

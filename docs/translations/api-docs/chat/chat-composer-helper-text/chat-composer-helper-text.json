@@ -22,10 +22,6 @@
       "nodeName": "the root element",
       "conditions": "disabled"
     },
-    "helperText": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the helper text element"
-    },
     "label": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the input label element"
@@ -51,5 +47,6 @@
       "nodeName": "the root element",
       "conditions": "variant=&quot;compact&quot;"
     }
-  }
+  },
+  "slotDescriptions": { "helperText": "The component that renders the helper text." }
 }

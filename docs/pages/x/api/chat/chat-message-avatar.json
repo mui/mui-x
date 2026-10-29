@@ -12,6 +12,10 @@
     "import { ChatMessageAvatar } from '@mui/x-chat/ChatMessage';",
     "import { ChatMessageAvatar } from '@mui/x-chat';"
   ],
+  "slots": [
+    { "name": "avatar", "description": "The component that renders the avatar.", "class": null },
+    { "name": "image", "description": "The component that renders the image.", "class": null }
+  ],
   "classes": [],
   "muiName": "MuiChatMessageAvatar",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageAvatar.tsx",

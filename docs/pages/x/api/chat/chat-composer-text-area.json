@@ -21,6 +21,9 @@
     "import { ChatComposerTextArea } from '@mui/x-chat/ChatComposer';",
     "import { ChatComposerTextArea } from '@mui/x-chat';"
   ],
+  "slots": [
+    { "name": "input", "description": "The component that renders the input.", "class": null }
+  ],
   "classes": [
     {
       "key": "attachButton",

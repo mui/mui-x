@@ -32,10 +32,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the helper text element"
     },
-    "label": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the input label element"
-    },
     "root": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the input root element"
@@ -57,5 +53,6 @@
       "nodeName": "the root element",
       "conditions": "variant=&quot;compact&quot;"
     }
-  }
+  },
+  "slotDescriptions": { "label": "The component that renders the label." }
 }

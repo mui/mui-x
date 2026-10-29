@@ -31,6 +31,9 @@
     "import { ChatMessageActions } from '@mui/x-chat/ChatMessage';",
     "import { ChatMessageActions } from '@mui/x-chat';"
   ],
+  "slots": [
+    { "name": "actions", "description": "The component that renders the actions.", "class": null }
+  ],
   "classes": [],
   "spread": true,
   "themeDefaultProps": null,

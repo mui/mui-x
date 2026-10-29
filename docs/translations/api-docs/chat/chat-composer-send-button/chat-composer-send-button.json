@@ -34,10 +34,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the input root element"
     },
-    "sendButton": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the send button element"
-    },
     "textArea": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the textarea element"
@@ -51,5 +47,6 @@
       "nodeName": "the root element",
       "conditions": "variant=&quot;compact&quot;"
     }
-  }
+  },
+  "slotDescriptions": { "sendButton": "The component that renders the send button." }
 }

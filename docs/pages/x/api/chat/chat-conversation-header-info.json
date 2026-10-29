@@ -21,6 +21,13 @@
     "import { ChatConversationHeaderInfo } from '@mui/x-chat/ChatConversation';",
     "import { ChatConversationHeaderInfo } from '@mui/x-chat';"
   ],
+  "slots": [
+    {
+      "name": "headerInfo",
+      "description": "The component that renders the header info.",
+      "class": "MuiChatConversationHeaderInfo-headerInfo"
+    }
+  ],
   "classes": [
     {
       "key": "header",
@@ -32,12 +39,6 @@
       "key": "headerActions",
       "className": "MuiChatConversationHeaderInfo-headerActions",
       "description": "Styles applied to the conversation header actions element.",
-      "isGlobal": false
-    },
-    {
-      "key": "headerInfo",
-      "className": "MuiChatConversationHeaderInfo-headerInfo",
-      "description": "Styles applied to the conversation header info element.",
       "isGlobal": false
     },
     {

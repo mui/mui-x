@@ -21,6 +21,13 @@
     "import { ChatConversation } from '@mui/x-chat/ChatConversation';",
     "import { ChatConversation } from '@mui/x-chat';"
   ],
+  "slots": [
+    {
+      "name": "root",
+      "description": "The component that renders the root.",
+      "class": "MuiChatConversation-root"
+    }
+  ],
   "classes": [
     {
       "key": "header",
@@ -38,12 +45,6 @@
       "key": "headerInfo",
       "className": "MuiChatConversation-headerInfo",
       "description": "Styles applied to the conversation header info element.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiChatConversation-root",
-      "description": "Styles applied to the conversation root element.",
       "isGlobal": false
     },
     {

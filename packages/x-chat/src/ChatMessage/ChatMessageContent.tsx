@@ -7,6 +7,7 @@ import type {
   MessageContentProps,
   ToolPartOwnerState,
   ToolPartSectionOwnerState,
+  MessageContentSlots,
 } from '@mui/x-chat-headless';
 import { useToolDisclosure } from '@mui/x-chat-headless/internals';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
@@ -154,6 +155,8 @@ function CheckSvgIcon() {
 }
 
 const useThemeProps = createUseThemeProps('MuiChatMessageContent');
+
+export interface ChatMessageContentSlots extends MessageContentSlots {}
 
 export interface ChatMessageContentProps extends MessageContentProps {
   className?: string;

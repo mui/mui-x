@@ -4,13 +4,15 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { SxProps, Theme } from '@mui/system';
 import { UnreadMarker } from '@mui/x-chat-headless';
-import type { UnreadMarkerProps } from '@mui/x-chat-headless';
+import type { UnreadMarkerProps, UnreadMarkerSlots } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatUnreadMarkerUtilityClasses } from './chatUnreadMarkerClasses';
 import type { ChatUnreadMarkerClasses } from './chatUnreadMarkerClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatUnreadMarker');
+
+export interface ChatUnreadMarkerSlots extends UnreadMarkerSlots {}
 
 export interface ChatUnreadMarkerProps extends UnreadMarkerProps {
   className?: string;

@@ -20,6 +20,13 @@
     "import { ChatComposerToolbar } from '@mui/x-chat/ChatComposer';",
     "import { ChatComposerToolbar } from '@mui/x-chat';"
   ],
+  "slots": [
+    {
+      "name": "toolbar",
+      "description": "The component that renders the toolbar.",
+      "class": "MuiChatComposerToolbar-toolbar"
+    }
+  ],
   "classes": [
     {
       "key": "attachButton",
@@ -67,12 +74,6 @@
       "key": "textArea",
       "className": "MuiChatComposerToolbar-textArea",
       "description": "Styles applied to the textarea element.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbar",
-      "className": "MuiChatComposerToolbar-toolbar",
-      "description": "Styles applied to the toolbar element.",
       "isGlobal": false
     },
     {

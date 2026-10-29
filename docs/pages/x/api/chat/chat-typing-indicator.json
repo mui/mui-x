@@ -20,14 +20,14 @@
     "import { ChatTypingIndicator } from '@mui/x-chat/ChatIndicators';",
     "import { ChatTypingIndicator } from '@mui/x-chat';"
   ],
-  "classes": [
+  "slots": [
     {
-      "key": "root",
-      "className": "MuiChatTypingIndicator-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
+      "name": "root",
+      "description": "The component that renders the root.",
+      "class": "MuiChatTypingIndicator-root"
     }
   ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": null,
   "muiName": "MuiChatTypingIndicator",

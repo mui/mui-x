@@ -20,6 +20,13 @@
     "import { ChatComposerSendButton } from '@mui/x-chat/ChatComposer';",
     "import { ChatComposerSendButton } from '@mui/x-chat';"
   ],
+  "slots": [
+    {
+      "name": "sendButton",
+      "description": "The component that renders the send button.",
+      "class": "MuiChatComposerSendButton-sendButton"
+    }
+  ],
   "classes": [
     {
       "key": "attachButton",
@@ -55,12 +62,6 @@
       "key": "root",
       "className": "MuiChatComposerSendButton-root",
       "description": "Styles applied to the input root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "sendButton",
-      "className": "MuiChatComposerSendButton-sendButton",
-      "description": "Styles applied to the send button element.",
       "isGlobal": false
     },
     {

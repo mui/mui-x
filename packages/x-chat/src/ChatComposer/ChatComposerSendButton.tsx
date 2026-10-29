@@ -4,13 +4,15 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { SxProps, Theme } from '@mui/system';
 import { ComposerSendButton } from '@mui/x-chat-headless';
-import type { ComposerSendButtonProps } from '@mui/x-chat-headless';
+import type { ComposerSendButtonProps, ComposerSendButtonSlots } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatComposerUtilityClasses } from './chatComposerClasses';
 import type { ChatComposerClasses } from './chatComposerClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerSendButton');
+
+export interface ChatComposerSendButtonSlots extends ComposerSendButtonSlots {}
 
 export interface ChatComposerSendButtonProps extends ComposerSendButtonProps {
   className?: string;

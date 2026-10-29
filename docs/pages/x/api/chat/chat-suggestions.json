@@ -29,20 +29,19 @@
     "import { ChatSuggestions } from '@mui/x-chat/ChatSuggestions';",
     "import { ChatSuggestions } from '@mui/x-chat';"
   ],
-  "classes": [
+  "slots": [
     {
-      "key": "item",
-      "className": "MuiChatSuggestions-item",
-      "description": "Styles applied to each suggestion item.",
-      "isGlobal": false
+      "name": "root",
+      "description": "The component that renders the root.",
+      "class": "MuiChatSuggestions-root"
     },
     {
-      "key": "root",
-      "className": "MuiChatSuggestions-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
+      "name": "item",
+      "description": "The component that renders each suggestion.",
+      "class": "MuiChatSuggestions-item"
     }
   ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": null,
   "muiName": "MuiChatSuggestions",

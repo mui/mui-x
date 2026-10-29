@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { SxProps, Theme } from '@mui/system';
 import { ComposerAttachmentList, useChatComposer, useChatLocaleText } from '@mui/x-chat-headless';
-import type { ComposerAttachmentListProps } from '@mui/x-chat-headless';
+import type {
+  ComposerAttachmentListProps,
+  ComposerAttachmentListSlots,
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses } from './chatComposerClasses';
 import type { ChatComposerClasses } from './chatComposerClasses';
@@ -12,6 +15,8 @@ import { DefaultCloseIcon, DefaultFileIcon } from '../icons/icons';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerAttachmentList');
+
+export interface ChatComposerAttachmentListSlots extends ComposerAttachmentListSlots {}
 
 export interface ChatComposerAttachmentListProps extends ComposerAttachmentListProps {
   className?: string;

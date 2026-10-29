@@ -18,11 +18,9 @@
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     }
   },
-  "classDescriptions": {
-    "item": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "each suggestion item"
-    },
-    "root": { "description": "Styles applied to the root element." }
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "item": "The component that renders each suggestion.",
+    "root": "The component that renders the root."
   }
 }

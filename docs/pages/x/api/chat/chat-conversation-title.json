@@ -20,6 +20,13 @@
     "import { ChatConversationTitle } from '@mui/x-chat/ChatConversation';",
     "import { ChatConversationTitle } from '@mui/x-chat';"
   ],
+  "slots": [
+    {
+      "name": "title",
+      "description": "The component that renders the title.",
+      "class": "MuiChatConversationTitle-title"
+    }
+  ],
   "classes": [
     {
       "key": "header",
@@ -49,12 +56,6 @@
       "key": "subtitle",
       "className": "MuiChatConversationTitle-subtitle",
       "description": "Styles applied to the conversation subtitle element.",
-      "isGlobal": false
-    },
-    {
-      "key": "title",
-      "className": "MuiChatConversationTitle-title",
-      "description": "Styles applied to the conversation title element.",
       "isGlobal": false
     }
   ],

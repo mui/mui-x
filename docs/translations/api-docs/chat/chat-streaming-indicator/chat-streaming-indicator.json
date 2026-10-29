@@ -24,13 +24,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the waiting-phase typing bubble"
     },
-    "root": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element (the dots)"
-    },
     "row": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the waiting-phase assistant row wrapper"
     }
-  }
+  },
+  "slotDescriptions": { "root": "The component that renders the root." }
 }

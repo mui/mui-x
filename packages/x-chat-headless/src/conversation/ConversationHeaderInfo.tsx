@@ -6,6 +6,9 @@ import { useConversationContext } from './internals/ConversationContext';
 import type { ConversationHeaderInfoOwnerState } from './conversation.types';
 
 export interface ConversationHeaderInfoSlots {
+  /**
+   * The component that renders the header info.
+   */
   headerInfo: React.ElementType;
 }
 

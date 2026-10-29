@@ -33,17 +33,18 @@
     "import { ChatStreamingIndicator } from '@mui/x-chat/ChatIndicators';",
     "import { ChatStreamingIndicator } from '@mui/x-chat';"
   ],
+  "slots": [
+    {
+      "name": "root",
+      "description": "The component that renders the root.",
+      "class": "MuiChatStreamingIndicator-root"
+    }
+  ],
   "classes": [
     {
       "key": "bubble",
       "className": "MuiChatStreamingIndicator-bubble",
       "description": "Styles applied to the waiting-phase typing bubble.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiChatStreamingIndicator-root",
-      "description": "Styles applied to the root element (the dots).",
       "isGlobal": false
     },
     {

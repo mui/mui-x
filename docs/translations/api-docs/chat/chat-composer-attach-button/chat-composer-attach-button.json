@@ -9,10 +9,6 @@
     }
   },
   "classDescriptions": {
-    "attachButton": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the attach button element"
-    },
     "attachmentList": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the attachment list element"
@@ -51,5 +47,9 @@
       "nodeName": "the root element",
       "conditions": "variant=&quot;compact&quot;"
     }
+  },
+  "slotDescriptions": {
+    "attachButton": "The component that renders the attach button.",
+    "attachInput": "The component that renders the attach input."
   }
 }

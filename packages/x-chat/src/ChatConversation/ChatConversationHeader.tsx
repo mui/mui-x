@@ -3,13 +3,15 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { ConversationHeader } from '@mui/x-chat-headless';
-import type { ConversationHeaderProps } from '@mui/x-chat-headless';
+import type { ConversationHeaderProps, ConversationHeaderSlots } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatConversationUtilityClasses } from './chatConversationClasses';
 import type { ChatConversationClasses } from './chatConversationClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatConversationHeader');
+
+export interface ChatConversationHeaderSlots extends ConversationHeaderSlots {}
 
 export interface ChatConversationHeaderProps extends ConversationHeaderProps {
   className?: string;

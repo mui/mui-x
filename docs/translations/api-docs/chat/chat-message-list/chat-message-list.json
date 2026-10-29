@@ -54,5 +54,26 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the message list scroller element"
     }
+  },
+  "slotDescriptions": {
+    "dateDivider": "The date separator rendered between message groups. Only rendered when <code>features.dateDivider</code> is enabled. Pass <code>null</code> to hide it.",
+    "messageActions": "Actions row component (receives <code>{ messageId }</code>). Pass <code>null</code> to hide actions entirely; omit to render only the declarative <code>extraActions</code> from <code>slotProps.messageActions</code> if provided.",
+    "messageAuthorName": "Author name label rendered by the group wrapper (default variant: above the bubble; compact variant: inside the message grid). Pass <code>null</code> to hide.",
+    "messageAvatar": "Avatar component. Pass <code>null</code> to hide the avatar entirely and drop the reserved avatar grid track.",
+    "messageContent": "The message bubble component.",
+    "messageError": "Error card shown under the bubble when the message status is <code>error</code>. Pass <code>null</code> to hide the error surface entirely (no component is mounted).",
+    "messageGroup": "The per-author group wrapper around consecutive messages.",
+    "messageInlineMeta": "Inline meta rendered inside the bubble (default variant). Pass <code>null</code> to hide.",
+    "messageList": "The component that renders the message list.",
+    "messageListContent": "The component that renders the message list content.",
+    "messageListOverlay": "The component that renders the message list overlay.",
+    "messageListScrollbar": "The component that renders the message list scrollbar.",
+    "messageListScrollbarThumb": "The component that renders the message list scrollbar thumb.",
+    "messageListScroller": "The component that renders the message list scroller.",
+    "messageListStatus": "The visually-hidden <code>role=&quot;status&quot;</code> element announcing streaming transitions (&quot;Assistant is responding&quot; / &quot;Response complete&quot;) to screen readers. Pass <code>null</code>-rendering component to silence the announcements.",
+    "messageMeta": "External meta (compact variant). Pass <code>null</code> to hide.",
+    "messageRoot": "Styled root of <code>&lt;ChatMessage&gt;</code> (wrapper-only); the default avatar/content/meta tree still renders inside it.",
+    "streamingIndicator": "The animated dots shown while an assistant response is in flight: as a trailing row while waiting for the response to start, then inside the assistant bubble while it streams. Controlled by <code>features.streamingIndicator</code> (<code>&#39;auto&#39;</code> by default). Pass <code>null</code> to hide it.",
+    "unreadMarker": "The &quot;new messages&quot; marker. Only rendered when <code>features.unreadMarker</code> is enabled. Pass <code>null</code> to hide it."
   }
 }

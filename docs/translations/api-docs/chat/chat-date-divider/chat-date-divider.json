@@ -50,5 +50,10 @@
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "divider": "The component that renders the divider.",
+    "label": "The component that renders the label.",
+    "line": "The component that renders the line."
+  }
 }

@@ -20,6 +20,13 @@
     "import { ChatComposerHelperText } from '@mui/x-chat/ChatComposer';",
     "import { ChatComposerHelperText } from '@mui/x-chat';"
   ],
+  "slots": [
+    {
+      "name": "helperText",
+      "description": "The component that renders the helper text.",
+      "class": "MuiChatComposerHelperText-helperText"
+    }
+  ],
   "classes": [
     {
       "key": "attachButton",
@@ -38,12 +45,6 @@
       "className": "Mui-disabled",
       "description": "Styles applied to the root element when disabled.",
       "isGlobal": true
-    },
-    {
-      "key": "helperText",
-      "className": "MuiChatComposerHelperText-helperText",
-      "description": "Styles applied to the helper text element.",
-      "isGlobal": false
     },
     {
       "key": "label",

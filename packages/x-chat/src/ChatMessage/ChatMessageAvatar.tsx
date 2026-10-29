@@ -3,12 +3,14 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { MessageAvatar } from '@mui/x-chat-headless';
-import type { MessageAvatarProps } from '@mui/x-chat-headless';
+import type { MessageAvatarProps, MessageAvatarSlots } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses } from './chatMessageClasses';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageAvatar');
+
+export interface ChatMessageAvatarSlots extends MessageAvatarSlots {}
 
 export interface ChatMessageAvatarProps extends MessageAvatarProps {
   className?: string;

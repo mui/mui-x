@@ -37,6 +37,8 @@ import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatConversationList');
 
+export interface ChatConversationListSlots extends ConversationListRootSlots {}
+
 export interface ChatConversationListProps extends ConversationListRootProps {
   className?: string;
   /**

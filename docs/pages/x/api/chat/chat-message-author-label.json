@@ -13,17 +13,18 @@
     "import { ChatMessageAuthorLabel } from '@mui/x-chat/ChatMessage';",
     "import { ChatMessageAuthorLabel } from '@mui/x-chat';"
   ],
+  "slots": [
+    {
+      "name": "authorLabel",
+      "description": "The component that renders the author label.",
+      "class": "MuiChatMessageAuthorLabel-authorLabel"
+    }
+  ],
   "classes": [
     {
       "key": "actions",
       "className": "MuiChatMessageAuthorLabel-actions",
       "description": "Styles applied to the message actions element.",
-      "isGlobal": false
-    },
-    {
-      "key": "authorLabel",
-      "className": "MuiChatMessageAuthorLabel-authorLabel",
-      "description": "Styles applied to the message author label element.",
       "isGlobal": false
     },
     {

@@ -4,13 +4,18 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { SxProps, Theme } from '@mui/system';
 import { ConversationHeaderActions } from '@mui/x-chat-headless';
-import type { ConversationHeaderActionsProps } from '@mui/x-chat-headless';
+import type {
+  ConversationHeaderActionsProps,
+  ConversationHeaderActionsSlots,
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatConversationUtilityClasses } from './chatConversationClasses';
 import type { ChatConversationClasses } from './chatConversationClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatConversationHeaderActions');
+
+export interface ChatConversationHeaderActionsSlots extends ConversationHeaderActionsSlots {}
 
 export interface ChatConversationHeaderActionsProps extends ConversationHeaderActionsProps {
   className?: string;

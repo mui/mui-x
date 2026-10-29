@@ -17,7 +17,9 @@
     "retryButton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the retry button"
-    },
-    "root": { "description": "Styles applied to the root element." }
+    }
+  },
+  "slotDescriptions": {
+    "root": "The root element of the per-message error primitive. Rendered with <code>role=&quot;alert&quot;</code> so screen readers announce the error."
   }
 }

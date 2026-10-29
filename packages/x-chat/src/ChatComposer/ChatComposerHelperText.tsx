@@ -4,13 +4,19 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { SxProps, Theme } from '@mui/system';
 import { ComposerHelperText } from '@mui/x-chat-headless';
-import type { ComposerHelperTextProps, ComposerHelperTextOwnerState } from '@mui/x-chat-headless';
+import type {
+  ComposerHelperTextProps,
+  ComposerHelperTextOwnerState,
+  ComposerHelperTextSlots,
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatComposerUtilityClasses } from './chatComposerClasses';
 import type { ChatComposerClasses } from './chatComposerClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerHelperText');
+
+export interface ChatComposerHelperTextSlots extends ComposerHelperTextSlots {}
 
 export interface ChatComposerHelperTextProps extends ComposerHelperTextProps {
   className?: string;

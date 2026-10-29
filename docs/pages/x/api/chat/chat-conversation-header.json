@@ -14,13 +14,14 @@
     "import { ChatConversationHeader } from '@mui/x-chat/ChatConversation';",
     "import { ChatConversationHeader } from '@mui/x-chat';"
   ],
-  "classes": [
+  "slots": [
     {
-      "key": "header",
-      "className": "MuiChatConversationHeader-header",
-      "description": "Styles applied to the conversation header element.",
-      "isGlobal": false
-    },
+      "name": "header",
+      "description": "The component that renders the header.",
+      "class": "MuiChatConversationHeader-header"
+    }
+  ],
+  "classes": [
     {
       "key": "headerActions",
       "className": "MuiChatConversationHeader-headerActions",

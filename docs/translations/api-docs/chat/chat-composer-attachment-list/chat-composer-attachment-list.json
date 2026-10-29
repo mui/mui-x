@@ -13,10 +13,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the attach button element"
     },
-    "attachmentList": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the attachment list element"
-    },
     "disabled": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the root element",
@@ -51,5 +47,6 @@
       "nodeName": "the root element",
       "conditions": "variant=&quot;compact&quot;"
     }
-  }
+  },
+  "slotDescriptions": { "attachmentList": "The component that renders the attachment list." }
 }

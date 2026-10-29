@@ -22,10 +22,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the conversation header info element"
     },
-    "root": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the conversation root element"
-    },
     "subtitle": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the conversation subtitle element"
@@ -34,5 +30,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the conversation title element"
     }
-  }
+  },
+  "slotDescriptions": { "root": "The component that renders the root." }
 }

@@ -15,7 +15,13 @@ function normalizeSuggestion(item: ChatSuggestion | string): ChatSuggestion {
 }
 
 export interface SuggestionsRootSlots {
+  /**
+   * The component that renders the root.
+   */
   root: React.ElementType;
+  /**
+   * The component that renders each suggestion.
+   */
   item: React.ElementType;
 }
 

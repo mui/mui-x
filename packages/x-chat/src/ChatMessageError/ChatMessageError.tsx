@@ -5,7 +5,11 @@ import clsx from 'clsx';
 import type { SxProps, Theme } from '@mui/system';
 import Button from '@mui/material/Button';
 import { MessageError, useChatLocaleText, useChatStatus, useMessage } from '@mui/x-chat-headless';
-import type { MessageErrorProps, MessageErrorOwnerState } from '@mui/x-chat-headless';
+import type {
+  MessageErrorProps,
+  MessageErrorOwnerState,
+  MessageErrorSlots,
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatMessageErrorUtilityClasses } from './chatMessageErrorClasses';
@@ -27,6 +31,8 @@ function getErrorCardBackgroundStyles(
     }),
   };
 }
+
+export interface ChatMessageErrorSlots extends MessageErrorSlots {}
 
 export interface ChatMessageErrorProps extends MessageErrorProps {
   className?: string;

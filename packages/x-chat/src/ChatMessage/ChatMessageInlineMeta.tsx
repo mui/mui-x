@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { MessageMeta } from '@mui/x-chat-headless';
-import type { MessageMetaProps } from '@mui/x-chat-headless';
+import type { MessageMetaProps, MessageMetaSlots } from '@mui/x-chat-headless';
 import { styled } from '../internals/zero-styled';
 import { DefaultDoneIcon, DefaultDoneAllIcon } from '../icons/icons';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
@@ -92,6 +92,8 @@ const InlineStatusSlot = React.forwardRef<HTMLSpanElement, any>(function InlineS
     </InlineStatusStyled>
   );
 });
+
+export interface ChatMessageInlineMetaSlots extends MessageMetaSlots {}
 
 export interface ChatMessageInlineMetaProps extends MessageMetaProps {}
 

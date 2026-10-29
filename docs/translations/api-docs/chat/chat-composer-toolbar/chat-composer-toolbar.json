@@ -42,14 +42,11 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the textarea element"
     },
-    "toolbar": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the toolbar element"
-    },
     "variantCompact": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the root element",
       "conditions": "variant=&quot;compact&quot;"
     }
-  }
+  },
+  "slotDescriptions": { "toolbar": "The component that renders the toolbar." }
 }

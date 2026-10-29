@@ -10,10 +10,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the message actions element"
     },
-    "authorLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the message author label element"
-    },
     "avatar": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the message avatar element"
@@ -69,5 +65,6 @@
       "nodeName": "the message root element"
     },
     "streaming": { "description": "Applied while the message is streaming" }
-  }
+  },
+  "slotDescriptions": { "authorLabel": "The component that renders the author label." }
 }

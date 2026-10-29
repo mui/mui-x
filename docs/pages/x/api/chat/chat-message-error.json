@@ -21,6 +21,13 @@
     "import { ChatMessageError } from '@mui/x-chat/ChatMessageError';",
     "import { ChatMessageError } from '@mui/x-chat';"
   ],
+  "slots": [
+    {
+      "name": "root",
+      "description": "The root element of the per-message error primitive.\nRendered with `role=\"alert\"` so screen readers announce the error.",
+      "class": "MuiChatMessageError-root"
+    }
+  ],
   "classes": [
     {
       "key": "message",
@@ -32,12 +39,6 @@
       "key": "retryButton",
       "className": "MuiChatMessageError-retryButton",
       "description": "Styles applied to the retry button.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiChatMessageError-root",
-      "description": "Styles applied to the root element.",
       "isGlobal": false
     }
   ],

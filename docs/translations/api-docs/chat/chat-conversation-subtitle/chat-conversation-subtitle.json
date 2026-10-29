@@ -25,13 +25,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the conversation root element"
     },
-    "subtitle": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the conversation subtitle element"
-    },
     "title": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the conversation title element"
     }
-  }
+  },
+  "slotDescriptions": { "subtitle": "The component that renders the subtitle." }
 }

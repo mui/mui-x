@@ -4,13 +4,15 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { SxProps, Theme } from '@mui/system';
 import { ComposerLabel } from '@mui/x-chat-headless';
-import type { ComposerLabelProps } from '@mui/x-chat-headless';
+import type { ComposerLabelProps, ComposerLabelSlots } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatComposerUtilityClasses } from './chatComposerClasses';
 import type { ChatComposerClasses } from './chatComposerClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerLabel');
+
+export interface ChatComposerLabelSlots extends ComposerLabelSlots {}
 
 export interface ChatComposerLabelProps extends ComposerLabelProps {
   className?: string;

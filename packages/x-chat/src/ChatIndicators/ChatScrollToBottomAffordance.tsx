@@ -5,13 +5,18 @@ import clsx from 'clsx';
 import type { SxProps, Theme } from '@mui/system';
 import IconButton from '@mui/material/IconButton';
 import { ScrollToBottomAffordance } from '@mui/x-chat-headless';
-import type { ScrollToBottomAffordanceProps } from '@mui/x-chat-headless';
+import type {
+  ScrollToBottomAffordanceProps,
+  ScrollToBottomAffordanceSlots,
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatScrollToBottomAffordanceUtilityClasses } from './chatScrollToBottomAffordanceClasses';
 import type { ChatScrollToBottomAffordanceClasses } from './chatScrollToBottomAffordanceClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatScrollToBottomAffordance');
+
+export interface ChatScrollToBottomAffordanceSlots extends ScrollToBottomAffordanceSlots {}
 
 export interface ChatScrollToBottomAffordanceProps extends ScrollToBottomAffordanceProps {
   className?: string;

@@ -20,13 +20,19 @@
     "import { ChatComposerAttachButton } from '@mui/x-chat/ChatComposer';",
     "import { ChatComposerAttachButton } from '@mui/x-chat';"
   ],
-  "classes": [
+  "slots": [
     {
-      "key": "attachButton",
-      "className": "MuiChatComposerAttachButton-attachButton",
-      "description": "Styles applied to the attach button element.",
-      "isGlobal": false
+      "name": "attachButton",
+      "description": "The component that renders the attach button.",
+      "class": "MuiChatComposerAttachButton-attachButton"
     },
+    {
+      "name": "attachInput",
+      "description": "The component that renders the attach input.",
+      "class": null
+    }
+  ],
+  "classes": [
     {
       "key": "attachmentList",
       "className": "MuiChatComposerAttachButton-attachmentList",

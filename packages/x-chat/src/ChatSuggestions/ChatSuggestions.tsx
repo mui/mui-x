@@ -4,13 +4,15 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { SxProps, Theme } from '@mui/system';
 import { SuggestionsRoot } from '@mui/x-chat-headless';
-import type { SuggestionsRootProps } from '@mui/x-chat-headless';
+import type { SuggestionsRootProps, SuggestionsRootSlots } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatSuggestionsUtilityClasses } from './chatSuggestionsClasses';
 import type { ChatSuggestionsClasses } from './chatSuggestionsClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatSuggestions');
+
+export interface ChatSuggestionsSlots extends SuggestionsRootSlots {}
 
 export interface ChatSuggestionsProps extends SuggestionsRootProps {
   className?: string;

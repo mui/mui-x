@@ -29,6 +29,10 @@
     "import { ChatMessageContent } from '@mui/x-chat/ChatMessage';",
     "import { ChatMessageContent } from '@mui/x-chat';"
   ],
+  "slots": [
+    { "name": "content", "description": "The component that renders the content.", "class": null },
+    { "name": "bubble", "description": "The component that renders the bubble.", "class": null }
+  ],
   "classes": [],
   "spread": true,
   "themeDefaultProps": null,

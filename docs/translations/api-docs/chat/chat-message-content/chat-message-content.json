@@ -21,5 +21,9 @@
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "bubble": "The component that renders the bubble.",
+    "content": "The component that renders the content."
+  }
 }
