@@ -65,6 +65,8 @@ import type { GridPivotModel } from '../pivoting/gridPivotingInterfaces';
 const EMPTY_CHART_INTEGRATION_CONTEXT: GridChartsIntegrationContextValue = {
   chartStateLookup: {},
   setChartState: () => {},
+  exportGridDataAsExcel: null,
+  setExportGridDataAsExcel: () => {},
 };
 
 export const EMPTY_CHART_INTEGRATION_CONTEXT_STATE: ChartState = {
@@ -167,7 +169,8 @@ export const useGridChartsIntegration = (
   const pivotActive = gridPivotActiveSelector(apiRef);
   const pivotModel = gridPivotModelSelector(apiRef);
 
-  const { chartStateLookup, setChartState } = context || EMPTY_CHART_INTEGRATION_CONTEXT;
+  const { chartStateLookup, setChartState, setExportGridDataAsExcel } =
+    context || EMPTY_CHART_INTEGRATION_CONTEXT;
   const availableChartIds = React.useMemo(() => {
     const ids = Object.keys(chartStateLookup);
     // cleanup visibleDimensions and visibleValues references
@@ -985,6 +988,21 @@ export const useGridChartsIntegration = (
     },
     [apiRef, setChartState],
   );
+
+  // The chart's own export only covers the dimensions and values selected for it, so the Grid
+  // publishes its export too, letting the chart's toolbar offer both. It uses the same options as
+  // the Grid's own button, so the two produce the same file, and it is withdrawn on unmount.
+  const excelOptions = props.slotProps?.toolbar?.excelOptions;
+
+  React.useEffect(() => {
+    if (!isChartsIntegrationAvailable || excelOptions?.disableToolbarButton) {
+      return undefined;
+    }
+
+    setExportGridDataAsExcel(() => apiRef.current.exportDataAsExcel(excelOptions));
+
+    return () => setExportGridDataAsExcel(null);
+  }, [apiRef, isChartsIntegrationAvailable, excelOptions, setExportGridDataAsExcel]);
 
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);

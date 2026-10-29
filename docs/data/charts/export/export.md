@@ -199,7 +199,7 @@ import { useChartPremiumExport } from '@mui/x-charts-premium/plugins';
 const plugins = [...BAR_CHART_PREMIUM_PLUGINS, useChartPremiumExport];
 ```
 
-With the plugin registered, `ChartsToolbarPremium` adds an **Export as Excel** entry to the export menu.
+With the plugin registered, `ChartsToolbarPremium` adds an **Export data as Excel** entry to the export menu.
 The entry is left out when the chart does not register the plugin, so the menu never offers an export that cannot run.
 
 {{"demo": "ExportChartAsExcel.js"}}

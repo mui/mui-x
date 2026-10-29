@@ -24,7 +24,9 @@ export type ChartExcelTableId =
   | 'ohlc'
   | 'mapShape'
   | 'sankeyNodes'
-  | 'sankeyLinks';
+  | 'sankeyLinks'
+  /** The Data Grid integration's own selection, which is not a chart series. */
+  | 'gridCharts';
 
 export interface ChartExcelTable {
   id: ChartExcelTableId;

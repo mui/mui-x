@@ -87,11 +87,38 @@ export interface ChartsToolbarPremiumExcelExportOptions extends ChartExcelExport
   disableToolbarButton?: boolean;
 }
 
+export interface ChartsToolbarPremiumDataGridExportOptions {
+  /**
+   * If `true`, the Data Grid export button is not shown in the toolbar's export menu.
+   * @default false
+   */
+  disableToolbarButton?: boolean;
+}
+
 export interface ChartsToolbarPremiumProps extends ChartsToolbarProProps {
   /**
-   * The options to apply on the Excel export.
+   * The options to apply on the Excel export of the chart's own data.
    */
   excelExportOptions?: ChartsToolbarPremiumExcelExportOptions;
+  /**
+   * Overrides how the chart's data is exported.
+   * Defaults to `apiRef.current.exportAsExcel`, and is required for a chart that does not
+   * register `useChartPremiumExport`, such as the one in the Data Grid integration.
+   * @param {ChartExcelExportOptions} options The options to apply on the Excel export.
+   * @returns {Promise<void>} A promise that resolves once the export is done.
+   */
+  onExcelExport?: (options?: ChartExcelExportOptions) => Promise<void>;
+  /**
+   * The options to apply on the Excel export of the Data Grid's data.
+   * The entry is only shown when `onDataGridExcelExport` is provided, which the Data Grid
+   * integration does.
+   */
+  dataGridExportOptions?: ChartsToolbarPremiumDataGridExportOptions;
+  /**
+   * Exports the data of the Data Grid the chart is bound to, rather than the chart's own data.
+   * @returns {Promise<void>} A promise that resolves once the export is done.
+   */
+  onDataGridExcelExport?: () => Promise<void>;
 }
 
 /**
@@ -101,6 +128,9 @@ export interface ChartsToolbarPremiumProps extends ChartsToolbarProProps {
 function ChartsToolbarPremium({
   excelExportOptions,
   exportMenuItems,
+  onExcelExport,
+  dataGridExportOptions,
+  onDataGridExcelExport,
   ...other
 }: ChartsToolbarPremiumProps) {
   const { localeText } = useChartsLocalization();
@@ -110,20 +140,39 @@ function ChartsToolbarPremium({
   // so the method is already there when this child renders. Decided here rather than inside the
   // render prop, so the Pro toolbar does not open an export menu that would be empty.
   const showExcelExport =
-    !excelExportOptions?.disableToolbarButton && apiRef.current?.exportAsExcel != null;
+    !excelExportOptions?.disableToolbarButton &&
+    (onExcelExport != null || apiRef.current?.exportAsExcel != null);
+
+  // The Data Grid's data is a separate entry: the chart's own export only covers what is plotted.
+  const showDataGridExport =
+    !dataGridExportOptions?.disableToolbarButton && onDataGridExcelExport != null;
 
   const renderExportMenuItems =
-    showExcelExport || exportMenuItems
+    showExcelExport || showDataGridExport || exportMenuItems
       ? (params: { onClose: () => void }) => (
           <React.Fragment>
             {showExcelExport && (
               <ExcelExportMenuItem
-                label={localeText.toolbarExportExcel}
+                // Qualified only when the grid entry sits next to it, so a chart on its own does
+                // not say "chart" inside its own toolbar.
+                label={
+                  showDataGridExport
+                    ? localeText.toolbarExportChartExcel
+                    : localeText.toolbarExportExcel
+                }
                 options={excelExportOptions}
+                onExport={onExcelExport}
                 onClose={params.onClose}
               />
             )}
-            {/* After the built-in entry, so `exportMenuItems` stays "at the end of the menu". */}
+            {showDataGridExport && (
+              <ExcelExportMenuItem
+                label={localeText.toolbarExportDataGridExcel}
+                onExport={onDataGridExcelExport}
+                onClose={params.onClose}
+              />
+            )}
+            {/* After the built-in entries, so `exportMenuItems` stays "at the end of the menu". */}
             {exportMenuItems?.(params)}
           </React.Fragment>
         )
@@ -138,7 +187,15 @@ ChartsToolbarPremium.propTypes /* remove-proptypes */ = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The options to apply on the Excel export.
+   * The options to apply on the Excel export of the Data Grid's data.
+   * The entry is only shown when `onDataGridExcelExport` is provided, which the Data Grid
+   * integration does.
+   */
+  dataGridExportOptions: PropTypes.shape({
+    disableToolbarButton: PropTypes.bool,
+  }),
+  /**
+   * The options to apply on the Excel export of the chart's own data.
    */
   excelExportOptions: PropTypes.shape({
     disableToolbarButton: PropTypes.bool,
@@ -167,6 +224,19 @@ ChartsToolbarPremium.propTypes /* remove-proptypes */ = {
       type: PropTypes.string.isRequired,
     }),
   ),
+  /**
+   * Exports the data of the Data Grid the chart is bound to, rather than the chart's own data.
+   * @returns {Promise<void>} A promise that resolves once the export is done.
+   */
+  onDataGridExcelExport: PropTypes.func,
+  /**
+   * Overrides how the chart's data is exported.
+   * Defaults to `apiRef.current.exportAsExcel`, and is required for a chart that does not
+   * register `useChartPremiumExport`, such as the one in the Data Grid integration.
+   * @param {ChartExcelExportOptions} options The options to apply on the Excel export.
+   * @returns {Promise<void>} A promise that resolves once the export is done.
+   */
+  onExcelExport: PropTypes.func,
   printOptions: PropTypes.object,
   /**
    * Configuration for range buttons shown in the toolbar.

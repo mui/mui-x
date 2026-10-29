@@ -69,7 +69,7 @@ describe.skipIf(!isJSDOM)('<ChartsToolbarPremium />', () => {
 
     await user.click(screen.getByRole('button', { name: 'Export' }));
 
-    expect(screen.getByRole('menuitem', { name: 'Export as Excel' })).not.to.equal(null);
+    expect(screen.getByRole('menuitem', { name: 'Export data as Excel' })).not.to.equal(null);
     expect(screen.getByRole('menuitem', { name: 'Print' })).not.to.equal(null);
   });
 
@@ -77,7 +77,7 @@ describe.skipIf(!isJSDOM)('<ChartsToolbarPremium />', () => {
     const { user } = render(chart({ excelExportOptions: { fileName: 'sales' } }));
 
     await user.click(screen.getByRole('button', { name: 'Export' }));
-    await user.click(screen.getByRole('menuitem', { name: 'Export as Excel' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Export data as Excel' }));
 
     await vi.waitFor(() => expect(downloads).to.deep.equal(['sales.xlsx']));
   });
@@ -87,7 +87,7 @@ describe.skipIf(!isJSDOM)('<ChartsToolbarPremium />', () => {
 
     await user.click(screen.getByRole('button', { name: 'Export' }));
 
-    expect(screen.queryByRole('menuitem', { name: 'Export as Excel' })).to.equal(null);
+    expect(screen.queryByRole('menuitem', { name: 'Export data as Excel' })).to.equal(null);
   });
 
   it('hides the entry when the chart does not opt into the plugin', async () => {
@@ -104,7 +104,7 @@ describe.skipIf(!isJSDOM)('<ChartsToolbarPremium />', () => {
 
     await user.click(screen.getByRole('button', { name: 'Export' }));
 
-    expect(screen.queryByRole('menuitem', { name: 'Export as Excel' })).to.equal(null);
+    expect(screen.queryByRole('menuitem', { name: 'Export data as Excel' })).to.equal(null);
     expect(screen.getByRole('menuitem', { name: 'Print' })).not.to.equal(null);
   });
 
@@ -136,7 +136,7 @@ describe.skipIf(!isJSDOM)('<ChartsToolbarPremium />', () => {
     await user.click(screen.getByRole('button', { name: 'Export' }));
 
     expect(screen.getByRole('menuitem', { name: 'Download as PDF' })).not.to.equal(null);
-    expect(screen.getByRole('menuitem', { name: 'Export as Excel' })).not.to.equal(null);
+    expect(screen.getByRole('menuitem', { name: 'Export data as Excel' })).not.to.equal(null);
   });
 
   it('exports through onExport when the chart has no plugin', async () => {
@@ -157,7 +157,7 @@ describe.skipIf(!isJSDOM)('<ChartsToolbarPremium />', () => {
                 onExport={onExport}
                 onClick={onClose}
               >
-                Export as Excel
+                Export data as Excel
               </ChartsToolbarExcelExportTrigger>
             ),
           },
@@ -166,9 +166,75 @@ describe.skipIf(!isJSDOM)('<ChartsToolbarPremium />', () => {
     );
 
     await user.click(screen.getByRole('button', { name: 'Export' }));
-    await user.click(screen.getByRole('menuitem', { name: 'Export as Excel' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Export data as Excel' }));
 
     expect(onExport.mock.calls).to.have.length(1);
+  });
+
+  describe('Data Grid data entry', () => {
+    it('offers the chart export and the Data Grid export as separate entries', async () => {
+      const onDataGridExcelExport = vi.fn(async () => {});
+      const { user } = render(chart({ onDataGridExcelExport }));
+
+      await user.click(screen.getByRole('button', { name: 'Export' }));
+
+      expect(screen.getByRole('menuitem', { name: 'Export chart data as Excel' })).not.to.equal(
+        null,
+      );
+      expect(screen.getByRole('menuitem', { name: 'Export grid data as Excel' })).not.to.equal(
+        null,
+      );
+    });
+
+    it('calls the Data Grid export, not the chart one, when its entry is clicked', async () => {
+      const onDataGridExcelExport = vi.fn(async () => {});
+      const { user } = render(chart({ onDataGridExcelExport }));
+
+      await user.click(screen.getByRole('button', { name: 'Export' }));
+      await user.click(screen.getByRole('menuitem', { name: 'Export grid data as Excel' }));
+
+      await vi.waitFor(() => expect(onDataGridExcelExport.mock.calls).to.have.length(1));
+      // The chart's own export is async, so give it the chance to land before ruling it out.
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50);
+      });
+      expect(downloads).to.deep.equal([]);
+    });
+
+    it('is absent when the chart is not bound to a Data Grid', async () => {
+      const { user } = render(chart());
+
+      await user.click(screen.getByRole('button', { name: 'Export' }));
+
+      expect(screen.queryByRole('menuitem', { name: 'Export grid data as Excel' })).to.equal(null);
+    });
+
+    it('each entry can be disabled on its own', async () => {
+      const onDataGridExcelExport = vi.fn(async () => {});
+      const { user } = render(
+        chart({ onDataGridExcelExport, excelExportOptions: { disableToolbarButton: true } }),
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Export' }));
+
+      expect(screen.queryByRole('menuitem', { name: 'Export chart data as Excel' })).to.equal(null);
+      expect(screen.getByRole('menuitem', { name: 'Export grid data as Excel' })).not.to.equal(
+        null,
+      );
+    });
+
+    it('hides the Data Grid entry through dataGridExportOptions', async () => {
+      const onDataGridExcelExport = vi.fn(async () => {});
+      const { user } = render(
+        chart({ onDataGridExcelExport, dataGridExportOptions: { disableToolbarButton: true } }),
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Export' }));
+
+      // Alone again, so the entry drops the qualifier.
+      expect(screen.getByRole('menuitem', { name: 'Export data as Excel' })).not.to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: 'Export grid data as Excel' })).to.equal(null);
+    });
   });
 
   it('reports a trigger that has nothing to export, through console.error', async () => {
@@ -193,7 +259,7 @@ describe.skipIf(!isJSDOM)('<ChartsToolbarPremium />', () => {
           toolbar: {
             exportMenuItems: ({ onClose }) => (
               <ChartsToolbarExcelExportTrigger render={<li role="menuitem" />} onClick={onClose}>
-                Export as Excel
+                Export data as Excel
               </ChartsToolbarExcelExportTrigger>
             ),
           },
@@ -202,7 +268,7 @@ describe.skipIf(!isJSDOM)('<ChartsToolbarPremium />', () => {
     );
 
     await user.click(screen.getByRole('button', { name: 'Export' }));
-    await user.click(screen.getByRole('menuitem', { name: 'Export as Excel' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Export data as Excel' }));
 
     const logged = consoleError.mock.calls.map((call) => call.join(' ')).join('\n');
     expect(logged).to.contain('The Excel export trigger has nothing to export.');
