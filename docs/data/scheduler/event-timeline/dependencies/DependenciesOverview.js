@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { dependenciesFeature } from '@mui/x-scheduler-premium/dependencies';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 

@@ -238,9 +238,7 @@ describe('EventTimelinePremium - features', () => {
       const hitArea = document.querySelector('[data-dependency-hit="dep-1"]')!;
       fireEvent.click(hitArea);
       fireEvent.doubleClick(hitArea);
-      fireEvent.click(
-        within(screen.getByRole('dialog')).getByRole('button', { name: 'Delete' }),
-      );
+      fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Delete' }));
 
       expect(handleDependenciesChange.mock.calls.length).to.equal(1);
       expect(handleDependenciesChange.mock.calls[0][0]).to.deep.equal([]);
