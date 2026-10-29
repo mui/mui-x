@@ -96,6 +96,27 @@ In the following demo, the `firstName` column is not sortable by the default gri
 
 {{"demo": "ReadOnlySortingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Value used for sorting
+
+When sorting by a column, the Data Grid compares the cell values of that column.
+A cell value is the value of the column's `field` in the row, or the value returned by the column's [`valueGetter()`](/x/react-data-grid/column-definition/#value-getter) if it has one.
+
+The values returned by [`valueFormatter()`](/x/react-data-grid/column-definition/#value-formatter) and [`renderCell()`](/x/react-data-grid/column-definition/#rendering-cells) are only used for rendering, so they don't change how the column is sorted.
+For example, if a column uses `renderCell()` to display a value that is nested in the row object, sorting the column doesn't reorder the rows.
+Use `valueGetter()` to return the nested value instead:
+
+```tsx
+const columns: GridColDef[] = [
+  {
+    field: 'vendor',
+    headerName: 'Vendor',
+    valueGetter: (value, row) => row.order?.vendor?.name,
+  },
+];
+```
+
+If the cell value is an object, or its type doesn't match the column's `type`, provide a [custom comparator](#custom-comparator) so the column sorts correctly.
+
 ## Custom comparator
 
 A comparator determines how two cell values should be sorted.
