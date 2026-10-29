@@ -1,20 +1,22 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import {
-  DataGrid,
+import type {
   GridColDef,
   GridColumnGroup,
   GridColumnGroupingModel,
   GridColumnVisibilityModel,
+  GridApi,
+  GridColumnLookup,
+  GridColumnsPanelProps,
+} from '@mui/x-data-grid';
+import {
+  DataGrid,
   gridColumnVisibilityModelSelector,
   useGridApiContext,
   useGridRootProps,
   isLeaf,
-  GridApi,
   gridColumnLookupSelector,
-  GridColumnLookup,
   useGridSelector,
-  GridColumnsPanelProps,
   GridColumnsPanel,
   GridPreferencePanelsValue,
 } from '@mui/x-data-grid';

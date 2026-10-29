@@ -1,7 +1,7 @@
 import * as React from 'react';
+import type { GridColDef } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
-  GridColDef,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';

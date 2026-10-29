@@ -1,11 +1,12 @@
 import * as React from 'react';
+import type { GridColDef } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
   useGridApiRef,
-  GridColDef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
-import { useMovieData, Movie } from '@mui/x-data-grid-generator';
+import type { Movie } from '@mui/x-data-grid-generator';
+import { useMovieData } from '@mui/x-data-grid-generator';
 
 export default function RowGroupingGroupingValueSetter() {
   const data = useMovieData();

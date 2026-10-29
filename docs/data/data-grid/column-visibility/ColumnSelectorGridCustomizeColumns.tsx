@@ -1,6 +1,6 @@
+import type { GridColDef } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
-  GridColDef,
   useKeepGroupedColumnsHidden,
   useGridApiRef,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,

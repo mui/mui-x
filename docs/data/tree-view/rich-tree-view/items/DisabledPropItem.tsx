@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { MUI_X_PRODUCTS, MuiXProduct } from '../../datasets/disabledProducts';
+import type { MuiXProduct } from '../../datasets/disabledProducts';
+import { MUI_X_PRODUCTS } from '../../datasets/disabledProducts';
 
 const isItemDisabled = (item: MuiXProduct) => !!item.disabled;
 

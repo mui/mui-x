@@ -1,16 +1,18 @@
 /* eslint-disable no-underscore-dangle */
 import * as React from 'react';
-import {
-  DataGrid,
+import type {
   GridRowId,
   GridValidRowModel,
   DataGridProps,
+  GridColDef,
+  GridRenderCellParams,
+} from '@mui/x-data-grid';
+import {
+  DataGrid,
   useGridApiRef,
   GridActionsCellItem,
-  GridColDef,
   gridClasses,
   GridActionsCell,
-  GridRenderCellParams,
   useGridApiContext,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';

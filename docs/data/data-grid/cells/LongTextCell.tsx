@@ -1,12 +1,11 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import {
-  DataGrid,
+import type {
   GridColDef,
   GridRenderCellParams,
   GridRowModel,
-  useGridApiContext,
 } from '@mui/x-data-grid';
+import { DataGrid, useGridApiContext } from '@mui/x-data-grid';
 import { randomInt, randomArrayItem } from '@mui/x-data-grid-generator';
 import Popper from '@mui/material/Popper';
 import Paper from '@mui/material/Paper';

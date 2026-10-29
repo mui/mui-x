@@ -4,12 +4,12 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import {
-  DateCalendar,
+import type {
   DateCalendarSlots,
   DateCalendarSlotProps,
 } from '@mui/x-date-pickers/DateCalendar';
-import { PropsFromSlot } from '@mui/x-date-pickers/models';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import type { PropsFromSlot } from '@mui/x-date-pickers/models';
 import { PickersCalendarHeader } from '@mui/x-date-pickers/PickersCalendarHeader';
 
 function DisplayWeekNumberToggle({

@@ -1,9 +1,6 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
-  GridColDef,
-  useGridApiRef,
-} from '@mui/x-data-grid-premium';
+import type { GridColDef } from '@mui/x-data-grid-premium';
+import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
 import { randomEmail, randomId, randomUserName } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
 

@@ -1,8 +1,8 @@
-import MUISwipeableDrawer, {
-  SwipeableDrawerProps as MUISwipeableDrawerProps,
-} from '@mui/material/SwipeableDrawer';
+import type { SwipeableDrawerProps as MUISwipeableDrawerProps } from '@mui/material/SwipeableDrawer';
+import MUISwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Box from '@mui/material/Box';
-import Stack, { StackProps } from '@mui/material/Stack';
+import type { StackProps } from '@mui/material/Stack';
+import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import { useMediaQuery } from '@mui/system';
 
