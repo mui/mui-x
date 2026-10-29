@@ -76,7 +76,8 @@ export interface EventTimelinePremiumProps<TEvent extends object, TResource exte
    */
   getEventAriaLabel?: (parameters: EventTimelineGetEventAriaLabelParameters) => string;
   /**
-   * The optional features of the Event Timeline.
+   * The optional features of the Event Timeline: `recurringEvents` from `@mui/x-scheduler-premium/recurring-events`
+   * and `dependencies` from `@mui/x-scheduler-premium/dependencies`.
    * They are read once when the component mounts, later changes are ignored.
    * @example { recurringEvents: recurringEventsFeature, dependencies: dependenciesFeature }
    */

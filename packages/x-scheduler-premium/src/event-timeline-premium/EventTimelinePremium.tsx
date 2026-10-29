@@ -300,8 +300,9 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
   defaultVisibleResources: PropTypes.object,
   /**
    * The dependencies between events.
-   * Requires the `dependencies` feature from `@mui/x-scheduler-premium/dependencies`.
-   * With it, any value, even an empty array, lets users create dependencies.
+   * Requires `dependenciesFeature` from `@mui/x-scheduler-premium/dependencies`.
+   * With it, any value, even an empty array, enables the dependencies.
+   * Pass `onDependenciesChange` to keep the changes users make.
    */
   dependencies: PropTypes.arrayOf(
     PropTypes.shape({
@@ -390,7 +391,8 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    */
   events: PropTypes.arrayOf(PropTypes.object),
   /**
-   * The optional features of the Event Timeline.
+   * The optional features of the Event Timeline: `recurringEvents` from `@mui/x-scheduler-premium/recurring-events`
+   * and `dependencies` from `@mui/x-scheduler-premium/dependencies`.
    * They are read once when the component mounts, later changes are ignored.
    * @example { recurringEvents: recurringEventsFeature, dependencies: dependenciesFeature }
    */

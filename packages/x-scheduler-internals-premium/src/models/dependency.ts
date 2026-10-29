@@ -60,8 +60,8 @@ export interface SchedulerDependency {
   /**
    * The time the successor waits after the constraining edge of the predecessor, as a
    * whole number of `lagUnit`.
-   * Days and weeks keep the time of day in the successor's timezone, minutes and hours
-   * count elapsed time.
+   * Days and weeks keep the time of day in the successor's timezone.
+   * Minutes and hours count elapsed time.
    * For an all-day successor, the lag is rounded down to whole days, so a lag shorter
    * than a day is ignored.
    * An invalid lag is ignored with a warning.
@@ -214,8 +214,9 @@ export interface SchedulerDependenciesState {
 export interface SchedulerDependenciesParameters {
   /**
    * The dependencies between events.
-   * Requires the `dependencies` feature from `@mui/x-scheduler-premium/dependencies`.
-   * With it, any value, even an empty array, lets users create dependencies.
+   * Requires `dependenciesFeature` from `@mui/x-scheduler-premium/dependencies`.
+   * With it, any value, even an empty array, enables the dependencies.
+   * Pass `onDependenciesChange` to keep the changes users make.
    */
   dependencies?: readonly SchedulerDependency[];
   /**
