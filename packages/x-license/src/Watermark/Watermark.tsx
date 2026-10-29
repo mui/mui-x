@@ -1,7 +1,8 @@
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useLicenseVerifier } from '../useLicenseVerifier';
-import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
-import { CommercialPackageInfo } from '../utils/commercialPackages';
+import type { LicenseStatus } from '../utils/licenseStatus';
+import { LICENSE_STATUS } from '../utils/licenseStatus';
+import type { CommercialPackageInfo } from '../utils/commercialPackages';
 
 function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
   switch (licenseStatus) {

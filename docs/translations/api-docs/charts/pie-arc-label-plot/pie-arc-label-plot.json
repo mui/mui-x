@@ -9,6 +9,7 @@
     "cornerRadius": {
       "description": "The radius applied to arc corners (similar to border radius)."
     },
+    "data": { "description": "The data of the series, with the default values applied." },
     "faded": { "description": "Override the arc attributes when it is faded." },
     "highlighted": { "description": "Override the arc attributes when it is highlighted." },
     "innerRadius": {
@@ -22,5 +23,5 @@
     "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {},
-  "slotDescriptions": { "pieArcLabel": "" }
+  "slotDescriptions": { "pieArcLabel": "The component that renders the pie arc labels." }
 }

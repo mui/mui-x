@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { LinePlot } from '@mui/x-charts/LineChart';
-import { LineSeriesType } from '@mui/x-charts/models';
+import type { LineSeriesType } from '@mui/x-charts/models';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';

@@ -9,9 +9,9 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { Button } from '@base-ui/react/button';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
+import { formatMonthShortAndDayOfMonth, toPlainDate } from '@mui/x-scheduler-internals/internals';
 import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
 import type { EventItemProps } from './EventItem.types';
 import { useFormatTime } from '../../../hooks/useFormatTime';
@@ -19,6 +19,7 @@ import { useEventCalendarStyledContext } from '../../../../event-calendar/EventC
 import type { PaletteName } from '../../../utils/tokens';
 import { getPaletteVariants } from '../../../utils/tokens';
 import { getArrowEdgeStyles, getArrowFocusVisibleStyles } from '../arrowClips';
+import { isOccurrenceMultiDay } from '../../../utils/event-utils';
 
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
@@ -182,13 +183,10 @@ export const EventItem = React.forwardRef(function EventItem(
     localeText,
   });
 
-  const adapter = useAdapterContext();
-  const startsBeforeDay =
-    !adapter.isSameDay(occurrence.displayTimezone.start.value, date.value) &&
-    adapter.isBefore(occurrence.displayTimezone.start.value, date.value);
-  const endsAfterDay =
-    !adapter.isSameDay(occurrence.displayTimezone.end.value, date.value) &&
-    adapter.isAfter(occurrence.displayTimezone.end.value, date.value);
+  // The keys of the processed dates only depend on their day in the display timezone.
+  const { start, end } = occurrence.displayTimezone;
+  const startsBeforeDay = start.key !== date.key && start.timestamp < date.timestamp;
+  const endsAfterDay = end.key !== date.key && end.timestamp > date.timestamp;
 
   const content = React.useMemo(() => {
     switch (variant) {
@@ -202,7 +200,7 @@ export const EventItem = React.forwardRef(function EventItem(
             >
               <EventItemCardContent className={classes.eventItemCardContent}>
                 <EventItemTime className={classes.eventItemTime} data-compact>
-                  <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
+                  <span>{formatTime(occurrence.displayTimezone.start)}</span>
                 </EventItemTime>
                 <EventItemTitle className={classes.eventItemTitle}>
                   {occurrence.title}
@@ -289,17 +287,16 @@ function MultiDayDateLabel(props: {
 }) {
   const { occurrence, formatTime } = props;
 
-  const adapter = useAdapterContext();
+  const store = useEventCalendarStoreContext();
+  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
   const { classes, localeText } = useEventCalendarStyledContext();
 
-  if (
-    !adapter.isSameDay(occurrence.displayTimezone.start.value, occurrence.displayTimezone.end.value)
-  ) {
-    const format = `${adapter.formats.dayOfMonth} ${adapter.formats.month3Letters}`;
+  if (isOccurrenceMultiDay(occurrence)) {
+    const { end, timezone } = occurrence.displayTimezone;
     return (
       <EventItemTime className={classes.eventItemTime} as="span">
         {localeText.eventItemMultiDayLabel(
-          adapter.formatByString(occurrence.displayTimezone.end.value, format),
+          formatMonthShortAndDayOfMonth(locale, toPlainDate(end.timestamp, timezone)),
         )}
       </EventItemTime>
     );
@@ -313,8 +310,8 @@ function MultiDayDateLabel(props: {
   }
   return (
     <EventItemTime className={classes.eventItemTime}>
-      <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
-      <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
+      <span>{formatTime(occurrence.displayTimezone.start)}</span>
+      <span> - {formatTime(occurrence.displayTimezone.end)}</span>
     </EventItemTime>
   );
 }

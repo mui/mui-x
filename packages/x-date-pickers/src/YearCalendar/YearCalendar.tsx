@@ -373,11 +373,17 @@ YearCalendar.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If `true`, the component is focused when it mounts.
+   */
   autoFocus: PropTypes.bool,
   /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   /**
    * The default selected value.
@@ -405,7 +411,13 @@ YearCalendar.propTypes /* remove-proptypes */ = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * @ignore
+   */
   gridLabelId: PropTypes.string,
+  /**
+   * @ignore
+   */
   hasFocus: PropTypes.bool,
   /**
    * Maximal selectable date.
@@ -422,7 +434,13 @@ YearCalendar.propTypes /* remove-proptypes */ = {
    * @param {PickerValidDate} value The new value.
    */
   onChange: PropTypes.func,
+  /**
+   * @ignore
+   */
   onFocusedViewChange: PropTypes.func,
+  /**
+   * @ignore
+   */
   onYearFocus: PropTypes.func,
   /**
    * If `true`, the component is read-only.

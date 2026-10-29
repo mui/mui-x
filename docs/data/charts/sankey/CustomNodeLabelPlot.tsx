@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
+import type { SankeyLayoutNode } from '@mui/x-charts-pro/SankeyChart';
 import {
-  SankeyLayoutNode,
   useSankeyLayout,
   useSankeyNodeHighlightState,
   useSankeySeries,
 } from '@mui/x-charts-pro/SankeyChart';
-import { SeriesId } from '@mui/x-charts-pro/models';
+import type { SeriesId } from '@mui/x-charts-pro/models';
 
 export function CustomNodeLabelPlot() {
   const sankeySeries = useSankeySeries()[0];

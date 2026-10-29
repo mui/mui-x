@@ -2,7 +2,6 @@ import * as React from 'react';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-
 import { ChatMessageList, ChatScrollToBottomAffordance } from '@mui/x-chat';
 import { useChat, useChatStore } from '@mui/x-chat/headless';
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';

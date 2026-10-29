@@ -16,6 +16,11 @@ const dataGridApiPages: MuiPage[] = [
     title: 'ColumnsPanelTrigger',
   },
   {
+    pathname: '/x/api/data-grid/computed-columns-panel-trigger',
+    title: 'ComputedColumnsPanelTrigger',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/data-grid/data-grid',
     title: 'DataGrid',
   },

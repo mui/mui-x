@@ -1,12 +1,14 @@
 import * as React from 'react';
-import {
+import type {
   GridPivotModel,
-  DataGridPremium,
   GridDataSource,
+  DataGridPremiumProps,
+} from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
   useGridApiRef,
   GridGetRowsError,
   GridSidebarValue,
-  DataGridPremiumProps,
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import Snackbar from '@mui/material/Snackbar';

@@ -2,6 +2,7 @@ import { clearWarningsCache } from '@mui/x-internals/warning';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
 import type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
 const DEFAULT_PARAMS = {
@@ -179,6 +180,40 @@ describe('Preset - EventTimelinePremiumStore', () => {
 
         expect(store.state.visibleDate).toEqualDateTime(previous);
       });
+    });
+
+    it('should move the days of the display timezone across a DST transition', () => {
+      const onVisibleDateChange = vi.fn();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          defaultPreset: 'dayAndHour',
+          // March 28th at 22:30 in UTC is March 28th at 23:30 in Paris, the day before the DST transition.
+          defaultVisibleDate: adapter.date('2026-03-28T22:30:00', 'UTC'),
+          displayTimezone: 'Europe/Paris',
+          onVisibleDateChange,
+        },
+        adapter,
+      );
+
+      store.goToNextVisibleDate({} as any);
+
+      // The next span starts on April 1st in Paris, the day after the four days of the first one.
+      expect(
+        new Date(eventTimelinePremiumPresetSelectors.config(store.state).start).toISOString(),
+      ).to.equal('2026-03-31T22:00:00.000Z');
+      // April 1st at 23:30 in Paris, labeled with the display timezone.
+      const changedVisibleDate = onVisibleDateChange.mock.lastCall?.[0];
+      expect(adapter.getTime(store.state.visibleDate)).to.equal(Date.parse('2026-04-01T21:30:00Z'));
+      expect(adapter.getTimezone(store.state.visibleDate)).to.equal('Europe/Paris');
+      expect(adapter.getTime(changedVisibleDate)).to.equal(Date.parse('2026-04-01T21:30:00Z'));
+      expect(adapter.getTimezone(changedVisibleDate)).to.equal('Europe/Paris');
+
+      store.goToPreviousVisibleDate({} as any);
+
+      expect(
+        new Date(eventTimelinePremiumPresetSelectors.config(store.state).start).toISOString(),
+      ).to.equal('2026-03-27T23:00:00.000Z');
     });
   });
 });

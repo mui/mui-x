@@ -267,7 +267,7 @@ const isResizableSelector = (
 
   // In month view, only multi-day and all-day events can be resized
   if (view === 'month') {
-    return isOccurrenceAllDayOrMultipleDay(occurrence, state.adapter);
+    return isOccurrenceAllDayOrMultipleDay(occurrence);
   }
 
   return true;
@@ -336,8 +336,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
                 style={{ '--number-of-lines': 1 } as React.CSSProperties}
               >
                 <DayGridEventTime className={classes.dayGridEventTime}>
-                  <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
-                  <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
+                  <span>{formatTime(occurrence.displayTimezone.start)}</span>
+                  <span> - {formatTime(occurrence.displayTimezone.end)}</span>
                 </DayGridEventTime>
                 <DayGridEventTitle className={classes.dayGridEventTitle} as="span">
                   {occurrence.title}
@@ -364,8 +364,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   }, [
     variant,
     occurrence.title,
-    occurrence.displayTimezone.start.value,
-    occurrence.displayTimezone.end.value,
+    occurrence.displayTimezone.start,
+    occurrence.displayTimezone.end,
     isRecurring,
     formatTime,
     classes,

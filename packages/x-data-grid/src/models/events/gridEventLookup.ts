@@ -627,11 +627,13 @@ export interface GridEventLookup
 
   // Menu
   /**
-   * Fired when the menu is opened.
+   * Fired when a grid menu is opened.
+   * This includes the column menu, the actions cell menu, and the toolbar menus.
    */
   menuOpen: { params: GridMenuParams };
   /**
-   * Fired when the grid menu is closed.
+   * Fired when a grid menu is closed.
+   * This includes the column menu, the actions cell menu, and the toolbar menus.
    */
   menuClose: { params: GridMenuParams };
 }

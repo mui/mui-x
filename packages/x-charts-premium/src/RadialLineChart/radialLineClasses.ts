@@ -22,6 +22,9 @@ export interface RadialLineClasses {
 export type LineClassKey = keyof RadialLineClasses;
 
 export interface MarkElementOwnerState {
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<RadialLineClasses>;
   skipAnimation?: boolean;
 }
@@ -41,6 +44,9 @@ export const radialLineClasses: RadialLineClasses = generateUtilityClasses('MuiR
 ]);
 
 export interface UseUtilityClassesOptions {
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<RadialLineClasses>;
 }
 

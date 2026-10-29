@@ -15,7 +15,6 @@ import { BarPlot } from '@mui/x-charts-premium/BarChart';
 import { ChartsXAxis } from '@mui/x-charts-premium/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts-premium/ChartsYAxis';
 import { useAxesTooltip } from '@mui/x-charts-premium/ChartsTooltip';
-
 import { ChartsDataProviderPremium } from '@mui/x-charts-premium/ChartsDataProviderPremium';
 import { ChartsWrapper } from '@mui/x-charts-premium/ChartsWrapper';
 import { ChartsAxisHighlight } from '@mui/x-charts-premium/ChartsAxisHighlight';

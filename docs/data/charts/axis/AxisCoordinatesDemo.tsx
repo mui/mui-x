@@ -8,9 +8,9 @@ import {
   useXAxisCoordinates,
   useYAxis,
   useYAxisCoordinates,
-  type AxisCoordinates,
 } from '@mui/x-charts/hooks';
-import { AxisId } from '@mui/x-charts/internals';
+import type { AxisCoordinates } from '@mui/x-charts/hooks';
+import type { AxisId } from '@mui/x-charts/internals';
 import { useTheme } from '@mui/material/styles';
 
 const lineData = [2, 5, 3, 8, 4];

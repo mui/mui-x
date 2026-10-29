@@ -7,7 +7,6 @@ import {
   ChatMessageGroup,
   ChatMessageInlineMeta,
 } from '@mui/x-chat';
-
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
 import {
   ChatChrome,

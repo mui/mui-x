@@ -15,17 +15,19 @@ export * from './useOriginalOccurrence';
 export * from './useElementDragMarker';
 export * from './useTimelineDragAutoScroll';
 export * from './TimeoutManager';
+export * from './date-locale';
 export * from './date-utils';
 export * from './plain-date-utils';
 export {
   addMonths as addMonthsToDayNumber,
-  createPlainDate,
   getStartOfMonth as getStartOfMonthDayNumber,
   getStartOfWeek as getStartOfWeekDayNumber,
   LAST_SUPPORTED_DAY,
   PlainDate,
+  type PlainDateDuration,
 } from './base-temporal/PlainDate';
-export { ISO_CALENDAR_ID } from './base-temporal/calendar';
+export { MS_PER_DAY } from './base-temporal/iso';
+export { ZonedDateTime } from './base-temporal/ZonedDateTime';
 export * from './extractStandaloneEvent';
 export * from './useInitializeApiRef';
 export * from './useEventCreation';

@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
   computeElementPositionInCollection,
+  createProcessedDate,
   isInternalDragOrResizePlaceholder,
 } from '@mui/x-scheduler-internals/internals';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -35,20 +38,21 @@ export function usePlaceholderInRow(
     : null;
   const originalEvent = useStore(store, schedulerEventSelectors.processedEvent, originalEventId);
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
   return React.useMemo(() => {
     if (!rawPlaceholder) {
       return null;
     }
 
-    const startProcessed = processDate(rawPlaceholder.start, adapter);
-    const endProcessed = processDate(rawPlaceholder.end, adapter);
+    const startProcessed = createProcessedDate(adapter, rawPlaceholder.start, displayTimezone);
+    const endProcessed = createProcessedDate(adapter, rawPlaceholder.end, displayTimezone);
 
     // A placeholder that occupies no space (fully inside the hidden hours while editing
     // the dates in the event dialog, or shorter than the minute the axis is drawn with)
     // would render as a zero-width sliver pinned to the day seam. Measured on the
     // rendered geometry, like the occurrence selector does.
-    const renderedPosition = computeElementPositionInCollection(adapter, {
+    const renderedPosition = computeElementPositionInCollection({
       start: startProcessed,
       end: endProcessed,
       collection: config,
@@ -57,7 +61,6 @@ export function usePlaceholderInRow(
     if (renderedPosition.duration === 0) {
       return null;
     }
-    const timezone = adapter.getTimezone(rawPlaceholder.start);
     const sharedProperties = {
       id: originalEventId ?? 'occurrence-placeholder',
       key: 'occurrence-placeholder',
@@ -66,7 +69,7 @@ export function usePlaceholderInRow(
       displayTimezone: {
         start: startProcessed,
         end: endProcessed,
-        timezone,
+        timezone: displayTimezone,
       },
     };
 
@@ -102,7 +105,16 @@ export function usePlaceholderInRow(
       ...sharedProperties,
       position,
     };
-  }, [rawPlaceholder, adapter, config, originalEvent, originalEventId, occurrences, maxIndex]);
+  }, [
+    rawPlaceholder,
+    adapter,
+    config,
+    displayTimezone,
+    originalEvent,
+    originalEventId,
+    occurrences,
+    maxIndex,
+  ]);
 }
 
 export namespace usePlaceholderInRow {

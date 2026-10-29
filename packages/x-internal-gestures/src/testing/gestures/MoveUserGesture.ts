@@ -1,4 +1,4 @@
-import { PointerManager } from '../PointerManager';
+import type { PointerManager } from '../PointerManager';
 import type { MoveUserGestureOptions } from './MoveUserGesture.types';
 
 /**

@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
-import { TransitionProps } from '@mui/material/transitions';
+import type { TransitionProps } from '@mui/material/transitions';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useSpring, animated } from '@react-spring/web';
 import { MUI_X_PRODUCTS } from '../../datasets/products';

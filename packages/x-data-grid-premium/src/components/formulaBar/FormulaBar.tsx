@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import {
   gridClasses,
@@ -38,7 +39,7 @@ import {
   shouldIgnorePlainEditInput,
 } from '../../hooks/features/formula/gridFormulaPlainEditing';
 import { CellValueUpdater } from '../../hooks/features/clipboard/useGridClipboardImport';
-import { GridFormulaEditable, valueToText } from '../GridFormulaEditable';
+import { GridFormulaEditable, isComposingKeyEvent, valueToText } from '../GridFormulaEditable';
 import type { GridFormulaEditableHandle } from '../GridFormulaEditable';
 
 const FormulaBarRoot = styled('div', {
@@ -126,7 +127,7 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
   const { className, onKeyDown, onMouseDown, ...other } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
-  const popupId = React.useId();
+  const popupId = useId();
   const rootRef = React.useRef<HTMLDivElement | null>(null);
   // Registration for the `canUpdateFocus` veto follows the ELEMENT lifecycle
   // through this callback ref, not the component's: the bar stays mounted while
@@ -505,6 +506,10 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
   const handleRootKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
       onKeyDown?.(event);
+      // A Tab pressed during an IME composition walks the IME's candidates.
+      if (isComposingKeyEvent(event)) {
+        return;
+      }
       // Tab with the suggestion popup open is consumed by the editable
       // (stopPropagation) — reaching here means "commit and move" (Excel:
       // Tab → right, Shift+Tab → left).

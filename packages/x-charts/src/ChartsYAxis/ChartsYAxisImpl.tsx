@@ -23,6 +23,9 @@ const YAxisRoot = styled(AxisRoot, {
 })({});
 
 interface ChartsYAxisImplProps extends Omit<ChartsYAxisProps, 'axis'> {
+  /**
+   * The computed axis to render.
+   */
   axis: ComputedAxis<ScaleName, any, ChartsYAxisProps>;
 }
 

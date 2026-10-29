@@ -1,6 +1,6 @@
-import { ThemeOptions, Theme } from '@mui/material/styles';
+import type { ThemeOptions, Theme } from '@mui/material/styles';
 import type {} from '@mui/x-date-pickers-pro/themeAugmentation';
-import { Config, PaletteMode } from './themes.types';
+import type { Config, PaletteMode } from './themes.types';
 
 declare module '@mui/material/styles' {
   interface Mixins {

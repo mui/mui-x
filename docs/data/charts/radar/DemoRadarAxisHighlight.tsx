@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import { RadarChart, RadarSeries } from '@mui/x-charts/RadarChart';
+import type { RadarSeries } from '@mui/x-charts/RadarChart';
+import { RadarChart } from '@mui/x-charts/RadarChart';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 

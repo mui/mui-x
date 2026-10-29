@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
-
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { frFR } from '@mui/x-scheduler/locales';
 import {

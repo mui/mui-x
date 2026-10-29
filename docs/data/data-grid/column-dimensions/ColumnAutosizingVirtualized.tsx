@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGrid, GridColDef, GridRowId, useGridApiRef } from '@mui/x-data-grid';
+import type { GridColDef, GridRowId } from '@mui/x-data-grid';
+import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 
 export interface DataRowModel {

@@ -261,6 +261,25 @@ describe('DayView - event toolbar', () => {
     expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
   });
 
+  it('should not render the toolbar Delete button when `eventDeletion` is `false`', () => {
+    window.matchMedia = createMatchMedia(true);
+    renderEvent(vi.fn(), { eventDeletion: false });
+
+    fireEvent.click(getEvent());
+
+    expect(screen.getByRole('button', { name: 'Edit event' })).not.to.equal(null);
+    expect(screen.queryByRole('button', { name: 'Delete event' })).to.equal(null);
+  });
+
+  it('should render the toolbar Delete button when `eventDeletion` is `true`', () => {
+    window.matchMedia = createMatchMedia(true);
+    renderEvent(vi.fn(), { eventDeletion: true });
+
+    fireEvent.click(getEvent());
+
+    expect(screen.getByRole('button', { name: 'Delete event' })).not.to.equal(null);
+  });
+
   it('should close the confirmation dialog on Escape without deleting or disarming the toolbar', async () => {
     window.matchMedia = createMatchMedia(true);
     const { onEventsChange } = renderEvent();

@@ -6,19 +6,45 @@ import type { ChatConversation } from '../types/chat-entities';
 import type { ConversationListPreviewOwnerState } from './conversationList.types';
 
 export interface ConversationListPreviewSlots {
+  /**
+   * The component that renders the root.
+   */
   root: React.ElementType;
 }
 
 export interface ConversationListPreviewSlotProps {
+  /**
+   * The props used for the root slot.
+   */
   root?: SlotComponentProps<'div', {}, ConversationListPreviewOwnerState>;
 }
 
 export interface ConversationListPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * The conversation the item renders.
+   */
   conversation: ChatConversation;
+  /**
+   * If `true`, the conversation is selected.
+   */
   selected?: boolean;
+  /**
+   * If `true`, the conversation has unread messages.
+   */
   unread?: boolean;
+  /**
+   * If `true`, the item has keyboard focus.
+   */
   focused?: boolean;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<ConversationListPreviewSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ConversationListPreviewSlotProps;
 }
 
