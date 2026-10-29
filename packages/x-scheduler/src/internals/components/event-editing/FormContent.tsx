@@ -63,12 +63,12 @@ import { eventDialogFormSelectors } from '../event-dialog/form/EventDialogFormSt
 import { usePushPlaceholder } from '../event-dialog/usePushPlaceholder';
 import { focusFirstInvalid } from '../scheduler-form/focusFirstInvalid';
 import { deleteOccurrenceAndRestoreFocus } from '../../utils/focus-utils';
-import { getUserFacingErrorMessage } from '../../utils/user-facing-error';
 import {
   dialogContentBaseStyles,
   dialogFormBaseStyles,
   getDialogFormActionsBaseStyles,
 } from '../../constants/dialogStyles';
+import { getUserFacingErrorMessage } from '../../utils/user-facing-error';
 
 const EventDialogFormActions = styled(DialogActions, {
   name: 'MuiEventDialog',

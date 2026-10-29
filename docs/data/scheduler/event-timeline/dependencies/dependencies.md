@@ -15,7 +15,7 @@ components: EventTimelinePremium
 A dependency links two events: the predecessor (`source`) and the successor (`target`).
 The Event Timeline draws each dependency as an arrow.
 A dependency is broken when the successor starts or finishes earlier than its type allows.
-When a change would break a dependency, the Event Timeline moves the successor later to respect it.
+Moving or resizing an event, creating a dependency, or making one stricter moves the successor later to respect it, as described in [Auto-scheduling](#auto-scheduling).
 
 {{"demo": "DependenciesOverview.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -43,7 +43,7 @@ function App() {
 }
 ```
 
-The dependencies are only enabled with both the feature and a `dependencies` value, even an empty array.
+The dependencies are only enabled when both the feature and a `dependencies` value, even an empty array, are provided.
 Without one of them, the arrows don't render and users can't create dependencies.
 A `dependencies` value without the feature logs a warning in development.
 
@@ -60,9 +60,9 @@ To change them, remount the Event Timeline, for example with a `key`.
 import { SchedulerDependency } from '@mui/x-scheduler-premium/models';
 
 const dependency: SchedulerDependency = {
-  id: 'd1',
-  source: 'design', // The id of the predecessor event
-  target: 'build', // The id of the successor event
+  id: '1',
+  source: '12', // The id of the predecessor event
+  target: '13', // The id of the successor event
   type: 'FinishToStart',
   lag: 2, // Optional, defaults to 0
   lagUnit: 'day', // Optional, defaults to 'day'

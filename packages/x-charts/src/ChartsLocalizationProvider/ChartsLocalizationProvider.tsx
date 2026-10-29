@@ -14,6 +14,9 @@ export const ChartsLocalizationContext = React.createContext<ChartsLocalizationC
 );
 
 export interface ChartsLocalizationProviderProps {
+  /**
+   * The content of the component.
+   */
   children?: React.ReactNode;
   /**
    * Localized text for chart components.
@@ -74,6 +77,9 @@ ChartsLocalizationProvider.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The content of the component.
+   */
   children: PropTypes.node,
   /**
    * Localized text for chart components.

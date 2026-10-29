@@ -8,8 +8,14 @@ import { useChartId, useDrawingArea } from '../hooks';
 import type { SeriesId } from '../models/seriesType/common';
 
 interface AppearingMaskProps {
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: SeriesId;
   skipAnimation?: boolean;
+  /**
+   * The content of the component.
+   */
   children: React.ReactNode;
 }
 

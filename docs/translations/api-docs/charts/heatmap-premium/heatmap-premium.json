@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "apiRef": { "description": "The ref object that exposes the chart API methods." },
     "borderRadius": { "description": "The border radius of the heatmap cells in pixels." },
     "brushConfig": { "description": "Configuration for the brush interaction." },
     "colors": { "description": "Color palette used to colorize multiple series." },
@@ -83,6 +84,12 @@
     "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "theme": {
+      "description": "The color mode passed to <code>colors</code> when it is a function. Defaults to the mode of the Material UI theme."
+    },
     "title": {
       "description": "The title of the chart. Used to provide an accessible label for the chart."
     },
@@ -113,15 +120,15 @@
     "axisLine": "Custom component for the axis main line.",
     "axisTick": "Custom component for the axis tick.",
     "axisTickLabel": "Custom component for tick label.",
-    "baseButton": "",
-    "baseDivider": "",
-    "baseIconButton": "",
-    "baseMenuItem": "",
-    "baseMenuList": "",
-    "basePopper": "",
+    "baseButton": "The component used for buttons.",
+    "baseDivider": "The component used for dividers.",
+    "baseIconButton": "The component used for icon buttons.",
+    "baseMenuItem": "The component used for menu items.",
+    "baseMenuList": "The component used for menu lists.",
+    "basePopper": "The component used for poppers.",
     "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps &amp; BaseToggleButtonPropsOverrides&gt;</code>.",
-    "baseToggleButtonGroup": "",
-    "baseTooltip": "",
+    "baseToggleButtonGroup": "The component used for toggle button groups.",
+    "baseTooltip": "The component used for tooltips.",
     "cell": "The component that renders the heatmap cell.",
     "exportIcon": "Icon displayed on the toolbar&#39;s export button.",
     "legend": "Custom component for the legend.",
