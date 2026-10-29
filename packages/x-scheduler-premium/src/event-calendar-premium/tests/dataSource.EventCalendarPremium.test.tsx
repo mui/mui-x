@@ -79,19 +79,47 @@ describe('<EventCalendarPremium /> - Data Source', () => {
       persistEvents: async () => ({ success: true }),
     };
 
-    await renderSettled(
-      <EventCalendarPremium
-        dataSource={dataSource}
-        defaultView="agenda"
-        defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        defaultPreferences={{ showEmptyDaysInAgenda: false }}
-      />,
-    );
-
-    await waitFor(() => {
-      expect(screen.getByText('Network down')).not.to.equal(null);
-    });
+    await expect(async () => {
+      await renderSettled(
+        <EventCalendarPremium
+          dataSource={dataSource}
+          defaultView="agenda"
+          defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          defaultPreferences={{ showEmptyDaysInAgenda: false }}
+        />,
+      );
+      await waitFor(() => {
+        expect(screen.getByText('Something went wrong. Try again.')).not.to.equal(null);
+      });
+    }).toErrorDev([
+      'MUI X Scheduler: The user was shown the `somethingWentWrongError` error, caused by: Error: Network down',
+    ]);
     expect(screen.getByRole('status')).to.have.text('No upcoming events');
+  });
+
+  it('should render the data source error from the localeText', async () => {
+    const dataSource = {
+      getEvents: async () => {
+        throw new Error('Network down');
+      },
+      persistEvents: async () => ({ success: true }),
+    };
+
+    await expect(async () => {
+      await renderSettled(
+        <EventCalendarPremium
+          dataSource={dataSource}
+          defaultView="day"
+          defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          localeText={{ somethingWentWrongError: 'Algo salió mal.' }}
+        />,
+      );
+      await waitFor(() => {
+        expect(screen.getByText('Algo salió mal.')).not.to.equal(null);
+      });
+    }).toErrorDev([
+      'MUI X Scheduler: The user was shown the `somethingWentWrongError` error, caused by: Error: Network down',
+    ]);
   });
 
   it('should not forward the dataSource prop to the root element', async () => {

@@ -68,7 +68,10 @@ const styledContextValue = {
   localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 };
 
-const sharedStyledContextValue = { classes: eventTimelinePremiumClasses };
+const sharedStyledContextValue = {
+  classes: eventTimelinePremiumClasses,
+  localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+};
 
 const defaultFeatures: EventTimelinePremiumInternalFeatures = {
   recurringEvents: recurringEventsFeature,
