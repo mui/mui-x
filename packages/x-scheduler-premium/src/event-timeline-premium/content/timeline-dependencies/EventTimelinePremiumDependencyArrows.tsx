@@ -20,9 +20,6 @@ import {
 
 const DEPENDENCY_ARROW_STROKE_WIDTH = 1;
 const DEPENDENCY_ARROW_SELECTED_STROKE_WIDTH = 2;
-// TODO(dependencies public flip, #23420): add a `dependencyArrows` utility class and assert the
-// slot in the theme augmentation. The overlay only carries data attributes while the
-// feature has no public API.
 const DependencyArrowsSvg = styled('svg', {
   name: 'MuiEventTimeline',
   slot: 'DependencyArrows',
@@ -80,7 +77,7 @@ export function EventTimelinePremiumDependencyArrows() {
 function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCreation | null }) {
   const theme = useTheme();
   const store = useEventTimelinePremiumStoreContext();
-  const { schedulerId } = useEventTimelinePremiumStyledContext();
+  const { schedulerId, classes } = useEventTimelinePremiumStyledContext();
   const isRtl = useDirection() === 'rtl';
 
   const svgRef = React.useRef<SVGSVGElement>(null);
@@ -163,6 +160,7 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
     <DependencyArrowsSvg
       ref={svgRef}
       aria-hidden
+      className={classes.dependencyArrows}
       data-dependency-arrows=""
       width={eventsWidth}
       height={height}

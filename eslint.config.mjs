@@ -546,6 +546,32 @@ export default defineConfig(
       'no-console': 'off',
     },
   },
+  // `@mui/internal-code-infra` lints the sources of packages that declare `engines.node` with
+  // `n/no-unsupported-features/node-builtins`. It also reports APIs that exist on every version in
+  // the range but were still documented as experimental there. Only the APIs below are ignored, so
+  // anything else is still checked. Options here replace code-infra's `ignores` (browser globals
+  // such as `localStorage`), which these packages don't reference.
+  {
+    files: [`packages/x-codemod/src/**/*${EXTENSION_TS}`],
+    rules: {
+      // `import.meta.dirname` exists since Node.js 20.11 but not in 21.0 and 21.1, which
+      // `>=20.19` allows. It is only read in each codemod's `testConfig`, which only `*.test.ts`
+      // files call, so it runs on the repo's Node.js and never in the published CLI.
+      'n/no-unsupported-features/node-builtins': ['error', { ignores: ['import.meta.dirname'] }],
+    },
+  },
+  {
+    files: [`packages/x-telemetry/src/**/*${EXTENSION_TS}`],
+    rules: {
+      // `fetch` and `Response` (Node.js 18) and the global `crypto` (Node.js 19) work without flags
+      // on every version in `>=20`. The rule reports them because Node.js only marked them stable
+      // in 21 and 23.
+      'n/no-unsupported-features/node-builtins': [
+        'error',
+        { ignores: ['fetch', 'Response', 'crypto'] },
+      ],
+    },
+  },
   {
     files: [
       'packages/x-scheduler/**/*{.tsx,.ts,.js}',

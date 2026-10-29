@@ -1,6 +1,8 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." }
+  },
   "classDescriptions": {
     "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the mark element" },
     "markPlot": {
