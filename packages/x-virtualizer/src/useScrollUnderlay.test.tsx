@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
-import { useScrollUnderlay, type UnderlayContent, type UnderlayParams } from '@mui/x-virtualizer';
+import type { UnderlayContent, UnderlayParams } from '@mui/x-virtualizer';
+import { useScrollUnderlay } from '@mui/x-virtualizer';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect, vi } from 'vitest';
 
