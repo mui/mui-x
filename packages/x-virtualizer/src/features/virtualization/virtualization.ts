@@ -679,7 +679,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         virtualRowIndex = focusedVirtualCell.rowIndex;
       }
       if (
-        focusedVirtualCell.rowIndex > lastRowToRender &&
+        focusedVirtualCell.rowIndex >= lastRowToRender &&
         focusedVirtualCell.rowIndex < rowModels.length
       ) {
         rowIndexes.push(focusedVirtualCell.rowIndex);
