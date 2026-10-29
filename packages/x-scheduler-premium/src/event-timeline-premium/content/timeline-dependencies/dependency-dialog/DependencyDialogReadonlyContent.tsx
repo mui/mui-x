@@ -11,13 +11,6 @@ import {
   getDependencyLag,
   getEffectiveDependencyLag,
 } from '@mui/x-scheduler-internals-premium/internals';
-import {
-  EventDialogForm,
-  EventDialogFormActions,
-  EventDialogHeader,
-  useEventEditingStyledContext,
-} from '@mui/x-scheduler/internals';
-import { useEventTimelinePremiumStyledContext } from '../../../EventTimelinePremiumStyledContext';
 import { getAllDayLagNote, getDependencyTypeLabel } from './dependencyDialogUtils';
 import {
   DependencyDialogBody,
@@ -25,6 +18,12 @@ import {
   DependencyDialogEndpoints,
 } from './DependencyDialogDetails';
 import type { DependencyDialogViewProps } from './DependencyDialogDetails';
+import {
+  DependencyDialogActions,
+  DependencyDialogForm,
+  DependencyDialogHeader,
+} from './DependencyDialogLayout';
+import { useEventTimelinePremiumStyledContext } from '../../../EventTimelinePremiumStyledContext';
 
 const DependencyDialogLagNote = styled('span', {
   name: 'MuiEventTimeline',
@@ -38,8 +37,7 @@ const DependencyDialogLagNote = styled('span', {
 export function DependencyDialogReadonlyContent(props: DependencyDialogViewProps) {
   const { dependency, titleId, dragHandlerRef, onClose } = props;
   const store = useEventTimelinePremiumStoreContext();
-  const { classes } = useEventEditingStyledContext();
-  const { localeText } = useEventTimelinePremiumStyledContext();
+  const { classes, localeText } = useEventTimelinePremiumStyledContext();
   const lag = getDependencyLag(dependency);
   const isTargetAllDay = useStore(
     store,
@@ -52,14 +50,14 @@ export function DependencyDialogReadonlyContent(props: DependencyDialogViewProps
   );
 
   return (
-    <EventDialogForm as="section" className={classes.eventDialogForm}>
-      <EventDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
-        <Typography variant="h6" id={titleId} className={classes.eventDialogTitle}>
+    <DependencyDialogForm as="section" className={classes.dependencyDialogForm}>
+      <DependencyDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
+        <Typography variant="h6" id={titleId} className={classes.dependencyDialogTitle}>
           {localeText.dependencyDetailsTitle}
         </Typography>
-      </EventDialogHeader>
-      <DependencyDialogBody>
-        <DependencyDialogDetails>
+      </DependencyDialogHeader>
+      <DependencyDialogBody className={classes.dependencyDialogBody}>
+        <DependencyDialogDetails className={classes.dependencyDialogDetails}>
           <DependencyDialogEndpoints {...props} />
           <Typography component="dt">{localeText.dependencyTypeLabel}</Typography>
           <Typography component="dd">
@@ -71,17 +69,19 @@ export function DependencyDialogReadonlyContent(props: DependencyDialogViewProps
               ? localeText.dependencyNoLag
               : localeText.dependencyLag(lag.amount, lag.unit)}
             {allDayLagNote !== null && (
-              <DependencyDialogLagNote>{allDayLagNote}</DependencyDialogLagNote>
+              <DependencyDialogLagNote className={classes.dependencyDialogLagNote}>
+                {allDayLagNote}
+              </DependencyDialogLagNote>
             )}
           </Typography>
         </DependencyDialogDetails>
       </DependencyDialogBody>
-      <Divider className={classes.eventDialogFormDivider} />
-      <EventDialogFormActions className={classes.eventDialogFormActions}>
+      <Divider className={classes.dependencyDialogDivider} />
+      <DependencyDialogActions className={classes.dependencyDialogActions}>
         <Button variant="contained" type="button" onClick={onClose}>
           {localeText.closeButtonLabel}
         </Button>
-      </EventDialogFormActions>
-    </EventDialogForm>
+      </DependencyDialogActions>
+    </DependencyDialogForm>
   );
 }
