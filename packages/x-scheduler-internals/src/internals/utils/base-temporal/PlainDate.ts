@@ -53,8 +53,7 @@ export declare namespace BaseTemporal {
     readonly eraYear: number | undefined;
     /**
      * The year in the calendar, which keeps counting down before its first era: the ISO year 0 is
-     * 1 BC. ISO years go from 0 to 9999, and calendar grids may include disabled days in years -1
-     * and 10000.
+     * 1 BC. ISO years go from 0 to 9999.
      */
     readonly year: number;
     /**
@@ -205,7 +204,7 @@ export function getWeekDayIndex(dayOfWeek: number, firstDayOfWeek: number): numb
 }
 
 /**
- * Allows calendar grids to include disabled days outside the supported years.
+ * Creates a date from a day number without validating fields, for `createPlainDate()`.
  */
 const UNVALIDATED = Symbol('unvalidated');
 
@@ -553,8 +552,7 @@ export class PlainDate implements BaseTemporal.PlainDate {
 }
 
 /**
- * Creates a date from a day number, which may be outside the supported days, as calendar grids
- * show around them.
+ * Creates a date from a day number, without checking that its calendar supports it.
  */
 export function createPlainDate(dayNumber: number, calendar: string): PlainDate {
   // Like the fields of a date, a day number that isn't finite throws. A fraction rounds down, to
@@ -643,26 +641,4 @@ function getItemDayNumber(item: PlainDateItem) {
     return item.dayNumber;
   }
   return readDate(item, 'constrain', 'PlainDate.compare()').dayNumber;
-}
-
-/**
- * Caches one `PlainDate` instance per day for a calendar grid, in the calendar it displays.
- */
-export class PlainDateCache {
-  private readonly dates = new Map<number, PlainDate>();
-
-  declare public readonly calendarId: string;
-
-  constructor(calendarId: string = ISO_CALENDAR_ID) {
-    this.calendarId = calendarId;
-  }
-
-  public get(dayNumber: number): PlainDate {
-    let date = this.dates.get(dayNumber);
-    if (date === undefined) {
-      date = createPlainDate(dayNumber, this.calendarId);
-      this.dates.set(dayNumber, date);
-    }
-    return date;
-  }
 }
