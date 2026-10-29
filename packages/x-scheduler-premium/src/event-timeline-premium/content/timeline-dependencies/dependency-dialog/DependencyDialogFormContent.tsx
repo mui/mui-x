@@ -26,13 +26,9 @@ import {
   getEffectiveDependencyLag,
 } from '@mui/x-scheduler-internals-premium/internals';
 import {
-  EventDialogForm,
-  EventDialogFormActions,
-  EventDialogHeader,
   focusFirstInvalid,
   SchedulerFormStore,
   schedulerFormSelectors,
-  useEventEditingStyledContext,
   useSchedulerFormField,
 } from '@mui/x-scheduler/internals';
 import { useEventTimelinePremiumStyledContext } from '../../../EventTimelinePremiumStyledContext';
@@ -54,6 +50,11 @@ import {
   DependencyDialogEndpoints,
 } from './DependencyDialogDetails';
 import type { DependencyDialogViewProps } from './DependencyDialogDetails';
+import {
+  DependencyDialogActions,
+  DependencyDialogForm,
+  DependencyDialogHeader,
+} from './DependencyDialogLayout';
 
 // Same right inset as the Type select, so both arrows line up.
 const DependencyDialogLag = styled(TextField, {
@@ -77,8 +78,7 @@ const DependencyDialogLagUnit = styled(Select, {
 export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
   const { dependency, titleId, dragHandlerRef, onClose } = props;
   const store = useEventTimelinePremiumStoreContext();
-  const { schedulerId, classes } = useEventEditingStyledContext();
-  const { localeText } = useEventTimelinePremiumStyledContext();
+  const { schedulerId, classes, localeText } = useEventTimelinePremiumStyledContext();
   const isTargetAllDay = useStore(
     store,
     (state) => schedulerEventSelectors.processedEvent(state, dependency.target)?.allDay ?? false,
@@ -187,14 +187,14 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
   };
 
   return (
-    <EventDialogForm onSubmit={handleSubmit} className={classes.eventDialogForm}>
-      <EventDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
-        <Typography variant="h6" id={titleId} className={classes.eventDialogTitle}>
+    <DependencyDialogForm onSubmit={handleSubmit} className={classes.dependencyDialogForm}>
+      <DependencyDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
+        <Typography variant="h6" id={titleId} className={classes.dependencyDialogTitle}>
           {localeText.dependencyEditTitle}
         </Typography>
-      </EventDialogHeader>
-      <DependencyDialogBody>
-        <DependencyDialogDetails>
+      </DependencyDialogHeader>
+      <DependencyDialogBody className={classes.dependencyDialogBody}>
+        <DependencyDialogDetails className={classes.dependencyDialogDetails}>
           <DependencyDialogEndpoints {...props} />
         </DependencyDialogDetails>
         <FormControl fullWidth size="small" error={typeField.error !== undefined}>
@@ -218,6 +218,7 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
         </FormControl>
         <DependencyDialogLag
           id={lagId}
+          className={classes.dependencyDialogLag}
           fullWidth
           size="small"
           label={localeText.dependencyLagLabel}
@@ -235,6 +236,7 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
               endAdornment: (
                 <InputAdornment position="end">
                   <DependencyDialogLagUnit
+                    className={classes.dependencyDialogLagUnit}
                     variant="standard"
                     disableUnderline
                     value={lagUnitField.value}
@@ -265,15 +267,15 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
           }}
         />
       </DependencyDialogBody>
-      <Divider className={classes.eventDialogFormDivider} />
-      <EventDialogFormActions className={classes.eventDialogFormActions}>
+      <Divider className={classes.dependencyDialogDivider} />
+      <DependencyDialogActions className={classes.dependencyDialogActions}>
         <Button color="error" type="button" onClick={handleDelete} disabled={isSubmitting}>
           {localeText.deleteDependency}
         </Button>
         <Button variant="contained" type="submit" disabled={isSubmitting}>
           {localeText.saveChanges}
         </Button>
-      </EventDialogFormActions>
-    </EventDialogForm>
+      </DependencyDialogActions>
+    </DependencyDialogForm>
   );
 }
