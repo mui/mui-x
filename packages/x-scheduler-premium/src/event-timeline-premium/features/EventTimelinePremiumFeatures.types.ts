@@ -15,6 +15,10 @@ export interface EventTimelinePremiumRecurringEventsFeature {
   optionalRenderers: EventEditingOptionalRenderers;
 }
 
+/**
+ * The value of `dependenciesFeature`.
+ * Its members are internal and can change: pass `dependenciesFeature` as is.
+ */
 export interface EventTimelinePremiumDependenciesFeature {
   /**
    * Holds the dependencies, keeps the successors after their predecessors, and creates, edits
