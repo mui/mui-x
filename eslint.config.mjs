@@ -259,14 +259,7 @@ export default defineConfig(
     },
   },
   {
-    files: [
-      `packages/x-charts{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-data-grid{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-date-pickers{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-scheduler{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-tree-view{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-chat{,-*}/**/*${EXTENSION_TS}`,
-    ],
+    files: [`packages/**/*${EXTENSION_TS}`],
     rules: {
       '@typescript-eslint/consistent-type-imports': [
         'error',
