@@ -107,7 +107,23 @@ Same changes as in `@mui/x-tree-view@9.16.1`.
 
 - Recurring events and dependencies are now opt-in in the Event Timeline. Without the feature, each event with an `rrule` renders once:
 
-  
+  ```diff
+  -<EventTimelinePremium events={events} />
+  +<EventTimelinePremium events={events} features={{ recurringEvents: recurringEventsFeature }} />
+  ```
+
+- The `dateLocale` prop and `createDateLocaleTheme()` take a locale string, like `Intl.DateTimeFormat`, instead of a `date-fns` locale object:
+
+  ```diff
+  -import { fr } from 'date-fns/locale/fr';
+  -<EventCalendar dateLocale={fr} />
+  +<EventCalendar dateLocale="fr-FR" />
+  ```
+
+- The `weekStartsOn` preference uses ISO weekdays, from `1` (Monday) to `7` (Sunday). Sunday is `7` instead of `0`.
+- Without `ampm`, times follow the hour cycle of the locale instead of a 12-hour clock, and `defaultPreferences` no longer includes `ampm: true`.
+- Dates use the `Intl.DateTimeFormat` formats of the locale, so some labels change slightly (for example "July 3" instead of "July 3rd"), and week numbers follow the locale.
+- Timed events shorter than one day that cross midnight now stay in the time grid by default, and the day grid row no longer shows a visible "All day" label. Use `timeGridEvents: 'same-day-only'` in `viewConfig.day` and `viewConfig.week` to keep the previous behavior.
 
 #### `@mui/x-scheduler@9.0.0-beta.15`
 
