@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { ScatterValueType } from '@mui/x-charts/models';
+import type { ScatterValueType } from '@mui/x-charts/models';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import {
-  ScatterChartPro,
-  ScatterChartProProps,
-} from '@mui/x-charts-pro/ScatterChartPro';
+import type { ScatterChartProProps } from '@mui/x-charts-pro/ScatterChartPro';
+import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import Slider from '@mui/material/Slider';
 import { globalCo2GdpPopulation } from '../dataset/globalCo2GdpPopulation';
 import { globalBirthPerWoman } from '../dataset/globalBirthsPerWoman';

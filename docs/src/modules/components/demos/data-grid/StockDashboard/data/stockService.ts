@@ -1,4 +1,4 @@
-import { StockData } from '../types/stocks';
+import type { StockData } from '../types/stocks';
 
 let stockData: Record<string, StockData> = {};
 

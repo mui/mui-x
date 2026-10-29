@@ -110,7 +110,11 @@ async function transpileFile(tsxPath, ignoreCache = false) {
       }
     }
 
-    const source = await fs.promises.readFile(tsxPath, 'utf8');
+    // `import type` statements are erased, but `retainLines` would leave their lines blank
+    const source = (await fs.promises.readFile(tsxPath, 'utf8')).replace(
+      /^import type [^;]*;\r?\n/gm,
+      '',
+    );
     const overrides = previewOverride[path.join('docs/', tsxPath.split('docs/')[1])];
 
     const transformOptions = { ...babelConfig, filename: tsxPath };

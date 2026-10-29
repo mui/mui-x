@@ -1,11 +1,11 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import type { GridCellParams } from '@mui/x-data-grid-pro';
 import {
   DataGridPro,
   useGridApiRef,
   gridVisibleColumnDefinitionsSelector,
   gridExpandedSortedRowIdsSelector,
-  GridCellParams,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 

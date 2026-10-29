@@ -8,7 +8,7 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import { BarSeriesType, LineSeriesType } from '@mui/x-charts/models';
+import type { BarSeriesType, LineSeriesType } from '@mui/x-charts/models';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 
 const dataset = [

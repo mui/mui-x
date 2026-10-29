@@ -1,23 +1,23 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import {
-  eventTimelinePremiumClasses,
+import type {
   EventTimelinePremiumFeatures,
   EventTimelinePremiumProps as BaseEventTimelinePremiumProps,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { eventTimelinePremiumClasses } from '@mui/x-scheduler-premium/event-timeline-premium';
+import type { dependenciesFeature } from '@mui/x-scheduler-premium/internals';
 import {
   EventTimelinePremiumContent,
   EventTimelinePremiumStyledContext,
   EventTimelinePremiumFeaturesContext,
-  dependenciesFeature,
   useFrozenEventTimelinePremiumFeatures,
 } from '@mui/x-scheduler-premium/internals';
 import {
   useEventTimelinePremium,
   useExtractEventTimelinePremiumParameters,
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
-import { SchedulerDependenciesParameters } from '@mui/x-scheduler-internals-premium/models';
+import type { SchedulerDependenciesParameters } from '@mui/x-scheduler-internals-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   ErrorContainer,

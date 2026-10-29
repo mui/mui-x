@@ -259,7 +259,11 @@ export default defineConfig(
     },
   },
   {
-    files: [`packages/**/*${EXTENSION_TS}`],
+    files: [
+      `packages/**/*${EXTENSION_TS}`,
+      `docs/**/*${EXTENSION_TS}`,
+      `scripts/**/*${EXTENSION_TS}`,
+    ],
     rules: {
       '@typescript-eslint/consistent-type-imports': [
         'error',

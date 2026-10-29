@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGridPro, useGridApiRef, GridFilterModel } from '@mui/x-data-grid-pro';
+import type { GridFilterModel } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';

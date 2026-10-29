@@ -8,10 +8,10 @@ import {
   GridChartsRendererProxy,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
+import type { ChartsRendererProps } from '@mui/x-charts-premium/ChartsRenderer';
 import {
   ChartsRenderer,
   configurationOptions,
-  ChartsRendererProps,
 } from '@mui/x-charts-premium/ChartsRenderer';
 
 function processPrompt(prompt: string, context: string, conversationId?: string) {

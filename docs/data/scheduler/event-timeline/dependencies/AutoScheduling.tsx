@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
-import { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import { dependenciesFeature } from '@mui/x-scheduler-premium/internals';
 import { EventTimelinePremium } from './shared/DependenciesTimeline';
 

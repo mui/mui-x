@@ -1,7 +1,7 @@
 import * as React from 'react';
+import type { GridEventListener } from '@mui/x-data-grid';
 import {
   DataGrid,
-  GridEventListener,
   GridFooter,
   useGridEvent,
   useGridApiContext,

@@ -1,4 +1,4 @@
-import { Dayjs } from 'dayjs';
+import type { Dayjs } from 'dayjs';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -8,14 +8,14 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
+import type { PickersLayoutProps } from '@mui/x-date-pickers/PickersLayout';
 import {
-  PickersLayoutProps,
   usePickerLayout,
   pickersLayoutClasses,
   PickersLayoutRoot,
   PickersLayoutContentWrapper,
 } from '@mui/x-date-pickers/PickersLayout';
-import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
+import type { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
 
 function ActionList(props: PickersActionBarProps) {

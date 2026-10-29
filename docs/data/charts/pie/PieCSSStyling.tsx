@@ -1,4 +1,5 @@
-import { pieClasses, PieChart, PieChartProps } from '@mui/x-charts/PieChart';
+import type { PieChartProps } from '@mui/x-charts/PieChart';
+import { pieClasses, PieChart } from '@mui/x-charts/PieChart';
 import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
 import { useTheme } from '@mui/material/styles';
 

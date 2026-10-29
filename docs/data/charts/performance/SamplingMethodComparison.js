@@ -2,7 +2,6 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
-
 import { electricityGeneration2024Hourly } from '../dataset/electricityGeneration2024Hourly';
 
 // Real dataset: average electricity generation (MW) for every hour of 2024 (8,784 points).

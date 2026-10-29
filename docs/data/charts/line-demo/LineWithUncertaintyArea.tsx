@@ -1,11 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import {
-  AnimatedLine,
-  AnimatedLineProps,
-  LinePlot,
-  MarkPlot,
-} from '@mui/x-charts/LineChart';
+import type { AnimatedLineProps } from '@mui/x-charts/LineChart';
+import { AnimatedLine, LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
@@ -20,8 +16,9 @@ import {
   useYScale,
 } from '@mui/x-charts/hooks';
 import * as d3Shape from '@mui/x-charts-vendor/d3-shape';
-import { SxProps } from '@mui/system';
-import { useTheme, Theme } from '@mui/material/styles';
+import type { SxProps } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 
 interface CustomAnimatedLineProps extends AnimatedLineProps {
   limit?: number;

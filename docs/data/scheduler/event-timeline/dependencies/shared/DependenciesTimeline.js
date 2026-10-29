@@ -12,7 +12,6 @@ import {
   useEventTimelinePremium,
   useExtractEventTimelinePremiumParameters,
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
-
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   ErrorContainer,

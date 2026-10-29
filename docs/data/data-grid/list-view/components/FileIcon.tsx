@@ -1,10 +1,11 @@
 import * as React from 'react';
-import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
+import type { SvgIconProps } from '@mui/material/SvgIcon';
+import SvgIcon from '@mui/material/SvgIcon';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import ImageIcon from '@mui/icons-material/Image';
 import FolderZipIcon from '@mui/icons-material/FolderZip';
-import { FileType } from '../types';
+import type { FileType } from '../types';
 
 const FILE_TYPE_ICONS = {
   video: {

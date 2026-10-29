@@ -1,6 +1,6 @@
+import type { GridRowCountProps } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
-  GridRowCountProps,
   useGridApiRef,
   useGridSelector,
   useKeepGroupedColumnsHidden,

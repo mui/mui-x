@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 import { eventTimelinePremiumClasses } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
   EventTimelinePremiumContent,
@@ -8,11 +8,9 @@ import {
   dependenciesFeature,
   useFrozenEventTimelinePremiumFeatures,
 } from '@mui/x-scheduler-premium/internals';
-import {
-  useEventTimelinePremium,
-  EventTimelinePremiumStoreParameters,
-} from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
-import { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
+import type { EventTimelinePremiumStoreParameters } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
+import { useEventTimelinePremium } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
+import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   ErrorContainer,

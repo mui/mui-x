@@ -1,11 +1,11 @@
 import * as React from 'react';
-import {
-  DataGrid,
+import type {
   GridRowModel,
   GridColDef,
   GridRowId,
   GridRowsProp,
 } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
   randomTraderName,
@@ -17,7 +17,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
-import Alert, { AlertProps } from '@mui/material/Alert';
+import type { AlertProps } from '@mui/material/Alert';
+import Alert from '@mui/material/Alert';
 
 interface User {
   name: string;
