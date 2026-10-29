@@ -2,7 +2,7 @@ import transformTreeView from '../tree-view/preset-safe';
 import transformPickers from '../pickers/preset-safe';
 import transformCharts from '../charts/preset-safe';
 import transformDataGrid from '../data-grid/preset-safe';
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../types';
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   file.source = transformTreeView(file, api, options);

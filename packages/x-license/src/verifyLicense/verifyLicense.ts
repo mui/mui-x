@@ -1,16 +1,14 @@
 import { base64Decode } from '../encoding/base64';
 import { md5 } from '../encoding/md5';
-import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
-import {
-  PlanScope,
-  PLAN_SCOPES,
-  PlanVersion,
-  isPlanVersionOlderOrEqual,
-} from '../utils/licensePlan';
+import type { LicenseStatus } from '../utils/licenseStatus';
+import { LICENSE_STATUS } from '../utils/licenseStatus';
+import type { PlanScope, PlanVersion } from '../utils/licensePlan';
+import { PLAN_SCOPES, isPlanVersionOlderOrEqual } from '../utils/licensePlan';
 import type { AppType } from '../utils/licenseAppType';
-import { LicenseModel, LICENSE_MODELS } from '../utils/licenseModel';
+import type { LicenseModel } from '../utils/licenseModel';
+import { LICENSE_MODELS } from '../utils/licenseModel';
 import type { NullableLicenseDetails } from '../utils/licenseDetails';
-import { MuiCommercialPackageName, CommercialPackageInfo } from '../utils/commercialPackages';
+import type { MuiCommercialPackageName, CommercialPackageInfo } from '../utils/commercialPackages';
 
 function isPlanScopeSufficient(packageName: MuiCommercialPackageName, planScope: PlanScope) {
   let acceptedScopes: PlanScope[];

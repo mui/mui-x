@@ -1,14 +1,14 @@
-import { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
-import {
-  Gesture,
+import type { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
+import type {
   GestureEventData,
   GestureOptions,
+  Gesture,
   type BaseGestureOptions,
   type PointerMode,
 } from './Gesture';
 import type { KeyboardManager } from './KeyboardManager';
-import { PointerData, PointerManager } from './PointerManager';
-import { TargetElement } from './types/TargetElement';
+import type { PointerData, PointerManager } from './PointerManager';
+import type { TargetElement } from './types/TargetElement';
 
 /**
  * Base configuration options that can be overridden per pointer mode.

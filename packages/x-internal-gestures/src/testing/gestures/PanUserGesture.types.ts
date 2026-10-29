@@ -1,4 +1,4 @@
-import { Pointers, type MousePointer, type PointerType } from '../types/Pointers';
+import type { Pointers, type MousePointer, type PointerType } from '../types/Pointers';
 
 export type PanUserGestureOptions<P extends PointerType> = {
   /**

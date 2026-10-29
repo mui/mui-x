@@ -1,4 +1,4 @@
-import { PointerManager } from '../PointerManager';
+import type { PointerManager } from '../PointerManager';
 
 export type UserGesturePlugin<Options extends Record<string, any> = any> = {
   /**
