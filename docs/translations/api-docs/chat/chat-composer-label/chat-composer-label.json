@@ -4,8 +4,14 @@
     "children": {
       "description": "Label text. Falls back to the locale text <code>composerInputAriaLabel</code> when omitted, so the default is consistent with the textarea&#39;s <code>aria-label</code>."
     },
+    "classes": { "description": "Override or extend the styles applied to the component." },
     "htmlFor": {
       "description": "The <code>id</code> of the textarea this label is associated with. Passed directly to the native <code>htmlFor</code> attribute. When provided, the label is semantically linked to the textarea so that clicking the label focuses the input and screen readers announce it on focus."
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     }
   },
   "classDescriptions": {

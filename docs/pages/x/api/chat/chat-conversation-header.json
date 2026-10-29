@@ -1,5 +1,14 @@
 {
-  "props": {},
+  "props": {
+    "children": { "type": { "name": "node" } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ChatConversationHeader",
   "imports": [
     "import { ChatConversationHeader } from '@mui/x-chat/ChatConversation';",

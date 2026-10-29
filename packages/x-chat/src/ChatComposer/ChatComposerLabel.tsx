@@ -14,7 +14,13 @@ const useThemeProps = createUseThemeProps('MuiChatComposerLabel');
 
 export interface ChatComposerLabelProps extends ComposerLabelProps {
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<ChatComposerClasses>;
 }
 
@@ -70,6 +76,9 @@ ChatComposerLabel.propTypes /* remove-proptypes */ = {
    * omitted, so the default is consistent with the textarea's `aria-label`.
    */
   children: PropTypes.node,
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
@@ -79,8 +88,19 @@ ChatComposerLabel.propTypes /* remove-proptypes */ = {
    * clicking the label focuses the input and screen readers announce it on focus.
    */
   htmlFor: PropTypes.string,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

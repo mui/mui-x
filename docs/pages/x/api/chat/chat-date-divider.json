@@ -1,5 +1,16 @@
 {
   "props": {
+    "messageId": { "type": { "name": "string" }, "required": true },
+    "formatDate": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(date: Date) => React.ReactNode",
+        "describedArgs": ["date"],
+        "returned": "React.ReactNode"
+      }
+    },
+    "index": { "type": { "name": "number" } },
+    "items": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "shouldShowDivider": {
       "type": { "name": "func" },
       "default": "Renders when `message.createdAt` falls on a different UTC\ncalendar day than the previous message's.",
@@ -15,6 +26,19 @@
         ],
         "returned": "boolean"
       }
+    },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
     }
   },
   "name": "ChatDateDivider",

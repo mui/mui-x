@@ -1,5 +1,13 @@
 {
-  "props": {},
+  "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ChatMessageAuthorLabel",
   "imports": [
     "import { ChatMessageAuthorLabel } from '@mui/x-chat/ChatMessage';",

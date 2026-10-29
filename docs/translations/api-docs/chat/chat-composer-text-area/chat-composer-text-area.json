@@ -1,8 +1,14 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
     "maxRows": {
       "description": "Maximum number of rows the textarea can expand to before it starts scrolling. When set, the textarea starts at 1 row and auto-grows up to <code>maxRows</code>."
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     }
   },
   "classDescriptions": {

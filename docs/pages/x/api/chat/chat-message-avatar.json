@@ -1,5 +1,12 @@
 {
-  "props": {},
+  "props": {
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ChatMessageAvatar",
   "imports": [
     "import { ChatMessageAvatar } from '@mui/x-chat/ChatMessage';",

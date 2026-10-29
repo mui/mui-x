@@ -1,8 +1,17 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "children": { "description": "The content of the component." },
     "groupKey": {
       "description": "A function that maps a message to a group key. Messages that resolve to the same key are visually grouped (shared avatar, author name, etc.). Use <code>createTimeWindowGroupKey(windowMs)</code> to replicate time-window-based grouping."
+    },
+    "index": { "description": "The index of the row in <code>items</code>." },
+    "items": { "description": "The ids of the messages in the list, in order." },
+    "messageId": { "description": "The id of the message this row belongs to." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     }
   },
   "classDescriptions": {}

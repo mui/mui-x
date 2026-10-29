@@ -4,17 +4,42 @@
       "type": { "name": "union", "description": "{ buffer?: number }<br>&#124;&nbsp;bool" },
       "default": "true"
     },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "enableRovingFocus": { "type": { "name": "bool" }, "default": "true" },
+    "estimatedItemSize": { "type": { "name": "number" }, "default": "84" },
     "features": {
       "type": {
         "name": "shape",
         "description": "{ dateDivider?: bool, streamingIndicator?: 'auto'<br>&#124;&nbsp;bool, unreadMarker?: bool }"
       }
     },
+    "getItemKey": {
+      "type": { "name": "func" },
+      "default": "(id) => id",
+      "signature": {
+        "type": "function(id: string, index: number) => React.Key",
+        "describedArgs": ["id", "index"],
+        "returned": "React.Key"
+      }
+    },
+    "items": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "onReachBottom": { "type": { "name": "func" } },
     "onReachTop": { "type": { "name": "func" } },
     "overlay": { "type": { "name": "node" }, "default": "null" },
-    "renderItem": { "type": { "name": "func" } }
+    "renderItem": { "type": { "name": "func" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    }
   },
   "name": "ChatMessageList",
   "imports": [

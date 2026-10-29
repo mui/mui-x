@@ -36,6 +36,9 @@ export interface ChatMessageExtraAction {
 
 export interface ChatMessageActionsProps extends MessageActionsProps {
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
   /**
    * Declarative action buttons appended after `children`. Lets consumers add
@@ -335,8 +338,19 @@ ChatMessageActions.propTypes /* remove-proptypes */ = {
     ]),
     updatedAt: PropTypes.string,
   }),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

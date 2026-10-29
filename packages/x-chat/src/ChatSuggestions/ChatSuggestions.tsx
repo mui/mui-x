@@ -14,7 +14,13 @@ const useThemeProps = createUseThemeProps('MuiChatSuggestions');
 
 export interface ChatSuggestionsProps extends SuggestionsRootProps {
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<ChatSuggestionsClasses>;
 }
 
@@ -103,10 +109,24 @@ ChatSuggestions.propTypes /* remove-proptypes */ = {
    * @default false
    */
   autoSubmit: PropTypes.bool,
+  /**
+   * The suggestions to render, instead of `suggestions`.
+   */
   children: PropTypes.node,
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
   /**
    * Suggestion items. Strings are normalized to `{ value, label }`.
@@ -121,6 +141,9 @@ ChatSuggestions.propTypes /* remove-proptypes */ = {
       PropTypes.string,
     ]).isRequired,
   ),
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

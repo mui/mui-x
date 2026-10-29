@@ -1,5 +1,15 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "scrollBehavior": {
+      "description": "The scroll behavior used when the button scrolls to the bottom."
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    }
+  },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } }
 }
