@@ -1,11 +1,7 @@
-import {
-  EventCalendarParameters,
-  EventCalendarStore,
-} from '@mui/x-scheduler-internals/use-event-calendar';
-import {
-  EventTimelinePremiumStoreParameters,
-  EventTimelinePremiumStore,
-} from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
+import type { EventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
+import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
+import type { EventTimelinePremiumStoreParameters } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
+import { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import { adapter } from './adapters';
 import { EventTimelinePremiumStoreWithFeatures } from './storeClasses';
 import { ResourceBuilder } from './resource-builder';
