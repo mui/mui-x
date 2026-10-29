@@ -263,7 +263,16 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
       let hasScrollX = false;
       let hasScrollY = false;
 
-      if (params.dimensions.autoHeight) {
+      if (store.state.scrolling.external) {
+        viewportOuterSize = store.state.scrolling.viewportSize;
+        hasScrollX =
+          !store.state.scrolling.bothAxes &&
+          columnsTotalWidth > (containerNode?.clientWidth ?? rootSize.width);
+        viewportInnerSize = {
+          width: viewportOuterSize.width,
+          height: store.state.scrolling.rowViewportHeight,
+        };
+      } else if (params.dimensions.autoHeight) {
         hasScrollY = false;
         hasScrollX = Math.round(columnsTotalWidth) > Math.round(rootSize.width);
 
@@ -385,7 +394,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
         rightPinnedWidth,
         topContainerHeight,
         bottomContainerHeight,
-        autoHeight: params.dimensions.autoHeight,
+        autoHeight: !store.state.scrolling.external && params.dimensions.autoHeight,
         minimalContentHeight: params.dimensions.minimalContentHeight,
       };
 
@@ -470,7 +479,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
     store.update({
       dimensions: {
         ...store.state.dimensions,
-        autoHeight: params.dimensions.autoHeight,
+        autoHeight: !store.state.scrolling.external && params.dimensions.autoHeight,
         minimalContentHeight: params.dimensions.minimalContentHeight,
       },
     });
