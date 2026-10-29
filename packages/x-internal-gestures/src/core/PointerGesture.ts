@@ -1,11 +1,6 @@
 import type { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
-import type {
-  GestureEventData,
-  GestureOptions,
-  Gesture,
-  type BaseGestureOptions,
-  type PointerMode,
-} from './Gesture';
+import type { GestureEventData, GestureOptions, BaseGestureOptions, PointerMode } from './Gesture';
+import { Gesture } from './Gesture';
 import type { KeyboardManager } from './KeyboardManager';
 import type { PointerData, PointerManager } from './PointerManager';
 import type { TargetElement } from './types/TargetElement';
