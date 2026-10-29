@@ -246,6 +246,7 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/react-data-grid/virtualization' },
           { pathname: '/x/react-data-grid/accessibility' },
+          { pathname: '/x/react-data-grid/keyboard-reordering', plan: 'pro' },
           { pathname: '/x/react-data-grid/localization' },
         ],
       },
