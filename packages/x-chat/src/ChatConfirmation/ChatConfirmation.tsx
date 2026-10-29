@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import useId from '@mui/utils/useId';
 import type { SxProps, Theme } from '@mui/system';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatConfirmationUtilityClasses } from './chatConfirmationClasses';
@@ -157,7 +158,7 @@ const ChatConfirmation = React.forwardRef<HTMLDivElement, ChatConfirmationProps>
       ...other
     } = props;
     const classes = useChatConfirmationUtilityClasses(classesProp);
-    const messageId = React.useId();
+    const messageId = useId();
 
     return (
       <ChatConfirmationRoot
