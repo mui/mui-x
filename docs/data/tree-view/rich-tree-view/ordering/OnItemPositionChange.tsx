@@ -1,9 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import {
-  RichTreeViewPro,
-  RichTreeViewProProps,
-} from '@mui/x-tree-view-pro/RichTreeViewPro';
+import type { RichTreeViewProProps } from '@mui/x-tree-view-pro/RichTreeViewPro';
+import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { MUI_X_PRODUCTS } from '../../datasets/products';

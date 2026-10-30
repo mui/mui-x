@@ -1,4 +1,4 @@
-import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
+import type { MuiPickersAdapter } from '@mui/x-date-pickers/models';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';

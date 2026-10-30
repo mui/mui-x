@@ -1,5 +1,6 @@
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
-import { PreRequisiteUsage, checkPreRequisitesSatisfied } from '../../../util/renameIdentifiers';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { PreRequisiteUsage } from '../../../util/renameIdentifiers';
+import { checkPreRequisitesSatisfied } from '../../../util/renameIdentifiers';
 
 const renamedSelectors = {
   gridSelectionStateSelector: 'gridRowSelectionStateSelector',

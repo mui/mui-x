@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
+import type { Dayjs } from 'dayjs';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
@@ -9,17 +9,15 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { DateField } from '@mui/x-date-pickers/DateField';
+import type { PickersLayoutProps } from '@mui/x-date-pickers/PickersLayout';
 import {
-  PickersLayoutProps,
   PickersLayoutRoot,
   PickersLayoutContentWrapper,
   pickersLayoutClasses,
   usePickerLayout,
 } from '@mui/x-date-pickers/PickersLayout';
-import {
-  DatePickerToolbar,
-  DatePickerToolbarProps,
-} from '@mui/x-date-pickers/DatePicker';
+import type { DatePickerToolbarProps } from '@mui/x-date-pickers/DatePicker';
+import { DatePickerToolbar } from '@mui/x-date-pickers/DatePicker';
 import { usePickerContext } from '@mui/x-date-pickers/hooks';
 
 interface KeyboardViewToolbarProps extends DatePickerToolbarProps {

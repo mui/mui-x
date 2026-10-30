@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-
 import {
   createChunkStream,
   createTextResponseChunks,

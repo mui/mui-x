@@ -2,7 +2,6 @@ import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { randomData } from './randomData';
 

@@ -7,7 +7,6 @@ import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { ChatBox } from '@mui/x-chat';
-
 import { demoUsers } from 'docs/data/chat/core/examples/shared/demoData';
 import { createChunkStream } from 'docs/data/chat/core/examples/shared/demoUtils';
 

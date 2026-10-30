@@ -1,11 +1,13 @@
 /** Async codegen tool: POST + SSE GET, buffered into `{ threadId, files, explanation }`. */
-import { z } from 'zod';
+import type { z } from 'zod';
 import type { Logger, ToolOverrides } from '../types';
 import { createAuthedFetch } from '../auth/authed-fetch';
 import { wrapTool } from '../utils/wrap-tool';
-import { generateResponseSchema, inputSchema, outputSchema, type MuiPairing } from './schemas';
+import { generateResponseSchema, inputSchema, outputSchema } from './schemas';
+import type { MuiPairing } from './schemas';
 import { safeJson, translateBackendError } from './errors';
-import { consumeCodegenStream, type CodegenProgressEvent } from './stream';
+import { consumeCodegenStream } from './stream';
+import type { CodegenProgressEvent } from './stream';
 
 export const CODEGEN_GENERATE_PATH = '/v1/codegen/generate';
 export const codegenRunPath = (runId: string): string =>

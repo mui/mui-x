@@ -381,7 +381,10 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
       // Atomic veto: nothing applied, the rejection returned rather than pushed as a toast.
       expect(result.applied).to.equal(false);
-      expect((result as { rejection: Error }).rejection.message).to.include('"Blocked successor"');
+      expect(result).to.deep.equal({
+        applied: false,
+        rejection: { code: 'readOnlyEventMovedError', params: { title: 'Blocked successor' } },
+      });
       expect(onEventsChange.mock.calls.length).to.equal(0);
       expect(store.state.errors).to.have.length(0);
     });
@@ -538,10 +541,10 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         result = store.updateEvent({ id: 'a', end: date('2025-07-03T10:30:00Z') });
       }).toWarnDev([cascadeNotWritableWarning('start')]);
 
-      expect(result!.applied).to.equal(false);
-      expect((result! as Extract<typeof result, { applied: false }>).rejection.message).to.equal(
-        `This change would move the event "${eventB.title}", whose dates can't be edited, so it was not applied.`,
-      );
+      expect(result!).to.deep.equal({
+        applied: false,
+        rejection: { code: 'unwritableEventMovedError', params: { title: eventB.title } },
+      });
       expect(onEventsChange.mock.calls.length).to.equal(0);
     });
 
@@ -841,8 +844,9 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(result).to.equal(null);
       expect(onEventsChange.mock.calls.length).to.equal(0);
       expect(store.state.copiedEvent).not.to.equal(null);
-      expect(store.state.errors).to.have.length(1);
-      expect(store.state.errors[0].error.message).to.include('"Blocked successor"');
+      expect(store.state.errors).to.deep.equal([
+        { code: 'readOnlyEventMovedError', params: { title: 'Blocked successor' }, key: '1' },
+      ]);
     });
 
     it('should return the pasted event when a cut paste cascades into its successor', () => {

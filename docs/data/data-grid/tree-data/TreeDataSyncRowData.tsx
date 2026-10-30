@@ -1,9 +1,6 @@
 import * as React from 'react';
-import {
-  DataGridPro,
-  useGridApiRef,
-  type DataGridProProps,
-} from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import type { DataGridProProps } from '@mui/x-data-grid-pro';
 import Button from '@mui/material/Button';
 import { TreeDataSyncRowDataGroupingCell } from './utils/TreeDataSyncRowDataGroupingCell';
 import { DataStore } from './utils/DataStore';

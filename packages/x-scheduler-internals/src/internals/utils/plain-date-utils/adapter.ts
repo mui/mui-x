@@ -47,15 +47,6 @@ export function createStartOfPlainDate(
 }
 
 /**
- * Creates the adapter value of the midnight of a plain date in UTC, to format the date or read the
- * fields that depend on the locale, like its week number. UTC skips no date, unlike a timezone that
- * skips a midnight or a whole date, like December 30th, 2011 in Pacific/Apia.
- */
-export function createLabelDate(adapter: Adapter, plainDate: PlainDate): TemporalSupportedObject {
-  return createStartOfPlainDate(adapter, plainDate, 'UTC');
-}
-
-/**
  * Creates the adapter value of the last instant of a plain date in `timezone`, just before the next
  * day starts. When a DST transition repeats the last hour of the day, it's the later 23:59:59.999.
  */

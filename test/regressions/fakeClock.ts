@@ -1,7 +1,8 @@
 // `test/regressions` renders in a plain Vite app driven by Playwright, not in a Vitest
 // context, so `vi.useFakeTimers` is not available here. Use the fake-timers package
 // Vitest itself is built on.
-import { install, type Clock, type FakeMethod } from '@sinonjs/fake-timers';
+import { install } from '@sinonjs/fake-timers';
+import type { Clock, FakeMethod } from '@sinonjs/fake-timers';
 
 // Use a "real timestamp" so that we see a useful date instead of "00:00"
 const DEFAULT_TIMESTAMP = '2014-08-18T14:11:54-05:00';

@@ -104,12 +104,18 @@ GridActionsCellItem.propTypes /* remove-proptypes */ = {
    * from https://mui.com/material-ui/api/button-base/#ButtonBase-prop-component
    */
   component: PropTypes.elementType,
+  /**
+   * If `true`, the button is disabled.
+   */
   disabled: PropTypes.bool,
   /**
    * The URL to link to. If set, and `component` is not set, the component renders as an anchor tag.
    */
   href: PropTypes.string,
   icon: PropTypes /* @typescript-to-proptypes-ignore */.element,
+  /**
+   * The label of the button.
+   */
   label: PropTypes.node,
   /**
    * The relationship of the linked URL.

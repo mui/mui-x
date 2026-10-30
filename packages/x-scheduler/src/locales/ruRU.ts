@@ -111,6 +111,22 @@ const ruRUDialog: SchedulerDialogTranslations = {
   radioGroupAriaLabel: 'Редактирование повторяющихся событий',
   thisAndFollowing: 'Это и последующие события',
   title: 'К каким событиям применить изменение:',
+
+  // Errors
+  // somethingWentWrongError: 'Something went wrong. Try again.',
+  // eventNotLoadedError: 'This event is still being saved, so the change was not applied. Try again once it is saved.',
+  // eventChangedWhileConfirmingError: 'This event changed while the delete confirmation was open, so the deletion was not applied. Try deleting it again.',
+  // datesNotWritableError: "This date can't be changed, so the change was not applied.",
+  // eventNotCreatableError: "This can't be saved as a new event, so the change was not applied.",
+  // readOnlyEventMovedError: title => `This change would move the read-only event "${title}", so it was not applied.`,
+  // unwritableEventMovedError: title => `This change would move the event "${title}", whose dates can't be edited, so it was not applied.`,
+  // dependencyCascadeBlockedError: 'This dependency would move a read-only event, so it was not created.',
+  // dependencyDatesNotWritableError: "This dependency would move an event whose dates can't be changed, so it was not created.",
+  // dependencyCycleError: 'This dependency would create a cycle between events.',
+  // dependencyDuplicateError: 'A dependency of this type already exists between these two events.',
+  // dependencyRecurringEventError: 'Dependencies cannot involve recurring events.',
+  // dependencyReadOnlyError: 'Dependencies cannot be changed while the scheduler is read-only.',
+  // dependencyUnknownEventError: 'This dependency cannot be created because one of its events no longer exists.',
 };
 
 const ruRUEvent: SchedulerEventTranslations = {
@@ -145,6 +161,7 @@ const ruRUCalendar: SchedulerCalendarTranslations = {
   months: 'Месяцы',
   weeks: 'Недели',
   years: 'Годы',
+  // viewSwitcherAriaLabel: 'Views',
 
   // DateNavigator
   closeSidePanel: 'Закрыть боковую панель',
@@ -221,6 +238,55 @@ const ruRUCalendar: SchedulerCalendarTranslations = {
 const ruRUTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Название ресурса',
+
+  // Dependency dialog
+  // dependencyEditTitle: 'Edit dependency',
+  // dependencyDetailsTitle: 'Dependency details',
+  // dependencySourceLabel: 'From',
+  // dependencyTargetLabel: 'To',
+  // dependencyTypeLabel: 'Type',
+  // dependencyLagLabel: 'Lag',
+  // dependencyLagUnitAriaLabel: 'Lag unit',
+  // dependencyNoLag: 'None',
+  // dependencyInvalidLagError: 'Enter a whole number, 0 or more.',
+  // dependencyAllDayLagIgnored: 'An all-day event can only wait whole days, so this lag adds no wait.',
+  // dependencyAllDayLagRounded: lag => `An all-day event can only wait whole days: ${lag}.`,
+  // dependencyUpdateCascadeBlockedError: 'This change would move a read-only event, so it was not applied.',
+  // dependencyUpdateDatesNotWritableError: "This change would move an event whose dates can't be changed, so it was not applied.",
+  // dependencyUpdateNotFoundError: 'This dependency no longer exists.',
+  // dependencyTypeFinishToStart: 'Finish to start',
+  // dependencyTypeStartToStart: 'Start to start',
+  // dependencyTypeFinishToFinish: 'Finish to finish',
+  // dependencyTypeStartToFinish: 'Start to finish',
+  // dependencyLagUnitMinutes: 'minutes',
+  // dependencyLagUnitHours: 'hours',
+  // dependencyLagUnitDays: 'days',
+  // dependencyLagUnitWeeks: 'weeks',
+  // dependencyLag: (amount, unit) => `${amount} ${unit}${amount === 1 ? '' : 's'}`,
+
+  // Dependency context menu and dialog actions
+  // dependencyActionsAriaLabel: 'Dependency actions',
+  // editDependency: 'Edit dependency',
+  // showDependencyDetails: 'Show details',
+  // deleteDependency: 'Delete',
+
+  // Accessible description of an event that waits on dependencies
+  // dependencyFinishToStartDescription: ({
+  //   title,
+  //   lag
+  // }) => `Cannot start until ${lag === null ? '' : `${lag} after `}${title} finishes.`,
+  // dependencyStartToStartDescription: ({
+  //   title,
+  //   lag
+  // }) => `Cannot start until ${lag === null ? '' : `${lag} after `}${title} starts.`,
+  // dependencyFinishToFinishDescription: ({
+  //   title,
+  //   lag
+  // }) => `Cannot finish until ${lag === null ? '' : `${lag} after `}${title} finishes.`,
+  // dependencyStartToFinishDescription: ({
+  //   title,
+  //   lag
+  // }) => `Cannot finish until ${lag === null ? '' : `${lag} after `}${title} starts.`,
 };
 
 export const ruRU: SchedulerLocalization = getSchedulerLocalization({

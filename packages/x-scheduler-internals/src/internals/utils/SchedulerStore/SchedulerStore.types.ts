@@ -22,20 +22,41 @@ import type {
   SchedulerEventDeletionConfig,
   RecurringEventScope,
 } from '../../../models';
-import type { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
+import type { Adapter } from '../../../use-adapter/useAdapter.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 
-export interface StoredError {
-  /**
-   * The error itself. Non-Error rejections are wrapped, preserving the original via `cause`.
-   */
-  error: Error;
+/**
+ * The user-facing errors whose message needs no params. Every code is a `localeText` key, so the
+ * UI shows the error in the user's language.
+ */
+export type SchedulerUserFacingErrorCode =
+  | 'somethingWentWrongError'
+  | 'eventNotLoadedError'
+  | 'eventChangedWhileConfirmingError'
+  | 'datesNotWritableError'
+  | 'eventNotCreatableError'
+  | 'dependencyCascadeBlockedError'
+  | 'dependencyDatesNotWritableError'
+  | 'dependencyCycleError'
+  | 'dependencyDuplicateError'
+  | 'dependencyRecurringEventError'
+  | 'dependencyReadOnlyError'
+  | 'dependencyUnknownEventError';
+
+/**
+ * An error to show to the user: a `localeText` key and the params its message needs.
+ */
+export type SchedulerUserFacingErrorDescriptor =
+  | { code: SchedulerUserFacingErrorCode; params?: undefined }
+  | { code: 'readOnlyEventMovedError' | 'unwritableEventMovedError'; params: { title: string } };
+
+export type UserFacingError = SchedulerUserFacingErrorDescriptor & {
   /**
    * Stable identifier assigned at push time. Suitable as a React key and as the
    * argument to `store.dismissError(key)`.
    */
   key: string;
-}
+};
 
 /**
  * Which face the edited occurrence is in:
@@ -70,6 +91,10 @@ export interface SchedulerState<TEvent extends object = any> {
    * Not publicly exposed, is only set in state to avoid passing it to the selectors.
    */
   adapter: Adapter;
+  /**
+   * The locale the dates are formatted in.
+   */
+  dateLocale: string;
   /**
    * The date used to determine the visible date range.
    */
@@ -227,7 +252,7 @@ export interface SchedulerState<TEvent extends object = any> {
    * Each entry carries a stable `key` assigned at push time so the UI can use it
    * directly as a React key and as the argument to `store.dismissError(key)`.
    */
-  errors: readonly StoredError[];
+  errors: readonly UserFacingError[];
   /**
    * Plugin that provides recurring-events support. `null` when not attached.
    */
@@ -255,8 +280,8 @@ export interface SchedulerDataSource<TEvent extends object> {
   /**
    * Called when events are created, updated or deleted so the consumer can persist them.
    *
-   * Throw to surface a custom error in `state.errors`. Return `{ success: false }`
-   * to abort the cache/state update with a generic error.
+   * Throw or return `{ success: false }` to abort the cache/state update. The user then sees a
+   * generic error, and the cause is logged to the console.
    */
   persistEvents: (parameters: {
     deleted: SchedulerEventId[];
@@ -428,12 +453,13 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    */
   displayTimezone?: TemporalTimezone;
   /**
-   * The locale object from `date-fns` used to format dates.
-   * This affects day names, month names, week start day, and other locale-dependent formatting.
-   * Import a locale from `date-fns/locale` and pass it to this prop.
-   * @default enUS (English)
+   * The locale of the dates, as a BCP 47 language tag such as `"fr-FR"`, like the locales of
+   * `Intl.DateTimeFormat`.
+   * This affects day names, month names, the first day of the week, week numbers, the 12-hour
+   * or 24-hour clock and the other locale-dependent formatting.
+   * @default "en-US"
    */
-  dateLocale?: DateLocale;
+  dateLocale?: string;
 
   /**
    * Configures how events are deleted.
@@ -557,7 +583,7 @@ export interface UpdateEventsParameters {
  */
 export type SchedulerUpdateEventResult =
   | { applied: true; changes: SchedulerEventUpdatedProperties }
-  | { applied: false; rejection: Error };
+  | { applied: false; rejection: SchedulerUserFacingErrorDescriptor };
 
 export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
 

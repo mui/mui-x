@@ -41,6 +41,10 @@
     "columnGroupHeaderHeight": {
       "description": "Sets the height in pixels of the column group headers in the Data Grid. Inherits the <code>columnHeaderHeight</code> value if not set."
     },
+    "columnGroupingModel": {
+      "description": "The column groups of the header.",
+      "seeMoreText": "See {{link}} for more details."
+    },
     "columnHeaderHeight": {
       "description": "Sets the height in pixel of the column headers in the Data Grid."
     },
@@ -573,7 +577,7 @@
       }
     },
     "onMenuClose": {
-      "description": "Callback fired when the menu is closed.",
+      "description": "Callback fired when a grid menu is closed. This includes the column menu, the actions cell menu, and the toolbar menus.",
       "typeDescriptions": {
         "params": {
           "name": "params",
@@ -584,7 +588,7 @@
       }
     },
     "onMenuOpen": {
-      "description": "Callback fired when the menu is opened.",
+      "description": "Callback fired when a grid menu is opened. This includes the column menu, the actions cell menu, and the toolbar menus.",
       "typeDescriptions": {
         "params": {
           "name": "params",
@@ -1157,8 +1161,16 @@
       "nodeName": "the column header",
       "conditions": "the type of the column is <code>number</code>"
     },
-    "columnHeader--pinnedLeft": { "description": "" },
-    "columnHeader--pinnedRight": { "description": "" },
+    "columnHeader--pinnedLeft": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column header",
+      "conditions": "it is pinned to the left"
+    },
+    "columnHeader--pinnedRight": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column header",
+      "conditions": "it is pinned to the right"
+    },
     "columnHeader--sortable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the column header",
@@ -1169,7 +1181,11 @@
       "nodeName": "the column header",
       "conditions": "the column is sorted"
     },
-    "columnHeader--withLeftBorder": { "description": "" },
+    "columnHeader--withLeftBorder": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column header",
+      "conditions": "it has a left border"
+    },
     "columnHeader--withRightBorder": {
       "description": "Styles applied the column header if <code>showColumnVerticalBorder={true}</code>."
     },
@@ -1464,7 +1480,10 @@
       "nodeName": "the main container element",
       "conditions": "it has right pinned columns"
     },
-    "mainContent": { "description": "" },
+    "mainContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the element that wraps the main content of the grid"
+    },
     "menu": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the menu element" },
     "menuIcon": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1873,7 +1892,11 @@
       "nodeName": "cells",
       "conditions": "column header and other elements that have border"
     },
-    "withSidePanel": { "description": "" },
+    "withSidePanel": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "a side panel is open"
+    },
     "withVerticalBorder": {
       "description": "Styles applied the grid if <code>showColumnVerticalBorder={true}</code>."
     }

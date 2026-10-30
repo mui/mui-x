@@ -20,12 +20,27 @@ import type { UseChartHighlightSignature } from '../internals/plugins/featurePlu
 import { appendAtKey } from '../internals/appendAtKey';
 
 export interface BatchScatterProps {
+  /**
+   * The scatter series to render.
+   */
   series: DefaultizedScatterSeriesType;
+  /**
+   * The scale of the x-axis.
+   */
   xScale: D3Scale;
+  /**
+   * The scale of the y-axis.
+   */
   yScale: D3Scale;
+  /**
+   * The color of the element.
+   */
   color: string;
   colorGetter?: ColorGetter<'scatter'>;
   sizeGetter?: ScatterSizeGetter;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   // eslint-disable-next-line react/no-unused-prop-types
   classes?: Partial<ScatterClasses>;
   className?: string;
@@ -88,9 +103,21 @@ function useCreatePaths(
 }
 
 interface BatchScatterPathsProps {
+  /**
+   * The scatter series to render.
+   */
   series: DefaultizedScatterSeriesType;
+  /**
+   * The scale of the x-axis.
+   */
   xScale: D3Scale;
+  /**
+   * The scale of the y-axis.
+   */
   yScale: D3Scale;
+  /**
+   * The color of the element.
+   */
   color: string;
   colorGetter?: ColorGetter<'scatter'>;
   markerSize: number;

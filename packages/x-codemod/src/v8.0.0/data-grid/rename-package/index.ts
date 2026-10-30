@@ -1,4 +1,4 @@
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 // TODO: Make it generic and move to utils
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options?: any) {

@@ -1,10 +1,8 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { interpolateOrRd } from 'd3-scale-chromatic';
-import {
-  HeatmapPremium,
-  HeatmapPremiumProps,
-} from '@mui/x-charts-premium/HeatmapPremium';
+import type { HeatmapPremiumProps } from '@mui/x-charts-premium/HeatmapPremium';
+import { HeatmapPremium } from '@mui/x-charts-premium/HeatmapPremium';
 import data from '../dataset/nyc-yellow-taxi-2024-trip-count.json';
 
 const seriesData = data as [number, number, number][];

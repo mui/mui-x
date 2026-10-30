@@ -8,7 +8,7 @@ import DialogActions from '@mui/material/DialogActions';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
+import type { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 
 function CustomActionBar(props: PickersActionBarProps) {

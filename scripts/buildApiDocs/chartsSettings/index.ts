@@ -1,12 +1,12 @@
 import path from 'path';
 import fs from 'fs';
 import { LANGUAGES } from '@mui/internal-core-docs/constants';
-import {
+import type {
   ProjectSettings,
   ComponentReactApi,
   HookReactApi,
-  findApiPages,
 } from '@mui/internal-api-docs-builder';
+import { findApiPages } from '@mui/internal-api-docs-builder';
 import { isGlobalState } from '@mui/utils/generateUtilityClass';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
 import generateChartsClassName from './generateChartsClassName';

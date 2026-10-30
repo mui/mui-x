@@ -1,16 +1,16 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { styled, Theme } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+import type { GridColumnMenuProps, GridSlots } from '@mui/x-data-grid-pro';
 import {
   GridColumnMenu,
   GridColumnMenuContainer,
-  GridColumnMenuProps,
   GridColumnMenuFilterItem,
   GridColumnMenuSortItem,
   useGridApiRef,
   DataGridPro,
-  GridSlots,
 } from '@mui/x-data-grid-pro';
 import StarOutlineIcon from '@mui/icons-material/StarOutlined';
 

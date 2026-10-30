@@ -4,11 +4,13 @@ import {
   useChat,
   useChatPartRenderer,
   useConversation,
-  type ChatAdapter,
-  type ChatConversation,
-  type ChatMessage,
-  type ChatPartRendererMap,
-  type ChatUser,
+} from '@mui/x-chat/headless';
+import type {
+  ChatAdapter,
+  ChatConversation,
+  ChatMessage,
+  ChatPartRendererMap,
+  ChatUser,
 } from '@mui/x-chat/headless';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';

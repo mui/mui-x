@@ -9,6 +9,9 @@ interface ChartsGridHorizontalProps {
   axis: ComputedYAxis;
   start: number;
   end: number;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: Partial<ChartsGridClasses>;
 }
 

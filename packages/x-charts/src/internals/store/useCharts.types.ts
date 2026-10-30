@@ -3,6 +3,9 @@ import type { ChartAnyPluginSignature, ChartPublicAPI } from '../plugins/models'
 import type { ChartSeriesConfig } from '../plugins/corePlugins/useChartSeriesConfig';
 
 export interface UseChartBaseProps<TSignatures extends readonly ChartAnyPluginSignature[]> {
+  /**
+   * The ref object that exposes the chart API methods.
+   */
   apiRef?: React.RefObject<ChartPublicAPI<TSignatures> | undefined>;
   /**
    * The configuration for the series types.

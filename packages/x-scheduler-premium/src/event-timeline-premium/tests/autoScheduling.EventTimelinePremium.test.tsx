@@ -189,7 +189,10 @@ describe('<EventTimelinePremium /> auto-scheduling', () => {
       originalSuccessorStart,
     );
     expect(store.state.errors).to.have.length(1);
-    expect(store.state.errors[0].error.message).to.include('read-only event "Event B"');
+    expect(store.state.errors[0]).to.deep.include({
+      code: 'readOnlyEventMovedError',
+      params: { title: 'Event B' },
+    });
     // The drop gesture still completes: no ghost placeholder survives the veto.
     expect(store.state.occurrencePlaceholder).to.equal(null);
   });

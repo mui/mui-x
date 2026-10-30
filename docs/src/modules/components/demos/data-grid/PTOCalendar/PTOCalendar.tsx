@@ -3,10 +3,9 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
+import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
-  GridColDef,
-  GridRenderCellParams,
   useGridApiContext,
   useGridSelector,
   gridFilteredRowCountSelector,

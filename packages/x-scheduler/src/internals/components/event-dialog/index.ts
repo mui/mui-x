@@ -1,11 +1,4 @@
-export {
-  EventDialogContent,
-  EventDialogProvider,
-  EventDialogRoot,
-  EventDialogDraggablePaper,
-} from './EventDialog';
-export type { EventDialogDraggablePaperProps } from './EventDialog';
-export { default as EventDialogHeader } from './EventDialogHeader';
+export { EventDialogContent, EventDialogProvider } from './EventDialog';
 export * from './eventDialogClasses';
 export type { EndsSelection } from './utils';
 export {

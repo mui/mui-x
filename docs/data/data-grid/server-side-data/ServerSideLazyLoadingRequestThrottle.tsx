@@ -1,11 +1,10 @@
 import * as React from 'react';
-import {
-  DataGridPro,
+import type {
   GridDataSource,
   GridGetRowsParams,
-  GridRowCount,
   GridSlotProps,
 } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridRowCount } from '@mui/x-data-grid-pro';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';

@@ -1,5 +1,5 @@
 import removeProps from '../../../util/removeProps';
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 const componentNames = ['DataGrid', 'DataGridPro', 'DataGridPremium'];
 const props = ['disableExtendRowFullWidth'];

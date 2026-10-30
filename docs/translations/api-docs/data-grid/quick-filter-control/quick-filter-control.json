@@ -1,8 +1,38 @@
 {
   "componentDescription": "A component that takes user input and filters row data.\nIt renders the `baseTextField` slot.",
   "propDescriptions": {
+    "autoComplete": {
+      "description": "The <code>autocomplete</code> attribute of the input element."
+    },
+    "autoFocus": {
+      "description": "If <code>true</code>, the input element is focused during the first mount."
+    },
     "className": { "description": "Override or extend the styles applied to the component." },
-    "render": { "description": "A function to customize rendering of the component." }
+    "color": { "description": "The color of the text field." },
+    "disabled": { "description": "If <code>true</code>, the text field is disabled." },
+    "error": {
+      "description": "If <code>true</code>, the text field is displayed in an error state."
+    },
+    "fullWidth": {
+      "description": "If <code>true</code>, the text field takes up the full width of its container."
+    },
+    "helperText": { "description": "The helper text displayed below the input." },
+    "id": { "description": "The id of the input element." },
+    "inputRef": { "description": "A ref to the input element." },
+    "label": { "description": "The label of the text field." },
+    "multiline": {
+      "description": "If <code>true</code>, a <code>textarea</code> element is rendered instead of an <code>input</code>."
+    },
+    "placeholder": {
+      "description": "The short hint displayed in the input before the user enters a value."
+    },
+    "render": { "description": "A function to customize rendering of the component." },
+    "role": { "description": "The ARIA role of the root element." },
+    "size": { "description": "The size of the text field." },
+    "slotProps": { "description": "The props used for each slot inside." },
+    "tabIndex": { "description": "The <code>tabIndex</code> of the input element." },
+    "type": { "description": "The type of the input element." },
+    "value": { "description": "The value of the input element." }
   },
   "classDescriptions": {}
 }

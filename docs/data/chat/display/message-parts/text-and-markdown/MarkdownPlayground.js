@@ -5,7 +5,6 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { ChatConversation, ChatMessageList } from '@mui/x-chat';
-
 import { ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
 
 const MARKDOWN_SAMPLE = `### Markdown rendering

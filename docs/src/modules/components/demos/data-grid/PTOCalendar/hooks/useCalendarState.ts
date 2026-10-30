@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { addMonths, subMonths } from 'date-fns';
-import { FilterType } from '../types/pto';
+import type { FilterType } from '../types/pto';
 import { DATE_CONSTRAINTS } from '../constants';
 
 export const useCalendarState = () => {

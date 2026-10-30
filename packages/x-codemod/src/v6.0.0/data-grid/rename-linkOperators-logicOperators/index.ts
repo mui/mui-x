@@ -1,6 +1,7 @@
 import type { Collection, JSCodeshift } from 'jscodeshift';
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
-import renameIdentifiers, { PreRequisiteUsage, matchImport } from '../../../util/renameIdentifiers';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { PreRequisiteUsage } from '../../../util/renameIdentifiers';
+import renameIdentifiers, { matchImport } from '../../../util/renameIdentifiers';
 
 const renamedIdentifiers = {
   GridLinkOperator: 'GridLogicOperator',

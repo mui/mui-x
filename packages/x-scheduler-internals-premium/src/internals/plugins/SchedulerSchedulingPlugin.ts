@@ -180,9 +180,10 @@ export class SchedulerSchedulingPlugin<
         const blockedEvent = this.store.state.processedEventLookup.get(result.blocked[0])!;
         return {
           rejected: true as const,
-          error: /* minify-error-disabled */ new Error(
-            `This change would move the read-only event "${blockedEvent.title}", so it was not applied.`,
-          ),
+          rejection: {
+            code: 'readOnlyEventMovedError' as const,
+            params: { title: blockedEvent.title },
+          },
         };
       }
       // The cascade only reports the bound it moves, so a single unwritable bound isn't a move
@@ -193,9 +194,10 @@ export class SchedulerSchedulingPlugin<
         const unwritableEvent = this.store.state.processedEventLookup.get(unwritable.id)!;
         return {
           rejected: true as const,
-          error: /* minify-error-disabled */ new Error(
-            `This change would move the event "${unwritableEvent.title}", whose dates can't be edited, so it was not applied.`,
-          ),
+          rejection: {
+            code: 'unwritableEventMovedError' as const,
+            params: { title: unwritableEvent.title },
+          },
         };
       }
       cascaded = result.updated;

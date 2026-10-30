@@ -18,7 +18,6 @@ export {
   buildTemporalPlainDate,
   createAdapterDate,
   createEndOfPlainDate,
-  createLabelDate,
   createProcessedDate,
   createStartOfPlainDate,
   moveToPlainDate,
