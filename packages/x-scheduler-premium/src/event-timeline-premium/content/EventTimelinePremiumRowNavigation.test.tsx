@@ -346,6 +346,33 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> arrow-key row navigation', ()
     });
   });
 
+  it('should only make the link events of the focused row tabbable', async () => {
+    const events = resources.slice(0, 2).map((resource) =>
+      EventBuilder.new()
+        .resource(resource)
+        .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+        .readOnly()
+        .href('#order')
+        .build(),
+    );
+    const { user } = await renderTimeline({ events });
+    const getLink = (index: number) =>
+      getEventsCell(resources[index].id)!.querySelector('a[data-occurrence-key]')!;
+
+    act(() => {
+      getEventsCell(resources[0].id)!.focus();
+    });
+    expect(getLink(0).getAttribute('tabindex')).to.equal('0');
+    expect(getLink(1).getAttribute('tabindex')).to.equal('-1');
+
+    await user.keyboard('{ArrowDown}');
+
+    await waitFor(() => {
+      expect(getLink(0).getAttribute('tabindex')).to.equal('-1');
+      expect(getLink(1).getAttribute('tabindex')).to.equal('0');
+    });
+  });
+
   it('should not scroll back to a row the focus left when its resource is removed', async () => {
     const { setProps } = await renderTimeline();
     const scroller = screen.getByRole('grid');

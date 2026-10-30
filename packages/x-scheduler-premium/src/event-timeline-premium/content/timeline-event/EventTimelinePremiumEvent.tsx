@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
+import type { CSSObject, Theme } from '@mui/material/styles';
 import visuallyHidden from '@mui/utils/visuallyHidden';
 import { useStore } from '@base-ui/utils/store';
 import { useId } from '@base-ui/utils/useId';
@@ -18,6 +19,7 @@ import {
   getArrowEdgeStyles,
   getPaletteVariants,
   useEventAccessibleName,
+  useEventHref,
   useSchedulerSlots,
 } from '@mui/x-scheduler/internals';
 import type {
@@ -34,13 +36,11 @@ const INERT_PROPS = (isReactVersionAtLeast(19) ? { inert: true } : { inert: '' }
   inert?: boolean;
 };
 
-const EventTimelinePremiumEventRoot = styled('div', {
-  name: 'MuiEventTimeline',
-  slot: 'Event',
-})(({ theme }) => ({
+const getEventRootStyles = (theme: Theme): CSSObject => ({
   borderRadius: theme.shape.borderRadius,
   backgroundColor: 'var(--event-surface-subtle)',
   color: 'var(--event-on-surface-subtle-primary)',
+  textDecoration: 'none',
   padding: theme.spacing(0.5, 1),
   position: 'relative',
   // Keeps the resize handlers' z-index inside the event.
@@ -98,7 +98,17 @@ const EventTimelinePremiumEventRoot = styled('div', {
     display: 'none',
   },
   variants: getPaletteVariants(theme),
-}));
+});
+
+const EventTimelinePremiumEventRoot = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'Event',
+})(({ theme }) => getEventRootStyles(theme));
+
+const EventTimelinePremiumEventLinkRoot = styled('a', {
+  name: 'MuiEventTimeline',
+  slot: 'Event',
+})(({ theme }) => getEventRootStyles(theme));
 
 const EventTimelinePremiumEventLinesClamp = styled('span', {
   name: 'MuiEventTimeline',
@@ -191,6 +201,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
     resourceName: rowResource?.title ?? null,
     localeText,
   });
+  const href = useEventHref(occurrence);
   const accessibleName = getEventAriaLabel
     ? getEventAriaLabel({
         occurrence,
@@ -250,7 +261,8 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 
   return (
     <TimelineGrid.Event
-      render={<EventTimelinePremiumEventRoot />}
+      render={href != null ? <EventTimelinePremiumEventLinkRoot /> : <EventTimelinePremiumEventRoot />}
+      href={href}
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}

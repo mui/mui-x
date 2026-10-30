@@ -47,6 +47,7 @@ export interface EventTimelinePremiumSlots extends SchedulerSlots {
    * The content of an event block.
    * It replaces the title text and is rendered inside the block, so the block keeps its
    * geometry, its drag and resize handles, and its button semantics.
+   * A read-only event with an `href` is a link, so its content must not contain other links or buttons.
    * The content doesn't change the accessible name of the event, which is built from its data:
    * use `getEventAriaLabel` to announce the details it adds.
    * @default the occurrence title
