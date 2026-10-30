@@ -1,17 +1,27 @@
 {
-  "props": {},
+  "props": {
+    "children": { "type": { "name": "node" } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ChatConversationHeader",
   "imports": [
     "import { ChatConversationHeader } from '@mui/x-chat/ChatConversation';",
     "import { ChatConversationHeader } from '@mui/x-chat';"
   ],
-  "classes": [
+  "slots": [
     {
-      "key": "header",
-      "className": "MuiChatConversationHeader-header",
-      "description": "Styles applied to the conversation header element.",
-      "isGlobal": false
-    },
+      "name": "header",
+      "description": "The component that renders the header.",
+      "class": "MuiChatConversationHeader-header"
+    }
+  ],
+  "classes": [
     {
       "key": "headerActions",
       "className": "MuiChatConversationHeader-headerActions",

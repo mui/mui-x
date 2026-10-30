@@ -16,6 +16,9 @@ type RadialBarElementProps = Omit<React.SVGProps<SVGPathElement>, 'ref'> & {
   endAngle: number;
   innerRadius: number;
   outerRadius: number;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<RadialBarClasses>;
   onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
 };

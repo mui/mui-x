@@ -283,7 +283,7 @@ export interface GridFormulaEditableProps {
    */
   readOnly?: boolean;
   /** Stable DOM id prefix for the popup's listbox/options (aria wiring). */
-  popupId: string;
+  popupId: string | undefined;
   ariaLabel: string;
   className?: string;
   /**

@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as childProcess from 'child_process';
-import { type Browser, chromium, type ConsoleMessage, type Page } from '@playwright/test';
+import { chromium } from '@playwright/test';
+import type { Browser, ConsoleMessage, Page } from '@playwright/test';
 import fs from 'node:fs/promises';
 import { describe, expect, it, test as base, afterAll, beforeEach, afterEach } from 'vitest';
 import { minimatch } from 'minimatch';
@@ -762,6 +763,14 @@ async function getDrawingArea(page: Page) {
 
 type NewPageOptions = Parameters<Browser['newPage']>[0];
 
+/**
+ * A 20×15 grey PNG, the size of the `w20` flags from flagcdn.com.
+ */
+const FLAG_PLACEHOLDER_PNG = Buffer.from(
+  'iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAIAAABr+ngCAAAAFklEQVR42mM4QwFgGNU8qnlUM5U1AwD/6s1PCbpwUAAAAABJRU5ErkJggg==',
+  'base64',
+);
+
 async function newTestPage(browser: Browser, newPageOptions: NewPageOptions = {}): Promise<Page> {
   // reuse viewport from `vrtest`
   // https://github.com/nathanmarks/vrtest/blob/1185b852a6c1813cedf5d81f6d6843d9a241c1ce/src/server/runner.js#L44
@@ -770,13 +779,18 @@ async function newTestPage(browser: Browser, newPageOptions: NewPageOptions = {}
   // Block images since they slow down tests (need download).
   // They're also most likely decorative for documentation demos
   const allowedImages = [
-    'https://flagcdn.com',
     // Map raster base maps are reprojected on a canvas, so they must actually load.
     '/static/x/charts/mars-viking-mdim21.jpg',
   ];
   await page.route(/./, async (route, request) => {
     const type = request.resourceType();
-    if (type === 'image' && !allowedImages.some((allowed) => request.url().includes(allowed))) {
+    if (type === 'image' && request.url().startsWith('https://flagcdn.com/')) {
+      // Serve flags from a local placeholder instead of the CDN.
+      route.fulfill({ contentType: 'image/png', body: FLAG_PLACEHOLDER_PNG });
+    } else if (
+      type === 'image' &&
+      !allowedImages.some((allowed) => request.url().includes(allowed))
+    ) {
       route.abort();
     } else {
       route.continue();

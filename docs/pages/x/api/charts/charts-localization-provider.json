@@ -1,5 +1,8 @@
 {
-  "props": { "localeText": { "type": { "name": "object" } } },
+  "props": {
+    "children": { "type": { "name": "node" } },
+    "localeText": { "type": { "name": "object" } }
+  },
   "name": "ChartsLocalizationProvider",
   "imports": [
     "import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';",

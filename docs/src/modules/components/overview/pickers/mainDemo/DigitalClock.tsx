@@ -1,11 +1,12 @@
-import { Dayjs } from 'dayjs';
+import type { Dayjs } from 'dayjs';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { StaticTimePicker, StaticTimePickerProps } from '@mui/x-date-pickers/StaticTimePicker';
+import type { StaticTimePickerProps } from '@mui/x-date-pickers/StaticTimePicker';
+import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
+import type { PickersLayoutProps } from '@mui/x-date-pickers/PickersLayout';
 import {
-  PickersLayoutProps,
   usePickerLayout,
   pickersLayoutClasses,
   PickersLayoutRoot,

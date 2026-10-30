@@ -6,15 +6,29 @@ import { useConversationContext } from './internals/ConversationContext';
 import type { ConversationTitleOwnerState } from './conversation.types';
 
 export interface ConversationTitleSlots {
+  /**
+   * The component that renders the title.
+   */
   title: React.ElementType;
 }
 
 export interface ConversationTitleSlotProps {
+  /**
+   * The props used for the title slot.
+   */
   title?: SlotComponentProps<'div', {}, ConversationTitleOwnerState>;
 }
 
 export interface ConversationTitleProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<ConversationTitleSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ConversationTitleSlotProps;
 }
 

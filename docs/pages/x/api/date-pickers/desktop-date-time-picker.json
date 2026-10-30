@@ -3,6 +3,7 @@
     "ampm": { "type": { "name": "bool" }, "default": "adapter.is12HourCycleInCurrentLocale()" },
     "ampmInClock": { "type": { "name": "bool" }, "default": "true on desktop, false on mobile" },
     "autoFocus": { "type": { "name": "bool" } },
+    "className": { "type": { "name": "string" } },
     "closeOnSelect": { "type": { "name": "bool" }, "default": "false" },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },

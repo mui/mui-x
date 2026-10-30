@@ -40,6 +40,9 @@ export interface ChartsAxisHighlightValueProps {
    * @returns {string} The formatted string.
    */
   valueFormatter?: (value: number | Date | string) => string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps;
 }
 

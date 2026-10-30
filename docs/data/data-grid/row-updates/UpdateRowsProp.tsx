@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import type { GridColDef } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { randomInt, randomUserName } from '@mui/x-data-grid-generator';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';

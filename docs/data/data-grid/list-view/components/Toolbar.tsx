@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import type { GridRowId, GridToolbarProps } from '@mui/x-data-grid-premium';
 import {
   GridClearIcon,
   GridDeleteIcon,
-  GridRowId,
-  GridToolbarProps,
   gridRowSelectionCountSelector,
   gridRowSelectionIdsSelector,
   useGridApiContext,
@@ -26,7 +25,7 @@ import { ToolbarColumnsItem } from './ToolbarColumnsItem';
 import { ToolbarSortItem } from './ToolbarSortItem';
 import { ToolbarDensityItem } from './ToolbarDensityItem';
 import { ToolbarFilterItem } from './ToolbarFilterItem';
-import { DrawerProps } from './Drawer';
+import type { DrawerProps } from './Drawer';
 
 export interface ToolbarProps extends GridToolbarProps {
   container?: DrawerProps['container'];

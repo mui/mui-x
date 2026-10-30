@@ -1,7 +1,6 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Divider from '@mui/material/Divider';
-
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   EventDialogGeneralTabContent,

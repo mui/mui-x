@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { UseChartBrushSignature, useStore } from '@mui/x-charts/internals';
+import type { UseChartBrushSignature } from '@mui/x-charts/internals';
+import { useStore } from '@mui/x-charts/internals';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 
 const dataset = [

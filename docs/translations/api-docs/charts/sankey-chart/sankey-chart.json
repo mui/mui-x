@@ -1,6 +1,7 @@
 {
   "componentDescription": "Sankey Chart component\n\nDisplays a Sankey diagram, visualizing flows between nodes where the width\nof the links is proportional to the flow quantity.",
   "propDescriptions": {
+    "apiRef": { "description": "The ref object that exposes the chart API methods." },
     "classes": { "description": "Classes applied to the various elements." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "desc": {
@@ -63,6 +64,12 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "theme": {
+      "description": "The color mode passed to <code>colors</code> when it is a function. Defaults to the mode of the Material UI theme."
+    },
     "title": {
       "description": "The title of the chart. Used to provide an accessible label for the chart."
     },
@@ -107,10 +114,10 @@
     "root": { "description": "Styles applied to the root element." }
   },
   "slotDescriptions": {
-    "baseButton": "",
-    "baseIconButton": "",
+    "baseButton": "The component used for buttons.",
+    "baseIconButton": "The component used for icon buttons.",
     "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps &amp; BaseToggleButtonPropsOverrides&gt;</code>.",
-    "baseToggleButtonGroup": "",
+    "baseToggleButtonGroup": "The component used for toggle button groups.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
     "toolbar": "Custom component for the toolbar.",

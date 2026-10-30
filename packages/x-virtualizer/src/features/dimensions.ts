@@ -7,8 +7,10 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { throttle } from '@mui/x-internals/throttle';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
-import { Store, useStore, createSelectorMemoized } from '@base-ui/utils/store';
-import { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState, Size } from '../models';
+import type { Store } from '@base-ui/utils/store';
+import { useStore, createSelectorMemoized } from '@base-ui/utils/store';
+import type { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState } from '../models';
+import { Size } from '../models';
 import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */

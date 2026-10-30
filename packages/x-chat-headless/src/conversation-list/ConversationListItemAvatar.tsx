@@ -6,21 +6,53 @@ import type { ChatConversation } from '../types/chat-entities';
 import type { ConversationListItemAvatarOwnerState } from './conversationList.types';
 
 export interface ConversationListItemAvatarSlots {
+  /**
+   * The component that renders the root.
+   */
   root: React.ElementType;
+  /**
+   * The component that renders the image.
+   */
   image: React.ElementType;
 }
 
 export interface ConversationListItemAvatarSlotProps {
+  /**
+   * The props used for the root slot.
+   */
   root?: SlotComponentProps<'div', {}, ConversationListItemAvatarOwnerState>;
+  /**
+   * The props used for the image slot.
+   */
   image?: SlotComponentProps<'img', {}, ConversationListItemAvatarOwnerState>;
 }
 
 export interface ConversationListItemAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * The conversation the item renders.
+   */
   conversation: ChatConversation;
+  /**
+   * If `true`, the conversation is selected.
+   */
   selected?: boolean;
+  /**
+   * If `true`, the conversation has unread messages.
+   */
   unread?: boolean;
+  /**
+   * If `true`, the item has keyboard focus.
+   */
   focused?: boolean;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<ConversationListItemAvatarSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ConversationListItemAvatarSlotProps;
 }
 

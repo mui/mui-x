@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGridPremium, GridColDef } from '@mui/x-data-grid-premium';
+import type { GridColDef } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 import Rating from '@mui/material/Rating';
 

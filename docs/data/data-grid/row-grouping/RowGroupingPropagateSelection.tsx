@@ -1,9 +1,9 @@
 import * as React from 'react';
+import type { GridRowSelectionPropagation } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
-  GridRowSelectionPropagation,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 import FormControlLabel from '@mui/material/FormControlLabel';

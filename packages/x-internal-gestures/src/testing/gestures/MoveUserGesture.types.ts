@@ -1,4 +1,4 @@
-import { MousePointer } from '../types/Pointers';
+import type { MousePointer } from '../types/Pointers';
 
 export type MoveUserGestureOptions = {
   /**

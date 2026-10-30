@@ -6,15 +6,29 @@ import { useMessageContext } from './internals/MessageContext';
 import type { MessageActionsOwnerState } from './message.types';
 
 export interface MessageActionsSlots {
+  /**
+   * The component that renders the actions.
+   */
   actions: React.ElementType;
 }
 
 export interface MessageActionsSlotProps {
+  /**
+   * The props used for the actions slot.
+   */
   actions?: SlotComponentProps<'div', {}, MessageActionsOwnerState>;
 }
 
 export interface MessageActionsProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<MessageActionsSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: MessageActionsSlotProps;
 }
 

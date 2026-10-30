@@ -6,17 +6,14 @@ import Typography from '@mui/material/Typography';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import CircleIcon from '@mui/icons-material/Circle';
 import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
-import {
+import type {
   UseTreeItemContentSlotOwnProps,
   UseTreeItemLabelSlotOwnProps,
   UseTreeItemStatus,
 } from '@mui/x-tree-view/useTreeItem';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import {
-  TreeItem,
-  TreeItemProps,
-  TreeItemSlotProps,
-} from '@mui/x-tree-view/TreeItem';
+import type { TreeItemProps, TreeItemSlotProps } from '@mui/x-tree-view/TreeItem';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { MUI_X_PRODUCTS } from '../datasets/disabledAndEditableProducts';
 
 interface CustomLabelProps extends UseTreeItemLabelSlotOwnProps {

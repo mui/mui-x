@@ -23,8 +23,18 @@
     "import { PiePlot } from '@mui/x-charts-premium';"
   ],
   "slots": [
-    { "name": "pieArc", "description": "", "class": null },
-    { "name": "pieArcLabel", "description": "", "class": null }
+    {
+      "name": "pieArc",
+      "description": "The component that renders the pie arcs.",
+      "default": "PieArc",
+      "class": null
+    },
+    {
+      "name": "pieArcLabel",
+      "description": "The component that renders the pie arc labels.",
+      "default": "PieArcLabel",
+      "class": null
+    }
   ],
   "classes": [],
   "muiName": "MuiPiePlot",

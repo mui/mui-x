@@ -1,10 +1,10 @@
 import * as React from 'react';
-import {
-  DataGrid,
+import type {
   GridDataSource,
   GridPaginationModel,
   GridRowId,
 } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 export default function ServerSideCursorBlocking() {
