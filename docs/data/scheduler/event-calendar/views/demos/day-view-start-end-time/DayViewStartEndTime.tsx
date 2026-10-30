@@ -1,0 +1,26 @@
+import * as React from 'react';
+import type { SchedulerEvent } from '@mui/x-scheduler/models';
+import { StandaloneDayView } from '@mui/x-scheduler/day-view';
+import {
+  initialEvents,
+  defaultVisibleDate,
+  resources,
+} from '../../../../datasets/personal-agenda';
+
+export default function DayViewStartEndTime() {
+  // @focus-start @padding 1
+  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
+
+  return (
+    <div style={{ height: '500px', width: '100%' }}>
+      <StandaloneDayView
+        events={events}
+        resources={resources}
+        defaultVisibleDate={defaultVisibleDate}
+        onEventsChange={setEvents}
+        viewConfig={{ day: { startTime: 8, endTime: 20 } }}
+      />
+    </div>
+  );
+  // @focus-end
+}

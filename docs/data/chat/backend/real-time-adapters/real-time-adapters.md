@@ -128,7 +128,7 @@ async markRead({ conversationId, messageId }) {
 
 The demo below uses an in-memory adapter whose `subscribe()` hands `onEvent` to the buttons — click them to emit `typing`, `presence`, and `read` events and watch the hooks react.
 
-{{"demo": "../../core/examples/realtime/RealtimeHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
+{{"component": "file://../../core/examples/realtime/demos/realtime-headless-chat/index.ts", "bg": "inline", "hideToolbar": true, "collapseToEmpty": true}}
 
 ### Typing indicators
 

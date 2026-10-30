@@ -18,13 +18,13 @@ You can render your Date Range Field with either one input using `SingleInputDat
 All the topics covered below are applicable to both `SingleInputDateRangeField` and `MultiInputDateRangeField` unless explicitly mentioned.
 :::
 
-{{"demo": "BasicDateRangeField.js"}}
+{{"component": "file://./demos/basic-date-range-field/index.ts"}}
 
 ## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
 
-{{"demo": "DateRangeFieldValue.js"}}
+{{"component": "file://./demos/date-range-field-value/index.ts"}}
 
 :::info
 

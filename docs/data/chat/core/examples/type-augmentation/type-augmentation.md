@@ -88,7 +88,7 @@ const renderer = useChatPartRenderer('ticket-summary');
 
 The demo below shows how a single augmentation flows through metadata, a typed tool, a typed `data-*` part, and a custom message part:
 
-{{"demo": "TypeAugmentationHeadlessChat.js"}}
+{{"component": "file://./demos/type-augmentation-headless-chat/index.ts"}}
 
 ## Key takeaways
 

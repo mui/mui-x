@@ -17,7 +17,7 @@ You can use the Toolbar and various other [Data Grid components](/x/react-data-g
 
 The demo below shows how to compose the Toolbar and various other components to look and behave like the built-in toolbar.
 
-{{"demo": "GridToolbar.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-toolbar/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Anatomy
 
@@ -53,7 +53,7 @@ It can be rendered anywhere, including outside of a Data Grid, and picks up the 
 It only applies the styles.
 The toolbar subcomponents such as [Toolbar Button](#toolbar-button) render Data Grid slots and register with the toolbar context, so they need a [Toolbar](#toolbar) inside a Data Grid.
 
-{{"demo": "GridToolbarStyleReuse.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-toolbar-style-reuse/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Recipes
 
@@ -63,19 +63,19 @@ Below are some ways the Toolbar component can be used.
 
 The demo below shows how to display an appearance settings menu on the toolbar. It uses local storage to persist the user's selections.
 
-{{"demo": "GridToolbarSettingsMenu.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-toolbar-settings-menu/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Custom trigger and panel
 
 The demo below shows how to add a custom trigger and panel to the toolbar.
 
-{{"demo": "GridToolbarCustomPanel.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-toolbar-custom-panel/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Filter bar
 
 The demo below shows how to display active filter chips on the toolbar.
 
-{{"demo": "GridToolbarFilterBar.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-toolbar-filter-bar/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Row grouping toolbar
 
@@ -83,7 +83,7 @@ The demo below shows how to add a custom toolbar that enables creating and reord
 
 Users can create groups by dragging column headers into the toolbar, reorder them by dragging the chips within the toolbar, and remove them by clicking the delete button.
 
-{{"demo": "GridToolbarRowGrouping.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-toolbar-row-grouping/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Custom elements
 
@@ -91,7 +91,7 @@ Use the `render` prop to replace default elements. See [Components usage—Custo
 
 The demo below shows how to replace the default elements with custom ones, styled with Tailwind CSS.
 
-{{"demo": "GridToolbarCustom.js", "bg": "inline", "defaultCodeOpen": false, "iframe": true}}
+{{"component": "file://./demos/grid-toolbar-custom/index.ts", "bg": "inline", "iframe": true, "collapseToEmpty": true}}
 
 ## Accessibility
 

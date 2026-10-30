@@ -47,4 +47,4 @@ This method only works with items that are currently visible.
 Calling `apiRef.focusItem()` on an item with a collapsed parent has no effect.
 :::
 
-{{"demo": "ApiMethodFocusItem.js"}}
+{{"component": "file://./demos/api-method-focus-item/index.ts"}}

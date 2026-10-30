@@ -17,7 +17,7 @@ or the `AdapterMomentJalaali` adapter, which is based on [moment-jalaali](https:
 
 The following demo shows how to use the `date-fns-jalali` adapter:
 
-{{"demo": "AdapterJalali.js"}}
+{{"component": "file://./demos/adapter-jalali/index.ts"}}
 
 :::info
 We support `date-fns-jalali` package v2.x, v3.x, and v4.x major versions.
@@ -37,13 +37,13 @@ import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV2
 
 The following demo shows how to use the `moment-jalaali` adapter:
 
-{{"demo": "AdapterMomentJalali.js"}}
+{{"component": "file://./demos/adapter-moment-jalali/index.ts"}}
 
 ## Hijri
 
 You can use the `AdapterMomentHijri` adapter, which is based on [moment-hijri](https://www.npmjs.com/package/moment-hijri):
 
-{{"demo": "AdapterHijri.js"}}
+{{"component": "file://./demos/adapter-hijri/index.ts"}}
 
 :::error
 The adapter with `moment-hijri` does not support the new fields components because the date library seems buggy when parsing a month only.
@@ -57,7 +57,7 @@ You can have a look at the other demos in the [Custom Field—With a custom edit
 
 You can use the `AdapterDayjsBuddhist` adapter, which is based on [dayjs](https://www.npmjs.com/package/dayjs). The adapter extends the [buddhistEra](https://day.js.org/docs/en/plugin/buddhist-era) plugin under the hood.
 
-{{"demo": "AdapterBuddhist.js"}}
+{{"component": "file://./demos/adapter-buddhist/index.ts"}}
 
 The Buddhist Era calendar is used in Thailand and other Southeast Asian countries. It uses the same months and days as the Gregorian calendar but with a year offset of 543, for example, 2024 CE = 2567 BE.
 

@@ -17,7 +17,7 @@ The runtime tracks the full tool lifecycle through the streaming chunk protocol 
 
 The demo below streams a `get_weather` tool call through `input-streaming` → `input-available` → `output-available` and renders each stage with a custom tool card:
 
-{{"demo": "ToolCallingLifecycle.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/tool-calling-lifecycle/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Tool message part structure
 
@@ -358,7 +358,7 @@ defaultExpanded={{
 
 The playground below maps a few common policies to presets — pick one, then step the tool state and toggle message streaming to watch the card respond:
 
-{{"demo": "ToolCardExpansionPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/tool-card-expansion-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## See also
 

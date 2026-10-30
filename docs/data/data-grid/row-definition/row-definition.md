@@ -15,7 +15,7 @@ The `rows` prop should keep the same reference between two renders except when y
 Otherwise, the Data Grid will re-apply heavy work like sorting and filtering.
 :::
 
-{{"demo": "RowsGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/rows-grid/index.ts", "bg": "inline"}}
 
 ## Row identifier
 
@@ -37,7 +37,7 @@ function getRowId(row) {
 <DataGrid getRowId={getRowId} />;
 ```
 
-{{"demo": "RowsGridWithGetRowId.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/rows-grid-with-get-row-id/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 If no such unique identifier exists in the data set, then you must create it by some other means, but this scenario should be avoided because it leads to issues with other features of the Data Grid.
 

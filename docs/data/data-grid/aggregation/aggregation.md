@@ -12,7 +12,7 @@ It includes [built-in functions](#built-in-functions) to cover common use cases 
 End users can aggregate rows through the Data Grid interface by opening the column menu and selecting from the items under **Aggregation**.
 The aggregated values are rendered in a footer row at the bottom of the Grid.
 
-{{"demo": "AggregationInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/aggregation-initial-state/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::info
 This document covers client-side implementation.
@@ -28,14 +28,14 @@ The keys correspond to the columns, and the values are the names of the aggregat
 
 To initialize aggregation without controlling its state, provide the model to the `initialState` prop, as shown below:
 
-{{"demo": "AggregationInitialState.js", "bg": "inline"}}
+{{"component": "file://./demos/aggregation-initial-state/index.ts", "bg": "inline"}}
 
 ## Controlled aggregation
 
 Use the `aggregationModel` prop to control aggregation passed to the Data Grid.
 Use the `onAggregationModelChange` prop to listen to changes to aggregation and update the prop accordingly.
 
-{{"demo": "AggregationControlled.js", "bg": "inline"}}
+{{"component": "file://./demos/aggregation-controlled/index.ts", "bg": "inline"}}
 
 ## Disabling aggregation
 
@@ -44,7 +44,7 @@ Use the `onAggregationModelChange` prop to listen to changes to aggregation and 
 To disable aggregation, set the `disableAggregation` prop to `true`.
 This will disable all features related to aggregation, even if a model is provided.
 
-{{"demo": "AggregationDisabled.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/aggregation-disabled/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### For specific columns
 
@@ -52,7 +52,7 @@ To disable aggregation on a specific column, set the `aggregable` property on it
 
 In the example below, the **Year** column is not aggregable since its `aggregable` property is set to `false`.
 
-{{"demo": "AggregationColDefAggregable.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/aggregation-col-def-aggregable/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Aggregating non-aggregable columns
 
@@ -64,7 +64,7 @@ To apply aggregation programmatically on non-aggregable columns (columns with `a
 
 In the following demo, even though the **Year** column is not aggregable, it's still aggregated in read-only mode by providing an initial aggregation model as described above.
 
-{{"demo": "AggregationColDefNonAggregable.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/aggregation-col-def-non-aggregable/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Usage with row grouping
 
@@ -72,7 +72,7 @@ When [row grouping](/x/react-data-grid/row-grouping/) is enabled, aggregated val
 
 In the example below, the sum and the count of `true` values for each row group are aggregated and displayed in that group's row, while the total sum and count of `true` values for all rows are displayed in the footer.
 
-{{"demo": "AggregationRowGrouping.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/aggregation-row-grouping/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 You can use the `getAggregationPosition` prop to customize this behavior.
 This function takes the current group node as an argument (or `null` for the root group) and returns the position of the aggregated value.
@@ -110,7 +110,7 @@ getAggregationPosition={(groupNode) => groupNode == null ? 'footer' : null}
 
 The demo below shows the sum aggregation in the footer of each group but not in the top-level footer:
 
-{{"demo": "AggregationGetAggregationPosition.js", "bg": "inline"}}
+{{"component": "file://./demos/aggregation-get-aggregation-position/index.ts", "bg": "inline"}}
 
 ## Usage with tree data
 
@@ -123,7 +123,7 @@ This means that even if the dataset explicitly provides group values, they will 
 
 In the demo below, the max values of the **Last modification** column and the sums of the **Size** column values are displayed in both the grouping rows and the footer:
 
-{{"demo": "AggregationTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/aggregation-tree-data/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Filtering
 
@@ -132,7 +132,7 @@ To use all rows, set the `aggregationRowsScope` prop to `"all"`.
 
 In the example below, the movie _Avatar_ doesn't pass the filters but is still used for the max aggregation of the **Gross** column:
 
-{{"demo": "AggregationFiltering.js", "bg": "inline"}}
+{{"component": "file://./demos/aggregation-filtering/index.ts", "bg": "inline"}}
 
 ## Aggregation functions
 
@@ -172,7 +172,7 @@ The `@mui/x-data-grid-premium` package comes with a set of built-in aggregation 
 To remove specific aggregation functions from all columns, pass a filtered object to the `aggregationFunctions` prop.
 In the example below, the sum function has been removed:
 
-{{"demo": "AggregationRemoveFunctionAllColumns.js", "bg": "inline"}}
+{{"component": "file://./demos/aggregation-remove-function-all-columns/index.ts", "bg": "inline"}}
 
 #### From a specific column
 
@@ -189,7 +189,7 @@ const column = {
 
 In the example below, you can only aggregate the **Year** column using the max and min functions, whereas all functions are available for the **Gross** column:
 
-{{"demo": "AggregationRemoveFunctionOneColumn.js", "bg": "inline"}}
+{{"component": "file://./demos/aggregation-remove-function-one-column/index.ts", "bg": "inline"}}
 
 ### Creating custom functions
 
@@ -221,7 +221,7 @@ const firstAlphabeticalAggregation: GridAggregationFunction<string, string | nul
 To provide custom aggregation functions, pass them to the `aggregationFunctions` prop on the Data Grid Premium.
 In the example below, the Grid has two custom functions for `string` columns: `firstAlphabetical` and `lastAlphabetical`:
 
-{{"demo": "AggregationCustomFunction.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/aggregation-custom-function/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Aggregating data from multiple row fields
 
@@ -265,7 +265,7 @@ const profit: GridAggregationFunction<{ gross: number; budget: number }, number>
 };
 ```
 
-{{"demo": "AggregationMultipleRowFields.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/aggregation-multiple-row-fields/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Custom value formatter
 
@@ -284,14 +284,14 @@ const aggregationFunction: GridAggregationFunction = {
 };
 ```
 
-{{"demo": "AggregationValueFormatter.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/aggregation-value-formatter/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Including pinned rows in the aggregation
 
 By default, pinned rows are not included in the top-level aggregation calculation.
 The demo below overrides the default aggregation functions to include values from the pinned rows in the top-level total aggreagation.
 
-{{"demo": "AggregationPinnedRows.js", "bg": "inline"}}
+{{"component": "file://./demos/aggregation-pinned-rows/index.ts", "bg": "inline"}}
 
 ## Custom rendering
 
@@ -300,7 +300,7 @@ This object contains a `hasCellUnit` property to indicate whether the current ag
 
 In the example below, all the aggregation functions are rendered with the rating UI aside from `size`, because it's not a valid rating:
 
-{{"demo": "AggregationRenderCell.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/aggregation-render-cell/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Selectors
 

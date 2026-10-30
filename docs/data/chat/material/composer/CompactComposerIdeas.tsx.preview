@@ -1,3 +1,0 @@
-{ideas.map((idea) => (
-  <CompactIdea key={idea.label} idea={idea} />
-))}

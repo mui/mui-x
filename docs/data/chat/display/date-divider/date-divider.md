@@ -59,7 +59,7 @@ Divider slot customizations only take effect while the feature is enabled. Witho
 
 The demo below enables the feature on a conversation spanning three days — a divider appears at each day boundary:
 
-{{"demo": "../../material/message-list/DateDividerFormat.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://../../material/message-list/demos/date-divider-format/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Customizing divider placement
 
@@ -84,7 +84,7 @@ const shouldShowDivider = ({ date, previousDate }) =>
   startOfWeekIso(date) !== startOfWeekIso(previousDate);
 ```
 
-{{"demo": "DateDividerByWeek.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/date-divider-by-week/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Divider every N messages
 
@@ -111,7 +111,7 @@ The same hook supports any rule: for example, group by the viewer's **local** da
 
 The playground below renders the divider between two messages and lets you change `formatDate` and the second message's `createdAt`:
 
-{{"demo": "ChatDateDividerPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-date-divider-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## See also
 

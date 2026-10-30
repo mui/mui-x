@@ -10,23 +10,23 @@ components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, Lin
 
 ## SimpleAreaChart
 
-{{"demo": "SimpleAreaChart.js"}}
+{{"component": "file://./demos/simple-area-chart/index.ts"}}
 
 ## StackedAreaChart
 
-{{"demo": "StackedAreaChart.js"}}
+{{"component": "file://./demos/stacked-area-chart/index.ts"}}
 
 ## TinyAreaChart
 
-{{"demo": "TinyAreaChart.js"}}
+{{"component": "file://./demos/tiny-area-chart/index.ts"}}
 
 ## PercentAreaChart
 
-{{"demo": "PercentAreaChart.js"}}
+{{"component": "file://./demos/percent-area-chart/index.ts"}}
 
 ## AreaChartConnectNulls
 
-{{"demo": "AreaChartConnectNulls.js"}}
+{{"component": "file://./demos/area-chart-connect-nulls/index.ts"}}
 
 ## AreaChartFillByValue
 
@@ -46,4 +46,4 @@ The `<stop />` offset is a ratio of gradient vector.
 That's why you need to divide the coordinate by the SVG height.
 :::
 
-{{"demo": "AreaChartFillByValue.js"}}
+{{"component": "file://./demos/area-chart-fill-by-value/index.ts"}}

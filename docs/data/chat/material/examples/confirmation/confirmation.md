@@ -15,7 +15,7 @@ githubLabel: 'scope: chat'
 
 The demo below shows the confirmation card in action. Click **Delete files** or **Keep files** to see the result:
 
-{{"demo": "Confirmation.js", "bg": "inline"}}
+{{"component": "file://./demos/confirmation/index.ts", "bg": "inline"}}
 
 ## Rendering the confirmation card
 

@@ -13,7 +13,7 @@ materialDesign: https://m2.material.io/components/time-pickers
 
 ## Basic usage
 
-{{"demo": "BasicTimePicker.js"}}
+{{"component": "file://./demos/basic-time-picker/index.ts"}}
 
 ## Component composition
 
@@ -32,7 +32,7 @@ Some [TimeField props](/x/api/date-pickers/time-field/#props) are not available 
 
 The value of the component can be uncontrolled or controlled.
 
-{{"demo": "TimePickerValue.js"}}
+{{"component": "file://./demos/time-picker-value/index.ts"}}
 
 :::info
 
@@ -56,7 +56,7 @@ The component is available in four variants:
 
 - The `StaticTimePicker` component which renders without the popover/modal and field.
 
-{{"demo": "ResponsiveTimePickers.js"}}
+{{"component": "file://./demos/responsive-time-pickers/index.ts"}}
 
 By default, the `TimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
@@ -70,7 +70,7 @@ Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-cave
 
 The component supports the `disabled`, `readOnly` and `name` form props:
 
-{{"demo": "FormPropsTimePickers.js"}}
+{{"component": "file://./demos/form-props-time-pickers/index.ts"}}
 
 ## Views
 
@@ -79,12 +79,12 @@ The component supports three views: `hours`, `minutes` and `seconds`.
 By default, the `hours` and `minutes` views are enabled.
 Use the `views` prop to change this behavior:
 
-{{"demo": "TimePickerViews.js"}}
+{{"component": "file://./demos/time-picker-views/index.ts"}}
 
 By default, the `MobileTimePicker` component renders the `hours` view on mount.
 Use the `openTo` prop to change this behavior:
 
-{{"demo": "TimePickerOpenTo.js"}}
+{{"component": "file://./demos/time-picker-open-to/index.ts"}}
 
 :::success
 The views will appear in the order defined by the `views` array.
@@ -97,7 +97,7 @@ By default, the Time Picker component automatically sets the orientation based o
 
 You can force a specific orientation using the `orientation` prop.
 
-{{"demo": "StaticTimePickerLandscape.js", "bg": true}}
+{{"component": "file://./demos/static-time-picker-landscape/index.ts", "bg": true}}
 
 :::info
 You can find more information about the layout customization in the [custom layout page](/x/react-date-pickers/custom-layout/).
@@ -108,7 +108,7 @@ You can find more information about the layout customization in the [custom layo
 You can use the `viewRenderers` prop to change the view that is used for rendering a view.
 You might be interested in using the [Time Clock](/x/react-date-pickers/time-clock/) instead of the [Digital Clock](/x/react-date-pickers/digital-clock/) on desktop as well as mobile.
 
-{{"demo": "TimePickerViewRenderers.js"}}
+{{"component": "file://./demos/time-picker-view-renderers/index.ts"}}
 
 ## Localization
 

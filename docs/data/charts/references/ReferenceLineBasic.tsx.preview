@@ -1,4 +1,0 @@
-<LineChart {...chartsConfig}>
-  <ChartsReferenceLine y={4} />
-  <ChartsReferenceLine x="Mar" />
-</LineChart>

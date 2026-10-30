@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import MonthViewOverflowContinuation from 'docs/data/experiments/scheduler/MonthViewOverflowContinuation';
-import MonthViewOverflowPersist from 'docs/data/experiments/scheduler/MonthViewOverflowPersist';
-import MonthViewOverflowButtonOverlap from 'docs/data/experiments/scheduler/MonthViewOverflowButtonOverlap';
+import MonthViewOverflowContinuation from 'docs/data/experiments/scheduler/demos/month-view-overflow-continuation/MonthViewOverflowContinuation';
+import MonthViewOverflowPersist from 'docs/data/experiments/scheduler/demos/month-view-overflow-persist/MonthViewOverflowPersist';
+import MonthViewOverflowButtonOverlap from 'docs/data/experiments/scheduler/demos/month-view-overflow-button-overlap/MonthViewOverflowButtonOverlap';
 
 export default function MonthViewMultiDayOverflowExperiment() {
   return (

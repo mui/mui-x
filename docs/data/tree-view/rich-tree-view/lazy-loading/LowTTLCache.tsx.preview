@@ -1,8 +1,0 @@
-<RichTreeViewPro
-  items={[]}
-  dataSource={{
-    getChildrenCount: (item) => item?.childrenCount as number,
-    getTreeItems: fetchData,
-  }}
-  dataSourceCache={lowTTLCache}
-/>

@@ -75,7 +75,7 @@ The built-in parser supports:
 This keeps untrusted model output XSS-safe by construction.
 :::
 
-{{"demo": "MarkdownPlayground.js"}}
+{{"component": "file://./demos/markdown-playground/index.ts"}}
 
 ### Customizing text rendering
 
@@ -121,7 +121,7 @@ Once the `text-end` chunk arrives, `state` transitions to `'done'`, as shown bel
 { type: 'text', text: 'The answer is 42.', state: 'done' }
 ```
 
-{{"demo": "StreamingMarkdown.js"}}
+{{"component": "file://./demos/streaming-markdown/index.ts"}}
 
 When composing a fully custom message renderer (for example with the headless package), use the part's `state` field to show a typing indicator or pulsing cursor while content is arriving:
 

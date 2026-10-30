@@ -36,7 +36,7 @@ function CustomToolbar() {
 You don't need to initialize the API object using `useGridApiRef()` to be able to use it inside Data Grid components.
 :::
 
-{{"demo": "UseGridApiContext.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/use-grid-api-context/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Outside the Data Grid
 
@@ -61,7 +61,7 @@ The API object is populated by the `DataGrid`'s various plugins during the first
 If you try to use it in the first render of the component, it will crash because not all methods are registered yet.
 :::
 
-{{"demo": "UseGridApiRef.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/use-grid-api-ref/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Common use cases
 
@@ -94,7 +94,7 @@ function CustomDataGrid(props) {
 }
 ```
 
-{{"demo": "AccessDisabledColumnFeatures.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/access-disabled-column-features/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Retrieve data from the state
 

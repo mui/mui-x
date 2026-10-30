@@ -13,7 +13,7 @@ Chat composers hide a lot of behavior behind a simple surface: autosizing, disab
 
 The demo below shows the headless composer wired up with text input, attachment selection, helper text, and send state:
 
-{{"demo": "ComposerWithAttachments.js"}}
+{{"component": "file://./demos/composer-with-attachments/index.ts"}}
 
 ## Wiring the composer primitives
 

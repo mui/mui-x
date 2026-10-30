@@ -22,7 +22,7 @@ This can be accomplished either by defining the prop outside the component scope
 Use the `items` prop to define items.
 This prop expects an array of objects.
 
-{{"demo": "BasicRichTreeView.js"}}
+{{"component": "file://./demos/basic-rich-tree-view/index.ts"}}
 
 ## Item identifier
 
@@ -51,7 +51,7 @@ function getItemId(item) {
 <RichTreeView items={ITEMS} getItemId={getItemId} />;
 ```
 
-{{"demo": "GetItemId.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/get-item-id/index.ts", "collapseToEmpty": true}}
 
 ## Item label
 
@@ -79,7 +79,7 @@ function getItemLabel(item) {
 <RichTreeView items={ITEMS} getItemLabel={getItemLabel} />;
 ```
 
-{{"demo": "GetItemLabel.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/get-item-label/index.ts", "collapseToEmpty": true}}
 
 :::warning
 Unlike `SimpleTreeView`, `RichTreeView` only supports string labels.
@@ -116,7 +116,7 @@ function getItemChildren(item) {
 <RichTreeView items={ITEMS} getItemChildren={getItemChildren} />;
 ```
 
-{{"demo": "GetItemChildren.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/get-item-children/index.ts", "collapseToEmpty": true}}
 
 ## Loading state
 
@@ -127,7 +127,7 @@ By default, the tree renders animated skeleton rows in place of the real items.
 <RichTreeView items={[]} loading />
 ```
 
-{{"demo": "LoadingRichTreeView.js"}}
+{{"component": "file://./demos/loading-rich-tree-view/index.ts"}}
 
 Use the `itemsCount` value in `slotProps.loading` to control how many loading rows are shown (default is `5`):
 
@@ -154,11 +154,11 @@ Custom loading UIs also render for the children of items that [load lazily](/x/r
 
 The demo below replaces each loading row with the `itemLoader` slot and fades the rows out with the `slotProps.itemLoader` callback:
 
-{{"demo": "LoadingCustomRows.js"}}
+{{"component": "file://./demos/loading-custom-rows/index.ts"}}
 
 The demo below replaces the whole loading UI with a spinner through the `loading` slot and configures its message with `slotProps.loading`:
 
-{{"demo": "LoadingCustomIndicator.js"}}
+{{"component": "file://./demos/loading-custom-indicator/index.ts"}}
 
 ## Disabled items
 
@@ -172,7 +172,7 @@ function isItemDisabled(item) {
 <RichTreeView isItemDisabled={isItemDisabled} />;
 ```
 
-{{"demo": "DisabledPropItem.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/disabled-prop-item/index.ts", "collapseToEmpty": true}}
 
 ### Focus disabled items
 
@@ -196,14 +196,14 @@ When it's set to true:
 - <kbd class="key">Shift</kbd> + arrow keys will not skip disabled items, but the disabled item will not be selected.
 - Programmatic focus will focus disabled items.
 
-{{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/disabled-items-focusable/index.ts", "collapseToEmpty": true}}
 
 ## Item height
 
 Use the `itemHeight` prop to set the height of each item in the tree.
 If not provided, no height restriction is applied to the tree item content element.
 
-{{"demo": "ItemHeight.js"}}
+{{"component": "file://./demos/item-height/index.ts"}}
 
 :::info
 When virtualization is enabled (the default for `RichTreeViewPro`), the `itemHeight` defaults to `32px` if this prop is not defined.
@@ -266,14 +266,14 @@ The **nested** DOM structure is not compatible with the virtualization on the `<
 
 Use the `onItemClick` prop to track the clicked item:
 
-{{"demo": "OnItemClick.js"}}
+{{"component": "file://./demos/on-item-click/index.ts"}}
 
 ## Get the root DOM element
 
 `RichTreeView` forwards its `ref` to the root `<ul>` element.
 Pass a regular React `ref` to the component to access this element:
 
-{{"demo": "RootElementRef.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/root-element-ref/index.ts", "collapseToEmpty": true}}
 
 ## Imperative API
 
@@ -305,7 +305,7 @@ const item = apiRef.current.getItem(
 );
 ```
 
-{{"demo": "ApiMethodGetItem.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/api-method-get-item/index.ts", "collapseToEmpty": true}}
 
 ### Get an item's DOM element by ID
 
@@ -318,7 +318,7 @@ const itemElement = apiRef.current.getItemDOMElement(
 );
 ```
 
-{{"demo": "ApiMethodGetItemDOMElement.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/api-method-get-item-dom-element/index.ts", "collapseToEmpty": true}}
 
 ### Get the current item tree
 
@@ -328,7 +328,7 @@ Use the `getItemTree()` API method to get the current item tree.
 const itemTree = apiRef.current.getItemTree();
 ```
 
-{{"demo": "ApiMethodGetItemTree.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/api-method-get-item-tree/index.ts", "collapseToEmpty": true}}
 
 :::info
 This method is mostly useful when `RichTreeView` has some internal updates on the items.
@@ -346,7 +346,7 @@ const childrenIds = apiRef.current.getItemOrderedChildrenIds(
 );
 ```
 
-{{"demo": "ApiMethodGetItemOrderedChildrenIds.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/api-method-get-item-ordered-children-ids/index.ts", "collapseToEmpty": true}}
 
 ### Get an item's parent id
 
@@ -356,7 +356,7 @@ Use the `getParentId()` API method to get the ID of the item's parent.
 publicAPI.getParentId(itemId);
 ```
 
-{{"demo": "GetParentIdPublicAPI.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/get-parent-id-public-api/index.ts", "collapseToEmpty": true}}
 
 ### Imperatively disable an item
 
@@ -373,7 +373,7 @@ publicAPI.setIsItemDisabled({
 });
 ```
 
-{{"demo": "DisableTreeItemPublicAPI.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/disable-tree-item-public-api/index.ts", "collapseToEmpty": true}}
 
 ### Imperatively add items
 
@@ -393,7 +393,7 @@ apiRef.current.addItems({
 
 You can combine it with the [`setEditedItem()`](/x/react-tree-view/rich-tree-view/editing/#imperative-api) API method to let users name the new item right away, similar to creating files and folders in a file explorer:
 
-{{"demo": "ApiMethodAddItems.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/api-method-add-items/index.ts", "collapseToEmpty": true}}
 
 :::info
 Items added with `addItems()` are only stored in the internal state of the component.

@@ -1,3 +1,0 @@
-<PinningContext.Provider value={pinningContextValue}>
-  <DataGridPro columns={columns} pinnedRows={pinnedRows} rows={rows} />
-</PinningContext.Provider>

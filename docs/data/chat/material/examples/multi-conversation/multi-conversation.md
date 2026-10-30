@@ -19,7 +19,7 @@ The conversation sidebar is enabled explicitly with `features={{ conversationLis
 
 The demo below shows the inbox layout switching between two conversations while preserving each thread's history:
 
-{{"demo": "MultiConversation.js", "bg": "inline"}}
+{{"component": "file://./demos/multi-conversation/index.ts", "bg": "inline"}}
 
 ## Controlled and uncontrolled conversations
 

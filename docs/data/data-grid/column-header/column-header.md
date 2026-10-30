@@ -7,7 +7,7 @@ You can configure the headers with:
 - `headerName`: The title of the column rendered in the column header cell.
 - `description`: The description of the column rendered as tooltip if the column header name is not fully displayed.
 
-{{"demo": "HeaderColumnsGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/header-columns-grid/index.ts", "bg": "inline"}}
 
 ## Custom header renderer
 
@@ -32,7 +32,7 @@ const columns: GridColDef[] = [
 ];
 ```
 
-{{"demo": "RenderHeaderGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/render-header-grid/index.ts", "bg": "inline"}}
 
 ## Header height
 
@@ -40,7 +40,7 @@ By default, column headers have a height of 56 pixels. This matches the height f
 
 The `columnHeaderHeight` prop can be used to override the default value.
 
-{{"demo": "HeaderHeight.js", "bg": "inline"}}
+{{"component": "file://./demos/header-height/index.ts", "bg": "inline"}}
 
 ## Styling header
 

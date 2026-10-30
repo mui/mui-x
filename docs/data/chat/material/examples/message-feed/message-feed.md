@@ -9,7 +9,7 @@ githubLabel: 'scope: chat'
 
 <p class="description">Embed a read-only message feed that renders transcripts and assistant output without a composer.</p>
 
-{{"demo": "MessageFeed.js", "bg": "inline"}}
+{{"component": "file://./demos/message-feed/index.ts", "bg": "inline"}}
 
 ## When to use this pattern
 

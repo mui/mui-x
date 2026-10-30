@@ -125,7 +125,7 @@ This will produce the following result:
 
 ## Supported locales
 
-{{"demo": "PickersLocalisationTableNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+{{"component": "file://./demos/pickers-localisation-table-no-snap/index.ts", "hideToolbar": true, "bg": "inline"}}
 
 You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-date-pickers/src/locales) in the GitHub repository.
 
