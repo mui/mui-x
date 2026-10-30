@@ -30,17 +30,19 @@ The following team members contributed to this release:
 
 - [DataGrid] Add `filterFormColumnInput` slot (#23871) @michelengelen
 - [DataGrid] Describe column and action in sort button labels (#23755) @minwookshin
+- [DataGrid] Describe column and action in sort button labels (#23755) @minwookshin
 - [DataGrid] Document undocumented props and classes (#24052) @Janpot
 - [DataGrid] Fire `onMenuClose` only when a menu actually closes (#23873) @michelengelen
 - [DataGrid] Fix stale values when server-side aggregation is removed (#23973) @JCQuintas
 - [DataGrid] Focus the column header when clicking the sort icon (#23947) @JCQuintas
 - [DataGrid] Show the column header icons on keyboard focus (#23699) @dasjideepak
-- [DataGrid] Touch column reorder with pointer events (#23928) @noraleonte
 - [DataGrid] Keep the first typed character with a controlled modes model (#23982) @michelengelen
 
 #### `@mui/x-data-grid-pro@9.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@9.17.0`.
+Same changes as in `@mui/x-data-grid@9.17.0`, plus:
+
+- [DataGridPro] Touch column reorder with pointer events (#23928) @noraleonte
 
 #### `@mui/x-data-grid-premium@9.17.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -202,6 +204,7 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.15`, plus:
 - [code-infra] Remove redundant enablePrePostScripts setting (#24000) @Janpot
 - [code-infra] Skip empty internal package changelogs (#23648) @mateuseap
 - [code-infra] Include resolution settings in lockfile (#23944) @ZeeshanTamboli
+- [test] Start the e2e test server from vitest (#24062) @LukasTy
 
 ### Miscellaneous
 
