@@ -17,8 +17,8 @@ declare module '@mui/x-scheduler-internals/models' {
 }
 
 /**
- * The PDM dependency types: which edge of the predecessor constrains which edge of
- * the successor.
+ * The dependency types: which edge of the predecessor constrains which edge of the
+ * successor.
  */
 export type SchedulerDependencyType =
   'FinishToStart' | 'StartToStart' | 'FinishToFinish' | 'StartToFinish';
@@ -46,11 +46,11 @@ export interface SchedulerDependency {
    */
   id: SchedulerDependencyId;
   /**
-   * The id of the event at the source end of the dependency.
+   * The id of the predecessor event.
    */
   source: SchedulerEventId;
   /**
-   * The id of the event at the target end of the dependency.
+   * The id of the successor event.
    */
   target: SchedulerEventId;
   /**
@@ -58,8 +58,10 @@ export interface SchedulerDependency {
    */
   type: SchedulerDependencyType;
   /**
-   * The calendar time the successor waits after the constraining edge of the
-   * predecessor, as a whole number of `lagUnit`, applied in the successor's timezone.
+   * The time the successor waits after the constraining edge of the predecessor, as a
+   * whole number of `lagUnit`.
+   * Days and weeks keep the time of day in the successor's timezone.
+   * Minutes and hours count elapsed time.
    * For an all-day successor, the lag is rounded down to whole days, so a lag shorter
    * than a day is ignored.
    * An invalid lag is ignored with a warning.
@@ -211,9 +213,10 @@ export interface SchedulerDependenciesState {
  */
 export interface SchedulerDependenciesParameters {
   /**
-   * The dependencies between events. Ignored unless the dependencies feature is provided.
-   * With it, providing a value — even an empty array — enables terminals, arrows and
-   * selection.
+   * The dependencies between events.
+   * Requires `dependenciesFeature` from `@mui/x-scheduler-premium/dependencies`.
+   * With it, any value, even an empty array, enables the dependencies.
+   * Pass `onDependenciesChange` to keep the changes users make.
    */
   dependencies?: readonly SchedulerDependency[];
   /**

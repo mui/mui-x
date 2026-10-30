@@ -14,10 +14,7 @@ import type { EventTimelinePremiumSlotsAndSlotProps } from '../models/slots';
 import type { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses';
 import type { EventTimelinePremiumFeatures } from './features/EventTimelinePremiumFeatures.types';
 
-export type {
-  EventTimelinePremiumFeatures,
-  EventTimelinePremiumRecurringEventsFeature,
-} from './features/EventTimelinePremiumFeatures.types';
+export type { EventTimelinePremiumFeatures } from './features/EventTimelinePremiumFeatures.types';
 
 export type EventTimelinePremiumApiRef<
   TEvent extends object = any,
@@ -79,9 +76,10 @@ export interface EventTimelinePremiumProps<TEvent extends object, TResource exte
    */
   getEventAriaLabel?: (parameters: EventTimelineGetEventAriaLabelParameters) => string;
   /**
-   * The optional features of the Event Timeline.
+   * The optional features of the Event Timeline: `recurringEvents` from `@mui/x-scheduler-premium/recurring-events`
+   * and `dependencies` from `@mui/x-scheduler-premium/dependencies`.
    * They are read once when the component mounts, later changes are ignored.
-   * @example { recurringEvents: recurringEventsFeature }
+   * @example { recurringEvents: recurringEventsFeature, dependencies: dependenciesFeature }
    */
   features?: EventTimelinePremiumFeatures;
   /**

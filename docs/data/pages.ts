@@ -79,6 +79,7 @@ const schedulerPages: MuiPage[] = [
           { pathname: '/x/react-scheduler/event-timeline/navigation' },
           { pathname: '/x/react-scheduler/event-timeline/drag-interactions' },
           { pathname: '/x/react-scheduler/event-timeline/editing' },
+          { pathname: '/x/react-scheduler/event-timeline/dependencies' },
           { pathname: '/x/react-scheduler/event-timeline/presets' },
           { pathname: '/x/react-scheduler/event-timeline/lazy-loading' },
           { pathname: '/x/react-scheduler/event-timeline/virtualization' },
