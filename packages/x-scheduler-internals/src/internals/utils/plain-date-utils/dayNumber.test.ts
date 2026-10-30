@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import {
   addMonthsToDayNumber,
   dayNumberToIsoDate,
+  getDaysInIsoMonth,
+  getIsoDayOfWeek,
   getStartOfMonthDayNumber,
   getStartOfWeekDayNumber,
   getStartOfYearDayNumber,
@@ -54,6 +56,27 @@ describe('dayNumber', () => {
         day: 13,
       });
       expect(isoDateToDayNumber(-271821, 4, 20)).to.equal(-LAST_SUPPORTED_DAY);
+    });
+  });
+
+  describe('getDaysInIsoMonth', () => {
+    it('should return the days of the month, with the leap years of the Gregorian calendar', () => {
+      expect(getDaysInIsoMonth(2024, 1)).to.equal(31);
+      expect(getDaysInIsoMonth(2024, 4)).to.equal(30);
+      expect(getDaysInIsoMonth(2024, 2)).to.equal(29);
+      expect(getDaysInIsoMonth(2023, 2)).to.equal(28);
+      expect(getDaysInIsoMonth(1900, 2)).to.equal(28);
+      expect(getDaysInIsoMonth(2000, 2)).to.equal(29);
+    });
+  });
+
+  describe('getIsoDayOfWeek', () => {
+    it('should return the ISO day of the week, from 1 (Monday) to 7 (Sunday)', () => {
+      // January 1st, 1970 was a Thursday.
+      expect(getIsoDayOfWeek(0)).to.equal(4);
+      expect(getIsoDayOfWeek(-1)).to.equal(3);
+      expect(getIsoDayOfWeek(isoDateToDayNumber(2024, 1, 1))).to.equal(1);
+      expect(getIsoDayOfWeek(isoDateToDayNumber(2024, 1, 7))).to.equal(7);
     });
   });
 
