@@ -59,7 +59,7 @@ Inside `ChatProvider`, call `useChat()` to get messages, streaming state, and ac
 const { messages, sendMessage, isStreaming } = useChat();
 ```
 
-{{"demo": "MinimalHeadlessChat.js"}}
+{{"component": "file://./demos/minimal-headless-chat/index.ts"}}
 
 ## Key takeaways
 

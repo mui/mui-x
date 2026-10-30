@@ -51,7 +51,7 @@ The UI can respond by showing a placeholder or selecting the next conversation.
 
 The demo below shows collection events driving thread and sidebar updates in real time:
 
-{{"demo": "RealtimeThreadSyncHeadlessChat.js"}}
+{{"component": "file://./demos/realtime-thread-sync-headless-chat/index.ts"}}
 
 ## Key takeaways
 

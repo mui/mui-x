@@ -14,7 +14,7 @@ A scatter chart plots two variables as points on a surface, so you can see how o
 Each point is one observation, placed by its values on the two axes.
 Scatter charts are often used for statistical analysis, scientific data, and performance metrics.
 
-{{"demo": "ScatterOverview.js", "disableAd": true, "defaultCodeOpen": false}}
+{{"component": "file://./demos/scatter-overview/index.ts", "disableAd": true, "collapseToEmpty": true}}
 
 ## Basics
 
@@ -25,7 +25,7 @@ You can also use the `dataset` prop together with `datasetKeys` instead of putti
 Add an optional `id` on each point so it keeps a stable identity when the data changes.
 If you animate the series, `id` lets added or removed points transition predictably; without it, updates follow each point's index in the array and existing markers can be repurposed in ways that look wrong.
 
-{{"demo": "BasicScatter.js"}}
+{{"component": "file://./demos/basic-scatter/index.ts"}}
 
 ### Using a dataset
 
@@ -37,7 +37,7 @@ You can also include optional `id`, `colorValue`, and `sizeValue` keys.
 
 See the [Dataset](/x/react-charts/dataset/) page to learn more.
 
-{{"demo": "ScatterDataset.js"}}
+{{"component": "file://./demos/scatter-dataset/index.ts"}}
 
 ## Interaction
 
@@ -48,7 +48,7 @@ Use the `hitAreaRadius` prop with a number to limit how far the pointer can be f
 If the pointer is farther than that from any point, no item is selected.
 Use `hitAreaRadius` with `"item"` to trigger interactions only when the pointer is directly over a marker, instead of selecting whichever point is closest to the pointer in the drawing area.
 
-{{"demo": "ClosestPointInteraction.js"}}
+{{"component": "file://./demos/closest-point-interaction/index.ts"}}
 
 ## Click event
 
@@ -66,7 +66,7 @@ When `hitAreaRadius` is `"item"`, the user must click directly on the point, and
 
 Otherwise, click behavior matches the [interaction section](#interaction), and the mouse event comes from the SVG container.
 
-{{"demo": "ScatterClick.js"}}
+{{"component": "file://./demos/scatter-click/index.ts"}}
 
 ## Bubble chart
 
@@ -79,7 +79,7 @@ Those are configured with
 
 See the [Bubble chart](/x/react-charts/bubble/) page for demos and details.
 
-{{"demo": "../bubble/BubbleChartCO2Emissions.js"}}
+{{"component": "file://../bubble/demos/bubble-chart-co2-emissions/index.ts"}}
 
 ## Styling
 
@@ -89,7 +89,7 @@ You can add a grid in the background of the chart with the `grid` prop.
 
 See [Axis—Grid](/x/react-charts/axis-ticks/#grid) for details.
 
-{{"demo": "GridDemo.js"}}
+{{"component": "file://./demos/grid-demo/index.ts"}}
 
 ### CSS
 
@@ -103,7 +103,7 @@ Use the `scatterClasses.root` class to select all marker groups.
 
 The example below customizes the highlighted style by series.
 
-{{"demo": "ScatterCSSSelectors.js"}}
+{{"component": "file://./demos/scatter-css-selectors/index.ts"}}
 
 ### Shape
 
@@ -111,7 +111,7 @@ Pass a component to the `marker` slot to customize the shape of scatter points.
 
 To keep the legend and tooltip in sync with the custom shape, set the `labelMarkType` property on each series, as shown in the example below.
 
-{{"demo": "ScatterCustomShape.js"}}
+{{"component": "file://./demos/scatter-custom-shape/index.ts"}}
 
 ### Size
 
@@ -120,7 +120,7 @@ For circles, `markerSize` is the radius in pixels.
 
 See the [Bubble chart page](/x/react-charts/bubble/) to modify mark size based on their value.
 
-{{"demo": "ScatterCustomSize.js"}}
+{{"component": "file://./demos/scatter-custom-size/index.ts"}}
 
 ## Plot customization
 
@@ -131,7 +131,7 @@ It returns the series order and details for each series (data points, color, and
 
 See [Custom components](/x/react-charts/components/) for more ways to customize charts.
 
-{{"demo": "CustomScatter.js"}}
+{{"component": "file://./demos/custom-scatter/index.ts"}}
 
 ## Performance
 
@@ -177,7 +177,7 @@ Use the buttons to compare the single and progressive renderers: the spinner kee
 Zoom and pan the chart to see the progressive renderer keep only the first level painted while you interact, then fill in the rest once the interaction settles.
 The first level is the first N points of each series, so it is representative only when the data is unordered; data sorted along an axis may show a partial cloud until the interaction settles.
 
-{{"demo": "ScatterAsyncRenderer.js"}}
+{{"component": "file://./demos/scatter-async-renderer/index.ts"}}
 
 ### Batch renderer
 
@@ -195,7 +195,7 @@ Behavior also differs in a few ways:
 
 The example below uses the `renderer` prop to render 16,000 points with better performance.
 
-{{"demo": "ScatterBatchRenderer.js"}}
+{{"component": "file://./demos/scatter-batch-renderer/index.ts"}}
 
 ### WebGL renderer [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
@@ -204,7 +204,7 @@ This bypasses per-point SVG entirely and trades item-level interactivity for thr
 
 The example below renders 200,000 points.
 
-{{"demo": "ScatterWebGLRenderer.js"}}
+{{"component": "file://./demos/scatter-web-gl-renderer/index.ts"}}
 
 ## Composition
 
@@ -244,4 +244,4 @@ See [Composition—clipping](/x/react-charts/composition/#clipping) for details.
 
 Add a regression line to a scatter plot by composing a custom chart and drawing the line yourself.
 
-{{"demo": "ScatterRegressionLine.js"}}
+{{"component": "file://./demos/scatter-regression-line/index.ts"}}

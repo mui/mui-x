@@ -16,11 +16,11 @@ components: EventTimelinePremium
 
 The `dayAndHour` preset displays a few days with hourly granularity—ideal for scheduling tasks within specific hours.
 
-{{"demo": "DayAndHourPreset.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/day-and-hour-preset/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 Use the `presetConfig` prop to limit the hours displayed for each day. The prop is keyed by preset name, and only the `dayAndHour` preset supports an hour range: `presetConfig={{ dayAndHour: { startTime: 8, endTime: 20 } }}` displays the 8:00 AM–8:00 PM window (`startTime` is inclusive, `endTime` exclusive: the last rendered hour cell is 7:00 PM, and an event ending exactly at 8:00 PM is still fully visible).
 
-{{"demo": "DayAndHourStartEndTime.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/day-and-hour-start-end-time/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 Events that fall entirely within the hidden hours are not rendered at all. An event whose start or end falls inside the hidden hours is clipped to the window edge and flagged with the `data-starting-before-edge` / `data-ending-after-edge` attributes, like an event overflowing the visible date range. An event that only spans the hidden hours (for example a multi-day rental) keeps both edges and renders as a single continuous bar, with the hidden hours simply removed from the axis.
 
@@ -34,25 +34,25 @@ The [Event Calendar's day and week views](/x/react-scheduler/event-calendar/view
 
 The `dayAndMonth` preset displays several weeks with daily granularity grouped by month—ideal for bookings and short-term planning.
 
-{{"demo": "DayAndMonthPreset.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/day-and-month-preset/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Day and week preset
 
 The `dayAndWeek` preset displays several months with weekly granularity—ideal for project planning and sprint tracking.
 
-{{"demo": "DayAndWeekPreset.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/day-and-week-preset/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Month and year preset
 
 The `monthAndYear` preset displays several years with monthly granularity—ideal for long-term roadmaps and strategic planning.
 
-{{"demo": "MonthAndYearPreset.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/month-and-year-preset/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Year preset
 
 The `year` preset displays decades with yearly granularity—ideal for high-level overviews of multi-year initiatives.
 
-{{"demo": "YearPreset.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/year-preset/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Zoom in and out 🚧
 

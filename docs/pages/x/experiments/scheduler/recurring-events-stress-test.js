@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import RecurringEventsStressTest from 'docs/data/experiments/scheduler/RecurringEventsStressTest';
+import RecurringEventsStressTest from 'docs/data/experiments/scheduler/demos/recurring-events-stress-test/RecurringEventsStressTest';
 
 export default function RecurringEventsStressTestExperiment() {
   return (

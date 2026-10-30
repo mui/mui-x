@@ -18,7 +18,7 @@ components: ChatConversation, ChatConversationHeader, ChatConversationTitle, Cha
 
 Configure the title, subtitle, and trailing actions of `ChatConversationHeader`—every header subcomponent (`ChatConversationHeaderInfo`, `ChatConversationTitle`, `ChatConversationSubtitle`, `ChatConversationHeaderActions`) is exercised in this single demo.
 
-{{"demo": "ChatConversationHeaderPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-conversation-header-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ```tsx
 import {
@@ -106,7 +106,7 @@ const CustomActions = React.forwardRef(function CustomActions(
 });
 ```
 
-{{"demo": "CustomHeaderActions.js", "bg": "inline"}}
+{{"component": "file://./demos/custom-header-actions/index.ts", "bg": "inline"}}
 
 :::info
 Icon-only `IconButton`s **must** carry an `aria-label` (as the recipes above do) so screen readers announce each action. The header itself is a native `<header>` element. See the [Accessibility](/x/react-chat/accessibility/) page for the full keyboard and screen reader model.
@@ -179,7 +179,7 @@ Pass `CustomHeader` through `ChatBox`'s `slots.conversationHeader` prop:
 <ChatBox slots={{ conversationHeader: CustomHeader }} />
 ```
 
-{{"demo": "GradientHeader.js", "bg": "inline"}}
+{{"component": "file://./demos/gradient-header/index.ts", "bg": "inline"}}
 
 ## Customizing the title with conversation state
 
@@ -213,7 +213,7 @@ function CustomConversationTitle(props) {
 
 The component passes the default content — `conversation.title` — to your slot as `children`; render it or replace it as shown.
 
-{{"demo": "LiveTitle.js", "bg": "inline"}}
+{{"component": "file://./demos/live-title/index.ts", "bg": "inline"}}
 
 ## Recomposing the header from scratch
 

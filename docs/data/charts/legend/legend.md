@@ -12,7 +12,7 @@ A legend is a UI element that maps symbols and colors to series labels, helping 
 
 In chart components, the legend links series with `label` properties and their colors.
 
-{{"demo": "BasicLegend.js"}}
+{{"component": "file://./demos/basic-legend/index.ts"}}
 
 ## Toggle visibility
 
@@ -25,7 +25,7 @@ To only consider visible series set the axis property `domainSeries` to `'visibl
 
 This demo shows how hiding series can impact the x-axis.
 
-{{"demo": "ToggleSeriesVisibility.js"}}
+{{"component": "file://./demos/toggle-series-visibility/index.ts"}}
 
 ### Stack series edge case
 
@@ -35,7 +35,7 @@ Otherwise, hiding the bottom series could bring the other one outside of the axi
 In this demo, hiding the blue series (New York) decreases the values of the two other ones as expected.
 But if the y-axis does not take it into consideration, the yellow series which has some values below 50 goes outside of the drawing area.
 
-{{"demo": "StackLineVisibility.js"}}
+{{"component": "file://./demos/stack-line-visibility/index.ts"}}
 
 ### Visibility change callback
 
@@ -46,7 +46,7 @@ To set the initial hidden items, use the `initialHiddenItems` prop.
 
 The demo below shows a line chart where you can toggle series' visibility and see the count of currently visible series.
 
-{{"demo": "VisibilityOnChange.js"}}
+{{"component": "file://./demos/visibility-on-change/index.ts"}}
 
 :::info
 You can combine the `toggleVisibilityOnClick` prop with the `onItemClick()` handler.
@@ -65,7 +65,7 @@ All identifiers require a `type` field indicating the series type (for example, 
 
 The demo below shows how to control which items are visible using buttons.
 
-{{"demo": "ControlledVisibility.js"}}
+{{"component": "file://./demos/controlled-visibility/index.ts"}}
 
 ## Customization
 
@@ -82,7 +82,7 @@ Each legend item is composed of two main elements: the `mark` and the `label`.
 
 The example below shows how to customize parts of the legend and how to use both the `legendClasses` variable and the CSS class directly.
 
-{{"demo": "LegendDimension.js", "hideToolbar": true, "bg": "playground"}}
+{{"component": "file://./demos/legend-dimension/index.ts", "hideToolbar": true, "bg": "playground"}}
 
 ### Position
 
@@ -105,13 +105,13 @@ When [composing custom charts](/x/react-charts/quickstart/#composable-charts), t
 Or you can place the legend wherever you prefer.
 :::
 
-{{"demo": "LegendPosition.js", "hideToolbar": true, "bg": "playground"}}
+{{"component": "file://./demos/legend-position/index.ts", "hideToolbar": true, "bg": "playground"}}
 
 ### Hiding
 
 You can hide the legend with the `hideLegend` prop of the Chart.
 
-{{"demo": "HiddenLegend.js"}}
+{{"component": "file://./demos/hidden-legend/index.ts"}}
 
 ### Label styling
 
@@ -120,20 +120,20 @@ You can change the `label` style by targeting the root component's font properti
 The mark is an SVG element, so you can use the `fill` property to change its color.
 You can do this via the `sx` prop, CSS Modules, or other CSS approaches, as shown in the demo below:
 
-{{"demo": "LegendTextStyling.js", "hideToolbar": true, "bg": "playground"}}
+{{"component": "file://./demos/legend-text-styling/index.ts", "hideToolbar": true, "bg": "playground"}}
 
 ### Change mark shape
 
 You can change the mark shape using the `labelMarkType` property of the series item.
 For the `pie` series, the `labelMarkType` property is also available for each pie slice.
 
-{{"demo": "LegendMarkType.js", "hideToolbar": true, "bg": "playground"}}
+{{"component": "file://./demos/legend-mark-type/index.ts", "hideToolbar": true, "bg": "playground"}}
 
 #### Custom shapes
 
 For more advanced use cases, you can provide a component to the `labelMarkType` property of each series to fully customize the mark.
 
-{{"demo": "LegendCustomLabelMark.js" }}
+{{"component": "file://./demos/legend-custom-label-mark/index.ts"}}
 
 Passing a component to `labelMarkType` affects not only the legend but also other places where the label mark is shown, such as tooltips.
 
@@ -147,14 +147,14 @@ To ensure compatibility with [gradients and patterns](/x/react-charts/styling/#g
 You can make the legend scrollable by setting `overflowY` for vertical legends or `overflowX` for horizontal legends.
 Make sure the legend container has a fixed height or width to enable scrolling.
 
-{{"demo": "ScrollableLegend.js"}}
+{{"component": "file://./demos/scrollable-legend/index.ts"}}
 
 ### Series styling
 
 You can use CSS to style the series in the legend.
 Each legend item has a `data-series` attribute where its value is the ID of the series it represents.
 
-{{"demo": "LegendStyleSeries.js"}}
+{{"component": "file://./demos/legend-style-series/index.ts"}}
 
 ### Custom component
 
@@ -166,7 +166,7 @@ The demo below shows how to use `labelMarkType` together with `useLegend()` to c
 This approach uses slots to render the legend items.
 See [HTML components](/x/react-charts/components/#html-components) for a demo that shows how to implement it when composing a custom chart.
 
-{{"demo": "CustomLegend.js"}}
+{{"component": "file://./demos/custom-legend/index.ts"}}
 
 ## Color legend
 
@@ -177,7 +177,7 @@ To display a legend associated with a [`colorMap`](/x/react-charts/styling/#valu
 
 You can override the `legend` slot to display the desired legend, or use the [composition API](/x/react-charts/composition/) to add as many legends as needed.
 
-{{"demo": "VeryBasicColorLegend.js"}}
+{{"component": "file://./demos/very-basic-color-legend/index.ts"}}
 
 ### Select data
 
@@ -186,7 +186,7 @@ To select the color mapping to represent, use the following props:
 - `axisDirection`: `'x'`, `'y'`, or `'z'` - indicates which axis contains the `colorMap` definition
 - `axisId`: The ID of the axis to use (if the selected direction contains multiple axes)
 
-{{"demo": "BasicColorLegend.js"}}
+{{"component": "file://./demos/basic-color-legend/index.ts"}}
 
 ### Position
 
@@ -207,7 +207,7 @@ For the piecewise legend, two extra values are accepted:
 - With `direction='horizontal'`, `'inline-start'` and `'inline-end'` position labels inline with the marker
 - With `direction='vertical'`, these work the same as `'start'` and `'end'`
 
-{{"demo": "LegendLabelPositions.js"}}
+{{"component": "file://./demos/legend-label-positions/index.ts"}}
 
 ### Continuous color mapping
 
@@ -220,7 +220,7 @@ They accept either a string to display or a function `({value, formattedValue}) 
 
 You can also reverse the gradient with the `reverse` prop.
 
-{{"demo": "ContinuousInteractiveDemo.js", "hideToolbar": true, "bg": "playground"}}
+{{"component": "file://./demos/continuous-interactive-demo/index.ts", "hideToolbar": true, "bg": "playground"}}
 
 ### Piecewise color mapping
 
@@ -241,7 +241,7 @@ labelFormatter = ({ index, length, min, max, formattedMin, formattedMax }) =>
 You can change the mark type with the `markType` prop.
 Since the color values are based on the axis and not the series, you must set `markType` directly on the legend.
 
-{{"demo": "PiecewiseInteractiveDemo.js", "hideToolbar": true, "bg": "playground"}}
+{{"component": "file://./demos/piecewise-interactive-demo/index.ts", "hideToolbar": true, "bg": "playground"}}
 
 ## Click event
 
@@ -259,4 +259,4 @@ const clickHandler = (
 The `context` object contains different properties depending on the legend type.
 Click the legend items in the demo below to see their content.
 
-{{"demo": "LegendClick.js"}}
+{{"component": "file://./demos/legend-click/index.ts"}}

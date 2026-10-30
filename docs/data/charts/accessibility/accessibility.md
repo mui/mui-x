@@ -64,7 +64,7 @@ components: {
 }
 ```
 
-{{"demo": "KeyboardNavigation.js"}}
+{{"component": "file://./demos/keyboard-navigation/index.ts"}}
 
 This feature is currently supported by the following charts: line, bar, pie, scatter, sparkline, funnel, radar, heatmap, sankey, map, radial bar, radial line, and range bar.
 
@@ -167,7 +167,7 @@ import type {} from '@mui/x-charts/moduleAugmentation/keyboardActivation';
 The click callbacks then receive `MouseEvent | KeyboardEvent`, and you can narrow with `event instanceof KeyboardEvent` before reading pointer-only properties such as `clientX`.
 Both become the default in v10.
 
-{{"demo": "KeyboardActivation.js"}}
+{{"component": "file://./demos/keyboard-activation/index.ts"}}
 
 When a chart exposes several item callbacks, activation fires the one a pointer would reach first on the focused data point: line charts try `onMarkClick`, then `onLineClick`, then `onAreaClick`; radar charts try `onMarkClick`, then `onAreaClick`; and Sankey charts call `onNodeClick` or `onLinkClick` depending on the focused element. Only one of them fires.
 

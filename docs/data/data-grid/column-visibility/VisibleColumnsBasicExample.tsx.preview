@@ -1,9 +1,0 @@
-<DataGrid
-  columns={[
-    { field: 'username', hideable: false, rowHeader: true },
-    { field: 'age' },
-    { field: 'desk' },
-  ]}
-  rows={rows}
-  showToolbar
-/>

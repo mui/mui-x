@@ -9,7 +9,7 @@ githubLabel: 'scope: chat'
 
 <p class="description">Build a single-thread chat surface without a conversation list when your backend has no history API.</p>
 
-{{"demo": "NoConversationHistory.js", "bg": "inline"}}
+{{"component": "file://./demos/no-conversation-history/index.ts", "bg": "inline"}}
 
 ## Composing the thread directly
 

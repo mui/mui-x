@@ -1,9 +1,0 @@
-<DataGridPremium
-  {...data}
-  showToolbar
-  slotProps={{
-    columnsManagement: {
-      toggleAllMode: 'filteredOnly',
-    },
-  }}
-/>

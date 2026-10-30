@@ -91,7 +91,7 @@ function CustomComponent() {
 The example below shows `useXAxes()` and `useYAxes()` reading all axes in a chart with dual y-axes.
 The custom components use these hooks to draw visual indicators for axis ranges and to display axis metadata.
 
-{{"demo": "UseAxes.js"}}
+{{"component": "file://./demos/use-axes/index.ts"}}
 
 ## Caveats
 

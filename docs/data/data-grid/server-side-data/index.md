@@ -163,7 +163,7 @@ When the corresponding models update, the Data Grid calls the `getRows()` method
 
 The following demo showcases this behavior.
 
-{{"demo": "ServerSideDataGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-data-grid/index.ts", "bg": "inline"}}
 
 :::info
 The Data Source demos use a `useMockServer()` utility function to simulate server-side data fetching.
@@ -178,7 +178,7 @@ By default, the Data Grid clears the visible rows and shows a loading overlay wh
 Pass the `dataSourceKeepPreviousData` prop to keep the previously displayed rows visible until the next response arrives.
 The loading overlay is rendered on top of the previous rows, which prevents the grid height from collapsing between pages.
 
-{{"demo": "ServerSideDataGridKeepPreviousData.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-data-grid-keep-previous-data/index.ts", "bg": "inline"}}
 
 If the request fails, the previous rows are reset, because they no longer match the pagination, sorting, and filtering controls, which already reflect the failed request.
 Handle the error through the [`onDataSourceError`](/x/react-data-grid/server-side-data/#error-handling) callback.
@@ -246,7 +246,7 @@ const lowTTLCache = new GridDataSourceCacheDefault({ ttl: 1000 * 10 }); // 10 se
 />;
 ```
 
-{{"demo": "ServerSideDataGridTTL.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-data-grid-ttl/index.ts", "bg": "inline"}}
 
 ### Create a custom cache
 
@@ -269,7 +269,7 @@ To disable the Data Source cache, pass `null` to the `dataSourceCache` prop.
 <DataGrid columns={columns} dataSource={customDataSource} dataSourceCache={null} />
 ```
 
-{{"demo": "ServerSideDataGridNoCache.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-data-grid-no-cache/index.ts", "bg": "inline"}}
 
 :::success
 To bypass the cache and force refetch rows from the server with a single `dataSource.fetchRows()` API method call, pass `skipCache` flag to the fetch options:
@@ -288,7 +288,7 @@ This starts a polling timer that revalidates the current server-side query in th
 
 The demo below uses `dataSourceRevalidateMs="2_000"` and disables the cache to make the periodic updates visible.
 
-{{"demo": "ServerSideDataGridRevalidation.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-data-grid-revalidation/index.ts", "bg": "inline"}}
 
 ## Updating server-side data
 
@@ -309,7 +309,7 @@ If there's an error, `onDataSourceError()` is triggered with the error object co
  }
 ```
 
-{{"demo": "ServerSideEditing.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-editing/index.ts", "bg": "inline"}}
 
 ### Replacing the row instead of merging it
 
@@ -380,7 +380,7 @@ Each error type has a corresponding `error.params` type which is passed as an ar
 The demo below renders a custom Snackbar component to display an error message when the requests fail, which you can simulate using the checkbox and the **Refetch rows** button at the top.
 Caching has been disabled for simplicity.
 
-{{"demo": "ServerSideErrorHandling.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-error-handling/index.ts", "bg": "inline"}}
 
 ## API
 

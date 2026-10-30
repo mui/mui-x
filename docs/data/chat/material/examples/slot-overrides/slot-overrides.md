@@ -17,7 +17,7 @@ The demo below replaces the message bubble with a `Paper`-based component that u
 - `ownerState.role` differentiates user and assistant bubble styling.
 - `sx` on `Paper` uses theme tokens (`primary.main`, `background.paper`, `divider`) for consistent colors.
 
-{{"demo": "SlotOverrides.js", "bg": "inline"}}
+{{"component": "file://./demos/slot-overrides/index.ts", "bg": "inline"}}
 
 ## Wrapping the default slot
 

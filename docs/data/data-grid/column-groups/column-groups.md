@@ -44,7 +44,7 @@ A column can only be associated with one group.
 />
 ```
 
-{{"demo": "BasicGroupingDemo.js", "bg": "inline"}}
+{{"component": "file://./demos/basic-grouping-demo/index.ts", "bg": "inline"}}
 
 ## Customize column group
 
@@ -55,7 +55,7 @@ In addition to the required `groupId` and `children`, you can use the following 
 - `headerClassName`: a CSS class for styling customization.
 - `renderHeaderGroup`: a function returning custom React component.
 
-{{"demo": "CustomizationDemo.js", "bg": "inline"}}
+{{"component": "file://./demos/customization-demo/index.ts", "bg": "inline"}}
 
 ## Group header height
 
@@ -63,7 +63,7 @@ By default, column group headers are the same height as [column headers](/x/rea
 
 The `columnGroupHeaderHeight` prop can be used to size column group headers independently of column headers.
 
-{{"demo": "GroupHeaderHeight.js", "bg": "inline"}}
+{{"component": "file://./demos/group-header-height/index.ts", "bg": "inline"}}
 
 ## Column reordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
@@ -72,13 +72,13 @@ You can customize this behavior on specific groups by setting `freeReordering: t
 
 In the example below, the `Full name` column group can be divided, but not other column groups.
 
-{{"demo": "BreakingGroupDemo.js", "disableAd": true, "bg": "inline"}}
+{{"component": "file://./demos/breaking-group-demo/index.ts", "disableAd": true, "bg": "inline"}}
 
 ## Collapsible column groups
 
 The demo below uses [`renderHeaderGroup`](/x/react-data-grid/column-groups/#customize-column-group) to add a button to collapse/expand the column group.
 
-{{"demo": "CollapsibleColumnGroups.js", "bg": "inline"}}
+{{"component": "file://./demos/collapsible-column-groups/index.ts", "bg": "inline"}}
 
 ## Manage group visibility 🚧
 

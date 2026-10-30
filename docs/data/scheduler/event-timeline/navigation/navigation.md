@@ -22,7 +22,7 @@ const defaultVisibleDate = DateTime.fromISO('2025-11-01');
 <EventTimelinePremium defaultVisibleDate={defaultVisibleDate} />;
 ```
 
-{{"demo": "DefaultVisibleDate.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/default-visible-date/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::success
 You can also control the visible date using the `visibleDate` and `onVisibleDateChange` props:
@@ -66,7 +66,7 @@ apiRef.current.setVisibleDate({
 });
 ```
 
-{{"demo": "ApiMethodSetVisibleDate.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/api-method-set-visible-date/index.ts", "collapseToEmpty": true}}
 
 ### Navigate to the next and previous range
 
@@ -94,4 +94,4 @@ apiRef.current.goToPreviousVisibleDate(event);
 The steps move the visible date on the days of `displayTimezone`, and `onVisibleDateChange` receives an instant on the new day in that timezone.
 Read its day in `displayTimezone`, as the timezone of the browser can put it on another day.
 
-{{"demo": "ExternalNavigation.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/external-navigation/index.ts", "bg": "inline", "collapseToEmpty": true}}

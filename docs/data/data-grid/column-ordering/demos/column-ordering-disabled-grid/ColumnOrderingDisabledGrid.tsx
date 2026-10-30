@@ -1,0 +1,26 @@
+import { DataGridPro } from '@mui/x-data-grid-pro';
+
+const rows = [
+  {
+    id: 1,
+    username: '@MUI',
+    age: 20,
+  },
+];
+
+export default function ColumnOrderingDisabledGrid() {
+  return (
+    <div style={{ height: 250, width: '100%' }}>
+      {/* @focus-start */}
+      <DataGridPro
+        columns={[
+          { field: 'id' },
+          { field: 'username', rowHeader: true },
+          { field: 'age', disableReorder: true },
+        ]}
+        rows={rows}
+      />
+      {/* @focus-end */}
+    </div>
+  );
+}

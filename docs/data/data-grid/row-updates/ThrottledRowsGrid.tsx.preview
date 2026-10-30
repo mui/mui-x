@@ -1,6 +1,0 @@
-<DataGridPro
-  rows={rows}
-  columns={columns}
-  apiRef={apiRef}
-  throttleRowsMs={2000}
-/>

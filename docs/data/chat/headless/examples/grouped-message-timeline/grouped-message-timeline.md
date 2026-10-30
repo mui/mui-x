@@ -17,7 +17,7 @@ This example exercises `MessageGroup`, `groupingWindowMs`, the `Message.Avatar`/
 
 The demo below shows an author-grouped timeline that collapses repeated avatars and metadata within a short time window:
 
-{{"demo": "GroupedMessageTimeline.js"}}
+{{"component": "file://./demos/grouped-message-timeline/index.ts"}}
 
 ## Key primitives
 

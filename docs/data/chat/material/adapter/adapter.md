@@ -15,7 +15,7 @@ It receives user messages, communicates with your server, and returns a streamin
 
 The following demo shows an adapter connected to a local echo backend:
 
-{{"demo": "../examples/basic-ai-chat/BasicAiChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
+{{"component": "file://../examples/basic-ai-chat/demos/basic-ai-chat/index.ts", "bg": "inline", "hideToolbar": true, "collapseToEmpty": true}}
 
 You author the adapter once and pass it directly to `ChatBox`:
 

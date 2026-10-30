@@ -35,7 +35,7 @@ By default, the toolbar is not displayed on exported media.
 You can override the `onBeforeExport` callback to change this behavior.
 :::
 
-{{"demo": "ExportChartToolbar.js"}}
+{{"component": "file://./demos/export-chart-toolbar/index.ts"}}
 
 ### Custom toolbar
 
@@ -91,7 +91,7 @@ If the browser does not support a requested image format, the export defaults to
 In the example below, you can toggle which export formats are available to the user.
 The name of the exported file has been customized to resemble the chart's title.
 
-{{"demo": "ExportChartToolbarCustomization.js"}}
+{{"component": "file://./demos/export-chart-toolbar-customization/index.ts"}}
 
 ### Add custom styles before exporting
 
@@ -102,7 +102,7 @@ The `onBeforeExport` callback gives you access to the iframe before the export p
 
 For example, you can add the title and caption to the exported chart as shown below:
 
-{{"demo": "ExportChartOnBeforeExport.js"}}
+{{"component": "file://./demos/export-chart-on-before-export/index.ts"}}
 
 :::info
 If you don't want to manually add elements to the chart export, you can create a chart through composition and include the elements you want to export as part of the chart.
@@ -114,7 +114,7 @@ See [Exporting composed charts](#exporting-composed-charts) below for more infor
 Mark any element with the `data-hide-on-export` attribute to exclude it from image and print exports.
 The attribute works on any HTML or SVG element in the chart tree.
 
-{{"demo": "ExportChartHideOnExport.js"}}
+{{"component": "file://./demos/export-chart-hide-on-export/index.ts"}}
 
 To hide an internal MUI X Charts component (such as the legend) that you do not render directly, forward the attribute through `slotProps`:
 
@@ -174,7 +174,7 @@ See [Composition](/x/react-charts/composition/) for more details on implementing
 
 To use a custom wrapper instead, you must set the reference to the root element with the `useChartRootRef()` hook as shown below:
 
-{{"demo": "ExportCompositionNoSnap.js"}}
+{{"component": "file://./demos/export-composition-no-snap/index.ts"}}
 
 ## Content Security Policy (CSP)
 
@@ -202,7 +202,7 @@ const plugins = [...BAR_CHART_PREMIUM_PLUGINS, useChartPremiumExport];
 With the plugin registered, `ChartsToolbarPremium` adds an **Export as Excel** entry to the export menu.
 The entry is left out when the chart does not register the plugin, so the menu never offers an export that cannot run.
 
-{{"demo": "ExportChartAsExcel.js"}}
+{{"component": "file://./demos/export-chart-as-excel/index.ts"}}
 
 :::info
 The single-component charts, such as `BarChartPremium`, do not accept a `plugins` prop, so the Excel export is only available on composed charts.
@@ -252,7 +252,7 @@ Series are grouped by the columns they need, and each group becomes one sheet:
 The `apiRef` prop exposes the `exportAsPrint()` method that can be used to open the browser's print dialog.
 The print dialog lets you print the chart or save it as a PDF, as well as configure other settings.
 
-{{"demo": "PrintChart.js"}}
+{{"component": "file://./demos/print-chart/index.ts"}}
 
 ### Export as image
 
@@ -316,6 +316,6 @@ try {
 }
 ```
 
-{{"demo": "ExportChartAsImage.js"}}
+{{"component": "file://./demos/export-chart-as-image/index.ts"}}
 
 When `onStylesheetError` cancels the export by returning `false`, nothing is exported, no error is logged, and the promise resolves.

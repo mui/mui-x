@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import TimelineDependencyEdgeCases from 'docs/data/experiments/scheduler/TimelineDependencyEdgeCases';
+import TimelineDependencyEdgeCases from 'docs/data/experiments/scheduler/demos/timeline-dependency-edge-cases/TimelineDependencyEdgeCases';
 
 export default function TimelineDependencyEdgeCasesExperiment() {
   return (

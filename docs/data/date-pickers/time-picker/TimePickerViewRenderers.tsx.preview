@@ -1,8 +1,0 @@
-<TimePicker
-  label="With Time Clock"
-  viewRenderers={{
-    hours: renderTimeViewClock,
-    minutes: renderTimeViewClock,
-    seconds: renderTimeViewClock,
-  }}
-/>

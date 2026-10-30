@@ -18,7 +18,7 @@ import { chatSelectors, useChatStore } from '@mui/x-chat/headless';
 
 The demo below shows selectors driving row-level subscriptions in a chat thread:
 
-{{"demo": "../examples/selector-driven-thread/SelectorDrivenThread.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
+{{"component": "file://../examples/selector-driven-thread/demos/selector-driven-thread/index.ts", "bg": "inline", "hideToolbar": true, "collapseToEmpty": true}}
 
 ## Selector reference
 

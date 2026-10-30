@@ -22,7 +22,7 @@ We encourage you to build you own component by reusing those demo helpers.
 If you miss some behaviors, feel free to [open an issue](https://github.com/mui/mui-x/issues/new?template=2.feature.yml).
 :::
 
-{{"demo": "ReferenceOverview.js"}}
+{{"component": "file://./demos/reference-overview/index.ts"}}
 
 ## Reference line
 
@@ -36,14 +36,14 @@ When a chart has multiple axes, use the `axisId` prop to specify which axis the 
 By default, it targets the first defined axis.
 :::
 
-{{"demo": "ReferenceLineBasic.js"}}
+{{"component": "file://./demos/reference-line-basic/index.ts"}}
 
 ### Label
 
 You can add a `label` prop to display text alongside the reference line.
 Position it with the `labelAlign` prop, which accepts `'start'`, `'middle'` (default), and `'end'`.
 
-{{"demo": "ReferenceLineLabel.js"}}
+{{"component": "file://./demos/reference-line-label/index.ts"}}
 
 ### Styling
 
@@ -55,7 +55,7 @@ You can style the `ChartsReferenceLine` with two ways
 Using the `labelStyle` is necessary if you your label has multiple lines.
 This property is used to measure the text size and correctly space the multiple lines.
 
-{{"demo": "ReferenceLineStyled.js"}}
+{{"component": "file://./demos/reference-line-styled/index.ts"}}
 
 ## Reference area
 
@@ -69,10 +69,10 @@ This allows for example adding some labels to the area.
 
 Notice the usage of composition to be able to put the reference area below the plots.
 
-{{"demo": "ReferenceAreaBasic.js"}}
+{{"component": "file://./demos/reference-area-basic/index.ts"}}
 
 ## Reference point
 
 With the same logic as the previous section, you can highlight specific points in the chart.
 
-{{"demo": "ReferencePointBasic.js"}}
+{{"component": "file://./demos/reference-point-basic/index.ts"}}

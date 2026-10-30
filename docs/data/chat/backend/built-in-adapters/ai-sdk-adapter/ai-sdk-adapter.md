@@ -21,7 +21,7 @@ Use this adapter when your backend speaks the AI SDK's UI Message Stream; for pr
 The demo below talks to a live MUI documentation assistant served using AI SDK.
 Ask it anything about Material UI or MUI X—it streams text and reasoning back through the adapter.
 
-{{"demo": "MuiDocsAssistantDemo.js", "defaultCodeOpen": true, "bg": "inline"}}
+{{"component": "file://./demos/mui-docs-assistant-demo/index.ts", "bg": "inline", "initialExpanded": true}}
 
 :::warning
 The MUI docs assistant endpoint is rate-limited to 20 requests per window for fair public usage.
@@ -106,7 +106,7 @@ Don't call this from a browser component with raw API keys—those keys would sh
 
 The demo below simulates `toUIMessageStream()` with a hand-built object stream, so you can watch the token-by-token flow without any backend:
 
-{{"demo": "AiSdkMockStreamDemo.js", "bg": "inline"}}
+{{"component": "file://./demos/ai-sdk-mock-stream-demo/index.ts", "bg": "inline"}}
 
 ## Pattern C: Sharing state with `useChat`
 

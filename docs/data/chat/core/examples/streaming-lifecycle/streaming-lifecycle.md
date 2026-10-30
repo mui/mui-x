@@ -56,7 +56,7 @@ Register callbacks on `ChatProvider` to observe lifecycle events:
 
 The demo below exercises every lifecycle callback alongside `sendMessage()`, `stopStreaming()`, and `retry()`:
 
-{{"demo": "StreamingLifecycleHeadlessChat.js"}}
+{{"component": "file://./demos/streaming-lifecycle-headless-chat/index.ts"}}
 
 ## Lifecycle summary
 

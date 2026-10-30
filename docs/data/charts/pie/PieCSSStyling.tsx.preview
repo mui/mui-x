@@ -1,8 +1,0 @@
-<PieChart
-  {...settings}
-  sx={{
-    [`.${pieClasses.series}[data-series="outer"] .${pieClasses.arc}`]: {
-      opacity: 0.6,
-    },
-  }}
-/>

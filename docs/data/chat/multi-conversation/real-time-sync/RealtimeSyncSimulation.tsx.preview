@@ -1,8 +1,0 @@
-<ChatProvider
-  adapter={adapter}
-  initialConversations={initialConversations}
-  initialMessages={initialMessages}
-  initialActiveConversationId="support"
->
-  <RealtimeSyncInner emit={emit} />
-</ChatProvider>

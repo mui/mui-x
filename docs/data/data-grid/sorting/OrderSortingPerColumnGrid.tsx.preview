@@ -1,6 +1,0 @@
-<DataGrid
-  {...data}
-  loading={loading}
-  columns={columns}
-  sortingOrder={['asc', 'desc', null]}
-/>

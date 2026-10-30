@@ -56,7 +56,7 @@ Use controlled state when you need to:
 
 The demo below shows controlled state wired through `ChatProvider`:
 
-{{"demo": "ControlledStateHeadlessChat.js"}}
+{{"component": "file://./demos/controlled-state-headless-chat/index.ts"}}
 
 ## Key takeaways
 

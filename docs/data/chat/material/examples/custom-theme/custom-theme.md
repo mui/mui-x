@@ -19,7 +19,7 @@ This demo shows how a single `createTheme()` call changes bubble colors, border 
 
 The demo below shows a single `createTheme()` call retheming bubble colors, border radius, and typography across the entire surface:
 
-{{"demo": "CustomTheme.js", "bg": "inline"}}
+{{"component": "file://./demos/custom-theme/index.ts", "bg": "inline"}}
 
 ## Mapping theme tokens to chat elements
 

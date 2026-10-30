@@ -1,8 +1,0 @@
-<DataGrid
-  {...data}
-  disableColumnFilter
-  disableColumnSelector
-  disableDensitySelector
-  columns={columns}
-  showToolbar
-/>

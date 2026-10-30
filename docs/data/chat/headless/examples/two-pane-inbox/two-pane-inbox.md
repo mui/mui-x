@@ -15,7 +15,7 @@ It's the most common production layout for support inboxes, internal copilots, a
 
 The demo below shows the full two-pane inbox assembled from the headless primitives:
 
-{{"demo": "TwoPaneInbox.js"}}
+{{"component": "file://./demos/two-pane-inbox/index.ts"}}
 
 ## Key primitives
 

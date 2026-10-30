@@ -35,7 +35,7 @@ Available properties:
 - `isSidePanelOpen`: Whether the side panel is open.
 - `showEmptyDaysInAgenda`: Whether the agenda view shows days with no events. When set to `false`, the agenda view looks for events in the next 180 days (or in the visible month when `viewConfig.agenda.dayCount` is `'month'`) and shows a message when none is found, customizable through `localeText.agendaViewEmptyStateLabel`.
 
-{{"demo": "DefaultPreferences.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/default-preferences/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::success
 You can also control the preferences using `preferences` and `onPreferencesChange` props:
@@ -78,4 +78,4 @@ preferencesMenuConfig={{ toggleWeekendVisibility: false }}
 preferencesMenuConfig={{ toggleWeekendVisibility: false, toggleWeekNumberVisibility: false }}
 ```
 
-{{"demo": "PreferencesMenu.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/preferences-menu/index.ts", "bg": "inline", "collapseToEmpty": true}}
