@@ -27,7 +27,7 @@ You can use the Computed Columns Panel Trigger and [Toolbar](/x/react-data-grid/
 
 The demo below shows how to add a computed columns panel trigger to a custom toolbar.
 
-{{"demo": "GridComputedColumnsPanelTrigger.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-computed-columns-panel-trigger/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Anatomy
 

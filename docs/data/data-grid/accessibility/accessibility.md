@@ -32,7 +32,7 @@ const columns: GridColDef[] = [
 ];
 ```
 
-{{"demo": "RowHeaderGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/row-header-grid/index.ts", "bg": "inline"}}
 
 Do not use an arbitrary index as a row header.
 A grid can have multiple row header columns when more than one value is needed to identify a row.
@@ -83,7 +83,7 @@ The user can override this setting with the optional toolbar density selector.
 
 You can create a custom toolbar with a density selector that lets users change the density of the `DataGrid`, as shown in the demo below.
 
-{{"demo": "DensitySelectorGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/density-selector-grid/index.ts", "bg": "inline"}}
 
 See the [Toolbar component—Settings menu](/x/react-data-grid/components/toolbar/#settings-menu) for an example of how to create a settings menu that stores user preferences in local storage.
 
@@ -101,7 +101,7 @@ If there is no element with `tabIndex={0}`, the focus is set on the cell itself.
 
 The two Data Grids below illustrate how the user experience is impacted by improper management of the page tab sequence, making it difficult to navigate through the data set:
 
-{{"demo": "FocusManagement.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/focus-management/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 If you customize cell rendering with the [`renderCell()`](/x/react-data-grid/column-definition/#rendering-cells) method, you become responsible for removing focusable elements from the page tab sequence.
 Use the `tabIndex` prop passed to the `renderCell()` params to determine if the rendered cell has focus and, as a result, whether the inner elements should be removed from the tab sequence:
@@ -151,7 +151,7 @@ The tab barriers above and below the grid in the demo are included to make it ea
 Press the <kbd class="key">Tab</kbd> key multiple times to pass the barrier.
 :::
 
-{{"demo": "TabNavigation.js", "bg": "inline"}}
+{{"component": "file://./demos/tab-navigation/index.ts", "bg": "inline"}}
 
 ### Navigation
 

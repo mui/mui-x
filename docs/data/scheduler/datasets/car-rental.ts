@@ -1,5 +1,5 @@
 // Fake data of a car rental company
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 
 export const defaultVisibleDate = new Date('2025-07-01T00:00:00');
 

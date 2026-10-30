@@ -41,7 +41,7 @@ interface GridColDef {
 }
 ```
 
-{{"demo": "ColumnSpanningNumber.js", "bg": "inline"}}
+{{"component": "file://./demos/column-spanning-number/index.ts", "bg": "inline"}}
 
 ## Function signature
 
@@ -54,11 +54,11 @@ interface GridColDef {
 }
 ```
 
-{{"demo": "ColumnSpanningFunction.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/column-spanning-function/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 Function signature can also be useful to derive `colSpan` value from row data:
 
-{{"demo": "ColumnSpanningDerived.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/column-spanning-derived/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## API
 

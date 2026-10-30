@@ -1,4 +1,0 @@
-<Box sx={{ height: 300, width: '100%' }}>
-  <DataGrid onRowClick={handleRowClick} {...data} />
-</Box>
-{message && <Alert severity="info">{message}</Alert>}

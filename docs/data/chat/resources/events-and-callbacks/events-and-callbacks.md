@@ -28,7 +28,7 @@ Use them for logging, analytics, side effects, and error handling without modify
 
 The following demo wires all four callbacks to an event log so you can observe their relative timing:
 
-{{"demo": "CallbackEventLog.js"}}
+{{"component": "file://./demos/callback-event-log/index.ts"}}
 
 ## Observing stream completion
 

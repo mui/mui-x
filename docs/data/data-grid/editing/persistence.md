@@ -81,7 +81,7 @@ Additionally, `onProcessRowUpdateError()` is called to display the error message
 
 To exit edit mode, press <kbd class="key">Escape</kbd> or enter a valid name.
 
-{{"demo": "ServerSidePersistence.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/server-side-persistence/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Confirm before saving
 
@@ -93,7 +93,7 @@ If the user accepts the change, the internal state is updated with the values.
 But if the changes are rejected, the internal state remains unchanged, and the cell is reverted back to its original value.
 The demo also employs validation to prevent entering an empty name.
 
-{{"demo": "AskConfirmationBeforeSave.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/ask-confirmation-before-save/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## API
 

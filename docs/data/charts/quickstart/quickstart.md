@@ -72,7 +72,7 @@ Self-contained Chart components are imported and rendered as a single React comp
 These components require a `series` prop describing the data to render, as well as a numerical value (rendered in pixels) for the `height` prop.
 The `width` prop is optional; if no value is provided, the Charts expand to fill the available space.
 
-{{"demo": "SimpleCharts.js"}}
+{{"component": "file://./demos/simple-charts/index.ts"}}
 
 ### Composable Charts
 
@@ -88,7 +88,7 @@ See the [Charts composition documentation](/x/react-charts/composition/) for com
 
 The demo below shows how to use composition to create a custom Chart that combines a Bar and a Line Chart on a single plot:
 
-{{"demo": "Combining.js"}}
+{{"component": "file://./demos/combining/index.ts"}}
 
 ### Chart layouts
 

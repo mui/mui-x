@@ -61,14 +61,14 @@ return (
 The demo below shows all the basic elements needed to get the charts integration working.
 Use `initialState` to set the initial configuration for the chart renderer.
 
-{{"demo": "GridChartsIntegrationBasic.js", "bg": "inline"}}
+{{"component": "file://./demos/grid-charts-integration-basic/index.ts", "bg": "inline"}}
 
 ## Row grouping
 
 You can integrate charts with grouped and aggregated data.
 The Grid's grouping and aggregation states are reflected in the chart.
 
-{{"demo": "GridChartsIntegrationRowGrouping.js", "bg": "inline"}}
+{{"component": "file://./demos/grid-charts-integration-row-grouping/index.ts", "bg": "inline"}}
 
 ## Pivoting
 
@@ -101,13 +101,13 @@ React.useEffect(() => {
 }, [apiRef]);
 ```
 
-{{"demo": "GridChartsIntegrationPivoting.js", "bg": "inline"}}
+{{"component": "file://./demos/grid-charts-integration-pivoting/index.ts", "bg": "inline"}}
 
 ## Server-side data
 
 The following demo shows charts integration with the grid using [Server-side data](/x/react-data-grid/server-side-data/).
 
-{{"demo": "GridChartsIntegrationDataSource.js", "bg": "inline"}}
+{{"component": "file://./demos/grid-charts-integration-data-source/index.ts", "bg": "inline"}}
 
 ## Multiple charts
 
@@ -119,7 +119,7 @@ Each chart can have its own configuration and state.
 <GridChartsRendererProxy id="feeRate" label="Fee Rate" renderer={ChartsRenderer} />
 ```
 
-{{"demo": "GridChartsIntegrationMultipleCharts.js", "bg": "inline"}}
+{{"component": "file://./demos/grid-charts-integration-multiple-charts/index.ts", "bg": "inline"}}
 
 ## Customization
 
@@ -134,13 +134,13 @@ Additionally, it adds axes formatting for line and area chart that cannot be con
 
 If needed, you can extend the configuration to render the UI elements for the additional customized axes.
 
-{{"demo": "GridChartsIntegrationCustomization.js", "bg": "inline"}}
+{{"component": "file://./demos/grid-charts-integration-customization/index.ts", "bg": "inline"}}
 
 ## Live data
 
 The demo below shows how the Charts react to live data updates in the Grid.
 
-{{"demo": "GridChartsIntegrationLiveData.js", "bg": "inline"}}
+{{"component": "file://./demos/grid-charts-integration-live-data/index.ts", "bg": "inline"}}
 
 ## Localization
 
@@ -151,7 +151,7 @@ To get localized configuration options, use `getLocalizedConfigurationOptions()`
 
 The demo below shows how to incorporate localization into the integration using the `frFr` locale.
 
-{{"demo": "GridChartsIntegrationLocalization.js", "bg": "inline"}}
+{{"component": "file://./demos/grid-charts-integration-localization/index.ts", "bg": "inline"}}
 
 ## API
 

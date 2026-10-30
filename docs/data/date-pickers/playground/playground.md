@@ -12,4 +12,4 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 
 <p class="description">Use this playground to experiment with the props that affect the layout of the Date and Time Picker components.</p>
 
-{{"demo": "PickersPlaygroundWrapper.js", "hideToolbar": true, "bg": "playground"}}
+{{"component": "file://./demos/pickers-playground-wrapper/index.ts", "hideToolbar": true, "bg": "playground"}}

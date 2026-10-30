@@ -1,5 +1,0 @@
-<RichTreeView
-  defaultExpandedItems={['3']}
-  items={ITEMS}
-  slots={{ item: CustomTreeItem }}
-/>

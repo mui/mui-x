@@ -32,7 +32,7 @@ Pass a custom value to `eventCreation.duration` to change the default duration o
 <EventTimelinePremium eventCreation={{ duration: 60 }} />
 ```
 
-{{"demo": "EventCreationDuration.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/event-creation-duration/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Create event on double-click
 
@@ -42,7 +42,7 @@ Set `eventCreation.interaction` to `"double-click"` to open the creation form wh
 <EventTimelinePremium eventCreation={{ interaction: 'double-click' }} />
 ```
 
-{{"demo": "EventCreationInteraction.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/event-creation-interaction/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Event deletion
 
@@ -59,7 +59,7 @@ Users can still edit, drag, and resize events.
 <EventTimelinePremium eventDeletion={false} />
 ```
 
-{{"demo": "EventDeletionDisabled.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/event-deletion-disabled/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 Unlike [`readOnly`](#read-only), which blocks every change to an event, `eventDeletion={false}` only removes the delete actions.
 Your own code can still remove events, for example by updating the `events` prop.
@@ -72,7 +72,7 @@ Pass `eventDeletion={{ confirmation: false }}` to delete events immediately, wit
 <EventTimelinePremium eventDeletion={{ confirmation: false }} />
 ```
 
-{{"demo": "EventDeletionConfirmation.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/event-deletion-confirmation/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Event dialog
 
@@ -88,7 +88,7 @@ From there you can edit the event details or delete it.
 
 The General tab can be recomposed with built-in and custom sections through the `eventDialogGeneralTab` slot — see the [Event dialog component page](/x/react-scheduler/components/event-dialog/).
 
-{{"demo": "EventDialog.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/event-dialog/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::info
 Events with `readOnly: true` (or belonging to a read-only resource) open the dialog in view-only mode.
@@ -124,7 +124,7 @@ Call `eventDetails.cancel()` to keep the built-in dialog closed and open your ow
 
 In the demo below, both clicking an event and clicking an empty cell open a custom dialog instead of the built-in one:
 
-{{"demo": "CustomEditingUI.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/custom-editing-ui/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::warning
 Canceling `onEventEditingStart` replaces the built-in dialog (and its mobile drawer variant): your UI owns the editing form, the recurring event scope selection ("this event", "this and following events", "all events"), and persisting the changes (for example by updating your controlled `events` state).
@@ -140,7 +140,7 @@ Use the `readOnly` prop to disable all editing interactions (event creation, dra
 <EventTimelinePremium readOnly />
 ```
 
-{{"demo": "ReadOnly.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/read-only/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Only set on some events
 

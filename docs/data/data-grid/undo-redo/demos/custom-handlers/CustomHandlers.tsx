@@ -1,0 +1,60 @@
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import type {
+  GridHistoryEventHandler,
+  GridEvents,
+  GridApiPremium,
+} from '@mui/x-data-grid-premium';
+import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
+import { useDemoData } from '@mui/x-data-grid-generator';
+import {
+  createCustomCellEditHandler,
+  createCustomClipboardPasteHistoryHandler,
+} from '../../customHistoryEventHandlers';
+
+export default function CustomHandlers() {
+  // @focus-start @padding 1
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 200,
+    editable: true,
+    multiSelect: true,
+  });
+
+  const apiRef = useGridApiRef() as React.RefObject<GridApiPremium>;
+
+  const historyEventHandlers = React.useMemo(() => {
+    if (!apiRef.current) {
+      return {};
+    }
+
+    return {
+      cellEditStop: createCustomCellEditHandler(apiRef),
+      clipboardPasteEnd: createCustomClipboardPasteHistoryHandler(apiRef),
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiRef.current]) as Record<GridEvents, GridHistoryEventHandler<any>>;
+
+  return (
+    <Box sx={{ height: 500, width: '100%' }}>
+      <DataGridPremium
+        {...data}
+        apiRef={apiRef}
+        pagination
+        pageSizeOptions={[50, 100]}
+        showToolbar
+        disableRowSelectionOnClick
+        cellSelection
+        disablePivoting
+        disableRowGrouping
+        disableColumnPinning
+        historyEventHandlers={historyEventHandlers}
+        initialState={{
+          ...data.initialState,
+          pagination: { paginationModel: { pageSize: 50 } },
+        }}
+      />
+    </Box>
+  );
+  // @focus-end
+}

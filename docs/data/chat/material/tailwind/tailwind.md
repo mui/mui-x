@@ -136,7 +136,7 @@ Use the `slots` and `slotProps` props to replace inner elements while keeping be
 
 The demo below shows a Chat styled entirely with Tailwind CSS utility classes on the structural primitives from `@mui/x-chat/headless`:
 
-{{"demo": "TailwindChatDemo.js", "bg": "inline", "defaultCodeOpen": false, "iframe": true, "height": 500}}
+{{"component": "file://./demos/tailwind-chat-demo/index.ts", "bg": "inline", "iframe": true, "height": 500, "collapseToEmpty": true}}
 
 ## API
 

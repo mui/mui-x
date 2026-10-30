@@ -14,7 +14,7 @@ In [supported browsers](https://developer.mozilla.org/en-US/docs/Web/API/SpeechR
 AI Assistant demos on this page use a limited version of MUI's hosted processing service.
 :::
 
-{{"demo": "AssistantWithExamples.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/assistant-with-examples/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Get started
 
@@ -100,13 +100,13 @@ This is useful if you're dealing with non-sensitive data and want to skip creati
 
 Data is collected randomly at the cell level, which means that the examples for a given column might not come from the same rows.
 
-{{"demo": "AssistantWithDataSampling.js", "bg": "inline"}}
+{{"component": "file://./demos/assistant-with-data-sampling/index.ts", "bg": "inline"}}
 
 ### Using server-side data
 
 The example below shows how to combine the AI Assistant with [server-side data](/x/react-data-grid/server-side-data/).
 
-{{"demo": "AssistantWithDataSource.js", "bg": "inline"}}
+{{"component": "file://./demos/assistant-with-data-source/index.ts", "bg": "inline"}}
 
 ### Data visualization
 
@@ -114,7 +114,7 @@ AI Assistant analyzes the query to determine if it is helpful to visualize the r
 
 [Integrate](/x/react-data-grid/charts-integration/) the Data Grid with [MUI X Charts](/x/react-charts/) to enable the Data Grid to apply the visualization instructions.
 
-{{"demo": "AssistantWithCharts.js", "bg": "inline"}}
+{{"component": "file://./demos/assistant-with-charts/index.ts", "bg": "inline"}}
 
 ## Build your own service
 

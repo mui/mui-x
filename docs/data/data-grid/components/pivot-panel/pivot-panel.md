@@ -26,7 +26,7 @@ You can use the Pivot Panel Trigger and [Toolbar](/x/react-data-grid/components/
 
 The demo below shows how to add a pivot panel trigger to a custom toolbar.
 
-{{"demo": "GridPivotPanelTrigger.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-pivot-panel-trigger/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Anatomy
 

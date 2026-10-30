@@ -1,6 +1,0 @@
-<DatePicker label={'"year"'} openTo="year" />
-<DatePicker
-  label={'"month"'}
-  openTo="month"
-  views={['year', 'month', 'day']}
-/>

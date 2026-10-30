@@ -21,7 +21,7 @@ Users can:
 
 In the following demo, undo-redo is available for the "edit" and "paste" operations.
 
-{{"demo": "BasicUndoRedo.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/basic-undo-redo/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Disabling the undo and redo
 
@@ -33,7 +33,7 @@ To disable the undo/redo feature, set `historyStackSize` to `0`:
 
 This removes existing history, prevents any further history from being tracked, and hides the undo/redo buttons from the toolbar.
 
-{{"demo": "ToggleUndoRedo.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/toggle-undo-redo/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Removing the toolbar buttons
 
@@ -108,7 +108,7 @@ Check the customization sections to learn how to change the default behavior.
 The following demo shows the undo/redo feature working with a Data Source that supports row editing.
 Remove the `updateRow` method to see the toolbar adjustment.
 
-{{"demo": "DataSourceUndoRedo.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/data-source-undo-redo/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Restoring rows that can't be merged
 
@@ -145,7 +145,7 @@ The following demo shows how to customize the cell edit and clipboard paste hand
 - Keep undo/redo operations valid even when the cell is on a different page
 - Automatically navigate to the correct page when undoing/redoing
 
-{{"demo": "CustomHandlers.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/custom-handlers/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Creating a new handler
 
@@ -156,7 +156,7 @@ This lets users to undo and redo filter operations.
 
 To reduce the number of undo steps, changes on the filter model items that do not have a value are ignored.
 
-{{"demo": "AddFilterHandler.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/add-filter-handler/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Validation events
 

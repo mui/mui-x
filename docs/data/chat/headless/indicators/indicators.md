@@ -14,7 +14,7 @@ githubLabel: 'scope: chat'
 
 The demo below combines all three indicator primitives inside a chat thread:
 
-{{"demo": "../examples/indicators-in-context/IndicatorsInContext.js", "hideToolbar": true}}
+{{"component": "file://../examples/indicators-in-context/demos/indicators-in-context/index.ts", "hideToolbar": true}}
 
 ## Indicator primitives
 

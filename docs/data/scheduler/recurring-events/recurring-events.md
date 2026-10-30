@@ -44,7 +44,7 @@ The `EventCalendarPremium` expands recurring events out of the box, only for the
 The rule is evaluated in the event's `timezone`, even when it is edited from the event dialog while the calendar displays another timezone.
 See [Recurring events and timezones](/x/react-scheduler/timezone/#recurring-events-and-timezones) for details.
 
-{{"demo": "RecurringEventsDataset.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/recurring-events-dataset/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::success
 The `EventTimelinePremium` only expands recurring events when you pass the `recurringEvents` feature to its `features` prop.

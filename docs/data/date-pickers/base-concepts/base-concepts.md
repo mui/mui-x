@@ -15,7 +15,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 
 All the components have a `value` / `onChange` API to set and control the values:
 
-{{"demo": "ControlledComponent.js"}}
+{{"component": "file://./demos/controlled-component/index.ts"}}
 
 ## Imports
 
@@ -88,15 +88,15 @@ Depending on your use case, different interaction styles are preferred.
 
 - For input editing with a popover or modal for mouse interaction, use the _Picker_ components:
 
-{{"demo": "BasicDatePicker.js", "hideToolbar": true, "bg": "inline"}}
+{{"component": "file://./demos/basic-date-picker/index.ts", "hideToolbar": true, "bg": "inline"}}
 
 - For input-only editing, use the _Field_ components:
 
-{{"demo": "BasicDateField.js", "hideToolbar": true, "bg": "inline"}}
+{{"component": "file://./demos/basic-date-field/index.ts", "hideToolbar": true, "bg": "inline"}}
 
 - For inline editing, use the _Calendar / Clock_ components:
 
-{{"demo": "BasicDateCalendar.js", "hideToolbar": true, "bg": "inline"}}
+{{"component": "file://./demos/basic-date-calendar/index.ts", "hideToolbar": true, "bg": "inline"}}
 
 :::info
 Each _Picker_ is a combination of one _Field_ and one or several _Calendar / Clock_ components.
@@ -110,7 +110,7 @@ The _Calendar / Clock_ components are rendered inside a _Popover_ on desktop and
 The Date and Time Pickers are divided into six families of components.
 The demo below shows each one of them using their field component:
 
-{{"demo": "ComponentFamilies.js"}}
+{{"component": "file://./demos/component-families/index.ts"}}
 
 ### Responsiveness
 
@@ -124,13 +124,13 @@ Each _Picker_ is available in a responsive, desktop and mobile variant:
 - The mobile component (for example `MobileDatePicker`) which works best for touch devices and small screens.
   It renders the view inside a modal and a field for keyboard editing.
 
-{{"demo": "ResponsivePickers.js"}}
+{{"component": "file://./demos/responsive-pickers/index.ts"}}
 
 ### Find your component
 
 There are many components available, each fitting specific use cases. Use the form below to find the component you need:
 
-{{"demo": "ComponentExplorerNoSnap.js", "hideToolbar": true}}
+{{"component": "file://./demos/component-explorer-no-snap/index.ts", "hideToolbar": true}}
 
 ## Reference date when no value is defined
 
@@ -138,20 +138,20 @@ If `value` or `defaultValue` contains a valid date, this date will be used to in
 
 In the demo below, you can see that the calendar is set to April 2022 on mount:
 
-{{"demo": "ReferenceDateUsingValue.js"}}
+{{"component": "file://./demos/reference-date-using-value/index.ts"}}
 
 When `value` and `defaultValue` contain no valid date, the component will try to find a reference date that passes the validation to initialize its rendering:
 
-{{"demo": "ReferenceDateDefaultBehavior.js"}}
+{{"component": "file://./demos/reference-date-default-behavior/index.ts"}}
 
 You can override this date using the `referenceDate` prop:
 
-{{"demo": "ReferenceDateExplicitDateTimePicker.js"}}
+{{"component": "file://./demos/reference-date-explicit-date-time-picker/index.ts"}}
 
 This can also be useful to set the part of the value that will not be selectable in the component.
 For example, in a Time Picker, it lets you choose the date of your value:
 
-{{"demo": "ReferenceDateExplicitTimePicker.js"}}
+{{"component": "file://./demos/reference-date-explicit-time-picker/index.ts"}}
 
 Reference date can be unique for each range component position.
 You can pass an array of dates to the `referenceDate` prop to set the reference date for each position in the range.
@@ -161,7 +161,7 @@ This might be useful when you want different time values for start and end posit
 Try selecting a date in the demo below, then move to the next position to observe the end reference date usage.
 :::
 
-{{"demo": "ReferenceDateRange.js"}}
+{{"component": "file://./demos/reference-date-range/index.ts"}}
 
 ## Testing caveats
 
@@ -275,7 +275,7 @@ You can find the list of available slots for each component in its respective [A
 
 Some parts of the Pickers' UI are built on several nested slots. For instance, the adornment of the `TextField` on `DatePicker` contains three slots (`inputAdornment`, `openPickerButton`, and `openPickerIcon`) that you can use depending on what you are trying to customize.
 
-{{"demo": "CustomSlots.js"}}
+{{"component": "file://./demos/custom-slots/index.ts"}}
 
 :::info
 Learn more about overriding slots in the doc page about [Custom slots and subcomponents](/x/react-date-pickers/custom-components/).

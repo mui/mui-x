@@ -1,7 +1,0 @@
-<DataGrid
-  {...data}
-  localeText={{
-    toolbarQuickFilterPlaceholder: 'Search commodities',
-  }}
-  showToolbar
-/>
