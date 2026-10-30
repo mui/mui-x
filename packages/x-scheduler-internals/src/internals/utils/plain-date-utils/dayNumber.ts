@@ -55,7 +55,10 @@ export function dayNumberToIsoDate(dayNumber: number): {
  */
 export const LAST_SUPPORTED_DAY = 100_000_000;
 
-function getDaysInIsoMonth(year: number, month: number): number {
+/**
+ * The number of days of an ISO month.
+ */
+export function getDaysInIsoMonth(year: number, month: number): number {
   if (month === 2) {
     return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0) ? 29 : 28;
   }
@@ -63,13 +66,19 @@ function getDaysInIsoMonth(year: number, month: number): number {
 }
 
 /**
+ * The ISO day of the week of `dayNumber`, from 1 (Monday) to 7 (Sunday).
+ */
+export function getIsoDayOfWeek(dayNumber: number): number {
+  // January 1st, 1970 was a Thursday, the ISO weekday 4.
+  return ((((dayNumber + 3) % 7) + 7) % 7) + 1;
+}
+
+/**
  * The first day of the week of `dayNumber`, with weeks starting on the ISO weekday
  * `firstDayOfWeek`, from 1 (Monday) to 7 (Sunday).
  */
 export function getStartOfWeekDayNumber(dayNumber: number, firstDayOfWeek: number): number {
-  // January 1st, 1970 was a Thursday, the ISO weekday 4.
-  const isoDayOfWeek = ((((dayNumber + 3) % 7) + 7) % 7) + 1;
-  return dayNumber - ((isoDayOfWeek - firstDayOfWeek + 7) % 7);
+  return dayNumber - ((getIsoDayOfWeek(dayNumber) - firstDayOfWeek + 7) % 7);
 }
 
 /**

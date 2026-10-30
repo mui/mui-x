@@ -1,6 +1,7 @@
 import { describe, test } from 'vitest';
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
+  RecurringEventWeekDayCode,
   SchedulerEventRecurrenceRule,
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
@@ -134,6 +135,42 @@ describe('recurring event expansion', () => {
       }),
       bench('month view, 10 years after DTSTART', () => {
         expandAll(events, RANGES.month, 'default');
+      }),
+      BENCH_OPTIONS,
+    );
+  });
+
+  test('weekly series with COUNT since 1970', { timeout: 0 }, async ({ bench }) => {
+    // Each series steps through about 8,800 days before the visible range, on other days of the
+    // week than the previous one, so two of them step through more days than the Scheduler keeps
+    // plain dates for.
+    const BY_DAYS: RecurringEventWeekDayCode[][] = [
+      ['MO', 'WE', 'FR'],
+      ['TU', 'TH', 'SA'],
+      ['MO', 'TU', 'TH'],
+      ['WE', 'FR', 'SU'],
+    ];
+    const createSeries = (length: number) =>
+      Array.from({ length }, (_, index) =>
+        EventBuilder.new(adapter)
+          .id(index)
+          .singleDay('1970-01-05T09:00:00')
+          .rrule({ freq: 'WEEKLY', byDay: BY_DAYS[index], count: 20_000 })
+          .toProcessed(),
+      );
+    const oneSeries = createSeries(1);
+    const twoSeries = createSeries(2);
+    const fourSeries = createSeries(4);
+
+    await bench.compare(
+      bench('1 series, month view', () => {
+        expandAll(oneSeries, RANGES.month, 'default');
+      }),
+      bench('2 series, month view', () => {
+        expandAll(twoSeries, RANGES.month, 'default');
+      }),
+      bench('4 series, month view', () => {
+        expandAll(fourSeries, RANGES.month, 'default');
       }),
       BENCH_OPTIONS,
     );

@@ -32,6 +32,9 @@ export {
 } from './plainDate';
 export {
   addMonthsToDayNumber,
+  dayNumberToIsoDate,
+  getDaysInIsoMonth,
+  getIsoDayOfWeek,
   getStartOfMonthDayNumber,
   getStartOfWeekDayNumber,
   getStartOfYearDayNumber,
