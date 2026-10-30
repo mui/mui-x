@@ -71,7 +71,10 @@ const getEventItemCardStyles = (theme: Theme): CSSObject => ({
   variants: getPaletteVariants(theme),
 });
 
-type EventItemCardProps = { 'data-variant'?: 'compact' | 'filled' | 'regular'; palette?: PaletteName };
+type EventItemCardProps = {
+  'data-variant'?: 'compact' | 'filled' | 'regular';
+  palette?: PaletteName;
+};
 
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',

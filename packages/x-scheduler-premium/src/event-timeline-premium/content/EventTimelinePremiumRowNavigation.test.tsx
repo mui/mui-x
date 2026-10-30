@@ -347,14 +347,16 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> arrow-key row navigation', ()
   });
 
   it('should only make the link events of the focused row tabbable', async () => {
-    const events = resources.slice(0, 2).map((resource) =>
-      EventBuilder.new()
-        .resource(resource)
-        .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
-        .readOnly()
-        .href('#order')
-        .build(),
-    );
+    const events = resources
+      .slice(0, 2)
+      .map((resource) =>
+        EventBuilder.new()
+          .resource(resource)
+          .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+          .readOnly()
+          .href('#order')
+          .build(),
+      );
     const { user } = await renderTimeline({ events });
     const getLink = (index: number) =>
       getEventsCell(resources[index].id)!.querySelector('a[data-occurrence-key]')!;

@@ -38,15 +38,18 @@ describe('EventCalendar - Event links', () => {
       ['day grid', 'week', allDayEvent],
       ['month view', 'month', timedEvent],
       ['agenda view', 'agenda', timedEvent],
-    ] as const)('should render a read-only event with an href as a link in the %s', (_, view, event) => {
-      render(<EventCalendar events={[event]} defaultView={view} />);
+    ] as const)(
+      'should render a read-only event with an href as a link in the %s',
+      (_, view, event) => {
+        render(<EventCalendar events={[event]} defaultView={view} />);
 
-      const link = getLink();
-      expect(link).to.have.attribute('href', HREF);
-      expect(link).to.have.attribute('data-link');
-      expect(link).to.have.attribute('tabindex');
-      expect(screen.queryByRole('button', { name: /^Order 1042,/ })).to.equal(null);
-    });
+        const link = getLink();
+        expect(link).to.have.attribute('href', HREF);
+        expect(link).to.have.attribute('data-link');
+        expect(link).to.have.attribute('tabindex');
+        expect(screen.queryByRole('button', { name: /^Order 1042,/ })).to.equal(null);
+      },
+    );
 
     it('should render a link in the compact views', () => {
       render(

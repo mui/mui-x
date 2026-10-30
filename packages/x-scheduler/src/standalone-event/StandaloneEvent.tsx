@@ -55,6 +55,7 @@ StandaloneEvent.propTypes /* remove-proptypes */ = {
     duration: PropTypes.number,
     exDates: PropTypes.arrayOf(PropTypes.string),
     extractedFromId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    href: PropTypes.string,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     readOnly: PropTypes.bool,
     resizable: PropTypes.oneOfType([PropTypes.oneOf(['end', 'start']), PropTypes.bool]),

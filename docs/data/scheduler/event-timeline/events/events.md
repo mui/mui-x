@@ -131,6 +131,35 @@ const event = {
 
 When defined, it applies to the event root DOM element across all views.
 
+### Link
+
+Use the `href` property to render an event as a link, for example to the page of the order it represents:
+
+```ts
+const event = {
+  // ...other properties
+  href: '/orders/1042',
+  readOnly: true,
+};
+```
+
+{{"demo": "HrefProperty.js", "bg": "inline", "defaultCodeOpen": false}}
+
+The event renders as a link only when it's read-only, through its own `readOnly` property, the `areEventsReadOnly` property of its resource, or the `readOnly` prop of the Event Timeline.
+See [Editing—Read-only](/x/react-scheduler/event-timeline/editing/#read-only) for details.
+The `href` of an editable event is ignored.
+
+A link event keeps the behavior of a native link: clicking it navigates to the URL, the browser can open it in a new tab, and it doesn't open the event dialog or the context menu.
+Its root element has a `data-link` attribute, so you can style link events differently from the other events.
+
+To build the URL from other fields of your model, use the `eventModelStructure` prop:
+
+```ts
+const eventModelStructure = {
+  href: { getter: (event) => `/orders/${event.orderId}` },
+};
+```
+
 ### Drag interactions
 
 Use the `draggable` property on the event model to prevent an event from being dragged to a different time slot:
@@ -232,7 +261,7 @@ The slot also renders in the placeholder that previews a drag, a resize or a cre
 The slot doesn't change the accessible name of the event, which is built from its title, dates, resource, and recurrence.
 To announce the details the slot adds, pass `getEventAriaLabel`: it receives the `occurrence`, the row `resource` and the `defaultAriaLabel`, and returns the name to use.
 The demo above appends the ticket code to the default name.
-The block is a button, so keep the content presentational (text, icons, a tooltip) rather than adding links or buttons of its own.
+The block is a button, or a link when the event has an `href`, so keep the content presentational (text, icons, a tooltip) rather than adding links or buttons of its own.
 
 ### Typing custom slot props
 

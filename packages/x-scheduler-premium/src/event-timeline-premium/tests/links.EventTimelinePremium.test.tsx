@@ -90,9 +90,9 @@ describe('EventTimelinePremium - Event links', () => {
       .build();
 
     clearWarningsCache();
-    await expect(async () => {
-      await renderTimeline({ events: [event] });
-    }).toWarnDev(['MUI X Scheduler: An editable event has an `href`']);
+    await expect(() => renderTimeline({ events: [event] })).toWarnDev([
+      'MUI X Scheduler: An editable event has an `href`',
+    ]);
 
     expect(screen.queryByRole('link', { name: getEventNamePattern('Order 1042') })).to.equal(null);
   });

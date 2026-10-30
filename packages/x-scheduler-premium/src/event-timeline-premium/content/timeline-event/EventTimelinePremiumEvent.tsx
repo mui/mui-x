@@ -261,7 +261,9 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 
   return (
     <TimelineGrid.Event
-      render={href != null ? <EventTimelinePremiumEventLinkRoot /> : <EventTimelinePremiumEventRoot />}
+      render={
+        href != null ? <EventTimelinePremiumEventLinkRoot /> : <EventTimelinePremiumEventRoot />
+      }
       href={href}
       isDraggable={isDraggable}
       eventId={occurrence.id}
