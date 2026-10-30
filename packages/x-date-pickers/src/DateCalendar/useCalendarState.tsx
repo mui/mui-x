@@ -170,6 +170,21 @@ export const useCalendarState = (
     timezone,
   });
 
+  const findClosestEnabledDateInMonth = (date: PickerValidDate) => {
+    const startOfMonth = adapter.startOfMonth(date);
+    const endOfMonth = adapter.endOfMonth(date);
+    return findClosestEnabledDate({
+      adapter,
+      date,
+      minDate: adapter.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
+      maxDate: adapter.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
+      disablePast,
+      disableFuture,
+      isDateDisabled,
+      timezone,
+    });
+  };
+
   // Ensure that `calendarState.currentMonth` timezone is updated when `referenceDate` (or timezone changes)
   // https://github.com/mui/mui-x/issues/10804
   React.useEffect(() => {
@@ -202,18 +217,7 @@ export const useCalendarState = (
 
       // If the date is disabled, we try to find a non-disabled date inside the same month.
       if (isDateDisabled(focusedDay)) {
-        const startOfMonth = adapter.startOfMonth(target);
-        const endOfMonth = adapter.endOfMonth(target);
-        focusedDay = findClosestEnabledDate({
-          adapter,
-          date: focusedDay,
-          minDate: adapter.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
-          maxDate: adapter.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
-          disablePast,
-          disableFuture,
-          isDateDisabled,
-          timezone,
-        });
+        focusedDay = findClosestEnabledDateInMonth(focusedDay);
       }
     }
 
@@ -246,9 +250,14 @@ export const useCalendarState = (
     dispatch({ type: 'finishMonthSwitchingAnimation' });
   }, []);
 
+  const focusedDay =
+    calendarState.focusedDay != null && isDateDisabled(calendarState.focusedDay)
+      ? findClosestEnabledDateInMonth(calendarState.focusedDay)
+      : calendarState.focusedDay;
+
   return {
     referenceDate,
-    calendarState,
+    calendarState: { ...calendarState, focusedDay },
     setVisibleDate,
     isDateDisabled,
     onMonthSwitchingAnimationEnd,
