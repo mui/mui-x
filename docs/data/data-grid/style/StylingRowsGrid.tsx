@@ -1,7 +1,8 @@
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { darken, lighten, styled, Theme } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
+import { darken, lighten, styled } from '@mui/material/styles';
 
 const getBackgroundColor = (color: string, theme: Theme, coefficient: number) => ({
   backgroundColor: darken(color, coefficient),

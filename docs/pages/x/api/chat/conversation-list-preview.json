@@ -2,7 +2,9 @@
   "props": {},
   "name": "ConversationListPreview",
   "imports": ["import { ConversationListPreview } from '@mui/x-chat/headless';"],
-  "slots": [{ "name": "root", "description": "", "class": null }],
+  "slots": [
+    { "name": "root", "description": "The component that renders the root.", "class": null }
+  ],
   "classes": [],
   "muiName": "MuiConversationListPreview",
   "filename": "/packages/x-chat-headless/src/conversation-list/ConversationListPreview.tsx",

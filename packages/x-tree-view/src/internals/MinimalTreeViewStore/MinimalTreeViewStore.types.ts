@@ -100,6 +100,9 @@ export interface MinimalTreeViewParameters<
    */
   // TODO Base UI: Rename focusableWhenDisabled.
   disabledItemsFocusable?: boolean;
+  /**
+   * The items to render in the Tree View.
+   */
   items: readonly R[];
   /**
    * Used to determine if a given item should be disabled.

@@ -142,7 +142,13 @@ BarLabel.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
+  /**
+   * The index of the data point in the series.
+   */
   dataIndex: PropTypes.number.isRequired,
   /**
    * Height of the bar this label belongs to.
@@ -152,8 +158,17 @@ BarLabel.propTypes /* remove-proptypes */ = {
    * If true, the bar label is hidden.
    */
   hidden: PropTypes.bool,
+  /**
+   * If `true`, the element is faded.
+   */
   isFaded: PropTypes.bool.isRequired,
+  /**
+   * If `true`, the element is highlighted.
+   */
   isHighlighted: PropTypes.bool.isRequired,
+  /**
+   * The orientation of the bar.
+   */
   layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
   /**
    * The placement of the bar label.
@@ -161,7 +176,13 @@ BarLabel.propTypes /* remove-proptypes */ = {
    * @default 'center'
    */
   placement: PropTypes.oneOf(['center', 'outside']),
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: PropTypes.string.isRequired,
+  /**
+   * If `true`, animations are skipped.
+   */
   skipAnimation: PropTypes.bool.isRequired,
   /**
    * Width of the bar this label belongs to.

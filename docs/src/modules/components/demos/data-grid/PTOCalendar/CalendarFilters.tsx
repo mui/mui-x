@@ -3,7 +3,7 @@ import Link from '@mui/material/Link';
 import { ToolbarButton } from '@mui/x-data-grid-premium';
 import Chip from '@mui/material/Chip';
 import Check from '@mui/icons-material/Check';
-import { FilterType } from './types/pto';
+import type { FilterType } from './types/pto';
 import { FILTER_OPTIONS, FILTER_LABELS, FILTER_COLORS } from './constants';
 
 interface CalendarFiltersProps {

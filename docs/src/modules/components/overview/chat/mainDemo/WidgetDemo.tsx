@@ -12,7 +12,8 @@ import { alpha, keyframes } from '@mui/material/styles';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutlined';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
+import type { GridColDef } from '@mui/x-data-grid';
 import { ChatBox } from '@mui/x-chat';
 import type {
   ChatAdapter,

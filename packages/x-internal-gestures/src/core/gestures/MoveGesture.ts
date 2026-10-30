@@ -12,12 +12,13 @@
  * This gesture only works with mouse pointers, not touch or pen.
  */
 
-import { ActiveGesturesRegistry } from '../ActiveGesturesRegistry';
-import { GesturePhase, GestureState } from '../Gesture';
+import type { ActiveGesturesRegistry } from '../ActiveGesturesRegistry';
+import type { GesturePhase, GestureState } from '../Gesture';
 import type { KeyboardManager } from '../KeyboardManager';
-import { PointerGesture, PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
-import { PointerData, PointerManager } from '../PointerManager';
-import { TargetElement } from '../types/TargetElement';
+import type { PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
+import { PointerGesture } from '../PointerGesture';
+import type { PointerData, PointerManager } from '../PointerManager';
+import type { TargetElement } from '../types/TargetElement';
 import { calculateCentroid, createEventName } from '../utils';
 
 /**

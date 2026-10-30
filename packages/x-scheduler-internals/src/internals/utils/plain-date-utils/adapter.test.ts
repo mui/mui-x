@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapter-date-fns';
-import { adapter, adapterFr, setSystemTimezone } from 'test/utils/scheduler';
+import { adapter, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { processDate } from '../../../process-date';
 import {
@@ -72,12 +72,10 @@ describe('base-temporal adapter bridge', () => {
     },
   );
 
-  it('should return the ISO date of the day in the timezone of the value as the key, whatever the locale', () => {
-    for (const currentAdapter of [adapter, adapterFr]) {
-      // July 4th at 02:00 in Tokyo is July 3rd in UTC.
-      const value = currentAdapter.date('2025-07-04T02:00:00', 'Asia/Tokyo');
-      expect(getDateKey(value, currentAdapter)).to.equal('2025-07-04');
-    }
+  it('should return the ISO date of the day in the timezone of the value as the key', () => {
+    // July 4th at 02:00 in Tokyo is July 3rd in UTC.
+    const value = adapter.date('2025-07-04T02:00:00', 'Asia/Tokyo');
+    expect(getDateKey(value, adapter)).to.equal('2025-07-04');
   });
 
   // The processed date the adapter reads from a value, which processed dates must match.

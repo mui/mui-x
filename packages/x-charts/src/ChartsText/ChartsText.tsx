@@ -16,6 +16,9 @@ export interface ChartsTextProps
    * Height of a text line (in `em`).
    */
   lineHeight?: number;
+  /**
+   * @ignore
+   */
   ownerState?: any;
 }
 
@@ -86,6 +89,9 @@ ChartsText.propTypes /* remove-proptypes */ = {
    * @default false
    */
   needsComputation: PropTypes.bool,
+  /**
+   * @ignore
+   */
   ownerState: PropTypes.any,
   /**
    * Style applied to text elements.

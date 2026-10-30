@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { benchmark } from '@mui/internal-benchmark';
 import { HeatmapPremium } from '@mui/x-charts-premium/HeatmapPremium';
-import { HeatmapValueType } from '@mui/x-charts-pro';
+import type { HeatmapValueType } from '@mui/x-charts-pro';
 import { benchWebGLInteraction } from '../utils';
 
 const dataLength = 100;

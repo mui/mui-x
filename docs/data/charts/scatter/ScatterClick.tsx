@@ -8,7 +8,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
-import { ScatterItemIdentifier } from '@mui/x-charts/models';
+import type { ScatterItemIdentifier } from '@mui/x-charts/models';
 
 const scatterChartsParams = {
   series: [

@@ -23,9 +23,21 @@ export interface HeatmapItemSlotProps {
 export interface HeatmapItemProps {
   seriesId: SeriesId;
   value: number;
+  /**
+   * The width of the element.
+   */
   width: number;
+  /**
+   * The height of the element.
+   */
   height: number;
+  /**
+   * The position of the element in the x-axis.
+   */
   x: number;
+  /**
+   * The position of the element in the y-axis.
+   */
   y: number;
   xIndex: number;
   yIndex: number;

@@ -14,10 +14,17 @@ describe('Core - EventTimelinePremiumStore', () => {
     createRenderer({ clockConfig: new Date(2012, 4, 3, 14, 30, 15, 743) });
 
     it('should initialize default state', () => {
-      const store = new EventTimelinePremiumStore(DEFAULT_PARAMS, adapter);
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          storeFeatures: { recurringEvents: schedulerRecurringEventsPlugin },
+        },
+        adapter,
+      );
 
       const expectedState = {
         adapter,
+        dateLocale: 'en-US',
         areDependenciesEnabled: false,
         areEventsDraggable: true,
         areEventsResizable: true,
@@ -27,6 +34,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         selection: null,
         dependencyCreation: null,
         dependencyEditor: null,
+        dependenciesFeature: null,
         dependencyModelList: [],
         dependencyModelLookup: new Map(),
         eventColor: 'teal',

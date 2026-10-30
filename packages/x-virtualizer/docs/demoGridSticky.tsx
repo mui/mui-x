@@ -3,13 +3,8 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import {
-  useVirtualizer,
-  Virtualizer,
-  Virtualization,
-  Dimensions,
-  LayoutGridSticky,
-} from '@mui/x-virtualizer';
+import type { Virtualizer } from '@mui/x-virtualizer';
+import { useVirtualizer, Virtualization, Dimensions, LayoutGridSticky } from '@mui/x-virtualizer';
 
 const ROW_COUNT = 100_000;
 const COLUMN_COUNT = 40;

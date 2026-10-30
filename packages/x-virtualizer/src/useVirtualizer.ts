@@ -1,6 +1,6 @@
-import * as React from 'react';
+import type * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
-import { integer } from '@mui/x-internals/types';
+import type { integer } from '@mui/x-internals/types';
 import { Store } from '@base-ui/utils/store';
 import { Colspan } from './features/colspan';
 import { Dimensions } from './features/dimensions';
@@ -14,7 +14,7 @@ import type { ColspanParams } from './features/colspan';
 import type { DimensionsParams } from './features/dimensions';
 import type { VirtualizationParams } from './features/virtualization';
 
-import {
+import type {
   ColumnWithWidth,
   FocusedCell,
   Size,

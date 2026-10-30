@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import useId from '@mui/utils/useId';
 import type { SxProps, Theme } from '@mui/system';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatConfirmationUtilityClasses } from './chatConfirmationClasses';
@@ -31,7 +32,13 @@ export interface ChatConfirmationProps {
    */
   onCancel?: React.MouseEventHandler<HTMLButtonElement>;
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<ChatConfirmationClasses>;
 }
 
@@ -157,7 +164,7 @@ const ChatConfirmation = React.forwardRef<HTMLDivElement, ChatConfirmationProps>
       ...other
     } = props;
     const classes = useChatConfirmationUtilityClasses(classesProp);
-    const messageId = React.useId();
+    const messageId = useId();
 
     return (
       <ChatConfirmationRoot
@@ -208,6 +215,9 @@ ChatConfirmation.propTypes /* remove-proptypes */ = {
    * @default 'Cancel'
    */
   cancelLabel: PropTypes.string,
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
@@ -227,6 +237,9 @@ ChatConfirmation.propTypes /* remove-proptypes */ = {
    * Called when the user clicks the confirm button.
    */
   onConfirm: PropTypes.func,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

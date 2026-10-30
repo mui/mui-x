@@ -9,18 +9,17 @@ export {
   toEpochMs,
   toLocalDayNumber,
   toLocalMs,
-  toPlainDateTime,
+  toMsInDay,
+  toPlainDate,
+  toWallClockIsoString,
 } from './timeZone';
-export type { PlainDateTime } from './timeZone';
 export {
   addToAdapterDate,
   buildTemporalPlainDate,
   createAdapterDate,
-  createAdapterDateOnPlainDate,
   createEndOfPlainDate,
   createProcessedDate,
   createStartOfPlainDate,
-  getDateKey,
   moveToPlainDate,
   normalizeAllDayBounds,
 } from './adapter';

@@ -5,7 +5,7 @@ import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import type { GridRowType } from '@mui/x-scheduler-internals/models';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
-import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
+import { adapter, createSchedulerRenderer, processDay } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/adapter';
 
@@ -33,7 +33,7 @@ describe('CalendarGrid keyboard navigation', () => {
             {days.map((day, i) => (
               <CalendarGrid.HeaderCell
                 key={i}
-                date={processDate(day, adapter)}
+                date={processDay(day, adapter)}
                 data-testid={`header-${i}`}
               >
                 {adapter.format(day, 'weekday3Letters')}
@@ -191,7 +191,7 @@ describe('CalendarGrid keyboard navigation', () => {
               {week0Days.map((day, i) => (
                 <CalendarGrid.HeaderCell
                   key={i}
-                  date={processDate(day, adapter)}
+                  date={processDay(day, adapter)}
                   data-testid={`header-${i}`}
                 >
                   {adapter.format(day, 'weekday3Letters')}
@@ -376,7 +376,7 @@ describe('CalendarGrid keyboard navigation', () => {
               {days.slice(0, 3).map((day, i) => (
                 <CalendarGrid.HeaderCell
                   key={i}
-                  date={processDate(day, adapter)}
+                  date={processDay(day, adapter)}
                   data-testid={`header-${i}`}
                 >
                   {adapter.format(day, 'weekday3Letters')}
@@ -399,8 +399,7 @@ describe('CalendarGrid keyboard navigation', () => {
               {days.slice(0, 3).map((day, i) => (
                 <CalendarGrid.TimeColumn
                   key={i}
-                  start={adapter.getTime(day)}
-                  end={adapter.getTime(adapter.endOfDay(day))}
+                  value={buildTemporalPlainDate(adapter, day)}
                   data-testid={`time-${i}`}
                 />
               ))}
@@ -534,8 +533,7 @@ describe('CalendarGrid keyboard navigation', () => {
           <CalendarGrid.Root rowTypes={['time-grid']} rowsPerType={{}}>
             <CalendarGrid.TimeScrollableContent>
               <CalendarGrid.TimeColumn
-                start={adapter.getTime(day1)}
-                end={adapter.getTime(adapter.endOfDay(day1))}
+                value={buildTemporalPlainDate(adapter, day1)}
                 data-testid="col-0"
               >
                 <CalendarGrid.TimeEvent
@@ -549,8 +547,7 @@ describe('CalendarGrid keyboard navigation', () => {
                 />
               </CalendarGrid.TimeColumn>
               <CalendarGrid.TimeColumn
-                start={adapter.getTime(day2)}
-                end={adapter.getTime(adapter.endOfDay(day2))}
+                value={buildTemporalPlainDate(adapter, day2)}
                 data-testid="col-1"
               >
                 <CalendarGrid.TimeEvent

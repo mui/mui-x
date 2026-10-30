@@ -10,10 +10,8 @@ import {
   NumberControl,
   TextControl,
 } from 'docs/src/modules/components/chat-playground/controls';
-import {
-  useCustomizations,
-  type CustomizationDef,
-} from 'docs/src/modules/components/chat-playground/useCustomizations';
+import { useCustomizations } from 'docs/src/modules/components/chat-playground/useCustomizations';
+import type { CustomizationDef } from 'docs/src/modules/components/chat-playground/useCustomizations';
 import { users } from 'docs/src/modules/components/chat-playground/data';
 
 const CONVERSATION_ID = 'unread-playground';

@@ -1,1 +1,1 @@
-export { lruMemoize } from 'reselect';
+export { lruMemoize } from '@base-ui/utils/lruMemoize';

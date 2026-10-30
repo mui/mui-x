@@ -13,7 +13,7 @@ export function plainDateFromDayNumber(dayNumber: number): PlainDate {
  * Checks if the given plain date is a weekend (Saturday or Sunday).
  */
 export function isWeekendPlainDate(plainDate: PlainDate): boolean {
-  // TODO: Read the weekend days from adapter.isWeekend() so they follow the locale
+  // TODO: Read the weekend days of the locale from `Intl.Locale.prototype.getWeekInfo()`
   // (https://github.com/mui/mui-x/issues/23985).
   // ISO weekdays 6 and 7 are Saturday and Sunday.
   return plainDate.dayOfWeek >= 6;

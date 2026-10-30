@@ -1,15 +1,16 @@
 import * as React from 'react';
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 import { eventTimelinePremiumClasses } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
   EventTimelinePremiumContent,
   EventTimelinePremiumStyledContext,
+  EventTimelinePremiumFeaturesContext,
+  dependenciesFeature,
+  useFrozenEventTimelinePremiumFeatures,
 } from '@mui/x-scheduler-premium/internals';
-import {
-  useEventTimelinePremium,
-  EventTimelinePremiumStoreParameters,
-} from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
-import { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
+import type { EventTimelinePremiumStoreParameters } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
+import { useEventTimelinePremium } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
+import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   ErrorContainer,
@@ -131,13 +132,20 @@ const styledContextValue = {
   classes: eventTimelinePremiumClasses,
   localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 };
-const sharedStyledContextValue = { classes: eventTimelinePremiumClasses };
+const sharedStyledContextValue = {
+  classes: eventTimelinePremiumClasses,
+  localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+};
 
 export default function TimelineAutoScheduling() {
   const [events, setEvents] = React.useState(initialEvents);
   const [dependencies, setDependencies] = React.useState<
     readonly SchedulerDependency[] | undefined
   >(initialDependencies);
+
+  const { features, storeFeatures } = useFrozenEventTimelinePremiumFeatures({
+    dependencies: dependenciesFeature,
+  });
 
   // `dependencies` has no public API yet (#22854), so instead of `<EventTimelinePremium />`
   // this experiment feeds the internal store parameters to the same hook the component
@@ -155,6 +163,7 @@ export default function TimelineAutoScheduling() {
     defaultPreset: 'dayAndHour',
     areEventsDraggable: true,
     areEventsResizable: true,
+    storeFeatures,
   };
   const store = useEventTimelinePremium(parameters);
   // The context is typed on the base state and the store generic is invariant: the
@@ -182,16 +191,20 @@ export default function TimelineAutoScheduling() {
         }
       </style>
       <SchedulerStoreContext.Provider value={storeContextValue}>
-        <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-          <EventEditingStyledContext.Provider value={styledContextValue}>
-            <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
-              <SchedulerDirectionProvider>
-                <EventTimelinePremiumContent />
-                <ErrorContainer />
-              </SchedulerDirectionProvider>
-            </SharedComponentsStyledContext.Provider>
-          </EventEditingStyledContext.Provider>
-        </EventTimelinePremiumStyledContext.Provider>
+        <EventTimelinePremiumFeaturesContext.Provider value={features}>
+          <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
+            <EventEditingStyledContext.Provider value={styledContextValue}>
+              <SharedComponentsStyledContext.Provider
+                value={sharedStyledContextValue}
+              >
+                <SchedulerDirectionProvider>
+                  <EventTimelinePremiumContent />
+                  <ErrorContainer />
+                </SchedulerDirectionProvider>
+              </SharedComponentsStyledContext.Provider>
+            </EventEditingStyledContext.Provider>
+          </EventTimelinePremiumStyledContext.Provider>
+        </EventTimelinePremiumFeaturesContext.Provider>
       </SchedulerStoreContext.Provider>
     </div>
   );

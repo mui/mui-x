@@ -1,7 +1,7 @@
 import * as React from 'react';
+import type { GridInitialState } from '@mui/x-data-grid-pro';
 import {
   DataGridPro,
-  GridInitialState,
   useGridApiContext,
   useGridApiRef,
   Toolbar,

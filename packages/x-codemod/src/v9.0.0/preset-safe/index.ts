@@ -1,6 +1,6 @@
 import transformCharts from '../charts/preset-safe';
 import transformPickers from '../pickers/preset-safe';
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../types';
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   [

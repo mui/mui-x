@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 
 const defaultVisibleDate = new Date('2025-07-01T00:00:00');

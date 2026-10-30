@@ -27,6 +27,9 @@ function polarToSvg(cx: number, cy: number, radius: number, angle: number) {
  */
 export default function ChartsRadiusAxisHighlight(props: {
   type: ChartsRadialAxisHighlightRadiusType;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: ChartsRadialAxisHighlightClasses;
 }) {
   const { type, classes } = props;

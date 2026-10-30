@@ -2,7 +2,9 @@
   "props": {},
   "name": "ComposerLabel",
   "imports": ["import { ComposerLabel } from '@mui/x-chat/headless';"],
-  "slots": [{ "name": "label", "description": "", "class": null }],
+  "slots": [
+    { "name": "label", "description": "The component that renders the label.", "class": null }
+  ],
   "classes": [],
   "muiName": "MuiComposerLabel",
   "filename": "/packages/x-chat-headless/src/composer/ComposerLabel.tsx",

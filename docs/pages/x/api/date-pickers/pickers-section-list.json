@@ -8,6 +8,13 @@
       },
       "required": true
     },
+    "sectionListRef": {
+      "type": {
+        "name": "union",
+        "description": "func<br>&#124;&nbsp;{ current?: { getRoot: func, getSectionContainer: func, getSectionContent: func, getSectionIndexFromDOMElement: func } }"
+      },
+      "required": true
+    },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "slotProps": { "type": { "name": "object" } },
     "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } }
@@ -19,14 +26,30 @@
     "import { PickersSectionList } from '@mui/x-date-pickers-pro';"
   ],
   "slots": [
-    { "name": "root", "description": "", "class": "MuiPickersSectionList-root" },
-    { "name": "section", "description": "", "class": "MuiPickersSectionList-section" },
+    {
+      "name": "root",
+      "description": "The component that renders the root.",
+      "default": "PickersSectionListRoot",
+      "class": "MuiPickersSectionList-root"
+    },
+    {
+      "name": "section",
+      "description": "The component that renders a section.",
+      "default": "PickersSectionListSection",
+      "class": "MuiPickersSectionList-section"
+    },
     {
       "name": "sectionContent",
-      "description": "",
+      "description": "The component that renders the editable content of a section.",
+      "default": "PickersSectionListSectionContent",
       "class": "MuiPickersSectionList-sectionContent"
     },
-    { "name": "sectionSeparator", "description": "", "class": null }
+    {
+      "name": "sectionSeparator",
+      "description": "The component that renders the separator before or after a section.",
+      "default": "PickersSectionListSectionSeparator",
+      "class": null
+    }
   ],
   "classes": [],
   "muiName": "MuiPickersSectionList",

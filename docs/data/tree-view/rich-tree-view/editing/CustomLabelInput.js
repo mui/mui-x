@@ -6,7 +6,6 @@ import IconButton from '@mui/material/IconButton';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { TreeItem, TreeItemLabel } from '@mui/x-tree-view/TreeItem';
-
 import { useTreeItemUtils, useTreeItemModel } from '@mui/x-tree-view/hooks';
 
 const StyledLabelInput = styled('input')(({ theme }) => ({

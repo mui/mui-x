@@ -1,12 +1,12 @@
+import type { GridAggregationFunction, GridColDef } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
-  GridAggregationFunction,
-  GridColDef,
   GRID_AGGREGATION_FUNCTIONS,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
-import { useMovieData, Movie } from '@mui/x-data-grid-generator';
+import type { Movie } from '@mui/x-data-grid-generator';
+import { useMovieData } from '@mui/x-data-grid-generator';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',

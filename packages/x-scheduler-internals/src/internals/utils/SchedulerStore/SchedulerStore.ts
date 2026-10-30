@@ -38,6 +38,7 @@ import type {
   SchedulerModelUpdater,
   UpdateEventsParameters,
   SchedulerUpdateEventResult,
+  SchedulerUserFacingErrorDescriptor,
   SchedulerInstanceName,
   SchedulerEditingMode,
   SchedulerEventEditingStartEventDetails,
@@ -74,7 +75,8 @@ import {
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
 import { createStartOfPlainDate } from '../plain-date-utils/adapter';
-import { toPlainDateTime } from '../plain-date-utils/timeZone';
+import { checkDateLocale, DEFAULT_DATE_LOCALE } from '../date-locale';
+import { toPlainDate } from '../plain-date-utils/timeZone';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
@@ -83,7 +85,7 @@ const ONE_MINUTE_IN_MS = 60 * 1000;
  * the end of the gap.
  */
 function createStartOfToday(adapter: Adapter, nowTimestamp: number, timezone: TemporalTimezone) {
-  return createStartOfPlainDate(adapter, toPlainDateTime(nowTimestamp, timezone).date, timezone);
+  return createStartOfPlainDate(adapter, toPlainDate(nowTimestamp, timezone), timezone);
 }
 
 /**
@@ -91,9 +93,7 @@ function createStartOfToday(adapter: Adapter, nowTimestamp: number, timezone: Te
  */
 const TRANSIENT_ERROR_DURATION_MS = 5000;
 
-export const DEFAULT_SCHEDULER_PREFERENCES: SchedulerPreferences = {
-  ampm: true,
-};
+export const DEFAULT_SCHEDULER_PREFERENCES: SchedulerPreferences = {};
 
 const MOCK_EVENT_STATE = {
   eventIdList: [],
@@ -107,22 +107,16 @@ const MOCK_EVENT_STATE = {
  * Surfaced to the user (like a scheduling veto) when an action targets an event the store does
  * not hold: it is still being persisted through the `dataSource`, or left the loaded range.
  */
-function createEventNotLoadedError() {
-  return /* minify-error-disabled */ new Error(
-    'This event is still being saved, so the change was not applied. Try again once it is saved.',
-  );
-}
+const EVENT_NOT_LOADED_ERROR: SchedulerUserFacingErrorDescriptor = { code: 'eventNotLoadedError' };
 
 /**
  * Surfaced when a confirmed delete no longer matches what the confirmation was requested for: the
  * event, its resource, or the scheduler became read-only, or (with the recurring events plugin)
  * the event gained a recurrence rule and now needs a scope choice instead of a flat delete.
  */
-function createEventChangedWhileConfirmingError() {
-  return /* minify-error-disabled */ new Error(
-    'This event changed while the delete confirmation was open, so the deletion was not applied. Try deleting it again.',
-  );
-}
+const EVENT_CHANGED_WHILE_CONFIRMING_ERROR: SchedulerUserFacingErrorDescriptor = {
+  code: 'eventChangedWhileConfirmingError',
+};
 
 /**
  * Normalizes the `eventDeletion` parameter: `false` disables deletion, `true`, an object or
@@ -143,7 +137,7 @@ function getEventDeletionState(
 
 function toUpdateEventResult(result: {
   updatedEntries: SchedulerEventUpdatedProperties[];
-  rejection: Error | null;
+  rejection: SchedulerUserFacingErrorDescriptor | null;
 }): SchedulerUpdateEventResult {
   return result.rejection
     ? { applied: false, rejection: result.rejection }
@@ -165,26 +159,22 @@ function datesNotWritableReason(state: SchedulerState): string {
 }
 
 /**
- * Surfaced to the user (like `createEventNotLoadedError`): a plain sentence, not the
- * `eventModelStructure` / `setter` explanation, which belongs in the dev warning instead — the
- * end user looking at a field error or a toast has no `setter` to add.
+ * Surfaced to the user (like `EVENT_NOT_LOADED_ERROR`). Its `localeText` message is a plain
+ * sentence, not the `eventModelStructure` / `setter` explanation, which belongs in the dev
+ * warning instead — the end user looking at a field error or a toast has no `setter` to add.
  */
-function createDatesNotWritableError(): Error {
-  return /* minify-error-disabled */ new Error(
-    "This date can't be changed, so the change was not applied.",
-  );
-}
+const DATES_NOT_WRITABLE_ERROR: SchedulerUserFacingErrorDescriptor = {
+  code: 'datesNotWritableError',
+};
 
 /**
  * Surfaced to the user, for a refused creation — unlike a move, nothing the user did
  * necessarily touched a date: a recurring split detaching an occurrence hits this from an edit
- * to any field (the title, say), so the message doesn't blame "this date" for it.
+ * to any field (the title, say), so its `localeText` message doesn't blame "this date" for it.
  */
-function createEventNotCreatableError(): Error {
-  return /* minify-error-disabled */ new Error(
-    "This can't be saved as a new event, so the change was not applied.",
-  );
-}
+const EVENT_NOT_CREATABLE_ERROR: SchedulerUserFacingErrorDescriptor = {
+  code: 'eventNotCreatableError',
+};
 
 /**
  * Whether `changes` is a move of both bounds, as opposed to a resize that only submits one. A
@@ -290,9 +280,7 @@ export class SchedulerStore<
       this.registerStoreEffect(schedulerOtherSelectors.visibleTimestamp, this.stopEditing),
     );
 
-    const currentDate = new Date();
-    const timeUntilNextMinuteMs =
-      ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
+    const timeUntilNextMinuteMs = ONE_MINUTE_IN_MS - (Date.now() % ONE_MINUTE_IN_MS);
 
     this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
       this.set('nowTimestamp', Date.now());
@@ -314,8 +302,11 @@ export class SchedulerStore<
     parameters: SchedulerParameters<TEvent, TResource>,
     adapter: Adapter,
   ) {
+    const dateLocale = parameters.dateLocale ?? DEFAULT_DATE_LOCALE;
+    checkDateLocale(dateLocale);
     return {
       adapter,
+      dateLocale,
       areEventsDraggable: parameters.areEventsDraggable ?? true,
       areEventsResizable: parameters.areEventsResizable ?? true,
       canDragEventsFromTheOutside: parameters.canDragEventsFromTheOutside ?? false,
@@ -417,6 +408,7 @@ export class SchedulerStore<
       newSchedulerState,
       parameters,
       updateModel,
+      this.state,
     );
 
     this.update(newState as State);
@@ -459,7 +451,7 @@ export class SchedulerStore<
   /**
    * Removes the error with the given key from `state.errors`, canceling its
    * auto-dismiss timer if it was transient.
-   * The key is the one carried by the matching `StoredError` entry.
+   * The key is the one carried by the matching `UserFacingError` entry.
    */
   public dismissError = (key: string) => {
     this.timeoutManager.clearTimeout(`transient-error-${key}`);
@@ -475,27 +467,34 @@ export class SchedulerStore<
   private transientErrorKeys = new Set<string>();
 
   /**
-   * Appends an error to `state.errors`, wrapping non-Error rejections to preserve
-   * the original payload via `cause`. The store owns the key counter so uniqueness
-   * is enforced in one place. Does not dedupe — pushing the same `Error` instance
-   * twice produces two entries (intentional; e.g. a retried failure that should
-   * re-display after the previous one was dismissed).
+   * Appends an error to `state.errors`, to show it to the user. `options.error` is the original
+   * failure, if any: it is logged to the console and never stored.
+   * The store owns the key counter so uniqueness is enforced in one place. Does not dedupe —
+   * pushing the same error twice produces two entries (intentional; e.g. a retried failure that
+   * should re-display after the previous one was dismissed).
    * With `transient: true` the entry behaves as gesture feedback instead of a
    * failure that must stay until acknowledged: it replaces a previous transient
-   * entry carrying the same message (refreshing its timer) rather than stacking,
+   * entry with the same code and params (refreshing its timer) rather than stacking,
    * and dismisses itself after `TRANSIENT_ERROR_DURATION_MS`.
    * Returns the entry's key, so the caller can `dismissError` it later.
    * @internal
    */
-  public pushError = (error: unknown, options?: { transient?: boolean }): string => {
-    const wrapped =
-      error instanceof Error
-        ? error
-        : /* minify-error-disabled */ new Error(String(error), { cause: error });
+  public pushUserFacingError = (
+    userFacingError: SchedulerUserFacingErrorDescriptor,
+    options?: { error?: unknown; transient?: boolean },
+  ): string => {
+    if (options && 'error' in options) {
+      console.error(
+        `MUI X Scheduler: The user was shown the \`${userFacingError.code}\` error, caused by:`,
+        options.error,
+      );
+    }
     if (options?.transient) {
       const existing = this.state.errors.find(
         (entry) =>
-          this.transientErrorKeys.has(entry.key) && entry.error.message === wrapped.message,
+          this.transientErrorKeys.has(entry.key) &&
+          entry.code === userFacingError.code &&
+          isDeepEqual(entry.params, userFacingError.params),
       );
       if (existing !== undefined) {
         this.dismissError(existing.key);
@@ -503,7 +502,7 @@ export class SchedulerStore<
     }
     this.nextErrorKey += 1;
     const key = String(this.nextErrorKey);
-    this.set('errors', [...this.state.errors, { error: wrapped, key }]);
+    this.set('errors', [...this.state.errors, { ...userFacingError, key }]);
     if (options?.transient) {
       this.transientErrorKeys.add(key);
       this.timeoutManager.startTimeout(`transient-error-${key}`, TRANSIENT_ERROR_DURATION_MS, () =>
@@ -654,7 +653,7 @@ export class SchedulerStore<
         updated: [],
         updatedEntries: [],
         created: [],
-        rejection: contributions.error,
+        rejection: contributions.rejection,
       };
     }
     if (contributions?.updated) {
@@ -848,7 +847,7 @@ export class SchedulerStore<
         warnOnce(
           [
             'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+            'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events`, to enable recurring events.',
           ].join('\n'),
         );
       }
@@ -896,7 +895,9 @@ export class SchedulerStore<
    * plugin's own side effects (e.g. the dependency cleanup for a deleted event in the same batch)
    * go out first only to refuse the batch a moment later.
    */
-  private checkCreatedDatesWritable(created: SchedulerEventCreationProperties[]): Error | null {
+  private checkCreatedDatesWritable(
+    created: SchedulerEventCreationProperties[],
+  ): SchedulerUserFacingErrorDescriptor | null {
     if (created.length === 0 || schedulerEventSelectors.canWriteEventDates(this.state)) {
       return null;
     }
@@ -912,7 +913,7 @@ export class SchedulerStore<
         ].join('\n'),
       );
     }
-    return createEventNotCreatableError();
+    return EVENT_NOT_CREATABLE_ERROR;
   }
 
   /**
@@ -925,7 +926,7 @@ export class SchedulerStore<
    */
   private checkUpdatedDatesWritable(
     updated: Iterable<SchedulerEventUpdatedProperties>,
-  ): Error | null {
+  ): SchedulerUserFacingErrorDescriptor | null {
     if (schedulerEventSelectors.canWriteEventDates(this.state)) {
       return null;
     }
@@ -940,7 +941,7 @@ export class SchedulerStore<
             ].join('\n'),
           );
         }
-        return createDatesNotWritableError();
+        return DATES_NOT_WRITABLE_ERROR;
       }
     }
 
@@ -969,13 +970,13 @@ export class SchedulerStore<
         warnOnce(
           [
             'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+            'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events`, to enable recurring events.',
           ].join('\n'),
         );
       }
-      return toUpdateEventResult(
-        this.updateEvents({ updated: [{ ...calendarEvent, rrule: undefined }] }),
-      );
+      // Drop the key rather than sending `undefined`, which would remove the stored rule.
+      const { rrule, ...changes } = calendarEvent;
+      return toUpdateEventResult(this.updateEvents({ updated: [changes] }));
     }
 
     return toUpdateEventResult(this.updateEvents({ updated: [calendarEvent] }));
@@ -990,7 +991,7 @@ export class SchedulerStore<
         warnOnce(
           [
             'MUI X Scheduler: Recurring event updates are a premium feature.',
-            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+            'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events`, to enable recurring events.',
           ].join('\n'),
         );
       }
@@ -1008,7 +1009,7 @@ export class SchedulerStore<
         warnOnce(
           [
             'MUI X Scheduler: Recurring event deletions are a premium feature.',
-            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+            'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events`, to enable recurring events.',
           ].join('\n'),
         );
       }
@@ -1030,7 +1031,7 @@ export class SchedulerStore<
     // Neither path can act on it, a scope confirmation reads the stored event.
     const liveEvent = schedulerEventSelectors.processedEvent(this.state, occurrence.id);
     if (liveEvent == null) {
-      this.pushError(createEventNotLoadedError(), { transient: true });
+      this.pushUserFacingError(EVENT_NOT_LOADED_ERROR, { transient: true });
       return;
     }
     const isRecurring =
@@ -1075,7 +1076,7 @@ export class SchedulerStore<
     // replacing the loaded range, a split still being persisted).
     const original = schedulerEventSelectors.processedEvent(this.state, eventId);
     if (original == null) {
-      this.pushError(createEventNotLoadedError(), { transient: true });
+      this.pushUserFacingError(EVENT_NOT_LOADED_ERROR, { transient: true });
       return;
     }
     if (!original.dataTimezone.rrule) {
@@ -1122,7 +1123,7 @@ export class SchedulerStore<
         // message — and a resize is stripped the same way too.
         const rejection = this.checkUpdatedDatesWritable([changesInDataTimezone]);
         if (rejection) {
-          this.pushError(rejection, { transient: true });
+          this.pushUserFacingError(rejection, { transient: true });
           return;
         }
         changesInDataTimezone = this.removeUnwritableDates(changesInDataTimezone);
@@ -1139,7 +1140,7 @@ export class SchedulerStore<
     const { created: createdIds, rejection } = this.updateEvents(updatedEvents);
     if (rejection) {
       // No other surface for the rejection; the scope dialog already closed.
-      this.pushError(rejection, { transient: true });
+      this.pushUserFacingError(rejection, { transient: true });
       return;
     }
 
@@ -1200,7 +1201,7 @@ export class SchedulerStore<
     // The event can leave the store while the dialog is open (a fetch replacing the loaded
     // range, a controlled `events` change).
     if (schedulerEventSelectors.processedEvent(this.state, pending.eventId) == null) {
-      this.pushError(createEventNotLoadedError(), { transient: true });
+      this.pushUserFacingError(EVENT_NOT_LOADED_ERROR, { transient: true });
       return;
     }
 
@@ -1211,7 +1212,7 @@ export class SchedulerStore<
       schedulerEventSelectors.isReadOnly(this.state, pending.eventId) ||
       schedulerEventSelectors.isRecurring(this.state, pending.eventId)
     ) {
-      this.pushError(createEventChangedWhileConfirmingError(), { transient: true });
+      this.pushUserFacingError(EVENT_CHANGED_WHILE_CONFIRMING_ERROR, { transient: true });
       return;
     }
 
@@ -1333,7 +1334,7 @@ export class SchedulerStore<
       const { updated, rejection } = this.updateEvents({ updated: [updatedEvent] });
       if (rejection) {
         // No other surface for the rejection; the clipboard stays usable.
-        this.pushError(rejection, { transient: true });
+        this.pushUserFacingError(rejection, { transient: true });
         return null;
       }
       this.set('copiedEvent', null);

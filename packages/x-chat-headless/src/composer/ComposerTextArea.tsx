@@ -9,10 +9,16 @@ import { useComposerContext } from './internals/ComposerContext';
 import type { ComposerTextAreaOwnerState } from './composer.types';
 
 export interface ComposerTextAreaSlots {
+  /**
+   * The component that renders the input.
+   */
   input: React.ElementType;
 }
 
 export interface ComposerTextAreaSlotProps {
+  /**
+   * The props used for the input slot.
+   */
   input?: SlotComponentProps<'textarea', {}, ComposerTextAreaOwnerState>;
 }
 
@@ -20,7 +26,15 @@ export interface ComposerTextAreaProps extends Omit<
   React.TextareaHTMLAttributes<HTMLTextAreaElement>,
   'children' | 'value' | 'defaultValue' | 'onChange'
 > {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<ComposerTextAreaSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ComposerTextAreaSlotProps;
 }
 

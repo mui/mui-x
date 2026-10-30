@@ -12,21 +12,24 @@ import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-interna
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import type {
   SchedulerEventOccurrence,
-  SchedulerProcessedDate,
+  SchedulerProcessedDay,
 } from '@mui/x-scheduler-internals/models';
-import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
+  schedulerPreferenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
+  formatDayOfMonth,
+  formatTime,
+  formatWeekdayMonthAndDayOfMonth,
+  formatWeekdayShort,
   getDisplayedHourRange,
   getEndOfDayMs,
   getInitialScrollTime,
-  toLocalDayNumber,
+  isWeekendPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import clsx from 'clsx';
 import type { DayTimeGridProps } from './DayTimeGrid.types';
@@ -34,7 +37,6 @@ import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
 import { useEventEditingContext } from '../event-editing';
 import { useDisarmOnOutsidePointer } from '../armed-occurrence';
-import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { isOccurrenceInDayGrid } from '../../utils/event-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
@@ -352,7 +354,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const initialScrollTime = getInitialScrollTime(initialScrollTimeProp, range, hourRangeSource);
 
   // Context hooks
-  const adapter = useAdapterContext();
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
   const { stopEditing } = useEventEditingContext();
@@ -379,6 +380,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
   const showCurrentTimeIndicator = useStore(store, schedulerNowSelectors.showCurrentTimeIndicator);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
+  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
+  const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
 
   // Feature hooks
   const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
@@ -391,18 +394,16 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     ),
   });
 
-  const formatTime = useFormatTime();
-
   const [hasScroll, setHasScroll] = React.useState(false);
 
   const { start, end, firstDayNumber, lastDayNumber } = React.useMemo(() => {
-    const lastTimestamp = days[days.length - 1].timestamp;
+    const lastDay = days[days.length - 1];
     return {
       // `days[0].timestamp` is the first instant of the first day.
       start: days[0].timestamp,
-      end: getEndOfDayMs(lastTimestamp, displayTimezone),
-      firstDayNumber: toLocalDayNumber(days[0].timestamp, displayTimezone),
-      lastDayNumber: toLocalDayNumber(lastTimestamp, displayTimezone),
+      end: getEndOfDayMs(lastDay.timestamp, displayTimezone),
+      firstDayNumber: days[0].plainDate.dayNumber,
+      lastDayNumber: lastDay.plainDate.dayNumber,
     };
   }, [days, displayTimezone]);
 
@@ -444,17 +445,15 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     applyInitialScroll();
   });
 
-  const lastIsWeekend = isWeekend(adapter, days[days.length - 1].value);
+  const lastIsWeekend = isWeekendPlainDate(days[days.length - 1].plainDate);
 
-  const template = adapter.date('2020-01-01T00:00:00', 'default');
-
-  const renderHeaderContent = (day: SchedulerProcessedDate) => (
+  const renderHeaderContent = (day: SchedulerProcessedDay) => (
     <DayTimeGridHeaderContent className={classes.dayTimeGridHeaderContent}>
       <DayTimeGridHeaderDayName className={classes.dayTimeGridHeaderDayName}>
-        {adapter.format(day.value, 'weekday3Letters')}
+        {formatWeekdayShort(locale, day.plainDate)}
       </DayTimeGridHeaderDayName>
       <DayTimeGridHeaderDayNumber className={classes.dayTimeGridHeaderDayNumber}>
-        {adapter.format(day.value, 'dayOfMonth')}
+        {formatDayOfMonth(locale, day.plainDate)}
       </DayTimeGridHeaderDayNumber>
     </DayTimeGridHeaderContent>
   );
@@ -482,7 +481,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             key={day.key}
             className={classes.dayTimeGridHeaderCell}
             date={day}
-            ariaLabelFormat={`${adapter.formats.weekday} ${adapter.formats.dayOfMonth}`}
+            aria-label={formatWeekdayMonthAndDayOfMonth(locale, day.plainDate)}
             aria-colindex={index + 1}
             data-has-scroll={(index === days.length - 1 && hasScroll) || undefined}
           >
@@ -549,7 +548,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     style={{ '--hour': index } as React.CSSProperties}
                   >
                     <DayTimeGridTimeAxisText className={classes.dayTimeGridTimeAxisText} as="time">
-                      {index === 0 ? null : formatTime(adapter.setHours(template, hour))}
+                      {index === 0 ? null : formatTime(locale, hour * 60, ampm)}
                     </DayTimeGridTimeAxisText>
                   </DayTimeGridTimeAxisCell>
                 );

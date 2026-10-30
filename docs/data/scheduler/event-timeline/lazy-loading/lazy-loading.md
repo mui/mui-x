@@ -48,6 +48,8 @@ In a real-world scenario, you would replace it with your own server-side data fe
 ## Error handling
 
 When the `dataSource.getEvents` method rejects, the Event Timeline displays an error state.
+It shows a generic message, which you can translate with the `somethingWentWrongError` key of the `localeText` prop, and logs the original error to the console.
+The same happens when `dataSource.persistEvents` throws or returns `{ success: false }`.
 Use the toggle button to simulate a server error.
 
 {{"demo": "ErrorHandling.js", "bg": "inline", "defaultCodeOpen": false}}

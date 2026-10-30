@@ -133,6 +133,8 @@ export function usePreferencesMenuItems(): {
   const { classes, localeText } = useEventCalendarStyledContext();
 
   const preferences = useStore(store, eventCalendarPreferenceSelectors.all);
+  const ampm = useStore(store, eventCalendarPreferenceSelectors.ampm);
+  const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
   const {
     currentView,
     visibleOptions,
@@ -151,7 +153,7 @@ export function usePreferencesMenuItems(): {
     store.setPreferences({ ampm: value === '12' }, event);
   };
 
-  const handleWeekStartsOnChange = (value: 0 | 1 | 6, event: Event) => {
+  const handleWeekStartsOnChange = (value: 1 | 6 | 7, event: Event) => {
     store.setPreferences({ weekStartsOn: value }, event);
   };
 
@@ -216,19 +218,11 @@ export function usePreferencesMenuItems(): {
       >
         {localeText.timeFormat}
       </PreferencesMenuListSubheader>,
-      renderCheckableItem(
-        'ampm-12',
-        'menuitemradio',
-        !!preferences.ampm,
-        localeText.amPm12h,
-        (event) => handleTimeFormatChange('12', event.nativeEvent),
+      renderCheckableItem('ampm-12', 'menuitemradio', ampm, localeText.amPm12h, (event) =>
+        handleTimeFormatChange('12', event.nativeEvent),
       ),
-      renderCheckableItem(
-        'ampm-24',
-        'menuitemradio',
-        !preferences.ampm,
-        localeText.hour24h,
-        (event) => handleTimeFormatChange('24', event.nativeEvent),
+      renderCheckableItem('ampm-24', 'menuitemradio', !ampm, localeText.hour24h, (event) =>
+        handleTimeFormatChange('24', event.nativeEvent),
       ),
     );
   }
@@ -247,7 +241,7 @@ export function usePreferencesMenuItems(): {
     );
     (
       [
-        { value: 0, label: localeText.weekdaySunday },
+        { value: 7, label: localeText.weekdaySunday },
         { value: 1, label: localeText.weekdayMonday },
         { value: 6, label: localeText.weekdaySaturday },
       ] as const
@@ -256,7 +250,7 @@ export function usePreferencesMenuItems(): {
         renderCheckableItem(
           `week-start-${value}`,
           'menuitemradio',
-          preferences.weekStartsOn === value,
+          weekStartsOn === value,
           label,
           (event) => handleWeekStartsOnChange(value, event.nativeEvent),
         ),

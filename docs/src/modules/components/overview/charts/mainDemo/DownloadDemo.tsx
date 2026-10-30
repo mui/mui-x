@@ -11,7 +11,8 @@ import dataCharts from '../data/x-charts.json';
 import dataGrid from '../data/x-data-grid.json';
 import dataPickers from '../data/x-date-pickers.json';
 import { shortMonthYearFormatter } from '../shortMonthYearFormatter';
-import { generateDataset, Versions } from './generateDataset';
+import type { Versions } from './generateDataset';
+import { generateDataset } from './generateDataset';
 
 function AreaGradient({ color, id }: { color: string; id: string }) {
   return (

@@ -89,11 +89,15 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
       const getEvents = vi.fn(async () => {
         throw new Error('Network down');
       });
-      renderWithDataSource(getEvents, hideEmptyDays);
 
-      await waitFor(() => {
-        expect(screen.getByRole('status')).to.have.text('No upcoming events');
-      });
+      await expect(async () => {
+        renderWithDataSource(getEvents, hideEmptyDays);
+        await waitFor(() => {
+          expect(screen.getByRole('status')).to.have.text('No upcoming events');
+        });
+      }).toErrorDev([
+        'MUI X Scheduler: The user was shown the `somethingWentWrongError` error, caused by: Error: Network down',
+      ]);
       expect(getEvents.mock.calls).to.have.length(1);
       expect(getSkeletons()).to.have.length(0);
       expect(getRows()).to.have.length(0);

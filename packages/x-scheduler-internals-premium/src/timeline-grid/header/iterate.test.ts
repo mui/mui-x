@@ -2,7 +2,7 @@ import { adapter } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
-import { getTimelineAxis } from '@mui/x-scheduler-internals/internals';
+import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
 import type { TimelineAxisWindow } from '@mui/x-scheduler-internals/internals';
 import type { PresetHeaderUnit } from '../../models';
 import { iterate } from './iterate';
@@ -12,11 +12,17 @@ function iterateRange(
   tickUnit: PresetHeaderUnit,
   start: TemporalSupportedObject,
   end: TemporalSupportedObject,
-  weekStartsOn?: WeekStartsOn,
+  // The first day of the week of English (United States).
+  weekStartsOn: WeekStartsOn = 7,
   hourWindow: TimelineAxisWindow = { dayStartMinute: 0, dayEndMinute: 1440 },
 ) {
-  const axis = getTimelineAxis(adapter, { start, end, ...hourWindow });
-  return iterate(adapter, unit, tickUnit, axis, weekStartsOn);
+  // The ranges of the tests run from the first instant of a date to the last instant of a date.
+  const range = {
+    startPlainDate: buildTemporalPlainDate(adapter, start),
+    endPlainDate: buildTemporalPlainDate(adapter, end).add({ days: 1 }),
+    ...hourWindow,
+  };
+  return iterate(unit, tickUnit, range, weekStartsOn);
 }
 
 describe('iterate()', () => {
@@ -66,9 +72,9 @@ describe('iterate()', () => {
       });
 
       expect(hourCells.length).to.equal(4 * 12);
-      expect(adapter.getHours(hourCells[0].date)).to.equal(8);
-      expect(adapter.getHours(hourCells[11].date)).to.equal(19);
-      expect(adapter.getHours(hourCells[12].date)).to.equal(8);
+      expect(hourCells[0].wallClockHour).to.equal(8);
+      expect(hourCells[11].wallClockHour).to.equal(19);
+      expect(hourCells[12].wallClockHour).to.equal(8);
       hourCells.forEach((cell) => expect(cell.spanInTicks).to.equal(1));
     });
 
@@ -102,7 +108,7 @@ describe('iterate()', () => {
     });
 
     it('should ignore the hour range when the tick unit is not hour', () => {
-      const cells = iterateRange('week', 'day', start, end, undefined, {
+      const cells = iterateRange('week', 'day', start, end, 7, {
         dayStartMinute: 480,
         dayEndMinute: 1200,
       });
@@ -211,7 +217,7 @@ describe('iterate()', () => {
       });
     });
 
-    it('should keep the day cells on midnight and one tick wide after a transition at midnight', () => {
+    it('should keep one day cell per date, one tick wide, after a transition at midnight', () => {
       // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
       // The dayAndMonth shape: 8 weeks of day ticks.
       const start = adapter.startOfDay(adapter.date('2026-03-01T12:00:00', 'America/Havana'));
@@ -221,10 +227,13 @@ describe('iterate()', () => {
 
       expect(cells.length).to.equal(56);
       expect(cells.every((cell) => cell.spanInTicks === 1)).to.equal(true);
-      // March 8th, the 8th cell, starts at 01:00.
-      expect(cells.every((cell) => adapter.getHours(cell.date) === 0 || cell.index === 7)).to.equal(
-        true,
-      );
+      // March 8th, the 8th cell, starts at 01:00 but keeps its date.
+      expect(cells[7].plainDate).toEqualPlainDate('2026-03-08');
+      expect(
+        cells.every(
+          (cell, index) => cell.plainDate.dayNumber === cells[0].plainDate.dayNumber + index,
+        ),
+      ).to.equal(true);
     });
 
     it('should keep the first day cell whole when the range starts on a transition at midnight', () => {
@@ -275,7 +284,7 @@ describe('iterate()', () => {
       const cells = iterateRange('year', 'day', start, end);
 
       expect(cells.length).to.equal(4);
-      expect(adapter.getYear(cells[0].date)).to.equal(2025);
+      expect(cells[0].plainDate).toEqualPlainDate('2025-01-01');
       expect(cells[0].spanInTicks).to.equal(
         adapter.differenceInDays(adapter.date('2026-01-01T00:00:00Z', 'default'), start),
       );
@@ -297,15 +306,19 @@ describe('iterate()', () => {
       expect(cells[1].spanInTicks).to.equal(10); // Feb 1–10
     });
 
-    it('should expose the aligned `date` plus clamped `start` and `end`', () => {
+    it('should expose the aligned date plus the first and last dates within the range', () => {
       const start = adapter.date('2025-07-15T00:00:00Z', 'default');
       const end = adapter.date('2025-08-15T23:59:59.999Z', 'default');
 
       const cells = iterateRange('month', 'day', start, end);
 
-      // First cell aligns to July 1st but its clamped start is July 15th.
-      expect(adapter.getDate(cells[0].date)).to.equal(1);
-      expect(cells[0].start).toEqualDateTime(start);
+      // The first cell aligns to July 1st but starts on July 15th within the range.
+      expect(cells[0].plainDate).toEqualPlainDate('2025-07-01');
+      expect(cells[0].firstPlainDate).toEqualPlainDate('2025-07-15');
+      expect(cells[0].lastPlainDate).toEqualPlainDate('2025-07-31');
+      // The last cell ends on the last date of the range.
+      expect(cells[1].firstPlainDate).toEqualPlainDate('2025-08-01');
+      expect(cells[1].lastPlainDate).toEqualPlainDate('2025-08-15');
     });
 
     it('should emit one partial cell per month when the range crosses a year boundary', () => {
@@ -315,11 +328,9 @@ describe('iterate()', () => {
       const cells = iterateRange('month', 'day', start, end);
 
       expect(cells.length).to.equal(2);
-      expect(adapter.getYear(cells[0].date)).to.equal(2025);
-      expect(adapter.getMonth(cells[0].date)).to.equal(11); // December (0-indexed)
+      expect(cells[0].plainDate).toEqualPlainDate('2025-12-01');
       expect(cells[0].spanInTicks).to.equal(4); // Dec 28-31
-      expect(adapter.getYear(cells[1].date)).to.equal(2026);
-      expect(adapter.getMonth(cells[1].date)).to.equal(0); // January
+      expect(cells[1].plainDate).toEqualPlainDate('2026-01-01');
       expect(cells[1].spanInTicks).to.equal(5); // Jan 1-5
     });
 
@@ -377,13 +388,16 @@ describe('iterate()', () => {
       );
     });
 
-    it('should throw when rangeEnd is before rangeStart', () => {
+    it('should throw when the end date of the range is not after its start date', () => {
       const start = adapter.date('2025-07-31T00:00:00Z', 'default');
-      const end = adapter.date('2025-07-01T00:00:00Z', 'default');
 
-      expect(() => iterateRange('day', 'day', start, end)).to.throw(
-        /rangeEnd is before rangeStart/,
-      );
+      expect(() =>
+        iterateRange('day', 'day', start, adapter.date('2025-07-01T00:00:00Z', 'default')),
+      ).to.throw(/end date is not after its start date/);
+      // The range ends on its start date.
+      expect(() =>
+        iterateRange('day', 'day', start, adapter.date('2025-07-30T00:00:00Z', 'default')),
+      ).to.throw(/end date is not after its start date/);
     });
 
     it('should throw when the cell count would exceed the 10k safety cap', () => {
@@ -406,34 +420,19 @@ describe('iterate()', () => {
 
       const cells = iterateRange('week', 'day', start, end, 1);
 
-      // The aligned `date` on the first cell should be Jan 6 (Monday).
-      expect(adapter.getDate(cells[0].date)).to.equal(6);
-      expect(adapter.getMonth(cells[0].date)).to.equal(0); // January
+      // The first cell should be aligned to Jan 6 (Monday).
+      expect(cells[0].plainDate).toEqualPlainDate('2025-01-06');
     });
 
-    it('should start the first week cell on Sunday when weekStartsOn is 0', () => {
-      // Range: same Wed-to-Wed. With weekStartsOn=0 first cell aligns to Sun 2025-01-05.
+    it('should start the first week cell on Sunday when weekStartsOn is 7', () => {
+      // Range: same Wed-to-Wed. With weekStartsOn=7 first cell aligns to Sun 2025-01-05.
       const start = adapter.date('2025-01-08T00:00:00Z', 'default');
       const end = adapter.date('2025-01-22T23:59:59.999Z', 'default');
 
-      const cells = iterateRange('week', 'day', start, end, 0);
+      const cells = iterateRange('week', 'day', start, end, 7);
 
-      // The aligned `date` on the first cell should be Jan 5 (Sunday).
-      expect(adapter.getDate(cells[0].date)).to.equal(5);
-      expect(adapter.getMonth(cells[0].date)).to.equal(0); // January
-    });
-
-    it('should produce the same result as default when weekStartsOn is undefined', () => {
-      const start = adapter.date('2025-01-08T00:00:00Z', 'default');
-      const end = adapter.date('2025-01-22T23:59:59.999Z', 'default');
-
-      const withUndefined = iterateRange('week', 'day', start, end, undefined);
-      const withoutArg = iterateRange('week', 'day', start, end);
-
-      expect(withUndefined.length).to.equal(withoutArg.length);
-      withUndefined.forEach((cell, i) => {
-        expect(adapter.isSameDay(cell.date, withoutArg[i].date)).to.equal(true);
-      });
+      // The first cell should be aligned to Jan 5 (Sunday).
+      expect(cells[0].plainDate).toEqualPlainDate('2025-01-05');
     });
   });
 });

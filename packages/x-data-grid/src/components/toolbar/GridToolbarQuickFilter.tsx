@@ -41,6 +41,9 @@ export type GridToolbarQuickFilterProps = {
    * @default 150
    */
   debounceMs?: number;
+  /**
+   * The props used for each slot inside.
+   */
   slotProps?: {
     root: TextFieldProps;
   };
@@ -219,6 +222,9 @@ GridToolbarQuickFilter.propTypes /* remove-proptypes */ = {
    *   .filter((word) => word !== '')
    */
   quickFilterParser: PropTypes.func,
+  /**
+   * The props used for each slot inside.
+   */
   slotProps: PropTypes.object,
 } as any;
 

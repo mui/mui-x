@@ -45,7 +45,7 @@ const visibleAxisDataSelector = createSelectorMemoized(
           const position = computeElementPositionInCollection({
             start: occurrence.displayTimezone.start,
             end: occurrence.displayTimezone.end,
-            collection: config.axis,
+            collection: config,
             durationMs: config.durationMs,
           });
           if (position.duration === 0) {
@@ -94,7 +94,7 @@ export function addTimelinePositionsToOccurrences({
       computeElementPositionInCollection({
         start: occurrence.displayTimezone.start,
         end: occurrence.displayTimezone.end,
-        collection: config.axis,
+        collection: config,
         durationMs: config.durationMs,
       }),
   }));

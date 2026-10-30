@@ -1,16 +1,12 @@
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
-import {
-  StaticDatePicker,
-  StaticDatePickerProps,
-} from '@mui/x-date-pickers/StaticDatePicker';
-import {
-  DesktopDatePicker,
-  DesktopDatePickerProps,
-} from '@mui/x-date-pickers/DesktopDatePicker';
-import { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
+import type { StaticDatePickerProps } from '@mui/x-date-pickers/StaticDatePicker';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import type { DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import type { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
-import { PickersSubcomponentType } from 'docs/src/modules/utils/useCustomizationPlayground';
+import type { PickersSubcomponentType } from 'docs/src/modules/utils/useCustomizationPlayground';
 
 type PickerExamplesType<TComponent, TComponentProps> = {
   name: string;

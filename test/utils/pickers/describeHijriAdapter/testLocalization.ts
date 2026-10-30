@@ -1,5 +1,5 @@
 import { it, expect } from 'vitest';
-import { DescribeHijriAdapterTestSuite } from './describeHijriAdapter.types';
+import type { DescribeHijriAdapterTestSuite } from './describeHijriAdapter.types';
 
 export const testLocalization: DescribeHijriAdapterTestSuite = ({ adapter }) => {
   it('Method: formatNumber', () => {

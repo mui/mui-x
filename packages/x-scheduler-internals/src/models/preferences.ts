@@ -1,17 +1,18 @@
-/** Day-of-week index: 0 = Sunday, 1 = Monday, …, 6 = Saturday. */
-export type WeekStartsOn = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+/** ISO weekday: 1 = Monday, 2 = Tuesday, …, 7 = Sunday. */
+export type WeekStartsOn = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 export interface SchedulerPreferences {
   /**
    * Whether the component should display the time in 12-hour format with AM/PM meridiem.
-   * @default true
+   * When not set, the hour cycle of the `dateLocale` is used.
+   * @default The hour cycle of the `dateLocale`
    */
-  ampm: boolean;
+  ampm?: boolean;
   /**
-   * The day the week starts on.
-   * 0 = Sunday, 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday.
-   * When not set, the locale's first day of the week is used.
-   * @default The locale's first day of the week
+   * The day the week starts on, as an ISO weekday.
+   * 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday, 7 = Sunday.
+   * When not set, the first day of the week of the `dateLocale` is used.
+   * @default The first day of the week of the `dateLocale`
    */
   weekStartsOn?: WeekStartsOn;
 }

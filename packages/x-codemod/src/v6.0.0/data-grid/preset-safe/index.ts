@@ -7,7 +7,7 @@ import renameFilterItemProps from '../rename-filter-item-props';
 import renameSelectorsAndEvents from '../rename-selectors-and-events';
 import removeExperimentalFeatures from '../remove-stabilized-experimentalFeatures';
 import replaceOnCellFocusOut from '../replace-onCellFocusOut-prop';
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   file.source = transformColumnMenu(file, api, options);
