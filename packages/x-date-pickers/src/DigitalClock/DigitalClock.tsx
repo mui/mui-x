@@ -121,6 +121,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
   const handleRef = useForkRef(ref, containerRef);
   const listRef = React.useRef<HTMLUListElement>(null);
   const lastActiveRef = React.useRef<HTMLElement | null>(null);
+  const lastScrollRef = React.useRef<{ item: HTMLElement; offsetTop: number } | null>(null);
 
   const props = useThemeProps({
     props: inProps,
@@ -234,6 +235,15 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
       lastActiveRef.current = activeItem;
       activeItem.focus();
     }
+
+    // Only scroll when the active item or its position changes, so that re-renders don't undo the user's scrolling
+    if (
+      lastScrollRef.current?.item === activeItem &&
+      lastScrollRef.current.offsetTop === offsetTop
+    ) {
+      return;
+    }
+    lastScrollRef.current = { item: activeItem, offsetTop };
 
     // Subtracting the 4px of extra margin intended for the first visible section item
     containerRef.current.scrollTop = offsetTop - 4;
@@ -408,6 +418,9 @@ DigitalClock.propTypes /* remove-proptypes */ = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   /**
    * The default selected value.

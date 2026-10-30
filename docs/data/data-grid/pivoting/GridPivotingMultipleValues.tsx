@@ -1,12 +1,11 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
+import type {
   GridColDef,
   GridRowModel,
   GridPivotModel,
   GridInitialState,
-  GridSidebarValue,
 } from '@mui/x-data-grid-premium';
+import { DataGridPremium, GridSidebarValue } from '@mui/x-data-grid-premium';
 import { pivotHeightlightStyles } from './pivotHighlightStyles';
 
 const rows: GridRowModel[] = [

@@ -1,11 +1,13 @@
-import { alpha, Theme, createTheme } from '@mui/material/styles';
+import type { Direction, Theme } from '@mui/material/styles';
+import { alpha, createTheme } from '@mui/material/styles';
 import '@mui/x-scheduler-premium/theme-augmentation';
 import '@mui/x-scheduler/theme-augmentation';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { darkGrey, grey } from './colors';
 
-export const getNeutralVibesTheme = (mode: 'light' | 'dark'): Theme => {
+export const getNeutralVibesTheme = (mode: 'light' | 'dark', direction: Direction): Theme => {
   return createTheme({
+    direction,
     typography: {
       fontFamily: '"General Sans", sans-serif',
 

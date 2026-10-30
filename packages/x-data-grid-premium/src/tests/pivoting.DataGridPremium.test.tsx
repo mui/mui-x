@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
+import { act, createRenderer, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { DataGridPremium, gridClasses } from '@mui/x-data-grid-premium';
 import type {
   DataGridPremiumProps,
@@ -145,6 +145,50 @@ describe('<DataGridPremium /> - Pivoting', () => {
     );
   }
 
+  it('should name a derived pivot sort button while pivoting is inactive', async () => {
+    render(
+      <Test
+        columns={COLUMNS.map((column) =>
+          column.field === 'date' ? { ...column, headerName: 'Shipped' } : column,
+        )}
+        pivotActive={false}
+        pivotPanelOpen
+        initialState={{
+          pivoting: { model: { rows: [], columns: [{ field: 'date-year' }], values: [] } },
+        }}
+      />,
+    );
+
+    expect(
+      await screen.findByRole('button', { name: 'Sort Shipped (Year) in ascending order' }),
+    ).not.to.equal(null);
+  });
+
+  it('should sort pivot columns in the order announced by the button', async () => {
+    const onPivotModelChange = vi.fn();
+    const { user } = render(
+      <Test
+        pivotActive={false}
+        pivotPanelOpen
+        sortingOrder={['desc', 'asc']}
+        onPivotModelChange={onPivotModelChange}
+        initialState={{
+          pivoting: { model: { rows: [], columns: [{ field: 'type' }], values: [] } },
+        }}
+      />,
+    );
+    const checkbox = await screen.findByRole('checkbox', { name: 'Type' });
+    const field = checkbox.closest<HTMLElement>(`.${gridClasses.pivotPanelField}`)!;
+    const button = within(field).getByRole('button', { name: 'Sort Type in descending order' });
+
+    await user.click(button);
+    expect(onPivotModelChange.mock.lastCall?.[0].columns[0].sort).to.equal('desc');
+    expect(button).to.have.attribute('aria-label', 'Sort Type in ascending order');
+    await user.click(button);
+    expect(onPivotModelChange.mock.lastCall?.[0].columns[0].sort).to.equal('asc');
+    expect(button).to.have.attribute('aria-label', 'Sort Type in descending order');
+  });
+
   it('should pivot the data without pivot columns', async () => {
     const { user } = render(
       <Test
@@ -179,6 +223,36 @@ describe('<DataGridPremium /> - Pivoting', () => {
     expect(getRowValues(3)).to.deep.equal(['AMZN (2)', '6,000']);
     expect(getRowValues(4)).to.deep.equal(['US_TREASURY_2Y (1)', '1,000']);
     expect(getRowValues(5)).to.deep.equal(['US_TREASURY_10Y (1)', '750']);
+  });
+
+  it('should keep the ids of the pivot panel when pivoting is turned on and off', async () => {
+    render(
+      <Test
+        initialState={{
+          pivoting: {
+            model: {
+              rows: [{ field: 'ticker' }],
+              columns: [],
+              values: [{ field: 'volume', aggFunc: 'sum' }],
+            },
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Pivot' }));
+    const pivotSwitch = screen.getByRole('switch', { name: 'Pivot' }) as HTMLInputElement;
+    fireEvent.click(pivotSwitch);
+    expect(pivotSwitch.checked).to.equal(true);
+    // Turning pivoting off restores the state exported when it was turned on.
+    fireEvent.click(pivotSwitch);
+    expect(pivotSwitch.checked).to.equal(false);
+
+    const pivotButton = screen.getByRole('button', { name: 'Pivot' });
+    const sidebar = document.querySelector<HTMLElement>(`.${gridClasses.sidebar}`)!;
+    expect(sidebar.id).not.to.equal('');
+    expect(pivotButton.getAttribute('aria-controls')).to.equal(sidebar.id);
+    expect(sidebar.getAttribute('aria-labelledby')).to.equal(pivotButton.id);
   });
 
   it('should pivot the data with 2 pivot values', async () => {

@@ -9,13 +9,10 @@ import ListSubheader from '@mui/material/ListSubheader';
 import { feature as topojsonFeature } from 'topojson-client';
 import countriesTopology from 'visionscarto-world-atlas/world/110m.json';
 import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
-import {
-  D3NamedProjection,
-  GeoDataPlot,
-  Graticule,
-} from '@mui/x-charts-premium/Map';
+import type { D3NamedProjection } from '@mui/x-charts-premium/Map';
+import { GeoDataPlot, Graticule } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
+import type { ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
 import { useGeoPath } from '@mui/x-charts-premium/hooks';
 
 const countries = topojsonFeature(

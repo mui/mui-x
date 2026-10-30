@@ -1,4 +1,4 @@
-import { ASTPath, ImportDeclaration } from 'jscodeshift';
+import type { ASTPath, ImportDeclaration } from 'jscodeshift';
 import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 const PACKAGE_REGEXP = /@mui\/x-date-pickers(-pro|)(\/(.*)|)/;

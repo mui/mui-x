@@ -1,1 +1,9 @@
-{ "componentDescription": "", "propDescriptions": {}, "classDescriptions": {} }
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "children": { "description": "The content of the component." },
+    "id": { "description": "The id attribute of the item." },
+    "itemId": { "description": "The id of the item." }
+  },
+  "classDescriptions": {}
+}

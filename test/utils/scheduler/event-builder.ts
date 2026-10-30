@@ -1,8 +1,9 @@
-import {
+import type {
   RecurringEventPresetKey,
   SchedulerEventRecurrenceRule,
+  SchedulerResource,
 } from '@mui/x-scheduler-internals/models';
-import {
+import type {
   SchedulerEvent,
   SchedulerEventColor,
   SchedulerEventCreationProperties,
@@ -15,9 +16,8 @@ import {
   schedulerRecurringEventsPlugin,
   getWeekDayCode,
 } from '@mui/x-scheduler-internals-premium/internals';
-import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { adapter as defaultAdapter } from './adapters';
 
 export const DEFAULT_TESTING_VISIBLE_DATE_STR = '2025-07-03T00:00:00Z';
@@ -43,7 +43,7 @@ function toInstantString(adapter: Adapter, value: Parameters<Adapter['toJsDate']
  * - Can optionally derive a SchedulerEventOccurrence via .toOccurrence().
  */
 export class EventBuilder {
-  protected event: SchedulerEvent;
+  declare protected event: SchedulerEvent;
 
   protected displayTimezone: TemporalTimezone = 'default';
 

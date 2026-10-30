@@ -1,4 +1,5 @@
-import { BarChart, BarLabelProps } from '@mui/x-charts/BarChart';
+import type { BarLabelProps } from '@mui/x-charts/BarChart';
+import { BarChart } from '@mui/x-charts/BarChart';
 import * as React from 'react';
 import { useAnimateBarLabel } from '@mui/x-charts/hooks';
 import Stack from '@mui/material/Stack';

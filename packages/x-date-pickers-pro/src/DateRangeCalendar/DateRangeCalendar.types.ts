@@ -111,6 +111,9 @@ export interface DateRangeCalendarProps
    * @default 2
    */
   calendars?: 1 | 2 | 3;
+  /**
+   * A CSS class name applied to the root element.
+   */
   className?: string;
   /**
    * Override or extend the styles applied to the component.

@@ -44,6 +44,36 @@ Set `eventCreation.interaction` to `"double-click"` to open the creation form wh
 
 {{"demo": "EventCreationInteraction.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Event deletion
+
+Deleting an event asks for confirmation first, through a dialog with a Cancel and a Delete event action. Deleting a [recurring event](/x/react-scheduler/recurring-events/) opens the recurring scope dialog instead, which already asks the user to confirm a scope before applying the change—no second prompt is shown on top of it.
+
+Use the `eventDeletion` prop to customize or disable this behavior.
+
+### Disable event deletion
+
+Pass `eventDeletion={false}` to remove every delete action from the UI: the Delete button of the event toolbar, the Delete event button of the editing form, and the Delete item of the event context menu.
+Users can still edit, drag, and resize events.
+
+```tsx
+<EventTimelinePremium eventDeletion={false} />
+```
+
+{{"demo": "EventDeletionDisabled.js", "bg": "inline", "defaultCodeOpen": false}}
+
+Unlike [`readOnly`](#read-only), which blocks every change to an event, `eventDeletion={false}` only removes the delete actions.
+Your own code can still remove events, for example by updating the `events` prop.
+
+### Skip the confirmation dialog
+
+Pass `eventDeletion={{ confirmation: false }}` to delete events immediately, without asking for confirmation:
+
+```tsx
+<EventTimelinePremium eventDeletion={{ confirmation: false }} />
+```
+
+{{"demo": "EventDeletionConfirmation.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Event dialog
 
 Clicking an event or creating a new one opens the event dialog.
@@ -51,7 +81,7 @@ Clicking an event or creating a new one opens the event dialog.
 The dialog has two tabs:
 
 - **General**: title, start/end date and time, all-day toggle, resource and color selectors, and description.
-- **Recurrence**: frequency, interval, days of the week, and end condition.
+- **Recurrence**: frequency, interval, days of the week, and end condition. Shown when the [`recurringEvents` feature](/x/react-scheduler/recurring-events/) is enabled.
 
 Click any event in the demo below to open the dialog.
 From there you can edit the event details or delete it.

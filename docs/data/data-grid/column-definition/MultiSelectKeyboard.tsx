@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import type { GridColDef } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 
 const rows = [
   { id: 1, project: 'Alpha', skills: ['React', 'TypeScript'] },

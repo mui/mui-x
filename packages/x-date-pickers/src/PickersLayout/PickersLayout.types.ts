@@ -46,6 +46,11 @@ export interface PickerLayoutOwnerState extends PickerOwnerState {
    * This flag is used to adjust the layout accordingly.
    */
   hasShortcuts: boolean;
+  /**
+   * Whether the layout displays the toolbar or not.
+   * This flag is used to adjust the layout accordingly.
+   */
+  hasToolbar: boolean;
 }
 
 export interface ExportedPickersLayoutSlotProps<TValue extends PickerValidValue> {
@@ -94,7 +99,13 @@ export interface PickersLayoutProps<TValue extends PickerValidValue> extends Omi
   React.HTMLAttributes<HTMLDivElement>,
   'children' | 'className'
 > {
+  /**
+   * A CSS class name applied to the root element.
+   */
   className?: string;
+  /**
+   * The content rendered in the content area of the layout.
+   */
   children?: React.ReactNode;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.

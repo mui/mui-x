@@ -287,6 +287,14 @@ For more detail, see https://mui.com/x/react-data-grid/row-updates/.`,
 };
 
 /**
+ * Wraps rows into `{ _action: 'replace', row }` updates, so they are stored as-is instead of merged.
+ * @param {GridRowModel[]} rows The rows to store.
+ * @returns {GridRowModelReplace[]} The replace updates.
+ */
+export const asReplaceUpdates = (rows: GridRowModel[]): GridRowModelReplace[] =>
+  rows.map((row) => ({ _action: 'replace', row }));
+
+/**
  * Merges a partial update into the existing row.
  * Prototype-preservation rules:
  *   1. If partialRow is a class instance (non-plain object), use its prototype — the
@@ -549,7 +557,7 @@ export function computeRowsUpdates(
 
     const rowNode = gridRowNodeSelector(apiRef, id);
     if (rowNode?.type === 'pinnedRow') {
-      // @ts-ignore because otherwise `release:build` doesn't work
+      // @ts-expect-error The public API type omits private caches used by this internal row update.
       const pinnedRowsCache = apiRef.current.caches.pinnedRows;
       const prevModel = pinnedRowsCache.idLookup[id];
       if (prevModel) {

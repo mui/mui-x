@@ -24,7 +24,7 @@
       "description": "Data source for fetching events asynchronously. When provided, events are fetched through the data source instead of the <code>events</code> prop."
     },
     "dateLocale": {
-      "description": "The locale object from <code>date-fns</code> used to format dates. This affects day names, month names, week start day, and other locale-dependent formatting. Import a locale from <code>date-fns/locale</code> and pass it to this prop."
+      "description": "The locale of the dates, as a BCP 47 language tag such as <code>&quot;fr-FR&quot;</code>, like the locales of <code>Intl.DateTimeFormat</code>. This affects day names, month names, the first day of the week, week numbers, the 12-hour or 24-hour clock and the other locale-dependent formatting."
     },
     "defaultCollapsedResources": {
       "description": "The resources initially collapsed. To render a controlled scheduler, use the <code>collapsedResources</code> prop."
@@ -42,7 +42,7 @@
       "description": "The IDs of the resources initially visible. To render a controlled scheduler, use the <code>visibleResources</code> prop."
     },
     "displayTimezone": {
-      "description": "The timezone used to display events in the scheduler.<br>Accepts any valid IANA timezone name (for example &quot;America/New_York&quot;, &quot;Europe/Paris&quot;, &quot;Asia/Tokyo&quot;), or keywords understood by the adapter, such as &quot;default&quot; (use the adapter&#39;s default timezone), &quot;locale&quot; (use the user&#39;s current locale timezone), or &quot;UTC&quot;.<br>This timezone only affects rendering, events keep their original data timezone."
+      "description": "The timezone used to display events in the scheduler.<br>Accepts any valid IANA timezone name (for example &quot;America/New_York&quot;, &quot;Europe/Paris&quot;, &quot;Asia/Tokyo&quot;), or keywords understood by the adapter, such as &quot;default&quot; (use the adapter&#39;s default timezone), &quot;locale&quot; (use the user&#39;s current locale timezone), or &quot;UTC&quot;.<br>Events keep their original data timezone. The visible range starts on the day of the visible date in this timezone, and the next and previous navigation return dates in this timezone."
     },
     "eventColor": {
       "description": "The color palette used for all events. Can be overridden per resource using the <code>eventColor</code> property on the resource model. Can be overridden per event using the <code>color</code> property on the event model."
@@ -50,11 +50,17 @@
     "eventCreation": {
       "description": "Configures how events are created. If <code>false</code>, event creation is disabled. If <code>true</code>, event creation is enabled with default configuration. If an object, event creation is enabled with the provided configuration."
     },
+    "eventDeletion": {
+      "description": "Configures how events are deleted. If <code>false</code>, event deletion is disabled. If <code>true</code>, event deletion is enabled with default configuration. If an object, event deletion is enabled with the provided configuration."
+    },
     "eventModelStructure": {
       "description": "The structure of the event model. It defines how to read and write the properties of the event model. If not provided, the event model is assumed to match the <code>CalendarEvent</code> interface."
     },
     "events": {
       "description": "The events currently available in the calendar.<br>Event models are compared by reference to avoid reprocessing unchanged events. Replace an event model with a new object when updating it instead of mutating it in place."
+    },
+    "features": {
+      "description": "The optional features of the Event Timeline. They are read once when the component mounts, later changes are ignored."
     },
     "getEventAriaLabel": {
       "description": "Returns the accessible name of an event block. Use it to announce details rendered through the <code>timelineEventContent</code> slot.",
@@ -160,6 +166,75 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the current time indicator circle element"
     },
+    "dependencyArrows": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency arrows overlay element"
+    },
+    "dependencyDialog": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog root element"
+    },
+    "dependencyDialogActions": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog actions element"
+    },
+    "dependencyDialogBody": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog body element"
+    },
+    "dependencyDialogCloseButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog close button element"
+    },
+    "dependencyDialogContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog content element"
+    },
+    "dependencyDialogDetails": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog details element"
+    },
+    "dependencyDialogDivider": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog divider element"
+    },
+    "dependencyDialogEventChip": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog event chip elements"
+    },
+    "dependencyDialogForm": {
+      "description": "Styles applied to {{nodeName}}, {{conditions}}.",
+      "nodeName": "the dependency dialog form element",
+      "conditions": "or its details section when read-only"
+    },
+    "dependencyDialogHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog header element"
+    },
+    "dependencyDialogLag": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog lag field element"
+    },
+    "dependencyDialogLagNote": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the lag note of the read-only dependency dialog"
+    },
+    "dependencyDialogLagUnit": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog lag unit select element"
+    },
+    "dependencyDialogPaper": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog paper element"
+    },
+    "dependencyDialogTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog title element"
+    },
+    "dependencyTerminals": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency terminals overlay element"
+    },
     "errorAlert": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the error alert element"
@@ -188,6 +263,10 @@
     "eventContextMenuShowDetailsItem": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event context menu show details item element (read-only events)"
+    },
+    "eventDependencyTerminal": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "event dependency terminal elements"
     },
     "eventDialog": {
       "description": "Styles applied to {{nodeName}}.",

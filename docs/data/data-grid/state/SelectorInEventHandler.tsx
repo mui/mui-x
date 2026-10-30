@@ -2,12 +2,8 @@ import * as React from 'react';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import {
-  DataGrid,
-  GridCallbackDetails,
-  GridFilterModel,
-  gridRowSelectionIdsSelector,
-} from '@mui/x-data-grid';
+import type { GridCallbackDetails, GridFilterModel } from '@mui/x-data-grid';
+import { DataGrid, gridRowSelectionIdsSelector } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function SelectorInEventHandler() {

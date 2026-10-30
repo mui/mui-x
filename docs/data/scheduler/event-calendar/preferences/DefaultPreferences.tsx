@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { EventCalendarPreferences, SchedulerEvent } from '@mui/x-scheduler/models';
+import type {
+  EventCalendarPreferences,
+  SchedulerEvent,
+} from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   initialEvents,

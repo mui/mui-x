@@ -1,11 +1,8 @@
 'use client';
 import * as React from 'react';
 import Paper from '@mui/material/Paper';
-import {
-  ChatBox,
-  ChatMessageContent,
-  type ChatMessageContentProps,
-} from '@mui/x-chat';
+import { ChatBox, ChatMessageContent } from '@mui/x-chat';
+import type { ChatMessageContentProps } from '@mui/x-chat';
 import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   minimalConversation,

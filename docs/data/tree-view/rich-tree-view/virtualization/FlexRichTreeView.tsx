@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
-import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
+import type { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
 
 const INITIAL_ITEMS: TreeViewDefaultItemModelProperties[] = Array.from(
   { length: 100 },

@@ -1,4 +1,5 @@
-import { fireEvent, screen, MuiRenderResult } from '@mui/internal-test-utils';
+import type { MuiRenderResult } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { getFieldSectionsContainer } from 'test/utils/pickers/fields';
 
 export type PickerComponentType = 'date' | 'date-time' | 'time';

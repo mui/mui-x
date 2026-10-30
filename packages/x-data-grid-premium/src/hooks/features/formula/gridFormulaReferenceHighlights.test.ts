@@ -265,6 +265,32 @@ describe('gridFormulaReferenceHighlights', () => {
     it('returns no segments for an empty value', () => {
       expect(segments('')).to.deep.equal([]);
     });
+
+    it('marks the runs inside an error span, splitting references and syntax runs', () => {
+      const value = '=SUM(price, 2)';
+      const references = build(value, false, owner).references;
+      // The span covers `ice, 2` — part of the reference, a syntax run and a plain run.
+      const result = buildFormulaTextSegments(value, references, [{ start: 7, end: 13 }]);
+      expect(result).to.deep.equal([
+        { text: '=', colorIndex: null, syntax: true },
+        { text: 'SUM', colorIndex: null },
+        { text: '(', colorIndex: null, syntax: true },
+        { text: 'pr', colorIndex: 0 },
+        { text: 'ice', colorIndex: 0, error: true },
+        { text: ',', colorIndex: null, syntax: true, error: true },
+        { text: ' 2', colorIndex: null, error: true },
+        { text: ')', colorIndex: null, syntax: true },
+      ]);
+      expect(result.map((segment) => segment.text).join('')).to.equal(value);
+      // Spans are clamped to the text; an empty list changes nothing.
+      expect(buildFormulaTextSegments(value, references, [{ start: 12, end: 40 }])).to.deep.equal([
+        ...segments(value).slice(0, -2),
+        { text: ' ', colorIndex: null },
+        { text: '2', colorIndex: null, error: true },
+        { text: ')', colorIndex: null, syntax: true, error: true },
+      ]);
+      expect(buildFormulaTextSegments(value, references, [])).to.deep.equal(segments(value));
+    });
   });
 
   describe('getFormulaReferenceColor', () => {

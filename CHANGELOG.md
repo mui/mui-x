@@ -1,5 +1,560 @@
 # Changelog
 
+## 9.17.0
+
+_Oct 30, 2026_
+
+We'd like to extend a big thank you to the 20 contributors who made this release possible. Here are some highlights ✨:
+
+- 🧮 Computed columns in the Data Grid Premium
+
+  https://github.com/user-attachments/assets/a96a8366-41df-4fe8-8e25-e517c914b372
+
+- 👆 Data Grid column reordering on touch and pen devices
+- ↔️  Right-to-left (RTL) support in the Event Calendar and the Event Timeline
+- 🕒 Fix recurring events, drag and drop, and the time axis of the Scheduler across DST transitions
+- ⚠️ Recurring events and dependencies are now opt-in in the Event Timeline
+- 🌍 The Scheduler formats dates with `Intl`: `dateLocale` takes a locale string like `"fr-FR"`
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to these community members for their valuable contributions:
+@adamowski10, @Anexus5919, @b84330808, @chanellebingham, @costajohnt, @dasjideepak, @mateuseap, @minwookshin, @mustafajw07
+
+The following team members contributed to this release:
+@flaviendelangle, @hasdfa, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @romgrk, @ZeeshanTamboli
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.17.0`
+
+- [DataGrid] Add `filterFormColumnInput` slot (#23871) @michelengelen
+- [DataGrid] Describe column and action in sort button labels (#23755) @minwookshin
+- [DataGrid] Describe column and action in sort button labels (#23755) @minwookshin
+- [DataGrid] Document undocumented props and classes (#24052) @Janpot
+- [DataGrid] Fire `onMenuClose` only when a menu actually closes (#23873) @michelengelen
+- [DataGrid] Fix stale values when server-side aggregation is removed (#23973) @JCQuintas
+- [DataGrid] Focus the column header when clicking the sort icon (#23947) @JCQuintas
+- [DataGrid] Show the column header icons on keyboard focus (#23699) @dasjideepak
+- [DataGrid] Keep the first typed character with a controlled modes model (#23982) @michelengelen
+
+#### `@mui/x-data-grid-pro@9.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.17.0`, plus:
+
+- [DataGridPro] Touch column reorder with pointer events (#23928) @noraleonte
+
+#### `@mui/x-data-grid-premium@9.17.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.17.0`, plus:
+
+- [DataGridPremium] Computed columns (#23646) @MBilalShafi
+- [DataGridPremium] Fix React 17 crashes (#24038) @LukasTy
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.17.0`
+
+- [pickers] Document undocumented props and slots (#24031) @Janpot
+- [pickers] Forward `readOnly` to the input in `PickersTextField` (#24042) @LukasTy
+- [pickers] Only scroll the Digital Clock when its active item changes (#23942) @b84330808
+
+#### `@mui/x-date-pickers-pro@9.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.17.0`.
+
+### Charts
+
+#### `@mui/x-charts@9.17.0`
+
+- [charts] Document undocumented props and slots (#24033) @Janpot
+- [charts] Fix React 17 crashes (#24038) @LukasTy
+
+#### `@mui/x-charts-pro@9.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.17.0`.
+
+#### `@mui/x-charts-premium@9.17.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.17.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@9.17.0`
+
+- [tree view] Document undocumented props (#24036) @Janpot
+- [tree view] Keep the dragged item mounted when it is virtualized away (#24050) @JCQuintas
+
+#### `@mui/x-tree-view-pro@9.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.17.0`.
+
+### Scheduler
+
+#### Breaking changes
+
+- The `headerToolbarLeftElement` class of the Event Calendar has been renamed to `headerToolbarStart`.
+  Update your style overrides and class selectors:
+
+  ```diff
+   const theme = createTheme({
+     components: {
+       MuiEventCalendar: {
+         styleOverrides: {
+  -        headerToolbarLeftElement: { gap: 8 },
+  +        headerToolbarStart: { gap: 8 },
+         },
+       },
+     },
+   });
+  ```
+
+- The unused `DEFAULT_PREFERENCES` export of the Timeline store has been removed.
+
+- Recurring events and dependencies are now opt-in in the Event Timeline. Without the feature, each event with an `rrule` renders once:
+
+  ```diff
+  -<EventTimelinePremium events={events} />
+  +<EventTimelinePremium events={events} features={{ recurringEvents: recurringEventsFeature }} />
+  ```
+
+- The `dateLocale` prop and `createDateLocaleTheme()` take a locale string, like `Intl.DateTimeFormat`, instead of a `date-fns` locale object:
+
+  ```diff
+  -import { fr } from 'date-fns/locale/fr';
+  -<EventCalendar dateLocale={fr} />
+  +<EventCalendar dateLocale="fr-FR" />
+  ```
+
+- The `weekStartsOn` preference uses ISO weekdays, from `1` (Monday) to `7` (Sunday). Sunday is `7` instead of `0`.
+- Without `ampm`, times follow the hour cycle of the locale instead of a 12-hour clock, and `defaultPreferences` no longer includes `ampm: true`.
+- Dates use the `Intl.DateTimeFormat` formats of the locale, so some labels change slightly (for example "July 3" instead of "July 3rd"), and week numbers follow the locale.
+- Timed events shorter than one day that cross midnight now stay in the time grid by default, and the day grid row no longer shows a visible "All day" label. Use `timeGridEvents: 'same-day-only'` in `viewConfig.day` and `viewConfig.week` to keep the previous behavior.
+
+#### `@mui/x-scheduler@9.0.0-beta.15`
+
+- [scheduler] Add `timeGridEvents` option to keep overnight timed events in the time grid (#23749) @Anexus5919
+- [scheduler] Add an RTL demo and visual regression tests (#23975) @rita-codes
+- [scheduler] Add regression tests for standalone month names in headers (#22841) @adamowski10
+- [scheduler] Add store-level tests for the clamped resize with unwritable dates (#23952) @mustafajw07
+- [scheduler] Add utility classes to the dependency UI (#24035) @rita-codes
+- [scheduler] Allow disabling event deletion with `eventDeletion={false}` (#23988) @mustafajw07
+- [scheduler] Build the date keys from plain dates (#24010) @flaviendelangle
+- [scheduler] Compute the fields of PlainDate when they are read (#23969) @flaviendelangle
+- [scheduler] Detect the text direction and pass it to the timeline virtualizer (#23898) @rita-codes
+- [scheduler] Document undocumented props (#24036) @Janpot
+- [scheduler] Fetch the ranges of the lazy loading as timestamps (#23998) @flaviendelangle
+- [scheduler] Fix React 17 crashes (#24038) @LukasTy
+- [scheduler] Fix recurring events across timezones and DST transitions (#23943) @flaviendelangle
+- [scheduler] Fix the dependency engine across DST transitions and speed it up (#23963) @flaviendelangle
+- [scheduler] Fix the drag and drop of the day grid across DST transitions and speed up its preview (#23964) @flaviendelangle
+- [scheduler] Fix the edits of recurring series across DST transitions (#23965) @flaviendelangle
+- [scheduler] Fix the navigation of the Timeline presets across DST transitions (#23966) @flaviendelangle
+- [scheduler] Fix the time axis across DST transitions and speed it up (#23962) @flaviendelangle
+- [scheduler] Format the dates with Intl and number the weekdays like ISO 8601 (#24021) @flaviendelangle
+- [scheduler] Give the view switcher and the drawer view list an accessible name (#23996) @chanellebingham
+- [scheduler] Keep the "+N more" popover and the event context menu in sync with removed events (#23800) @rita-codes
+- [scheduler] Make every user-facing store error translatable through `localeText` (#24026) @rita-codes
+- [scheduler] Make the agenda view day count configurable (#23815) @costajohnt
+- [scheduler] Mirror arrow key navigation in RTL (#23954) @rita-codes
+- [scheduler] Mirror navigation icons, popups and dialogs in RTL (#23955) @rita-codes
+- [scheduler] Move the day math of the Event Calendar views to plain dates (#23999) @flaviendelangle
+- [scheduler] Move the placeholder of the drag and drop to timestamps (#23997) @flaviendelangle
+- [scheduler] Pass timestamps and plain dates to the CalendarGrid (#24007) @flaviendelangle
+- [scheduler] Process dates without the getters of the adapter (#23984) @flaviendelangle
+- [scheduler] Read more internal dates as plain dates and timestamps (#24014) @flaviendelangle
+- [scheduler] Read the Timeline presets, the recurrence presets and the time columns on plain dates (#24015) @flaviendelangle
+- [scheduler] Read the bounds of the time axis as timestamps (#24006) @flaviendelangle
+- [scheduler] Read the dates of the event dialog as plain dates (#24003) @flaviendelangle
+- [scheduler] Read the timestamps of the processed dates in the recurring events (#24004) @flaviendelangle
+- [scheduler] Refuse writes atomically when a date can't be written back (#23553) @mustafajw07
+- [scheduler] Remove the unused `DEFAULT_PREFERENCES` export of the Timeline store (#24013) @flaviendelangle
+- [scheduler] Rename `headerToolbarLeftElement` to `headerToolbarStart` (#23897) @rita-codes
+- [scheduler] Speed up the day grid and fix day lists across DST transitions (#23961) @flaviendelangle
+- [scheduler] Store the current time as a timestamp and compare the days of the occurrences (#24005) @flaviendelangle
+- [scheduler] Support RTL in the Event Timeline dependency arrows (#23974) @rita-codes
+- [scheduler] Support RTL pointer and scroll interactions in the Event Timeline (#23972) @rita-codes
+- [scheduler] Support RTL when dragging multi-day events in the Event Calendar (#23953) @rita-codes
+- [scheduler] Sync the BaseTemporal copy with the Base UI version (#24040) @flaviendelangle
+- [scheduler] Type the plain dates through the BaseTemporal namespace (#24034) @flaviendelangle
+- [scheduler] Use logical CSS properties in the Event Calendar and Event Timeline (#23899) @rita-codes
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.15` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.15`, plus:
+
+- [scheduler-premium] Draw dependency arrows to events outside the visible range (#23790) @rita-codes
+- [scheduler-premium] Fix the Event Timeline features after the plain-date migration (#24020) @flaviendelangle
+- [scheduler-premium] Make recurring events and dependencies opt-in in the Event Timeline (#24011) @rita-codes
+- [scheduler-premium] Move the dependency UI strings to `localeText` (#24027) @rita-codes
+- [scheduler-premium] Scroll virtualized timeline rows into view on arrow-key navigation (#23860) @rita-codes
+
+### Docs
+
+- [DataGrid] Document running your own AI Assistant prompt processor (#24037) @hasdfa
+- [docs] Add a shared experiments area and migrate Scheduler experiments (#23979) @flaviendelangle
+- [docs] Enforce top-level type imports in docs and scripts (#24046) @Janpot
+- [docs] Follow the docs direction in the scheduler overview demos (#23968) @rita-codes
+- [docs] Add the Event Timeline dependencies page, unlisted until the feature is public (#24032) @rita-codes
+
+### Core
+
+- [code-infra] Enforce top-level type imports in all packages (#24045) @Janpot
+- [code-infra] Enforce top-level type imports in test (#24047) @Janpot
+- [code-infra] Remove redundant `only-allow` preinstall hook (#23956) @Janpot
+- [code-infra] Remove redundant enablePrePostScripts setting (#24000) @Janpot
+- [code-infra] Skip empty internal package changelogs (#23648) @mateuseap
+- [code-infra] Include resolution settings in lockfile (#23944) @ZeeshanTamboli
+- [test] Start the e2e test server from vitest (#24062) @LukasTy
+
+### Miscellaneous
+
+- [chat] Document undocumented props and slots (#24053) @Janpot
+- [chat] Fix `ChatBox` ignoring `features.attachments` (#23946) @JCQuintas
+- [chat] Fix React 17 crashes (#24038) @LukasTy
+- [test] Serve flagcdn images from a placeholder in the regression tests (#24055) @Janpot
+- [test] Start the e2e test server from vitest (#24062) @LukasTy
+- [test] Start the regression test server from vitest (#24057) @Janpot
+- [x-internals] Re-export the utilities shared with @base-ui/utils (#23374) @romgrk
+
+## 9.16.0
+
+_Oct 20, 2026_
+
+We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+
+- 📊 Excel export in the Charts Premium, with a toolbar entry
+- 👆 Data Grid row reordering on touch and pen devices
+- 🗑️ Confirmation dialog before deleting an event in the Scheduler
+- 🌍 Improve Romanian (ro-RO) locale on the Data Grid and the Date and Time Pickers
+- 🌍 Improve Turkish (tr-TR) locale on the Data Grid, the Date and Time Pickers, and the Scheduler
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to these community members for their valuable contributions:
+@aozmekik, @cpruijsen, @mustafajw07, @reckter, @vicuts
+
+The following team members contributed to this release:
+@arminmeh, @brijeshb42, @cherniavskii, @Janpot, @JCQuintas, @LukasTy, @michelengelen, @noraleonte, @rita-codes
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.16.0`
+
+- [DataGrid] Fix `PropsFromSlot` resolving to `any` for `JSXElementConstructor` slots (#23856) @cpruijsen
+- [DataGrid] Fix memory leak on row updates (#23779) @arminmeh
+- [DataGrid] Fix the "is any of" prompt filter text in translated locales (#23833) @LukasTy
+- [DataGrid] Keep keyboard focus after a click on the empty row space (#23862) @michelengelen
+- [DataGrid] Extract column reorder utils (#23834) @noraleonte
+- [DataGrid] Fix popover aria roles (#23878) @noraleonte
+- [l10n] Improve Romanian (ro-RO) locale (#23816) @vicuts
+- [l10n] Improve Turkish (tr-TR) locale (#23912) @aozmekik
+
+#### `@mui/x-data-grid-pro@9.16.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.16.0`, plus:
+
+- [DataGridPro] Allow triggering infinite loading beyond row buffer (#23784) @arminmeh
+- [DataGridPro] Fix toggling `treeData` and `getTreeDataPath` together (#23715) @michelengelen
+- [DataGridPro] Row reorder pointer events for improved touch interaction (#23725) @noraleonte
+- [DataGridPro] Skip the infinite loader when `IntersectionObserver` is unavailable (#23869) @michelengelen
+
+#### `@mui/x-data-grid-premium@9.16.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.16.0`, plus:
+
+- [DataGridPremium] Re-apply aggregation when a column `valueGetter` changes (#23713) @michelengelen
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.16.0`
+
+- [l10n] Improve Romanian (ro-RO) locale (#23816) @vicuts
+- [l10n] Improve Turkish (tr-TR) locale (#23912) @aozmekik
+- [pickers] Fix `PropsFromSlot` resolving to `any` for `JSXElementConstructor` slots (#23856) @cpruijsen
+- [pickers] Fix Day.js named-zone elapsed-time additions across DST (#23752) @LukasTy
+- [pickers] Fix empty gap next to the digital clock columns (#23698) @michelengelen
+- [pickers] Fix missing `onYearChange` and duplicate `onMonthChange` calls (#23874) @LukasTy
+- [pickers] Memoize the year list in `YearCalendar` (#23867) @michelengelen
+- [pickers] Use `monthsPerRow` for keyboard navigation in `MonthCalendar` (#23876) @vicuts
+
+#### `@mui/x-date-pickers-pro@9.16.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.16.0`.
+
+### Charts
+
+#### `@mui/x-charts@9.16.0`
+
+- [charts] Fix `PropsFromSlot` resolving to `any` for `JSXElementConstructor` slots (#23856) @cpruijsen
+- [charts] Fix aria role on popper (#23939) @noraleonte
+
+#### `@mui/x-charts-pro@9.16.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.16.0`.
+
+#### `@mui/x-charts-premium@9.16.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.16.0`, plus:
+
+- [charts-premium] Add the Excel export plugin (#23597) @JCQuintas
+- [charts-premium] Add the Excel export toolbar entry (#23644) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@9.16.0`
+
+- [tree view] Fix `PropsFromSlot` resolving to `any` for `JSXElementConstructor` slots (#23856) @cpruijsen
+- [TreeView] Fix infinite recursion when a mounted item suspends (#23668) @reckter
+
+#### `@mui/x-tree-view-pro@9.16.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.16.0`.
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-beta.14`
+
+- [l10n] Improve Turkish (tr-TR) locale (#23912) @aozmekik
+- [scheduler] Add confirmation dialog for event deletion (#23593) @mustafajw07
+- [scheduler] Extract a generic form store from the event dialog form (#23781) @rita-codes
+- [scheduler] Fix the style overrides key of the responsiveness example (#23838) @rita-codes
+- [scheduler] Mark today with `aria-current="date"` (#23809) @rita-codes
+- [scheduler] Remove duplicated and unused code from the stores (#23854) @rita-codes
+- [scheduler] Show the end date of multi-day events in the read-only event details (#23846) @rita-codes
+- [scheduler] Use `menuitemradio` for the view switcher items (#23807) @rita-codes
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.14` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.14`, plus:
+
+- [scheduler-premium] Document `weekStartsOn` and export `EventTimelinePremiumPreferences` (#23811) @rita-codes
+- [scheduler-premium] Include the community models and theme augmentation in the Premium package (#23813) @rita-codes
+- [scheduler-premium] Dependencies - Edit the type and lag from the arrow, cascade on create and edit (#23726) @rita-codes
+- [scheduler-premium] Fix agenda focus skipping surviving occurrences after deleting a recurring event (#23903) @mustafajw07
+
+
+### Chat
+
+#### `@mui/x-chat@9.0.0-alpha.20`
+
+Internal changes.
+
+#### `@mui/x-chat-headless@9.0.0-alpha.20`
+
+Internal changes.
+
+### Codemod
+
+#### `@mui/x-codemod@9.16.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Replace deprecated APIs in documentation (#23791) @brijeshb42
+- [docs][charts] Fix dead Popper.js documentation links (#23832) @LukasTy
+- [docs][pickers] Add a Year Range Picker placeholder section (#23794) @michelengelen
+- [docs][scheduler] Fix the broken event model and resource snippets (#23840) @rita-codes
+- [docs][scheduler] Point to the event dialog slot instead of promising a customizable form (#23803) @rita-codes
+- [docs][scheduler] Remove the premium rrule from the title property demo (#23805) @rita-codes
+- [docs][scheduler] Use the preset names in the Timeline navigation step table (#23836) @rita-codes
+
+### Core
+
+- [code-infra] Bump vitest to 5.0.4 and tune browser test concurrency (#23850) @Janpot
+- [code-infra] Fix ts-ignore lint error in AdapterDayjs test (#23843) @LukasTy
+- [code-infra] Group major and minor pragmatic-drag-and-drop renovate updates (#23782) @LukasTy
+- [code-infra] Use flake-fix dry-run (#23849) @Janpot
+- [code-infra] Skip `MUI.GoogleLatin` in changelogs (#23934) @Janpot
+- [code-infra] Wait for `data-screenshot-pending` before regression screenshots (#23772) @Janpot
+- [x-internals] Restore removed exports and pin internal dependencies (#23907) @LukasTy
+- [x-internals] Fix `useStoreEffect` in Strict Mode (#23857) @cherniavskii
+
+### Miscellaneous
+
+- [infra] Fix package.json metadata (#23712) @Janpot
+- [infra] Remove engines.node from UI packages (#23786) @Janpot
+- [infra] Require explanations for TypeScript error suppressions (#23789) @brijeshb42
+- [pnpm] Prune stale minimumReleaseAgeExclude entries (#23666) @Janpot
+- [virtualizer] Render the rows and columns in view on small scrolls in controlled layout (#23865) @rita-codes
+
+## 9.15.0
+
+_Oct 6, 2026_
+
+We'd like to extend a big thank you to the 17 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Russian (ru-RU) locale to the Scheduler
+- 📐 New `height` prop to size the Data Grid without a wrapper
+- 📅 New `onCancel` callback prop on the Date and Time Pickers
+- ⌨️ Home/End, Ctrl+Home/End, and PageUp/PageDown keyboard navigation in the Charts
+- 🔒 Data Grid and Charts exports work under a Content Security Policy
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to these community members for their valuable contributions:
+@Anexus5919, @davidjb, @kwy404, @mixelburg, @Sazuru
+
+The following team members contributed to this release:
+@arminmeh, @brijeshb42, @flaviendelangle, @Janpot, @JCQuintas, @LukasTy, @mapache-salvaje, @michelengelen, @noraleonte, @rita-codes, @romgrk, @siriwatknp
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.15.0`
+
+- [DataGrid] Add `height` prop for sizing without a wrapper (#23628) @michelengelen
+- [DataGrid] Cap the pagination toolbar so the footer height is stable on mount (#23547) @JCQuintas
+- [DataGrid] Document `rowsSet`, `filteredRowsSet` & `sortedRowsSet` events (#23631) @michelengelen
+- [DataGrid] Extract the data source polling into a shared hook (#23714) @LukasTy
+- [DataGrid] Fix `autosizeColumns` with wrapped header text (#23241) @siriwatknp
+- [DataGrid] Fix flex column jump when a detail panel expands (#23576) @michelengelen
+- [DataGrid] Fix stale columns and stalled loading in the demo data generator (#23727) @LukasTy
+- [DataGrid] Fix stale rows and lost edits in `useMockServer` (#23751) @LukasTy
+- [DataGrid] Fix the `height` prop overflowing a narrow flex row parent (#23745) @LukasTy
+- [DataGrid] Fix the `inputRef` prop type warning in select-based filter inputs (#23728) @LukasTy
+- [DataGrid] Keep empty first and last cells when copying rows (#23753) @Anexus5919
+- [DataGrid] Keep pinned cells opaque without `color-mix()` support (#23563) @michelengelen
+- [DataGrid] Let the theme disable the row checkbox ripple (#23703) @siriwatknp
+- [DataGrid] Stop the data source polling after the grid unmounts (#23709) @LukasTy
+- [DataGrid] Stop the lazy loading polling when `lazyLoading` turns off (#23717) @LukasTy
+- [DataGrid] Support `href` on `GridActionsCellItem` (#23630) @michelengelen
+
+#### `@mui/x-data-grid-pro@9.15.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.15.0`.
+
+#### `@mui/x-data-grid-premium@9.15.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.15.0`, plus:
+
+- [DataGridPremium] Clear the aggregation from the column menu (#23641) @Anexus5919
+- [DataGridPremium] Fix exports failing or hanging under a Content Security Policy (#23521) @JCQuintas
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.15.0`
+
+- [fields] Focus the section synchronously on `mousedown` (#23642) @michelengelen
+- [pickers] Add `onCancel` callback prop (#23669) @michelengelen
+- [pickers] Fix `TimeClock` `PageUp` and `PageDown` at noon (#23741) @kwy404
+- [pickers] Fix `getDaysInMonth` on dates bound to a timezone before 1970 (#23302) @JCQuintas
+- [pickers] Fix month label jump when switching months fast (#23645) @michelengelen
+- [pickers] Fix singular/plural clock number ARIA labels (#23683) @michelengelen
+- [pickers] Fix the uncontrolled `defaultValue` change warning (#23702) @LukasTy
+- [pickers] Migrate picker hooks to the `manager` pattern (#23684) @michelengelen
+- [pickers] Preserve plain Day.js values across system DST changes (#22278) @LukasTy
+
+#### `@mui/x-date-pickers-pro@9.15.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.15.0`.
+
+### Charts
+
+#### `@mui/x-charts@9.15.0`
+
+- [charts] Add Home/End, Ctrl+Home/End, and PageUp/PageDown keyboard navigation (#23146) @JCQuintas
+- [charts] Disable the `SparkLineChart` axis listener when nothing uses it (#23681) @Anexus5919
+- [charts] Fix `Unsupported style property @media` warning with responsive theme typography (#23705) @noraleonte
+- [charts] Pass `SparkLineChart` container props to the data provider (#23690) @mixelburg
+
+#### `@mui/x-charts-pro@9.15.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.15.0`, plus:
+
+- [charts-pro] Fix image export under a CSP when styles come only from `<link>` stylesheets (#23721) @Anexus5919
+- [charts-pro] Fix exports failing or hanging under a Content Security Policy (#23521) @JCQuintas
+
+#### `@mui/x-charts-premium@9.15.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.15.0`, plus:
+
+- [charts-premium] Move the Excel export defaults out of the types file (#23643) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@9.15.0`
+
+- [tree view] Use `aria-selected` instead of `aria-checked` when `checkboxSelection` is disabled (#23679) @michelengelen
+
+#### `@mui/x-tree-view-pro@9.15.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.15.0`.
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-beta.13`
+
+- [l10n] Add Russian (ru-RU) locale (#23567) @Sazuru
+- [scheduler] Clamp the placeholder span to the week row (#23734) @rita-codes
+- [scheduler] Fix the agenda view crashing when hiding empty days and no event is in the horizon (#23570) @rita-codes
+- [scheduler] Fix the event dialog moving untouched dates across timezones (#23462) @rita-codes
+- [scheduler] Give events a proper accessible name (#23675) @rita-codes
+- [scheduler] Index events by visible range (#23362) @flaviendelangle
+- [scheduler] Index timeline occurrences by position (#23367) @flaviendelangle
+- [scheduler] Pass the weekday token to the monthly recurrence labels (#23637) @Anexus5919
+- [scheduler] Remove redundant readonly recurrence subscription (#23626) @flaviendelangle
+- [scheduler] Render the event-item recurring icon once (#23621) @flaviendelangle
+- [scheduler] Share custom recurrence draft updates (#23618) @flaviendelangle
+- [scheduler] Share edit and show-details menu item markup (#23627) @flaviendelangle
+- [scheduler] Simplify time-grid event duration checks (#23611) @flaviendelangle
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.13` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.13`, plus:
+
+- [scheduler-premium] Dependencies - SS/FF/SF and lag in the auto-scheduling engine (#23623) @rita-codes
+- [scheduler-premium] Read the RRULE `UNTIL` as a UTC instant (#23739) @rita-codes
+- [scheduler-premium] Read the `body2` font size unit in the timeline row height (#23736) @rita-codes
+
+### Chat
+
+#### `@mui/x-chat@9.0.0-alpha.19`
+
+- [chat] Cap markdown input length to avoid a render-thread freeze (#23008) @Anexus5919
+- [chat] Distinguish "history not loaded yet" from "empty conversation" (#23607) @JCQuintas
+
+#### `@mui/x-chat-headless@9.0.0-alpha.19`
+
+- [chat] Distinguish "history not loaded yet" from "empty conversation" (#23607) @JCQuintas
+
+### Codemod
+
+#### `@mui/x-codemod@9.15.0`
+
+Internal changes.
+
+### Docs
+
+- [DataGrid] Make product comparisons more explicit on Overview page (#22696) @mapache-salvaje
+- [tree view] Fix typo on Customization page (#23691) @davidjb
+
+### Core
+
+- [code-infra] Cap typecheck concurrency and remove `typescript:ci` (#23731) @Janpot
+- [code-infra] Clear the demo data caches between regression routes (#23747) @Janpot
+- [code-infra] Enable pnpm `autoDedupe` (#23706) @LukasTy
+- [code-infra] Fix the stale `@types/node` entry in the lockfile (#23742) @LukasTy
+- [code-infra] Mark the Argos reference branch for release branch cuts (#23776) @Janpot
+- [code-infra] Only fake timers while a regression test case mounts (#23748) @Janpot
+- [code-infra] Widen `@babel/runtime` range and stop emitting empty class fields (#23707) @brijeshb42
+- [docs-infra] Migrate deploy-succeeded to event-triggered function (#23634) @brijeshb42
+- [docs-infra] Retire the docs service worker (#23674) @Janpot
+
+### Miscellaneous
+
+- [ci] Flake-fix caller: follow mui-public's central model default (#23680) @Janpot
+- [internals] Fix `hash` word indexing and buffer sizing (#23494) @romgrk
+- [test] Fix regression flake when an aborted image errors mid-wait (#23708) @JCQuintas
+- [test] Fix the flaky data grid export tests (#23720) @LukasTy
+- [test] Fix the flaky detail panel flex width test on React 18 (#23710) @LukasTy
+- [test] Load the regression fonts from npm instead of Google Fonts (#23775) @Janpot
+- [test] Make regression screenshot rasterization deterministic (#23722) @LukasTy
+- [test] Wait for the Mars texture before the `MarsMap` regression screenshot (#23730) @LukasTy
+- [virtualizer] Do not affect `columnPositions` selector with unrelated state change (#23629) @arminmeh
+- [x-internals] Import Base UI utils directly instead of re-exporting them (#23373) @romgrk
+- [x-internals] Import the store from `@base-ui/utils` directly (#23335) @romgrk
+
 ## 9.14.0
 
 _Sep 17, 2026_

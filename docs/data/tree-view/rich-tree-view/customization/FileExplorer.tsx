@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { animated, useSpring } from '@react-spring/web';
 import { styled, alpha } from '@mui/material/styles';
-import { TransitionProps } from '@mui/material/transitions';
+import type { TransitionProps } from '@mui/material/transitions';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
@@ -13,7 +13,8 @@ import ImageIcon from '@mui/icons-material/Image';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { useTreeItem, UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
+import type { UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
+import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
 import {
   TreeItemCheckbox,
   TreeItemIconContainer,

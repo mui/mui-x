@@ -1,9 +1,6 @@
 import path from 'path';
-import {
-  createTypeScriptProject,
-  CreateTypeScriptProjectOptions,
-  TypeScriptProject,
-} from '@mui/internal-docs-utils';
+import type { CreateTypeScriptProjectOptions, TypeScriptProject } from '@mui/internal-docs-utils';
+import { createTypeScriptProject } from '@mui/internal-docs-utils';
 import { getComponentFilesInFolder } from './utils';
 
 const workspaceRoot = path.resolve(__dirname, '../../');
@@ -173,6 +170,7 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
       'RadarSeries',
       'AxisConfig',
       'ChartImageExportOptions',
+      'ChartExcelExportOptions',
       'ChartPrintExportOptions',
       'LegendItemParams',
     ],
@@ -183,6 +181,7 @@ export const datagridApiToDocument = [
   'GridCellSelectionApi',
   'GridColumnPinningApi',
   'GridColumnResizeApi',
+  'GridComputedColumnsApi',
   'GridCsvExportApi',
   'GridDetailPanelApi',
   'GridEditingApi',

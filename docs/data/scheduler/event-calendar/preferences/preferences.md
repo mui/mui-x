@@ -28,11 +28,12 @@ const defaultPreferences = {
 
 Available properties:
 
-- `ampm`: Whether the component displays time in 12-hour format with AM/PM.
+- `ampm`: Whether the component displays time in 12-hour format with AM/PM. Defaults to the hour cycle of the [date locale](/x/react-scheduler/event-calendar/localization/#date-locale).
 - `showWeekends`: Whether the calendar shows weekends.
 - `showWeekNumber`: Whether the calendar shows the week number.
+- `weekStartsOn`: The first day of the week, as an ISO weekday, from `1` (Monday) to `7` (Sunday). Defaults to the first day of the week of the [date locale](/x/react-scheduler/event-calendar/localization/#date-locale).
 - `isSidePanelOpen`: Whether the side panel is open.
-- `showEmptyDaysInAgenda`: Whether the agenda view shows days with no events.
+- `showEmptyDaysInAgenda`: Whether the agenda view shows days with no events. When set to `false`, the agenda view looks for events in the next 180 days (or in the visible month when `viewConfig.agenda.dayCount` is `'month'`) and shows a message when none is found, customizable through `localeText.agendaViewEmptyStateLabel`.
 
 {{"demo": "DefaultPreferences.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -60,7 +61,7 @@ You can customize which preferences are available in the preferences menu using 
 Available properties:
 
 - `toggleAmpm`: Show/hide the menu item that toggles 12/24‑hour time format.
-- `toggleWeekStartsOn`: Show/hide the menu item that changes the first day of the week.
+- `toggleWeekStartsOn`: Show/hide the menu item that changes the first day of the week. Hidden by default; set it to `true` to show it.
 - `toggleWeekendVisibility`: Show/hide the menu item that toggles weekend visibility.
 - `toggleWeekNumberVisibility`: Show/hide the menu item that toggles week number visibility.
 - `toggleEmptyDaysInAgenda`: Show/hide the menu item that toggles the visibility of days with no event in the agenda view.

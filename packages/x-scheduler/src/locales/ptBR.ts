@@ -20,6 +20,9 @@ const ptBRDialog: SchedulerDialogTranslations = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Excluir evento',
+  // deleteConfirmationTitle: 'Delete this event?',
+  // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  cancel: 'Cancelar',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
@@ -72,12 +75,25 @@ const ptBRDialog: SchedulerDialogTranslations = {
 
   // RecurringScopeDialog
   all: 'Todos os eventos',
-  cancel: 'Cancelar',
   confirm: 'Confirmar',
   onlyThis: 'Apenas este evento',
   radioGroupAriaLabel: 'Escopo de edição de eventos recorrentes',
   thisAndFollowing: 'Este evento e seguintes',
   title: 'Aplicar esta alteração a:',
+
+  // Errors
+  // somethingWentWrongError: 'Something went wrong. Try again.',
+  // eventNotLoadedError: 'This event is still being saved, so the change was not applied. Try again once it is saved.',
+  // eventChangedWhileConfirmingError: 'This event changed while the delete confirmation was open, so the deletion was not applied. Try deleting it again.',
+  // datesNotWritableError: "This date can't be changed, so the change was not applied.",
+  // eventNotCreatableError: "This can't be saved as a new event, so the change was not applied.",
+  // readOnlyEventMovedError: title => `This change would move the read-only event "${title}", so it was not applied.`,
+  // dependencyCascadeBlockedError: 'This dependency would move a read-only event, so it was not created.',
+  // dependencyCycleError: 'This dependency would create a cycle between events.',
+  // dependencyDuplicateError: 'A dependency of this type already exists between these two events.',
+  // dependencyRecurringEventError: 'Dependencies cannot involve recurring events.',
+  // dependencyReadOnlyError: 'Dependencies cannot be changed while the scheduler is read-only.',
+  // dependencyUnknownEventError: 'This dependency cannot be created because one of its events no longer exists.',
 };
 
 const ptBREvent: SchedulerEventTranslations = {
@@ -112,6 +128,7 @@ const ptBRCalendar: SchedulerCalendarTranslations = {
   months: 'Meses',
   weeks: 'Semanas',
   years: 'Anos',
+  // viewSwitcherAriaLabel: 'Views',
 
   // DateNavigator
   closeSidePanel: 'Fechar painel lateral',
@@ -136,11 +153,15 @@ const ptBRCalendar: SchedulerCalendarTranslations = {
 
   // WeekView
   allDay: 'O dia todo',
+  // dayGridLabel: 'All-day and multi-day events',
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} mais…`,
   nextTimeSpan: (timeSpan) => `Próximo(a) ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterior`,
   weekAbbreviation: 'S',
   weekNumberAriaLabel: (weekNumber) => `Semana ${weekNumber}`,
+
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
 
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Termina em ${endDate}`,
@@ -160,6 +181,54 @@ const ptBRCalendar: SchedulerCalendarTranslations = {
 const ptBRTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Título do recurso',
+
+  // Dependency dialog
+  // dependencyEditTitle: 'Edit dependency',
+  // dependencyDetailsTitle: 'Dependency details',
+  // dependencySourceLabel: 'From',
+  // dependencyTargetLabel: 'To',
+  // dependencyTypeLabel: 'Type',
+  // dependencyLagLabel: 'Lag',
+  // dependencyLagUnitAriaLabel: 'Lag unit',
+  // dependencyNoLag: 'None',
+  // dependencyInvalidLagError: 'Enter a whole number, 0 or more.',
+  // dependencyAllDayLagIgnored: 'An all-day event can only wait whole days, so this lag adds no wait.',
+  // dependencyAllDayLagRounded: lag => `An all-day event can only wait whole days: ${lag}.`,
+  // dependencyUpdateCascadeBlockedError: 'This change would move a read-only event, so it was not applied.',
+  // dependencyUpdateNotFoundError: 'This dependency no longer exists.',
+  // dependencyTypeFinishToStart: 'Finish to start',
+  // dependencyTypeStartToStart: 'Start to start',
+  // dependencyTypeFinishToFinish: 'Finish to finish',
+  // dependencyTypeStartToFinish: 'Start to finish',
+  // dependencyLagUnitMinutes: 'minutes',
+  // dependencyLagUnitHours: 'hours',
+  // dependencyLagUnitDays: 'days',
+  // dependencyLagUnitWeeks: 'weeks',
+  // dependencyLag: (amount, unit) => `${amount} ${unit}${amount === 1 ? '' : 's'}`,
+
+  // Dependency context menu and dialog actions
+  // dependencyActionsAriaLabel: 'Dependency actions',
+  // editDependency: 'Edit dependency',
+  // showDependencyDetails: 'Show details',
+  // deleteDependency: 'Delete',
+
+  // Accessible description of an event that waits on dependencies
+  // dependencyFinishToStartDescription: ({
+  //   title,
+  //   lag
+  // }) => `Cannot start until ${lag === null ? '' : `${lag} after `}${title} finishes.`,
+  // dependencyStartToStartDescription: ({
+  //   title,
+  //   lag
+  // }) => `Cannot start until ${lag === null ? '' : `${lag} after `}${title} starts.`,
+  // dependencyFinishToFinishDescription: ({
+  //   title,
+  //   lag
+  // }) => `Cannot finish until ${lag === null ? '' : `${lag} after `}${title} finishes.`,
+  // dependencyStartToFinishDescription: ({
+  //   title,
+  //   lag
+  // }) => `Cannot finish until ${lag === null ? '' : `${lag} after `}${title} starts.`,
 };
 
 export const ptBR: SchedulerLocalization = getSchedulerLocalization({

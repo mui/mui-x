@@ -1,12 +1,14 @@
 'use client';
 import * as React from 'react';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
+import { useRtl } from '@mui/system/RtlProvider';
 import type { Position } from '../utils/dialog-utils';
 import { calculatePosition } from '../utils/dialog-utils';
 
 /** Positions a popup next to an anchor and keeps it in sync on resize/anchor changes. */
 export function useAnchoredPosition(parameters: useAnchoredPosition.Parameters) {
-  const { anchor, popupRef, side = 'left', onReposition } = parameters;
+  const isRtl = useRtl();
+  const { anchor, popupRef, side = isRtl ? 'right' : 'left', onReposition } = parameters;
 
   const updatePosition = React.useCallback(
     // `resetDrag` gates `onReposition`: skip it for content-size repositions so a dragged dialog stays put.
@@ -86,7 +88,7 @@ export namespace useAnchoredPosition {
     popupRef: React.RefObject<HTMLElement | null>;
     /**
      * Preferred side.
-     * @default 'left'
+     * @default 'left', or 'right' in RTL
      */
     side?: Position;
     /**

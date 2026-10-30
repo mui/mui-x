@@ -69,6 +69,14 @@ export interface GridExperimentalFeatures {
    * @default 'uncontrolled'
    */
   virtualizerLayoutMode: 'controlled' | 'uncontrolled';
+  /**
+   * If `true`, the focused editable cell renders its edit component before edit mode starts.
+   * Then an input method editor (IME) can compose the first character of Korean, Japanese, or Chinese text.
+   * Only applies to string columns that use the default edit component.
+   * Not available on devices with a coarse primary pointer, such as touch screens.
+   * @default false
+   */
+  imeFastEdit: boolean;
 }
 
 /**
@@ -80,6 +88,10 @@ export type DataGridProps<R extends GridValidRowModel = any> = Omit<
     DataGridPropsWithoutDefaultValue<R>,
   DataGridForcedPropsKey
 > & {
+  /**
+   * Pagination is always enabled in the Data Grid.
+   * Use the Data Grid Pro to disable it.
+   */
   pagination?: true;
 };
 
@@ -745,14 +757,16 @@ export interface DataGridPropsWithoutDefaultValue<
    */
   onPreferencePanelOpen?: GridEventListener<'preferencePanelOpen', Api>;
   /**
-   * Callback fired when the menu is opened.
+   * Callback fired when a grid menu is opened.
+   * This includes the column menu, the actions cell menu, and the toolbar menus.
    * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onMenuOpen?: GridEventListener<'menuOpen', Api>;
   /**
-   * Callback fired when the menu is closed.
+   * Callback fired when a grid menu is closed.
+   * This includes the column menu, the actions cell menu, and the toolbar menus.
    * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -900,6 +914,10 @@ export interface DataGridPropsWithoutDefaultValue<
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError?: (error: any) => void;
+  /**
+   * The column groups of the header.
+   * @see See {@link https://mui.com/x/react-data-grid/column-groups/ column grouping docs} for more details.
+   */
   columnGroupingModel?: GridColumnGroupingModel;
   /**
    * Sets the height in pixels of the column group headers in the Data Grid.

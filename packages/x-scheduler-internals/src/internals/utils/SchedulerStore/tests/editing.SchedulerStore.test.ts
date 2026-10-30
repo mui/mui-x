@@ -12,7 +12,7 @@ import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/us
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { vi, describe, it, expect } from 'vitest';
-import { schedulerOtherSelectors } from '../../../../scheduler-selectors';
+import { schedulerEventSelectors, schedulerOtherSelectors } from '../../../../scheduler-selectors';
 import { processDate } from '../../../../process-date';
 import { getOccurrenceKey, getRecurringOccurrenceKey } from '../../event-utils';
 
@@ -22,6 +22,12 @@ const DEFAULT_PARAMS = {
 };
 
 const RRULE = { freq: 'DAILY' } as any;
+
+// Mirrors `datesNotWritableReason` in `SchedulerStore.ts` (not exported): `toWarnDev` matches by
+// `includes`, so asserting only the first line of a warning never pins this text. Every fixture
+// in this file locks `start` only.
+const DATES_NOT_WRITABLE_REASON =
+  '`eventModelStructure` declares `start` with a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.';
 
 // A minimal edited occurrence of a recurring series (only the fields `repointEditingOccurrence` reads).
 function armRecurringOccurrence(store: any) {
@@ -319,6 +325,25 @@ premiumStoreClasses.forEach((storeClass) => {
       );
     }
 
+    // Shared by the "all" scope and "refused because a date has no setter" describes below —
+    // both need a store whose `start` has no setter, differing only in whether a test supplies
+    // its own event (a split-scope refusal needs one with an explicit `rrule.byDay`/exDates
+    // shape, the rest just reuse `RECURRING_EVENT`).
+    function createStoreWithReadOnlyStart(
+      onEventsChange: (...args: any[]) => void,
+      event: SchedulerEvent = RECURRING_EVENT,
+    ) {
+      return new storeClass.Value(
+        {
+          ...DEFAULT_PARAMS,
+          events: [event],
+          eventModelStructure: { start: { getter: (evt) => evt.start } },
+          onEventsChange,
+        },
+        adapter,
+      );
+    }
+
     function armOccurrence(store: any, occurrenceStart: ReturnType<typeof adapter.date>) {
       store.startEditing(
         {
@@ -471,10 +496,11 @@ premiumStoreClasses.forEach((storeClass) => {
     });
 
     // A store whose host feeds every change back into the controlled `events` prop.
-    function createControlledStore(events: any[]) {
+    function createControlledStore(events: any[], overrides?: { eventModelStructure?: object }) {
       let store: any;
       const parameters = {
         ...DEFAULT_PARAMS,
+        ...overrides,
         events,
         onEventsChange: (nextEvents: any[]) =>
           store.updateStateFromParameters({ ...parameters, events: nextEvents }, adapter),
@@ -750,8 +776,8 @@ premiumStoreClasses.forEach((storeClass) => {
       const days = schedulerRecurringEventsPlugin
         .getOccurrencesForVisibleDays(
           reprocessed,
-          visibleStart,
-          adapter.addDays(visibleStart, 4),
+          adapter.getTime(visibleStart),
+          adapter.getTime(adapter.addDays(visibleStart, 4)),
           adapter,
           'default',
         )
@@ -761,6 +787,301 @@ premiumStoreClasses.forEach((storeClass) => {
 
       expect(days).to.include('2025-02-28');
       expect(days).to.not.include('2025-03-01');
+    });
+
+    // The "all" scope has its own writability handling in `selectRecurringEventScope`, before
+    // `updateEvents` — not covered by the generic `dates declared without a setter` suite, which
+    // never combines a recurring "all" scope with an unwritable date.
+    describe('scope "all" with an unwritable date', () => {
+      // Regression guard: without the "all"-scope handling, `updateRecurringEvent` would realign
+      // the rule's pattern off a `start` that was never actually applied, since it can't be
+      // written back — silently corrupting the series instead of refusing the edit.
+      it('should refuse an "all" edit that moves the day when start lacks a setter', () => {
+        const onEventsChange = vi.fn();
+        const store = createStoreWithReadOnlyStart(onEventsChange);
+        const seriesBefore = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
+
+        const movedStart = adapter.addHours(dayB, 25);
+        const movedEnd = adapter.addHours(movedStart, 1);
+        store.updateRecurringEvent({
+          occurrenceStart: dayB,
+          changes: { id: 'standup', start: movedStart, end: movedEnd },
+        });
+
+        expect(() => {
+          store.selectRecurringEventScope('all');
+        }).toWarnDev([
+          `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON}`,
+        ]);
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        const seriesAfter = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
+        expect(seriesAfter.dataTimezone.start.value).toEqualDateTime(
+          seriesBefore.dataTimezone.start.value,
+        );
+        expect(seriesAfter.dataTimezone.rrule).to.deep.equal(seriesBefore.dataTimezone.rrule);
+        // No surface of its own for this rejection either — pushed as a toast.
+        expect(store.state.errors.length).to.equal(1);
+      });
+
+      // A resize-style "all" edit — only `end` is submitted, the day (`start`) isn't part of the
+      // change at all (as the real editing dialog gates per-bound) — still applies: a single
+      // submitted bound is a resize, not a move.
+      it('should apply an "all" edit that only resizes the time when start lacks a setter', () => {
+        const onEventsChange = vi.fn();
+        const store = createStoreWithReadOnlyStart(onEventsChange);
+
+        expect(() => {
+          store.updateRecurringEvent({
+            occurrenceStart: dayA,
+            changes: { id: 'standup', end: adapter.addMinutes(dayA, 90) },
+          });
+          store.selectRecurringEventScope('all');
+        }).not.toWarnDev();
+
+        // `onEventsChange` isn't fed back into `events`, so the applied change is read off the
+        // emitted model, not off `store.state` (which the "all"-scope tests above check through
+        // the armed occurrence — not applicable here since nothing is armed).
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        const updated = onEventsChange.mock.lastCall?.[0].find(
+          (candidate: any) => candidate.id === 'standup',
+        );
+        expect(
+          adapter.isEqual(adapter.date(updated.end, 'default'), adapter.addMinutes(dayA, 90)),
+        ).to.equal(true);
+        // `start` was stripped out of the change entirely (not merely resubmitted unchanged), so
+        // the model keeps its original string as-is instead of being reformatted.
+        expect(updated.start).to.equal(RECURRING_EVENT.start);
+      });
+
+      // On a later occurrence, the end of the series follows the new start with the duration of the
+      // edited occurrence: it must not be submitted when it doesn't move, or the resize becomes a
+      // move.
+      it('should apply an "all" edit that only resizes the start of a later occurrence when end lacks a setter', () => {
+        const store = createControlledStore([RECURRING_EVENT], {
+          eventModelStructure: { end: { getter: (event: any) => event.end } },
+        });
+
+        expect(() => {
+          store.updateRecurringEvent({
+            occurrenceStart: dayB,
+            changes: { id: 'standup', start: adapter.addMinutes(dayB, 30) },
+          });
+          store.selectRecurringEventScope('all');
+        }).not.toWarnDev();
+
+        expect(store.state.errors.length).to.equal(0);
+        const series = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
+        expect(series.dataTimezone.start.value).toEqualDateTime(adapter.addMinutes(dayA, 30));
+        expect(series.dataTimezone.end.value).toEqualDateTime(adapter.addHours(dayA, 1));
+      });
+
+      // The tests above use the shared, daily `RECURRING_EVENT`, where every occurrence falls on
+      // the same weekday as DTSTART — moving one to a new day never touches `byDay`, so it can't
+      // expose a pattern realignment bug. This series is weekly instead, and the edit targets its
+      // *second* occurrence: on the first, the occurrence start equals DTSTART, so a reference
+      // bug (falling back to the series' own bounds instead of the occurrence's) would be
+      // invisible too — both mutations survive the tests above unnoticed.
+      describe('on a weekly rule, at a non-first occurrence', () => {
+        const weeklyStandupEvent = EventBuilder.new()
+          .id('standup')
+          .startAt('2025-07-07T09:00:00Z') // a Monday
+          .endAt('2025-07-07T10:00:00Z')
+          .recurrent('WEEKLY')
+          .build();
+        const secondMonday = adapter.addDays(dayA, 7);
+        const readOnlyStartStructure = {
+          eventModelStructure: { start: { getter: (event: any) => event.start } },
+        };
+
+        it('should not realign BYDAY when a non-first occurrence\'s unwritable start is "moved"', () => {
+          const store = createControlledStore([weeklyStandupEvent], readOnlyStartStructure);
+
+          expect(() => {
+            store.updateRecurringEvent({
+              occurrenceStart: secondMonday,
+              changes: { id: 'standup', start: adapter.addDays(secondMonday, -1) },
+            });
+            store.selectRecurringEventScope('all');
+          }).toWarnDev([
+            "MUI X Scheduler: An event's `start` date was not updated.\n" +
+              '`eventModelStructure.start` declares a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.',
+          ]);
+
+          const series = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
+          expect(series.dataTimezone.rrule!.byDay).to.deep.equal(['MO']);
+        });
+
+        it('should keep the armed occurrence on its day when its unwritable start is "moved"', () => {
+          const store = createControlledStore([weeklyStandupEvent], readOnlyStartStructure);
+          const armedKey = getRecurringOccurrenceKey('standup', secondMonday, adapter);
+          armOccurrence(store, secondMonday);
+
+          expect(() => {
+            store.updateRecurringEvent({
+              occurrenceStart: secondMonday,
+              changes: { id: 'standup', start: adapter.addDays(secondMonday, -1) },
+            });
+            store.selectRecurringEventScope('all');
+          }).toWarnDev([
+            "MUI X Scheduler: An event's `start` date was not updated.\n" +
+              '`eventModelStructure.start` declares a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.',
+          ]);
+
+          const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+          expect(occurrence?.key).to.equal(armedKey);
+          expect(occurrence?.dataTimezone.start.value).toEqualDateTime(secondMonday);
+        });
+      });
+    });
+
+    // `selectRecurringEventScope` feeds the plugin's split straight into `updateEvents`, bypassing
+    // `updateEvent()` / `createEvent()` entirely — this is the direct caller the generic guard in
+    // `updateEvents` is meant to cover, not just the public methods. The whole call is refused,
+    // not only the creation: `only-this` / `this-and-following` also update or delete the
+    // original series in the same call, and applying that half while dropping the detached
+    // occurrence would corrupt the series instead of leaving it untouched.
+    describe('refused because a date has no setter', () => {
+      it('should refuse an "only-this" split and leave the series untouched', () => {
+        const onEventsChange = vi.fn();
+        // Seeded with an exDate unrelated to `dayA` so the before/after comparison below has
+        // teeth: an exDate wrongly added for the refused split would still show up as a diff.
+        const preExcludedDay = '2025-07-09T09:00:00Z';
+        const eventWithExDate = EventBuilder.new()
+          .id('standup')
+          .title(RECURRING_EVENT.title)
+          .startAt('2025-07-07T09:00:00Z')
+          .endAt('2025-07-07T10:00:00Z')
+          .recurrent('DAILY')
+          .exDates([preExcludedDay])
+          .build();
+        const store = createStoreWithReadOnlyStart(onEventsChange, eventWithExDate);
+        const seriesBefore = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
+
+        store.updateRecurringEvent({
+          occurrenceStart: dayA,
+          changes: {
+            id: 'standup',
+            start: adapter.addMinutes(dayA, 30),
+            end: adapter.addMinutes(dayA, 90),
+          },
+        });
+
+        expect(() => {
+          store.selectRecurringEventScope('only-this');
+        }).toWarnDev([
+          `MUI X Scheduler: An event was not created because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON}`,
+        ]);
+
+        // Refused as a whole: no detached event, and no exDate excluding the edited occurrence.
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(store.state.eventIdList).to.deep.equal(['standup']);
+        const seriesAfter = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
+        expect(seriesAfter.dataTimezone.exDates).to.deep.equal(seriesBefore.dataTimezone.exDates);
+        // The dialog has no surface of its own for this rejection, so it's pushed as a toast
+        // instead of the save silently doing nothing.
+        expect(store.state.errors.length).to.equal(1);
+      });
+
+      // A title edit never touches a date, but "only-this" still detaches the occurrence into
+      // its own event — refused the same way as a date move, but the message shown to the user
+      // must not claim a date was edited when it wasn't.
+      it('should refuse an "only-this" split over a title-only edit with a message that does not blame a date', () => {
+        const store = createStoreWithReadOnlyStart(vi.fn());
+
+        store.updateRecurringEvent({
+          occurrenceStart: dayA,
+          changes: { id: 'standup', title: 'Renamed' },
+        });
+
+        expect(() => {
+          store.selectRecurringEventScope('only-this');
+        }).toWarnDev([
+          `MUI X Scheduler: An event was not created because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON}`,
+        ]);
+
+        expect(store.state.errors).to.have.length(1);
+        expect(store.state.errors[0].code).to.equal('eventNotCreatableError');
+      });
+
+      it('should refuse a "this-and-following" split and leave the series untouched', () => {
+        const onEventsChange = vi.fn();
+        const store = createStoreWithReadOnlyStart(onEventsChange);
+        const seriesBefore = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
+
+        store.updateRecurringEvent({
+          occurrenceStart: dayB,
+          changes: {
+            id: 'standup',
+            start: adapter.addMinutes(dayB, 30),
+            end: adapter.addMinutes(dayB, 90),
+          },
+        });
+
+        expect(() => {
+          store.selectRecurringEventScope('this-and-following');
+        }).toWarnDev([
+          `MUI X Scheduler: An event was not created because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON}`,
+        ]);
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(store.state.eventIdList).to.deep.equal(['standup']);
+        const seriesAfter = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
+        expect(seriesAfter.dataTimezone.rrule).to.deep.equal(seriesBefore.dataTimezone.rrule);
+      });
+
+      // "this-and-following" on the very first occurrence has no remaining series to truncate, so
+      // the plugin's split is `{ created: [...], deleted: [originalEvent.id] }` — the whole series
+      // would be lost, not just the detached occurrence, if the refusal weren't atomic.
+      it('should refuse a "this-and-following" split on the first occurrence and keep the series', () => {
+        const onEventsChange = vi.fn();
+        const store = createStoreWithReadOnlyStart(onEventsChange);
+
+        store.updateRecurringEvent({
+          occurrenceStart: dayA,
+          changes: {
+            id: 'standup',
+            start: adapter.addMinutes(dayA, 30),
+            end: adapter.addMinutes(dayA, 90),
+          },
+        });
+
+        expect(() => {
+          store.selectRecurringEventScope('this-and-following');
+        }).toWarnDev([
+          `MUI X Scheduler: An event was not created because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON}`,
+        ]);
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(store.state.eventIdList).to.deep.equal(['standup']);
+      });
+
+      // `createdIds` comes back empty on a refusal, so the fallback that would otherwise call
+      // `setEditingOccurrenceTimes` with the (never applied) new times must not run either.
+      it('should leave the editing surface untouched after a refused split', () => {
+        const store = createStoreWithReadOnlyStart(vi.fn());
+        armOccurrence(store, dayA);
+        const editingOccurrenceBefore = schedulerOtherSelectors.editingOccurrence(store.state);
+
+        store.updateRecurringEvent({
+          occurrenceStart: dayA,
+          changes: {
+            id: 'standup',
+            start: adapter.addMinutes(dayA, 30),
+            end: adapter.addMinutes(dayA, 90),
+          },
+        });
+
+        expect(() => {
+          store.selectRecurringEventScope('only-this');
+        }).toWarnDev([
+          `MUI X Scheduler: An event was not created because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON}`,
+        ]);
+
+        expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(
+          editingOccurrenceBefore,
+        );
+      });
     });
   });
 });

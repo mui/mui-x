@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as childProcess from 'child_process';
-import { type Browser, chromium, type ConsoleMessage, type Page } from '@playwright/test';
+import { chromium } from '@playwright/test';
+import type { Browser, ConsoleMessage, Page } from '@playwright/test';
 import fs from 'node:fs/promises';
 import { describe, expect, it, test as base, afterAll, beforeEach, afterEach } from 'vitest';
 import { minimatch } from 'minimatch';
@@ -44,8 +45,8 @@ interface RouteConfig {
    */
   viewport?: { width: number; height: number };
   /**
-   * Wait for this selector before screenshotting, on top of `navigateToTest`
-   * (fonts loaded, and the timers scheduled while mounting flushed).
+   * Wait for this selector before screenshotting, on top of `navigateToTest`.
+   * Prefer rendering `data-screenshot-pending` while the demo loads, so no rule is needed.
    */
   waitForSelector?: string;
 }
@@ -75,17 +76,6 @@ const TEST_RULES: RouteRule[] = [
     test: '/test-regressions-charts/LineChartPointerInteraction',
     // Dedicated tests handle mouse positioning.
     enabled: false,
-  },
-  {
-    test: '/test-regressions-charts/MapImageProjections',
-    // `MapImagePlot` reprojects each raster on a canvas asynchronously; the demo
-    // reveals this sentinel once every projection has finished rendering.
-    waitForSelector: '[data-testid="map-images-ready"]',
-  },
-  {
-    test: '/test-regressions-charts/MapImageAntimeridian',
-    // Same async reprojection sentinel as MapImageProjections.
-    waitForSelector: '[data-testid="map-images-ready"]',
   },
   {
     test: '/docs-charts-map/MarsMap',
@@ -120,12 +110,6 @@ const TEST_RULES: RouteRule[] = [
     waitForSelector:
       '.MuiDataGrid-row[aria-rowindex="43"] .MuiDataGrid-cell[data-field="maturityDate"]',
   },
-  {
-    test: '/docs-data-grid-components-toolbar/GridToolbarCustom',
-    // The demo renders in `TailwindDemoContainer`, which shows a spinner until the Tailwind
-    // script loads from the network. Wait for a real, non-skeleton row before screenshotting.
-    waitForSelector: '.MuiDataGrid-row:not(.MuiDataGrid-rowSkeleton)',
-  },
 ];
 
 function getRouteConfig(routeUrl: string): RouteConfig | undefined {
@@ -148,8 +132,6 @@ async function main() {
       // is a no-op on Linux Chromium, so without this flag screenshots pick
       // up LCD subpixel color fringes that vary across hosts.
       '--disable-lcd-text',
-      // Skia otherwise picks SIMD code paths per host CPU, which shifts glyph edges.
-      '--disable-skia-runtime-opts',
       // Not `--hide-scrollbars`: it also hides the scrollbars of the components under test.
       // Only the page scrollbar is hidden, see `TestViewer`.
     ],
@@ -208,8 +190,13 @@ async function main() {
       window.muiFixture.navigate(_route);
     }, route);
 
+    // Wait until nothing in the test case is marked `data-screenshot-pending`: the viewer until the
+    // test case mounted and its fonts loaded, and demos while they load something the timers
+    // don't cover, for example a script from the network. Content that mounts once that's done
+    // still has its timers faked. The timers only run after this wait, so a marker must not wait
+    // for a timer, or the test times out.
     const testcase = await page.waitForSelector(
-      `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+      `[data-testid="testcase"][data-testpath="${route}"]:not(:has([data-screenshot-pending]))`,
     );
 
     // Run the timers the test case scheduled while mounting, then switch to real timers.
@@ -776,6 +763,14 @@ async function getDrawingArea(page: Page) {
 
 type NewPageOptions = Parameters<Browser['newPage']>[0];
 
+/**
+ * A 20×15 grey PNG, the size of the `w20` flags from flagcdn.com.
+ */
+const FLAG_PLACEHOLDER_PNG = Buffer.from(
+  'iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAIAAABr+ngCAAAAFklEQVR42mM4QwFgGNU8qnlUM5U1AwD/6s1PCbpwUAAAAABJRU5ErkJggg==',
+  'base64',
+);
+
 async function newTestPage(browser: Browser, newPageOptions: NewPageOptions = {}): Promise<Page> {
   // reuse viewport from `vrtest`
   // https://github.com/nathanmarks/vrtest/blob/1185b852a6c1813cedf5d81f6d6843d9a241c1ce/src/server/runner.js#L44
@@ -784,13 +779,18 @@ async function newTestPage(browser: Browser, newPageOptions: NewPageOptions = {}
   // Block images since they slow down tests (need download).
   // They're also most likely decorative for documentation demos
   const allowedImages = [
-    'https://flagcdn.com',
     // Map raster base maps are reprojected on a canvas, so they must actually load.
     '/static/x/charts/mars-viking-mdim21.jpg',
   ];
   await page.route(/./, async (route, request) => {
     const type = request.resourceType();
-    if (type === 'image' && !allowedImages.some((allowed) => request.url().includes(allowed))) {
+    if (type === 'image' && request.url().startsWith('https://flagcdn.com/')) {
+      // Serve flags from a local placeholder instead of the CDN.
+      route.fulfill({ contentType: 'image/png', body: FLAG_PLACEHOLDER_PNG });
+    } else if (
+      type === 'image' &&
+      !allowedImages.some((allowed) => request.url().includes(allowed))
+    ) {
       route.abort();
     } else {
       route.continue();

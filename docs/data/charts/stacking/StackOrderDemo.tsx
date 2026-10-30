@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { StackOrderType } from '@mui/x-charts/models';
+import type { StackOrderType } from '@mui/x-charts/models';
 
 // Data coming from https://www.insee.fr/fr/statistiques/5013868
 const commonTransportation = [

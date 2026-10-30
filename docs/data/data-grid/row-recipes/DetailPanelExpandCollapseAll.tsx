@@ -1,20 +1,23 @@
+import { gridRowIdSelector } from '@mui/x-data-grid';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
-import {
-  DataGridPro,
+import type {
   GridColDef,
   GridRowsProp,
   GridRowParams,
+  GridRowId,
+} from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
   useGridApiContext,
   useGridSelector,
   gridRowsLookupSelector,
   gridDetailPanelExpandedRowIdsSelector,
   gridDetailPanelExpandedRowsContentCacheSelector,
   GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
-  GridRowId,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -64,7 +67,7 @@ function CustomDetailPanelHeader() {
       for (const key in rowsWithDetailPanels) {
         if (rowsWithDetailPanels.hasOwnProperty(key)) {
           allRowIdsWithDetailPanels.add(
-            apiRef.current.getRowId(dataRowIdToModelLookup[key]),
+            gridRowIdSelector(apiRef, dataRowIdToModelLookup[key]),
           );
         }
       }

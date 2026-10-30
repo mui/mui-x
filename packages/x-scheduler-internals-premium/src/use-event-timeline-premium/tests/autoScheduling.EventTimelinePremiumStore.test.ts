@@ -1,5 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
-import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
+import {
+  adapter,
+  EventBuilder,
+  EventTimelinePremiumStoreWithFeatures,
+  ResourceBuilder,
+} from 'test/utils/scheduler';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import { applyInternalDragOrResizeOccurrencePlaceholder } from '@mui/x-scheduler-internals/internals';
@@ -9,7 +14,7 @@ import {
   flushEffect,
   noopPersistEvents,
 } from '../../internals/tests/disposeTestHelpers';
-import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
+import type { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
 const TEST_RESOURCES = [ResourceBuilder.new().id('r1').title('Resource 1').build()];
 const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').build();
@@ -46,7 +51,10 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
   describe('method: updateEvent', () => {
     it('should emit onEventsChange once with the cascaded events included', () => {
       const onEventsChange = vi.fn();
-      const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, onEventsChange }, adapter);
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        { ...DEFAULT_PARAMS, onEventsChange },
+        adapter,
+      );
 
       store.updateEvent({
         id: 'a',
@@ -65,7 +73,10 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
     it('should clamp a successor dropped before its predecessor within the same emission', () => {
       const onEventsChange = vi.fn();
-      const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, onEventsChange }, adapter);
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        { ...DEFAULT_PARAMS, onEventsChange },
+        adapter,
+      );
 
       store.updateEvent({
         id: 'b',
@@ -85,7 +96,10 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
     it('should cascade on an end-only update', () => {
       const onEventsChange = vi.fn();
-      const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, onEventsChange }, adapter);
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        { ...DEFAULT_PARAMS, onEventsChange },
+        adapter,
+      );
 
       // Resize: only the end moves, past the successor's start.
       store.updateEvent({ id: 'a', end: date('2025-07-03T10:30:00Z') });
@@ -99,7 +113,10 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
     it('should leave the successor untouched when the predecessor moves earlier', () => {
       const onEventsChange = vi.fn();
-      const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, onEventsChange }, adapter);
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        { ...DEFAULT_PARAMS, onEventsChange },
+        adapter,
+      );
 
       store.updateEvent({
         id: 'a',
@@ -114,7 +131,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     });
 
     it('should report an applied update', () => {
-      const store = new EventTimelinePremiumStore(
+      const store = new EventTimelinePremiumStoreWithFeatures(
         { ...DEFAULT_PARAMS, onEventsChange: () => {} },
         adapter,
       );
@@ -129,7 +146,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     });
 
     it('should report the changes as applied, with the clamped dates', () => {
-      const store = new EventTimelinePremiumStore(
+      const store = new EventTimelinePremiumStoreWithFeatures(
         { ...DEFAULT_PARAMS, onEventsChange: () => {} },
         adapter,
       );
@@ -150,8 +167,28 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(adapter.getTime(changes.end!)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
     });
 
+    // The cascade appends `b`'s entry to the batch regardless of where either id sits in the
+    // `events` prop — `changes` has to stay the caller's own entry, not whichever one the main
+    // loop (which walks `events` in its own order) happens to visit first.
+    it("should report the caller's own entry first, not whichever id the `events` prop lists first", () => {
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        { ...DEFAULT_PARAMS, events: [eventB, eventA], onEventsChange: () => {} },
+        adapter,
+      );
+
+      const result = store.updateEvent({
+        id: 'a',
+        start: date('2025-07-03T11:00:00Z'),
+        end: date('2025-07-03T12:00:00Z'),
+      });
+
+      expect(result.applied).to.equal(true);
+      const { changes } = result as Extract<typeof result, { applied: true }>;
+      expect(changes.id).to.equal('a');
+    });
+
     it('should sync the armed occurrence with the clamped dates after a start resize', () => {
-      const store = new EventTimelinePremiumStore(
+      const store = new EventTimelinePremiumStoreWithFeatures(
         { ...DEFAULT_PARAMS, onEventsChange: () => {} },
         adapter,
       );
@@ -172,8 +209,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
           originalOccurrence: occurrenceB,
           sourceResourceId: null,
           resourceId: null,
-          start: date('2025-07-03T09:30:00Z'),
-          end: date('2025-07-03T11:00:00Z'),
+          start: adapter.getTime(date('2025-07-03T09:30:00Z')),
+          end: adapter.getTime(date('2025-07-03T11:00:00Z')),
         },
       );
 
@@ -192,7 +229,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .id('b')
         .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
         .build();
-      const store = new EventTimelinePremiumStore(
+      const store = new EventTimelinePremiumStoreWithFeatures(
         { ...DEFAULT_PARAMS, events: [allDayA, allDayB], onEventsChange },
         adapter,
       );
@@ -223,7 +260,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .withDataTimezone('America/New_York')
         .span('2025-07-03T12:00:00', '2025-07-03T13:00:00')
         .build();
-      const store = new EventTimelinePremiumStore(
+      const store = new EventTimelinePremiumStoreWithFeatures(
         { ...DEFAULT_PARAMS, events: [predecessor, newYorkB], onEventsChange },
         adapter,
       );
@@ -250,7 +287,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .withDataTimezone('America/New_York')
         .span('2025-03-10T03:00:00Z', '2025-03-10T04:00:00Z')
         .build();
-      const store = new EventTimelinePremiumStore(
+      const store = new EventTimelinePremiumStoreWithFeatures(
         {
           ...DEFAULT_PARAMS,
           events: [predecessor, newYorkB],
@@ -280,7 +317,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .withDataTimezone('UTC')
         .span('2025-07-05T00:00:00', '2025-07-05T23:59:59', { allDay: true })
         .build();
-      const store = new EventTimelinePremiumStore(
+      const store = new EventTimelinePremiumStoreWithFeatures(
         {
           ...DEFAULT_PARAMS,
           events: [predecessor, allDayB],
@@ -311,7 +348,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .id('b')
         .span('2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z')
         .build();
-      const store = new EventTimelinePremiumStore(
+      const store = new EventTimelinePremiumStoreWithFeatures(
         { ...DEFAULT_PARAMS, events: [parisA, successor], onEventsChange },
         adapter,
       );
@@ -331,7 +368,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
   describe('read-only veto', () => {
     it('should reject the batch when the cascade would move a read-only event', () => {
       const onEventsChange = vi.fn();
-      const store = new EventTimelinePremiumStore(
+      const store = new EventTimelinePremiumStoreWithFeatures(
         { ...DEFAULT_PARAMS, events: [eventA, readOnlySuccessor], onEventsChange },
         adapter,
       );
@@ -344,7 +381,10 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
       // Atomic veto: nothing applied, the rejection returned rather than pushed as a toast.
       expect(result.applied).to.equal(false);
-      expect((result as { rejection: Error }).rejection.message).to.include('"Blocked successor"');
+      expect(result).to.deep.equal({
+        applied: false,
+        rejection: { code: 'readOnlyEventMovedError', params: { title: 'Blocked successor' } },
+      });
       expect(onEventsChange.mock.calls.length).to.equal(0);
       expect(store.state.errors).to.have.length(0);
     });
@@ -355,7 +395,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .id('c')
         .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
         .build();
-      const store = new EventTimelinePremiumStore(
+      const store = new EventTimelinePremiumStoreWithFeatures(
         {
           ...DEFAULT_PARAMS,
           events: [eventA, readOnlySuccessor, movableSuccessor],
@@ -389,7 +429,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
           onDependenciesChange: () => {},
           dataSource,
         };
-        const store = new EventTimelinePremiumStore(params, adapter);
+        const store = new EventTimelinePremiumStoreWithFeatures(params, adapter);
         store.updateStateFromParameters(params, adapter);
         await flushEffect();
         await flushDebounce();
@@ -412,7 +452,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const onEventsChange = vi.fn();
       const onDependenciesChange = vi.fn();
       const orphan = EventBuilder.new().id('d').singleDay('2025-07-04T09:00:00Z').build();
-      const store = new EventTimelinePremiumStore(
+      const store = new EventTimelinePremiumStoreWithFeatures(
         {
           ...DEFAULT_PARAMS,
           events: [eventA, readOnlySuccessor, orphan],
@@ -436,12 +476,230 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(onEventsChange.mock.calls.length).to.equal(0);
       expect(onDependenciesChange.mock.calls.length).to.equal(0);
     });
+
+    // The dependency cleanup for `deleted` is computed inside `handleEventsUpdate`, before the
+    // store's own date-writability check runs on the merged batch — it must not go out just
+    // because this hook itself had nothing to veto.
+    it('should emit nothing, not even the dependency cleanup, when the batch is refused because a date cannot be written back', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const orphan = EventBuilder.new().id('d').singleDay('2025-07-04T09:00:00Z').build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, eventB, orphan],
+          dependencies: [DEP_AB, { id: 'dep-2', source: 'a', target: 'd', type: 'FinishToStart' }],
+          eventModelStructure: { start: { getter: (event: any) => event.start } },
+          onEventsChange,
+          onDependenciesChange,
+        },
+        adapter,
+      );
+
+      // Only recurring scope changes build such batches today, so the store method is
+      // called directly.
+      let result: any;
+      expect(() => {
+        result = (store as any).updateEvents({
+          deleted: ['d'],
+          updated: [
+            { id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') },
+          ],
+        });
+      }).toWarnDev([
+        'MUI X Scheduler: An event was not moved because a date could not be written back.',
+      ]);
+
+      expect(result.rejection).not.to.equal(null);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+    });
+  });
+
+  // Combines the scheduling cascade with an `eventModelStructure` date that can't be written
+  // back — the two features are tested separately everywhere else in this suite.
+  describe('unwritable date', () => {
+    it('should refuse the whole batch when a cascade would move a successor whose date is not writable', () => {
+      const onEventsChange = vi.fn();
+      const eventModelStructure = { start: { getter: (event: any) => event.start } };
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        { ...DEFAULT_PARAMS, eventModelStructure, onEventsChange },
+        adapter,
+      );
+
+      // Resizing `a` alone isn't a move (only `end` is submitted) — but the cascade pushes `b`'s
+      // whole range forward through the dependency, and that push carries both of `b`'s bounds
+      // together (a rigid shift), so `b`'s unwritable `start` refuses the entire batch instead of
+      // silently applying `a`'s resize while corrupting `b`.
+      let result: ReturnType<typeof store.updateEvent>;
+      expect(() => {
+        result = store.updateEvent({ id: 'a', end: date('2025-07-03T10:30:00Z') });
+      }).toWarnDev([
+        'MUI X Scheduler: An event was not moved because a date could not be written back.\n' +
+          '`eventModelStructure` declares `start` with a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.',
+      ]);
+
+      expect(result!.applied).to.equal(false);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    // The opposite shape: `a`'s own `end` (not `start`) is unwritable, and it's the only bound
+    // in this change — a resize, not a move. Stripped before the plugin ever computes from it,
+    // so the cascade never triggers at all, and the unrelated `title` change still goes through.
+    // If the strip ran after the plugin instead, the raw (pre-strip) `end` would still push `b`
+    // forward, and that push would refuse the whole batch once `b`'s shifted bounds are checked.
+    it('should strip a single-side unwritable bound before the plugin runs, instead of refusing an unrelated change', () => {
+      const onEventsChange = vi.fn();
+      const eventModelStructure = { end: { getter: (event: any) => event.end } };
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        { ...DEFAULT_PARAMS, eventModelStructure, onEventsChange },
+        adapter,
+      );
+
+      let result: ReturnType<typeof store.updateEvent>;
+      expect(() => {
+        result = store.updateEvent({
+          id: 'a',
+          end: date('2025-07-03T10:30:00Z'),
+          title: 'x',
+        });
+      }).toWarnDev([
+        "MUI X Scheduler: An event's `end` date was not updated.\n" +
+          '`eventModelStructure.end` declares a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.',
+      ]);
+
+      expect(result!.applied).to.equal(true);
+      const { changes } = result! as Extract<typeof result, { applied: true }>;
+      expect(changes.title).to.equal('x');
+      expect('end' in changes).to.equal(false);
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+      const emittedB = newEvents.find((event) => event.id === 'b')!;
+      // `b` never moved: the cascade never saw a changed `end` to push it from.
+      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
+      expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
+    });
+
+    // Same ordering as above, but for `checkCreatedDatesWritable`: a "this and following" split
+    // on the series' first occurrence detaches as `{ created: [...], deleted: ['standup'] }`,
+    // and the refusal must beat `commit()` to the dependency cleanup for the deleted series.
+    it('should not clean up a dependency on a recurring split refused because a date cannot be written back', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const recurringEvent = EventBuilder.new()
+        .id('standup')
+        .startAt('2025-07-03T09:00:00Z')
+        .endAt('2025-07-03T10:00:00Z')
+        .recurrent('DAILY')
+        .build();
+      const other = EventBuilder.new().id('other').singleDay('2025-07-04T09:00:00Z').build();
+
+      let store: EventTimelinePremiumStore<any, any>;
+      expect(() => {
+        // Dependencies don't support recurring events (hence the second warning below), but
+        // cleanup still reads the raw `dependencyModelList`, so this one is still there to drop.
+        store = new EventTimelinePremiumStoreWithFeatures(
+          {
+            resources: TEST_RESOURCES,
+            events: [recurringEvent, other],
+            dependencies: [
+              { id: 'dep-1', source: 'standup', target: 'other', type: 'FinishToStart' },
+            ],
+            eventModelStructure: { start: { getter: (event: any) => event.start } },
+            onEventsChange,
+            onDependenciesChange,
+          },
+          adapter,
+        );
+
+        store.updateRecurringEvent({
+          occurrenceStart: date('2025-07-03T09:00:00Z'),
+          changes: {
+            id: 'standup',
+            start: date('2025-07-03T09:30:00Z'),
+            end: date('2025-07-03T10:30:00Z'),
+          },
+        });
+        store.selectRecurringEventScope('this-and-following');
+      }).toWarnDev([
+        'MUI X Scheduler: The dependency "dep-1" references the recurring event "standup".\n' +
+          'Dependencies on recurring events are not supported, so it is ignored by the timeline.',
+        'MUI X Scheduler: An event was not created because a date could not be written back.\n' +
+          '`eventModelStructure` declares `start` with a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.',
+      ]);
+
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+      expect(store!.state.dependencyModelList).to.have.length(1);
+    });
+
+    // The clamp on a start resize keeps `b`'s end, so its contribution carries `start` only.
+    // Merging it into the caller's entry must not add an `end` key: that would turn the resize
+    // into a two-bound move, which `b`'s unwritable `end` refuses wholesale.
+    it('should apply a clamped start resize when the untouched end is not writable', () => {
+      const onEventsChange = vi.fn();
+      const eventModelStructure = { end: { getter: (event: any) => event.end } };
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        { ...DEFAULT_PARAMS, eventModelStructure, onEventsChange },
+        adapter,
+      );
+
+      const result = store.updateEvent({ id: 'b', start: date('2025-07-03T09:30:00Z') });
+
+      expect(result.applied).to.equal(true);
+      const { changes } = result as Extract<typeof result, { applied: true }>;
+      expect(adapter.getTime(changes.start!)).to.equal(
+        adapter.getTime(date('2025-07-03T10:00:00Z')),
+      );
+      expect('end' in changes).to.equal(false);
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+      const emittedB = newEvents.find((event) => event.id === 'b')!;
+      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
+      expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
+    });
+
+    // Mirror of the above: the clamp on an end resize keeps `b`'s start, so its contribution
+    // carries `end` only, and `b`'s unwritable `start` must not be pulled into the merged entry.
+    it('should apply a clamped end resize when the untouched start is not writable', () => {
+      const onEventsChange = vi.fn();
+      const eventModelStructure = { start: { getter: (event: any) => event.start } };
+      const longPredecessor = EventBuilder.new()
+        .id('a')
+        .span('2025-07-03T09:00:00Z', '2025-07-03T12:00:00Z')
+        .build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          events: [longPredecessor, eventB],
+          dependencies: [{ id: 'dep-1', source: 'a', target: 'b', type: 'FinishToFinish' }],
+          eventModelStructure,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      const result = store.updateEvent({ id: 'b', end: date('2025-07-03T11:30:00Z') });
+
+      expect(result.applied).to.equal(true);
+      const { changes } = result as Extract<typeof result, { applied: true }>;
+      expect(adapter.getTime(changes.end!)).to.equal(adapter.getTime(date('2025-07-03T12:00:00Z')));
+      expect('start' in changes).to.equal(false);
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+      const emittedB = newEvents.find((event) => event.id === 'b')!;
+      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
+      expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T12:00:00Z')));
+    });
   });
 
   describe('method: pasteEvent', () => {
     it('should keep the clipboard when a cut paste is rejected', () => {
       const onEventsChange = vi.fn();
-      const store = new EventTimelinePremiumStore(
+      const store = new EventTimelinePremiumStoreWithFeatures(
         { ...DEFAULT_PARAMS, events: [eventA, readOnlySuccessor], onEventsChange },
         adapter,
       );
@@ -453,13 +711,17 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(result).to.equal(null);
       expect(onEventsChange.mock.calls.length).to.equal(0);
       expect(store.state.copiedEvent).not.to.equal(null);
-      expect(store.state.errors).to.have.length(1);
-      expect(store.state.errors[0].error.message).to.include('"Blocked successor"');
+      expect(store.state.errors).to.deep.equal([
+        { code: 'readOnlyEventMovedError', params: { title: 'Blocked successor' }, key: '1' },
+      ]);
     });
 
     it('should return the pasted event when a cut paste cascades into its successor', () => {
       const onEventsChange = vi.fn();
-      const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, onEventsChange }, adapter);
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        { ...DEFAULT_PARAMS, onEventsChange },
+        adapter,
+      );
 
       store.cutEvent('a');
       const pastedId = store.pasteEvent({ start: date('2025-07-03T11:00:00Z') });
@@ -479,7 +741,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const onEventsChange = vi.fn();
       const onDependenciesChange = vi.fn();
       const orphan = EventBuilder.new().id('d').singleDay('2025-07-04T09:00:00Z').build();
-      const store = new EventTimelinePremiumStore(
+      const store = new EventTimelinePremiumStoreWithFeatures(
         {
           ...DEFAULT_PARAMS,
           events: [eventA, eventB, orphan],
@@ -522,7 +784,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
           onDependenciesChange: () => {},
           dataSource,
         };
-        const store = new EventTimelinePremiumStore(params, adapter);
+        const store = new EventTimelinePremiumStoreWithFeatures(params, adapter);
         store.updateStateFromParameters(params, adapter);
         await flushEffect();
         await flushDebounce();
@@ -555,10 +817,461 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     });
   });
 
+  describe('method: addDependency', () => {
+    it('should push the target of a dependency created broken', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const overlapping = EventBuilder.new().id('c').singleDay('2025-07-03T09:30:00Z').build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, overlapping],
+          dependencies: [],
+          onDependenciesChange,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      expect(
+        store.addDependency({ source: 'a', target: 'c', type: 'FinishToStart' }).status,
+      ).to.equal('added');
+
+      expect(onDependenciesChange.mock.calls.length).to.equal(1);
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      const emittedC = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
+        (event) => event.id === 'c',
+      )!;
+      expect(timestampOf(emittedC.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
+      expect(timestampOf(emittedC.end)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
+    });
+
+    it('should not emit when the push would move a read-only event', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const overlapping = EventBuilder.new().id('c').singleDay('2025-07-03T09:30:00Z').build();
+      const readOnlyNext = EventBuilder.new()
+        .id('d')
+        .readOnly()
+        .singleDay('2025-07-03T10:30:00Z')
+        .build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, overlapping, readOnlyNext],
+          dependencies: [{ id: 'dep-cd', source: 'c', target: 'd', type: 'FinishToStart' }],
+          onDependenciesChange,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      expect(
+        store.addDependency({ source: 'a', target: 'c', type: 'FinishToStart' }),
+      ).to.deep.equal({ status: 'rejected', reason: 'cascadeBlocked', eventId: 'd' });
+
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should push the target only as far as the created dependency requires', () => {
+      const onEventsChange = vi.fn();
+      const overlapping = EventBuilder.new().id('c').singleDay('2025-07-03T09:30:00Z').build();
+      const later = EventBuilder.new().id('x').singleDay('2025-07-03T12:00:00Z').build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, overlapping, later],
+          // Already broken: a second engine run would clamp `c` after `x` too.
+          dependencies: [{ id: 'dep-xc', source: 'x', target: 'c', type: 'FinishToStart' }],
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      store.addDependency({ source: 'a', target: 'c', type: 'FinishToStart' });
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      const emittedC = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
+        (event) => event.id === 'c',
+      )!;
+      expect(timestampOf(emittedC.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
+    });
+  });
+
+  describe('method: updateDependency', () => {
+    it('should push the target when the new type is broken', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const overlapping = EventBuilder.new().id('b').singleDay('2025-07-03T09:30:00Z').build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, overlapping],
+          dependencies: [{ ...DEP_AB, type: 'StartToStart' }],
+          onDependenciesChange,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { type: 'FinishToStart' })).to.deep.equal({
+        status: 'updated',
+      });
+
+      expect(onDependenciesChange.mock.lastCall![0]).to.deep.equal([DEP_AB]);
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      expect(onDependenciesChange.mock.invocationCallOrder[0]).to.be.lessThan(
+        onEventsChange.mock.invocationCallOrder[0],
+      );
+      const emittedB = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
+        (event) => event.id === 'b',
+      )!;
+      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
+    });
+
+    it('should not move the target when a type change on a broken dependency is not stricter', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const overlapping = EventBuilder.new().id('b').singleDay('2025-07-03T09:30:00Z').build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, overlapping],
+          onDependenciesChange,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { type: 'StartToStart' })).to.deep.equal({
+        status: 'updated',
+      });
+
+      expect(onDependenciesChange.mock.lastCall![0]).to.deep.equal([
+        { ...DEP_AB, type: 'StartToStart' },
+      ]);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should accept a type change that is not stricter on a broken dependency into a read-only event', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const readOnlyOverlapping = EventBuilder.new()
+        .id('b')
+        .readOnly()
+        .singleDay('2025-07-03T09:30:00Z')
+        .build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, readOnlyOverlapping],
+          onDependenciesChange,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { type: 'StartToStart' })).to.deep.equal({
+        status: 'updated',
+      });
+
+      expect(onDependenciesChange.mock.calls.length).to.equal(1);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should push the target fully when a stricter type replaces an already broken dependency', () => {
+      const onEventsChange = vi.fn();
+      // Breaks StartToStart by 30 minutes, FinishToStart by 90 minutes.
+      const early = EventBuilder.new().id('b').singleDay('2025-07-03T08:30:00Z').build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, early],
+          dependencies: [{ ...DEP_AB, type: 'StartToStart' }],
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      store.updateDependency('dep-1', { type: 'FinishToStart' });
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      const emittedB = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
+        (event) => event.id === 'b',
+      )!;
+      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
+      expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
+    });
+
+    it('should push an all-day target when a type change needs more days across a DST change', () => {
+      const onEventsChange = vi.fn();
+      // New York falls back on 2025-11-02, making that day 25h long.
+      const newYorkA = EventBuilder.new()
+        .id('a')
+        .withDataTimezone('America/New_York')
+        .span('2025-11-03T00:00:00', '2025-11-04T00:00:00')
+        .build();
+      const allDayB = EventBuilder.new()
+        .id('b')
+        .withDataTimezone('America/New_York')
+        .span('2025-11-02T00:00:00', '2025-11-02T23:59:59', { allDay: true })
+        .build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          events: [newYorkA, allDayB],
+          dependencies: [{ ...DEP_AB, type: 'StartToStart' }],
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      // StartToStart breaks by 1 day (25h), FinishToFinish by 2 days (24h + 1ms).
+      store.updateDependency('dep-1', { type: 'FinishToFinish' });
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      const emittedB = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
+        (event) => event.id === 'b',
+      )!;
+      expect(emittedB.start).to.equal('2025-11-04T00:00:00');
+      expect(emittedB.end).to.equal('2025-11-04T23:59:59');
+    });
+
+    it('should cascade the push of a stricter type change to the successors of the target', () => {
+      const onEventsChange = vi.fn();
+      const overlapping = EventBuilder.new().id('b').singleDay('2025-07-03T09:30:00Z').build();
+      const successor = EventBuilder.new().id('c').singleDay('2025-07-03T10:30:00Z').build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, overlapping, successor],
+          dependencies: [
+            { ...DEP_AB, type: 'StartToStart' },
+            { id: 'dep-bc', source: 'b', target: 'c', type: 'FinishToStart' },
+          ],
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      store.updateDependency('dep-1', { type: 'FinishToStart' });
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+      const emittedC = newEvents.find((event) => event.id === 'c')!;
+      expect(timestampOf(emittedC.start)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
+      expect(timestampOf(emittedC.end)).to.equal(adapter.getTime(date('2025-07-03T12:00:00Z')));
+    });
+
+    it('should not emit when the push would move a read-only event', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const overlapping = EventBuilder.new().id('b').singleDay('2025-07-03T09:30:00Z').build();
+      const readOnlyNext = EventBuilder.new()
+        .id('d')
+        .readOnly()
+        .singleDay('2025-07-03T10:30:00Z')
+        .build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, overlapping, readOnlyNext],
+          dependencies: [
+            { ...DEP_AB, type: 'StartToStart' },
+            { id: 'dep-bd', source: 'b', target: 'd', type: 'FinishToStart' },
+          ],
+          onDependenciesChange,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { type: 'FinishToStart' })).to.deep.equal({
+        status: 'rejected',
+        reason: 'cascadeBlocked',
+        eventId: 'd',
+      });
+
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should push the target when the new lag is broken', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        { ...DEFAULT_PARAMS, onDependenciesChange, onEventsChange },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { lag: 2, lagUnit: 'hour' })).to.deep.equal({
+        status: 'updated',
+      });
+
+      expect(onDependenciesChange.mock.lastCall![0]).to.deep.equal([
+        { ...DEP_AB, lag: 2, lagUnit: 'hour' },
+      ]);
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      const emittedB = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
+        (event) => event.id === 'b',
+      )!;
+      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T12:00:00Z')));
+      expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T13:00:00Z')));
+    });
+
+    it('should not move the target when the new lag fits in the slack', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const laterB = EventBuilder.new()
+        .id('b')
+        .span('2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z')
+        .build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        { ...DEFAULT_PARAMS, events: [eventA, laterB], onDependenciesChange, onEventsChange },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { lag: 1, lagUnit: 'hour' })).to.deep.equal({
+        status: 'updated',
+      });
+
+      expect(onDependenciesChange.mock.lastCall![0]).to.deep.equal([
+        { ...DEP_AB, lag: 1, lagUnit: 'hour' },
+      ]);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should push the target when an already broken lag gets longer', () => {
+      const onEventsChange = vi.fn();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          dependencies: [{ ...DEP_AB, lag: 1, lagUnit: 'hour' }],
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      store.updateDependency('dep-1', { lag: 3, lagUnit: 'hour' });
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      const emittedB = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
+        (event) => event.id === 'b',
+      )!;
+      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T13:00:00Z')));
+    });
+
+    it('should not move the target when an already broken lag gets shorter', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          dependencies: [{ ...DEP_AB, lag: 3, lagUnit: 'hour' }],
+          onDependenciesChange,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { lag: 1, lagUnit: 'hour' })).to.deep.equal({
+        status: 'updated',
+      });
+
+      expect(onDependenciesChange.mock.lastCall![0]).to.deep.equal([
+        { ...DEP_AB, lag: 1, lagUnit: 'hour' },
+      ]);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should accept a shorter lag on an already broken dependency into a read-only event', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, readOnlySuccessor],
+          dependencies: [{ ...DEP_AB, lag: 3, lagUnit: 'hour' }],
+          onDependenciesChange,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { lag: 1, lagUnit: 'hour' })).to.deep.equal({
+        status: 'updated',
+      });
+
+      expect(onDependenciesChange.mock.calls.length).to.equal(1);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should push the target only as far as the edited dependency requires', () => {
+      const onEventsChange = vi.fn();
+      const overlapping = EventBuilder.new().id('b').singleDay('2025-07-03T09:30:00Z').build();
+      const later = EventBuilder.new().id('x').singleDay('2025-07-03T12:00:00Z').build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, overlapping, later],
+          dependencies: [
+            { ...DEP_AB, type: 'StartToStart' },
+            // Already broken: a second engine run would clamp `b` after `x` too.
+            { id: 'dep-xb', source: 'x', target: 'b', type: 'FinishToStart' },
+          ],
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      store.updateDependency('dep-1', { type: 'FinishToStart' });
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      const emittedB = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
+        (event) => event.id === 'b',
+      )!;
+      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
+    });
+
+    it('should cascade an update made from onEventsChange during a dependency change', () => {
+      const onEventsChange = vi.fn();
+      const overlapping = EventBuilder.new().id('b').singleDay('2025-07-03T09:30:00Z').build();
+      const successor = EventBuilder.new().id('c').singleDay('2025-07-03T14:00:00Z').build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, overlapping, successor],
+          dependencies: [
+            { ...DEP_AB, type: 'StartToStart' },
+            { id: 'dep-bc', source: 'b', target: 'c', type: 'FinishToStart' },
+          ],
+          onEventsChange,
+        },
+        adapter,
+      );
+      onEventsChange.mockImplementationOnce(() => {
+        store.updateEvent({
+          id: 'b',
+          start: date('2025-07-03T14:30:00Z'),
+          end: date('2025-07-03T15:30:00Z'),
+        });
+      });
+
+      store.updateDependency('dep-1', { type: 'FinishToStart' });
+
+      expect(onEventsChange.mock.calls.length).to.equal(2);
+      const emittedC = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
+        (event) => event.id === 'c',
+      )!;
+      expect(timestampOf(emittedC.start)).to.equal(adapter.getTime(date('2025-07-03T15:30:00Z')));
+    });
+  });
+
   describe('feature gating', () => {
     it('should not cascade when the dependencies feature is disabled', () => {
       const onEventsChange = vi.fn();
-      const store = new EventTimelinePremiumStore(
+      const store = new EventTimelinePremiumStoreWithFeatures(
         { events: [eventA, eventB], resources: TEST_RESOURCES, onEventsChange },
         adapter,
       );
@@ -582,7 +1295,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       ];
       let store!: EventTimelinePremiumStore<SchedulerEvent, (typeof TEST_RESOURCES)[number]>;
       expect(() => {
-        store = new EventTimelinePremiumStore(
+        store = new EventTimelinePremiumStoreWithFeatures(
           {
             events: [eventA, recurringEvent],
             resources: TEST_RESOURCES,

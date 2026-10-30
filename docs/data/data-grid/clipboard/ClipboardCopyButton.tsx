@@ -1,7 +1,8 @@
 import * as React from 'react';
+import type { GridApiPremium } from '@mui/x-data-grid-premium';
 import {
+  gridRowSelectionIdsSelector,
   DataGridPremium,
-  GridApiPremium,
   gridFocusCellSelector,
   gridSortedRowIdsSelector,
   useGridApiRef,
@@ -41,7 +42,7 @@ function getSelectionAsText(apiRef: RefObject<GridApiPremium | null>): string {
       .join('\n');
   }
 
-  const selectedRowIds = api.getSelectedRows();
+  const selectedRowIds = gridRowSelectionIdsSelector({ current: api });
   if (selectedRowIds.size > 0) {
     return api.getDataAsCsv({
       includeHeaders: false,

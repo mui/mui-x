@@ -7,7 +7,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { AxisValueFormatterContext, ScatterValueType } from '@mui/x-charts/models';
+import type {
+  AxisValueFormatterContext,
+  ScatterValueType,
+} from '@mui/x-charts/models';
 import { earthquakeData } from '../dataset/earthquakeData';
 
 const settings = {

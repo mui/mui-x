@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGrid, GridSortModel } from '@mui/x-data-grid';
+import type { GridSortModel } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];

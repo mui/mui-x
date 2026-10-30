@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventTimelinePremium } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import type {
@@ -9,16 +10,23 @@ import type {
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 import {
   EventEditingStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
   SharedComponentsStyledContext,
+  SchedulerDirectionProvider,
 } from '@mui/x-scheduler/internals';
 import { DEFAULT_TESTING_VISIBLE_DATE, mockElementBounds } from 'test/utils/scheduler';
 import { buildDependency, resource1, resource2 } from './dependencyGeometryTestUtils';
 import { EventTimelinePremiumContent } from '../content';
 import { EventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
+import { recurringEventsFeature } from '../../recurring-events';
+import { dependenciesFeature } from '../content/timeline-dependencies/dependenciesFeature';
+import { EventTimelinePremiumFeaturesContext } from '../features/EventTimelinePremiumFeaturesContext';
+import { useFrozenEventTimelinePremiumFeatures } from '../features/useFrozenEventTimelinePremiumFeatures';
+import type { EventTimelinePremiumInternalFeatures } from '../features/EventTimelinePremiumFeatures.types';
 
 export { buildDependency, resource1, resource2 };
 
@@ -61,7 +69,15 @@ const styledContextValue = {
   localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 };
 
-const sharedStyledContextValue = { classes: eventTimelinePremiumClasses };
+const sharedStyledContextValue = {
+  classes: eventTimelinePremiumClasses,
+  localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+};
+
+const defaultFeatures: EventTimelinePremiumInternalFeatures = {
+  recurringEvents: recurringEventsFeature,
+  dependencies: dependenciesFeature,
+};
 
 type PresetConfig = EventTimelinePremiumStoreParameters<
   SchedulerEvent,
@@ -74,6 +90,14 @@ interface TestTimelineProps {
   dependencies?: SchedulerDependency[];
   presetConfig?: PresetConfig;
   readOnly?: boolean;
+  /**
+   * @default both features
+   */
+  features?: EventTimelinePremiumInternalFeatures;
+  /**
+   * Merged into the default locale text.
+   */
+  localeText?: Partial<EventTimelineLocaleText>;
   /**
    * Observes the dependency changes on top of the controlled loop.
    */
@@ -91,6 +115,8 @@ export function TestTimeline({
   dependencies: initialDependencies,
   presetConfig,
   readOnly,
+  features: featuresProp = defaultFeatures,
+  localeText,
   onDependenciesChange,
   onStoreReady,
 }: TestTimelineProps) {
@@ -106,6 +132,19 @@ export function TestTimeline({
   // Providing a dependencies parameter enables the feature: tests without one must
   // render a timeline with dependencies disabled.
   const dependenciesEnabled = dependencies !== undefined;
+
+  const { features, storeFeatures } = useFrozenEventTimelinePremiumFeatures(featuresProp);
+
+  const [styledContext, sharedStyledContext] = React.useMemo(() => {
+    if (localeText === undefined) {
+      return [styledContextValue, sharedStyledContextValue];
+    }
+    const mergedLocaleText = { ...EVENT_TIMELINE_DEFAULT_LOCALE_TEXT, ...localeText };
+    return [
+      { ...styledContextValue, localeText: mergedLocaleText },
+      { ...sharedStyledContextValue, localeText: mergedLocaleText },
+    ];
+  }, [localeText]);
 
   const parameters: EventTimelinePremiumStoreParameters<SchedulerEvent, SchedulerResource> = {
     events,
@@ -123,6 +162,7 @@ export function TestTimeline({
     preset: 'dayAndHour',
     presets: ['dayAndHour'],
     presetConfig,
+    storeFeatures,
   };
   const store = useEventTimelinePremium(parameters);
   React.useEffect(() => {
@@ -134,13 +174,15 @@ export function TestTimeline({
 
   return (
     <SchedulerStoreContext.Provider value={storeContextValue}>
-      <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-        <EventEditingStyledContext.Provider value={styledContextValue}>
-          <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
-            <EventTimelinePremiumContent />
-          </SharedComponentsStyledContext.Provider>
-        </EventEditingStyledContext.Provider>
-      </EventTimelinePremiumStyledContext.Provider>
+      <EventTimelinePremiumFeaturesContext.Provider value={features}>
+        <EventTimelinePremiumStyledContext.Provider value={styledContext}>
+          <EventEditingStyledContext.Provider value={styledContext}>
+            <SharedComponentsStyledContext.Provider value={sharedStyledContext}>
+              <EventTimelinePremiumContent />
+            </SharedComponentsStyledContext.Provider>
+          </EventEditingStyledContext.Provider>
+        </EventTimelinePremiumStyledContext.Provider>
+      </EventTimelinePremiumFeaturesContext.Provider>
     </SchedulerStoreContext.Provider>
   );
 }
@@ -151,8 +193,20 @@ interface RenderTimelineParameters {
   dependencies?: SchedulerDependency[];
   presetConfig?: PresetConfig;
   readOnly?: boolean;
+  features?: EventTimelinePremiumInternalFeatures;
+  localeText?: Partial<EventTimelineLocaleText>;
   onDependenciesChange?: (dependencies: SchedulerDependency[]) => void;
+  /**
+   * Sets the theme direction and the `dir` attribute, like a consumer does.
+   * @default 'ltr'
+   */
+  direction?: 'ltr' | 'rtl';
 }
+
+const themeByDirection = {
+  ltr: createTheme({ direction: 'ltr' }),
+  rtl: createTheme({ direction: 'rtl' }),
+};
 
 /**
  * The rendered root, so `view.setProps` reaches the timeline: the host element it
@@ -164,35 +218,45 @@ function TimelineHost({
   dependencies,
   presetConfig,
   readOnly,
+  features,
+  localeText,
   onDependenciesChange,
   onStoreReady,
+  direction = 'ltr',
 }: RenderTimelineParameters & {
   onStoreReady: (store: EventTimelinePremiumStore<any, any>) => void;
 }) {
   return (
     // Mimics the layout, font-size and box-sizing reset the `EventTimelinePremium`
     // root provides to the content (the row-height CSS resolves against them).
-    <div
-      className="test-timeline-host"
-      style={{
-        width: 1200,
-        height: 600,
-        display: 'flex',
-        flexDirection: 'column',
-        fontSize: '0.875rem',
-      }}
-    >
-      <style>{'.test-timeline-host, .test-timeline-host * { box-sizing: border-box; }'}</style>
-      <TestTimeline
-        events={events}
-        resources={resources}
-        dependencies={dependencies}
-        presetConfig={presetConfig}
-        readOnly={readOnly}
-        onDependenciesChange={onDependenciesChange}
-        onStoreReady={onStoreReady}
-      />
-    </div>
+    <ThemeProvider theme={themeByDirection[direction]}>
+      <SchedulerDirectionProvider>
+        <div
+          className="test-timeline-host"
+          dir={direction}
+          style={{
+            width: 1200,
+            height: 600,
+            display: 'flex',
+            flexDirection: 'column',
+            fontSize: '0.875rem',
+          }}
+        >
+          <style>{'.test-timeline-host, .test-timeline-host * { box-sizing: border-box; }'}</style>
+          <TestTimeline
+            events={events}
+            resources={resources}
+            dependencies={dependencies}
+            presetConfig={presetConfig}
+            readOnly={readOnly}
+            features={features}
+            localeText={localeText}
+            onDependenciesChange={onDependenciesChange}
+            onStoreReady={onStoreReady}
+          />
+        </div>
+      </SchedulerDirectionProvider>
+    </ThemeProvider>
   );
 }
 
@@ -223,6 +287,17 @@ export function createDependencyTimelineRenderer(
 
 export function getArrowPaths() {
   return Array.from(document.querySelectorAll<SVGPathElement>('[data-dependency-id]'));
+}
+
+/**
+ * The numbers of an arrow's path, in order: x and y pairs, with the control points of
+ * the softened corners.
+ */
+export function getPathCoordinates(path: SVGPathElement) {
+  return path
+    .getAttribute('d')!
+    .match(/-?[\d.]+/g)!
+    .map(parseFloat);
 }
 
 export function getEventElement(title: string) {

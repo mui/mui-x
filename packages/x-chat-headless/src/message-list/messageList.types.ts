@@ -7,6 +7,9 @@ export interface MessageListRootOwnerState {
 }
 
 export interface MessageListDateDividerOwnerState {
+  /**
+   * The id of the message.
+   */
   messageId: string;
   hasBoundary: boolean;
   label: React.ReactNode;

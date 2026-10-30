@@ -1,8 +1,5 @@
-import {
-  DataGridPro,
-  GridColDef,
-  GridColumnGroupingModel,
-} from '@mui/x-data-grid-pro';
+import type { GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 100 },

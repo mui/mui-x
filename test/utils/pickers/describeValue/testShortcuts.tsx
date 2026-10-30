@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expectPickerChangeHandlerValue } from 'test/utils/pickers';
 import { screen } from '@mui/internal-test-utils';
 import { vi, describe, it, expect } from 'vitest';
-import { DescribeValueTestSuite } from './describeValue.types';
+import type { DescribeValueTestSuite } from './describeValue.types';
 
 export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTest, options) => {
   const {

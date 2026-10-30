@@ -1,9 +1,31 @@
 {
-  "props": {},
+  "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    }
+  },
   "name": "ChatComposerHelperText",
   "imports": [
     "import { ChatComposerHelperText } from '@mui/x-chat/ChatComposer';",
     "import { ChatComposerHelperText } from '@mui/x-chat';"
+  ],
+  "slots": [
+    {
+      "name": "helperText",
+      "description": "The component that renders the helper text.",
+      "class": "MuiChatComposerHelperText-helperText"
+    }
   ],
   "classes": [
     {
@@ -23,12 +45,6 @@
       "className": "Mui-disabled",
       "description": "Styles applied to the root element when disabled.",
       "isGlobal": true
-    },
-    {
-      "key": "helperText",
-      "className": "MuiChatComposerHelperText-helperText",
-      "description": "Styles applied to the helper text element.",
-      "isGlobal": false
     },
     {
       "key": "label",

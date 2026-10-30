@@ -9,6 +9,7 @@ import {
   randomBoolean,
 } from '@mui/x-data-grid-generator';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
+import type { TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import {
   TreeItemContent,
   TreeItemIconContainer,
@@ -16,9 +17,8 @@ import {
   TreeItemLabel,
   TreeItemRoot,
   TreeItemCheckbox,
-  TreeItemProps,
 } from '@mui/x-tree-view/TreeItem';
-import { TreeViewCancellableEventHandler } from '@mui/x-tree-view/models';
+import type { TreeViewCancellableEventHandler } from '@mui/x-tree-view/models';
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';

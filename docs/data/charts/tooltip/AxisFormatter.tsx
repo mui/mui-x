@@ -1,4 +1,5 @@
-import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
+import type { BarChartProps } from '@mui/x-charts/BarChart';
+import { BarChart } from '@mui/x-charts/BarChart';
 
 const dataset = [
   { name: 'Austria', code: 'AT', gdp: 471 },

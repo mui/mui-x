@@ -1,4 +1,4 @@
-import { Size } from './core';
+import type { Size } from './core';
 
 export interface DimensionsState {
   /**

@@ -1,8 +1,5 @@
-import {
-  DataGridPremium,
-  GridRenderCellParams,
-  GridColDef,
-} from '@mui/x-data-grid-premium';
+import type { GridRenderCellParams, GridColDef } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
@@ -129,6 +126,13 @@ const rows = [
     slot: 'columnMenuAggregationItem',
     defaultComponent: 'GridColumnMenuAggregationItem',
     displayOrder: 23,
+    plan: 'Premium',
+  },
+  {
+    id: 12,
+    slot: 'columnMenuComputedColumnItem',
+    defaultComponent: 'GridColumnMenuComputedColumnItem',
+    displayOrder: 24,
     plan: 'Premium',
   },
   {

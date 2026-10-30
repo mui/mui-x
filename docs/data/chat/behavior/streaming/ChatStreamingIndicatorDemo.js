@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { ChatBox } from '@mui/x-chat';
-
 import { users } from 'docs/src/modules/components/chat-playground/data';
 
 const conversation = {

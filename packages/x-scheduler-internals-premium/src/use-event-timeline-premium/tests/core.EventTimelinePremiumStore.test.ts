@@ -14,10 +14,17 @@ describe('Core - EventTimelinePremiumStore', () => {
     createRenderer({ clockConfig: new Date(2012, 4, 3, 14, 30, 15, 743) });
 
     it('should initialize default state', () => {
-      const store = new EventTimelinePremiumStore(DEFAULT_PARAMS, adapter);
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          storeFeatures: { recurringEvents: schedulerRecurringEventsPlugin },
+        },
+        adapter,
+      );
 
       const expectedState = {
         adapter,
+        dateLocale: 'en-US',
         areDependenciesEnabled: false,
         areEventsDraggable: true,
         areEventsResizable: true,
@@ -26,18 +33,22 @@ describe('Core - EventTimelinePremiumStore', () => {
         copiedEvent: null,
         selection: null,
         dependencyCreation: null,
+        dependencyEditor: null,
+        dependenciesFeature: null,
         dependencyModelList: [],
         dependencyModelLookup: new Map(),
         eventColor: 'teal',
         eventCreation: true,
+        eventDeletion: { confirmation: true },
         eventIdList: [],
         eventModelList: [],
         eventModelLookup: new Map(),
         eventModelStructure: undefined,
         displayTimezone: 'default',
         editingOccurrence: null,
-        nowUpdatedEveryMinute: adapter.now('default'),
+        nowTimestamp: Date.now(),
         occurrencePlaceholder: null,
+        pendingDeleteConfirmation: null,
         pendingRecurringEventOperation: null,
         preferences: EMPTY_OBJECT,
         processedEventLookup: new Map(),
@@ -198,7 +209,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         ),
       ).to.throw(/is not part of the `presets` prop/i);
 
-      // Dispose the store's pending timers; otherwise the `nowUpdatedEveryMinute` interval
+      // Dispose the store's pending timers; otherwise the `nowTimestamp` interval
       // would fire later, re-trigger the subscribe listener against the intentionally invalid
       // state left by this test, and leak an unhandled error into the test run.
       store[disposeSymbol]();

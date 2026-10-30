@@ -291,7 +291,7 @@
     "languageTag": "tr-TR",
     "importName": "trTR",
     "localeName": "Turkish",
-    "missingKeysCount": 16,
+    "missingKeysCount": 0,
     "totalKeysCount": 53,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/trTR.ts"
   },

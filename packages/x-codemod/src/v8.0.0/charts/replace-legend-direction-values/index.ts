@@ -1,5 +1,5 @@
-import { JSXAttribute, JSXExpressionContainer, ObjectExpression } from 'jscodeshift';
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JSXAttribute, JSXExpressionContainer, ObjectExpression } from 'jscodeshift';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import { transformNestedProp } from '../../../util/addComponentsSlots';
 /**
  * @param {import('jscodeshift').FileInfo} file
@@ -37,9 +37,9 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
           const direction = (
             (slotProps?.value as JSXExpressionContainer | null)?.expression as ObjectExpression
           )?.properties
-            // @ts-expect-error
+            // @ts-expect-error Only object properties with identifier keys can match the legend name.
             ?.find((v) => v?.key?.name === 'legend')
-            // @ts-expect-error
+            // @ts-expect-error The matching legend property contains an object expression with nested properties.
             ?.value?.properties?.find((v) => v?.key?.name === 'direction');
 
           if (

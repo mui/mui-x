@@ -1,0 +1,253 @@
+'use client';
+import * as React from 'react';
+import { useTheme } from '@mui/material/styles';
+import { useStore } from '@base-ui/utils/store';
+import { Dimensions, Virtualization } from '@mui/x-virtualizer';
+import type {
+  SchedulerEventId,
+  SchedulerEventOccurrence,
+  SchedulerResource,
+} from '@mui/x-scheduler-internals/models';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
+import {
+  eventTimelinePremiumDependencySelectors,
+  eventTimelinePremiumOccurrenceSelectors,
+  eventTimelinePremiumPresetSelectors,
+} from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
+import type { SchedulerDependencyId } from '@mui/x-scheduler-internals-premium/models';
+import { useEventTimelinePremiumVirtualizerStore } from '../EventTimelinePremiumVirtualizerContext';
+import { getEventsCellLaneMetrics } from '../rowGeometry';
+import { getVisibleFractionRange } from '../getVisibleFractionRange';
+import type { DependencyAnchorResolver } from './dependencyAnchorResolver';
+import { createDependencyAnchorResolver } from './dependencyAnchorResolver';
+import type { DependencyArrow } from './dependencyArrowGeometry';
+import { computeDependencyArrows } from './dependencyArrowGeometry';
+
+export interface EventTimelinePremiumDependencyGeometryValue {
+  resolver: DependencyAnchorResolver;
+  /**
+   * The arrows intersecting the visible range. Selection-agnostic (the provider does
+   * not subscribe to the selection): the layers highlighting the selected arrow order
+   * it last themselves, through `orderArrowsWithSelectedLast`.
+   */
+  visibleArrows: DependencyArrow[];
+  eventsWidth: number;
+  /**
+   * The y of the first rendered row: the overlays' y = 0 in absolute row-space.
+   */
+  offsetTop: number;
+  height: number;
+  visibleStartFraction: number;
+  visibleEndFraction: number;
+  firstRowIndex: number;
+  lastRowIndex: number;
+  resources: readonly { resource: SchedulerResource; occurrences: SchedulerEventOccurrence[] }[];
+}
+
+const EventTimelinePremiumDependencyGeometryContext =
+  React.createContext<EventTimelinePremiumDependencyGeometryValue | null>(null);
+
+/**
+ * In its own context so hovering does not re-render the geometry consumers.
+ */
+const DependencyHoveredIdContext = React.createContext<SchedulerDependencyId | null>(null);
+
+/**
+ * Separate from the hovered id so the interactions layer does not re-render on hover.
+ */
+const DependencySetHoveredIdContext = React.createContext<
+  ((dependencyId: SchedulerDependencyId | null) => void) | null
+>(null);
+
+/**
+ * The visible arrows with the selected one last, so its highlight (and its hit area)
+ * is never covered by a sibling, and the hovered one right before it. Returns the
+ * input array when nothing is selected nor hovered.
+ */
+export function orderArrowsWithSelectedLast(
+  arrows: DependencyArrow[],
+  selectedId: SchedulerDependencyId | null,
+  hoveredId: SchedulerDependencyId | null = null,
+): DependencyArrow[] {
+  const getRank = (arrow: DependencyArrow) => {
+    if (arrow.id === selectedId) {
+      return 2;
+    }
+    return arrow.id === hoveredId ? 1 : 0;
+  };
+  if (arrows.every((arrow) => getRank(arrow) === 0)) {
+    return arrows;
+  }
+  return arrows.toSorted((a, b) => getRank(a) - getRank(b));
+}
+
+export function useDependencyHoveredId(): SchedulerDependencyId | null {
+  return React.useContext(DependencyHoveredIdContext);
+}
+
+export function useSetDependencyHoveredId(): (dependencyId: SchedulerDependencyId | null) => void {
+  const setHoveredId = React.useContext(DependencySetHoveredIdContext);
+  if (setHoveredId === null) {
+    throw /* minify-error-disabled */ new Error(
+      'MUI X Scheduler: useSetDependencyHoveredId requires <EventTimelinePremiumDependencyGeometryProvider /> as an ancestor.',
+    );
+  }
+  return setHoveredId;
+}
+
+export function useDependencyGeometry(): EventTimelinePremiumDependencyGeometryValue {
+  const value = React.useContext(EventTimelinePremiumDependencyGeometryContext);
+  if (value === null) {
+    throw /* minify-error-disabled */ new Error(
+      'MUI X Scheduler: useDependencyGeometry requires <EventTimelinePremiumDependencyGeometryProvider /> as an ancestor.',
+    );
+  }
+  return value;
+}
+
+/**
+ * Computes the dependency geometry once and shares it with the three overlays (visual
+ * arrows, terminals, interactions), which would otherwise each run the resolver and
+ * the routing on every render of their own. Renders no DOM. Deliberately not
+ * subscribed to the creation gesture: only the layers drawing it pay for its
+ * start/snap/end updates.
+ * Pass-through when the dependencies feature is disabled: the overlays return null
+ * before reading the context, and the timeline must not pay the provider's scroll and
+ * rows-meta subscriptions for a feature it does not use.
+ */
+export function EventTimelinePremiumDependencyGeometryProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const store = useEventTimelinePremiumStoreContext();
+  const enabled = useStore(store, eventTimelinePremiumDependencySelectors.enabled);
+
+  if (!enabled) {
+    return children;
+  }
+
+  return (
+    <EventTimelinePremiumDependencyGeometryProviderImpl>
+      {children}
+    </EventTimelinePremiumDependencyGeometryProviderImpl>
+  );
+}
+
+function EventTimelinePremiumDependencyGeometryProviderImpl({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const theme = useTheme();
+  const store = useEventTimelinePremiumStoreContext();
+  const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
+
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const dependencies = useStore(store, eventTimelinePremiumDependencySelectors.activeModelList);
+  // Keep the lane assignment consistent with the rendered rows, which exclude the
+  // occurrences hidden by the preset's hour window.
+  const resources = useStore(
+    store,
+    eventTimelinePremiumOccurrenceSelectors.visibleGroupedByResourceList,
+  );
+  const positionByOccurrenceKey = useStore(
+    store,
+    eventTimelinePremiumOccurrenceSelectors.visiblePositionByOccurrenceKey,
+  );
+  const processedEventLookup = useStore(store, schedulerEventSelectors.processedEventLookup);
+  const rowsMeta = virtualizerStore.use(Dimensions.selectors.rowsMeta);
+  const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
+
+  const eventsWidth = config.tickCount * config.tickWidth;
+
+  const endpointIds = React.useMemo(() => {
+    const ids = new Set<SchedulerEventId>();
+    for (const dependency of dependencies) {
+      ids.add(dependency.source);
+      ids.add(dependency.target);
+    }
+    return ids;
+  }, [dependencies]);
+
+  const resolver = React.useMemo(
+    () =>
+      createDependencyAnchorResolver({
+        resources,
+        rowPositions: rowsMeta.positions,
+        axis: config,
+        durationMs: config.durationMs,
+        positionByOccurrenceKey,
+        eventsWidth,
+        laneMetrics: getEventsCellLaneMetrics(theme),
+        processedEventLookup,
+        endpointIds,
+      }),
+    // The config selector is memoized, so the object identity only changes with its content.
+    [
+      resources,
+      positionByOccurrenceKey,
+      rowsMeta.positions,
+      config,
+      eventsWidth,
+      theme,
+      processedEventLookup,
+      endpointIds,
+    ],
+  );
+
+  const arrows = React.useMemo(
+    () => computeDependencyArrows(resolver, dependencies),
+    [resolver, dependencies],
+  );
+
+  const value: EventTimelinePremiumDependencyGeometryValue = React.useMemo(() => {
+    // Only the arrows intersecting the visible range render. Row-range overlap
+    // (rather than endpoint visibility) keeps an arrow whose vertical segment crosses
+    // the viewport even when both of its endpoints are scrolled out.
+    const { start: visibleStartFraction, end: visibleEndFraction } = getVisibleFractionRange(
+      renderContext,
+      config.tickCount,
+    );
+    const visibleArrows = arrows.filter(
+      (arrow) =>
+        arrow.maxXFraction > visibleStartFraction &&
+        arrow.minXFraction < visibleEndFraction &&
+        arrow.maxRowIndex >= renderContext.firstRowIndex &&
+        arrow.minRowIndex <= renderContext.lastRowIndex,
+    );
+
+    const offsetTop = rowsMeta.positions[renderContext.firstRowIndex] ?? 0;
+    const height = rowsMeta.currentPageTotalHeight - offsetTop;
+
+    return {
+      resolver,
+      visibleArrows,
+      eventsWidth,
+      offsetTop,
+      height,
+      visibleStartFraction,
+      visibleEndFraction,
+      firstRowIndex: renderContext.firstRowIndex,
+      lastRowIndex: renderContext.lastRowIndex,
+      resources,
+    };
+  }, [arrows, resolver, eventsWidth, renderContext, rowsMeta, config.tickCount, resources]);
+
+  const [hoveredId, setHoveredId] = React.useState<SchedulerDependencyId | null>(null);
+  // An arrow unmounted under the pointer never gets its pointerleave.
+  if (hoveredId !== null && !value.visibleArrows.some((arrow) => arrow.id === hoveredId)) {
+    setHoveredId(null);
+  }
+
+  return (
+    <EventTimelinePremiumDependencyGeometryContext.Provider value={value}>
+      <DependencySetHoveredIdContext.Provider value={setHoveredId}>
+        <DependencyHoveredIdContext.Provider value={hoveredId}>
+          {children}
+        </DependencyHoveredIdContext.Provider>
+      </DependencySetHoveredIdContext.Provider>
+    </EventTimelinePremiumDependencyGeometryContext.Provider>
+  );
+}
