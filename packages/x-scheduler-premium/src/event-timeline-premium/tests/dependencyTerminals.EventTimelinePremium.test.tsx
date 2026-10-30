@@ -1423,6 +1423,29 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(store.state.occurrencePlaceholder).not.to.equal(null);
     });
 
+    it('should not follow a link event with the click that deselects the arrow', async () => {
+      const linkEvent = EventBuilder.new()
+        .id('event-link')
+        .title('Link event')
+        .singleDay('2025-07-03T13:00:00Z')
+        .resource(resource1)
+        .readOnly()
+        .href('#link-event')
+        .build();
+      const { store } = await renderTimeline({
+        events: [eventA, eventB, linkEvent],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+
+      const link = getEventElement('Link event');
+      fireEvent.pointerDown(link);
+      // `fireEvent` returns `false` when a handler prevented the default behavior.
+      expect(fireEvent.click(link)).to.equal(false);
+      expect(store.state.selection).to.equal(null);
+    });
+
     it('should not deselect the arrow when pressing inside a shadow-rooted dialog', async () => {
       const { store } = await renderTimeline({
         events: [eventA, eventB],

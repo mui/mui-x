@@ -147,7 +147,7 @@ const event = {
 
 The event renders as a link only when it's read-only, through its own `readOnly` property, the `areEventsReadOnly` property of its resource, or the `readOnly` prop of the Event Timeline.
 See [Editing—Read-only](/x/react-scheduler/event-timeline/editing/#read-only) for details.
-The `href` of an editable event is ignored.
+The `href` of an editable event is ignored, and a warning is logged in development.
 
 A link event keeps the behavior of a native link: clicking it navigates to the URL, the browser can open it in a new tab, and it doesn't open the event dialog or the context menu.
 Its root element has a `data-link` attribute, so you can style link events differently from the other events.
@@ -252,7 +252,7 @@ A property declared with a `getter` but no `setter` is read-only: the Event Time
 
 Use the `timelineEventContent` slot to replace the text rendered inside an event block.
 The slot receives the `occurrence`, the `resource` of the row it is rendered in and the `variant` of the block.
-It is placed inside the block, so the block keeps its geometry, its drag and resize handles, and its button semantics.
+It is placed inside the block, so the block keeps its geometry, its drag and resize handles, and its role: a button, or a link for a read-only event with an `href`.
 
 {{"demo": "EventContentSlot.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -261,7 +261,7 @@ The slot also renders in the placeholder that previews a drag, a resize or a cre
 The slot doesn't change the accessible name of the event, which is built from its title, dates, resource, and recurrence.
 To announce the details the slot adds, pass `getEventAriaLabel`: it receives the `occurrence`, the row `resource` and the `defaultAriaLabel`, and returns the name to use.
 The demo above appends the ticket code to the default name.
-The block is a button, or a link when the event has an `href`, so keep the content presentational (text, icons, a tooltip) rather than adding links or buttons of its own.
+The block is a button or a link, so keep the content presentational (text, icons, a tooltip) rather than adding links or buttons of its own.
 
 ### Typing custom slot props
 

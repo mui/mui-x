@@ -1,9 +1,14 @@
 import { act, fireEvent, screen, within } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
-import { createSchedulerRenderer, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
+import {
+  createSchedulerRenderer,
+  EventBuilder,
+  getEventNamePattern,
+  ResourceBuilder,
+} from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { CompactDayView } from '@mui/x-scheduler/compact-day-view';
-import { vi, describe, it, expect } from 'vitest';
+import { vi, describe, it, expect, afterEach } from 'vitest';
 import { EventDialogProvider } from '../../internals/components/event-dialog';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 
@@ -12,6 +17,11 @@ describe('EventCalendar - Event links', () => {
 
   // A hash keeps the navigation inside the page, which jsdom supports.
   const HREF = '#order-1042';
+
+  // Clicking a link changes the hash of the page.
+  afterEach(() => {
+    window.location.hash = '';
+  });
 
   const timedEvent = EventBuilder.new()
     .title('Order 1042')
@@ -28,28 +38,72 @@ describe('EventCalendar - Event links', () => {
     .href(HREF)
     .build();
 
+  const NAME = getEventNamePattern('Order 1042');
+
   function getLink() {
-    return screen.getByRole('link', { name: /^Order 1042,/ });
+    return screen.getByRole('link', { name: NAME });
   }
 
   describe('rendering', () => {
+    // The grid views use a roving `tabIndex`, the agenda lists every event as a tab stop.
     it.each([
-      ['time grid', 'week', timedEvent],
-      ['day grid', 'week', allDayEvent],
-      ['month view', 'month', timedEvent],
-      ['agenda view', 'agenda', timedEvent],
+      ['time grid', 'week', timedEvent, '-1'],
+      ['day grid', 'week', allDayEvent, '-1'],
+      ['month view', 'month', timedEvent, '-1'],
+      ['agenda view', 'agenda', timedEvent, '0'],
     ] as const)(
       'should render a read-only event with an href as a link in the %s',
-      (_, view, event) => {
+      (_, view, event, tabIndex) => {
         render(<EventCalendar events={[event]} defaultView={view} />);
 
         const link = getLink();
         expect(link).to.have.attribute('href', HREF);
         expect(link).to.have.attribute('data-link');
-        expect(link).to.have.attribute('tabindex');
-        expect(screen.queryByRole('button', { name: /^Order 1042,/ })).to.equal(null);
+        expect(link).to.have.attribute('tabindex', tabIndex);
+        expect(screen.queryByRole('button', { name: NAME })).to.equal(null);
       },
     );
+
+    it('should render a multi-day event as a single link per row', () => {
+      const event = EventBuilder.new()
+        .title('Order 1042')
+        .span('2025-05-26T00:00:00Z', '2025-05-28T00:00:00Z')
+        .allDay()
+        .readOnly()
+        .href(HREF)
+        .build();
+      render(<EventCalendar events={[event]} defaultView="week" />);
+
+      // The hidden copies that reserve the event's row in the other days are not links.
+      expect(document.querySelectorAll(`a[href="${HREF}"]`).length).to.equal(1);
+    });
+
+    it('should read the href through eventModelStructure', () => {
+      const event = { ...timedEvent, href: undefined, orderId: 1042 };
+      render(
+        <EventCalendar
+          events={[event]}
+          eventModelStructure={{
+            href: { getter: (model) => `#order-${model.orderId}` },
+          }}
+        />,
+      );
+
+      expect(getLink()).to.have.attribute('href', HREF);
+    });
+
+    it('should not render an event with an empty href as a link', () => {
+      const event = EventBuilder.new()
+        .title('Order 1042')
+        .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+        .readOnly()
+        .href('')
+        .build();
+      render(<EventCalendar events={[event]} />);
+
+      expect(screen.queryByRole('link', { name: NAME })).to.equal(null);
+      expect(screen.getByRole('button', { name: NAME })).not.to.equal(null);
+    });
 
     it('should render a link in the compact views', () => {
       render(
@@ -78,7 +132,8 @@ describe('EventCalendar - Event links', () => {
       const popover = await screen.findByRole('presentation');
 
       const links = within(popover).getAllByRole('link');
-      expect(links.length).to.be.greaterThan(0);
+      expect(links.length).to.equal(events.length);
+      expect(within(popover).queryAllByRole('button', { name: /^Order/ })).to.have.length(0);
       links.forEach((link) => {
         expect(link).to.have.attribute('tabindex', '0');
         expect(link.getAttribute('href')).to.match(/^#order-/);
@@ -119,10 +174,10 @@ describe('EventCalendar - Event links', () => {
       clearWarningsCache();
       expect(() => {
         render(<EventCalendar events={[event]} />);
-      }).toWarnDev(['MUI X Scheduler: An editable event has an `href`']);
+      }).toWarnDev(['MUI X Scheduler: An event has an `href` but is editable']);
 
-      expect(screen.queryByRole('link', { name: /^Order 1042,/ })).to.equal(null);
-      expect(screen.getByRole('button', { name: /^Order 1042,/ })).not.to.equal(null);
+      expect(screen.queryByRole('link', { name: NAME })).to.equal(null);
+      expect(screen.getByRole('button', { name: NAME })).not.to.equal(null);
     });
   });
 
@@ -138,6 +193,13 @@ describe('EventCalendar - Event links', () => {
 
       expect(onEventEditingStart.mock.calls.length).to.equal(0);
       expect(screen.queryByRole('dialog')).to.equal(null);
+    });
+
+    it('should keep the native navigation on click', () => {
+      render(<EventCalendar events={[timedEvent]} />);
+
+      // `fireEvent` returns `false` when a handler prevented the default behavior.
+      expect(fireEvent.click(getLink())).to.equal(true);
     });
 
     it('should not create an event when a link is clicked in a time column', async () => {

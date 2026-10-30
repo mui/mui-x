@@ -133,7 +133,8 @@ export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
   resizable?: boolean | SchedulerEventSide;
 
   /**
-   * The URL the event links to.
+   * The `href` of the event model.
+   * Only used when the event is read-only.
    */
   href?: string;
 }

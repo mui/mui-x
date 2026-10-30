@@ -959,47 +959,6 @@ describe('schedulerEventSelectors', () => {
     });
   });
 
-  describe('href', () => {
-    it('should return the href of a read-only event', () => {
-      const event = EventBuilder.new().readOnly().href('/orders/1').build();
-      const state = getEventCalendarStateFromParameters({ events: [event] });
-      expect(schedulerEventSelectors.href(state, event.id)).to.equal('/orders/1');
-    });
-
-    it('should return the href when the event is read-only through its resource', () => {
-      const resource = ResourceBuilder.new().areEventsReadOnly().build();
-      const event = EventBuilder.new().resource(resource).href('/orders/1').build();
-      const state = getEventCalendarStateFromParameters({
-        events: [event],
-        resources: [resource],
-      });
-      expect(schedulerEventSelectors.href(state, event.id)).to.equal('/orders/1');
-    });
-
-    it('should return the href when the scheduler is read-only', () => {
-      const event = EventBuilder.new().href('/orders/1').build();
-      const state = getEventCalendarStateFromParameters({ events: [event], readOnly: true });
-      expect(schedulerEventSelectors.href(state, event.id)).to.equal('/orders/1');
-    });
-
-    it('should return undefined when the event is editable', () => {
-      const event = EventBuilder.new().href('/orders/1').build();
-      const state = getEventCalendarStateFromParameters({ events: [event] });
-      expect(schedulerEventSelectors.href(state, event.id)).to.equal(undefined);
-    });
-
-    it('should read the href through the eventModelStructure getter', () => {
-      const event = { ...EventBuilder.new().readOnly().build(), orderId: 7 };
-      const state = getEventCalendarStateFromParameters({
-        events: [event],
-        eventModelStructure: {
-          href: { getter: (model: typeof event) => `/orders/${model.orderId}` },
-        },
-      });
-      expect(schedulerEventSelectors.href(state, event.id)).to.equal('/orders/7');
-    });
-  });
-
   describe('canWriteEventDates', () => {
     it('should return true by default', () => {
       const state = getEventCalendarStateFromParameters({ events: [defaultEvent] });

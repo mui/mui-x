@@ -155,7 +155,7 @@
     },
     {
       "name": "timelineEventContent",
-      "description": "The content of an event block.\nIt replaces the title text and is rendered inside the block, so the block keeps its\ngeometry, its drag and resize handles, and its button semantics.\nA read-only event with an `href` is a link, so its content must not contain other links or buttons.\nThe content doesn't change the accessible name of the event, which is built from its data:\nuse `getEventAriaLabel` to announce the details it adds.",
+      "description": "The content of an event block.\nIt replaces the title text and is rendered inside the block, so the block keeps its\ngeometry, its drag and resize handles, and its role: a button, or a link for a read-only\nevent with an `href`.\nThe content doesn't change the accessible name of the event, which is built from its data:\nuse `getEventAriaLabel` to announce the details it adds.",
       "default": "the occurrence title",
       "class": null
     },

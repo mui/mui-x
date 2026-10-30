@@ -7,7 +7,7 @@ const events: SchedulerEvent[] = [
   {
     id: 'order-1042',
     start: '2025-07-02T00:00:00',
-    end: '2025-07-03T00:00:00',
+    end: '2025-07-02T00:00:00',
     allDay: true,
     title: 'Order 1042',
     resource: 'line-1',
@@ -25,7 +25,7 @@ const events: SchedulerEvent[] = [
   {
     id: 'order-1044',
     start: '2025-07-04T00:00:00',
-    end: '2025-07-05T00:00:00',
+    end: '2025-07-04T00:00:00',
     allDay: true,
     title: 'Order 1044',
     resource: 'line-1',

@@ -104,11 +104,11 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     position: elementPosition,
   });
 
-  const isLink = href != null;
+  const isLink = interactive && href != null;
   const tabIndex = columnHasFocus ? 0 : -1;
   const { getButtonProps, buttonRef } = useButton({
     disabled: false,
-    native: nativeButton,
+    native: nativeButton && !isLink,
     tabIndex,
   });
 
@@ -131,8 +131,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
         } as React.CSSProperties,
       },
       // A link keeps the native link behavior, so it only needs the roving `tabIndex`.
-      ...(isLink ? [{ href, tabIndex }] : []),
-      ...(interactive && !isLink ? [getButtonProps] : []),
+      ...(interactive ? [isLink ? { href, tabIndex } : getButtonProps] : []),
     ],
   });
 
@@ -166,7 +165,8 @@ export namespace CalendarGridTimeEvent {
     interactive?: boolean;
     /**
      * The URL the event links to.
-     * When provided, the event renders as a link instead of a button.
+     * When provided, the event renders as a link instead of a button, unless `interactive` is `false`.
+     * A custom `render` element must be an `<a>`.
      */
     href?: string;
     /**

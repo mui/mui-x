@@ -153,7 +153,8 @@ export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
       return undefined;
     }
     return () => menuContext.closeMenuForAnchor(node);
-  }, [menuContext, editing.ref]);
+    // `href` swaps the element when the event becomes a link or stops being one.
+  }, [menuContext, editing.ref, href]);
 
   // The "+N more" popover, which passes `getFocusFallback`, moves focus out of its own items.
   useMoveFocusOutOnUnmount(editing.ref, occurrence, getFocusFallback == null);

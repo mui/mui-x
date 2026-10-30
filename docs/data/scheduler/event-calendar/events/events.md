@@ -148,7 +148,7 @@ const event = {
 
 The event renders as a link only when it's read-only, through its own `readOnly` property, the `areEventsReadOnly` property of its resource, or the `readOnly` prop of the Event Calendar.
 See [Editing—Read-only](/x/react-scheduler/event-calendar/editing/#read-only) for details.
-The `href` of an editable event is ignored.
+The `href` of an editable event is ignored, and a warning is logged in development.
 
 A link event keeps the behavior of a native link in all views: clicking it navigates to the URL, the browser can open it in a new tab, and it doesn't open the event dialog or the context menu.
 Its root element has a `data-link` attribute, so you can style link events differently from the other events.

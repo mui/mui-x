@@ -1,7 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import type { CSSObject, Theme } from '@mui/material/styles';
 import visuallyHidden from '@mui/utils/visuallyHidden';
 import { useStore } from '@base-ui/utils/store';
 import { useId } from '@base-ui/utils/useId';
@@ -36,7 +35,10 @@ const INERT_PROPS = (isReactVersionAtLeast(19) ? { inert: true } : { inert: '' }
   inert?: boolean;
 };
 
-const getEventRootStyles = (theme: Theme): CSSObject => ({
+const EventTimelinePremiumEventRoot = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'Event',
+})(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   backgroundColor: 'var(--event-surface-subtle)',
   color: 'var(--event-on-surface-subtle-primary)',
@@ -98,17 +100,7 @@ const getEventRootStyles = (theme: Theme): CSSObject => ({
     display: 'none',
   },
   variants: getPaletteVariants(theme),
-});
-
-const EventTimelinePremiumEventRoot = styled('div', {
-  name: 'MuiEventTimeline',
-  slot: 'Event',
-})(({ theme }) => getEventRootStyles(theme));
-
-const EventTimelinePremiumEventLinkRoot = styled('a', {
-  name: 'MuiEventTimeline',
-  slot: 'Event',
-})(({ theme }) => getEventRootStyles(theme));
+}));
 
 const EventTimelinePremiumEventLinesClamp = styled('span', {
   name: 'MuiEventTimeline',
@@ -261,9 +253,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 
   return (
     <TimelineGrid.Event
-      render={
-        href != null ? <EventTimelinePremiumEventLinkRoot /> : <EventTimelinePremiumEventRoot />
-      }
+      render={<EventTimelinePremiumEventRoot as={href != null ? 'a' : undefined} />}
       href={href}
       isDraggable={isDraggable}
       eventId={occurrence.id}

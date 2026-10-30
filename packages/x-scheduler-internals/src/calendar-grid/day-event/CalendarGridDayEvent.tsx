@@ -146,8 +146,10 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const mergedState = { ...state, startingBeforeEdge, endingAfterEdge, link: isLink };
 
   const tabIndex = cellHasFocus ? 0 : -1;
+  // TODO: Expose a real `interactive` prop
+  // to control whether the event should behave like a button
   const { getButtonProps, buttonRef } = useButton({
-    native: nativeButton,
+    native: nativeButton && !isLink,
     tabIndex,
   });
 
@@ -198,6 +200,7 @@ export namespace CalendarGridDayEvent {
     /**
      * The URL the event links to.
      * When provided, the event renders as a link instead of a button.
+     * A custom `render` element must be an `<a>`.
      */
     href?: string;
   }

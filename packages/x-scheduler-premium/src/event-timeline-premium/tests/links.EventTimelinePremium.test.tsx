@@ -27,6 +27,8 @@ describe('EventTimelinePremium - Event links', () => {
   });
   afterEach(() => {
     window.matchMedia = originalMatchMedia;
+    // Clicking a link changes the hash of the page.
+    window.location.hash = '';
   });
 
   // A hash keeps the navigation inside the page, which jsdom supports.
@@ -91,7 +93,7 @@ describe('EventTimelinePremium - Event links', () => {
 
     clearWarningsCache();
     await expect(() => renderTimeline({ events: [event] })).toWarnDev([
-      'MUI X Scheduler: An editable event has an `href`',
+      'MUI X Scheduler: An event has an `href` but is editable',
     ]);
 
     expect(screen.queryByRole('link', { name: getEventNamePattern('Order 1042') })).to.equal(null);

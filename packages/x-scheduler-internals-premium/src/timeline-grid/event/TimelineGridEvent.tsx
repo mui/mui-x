@@ -144,8 +144,10 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   });
 
   const tabIndex = rowHasFocus ? 0 : -1;
+  // TODO: Expose a real `interactive` prop
+  // to control whether the event should behave like a button
   const { getButtonProps, buttonRef } = useButton({
-    native: nativeButton,
+    native: nativeButton && !isLink,
     tabIndex,
   });
 
@@ -216,6 +218,7 @@ export namespace TimelineGridEvent {
     /**
      * The URL the event links to.
      * When provided, the event renders as a link instead of a button.
+     * A custom `render` element must be an `<a>`.
      */
     href?: string;
   }
