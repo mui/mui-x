@@ -1,11 +1,15 @@
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 import {
+  addMonthsToDayNumber,
+  getDayNumber,
   getPlainDateWeekStart,
+  getStartOfMonthDayNumber,
+  getStartOfYearDayNumber,
   getTimelineAxisOffsetMs,
   MS_PER_DAY,
   plainDateFromDayNumber,
 } from '@mui/x-scheduler-internals/internals';
-import type { PlainDate, TimelineAxisWindow } from '@mui/x-scheduler-internals/internals';
+import type { BaseTemporal, TimelineAxisWindow } from '@mui/x-scheduler-internals/internals';
 import type { IteratedCell, PresetHeaderUnit } from '../../models';
 
 const MINUTE_MS = 60_000;
@@ -14,7 +18,7 @@ const HOUR_MS = 60 * MINUTE_MS;
 /**
  * The date of a wall-clock time.
  */
-function plainDateFromLocalMs(localMs: number): PlainDate {
+function plainDateFromLocalMs(localMs: number): BaseTemporal.PlainDate {
   return plainDateFromDayNumber(Math.floor(localMs / MS_PER_DAY));
 }
 
@@ -23,8 +27,8 @@ function plainDateFromLocalMs(localMs: number): PlainDate {
  * each day.
  */
 export interface IteratedRange extends TimelineAxisWindow {
-  startPlainDate: PlainDate;
-  endPlainDate: PlainDate;
+  startPlainDate: BaseTemporal.PlainDate;
+  endPlainDate: BaseTemporal.PlainDate;
 }
 
 /**
@@ -39,16 +43,15 @@ export function iterate(
   range: IteratedRange,
   weekStartsOn: WeekStartsOn,
 ): IteratedCell[] {
-  if (range.endPlainDate.dayNumber <= range.startPlainDate.dayNumber) {
+  const rangeStartLocalMs = getDayNumber(range.startPlainDate) * MS_PER_DAY;
+  const rangeEndLocalMs = getDayNumber(range.endPlainDate) * MS_PER_DAY;
+  if (rangeEndLocalMs <= rangeStartLocalMs) {
     throw new Error(
       `MUI X Scheduler: TimelineGridHeader.iterate() received a range whose end date is not after its start date. ` +
         `The iteration would silently produce an empty header, masking the misconfiguration. ` +
         `Check the preset's \`getStartPlainDate\` / \`getEndPlainDate\` so they return ordered dates.`,
     );
   }
-
-  const rangeStartLocalMs = range.startPlainDate.dayNumber * MS_PER_DAY;
-  const rangeEndLocalMs = range.endPlainDate.dayNumber * MS_PER_DAY;
 
   // Hour ticks are a wall-clock grid: every day contributes the same columns whatever
   // its real hours are, so spans are measured on the axis rather than in elapsed hours.
@@ -120,8 +123,8 @@ function iterateHourCells(range: IteratedRange): IteratedCell[] {
   const startHour = Math.ceil(range.dayStartMinute / 60);
   const endHour = Math.ceil(range.dayEndMinute / 60);
 
-  const firstDay = range.startPlainDate.dayNumber;
-  const dayCount = range.endPlainDate.dayNumber - firstDay;
+  const firstDay = getDayNumber(range.startPlainDate);
+  const dayCount = getDayNumber(range.endPlainDate) - firstDay;
 
   // Same runaway guard as the generic walk, checked up front since the count is known.
   if (dayCount * Math.max(0, endHour - startHour) > 10_000) {
@@ -160,12 +163,13 @@ function startOf(localMs: number, unit: PresetHeaderUnit, weekStartsOn: WeekStar
       return Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY;
     case 'week':
       return (
-        getPlainDateWeekStart(plainDateFromLocalMs(localMs), weekStartsOn).dayNumber * MS_PER_DAY
+        getDayNumber(getPlainDateWeekStart(plainDateFromLocalMs(localMs), weekStartsOn)) *
+        MS_PER_DAY
       );
     case 'month':
-      return plainDateFromLocalMs(localMs).with({ day: 1 }).dayNumber * MS_PER_DAY;
+      return getStartOfMonthDayNumber(Math.floor(localMs / MS_PER_DAY)) * MS_PER_DAY;
     case 'year':
-      return plainDateFromLocalMs(localMs).with({ month: 1, day: 1 }).dayNumber * MS_PER_DAY;
+      return getStartOfYearDayNumber(Math.floor(localMs / MS_PER_DAY)) * MS_PER_DAY;
     default:
       throw new Error(
         `MUI X Scheduler: Unsupported header unit "${unit}". ` +
@@ -204,10 +208,8 @@ function addUnit(localMs: number, unit: PresetHeaderUnit, amount: number): numbe
  * Adds months to a wall-clock time, keeping its time of day.
  */
 function addMonths(localMs: number, months: number): number {
-  const plainDate = plainDateFromLocalMs(localMs);
-  return (
-    plainDate.add({ months }).dayNumber * MS_PER_DAY + (localMs - plainDate.dayNumber * MS_PER_DAY)
-  );
+  const dayNumber = Math.floor(localMs / MS_PER_DAY);
+  return addMonthsToDayNumber(dayNumber, months) * MS_PER_DAY + (localMs - dayNumber * MS_PER_DAY);
 }
 
 /**

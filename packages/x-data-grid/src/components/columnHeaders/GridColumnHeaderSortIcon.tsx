@@ -5,10 +5,15 @@ import { GridIconButtonContainer } from './GridIconButtonContainer';
 import { GridColumnSortButton } from '../GridColumnSortButton';
 import type { GridColumnSortButtonProps } from '../GridColumnSortButton';
 
-export interface GridColumnHeaderSortIconProps extends GridColumnSortButtonProps {}
+export interface GridColumnHeaderSortIconProps extends Omit<
+  GridColumnSortButtonProps,
+  'columnName'
+> {
+  columnName?: string;
+}
 
 function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
-  const { field, onClick } = props;
+  const { field, columnName = field, onClick, ...other } = props;
   const apiRef = useGridApiContext();
 
   const handleClick = React.useCallback(
@@ -21,7 +26,13 @@ function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
 
   return (
     <GridIconButtonContainer>
-      <GridColumnSortButton {...props} tabIndex={-1} onClick={handleClick} />
+      <GridColumnSortButton
+        {...other}
+        field={field}
+        columnName={columnName}
+        tabIndex={-1}
+        onClick={handleClick}
+      />
     </GridIconButtonContainer>
   );
 }
@@ -38,6 +49,7 @@ GridColumnHeaderSortIconRaw.propTypes /* remove-proptypes */ = {
    * The color of the button.
    */
   color: PropTypes.oneOf(['default', 'inherit', 'primary']),
+  columnName: PropTypes.string,
   /**
    * The component used for the root node. Either a string to use an HTML element or a component.
    */

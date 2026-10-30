@@ -1,8 +1,9 @@
 import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
-import { getStartOfWeek as getStartOfWeekDayNumber, PlainDate } from './base-temporal/PlainDate';
-import { plainDateFromDayNumber } from './plain-date-utils/plainDate';
+import type { BaseTemporal } from './base-temporal';
+import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
+import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import type { WeekInfo } from './date-locale';
 import { toWallClockIsoString } from './plain-date-utils/timeZone';
 
@@ -60,9 +61,12 @@ function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {
 /**
  * The first day of the week of `plainDate`.
  */
-export function getPlainDateWeekStart(plainDate: PlainDate, weekStartsOn: WeekStartsOn): PlainDate {
+export function getPlainDateWeekStart(
+  plainDate: BaseTemporal.PlainDate,
+  weekStartsOn: WeekStartsOn,
+): BaseTemporal.PlainDate {
   checkWeekStartsOn(weekStartsOn);
-  return plainDateFromDayNumber(getStartOfWeekDayNumber(plainDate.dayNumber, weekStartsOn));
+  return plainDateFromDayNumber(getStartOfWeekDayNumber(getDayNumber(plainDate), weekStartsOn));
 }
 
 /**
@@ -72,15 +76,15 @@ export function getPlainDateWeekStart(plainDate: PlainDate, weekStartsOn: WeekSt
  * The first week of a year is the first one with at least `weekInfo.minimalDays` days in that
  * year. With weeks starting on Monday and 4 minimal days, the result is the ISO 8601 week number.
  */
-export function getWeekNumber(plainDate: PlainDate, weekInfo: WeekInfo): number {
+export function getWeekNumber(plainDate: BaseTemporal.PlainDate, weekInfo: WeekInfo): number {
   const { firstDay: weekStartsOn, minimalDays } = weekInfo;
   const weekStartPlainDate = getPlainDateWeekStart(plainDate, weekStartsOn);
   // A week belongs to the year of its last `minimalDays` days, and the first week of a year holds
   // its `minimalDays`-th day.
   const year = weekStartPlainDate.add({ days: 7 - minimalDays }).year;
   const firstWeekStart = getStartOfWeekDayNumber(
-    PlainDate.from({ year, month: 1, day: minimalDays }).dayNumber,
+    isoDateToDayNumber(year, 1, minimalDays),
     weekStartsOn,
   );
-  return (weekStartPlainDate.dayNumber - firstWeekStart) / 7 + 1;
+  return (getDayNumber(weekStartPlainDate) - firstWeekStart) / 7 + 1;
 }
