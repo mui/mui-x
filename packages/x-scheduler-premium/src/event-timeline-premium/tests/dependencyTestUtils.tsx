@@ -9,7 +9,11 @@ import type {
   EventTimelinePremiumStoreParameters,
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
-import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerEvent,
+  SchedulerEventModelStructure,
+  SchedulerResource,
+} from '@mui/x-scheduler-internals/models';
 import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 import {
   EventEditingStyledContext,
@@ -90,6 +94,7 @@ interface TestTimelineProps {
   dependencies?: SchedulerDependency[];
   presetConfig?: PresetConfig;
   readOnly?: boolean;
+  eventModelStructure?: SchedulerEventModelStructure<SchedulerEvent>;
   /**
    * @default both features
    */
@@ -115,6 +120,7 @@ export function TestTimeline({
   dependencies: initialDependencies,
   presetConfig,
   readOnly,
+  eventModelStructure,
   features: featuresProp = defaultFeatures,
   localeText,
   onDependenciesChange,
@@ -151,6 +157,7 @@ export function TestTimeline({
     resources,
     dependencies,
     readOnly,
+    eventModelStructure,
     onEventsChange: setEvents,
     onDependenciesChange: dependenciesEnabled
       ? (value) => {
@@ -193,6 +200,10 @@ interface RenderTimelineParameters {
   dependencies?: SchedulerDependency[];
   presetConfig?: PresetConfig;
   readOnly?: boolean;
+  /**
+   * Pass a module-scope value: the store compares it by reference.
+   */
+  eventModelStructure?: SchedulerEventModelStructure<SchedulerEvent>;
   features?: EventTimelinePremiumFeatures;
   localeText?: Partial<EventTimelineLocaleText>;
   onDependenciesChange?: (dependencies: SchedulerDependency[]) => void;
@@ -218,6 +229,7 @@ function TimelineHost({
   dependencies,
   presetConfig,
   readOnly,
+  eventModelStructure,
   features,
   localeText,
   onDependenciesChange,
@@ -249,6 +261,7 @@ function TimelineHost({
             dependencies={dependencies}
             presetConfig={presetConfig}
             readOnly={readOnly}
+            eventModelStructure={eventModelStructure}
             features={features}
             localeText={localeText}
             onDependenciesChange={onDependenciesChange}

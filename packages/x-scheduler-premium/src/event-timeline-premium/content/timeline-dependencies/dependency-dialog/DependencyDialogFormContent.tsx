@@ -164,7 +164,9 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
       // `featureDisabled` can't happen: the dialog only exists when the dependencies feature is provided.
       if (result.status === 'rejected' && result.reason !== 'featureDisabled') {
         // On the field that caused it (Type by default), like the event form.
-        const isLagRejected = result.reason === 'cascadeBlocked' && isLagChanged;
+        const isLagRejected =
+          (result.reason === 'cascadeBlocked' || result.reason === 'datesNotWritable') &&
+          isLagChanged;
         ReactDOM.flushSync(() =>
           formStore.setError(
             isLagRejected ? 'lagAmount' : 'type',

@@ -37,7 +37,13 @@ export interface SchedulerErrorLocaleText {
    * Shown when a change would move a read-only event through its dependencies.
    */
   readOnlyEventMovedError: (title: string) => string;
+  /**
+   * Shown when a change would move, through its dependencies, an event whose dates
+   * `eventModelStructure` can't write back.
+   */
+  unwritableEventMovedError: (title: string) => string;
   dependencyCascadeBlockedError: string;
+  dependencyDatesNotWritableError: string;
   dependencyCycleError: string;
   dependencyDuplicateError: string;
   dependencyRecurringEventError: string;
@@ -315,6 +321,7 @@ export interface EventTimelineLocaleText extends EventEditingLocaleText, Schedul
    */
   dependencyAllDayLagRounded: (lag: string) => string;
   dependencyUpdateCascadeBlockedError: string;
+  dependencyUpdateDatesNotWritableError: string;
   dependencyUpdateNotFoundError: string;
   dependencyTypeFinishToStart: string;
   dependencyTypeStartToStart: string;

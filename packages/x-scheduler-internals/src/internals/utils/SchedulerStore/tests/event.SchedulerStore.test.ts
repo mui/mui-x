@@ -20,7 +20,7 @@ const TEST_RESOURCES = [ResourceBuilder.new().build()];
 
 const otherAdapter = new TemporalAdapterDateFns();
 
-// Pins the reason text `datesNotWritableReason` in `SchedulerStore.ts` builds (not exported):
+// Pins the reason text `datesNotWritableReason` in `SchedulerStore.utils.ts` builds:
 // `toWarnDev` matches by `includes`, so an assertion naming only the first line of a warning
 // never pins this text. Written out as literals, not by calling an equivalent helper here — a
 // helper that rebuilt the same string the same way would mirror a bug in the pronoun or
