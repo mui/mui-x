@@ -5,7 +5,14 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Typography from '@mui/material/Typography';
 import type { Virtualizer } from '@mui/x-virtualizer';
-import { useVirtualizer, LayoutList, LayoutListSticky } from '@mui/x-virtualizer';
+import {
+  useVirtualizer,
+  useScrollUnderlay,
+  Dimensions,
+  LayoutList,
+  LayoutListSticky,
+} from '@mui/x-virtualizer';
+import { clone, createItemsBox, pickTypical } from './underlay';
 
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
@@ -41,11 +48,25 @@ function useJank(scroller: React.RefObject<HTMLDivElement | null>) {
   }, [scroller, jank]);
 }
 
+// The underlay content (see `useScrollUnderlay`): copies of rendered items, picked among
+// those of typical width.
+function getUnderlayItems(windowContent: HTMLElement, scroller: HTMLElement, count: number) {
+  const itemElements = Array.from(windowContent.children) as HTMLElement[];
+  if (itemElements.length === 0) {
+    return null;
+  }
+  const underlayItems = createItemsBox(itemElements[0], scroller);
+  pickTypical(itemElements, count).forEach((item) => underlayItems.append(clone(item)));
+  return { content: [underlayItems] };
+}
+
 function StickyList() {
   const refs = {
     container: React.useRef<HTMLDivElement>(null),
     scroller: React.useRef<HTMLDivElement>(null),
   };
+  const windowContentRef = React.useRef<HTMLDivElement>(null);
+  const underlayRef = React.useRef<HTMLDivElement>(null);
   const layout = useLazyRef(() => new LayoutListSticky(refs)).current;
   const virtualizer = useVirtualizer({
     layout,
@@ -62,35 +83,54 @@ function StickyList() {
   });
 
   useJank(refs.scroller);
+  useScrollUnderlay({
+    scrollerRef: refs.scroller,
+    underlayRef,
+    itemHeight: 48,
+    itemCount: items.length,
+    getUnderlayContent: ({ itemCount }) =>
+      windowContentRef.current && refs.scroller.current
+        ? getUnderlayItems(windowContentRef.current, refs.scroller.current, itemCount)
+        : null,
+  });
 
   const containerProps = virtualizer.store.use(LayoutListSticky.selectors.containerProps);
   const contentProps = virtualizer.store.use(LayoutListSticky.selectors.contentProps);
   const positionerProps = virtualizer.store.use(LayoutListSticky.selectors.positionerProps);
   const windowProps = virtualizer.store.use(LayoutListSticky.selectors.windowProps);
   const windowContentProps = virtualizer.store.use(LayoutListSticky.selectors.windowContentProps);
+  const dimensions = virtualizer.store.use(Dimensions.selectors.dimensions);
 
   return (
+    // The container is the scroller, so the underlay sits beside it in a wrapper.
     <Box
-      {...containerProps}
-      sx={{
-        height: 352,
-        flex: 1,
-        overflowX: 'hidden',
-        overflowY: 'auto',
-        border: '1px solid #666',
-        borderRadius: 1,
-      }}
+      sx={{ position: 'relative', height: 352, flex: 1, border: '1px solid #666', borderRadius: 1 }}
     >
-      <div className="List--content" {...contentProps}>
-        <div className="List--positioner" {...positionerProps} />
-        <div className="List--window" {...windowProps}>
-          <div className="List--windowContent" {...windowContentProps}>
-            <VirtualizerContext.Provider value={virtualizer}>
-              <ListContent />
-            </VirtualizerContext.Provider>
+      <div
+        className="List--underlay"
+        ref={underlayRef}
+        style={{
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: dimensions.hasScrollY ? dimensions.scrollbarSize : 0,
+          overflow: 'hidden',
+          pointerEvents: 'none',
+        }}
+      />
+      <Box {...containerProps} sx={{ height: '100%', overflowX: 'hidden', overflowY: 'auto' }}>
+        <div className="List--content" {...contentProps}>
+          <div className="List--positioner" {...positionerProps} />
+          <div className="List--window" {...windowProps}>
+            <div className="List--windowContent" {...windowContentProps} ref={windowContentRef}>
+              <VirtualizerContext.Provider value={virtualizer}>
+                <ListContent />
+              </VirtualizerContext.Provider>
+            </div>
           </div>
         </div>
-      </div>
+      </Box>
     </Box>
   );
 }
@@ -160,6 +200,8 @@ function ListItem({ id: _id, model }: { id: number; model: { label: string } }) 
         alignItems: 'center',
         justifyContent: 'center',
         borderBottom: '1px solid #666',
+        // Hides the underlay wherever the item is drawn (see `useScrollUnderlay`).
+        background: '#fff',
       }}
     >
       {model.label}
