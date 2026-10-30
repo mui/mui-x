@@ -1,8 +1,8 @@
 import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
-import { BaseTemporal } from './base-temporal';
-import { getStartOfWeekDayNumber } from './plain-date-utils/dayNumber';
+import type { BaseTemporal } from './base-temporal';
+import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
 import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import type { WeekInfo } from './date-locale';
 import { toWallClockIsoString } from './plain-date-utils/timeZone';
@@ -83,7 +83,7 @@ export function getWeekNumber(plainDate: BaseTemporal.PlainDate, weekInfo: WeekI
   // its `minimalDays`-th day.
   const year = weekStartPlainDate.add({ days: 7 - minimalDays }).year;
   const firstWeekStart = getStartOfWeekDayNumber(
-    getDayNumber(BaseTemporal.PlainDate.from({ year, month: 1, day: minimalDays })),
+    isoDateToDayNumber(year, 1, minimalDays),
     weekStartsOn,
   );
   return (getDayNumber(weekStartPlainDate) - firstWeekStart) / 7 + 1;

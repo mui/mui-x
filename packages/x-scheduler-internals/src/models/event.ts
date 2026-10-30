@@ -424,7 +424,8 @@ export interface SchedulerProcessedDate {
 export interface SchedulerProcessedDay extends SchedulerProcessedDate {
   /**
    * The date of the day in the display timezone, which the day list is built in: consumers compare
-   * its day number with the day numbers of instants in that timezone.
+   * its day number, from `getDayNumber()`, with the day numbers of instants in that timezone, from
+   * `toLocalDayNumber()`.
    */
   plainDate: BaseTemporal.PlainDate;
 }

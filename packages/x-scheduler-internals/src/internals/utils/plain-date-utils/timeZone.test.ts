@@ -90,6 +90,12 @@ describe('timeZone', () => {
       );
     });
 
+    it('should write each part of the time with two digits', () => {
+      expect(toWallClockIsoString(Date.UTC(2025, 0, 15, 9, 5, 3), 'UTC')).to.equal(
+        '2025-01-15T09:05:03',
+      );
+    });
+
     it('should write the wall-clock time in a timezone with a half-hour offset', () => {
       // Asia/Kolkata is at +05:30, which moves the instant to the next day.
       expect(toWallClockIsoString(Date.UTC(2025, 0, 15, 18, 45, 10, 500), 'Asia/Kolkata')).to.equal(

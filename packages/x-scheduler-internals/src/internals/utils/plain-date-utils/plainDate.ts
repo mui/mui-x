@@ -10,13 +10,16 @@ const ISO_CALENDAR_ID = 'iso8601';
 
 const MAX_CACHED_PLAIN_DATES = 10_000;
 // The plain dates are immutable, so a day number keeps its plain date: the views build the same
-// days on every render, and a lookup is faster than creating one.
+// days on every render, and a lookup is faster than creating one. Emptied at 10,000 entries.
 const plainDateLookup = new Map<number, BaseTemporal.PlainDate>();
-// The day number of a plain date, read once from its fields.
+// The day number of a plain date, read once from its fields. The entries go with their dates, so it
+// needs no limit, holds the results of `add()` and `from()` too, and outlives `plainDateLookup`.
 const dayNumberLookup = new WeakMap<BaseTemporal.PlainDate, number>();
 
 /**
  * The plain date of a day number, in the ISO calendar.
+ * Returns the same instance for a day number until the cache is emptied, so compare the results
+ * with `equals()` or their day numbers, not with `===`.
  */
 export function plainDateFromDayNumber(dayNumber: number): BaseTemporal.PlainDate {
   let plainDate = plainDateLookup.get(dayNumber);
@@ -35,6 +38,7 @@ export function plainDateFromDayNumber(dayNumber: number): BaseTemporal.PlainDat
 /**
  * The day number of `plainDate`: the number of days since January 1st, 1970.
  * It's read from the ISO fields of the date, so it only uses the public API of the plain dates.
+ * Use it instead of the `dayNumber` field of the dates, which is internal to BaseTemporal.
  */
 export function getDayNumber(plainDate: BaseTemporal.PlainDate): number {
   let dayNumber = dayNumberLookup.get(plainDate);

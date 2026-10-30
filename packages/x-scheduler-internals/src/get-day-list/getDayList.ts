@@ -24,7 +24,7 @@ export function getDayListFromPlainDates(parameters: {
   const skippedDays = getSkippedDays(firstPlainDate, lastPlainDate.add({ days: 1 }), timezone);
   const lastDayNumber = getDayNumber(lastPlainDate);
   const days: SchedulerProcessedDay[] = [];
-  // The day numbers give the plain dates of the days without building them, as they're cached.
+  // Walks the day numbers, so each day reuses its cached plain date instead of building one with `add()`.
   for (let dayNumber = getDayNumber(firstPlainDate); dayNumber <= lastDayNumber; dayNumber += 1) {
     const plainDate = plainDateFromDayNumber(dayNumber);
     if (!skippedDays.has(dayNumber) && !(excludeWeekends && isWeekendPlainDate(plainDate))) {
