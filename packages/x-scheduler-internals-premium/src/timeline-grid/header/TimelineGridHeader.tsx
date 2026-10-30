@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
-import { isWeekendPlainDate } from '@mui/x-scheduler-internals/internals';
+import { getDayNumber, isWeekendPlainDate } from '@mui/x-scheduler-internals/internals';
 import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
@@ -63,6 +63,7 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
 
   const children = headers.map((level, levelIndex) => {
     const allCells = cellsPerLevel[levelIndex];
+    const isDayLevel = level.unit === 'day';
 
     let cells: ReturnType<typeof iterate>;
     let offsetInTicks = 0;
@@ -85,7 +86,9 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
           <div role="none" style={{ width: `calc(var(--unit-width) * ${offsetInTicks})` }} />
         )}
         {cells.map((cell) => {
-          const isCurrentDay = level.unit === 'day' && cell.plainDate.dayNumber === nowDayNumber;
+          // Only day cells: coarser cells carry their aligned start date, which equals today
+          // without being it.
+          const isCurrentDay = isDayLevel && getDayNumber(cell.plainDate) === nowDayNumber;
 
           return (
             <div
@@ -95,9 +98,7 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
               data-unit={level.unit}
               data-index={cell.index}
               data-unit-leaf={level.unit === timeResolution ? '' : undefined}
-              data-weekend={
-                level.unit === 'day' && isWeekendPlainDate(cell.plainDate) ? '' : undefined
-              }
+              data-weekend={isDayLevel && isWeekendPlainDate(cell.plainDate) ? '' : undefined}
               data-current={isCurrentDay ? '' : undefined}
               aria-current={isCurrentDay ? 'date' : undefined}
               style={{ '--span': cell.spanInTicks } as React.CSSProperties}
