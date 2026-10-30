@@ -34,7 +34,7 @@ import {
 import clsx from 'clsx';
 import type { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridColumn } from './TimeGridColumn';
-import { DayGridCell } from './DayGridCell';
+import { DayGridCell, EVENT_HEIGHT } from './DayGridCell';
 import { useEventEditingContext } from '../event-editing';
 import { useDisarmOnOutsidePointer } from '../armed-occurrence';
 import { isOccurrenceInDayGrid } from '../../utils/event-utils';
@@ -46,6 +46,8 @@ const HOUR_HEIGHT = 46;
 // Number of hours displayed in the grid. Defaults to a full day; overridden per render via the
 // `--hours-count` CSS variable when a view limits its visible hour range.
 const DEFAULT_HOURS_IN_DAY = 24;
+// Number of all-day event rows displayed before the all-day area starts to scroll.
+const MAX_VISIBLE_ALL_DAY_EVENTS = 6;
 
 const DayTimeGridContainer = styled(CalendarGrid.Root, {
   name: 'MuiEventCalendar',
@@ -96,7 +98,9 @@ const DayTimeGridAllDayEventsGrid = styled('div', {
     overflowY: 'scroll',
     scrollbarGutter: 'stable',
     height: '100%',
-    gridColumn: '-1',
+    // Fill the last track, which the all-day row spans, so the row's own scrollbar lands in this gutter.
+    gridColumn: '-2',
+    gridRow: 1,
     /* Make scrollbar invisible by setting transparent colors */
     scrollbarColor: 'transparent transparent',
     background: 'transparent',
@@ -132,6 +136,13 @@ const DayTimeGridAllDayEventsRow = styled(CalendarGrid.DayRow, {
   gridRow: 1,
   width: '100%',
   height: '100%',
+  // The extra spacing beyond the cell padding lets the top of the next event peek out,
+  // which hints that the area scrolls.
+  maxHeight: `calc(${MAX_VISIBLE_ALL_DAY_EVENTS * EVENT_HEIGHT}px + ${theme.spacing(1)})`,
+  overflowX: 'hidden',
+  overflowY: 'auto',
+  // Keeps the focus ring of an event scrolled into view inside the visible area.
+  scrollPaddingBlock: theme.spacing(0.5),
   '& > *': {
     borderInlineStart: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
@@ -362,6 +373,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   // Ref hooks
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const allDayHeaderWrapperRef = React.useRef<HTMLDivElement>(null);
+  const allDayRowRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLElement | null>(null);
   const scrollRootRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
@@ -408,6 +420,13 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   }, [days, displayTimezone]);
 
   const isTodayInView = nowDayNumber >= firstDayNumber && nowDayNumber <= lastDayNumber;
+
+  // Unlike the time grid, the all-day scroll position means nothing in another period.
+  useIsoLayoutEffect(() => {
+    if (allDayRowRef.current) {
+      allDayRowRef.current.scrollTop = 0;
+    }
+  }, [start]);
 
   const updateHasScroll = React.useCallback(() => {
     const body = bodyRef.current;
@@ -520,6 +539,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
         </DayTimeGridAllDayEventsHeaderCell>
         <DayTimeGridAllDayEventsRow
           as={CalendarGrid.DayRow}
+          ref={allDayRowRef}
           start={start}
           end={end}
           className={classes.dayTimeGridAllDayEventsRow}
