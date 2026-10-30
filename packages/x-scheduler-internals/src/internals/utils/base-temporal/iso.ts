@@ -50,10 +50,12 @@ export function fromDayNumber(dayNumber: number): { year: number; month: number;
 }
 
 /**
- * The supported range of day numbers, covering years 0 to 9999.
+ * The supported range of day numbers: the days of `Date`, from -271821-04-20 to +275760-09-13,
+ * 100,000,000 days on each side of 1970-01-01. Temporal also supports -271821-04-19, whose midnight
+ * is before the first instant of `Date`, so `Intl.DateTimeFormat` can't display it.
  */
-export const FIRST_SUPPORTED_DAY = /* @__PURE__ */ toDayNumber(0, 1, 1);
-export const LAST_SUPPORTED_DAY = /* @__PURE__ */ toDayNumber(9999, 12, 31);
+export const FIRST_SUPPORTED_DAY = -100_000_000;
+export const LAST_SUPPORTED_DAY = 100_000_000;
 
 /**
  * The ISO day of the week of a day number, from 1 (Monday) to 7 (Sunday).
@@ -71,14 +73,11 @@ export function getDaysInMonth(year: number, month: number): number {
 }
 
 export function isValidIsoDate(year: number, month: number, day: number): boolean {
-  return (
-    year >= 0 &&
-    year <= 9999 &&
-    month >= 1 &&
-    month <= 12 &&
-    day >= 1 &&
-    day <= getDaysInMonth(year, month)
-  );
+  if (month < 1 || month > 12 || day < 1 || day > getDaysInMonth(year, month)) {
+    return false;
+  }
+  const dayNumber = toDayNumber(year, month, day);
+  return dayNumber >= FIRST_SUPPORTED_DAY && dayNumber <= LAST_SUPPORTED_DAY;
 }
 
 /**
@@ -191,6 +190,48 @@ export function readOverflow(
     );
   }
   return overflow;
+}
+
+/**
+ * Reads the fields of `fieldNames` that `with()` receives, own or inherited, like Temporal.
+ * Throws like Temporal for temporal values and objects with a calendar or a time zone, and for
+ * objects without any of the fields.
+ */
+export function readWithFields<T extends object>(
+  fields: T,
+  apiName: string,
+  fieldNames: readonly string[],
+): Partial<T> {
+  if (
+    typeof fields !== 'object' ||
+    fields === null ||
+    // Temporal values have a `with()` method, unlike objects of fields.
+    typeof (fields as { with?: unknown }).with === 'function' ||
+    ['calendar', 'calendarId', 'timeZone'].some(
+      (key) => (fields as Record<string, unknown>)[key] !== undefined,
+    )
+  ) {
+    throw new TypeError(
+      `Base UI Plus: \`BaseTemporal.${apiName}\` received ${String(fields)}, which isn't an object of fields. ` +
+        '`with()` replaces the fields of an object, and keeps the calendar of the value, so it rejects temporal values and objects with a calendar or a time zone. ' +
+        'Pass only the fields to replace, such as `{ day: 1 }` for a date or `{ hour: 9 }` for a time.',
+    );
+  }
+  const read: Record<string, unknown> = {};
+  for (const name of fieldNames) {
+    const value = (fields as Record<string, unknown>)[name];
+    if (value !== undefined) {
+      read[name] = value;
+    }
+  }
+  if (Object.keys(read).length === 0) {
+    throw new TypeError(
+      `Base UI Plus: \`BaseTemporal.${apiName}\` received no field the value reads. ` +
+        "`with()` can't tell which fields to replace. " +
+        'Pass at least one field of the value, such as `{ day: 1 }` for a date or `{ hour: 9 }` for a time. Only calendars with eras, unlike the ISO calendar, read `era` and `eraYear`.',
+    );
+  }
+  return read as Partial<T>;
 }
 
 export function compareOrder(a: number | bigint, b: number | bigint): -1 | 0 | 1 {

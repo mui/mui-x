@@ -57,7 +57,7 @@ export interface CalendarDateFieldsInput {
  */
 export interface CalendarImplementation extends CalendarSystem {
   /**
-   * The first and last days the calendar supports, as day numbers inside the ISO years 0 to 9999.
+   * The first and last days the calendar supports, as day numbers inside the days `Date` supports.
    * `Intl.DateTimeFormat` labels every day between them as the arithmetic below does.
    */
   readonly firstDay: number;
@@ -234,7 +234,7 @@ export function checkIsoDate(year: number, month: number, day: number) {
   if (!isValidIsoDate(year, month, day)) {
     throw new Error(
       `Base UI Plus: \`PlainDate\` received the year ${year}, the month ${month} and the day ${day}, which don't name a supported date. ` +
-        'The year must be from 0 to 9999, the month from 1 to 12, and the day must exist in the month. ' +
+        'The month must be from 1 to 12, the day must exist in the month, and the date must be from -271821-04-20 to +275760-09-13, the days of `Date`. ' +
         'Pass a valid date, or create it with `BaseTemporal.PlainDate.from()` and an object to move a month or a day above its range to the closest valid value.',
     );
   }
@@ -474,7 +474,7 @@ export function checkCalendarRange(calendar: CalendarImplementation, dayNumber: 
     const last = fromDayNumber(calendar.lastDay);
     throw new Error(
       `Base UI Plus: A date of the "${calendar.id}" calendar is outside the days it supports, from the ISO date ${first.year}-${first.month}-${first.day} to ${last.year}-${last.month}-${last.day}. ` +
-        "Outside these days, `Intl.DateTimeFormat` doesn't label dates as Base UI Plus computes them, or the ISO year is outside 0 to 9999. " +
+        "Outside these days, `Intl.DateTimeFormat` doesn't label dates as Base UI Plus computes them, or `Date` can't represent them. " +
         'Use a date inside the range.',
     );
   }
