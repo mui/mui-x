@@ -83,6 +83,7 @@ Same changes as in `@mui/x-charts-pro@9.17.0`.
 #### `@mui/x-tree-view@9.17.0`
 
 - [tree view] Document undocumented props (#24036) @Janpot
+- [tree view] Keep the dragged item mounted when it is virtualized away (#24050) @JCQuintas
 
 #### `@mui/x-tree-view-pro@9.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
