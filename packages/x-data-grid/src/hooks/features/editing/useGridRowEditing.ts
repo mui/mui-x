@@ -278,13 +278,6 @@ export const useGridRowEditing = (
         }
 
         if (reason) {
-          // Only pass the pressed key when the row editing is controlled via `rowModesModel`.
-          // In uncontrolled mode, the default editor already inserts the character and passing it here would duplicate it.
-          const key = rowModesModelProp && isPrintableKey(event) ? event.key : undefined;
-          // The pre-mounted editor ignores the `input` event in view mode, so the key is not duplicated.
-          if (key !== undefined && isEventFromPreMountedEditor(event)) {
-            event.preventDefault();
-          }
           const rowParams = apiRef.current.getRowParams(params.id);
           const newParams: GridRowEditStartParams = {
             ...rowParams,

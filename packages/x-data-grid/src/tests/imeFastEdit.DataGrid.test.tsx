@@ -24,7 +24,7 @@ import {
   getEditorWrappers,
   getFocusTarget,
   getInput,
-  typeInSameTask,
+  pressKeyWithBrowserTiming,
 } from 'test/utils/imeFastEdit';
 import type { User } from 'test/utils/imeFastEdit';
 
@@ -1090,19 +1090,15 @@ describe('<DataGrid /> - IME fast edit', () => {
         expect(input.value).to.equal('x');
       });
 
-      // A controlled `cellModesModel` also loses the first character without the flag.
-      it.skipIf(editMode === 'cell')(
-        'types the first character once when no effect runs between `keydown` and `input`',
-        async () => {
-          const { user } = render(<ControlledTest />);
-          const cell = await focusCell(user, 0, 1);
-          const input = getInput(cell)!;
-          typeInSameTask(input, 'x');
-          expect(cell).to.have.class('MuiDataGrid-cell--editing');
-          expect(getInput(cell)).to.equal(input);
-          expect(input.value).to.equal('x');
-        },
-      );
+      it.skipIf(isJSDOM)('types the first character once with the browser timing', async () => {
+        const { user } = render(<ControlledTest />);
+        const cell = await focusCell(user, 0, 1);
+        const input = getInput(cell)!;
+        await pressKeyWithBrowserTiming('x');
+        expect(cell).to.have.class('MuiDataGrid-cell--editing');
+        expect(getInput(cell)).to.equal(input);
+        expect(input.value).to.equal('x');
+      });
 
       it('keeps the same input when a composition starts', async () => {
         const { user } = render(<ControlledTest />);

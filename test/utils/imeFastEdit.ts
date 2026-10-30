@@ -1,6 +1,6 @@
 // Helpers for the `experimentalFeatures.imeFastEdit` tests.
 import { expect } from 'vitest';
-import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
+import { fireEvent, waitFor } from '@mui/internal-test-utils';
 import type { MuiRenderResult } from '@mui/internal-test-utils';
 import type { GridDataSource, GridGetRowsParams } from '@mui/x-data-grid';
 import type { GridApiCommon } from '@mui/x-data-grid/models/api/gridApiCommon';
@@ -140,20 +140,21 @@ export async function compareWithBaseline<T>(
   return { baseline, withFlag };
 }
 
-// Sends `keydown` and `input` in one `act()`, as a browser does in one task.
-// user-event flushes the effects between them.
-// The browser does not insert the character when a `keydown` listener prevents the default.
-export function typeInSameTask(input: HTMLInputElement, key: string) {
-  act(() => {
-    const keyDown = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
-    if (!input.dispatchEvent(keyDown)) {
-      return;
-    }
-    // The native setter lets React see the change.
-    const setValue = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!;
-    setValue.call(input, `${input.value}${key}`);
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-  });
+declare global {
+  // eslint-disable-next-line vars-on-top
+  var IS_REACT_ACT_ENVIRONMENT: boolean | undefined;
+}
+
+// Presses a real key without `act()`, so that React renders as in a browser. Browser only.
+export async function pressKeyWithBrowserTiming(key: string) {
+  const { userEvent } = await import('vitest/browser');
+  const previousActEnvironment = globalThis.IS_REACT_ACT_ENVIRONMENT;
+  globalThis.IS_REACT_ACT_ENVIRONMENT = false;
+  try {
+    await userEvent.keyboard(key);
+  } finally {
+    globalThis.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
+  }
 }
 
 // Composes an IME text in the input. The composition does not commit the value.
