@@ -174,7 +174,7 @@ Same changes as in `@mui/x-tree-view@9.17.0`.
 - [scheduler] Support RTL in the Event Timeline dependency arrows (#23974) @rita-codes
 - [scheduler] Support RTL pointer and scroll interactions in the Event Timeline (#23972) @rita-codes
 - [scheduler] Support RTL when dragging multi-day events in the Event Calendar (#23953) @rita-codes
-- [scheduler] Sync the BaseTemporal copy with the Base UI version (#24040) @flaviendelangle
+- [scheduler] Sync the BaseTemporal copy with the Base UI version (#24040) @flaviendelangle
 - [scheduler] Type the plain dates through the BaseTemporal namespace (#24034) @flaviendelangle
 - [scheduler] Use logical CSS properties in the Event Calendar and Event Timeline (#23899) @rita-codes
 
