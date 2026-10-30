@@ -113,6 +113,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       return;
     }
     if (reason === 'backdropClick' || event.key === 'Escape') {
+      setOpen(false);
       const params = apiRef.current.getCellParams(id, field);
       apiRef.current.publishEvent('cellEditStop', {
         ...params,
