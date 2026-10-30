@@ -42,7 +42,7 @@ The series hooks for each chart type are:
 
 The example below shows `useBarSeries()` returning bar chart series data:
 
-{{"demo": "UseBarSeries.js"}}
+{{"component": "file://./demos/use-bar-series/index.ts"}}
 
 ## Advanced usage
 
@@ -54,7 +54,7 @@ It's preferable to use type-specific series hooks (for example, `useBarSeries()`
 Use `useSeries()` when you need to handle multiple or unknown chart types at once.
 :::
 
-{{"demo": "UseSeries.js"}}
+{{"component": "file://./demos/use-series/index.ts"}}
 
 ## Caveats
 

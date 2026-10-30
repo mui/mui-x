@@ -13,7 +13,7 @@ The definitions are a serializable list, so they persist, restore, and travel wi
 The demo below has two computed columns—**Total** and **Margin**—defined from the **Price**, **Cost**, **Qty**, and **Discount** columns.
 Edit any of those values and watch the computed cells update, or open the **Computed columns** panel from the toolbar to add a column of your own.
 
-{{"demo": "ComputedColumnsBasic.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/computed-columns-basic/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 Computed columns are part of the formulas feature, which is not bundled with the grid.
 Inject it through the `featureDependencies` prop, as described in [Enabling formulas](/x/react-data-grid/formulas/#enabling-formulas).
@@ -160,7 +160,7 @@ The flag only restricts the grid UI: the `apiRef` methods and the controlled `co
 
 The demo below locks the **Total** column and leaves **Tax** editable: open their column menus, or the **Computed columns** panel, to compare them.
 
-{{"demo": "ComputedColumnsReadOnly.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/computed-columns-read-only/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::info
 The `editable` flag of a definition is not the `editable` property of the generated column.
@@ -262,7 +262,7 @@ const [computedColumns, setComputedColumns] =
 In the demo below, the model is shown under the grid.
 Open the panel to add, edit, or remove a column and watch it change; the **Total pay** column references the two other computed columns.
 
-{{"demo": "ComputedColumnsControlled.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/computed-columns-controlled/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 The model is part of the [grid state](/x/react-data-grid/state/): `apiRef.current.exportState()` includes it as `computedColumns.model`, and `initialState` or `apiRef.current.restoreState()` bring it back—together with the position, width, and visibility of the generated columns, which live in the `columns` slice like those of any other column.
 Definitions are plain objects, so the model can be stored as JSON.
@@ -314,7 +314,7 @@ To provide a fallback, wrap the expression in `IFERROR`:
 
 In the demo below, **Unit price** shows `#DIV/0!` for the regions without sales, **Unit price (safe)** falls back to zero, and **Revenue per store** references a column that does not exist, so it is invalid.
 
-{{"demo": "ComputedColumnsErrors.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/computed-columns-errors/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 Errors are values of the column: sorting places them after every other value in both directions, the quick filter matches their code as text, and export writes the code.
 The filter operators of a `number`, `boolean`, `date`, or `dateTime` column never receive them: only _is not empty_ matches an error, which counts as a value.
@@ -368,7 +368,7 @@ The undo and redo shortcuts typed in the text fields of the panel keep their nat
 
 ## API
 
-{{"demo": "ComputedColumnsApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "file://./demos/computed-columns-api-no-snap/index.ts", "bg": "inline", "hideToolbar": true}}
 
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)
 - [ComputedColumnsPanelTrigger](/x/api/data-grid/computed-columns-panel-trigger/)

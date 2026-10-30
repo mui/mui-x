@@ -19,7 +19,7 @@ import type { ChatAdapter } from '@mui/x-chat/headless';
 
 The following demo shows a minimal adapter in action:
 
-{{"demo": "../examples/minimal-chat/MinimalHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
+{{"component": "file://../examples/minimal-chat/demos/minimal-headless-chat/index.ts", "bg": "inline", "hideToolbar": true, "collapseToEmpty": true}}
 
 ## Minimal adapter
 

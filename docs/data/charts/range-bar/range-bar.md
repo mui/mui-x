@@ -21,7 +21,7 @@ To create a range bar chart, render `BarChartPremium` with at least one series o
 
 Each data point in a range bar series consists of a `{ start: number, end: number }` object.
 
-{{"demo": "BasicRangeBar.js"}}
+{{"component": "file://./demos/basic-range-bar/index.ts"}}
 
 ### Using a dataset
 
@@ -42,7 +42,7 @@ To achieve rounded corners, set the `borderRadius` prop on `BarChartPremium` to 
 
 When composing a custom component, set the `borderRadius` prop on the `RangeBarPlot` component.
 
-{{"demo": "RangeBarBorderRadius.js"}}
+{{"component": "file://./demos/range-bar-border-radius/index.ts"}}
 
 ### Color
 
@@ -57,7 +57,7 @@ Unlike other chart types, the `colorMap` property does not work for the numerica
 
 See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) for more details on `colorMap`.
 
-{{"demo": "RangeBarColorScale.js"}}
+{{"component": "file://./demos/range-bar-color-scale/index.ts"}}
 
 ### CSS
 
@@ -66,14 +66,14 @@ You can customize the range bar chart elements using CSS selectors.
 Like a bar chart, each series renders a `g` element that contains a `data-series` attribute.
 You can use this attribute to target elements based on their series.
 
-{{"demo": "RangeBarGradient.js"}}
+{{"component": "file://./demos/range-bar-gradient/index.ts"}}
 
 ## Click event
 
 The click event handlers work similarly to bar charts.
 See [Bars—Click events](/x/react-charts/bars/#click-events) for details.
 
-{{"demo": "RangeBarClick.js"}}
+{{"component": "file://./demos/range-bar-click/index.ts"}}
 
 :::info
 For `onAxisClick`, the `seriesValues` type will be missing `RangeBarValueType`.
@@ -92,7 +92,7 @@ import type {} from '@mui/x-charts-pro/moduleAugmentation/rangeBarOnClick';
 Animation works similarly to bar charts.
 See [Bars—Animation](/x/react-charts/bars/#animation) for details.
 
-{{"demo": "RangeBarAnimation.js"}}
+{{"component": "file://./demos/range-bar-animation/index.ts"}}
 
 ## Performance
 
@@ -101,7 +101,7 @@ Set the `renderer` prop to `"webgl"` to enable it.
 
 The same trade-offs as the bar chart [WebGL renderer](/x/react-charts/bars/#webgl-renderer) apply.
 
-{{"demo": "WebGLRangeBars.js"}}
+{{"component": "file://./demos/web-gl-range-bars/index.ts"}}
 
 ## Composition
 
@@ -135,4 +135,4 @@ The example below shows how `BarChartPremium` is composed:
 
 The example below follows a similar pattern and creates a project schedule chart using range bars to represent task durations.
 
-{{"demo": "RangeBarProjectSchedule.js"}}
+{{"component": "file://./demos/range-bar-project-schedule/index.ts"}}

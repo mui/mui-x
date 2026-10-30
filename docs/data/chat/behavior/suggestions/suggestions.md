@@ -20,7 +20,7 @@ Clicking a suggestion pre-fills the composer with the suggestion text, giving us
 
 Edit the suggestion list and toggle layout options:
 
-{{"demo": "ChatSuggestionsPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-suggestions-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Implementing suggestions
 
@@ -45,7 +45,7 @@ Once the first message appears, `ChatBox` moves them to a row above the composer
 For more control, pass `ChatSuggestion` objects instead of plain strings.
 This lets you set a display label that differs from the value pre-filled into the composer:
 
-{{"demo": "SuggestionsWithLabels.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/suggestions-with-labels/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Suggestion object structure
 
@@ -62,13 +62,13 @@ Strings are internally normalized to `{ value: string }`.
 By default, clicking a suggestion pre-fills the composer so users can review or edit before sending.
 Set `suggestionsAutoSubmit` to automatically submit the message when a suggestion is clicked:
 
-{{"demo": "AutoSubmitSuggestions.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/auto-submit-suggestions/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Suggestions in active conversations
 
 When the conversation already has messages, `ChatBox` keeps the suggestions visible as a horizontal, scrollable row above the composer — useful for offering follow-up prompts.
 
-{{"demo": "SuggestionsAboveComposer.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/suggestions-above-composer/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 `ChatBox` switches between the two placements automatically and has no `alwaysVisible` prop.
 When composing a custom layout with the standalone `ChatSuggestions` component, suggestions only render while the thread is empty by default — set `alwaysVisible` to render them regardless of message count:

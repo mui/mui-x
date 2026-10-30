@@ -11,7 +11,7 @@ githubLabel: 'scope: chat'
 
 The demo below shows a scripted agentic loop with streaming tool calls, reasoning, step boundaries, and an approval flow:
 
-{{"demo": "AgenticCode.js", "bg": "inline"}}
+{{"component": "file://./demos/agentic-code/index.ts", "bg": "inline"}}
 
 ## How it works
 
@@ -84,7 +84,7 @@ Five variations of the `icon` slot—from the default first-letter monogram to e
 Each icon receives `ownerState.toolName` so a single component can branch on the tool type.
 The demo below shows the five icon variations:
 
-{{"demo": "ToolStylingA.js", "bg": "inline"}}
+{{"component": "file://./demos/tool-styling-a/index.ts", "bg": "inline"}}
 
 ### Theming tool blocks
 
@@ -92,7 +92,7 @@ Five color themes, all built on `toolSlotProps`—per-tool overrides that style 
 This keeps collapse/expand and all other built-in behaviors intact while giving each tool its own distinct accent: **Colorful** (gradient + circular icon), **Pastel** (light fills), **Vivid** (solid saturated header, white text), **Outlined** (transparent fill, colored border), and **Dark** (dark background with glowing accents).
 The demo below shows the five block themes:
 
-{{"demo": "ToolStylingB.js", "bg": "inline"}}
+{{"component": "file://./demos/tool-styling-b/index.ts", "bg": "inline"}}
 
 ### Providing a custom renderer
 
@@ -101,7 +101,7 @@ The component receives `ownerState.toolName` and `ownerState.state` from the slo
 Here each call renders as a single-line process trace: tool name, a dotted rule, and a state badge.
 The demo below shows the custom renderer:
 
-{{"demo": "ToolStylingC.js", "bg": "inline"}}
+{{"component": "file://./demos/tool-styling-c/index.ts", "bg": "inline"}}
 
 ## See also
 

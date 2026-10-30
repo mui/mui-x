@@ -1,0 +1,25 @@
+import { DataGrid } from '@mui/x-data-grid';
+
+const rows = [
+  {
+    id: 1,
+    username: '@MUI',
+    age: 38,
+  },
+];
+
+export default function ColumnWidthGrid() {
+  return (
+    <div style={{ height: 250, width: '100%' }}>
+      {/* @focus-start */}
+      <DataGrid
+        columns={[
+          { field: 'username', width: 200, rowHeader: true },
+          { field: 'age' },
+        ]}
+        rows={rows}
+      />
+      {/* @focus-end */}
+    </div>
+  );
+}

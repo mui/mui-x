@@ -35,7 +35,7 @@ To display the selected area, you can add the `ChartsBrushOverlay` component as 
 
 To create a custom interaction, you can use the `useBrush()` hook as shown in the [Custom overlay](#custom-overlay) section below.
 
-{{"demo": "BrushBasic.js"}}
+{{"component": "file://./demos/brush-basic/index.ts"}}
 
 ## Customization examples
 
@@ -44,14 +44,14 @@ To create a custom interaction, you can use the `useBrush()` hook as shown in th
 You can create a custom brush overlay by building your own component that uses the `useBrush()` hook.
 The example below displays the values at the start and end positions, along with the difference and percentage change between them.
 
-{{"demo": "BrushCustomOverlay.js"}}
+{{"component": "file://./demos/brush-custom-overlay/index.ts"}}
 
 ### Data selection
 
 You can use the brush to select and display data points within the selection area.
 The example below shows a scatter chart where you can select points by dragging, and the selected points are displayed below the chart.
 
-{{"demo": "BrushScatterList.js"}}
+{{"component": "file://./demos/brush-scatter-list/index.ts"}}
 
 ### Using the `useBrush()` hook
 

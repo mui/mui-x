@@ -142,7 +142,7 @@ stop() {
 
 The following demo combines Steps 2 and 3: a hand-rolled adapter that streams a canned reply chunk by chunk. `ChatBox` does not render a stop button of its own, so the demo adds one with the headless `stopStreaming()` action — pressing it mid-stream fires the abort signal.
 
-{{"demo": "ManualStreamAdapterDemo.js"}}
+{{"component": "file://./demos/manual-stream-adapter-demo/index.ts"}}
 
 ## Step 4: Adding message history
 

@@ -20,7 +20,7 @@ Customize the headless primitives to produce a full-page ChatGPT-style chat layo
 
 The demo below shows the full ChatGPT-style layout assembled from the headless primitives:
 
-{{"demo": "ChatGptStyleChat.js", "bg": "inline"}}
+{{"component": "file://./demos/chat-gpt-style-chat/index.ts", "bg": "inline"}}
 
 ## Layout structure
 

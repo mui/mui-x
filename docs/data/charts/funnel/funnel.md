@@ -15,7 +15,7 @@ Use it for flows like audience engagement, education levels, or conversion pipel
 
 The demo below shows a simple funnel with four decreasing values.
 
-{{"demo": "BasicFunnel.js"}}
+{{"component": "file://./demos/basic-funnel/index.ts"}}
 
 ## Basics
 
@@ -30,7 +30,7 @@ Provide a `label` in each data object for the legend text.
 
 Set `hideLegend` to `true` to hide the legend.
 
-{{"demo": "FunnelLegend.js"}}
+{{"component": "file://./demos/funnel-legend/index.ts"}}
 
 ## Pyramid chart
 
@@ -38,20 +38,20 @@ A pyramid chart is a funnel with an inverted profile.
 
 Set the `curve` property to `'pyramid'` on the series.
 
-{{"demo": "PyramidFunnel.js"}}
+{{"component": "file://./demos/pyramid-funnel/index.ts"}}
 
 ## Labels
 
 The funnel shows labels by default (each section's `value`).
 Use the `valueFormatter` prop to format them.
 
-{{"demo": "FunnelLabels.js"}}
+{{"component": "file://./demos/funnel-labels/index.ts"}}
 
 ### Styling labels
 
 Use the `funnelSectionClasses.label` class to style labels.
 
-{{"demo": "FunnelLabelStyling.js"}}
+{{"component": "file://./demos/funnel-label-styling/index.ts"}}
 
 ### Positioning labels
 
@@ -72,7 +72,7 @@ See [text-anchor](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/tex
 Set `sectionLabel` to `false` to hide labels.
 You can also pass a function that receives the data object and returns the label config.
 
-{{"demo": "FunnelLabelPositioning.js"}}
+{{"component": "file://./demos/funnel-label-positioning/index.ts"}}
 
 ## Styling
 
@@ -81,13 +81,13 @@ You can also pass a function that receives the data object and returns the label
 Use the `curve` property to choose the shape between sections.
 It accepts `'linear'`, `'linear-sharp'`, `'bump'`, `'pyramid'`, `'step'`, or `'step-pyramid'`.
 
-{{"demo": "FunnelCurves.js"}}
+{{"component": "file://./demos/funnel-curves/index.ts"}}
 
 ### Gap
 
 Use the `gap` property to set the space between sections (in pixels).
 
-{{"demo": "FunnelGap.js"}}
+{{"component": "file://./demos/funnel-gap/index.ts"}}
 
 ### Border radius
 
@@ -102,7 +102,7 @@ See [Curve interpolation](#curve-interpolation) for how `curve` and `borderRadiu
 If `gap` is 0, radius applies only to corners not connected to another section.
 If `gap` is greater than 0, radius applies to all corners.
 
-{{"demo": "FunnelBorderRadius.js"}}
+{{"component": "file://./demos/funnel-border-radius/index.ts"}}
 
 ### Variant
 
@@ -113,7 +113,7 @@ Use the `variant` property to switch between styles:
 
 The `outlined` variant is lighter visually.
 
-{{"demo": "FunnelVariant.js"}}
+{{"component": "file://./demos/funnel-variant/index.ts"}}
 
 ### Colors
 
@@ -122,7 +122,7 @@ You can customize funnel colors in two ways:
 1. Pass a [color palette](/x/react-charts/styling/#built-in-color-palettes). Each section uses a color from the palette.
 2. Set a `color` property on each data object to override the palette for that section.
 
-{{"demo": "FunnelColor.js"}}
+{{"component": "file://./demos/funnel-color/index.ts"}}
 
 ### CSS
 
@@ -130,7 +130,7 @@ You can style the funnel with CSS.
 Each section group has a `data-series` attribute for targeting.
 Use `:nth-child` or `:nth-of-type` to target specific sections, as in the demo below.
 
-{{"demo": "FunnelDataAttributes.js"}}
+{{"component": "file://./demos/funnel-data-attributes/index.ts"}}
 
 ## Multiple funnels
 
@@ -138,14 +138,14 @@ By default, multiple series are stacked.
 Pass multiple series and use different colors or styles to tell them apart.
 The first series is at the bottom, the last at the top.
 
-{{"demo": "FunnelStacked.js"}}
+{{"component": "file://./demos/funnel-stacked/index.ts"}}
 
 ## Highlight
 
 Set `highlightScope.highlight` to `'item'` to highlight the hovered section.
 Set `highlightScope.fade` to `'global'` to fade the other sections.
 
-{{"demo": "HighlightFunnel.js"}}
+{{"component": "file://./demos/highlight-funnel/index.ts"}}
 
 ## Category axis
 
@@ -154,18 +154,18 @@ By default, the axis is hidden.
 
 To show it, pass `position` and `categories` to the `categoryAxis` prop.
 
-{{"demo": "FunnelCategoryAxis.js"}}
+{{"component": "file://./demos/funnel-category-axis/index.ts"}}
 
 ### Scaled sections
 
 By default, sections use the `band` scale (equal width).
 Set `scaleType` to `'linear'` in the `categoryAxis` configuration to scale section width by value.
 
-{{"demo": "FunnelLinearScale.js"}}
+{{"component": "file://./demos/funnel-linear-scale/index.ts"}}
 
 ### Auto-sizing axis
 
 You can set the axis `size` to `'auto'` to automatically calculate the axis dimension based on tick label measurements.
 This is useful when your tick labels have varying lengths.
 
-{{"demo": "FunnelAxisAutoSize.js"}}
+{{"component": "file://./demos/funnel-axis-auto-size/index.ts"}}

@@ -13,7 +13,7 @@ The priority of the data copied to the clipboard is the following, from highest 
 2. If one or more rows are selected (see [Row selection](/x/react-data-grid/row-selection/)), the selected rows are copied
 3. If there is a single cell selected, the single cell is copied
 
-{{"demo": "ClipboardCopy.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/clipboard-copy/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Add new rows from copied data
 
@@ -21,13 +21,13 @@ The `onClipboardCopy` prop can be used to capture the copied data and reuse it o
 
 The demo below stores the data copied with <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">C</kbd></kbd> (<kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">C</kbd></kbd> on macOS) and adds it back as new rows when the button is clicked, while leaving the regular copy and paste behavior untouched.
 
-{{"demo": "ClipboardCopyAddRows.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/clipboard-copy-add-rows/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Triggering a copy without the keyboard shortcut
 
 To let users copy the current selection from a button (or any other UI, such as a context menu), combine public APIs: `apiRef.current.getSelectedCellsAsArray()` and `getCellSelectionModel()` for cell selection, `apiRef.current.getDataAsCsv()` for row selection, and `gridFocusCellSelector` as a fallback for a single focused cell.
 
-{{"demo": "ClipboardCopyButton.js", "bg": "inline"}}
+{{"component": "file://./demos/clipboard-copy-button/index.ts", "bg": "inline"}}
 
 ## Clipboard paste [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
@@ -65,7 +65,7 @@ The priority is the following, from highest to lowest:
 2. If one or more rows are selected (see [Row selection](/x/react-data-grid/row-selection/)), the selected rows are updated with the pasted values.
 3. If a single cell is selected, the values are pasted starting from the selected cell.
 
-{{"demo": "ClipboardPaste.js", "bg": "inline"}}
+{{"component": "file://./demos/clipboard-paste/index.ts", "bg": "inline"}}
 
 ### Keyboard shortcuts
 
@@ -82,7 +82,7 @@ To let the users copy the values using dragging, similar to the spreadsheet appl
 When passed, a small handle appears at the bottom-right corner of the selected [`editable`](/x/react-data-grid/editing/#making-a-column-editable) cell.
 Drag it up or down to fill rows, or left and right to fill adjacent columns.
 
-{{"demo": "CellSelectionFillHandle.js", "bg": "inline"}}
+{{"component": "file://./demos/cell-selection-fill-handle/index.ts", "bg": "inline"}}
 
 :::info
 
@@ -95,7 +95,7 @@ The above demo uses a `pastedValueParser` to convert the pasted value to a numbe
 
 To disable clipboard paste, set the `disableClipboardPaste` prop to `true`:
 
-{{"demo": "ClipboardPasteDisabled.js", "bg": "inline"}}
+{{"component": "file://./demos/clipboard-paste-disabled/index.ts", "bg": "inline"}}
 
 ### Disable pasting to the specific cells within a row
 
@@ -111,7 +111,7 @@ The demo below shows a product inventory grid with the following paste restricti
 Try selecting multiple cells and pasting data.
 Cells marked as non-editable by `isCellEditable` will not be updated.
 
-{{"demo": "ClipboardPasteIsCellEditable.js", "bg": "inline"}}
+{{"component": "file://./demos/clipboard-paste-is-cell-editable/index.ts", "bg": "inline"}}
 
 ### Persisting pasted data
 
@@ -126,7 +126,7 @@ If the callback throws or returns a rejected promise, the row will not be update
 
 The demo below shows how to persist the pasted data in the browser's `sessionStorage`.
 
-{{"demo": "ClipboardPastePersistence.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/clipboard-paste-persistence/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Events
 
@@ -157,7 +157,7 @@ const onBeforeClipboardPasteStart = async () => {
 The demo below uses the [`Dialog`](/material-ui/react-dialog/) component for paste confirmation.
 If confirmed, the Data Grid displays a loading indicator during the paste operation.
 
-{{"demo": "ClipboardPasteEvents.js", "bg": "inline"}}
+{{"component": "file://./demos/clipboard-paste-events/index.ts", "bg": "inline"}}
 
 ## Format of the clipboard data
 
@@ -179,7 +179,7 @@ You can use `clipboardCopyCellDelimiter` and `splitClipboardPastedText` props to
 
 The demo below uses `,` (comma) character as a cell delimiter for both copy and paste operations:
 
-{{"demo": "ClipboardPasteDelimiter.js", "bg": "inline"}}
+{{"component": "file://./demos/clipboard-paste-delimiter/index.ts", "bg": "inline"}}
 
 ## API
 

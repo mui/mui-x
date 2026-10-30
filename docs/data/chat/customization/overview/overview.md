@@ -58,7 +58,7 @@ Most apps only need the top two layers:
 </ThemeProvider>
 ```
 
-{{"demo": "EightyTwentyDemo.js", "bg": "inline"}}
+{{"component": "file://./demos/eighty-twenty-demo/index.ts", "bg": "inline"}}
 
 Reach for `slots` or `partRenderers` only when the theme can't express what you need—for example, replacing the Composer with a fully custom input, or rendering tool-call results as cards instead of JSON.
 

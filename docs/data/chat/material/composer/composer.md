@@ -57,7 +57,7 @@ It submits on **Enter** and inserts a newline on **Shift+Enter**.
 
 Customize the placeholder through `slotProps`:
 
-{{"demo": "ComposerCustomPlaceholder.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/composer-custom-placeholder/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### IME composition
 
@@ -80,7 +80,7 @@ Selected files are queued as draft attachments and previewed in the composer are
 
 Set `features={{ attachments: false }}` to hide the attach button:
 
-{{"demo": "ComposerHiddenAttachButton.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/composer-hidden-attach-button/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Helper text
 
@@ -99,7 +99,7 @@ Use it for legal disclaimers, character counts, or contextual hints.
 Control the composer value externally through `ChatProvider`, or through the equivalent `ChatBox` props that forward to it.
 The demo below mirrors the current composer value above the chat surface:
 
-{{"demo": "ComposerControlled.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/composer-controlled/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Accessing composer state with a hook
 
@@ -150,7 +150,7 @@ The attachment type used by the composer:
 
 The demo below shows five design ideas for the compact composer variant—click into the text area to see the focus state.
 
-{{"demo": "CompactComposerIdeas.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/compact-composer-ideas/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Disabling the composer
 
@@ -158,7 +158,7 @@ Pass `disabled` to prevent all interaction.
 When disabled, the text area is read-only and the send button is inert.
 The owner state exposes `disabled` so custom styles can react to the state.
 
-{{"demo": "ComposerDisabled.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/composer-disabled/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Localization
 

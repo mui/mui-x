@@ -1,7 +1,0 @@
-<DatePicker
-  slotProps={{
-    openPickerIcon: (ownerState) => ({
-      color: ownerState.isPickerOpen ? 'secondary' : 'primary',
-    }),
-  }}
-/>

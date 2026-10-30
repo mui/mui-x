@@ -1,0 +1,9 @@
+import LocalizationTable from 'docs/src/modules/components/LocalizationTable';
+import data from '../../data.json';
+
+export default function ChartsLocalizationTableNoSnap() {
+  return (
+    // @focus @padding 2
+    <LocalizationTable data={data} />
+  );
+}

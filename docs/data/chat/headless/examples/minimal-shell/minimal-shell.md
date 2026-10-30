@@ -18,7 +18,7 @@ The demo below composes the headless primitives that make up a complete chat sur
 - `MessageList.Root`
 - `Composer.Root`
 
-{{"demo": "MinimalUnstyledShell.js"}}
+{{"component": "file://./demos/minimal-unstyled-shell/index.ts"}}
 
 Use the minimal shell to identify:
 

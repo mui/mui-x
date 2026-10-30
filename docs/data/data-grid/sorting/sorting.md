@@ -6,7 +6,7 @@ Sorting is enabled by default to the Data Grid users and works out of the box wi
 Users can set a sorting rule simply by clicking on a column header.
 Following clicks change the column's sorting direction. You can see the applied direction on the header's arrow indicator.
 
-{{"demo": "BasicExampleDataGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/basic-example-data-grid/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Single and multi-sorting
 
@@ -22,12 +22,12 @@ The following demo lets you sort the rows according to several criteria at the s
 
 By default, users need to hold down the <kbd class="key">Ctrl</kbd> or <kbd class="key">Shift</kbd> (use <kbd class="key">⌘ Command</kbd> on macOS) key while clicking the column header.
 
-{{"demo": "BasicExampleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/basic-example-data-grid-pro/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 You can also enable multi-sorting without modifier keys by setting the `multipleColumnsSortingMode` prop to `"always"`.
 This lets users click on multiple column headers to add them as sorting criteria without needing to hold down modifier keys.
 
-{{"demo": "MultiSortingWithoutModifier.js", "bg": "inline"}}
+{{"component": "file://./demos/multi-sorting-without-modifier/index.ts", "bg": "inline"}}
 
 ## Pass sorting rules to the Data Grid
 
@@ -54,7 +54,7 @@ But if you want to set an initial sorting order, simply provide the model to the
 />
 ```
 
-{{"demo": "InitialSort.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/initial-sort/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Controlled sort model
 
@@ -62,7 +62,7 @@ Use the `sortModel` prop to control the state of the sorting rules.
 
 You can use the `onSortModelChange` prop to listen to changes in the sorting rules and update the prop accordingly.
 
-{{"demo": "ControlledSort.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/controlled-sort/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Disable the sorting
 
@@ -74,7 +74,7 @@ Sorting is enabled by default, but you can easily disable this feature by settin
 <DataGrid disableColumnSorting />
 ```
 
-{{"demo": "DisableSortingGridAllColumns.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/disable-sorting-grid-all-columns/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### For some columns
 
@@ -86,7 +86,7 @@ In the following demo, the user cannot sort the _rating_ column from the UI.
 <DataGrid columns={[...columns, { field: 'rating', sortable: false }]} />
 ```
 
-{{"demo": "DisableSortingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/disable-sorting-grid/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Sorting non-sortable columns programmatically
 
@@ -94,7 +94,7 @@ The columns with `colDef.sortable` set to `false` are not sortable from the grid
 
 In the following demo, the `firstName` column is not sortable by the default grid UI, but it is sorted programmatically by a custom built UI.
 
-{{"demo": "ReadOnlySortingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/read-only-sorting-grid/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Custom comparator
 
@@ -114,14 +114,14 @@ To extend or modify this behavior in a specific column, you can pass in a custom
 In the following demo, the "Created on" column sorting is based on the day of the month of the `createdOn` field.
 It is a fully custom sorting comparator.
 
-{{"demo": "FullyCustomSortComparator.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/fully-custom-sort-comparator/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Combine built-in comparators
 
 In the following demo, the "Name" column combines the `name` and `isAdmin` fields.
 The sorting is based on `isAdmin` and then on `name`, if necessary. It re-uses the built-in sorting comparator.
 
-{{"demo": "ExtendedSortComparator.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/extended-sort-comparator/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Asymmetric comparator
 
@@ -131,7 +131,7 @@ While this is sufficient for most use cases, it is possible to define an asymmet
 
 In the demo below, the `getSortComparator()` function is used in the "Quantity" column to keep the `null` values at the bottom when sorting is applied (regardless of the sorting direction):
 
-{{"demo": "GetSortComparator.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/get-sort-comparator/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Custom sort order
 
@@ -149,7 +149,7 @@ The next click will make it sort descending (`desc`). Another click will remove 
 The default sort order can be overridden for all columns with the `sortingOrder` prop.
 In the following demo, columns are only sortable in descending or ascending order.
 
-{{"demo": "OrderSortingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/order-sorting-grid/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Per column
 
@@ -161,13 +161,13 @@ const columns: GridColDef = [
 ];
 ```
 
-{{"demo": "OrderSortingPerColumnGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/order-sorting-per-column-grid/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Server-side sorting
 
 Sorting can be run server-side by setting the `sortingMode` prop to `server`, and implementing the `onSortModelChange` handler.
 
-{{"demo": "ServerSortingGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/server-sorting-grid/index.ts", "bg": "inline"}}
 
 :::success
 You can combine server-side sorting with [server-side filtering](/x/react-data-grid/filtering/server-side/) and [server-side pagination](/x/react-data-grid/pagination/#server-side-pagination) to avoid fetching more data than needed, since it's already processed outside of the Data Grid.
@@ -179,7 +179,7 @@ You can combine server-side sorting with [server-side filtering](/x/react-data-g
 Only use this API as the last option. Give preference to the props to control the Data Grid.
 :::
 
-{{"demo": "SortingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "file://./demos/sorting-api-no-snap/index.ts", "bg": "inline", "hideToolbar": true}}
 
 ## Selectors
 

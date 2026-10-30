@@ -12,7 +12,7 @@ By default, the [Master-detail row panel <span class="plan-pro" />](/x/react-dat
 
 However, you can [control the expanded detail panels](/x/react-data-grid/master-detail/#controlling-expanded-detail-panels) to have only one detail panel expanded at a time.
 
-{{"demo": "DetailPanelOneExpandedRow.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/detail-panel-one-expanded-row/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Expand or collapse all detail panels
 
@@ -24,26 +24,26 @@ The custom header uses `gridRowsLookupSelector` to find all rows with a detail p
 It checks the status of open panels using the [`useGridSelector()` hook](/x/react-data-grid/state/#with-usegridselector) to access the grid's state.
 When clicked, it uses [`setExpandedDetailPanels`](/x/api/data-grid/grid-api/#grid-api-prop-setExpandedDetailPanels) from the [Grid API](/x/react-data-grid/api-object/#how-to-use-the-api-object) to expand or collapse all detail panels.
 
-{{"demo": "DetailPanelExpandCollapseAll.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/detail-panel-expand-collapse-all/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Toggling detail panels on row click
 
 In the demo below, you can toggle the detail panel by clicking anywhere on the row:
 
-{{"demo": "DetailPanelExpandOnRowClick.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/detail-panel-expand-on-row-click/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Lazy loading detail panels with auto height
 
 In the demo below, detail panels have a height based on content (auto height) and are lazy loaded.
 To prevent scrolling issues, panel heights are cached once they are loaded and the cached height is returned from the `getDetailPanelHeight()` callback.
 
-{{"demo": "LazyLoadingAutoHeightDetailPanel.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/lazy-loading-auto-height-detail-panel/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Access Data Grid internal loading state
 
 The following demo shows how to disable a button on the toolbar when the Data Grid is in loading state using the [`useGridSelector()`](https://mui.com/x/react-data-grid/state/#with-usegridselector) hook with the `gridRowsLoadingSelector()`.
 
-{{"demo": "AccessingLoadingState.js", "bg": "inline"}}
+{{"component": "file://./demos/accessing-loading-state/index.ts", "bg": "inline"}}
 
 :::info
 The `useGridSelector()` is based on a React Context, so the component must be a child of the Data Grid in the React tree to access the internal state.
@@ -60,4 +60,4 @@ The following demo listens to the `rowDragStart` and `rowDragEnd` events in a cu
 When a row is being dragged over the previous or next page button, the component changes the page during the `dragOver` phase.
 After the page changes, drop it in the desired position in the new page.
 
-{{"demo": "RowReorderingWithPagination.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-reordering-with-pagination/index.ts", "bg": "inline", "collapseToEmpty": true}}

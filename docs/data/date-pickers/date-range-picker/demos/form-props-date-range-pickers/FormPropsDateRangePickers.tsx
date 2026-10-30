@@ -1,0 +1,20 @@
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+
+export default function FormPropsDateRangePickers() {
+  return (
+    // @focus-start @padding 2
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer
+        components={['DateRangePicker', 'DateRangePicker', 'DateRangePicker']}
+      >
+        <DateRangePicker label="disabled" disabled />
+        <DateRangePicker label="readOnly" readOnly />
+        <DateRangePicker label="name" name="startDateRange" />
+      </DemoContainer>
+    </LocalizationProvider>
+    // @focus-end
+  );
+}

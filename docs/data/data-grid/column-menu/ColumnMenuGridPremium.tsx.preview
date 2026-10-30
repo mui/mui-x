@@ -1,7 +1,0 @@
-<DataGridPremium
-  {...data}
-  apiRef={apiRef}
-  featureDependencies={{ formula: formulaFeature }}
-  groupingColDef={groupingColDef}
-  initialState={initialState}
-/>

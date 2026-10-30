@@ -1,9 +1,0 @@
-<DataGridPremium
-  {...data}
-  label="Data Grid Premium"
-  apiRef={apiRef}
-  loading={loading}
-  disableRowSelectionOnClick
-  initialState={initialState}
-  showToolbar
-/>

@@ -58,13 +58,13 @@ See [Conversation header](/x/react-chat/multi-conversation/conversation-header/)
 The demo below wires `ChatConversation` to a `ChatProvider` with a demo adapter.
 The title and subtitle come from the active conversation; send a message to see the list scroll and the echo reply arrive.
 
-{{"demo": "ConversationBasicStandalone.js", "bg": "inline", "defaultCodeOpen": true}}
+{{"component": "file://./demos/conversation-basic-standalone/index.ts", "bg": "inline", "initialExpanded": true}}
 
 ## Interactive playground
 
 The demo below lets you toggle whether the header and composer are rendered, and switch the surrounding variant and density:
 
-{{"demo": "ChatConversationPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-conversation-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::info
 The conversation surface is the chat's main scroll region: the message list manages roving focus and `Page Up`/`Page Down` scrolling, and the composer is reachable with `Tab`.

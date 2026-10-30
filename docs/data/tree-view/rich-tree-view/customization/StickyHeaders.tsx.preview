@@ -1,5 +1,0 @@
-<StickyRichTreeView
-  items={MUI_X_PRODUCTS}
-  itemHeight={ITEM_HEIGHT}
-  defaultExpandedItems={DEFAULT_EXPANDED_ITEMS}
-/>

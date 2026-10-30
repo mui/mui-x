@@ -56,7 +56,7 @@ If the user scrolls too fast, the Grid loads multiple pages with one request (by
 
 The demo below shows how viewport loading mode works:
 
-{{"demo": "ServerSideLazyLoadingViewport.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-lazy-loading-viewport/index.ts", "bg": "inline"}}
 
 :::info
 The Data Source demos use a `useMockServer()` utility function to simulate server-side data fetching.
@@ -72,7 +72,7 @@ It also throttles new data fetches to avoid making unnecessary requests.
 The default throttle time is 500 milliseconds.
 Use the `lazyLoadingRequestThrottleMs` prop to set a custom time, as shown below:
 
-{{"demo": "ServerSideLazyLoadingRequestThrottle.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-lazy-loading-request-throttle/index.ts", "bg": "inline"}}
 
 ### Infinite loading
 
@@ -85,7 +85,7 @@ The demo below shows how infinite loading mode works.
 The page size is set to `15` and the mock server is configured to return a total of 100 rows.
 When the response contains no new rows, the Grid stops requesting new data.
 
-{{"demo": "ServerSideLazyLoadingInfinite.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-lazy-loading-infinite/index.ts", "bg": "inline"}}
 
 ### Changing the loading mode
 
@@ -106,7 +106,7 @@ Changing its value can cause the Grid to reset and the cache to be cleared, whic
 
 The following demo showcases how the loading mode can change as described above, and is not representative of something you would implement in a real-world scenario.
 
-{{"demo": "ServerSideLazyLoadingModeUpdate.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-lazy-loading-mode-update/index.ts", "bg": "inline"}}
 
 ## Nested lazy loading
 
@@ -118,13 +118,13 @@ The nested lazy loading doesn't support the [infinite loading](#infinite-loading
 
 The demo below exhibits the behavior of the nested lazy loading with tree data.
 
-{{"demo": "ServerSideTreeDataNestedLazyLoading.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-tree-data-nested-lazy-loading/index.ts", "bg": "inline"}}
 
 ### With row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 The demo below exhibits the behavior of the nested lazy loading with row grouping.
 
-{{"demo": "ServerSideRowGroupingNestedLazyLoading.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-row-grouping-nested-lazy-loading/index.ts", "bg": "inline"}}
 
 ### Row selection propagation
 
@@ -143,13 +143,13 @@ Groups that are loaded later while scrolling behave the same.
 
 The following demo uses `defaultGroupingExpansionDepth={1}` to expand top-level tree data groups as they are loaded.
 
-{{"demo": "ServerSideLazyLoadingTreeDataGroupExpansion.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-lazy-loading-tree-data-group-expansion/index.ts", "bg": "inline"}}
 
 ### Row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 The following demo uses `defaultGroupingExpansionDepth={-1}` to expand all row grouping groups in a waterfall manner.
 
-{{"demo": "ServerSideLazyLoadingRowGroupingGroupExpansion.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-lazy-loading-row-grouping-group-expansion/index.ts", "bg": "inline"}}
 
 ## Dynamic data and cache revalidation
 
@@ -164,7 +164,7 @@ The following demos use `dataSourceRevalidateMs="3_000"` (3 seconds) to revalida
 
 Note that the row IDs stay stable but the row values change over time.
 
-{{"demo": "ServerSideLazyLoadingRevalidationTabs.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-lazy-loading-revalidation-tabs/index.ts", "bg": "inline"}}
 
 ### Dynamically replaced datasets
 
@@ -173,7 +173,7 @@ On each revalidation, only the visible range is replaced with the latest rows, a
 
 The demo below uses data batch numbers to identify the data set and replace the current viewport with the latest data set. It uses `dataSourceRevalidateMs="2_000"` (2 seconds) to revalidate the current viewport and get the latest data set. But the actual update only happens if the data batch is different from the previous one, which is only regenerated on the backend server every 10 seconds.
 
-{{"demo": "ServerSideLazyLoadingFullyReplaced.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-lazy-loading-fully-replaced/index.ts", "bg": "inline"}}
 
 :::info
 The sorting and filtering are disabled in the demos above to keep the dummy server's code simple and easy to relate.
@@ -189,7 +189,7 @@ If successful, the Data Grid uses `rows` and `rowCount` data to determine if the
 
 The following demo provides an example how to use `GridGetRowsParams` to retry a failed request:
 
-{{"demo": "ServerSideLazyLoadingErrorHandling.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-lazy-loading-error-handling/index.ts", "bg": "inline"}}
 
 ## API
 

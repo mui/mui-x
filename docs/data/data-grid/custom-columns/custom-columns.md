@@ -15,7 +15,7 @@ const usdPrice: GridColTypeDef = {
 };
 ```
 
-{{"demo": "CustomColumnTypesGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/custom-column-types-grid/index.ts", "bg": "inline"}}
 
 :::info
 If an unsupported column type is used, the `string` column type will be used instead.
@@ -27,7 +27,7 @@ Sparkline charts can be useful as an overview of data trends.
 
 In the demo below, we create a custom column type using the `GridColTypeDef` interface and use the [Sparkline](/x/react-charts/sparkline/) component from [`@mui/x-charts`](/x/react-charts/) package in the [`renderCell`](/x/react-data-grid/column-definition/#rendering-cells) property.
 
-{{"demo": "SparklineColumn.js", "bg": "inline"}}
+{{"component": "file://./demos/sparkline-column/index.ts", "bg": "inline"}}
 
 ## Date pickers
 
@@ -37,7 +37,7 @@ While the [MUI X Date and Time Pickers](/x/react-date-pickers/) are not support
 
 The example below uses `@mui/x-date-pickers` for both `date` and `dateTime` column types:
 
-{{"demo": "EditingWithDatePickers.js", "bg": "inline", "defaultCodeOpen": false }}
+{{"component": "file://./demos/editing-with-date-pickers/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::info
 You can change the date format by importing different locale (`en-US` locale is used in the example above).
@@ -54,7 +54,7 @@ You can copy the column definitions and custom cell renderers from the demo sour
 All column definitions are located in the main component file, while each cell renderer is in a separate file.
 :::
 
-{{"demo": "CustomColumnFullExample.js", "bg": "inline"}}
+{{"component": "file://./demos/custom-column-full-example/index.ts", "bg": "inline"}}
 
 ## API
 

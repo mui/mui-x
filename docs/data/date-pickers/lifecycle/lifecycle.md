@@ -26,7 +26,7 @@ It will only call the `onChange` callback when:
 
 The example below shows the last value received by `onChange`.
 
-{{"demo": "LifeCycleDateFieldEmpty.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/life-cycle-date-field-empty/index.ts", "collapseToEmpty": true}}
 
 ## Lifecycle on range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
@@ -36,7 +36,7 @@ On range fields (`SingleInputDateRangeField` / `MultiInputDateRangeField` / ... 
 The example below shows the last value received by `onChange`.
 Note how changing the value of the start date section will call `onChange` even if the end date is empty or partially filled.
 
-{{"demo": "LifeCycleDateRangeField.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/life-cycle-date-range-field/index.ts", "collapseToEmpty": true}}
 
 ## Lifecycle on pickers: "onClose"
 
@@ -132,7 +132,7 @@ Pressing <kbd class="key">Escape</kbd> or clicking outside the picker will close
 By default, the picker's popper closes when the field is clicked or focused.
 You can use the `keepOpenDuringFieldFocus` prop to keep it open when the user is interacting with the field.
 
-{{"demo": "KeepOpenDuringFieldFocus.js"}}
+{{"component": "file://./demos/keep-open-during-field-focus/index.ts"}}
 
 #### When a value is selected using the action bar
 
@@ -468,7 +468,7 @@ If you want to update your state only when the value is valid, you can ignore an
 
 In the example below, `onChange` will only be called if the date is valid and its year is 2022:
 
-{{"demo": "LifeCycleIgnoreInvalidValue.js"}}
+{{"component": "file://./demos/life-cycle-ignore-invalid-value/index.ts"}}
 
 ## Picker inside a Dialog
 
@@ -537,7 +537,7 @@ If for some reason, you need to send the data to the server without having the u
 The following demo shows how to extend the Date Field component by adding an `onAccept` prop, which is a debounced version of `onChange`.
 You can find more information about the `onAccept` prop [in the dedicated doc section](/x/react-date-pickers/lifecycle/#lifecycle-on-pickers-onaccept).
 
-{{"demo": "ServerInteraction.js"}}
+{{"component": "file://./demos/server-interaction/index.ts"}}
 
 ### Source values in `context.source`
 

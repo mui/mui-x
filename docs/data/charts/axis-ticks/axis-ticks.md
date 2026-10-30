@@ -25,7 +25,7 @@ If you use composition you can pass these as props to the `<ChartsGrid />` compo
 
 In this Demo the horizontal grid is customized with some CSS selectors.
 
-{{"demo": "GridDemo.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-demo/index.ts", "collapseToEmpty": true}}
 
 ### Labels on the grid
 
@@ -39,7 +39,7 @@ Together, they let you place one label above each grid line.
 Setting `position: 'none'` also frees the space, but the axis is then removed from the chart, and the `yAxis` slot is no longer rendered.
 :::
 
-{{"demo": "GridLabels.js"}}
+{{"component": "file://./demos/grid-labels/index.ts"}}
 
 ## Tick position
 
@@ -58,7 +58,7 @@ To better control how the ticks render, you can also provide `tickMinStep` and `
 
 In the demo below, the top axis has a `tickMinStep` of half a day, and the bottom axis has a `tickMinStep` of a full day.
 
-{{"demo": "TickNumber.js"}}
+{{"component": "file://./demos/tick-number/index.ts"}}
 
 ### Tick spacing
 
@@ -68,7 +68,7 @@ Having a minimum space between ticks improves the readability of the axis and ca
 
 This property defaults to 0 and is only available for ordinal axes, that is, axes with a band or point scale.
 
-{{"demo": "TickSpacing.js"}}
+{{"component": "file://./demos/tick-spacing/index.ts"}}
 
 ### Fixed tick position
 
@@ -81,7 +81,7 @@ In the demo below, both axes are set to `scaleType='point'`.
 The top axis demonstrates the default behavior with a tick for each point.
 The bottom axis uses a filtering function to only display a tick at the beginning of a day.
 
-{{"demo": "TickPosition.js"}}
+{{"component": "file://./demos/tick-position/index.ts"}}
 
 ### Filtering tick labels
 
@@ -99,7 +99,7 @@ You can override this behavior with `tickLabelInterval: () => true` which forces
 In the example below, the top axis is a reference for the default behavior: tick labels don't overflow.
 At the bottom, you can see one tick for the beginning and the middle of the day, but the tick label is only displayed for the beginning of the day.
 
-{{"demo": "TickLabelPosition.js"}}
+{{"component": "file://./demos/tick-label-position/index.ts"}}
 
 ### Ordinal tick management
 
@@ -117,7 +117,7 @@ When using `ordinalTimeTicks` the property `tickPlacement` is ignored, and compu
 
 In the following demo, you can modify the `ordinalTimeTicks` based on built-in frequencies and see how it impacts zoom behavior.
 
-{{"demo": "OrdinalTickPlacement.js"}}
+{{"component": "file://./demos/ordinal-tick-placement/index.ts"}}
 
 The `TickFrequencyDefinition` is an object made of following properties:
 
@@ -129,4 +129,4 @@ The built-in frequency definitions are exported as `tickFrequencies` from `'@mui
 
 In the following demo, we use the `tickFrequencies` to display quarters and weeks with different labels.
 
-{{"demo": "CustomTickFrequency.js"}}
+{{"component": "file://./demos/custom-tick-frequency/index.ts"}}

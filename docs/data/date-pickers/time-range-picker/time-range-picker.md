@@ -13,7 +13,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 ## Basic usage
 
-{{"demo": "BasicTimeRangePicker.js"}}
+{{"component": "file://./demos/basic-time-range-picker/index.ts"}}
 
 ## Component composition
 
@@ -28,7 +28,7 @@ Check out their documentation page for more information:
 
 The value of the component can be uncontrolled or controlled.
 
-{{"demo": "TimeRangePickerValue.js"}}
+{{"component": "file://./demos/time-range-picker-value/index.ts"}}
 
 :::info
 
@@ -50,7 +50,7 @@ The component is available in three variants:
 
 - The `TimeRangePicker` component which renders `DesktopTimeRangePicker` or `MobileTimeRangePicker` depending on the device it runs on.
 
-{{"demo": "ResponsiveTimeRangePickers.js"}}
+{{"component": "file://./demos/responsive-time-range-pickers/index.ts"}}
 
 By default, the `TimeRangePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
@@ -64,7 +64,7 @@ Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-cave
 
 The component supports the `disabled`, `readOnly` and `name` props:
 
-{{"demo": "FormPropsTimeRangePickers.js"}}
+{{"component": "file://./demos/form-props-time-range-pickers/index.ts"}}
 
 :::success
 The `name` prop is not available when using the Time Range Picker with the Multi Input Time Range Field.
@@ -76,7 +76,7 @@ The `name` prop is not available when using the Time Range Picker with the Multi
 
 You can pass the `MultiInputTimeRangeField` component to the Time Range Picker to use it for keyboard editing:
 
-{{"demo": "MultiInputTimeRangePicker.js"}}
+{{"component": "file://./demos/multi-input-time-range-picker/index.ts"}}
 
 :::info
 You can find more information in a [dedicated documentation page section](/x/react-date-pickers/custom-field/#usage-inside-a-range-picker).
@@ -88,7 +88,7 @@ The below demo shows how to add a custom label on the end time view showing the 
 
 It replaces the default `digitalClockItem` slot component with a different one calculating the duration of the range when selecting the end time.
 
-{{"demo": "CustomizedBehaviorTimeRangePicker.js"}}
+{{"component": "file://./demos/customized-behavior-time-range-picker/index.ts"}}
 
 ### Customize the field
 

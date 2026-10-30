@@ -1,3 +1,0 @@
-<DensityPanel density="compact" caption='density="compact"' />
-<DensityPanel density="standard" caption='density="standard" (default)' />
-<DensityPanel density="comfortable" caption='density="comfortable"' />

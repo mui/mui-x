@@ -1,6 +1,0 @@
-<DataGridPro
-  treeData
-  rows={rows}
-  columns={columns}
-  getTreeDataPath={getTreeDataPath}
-/>

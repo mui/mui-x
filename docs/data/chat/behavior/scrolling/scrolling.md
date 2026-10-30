@@ -16,7 +16,7 @@ components: ChatMessageList, ChatScrollToBottomAffordance
 
 Try the scroll-to-bottom affordance live: scroll up inside the preview to reveal the jump-to-latest button, and try each `scrollBehavior`.
 
-{{"demo": "ChatScrollToBottomAffordancePlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-scroll-to-bottom-affordance-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 The message list automatically manages scroll position so new messages and streaming content stay visible without user intervention.
 Users can still scroll up to read earlier messages without losing their place.
@@ -52,7 +52,7 @@ When auto-scroll is disabled, users can still scroll to the bottom manually usin
 
 Send a message, then scroll up while the long reply streams in — auto-scroll pauses once you're more than `buffer` pixels from the bottom and resumes when you scroll back within it.
 
-{{"demo": "AutoScrollBuffer.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/auto-scroll-buffer/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::info
 Scrolling to the bottom when the user sends a message is always active, regardless of the `autoScroll` setting.

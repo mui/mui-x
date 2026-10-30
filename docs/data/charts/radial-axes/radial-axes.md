@@ -21,7 +21,7 @@ This component accepts two boolean props `rotation` and `radius` to display grid
 
 Use the `chartsRadialGridClasses` to modify the style of this component.
 
-{{"demo": "RadialGridPlayground.js", "hideToolbar": true, "bg": "playground"}}
+{{"component": "file://./demos/radial-grid-playground/index.ts", "hideToolbar": true, "bg": "playground"}}
 
 ## Axes
 
@@ -57,7 +57,7 @@ It can be set to
 - `'end'`: Place the axis at the `endAngle` of the rotation axis.
 - `number`: The angle in degree where to plot the axis.
 
-{{"demo": "RadiusAxisPlayground.js", "hideToolbar": true, "bg": "playground"}}
+{{"component": "file://./demos/radius-axis-playground/index.ts", "hideToolbar": true, "bg": "playground"}}
 
 #### Radius extent
 
@@ -79,7 +79,7 @@ Percentage values scale with the chart, which keeps the proportions consistent a
 <radiusAxis minRadius="40%" />
 ```
 
-{{"demo": "RadiusAxisPercentage.js"}}
+{{"component": "file://./demos/radius-axis-percentage/index.ts"}}
 
 ### Rotation axis
 
@@ -91,7 +91,7 @@ It can be set to
 - `'outside'`: Place the axis at the `maxRadius` of the radius axis. Places labels and ticks outside by default.
 - `'inside'`: Place the axis at the `minRadius` of the radius axis. Places labels and ticks inside by default.
 
-{{"demo": "RotationAxisPlayground.js", "hideToolbar": true, "bg": "playground"}}
+{{"component": "file://./demos/rotation-axis-playground/index.ts", "hideToolbar": true, "bg": "playground"}}
 
 ## Axis highlight
 
@@ -116,4 +116,4 @@ Or the component when using composition:
 />
 ```
 
-{{"demo": "BandHighlight.js", "bg": "outline"}}
+{{"component": "file://./demos/band-highlight/index.ts", "bg": "outline"}}

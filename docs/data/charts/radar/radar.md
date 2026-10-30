@@ -15,7 +15,7 @@ Use it to compare profiles or scores across several dimensions (for example, pro
 
 The demo below shows a basic radar chart with one series.
 
-{{"demo": "BasicRadar.js"}}
+{{"component": "file://./demos/basic-radar/index.ts"}}
 
 ## Basics
 
@@ -28,13 +28,13 @@ Each entry in `metrics` is a string or an object that defines one axis of the ch
 
 You can plot multiple series on the same radar.
 
-{{"demo": "MultiSeriesRadar.js"}}
+{{"component": "file://./demos/multi-series-radar/index.ts"}}
 
 ## Series options
 
 Set `hideMark` and `fillArea` on a radar series to change how it renders.
 
-{{"demo": "DemoRadarVisualisation.js"}}
+{{"component": "file://./demos/demo-radar-visualisation/index.ts"}}
 
 ## Metrics
 
@@ -47,7 +47,7 @@ Each item can be:
   - `min`: minimum value for this axis (default 0)
   - `max`: maximum value for this axis (default is the max value in the data)
 
-{{"demo": "RadarAxis.js"}}
+{{"component": "file://./demos/radar-axis/index.ts"}}
 
 ## Grid
 
@@ -59,7 +59,7 @@ Configure it with:
 - `shape`: `circular` or `sharp`
 - `stripeColor`: callback that returns stripe colors. Set to `null` to remove stripes.
 
-{{"demo": "DemoRadar.js"}}
+{{"component": "file://./demos/demo-radar/index.ts"}}
 
 ## Axis values
 
@@ -71,7 +71,7 @@ It needs a `metric` prop and can be configured with:
 - `divisions`: number of labels
 - `textAnchor` / `dominantBaseline`: label placement (string or function that receives the angle in degrees)
 
-{{"demo": "DemoRadarAxis.js"}}
+{{"component": "file://./demos/demo-radar-axis/index.ts"}}
 
 ## Highlight
 
@@ -80,7 +80,7 @@ It needs a `metric` prop and can be configured with:
 By default, the radar chart highlights all values on the same axis.
 If you're composing a custom component, add `RadarAxisHighlight` to get this behavior.
 
-{{"demo": "DemoRadarAxisHighlight.js"}}
+{{"component": "file://./demos/demo-radar-axis-highlight/index.ts"}}
 
 ### Series highlight
 
@@ -92,7 +92,7 @@ If you're composing a custom component, pass these props to `RadarDataProvider`.
 The demo below shows controlled highlight with several overlapping country series.
 Place the series you want to be most interactive last in the `series` array, since later series render on top and receive pointer events first in overlapping regions.
 
-{{"demo": "DemoRadarSeriesHighlight.js"}}
+{{"component": "file://./demos/demo-radar-series-highlight/index.ts"}}
 
 ### Disabling highlight
 
@@ -109,7 +109,7 @@ The `trigger` prop of the tooltip slot accepts:
 - `'item'`: when the pointer is over a radar area, the tooltip shows data for that series.
 - `'none'`: tooltip is off.
 
-{{"demo": "RadarTooltip.js"}}
+{{"component": "file://./demos/radar-tooltip/index.ts"}}
 
 ## Click events
 
@@ -128,7 +128,7 @@ const clickHandler = (
 ) => {};
 ```
 
-{{"demo": "RadarClick.js"}}
+{{"component": "file://./demos/radar-click/index.ts"}}
 
 :::info
 The `event` passed to `onAxisClick` differs from the others.
@@ -159,7 +159,7 @@ In addition to the shared chart components available for [composition](/x/react-
 `RadarSeriesArea` and `RadarSeriesMarks` let you draw all marks above all areas, or insert components between areas and marks.
 :::
 
-{{"demo": "CompositionExample.js"}}
+{{"component": "file://./demos/composition-example/index.ts"}}
 
 Here's how the radar chart is composed:
 
