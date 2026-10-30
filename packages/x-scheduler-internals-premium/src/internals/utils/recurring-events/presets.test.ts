@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { PlainDate } from '@mui/x-scheduler-internals/internals';
+import { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import { getMonthlyReference, getWeeklyDays } from './presets';
 
 describe('recurring-events/presets', () => {
   describe('getWeeklyDays', () => {
     it('returns 7 contiguous days starting on Sunday when weekStartsOn=7', () => {
-      const visiblePlainDate = PlainDate.from('2025-07-09'); // Wednesday
+      const visiblePlainDate = BaseTemporal.PlainDate.from('2025-07-09'); // Wednesday
       const days = getWeeklyDays(visiblePlainDate, 7);
 
       expect(days).to.have.length(7);
@@ -23,7 +23,7 @@ describe('recurring-events/presets', () => {
     });
 
     it('returns days starting on Monday when weekStartsOn=1', () => {
-      const visiblePlainDate = PlainDate.from('2025-07-09'); // Wednesday
+      const visiblePlainDate = BaseTemporal.PlainDate.from('2025-07-09'); // Wednesday
       const days = getWeeklyDays(visiblePlainDate, 1);
 
       expect(days).to.have.length(7);
@@ -33,7 +33,7 @@ describe('recurring-events/presets', () => {
     });
 
     it('returns days starting on Friday when weekStartsOn=5', () => {
-      const days = getWeeklyDays(PlainDate.from('2011-12-31'), 5); // Saturday
+      const days = getWeeklyDays(BaseTemporal.PlainDate.from('2011-12-31'), 5); // Saturday
 
       expect(days.map((d) => d.code)).to.deep.equal(['FR', 'SA', 'SU', 'MO', 'TU', 'WE', 'TH']);
       expect(days[0].date).toEqualPlainDate('2011-12-30');
@@ -42,7 +42,7 @@ describe('recurring-events/presets', () => {
 
   describe('getMonthlyReference', () => {
     it('returns the day of the month, the weekday code and the ordinal', () => {
-      const ref = getMonthlyReference(PlainDate.from('2025-07-15')); // 3rd Tuesday of July 2025
+      const ref = getMonthlyReference(BaseTemporal.PlainDate.from('2025-07-15')); // 3rd Tuesday of July 2025
 
       expect(ref.dayOfMonth).to.equal(15);
       expect(ref.code).to.equal('TU');

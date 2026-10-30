@@ -26,6 +26,7 @@ import {
   formatTime,
   formatWeekdayMonthAndDayOfMonth,
   formatWeekdayShort,
+  getDayNumber,
   getDisplayedHourRange,
   getEndOfDayMs,
   getInitialScrollTime,
@@ -402,8 +403,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       // `days[0].timestamp` is the first instant of the first day.
       start: days[0].timestamp,
       end: getEndOfDayMs(lastDay.timestamp, displayTimezone),
-      firstDayNumber: days[0].plainDate.dayNumber,
-      lastDayNumber: lastDay.plainDate.dayNumber,
+      firstDayNumber: getDayNumber(days[0].plainDate),
+      lastDayNumber: getDayNumber(lastDay.plainDate),
     };
   }, [days, displayTimezone]);
 

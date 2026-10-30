@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { adapter } from 'test/utils/scheduler';
-import { PlainDate } from './base-temporal/PlainDate';
+import { BaseTemporal } from './base-temporal';
 import { getPlainDateWeekStart, getWeekNumber } from './date-utils';
 import { normalizeAllDayBounds } from './plain-date-utils/adapter';
 
-const wednesdayPlainDate = PlainDate.from('2025-01-08');
+const wednesdayPlainDate = BaseTemporal.PlainDate.from('2025-01-08');
 
 describe('date-utils', () => {
   describe('normalizeAllDayBounds', () => {
@@ -76,31 +76,31 @@ describe('date-utils', () => {
       expect(getWeekNumber(wednesdayPlainDate, { firstDay: 1, minimalDays: 4 })).to.equal(2);
       // Wednesday, January 1st, 2025 is in the week of Monday, December 30th, 2024, whose
       // Thursday is in 2025.
-      expect(getWeekNumber(PlainDate.from('2025-01-01'), { firstDay: 1, minimalDays: 4 })).to.equal(
-        1,
-      );
+      expect(
+        getWeekNumber(BaseTemporal.PlainDate.from('2025-01-01'), { firstDay: 1, minimalDays: 4 }),
+      ).to.equal(1);
       // Monday, December 29th, 2025 starts a week whose Thursday is in 2026.
-      expect(getWeekNumber(PlainDate.from('2025-12-29'), { firstDay: 1, minimalDays: 4 })).to.equal(
-        1,
-      );
+      expect(
+        getWeekNumber(BaseTemporal.PlainDate.from('2025-12-29'), { firstDay: 1, minimalDays: 4 }),
+      ).to.equal(1);
       // Friday, January 1st, 2027 is in the week of Monday, December 28th, 2026, whose Thursday is
       // in 2026.
-      expect(getWeekNumber(PlainDate.from('2027-01-01'), { firstDay: 1, minimalDays: 4 })).to.equal(
-        53,
-      );
+      expect(
+        getWeekNumber(BaseTemporal.PlainDate.from('2027-01-01'), { firstDay: 1, minimalDays: 4 }),
+      ).to.equal(53);
     });
 
     it('starts the first week of a year on the week of January 1 with 1 minimal day', () => {
       // The weeks of the United States start on Sunday, and January 1st is in their first week.
-      expect(getWeekNumber(PlainDate.from('2027-01-01'), { firstDay: 7, minimalDays: 1 })).to.equal(
-        1,
-      );
-      expect(getWeekNumber(PlainDate.from('2026-12-26'), { firstDay: 7, minimalDays: 1 })).to.equal(
-        52,
-      );
-      expect(getWeekNumber(PlainDate.from('2026-12-27'), { firstDay: 7, minimalDays: 1 })).to.equal(
-        1,
-      );
+      expect(
+        getWeekNumber(BaseTemporal.PlainDate.from('2027-01-01'), { firstDay: 7, minimalDays: 1 }),
+      ).to.equal(1);
+      expect(
+        getWeekNumber(BaseTemporal.PlainDate.from('2026-12-26'), { firstDay: 7, minimalDays: 1 }),
+      ).to.equal(52);
+      expect(
+        getWeekNumber(BaseTemporal.PlainDate.from('2026-12-27'), { firstDay: 7, minimalDays: 1 }),
+      ).to.equal(1);
       // Sunday, January 5th, 2025 starts the second week of 2025.
       expect(getWeekNumber(wednesdayPlainDate, { firstDay: 7, minimalDays: 1 })).to.equal(2);
     });
@@ -108,19 +108,23 @@ describe('date-utils', () => {
     it('keeps the first week of the year when the weeks start on another day', () => {
       // The first week of the United States holds January 1st, whatever day the weeks start on.
       const mondayWeekInfo = { firstDay: 1, minimalDays: 1 } as const;
-      expect(getWeekNumber(PlainDate.from('2026-12-27'), mondayWeekInfo)).to.equal(52);
-      expect(getWeekNumber(PlainDate.from('2026-12-28'), mondayWeekInfo)).to.equal(1);
-      expect(getWeekNumber(PlainDate.from('2027-01-01'), mondayWeekInfo)).to.equal(1);
+      expect(getWeekNumber(BaseTemporal.PlainDate.from('2026-12-27'), mondayWeekInfo)).to.equal(52);
+      expect(getWeekNumber(BaseTemporal.PlainDate.from('2026-12-28'), mondayWeekInfo)).to.equal(1);
+      expect(getWeekNumber(BaseTemporal.PlainDate.from('2027-01-01'), mondayWeekInfo)).to.equal(1);
       const saturdayWeekInfo = { firstDay: 6, minimalDays: 1 } as const;
-      expect(getWeekNumber(PlainDate.from('2026-12-25'), saturdayWeekInfo)).to.equal(52);
-      expect(getWeekNumber(PlainDate.from('2026-12-26'), saturdayWeekInfo)).to.equal(1);
+      expect(getWeekNumber(BaseTemporal.PlainDate.from('2026-12-25'), saturdayWeekInfo)).to.equal(
+        52,
+      );
+      expect(getWeekNumber(BaseTemporal.PlainDate.from('2026-12-26'), saturdayWeekInfo)).to.equal(
+        1,
+      );
     });
 
     it('returns week 48 for 2012-11-23 with weekStartsOn=5 (Fri)', () => {
       // Fri-week 1 of 2012 starts on Friday, December 30th, 2011, and holds January 4th.
-      expect(getWeekNumber(PlainDate.from('2012-11-23'), { firstDay: 5, minimalDays: 4 })).to.equal(
-        48,
-      );
+      expect(
+        getWeekNumber(BaseTemporal.PlainDate.from('2012-11-23'), { firstDay: 5, minimalDays: 4 }),
+      ).to.equal(48);
     });
   });
 

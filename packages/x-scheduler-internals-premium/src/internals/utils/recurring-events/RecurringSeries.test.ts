@@ -4,6 +4,7 @@ import type {
   RecurringEventByDayValue,
   SchedulerProcessedEventRecurrenceRule,
   TemporalSupportedObject,
+  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
@@ -104,6 +105,31 @@ describe('recurring-events/RecurringSeries', () => {
     });
   });
 
+  describe('UNTIL and exDates after 9999', () => {
+    it('should read them in a timezone east of UTC', () => {
+      // December 31st, 9999, a common "no end date", is already January 1st, 10000 in Tokyo.
+      const lastInstant = adapter.date('9999-12-31T23:59:59Z', 'UTC');
+      const getLastDays = (timezone: TemporalTimezone, exDates: TemporalSupportedObject[]) => {
+        const series = new RecurringSeries(adapter, {
+          rule: { freq: 'DAILY', until: lastInstant },
+          start: adapter.getTime(adapter.date('2026-01-05T09:00:00Z', 'UTC')),
+          timezone,
+          exDates,
+        });
+        return series
+          .getOccurrenceDays(
+            buildTemporalPlainDate(adapter, adapter.date('9999-12-31T00:00:00', 'UTC')),
+            buildTemporalPlainDate(adapter, adapter.date('+010000-01-02T00:00:00', 'UTC')),
+          )
+          .map((day) => day.toString());
+      };
+
+      expect(getLastDays('Asia/Tokyo', [])).to.deep.equal(['9999-12-31', '+010000-01-01']);
+      expect(getLastDays('Asia/Tokyo', [lastInstant])).to.deep.equal(['9999-12-31']);
+      expect(getLastDays('UTC', [])).to.deep.equal(['9999-12-31']);
+    });
+  });
+
   describe('last supported day', () => {
     it('should end every frequency on September 13, 275760', () => {
       const lastYear = ['+275760-01-01T00:00:00', '+275760-09-13T00:00:00'] as const;
@@ -140,6 +166,21 @@ describe('recurring-events/RecurringSeries', () => {
           '+275760-09-08T00:00:00',
           '+275760-09-13T00:00:00',
         ),
+      ).to.deep.equal([]);
+      // The 20th and the 3rd Sunday of September 275760 are after the 13th.
+      const september = ['+275760-09-01T00:00:00', '+275760-09-13T00:00:00'] as const;
+      expect(
+        getOccurrenceDays({ freq: 'MONTHLY' }, '+275760-08-20T09:00:00', ...september),
+      ).to.deep.equal([]);
+      expect(
+        getOccurrenceDays(
+          { freq: 'MONTHLY', byDay: ['3SU'] },
+          '+275760-08-17T09:00:00',
+          ...september,
+        ),
+      ).to.deep.equal([]);
+      expect(
+        getOccurrenceDays({ freq: 'YEARLY' }, '+275759-09-20T09:00:00', ...september),
       ).to.deep.equal([]);
       // September 275760 has no 5th Sunday before the 13th, and August 31st is the last one.
       const series = new RecurringSeries(adapter, {
@@ -198,6 +239,17 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(),
+          adapter.date('2025-03-10', 'UTC'),
+          adapter.date('2025-03-09T23:59:59', 'UTC'),
+          100,
+        ),
+      ).to.equal(100);
+    });
+
+    it('should return count when target is before start with an interval of millennia', () => {
+      expect(
+        countRemaining(
+          createRule(1_000_000),
           adapter.date('2025-03-10', 'UTC'),
           adapter.date('2025-03-09T23:59:59', 'UTC'),
           100,
