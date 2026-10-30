@@ -88,7 +88,7 @@ function translation(element: Element) {
   return { x: matrix.m41, y: matrix.m42 };
 }
 
-// Two frames: the scroll-driven animations pick up a new scroll position in the next one.
+// Two frames: the scroll-driven animations start, or pick up a new scroll position, in the next one.
 function waitForFrames() {
   return act(
     () =>
@@ -107,6 +107,7 @@ async function renderAndWaitForBuild(
   await waitFor(() => {
     expect(getUnderlayContent.mock.calls.length).to.be.greaterThan(0);
   });
+  await waitForFrames();
 }
 
 async function stopAt(
