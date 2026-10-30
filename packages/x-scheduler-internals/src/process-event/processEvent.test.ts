@@ -41,6 +41,19 @@ describe('processEvent', () => {
       );
     });
 
+    it('should read an end after 9999 in a timezone east of UTC', () => {
+      // December 31st, 9999, a common "no end date", is already January 1st, 10000 in Tokyo.
+      const event = EventBuilder.new(adapter)
+        .withDataTimezone('Asia/Tokyo')
+        .span('2025-01-01T10:00:00Z', '9999-12-31T23:30:00Z')
+        .build();
+
+      const processed = processEvent(event, 'Asia/Tokyo', adapter);
+
+      expect(processed.dataTimezone.end.key).to.equal('+010000-01-01');
+      expect(processed.displayTimezone.end.key).to.equal('+010000-01-01');
+    });
+
     it('should convert exDates to the display timezone', () => {
       const event = EventBuilder.new(adapter).exDates(['2025-01-05T00:00:00Z']).build();
       const processed = processEvent(event, 'America/New_York', adapter);

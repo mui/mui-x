@@ -501,9 +501,11 @@ export class RecurringSeries {
     const period = Math.floor(dayNumber / SKIPPED_DAYS_PERIOD);
     let skippedDays = this.skippedDaysByPeriod.get(period);
     if (skippedDays === undefined) {
+      // The last period stops at the last supported day, which no timezone skips: the day after it
+      // has no plain date.
       skippedDays = getSkippedDays(
         plainDateFromDayNumber(period * SKIPPED_DAYS_PERIOD),
-        plainDateFromDayNumber((period + 1) * SKIPPED_DAYS_PERIOD),
+        plainDateFromDayNumber(Math.min((period + 1) * SKIPPED_DAYS_PERIOD, LAST_SUPPORTED_DAY)),
         this.timezone,
       );
       this.skippedDaysByPeriod.set(period, skippedDays);

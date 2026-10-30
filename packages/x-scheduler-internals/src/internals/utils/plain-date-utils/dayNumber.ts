@@ -50,9 +50,10 @@ export function dayNumberToIsoDate(dayNumber: number): {
 }
 
 /**
- * The day number of the last day `BaseTemporal.PlainDate` supports, December 31st, 9999.
+ * The day number of the last day `BaseTemporal.PlainDate` supports, September 13th, 275760, the
+ * last day of `Date`.
  */
-export const LAST_SUPPORTED_DAY = /* #__PURE__ */ isoDateToDayNumber(9999, 12, 31);
+export const LAST_SUPPORTED_DAY = 100_000_000;
 
 function getDaysInIsoMonth(year: number, month: number): number {
   if (month === 2) {

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { BaseTemporal } from '../base-temporal';
+import { LAST_SUPPORTED_DAY } from './dayNumber';
 import {
   getDayNumber,
   getPlainDateKey,
@@ -14,12 +15,13 @@ describe('plainDateFromDayNumber', () => {
     expect(plainDateFromDayNumber(20_000).calendarId).to.equal('iso8601');
   });
 
-  it('should return the same plain date for a day number', () => {
+  it('should return the same instance for a day number', () => {
     expect(plainDateFromDayNumber(20_000)).to.equal(plainDateFromDayNumber(20_000));
   });
 
-  it('should throw for a day after the supported dates', () => {
-    expect(() => plainDateFromDayNumber(3_000_000)).to.throw();
+  it('should throw for a day after the last supported day', () => {
+    expect(plainDateFromDayNumber(LAST_SUPPORTED_DAY)).toEqualPlainDate('+275760-09-13');
+    expect(() => plainDateFromDayNumber(LAST_SUPPORTED_DAY + 1)).to.throw();
   });
 });
 

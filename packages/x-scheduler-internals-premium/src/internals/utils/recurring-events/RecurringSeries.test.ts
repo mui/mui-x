@@ -104,6 +104,26 @@ describe('recurring-events/RecurringSeries', () => {
     });
   });
 
+  describe('UNTIL and exDates after 9999', () => {
+    it('should read them in a timezone east of UTC', () => {
+      // December 31st, 9999, a common "no end date", is already January 1st, 10000 in Tokyo.
+      const lastInstant = adapter.date('9999-12-31T23:59:59Z', 'UTC');
+      const series = new RecurringSeries(adapter, {
+        rule: { freq: 'DAILY', until: lastInstant },
+        start: adapter.getTime(adapter.date('2026-01-05T09:00:00Z', 'UTC')),
+        timezone: 'Asia/Tokyo',
+        exDates: [lastInstant],
+      });
+      const days = series.getOccurrenceDays(
+        buildTemporalPlainDate(adapter, adapter.date('2026-01-05T00:00:00', 'UTC')),
+        buildTemporalPlainDate(adapter, adapter.date('2026-01-06T00:00:00', 'UTC')),
+      );
+
+      expect(days.map((day) => day.toString())).to.deep.equal(['2026-01-05', '2026-01-06']);
+      expect(series.hasOccurrence()).to.equal(true);
+    });
+  });
+
   describe('last supported day', () => {
     it('should end every frequency on September 13, 275760', () => {
       const lastYear = ['+275760-01-01T00:00:00', '+275760-09-13T00:00:00'] as const;

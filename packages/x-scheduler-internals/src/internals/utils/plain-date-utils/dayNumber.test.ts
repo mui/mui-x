@@ -18,12 +18,8 @@ function getUtcMidnight(year: number, month: number, day: number) {
 
 describe('dayNumber', () => {
   describe('isoDateToDayNumber and dayNumberToIsoDate', () => {
-    it('should count the days from January 1st, 1970, on every day of the supported years', () => {
-      for (
-        let dayNumber = isoDateToDayNumber(0, 1, 1);
-        dayNumber <= LAST_SUPPORTED_DAY;
-        dayNumber += 1
-      ) {
+    it('should count the days from January 1st, 1970, like Date', () => {
+      const checkDay = (dayNumber: number) => {
         const isoDate = dayNumberToIsoDate(dayNumber);
         if (getUtcMidnight(isoDate.year, isoDate.month, isoDate.day) !== dayNumber * MS_PER_DAY) {
           throw new Error(`Day ${dayNumber} reads as ${JSON.stringify(isoDate)}.`);
@@ -31,14 +27,32 @@ describe('dayNumber', () => {
         if (isoDateToDayNumber(isoDate.year, isoDate.month, isoDate.day) !== dayNumber) {
           throw new Error(`Day ${dayNumber} doesn't round trip.`);
         }
+      };
+      // Every day of the years 0 to 9999, then every 9973rd day of `Date`, a prime step.
+      const lastDayOf9999 = isoDateToDayNumber(9999, 12, 31);
+      for (
+        let dayNumber = isoDateToDayNumber(0, 1, 1);
+        dayNumber <= lastDayOf9999;
+        dayNumber += 1
+      ) {
+        checkDay(dayNumber);
       }
+      for (
+        let dayNumber = -LAST_SUPPORTED_DAY;
+        dayNumber <= LAST_SUPPORTED_DAY;
+        dayNumber += 9973
+      ) {
+        checkDay(dayNumber);
+      }
+      checkDay(LAST_SUPPORTED_DAY);
       expect(isoDateToDayNumber(1970, 1, 1)).to.equal(0);
       expect(dayNumberToIsoDate(-1)).to.deep.equal({ year: 1969, month: 12, day: 31 });
       expect(dayNumberToIsoDate(LAST_SUPPORTED_DAY)).to.deep.equal({
-        year: 9999,
-        month: 12,
-        day: 31,
+        year: 275760,
+        month: 9,
+        day: 13,
       });
+      expect(isoDateToDayNumber(-271821, 4, 20)).to.equal(-LAST_SUPPORTED_DAY);
     });
   });
 
