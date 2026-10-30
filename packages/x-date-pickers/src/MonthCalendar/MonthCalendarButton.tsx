@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import * as materialStyles from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
@@ -72,6 +73,13 @@ const DefaultMonthButton = styled('button', {
       (theme.vars || theme).palette.action.hoverOpacity,
     ),
   },
+  ...(theme.focusVisible && {
+    '&:focus-visible': {
+      backgroundColor: 'transparent',
+      ...materialStyles.private_outsetFocusRing,
+      ...theme.focusVisible,
+    },
+  }),
   '&:hover': {
     backgroundColor: theme.alpha(
       (theme.vars || theme).palette.action.active,

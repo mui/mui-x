@@ -430,6 +430,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/style-recipes', title: 'Styling recipes' },
           { pathname: '/x/react-data-grid/overlays' },
           { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
+          { pathname: '/x/react-data-grid/focus-visible', newFeature: true },
         ],
       },
       {
@@ -665,6 +666,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/custom-field' },
           { pathname: '/x/react-date-pickers/custom-opening-button' },
           { pathname: '/x/react-date-pickers/playground', title: 'Customization playground' },
+          { pathname: '/x/react-date-pickers/focus-visible', newFeature: true },
         ],
       },
       {
@@ -938,6 +940,7 @@ const pages: MuiPage[] = [
         children: [
           { pathname: '/x/react-tree-view/accessibility' },
           { pathname: '/x/react-tree-view/tree-item-customization', title: 'Item customization' },
+          { pathname: '/x/react-tree-view/focus-visible', newFeature: true },
         ],
       },
       {

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import * as materialStyles from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -64,9 +65,18 @@ export const TreeItemContent = styled('div', {
     backgroundColor: 'transparent',
     cursor: 'auto',
   },
-  '&[data-focused]': {
-    backgroundColor: (theme.vars || theme).palette.action.focus,
-  },
+  ...(theme.focusVisible
+    ? {
+        '[role="treeitem"]:focus-visible > &': {
+          ...materialStyles.private_applyInsetFocusVisible?.(1),
+          ...theme.focusVisible,
+        },
+      }
+    : {
+        '&[data-focused]': {
+          backgroundColor: (theme.vars || theme).palette.action.focus,
+        },
+      }),
   '&[data-selected]': {
     backgroundColor: theme.alpha(
       (theme.vars || theme).palette.primary.main,
@@ -86,12 +96,14 @@ export const TreeItemContent = styled('div', {
       },
     },
   },
-  '&[data-selected][data-focused]': {
-    backgroundColor: theme.alpha(
-      (theme.vars || theme).palette.primary.main,
-      `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.focusOpacity}`,
-    ),
-  },
+  ...(!theme.focusVisible && {
+    '&[data-selected][data-focused]': {
+      backgroundColor: theme.alpha(
+        (theme.vars || theme).palette.primary.main,
+        `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.focusOpacity}`,
+      ),
+    },
+  }),
 }));
 
 export const TreeItemLabel = styled('div', {

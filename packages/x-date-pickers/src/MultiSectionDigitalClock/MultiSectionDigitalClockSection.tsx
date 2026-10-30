@@ -2,6 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
+import * as materialStyles from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
@@ -116,13 +117,20 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
     '&:focus-visible, &:hover': {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
+    ...(theme.focusVisible && {
+      '&.Mui-focusVisible': materialStyles.private_applyChildrenFocusVisible?.(
+        `0 0 0 4px ${(theme.vars || theme).palette.primary.contrastText}`,
+      ),
+    }),
   },
-  '&.Mui-focusVisible': {
-    backgroundColor: theme.alpha(
-      (theme.vars || theme).palette.primary.main,
-      (theme.vars || theme).palette.action.focusOpacity,
-    ),
-  },
+  ...(!theme.focusVisible && {
+    '&.Mui-focusVisible': {
+      backgroundColor: theme.alpha(
+        (theme.vars || theme).palette.primary.main,
+        (theme.vars || theme).palette.action.focusOpacity,
+      ),
+    },
+  }),
 }));
 
 type MultiSectionDigitalClockSectionComponent = <TSectionValue extends number | string>(
