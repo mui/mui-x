@@ -61,10 +61,13 @@ export const useGridPipeProcessing = (apiRef: RefObject<GridPrivateApiCommon>) =
       return;
     }
     isRunning.current = true;
-    Object.values(groupCache.appliers).forEach((callback) => {
-      callback();
-    });
-    isRunning.current = false;
+    try {
+      Object.values(groupCache.appliers).forEach((callback) => {
+        callback();
+      });
+    } finally {
+      isRunning.current = false;
+    }
   }, []);
 
   const registerPipeProcessor = React.useCallback<
