@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import {
   GridShadowScrollArea,
   getDataGridUtilityClass,
+  gridClasses,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
@@ -16,8 +17,10 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridPivotPanelField } from './GridPivotPanelField';
 import { Collapsible, CollapsiblePanel, CollapsibleTrigger } from '../collapsible';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
+import { usePanelFieldPointerDrag } from '../../hooks/utils/usePanelFieldPointerDrag';
 import { ResizablePanel, ResizablePanelHandle } from '../resizablePanel';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import type { DropPosition } from '../../hooks/features/pivoting/gridPivotingInterfaces';
 
 type OwnerState = DataGridPremiumProcessedProps;
 
@@ -142,7 +145,18 @@ export interface FieldTransferObject {
   modelKey: 'columns' | 'rows' | 'values' | null;
 }
 
-const INITIAL_DRAG_STATE = { active: false, dropZone: null, initialModelKey: null };
+const INITIAL_DRAG_STATE = {
+  active: false,
+  dropZone: null,
+  initialModelKey: null,
+  targetField: null,
+  targetPosition: null,
+};
+
+// The zones a field can be dropped on: the available fields, and the sections of the pivot model
+const ZONE_SELECTOR = `.${gridClasses.pivotPanelAvailableFields}, .${gridClasses.pivotPanelSection}`;
+const FIELD_SELECTOR = `.${gridClasses.pivotPanelField}`;
+const SCROLL_AREA_SELECTOR = `.${gridClasses.pivotPanelAvailableFields}, .${gridClasses.pivotPanelScrollArea}`;
 
 function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
   const apiRef = useGridPrivateApiContext();
@@ -153,6 +167,9 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
     active: boolean;
     dropZone: FieldTransferObject['modelKey'];
     initialModelKey: FieldTransferObject['modelKey'];
+    // The drop indicator of a touch or pen drag. Mouse drags keep it in the field, from HTML drag and drop events.
+    targetField: string | null;
+    targetPosition: DropPosition;
   }>(INITIAL_DRAG_STATE);
   const pivotModel = useGridSelector(apiRef, gridPivotModelSelector);
   const classes = useUtilityClasses(rootProps);
@@ -188,12 +205,52 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
   }, [searchValue, fields, getColumnName, pivotModelFields, initialColumns]);
 
   const handleDragStart = (modelKey: FieldTransferObject['modelKey']) => {
-    setDrag({ active: true, initialModelKey: modelKey, dropZone: null });
+    setDrag({ ...INITIAL_DRAG_STATE, active: true, initialModelKey: modelKey });
   };
 
   const handleDragEnd = () => {
     setDrag(INITIAL_DRAG_STATE);
   };
+
+  // Touch and pen drags, with the drop rules of the HTML drag and drop handlers below
+  usePanelFieldPointerDrag<FieldTransferObject['modelKey']>({
+    apiRef,
+    zoneSelector: ZONE_SELECTOR,
+    fieldSelector: FIELD_SELECTOR,
+    scrollAreaSelector: SCROLL_AREA_SELECTOR,
+    previewClassName: gridClasses['pivotPanelField--dragging'],
+    onDragStart: (data) => handleDragStart(data.section),
+    onDropTargetChange: (target) => {
+      setDrag((v) => ({
+        ...v,
+        // Outside of the zones, the section the field comes from is highlighted, like on `dragleave`
+        dropZone: target ? target.section : v.initialModelKey,
+        targetField: target?.field ?? null,
+        targetPosition: target?.position ?? null,
+      }));
+    },
+    onDrop: (data, target) => {
+      if (target.field !== null) {
+        apiRef.current.updatePivotModel({
+          field: data.field,
+          targetField: target.field,
+          targetFieldPosition: target.position,
+          originSection: data.section,
+          targetSection: target.section,
+        });
+      } else if (target.section !== data.section) {
+        apiRef.current.updatePivotModel({
+          field: data.field,
+          targetSection: target.section,
+          originSection: data.section,
+        });
+      }
+    },
+    onDragEnd: handleDragEnd,
+  });
+
+  const getPointerDropPosition = (field: string) =>
+    drag.targetField === field ? drag.targetPosition : null;
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     setDrag(INITIAL_DRAG_STATE);
@@ -271,6 +328,7 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
                 modelKey={null}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
+                pointerDropPosition={getPointerDropPosition(field)}
               >
                 {getColumnName(field)}
               </GridPivotPanelField>
@@ -317,9 +375,9 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
                       field={modelValue.field}
                       modelKey="rows"
                       modelValue={modelValue}
-                      data-field={modelValue.field}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
+                      pointerDropPosition={getPointerDropPosition(modelValue.field)}
                     >
                       {getColumnName(modelValue.field)}
                     </GridPivotPanelField>
@@ -362,6 +420,7 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
                       modelValue={modelValue}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
+                      pointerDropPosition={getPointerDropPosition(modelValue.field)}
                     >
                       {getColumnName(modelValue.field)}
                     </GridPivotPanelField>
@@ -404,6 +463,7 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
                       modelValue={modelValue}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
+                      pointerDropPosition={getPointerDropPosition(modelValue.field)}
                     >
                       {getColumnName(modelValue.field)}
                     </GridPivotPanelField>

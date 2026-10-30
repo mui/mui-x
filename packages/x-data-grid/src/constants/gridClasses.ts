@@ -1015,6 +1015,10 @@ export interface GridClasses {
    */
   'pivotPanelField--sorted': string;
   /**
+   * Styles applied to the drag preview of a pivot panel field when it's dragged with touch or pen.
+   */
+  'pivotPanelField--dragging': string;
+  /**
    * Styles applied to the pivot panel header.
    */
   pivotPanelHeader: string;
@@ -1409,9 +1413,11 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'virtualScrollerContent',
   'virtualScrollerContent--overflowed',
   'virtualScrollerRenderZone',
+  'pivotPanelBody',
   'pivotPanelAvailableFields',
   'pivotPanelField',
   'pivotPanelField--sorted',
+  'pivotPanelField--dragging',
   'pivotPanelFieldActionContainer',
   'pivotPanelFieldCheckbox',
   'pivotPanelFieldDragIcon',
