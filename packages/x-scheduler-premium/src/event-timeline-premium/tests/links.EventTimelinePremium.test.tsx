@@ -83,6 +83,31 @@ describe('EventTimelinePremium - Event links', () => {
     expect(link.closest(`[data-resource-id="${engineering.id}"]`)).not.to.equal(null);
   });
 
+  it('should render the event as a link when the timeline is read-only', async () => {
+    const event = EventBuilder.new()
+      .title('Order 1042')
+      .singleDay('2025-07-03T09:00:00Z', 60)
+      .resource(engineering)
+      .href(HREF)
+      .build();
+    await renderTimeline({ events: [event], readOnly: true });
+
+    expect(getLink()).to.have.attribute('href', HREF);
+  });
+
+  it('should render the event as a link when its resource is read-only', async () => {
+    const resource = ResourceBuilder.new().areEventsReadOnly().build();
+    const event = EventBuilder.new()
+      .title('Order 1042')
+      .singleDay('2025-07-03T09:00:00Z', 60)
+      .resource(resource)
+      .href(HREF)
+      .build();
+    await renderTimeline({ resources: [resource], events: [event] });
+
+    expect(getLink()).to.have.attribute('href', HREF);
+  });
+
   it('should ignore the href of an editable event and warn', async () => {
     const event = EventBuilder.new()
       .title('Order 1042')

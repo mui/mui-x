@@ -195,7 +195,7 @@ describe('EventCalendar - Event links', () => {
       expect(screen.queryByRole('dialog')).to.equal(null);
     });
 
-    it('should keep the native navigation on click', () => {
+    it('should not prevent the native navigation on click', () => {
       render(<EventCalendar events={[timedEvent]} />);
 
       // `fireEvent` returns `false` when a handler prevented the default behavior.

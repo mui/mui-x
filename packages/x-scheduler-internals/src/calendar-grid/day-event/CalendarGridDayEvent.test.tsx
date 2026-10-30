@@ -135,4 +135,23 @@ describe('<CalendarGrid.DayEvent />', () => {
     // An `<a href>` is focusable by default, so the roving `tabIndex` must be set explicitly.
     expect(event).to.have.attribute('tabindex', '-1');
   });
+
+  it('should render a button when the href is empty', () => {
+    renderEvent(
+      <CalendarGrid.DayEvent
+        eventId="fake-id"
+        occurrenceKey="fake-key"
+        dataTimezone={undefined}
+        start={eventStart}
+        end={eventEnd}
+        renderDragPreview={() => null}
+        href=""
+        data-testid="event"
+      />,
+    );
+
+    const event = screen.getByTestId('event');
+    expect(event.tagName).to.equal('DIV');
+    expect(event).to.have.attribute('role', 'button');
+  });
 });

@@ -140,11 +140,11 @@ The Resources sidebar uses the [MUI X Rich Tree View](/x/react-tree-view/) inte
 
 ### Menus and popovers
 
-|                          Keys | Description                                                                                                             |
-| ----------------------------: | :---------------------------------------------------------------------------------------------------------------------- |
-| <kbd class="key">Escape</kbd> | Closes the View Switcher menu, Preferences menu, More Events popover, event context menu, or delete confirmation dialog |
-|  <kbd class="key">Enter</kbd> | Activates (opens) a focused event                                                                                       |
-|  <kbd class="key">Space</kbd> | Opens the [event context menu](#event-context-menu) for a focused event (mouse/trackpad only — see below)               |
+|                          Keys | Description                                                                                                                                 |
+| ----------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------ |
+| <kbd class="key">Escape</kbd> | Closes the View Switcher menu, Preferences menu, More Events popover, event context menu, or delete confirmation dialog                     |
+|  <kbd class="key">Enter</kbd> | Activates (opens) a focused event, or follows the link of a link event                                                                      |
+|  <kbd class="key">Space</kbd> | Opens the [event context menu](#event-context-menu) for a focused event (mouse/trackpad only — see below), and does nothing on a link event |
 
 ## Live region announcements
 

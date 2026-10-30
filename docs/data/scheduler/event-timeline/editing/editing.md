@@ -91,14 +91,14 @@ The General tab can be recomposed with built-in and custom sections through the 
 {{"demo": "EventDialog.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
-Events with `readOnly: true` (or belonging to a read-only resource) open the dialog in view-only mode.
+Events with `readOnly: true` (or belonging to a read-only resource) open the dialog in view-only mode, unless they have an [`href`](/x/react-scheduler/event-timeline/events/#link): they then render as links and open no dialog.
 :::
 
 ### Replace the dialog with your own UI
 
 Use the `onEventEditingStart` callback to intercept editing right before the built-in dialog opens.
 It fires for every entry point (pointer, keyboard, touch, and event creation).
-`eventDetails.reason` is `"creation"` when the user is creating a new event, `"view"` when the occurrence is read-only (through the event, its resource, or the `readOnly` prop) and the dialog opens in view-only mode, and `"edit"` otherwise.
+`eventDetails.reason` is `"creation"` when the user is creating a new event, `"view"` when the occurrence is read-only (through the event, its resource, or the `readOnly` prop) and the dialog opens in view-only mode (never for a link event), and `"edit"` otherwise.
 `eventDetails.occurrence` is typed by that reason, so narrowing on it gives you the persisted occurrence fields on `"edit"` and `"view"` and the draft on `"creation"`.
 `eventDetails.anchor` is an element that stays in the DOM after a cancellation, ready to anchor your own popover to; `eventDetails.trigger` identifies the exact activated element, but some flows unmount it right after a canceled activation (the armed toolbar's Edit button, a creation placeholder), so don't position against it.
 Call `eventDetails.cancel()` to keep the built-in dialog closed and open your own editing UI instead:

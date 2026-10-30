@@ -104,7 +104,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     position: elementPosition,
   });
 
-  const isLink = interactive && href != null;
+  // An empty `href` would link to the current page.
+  const isLink = interactive && !!href;
   const tabIndex = columnHasFocus ? 0 : -1;
   const { getButtonProps, buttonRef } = useButton({
     disabled: false,
@@ -157,7 +158,7 @@ export namespace CalendarGridTimeEvent {
       NonNativeButtonProps,
       useDraggableEvent.PublicParameters {
     /**
-     * Whether the event behaves like a button: `role="button"` and a roving `tabIndex`.
+     * Whether the event behaves like a button, or like a link when `href` is set, with a roving `tabIndex`.
      * Set it to `false` for an inert preview (creation / resize placeholder) that
      * only hosts pointer interactions — it then renders a plain `div`, so it is never focusable.
      * @default true

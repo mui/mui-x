@@ -5,7 +5,7 @@ import type {
   SchedulerProcessedDay,
 } from '@mui/x-scheduler-internals/models';
 
-export interface EventItemProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onClick'> {
+export interface EventItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onClick'> {
   onClick?: Button.Props['onClick'];
   /**
    * The event occurrence to render.

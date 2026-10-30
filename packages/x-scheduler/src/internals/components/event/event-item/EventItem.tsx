@@ -2,7 +2,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import type { CSSObject, Theme } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import {
@@ -28,7 +27,14 @@ import { getPaletteVariants } from '../../../utils/tokens';
 import { getArrowEdgeStyles, getArrowFocusVisibleStyles } from '../arrowClips';
 import { isOccurrenceMultiDay } from '../../../utils/event-utils';
 
-const getEventItemCardStyles = (theme: Theme): CSSObject => ({
+const EventItemCard = styled('div', {
+  name: 'MuiEventCalendar',
+  slot: 'EventItemCard',
+})<{
+  'data-variant'?: 'compact' | 'filled' | 'regular';
+  palette?: PaletteName;
+  href?: string;
+}>(({ theme }) => ({
   display: 'block',
   padding: 0,
   borderRadius: theme.shape.borderRadius,
@@ -69,22 +75,7 @@ const getEventItemCardStyles = (theme: Theme): CSSObject => ({
     },
   },
   variants: getPaletteVariants(theme),
-});
-
-type EventItemCardProps = {
-  'data-variant'?: 'compact' | 'filled' | 'regular';
-  palette?: PaletteName;
-};
-
-const EventItemCard = styled('div', {
-  name: 'MuiEventCalendar',
-  slot: 'EventItemCard',
-})<EventItemCardProps>(({ theme }) => getEventItemCardStyles(theme));
-
-const EventItemLinkCard = styled('a', {
-  name: 'MuiEventCalendar',
-  slot: 'EventItemCard',
-})<EventItemCardProps>(({ theme }) => getEventItemCardStyles(theme));
+}));
 
 const EventItemCardWrapper = styled('div', {
   name: 'MuiEventCalendar',
@@ -301,8 +292,9 @@ export const EventItem = React.forwardRef(function EventItem(
 
   if (href != null) {
     return (
-      <EventItemLinkCard
-        ref={forwardedRef as React.Ref<HTMLAnchorElement>}
+      <EventItemCard
+        as="a"
+        ref={forwardedRef}
         href={href}
         // Read by the agenda's delete-focus fallback, which finds the events by their `tabindex`.
         tabIndex={0}
@@ -310,7 +302,7 @@ export const EventItem = React.forwardRef(function EventItem(
         {...cardProps}
       >
         {children}
-      </EventItemLinkCard>
+      </EventItemCard>
     );
   }
 

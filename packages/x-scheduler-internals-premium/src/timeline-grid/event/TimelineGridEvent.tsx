@@ -59,7 +59,11 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     ...elementProps
   } = componentProps;
 
-  const isLink = href != null;
+  // TODO: Expose a real `interactive` prop
+  // to control whether the event should behave like a button
+  const isInteractive = true;
+  // An empty `href` would link to the current page.
+  const isLink = !!href;
 
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
@@ -144,9 +148,8 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   });
 
   const tabIndex = rowHasFocus ? 0 : -1;
-  // TODO: Expose a real `interactive` prop
-  // to control whether the event should behave like a button
   const { getButtonProps, buttonRef } = useButton({
+    disabled: !isInteractive,
     native: nativeButton && !isLink,
     tabIndex,
   });

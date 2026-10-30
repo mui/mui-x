@@ -1446,6 +1446,24 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(store.state.selection).to.equal(null);
     });
 
+    it('should keep the native behavior of a link that is not an event with the click that deselects the arrow', async () => {
+      const { store } = await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+
+      // Like a link rendered by the `timelineResourceTitle` slot.
+      const link = document.createElement('a');
+      link.href = '#resource';
+      document.querySelector('[role="grid"]')!.appendChild(link);
+      fireEvent.pointerDown(link);
+      // `fireEvent` returns `false` when a handler prevented the default behavior.
+      expect(fireEvent.click(link)).to.equal(true);
+      expect(store.state.selection).to.equal(null);
+      link.remove();
+    });
+
     it('should not deselect the arrow when pressing inside a shadow-rooted dialog', async () => {
       const { store } = await renderTimeline({
         events: [eventA, eventB],

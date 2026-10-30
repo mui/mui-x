@@ -130,9 +130,13 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
       // down before the click arrives) and disarm themselves on the click, or on any
       // signal that the press will not produce one (a drag, a canceled pointer, a
       // keystroke).
+      // Only an event link loses its default: a link in a resource title still navigates.
+      const isEventLinkPress = isElement(target) && target.closest('a[data-link]') !== null;
       function swallowClick(clickEvent: MouseEvent) {
         clickEvent.stopPropagation();
-        clickEvent.preventDefault();
+        if (isEventLinkPress) {
+          clickEvent.preventDefault();
+        }
         disarm();
       }
       function disarm() {
