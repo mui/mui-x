@@ -114,23 +114,29 @@ function addMonths(monthStart: number, months: number): number | null {
  *
  * A yearly rule has no BY* part, so it matches the day of DTSTART every 12 × INTERVAL months.
  *
- * The days are day numbers: a series with COUNT steps through all its days since DTSTART on every
- * expansion, and only the days it returns become plain dates.
+ * The days are day numbers: a series with COUNT counts all its days since DTSTART on every
+ * expansion, and only the days it returns become plain dates. The days of a daily or weekly rule
+ * repeat every period, so they're counted without stepping through them.
  */
 class RuleDays {
   /**
    * The step between two periods of the rule, in days, weeks, or months for monthly and yearly
    * rules.
    */
-  declare public readonly interval: number;
+  declare private readonly interval: number;
 
   /**
    * How many months to try before concluding that the rule never matches again.
    */
   declare private readonly maxSearchSteps: number;
 
-  // Weekly-specific: ISO days of the week, sorted from Monday.
-  private weekDays: number[] = [];
+  // Daily and weekly: the rule matches the same days of each period of `periodLength` days from
+  // `periodStart`, at these sorted offsets. Empty for the monthly and yearly rules.
+  private periodOffsets: number[] = [];
+
+  private periodStart: number = 0;
+
+  private periodLength: number = 0;
 
   // Monthly and yearly: byDay (e.g., "2nd Tuesday") or the day of the month (e.g., "the 15th")
   private monthlyByDay: { ord: number; dayOfWeek: number } | null = null;
@@ -138,7 +144,7 @@ class RuleDays {
   private monthlyTargetDay: number = 0;
 
   constructor(
-    public readonly rule: SchedulerProcessedEventRecurrenceRule,
+    rule: SchedulerProcessedEventRecurrenceRule,
     public readonly seriesStart: number,
   ) {
     this.interval = (rule.freq === 'YEARLY' ? 12 : 1) * (rule.interval ?? 1);
@@ -146,13 +152,21 @@ class RuleDays {
 
     switch (rule.freq) {
       case 'DAILY':
+        this.periodOffsets = [0];
+        this.periodStart = seriesStart;
+        this.periodLength = this.interval;
         break;
       case 'WEEKLY': {
-        this.weekDays = (
-          parsesByDayForWeeklyFrequency(rule.byDay)?.map(getDayOfWeekFromCode) ?? [
-            getIsoDayOfWeek(seriesStart),
-          ]
-        ).toSorted((a, b) => a - b);
+        const weekDays = parsesByDayForWeeklyFrequency(rule.byDay)?.map(getDayOfWeekFromCode) ?? [
+          getIsoDayOfWeek(seriesStart),
+        ];
+        this.periodOffsets = Array.from(new Set(weekDays), (weekDay) => weekDay - 1).toSorted(
+          (a, b) => a - b,
+        );
+        // RFC 5545 weeks start on Monday (WKST=MO) whatever the locale, otherwise BYDAY like SU+TU
+        // can go backwards.
+        this.periodStart = getStartOfWeekDayNumber(seriesStart, 1);
+        this.periodLength = 7 * this.interval;
         break;
       }
       default: {
@@ -169,76 +183,84 @@ class RuleDays {
   }
 
   /**
-   * Returns the first day on or after `day`, skipping the whole intervals before it.
+   * Returns the number of days of the rule before `day`, or `null` for the monthly and yearly
+   * rules, whose days are counted by stepping through them.
+   */
+  public countBefore(day: number): number | null {
+    if (this.periodOffsets.length === 0) {
+      return null;
+    }
+    // The days of the first period before DTSTART aren't days of the rule.
+    return Math.max(
+      0,
+      this.countPeriodDaysBefore(day) - this.countPeriodDaysBefore(this.seriesStart),
+    );
+  }
+
+  /**
+   * Returns the day of a daily or weekly rule at `index`, from 0 for the first one.
+   */
+  public getDayAt(index: number): number {
+    const { periodOffsets } = this;
+    const position = index + this.countPeriodDaysBefore(this.seriesStart);
+    const periods = Math.floor(position / periodOffsets.length);
+    return (
+      this.periodStart +
+      periods * this.periodLength +
+      periodOffsets[position - periods * periodOffsets.length]
+    );
+  }
+
+  /**
+   * Returns the first day on or after `day`.
    */
   public getFirstFrom(day: number): number | null {
-    const { interval, seriesStart } = this;
-    const skip = (periods: number) => (periods > 0 ? Math.floor(periods / interval) * interval : 0);
-    const minDay = Math.max(seriesStart, day);
-
-    switch (this.rule.freq) {
-      case 'DAILY': {
-        const first = seriesStart + skip(day - seriesStart);
-        return first < day ? addDays(first, interval) : first;
-      }
-      case 'WEEKLY': {
-        // RFC 5545 weeks start on Monday (WKST=MO) whatever the locale, otherwise BYDAY like SU+TU
-        // can go backwards.
-        const seriesWeekStart = getStartOfWeekDayNumber(seriesStart, 1);
-        const weeksDiff = (getStartOfWeekDayNumber(day, 1) - seriesWeekStart) / 7;
-        const startingWeek = seriesWeekStart + 7 * skip(weeksDiff);
-        const first = this.findFirstInWeek(startingWeek, minDay);
-        if (first !== null) {
-          return first;
-        }
-        const nextWeek = addDays(startingWeek, 7 * interval);
-        return nextWeek === null ? null : this.findFirstInWeek(nextWeek, seriesStart);
-      }
-      default: {
-        const isoDate = dayNumberToIsoDate(day);
-        const seriesStartIsoDate = dayNumberToIsoDate(seriesStart);
-        const monthsDiff =
-          (isoDate.year - seriesStartIsoDate.year) * 12 + isoDate.month - seriesStartIsoDate.month;
-        const startingMonth = addMonths(getStartOfMonthDayNumber(seriesStart), skip(monthsDiff));
-        return startingMonth === null ? null : this.findFirstInMonth(startingMonth, minDay);
-      }
+    const daysBefore = this.countBefore(day);
+    if (daysBefore !== null) {
+      const first = this.getDayAt(daysBefore);
+      return first > LAST_SUPPORTED_DAY ? null : first;
     }
+
+    // Skips the whole intervals of months before `day`.
+    const { interval, seriesStart } = this;
+    const isoDate = dayNumberToIsoDate(day);
+    const seriesStartIsoDate = dayNumberToIsoDate(seriesStart);
+    const monthsDiff =
+      (isoDate.year - seriesStartIsoDate.year) * 12 + isoDate.month - seriesStartIsoDate.month;
+    const startingMonth = addMonths(
+      getStartOfMonthDayNumber(seriesStart),
+      monthsDiff > 0 ? Math.floor(monthsDiff / interval) * interval : 0,
+    );
+    return startingMonth === null
+      ? null
+      : this.findFirstInMonth(startingMonth, Math.max(seriesStart, day));
   }
 
   /**
    * Returns the day following `day`, a day of the rule.
    */
   public getNext(day: number): number | null {
-    switch (this.rule.freq) {
-      case 'DAILY': {
-        return addDays(day, this.interval);
-      }
-      case 'WEEKLY': {
-        // The next day of the week, or the first one `interval` weeks later.
-        const dayOfWeek = getIsoDayOfWeek(day);
-        const nextDayOfWeek = this.weekDays.find((weekDay) => weekDay > dayOfWeek);
-        return addDays(
-          day,
-          nextDayOfWeek === undefined
-            ? 7 * this.interval + this.weekDays[0] - dayOfWeek
-            : nextDayOfWeek - dayOfWeek,
-        );
-      }
-      default: {
-        const nextMonth = addMonths(getStartOfMonthDayNumber(day), this.interval);
-        return nextMonth === null ? null : this.findFirstInMonth(nextMonth, this.seriesStart);
-      }
+    const { periodOffsets } = this;
+    if (periodOffsets.length > 0) {
+      // The next day of the period, or the first one of the next period.
+      const offset = (day - this.periodStart) % this.periodLength;
+      const nextOffset = periodOffsets.find((periodOffset) => periodOffset > offset);
+      return addDays(day, (nextOffset ?? this.periodLength + periodOffsets[0]) - offset);
     }
+    const nextMonth = addMonths(getStartOfMonthDayNumber(day), this.interval);
+    return nextMonth === null ? null : this.findFirstInMonth(nextMonth, this.seriesStart);
   }
 
-  private findFirstInWeek(weekStart: number, minDay: number): number | null {
-    for (const dayOfWeek of this.weekDays) {
-      const candidate = addDays(weekStart, dayOfWeek - 1);
-      if (candidate === null || candidate >= minDay) {
-        return candidate;
-      }
-    }
-    return null;
+  /**
+   * Returns the number of days of the periods before `day`, including the days of the first period
+   * before DTSTART.
+   */
+  private countPeriodDaysBefore(day: number): number {
+    const { periodOffsets, periodLength } = this;
+    const elapsed = day - this.periodStart;
+    const periods = Math.floor(elapsed / periodLength);
+    const rest = elapsed - periods * periodLength;
+    return periods * periodOffsets.length + periodOffsets.filter((offset) => offset < rest).length;
   }
 
   private findFirstInMonth(monthStart: number, minDay: number): number | null {
@@ -463,15 +485,14 @@ export class RecurringSeries {
 
     // Counts the days of the rule, then looks for the days the timezone skips among the counted
     // ones only, so that an expired series doesn't look them up until `end`.
-    let count: number;
-    if (ruleDays.rule.freq === 'DAILY') {
-      const days = end - startDay;
-      count = days > 0 ? Math.min(this.count, Math.ceil(days / ruleDays.interval)) : 0;
-      if (count > 0) {
-        lastDay = startDay + (count - 1) * ruleDays.interval;
-      }
-    } else {
+    let count = ruleDays.countBefore(end);
+    if (count === null) {
       count = countDays(() => false);
+    } else {
+      count = Math.min(count, this.count);
+      if (count > 0) {
+        lastDay = ruleDays.getDayAt(count - 1);
+      }
     }
     if (
       count === 0 ||
