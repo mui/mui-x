@@ -5,6 +5,7 @@ import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { isWeekendPlainDate } from '@mui/x-scheduler-internals/internals';
 import {
+  schedulerNowSelectors,
   schedulerOtherSelectors,
   schedulerPreferenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
@@ -83,24 +84,30 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
         {offsetInTicks > 0 && (
           <div role="none" style={{ width: `calc(var(--unit-width) * ${offsetInTicks})` }} />
         )}
-        {cells.map((cell) => (
-          <div
-            key={cell.key}
-            className={[classNames?.cell, level.className].filter(Boolean).join(' ') || undefined}
-            data-level={levelIndex}
-            data-unit={level.unit}
-            data-index={cell.index}
-            data-unit-leaf={level.unit === timeResolution ? '' : undefined}
-            data-weekend={
-              level.unit === 'day' && isWeekendPlainDate(cell.plainDate) ? '' : undefined
-            }
-            style={{ '--span': cell.spanInTicks } as React.CSSProperties}
-          >
-            <time className={classNames?.label} dateTime={getCellDateTime(cell)}>
-              {labelsPerLevel[levelIndex][cell.index]}
-            </time>
-          </div>
-        ))}
+        {cells.map((cell) => {
+          const isCurrentDay = level.unit === 'day' && cell.plainDate.dayNumber === nowDayNumber;
+
+          return (
+            <div
+              key={cell.key}
+              className={[classNames?.cell, level.className].filter(Boolean).join(' ') || undefined}
+              data-level={levelIndex}
+              data-unit={level.unit}
+              data-index={cell.index}
+              data-unit-leaf={level.unit === timeResolution ? '' : undefined}
+              data-weekend={
+                level.unit === 'day' && isWeekendPlainDate(cell.plainDate) ? '' : undefined
+              }
+              data-current={isCurrentDay ? '' : undefined}
+              aria-current={isCurrentDay ? 'date' : undefined}
+              style={{ '--span': cell.spanInTicks } as React.CSSProperties}
+            >
+              <time className={classNames?.label} dateTime={getCellDateTime(cell)}>
+                {labelsPerLevel[levelIndex][cell.index]}
+              </time>
+            </div>
+          );
+        })}
       </div>
     );
   });
