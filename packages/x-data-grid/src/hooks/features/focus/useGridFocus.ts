@@ -373,8 +373,7 @@ export const useGridFocus = (
       if (event.relatedTarget?.getAttribute('class')?.includes(gridClasses.cell)) {
         return;
       }
-      // The focus can also move into the focused cell, for example to its editor or checkbox.
-      // Only the cell in the focus state counts, because Tab can also move to a button in `renderCell`.
+      // Ignore a focus move inside the focused cell, for example to its editor or checkbox.
       const focusedCell = gridFocusCellSelector(apiRef);
       if (
         focusedCell &&

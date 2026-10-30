@@ -134,7 +134,7 @@ export const useGridCellEditing = (
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       if (params.cellMode === GridCellModes.Edit) {
-        // Wait until the IME composition ends, for example in Japanese, Chinese, and Korean.
+        // Wait until the IME composition ends.
         if (isImeKeyDown(event)) {
           return;
         }
@@ -157,8 +157,7 @@ export const useGridCellEditing = (
           apiRef.current.publishEvent('cellEditStop', newParams, event);
         }
       } else if (params.isEditable) {
-        // The composition in the editor starts edit mode, see `handleCellCompositionStart`.
-        // Ignore the IME keydown, so that the start reason does not change with the browser.
+        // The composition starts edit mode instead, see `handleCellCompositionStart`.
         if (isEventFromPreMountedEditor(event) && isImeKeyDown(event)) {
           return;
         }

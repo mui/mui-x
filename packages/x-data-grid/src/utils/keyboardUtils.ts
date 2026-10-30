@@ -96,10 +96,8 @@ export function isRedoShortcut(event: React.KeyboardEvent): boolean {
 }
 
 /**
- * Tells if the keydown event belongs to an input method editor (IME) composition.
- * Some browsers send this keydown before `compositionstart`, for example Safari and Chrome on macOS.
- * Then `isComposing` is false, and `key` can be the composed character.
- * Only `keyCode` 229 identifies this keydown, so the check uses it, as MDN recommends.
+ * Tells if the keydown event belongs to an IME composition.
+ * Some browsers send it before `compositionstart` with `isComposing: false`, so check `keyCode` 229.
  * See https://developer.mozilla.org/en-US/docs/Web/API/Element/keydown_event#keydown_events_with_ime
  */
 export function isImeKeyDown(event: React.KeyboardEvent): boolean {

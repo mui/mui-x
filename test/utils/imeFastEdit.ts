@@ -1,6 +1,4 @@
-// Shared helpers for the tests of `experimentalFeatures.imeFastEdit`.
-// The focused editable string cell renders a hidden editor (`data-cell-editor="preMounted"`).
-// This editor has the DOM focus, and a composition starts edit mode on its input.
+// Helpers for the `experimentalFeatures.imeFastEdit` tests.
 import { expect } from 'vitest';
 import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import type { MuiRenderResult } from '@mui/internal-test-utils';
@@ -11,7 +9,7 @@ import { getActiveCell, getCell } from 'test/utils/helperFn';
 
 export type User = MuiRenderResult['user'];
 
-// A ref to a grid API. The helpers use it only to get the column of a cell.
+// A grid API ref, used to get the column of a cell.
 export type ColumnLookup = { current: Pick<GridApiCommon, 'getColumn'> | null };
 
 export const getInput = (cell: HTMLElement) => cell.querySelector('input');
@@ -50,8 +48,7 @@ export function expectFocusedCell(cell: HTMLElement, imeFastEdit: boolean) {
   }
 }
 
-// Returns the element that has the focus in a focused editable string cell.
-// This is the hidden editor with the flag, and the cell without the flag.
+// Returns the focused element: the hidden editor with the flag, the cell without it.
 export function getFocusTarget(cell: HTMLElement, imeFastEdit: boolean) {
   const target = imeFastEdit ? getInput(cell)! : cell;
   expect(document.activeElement).to.equal(target);
@@ -73,8 +70,7 @@ export function describeFocus() {
   return element === cell ? `cell ${position}` : `input ${position}`;
 }
 
-// Describes the active element without a reference to a DOM node, so that two renders can be compared.
-// The hidden editor and its cell give the same result. `expectFocusMatchesCell` checks the element.
+// Describes the active element without DOM references, so that two renders can be compared.
 export function describeActiveElement() {
   const active = document.activeElement;
   if (!active || active === document.body) {
@@ -86,7 +82,7 @@ export function describeActiveElement() {
   const header = active.closest('[role="columnheader"]');
   if (header) {
     const colIndex = header.getAttribute('aria-colindex');
-    // The text of a header filter changes with the filter state, so it is not part of the result.
+    // The header filter text depends on the filter state, so skip it.
     if (header.classList.contains('MuiDataGrid-columnHeader--filter')) {
       return `filter:${colIndex}`;
     }
@@ -97,9 +93,7 @@ export function describeActiveElement() {
   return `${active.tagName.toLowerCase()}:${label}`;
 }
 
-// Asserts the active element in the focused cell.
-// With the flag, it is the hidden editor when the cell is an editable string cell.
-// In all other cases, it is the cell, and the cell has no hidden editor.
+// Asserts the active element: the hidden editor in an editable string cell with the flag, else the cell.
 export function expectFocusMatchesCell(imeFastEdit: boolean, apiRef: ColumnLookup) {
   const active = document.activeElement as HTMLElement;
   const cell = active.closest<HTMLElement>('[role="gridcell"]');
@@ -146,9 +140,8 @@ export async function compareWithBaseline<T>(
   return { baseline, withFlag };
 }
 
-// Types one character in the input as a browser does: `keydown` and `input` in the same task.
-// user-event wraps each event in `act()`, which flushes the effects between `keydown` and `input`.
-// This helper uses one `act()` for the two events, so that no effect runs between them.
+// Sends `keydown` and `input` in one `act()`, as a browser does in one task.
+// user-event flushes the effects between them.
 // The browser does not insert the character when a `keydown` listener prevents the default.
 export function typeInSameTask(input: HTMLInputElement, key: string) {
   act(() => {
@@ -156,7 +149,7 @@ export function typeInSameTask(input: HTMLInputElement, key: string) {
     if (!input.dispatchEvent(keyDown)) {
       return;
     }
-    // Set the value with the native setter. Then React sees the change in the `input` event.
+    // The native setter lets React see the change.
     const setValue = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!;
     setValue.call(input, `${input.value}${key}`);
     input.dispatchEvent(new Event('input', { bubbles: true }));
@@ -176,8 +169,7 @@ export async function composeAndCommit(user: User, input: HTMLInputElement, text
   await user.keyboard('{Enter}');
 }
 
-// Composes an IME text in the focused hidden editor of the cell and commits it with Enter.
-// Asserts that the composition keeps the same input and that the cell shows the text after the commit.
+// Composes and commits text in the hidden editor. Asserts that the input is kept and the cell shows the text.
 export async function composeAndCommitInCell(user: User, cell: HTMLElement, text: string) {
   const input = getInput(cell)!;
   expect(document.activeElement).to.equal(input);
@@ -193,8 +185,7 @@ export async function composeAndCommitInCell(user: User, cell: HTMLElement, text
   });
 }
 
-// Creates a data source that reads and writes the rows of `useMockServer`.
-// The spies receive the URL of each fetch and the params of each update.
+// A data source over the `useMockServer` rows. The spies get each fetch URL and update params.
 export function createMockDataSource(
   server: Pick<ReturnType<typeof useMockServer>, 'fetchRows' | 'editRow'>,
   options: {

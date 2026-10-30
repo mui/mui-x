@@ -197,7 +197,7 @@ export const useGridRowEditing = (
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       if (params.cellMode === GridRowModes.Edit) {
-        // Wait until the IME composition ends, for example in Japanese, Chinese, and Korean.
+        // Wait until the IME composition ends.
         if (isImeKeyDown(event)) {
           return;
         }
@@ -249,8 +249,7 @@ export const useGridRowEditing = (
           apiRef.current.publishEvent('rowEditStop', newParams, event);
         }
       } else if (params.isEditable) {
-        // The composition in the editor starts edit mode, see `handleCellCompositionStart`.
-        // Ignore the IME keydown, so that the start reason does not change with the browser.
+        // The composition starts edit mode instead, see `handleCellCompositionStart`.
         if (isEventFromPreMountedEditor(event) && isImeKeyDown(event)) {
           return;
         }
@@ -281,9 +280,7 @@ export const useGridRowEditing = (
           // Only pass the pressed key when the row editing is controlled via `rowModesModel`.
           // In uncontrolled mode, the default editor already inserts the character and passing it here would duplicate it.
           const key = rowModesModelProp && isPrintableKey(event) ? event.key : undefined;
-          // A controlled `rowModesModel` starts edit mode in an effect, maybe after the `input` event.
-          // The editor that the cell renders before edit mode starts ignores this event in view mode.
-          // Thus the key gives the character, and the editor must not also receive it.
+          // The pre-mounted editor ignores the `input` event in view mode, so the key is not duplicated.
           if (key !== undefined && isEventFromPreMountedEditor(event)) {
             event.preventDefault();
           }

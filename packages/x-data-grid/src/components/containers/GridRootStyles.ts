@@ -272,17 +272,14 @@ export const GridRootStyles = styled('div', {
       outline: `solid ${vars.colors.interactive.focus} ${focusOutlineWidth}px`,
       outlineOffset: focusOutlineWidth * -1,
     },
-    // A browser that does not support `:has()` ignores all selectors of the rule.
-    // Keep this selector in a separate rule, so that the other focus outlines stay.
-    // `:where()` gives the rule the specificity of `.cell:focus-within`.
-    // Thus an override of `.cell:focus-within` also removes this outline.
+    // Separate rule, because a browser without `:has()` support drops the whole rule.
+    // `:where()` keeps the specificity of `.cell:focus-within`, so overrides of it still apply.
     [`& .${c.cell}:has(> :where([data-cell-editor="preMounted"]):focus-within)`]: {
       outline: `solid ${vars.colors.interactive.focus} ${focusOutlineWidth}px`,
       outlineOffset: focusOutlineWidth * -1,
     },
-    // The editor that the cell renders before edit mode starts (`experimentalFeatures.imeFastEdit`).
-    // Do not hide it with `display: none` or `visibility: hidden`, because it must stay focusable.
-    // It has no offsets. Thus it stays at its static position and needs no positioned ancestor.
+    // Pre-mounted editor (`imeFastEdit`). It must stay focusable, so do not use `display: none`
+    // or `visibility: hidden`. Without offsets, it needs no positioned ancestor.
     [`& .${c.cell} > [data-cell-editor="preMounted"]`]: {
       position: 'absolute',
       width: 0,

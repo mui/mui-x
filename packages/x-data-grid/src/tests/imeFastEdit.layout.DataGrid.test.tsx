@@ -492,9 +492,7 @@ describe('<DataGrid /> - IME fast edit layout', () => {
       expect(withFlag).to.deep.equal(baseline);
     });
 
-    // The `mouseup` of the resize clears the focus state (`useGridFocus.handleDocumentClick`)
-    // while the DOM focus stays in the cell. The hidden editor must keep the DOM focus, like the cell
-    // element does without the flag.
+    // The resize `mouseup` clears the focus state. The hidden editor must keep the DOM focus.
     it('resizes a column with the focus in the hidden editor like the baseline', async () => {
       const { baseline, withFlag } = await compareWithBaseline(async (imeFastEdit) => {
         const { user, unmount } = render(<TestCase imeFastEdit={imeFastEdit} />);
@@ -521,8 +519,7 @@ describe('<DataGrid /> - IME fast edit layout', () => {
   });
 
   describe('focus', () => {
-    // Same root cause as the column resize test: a `mouseup` outside the cells clears the focus
-    // state while the DOM focus stays in the hidden editor.
+    // Same cause as the column resize test.
     it.skipIf(isJSDOM)(
       'keeps the DOM focus when a toolbar button prevents the default mousedown',
       async () => {

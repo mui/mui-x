@@ -65,8 +65,7 @@ describe('<DataGrid /> - IME fast edit with data loading and updates', () => {
     const updateRowSpy = vi.fn();
     let mockServer: ReturnType<typeof useMockServer>;
 
-    // The mock server keeps its rows between tests. A commit must use a new value,
-    // otherwise `stopCellEditMode` sees no change and does not call `updateRow`.
+    // The mock server keeps its rows between tests. Use a new value, or `updateRow` is not called.
     let composedCount = 0;
     const nextText = () => {
       composedCount += 1;
