@@ -40,6 +40,24 @@ function RowEditingProps() {
   />;
 }
 
+function EditStartEventType() {
+  <DataGrid
+    rows={[]}
+    columns={[]}
+    onCellEditStart={(params, event) => {
+      // @ts-expect-error The event can be a composition event, which has no `shiftKey`.
+      console.log(event.shiftKey);
+      if ('key' in event) {
+        console.log(event.key);
+      }
+    }}
+    onRowEditStart={(params, event) => {
+      // @ts-expect-error The event can be a composition event, which has no `key`.
+      console.log(event.key);
+    }}
+  />;
+}
+
 function RowPropTest() {
   return (
     <div>
