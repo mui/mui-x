@@ -104,11 +104,13 @@ export function generateOccurrenceFromEvent({
 }
 
 /**
- *  Returns the key of the days an event occurrence should be visible on.
+ * Returns the key of the days an event occurrence should be visible on.
+ * `dayNumbers` are the day numbers of `days`, read once for all the occurrences of the days.
  */
 export function getDaysTheOccurrenceIsVisibleOn(
   event: SchedulerEventOccurrence,
   days: SchedulerProcessedDay[],
+  dayNumbers: readonly number[],
 ) {
   const { start, end, timezone } = event.displayTimezone;
   const startDayNumber = toLocalDayNumber(start.timestamp, timezone);
@@ -116,13 +118,14 @@ export function getDaysTheOccurrenceIsVisibleOn(
 
   const dayKeys: string[] = [];
   for (let index = 0; index < days.length; index += 1) {
+    const dayNumber = dayNumbers[index];
     // If the day is before the event start, skip to the next day
-    if (days[index].plainDate.dayNumber < startDayNumber) {
+    if (dayNumber < startDayNumber) {
       continue;
     }
 
     // If the day is after the event end, break as the days are sorted by start date
-    if (days[index].plainDate.dayNumber > endDayNumber) {
+    if (dayNumber > endDayNumber) {
       break;
     }
     dayKeys.push(days[index].key);

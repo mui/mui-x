@@ -9,7 +9,7 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
 } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
-import type { PlainDate } from '../utils/base-temporal/PlainDate';
+import type { BaseTemporal } from '../utils/base-temporal';
 import type { UpdateEventsParameters } from '../utils/SchedulerStore/SchedulerStore.types';
 
 /** Contract implemented by the premium recurring-events plugin. */
@@ -77,7 +77,7 @@ export interface SchedulerRecurringEventsPluginInterface {
    * `plainDate` is the date of the event's start in its own timezone.
    */
   computePresets(
-    plainDate: PlainDate,
+    plainDate: BaseTemporal.PlainDate,
   ): Record<RecurringEventPresetKey, SchedulerProcessedEventRecurrenceRule>;
 
   /**
@@ -87,7 +87,7 @@ export interface SchedulerRecurringEventsPluginInterface {
    */
   getDefaultPresetKey(
     rule: SchedulerProcessedEventRecurrenceRule | undefined,
-    occurrenceStartPlainDate: PlainDate,
+    occurrenceStartPlainDate: BaseTemporal.PlainDate,
   ): RecurringEventPresetKey | 'custom' | null;
 
   /**

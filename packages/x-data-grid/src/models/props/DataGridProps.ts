@@ -80,6 +80,10 @@ export type DataGridProps<R extends GridValidRowModel = any> = Omit<
     DataGridPropsWithoutDefaultValue<R>,
   DataGridForcedPropsKey
 > & {
+  /**
+   * Pagination is always enabled in the Data Grid.
+   * Use the Data Grid Pro to disable it.
+   */
   pagination?: true;
 };
 
@@ -902,6 +906,10 @@ export interface DataGridPropsWithoutDefaultValue<
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError?: (error: any) => void;
+  /**
+   * The column groups of the header.
+   * @see See {@link https://mui.com/x/react-data-grid/column-groups/ column grouping docs} for more details.
+   */
   columnGroupingModel?: GridColumnGroupingModel;
   /**
    * Sets the height in pixels of the column group headers in the Data Grid.

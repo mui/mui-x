@@ -9,9 +9,21 @@ import { useMessageContext } from './internals/MessageContext';
 import type { MessageMetaOwnerState } from './message.types';
 
 export interface MessageMetaSlots {
+  /**
+   * The component that renders the meta.
+   */
   meta: React.ElementType;
+  /**
+   * The component that renders the timestamp.
+   */
   timestamp: React.ElementType;
+  /**
+   * The component that renders the status.
+   */
   status: React.ElementType;
+  /**
+   * The component that renders the edited.
+   */
   edited: React.ElementType;
   /**
    * The root element of the streaming progress indicator.
@@ -27,9 +39,21 @@ export interface MessageMetaSlots {
 }
 
 export interface MessageMetaSlotProps {
+  /**
+   * The props used for the meta slot.
+   */
   meta?: SlotComponentProps<'div', {}, MessageMetaOwnerState>;
+  /**
+   * The props used for the timestamp slot.
+   */
   timestamp?: SlotComponentProps<'span', {}, MessageMetaOwnerState>;
+  /**
+   * The props used for the status slot.
+   */
   status?: SlotComponentProps<'span', {}, MessageMetaOwnerState>;
+  /**
+   * The props used for the edited slot.
+   */
   edited?: SlotComponentProps<'span', {}, MessageMetaOwnerState>;
   streamingProgress?: SlotComponentProps<'div', {}, MessageMetaOwnerState>;
   streamingProgressTrack?: SlotComponentProps<'div', {}, MessageMetaOwnerState>;
@@ -37,7 +61,15 @@ export interface MessageMetaSlotProps {
 }
 
 export interface MessageMetaProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<MessageMetaSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: MessageMetaSlotProps;
 }
 

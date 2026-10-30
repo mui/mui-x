@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { SxProps, Theme } from '@mui/system';
 import { UnreadMarker } from '@mui/x-chat-headless';
-import type { UnreadMarkerProps } from '@mui/x-chat-headless';
+import type { UnreadMarkerProps, UnreadMarkerSlots } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatUnreadMarkerUtilityClasses } from './chatUnreadMarkerClasses';
@@ -12,9 +12,17 @@ import type { ChatUnreadMarkerClasses } from './chatUnreadMarkerClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatUnreadMarker');
 
+export interface ChatUnreadMarkerSlots extends UnreadMarkerSlots {}
+
 export interface ChatUnreadMarkerProps extends UnreadMarkerProps {
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<ChatUnreadMarkerClasses>;
 }
 
@@ -93,14 +101,40 @@ ChatUnreadMarker.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * The index of the row in `items`.
+   */
   index: PropTypes.number,
+  /**
+   * The ids of the messages in the list, in order.
+   */
   items: PropTypes.arrayOf(PropTypes.string),
+  /**
+   * The label of the marker.
+   */
   label: PropTypes.node,
+  /**
+   * The id of the message this row belongs to.
+   */
   messageId: PropTypes.string.isRequired,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
