@@ -283,7 +283,7 @@ export interface RecurringSeriesParameters {
    */
   timezone: TemporalTimezone;
   /**
-   * The excluded occurrences (EXDATE), labeled in the timezone of the series.
+   * The excluded occurrences (EXDATE), read in the timezone of the series.
    */
   exDates?: readonly TemporalSupportedObject[];
 }

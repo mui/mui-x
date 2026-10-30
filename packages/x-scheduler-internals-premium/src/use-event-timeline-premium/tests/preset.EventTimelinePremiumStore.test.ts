@@ -202,12 +202,10 @@ describe('Preset - EventTimelinePremiumStore', () => {
       expect(
         new Date(eventTimelinePremiumPresetSelectors.config(store.state).start).toISOString(),
       ).to.equal('2026-03-31T22:00:00.000Z');
-      // April 1st at 23:30 in Paris, labeled with the display timezone.
+      // April 1st at 23:30 in Paris.
       const changedVisibleDate = onVisibleDateChange.mock.lastCall?.[0];
       expect(adapter.getTime(store.state.visibleDate)).to.equal(Date.parse('2026-04-01T21:30:00Z'));
-      expect(adapter.getTimezone(store.state.visibleDate)).to.equal('Europe/Paris');
       expect(adapter.getTime(changedVisibleDate)).to.equal(Date.parse('2026-04-01T21:30:00Z'));
-      expect(adapter.getTimezone(changedVisibleDate)).to.equal('Europe/Paris');
 
       store.goToPreviousVisibleDate({} as any);
 

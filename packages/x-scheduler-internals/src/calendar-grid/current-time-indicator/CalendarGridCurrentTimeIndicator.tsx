@@ -3,7 +3,6 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
-import { useAdapterContext } from '../../use-adapter-context';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { CalendarGridCurrentTimeIndicatorCssVars } from './CalendarGridCurrentTimeIndicatorCssVars';
@@ -17,8 +16,6 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
     componentProps: CalendarGridCurrentTimeIndicator.Props,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const adapter = useAdapterContext();
-
     const {
       // Rendering props
       className,
@@ -38,11 +35,10 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
     const nowForColumn = React.useMemo(
       () =>
         createProcessedDate(
-          adapter,
           moveTimestampToPlainDate(nowTimestamp, columnPlainDate, displayTimezone),
           displayTimezone,
         ),
-      [adapter, columnPlainDate, displayTimezone, nowTimestamp],
+      [columnPlainDate, displayTimezone, nowTimestamp],
     );
 
     const { position } = useElementPositionInCollection({

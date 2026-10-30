@@ -57,6 +57,7 @@ describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
           adapter,
           adapter.date(visibleDate, 'Europe/London'),
           1,
+          'Europe/London',
         );
         expect(adapter.toJsDate(nextVisibleDate).toISOString()).to.equal(
           '2026-10-25T02:00:00.000Z',
@@ -78,6 +79,7 @@ describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
           adapter,
           adapter.date(visibleDate, 'Europe/Paris'),
           1,
+          'Europe/Paris',
         );
         expect(adapter.toJsDate(nextVisibleDate).toISOString()).to.equal(
           '2026-10-25T00:30:00.000Z',
@@ -99,6 +101,7 @@ describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
           adapter,
           adapter.date(visibleDate, 'Europe/Paris'),
           1,
+          'Europe/Paris',
         );
         expect(adapter.toJsDate(nextVisibleDate).toISOString()).to.equal(
           '2027-03-28T01:30:00.000Z',

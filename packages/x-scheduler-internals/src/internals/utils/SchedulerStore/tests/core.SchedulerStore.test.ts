@@ -41,8 +41,7 @@ storeClasses.forEach((storeClass) => {
 
         const expectedToday = adapter.startOfDay(adapter.now(displayTimezone));
 
-        expect(store.state.visibleDate).toEqualDateTime(expectedToday);
-        expect(adapter.getTimezone(store.state.visibleDate)).to.equal(displayTimezone);
+        expect(adapter.getTime(store.state.visibleDate)).to.equal(adapter.getTime(expectedToday));
       });
 
       it('should start today at the end of the gap when the display timezone skips midnight', () => {

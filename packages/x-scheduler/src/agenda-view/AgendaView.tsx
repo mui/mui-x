@@ -193,9 +193,12 @@ const AGENDA_VIEW_DEFINITION: EventCalendarViewDefinition = {
     if (dayCount === 'month') {
       return getSiblingMonthStart(state, delta);
     }
-    return addToAdapterDate(state.adapter, schedulerOtherSelectors.visibleDate(state), {
-      days: dayCount * delta,
-    });
+    return addToAdapterDate(
+      state.adapter,
+      state.visibleDate,
+      { days: dayCount * delta },
+      state.displayTimezone,
+    );
   },
   visibleDaysSelector: eventCalendarAgendaSelectors.visibleDays,
   fetchRangeSelector: eventCalendarAgendaSelectors.fetchRange,

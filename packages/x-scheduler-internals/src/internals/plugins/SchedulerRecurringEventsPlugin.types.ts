@@ -62,16 +62,6 @@ export interface SchedulerRecurringEventsPluginInterface {
   ): UpdateEventsParameters;
 
   /**
-   * Relabels the display-timezone dates of an update (start/end/exDates) into the event's
-   * data timezone before they are persisted. The rule is already expressed there.
-   */
-  applyDataTimezoneToEventUpdate(params: {
-    adapter: Adapter;
-    originalEvent: SchedulerProcessedEvent;
-    changes: SchedulerEventUpdatedProperties;
-  }): SchedulerEventUpdatedProperties;
-
-  /**
    * Builds the recurrence presets (Daily / Weekly / Monthly / Yearly)
    * the user can choose from when editing an event.
    * `plainDate` is the date of the event's start in its own timezone.

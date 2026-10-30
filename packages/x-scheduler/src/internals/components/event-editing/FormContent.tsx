@@ -465,9 +465,9 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         rruleToSubmit = recurrencePresets[values.recurrenceSelection];
       }
 
-      // The store receives adapter values, labeled with the display timezone the fields are read in.
-      const start = createAdapterDate(current.adapter, range.start, current.displayTimezone);
-      const end = createAdapterDate(current.adapter, range.end, current.displayTimezone);
+      // The store receives adapter values, the instants of the fields read in the display timezone.
+      const start = createAdapterDate(range.start);
+      const end = createAdapterDate(range.end);
       if (isCreation) {
         store.createEvent({ ...metaChanges, start, end, rrule: rruleToSubmit });
       } else if (

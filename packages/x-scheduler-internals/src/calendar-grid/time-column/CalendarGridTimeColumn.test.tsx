@@ -17,7 +17,7 @@ import { BaseTemporal, buildTemporalPlainDate } from '@mui/x-scheduler-internals
 describe('<CalendarGrid.TimeColumn />', () => {
   const { render } = createSchedulerRenderer();
 
-  const plainDate = buildTemporalPlainDate(adapter, adapter.now('default'));
+  const plainDate = buildTemporalPlainDate(adapter, adapter.now('default'), 'default');
 
   function TimeColumnWrapper({
     children,

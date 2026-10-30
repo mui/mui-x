@@ -8,19 +8,15 @@ import {
   createAdapterDate,
   createAdapterDateFromWallTime,
   createProcessedDate,
-  getDateKey,
 } from './adapter';
 import type { TemporalSupportedObject } from '../../../models';
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
 
 describe('base-temporal adapter bridge', () => {
-  it('should build the plain date of a value in the timezone it is labeled with', () => {
+  it('should build the plain date of a value in a timezone', () => {
     // 2025-03-03T00:30Z is March 2nd in Los Angeles.
-    const value = adapter.setTimezone(
-      adapter.date('2025-03-03T00:30:00Z', 'default'),
-      'America/Los_Angeles',
-    );
-    const plainDate = buildTemporalPlainDate(adapter, value);
+    const value = adapter.date('2025-03-03T00:30:00Z', 'default');
+    const plainDate = buildTemporalPlainDate(adapter, value, 'America/Los_Angeles');
     expect(plainDate.toString()).to.equal('2025-03-02');
   });
 
@@ -36,7 +32,7 @@ describe('base-temporal adapter bridge', () => {
     '2011-12-30T10:00:00Z',
   ];
 
-  it('should build the date the adapter reads, whatever the timezone of the value', () => {
+  it('should build the date the adapter reads in the timezone', () => {
     for (const timezone of [
       'UTC',
       'America/New_York',
@@ -49,11 +45,11 @@ describe('base-temporal adapter bridge', () => {
       'Pacific/Apia',
     ]) {
       for (const instant of INSTANTS) {
-        const value = adapter.setTimezone(adapter.date(instant, 'default'), timezone);
+        const value = adapter.date(instant, 'default');
         expect(
-          buildTemporalPlainDate(adapter, value).toString(),
+          buildTemporalPlainDate(adapter, value, timezone).toString(),
           `${instant} in ${timezone}`,
-        ).to.equal(adapter.formatByString(value, 'yyyy-MM-dd'));
+        ).to.equal(adapter.formatByString(adapter.setTimezone(value, timezone), 'yyyy-MM-dd'));
       }
     }
   });
@@ -65,42 +61,55 @@ describe('base-temporal adapter bridge', () => {
       setSystemTimezone('Australia/Lord_Howe');
       for (const instant of INSTANTS) {
         const value = adapter.date(instant, 'default');
-        expect(buildTemporalPlainDate(adapter, value).toString(), instant).to.equal(
+        expect(buildTemporalPlainDate(adapter, value, 'default').toString(), instant).to.equal(
           adapter.formatByString(value, 'yyyy-MM-dd'),
         );
       }
     },
   );
 
-  it('should return the ISO date of the day in the timezone of the value as the key', () => {
-    // July 4th at 02:00 in Tokyo is July 3rd in UTC.
-    const value = adapter.date('2025-07-04T02:00:00', 'Asia/Tokyo');
-    expect(getDateKey(value, adapter)).to.equal('2025-07-04');
-  });
+  // The fields of a processed date as the adapter reads them in `timezone`, which processed dates
+  // must match.
+  const readThroughAdapter = (
+    currentAdapter: Adapter,
+    value: TemporalSupportedObject,
+    timezone: string,
+  ) => {
+    const valueInTimezone = currentAdapter.setTimezone(value, timezone);
+    return {
+      key: currentAdapter.formatByString(valueInTimezone, 'yyyy-MM-dd'),
+      timestamp: currentAdapter.getTime(value),
+      minutesInDay:
+        currentAdapter.getHours(valueInTimezone) * 60 + currentAdapter.getMinutes(valueInTimezone),
+    };
+  };
 
-  // The processed date the adapter reads from a value, which processed dates must match.
-  const readThroughAdapter = (currentAdapter: Adapter, value: TemporalSupportedObject) => ({
-    value,
-    key: currentAdapter.formatByString(value, 'yyyy-MM-dd'),
-    timestamp: currentAdapter.getTime(value),
-    minutesInDay: currentAdapter.getHours(value) * 60 + currentAdapter.getMinutes(value),
-  });
+  it.each(['default', 'UTC', 'America/New_York', 'Asia/Kolkata'])(
+    'should process a date in %s like the adapter reads it',
+    (timezone) => {
+      const epochMs = Date.UTC(2025, 10, 2, 5, 30);
+      const value = createAdapterDate(epochMs);
+      // A plain `Date`, not a subclass carrying a timezone.
+      expect(value.constructor).to.equal(Date);
+      expect(adapter.getTime(value)).to.equal(epochMs);
 
-  it.each([
-    { epochMs: Date.UTC(2025, 10, 2, 5, 30), timezone: 'default' },
-    { epochMs: Date.UTC(2025, 10, 2, 5, 30), timezone: 'UTC' },
-    { epochMs: Date.UTC(2025, 10, 2, 5, 30), timezone: 'America/New_York' },
-    { epochMs: Date.UTC(2025, 10, 2, 5, 30), timezone: 'Asia/Kolkata' },
-    // Africa/Monrovia used -00:44:30 until 1972, which TZDate reads as +00:44:30.
-    { epochMs: 0, timezone: 'Africa/Monrovia' },
-  ])('should process a date in $timezone like the adapter reads it', ({ epochMs, timezone }) => {
-    const value = createAdapterDate(adapter, epochMs, timezone);
-    expect(adapter.getTime(value)).to.equal(epochMs);
-    expect(adapter.getTimezone(value)).to.equal(timezone === 'default' ? 'system' : timezone);
+      const { value: processedValue, ...processed } = processDate(value, adapter, timezone);
+      expect(processedValue).to.equal(value);
+      expect(processed).to.deep.equal(readThroughAdapter(adapter, value, timezone));
+      const { value: createdValue, ...created } = createProcessedDate(epochMs, timezone);
+      expect(createdValue.constructor).to.equal(Date);
+      expect(created).to.deep.equal(readThroughAdapter(adapter, createdValue, timezone));
+    },
+  );
 
-    expect(processDate(value, adapter)).to.deep.equal(readThroughAdapter(adapter, value));
-    const created = createProcessedDate(adapter, epochMs, timezone);
-    expect(created).to.deep.equal(readThroughAdapter(adapter, created.value));
+  it('should process a date with an offset between -01:00 and 00:00', () => {
+    // Africa/Monrovia used -00:44:30 until 1972: the epoch is 23:15:30 on December 31st, 1969.
+    const { value, ...processed } = createProcessedDate(0, 'Africa/Monrovia');
+    expect(processed).to.deep.equal({
+      key: '1969-12-31',
+      timestamp: 0,
+      minutesInDay: 23 * 60 + 15,
+    });
   });
 
   // Browsers cannot change their timezone through process.env.TZ.
@@ -114,21 +123,20 @@ describe('base-temporal adapter bridge', () => {
       const epochMs = Date.UTC(2025, 10, 2, 5, 30);
       const value = systemAdapter.date(new Date(epochMs).toISOString(), 'default');
 
-      expect(processDate(value, systemAdapter)).to.deep.equal(
-        readThroughAdapter(systemAdapter, value),
-      );
-      const created = createProcessedDate(systemAdapter, epochMs, 'default');
-      expect(created).to.deep.equal(readThroughAdapter(systemAdapter, created.value));
+      const { value: processedValue, ...processed } = processDate(value, systemAdapter, 'default');
+      expect(processed).to.deep.equal(readThroughAdapter(systemAdapter, value, 'default'));
+      const { value: createdValue, ...created } = createProcessedDate(epochMs, 'default');
+      expect(created).to.deep.equal(readThroughAdapter(systemAdapter, createdValue, 'default'));
     },
   );
 
   describe('createAdapterDateFromWallTime', () => {
     const resolve = (value: string, timezone: string) => {
-      const date = createAdapterDateFromWallTime(adapter, value, timezone);
+      const date = createAdapterDateFromWallTime(value, timezone);
       return date === null ? null : new Date(adapter.getTime(date)).toISOString();
     };
 
-    // TZDate resolves DST transitions with the timezone of the system, the plain dates don't.
+    // The DST transitions must resolve the same way whatever the timezone of the system.
     describe.each(['UTC', 'America/New_York', 'Europe/Paris'])(
       'system timezone: %s',
       (systemTimezone) => {
@@ -155,9 +163,7 @@ describe('base-temporal adapter bridge', () => {
       expect(resolve('2025-01-01', 'America/New_York')).to.equal('2025-01-01T05:00:00.000Z');
       expect(resolve('2025-01-01T09:30', 'America/New_York')).to.equal('2025-01-01T14:30:00.000Z');
       expect(resolve('2025-01-01T09:30:15.5', 'UTC')).to.equal('2025-01-01T09:30:15.500Z');
-      const value = createAdapterDateFromWallTime(adapter, '2025-01-01T09:30:00', 'Asia/Tokyo')!;
-      expect(adapter.getTimezone(value)).to.equal('Asia/Tokyo');
-      expect(adapter.getHours(value)).to.equal(9);
+      expect(resolve('2025-01-01T09:30:00', 'Asia/Tokyo')).to.equal('2025-01-01T00:30:00.000Z');
     });
 
     it('should move the dates and times above their range forward, like Date', () => {

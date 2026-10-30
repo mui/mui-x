@@ -6,7 +6,6 @@ import type {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
 import { EventCalendarPremiumStore } from '../EventCalendarPremiumStore';
 
@@ -68,7 +67,7 @@ const buildViewDefinition = (dayCount = 7): any => ({
   visibleDaysSelector: (state: any): SchedulerProcessedDate[] => {
     const days: SchedulerProcessedDate[] = [];
     for (let i = 0; i < dayCount; i += 1) {
-      const value = adapter.addDays(schedulerOtherSelectors.visibleDate(state), i);
+      const value = adapter.addDays(state.visibleDate, i);
       days.push({
         value,
         key: String(adapter.getTime(value)),

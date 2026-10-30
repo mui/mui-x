@@ -453,8 +453,8 @@ export function computeAutoSchedulingCascade(
   // entry in the old timezone and the model is then read in the new one, so the entry
   // carries the instant whose old-zone wall time is the intended new-zone wall time.
   function toEntryDates(eventId: SchedulerEventId, dates: ResolvedDates) {
-    const start = createAdapterDate(adapter, dates.start, dates.timezone);
-    const end = createAdapterDate(adapter, dates.end, dates.timezone);
+    const start = createAdapterDate(dates.start);
+    const end = createAdapterDate(dates.end);
     const timezoneChange = timezoneChanges.get(eventId);
     if (timezoneChange === undefined) {
       return { start, end };

@@ -354,13 +354,12 @@ export class EventTimelinePremiumStore<
   }
 
   private setSiblingVisibleDate = (delta: 1 | -1, event: React.UIEvent) => {
-    const { adapter, preset } = this.state;
+    const { adapter, preset, displayTimezone, visibleDate } = this.state;
     const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
     // Moves the days of the display timezone, the ones the preset config reads. Days added in
     // another timezone can skip a day of the display timezone across a DST transition.
-    const visibleDate = schedulerOtherSelectors.visibleDate(this.state);
     this.setVisibleDate({
-      visibleDate: navigate(adapter, visibleDate, delta * unitCount),
+      visibleDate: navigate(adapter, visibleDate, delta * unitCount, displayTimezone),
       event,
     });
   };

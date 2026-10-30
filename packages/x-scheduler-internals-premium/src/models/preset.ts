@@ -1,5 +1,9 @@
 import type * as React from 'react';
-import type { TemporalAdapter, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
+import type {
+  TemporalAdapter,
+  TemporalSupportedObject,
+  TemporalTimezone,
+} from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 
@@ -135,13 +139,15 @@ export interface PresetDefinition {
     endPlainDate: BaseTemporal.PlainDate,
   ) => number;
   /**
-   * Adds `amount` units (of the preset's navigation unit) to `date`. Called by
-   * `goToNextVisibleDate` / `goToPreviousVisibleDate` with `amount = ±unitCount`.
+   * Adds `amount` units (of the preset's navigation unit) to `date`, on the wall clock of
+   * `timezone`. Called by `goToNextVisibleDate` / `goToPreviousVisibleDate` with
+   * `amount = ±unitCount`.
    */
   navigate: (
     adapter: TemporalAdapter,
     date: TemporalSupportedObject,
     amount: number,
+    timezone: TemporalTimezone,
   ) => TemporalSupportedObject;
 }
 

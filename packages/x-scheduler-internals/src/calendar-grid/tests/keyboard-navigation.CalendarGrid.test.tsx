@@ -47,7 +47,7 @@ describe('CalendarGrid keyboard navigation', () => {
             {days.map((day, i) => (
               <CalendarGrid.DayCell
                 key={i}
-                value={buildTemporalPlainDate(adapter, day)}
+                value={buildTemporalPlainDate(adapter, day, 'default')}
                 data-testid={`day-${i}`}
               />
             ))}
@@ -206,7 +206,7 @@ describe('CalendarGrid keyboard navigation', () => {
               {week0Days.map((day, i) => (
                 <CalendarGrid.DayCell
                   key={i}
-                  value={buildTemporalPlainDate(adapter, day)}
+                  value={buildTemporalPlainDate(adapter, day, 'default')}
                   data-testid={`w0-${i}`}
                 />
               ))}
@@ -219,7 +219,7 @@ describe('CalendarGrid keyboard navigation', () => {
               {week1Days.map((day, i) => (
                 <CalendarGrid.DayCell
                   key={i}
-                  value={buildTemporalPlainDate(adapter, day)}
+                  value={buildTemporalPlainDate(adapter, day, 'default')}
                   data-testid={`w1-${i}`}
                 />
               ))}
@@ -232,7 +232,7 @@ describe('CalendarGrid keyboard navigation', () => {
               {week2Days.map((day, i) => (
                 <CalendarGrid.DayCell
                   key={i}
-                  value={buildTemporalPlainDate(adapter, day)}
+                  value={buildTemporalPlainDate(adapter, day, 'default')}
                   data-testid={`w2-${i}`}
                 />
               ))}
@@ -390,7 +390,7 @@ describe('CalendarGrid keyboard navigation', () => {
               {days.slice(0, 3).map((day, i) => (
                 <CalendarGrid.DayCell
                   key={i}
-                  value={buildTemporalPlainDate(adapter, day)}
+                  value={buildTemporalPlainDate(adapter, day, 'default')}
                   data-testid={`day-${i}`}
                 />
               ))}
@@ -399,7 +399,7 @@ describe('CalendarGrid keyboard navigation', () => {
               {days.slice(0, 3).map((day, i) => (
                 <CalendarGrid.TimeColumn
                   key={i}
-                  value={buildTemporalPlainDate(adapter, day)}
+                  value={buildTemporalPlainDate(adapter, day, 'default')}
                   data-testid={`time-${i}`}
                 />
               ))}
@@ -470,29 +470,29 @@ describe('CalendarGrid keyboard navigation', () => {
               end={adapter.getTime(adapter.endOfDay(day2))}
             >
               <CalendarGrid.DayCell
-                value={buildTemporalPlainDate(adapter, day1)}
+                value={buildTemporalPlainDate(adapter, day1, 'default')}
                 data-testid="cell-0"
               >
                 <CalendarGrid.DayEvent
                   eventId="event-1"
                   occurrenceKey="occ-1"
                   dataTimezone={undefined}
-                  start={processDate(day1, adapter)}
-                  end={processDate(adapter.addHours(day1, 1), adapter)}
+                  start={processDate(day1, adapter, 'default')}
+                  end={processDate(adapter.addHours(day1, 1), adapter, 'default')}
                   renderDragPreview={() => null}
                   data-testid="event-1"
                 />
               </CalendarGrid.DayCell>
               <CalendarGrid.DayCell
-                value={buildTemporalPlainDate(adapter, day2)}
+                value={buildTemporalPlainDate(adapter, day2, 'default')}
                 data-testid="cell-1"
               >
                 <CalendarGrid.DayEvent
                   eventId="event-2"
                   occurrenceKey="occ-2"
                   dataTimezone={undefined}
-                  start={processDate(day2, adapter)}
-                  end={processDate(adapter.addHours(day2, 1), adapter)}
+                  start={processDate(day2, adapter, 'default')}
+                  end={processDate(adapter.addHours(day2, 1), adapter, 'default')}
                   renderDragPreview={() => null}
                   data-testid="event-2"
                 />
@@ -533,29 +533,29 @@ describe('CalendarGrid keyboard navigation', () => {
           <CalendarGrid.Root rowTypes={['time-grid']} rowsPerType={{}}>
             <CalendarGrid.TimeScrollableContent>
               <CalendarGrid.TimeColumn
-                value={buildTemporalPlainDate(adapter, day1)}
+                value={buildTemporalPlainDate(adapter, day1, 'default')}
                 data-testid="col-0"
               >
                 <CalendarGrid.TimeEvent
                   eventId="event-1"
                   occurrenceKey="occ-1"
                   dataTimezone={undefined}
-                  start={processDate(adapter.addHours(day1, 9), adapter)}
-                  end={processDate(adapter.addHours(day1, 10), adapter)}
+                  start={processDate(adapter.addHours(day1, 9), adapter, 'default')}
+                  end={processDate(adapter.addHours(day1, 10), adapter, 'default')}
                   renderDragPreview={() => null}
                   data-testid="time-event-1"
                 />
               </CalendarGrid.TimeColumn>
               <CalendarGrid.TimeColumn
-                value={buildTemporalPlainDate(adapter, day2)}
+                value={buildTemporalPlainDate(adapter, day2, 'default')}
                 data-testid="col-1"
               >
                 <CalendarGrid.TimeEvent
                   eventId="event-2"
                   occurrenceKey="occ-2"
                   dataTimezone={undefined}
-                  start={processDate(adapter.addHours(day2, 9), adapter)}
-                  end={processDate(adapter.addHours(day2, 10), adapter)}
+                  start={processDate(adapter.addHours(day2, 9), adapter, 'default')}
+                  end={processDate(adapter.addHours(day2, 10), adapter, 'default')}
                   renderDragPreview={() => null}
                   data-testid="time-event-2"
                 />

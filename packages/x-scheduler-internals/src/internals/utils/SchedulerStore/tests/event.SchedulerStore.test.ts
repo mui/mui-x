@@ -135,8 +135,16 @@ storeClasses.forEach((storeClass) => {
           id: '1',
           title: 'Event 1',
           displayTimezone: {
-            start: processDate(adapter.date('2025-07-01T09:00:00.000Z', 'default'), adapter),
-            end: processDate(adapter.date('2025-07-01T10:00:00.000Z', 'default'), adapter),
+            start: processDate(
+              adapter.date('2025-07-01T09:00:00.000Z', 'default'),
+              adapter,
+              'default',
+            ),
+            end: processDate(
+              adapter.date('2025-07-01T10:00:00.000Z', 'default'),
+              adapter,
+              'default',
+            ),
             timezone: 'default',
             exDates: undefined,
           },

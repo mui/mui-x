@@ -5,7 +5,6 @@ import { schedulerEventSelectors, schedulerOtherSelectors } from '../../schedule
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
-import { useAdapterContext } from '../../use-adapter-context';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
 import { createProcessedDate } from '../../internals/utils/plain-date-utils/adapter';
@@ -17,7 +16,6 @@ export function useCalendarGridPlaceholderInDay(
   row: useEventOccurrencesWithDayGridPosition.ReturnValue,
   maxEvents?: number,
 ): useEventOccurrencesWithDayGridPosition.EventOccurrencePlaceholderWithPosition | null {
-  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext().axis;
 
@@ -86,7 +84,7 @@ export function useCalendarGridPlaceholderInDay(
             timestamp: day.timestamp,
             minutesInDay: day.minutesInDay,
           },
-          end: createProcessedDate(adapter, endInRow, displayTimezone),
+          end: createProcessedDate(endInRow, displayTimezone),
           timezone: displayTimezone,
         },
         position: {
@@ -101,8 +99,8 @@ export function useCalendarGridPlaceholderInDay(
         ...sharedProperties,
         title: rawPlaceholder.eventData.title ?? '',
         displayTimezone: {
-          start: createProcessedDate(adapter, rawPlaceholder.start, displayTimezone),
-          end: createProcessedDate(adapter, rawPlaceholder.end, displayTimezone),
+          start: createProcessedDate(rawPlaceholder.start, displayTimezone),
+          end: createProcessedDate(rawPlaceholder.end, displayTimezone),
           timezone: displayTimezone,
         },
         position: {
@@ -114,8 +112,8 @@ export function useCalendarGridPlaceholderInDay(
 
     return {
       ...sharedProperties,
-      start: createProcessedDate(adapter, rawPlaceholder.start, displayTimezone),
-      end: createProcessedDate(adapter, rawPlaceholder.end, displayTimezone),
+      start: createProcessedDate(rawPlaceholder.start, displayTimezone),
+      end: createProcessedDate(rawPlaceholder.end, displayTimezone),
       displayTimezone: { ...originalEvent!.displayTimezone },
       position: {
         index: findAvailableIndex(rawPlaceholder.occurrenceKey),
@@ -123,7 +121,6 @@ export function useCalendarGridPlaceholderInDay(
       },
     };
   }, [
-    adapter,
     day,
     displayTimezone,
     originalEvent,

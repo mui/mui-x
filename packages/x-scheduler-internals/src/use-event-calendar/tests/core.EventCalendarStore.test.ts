@@ -246,7 +246,10 @@ describe('Core - EventCalendarStore', () => {
     describe('setEditingOccurrenceTimes', () => {
       it('should refresh the edited occurrence times, keeping the mode', () => {
         const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
-        store.startEditing(occurrence('event-1'), 'armed');
+        store.startEditing(
+          EventBuilder.new(adapter).id('event-1').singleDay('2024-01-15T09:00:00').toOccurrence(),
+          'armed',
+        );
         const start = adapter.date('2024-01-15T10:00:00', 'default');
         const end = adapter.date('2024-01-15T11:30:00', 'default');
 
@@ -288,7 +291,8 @@ describe('Core - EventCalendarStore', () => {
         // A rule added from the dialog is built on the data-timezone start.
         expect(editing.dataTimezone.start.timestamp).to.equal(adapter.getTime(start));
         expect(editing.dataTimezone.end.timestamp).to.equal(adapter.getTime(end));
-        expect(adapter.getTimezone(editing.dataTimezone.start.value)).to.equal('UTC');
+        // Read in the data timezone: 14:00 UTC.
+        expect(editing.dataTimezone.start.minutesInDay).to.equal(14 * 60);
       });
 
       it('should keep a bound left out on its stored value in both timezones', () => {

@@ -27,7 +27,7 @@ function countRemaining(
   count: number,
 ) {
   const series = new RecurringSeries(adapter, { rule: { ...rule, count }, ...seriesStart(start) });
-  const datePlainDate = buildTemporalPlainDate(adapter, date);
+  const datePlainDate = buildTemporalPlainDate(adapter, date, adapter.getTimezone(date));
   return count - series.countOccurrencesBefore(datePlainDate.add({ days: 1 }));
 }
 
@@ -43,8 +43,8 @@ function getOccurrenceDays(
     ...seriesStart(adapter.date(start, 'UTC')),
     exDates: exDates?.map((exDate) => adapter.date(exDate, 'UTC')),
   });
-  const fromPlainDate = buildTemporalPlainDate(adapter, adapter.date(from, 'UTC'));
-  const toPlainDate = buildTemporalPlainDate(adapter, adapter.date(to, 'UTC'));
+  const fromPlainDate = buildTemporalPlainDate(adapter, adapter.date(from, 'UTC'), 'UTC');
+  const toPlainDate = buildTemporalPlainDate(adapter, adapter.date(to, 'UTC'), 'UTC');
   return series.getOccurrenceDays(fromPlainDate, toPlainDate).map((day) => day.toString());
 }
 
@@ -118,8 +118,8 @@ describe('recurring-events/RecurringSeries', () => {
         });
         return series
           .getOccurrenceDays(
-            buildTemporalPlainDate(adapter, adapter.date('9999-12-31T00:00:00', 'UTC')),
-            buildTemporalPlainDate(adapter, adapter.date('+010000-01-02T00:00:00', 'UTC')),
+            buildTemporalPlainDate(adapter, adapter.date('9999-12-31T00:00:00', 'UTC'), 'UTC'),
+            buildTemporalPlainDate(adapter, adapter.date('+010000-01-02T00:00:00', 'UTC'), 'UTC'),
           )
           .map((day) => day.toString());
       };
@@ -199,7 +199,8 @@ describe('recurring-events/RecurringSeries', () => {
         ...seriesStart(adapter.date('2025-01-06T09:00:00', 'UTC')),
         exDates: [adapter.date('2025-01-06T09:00:00', 'UTC')],
       });
-      const day = (date: string) => buildTemporalPlainDate(adapter, adapter.date(date, 'UTC'));
+      const day = (date: string) =>
+        buildTemporalPlainDate(adapter, adapter.date(date, 'UTC'), 'UTC');
       expect(series.hasOccurrenceBefore(day('2025-01-13T00:00:00'))).to.equal(false);
       expect(series.hasOccurrenceBefore(day('2025-01-14T00:00:00'))).to.equal(true);
     });
