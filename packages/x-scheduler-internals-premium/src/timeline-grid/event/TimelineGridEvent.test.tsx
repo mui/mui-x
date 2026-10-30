@@ -87,4 +87,27 @@ describe('<TimelineGrid.Event />', () => {
     expect(event).not.to.have.attribute('aria-label');
     expect(event).not.to.have.attribute('aria-labelledby');
   });
+
+  it('should render a link instead of a button when an href is provided', () => {
+    renderEvent(
+      <TimelineGrid.Event
+        eventId="fake-id"
+        occurrenceKey="fake-key"
+        start={start}
+        end={end}
+        renderDragPreview={() => null}
+        href="/orders/1"
+        data-testid="event"
+      />,
+    );
+
+    const event = screen.getByTestId('event');
+    expect(event.tagName).to.equal('A');
+    expect(event).to.have.attribute('href', '/orders/1');
+    expect(event).to.have.attribute('data-link');
+    expect(event).to.have.attribute('data-occurrence-key', 'fake-key');
+    expect(event).not.to.have.attribute('role');
+    // An `<a href>` is focusable by default, so the roving `tabIndex` must be set explicitly.
+    expect(event).to.have.attribute('tabindex', '-1');
+  });
 });

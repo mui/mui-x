@@ -23,4 +23,8 @@ export enum CalendarGridDayEventDataAttributes {
    * Present when the event ends after the visible row edge.
    */
   endingAfterEdge = 'data-ending-after-edge',
+  /**
+   * Present when the event renders as a link.
+   */
+  link = 'data-link',
 }

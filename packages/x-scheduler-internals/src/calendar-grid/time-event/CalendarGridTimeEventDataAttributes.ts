@@ -15,4 +15,8 @@ export enum CalendarGridTimeEventDataAttributes {
    * Present when the event is being resized.
    */
   resizing = 'data-resizing',
+  /**
+   * Present when the event renders as a link.
+   */
+  link = 'data-link',
 }

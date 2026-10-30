@@ -45,13 +45,12 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     renderDragPreview,
     isDraggable = false,
     nativeButton = false,
+    href,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
-  // TODO: Expose a real `interactive` prop
-  // to control whether the event should behave like a button
-  const isInteractive = true;
+  const isLink = href != null;
 
   // Context hooks
   const store = useEventCalendarStoreContext();
@@ -144,12 +143,12 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const startingBeforeEdge = draggableEventContextValue.isEventStartClipped;
   const endingAfterEdge = draggableEventContextValue.isEventEndClipped;
 
-  const mergedState = { ...state, startingBeforeEdge, endingAfterEdge };
+  const mergedState = { ...state, startingBeforeEdge, endingAfterEdge, link: isLink };
 
+  const tabIndex = cellHasFocus ? 0 : -1;
   const { getButtonProps, buttonRef } = useButton({
-    disabled: !isInteractive,
     native: nativeButton,
-    tabIndex: cellHasFocus ? 0 : -1,
+    tabIndex,
   });
 
   // Rendering hooks
@@ -159,7 +158,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     [draggableEventContextValue, getSharedDragData],
   );
 
-  const element = useRenderElement('div', componentProps, {
+  const element = useRenderElement(isLink ? 'a' : 'div', componentProps, {
     state: mergedState,
     ref: [forwardedRef, buttonRef, ref],
     props: [
@@ -167,7 +166,8 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
       {
         style: hasPlaceholder ? { pointerEvents: 'none' as const } : undefined,
       },
-      getButtonProps,
+      // A link keeps the native link behavior, so it only needs the roving `tabIndex`.
+      isLink ? { href, tabIndex } : getButtonProps,
     ],
     stateAttributesMapping: overflowStateAttributesMapping,
   });
@@ -184,13 +184,23 @@ export namespace CalendarGridDayEvent {
   export interface State extends useDraggableEvent.State {
     startingBeforeEdge: boolean;
     endingAfterEdge: boolean;
+    /**
+     * Whether the event renders as a link.
+     */
+    link: boolean;
   }
 
   export interface Props
     extends
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      useDraggableEvent.PublicParameters {}
+      useDraggableEvent.PublicParameters {
+    /**
+     * The URL the event links to.
+     * When provided, the event renders as a link instead of a button.
+     */
+    href?: string;
+  }
 
   export interface SharedDragData {
     eventId: SchedulerEventId;

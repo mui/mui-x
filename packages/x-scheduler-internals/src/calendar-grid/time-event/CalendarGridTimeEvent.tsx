@@ -32,6 +32,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     elementPosition: elementPositionProp,
     nativeButton = false,
     interactive = true,
+    href,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -103,19 +104,23 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     position: elementPosition,
   });
 
+  const isLink = href != null;
+  const tabIndex = columnHasFocus ? 0 : -1;
   const { getButtonProps, buttonRef } = useButton({
     disabled: false,
     native: nativeButton,
-    tabIndex: columnHasFocus ? 0 : -1,
+    tabIndex,
   });
+
+  const mergedState = { ...state, link: isLink };
 
   const contextValue: CalendarGridTimeEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),
     [draggableEventContextValue, getSharedDragData],
   );
 
-  const element = useRenderElement('div', componentProps, {
-    state,
+  const element = useRenderElement(isLink ? 'a' : 'div', componentProps, {
+    state: mergedState,
     ref: [forwardedRef, buttonRef, ref],
     props: [
       elementProps,
@@ -125,7 +130,9 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
           [CalendarGridTimeEventCssVars.height]: `${duration * 100}%`,
         } as React.CSSProperties,
       },
-      ...(interactive ? [getButtonProps] : []),
+      // A link keeps the native link behavior, so it only needs the roving `tabIndex`.
+      ...(isLink ? [{ href, tabIndex }] : []),
+      ...(interactive && !isLink ? [getButtonProps] : []),
     ],
   });
 
@@ -138,7 +145,12 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
 });
 
 export namespace CalendarGridTimeEvent {
-  export interface State extends useDraggableEvent.State {}
+  export interface State extends useDraggableEvent.State {
+    /**
+     * Whether the event renders as a link.
+     */
+    link: boolean;
+  }
 
   export interface Props
     extends
@@ -152,6 +164,11 @@ export namespace CalendarGridTimeEvent {
      * @default true
      */
     interactive?: boolean;
+    /**
+     * The URL the event links to.
+     * When provided, the event renders as a link instead of a button.
+     */
+    href?: string;
     /**
      * The position of the event in its column, computed from `start` and `end` when not provided.
      */

@@ -54,13 +54,12 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     isDraggable,
     elementPosition: elementPositionProp,
     nativeButton = false,
+    href,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
-  // TODO: Expose a real `interactive` prop
-  // to control whether the event should behave like a button
-  const isInteractive = true;
+  const isLink = href != null;
 
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
@@ -144,10 +143,10 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     position: elementPosition,
   });
 
+  const tabIndex = rowHasFocus ? 0 : -1;
   const { getButtonProps, buttonRef } = useButton({
-    disabled: !isInteractive,
     native: nativeButton,
-    tabIndex: rowHasFocus ? 0 : -1,
+    tabIndex,
   });
 
   // eslint-disable-next-line react-compiler/react-compiler
@@ -163,6 +162,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     startingBeforeEdge,
     endingAfterEdge,
     dependencyDropTarget,
+    link: isLink,
   };
 
   const contextValue: TimelineGridEventContext = React.useMemo(
@@ -170,7 +170,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     [draggableEventContextValue, getSharedDragData],
   );
 
-  const element = useRenderElement('div', componentProps, {
+  const element = useRenderElement(isLink ? 'a' : 'div', componentProps, {
     state: mergedState,
     ref: [forwardedRef, ref, buttonRef],
     props: [
@@ -182,7 +182,8 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
         } as React.CSSProperties,
       },
       { [TimelineGridEventDataAttributes.occurrenceKey]: occurrenceKey } as Record<string, string>,
-      getButtonProps,
+      // A link keeps the native link behavior, so it only needs the roving `tabIndex`.
+      isLink ? { href, tabIndex } : getButtonProps,
     ],
     stateAttributesMapping: extraStateAttributesMapping,
   });
@@ -200,6 +201,10 @@ export namespace TimelineGridEvent {
     startingBeforeEdge: boolean;
     endingAfterEdge: boolean;
     dependencyDropTarget: boolean;
+    /**
+     * Whether the event renders as a link.
+     */
+    link: boolean;
   }
 
   export interface Props
@@ -208,6 +213,11 @@ export namespace TimelineGridEvent {
       NonNativeButtonProps,
       useDraggableEvent.PublicParameters {
     elementPosition?: useElementPositionInCollection.ReturnValue;
+    /**
+     * The URL the event links to.
+     * When provided, the event renders as a link instead of a button.
+     */
+    href?: string;
   }
 
   export interface SharedDragData {
