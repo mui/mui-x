@@ -14,4 +14,4 @@ Check [Data Grid - Charts integration](/x/react-data-grid/charts-integration/) f
 
 The demo below shows how to implement all of the elements mentioned above:
 
-{{"demo": "../../data-grid/charts-integration/GridChartsIntegrationBasic.js", "bg": "inline"}}
+{{"component": "file://../../data-grid/charts-integration/demos/grid-charts-integration-basic/index.ts", "bg": "inline"}}

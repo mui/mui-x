@@ -69,7 +69,7 @@ If you are building a custom layout without `ChatBox`, wrap your tree in `<ChatP
 The following demo is built entirely from hooks — no `ChatBox` — composing `useMessageIds()` + `useMessage(id)` for the thread, `useChatStatus()` for the progress indicator, `useChatComposer()` for the input, and `useChatStore()` for the message counter.
 Send a message to watch the echo adapter stream a reply.
 
-{{"demo": "HooksHeadlessChat.js"}}
+{{"component": "file://./demos/hooks-headless-chat/index.ts"}}
 
 ## Choosing the right hook
 

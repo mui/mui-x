@@ -18,7 +18,7 @@ This unlocks visualizations that go beyond the standard chart components, while 
 
 The forecast below combines bars, lines, axes, a synced tooltip, and custom SVG layers in a single composed chart.
 
-{{"demo": "WeatherComposition.js"}}
+{{"component": "file://./demos/weather-composition/index.ts"}}
 
 The MUI X Charts components follow an architecture based on context providers: you can pass your series and axes definitions to specialized components that transform the data and make it available to its descendants.
 These descendants can then be composed.
@@ -156,7 +156,7 @@ If the parent's dimensions rely on its content, the responsive chart will not re
 
 The demo below lets you switch between a chart with discrete dimensions (`width={500} height={300}`) and one with no dimensions defined, so you see how they differ.
 
-{{"demo": "BasicComposition.js" }}
+{{"component": "file://./demos/basic-composition/index.ts"}}
 
 ### Properties
 
@@ -227,7 +227,7 @@ You can modify the series `type` property to switch between rendering a line and
 </ChartsContainer>
 ```
 
-{{"demo": "SwitchSeriesType.js" }}
+{{"component": "file://./demos/switch-series-type/index.ts"}}
 
 ## Subcomponents
 
@@ -264,7 +264,7 @@ Here's how to apply it:
 The demo below lets you toggle clipping for scatter and line plots.
 Observe how the line markers extend beyond the clip area, rendering on top of the axes.
 
-{{"demo": "LimitOverflow.js" }}
+{{"component": "file://./demos/limit-overflow/index.ts"}}
 
 :::warning
 The demo above generates a unique ID with `useId()`.
@@ -321,7 +321,7 @@ See [HTML components](/x/react-charts/components/#html-components) for more info
 
 You can add interactive elements such as `ChartsAxisHighlight` and `ChartsTooltip` as illustrated in the demo below.
 
-{{"demo": "LegendTooltipComposition.js" }}
+{{"component": "file://./demos/legend-tooltip-composition/index.ts"}}
 
 :::info
 By default, `ChartsContainer` listens to mouse events to keep track of where the mouse is located on the chart.
@@ -359,7 +359,7 @@ In the example below, we create three layers:
 2. A WebGL layer for rendering with `CandlestickPlot`;
 3. An SVG layer that renders the axes and crosshair
 
-{{"demo": "Layering.js"}}
+{{"component": "file://./demos/layering/index.ts"}}
 
 Since all layers are absolutely positioned, they stack on top of each other in the order they are defined.
 
@@ -370,4 +370,4 @@ Since all layers are absolutely positioned, they stack on top of each other in t
 This example demonstrates how to combine scatter and line plots to overlay a normal distribution curve (known as a bell curve) over scattered data points.
 The bell curve is calculated based on the mean and standard deviation of the data.
 
-{{"demo": "BellCurveOverlay.js" }}
+{{"component": "file://./demos/bell-curve-overlay/index.ts"}}

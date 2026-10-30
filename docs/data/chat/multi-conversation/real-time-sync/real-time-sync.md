@@ -48,7 +48,7 @@ async subscribe({ onEvent }) {
 
 The demo below wires a simulated backend through `subscribe()`. Each button emits a real-time event so you can watch the typing indicator, presence chip, incoming message bubble, and unread badge react without any composer input.
 
-{{"demo": "RealtimeSyncSimulation.js"}}
+{{"component": "file://./demos/realtime-sync-simulation/index.ts"}}
 
 ## Event types
 

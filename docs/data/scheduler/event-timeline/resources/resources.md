@@ -55,7 +55,7 @@ const resources = [
 ];
 ```
 
-{{"demo": "NestedResources.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/nested-resources/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Default collapsed resources
 
@@ -63,7 +63,7 @@ Parent resources can be collapsed to hide their descendants.
 Use the `defaultCollapsedResources` prop to initialize the collapsed resources.
 A resource is expanded unless it is present in the object with a `true` value.
 
-{{"demo": "DefaultCollapsedResources.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/default-collapsed-resources/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Controlled collapsed resources
 
@@ -89,7 +89,7 @@ return (
 Use the `defaultVisibleResources` prop to initialize the visible resources.
 A resource is visible if it's absent from the object or set to `true`.
 
-{{"demo": "DefaultVisibleResources.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/default-visible-resources/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Controlled visible resources
 
@@ -131,7 +131,7 @@ const event = {
 };
 ```
 
-{{"demo": "MultipleResourcesPerEvent.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/multiple-resources-per-event/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 A multi-resource event renders once per row, each instance taking that row's `eventColor` unless the event has its own `color` — in the demo above, "Cross-team sync" renders blue in the Team A row and pink in the Team B row.
 
@@ -157,7 +157,7 @@ When `canHaveMultipleResources` isn't set, it's inferred from the `events` prop:
 Use the `eventColor` property to define a resource's color.
 The available color palettes are shown below:
 
-{{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/color-palettes/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::info
 Event colors can also be defined on the event or at the component level.
@@ -235,7 +235,7 @@ See [Editing—Read-only](/x/react-scheduler/event-timeline/editing/#read-only) 
 
 Use the `resourceColumnLabel` prop to customize the header of the resource column:
 
-{{"demo": "ResourceColumnLabel.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/resource-column-label/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 When both are provided, `resourceColumnLabel` takes priority over `localeText.timelineResourceTitleHeader`.
 
@@ -244,7 +244,7 @@ When both are provided, `resourceColumnLabel` takes priority over `localeText.ti
 Use the `timelineResourceTitle` slot to replace the text rendered inside a resource title cell.
 The slot receives the `resource` and is placed next to the legend color and the collapse toggle.
 
-{{"demo": "ResourceTitleSlot.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/resource-title-slot/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 The events of the row announce the resource through their own accessible name, so the content of the slot doesn't change it.
 The cell is its own focus target and toggles the collapse, so keep some text in it, and describe rather than label it when adding a tooltip, as the demo does with `describeChild`.
@@ -290,4 +290,4 @@ function Timeline() {
 }
 ```
 
-{{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/title-property/index.ts", "bg": "inline", "collapseToEmpty": true}}

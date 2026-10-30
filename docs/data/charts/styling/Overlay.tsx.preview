@@ -1,2 +1,0 @@
-<LineChart loading {...emptySeries} />
-<LineChart {...emptySeries} />

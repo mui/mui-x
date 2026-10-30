@@ -1,4 +1,0 @@
-<ScatterChart series={series} height={300}>
-  <LinkPoints seriesId="s1" />
-  <LinkPoints seriesId="s2" close />
-</ScatterChart>

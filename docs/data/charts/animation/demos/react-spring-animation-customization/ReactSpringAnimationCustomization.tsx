@@ -1,0 +1,81 @@
+import type { BarLabelProps } from '@mui/x-charts/BarChart';
+import { BarChart } from '@mui/x-charts/BarChart';
+import * as React from 'react';
+import { animated, useSpring } from '@react-spring/web';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+
+export default function ReactSpringAnimationCustomization() {
+  // @focus-start @padding 1
+  const [key, animate] = React.useReducer((v) => v + 1, 0);
+
+  return (
+    <Stack>
+      <BarChart
+        key={key}
+        xAxis={[{ data: ['A', 'B', 'C'] }]}
+        series={[
+          {
+            type: 'bar',
+            data: [5, 17, 11],
+            barLabel: 'value',
+          },
+          {
+            type: 'bar',
+            data: [0, 12, 15],
+            barLabel: 'value',
+          },
+          {
+            type: 'bar',
+            data: [1, 3, 9],
+            barLabel: 'value',
+          },
+        ]}
+        width={300}
+        height={400}
+        slots={{ barLabel: AnimatedBarLabel }}
+      />
+
+      <Button onClick={() => animate()}>Run Animation</Button>
+    </Stack>
+  );
+  // @focus-end
+}
+
+function AnimatedBarLabel(props: BarLabelProps) {
+  const {
+    seriesId,
+    dataIndex,
+    color,
+    isFaded,
+    isHighlighted,
+    classes,
+    xOrigin,
+    yOrigin,
+    x,
+    y,
+    width,
+    height,
+    layout,
+    skipAnimation,
+    ...otherProps
+  } = props;
+
+  const style = useSpring({
+    from: { y: yOrigin },
+    to: { y: y - 4 },
+    config: { tension: 100, friction: 10 },
+  });
+
+  return (
+    <animated.text
+      {...otherProps}
+      fill={color}
+      x={xOrigin + x + width / 2}
+      width={width}
+      height={height}
+      style={style}
+      textAnchor="middle"
+    />
+  );
+}

@@ -94,7 +94,7 @@ To use the Date and Time Pickers with a custom locale, see [Date and format loca
 
 With the component, adapter, and provider properly configured, you're now ready to render a Date Picker as shown below:
 
-{{"demo": "FirstComponent.js", "defaultCodeOpen": true}}
+{{"component": "file://./demos/first-component/index.ts", "initialExpanded": true}}
 
 ## TypeScript
 

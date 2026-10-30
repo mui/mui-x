@@ -64,4 +64,4 @@ To use the same value at every width, set all three tiers (`-sm`, `-md`, and `-l
 
 The demo below renders `StandaloneWeekView` with `width: 100%` and a `max-width` toggle. Switching `sm` / `md` / `lg` crosses the container-query breakpoints. Typography and the fixed-column width adapt.
 
-{{"demo": "ResponsiveTypographyDemo.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/responsive-typography-demo/index.ts", "bg": "inline", "collapseToEmpty": true}}

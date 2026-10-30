@@ -16,7 +16,7 @@ githubLabel: 'scope: chat'
 
 The demo below shows the empty state of the `ChatBox` component—an active conversation with no messages—before any user interaction:
 
-{{"demo": "EmptyState.js", "bg": "inline"}}
+{{"component": "file://./demos/empty-state/index.ts", "bg": "inline"}}
 
 ## API
 

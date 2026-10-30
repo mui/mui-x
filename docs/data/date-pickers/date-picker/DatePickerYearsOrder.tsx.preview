@@ -1,8 +1,0 @@
-<DatePicker
-  label="Years in descending order"
-  maxDate={currentYear}
-  openTo="year"
-  views={['year', 'month']}
-  yearsOrder="desc"
-  sx={{ minWidth: 250 }}
-/>

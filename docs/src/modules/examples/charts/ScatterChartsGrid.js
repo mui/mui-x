@@ -1,5 +1,5 @@
-import SimpleScatterChart from 'docs/data/charts/scatter-demo/SimpleScatterChart';
-import MultipleYAxesScatterChart from 'docs/data/charts/scatter-demo/MultipleYAxesScatterChart';
+import SimpleScatterChart from 'docs/data/charts/scatter-demo/demos/simple-scatter-chart/SimpleScatterChart';
+import MultipleYAxesScatterChart from 'docs/data/charts/scatter-demo/demos/multiple-y-axes-scatter-chart/MultipleYAxesScatterChart';
 import { ChartThumbnailCard, ChartThumbnailGridWrapper } from './ChartExampleThumbnailGrid';
 
 const chartData = [

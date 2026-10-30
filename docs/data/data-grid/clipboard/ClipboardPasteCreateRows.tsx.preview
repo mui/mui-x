@@ -1,8 +1,0 @@
-<DataGridPremium
-  rows={initialRows}
-  columns={columns}
-  clipboardPasteOptions={clipboardPasteOptions}
-  cellSelection
-  disableRowSelectionOnClick
-  ignoreValueFormatterDuringExport
-/>

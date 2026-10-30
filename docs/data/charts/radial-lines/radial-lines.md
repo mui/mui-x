@@ -12,13 +12,13 @@ components: ChartsRadialDataProvider, ChartsRadialDataProviderPremium, RadialLin
 
 The `RadialLineChart` component accepts `series`, `rotationAxis`, and `radiusAxis` props to render data in polar coordinates.
 
-{{"demo": "BasicRadialLineChart.js", "bg": "outline"}}
+{{"component": "file://./demos/basic-radial-line-chart/index.ts", "bg": "outline"}}
 
 ## Closing path
 
 To draw the line between the last and first point of the series, set the series property `closePath` to `true`.
 
-{{"demo": "ClosedOpenRadialLineChart.js", "bg": "outline"}}
+{{"component": "file://./demos/closed-open-radial-line-chart/index.ts", "bg": "outline"}}
 
 ## Axes
 
@@ -28,7 +28,7 @@ For more information about radial axes configuration, visit the [dedicated page]
 
 Here is an example of a rotation axis with a continuous scale type.
 
-{{"demo": "ContinuousRadialLineChart.js", "bg": "outline"}}
+{{"component": "file://./demos/continuous-radial-line-chart/index.ts", "bg": "outline"}}
 
 ## Marks
 
@@ -37,7 +37,7 @@ Add `showMark: true` to display marks.
 To modify the mark, use the property `shape`.
 It accepts 7 shapes: `'circle'`, `'square'`, `'diamond'`, `'cross'`, `'star'`, `'triangle'`, and `'wye'`.
 
-{{"demo": "RadialLineMarkShape.js", "bg": "outline"}}
+{{"component": "file://./demos/radial-line-mark-shape/index.ts", "bg": "outline"}}
 
 ## Highlight
 
@@ -47,7 +47,7 @@ Like other series, the radial line series has a `highlightScope` property that a
 The radial line interaction uses the [pointer based interaction](/x/react-charts/lines/#pointer-interaction).
 :::
 
-{{"demo": "ElementHighlights.js", "bg": "outline"}}
+{{"component": "file://./demos/element-highlights/index.ts", "bg": "outline"}}
 
 ## Click events
 
@@ -65,7 +65,7 @@ const clickHandler = (
 ) => {};
 ```
 
-{{"demo": "RadialLineClick.js", "bg": "outline"}}
+{{"component": "file://./demos/radial-line-click/index.ts", "bg": "outline"}}
 
 :::info
 There is a slight difference between the `event` of `onItemClick` and `onAxisClick`:

@@ -69,7 +69,7 @@ The rule of a timed event is evaluated in the event's `timezone`, even when it i
 The rule of an all-day event is evaluated on its dates, the same in every timezone.
 See [Recurring events and timezones](/x/react-scheduler/timezone/#recurring-events-and-timezones) for details.
 
-{{"demo": "RecurringEventsDataset.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/recurring-events-dataset/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Frequency and interval
 

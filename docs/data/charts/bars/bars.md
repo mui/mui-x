@@ -16,7 +16,7 @@ Categories can be progressive (for example, time periods) or independent (for ex
 
 The horizontal bar chart below compares voter turnout in several European countries.
 
-{{"demo": "ShinyBarChartHorizontal.js"}}
+{{"component": "file://./demos/shiny-bar-chart-horizontal/index.ts"}}
 
 ## Basics
 
@@ -30,7 +30,7 @@ Bar chart series must contain a `data` property with an array of values.
 You can specify bar ticks with the `xAxis` prop.
 The category axis uses `scaleType='band'` and its `data` should have the same length as your series.
 
-{{"demo": "BasicBars.js"}}
+{{"component": "file://./demos/basic-bars/index.ts"}}
 
 ### Using a dataset
 
@@ -40,7 +40,7 @@ It accepts an array of objects such as `dataset={[{x: 1, y: 32}, {x: 2, y: 41}, 
 You can reuse this data when defining the series and axes by using the `dataKey` property.
 For example, `xAxis={[{ dataKey: 'x' }]}` or `series={[{ dataKey: 'y' }]}`.
 
-{{"demo": "BarsDataset.js"}}
+{{"component": "file://./demos/bars-dataset/index.ts"}}
 
 ## Bar size
 
@@ -54,14 +54,14 @@ It's the size of the gap divided by the size of the bar.
 So a value of `1` will result in a gap between bars equal to the bar width.
 A value of `-1` will make bars overlap.
 
-{{"demo": "BarGap.js", "hideToolbar": true, "bg": "playground"}}
+{{"component": "file://./demos/bar-gap/index.ts", "hideToolbar": true, "bg": "playground"}}
 
 ## Stacking
 
 Bar series accept a string property called `stack`.
 Series with the same `stack` value are stacked on top of each other.
 
-{{"demo": "StackBars.js"}}
+{{"component": "file://./demos/stack-bars/index.ts"}}
 
 ### Stacking strategy
 
@@ -78,7 +78,7 @@ See [Stacking](/x/react-charts/stacking/) for more details.
 Use the `layout="horizontal"` prop to render bar charts in a horizontal layout.
 If you're composing a custom component, set the `layout: 'horizontal'` property on each bar series object.
 
-{{"demo": "HorizontalBars.js"}}
+{{"component": "file://./demos/horizontal-bars/index.ts"}}
 
 ### Tick placement
 
@@ -89,7 +89,7 @@ When using a `"band"` scale, the axis has some additional customization properti
 
 You can test all configuration options in the following demo:
 
-{{"demo": "TickPlacementBars.js"}}
+{{"component": "file://./demos/tick-placement-bars/index.ts"}}
 
 ### Date axis
 
@@ -106,7 +106,7 @@ This property is useful when you want to ensure that bars are always visible, ev
 The `minBarSize` property is ignored if the series value is `null` or `0`.
 It also doesn't work with stacked series.
 
-{{"demo": "MinBarSize.js"}}
+{{"component": "file://./demos/min-bar-size/index.ts"}}
 
 ### Log scale
 
@@ -122,7 +122,7 @@ You can add a grid in the background of the chart with the `grid` prop.
 
 See [Axis—Grid](/x/react-charts/axis-ticks/#grid) for details.
 
-{{"demo": "GridDemo.js"}}
+{{"component": "file://./demos/grid-demo/index.ts"}}
 
 ### Color scale
 
@@ -137,7 +137,7 @@ Bar charts use the following, in order of priority:
 
 See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) for the `colorMap` properties.
 
-{{"demo": "ColorScale.js"}}
+{{"component": "file://./demos/color-scale/index.ts"}}
 
 ### Border radius
 
@@ -146,7 +146,7 @@ It works with any positive value and is properly applied to horizontal layouts, 
 
 When composing a custom component, you can set the `borderRadius` prop on the `BarPlot` component.
 
-{{"demo": "BorderRadius.js"}}
+{{"component": "file://./demos/border-radius/index.ts"}}
 
 ### CSS
 
@@ -155,7 +155,7 @@ You can customize the bar chart elements using CSS selectors.
 Each series renders a `g` element that contains a `data-series` attribute.
 You can use this attribute to target elements based on their series.
 
-{{"demo": "BarGradient.js"}}
+{{"component": "file://./demos/bar-gradient/index.ts"}}
 
 ### Gradients
 
@@ -174,7 +174,7 @@ In the example below, there are two gradients:
 The first gradient is used for elements showing the whole gradient, such as tooltips and legend.
 The second one is shown in the bars themselves that display the part of the gradient that corresponds to their value.
 
-{{"demo": "BarOECDHouseholdSavings.js"}}
+{{"component": "file://./demos/bar-oecd-household-savings/index.ts"}}
 
 ## Labels
 
@@ -187,7 +187,7 @@ Alternatively, the `barLabel` property accepts a function that is called with th
 In the example below, the value of the first series is displayed using the default formatter, and the value of the second series is formatted as US dollars.
 The labels of the third series are hidden.
 
-{{"demo": "BarLabel.js"}}
+{{"component": "file://./demos/bar-label/index.ts"}}
 
 ### Label placement
 
@@ -198,7 +198,7 @@ To customize the position of the bar label, set a series' `barLabelPlacement` pr
   For a vertical positive bar, the label is above its top edge.
   For a horizontal negative bar, the label is to the left of its leftmost limit.
 
-{{"demo": "BarLabelPlacement.js"}}
+{{"component": "file://./demos/bar-label-placement/index.ts"}}
 
 :::info
 When using `outside` placement, if the label doesn't fit in the chart area, it will be clipped.
@@ -212,12 +212,12 @@ Labels are not displayed if the function returns `null`.
 
 The example below displays the text `'High'` on values higher than 10 and hides values when the generated bar height is lower than 60px.
 
-{{"demo": "CustomLabels.js"}}
+{{"component": "file://./demos/custom-labels/index.ts"}}
 
 You can further customize the labels by providing a component to the `barLabel` slot.
 The example below positions the labels above the bars they refer to.
 
-{{"demo": "LabelsAboveBars.js"}}
+{{"component": "file://./demos/labels-above-bars/index.ts"}}
 
 ### Stack total labels
 
@@ -226,7 +226,7 @@ To show it, render a custom component as a child of the chart container.
 
 The example below sums the series with the [`useBarSeries`](/x/react-charts/hooks/use-series/) hook and positions each total with the [`useXScale`](/x/react-charts/hooks/use-scale/) and [`useYScale`](/x/react-charts/hooks/use-scale/) scales.
 
-{{"demo": "StackTotalLabels.js"}}
+{{"component": "file://./demos/stack-total-labels/index.ts"}}
 
 ## Click events
 
@@ -244,7 +244,7 @@ const clickHandler = (
 ) => {};
 ```
 
-{{"demo": "BarClick.js"}}
+{{"component": "file://./demos/bar-click/index.ts"}}
 
 :::info
 There is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
@@ -280,7 +280,7 @@ When you set `skipAnimation` to `true`, the chart renders without animations.
 </ChartsContainer>
 ```
 
-{{"demo": "BarAnimation.js"}}
+{{"component": "file://./demos/bar-animation/index.ts"}}
 
 ## Performance
 
@@ -301,7 +301,7 @@ This has some trade-offs:
 
 The example below uses the `renderer` prop to improve performance when rendering a dataset with 500 data points.
 
-{{"demo": "BarBatchRenderer.js"}}
+{{"component": "file://./demos/bar-batch-renderer/index.ts"}}
 
 ### WebGL renderer [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
@@ -314,7 +314,7 @@ The WebGL renderer has the same trade-offs as the batch renderer, plus a few add
 - The WebGL canvas only draws the bar shapes. Axes, grid, highlights, focus outlines, and bar labels continue to rely on SVG.
 - Requires a browser with WebGL 2 support.
 
-{{"demo": "WebGLBars.js"}}
+{{"component": "file://./demos/web-gl-bars/index.ts"}}
 
 ### Sampling [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
@@ -351,4 +351,4 @@ Here's how the bar chart is composed:
 </ChartsDataProvider>
 ```
 
-{{"demo": "BarScatterCompostion.js"}}
+{{"component": "file://./demos/bar-scatter-compostion/index.ts"}}

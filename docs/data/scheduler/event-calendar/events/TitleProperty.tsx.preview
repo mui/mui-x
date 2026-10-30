@@ -1,7 +1,0 @@
-<EventCalendar
-  events={events}
-  defaultVisibleDate={defaultVisibleDate}
-  onEventsChange={setEvents}
-  eventModelStructure={eventModelStructure}
-  defaultPreferences={{ isSidePanelOpen: false }}
-/>

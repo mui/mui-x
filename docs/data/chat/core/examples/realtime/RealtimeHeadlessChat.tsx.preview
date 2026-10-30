@@ -1,7 +1,0 @@
-<ChatProvider
-  adapter={adapter}
-  initialConversations={cloneConversations(demoConversations.slice(0, 2))}
-  initialActiveConversationId="support"
->
-  <RealtimeInner emit={emit} />
-</ChatProvider>

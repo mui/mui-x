@@ -1,9 +1,0 @@
-<DataGridPremium
-  {...data}
-  disableRowSelectionOnClick
-  initialState={{
-    rowGrouping: {
-      model: ['company', 'director'],
-    },
-  }}
-/>

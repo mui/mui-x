@@ -17,7 +17,7 @@ githubLabel: 'scope: chat'
 
 In the demo below, the adapter throws on every send and the error surfaces via `onError`:
 
-{{"demo": "ErrorState.js", "bg": "inline"}}
+{{"component": "file://./demos/error-state/index.ts", "bg": "inline"}}
 
 ## API
 

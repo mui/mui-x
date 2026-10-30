@@ -15,7 +15,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 Virtualization is enabled by default on the `<RichTreeViewPro />` component.
 Here is an example of a Tree View with 100 000 items:
 
-{{"demo": "BasicVirtualizedRichTreeViewPro.js"}}
+{{"component": "file://./demos/basic-virtualized-rich-tree-view-pro/index.ts"}}
 
 You can disable virtualization using the `disableVirtualization` prop:
 
@@ -95,13 +95,13 @@ Without setting the minimum and maximum height, the Tree View takes as much spac
 Consider setting `maxHeight` on the flex parent container, otherwise item virtualization will not be able to improve performance by limiting the number of elements rendered in the DOM.
 :::
 
-{{"demo": "FlexRichTreeView.js", "bg": "inline"}}
+{{"component": "file://./demos/flex-rich-tree-view/index.ts", "bg": "inline"}}
 
 ### Minimum and maximum height
 
 In the demo below, the Tree View is placed inside a flex container with a minimum height of `200px` and a maximum height of `400px` and adapts its height when the number of items changes.
 
-{{"demo": "MinMaxHeightRichTreeView.js", "bg": "inline"}}
+{{"component": "file://./demos/min-max-height-rich-tree-view/index.ts", "bg": "inline"}}
 
 ## Percentage dimensions
 
@@ -113,4 +113,4 @@ If the parent has no size, the percentage will be zero.
 
 You can predefine dimensions for the parent of the Tree View.
 
-{{"demo": "FixedSizeRichTreeView.js", "bg": "inline"}}
+{{"component": "file://./demos/fixed-size-rich-tree-view/index.ts", "bg": "inline"}}

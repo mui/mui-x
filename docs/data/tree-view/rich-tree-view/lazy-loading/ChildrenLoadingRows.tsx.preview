@@ -1,9 +1,0 @@
-<RichTreeViewPro
-  items={[]}
-  domStructure="nested"
-  disableVirtualization
-  dataSource={{
-    getChildrenCount: (item) => item?.childrenCount as number,
-    getTreeItems,
-  }}
-/>

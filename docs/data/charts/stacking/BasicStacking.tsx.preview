@@ -1,8 +1,0 @@
-<BarChart
-  height={300}
-  series={[
-    { ...seriesA, stack: 'total' },
-    { ...seriesB, stack: 'total' },
-    { ...seriesC, stack: 'total' },
-  ]}
-/>

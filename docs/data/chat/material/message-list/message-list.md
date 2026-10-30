@@ -57,7 +57,7 @@ Control auto-scrolling through the `features` prop on `ChatBox`.
 Use the toggle in the demo below to compare the behavior with auto-scroll enabled and disabled.
 When auto-scroll is disabled, the user can still scroll to the bottom manually using the scroll-to-bottom affordance button.
 
-{{"demo": "AutoScrollConfig.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/auto-scroll-config/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Scroll-to-bottom affordance
 
@@ -84,7 +84,7 @@ Dividers are disabled by default—enable them with `features={{ dateDivider: tr
 
 Customize the date format through `slotProps`. The demo below enables the feature and uses a short month + day format:
 
-{{"demo": "DateDividerFormat.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/date-divider-format/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Message groups
 
@@ -95,7 +95,7 @@ If no avatar resolves for that author, the avatar slot is omitted entirely.
 The grouping window defaults to 5 minutes (300,000 ms). Customize it through `slotProps`.
 The demo below sets the window to 1 minute (60,000 ms)—messages more than 1 minute apart start a new group with a fresh avatar:
 
-{{"demo": "MessageGrouping.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/message-grouping/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Compact variant
 
@@ -109,7 +109,7 @@ Compact mode applies the following changes to the message list:
 
 When set on `ChatBox`, the variant automatically applies to the conversation list as well.
 
-{{"demo": "CompactVariant.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/compact-variant/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ```tsx
 <ChatBox variant="compact" adapter={adapter} />
@@ -122,7 +122,7 @@ Three values are available—`compact`, `standard` (default), and `comfortable`�
 
 Use the toggle in the demo below to compare the three density levels:
 
-{{"demo": "DensityProp.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/density-prop/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ```tsx
 <ChatBox density="compact" adapter={adapter} />
@@ -141,7 +141,7 @@ The message list auto-scrolls to follow new content as long as the user is near 
 When building a custom layout outside of `ChatBox`, use `ChatMessageList` directly inside a `ChatRoot` provider.
 The demo below renders only the message list with a placeholder for a custom composer:
 
-{{"demo": "StandaloneMessageList.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/standalone-message-list/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Imperative scrolling
 
@@ -190,7 +190,7 @@ function CustomScrollIndicator() {
 
 The message list is a single Tab stop: a roving tabindex over the `role="article"` messages keeps only one message in the tab order at a time, so tabbing from the composer to the rest of the application never walks through every message.
 
-{{"demo": "KeyboardNavigation.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/keyboard-navigation/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 | Key                                              | Action                                                                                           |
 | :----------------------------------------------- | :----------------------------------------------------------------------------------------------- |

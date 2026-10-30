@@ -1,9 +1,0 @@
-<DataGrid
-  rows={rows}
-  columns={columns}
-  onCellEditStop={(params: GridCellEditStopParams, event: MuiEvent) => {
-    if (params.reason === GridCellEditStopReasons.cellFocusOut) {
-      event.defaultMuiPrevented = true;
-    }
-  }}
-/>

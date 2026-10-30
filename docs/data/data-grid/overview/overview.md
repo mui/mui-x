@@ -57,7 +57,7 @@ The MIT-licensed Community version of the Data Grid is a more sophisticated impl
 
 It includes all of the main features listed in the navigation menu, such as editing, sorting, filtering, and pagination, as shown in the demo below:
 
-{{"demo": "DataGridDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/data-grid-demo/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Pro version [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
@@ -70,7 +70,7 @@ Pro features are denoted by the blue cube icon (<span class="plan-pro"></span>) 
 
 The demo below displays 31 columns and 100,000 rows—over three million cells in total:
 
-{{"demo": "DataGridProDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
+{{"component": "file://./demos/data-grid-pro-demo/index.ts", "disableAd": true, "bg": "inline", "collapseToEmpty": true}}
 
 ### Premium version [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
@@ -85,7 +85,7 @@ The demo below groups rows by commodity name, and uses an aggregation function t
 You can experiment with grouping other columns in the column header menus.
 You can also try exporting to Excel, and copying and pasting data to and from Excel tables.
 
-{{"demo": "DataGridPremiumDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
+{{"component": "file://./demos/data-grid-premium-demo/index.ts", "disableAd": true, "bg": "inline", "collapseToEmpty": true}}
 
 ## API
 

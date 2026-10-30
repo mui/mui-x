@@ -20,20 +20,20 @@ See [Common concepts—Slots and subcomponents](/x/common-concepts/custom-compon
 
 You can use the `textField` slot to pass custom props to the `TextField`:
 
-{{"demo": "TextFieldSlotProps.js"}}
+{{"component": "file://./demos/text-field-slot-props/index.ts"}}
 
 ### Change the separator of range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 You can use the `dateSeparator` prop to change the separator rendered between the start and end dates:
 
-{{"demo": "RangeFieldDateSeparator.js"}}
+{{"component": "file://./demos/range-field-date-separator/index.ts"}}
 
 ### Change the format density
 
 You can control the field format spacing using the `formatDensity` prop.
 Setting `formatDensity` to `"spacious"` adds space before and after each `/`, `-` and `.` character.
 
-{{"demo": "FieldFormatDensity.js"}}
+{{"component": "file://./demos/field-format-density/index.ts"}}
 
 ## Multi input range field [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
@@ -41,24 +41,24 @@ Setting `formatDensity` to `"spacious"` adds space before and after each `/`, `-
 
 You can pass the multi input fields to the range picker to use it for keyboard editing:
 
-{{"demo": "MultiInputDateRangePicker.js"}}
+{{"component": "file://./demos/multi-input-date-range-picker/index.ts"}}
 
 If you want to create a wrapper around the field, make sure to set the `fieldType` static property to `'multi-input'`.
 Otherwise, the picker will throw an error because it won't know how to adapt to this custom field:
 
-{{"demo": "MultiInputDateRangePickerWrapped.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/multi-input-date-range-picker-wrapped/index.ts", "collapseToEmpty": true}}
 
 ### Customize the `start` and `end` fields differently
 
 You can pass conditional props to the `textField` slot to customize the input styling based on the `position`.
 
-{{"demo": "MultiInputFieldTextFieldProps.js"}}
+{{"component": "file://./demos/multi-input-field-text-field-props/index.ts"}}
 
 ### Customize the separator
 
 You can use the `separator` slot to pass custom props to the `Typography` rendered between the two Text Fields:
 
-{{"demo": "MultiInputFieldSeparatorSlotProps.js"}}
+{{"component": "file://./demos/multi-input-field-separator-slot-props/index.ts"}}
 
 :::success
 When used inside a picker, the `separator` slot is not available directly and must be accessed using `slotProps.field.slotProps.separator`.
@@ -70,7 +70,7 @@ When used inside a picker, the `separator` slot is not available directly and mu
 
 You can import the `PickersTextField` component to create custom wrappers:
 
-{{"demo": "MaterialFieldWrapped.js"}}
+{{"component": "file://./demos/material-field-wrapped/index.ts"}}
 
 :::success
 This approach is only recommended if you need complex customizations on your `PickersTextField`.
@@ -89,11 +89,11 @@ You will have access to the `clearable` and `onClear` props using native HTML el
 but the **focus** and **hover** behavior depends on styles applied via the `sx` prop.
 :::
 
-{{"demo": "BrowserField.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/browser-field/index.ts", "collapseToEmpty": true}}
 
-{{"demo": "BrowserSingleInputRangeField.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/browser-single-input-range-field/index.ts", "collapseToEmpty": true}}
 
-{{"demo": "BrowserMultiInputRangeField.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/browser-multi-input-range-field/index.ts", "collapseToEmpty": true}}
 
 ## With a custom editing experience
 
@@ -101,37 +101,37 @@ but the **focus** and **hover** behavior depends on styles applied via the `sx` 
 
 If your user can only select a value in a small list of available dates, you can replace the field with the [Autocomplete](/material-ui/react-autocomplete/) component to list those dates:
 
-{{"demo": "behavior-autocomplete/MaterialDatePicker.js", "defaultCodeOpen": false}}
+{{"component": "file://./behavior-autocomplete/demos/material-date-picker/index.ts", "collapseToEmpty": true}}
 
 ### Using a masked Text Field
 
 If you want to use a simple mask approach for the field editing instead of the built-in logic, you can replace the default field with the [TextField](/material-ui/react-text-field/) component using a masked input value built with the [rifm](https://github.com/realadvisor/rifm) package.
 
-{{"demo": "behavior-masked-text-field/MaskedMaterialTextField.js", "defaultCodeOpen": false}}
+{{"component": "file://./behavior-masked-text-field/demos/masked-material-text-field/index.ts", "collapseToEmpty": true}}
 
 ### Using a read-only Text Field
 
 If you want users to select a value exclusively through the views
 but you still want the UI to look like a Text Field, you can replace the field with a read-only [Text Field](/material-ui/react-text-field/) component:
 
-{{"demo": "behavior-read-only-text-field/MaterialDatePicker.js", "defaultCodeOpen": false}}
+{{"component": "file://./behavior-read-only-text-field/demos/material-date-picker/index.ts", "collapseToEmpty": true}}
 
 ### Using a read-only Text Field on mobile
 
 If you want to keep the default behavior on desktop but have a read-only TextField on mobile, you can conditionally render the custom field presented in the previous section:
 
-{{"demo": "behavior-read-only-mobile-text-field/MaterialDatePicker.js", "defaultCodeOpen": false}}
+{{"component": "file://./behavior-read-only-mobile-text-field/demos/material-date-picker/index.ts", "collapseToEmpty": true}}
 
 ### Using a Button
 
 If you want users to select a value exclusively through the views
 and you don't want the UI to look like a Text Field, you can replace the field with the [Button](/material-ui/react-button/) component:
 
-{{"demo": "behavior-button/MaterialDatePicker.js", "defaultCodeOpen": false}}
+{{"component": "file://./behavior-button/demos/material-date-picker/index.ts", "collapseToEmpty": true}}
 
 The same logic can be applied to any Range Picker:
 
-{{"demo": "behavior-button/MaterialDateRangePicker.js", "defaultCodeOpen": false}}
+{{"component": "file://./behavior-button/demos/material-date-range-picker/index.ts", "collapseToEmpty": true}}
 
 ## Build your own custom field
 
@@ -287,4 +287,4 @@ function DesktopDatePickerWithCustomField() {
 
 Here is a live demo of the example created in all the previous sections:
 
-{{"demo": "behavior-tutorial/MaterialDatePicker.js", "defaultCodeOpen": false}}
+{{"component": "file://./behavior-tutorial/demos/material-date-picker/index.ts", "collapseToEmpty": true}}

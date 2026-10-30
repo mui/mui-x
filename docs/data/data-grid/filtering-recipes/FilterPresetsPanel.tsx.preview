@@ -1,8 +1,0 @@
-<DataGridPro
-  {...data}
-  loading={loading}
-  slots={{
-    filterPanel: CustomFilterPanel,
-  }}
-  showToolbar
-/>

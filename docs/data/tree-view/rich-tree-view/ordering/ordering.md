@@ -15,7 +15,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 You can enable the drag-and-drop reordering of items by setting the `itemsReordering` prop to `true`:
 
-{{"demo": "DragAndDrop.js"}}
+{{"component": "file://./demos/drag-and-drop/index.ts"}}
 
 ## Limit reordering
 
@@ -23,12 +23,12 @@ By default, all items are reorderable.
 You can prevent reordering of specifc items using the `isItemReorderable` prop.
 The following example shows how to only let users reorder the leaves using the [`getItemOrderedChildrenIds()`](/x/react-tree-view/rich-tree-view/items/#get-an-items-children-by-id) API method.
 
-{{"demo": "OnlyReorderLeaves.js"}}
+{{"component": "file://./demos/only-reorder-leaves/index.ts"}}
 
 You can also limit the items in which an item can be dropped using the `canMoveItemToNewPosition` prop.
 The following example shows how to only let users reorder inside the same parent:
 
-{{"demo": "OnlyReorderInSameParent.js"}}
+{{"component": "file://./demos/only-reorder-in-same-parent/index.ts"}}
 
 To restrict where an item can be nested (the `make-child` case), check `newPosition.parentId`.
 It contains the id of the item that would become the new parent (or `null` when dropping at the root), so you can pass it to [`apiRef.current.getItem()`](/x/react-tree-view/rich-tree-view/items/#get-an-item-by-id) and inspect that item's data.
@@ -40,18 +40,18 @@ The action is only exposed by `getDragAndDropOverlayProps()`, which is meant for
 
 The example below only allows items to be dropped inside items of type `'folder'`:
 
-{{"demo": "CanMoveItemByType.js"}}
+{{"component": "file://./demos/can-move-item-by-type/index.ts"}}
 
 ## React to an item reordering
 
 You can use the `onItemPositionChange` to send the new position of an item to your backend:
 
-{{"demo": "OnItemPositionChange.js"}}
+{{"component": "file://./demos/on-item-position-change/index.ts"}}
 
 If you want to send the entire dataset to your backend, you can use the [`getItemTree()`](/x/react-tree-view/rich-tree-view/items/#get-the-current-item-tree) API method.
 The following demo demonstrates it by synchronizing the first `RichTreeView` with the second one whenever you perform a reordering:
 
-{{"demo": "SendAllItemsToServer.js"}}
+{{"component": "file://./demos/send-all-items-to-server/index.ts"}}
 
 ## Customization
 
@@ -59,7 +59,7 @@ The following demo demonstrates it by synchronizing the first `RichTreeView` wit
 
 You can create a custom `TreeItem` component to render a drag handle icon and only trigger reordering when dragging from it:
 
-{{"demo": "OnlyReorderFromDragHandle.js"}}
+{{"component": "file://./demos/only-reorder-from-drag-handle/index.ts"}}
 
 ## Common examples
 
@@ -68,4 +68,4 @@ You can create a custom `TreeItem` component to render a drag handle icon and on
 The example below is a simplified version of the [file explorer](/x/react-tree-view/rich-tree-view/customization/#file-explorer) example with drag-and-drop reordering.
 You can reorder items but only inside folders (or inside the trash).
 
-{{"demo": "FileExplorer.js"}}
+{{"component": "file://./demos/file-explorer/index.ts"}}

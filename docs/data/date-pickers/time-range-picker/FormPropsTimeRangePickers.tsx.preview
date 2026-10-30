@@ -1,3 +1,0 @@
-<TimeRangePicker label="disabled" disabled />
-<TimeRangePicker label="readOnly" readOnly />
-<TimeRangePicker label="name" name="startTimeRange" />

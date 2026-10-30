@@ -1,8 +1,0 @@
-<BarChart
-  series={[
-    { data: pData, label: 'pv', id: 'pvId' },
-    { data: uData, label: 'uv', id: 'uvId' },
-  ]}
-  xAxis={[{ data: xLabels, height: 28 }]}
-  yAxis={[{ width: 50 }]}
-/>
