@@ -11,7 +11,7 @@ We'd like to extend a big thank you to the 20 contributors who made this release
   https://github.com/user-attachments/assets/a96a8366-41df-4fe8-8e25-e517c914b372
 
 - 👆 Data Grid column reordering on touch and pen devices
-- ↔️ Right-to-left (RTL) support in the Event Calendar and the Event Timeline
+- ↔️  Right-to-left (RTL) support in the Event Calendar and the Event Timeline
 - 🕒 Fix recurring events, drag and drop, and the time axis of the Scheduler across DST transitions
 - ⚠️ Recurring events and dependencies are now opt-in in the Event Timeline
 - 🌍 The Scheduler formats dates with `Intl`: `dateLocale` takes a locale string like `"fr-FR"`
