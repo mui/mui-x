@@ -329,8 +329,10 @@ export class LayoutList extends Layout<ListElements> {
 function padTopFor(offsetTop: number, anchorTop: number) {
   // Clamped: row positions can change without a context update (e.g. a row-height
   // change), and a negative padding would be dropped while the counter-translation kept
-  // applying, displacing the rows. At zero the box is unanchored until the next update.
-  return Math.max(0, offsetTop - anchorTop);
+  // applying, displacing the rows. At least 1, so the rows' layer has unpainted area at the top
+  // of the scroll as it does elsewhere: one painted edge to edge can count as opaque, which
+  // would hide a `useScrollUnderlay` underlay and keep the browser from drawing it.
+  return Math.max(1, offsetTop - anchorTop);
 }
 
 /**
