@@ -75,8 +75,8 @@ describe('<DataGridPro /> - IME fast edit with data loading', () => {
         )!;
         await user.click(skeletonCell);
         expect(gridFocusCellSelector(apiRef as any)).to.equal(null);
-        expect(getEditorWrappers()).to.have.length(0);
-        expect(getInput(getCell(0, 1))).to.equal(null);
+        // The cell stays the tab stop, and so does its hidden editor.
+        expect(getEditorWrappers()).to.have.length(imeFastEdit ? 1 : 0);
         expect(describeFocus()).to.equal('other');
       },
     );

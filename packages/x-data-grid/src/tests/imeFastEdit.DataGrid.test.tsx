@@ -1,8 +1,16 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
-import { DataGrid, GridCellEditStartReasons, GridEditInputCell } from '@mui/x-data-grid';
+import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
+import Dialog from '@mui/material/Dialog';
+import {
+  DataGrid,
+  GridCellEditStartReasons,
+  GridEditInputCell,
+  gridFocusCellSelector,
+  useGridApiRef,
+} from '@mui/x-data-grid';
 import type {
   DataGridProps,
+  GridApi,
   GridCellModesModel,
   GridColDef,
   GridRenderCellParams,
@@ -43,6 +51,29 @@ function TestCase(props: Partial<DataGridProps>) {
       />
     </div>
   );
+}
+
+// Returns a function that restores `matchMedia`. jsdom has no `matchMedia` to spy on.
+function mockCoarsePointer() {
+  const originalMatchMedia = window.matchMedia;
+  window.matchMedia = (query: string) => {
+    if (query === '(pointer: coarse)' || !originalMatchMedia) {
+      return {
+        matches: query === '(pointer: coarse)',
+        media: query,
+        onchange: null,
+        addListener: () => {},
+        removeListener: () => {},
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        dispatchEvent: () => false,
+      };
+    }
+    return originalMatchMedia.call(window, query);
+  };
+  return () => {
+    window.matchMedia = originalMatchMedia;
+  };
 }
 
 describe('<DataGrid /> - IME fast edit', () => {
@@ -418,7 +449,23 @@ describe('<DataGrid /> - IME fast edit', () => {
       expect(getCell(0, 1)).to.have.attribute('tabindex', '-1');
     });
 
-    it('removes the editor when the DOM focus leaves it', async () => {
+    it('keeps the editor as the tab stop when the DOM focus leaves the grid', async () => {
+      const { user } = render(
+        <React.Fragment>
+          <input data-testid="outside" />
+          <TestCase />
+        </React.Fragment>,
+      );
+      const cell = await focusCell(user, 0, 1);
+      const outside = document.querySelector<HTMLElement>('[data-testid="outside"]')!;
+      await user.click(outside);
+      expect(document.activeElement).to.equal(outside);
+      expect(getEditorWrappers()).to.have.length(1);
+      expect(cell).to.have.attribute('tabindex', '-1');
+      expect(getInput(cell)).to.have.attribute('tabindex', '0');
+    });
+
+    it('removes the editor of the previous cell when another cell gets the focus', async () => {
       const { user } = render(
         <React.Fragment>
           <input data-testid="outside" />
@@ -427,7 +474,85 @@ describe('<DataGrid /> - IME fast edit', () => {
       );
       const cell = await focusCell(user, 0, 1);
       await user.click(document.querySelector('[data-testid="outside"]')!);
+      const other = await focusCell(user, 1, 0);
       expect(getInput(cell)).to.equal(null);
+      expect(getEditorWrappers()).to.have.length(1);
+      expect(document.activeElement).to.equal(getInput(other));
+    });
+
+    it('gives the focus back to the editor when a dialog closes after a click in the dialog', async () => {
+      function DialogTestCase() {
+        const [open, setOpen] = React.useState(false);
+        return (
+          <React.Fragment>
+            <TestCase onCellKeyDown={(params, event) => event.key === 'F2' && setOpen(true)} />
+            <Dialog open={open} onClose={() => setOpen(false)}>
+              <button type="button">inside</button>
+              <button type="button" onClick={() => setOpen(false)}>
+                close
+              </button>
+            </Dialog>
+          </React.Fragment>
+        );
+      }
+      const { user } = render(<DialogTestCase />);
+      const cell = await focusCell(user, 0, 1);
+      const input = getInput(cell)!;
+      // F2 does not start edit mode.
+      fireEvent.keyDown(input, { key: 'F2' });
+      await screen.findByRole('dialog');
+      await user.click(screen.getByRole('button', { name: 'inside' }));
+      await user.click(screen.getByRole('button', { name: 'close' }));
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getInput(cell));
+      });
+      await user.keyboard('{ArrowDown}');
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getInput(getCell(1, 1)));
+      });
+    });
+  });
+
+  // jsdom does not clear the text selection on mousedown.
+  describe.skipIf(isJSDOM)('text selection', () => {
+    it('keeps a text selection made with a drag over the text of the cell', async () => {
+      const { user } = render(<TestCase />);
+      const cell = getCell(0, 1);
+      const text = document.createTreeWalker(cell, NodeFilter.SHOW_TEXT).nextNode()!;
+      expect(text.textContent).to.equal('Seoul');
+
+      await user.pointer({ keys: '[MouseLeft>]', target: cell });
+      act(() => {
+        const range = document.createRange();
+        range.setStart(text, 0);
+        range.setEnd(text, 3);
+        document.getSelection()!.removeAllRanges();
+        document.getSelection()!.addRange(range);
+      });
+      await user.pointer({ keys: '[/MouseLeft]', target: cell });
+
+      await waitFor(() => {
+        expect(getInput(cell)).not.to.equal(null);
+      });
+      expect(document.getSelection()!.toString()).to.equal('Seo');
+      expect(document.activeElement).to.equal(cell);
+    });
+
+    it('gives the focus to the editor on the next click without a text selection', async () => {
+      const { user } = render(<TestCase />);
+      const cell = await focusCell(user, 0, 1);
+      act(() => {
+        const range = document.createRange();
+        range.selectNodeContents(cell);
+        document.getSelection()!.removeAllRanges();
+        document.getSelection()!.addRange(range);
+        cell.focus();
+      });
+      expect(document.activeElement).to.equal(cell);
+
+      await user.click(cell);
+      expect(document.activeElement).to.equal(getInput(cell));
     });
   });
 
@@ -582,23 +707,7 @@ describe('<DataGrid /> - IME fast edit', () => {
 
   describe('devices with a coarse pointer', () => {
     it('does not render the editor when the primary pointer is coarse', async () => {
-      // jsdom has no `matchMedia`, so replace it instead of a spy.
-      const originalMatchMedia = window.matchMedia;
-      window.matchMedia = (query: string) => {
-        if (query === '(pointer: coarse)' || !originalMatchMedia) {
-          return {
-            matches: query === '(pointer: coarse)',
-            media: query,
-            onchange: null,
-            addListener: () => {},
-            removeListener: () => {},
-            addEventListener: () => {},
-            removeEventListener: () => {},
-            dispatchEvent: () => false,
-          };
-        }
-        return originalMatchMedia.call(window, query);
-      };
+      const restoreMatchMedia = mockCoarsePointer();
       try {
         const { user } = render(<TestCase />);
         const cell = await focusCell(user, 0, 1);
@@ -606,7 +715,35 @@ describe('<DataGrid /> - IME fast edit', () => {
         expect(document.activeElement).to.equal(cell);
         expect(cell).to.have.attribute('tabindex', '0');
       } finally {
-        window.matchMedia = originalMatchMedia;
+        restoreMatchMedia();
+      }
+    });
+
+    it('does not set the focus state when Tab moves the focus to a cell', async () => {
+      const restoreMatchMedia = mockCoarsePointer();
+      try {
+        let apiRef: React.RefObject<GridApi | null>;
+        function ApiRefTestCase() {
+          apiRef = useGridApiRef();
+          return <TestCase apiRef={apiRef} hideFooter />;
+        }
+        const { user } = render(
+          <React.Fragment>
+            <ApiRefTestCase />
+            <button type="button">after</button>
+          </React.Fragment>,
+        );
+        const cell = await focusCell(user, 0, 1);
+        await user.click(screen.getByRole('button', { name: 'after' }));
+        expect(gridFocusCellSelector(apiRef!)).to.equal(null);
+
+        await user.tab({ shift: true });
+        expect(document.activeElement).to.equal(cell);
+        // Without the flag, Tab does not set the focus state.
+        expect(gridFocusCellSelector(apiRef!)).to.equal(null);
+        expect(getInput(cell)).to.equal(null);
+      } finally {
+        restoreMatchMedia();
       }
     });
   });
