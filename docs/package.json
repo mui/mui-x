@@ -26,7 +26,7 @@
     "@emotion/styled": "catalog:",
     "@mui/icons-material": "catalog:",
     "@mui/internal-core-docs": "catalog:",
-    "@mui/internal-docs-infra": "^0.13.1-canary.0",
+    "@mui/internal-docs-infra": "0.13.1-canary.27",
     "@mui/material": "catalog:",
     "@mui/material-nextjs": "^9.5.0",
     "@mui/stylis-plugin-rtl": "catalog:",
@@ -85,8 +85,8 @@
     "stylis": "catalog:",
     "topojson-client": "^3.1.0",
     "us-atlas": "^3.0.1",
-    "webpack-bundle-analyzer": "^5.4.0",
-    "visionscarto-world-atlas": "^1.0.0"
+    "visionscarto-world-atlas": "^1.0.0",
+    "webpack-bundle-analyzer": "^5.4.0"
   },
   "devDependencies": {
     "@babel/preset-typescript": "catalog:",
