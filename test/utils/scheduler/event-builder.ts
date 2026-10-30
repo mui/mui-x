@@ -155,6 +155,12 @@ export class EventBuilder {
     return this;
   }
 
+  /** Set the URL the event links to. */
+  href(href: string) {
+    this.event.href = href;
+    return this;
+  }
+
   // ─────────────────────────────────────────────
   // Time setters
   // ─────────────────────────────────────────────

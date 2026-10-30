@@ -131,6 +131,11 @@ export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
    * If not defined, the event is resizable if the `areEventsResizable` property is enabled.
    */
   resizable?: boolean | SchedulerEventSide;
+
+  /**
+   * The URL the event links to.
+   */
+  href?: string;
 }
 
 /**
@@ -240,6 +245,11 @@ export interface SchedulerEvent {
    * A custom class name to apply to the event element.
    */
   className?: string;
+  /**
+   * The URL the event links to.
+   * Only used when the event is read-only: the event then renders as a link instead of opening the event dialog.
+   */
+  href?: string;
 }
 
 /**

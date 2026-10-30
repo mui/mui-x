@@ -161,6 +161,12 @@ export const schedulerEventSelectors = {
     return event;
   },
   isReadOnly: isEventReadOnlySelector,
+  /**
+   * The URL an event renders a link to.
+   * Only read-only events can be links, so it is `undefined` for editable events.
+   */
+  href: (state: State, eventId: SchedulerEventId) =>
+    isEventReadOnlySelector(state, eventId) ? processedEventSelector(state, eventId)?.href : undefined,
   /** Used by writers where no event exists yet (a creation), or that write the whole model into a new one (a copy). */
   canWriteEventDates: (state: State) => canWriteEventDatesSelector(state.eventModelStructure),
   /**
