@@ -7,16 +7,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
 function RatingInputValue(props) {
-  const { item, applyValue, focusElementRef, headerFilterMenu, clearButton } = props;
-
-  const ratingRef = React.useRef(null);
-  React.useImperativeHandle(focusElementRef, () => ({
-    focus: () => {
-      ratingRef.current
-        .querySelector(`input[value="${Number(item.value) || ''}"]`)
-        .focus();
-    },
-  }));
+  const { item, applyValue, headerFilterMenu, clearButton } = props;
 
   const handleFilterChange = (event, newValue) => {
     applyValue({ ...item, value: newValue });
@@ -36,7 +27,6 @@ function RatingInputValue(props) {
         value={Number(item.value)}
         onChange={handleFilterChange}
         precision={0.5}
-        ref={ratingRef}
         sx={{ mr: 0.5 }}
       />
       {headerFilterMenu}

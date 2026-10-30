@@ -100,6 +100,10 @@ GridFilterInputMultipleValue.propTypes /* remove-proptypes */ = {
    * @default false
    */
   disableDebounce: PropTypes.bool,
+  /**
+   * A ref allowing to set imperative focus.
+   * @deprecated The grid no longer passes this prop. Use `inputRef` instead.
+   */
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,

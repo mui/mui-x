@@ -5,16 +5,7 @@ import { DataGrid, getGridNumericOperators } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function RatingInputValue(props) {
-  const { item, applyValue, focusElementRef } = props;
-
-  const ratingRef = React.useRef(null);
-  React.useImperativeHandle(focusElementRef, () => ({
-    focus: () => {
-      ratingRef.current
-        .querySelector(`input[value="${Number(item.value) || ''}"]`)
-        .focus();
-    },
-  }));
+  const { item, applyValue } = props;
 
   const handleFilterChange = (event, newValue) => {
     applyValue({ ...item, value: newValue });
@@ -35,7 +26,6 @@ function RatingInputValue(props) {
         value={Number(item.value)}
         onChange={handleFilterChange}
         precision={0.5}
-        ref={ratingRef}
       />
     </Box>
   );

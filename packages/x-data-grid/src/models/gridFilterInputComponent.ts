@@ -19,6 +19,10 @@ export type GridFilterInputValueProps<
   // Is any because if typed as GridApiRef a dep cycle occurs. Same happens if ApiContext is used.
   apiRef: RefObject<Api>;
   inputRef?: React.Ref<HTMLElement | null>;
+  /**
+   * A ref allowing to set imperative focus.
+   * @deprecated The grid no longer passes this prop. Use `inputRef` instead.
+   */
   focusElementRef?: React.Ref<any>;
   headerFilterMenu?: React.ReactNode;
   clearButton?: React.ReactNode | null;

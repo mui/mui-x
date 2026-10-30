@@ -475,6 +475,21 @@ describe('<DataGrid /> - Filter panel', () => {
     expect(screen.queryAllByRole('dialog').length).to.deep.equal(0);
   });
 
+  // See https://github.com/mui/mui-x/issues/24012
+  it('should focus the column input when the panel opens', () => {
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+      />,
+    );
+    expect(screen.getByRole('combobox', { name: 'Column' })).toHaveFocus();
+  });
+
   // See https://github.com/mui/mui-x/issues/5402
   it('should not remove `isEmpty` filter from model when filter panel is opened through column menu', () => {
     render(
@@ -607,6 +622,8 @@ describe('<DataGrid /> - Filter panel', () => {
         'aria-pressed',
         'true',
       );
+      // The slot ignores `focusElementRef`, so focus falls back to the operator input.
+      expect(screen.getByRole('combobox', { name: 'Operator' })).toHaveFocus();
     });
 
     it('should update the filter item when the custom column input calls onChange', () => {
