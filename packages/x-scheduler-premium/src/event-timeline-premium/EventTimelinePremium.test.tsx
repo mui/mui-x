@@ -32,7 +32,7 @@ import type {
   TimelineResourceTitleProps,
   TimelineResourceTitlePropsOverrides,
 } from '@mui/x-scheduler-premium/models';
-import { vi, describe, it, expect } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 const engineering = ResourceBuilder.new().build();
 const design = ResourceBuilder.new().build();
@@ -852,6 +852,92 @@ describe('<EventTimelinePremium />', () => {
         `.${eventTimelinePremiumClasses.currentTimeIndicator}`,
       );
       expect(indicators.length).to.equal(0);
+    });
+  });
+
+  describe('current day', () => {
+    function getCurrentHeaderCells() {
+      return Array.from(
+        document.querySelectorAll(`.${eventTimelinePremiumClasses.headerCell}[aria-current]`),
+      );
+    }
+
+    it('should mark only the day header cell of today with data-current and aria-current="date"', async () => {
+      await renderTimeline();
+
+      const currentCells = getCurrentHeaderCells();
+      expect(currentCells.length).to.equal(1);
+      expect(currentCells[0]).to.have.attribute('aria-current', 'date');
+      expect(currentCells[0]).to.have.attribute('data-current', '');
+      expect(currentCells[0]).to.have.attribute('data-unit', 'day');
+      expect(currentCells[0].querySelector('time')).to.have.attribute(
+        'dateTime',
+        '2025-07-03T00:00',
+      );
+    });
+
+    it('should mark the day header cell of today in the dayAndHour preset', async () => {
+      await renderTimeline({ preset: 'dayAndHour' });
+
+      const currentCells = getCurrentHeaderCells();
+      expect(currentCells.length).to.equal(1);
+      expect(currentCells[0]).to.have.attribute('data-unit', 'day');
+    });
+
+    it('should not mark any header cell when today is not in view', async () => {
+      await renderTimeline({ visibleDate: adapter.date('2030-01-01T00:00:00Z', 'default') });
+
+      expect(getCurrentHeaderCells().length).to.equal(0);
+    });
+
+    it('should not mark any header cell when the preset has no day level', async () => {
+      await renderTimeline({ preset: 'monthAndYear' });
+
+      expect(getCurrentHeaderCells().length).to.equal(0);
+    });
+
+    it('should mark the current day of the display timezone', async () => {
+      // It's still July 2nd at 22:00 in New York, but July 3rd in UTC.
+      const now = new Date('2025-07-03T02:00:00Z');
+      vi.setSystemTime(now);
+      await renderTimeline({ visibleDate: now, displayTimezone: 'America/New_York' });
+
+      const currentCells = getCurrentHeaderCells();
+      expect(currentCells.length).to.equal(1);
+      expect(currentCells[0].querySelector('time')).to.have.attribute(
+        'dateTime',
+        '2025-07-02T00:00',
+      );
+    });
+
+    describe('midnight rollover', () => {
+      beforeEach(() => {
+        vi.useFakeTimers({ now: new Date('2025-07-03T23:59:30Z') });
+      });
+
+      afterEach(() => {
+        vi.useRealTimers();
+      });
+
+      it('should move the current day to the next day at midnight', async () => {
+        await renderTimeline({ displayTimezone: 'UTC' });
+
+        expect(getCurrentHeaderCells()[0].querySelector('time')).to.have.attribute(
+          'dateTime',
+          '2025-07-03T00:00',
+        );
+
+        await act(async () => {
+          await vi.advanceTimersByTimeAsync(60_000);
+        });
+
+        const currentCells = getCurrentHeaderCells();
+        expect(currentCells.length).to.equal(1);
+        expect(currentCells[0].querySelector('time')).to.have.attribute(
+          'dateTime',
+          '2025-07-04T00:00',
+        );
+      });
     });
   });
 
