@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
+import { act, screen, waitFor, within } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import { dependenciesFeature } from '@mui/x-scheduler-premium/dependencies';
@@ -228,17 +228,15 @@ describe('EventTimelinePremium - features', () => {
 
     it('should call `onDependenciesChange` when a dependency is deleted', async () => {
       const handleDependenciesChange = vi.fn();
-      await renderSettled(
+      const { user } = await renderSettled(
         <DependenciesTimeline
           dependencies={[dependency]}
           onDependenciesChange={handleDependenciesChange}
         />,
       );
 
-      const hitArea = document.querySelector('[data-dependency-hit="dep-1"]')!;
-      fireEvent.click(hitArea);
-      fireEvent.doubleClick(hitArea);
-      fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Delete' }));
+      await user.dblClick(document.querySelector('[data-dependency-hit="dep-1"]')!);
+      await user.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Delete' }));
 
       expect(handleDependenciesChange.mock.calls.length).to.equal(1);
       expect(handleDependenciesChange.mock.calls[0][0]).to.deep.equal([]);
