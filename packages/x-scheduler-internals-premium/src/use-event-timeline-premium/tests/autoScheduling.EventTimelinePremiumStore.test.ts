@@ -46,6 +46,9 @@ const DEFAULT_PARAMS = {
 
 const date = (value: string) => adapter.date(value, 'default');
 const timestampOf = (value: string | undefined) => new Date(value!).getTime();
+const cascadeNotWritableWarning = (property: 'start' | 'end') =>
+  'MUI X Scheduler: A change was not applied because keeping a dependency would move an event whose date could not be written back.\n' +
+  `\`eventModelStructure\` declares \`${property}\` with a getter but no setter, so it cannot be written back to your event model. Add a \`setter\` to make it editable.`;
 
 describe('Auto-scheduling - EventTimelinePremiumStore', () => {
   describe('method: updateEvent', () => {
@@ -479,7 +482,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
     // The dependency cleanup for `deleted` is computed inside `handleEventsUpdate`, before the
     // store's own date-writability check runs on the merged batch — it must not go out just
-    // because this hook itself had nothing to veto.
+    // because this hook left the refusal of the caller's own move to the store.
     it('should emit nothing, not even the dependency cleanup, when the batch is refused because a date cannot be written back', () => {
       const onEventsChange = vi.fn();
       const onDependenciesChange = vi.fn();
@@ -497,21 +500,54 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       );
 
       // Only recurring scope changes build such batches today, so the store method is
-      // called directly. `a` moves earlier, so the cascade pushes nothing and the store's own
-      // refusal of `a`'s move is the one that has to beat the cleanup.
+      // called directly.
       let result: any;
       expect(() => {
         result = (store as any).updateEvents({
           deleted: ['d'],
           updated: [
-            { id: 'a', start: date('2025-07-03T08:00:00Z'), end: date('2025-07-03T09:00:00Z') },
+            { id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') },
           ],
         });
       }).toWarnDev([
         'MUI X Scheduler: An event was not moved because a date could not be written back.',
       ]);
 
-      expect(result.rejection).not.to.equal(null);
+      expect(result.rejection).to.deep.equal({ code: 'datesNotWritableError' });
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+    });
+
+    // Same batch, but `a` is only resized: the plugin itself vetoes the push of `b`, and its
+    // veto must beat the cleanup too.
+    it('should emit nothing, not even the dependency cleanup, when the cascade of a batch with a deletion needs a date that cannot be written back', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const orphan = EventBuilder.new().id('d').singleDay('2025-07-04T09:00:00Z').build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, eventB, orphan],
+          dependencies: [DEP_AB, { id: 'dep-2', source: 'a', target: 'd', type: 'FinishToStart' }],
+          eventModelStructure: { start: { getter: (event: any) => event.start } },
+          onEventsChange,
+          onDependenciesChange,
+        },
+        adapter,
+      );
+
+      let result: any;
+      expect(() => {
+        result = (store as any).updateEvents({
+          deleted: ['d'],
+          updated: [{ id: 'a', end: date('2025-07-03T10:30:00Z') }],
+        });
+      }).toWarnDev([cascadeNotWritableWarning('start')]);
+
+      expect(result.rejection).to.deep.equal({
+        code: 'unwritableEventMovedError',
+        params: { title: eventB.title },
+      });
       expect(onEventsChange.mock.calls.length).to.equal(0);
       expect(onDependenciesChange.mock.calls.length).to.equal(0);
     });
@@ -520,10 +556,6 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
   // Combines the scheduling cascade with an `eventModelStructure` date that can't be written
   // back — the two features are tested separately everywhere else in this suite.
   describe('unwritable date', () => {
-    const cascadeNotWritableWarning = (property: 'start' | 'end') =>
-      'MUI X Scheduler: A change was not applied because keeping a dependency would move an event whose date could not be written back.\n' +
-      `\`eventModelStructure\` declares \`${property}\` with a getter but no setter, so it cannot be written back to your event model. Add a \`setter\` to make it editable.`;
-
     it('should refuse the whole batch when a cascade would move a successor whose date is not writable', () => {
       const onEventsChange = vi.fn();
       const eventModelStructure = { start: { getter: (event: any) => event.start } };
@@ -544,6 +576,48 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(result!).to.deep.equal({
         applied: false,
         rejection: { code: 'unwritableEventMovedError', params: { title: eventB.title } },
+      });
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+      expect(store.state.processedEventLookup.get('a')!.dataTimezone.end.timestamp).to.equal(
+        adapter.getTime(date('2025-07-03T10:00:00Z')),
+      );
+    });
+
+    // A caller's own move is refused by the store whatever the cascade does with it, so the
+    // rejection is the same wherever the move lands: clamped back after `a` (first call), or
+    // pushing `b` forward (second call) — the toast must not blame `b` for `a`'s own move.
+    it.each([
+      {
+        name: 'when the cascade clamps it',
+        changes: { id: 'b', start: '2025-07-03T09:00:00Z', end: '2025-07-03T10:00:00Z' },
+      },
+      {
+        name: 'when it pushes a successor',
+        changes: { id: 'a', start: '2025-07-03T11:00:00Z', end: '2025-07-03T12:00:00Z' },
+      },
+    ])("should refuse the caller's own move with the store's error $name", ({ changes }) => {
+      const onEventsChange = vi.fn();
+      const eventModelStructure = { start: { getter: (event: any) => event.start } };
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        { ...DEFAULT_PARAMS, eventModelStructure, onEventsChange },
+        adapter,
+      );
+
+      let result: ReturnType<typeof store.updateEvent>;
+      expect(() => {
+        result = store.updateEvent({
+          id: changes.id,
+          start: date(changes.start),
+          end: date(changes.end),
+        });
+      }).toWarnDev([
+        'MUI X Scheduler: An event was not moved because a date could not be written back.\n' +
+          '`eventModelStructure` declares `start` with a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.',
+      ]);
+
+      expect(result!).to.deep.equal({
+        applied: false,
+        rejection: { code: 'datesNotWritableError' },
       });
       expect(onEventsChange.mock.calls.length).to.equal(0);
     });
@@ -818,13 +892,41 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         eventId: 'b',
       });
       // The warning above is only logged once.
-      expect(store.updateDependency('dep-1', { lag: 2, lagUnit: 'hour' })).to.deep.equal({
+      expect(() => {
+        result = store.updateDependency('dep-1', { lag: 2, lagUnit: 'hour' });
+      }).not.toWarnDev();
+      expect(result!).to.deep.equal({
         status: 'rejected',
         reason: 'datesNotWritable',
         eventId: 'b',
       });
 
       expect(onDependenciesChange.mock.calls.length).to.equal(0);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    // Guards against over-refusing: these paths move no event, so an unwritable date is irrelevant.
+    it('should still relax and delete a dependency when a date is not writable', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          eventModelStructure: { start: { getter: (event: any) => event.start } },
+          onDependenciesChange,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      expect(() => {
+        expect(store.updateDependency('dep-1', { type: 'StartToStart' })).to.deep.equal({
+          status: 'updated',
+        });
+        expect(store.deleteDependency('dep-1')).to.equal(true);
+      }).not.toWarnDev();
+
+      expect(onDependenciesChange.mock.calls.length).to.equal(2);
       expect(onEventsChange.mock.calls.length).to.equal(0);
     });
   });

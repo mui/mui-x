@@ -855,8 +855,8 @@ export class SchedulerStore<
   ): SchedulerEventUpdatedProperties {
     let result: SchedulerEventUpdatedProperties | undefined;
 
-    for (const property of ['start', 'end'] as const) {
-      if (!(property in changes) || schedulerEventSelectors.isDateWritable(this.state, property)) {
+    for (const property of schedulerEventSelectors.unwritableDates(this.state)) {
+      if (!(property in changes)) {
         continue;
       }
 
@@ -907,11 +907,9 @@ export class SchedulerStore<
   /**
    * Refuses the whole `updateEvents` batch — like a scheduling veto — when a move (both bounds
    * present, per `isDatesMove`) of an updated event has a date `eventModelStructure` can't write
-   * back: partially applying it would turn an intended shift into a stretch. Checked after the
-   * scheduling plugin's contributions are merged into `updated`, but a cascaded entry carrying
-   * such a date never gets here: the plugin vetoes it, whether it carries one bound or both. A
-   * resize-style update of the caller's own — only one bound present — isn't a move;
-   * `removeUnwritableDates` drops just the unwritable side for those instead.
+   * back: partially applying it would turn an intended shift into a stretch. A resize-style
+   * update of the caller's own — only one bound present — isn't a move; `removeUnwritableDates`
+   * drops just the unwritable side for those instead.
    */
   private checkUpdatedDatesWritable(
     updated: Iterable<SchedulerEventUpdatedProperties>,

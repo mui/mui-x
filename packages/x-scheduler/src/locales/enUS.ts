@@ -94,7 +94,7 @@ const enUSDialog: EventEditingLocaleText = {
   readOnlyEventMovedError: (title) =>
     `This change would move the read-only event "${title}", so it was not applied.`,
   unwritableEventMovedError: (title) =>
-    `This change would move the event "${title}", whose dates can't be edited, so it was not applied.`,
+    `This change would move the event "${title}", whose dates can't be changed, so it was not applied.`,
   dependencyCascadeBlockedError:
     'This dependency would move a read-only event, so it was not created.',
   dependencyDatesNotWritableError:

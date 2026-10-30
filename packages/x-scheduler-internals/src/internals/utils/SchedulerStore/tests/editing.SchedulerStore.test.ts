@@ -23,7 +23,7 @@ const DEFAULT_PARAMS = {
 
 const RRULE = { freq: 'DAILY' } as any;
 
-// Mirrors `datesNotWritableReason` in `SchedulerStore.ts` (not exported): `toWarnDev` matches by
+// Mirrors `datesNotWritableReason` in `SchedulerStore.utils.ts`: `toWarnDev` matches by
 // `includes`, so asserting only the first line of a warning never pins this text. Every fixture
 // in this file locks `start` only.
 const DATES_NOT_WRITABLE_REASON =

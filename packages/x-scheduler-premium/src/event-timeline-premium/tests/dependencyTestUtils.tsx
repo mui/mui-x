@@ -9,7 +9,11 @@ import type {
   EventTimelinePremiumStoreParameters,
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
-import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerEvent,
+  SchedulerEventModelStructure,
+  SchedulerResource,
+} from '@mui/x-scheduler-internals/models';
 import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 import {
   EventEditingStyledContext,
@@ -84,18 +88,13 @@ type PresetConfig = EventTimelinePremiumStoreParameters<
   SchedulerResource
 >['presetConfig'];
 
-type EventModelStructure = EventTimelinePremiumStoreParameters<
-  SchedulerEvent,
-  SchedulerResource
->['eventModelStructure'];
-
 interface TestTimelineProps {
   events: SchedulerEvent[];
   resources: SchedulerResource[];
   dependencies?: SchedulerDependency[];
   presetConfig?: PresetConfig;
   readOnly?: boolean;
-  eventModelStructure?: EventModelStructure;
+  eventModelStructure?: SchedulerEventModelStructure<SchedulerEvent>;
   /**
    * @default both features
    */
@@ -204,7 +203,7 @@ interface RenderTimelineParameters {
   /**
    * Pass a module-scope value: the store compares it by reference.
    */
-  eventModelStructure?: EventModelStructure;
+  eventModelStructure?: SchedulerEventModelStructure<SchedulerEvent>;
   features?: EventTimelinePremiumInternalFeatures;
   localeText?: Partial<EventTimelineLocaleText>;
   onDependenciesChange?: (dependencies: SchedulerDependency[]) => void;

@@ -519,8 +519,8 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       expect(getLagInput(dialog)).not.to.have.attribute('aria-describedby');
     });
 
-    // Changing `dep-1` to Finish to start, or adding a lag, would push the start of the
-    // writable `event-o`, which `eventModelStructure` can't write back.
+    // Changing `dep-1` to Finish to start, or adding a lag, would push the start of `event-o`,
+    // which isn't read-only but whose start `eventModelStructure` can't write back.
     function renderUnwritableCascade(
       onDependenciesChange?: (value: SchedulerDependency[]) => void,
     ) {

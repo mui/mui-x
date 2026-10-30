@@ -27,9 +27,7 @@ import { schedulerEventSelectors } from '../../../scheduler-selectors/schedulerE
  * "start and / or end".
  */
 export function datesNotWritableReason(state: SchedulerState): string {
-  const properties = (['start', 'end'] as const).filter(
-    (property) => !schedulerEventSelectors.isDateWritable(state, property),
-  );
+  const properties = schedulerEventSelectors.unwritableDates(state);
   const names = properties.map((property) => `\`${property}\``).join(' and ');
   const pronoun = properties.length > 1 ? 'they' : 'it';
   return `\`eventModelStructure\` declares ${names} with a getter but no setter, so ${pronoun} cannot be written back to your event model. Add a \`setter\` to make ${pronoun === 'it' ? 'it' : 'them'} editable.`;

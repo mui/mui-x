@@ -150,8 +150,9 @@ export class SchedulerSchedulingPlugin<
    * instead: nothing is applied, and the rejection is returned for the caller to surface.
    *
    * Neither is applied here: `updateEvents` can still refuse the merged batch afterward for a
-   * reason of its own, so the dependency cleanup is returned as `commit`, called only once the
-   * caller has confirmed the batch goes ahead — a vetoed batch must not have emitted it.
+   * reason of its own (e.g. the caller's own move of a date `eventModelStructure` can't write
+   * back), so the dependency cleanup is returned as `commit`, called only once the caller has
+   * confirmed the batch goes ahead — a vetoed batch must not have emitted it.
    *
    * With a `dataSource`, event deletions are persisted asynchronously after `commit` has already
    * emitted `onDependenciesChange`. If that persistence fails, the event survives but its
@@ -189,9 +190,17 @@ export class SchedulerSchedulingPlugin<
       // The cascade only reports the bound it moves, so a single unwritable bound isn't a move
       // `updateEvents` refuses: it would strip it like a caller's own resize and apply the rest
       // of the batch with the dependency broken.
-      const unwritable = this.findUnwritableCascadedEntry(result.updated);
-      if (unwritable) {
-        const unwritableEvent = this.store.state.processedEventLookup.get(unwritable.id)!;
+      // A caller's own move (both bounds) is left to `updateEvents`, which refuses the whole
+      // batch for it anyway: vetoing here would blame whichever event the cascade clamped (the
+      // moved event itself, or a successor it pushes), depending only on where the move lands.
+      const isCallerMoveRefused =
+        !schedulerEventSelectors.canWriteEventDates(this.store.state) &&
+        updated.some((entry) => 'start' in entry && 'end' in entry);
+      const unwritableEventId = isCallerMoveRefused
+        ? undefined
+        : this.findUnwritableCascadedEventId(result.updated);
+      if (unwritableEventId !== undefined) {
+        const unwritableEvent = this.store.state.processedEventLookup.get(unwritableEventId)!;
         return {
           rejected: true as const,
           rejection: {
@@ -222,8 +231,8 @@ export class SchedulerSchedulingPlugin<
    * Adds a dependency between two events.
    * Rejects every dependency while the scheduler is read-only, and dependencies
    * referencing an unknown or recurring event, duplicating an existing dependency, closing
-   * a cycle, needing a read-only event to move, or needing a date `eventModelStructure`
-   * can't write back to change.
+   * a cycle, needing a read-only event to move, or changing a date `eventModelStructure`
+   * can't write back.
    * The guards read the controlled `dependencies` value, so two adds in the same
    * tick are not validated against each other.
    * Implementation of the store's `addDependency()` — call it through the store.
@@ -352,9 +361,9 @@ export class SchedulerSchedulingPlugin<
     if (result.blocked.length > 0) {
       return { status: 'rejected', reason: 'cascadeBlocked', eventId: result.blocked[0] };
     }
-    const unwritable = this.findUnwritableCascadedEntry(result.updated);
-    if (unwritable) {
-      return { status: 'rejected', reason: 'datesNotWritable', eventId: unwritable.id };
+    const unwritableEventId = this.findUnwritableCascadedEventId(result.updated);
+    if (unwritableEventId !== undefined) {
+      return { status: 'rejected', reason: 'datesNotWritable', eventId: unwritableEventId };
     }
 
     this.updateDependencies(nextList);
@@ -365,21 +374,17 @@ export class SchedulerSchedulingPlugin<
   }
 
   /**
-   * The first cascaded entry carrying a date `eventModelStructure` can't write back, warning
-   * about the missing setter in dev. Shared by both paths applying a cascade: the one merged
-   * into an `updateEvents` batch, and the one `commitDependencyChange` applies directly.
+   * The id of the first cascaded event carrying a date `eventModelStructure` can't write back,
+   * warning about the missing setter in dev. Shared by both paths applying a cascade: the one
+   * merged into an `updateEvents` batch, and the one `commitDependencyChange` applies directly.
    */
-  private findUnwritableCascadedEntry(
+  private findUnwritableCascadedEventId(
     cascaded: readonly SchedulerEventUpdatedProperties[],
-  ): SchedulerEventUpdatedProperties | undefined {
+  ): SchedulerEventId | undefined {
     const { state } = this.store;
-    if (schedulerEventSelectors.canWriteEventDates(state)) {
-      return undefined;
-    }
+    const unwritableDates = schedulerEventSelectors.unwritableDates(state);
     const unwritable = cascaded.find((entry) =>
-      (['start', 'end'] as const).some(
-        (property) => property in entry && !schedulerEventSelectors.isDateWritable(state, property),
-      ),
+      unwritableDates.some((property) => property in entry),
     );
     if (process.env.NODE_ENV !== 'production') {
       if (unwritable) {
@@ -391,7 +396,7 @@ export class SchedulerSchedulingPlugin<
         );
       }
     }
-    return unwritable;
+    return unwritable?.id;
   }
 
   /**
