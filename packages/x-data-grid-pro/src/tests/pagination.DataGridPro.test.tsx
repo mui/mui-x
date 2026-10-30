@@ -1,5 +1,6 @@
+import * as React from 'react';
 import { createRenderer, act, waitFor } from '@mui/internal-test-utils';
-import { getColumnValues } from 'test/utils/helperFn';
+import { getColumnValues, spyApi } from 'test/utils/helperFn';
 import type { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import type { GridApi } from '@mui/x-data-grid-pro';
@@ -66,6 +67,71 @@ describe('<DataGridPro /> - Pagination', () => {
         apiRef.current?.setPage(50);
       });
       expect(getColumnValues(0)).to.deep.equal(['19']);
+    });
+
+    it('should not scroll when pagination is disabled', () => {
+      let apiRef: RefObject<GridApi | null>;
+
+      function GridTest() {
+        const basicData = useBasicDemoData(20, 2);
+        apiRef = useGridApiRef();
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...basicData}
+              apiRef={apiRef}
+              initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
+              pageSizeOptions={[1]}
+            />
+          </div>
+        );
+      }
+
+      render(<GridTest />);
+      const scrollToIndexes = spyApi(apiRef!.current!, 'scrollToIndexes');
+
+      act(() => {
+        apiRef!.current?.setPage(1);
+      });
+
+      expect(scrollToIndexes.mock.calls.length).to.equal(0);
+    });
+
+    it('should not apply the page offset before the pagination state is synced', () => {
+      let apiRef!: RefObject<GridApi | null>;
+
+      function GridTest({ pagination }: { pagination: boolean }) {
+        apiRef = useGridApiRef();
+
+        // `useGridPaginationModel` syncs the prop into the state in a passive effect, so a
+        // layout effect runs while the two disagree. `GridEditMultiSelectCell` scrolls from
+        // exactly such an effect.
+        React.useLayoutEffect(() => {
+          if (pagination) {
+            apiRef.current?.scrollToIndexes({ rowIndex: 0 });
+          }
+        }, [pagination]);
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              apiRef={apiRef}
+              columns={[{ field: 'id' }]}
+              rows={Array.from({ length: 6 }, (_, id) => ({ id }))}
+              pagination={pagination}
+              paginationModel={{ page: 1, pageSize: 3 }}
+              pageSizeOptions={[3]}
+            />
+          </div>
+        );
+      }
+
+      const { setProps } = render(<GridTest pagination={false} />);
+
+      // Reading `props.pagination` here would take the paginated path against an unpaginated
+      // state and reject `rowIndex: 0` as being before `page * pageSize`.
+      expect(() => setProps({ pagination: true })).not.toWarnDev();
     });
   });
 

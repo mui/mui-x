@@ -121,7 +121,7 @@ export const useDataGridComponent = (
   useGridDensity(apiRef, props);
   useGridColumnResize(apiRef, props);
   useGridPagination(apiRef, props);
-  useGridScroll(apiRef, props);
+  useGridScroll(apiRef);
   useGridColumnMenu(apiRef);
   useGridCsvExport(apiRef, props);
   useGridPrintExport(apiRef, props);
