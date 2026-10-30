@@ -2,10 +2,12 @@ import * as React from 'react';
 import {
   DataGrid,
   GridFilterInputMultipleValue,
-  type GridFilterInputMultipleValueProps,
-  type GridFilterModel,
   GridPreferencePanelsValue,
   getGridStringOperators,
+} from '@mui/x-data-grid';
+import type {
+  GridFilterInputMultipleValueProps,
+  GridFilterModel,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 

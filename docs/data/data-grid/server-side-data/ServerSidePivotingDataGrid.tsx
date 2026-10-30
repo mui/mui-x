@@ -1,10 +1,10 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
+import type {
   GridPivotModel,
   GridDataSource,
   DataGridPremiumProps,
 } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 const pivotModel: GridPivotModel = {

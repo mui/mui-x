@@ -341,12 +341,21 @@ MonthCalendar.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If `true`, the component is focused when it mounts.
+   */
   autoFocus: PropTypes.bool,
   /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
+  /**
+   * @ignore
+   */
   currentMonth: PropTypes.object,
   /**
    * The default selected value.
@@ -374,7 +383,13 @@ MonthCalendar.propTypes /* remove-proptypes */ = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * @ignore
+   */
   gridLabelId: PropTypes.string,
+  /**
+   * @ignore
+   */
   hasFocus: PropTypes.bool,
   /**
    * Maximal selectable date.
@@ -396,7 +411,13 @@ MonthCalendar.propTypes /* remove-proptypes */ = {
    * @param {PickerValidDate} value The new value.
    */
   onChange: PropTypes.func,
+  /**
+   * @ignore
+   */
   onFocusedViewChange: PropTypes.func,
+  /**
+   * @ignore
+   */
   onMonthFocus: PropTypes.func,
   /**
    * If `true`, the component is read-only.

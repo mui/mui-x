@@ -15,6 +15,9 @@ export interface BasePickerProps<
   TError,
   TExternalProps extends UsePickerProps<TValue, TView, TError, any>,
 > extends UsePickerBaseProps<TValue, TView, TError, TExternalProps> {
+  /**
+   * A CSS class name applied to the root element.
+   */
   className?: string;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.

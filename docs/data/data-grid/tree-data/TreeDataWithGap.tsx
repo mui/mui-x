@@ -1,5 +1,6 @@
 import { gridRowIdSelector, gridRowNodeSelector } from '@mui/x-data-grid';
-import { DataGridPro, GridColDef, DataGridProProps } from '@mui/x-data-grid-pro';
+import type { GridColDef, DataGridProProps } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 
 const rows = [
   {

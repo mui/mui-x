@@ -14,7 +14,7 @@
       "description": "Whether events can be dragged from inside of the calendar and dropped outside of it. If true, when the mouse leaves the calendar, the event won&#39;t be rendered inside the calendar anymore. If false, when the mouse leaves the calendar, the event will be rendered in its last valid position inside the calendar."
     },
     "dateLocale": {
-      "description": "The locale object from <code>date-fns</code> used to format dates. This affects day names, month names, week start day, and other locale-dependent formatting. Import a locale from <code>date-fns/locale</code> and pass it to this prop."
+      "description": "The locale of the dates, as a BCP 47 language tag such as <code>&quot;fr-FR&quot;</code>, like the locales of <code>Intl.DateTimeFormat</code>. This affects day names, month names, the first day of the week, week numbers, the 12-hour or 24-hour clock and the other locale-dependent formatting."
     },
     "defaultPreferences": {
       "description": "The default preferences for the calendar. To use controlled preferences, use the <code>preferences</code> prop."
@@ -29,7 +29,7 @@
       "description": "The IDs of the resources initially visible. To render a controlled scheduler, use the <code>visibleResources</code> prop."
     },
     "displayTimezone": {
-      "description": "The timezone used to display events in the scheduler.<br>Accepts any valid IANA timezone name (for example &quot;America/New_York&quot;, &quot;Europe/Paris&quot;, &quot;Asia/Tokyo&quot;), or keywords understood by the adapter, such as &quot;default&quot; (use the adapter&#39;s default timezone), &quot;locale&quot; (use the user&#39;s current locale timezone), or &quot;UTC&quot;.<br>This timezone only affects rendering, events keep their original data timezone."
+      "description": "The timezone used to display events in the scheduler.<br>Accepts any valid IANA timezone name (for example &quot;America/New_York&quot;, &quot;Europe/Paris&quot;, &quot;Asia/Tokyo&quot;), or keywords understood by the adapter, such as &quot;default&quot; (use the adapter&#39;s default timezone), &quot;locale&quot; (use the user&#39;s current locale timezone), or &quot;UTC&quot;.<br>Events keep their original data timezone. The visible range starts on the day of the visible date in this timezone, and the next and previous navigation return dates in this timezone."
     },
     "eventColor": {
       "description": "The color palette used for all events. Can be overridden per resource using the <code>eventColor</code> property on the resource model. Can be overridden per event using the <code>color</code> property on the event model."

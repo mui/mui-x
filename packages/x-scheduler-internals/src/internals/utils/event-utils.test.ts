@@ -15,22 +15,20 @@ import {
   getPrimaryResourceId,
   getResourceSelectionMode,
 } from './event-utils';
-import { processDate } from '../../process-date';
-import { toLocalDayNumber } from './plain-date-utils/timeZone';
+import { getDayListFromPlainDates } from '../../get-day-list';
+import { PlainDate } from './base-temporal/PlainDate';
 import { createEventRangeIndex } from './event-range-index';
 
 describe('event-utils', () => {
   describe('getDaysTheOccurrenceIsVisibleOn', () => {
-    const days = [
-      processDate(adapter.date('2024-01-14', 'default'), adapter),
-      processDate(adapter.date('2024-01-15', 'default'), adapter),
-      processDate(adapter.date('2024-01-16', 'default'), adapter),
-      processDate(adapter.date('2024-01-17', 'default'), adapter),
-      processDate(adapter.date('2024-01-18', 'default'), adapter),
-    ];
+    const days = getDayListFromPlainDates({
+      adapter,
+      firstPlainDate: PlainDate.from('2024-01-14'),
+      lastPlainDate: PlainDate.from('2024-01-18'),
+      timezone: 'default',
+    });
 
-    const formattedDays = days.map((day) => adapter.format(day.value, 'localizedNumericDate'));
-    const dayNumbers = days.map((day) => toLocalDayNumber(day.timestamp, 'default'));
+    const dayKeys = ['2024-01-14', '2024-01-15', '2024-01-16', '2024-01-17', '2024-01-18'];
 
     it('should return all days when event spans multiple days', () => {
       const event = EventBuilder.new()
@@ -38,8 +36,8 @@ describe('event-utils', () => {
         .allDay(true)
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
-      expect(result).toEqual([formattedDays[1], formattedDays[2], formattedDays[3]]);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, days);
+      expect(result).toEqual([dayKeys[1], dayKeys[2], dayKeys[3]]);
     });
 
     it('should return empty array when event is completely outside visible range', () => {
@@ -48,7 +46,7 @@ describe('event-utils', () => {
         .allDay(true)
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, days);
       expect(result).toHaveLength(0);
     });
 
@@ -58,7 +56,7 @@ describe('event-utils', () => {
         .allDay(true)
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, days);
       expect(result).toHaveLength(0);
     });
 
@@ -68,8 +66,8 @@ describe('event-utils', () => {
         .allDay(true)
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
-      expect(result).toEqual([formattedDays[0], formattedDays[1], formattedDays[2]]);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, days);
+      expect(result).toEqual([dayKeys[0], dayKeys[1], dayKeys[2]]);
     });
 
     it('should handle event that partially overlaps with visible range at the end', () => {
@@ -78,8 +76,8 @@ describe('event-utils', () => {
         .allDay(true)
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
-      expect(result).toEqual([formattedDays[2], formattedDays[3], formattedDays[4]]);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, days);
+      expect(result).toEqual([dayKeys[2], dayKeys[3], dayKeys[4]]);
     });
   });
 
@@ -176,9 +174,9 @@ describe('event-utils', () => {
 
       const result = getOccurrencesFromEvents({
         adapter,
-        start,
-        end,
-        eventRangeIndex: createEventRangeIndex([event], adapter, false),
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
+        eventRangeIndex: createEventRangeIndex([event], false),
         visibleResources: { [resourceA.id]: true, [resourceB.id]: false },
         displayTimezone: 'default',
         recurringEventsPlugin: null,
@@ -202,9 +200,9 @@ describe('event-utils', () => {
 
       const result = getOccurrencesFromEvents({
         adapter,
-        start,
-        end,
-        eventRangeIndex: createEventRangeIndex(events, adapter, false),
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
+        eventRangeIndex: createEventRangeIndex(events, false),
         visibleResources: { [resourceA.id]: true, [resourceB.id]: false },
         displayTimezone: 'default',
         recurringEventsPlugin: null,
@@ -227,9 +225,9 @@ describe('event-utils', () => {
 
       const result = getOccurrencesFromEvents({
         adapter,
-        start: adapter.startOfDay(rangeStart),
-        end: adapter.endOfDay(rangeStart),
-        eventRangeIndex: createEventRangeIndex(events, adapter, true),
+        start: adapter.getTime(adapter.startOfDay(rangeStart)),
+        end: adapter.getTime(adapter.endOfDay(rangeStart)),
+        eventRangeIndex: createEventRangeIndex(events, true),
         visibleResources: {},
         displayTimezone: 'default',
         recurringEventsPlugin: schedulerRecurringEventsPlugin,
@@ -250,9 +248,9 @@ describe('event-utils', () => {
 
       const result = getOccurrencesFromEvents({
         adapter,
-        start,
-        end,
-        eventRangeIndex: createEventRangeIndex([event], adapter, false),
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
+        eventRangeIndex: createEventRangeIndex([event], false),
         visibleResources: { [resourceA.id]: false, [resourceB.id]: false },
         displayTimezone: 'default',
         recurringEventsPlugin: null,
@@ -266,9 +264,9 @@ describe('event-utils', () => {
 
       const result = getOccurrencesFromEvents({
         adapter,
-        start,
-        end,
-        eventRangeIndex: createEventRangeIndex([event], adapter, false),
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
+        eventRangeIndex: createEventRangeIndex([event], false),
         visibleResources: { [resourceA.id]: false, [resourceB.id]: false },
         displayTimezone: 'default',
         recurringEventsPlugin: null,

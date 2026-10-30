@@ -4,7 +4,6 @@ import {
   setSystemTimezone,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
-import { getStartOfWeek } from '@mui/x-scheduler-internals/internals';
 import type { EventCalendarPreferences } from '@mui/x-scheduler-internals/models';
 import { describe, it, expect } from 'vitest';
 import { createDayTimeGridViewDefinition } from './day-time-grid-view-definition';
@@ -49,28 +48,29 @@ describe('createDayTimeGridViewDefinition', () => {
   describe('week-aligned day count (dayCount=7)', () => {
     it('snaps to the start of the week and renders 7 days when weekends are shown', () => {
       const days = createDayTimeGridViewDefinition(7).visibleDaysSelector(
-        getState({ showWeekends: true, weekStartsOn: 0 }),
+        getState({ showWeekends: true, weekStartsOn: 7 }),
       );
       expect(days).to.have.length(7);
-      expect(days[0].value).toEqualDateTime(getStartOfWeek(adapter, visibleDate, 0));
+      // Thursday, July 3rd, 2025 is in the week that starts on Sunday, June 29th.
+      expect(days[0].plainDate).toEqualPlainDate('2025-06-29');
     });
 
     it('excludes weekends (5 columns) when showWeekends is false', () => {
       const days = createDayTimeGridViewDefinition(7).visibleDaysSelector(
-        getState({ showWeekends: false, weekStartsOn: 0 }),
+        getState({ showWeekends: false, weekStartsOn: 7 }),
       );
       expect(days).to.have.length(5);
     });
 
     it('respects the weekStartsOn preference', () => {
       const sundayStart = createDayTimeGridViewDefinition(7).visibleDaysSelector(
-        getState({ showWeekends: true, weekStartsOn: 0 }),
+        getState({ showWeekends: true, weekStartsOn: 7 }),
       );
       const mondayStart = createDayTimeGridViewDefinition(7).visibleDaysSelector(
         getState({ showWeekends: true, weekStartsOn: 1 }),
       );
-      expect(sundayStart[0].value).toEqualDateTime(getStartOfWeek(adapter, visibleDate, 0));
-      expect(mondayStart[0].value).toEqualDateTime(getStartOfWeek(adapter, visibleDate, 1));
+      expect(sundayStart[0].plainDate).toEqualPlainDate('2025-06-29');
+      expect(mondayStart[0].plainDate).toEqualPlainDate('2025-06-30');
     });
   });
 
@@ -108,13 +108,13 @@ describe('createDayTimeGridViewDefinition', () => {
 
     it('steps week-aligned for the 7-day view', () => {
       const definition = createDayTimeGridViewDefinition(7);
-      const state = getState({ weekStartsOn: 0 });
-      const weekStart = getStartOfWeek(adapter, visibleDate, 0);
+      const state = getState({ weekStartsOn: 7 });
+      // The week of Thursday, July 3rd, 2025 starts on Sunday, June 29th.
       expect(definition.siblingVisibleDateGetter({ state, delta: 1 })).toEqualDateTime(
-        adapter.addWeeks(weekStart, 1),
+        '2025-07-06T00:00:00Z',
       );
       expect(definition.siblingVisibleDateGetter({ state, delta: -1 })).toEqualDateTime(
-        adapter.addWeeks(weekStart, -1),
+        '2025-06-22T00:00:00Z',
       );
     });
 
@@ -125,7 +125,7 @@ describe('createDayTimeGridViewDefinition', () => {
         events: [],
         visibleDate: adapter.date('2024-09-10T12:00:00', 'America/Santiago'),
         displayTimezone: 'America/Santiago',
-        defaultPreferences: { weekStartsOn: 0 },
+        defaultPreferences: { weekStartsOn: 7 },
       });
       const nextVisibleDate = createDayTimeGridViewDefinition(7).siblingVisibleDateGetter({
         state,

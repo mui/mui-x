@@ -26,6 +26,7 @@ describe('Core - EventCalendarStore', () => {
 
       const expectedState = {
         adapter,
+        dateLocale: 'en-US',
         areEventsDraggable: true,
         areEventsResizable: true,
         canDragEventsFromTheOutside: false,
@@ -41,7 +42,7 @@ describe('Core - EventCalendarStore', () => {
         eventModelStructure: undefined,
         displayTimezone: 'default',
         editingOccurrence: null,
-        nowUpdatedEveryMinute: adapter.now('default'),
+        nowTimestamp: Date.now(),
         occurrencePlaceholder: null,
         pendingDeleteConfirmation: null,
         pendingRecurringEventOperation: null,

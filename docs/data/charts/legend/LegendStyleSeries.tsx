@@ -1,4 +1,5 @@
-import { LineChart, LineChartProps, lineClasses } from '@mui/x-charts/LineChart';
+import type { LineChartProps } from '@mui/x-charts/LineChart';
+import { LineChart, lineClasses } from '@mui/x-charts/LineChart';
 import { legendClasses } from '@mui/x-charts/ChartsLegend';
 import { labelMarkClasses } from '@mui/x-charts/ChartsLabel';
 

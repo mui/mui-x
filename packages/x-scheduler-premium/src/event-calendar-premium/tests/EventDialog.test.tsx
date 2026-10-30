@@ -4,11 +4,11 @@ import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   adapter,
   createSchedulerRenderer,
-  dateLocaleFr,
   EventBuilder,
   utcJuly4AllDayBuilder,
   ResourceBuilder,
   SchedulerStoreRunner,
+  setSystemTimezone,
   StateWatcher,
   StoreSpy,
 } from 'test/utils/scheduler';
@@ -3704,6 +3704,64 @@ describe('<EventDialogContent open />', () => {
           expect(updated.rrule?.until).to.equal('2025-07-06T23:59:59');
         });
 
+        describe('on a day whose last hour a DST transition repeats', () => {
+          // Santiago leaves summer time at the end of April 4th, 2026, when 24:00 becomes 23:00.
+          // The event is stored as instants, in the default timezone of the system.
+          async function renderSantiagoSystemDialog(start: string, end: string) {
+            setSystemTimezone('America/Santiago');
+            const { user, onEventsChange } = renderCrossTimezoneDialog(
+              EventBuilder.new().title('Run').span(start, end),
+              'default',
+            );
+            await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+            await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+            await user.click(await screen.findByRole('option', { name: /custom/i }));
+            return { user, onEventsChange };
+          }
+
+          it.skipIf(!isJSDOM)(
+            'should pre-fill "Until" with the later 23:59:59.999 of the last day',
+            async () => {
+              const { user, onEventsChange } = await renderSantiagoSystemDialog(
+                '2026-04-04T14:00:00Z',
+                '2026-04-04T15:00:00Z',
+              );
+              const endsFieldset = screen.getByRole('group', { name: /ends/i });
+              await user.click(within(endsFieldset).getByRole('radio', { name: /until/i }));
+              const dateInput = endsFieldset.querySelector(
+                'input[type="date"]',
+              ) as HTMLInputElement;
+              expect(dateInput.value).to.equal('2026-04-04');
+              await user.click(screen.getByRole('button', { name: /save/i }));
+
+              const updated = onEventsChange.mock.calls[0][0][0];
+              expect(updated.rrule?.until).to.equal('2026-04-05T03:59:59.999Z');
+            },
+          );
+
+          it.skipIf(!isJSDOM)(
+            'should end the series on the later 23:59:59.999 of the "Until" day',
+            async () => {
+              // On April 3rd, so that the pre-filled day differs from the typed one.
+              const { user, onEventsChange } = await renderSantiagoSystemDialog(
+                '2026-04-03T14:00:00Z',
+                '2026-04-03T15:00:00Z',
+              );
+              const endsFieldset = screen.getByRole('group', { name: /ends/i });
+              await user.click(within(endsFieldset).getByRole('radio', { name: /until/i }));
+              const dateInput = endsFieldset.querySelector(
+                'input[type="date"]',
+              ) as HTMLInputElement;
+              await user.clear(dateInput);
+              await user.type(dateInput, '2026-04-04');
+              await user.click(screen.getByRole('button', { name: /save/i }));
+
+              const updated = onEventsChange.mock.calls[0][0][0];
+              expect(updated.rrule?.until).to.equal('2026-04-05T03:59:59.999Z');
+            },
+          );
+        });
+
         it('should pre-fill the "Until" input with the stored day in the event timezone', async () => {
           // A New York rule ending on July 20 opened from Tokyo, where that instant is July 21.
           const { user } = renderCrossTimezoneDialog(
@@ -3965,7 +4023,7 @@ describe('<EventDialogContent open />', () => {
             <EventCalendarProvider
               events={[DEFAULT_EVENT]}
               resources={resources}
-              dateLocale={dateLocaleFr}
+              dateLocale="fr-FR"
               storeClass={PremiumTestStore}
             >
               <TestEventDialogContent open {...defaultProps} />

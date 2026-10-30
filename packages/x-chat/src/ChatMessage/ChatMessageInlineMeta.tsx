@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { MessageMeta } from '@mui/x-chat-headless';
-import type { MessageMetaProps } from '@mui/x-chat-headless';
+import type { MessageMetaProps, MessageMetaSlots } from '@mui/x-chat-headless';
 import { styled } from '../internals/zero-styled';
 import { DefaultDoneIcon, DefaultDoneAllIcon } from '../icons/icons';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
@@ -93,6 +93,8 @@ const InlineStatusSlot = React.forwardRef<HTMLSpanElement, any>(function InlineS
   );
 });
 
+export interface ChatMessageInlineMetaSlots extends MessageMetaSlots {}
+
 export interface ChatMessageInlineMetaProps extends MessageMetaProps {}
 
 /**
@@ -136,7 +138,15 @@ ChatMessageInlineMeta.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
 } as any;
 

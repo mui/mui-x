@@ -87,6 +87,9 @@ export interface ChatMessageSlots {
  */
 export interface ChatMessageActionsResolveContext {
   message: ChatMessageEntity | null;
+  /**
+   * The id of the message.
+   */
   messageId: string;
   role?: ChatRole;
   status?: ChatMessageStatus;
@@ -111,9 +114,23 @@ export interface ChatMessageSlotProps {
 
 export interface ChatMessageProps extends Omit<MessageRootProps, 'slots' | 'slotProps'> {
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<ChatMessageClasses>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<ChatMessageSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ChatMessageSlotProps;
   /**
    * @ignore
@@ -412,6 +429,9 @@ ChatMessage.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
@@ -421,10 +441,28 @@ ChatMessage.propTypes /* remove-proptypes */ = {
    * consumer's custom composition (which uses `children`).
    */
   groupAuthorName: PropTypes.node,
+  /**
+   * If `true`, the message is part of a group with the previous message.
+   * @default false
+   */
   isGrouped: PropTypes.bool,
+  /**
+   * The id of the message.
+   */
   messageId: PropTypes.string.isRequired,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

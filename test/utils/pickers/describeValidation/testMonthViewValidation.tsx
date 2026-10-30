@@ -2,7 +2,7 @@ import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { DescribeValidationTestSuite } from './describeValidation.types';
+import type { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
   const { views, componentFamily, render } = getOptions();

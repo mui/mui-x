@@ -4,8 +4,10 @@ import {
   buildTemporalPlainDate,
   createAdapterDate,
   getStartOfDayMs,
+  MS_PER_DAY,
   toEpochMs,
-  toPlainDateTime,
+  toLocalMs,
+  toMsInDay,
 } from '@mui/x-scheduler-internals/internals';
 import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 import type {
@@ -32,24 +34,24 @@ export function createStartOfPreviousDay(
 }
 
 /**
- * Moves the end of an event to `plainDate` like `moveToPlainDate()`, except that a time a DST
- * transition repeats resolves to its first instant at or after `startMs`, so that the end of an
- * event starting in the second occurrence of a repeated hour doesn't come before its start.
+ * Moves the end of an event to `plainDate` on the wall clock of `timezone`, like
+ * `moveToPlainDate()`, except that a time a DST transition repeats resolves to its first instant at
+ * or after `startMs`, so that the end of an event starting in the second occurrence of a repeated
+ * hour doesn't come before its start.
  */
 export function moveEndToPlainDate(
   adapter: Adapter,
   end: TemporalSupportedObject,
   plainDate: PlainDate,
   startMs: number,
+  timezone: TemporalTimezone,
 ): TemporalSupportedObject {
-  const timezone = adapter.getTimezone(end);
-  const { msInDay } = toPlainDateTime(adapter.getTime(end), timezone);
+  const msInDay = toMsInDay(adapter.getTime(end), timezone);
   let endMs = toEpochMs(plainDate, msInDay, timezone);
   if (endMs < startMs) {
     // The same wall-clock time, in the offset of the start.
-    const laterMs = startMs + msInDay - toPlainDateTime(startMs, timezone).msInDay;
-    const later = toPlainDateTime(laterMs, timezone);
-    if (later.date.equals(plainDate) && later.msInDay === msInDay) {
+    const laterMs = startMs + msInDay - toMsInDay(startMs, timezone);
+    if (toLocalMs(laterMs, timezone) === plainDate.dayNumber * MS_PER_DAY + msInDay) {
       endMs = laterMs;
     }
   }

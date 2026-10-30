@@ -178,6 +178,9 @@ DesktopTimeRangePicker.propTypes /* remove-proptypes */ = {
    * - the `input` element if there is a field rendered.
    */
   autoFocus: PropTypes.bool,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   /**
    * If `true`, the Picker will close after submitting the full date.

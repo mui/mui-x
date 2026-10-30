@@ -1,5 +1,5 @@
 import { describe, test } from 'vitest';
-import { adapter } from 'test/utils/scheduler';
+import { adapter, createTimelineAxis } from 'test/utils/scheduler';
 import { processDate } from '../../process-date';
 import { computeElementPositionInCollection } from './useElementPositionInCollection';
 import { getTimelineAxisDurationMs, timelineAxisOffsetToTimestamp } from './timeline-axis';
@@ -13,13 +13,13 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
   const start = adapter.startOfDay(
     adapter.setTimezone(adapter.date('2026-03-02T12:00:00Z', 'default'), timezone),
   );
-  const axis = {
+  const axis = createTimelineAxis({
     start,
     end: adapter.endOfDay(adapter.addDays(start, 6)),
     dayStartMinute: 0,
     dayEndMinute: 1440,
-  };
-  const durationMs = getTimelineAxisDurationMs(adapter, axis);
+  });
+  const durationMs = getTimelineAxisDurationMs(axis);
   // Occurrences of 30 minutes to 5 hours, every 10 minutes across the week.
   const occurrences = Array.from({ length: occurrenceCount }, (_, index) => {
     const occurrenceStart = adapter.addMinutes(start, index * 10);
@@ -33,7 +33,7 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
     await bench('positions on a week axis', () => {
       let total = 0;
       for (const occurrence of occurrences) {
-        total += computeElementPositionInCollection(adapter, {
+        total += computeElementPositionInCollection({
           ...occurrence,
           collection: axis,
           durationMs,
@@ -44,12 +44,12 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
   });
 
   test('map 1,000 pointer positions to dates', { timeout: 0 }, async ({ bench }) => {
+    const timelineAxis = axis;
     await bench('dates on a week axis', () => {
       let total = 0;
       for (let index = 0; index < occurrenceCount; index += 1) {
         total += timelineAxisOffsetToTimestamp(
-          adapter,
-          axis,
+          timelineAxis,
           (durationMs * index) / occurrenceCount,
         );
       }

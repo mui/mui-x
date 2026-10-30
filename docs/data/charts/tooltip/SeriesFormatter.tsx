@@ -1,4 +1,5 @@
-import { PieChart, PieChartProps } from '@mui/x-charts/PieChart';
+import type { PieChartProps } from '@mui/x-charts/PieChart';
+import { PieChart } from '@mui/x-charts/PieChart';
 import { legendClasses } from '@mui/x-charts/ChartsLegend';
 
 const otherProps: Partial<PieChartProps> = {

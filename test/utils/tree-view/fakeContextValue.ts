@@ -1,6 +1,6 @@
-import { UseTreeViewStoreParameters } from '@mui/x-tree-view/internals';
+import type { UseTreeViewStoreParameters } from '@mui/x-tree-view/internals';
 import { SimpleTreeViewStore } from '@mui/x-tree-view/internals/SimpleTreeViewStore';
-import { TreeViewContextValue } from '@mui/x-tree-view/internals/TreeViewProvider';
+import type { TreeViewContextValue } from '@mui/x-tree-view/internals/TreeViewProvider';
 
 export const getFakeContextValue = (
   parameters: UseTreeViewStoreParameters<SimpleTreeViewStore<any>> = {},

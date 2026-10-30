@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
-import { InferNonNullablePickerValue, PickerValidValue } from '@mui/x-date-pickers/internals';
-import {
+import type * as React from 'react';
+import type { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
+import type { InferNonNullablePickerValue, PickerValidValue } from '@mui/x-date-pickers/internals';
+import type {
   BuildFieldInteractionsResponse,
   FieldPressCharacter,
   FieldSectionSelector,
   OpenPickerParams,
 } from 'test/utils/pickers';
-import { PickerComponentFamily } from '../describe.types';
+import type { PickerComponentFamily } from '../describe.types';
 
 interface DescribeValueBaseOptions<
   TValue extends PickerValidValue,

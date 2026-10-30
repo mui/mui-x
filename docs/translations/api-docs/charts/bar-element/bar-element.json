@@ -1,8 +1,20 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "dataIndex": { "description": "The index of the data point in the series." },
+    "height": { "description": "The height of the element." },
+    "hidden": { "description": "If <code>true</code>, the element is hidden." },
+    "layout": { "description": "The orientation of the bar." },
+    "seriesId": { "description": "The id of the series the element belongs to." },
+    "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
-    "slots": { "description": "Overridable component slots." }
+    "slots": { "description": "Overridable component slots." },
+    "width": { "description": "The width of the element." },
+    "x": { "description": "The position of the element in the x-axis." },
+    "xOrigin": { "description": "The position in the x-axis of the stack this bar belongs to." },
+    "y": { "description": "The position of the element in the y-axis." },
+    "yOrigin": { "description": "The position in the y-axis of the stack this bar belongs to." }
   },
   "classDescriptions": {
     "element": {

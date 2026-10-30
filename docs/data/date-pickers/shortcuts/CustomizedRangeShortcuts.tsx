@@ -1,4 +1,5 @@
-import dayjs, { Dayjs } from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Chip from '@mui/material/Chip';
@@ -7,11 +8,11 @@ import Box from '@mui/material/Box';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
-import {
+import type {
   PickersShortcutsItem,
   PickersShortcutsProps,
 } from '@mui/x-date-pickers/PickersShortcuts';
-import { DateRange } from '@mui/x-date-pickers-pro/models';
+import type { DateRange } from '@mui/x-date-pickers-pro/models';
 import { useIsValidValue, usePickerContext } from '@mui/x-date-pickers/hooks';
 
 const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [

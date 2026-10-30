@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { styled } from '@mui/material/styles';
 import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { LinePlot } from '@mui/x-charts/LineChart';

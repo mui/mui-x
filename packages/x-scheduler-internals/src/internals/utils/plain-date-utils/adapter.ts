@@ -9,19 +9,19 @@ import {
   localToEpochMs,
   moveTimestampToPlainDate,
   toEpochMs,
-  toPlainDateTime,
+  toLocalMs,
+  toPlainDate,
 } from './timeZone';
+import { getPlainDateKey, plainDateFromDayNumber } from './plainDate';
 
 // Translates between the adapter's date objects and plain dates, so that code working on plain dates
 // receives and returns the same values as the rest of the Scheduler.
 
 /**
- * Returns a string representation of the date.
- * It can be used as key in Maps or passed to the React `key` property when looping through days.
- * It only contains date information, two dates representing the same day but with different time will have the same key.
+ * Returns the `getPlainDateKey()` of the day of `day`, in the timezone it's labeled with.
  */
 export function getDateKey(day: TemporalSupportedObject, adapter: Adapter): string {
-  return adapter.format(day, 'localizedNumericDate');
+  return getPlainDateKey(buildTemporalPlainDate(adapter, day));
 }
 
 /**
@@ -30,21 +30,7 @@ export function getDateKey(day: TemporalSupportedObject, adapter: Adapter): stri
  * returns the same date.
  */
 export function buildTemporalPlainDate(adapter: Adapter, date: TemporalSupportedObject): PlainDate {
-  return toPlainDateTime(adapter.getTime(date), adapter.getTimezone(date)).date;
-}
-
-/**
- * Creates the adapter value of a wall-clock time of a plain date in `timezone`, given in
- * milliseconds since midnight. A time a DST transition skips moves forward by the length of the
- * gap, and a time it repeats resolves to its first instant, whatever the timezone of the system.
- */
-export function createAdapterDateOnPlainDate(
-  adapter: Adapter,
-  plainDate: PlainDate,
-  msInDay: number,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject {
-  return createAdapterDate(adapter, toEpochMs(plainDate, msInDay, timezone), timezone);
+  return toPlainDate(adapter.getTime(date), adapter.getTimezone(date));
 }
 
 /**
@@ -57,7 +43,7 @@ export function createStartOfPlainDate(
   plainDate: PlainDate,
   timezone: TemporalTimezone,
 ): TemporalSupportedObject {
-  return createAdapterDateOnPlainDate(adapter, plainDate, 0, timezone);
+  return createAdapterDate(adapter, toEpochMs(plainDate, 0, timezone), timezone);
 }
 
 /**
@@ -144,48 +130,23 @@ export function normalizeAllDayBounds(
   };
 }
 
-const MAX_CACHED_KEYS_PER_ADAPTER = 10_000;
-const dateKeysCache = new WeakMap<Adapter, Map<number, string>>();
-
-/**
- * Returns the `getDateKey()` of any adapter value on `date`.
- * The key only depends on the date and the adapter's locale, so it's formatted once per day.
- */
-export function getPlainDateKey(adapter: Adapter, date: PlainDate): string {
-  let keys = dateKeysCache.get(adapter);
-  if (keys === undefined) {
-    keys = new Map();
-    dateKeysCache.set(adapter, keys);
-  }
-  let key = keys.get(date.dayNumber);
-  if (key === undefined) {
-    if (keys.size >= MAX_CACHED_KEYS_PER_ADAPTER) {
-      keys.clear();
-    }
-    // Labeled in UTC: a system timezone can skip the local midnight of a day, such as
-    // December 30th, 2011 in Pacific/Apia.
-    key = getDateKey(createAdapterDate(adapter, date.dayNumber * MS_PER_DAY, 'UTC'), adapter);
-    keys.set(date.dayNumber, key);
-  }
-  return key;
-}
-
 /**
  * Returns the processed date of `value`, the adapter value of the instant `epochMs` in `timezone`.
  * Reads the date and time from the offsets of the timezone instead of the getters of the adapter.
  */
 export function buildProcessedDate(
-  adapter: Adapter,
   value: TemporalSupportedObject,
   epochMs: number,
   timezone: TemporalTimezone,
 ): SchedulerProcessedDate {
-  const plainDateTime = toPlainDateTime(epochMs, timezone);
+  // The wall clock is read once, as this runs for each occurrence of the visible range.
+  const localMs = toLocalMs(epochMs, timezone);
+  const dayNumber = Math.floor(localMs / MS_PER_DAY);
   return {
     value,
-    key: getPlainDateKey(adapter, plainDateTime.date),
+    key: getPlainDateKey(plainDateFromDayNumber(dayNumber)),
     timestamp: epochMs,
-    minutesInDay: Math.floor(plainDateTime.msInDay / 60_000),
+    minutesInDay: Math.floor((localMs - dayNumber * MS_PER_DAY) / 60_000),
   };
 }
 
@@ -197,12 +158,7 @@ export function createProcessedDate(
   epochMs: number,
   timezone: TemporalTimezone,
 ): SchedulerProcessedDate {
-  return buildProcessedDate(
-    adapter,
-    createAdapterDate(adapter, epochMs, timezone),
-    epochMs,
-    timezone,
-  );
+  return buildProcessedDate(createAdapterDate(adapter, epochMs, timezone), epochMs, timezone);
 }
 
 /**
@@ -231,11 +187,5 @@ export function addToAdapterDate(
   date: TemporalSupportedObject,
   duration: PlainDateDuration,
 ): TemporalSupportedObject {
-  const timezone = adapter.getTimezone(date);
-  const plainDateTime = toPlainDateTime(adapter.getTime(date), timezone);
-  return createAdapterDate(
-    adapter,
-    toEpochMs(plainDateTime.date.add(duration), plainDateTime.msInDay, timezone),
-    timezone,
-  );
+  return moveToPlainDate(adapter, date, buildTemporalPlainDate(adapter, date).add(duration));
 }

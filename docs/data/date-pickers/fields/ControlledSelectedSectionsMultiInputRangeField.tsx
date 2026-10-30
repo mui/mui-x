@@ -4,13 +4,13 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import {
+import type {
   FieldSectionType,
   FieldSelectedSections,
   FieldRef,
 } from '@mui/x-date-pickers/models';
-import { PickerValue } from '@mui/x-date-pickers/internals';
-import { RangePosition } from '@mui/x-date-pickers-pro/models';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
+import type { RangePosition } from '@mui/x-date-pickers-pro/models';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 
 export default function ControlledSelectedSectionsMultiInputRangeField() {

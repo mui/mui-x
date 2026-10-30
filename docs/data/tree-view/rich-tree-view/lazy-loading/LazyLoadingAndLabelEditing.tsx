@@ -1,6 +1,6 @@
 import { randomInt, randomName, randomId } from '@mui/x-data-grid-generator';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
-import { TreeViewItemId } from '@mui/x-tree-view/models';
+import type { TreeViewItemId } from '@mui/x-tree-view/models';
 import { DataSourceCacheDefault } from '@mui/x-tree-view/utils';
 import { useRichTreeViewProApiRef } from '@mui/x-tree-view-pro/hooks';
 

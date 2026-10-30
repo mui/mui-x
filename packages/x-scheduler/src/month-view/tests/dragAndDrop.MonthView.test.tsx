@@ -135,6 +135,69 @@ describe('MonthView - Drag and Drop', () => {
     expect(new Date(updatedEvents[0].end).getUTCDate()).to.equal(5);
   });
 
+  it('should resize an event start onto the day of its end at the start of that day', async () => {
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Trip')
+      .span('2025-07-08T10:00:00Z', '2025-07-10T12:00:00Z')
+      .resizable(true)
+      .build();
+
+    render(
+      <StandaloneMonthView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
+    );
+
+    const eventElement = screen.getByRole('button', { name: /Trip/i });
+    mockElementBounds(eventElement, { left: 0, width: 300 });
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: getResizeHandle(eventElement, 'start'),
+        target: getMonthViewCell(10),
+      });
+    });
+
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
+    expect(updatedEvents[0].start).to.equal('2025-07-10T00:00:00.000Z');
+    expect(updatedEvents[0].end).to.equal('2025-07-10T12:00:00Z');
+  });
+
+  it('should resize an event end onto the day of its start at the end of that day', async () => {
+    // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026: the day starts at 01:00.
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Trip')
+      .span('2026-03-08T14:00:00Z', '2026-03-10T16:00:00Z') // 10:00 CDT to 12:00 CDT
+      .resizable(true)
+      .build();
+
+    render(
+      <StandaloneMonthView
+        events={[event]}
+        resources={[]}
+        displayTimezone="America/Havana"
+        visibleDate={new Date('2026-03-15T12:00:00Z')}
+        onEventsChange={handleEventsChange}
+      />,
+    );
+
+    const eventElement = screen.getByRole('button', { name: /Trip/i });
+    mockElementBounds(eventElement, { left: 0, width: 300 });
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: getResizeHandle(eventElement, 'end'),
+        target: getMonthViewCell(8),
+      });
+    });
+
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
+    expect(updatedEvents[0].start).to.equal('2026-03-08T14:00:00Z');
+    expect(updatedEvents[0].end).to.equal('2026-03-09T03:59:59.999Z'); // 23:59:59.999 CDT
+  });
+
   it('should move a timed multi-day event by the day under the pointer', async () => {
     const handleEventsChange = vi.fn();
     // Monday 10:00 to Wednesday 09:00: the event covers the 3 cells of these dates.

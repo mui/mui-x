@@ -4,12 +4,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import type { SxProps, Theme } from '@mui/system';
 import { ChatMessageList, ChatScrollToBottomAffordance } from '@mui/x-chat';
-import {
-  useChat,
-  useChatStore,
-  type ChatConversation,
-  type ChatMessage,
-} from '@mui/x-chat/headless';
+import { useChat, useChatStore } from '@mui/x-chat/headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
 import { ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
 import { MessageBubble } from 'docs/src/modules/components/chat-playground/MessageBubble';
@@ -18,10 +14,8 @@ import {
   DividerLabel,
   NumberControl,
 } from 'docs/src/modules/components/chat-playground/controls';
-import {
-  useCustomizations,
-  type CustomizationDef,
-} from 'docs/src/modules/components/chat-playground/useCustomizations';
+import { useCustomizations } from 'docs/src/modules/components/chat-playground/useCustomizations';
+import type { CustomizationDef } from 'docs/src/modules/components/chat-playground/useCustomizations';
 import { users } from 'docs/src/modules/components/chat-playground/data';
 
 const conversation: ChatConversation = {

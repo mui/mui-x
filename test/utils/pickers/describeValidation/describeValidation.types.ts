@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
-import { DateOrTimeView } from '@mui/x-date-pickers/models';
-import { PickerComponentFamily } from '../describe.types';
+import type * as React from 'react';
+import type { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
+import type { DateOrTimeView } from '@mui/x-date-pickers/models';
+import type { PickerComponentFamily } from '../describe.types';
 
 export interface DescribeValidationInputOptions {
   render: (node: React.ReactElement<any>) => MuiRenderResult;

@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import type { SxProps, Theme } from '@mui/system';
 import { keyframes } from '@mui/system';
 import { StreamingIndicator } from '@mui/x-chat-headless';
-import type { StreamingIndicatorProps } from '@mui/x-chat-headless';
+import type { StreamingIndicatorProps, StreamingIndicatorSlots } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatStreamingIndicatorUtilityClasses } from './chatStreamingIndicatorClasses';
@@ -13,9 +13,17 @@ import type { ChatStreamingIndicatorClasses } from './chatStreamingIndicatorClas
 
 const useThemeProps = createUseThemeProps('MuiChatStreamingIndicator');
 
+export interface ChatStreamingIndicatorSlots extends StreamingIndicatorSlots {}
+
 export interface ChatStreamingIndicatorProps extends StreamingIndicatorProps {
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<ChatStreamingIndicatorClasses>;
 }
 
@@ -87,9 +95,18 @@ ChatStreamingIndicator.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * The index of the row in `items`.
+   */
   index: PropTypes.number,
+  /**
+   * The ids of the messages in the list, in order.
+   */
   items: PropTypes.arrayOf(PropTypes.string),
   /**
    * The assistant message to reflect. Falls back to the surrounding
@@ -227,8 +244,19 @@ ChatStreamingIndicator.propTypes /* remove-proptypes */ = {
    * @default 'auto'
    */
   mode: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.bool]),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

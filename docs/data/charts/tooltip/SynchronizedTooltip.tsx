@@ -1,11 +1,12 @@
 import * as React from 'react';
 import NoSsr from '@mui/material/NoSsr';
 import Paper from '@mui/material/Paper';
-import Popper, { PopperProps } from '@mui/material/Popper';
+import type { PopperProps } from '@mui/material/Popper';
+import Popper from '@mui/material/Popper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { AxisItemIdentifier } from '@mui/x-charts/models';
+import type { AxisItemIdentifier } from '@mui/x-charts/models';
 
 const X_AXIS_ID = 'shared-x';
 

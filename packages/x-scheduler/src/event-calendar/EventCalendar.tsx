@@ -56,7 +56,10 @@ const EventCalendar = React.forwardRef(function EventCalendar<
     [schedulerId, classes, mergedLocaleText],
   );
 
-  const sharedComponentsStyledContextValue = React.useMemo(() => ({ classes }), [classes]);
+  const sharedComponentsStyledContextValue = React.useMemo(
+    () => ({ classes, localeText: mergedLocaleText }),
+    [classes, mergedLocaleText],
+  );
 
   return (
     <SchedulerStoreContext.Provider value={store as any}>
@@ -126,12 +129,13 @@ EventCalendar.propTypes /* remove-proptypes */ = {
    */
   collapsedResources: PropTypes.object,
   /**
-   * The locale object from `date-fns` used to format dates.
-   * This affects day names, month names, week start day, and other locale-dependent formatting.
-   * Import a locale from `date-fns/locale` and pass it to this prop.
-   * @default enUS (English)
+   * The locale of the dates, as a BCP 47 language tag such as `"fr-FR"`, like the locales of
+   * `Intl.DateTimeFormat`.
+   * This affects day names, month names, the first day of the week, week numbers, the 12-hour
+   * or 24-hour clock and the other locale-dependent formatting.
+   * @default "en-US"
    */
-  dateLocale: PropTypes.object,
+  dateLocale: PropTypes.string,
   /**
    * The resources initially collapsed.
    * To render a controlled scheduler, use the `collapsedResources` prop.
@@ -141,7 +145,7 @@ EventCalendar.propTypes /* remove-proptypes */ = {
   /**
    * The default preferences for the calendar.
    * To use controlled preferences, use the `preferences` prop.
-   * @default { showWeekends: true, showWeekNumber: false, isSidePanelOpen: true, showEmptyDaysInAgenda: true, ampm: true }
+   * @default { showWeekends: true, showWeekNumber: false, isSidePanelOpen: true, showEmptyDaysInAgenda: true }
    */
   defaultPreferences: PropTypes.shape({
     ampm: PropTypes.bool,
@@ -149,7 +153,7 @@ EventCalendar.propTypes /* remove-proptypes */ = {
     showEmptyDaysInAgenda: PropTypes.bool,
     showWeekends: PropTypes.bool,
     showWeekNumber: PropTypes.bool,
-    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
+    weekStartsOn: PropTypes.oneOf([1, 2, 3, 4, 5, 6, 7]),
   }),
   /**
    * The view initially displayed in the calendar.
@@ -179,7 +183,8 @@ EventCalendar.propTypes /* remove-proptypes */ = {
    * "locale" (use the user's current locale timezone),
    * or "UTC".
    *
-   * This timezone only affects rendering, events keep their original data timezone.
+   * Events keep their original data timezone. The visible range starts on the day of the visible
+   * date in this timezone, and the next and previous navigation return dates in this timezone.
    * @default "default"
    */
   displayTimezone: PropTypes.string,
@@ -291,7 +296,7 @@ EventCalendar.propTypes /* remove-proptypes */ = {
     showEmptyDaysInAgenda: PropTypes.bool,
     showWeekends: PropTypes.bool,
     showWeekNumber: PropTypes.bool,
-    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
+    weekStartsOn: PropTypes.oneOf([1, 2, 3, 4, 5, 6, 7]),
   }),
   /**
    * Config of the preferences menu.

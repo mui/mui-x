@@ -3,19 +3,55 @@
   "name": "ConversationListRoot",
   "imports": ["import { ConversationListRoot } from '@mui/x-chat/headless';"],
   "slots": [
-    { "name": "root", "description": "", "class": null },
-    { "name": "scroller", "description": "", "class": null },
-    { "name": "viewport", "description": "", "class": null },
-    { "name": "scrollbar", "description": "", "class": null },
-    { "name": "scrollbarThumb", "description": "", "class": null },
-    { "name": "item", "description": "", "class": null },
-    { "name": "itemAvatar", "description": "", "class": null },
-    { "name": "itemContent", "description": "", "class": null },
-    { "name": "title", "description": "", "class": null },
-    { "name": "preview", "description": "", "class": null },
-    { "name": "timestamp", "description": "", "class": null },
-    { "name": "unreadBadge", "description": "", "class": null },
-    { "name": "itemActions", "description": "", "class": null }
+    { "name": "root", "description": "The component that renders the root.", "class": null },
+    {
+      "name": "scroller",
+      "description": "The component that renders the scroller.",
+      "class": null
+    },
+    {
+      "name": "viewport",
+      "description": "The component that renders the viewport.",
+      "class": null
+    },
+    {
+      "name": "scrollbar",
+      "description": "The component that renders the scrollbar.",
+      "class": null
+    },
+    {
+      "name": "scrollbarThumb",
+      "description": "The component that renders the scrollbar thumb.",
+      "class": null
+    },
+    { "name": "item", "description": "The component that renders the item.", "class": null },
+    {
+      "name": "itemAvatar",
+      "description": "The component that renders the item avatar.",
+      "class": null
+    },
+    {
+      "name": "itemContent",
+      "description": "The component that renders the item content.",
+      "class": null
+    },
+    { "name": "title", "description": "The component that renders the title.", "class": null },
+    { "name": "preview", "description": "The component that renders the preview.", "class": null },
+    {
+      "name": "timestamp",
+      "description": "The component that renders the timestamp.",
+      "class": null
+    },
+    {
+      "name": "unreadBadge",
+      "description": "The component that renders the unread badge.",
+      "class": null
+    },
+    {
+      "name": "itemActions",
+      "description": "The component that renders the item actions.",
+      "class": null
+    }
   ],
   "classes": [],
   "spread": true,

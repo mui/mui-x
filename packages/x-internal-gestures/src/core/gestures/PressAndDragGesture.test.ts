@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { mouseGesture, touchGesture } from '../../testing';
 import { GestureManager } from '../GestureManager';
-import { PressAndDragGesture, type PressAndDragEvent } from './PressAndDragGesture';
+import { PressAndDragGesture } from './PressAndDragGesture';
+import type { PressAndDragEvent } from './PressAndDragGesture';
 
 const formatPressAndDragEvent = (event: PressAndDragEvent) => {
   const detail = event.detail;

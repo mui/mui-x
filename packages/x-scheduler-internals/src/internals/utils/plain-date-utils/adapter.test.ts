@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapter-date-fns';
-import { adapter, adapterFr, setSystemTimezone } from 'test/utils/scheduler';
+import { adapter, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { processDate } from '../../../process-date';
 import {
@@ -9,9 +9,7 @@ import {
   createAdapterDateFromWallTime,
   createProcessedDate,
   getDateKey,
-  getPlainDateKey,
 } from './adapter';
-import { PlainDate } from '../base-temporal/PlainDate';
 import type { TemporalSupportedObject } from '../../../models';
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
 
@@ -74,30 +72,16 @@ describe('base-temporal adapter bridge', () => {
     },
   );
 
-  it('should return the key getDateKey() returns for the same day', () => {
-    for (const currentAdapter of [adapter, adapterFr]) {
-      const value = currentAdapter.date('2025-07-04T15:00:00', 'Asia/Tokyo');
-      const plainDate = buildTemporalPlainDate(currentAdapter, value);
-      expect(getPlainDateKey(currentAdapter, plainDate)).to.equal(
-        getDateKey(value, currentAdapter),
-      );
-    }
-  });
-
-  // Browsers cannot change their timezone through process.env.TZ.
-  it.skipIf(!isJSDOM)('should return the key of a day the system timezone skips', () => {
-    // Pacific/Apia skipped December 30th, 2011.
-    setSystemTimezone('Pacific/Apia');
-    const systemAdapter = new TemporalAdapterDateFns();
-    expect(
-      getPlainDateKey(systemAdapter, PlainDate.from({ year: 2011, month: 12, day: 30 })),
-    ).to.equal('12/30/2011');
+  it('should return the ISO date of the day in the timezone of the value as the key', () => {
+    // July 4th at 02:00 in Tokyo is July 3rd in UTC.
+    const value = adapter.date('2025-07-04T02:00:00', 'Asia/Tokyo');
+    expect(getDateKey(value, adapter)).to.equal('2025-07-04');
   });
 
   // The processed date the adapter reads from a value, which processed dates must match.
   const readThroughAdapter = (currentAdapter: Adapter, value: TemporalSupportedObject) => ({
     value,
-    key: getDateKey(value, currentAdapter),
+    key: currentAdapter.formatByString(value, 'yyyy-MM-dd'),
     timestamp: currentAdapter.getTime(value),
     minutesInDay: currentAdapter.getHours(value) * 60 + currentAdapter.getMinutes(value),
   });

@@ -52,7 +52,7 @@ export function usePlaceholderInRow(
     // the dates in the event dialog, or shorter than the minute the axis is drawn with)
     // would render as a zero-width sliver pinned to the day seam. Measured on the
     // rendered geometry, like the occurrence selector does.
-    const renderedPosition = computeElementPositionInCollection(adapter, {
+    const renderedPosition = computeElementPositionInCollection({
       start: startProcessed,
       end: endProcessed,
       collection: config,

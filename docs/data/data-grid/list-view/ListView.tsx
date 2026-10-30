@@ -1,10 +1,12 @@
 import * as React from 'react';
-import {
-  DataGridPro,
+import type {
   GridRenderCellParams,
   GridListViewColDef,
   GridColDef,
   GridRowParams,
+} from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
   Toolbar as GridToolbar,
   ToolbarRoot,
   GridActionsCell,

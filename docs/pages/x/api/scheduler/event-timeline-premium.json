@@ -21,7 +21,7 @@
     "dataSource": {
       "type": { "name": "shape", "description": "{ getEvents: func, persistEvents: func }" }
     },
-    "dateLocale": { "type": { "name": "object" }, "default": "enUS (English)" },
+    "dateLocale": { "type": { "name": "string" }, "default": "\"en-US\"" },
     "defaultCollapsedResources": {
       "type": { "name": "object" },
       "default": "{} - all resources are expanded"
@@ -29,9 +29,9 @@
     "defaultPreferences": {
       "type": {
         "name": "shape",
-        "description": "{ ampm?: bool, weekStartsOn?: 0<br>&#124;&nbsp;1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6 }"
+        "description": "{ ampm?: bool, weekStartsOn?: 1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6<br>&#124;&nbsp;7 }"
       },
-      "default": "{ ampm: true }"
+      "default": "{}"
     },
     "defaultPreset": {
       "type": {
@@ -71,6 +71,12 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "default": "[]"
     },
+    "features": {
+      "type": {
+        "name": "shape",
+        "description": "{ recurringEvents?: { optionalRenderers: { recurrenceTab?: elementType, recurringScopeDialog?: elementType }, store: { applyDataTimezoneToEventUpdate: func, computePresets: func, deleteRecurringEvent: func, getDefaultPresetKey: func, getOccurrencesForVisibleDays: func, isSameRRule: func, parseRRule: func, updateRecurringEvent: func } } }"
+      }
+    },
     "getEventAriaLabel": {
       "type": { "name": "func" },
       "signature": {
@@ -89,7 +95,7 @@
     "preferences": {
       "type": {
         "name": "shape",
-        "description": "{ ampm?: bool, weekStartsOn?: 0<br>&#124;&nbsp;1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6 }"
+        "description": "{ ampm?: bool, weekStartsOn?: 1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6<br>&#124;&nbsp;7 }"
       }
     },
     "preset": {
@@ -226,6 +232,108 @@
       "isGlobal": false
     },
     {
+      "key": "dependencyArrows",
+      "className": "MuiEventTimeline-dependencyArrows",
+      "description": "Styles applied to the dependency arrows overlay element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialog",
+      "className": "MuiEventTimeline-dependencyDialog",
+      "description": "Styles applied to the dependency dialog root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogActions",
+      "className": "MuiEventTimeline-dependencyDialogActions",
+      "description": "Styles applied to the dependency dialog actions element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogBody",
+      "className": "MuiEventTimeline-dependencyDialogBody",
+      "description": "Styles applied to the dependency dialog body element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogCloseButton",
+      "className": "MuiEventTimeline-dependencyDialogCloseButton",
+      "description": "Styles applied to the dependency dialog close button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogContent",
+      "className": "MuiEventTimeline-dependencyDialogContent",
+      "description": "Styles applied to the dependency dialog content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogDetails",
+      "className": "MuiEventTimeline-dependencyDialogDetails",
+      "description": "Styles applied to the dependency dialog details element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogDivider",
+      "className": "MuiEventTimeline-dependencyDialogDivider",
+      "description": "Styles applied to the dependency dialog divider element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogEventChip",
+      "className": "MuiEventTimeline-dependencyDialogEventChip",
+      "description": "Styles applied to the dependency dialog event chip elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogForm",
+      "className": "MuiEventTimeline-dependencyDialogForm",
+      "description": "Styles applied to the dependency dialog form element, or its details section when read-only.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogHeader",
+      "className": "MuiEventTimeline-dependencyDialogHeader",
+      "description": "Styles applied to the dependency dialog header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogLag",
+      "className": "MuiEventTimeline-dependencyDialogLag",
+      "description": "Styles applied to the dependency dialog lag field element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogLagNote",
+      "className": "MuiEventTimeline-dependencyDialogLagNote",
+      "description": "Styles applied to the lag note of the read-only dependency dialog.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogLagUnit",
+      "className": "MuiEventTimeline-dependencyDialogLagUnit",
+      "description": "Styles applied to the dependency dialog lag unit select element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogPaper",
+      "className": "MuiEventTimeline-dependencyDialogPaper",
+      "description": "Styles applied to the dependency dialog paper element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogTitle",
+      "className": "MuiEventTimeline-dependencyDialogTitle",
+      "description": "Styles applied to the dependency dialog title element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyTerminals",
+      "className": "MuiEventTimeline-dependencyTerminals",
+      "description": "Styles applied to the dependency terminals overlay element.",
+      "isGlobal": false
+    },
+    {
       "key": "errorAlert",
       "className": "MuiEventTimeline-errorAlert",
       "description": "Styles applied to the error alert element.",
@@ -271,6 +379,12 @@
       "key": "eventContextMenuShowDetailsItem",
       "className": "MuiEventTimeline-eventContextMenuShowDetailsItem",
       "description": "Styles applied to the event context menu show details item element (read-only events).",
+      "isGlobal": false
+    },
+    {
+      "key": "eventDependencyTerminal",
+      "className": "MuiEventTimeline-eventDependencyTerminal",
+      "description": "Styles applied to event dependency terminal elements.",
       "isGlobal": false
     },
     {

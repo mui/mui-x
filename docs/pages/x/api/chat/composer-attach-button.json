@@ -3,8 +3,16 @@
   "name": "ComposerAttachButton",
   "imports": ["import { ComposerAttachButton } from '@mui/x-chat/headless';"],
   "slots": [
-    { "name": "attachButton", "description": "", "class": null },
-    { "name": "attachInput", "description": "", "class": null }
+    {
+      "name": "attachButton",
+      "description": "The component that renders the attach button.",
+      "class": null
+    },
+    {
+      "name": "attachInput",
+      "description": "The component that renders the attach input.",
+      "class": null
+    }
   ],
   "classes": [],
   "muiName": "MuiComposerAttachButton",

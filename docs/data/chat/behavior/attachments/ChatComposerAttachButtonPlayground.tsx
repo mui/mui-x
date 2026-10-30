@@ -16,10 +16,8 @@ import {
   SwitchControl,
   TextControl,
 } from 'docs/src/modules/components/chat-playground/controls';
-import {
-  useCustomizations,
-  type CustomizationDef,
-} from 'docs/src/modules/components/chat-playground/useCustomizations';
+import { useCustomizations } from 'docs/src/modules/components/chat-playground/useCustomizations';
+import type { CustomizationDef } from 'docs/src/modules/components/chat-playground/useCustomizations';
 
 type IconChoice = 'paperclip' | 'image';
 

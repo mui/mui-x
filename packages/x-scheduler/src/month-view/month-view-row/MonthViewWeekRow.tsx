@@ -2,16 +2,15 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
-  createEndOfPlainDate,
+  formatWeekNumber,
+  getEndOfDayMs,
   getWeekNumber,
-  toPlainDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import type { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
 import { MonthViewCell } from './MonthViewCell';
@@ -47,26 +46,18 @@ const MonthViewWeekNumberCell = styled('div', {
 export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const { rowIndex, maxEvents, days, occurrencesMap, firstDayRef } = props;
 
-  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
-  const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
+  const weekInfo = useStore(store, eventCalendarPreferenceSelectors.weekInfo);
+  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
   const occurrences = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap, maxEvents });
-  const weekNumber = getWeekNumber(adapter, days[0].value, weekStartsOn);
+  const weekNumber = getWeekNumber(days[0].plainDate, weekInfo);
 
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
-  const { start, end } = React.useMemo(
-    () => ({
-      start: days[0].value,
-      end: createEndOfPlainDate(
-        adapter,
-        toPlainDateTime(days[days.length - 1].timestamp, displayTimezone).date,
-        displayTimezone,
-      ),
-    }),
-    [adapter, days, displayTimezone],
-  );
+  // `days[0].timestamp` is the first instant of the first day.
+  const start = days[0].timestamp;
+  const end = getEndOfDayMs(days[days.length - 1].timestamp, displayTimezone);
 
   const weekNumberId = showWeekNumber
     ? `${schedulerId}-MonthViewWeekNumber-${weekNumber}`
@@ -87,7 +78,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
           aria-label={localeText.weekNumberAriaLabel(weekNumber)}
           aria-hidden="true"
         >
-          {weekNumber}
+          {formatWeekNumber(locale, weekNumber)}
         </MonthViewWeekNumberCell>
       )}
       {occurrences.days.map((day, dayIdx) => (

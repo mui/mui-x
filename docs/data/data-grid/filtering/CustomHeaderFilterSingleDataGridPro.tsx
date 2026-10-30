@@ -1,11 +1,12 @@
 import * as React from 'react';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import type { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import type { GridRenderHeaderFilterProps } from '@mui/x-data-grid-pro';
 import {
   DataGridPro,
-  GridRenderHeaderFilterProps,
   gridFilterModelSelector,
   useGridSelector,
   useGridApiContext,

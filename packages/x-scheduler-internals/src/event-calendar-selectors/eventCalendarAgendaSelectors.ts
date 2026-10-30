@@ -12,7 +12,6 @@ import type { EventCalendarFetchRange, SchedulerProcessedDate } from '../models'
 import { AGENDA_MAX_HORIZON_DAYS, AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import { getDayListFromPlainDates } from '../get-day-list';
 import type { PlainDate } from '../internals/utils/base-temporal/PlainDate';
-import { createStartOfPlainDate } from '../internals/utils/plain-date-utils/adapter';
 
 /**
  * The span of days the agenda displays: `dayCount` days from the visible date,
@@ -166,37 +165,20 @@ export const eventCalendarAgendaSelectors = {
    * The range to fetch: the base days, or the whole horizon when hiding the empty days.
    */
   fetchRange: createSelectorMemoized(
-    (state: State) => state.adapter,
     baseRange,
     baseVisibleDays,
     horizonEndPlainDate,
-    schedulerOtherSelectors.displayTimezone,
     eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
-    (
-      adapter,
-      range,
-      baseDays,
-      horizonPlainDate,
-      displayTimezone,
-      showEmptyDaysInAgenda,
-    ): EventCalendarFetchRange => {
+    (range, baseDays, horizonPlainDate, showEmptyDaysInAgenda): EventCalendarFetchRange => {
       // The day list is empty when a short `dayCount` only covers hidden weekend days,
       // so fall back to the bounds of the range.
-      const firstDay =
-        baseDays.length > 0
-          ? baseDays[0].value
-          : createStartOfPlainDate(adapter, range.start, displayTimezone);
-      const lastDay =
-        baseDays.length > 0
-          ? baseDays[baseDays.length - 1].value
-          : createStartOfPlainDate(adapter, range.end, displayTimezone);
-      if (showEmptyDaysInAgenda) {
-        return { start: firstDay, end: lastDay };
+      const firstPlainDate = baseDays.length > 0 ? baseDays[0].plainDate : range.start;
+      if (!showEmptyDaysInAgenda) {
+        return { start: firstPlainDate, end: horizonPlainDate };
       }
-      return {
-        start: firstDay,
-        end: createStartOfPlainDate(adapter, horizonPlainDate, displayTimezone),
-      };
+      const lastPlainDate =
+        baseDays.length > 0 ? baseDays[baseDays.length - 1].plainDate : range.end;
+      return { start: firstPlainDate, end: lastPlainDate };
     },
   ),
 };

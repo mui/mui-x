@@ -6,12 +6,32 @@
         "name": "shape",
         "description": "{ dynamic-tool?: { className?: string, defaultExpanded?: object, slotProps?: object, slots?: object, toolSlotProps?: object, toolSlots?: object }, file?: { className?: string, slotProps?: object, slots?: object }, reasoning?: { className?: string, slotProps?: object, slots?: object }, source-document?: { className?: string, slotProps?: object, slots?: object }, source-url?: { className?: string, slotProps?: object, slots?: object }, text?: { renderText?: func }, tool?: { className?: string, defaultExpanded?: object, slotProps?: object, slots?: object, toolSlotProps?: object, toolSlots?: object } }"
       }
+    },
+    "resolveBuiltInPartRenderer": {
+      "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>partProps</code> instead.",
+      "signature": {
+        "type": "function(part: ChatMessagePart, localeText: ChatLocaleText) => ChatPartRenderer<ChatMessagePart> | null",
+        "describedArgs": ["part", "localeText"],
+        "returned": "ChatPartRenderer<ChatMessagePart> | null"
+      }
+    },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
     }
   },
   "name": "ChatMessageContent",
   "imports": [
     "import { ChatMessageContent } from '@mui/x-chat/ChatMessage';",
     "import { ChatMessageContent } from '@mui/x-chat';"
+  ],
+  "slots": [
+    { "name": "content", "description": "The component that renders the content.", "class": null },
+    { "name": "bubble", "description": "The component that renders the bubble.", "class": null }
   ],
   "classes": [],
   "spread": true,

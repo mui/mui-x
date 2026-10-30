@@ -180,9 +180,10 @@ export class SchedulerSchedulingPlugin<
         const blockedEvent = this.store.state.processedEventLookup.get(result.blocked[0])!;
         return {
           rejected: true as const,
-          error: /* minify-error-disabled */ new Error(
-            `This change would move the read-only event "${blockedEvent.title}", so it was not applied.`,
-          ),
+          rejection: {
+            code: 'readOnlyEventMovedError' as const,
+            params: { title: blockedEvent.title },
+          },
         };
       }
       cascaded = result.updated;
