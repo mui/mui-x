@@ -166,7 +166,8 @@ class RuleDays {
         // RFC 5545 weeks start on Monday (WKST=MO) whatever the locale, otherwise BYDAY like SU+TU
         // can go backwards.
         this.periodStart = getStartOfWeekDayNumber(seriesStart, 1);
-        this.periodLength = 7 * this.interval;
+        // Finite even for an interval like Number.MAX_VALUE, whose next period is never reached.
+        this.periodLength = Math.min(7 * this.interval, Number.MAX_VALUE);
         break;
       }
       default: {
