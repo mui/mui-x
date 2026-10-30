@@ -216,6 +216,15 @@ const zhCNGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} 个筛选器` : `${count} 个筛选器`,
   columnHeaderFiltersLabel: '显示筛选器',
   columnHeaderSortIconLabel: '排序',
+  columnHeaderSortIconAriaLabel: (columnName, direction) => {
+    if (direction === 'asc') {
+      return `按${columnName}升序排序`;
+    }
+    if (direction === 'desc') {
+      return `按${columnName}降序排序`;
+    }
+    return `取消${columnName}的排序`;
+  },
 
   // Rows selected footer text
   footerRowSelected: (count) => `共选中了${count.toLocaleString()}行`,
@@ -237,6 +246,9 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: '真',
   booleanCellFalseLabel: '假',
+
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
 
   // Long text cell
   longTextCellExpandLabel: '显示',

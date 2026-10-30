@@ -243,6 +243,15 @@ const ruRUGrid: Partial<GridLocaleText> = {
     }),
   columnHeaderFiltersLabel: 'Показать фильтры',
   columnHeaderSortIconLabel: 'Сортировать',
+  // columnHeaderSortIconAriaLabel: (columnName, direction) => {
+  //   if (direction === 'asc') {
+  //     return `Sort ${columnName} in ascending order`;
+  //   }
+  //   if (direction === 'desc') {
+  //     return `Sort ${columnName} in descending order`;
+  //   }
+  //   return `Remove sorting from ${columnName}`;
+  // },
 
   // Rows selected footer text
   footerRowSelected: (count) =>
@@ -269,6 +278,9 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'истина',
   booleanCellFalseLabel: 'ложь',
+
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
 
   // Long text cell
   longTextCellExpandLabel: 'Развернуть',

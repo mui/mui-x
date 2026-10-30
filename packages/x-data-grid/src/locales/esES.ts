@@ -217,6 +217,15 @@ const esESGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} filtros activos` : `${count} filtro activo`,
   columnHeaderFiltersLabel: 'Mostrar filtros',
   columnHeaderSortIconLabel: 'Ordenar',
+  columnHeaderSortIconAriaLabel: (columnName, direction) => {
+    if (direction === 'asc') {
+      return `Ordenar la columna ${columnName} de forma ascendente`;
+    }
+    if (direction === 'desc') {
+      return `Ordenar la columna ${columnName} de forma descendente`;
+    }
+    return `Quitar la ordenación de la columna ${columnName}`;
+  },
 
   // Rows selected footer text
   footerRowSelected: (count) =>
@@ -241,6 +250,9 @@ const esESGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'si',
   booleanCellFalseLabel: 'no',
+
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
 
   // Long text cell
   longTextCellExpandLabel: 'Expandir',

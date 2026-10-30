@@ -213,6 +213,15 @@ const bgBGGrid: Partial<GridLocaleText> = {
   columnHeaderFiltersTooltipActive: (count) => `${count} активни филтри`,
   columnHeaderFiltersLabel: 'Покажи Филтрите',
   columnHeaderSortIconLabel: 'Сортирай',
+  // columnHeaderSortIconAriaLabel: (columnName, direction) => {
+  //   if (direction === 'asc') {
+  //     return `Sort ${columnName} in ascending order`;
+  //   }
+  //   if (direction === 'desc') {
+  //     return `Sort ${columnName} in descending order`;
+  //   }
+  //   return `Remove sorting from ${columnName}`;
+  // },
 
   // Rows selected footer text
   footerRowSelected: (count) =>
@@ -237,6 +246,9 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'да',
   booleanCellFalseLabel: 'не',
+
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
 
   // Long text cell
   longTextCellExpandLabel: 'Разгъване',

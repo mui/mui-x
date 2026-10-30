@@ -11,7 +11,7 @@ import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-g
 import type { EventCalendarFetchRange, SchedulerProcessedDate } from '../models';
 import { AGENDA_MAX_HORIZON_DAYS, AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import { getDayListFromPlainDates } from '../get-day-list';
-import type { PlainDate } from '../internals/utils/base-temporal/PlainDate';
+import { BaseTemporal } from '../internals/utils/base-temporal';
 
 /**
  * The span of days the agenda displays: `dayCount` days from the visible date,
@@ -20,7 +20,7 @@ import type { PlainDate } from '../internals/utils/base-temporal/PlainDate';
 const baseRange = createSelectorMemoized(
   schedulerOtherSelectors.visiblePlainDate,
   eventCalendarViewSelectors.agendaDayCount,
-  (visiblePlainDate, dayCount): { start: PlainDate; end: PlainDate } =>
+  (visiblePlainDate, dayCount): { start: BaseTemporal.PlainDate; end: BaseTemporal.PlainDate } =>
     dayCount === 'month'
       ? {
           start: visiblePlainDate.with({ day: 1 }),
@@ -57,7 +57,9 @@ const horizonEndPlainDate = createSelectorMemoized(
     }
     // A day count beyond the default horizon still scans at least the displayed days
     const horizonPlainDate = range.start.add({ days: AGENDA_MAX_HORIZON_DAYS - 1 });
-    return horizonPlainDate.dayNumber > range.end.dayNumber ? horizonPlainDate : range.end;
+    return BaseTemporal.PlainDate.compare(horizonPlainDate, range.end) > 0
+      ? horizonPlainDate
+      : range.end;
   },
 );
 
@@ -117,7 +119,7 @@ const visibleDays = createSelectorMemoized(
     let scannedUntilPlainDate = range.end;
     while (
       daysWithEvents.length < amount &&
-      scannedUntilPlainDate.dayNumber < horizonPlainDate.dayNumber
+      BaseTemporal.PlainDate.compare(scannedUntilPlainDate, horizonPlainDate) < 0
     ) {
       // Extend forward by one more chunk, without passing the horizon
       const nextStartPlainDate = scannedUntilPlainDate.add({ days: 1 });
@@ -125,7 +127,7 @@ const visibleDays = createSelectorMemoized(
         days: Math.max(amount, AGENDA_VIEW_DAYS_AMOUNT) - 1,
       });
       scannedUntilPlainDate =
-        chunkEndPlainDate.dayNumber < horizonPlainDate.dayNumber
+        BaseTemporal.PlainDate.compare(chunkEndPlainDate, horizonPlainDate) < 0
           ? chunkEndPlainDate
           : horizonPlainDate;
 

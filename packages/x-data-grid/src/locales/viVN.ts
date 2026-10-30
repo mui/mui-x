@@ -215,6 +215,15 @@ const viVNGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} bộ lọc hoạt động` : `${count} bộ lọc hoạt động`,
   columnHeaderFiltersLabel: 'Bộ lọc',
   columnHeaderSortIconLabel: 'Sắp xếp',
+  // columnHeaderSortIconAriaLabel: (columnName, direction) => {
+  //   if (direction === 'asc') {
+  //     return `Sort ${columnName} in ascending order`;
+  //   }
+  //   if (direction === 'desc') {
+  //     return `Sort ${columnName} in descending order`;
+  //   }
+  //   return `Remove sorting from ${columnName}`;
+  // },
 
   // Rows selected footer text
   footerRowSelected: (count) =>
@@ -237,6 +246,9 @@ const viVNGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'Có',
   booleanCellFalseLabel: 'Không',
+
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
 
   // Long text cell
   longTextCellExpandLabel: 'Mở rộng',

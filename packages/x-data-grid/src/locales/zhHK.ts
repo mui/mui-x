@@ -216,6 +216,15 @@ const zhHKGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} 個有效過濾器` : `${count} 個活動過濾器`,
   columnHeaderFiltersLabel: '顯示過濾器',
   columnHeaderSortIconLabel: '種類',
+  // columnHeaderSortIconAriaLabel: (columnName, direction) => {
+  //   if (direction === 'asc') {
+  //     return `Sort ${columnName} in ascending order`;
+  //   }
+  //   if (direction === 'desc') {
+  //     return `Sort ${columnName} in descending order`;
+  //   }
+  //   return `Remove sorting from ${columnName}`;
+  // },
 
   // Rows selected footer text
   footerRowSelected: (count) =>
@@ -238,6 +247,9 @@ const zhHKGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: '是的',
   booleanCellFalseLabel: '不',
+
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
 
   // Long text cell
   longTextCellExpandLabel: '擴張',
