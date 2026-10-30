@@ -247,6 +247,9 @@ const viVNGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'Có',
   booleanCellFalseLabel: 'Không',
 
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
+
   // Long text cell
   longTextCellExpandLabel: 'Mở rộng',
   longTextCellCollapseLabel: 'Thu nhỏ',

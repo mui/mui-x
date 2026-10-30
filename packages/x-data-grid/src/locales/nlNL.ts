@@ -249,6 +249,9 @@ const nlNLGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'waar',
   booleanCellFalseLabel: 'onwaar',
 
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
+
   // Long text cell
   longTextCellExpandLabel: 'Uitklappen',
   longTextCellCollapseLabel: 'Inklappen',

@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import type { Virtualizer } from '@mui/x-virtualizer';
 import { LayoutList, useVirtualizer } from '@mui/x-virtualizer';
 import { createSelectorMemoized, useStore } from '@base-ui/utils/store';
@@ -17,6 +18,16 @@ import {
 } from '@mui/x-tree-view/internals';
 import useSlotProps from '@mui/utils/useSlotProps';
 import type { RichTreeViewProStore } from '../internals/RichTreeViewProStore';
+import { itemsReorderingSelectors } from '../internals/plugins/itemsReordering';
+
+const HIDDEN_ITEM_STYLE: React.CSSProperties = {
+  height: 0,
+  padding: 0,
+  margin: 0,
+  border: 0,
+  opacity: 0,
+  overflow: 'hidden',
+};
 
 const VirtualizerContext = React.createContext<Virtualizer | null>(null);
 
@@ -61,6 +72,16 @@ export function RichTreeViewVirtualizedItems<TProps extends object>(
     scroller: React.useRef<HTMLDivElement>(null),
   };
   const layout = useRefWithInit(() => new LayoutList(refs)).current;
+
+  // The dragged item stays mounted while scrolled out of view, since `dragend` is only dispatched to it.
+  const draggedItemId = useStore(store, itemsReorderingSelectors.draggedItemId);
+  const draggedItemIndex = React.useMemo(
+    () => (draggedItemId == null ? -1 : items.findIndex((item) => item.id === draggedItemId)),
+    [items, draggedItemId],
+  );
+  const draggedItemCell =
+    draggedItemIndex === -1 ? null : { rowIndex: draggedItemIndex, columnIndex: 0 };
+
   const virtualizer = useVirtualizer({
     layout,
     dimensions: {
@@ -71,11 +92,22 @@ export function RichTreeViewVirtualizedItems<TProps extends object>(
     rows: items,
     range,
     rowCount: items.length,
+    focusedVirtualCell: () => draggedItemCell,
 
     renderRow: (params) => (
       <RichTreeViewItem
         itemSlot={itemSlot}
-        itemSlotProps={itemSlotProps}
+        itemSlotProps={
+          params.isVirtualFocusRow
+            ? (itemOwnerState) => {
+                const resolvedProps = resolveComponentProps(itemSlotProps, itemOwnerState);
+                return {
+                  ...resolvedProps,
+                  style: { ...resolvedProps?.style, ...HIDDEN_ITEM_STYLE },
+                };
+              }
+            : itemSlotProps
+        }
         key={params.id}
         itemId={params.id}
         skipChildren

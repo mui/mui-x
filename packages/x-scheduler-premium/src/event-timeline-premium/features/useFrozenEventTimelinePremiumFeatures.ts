@@ -4,17 +4,14 @@ import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { EventTimelinePremiumStoreFeatures } from '@mui/x-scheduler-internals-premium/internals';
-import type { EventTimelinePremiumInternalFeatures } from './EventTimelinePremiumFeatures.types';
+import type { EventTimelinePremiumFeatures } from './EventTimelinePremiumFeatures.types';
 
-function hasChanged(
-  frozen: EventTimelinePremiumInternalFeatures,
-  current: EventTimelinePremiumInternalFeatures,
-) {
+function hasChanged(frozen: EventTimelinePremiumFeatures, current: EventTimelinePremiumFeatures) {
   const keys = new Set([...Object.keys(frozen), ...Object.keys(current)]);
   for (const key of keys) {
     if (
-      frozen[key as keyof EventTimelinePremiumInternalFeatures] !==
-      current[key as keyof EventTimelinePremiumInternalFeatures]
+      frozen[key as keyof EventTimelinePremiumFeatures] !==
+      current[key as keyof EventTimelinePremiumFeatures]
     ) {
       return true;
     }
@@ -26,13 +23,13 @@ function hasChanged(
  * Reads the features once, on mount, and derives the features of the store from them.
  */
 export function useFrozenEventTimelinePremiumFeatures(
-  features: EventTimelinePremiumInternalFeatures | undefined,
+  features: EventTimelinePremiumFeatures | undefined,
 ): {
-  features: EventTimelinePremiumInternalFeatures;
+  features: EventTimelinePremiumFeatures;
   storeFeatures: EventTimelinePremiumStoreFeatures;
 } {
   const frozen = useLazyRef(() => {
-    const value: EventTimelinePremiumInternalFeatures = features ?? EMPTY_OBJECT;
+    const value: EventTimelinePremiumFeatures = features ?? EMPTY_OBJECT;
     return {
       features: value,
       storeFeatures: {

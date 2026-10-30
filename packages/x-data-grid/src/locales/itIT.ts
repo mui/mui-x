@@ -251,6 +251,9 @@ const itITGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'vero',
   booleanCellFalseLabel: 'falso',
 
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
+
   // Long text cell
   longTextCellExpandLabel: 'Espandi',
   longTextCellCollapseLabel: 'Comprimi',

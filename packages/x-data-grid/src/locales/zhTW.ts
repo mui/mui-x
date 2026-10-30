@@ -246,6 +246,9 @@ const zhTWGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: '真',
   booleanCellFalseLabel: '假',
 
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
+
   // Long text cell
   longTextCellExpandLabel: '展開',
   longTextCellCollapseLabel: '摺疊',

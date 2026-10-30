@@ -6,6 +6,7 @@ import type { ClassValue } from 'clsx';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import ownerDocument from '@mui/utils/ownerDocument';
+import ownerWindow from '@mui/utils/ownerWindow';
 import capitalize from '@mui/utils/capitalize';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
@@ -13,7 +14,10 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useStore } from '@base-ui/utils/store';
 import { Rowspan } from '@mui/x-virtualizer';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useId from '@mui/utils/useId';
 import { focusElement } from '../../utils/focusElement';
+import { PRE_MOUNTED_EDITOR_SELECTOR } from '../../utils/cellEditor';
+import { isImeKeyDown } from '../../utils/keyboardUtils';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import { GridCellModes } from '../../models';
 import type { GridCellEventLookup, GridEvents, GridRowId, GridEditCellProps } from '../../models';
@@ -33,6 +37,8 @@ import { usePinnedScrollOffset } from '../../hooks/utils/usePinnedScrollOffset';
 import { gridEditCellStateSelector } from '../../hooks/features/editing/gridEditingSelectors';
 import { attachPinnedStyle } from '../../internals/utils';
 import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
+import { getDefaultCellValue } from '../../hooks/features/editing/utils';
+import { renderEditInputCell } from './GridEditInputCell';
 
 export type GridCellProps = React.HTMLAttributes<HTMLDivElement> & {
   align: GridAlignment;
@@ -106,6 +112,49 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 let warnedOnce = false;
+
+// Only the default string editor can be pre-mounted.
+function canPreMountEditor(column: GridStateColDef) {
+  return column.type === 'string' && column.renderEditCell === renderEditInputCell;
+}
+
+// Prevents autofill, spell check, and password manager icons on the pre-mounted editor.
+const PRE_MOUNTED_EDITOR_INPUT_PROPS = {
+  autoComplete: 'off',
+  spellCheck: false,
+  'data-lpignore': 'true',
+  'data-1p-ignore': '',
+  'data-bwignore': '',
+  'data-form-type': 'other',
+};
+
+// Prevents Enter from submitting a parent form, except when it confirms an IME composition.
+function handlePreMountedEditorKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+  if (event.key === 'Enter' && !isImeKeyDown(event)) {
+    event.preventDefault();
+  }
+}
+
+// Returns the first tab stop in the cell content, ignoring the pre-mounted editor.
+function getContentTabStop(cell: HTMLElement) {
+  return Array.from(cell.querySelectorAll<HTMLElement>('[tabindex="0"]')).find(
+    (element) => !element.closest(PRE_MOUNTED_EDITOR_SELECTOR),
+  );
+}
+
+// On touch devices, a focused input opens the virtual keyboard.
+function isCoarsePointer(element: Element | null) {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+  return !!ownerWindow(element ?? undefined).matchMedia?.('(pointer: coarse)').matches;
+}
+
+// Focusing the editor would clear a text selection in the cell.
+function hasTextSelection(cell: HTMLElement) {
+  const selection = ownerDocument(cell).getSelection();
+  return !!selection && !selection.isCollapsed && cell.contains(selection.anchorNode);
+}
 
 // TODO(v7): Removing the wrapper will break the docs performance visualization demo.
 
@@ -210,6 +259,35 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   const tabIndex =
     (cellMode === 'view' || !isEditable) && column.type !== 'actions' ? cellParams.tabIndex : -1;
 
+  const imeFastEdit = !!rootProps.experimentalFeatures?.imeFastEdit;
+  // An IME only composes in an input that has the focus before the first key,
+  // so the focused cell renders a hidden editor before edit mode starts.
+  // Keep the editor while it has the DOM focus, even if the focus state is cleared.
+  const [editorHasDomFocus, setEditorHasDomFocus] = React.useState(false);
+  // Content with a tab stop (for example a link from `renderCell`) keeps the focus.
+  const [contentHasTabStop, setContentHasTabStop] = React.useState(false);
+  // Keep the editor while the cell is the tab stop, so a dialog can give the focus back to it.
+  const [editorHadFocus, setEditorHadFocus] = React.useState(false);
+  const cellId = useId();
+  const canCellPreMountEditor =
+    imeFastEdit &&
+    cellMode === GridCellModes.View &&
+    !contentHasTabStop &&
+    canPreMountEditor(column) &&
+    !isCoarsePointer(apiRef.current.rootElementRef?.current ?? null);
+  const isEditorPreMounted =
+    canCellPreMountEditor &&
+    ((hasFocus && isEditable) ||
+      editorHasDomFocus ||
+      (editorHadFocus && isEditable && cellParams.tabIndex === 0));
+  // React does not call `onBlur` when it removes a focused element, so reset the state here.
+  if (editorHasDomFocus && !isEditorPreMounted && cellMode === GridCellModes.View) {
+    setEditorHasDomFocus(false);
+  }
+  if (editorHadFocus && !isEditorPreMounted && cellMode === GridCellModes.View) {
+    setEditorHadFocus(false);
+  }
+
   const { classes: rootClasses, getCellClassName } = rootProps;
 
   // There is a hidden grid state access in `applyPipeProcessor('cellClassName', ...)`
@@ -258,8 +336,31 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   };
   const classes = useUtilityClasses(ownerState);
 
+  // Moves the focus from the cell to its pre-mounted editor. Never takes it from another element.
+  const focusPreMountedEditor = React.useCallback(() => {
+    const doc = ownerDocument(apiRef.current.rootElementRef!.current)!;
+    if (
+      !cellRef.current ||
+      doc.activeElement !== cellRef.current ||
+      getContentTabStop(cellRef.current) !== undefined ||
+      hasTextSelection(cellRef.current)
+    ) {
+      return;
+    }
+    const input = cellRef.current.querySelector<HTMLElement>(
+      `${PRE_MOUNTED_EDITOR_SELECTOR} input`,
+    );
+    if (input) {
+      focusElement(input, apiRef);
+    }
+  }, [apiRef]);
+
+  // Tells if the next focus event of the cell comes from a mousedown.
+  const isMouseDownRef = React.useRef(false);
+
   const publishMouseUp = React.useCallback(
     (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
+      isMouseDownRef.current = false;
       // The row might have been deleted during the click
       if (!apiRef.current.getRow(rowId)) {
         return;
@@ -271,12 +372,28 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
       if (onMouseUp) {
         onMouseUp(event);
       }
+
+      if (imeFastEdit) {
+        // Wait for the mouseup, so that a drag can select text.
+        focusPreMountedEditor();
+      }
     },
-    [apiRef, field, onMouseUp, rowId],
+    [apiRef, field, focusPreMountedEditor, imeFastEdit, onMouseUp, rowId],
   );
 
   const publishMouseDown = React.useCallback(
     (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
+      isMouseDownRef.current = true;
+      if (imeFastEdit) {
+        // The mousedown may not give the focus, and the mouseup may be on another cell.
+        ownerDocument(event.currentTarget).addEventListener(
+          'mouseup',
+          () => {
+            isMouseDownRef.current = false;
+          },
+          { once: true, capture: true },
+        );
+      }
       // The row might have been deleted during the click
       if (!apiRef.current.getRow(rowId)) {
         return;
@@ -288,7 +405,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
         onMouseDown(event);
       }
     },
-    [apiRef, field, onMouseDown, rowId],
+    [apiRef, field, imeFastEdit, onMouseDown, rowId],
   );
 
   const publish = React.useCallback(
@@ -362,6 +479,15 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     rowSpan,
   ]);
 
+  // `renderCell` only gets `tabIndex: 0` in the focused cell. Runs before the focus effect below.
+  useEnhancedEffect(() => {
+    if (!imeFastEdit || !hasFocus || cellMode !== GridCellModes.View || !cellRef.current) {
+      return;
+    }
+    setContentHasTabStop(getContentTabStop(cellRef.current) !== undefined);
+    // `row` and `column` change the content of `renderCell`.
+  }, [imeFastEdit, hasFocus, cellMode, row, column]);
+
   useEnhancedEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
       return;
@@ -382,12 +508,32 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
         return;
       }
 
-      const focusableElement = cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
+      // A tab stop in the content takes precedence over the editor.
+      const focusableElement =
+        getContentTabStop(cellRef.current) ??
+        cellRef.current.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || cellRef.current;
 
       focusElement(elementToFocus, apiRef);
     }
   }, [hasFocus, cellMode, apiRef]);
+
+  useEnhancedEffect(() => {
+    if (isEditorPreMounted) {
+      focusPreMountedEditor();
+    }
+  }, [isEditorPreMounted, focusPreMountedEditor]);
+
+  // If React removes the focused editor, move the focus from the body back to the cell.
+  useEnhancedEffect(() => {
+    if (!imeFastEdit || isEditorPreMounted || !hasFocus || cellMode !== GridCellModes.View) {
+      return;
+    }
+    const doc = ownerDocument(apiRef.current.rootElementRef!.current)!;
+    if (cellRef.current && doc.activeElement === doc.body) {
+      focusElement(cellRef.current, apiRef);
+    }
+  }, [imeFastEdit, isEditorPreMounted, hasFocus, cellMode, apiRef]);
 
   if (isCellRowSpanned) {
     return <div data-colindex={colIndex} role="none" style={{ width: 'var(--width)', ...style }} />;
@@ -422,6 +568,49 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
       }
     };
   }
+
+  if (imeFastEdit) {
+    const handleFocusWithoutEditor = handleFocus;
+    handleFocus = (event: React.FocusEvent<HTMLDivElement>) => {
+      handleFocusWithoutEditor?.(event);
+      const isFromMouseDown = isMouseDownRef.current;
+      isMouseDownRef.current = false;
+      if (event.target !== event.currentTarget) {
+        return;
+      }
+      if (isEditorPreMounted) {
+        // After a mousedown, the mouseup focuses the editor.
+        if (!isFromMouseDown) {
+          focusPreMountedEditor();
+        }
+      } else if (!isFromMouseDown && !hasFocus && isEditable && canCellPreMountEditor) {
+        // Tab focuses the cell without the focus state. Sync it, so that the editor renders.
+        const canUpdateFocus = apiRef.current.unstable_applyPipeProcessors('canUpdateFocus', true, {
+          event: event.nativeEvent as unknown as MouseEvent,
+          cell: cellParams,
+        });
+        if (canUpdateFocus) {
+          apiRef.current.setCellFocus(rowId, field);
+        }
+      }
+    };
+  }
+
+  const handleEditorFocus = (event: React.FocusEvent<HTMLDivElement>) => {
+    setEditorHasDomFocus(true);
+    setEditorHadFocus(true);
+    if (hasFocus || !isEditorPreMounted) {
+      return;
+    }
+    // For example, a dialog gives the focus back. Sync the focus state for keyboard navigation.
+    const canUpdateFocus = apiRef.current.unstable_applyPipeProcessors('canUpdateFocus', true, {
+      event: event.nativeEvent as unknown as MouseEvent,
+      cell: cellParams,
+    });
+    if (canUpdateFocus) {
+      apiRef.current.setCellFocus(rowId, field);
+    }
+  };
 
   let children: React.ReactNode;
   let title: string | undefined;
@@ -458,6 +647,62 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     title = valueString;
   }
 
+  if (imeFastEdit) {
+    // The same position in view and edit mode lets a composition continue in the same input.
+    let editor: React.ReactNode = null;
+    let editorState: 'preMounted' | 'editing' | null = null;
+    if (editCellState !== null) {
+      editor = children;
+      children = null;
+      editorState = 'editing';
+    } else if (isEditorPreMounted) {
+      editor = column.renderEditCell!({
+        ...cellParams,
+        value: getDefaultCellValue(column),
+        isValidating: false,
+        isProcessingProps: false,
+        // The cell gives the focus to the editor, see `focusPreMountedEditor`.
+        hasFocus: false,
+        slotProps: {
+          root: {
+            slotProps: {
+              htmlInput: {
+                ...PRE_MOUNTED_EDITOR_INPUT_PROPS,
+                // The editor replaces the cell as the tab stop.
+                tabIndex: cellParams.tabIndex,
+                // Screen readers announce the cell content, not the empty input.
+                ...(children == null || children === ''
+                  ? { 'aria-label': apiRef.current.getLocaleText('emptyCellLabel') }
+                  : { 'aria-labelledby': cellId }),
+              },
+            },
+          },
+        },
+      });
+      editorState = 'preMounted';
+    }
+
+    // Keep the same children structure in all cells, so the content does not remount on focus.
+    // The editor comes first, so scrolling to it does not scroll past the row.
+    children = [
+      editorState === null ? null : (
+        <div
+          key="editor"
+          data-cell-editor={editorState}
+          onCompositionStart={
+            editorState === 'preMounted' ? publish('cellCompositionStart', undefined) : undefined
+          }
+          onKeyDown={editorState === 'preMounted' ? handlePreMountedEditorKeyDown : undefined}
+          onFocus={handleEditorFocus}
+          onBlur={() => setEditorHasDomFocus(false)}
+        >
+          {editor}
+        </div>
+      ),
+      <React.Fragment key="view">{children}</React.Fragment>,
+    ];
+  }
+
   const draggableEventHandlers = disableDragEvents
     ? null
     : {
@@ -469,6 +714,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     <div
       className={clsx(classes.root, classNames, className)}
       role={column.rowHeader ? 'rowheader' : 'gridcell'}
+      id={isEditorPreMounted ? cellId : undefined}
       data-field={field}
       data-colindex={colIndex}
       aria-colindex={colIndex + 1}
@@ -476,7 +722,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
       aria-rowspan={rowSpan}
       style={style}
       title={title}
-      tabIndex={tabIndex}
+      tabIndex={isEditorPreMounted ? -1 : tabIndex}
       onClick={publish('cellClick', onClick)}
       onDoubleClick={publish('cellDoubleClick', onDoubleClick)}
       onMouseOver={publish('cellMouseOver', onMouseOver)}

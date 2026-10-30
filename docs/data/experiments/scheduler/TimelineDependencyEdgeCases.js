@@ -1,21 +1,6 @@
 import * as React from 'react';
-import { eventTimelinePremiumClasses } from '@mui/x-scheduler-premium/event-timeline-premium';
-import {
-  EventTimelinePremiumContent,
-  EventTimelinePremiumStyledContext,
-  EventTimelinePremiumFeaturesContext,
-  dependenciesFeature,
-  useFrozenEventTimelinePremiumFeatures,
-} from '@mui/x-scheduler-premium/internals';
-import { useEventTimelinePremium } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
-import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import {
-  ErrorContainer,
-  EventEditingStyledContext,
-  SharedComponentsStyledContext,
-  EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
-  SchedulerDirectionProvider,
-} from '@mui/x-scheduler/internals';
+import { dependenciesFeature } from '@mui/x-scheduler-premium/dependencies';
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 
 // A release day: every dependency has a business reason, and each type and arrow
 // shape appears once, in its own stretch of the day so the arrows stay apart.
@@ -26,6 +11,7 @@ const resources = [
   { id: 'docs', title: 'Docs' },
   { id: 'devops', title: 'DevOps' },
   { id: 'support', title: 'Support' },
+  { id: 'planning', title: 'Planning' },
 ];
 
 const initialEvents = [
@@ -114,6 +100,21 @@ const initialEvents = [
     end: '2025-07-03T16:00:00',
     resource: ['frontend', 'qa', 'devops'],
   },
+  // Outside the visible date range, before and after it.
+  {
+    id: 'kickoff',
+    title: 'Kickoff',
+    start: '2025-06-02T09:00:00',
+    end: '2025-06-02T10:00:00',
+    resource: 'planning',
+  },
+  {
+    id: 'retro',
+    title: 'Retro',
+    start: '2025-08-14T09:00:00',
+    end: '2025-08-14T10:00:00',
+    resource: 'planning',
+  },
 ];
 
 const initialDependencies = [
@@ -149,84 +150,31 @@ const initialDependencies = [
   { id: 'd8', source: 'sync', target: 'prod', type: 'FinishToStart' },
   // The on-call shift cannot end until the production deploy has started.
   { id: 'd9', source: 'prod', target: 'on-call', type: 'StartToFinish' },
+  // Links to events outside the visible date range continue to the timeline edge.
+  { id: 'd10', source: 'kickoff', target: 'api', type: 'FinishToStart' },
+  { id: 'd11', source: 'notes', target: 'retro', type: 'FinishToStart' },
 ];
 
-const styledContextValue = {
-  schedulerId: 'experiment-dependency-arrows',
-  classes: eventTimelinePremiumClasses,
-  localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
-};
-const sharedStyledContextValue = {
-  classes: eventTimelinePremiumClasses,
-  localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
-};
+const features = { dependencies: dependenciesFeature };
 
-export default function TimelineDependencyArrows() {
+export default function TimelineDependencyEdgeCases() {
   const [events, setEvents] = React.useState(initialEvents);
   const [dependencies, setDependencies] = React.useState(initialDependencies);
 
-  const { features, storeFeatures } = useFrozenEventTimelinePremiumFeatures({
-    dependencies: dependenciesFeature,
-  });
-
-  // `dependencies` has no public API yet (#22855), so instead of `<EventTimelinePremium />`
-  // this experiment feeds the internal store parameters to the same hook the component
-  // uses and renders its content inside the same providers.
-  const parameters = {
-    events,
-    onEventsChange: setEvents,
-    resources,
-    dependencies,
-    onDependenciesChange: setDependencies,
-    defaultVisibleDate: new Date('2025-07-03T00:00:00'),
-    defaultPreset: 'dayAndHour',
-    // Working hours only, so every arrow fits the initial viewport.
-    presetConfig: { dayAndHour: { startTime: 8, endTime: 18 } },
-    areEventsDraggable: true,
-    areEventsResizable: true,
-    storeFeatures,
-  };
-  const store = useEventTimelinePremium(parameters);
-  // The context is typed on the base scheduler state and the store generic is
-  // invariant, so the premium store (extra state slices) needs the cast.
-  const storeContextValue = store;
-
   return (
-    /* Mimics the layout, font-size and box-sizing reset the `EventTimelinePremium`
-       root provides to the content (the row-height CSS resolves against them). */
-    <div
-      className="experiment-dependency-arrows-host"
-      style={{
-        height: 460,
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        fontSize: '0.875rem',
-        // Contains the ErrorContainer toasts, absolutely positioned bottom-right.
-        position: 'relative',
-      }}
-    >
-      <style>
-        {
-          '.experiment-dependency-arrows-host, .experiment-dependency-arrows-host * { box-sizing: border-box; }'
-        }
-      </style>
-      <SchedulerStoreContext.Provider value={storeContextValue}>
-        <EventTimelinePremiumFeaturesContext.Provider value={features}>
-          <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-            <EventEditingStyledContext.Provider value={styledContextValue}>
-              <SharedComponentsStyledContext.Provider
-                value={sharedStyledContextValue}
-              >
-                <SchedulerDirectionProvider>
-                  <EventTimelinePremiumContent />
-                  <ErrorContainer />
-                </SchedulerDirectionProvider>
-              </SharedComponentsStyledContext.Provider>
-            </EventEditingStyledContext.Provider>
-          </EventTimelinePremiumStyledContext.Provider>
-        </EventTimelinePremiumFeaturesContext.Provider>
-      </SchedulerStoreContext.Provider>
+    <div style={{ height: 520, width: '100%' }}>
+      <EventTimelinePremium
+        events={events}
+        onEventsChange={setEvents}
+        resources={resources}
+        features={features}
+        dependencies={dependencies}
+        onDependenciesChange={setDependencies}
+        defaultVisibleDate={new Date('2025-07-03T00:00:00')}
+        defaultPreset="dayAndHour"
+        // Working hours only, so every arrow fits the initial viewport.
+        presetConfig={{ dayAndHour: { startTime: 8, endTime: 18 } }}
+      />
     </div>
   );
 }

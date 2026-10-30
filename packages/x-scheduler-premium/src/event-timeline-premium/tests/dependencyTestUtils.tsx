@@ -27,10 +27,10 @@ import { EventTimelinePremiumContent } from '../content';
 import { EventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
 import { recurringEventsFeature } from '../../recurring-events';
-import { dependenciesFeature } from '../content/timeline-dependencies/dependenciesFeature';
+import { dependenciesFeature } from '../../dependencies';
 import { EventTimelinePremiumFeaturesContext } from '../features/EventTimelinePremiumFeaturesContext';
 import { useFrozenEventTimelinePremiumFeatures } from '../features/useFrozenEventTimelinePremiumFeatures';
-import type { EventTimelinePremiumInternalFeatures } from '../features/EventTimelinePremiumFeatures.types';
+import type { EventTimelinePremiumFeatures } from '../features/EventTimelinePremiumFeatures.types';
 
 export { buildDependency, resource1, resource2 };
 
@@ -78,7 +78,7 @@ const sharedStyledContextValue = {
   localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 };
 
-const defaultFeatures: EventTimelinePremiumInternalFeatures = {
+const defaultFeatures: EventTimelinePremiumFeatures = {
   recurringEvents: recurringEventsFeature,
   dependencies: dependenciesFeature,
 };
@@ -98,7 +98,7 @@ interface TestTimelineProps {
   /**
    * @default both features
    */
-  features?: EventTimelinePremiumInternalFeatures;
+  features?: EventTimelinePremiumFeatures;
   /**
    * Merged into the default locale text.
    */
@@ -110,8 +110,8 @@ interface TestTimelineProps {
   onStoreReady: (store: EventTimelinePremiumStore<any, any>) => void;
 }
 
-// `dependencies` is not a public prop yet, so the harness feeds the internal store
-// parameters to the same hook the component uses, and closes the controlled loop
+// The tests need the store, which the component doesn't expose, so the harness feeds the
+// store parameters to the same hook the component uses, and closes the controlled loop
 // (`onEventsChange` / `onDependenciesChange` → new parameter values) like a consumer.
 // Exported for the tests rendering several timelines on one page.
 export function TestTimeline({
@@ -204,7 +204,7 @@ interface RenderTimelineParameters {
    * Pass a module-scope value: the store compares it by reference.
    */
   eventModelStructure?: SchedulerEventModelStructure<SchedulerEvent>;
-  features?: EventTimelinePremiumInternalFeatures;
+  features?: EventTimelinePremiumFeatures;
   localeText?: Partial<EventTimelineLocaleText>;
   onDependenciesChange?: (dependencies: SchedulerDependency[]) => void;
   /**

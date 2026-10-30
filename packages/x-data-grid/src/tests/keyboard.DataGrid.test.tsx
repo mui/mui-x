@@ -1,4 +1,5 @@
 import { createRenderer, fireEvent, screen, act, within } from '@mui/internal-test-utils';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   getActiveCell,
   getActiveColumnHeader,
@@ -8,8 +9,20 @@ import {
   getRow,
   openLongTextViewPopup,
 } from 'test/utils/helperFn';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
-import type { DataGridProps, GridColDef, GridColType, GridValueSetter } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridActionsCellItem,
+  gridFocusCellSelector,
+  gridFocusColumnHeaderSelector,
+  useGridApiRef,
+} from '@mui/x-data-grid';
+import type {
+  DataGridProps,
+  GridApi,
+  GridColDef,
+  GridColType,
+  GridValueSetter,
+} from '@mui/x-data-grid';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 import RestoreIcon from '@mui/icons-material/Restore';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -446,6 +459,48 @@ describe('<DataGrid /> - Keyboard', () => {
       expect(fireEvent.keyDown(input, { key: 'a' })).to.equal(true);
       expect(fireEvent.keyDown(input, { key: ' ' })).to.equal(true);
       expect(fireEvent.keyDown(input, { key: 'ArrowLeft' })).to.equal(true);
+    });
+
+    it('should clear the focus state when the focus moves from a column header to a button in a cell', async () => {
+      let apiRef: RefObject<GridApi | null>;
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              apiRef={apiRef}
+              rows={[{ id: 1, name: 'John' }]}
+              columns={[
+                {
+                  field: 'name',
+                  renderCell: () => <button type="button">Action</button>,
+                },
+              ]}
+            />
+          </div>
+        );
+      }
+      render(<Test />);
+      await act(async () => getColumnHeaderCell(0).focus());
+      expect(gridFocusColumnHeaderSelector(apiRef!)).not.to.equal(null);
+
+      // Tab moves the focus to the button, but the cell does not get the focus state.
+      await act(async () => screen.getByRole('button', { name: 'Action' }).focus());
+      expect(gridFocusColumnHeaderSelector(apiRef!)).to.equal(null);
+      expect(gridFocusCellSelector(apiRef!)).to.equal(null);
+    });
+
+    it('should keep the focus state when "ArrowDown" moves the focus from the checkbox column header', async () => {
+      let apiRef: RefObject<GridApi | null>;
+      function Test() {
+        apiRef = useGridApiRef();
+        return <NavigationTestCaseNoScrollX apiRef={apiRef} checkboxSelection />;
+      }
+      const { user } = render(<Test />);
+      await user.click(screen.getByRole('checkbox', { name: 'Select all rows' }));
+      await user.keyboard('{ArrowDown}');
+      expect(gridFocusCellSelector(apiRef!)).to.deep.equal({ id: 11, field: '__check__' });
+      expect(getCell(0, 0).contains(document.activeElement)).to.equal(true);
     });
   });
 

@@ -44,7 +44,7 @@ export interface EventTimelinePremiumState extends SchedulerState, SchedulerDepe
   dependenciesFeature: EventTimelinePremiumDependenciesStoreFeature | null;
   /**
    * Whether the dependencies feature is enabled, i.e. the store received it and the
-   * internal `dependencies` parameter is provided.
+   * `dependencies` parameter is provided.
    */
   areDependenciesEnabled: boolean;
   /**
@@ -65,7 +65,10 @@ export interface EventTimelinePremiumState extends SchedulerState, SchedulerDepe
 }
 
 export interface EventTimelinePremiumParameters<TEvent extends object, TResource extends object>
-  extends SchedulerParameters<TEvent, TResource>, SchedulerLazyLoadingParameters<TEvent> {
+  extends
+    SchedulerParameters<TEvent, TResource>,
+    SchedulerLazyLoadingParameters<TEvent>,
+    SchedulerDependenciesParameters {
   /**
    * The preset currently displayed in the timeline.
    */
@@ -116,17 +119,13 @@ export interface EventTimelinePremiumParameters<TEvent extends object, TResource
 }
 
 /**
- * Parameters accepted by the timeline store, including the dependencies parameters
- * that are not publicly exposed yet.
- * `dependencies` / `onDependenciesChange` move to `EventTimelinePremiumParameters`
- * when the dependencies feature becomes public.
+ * Parameters accepted by the timeline store: the component parameters and the store features.
  * @internal
  */
 export interface EventTimelinePremiumStoreParameters<
   TEvent extends object,
   TResource extends object,
->
-  extends EventTimelinePremiumParameters<TEvent, TResource>, SchedulerDependenciesParameters {
+> extends EventTimelinePremiumParameters<TEvent, TResource> {
   /**
    * Optional features of the store, read only when the store is created.
    */
