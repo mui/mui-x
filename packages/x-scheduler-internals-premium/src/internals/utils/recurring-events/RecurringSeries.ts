@@ -13,7 +13,6 @@ import {
   plainDateFromDayNumber,
   toLocalDayNumber,
   toMsInDay,
-  toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import type {
   RecurringEventWeekDayCode,
@@ -80,12 +79,11 @@ function getNthWeekdayOfMonth(
   ordinal: number,
 ): number | null {
   const daysInMonth = getDaysInMonth(monthStart);
-  const monthStartDayOfWeek = getIsoDayOfWeek(monthStart);
   let day: number;
   if (ordinal > 0) {
-    day = 1 + ((dayOfWeek - monthStartDayOfWeek + 7) % 7) + 7 * (ordinal - 1);
+    day = 1 + ((dayOfWeek - getIsoDayOfWeek(monthStart) + 7) % 7) + 7 * (ordinal - 1);
   } else {
-    const lastDayOfWeek = ((monthStartDayOfWeek + daysInMonth - 2) % 7) + 1;
+    const lastDayOfWeek = getIsoDayOfWeek(monthStart + daysInMonth - 1);
     day = daysInMonth - ((lastDayOfWeek - dayOfWeek + 7) % 7) + 7 * (ordinal + 1);
   }
   return day >= 1 && day <= daysInMonth ? addDays(monthStart, day - 1) : null;
@@ -141,7 +139,7 @@ class RuleDays {
 
   constructor(
     public readonly rule: SchedulerProcessedEventRecurrenceRule,
-    private readonly seriesStart: number,
+    public readonly seriesStart: number,
   ) {
     this.interval = (rule.freq === 'YEARLY' ? 12 : 1) * (rule.interval ?? 1);
     this.maxSearchSteps = getMaxSearchSteps(MONTHS_PER_GREGORIAN_CYCLE, this.interval);
@@ -304,14 +302,12 @@ export class RecurringSeries {
    */
   declare public readonly startMsInDay: number;
 
-  // The days of the series are day numbers: see `RuleDays`.
-  declare private readonly startDay: number;
-
   declare private readonly ruleDays: RuleDays;
 
   declare private readonly count: number;
 
-  declare private readonly untilDay: number | null;
+  // `Infinity` without UNTIL.
+  declare private readonly untilDay: number;
 
   declare private readonly excludedDays: Set<number>;
 
@@ -322,14 +318,15 @@ export class RecurringSeries {
     const toDay = (date: TemporalSupportedObject) =>
       toLocalDayNumber(adapter.getTime(date), timezone);
 
+    const startDay = toLocalDayNumber(parameters.start, timezone);
+
     this.timezone = timezone;
-    this.startPlainDate = toPlainDate(parameters.start, timezone);
+    this.startPlainDate = plainDateFromDayNumber(startDay);
     this.startMsInDay = toMsInDay(parameters.start, timezone);
-    this.startDay = getDayNumber(this.startPlainDate);
-    this.ruleDays = new RuleDays(rule, this.startDay);
+    this.ruleDays = new RuleDays(rule, startDay);
     // A fractional COUNT is rounded up.
     this.count = Math.ceil(rule.count ?? Infinity);
-    this.untilDay = rule.until ? toDay(rule.until) : null;
+    this.untilDay = rule.until ? toDay(rule.until) : Infinity;
     this.excludedDays = new Set(parameters.exDates?.map(toDay));
   }
 
@@ -371,9 +368,7 @@ export class RecurringSeries {
    * Returns the number of occurrences before `day` that count toward COUNT, up to COUNT.
    */
   public countOccurrencesBefore(day: BaseTemporal.PlainDate): number {
-    const { untilDay } = this;
-    const dayNumber = getDayNumber(day);
-    return this.countBefore(untilDay !== null && untilDay < dayNumber ? untilDay + 1 : dayNumber);
+    return this.countBefore(Math.min(this.untilDay + 1, getDayNumber(day)));
   }
 
   /**
@@ -387,16 +382,17 @@ export class RecurringSeries {
    * Returns whether the series has an occurrence that isn't excluded.
    */
   public hasOccurrence(): boolean {
-    return (this.count === Infinity && this.untilDay === null) || this.hasOccurrenceUntil(null);
+    return (
+      (this.count === Infinity && this.untilDay === Infinity) || this.hasOccurrenceUntil(Infinity)
+    );
   }
 
   /**
-   * Returns whether an occurrence that isn't excluded falls on or before `to`, or at all when `to`
-   * is `null`.
+   * Returns whether an occurrence that isn't excluded falls on or before `to`.
    */
-  private hasOccurrenceUntil(to: number | null): boolean {
+  private hasOccurrenceUntil(to: number): boolean {
     let hasOccurrence = false;
-    this.visitOccurrences(this.startDay, to, (_day, isExcluded) => {
+    this.visitOccurrences(this.ruleDays.seriesStart, to, (_day, isExcluded) => {
       hasOccurrence = !isExcluded;
       return !hasOccurrence;
     });
@@ -409,15 +405,14 @@ export class RecurringSeries {
    */
   private visitOccurrences(
     from: number,
-    to: number | null,
+    to: number,
     visit: (day: number, isExcluded: boolean) => boolean,
   ): void {
-    const { ruleDays, untilDay } = this;
-    const last = to === null || (untilDay !== null && untilDay < to) ? untilDay : to;
-    const isAfterLast = (day: number) => last !== null && day > last;
+    const { ruleDays } = this;
+    const last = Math.min(to, this.untilDay);
     // Stops before counting or looking up the timezone, as the next day can be millennia away.
     const first = ruleDays.getFirstFrom(from);
-    if (first === null || isAfterLast(first)) {
+    if (first === null || first > last) {
       return;
     }
 
@@ -432,7 +427,7 @@ export class RecurringSeries {
       day !== null && remainingCount > 0;
       day = ruleDays.getNext(day)
     ) {
-      if (isAfterLast(day)) {
+      if (day > last) {
         return;
       }
       if (!this.isSkippedDay(day)) {
@@ -448,7 +443,8 @@ export class RecurringSeries {
    * Returns the number of occurrences before `end` that count toward COUNT, up to COUNT.
    */
   private countBefore(end: number): number {
-    const { ruleDays, startDay } = this;
+    const { ruleDays } = this;
+    const startDay = ruleDays.seriesStart;
     let lastDay = startDay;
     const countDays = (isSkippedDay: (day: number) => boolean) => {
       let count = 0;
