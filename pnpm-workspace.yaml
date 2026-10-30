@@ -23,7 +23,7 @@ catalog:
   '@mui/icons-material': 9.5.0
   '@mui/internal-test-utils': 2.1.1-canary.5
   '@mui/internal-core-docs': 9.4.1-canary.0
-  '@mui/internal-docs-infra': 0.13.1-canary.14
+  '@mui/internal-docs-infra': 0.13.1-canary.28
   '@mui/material': 9.5.0
   '@mui/stylis-plugin-rtl': 9.5.0
   '@mui/system': 9.5.0
@@ -122,7 +122,7 @@ allowBuilds:
   msw: false
 
 overrides:
-  '@mui/internal-docs-infra': 0.13.1-canary.14
+  '@mui/internal-docs-infra': 0.13.1-canary.28
   # Preview packages from material-ui PR #48842, pinned to its reviewed head.
   '@mui/core-downloads-tracker': https://pkg.pr.new/mui/material-ui/@mui/core-downloads-tracker@40645cf
   '@mui/icons-material': https://pkg.pr.new/mui/material-ui/@mui/icons-material@40645cf
@@ -151,5 +151,3 @@ lockfile:
 patchedDependencies:
   # Remove after adopting the core-docs font fix from material-ui #49460.
   '@mui/internal-core-docs@10.0.0-alpha.0': patches/@mui__internal-core-docs@10.0.0-alpha.0.patch
-  # Remove after docs-infra ships the export, precompute, and watch fixes.
-  '@mui/internal-docs-infra@0.13.1-canary.14': patches/@mui__internal-docs-infra@0.13.1-canary.14.patch
