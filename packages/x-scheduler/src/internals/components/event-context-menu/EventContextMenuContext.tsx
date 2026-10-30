@@ -10,6 +10,7 @@ import {
   useMoveFocusOutOnUnmount,
 } from '../../utils/focus-utils';
 import { useEventEditingTriggerProps } from '../event-editing';
+import { useEventHref } from '../../hooks/useEventHref';
 import { EventContextMenu } from './EventContextMenu';
 import type {
   EventContextMenuAnchorPosition,
@@ -135,12 +136,16 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
  * (`editingModePolicy.ts`), and that toolbar already exposes Edit and Delete — so right-click and
  * Space fall through to their default behavior (arm/re-arm) here instead of also opening a
  * redundant menu whose own Edit item would otherwise just re-arm a no-op.
+ *
+ * A link event (a read-only event with an `href`) is rendered as is, so it keeps the native link
+ * behavior.
  */
 export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
   const { occurrence, onClick, onEditingCanceled, stableAnchor, getFocusFallback, children } =
     props;
   const editing = useEventEditingTriggerProps(occurrence, { onEditingCanceled, stableAnchor });
   const menuContext = useEventContextMenuContext();
+  const href = useEventHref(occurrence);
 
   useIsoLayoutEffect(() => {
     const node = editing.ref.current;
@@ -152,6 +157,10 @@ export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
 
   // The "+N more" popover, which passes `getFocusFallback`, moves focus out of its own items.
   useMoveFocusOutOnUnmount(editing.ref, occurrence, getFocusFallback == null);
+
+  if (href != null) {
+    return children;
+  }
 
   return React.cloneElement(children as React.ReactElement<any>, {
     ref: editing.ref,

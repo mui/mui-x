@@ -13,6 +13,7 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
+import { useEventHref } from '../../../hooks/useEventHref';
 import type { TimeGridEventProps } from './TimeGridEvent.types';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
@@ -173,6 +174,8 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
 })<{ palette?: PaletteName }>(({ theme }) => ({
   ...getTimeGridEventRootStyles(theme),
   padding: theme.spacing(0.5, 1, 0.5, 1),
+  color: 'inherit',
+  textDecoration: 'none',
   // Shrink vertical padding on shorter events so the text isn't squeezed out.
   '&[data-under-hour="true"]': {
     paddingTop: theme.spacing(0.25),
@@ -182,7 +185,7 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
     paddingTop: 0,
     paddingBottom: 0,
   },
-  '&[role="button"]': {
+  '&[role="button"], &[data-link]': {
     cursor: 'pointer',
   },
   // Accent bar on the leading edge.
@@ -538,6 +541,7 @@ const TimeGridEventRegular = React.forwardRef(function TimeGridEventRegular(
     isRecurring,
     localeText,
   });
+  const href = useEventHref(occurrence);
 
   // Armed = this occurrence shows its action toolbar (touch). Touch styles reveal the resize dots +
   // outline; inert on a mouse. Editing = the surface is open for it (either mode), for the selected look.
@@ -551,6 +555,7 @@ const TimeGridEventRegular = React.forwardRef(function TimeGridEventRegular(
       occurrenceKey={occurrence.key}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-label={accessibleName}
+      href={href}
       data-armed={isArmed || undefined}
       data-editing={isEditing || undefined}
       {...rootDataAttributes}

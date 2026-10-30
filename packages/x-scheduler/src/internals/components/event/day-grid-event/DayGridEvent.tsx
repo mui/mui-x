@@ -21,6 +21,7 @@ import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
+import { useEventHref } from '../../../hooks/useEventHref';
 import type { PaletteName } from '../../../utils/tokens';
 import { getPaletteVariants } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
@@ -54,6 +55,8 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
 })<{ 'data-variant'?: 'filled' | 'invisible' | 'compact' | 'placeholder'; palette?: PaletteName }>(
   ({ theme }) => ({
     ...(DayGridEventBaseStyles(theme) as any),
+    color: 'inherit',
+    textDecoration: 'none',
     '&:focus-visible': {
       outline: '2px solid var(--event-surface-accent)',
       outlineOffset: 1,
@@ -302,6 +305,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     isRecurring,
     localeText,
   });
+  const href = useEventHref(occurrence);
 
   const content = React.useMemo(() => {
     switch (variant) {
@@ -411,6 +415,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-hidden={variant === 'invisible'}
       aria-label={accessibleName}
+      href={variant === 'invisible' ? undefined : href}
       {...sharedProps}
       className={clsx(classes.dayGridEvent, sharedProps.className)}
     >

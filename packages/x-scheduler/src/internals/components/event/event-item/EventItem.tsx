@@ -2,6 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
+import type { CSSObject, Theme } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import {
@@ -18,6 +19,7 @@ import {
   formatMonthShortAndDayOfMonth,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
+import { useEventHref } from '../../../hooks/useEventHref';
 import type { EventItemProps } from './EventItem.types';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
@@ -26,13 +28,13 @@ import { getPaletteVariants } from '../../../utils/tokens';
 import { getArrowEdgeStyles, getArrowFocusVisibleStyles } from '../arrowClips';
 import { isOccurrenceMultiDay } from '../../../utils/event-utils';
 
-const EventItemCard = styled('div', {
-  name: 'MuiEventCalendar',
-  slot: 'EventItemCard',
-})<{ 'data-variant'?: 'compact' | 'filled' | 'regular'; palette?: PaletteName }>(({ theme }) => ({
+const getEventItemCardStyles = (theme: Theme): CSSObject => ({
+  display: 'block',
   padding: 0,
   borderRadius: theme.shape.borderRadius,
   cursor: 'pointer',
+  color: 'inherit',
+  textDecoration: 'none',
   '&:hover': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
   },
@@ -67,7 +69,19 @@ const EventItemCard = styled('div', {
     },
   },
   variants: getPaletteVariants(theme),
-}));
+});
+
+type EventItemCardProps = { 'data-variant'?: 'compact' | 'filled' | 'regular'; palette?: PaletteName };
+
+const EventItemCard = styled('div', {
+  name: 'MuiEventCalendar',
+  slot: 'EventItemCard',
+})<EventItemCardProps>(({ theme }) => getEventItemCardStyles(theme));
+
+const EventItemLinkCard = styled('a', {
+  name: 'MuiEventCalendar',
+  slot: 'EventItemCard',
+})<EventItemCardProps>(({ theme }) => getEventItemCardStyles(theme));
 
 const EventItemCardWrapper = styled('div', {
   name: 'MuiEventCalendar',
@@ -188,6 +202,7 @@ export const EventItem = React.forwardRef(function EventItem(
     isRecurring,
     localeText,
   });
+  const href = useEventHref(occurrence);
 
   // The processed dates are read in the display timezone, like the day.
   const { start } = occurrence;
@@ -253,38 +268,56 @@ export const EventItem = React.forwardRef(function EventItem(
     }
   }, [variant, formatTime, occurrence, classes]);
 
+  const cardProps = {
+    'data-variant': variant,
+    'data-palette': color,
+    'data-editing': isEditing || undefined,
+    // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
+    'data-event-id': occurrence.id,
+    // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
+    'data-occurrence-timestamp': occurrence.start.timestamp,
+    'aria-label': accessibleName,
+    ...(startsBeforeDay ? { 'data-starting-before-edge': '' } : {}),
+    ...(endsAfterDay ? { 'data-ending-after-edge': '' } : {}),
+    ...other,
+    className: clsx(className, classes.eventItemCard, occurrence.className),
+  };
+
+  const children = (
+    <EventItemCardWrapper className={classes.eventItemCardWrapper} data-variant={variant}>
+      {content}
+      {isRecurring && (
+        <EventItemRecurringIcon
+          className={classes.eventItemRecurringIcon}
+          aria-hidden="true"
+          fontSize="small"
+        />
+      )}
+    </EventItemCardWrapper>
+  );
+
+  if (href != null) {
+    return (
+      <EventItemLinkCard
+        ref={forwardedRef as React.Ref<HTMLAnchorElement>}
+        href={href}
+        // Read by the agenda's delete-focus fallback, which finds the events by their `tabindex`.
+        tabIndex={0}
+        data-link=""
+        {...cardProps}
+      >
+        {children}
+      </EventItemLinkCard>
+    );
+  }
+
   return (
     <Button
       nativeButton={false}
       onClick={onClick}
-      render={
-        <EventItemCard
-          ref={forwardedRef}
-          data-variant={variant}
-          data-palette={color}
-          data-editing={isEditing || undefined}
-          // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
-          data-event-id={occurrence.id}
-          // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
-          data-occurrence-timestamp={occurrence.start.timestamp}
-          aria-label={accessibleName}
-          {...(startsBeforeDay ? { 'data-starting-before-edge': '' } : {})}
-          {...(endsAfterDay ? { 'data-ending-after-edge': '' } : {})}
-          {...other}
-          className={clsx(className, classes.eventItemCard, occurrence.className)}
-        />
-      }
+      render={<EventItemCard ref={forwardedRef} {...cardProps} />}
     >
-      <EventItemCardWrapper className={classes.eventItemCardWrapper} data-variant={variant}>
-        {content}
-        {isRecurring && (
-          <EventItemRecurringIcon
-            className={classes.eventItemRecurringIcon}
-            aria-hidden="true"
-            fontSize="small"
-          />
-        )}
-      </EventItemCardWrapper>
+      {children}
     </Button>
   );
 });
