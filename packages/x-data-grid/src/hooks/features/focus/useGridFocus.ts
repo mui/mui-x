@@ -19,6 +19,7 @@ import {
   gridFocusColumnGroupHeaderSelector,
 } from './gridFocusStateSelector';
 import { focusElement } from '../../../utils/focusElement';
+import { getActiveElement } from '../../../utils/domUtils';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import {
   gridVisibleColumnDefinitionsSelector,
@@ -526,10 +527,43 @@ export const useGridFocus = (
         nextRowId = nextRow?.id ?? null;
       }
 
+      const nextCell = nextRowId === null ? null : { id: nextRowId, field: cell.field };
+
+      // If the focus is intentionally outside the grid (e.g. on a button that deleted the row),
+      // only move the tab index so the next cell doesn't pull the focus back into the grid.
+      // See https://github.com/mui/mui-x/issues/23886
+      const gridRoot = apiRef.current.rootElementRef?.current;
+      const doc = ownerDocument(gridRoot);
+      const activeElement = getActiveElement(doc);
+      const isFocusOutsideGrid =
+        !!activeElement &&
+        activeElement !== doc.body &&
+        activeElement !== doc.documentElement &&
+        !gridRoot?.contains(activeElement);
+
+      if (isFocusOutsideGrid) {
+        apiRef.current.setState((state) => ({
+          ...state,
+          tabIndex: {
+            cell: nextCell,
+            columnHeader: null,
+            columnHeaderFilter: null,
+            columnGroupHeader: null,
+          },
+          focus: {
+            cell: null,
+            columnHeader: null,
+            columnHeaderFilter: null,
+            columnGroupHeader: null,
+          },
+        }));
+        return;
+      }
+
       apiRef.current.setState((state) => ({
         ...state,
         focus: {
-          cell: nextRowId === null ? null : { id: nextRowId, field: cell.field },
+          cell: nextCell,
           columnHeader: null,
           columnHeaderFilter: null,
           columnGroupHeader: null,
