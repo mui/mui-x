@@ -4,7 +4,7 @@
 
 _Oct 30, 2026_
 
-We'd like to extend a big thank you to the 18 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 20 contributors who made this release possible. Here are some highlights ✨:
 
 - 🧮 Computed columns in the Data Grid Premium
 
@@ -19,16 +19,18 @@ We'd like to extend a big thank you to the 18 contributors who made this release
 - 📚 Documentation improvements
 
 Special thanks go out to these community members for their valuable contributions:
-@adamowski10, @Anexus5919, @b84330808, @chanellebingham, @costajohnt, @dasjideepak, @mateuseap, @mustafajw07
+@adamowski10, @Anexus5919, @b84330808, @chanellebingham, @costajohnt, @dasjideepak, @mateuseap, @minwookshin, @mustafajw07
 
 The following team members contributed to this release:
-@flaviendelangle, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @romgrk, @ZeeshanTamboli
+@flaviendelangle, @hasdfa, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @romgrk, @ZeeshanTamboli
 
 ### Data Grid
 
 #### `@mui/x-data-grid@9.17.0`
 
 - [DataGrid] Add `filterFormColumnInput` slot (#23871) @michelengelen
+- [DataGrid] Describe column and action in sort button labels (#23755) @minwookshin
+- [DataGrid] Document undocumented props and classes (#24052) @Janpot
 - [DataGrid] Fire `onMenuClose` only when a menu actually closes (#23873) @michelengelen
 - [DataGrid] Fix stale values when server-side aggregation is removed (#23973) @JCQuintas
 - [DataGrid] Focus the column header when clicking the sort icon (#23947) @JCQuintas
@@ -78,7 +80,7 @@ Same changes as in `@mui/x-charts-pro@9.17.0`.
 
 #### `@mui/x-tree-view@9.17.0`
 
-Internal changes.
+- [tree view] Document undocumented props (#24036) @Janpot
 
 #### `@mui/x-tree-view-pro@9.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -137,6 +139,7 @@ Same changes as in `@mui/x-tree-view@9.17.0`.
 - [scheduler] Build the date keys from plain dates (#24010) @flaviendelangle
 - [scheduler] Compute the fields of PlainDate when they are read (#23969) @flaviendelangle
 - [scheduler] Detect the text direction and pass it to the timeline virtualizer (#23898) @rita-codes
+- [scheduler] Document undocumented props (#24036) @Janpot
 - [scheduler] Fetch the ranges of the lazy loading as timestamps (#23998) @flaviendelangle
 - [scheduler] Fix React 17 crashes (#24038) @LukasTy
 - [scheduler] Fix recurring events across timezones and DST transitions (#23943) @flaviendelangle
@@ -169,6 +172,8 @@ Same changes as in `@mui/x-tree-view@9.17.0`.
 - [scheduler] Support RTL in the Event Timeline dependency arrows (#23974) @rita-codes
 - [scheduler] Support RTL pointer and scroll interactions in the Event Timeline (#23972) @rita-codes
 - [scheduler] Support RTL when dragging multi-day events in the Event Calendar (#23953) @rita-codes
+- [scheduler] Sync the BaseTemporal copy with the Base UI version (#24040) @flaviendelangle
+- [scheduler] Type the plain dates through the BaseTemporal namespace (#24034) @flaviendelangle
 - [scheduler] Use logical CSS properties in the Event Calendar and Event Timeline (#23899) @rita-codes
 
 #### `@mui/x-scheduler-premium@9.0.0-beta.15` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
@@ -183,6 +188,7 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.15`, plus:
 
 ### Docs
 
+- [DataGrid] Document running your own AI Assistant prompt processor (#24037) @hasdfa
 - [docs] Add a shared experiments area and migrate Scheduler experiments (#23979) @flaviendelangle
 - [docs] Enforce top-level type imports in docs and scripts (#24046) @Janpot
 - [docs] Follow the docs direction in the scheduler overview demos (#23968) @rita-codes
@@ -199,8 +205,12 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.15`, plus:
 
 ### Miscellaneous
 
+- [chat] Document undocumented props and slots (#24053) @Janpot
 - [chat] Fix `ChatBox` ignoring `features.attachments` (#23946) @JCQuintas
 - [chat] Fix React 17 crashes (#24038) @LukasTy
+- [test] Serve flagcdn images from a placeholder in the regression tests (#24055) @Janpot
+- [test] Start the e2e test server from vitest (#24062) @LukasTy
+- [test] Start the regression test server from vitest (#24057) @Janpot
 - [x-internals] Re-export the utilities shared with @base-ui/utils (#23374) @romgrk
 
 ## 9.16.0
