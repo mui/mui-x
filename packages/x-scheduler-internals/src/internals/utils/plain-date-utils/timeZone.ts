@@ -1,7 +1,7 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import { formatIsoTime, MS_PER_DAY, toDayNumber } from '../base-temporal/iso';
-import type { PlainDate } from '../base-temporal/PlainDate';
-import { plainDateFromDayNumber } from './plainDate';
+import type { BaseTemporal } from '../base-temporal';
+import { isoDateToDayNumber, MS_PER_DAY } from './dayNumber';
+import { getDayNumber, plainDateFromDayNumber } from './plainDate';
 
 interface TimezoneOffsets {
   format: (epochMs: number) => string;
@@ -56,7 +56,7 @@ function getSystemTimezoneOffsetMs(epochMs: number): number {
     return -date.getTimezoneOffset() * 60_000;
   }
   const localMs =
-    toDayNumber(date.getFullYear(), date.getMonth() + 1, date.getDate()) * MS_PER_DAY +
+    isoDateToDayNumber(date.getFullYear(), date.getMonth() + 1, date.getDate()) * MS_PER_DAY +
     ((date.getHours() * 60 + date.getMinutes()) * 60 + date.getSeconds()) * 1000 +
     date.getMilliseconds();
   return localMs - epochMs;
@@ -121,7 +121,7 @@ export function toLocalMs(epochMs: number, timezone: TemporalTimezone): number {
 /**
  * The date of an instant in `timezone`.
  */
-export function toPlainDate(epochMs: number, timezone: TemporalTimezone): PlainDate {
+export function toPlainDate(epochMs: number, timezone: TemporalTimezone): BaseTemporal.PlainDate {
   return plainDateFromDayNumber(toLocalDayNumber(epochMs, timezone));
 }
 
@@ -141,14 +141,13 @@ export function toWallClockIsoString(epochMs: number, timezone: TemporalTimezone
   const localMs = toLocalMs(epochMs, timezone);
   const dayNumber = Math.floor(localMs / MS_PER_DAY);
   const msInDay = localMs - dayNumber * MS_PER_DAY;
-  const time = formatIsoTime({
-    hour: Math.floor(msInDay / 3_600_000),
-    minute: Math.floor(msInDay / 60_000) % 60,
-    second: Math.floor(msInDay / 1000) % 60,
-    millisecond: 0,
-    microsecond: 0,
-    nanosecond: 0,
-  });
+  const time = [
+    Math.floor(msInDay / 3_600_000),
+    Math.floor(msInDay / 60_000) % 60,
+    Math.floor(msInDay / 1000) % 60,
+  ]
+    .map((part) => String(part).padStart(2, '0'))
+    .join(':');
   return `${plainDateFromDayNumber(dayNumber).toString()}T${time}`;
 }
 
@@ -187,8 +186,12 @@ export function localToEpochMs(localMs: number, timezone: TemporalTimezone): num
 /**
  * The instant of a date and wall-clock time in `timezone`, resolved like `localToEpochMs()`.
  */
-export function toEpochMs(date: PlainDate, msInDay: number, timezone: TemporalTimezone): number {
-  return localToEpochMs(date.dayNumber * MS_PER_DAY + msInDay, timezone);
+export function toEpochMs(
+  date: BaseTemporal.PlainDate,
+  msInDay: number,
+  timezone: TemporalTimezone,
+): number {
+  return localToEpochMs(getDayNumber(date) * MS_PER_DAY + msInDay, timezone);
 }
 
 /**
@@ -197,7 +200,7 @@ export function toEpochMs(date: PlainDate, msInDay: number, timezone: TemporalTi
  */
 export function moveTimestampToPlainDate(
   epochMs: number,
-  plainDate: PlainDate,
+  plainDate: BaseTemporal.PlainDate,
   timezone: TemporalTimezone,
 ): number {
   return toEpochMs(plainDate, toMsInDay(epochMs, timezone), timezone);
@@ -284,8 +287,8 @@ export function differenceInDays(
  * like December 30th, 2011, which Pacific/Apia skipped when it moved across the date line.
  */
 export function getSkippedDays(
-  from: PlainDate,
-  to: PlainDate,
+  from: BaseTemporal.PlainDate,
+  to: BaseTemporal.PlainDate,
   timezone: TemporalTimezone,
 ): Set<number> {
   const skippedDays = new Set<number>();
@@ -294,9 +297,11 @@ export function getSkippedDays(
   // A skipped day makes the days of a period last a day longer than the time elapsed between their
   // starts, when DST transitions change it by hours. The periods are a month long, as a timezone
   // never skipped and repeated a day within a month, which would cancel out.
-  let periodStartMs = getStartMs(from.dayNumber);
-  for (let start = from.dayNumber; start < to.dayNumber; start += 31) {
-    const end = Math.min(start + 31, to.dayNumber);
+  const fromDayNumber = getDayNumber(from);
+  const endDayNumber = getDayNumber(to);
+  let periodStartMs = getStartMs(fromDayNumber);
+  for (let start = fromDayNumber; start < endDayNumber; start += 31) {
+    const end = Math.min(start + 31, endDayNumber);
     const periodEndMs = getStartMs(end);
     if ((end - start) * MS_PER_DAY - (periodEndMs - periodStartMs) >= MS_PER_DAY / 2) {
       for (let dayNumber = start; dayNumber < end; dayNumber += 1) {
