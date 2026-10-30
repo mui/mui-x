@@ -215,6 +215,15 @@ const nlNLGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} actieve filters` : `${count} filter actief`,
   columnHeaderFiltersLabel: 'Toon filters',
   columnHeaderSortIconLabel: 'Sorteren',
+  columnHeaderSortIconAriaLabel: (columnName, direction) => {
+    if (direction === 'asc') {
+      return `${columnName} oplopend sorteren`;
+    }
+    if (direction === 'desc') {
+      return `${columnName} aflopend sorteren`;
+    }
+    return `Sortering van ${columnName} verwijderen`;
+  },
 
   // Rows selected footer text
   footerRowSelected: (count) =>

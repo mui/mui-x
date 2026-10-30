@@ -48,32 +48,6 @@ function waitFor(callback: () => Promise<void>): Promise<void> {
   });
 }
 
-/**
- * Attempts page.goto with retries
- *
- * @remarks The server and runner can be started up simultaneously
- * @param page
- * @param url
- */
-async function attemptGoto(page: Page, url: string): Promise<boolean> {
-  const maxAttempts = 10;
-  const retryTimeoutMS = 250;
-
-  let didNavigate = false;
-  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
-    try {
-      // eslint-disable-next-line no-await-in-loop
-      await page.goto(url);
-      didNavigate = true;
-    } catch (error) {
-      // eslint-disable-next-line no-await-in-loop
-      await sleep(retryTimeoutMS);
-    }
-  }
-
-  return didNavigate;
-}
-
 // Pick the new/fake "now" for you test pages.
 const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
 
@@ -127,12 +101,7 @@ async function initializeEnvironment(
     const __DateNow = Date.now;
     Date.now = () => __DateNow() + __DateNowOffset;
   }`);
-  const isServerRunning = await attemptGoto(page, `${baseUrl}#no-dev`);
-  if (!isServerRunning) {
-    throw new Error(
-      `Unable to navigate to ${baseUrl} after multiple attempts. Did you forget to run \`pnpm test:e2e:server\` and \`pnpm test:e2e:build\`?`,
-    );
-  }
+  await page.goto(`${baseUrl}#no-dev`);
   return { browser, context, page };
 }
 

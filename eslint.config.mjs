@@ -71,6 +71,40 @@ function getReactCompilerFilesForPackages(packageInfo) {
     );
 }
 
+const INTERNALS_INDEX_RESTRICTED_ZONES = [
+  ...CHARTS_PACKAGES,
+  ...PICKERS_PACKAGES,
+  ...TREE_VIEW_PACKAGES,
+  ...SCHEDULER_PACKAGES,
+].map((packageName) => ({
+  target: `./packages/${packageName}/src/**/!(*.test.*|*.spec.*)`,
+  from: `./packages/${packageName}/src/internals/index.ts`,
+  message: `Use a more specific import instead. E.g. import { MyInternal } from '../internals/MyInternal';`,
+}));
+
+// The copy of BaseTemporal from the Base UI version, and the internals its `ZonedDateTime` imports.
+const BASE_TEMPORAL_COPY = 'packages/x-scheduler-internals/src/internals/utils/base-temporal';
+const BASE_TEMPORAL_COPY_INTERNALS =
+  'packages/x-scheduler-internals/src/internals/utils/internals/temporal-utils';
+
+// The Scheduler only uses the public API of the BaseTemporal copy: the exports of its index. Its
+// other modules are internals of the library.
+const BASE_TEMPORAL_COPY_RESTRICTED_ZONES = [
+  {
+    target: ['./packages', './test'],
+    from: `./${BASE_TEMPORAL_COPY}`,
+    except: ['./index.ts'],
+    message:
+      'Import `BaseTemporal` from the index of the copy, and the day number helpers from `plain-date-utils`.',
+  },
+  {
+    target: ['./packages', './test'],
+    from: `./${BASE_TEMPORAL_COPY_INTERNALS}`,
+    message:
+      'These are internals of the BaseTemporal copy. Use `BaseTemporal.ZonedDateTime` from the index of the copy instead.',
+  },
+];
+
 const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/material',
   '@mui/utils',
@@ -190,16 +224,7 @@ export default defineConfig(
       'import/no-restricted-paths': [
         'error',
         {
-          zones: [
-            ...CHARTS_PACKAGES,
-            ...PICKERS_PACKAGES,
-            ...TREE_VIEW_PACKAGES,
-            ...SCHEDULER_PACKAGES,
-          ].map((packageName) => ({
-            target: `./packages/${packageName}/src/**/!(*.test.*|*.spec.*)`,
-            from: `./packages/${packageName}/src/internals/index.ts`,
-            message: `Use a more specific import instead. E.g. import { MyInternal } from '../internals/MyInternal';`,
-          })),
+          zones: [...INTERNALS_INDEX_RESTRICTED_ZONES, ...BASE_TEMPORAL_COPY_RESTRICTED_ZONES],
         },
       ],
       'no-restricted-imports': 'off',
@@ -307,13 +332,16 @@ export default defineConfig(
     },
   },
   {
-    // A copy of BaseTemporal from the Base UI version, which keeps its code style.
+    // A copy of BaseTemporal from the Base UI version, which keeps its code style. Change the Base UI
+    // version first, then copy it again.
     files: [
-      `packages/x-scheduler-internals/src/internals/utils/base-temporal/*${EXTENSION_TS}`,
-      `packages/x-scheduler-internals/src/internals/utils/internals/temporal-utils/*${EXTENSION_TS}`,
+      `${BASE_TEMPORAL_COPY}/*${EXTENSION_TS}`,
+      `${BASE_TEMPORAL_COPY_INTERNALS}/*${EXTENSION_TS}`,
     ],
     rules: {
       'import/consistent-type-specifier-style': 'off',
+      // The copy imports its own modules, so it keeps only the zones of the internals index.
+      'import/no-restricted-paths': ['error', { zones: INTERNALS_INDEX_RESTRICTED_ZONES }],
       'jsdoc/no-bad-blocks': 'off',
     },
   },

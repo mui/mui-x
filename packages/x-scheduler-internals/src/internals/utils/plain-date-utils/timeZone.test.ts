@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
-import { PlainDate } from '../base-temporal/PlainDate';
+import { BaseTemporal } from '../base-temporal';
 import {
   addDaysOnWallClock,
   differenceInDays,
@@ -20,7 +20,11 @@ function epochMsOf(date: string, time: string, timezone: string) {
   const [year, month, day] = date.split('-').map(Number);
   const [hours, minutes] = time.split(':').map(Number);
   return new Date(
-    toEpochMs(PlainDate.from({ year, month, day }), (hours * 60 + minutes) * 60_000, timezone),
+    toEpochMs(
+      BaseTemporal.PlainDate.from({ year, month, day }),
+      (hours * 60 + minutes) * 60_000,
+      timezone,
+    ),
   ).toISOString();
 }
 
@@ -83,6 +87,12 @@ describe('timeZone', () => {
       // 01:30:15.999Z is the second 02:30 of the night Paris falls back.
       expect(toWallClockIsoString(Date.UTC(2026, 9, 25, 1, 30, 15, 999), 'Europe/Paris')).to.equal(
         '2026-10-25T02:30:15',
+      );
+    });
+
+    it('should write each part of the time with two digits', () => {
+      expect(toWallClockIsoString(Date.UTC(2025, 0, 15, 9, 5, 3), 'UTC')).to.equal(
+        '2025-01-15T09:05:03',
       );
     });
 
