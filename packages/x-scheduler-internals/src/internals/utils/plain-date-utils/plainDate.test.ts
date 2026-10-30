@@ -19,9 +19,25 @@ describe('plainDateFromDayNumber', () => {
     expect(plainDateFromDayNumber(20_000)).to.equal(plainDateFromDayNumber(20_000));
   });
 
-  it('should throw for a day after the last supported day', () => {
+  it('should keep the dates it returned usable once the cache is emptied', () => {
+    const plainDate = plainDateFromDayNumber(20_000);
+
+    // More days than the cache holds.
+    for (let dayNumber = 0; dayNumber <= 10_000; dayNumber += 1) {
+      plainDateFromDayNumber(dayNumber);
+    }
+
+    const plainDateAfterClear = plainDateFromDayNumber(20_000);
+    expect(plainDateAfterClear).not.to.equal(plainDate);
+    expect(plainDateAfterClear.equals(plainDate)).to.equal(true);
+    expect(getDayNumber(plainDate)).to.equal(20_000);
+  });
+
+  it('should throw for a day outside the supported days', () => {
     expect(plainDateFromDayNumber(LAST_SUPPORTED_DAY)).toEqualPlainDate('+275760-09-13');
     expect(() => plainDateFromDayNumber(LAST_SUPPORTED_DAY + 1)).to.throw();
+    expect(plainDateFromDayNumber(-LAST_SUPPORTED_DAY)).toEqualPlainDate('-271821-04-20');
+    expect(() => plainDateFromDayNumber(-LAST_SUPPORTED_DAY - 1)).to.throw();
   });
 });
 

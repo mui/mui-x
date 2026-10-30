@@ -59,7 +59,8 @@ function getDayOfWeekFromCode(code: RecurringEventWeekDayCode): number {
 /**
  * Returns the Nth `dayOfWeek` of the month starting on `monthStart`.
  * ordinal > 0 → Nth from the start (1..5). ordinal < 0 → Nth from the end (-1 = last).
- * If that occurrence doesn't exist in the month, returns null.
+ * If that occurrence doesn't exist in the month, or is after the last day BaseTemporal supports,
+ * returns null.
  */
 function getNthWeekdayOfMonth(
   monthStart: BaseTemporal.PlainDate,
@@ -75,9 +76,7 @@ function getNthWeekdayOfMonth(
     const lastDayOfWeek = ((monthStart.dayOfWeek + daysInMonth - 2) % 7) + 1;
     day = daysInMonth - ((lastDayOfWeek - dayOfWeek + 7) % 7) + 7 * (ordinal + 1);
   }
-  return day >= 1 && day <= daysInMonth
-    ? plainDateFromDayNumber(getDayNumber(monthStart) + day - 1)
-    : null;
+  return day >= 1 && day <= daysInMonth ? addDays(monthStart, day - 1) : null;
 }
 
 /**
@@ -91,7 +90,7 @@ function addDays(date: BaseTemporal.PlainDate, days: number): BaseTemporal.Plain
 
 /**
  * Returns the first day of the month `months` after the one starting on `monthStart`, or `null`
- * after the last year BaseTemporal supports.
+ * after the last day BaseTemporal supports.
  */
 function addMonths(
   monthStart: BaseTemporal.PlainDate,
@@ -258,7 +257,7 @@ class RuleDays {
         candidate = getNthWeekdayOfMonth(month, this.monthlyByDay.dayOfWeek, this.monthlyByDay.ord);
       } else if (this.monthlyTargetDay <= month.daysInMonth) {
         // Monthly by day of month (e.g., "the 15th")
-        candidate = plainDateFromDayNumber(getDayNumber(month) + this.monthlyTargetDay - 1);
+        candidate = addDays(month, this.monthlyTargetDay - 1);
       }
 
       if (candidate !== null && BaseTemporal.PlainDate.compare(candidate, minDate) >= 0) {

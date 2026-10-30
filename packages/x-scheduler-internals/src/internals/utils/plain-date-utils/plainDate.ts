@@ -20,6 +20,8 @@ const dayNumberLookup = new WeakMap<BaseTemporal.PlainDate, number>();
  * The plain date of a day number, in the ISO calendar.
  * Returns the same instance for a day number until the cache is emptied, so compare the results
  * with `equals()` or their day numbers, not with `===`.
+ * Throws, like the `BaseTemporal.PlainDate` constructor, outside the days it supports: check the
+ * day number against `LAST_SUPPORTED_DAY` first when it can leave them.
  */
 export function plainDateFromDayNumber(dayNumber: number): BaseTemporal.PlainDate {
   let plainDate = plainDateLookup.get(dayNumber);

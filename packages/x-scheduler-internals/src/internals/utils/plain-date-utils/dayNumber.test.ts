@@ -4,6 +4,7 @@ import {
   dayNumberToIsoDate,
   getStartOfMonthDayNumber,
   getStartOfWeekDayNumber,
+  getStartOfYearDayNumber,
   isoDateToDayNumber,
   LAST_SUPPORTED_DAY,
   MS_PER_DAY,
@@ -82,6 +83,17 @@ describe('dayNumber', () => {
       );
       expect(getStartOfMonthDayNumber(isoDateToDayNumber(1969, 12, 31))).to.equal(
         isoDateToDayNumber(1969, 12, 1),
+      );
+    });
+  });
+
+  describe('getStartOfYearDayNumber', () => {
+    it('should return the first day of the year', () => {
+      expect(getStartOfYearDayNumber(isoDateToDayNumber(2024, 12, 31))).to.equal(
+        isoDateToDayNumber(2024, 1, 1),
+      );
+      expect(getStartOfYearDayNumber(isoDateToDayNumber(1969, 3, 1))).to.equal(
+        isoDateToDayNumber(1969, 1, 1),
       );
     });
   });

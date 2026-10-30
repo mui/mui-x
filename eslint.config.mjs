@@ -87,6 +87,24 @@ const BASE_TEMPORAL_COPY = 'packages/x-scheduler-internals/src/internals/utils/b
 const BASE_TEMPORAL_COPY_INTERNALS =
   'packages/x-scheduler-internals/src/internals/utils/internals/temporal-utils';
 
+// The Scheduler only uses the public API of the BaseTemporal copy: the exports of its index. Its
+// other modules are internals of the library.
+const BASE_TEMPORAL_COPY_RESTRICTED_ZONES = [
+  {
+    target: ['./packages', './test'],
+    from: `./${BASE_TEMPORAL_COPY}`,
+    except: ['./index.ts'],
+    message:
+      'Import `BaseTemporal` from the index of the copy, and the day number helpers from `plain-date-utils`.',
+  },
+  {
+    target: ['./packages', './test'],
+    from: `./${BASE_TEMPORAL_COPY_INTERNALS}`,
+    message:
+      'These are internals of the BaseTemporal copy. Use `BaseTemporal.ZonedDateTime` from the index of the copy instead.',
+  },
+];
+
 const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/material',
   '@mui/utils',
@@ -206,7 +224,7 @@ export default defineConfig(
       'import/no-restricted-paths': [
         'error',
         {
-          zones: INTERNALS_INDEX_RESTRICTED_ZONES,
+          zones: [...INTERNALS_INDEX_RESTRICTED_ZONES, ...BASE_TEMPORAL_COPY_RESTRICTED_ZONES],
         },
       ],
       'no-restricted-imports': 'off',
@@ -322,37 +340,9 @@ export default defineConfig(
     ],
     rules: {
       'import/consistent-type-specifier-style': 'off',
+      // The copy imports its own modules, so it keeps only the zones of the internals index.
+      'import/no-restricted-paths': ['error', { zones: INTERNALS_INDEX_RESTRICTED_ZONES }],
       'jsdoc/no-bad-blocks': 'off',
-    },
-  },
-  {
-    // The Scheduler only uses the public API of the BaseTemporal copy: the exports of its index. Its
-    // other modules are internals of the library.
-    files: [`packages/x-scheduler*/src/**/*${EXTENSION_TS}`],
-    ignores: [`${BASE_TEMPORAL_COPY}/**`, `${BASE_TEMPORAL_COPY_INTERNALS}/**`],
-    rules: {
-      'import/no-restricted-paths': [
-        'error',
-        {
-          zones: [
-            // This entry replaces the rule of all the files, so it repeats their zones.
-            ...INTERNALS_INDEX_RESTRICTED_ZONES,
-            {
-              target: './packages',
-              from: `./${BASE_TEMPORAL_COPY}`,
-              except: ['./index.ts'],
-              message:
-                'Import `BaseTemporal` from the index of the copy, and the day number helpers from `plain-date-utils`.',
-            },
-            {
-              target: './packages',
-              from: `./${BASE_TEMPORAL_COPY_INTERNALS}`,
-              message:
-                'These are internals of the BaseTemporal copy. Use `BaseTemporal.ZonedDateTime` from the index of the copy instead.',
-            },
-          ],
-        },
-      ],
     },
   },
   {

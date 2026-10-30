@@ -80,6 +80,13 @@ export function getStartOfMonthDayNumber(dayNumber: number): number {
 }
 
 /**
+ * The first day of the year of `dayNumber`.
+ */
+export function getStartOfYearDayNumber(dayNumber: number): number {
+  return isoDateToDayNumber(dayNumberToIsoDate(dayNumber).year, 1, 1);
+}
+
+/**
  * Adds `months` to `dayNumber`, keeping its day of the month, or the last day of the month when
  * the month is shorter.
  */

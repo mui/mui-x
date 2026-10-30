@@ -100,6 +100,7 @@ export function useEventOccurrencesWithDayGridPosition(
       }
 
       const withPosition: useEventOccurrencesWithDayGridPosition.EventOccurrenceWithPosition[] = [];
+      const dayNumber = getDayNumber(day.plainDate);
 
       for (const occurrence of sortedNeedsPosition) {
         let smallestAvailableIndex = 1;
@@ -131,7 +132,7 @@ export function useEventOccurrencesWithDayGridPosition(
               index: smallestAvailableIndex,
               daySpan: Math.min(
                 toLocalDayNumber(occurrence.displayTimezone.end.timestamp, timezone) -
-                  getDayNumber(day.plainDate) +
+                  dayNumber +
                   1,
                 dayListSize - dayIndex,
               ),

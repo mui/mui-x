@@ -4,6 +4,7 @@ import {
   getDayNumber,
   getPlainDateWeekStart,
   getStartOfMonthDayNumber,
+  getStartOfYearDayNumber,
   getTimelineAxisOffsetMs,
   MS_PER_DAY,
   plainDateFromDayNumber,
@@ -168,7 +169,7 @@ function startOf(localMs: number, unit: PresetHeaderUnit, weekStartsOn: WeekStar
     case 'month':
       return getStartOfMonthDayNumber(Math.floor(localMs / MS_PER_DAY)) * MS_PER_DAY;
     case 'year':
-      return getDayNumber(plainDateFromLocalMs(localMs).with({ month: 1, day: 1 })) * MS_PER_DAY;
+      return getStartOfYearDayNumber(Math.floor(localMs / MS_PER_DAY)) * MS_PER_DAY;
     default:
       throw new Error(
         `MUI X Scheduler: Unsupported header unit "${unit}". ` +

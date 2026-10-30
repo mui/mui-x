@@ -34,6 +34,7 @@ export {
   addMonthsToDayNumber,
   getStartOfMonthDayNumber,
   getStartOfWeekDayNumber,
+  getStartOfYearDayNumber,
   LAST_SUPPORTED_DAY,
   MS_PER_DAY,
 } from './dayNumber';
