@@ -8,7 +8,6 @@ import { screen } from '@mui/internal-test-utils';
 import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { isJSDOM } from 'test/utils/skipIf';
-import { fr } from 'date-fns/locale/fr';
 import {
   createDateLocaleTheme,
   esES,
@@ -26,17 +25,19 @@ describe('<StandaloneWeekView />', () => {
         <StandaloneWeekView
           events={[]}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          localeText={{ allDay: 'Ganztägig' }}
+          localeText={{ dayGridLabel: 'Ganztägig' }}
         />,
       );
 
-      expect(screen.getByText('Ganztägig')).toBeVisible();
+      expect(screen.getAllByRole('gridcell', { name: /Ganztägig/ })).to.have.length(7);
     });
 
     it('should use the default locale text when the localeText prop is not provided', () => {
       render(<StandaloneWeekView events={[]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />);
 
-      expect(screen.getByText('All day')).toBeVisible();
+      expect(
+        screen.getAllByRole('gridcell', { name: /All-day and multi-day events/ }),
+      ).to.have.length(7);
     });
 
     it('should use the locale text provided through the theme', () => {
@@ -46,7 +47,9 @@ describe('<StandaloneWeekView />', () => {
         </ThemeProvider>,
       );
 
-      expect(screen.getByText('Todo el día')).toBeVisible();
+      expect(screen.getAllByRole('gridcell', { name: /Todo el día y varios días/ })).to.have.length(
+        7,
+      );
     });
 
     it('should name events with the locale text provided through the theme', () => {
@@ -64,7 +67,7 @@ describe('<StandaloneWeekView />', () => {
 
       expect(
         screen.getByRole('button', {
-          name: 'Correr, de 7:30 AM a 8:30 AM, Thursday, July 3rd, 2025',
+          name: 'Correr, de 7:30 AM a 8:30 AM, Thursday, July 3, 2025',
         }),
       ).not.to.equal(null);
     });
@@ -90,7 +93,7 @@ describe('<StandaloneWeekView />', () => {
 
       expect(
         screen.getByRole('button', {
-          name: 'Laufen, 7:30 AM to 8:30 AM, Thursday, July 3rd, 2025',
+          name: 'Laufen, 7:30 AM to 8:30 AM, Thursday, July 3, 2025',
         }),
       ).not.to.equal(null);
     });
@@ -103,13 +106,14 @@ describe('<StandaloneWeekView />', () => {
         .build();
 
       render(
-        <ThemeProvider theme={createTheme({}, frFR, createDateLocaleTheme(fr))}>
+        <ThemeProvider theme={createTheme({}, frFR, createDateLocaleTheme('fr-FR'))}>
           <StandaloneWeekView events={[event]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />
         </ThemeProvider>,
       );
 
       expect(
-        screen.getByRole('button', { name: 'Courir, de 7:30 AM à 8:30 AM, jeudi 3 juillet 2025' }),
+        // French uses a 24-hour clock.
+        screen.getByRole('button', { name: 'Courir, de 07:30 à 08:30, jeudi 3 juillet 2025' }),
       ).not.to.equal(null);
     });
 
@@ -119,12 +123,15 @@ describe('<StandaloneWeekView />', () => {
           <StandaloneWeekView
             events={[]}
             visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-            localeText={{ allDay: 'Ganztägig' }}
+            localeText={{ dayGridLabel: 'Ganztägig' }}
           />
         </ThemeProvider>,
       );
 
-      expect(screen.getByText('Ganztägig')).toBeVisible();
+      expect(screen.getAllByRole('gridcell', { name: /Ganztägig/ })).to.have.length(7);
+      expect(
+        screen.queryAllByRole('gridcell', { name: /Todo el día y varios días/ }),
+      ).to.have.length(0);
     });
   });
 

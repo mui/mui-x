@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useDrawingArea, useXScale, useYScale } from '@mui/x-charts/hooks';
-
 import { resolveValue } from './resolveValue';
 
 export function useReferencePoint(params) {

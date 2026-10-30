@@ -21,8 +21,32 @@ export interface SchedulerMonthlyWeekNumberLabelParams extends SchedulerWeekdayL
   ord: number;
 }
 
+/**
+ * Errors shown to the user, in the error container or next to the field they apply to.
+ */
+export interface SchedulerErrorLocaleText {
+  /**
+   * Shown when the `dataSource` fails to load or save events.
+   */
+  somethingWentWrongError: string;
+  eventNotLoadedError: string;
+  eventChangedWhileConfirmingError: string;
+  datesNotWritableError: string;
+  eventNotCreatableError: string;
+  /**
+   * Shown when a change would move a read-only event through its dependencies.
+   */
+  readOnlyEventMovedError: (title: string) => string;
+  dependencyCascadeBlockedError: string;
+  dependencyCycleError: string;
+  dependencyDuplicateError: string;
+  dependencyRecurringEventError: string;
+  dependencyReadOnlyError: string;
+  dependencyUnknownEventError: string;
+}
+
 // Strings shared by every event-editing surface: the dialog, the drawer, and the armed-event toolbar.
-export interface EventEditingLocaleText {
+export interface EventEditingLocaleText extends SchedulerErrorLocaleText {
   // EventDialog
   colorPickerLabel: string;
   colorSectionLabel: string;
@@ -38,6 +62,11 @@ export interface EventEditingLocaleText {
   deleteEventButtonAriaLabel: string;
   eventActionsToolbarAriaLabel: string;
   deleteEvent: string;
+  // DeleteConfirmationDialog
+  deleteConfirmationTitle: string;
+  deleteConfirmationMessage: string;
+  // Also used by the RecurringScopeDialog's own Cancel action.
+  cancel: string;
   // EventContextMenu (shown on right-click of an event, or on Space while it is focused)
   editEvent: string;
   // Replaces `editEvent` on a read-only event: opens the same non-editable view, so the label
@@ -115,7 +144,6 @@ export interface EventEditingLocaleText {
 
   // RecurringScopeDialog
   all: string;
-  cancel: string;
   confirm: string;
   onlyThis: string;
   radioGroupAriaLabel: string;
@@ -204,6 +232,7 @@ export interface EventCalendarLocaleText extends EventEditingLocaleText, Schedul
   months: string;
   weeks: string;
   years: string;
+  viewSwitcherAriaLabel: string;
 
   // DateNavigator
   closeSidePanel: string;
@@ -228,6 +257,7 @@ export interface EventCalendarLocaleText extends EventEditingLocaleText, Schedul
 
   // WeekView
   allDay: string;
+  dayGridLabel: string;
 
   // MonthView
   hiddenEvents: (hiddenEventsCount: number) => string;
@@ -254,7 +284,64 @@ export interface EventCalendarLocaleText extends EventEditingLocaleText, Schedul
   timelineResourceTitleHeader: string;
 }
 
+export interface SchedulerDependencyDescriptionParams {
+  /**
+   * The title of the event the occurrence waits on.
+   */
+  title: string;
+  /**
+   * The formatted lag, from `dependencyLag`, or `null` when the dependency has none.
+   */
+  lag: string | null;
+}
+
 export interface EventTimelineLocaleText extends EventEditingLocaleText, SchedulerEventLocaleText {
   // Timeline title sub grid
   timelineResourceTitleHeader: string;
+
+  // Dependency dialog
+  dependencyEditTitle: string;
+  dependencyDetailsTitle: string;
+  dependencySourceLabel: string;
+  dependencyTargetLabel: string;
+  dependencyTypeLabel: string;
+  dependencyLagLabel: string;
+  dependencyLagUnitAriaLabel: string;
+  dependencyNoLag: string;
+  dependencyInvalidLagError: string;
+  dependencyAllDayLagIgnored: string;
+  /**
+   * @param {string} lag The lag the all-day event waits, formatted by `dependencyLag`.
+   */
+  dependencyAllDayLagRounded: (lag: string) => string;
+  dependencyUpdateCascadeBlockedError: string;
+  dependencyUpdateNotFoundError: string;
+  dependencyTypeFinishToStart: string;
+  dependencyTypeStartToStart: string;
+  dependencyTypeFinishToFinish: string;
+  dependencyTypeStartToFinish: string;
+  dependencyLagUnitMinutes: string;
+  dependencyLagUnitHours: string;
+  dependencyLagUnitDays: string;
+  dependencyLagUnitWeeks: string;
+  /**
+   * Formats a lag, for example "2 hours".
+   * @param {number} amount The number of units.
+   * @param {'minute' | 'hour' | 'day' | 'week'} unit The unit, as a code: the locale handles its plural.
+   */
+  dependencyLag: (amount: number, unit: 'minute' | 'hour' | 'day' | 'week') => string;
+
+  // Dependency context menu (shown on right-click of an arrow) and dialog actions
+  dependencyActionsAriaLabel: string;
+  editDependency: string;
+  // Replaces `editDependency` on a read-only dependency.
+  showDependencyDetails: string;
+  deleteDependency: string;
+
+  // Accessible description of an event that waits on dependencies, for example
+  // "Cannot start until 2 hours after Design finishes."
+  dependencyFinishToStartDescription: (params: SchedulerDependencyDescriptionParams) => string;
+  dependencyStartToStartDescription: (params: SchedulerDependencyDescriptionParams) => string;
+  dependencyFinishToFinishDescription: (params: SchedulerDependencyDescriptionParams) => string;
+  dependencyStartToFinishDescription: (params: SchedulerDependencyDescriptionParams) => string;
 }

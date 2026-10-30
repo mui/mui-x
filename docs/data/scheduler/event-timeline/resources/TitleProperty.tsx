@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {
+import type {
   SchedulerEventColor,
   SchedulerResourceModelStructure,
 } from '@mui/x-scheduler/models';

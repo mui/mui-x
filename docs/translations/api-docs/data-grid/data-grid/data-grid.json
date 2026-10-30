@@ -38,6 +38,10 @@
     "columnGroupHeaderHeight": {
       "description": "Sets the height in pixels of the column group headers in the Data Grid. Inherits the <code>columnHeaderHeight</code> value if not set."
     },
+    "columnGroupingModel": {
+      "description": "The column groups of the header.",
+      "seeMoreText": "See {{link}} for more details."
+    },
     "columnHeaderHeight": {
       "description": "Sets the height in pixel of the column headers in the Data Grid."
     },
@@ -440,7 +444,7 @@
       }
     },
     "onMenuClose": {
-      "description": "Callback fired when the menu is closed.",
+      "description": "Callback fired when a grid menu is closed. This includes the column menu, the actions cell menu, and the toolbar menus.",
       "typeDescriptions": {
         "params": {
           "name": "params",
@@ -451,7 +455,7 @@
       }
     },
     "onMenuOpen": {
-      "description": "Callback fired when the menu is opened.",
+      "description": "Callback fired when a grid menu is opened. This includes the column menu, the actions cell menu, and the toolbar menus.",
       "typeDescriptions": {
         "params": {
           "name": "params",
@@ -582,6 +586,9 @@
       }
     },
     "pageSizeOptions": { "description": "Select the pageSize dynamically using the component UI." },
+    "pagination": {
+      "description": "Pagination is always enabled in the Data Grid. Use the Data Grid Pro to disable it."
+    },
     "paginationMeta": {
       "description": "The extra information about the pagination state of the Data Grid. Only applicable with <code>paginationMode=&quot;server&quot;</code>."
     },
@@ -751,6 +758,16 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the icon of the boolean cell"
     },
+    "cell--computed": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "the cell belongs to a computed column (Premium computed columns)"
+    },
+    "cell--computedError": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "the formula of its computed column evaluates to an error for the row (Premium computed columns)"
+    },
     "cell--editable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
@@ -902,6 +919,16 @@
       "nodeName": "the column header",
       "conditions": "<code>headerAlign=\"right\"</code>"
     },
+    "columnHeader--computed": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column header",
+      "conditions": "the column is a computed column (Premium computed columns)"
+    },
+    "columnHeader--computedInvalid": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column header",
+      "conditions": "the formula of its computed column is invalid (Premium computed columns)"
+    },
     "columnHeader--dragging": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the floating column header element",
@@ -939,8 +966,16 @@
       "nodeName": "the column header",
       "conditions": "the type of the column is <code>number</code>"
     },
-    "columnHeader--pinnedLeft": { "description": "" },
-    "columnHeader--pinnedRight": { "description": "" },
+    "columnHeader--pinnedLeft": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column header",
+      "conditions": "it is pinned to the left"
+    },
+    "columnHeader--pinnedRight": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column header",
+      "conditions": "it is pinned to the right"
+    },
     "columnHeader--sortable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the column header",
@@ -951,7 +986,11 @@
       "nodeName": "the column header",
       "conditions": "the column is sorted"
     },
-    "columnHeader--withLeftBorder": { "description": "" },
+    "columnHeader--withLeftBorder": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column header",
+      "conditions": "it has a left border"
+    },
     "columnHeader--withRightBorder": {
       "description": "Styles applied the column header if <code>showColumnVerticalBorder={true}</code>."
     },
@@ -1030,6 +1069,58 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the columns management search input element"
     },
+    "computedColumnHeaderBadge": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the <code>ƒx</code> badge in the column header of a computed column (Premium computed columns)"
+    },
+    "computedColumnsPanel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the computed columns panel root element (Premium computed columns)"
+    },
+    "computedColumnsPanelEditor": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the computed columns panel editor view element"
+    },
+    "computedColumnsPanelEmpty": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the empty state of the computed columns panel list"
+    },
+    "computedColumnsPanelField": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the field rows of the computed columns panel editor"
+    },
+    "computedColumnsPanelFooter": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the footer of the computed columns panel editor"
+    },
+    "computedColumnsPanelFormula": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the formula surface of the computed columns panel editor"
+    },
+    "computedColumnsPanelHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the computed columns panel header element"
+    },
+    "computedColumnsPanelList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the computed columns panel list view element"
+    },
+    "computedColumnsPanelListItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "each item of the computed columns panel list"
+    },
+    "computedColumnsPanelPreview": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the preview element of the computed columns panel editor"
+    },
+    "computedColumnsPanelReference": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the reference pane (columns and functions to insert) of the computed columns panel editor"
+    },
+    "computedColumnsPanelValidation": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the validation block of the computed columns panel editor"
+    },
     "container--bottom": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the bottom container"
@@ -1102,10 +1193,6 @@
     "filterForm": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the filter form component"
-    },
-    "filterFormColumnInput": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the column input of the filter form component"
     },
     "filterFormDeleteIcon": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1198,7 +1285,10 @@
       "nodeName": "the main container element",
       "conditions": "it has right pinned columns"
     },
-    "mainContent": { "description": "" },
+    "mainContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the element that wraps the main content of the grid"
+    },
     "menu": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the menu element" },
     "menuIcon": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1607,7 +1697,11 @@
       "nodeName": "cells",
       "conditions": "column header and other elements that have border"
     },
-    "withSidePanel": { "description": "" },
+    "withSidePanel": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "a side panel is open"
+    },
     "withVerticalBorder": {
       "description": "Styles applied the grid if <code>showColumnVerticalBorder={true}</code>."
     }
@@ -1669,6 +1763,7 @@
     "detailPanelExpandIcon": "Icon displayed on the detail panel toggle column when collapsed.",
     "detailPanels": "Component responsible for rendering the detail panels.",
     "exportIcon": "Icon displayed on the open export button present in the toolbar by default.",
+    "filterFormColumnInput": "Column input component rendered in each filter form of the filter panel.",
     "filterPanel": "Filter panel component rendered when clicking the filter button.",
     "filterPanelAddIcon": "Icon displayed for deleting the filter from filter panel.",
     "filterPanelDeleteIcon": "Icon displayed for deleting the filter from filter panel.",

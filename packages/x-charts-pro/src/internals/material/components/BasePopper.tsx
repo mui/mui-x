@@ -60,6 +60,8 @@ export function BasePopper(props: ChartBasePopperProps) {
     target,
     transition,
     placement,
+    // Destructured so MUI Popper's default `role="tooltip"` is not applied unless explicitly requested
+    role,
     ...other
   } = props;
 
@@ -133,6 +135,7 @@ export function BasePopper(props: ChartBasePopperProps) {
       transition={transition}
       placement={placement}
       modifiers={modifiers}
+      role={role}
       {...other}
     >
       {content}

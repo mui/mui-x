@@ -15,7 +15,7 @@ import {
   ContinuousColorLegend,
   PiecewiseColorLegend,
 } from '@mui/x-charts-premium/ChartsLegend';
-import { type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
+import type { ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
 import { internetUsageByCountry } from '../dataset/internetUsageByCountry';
 import { withCountryCodeAsName, countryData } from '../dataset/countryData';
 

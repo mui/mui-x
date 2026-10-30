@@ -1,10 +1,10 @@
 import type { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
-import type { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
+import type { SchedulerProcessedDay } from '@mui/x-scheduler-internals/models';
 
 export interface MonthViewWeekRowProps {
   rowIndex: number;
   maxEvents: number;
-  days: SchedulerProcessedDate[];
+  days: SchedulerProcessedDay[];
   occurrencesMap: useEventOccurrencesGroupedByDay.ReturnValue;
   firstDayRef: React.Ref<HTMLDivElement | null> | undefined;
 }

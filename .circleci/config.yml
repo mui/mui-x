@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/e15cf53015fb529c870cbc6ed088429355435928/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/80d3ec0d49901ddda4af788aeb3b1b51e21c07cc/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -60,7 +60,7 @@ default-job: &default-job
   working_directory: /tmp/mui
   executor:
     name: code-infra/mui-node
-    node-version: '22.23.3'
+    node-version: '22.23.4'
   resource_class: medium.gen2
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
@@ -113,7 +113,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.64.0-noble
+      playwright-img-version: v1.64.1-noble
     resource_class: large.gen2
     steps:
       - checkout
@@ -181,7 +181,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.64.0-noble
+      playwright-img-version: v1.64.1-noble
     resource_class: medium
     steps:
       - checkout
@@ -197,7 +197,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.64.0-noble
+      playwright-img-version: v1.64.1-noble
     resource_class: medium
     steps:
       - checkout
@@ -222,7 +222,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.64.0-noble
+      playwright-img-version: v1.64.1-noble
     resource_class: large.gen2
     steps:
       - checkout
@@ -239,7 +239,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.64.0-noble
+      playwright-img-version: v1.64.1-noble
     resource_class: medium
     steps:
       - checkout

@@ -32,9 +32,15 @@ export interface ChatComposerFeatures {
   attachments?: boolean | ChatAttachmentsConfig;
 }
 
-export interface ChatComposerProps extends ComposerRootProps {
+export interface ChatComposerProps extends Omit<ComposerRootProps, 'attachmentConfig'> {
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<ChatComposerClasses>;
   /**
    * Feature flags to control composer capabilities.
@@ -282,17 +288,14 @@ ChatComposer.propTypes /* remove-proptypes */ = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Configuration for attachment validation constraints.
-   * When provided, file attachments are validated against these rules.
+   * Override or extend the styles applied to the component.
    */
-  attachmentConfig: PropTypes.shape({
-    acceptedMimeTypes: PropTypes.arrayOf(PropTypes.string),
-    maxFileCount: PropTypes.number,
-    maxFileSize: PropTypes.number,
-    onAttachmentReject: PropTypes.func,
-  }),
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * If `true`, the composer is disabled.
+   * @default false
+   */
   disabled: PropTypes.bool,
   /**
    * Feature flags to control composer capabilities.
@@ -317,8 +320,19 @@ ChatComposer.propTypes /* remove-proptypes */ = {
    * after the handler returns.
    */
   onSubmit: PropTypes.func,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

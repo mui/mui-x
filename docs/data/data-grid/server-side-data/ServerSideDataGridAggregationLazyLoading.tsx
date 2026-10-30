@@ -1,9 +1,6 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
-  GridDataSource,
-  GridGetRowsResponse,
-} from '@mui/x-data-grid-premium';
+import type { GridDataSource, GridGetRowsResponse } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 const aggregationFunctions = {

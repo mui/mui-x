@@ -19,6 +19,9 @@ export interface FunnelSectionLabelProps extends Omit<
   React.SVGProps<SVGTextElement>,
   'ref' | 'id'
 > {
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<FunnelClasses>;
   label: FunnelSectionLabelConfig;
   /**

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SchedulerEvent } from '@mui/x-scheduler/models';
+import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
 import {
   initialEvents,

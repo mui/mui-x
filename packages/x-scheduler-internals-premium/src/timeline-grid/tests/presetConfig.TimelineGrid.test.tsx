@@ -255,8 +255,8 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
         store!.set('occurrencePlaceholder', {
           type: 'creation',
           surfaceType: 'timeline',
-          start: adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 10),
-          end: adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 12),
+          start: adapter.getTime(adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 10)),
+          end: adapter.getTime(adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 12)),
           resourceId: resource.id,
           lockSurfaceType: true,
         });
@@ -292,8 +292,8 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
           store!.set('occurrencePlaceholder', {
             type: 'creation',
             surfaceType: 'timeline',
-            start: adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, startHour),
-            end: adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, endHour),
+            start: adapter.getTime(adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, startHour)),
+            end: adapter.getTime(adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, endHour)),
             resourceId: resource.id,
             lockSurfaceType: true,
           });
@@ -326,8 +326,8 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
         store!.set('occurrencePlaceholder', {
           type: 'creation',
           surfaceType: 'timeline',
-          start: adapter.addMilliseconds(windowStart, -30_000),
-          end: adapter.addMilliseconds(windowStart, 30_000),
+          start: adapter.getTime(adapter.addMilliseconds(windowStart, -30_000)),
+          end: adapter.getTime(adapter.addMilliseconds(windowStart, 30_000)),
           resourceId: resource.id,
           lockSurfaceType: true,
         });
@@ -357,10 +357,12 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
       fireEvent.click(row, { clientX: AXIS_MINUTES });
 
       expect(store!.state.occurrencePlaceholder?.type).to.equal('creation');
-      expect(store!.state.occurrencePlaceholder?.start).toEqualDateTime(
-        adapter.addMinutes(
-          adapter.addHours(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 3), 19),
-          30,
+      expect(store!.state.occurrencePlaceholder?.start).to.equal(
+        adapter.getTime(
+          adapter.addMinutes(
+            adapter.addHours(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 3), 19),
+            30,
+          ),
         ),
       );
     });
@@ -384,8 +386,8 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
       await user.keyboard('{Enter}');
 
       expect(store!.state.occurrencePlaceholder?.type).to.equal('creation');
-      expect(store!.state.occurrencePlaceholder?.start).toEqualDateTime(
-        adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 8),
+      expect(store!.state.occurrencePlaceholder?.start).to.equal(
+        adapter.getTime(adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 8)),
       );
     });
   });

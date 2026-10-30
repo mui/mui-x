@@ -1,5 +1,6 @@
 import type * as React from 'react';
 import type { GridColDef } from '../colDef';
+import type { GridSortDirection } from '../gridSortModel';
 
 /**
  * Set the types of the texts in the grid.
@@ -59,6 +60,73 @@ export interface GridLocaleText {
   formulaBarLabel: string;
   formulaBarInputLabel: string;
   formulaBarAddressLabel: string;
+
+  // Computed columns (Premium)
+  columnMenuAddComputedColumn: string;
+  columnMenuEditComputedColumn: string;
+  columnMenuViewComputedColumn: string;
+  columnMenuRemoveComputedColumn: string;
+  toolbarComputedColumns: string;
+  computedColumnsPanelTitle: string;
+  computedColumnsPanelCloseButton: string;
+  computedColumnsPanelBackButton: string;
+  computedColumnsPanelEmpty: string;
+  computedColumnsPanelAddButton: string;
+  computedColumnsPanelItemMenuLabel: string;
+  computedColumnsPanelItemReadOnlyLabel: string;
+  computedColumnEditorNewTitle: string;
+  computedColumnEditorEditTitle: string;
+  computedColumnEditorViewTitle: string;
+  computedColumnReadOnlyHint: string;
+  computedColumnNameLabel: string;
+  computedColumnFieldLabel: string;
+  computedColumnFormulaLabel: string;
+  computedColumnTypeLabel: string;
+  computedColumnTypeNumber: string;
+  computedColumnTypeString: string;
+  computedColumnTypeBoolean: string;
+  computedColumnTypeDate: string;
+  computedColumnTypeDateTime: string;
+  computedColumnFormatLabel: string;
+  computedColumnFormatStyleDecimal: string;
+  computedColumnFormatStylePercent: string;
+  computedColumnFormatStyleCurrency: string;
+  computedColumnFormatCurrencyLabel: string;
+  computedColumnFormatDecimalsLabel: string;
+  computedColumnFormatGroupingLabel: string;
+  computedColumnPreviewLabel: string;
+  computedColumnPreviewRow: (rowIndex: number) => string;
+  computedColumnPreviewNoRows: string;
+  computedColumnReferenceTitle: string;
+  computedColumnReferenceColumns: string;
+  computedColumnReferenceFunctions: string;
+  computedColumnReferenceSearchPlaceholder: string;
+  computedColumnReferenceNoResults: string;
+  computedColumnApplyButton: string;
+  computedColumnAddButton: string;
+  computedColumnCancelButton: string;
+  computedColumnCloseButton: string;
+  computedColumnDeleteButton: string;
+  computedColumnHeaderLabel: string;
+  computedColumnHeaderInvalidLabel: string;
+  computedColumnErrorNameRequired: string;
+  computedColumnErrorFieldRequired: string;
+  computedColumnErrorFieldInvalid: string;
+  computedColumnErrorFieldExists: (field: string) => string;
+  computedColumnErrorFieldA1Like: string;
+  computedColumnErrorFormulaRequired: string;
+  computedColumnErrorParse: (message: string) => string;
+  computedColumnErrorUnknownFunction: (name: string) => string;
+  computedColumnErrorUnsupportedReference: string;
+  computedColumnErrorUnknownField: (field: string) => string;
+  computedColumnErrorSelfReference: string;
+  computedColumnErrorCycle: (path: string) => string;
+  computedCellErrorDivByZero: string;
+  computedCellErrorValue: string;
+  computedCellErrorRef: string;
+  computedCellErrorName: string;
+  computedCellErrorCycle: string;
+  computedCellErrorGeneric: string;
 
   // Columns management text
   columnsManagementSearchTitle: string;
@@ -148,6 +216,7 @@ export interface GridLocaleText {
   columnHeaderFiltersTooltipActive: (count: number) => React.ReactNode;
   columnHeaderFiltersLabel: string;
   columnHeaderSortIconLabel: string;
+  columnHeaderSortIconAriaLabel: (columnName: string, direction: GridSortDirection) => string;
 
   // Rows selected footer text
   footerRowSelected: (count: number) => React.ReactNode;

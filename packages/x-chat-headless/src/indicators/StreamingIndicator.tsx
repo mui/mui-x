@@ -10,10 +10,16 @@ import { getDataAttributes } from '../internals/getDataAttributes';
 import type { StreamingIndicatorOwnerState } from './indicators.types';
 
 export interface StreamingIndicatorSlots {
+  /**
+   * The component that renders the root.
+   */
   root: React.ElementType;
 }
 
 export interface StreamingIndicatorSlotProps {
+  /**
+   * The props used for the root slot.
+   */
   root?: SlotComponentProps<'div', {}, StreamingIndicatorOwnerState>;
 }
 
@@ -38,9 +44,23 @@ export interface StreamingIndicatorProps extends React.HTMLAttributes<HTMLDivEle
    * provided, the indicator self-suppresses on every row except the last one.
    */
   messageId?: string;
+  /**
+   * The index of the row in `items`.
+   */
   index?: number;
+  /**
+   * The ids of the messages in the list, in order.
+   */
   items?: string[];
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<StreamingIndicatorSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: StreamingIndicatorSlotProps;
 }
 

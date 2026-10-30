@@ -1,25 +1,28 @@
 import type * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { EMPTY_OBJECT } from '@base-ui/utils/empty';
+import { EMPTY_ARRAY, EMPTY_OBJECT } from '@base-ui/utils/empty';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { SchedulerParametersToStateMapper } from '@mui/x-scheduler-internals/internals';
 import {
-  DEFAULT_SCHEDULER_PREFERENCES,
   getDisplayedHourRange,
   getShouldEventRequireResource,
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import type {
-  EventTimelinePremiumPreferences,
   EventTimelinePremiumPreset,
   EventTimelinePremiumPresetConfig,
   SchedulerAddDependencyResult,
+  SchedulerDependenciesState,
   SchedulerDependenciesParameters,
   SchedulerDependencyCreation,
   SchedulerDependencyCreationProperties,
+  SchedulerDependencyEditor,
   SchedulerDependencyId,
+  SchedulerDependencyUpdatedProperties,
+  SchedulerUpdateDependencyResult,
 } from '../models';
 import type {
   EventTimelinePremiumState,
@@ -27,13 +30,17 @@ import type {
   EventTimelinePremiumStoreParameters,
 } from './EventTimelinePremiumStore.types';
 import { EventTimelinePremiumLazyLoadingPlugin } from './plugins/EventTimelinePremiumLazyLoadingPlugin';
-import { schedulerRecurringEventsPlugin } from '../internals/plugins/schedulerRecurringEventsPlugin';
-import { SchedulerSchedulingPlugin } from '../internals/plugins/SchedulerSchedulingPlugin';
+import type { SchedulerSchedulingPlugin } from '../internals/plugins/SchedulerSchedulingPlugin';
 import {
   EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS,
   getPresetPxPerDay,
 } from '../internals/utils/preset-utils';
-import { buildDependenciesState, isDependencyActive } from '../internals/utils/dependency-utils';
+import type { EventTimelinePremiumDependenciesStoreFeature } from '../internals/features/eventTimelinePremiumStoreFeatures';
+
+const EMPTY_DEPENDENCIES_STATE: SchedulerDependenciesState = {
+  dependencyModelList: EMPTY_ARRAY,
+  dependencyModelLookup: new Map(),
+};
 
 // Sorted by descending px/day (most zoomed-in first). Each preset's `(timeResolution,
 // tickWidth)` must produce a unique px/day — otherwise the order is decided by
@@ -123,9 +130,22 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
 // `onDependenciesChange` could only enable a UI whose creations never display: the
 // feature requires the value, and the lone handler gets the symmetric dev warning to
 // the one `updateDependencies` emits for a value without a handler.
-const deriveAreDependenciesEnabled = (parameters: SchedulerDependenciesParameters) => {
-  const enabled = parameters.dependencies !== undefined;
-  if (!enabled && parameters.onDependenciesChange !== undefined) {
+const deriveAreDependenciesEnabled = (
+  dependenciesFeature: EventTimelinePremiumDependenciesStoreFeature | null,
+  parameters: SchedulerDependenciesParameters,
+) => {
+  if (process.env.NODE_ENV !== 'production') {
+    if (dependenciesFeature === null && parameters.dependencies !== undefined) {
+      warnOnce(
+        [
+          'MUI X Scheduler: A `dependencies` value was provided, but the dependencies feature is missing.',
+          'Without it, the dependencies are ignored: no arrows render and events do not move with their predecessors.',
+          'Pass the dependencies feature through the `storeFeatures` parameter.',
+        ].join('\n'),
+      );
+    }
+  }
+  if (parameters.dependencies === undefined && parameters.onDependenciesChange !== undefined) {
     warnOnce(
       [
         'MUI X Scheduler: An `onDependenciesChange` handler was provided without a `dependencies` value.',
@@ -134,10 +154,13 @@ const deriveAreDependenciesEnabled = (parameters: SchedulerDependenciesParameter
       ].join('\n'),
     );
   }
-  return enabled;
+  return dependenciesFeature !== null && parameters.dependencies !== undefined;
 };
 
-export const DEFAULT_PREFERENCES: EventTimelinePremiumPreferences = DEFAULT_SCHEDULER_PREFERENCES;
+const buildDependenciesState = (
+  dependenciesFeature: EventTimelinePremiumDependenciesStoreFeature | null,
+  parameters: SchedulerDependenciesParameters,
+) => dependenciesFeature?.buildState(parameters.dependencies) ?? EMPTY_DEPENDENCIES_STATE;
 
 const mapper: SchedulerParametersToStateMapper<
   EventTimelinePremiumState,
@@ -148,33 +171,38 @@ const mapper: SchedulerParametersToStateMapper<
       parameters,
       DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE,
     );
+    const dependenciesFeature = parameters.storeFeatures?.dependencies ?? null;
     return {
       ...schedulerInitialState,
       ...deriveStateFromParameters(parameters),
-      ...buildDependenciesState(parameters.dependencies),
-      areDependenciesEnabled: deriveAreDependenciesEnabled(parameters),
+      ...buildDependenciesState(dependenciesFeature, parameters),
+      dependenciesFeature,
+      areDependenciesEnabled: deriveAreDependenciesEnabled(dependenciesFeature, parameters),
       dependencyCreation: null,
+      dependencyEditor: null,
       preset: parameters.preset ?? parameters.defaultPreset ?? DEFAULT_PRESET,
       preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
       shouldEventRequireResource,
       hasInitialized: false,
     };
   },
-  updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
+  updateStateFromParameters: (newSchedulerState, parameters, updateModel, currentState) => {
     const shouldEventRequireResource = getShouldEventRequireResource(
       parameters,
       DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE,
     );
-    const areDependenciesEnabled = deriveAreDependenciesEnabled(parameters);
+    // The feature is frozen at construction: later `storeFeatures` values are ignored.
+    const { dependenciesFeature } = currentState;
+    const areDependenciesEnabled = deriveAreDependenciesEnabled(dependenciesFeature, parameters);
     const newState: Partial<EventTimelinePremiumState> = {
       ...newSchedulerState,
       ...deriveStateFromParameters(parameters),
-      ...buildDependenciesState(parameters.dependencies),
+      ...buildDependenciesState(dependenciesFeature, parameters),
       areDependenciesEnabled,
-      // Disabling the feature discards its in-flight gesture: kept in the raw state
-      // it would come back on screen if the feature is re-enabled. The selection is
-      // cleared by the store effect, which can check the selected type.
-      ...(areDependenciesEnabled ? null : { dependencyCreation: null }),
+      // Disabling the feature discards its in-flight gesture and dialog: kept in the raw
+      // state they would come back on screen if the feature is re-enabled. The selection
+      // is cleared by the store effect, which can check the selected type.
+      ...(areDependenciesEnabled ? null : { dependencyCreation: null, dependencyEditor: null }),
       shouldEventRequireResource,
       hasInitialized: true,
     };
@@ -201,13 +229,19 @@ export class EventTimelinePremiumStore<
     TEvent,
     EventTimelinePremiumState,
     EventTimelinePremiumStoreParameters<TEvent, TResource>
-  >;
+  > | null;
 
   public constructor(
     parameters: EventTimelinePremiumStoreParameters<TEvent, TResource>,
     adapter: Adapter,
   ) {
-    super(parameters, adapter, 'EventTimelinePremiumStore', mapper, schedulerRecurringEventsPlugin);
+    super(
+      parameters,
+      adapter,
+      'EventTimelinePremiumStore',
+      mapper,
+      parameters.storeFeatures?.recurringEvents ?? null,
+    );
 
     if (process.env.NODE_ENV !== 'production') {
       // Assert the initial state validity; `subscribe` only fires on subsequent state changes.
@@ -220,33 +254,68 @@ export class EventTimelinePremiumStore<
       );
     }
 
-    this.scheduling = this.disposables.use(new SchedulerSchedulingPlugin(this));
+    const { dependenciesFeature } = this.state;
+    this.scheduling =
+      dependenciesFeature === null
+        ? null
+        : this.disposables.use(
+            dependenciesFeature.createSchedulingPlugin(this, (updated) => {
+              this.updateEvents({ updated }, { skipScheduling: true });
+            }),
+          );
     this.schedulingPlugin = this.scheduling;
     this.lazyLoading = this.disposables.use(new EventTimelinePremiumLazyLoadingPlugin(this));
 
-    // Clear (not just mask) the selection of a removed or deactivated dependency:
-    // with masking alone, a dependency coming back (a re-added id, an endpoint event
-    // re-fetched or no longer recurring) would resurrect the arrow already selected.
-    const clearInactiveDependencySelection = () => {
-      const { selection, dependencyModelLookup, processedEventLookup } = this.state;
-      if (selection?.type !== 'dependency') {
-        return;
-      }
-      const dependency = dependencyModelLookup.get(selection.id);
-      if (dependency === undefined || !isDependencyActive(processedEventLookup, dependency)) {
+    // The feature is frozen at construction: without it, no dependency is ever selected or edited.
+    if (dependenciesFeature === null) {
+      return;
+    }
+
+    // Clear (not just mask) the selection and the dialog of a removed or deactivated
+    // dependency: with masking alone, a dependency coming back (a re-added id, an endpoint
+    // event re-fetched or no longer recurring) would bring them back.
+    const clearInactiveDependencyState = () => {
+      const { selection, dependencyEditor } = this.state;
+      if (selection?.type === 'dependency' && this.isDependencyInactive(selection.id)) {
         this.setSelection(null);
+      }
+      if (dependencyEditor !== null && this.isDependencyInactive(dependencyEditor.dependencyId)) {
+        this.closeDependencyEditor();
       }
     };
     this.disposables.defer(
       this.registerStoreEffect(
         (state) => state.dependencyModelLookup,
-        clearInactiveDependencySelection,
+        clearInactiveDependencyState,
       ),
     );
     this.disposables.defer(
+      this.registerStoreEffect((state) => state.processedEventLookup, clearInactiveDependencyState),
+    );
+
+    // The dialog anchor no longer matches the arrow after a date or preset change.
+    this.disposables.defer(
       this.registerStoreEffect(
-        (state) => state.processedEventLookup,
-        clearInactiveDependencySelection,
+        schedulerOtherSelectors.visibleTimestamp,
+        this.closeDependencyEditor,
+      ),
+    );
+    this.disposables.defer(
+      this.registerStoreEffect((state) => state.preset, this.closeDependencyEditor),
+    );
+    // The dialog switches between the form and the details, which would drop the draft.
+    this.disposables.defer(
+      this.registerStoreEffect((state) => state.readOnly, this.closeDependencyEditor),
+    );
+
+    this.disposables.defer(
+      this.registerStoreEffect(
+        (state) => state.editingOccurrence,
+        (previous, next) => {
+          if (previous === null && next !== null) {
+            this.closeDependencyEditor();
+          }
+        },
       ),
     );
 
@@ -284,29 +353,27 @@ export class EventTimelinePremiumStore<
     };
   }
 
-  /**
-   * Goes to the next visible date span based on the current preset.
-   */
-  public goToNextVisibleDate = (event: React.UIEvent) => {
-    const { adapter, visibleDate, preset } = this.state;
+  private setSiblingVisibleDate = (delta: 1 | -1, event: React.UIEvent) => {
+    const { adapter, preset } = this.state;
     const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
+    // Moves the days of the display timezone, the ones the preset config reads. Days added in
+    // another timezone can skip a day of the display timezone across a DST transition.
+    const visibleDate = schedulerOtherSelectors.visibleDate(this.state);
     this.setVisibleDate({
-      visibleDate: navigate(adapter, visibleDate, unitCount),
+      visibleDate: navigate(adapter, visibleDate, delta * unitCount),
       event,
     });
   };
 
   /**
+   * Goes to the next visible date span based on the current preset.
+   */
+  public goToNextVisibleDate = (event: React.UIEvent) => this.setSiblingVisibleDate(1, event);
+
+  /**
    * Goes to the previous visible date span based on the current preset.
    */
-  public goToPreviousVisibleDate = (event: React.UIEvent) => {
-    const { adapter, visibleDate, preset } = this.state;
-    const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
-    this.setVisibleDate({
-      visibleDate: navigate(adapter, visibleDate, -unitCount),
-      event,
-    });
-  };
+  public goToPreviousVisibleDate = (event: React.UIEvent) => this.setSiblingVisibleDate(-1, event);
 
   /**
    * Sets the preset of the timeline.
@@ -331,22 +398,39 @@ export class EventTimelinePremiumStore<
 
   /**
    * Adds a dependency between two events.
-   * Rejects dependencies referencing an unknown, recurring or read-only event,
-   * duplicates and cycles — see the returned `SchedulerAddDependencyResult`.
+   * Rejects every dependency while the scheduler is read-only, and dependencies
+   * referencing an unknown or recurring event, duplicates, cycles, and dependencies
+   * needing a read-only event to move — see the returned `SchedulerAddDependencyResult`.
+   * A dependency the event dates break moves its successor.
    * The guards read the controlled `dependencies` value, so two adds in the same
    * tick are not validated against each other: wait for the updated `dependencies`
    * value before making another validated add.
+   * Without the dependencies feature, every add is rejected as `featureDisabled`.
    */
   public addDependency = (
     properties: SchedulerDependencyCreationProperties,
-  ): SchedulerAddDependencyResult => this.scheduling.addDependency(properties);
+  ): SchedulerAddDependencyResult =>
+    this.scheduling?.addDependency(properties) ?? { status: 'rejected', reason: 'featureDisabled' };
+
+  /**
+   * Changes the type or lag of a dependency — see `SchedulerUpdateDependencyResult` for
+   * the rejections. Events only move when the change makes the dependency stricter.
+   */
+  public updateDependency = (
+    dependencyId: SchedulerDependencyId,
+    changes: SchedulerDependencyUpdatedProperties,
+  ): SchedulerUpdateDependencyResult =>
+    this.scheduling?.updateDependency(dependencyId, changes) ?? {
+      status: 'rejected',
+      reason: 'featureDisabled',
+    };
 
   /**
    * Deletes a dependency. Returns `false` when the deletion was refused: the id is
-   * unknown, or an endpoint event is read-only.
+   * unknown, the scheduler is read-only, or the dependencies feature is missing.
    */
   public deleteDependency = (dependencyId: SchedulerDependencyId): boolean =>
-    this.scheduling.deleteDependency(dependencyId);
+    this.scheduling?.deleteDependency(dependencyId) ?? false;
 
   /**
    * Sets the pending create-dependency drag gesture. The gesture only holds ids —
@@ -369,6 +453,43 @@ export class EventTimelinePremiumStore<
     this.setSelection(dependencyId === null ? null : { type: 'dependency', id: dependencyId });
   };
 
+  private isDependencyInactive(dependencyId: SchedulerDependencyId): boolean {
+    const { dependenciesFeature, dependencyModelLookup, processedEventLookup } = this.state;
+    const dependency = dependencyModelLookup.get(dependencyId);
+    return (
+      dependenciesFeature === null ||
+      dependency === undefined ||
+      !dependenciesFeature.isDependencyActive(processedEventLookup, dependency)
+    );
+  }
+
+  /**
+   * Opens the dependency dialog, closing the event dialog if open.
+   */
+  public openDependencyEditor = (
+    dependencyId: SchedulerDependencyId,
+    anchor: SchedulerDependencyEditor['anchor'],
+    resourceIds?: Pick<SchedulerDependencyEditor, 'sourceResourceId' | 'targetResourceId'>,
+  ) => {
+    // A menu left open on a removed dependency must not open the dialog later.
+    if (this.isDependencyInactive(dependencyId)) {
+      return;
+    }
+    if (this.state.editingOccurrence !== null) {
+      this.stopEditing();
+    }
+    this.set('dependencyEditor', { dependencyId, anchor, ...resourceIds });
+  };
+
+  /**
+   * Closes the dependency dialog.
+   */
+  public closeDependencyEditor = () => {
+    if (this.state.dependencyEditor !== null) {
+      this.set('dependencyEditor', null);
+    }
+  };
+
   /**
    * Deletes the selected dependency and clears the selection, so the pairing cannot
    * drift apart across the affordances triggering it (delete button, keyboard).
@@ -378,7 +499,7 @@ export class EventTimelinePremiumStore<
     if (selection?.type !== 'dependency') {
       return;
     }
-    // A refused deletion (read-only endpoint) keeps the selection: silently
+    // A refused deletion (read-only scheduler) keeps the selection: silently
     // deselecting would read as a broken delete.
     if (!this.deleteDependency(selection.id)) {
       return;

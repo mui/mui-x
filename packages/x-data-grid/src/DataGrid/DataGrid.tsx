@@ -221,6 +221,10 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
    * Inherits the `columnHeaderHeight` value if not set.
    */
   columnGroupHeaderHeight: PropTypes.number,
+  /**
+   * The column groups of the header.
+   * @see See {@link https://mui.com/x/react-data-grid/column-groups/ column grouping docs} for more details.
+   */
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
    * Sets the height in pixel of the column headers in the Data Grid.
@@ -660,14 +664,16 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
    */
   onFilterModelChange: PropTypes.func,
   /**
-   * Callback fired when the menu is closed.
+   * Callback fired when a grid menu is closed.
+   * This includes the column menu, the actions cell menu, and the toolbar menus.
    * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onMenuClose: PropTypes.func,
   /**
-   * Callback fired when the menu is opened.
+   * Callback fired when a grid menu is opened.
+   * This includes the column menu, the actions cell menu, and the toolbar menus.
    * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -781,6 +787,10 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
       }),
     ]).isRequired,
   ),
+  /**
+   * Pagination is always enabled in the Data Grid.
+   * Use the Data Grid Pro to disable it.
+   */
   pagination: PropTypes.oneOf([true]),
   /**
    * The extra information about the pagination state of the Data Grid.

@@ -1,9 +1,11 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
-import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
-import { PieChart, PieChartProps } from '@mui/x-charts/PieChart';
-import { BarItemIdentifier, PieItemIdentifier } from '@mui/x-charts/models';
+import type { BarChartProps } from '@mui/x-charts/BarChart';
+import { BarChart } from '@mui/x-charts/BarChart';
+import type { PieChartProps } from '@mui/x-charts/PieChart';
+import { PieChart } from '@mui/x-charts/PieChart';
+import type { BarItemIdentifier, PieItemIdentifier } from '@mui/x-charts/models';
 
 const CodeBlock = styled('pre')({
   minHeight: 125,

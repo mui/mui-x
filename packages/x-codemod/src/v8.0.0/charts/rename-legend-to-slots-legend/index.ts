@@ -1,4 +1,4 @@
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import { transformNestedProp } from '../../../util/addComponentsSlots';
 /**
  * @param {import('jscodeshift').FileInfo} file

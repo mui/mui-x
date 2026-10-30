@@ -3,7 +3,7 @@
 // Resources are the theaters, events are individual production runs from opening to closing night
 // Note: All Broadway theaters were closed from March 12, 2020 to approximately September 2021 due to COVID-19
 
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 
 export const defaultVisibleDate = new Date('2022-01-01T00:00:00');
 

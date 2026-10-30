@@ -44,6 +44,9 @@ const event = {
 
 {{"demo": "AllDay.js", "bg": "inline", "defaultCodeOpen": false}}
 
+In the day and week views, all-day events are rendered in the day grid above the time grid.
+See the `timeGridEvents` option of the [Week view](/x/react-scheduler/event-calendar/views/#week-view) to choose where timed events that cross midnight are rendered.
+
 ### Timezone
 
 Use the `timezone` property to specify the timezone for an event's dates:
@@ -189,6 +192,8 @@ function Calendar() {
 ```
 
 {{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
+
+A property declared with a `getter` but no `setter` is read-only: the Event Calendar displays it but never writes it back to your model. When `start` or `end` is read-only, events can't be dragged or created, and only the other edge can be resized. Saving an occurrence of a recurring event with the "Only this event" or "This and following events" scope is refused with an error, since it needs to write a new date.
 
 ## Event constraints 🚧
 

@@ -9,8 +9,9 @@ import Button from '@mui/material/Button';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { Chance } from 'chance';
-import { ScatterChart, ScatterChartProps } from '@mui/x-charts/ScatterChart';
-import { ScatterValueType } from '@mui/x-charts/models';
+import type { ScatterChartProps } from '@mui/x-charts/ScatterChart';
+import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import type { ScatterValueType } from '@mui/x-charts/models';
 import {
   blueberryTwilightPalette,
   mangoFusionPalette,

@@ -14,9 +14,15 @@ import { lineClasses, useUtilityClasses as useLineUtilityClasses } from './lineC
 import type { LineClasses } from './lineClasses';
 
 export interface MarkElementOwnerState {
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: SeriesId;
   isFaded: boolean;
   isHighlighted: boolean;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<Pick<LineClasses, 'mark'>>;
   skipAnimation?: boolean;
 }
@@ -143,6 +149,9 @@ MarkElement.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   /**
    * The index to the element in the series' data array.
@@ -163,6 +172,9 @@ MarkElement.propTypes /* remove-proptypes */ = {
    * @default false
    */
   isHighlighted: PropTypes.bool,
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: PropTypes.string.isRequired,
   /**
    * The shape of the marker.

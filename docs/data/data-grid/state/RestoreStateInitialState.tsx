@@ -5,10 +5,9 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import type { GridInitialState, GridSlotProps } from '@mui/x-data-grid-pro';
 import {
   DataGridPro,
-  GridInitialState,
-  GridSlotProps,
   Toolbar,
   ToolbarRoot,
   ToolbarButton,

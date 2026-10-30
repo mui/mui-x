@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
+import type { Dayjs } from 'dayjs';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import {
+import type {
   FieldSectionType,
   FieldSelectedSections,
   FieldRef,
 } from '@mui/x-date-pickers/models';
-import { DateRange, RangePosition } from '@mui/x-date-pickers-pro/models';
+import type { DateRange, RangePosition } from '@mui/x-date-pickers-pro/models';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 
 export default function ControlledSelectedSectionsSingleInputRangeField() {

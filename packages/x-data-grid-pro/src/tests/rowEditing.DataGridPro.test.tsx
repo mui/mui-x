@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { useGridApiRef, DataGridPro, GridRowModes } from '@mui/x-data-grid-pro';
+import { useGridApiRef, DataGridPro, GridRowModes, gridClasses } from '@mui/x-data-grid-pro';
 import type {
   GridApi,
   DataGridProProps,
@@ -1151,6 +1151,19 @@ describe('<DataGridPro /> - Row editing', () => {
         fireEvent.doubleClick(getCell(0, 1));
         expect(listener.mock.calls.length).to.equal(0);
         fireUserEvent.mousePress(getCell(1, 1));
+
+        await waitFor(() => {
+          expect(listener.mock.lastCall?.[0].reason).to.equal('rowFocusOut');
+        });
+      });
+
+      it(`should publish 'rowEditStop' with reason=rowFocusOut after a click on the empty space of the row`, async () => {
+        render(<TestCase />);
+        const listener = vi.fn();
+        apiRef.current?.subscribeEvent('rowEditStop', listener);
+        fireEvent.doubleClick(getCell(0, 1));
+        expect(listener.mock.calls.length).to.equal(0);
+        fireUserEvent.mousePress(getRow(0).querySelector(`.${gridClasses.cellEmpty}`)!);
 
         await waitFor(() => {
           expect(listener.mock.lastCall?.[0].reason).to.equal('rowFocusOut');

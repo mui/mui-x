@@ -9,7 +9,6 @@ import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsDataProviderPremium } from '@mui/x-charts-premium/ChartsDataProviderPremium';
 import { ChartsToolbarPremium } from '@mui/x-charts-premium/ChartsToolbarPremium';
 import { BAR_CHART_PREMIUM_PLUGINS } from '@mui/x-charts-premium/BarChartPremium';
-
 import { useChartPremiumExport } from '@mui/x-charts-premium/plugins';
 
 // Defined outside the component: plugins contain hooks, so their order must not change.
