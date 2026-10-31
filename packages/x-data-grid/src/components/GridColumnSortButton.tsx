@@ -69,7 +69,8 @@ function getIcon(
 }
 
 function GridColumnSortButton(props: GridColumnSortButtonProps) {
-  const { columnName, direction, index, sortingOrder, disabled, className, ...other } = props;
+  const { field, columnName, direction, index, sortingOrder, disabled, className, ...other } =
+    props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
