@@ -1,6 +1,13 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "isGrouped": {
+      "description": "If <code>true</code>, the message is part of a group with the previous message."
+    },
+    "messageId": { "description": "The id of the message." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
+  },
   "classDescriptions": {},
-  "slotDescriptions": { "root": "" }
+  "slotDescriptions": { "root": "The component that renders the root." }
 }

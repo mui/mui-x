@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { initialEvents, defaultVisibleDate } from '../../datasets/personal-agenda';
 

@@ -8,25 +8,26 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { integer } from '@mui/x-internals/types';
 import { platform } from '@base-ui/utils/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
-import { createSelector, useStore, Store } from '@base-ui/utils/store';
+import type { Store } from '@base-ui/utils/store';
+import { createSelector, useStore } from '@base-ui/utils/store';
 import { useStoreEffect } from '@mui/x-internals/useStoreEffect';
 import useRefCallback from '../../utils/useRefCallback';
-import { PinnedRows, PinnedColumns, Size } from '../../models/core';
+import type { Size } from '../../models/core';
+import { PinnedRows, PinnedColumns } from '../../models/core';
 import type { CellColSpanInfo } from '../../models/colspan';
 import { Dimensions, observeRootNode } from '../dimensions';
 import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';
 import type { Layout } from './layout';
 import { nextAnchorTop } from './anchor';
-import {
+import type {
   PinnedRowPosition,
   RenderContext,
   ColumnsRenderContext,
   ColumnWithWidth,
   RowId,
   RowEntry,
-  ScrollPosition,
-  ScrollDirection,
 } from '../../models';
+import { ScrollPosition, ScrollDirection } from '../../models';
 
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
 
@@ -679,7 +680,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         virtualRowIndex = focusedVirtualCell.rowIndex;
       }
       if (
-        focusedVirtualCell.rowIndex > lastRowToRender &&
+        focusedVirtualCell.rowIndex >= lastRowToRender &&
         focusedVirtualCell.rowIndex < rowModels.length
       ) {
         rowIndexes.push(focusedVirtualCell.rowIndex);

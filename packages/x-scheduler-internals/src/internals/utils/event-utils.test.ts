@@ -15,22 +15,22 @@ import {
   getPrimaryResourceId,
   getResourceSelectionMode,
 } from './event-utils';
-import { processDate } from '../../process-date';
-import { toLocalDayNumber } from './plain-date-utils/timeZone';
+import { getDayListFromPlainDates } from '../../get-day-list';
+import { BaseTemporal } from './base-temporal';
+import { getDayNumber } from './plain-date-utils/plainDate';
 import { createEventRangeIndex } from './event-range-index';
 
 describe('event-utils', () => {
   describe('getDaysTheOccurrenceIsVisibleOn', () => {
-    const days = [
-      processDate(adapter.date('2024-01-14', 'default'), adapter),
-      processDate(adapter.date('2024-01-15', 'default'), adapter),
-      processDate(adapter.date('2024-01-16', 'default'), adapter),
-      processDate(adapter.date('2024-01-17', 'default'), adapter),
-      processDate(adapter.date('2024-01-18', 'default'), adapter),
-    ];
+    const days = getDayListFromPlainDates({
+      adapter,
+      firstPlainDate: BaseTemporal.PlainDate.from('2024-01-14'),
+      lastPlainDate: BaseTemporal.PlainDate.from('2024-01-18'),
+      timezone: 'default',
+    });
+    const dayNumbers = days.map((day) => getDayNumber(day.plainDate));
 
     const dayKeys = ['2024-01-14', '2024-01-15', '2024-01-16', '2024-01-17', '2024-01-18'];
-    const dayNumbers = days.map((day) => toLocalDayNumber(day.timestamp, 'default'));
 
     it('should return all days when event spans multiple days', () => {
       const event = EventBuilder.new()

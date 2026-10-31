@@ -6,8 +6,10 @@
     },
     "htmlFor": {
       "description": "The <code>id</code> of the textarea this label is associated with. Passed directly to the native <code>htmlFor</code> attribute. When provided, the label is semantically linked to the textarea so that clicking the label focuses the input and screen readers announce it on focus."
-    }
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {},
-  "slotDescriptions": { "label": "" }
+  "slotDescriptions": { "label": "The component that renders the label." }
 }

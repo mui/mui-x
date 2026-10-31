@@ -2,7 +2,9 @@
   "props": {},
   "name": "ConversationHeader",
   "imports": ["import { ConversationHeader } from '@mui/x-chat/headless';"],
-  "slots": [{ "name": "header", "description": "", "class": null }],
+  "slots": [
+    { "name": "header", "description": "The component that renders the header.", "class": null }
+  ],
   "classes": [],
   "muiName": "MuiConversationHeader",
   "filename": "/packages/x-chat-headless/src/conversation/ConversationHeader.tsx",

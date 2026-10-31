@@ -1,12 +1,14 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import {
-  DataGridPremium,
-  useGridApiRef,
+import type {
   GridHistoryEventHandler,
   GridEvents,
   GridFilterModel,
   GridApiPremium,
+} from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  useGridApiRef,
   createClipboardPasteHistoryHandler,
   createRowEditHistoryHandler,
   createCellEditHistoryHandler,

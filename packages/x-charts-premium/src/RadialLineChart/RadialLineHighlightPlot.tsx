@@ -15,12 +15,19 @@ import getColor from './seriesConfig/getColor';
 import type { RadialLineHighlightPropsOverrides } from '../models/chartsSlotsComponentsPropsPremium';
 
 export interface RadialLineHighlightPlotSlots {
+  /**
+   * The component that renders the radial line highlight.
+   * @default RadialLineHighlightElement
+   */
   radialLineHighlight?: React.JSXElementConstructor<
     RadialLineHighlightElementProps & RadialLineHighlightPropsOverrides
   >;
 }
 
 export interface RadialLineHighlightPlotSlotProps {
+  /**
+   * The props used for the `radialLineHighlight` slot.
+   */
   radialLineHighlight?: SlotComponentPropsFromProps<
     RadialLineHighlightElementProps,
     RadialLineHighlightPropsOverrides,

@@ -1,11 +1,13 @@
 import * as React from 'react';
+import type {
+  GridGroupingColDefOverride,
+  GridInitialState,
+} from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
   gridFilteredDescendantCountLookupSelector,
   useGridApiRef,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-  GridGroupingColDefOverride,
-  GridInitialState,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 

@@ -1,9 +1,8 @@
 import * as React from 'react';
+import type { GridColDef, GridColumnResizeParams } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
   useGridApiRef,
-  GridColDef,
-  GridColumnResizeParams,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
 } from '@mui/x-data-grid-premium';
 import Button from '@mui/material/Button';

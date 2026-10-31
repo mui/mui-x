@@ -1,58 +1,11 @@
 import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
-import { getStartOfWeek as getStartOfWeekDayNumber, PlainDate } from './base-temporal/PlainDate';
-import {
-  buildTemporalPlainDate,
-  createAdapterDate,
-  createStartOfPlainDate,
-} from './plain-date-utils/adapter';
-import { plainDateFromDayNumber } from './plain-date-utils/plainDate';
-
-/**
- * Builds an adapter-agnostic format string that produces an ISO 8601 date.
- * Produces e.g. `yyyy'-'MM'-'dd` for date-fns.
- */
-export function getIsoDateFormat(adapter: Adapter): string {
-  const f = adapter.formats;
-  const esc = adapter.escapedCharacters;
-  return [
-    f.yearPadded,
-    esc.start,
-    '-',
-    esc.end,
-    f.monthPadded,
-    esc.start,
-    '-',
-    esc.end,
-    f.dayOfMonthPadded,
-  ].join('');
-}
-
-/**
- * Builds an adapter-agnostic format string that produces an ISO 8601 date-time
- * **without** the trailing `Z` (wall-time representation).
- * Produces e.g. `yyyy'-'MM'-'dd'T'HH':'mm':'ss` for date-fns.
- */
-export function getWallTimeIsoFormat(adapter: Adapter): string {
-  const f = adapter.formats;
-  const esc = adapter.escapedCharacters;
-  return [
-    getIsoDateFormat(adapter),
-    esc.start,
-    'T',
-    esc.end,
-    f.hours24hPadded,
-    esc.start,
-    ':',
-    esc.end,
-    f.minutesPadded,
-    esc.start,
-    ':',
-    esc.end,
-    f.secondsPadded,
-  ].join('');
-}
+import type { BaseTemporal } from './base-temporal';
+import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
+import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
+import type { WeekInfo } from './date-locale';
+import { toWallClockIsoString } from './plain-date-utils/timeZone';
 
 /**
  * Converts a `TemporalSupportedObject` back to a string, respecting the
@@ -69,8 +22,7 @@ export function dateToEventString(
   if (originalString.endsWith('Z')) {
     return adapter.toJsDate(date).toISOString();
   }
-  const dateInDataTz = adapter.setTimezone(date, dataTimezone);
-  return adapter.formatByString(dateInDataTz, getWallTimeIsoFormat(adapter));
+  return toWallClockIsoString(adapter.getTime(date), dataTimezone);
 }
 
 /**
@@ -90,24 +42,16 @@ export function getOccurrenceEnd({
   return adapter.addMilliseconds(occurrenceStart, durationMs);
 }
 
-/**
- * The JS weekday (0=Sun … 6=Sat) of a date, read in its own timezone.
- */
-export function getJsDayOfWeek(adapter: Adapter, date: TemporalSupportedObject): number {
-  // ISO weekdays go from 1 (Monday) to 7 (Sunday).
-  return buildTemporalPlainDate(adapter, date).dayOfWeek % 7;
-}
-
 function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {
   if (process.env.NODE_ENV !== 'production') {
     if (
       !Number.isInteger(weekStartsOn) ||
-      (weekStartsOn as number) < 0 ||
-      (weekStartsOn as number) > 6
+      (weekStartsOn as number) < 1 ||
+      (weekStartsOn as number) > 7
     ) {
       // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
-        `MUI X Scheduler: weekStartsOn must be an integer between 0 (Sunday) and 6 (Saturday),` +
+        `MUI X Scheduler: weekStartsOn must be an integer between 1 (Monday) and 7 (Sunday),` +
           ` but received ${weekStartsOn}.`,
       );
     }
@@ -115,89 +59,32 @@ function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {
 }
 
 /**
- * The first day of the week of `date`, read in its own timezone.
- */
-export function getWeekStartPlainDate(
-  adapter: Adapter,
-  date: TemporalSupportedObject,
-  weekStartsOn: WeekStartsOn | undefined,
-): PlainDate {
-  return getPlainDateWeekStart(adapter, buildTemporalPlainDate(adapter, date), weekStartsOn);
-}
-
-const localeFirstDaysOfWeek = new WeakMap<Adapter, number>();
-
-/**
- * The ISO weekday (1 = Monday … 7 = Sunday) the weeks of the locale of the adapter start on.
- */
-function getLocaleFirstDayOfWeek(adapter: Adapter): number {
-  let firstDayOfWeek = localeFirstDaysOfWeek.get(adapter);
-  if (firstDayOfWeek === undefined) {
-    // The adapter numbers the days of the week from 1, starting on the first day of the locale.
-    // January 1st, 2024 is a Monday.
-    const monday = createAdapterDate(adapter, Date.UTC(2024, 0, 1, 12), 'UTC');
-    firstDayOfWeek = ((8 - adapter.getDayOfWeek(monday)) % 7) + 1;
-    localeFirstDaysOfWeek.set(adapter, firstDayOfWeek);
-  }
-  return firstDayOfWeek;
-}
-
-/**
- * The first day of the week of `plainDate`. Without `weekStartsOn`, the week starts on the first
- * day of the locale of the adapter.
+ * The first day of the week of `plainDate`.
  */
 export function getPlainDateWeekStart(
-  adapter: Adapter,
-  plainDate: PlainDate,
-  weekStartsOn: WeekStartsOn | undefined,
-): PlainDate {
-  if (weekStartsOn !== undefined) {
-    checkWeekStartsOn(weekStartsOn);
-  }
-  // `weekStartsOn` and ISO weekdays agree, except for Sunday (0 and 7), which both accept.
-  return plainDateFromDayNumber(
-    getStartOfWeekDayNumber(plainDate.dayNumber, weekStartsOn ?? getLocaleFirstDayOfWeek(adapter)),
-  );
+  plainDate: BaseTemporal.PlainDate,
+  weekStartsOn: WeekStartsOn,
+): BaseTemporal.PlainDate {
+  checkWeekStartsOn(weekStartsOn);
+  return plainDateFromDayNumber(getStartOfWeekDayNumber(getDayNumber(plainDate), weekStartsOn));
 }
 
 /**
- * Returns the start of the week for `date`, using `weekStartsOn` as the first
- * day of the week (0 = Sunday … 6 = Saturday).
+ * Returns the week number of `plainDate`, with weeks starting on `weekInfo.firstDay`
+ * (1 = Monday … 7 = Sunday).
  *
- * When `weekStartsOn` is `undefined` the first day of the week of the locale is used.
+ * The first week of a year is the first one with at least `weekInfo.minimalDays` days in that
+ * year. With weeks starting on Monday and 4 minimal days, the result is the ISO 8601 week number.
  */
-export function getStartOfWeek(
-  adapter: Adapter,
-  date: TemporalSupportedObject,
-  weekStartsOn: WeekStartsOn | undefined,
-): TemporalSupportedObject {
-  const weekStartPlainDate = getWeekStartPlainDate(adapter, date, weekStartsOn);
-  return createStartOfPlainDate(adapter, weekStartPlainDate, adapter.getTimezone(date));
-}
-
-/**
- * Returns the week number for `date`, using `weekStartsOn` as the first day of
- * the week (0 = Sunday … 6 = Saturday).
- *
- * Applies the ISO 8601 "4-day minimum" rule (the Thursday of each week
- * determines its year) with a parametric first day of the week. When
- * `weekStartsOn` is 1 the result is a standard ISO 8601 week number; for
- * other values it is the same algorithm with a shifted origin.
- */
-export function getWeekNumber(
-  adapter: Adapter,
-  date: TemporalSupportedObject,
-  weekStartsOn: WeekStartsOn | undefined,
-): number {
-  if (weekStartsOn === undefined) {
-    return adapter.getWeekNumber(date);
-  }
-  const weekStartPlainDate = getWeekStartPlainDate(adapter, date, weekStartsOn);
-  // The week belongs to the year of its 4th day, and the first week of a year holds January 4th.
-  const year = weekStartPlainDate.add({ days: 3 }).year;
+export function getWeekNumber(plainDate: BaseTemporal.PlainDate, weekInfo: WeekInfo): number {
+  const { firstDay: weekStartsOn, minimalDays } = weekInfo;
+  const weekStartPlainDate = getPlainDateWeekStart(plainDate, weekStartsOn);
+  // A week belongs to the year of its last `minimalDays` days, and the first week of a year holds
+  // its `minimalDays`-th day.
+  const year = weekStartPlainDate.add({ days: 7 - minimalDays }).year;
   const firstWeekStart = getStartOfWeekDayNumber(
-    PlainDate.from({ year, month: 1, day: 4 }).dayNumber,
+    isoDateToDayNumber(year, 1, minimalDays),
     weekStartsOn,
   );
-  return (weekStartPlainDate.dayNumber - firstWeekStart) / 7 + 1;
+  return (getDayNumber(weekStartPlainDate) - firstWeekStart) / 7 + 1;
 }

@@ -1,7 +1,7 @@
 import * as React from 'react';
+import type { GridDataSource } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
-  GridDataSource,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';

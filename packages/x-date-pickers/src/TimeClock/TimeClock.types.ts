@@ -40,5 +40,8 @@ export interface TimeClockProps<TView extends TimeViewWithMeridiem = TimeView>
    * @default {}
    */
   slotProps?: TimeClockSlotProps;
+  /**
+   * If `true`, displays arrow buttons to switch between the views.
+   */
   showViewSwitcher?: boolean;
 }

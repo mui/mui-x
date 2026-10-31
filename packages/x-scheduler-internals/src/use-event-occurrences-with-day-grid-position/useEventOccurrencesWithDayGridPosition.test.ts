@@ -2,19 +2,19 @@ import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { renderHook } from '@mui/internal-test-utils';
 import { describe, it, expect } from 'vitest';
 import { useEventOccurrencesWithDayGridPosition } from './useEventOccurrencesWithDayGridPosition';
-import { processDate } from '../process-date';
 import type { SchedulerProcessedEvent } from '../models';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { createEventRangeIndex } from '../internals/utils/event-range-index';
 import { getDayListFromPlainDates } from '../get-day-list';
-import { PlainDate } from '../internals/utils/base-temporal/PlainDate';
+import { BaseTemporal } from '../internals/utils/base-temporal';
 
 describe('useDayListEventOccurrencesWithPosition', () => {
-  const days = [
-    processDate(adapter.date('2024-01-15Z', 'default'), adapter),
-    processDate(adapter.date('2024-01-16Z', 'default'), adapter),
-    processDate(adapter.date('2024-01-17Z', 'default'), adapter),
-  ];
+  const days = getDayListFromPlainDates({
+    adapter,
+    firstPlainDate: BaseTemporal.PlainDate.from('2024-01-15'),
+    lastPlainDate: BaseTemporal.PlainDate.from('2024-01-17'),
+    timezone: 'default',
+  });
 
   function testHook(
     events: SchedulerProcessedEvent[],
@@ -187,8 +187,8 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     const timezone = 'America/Havana';
     const dayList = getDayListFromPlainDates({
       adapter,
-      firstPlainDate: PlainDate.from('2026-03-08'),
-      lastPlainDate: PlainDate.from('2026-03-09'),
+      firstPlainDate: BaseTemporal.PlainDate.from('2026-03-08'),
+      lastPlainDate: BaseTemporal.PlainDate.from('2026-03-09'),
       timezone,
     });
     const result = testHook(
@@ -215,8 +215,8 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
     const havanaDays = getDayListFromPlainDates({
       adapter,
-      firstPlainDate: PlainDate.from('2026-03-08'),
-      lastPlainDate: PlainDate.from('2026-03-10'),
+      firstPlainDate: BaseTemporal.PlainDate.from('2026-03-08'),
+      lastPlainDate: BaseTemporal.PlainDate.from('2026-03-10'),
       timezone: 'America/Havana',
     });
     const result = testHook(

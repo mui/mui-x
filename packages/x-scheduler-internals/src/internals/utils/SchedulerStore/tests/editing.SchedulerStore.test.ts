@@ -23,7 +23,7 @@ const DEFAULT_PARAMS = {
 
 const RRULE = { freq: 'DAILY' } as any;
 
-// Mirrors `datesNotWritableReason` in `SchedulerStore.ts` (not exported): `toWarnDev` matches by
+// Mirrors `datesNotWritableReason` in `SchedulerStore.utils.ts`: `toWarnDev` matches by
 // `includes`, so asserting only the first line of a warning never pins this text. Every fixture
 // in this file locks `start` only.
 const DATES_NOT_WRITABLE_REASON =
@@ -1001,9 +1001,7 @@ premiumStoreClasses.forEach((storeClass) => {
         ]);
 
         expect(store.state.errors).to.have.length(1);
-        expect(store.state.errors[0].error.message).to.equal(
-          "This can't be saved as a new event, so the change was not applied.",
-        );
+        expect(store.state.errors[0].code).to.equal('eventNotCreatableError');
       });
 
       it('should refuse a "this-and-following" split and leave the series untouched', () => {

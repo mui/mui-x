@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { useEventCalendarApiRef } from '@mui/x-scheduler/use-event-calendar-api-ref';
 import {

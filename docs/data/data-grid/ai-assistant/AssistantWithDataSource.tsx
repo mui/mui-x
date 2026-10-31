@@ -1,13 +1,15 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
+import type {
   GridDataSource,
   GridGetRowsResponse,
+  DataGridPremiumProps,
+} from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
   unstable_gridDefaultPromptResolver as promptResolver,
   GridAiAssistantPanel,
-  DataGridPremiumProps,
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 

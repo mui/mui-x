@@ -1,27 +1,17 @@
-import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type {
   RecurringEventPresetKey,
   RecurringEventWeekDayCode,
-  SchedulerProcessedDate,
   SchedulerProcessedEventRecurrenceRule,
   WeekStartsOn,
 } from '@mui/x-scheduler-internals/models';
-import {
-  buildTemporalPlainDate,
-  createAdapterDate,
-  getStartOfWeek,
-  toEpochMs,
-} from '@mui/x-scheduler-internals/internals';
-import type { PlainDate } from '@mui/x-scheduler-internals/internals';
+import { getPlainDateWeekStart } from '@mui/x-scheduler-internals/internals';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
-import { getPlainDateWeekDayCode, getWeekDayCode } from './internal-utils';
+import { getPlainDateWeekDayCode } from './internal-utils';
 
 export function computePresets(
-  adapter: Adapter,
-  date: SchedulerProcessedDate,
+  plainDate: BaseTemporal.PlainDate,
 ): Record<RecurringEventPresetKey, SchedulerProcessedEventRecurrenceRule> {
-  const plainDate = buildTemporalPlainDate(adapter, date.value);
   return {
     DAILY: { freq: 'DAILY', interval: 1 },
     WEEKLY: { freq: 'WEEKLY', interval: 1, byDay: [getPlainDateWeekDayCode(plainDate)] },
@@ -31,9 +21,8 @@ export function computePresets(
 }
 
 export function getDefaultPresetKey(
-  adapter: Adapter,
   rule: SchedulerProcessedEventRecurrenceRule | undefined,
-  occurrenceStart: SchedulerProcessedDate,
+  occurrenceStartPlainDate: BaseTemporal.PlainDate,
 ): RecurringEventPresetKey | 'custom' | null {
   if (!rule) {
     return null;
@@ -50,7 +39,7 @@ export function getDefaultPresetKey(
     }
     case 'WEEKLY': {
       // Preset "Weekly" => FREQ=WEEKLY;INTERVAL=1;BYDAY=<weekday-of-start>; no COUNT/UNTIL;
-      const occurrenceStartWeekDayCode = getWeekDayCode(adapter, occurrenceStart.value);
+      const occurrenceStartWeekDayCode = getPlainDateWeekDayCode(occurrenceStartPlainDate);
       const byDay = rule.byDay ?? [];
       const matchesDefaultByDay =
         byDay.length === 0 || (byDay.length === 1 && byDay[0] === occurrenceStartWeekDayCode);
@@ -63,7 +52,7 @@ export function getDefaultPresetKey(
     }
     case 'MONTHLY': {
       // Preset "Monthly" => FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=<start-day>; no COUNT/UNTIL;
-      const day = buildTemporalPlainDate(adapter, occurrenceStart.value).day;
+      const day = occurrenceStartPlainDate.day;
       const byMonthDay = rule.byMonthDay ?? [];
       const matchesDefaultByMonthDay =
         byMonthDay.length === 0 || (byMonthDay.length === 1 && byMonthDay[0] === day);
@@ -83,41 +72,33 @@ export function getDefaultPresetKey(
   }
 }
 
+/**
+ * Returns the 7 week days with their code and date, starting at the start of the week containing
+ * `visiblePlainDate`.
+ */
 export function getWeeklyDays(
-  adapter: Adapter,
-  visiblePlainDate: PlainDate,
-  weekStartsOn?: WeekStartsOn,
-): { code: RecurringEventWeekDayCode; date: PlainDate }[] {
-  // The adapter knows the first day of the week of the locale. It finds it on a date in UTC, which
-  // skips no day.
-  const weekStartPlainDate = buildTemporalPlainDate(
-    adapter,
-    getStartOfWeek(
-      adapter,
-      createAdapterDate(adapter, toEpochMs(visiblePlainDate, 0, 'UTC'), 'UTC'),
-      weekStartsOn,
-    ),
-  );
+  visiblePlainDate: BaseTemporal.PlainDate,
+  weekStartsOn: WeekStartsOn,
+): { code: RecurringEventWeekDayCode; date: BaseTemporal.PlainDate }[] {
+  const weekStartPlainDate = getPlainDateWeekStart(visiblePlainDate, weekStartsOn);
   return Array.from({ length: 7 }, (_, i) => {
     const plainDate = weekStartPlainDate.add({ days: i });
     return { code: getPlainDateWeekDayCode(plainDate), date: plainDate };
   });
 }
 
-export function getMonthlyReference(
-  adapter: Adapter,
-  date: SchedulerProcessedDate,
-): {
+/**
+ * Returns the monthly reference of a date: its day of the month, its weekday code and the ordinal
+ * of that weekday in the month.
+ */
+export function getMonthlyReference(plainDate: BaseTemporal.PlainDate): {
   dayOfMonth: number;
   code: RecurringEventWeekDayCode;
   ord: number;
-  date: TemporalSupportedObject;
 } {
-  const plainDate = buildTemporalPlainDate(adapter, date.value);
   return {
     dayOfMonth: plainDate.day,
     code: getPlainDateWeekDayCode(plainDate),
     ord: computeMonthlyOrdinal(plainDate),
-    date: date.value,
   };
 }

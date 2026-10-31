@@ -1,11 +1,8 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import {
-  TreeItem,
-  TreeItemProps,
-  TreeItemSlotProps,
-} from '@mui/x-tree-view/TreeItem';
+import type { TreeItemProps, TreeItemSlotProps } from '@mui/x-tree-view/TreeItem';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { MUI_X_PRODUCTS } from '../datasets/disabledAndEditableProducts';
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(

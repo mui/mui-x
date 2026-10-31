@@ -4,7 +4,6 @@ import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 
 const settings = {

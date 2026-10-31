@@ -12,6 +12,9 @@ import type {
 import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 import type { EventTimelinePremiumSlotsAndSlotProps } from '../models/slots';
 import type { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses';
+import type { EventTimelinePremiumFeatures } from './features/EventTimelinePremiumFeatures.types';
+
+export type { EventTimelinePremiumFeatures } from './features/EventTimelinePremiumFeatures.types';
 
 export type EventTimelinePremiumApiRef<
   TEvent extends object = any,
@@ -72,6 +75,13 @@ export interface EventTimelinePremiumProps<TEvent extends object, TResource exte
    * @returns {string} The accessible name of the event block.
    */
   getEventAriaLabel?: (parameters: EventTimelineGetEventAriaLabelParameters) => string;
+  /**
+   * The optional features of the Event Timeline: `recurringEvents` from `@mui/x-scheduler-premium/recurring-events`
+   * and `dependencies` from `@mui/x-scheduler-premium/dependencies`.
+   * They are read once when the component mounts, later changes are ignored.
+   * @example { recurringEvents: recurringEventsFeature, dependencies: dependenciesFeature }
+   */
+  features?: EventTimelinePremiumFeatures;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

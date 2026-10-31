@@ -9,7 +9,7 @@ import { MapShapePlot } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsTooltip } from '@mui/x-charts-premium/ChartsTooltip';
 import { ContinuousColorLegend } from '@mui/x-charts-premium/ChartsLegend';
-import { type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
+import type { ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
 import { internetUsageByCountry } from '../dataset/internetUsageByCountry';
 import { withCountryCodeAsName, countryData } from '../dataset/countryData';
 

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
 import {
   initialEvents,

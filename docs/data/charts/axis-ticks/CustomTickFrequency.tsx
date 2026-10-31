@@ -1,7 +1,12 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
-import { BarSeriesType, XAxis, YAxis, ZoomOptions } from '@mui/x-charts-pro/models';
+import type {
+  BarSeriesType,
+  XAxis,
+  YAxis,
+  ZoomOptions,
+} from '@mui/x-charts-pro/models';
 import { tickFrequencies } from '@mui/x-charts/utils';
 import alphabetStock from '../dataset/GOOGL.json';
 

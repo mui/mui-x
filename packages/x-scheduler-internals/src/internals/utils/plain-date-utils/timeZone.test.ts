@@ -1,15 +1,17 @@
 import { describe, it, expect } from 'vitest';
 import { setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
-import { PlainDate } from '../base-temporal/PlainDate';
+import { BaseTemporal } from '../base-temporal';
 import {
   addDaysOnWallClock,
   differenceInDays,
   getEndOfDayMs,
   getStartOfDayMs,
-  getTimezoneOffsetMs,
   toEpochMs,
-  toPlainDateTime,
+  toLocalMs,
+  toMsInDay,
+  toPlainDate,
+  toWallClockIsoString,
 } from './timeZone';
 
 const HOUR = 3_600_000;
@@ -18,51 +20,87 @@ function epochMsOf(date: string, time: string, timezone: string) {
   const [year, month, day] = date.split('-').map(Number);
   const [hours, minutes] = time.split(':').map(Number);
   return new Date(
-    toEpochMs(PlainDate.from({ year, month, day }), (hours * 60 + minutes) * 60_000, timezone),
+    toEpochMs(
+      BaseTemporal.PlainDate.from({ year, month, day }),
+      (hours * 60 + minutes) * 60_000,
+      timezone,
+    ),
   ).toISOString();
 }
 
 describe('timeZone', () => {
-  describe('getTimezoneOffsetMs', () => {
+  describe('toLocalMs', () => {
+    const getOffsetMs = (timezone: string, epochMs: number) =>
+      toLocalMs(epochMs, timezone) - epochMs;
+
     it('should read IANA offsets, with and without DST', () => {
-      expect(getTimezoneOffsetMs('America/New_York', Date.UTC(2025, 0, 15))).to.equal(-5 * HOUR);
-      expect(getTimezoneOffsetMs('America/New_York', Date.UTC(2025, 6, 15))).to.equal(-4 * HOUR);
-      expect(getTimezoneOffsetMs('Asia/Kolkata', Date.UTC(2025, 0, 15))).to.equal(5.5 * HOUR);
-      expect(getTimezoneOffsetMs('Europe/London', Date.UTC(2025, 0, 15))).to.equal(0);
-      expect(getTimezoneOffsetMs('UTC', Date.UTC(2025, 0, 15))).to.equal(0);
+      expect(getOffsetMs('America/New_York', Date.UTC(2025, 0, 15))).to.equal(-5 * HOUR);
+      expect(getOffsetMs('America/New_York', Date.UTC(2025, 6, 15))).to.equal(-4 * HOUR);
+      expect(getOffsetMs('Asia/Kolkata', Date.UTC(2025, 0, 15))).to.equal(5.5 * HOUR);
+      expect(getOffsetMs('Europe/London', Date.UTC(2025, 0, 15))).to.equal(0);
+      expect(getOffsetMs('UTC', Date.UTC(2025, 0, 15))).to.equal(0);
     });
 
     // Browsers cannot change their timezone through process.env.TZ.
     it.skipIf(!isJSDOM)('should read the system offset for the default timezone', () => {
       setSystemTimezone('Australia/Lord_Howe');
       // +11:00 in DST, +10:30 otherwise.
-      expect(getTimezoneOffsetMs('default', Date.UTC(2025, 0, 15))).to.equal(11 * HOUR);
-      expect(getTimezoneOffsetMs('system', Date.UTC(2025, 6, 15))).to.equal(10.5 * HOUR);
+      expect(getOffsetMs('default', Date.UTC(2025, 0, 15))).to.equal(11 * HOUR);
+      expect(getOffsetMs('system', Date.UTC(2025, 6, 15))).to.equal(10.5 * HOUR);
     });
   });
 
-  describe('toPlainDateTime', () => {
+  describe('toPlainDate and toMsInDay', () => {
     // Browsers cannot change their timezone through process.env.TZ.
     it.skipIf(!isJSDOM)(
       'should keep the seconds of a local mean time offset of the system timezone',
       () => {
         // Paris used +00:09:21 until 1911.
         setSystemTimezone('Europe/Paris');
-        const { date, msInDay } = toPlainDateTime(new Date(1890, 0, 1).getTime(), 'default');
-        expect(date.toString()).to.equal('1890-01-01');
-        expect(msInDay).to.equal(0);
+        const epochMs = new Date(1890, 0, 1).getTime();
+        expect(toPlainDate(epochMs, 'default').toString()).to.equal('1890-01-01');
+        expect(toMsInDay(epochMs, 'default')).to.equal(0);
 
         // Years 0 to 99 aren't remapped to the 1900s.
         const year99 = new Date(1890, 0, 1);
         year99.setFullYear(99);
-        expect(toPlainDateTime(year99.getTime(), 'system').date.toString()).to.equal('0099-01-01');
+        expect(toPlainDate(year99.getTime(), 'system').toString()).to.equal('0099-01-01');
       },
     );
 
     it('should read the date and wall-clock time in the timezone', () => {
-      const { date, msInDay } = toPlainDateTime(Date.UTC(2025, 2, 3, 0, 30), 'America/Los_Angeles');
-      expect(date.toString()).to.equal('2025-03-02');
-      expect(msInDay).to.equal((16 * 60 + 30) * 60_000);
+      const epochMs = Date.UTC(2025, 2, 3, 0, 30);
+      expect(toPlainDate(epochMs, 'America/Los_Angeles').toString()).to.equal('2025-03-02');
+      expect(toMsInDay(epochMs, 'America/Los_Angeles')).to.equal((16 * 60 + 30) * 60_000);
+    });
+
+    it('should read the date and wall-clock time of a day whose midnight a DST transition skips', () => {
+      // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
+      const epochMs = Date.UTC(2026, 2, 8, 5);
+      expect(toPlainDate(epochMs, 'America/Havana').toString()).to.equal('2026-03-08');
+      expect(toMsInDay(epochMs, 'America/Havana')).to.equal(HOUR);
+    });
+  });
+
+  describe('toWallClockIsoString', () => {
+    it('should write the wall-clock time to the second, in the offset of the instant', () => {
+      // 01:30:15.999Z is the second 02:30 of the night Paris falls back.
+      expect(toWallClockIsoString(Date.UTC(2026, 9, 25, 1, 30, 15, 999), 'Europe/Paris')).to.equal(
+        '2026-10-25T02:30:15',
+      );
+    });
+
+    it('should write each part of the time with two digits', () => {
+      expect(toWallClockIsoString(Date.UTC(2025, 0, 15, 9, 5, 3), 'UTC')).to.equal(
+        '2025-01-15T09:05:03',
+      );
+    });
+
+    it('should write the wall-clock time in a timezone with a half-hour offset', () => {
+      // Asia/Kolkata is at +05:30, which moves the instant to the next day.
+      expect(toWallClockIsoString(Date.UTC(2025, 0, 15, 18, 45, 10, 500), 'Asia/Kolkata')).to.equal(
+        '2025-01-16T00:15:10',
+      );
     });
   });
 
@@ -96,11 +134,12 @@ describe('timeZone', () => {
       );
     });
 
-    it('should round-trip with toPlainDateTime outside DST transitions', () => {
+    it('should round-trip with toPlainDate and toMsInDay outside DST transitions', () => {
       const epochMs = Date.UTC(2025, 4, 20, 17, 45, 12, 345);
       for (const timezone of ['default', 'UTC', 'Europe/Paris', 'Asia/Kathmandu', 'Pacific/Apia']) {
-        const { date, msInDay } = toPlainDateTime(epochMs, timezone);
-        expect(toEpochMs(date, msInDay, timezone)).to.equal(epochMs);
+        expect(
+          toEpochMs(toPlainDate(epochMs, timezone), toMsInDay(epochMs, timezone), timezone),
+        ).to.equal(epochMs);
       }
     });
   });

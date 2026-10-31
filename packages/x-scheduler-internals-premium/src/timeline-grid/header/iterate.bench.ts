@@ -1,36 +1,36 @@
 import { describe, test } from 'vitest';
-import { adapter } from 'test/utils/scheduler';
-import { getTimelineAxis } from '@mui/x-scheduler-internals/internals';
+import { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import { iterate } from './iterate';
+import type { IteratedRange } from './iterate';
 
 export const benchmarkResult = { value: undefined as unknown };
 
-describe.each(['default', 'America/New_York'] as const)('%s display timezone', (timezone) => {
-  const visibleDate = adapter.setTimezone(
-    adapter.date('2026-03-04T12:00:00Z', 'default'),
-    timezone,
-  );
-
+// The walk reads no timezone: the ranges are dates.
+describe('iterate', () => {
   // The header rows of the presets, with the ranges they display.
-  const dayStart = adapter.startOfDay(visibleDate);
-  const monthStart = adapter.startOfMonth(visibleDate);
-  const toAxis = (start: typeof dayStart, end: typeof dayStart) =>
-    getTimelineAxis(adapter, { start, end, dayStartMinute: 0, dayEndMinute: 1440 });
+  const visiblePlainDate = BaseTemporal.PlainDate.from('2026-03-04');
+  const monthStartPlainDate = visiblePlainDate.with({ day: 1 });
+  const toRange = (
+    startPlainDate: BaseTemporal.PlainDate,
+    endPlainDate: BaseTemporal.PlainDate,
+  ): IteratedRange => ({
+    startPlainDate,
+    endPlainDate,
+    dayStartMinute: 0,
+    dayEndMinute: 1440,
+  });
   const presets = {
     dayAndHour: () => {
-      const axis = toAxis(dayStart, adapter.endOfDay(adapter.addDays(dayStart, 3)));
-      return [iterate(adapter, 'day', 'hour', axis), iterate(adapter, 'hour', 'hour', axis)];
+      const range = toRange(visiblePlainDate, visiblePlainDate.add({ days: 4 }));
+      return [iterate('day', 'hour', range, 1), iterate('hour', 'hour', range, 1)];
     },
     dayAndMonth: () => {
-      const axis = toAxis(dayStart, adapter.endOfDay(adapter.addDays(dayStart, 8 * 7 - 1)));
-      return [iterate(adapter, 'month', 'day', axis), iterate(adapter, 'day', 'day', axis)];
+      const range = toRange(visiblePlainDate, visiblePlainDate.add({ days: 8 * 7 }));
+      return [iterate('month', 'day', range, 1), iterate('day', 'day', range, 1)];
     },
     monthAndYear: () => {
-      const axis = toAxis(
-        monthStart,
-        adapter.endOfMonth(adapter.addMonths(monthStart, 3 * 12 - 1)),
-      );
-      return [iterate(adapter, 'year', 'day', axis), iterate(adapter, 'month', 'day', axis)];
+      const range = toRange(monthStartPlainDate, monthStartPlainDate.add({ months: 3 * 12 }));
+      return [iterate('year', 'day', range, 1), iterate('month', 'day', range, 1)];
     },
   };
 

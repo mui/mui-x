@@ -1,5 +1,5 @@
 import removeObjectProperty from '../../../util/removeObjectProperty';
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 const componentsNames = ['DataGrid', 'DataGridPro', 'DataGridPremium'];
 const propName = 'experimentalFeatures';

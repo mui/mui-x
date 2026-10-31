@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen } from '@mui/internal-test-utils';
+import { act, screen } from '@mui/internal-test-utils';
 import {
   EventTimelinePremium,
   eventTimelinePremiumClasses as classes,
@@ -11,11 +11,12 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   ResourceBuilder,
 } from 'test/utils/scheduler';
+import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 import type {
   EventTimelinePremiumPreset,
   EventTimelinePremiumPresetConfig,
 } from '@mui/x-scheduler-internals-premium/models';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect, onTestFinished } from 'vitest';
 
 type PresetExpectations = {
   preset: EventTimelinePremiumPreset;
@@ -48,8 +49,9 @@ describe('<EventTimelinePremiumHeader />', () => {
   async function renderHeader(options: {
     preset: EventTimelinePremiumPreset;
     presets?: EventTimelinePremiumPreset[];
-    defaultPreferences?: { ampm: boolean };
+    defaultPreferences?: { ampm?: boolean; weekStartsOn?: WeekStartsOn };
     visibleDate?: typeof DEFAULT_TESTING_VISIBLE_DATE;
+    displayTimezone?: string;
     presetConfig?: EventTimelinePremiumPresetConfig;
   }) {
     // The grid is virtualized; sizing the host wide enough to fit the largest preset
@@ -65,6 +67,7 @@ describe('<EventTimelinePremiumHeader />', () => {
           presets={options.presets ?? [options.preset]}
           presetConfig={options.presetConfig}
           defaultPreferences={options.defaultPreferences}
+          displayTimezone={options.displayTimezone}
         />
       </div>,
     );
@@ -111,8 +114,8 @@ describe('<EventTimelinePremiumHeader />', () => {
     });
   });
 
-  describe('formatDate content', () => {
-    it('should render the formatDate result as the cell label', async () => {
+  describe('format content', () => {
+    it('should render the formatted date as the cell label', async () => {
       await renderHeader({ preset: 'monthAndYear' });
 
       // Visible range Jul 2025 → Jun 2028.
@@ -146,8 +149,8 @@ describe('<EventTimelinePremiumHeader />', () => {
   });
 
   describe('weekend marking', () => {
-    // DEFAULT_TESTING_VISIBLE_DATE is 2025-07-03 (Thursday); the test adapter has no
-    // locale configured, so date-fns starts weeks on Sunday → first cell is Sun Jun 29.
+    // DEFAULT_TESTING_VISIBLE_DATE is 2025-07-03 (Thursday); the weeks of the default date locale,
+    // English (United States), start on Sunday → first cell is Sun Jun 29.
     it('should mark weekend day cells with data-weekend in `dayAndWeek` (where the day row is the leaf)', async () => {
       await renderHeader({ preset: 'dayAndWeek' });
 
@@ -197,12 +200,127 @@ describe('<EventTimelinePremiumHeader />', () => {
       await renderHeader({
         preset: 'dayAndWeek',
         visibleDate: adapter.date('2011-12-28T00:00:00', 'Pacific/Apia'),
+        displayTimezone: 'Pacific/Apia',
       });
 
       const friday = Array.from(
         document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="day"]`),
       ).find((cell) => cell.querySelector('time')!.getAttribute('datetime') === '2011-12-30T00:00');
       expect(friday!.dataset.weekend).to.equal(undefined);
+    });
+  });
+
+  describe('current day', () => {
+    function getCurrentCells() {
+      return Array.from(
+        document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[aria-current]`),
+      );
+    }
+
+    function getDateTime(cell: HTMLElement) {
+      return cell.querySelector('time')!.getAttribute('datetime');
+    }
+
+    // Today (2025-07-03) is never the first day cell, so these cover the cells past index 0.
+    it.each([
+      { preset: 'dayAndMonth', visibleDate: '2025-06-01T00:00:00Z' },
+      { preset: 'dayAndHour', visibleDate: '2025-07-01T00:00:00Z' },
+      // The week row starts on Sunday, June 29th, and its first cell contains today too.
+      { preset: 'dayAndWeek', visibleDate: DEFAULT_TESTING_VISIBLE_DATE_STR },
+    ] as const)(
+      'should mark only the day cell of today with data-current and aria-current="date" in `$preset`',
+      async ({ preset, visibleDate }) => {
+        await renderHeader({ preset, visibleDate: adapter.date(visibleDate, 'default') });
+
+        const currentCells = getCurrentCells();
+        expect(currentCells.length).to.equal(1);
+        expect(currentCells[0]).to.have.attribute('aria-current', 'date');
+        expect(currentCells[0].dataset.current).to.equal('');
+        expect(currentCells[0].dataset.unit).to.equal('day');
+        expect(getDateTime(currentCells[0])).to.equal('2025-07-03T00:00');
+        expect(document.querySelectorAll(`.${classes.headerCell}[data-current]`).length).to.equal(
+          1,
+        );
+      },
+    );
+
+    it.each(['monthAndYear', 'year'] as const)(
+      'should not mark any cell in `%s`, which has no day row',
+      async (preset) => {
+        await renderHeader({ preset });
+
+        expect(getCurrentCells().length).to.equal(0);
+      },
+    );
+
+    it('should not mark any cell when today is not in view', async () => {
+      await renderHeader({
+        preset: 'dayAndMonth',
+        visibleDate: adapter.date('2030-01-01T00:00:00Z', 'default'),
+      });
+
+      expect(getCurrentCells().length).to.equal(0);
+    });
+
+    it.each([
+      // It's July 3rd at 22:00 in New York, but July 4th in UTC.
+      { displayTimezone: 'America/New_York', now: '2025-07-04T02:00:00Z', today: '2025-07-03' },
+      // It's July 4th at 05:00 in Tokyo, but July 3rd in UTC.
+      { displayTimezone: 'Asia/Tokyo', now: '2025-07-03T20:00:00Z', today: '2025-07-04' },
+    ])(
+      'should mark the current day of the display timezone $displayTimezone',
+      async ({ displayTimezone, now, today }) => {
+        vi.setSystemTime(new Date(now));
+        await renderHeader({
+          preset: 'dayAndWeek',
+          visibleDate: adapter.date(now, 'default'),
+          displayTimezone,
+        });
+
+        const currentCells = getCurrentCells();
+        expect(currentCells.length).to.equal(1);
+        expect(getDateTime(currentCells[0])).to.equal(`${today}T00:00`);
+      },
+    );
+
+    it('should move the mark to the next day at midnight', async () => {
+      vi.useFakeTimers({ now: new Date('2025-07-03T23:59:30Z') });
+      onTestFinished(() => {
+        vi.useRealTimers();
+      });
+      await renderHeader({ preset: 'dayAndMonth', displayTimezone: 'UTC' });
+
+      let currentCells = getCurrentCells();
+      expect(currentCells.length).to.equal(1);
+      expect(getDateTime(currentCells[0])).to.equal('2025-07-03T00:00');
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(60_000);
+      });
+
+      currentCells = getCurrentCells();
+      expect(currentCells.length).to.equal(1);
+      expect(getDateTime(currentCells[0])).to.equal('2025-07-04T00:00');
+    });
+  });
+
+  describe('`dayAndWeek` week row', () => {
+    it('should end the label of a week on its last date, even one its timezone skips', async () => {
+      // Pacific/Apia skipped Friday, December 30th, 2011, the last date of a week starting on
+      // Saturday.
+      await renderHeader({
+        preset: 'dayAndWeek',
+        visibleDate: adapter.date('2011-12-28T00:00:00', 'Pacific/Apia'),
+        displayTimezone: 'Pacific/Apia',
+        defaultPreferences: { weekStartsOn: 6 },
+      });
+
+      const weekCell = document.querySelector<HTMLElement>(
+        `.${classes.headerCell}[data-unit="week"][data-index="0"]`,
+      );
+      // The range of `Intl.DateTimeFormat` separates the dates with an en dash between spaces, thin
+      // ones in some runtimes.
+      expect(weekCell!.textContent).to.match(/^Sat, Dec 24\s–\sFri, Dec 30$/);
     });
   });
 

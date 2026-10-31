@@ -1,6 +1,9 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "data": {
+      "description": "The event created when this element is dropped into the Event Calendar."
+    },
     "onEventDrop": {
       "description": "Callback fired when the event is dropped into the Event Calendar."
     },

@@ -69,7 +69,7 @@ Weekday column headers carry a `role="columnheader"` with an `aria-label` contai
 
 ### Events
 
-Each event element has `role="button"` and an `aria-label` that announces its title, when it happens, its day, its resource, and whether it recurs, for example `"Running, 7:30 AM to 8:30 AM, Monday, May 26th, 2025, Resource: Sport, Recurring"`.
+Each event element has `role="button"` and an `aria-label` that announces its title, when it happens, its day, its resource, and whether it recurs, for example `"Running, 7:30 AM to 8:30 AM, Monday, May 26, 2025, Resource: Sport, Recurring"`.
 The parts come from [locale text](#localization-of-aria-labels) keys, composed by `eventAriaLabel`.
 On the Event Timeline, the announced resource is the one of the row the event is rendered in, and `getEventAriaLabel` can replace the name, for example to include details rendered through the `timelineEventContent` slot.
 
@@ -77,6 +77,9 @@ The previews rendered while creating, dragging or resizing an event, and the pla
 The resource color indicator inside an event is decorative (`aria-hidden="true"`).
 
 Recurring event icons are `aria-hidden="true"` as they are decorative.
+
+On the Event Timeline, dependency arrows are hidden from assistive technologies.
+Instead, each successor describes the dependencies it waits on, for example "Cannot start until Design finishes.", through `aria-describedby`.
 
 ### Agenda view
 
@@ -169,7 +172,7 @@ The dialog is labeled by its event title via `aria-labelledby`.
 
 When a month cell has more events than can be displayed, a **"X more"** button opens a popover listing all events for that day.
 
-- The popover header shows the full formatted date (for example, `"Monday, May 26"`).
+- The popover header shows the formatted date (for example, `"Mon, May 26"`).
 - Each event inside the popover has the same `aria-label` as in the grid (see [Events](#events)).
 - Event items have `role="button"` with `tabIndex="0"`, and can be activated with <kbd class="key">Enter</kbd>. On a mouse/trackpad, <kbd class="key">Space</kbd> opens the [event context menu](#event-context-menu) instead of activating the event directly.
 - Editing an event from the popover closes the popover with it. When focus would otherwise be lost, it returns to the **"X more"** button that opened it, or to the day cell if editing left the day with too few events for that button to be displayed. Focus that already moved outside the popover is preserved.
@@ -179,6 +182,7 @@ When a month cell has more events than can be displayed, a **"X more"** button o
 
 The view switcher button exposes `aria-haspopup="true"`, `aria-expanded`, and `aria-controls`.
 Inside the menu, each view uses `role="menuitemradio"` with `aria-checked`, so the current view is announced as checked.
+When the calendar is narrow, the side panel drawer lists the views with the same semantics.
 
 ## Preferences menu
 
@@ -249,6 +253,7 @@ The following keys are specifically relevant to accessibility:
   nextTimeSpan: (timeSpan) => `Next ${timeSpan}`,
   openSidePanel: 'Open side panel',
   closeSidePanel: 'Close side panel',
+  viewSwitcherAriaLabel: 'Views',
 }
 ```
 
@@ -259,6 +264,10 @@ See the [Event Calendar localization page](/x/react-scheduler/event-calendar/loc
 ### No arrow key navigation in the mini calendar
 
 The mini calendar in the side panel exposes `role="grid"` and a roving `tabIndex` on the active date, but arrow key navigation between day cells is not implemented. Clicking a date or using the previous/next month buttons are the only supported interaction methods.
+
+### No keyboard interactions for Event Timeline dependencies
+
+Dependencies can't be created, selected, or edited with the keyboard.
 
 ## API
 

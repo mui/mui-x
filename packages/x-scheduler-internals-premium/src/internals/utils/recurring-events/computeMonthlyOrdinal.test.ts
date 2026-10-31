@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { PlainDate } from '@mui/x-scheduler-internals/internals';
+import { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
 
 describe('recurring-events/computeMonthlyOrdinal', () => {
   const expectOrdinal = (dateString: string, expected: number) => {
-    expect(computeMonthlyOrdinal(PlainDate.from(dateString))).to.equal(expected);
+    expect(computeMonthlyOrdinal(BaseTemporal.PlainDate.from(dateString))).to.equal(expected);
   };
 
   it('returns 1 for the first time that weekday appears in the month', () => {

@@ -938,7 +938,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(store.state.errors).to.have.length(1);
-      expect(store.state.errors[0].error.message).to.contain('recurring');
+      expect(store.state.errors[0].code).to.equal('dependencyRecurringEventError');
     });
 
     it('should replace an identical rejection toast instead of stacking it', async () => {
@@ -951,7 +951,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       simulateTerminalDrag('Event A', getRecurringEventElement('Recurring event'));
 
       expect(store.state.errors).to.have.length(1);
-      expect(store.state.errors[0].error.message).to.contain('recurring');
+      expect(store.state.errors[0].code).to.equal('dependencyRecurringEventError');
     });
 
     it('should auto-dismiss a rejection toast', async () => {
@@ -1104,6 +1104,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
       expect(store.state.errors).to.have.length(1);
+      expect(store.state.errors[0].code).to.equal('dependencyDuplicateError');
       expect(
         document.querySelector('[data-dependency-id="dep-1"]')!.hasAttribute('data-selected'),
       ).to.equal(true);
@@ -1122,7 +1123,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(store.state.selection).to.equal(null);
       expect(store.state.errors).to.have.length(1);
-      expect(store.state.errors[0].error.message).to.include('cycle');
+      expect(store.state.errors[0].code).to.equal('dependencyCycleError');
     });
 
     it('should reject a reversed link of another type as a cycle', async () => {
@@ -1138,7 +1139,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(store.state.errors).to.have.length(1);
-      expect(store.state.errors[0].error.message).to.include('cycle');
+      expect(store.state.errors[0].code).to.equal('dependencyCycleError');
     });
   });
 
@@ -1776,9 +1777,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(store.state.errors).to.have.length(1);
-      expect(store.state.errors[0].error.message).to.equal(
-        'This dependency would move a read-only event, so it was not created.',
-      );
+      expect(store.state.errors[0].code).to.equal('dependencyCascadeBlockedError');
     });
 
     it('should reject addDependency when the component is read-only', async () => {
@@ -1873,6 +1872,37 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(getArrowPaths()).to.have.length(1);
+    });
+  });
+
+  describe('unwritable date', () => {
+    // Outside the test: the store compares `eventModelStructure` by reference.
+    const getterOnlyStart = { start: { getter: (event: any) => event.start } };
+
+    it('should reject the drop when the target would need a date that cannot be written back, and surface an error', async () => {
+      const handleDependenciesChange = vi.fn();
+      const overlappingEvent = EventBuilder.new()
+        .id('event-o')
+        .title('Overlapping event')
+        .singleDay('2025-07-03T09:30:00Z')
+        .resource(resource1)
+        .build();
+      const { store } = await renderTimeline({
+        events: [eventA, overlappingEvent],
+        dependencies: [],
+        eventModelStructure: getterOnlyStart,
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      expect(() => simulateTerminalDrag('Event A', getEventElement('Overlapping event'))).toWarnDev(
+        [
+          'MUI X Scheduler: A change was not applied because keeping a dependency would move an event whose date could not be written back.',
+        ],
+      );
+
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
+      expect(store.state.errors).to.have.length(1);
+      expect(store.state.errors[0].code).to.equal('dependencyDatesNotWritableError');
     });
   });
 

@@ -9,8 +9,8 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import { FieldRef } from '@mui/x-date-pickers/models';
-import { PickerRangeValue, PickerValue } from '@mui/x-date-pickers/internals';
+import type { FieldRef } from '@mui/x-date-pickers/models';
+import type { PickerRangeValue, PickerValue } from '@mui/x-date-pickers/internals';
 
 export default function ImperativeClear() {
   const fieldRef = React.useRef<FieldRef<PickerValue>>(null);

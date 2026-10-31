@@ -31,6 +31,9 @@ StandaloneEvent.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The event created when this element is dropped into the Event Calendar.
+   */
   data: PropTypes.shape({
     allDay: PropTypes.bool,
     className: PropTypes.string,

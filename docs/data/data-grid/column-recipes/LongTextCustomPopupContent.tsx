@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid, GridColDef, GridLongTextCell } from '@mui/x-data-grid';
+import type { GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridLongTextCell } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import Markdown from 'markdown-to-jsx';
 

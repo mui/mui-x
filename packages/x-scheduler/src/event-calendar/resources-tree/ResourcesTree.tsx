@@ -5,6 +5,7 @@ import { checkboxClasses } from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 import { useStore } from '@base-ui/utils/store';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { useId } from '@base-ui/utils/useId';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
@@ -112,7 +113,7 @@ export const ResourcesTree = React.forwardRef(function ResourcesTree(
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
   const apiRef = useRichTreeViewApiRef();
-  const headingId = React.useId();
+  const headingId = useId();
   const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
   const childrenLookup = useStore(
     store,

@@ -11,9 +11,11 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { vars } from '../constants/cssVariables';
 import { NotRendered } from '../utils/assert';
+import { getNextGridSortDirection } from '../hooks/features/sorting/gridSortingUtils';
 
 export type GridColumnSortButtonProps = GridSlotProps['baseIconButton'] & {
   field: string;
+  columnName: string;
   direction: GridSortDirection;
   index?: number;
   sortingOrder: readonly GridSortDirection[];
@@ -67,7 +69,8 @@ function getIcon(
 }
 
 function GridColumnSortButton(props: GridColumnSortButtonProps) {
-  const { field, direction, index, sortingOrder, disabled, className, ...other } = props;
+  const { field, columnName, direction, index, sortingOrder, disabled, className, ...other } =
+    props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
@@ -79,11 +82,16 @@ function GridColumnSortButton(props: GridColumnSortButtonProps) {
     return null;
   }
 
+  const nextDirection = getNextGridSortDirection(sortingOrder, direction);
+
   const iconButton = (
     <GridColumnSortButtonRoot
       as={rootProps.slots.baseIconButton}
       ownerState={ownerState}
-      aria-label={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
+      aria-label={apiRef.current.getLocaleText('columnHeaderSortIconAriaLabel')(
+        columnName,
+        nextDirection,
+      )}
       size="small"
       disabled={disabled}
       className={clsx(classes.root, className)}

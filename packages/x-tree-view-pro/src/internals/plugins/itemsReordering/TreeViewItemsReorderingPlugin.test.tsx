@@ -1,7 +1,9 @@
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { fireEvent, createEvent } from '@mui/internal-test-utils';
+import { act, fireEvent, createEvent, waitFor } from '@mui/internal-test-utils';
 import type { DragEventTypes } from 'test/utils/dragAndDrop';
 import { MockedDataTransfer } from 'test/utils/dragAndDrop';
+import { isJSDOM } from 'test/utils/skipIf';
+import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import {} from '@mui/x-tree-view/internals';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { chooseActionToApply } from './utils';
@@ -44,6 +46,11 @@ const buildTreeViewDragInteractions = (dataTransfer: DataTransfer) => {
   const dragEnd = createFireEvent('dragEnd');
 
   return {
+    dataTransfer,
+    dragStart,
+    dragEnter,
+    dragOver,
+    dragEnd,
     fullDragSequence: (
       draggedItem: HTMLElement,
       targetItem: HTMLElement,
@@ -262,6 +269,67 @@ describeTreeView<RichTreeViewProStore<any, any>>(
             { id: '2', children: [{ id: '1' }] },
             { id: '3' },
           ]);
+        });
+      });
+
+      describe.skipIf(isJSDOM)('virtualization', () => {
+        const ITEM_HEIGHT = 32;
+
+        async function dragItemOutOfRenderedItems() {
+          const onItemPositionChange = vi.fn();
+          const view = render({
+            items: Array.from({ length: 200 }, (_, index) => ({ id: `${index}` })),
+            itemsReordering: true,
+            disableVirtualization: false,
+            itemHeight: ITEM_HEIGHT,
+            style: { height: 10 * ITEM_HEIGHT },
+            onItemPositionChange,
+          });
+
+          const draggedItemRoot = view.getItemRoot('0');
+          dragEvents.dragStart(draggedItemRoot);
+
+          const scroller = draggedItemRoot.parentElement;
+          await act(async () => {
+            scroller?.scrollTo({ top: 100 * ITEM_HEIGHT });
+            scroller?.dispatchEvent(new Event('scroll'));
+          });
+          await waitFor(() => {
+            expect(view.getAllTreeItemIds()).to.include('100');
+          });
+          expect(draggedItemRoot.isConnected).to.equal(true);
+          expect(draggedItemRoot.getBoundingClientRect().height).to.equal(0);
+
+          dragEvents.dragEnter(view.getItemContent('100'));
+          dragEvents.dragOver(view.getItemContent('100'));
+
+          return { view, draggedItemRoot, onItemPositionChange };
+        }
+
+        it('should move the dragged item when it is scrolled out of the rendered items', async () => {
+          const { draggedItemRoot, onItemPositionChange } = await dragItemOutOfRenderedItems();
+          dragEvents.dragEnd(draggedItemRoot);
+
+          expect(onItemPositionChange.mock.calls.length).to.equal(1);
+          expect(onItemPositionChange.mock.calls[0][0]).to.deep.equal({
+            itemId: '0',
+            oldPosition: { parentId: null, index: 0 },
+            newPosition: { parentId: '100', index: 0 },
+          });
+        });
+
+        it('should reset the drag-and-drop state when the drag of an item scrolled out of the rendered items is cancelled', async () => {
+          const { view, draggedItemRoot, onItemPositionChange } =
+            await dragItemOutOfRenderedItems();
+          const getOverlay = () =>
+            view.getItemRoot('100').querySelector(`.${treeItemClasses.dragAndDropOverlay}`);
+          expect(getOverlay()).not.to.equal(null);
+
+          dragEvents.dataTransfer.dropEffect = 'none';
+          dragEvents.dragEnd(draggedItemRoot);
+
+          expect(onItemPositionChange.mock.calls.length).to.equal(0);
+          expect(getOverlay()).to.equal(null);
         });
       });
     });

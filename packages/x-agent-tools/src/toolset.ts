@@ -1,5 +1,6 @@
 import { createCodegenTool } from './codegen/build';
-import { createDocsTools, type DocsTools } from './docs/build';
+import { createDocsTools } from './docs/build';
+import type { DocsTools } from './docs/build';
 import type { GenerateReactCodeTool } from './codegen/tools';
 import type { AgentToolsConfig } from './config';
 import type { Logger } from './types';

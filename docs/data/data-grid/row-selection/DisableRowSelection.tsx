@@ -1,4 +1,5 @@
-import { DataGrid, GridRowParams } from '@mui/x-data-grid';
+import type { GridRowParams } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function DisableRowSelection() {

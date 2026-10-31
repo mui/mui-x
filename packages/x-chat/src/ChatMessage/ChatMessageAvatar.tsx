@@ -3,12 +3,14 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { MessageAvatar } from '@mui/x-chat-headless';
-import type { MessageAvatarProps } from '@mui/x-chat-headless';
+import type { MessageAvatarProps, MessageAvatarSlots } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses } from './chatMessageClasses';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageAvatar');
+
+export interface ChatMessageAvatarSlots extends MessageAvatarSlots {}
 
 export interface ChatMessageAvatarProps extends MessageAvatarProps {
   className?: string;
@@ -89,7 +91,15 @@ ChatMessageAvatar.propTypes /* remove-proptypes */ = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   className: PropTypes.string,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
 } as any;
 

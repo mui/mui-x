@@ -7,7 +7,7 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { DefaultizedLineSeriesType } from '@mui/x-charts/models';
+import type { DefaultizedLineSeriesType } from '@mui/x-charts/models';
 
 function ExtremaLabels() {
   const lineSeries = useLineSeries();

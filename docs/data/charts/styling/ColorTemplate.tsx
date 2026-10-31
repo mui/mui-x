@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { ScatterChart, ScatterChartProps } from '@mui/x-charts/ScatterChart';
-import { ScatterValueType } from '@mui/x-charts/models';
+import type { ScatterChartProps } from '@mui/x-charts/ScatterChart';
+import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import type { ScatterValueType } from '@mui/x-charts/models';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';

@@ -1,6 +1,6 @@
+import type { GridGroupingColDefOverrideParams } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
-  GridGroupingColDefOverrideParams,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';

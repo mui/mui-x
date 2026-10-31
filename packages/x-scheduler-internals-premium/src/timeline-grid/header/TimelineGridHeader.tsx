@@ -3,9 +3,12 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
-import { isWeekendPlainDate } from '@mui/x-scheduler-internals/internals';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { schedulerPreferenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { getDayNumber, isWeekendPlainDate } from '@mui/x-scheduler-internals/internals';
+import {
+  schedulerNowSelectors,
+  schedulerOtherSelectors,
+  schedulerPreferenceSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 import type { IteratedCell } from '../../models';
@@ -26,26 +29,41 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
     ...elementProps
   } = componentProps;
 
-  const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
-  const { axis, headers, timeResolution } = useStore(
-    store,
-    eventTimelinePremiumPresetSelectors.config,
-  );
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const { headers, timeResolution } = config;
   const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
+  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
   const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
+  const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
 
   // The header re-renders on every horizontal scroll (it subscribes to the
-  // virtualizer's render context): only recompute the cell walk when the range
+  // virtualizer's render context): only recompute the cell walk and the labels when the range
   // actually changes.
   const cellsPerLevel = React.useMemo(
-    () => headers.map((level) => iterate(adapter, level.unit, timeResolution, axis, weekStartsOn)),
-    [adapter, headers, timeResolution, axis, weekStartsOn],
+    () =>
+      config.headers.map((level) =>
+        iterate(level.unit, config.timeResolution, config, weekStartsOn),
+      ),
+    [config, weekStartsOn],
+  );
+  // Indexed like the cells of each level.
+  const labelsPerLevel = React.useMemo(
+    () =>
+      config.headers.map((level, levelIndex) =>
+        cellsPerLevel[levelIndex].map((cell) =>
+          level.renderCell
+            ? level.renderCell({ ...cell, locale, ampm, level: levelIndex, unit: level.unit })
+            : level.format(locale, cell.plainDate),
+        ),
+      ),
+    [locale, ampm, cellsPerLevel, config.headers],
   );
 
   const children = headers.map((level, levelIndex) => {
     const allCells = cellsPerLevel[levelIndex];
+    const isDayLevel = level.unit === 'day';
 
     let cells: ReturnType<typeof iterate>;
     let offsetInTicks = 0;
@@ -67,39 +85,30 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
         {offsetInTicks > 0 && (
           <div role="none" style={{ width: `calc(var(--unit-width) * ${offsetInTicks})` }} />
         )}
-        {cells.map((cell) => (
-          <div
-            key={cell.key}
-            className={[classNames?.cell, level.className].filter(Boolean).join(' ') || undefined}
-            data-level={levelIndex}
-            data-unit={level.unit}
-            data-index={cell.index}
-            data-unit-leaf={level.unit === timeResolution ? '' : undefined}
-            data-weekend={
-              level.unit === 'day' && isWeekendPlainDate(cell.plainDate) ? '' : undefined
-            }
-            style={{ '--span': cell.spanInTicks } as React.CSSProperties}
-          >
-            <time className={classNames?.label} dateTime={getCellDateTime(cell)}>
-              {level.renderCell
-                ? level.renderCell({
-                    adapter,
-                    ampm,
-                    date: cell.date,
-                    plainDate: cell.plainDate,
-                    start: cell.start,
-                    end: cell.end,
-                    index: cell.index,
-                    key: cell.key,
-                    level: levelIndex,
-                    spanInTicks: cell.spanInTicks,
-                    unit: level.unit,
-                    wallClockHour: cell.wallClockHour,
-                  })
-                : level.formatDate(adapter, cell.date)}
-            </time>
-          </div>
-        ))}
+        {cells.map((cell) => {
+          // Only day cells: coarser cells carry their aligned start date, which equals today
+          // without being it.
+          const isCurrentDay = isDayLevel && getDayNumber(cell.plainDate) === nowDayNumber;
+
+          return (
+            <div
+              key={cell.key}
+              className={[classNames?.cell, level.className].filter(Boolean).join(' ') || undefined}
+              data-level={levelIndex}
+              data-unit={level.unit}
+              data-index={cell.index}
+              data-unit-leaf={level.unit === timeResolution ? '' : undefined}
+              data-weekend={isDayLevel && isWeekendPlainDate(cell.plainDate) ? '' : undefined}
+              data-current={isCurrentDay ? '' : undefined}
+              aria-current={isCurrentDay ? 'date' : undefined}
+              style={{ '--span': cell.spanInTicks } as React.CSSProperties}
+            >
+              <time className={classNames?.label} dateTime={getCellDateTime(cell)}>
+                {labelsPerLevel[levelIndex][cell.index]}
+              </time>
+            </div>
+          );
+        })}
       </div>
     );
   });
@@ -136,9 +145,8 @@ export namespace TimelineGridHeader {
 }
 
 /**
- * Machine-readable local date-time of a cell, like `2026-03-08T00:00`. It's built from the
- * wall clock rather than from `date`, which moves the hour or the date skipped by a DST
- * transition to the next existing one. Only hour cells start after midnight.
+ * Machine-readable local date-time of a cell, like `2026-03-08T00:00`, on the wall clock of the
+ * axis. Only hour cells start after midnight.
  */
 function getCellDateTime(cell: IteratedCell) {
   return `${cell.plainDate.toString()}T${String(cell.wallClockHour ?? 0).padStart(2, '0')}:00`;
