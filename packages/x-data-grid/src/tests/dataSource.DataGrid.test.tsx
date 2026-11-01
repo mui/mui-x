@@ -2,7 +2,12 @@ import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
 import type { RefObject } from '@mui/x-internals/types';
-import { DataGrid, gridFilterModelSelector, useGridApiRef } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  gridFilterModelSelector,
+  gridFocusCellSelector,
+  useGridApiRef,
+} from '@mui/x-data-grid';
 import type {
   DataGridProps,
   GridApi,
@@ -365,6 +370,39 @@ describe('<DataGrid /> - Data source', () => {
     setProps({ sortModel: [{ field: 'id', sort: 'asc' }] });
     await waitFor(() => {
       expect(fetchRowsSpy.mock.calls.length).to.equal(2);
+    });
+  });
+
+  it('should keep cell focus on the same row index and field after server-side sort', async () => {
+    const { user } = render(
+      <TestDataSource
+        dataSetOptions={{ ...dataSetOptions, maxColumns: 3 }}
+        dataSourceCache={null}
+      />,
+    );
+    await waitFor(() => {
+      expect(apiRef.current?.getAllRowIds().length).to.equal(10);
+    });
+
+    const cell = getCell(2, 1);
+    const field = cell.dataset.field!;
+    const initialRowId = apiRef.current!.getAllRowIds()[2];
+    await user.click(cell);
+    expect(cell).toHaveFocus();
+
+    await act(async () => {
+      apiRef.current!.sortColumn(field, 'desc');
+    });
+    await waitFor(() => {
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
+      expect(apiRef.current!.getAllRowIds().length).to.equal(10);
+    });
+    const nextRowId = apiRef.current!.getAllRowIds()[2];
+    expect(nextRowId).not.to.equal(initialRowId);
+
+    await waitFor(() => {
+      expect(gridFocusCellSelector(apiRef)).to.deep.equal({ id: nextRowId, field });
+      expect(getCell(2, 1)).toHaveFocus();
     });
   });
 
