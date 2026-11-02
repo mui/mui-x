@@ -3,8 +3,9 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
-import { isWeekendPlainDate } from '@mui/x-scheduler-internals/internals';
+import { getDayNumber, isWeekendPlainDate } from '@mui/x-scheduler-internals/internals';
 import {
+  schedulerNowSelectors,
   schedulerOtherSelectors,
   schedulerPreferenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
@@ -35,6 +36,7 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
   const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
   const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
+  const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
 
   // The header re-renders on every horizontal scroll (it subscribes to the
   // virtualizer's render context): only recompute the cell walk and the labels when the range
@@ -61,6 +63,7 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
 
   const children = headers.map((level, levelIndex) => {
     const allCells = cellsPerLevel[levelIndex];
+    const isDayLevel = level.unit === 'day';
 
     let cells: ReturnType<typeof iterate>;
     let offsetInTicks = 0;
@@ -82,24 +85,30 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
         {offsetInTicks > 0 && (
           <div role="none" style={{ width: `calc(var(--unit-width) * ${offsetInTicks})` }} />
         )}
-        {cells.map((cell) => (
-          <div
-            key={cell.key}
-            className={[classNames?.cell, level.className].filter(Boolean).join(' ') || undefined}
-            data-level={levelIndex}
-            data-unit={level.unit}
-            data-index={cell.index}
-            data-unit-leaf={level.unit === timeResolution ? '' : undefined}
-            data-weekend={
-              level.unit === 'day' && isWeekendPlainDate(cell.plainDate) ? '' : undefined
-            }
-            style={{ '--span': cell.spanInTicks } as React.CSSProperties}
-          >
-            <time className={classNames?.label} dateTime={getCellDateTime(cell)}>
-              {labelsPerLevel[levelIndex][cell.index]}
-            </time>
-          </div>
-        ))}
+        {cells.map((cell) => {
+          // Only day cells: coarser cells carry their aligned start date, which equals today
+          // without being it.
+          const isCurrentDay = isDayLevel && getDayNumber(cell.plainDate) === nowDayNumber;
+
+          return (
+            <div
+              key={cell.key}
+              className={[classNames?.cell, level.className].filter(Boolean).join(' ') || undefined}
+              data-level={levelIndex}
+              data-unit={level.unit}
+              data-index={cell.index}
+              data-unit-leaf={level.unit === timeResolution ? '' : undefined}
+              data-weekend={isDayLevel && isWeekendPlainDate(cell.plainDate) ? '' : undefined}
+              data-current={isCurrentDay ? '' : undefined}
+              aria-current={isCurrentDay ? 'date' : undefined}
+              style={{ '--span': cell.spanInTicks } as React.CSSProperties}
+            >
+              <time className={classNames?.label} dateTime={getCellDateTime(cell)}>
+                {labelsPerLevel[levelIndex][cell.index]}
+              </time>
+            </div>
+          );
+        })}
       </div>
     );
   });
