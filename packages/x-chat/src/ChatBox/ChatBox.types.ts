@@ -114,17 +114,8 @@ interface ChatBoxConversationSlotProps {
   conversationHeaderActions?: WithDataAttributes<Partial<ChatConversationHeaderActionsProps>>;
 }
 
-/**
- * Message-list chrome. `messageList` swaps the scrollable root *element* of
- * `<ChatMessageList>` (wrapper-only — the default rows still render inside);
- * `messageGroup` swaps the per-author group wrapper.
- *
- * The subsets consumed by `ChatMessageGroup` and the `ChatMessageList` rows are
- * composed with `extends` rather than `Pick<ChatBoxSlots, 'a' | 'b'>`: a `Pick`
- * over a union of keys lists its members in TypeScript's internal union order,
- * which depends on which files the checker visited first, so `pnpm docs:api`
- * would emit the slots in a different order from run to run.
- */
+// The message slot subsets use `extends`, not a multi-key `Pick`. A `Pick` lists its keys
+// in TypeScript union order, which can change between `pnpm docs:api` runs.
 export interface ChatBoxMessageGroupSlots extends ChatBoxMessageSlots {
   /** The per-author group wrapper around consecutive messages. */
   messageGroup?: React.ElementType;
@@ -150,6 +141,11 @@ export interface ChatBoxMessageRowSlots extends ChatBoxMessageGroupSlots {
   unreadMarker?: React.ElementType | null;
 }
 
+/**
+ * Message-list chrome. `messageList` swaps the scrollable root *element* of
+ * `<ChatMessageList>` (wrapper-only — the default rows still render inside);
+ * `messageGroup` swaps the per-author group wrapper.
+ */
 interface ChatBoxMessageListSlots extends ChatBoxMessageRowSlots {
   /**
    * Styled scrollable root element of `<ChatMessageList>` (wrapper-only). The
