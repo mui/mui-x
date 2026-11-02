@@ -15,17 +15,19 @@ import { useDraggableDialog } from './useDraggableDialog';
 function TestDialog() {
   const { elementRef, resetDrag, draggableProps } = useDraggableDialog();
   return (
-    <Draggable.Root {...draggableProps} ref={elementRef} data-testid="dialog">
-      <Draggable.Handle data-testid="handle">
-        Move dialog
-        <input aria-label="Title" />
-        <button type="button">Close</button>
-      </Draggable.Handle>
-      <div data-testid="content">Dialog content</div>
-      <button type="button" onClick={resetDrag}>
-        Reset
-      </button>
-      <Draggable.Preview disabled />
+    <Draggable.Root {...draggableProps}>
+      <Draggable.Trigger ref={elementRef} data-testid="dialog">
+        <Draggable.Handle data-testid="handle">
+          Move dialog
+          <input aria-label="Title" />
+          <button type="button">Close</button>
+        </Draggable.Handle>
+        <div data-testid="content">Dialog content</div>
+        <button type="button" onClick={resetDrag}>
+          Reset
+        </button>
+        <Draggable.Preview disabled />
+      </Draggable.Trigger>
     </Draggable.Root>
   );
 }

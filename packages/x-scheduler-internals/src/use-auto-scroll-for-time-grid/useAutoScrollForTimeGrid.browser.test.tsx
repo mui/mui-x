@@ -28,32 +28,36 @@ function TimeGrid() {
   useAutoScrollForTimeGrid(ref);
   return (
     <React.Fragment>
-      <Draggable.Root
-        kind={schedulerTimeEventMoveKind}
-        payload={payload}
-        data-testid="event"
-        style={{ position: 'fixed', left: 300, top: 0, width: 100, height: 40 }}
-      >
-        Event
-        <Draggable.Preview disabled />
+      <Draggable.Root kind={schedulerTimeEventMoveKind} payload={payload}>
+        <Draggable.Trigger
+          data-testid="event"
+          style={{ position: 'fixed', left: 300, top: 0, width: 100, height: 40 }}
+        >
+          Event
+          <Draggable.Preview disabled />
+        </Draggable.Trigger>
       </Draggable.Root>
-      <Draggable.Root kind={schedulerDayEventMoveKind} payload={payload} data-testid="day-event">
-        Day event
-        <Draggable.Preview disabled />
+      <Draggable.Root kind={schedulerDayEventMoveKind} payload={payload}>
+        <Draggable.Trigger data-testid="day-event">
+          Day event
+          <Draggable.Preview disabled />
+        </Draggable.Trigger>
       </Draggable.Root>
-      <Draggable.Root
-        kind={schedulerTimeEventResizeKind}
-        payload={payload}
-        data-testid="time-resize"
-      >
-        <Draggable.Preview disabled />
+      <Draggable.Root kind={schedulerTimeEventResizeKind} payload={payload}>
+        <Draggable.Trigger data-testid="time-resize">
+          <Draggable.Preview disabled />
+        </Draggable.Trigger>
       </Draggable.Root>
-      <Draggable.Root kind={schedulerDayEventResizeKind} payload={payload} data-testid="day-resize">
-        <Draggable.Preview disabled />
+      <Draggable.Root kind={schedulerDayEventResizeKind} payload={payload}>
+        <Draggable.Trigger data-testid="day-resize">
+          <Draggable.Preview disabled />
+        </Draggable.Trigger>
       </Draggable.Root>
       <ExternalEventSource eventData={externalEventData} data-testid="external" />
-      <Draggable.Root kind={dialogKind} data-testid="dialog">
-        <Draggable.Preview disabled />
+      <Draggable.Root kind={dialogKind}>
+        <Draggable.Trigger data-testid="dialog">
+          <Draggable.Preview disabled />
+        </Draggable.Trigger>
       </Draggable.Root>
       <div
         ref={ref}

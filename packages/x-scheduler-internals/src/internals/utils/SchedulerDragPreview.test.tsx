@@ -26,9 +26,11 @@ function Source({
   disabled?: boolean;
 }) {
   return (
-    <Draggable.Root kind={schedulerDayEventMoveKind} payload={payload} data-testid="source">
-      Source
-      <SchedulerDragPreview disabled={disabled}>{renderPreview}</SchedulerDragPreview>
+    <Draggable.Root kind={schedulerDayEventMoveKind} payload={payload}>
+      <Draggable.Trigger data-testid="source">
+        Source
+        <SchedulerDragPreview disabled={disabled}>{renderPreview}</SchedulerDragPreview>
+      </Draggable.Trigger>
     </Draggable.Root>
   );
 }

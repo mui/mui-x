@@ -67,20 +67,20 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
   return (
     // An external event usually renders outside any Scheduler, so it brings its own provider.
     <Draggable.Provider>
-      <Draggable.Root
-        ref={forwardedRef}
-        kind={schedulerExternalEventKind}
-        payload={payload}
-        render={(dragProps, state) => (
-          <StandaloneEventElement
-            componentProps={props}
-            dragProps={dragProps}
-            // The engine keeps `[data-dragging]` on the source until its preview has
-            // settled after the drop, so the rendered attribute must not drop it sooner.
-            state={{ dragging: state.dragging || state.settling }}
-          />
-        )}
-      />
+      <Draggable.Root kind={schedulerExternalEventKind} payload={payload}>
+        <Draggable.Trigger
+          ref={forwardedRef}
+          render={(dragProps, state) => (
+            <StandaloneEventElement
+              componentProps={props}
+              dragProps={dragProps}
+              // The engine keeps `[data-dragging]` on the source until its preview has
+              // settled after the drop, so the rendered attribute must not drop it sooner.
+              state={{ dragging: state.dragging || state.settling }}
+            />
+          )}
+        />
+      </Draggable.Root>
     </Draggable.Provider>
   );
 });

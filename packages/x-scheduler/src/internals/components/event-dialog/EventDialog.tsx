@@ -74,13 +74,14 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
   useAnchoredPosition({ anchor, popupRef: nodeRef, onReposition: resetDrag });
 
   return (
-    <Draggable.Root
-      {...draggableProps}
-      render={withDragPreview(
-        <EventDialogPaper {...other} ref={nodeRef} className={className} />,
-        <Draggable.Preview disabled />,
-      )}
-    />
+    <Draggable.Root {...draggableProps}>
+      <Draggable.Trigger
+        render={withDragPreview(
+          <EventDialogPaper {...other} ref={nodeRef} className={className} />,
+          <Draggable.Preview disabled />,
+        )}
+      />
+    </Draggable.Root>
   );
 } as any as DialogProps['PaperComponent'];
 

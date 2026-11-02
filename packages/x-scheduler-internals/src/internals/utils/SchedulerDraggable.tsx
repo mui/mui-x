@@ -20,7 +20,20 @@ export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable<
     render,
     // Resize handles draw their own feedback, so they suppress Base UI's default clone of the source.
     preview = <Draggable.Preview disabled />,
-    ...other
+    kind,
+    disabled,
+    activation,
+    dragCursor,
+    modifiers,
+    previewKey,
+    collision,
+    collisionElement,
+    snap,
+    onMoveStart,
+    onMove,
+    onTargetChange,
+    // DOM props, including those a `Draggable.Target` merges in when it renders this part.
+    ...elementProps
   } = props;
 
   const store = useSchedulerStoreContext();
@@ -31,10 +44,19 @@ export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable<
 
   return (
     <Draggable.Root
-      {...other}
-      ref={forwardedRef}
+      kind={kind}
+      disabled={disabled}
+      activation={activation}
+      dragCursor={dragCursor}
+      modifiers={modifiers}
+      previewKey={previewKey}
+      collision={collision}
+      collisionElement={collisionElement}
+      snap={snap}
+      onMoveStart={onMoveStart}
+      onMove={onMove}
+      onTargetChange={onTargetChange}
       payload={payload}
-      render={withDragPreview(render, preview)}
       onBeforeMoveStart={(eventDetails) => {
         eventDetails.source.updateDragData(getDragData(eventDetails.input));
       }}
@@ -44,7 +66,13 @@ export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable<
           store.setOccurrencePlaceholder(null);
         }
       }}
-    />
+    >
+      <Draggable.Trigger
+        {...elementProps}
+        ref={forwardedRef}
+        render={withDragPreview(render, preview)}
+      />
+    </Draggable.Root>
   );
 }) as <TData extends SchedulerEventDragData>(
   props: SchedulerDraggable.Props<TData> & React.RefAttributes<HTMLDivElement>,
@@ -62,7 +90,7 @@ export namespace SchedulerDraggable {
      */
     getDragData: (input: { clientX: number; clientY: number }) => TData;
     /**
-     * The element to drag, already rendered with its own props. The root's props merge into it.
+     * The element to drag, already rendered with its own props. The trigger's props merge into it.
      */
     render: React.ReactElement;
     /**

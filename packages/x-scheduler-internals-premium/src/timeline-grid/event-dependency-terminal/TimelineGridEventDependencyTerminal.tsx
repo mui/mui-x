@@ -61,21 +61,22 @@ export const TimelineGridEventDependencyTerminal = React.forwardRef(
     });
 
     return (
-      <EventDependencyDropTarget
-        eventId={eventId}
-        occurrenceKey={occurrenceKey}
-        resourceId={resourceId}
-        side={side}
-        render={
-          <Draggable.Root
-            kind={store.dependencyDragKind}
-            payload={payload}
-            // The cursor the terminal shows at rest.
-            dragCursor="crosshair"
-            render={withDragPreview(element, <Draggable.Preview disabled />)}
-          />
-        }
-      />
+      <Draggable.Root
+        kind={store.dependencyDragKind}
+        payload={payload}
+        // The cursor the terminal shows at rest.
+        dragCursor="crosshair"
+      >
+        <EventDependencyDropTarget
+          eventId={eventId}
+          occurrenceKey={occurrenceKey}
+          resourceId={resourceId}
+          side={side}
+          render={
+            <Draggable.Trigger render={withDragPreview(element, <Draggable.Preview disabled />)} />
+          }
+        />
+      </Draggable.Root>
     );
   },
 );

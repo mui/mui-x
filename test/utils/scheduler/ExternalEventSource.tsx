@@ -24,9 +24,11 @@ export function ExternalEventSource(props: {
   const payload = React.useMemo(() => ({ eventData, onEventDrop }), [eventData, onEventDrop]);
   return (
     <Draggable.Provider>
-      <Draggable.Root kind={schedulerExternalEventKind} payload={payload} data-testid={testId}>
-        {children}
-        {preview}
+      <Draggable.Root kind={schedulerExternalEventKind} payload={payload}>
+        <Draggable.Trigger data-testid={testId}>
+          {children}
+          {preview}
+        </Draggable.Trigger>
       </Draggable.Root>
     </Draggable.Provider>
   );
