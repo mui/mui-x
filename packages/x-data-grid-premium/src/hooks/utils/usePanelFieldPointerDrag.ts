@@ -7,14 +7,14 @@ import {
   getElementAtPoint,
   hasReachedAutoScrollDistance,
   isElementInGrid,
+  isPointerDownOnHandleControl,
   useGridPointerDragRouting,
   usePointerDrag,
   vars,
 } from '@mui/x-data-grid-pro/internals';
 import type { DragPreview, PointerDragPosition } from '@mui/x-data-grid-pro/internals';
 import type { GridPrivateApiPremium } from '../../models/gridApiPremium';
-
-export type PanelFieldDropPosition = 'top' | 'bottom' | null;
+import type { DropPosition } from '../features/pivoting/gridPivotingInterfaces';
 
 export interface PanelFieldDragData<Section> {
   field: string;
@@ -36,7 +36,7 @@ export interface PanelFieldDropTarget<Section> {
   /**
    * Whether the pointer is over the top or the bottom half of `field`. `null` without a field.
    */
-  position: PanelFieldDropPosition;
+  position: DropPosition;
 }
 
 export interface UsePanelFieldPointerDragOptions<Section> {
@@ -91,12 +91,11 @@ interface DragSession<Section> {
   // Off until the pointer moves away from where the drag started
   canAutoScroll: boolean;
   preview: DragPreview;
+  // The element under the pointer at the last hit test
+  elementAtPoint: Element | null;
   target: PanelFieldDropTarget<Section> | null;
   frame: number | undefined;
 }
-
-// A slow tap on a control of the field, like its menu button or its aggregation chip, must stay a tap.
-const INTERACTIVE_CONTROL_SELECTOR = 'button, a, input, select, textarea, [role="button"]';
 
 /**
  * Styles of a field root that can be dragged with `usePanelFieldPointerDrag`.
@@ -140,6 +139,9 @@ export function usePanelFieldPointerDrag<Section>(
   options: UsePanelFieldPointerDragOptions<Section>,
 ): void {
   const { apiRef } = options;
+  // The charts panel sets `draggable` to `false` on a blocked field.
+  // `:is()` applies the attribute to each selector of a list.
+  const handleSelector = `:is(${options.fieldSelector})[draggable="true"]`;
   const optionsRef = React.useRef(options);
   const sessionRef = React.useRef<DragSession<Section> | null>(null);
 
@@ -173,6 +175,7 @@ export function usePanelFieldPointerDrag<Section>(
   };
 
   const updateTarget = (session: DragSession<Section>, elementAtPoint: Element | null) => {
+    session.elementAtPoint = elementAtPoint;
     const target = getDropTarget(session, elementAtPoint);
     if (isSameTarget(session.target, target)) {
       return;
@@ -205,28 +208,27 @@ export function usePanelFieldPointerDrag<Section>(
     return scrollArea.scrollTop !== scrollTop;
   };
 
-  // Like `dragover` in HTML drag and drop, the target is evaluated while the pointer holds still
+  // Auto-scrolls while the pointer holds still near an edge
   const onDragFrame = () => {
     const session = sessionRef.current;
     const root = apiRef.current.rootElementRef?.current;
     if (!session || !root) {
       return;
     }
-    let elementAtPoint = getElementAtPoint(root, session.clientX, session.clientY);
-    if (session.canAutoScroll && autoScroll(session, elementAtPoint)) {
-      // The fields moved under the pointer
-      elementAtPoint = getElementAtPoint(root, session.clientX, session.clientY);
+    if (session.canAutoScroll && autoScroll(session, session.elementAtPoint)) {
+      // The fields moved under the still pointer
+      updateTarget(session, getElementAtPoint(root, session.clientX, session.clientY));
     }
-    updateTarget(session, elementAtPoint);
     session.frame = requestAnimationFrame(onDragFrame);
   };
 
   const startDrag = (position: PointerDragPosition<DragData<Section>>) => {
     const root = apiRef.current.rootElementRef?.current;
-    if (!root) {
+    const { handle, ...data } = position.data;
+    // The field can get blocked, or re-rendered elsewhere, during the long press
+    if (!root || !handle.isConnected || !handle.matches(handleSelector)) {
       return false;
     }
-    const { handle, ...data } = position.data;
     const session: DragSession<Section> = {
       data,
       startClientX: position.clientX,
@@ -241,6 +243,7 @@ export function usePanelFieldPointerDrag<Section>(
         clientY: position.clientY,
         className: optionsRef.current.previewClassName,
       }),
+      elementAtPoint: null,
       target: null,
       frame: undefined,
     };
@@ -311,11 +314,10 @@ export function usePanelFieldPointerDrag<Section>(
   });
 
   useGridPointerDragRouting(apiRef, {
-    // The charts panel sets `draggable` to `false` on a blocked field
-    handleSelector: `${options.fieldSelector}[draggable="true"]`,
+    handleSelector,
     onPointerDown: (event, handle) => {
-      const control = (event.target as Element | null)?.closest?.(INTERACTIVE_CONTROL_SELECTOR);
-      if (control && handle.contains(control)) {
+      // A slow tap on a control of the field, like its menu button or its aggregation chip, must stay a tap
+      if (isPointerDownOnHandleControl(event, handle)) {
         return;
       }
       const field = handle.getAttribute('data-field');

@@ -13,6 +13,7 @@ export { useGridAriaAttributesPro } from '../hooks/utils/useGridAriaAttributes';
 export {
   useGridPointerDragRouting,
   isElementInGrid,
+  isPointerDownOnHandleControl,
 } from '../hooks/utils/useGridPointerDragRouting';
 export { useGridRowAriaAttributesPro } from '../hooks/features/rows/useGridRowAriaAttributes';
 

@@ -36,6 +36,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     sectionTitle: ['pivotPanelSectionTitle'],
     fieldList: ['pivotPanelFieldList'],
     placeholder: ['pivotPanelPlaceholder'],
+    fieldDragging: ['pivotPanelField--dragging'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -212,13 +213,34 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
     setDrag(INITIAL_DRAG_STATE);
   };
 
-  // Touch and pen drags, with the drop rules of the HTML drag and drop handlers below
+  // A drop on a field moves the dragged field next to it, a drop on a section moves it to the end
+  const dropField = (
+    field: string,
+    originSection: FieldTransferObject['modelKey'],
+    targetSection: FieldTransferObject['modelKey'],
+    targetField: string | null = null,
+    targetFieldPosition: DropPosition = null,
+  ) => {
+    if (targetField !== null) {
+      apiRef.current.updatePivotModel({
+        field,
+        targetField,
+        targetFieldPosition,
+        originSection,
+        targetSection,
+      });
+    } else if (targetSection !== originSection) {
+      apiRef.current.updatePivotModel({ field, targetSection, originSection });
+    }
+  };
+
+  // Touch and pen drags
   usePanelFieldPointerDrag<FieldTransferObject['modelKey']>({
     apiRef,
     zoneSelector: ZONE_SELECTOR,
     fieldSelector: FIELD_SELECTOR,
     scrollAreaSelector: SCROLL_AREA_SELECTOR,
-    previewClassName: gridClasses['pivotPanelField--dragging'],
+    previewClassName: classes.fieldDragging,
     onDragStart: (data) => handleDragStart(data.section),
     onDropTargetChange: (target) => {
       setDrag((v) => ({
@@ -229,23 +251,8 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
         targetPosition: target?.position ?? null,
       }));
     },
-    onDrop: (data, target) => {
-      if (target.field !== null) {
-        apiRef.current.updatePivotModel({
-          field: data.field,
-          targetField: target.field,
-          targetFieldPosition: target.position,
-          originSection: data.section,
-          targetSection: target.section,
-        });
-      } else if (target.section !== data.section) {
-        apiRef.current.updatePivotModel({
-          field: data.field,
-          targetSection: target.section,
-          originSection: data.section,
-        });
-      }
-    },
+    onDrop: (data, target) =>
+      dropField(data.field, data.section, target.section, target.field, target.position),
     onDragEnd: handleDragEnd,
   });
 
@@ -268,10 +275,7 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
     const targetSection = event.currentTarget.getAttribute(
       'data-section',
     ) as FieldTransferObject['modelKey'];
-    if (originSection === targetSection) {
-      return;
-    }
-    apiRef.current.updatePivotModel({ field, targetSection, originSection });
+    dropField(field, originSection, targetSection);
   };
 
   const handleDragOver = React.useCallback((event: React.DragEvent) => {

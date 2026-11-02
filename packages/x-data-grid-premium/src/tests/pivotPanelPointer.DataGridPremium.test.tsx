@@ -283,6 +283,16 @@ describe('<DataGridPremium /> - Pivot panel with pointer events', () => {
       expect(getPreview()).to.equal(null);
     });
 
+    it('should apply the `pivotPanelField--dragging` class override to the drag preview', async () => {
+      render(<Test classes={{ 'pivotPanelField--dragging': 'custom-dragging' }} />);
+
+      const handle = await startTouchDrag('year');
+      expect(getPreview()!.classList.contains('custom-dragging')).to.equal(true);
+
+      const target = getPoint(getPlaceholder('columns'));
+      fireEvent.pointerUp(handle, pointer('touch', target.x, target.y));
+    });
+
     it('should not start a drag on a tap', async () => {
       const onPivotModelChange = vi.fn();
       render(<Test onPivotModelChange={onPivotModelChange} />);

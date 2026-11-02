@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { RefObject, GridChartsConfigurationOptions } from '@mui/x-internals/types';
-import { act, createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
+import { act, createRenderer, fireEvent, reactMajor, screen } from '@mui/internal-test-utils';
 import { sleep } from 'test/utils/helperFn';
 import {
   DataGridPremium,
@@ -111,7 +111,9 @@ const configurationOptions: GridChartsConfigurationOptions = {
 };
 
 describe('<DataGridPremium /> - Charts panel with pointer events', () => {
-  const { render } = createRenderer();
+  // With React 18, the StrictMode effects of `GridChartsRendererProxy` reset the chart it registers:
+  // its type, dimensions and values from the initial state are lost.
+  const { render } = createRenderer({ strictEffects: reactMajor >= 19 });
 
   let apiRef: RefObject<GridApiPremium | null>;
 
@@ -222,6 +224,22 @@ describe('<DataGridPremium /> - Charts panel with pointer events', () => {
       fireEvent.pointerUp(handle, pointer('touch', target.x, target.y));
       await waitForFrames();
       expect(getPanel().getAttribute('data-dragging')).to.equal('false');
+    });
+
+    it('should keep the dragged field enabled when its section is full', async () => {
+      // One dimension at most: the dimensions section is full, and blocked for every field
+      await renderWithFieldsTab({ chartType: 'limited' });
+
+      const handle = await startTouchDrag('category1');
+      expect(getPanel().getAttribute('data-dragging')).to.equal('true');
+      // A disabled field would also open its "blocked" tooltip under the finger
+      expect(handle.getAttribute('draggable')).to.equal('true');
+
+      const target = getPoint(getField('category2'));
+      fireEvent.pointerMove(handle, pointer('touch', target.x, target.y));
+      fireEvent.pointerUp(handle, pointer('touch', target.x, target.y));
+      await waitForFrames();
+      expect(getDimensions()).to.deep.equal([]);
     });
 
     it('should not start a drag from a field blocked from every section', async () => {
