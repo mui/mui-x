@@ -32,6 +32,7 @@ Moving the focus from the first row up to a column header turns a row highlight 
 Click a cell or a column header, or press <kbd class="key">Tab</kbd> until the Data Grid has focus.
 Press <kbd class="key">Esc</kbd> to highlight the focused row or column, then use <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow</kbd></kbd> keys to move it.
 Screen reader announcements are mirrored above the Data Grid.
+The checkboxes above each demo turn row selection, the checkbox column and cell selection on and off, to test how the highlight coexists with them.
 
 {{"demo": "KeyboardReordering.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -49,6 +50,68 @@ Instead of <kbd class="key">Esc</kbd>, the arrow key that points out of the Data
 Extending with <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow</kbd></kbd> and moving with <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow</kbd></kbd> are unchanged.
 
 {{"demo": "KeyboardReorderingEdgeArrows.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Alternative: direct moves from any cell, no highlight
+
+The demo below has no persistent highlight at all, which avoids any conflict with row and cell selection.
+<kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow</kbd></kbd> works from any cell: <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Left/Right</kbd></kbd> moves the column of the focused cell, <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Up/Down</kbd></kbd> moves its row.
+If the focused row is part of a contiguous block of selected rows, the whole block moves: row selection is the multi-row mechanism here.
+What just moved is marked for a moment, with a lighter edge than a highlight, then the mark fades.
+
+<kbd class="key">Esc</kbd>, <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow</kbd></kbd> and <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> keep their default behavior.
+Moving several columns at once isn't possible in this variant, since the Data Grid has no column selection.
+
+{{"demo": "KeyboardReorderingDirect.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Alternative: selection is the highlight
+
+The two demos below drop the highlight concept for any Data Grid that allows selection.
+Selection is the row and column level object:
+
+- **Rows.** Selected rows move together with <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Up/Down</kbd></kbd> when the focused row is part of a contiguous block of selected rows.
+  Rows are selected as usual: <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd>, <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow Up/Down</kbd></kbd>, the checkbox column, clicks.
+- **Columns.** A selected column is a range of selected cells that covers the whole column.
+  With cell selection on, <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Space</kbd></kbd> selects the focused column, <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow Left/Right</kbd></kbd> grows the selection by whole columns, and <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Left/Right</kbd></kbd> moves the selected columns.
+  Without cell selection, columns can only be moved one at a time.
+- **Rows without row selection.** With cell selection on and row selection off, <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> selects the focused row as a range of cells, and <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow Up/Down</kbd></kbd> grows it by whole rows.
+- **No selection at all.** When both row selection and cell selection are off, the highlight of the first demo comes back (<kbd class="key">Esc</kbd> toggles it), drawn as an outline instead of a fill so it can't be mistaken for a selection.
+
+The two demos differ in what moves when nothing is selected:
+
+- **Any cell moves.** <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow</kbd></kbd> on any cell moves that cell's row or column. What moved is marked for a moment.
+- **Only explicit targets move.** <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow</kbd></kbd> only moves selected rows, selected columns, the row of a focused drag handle, or the column of a focused header. From an ordinary cell it announces what to do instead.
+
+Turn the selection checkboxes on and off to compare the configurations.
+
+### Any cell moves
+
+{{"demo": "KeyboardReorderingSelectionAnyCell.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Only explicit targets move
+
+{{"demo": "KeyboardReorderingSelectionExplicit.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Behavior by configuration
+
+|                                                                            Keys | No selection                                               | Row selection                                                         | Cell selection                                                              | Row and cell selection                  |
+| ------------------------------------------------------------------------------: | :--------------------------------------------------------- | :-------------------------------------------------------------------- | :-------------------------------------------------------------------------- | :-------------------------------------- |
+|                                                      <kbd class="key">Esc</kbd> | Toggles the outline highlight of the focused row or column | Nothing                                                               | Nothing                                                                     | Nothing                                 |
+|            <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> | Nothing                                                    | Toggles the row selection                                             | Selects the focused row as a range of cells                                 | Toggles the row selection               |
+|             <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Space</kbd></kbd> | Nothing                                                    | Nothing                                                               | Selects the focused column as a range of cells                              | Selects the focused column              |
+|    <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow Up/Down</kbd></kbd> | Extends the row highlight                                  | Extends the row selection                                             | Extends a full-row range by rows, otherwise the cell range                  | Extends the row selection               |
+| <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow Left/Right</kbd></kbd> | Extends the column highlight (headers)                     | Nothing                                                               | Extends a full-column range by columns, otherwise the cell range            | Same as cell selection                  |
+|      <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Up/Down</kbd></kbd> | The highlighted rows, else see the next table              | The selected block that contains the focused row, else the next table | The full-row range that contains the focused row, else the next table       | The selected block, else the next table |
+|   <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Left/Right</kbd></kbd> | The highlighted columns, else the next table               | See the next table                                                    | The full-column range that contains the focused column, else the next table | Same as cell selection                  |
+
+### What moves when nothing is selected or highlighted
+
+|                                                                                        Focus on | Any cell moves                  | Only explicit targets move                                               |
+| ----------------------------------------------------------------------------------------------: | :------------------------------ | :----------------------------------------------------------------------- |
+|                                                                                 A column header | Its column                      | Its column                                                               |
+|                                                                             The row drag handle | Its row                         | Its row                                                                  |
+|    An ordinary cell, <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Up/Down</kbd></kbd> | Its row, marked for a moment    | Nothing; announces "Select the row to move it, or focus its drag handle" |
+| An ordinary cell, <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Left/Right</kbd></kbd> | Its column, marked for a moment | Nothing; announces "Select the column to move it, or focus its header"   |
+|                                                              A cell in a selected row or column | The selected block              | The selected block                                                       |
 
 ## Keyboard interaction
 
@@ -103,6 +166,8 @@ Everything the [accessibility page](/x/react-data-grid/accessibility/#keyboard-n
 
 ## Limitations of the prototype
 
+- The demos use the Data Grid Premium so that cell selection can be turned on; reordering itself is a Pro feature.
+- <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Space</kbd></kbd> switches the input source on macOS when several keyboard layouts are installed. <kbd class="key">⌘ Command</kbd>+<kbd class="key">Space</kbd> is Spotlight. The key is the APG grid convention for column selection, but it needs a macOS alternative.
 - Column groups, pinned columns, pinned rows, tree data and row grouping aren't handled yet. The real implementation reuses the same rules as drag-and-drop reordering for all of them.
 - Right-to-left layouts aren't handled: <kbd class="key">Arrow Left</kbd> always moves toward lower column indexes.
 - A block move is performed as a sequence of single moves, so `onRowOrderChange` and `onColumnOrderChange` are called once per row or column of the block.
