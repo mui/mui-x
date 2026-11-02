@@ -1,7 +1,8 @@
 import * as React from 'react';
+import * as ReactDOMClient from 'react-dom/client';
 import * as ReactDOMServer from 'react-dom/server';
 import { describe, it, expect } from 'vitest';
-import { act, reactMajor } from '@mui/internal-test-utils';
+import { act } from '@mui/internal-test-utils';
 import { DataGridPro, useGridApiContext } from '@mui/x-data-grid-pro';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -21,77 +22,71 @@ describe('<DataGridPro /> - SSR', () => {
   // calls targeted fibers that React never mounted.
   // The suspended footer below mimics that timing: it suspends before mount and
   // then publishes `rowDragStart` while React still considers the tree unmounted.
-  // `react-dom/client` only exists in React 18+, so it is imported dynamically
-  // inside the test to avoid breaking module resolution on the React 17 lane.
-  it.skipIf(isJSDOM || reactMajor < 18)(
-    'should not update scroll area state before it has mounted',
-    async () => {
-      const ReactDOMClient = await import('react-dom/client');
-      let shouldSuspend = false;
-      let didSuspend = false;
-      let promise: Promise<void> | null = null;
+  it.skipIf(isJSDOM)('should not update scroll area state before it has mounted', async () => {
+    let shouldSuspend = false;
+    let didSuspend = false;
+    let promise: Promise<void> | null = null;
 
-      function SuspendedFooter() {
-        const apiRef = useGridApiContext();
+    function SuspendedFooter() {
+      const apiRef = useGridApiContext();
 
-        if (shouldSuspend && !didSuspend) {
-          promise ??= Promise.resolve().then(() => {
-            didSuspend = true;
-            apiRef.current.publishEvent(
-              'rowDragStart',
-              { id: ROWS[0].id } as any,
-              { dataTransfer: {} } as any,
-            );
-          });
+      if (shouldSuspend && !didSuspend) {
+        promise ??= Promise.resolve().then(() => {
+          didSuspend = true;
+          apiRef.current.publishEvent(
+            'rowDragStart',
+            { id: ROWS[0].id } as any,
+            { dataTransfer: {} } as any,
+          );
+        });
 
-          throw promise;
-        }
-
-        return null;
+        throw promise;
       }
 
-      const tree = (
-        <React.StrictMode>
-          <React.Suspense fallback={null}>
-            <div style={{ height: 300, width: 400 }}>
-              <DataGridPro rows={ROWS} columns={COLUMNS} slots={{ footer: SuspendedFooter }} />
-            </div>
-          </React.Suspense>
-        </React.StrictMode>
-      );
+      return null;
+    }
 
-      const container = document.createElement('div');
-      document.body.appendChild(container);
-      container.innerHTML = ReactDOMServer.renderToString(tree);
-      shouldSuspend = true;
+    const tree = (
+      <React.StrictMode>
+        <React.Suspense fallback={null}>
+          <div style={{ height: 300, width: 400 }}>
+            <DataGridPro rows={ROWS} columns={COLUMNS} slots={{ footer: SuspendedFooter }} />
+          </div>
+        </React.Suspense>
+      </React.StrictMode>
+    );
 
-      const errors: string[] = [];
-      const originalConsoleError = console.error;
-      const interceptor = (...args: any[]) => {
-        errors.push(args.map(String).join(' '));
-      };
-      // Direct assignment shadows the property; the test runner's
-      // vitest-fail-on-console wrapper assigned in beforeEach is bypassed.
-      console.error = interceptor;
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    container.innerHTML = ReactDOMServer.renderToString(tree);
+    shouldSuspend = true;
 
-      let root: ReturnType<typeof ReactDOMClient.hydrateRoot> | undefined;
-      try {
-        await act(async () => {
-          root = ReactDOMClient.hydrateRoot(container, tree);
-        });
-        await act(async () => {
-          root?.unmount();
-        });
-      } finally {
-        console.error = originalConsoleError;
-        document.body.removeChild(container);
-      }
+    const errors: string[] = [];
+    const originalConsoleError = console.error;
+    const interceptor = (...args: any[]) => {
+      errors.push(args.map(String).join(' '));
+    };
+    // Direct assignment shadows the property; the test runner's
+    // vitest-fail-on-console wrapper assigned in beforeEach is bypassed.
+    console.error = interceptor;
 
-      const hasStateUpdateWarning = errors.some((error) =>
-        /Can't perform a React state update on a component that hasn't mounted yet/.test(error),
-      );
+    let root: ReturnType<typeof ReactDOMClient.hydrateRoot> | undefined;
+    try {
+      await act(async () => {
+        root = ReactDOMClient.hydrateRoot(container, tree);
+      });
+      await act(async () => {
+        root?.unmount();
+      });
+    } finally {
+      console.error = originalConsoleError;
+      document.body.removeChild(container);
+    }
 
-      expect(hasStateUpdateWarning).to.equal(false);
-    },
-  );
+    const hasStateUpdateWarning = errors.some((error) =>
+      /Can't perform a React state update on a component that hasn't mounted yet/.test(error),
+    );
+
+    expect(hasStateUpdateWarning).to.equal(false);
+  });
 });

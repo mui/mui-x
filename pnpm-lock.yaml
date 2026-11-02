@@ -270,9 +270,6 @@ catalogs:
     '@types/semver':
       specifier: ^7.8.0
       version: 7.8.0
-    '@types/use-sync-external-store':
-      specifier: ^1.7.0
-      version: 1.7.0
     '@typescript-eslint/parser':
       specifier: ^8.72.0
       version: 8.72.0
@@ -372,9 +369,6 @@ catalogs:
     tsx:
       specifier: ^4.23.15
       version: 4.23.15
-    use-sync-external-store:
-      specifier: ^1.7.0
-      version: 1.7.0
     vite:
       specifier: ^8.3.5
       version: 8.3.5
@@ -1011,9 +1005,6 @@ importers:
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
-      use-sync-external-store:
-        specifier: 'catalog:'
-        version: 1.7.0(react@19.3.1)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
@@ -1027,9 +1018,6 @@ importers:
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
-      '@types/use-sync-external-store':
-        specifier: 'catalog:'
-        version: 1.7.0
       csstype:
         specifier: 'catalog:'
         version: 3.2.3
@@ -1353,16 +1341,10 @@ importers:
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
-      use-sync-external-store:
-        specifier: 'catalog:'
-        version: 1.7.0(react@19.3.1)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
         version: 2.1.1-canary.5(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@playwright/test@1.64.1)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(@vitest/utils@5.0.5)(chai@6.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vite@8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.0.5)
-      '@types/use-sync-external-store':
-        specifier: 'catalog:'
-        version: 1.7.0
       react:
         specifier: 'catalog:'
         version: 19.3.1
@@ -1432,9 +1414,6 @@ importers:
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
-      use-sync-external-store:
-        specifier: 'catalog:'
-        version: 1.7.0(react@19.3.1)
     devDependencies:
       '@mui/icons-material':
         specifier: 'catalog:'
@@ -1454,9 +1433,6 @@ importers:
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
-      '@types/use-sync-external-store':
-        specifier: 'catalog:'
-        version: 1.7.0
       react:
         specifier: 'catalog:'
         version: 19.3.1
@@ -1835,10 +1811,10 @@ importers:
         specifier: 'catalog:'
         version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       react:
-        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
+        specifier: ^18.0.0 || ^19.0.0
         version: 19.3.1
       react-dom:
-        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
+        specifier: ^18.0.0 || ^19.0.0
         version: 19.3.1(react@19.3.1)
     publishDirectory: build
 
@@ -1948,9 +1924,6 @@ importers:
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
-      '@types/use-sync-external-store':
-        specifier: 'catalog:'
-        version: 1.7.0
       react:
         specifier: 'catalog:'
         version: 19.3.1
@@ -1994,9 +1967,6 @@ importers:
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
-      use-sync-external-store:
-        specifier: 'catalog:'
-        version: 1.7.0(react@19.3.1)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
@@ -2004,9 +1974,6 @@ importers:
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
-      '@types/use-sync-external-store':
-        specifier: 'catalog:'
-        version: 1.7.0
       react:
         specifier: 'catalog:'
         version: 19.3.1
@@ -2051,9 +2018,6 @@ importers:
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
-      '@types/use-sync-external-store':
-        specifier: 'catalog:'
-        version: 1.7.0
       date-fns:
         specifier: 'catalog:'
         version: 4.4.0
@@ -2128,9 +2092,6 @@ importers:
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
-      '@types/use-sync-external-store':
-        specifier: 'catalog:'
-        version: 1.7.0
       date-fns:
         specifier: 'catalog:'
         version: 4.4.0
@@ -5843,9 +5804,6 @@ packages:
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
-
-  '@types/use-sync-external-store@1.7.0':
-    resolution: {integrity: sha512-v8435kzWm3FuxyUa4r8o4sG6b0D+r+uOrzF5MXHxZKW4Haoo6txu/lq56Vio45e2i1nkmFPA+R7myWcmV7Z7Bg==}
 
   '@types/webpack-bundle-analyzer@4.7.0':
     resolution: {integrity: sha512-c5i2ThslSNSG8W891BRvOd/RoCjI2zwph8maD22b1adtSns20j+0azDDMCK06DiVrzTgnwiDl5Ntmu1YRJw8Sg==}
@@ -14919,8 +14877,6 @@ snapshots:
   '@types/unist@2.0.11': {}
 
   '@types/unist@3.0.3': {}
-
-  '@types/use-sync-external-store@1.7.0': {}
 
   '@types/webpack-bundle-analyzer@4.7.0(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.31)(sharp@0.35.5(@types/node@22.20.5))(uglify-js@3.19.3)':
     dependencies:
