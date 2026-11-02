@@ -6,7 +6,6 @@ import type {
   SchedulerEventSide,
   SchedulerResourceId,
 } from '@mui/x-scheduler-internals/models';
-import { withDragPreview } from '@mui/x-scheduler-internals/internals';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -72,10 +71,9 @@ export const TimelineGridEventDependencyTerminal = React.forwardRef(
           occurrenceKey={occurrenceKey}
           resourceId={resourceId}
           side={side}
-          render={
-            <Draggable.Trigger render={withDragPreview(element, <Draggable.Preview disabled />)} />
-          }
+          render={<Draggable.Trigger render={element} />}
         />
+        <Draggable.Preview disabled />
       </Draggable.Root>
     );
   },

@@ -24,4 +24,3 @@ export * from './getDisplayedHourRange';
 export * from './getInitialScrollTime';
 export * from './schedulerDrag';
 export * from './SchedulerDraggable';
-export * from './withDragPreview';

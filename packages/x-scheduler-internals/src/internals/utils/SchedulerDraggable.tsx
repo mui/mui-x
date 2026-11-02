@@ -4,7 +4,6 @@ import { Draggable } from '@base-ui/react/draggable';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import { schedulerDropTargetKind } from './schedulerDrag';
 import type { SchedulerEventDragPayload, SchedulerEventDragData } from './schedulerDrag';
-import { withDragPreview } from './withDragPreview';
 
 /**
  * Captures the occurrence and grab position once for an event move or resize,
@@ -25,13 +24,7 @@ export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable<
     activation,
     dragCursor,
     modifiers,
-    previewKey,
-    collision,
-    collisionElement,
-    snap,
-    onMoveStart,
     onMove,
-    onTargetChange,
     // DOM props, including those a `Draggable.Target` merges in when it renders this part.
     ...elementProps
   } = props;
@@ -49,13 +42,7 @@ export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable<
       activation={activation}
       dragCursor={dragCursor}
       modifiers={modifiers}
-      previewKey={previewKey}
-      collision={collision}
-      collisionElement={collisionElement}
-      snap={snap}
-      onMoveStart={onMoveStart}
       onMove={onMove}
-      onTargetChange={onTargetChange}
       payload={payload}
       onBeforeMoveStart={(eventDetails) => {
         eventDetails.source.updateDragData(getDragData(eventDetails.input));
@@ -70,8 +57,11 @@ export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable<
       <Draggable.Trigger
         {...elementProps}
         ref={forwardedRef}
-        render={withDragPreview(render, preview)}
+        render={render}
+        // A disabled Scheduler draggable only can't be dragged: the element itself stays enabled.
+        data-disabled={undefined}
       />
+      {preview}
     </Draggable.Root>
   );
 }) as <TData extends SchedulerEventDragData>(
@@ -79,9 +69,9 @@ export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable<
 ) => React.JSX.Element;
 
 export namespace SchedulerDraggable {
-  export interface Props<TData extends SchedulerEventDragData> extends Omit<
+  export interface Props<TData extends SchedulerEventDragData> extends Pick<
     Draggable.Root.Props<SchedulerEventDragPayload, TData>,
-    'render' | 'children' | 'payload' | 'onBeforeMoveStart' | 'onMoveEnd'
+    'kind' | 'disabled' | 'activation' | 'dragCursor' | 'modifiers' | 'onMove'
   > {
     /**
      * Gets the drag data when the drag is about to start.
