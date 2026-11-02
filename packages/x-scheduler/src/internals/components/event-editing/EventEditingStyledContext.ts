@@ -5,7 +5,7 @@ import type { EventContextMenuClasses } from '../event-context-menu/eventContext
 import type { EventEditingLocaleText } from '../../../models/translations';
 
 export interface EventEditingStyledContextValue {
-  schedulerId: string | undefined;
+  schedulerId: string;
   classes: EventDialogClasses & EventContextMenuClasses;
   localeText: EventEditingLocaleText;
 }

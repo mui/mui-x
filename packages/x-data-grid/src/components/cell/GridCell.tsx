@@ -14,7 +14,6 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useStore } from '@base-ui/utils/store';
 import { Rowspan } from '@mui/x-virtualizer';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import useId from '@mui/utils/useId';
 import { focusElement } from '../../utils/focusElement';
 import { PRE_MOUNTED_EDITOR_SELECTOR } from '../../utils/cellEditor';
 import { isImeKeyDown } from '../../utils/keyboardUtils';
@@ -268,7 +267,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   const [contentHasTabStop, setContentHasTabStop] = React.useState(false);
   // Keep the editor while the cell is the tab stop, so a dialog can give the focus back to it.
   const [editorHadFocus, setEditorHadFocus] = React.useState(false);
-  const cellId = useId();
+  const cellId = React.useId();
   const canCellPreMountEditor =
     imeFastEdit &&
     cellMode === GridCellModes.View &&

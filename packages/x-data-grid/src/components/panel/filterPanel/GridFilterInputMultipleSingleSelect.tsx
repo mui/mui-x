@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useId from '@mui/utils/useId';
 import type { AutocompleteProps } from '../../../models/gridBaseSlots';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import type { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
@@ -17,7 +16,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
   const { item, applyValue, type, apiRef, focusElementRef, slotProps, disableDebounce, ...other } =
     props;
 
-  const id = useId();
+  const id = React.useId();
   const rootProps = useGridRootProps();
 
   const resolvedColumn = apiRef.current.getColumn(item.field) as GridSingleSelectColDef | undefined;

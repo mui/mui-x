@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { GridMenu, useGridSelector } from '@mui/x-data-grid-pro';
-import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import {
@@ -18,8 +17,8 @@ function GridAiAssistantPanelConversationsMenu() {
   );
   const conversations = useGridSelector(apiRef, gridAiAssistantConversationsSelector);
   const [open, setOpen] = React.useState(false);
-  const menuId = useId();
-  const triggerId = useId();
+  const menuId = React.useId();
+  const triggerId = React.useId();
   const triggerRef = React.useRef<HTMLButtonElement>(null);
 
   const handleOpen = () => {

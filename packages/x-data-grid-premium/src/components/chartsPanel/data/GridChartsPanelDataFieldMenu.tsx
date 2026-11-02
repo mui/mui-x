@@ -2,7 +2,6 @@
 import * as React from 'react';
 
 import { GridMenu, useGridSelector } from '@mui/x-data-grid-pro';
-import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import type { FieldTransferObject, DropPosition } from './GridChartsPanelDataBody';
 import { useGridPrivateApiContext } from '../../../hooks/utils/useGridPrivateApiContext';
@@ -49,8 +48,8 @@ function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) 
     : 0;
   const canMoveUp = fieldIndexInModel > 0;
   const canMoveDown = !isAvailableField && fieldIndexInModel < modelLength - 1;
-  const menuId = useId();
-  const triggerId = useId();
+  const menuId = React.useId();
+  const triggerId = React.useId();
   const triggerRef = React.useRef<HTMLButtonElement>(null);
 
   const menuItems = React.useMemo((): (MenuAction | MenuDivider)[] => {

@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import useId from '@mui/utils/useId';
 import { useToolbarContext } from './ToolbarContext';
 
 interface ToolbarItemProps extends Pick<
@@ -15,7 +14,7 @@ export function useRegisterToolbarButton(
 ) {
   const { onKeyDown, onFocus, onBlur, disabled, 'aria-disabled': ariaDisabled } = props;
 
-  const id = useId();
+  const id = React.useId();
   const {
     focusableItemId,
     registerItem,
@@ -32,24 +31,24 @@ export function useRegisterToolbarButton(
   };
 
   const handleFocus = (event: React.FocusEvent<HTMLButtonElement>) => {
-    onItemFocus(id!);
+    onItemFocus(id);
     onFocus?.(event);
   };
 
   const handleBlur = (event: React.FocusEvent<HTMLButtonElement>) => {
-    onItemBlur(id!, event);
+    onItemBlur(id, event);
     onBlur?.(event);
   };
 
   React.useEffect(() => {
-    registerItem(id!, ref);
-    return () => unregisterItem(id!);
+    registerItem(id, ref);
+    return () => unregisterItem(id);
   }, [id, ref, registerItem, unregisterItem]);
 
   const previousDisabled = React.useRef(disabled);
   React.useEffect(() => {
     if (previousDisabled.current !== disabled && disabled === true) {
-      onItemDisabled(id!);
+      onItemDisabled(id);
     }
     previousDisabled.current = disabled;
   }, [disabled, id, onItemDisabled]);
@@ -57,7 +56,7 @@ export function useRegisterToolbarButton(
   const previousAriaDisabled = React.useRef(ariaDisabled);
   React.useEffect(() => {
     if (previousAriaDisabled.current !== ariaDisabled && ariaDisabled === true) {
-      onItemDisabled(id!);
+      onItemDisabled(id);
     }
     previousAriaDisabled.current = ariaDisabled;
   }, [ariaDisabled, id, onItemDisabled]);

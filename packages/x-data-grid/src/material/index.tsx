@@ -41,7 +41,6 @@ import MUITabs from '@mui/material/Tabs';
 import MUITab from '@mui/material/Tab';
 import MUIToggleButton from '@mui/material/ToggleButton';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import useId from '@mui/utils/useId';
 import {
   GridAddIcon,
   GridArrowDownwardIcon,
@@ -764,7 +763,7 @@ function TabPanel(
 }
 
 function BaseTabs({ items, value, material, ...props }: P['baseTabs']) {
-  const id = useId();
+  const id = React.useId();
   const labelId = `${id}-tab-${value}`;
   const panelId = `${id}-tabpanel-${value}`;
   return (

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
-import useId from '@mui/utils/useId';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
 import { focusElement } from '../../utils/focusElement';
@@ -128,8 +127,8 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const isRtl = useRtl();
   const adornment = configuration.hooks.useColumnHeaderAdornment(colDef.field);
   const headerCellRef = React.useRef<HTMLDivElement>(null);
-  const columnMenuId = useId();
-  const columnMenuButtonId = useId();
+  const columnMenuId = React.useId();
+  const columnMenuButtonId = React.useId();
   const iconButtonRef = React.useRef<HTMLButtonElement>(null);
   const [showColumnMenuIcon, setShowColumnMenuIcon] = React.useState(columnMenuOpen);
 
@@ -257,8 +256,8 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     hasColumnMenuItems && (
       <ColumnHeaderMenuIcon
         colDef={colDef}
-        columnMenuId={columnMenuId!}
-        columnMenuButtonId={columnMenuButtonId!}
+        columnMenuId={columnMenuId}
+        columnMenuButtonId={columnMenuButtonId}
         open={showColumnMenuIcon}
         iconButtonRef={iconButtonRef}
       />
@@ -266,8 +265,8 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const columnMenu = (
     <GridColumnHeaderMenu
-      columnMenuId={columnMenuId!}
-      columnMenuButtonId={columnMenuButtonId!}
+      columnMenuId={columnMenuId}
+      columnMenuButtonId={columnMenuButtonId}
       field={colDef.field}
       open={columnMenuOpen}
       target={iconButtonRef.current}

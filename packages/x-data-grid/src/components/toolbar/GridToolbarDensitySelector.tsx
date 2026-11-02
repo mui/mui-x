@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useId from '@mui/utils/useId';
 import useForkRef from '@mui/utils/useForkRef';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
@@ -36,8 +35,8 @@ const GridToolbarDensitySelector = forwardRef<HTMLButtonElement, GridToolbarDens
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const density = useGridSelector(apiRef, gridDensitySelector);
-    const densityButtonId = useId();
-    const densityMenuId = useId();
+    const densityButtonId = React.useId();
+    const densityMenuId = React.useId();
 
     const [open, setOpen] = React.useState(false);
     const buttonRef = React.useRef<HTMLButtonElement>(null);

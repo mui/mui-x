@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useId from '@mui/utils/useId';
 import { styled } from '@mui/material/styles';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
@@ -52,8 +51,8 @@ function GridFilterFormColumnInput(props: GridFilterFormColumnInputProps) {
   const { item, columns, value, onChange, disabled, className, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const columnSelectId = useId();
-  const columnSelectLabelId = useId();
+  const columnSelectId = React.useId();
+  const columnSelectLabelId = React.useId();
 
   const baseSelectProps = rootProps.slotProps?.baseSelect || {};
   const isBaseSelectNative = baseSelectProps.native ?? false;

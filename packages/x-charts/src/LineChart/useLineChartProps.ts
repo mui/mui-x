@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import useId from '@mui/utils/useId';
 import type { ChartsAxisProps } from '../ChartsAxis';
 import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import type { ChartsClipPathProps } from '../ChartsClipPath';
@@ -56,7 +55,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     ...other
   } = props;
 
-  const id = useId();
+  const id = React.useId();
   const clipPathId = `${id}-clip-path`;
 
   const seriesWithDefault = React.useMemo(

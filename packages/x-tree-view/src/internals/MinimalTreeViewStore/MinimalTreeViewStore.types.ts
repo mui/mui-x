@@ -42,7 +42,7 @@ export interface MinimalTreeViewState<
   /**
    * The id of the Tree View used for accessibility attributes.
    */
-  treeId: string | undefined;
+  treeId: string;
   /**
    * The ids of the items currently expanded.
    */
@@ -89,7 +89,7 @@ export interface MinimalTreeViewParameters<
   /**
    * The id used to build the id attributes of the items when the `id` parameter is not provided.
    */
-  defaultId: string | undefined;
+  defaultId: string;
   /**
    * Whether the layout is right-to-left.
    */

@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
-import useId from '@mui/utils/useId';
 import capitalize from '@mui/utils/capitalize';
 import { styled } from '@mui/material/styles';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -236,8 +235,8 @@ const GridFilterFormBase = forwardRef<HTMLDivElement, GridFilterFormBaseProps>(
     const apiRef = useGridApiContext();
     const columnLookup = useGridSelector(apiRef, gridColumnLookupSelector);
     const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
-    const operatorSelectId = useId();
-    const operatorSelectLabelId = useId();
+    const operatorSelectId = React.useId();
+    const operatorSelectLabelId = React.useId();
     const rootProps = useGridRootProps();
     const classes = useUtilityClasses(rootProps);
     const valueRef = React.useRef<any>(null);

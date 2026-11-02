@@ -2,7 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useRtl } from '@mui/system/RtlProvider';
-import useId from '@mui/utils/useId';
 import { errorOnce } from '@mui/x-internals/warning';
 import type { GridRowParams } from '../../models/params/gridRowParams';
 import type { GridRenderCellParams } from '../../models/params/gridCellParams';
@@ -98,8 +97,8 @@ function GridActionsCell<
   const ignoreCallToFocus = React.useRef(false);
   const touchRippleRefs = React.useRef<Record<string, TouchRippleActions | null>>({});
   const isRtl = useRtl();
-  const menuId = useId();
-  const buttonId = useId();
+  const menuId = React.useId();
+  const buttonId = React.useId();
   const rootProps = useGridRootProps();
   const rowParams = apiRef.current.getRowParams(id);
 
@@ -273,7 +272,7 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
         }),
       )}
 
-      {menuButtons.length > 0 && buttonId && (
+      {menuButtons.length > 0 && (
         <rootProps.slots.baseIconButton
           ref={buttonRef}
           id={buttonId}

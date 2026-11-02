@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import useId from '@mui/utils/useId';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { useNow } from '../internals/hooks/useUtils';
 import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
@@ -131,7 +130,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
 
   const translations = usePickerTranslations();
   const now = useNow(timezone);
-  const selectedId = useId();
+  const selectedId = React.useId();
   const { ownerState } = usePickerPrivateContext();
 
   const { view, setView, previousView, nextView, setValueAndGoToNextView } = useViews({

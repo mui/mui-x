@@ -5,7 +5,6 @@ import clsx from 'clsx';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import useId from '@mui/utils/useId';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { DateCalendarProps, DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { useCalendarState } from './useCalendarState';
@@ -97,7 +96,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
 ) {
   const adapter = usePickerAdapter();
   const { ownerState } = usePickerPrivateContext();
-  const id = useId();
+  const id = React.useId();
   const props = useDateCalendarDefaultizedProps(inProps, 'MuiDateCalendar');
 
   const {

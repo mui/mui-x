@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useId from '@mui/utils/useId';
 import { useTimeout } from '../../../hooks/utils/useTimeout';
 import type { TextFieldProps } from '../../../models/gridBaseSlots';
 import type { GridFilterItem } from '../../../models/gridFilterItem';
@@ -37,7 +36,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     sanitizeFilterItemValue(item.value),
   );
   const [applying, setIsApplying] = React.useState(false);
-  const id = useId();
+  const id = React.useId();
   const rootProps = useGridRootProps();
   const debounceMs = disableDebounce ? 0 : rootProps.filterDebounceMs;
 
@@ -50,7 +49,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
       const newItem = {
         ...item,
         value: type === 'number' && !Number.isNaN(Number(value)) ? Number(value) : value,
-        fromInput: id!,
+        fromInput: id,
       };
 
       if (debounceMs === 0) {

@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useGridSelector } from '@mui/x-data-grid-pro';
 import type { GridColumnMenuItemProps } from '@mui/x-data-grid-pro';
-import useId from '@mui/utils/useId';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import {
@@ -19,7 +18,7 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   const apiRef = useGridApiContext();
   const inputRef = React.useRef<any>(null);
   const rootProps = useGridRootProps();
-  const id = useId();
+  const id = React.useId();
   const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
   const availableAggregationFunctions = React.useMemo(
     () =>

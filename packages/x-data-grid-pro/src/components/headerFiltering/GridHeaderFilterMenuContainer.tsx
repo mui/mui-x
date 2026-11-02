@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { useGridApiContext, useGridSelector } from '@mui/x-data-grid';
 import type { GridFilterItem, GridFilterOperator, GridColDef } from '@mui/x-data-grid';
 import refType from '@mui/utils/refType';
-import useId from '@mui/utils/useId';
 import { gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
@@ -31,8 +30,8 @@ function GridHeaderFilterMenuContainer(props: {
     ...other
   } = props;
 
-  const buttonId = useId();
-  const menuId = useId();
+  const buttonId = React.useId();
+  const menuId = React.useId();
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -81,8 +80,8 @@ function GridHeaderFilterMenuContainer(props: {
         item={item}
         target={headerFilterMenuRef.current}
         operators={operators}
-        labelledBy={buttonId!}
-        id={menuId!}
+        labelledBy={buttonId}
+        id={menuId}
         clearFilterItem={clearFilterItem}
         showClearItem={showClearItem}
         {...other}

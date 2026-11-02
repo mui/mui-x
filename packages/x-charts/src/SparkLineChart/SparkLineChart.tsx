@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useId from '@mui/utils/useId';
 import { ChartsClipPath } from '../ChartsClipPath';
 import type { ChartsColor, ChartsColorPalette } from '../colorPalettes';
 import { BarPlot } from '../BarChart';
@@ -211,7 +210,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     disableAxisListener,
     ...other
   } = props;
-  const id = useId();
+  const id = React.useId();
   const clipPathId = `${id}-clip-path`;
   const clipPathOffset = React.useMemo(
     () => ({

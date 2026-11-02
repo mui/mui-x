@@ -3,7 +3,6 @@ import { styled } from '@mui/material/styles';
 import { selectorChartAxisZoomOptionsLookup, useStore } from '@mui/x-charts/internals';
 import type { AxisId, SeriesId } from '@mui/x-charts/internals';
 import { alpha } from '@mui/system';
-import useId from '@mui/utils/useId';
 import { selectorChartAxisZoomData } from '../../internals/plugins/useChartProZoom';
 import { ChartsAxisZoomSliderPreviewContent } from './ChartsAxisZoomSliderPreviewContent';
 
@@ -60,7 +59,7 @@ function PreviewRectangles(props: {
 
   const zoomData = store.use(selectorChartAxisZoomData, axisId);
   const zoomOptions = store.use(selectorChartAxisZoomOptionsLookup, axisId);
-  const id = useId();
+  const id = React.useId();
 
   if (!zoomData) {
     return null;

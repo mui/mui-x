@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import debounce from '@mui/utils/debounce';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
-import useId from '@mui/utils/useId';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
@@ -108,7 +107,7 @@ function QuickFilter(props: QuickFilterProps) {
   );
   const resolvedClassName = typeof className === 'function' ? className(state) : className;
   const ref = React.useRef<HTMLDivElement>(null);
-  const controlId = useId();
+  const controlId = React.useId();
 
   const handleExpandedChange = React.useCallback(
     (newExpanded: boolean) => {

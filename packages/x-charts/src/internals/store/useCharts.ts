@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import useId from '@mui/utils/useId';
 import { Store } from '@base-ui/utils/store';
 import type {
   ChartAnyPluginSignature,
@@ -35,7 +34,7 @@ export function useCharts<TSignatures extends readonly ChartAnyPluginSignature[]
     ...TSignatures,
   ];
 
-  const chartId = useId();
+  const chartId = React.useId();
 
   const plugins = React.useMemo(
     () =>
