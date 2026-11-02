@@ -378,6 +378,10 @@ describe('<DataGrid /> - Data source', () => {
       <TestDataSource
         dataSetOptions={{ ...dataSetOptions, maxColumns: 3 }}
         dataSourceCache={null}
+        initialState={{
+          pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+          sorting: { sortModel: [{ field: 'id', sort: 'asc' }] },
+        }}
       />,
     );
     await waitFor(() => {
@@ -391,12 +395,13 @@ describe('<DataGrid /> - Data source', () => {
     expect(cell).toHaveFocus();
 
     await act(async () => {
-      apiRef.current!.sortColumn(field, 'desc');
+      apiRef.current!.sortColumn('id', 'desc');
     });
     await waitFor(() => {
       expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       expect(apiRef.current!.getAllRowIds().length).to.equal(10);
     });
+    expect(apiRef.current!.getAllRowIds()).not.to.include(initialRowId);
     const nextRowId = apiRef.current!.getAllRowIds()[2];
     expect(nextRowId).not.to.equal(initialRowId);
 
