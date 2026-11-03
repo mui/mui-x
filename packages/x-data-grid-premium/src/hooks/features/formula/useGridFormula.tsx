@@ -402,8 +402,9 @@ export const useGridFormula = (
    * cascade, so a pass that changed cells of a grouped field re-triggers the
    * tree build; the rebuild's own cascade is suppressed from re-triggering.
    * Filtering and sorting re-run in the rows cascades only: after a change of
-   * the computed values (`computedColumnsChanged`), they are re-applied when
-   * their model reads a changed value. Once: the events they publish refresh
+   * the computed values or a re-evaluation of every formula outside of a rows
+   * cascade (`computedColumnsChanged`), they are re-applied when their model
+   * reads a changed value. Once: the events they publish refresh
    * the position-dependent formulas without reporting a computed change. A
    * filtering or a sorting the core can't apply leaves the view as it was,
    * and a failed regroup is finished with both (`tryToApplyView`), except the
@@ -420,7 +421,8 @@ export const useGridFormula = (
       },
     ) => {
       // The values of the computed columns changed as a whole (formula, referenced
-      // `valueGetter`, function registry), whether or not a formula cell followed.
+      // `valueGetter`, function registry), whether or not a formula cell followed, or every
+      // formula was re-evaluated outside of a rows cascade (function registry, enablement).
       const computedColumnsChanged = options.computedColumnsChanged === true;
       if ((changedCells === null || changedCells.length === 0) && !computedColumnsChanged) {
         return;
@@ -537,7 +539,12 @@ export const useGridFormula = (
     // Aggregation, row spanning and grouping consumed formula values through
     // `getRowValue` — refresh them after passes that are not part of a rows
     // update cascade (registry change, enablement toggle, in-place mutations).
-    triggerDependentFeatures(runPass('full'), { aggregation: true, rowSpanning: true });
+    // Filtering and sorting re-run too: no rows cascade follows (#23989).
+    triggerDependentFeatures(runPass('full'), {
+      aggregation: true,
+      rowSpanning: true,
+      computedColumnsChanged: true,
+    });
   }, [runPass, triggerDependentFeatures]);
 
   const setFormulaActiveEdit = React.useCallback<GridFormulaPrivateApi['setFormulaActiveEdit']>(
@@ -1029,8 +1036,7 @@ export const useGridFormula = (
       return;
     }
     cache.registry = createFormulaFunctionRegistry(Object.values(effectiveFormulaFunctions));
-    const computedColumnsChanged = cache.computedColumns.records.size > 0;
-    if (computedColumnsChanged) {
+    if (cache.computedColumns.records.size > 0) {
       // The validity of the computed columns depends on the registry (unknown functions),
       // and the definitions are validated when the columns are hydrated.
       apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
@@ -1039,10 +1045,11 @@ export const useGridFormula = (
     // The revision also stands for the registry: the computed column editor reads it
     // for its preview and its function list, with or without a stored computed column.
     bumpComputedColumnsRevision(apiRef);
+    // The cell formulas changed too: filtering and sorting re-run without a rows cascade (#23989).
     triggerDependentFeatures(runPass('full'), {
       aggregation: true,
       rowSpanning: true,
-      computedColumnsChanged,
+      computedColumnsChanged: true,
     });
   }, [apiRef, effectiveFormulaFunctions, runPass, triggerDependentFeatures]);
 

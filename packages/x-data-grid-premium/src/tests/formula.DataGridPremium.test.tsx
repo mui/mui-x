@@ -1114,6 +1114,100 @@ describe('<DataGridPremium /> - Formulas', () => {
     });
   });
 
+  describe('sorting and filtering after a re-evaluation', () => {
+    const scaled = (factor: number) => ({
+      ...GRID_FORMULA_FUNCTIONS,
+      SCALE: {
+        name: 'SCALE',
+        minArgs: 1,
+        maxArgs: 1,
+        apply: (args: unknown[]) => (args[0] as number) * factor,
+      },
+    });
+    const BY_1 = scaled(1);
+    const BY_MINUS_1 = scaled(-1);
+    const scaleRows = [
+      { id: 0, price: 2, f: '=SCALE(price)' },
+      { id: 1, price: 4, f: '=SCALE(price)' },
+      { id: 2, price: 3, f: '=SCALE(price)' },
+    ];
+    const scaleColumns = [
+      { field: 'price', type: 'number' as const },
+      { field: 'f', type: 'number' as const, allowFormulas: true },
+    ];
+
+    it('should re-sort when formulaFunctions changes', async () => {
+      const { setProps } = await render(
+        <Test
+          rows={scaleRows}
+          columns={scaleColumns}
+          formulaFunctions={BY_1}
+          initialState={{ sorting: { sortModel: [{ field: 'f', sort: 'asc' }] } }}
+        />,
+      );
+      expect(getColumnValues(1)).to.deep.equal(['2', '3', '4']);
+
+      setProps({ formulaFunctions: BY_MINUS_1 });
+      await microtasks();
+      expect(getColumnValues(1)).to.deep.equal(['-4', '-3', '-2']);
+    });
+
+    it('should re-filter when formulaFunctions changes', async () => {
+      const { setProps } = await render(
+        <Test
+          rows={scaleRows}
+          columns={scaleColumns}
+          formulaFunctions={BY_1}
+          initialState={{
+            filter: { filterModel: { items: [{ field: 'f', operator: '>', value: 0 }] } },
+          }}
+        />,
+      );
+      expect(getColumnValues(1)).to.deep.equal(['2', '4', '3']);
+
+      setProps({ formulaFunctions: BY_MINUS_1 });
+      await microtasks();
+      expect(getColumnValues(1)).to.deep.equal([]);
+    });
+
+    it('should re-apply the quick filter when formulaFunctions changes', async () => {
+      const { setProps } = await render(
+        <Test
+          rows={scaleRows}
+          columns={scaleColumns}
+          formulaFunctions={BY_1}
+          initialState={{ filter: { filterModel: { items: [], quickFilterValues: ['-4'] } } }}
+        />,
+      );
+      expect(getColumnValues(1)).to.deep.equal([]);
+
+      setProps({ formulaFunctions: BY_MINUS_1 });
+      await microtasks();
+      expect(getColumnValues(1)).to.deep.equal(['-4']);
+    });
+
+    it('should re-sort when disableFormulas is turned off', async () => {
+      const { setProps } = await render(
+        <Test
+          rows={[
+            { id: 0, price: 9, f: '=price * 1' },
+            { id: 1, price: 1, f: '=price * 2' },
+            { id: 2, price: 2, f: '=price * 3' },
+          ]}
+          columns={scaleColumns}
+          disableFormulas
+          initialState={{ sorting: { sortModel: [{ field: 'f', sort: 'asc' }] } }}
+        />,
+      );
+      // The raw sources are not in the order of their evaluated values.
+      expect(getColumnValues(1)).to.deep.equal(['=price * 1', '=price * 2', '=price * 3']);
+
+      setProps({ disableFormulas: false });
+      await microtasks();
+      expect(getColumnValues(1)).to.deep.equal(['2', '6', '9']);
+    });
+  });
+
   describe('guards', () => {
     it('should render raw strings when disableFormulas is enabled', async () => {
       await render(<Test disableFormulas />);
