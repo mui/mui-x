@@ -83,7 +83,7 @@
     "languageTag": "cs-CZ",
     "importName": "csCZ",
     "localeName": "Czech",
-    "missingKeysCount": 152,
+    "missingKeysCount": 65,
     "totalKeysCount": 293,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/csCZ.ts"
   },
