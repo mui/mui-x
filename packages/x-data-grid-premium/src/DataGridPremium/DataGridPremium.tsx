@@ -406,6 +406,10 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
    * Inherits the `columnHeaderHeight` value if not set.
    */
   columnGroupHeaderHeight: PropTypes.number,
+  /**
+   * The column groups of the header.
+   * @see See {@link https://mui.com/x/react-data-grid/column-groups/ column grouping docs} for more details.
+   */
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
    * Sets the height in pixel of the column headers in the Data Grid.
@@ -671,6 +675,7 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    imeFastEdit: PropTypes.bool,
     virtualizerLayoutMode: PropTypes.oneOf(['controlled', 'uncontrolled']),
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
@@ -877,6 +882,7 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
       'aiAssistantActiveConversationIndexChange',
       'aiAssistantConversationsChange',
       'cellClick',
+      'cellCompositionStart',
       'cellDoubleClick',
       'cellDragEnter',
       'cellDragOver',

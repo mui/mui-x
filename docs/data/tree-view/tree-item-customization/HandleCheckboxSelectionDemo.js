@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
-
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { MUI_X_PRODUCTS } from '../datasets/disabledAndEditableProducts';

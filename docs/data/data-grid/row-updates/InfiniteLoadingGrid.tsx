@@ -1,19 +1,21 @@
 import * as React from 'react';
-import {
-  DataGridPro,
+import type {
   DataGridProProps,
   GridSlots,
   GridSortModel,
-  gridStringOrNumberComparator,
   GridFilterModel,
-  getGridStringOperators,
   GridFilterOperator,
 } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  gridStringOrNumberComparator,
+  getGridStringOperators,
+} from '@mui/x-data-grid-pro';
+import type { GridDemoData } from '@mui/x-data-grid-generator';
 import {
   getRealGridData,
   getCommodityColumns,
   randomInt,
-  GridDemoData,
 } from '@mui/x-data-grid-generator';
 import LinearProgress from '@mui/material/LinearProgress';
 

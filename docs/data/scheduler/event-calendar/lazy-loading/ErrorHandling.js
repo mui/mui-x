@@ -3,7 +3,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
-
 import {
   resources,
   defaultVisibleDate,

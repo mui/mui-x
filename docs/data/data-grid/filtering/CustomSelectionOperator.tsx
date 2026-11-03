@@ -1,8 +1,8 @@
 import * as React from 'react';
+import type { GridFilterOperator } from '@mui/x-data-grid';
 import {
   gridRowIdSelector,
   DataGrid,
-  GridFilterOperator,
   getGridDefaultColumnTypes,
   DEFAULT_GRID_COL_TYPE_KEY,
   gridRowSelectionManagerSelector,

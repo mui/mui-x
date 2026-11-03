@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { ChatUnreadMarker } from '@mui/x-chat';
-
 import { ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
 import { MessageBubble } from 'docs/src/modules/components/chat-playground/MessageBubble';
 import { users } from 'docs/src/modules/components/chat-playground/data';

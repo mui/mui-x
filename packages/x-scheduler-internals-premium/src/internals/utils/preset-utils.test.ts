@@ -1,7 +1,7 @@
 import { adapter, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
-import { PlainDate } from '@mui/x-scheduler-internals/internals';
+import { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import { EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS, getPresetPxPerDay } from './preset-utils';
 import type { EventTimelinePremiumPreset } from '../../models';
 
@@ -11,8 +11,8 @@ describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
       // The displayed hour window scales this in the preset selector, so the preset
       // always sizes the full day.
       const count = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS.dayAndHour.getCssUnitCount!(
-        PlainDate.from('2025-07-03'),
-        PlainDate.from('2025-07-07'),
+        BaseTemporal.PlainDate.from('2025-07-03'),
+        BaseTemporal.PlainDate.from('2025-07-07'),
       );
       expect(count).to.equal(4 * 24);
     });
@@ -30,7 +30,10 @@ describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
       'should start $preset on the first date of the period of the visible date and end it after its periods',
       ({ preset, start, end }) => {
         const definition = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
-        const startPlainDate = definition.getStartPlainDate(PlainDate.from('2025-07-03'), 1);
+        const startPlainDate = definition.getStartPlainDate(
+          BaseTemporal.PlainDate.from('2025-07-03'),
+          1,
+        );
         expect(startPlainDate).toEqualPlainDate(start);
         expect(definition.getEndPlainDate(startPlainDate, definition.unitCount)).toEqualPlainDate(
           end,

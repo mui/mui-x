@@ -316,7 +316,9 @@ describe('<DataGrid /> - Column headers', () => {
         />
       </div>,
     );
-    const sortButton = within(getColumnHeaderCell(0)).getByRole('button', { name: 'Sort' });
+    const sortButton = within(getColumnHeaderCell(0)).getByRole('button', {
+      name: 'Sort brand in descending order',
+    });
 
     await user.click(sortButton);
     await user.click(sortButton);

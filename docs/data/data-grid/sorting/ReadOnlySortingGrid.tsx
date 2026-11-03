@@ -1,6 +1,6 @@
+import type { GridColDef } from '@mui/x-data-grid';
 import {
   DataGrid,
-  GridColDef,
   Toolbar,
   ToolbarButton,
   useGridApiContext,

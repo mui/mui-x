@@ -1,7 +1,6 @@
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import { DataGrid, useGridApiContext } from '@mui/x-data-grid';
-
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function AutocompleteColumnInput(props) {

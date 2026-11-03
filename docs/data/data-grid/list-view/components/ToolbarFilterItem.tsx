@@ -1,11 +1,11 @@
 import * as React from 'react';
+import type { GridFilterItem } from '@mui/x-data-grid-premium';
 import {
   GridFilterListIcon,
   useGridApiContext,
   useGridSelector,
   gridFilterActiveItemsSelector,
   GridCheckIcon,
-  GridFilterItem,
   ToolbarButton,
 } from '@mui/x-data-grid-premium';
 import Badge from '@mui/material/Badge';
@@ -20,8 +20,9 @@ import ListSubheader from '@mui/material/ListSubheader';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
-import { Drawer, DrawerHeader, DrawerProps } from './Drawer';
-import { FileType } from '../types';
+import type { DrawerProps } from './Drawer';
+import { Drawer, DrawerHeader } from './Drawer';
+import type { FileType } from '../types';
 import { FILE_TYPES } from '../constants';
 
 const DATE_MODIFIED_FILTERS = [

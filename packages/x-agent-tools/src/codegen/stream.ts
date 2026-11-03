@@ -1,5 +1,6 @@
 /** Buffer the codegen SSE stream into `{ files, explanation }`. */
-import { createParser, type EventSourceMessage } from 'eventsource-parser';
+import { createParser } from 'eventsource-parser';
+import type { EventSourceMessage } from 'eventsource-parser';
 
 /** Progress event the codegen run emits as files stream in. */
 export type CodegenProgressEvent =

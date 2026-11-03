@@ -1,17 +1,24 @@
 import { pan } from './gestures/PanUserGesture';
-import { PanUserGestureOptions, PanUserGestureRoot } from './gestures/PanUserGesture.types';
+import type { PanUserGestureOptions, PanUserGestureRoot } from './gestures/PanUserGesture.types';
 import { pinch } from './gestures/PinchUserGesture';
-import { PinchUserGestureOptions, PinchUserGestureRoot } from './gestures/PinchUserGesture.types';
+import type {
+  PinchUserGestureOptions,
+  PinchUserGestureRoot,
+} from './gestures/PinchUserGesture.types';
 import { press } from './gestures/PressUserGesture';
-import { PressUserGestureOptions, PressUserGestureRoot } from './gestures/PressUserGesture.types';
+import type {
+  PressUserGestureOptions,
+  PressUserGestureRoot,
+} from './gestures/PressUserGesture.types';
 import { rotate } from './gestures/RotateUserGesture';
-import {
+import type {
   RotateUserGestureOptions,
   RotateUserGestureRoot,
 } from './gestures/RotateUserGesture.types';
 import { tap } from './gestures/TapUserGesture';
-import { TapUserGestureOptions, TapUserGestureRoot } from './gestures/TapUserGesture.types';
-import { UserGesture, UserGestureOptions } from './UserGesture';
+import type { TapUserGestureOptions, TapUserGestureRoot } from './gestures/TapUserGesture.types';
+import type { UserGestureOptions } from './UserGesture';
+import { UserGesture } from './UserGesture';
 import { createProxy } from './utils/createProxy';
 
 /**

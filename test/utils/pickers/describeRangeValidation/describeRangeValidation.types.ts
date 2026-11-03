@@ -1,5 +1,8 @@
-import * as React from 'react';
-import { DescribeValidationInputOptions, DescribeValidationOptions } from '../describeValidation';
+import type * as React from 'react';
+import type {
+  DescribeValidationInputOptions,
+  DescribeValidationOptions,
+} from '../describeValidation';
 
 interface DescribeRangeValidationKeyboardOptions {
   setValue?: (

@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { StandaloneCompactDayViewPremium } from '@mui/x-scheduler-premium/compact-day-view-premium';
 import {
   initialEvents,

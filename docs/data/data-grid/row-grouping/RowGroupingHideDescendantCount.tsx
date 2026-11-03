@@ -1,7 +1,9 @@
-import {
-  DataGridPremium,
+import type {
   GridGroupingColDefOverride,
   GridValidRowModel,
+} from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';

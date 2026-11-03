@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box';
-
 import { LineChart } from '@mui/x-charts/LineChart';
 
 export default function TickLabelPosition() {

@@ -40,50 +40,128 @@ import type {
 } from './conversationList.types';
 
 export interface ConversationListRootSlots {
+  /**
+   * The component that renders the root.
+   */
   root: React.ElementType;
+  /**
+   * The component that renders the scroller.
+   */
   scroller: React.ElementType;
+  /**
+   * The component that renders the viewport.
+   */
   viewport: React.ElementType;
+  /**
+   * The component that renders the scrollbar.
+   */
   scrollbar: React.ElementType;
+  /**
+   * The component that renders the scrollbar thumb.
+   */
   scrollbarThumb: React.ElementType;
+  /**
+   * The component that renders the item.
+   */
   item: React.JSXElementConstructor<ConversationListItemProps>;
+  /**
+   * The component that renders the item avatar.
+   */
   itemAvatar: React.JSXElementConstructor<ConversationListItemAvatarProps>;
+  /**
+   * The component that renders the item content.
+   */
   itemContent: React.JSXElementConstructor<ConversationListItemContentProps>;
+  /**
+   * The component that renders the title.
+   */
   title: React.JSXElementConstructor<ConversationListTitleProps>;
+  /**
+   * The component that renders the preview.
+   */
   preview: React.JSXElementConstructor<ConversationListPreviewProps>;
+  /**
+   * The component that renders the timestamp.
+   */
   timestamp: React.JSXElementConstructor<ConversationListTimestampProps>;
+  /**
+   * The component that renders the unread badge.
+   */
   unreadBadge: React.JSXElementConstructor<ConversationListUnreadBadgeProps>;
+  /**
+   * The component that renders the item actions.
+   */
   itemActions: React.JSXElementConstructor<ConversationListItemActionsProps>;
 }
 
 export interface ConversationListRootSlotProps {
+  /**
+   * The props used for the root slot.
+   */
   root?: SlotComponentProps<'div', {}, ConversationListRootOwnerState>;
+  /**
+   * The props used for the scroller slot.
+   */
   scroller?: SlotComponentProps<'div', {}, ConversationListRootOwnerState>;
+  /**
+   * The props used for the viewport slot.
+   */
   viewport?: SlotComponentProps<'div', {}, ConversationListRootOwnerState>;
+  /**
+   * The props used for the scrollbar slot.
+   */
   scrollbar?: SlotComponentProps<'div', {}, ConversationListRootOwnerState>;
+  /**
+   * The props used for the scrollbar thumb slot.
+   */
   scrollbarThumb?: SlotComponentProps<'div', {}, ConversationListRootOwnerState>;
+  /**
+   * The props used for the item slot.
+   */
   item?: SlotComponentProps<typeof ConversationListItem, {}, ConversationListItemOwnerState>;
+  /**
+   * The props used for the item avatar slot.
+   */
   itemAvatar?: SlotComponentProps<
     typeof ConversationListItemAvatar,
     {},
     ConversationListItemOwnerState
   >;
+  /**
+   * The props used for the item content slot.
+   */
   itemContent?: SlotComponentProps<
     typeof ConversationListItemContent,
     {},
     ConversationListItemOwnerState
   >;
+  /**
+   * The props used for the title slot.
+   */
   title?: SlotComponentProps<typeof ConversationListTitle, {}, ConversationListItemOwnerState>;
+  /**
+   * The props used for the preview slot.
+   */
   preview?: SlotComponentProps<typeof ConversationListPreview, {}, ConversationListItemOwnerState>;
+  /**
+   * The props used for the timestamp slot.
+   */
   timestamp?: SlotComponentProps<
     typeof ConversationListTimestamp,
     {},
     ConversationListItemOwnerState
   >;
+  /**
+   * The props used for the unread badge slot.
+   */
   unreadBadge?: SlotComponentProps<
     typeof ConversationListUnreadBadge,
     {},
     ConversationListItemOwnerState
   >;
+  /**
+   * The props used for the item actions slot.
+   */
   itemActions?: SlotComponentProps<
     typeof ConversationListItemActions,
     {},
@@ -102,17 +180,45 @@ export interface ConversationListRootProps extends Omit<
    * @default 'default'
    */
   variant?: ConversationListVariant;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<ConversationListRootSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ConversationListRootSlotProps;
 }
 
 interface ConversationListRenderedItemProps {
+  /**
+   * The conversation the item renders.
+   */
   conversation: ChatConversation;
+  /**
+   * If `true`, the item has keyboard focus.
+   */
   focused: boolean;
+  /**
+   * If `true`, the conversation is selected.
+   */
   selected: boolean;
+  /**
+   * If `true`, the conversation has unread messages.
+   */
   unread: boolean;
   variant: ConversationListVariant;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: Partial<ConversationListRootSlots> | undefined;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: ConversationListRootSlotProps | undefined;
   registerItemRef(id: string, element: HTMLElement | null): void;
   onFocus(id: string): void;

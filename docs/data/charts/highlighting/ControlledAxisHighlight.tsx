@@ -1,14 +1,16 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
-import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
+import type { BarChartProps } from '@mui/x-charts/BarChart';
+import { BarChart } from '@mui/x-charts/BarChart';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
-import { AxisItemIdentifier } from '@mui/x-charts/models';
-import { LineChart, LineChartProps } from '@mui/x-charts/LineChart';
+import type { AxisItemIdentifier } from '@mui/x-charts/models';
+import type { LineChartProps } from '@mui/x-charts/LineChart';
+import { LineChart } from '@mui/x-charts/LineChart';
 
 export default function ControlledAxisHighlight() {
   const [highlightedAxis, setHighlightedAxis] = React.useState<AxisItemIdentifier[]>(

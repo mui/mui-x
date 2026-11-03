@@ -1,8 +1,15 @@
 {
   "componentDescription": "A button that triggers an Excel export.\nIt renders the `baseButton` slot.",
   "propDescriptions": {
+    "disabled": { "description": "If <code>true</code>, the button is disabled." },
+    "id": { "description": "The id of the button element." },
     "options": { "description": "The options to apply on the Excel export." },
-    "render": { "description": "A function to customize rendering of the component." }
+    "render": { "description": "A function to customize rendering of the component." },
+    "role": { "description": "The ARIA role of the button element." },
+    "size": { "description": "The size of the button." },
+    "startIcon": { "description": "Element placed before the children." },
+    "tabIndex": { "description": "The <code>tabIndex</code> of the button element." },
+    "title": { "description": "The title of the button element." }
   },
   "classDescriptions": {}
 }

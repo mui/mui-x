@@ -1,5 +1,5 @@
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
-import { GridRenderCellParams } from '@mui/x-data-grid';
+import type { GridRenderCellParams } from '@mui/x-data-grid';
 
 export function renderSparkline(params: GridRenderCellParams) {
   if (params.value == null) {

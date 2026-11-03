@@ -1,6 +1,6 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import { PlainDate } from '@mui/x-scheduler-internals/internals';
+import { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../../constants/defaultLocaleText';
 import {
   findInvalidRangeField,
@@ -127,7 +127,7 @@ describe('getEditedRangeBounds', () => {
 
 describe('getRecurrenceLabel', () => {
   it('should write the yearly date in the order of the locale', () => {
-    const startPlainDate = PlainDate.from('2025-07-03');
+    const startPlainDate = BaseTemporal.PlainDate.from('2025-07-03');
     const localeText = EVENT_CALENDAR_DEFAULT_LOCALE_TEXT;
     expect(getRecurrenceLabel('en-US', startPlainDate, 'YEARLY', localeText)).to.equal(
       localeText.recurrenceYearlyPresetLabel('July 3'),
@@ -186,8 +186,8 @@ describe('getRecurrenceTimezoneName', () => {
 
 describe('getWeekdayToken', () => {
   it('should return the weekday of the plain date', () => {
-    expect(getWeekdayToken(PlainDate.from('2025-07-07'))).to.equal('monday');
-    expect(getWeekdayToken(PlainDate.from('2025-07-06'))).to.equal('sunday');
+    expect(getWeekdayToken(BaseTemporal.PlainDate.from('2025-07-07'))).to.equal('monday');
+    expect(getWeekdayToken(BaseTemporal.PlainDate.from('2025-07-06'))).to.equal('sunday');
   });
 });
 

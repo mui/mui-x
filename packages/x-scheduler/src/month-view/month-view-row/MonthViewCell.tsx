@@ -7,6 +7,7 @@ import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import {
   formatDayOfMonth,
   formatMonthShortAndDayOfMonth,
+  getDayNumber,
   isWeekendPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
@@ -196,7 +197,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const isCurrentMonth =
     day.plainDate.year === visiblePlainDate.year && day.plainDate.month === visiblePlainDate.month;
   const isFirstDayOfMonth = day.plainDate.day === 1;
-  const isToday = day.plainDate.dayNumber === nowDayNumber;
+  const isToday = getDayNumber(day.plainDate) === nowDayNumber;
 
   const inBoundOccurrences = day.withPosition.filter((o) => o.position.index <= maxEvents);
   const hasOverflow = inBoundOccurrences.length < day.withPosition.length;

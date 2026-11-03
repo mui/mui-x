@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
-import { UseChartBrushSignature, useStore } from '@mui/x-charts/internals';
+import type { UseChartBrushSignature } from '@mui/x-charts/internals';
+import { useStore } from '@mui/x-charts/internals';
 
 const scatterData = [
   { x: 10, y: 20, id: 1 },

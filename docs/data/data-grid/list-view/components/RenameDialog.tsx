@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { GridRowId, GridRowParams } from '@mui/x-data-grid-premium';
+import type { GridRowId, GridRowParams } from '@mui/x-data-grid-premium';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { RowModel } from '../types';
+import type { RowModel } from '../types';
 
 export interface RenameDialogProps {
   params: Pick<GridRowParams<RowModel>, 'row'> | null;

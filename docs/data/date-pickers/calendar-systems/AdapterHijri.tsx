@@ -8,11 +8,11 @@ import Button from '@mui/material/Button';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import {
-  DateTimePicker,
+import type {
   DateTimePickerProps,
   DateTimePickerFieldProps,
 } from '@mui/x-date-pickers/DateTimePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 import {
   useSplitFieldProps,

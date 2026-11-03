@@ -8,9 +8,10 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
-import { TreeViewSelectionPropagation } from '@mui/x-tree-view/models';
+import type { TreeViewSelectionPropagation } from '@mui/x-tree-view/models';
 import PlaygroundTreeView from './PlaygroundTreeView';
-import ThemeConfig, { Corner, Density } from './PlaygroundThemeConfig';
+import type { Corner, Density } from './PlaygroundThemeConfig';
+import ThemeConfig from './PlaygroundThemeConfig';
 
 export default function MainDemo() {
   const docsTheme = useTheme();

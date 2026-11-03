@@ -1,8 +1,5 @@
-import {
-  DataGridPro,
-  GridRenderCellParams,
-  GridListViewColDef,
-} from '@mui/x-data-grid-pro';
+import type { GridRenderCellParams, GridListViewColDef } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';

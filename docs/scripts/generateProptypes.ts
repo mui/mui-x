@@ -7,7 +7,8 @@ import {
   injectPropTypesInFile,
 } from '@mui/internal-scripts/typescript-to-proptypes';
 import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/internal-docs-utils';
-import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
+import type { XTypeScriptProject } from './createXTypeScriptProjects';
+import { createXTypeScriptProjects } from './createXTypeScriptProjects';
 import { resolvePrettierConfigPath } from './utils';
 
 const COMPONENTS_WITHOUT_PROPTYPES = [
@@ -169,6 +170,10 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         'dateLocale',
       ];
       if (propsToNotResolve.includes(name)) {
+        return false;
+      }
+      // The scheduler features are opaque values imported from their entry points.
+      if (name === 'features' && project.name === 'x-scheduler-premium') {
         return false;
       }
 

@@ -11,7 +11,6 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useChartRootRef } from '@mui/x-charts/hooks';
 import { useChartPremiumApiRef } from '@mui/x-charts-premium/hooks';
 import { PiecewiseColorLegend } from '@mui/x-charts-premium/ChartsLegend';
-
 import { countryData } from '../dataset/countryData';
 import { internetUsageByCountry } from '../dataset/internetUsageByCountry';
 

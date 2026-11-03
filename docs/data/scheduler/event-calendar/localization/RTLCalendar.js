@@ -4,7 +4,6 @@ import rtlPlugin from '@mui/stylis-plugin-rtl';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
-
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { heIL, createDateLocaleTheme } from '@mui/x-scheduler/locales';
 

@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import ChartsUsageDemo from 'docs/src/modules/components/ChartsUsageDemo';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { AxisValueFormatterContext } from '@mui/x-charts/models';
+import type { AxisValueFormatterContext } from '@mui/x-charts/models';
 import { dataset, valueFormatter } from '../dataset/weather';
 
 const chartSetting = {

@@ -1,7 +1,8 @@
-import { Gesture, KeyboardManager, PointerManager } from '../../core';
+import type { Gesture } from '../../core';
+import { KeyboardManager, PointerManager } from '../../core';
 import { ActiveGesturesRegistry } from '../../core/ActiveGesturesRegistry';
-import { AnyGesture } from '../AnyGesture';
-import { MatcherState, SyncMatcherFn } from '../Matcher.types';
+import type { AnyGesture } from '../AnyGesture';
+import type { MatcherState, SyncMatcherFn } from '../Matcher.types';
 import { messages } from '../messages';
 
 export type ToUpdateOptions<R = AnyGesture> = {

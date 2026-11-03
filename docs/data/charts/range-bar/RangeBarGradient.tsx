@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { barClasses } from '@mui/x-charts/BarChart';
+import type { RangeBarSeries } from '@mui/x-charts-premium/BarChartPremium';
 import {
   BarChartPremium,
   rangeBarClasses,
-  RangeBarSeries,
 } from '@mui/x-charts-premium/BarChartPremium';
 
 const settings = {

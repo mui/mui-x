@@ -1,9 +1,6 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
-  GridColDef,
-  GridPastedValueParser,
-} from '@mui/x-data-grid-premium';
+import type { GridColDef, GridPastedValueParser } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 
 const numberPastedValueParser: GridPastedValueParser = (value, _, column) => {
   if (column.type === 'number' && Number.isNaN(Number(value))) {

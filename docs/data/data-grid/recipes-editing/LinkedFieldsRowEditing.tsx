@@ -1,10 +1,12 @@
 import Box from '@mui/material/Box';
-import {
-  DataGrid,
+import type {
   GridColDef,
   GridRowsProp,
-  GridEditSingleSelectCell,
   GridEditSingleSelectCellProps,
+} from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridEditSingleSelectCell,
   useGridApiContext,
 } from '@mui/x-data-grid';
 import { randomPrice } from '@mui/x-data-grid-generator';

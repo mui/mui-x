@@ -1,9 +1,49 @@
 {
-  "props": {},
+  "props": {
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    }
+  },
   "name": "ChatMessageMeta",
   "imports": [
     "import { ChatMessageMeta } from '@mui/x-chat/ChatMessage';",
     "import { ChatMessageMeta } from '@mui/x-chat';"
+  ],
+  "slots": [
+    { "name": "meta", "description": "The component that renders the meta.", "class": null },
+    {
+      "name": "timestamp",
+      "description": "The component that renders the timestamp.",
+      "class": null
+    },
+    { "name": "status", "description": "The component that renders the status.", "class": null },
+    { "name": "edited", "description": "The component that renders the edited.", "class": null },
+    {
+      "name": "streamingProgress",
+      "description": "The root element of the streaming progress indicator.\nRendered by Base UI `Progress.Root` when `message.status === 'streaming'`.\nProvides `role=\"progressbar\"` and `aria-valuetext` for screen readers.",
+      "default": "ProgressRoot (Base UI Progress.Root wrapper)",
+      "class": null
+    },
+    {
+      "name": "streamingProgressTrack",
+      "description": "The track element wrapping the streaming progress indicator.",
+      "class": null
+    },
+    {
+      "name": "streamingProgressIndicator",
+      "description": "The animated indicator bar inside the streaming progress track.",
+      "class": null
+    }
   ],
   "classes": [],
   "muiName": "MuiChatMessageMeta",

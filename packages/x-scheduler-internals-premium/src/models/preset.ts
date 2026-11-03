@@ -1,7 +1,7 @@
 import type * as React from 'react';
 import type { TemporalAdapter, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
-import type { PlainDate } from '@mui/x-scheduler-internals/internals';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 
 export type EventTimelinePremiumPreset =
   'dayAndHour' | 'dayAndMonth' | 'dayAndWeek' | 'monthAndYear' | 'year';
@@ -20,11 +20,11 @@ export interface IteratedCell {
    * for a `month` row), on the wall clock of the axis. For a partial first cell, it's before the
    * visible range.
    */
-  plainDate: PlainDate;
+  plainDate: BaseTemporal.PlainDate;
   /** First date of the cell within the visible range. */
-  firstPlainDate: PlainDate;
+  firstPlainDate: BaseTemporal.PlainDate;
   /** Last date of the cell within the visible range. */
-  lastPlainDate: PlainDate;
+  lastPlainDate: BaseTemporal.PlainDate;
   /** Cell width measured in `tickUnit` ticks. */
   spanInTicks: number;
   /** Stable key derived from the aligned start. */
@@ -67,7 +67,7 @@ export type PresetHeaderLevelConfig = PresetHeaderLevelConfigBase &
   (
     | {
         /** Formats the date of the aligned start of the cell into a string label. */
-        format: (locale: string, plainDate: PlainDate) => string;
+        format: (locale: string, plainDate: BaseTemporal.PlainDate) => string;
         renderCell?: undefined;
       }
     | {
@@ -109,12 +109,18 @@ export interface PresetDefinition {
    * Returns the first date of the visible range, from the date of the visible date in the
    * display timezone.
    */
-  getStartPlainDate: (visiblePlainDate: PlainDate, weekStartsOn: WeekStartsOn) => PlainDate;
+  getStartPlainDate: (
+    visiblePlainDate: BaseTemporal.PlainDate,
+    weekStartsOn: WeekStartsOn,
+  ) => BaseTemporal.PlainDate;
   /**
    * Returns the date after the last date of the visible range, `unitCount` periods after its
    * first date.
    */
-  getEndPlainDate: (startPlainDate: PlainDate, unitCount: number) => PlainDate;
+  getEndPlainDate: (
+    startPlainDate: BaseTemporal.PlainDate,
+    unitCount: number,
+  ) => BaseTemporal.PlainDate;
   /**
    * Returns the exact number of CSS ticks for the visible range, sized for the
    * full day. Override `unitCount` whenever the grid width must differ from the
@@ -124,7 +130,10 @@ export interface PresetDefinition {
    * shrink on DST days). The displayed hour window scales the result in the
    * preset selector, so presets never see it. `endPlainDate` is the date after the range.
    */
-  getCssUnitCount?: (startPlainDate: PlainDate, endPlainDate: PlainDate) => number;
+  getCssUnitCount?: (
+    startPlainDate: BaseTemporal.PlainDate,
+    endPlainDate: BaseTemporal.PlainDate,
+  ) => number;
   /**
    * Adds `amount` units (of the preset's navigation unit) to `date`. Called by
    * `goToNextVisibleDate` / `goToPreviousVisibleDate` with `amount = ±unitCount`.

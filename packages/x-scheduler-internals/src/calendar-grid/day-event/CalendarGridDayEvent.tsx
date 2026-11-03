@@ -9,7 +9,7 @@ import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
-import type { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
+import type { BaseTemporal } from '../../internals/utils/base-temporal';
 import { plainDateFromDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
 import type { SchedulerEventId, SchedulerEventOccurrence, SchedulerResourceId } from '../../models';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
@@ -204,6 +204,6 @@ export namespace CalendarGridDayEvent {
     /**
      * The grabbed day, in the timezone of `start`.
      */
-    draggedDay: PlainDate;
+    draggedDay: BaseTemporal.PlainDate;
   }
 }
