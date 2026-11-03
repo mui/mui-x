@@ -26,7 +26,6 @@ function TestDialog() {
         <button type="button" onClick={resetDrag}>
           Reset
         </button>
-        <Draggable.Preview disabled />
       </Draggable.Trigger>
     </Draggable.Root>
   );

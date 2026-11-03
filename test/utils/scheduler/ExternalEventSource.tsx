@@ -17,7 +17,7 @@ export function ExternalEventSource(props: {
   const {
     eventData,
     onEventDrop,
-    preview = <Draggable.Preview disabled />,
+    preview,
     'data-testid': testId = 'external-source',
     children = eventData.title,
   } = props;
@@ -25,10 +25,8 @@ export function ExternalEventSource(props: {
   return (
     <Draggable.Provider>
       <Draggable.Root kind={schedulerExternalEventKind} payload={payload}>
-        <Draggable.Trigger data-testid={testId}>
-          {children}
-          {preview}
-        </Draggable.Trigger>
+        <Draggable.Trigger data-testid={testId}>{children}</Draggable.Trigger>
+        {preview}
       </Draggable.Root>
     </Draggable.Provider>
   );

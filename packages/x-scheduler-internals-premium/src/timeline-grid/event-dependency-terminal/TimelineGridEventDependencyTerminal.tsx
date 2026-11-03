@@ -73,7 +73,6 @@ export const TimelineGridEventDependencyTerminal = React.forwardRef(
           side={side}
           render={<Draggable.Trigger render={element} />}
         />
-        <Draggable.Preview disabled />
       </Draggable.Root>
     );
   },

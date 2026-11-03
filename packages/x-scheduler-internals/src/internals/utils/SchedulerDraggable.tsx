@@ -17,8 +17,8 @@ export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable<
   const {
     getDragData,
     render,
-    // Resize handles draw their own feedback, so they suppress Base UI's default clone of the source.
-    preview = <Draggable.Preview disabled />,
+    // Resize handles draw their own feedback, so they render no preview.
+    preview,
     kind,
     disabled,
     activation,
@@ -84,8 +84,7 @@ export namespace SchedulerDraggable {
      */
     render: React.ReactElement;
     /**
-     * The `Draggable.Preview` of the drag.
-     * @default <Draggable.Preview disabled />
+     * The preview parts of the drag. Omit it to show no preview.
      */
     preview?: React.ReactNode;
   }

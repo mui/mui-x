@@ -69,8 +69,8 @@ describe('Scheduler drag snapshots', () => {
     expect(nextGetDragData).toHaveBeenCalledTimes(1);
   });
 
-  // Resize handles draw their own feedback: Base UI's default clone of the source would repeat it.
-  it('should not show a clone of the source while it is dragged without a preview', async () => {
+  // Resize handles draw their own feedback: a copy of the source would repeat it.
+  it('should not show a copy of the source while it is dragged without a preview', async () => {
     render(<Fixture getDragData={() => snapshot} />);
     startDrag(screen.getByTestId('source'));
     await act(async () => {

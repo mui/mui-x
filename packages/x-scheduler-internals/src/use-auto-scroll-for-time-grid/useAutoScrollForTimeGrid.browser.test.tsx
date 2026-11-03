@@ -34,30 +34,20 @@ function TimeGrid() {
           style={{ position: 'fixed', left: 300, top: 0, width: 100, height: 40 }}
         >
           Event
-          <Draggable.Preview disabled />
         </Draggable.Trigger>
       </Draggable.Root>
       <Draggable.Root kind={schedulerDayEventMoveKind} payload={payload}>
-        <Draggable.Trigger data-testid="day-event">
-          Day event
-          <Draggable.Preview disabled />
-        </Draggable.Trigger>
+        <Draggable.Trigger data-testid="day-event">Day event</Draggable.Trigger>
       </Draggable.Root>
       <Draggable.Root kind={schedulerTimeEventResizeKind} payload={payload}>
-        <Draggable.Trigger data-testid="time-resize">
-          <Draggable.Preview disabled />
-        </Draggable.Trigger>
+        <Draggable.Trigger data-testid="time-resize"></Draggable.Trigger>
       </Draggable.Root>
       <Draggable.Root kind={schedulerDayEventResizeKind} payload={payload}>
-        <Draggable.Trigger data-testid="day-resize">
-          <Draggable.Preview disabled />
-        </Draggable.Trigger>
+        <Draggable.Trigger data-testid="day-resize"></Draggable.Trigger>
       </Draggable.Root>
       <ExternalEventSource eventData={externalEventData} data-testid="external" />
       <Draggable.Root kind={dialogKind}>
-        <Draggable.Trigger data-testid="dialog">
-          <Draggable.Preview disabled />
-        </Draggable.Trigger>
+        <Draggable.Trigger data-testid="dialog"></Draggable.Trigger>
       </Draggable.Root>
       <div
         ref={ref}

@@ -77,7 +77,6 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
       <Draggable.Trigger
         render={<EventDialogPaper {...other} ref={nodeRef} className={className} />}
       />
-      <Draggable.Preview disabled />
     </Draggable.Root>
   );
 } as any as DialogProps['PaperComponent'];

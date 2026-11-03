@@ -75,7 +75,8 @@ export function useDraggableEvent<TData extends SchedulerEventDragData>(
     disabled: !isDraggable,
     getDragData,
     preview: (
-      <SchedulerDragPreview disabled={!canDropOutside}>
+      // The event sits in the Scheduler, so the drag starts over one of its targets.
+      <SchedulerDragPreview disabled={!canDropOutside} startsOverScheduler>
         {() => renderDragPreview({ type: 'internal-event', data: event })}
       </SchedulerDragPreview>
     ),

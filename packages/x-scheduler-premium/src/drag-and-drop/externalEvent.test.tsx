@@ -26,9 +26,11 @@ import { describe, it, expect, vi } from 'vitest';
 import { TestTimeline } from '../event-timeline-premium/tests/dependencyTestUtils';
 
 const floatingCardPreview = (
-  <Draggable.Preview>
-    <span data-testid="external-preview">Floating card</span>
-  </Draggable.Preview>
+  <Draggable.Positioner>
+    <Draggable.Preview>
+      <span data-testid="external-preview">Floating card</span>
+    </Draggable.Preview>
+  </Draggable.Positioner>
 );
 
 function Source({ onEventDrop, duration = 4320 }: { onEventDrop: () => void; duration?: number }) {
