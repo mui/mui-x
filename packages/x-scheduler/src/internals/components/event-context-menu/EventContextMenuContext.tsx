@@ -2,9 +2,14 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
-import { isCoarsePointer, isEventOccurrence } from '@mui/x-scheduler-internals/internals';
+import { isCoarsePointer } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
-import { captureFocusFallback, resolveFocusFallback } from '../../utils/focus-utils';
+import {
+  captureFocusFallback,
+  getOccurrenceTimestamp,
+  resolveConnectedFocusFallback,
+  useMoveFocusOutOnUnmount,
+} from '../../utils/focus-utils';
 import { useEventEditingTriggerProps } from '../event-editing';
 import { EventContextMenu } from './EventContextMenu';
 import type {
@@ -56,10 +61,11 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
       options: OpenEventContextMenuOptions = {},
     ) => {
       // Read while the anchor is still mounted.
-      const occurrenceTimestamp = isEventOccurrence(occurrence)
-        ? occurrence.dataTimezone.start.timestamp
-        : 0;
-      const snapshot = captureFocusFallback(anchorEl, occurrence.id, occurrenceTimestamp);
+      const snapshot = captureFocusFallback(
+        anchorEl,
+        occurrence.id,
+        getOccurrenceTimestamp(occurrence),
+      );
       setState({
         open: true,
         occurrence,
@@ -70,18 +76,7 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
         // Other events can be removed in the same update, so only the ones still mounted are kept.
         getFocusFallback:
           options.getFocusFallback ??
-          (() =>
-            snapshot
-              ? resolveFocusFallback(
-                  {
-                    ...snapshot,
-                    candidates: snapshot.candidates.filter(
-                      (candidate) => candidate.element.isConnected,
-                    ),
-                  },
-                  null,
-                )
-              : null),
+          (() => (snapshot ? resolveConnectedFocusFallback(snapshot) : null)),
       });
     },
   );
@@ -126,7 +121,8 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
  * the event context menu on right-click or on `Space` while it is focused. `onEditingCanceled` and
  * `stableAnchor` behave exactly as they do on `EventEditingTrigger` — forwarded to `startEditing`
  * both for the direct click and for Edit chosen from the menu. Unmounting closes the menu opened
- * from it.
+ * from it, and moves focus to the event's cell, column or row (or the next agenda event) when it
+ * was focused.
  *
  * On a coarse pointer, activation arms the toolbar instead of opening the dialog directly
  * (`editingModePolicy.ts`), and that toolbar already exposes Edit and Delete — so right-click and
@@ -146,6 +142,9 @@ export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
     }
     return () => menuContext.closeMenuForAnchor(node);
   }, [menuContext, editing.ref]);
+
+  // The "+N more" popover, which passes `getFocusFallback`, moves focus out of its own items.
+  useMoveFocusOutOnUnmount(editing.ref, occurrence, getFocusFallback == null);
 
   return React.cloneElement(children as React.ReactElement<any>, {
     ref: editing.ref,

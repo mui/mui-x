@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, fireEvent, waitFor, within } from '@mui/internal-test-utils';
+import { act, screen, fireEvent, waitFor, within } from '@mui/internal-test-utils';
 import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneAgendaView } from '@mui/x-scheduler/agenda-view';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
@@ -104,6 +104,32 @@ describe('AgendaView - event deletion', () => {
 
     await waitFor(() => {
       expect(document.activeElement).to.equal(screen.getByRole('button', { name: /First/ }));
+    });
+  });
+
+  it('should move focus to the next event when the focused event is removed', async () => {
+    const initialEvents = ['First', 'Second'].map((title, index) =>
+      EventBuilder.new()
+        .id(`event-${index}`)
+        .title(title)
+        .singleDay(`2025-07-03T${10 + index}:00:00Z`, 60)
+        .build(),
+    );
+    const { setProps } = render(
+      <StandaloneAgendaView
+        events={initialEvents}
+        resources={[]}
+        visibleDate={new Date('2025-07-03T00:00:00Z')}
+      />,
+    );
+    await act(async () => {
+      screen.getByRole('button', { name: /First/ }).focus();
+    });
+
+    setProps({ events: initialEvents.slice(1) });
+
+    await waitFor(() => {
+      expect(document.activeElement).to.equal(screen.getByRole('button', { name: /Second/ }));
     });
   });
 });

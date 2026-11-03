@@ -1,4 +1,7 @@
+'use client';
+import * as React from 'react';
 import { activeElement, contains } from '@base-ui/utils/shadowDom';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import type {
   RecurringEventScope,
   SchedulerEventId,
@@ -125,6 +128,73 @@ export function resolveFocusFallback(
 }
 
 /**
+ * `resolveFocusFallback` for a removal with no scope to go by: only the rows still in the document
+ * are candidates.
+ */
+export function resolveConnectedFocusFallback(snapshot: FocusFallbackSnapshot): HTMLElement | null {
+  return resolveFocusFallback(
+    {
+      ...snapshot,
+      candidates: snapshot.candidates.filter((candidate) => candidate.element.isConnected),
+    },
+    null,
+  );
+}
+
+/** The start `captureFocusFallback` identifies an occurrence's rows by. */
+export function getOccurrenceTimestamp(occurrence: SchedulerRenderableEventOccurrence): number {
+  return isEventOccurrence(occurrence) ? occurrence.dataTimezone.start.timestamp : 0;
+}
+
+/**
+ * Moves focus to the fallback of the element in `ref` (rendering `occurrence`) when it unmounts
+ * while focused, e.g. once its event is removed through a controlled `events` prop. Without it,
+ * focus is lost to the document.
+ *
+ * Runs in a layout cleanup, which React calls before detaching the element, so the fallback is
+ * captured while the element is still in place; focus moves once the commit is done.
+ */
+export function useMoveFocusOutOnUnmount(
+  ref: React.RefObject<HTMLElement | null>,
+  occurrence: SchedulerRenderableEventOccurrence,
+  enabled: boolean,
+) {
+  const occurrenceRef = React.useRef(occurrence);
+  occurrenceRef.current = occurrence;
+
+  useIsoLayoutEffect(() => {
+    const node = ref.current;
+    if (!enabled || node === null) {
+      return undefined;
+    }
+    return () => {
+      const ownerDocument = node.ownerDocument;
+      if (!contains(node, activeElement(ownerDocument))) {
+        return;
+      }
+      const snapshot = captureFocusFallback(
+        node,
+        occurrenceRef.current.id,
+        getOccurrenceTimestamp(occurrenceRef.current),
+      );
+      if (snapshot === null) {
+        return;
+      }
+      queueMicrotask(() => {
+        // Still focused, or focus moved elsewhere in the meantime.
+        if (!isFocusOnDocument(ownerDocument)) {
+          return;
+        }
+        const focusFallback = resolveConnectedFocusFallback(snapshot);
+        if (focusFallback?.isConnected) {
+          focusFallback.focus({ preventScroll: true });
+        }
+      });
+    };
+  }, [ref, enabled]);
+}
+
+/**
  * Deletes `occurrence`, then moves focus to the fallback of `anchor` (the element it was opened
  * from) once the delete's scope (if any) is known. `onDelete` runs once the delete applies.
  */
@@ -139,10 +209,9 @@ export function deleteOccurrenceAndRestoreFocus(
   anchor: HTMLElement | null | undefined,
   onDelete?: () => void,
 ) {
-  const occurrenceTimestamp = isEventOccurrence(occurrence)
-    ? occurrence.dataTimezone.start.timestamp
-    : 0;
-  const snapshot = anchor ? captureFocusFallback(anchor, occurrence.id, occurrenceTimestamp) : null;
+  const snapshot = anchor
+    ? captureFocusFallback(anchor, occurrence.id, getOccurrenceTimestamp(occurrence))
+    : null;
 
   store.deleteOccurrence(occurrence, (scope) => {
     onDelete?.();
