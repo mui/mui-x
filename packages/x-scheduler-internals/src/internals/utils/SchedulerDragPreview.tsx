@@ -1,6 +1,9 @@
 'use client';
 import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
+import { useId } from '@base-ui/utils/useId';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
+import { useValueAsRef } from '@base-ui/utils/useValueAsRef';
 import { schedulerDropTargetKind } from './schedulerDrag';
 
 function isOutsideScheduler(location: Draggable.LocationHistory) {
@@ -14,19 +17,63 @@ function isOutsideScheduler(location: Draggable.LocationHistory) {
 function SchedulerFloatingPreview(props: SchedulerDragPreview.Props) {
   const { children, startsOverScheduler = false } = props;
   const [content] = React.useState(children);
-  // The monitor registers once the drag has started, so the caller tells where it starts.
-  const [visible, setVisible] = React.useState(!startsOverScheduler);
-  // The preview only exists during its own drag, so the monitor needs no `accept`.
-  Draggable.useMonitor({
-    onMove: (eventDetails) => setVisible(isOutsideScheduler(eventDetails.location)),
-    onTargetChange: (eventDetails) => setVisible(isOutsideScheduler(eventDetails.location)),
-  });
+  const manager = Draggable.useManager();
+  const id = useId();
+  // On React 17 the id is only set after mount, so the monitor reads it through a ref.
+  const idRef = useValueAsRef(id);
+  const previewRef = React.useRef<HTMLDivElement>(null);
+
+  useIsoLayoutEffect(() => {
+    let element = previewRef.current;
+    // The monitor registers once the drag has started, so the caller tells where it starts.
+    let visible = !startsOverScheduler;
+    let mounted = true;
+    let ended = false;
+    function update(location: Draggable.LocationHistory) {
+      const nextVisible = isOutsideScheduler(location);
+      if (nextVisible === visible) {
+        return;
+      }
+      visible = nextVisible;
+      // When virtualization unmounts the source, Base UI leaves a copy of the preview in place.
+      if (element && !element.isConnected && idRef.current) {
+        element = element.ownerDocument.querySelector<HTMLDivElement>(
+          `[data-scheduler-drag-preview="${CSS.escape(idRef.current)}"]`,
+        );
+      }
+      element?.style.setProperty('visibility', visible ? '' : 'hidden');
+    }
+    // The preview only exists during its own drag, so the monitor needs no `accept`.
+    const unregister = manager.registerMonitor(() => ({
+      onMove: (eventDetails) => update(eventDetails.location),
+      onTargetChange: (eventDetails) => update(eventDetails.location),
+      onMoveEnd: () => {
+        ended = true;
+        if (!mounted) {
+          unregister();
+        }
+      },
+    }));
+    return () => {
+      mounted = false;
+      // The copy left in place still needs its visibility until the drag ends.
+      if (ended) {
+        unregister();
+      }
+    };
+  }, [manager, idRef, startsOverScheduler]);
+
   // An empty preview would still follow the pointer.
   if (content == null || content === false) {
     return null;
   }
   return (
-    <Draggable.Preview style={{ visibility: visible ? undefined : 'hidden' }}>
+    <Draggable.Preview
+      ref={previewRef}
+      data-scheduler-drag-preview={id}
+      // Written once: the monitor updates the element directly, as it outlives this component.
+      style={startsOverScheduler ? { visibility: 'hidden' } : undefined}
+    >
       {content}
     </Draggable.Preview>
   );

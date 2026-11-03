@@ -90,6 +90,13 @@ describe('Scheduler floating drag preview', () => {
     expect(screen.queryByTestId('source')).toBe(null);
     await moveDragAndWait(document.body, { clientX: 200 });
     expect(screen.getByText('Custom preview')).toBeVisible();
+    // The preview left in place still hides over Scheduler targets.
+    await moveDragAndWait(screen.getByTestId('target'), { clientX: 100 });
+    await waitFor(() =>
+      expect(screen.getByText('Custom preview').parentElement!.style.visibility).toBe('hidden'),
+    );
+    await moveDragAndWait(document.body, { clientX: 200 });
+    await waitFor(() => expect(screen.getByText('Custom preview')).toBeVisible());
     cancelDrag();
     await waitFor(() => expect(screen.queryByText('Custom preview')).toBe(null));
   });
