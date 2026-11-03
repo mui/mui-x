@@ -46,6 +46,9 @@ const DEFAULT_PARAMS = {
 
 const date = (value: string) => adapter.date(value, 'default');
 const timestampOf = (value: string | undefined) => new Date(value!).getTime();
+const cascadeNotWritableWarning = (property: 'start' | 'end') =>
+  'MUI X Scheduler: A change was not applied because keeping a dependency would move an event whose date could not be written back.\n' +
+  `\`eventModelStructure\` declares \`${property}\` with a getter but no setter, so it cannot be written back to your event model. Add a \`setter\` to make it editable.`;
 
 describe('Auto-scheduling - EventTimelinePremiumStore', () => {
   describe('method: updateEvent', () => {
@@ -479,7 +482,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
     // The dependency cleanup for `deleted` is computed inside `handleEventsUpdate`, before the
     // store's own date-writability check runs on the merged batch — it must not go out just
-    // because this hook itself had nothing to veto.
+    // because this hook left the refusal of the caller's own move to the store.
     it('should emit nothing, not even the dependency cleanup, when the batch is refused because a date cannot be written back', () => {
       const onEventsChange = vi.fn();
       const onDependenciesChange = vi.fn();
@@ -510,7 +513,41 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         'MUI X Scheduler: An event was not moved because a date could not be written back.',
       ]);
 
-      expect(result.rejection).not.to.equal(null);
+      expect(result.rejection).to.deep.equal({ code: 'datesNotWritableError' });
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+    });
+
+    // Same batch, but `a` is only resized: the plugin itself vetoes the push of `b`, and its
+    // veto must beat the cleanup too.
+    it('should emit nothing, not even the dependency cleanup, when the cascade of a batch with a deletion needs a date that cannot be written back', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const orphan = EventBuilder.new().id('d').singleDay('2025-07-04T09:00:00Z').build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, eventB, orphan],
+          dependencies: [DEP_AB, { id: 'dep-2', source: 'a', target: 'd', type: 'FinishToStart' }],
+          eventModelStructure: { start: { getter: (event: any) => event.start } },
+          onEventsChange,
+          onDependenciesChange,
+        },
+        adapter,
+      );
+
+      let result: any;
+      expect(() => {
+        result = (store as any).updateEvents({
+          deleted: ['d'],
+          updated: [{ id: 'a', end: date('2025-07-03T10:30:00Z') }],
+        });
+      }).toWarnDev([cascadeNotWritableWarning('start')]);
+
+      expect(result.rejection).to.deep.equal({
+        code: 'unwritableEventMovedError',
+        params: { title: eventB.title },
+      });
       expect(onEventsChange.mock.calls.length).to.equal(0);
       expect(onDependenciesChange.mock.calls.length).to.equal(0);
     });
@@ -534,12 +571,54 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       let result: ReturnType<typeof store.updateEvent>;
       expect(() => {
         result = store.updateEvent({ id: 'a', end: date('2025-07-03T10:30:00Z') });
+      }).toWarnDev([cascadeNotWritableWarning('start')]);
+
+      expect(result!).to.deep.equal({
+        applied: false,
+        rejection: { code: 'unwritableEventMovedError', params: { title: eventB.title } },
+      });
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+      expect(store.state.processedEventLookup.get('a')!.dataTimezone.end.timestamp).to.equal(
+        adapter.getTime(date('2025-07-03T10:00:00Z')),
+      );
+    });
+
+    // A caller's own move is refused by the store whatever the cascade does with it, so the
+    // rejection is the same wherever the move lands: clamped back after `a` (first call), or
+    // pushing `b` forward (second call) — the toast must not blame `b` for `a`'s own move.
+    it.each([
+      {
+        name: 'when the cascade clamps it',
+        changes: { id: 'b', start: '2025-07-03T09:00:00Z', end: '2025-07-03T10:00:00Z' },
+      },
+      {
+        name: 'when it pushes a successor',
+        changes: { id: 'a', start: '2025-07-03T11:00:00Z', end: '2025-07-03T12:00:00Z' },
+      },
+    ])("should refuse the caller's own move with the store's error $name", ({ changes }) => {
+      const onEventsChange = vi.fn();
+      const eventModelStructure = { start: { getter: (event: any) => event.start } };
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        { ...DEFAULT_PARAMS, eventModelStructure, onEventsChange },
+        adapter,
+      );
+
+      let result: ReturnType<typeof store.updateEvent>;
+      expect(() => {
+        result = store.updateEvent({
+          id: changes.id,
+          start: date(changes.start),
+          end: date(changes.end),
+        });
       }).toWarnDev([
         'MUI X Scheduler: An event was not moved because a date could not be written back.\n' +
           '`eventModelStructure` declares `start` with a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.',
       ]);
 
-      expect(result!.applied).to.equal(false);
+      expect(result!).to.deep.equal({
+        applied: false,
+        rejection: { code: 'datesNotWritableError' },
+      });
       expect(onEventsChange.mock.calls.length).to.equal(0);
     });
 
@@ -693,6 +772,162 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const emittedB = newEvents.find((event) => event.id === 'b')!;
       expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
       expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T12:00:00Z')));
+    });
+
+    // Turning `b` all-day moves its start back to midnight, before `a` ends, and keeps its end
+    // (already at the end of a day). The cascade only reports the bound it pushes (`start`), so
+    // the contribution isn't a move: it must still refuse the batch rather than be stripped like
+    // a caller's own resize, which would apply `allDay` alone and leave `b` overlapping `a`.
+    it('should refuse the whole batch when the cascade pushes a single bound that is not writable', () => {
+      const onEventsChange = vi.fn();
+      const eventModelStructure = { start: { getter: (event: any) => event.start } };
+      const longSuccessor = EventBuilder.new()
+        .id('b')
+        .span('2025-07-03T10:00:00Z', '2025-07-05T23:59:59.999Z')
+        .build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        { ...DEFAULT_PARAMS, events: [eventA, longSuccessor], eventModelStructure, onEventsChange },
+        adapter,
+      );
+
+      let result: ReturnType<typeof store.updateEvent>;
+      expect(() => {
+        result = store.updateEvent({ id: 'b', allDay: true });
+      }).toWarnDev([cascadeNotWritableWarning('start')]);
+
+      expect(result!.applied).to.equal(false);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+      expect(store.state.processedEventLookup.get('b')!.allDay).to.equal(false);
+    });
+
+    // Mirror of the above: turning `b` back to timed makes it end at noon, before `a` ends, so
+    // the FinishToFinish clamp pushes the unwritable `end` alone.
+    it('should refuse the whole batch when the cascade clamps a single end that is not writable', () => {
+      const onEventsChange = vi.fn();
+      const eventModelStructure = { end: { getter: (event: any) => event.end } };
+      const lateEndingPredecessor = EventBuilder.new()
+        .id('a')
+        .span('2025-07-03T09:00:00Z', '2025-07-03T18:00:00Z')
+        .build();
+      const allDaySuccessor = EventBuilder.new()
+        .id('b')
+        .span('2025-07-03T00:00:00Z', '2025-07-03T12:00:00Z', { allDay: true })
+        .build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          events: [lateEndingPredecessor, allDaySuccessor],
+          dependencies: [{ ...DEP_AB, type: 'FinishToFinish' }],
+          eventModelStructure,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      let result: ReturnType<typeof store.updateEvent>;
+      expect(() => {
+        result = store.updateEvent({ id: 'b', allDay: false });
+      }).toWarnDev([cascadeNotWritableWarning('end')]);
+
+      expect(result!.applied).to.equal(false);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+      expect(store.state.processedEventLookup.get('b')!.allDay).to.equal(true);
+    });
+
+    it('should not add a dependency whose push would change a date that is not writable', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const overlapping = EventBuilder.new().id('c').singleDay('2025-07-03T09:30:00Z').build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, overlapping],
+          dependencies: [],
+          eventModelStructure: { start: { getter: (event: any) => event.start } },
+          onDependenciesChange,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      let result: ReturnType<typeof store.addDependency>;
+      expect(() => {
+        result = store.addDependency({ source: 'a', target: 'c', type: 'FinishToStart' });
+      }).toWarnDev([cascadeNotWritableWarning('start')]);
+
+      expect(result!).to.deep.equal({
+        status: 'rejected',
+        reason: 'datesNotWritable',
+        eventId: 'c',
+      });
+
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should not make a dependency stricter when its push would change a date that is not writable', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const overlapping = EventBuilder.new().id('b').singleDay('2025-07-03T09:30:00Z').build();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, overlapping],
+          dependencies: [{ ...DEP_AB, type: 'StartToStart' }],
+          eventModelStructure: { start: { getter: (event: any) => event.start } },
+          onDependenciesChange,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      let result: ReturnType<typeof store.updateDependency>;
+      expect(() => {
+        result = store.updateDependency('dep-1', { type: 'FinishToStart' });
+      }).toWarnDev([cascadeNotWritableWarning('start')]);
+
+      expect(result!).to.deep.equal({
+        status: 'rejected',
+        reason: 'datesNotWritable',
+        eventId: 'b',
+      });
+      // The warning above is only logged once.
+      expect(() => {
+        result = store.updateDependency('dep-1', { lag: 2, lagUnit: 'hour' });
+      }).not.toWarnDev();
+      expect(result!).to.deep.equal({
+        status: 'rejected',
+        reason: 'datesNotWritable',
+        eventId: 'b',
+      });
+
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    // Guards against over-refusing: these paths move no event, so an unwritable date is irrelevant.
+    it('should still relax and delete a dependency when a date is not writable', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStoreWithFeatures(
+        {
+          ...DEFAULT_PARAMS,
+          eventModelStructure: { start: { getter: (event: any) => event.start } },
+          onDependenciesChange,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      expect(() => {
+        expect(store.updateDependency('dep-1', { type: 'StartToStart' })).to.deep.equal({
+          status: 'updated',
+        });
+        expect(store.deleteDependency('dep-1')).to.equal(true);
+      }).not.toWarnDev();
+
+      expect(onDependenciesChange.mock.calls.length).to.equal(2);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
     });
   });
 

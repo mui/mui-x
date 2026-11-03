@@ -247,6 +247,9 @@ const isISGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'já',
   booleanCellFalseLabel: 'nei',
 
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
+
   // Long text cell
   longTextCellExpandLabel: 'Stækka',
   longTextCellCollapseLabel: 'Minnka',

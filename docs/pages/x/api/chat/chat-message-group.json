@@ -34,6 +34,11 @@
       "class": null
     },
     {
+      "name": "streamingIndicator",
+      "description": "The animated dots shown while an assistant response is in flight: as a\ntrailing row while waiting for the response to start, then inside the\nassistant bubble while it streams. Controlled by\n`features.streamingIndicator` (`'auto'` by default). Pass `null` to hide it.",
+      "class": null
+    },
+    {
       "name": "messageRoot",
       "description": "Styled root of `<ChatMessage>` (wrapper-only); the default avatar/content/meta\ntree still renders inside it.",
       "class": null
@@ -67,11 +72,6 @@
     {
       "name": "messageAuthorName",
       "description": "Author name label rendered by the group wrapper (default variant: above the\nbubble; compact variant: inside the message grid). Pass `null` to hide.",
-      "class": null
-    },
-    {
-      "name": "streamingIndicator",
-      "description": "The animated dots shown while an assistant response is in flight: as a\ntrailing row while waiting for the response to start, then inside the\nassistant bubble while it streams. Controlled by\n`features.streamingIndicator` (`'auto'` by default). Pass `null` to hide it.",
       "class": null
     }
   ],
