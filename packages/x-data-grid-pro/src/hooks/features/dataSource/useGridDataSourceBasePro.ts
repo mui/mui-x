@@ -409,7 +409,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         }
         apiRef.current.updateNestedRows(
           [...getFetchedRowsUpdates(apiRef, response.rows), ...rowsToDelete],
-          [],
+          undefined,
           { replaceChildrenOf: GRID_ROOT_GROUP_ID, throttle: true },
         );
       }

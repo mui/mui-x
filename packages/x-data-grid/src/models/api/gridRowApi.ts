@@ -169,7 +169,7 @@ export interface GridRowProPrivateApi {
   /**
    * Allows to update, insert, replace and delete rows at a specific nested level.
    * @param {Array<GridRowModelUpdate | GridRowModelReplace>} updates An array of rows with an `action` specifying what to do.
-   * @param {string[]} nestedLevel The nested level of the rows to update, it represents the path to the row in the tree based on `node.groupingKey`.
+   * @param {string[]} nestedLevel The nested level of the rows to update, it represents the path to the row in the tree based on `node.groupingKey`. If omitted, each row keeps its current parent.
    * @param {GridUpdateNestedRowsOptions} options Additional options for the update.
    */
   updateNestedRows: (

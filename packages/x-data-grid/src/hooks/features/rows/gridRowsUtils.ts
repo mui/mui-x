@@ -423,7 +423,7 @@ export const updateCacheWithNewRows = ({
     }
   });
 
-  let childrenOrder: GridRowsPartialUpdates['childrenOrder'];
+  let childrenOrder = previousCache.updates.childrenOrder;
   if (replaceChildrenOf !== undefined) {
     const ids: GridRowId[] = [];
     uniqueUpdates.forEach((row, id) => {

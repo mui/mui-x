@@ -243,7 +243,7 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock this f
         updates: nonPinnedRowsUpdates,
         getRowId: props.getRowId,
         previousCache: apiRef.current.caches.rows,
-        groupKeys: groupKeys ?? [],
+        groupKeys,
         replaceChildrenOf: options?.replaceChildrenOf,
       });
 
