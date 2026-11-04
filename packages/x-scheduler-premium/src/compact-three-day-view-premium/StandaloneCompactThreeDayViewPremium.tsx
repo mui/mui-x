@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
+import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import {
   EventCalendarPremiumStore,
   useExtractEventCalendarPremiumParameters,
@@ -11,7 +12,7 @@ import {
   EventEditingOptionalRenderersContext,
   ResponsiveTypographyContainer,
 } from '@mui/x-scheduler/internals';
-import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
+import { useFrozenEventCalendarPremiumFeatures } from '../event-calendar-premium/features/useFrozenEventCalendarPremiumFeatures';
 import type { StandaloneCompactThreeDayViewPremiumProps } from './CompactThreeDayViewPremium.types';
 
 const packageInfo = {
@@ -38,19 +39,27 @@ const StandaloneCompactThreeDayViewPremium = React.forwardRef(
       typeof props
     >(props);
 
-    const { localeText, slots, slotProps, ...other } = forwardedProps;
+    const { localeText, slots, slotProps, features: featuresProp, ...other } = forwardedProps;
+    const { features, storeFeatures } = useFrozenEventCalendarPremiumFeatures(
+      featuresProp,
+      'StandaloneCompactThreeDayViewPremium',
+    );
+    const storeParameters = React.useMemo(
+      () => ({ ...parameters, storeFeatures }),
+      [parameters, storeFeatures],
+    );
 
     return (
       <ResponsiveTypographyContainer>
         <EventCalendarProvider
-          {...parameters}
+          {...storeParameters}
           storeClass={EventCalendarPremiumStore}
           localeText={localeText}
           slots={slots}
           slotProps={slotProps}
         >
           <EventEditingOptionalRenderersContext.Provider
-            value={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}
+            value={features.recurringEvents?.optionalRenderers ?? EMPTY_OBJECT}
           >
             <CompactThreeDayView ref={forwardedRef} {...other} />
           </EventEditingOptionalRenderersContext.Provider>
