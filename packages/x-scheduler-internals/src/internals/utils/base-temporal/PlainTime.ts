@@ -5,6 +5,7 @@ import {
   getTimeNumber,
   ISO_TIME_REGEXP,
   readOverflow,
+  readWithFields,
   throwOnPrimitiveConversion,
   TIME_FIELD_MAXIMUMS,
   TIME_FIELDS,
@@ -91,6 +92,11 @@ export declare namespace BaseTemporal {
     readonly millisecond: number;
     readonly microsecond: number;
     readonly nanosecond: number;
+    /**
+     * A time has no date. Date-times have every other member of a time, so this keeps them out of
+     * the APIs that take a time, such as the time field.
+     */
+    readonly year?: undefined;
     /**
      * Returns whether `other` represents the same time.
      */
@@ -181,7 +187,12 @@ export class PlainTime implements BaseTemporal.PlainTime {
   }
 
   with(fields: PlainTimeFields, options?: PlainDateFromOptions): PlainTime {
-    return PlainTime.from(mergeDefinedFields<PlainTimeFields>(this, fields), options);
+    const partial = readWithFields(fields, 'PlainTime.prototype.with()', TIME_FIELDS);
+    const next: PlainTimeFields = {};
+    for (const key of TIME_FIELDS) {
+      next[key] = partial[key] === undefined ? this[key] : partial[key];
+    }
+    return PlainTime.from(next, options);
   }
 
   toString(): string {
@@ -193,18 +204,4 @@ export class PlainTime implements BaseTemporal.PlainTime {
   valueOf(): never {
     return throwOnPrimitiveConversion('PlainTime');
   }
-}
-
-/**
- * Keeps existing fields when an update is omitted or `undefined`.
- */
-export function mergeDefinedFields<T extends object>(current: T, fields: Partial<T>): T {
-  const next = { ...current };
-  for (const key of Object.keys(fields) as (keyof T)[]) {
-    const value = fields[key];
-    if (value !== undefined) {
-      next[key] = value;
-    }
-  }
-  return next;
 }

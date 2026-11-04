@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useTheme, ThemeProvider, createTheme, Theme, Components } from '@mui/material/styles';
+import type { Theme, Components } from '@mui/material/styles';
+import { useTheme, ThemeProvider, createTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';

@@ -1,12 +1,11 @@
 import * as React from 'react';
+import type { GridEventListener, GridPivotModel } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
   GridChartsPanel,
   GridChartsIntegrationContextProvider,
   GridChartsRendererProxy,
   gridColumnGroupsUnwrappedModelSelector,
-  GridEventListener,
-  GridPivotModel,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import {

@@ -1,5 +1,8 @@
 {
-  "props": {},
+  "props": {
+    "featureName": { "type": { "name": "string" }, "required": true },
+    "seriesId": { "type": { "name": "string" }, "required": true }
+  },
   "name": "MapShape",
   "imports": [
     "import { MapShape } from '@mui/x-charts-premium/Map';",

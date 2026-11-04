@@ -14,14 +14,17 @@ import {
   LAST_SUPPORTED_DAY,
   MS_PER_DAY,
   throwOnPrimitiveConversion,
+  TIME_FIELDS,
 } from './iso';
 import type { PlainTime, BaseTemporal as PlainTimeTypes } from './PlainTime';
 import {
   PlainDateTime,
   createPlainDateTime,
   formatIsoDateTime,
+  withFields,
   type BaseTemporal as PlainDateTimeTypes,
   type PlainDateTimeFields,
+  type PlainDateTimeWithFields,
 } from './PlainDateTime';
 import {
   checkCalendarRange,
@@ -30,6 +33,11 @@ import {
   ISO_CALENDAR_ID,
   readCalendarAnnotation,
 } from './calendar';
+
+const ZONED_FIELDS = [...TIME_FIELDS, 'offset'];
+
+// The instants of `Date` and Temporal, 100,000,000 days on each side of 1970-01-01.
+const MAX_EPOCH_NANOSECONDS = /* @__PURE__ */ BigInt(LAST_SUPPORTED_DAY * MS_PER_DAY) * NS_PER_MS;
 
 export interface ZonedDateTimeOptions {
   overflow?: 'constrain' | 'reject' | undefined;
@@ -90,7 +98,7 @@ export declare namespace BaseTemporal {
      * stays valid.
      */
     with(
-      fields: Partial<PlainDateTimeFields> & { offset?: string | undefined },
+      fields: PlainDateTimeWithFields & { offset?: string | undefined },
       options?: ZonedDateTimeOptions,
     ): ZonedDateTime;
     /**
@@ -159,10 +167,16 @@ export class ZonedDateTime implements BaseTemporal.ZonedDateTime {
     this.offset = offset;
     const local = milliseconds + readCachedOffset(offset);
     const dayNumber = Math.floor(local / MS_PER_DAY);
-    if (dayNumber < FIRST_SUPPORTED_DAY || dayNumber > LAST_SUPPORTED_DAY) {
+    if (
+      epochNanoseconds < -MAX_EPOCH_NANOSECONDS ||
+      epochNanoseconds > MAX_EPOCH_NANOSECONDS ||
+      dayNumber < FIRST_SUPPORTED_DAY ||
+      dayNumber > LAST_SUPPORTED_DAY
+    ) {
       throw new Error(
-        'Base UI Plus: The zoned date-time is outside the supported years. ' +
-          'Fields cannot display it. Use a date-time between years 0 and 9999.',
+        'Base UI Plus: The zoned date-time is outside the supported range. ' +
+          'Like in Temporal, its instant must be one of the instants of `Date`, and its date must be from -271821-04-20 to +275760-09-13. ' +
+          'Use a date-time inside this range.',
       );
     }
     const clock = local - dayNumber * MS_PER_DAY;
@@ -184,14 +198,18 @@ export class ZonedDateTime implements BaseTemporal.ZonedDateTime {
     item: ZonedDateTime | ZonedDateTimeFields | string,
     options?: ZonedDateTimeOptions,
   ): ZonedDateTime {
-    if (item instanceof ZonedDateTime) {
-      return new ZonedDateTime(item.epochNanoseconds, item.timeZoneId, item.calendarId);
+    // A zoned value, of this or another implementation such as `Temporal`, holds its instant.
+    if (
+      typeof (item as Partial<BaseTemporal.ZonedDateTime> | null)?.epochNanoseconds === 'bigint'
+    ) {
+      const { epochNanoseconds, timeZoneId, calendarId } = item as BaseTemporal.ZonedDateTime;
+      return new ZonedDateTime(epochNanoseconds, timeZoneId, calendarId);
     }
     if (typeof item === 'string') {
       // The calendar annotation follows the time zone, as in Temporal.
       const annotated = readCalendarAnnotation(item);
       const match =
-        /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d{1,9})?)?)(Z|[+-]\d{2}:\d{2}(?::\d{2})?)?\[([^\]=]+)\]$/.exec(
+        /^((?:\d{4}|[+-]\d{6})-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d{1,9})?)?)(Z|[+-]\d{2}:\d{2}(?::\d{2})?)?\[([^\]=]+)\]$/.exec(
           annotated.text,
         );
       if (!match) {
@@ -208,10 +226,11 @@ export class ZonedDateTime implements BaseTemporal.ZonedDateTime {
         dateTime.calendarId,
       );
     }
-    const dateTime = PlainDateTime.from(item, options);
+    const fields = item as ZonedDateTimeFields;
+    const dateTime = PlainDateTime.from(fields, options);
     return new ZonedDateTime(
-      resolve(dateTime, item.timeZone, item.offset, options),
-      item.timeZone,
+      resolve(dateTime, fields.timeZone, fields.offset, options),
+      fields.timeZone,
       dateTime.calendarId,
     );
   }
@@ -285,11 +304,18 @@ export class ZonedDateTime implements BaseTemporal.ZonedDateTime {
     );
   }
   with(
-    fields: Partial<PlainDateTimeFields> & { offset?: string | undefined },
+    fields: PlainDateTimeWithFields & { offset?: string | undefined },
     options?: ZonedDateTimeOptions,
   ): ZonedDateTime {
+    const dateTime = withFields(
+      this.dateTime,
+      fields,
+      options,
+      'ZonedDateTime.prototype.with()',
+      ZONED_FIELDS,
+    );
     return new ZonedDateTime(
-      resolve(this.dateTime.with(fields, options), this.timeZoneId, fields.offset ?? this.offset, {
+      resolve(dateTime, this.timeZoneId, fields.offset ?? this.offset, {
         ...options,
         offset: options?.offset ?? 'prefer',
       }),

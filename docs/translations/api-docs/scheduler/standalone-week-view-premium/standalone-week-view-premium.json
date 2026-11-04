@@ -17,7 +17,7 @@
       "description": "Data source for fetching events asynchronously. When provided, events are fetched through the data source instead of the <code>events</code> prop."
     },
     "dateLocale": {
-      "description": "The locale object from <code>date-fns</code> used to format dates. This affects day names, month names, week start day, and other locale-dependent formatting. Import a locale from <code>date-fns/locale</code> and pass it to this prop."
+      "description": "The locale of the dates, as a BCP 47 language tag such as <code>&quot;fr-FR&quot;</code>, like the locales of <code>Intl.DateTimeFormat</code>. This affects day names, month names, the first day of the week, week numbers, the 12-hour or 24-hour clock and the other locale-dependent formatting."
     },
     "defaultPreferences": {
       "description": "The default preferences for the calendar. To use controlled preferences, use the <code>preferences</code> prop."

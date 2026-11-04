@@ -1,8 +1,9 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../../models';
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
-import type { PlainDate, PlainDateDuration } from '../base-temporal/PlainDate';
-import { MS_PER_DAY } from '../base-temporal/iso';
+import type { BaseTemporal } from '../base-temporal';
+import { MS_PER_DAY } from './dayNumber';
+import type { PlainDateDuration } from './plainDate';
 import {
   getEndOfDayMs,
   getStartOfDayMs,
@@ -29,7 +30,10 @@ export function getDateKey(day: TemporalSupportedObject, adapter: Adapter): stri
  * Read from the offsets of the timezone, which is faster than the getters of the adapter and
  * returns the same date.
  */
-export function buildTemporalPlainDate(adapter: Adapter, date: TemporalSupportedObject): PlainDate {
+export function buildTemporalPlainDate(
+  adapter: Adapter,
+  date: TemporalSupportedObject,
+): BaseTemporal.PlainDate {
   return toPlainDate(adapter.getTime(date), adapter.getTimezone(date));
 }
 
@@ -40,19 +44,10 @@ export function buildTemporalPlainDate(adapter: Adapter, date: TemporalSupported
  */
 export function createStartOfPlainDate(
   adapter: Adapter,
-  plainDate: PlainDate,
+  plainDate: BaseTemporal.PlainDate,
   timezone: TemporalTimezone,
 ): TemporalSupportedObject {
   return createAdapterDate(adapter, toEpochMs(plainDate, 0, timezone), timezone);
-}
-
-/**
- * Creates the adapter value of the midnight of a plain date in UTC, to format the date or read the
- * fields that depend on the locale, like its week number. UTC skips no date, unlike a timezone that
- * skips a midnight or a whole date, like December 30th, 2011 in Pacific/Apia.
- */
-export function createLabelDate(adapter: Adapter, plainDate: PlainDate): TemporalSupportedObject {
-  return createStartOfPlainDate(adapter, plainDate, 'UTC');
 }
 
 /**
@@ -61,7 +56,7 @@ export function createLabelDate(adapter: Adapter, plainDate: PlainDate): Tempora
  */
 export function createEndOfPlainDate(
   adapter: Adapter,
-  plainDate: PlainDate,
+  plainDate: BaseTemporal.PlainDate,
   timezone: TemporalTimezone,
 ): TemporalSupportedObject {
   const nextPlainDate = plainDate.add({ days: 1 });
@@ -176,7 +171,7 @@ export function createProcessedDate(
 export function moveToPlainDate(
   adapter: Adapter,
   date: TemporalSupportedObject,
-  plainDate: PlainDate,
+  plainDate: BaseTemporal.PlainDate,
 ): TemporalSupportedObject {
   const timezone = adapter.getTimezone(date);
   return createAdapterDate(

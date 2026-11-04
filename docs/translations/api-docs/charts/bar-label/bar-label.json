@@ -1,11 +1,19 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "color": { "description": "The color of the element." },
+    "dataIndex": { "description": "The index of the data point in the series." },
     "height": { "description": "Height of the bar this label belongs to." },
     "hidden": { "description": "If true, the bar label is hidden." },
+    "isFaded": { "description": "If <code>true</code>, the element is faded." },
+    "isHighlighted": { "description": "If <code>true</code>, the element is highlighted." },
+    "layout": { "description": "The orientation of the bar." },
     "placement": {
       "description": "The placement of the bar label. It controls whether the label is rendered in the center or outside the bar."
     },
+    "seriesId": { "description": "The id of the series the element belongs to." },
+    "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "width": { "description": "Width of the bar this label belongs to." },
     "x": { "description": "Position in the x-axis of the bar this label belongs to." },
     "xOrigin": { "description": "The x-coordinate of the stack this bar label belongs to." },

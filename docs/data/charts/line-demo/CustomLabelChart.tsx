@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
-import { LineChart, MarkElementProps } from '@mui/x-charts/LineChart';
+import type { MarkElementProps } from '@mui/x-charts/LineChart';
+import { LineChart } from '@mui/x-charts/LineChart';
 
 const margin = { right: 24 };
 const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];

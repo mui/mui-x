@@ -34,7 +34,8 @@ import { getMonthlyReference, getWeeklyDays } from '@mui/x-scheduler-internals-p
 import {
   buildTemporalPlainDate,
   createAdapterDate,
-  createLabelDate,
+  formatWeekday,
+  formatWeekdayShort,
   getEndOfDayMs,
 } from '@mui/x-scheduler-internals/internals';
 import type { EndsSelection } from '@mui/x-scheduler/internals';
@@ -224,6 +225,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const visiblePlainDate = useStore(store, schedulerOtherSelectors.visiblePlainDate);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
+  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
   // The rule lives in the event's timezone, so the days offered here come from the range the
   // event ends up with, in that timezone (the submit builds the preset on the same start).
@@ -246,8 +248,8 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     [occurrence, ruleStart],
   );
   const recurrenceTimezoneName = React.useMemo(
-    () => getRecurrenceTimezoneName(adapter, eventTimezone, displayTimezone),
-    [adapter, eventTimezone, displayTimezone],
+    () => getRecurrenceTimezoneName(locale, eventTimezone, displayTimezone),
+    [locale, eventTimezone, displayTimezone],
   );
   const monthlyRef = React.useMemo(
     () => getMonthlyReference(ruleStartPlainDate),
@@ -273,8 +275,8 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     });
   }, [formStore, store, ruleStart, ruleStartPlainDate]);
   const weeklyDays = React.useMemo(
-    () => getWeeklyDays(adapter, visiblePlainDate, weekStartsOn),
-    [adapter, visiblePlainDate, weekStartsOn],
+    () => getWeeklyDays(visiblePlainDate, weekStartsOn),
+    [visiblePlainDate, weekStartsOn],
   );
 
   const handleRecurrenceSelectionChange = (
@@ -404,9 +406,9 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     () =>
       ([null, 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY', 'custom'] as const).map((value) => ({
         value,
-        label: getRecurrenceLabel(adapter, ruleStartPlainDate, value, localeText),
+        label: getRecurrenceLabel(locale, ruleStartPlainDate, value, localeText),
       })),
-    [adapter, ruleStartPlainDate, localeText],
+    [locale, ruleStartPlainDate, localeText],
   );
 
   const recurrenceFrequencyOptions: {
@@ -430,15 +432,12 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   const weeklyDayItems = React.useMemo(
     () =>
-      weeklyDays.map(({ code, date: plainDate }) => {
-        const date = createLabelDate(adapter, plainDate);
-        return {
-          value: code,
-          ariaLabel: adapter.format(date, 'weekday'),
-          label: adapter.format(date, 'weekday3Letters'),
-        };
-      }),
-    [adapter, weeklyDays],
+      weeklyDays.map(({ code, date: plainDate }) => ({
+        value: code,
+        ariaLabel: formatWeekday(locale, plainDate),
+        label: formatWeekdayShort(locale, plainDate),
+      })),
+    [locale, weeklyDays],
   );
 
   const monthlyItems = React.useMemo(() => {
@@ -446,9 +445,11 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     const dayOfMonthLabel = localeText.recurrenceMonthlyDayOfMonthLabel?.(monthlyRef.dayOfMonth);
     const isLast = ordinal === -1;
     const weekday = getWeekdayToken(ruleStartPlainDate);
-    const labelDate = createLabelDate(adapter, ruleStartPlainDate);
-    const ariaParams = { weekday, weekdayName: adapter.format(labelDate, 'weekday') };
-    const labelParams = { weekday, weekdayName: adapter.format(labelDate, 'weekday3Letters') };
+    const ariaParams = { weekday, weekdayName: formatWeekday(locale, ruleStartPlainDate) };
+    const labelParams = {
+      weekday,
+      weekdayName: formatWeekdayShort(locale, ruleStartPlainDate),
+    };
     const weekAriaLabel = isLast
       ? localeText.recurrenceMonthlyLastWeekAriaLabel(ariaParams)
       : localeText.recurrenceMonthlyWeekNumberAriaLabel?.({ ...ariaParams, ord: ordinal });
@@ -468,7 +469,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
         label: weekLabel,
       },
     ];
-  }, [adapter, ruleStartPlainDate, monthlyRef, localeText]);
+  }, [locale, ruleStartPlainDate, monthlyRef, localeText]);
 
   const monthlyMode: 'byMonthDay' | 'byDay' = rruleDraft.byDay?.length ? 'byDay' : 'byMonthDay';
 

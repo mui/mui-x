@@ -912,7 +912,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         EventBuilder.new().span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z'),
       );
 
-      expect(text).to.equal('Monday, May 26th, 2025, 7:30 AM - 8:15 AM');
+      expect(text).to.equal('Monday, May 26, 2025, 7:30 AM - 8:15 AM');
       expect(times).to.deep.equal(['2025-05-26T07:30:00', '2025-05-26T08:15:00']);
     });
 
@@ -921,7 +921,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         EventBuilder.new().span('2025-05-03T13:30:00Z', '2025-05-05T14:15:00Z'),
       );
 
-      expect(text).to.equal('Saturday, May 3rd, 2025, 1:30 PM - Monday, May 5th, 2025, 2:15 PM');
+      expect(text).to.equal('Saturday, May 3, 2025, 1:30 PM - Monday, May 5, 2025, 2:15 PM');
       expect(times).to.deep.equal(['2025-05-03T13:30:00', '2025-05-05T14:15:00']);
     });
 
@@ -930,7 +930,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         EventBuilder.new().span('2025-05-26T22:00:00Z', '2025-05-27T00:00:00Z'),
       );
 
-      expect(text).to.equal('Monday, May 26th, 2025, 10:00 PM - Tuesday, May 27th, 2025, 12:00 AM');
+      expect(text).to.equal('Monday, May 26, 2025, 10:00 PM - Tuesday, May 27, 2025, 12:00 AM');
     });
 
     it('should show the dates and times in the display timezone', () => {
@@ -939,7 +939,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         'Asia/Tokyo',
       );
 
-      expect(text).to.equal('Monday, May 26th, 2025, 4:30 PM - 5:15 PM');
+      expect(text).to.equal('Monday, May 26, 2025, 4:30 PM - 5:15 PM');
       expect(times).to.deep.equal(['2025-05-26T16:30:00', '2025-05-26T17:15:00']);
     });
 
@@ -949,7 +949,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         'Asia/Tokyo',
       );
 
-      expect(text).to.equal('Monday, May 26th, 2025, 11:30 PM - Tuesday, May 27th, 2025, 12:15 AM');
+      expect(text).to.equal('Monday, May 26, 2025, 11:30 PM - Tuesday, May 27, 2025, 12:15 AM');
     });
 
     // Browsers cannot change their timezone through process.env.TZ.
@@ -965,7 +965,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         );
 
         expect(text).to.equal(
-          'Friday, December 30th, 2011, 10:00 AM - Saturday, December 31st, 2011, 10:00 AM',
+          'Friday, December 30, 2011, 10:00 AM - Saturday, December 31, 2011, 10:00 AM',
         );
       },
     );
@@ -976,7 +976,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         'Asia/Tokyo',
       );
 
-      expect(text).to.equal('Tuesday, May 27th, 2025, 8:30 AM - 9:15 AM');
+      expect(text).to.equal('Tuesday, May 27, 2025, 8:30 AM - 9:15 AM');
     });
 
     it('should show the date of a single-day all-day event', () => {
@@ -984,7 +984,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         EventBuilder.new().span('2025-05-26T00:00:00Z', '2025-05-26T23:59:59Z', { allDay: true }),
       );
 
-      expect(text).to.equal('Monday, May 26th, 2025, All Day');
+      expect(text).to.equal('Monday, May 26, 2025, All Day');
       expect(times).to.deep.equal(['2025-05-26']);
     });
 
@@ -993,7 +993,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         EventBuilder.new().span('2025-05-03T00:00:00Z', '2025-05-05T23:59:59Z', { allDay: true }),
       );
 
-      expect(text).to.equal('Saturday, May 3rd, 2025 - Monday, May 5th, 2025, All Day');
+      expect(text).to.equal('Saturday, May 3, 2025 - Monday, May 5, 2025, All Day');
       expect(times).to.deep.equal(['2025-05-03', '2025-05-05']);
     });
   });

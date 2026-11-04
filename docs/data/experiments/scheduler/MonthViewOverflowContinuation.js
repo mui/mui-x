@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { StandaloneMonthView } from '@mui/x-scheduler/month-view';
 
 // A, B, C, D all cross Mon Jul 7 (rows 1-4), so "Long trip" starting Jul 7 is

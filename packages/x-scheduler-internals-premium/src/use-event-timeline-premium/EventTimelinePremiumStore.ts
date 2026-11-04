@@ -5,7 +5,6 @@ import { EMPTY_ARRAY, EMPTY_OBJECT } from '@base-ui/utils/empty';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { SchedulerParametersToStateMapper } from '@mui/x-scheduler-internals/internals';
 import {
-  DEFAULT_SCHEDULER_PREFERENCES,
   getDisplayedHourRange,
   getShouldEventRequireResource,
   SchedulerStore,
@@ -13,7 +12,6 @@ import {
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import type {
-  EventTimelinePremiumPreferences,
   EventTimelinePremiumPreset,
   EventTimelinePremiumPresetConfig,
   SchedulerAddDependencyResult,
@@ -142,7 +140,7 @@ const deriveAreDependenciesEnabled = (
         [
           'MUI X Scheduler: A `dependencies` value was provided, but the dependencies feature is missing.',
           'Without it, the dependencies are ignored: no arrows render and events do not move with their predecessors.',
-          'Pass the dependencies feature through the `storeFeatures` parameter.',
+          'Pass `dependenciesFeature` from `@mui/x-scheduler-premium/dependencies` to the `features` prop.',
         ].join('\n'),
       );
     }
@@ -163,8 +161,6 @@ const buildDependenciesState = (
   dependenciesFeature: EventTimelinePremiumDependenciesStoreFeature | null,
   parameters: SchedulerDependenciesParameters,
 ) => dependenciesFeature?.buildState(parameters.dependencies) ?? EMPTY_DEPENDENCIES_STATE;
-
-export const DEFAULT_PREFERENCES: EventTimelinePremiumPreferences = DEFAULT_SCHEDULER_PREFERENCES;
 
 const mapper: SchedulerParametersToStateMapper<
   EventTimelinePremiumState,
@@ -404,7 +400,8 @@ export class EventTimelinePremiumStore<
    * Adds a dependency between two events.
    * Rejects every dependency while the scheduler is read-only, and dependencies
    * referencing an unknown or recurring event, duplicates, cycles, and dependencies
-   * needing a read-only event to move — see the returned `SchedulerAddDependencyResult`.
+   * needing a read-only event to move or changing a date `eventModelStructure` can't write
+   * back — see the returned `SchedulerAddDependencyResult`.
    * A dependency the event dates break moves its successor.
    * The guards read the controlled `dependencies` value, so two adds in the same
    * tick are not validated against each other: wait for the updated `dependencies`

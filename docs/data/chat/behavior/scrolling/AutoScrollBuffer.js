@@ -8,7 +8,6 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import { ChatBox } from '@mui/x-chat';
-
 import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   createTextMessage,

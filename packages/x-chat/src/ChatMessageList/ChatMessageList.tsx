@@ -40,7 +40,15 @@ export interface ChatMessageListProps extends Omit<
    * individual sub-components without losing the default chrome.
    */
   renderItem?: MessageListRootProps['renderItem'];
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<ChatMessageListSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ChatMessageListSlotProps;
   /**
    * Feature flags for the row extras rendered by the default row: the opt-in
@@ -50,7 +58,13 @@ export interface ChatMessageListProps extends Omit<
    */
   features?: ChatMessageListFeatures;
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<ChatMessageListClasses>;
 }
 
@@ -274,6 +288,9 @@ ChatMessageList.propTypes /* remove-proptypes */ = {
     }),
     PropTypes.bool,
   ]),
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
@@ -286,6 +303,10 @@ ChatMessageList.propTypes /* remove-proptypes */ = {
    * @default true
    */
   enableRovingFocus: PropTypes.bool,
+  /**
+   * The estimated height of a row in pixels, used until the row is measured.
+   * @default 84
+   */
   estimatedItemSize: PropTypes.number,
   /**
    * Feature flags for the row extras rendered by the default row: the opt-in
@@ -298,7 +319,17 @@ ChatMessageList.propTypes /* remove-proptypes */ = {
     streamingIndicator: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.bool]),
     unreadMarker: PropTypes.bool,
   }),
+  /**
+   * Returns the React key of a row.
+   * @param {string} id The id of the message.
+   * @param {number} index The index of the row.
+   * @returns {React.Key} The key of the row.
+   * @default (id) => id
+   */
   getItemKey: PropTypes.func,
+  /**
+   * The ids of the messages to render, in order.
+   */
   items: PropTypes.arrayOf(PropTypes.string),
   /**
    * Callback fired when the viewport enters the bottom zone of the list — within
@@ -334,8 +365,19 @@ ChatMessageList.propTypes /* remove-proptypes */ = {
    * individual sub-components without losing the default chrome.
    */
   renderItem: PropTypes.func,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

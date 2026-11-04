@@ -1,7 +1,7 @@
 import type * as React from 'react';
 import type { TemporalAdapter, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
-import type { PlainDate } from '@mui/x-scheduler-internals/internals';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 
 export type EventTimelinePremiumPreset =
   'dayAndHour' | 'dayAndMonth' | 'dayAndWeek' | 'monthAndYear' | 'year';
@@ -20,11 +20,11 @@ export interface IteratedCell {
    * for a `month` row), on the wall clock of the axis. For a partial first cell, it's before the
    * visible range.
    */
-  plainDate: PlainDate;
+  plainDate: BaseTemporal.PlainDate;
   /** First date of the cell within the visible range. */
-  firstPlainDate: PlainDate;
+  firstPlainDate: BaseTemporal.PlainDate;
   /** Last date of the cell within the visible range. */
-  lastPlainDate: PlainDate;
+  lastPlainDate: BaseTemporal.PlainDate;
   /** Cell width measured in `tickUnit` ticks. */
   spanInTicks: number;
   /** Stable key derived from the aligned start. */
@@ -46,7 +46,8 @@ export interface PresetHeaderCellState extends IteratedCell {
   level: number;
   /** The unit this row operates on. */
   unit: PresetHeaderUnit;
-  adapter: TemporalAdapter;
+  /** The locale the labels are formatted in. */
+  locale: string;
   /** `true` if hour labels should be rendered with AM/PM. */
   ampm: boolean;
 }
@@ -60,17 +61,17 @@ interface PresetHeaderLevelConfigBase {
 
 /**
  * Configuration for one header row of a preset. Each level must provide either
- * `formatDate` (text-only label) or `renderCell` (full React render), never both.
+ * `format` (text-only label) or `renderCell` (full React render), never both.
  */
 export type PresetHeaderLevelConfig = PresetHeaderLevelConfigBase &
   (
     | {
         /** Formats the date of the aligned start of the cell into a string label. */
-        formatDate: (adapter: TemporalAdapter, plainDate: PlainDate) => string;
+        format: (locale: string, plainDate: BaseTemporal.PlainDate) => string;
         renderCell?: undefined;
       }
     | {
-        formatDate?: undefined;
+        format?: undefined;
         /**
          * Renders the cell label from the full cell state. Use this when the
          * label needs more than the date of the aligned start (e.g. a range, multiple
@@ -109,15 +110,17 @@ export interface PresetDefinition {
    * display timezone.
    */
   getStartPlainDate: (
-    adapter: TemporalAdapter,
-    visiblePlainDate: PlainDate,
-    weekStartsOn: WeekStartsOn | undefined,
-  ) => PlainDate;
+    visiblePlainDate: BaseTemporal.PlainDate,
+    weekStartsOn: WeekStartsOn,
+  ) => BaseTemporal.PlainDate;
   /**
    * Returns the date after the last date of the visible range, `unitCount` periods after its
    * first date.
    */
-  getEndPlainDate: (startPlainDate: PlainDate, unitCount: number) => PlainDate;
+  getEndPlainDate: (
+    startPlainDate: BaseTemporal.PlainDate,
+    unitCount: number,
+  ) => BaseTemporal.PlainDate;
   /**
    * Returns the exact number of CSS ticks for the visible range, sized for the
    * full day. Override `unitCount` whenever the grid width must differ from the
@@ -127,7 +130,10 @@ export interface PresetDefinition {
    * shrink on DST days). The displayed hour window scales the result in the
    * preset selector, so presets never see it. `endPlainDate` is the date after the range.
    */
-  getCssUnitCount?: (startPlainDate: PlainDate, endPlainDate: PlainDate) => number;
+  getCssUnitCount?: (
+    startPlainDate: BaseTemporal.PlainDate,
+    endPlainDate: BaseTemporal.PlainDate,
+  ) => number;
   /**
    * Adds `amount` units (of the preset's navigation unit) to `date`. Called by
    * `goToNextVisibleDate` / `goToPreviousVisibleDate` with `amount = ±unitCount`.

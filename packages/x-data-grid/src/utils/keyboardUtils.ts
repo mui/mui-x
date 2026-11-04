@@ -94,3 +94,12 @@ export function isRedoShortcut(event: React.KeyboardEvent): boolean {
     !event.altKey
   );
 }
+
+/**
+ * Tells if the keydown event belongs to an IME composition.
+ * Some browsers send it before `compositionstart` with `isComposing: false`, so check `keyCode` 229.
+ * See https://developer.mozilla.org/en-US/docs/Web/API/Element/keydown_event#keydown_events_with_ime
+ */
+export function isImeKeyDown(event: React.KeyboardEvent): boolean {
+  return event.nativeEvent?.isComposing || event.key === 'Process' || event.keyCode === 229;
+}

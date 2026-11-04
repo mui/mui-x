@@ -1,13 +1,24 @@
 {
   "props": {
+    "color": { "type": { "name": "string" }, "required": true },
     "colorGetter": { "type": { "name": "func" }, "required": true },
+    "series": { "type": { "name": "object" }, "required": true },
     "sizeGetter": { "type": { "name": "func" }, "required": true },
+    "xScale": { "type": { "name": "func" }, "required": true },
+    "yScale": { "type": { "name": "func" }, "required": true },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(event: ChartsActivationEvent<SVGElement>, scatterItemIdentifier: ScatterItemIdentifier) => void",
         "describedArgs": ["event", "scatterItemIdentifier"]
       }
+    },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
     }
   },
   "name": "Scatter",

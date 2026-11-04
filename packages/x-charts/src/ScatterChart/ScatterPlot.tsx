@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
+import useId from '@mui/utils/useId';
 import { Scatter } from './Scatter';
 import type { ScatterProps, ScatterSlotProps, ScatterSlots } from './Scatter';
 import { useScatterSeriesContext } from '../hooks/useScatterSeries';
@@ -23,6 +24,9 @@ import type { ScatterPropsOverrides } from '../models/chartsSlotsComponentsProps
 const EMPTY_SERIES_IDS: readonly SeriesId[] = [];
 
 export interface ScatterPlotSlots extends ScatterSlots {
+  /**
+   * The component that renders the scatter markers.
+   */
   scatter?: React.JSXElementConstructor<ScatterProps & ScatterPropsOverrides>;
 }
 
@@ -30,6 +34,9 @@ export interface ScatterPlotSlotProps extends ScatterSlotProps {
   // Not widened with `data-*`: none of the default renderers (svg-single
   // `Scatter`, svg-batch `BatchScatter`, progressive `ScatterAsync`) spread
   // unknown props onto an element, so `data-*` here never reaches the DOM.
+  /**
+   * The props used for the `scatter` slot.
+   */
   scatter?: Partial<ScatterProps> & ScatterPropsOverrides;
 }
 
@@ -92,11 +99,12 @@ function ScatterPlot(props: ScatterPlotProps) {
 
   const { instance } = useChartsContext<[UseProgressiveRenderingSignature]>();
   const store = useStore<[UseProgressiveRenderingSignature]>();
-  const plotId = React.useId();
+  const plotId = useId();
   const seriesIds = seriesData?.seriesOrder ?? EMPTY_SERIES_IDS;
   const isProgressive = store.use(selectorShouldUseProgressiveRenderer, seriesIds, renderer);
   React.useEffect(
-    () => instance.registerProgressivePlan(plotId, seriesIds, renderer),
+    // `plotId` is `undefined` on the first render in React 17.
+    () => (plotId ? instance.registerProgressivePlan(plotId, seriesIds, renderer) : undefined),
     [instance, plotId, seriesIds, renderer],
   );
 
@@ -163,6 +171,9 @@ ScatterPlot.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
   /**

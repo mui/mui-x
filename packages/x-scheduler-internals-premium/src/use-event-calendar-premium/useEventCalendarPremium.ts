@@ -8,7 +8,7 @@ import type { EventCalendarPremiumParameters } from './EventCalendarPremiumStore
 export function useEventCalendarPremium<TEvent extends object, TResource extends object>(
   parameters: EventCalendarPremiumParameters<TEvent, TResource>,
 ): EventCalendarPremiumStore<TEvent, TResource> {
-  const adapter = useAdapter(parameters.dateLocale);
+  const adapter = useAdapter();
   const store = useDisposable(() => new EventCalendarPremiumStore(parameters, adapter));
 
   useIsoLayoutEffect(

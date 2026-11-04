@@ -1,6 +1,7 @@
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { DataGrid, useGridApiRef, GridColDef } from '@mui/x-data-grid';
+import type { GridColDef } from '@mui/x-data-grid';
+import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },

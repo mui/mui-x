@@ -11,6 +11,9 @@ interface ChartsRotationGridProps {
   axis: PolarAxisDefaultized<any, any, any>;
   innerRadius: number;
   outerRadius: number;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: Partial<ChartsRadialGridClasses>;
 }
 

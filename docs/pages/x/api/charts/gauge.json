@@ -1,5 +1,7 @@
 {
   "props": {
+    "children": { "type": { "name": "node" } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "cornerRadius": {
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "0"
@@ -26,6 +28,14 @@
     },
     "skipAnimation": { "type": { "name": "bool" } },
     "startAngle": { "type": { "name": "number" }, "default": "0" },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "text": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
     "title": { "type": { "name": "string" } },
     "value": { "type": { "name": "number" } },
     "valueMax": { "type": { "name": "number" }, "default": "100" },

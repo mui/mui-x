@@ -6,8 +6,16 @@
     },
     "partProps": {
       "description": "Props forwarded to the built-in unstyled part renderer components. Use this to pass <code>slots</code> and <code>slotProps</code> to individual part type renderers."
-    }
+    },
+    "resolveBuiltInPartRenderer": {
+      "description": "Callback to resolve a built-in part renderer for a given part type."
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {},
-  "slotDescriptions": { "bubble": "", "content": "" }
+  "slotDescriptions": {
+    "bubble": "The component that renders the bubble.",
+    "content": "The component that renders the content."
+  }
 }

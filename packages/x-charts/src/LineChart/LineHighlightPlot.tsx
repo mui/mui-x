@@ -17,12 +17,19 @@ import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins
 import type { LineHighlightPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface LineHighlightPlotSlots {
+  /**
+   * The component that renders the line highlight.
+   * @default LineHighlightElement
+   */
   lineHighlight?: React.JSXElementConstructor<
     LineHighlightElementProps & LineHighlightPropsOverrides
   >;
 }
 
 export interface LineHighlightPlotSlotProps {
+  /**
+   * The props used for the `lineHighlight` slot.
+   */
   lineHighlight?: SlotComponentPropsFromProps<
     LineHighlightElementProps,
     LineHighlightPropsOverrides,

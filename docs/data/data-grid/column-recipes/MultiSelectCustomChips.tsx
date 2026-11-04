@@ -2,14 +2,15 @@ import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
-import Chip, { ChipProps } from '@mui/material/Chip';
+import type { ChipProps } from '@mui/material/Chip';
+import Chip from '@mui/material/Chip';
+import type { GridColDef } from '@mui/x-data-grid-pro';
 import {
   DataGridPro,
-  GridColDef,
   GridMultiSelectCell,
   GridEditMultiSelectCell,
 } from '@mui/x-data-grid-pro';
-import { AutocompleteProps } from '@mui/x-data-grid/internals';
+import type { AutocompleteProps } from '@mui/x-data-grid/internals';
 
 type ChipColor = NonNullable<ChipProps['color']>;
 

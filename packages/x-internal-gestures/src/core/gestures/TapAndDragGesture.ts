@@ -14,12 +14,14 @@
  */
 
 import type { ActiveGesturesRegistry } from '../ActiveGesturesRegistry';
-import { GestureState } from '../Gesture';
+import type { GestureState } from '../Gesture';
 import type { KeyboardManager } from '../KeyboardManager';
-import { PointerGesture, type PointerGestureOptions } from '../PointerGesture';
-import { type PointerManager } from '../PointerManager';
+import { PointerGesture } from '../PointerGesture';
+import type { PointerGestureOptions } from '../PointerGesture';
+import type { PointerManager } from '../PointerManager';
 import { createEventName, preventDefault } from '../utils';
-import { PanGesture, type PanEvent, type PanGestureEventData } from './PanGesture';
+import { PanGesture } from './PanGesture';
+import type { PanEvent, PanGestureEventData } from './PanGesture';
 import { TapGesture } from './TapGesture';
 
 /**

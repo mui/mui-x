@@ -3,10 +3,12 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { platform } from '@base-ui/utils/platform';
-import { Store, createSelectorMemoized } from '@base-ui/utils/store';
+import type { Store } from '@base-ui/utils/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import type { ColumnWithWidth } from '../../models';
 import { Dimensions } from '../../features/dimensions';
-import { Virtualization, type VirtualizationLayoutParams } from './virtualization';
+import { Virtualization } from './virtualization';
+import type { VirtualizationLayoutParams } from './virtualization';
 import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';
 import useRefCallback from '../../utils/useRefCallback';
 

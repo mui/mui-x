@@ -46,7 +46,14 @@ export interface RangeButtonConfig {
 }
 
 export interface ChartsToolbarProProps extends ChartsToolbarProps {
+  /**
+   * The options of the print export.
+   * Set `disableToolbarButton` to remove the print entry from the export menu.
+   */
   printOptions?: ChartsToolbarPrintExportOptions;
+  /**
+   * The image export options. Each option adds an entry to the export menu.
+   */
   imageExportOptions?: ChartsToolbarImageExportOptions[];
   /**
    * Configuration for range buttons shown in the toolbar.
@@ -247,6 +254,9 @@ ChartsToolbarPro.propTypes /* remove-proptypes */ = {
    * @returns {React.ReactNode} The menu items.
    */
   exportMenuItems: PropTypes.func,
+  /**
+   * The image export options. Each option adds an entry to the export menu.
+   */
   imageExportOptions: PropTypes.arrayOf(
     PropTypes.shape({
       copyStyles: PropTypes.bool,
@@ -259,6 +269,10 @@ ChartsToolbarPro.propTypes /* remove-proptypes */ = {
       type: PropTypes.string.isRequired,
     }),
   ),
+  /**
+   * The options of the print export.
+   * Set `disableToolbarButton` to remove the print entry from the export menu.
+   */
   printOptions: PropTypes.object,
   /**
    * Configuration for range buttons shown in the toolbar.

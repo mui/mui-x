@@ -1,10 +1,10 @@
-import type { PlainDate } from '@mui/x-scheduler-internals/internals';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 
 /**
  * Computes the ordinal for a MONTHLY BYDAY rule for a given date.
  * @returns {number} - The ordinal: -1 for last, otherwise 1..5.
  */
-export function computeMonthlyOrdinal(plainDate: PlainDate): number {
+export function computeMonthlyOrdinal(plainDate: BaseTemporal.PlainDate): number {
   // Is it the last same-weekday of the month? (-1)
   if (plainDate.day + 7 > plainDate.daysInMonth) {
     return -1;

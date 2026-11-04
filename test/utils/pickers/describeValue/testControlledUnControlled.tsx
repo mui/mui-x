@@ -8,7 +8,7 @@ import {
   isPickerSingleInput,
 } from 'test/utils/pickers';
 import { vi, describe, it, expect } from 'vitest';
-import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
+import type { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
 
 export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
   ElementToTest,

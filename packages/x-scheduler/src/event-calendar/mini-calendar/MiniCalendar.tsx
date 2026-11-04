@@ -16,15 +16,19 @@ import {
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
 import {
-  createLabelDate,
+  formatDayOfMonth,
+  formatFullDate,
+  formatMonthAndYear,
+  formatWeekday,
+  formatWeekdayNarrow,
+  getDayNumber,
   getPlainDateWeekStart,
   isWeekendPlainDate,
 } from '@mui/x-scheduler-internals/internals';
-import type { PlainDate } from '@mui/x-scheduler-internals/internals';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerProcessedDay } from '@mui/x-scheduler-internals/models';
 import type { MiniCalendarProps } from './MiniCalendar.types';
 import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
-import { formatMonthFullLetterAndYear } from '../../internals/utils/date-utils';
 
 const MiniCalendarRoot = styled('div', {
   name: 'MuiEventCalendar',
@@ -171,9 +175,10 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
     const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
     const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
     const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
+    const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
     // The first day of the displayed month.
-    const [displayedMonth, setDisplayedMonth] = React.useState<PlainDate>(() =>
+    const [displayedMonth, setDisplayedMonth] = React.useState<BaseTemporal.PlainDate>(() =>
       visiblePlainDate.with({ day: 1 }),
     );
 
@@ -186,7 +191,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
     // Generate days for the displayed month (including padding days from adjacent months)
     // Always show 6 weeks (42 days) for consistent height
     const days = React.useMemo(() => {
-      const gridStart = getPlainDateWeekStart(adapter, displayedMonth, weekStartsOn);
+      const gridStart = getPlainDateWeekStart(displayedMonth, weekStartsOn);
       return getDayListFromPlainDates({
         adapter,
         firstPlainDate: gridStart,
@@ -208,10 +213,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
     // Get weekday headers from first week
     const weekdays = weeks[0] ?? [];
 
-    const monthYearLabel = React.useMemo(
-      () => formatMonthFullLetterAndYear(createLabelDate(adapter, displayedMonth), adapter),
-      [adapter, displayedMonth],
-    );
+    const monthYearLabel = formatMonthAndYear(locale, displayedMonth);
 
     return (
       <MiniCalendarRoot
@@ -256,12 +258,12 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
             <MiniCalendarWeekdayCell
               key={day.key}
               role="columnheader"
-              aria-label={adapter.formatByString(day.value, adapter.formats.weekday)}
+              aria-label={formatWeekday(locale, day.plainDate)}
               aria-colindex={dayIndex + 1}
               className={classes.miniCalendarWeekdayCell}
               data-weekend={isWeekendPlainDate(day.plainDate) || undefined}
             >
-              {adapter.formatByString(day.value, adapter.formats.weekday1Letter)}
+              {formatWeekdayNarrow(locale, day.plainDate)}
             </MiniCalendarWeekdayCell>
           ))}
         </MiniCalendarWeekdayHeader>
@@ -275,17 +277,14 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
               className={classes.miniCalendarWeekRow}
             >
               {week.map((day, dayIndex) => {
-                const isToday = day.plainDate.dayNumber === nowDayNumber;
-                const isActive = day.plainDate.dayNumber === visiblePlainDate.dayNumber;
+                const isToday = getDayNumber(day.plainDate) === nowDayNumber;
+                const isActive = day.plainDate.equals(visiblePlainDate);
                 const isOtherMonth =
                   day.plainDate.year !== displayedMonth.year ||
                   day.plainDate.month !== displayedMonth.month;
 
                 // Create a full date label for accessibility
-                const fullDateLabel = adapter.formatByString(
-                  day.value,
-                  adapter.formats.localizedDateWithFullMonthAndWeekDay,
-                );
+                const fullDateLabel = formatFullDate(locale, day.plainDate);
 
                 return (
                   <MiniCalendarDayCell
@@ -306,7 +305,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
                       tabIndex={isActive ? 0 : -1}
                       onClick={(event) => store.goToDate(day.value, event)}
                     >
-                      {adapter.formatByString(day.value, adapter.formats.dayOfMonth)}
+                      {formatDayOfMonth(locale, day.plainDate)}
                     </MiniCalendarDayButton>
                   </MiniCalendarDayCell>
                 );

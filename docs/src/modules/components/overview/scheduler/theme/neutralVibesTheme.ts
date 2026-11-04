@@ -1,4 +1,5 @@
-import { alpha, Direction, Theme, createTheme } from '@mui/material/styles';
+import type { Direction, Theme } from '@mui/material/styles';
+import { alpha, createTheme } from '@mui/material/styles';
 import '@mui/x-scheduler-premium/theme-augmentation';
 import '@mui/x-scheduler/theme-augmentation';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';

@@ -1,4 +1,5 @@
-import { alpha, Theme, createTheme } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
+import { alpha, createTheme } from '@mui/material/styles';
 import '@mui/x-chat/themeAugmentation';
 import { darkGrey, grey } from './colors';
 

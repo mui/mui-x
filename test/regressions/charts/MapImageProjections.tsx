@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
-import { GeoDataPlot, MapImagePlot, D3NamedProjection } from '@mui/x-charts-premium/Map';
+import type { D3NamedProjection } from '@mui/x-charts-premium/Map';
+import { GeoDataPlot, MapImagePlot } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { marsRegions } from 'docs/data/charts/map/marsRegions';
 

@@ -7,9 +7,14 @@ import {
   GridMenu,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
-import type { GridColDef, GridSlotProps, GridSortDirection } from '@mui/x-data-grid-pro';
+import type { GridColDef, GridSlotProps } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
-import { GridColumnSortButton, NotRendered, vars } from '@mui/x-data-grid-pro/internals';
+import {
+  getNextGridSortDirection,
+  GridColumnSortButton,
+  NotRendered,
+  vars,
+} from '@mui/x-data-grid-pro/internals';
 import useId from '@mui/utils/useId';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import type {
@@ -258,6 +263,8 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
   const classes = useUtilityClasses(ownerState);
   const apiRef = useGridPrivateApiContext();
 
+  const initialColumns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);
+
   const handleDragStart = React.useCallback(
     (event: React.DragEvent) => {
       const data: FieldTransferObject = { field, modelKey: section };
@@ -319,15 +326,7 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
 
   const handleSort = () => {
     const currentSort = section === 'columns' ? props.modelValue.sort : null;
-    let newValue: GridSortDirection;
-
-    if (currentSort === 'asc') {
-      newValue = 'desc';
-    } else if (currentSort === 'desc') {
-      newValue = undefined;
-    } else {
-      newValue = 'asc';
-    }
+    const newValue = getNextGridSortDirection(rootProps.sortingOrder, currentSort) ?? undefined;
 
     apiRef.current.setPivotModel((prev) => {
       return {
@@ -404,6 +403,7 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
         {section === 'columns' && (
           <GridColumnSortButton
             field={field}
+            columnName={initialColumns.get(field)?.headerName ?? field}
             direction={props.modelValue.sort}
             sortingOrder={rootProps.sortingOrder}
             onClick={handleSort}

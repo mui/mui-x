@@ -1,12 +1,10 @@
 import * as React from 'react';
-import {
-  DataGridPro,
-  useGridApiRef,
+import type {
   GridInitialState,
   GridDataSource,
   GridGetRowsResponse,
-  GridGetRowsError,
 } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef, GridGetRowsError } from '@mui/x-data-grid-pro';
 import Snackbar from '@mui/material/Snackbar';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';

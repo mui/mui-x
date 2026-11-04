@@ -4,13 +4,11 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
-import {
-  BarChartPremium,
-  RangeBarSeries,
-} from '@mui/x-charts-premium/BarChartPremium';
+import type { RangeBarSeries } from '@mui/x-charts-premium/BarChartPremium';
+import { BarChartPremium } from '@mui/x-charts-premium/BarChartPremium';
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
-import { BarItemIdentifier, ChartsAxisData } from '@mui/x-charts/models';
-import { RangeBarItemIdentifier } from '@mui/x-charts-premium/models';
+import type { BarItemIdentifier, ChartsAxisData } from '@mui/x-charts/models';
+import type { RangeBarItemIdentifier } from '@mui/x-charts-premium/models';
 
 import type {} from '@mui/x-charts-premium/moduleAugmentation/rangeBarOnClick';
 

@@ -435,15 +435,15 @@ const TimeGridEventContent = React.memo(function TimeGridEventContent(props: {
             {occurrence.title}
           </TimeGridEventTitle>
           <TimeGridEventTime className={classes.timeGridEventTime} data-variant="block">
-            {formatTime(occurrence.displayTimezone.start.value)} -{' '}
-            {formatTime(occurrence.displayTimezone.end.value)}
+            {formatTime(occurrence.displayTimezone.start)} -{' '}
+            {formatTime(occurrence.displayTimezone.end)}
           </TimeGridEventTime>
         </React.Fragment>
       ) : (
         <TimeGridEventTitle className={classes.timeGridEventTitle}>
           {occurrence.title}{' '}
           <TimeGridEventTime className={classes.timeGridEventTime} data-variant="inline">
-            {formatTime(occurrence.displayTimezone.start.value)}
+            {formatTime(occurrence.displayTimezone.start)}
           </TimeGridEventTime>
         </TimeGridEventTitle>
       )}

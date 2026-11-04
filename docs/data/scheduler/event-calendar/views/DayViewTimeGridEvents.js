@@ -2,7 +2,6 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
 import { defaultVisibleDate } from '../../datasets/personal-agenda';
 

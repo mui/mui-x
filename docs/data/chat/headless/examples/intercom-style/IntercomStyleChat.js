@@ -7,7 +7,6 @@ import {
   MessageGroup,
   MessageList,
 } from '@mui/x-chat/headless';
-
 import {
   createEchoAdapter,
   formatMessageTime,

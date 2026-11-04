@@ -7,7 +7,6 @@ import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium }
 import { GeoDataPlot, MapShapePlot } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsTooltip } from '@mui/x-charts-premium/ChartsTooltip';
-
 import { countryData } from '../dataset/countryData';
 import { internetUsageByCountry } from '../dataset/internetUsageByCountry';
 

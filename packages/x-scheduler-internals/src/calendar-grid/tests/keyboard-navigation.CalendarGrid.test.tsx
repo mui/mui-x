@@ -5,7 +5,7 @@ import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import type { GridRowType } from '@mui/x-scheduler-internals/models';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
-import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
+import { adapter, createSchedulerRenderer, processDay } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/adapter';
 
@@ -33,7 +33,7 @@ describe('CalendarGrid keyboard navigation', () => {
             {days.map((day, i) => (
               <CalendarGrid.HeaderCell
                 key={i}
-                date={processDate(day, adapter)}
+                date={processDay(day, adapter)}
                 data-testid={`header-${i}`}
               >
                 {adapter.format(day, 'weekday3Letters')}
@@ -191,7 +191,7 @@ describe('CalendarGrid keyboard navigation', () => {
               {week0Days.map((day, i) => (
                 <CalendarGrid.HeaderCell
                   key={i}
-                  date={processDate(day, adapter)}
+                  date={processDay(day, adapter)}
                   data-testid={`header-${i}`}
                 >
                   {adapter.format(day, 'weekday3Letters')}
@@ -376,7 +376,7 @@ describe('CalendarGrid keyboard navigation', () => {
               {days.slice(0, 3).map((day, i) => (
                 <CalendarGrid.HeaderCell
                   key={i}
-                  date={processDate(day, adapter)}
+                  date={processDay(day, adapter)}
                   data-testid={`header-${i}`}
                 >
                   {adapter.format(day, 'weekday3Letters')}

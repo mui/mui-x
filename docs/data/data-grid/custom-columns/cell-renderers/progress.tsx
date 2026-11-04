@@ -1,12 +1,13 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import {
+import type {
   GridRenderCellParams,
   GridRenderEditCellParams,
-  useGridApiContext,
 } from '@mui/x-data-grid';
+import { useGridApiContext } from '@mui/x-data-grid';
 import { alpha, styled } from '@mui/material/styles';
-import Slider, { sliderClasses, SliderProps } from '@mui/material/Slider';
+import type { SliderProps } from '@mui/material/Slider';
+import Slider, { sliderClasses } from '@mui/material/Slider';
 import Tooltip from '@mui/material/Tooltip';
 import { debounce } from '@mui/material/utils';
 

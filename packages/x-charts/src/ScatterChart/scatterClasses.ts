@@ -33,6 +33,9 @@ export const scatterClasses: ScatterClasses = generateUtilityClasses('MuiScatter
 ]);
 
 export interface UseUtilityClassesOptions {
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<ScatterClasses>;
 }
 

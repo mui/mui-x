@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGrid, GridFilterModel } from '@mui/x-data-grid';
+import type { GridFilterModel } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { createFakeServer } from '@mui/x-data-grid-generator';
 
 const { useQuery, ...data } = createFakeServer();

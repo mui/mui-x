@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { fireEvent, screen, createDescribe } from '@mui/internal-test-utils';
-import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
+import type { SvgIconProps } from '@mui/material/SvgIcon';
+import SvgIcon from '@mui/material/SvgIcon';
 import { vi, describe, it, expect } from 'vitest';
-import { DescribePickerOptions } from './describePicker.types';
+import type { DescribePickerOptions } from './describePicker.types';
 
 function innerDescribePicker(ElementToTest: React.ElementType, options: DescribePickerOptions) {
   const { render, fieldType, hasNoView, variant } = options;

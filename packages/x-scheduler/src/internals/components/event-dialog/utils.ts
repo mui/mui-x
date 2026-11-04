@@ -10,18 +10,18 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
+  BaseTemporal,
   createAdapterDate,
   createEndOfPlainDate,
-  createLabelDate,
+  formatMonthAndDayOfMonth,
+  formatWeekday,
   getOccurrenceDataTimezone,
   MS_PER_DAY,
-  PlainDate,
   toEpochMs,
   toPlainDate,
   toWallClockIsoString,
 } from '@mui/x-scheduler-internals/internals';
 import type { EventEditingLocaleText, SchedulerWeekday } from '../../../models';
-import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
 /**
  * Form values handled by the built-in submit logic.
@@ -107,7 +107,7 @@ const WEEKDAYS: SchedulerWeekday[] = [
   'saturday',
 ];
 
-export const getWeekdayToken = (plainDate: PlainDate) => {
+export const getWeekdayToken = (plainDate: BaseTemporal.PlainDate) => {
   // ISO weekdays go from 1 (Monday) to 7 (Sunday).
   return WEEKDAYS[plainDate.dayOfWeek % 7];
 };
@@ -138,20 +138,20 @@ export function getEditedRangeBounds(
   };
 }
 
-// The documented `yyyy-MM-dd` / `HH:mm` formats. `PlainDate.from()` rejects the dates that don't
-// exist, like 2025-06-31, but also reads calendar annotations, which the fields don't use.
+// The documented `yyyy-MM-dd` / `HH:mm` formats. `BaseTemporal.PlainDate.from()` rejects the dates
+// that don't exist, like 2025-06-31, but also reads calendar annotations, which the fields don't use.
 const DATE_VALUE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_VALUE_REGEX = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
 /**
  * Reads a `yyyy-MM-dd` field, or returns `null` when it isn't an existing date.
  */
-function readDateField(raw: string): PlainDate | null {
+function readDateField(raw: string): BaseTemporal.PlainDate | null {
   if (!DATE_VALUE_REGEX.test(raw)) {
     return null;
   }
   try {
-    return PlainDate.from(raw);
+    return BaseTemporal.PlainDate.from(raw);
   } catch {
     return null;
   }
@@ -234,7 +234,7 @@ export function validateRange(
   allDay: boolean,
   displayTimezone: TemporalTimezone,
 ): null | { field: 'endDate' | 'endTime' } {
-  const dayOrder = PlainDate.compare(
+  const dayOrder = BaseTemporal.PlainDate.compare(
     toPlainDate(start, displayTimezone),
     toPlainDate(end, displayTimezone),
   );
@@ -295,8 +295,8 @@ export function getRangeErrorMessage(
 }
 
 export function getRecurrenceLabel(
-  adapter: Adapter,
-  startPlainDate: PlainDate,
+  locale: string,
+  startPlainDate: BaseTemporal.PlainDate,
   recurrenceKey: RecurringEventPresetKey | 'custom' | null,
   localeText: EventEditingLocaleText,
 ): string {
@@ -309,18 +309,16 @@ export function getRecurrenceLabel(
       return localeText.recurrenceDailyPresetLabel;
     case 'WEEKLY': {
       const weekday = getWeekdayToken(startPlainDate);
-      const weekdayName = adapter.format(createLabelDate(adapter, startPlainDate), 'weekday');
+      const weekdayName = formatWeekday(locale, startPlainDate);
       return localeText.recurrenceWeeklyPresetLabel({ weekday, weekdayName });
     }
     case 'MONTHLY': {
       return localeText.recurrenceMonthlyPresetLabel(startPlainDate.day);
     }
     case 'YEARLY': {
-      const normalDate = formatDayOfMonthAndMonthFullLetter(
-        createLabelDate(adapter, startPlainDate),
-        adapter,
+      return localeText.recurrenceYearlyPresetLabel(
+        formatMonthAndDayOfMonth(locale, startPlainDate),
       );
-      return localeText.recurrenceYearlyPresetLabel(normalDate);
     }
     case 'custom':
       return localeText.recurrenceCustomRepeat;
@@ -355,7 +353,7 @@ export function getEventBoundTimestamp(
 export function getEventTimezonePlainDate(
   occurrence: SchedulerRenderableEventOccurrence,
   timestamp: number,
-): PlainDate {
+): BaseTemporal.PlainDate {
   return toPlainDate(timestamp, getEventTimezone(occurrence));
 }
 
@@ -430,9 +428,9 @@ function getTimezoneId(timezone: TemporalTimezone): string {
  * The localized generic name of a timezone (e.g. "Pacific Time"), or its identifier when the
  * runtime has no name for it and prints an offset instead.
  */
-function getTimezoneDisplayName(adapter: Adapter, timezoneId: string): string {
+function getTimezoneDisplayName(locale: string, timezoneId: string): string {
   try {
-    const name = new Intl.DateTimeFormat(adapter.getCurrentLocaleCode(), {
+    const name = new Intl.DateTimeFormat(locale, {
       timeZone: timezoneId,
       timeZoneName: 'longGeneric',
     })
@@ -450,14 +448,14 @@ function getTimezoneDisplayName(adapter: Adapter, timezoneId: string): string {
  * of its recurrence rule can be labeled; `null` when both timezones are the same.
  */
 export function getRecurrenceTimezoneName(
-  adapter: Adapter,
+  locale: string,
   eventTimezone: TemporalTimezone,
   displayTimezone: TemporalTimezone,
 ): string | null {
   const eventTimezoneId = getTimezoneId(eventTimezone);
   return eventTimezoneId === getTimezoneId(displayTimezone)
     ? null
-    : getTimezoneDisplayName(adapter, eventTimezoneId);
+    : getTimezoneDisplayName(locale, eventTimezoneId);
 }
 
 export function getEndsSelectionFromRRule(rrule?: {

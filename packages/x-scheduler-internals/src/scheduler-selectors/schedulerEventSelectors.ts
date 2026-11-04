@@ -164,13 +164,15 @@ export const schedulerEventSelectors = {
   /** Used by writers where no event exists yet (a creation), or that write the whole model into a new one (a copy). */
   canWriteEventDates: (state: State) => canWriteEventDatesSelector(state.eventModelStructure),
   /**
-   * Whether `eventModelStructure` can write a single date back to the model. Used by
-   * `removeUnwritableDates`, which drops only the date that can't be written instead of refusing
-   * the whole update — called from `updateEvents` for a resize-style change, and from the
-   * recurring "all" scope path for an in-place edit.
+   * The dates `eventModelStructure` declares with a getter but no setter, so they can't be
+   * written back to the model. `removeUnwritableDates` drops them from a resize-style change,
+   * the scheduling plugin refuses a cascade carrying one, and every refusal names them in its
+   * dev warning (`datesNotWritableReason`).
    */
-  isDateWritable: (state: State, property: SchedulerEventSide) =>
-    !isPropertyMissingSetter(state.eventModelStructure, property),
+  unwritableDates: (state: State): SchedulerEventSide[] =>
+    (['start', 'end'] as const).filter((property) =>
+      isPropertyMissingSetter(state.eventModelStructure, property),
+    ),
   /**
    * Resolves an event's color. `resourceId` picks which resource's `eventColor` counts when the
    * event itself has none — pass the row's resource id on a resource-row surface (the Event

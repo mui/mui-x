@@ -2,7 +2,7 @@ import { adapter } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
-import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
+import { buildTemporalPlainDate, getDayNumber } from '@mui/x-scheduler-internals/internals';
 import type { TimelineAxisWindow } from '@mui/x-scheduler-internals/internals';
 import type { PresetHeaderUnit } from '../../models';
 import { iterate } from './iterate';
@@ -12,7 +12,8 @@ function iterateRange(
   tickUnit: PresetHeaderUnit,
   start: TemporalSupportedObject,
   end: TemporalSupportedObject,
-  weekStartsOn?: WeekStartsOn,
+  // The first day of the week of English (United States).
+  weekStartsOn: WeekStartsOn = 7,
   hourWindow: TimelineAxisWindow = { dayStartMinute: 0, dayEndMinute: 1440 },
 ) {
   // The ranges of the tests run from the first instant of a date to the last instant of a date.
@@ -21,7 +22,7 @@ function iterateRange(
     endPlainDate: buildTemporalPlainDate(adapter, end).add({ days: 1 }),
     ...hourWindow,
   };
-  return iterate(adapter, unit, tickUnit, range, weekStartsOn);
+  return iterate(unit, tickUnit, range, weekStartsOn);
 }
 
 describe('iterate()', () => {
@@ -107,7 +108,7 @@ describe('iterate()', () => {
     });
 
     it('should ignore the hour range when the tick unit is not hour', () => {
-      const cells = iterateRange('week', 'day', start, end, undefined, {
+      const cells = iterateRange('week', 'day', start, end, 7, {
         dayStartMinute: 480,
         dayEndMinute: 1200,
       });
@@ -230,7 +231,8 @@ describe('iterate()', () => {
       expect(cells[7].plainDate).toEqualPlainDate('2026-03-08');
       expect(
         cells.every(
-          (cell, index) => cell.plainDate.dayNumber === cells[0].plainDate.dayNumber + index,
+          (cell, index) =>
+            getDayNumber(cell.plainDate) === getDayNumber(cells[0].plainDate) + index,
         ),
       ).to.equal(true);
     });
@@ -423,28 +425,15 @@ describe('iterate()', () => {
       expect(cells[0].plainDate).toEqualPlainDate('2025-01-06');
     });
 
-    it('should start the first week cell on Sunday when weekStartsOn is 0', () => {
-      // Range: same Wed-to-Wed. With weekStartsOn=0 first cell aligns to Sun 2025-01-05.
+    it('should start the first week cell on Sunday when weekStartsOn is 7', () => {
+      // Range: same Wed-to-Wed. With weekStartsOn=7 first cell aligns to Sun 2025-01-05.
       const start = adapter.date('2025-01-08T00:00:00Z', 'default');
       const end = adapter.date('2025-01-22T23:59:59.999Z', 'default');
 
-      const cells = iterateRange('week', 'day', start, end, 0);
+      const cells = iterateRange('week', 'day', start, end, 7);
 
       // The first cell should be aligned to Jan 5 (Sunday).
       expect(cells[0].plainDate).toEqualPlainDate('2025-01-05');
-    });
-
-    it('should produce the same result as default when weekStartsOn is undefined', () => {
-      const start = adapter.date('2025-01-08T00:00:00Z', 'default');
-      const end = adapter.date('2025-01-22T23:59:59.999Z', 'default');
-
-      const withUndefined = iterateRange('week', 'day', start, end, undefined);
-      const withoutArg = iterateRange('week', 'day', start, end);
-
-      expect(withUndefined.length).to.equal(withoutArg.length);
-      withUndefined.forEach((cell, i) => {
-        expect(cell.plainDate).toEqualPlainDate(withoutArg[i].plainDate.toString());
-      });
     });
   });
 });

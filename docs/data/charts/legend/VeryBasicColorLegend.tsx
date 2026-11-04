@@ -1,4 +1,5 @@
-import { LineChart, LineChartProps } from '@mui/x-charts/LineChart';
+import type { LineChartProps } from '@mui/x-charts/LineChart';
+import { LineChart } from '@mui/x-charts/LineChart';
 import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
 import Stack from '@mui/material/Stack';
 import { dataset } from './tempAnomaly';
