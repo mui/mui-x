@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { SparkLineChart, SparkLineChartProps } from '@mui/x-charts/SparkLineChart';
+import type { SparkLineChartProps } from '@mui/x-charts/SparkLineChart';
+import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 import { lineClasses } from '@mui/x-charts/LineChart';
 import { chartsAxisHighlightClasses } from '@mui/x-charts/ChartsAxisHighlight';
 import Box from '@mui/material/Box';

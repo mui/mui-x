@@ -42,7 +42,7 @@ export function FetchChildren() {
 
   const fetchTreeItems = async (parentId?: string) => {
     const queryKey = parentId ? ['treeItems', parentId] : ['treeItems', 'root'];
-    const data = await myQueryClient.fetchQuery({
+    const data = await myQueryClient.query({
       queryKey,
       queryFn: () => fetchData(parentId),
     });

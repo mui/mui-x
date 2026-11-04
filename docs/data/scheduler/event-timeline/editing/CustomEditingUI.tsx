@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {
+import type {
   SchedulerEvent,
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler/models';
@@ -25,7 +25,7 @@ export default function CustomEditingUI() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
   const [editedEvent, setEditedEvent] = React.useState<EditedEvent | null>(null);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (editedEvent == null) {
       return;

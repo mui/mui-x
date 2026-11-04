@@ -1,10 +1,6 @@
 import * as React from 'react';
-import {
-  DataGridPro,
-  GridDataSource,
-  GridInitialState,
-  useGridApiRef,
-} from '@mui/x-data-grid-pro';
+import type { GridDataSource, GridInitialState } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 const pageSizeOptions = [5, 10, 50];

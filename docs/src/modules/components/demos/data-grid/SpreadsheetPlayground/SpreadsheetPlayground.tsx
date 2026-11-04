@@ -3,22 +3,20 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import { DataGridPremium, GridColDef, useGridApiRef } from '@mui/x-data-grid-premium';
+import type { GridColDef } from '@mui/x-data-grid-premium';
+import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
 import {
   formulaFeature,
   FormulaBar,
   GRID_FORMULA_FUNCTIONS,
 } from '@mui/x-data-grid-premium/formula';
-import { TEMPLATES, TemplateId, withPlaygroundColumnBehavior } from './playgroundData';
+import type { TemplateId } from './playgroundData';
+import { TEMPLATES, withPlaygroundColumnBehavior } from './playgroundData';
 import { PLAYGROUND_FUNCTIONS } from './playgroundFunctions';
-import {
-  containerSx,
-  makeGridSx,
-  RefPaletteId,
-  SHEETS_HEADER_HEIGHT,
-  SHEETS_ROW_HEIGHT,
-} from './sheetsStyles';
-import { PlaygroundMenuBar, PlaygroundToggles, ExportKind } from './PlaygroundMenuBar';
+import type { RefPaletteId } from './sheetsStyles';
+import { containerSx, makeGridSx, SHEETS_HEADER_HEIGHT, SHEETS_ROW_HEIGHT } from './sheetsStyles';
+import type { PlaygroundToggles, ExportKind } from './PlaygroundMenuBar';
+import { PlaygroundMenuBar } from './PlaygroundMenuBar';
 import { PlaygroundToolbar } from './PlaygroundToolbar';
 import { PlaygroundFooter } from './PlaygroundFooter';
 import { AddColumnDialog } from './AddColumnDialog';

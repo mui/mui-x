@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
+  schedulerOtherSelectors,
   schedulerPreferenceSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
@@ -31,9 +31,9 @@ export interface UseEventAccessibleNameParameters {
 export function useEventAccessibleName(parameters: UseEventAccessibleNameParameters): string {
   const { occurrence, isRecurring, localeText, resourceName: resourceNameProp } = parameters;
 
-  const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
   const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
+  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
   const usesPrimaryResource = resourceNameProp === undefined;
   const primaryResource = useStore(
     store,
@@ -46,12 +46,12 @@ export function useEventAccessibleName(parameters: UseEventAccessibleNameParamet
     () =>
       getEventAccessibleName({
         occurrence,
-        adapter,
+        locale,
         ampm,
         localeText,
         isRecurring,
         resourceName,
       }),
-    [occurrence, adapter, ampm, localeText, isRecurring, resourceName],
+    [occurrence, locale, ampm, localeText, isRecurring, resourceName],
   );
 }

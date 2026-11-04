@@ -16,7 +16,8 @@ export const GRID_STRING_COL_DEF: GridColTypeDef<any, any> = {
   filterable: true,
   groupable: true,
   pinnable: true,
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Premium augmentation adds aggregable only when the Premium package is included.
+  // @ts-ignore Premium augmentation adds aggregable only when the Premium package is included.
   aggregable: true,
   chartable: true,
   editable: false,

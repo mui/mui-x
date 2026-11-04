@@ -3,9 +3,17 @@
   "name": "ChatLayout",
   "imports": ["import { ChatLayout } from '@mui/x-chat/headless';"],
   "slots": [
-    { "name": "root", "description": "", "class": null },
-    { "name": "conversationsPane", "description": "", "class": null },
-    { "name": "threadPane", "description": "", "class": null }
+    { "name": "root", "description": "The component that renders the root.", "class": null },
+    {
+      "name": "conversationsPane",
+      "description": "The component that renders the conversations pane.",
+      "class": null
+    },
+    {
+      "name": "threadPane",
+      "description": "The component that renders the thread pane.",
+      "class": null
+    }
   ],
   "classes": [],
   "spread": true,

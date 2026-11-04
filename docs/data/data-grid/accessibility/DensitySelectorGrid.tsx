@@ -1,7 +1,7 @@
 import * as React from 'react';
+import type { GridDensity } from '@mui/x-data-grid';
 import {
   DataGrid,
-  GridDensity,
   gridDensitySelector,
   Toolbar,
   ToolbarButton,

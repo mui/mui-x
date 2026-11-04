@@ -3,7 +3,8 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { randomName, randomId } from '@mui/x-data-grid-generator';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
-import { initialItems, ItemType } from './items';
+import type { ItemType } from './items';
+import { initialItems } from './items';
 
 export default function ErrorManagement() {
   const [failRequests, setFailRequests] = React.useState(false);

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGridPro, type DataGridProProps } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
+import type { DataGridProProps } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => {

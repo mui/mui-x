@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SchedulerEvent } from '@mui/x-scheduler/models';
+import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   initialEvents,
@@ -21,7 +21,7 @@ export default function PreferencesMenu() {
           toggleWeekendVisibility: false,
           toggleWeekStartsOn: true,
         }}
-        defaultPreferences={{ isSidePanelOpen: false, weekStartsOn: 0 }}
+        defaultPreferences={{ isSidePanelOpen: false, weekStartsOn: 7 }}
       />
     </div>
   );

@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "cross-env NODE_ENV=production pnpm build && concurrently --success first --kill-others \"pnpm run test\" \"pnpm run server\"",
+    "start": "cross-env NODE_ENV=production pnpm build && vitest run",
     "build": "cross-env TEST_BUILD=true vite build",
     "dev": "concurrently \"pnpm run build --watch\" \"pnpm run server\"",
     "test": "vitest",
@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@babel/runtime": "catalog:",
+    "@fontsource/roboto": "5.3.0",
     "@mui/icons-material": "catalog:",
     "@mui/internal-test-utils": "catalog:",
     "@mui/x-charts": "workspace:^",

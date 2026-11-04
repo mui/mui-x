@@ -18,7 +18,7 @@ import {
 } from '@mui/x-charts/ChartsTooltip';
 import { ChartsLabelMark } from '@mui/x-charts/ChartsLabel';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
-import { AxisItemIdentifier } from '@mui/x-charts/models';
+import type { AxisItemIdentifier } from '@mui/x-charts/models';
 import { forecast } from '../dataset/weatherForecast';
 import {
   DayAndTimeHeader,

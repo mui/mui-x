@@ -1,4 +1,4 @@
-import { expect } from 'vitest';
+import type { expect } from 'vitest';
 
 export type MatcherState = ReturnType<typeof expect.getState>;
 

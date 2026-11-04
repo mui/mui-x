@@ -1,4 +1,5 @@
-import { DataGridPro, useGridApiRef, GridColDef } from '@mui/x-data-grid-pro';
+import type { GridColDef } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import {
   randomInt,
   randomUserName,

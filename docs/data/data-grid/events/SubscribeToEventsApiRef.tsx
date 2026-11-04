@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGridPro, GridEventListener, useGridApiRef } from '@mui/x-data-grid-pro';
+import type { GridEventListener } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useMovieData } from '@mui/x-data-grid-generator';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';

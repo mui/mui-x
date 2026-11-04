@@ -16,11 +16,11 @@ describe('createEventRangeIndex', () => {
       EventBuilder.new(adapter).id('earlier-start').singleDay('2025-01-15T09:00:00Z').toProcessed(),
       EventBuilder.new(adapter).id('outside').singleDay('2025-02-15T09:00:00Z').toProcessed(),
     ];
-    const index = createEventRangeIndex(events, adapter, false);
+    const index = createEventRangeIndex(events, false);
 
     const result = index.getEventsForRange(
-      adapter.date('2025-01-15T10:00:00Z', 'default'),
-      adapter.date('2025-01-15T13:00:00Z', 'default'),
+      adapter.getTime(adapter.date('2025-01-15T10:00:00Z', 'default')),
+      adapter.getTime(adapter.date('2025-01-15T13:00:00Z', 'default')),
     );
 
     expect(result.map((event) => event.id)).to.deep.equal([
@@ -44,11 +44,11 @@ describe('createEventRangeIndex', () => {
         EventBuilder.new(adapter).id(id).singleDay('2025-02-15T09:00:00Z').toProcessed(),
       ),
     ];
-    const index = createEventRangeIndex(events, adapter, false);
+    const index = createEventRangeIndex(events, false);
 
     const result = index.getEventsForRange(
-      adapter.date('2025-01-15T10:00:00Z', 'default'),
-      adapter.date('2025-01-15T12:00:00Z', 'default'),
+      adapter.getTime(adapter.date('2025-01-15T10:00:00Z', 'default')),
+      adapter.getTime(adapter.date('2025-01-15T12:00:00Z', 'default')),
     );
 
     expect(result.map((event) => event.id)).to.deep.equal(['ends-at-start', 'starts-at-end']);
@@ -64,10 +64,16 @@ describe('createEventRangeIndex', () => {
     const end = adapter.date('2025-02-02T00:00:00Z', 'default');
 
     expect(
-      createEventRangeIndex([recurringEvent], adapter, true).getEventsForRange(start, end),
+      createEventRangeIndex([recurringEvent], true).getEventsForRange(
+        adapter.getTime(start),
+        adapter.getTime(end),
+      ),
     ).to.have.length(1);
     expect(
-      createEventRangeIndex([recurringEvent], adapter, false).getEventsForRange(start, end),
+      createEventRangeIndex([recurringEvent], false).getEventsForRange(
+        adapter.getTime(start),
+        adapter.getTime(end),
+      ),
     ).to.have.length(0);
   });
 
@@ -101,10 +107,16 @@ describe('createEventRangeIndex', () => {
       );
 
       expect(
-        createEventRangeIndex(events, adapter, true).getEventsForRange(start, end),
+        createEventRangeIndex(events, true).getEventsForRange(
+          adapter.getTime(start),
+          adapter.getTime(end),
+        ),
       ).to.deep.equal(expected);
       expect(
-        createEventRangeIndex(events, adapter, false).getEventsForRange(start, end),
+        createEventRangeIndex(events, false).getEventsForRange(
+          adapter.getTime(start),
+          adapter.getTime(end),
+        ),
       ).to.deep.equal(rangeMatches);
     },
   );
@@ -119,11 +131,11 @@ describe('createEventRangeIndex', () => {
       .id('outside')
       .singleDay('2025-01-01T09:00:00Z')
       .toProcessed();
-    const index = createEventRangeIndex([outside, ...events], adapter, true);
+    const index = createEventRangeIndex([outside, ...events], true);
 
     const result = index.getEventsForRange(
-      adapter.date('2025-02-01T00:00:00Z', 'default'),
-      adapter.date('2025-02-02T00:00:00Z', 'default'),
+      adapter.getTime(adapter.date('2025-02-01T00:00:00Z', 'default')),
+      adapter.getTime(adapter.date('2025-02-02T00:00:00Z', 'default')),
     );
 
     expect(result).to.have.length(events.length);
@@ -131,11 +143,11 @@ describe('createEventRangeIndex', () => {
   });
 
   it('should return an empty array for an empty calendar', () => {
-    const index = createEventRangeIndex([], adapter, false);
+    const index = createEventRangeIndex([], false);
     expect(
       index.getEventsForRange(
-        adapter.date('2025-01-01T00:00:00Z', 'default'),
-        adapter.date('2025-02-01T00:00:00Z', 'default'),
+        adapter.getTime(adapter.date('2025-01-01T00:00:00Z', 'default')),
+        adapter.getTime(adapter.date('2025-02-01T00:00:00Z', 'default')),
       ),
     ).to.deep.equal([]);
   });
@@ -146,12 +158,17 @@ describe('createEventRangeIndex', () => {
       const point = adapter.addDays(firstDay, id).toISOString();
       return EventBuilder.new(adapter).id(id).span(point, point).toProcessed();
     });
-    const index = createEventRangeIndex(events, adapter, false);
+    const index = createEventRangeIndex(events, false);
 
-    expect(index.getEventsForRange(firstDay, adapter.addDays(firstDay, 1))).to.deep.equal(
-      events.slice(0, 2),
-    );
-    expect(index.getEventsForRange(firstDay, firstDay)).to.deep.equal([events[0]]);
+    expect(
+      index.getEventsForRange(
+        adapter.getTime(firstDay),
+        adapter.getTime(adapter.addDays(firstDay, 1)),
+      ),
+    ).to.deep.equal(events.slice(0, 2));
+    expect(
+      index.getEventsForRange(adapter.getTime(firstDay), adapter.getTime(firstDay)),
+    ).to.deep.equal([events[0]]);
   });
 
   it('should match a linear overlap scan across different ranges', () => {
@@ -164,7 +181,7 @@ describe('createEventRangeIndex', () => {
         .span(eventStart.toISOString(), eventEnd.toISOString())
         .toProcessed();
     });
-    const index = createEventRangeIndex(events, adapter, false);
+    const index = createEventRangeIndex(events, false);
 
     for (const width of [0, 3, 39, 40, 41, 100, 250]) {
       for (let day = -10; day < 230; day += 7) {
@@ -176,7 +193,9 @@ describe('createEventRangeIndex', () => {
             !adapter.isBefore(event.displayTimezone.end.value, rangeStart),
         );
 
-        expect(index.getEventsForRange(rangeStart, rangeEnd)).to.deep.equal(expected);
+        expect(
+          index.getEventsForRange(adapter.getTime(rangeStart), adapter.getTime(rangeEnd)),
+        ).to.deep.equal(expected);
       }
     }
   });
@@ -190,7 +209,7 @@ describe('createEventRangeIndex', () => {
         .span(eventStart.toISOString(), adapter.addDays(eventStart, 1).toISOString())
         .toProcessed();
     });
-    const index = createEventRangeIndex(events, adapter, false);
+    const index = createEventRangeIndex(events, false);
     const rangeStart = adapter.addDays(firstDay, 5);
     const rangeEnd = adapter.addDays(firstDay, 30);
     const expected = events.filter(
@@ -202,7 +221,9 @@ describe('createEventRangeIndex', () => {
     expect(expected.length).to.be.greaterThan(
       events.length * EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD,
     );
-    expect(index.getEventsForRange(rangeStart, rangeEnd)).to.deep.equal(expected);
+    expect(
+      index.getEventsForRange(adapter.getTime(rangeStart), adapter.getTime(rangeEnd)),
+    ).to.deep.equal(expected);
   });
 
   it('should preserve input order for a narrow indexed query over shuffled events', () => {
@@ -214,7 +235,7 @@ describe('createEventRangeIndex', () => {
         .span(eventStart.toISOString(), adapter.addDays(eventStart, 1).toISOString())
         .toProcessed();
     });
-    const index = createEventRangeIndex(events, adapter, false);
+    const index = createEventRangeIndex(events, false);
     const rangeStart = adapter.addDays(firstDay, 40);
     const rangeEnd = adapter.addDays(firstDay, 45);
     const expected = events.filter(
@@ -224,7 +245,9 @@ describe('createEventRangeIndex', () => {
     );
 
     expect(expected.length).to.be.lessThan(events.length * EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD);
-    expect(index.getEventsForRange(rangeStart, rangeEnd)).to.deep.equal(expected);
+    expect(
+      index.getEventsForRange(adapter.getTime(rangeStart), adapter.getTime(rangeEnd)),
+    ).to.deep.equal(expected);
   });
 
   it('should return a copy in input order when the range overlaps every event', () => {
@@ -232,11 +255,11 @@ describe('createEventRangeIndex', () => {
       EventBuilder.new(adapter).id('later').singleDay('2025-01-02T09:00:00Z').toProcessed(),
       EventBuilder.new(adapter).id('earlier').singleDay('2025-01-01T09:00:00Z').toProcessed(),
     ];
-    const index = createEventRangeIndex(events, adapter, false);
+    const index = createEventRangeIndex(events, false);
 
     const result = index.getEventsForRange(
-      adapter.date('2025-01-01T00:00:00Z', 'default'),
-      adapter.date('2025-01-03T00:00:00Z', 'default'),
+      adapter.getTime(adapter.date('2025-01-01T00:00:00Z', 'default')),
+      adapter.getTime(adapter.date('2025-01-03T00:00:00Z', 'default')),
     );
 
     expect(result).to.deep.equal(events);
@@ -256,10 +279,10 @@ describe('createEventRangeIndex', () => {
     ];
 
     expect(
-      createEventRangeIndex(events, adapter, false)
+      createEventRangeIndex(events, false)
         .getEventsForRange(
-          adapter.date('1959-12-31T00:00:00Z', 'default'),
-          adapter.date('1960-01-03T00:00:00Z', 'default'),
+          adapter.getTime(adapter.date('1959-12-31T00:00:00Z', 'default')),
+          adapter.getTime(adapter.date('1960-01-03T00:00:00Z', 'default')),
         )
         .map((event) => event.id),
     ).to.deep.equal(['before-epoch']);

@@ -4,9 +4,11 @@ export type ComposableCartesianChartSeriesType =
   | 'bar'
   | 'line'
   | 'scatter'
-  // @ts-ignore, 'rangeBar' does not exist in the base ChartsSeriesConfig, but it is added via module augmentation in x-charts-premium
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Range bar is added by Premium augmentation, absent in the community build.
+  // @ts-ignore Range bar is added by Premium augmentation, absent in the community build.
   | (ChartsSeriesConfig['rangeBar'] extends undefined ? never : 'rangeBar')
-  // @ts-ignore, 'ohlc' does not exist in the base ChartsSeriesConfig, but it is added via module augmentation in x-charts-premium
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- OHLC is added by Premium augmentation, absent in the community build.
+  // @ts-ignore OHLC is added by Premium augmentation, absent in the community build.
   | (ChartsSeriesConfig['ohlc'] extends undefined ? never : 'ohlc');
 
 export const composableCartesianSeriesTypes: Set<ComposableCartesianChartSeriesType> = new Set([

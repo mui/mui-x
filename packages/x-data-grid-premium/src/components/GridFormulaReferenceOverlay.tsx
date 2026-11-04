@@ -3,8 +3,8 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { styled } from '@mui/material/styles';
 import {
+  gridClasses,
   gridColumnPositionsSelector,
-  gridDimensionsSelector,
   gridPinnedColumnsSelector,
   gridRowsMetaSelector,
   useGridEvent,
@@ -12,6 +12,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import type { GridEventListener, GridRowId } from '@mui/x-data-grid-pro';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { useStore } from '@base-ui/utils/store';
 import type { RefObject } from '@mui/x-internals/types';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -32,18 +33,20 @@ import {
 import type { GridFormulaLiveResizeSession } from '../hooks/features/formula/gridFormulaLiveGeometry';
 import type { GridPrivateApiPremium } from '../models/gridApiPremium';
 
-// Lives INSIDE the virtual scroller (portaled into it) and positions its
-// rectangles in content coordinates, so native scrolling moves them in lockstep
-// with the cells — no scroll listener, no lag. It sits in the scroller's z=0
-// layer (after the content), so the sticky header (z=40) and pinned columns
-// (z=30) paint over a rectangle scrolled underneath them, and it paints over the
-// normal cells. `pointer-events: none` keeps it inert.
+// Lives INSIDE the render zone of the rows (portaled into it) and positions its
+// rectangles relative to the first rendered row, so native scrolling moves them
+// in lockstep with the cells — no scroll listener, no lag. The render zone is a
+// stacking context (it is translated to its first row): at z=1 in it, the overlay
+// paints over the normal cells and under the pinned cells (z=30), which cover a
+// rectangle scrolled underneath them. The sticky header and pinned rows (z=40,
+// outside the render zone) cover it too. `pointer-events: none` keeps it inert.
 const GridFormulaReferenceOverlayRoot = styled('div')(({ theme }) => ({
   position: 'absolute',
   top: 0,
   left: 0,
   width: 0,
   height: 0,
+  zIndex: 1,
   pointerEvents: 'none',
   ...getFormulaReferencePaletteStyles(theme),
   '@media (forced-colors: active)': { display: 'none' },
@@ -56,6 +59,12 @@ const GridFormulaReferenceOverlayRect = styled('div')({
   boxSizing: 'border-box',
   border: '1px dashed',
 });
+
+const selectFirstRenderedRowTop = (
+  state: GridPrivateApiPremium['virtualizer']['store']['state'],
+  active: boolean,
+) =>
+  active ? (state.rowsMeta.positions[state.virtualization.renderContext.firstRowIndex] ?? 0) : 0;
 
 interface OverlayRect {
   key: string;
@@ -77,7 +86,7 @@ interface RowSpan {
 }
 
 /**
- * Resolves the visible colored references to content-space rectangles. Returns
+ * Resolves the visible colored references to rectangles in the render zone. Returns
  * one rect per distinct target (a cell referenced twice → one rectangle).
  * Pinned-column targets and references off the current page are skipped (no rect)
  * — graceful degradation matching the documented limitations.
@@ -191,10 +200,10 @@ function computeOverlayRects(
 /**
  * Half B of the reference highlighting: a `pointer-events: none` overlay drawing
  * one dashed rectangle per referenced cell/range/column, color-matched to the
- * editor tokens. Portaled into the virtual scroller and positioned in content
- * coordinates, so it scrolls natively with the cells. Reads the active edit and
- * value from grid state (not the editor component), so it survives the editing
- * cell being virtualized out.
+ * editor tokens. Portaled into the render zone of the rows and positioned
+ * relative to its first row, so it scrolls natively with the cells. Reads the
+ * active edit and value from grid state (not the editor component), so it
+ * survives the editing cell being virtualized out.
  */
 function GridFormulaReferenceOverlay() {
   const apiRef = useGridPrivateApiContext();
@@ -207,19 +216,30 @@ function GridFormulaReferenceOverlay() {
   // visibility, sort/filter, row heights) — never on scroll, which is native.
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
-  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
+  // The render zone is translated to the position of its first row, which a
+  // vertical scroll can move. Read from the virtualizer store, like that
+  // translation, so both change in the same render (only while an edit is active).
+  const firstRenderedRowTop = useStore(
+    apiRef.current.virtualizer.store,
+    selectFirstRenderedRowTop,
+    activeEdit !== null,
+  );
 
-  // Capture the scroller (the portal target) lazily, only once a formula edit is
-  // active — so a grid that never edits a formula pays no extra render.
-  const [scroller, setScroller] = React.useState<HTMLElement | null>(null);
+  // Capture the render zone (the portal target) lazily, only once a formula edit
+  // is active — so a grid that never edits a formula pays no extra render.
+  const [renderZone, setRenderZone] = React.useState<HTMLElement | null>(null);
   useEnhancedEffect(() => {
-    if (activeEdit !== null && scroller === null) {
-      setScroller(apiRef.current.virtualScrollerRef?.current ?? null);
+    if (activeEdit !== null && renderZone === null) {
+      setRenderZone(
+        apiRef.current.virtualScrollerRef?.current?.querySelector<HTMLElement>(
+          `.${gridClasses.virtualScrollerRenderZone}`,
+        ) ?? null,
+      );
     }
-  }, [apiRef, activeEdit, scroller]);
+  }, [apiRef, activeEdit, renderZone]);
 
-  // The content-space overlay relies on the default (uncontrolled) layout, where
+  // The overlay relies on the default (uncontrolled) layout, where
   // the scroller scrolls natively. The experimental 'controlled' layout moves
   // rows by JS transform instead, so the overlay is disabled there (the editor
   // backdrop still works). See virtualizerLayoutMode.
@@ -263,7 +283,7 @@ function GridFormulaReferenceOverlay() {
           )
         : columnPositions,
       rowsMeta,
-      dimensions.topContainerHeight ?? 0,
+      -firstRenderedRowTop,
       pinnedFields,
       liveResize ? { field: session.field, width: liveWidth } : null,
     );
@@ -274,7 +294,7 @@ function GridFormulaReferenceOverlay() {
     model.references,
     columnPositions,
     rowsMeta,
-    dimensions,
+    firstRenderedRowTop,
     pinnedColumns,
   ]);
 
@@ -329,7 +349,7 @@ function GridFormulaReferenceOverlay() {
   useGridEvent(apiRef, 'columnResizeStop', handleColumnResizeStop);
   useGridEvent(apiRef, 'columnWidthChange', handleColumnWidthChange);
 
-  if (activeEdit === null || rects.length === 0 || scroller === null) {
+  if (activeEdit === null || rects.length === 0 || renderZone === null) {
     return null;
   }
 
@@ -358,7 +378,7 @@ function GridFormulaReferenceOverlay() {
         />
       ))}
     </GridFormulaReferenceOverlayRoot>,
-    scroller,
+    renderZone,
   );
 }
 

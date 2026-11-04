@@ -2,6 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "adapterLocale": { "description": "Locale for the date library you are using" },
+    "children": { "description": "The components that use the localization settings." },
     "dateAdapter": {
       "description": "Date library adapter class function.",
       "seeMoreText": "See the localization provider {{link}} for more details."

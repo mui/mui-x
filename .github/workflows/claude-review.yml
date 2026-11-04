@@ -13,7 +13,7 @@ permissions: {}
 
 jobs:
   claude-review:
-    uses: mui/mui-public/.github/workflows/claude-review.yml@dee147ca60c626f427f310af3d52a4aa27390566 # master
+    uses: mui/mui-public/.github/workflows/claude-review.yml@80d3ec0d49901ddda4af788aeb3b1b51e21c07cc # master
     permissions:
       contents: read # read the repo (checkout + git diff)
       id-token: write # mint the GitHub OIDC token exchanged for a Claude token via WIF

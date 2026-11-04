@@ -193,6 +193,8 @@ export const useGridPrintExport = (
       }
 
       gridClone.style.height = 'auto';
+      gridClone.style.minHeight = '0';
+      gridClone.style.maxHeight = 'none';
       // The height above does not include grid border width, so we need to exclude it
       gridClone.style.boxSizing = 'content-box';
 

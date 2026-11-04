@@ -29,8 +29,8 @@ describe('<ViewSwitcher />', () => {
     fireEvent.click(viewSwitcherButton);
 
     // Menu should contain all default views
-    const menu = screen.getByRole('listbox');
-    const menuItems = within(menu).getAllByRole('menuitem');
+    const menu = screen.getByRole('menu');
+    const menuItems = within(menu).getAllByRole('menuitemradio');
 
     expect(menuItems).toHaveLength(4);
     expect(menuItems[0]).to.have.text('Day');
@@ -38,8 +38,13 @@ describe('<ViewSwitcher />', () => {
     expect(menuItems[2]).to.have.text('Month');
     expect(menuItems[3]).to.have.text('Agenda');
 
-    // The current view should be selected
-    expect(menuItems[1]).to.have.attribute('aria-selected', 'true');
+    // Only the current view is checked
+    expect(menuItems.map((item) => item.getAttribute('aria-checked'))).to.deep.equal([
+      'false',
+      'true',
+      'false',
+      'false',
+    ]);
   });
 
   it('should expose aria-expanded reflecting the menu open state', async () => {
@@ -57,6 +62,27 @@ describe('<ViewSwitcher />', () => {
     expect(viewSwitcherButton).to.have.attribute('aria-expanded', 'true');
   });
 
+  it('should give the menu a fixed accessible name instead of the current view', async () => {
+    render(
+      <EventCalendarProvider {...standaloneDefaults}>
+        <HeaderToolbar />
+      </EventCalendarProvider>,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Week' }));
+
+    // The checked item already announces the current view, so the menu must not repeat it.
+    expect(screen.getByRole('menu')).toHaveAccessibleName('Views');
+  });
+
+  it('should take the menu accessible name from the localeText', async () => {
+    render(<EventCalendar events={[]} localeText={{ viewSwitcherAriaLabel: 'Calendar views' }} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Week' }));
+
+    expect(screen.getByRole('menu')).toHaveAccessibleName('Calendar views');
+  });
+
   it('should render all views in the menu for a custom set of views (with more than 3 views)', async () => {
     render(
       <EventCalendarProvider {...standaloneDefaults} views={['agenda', 'week', 'day', 'month']}>
@@ -70,8 +96,8 @@ describe('<ViewSwitcher />', () => {
     // Open the menu
     fireEvent.click(viewSwitcherButton);
 
-    const menu = screen.getByRole('listbox');
-    const menuItems = within(menu).getAllByRole('menuitem');
+    const menu = screen.getByRole('menu');
+    const menuItems = within(menu).getAllByRole('menuitemradio');
 
     expect(menuItems).toHaveLength(4);
     expect(menuItems[0]).to.have.text('Agenda');
@@ -80,7 +106,7 @@ describe('<ViewSwitcher />', () => {
     expect(menuItems[3]).to.have.text('Month');
   });
 
-  it('should show the selected view in the button and mark it as selected in the menu', async () => {
+  it('should show the selected view in the button and mark it as checked in the menu', async () => {
     render(
       <EventCalendarProvider
         {...standaloneDefaults}
@@ -97,11 +123,11 @@ describe('<ViewSwitcher />', () => {
     // Open the menu
     fireEvent.click(viewSwitcherButton);
 
-    const menu = screen.getByRole('listbox');
-    const menuItems = within(menu).getAllByRole('menuitem');
+    const menu = screen.getByRole('menu');
+    const menuItems = within(menu).getAllByRole('menuitemradio');
 
-    // The 'day' view (3rd item) should be selected
-    expect(menuItems[2]).to.have.attribute('aria-selected', 'true');
+    // The 'day' view (3rd item) should be checked
+    expect(menuItems[2]).to.have.attribute('aria-checked', 'true');
   });
 
   it('should render all views in the menu for a custom set of views (with exactly 3 views)', async () => {
@@ -114,8 +140,8 @@ describe('<ViewSwitcher />', () => {
     const viewSwitcherButton = screen.getByRole('button', { name: 'Week' });
     fireEvent.click(viewSwitcherButton);
 
-    const menu = screen.getByRole('listbox');
-    const menuItems = within(menu).getAllByRole('menuitem');
+    const menu = screen.getByRole('menu');
+    const menuItems = within(menu).getAllByRole('menuitemradio');
 
     expect(menuItems).toHaveLength(3);
     expect(menuItems[0]).to.have.text('Agenda');
@@ -133,8 +159,8 @@ describe('<ViewSwitcher />', () => {
     const viewSwitcherButton = screen.getByRole('button', { name: 'Week' });
     fireEvent.click(viewSwitcherButton);
 
-    const menu = screen.getByRole('listbox');
-    const menuItems = within(menu).getAllByRole('menuitem');
+    const menu = screen.getByRole('menu');
+    const menuItems = within(menu).getAllByRole('menuitemradio');
 
     expect(menuItems).toHaveLength(2);
     expect(menuItems[0]).to.have.text('Agenda');
@@ -234,7 +260,7 @@ describe('week number badge', () => {
     expect(badge).to.have.text('Week 1');
   });
 
-  it('shows "Week 2" for Jan 5 2025 when weekStartsOn=0 (regression)', () => {
+  it('shows "Week 2" for Jan 5 2025 when weekStartsOn=7 (regression)', () => {
     const visibleDate = adapter.date('2025-01-05T00:00:00Z', 'default');
 
     render(
@@ -242,13 +268,86 @@ describe('week number badge', () => {
         events={[]}
         visibleDate={visibleDate}
         view="week"
-        preferences={{ showWeekNumber: true, weekStartsOn: 0 }}
+        preferences={{ showWeekNumber: true, weekStartsOn: 7 }}
       />,
     );
 
     const badge = document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`);
     expect(badge).not.to.equal(null);
     expect(badge).to.have.text('Week 2');
+  });
+
+  it.each([
+    // January 1st is in the first week in English (United States), and the first week holds
+    // January 4th in French.
+    { dateLocale: 'en-US', expected: 'Week 1' },
+    { dateLocale: 'fr-FR', expected: 'Week 53' },
+  ])(
+    'numbers the week of Friday, January 1st, 2027 with the rules of $dateLocale',
+    ({ dateLocale, expected }) => {
+      render(
+        <EventCalendar
+          events={[]}
+          visibleDate={adapter.date('2027-01-01T12:00:00Z', 'default')}
+          view="week"
+          dateLocale={dateLocale}
+          preferences={{ showWeekNumber: true }}
+        />,
+      );
+
+      expect(
+        document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`),
+      ).to.have.text(expected);
+    },
+  );
+
+  it('keeps the first week of the locale when the weeks start on another day', () => {
+    // January 1st stays in the first week of English (United States) with weeks starting on Monday.
+    render(
+      <EventCalendar
+        events={[]}
+        visibleDate={adapter.date('2027-01-01T12:00:00Z', 'default')}
+        view="week"
+        dateLocale="en-US"
+        preferences={{ showWeekNumber: true, weekStartsOn: 1 }}
+      />,
+    );
+
+    expect(document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`)).to.have.text(
+      'Week 1',
+    );
+  });
+
+  it('writes the week number in the digits of the locale', () => {
+    render(
+      <EventCalendar
+        events={[]}
+        visibleDate={adapter.date('2025-07-16T12:00:00Z', 'default')}
+        view="week"
+        dateLocale="ar-EG"
+        preferences={{ showWeekNumber: true }}
+      />,
+    );
+
+    expect(document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`)).to.have.text(
+      'Week ٢٩',
+    );
+  });
+
+  it('formats the month of the visible date in the display timezone', () => {
+    // July 31st at 23:00 in UTC is August 1st in Tokyo.
+    render(
+      <EventCalendar
+        events={[]}
+        visibleDate={adapter.date('2025-07-31T23:00:00Z', 'default')}
+        displayTimezone="Asia/Tokyo"
+        view="week"
+      />,
+    );
+
+    expect(document.querySelector(`.${eventCalendarClasses.headerToolbarLabel}`)).to.have.text(
+      'August 2025',
+    );
   });
 });
 

@@ -1,5 +1,9 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
+import { toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
+import { createAdapterDate } from '../internals/utils/plain-date-utils/adapter';
+
+const visibleTimestamp = (state: State) => state.adapter.getTime(state.visibleDate);
 
 // Warning: Only add selectors here that do not belong to any specific feature.
 export const schedulerOtherSelectors = {
@@ -28,11 +32,31 @@ export const schedulerOtherSelectors = {
     }
     return editing.modelBounds ?? null;
   },
+  /**
+   * The timestamp of `visibleDate`. The other selectors of the visible date read it, so a re-passed
+   * date of the same instant changes nothing.
+   */
+  visibleTimestamp,
+  /**
+   * The locale the dates are formatted in.
+   */
+  dateLocale: (state: State) => state.dateLocale,
+  /**
+   * `visibleDate` in the display timezone, for the code that formats it or passes it on.
+   */
   visibleDate: createSelectorMemoized(
     (state: State) => state.adapter,
-    (state: State) => state.visibleDate,
+    visibleTimestamp,
     (state: State) => state.displayTimezone,
-    (adapter, visibleDate, timezone) => adapter.setTimezone(visibleDate, timezone),
+    createAdapterDate,
+  ),
+  /**
+   * The date of `visibleDate` in the display timezone, for the code that works on plain dates.
+   */
+  visiblePlainDate: createSelectorMemoized(
+    visibleTimestamp,
+    (state: State) => state.displayTimezone,
+    toPlainDate,
   ),
   /**
    * Which face the edited occurrence is in (`'armed'` toolbar or `'edit'` surface), or `null` when idle.
@@ -64,6 +88,15 @@ export const schedulerOtherSelectors = {
     );
   },
   isRecurringScopeDialogOpen: (state: State) => state.pendingRecurringEventOperation != null,
+  isDeleteConfirmationDialogOpen: (state: State) => state.pendingDeleteConfirmation != null,
+  /**
+   * Whether any confirmation dialog stacked above the armed toolbar is open (the recurring scope
+   * dialog or the delete confirmation dialog). Both own their dismissal and scrolling, so callers
+   * use this to stand down their own outside-pointer/scroll-blocking handlers while either is open.
+   */
+  isConfirmationDialogOpen: (state: State) =>
+    schedulerOtherSelectors.isRecurringScopeDialogOpen(state) ||
+    schedulerOtherSelectors.isDeleteConfirmationDialogOpen(state),
   /**
    * The default event color used when no color is specified on the event or its resource.
    */

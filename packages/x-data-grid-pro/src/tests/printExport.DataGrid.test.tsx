@@ -1,5 +1,10 @@
 import type { RefObject } from '@mui/x-internals/types';
-import { DataGridPro, GridPrintExportMenuItem, useGridApiRef } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GridPrintExportMenuItem,
+  gridClasses,
+  useGridApiRef,
+} from '@mui/x-data-grid-pro';
 import type { GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
 import MenuList from '@mui/material/MenuList';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
@@ -190,6 +195,59 @@ describe('<DataGridPro /> - Print export', () => {
         currencyPair: true,
         id: true,
       });
+    });
+  });
+
+  describe('print height', () => {
+    it.skipIf(isJSDOM).each([
+      { height: 1200, rowCount: 3 },
+      { height: 300, rowCount: 30 },
+    ])('fits $rowCount exported rows when height={$height}', async ({ height, rowCount }) => {
+      const { setProps } = render(
+        <Test {...getBasicGridData(rowCount, 2)} height={height} rowHeight={40} />,
+      );
+
+      const printLayouts: { height: number; footerGap: number; rowCount: number }[] = [];
+      const removeChild = document.body.removeChild.bind(document.body);
+      const removeChildSpy = vi
+        .spyOn(document.body, 'removeChild')
+        .mockImplementation(<T extends Node>(child: T): T => {
+          if (child instanceof HTMLIFrameElement) {
+            const printRoot = child.contentDocument!.querySelector<HTMLElement>(
+              `.${gridClasses.root}`,
+            )!;
+            const rows = printRoot.querySelectorAll<HTMLElement>(`.${gridClasses.row}`);
+            const lastRow = rows[rows.length - 1].getBoundingClientRect();
+            const footer = printRoot
+              .querySelector<HTMLElement>(`.${gridClasses.footerContainer}`)!
+              .getBoundingClientRect();
+            printLayouts.push({
+              height: printRoot.getBoundingClientRect().height,
+              footerGap: footer.top - lastRow.bottom,
+              rowCount: rows.length,
+            });
+          }
+          return removeChild(child);
+        });
+      onTestFinished(() => removeChildSpy.mockRestore());
+
+      async function exportGrid() {
+        let printPromise!: Promise<void>;
+        // Flush the virtualization update before the async export clones the grid in React 18.
+        act(() => {
+          printPromise = apiRef.current!.exportDataAsPrint();
+        });
+        await act(() => printPromise);
+      }
+
+      await exportGrid();
+
+      setProps({ height: undefined });
+      await exportGrid();
+
+      // The height prop must not change the exported content height or footer position.
+      expect(printLayouts.map((layout) => layout.rowCount)).to.deep.equal([rowCount, rowCount]);
+      expect(printLayouts[0]).to.deep.equal(printLayouts[1]);
     });
   });
 

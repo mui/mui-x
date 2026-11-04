@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { useStore } from '@base-ui/utils/store';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { warnOnce } from '@mui/x-internals/warning';
@@ -12,16 +13,13 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import type {
   SchedulerEventUpdatedProperties,
-  SchedulerProcessedDate,
   RecurringEventFrequency,
   SchedulerProcessedEventRecurrenceRule,
   SchedulerRenderableEventOccurrence,
-  TemporalSupportedObject,
   TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
@@ -29,6 +27,7 @@ import {
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
+  createAdapterDate,
   getCustomEventProperties,
   getEventResourceIds,
   getOccurrenceDataTimezone,
@@ -42,13 +41,15 @@ import type { EventDialogFormValues } from '../event-dialog/utils';
 import {
   computeRange,
   findInvalidRangeField,
+  formatDateAndTimeFields,
   getInvalidValueErrorMessage,
   getRangeErrorMessage,
   validateRange,
   hasProp,
   BUILT_IN_FORM_KEYS,
   getResentRangeBounds,
-  getEventTimezoneBound,
+  getEventBoundTimestamp,
+  getEventTimezonePlainDate,
   getRecurrenceRuleBound,
 } from '../event-dialog/utils';
 import EventDialogHeader from '../event-dialog/EventDialogHeader';
@@ -60,41 +61,33 @@ import {
 } from '../event-dialog/form/EventDialogFormContext';
 import { eventDialogFormSelectors } from '../event-dialog/form/EventDialogFormStore';
 import { usePushPlaceholder } from '../event-dialog/usePushPlaceholder';
+import { focusFirstInvalid } from '../scheduler-form/focusFirstInvalid';
+import { deleteOccurrenceAndRestoreFocus } from '../../utils/focus-utils';
+import {
+  dialogContentBaseStyles,
+  dialogFormBaseStyles,
+  getDialogFormActionsBaseStyles,
+} from '../../constants/dialogStyles';
+import { getUserFacingErrorMessage } from '../../utils/user-facing-error';
 
-const FormActions = styled(DialogActions, {
+const EventDialogFormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
   slot: 'FormActions',
-})(({ theme }) => ({
-  padding: theme.spacing(3),
-  gap: theme.spacing(2),
-}));
+})(({ theme }) => getDialogFormActionsBaseStyles(theme));
 
-const DialogContent = styled(MuiDialogContent, {
+const EventDialogContentRoot = styled(MuiDialogContent, {
   name: 'MuiEventDialog',
   slot: 'DialogContent',
 })({
-  cursor: 'default',
-  userSelect: 'text',
-  padding: 0,
+  ...dialogContentBaseStyles,
   minWidth: 360,
   width: 450,
-  // Shrink to fit the paper (capped at the viewport) so the form doesn't overflow on mobile screens.
-  maxWidth: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  overflow: 'hidden',
-  maxHeight: '100%',
 });
 
 const EventDialogForm = styled('form', {
   name: 'MuiEventDialog',
   slot: 'Form',
-})({
-  display: 'flex',
-  flexDirection: 'column',
-  flex: 1,
-  minHeight: 0,
-});
+})(dialogFormBaseStyles);
 
 const EventDialogTabsContainer = styled('div', {
   name: 'MuiEventDialog',
@@ -131,12 +124,13 @@ interface FormContentProps {
    * @default true
    */
   isDraggable?: boolean;
+  /** The element the surface is anchored to, where focus goes back to after a delete. */
+  anchor?: HTMLElement | null;
 }
 
 export function FormContent(props: FormContentProps) {
   const { occurrence } = props;
 
-  const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
   const pushPlaceholder = usePushPlaceholder();
 
@@ -152,8 +146,9 @@ export function FormContent(props: FormContentProps) {
 
   // Built once: the provider ignores later values anyway.
   const initialValues = useRefWithInit((): EventDialogFormValues => {
-    const fmtDate = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'yyyy-MM-dd');
-    const fmtTime = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'HH:mm');
+    const { start, end, timezone } = occurrence.displayTimezone;
+    const startFields = formatDateAndTimeFields(start.timestamp, timezone);
+    const endFields = formatDateAndTimeFields(end.timestamp, timezone);
 
     // The rule is read and written in the event's timezone, not the display one.
     const base = getOccurrenceDataTimezone(occurrence)?.rrule;
@@ -186,17 +181,17 @@ export function FormContent(props: FormContentProps) {
       ...customProperties,
       title: occurrence.title,
       description: hasProp(occurrence, 'description') ? (occurrence.description ?? '') : '',
-      startDate: fmtDate(occurrence.displayTimezone.start),
-      endDate: fmtDate(occurrence.displayTimezone.end),
-      startTime: fmtTime(occurrence.displayTimezone.start),
-      endTime: fmtTime(occurrence.displayTimezone.end),
+      startDate: startFields.date,
+      endDate: endFields.date,
+      startTime: startFields.time,
+      endTime: endFields.time,
       resourceIds: getEventResourceIds(occurrence.resource),
       allDay: !!occurrence.allDay,
       color: hasProp(occurrence, 'color') ? occurrence.color : null,
       recurrenceSelection: schedulerRecurringEventSelectors.defaultPresetKey(
         store.state,
         base,
-        getEventTimezoneBound(adapter, occurrence, 'start'),
+        getEventTimezonePlainDate(occurrence, getEventBoundTimestamp(occurrence, 'start')),
       ),
       rruleDraft: {
         freq: (base?.freq ?? 'WEEKLY') as RecurringEventFrequency,
@@ -222,7 +217,7 @@ export function FormContent(props: FormContentProps) {
 }
 
 function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
-  const { onClose, dragHandlerRef, isDraggable } = props;
+  const { onClose, dragHandlerRef, isDraggable, anchor } = props;
 
   // Context hooks
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
@@ -273,8 +268,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   // closure values may predate an async validation.
   const runSubmitChecks = (
     values: EventDialogFormValues,
-    start: TemporalSupportedObject,
-    end: TemporalSupportedObject,
+    start: number,
+    end: number,
     current: ResolutionSettings,
   ): boolean => {
     const isMissingRequiredResource =
@@ -287,11 +282,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
     }
 
     // Only custom fields can produce unparseable or empty date values.
-    const invalidRangeField = findInvalidRangeField(
-      current.adapter,
-      values,
-      current.displayTimezone,
-    );
+    const invalidRangeField = findInvalidRangeField(values, current.displayTimezone);
     if (invalidRangeField) {
       warnUnvalidatedField(invalidRangeField, 'The value cannot be parsed into a date');
       if (eventDialogFormSelectors.error(formStore.state, invalidRangeField) === undefined) {
@@ -302,11 +293,11 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       }
     }
 
-    // An invalid field already blocks; the ordering verdict would compare
-    // against the computeRange fallback and blame a healthy field.
+    // An invalid field already blocks. Its bound reads as now or `NaN`: the
+    // ordering check would blame a healthy field, or throw.
     const rangeError = invalidRangeField
       ? null
-      : validateRange(current.adapter, start, end, values.allDay);
+      : validateRange(start, end, values.allDay, current.displayTimezone);
     if (rangeError) {
       warnUnvalidatedField(rangeError.field, 'The date range is invalid');
       // A validator on the same field may have stored a more specific message.
@@ -320,6 +311,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const form = event.currentTarget;
 
     if (formStore.state.isSubmitting) {
       return;
@@ -376,7 +368,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       };
 
       const values = formStore.state.values;
-      const { start, end } = computeRange(current.adapter, values, current.displayTimezone);
+      const range = computeRange(values, current.displayTimezone);
 
       const dirtyValues = formStore.getDirtyValues();
       // Only the custom fields the user actually edited enter the changes payload,
@@ -425,16 +417,18 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // moved since the snapshot; the recurring update defaults it to the occurrence's own.
       const untouchedBound = (bound: 'start' | 'end') =>
         liveEvent != null && liveEvent.dataTimezone.rrule == null
-          ? liveEvent.displayTimezone[bound].value
-          : occurrence.displayTimezone[bound].value;
-      const submittedStart = submitStart ? start : untouchedBound('start');
-      const submittedEnd = submitEnd ? end : untouchedBound('end');
+          ? liveEvent.displayTimezone[bound].timestamp
+          : occurrence.displayTimezone[bound].timestamp;
+      const submittedStart = submitStart ? range.start : untouchedBound('start');
+      const submittedEnd = submitEnd ? range.end : untouchedBound('end');
       if (!runSubmitChecks(values, submittedStart, submittedEnd, current) || !isValid) {
         // Show the tab owning a failing field; General wins when both tabs fail.
         const failingKeys = Object.keys(formStore.state.errors);
         const onlyRecurrenceFails =
           failingKeys.length > 0 && failingKeys.every((key) => RECURRENCE_FORM_KEYS.has(key));
-        setTabValue(onlyRecurrenceFails ? 'recurrence' : 'general');
+        // Rendered synchronously so the failing field is on screen to take the focus.
+        ReactDOM.flushSync(() => setTabValue(onlyRecurrenceFails ? 'recurrence' : 'general'));
+        focusFirstInvalid(form);
         return;
       }
 
@@ -450,7 +444,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // A preset is built on the start the event ends up with, in the event's timezone; the
       // Recurrence tab derives its labels and drafts from the same start.
       const ruleStart = getRecurrenceRuleBound(
-        current.adapter,
         occurrence,
         values,
         startResent,
@@ -458,7 +451,10 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         'start',
       );
       const recurrencePresets = current.showRecurrence
-        ? schedulerRecurringEventSelectors.presets(store.state, ruleStart)
+        ? schedulerRecurringEventSelectors.presets(
+            store.state,
+            getEventTimezonePlainDate(occurrence, ruleStart),
+          )
         : null;
       let rruleToSubmit: SchedulerProcessedEventRecurrenceRule | undefined;
       if (recurrencePresets == null || values.recurrenceSelection === null) {
@@ -469,6 +465,9 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         rruleToSubmit = recurrencePresets[values.recurrenceSelection];
       }
 
+      // The store receives adapter values, labeled with the display timezone the fields are read in.
+      const start = createAdapterDate(current.adapter, range.start, current.displayTimezone);
+      const end = createAdapterDate(current.adapter, range.end, current.displayTimezone);
       if (isCreation) {
         store.createEvent({ ...metaChanges, start, end, rrule: rruleToSubmit });
       } else if (
@@ -507,15 +506,20 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           id: occurrence.id,
           ...(submitStart ? { start } : {}),
           ...(submitEnd ? { end } : {}),
-          rrule: rruleToSubmit,
+          // Without the Recurrence tab, the event keeps its `rrule` untouched.
+          ...(current.showRecurrence ? { rrule: rruleToSubmit } : {}),
         });
         if (!result.applied) {
           // A vetoed save keeps the dialog open; the rejection sits on the range field and
           // editing the dates clears it.
           const rejectedField = values.allDay ? 'endDate' : 'endTime';
-          warnUnvalidatedField(rejectedField, 'The scheduling plugin rejected the save');
-          formStore.setError(rejectedField, result.rejection.message);
-          setTabValue('general');
+          warnUnvalidatedField(rejectedField, 'The save was rejected');
+          formStore.setError(
+            rejectedField,
+            getUserFacingErrorMessage(localeText, result.rejection),
+          );
+          ReactDOM.flushSync(() => setTabValue('general'));
+          focusFirstInvalid(form);
           return;
         }
       }
@@ -529,8 +533,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   };
 
   const handleDelete = () => {
-    // A recurring delete closes the dialog on scope submit instead of right away.
-    store.deleteOccurrence(occurrence, onClose);
+    deleteOccurrenceAndRestoreFocus(store, occurrence, anchor, onClose);
   };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -558,7 +561,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   const hasTabs = Boolean(showRecurrence && RecurrenceTabRenderer);
 
   return (
-    <DialogContent className={classes.eventDialogContent}>
+    <EventDialogContentRoot className={classes.eventDialogContent}>
       <EventDialogForm
         onSubmit={handleSubmit}
         onInvalidCapture={handleFormInvalid}
@@ -596,29 +599,33 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         <Divider className={classes.eventDialogFormDivider} />
         <FormActionButtons onDelete={handleDelete} />
       </EventDialogForm>
-    </DialogContent>
+    </EventDialogContentRoot>
   );
 }
 
-// Subscribes to isSubmitting on its own so a submit only re-renders the buttons.
+// Subscribes to isSubmitting and the deletion config on its own so a change only re-renders the buttons.
 function FormActionButtons(props: { onDelete: () => void }) {
   const { classes, localeText } = useEventEditingStyledContext();
+  const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
   const isSubmitting = useStore(formStore, eventDialogFormSelectors.isSubmitting);
+  const deletionConfig = useStore(store, schedulerEventSelectors.deletionConfig);
 
   return (
-    <FormActions className={classes.eventDialogFormActions}>
-      <Button
-        className={classes.eventDialogDeleteButton}
-        color="error"
-        type="button"
-        onClick={props.onDelete}
-        // A delete during a pending recurring submit would get its scope
-        // operation overwritten by the resolving update.
-        disabled={isSubmitting}
-      >
-        {localeText.deleteEvent}
-      </Button>
+    <EventDialogFormActions className={classes.eventDialogFormActions}>
+      {deletionConfig !== false && (
+        <Button
+          className={classes.eventDialogDeleteButton}
+          color="error"
+          type="button"
+          onClick={props.onDelete}
+          // A delete during a pending recurring submit would get its scope
+          // operation overwritten by the resolving update.
+          disabled={isSubmitting}
+        >
+          {localeText.deleteEvent}
+        </Button>
+      )}
       <Button
         className={classes.eventDialogSaveButton}
         variant="contained"
@@ -627,6 +634,6 @@ function FormActionButtons(props: { onDelete: () => void }) {
       >
         {localeText.saveChanges}
       </Button>
-    </FormActions>
+    </EventDialogFormActions>
   );
 }

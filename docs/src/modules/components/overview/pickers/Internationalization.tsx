@@ -13,13 +13,14 @@ import Typography from '@mui/material/Typography';
 import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DateTimeValidationError } from '@mui/x-date-pickers/models';
+import type { DateTimeValidationError } from '@mui/x-date-pickers/models';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvider';
 import { roRO, enUS, zhCN } from '@mui/x-date-pickers-pro/locales';
 import InfoCard from '../InfoCard';
-import WorldMapSvg, { ContinentClickHandler } from './WorldMapSvg';
+import type { ContinentClickHandler } from './WorldMapSvg';
+import WorldMapSvg from './WorldMapSvg';
 import ConfigToggleButtons from '../ConfigToggleButtons';
 import DemoWrapper from '../DemoWrapper';
 

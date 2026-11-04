@@ -40,6 +40,9 @@ export const lineClasses: LineClasses = generateUtilityClasses('MuiLineChart', [
 
 export interface UseUtilityClassesOptions {
   skipAnimation?: boolean;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<LineClasses>;
 }
 

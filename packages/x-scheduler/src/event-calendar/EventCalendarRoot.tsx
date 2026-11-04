@@ -228,7 +228,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
             </EventCalendarSidePanel>
           </EventCalendarSidePanelCollapse>
 
-          <ResponsiveTypographyContainer>
+          <ResponsiveTypographyContainer className={classes.responsiveTypographyContainer}>
             <EventCalendarContent
               className={classes.content}
               data-view={view}

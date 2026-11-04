@@ -7,14 +7,16 @@ import Button from '@mui/material/Button';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import type { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import ChatBoxPlayground from 'docs/data/chat/basics/chatbox/ChatBoxPlayground';
 import { getSoftEdgesTheme } from '../theme/softEdgesTheme';
 import { getNeutralVibesTheme } from '../theme/neutralVibesTheme';
 import { darkGrey } from '../theme/colors';
-import ViewToggleGroup, { ChatView } from './ViewToggleGroup';
+import type { ChatView } from './ViewToggleGroup';
+import ViewToggleGroup from './ViewToggleGroup';
 import { chatOverviewDemos, getChatOverviewDemoSourceUrl } from './demoConfigs';
 import MessengerDemo from './MessengerDemo';
 import AgentDemo from './AgentDemo';
@@ -165,7 +167,7 @@ export default function MainDemo() {
   }
 
   return (
-    <Stack spacing={1} sx={{ p: 1, width: '100%', mb: 6 }}>
+    <Stack spacing={1} sx={{ p: 1, mb: 6 }}>
       {/* Toolbar: view toggle + theme selector */}
       <Stack
         direction="row"

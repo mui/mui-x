@@ -1,13 +1,15 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import {
-  DataGrid,
+import type {
   DataGridProps,
   GridRowModel,
   GridColDef,
   GridRowsProp,
-  GridEditSingleSelectCell,
   GridEditSingleSelectCellProps,
+} from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridEditSingleSelectCell,
   GridCellEditStopReasons,
 } from '@mui/x-data-grid';
 import { randomPrice } from '@mui/x-data-grid-generator';

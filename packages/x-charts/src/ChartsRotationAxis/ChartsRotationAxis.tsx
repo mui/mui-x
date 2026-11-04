@@ -157,6 +157,9 @@ ChartsRotationAxis.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The direction of the axis.
+   */
   axis: PropTypes.oneOf(['rotation']),
   /**
    * The id of the axis to render.
@@ -212,6 +215,9 @@ ChartsRotationAxis.propTypes /* remove-proptypes */ = {
    * The start angle (in deg).
    */
   startAngle: PropTypes.number,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

@@ -167,6 +167,35 @@ describe('<DataGridPro /> - Export', () => {
       );
     });
 
+    it('should keep whitespace and empty values at the start and end of the output', () => {
+      function TestCaseCSVExport() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...baselineProps}
+              apiRef={apiRef}
+              columns={[{ field: 'brand', headerName: 'Brand' }]}
+              rows={[
+                { id: 0, brand: ' Nike' },
+                { id: 1, brand: 'Adidas ' },
+                { id: 2, brand: '' },
+              ]}
+            />
+          </div>
+        );
+      }
+
+      render(<TestCaseCSVExport />);
+      expect(apiRef.current?.getDataAsCsv({ includeHeaders: false })).to.equal(
+        [' Nike', 'Adidas ', ''].join('\r\n'),
+      );
+      expect(apiRef.current?.getDataAsCsv()).to.equal(
+        ['Brand', ' Nike', 'Adidas ', ''].join('\r\n'),
+      );
+      expect(apiRef.current?.getDataAsCsv({ getRowsToExport: () => [] })).to.equal('Brand');
+    });
+
     it('should allow to change the delimiter', () => {
       function TestCaseCSVExport() {
         apiRef = useGridApiRef();

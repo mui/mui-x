@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { createRenderer, act, fireEvent } from '@mui/internal-test-utils';
-import { FieldRef, FieldSectionType } from '@mui/x-date-pickers/models';
+import type { createRenderer } from '@mui/internal-test-utils';
+import { act, fireEvent } from '@mui/internal-test-utils';
+import type { FieldRef, FieldSectionType } from '@mui/x-date-pickers/models';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
 import { expect } from 'vitest';
 import { expectFieldValue } from './assertions';
 
@@ -108,7 +109,7 @@ export const buildFieldInteractions = <P extends {}>({
         }
 
         const hasMultipleInputs =
-          // @ts-ignore
+          // @ts-expect-error The field component union does not expose ForwardRefExoticComponent.render.
           Component.render.name.includes('Range') &&
           allProps.slots?.field?.fieldType === 'multi-input';
         if (hasMultipleInputs) {

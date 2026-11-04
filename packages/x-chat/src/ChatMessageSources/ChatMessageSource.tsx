@@ -75,10 +75,24 @@ export interface ChatMessageSourceProps {
   title?: string;
   /** 1-based position number displayed as a muted badge. */
   index?: number;
+  /**
+   * The content of the component.
+   */
   children?: React.ReactNode;
   className?: string;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<ChatMessageSourceClasses>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: ChatMessageSourceSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ChatMessageSourceSlotProps;
 }
 
@@ -158,7 +172,13 @@ ChatMessageSource.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The content of the component.
+   */
   children: PropTypes.node,
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
@@ -169,7 +189,15 @@ ChatMessageSource.propTypes /* remove-proptypes */ = {
    * 1-based position number displayed as a muted badge.
    */
   index: PropTypes.number,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
   /**
    * Display title for the source. Falls back to `href` when omitted.

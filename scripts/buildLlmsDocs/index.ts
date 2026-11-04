@@ -70,7 +70,8 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import yargs, { ArgumentsCamelCase } from 'yargs';
+import type { ArgumentsCamelCase } from 'yargs';
+import yargs from 'yargs';
 import { kebabCase } from 'es-toolkit/string';
 import * as prettier from 'prettier';
 import { processMarkdownFile, processApiJson } from '@mui/internal-scripts/generate-llms-txt';
@@ -757,11 +758,25 @@ function generateProjectLlmsTxt(
 }
 
 /**
+ * Deletes the markdown and txt files a previous run wrote anywhere under `dir`.
+ * Files of any other type are kept, and emptied directories stay behind.
+ */
+function removeGeneratedFiles(dir: string): void {
+  for (const entry of fs.globSync(['**/*.md', '**/*.txt'], { cwd: dir })) {
+    fs.rmSync(path.join(dir, entry));
+  }
+}
+
+/**
  * Main build function
  */
 async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<void> {
   const grep = argv.grep ? new RegExp(argv.grep) : null;
   const outputDir = argv.outputDir || path.join(process.cwd(), 'docs/public');
+
+  if (!grep) {
+    removeGeneratedFiles(path.join(outputDir, 'x'));
+  }
 
   // Load project settings from the specified path
   if (!argv.projectSettings) {

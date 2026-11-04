@@ -1,13 +1,13 @@
-import { Dayjs } from 'dayjs';
+import type { Dayjs } from 'dayjs';
 import useForkRef from '@mui/utils/useForkRef';
 import Button from '@mui/material/Button';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import {
-  DateRangePicker,
+import type {
   DateRangePickerProps,
   DateRangePickerFieldProps,
 } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { useValidation } from '@mui/x-date-pickers/validation';
 import { validateDateRange } from '@mui/x-date-pickers-pro/validation';
 import {
@@ -15,7 +15,7 @@ import {
   useParsedFormat,
   usePickerContext,
 } from '@mui/x-date-pickers/hooks';
-import { SingleInputDateRangeFieldProps } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
+import type { SingleInputDateRangeFieldProps } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 
 function ButtonDateRangeField(
   props: DateRangePickerFieldProps &

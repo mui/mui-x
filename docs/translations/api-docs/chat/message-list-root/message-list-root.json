@@ -7,6 +7,11 @@
     "enableRovingFocus": {
       "description": "Whether the message list manages a roving tabindex over its messages: the list is a single Tab stop, ArrowUp/ArrowDown (plus Home/End) move focus between messages, Enter drills into a message&#39;s interior controls and Escape returns to the message.<br>Disable when rendering fully custom rows that manage focus themselves."
     },
+    "estimatedItemSize": {
+      "description": "The estimated height of a row in pixels, used until the row is measured."
+    },
+    "getItemKey": { "description": "Returns the React key of a row." },
+    "items": { "description": "The ids of the messages to render, in order." },
     "onReachBottom": {
       "description": "Callback fired when the viewport enters the bottom zone of the list — within <code>autoScroll.buffer</code> pixels (150 by default; <code>estimatedItemSize</code> when <code>autoScroll</code> is disabled) of the bottom edge. Fires once per entry: it does not fire again until the user scrolls away from the bottom and back. Entries caused by programmatic scrolls (<code>scrollToBottom()</code>, the scroll-to-bottom affordance, the forced scroll after the user sends a message) count. It does not fire on mount, while the list stays pinned to the bottom during streaming, when new messages arrive while already at the bottom, or when the conversation (item set) is switched. Growing the buffer so that it newly encloses the current position counts as entering the zone."
     },
@@ -15,16 +20,18 @@
     },
     "overlay": {
       "description": "Floating layer rendered above the message list, anchored to its bottom edge; pointer-transparent."
-    }
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "messageList": "",
-    "messageListContent": "",
-    "messageListOverlay": "",
-    "messageListScrollbar": "",
-    "messageListScrollbarThumb": "",
-    "messageListScroller": "",
+    "messageList": "The component that renders the message list.",
+    "messageListContent": "The component that renders the message list content.",
+    "messageListOverlay": "The component that renders the message list overlay.",
+    "messageListScrollbar": "The component that renders the message list scrollbar.",
+    "messageListScrollbarThumb": "The component that renders the message list scrollbar thumb.",
+    "messageListScroller": "The component that renders the message list scroller.",
     "messageListStatus": "The visually-hidden <code>role=&quot;status&quot;</code> element announcing streaming transitions (&quot;Assistant is responding&quot; / &quot;Response complete&quot;) to screen readers. Pass <code>null</code>-rendering component to silence the announcements."
   }
 }

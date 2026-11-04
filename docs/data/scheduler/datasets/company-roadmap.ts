@@ -2,7 +2,7 @@
 // One year of data with events spanning across several weeks/months
 // Resources are the various teams
 
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 
 // Timeline starts July 1, 2025
 export const defaultVisibleDate = new Date('2025-07-01T00:00:00');

@@ -151,7 +151,7 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
           aria-label={apiRef.current.getLocaleText('toolbarFiltersLabel')}
           aria-controls={isOpen ? filterPanelId : undefined}
           aria-expanded={isOpen}
-          aria-haspopup
+          aria-haspopup="dialog"
           startIcon={
             <rootProps.slots.baseBadge
               badgeContent={activeFilters.length}

@@ -49,7 +49,13 @@ export interface ChartsLegendProps {
    */
   toggleVisibilityOnClick?: boolean;
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
+  /**
+   * The `tabIndex` of the root element.
+   */
   tabIndex?: number;
 }
 

@@ -39,12 +39,25 @@ It does not support every rule or combination yet.
 For more information about specific rules, see [RFC 5545 §3.3.10 Recurrence Rule](https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10).
 :::
 
-The `EventCalendarPremium` and `EventTimelinePremium` expand recurring events only for the visible range, keep the original duration, and handle all-day and multi-day spans.
+The `EventCalendarPremium` expands recurring events out of the box, only for the visible range, keeping the original duration and handling all-day and multi-day spans.
 
 The rule is evaluated in the event's `timezone`, even when it is edited from the event dialog while the calendar displays another timezone.
 See [Recurring events and timezones](/x/react-scheduler/timezone/#recurring-events-and-timezones) for details.
 
 {{"demo": "RecurringEventsDataset.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::success
+The `EventTimelinePremium` only expands recurring events when you pass the `recurringEvents` feature to its `features` prop.
+Without it, each event with an `rrule` renders once, as a single event.
+
+```tsx
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
+
+<EventTimelinePremium features={{ recurringEvents: recurringEventsFeature }} />;
+```
+
+:::
 
 ## Frequency and interval
 
@@ -52,7 +65,7 @@ The RRULE string is composed of semicolon-separated `KEY=VALUE` pairs.
 The two fundamental properties are:
 
 - `FREQ`: the base frequency of the rule: `DAILY`, `WEEKLY`, `MONTHLY`, or `YEARLY`.
-- `INTERVAL` _(optional, defaults to `1`)_: at which intervals the recurrence repeats.
+- `INTERVAL` _(optional, defaults to `1`)_: at which intervals the recurrence repeats, as a positive integer.
   For example, within a `DAILY` rule, a value of `8` means every eight days.
 
 ### Daily frequency
@@ -83,7 +96,7 @@ rrule: 'FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,WE,FR';
 
 Use either the `BYMONTHDAY` or the `BYDAY` property (both can't be defined together):
 
-- Use the `BYMONTHDAY` property with a single day number to define the day of the month on which the event should be applied:
+- Use the `BYMONTHDAY` property with a single day number, from 1 to 31, to define the day of the month on which the event should be applied:
 
   ```ts
   // Every month on the 15th

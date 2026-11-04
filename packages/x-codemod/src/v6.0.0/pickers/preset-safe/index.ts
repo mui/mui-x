@@ -11,7 +11,7 @@ import transformRenameShouldDisableTime from '../rename-should-disable-time';
 import transformRenameInputFormatProp from '../rename-inputFormat-prop';
 import transformRenameDefaultToolbarTitleLocaleText from '../rename-default-toolbar-title-localeText';
 
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   file.source = transformLocalizationProviderRenameLocale(file, api, options);

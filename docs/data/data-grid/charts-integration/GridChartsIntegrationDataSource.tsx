@@ -1,5 +1,11 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
+import type {
+  GridDataSource,
+  GridPivotModel,
+  GridEventListener,
+  DataGridPremiumProps,
+} from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
   GridChartsPanel,
@@ -7,13 +13,9 @@ import {
   GridChartsRendererProxy,
   GridSidebarValue,
   useKeepGroupedColumnsHidden,
-  GridDataSource,
   useGridApiRef,
-  GridPivotModel,
-  GridEventListener,
   gridColumnGroupsUnwrappedModelSelector,
   gridPivotModelSelector,
-  DataGridPremiumProps,
 } from '@mui/x-data-grid-premium';
 import {
   ChartsRenderer,

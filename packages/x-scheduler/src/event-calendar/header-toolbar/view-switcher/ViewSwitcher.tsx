@@ -61,7 +61,6 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
       <Button
         className={classes.viewSwitcherButton}
         size="medium"
-        id={`${schedulerId}-view-switcher-button`}
         aria-controls={open ? `${schedulerId}-view-switcher-menu` : undefined}
         aria-haspopup="true"
         aria-expanded={open}
@@ -78,8 +77,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
         onClose={handleMenuClose}
         slotProps={{
           list: {
-            'aria-labelledby': `${schedulerId}-view-switcher-button`,
-            role: 'listbox',
+            'aria-label': localeText.viewSwitcherAriaLabel,
           },
         }}
       >
@@ -87,7 +85,8 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
           <MenuItem
             key={viewItem}
             selected={view === viewItem}
-            aria-selected={view === viewItem}
+            role="menuitemradio"
+            aria-checked={view === viewItem}
             onClick={(event) => handleMenuItemClick(event, viewItem)}
           >
             {localeText[viewItem]}

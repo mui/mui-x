@@ -1,16 +1,12 @@
 import * as React from 'react';
-import {
-  DataGrid,
-  useGridApiRef,
-  GridInitialState,
-  GridDataSource,
-  GridGetRowsError,
-} from '@mui/x-data-grid';
+import type { GridInitialState, GridDataSource } from '@mui/x-data-grid';
+import { DataGrid, useGridApiRef, GridGetRowsError } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Snackbar from '@mui/material/Snackbar';
-import Alert, { AlertProps } from '@mui/material/Alert';
+import type { AlertProps } from '@mui/material/Alert';
+import Alert from '@mui/material/Alert';
 import { alpha, styled, darken, lighten } from '@mui/material/styles';
 import { useMockServer } from '@mui/x-data-grid-generator';
 

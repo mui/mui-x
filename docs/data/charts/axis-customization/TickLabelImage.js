@@ -4,7 +4,6 @@ import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
-
 import { iconMap } from '../dataset/company.icons';
 
 function CustomTick(props) {

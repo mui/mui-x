@@ -2,8 +2,9 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
-import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import { UseTreeItemLabelInputSlotOwnProps } from '@mui/x-tree-view/useTreeItem';
+import type { TreeItemProps } from '@mui/x-tree-view/TreeItem';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
+import type { UseTreeItemLabelInputSlotOwnProps } from '@mui/x-tree-view/useTreeItem';
 import { MUI_X_PRODUCTS } from '../../datasets/products';
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(

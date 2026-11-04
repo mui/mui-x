@@ -71,10 +71,12 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
   const colDef = apiRef.current.getColumn(rowNode.groupingField!);
   if (colDef && typeof colDef.renderCell === 'function') {
     cellContent = colDef.renderCell(props);
-  } else if (typeof formattedValue !== 'undefined') {
-    cellContent = <span>{formattedValue}</span>;
-  } else {
-    cellContent = <span>{rowNode.groupingKey}</span>;
+  }
+  // Like in a regular cell, a `renderCell` returning `undefined` renders the formatted value.
+  if (cellContent === undefined) {
+    cellContent = (
+      <span>{typeof formattedValue !== 'undefined' ? formattedValue : rowNode.groupingKey}</span>
+    );
   }
 
   return (

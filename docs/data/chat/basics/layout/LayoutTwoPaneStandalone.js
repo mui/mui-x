@@ -18,7 +18,6 @@ import {
   ChatMessageList,
 } from '@mui/x-chat';
 import { ChatLayout, ChatProvider } from '@mui/x-chat/headless';
-
 import {
   createEchoAdapter,
   syncConversationPreview,

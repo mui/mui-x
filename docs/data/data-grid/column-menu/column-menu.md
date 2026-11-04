@@ -142,7 +142,7 @@ By default, each column header has the column menu enabled. To disable the colum
 
 ## Column menu with Pro/Premium features [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')[<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-In the following demo, in addition to Data Grid MIT features, you can see commercial features like [grouping](/x/react-data-grid/row-grouping/), and [aggregation](/x/react-data-grid/aggregation/) in action. Try tweaking the values from respective column menu items.
+In the following demo, in addition to Data Grid MIT features, you can see commercial features like [grouping](/x/react-data-grid/row-grouping/), [aggregation](/x/react-data-grid/aggregation/), and [computed columns](/x/react-data-grid/computed-columns/) in action. Try tweaking the values from respective column menu items.
 
 {{"demo": "ColumnMenuGridPremium.js", "bg": "inline"}}
 

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler-premium",
-  "version": "9.0.0-beta.12",
+  "version": "9.0.0-beta.15",
   "author": "MUI Team",
   "description": "The Premium plan edition of the scheduler components (MUI X).",
   "license": "SEE LICENSE IN LICENSE",
@@ -16,9 +16,11 @@
     "./compact-three-day-view-premium": "./src/compact-three-day-view-premium/index.ts",
     "./compact-week-view-premium": "./src/compact-week-view-premium/index.ts",
     "./day-view-premium": "./src/day-view-premium/index.ts",
+    "./dependencies": "./src/dependencies/index.ts",
     "./event-calendar-premium": "./src/event-calendar-premium/index.ts",
     "./event-timeline-premium": "./src/event-timeline-premium/index.ts",
     "./month-view-premium": "./src/month-view-premium/index.ts",
+    "./recurring-events": "./src/recurring-events/index.ts",
     "./use-event-calendar-premium-api-ref": "./src/use-event-calendar-premium-api-ref/index.ts",
     "./use-event-timeline-premium-api-ref": "./src/use-event-timeline-premium-api-ref/index.ts",
     "./week-view-premium": "./src/week-view-premium/index.ts",
@@ -62,12 +64,12 @@
     "@base-ui/react": "catalog:",
     "@base-ui/utils": "catalog:",
     "@mui/utils": "catalog:",
-    "@mui/x-internals": "workspace:^",
+    "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:^",
     "@mui/x-scheduler": "workspace:*",
     "@mui/x-scheduler-internals": "workspace:*",
     "@mui/x-scheduler-internals-premium": "workspace:*",
-    "@mui/x-virtualizer": "workspace:^",
+    "@mui/x-virtualizer": "workspace:*",
     "clsx": "catalog:",
     "prop-types": "catalog:"
   },
@@ -99,9 +101,6 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"
-  },
-  "engines": {
-    "node": ">=14.0.0"
   },
   "imports": {
     "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"

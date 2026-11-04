@@ -17,6 +17,7 @@ import {
   useEventEditingStyledContext,
   FormContent,
 } from '../event-editing';
+import { DeleteConfirmationDialog } from '../delete-confirmation-dialog';
 import { CompactReadonlyContent } from './CompactReadonlyContent';
 
 const CompactEventDrawerRoot = styled(SwipeableDrawer, {
@@ -34,8 +35,8 @@ const CompactEventDrawerRoot = styled(SwipeableDrawer, {
     display: 'flex',
     flexDirection: 'column',
     overflow: 'hidden',
-    borderTopLeftRadius: (theme.vars || theme).shape.borderRadius,
-    borderTopRightRadius: (theme.vars || theme).shape.borderRadius,
+    borderStartStartRadius: (theme.vars || theme).shape.borderRadius,
+    borderStartEndRadius: (theme.vars || theme).shape.borderRadius,
   },
 }));
 
@@ -67,7 +68,7 @@ export function CompactEventDrawer(props: CompactEventDrawerProps) {
   const store = useEventCalendarStoreContext();
   const { classes } = useEventEditingStyledContext();
   // Closing the drawer clears the store editing state via the shared editing context.
-  const { stopEditing } = useEventEditingContext();
+  const { stopEditing, anchor: triggerAnchor } = useEventEditingContext();
 
   const occurrence = useStore(store, schedulerOtherSelectors.editingOccurrence);
   const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
@@ -124,11 +125,13 @@ export function CompactEventDrawer(props: CompactEventDrawerProps) {
                 onClose={stopEditing}
                 dragHandlerRef={dragHandlerRef}
                 isDraggable={false}
+                anchor={triggerAnchor}
               />
             )}
           </CompactEventDrawerContent>
         )}
       </CompactEventDrawerRoot>
+      <DeleteConfirmationDialog />
       {RecurringScopeDialogRenderer && <RecurringScopeDialogRenderer />}
     </React.Fragment>
   );

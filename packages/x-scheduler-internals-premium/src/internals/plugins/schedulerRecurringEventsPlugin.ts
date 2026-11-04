@@ -4,12 +4,7 @@ import { getRecurringEventOccurrencesForVisibleDays } from '../utils/recurring-e
 import { updateRecurringEvent } from '../utils/recurring-events/updateRecurringEvent';
 import { deleteRecurringEvent } from '../utils/recurring-events/deleteRecurringEvent';
 import { applyDataTimezoneToEventUpdate } from '../utils/recurring-events/applyDataTimezoneToEventUpdate';
-import {
-  computePresets,
-  getDefaultPresetKey,
-  getWeeklyDays,
-  getMonthlyReference,
-} from '../utils/recurring-events/presets';
+import { computePresets, getDefaultPresetKey } from '../utils/recurring-events/presets';
 
 export const schedulerRecurringEventsPlugin = {
   parseRRule,
@@ -20,6 +15,4 @@ export const schedulerRecurringEventsPlugin = {
   computePresets,
   getDefaultPresetKey,
   isSameRRule,
-  getWeeklyDays,
-  getMonthlyReference,
 } as const satisfies SchedulerRecurringEventsPluginInterface;

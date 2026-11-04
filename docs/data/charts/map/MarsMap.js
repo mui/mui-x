@@ -8,7 +8,6 @@ import { useGeoPath } from '@mui/x-charts-premium/hooks';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsTooltip } from '@mui/x-charts-premium/ChartsTooltip';
 import { ContinuousColorLegend } from '@mui/x-charts-premium/ChartsLegend';
-
 import { marsRegions, marsData, marsFeatures } from './marsRegions';
 
 const MARS_IMAGE = '/static/x/charts/mars-viking-mdim21.jpg';

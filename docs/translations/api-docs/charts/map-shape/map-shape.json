@@ -1,1 +1,10 @@
-{ "componentDescription": "", "propDescriptions": {}, "classDescriptions": {} }
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "color": { "description": "The color of the shape." },
+    "d": { "description": "The SVG path of the shape." },
+    "featureName": { "description": "The name of the geographic feature." },
+    "seriesId": { "description": "The id of the series the element belongs to." }
+  },
+  "classDescriptions": {}
+}

@@ -46,10 +46,17 @@ function getItemLabel(
 }
 
 export interface PieArcLabelPlotSlots {
+  /**
+   * The component that renders the pie arc labels.
+   * @default PieArcLabel
+   */
   pieArcLabel?: React.JSXElementConstructor<PieArcLabelProps & PieArcLabelPropsOverrides>;
 }
 
 export interface PieArcLabelPlotSlotProps {
+  /**
+   * The props used for the `pieArcLabel` slot.
+   */
   pieArcLabel?: WithDataAttributes<Partial<PieArcLabelProps> & PieArcLabelPropsOverrides>;
 }
 
@@ -185,6 +192,9 @@ PieArcLabelPlot.propTypes /* remove-proptypes */ = {
    * @default 0
    */
   cornerRadius: PropTypes.number,
+  /**
+   * The data of the series, with the default values applied.
+   */
   data: PropTypes.arrayOf(
     PropTypes.shape({
       color: PropTypes.string.isRequired,

@@ -446,7 +446,7 @@ describe('<DataGridPremium /> - Formulas editor surface and highlighting', () =>
       });
 
       const pasteEvent = new Event('paste', { bubbles: true, cancelable: true });
-      // @ts-ignore the editor reads `text/plain` off the clipboard data.
+      // @ts-expect-error The synthetic Event supplies clipboardData, which only ClipboardEvent declares.
       pasteEvent.clipboardData = { getData: () => 'a\nb' };
       act(() => {
         editable.dispatchEvent(pasteEvent);

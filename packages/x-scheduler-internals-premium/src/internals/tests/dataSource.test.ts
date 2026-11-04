@@ -11,6 +11,15 @@ import { DEBOUNCE_MS } from '../utils/queue';
 
 const DEFAULT_PARAMS = { events: [], resources: [ResourceBuilder.new().build()] };
 
+// The lazy loading fetches ranges of timestamps.
+const toRange = (start: Date, end: Date) => ({
+  start: adapter.getTime(start),
+  end: adapter.getTime(end),
+});
+const SOMETHING_WENT_WRONG_LOG =
+  'MUI X Scheduler: The user was shown the `somethingWentWrongError` error, caused by:';
+const PERSIST_FAILED_LOG = `${SOMETHING_WENT_WRONG_LOG} \`dataSource.persistEvents\` returned \`{ success: false }\``;
+
 // The parameterized store classes form a union type whose generic `set` method
 // cannot be invoked directly, so state seeding goes through a common supertype.
 function setErrors(store: Store<SchedulerState>, errors: SchedulerState['errors']) {
@@ -62,11 +71,12 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(store.state.eventIdList).toHaveLength(0);
 
       // Trigger fetch
-      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       expect(dataSource.getEvents.mock.calls.length).to.equal(1);
       expect(dataSource.getEvents.mock.calls[0][0]).toEqual(start);
-      expect(dataSource.getEvents.mock.calls[0][1]).toEqual(end);
+      // The range ends at the end of its last day, which the cache covers.
+      expect(dataSource.getEvents.mock.calls[0][1]).toEqual(adapter.endOfDay(end));
 
       // Check if events are updated in store
       expect(store.state.eventIdList).toHaveLength(1);
@@ -84,20 +94,20 @@ premiumStoreClasses.forEach((storeClass) => {
       const start1 = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end1 = adapter.date('2025-07-07T00:00:00Z', 'default');
 
-      await store.lazyLoading?.queueDataFetchForRange({ start: start1, end: end1 }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start1, end1), true);
 
       expect(dataSource.getEvents.mock.calls.length).to.equal(1);
       expect(dataSource.getEvents.mock.calls[0][0]).toEqual(start1);
-      expect(dataSource.getEvents.mock.calls[0][1]).toEqual(end1);
+      expect(dataSource.getEvents.mock.calls[0][1]).toEqual(adapter.endOfDay(end1));
 
       // Second fetch (different range)
       const start2 = adapter.date('2025-08-01T00:00:00Z', 'default');
       const end2 = adapter.date('2025-08-07T00:00:00Z', 'default');
-      await store.lazyLoading?.queueDataFetchForRange({ start: start2, end: end2 }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start2, end2), true);
 
       expect(dataSource.getEvents.mock.calls.length).to.equal(2);
       expect(dataSource.getEvents.mock.calls[1][0]).toEqual(start2);
-      expect(dataSource.getEvents.mock.calls[1][1]).toEqual(end2);
+      expect(dataSource.getEvents.mock.calls[1][1]).toEqual(adapter.endOfDay(end2));
     });
 
     it('should reuse cached event processing until processing options change', async () => {
@@ -114,19 +124,19 @@ premiumStoreClasses.forEach((storeClass) => {
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
       await store.lazyLoading?.queueDataFetchForRange(
-        {
-          start: adapter.date('2025-07-01T00:00:00Z', 'default'),
-          end: adapter.date('2025-07-07T00:00:00Z', 'default'),
-        },
+        toRange(
+          adapter.date('2025-07-01T00:00:00Z', 'default'),
+          adapter.date('2025-07-07T00:00:00Z', 'default'),
+        ),
         true,
       );
       const firstProcessedEvent = store.state.processedEventLookup.get('1');
 
       await store.lazyLoading?.queueDataFetchForRange(
-        {
-          start: adapter.date('2025-08-01T00:00:00Z', 'default'),
-          end: adapter.date('2025-08-07T00:00:00Z', 'default'),
-        },
+        toRange(
+          adapter.date('2025-08-01T00:00:00Z', 'default'),
+          adapter.date('2025-08-07T00:00:00Z', 'default'),
+        ),
         true,
       );
 
@@ -138,10 +148,10 @@ premiumStoreClasses.forEach((storeClass) => {
         adapter,
       );
       await store.lazyLoading?.queueDataFetchForRange(
-        {
-          start: adapter.date('2025-09-01T00:00:00Z', 'default'),
-          end: adapter.date('2025-09-07T00:00:00Z', 'default'),
-        },
+        toRange(
+          adapter.date('2025-09-01T00:00:00Z', 'default'),
+          adapter.date('2025-09-07T00:00:00Z', 'default'),
+        ),
         true,
       );
 
@@ -160,7 +170,7 @@ premiumStoreClasses.forEach((storeClass) => {
       const start = adapter.date('2025-09-01T00:00:00Z', 'default');
       const end = adapter.date('2025-09-30T00:00:00Z', 'default');
 
-      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
@@ -168,12 +178,87 @@ premiumStoreClasses.forEach((storeClass) => {
       const subStart = adapter.date('2025-07-10T00:00:00Z', 'default');
       const subEnd = adapter.date('2025-07-15T00:00:00Z', 'default');
 
-      await store.lazyLoading?.queueDataFetchForRange({ start: subStart, end: subEnd });
+      await store.lazyLoading?.queueDataFetchForRange(toRange(subStart, subEnd));
 
       expect(dataSource.getEvents.mock.calls.length).to.equal(2);
 
       // Ensure events are still present in state
       expect(store.state.eventIdList).toHaveLength(1);
+    });
+
+    it('should only request the days after the cached range when extending it forward', async () => {
+      const dataSource = {
+        getEvents: vi.fn(async (_start: Date, _end: Date): Promise<TestEvent[]> => []),
+        persistEvents: async () => ({ success: true }),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const day = (offset: number) =>
+        adapter.addDays(adapter.date('2025-09-01T00:00:00Z', 'default'), offset);
+
+      await store.lazyLoading?.queueDataFetchForRange(toRange(day(0), day(9)), true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(day(5), day(14)), true);
+
+      expect(dataSource.getEvents.mock.calls).to.have.length(2);
+      const [start, end] = dataSource.getEvents.mock.calls[1];
+      expect(adapter.isEqual(start, adapter.startOfDay(day(10)))).to.equal(true);
+      expect(adapter.isEqual(end, adapter.endOfDay(day(14)))).to.equal(true);
+    });
+
+    it('should only request the days before the cached range when extending it backward', async () => {
+      const dataSource = {
+        getEvents: vi.fn(async (_start: Date, _end: Date): Promise<TestEvent[]> => []),
+        persistEvents: async () => ({ success: true }),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const day = (offset: number) =>
+        adapter.addDays(adapter.date('2025-09-01T00:00:00Z', 'default'), offset);
+
+      await store.lazyLoading?.queueDataFetchForRange(toRange(day(10), day(19)), true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(day(5), day(14)), true);
+
+      expect(dataSource.getEvents.mock.calls).to.have.length(2);
+      const [start, end] = dataSource.getEvents.mock.calls[1];
+      expect(adapter.isEqual(start, day(5))).to.equal(true);
+      expect(adapter.isEqual(end, adapter.endOfDay(day(9)))).to.equal(true);
+    });
+
+    it('should request the smallest range covering the gaps between cached ranges', async () => {
+      const dataSource = {
+        getEvents: vi.fn(async (_start: Date, _end: Date): Promise<TestEvent[]> => []),
+        persistEvents: async () => ({ success: true }),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const day = (offset: number) =>
+        adapter.addDays(adapter.date('2025-09-01T00:00:00Z', 'default'), offset);
+
+      await store.lazyLoading?.queueDataFetchForRange(toRange(day(0), day(4)), true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(day(20), day(24)), true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(day(2), day(22)), true);
+
+      expect(dataSource.getEvents.mock.calls).to.have.length(3);
+      const [start, end] = dataSource.getEvents.mock.calls[2];
+      expect(adapter.isEqual(start, adapter.startOfDay(day(5)))).to.equal(true);
+      expect(adapter.isEqual(end, adapter.endOfDay(day(19)))).to.equal(true);
+    });
+
+    it('should not flip isLoading when the requested range is already cached', async () => {
+      const dataSource = {
+        getEvents: vi.fn(async () => []),
+        persistEvents: async () => ({ success: true }),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const start = adapter.date('2025-09-01T00:00:00Z', 'default');
+      const end = adapter.date('2025-09-10T00:00:00Z', 'default');
+
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
+      expect(store.state.isLoading).to.equal(false);
+
+      const pending = store.lazyLoading?.queueDataFetchForRange(toRange(start, end));
+      expect(store.state.isLoading).to.equal(false);
+      await pending;
+
+      expect(dataSource.getEvents.mock.calls).to.have.length(1);
+      expect(store.state.isLoading).to.equal(false);
     });
 
     it('should pass full event objects to dataSource.persistEvents on create', async () => {
@@ -219,7 +304,7 @@ premiumStoreClasses.forEach((storeClass) => {
       // Populate the store via lazy loading (mockFetchData seeds an event with id '1')
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
-      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       store.updateEvent({
         id: '1',
@@ -250,7 +335,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
-      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
       expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
       store.updateEvent({
@@ -262,7 +347,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       // Re-fetching the same covered range should not call getEvents again
       // and should expose the updated event from the cache.
-      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
       expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
       const stored = store.state.processedEventLookup.get('1');
@@ -279,7 +364,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
-      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       store.updateEvent({
         id: '1',
@@ -293,7 +378,7 @@ premiumStoreClasses.forEach((storeClass) => {
       // A re-fetch of the same range serves from cache. The cached event must be
       // the exact same reference forwarded to the data source — both consumers
       // share the bucketed array produced by the store.
-      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       const stored = store.state.eventModelLookup.get('1');
       expect(stored).to.equal(payloadEvent);
@@ -373,7 +458,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
-      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       const { created: createdIds } = (store as any).updateEvents({
         deleted: ['1', '2'],
@@ -412,7 +497,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
-      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       store.deleteEvent('1');
 
@@ -429,7 +514,7 @@ premiumStoreClasses.forEach((storeClass) => {
       });
 
       // Re-reading a covered range uses the updated cache and must not restore the deleted event.
-      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
       expect(dataSource.getEvents.mock.calls.length).to.equal(1);
       expect(store.state.eventIdList).not.toContain('1');
     });
@@ -510,7 +595,7 @@ premiumStoreClasses.forEach((storeClass) => {
       // Now seed the store from the dataSource and update an event by its custom id
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
-      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       store.updateEvent({
         id: '1',
@@ -593,7 +678,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
-      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       // Without a structure-aware cache, both events would collide on key "undefined"
       // and only one would survive.
@@ -606,7 +691,7 @@ premiumStoreClasses.forEach((storeClass) => {
       await vi.waitFor(() => expect(dataSource.persistEvents.mock.calls.length).to.equal(1));
 
       // A re-fetch of the same range must serve from cache and reflect the update.
-      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
       expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
       expect(store.state.processedEventLookup.get('1')?.title).to.equal('E1 updated');
@@ -624,17 +709,21 @@ premiumStoreClasses.forEach((storeClass) => {
       // Populate the store via lazy loading
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
-      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       const initialIds = [...store.state.eventIdList];
 
-      const createdId = store.createEvent({
-        start: '2025-07-02T09:00:00.000Z',
-        end: '2025-07-02T10:00:00.000Z',
-        title: 'Rejected Event',
-      });
+      let createdId: SchedulerEventId | undefined;
+      await expect(async () => {
+        createdId = store.createEvent({
+          start: '2025-07-02T09:00:00.000Z',
+          end: '2025-07-02T10:00:00.000Z',
+          title: 'Rejected Event',
+        });
+        await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
+      }).toErrorDev([PERSIST_FAILED_LOG]);
 
-      await vi.waitFor(() => expect(dataSource.persistEvents.mock.calls.length).to.equal(1));
+      expect(dataSource.persistEvents.mock.calls.length).to.equal(1);
 
       expect(store.state.eventIdList).toEqual(initialIds);
       expect(store.state.eventIdList).not.toContain(createdId);
@@ -650,14 +739,17 @@ premiumStoreClasses.forEach((storeClass) => {
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
-      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
-      store.updateEvent({
-        id: '1',
-        title: 'Rejected Update',
-      });
+      await expect(async () => {
+        store.updateEvent({
+          id: '1',
+          title: 'Rejected Update',
+        });
+        await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
+      }).toErrorDev([PERSIST_FAILED_LOG]);
 
-      await vi.waitFor(() => expect(dataSource.persistEvents.mock.calls.length).to.equal(1));
+      expect(dataSource.persistEvents.mock.calls.length).to.equal(1);
 
       // The cache wasn't updated, so the stored event keeps its original title.
       const stored = store.state.processedEventLookup.get('1');
@@ -674,11 +766,14 @@ premiumStoreClasses.forEach((storeClass) => {
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
-      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
-      store.deleteEvent('1');
+      await expect(async () => {
+        store.deleteEvent('1');
+        await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
+      }).toErrorDev([PERSIST_FAILED_LOG]);
 
-      await vi.waitFor(() => expect(dataSource.persistEvents.mock.calls.length).to.equal(1));
+      expect(dataSource.persistEvents.mock.calls.length).to.equal(1);
 
       // The cache wasn't updated, so the event is still present.
       expect(store.state.eventIdList).toContain('1');
@@ -694,7 +789,7 @@ premiumStoreClasses.forEach((storeClass) => {
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
 
-      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       expect(dataSource.getEvents.mock.calls.length).to.equal(1);
       expect(store.state.eventIdList).toHaveLength(0);
@@ -727,16 +822,16 @@ premiumStoreClasses.forEach((storeClass) => {
 
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
-      await store.lazyLoading?.queueDataFetchForRange({ start: startCached, end: endCached }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(startCached, endCached), true);
       expect(store.state.errors).toHaveLength(0);
 
-      await store.lazyLoading?.queueDataFetchForRange(
-        { start: startFailing, end: endFailing },
-        true,
-      );
+      await expect(async () => {
+        await store.lazyLoading?.queueDataFetchForRange(toRange(startFailing, endFailing), true);
+      }).toErrorDev([`${SOMETHING_WENT_WRONG_LOG} Error: Range failed`]);
       expect(store.state.errors).toHaveLength(1);
+      expect(store.state.errors[0].code).to.equal('somethingWentWrongError');
 
-      await store.lazyLoading?.queueDataFetchForRange({ start: startCached, end: endCached }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(startCached, endCached), true);
       expect(store.state.errors).toHaveLength(0);
     });
 
@@ -757,7 +852,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       expect(store.state.isLoading).toBe(true);
 
-      const actionPromise = store.lazyLoading?.queueDataFetchForRange({ start, end });
+      const actionPromise = store.lazyLoading?.queueDataFetchForRange(toRange(start, end));
       resolveFetch!([
         {
           id: '1',
@@ -784,9 +879,9 @@ premiumStoreClasses.forEach((storeClass) => {
         const start = adapter.date('2025-07-01T00:00:00Z', 'default');
         const end = adapter.date('2025-07-07T00:00:00Z', 'default');
 
-        store.lazyLoading?.queueDataFetchForRange({ start, end });
-        store.lazyLoading?.queueDataFetchForRange({ start, end });
-        store.lazyLoading?.queueDataFetchForRange({ start, end });
+        store.lazyLoading?.queueDataFetchForRange(toRange(start, end));
+        store.lazyLoading?.queueDataFetchForRange(toRange(start, end));
+        store.lazyLoading?.queueDataFetchForRange(toRange(start, end));
 
         // Advance past the debounce window + the mockFetchData setTimeout(0).
         await vi.advanceTimersByTimeAsync(DEBOUNCE_MS + 50);
@@ -797,8 +892,8 @@ premiumStoreClasses.forEach((storeClass) => {
       }
     });
 
-    it('should wrap non-Error rejections from dataSource.getEvents into Error instances', async () => {
-      const rejection = { status: 500, toString: () => '500 Internal Server Error' };
+    it('should show the generic error and log the original one when dataSource.getEvents rejects', async () => {
+      const rejection = '500 Internal Server Error';
       const dataSource = {
         getEvents: vi.fn(() => Promise.reject(rejection)),
         persistEvents: async () => ({ success: true }),
@@ -808,39 +903,38 @@ premiumStoreClasses.forEach((storeClass) => {
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
 
-      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      await expect(async () => {
+        await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
+      }).toErrorDev([`${SOMETHING_WENT_WRONG_LOG} ${rejection}`]);
 
-      expect(store.state.errors).toHaveLength(1);
-      expect(store.state.errors[0].error).to.be.instanceOf(Error);
-      expect(store.state.errors[0].error.message).to.equal('500 Internal Server Error');
-      // `cause` preserves the original payload for telemetry/devtools.
-      expect(store.state.errors[0].error.cause).to.equal(rejection);
+      expect(store.state.errors.map((entry) => entry.code)).to.deep.equal([
+        'somethingWentWrongError',
+      ]);
     });
 
-    it('should wrap non-Error rejections from dataSource.persistEvents into Error instances', async () => {
-      const rejection = { status: 500, toString: () => '500 Update Failed' };
+    it('should show the generic error and log the original one when dataSource.persistEvents rejects', async () => {
+      const rejection = '500 Update Failed';
       const dataSource = {
         getEvents: vi.fn(mockFetchData),
         persistEvents: vi.fn(() => Promise.reject(rejection)),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
-      store.publishEvent('eventsUpdated', {
-        deleted: [],
-        updated: [buildTestEvent('1')],
-        created: [],
-        newEvents: [buildTestEvent('1')],
-      });
-
-      await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
+      await expect(async () => {
+        store.publishEvent('eventsUpdated', {
+          deleted: [],
+          updated: [buildTestEvent('1')],
+          created: [],
+          newEvents: [buildTestEvent('1')],
+        });
+        await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
+      }).toErrorDev([`${SOMETHING_WENT_WRONG_LOG} ${rejection}`]);
 
       expect(dataSource.persistEvents.mock.calls.length).to.equal(1);
-      expect(store.state.errors[0].error).to.be.instanceOf(Error);
-      expect(store.state.errors[0].error.message).to.equal('500 Update Failed');
-      expect(store.state.errors[0].error.cause).to.equal(rejection);
+      expect(store.state.errors[0].code).to.equal('somethingWentWrongError');
     });
 
-    it('should push an error to state.errors when dataSource.persistEvents rejects', async () => {
+    it('should push an error to state.errors when dataSource.persistEvents throws', async () => {
       const dataSource = {
         getEvents: vi.fn(mockFetchData),
         persistEvents: vi.fn(async () => {
@@ -849,17 +943,18 @@ premiumStoreClasses.forEach((storeClass) => {
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
-      store.publishEvent('eventsUpdated', {
-        deleted: [],
-        updated: [buildTestEvent('1')],
-        created: [],
-        newEvents: [buildTestEvent('1')],
-      });
-
-      await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
+      await expect(async () => {
+        store.publishEvent('eventsUpdated', {
+          deleted: [],
+          updated: [buildTestEvent('1')],
+          created: [],
+          newEvents: [buildTestEvent('1')],
+        });
+        await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
+      }).toErrorDev([`${SOMETHING_WENT_WRONG_LOG} Error: Update failed`]);
 
       expect(dataSource.persistEvents.mock.calls.length).to.equal(1);
-      expect(store.state.errors[0].error.message).to.equal('Update failed');
+      expect(store.state.errors[0].code).to.equal('somethingWentWrongError');
     });
 
     it('should push an error to state.errors when dataSource.persistEvents returns { success: false }', async () => {
@@ -869,17 +964,18 @@ premiumStoreClasses.forEach((storeClass) => {
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
-      store.publishEvent('eventsUpdated', {
-        deleted: [],
-        updated: [buildTestEvent('1')],
-        created: [],
-        newEvents: [buildTestEvent('1')],
-      });
-
-      await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
+      await expect(async () => {
+        store.publishEvent('eventsUpdated', {
+          deleted: [],
+          updated: [buildTestEvent('1')],
+          created: [],
+          newEvents: [buildTestEvent('1')],
+        });
+        await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
+      }).toErrorDev([PERSIST_FAILED_LOG]);
 
       expect(dataSource.persistEvents.mock.calls.length).to.equal(1);
-      expect(store.state.errors[0].error.message).to.include('{ success: false }');
+      expect(store.state.errors[0].code).to.equal('somethingWentWrongError');
     });
 
     it('should accumulate errors when consecutive fetches fail', async () => {
@@ -896,10 +992,15 @@ premiumStoreClasses.forEach((storeClass) => {
       const start2 = adapter.date('2025-08-01T00:00:00Z', 'default');
       const end2 = adapter.date('2025-08-07T00:00:00Z', 'default');
 
-      await store.lazyLoading?.queueDataFetchForRange({ start: start1, end: end1 }, true);
-      expect(store.state.errors).toHaveLength(1);
+      await expect(async () => {
+        await store.lazyLoading?.queueDataFetchForRange(toRange(start1, end1), true);
+        expect(store.state.errors).toHaveLength(1);
 
-      await store.lazyLoading?.queueDataFetchForRange({ start: start2, end: end2 }, true);
+        await store.lazyLoading?.queueDataFetchForRange(toRange(start2, end2), true);
+      }).toErrorDev([
+        `${SOMETHING_WENT_WRONG_LOG} Error: Fetch failed`,
+        `${SOMETHING_WENT_WRONG_LOG} Error: Fetch failed`,
+      ]);
       expect(store.state.errors).toHaveLength(2);
     });
 
@@ -915,23 +1016,24 @@ premiumStoreClasses.forEach((storeClass) => {
 
       // Populate the cache so the next fetch hits the branch outside
       // loadEventsFromDataSource's inner try/catch.
-      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       vi.useFakeTimers();
       try {
-        const failure = new Error('boom');
         (store.lazyLoading as any).dataManager.setRequestSettled = async () => {
-          throw failure;
+          throw new Error('boom');
         };
 
-        // Debounced path (queue()) — queueImmediate already propagates rejections.
-        const promise = store.lazyLoading?.queueDataFetchForRange({ start, end });
+        await expect(async () => {
+          // Debounced path (queue()) — queueImmediate already propagates rejections.
+          const promise = store.lazyLoading?.queueDataFetchForRange(toRange(start, end));
 
-        await vi.advanceTimersByTimeAsync(DEBOUNCE_MS + 50);
-        await promise;
+          await vi.advanceTimersByTimeAsync(DEBOUNCE_MS + 50);
+          await promise;
+        }).toErrorDev([`${SOMETHING_WENT_WRONG_LOG} Error: boom`]);
 
         expect(store.state.errors).toHaveLength(1);
-        expect(store.state.errors[0].error).to.equal(failure);
+        expect(store.state.errors[0].code).to.equal('somethingWentWrongError');
         expect(store.state.isLoading).to.equal(false);
       } finally {
         vi.useRealTimers();
@@ -949,11 +1051,11 @@ premiumStoreClasses.forEach((storeClass) => {
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
-      await store.lazyLoading?.queueDataFetchForRange(
-        { start: startFailing, end: endFailing },
-        true,
-      );
+      await expect(async () => {
+        await store.lazyLoading?.queueDataFetchForRange(toRange(startFailing, endFailing), true);
+      }).toErrorDev([`${SOMETHING_WENT_WRONG_LOG} Error: Fetch failed`]);
       expect(store.state.errors).toHaveLength(1);
+      expect(store.state.errors[0].code).to.equal('somethingWentWrongError');
 
       const updatedEvent: TestEvent = {
         id: '1',
@@ -971,11 +1073,11 @@ premiumStoreClasses.forEach((storeClass) => {
       await vi.waitFor(() => expect(store.state.errors).toHaveLength(0));
     });
 
-    describe('pushError', () => {
+    describe('pushUserFacingError', () => {
       it('should assign a unique key to every pushed error', () => {
         const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
-        store.pushError(new Error('a'));
-        store.pushError(new Error('b'));
+        store.pushUserFacingError({ code: 'somethingWentWrongError' });
+        store.pushUserFacingError({ code: 'somethingWentWrongError' });
         expect(store.state.errors).toHaveLength(2);
         expect(store.state.errors[0].key).not.to.equal(store.state.errors[1].key);
       });
@@ -984,44 +1086,37 @@ premiumStoreClasses.forEach((storeClass) => {
     describe('dismissError', () => {
       it('should remove only the entry whose key matches and preserve order', () => {
         const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
-        const a = new Error('A');
-        const b = new Error('B');
-        const c = new Error('C');
         setErrors(store, [
-          { error: a, key: '1' },
-          { error: b, key: '2' },
-          { error: c, key: '3' },
+          { code: 'somethingWentWrongError', key: '1' },
+          { code: 'eventNotLoadedError', key: '2' },
+          { code: 'eventChangedWhileConfirmingError', key: '3' },
         ]);
 
         store.dismissError('2');
 
-        expect(store.state.errors).toHaveLength(2);
-        expect(store.state.errors[0].key).to.equal('1');
-        expect(store.state.errors[0].error).to.equal(a);
-        expect(store.state.errors[1].key).to.equal('3');
-        expect(store.state.errors[1].error).to.equal(c);
+        expect(store.state.errors).to.deep.equal([
+          { code: 'somethingWentWrongError', key: '1' },
+          { code: 'eventChangedWhileConfirmingError', key: '3' },
+        ]);
       });
 
-      it('should distinguish duplicate Error instances by key', () => {
+      it('should distinguish errors with the same code by key', () => {
         const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
-        const shared = new Error('shared');
         setErrors(store, [
-          { error: shared, key: '1' },
-          { error: shared, key: '2' },
+          { code: 'somethingWentWrongError', key: '1' },
+          { code: 'somethingWentWrongError', key: '2' },
         ]);
 
         store.dismissError('1');
 
-        expect(store.state.errors).toHaveLength(1);
-        expect(store.state.errors[0].key).to.equal('2');
-        expect(store.state.errors[0].error).to.equal(shared);
+        expect(store.state.errors).to.deep.equal([{ code: 'somethingWentWrongError', key: '2' }]);
       });
 
       it('should be a no-op when the key does not exist', () => {
         const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
         const entries = [
-          { error: new Error('A'), key: '1' },
-          { error: new Error('B'), key: '2' },
+          { code: 'somethingWentWrongError' as const, key: '1' },
+          { code: 'eventNotLoadedError' as const, key: '2' },
         ];
         setErrors(store, entries);
 
@@ -1075,6 +1170,67 @@ describe('SchedulerDataSourceCacheDefault', () => {
         .map((event) => event.id)
         .sort(),
     ).to.deep.equal(['1', '3']);
+  });
+
+  describe('getMissingRange', () => {
+    it('should return null when the range is fully covered', () => {
+      const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 300_000 });
+      cache.setRange(0, 1000, []);
+
+      expect(cache.getMissingRange(100, 900)).to.equal(null);
+    });
+
+    it('should return null when adjacent ranges cover the whole range', () => {
+      const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 300_000 });
+      cache.setRange(0, 1000, []);
+      cache.setRange(1001, 2000, []);
+
+      expect(cache.getMissingRange(0, 2000)).to.equal(null);
+      expect(cache.getMissingRange(500, 1500)).to.equal(null);
+    });
+
+    it('should return null when the range matches a cached range exactly', () => {
+      const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 300_000 });
+      cache.setRange(0, 1000, []);
+
+      expect(cache.getMissingRange(0, 1000)).to.equal(null);
+    });
+
+    it('should return the whole range when nothing overlaps it', () => {
+      const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 300_000 });
+      cache.setRange(0, 1000, []);
+
+      expect(cache.getMissingRange(2000, 3000)).to.deep.equal({ start: 2000, end: 3000 });
+    });
+
+    it('should trim the covered edges and return the part that is missing', () => {
+      const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 300_000 });
+      cache.setRange(0, 1000, []);
+      cache.setRange(3000, 4000, []);
+
+      expect(cache.getMissingRange(500, 3500)).to.deep.equal({ start: 1001, end: 2999 });
+    });
+
+    it('should return the smallest range covering every gap', () => {
+      const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 300_000 });
+      cache.setRange(1000, 2000, []);
+      cache.setRange(3000, 4000, []);
+
+      expect(cache.getMissingRange(0, 5000)).to.deep.equal({ start: 0, end: 5000 });
+    });
+
+    it('should treat expired ranges as missing', () => {
+      vi.useFakeTimers();
+      try {
+        const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 1000 });
+        cache.setRange(0, 1000, []);
+        vi.advanceTimersByTime(1001);
+
+        expect(cache.getMissingRange(0, 1000)).to.deep.equal({ start: 0, end: 1000 });
+      } finally {
+        vi.useRealTimers();
+      }
+    });
   });
 
   it('upsert should throw when the resolved event id is missing', () => {

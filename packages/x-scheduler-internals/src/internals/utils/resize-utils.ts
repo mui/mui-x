@@ -1,5 +1,4 @@
-import type { Adapter } from '../../use-adapter/useAdapter.types';
-import type { SchedulerEventSide, TemporalSupportedObject } from '../../models';
+import type { SchedulerEventSide } from '../../models';
 
 /**
  * Whether a resize handler for the given side may run: its edge must render at its real position
@@ -21,36 +20,34 @@ export function isResizeHandlerEnabled(parameters: {
  * `precisionMinute` is the snap step reused as the minimum duration — intentionally the same value.
  */
 export function clampResizedEventEdge(parameters: {
-  adapter: Adapter;
   side: SchedulerEventSide;
   /**
-   * The current start of the event being resized (the fixed edge when `side` is `'end'`).
+   * The current start of the event being resized, as a timestamp (the fixed edge when `side` is
+   * `'end'`).
    */
-  start: TemporalSupportedObject;
+  start: number;
   /**
-   * The current end of the event being resized (the fixed edge when `side` is `'start'`).
+   * The current end of the event being resized, as a timestamp (the fixed edge when `side` is
+   * `'start'`).
    */
-  end: TemporalSupportedObject;
+  end: number;
   /**
-   * The candidate date under the pointer for the moving edge.
+   * The candidate timestamp under the pointer for the moving edge.
    */
-  cursorDate: TemporalSupportedObject;
+  cursorTimestamp: number;
   /**
    * The minimum duration, in minutes, the event must keep.
    */
   precisionMinute: number;
-}): { start: TemporalSupportedObject; end: TemporalSupportedObject } {
-  const { adapter, side, start, end, cursorDate, precisionMinute } = parameters;
+}): { start: number; end: number } {
+  const { side, start, end, cursorTimestamp, precisionMinute } = parameters;
+  const precisionMs = precisionMinute * 60_000;
 
   if (side === 'start') {
     // Keep one precision step between the new start and the fixed end.
-    const maxStartDate = adapter.addMinutes(end, -precisionMinute);
-    const newStart = adapter.isBefore(cursorDate, maxStartDate) ? cursorDate : maxStartDate;
-    return { start: newStart, end };
+    return { start: Math.min(cursorTimestamp, end - precisionMs), end };
   }
 
   // Keep one precision step between the fixed start and the new end.
-  const minEndDate = adapter.addMinutes(start, precisionMinute);
-  const newEnd = adapter.isAfter(cursorDate, minEndDate) ? cursorDate : minEndDate;
-  return { start, end: newEnd };
+  return { start, end: Math.max(cursorTimestamp, start + precisionMs) };
 }

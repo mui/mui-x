@@ -1,12 +1,15 @@
 import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { Adapter } from '../use-adapter';
 import type { SchedulerEventId } from '../models';
+import { createAdapterDateFromWallTime } from '../internals/utils/plain-date-utils/adapter';
 
 /**
  * Resolves an event date string to a `TemporalSupportedObject`.
  *
  * - Strings ending with `"Z"` are treated as instants (UTC).
  * - Strings without `"Z"` are treated as wall-time and interpreted in `dataTimezone`.
+ *   A wall-clock time skipped by a DST transition moves forward by the length of the gap, and a
+ *   repeated one refers to its first instant, whatever the timezone of the system (RFC 5545).
  *
  * The result carries the `dataTimezone` label, so day and weekday math runs in the
  * event's timezone for both formats.
@@ -17,9 +20,14 @@ export function resolveEventDate(
   adapter: Adapter,
   eventId?: SchedulerEventId,
 ): TemporalSupportedObject {
-  const date = value.endsWith('Z')
-    ? adapter.setTimezone(adapter.date(value, 'default'), dataTimezone)
-    : adapter.date(value, dataTimezone);
+  let date: TemporalSupportedObject | null = null;
+  if (value.endsWith('Z')) {
+    date = adapter.setTimezone(adapter.date(value, 'default'), dataTimezone);
+  } else if (dataTimezone !== 'default' && dataTimezone !== 'system') {
+    date = createAdapterDateFromWallTime(adapter, value, dataTimezone);
+  }
+  // `Date` already resolves the wall-clock times of the system timezone like RFC 5545.
+  date ??= adapter.date(value, dataTimezone);
 
   if (!adapter.isValid(date)) {
     const eventRef = eventId === undefined ? '' : ` of event "${eventId}"`;

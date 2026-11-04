@@ -172,10 +172,7 @@ export const GridRootStyles = styled('div', {
     '--DataGrid-bottomContainerHeight': '0px',
     '--DataGrid-horizontalFiller': '0px',
 
-    // flex-grow stays on to still fill a flex-row parent's width; flex-shrink: 0
-    // plus maxHeight below stop a flex-column parent from resizing the root away
-    // from the requested height. See https://github.com/mui/mui-x/pull/23628#discussion_r4046270137
-    flex: ownerState.height != null ? '1 0 auto' : 1,
+    flex: 1,
     boxSizing: 'border-box',
     position: 'relative',
     borderWidth: '1px',
@@ -187,10 +184,12 @@ export const GridRootStyles = styled('div', {
     font: vars.typography.font.body,
     outline: 'none',
     height: ownerState.height ?? '100%',
+    // Pin the `height` prop in a flex-column parent without flex-shrink: 0, which would make
+    // a flex-row parent overflow. See https://github.com/mui/mui-x/pull/23628#discussion_r4046270137
+    minHeight: ownerState.height ?? 0,
     maxHeight: ownerState.height,
     display: 'flex',
     minWidth: 0, // See https://github.com/mui/mui-x/issues/8547
-    minHeight: 0,
     flexDirection: 'column',
     overflow: 'hidden',
     transform: 'translate(0, 0)', // Create a stacking context to keep scrollbars from showing on top
@@ -272,6 +271,25 @@ export const GridRootStyles = styled('div', {
     [`& .${c.columnHeader}:focus, & .${c.cell}:focus`]: {
       outline: `solid ${vars.colors.interactive.focus} ${focusOutlineWidth}px`,
       outlineOffset: focusOutlineWidth * -1,
+    },
+    // Separate rule, because a browser without `:has()` support drops the whole rule.
+    // `:where()` keeps the specificity of `.cell:focus-within`, so overrides of it still apply.
+    [`& .${c.cell}:has(> :where([data-cell-editor="preMounted"]):focus-within)`]: {
+      outline: `solid ${vars.colors.interactive.focus} ${focusOutlineWidth}px`,
+      outlineOffset: focusOutlineWidth * -1,
+    },
+    // Pre-mounted editor (`imeFastEdit`). It must stay focusable, so do not use `display: none`
+    // or `visibility: hidden`. Without offsets, it needs no positioned ancestor.
+    [`& .${c.cell} > [data-cell-editor="preMounted"]`]: {
+      position: 'absolute',
+      width: 0,
+      height: 0,
+      overflow: 'hidden',
+      opacity: 0,
+      pointerEvents: 'none',
+    },
+    [`& .${c.cell} > [data-cell-editor="editing"]`]: {
+      display: 'contents',
     },
     // Hide the column separator when:
     // - the column is focused and has an outline
@@ -451,6 +469,24 @@ export const GridRootStyles = styled('div', {
         opacity: 0.78,
       },
     },
+    // Keyboard users have no hover, so also reveal the header icons on keyboard focus, on any device
+    [`& .${c.columnHeader}:focus-visible`]: {
+      [`& .${c.menuIcon}`]: {
+        width: 'auto',
+        visibility: 'visible',
+      },
+      [`& .${c.iconButtonContainer}`]: {
+        visibility: 'visible',
+        width: 'auto',
+      },
+    },
+    [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):focus-visible .${c.sortButton}`]: {
+      opacity: 1,
+    },
+    [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):focus-visible .${c.sortButton} > *`]:
+      {
+        opacity: 0.78,
+      },
     // Hide the column separator when the column has border and it is not resizable
     // In this case, this column separator may block interaction with the separator from the adjacent column that is resizable
     [`& .${c['columnHeader--withLeftBorder']} .${c['columnSeparator--sideLeft']}:not(.${c['columnSeparator--resizable']}), & .${c['columnHeader--withRightBorder']} .${c['columnSeparator--sideRight']}:not(.${c['columnSeparator--resizable']})`]:
@@ -684,6 +720,12 @@ export const GridRootStyles = styled('div', {
     [`& .${c['rowReorderCell--draggable']}`]: {
       cursor: 'grab',
       opacity: 1,
+      // A long press must not scroll, select text, or open the iOS callout.
+      // Not under `(pointer: coarse)`: a touch laptop with a mouse reports a fine primary pointer.
+      touchAction: 'none',
+      userSelect: 'none',
+      WebkitUserSelect: 'none',
+      WebkitTouchCallout: 'none',
     },
     [`& .${c.rowReorderCellContainer}`]: {
       padding: 0,
@@ -747,6 +789,15 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       width: '100%',
       height: '100%',
+      // A long press on a header starts a touch drag: it must not select text or open the iOS callout.
+      // Only on devices with a touch screen, so header text stays selectable with a mouse.
+      '@media (any-pointer: coarse)': {
+        '&[draggable="true"]': {
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+          WebkitTouchCallout: 'none',
+        },
+      },
     },
     [`& .${c.rowReorderCellPlaceholder}`]: {
       display: 'none',
