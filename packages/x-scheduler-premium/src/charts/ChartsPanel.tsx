@@ -3,7 +3,8 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { ChartsRenderer } from '@mui/x-charts-premium/ChartsRenderer';
-import { PieChart } from '@mui/x-charts/PieChart';
+import { barClasses } from '@mui/x-charts/BarChart';
+import { PieChart, pieClasses } from '@mui/x-charts/PieChart';
 import { useStore } from '@base-ui/utils/store';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
@@ -60,7 +61,6 @@ export function ChartsPanel({ cards, metric }: ChartsPanelProps) {
   );
 
   // Click toggles the highlight.
-  const rootRef = React.useRef<HTMLDivElement>(null);
   const toggleHighlight = (next: SchedulerOccurrenceHighlight) => {
     store.setOccurrenceHighlight(isDeepEqual(store.state.occurrenceHighlight, next) ? null : next);
   };
@@ -76,14 +76,17 @@ export function ChartsPanel({ cards, metric }: ChartsPanelProps) {
     }
   }, [isSidePanelOpen, store]);
 
-  // Same pattern as armed events: an outside click clears the highlight and is swallowed,
-  // so it does not create an event; Escape clears it too.
+  // Same pattern as armed events: a click anywhere but on a bar or a slice clears the
+  // highlight and is swallowed, so it does not create an event; Escape clears it too.
+  // The anchor is an empty element so that the rest of the panel counts as outside.
   const highlight = useStore(store, (state) => state.occurrenceHighlight);
   const clearHighlight = React.useCallback(() => store.setOccurrenceHighlight(null), [store]);
+  const outsideAnchorRef = React.useRef<HTMLSpanElement>(null);
   useDisarmOnOutsidePointer({
-    ref: rootRef,
+    ref: outsideAnchorRef,
     active: highlight != null,
     onDisarm: clearHighlight,
+    ignoreSelector: `.${barClasses.element}, .${pieClasses.arc}`,
     global: true,
   });
   useDisarmOnEscape({ active: highlight != null, onDisarm: clearHighlight });
@@ -190,7 +193,8 @@ export function ChartsPanel({ cards, metric }: ChartsPanelProps) {
   };
 
   return (
-    <PanelRoot ref={rootRef}>
+    <PanelRoot>
+      <span ref={outsideAnchorRef} hidden />
       {cards.map((cardId) => (
         <Card key={cardId}>
           <CardTitle>{cardLookup[cardId].title}</CardTitle>
