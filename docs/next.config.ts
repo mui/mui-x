@@ -49,17 +49,6 @@ const currentDirectory = url.fileURLToPath(new URL('.', import.meta.url));
 
 const require = createRequire(import.meta.url);
 
-// The pinned core-docs preview ships these files but omits their export entries.
-// Keep these aliases until the preview package exports its demo factories.
-const coreDocsDirectory = path.dirname(require.resolve('@mui/internal-core-docs/package.json'));
-const demoFactoryAliases = {
-  '@mui/internal-core-docs/utils/createDemo': path.join(coreDocsDirectory, 'utils/createDemo.js'),
-  '@mui/internal-core-docs/utils/createDemoClient': path.join(
-    coreDocsDirectory,
-    'utils/createDemoClient.js',
-  ),
-};
-
 const WORKSPACE_ROOT = path.resolve(currentDirectory, '../');
 
 function loadPkg(pkgPath: string): { version: string } {
@@ -147,6 +136,8 @@ export default withDeploymentConfig({
     tsconfigPath: './tsconfig.json',
   },
   transpilePackages: [
+    // DocSearch's CJS autocomplete dependency needs bundler interop for SSR.
+    '@docsearch/react',
     // This is needed because the package has next.js imports like `next/script` that need to be transpiled.
     '@mui/internal-core-docs',
   ],
@@ -172,7 +163,6 @@ export default withDeploymentConfig({
     MUI_CHAT_SCOPES: 'x-data-grid,x-date-pickers,x-charts,x-tree-view',
   },
   turbopack: {
-    resolveAlias: demoFactoryAliases,
     resolveExtensions: ['.mjs', '.tsx', '.ts', '.jsx', '.js', '.json'],
     rules: {
       // `.md?muiMarkdown` → markdown loader (mirrors the webpack `oneOf` branch).
@@ -184,12 +174,6 @@ export default withDeploymentConfig({
           as: '*.js',
         },
       ],
-      '**/@mui/internal-core-docs/MarkdownDocs/RichMarkdownElement.js': {
-        loaders: [path.join(currentDirectory, 'scripts/loadMigratedMarkdown.cjs')],
-      },
-      '**/DemoContent/exportConfig.js': {
-        loaders: [path.join(currentDirectory, 'scripts/loadDemoExportDeps.cjs')],
-      },
       './**/demos/*/index.ts': {
         loaders: [
           {
@@ -244,13 +228,14 @@ export default withDeploymentConfig({
     return {
       ...config,
       plugins,
-      resolve: {
-        ...config.resolve,
-        alias: { ...config.resolve.alias, ...demoFactoryAliases },
-      },
       module: {
         ...config.module,
         rules: config.module.rules.concat([
+          {
+            // Next adds require.resolveWeak to this published ESM dynamic import.
+            test: /[/\\]@mui[/\\]internal-core-docs[/\\]MarkdownDocs[/\\]RichMarkdownElement\.js$/,
+            type: 'javascript/auto',
+          },
           // used in some /getting-started/templates
           {
             test: /\.md$/,
@@ -271,14 +256,6 @@ export default withDeploymentConfig({
                 ],
               },
             ],
-          },
-          {
-            test: /[/\\]@mui[/\\]internal-core-docs[/\\]MarkdownDocs[/\\]RichMarkdownElement\.js$/,
-            use: [path.join(currentDirectory, 'scripts/loadMigratedMarkdown.cjs')],
-          },
-          {
-            test: /[/\\]@mui[/\\]internal-core-docs[/\\]DemoContent[/\\]exportConfig\.js$/,
-            use: [path.join(currentDirectory, 'scripts/loadDemoExportDeps.cjs')],
           },
           {
             test: /[/\\]demos[/\\][^/\\]+[/\\]index\.ts$/,

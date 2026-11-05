@@ -11,10 +11,9 @@ const nextWebpack = require('next/dist/compiled/webpack/webpack');
 const webpack = nextWebpack.webpack;
 const coreDirectory = path.dirname(require.resolve('@mui/internal-core-docs/package.json'));
 const rendererPath = path.join(coreDirectory, 'MarkdownDocs/RichMarkdownElement.js');
-const loaderPath = path.join(__dirname, 'loadMigratedMarkdown.cjs');
 
 // Check the real bundle graph and SSR output, including tabbed code blocks.
-test('keeps migrated markdown SSR without bundling legacy demos', async () => {
+test('keeps migrated markdown SSR without eager legacy demos', async () => {
   const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'mui-markdown-renderer-'));
   const entry = path.join(directory, 'entry.js');
   await fs.writeFile(
@@ -22,8 +21,8 @@ test('keeps migrated markdown SSR without bundling legacy demos', async () => {
     `export { RichMarkdownElement } from ${JSON.stringify(rendererPath)};\nexport { ThemeProvider } from '@mui/material/styles';\nexport { brandingLightTheme } from ${JSON.stringify(path.join(coreDirectory, 'branding/brandingTheme.js'))};\n`,
   );
 
-  async function build(mode) {
-    const outputPath = path.join(directory, mode, 'renderer.cjs');
+  async function build() {
+    const outputPath = path.join(directory, 'renderer.cjs');
     const compiler = webpack({
       mode: 'development',
       target: 'node',
@@ -48,12 +47,6 @@ test('keeps migrated markdown SSR without bundling legacy demos', async () => {
           callback();
         },
       ],
-      module: {
-        rules:
-          mode === 'candidate'
-            ? [{ test: /MarkdownDocs[/\\]RichMarkdownElement\.js$/, use: [loaderPath] }]
-            : [],
-      },
       optimization: { minimize: false },
       devtool: false,
     });
@@ -104,18 +97,22 @@ test('keeps migrated markdown SSR without bundling legacy demos', async () => {
     assert.equal(html[1], '<span>Demo text</span>');
     assert.ok(html[2].includes('role="tab"'));
     assert.ok(html[2].includes('const'));
-    const resources = [...stats.compilation.modules].map((module) => module.resource || '');
+    const resources = [...stats.compilation.chunks]
+      .filter((chunk) => chunk.canBeInitial())
+      .flatMap((chunk) =>
+        [...stats.compilation.chunkGraph.getChunkModulesIterable(chunk)].map(
+          (module) => module.resource || '',
+        ),
+      );
     return { html, resources };
   }
 
   try {
-    const baseline = await build('baseline');
-    const candidate = await build('candidate');
-    assert.deepEqual(candidate.html, baseline.html);
+    const candidate = await build();
     assert.equal(
       candidate.resources.some((resource) => /[/\\]Demo[/\\]Demo(?:Toolbar)?\.js$/.test(resource)),
       false,
-      'legacy demo modules stay out of migrated bundles',
+      'legacy demo modules stay out of initial bundles',
     );
   } finally {
     await fs.rm(directory, { recursive: true, force: true });
