@@ -12,6 +12,9 @@
     "types": ["../../mui-env.d.ts"]
   },
   "references": [
+    { "path": "../x-charts/tsconfig.build.json" },
+    { "path": "../x-charts-pro/tsconfig.build.json" },
+    { "path": "../x-charts-premium/tsconfig.build.json" },
     { "path": "../x-scheduler/tsconfig.build.json" },
     { "path": "../x-scheduler-internals/tsconfig.build.json" },
     { "path": "../x-scheduler-internals-premium/tsconfig.build.json" },
