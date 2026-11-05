@@ -123,14 +123,15 @@ allowBuilds:
 
 overrides:
   '@mui/internal-docs-infra': 0.13.1-canary.29
-  # Preview packages from material-ui PR #48842, pinned to its reviewed head.
+  # Docs previews: material-ui #49464; public runtime: #48842.
+  # Hold the public runtime until MUI X supports material-ui #49612.
   '@mui/core-downloads-tracker': https://pkg.pr.new/mui/material-ui/@mui/core-downloads-tracker@40645cf
   '@mui/icons-material': https://pkg.pr.new/mui/material-ui/@mui/icons-material@40645cf
-  '@mui/internal-api-docs-builder': https://pkg.pr.new/mui/material-ui/@mui/internal-api-docs-builder@40645cf
-  '@mui/internal-core-docs': https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@40645cf
-  '@mui/internal-docs-utils': https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@40645cf
-  '@mui/internal-markdown': https://pkg.pr.new/mui/material-ui/@mui/internal-markdown@40645cf
-  '@mui/internal-scripts': https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@40645cf
+  '@mui/internal-api-docs-builder': https://pkg.pr.new/mui/material-ui/@mui/internal-api-docs-builder@080b0262e3
+  '@mui/internal-core-docs': https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@080b0262e3
+  '@mui/internal-docs-utils': https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@080b0262e3
+  '@mui/internal-markdown': https://pkg.pr.new/mui/material-ui/@mui/internal-markdown@080b0262e3
+  '@mui/internal-scripts': https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@080b0262e3
   '@mui/material': https://pkg.pr.new/mui/material-ui/@mui/material@40645cf
   '@mui/material-nextjs': https://pkg.pr.new/mui/material-ui/@mui/material-nextjs@40645cf
   '@mui/private-theming': https://pkg.pr.new/mui/material-ui/@mui/private-theming@40645cf
@@ -147,7 +148,3 @@ overrides:
 
 lockfile:
   includeResolutionSettings: true
-
-patchedDependencies:
-  # Remove after adopting the core-docs font fix from material-ui #49460.
-  '@mui/internal-core-docs@10.0.0-alpha.0': patches/@mui__internal-core-docs@10.0.0-alpha.0.patch

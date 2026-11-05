@@ -4,7 +4,6 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 const babel = require('@babel/core');
-const transform = require('./loadDemoExportDeps.cjs');
 
 const PICKERS_PACKAGE = '@mui/x-date-pickers';
 const ADAPTER_IMPORT = `${PICKERS_PACKAGE}/AdapterDayjs`;
@@ -36,15 +35,10 @@ test('resolves pinned dependencies with their full import paths', async () => {
   assert.deepEqual(imports, [ADAPTER_IMPORT]);
 });
 
-// Exercise the compiled preview through the consumer loader and public exporter.
 test('keeps bundled declarations without nonexistent type packages', async () => {
   const corePath = path.join(
     path.dirname(require.resolve('@mui/internal-core-docs/package.json')),
     'DemoContent/exportConfig.js',
-  );
-  const coreSource = transform(fs.readFileSync(corePath, 'utf8')).replace(
-    "'@mui/internal-docs-infra/useDemo'",
-    JSON.stringify(pathToFileURL(require.resolve('@mui/internal-docs-infra/useDemo')).href),
   );
   const adapterPath = path.resolve(__dirname, '../src/modules/utils/postProcessImport.ts');
   const { code } = babel.transformSync(fs.readFileSync(adapterPath, 'utf8'), {
@@ -56,9 +50,7 @@ test('keeps bundled declarations without nonexistent type packages', async () =>
   const { postProcessImport } = await import(
     `data:text/javascript;base64,${Buffer.from(code).toString('base64')}`
   );
-  const { buildExportConfig } = await import(
-    `data:text/javascript;base64,${Buffer.from(coreSource).toString('base64')}`
-  );
+  const { buildExportConfig } = await import(pathToFileURL(corePath).href);
   const previousDeps = process.env.PICKERS_ADAPTERS_DEPS;
   process.env.PICKERS_ADAPTERS_DEPS = JSON.stringify({ 'date-fns-jalali': 'latest' });
 
