@@ -12,11 +12,7 @@ import {
   schedulerOtherSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import {
-  getEndOfDayMs,
-  getEventResourceIds,
-  toLocalMs,
-} from '@mui/x-scheduler-internals/internals';
+import { getEndOfDayMs, getEventResourceIds } from '@mui/x-scheduler-internals/internals';
 import { eventColorTokens } from '@mui/x-scheduler/internals';
 import type { ChartsMetric } from './chartsFeature';
 
@@ -205,53 +201,6 @@ export function useChartsDatasets(metric: ChartsMetric) {
       (resource) => resource.id !== NO_RESOURCE && rootOf(resource.id) !== resource.id,
     );
 
-    // busy hours: events per weekday x hour of day
-    const weekdayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const counts = new Map<string, number>();
-    let minHour = 24;
-    let maxHour = 0;
-    days.forEach((day, dayIndex) => {
-      // weekday and hours in the display timezone, 0 = Monday
-      const weekday = day.plainDate.dayOfWeek - 1;
-      const localDayStart = toLocalMs(day.timestamp, displayTimezone);
-      const hourOf = (timestamp: number) =>
-        (toLocalMs(timestamp, displayTimezone) - localDayStart) / MS_PER_HOUR;
-      for (const occurrence of occurrencesByDay.get(day.key) ?? []) {
-        if (occurrence.allDay) {
-          continue;
-        }
-        const startHour = hourOf(
-          Math.max(occurrence.displayTimezone.start.timestamp, day.timestamp),
-        );
-        const endHour = hourOf(
-          Math.min(occurrence.displayTimezone.end.timestamp, dayEnds[dayIndex]),
-        );
-        for (let hour = Math.floor(startHour); hour < Math.min(24, Math.ceil(endHour)); hour += 1) {
-          minHour = Math.min(minHour, hour);
-          maxHour = Math.max(maxHour, hour);
-          const key = `${weekday}-${hour}`;
-          counts.set(key, (counts.get(key) ?? 0) + 1);
-        }
-      }
-    });
-    if (minHour > maxHour) {
-      minHour = 8;
-      maxHour = 18;
-    }
-    const hours = Array.from({ length: maxHour - minHour + 1 }, (_, index) => minHour + index);
-    const busyHours = {
-      xLabels: weekdayLabels,
-      yLabels: hours.map((hour) => `${hour}h`),
-      data: weekdayLabels.flatMap((_, weekday) =>
-        hours.map((hour, hourIndex): [number, number, number] => [
-          weekday,
-          hourIndex,
-          counts.get(`${weekday}-${hour}`) ?? 0,
-        ]),
-      ),
-      max: Math.max(1, ...counts.values()),
-    };
-
     return {
       days,
       dayEnds,
@@ -261,7 +210,6 @@ export function useChartsDatasets(metric: ChartsMetric) {
       shareByResource,
       roots,
       hasNestedResources,
-      busyHours,
     };
   }, [
     days,

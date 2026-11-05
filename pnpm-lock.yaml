@@ -2094,9 +2094,6 @@ importers:
       '@mui/x-charts-premium':
         specifier: workspace:*
         version: link:../x-charts-premium/build
-      '@mui/x-charts-pro':
-        specifier: workspace:*
-        version: link:../x-charts-pro/build
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
