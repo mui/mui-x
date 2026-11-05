@@ -890,6 +890,10 @@ export const GridRootStyles = styled('div', {
     /* Fill handle styles */
     [`& .${c['cell--withFillHandle']}`]: {
       position: 'relative',
+      // Pinned cells must stay sticky, otherwise their `left`/`right` offset displaces them
+      [`&.${c['cell--pinnedLeft']}, &.${c['cell--pinnedRight']}`]: {
+        position: 'sticky',
+      },
       '&::after': {
         content: '""',
         position: 'absolute',

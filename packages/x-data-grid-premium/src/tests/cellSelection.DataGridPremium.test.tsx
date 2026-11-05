@@ -873,6 +873,23 @@ describe('<DataGridPremium /> - Cell selection', () => {
         expect(getCell(0, 1)).to.have.class(gridClasses['cell--withFillHandle']);
       });
 
+      it.skipIf(isJSDOM)(
+        'should keep pinned cells sticky when they show the fill handle',
+        async () => {
+          const { user } = render(
+            <TestDataGridSelection
+              columns={fillColumns}
+              rows={fillRows}
+              cellSelectionFillHandle
+              initialState={{ pinnedColumns: { left: ['id', 'name'] } }}
+            />,
+          );
+          await user.click(getCell(0, 1)); // pinned column that is not the first one
+          expect(getCell(0, 1)).to.have.class(gridClasses['cell--withFillHandle']);
+          expect(window.getComputedStyle(getCell(0, 1)).position).to.equal('sticky');
+        },
+      );
+
       it('should show fill handle on the bottom-right cell of a multi-cell selection', async () => {
         const { user } = render(
           <TestDataGridSelection columns={fillColumns} rows={fillRows} cellSelectionFillHandle />,
