@@ -35,6 +35,10 @@ import { useEventCalendarStyledContext } from './EventCalendarStyledContext';
 
 export interface EventCalendarRootProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
+   * SPIKE: extra content rendered at the bottom of the side panel (charts feature).
+   */
+  sidePanelExtra?: React.ReactNode;
+  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
@@ -147,7 +151,7 @@ const EventCalendarContent = styled('section', {
  */
 export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarRootProps>(
   function EventCalendarRoot(props, forwardedRef) {
-    const { children, className, ...other } = props;
+    const { children, className, sidePanelExtra, ...other } = props;
 
     const store = useEventCalendarStoreContext();
     const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
@@ -221,10 +225,21 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
             orientation="horizontal"
             className={classes.sidePanelCollapse}
           >
-            <EventCalendarSidePanel className={classes.sidePanel}>
+            <EventCalendarSidePanel
+              className={classes.sidePanel}
+              sx={
+                sidePanelExtra ? { overflowY: 'auto', '& > section': { flexShrink: 0 } } : undefined
+              }
+            >
               <MiniCalendar />
               <Divider className={classes.sidePanelDivider} />
               <ResourcesTree />
+              {sidePanelExtra ? (
+                <React.Fragment>
+                  <Divider className={classes.sidePanelDivider} />
+                  {sidePanelExtra}
+                </React.Fragment>
+              ) : null}
             </EventCalendarSidePanel>
           </EventCalendarSidePanelCollapse>
 

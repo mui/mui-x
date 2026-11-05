@@ -1,4 +1,7 @@
 {
+  "scheduler/charts-insights-hours-per-day": "Charts: hours per day",
+  "scheduler/charts-insights-nested-resources": "Charts: nested resources",
+  "scheduler/charts-insights-share-by-resource": "Charts: share by resource",
   "scheduler/month-view-multi-day-overflow": "Month view multi-day overflow",
   "scheduler/timeline-dependency-edge-cases": "Timeline dependency edge cases"
 }

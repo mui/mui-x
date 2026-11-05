@@ -54,6 +54,7 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
     featuresProp,
     'EventCalendarPremium',
   );
+  const ChartsPanel = features.charts?.Panel;
   const storeParameters = React.useMemo(
     () => ({ ...parameters, storeFeatures }),
     [parameters, storeFeatures],
@@ -98,7 +99,12 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
                 <EventDialogProvider
                   optionalRenderers={features.recurringEvents?.optionalRenderers}
                 >
-                  <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
+                  <EventCalendarRoot
+                    className={className}
+                    {...other}
+                    ref={forwardedRef}
+                    sidePanelExtra={ChartsPanel ? <ChartsPanel /> : undefined}
+                  >
                     {watermark}
                   </EventCalendarRoot>
                 </EventDialogProvider>

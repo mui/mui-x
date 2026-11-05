@@ -233,6 +233,7 @@ export class SchedulerStore<
       editingOccurrence: null,
       copiedEvent: null,
       selection: null,
+      occurrenceHighlight: null,
       nowTimestamp,
       pendingRecurringEventOperation: null,
       visibleResources:
@@ -413,6 +414,16 @@ export class SchedulerStore<
       }
     }
   }
+
+  /**
+   * Highlights the occurrences matching the given filters, or clears the highlight with `null`.
+   */
+  public setOccurrenceHighlight = (highlight: State['occurrenceHighlight']) => {
+    if (isDeepEqual(this.state.occurrenceHighlight, highlight)) {
+      return;
+    }
+    this.set('occurrenceHighlight', highlight);
+  };
 
   /**
    * Selects an entity, or clears the selection when called with `null`. A single
