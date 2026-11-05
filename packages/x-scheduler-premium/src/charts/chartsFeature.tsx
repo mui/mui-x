@@ -3,7 +3,7 @@ import * as React from 'react';
 import type { EventCalendarPremiumChartsFeature } from '../event-calendar-premium/features/EventCalendarPremiumFeatures.types';
 import { ChartsPanel } from './ChartsPanel';
 
-export type ChartsCardId = 'hoursPerDay' | 'shareByResource' | 'busyHours';
+export type ChartsCardId = 'hoursPerDay' | 'shareByResource';
 export type ChartsMetric = 'hours' | 'count';
 
 export interface ChartsFeatureConfig {

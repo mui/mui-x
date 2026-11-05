@@ -3,7 +3,6 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { ChartsRenderer } from '@mui/x-charts-premium/ChartsRenderer';
-import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { useStore } from '@base-ui/utils/store';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
@@ -53,7 +52,6 @@ export function ChartsPanel({ cards, metric }: ChartsPanelProps) {
     shareByResource,
     roots,
     hasNestedResources,
-    busyHours,
   } = useChartsDatasets(metric);
 
   const colorOf = React.useMemo(
@@ -180,42 +178,6 @@ export function ChartsPanel({ cards, metric }: ChartsPanelProps) {
     />
   );
 
-  const renderBusyHours = (
-    <Heatmap
-      height={190}
-      margin={{ left: 0, right: 0, top: 0, bottom: 0 }}
-      width={228}
-      xAxis={[
-        {
-          data: busyHours.xLabels,
-          valueFormatter: (label: string) => label[0],
-          height: 26,
-          tickLabelStyle: { fontSize: 10 },
-        },
-      ]}
-      yAxis={[
-        {
-          data: busyHours.yLabels,
-          width: 30,
-          tickLabelInterval: (_value, index) => index % 2 === 0,
-          tickLabelStyle: { fontSize: 10 },
-        },
-      ]}
-      zAxis={[
-        {
-          colorMap: {
-            type: 'continuous',
-            min: 0,
-            max: busyHours.max,
-            color: ['#eef3f8', '#1976d2'],
-          },
-        },
-      ]}
-      series={[{ data: busyHours.data }]}
-      hideLegend
-    />
-  );
-
   const cardLookup: Record<ChartsCardId, { title: string; content: React.ReactNode }> = {
     hoursPerDay: {
       title: metric === 'hours' ? 'Hours per day' : 'Events per day',
@@ -225,7 +187,6 @@ export function ChartsPanel({ cards, metric }: ChartsPanelProps) {
       title: 'Share by resource',
       content: renderShareByResource,
     },
-    busyHours: { title: 'Busy hours', content: renderBusyHours },
   };
 
   return (
