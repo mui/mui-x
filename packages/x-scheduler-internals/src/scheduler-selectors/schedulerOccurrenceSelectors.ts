@@ -2,6 +2,7 @@ import { createSelectorMemoized } from '@base-ui/utils/store';
 import type {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
+  SchedulerRenderableEventOccurrence,
   SchedulerResource,
 } from '../models';
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
@@ -87,7 +88,45 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
   },
 );
 
+const resourceOrAncestorMatches = (state: State, resourceId: string, targetId: string): boolean => {
+  const parentLookup = schedulerResourceSelectors.resourceParentIdLookup(state);
+  let current: string | null | undefined = resourceId;
+  while (current != null) {
+    if (current === targetId) {
+      return true;
+    }
+    current = parentLookup.get(current) as string | null | undefined;
+  }
+  return false;
+};
+
 export const schedulerOccurrenceSelectors = {
+  /**
+   * Whether the occurrence is highlighted or dimmed by `state.occurrenceHighlight`,
+   * `'none'` when nothing is highlighted.
+   */
+  highlightState: (
+    state: State,
+    occurrence: Pick<SchedulerRenderableEventOccurrence, 'resource' | 'displayTimezone'>,
+  ): 'none' | 'highlighted' | 'dimmed' => {
+    const highlight = state.occurrenceHighlight;
+    if (highlight == null) {
+      return 'none';
+    }
+    const resourceIds = getEventResourceIds(occurrence.resource);
+    let matchesResource = true;
+    if (highlight.resourceId === null) {
+      matchesResource = resourceIds.length === 0;
+    } else if (highlight.resourceId !== undefined) {
+      const targetId = highlight.resourceId;
+      matchesResource = resourceIds.some((id) => resourceOrAncestorMatches(state, id, targetId));
+    }
+    const matchesRange =
+      highlight.range == null ||
+      (occurrence.displayTimezone.start.timestamp < highlight.range.end &&
+        occurrence.displayTimezone.end.timestamp > highlight.range.start);
+    return matchesResource && matchesRange ? 'highlighted' : 'dimmed';
+  },
   isStarted: (state: State, start: SchedulerProcessedDate) => start.timestamp <= state.nowTimestamp,
   isEnded: (state: State, end: SchedulerProcessedDate) => end.timestamp < state.nowTimestamp,
   groupedByResourceList: occurrencesGroupedByResourceListSelector,

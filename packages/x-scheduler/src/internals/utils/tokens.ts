@@ -18,7 +18,7 @@ import {
  * These are derived from Material UI color palettes but with custom selections
  * for optimal visual appearance in both light and dark modes.
  */
-const eventColorTokens = {
+export const eventColorTokens = {
   red: {
     light: {
       main: red[500],

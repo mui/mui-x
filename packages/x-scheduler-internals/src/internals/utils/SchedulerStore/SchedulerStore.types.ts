@@ -85,6 +85,21 @@ export interface SchedulerEditingState {
   modelBounds?: { start: number; end: number };
 }
 
+/**
+ * Occurrences to spotlight: those matching every filter are highlighted, the others are dimmed.
+ */
+export interface SchedulerOccurrenceHighlight {
+  /**
+   * A resource (and its descendants), `null` for occurrences without resource,
+   * `undefined` for any resource.
+   */
+  resourceId?: SchedulerResourceId | null;
+  /**
+   * Half-open time range `[start, end)` as timestamps, `undefined` for any time.
+   */
+  range?: { start: number; end: number };
+}
+
 export interface SchedulerState<TEvent extends object = any> {
   /**
    * The adapter of the date library.
@@ -242,6 +257,10 @@ export interface SchedulerState<TEvent extends object = any> {
    * See `SchedulerSelectionTypeLookup` for how features register their type.
    */
   selection: SchedulerSelection | null;
+  /**
+   * The occurrence highlight, or `null` when nothing is highlighted.
+   */
+  occurrenceHighlight: SchedulerOccurrenceHighlight | null;
   /**
    * Whether the store is currently loading events from the data source.
    */

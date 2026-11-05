@@ -10,7 +10,10 @@ import type {
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
-import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOccurrenceSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
@@ -51,6 +54,9 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
   slot: 'DayGridEvent',
 })<{ 'data-variant'?: 'filled' | 'invisible' | 'compact' | 'placeholder'; palette?: PaletteName }>(
   ({ theme }) => ({
+    '&[data-highlight]': { transition: 'opacity 150ms' },
+    '&[data-highlight="dimmed"]': { opacity: 0.25 },
+    '&[data-highlight="highlighted"]': { outline: '2px solid var(--event-main)', outlineOffset: 1 },
     ...(DayGridEventBaseStyles(theme) as any),
     '&:focus-visible': {
       outline: '2px solid var(--event-surface-accent)',
@@ -289,6 +295,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
 
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
+  const highlightState = useStore(store, schedulerOccurrenceSelectors.highlightState, occurrence);
 
   // Feature hooks
   const formatTime = useFormatTime();
@@ -377,6 +384,10 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     ref: forwardedRef,
     'data-variant': variant,
     'data-palette': color,
+    'data-highlight':
+      highlightState === 'none' || variant === 'placeholder' || variant === 'invisible'
+        ? undefined
+        : highlightState,
     style: {
       '--grid-row': occurrence.position.index,
       '--grid-column-span': occurrence.position.daySpan,
