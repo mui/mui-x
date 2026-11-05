@@ -346,6 +346,16 @@ export interface GridCellEventLookup {
     event: React.CompositionEvent<HTMLElement>;
   };
   /**
+   * Fired when text is typed without a composition in the hidden editor of a focused cell,
+   * for example from the emoji picker or dictation.
+   * Requires `experimentalFeatures.imeFastEdit`.
+   * @ignore - do not document.
+   */
+  cellInput: {
+    params: GridCellParams<any>;
+    event: React.ChangeEvent<HTMLElement>;
+  };
+  /**
    * Fired when the dragged cell enters a valid drop target. It's mapped to the `dragend` DOM event.
    * @ignore - do not document.
    */
@@ -538,7 +548,8 @@ export interface GridEventLookup
     event:
       | React.MouseEvent<HTMLElement>
       | React.KeyboardEvent<HTMLElement>
-      | React.CompositionEvent<HTMLElement>;
+      | React.CompositionEvent<HTMLElement>
+      | React.ChangeEvent<HTMLElement>;
   };
   /**
    * Fired when the cell turns back to view mode.
@@ -555,7 +566,8 @@ export interface GridEventLookup
     event:
       | React.MouseEvent<HTMLElement>
       | React.KeyboardEvent<HTMLElement>
-      | React.CompositionEvent<HTMLElement>;
+      | React.CompositionEvent<HTMLElement>
+      | React.ChangeEvent<HTMLElement>;
   };
   /**
    * Fired when the row turns back to view mode.

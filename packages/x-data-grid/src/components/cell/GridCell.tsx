@@ -16,11 +16,17 @@ import { Rowspan } from '@mui/x-virtualizer';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useId from '@mui/utils/useId';
 import { focusElement } from '../../utils/focusElement';
-import { PRE_MOUNTED_EDITOR_SELECTOR } from '../../utils/cellEditor';
-import { isImeKeyDown } from '../../utils/keyboardUtils';
+import { PRE_MOUNTED_EDITOR_SELECTOR, isEventFromPreMountedEditor } from '../../utils/cellEditor';
+import { isImeKeyDown, isPrintableKey } from '../../utils/keyboardUtils';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import { GridCellModes } from '../../models';
-import type { GridCellEventLookup, GridEvents, GridRowId, GridEditCellProps } from '../../models';
+import type {
+  GridCellEventLookup,
+  GridEvents,
+  GridRowId,
+  GridEditCellProps,
+  MuiEvent,
+} from '../../models';
 import type { GridRenderEditCellParams, GridCellParams } from '../../models/params/gridCellParams';
 import type { GridAlignment, GridStateColDef } from '../../models/colDef/gridColDef';
 import type { GridRowModel, GridTreeNode, GridTreeNodeWithRender } from '../../models/gridRows';
@@ -429,6 +435,39 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     [apiRef, field, rowId],
   );
 
+  const publishKeyDown = React.useCallback(
+    (eventName: GridEvents) => (event: React.KeyboardEvent<HTMLDivElement>) => {
+      // The row might have been deleted
+      if (!apiRef.current.getRow(rowId)) {
+        return;
+      }
+
+      const params = apiRef.current.getCellParams(rowId, field || '');
+      apiRef.current.publishEvent(eventName, params, event);
+      if (onKeyDown) {
+        onKeyDown(event);
+      }
+
+      // The browser inserts a printable key into the hidden editor after the keydown. When a
+      // listener prevents the keydown, the key must not start edit mode with an `input` event.
+      // The nested `cellEditStart` publish resets `defaultMuiPrevented`, so a veto in
+      // `onCellEditStart` is the value read here.
+      // An AltGr character is not a printable key: Windows reports AltGr as Ctrl+Alt.
+      // A veto of an IME keydown is not honored: the keydown inserts nothing by itself, the text
+      // comes from the composition or from the `input` event, see `cellInput`.
+      if (
+        imeFastEdit &&
+        (event as MuiEvent<React.KeyboardEvent<HTMLDivElement>>).defaultMuiPrevented &&
+        isEventFromPreMountedEditor(event) &&
+        (isPrintableKey(event) || (event.key.length === 1 && event.ctrlKey && event.altKey)) &&
+        !isImeKeyDown(event)
+      ) {
+        event.preventDefault();
+      }
+    },
+    [apiRef, field, imeFastEdit, onKeyDown, rowId],
+  );
+
   const isCellRowSpanned = hiddenCells[rowId]?.[colIndex] ?? false;
   const rowSpan = spannedCells[rowId]?.[colIndex] ?? 1;
 
@@ -728,7 +767,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
       onMouseOver={publish('cellMouseOver', onMouseOver)}
       onMouseDown={publishMouseDown('cellMouseDown')}
       onMouseUp={publishMouseUp('cellMouseUp')}
-      onKeyDown={publish('cellKeyDown', onKeyDown)}
+      onKeyDown={publishKeyDown('cellKeyDown')}
       onKeyUp={publish('cellKeyUp', onKeyUp)}
       {...draggableEventHandlers}
       {...other}
