@@ -53,7 +53,7 @@ const resources = [
 ];
 ```
 
-{{"demo": "NestedResources.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/nested-resources/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Default collapsed resources
 
@@ -61,7 +61,7 @@ Parent resources can be collapsed to hide their descendants in the resources tre
 Use the `defaultCollapsedResources` prop to initialize the collapsed resources.
 A resource is expanded unless it is present in the object with a `true` value.
 
-{{"demo": "DefaultCollapsedResources.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/default-collapsed-resources/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Controlled collapsed resources
 
@@ -87,7 +87,7 @@ return (
 Use the `defaultVisibleResources` prop to initialize the visible resources.
 A resource is visible if it's absent from the object or set to `true`.
 
-{{"demo": "DefaultVisibleResources.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/default-visible-resources/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Controlled visible resources
 
@@ -126,7 +126,7 @@ const event = {
 };
 ```
 
-{{"demo": "MultipleResourcesPerEvent.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/multiple-resources-per-event/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 The resource picker in the edit dialog switches between a single-select and a multi-select depending on the event:
 
@@ -150,7 +150,7 @@ When `canHaveMultipleResources` isn't set, it's inferred from the `events` prop:
 Use the `eventColor` property to define a resource's color.
 The available color palettes are shown below:
 
-{{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/color-palettes/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::info
 Event colors can also be defined on the event or at the component level.
@@ -243,4 +243,4 @@ function Calendar() {
 }
 ```
 
-{{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/title-property/index.ts", "bg": "inline", "collapseToEmpty": true}}

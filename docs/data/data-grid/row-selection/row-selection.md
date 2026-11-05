@@ -8,7 +8,7 @@ Single row selection comes enabled by default for the MIT Data Grid component.
 You can select a row by clicking it, or using the [keyboard shortcuts](/x/react-data-grid/accessibility/#selection).
 To unselect a row, click on it again.
 
-{{"demo": "SingleRowSelectionGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/single-row-selection-grid/index.ts", "bg": "inline"}}
 
 ## Multiple row selection [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
@@ -20,13 +20,13 @@ On the Data Grid Pro and Data Grid Premium components, you can select multiple r
 
 Unselect one of the selected rows by holding the <kbd class="key">Ctrl</kbd> (<kbd class="key">Cmd</kbd> on MacOS) key and clicking on the selected row.
 
-{{"demo": "MultipleRowSelectionGrid.js", "disableAd": true, "bg": "inline"}}
+{{"component": "file://./demos/multiple-row-selection-grid/index.ts", "disableAd": true, "bg": "inline"}}
 
 ## Disable row selection on click
 
 You might have interactive content in the cells and need to disable the selection of the row on click. Use the `disableRowSelectionOnClick` prop in this case.
 
-{{"demo": "DisableClickSelectionGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/disable-click-selection-grid/index.ts", "bg": "inline"}}
 
 ## Disable selection on certain rows
 
@@ -36,14 +36,14 @@ If not specified, all rows are selectable.
 
 In the demo below only rows with quantity above 50,000 can be selected:
 
-{{"demo": "DisableRowSelection.js", "bg": "inline"}}
+{{"component": "file://./demos/disable-row-selection/index.ts", "bg": "inline"}}
 
 ## Row selection with filtering
 
 By default, when the rows are filtered the selection is cleared from the rows that don't meet the filter criteria.
 To keep those rows selected even when they're not visible, set the `keepNonExistentRowsSelected` prop.
 
-{{"demo": "KeepNonExistentRowsSelected.js", "bg": "inline"}}
+{{"component": "file://./demos/keep-non-existent-rows-selected/index.ts", "bg": "inline"}}
 
 ## Controlled row selection
 
@@ -65,7 +65,7 @@ The model can be either:
 - **`type: 'include'`**: Only the rows with IDs in the `ids` set are selected
 - **`type: 'exclude'`**: All rows are selected except those with IDs in the `ids` set
 
-{{"demo": "ControlledSelectionGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/controlled-selection-grid/index.ts", "bg": "inline"}}
 
 ### Opting out of exclude model optimization
 
@@ -85,7 +85,7 @@ By default, the Data Grid uses an exclude model optimization when selecting all 
 
 To activate checkbox selection set `checkboxSelection={true}`.
 
-{{"demo": "CheckboxSelectionGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/checkbox-selection-grid/index.ts", "bg": "inline"}}
 
 ### Custom checkbox column
 
@@ -95,7 +95,7 @@ We strongly recommend to use the `GRID_CHECKBOX_SELECTION_COL_DEF` variable inst
 
 In the following demo, the checkbox column has been moved to the right and its width has been increased to 100px.
 
-{{"demo": "CheckboxSelectionCustom.js", "bg": "inline"}}
+{{"component": "file://./demos/checkbox-selection-custom/index.ts", "bg": "inline"}}
 
 :::warning
 Always set the `checkboxSelection` prop to `true` even when providing a custom checkbox column.
@@ -143,7 +143,7 @@ function CustomRowCheckbox(props: GridRowCheckboxProps) {
 By default, when you click the "Select All" checkbox, all rows in the Data Grid are selected.
 If you want to change this behavior and only select the rows that are currently visible on the page, you can use the `checkboxSelectionVisibleOnly` prop.
 
-{{"demo": "CheckboxSelectionVisibleOnlyGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/checkbox-selection-visible-only-grid/index.ts", "bg": "inline"}}
 
 ## Usage with server-side pagination
 
@@ -160,7 +160,7 @@ By using this approach, clicking in the **Select All** checkbox may still leave 
 It is up to you to clean the selection model, using the `rowSelectionModel` prop.
 The following demo shows the prop in action:
 
-{{"demo": "ControlledSelectionServerPaginationGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/controlled-selection-server-pagination-grid/index.ts", "bg": "inline"}}
 
 ## apiRef
 
@@ -172,7 +172,7 @@ See [API object](/x/react-data-grid/api-object/) for more details.
 This API should only be used as a last resort when the Data Grid's built-in props aren't sufficient for your specific use case.
 :::
 
-{{"demo": "RowSelectionApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "file://./demos/row-selection-api-no-snap/index.ts", "bg": "inline", "hideToolbar": true}}
 
 ## API
 

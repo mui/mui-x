@@ -1,0 +1,42 @@
+import * as React from 'react';
+import type { GridColDef } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
+
+const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
+
+export default function OrderSortingPerColumnGrid() {
+  // @focus-start @padding 1
+  const { data, loading } = useDemoData({
+    dataSet: 'Employee',
+    visibleFields: VISIBLE_FIELDS,
+    rowLength: 100,
+  });
+
+  const columns = React.useMemo<GridColDef[]>(
+    () =>
+      data.columns.map((column) => {
+        if (column.field === 'rating') {
+          return {
+            ...column,
+            sortingOrder: ['desc', 'asc', null],
+          };
+        }
+
+        return column;
+      }),
+    [data.columns],
+  );
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid
+        {...data}
+        loading={loading}
+        columns={columns}
+        sortingOrder={['asc', 'desc', null]}
+      />
+    </div>
+  );
+  // @focus-end
+}

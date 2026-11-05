@@ -20,7 +20,7 @@ You can find [all supported translation keys](https://github.com/mui/mui-x/blob/
 
 The example below customizes the labels of the loading overlay.
 
-{{"demo": "CustomLocaleOverlay.js", "bg": "inline"}}
+{{"component": "file://./demos/custom-locale-overlay/index.ts", "bg": "inline"}}
 
 ### Built-in locales
 
@@ -135,4 +135,4 @@ See [Right-to-left support](/material-ui/customization/right-to-left/) in the Ma
 
 ## Translation status
 
-{{"demo": "ChartsLocalizationTableNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+{{"component": "file://./demos/charts-localization-table-no-snap/index.ts", "hideToolbar": true, "bg": "inline"}}

@@ -1,5 +1,0 @@
-<DataGrid
-  {...data}
-  getRowHeight={() => 'auto'}
-  virtualizeColumnsWithAutoRowHeight
-/>

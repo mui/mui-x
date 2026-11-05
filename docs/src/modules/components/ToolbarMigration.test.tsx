@@ -2,8 +2,8 @@ import * as React from 'react';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import ClipboardCopyButton from '../../../data/data-grid/clipboard/ClipboardCopyButton.tsx';
-import RestoreStateInitialState from '../../../data/data-grid/state/RestoreStateInitialState.tsx';
+import ClipboardCopyButton from '../../../data/data-grid/clipboard/demos/clipboard-copy-button/ClipboardCopyButton';
+import RestoreStateInitialState from '../../../data/data-grid/state/demos/restore-state-initial-state/RestoreStateInitialState';
 import ExportCustomToolbar from '../../../data/data-grid/export/ExportCustomToolbar.tsx';
 
 vi.mock('@mui/x-data-grid-generator', () => ({

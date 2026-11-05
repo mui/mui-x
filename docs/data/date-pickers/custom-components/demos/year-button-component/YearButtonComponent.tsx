@@ -1,0 +1,22 @@
+import { styled } from '@mui/material/styles';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+
+const CustomYearButton = styled('button')({
+  height: 36,
+  width: 72,
+});
+
+export default function YearButtonComponent() {
+  return (
+    // @focus-start @padding 2
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['DateCalendar']}>
+        <DateCalendar slots={{ yearButton: CustomYearButton }} openTo="year" />
+      </DemoContainer>
+    </LocalizationProvider>
+    // @focus-end
+  );
+}

@@ -28,26 +28,26 @@ const listViewColDef: GridListViewColDef = {
 <DataGridPro listViewColumn={listViewColDef} listView={true} />;
 ```
 
-{{"demo": "ListView.js", "bg": true}}
+{{"component": "file://./demos/list-view/index.ts", "bg": true}}
 
 ## Responsive list view with media query
 
 Use the `useMediaQuery()` hook from `@mui/material` to enable the list view feature at a specified breakpoint.
 The demo below automatically switches to a list layout when the viewport width is below the `md` breakpoint.
 
-{{"demo": "ListViewMediaQuery.js", "bg": "inline"}}
+{{"component": "file://./demos/list-view-media-query/index.ts", "bg": "inline"}}
 
 ## List view with editable rows
 
 The [editing feature](/x/react-data-grid/editing/) is not supported while in list view, but it's possible to build an editing experience from within a custom cell renderer, as shown below:
 
-{{"demo": "ListViewEdit.js", "bg": true}}
+{{"component": "file://./demos/list-view-edit/index.ts", "bg": true}}
 
 ## Optimizing list view for small screens
 
 If your use case calls for first-class mobile UX, you can fully customize the Data Grid's list layout using [custom subcomponents](/x/react-data-grid/components/) as shown in the demo below:
 
-{{"demo": "ListViewAdvanced.js", "iframe": true, "maxWidth": 400, "height": 600}}
+{{"component": "file://./demos/list-view-advanced/index.ts", "iframe": true, "maxWidth": 400, "height": 600}}
 
 ## List view feature compatibility
 

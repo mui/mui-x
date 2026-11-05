@@ -38,11 +38,11 @@ But the same props are available on:
 
 On the field, it enables its error state.
 
-{{"demo": "ValidationBehaviorInput.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/validation-behavior-input/index.ts", "collapseToEmpty": true}}
 
 On the calendar and clock views, the invalid values are displayed as disabled to prevent their selection.
 
-{{"demo": "ValidationBehaviorView.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/validation-behavior-view/index.ts", "collapseToEmpty": true}}
 
 ## Past and future validation
 
@@ -56,7 +56,7 @@ For date time pickers, it will combine both.
 - On the `hours` and `minutes` views, all the values ending before the current time won't be selectable.
 - On the `seconds` view, all the values before the current second won't be selectable.
 
-{{"demo": "DateValidationDisablePast.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/date-validation-disable-past/index.ts", "collapseToEmpty": true}}
 
 The `disableFuture` prop prevents the selection all values after today for date pickers and the selection of all values after the current time for time pickers.
 For date time pickers, it will combine both.
@@ -66,7 +66,7 @@ For date time pickers, it will combine both.
 - On the `hours` and `minutes` views, all the values beginning after the current time won't be selectable.
 - On the `seconds` view, all the values after the current second won't be selectable.
 
-{{"demo": "DateValidationDisableFuture.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/date-validation-disable-future/index.ts", "collapseToEmpty": true}}
 
 :::info
 The current time is computed during the first render of the `LocalizationProvider`.
@@ -84,7 +84,7 @@ The `minDate` prop prevents the selection of all values before `props.minDate`.
 - On the `day` view, all the days before the `minDate` won't be selectable.
 - On the `month` and `year` views, all the values ending before the `minDate` won't be selectable.
 
-{{"demo": "DateValidationMinDate.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/date-validation-min-date/index.ts", "collapseToEmpty": true}}
 
 :::info
 The default value of `minDate` is `1900-01-01`.
@@ -95,7 +95,7 @@ The `maxDate` prop prevents the selection of all values after `props.maxDate`.
 - On the `day` view, all the days after the `maxDate` won't be selectable.
 - On the `month` and `year` views, all the values starting after the `maxDate` won't be selectable.
 
-{{"demo": "DateValidationMaxDate.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/date-validation-max-date/index.ts", "collapseToEmpty": true}}
 
 :::info
 The default value of `maxDate` is `2099-12-31`.
@@ -107,7 +107,7 @@ The `shouldDisableDate` prop prevents the selection of all dates for which it re
 
 In the example below, the weekends are not selectable:
 
-{{"demo": "DateValidationShouldDisableDate.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/date-validation-should-disable-date/index.ts", "collapseToEmpty": true}}
 
 :::warning
 `shouldDisableDate` only prevents the selection of disabled dates on the `day` view.
@@ -127,13 +127,13 @@ For components supporting date range edition (`DateRangePicker`, `DateTimeRangeP
 
 In the example below, the start date cannot be in the weekend but the end date can.
 
-{{"demo": "DateRangeValidationShouldDisableDate.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/date-range-validation-should-disable-date/index.ts", "collapseToEmpty": true}}
 
 ### Disable specific months
 
 The `shouldDisableMonth` prop prevents the selection of all dates in months for which it returns `true`.
 
-{{"demo": "DateValidationShouldDisableMonth.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/date-validation-should-disable-month/index.ts", "collapseToEmpty": true}}
 
 :::warning
 `shouldDisableMonth` only prevents the selection of disabled months on the `day` and `month` views.
@@ -146,7 +146,7 @@ If you know that all months of some years are disabled, you can provide the [`sh
 
 The `shouldDisableYear` prop prevents the selection of all dates in years for which it returns `true`.
 
-{{"demo": "DateValidationShouldDisableYear.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/date-validation-should-disable-year/index.ts", "collapseToEmpty": true}}
 
 ## Time validation
 
@@ -154,11 +154,11 @@ The `shouldDisableYear` prop prevents the selection of all dates in years for wh
 
 The `minTime` prop prevents the selection of all values between midnight and `props.minTime`.
 
-{{"demo": "TimeValidationMinTime.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/time-validation-min-time/index.ts", "collapseToEmpty": true}}
 
 The `maxTime` prop prevents the selection of all values between `props.maxTime` and midnight.
 
-{{"demo": "TimeValidationMaxTime.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/time-validation-max-time/index.ts", "collapseToEmpty": true}}
 
 :::info
 The validation only uses the time part of this prop value. It ignores the day / month / year.
@@ -193,7 +193,7 @@ shouldDisableTime={(value, view) =>
 
 In the example below, the last quarter of each hour is not selectable.
 
-{{"demo": "TimeValidationShouldDisableTime.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/time-validation-should-disable-time/index.ts", "collapseToEmpty": true}}
 
 ## Date and time validation
 
@@ -201,11 +201,11 @@ In the example below, the last quarter of each hour is not selectable.
 
 The `minDateTime` prop prevents the selection of all values before `props.minDateTime`.
 
-{{"demo": "DateTimeValidationMinDateTime.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/date-time-validation-min-date-time/index.ts", "collapseToEmpty": true}}
 
 The `maxDateTime` prop prevents the selection of all values after `props.maxDateTime`.
 
-{{"demo": "DateTimeValidationMaxDateTime.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/date-time-validation-max-date-time/index.ts", "collapseToEmpty": true}}
 
 :::warning
 If you want to set time boundaries independent of the date, use the [`time boundaries`](#minimum-and-maximum-time) instead.
@@ -238,4 +238,4 @@ You can then use the `helperText` prop of the `TextField` to pass your error mes
 
 Try to type a date that is inside the first quarter of 2022—the error will go away.
 
-{{"demo": "RenderErrorUnderField.js"}}
+{{"component": "file://./demos/render-error-under-field/index.ts"}}

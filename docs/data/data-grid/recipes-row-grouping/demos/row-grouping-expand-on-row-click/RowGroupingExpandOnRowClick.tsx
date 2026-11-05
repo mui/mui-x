@@ -1,0 +1,51 @@
+import { gridRowNodeSelector } from '@mui/x-data-grid';
+import * as React from 'react';
+import type { GridEventListener } from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  useGridApiRef,
+  useKeepGroupedColumnsHidden,
+} from '@mui/x-data-grid-premium';
+import { useMovieData } from '@mui/x-data-grid-generator';
+
+export default function RowGroupingExpandOnRowClick() {
+  // @focus-start @padding 1
+  const data = useMovieData();
+  const apiRef = useGridApiRef();
+
+  const initialState = useKeepGroupedColumnsHidden({
+    apiRef,
+    initialState: {
+      rowGrouping: {
+        model: ['company'],
+      },
+    },
+  });
+
+  const onRowClick = React.useCallback<GridEventListener<'rowClick'>>(
+    (params) => {
+      const rowNode = apiRef.current
+        ? gridRowNodeSelector(apiRef, params.id)
+        : undefined;
+      if (rowNode && rowNode.type === 'group') {
+        apiRef.current?.setRowChildrenExpansion(
+          params.id,
+          !rowNode.childrenExpanded,
+        );
+      }
+    },
+    [apiRef],
+  );
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGridPremium
+        {...data}
+        apiRef={apiRef}
+        initialState={initialState}
+        onRowClick={onRowClick}
+      />
+    </div>
+  );
+  // @focus-end
+}

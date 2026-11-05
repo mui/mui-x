@@ -16,7 +16,7 @@ The conversation list is the sidebar that shows all available conversations and 
 
 The following demo shows a multi-conversation layout with `features={{ conversationList: true }}` enabled:
 
-{{"demo": "../examples/multi-conversation/MultiConversation.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
+{{"component": "file://../examples/multi-conversation/demos/multi-conversation/index.ts", "bg": "inline", "hideToolbar": true, "collapseToEmpty": true}}
 
 ## Component anatomy
 
@@ -83,7 +83,7 @@ Because the full `conversation` object is included, custom slot components can r
 
 Replace the avatar slot with a custom component to render initials or a status ring:
 
-{{"demo": "ThemedAvatar.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/themed-avatar/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 The `ownerState` prop arrives directly on the component because the Material UI layer passes it through `slotProps` using a function form. Destructure it before spreading `...props` to avoid forwarding a non-standard attribute to the DOM.
 
@@ -91,7 +91,7 @@ The `ownerState` prop arrives directly on the component because the Material UI
 
 Replace `itemContent` to change the structural layout of the title and preview region—for example, to add a participant count or an icon:
 
-{{"demo": "RichItemContent.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/rich-item-content/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 When you replace `itemContent`, the `title` and `preview` slots are no longer rendered (they are children of the default `itemContent`). Render any equivalent content directly inside your custom component.
 
@@ -99,7 +99,7 @@ When you replace `itemContent`, the `title` and `preview` slots are no longer re
 
 Replace the `item` slot to take full control of a row's layout while still benefiting from the built-in selection, keyboard navigation, and `aria-selected` wiring:
 
-{{"demo": "CompactRow.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/compact-row/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 The `role="option"` and `aria-selected` attributes are set automatically before the slot renders, so they are present on the element even without the default styled item. Spread `...props` to pass them through.
 
@@ -158,7 +158,7 @@ Or set the CSS variable on a parent element to control the width from a layout l
 
 The `conversation` object in `ownerState` lets you derive everything you need to render a rich row without additional data fetching or selectors. The following example builds a full item renderer that shows an avatar with initials, a bold title for unread conversations, a truncated preview, a human-readable timestamp, and a count badge:
 
-{{"demo": "FullCustomRow.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/full-custom-row/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Accessibility notes
 

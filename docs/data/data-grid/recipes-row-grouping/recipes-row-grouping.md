@@ -10,13 +10,13 @@ title: Data Grid - Row grouping recipes
 
 In the demo below, you can toggle the group by clicking anywhere on the grouping row:
 
-{{"demo": "RowGroupingExpandOnRowClick.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-expand-on-row-click/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Pinning a grouped column
 
 Use `GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD` to pin a grouped column. In the demo below, the `Company` column is pinned:
 
-{{"demo": "RowGroupingPinning.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-pinning/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Creating and reordering groups with drag and drop
 
@@ -28,7 +28,7 @@ By default, the row grouping column uses `sortComparator` of the grouping column
 
 To sort the row groups by the number of child rows, you can override it using `groupingColDef.sortComparator`:
 
-{{"demo": "RowGroupingSortByChildRows.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-sort-by-child-rows/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Displaying child row count in footer
 
@@ -36,7 +36,7 @@ By default, the row count in the footer is the number of top level rows that are
 
 In the demo below, a `CustomFooterRowCount` component is added to the `footerRowCount` slot. This component uses the `gridFilteredDescendantRowCountSelector` to get the number of child rows and display it alongside the number of groups.
 
-{{"demo": "RowGroupingChildRowCount.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-child-row-count/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Styling row groups based on child conditions
 
@@ -54,4 +54,4 @@ Take a look at the second column definition in the `columns` array:
 - The `groupingValueGetter` combines the `label` and `priority` fields into a single string separated by a constant effectively changing the grouping criteria for this column.
 - The `renderCell` splits the string and displays the `priority` field as a colored `Chip` when the row type is a group.
 
-{{"demo": "RowGroupingMultipleFields.js", "bg": "inline"}}
+{{"component": "file://./demos/row-grouping-multiple-fields/index.ts", "bg": "inline"}}

@@ -20,7 +20,7 @@ The map provider `ChartsGeoDataProviderPremium` uses three main props:
 - `projection`: a string that defines how the objects should be projected on the SVG.
 - `series`: the data associated to the geographical objects of type `'mapShape'`.
 
-{{"demo": "BasicGeoDataPlot.js"}}
+{{"component": "file://./demos/basic-geo-data-plot/index.ts"}}
 
 ## Composition
 
@@ -54,7 +54,7 @@ so one plot renders both layers and CSS styles them independently: colored plate
 below, country outlines on top for orientation.
 Toggle between a flat `naturalEarth1` map and an `orthographic` globe.
 
-{{"demo": "TectonicPlates.js"}}
+{{"component": "file://./demos/tectonic-plates/index.ts"}}
 
 ## Rendering the base map with `GeoDataPlot`
 
@@ -63,7 +63,7 @@ It is meant to render the base map—the geography itself—without any data ser
 The `fill`, `stroke`, and `strokeWidth` props apply uniformly to all features,
 so use them to style the background layer.
 
-{{"demo": "GeoDataPlotDemo.js"}}
+{{"component": "file://./demos/geo-data-plot-demo/index.ts"}}
 
 ## Adding a base map raster with `MapImagePlot`
 
@@ -86,7 +86,7 @@ The provider is not tied to Earth—`geoData` accepts any GeoJSON `FeatureCollec
 The demo below maps the 30 USGS Mars Chart quadrangles colored by mean elevation over a
 Viking surface mosaic, with notable landmarks and mission sites, and a projection toggle.
 
-{{"demo": "MarsMap.js"}}
+{{"component": "file://./demos/mars-map/index.ts"}}
 
 :::warning
 Reprojection reads the image pixels on a canvas, so the source must be same-origin or served
@@ -97,7 +97,7 @@ with CORS headers.
 
 The `projection` prop accepts either a d3-geo projection name or a `GeoProjection` instance.
 
-{{"demo": "ProjectionMapShape.js"}}
+{{"component": "file://./demos/projection-map-shape/index.ts"}}
 
 ### Conic projections
 
@@ -107,7 +107,7 @@ So it's recommended to keep those parallels close to the area you want to displa
 
 Here you can try different countries and play with projection and parallels to see its impact.
 
-{{"demo": "CountryProjectionShape.js"}}
+{{"component": "file://./demos/country-projection-shape/index.ts"}}
 
 ## Plotting series with `MapShapePlot`
 
@@ -115,7 +115,7 @@ Here you can try different countries and play with projection and parallels to s
 
 Stacking it on top of a `GeoDataPlot` is convenient for highlighting a subset of features over the full geography.
 
-{{"demo": "MapShapePlotDemo.js"}}
+{{"component": "file://./demos/map-shape-plot-demo/index.ts"}}
 
 ## Matching features with `geoFeatureKey`
 
@@ -156,7 +156,7 @@ But the data from Our World in Data merge them.
 Returning `'Somalia'` for both gives them the same key, so the single `{ name: 'Somalia' }`
 series item highlights the two shapes at once.
 
-{{"demo": "GeoFeatureKeyMapShape.js"}}
+{{"component": "file://./demos/geo-feature-key-map-shape/index.ts"}}
 
 ## Mapping values to colors
 
@@ -202,7 +202,7 @@ Specify the `unknownColor` property in the `colorMap` to render them.
 By using `unknownColor` instead of displaying the `GeoDataPlot` as a background, you enable the tooltip for those shapes without data.
 :::
 
-{{"demo": "ColorScaleMapShape.js"}}
+{{"component": "file://./demos/color-scale-map-shape/index.ts"}}
 
 ## Using a dataset
 
@@ -251,7 +251,7 @@ See the [Dataset](/x/react-charts/dataset/) page to learn more.
 It receives the click event and a `MapShapeItemIdentifier` that identifies the clicked item
 through its `seriesId` and `name`.
 
-{{"demo": "MapShapeClick.js"}}
+{{"component": "file://./demos/map-shape-click/index.ts"}}
 
 ## Managing the highlight with `highlightScope`
 
@@ -261,7 +261,7 @@ affects the rendering. The `highlight` option decides which items are emphasized
 the `fade` option decides which items are dimmed
 (`'series'` for the rest of the same series, `'global'` for every shape in every series).
 
-{{"demo": "HighlightedMapShape.js"}}
+{{"component": "file://./demos/highlighted-map-shape/index.ts"}}
 
 ## Zoom
 
@@ -307,7 +307,7 @@ You can also modify the zoom result with:
 - `minZoomLevel`/`maxZoomLevel`: Clamp the `zoomLevel` between those two values.
 - `maxEmptySpace`: The maximal space left empty while dragging the map. It's a ratio of the drawing area size. For example `maxEmptySpace=0.2` means you can not leave more than 20% of the drawing area empty when dragging the map.
 
-{{"demo": "MapZoomOptions.js"}}
+{{"component": "file://./demos/map-zoom-options/index.ts"}}
 
 ### Control
 
@@ -319,7 +319,7 @@ The view is made of three properties:
 - `center`: `[number, number]` The long/lat coordinates in degree of the point at the center of the projection.
 - `translation`: `[number, number]` The translation of the map as a ratio of the drawing area.
 
-{{"demo": "MapZoomControl.js"}}
+{{"component": "file://./demos/map-zoom-control/index.ts"}}
 
 ## Managing visibility from the legend
 
@@ -327,14 +327,14 @@ When `toggleVisibilityOnClick` is set on the `ChartsLegend`, clicking on a serie
 its visibility. Hidden series are skipped by `MapShapePlot` so the underlying base map
 stays visible.
 
-{{"demo": "VisibleMapShape.js"}}
+{{"component": "file://./demos/visible-map-shape/index.ts"}}
 
 ## Exporting
 
 Maps can be exported as an image or as a PDF, like any other chart.
 See the [Export](/x/react-charts/export/) page for the complete documentation.
 
-{{"demo": "ExportMap.js"}}
+{{"component": "file://./demos/export-map/index.ts"}}
 
 ## Common practice
 
@@ -346,4 +346,4 @@ There are two ways to remove it:.
 - Render only the countries in series by removing the `<GeoDataPlot />`
 - Filter out Antarctica from the `geoData`
 
-{{"demo": "RemoveAntarctica.js"}}
+{{"component": "file://./demos/remove-antarctica/index.ts"}}

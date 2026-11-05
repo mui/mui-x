@@ -21,7 +21,7 @@ Reasoning parts render automatically as a collapsible "Thinking…" section — 
 Reasoning parts render automatically — you don't need to register a renderer to display them.
 The built-in renderer is a native `<details>`/`<summary>` disclosure that stays open while `state` is `'streaming'` (showing a "Thinking…" label), then collapses to a clickable "Reasoning" summary once the reasoning is `'done'`.
 
-{{"demo": "ReasoningStreamingDemo.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/reasoning-streaming-demo/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Labels
 
@@ -76,7 +76,7 @@ import type { ReasoningPartOwnerState } from '@mui/x-chat/headless';
 
 Partial overrides keep the remaining Material defaults, because the slot maps are merged: a `summary`-only override still uses the default `root` and `content`.
 
-{{"demo": "ReasoningSlotsDemo.js", "bg": "inline", "defaultCodeOpen": true}}
+{{"component": "file://./demos/reasoning-slots-demo/index.ts", "bg": "inline", "initialExpanded": true}}
 
 See the [`ChatMessageContent` API](/x/api/chat/chat-message-content/) for the full `partProps` shape.
 

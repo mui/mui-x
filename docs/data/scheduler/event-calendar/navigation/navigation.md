@@ -22,7 +22,7 @@ const defaultVisibleDate = DateTime.fromISO('2025-11-01');
 <EventCalendar defaultVisibleDate={defaultVisibleDate} />;
 ```
 
-{{"demo": "DefaultVisibleDate.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/default-visible-date/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::success
 You can also control the visible date using the `visibleDate` and `onVisibleDateChange` props:
@@ -69,4 +69,4 @@ apiRef.current.setVisibleDate({
 });
 ```
 
-{{"demo": "ApiMethodSetVisibleDate.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/api-method-set-visible-date/index.ts", "collapseToEmpty": true}}

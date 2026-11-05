@@ -12,7 +12,7 @@ You can prevent the user from hiding a column through the user interface by sett
 
 In the following demo, the "username" column cannot be hidden.
 
-{{"demo": "VisibleColumnsBasicExample.js", "bg": "inline"}}
+{{"component": "file://./demos/visible-columns-basic-example/index.ts", "bg": "inline"}}
 
 ## Initialize the visible columns
 
@@ -38,7 +38,7 @@ Passing the visible columns to the `initialState` prop will only have an impact 
 />
 ```
 
-{{"demo": "VisibleColumnsModelInitialState.js", "bg": "inline", "defaultCodeOpen": false }}
+{{"component": "file://./demos/visible-columns-model-initial-state/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Controlled visible columns
 
@@ -55,7 +55,7 @@ You can use the `onColumnVisibilityModelChange` prop to listen to the changes to
 />
 ```
 
-{{"demo": "VisibleColumnsModelControlled.js", "bg": "inline"}}
+{{"component": "file://./demos/visible-columns-model-controlled/index.ts", "bg": "inline"}}
 
 ## Column visibility panel
 
@@ -66,7 +66,7 @@ The panel can be opened by:
 - Clicking the _Columns_ button in the [toolbar](/x/react-data-grid/components/#toolbar).
 - Clicking the _Manage columns_ button in the [column menu](/x/react-data-grid/column-menu/).
 
-{{"demo": "ColumnSelectorGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/column-selector-grid/index.ts", "bg": "inline"}}
 
 ### Disable the column visibility panel
 
@@ -79,7 +79,7 @@ To disable the column visibility panel, set the prop `disableColumnSelector={tru
 
 In the following demo, the columns panel is disabled, and access to columns `id`, `quantity`, and `filledQuantity` is only permitted for the `Admin` type user.
 
-{{"demo": "ColumnSelectorDisabledGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/column-selector-disabled-grid/index.ts", "bg": "inline"}}
 
 ### Customize the list of columns in columns management
 
@@ -110,7 +110,7 @@ const getTogglableColumns = (columns: GridColDef[]) => {
 />;
 ```
 
-{{"demo": "ColumnSelectorGridCustomizeColumns.js", "bg": "inline"}}
+{{"component": "file://./demos/column-selector-grid-customize-columns/index.ts", "bg": "inline"}}
 
 ### Disable actions in footer
 
@@ -144,7 +144,7 @@ To only toggle the visibility of the columns that are present in the current sea
 />
 ```
 
-{{"demo": "ColumnSelectorGridToggleAllMode.js", "bg": "inline"}}
+{{"component": "file://./demos/column-selector-grid-toggle-all-mode/index.ts", "bg": "inline"}}
 
 ## API
 

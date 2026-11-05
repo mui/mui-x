@@ -21,7 +21,7 @@ To do this, the `onCellEditStop()` prop is used to check if the `reason` is `'ce
 If that condition is true, it [disables](/x/react-data-grid/events/#disabling-the-default-behavior) the default event behavior.
 In this context, the user can only stop editing a cell by pressing <kbd class="key">Enter</kbd>, <kbd class="key">Escape</kbd> or <kbd class="key">Tab</kbd>.
 
-{{"demo": "DisableStopEditModeOnFocusOut.js", "bg": "inline"}}
+{{"component": "file://./demos/disable-stop-edit-mode-on-focus-out/index.ts", "bg": "inline"}}
 
 ## API
 

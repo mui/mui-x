@@ -1,9 +1,0 @@
-<FunnelChart
-  series={[
-    {
-      data,
-      variant: 'outlined',
-    },
-  ]}
-  height={300}
-/>

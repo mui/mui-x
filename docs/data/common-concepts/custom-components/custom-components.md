@@ -20,23 +20,23 @@ These slots receive props specific to this part of the UI and will most likely n
 
 You can override a slot by providing a custom component to the `slots` prop:
 
-{{"demo": "CustomSlot.js"}}
+{{"component": "file://./demos/custom-slot/index.ts"}}
 
 ### How to customize a slot?
 
 You can pass props to any slot using the `slotProps` prop:
 
-{{"demo": "CustomSlotProps.js"}}
+{{"component": "file://./demos/custom-slot-props/index.ts"}}
 
 You can also use both `slots` and `slotProps` on the same component:
 
-{{"demo": "CustomSlotAndSlotProps.js"}}
+{{"component": "file://./demos/custom-slot-and-slot-props/index.ts"}}
 
 Most slots also support a callback version of `slotProps`.
 This callback receives an object that contains information about the current state of the component,
 that information can vary depending on the slot being used:
 
-{{"demo": "CustomSlotPropsCallback.js"}}
+{{"component": "file://./demos/custom-slot-props-callback/index.ts"}}
 
 ## Correct usage
 
@@ -192,7 +192,7 @@ function MyApp() {
 }
 ```
 
-{{"demo": "TypescriptCasting.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/typescript-casting/index.ts", "collapseToEmpty": true}}
 
 ### Using module augmentation
 

@@ -9,7 +9,7 @@ githubLabel: 'scope: chat'
 
 <p class="description">Render the message list and composer in separate regions of the page while keeping them connected to a single chat store.</p>
 
-{{"demo": "SplitLayout.js", "bg": "inline"}}
+{{"component": "file://./demos/split-layout/index.ts", "bg": "inline"}}
 
 ## Connecting components through `ChatRoot`
 

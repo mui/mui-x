@@ -1,3 +1,0 @@
-<Box sx={{ height: 350, width: '100%' }}>
-  <DataGrid {...data} slots={{ footer: Footer }} />
-</Box>

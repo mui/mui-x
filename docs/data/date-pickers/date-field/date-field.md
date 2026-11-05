@@ -12,13 +12,13 @@ packageName: '@mui/x-date-pickers'
 
 ## Basic usage
 
-{{"demo": "BasicDateField.js"}}
+{{"component": "file://./demos/basic-date-field/index.ts"}}
 
 ## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
 
-{{"demo": "DateFieldValue.js"}}
+{{"component": "file://./demos/date-field-value/index.ts"}}
 
 :::info
 
@@ -34,7 +34,7 @@ See the [Date format and localization](/x/react-date-pickers/adapters-locale/) a
 
 ### Customize the date format
 
-{{"demo": "CustomDateFormat.js"}}
+{{"component": "file://./demos/custom-date-format/index.ts"}}
 
 :::info
 See [Date format and localization—Custom formats](/x/react-date-pickers/adapters-locale/#custom-formats) for more details.

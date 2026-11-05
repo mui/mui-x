@@ -118,7 +118,7 @@ Lower values mean faster visual updates but more store mutations.
 Higher values reduce mutation frequency at the cost of perceived latency.
 :::
 
-{{"demo": "ChatStreamingPlayground.js"}}
+{{"component": "file://./demos/chat-streaming-playground/index.ts"}}
 
 ## Streaming indicator
 
@@ -128,7 +128,7 @@ The indicator covers two phases:
 1. **Waiting** — after the user sends a message and before the `start` chunk arrives, the indicator renders as an incoming assistant row below the last message: the assistant's avatar (when resolvable from `members` or the conversation's `participants`) next to a typing bubble holding the dots.
 2. **Streaming** — once the assistant message exists with `status: 'streaming'`, the dots move inside the real assistant bubble, below the streamed content, and disappear when the stream finishes.
 
-{{"demo": "ChatStreamingIndicatorDemo.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-streaming-indicator-demo/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Enabling and disabling
 

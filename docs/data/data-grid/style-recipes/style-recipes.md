@@ -11,7 +11,7 @@ You can remove the focus outline by overriding the `:focus` and `:focus-within` 
 Removing the visible `focus` state hurts the accessibility of the grid.
 :::
 
-{{"demo": "CellFocusNoOutline.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/cell-focus-no-outline/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Remove drag handle for columns that are not resizeable
 
@@ -22,10 +22,10 @@ To hide the drag handles on columns that are not resizable, you can use the resi
 When the column is not resizable, the drag handle will not have the `columnSeparator--resizable` class.
 We can use that to hide the separator.
 
-{{"demo": "ColumnHeaderHideSeparator.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/column-header-hide-separator/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Styling Cells without impacting aggregation cells [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 Aggregation cells do not receive a special class, so styling cells without impacting them needs a small workaround in the `getClassName()` function.
 
-{{"demo": "StylingAllCellsButAggregation.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/styling-all-cells-but-aggregation/index.ts", "bg": "inline", "collapseToEmpty": true}}

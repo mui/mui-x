@@ -1,0 +1,69 @@
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import type { RadarSeries } from '@mui/x-charts/RadarChart';
+import { RadarChart } from '@mui/x-charts/RadarChart';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+
+export default function DemoRadarVisualisation() {
+  // @focus-start @padding 1
+  const [hideMark, setHideMark] = React.useState(false);
+  const [fillArea, setFillArea] = React.useState(false);
+
+  const withOptions = (series: RadarSeries[]) =>
+    series.map((item) => ({ ...item, hideMark, fillArea }));
+
+  return (
+    <Box sx={{ width: '100%' }}>
+      <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 2, width: '100%', mb: 2 }}>
+        <FormControlLabel
+          checked={!hideMark}
+          control={
+            <Checkbox onChange={(event) => setHideMark(!event.target.checked)} />
+          }
+          label="with mark"
+          labelPlacement="end"
+        />
+        <FormControlLabel
+          checked={fillArea}
+          control={
+            <Checkbox onChange={(event) => setFillArea(event.target.checked)} />
+          }
+          label="fill area"
+          labelPlacement="end"
+        />
+      </Stack>
+      <Stack
+        direction="row"
+        sx={{ flexWrap: 'wrap', justifyContent: 'space-around', width: '100%' }}
+      >
+        <Box sx={{ width: '100%', maxWidth: 400 }}>
+          <RadarChart
+            {...commonSettings}
+            series={withOptions([lisaGrades, bartGrades])}
+          />
+        </Box>
+      </Stack>
+    </Box>
+  );
+  // @focus-end
+}
+
+const commonSettings = {
+  height: 300,
+  radar: {
+    max: 120,
+    metrics: ['Math', 'Chinese', 'English', 'Geography', 'Physics', 'History'],
+  },
+};
+const lisaGrades = {
+  label: 'Lisa',
+  data: [120, 98, 86, 99, 85, 65],
+  hideMark: false,
+} satisfies RadarSeries;
+const bartGrades = {
+  label: 'Bart',
+  data: [25, 34, 51, 16, 90, 20],
+  hideMark: false,
+} satisfies RadarSeries;

@@ -1,7 +1,0 @@
-<StaticDateRangePicker
-  slotProps={{
-    shortcuts: {
-      items: shortcutsItems,
-    },
-  }}
-/>

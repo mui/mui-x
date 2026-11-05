@@ -11,7 +11,7 @@ githubLabel: 'scope: chat'
 
 The demo below replaces multiple headless slots in a single surface:
 
-{{"demo": "../examples/slot-customization/SlotCustomization.js", "hideToolbar": true}}
+{{"component": "file://../examples/slot-customization/demos/slot-customization/index.ts", "hideToolbar": true}}
 
 ## Customization model
 

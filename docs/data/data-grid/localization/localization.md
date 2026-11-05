@@ -12,7 +12,7 @@ You can find all the translation keys supported in [the source](https://github.c
 in the GitHub repository.
 In the following example, the label of the quick filter placeholder is customized.
 
-{{"demo": "CustomLocaleTextGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/custom-locale-text-grid/index.ts", "bg": "inline"}}
 
 ## Locale text
 
@@ -79,7 +79,7 @@ import { nlNL } from '@mui/x-data-grid/locales';
 
 ### Supported locales
 
-{{"demo": "DataGridLocalisationTableNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+{{"component": "file://./demos/data-grid-localisation-table-no-snap/index.ts", "hideToolbar": true, "bg": "inline"}}
 
 You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-data-grid/src/locales) in the GitHub repository.
 
@@ -96,7 +96,7 @@ Follow [this guide](/material-ui/customization/right-to-left/) to use them.
 
 The example below demonstrates how to use an RTL language (Arabic) with the Data Grid.
 
-{{"demo": "DataGridRTL.js", "bg": "inline"}}
+{{"component": "file://./demos/data-grid-rtl/index.ts", "bg": "inline"}}
 
 ## Pagination number formatting
 
@@ -163,7 +163,7 @@ function App() {
 }
 ```
 
-{{"demo": "PaginationNumberFormatting.js", "bg": "inline"}}
+{{"component": "file://./demos/pagination-number-formatting/index.ts", "bg": "inline"}}
 
 ## API
 

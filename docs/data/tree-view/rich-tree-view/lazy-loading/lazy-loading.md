@@ -21,17 +21,17 @@ If the children count is not available, but there are children present, it retur
 
 The `items` prop serves as the initial state.
 
-{{"demo": "LazyLoadingInitialState.js"}}
+{{"component": "file://./demos/lazy-loading-initial-state/index.ts"}}
 
 If you want to dynamically load all items of `RichTreeView`, you can pass an empty array to the `items` prop, and the `getTreeItems()` method will be called on the first render.
 
-{{"demo": "BasicLazyLoading.js"}}
+{{"component": "file://./demos/basic-lazy-loading/index.ts"}}
 
 ### Using react-query
 
 The following demo uses `fetchQuery` from `react-query` to load data.
 
-{{"demo": "FetchingWithReactQuery.js"}}
+{{"component": "file://./demos/fetching-with-react-query/index.ts"}}
 
 ## Loading indicators
 
@@ -46,7 +46,7 @@ While an item fetches its children, the loading UI depends on the DOM structure:
 
 You can customize the loading rows with the same [slots and classes](/x/react-tree-view/rich-tree-view/items/#customize-the-loading-ui) as the `loading` prop.
 
-{{"demo": "ChildrenLoadingRows.js"}}
+{{"component": "file://./demos/children-loading-rows/index.ts"}}
 
 ### Customized loading UI
 
@@ -60,7 +60,7 @@ The demo below combines the customization options and adds transitions:
 - The loading rows and the items share a staggered entrance animation.
   This makes the transition from the loading state to the loaded items read as one continuous motion.
 
-{{"demo": "CustomizedLazyLoading.js"}}
+{{"component": "file://./demos/customized-lazy-loading/index.ts"}}
 
 ## Data caching
 
@@ -71,14 +71,14 @@ This prop accepts a generic interface of type `DataSourceCache`.
 
 The following demo uses `QueryClient` from `react-query` as a data source cache.
 
-{{"demo": "ReactQueryCache.js"}}
+{{"component": "file://./demos/react-query-cache/index.ts"}}
 
 ### Customize the cache lifetime
 
 The `DataSourceCacheDefault` has a default time to live (`ttl`) of 5 minutes.
 To customize it, pass the `ttl` option in milliseconds to the `DataSourceCacheDefault` constructor, and then pass it as the `dataSourceCache` prop.
 
-{{"demo": "LowTTLCache.js"}}
+{{"component": "file://./demos/low-ttl-cache/index.ts"}}
 
 ## Auto-expand lazy-loaded items
 
@@ -89,13 +89,13 @@ In the example below, the server returns some items with their sub-items already
 The `onItemsLazyLoaded` callback expands any returned item that has inline children.
 Because those children are pre-cached by the tree view, expanding them requires no additional network request.
 
-{{"demo": "AutoExpandLazyLoadedItems.js"}}
+{{"component": "file://./demos/auto-expand-lazy-loaded-items/index.ts"}}
 
 ## Error management
 
 When the fetch of an item's children fails, the item closes again and displays an error indicator in its icon container.
 
-{{"demo": "ErrorManagement.js"}}
+{{"component": "file://./demos/error-management/index.ts"}}
 
 ## Lazy loading and label editing
 
@@ -104,7 +104,7 @@ To store the updated item labels on your server, use the `onItemLabelChange()` c
 Changes to the label are not automatically updated in the `dataSourceCache` and must be updated manually.
 The demo below shows you how to update the cache once a label is changed so the changes are reflected in the tree.
 
-{{"demo": "LazyLoadingAndLabelEditing.js"}}
+{{"component": "file://./demos/lazy-loading-and-label-editing/index.ts"}}
 
 ## Lazy loading and adding items
 
@@ -114,7 +114,7 @@ Collapsing and expanding their parent again replaces them with the response of t
 The demo below shows you how to update the cache once an item is added so the changes are reflected in the tree.
 The children of the selected item are loaded before the new item is added, because the fetch triggered when expanding an item overrides the items added to it.
 
-{{"demo": "LazyLoadingAndAddingItems.js"}}
+{{"component": "file://./demos/lazy-loading-and-adding-items/index.ts"}}
 
 ## Imperative API
 
@@ -141,4 +141,4 @@ apiRef.current.updateItemChildren(
 );
 ```
 
-{{"demo": "ApiMethodUpdateItemChildren.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/api-method-update-item-children/index.ts", "collapseToEmpty": true}}

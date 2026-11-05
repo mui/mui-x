@@ -10,8 +10,8 @@ components: Scatter, ScatterChart, ScatterPlot
 
 ## SimpleScatterChart
 
-{{"demo": "SimpleScatterChart.js"}}
+{{"component": "file://./demos/simple-scatter-chart/index.ts"}}
 
 ## MultipleYAxesScatterChart
 
-{{"demo": "MultipleYAxesScatterChart.js"}}
+{{"component": "file://./demos/multiple-y-axes-scatter-chart/index.ts"}}

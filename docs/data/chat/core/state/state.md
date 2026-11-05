@@ -14,7 +14,7 @@ It creates the chat store, wires the adapter, and makes hooks and selectors avai
 
 The following demo shows controlled state in action:
 
-{{"demo": "../examples/controlled-state/ControlledStateHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
+{{"component": "file://../examples/controlled-state/demos/controlled-state-headless-chat/index.ts", "bg": "inline", "hideToolbar": true, "collapseToEmpty": true}}
 
 ## Configuring the runtime
 

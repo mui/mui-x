@@ -1,5 +1,0 @@
-<DataGridPremium
-  {...data}
-  rowGroupingModel={rowGroupingModel}
-  onRowGroupingModelChange={(model) => setRowGroupingModel(model)}
-/>

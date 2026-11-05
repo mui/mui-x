@@ -11,7 +11,7 @@ import type { SelectChangeEvent } from '@mui/material/Select';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import ChatBoxPlayground from 'docs/data/chat/basics/chatbox/ChatBoxPlayground';
+import ChatBoxPlayground from 'docs/data/chat/basics/chatbox/demos/chat-box-playground/ChatBoxPlayground';
 import { getSoftEdgesTheme } from '../theme/softEdgesTheme';
 import { getNeutralVibesTheme } from '../theme/neutralVibesTheme';
 import { darkGrey } from '../theme/colors';

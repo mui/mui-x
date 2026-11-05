@@ -1,8 +1,0 @@
-<LineChart
-  dataset={usUnemploymentRate}
-  xAxis={xAxis}
-  yAxis={yAxis}
-  series={series}
-  height={300}
-  grid={{ vertical: true, horizontal: true }}
-/>

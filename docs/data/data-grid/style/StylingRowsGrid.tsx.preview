@@ -1,5 +1,0 @@
-<StyledDataGrid
-  {...data}
-  loading={loading}
-  getRowClassName={(params) => `super-app-theme--${params.row.status}`}
-/>

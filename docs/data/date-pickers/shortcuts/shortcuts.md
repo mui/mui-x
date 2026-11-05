@@ -36,20 +36,20 @@ You can use `slotProps.shortcuts` to customize this prop. For example to add a s
 />
 ```
 
-{{"demo": "BasicShortcuts.js", "bg": "inline"}}
+{{"component": "file://./demos/basic-shortcuts/index.ts", "bg": "inline"}}
 
 ## Disabled dates
 
 By default, the shortcuts are disabled if the returned value does not pass validation.
 Here is an example where `minDate` is set to the middle of the year.
 
-{{"demo": "DisabledDatesShortcuts.js", "bg": "inline"}}
+{{"component": "file://./demos/disabled-dates-shortcuts/index.ts", "bg": "inline"}}
 
 ## Range shortcuts [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 Shortcuts on range pickers require `getValue` property to return an array with two values.
 
-{{"demo": "BasicRangeShortcuts.js", "bg": "inline"}}
+{{"component": "file://./demos/basic-range-shortcuts/index.ts", "bg": "inline"}}
 
 ## Advanced shortcuts
 
@@ -60,14 +60,14 @@ You can use it to test if a value is valid or not based on the [validation props
 
 In the following demonstration, it is used to get the next available week and weekend.
 
-{{"demo": "AdvancedRangeShortcuts.js", "bg": "inline"}}
+{{"component": "file://./demos/advanced-range-shortcuts/index.ts", "bg": "inline"}}
 
 ### Know which shortcut has been selected
 
 The `onChange` callback receives the shortcut as a property of its second argument.
 You can use it to find out which shortcut has been chosen:
 
-{{"demo": "OnChangeShortcutLabel.js", "bg": "inline"}}
+{{"component": "file://./demos/on-change-shortcut-label/index.ts", "bg": "inline"}}
 
 ## Behavior when selecting a shortcut
 
@@ -76,17 +76,17 @@ You can change the behavior when selecting a shortcut using the `changeImportanc
 - `"accept"` (_default value_): fires `onChange`, fires `onAccept` and closes the picker.
 - `"set"`: fires `onChange` but does not fire `onAccept` and does not close the picker.
 
-{{"demo": "ChangeImportance.js", "bg": "inline"}}
+{{"component": "file://./demos/change-importance/index.ts", "bg": "inline"}}
 
 ## Customization
 
 Like other [layout subcomponents](/x/react-date-pickers/custom-layout/), the shortcuts can be customized.
 Here is an example with horizontal shortcuts.
 
-{{"demo": "CustomizedRangeShortcuts.js", "bg": "inline"}}
+{{"component": "file://./demos/customized-range-shortcuts/index.ts", "bg": "inline"}}
 
 ## RTL example
 
 Like other customizations, shortcuts also respect the RTL direction setting.
 
-{{"demo": "RTLShortcuts.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/rtl-shortcuts/index.ts", "bg": "inline", "collapseToEmpty": true}}

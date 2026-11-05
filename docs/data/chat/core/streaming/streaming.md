@@ -15,7 +15,7 @@ UI components consume the updates through hooks and selectors.
 
 The following demo visualizes the streaming lifecycle:
 
-{{"demo": "../examples/streaming-lifecycle/StreamingLifecycleHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
+{{"component": "file://../examples/streaming-lifecycle/demos/streaming-lifecycle-headless-chat/index.ts", "bg": "inline", "hideToolbar": true, "collapseToEmpty": true}}
 
 ## Chunk categories
 

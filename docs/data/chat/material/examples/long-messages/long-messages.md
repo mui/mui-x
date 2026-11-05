@@ -17,7 +17,7 @@ In the demo below, the Chat renders the following content patterns:
 - Mixed short and long messages
 - Code block formatting in messages
 
-{{"demo": "LongMessages.js", "bg": "inline"}}
+{{"component": "file://./demos/long-messages/index.ts", "bg": "inline"}}
 
 ## API
 

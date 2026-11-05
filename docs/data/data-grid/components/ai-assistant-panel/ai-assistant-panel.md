@@ -26,7 +26,7 @@ You can use the AI Assistant Panel Trigger and [Toolbar](/x/react-data-grid/comp
 
 The demo below shows how to add an AI assistant panel trigger to a custom toolbar.
 
-{{"demo": "GridAiAssistantPanelTrigger.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-ai-assistant-panel-trigger/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Anatomy
 

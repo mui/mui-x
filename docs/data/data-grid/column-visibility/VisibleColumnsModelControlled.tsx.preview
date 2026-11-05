@@ -1,8 +1,0 @@
-<DataGrid
-  {...data}
-  loading={loading}
-  columnVisibilityModel={columnVisibilityModel}
-  onColumnVisibilityModelChange={(newModel) =>
-    setColumnVisibilityModel(newModel)
-  }
-/>
