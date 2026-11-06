@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
@@ -49,8 +48,8 @@ const AiAssistantPanelTrigger = forwardRef<HTMLButtonElement, AiAssistantPanelTr
   function AiAssistantPanelTrigger(props, ref) {
     const { render, className, onClick, onPointerUp, ...other } = props;
     const rootProps = useGridRootProps();
-    const buttonId = useId();
-    const panelId = useId();
+    const buttonId = React.useId();
+    const panelId = React.useId();
     const apiRef = useGridApiContext();
     const panelState = useGridSelector(apiRef, gridPreferencePanelStateSelector);
     const open =

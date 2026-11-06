@@ -9,7 +9,6 @@ import type { ChartsToolbarProps } from '@mui/x-charts/Toolbar';
 import { useChartsContext, useChartsSlots } from '@mui/x-charts/internals';
 import type { UseChartCartesianAxisSignature, AxisId } from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
-import useId from '@mui/utils/useId';
 import { ChartsToolbarDivider } from './internals/ChartsToolbarDivider';
 import { ChartsMenu } from './internals/ChartsMenu';
 import { selectorChartZoomIsEnabled } from '../internals/plugins/useChartProZoom';
@@ -104,8 +103,8 @@ function ChartsToolbarPro({
   const { localeText } = useChartsLocalization();
   const [exportMenuOpen, setExportMenuOpen] = React.useState(false);
   const exportMenuTriggerRef = React.useRef<HTMLButtonElement>(null);
-  const exportMenuId = useId();
-  const exportMenuTriggerId = useId();
+  const exportMenuId = React.useId();
+  const exportMenuTriggerId = React.useId();
   const isZoomEnabled = store.use(selectorChartZoomIsEnabled);
   const imageExportOptionList = rawImageExportOptions ?? DEFAULT_IMAGE_EXPORT_OPTIONS;
   const showExportMenu =

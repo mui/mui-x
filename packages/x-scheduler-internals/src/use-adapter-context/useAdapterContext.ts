@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapter-date-fns';
 import type { SchedulerStoreInContext } from '../use-scheduler-store-context/useSchedulerStoreContext';
 import { SchedulerStoreContext } from '../use-scheduler-store-context/useSchedulerStoreContext';
@@ -27,5 +26,5 @@ export function useAdapterContext() {
     [store],
   );
 
-  return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+  return React.useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 }

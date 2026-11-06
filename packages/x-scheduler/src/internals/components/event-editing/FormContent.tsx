@@ -526,8 +526,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
 
       onClose();
     } finally {
-      // A store write is safe after unmount, unlike the React state update it
-      // replaced (React 17, still supported, warns on those).
       formStore.setSubmitting(false);
     }
   };

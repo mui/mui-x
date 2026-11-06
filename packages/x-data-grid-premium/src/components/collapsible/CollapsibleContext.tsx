@@ -4,7 +4,7 @@ import * as React from 'react';
 export interface CollapsibleContextValue {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  panelId: string | undefined;
+  panelId: string;
 }
 
 export const CollapsibleContext = React.createContext<CollapsibleContextValue | undefined>(

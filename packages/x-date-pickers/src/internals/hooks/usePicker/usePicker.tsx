@@ -3,7 +3,6 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
-import useId from '@mui/utils/useId';
 import type {
   PickerViewsRendererProps,
   UsePickerParameters,
@@ -83,7 +82,7 @@ export const usePicker = <
   /**
    * TODO: Improve how we generate the aria-label and aria-labelledby attributes.
    */
-  const labelId = useId();
+  const labelId = React.useId();
   const adapter = usePickerAdapter();
   const reduceAnimations = useReduceAnimations(reduceAnimationsProp);
   const orientation = useOrientation(views, orientationProp);

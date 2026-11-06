@@ -25,7 +25,6 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { useStore } from '@base-ui/utils/store';
-import { useId } from '@base-ui/utils/useId';
 import type { PaletteName } from '../internals/utils/tokens';
 import { getPaletteVariants } from '../internals/utils/tokens';
 import { useEventEditingStyledContext } from '../internals/components/event-editing/EventEditingStyledContext';
@@ -183,7 +182,7 @@ export function EventDialogResourceAndColorSection() {
 
   // Per-instance suffix: the same section can be rendered several times by a custom
   // General tab, and the ids must stay unique.
-  const sectionId = useId();
+  const sectionId = React.useId();
 
   // Selector hooks
   const resources = useStore(store, schedulerResourceSelectors.processedResourceFlatList);

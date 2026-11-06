@@ -15,7 +15,6 @@ import {
   NotRendered,
   vars,
 } from '@mui/x-data-grid-pro/internals';
-import useId from '@mui/utils/useId';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import type {
   GridPivotModel,
@@ -164,8 +163,8 @@ function AggregationSelect({
   const rootProps = useGridRootProps();
   const [aggregationMenuOpen, setAggregationMenuOpen] = React.useState(false);
   const aggregationMenuTriggerRef = React.useRef<HTMLDivElement>(null);
-  const aggregationMenuTriggerId = useId();
-  const aggregationMenuId = useId();
+  const aggregationMenuTriggerId = React.useId();
+  const aggregationMenuId = React.useId();
 
   const apiRef = useGridApiContext();
   const initialColumns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);

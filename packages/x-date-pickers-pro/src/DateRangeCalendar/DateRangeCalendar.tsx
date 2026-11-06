@@ -8,7 +8,6 @@ import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import useId from '@mui/utils/useId';
 import { Watermark } from '@mui/x-license/internals';
 import type {
   BaseDateValidationProps,
@@ -236,7 +235,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   });
 
   const adapter = usePickerAdapter();
-  const id = useId();
+  const id = React.useId();
 
   const { rangePosition, setRangePosition } = useRangePosition({
     rangePosition: rangePositionProp ?? rangePositionContext?.rangePosition,

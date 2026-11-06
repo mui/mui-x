@@ -43,16 +43,15 @@
     "@mui/x-internals": "workspace:*",
     "bezier-easing": "^3.2.0",
     "clsx": "catalog:",
-    "prop-types": "catalog:",
-    "use-sync-external-store": "catalog:"
+    "prop-types": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@mui/material": "^7.3.0 || ^9.0.0",
     "@mui/system": "^7.3.0 || ^9.0.0",
-    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
   },
   "peerDependenciesMeta": {
     "@emotion/react": {
@@ -67,7 +66,6 @@
     "@mui/material": "catalog:",
     "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
-    "@types/use-sync-external-store": "catalog:",
     "csstype": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import useId from '@mui/utils/useId';
 import { useGridSelector } from '../../hooks';
 import {
   gridPreferencePanelSelectorWithLabel,
@@ -58,9 +57,9 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
-  const labelId = useId();
+  const labelId = React.useId();
   const isOpen = useGridSelector(apiRef, gridPreferencePanelSelectorWithLabel, labelId);
-  const panelId = useId();
+  const panelId = React.useId();
 
   const toggleFilter = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {

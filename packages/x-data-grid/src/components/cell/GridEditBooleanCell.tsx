@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
-import useId from '@mui/utils/useId';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import type { GridRenderEditCellParams } from '../../models/params/gridCellParams';
@@ -66,7 +65,7 @@ function GridEditBooleanCell(props: GridEditBooleanCellProps) {
 
   const apiRef = useGridApiContext();
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const id = useId();
+  const id = React.useId();
   const [valueState, setValueState] = React.useState(value);
   const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes };

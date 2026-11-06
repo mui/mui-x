@@ -23,6 +23,6 @@ export const idSelectors = {
       return providedIdAttribute;
     }
 
-    return `${treeIdSelector(state) ?? ''}-${itemId}`;
+    return `${treeIdSelector(state)}-${itemId}`;
   },
 };

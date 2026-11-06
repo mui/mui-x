@@ -5,7 +5,7 @@ import type { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses'
 import type { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 
 export interface EventTimelinePremiumStyledContextValue {
-  schedulerId: string | undefined;
+  schedulerId: string;
   classes: EventTimelinePremiumClasses;
   localeText: EventTimelineLocaleText;
   resourceColumnLabel?: string;

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
-import useId from '@mui/utils/useId';
 import useForkRef from '@mui/utils/useForkRef';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
@@ -69,8 +68,8 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
     const lookup = useGridSelector(apiRef, gridColumnLookupSelector);
     const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
     const classes = useUtilityClasses(rootProps);
-    const filterButtonId = useId();
-    const filterPanelId = useId();
+    const filterButtonId = React.useId();
+    const filterPanelId = React.useId();
     const { triggers } = useGridPanelContext();
     const handleRef = useForkRef(ref, triggers.filterPanel.setRef);
 

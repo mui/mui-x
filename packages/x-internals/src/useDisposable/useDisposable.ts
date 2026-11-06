@@ -14,7 +14,7 @@ interface Disposable {
 // the fiber. We key on StrictEffectsMode (16) — the bit a concurrent-root
 // `<StrictMode>` sets on React 18/19, and the bit that actually drives the
 // mount→unmount→mount effect replay this hook guards against. Setups that
-// don't replay effects (legacy-root StrictMode, React 17, Preact) don't set
+// don't replay effects (legacy-root StrictMode, Preact) don't set
 // it, so they fall through to a single, normal dispose. Bit values are
 // React-version-specific; if a future React renumbers them and detection
 // misfires, the mount counter throws rather than silently leaking.
@@ -164,7 +164,7 @@ function useDisposableDevelopment<T extends Disposable>(factory: () => T): T {
  * once on unmount. The cleanup runs synchronously; in development StrictMode's
  * simulated unmount is detected and skipped so the same instance survives the
  * double mount. The development variant degrades to production behaviour on
- * runtimes that don't replay the double mount (Preact, React 17) because no
+ * runtimes that don't replay the double mount (Preact) because no
  * readable StrictEffectsMode bit is found, so no runtime branching is needed.
  */
 export const useDisposable =

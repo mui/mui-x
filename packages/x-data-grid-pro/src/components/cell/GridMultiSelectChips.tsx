@@ -11,7 +11,7 @@ import {
   useGridSelector,
 } from '@mui/x-data-grid';
 import type { GridSlotProps, ValueOptions } from '@mui/x-data-grid';
-import { NotRendered, useSyncExternalStore, useTimeout } from '@mui/x-data-grid/internals';
+import { NotRendered, useTimeout } from '@mui/x-data-grid/internals';
 import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import {
   DEFAULT_GAP,
@@ -119,7 +119,7 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
     () => privateApiRef.current.caches.multiSelect?.getOverflowMetrics() ?? null,
     [privateApiRef],
   );
-  const overflowMetrics = useSyncExternalStore(
+  const overflowMetrics = React.useSyncExternalStore(
     subscribeMetrics,
     getMetricsSnapshot,
     getMetricsSnapshot,

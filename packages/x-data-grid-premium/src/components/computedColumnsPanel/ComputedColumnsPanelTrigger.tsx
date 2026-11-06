@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
@@ -53,7 +52,7 @@ const ComputedColumnsPanelTrigger = forwardRef<HTMLButtonElement, ComputedColumn
   function ComputedColumnsPanelTrigger(props, ref) {
     const { render, className, onClick, ...other } = props;
     const rootProps = useGridRootProps();
-    const buttonId = useId();
+    const buttonId = React.useId();
     const apiRef = useGridPrivateApiContext();
     const open = useGridSelector(apiRef, gridComputedColumnsPanelOpenSelector);
     // The id of the open panel, whatever opened it: left out rather than dangling when

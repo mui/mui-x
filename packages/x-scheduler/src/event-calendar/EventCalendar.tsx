@@ -8,7 +8,6 @@ import {
 } from '@mui/x-scheduler-internals/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
-import { useId } from '@base-ui/utils/useId';
 import type { EventCalendarProps } from './EventCalendar.types';
 import { EventDialogProvider } from '../internals/components/event-dialog';
 import { SharedComponentsStyledContext } from '../internals/components/SharedComponentsStyledContext';
@@ -39,7 +38,7 @@ const EventCalendar = React.forwardRef(function EventCalendar<
   const { localeText, apiRef, slots, slotProps, ...other } = forwardedProps;
   useInitializeApiRef(store, apiRef);
 
-  const schedulerId = useId();
+  const schedulerId = React.useId();
 
   const mergedLocaleText = React.useMemo(
     () => ({ ...EVENT_CALENDAR_DEFAULT_LOCALE_TEXT, ...localeText }),

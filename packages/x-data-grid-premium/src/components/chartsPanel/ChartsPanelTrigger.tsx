@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import type { RenderProp } from '@mui/x-data-grid-pro/internals';
@@ -44,8 +43,8 @@ const ChartsPanelTrigger = forwardRef<HTMLButtonElement, ChartsPanelTriggerProps
   function ChartsPanelTrigger(props, ref) {
     const { render, className, onClick, onPointerUp, ...other } = props;
     const rootProps = useGridRootProps();
-    const buttonId = useId();
-    const panelId = useId();
+    const buttonId = React.useId();
+    const panelId = React.useId();
     const apiRef = useGridApiContext();
     const open = useGridSelector(apiRef, gridChartsPanelOpenSelector);
     const state = { open };

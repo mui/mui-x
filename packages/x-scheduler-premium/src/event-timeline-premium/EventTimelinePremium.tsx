@@ -11,7 +11,6 @@ import {
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
-import { useId } from '@base-ui/utils/useId';
 import {
   ErrorContainer,
   SharedComponentsStyledContext,
@@ -138,7 +137,7 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
     forwardedProps;
   useInitializeApiRef(store, apiRef);
 
-  const schedulerId = useId();
+  const schedulerId = React.useId();
 
   const mergedLocaleText = React.useMemo(
     () => ({ ...EVENT_TIMELINE_DEFAULT_LOCALE_TEXT, ...localeText }),

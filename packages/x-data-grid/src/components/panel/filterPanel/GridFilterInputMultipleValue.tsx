@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useId from '@mui/utils/useId';
 import type { AutocompleteProps } from '../../../models/gridBaseSlots';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import type { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
@@ -16,7 +15,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
   const { item, applyValue, type, apiRef, focusElementRef, slotProps, disableDebounce, ...other } =
     props;
 
-  const id = useId();
+  const id = React.useId();
   const [options, setOptions] = React.useState<string[]>([]);
   const [filterValueState, setFilterValueState] = React.useState(item.value || []);
 

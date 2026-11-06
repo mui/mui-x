@@ -61,7 +61,7 @@ type ComposerLabelComponent = ((
  * to focus the textarea.
  *
  * ```tsx
- * const textareaId = useId();
+ * const textareaId = React.useId();
  *
  * <Composer.Root>
  *   <Composer.Label htmlFor={textareaId}>

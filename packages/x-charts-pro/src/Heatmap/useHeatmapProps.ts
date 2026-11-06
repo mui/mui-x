@@ -1,5 +1,4 @@
 import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
-import useId from '@mui/utils/useId';
 import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
 import * as React from 'react';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
@@ -73,7 +72,7 @@ export function useHeatmapProps(props: UseHeatmapProps) {
     hideLegend,
   } = props;
 
-  const id = useId();
+  const id = React.useId();
   const clipPathId = `${id}-clip-path`;
 
   const xAxisWithDefault = React.useMemo(

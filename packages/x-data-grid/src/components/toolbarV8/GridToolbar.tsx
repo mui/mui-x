@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useId from '@mui/utils/useId';
 import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { GridMenu } from '../menu/GridMenu';
@@ -104,8 +103,8 @@ function GridToolbar(props: GridToolbarProps) {
   const rootProps = useGridRootProps();
   const [exportMenuOpen, setExportMenuOpen] = React.useState(false);
   const exportMenuTriggerRef = React.useRef<HTMLButtonElement>(null);
-  const exportMenuId = useId();
-  const exportMenuTriggerId = useId();
+  const exportMenuId = React.useId();
+  const exportMenuTriggerId = React.useId();
   const showExportMenu =
     !csvOptions?.disableToolbarButton ||
     !printOptions?.disableToolbarButton ||

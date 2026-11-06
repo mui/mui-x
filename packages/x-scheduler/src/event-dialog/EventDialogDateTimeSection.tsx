@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { useId } from '@base-ui/utils/useId';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Switch from '@mui/material/Switch';
@@ -67,7 +66,7 @@ export function EventDialogDateTimeSection() {
 
   // Per-instance suffix: the same section can be rendered several times by a custom
   // General tab, and the ids must stay unique.
-  const sectionId = useId();
+  const sectionId = React.useId();
 
   // Selector hooks
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
