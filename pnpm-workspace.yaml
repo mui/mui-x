@@ -94,8 +94,6 @@ minimumReleaseAgeExclude:
   - 'vitest'
   - '@vitest/*'
   - 'tinybench'
-  # Renovate security update: minimatch@11.0.1
-  - minimatch@11.0.1
 # Drop exemptions from minimumReleaseAgeExclude once the lockfile stops resolving them,
 # so the security-update entries Renovate adds do not accumulate.
 minimumReleaseAgeExcludePrune: true
