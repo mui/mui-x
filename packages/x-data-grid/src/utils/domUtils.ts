@@ -65,6 +65,34 @@ export function isEventTargetInPortal(event: React.SyntheticEvent) {
   return false;
 }
 
+const NON_TEXT_INPUT_TYPES = new Set([
+  'button',
+  'checkbox',
+  'color',
+  'file',
+  'hidden',
+  'image',
+  'radio',
+  'range',
+  'reset',
+  'submit',
+]);
+
+/**
+ * Checks if the event target is an element the user can type or paste text into,
+ * for example a text field rendered inside a cell.
+ */
+export function isEventTargetTextEntryElement(event: React.SyntheticEvent | Event) {
+  const target = event.target as HTMLElement | null;
+  if (!target || target.nodeType !== 1) {
+    return false;
+  }
+  if (target.tagName === 'INPUT') {
+    return !NON_TEXT_INPUT_TYPES.has((target as HTMLInputElement).type);
+  }
+  return target.tagName === 'TEXTAREA' || target.isContentEditable === true;
+}
+
 export function getFieldFromHeaderElem(colCellEl: Element): string {
   return colCellEl.getAttribute('data-field')!;
 }
