@@ -1838,6 +1838,45 @@ describe('<DataGrid /> - Rows', () => {
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
 
+    // https://github.com/mui/mui-x/issues/23886
+    it('should not move the DOM focus into the grid when the focused row is deleted while focus is outside', async () => {
+      const { user } = render(
+        <React.Fragment>
+          <TestCase />
+          <button type="button">Delete</button>
+        </React.Fragment>,
+      );
+      await user.click(getCell(1, 0));
+      expect(getCell(1, 0)).toHaveFocus();
+
+      const button = screen.getByRole('button', { name: 'Delete' });
+      act(() => button.focus());
+      expect(button).toHaveFocus();
+
+      await act(async () => apiRef.current?.updateRows([{ id: 1, _action: 'delete' }]));
+      // Only the tab index moves to another row, the focus stays outside the grid
+      await waitFor(() => {
+        expect(apiRef.current?.state.tabIndex.cell?.id).to.be.oneOf([0, 2]);
+      });
+      expect(apiRef.current?.state.focus.cell).to.equal(null);
+      expect(button).toHaveFocus();
+    });
+
+    it('should move the DOM focus to the next row when the focused row is deleted while focus is inside', async () => {
+      const { user } = render(<TestCase />);
+      await user.click(getCell(1, 0));
+      expect(getCell(1, 0)).toHaveFocus();
+
+      await act(async () => apiRef.current?.updateRows([{ id: 1, _action: 'delete' }]));
+      await waitFor(() => {
+        expect(apiRef.current?.state.focus.cell?.id).to.be.oneOf([0, 2]);
+      });
+      const { id, field } = apiRef.current!.state.focus.cell!;
+      await waitFor(() => {
+        expect(apiRef.current!.getCellElement(id, field)).toHaveFocus();
+      });
+    });
+
     it('should throw a console error if autoPageSize is used with autoHeight', () => {
       expect(() => {
         render(<TestCase autoPageSize autoHeight />);
