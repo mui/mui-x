@@ -28,6 +28,10 @@ import type { GridInitialStatePro } from '../../../models/gridStatePro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import type { GridColumnPinningApi } from './gridColumnPinningInterface';
 
+type PinnedColumnsChangeParams = Parameters<
+  NonNullable<DataGridProProcessedProps['onPinnedColumnsChange']>
+>;
+
 export const columnPinningStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'pinnedColumns' | 'initialState'>
 > = (state, props, apiRef) => {
@@ -200,10 +204,28 @@ export const useGridColumnPinning = (
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
+  const { onPinnedColumnsChange } = props;
+
+  // `setState` calls `onPinnedColumnsChange` before `hydrateColumns` moves the pinned columns in
+  // `orderedFields`. `setPinnedColumns` defers the call, so the callback sees the new column order.
+  const isSettingPinnedColumns = React.useRef(false);
+  const deferredPinnedColumnsChange = React.useRef<PinnedColumnsChangeParams | null>(null);
+
+  const handlePinnedColumnsChange = React.useCallback(
+    (...params: PinnedColumnsChangeParams) => {
+      if (isSettingPinnedColumns.current) {
+        deferredPinnedColumnsChange.current = params;
+        return;
+      }
+      onPinnedColumnsChange?.(...params);
+    },
+    [onPinnedColumnsChange],
+  );
+
   apiRef.current.registerControlState({
     stateId: 'pinnedColumns',
     propModel: props.pinnedColumns,
-    propOnChange: props.onPinnedColumnsChange,
+    propOnChange: handlePinnedColumnsChange,
     stateSelector: gridPinnedColumnsSelector,
     changeEvent: 'pinnedColumnsChange',
   });
@@ -245,10 +267,22 @@ export const useGridColumnPinning = (
 
   const setPinnedColumns = React.useCallback<GridColumnPinningApi['setPinnedColumns']>(
     (newPinnedColumns) => {
-      setState(apiRef, newPinnedColumns);
-      apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
+      let deferredChange: PinnedColumnsChangeParams | null = null;
+      isSettingPinnedColumns.current = true;
+      try {
+        setState(apiRef, newPinnedColumns);
+        apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
+      } finally {
+        isSettingPinnedColumns.current = false;
+        deferredChange = deferredPinnedColumnsChange.current;
+        deferredPinnedColumnsChange.current = null;
+      }
+
+      if (deferredChange) {
+        onPinnedColumnsChange?.(...deferredChange);
+      }
     },
-    [apiRef],
+    [apiRef, onPinnedColumnsChange],
   );
 
   const isColumnPinned = React.useCallback<GridColumnPinningApi['isColumnPinned']>(
