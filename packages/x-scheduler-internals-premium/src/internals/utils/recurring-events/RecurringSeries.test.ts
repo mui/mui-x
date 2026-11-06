@@ -155,6 +155,15 @@ describe('recurring-events/RecurringSeries', () => {
           ...lastYear,
         ),
       ).to.deep.equal(['+275760-08-15']);
+      // The week after the first one is too far to compute.
+      expect(
+        getOccurrenceDays(
+          { freq: 'WEEKLY', byDay: ['MO', 'WE'], interval: Number.MAX_VALUE },
+          '2025-01-06T09:00:00',
+          '2025-01-01T00:00:00',
+          '2025-01-31T00:00:00',
+        ),
+      ).to.deep.equal(['2025-01-06', '2025-01-08']);
     });
 
     it('should end the series when its next day of the week or month is after September 13, 275760', () => {
