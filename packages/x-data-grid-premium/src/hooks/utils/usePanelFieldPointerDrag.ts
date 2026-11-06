@@ -95,6 +95,8 @@ interface DragSession<Section> {
   elementAtPoint: Element | null;
   target: PanelFieldDropTarget<Section> | null;
   frame: number | undefined;
+  // The scroll area the pointer was last over, still scrolled when the pointer goes past its edge
+  scrollArea: HTMLElement | null;
 }
 
 /**
@@ -194,11 +196,19 @@ export function usePanelFieldPointerDrag<Section>(
 
   // With pointer capture, the container under the pointer doesn't scroll on its own
   const autoScroll = (session: DragSession<Section>, elementAtPoint: Element | null) => {
-    const scrollArea = elementAtPoint?.closest<HTMLElement>(optionsRef.current.scrollAreaSelector);
-    if (!scrollArea || !isElementInGrid(apiRef.current.rootElementRef?.current, scrollArea)) {
+    const hit = elementAtPoint?.closest<HTMLElement>(optionsRef.current.scrollAreaSelector);
+    if (hit && isElementInGrid(apiRef.current.rootElementRef?.current, hit)) {
+      session.scrollArea = hit;
+    }
+    const { scrollArea } = session;
+    if (!scrollArea?.isConnected) {
       return false;
     }
     const rect = scrollArea.getBoundingClientRect();
+    // Past the top or bottom edge, only while the pointer stays above or below the area
+    if (session.clientX < rect.left || session.clientX > rect.right) {
+      return false;
+    }
     const delta = getEdgeScrollDelta(session.clientY, rect.top, rect.bottom);
     if (delta === 0) {
       return false;
@@ -246,6 +256,7 @@ export function usePanelFieldPointerDrag<Section>(
       elementAtPoint: null,
       target: null,
       frame: undefined,
+      scrollArea: null,
     };
     sessionRef.current = session;
     optionsRef.current.onDragStart(data);

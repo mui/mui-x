@@ -399,6 +399,49 @@ describe('<DataGridPremium /> - Pivot panel with pointer events', () => {
 
       fireEvent.pointerUp(handle, pointer('touch', zoneRect.left + 20, zoneRect.bottom - 5));
     });
+
+    it('should keep scrolling the sections when the pointer goes past their bottom edge', async () => {
+      const manyColumns: GridColDef[] = Array.from({ length: 20 }, (_, index) => ({
+        field: `col${index}`,
+      }));
+      render(
+        <Test
+          columns={manyColumns}
+          model={{
+            rows: manyColumns.slice(0, 16).map(({ field }) => ({ field })),
+            columns: [],
+            values: [],
+          }}
+        />,
+      );
+
+      const scrollArea = document.querySelector<HTMLElement>(
+        `.${gridClasses.pivotPanelScrollArea}`,
+      )!;
+      expect(scrollArea.scrollHeight).to.be.greaterThan(scrollArea.clientHeight);
+
+      const handle = await startTouchDrag('col19');
+      const rect = scrollArea.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      // Over the sections, away from their edges
+      fireEvent.pointerMove(handle, pointer('touch', x, rect.top + rect.height / 2));
+      await waitForFrames();
+      expect(scrollArea.scrollTop).to.equal(0);
+
+      // Below the sections, where the pointer isn't over the panel anymore
+      fireEvent.pointerMove(handle, pointer('touch', x, rect.bottom + 16));
+      await waitForFrames();
+      expect(scrollArea.scrollTop).to.be.greaterThan(0);
+
+      // To the side of the sections
+      fireEvent.pointerMove(handle, pointer('touch', rect.left - 16, rect.bottom + 16));
+      await waitForFrames();
+      const { scrollTop } = scrollArea;
+      await waitForFrames();
+      expect(scrollArea.scrollTop).to.equal(scrollTop);
+
+      fireEvent.pointerUp(handle, pointer('touch', rect.left - 16, rect.bottom + 16));
+    });
   });
 
   describe.skipIf(isJSDOM)('pen', () => {
