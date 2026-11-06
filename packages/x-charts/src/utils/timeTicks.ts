@@ -19,17 +19,22 @@ export const tickFrequencies: Record<TickFrequency, TickFrequencyDefinition> = {
   years: {
     getTickNumber: yearNumber,
     isTick: (prev: Date, value: Date) => value.getFullYear() !== prev.getFullYear(),
+    shouldShowFirstTick: () => true,
     format: (d: Date) => d.getFullYear().toString(),
   },
   quarterly: {
     getTickNumber: (from: Date, to: Date) => Math.floor(monthNumber(from, to) / 3),
     isTick: (prev: Date, value: Date) =>
       value.getMonth() !== prev.getMonth() && value.getMonth() % 3 === 0,
+    shouldShowFirstTick(value: Date) {
+      return value.getMonth() % 3 === 0;
+    },
     format: new Intl.DateTimeFormat('default', { month: 'short' }).format,
   },
   months: {
     getTickNumber: monthNumber,
     isTick: (prev: Date, value: Date) => value.getMonth() !== prev.getMonth(),
+    shouldShowFirstTick: () => true,
     format: new Intl.DateTimeFormat('default', { month: 'short' }).format,
   },
   biweekly: {
@@ -37,22 +42,28 @@ export const tickFrequencies: Record<TickFrequency, TickFrequencyDefinition> = {
     isTick: (prev: Date, value: Date) =>
       (value.getDay() < prev.getDay() || dayNumber(value, prev) > 7) &&
       Math.floor(value.getDate() / 7) % 2 === 1,
+    shouldShowFirstTick(value: Date) {
+      return Math.floor(value.getDate() / 7) % 2 === 1;
+    },
     format: new Intl.DateTimeFormat('default', { day: 'numeric' }).format,
   },
   weeks: {
     getTickNumber: (from: Date, to: Date) => dayNumber(from, to) / 7,
     isTick: (prev: Date, value: Date) =>
       value.getDay() < prev.getDay() || dayNumber(value, prev) >= 7,
+    shouldShowFirstTick: () => true,
     format: new Intl.DateTimeFormat('default', { day: 'numeric' }).format,
   },
   days: {
     getTickNumber: dayNumber,
     isTick: (prev: Date, value: Date) => value.getDate() !== prev.getDate(),
+    shouldShowFirstTick: () => true,
     format: new Intl.DateTimeFormat('default', { day: 'numeric' }).format,
   },
   hours: {
     getTickNumber: hourNumber,
     isTick: (prev: Date, value: Date) => value.getHours() !== prev.getHours(),
+    shouldShowFirstTick: () => true,
     format: new Intl.DateTimeFormat('default', { hour: '2-digit', minute: '2-digit' }).format,
   },
 };
