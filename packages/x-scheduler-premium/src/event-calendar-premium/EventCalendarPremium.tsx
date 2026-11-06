@@ -21,7 +21,7 @@ import {
   EventCalendarStyledContext,
   useEventCalendarUtilityClasses,
 } from '@mui/x-scheduler/internals';
-import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
+import { useFrozenEventCalendarPremiumFeatures } from './features/useFrozenEventCalendarPremiumFeatures';
 import type { EventCalendarPremiumProps } from './EventCalendarPremium.types';
 
 const packageInfo = {
@@ -48,11 +48,20 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
 
   const {
     parameters,
-    forwardedProps: { className, classes: classesProp, ...forwardedProps },
+    forwardedProps: { className, classes: classesProp, features: featuresProp, ...forwardedProps },
   } = useExtractEventCalendarPremiumParameters<TEvent, TResource, typeof props>(props);
+  const { features, storeFeatures } = useFrozenEventCalendarPremiumFeatures(
+    featuresProp,
+    'EventCalendarPremium',
+  );
+  const ChartsPanel = features.charts?.Panel;
+  const storeParameters = React.useMemo(
+    () => ({ ...parameters, storeFeatures }),
+    [parameters, storeFeatures],
+  );
 
   // Use premium store with lazy loading
-  const store = useEventCalendarPremium(parameters);
+  const store = useEventCalendarPremium(storeParameters);
   const classes = useEventCalendarUtilityClasses(classesProp);
 
   const { localeText, apiRef, slots, slotProps, ...other } = forwardedProps;
@@ -87,8 +96,15 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
             <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
               <SchedulerDirectionProvider>
-                <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
-                  <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
+                <EventDialogProvider
+                  optionalRenderers={features.recurringEvents?.optionalRenderers}
+                >
+                  <EventCalendarRoot
+                    className={className}
+                    {...other}
+                    ref={forwardedRef}
+                    sidePanelExtra={ChartsPanel ? <ChartsPanel /> : undefined}
+                  >
                     {watermark}
                   </EventCalendarRoot>
                 </EventDialogProvider>
@@ -277,6 +293,12 @@ EventCalendarPremium.propTypes /* remove-proptypes */ = {
    * @default []
    */
   events: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * The optional features of the Event Calendar: `recurringEvents` from `@mui/x-scheduler-premium/recurring-events`.
+   * They are read once when the component mounts, later changes are ignored.
+   * @example { recurringEvents: recurringEventsFeature }
+   */
+  features: PropTypes.object,
   /**
    * Set the locale text of the Event Calendar.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)

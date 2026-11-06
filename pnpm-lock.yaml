@@ -2088,6 +2088,12 @@ importers:
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.5.0(@types/react@19.3.0)(react@19.3.1)
+      '@mui/x-charts':
+        specifier: workspace:*
+        version: link:../x-charts/build
+      '@mui/x-charts-premium':
+        specifier: workspace:*
+        version: link:../x-charts-premium/build
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
