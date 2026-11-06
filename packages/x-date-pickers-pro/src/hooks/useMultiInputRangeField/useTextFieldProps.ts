@@ -1,9 +1,10 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
+import useForkRef from '@mui/utils/useForkRef';
 import { useDateManager, useDateTimeManager, useTimeManager } from '@mui/x-date-pickers/managers';
 import type { UseValidationReturnValue } from '@mui/x-date-pickers/validation';
-import type { PickerValueType } from '@mui/x-date-pickers/models';
+import type { FieldRef, PickerValueType } from '@mui/x-date-pickers/models';
 import type {
   FieldChangeHandler,
   FieldChangeHandlerContext,
@@ -56,6 +57,7 @@ export function useTextFieldProps<
     onChange,
     autoFocus,
     validation,
+    internalFieldRef,
   } = parameters;
 
   let useManager: () => PickerAnyManager;
@@ -78,6 +80,7 @@ export function useTextFieldProps<
   }
 
   const manager = useManager();
+  const handleFieldRef = useForkRef(selectedSectionProps.fieldRef, internalFieldRef);
 
   const openPickerIfPossible = (event: React.UIEvent) => {
     if (!pickerContext) {
@@ -135,6 +138,7 @@ export function useTextFieldProps<
     ...forwardedProps,
     ...sharedInternalProps,
     ...selectedSectionProps,
+    fieldRef: handleFieldRef,
     onClick: handleClick,
     onFocus: handleFocus,
     onKeyDown: handleKeyDown,
@@ -144,7 +148,8 @@ export function useTextFieldProps<
   const { clearable, onClear, openPickerAriaLabel, ...fieldResponse } = useField({
     manager,
     props: allProps,
-    skipContextFieldRefAssignment: rangePosition !== position,
+    // `useMultiInputRangeField` binds the Picker's field ref.
+    skipContextFieldRefAssignment: true,
   }) as unknown as UseFieldReturnValue<typeof allProps>;
 
   React.useEffect(() => {
@@ -194,6 +199,7 @@ interface UseTextFieldPropsParameters<
   selectedSectionProps: UseMultiInputFieldSelectedSectionsResponseItem;
   position: RangePosition;
   validation: UseValidationReturnValue<PickerRangeValue, PickerManagerError<TManager>>;
+  internalFieldRef: React.RefObject<FieldRef<PickerValue> | null>;
 }
 
 export interface UseTextFieldBaseForwardedProps {
