@@ -132,6 +132,53 @@ describe('<MonthView />', () => {
     expect(screen.getByText(/more/i)).not.to.equal(null);
   });
 
+  describe('focus when an event is removed', () => {
+    const singleDayEvents = [
+      EventBuilder.new().singleDay('2025-05-01T09:00:00Z').title('Meeting').build(),
+      EventBuilder.new().singleDay('2025-05-15T14:00:00Z').title('Doctor Appointment').build(),
+    ];
+
+    function renderMonthView() {
+      return render(
+        <EventCalendarProvider events={singleDayEvents} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+    }
+
+    it('should move focus to the day cell when the focused event is removed', async () => {
+      const { setProps } = renderMonthView();
+      const eventButton = screen.getByRole('button', { name: /^Meeting,/ });
+      const cell = eventButton.closest<HTMLElement>('[role="gridcell"]')!;
+      await act(async () => {
+        eventButton.focus();
+      });
+
+      setProps({ events: singleDayEvents.slice(1) });
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(cell);
+      });
+    });
+
+    it('should leave focus alone when an event is removed while another one is focused', async () => {
+      const { setProps } = renderMonthView();
+      const otherEvent = screen.getByRole('button', { name: /^Doctor Appointment,/ });
+      await act(async () => {
+        otherEvent.focus();
+      });
+
+      setProps({ events: singleDayEvents.slice(1) });
+
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /^Meeting,/ })).to.equal(null);
+      });
+      expect(document.activeElement).to.equal(otherEvent);
+    });
+  });
+
   describe('Event keyboard accessibility in "more events" popover', () => {
     async function renderAndOpenPopover({
       theme,
