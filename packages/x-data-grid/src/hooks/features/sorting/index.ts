@@ -8,6 +8,7 @@ export type { GridSortColumnLookup } from './gridSortingSelector';
 export type { GridSortingState, GridSortingInitialState } from './gridSortingState';
 export {
   gridDateComparator,
+  gridNillComparator,
   gridNumberComparator,
   gridStringOrNumberComparator,
 } from './gridSortingUtils';

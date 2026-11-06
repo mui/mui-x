@@ -1,9 +1,15 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
-import { DataGrid, useGridApiRef, gridStringOrNumberComparator } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  useGridApiRef,
+  gridNillComparator,
+  gridStringOrNumberComparator,
+} from '@mui/x-data-grid';
 import type {
   DataGridProps,
+  GridComparatorFn,
   GridSortModel,
   GridApi,
   GridColDef,
@@ -788,6 +794,50 @@ describe('<DataGrid /> - Sorting', () => {
 
       fireEvent.click(header);
       expect(getColumnValues(0)).to.deep.equal(['b', 'a', '', '']);
+    });
+  });
+
+  describe('gridNillComparator', () => {
+    it('should sort nil values before non-nil values', () => {
+      expect(gridNillComparator(null, 'a')).to.equal(-1);
+      expect(gridNillComparator(undefined, 0)).to.equal(-1);
+      expect(gridNillComparator('a', null)).to.equal(1);
+      expect(gridNillComparator(0, undefined)).to.equal(1);
+    });
+
+    it('should consider two nil values as equal', () => {
+      expect(gridNillComparator(null, null)).to.equal(0);
+      expect(gridNillComparator(undefined, undefined)).to.equal(0);
+      expect(gridNillComparator(null, undefined)).to.equal(0);
+    });
+
+    it('should return null when both values are non-nil', () => {
+      expect(gridNillComparator('a', 'b')).to.equal(null);
+      expect(gridNillComparator(0, '')).to.equal(null);
+      expect(gridNillComparator(false, NaN)).to.equal(null);
+    });
+
+    it('should allow to build a custom comparator handling nil values', () => {
+      const lengthComparator: GridComparatorFn<string | null> = (value1, value2) =>
+        gridNillComparator(value1, value2) ?? value1!.length - value2!.length;
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            columns={[{ field: 'value', sortComparator: lengthComparator }]}
+            rows={[
+              { id: 1, value: 'ccc' },
+              { id: 2, value: null },
+              { id: 3, value: 'a' },
+              { id: 4, value: 'bb' },
+            ]}
+            sortModel={[{ field: 'value', sort: 'asc' }]}
+          />
+        </div>,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['', 'a', 'bb', 'ccc']);
     });
   });
 
