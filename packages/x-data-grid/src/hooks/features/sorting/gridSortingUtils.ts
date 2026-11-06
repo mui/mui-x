@@ -170,7 +170,8 @@ export const getNextGridSortDirection = (
   return sortingOrder[currentIdx + 1];
 };
 
-const gridNillComparator = (v1: any, v2: any): number | null => {
+/** Returns `null` when both values are non-nil. */
+export const gridNillComparator = (v1: any, v2: any): number | null => {
   if (v1 == null && v2 != null) {
     return -1;
   }
