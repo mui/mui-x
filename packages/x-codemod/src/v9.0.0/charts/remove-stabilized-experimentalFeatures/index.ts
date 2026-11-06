@@ -1,6 +1,6 @@
 import path from 'path';
 import removeObjectProperty from '../../../util/removeObjectProperty';
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import readFile from '../../../util/readFile';
 
 const componentsNames = [

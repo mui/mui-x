@@ -218,6 +218,15 @@ const ptPTGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} filtros ativos` : `${count} filtro ativo`,
   columnHeaderFiltersLabel: 'Mostrar filtros',
   columnHeaderSortIconLabel: 'Organizar',
+  columnHeaderSortIconAriaLabel: (columnName, direction) => {
+    if (direction === 'asc') {
+      return `Classificar a coluna ${columnName} por ordem crescente`;
+    }
+    if (direction === 'desc') {
+      return `Classificar a coluna ${columnName} por ordem decrescente`;
+    }
+    return `Remover a classificação da coluna ${columnName}`;
+  },
 
   // Rows selected footer text
   footerRowSelected: (count) =>
@@ -242,6 +251,9 @@ const ptPTGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'sim',
   booleanCellFalseLabel: 'não',
+
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
 
   // Long text cell
   longTextCellExpandLabel: 'Expandir',

@@ -1,18 +1,41 @@
 {
-  "props": {},
+  "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "scrollBehavior": {
+      "type": {
+        "name": "enum",
+        "description": "'auto'<br>&#124;&nbsp;'instant'<br>&#124;&nbsp;'smooth'"
+      }
+    },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    }
+  },
   "name": "ChatScrollToBottomAffordance",
   "imports": [
     "import { ChatScrollToBottomAffordance } from '@mui/x-chat/ChatIndicators';",
     "import { ChatScrollToBottomAffordance } from '@mui/x-chat';"
   ],
-  "classes": [
+  "slots": [
     {
-      "key": "root",
-      "className": "MuiChatScrollToBottomAffordance-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    }
+      "name": "root",
+      "description": "The component that renders the root.",
+      "class": "MuiChatScrollToBottomAffordance-root"
+    },
+    { "name": "badge", "description": "The component that renders the badge.", "class": null },
+    { "name": "icon", "description": "The component that renders the icon.", "class": null }
   ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": null,
   "muiName": "MuiChatScrollToBottomAffordance",

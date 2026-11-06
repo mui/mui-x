@@ -24,6 +24,7 @@ const DEPENDENCY_TYPE_KEYS = {
 
 export const DEPENDENCY_UPDATE_REJECTION_KEYS = {
   cascadeBlocked: 'dependencyUpdateCascadeBlockedError',
+  datesNotWritable: 'dependencyUpdateDatesNotWritableError',
   duplicateDependency: 'dependencyDuplicateError',
   readOnly: 'dependencyReadOnlyError',
   unknownDependency: 'dependencyUpdateNotFoundError',

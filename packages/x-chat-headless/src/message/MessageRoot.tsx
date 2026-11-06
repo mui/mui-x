@@ -20,17 +20,38 @@ import { MessageContextProvider } from './internals/MessageContext';
 import type { MessageRootOwnerState } from './message.types';
 
 export interface MessageRootSlots {
+  /**
+   * The component that renders the root.
+   */
   root: React.ElementType;
 }
 
 export interface MessageRootSlotProps {
+  /**
+   * The props used for the root slot.
+   */
   root?: SlotComponentProps<'div', {}, MessageRootOwnerState>;
 }
 
 export interface MessageRootProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'id'> {
+  /**
+   * The id of the message.
+   */
   messageId: string;
+  /**
+   * If `true`, the message is part of a group with the previous message.
+   * @default false
+   */
   isGrouped?: boolean;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<MessageRootSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: MessageRootSlotProps;
   /**
    * @ignore

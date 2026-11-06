@@ -1,5 +1,12 @@
 {
-  "props": {},
+  "props": {
+    "action": {
+      "type": {
+        "name": "enum",
+        "description": "'make-child'<br>&#124;&nbsp;'move-to-parent'<br>&#124;&nbsp;'reorder-above'<br>&#124;&nbsp;'reorder-below'"
+      }
+    }
+  },
   "name": "TreeItemDragAndDropOverlay",
   "imports": [
     "import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';",

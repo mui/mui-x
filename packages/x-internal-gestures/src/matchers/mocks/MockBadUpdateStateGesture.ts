@@ -1,5 +1,5 @@
 import { Gesture } from '../../core';
-import { MockState } from './MockState';
+import type { MockState } from './MockState';
 
 export class MockBadUpdateStateGesture extends Gesture<string> {
   protected state: MockState = {

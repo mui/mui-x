@@ -1,4 +1,4 @@
-import { MousePointer, Pointers, PointerType } from '../types/Pointers';
+import type { MousePointer, Pointers, PointerType } from '../types/Pointers';
 
 export type PressUserGestureOptions<P extends PointerType> = {
   /**

@@ -231,6 +231,15 @@ const csCZGrid: Partial<GridLocaleText> = {
   },
   columnHeaderFiltersLabel: 'Zobrazit filtry',
   columnHeaderSortIconLabel: 'Řadit',
+  // columnHeaderSortIconAriaLabel: (columnName, direction) => {
+  //   if (direction === 'asc') {
+  //     return `Sort ${columnName} in ascending order`;
+  //   }
+  //   if (direction === 'desc') {
+  //     return `Sort ${columnName} in descending order`;
+  //   }
+  //   return `Remove sorting from ${columnName}`;
+  // },
 
   // Rows selected footer text
   footerRowSelected: (count) => {
@@ -267,6 +276,9 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ano',
   booleanCellFalseLabel: 'ne',
+
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
 
   // Long text cell
   longTextCellExpandLabel: 'Rozbalit',

@@ -374,6 +374,9 @@ RichTreeViewPro.propTypes /* remove-proptypes */ = {
    * @default 32
    */
   itemHeight: PropTypes.number,
+  /**
+   * The items to render in the Tree View.
+   */
   items: PropTypes.array.isRequired,
   /**
    * If `true`, the reordering of items is enabled.

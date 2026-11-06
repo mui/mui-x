@@ -215,6 +215,15 @@ const bnBDGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} টি সক্রিয় ফিল্টার` : `${count} টি সক্রিয় ফিল্টার`,
   columnHeaderFiltersLabel: 'ফিল্টার দেখান',
   columnHeaderSortIconLabel: 'সাজান',
+  // columnHeaderSortIconAriaLabel: (columnName, direction) => {
+  //   if (direction === 'asc') {
+  //     return `Sort ${columnName} in ascending order`;
+  //   }
+  //   if (direction === 'desc') {
+  //     return `Sort ${columnName} in descending order`;
+  //   }
+  //   return `Remove sorting from ${columnName}`;
+  // },
 
   // Rows selected footer text
   footerRowSelected: (count) =>
@@ -239,6 +248,9 @@ const bnBDGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'হ্যাঁ',
   booleanCellFalseLabel: 'না',
+
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
 
   // Long text cell
   longTextCellExpandLabel: 'সম্প্রসারিত করুন',

@@ -36,6 +36,7 @@ export type SchedulerUserFacingErrorCode =
   | 'datesNotWritableError'
   | 'eventNotCreatableError'
   | 'dependencyCascadeBlockedError'
+  | 'dependencyDatesNotWritableError'
   | 'dependencyCycleError'
   | 'dependencyDuplicateError'
   | 'dependencyRecurringEventError'
@@ -47,7 +48,7 @@ export type SchedulerUserFacingErrorCode =
  */
 export type SchedulerUserFacingErrorDescriptor =
   | { code: SchedulerUserFacingErrorCode; params?: undefined }
-  | { code: 'readOnlyEventMovedError'; params: { title: string } };
+  | { code: 'readOnlyEventMovedError' | 'unwritableEventMovedError'; params: { title: string } };
 
 export type UserFacingError = SchedulerUserFacingErrorDescriptor & {
   /**

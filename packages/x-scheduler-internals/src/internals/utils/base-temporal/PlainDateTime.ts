@@ -30,6 +30,11 @@ export interface PlainDateTimeFields extends PlainTimeFields, PlainDateFields {}
 
 export type PlainDateTimeInput = PlainDateTimeFields | string;
 
+/**
+ * The fields `with()` replaces, read in the calendar of the value.
+ */
+export type PlainDateTimeWithFields = Partial<Omit<PlainDateTimeFields, 'calendar'>>;
+
 // Declared apart from the class, like `BaseTemporal.PlainDate`.
 export declare namespace BaseTemporal {
   /**
@@ -61,7 +66,7 @@ export declare namespace BaseTemporal {
      * Returns the date-time with some fields replaced, with the rules of `BaseTemporal.PlainDate`
      * for the date fields.
      */
-    with(fields: Partial<PlainDateTimeFields>, options?: PlainDateFromOptions): PlainDateTime;
+    with(fields: PlainDateTimeWithFields, options?: PlainDateFromOptions): PlainDateTime;
     /**
      * Returns the same date at another time, midnight by default.
      */
@@ -196,7 +201,7 @@ export class PlainDateTime implements BaseTemporal.PlainDateTime {
     let time: Required<PlainTimeFields>;
     if (typeof item === 'string') {
       const annotated = readCalendarAnnotation(item);
-      const match = /^(\d{4}-\d{2}-\d{2})T(.+)$/.exec(annotated.text);
+      const match = /^((?:\d{4}|[+-]\d{6})-\d{2}-\d{2})T(.+)$/.exec(annotated.text);
       if (match == null) {
         throw new Error(
           'Base UI Plus: The date-time string has an unsupported format. ' +
@@ -233,12 +238,8 @@ export class PlainDateTime implements BaseTemporal.PlainDateTime {
     const value = other instanceof PlainDateTime ? other : PlainDateTime.from(other);
     return PlainDateTime.compare(this, value) === 0 && this.calendarId === value.calendarId;
   }
-  with(fields: Partial<PlainDateTimeFields>, options?: PlainDateFromOptions): PlainDateTime {
-    const time: PlainTimeFields = {};
-    for (const key of TIME_FIELDS) {
-      time[key] = fields[key] ?? this[key];
-    }
-    return PlainDateTime.from({ ...mergeDateFields(this.date, fields), ...time }, options);
+  with(fields: PlainDateTimeWithFields, options?: PlainDateFromOptions): PlainDateTime {
+    return withFields(this, fields, options, 'PlainDateTime.prototype.with()', TIME_FIELDS);
   }
   withPlainTime(time: PlainTimeInput = new PlainTime()): PlainDateTime {
     return createPlainDateTime(this.date, readTime(time));
@@ -261,6 +262,25 @@ export class PlainDateTime implements BaseTemporal.PlainDateTime {
   valueOf(): never {
     return throwOnPrimitiveConversion('PlainDateTime');
   }
+}
+
+/**
+ * Returns `dateTime` with the fields `with()` received replaced. `fieldNames` are the fields of the
+ * value besides its date fields, at least one of which `fields` must set without a date field.
+ */
+export function withFields(
+  dateTime: PlainDateTime,
+  fields: PlainDateTimeWithFields,
+  options: PlainDateFromOptions | undefined,
+  apiName: string,
+  fieldNames: readonly string[],
+): PlainDateTime {
+  const dateFields = mergeDateFields(dateTime.toPlainDate(), fields, apiName, fieldNames);
+  const time: PlainTimeFields = {};
+  for (const key of TIME_FIELDS) {
+    time[key] = fields[key] ?? dateTime[key];
+  }
+  return PlainDateTime.from({ ...dateFields, ...time }, options);
 }
 
 /**

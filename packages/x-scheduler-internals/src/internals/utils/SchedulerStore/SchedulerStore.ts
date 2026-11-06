@@ -62,6 +62,7 @@ import {
   buildEventsState,
   buildResourcesState,
   createEventModel,
+  datesNotWritableReason,
   getCustomEventProperties,
   getUpdatedEventModelFromChanges,
 } from './SchedulerStore.utils';
@@ -142,20 +143,6 @@ function toUpdateEventResult(result: {
   return result.rejection
     ? { applied: false, rejection: result.rejection }
     : { applied: true, changes: result.updatedEntries[0] };
-}
-
-/**
- * Names the `eventModelStructure` date(s) — `start`, `end`, or both — that have a getter but no
- * setter, so every writer that refuses a whole event (a creation, a move, or a paste) because of
- * it can point at the specific property instead of a generic "start and / or end".
- */
-function datesNotWritableReason(state: SchedulerState): string {
-  const properties = (['start', 'end'] as const).filter(
-    (property) => !schedulerEventSelectors.isDateWritable(state, property),
-  );
-  const names = properties.map((property) => `\`${property}\``).join(' and ');
-  const pronoun = properties.length > 1 ? 'they' : 'it';
-  return `\`eventModelStructure\` declares ${names} with a getter but no setter, so ${pronoun} cannot be written back to your event model. Add a \`setter\` to make ${pronoun === 'it' ? 'it' : 'them'} editable.`;
 }
 
 /**
@@ -578,7 +565,8 @@ export class SchedulerStore<
    * A batch the scheduling plugin vetoes, or that moves a date `eventModelStructure` can't write
    * back, is not applied nor emitted: the result then carries the `rejection` for the caller to
    * surface, and empty lists. `updatedEntries` are the entries as applied — the dates the plugin
-   * clamped or cascaded, with any unwritable resize-style date already dropped — in `id` order
+   * clamped or cascaded, with any unwritable resize-style date of the caller's own entries
+   * already dropped (a cascaded one makes the plugin veto the batch instead) — in `id` order
    * matching `updated`, which itself preserves the caller's own entries first, then the
    * plugin's. An entry stripped down to `{ id }` alone is still reported rather than dropped, so
    * this never returns fewer entries than `updated` had ids for. `onEventsChange` / `eventsUpdated`
@@ -680,11 +668,11 @@ export class SchedulerStore<
       }
     }
 
-    // Checked after the plugin's contributions are merged in, so a cascaded successor is covered
-    // too — not only the caller's own entries. Refuses the whole call, not only the offending
-    // entry: `updated` / `deleted` in the same call can be one edit (a recurring scope split
-    // truncates the series), and applying part of it while dropping the rest would corrupt the
-    // series instead of leaving it untouched.
+    // Only the caller's own moves can trip this: the plugin already vetoed any cascaded entry
+    // carrying a date `eventModelStructure` can't write back. Refuses the whole call, not only
+    // the offending entry: `updated` / `deleted` in the same call can be one edit (a recurring
+    // scope split truncates the series), and applying part of it while dropping the rest would
+    // corrupt the series instead of leaving it untouched.
     const datesNotWritableRejection = this.checkUpdatedDatesWritable(updated.values());
     if (datesNotWritableRejection) {
       return {
@@ -867,8 +855,8 @@ export class SchedulerStore<
   ): SchedulerEventUpdatedProperties {
     let result: SchedulerEventUpdatedProperties | undefined;
 
-    for (const property of ['start', 'end'] as const) {
-      if (!(property in changes) || schedulerEventSelectors.isDateWritable(this.state, property)) {
+    for (const property of schedulerEventSelectors.unwritableDates(this.state)) {
+      if (!(property in changes)) {
         continue;
       }
 
@@ -919,10 +907,9 @@ export class SchedulerStore<
   /**
    * Refuses the whole `updateEvents` batch — like a scheduling veto — when a move (both bounds
    * present, per `isDatesMove`) of an updated event has a date `eventModelStructure` can't write
-   * back. Checked after the scheduling plugin's contributions are merged into `updated`, so a
-   * cascaded successor (which always carries both bounds) is covered too: partially applying it
-   * would turn an intended shift into a stretch. A resize-style update — only one bound present —
-   * isn't a move; `removeUnwritableDates` drops just the unwritable side for those instead.
+   * back: partially applying it would turn an intended shift into a stretch. A resize-style
+   * update of the caller's own — only one bound present — isn't a move; `removeUnwritableDates`
+   * drops just the unwritable side for those instead.
    */
   private checkUpdatedDatesWritable(
     updated: Iterable<SchedulerEventUpdatedProperties>,

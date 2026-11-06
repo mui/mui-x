@@ -2,7 +2,7 @@ import { adapter } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
-import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
+import { buildTemporalPlainDate, getDayNumber } from '@mui/x-scheduler-internals/internals';
 import type { TimelineAxisWindow } from '@mui/x-scheduler-internals/internals';
 import type { PresetHeaderUnit } from '../../models';
 import { iterate } from './iterate';
@@ -231,7 +231,8 @@ describe('iterate()', () => {
       expect(cells[7].plainDate).toEqualPlainDate('2026-03-08');
       expect(
         cells.every(
-          (cell, index) => cell.plainDate.dayNumber === cells[0].plainDate.dayNumber + index,
+          (cell, index) =>
+            getDayNumber(cell.plainDate) === getDayNumber(cells[0].plainDate) + index,
         ),
       ).to.equal(true);
     });

@@ -61,6 +61,7 @@ const REJECTION_ERRORS: Record<
 > = {
   cascadeBlocked: { code: 'dependencyCascadeBlockedError' },
   cyclicDependency: { code: 'dependencyCycleError' },
+  datesNotWritable: { code: 'dependencyDatesNotWritableError' },
   duplicateDependency: { code: 'dependencyDuplicateError' },
   recurringEvent: { code: 'dependencyRecurringEventError' },
   readOnly: { code: 'dependencyReadOnlyError' },

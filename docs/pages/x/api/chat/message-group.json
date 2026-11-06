@@ -3,8 +3,12 @@
   "name": "MessageGroup",
   "imports": ["import { MessageGroup } from '@mui/x-chat/headless';"],
   "slots": [
-    { "name": "group", "description": "", "class": null },
-    { "name": "authorName", "description": "", "class": null },
+    { "name": "group", "description": "The component that renders the group.", "class": null },
+    {
+      "name": "authorName",
+      "description": "The component that renders the author name.",
+      "class": null
+    },
     {
       "name": "groupTimestamp",
       "description": "The timestamp element rendered next to the author name in compact mode.\nOnly rendered when `variant === 'compact'` and the message has a `createdAt` value.",

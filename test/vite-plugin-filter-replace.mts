@@ -1,4 +1,4 @@
-import { Plugin } from 'vite';
+import type { Plugin } from 'vite';
 import path from 'path';
 
 interface RedirectRule {

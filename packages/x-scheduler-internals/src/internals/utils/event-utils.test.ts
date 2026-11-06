@@ -16,17 +16,19 @@ import {
   getResourceSelectionMode,
 } from './event-utils';
 import { getDayListFromPlainDates } from '../../get-day-list';
-import { PlainDate } from './base-temporal/PlainDate';
+import { BaseTemporal } from './base-temporal';
+import { getDayNumber } from './plain-date-utils/plainDate';
 import { createEventRangeIndex } from './event-range-index';
 
 describe('event-utils', () => {
   describe('getDaysTheOccurrenceIsVisibleOn', () => {
     const days = getDayListFromPlainDates({
       adapter,
-      firstPlainDate: PlainDate.from('2024-01-14'),
-      lastPlainDate: PlainDate.from('2024-01-18'),
+      firstPlainDate: BaseTemporal.PlainDate.from('2024-01-14'),
+      lastPlainDate: BaseTemporal.PlainDate.from('2024-01-18'),
       timezone: 'default',
     });
+    const dayNumbers = days.map((day) => getDayNumber(day.plainDate));
 
     const dayKeys = ['2024-01-14', '2024-01-15', '2024-01-16', '2024-01-17', '2024-01-18'];
 
@@ -36,7 +38,7 @@ describe('event-utils', () => {
         .allDay(true)
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
       expect(result).toEqual([dayKeys[1], dayKeys[2], dayKeys[3]]);
     });
 
@@ -46,7 +48,7 @@ describe('event-utils', () => {
         .allDay(true)
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
       expect(result).toHaveLength(0);
     });
 
@@ -56,7 +58,7 @@ describe('event-utils', () => {
         .allDay(true)
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
       expect(result).toHaveLength(0);
     });
 
@@ -66,7 +68,7 @@ describe('event-utils', () => {
         .allDay(true)
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
       expect(result).toEqual([dayKeys[0], dayKeys[1], dayKeys[2]]);
     });
 
@@ -76,7 +78,7 @@ describe('event-utils', () => {
         .allDay(true)
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
       expect(result).toEqual([dayKeys[2], dayKeys[3], dayKeys[4]]);
     });
   });

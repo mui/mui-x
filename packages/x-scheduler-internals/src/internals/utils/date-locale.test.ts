@@ -1,7 +1,7 @@
 import { setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect, vi } from 'vitest';
-import { PlainDate } from './base-temporal/PlainDate';
+import { BaseTemporal } from './base-temporal';
 import {
   checkDateLocale,
   formatDayOfMonth,
@@ -115,7 +115,7 @@ describe('date-locale', () => {
   });
 
   describe('format functions', () => {
-    const plainDate = PlainDate.from('2025-07-13');
+    const plainDate = BaseTemporal.PlainDate.from('2025-07-13');
 
     it('should format the date in the locale', () => {
       expect(formatWeekdayShortMonthShortAndDayOfMonth('en-US', plainDate)).to.equal('Sun, Jul 13');
@@ -129,7 +129,7 @@ describe('date-locale', () => {
       () => {
         // Pacific/Apia skipped December 30th, 2011.
         setSystemTimezone('Pacific/Apia');
-        expect(formatFullDate('en-US', PlainDate.from('2011-12-30'))).to.equal(
+        expect(formatFullDate('en-US', BaseTemporal.PlainDate.from('2011-12-30'))).to.equal(
           'Friday, December 30, 2011',
         );
       },
@@ -182,8 +182,8 @@ describe('date-locale', () => {
 
   describe('formatWeekdayShortMonthShortAndDayOfMonthRange', () => {
     it('should format the range in the order of the locale, writing the shared parts once', () => {
-      const startPlainDate = PlainDate.from('2025-07-13');
-      const endPlainDate = PlainDate.from('2025-07-19');
+      const startPlainDate = BaseTemporal.PlainDate.from('2025-07-13');
+      const endPlainDate = BaseTemporal.PlainDate.from('2025-07-19');
       // An en dash between spaces, thin ones in some runtimes.
       expect(
         formatWeekdayShortMonthShortAndDayOfMonthRange('en-US', startPlainDate, endPlainDate),
@@ -194,7 +194,7 @@ describe('date-locale', () => {
     });
 
     it('should format a range of one date as that date', () => {
-      const plainDate = PlainDate.from('2025-07-13');
+      const plainDate = BaseTemporal.PlainDate.from('2025-07-13');
       expect(
         formatWeekdayShortMonthShortAndDayOfMonthRange('en-US', plainDate, plainDate),
       ).to.equal('Sun, Jul 13');

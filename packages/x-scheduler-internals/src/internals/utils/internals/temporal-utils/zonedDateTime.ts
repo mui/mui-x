@@ -1,4 +1,4 @@
-import { getTimeNumber, MS_PER_DAY } from '../../base-temporal/iso';
+import { getTimeNumber, LAST_SUPPORTED_DAY, MS_PER_DAY } from '../../base-temporal/iso';
 import type { PlainDate } from '../../base-temporal/PlainDate';
 import type { PlainDateTime } from '../../base-temporal/PlainDateTime';
 import type { ZonedDateTimeOptions } from '../../base-temporal/ZonedDateTime';
@@ -6,6 +6,9 @@ import type { ZonedDateTimeOptions } from '../../base-temporal/ZonedDateTime';
 export const NS_PER_MS = 1_000_000n;
 
 const MAX_CACHED_DAYS_PER_TIME_ZONE = 20_000;
+
+// The last instant of `Date`, 100,000,000 days after 1970-01-01.
+const MAX_EPOCH_MILLISECONDS = LAST_SUPPORTED_DAY * MS_PER_DAY;
 
 const timeZoneFormats = new Map<
   string,
@@ -63,8 +66,12 @@ export function getOffset(timeZone: string, milliseconds: number): string {
   }
   try {
     const { formatter, offsets } = timeZoneFormats.get(normalized)!;
-    // `longOffset` formats like `ZonedDateTime.offset`, with seconds when they aren't 0.
-    const format = (instant: number) => formatter.format(instant).split('GMT')[1] || '+00:00';
+    // `longOffset` formats like `ZonedDateTime.offset`, with seconds when they aren't 0. The instants
+    // around the first and last days of `Date` take its first and last offsets.
+    const format = (instant: number) =>
+      formatter
+        .format(Math.min(Math.max(instant, -MAX_EPOCH_MILLISECONDS), MAX_EPOCH_MILLISECONDS))
+        .split('GMT')[1] || '+00:00';
     // Formatting is slow and offsets only change at a few transitions a year, so a UTC day that
     // starts and ends with the same offset keeps it: no timezone has two transitions in a day that
     // cancel out.

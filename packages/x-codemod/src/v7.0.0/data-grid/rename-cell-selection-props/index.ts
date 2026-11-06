@@ -1,5 +1,5 @@
 import renameProps from '../../../util/renameProps';
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 const componentNames = ['DataGridPremium'];
 const props = {

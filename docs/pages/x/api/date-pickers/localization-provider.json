@@ -1,6 +1,7 @@
 {
   "props": {
     "adapterLocale": { "type": { "name": "any" } },
+    "children": { "type": { "name": "node" } },
     "dateAdapter": {
       "type": { "name": "func" },
       "seeMoreLink": {

@@ -9,7 +9,7 @@ import {
   isStartMinuteOutsideAxisWindow,
   isEndMinuteOutsideAxisWindow,
 } from './timeline-axis';
-import { PlainDate } from './base-temporal/PlainDate';
+import { BaseTemporal } from './base-temporal';
 
 const MINUTE = 60_000;
 
@@ -29,7 +29,7 @@ describe('timeline-axis', () => {
       timezone = 'UTC',
     ) => {
       const axis = getPlainDateTimelineAxis(
-        PlainDate.from(date),
+        BaseTemporal.PlainDate.from(date),
         { dayStartMinute, dayEndMinute },
         timezone,
       );
@@ -77,7 +77,7 @@ describe('timeline-axis', () => {
 
     it('should return the axis of the window in the timezone', () => {
       const axis = getPlainDateTimelineAxis(
-        PlainDate.from('2025-07-03'),
+        BaseTemporal.PlainDate.from('2025-07-03'),
         { dayStartMinute: 480, dayEndMinute: 1200 },
         'Europe/Paris',
       );

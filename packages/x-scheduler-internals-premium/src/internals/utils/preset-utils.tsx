@@ -9,9 +9,10 @@ import {
   formatWeekdayShortMonthShortAndDayOfMonth,
   formatWeekdayShortMonthShortAndDayOfMonthRange,
   formatYear,
+  getDayNumber,
   getPlainDateWeekStart,
 } from '@mui/x-scheduler-internals/internals';
-import type { PlainDate, PlainDateDuration } from '@mui/x-scheduler-internals/internals';
+import type { BaseTemporal, PlainDateDuration } from '@mui/x-scheduler-internals/internals';
 import type { EventTimelinePremiumPreset, PresetDefinition, PresetHeaderUnit } from '../../models';
 
 const DAY_AND_HOUR_DAYS = 4;
@@ -36,8 +37,11 @@ function createPlainDateRange(
 /**
  * The number of days of the range, `endPlainDate` being the date after it.
  */
-function getDayCount(startPlainDate: PlainDate, endPlainDate: PlainDate) {
-  return endPlainDate.dayNumber - startPlainDate.dayNumber;
+export function getDayCount(
+  startPlainDate: BaseTemporal.PlainDate,
+  endPlainDate: BaseTemporal.PlainDate,
+) {
+  return getDayNumber(endPlainDate) - getDayNumber(startPlainDate);
 }
 
 export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<

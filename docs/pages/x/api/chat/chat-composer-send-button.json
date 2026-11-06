@@ -1,9 +1,31 @@
 {
-  "props": {},
+  "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    }
+  },
   "name": "ChatComposerSendButton",
   "imports": [
     "import { ChatComposerSendButton } from '@mui/x-chat/ChatComposer';",
     "import { ChatComposerSendButton } from '@mui/x-chat';"
+  ],
+  "slots": [
+    {
+      "name": "sendButton",
+      "description": "The component that renders the send button.",
+      "class": "MuiChatComposerSendButton-sendButton"
+    }
   ],
   "classes": [
     {
@@ -40,12 +62,6 @@
       "key": "root",
       "className": "MuiChatComposerSendButton-root",
       "description": "Styles applied to the input root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "sendButton",
-      "className": "MuiChatComposerSendButton-sendButton",
-      "description": "Styles applied to the send button element.",
       "isGlobal": false
     },
     {

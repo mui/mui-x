@@ -1,11 +1,14 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    }
+  },
   "classDescriptions": {
-    "attachButton": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the attach button element"
-    },
     "attachmentList": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the attachment list element"
@@ -44,5 +47,9 @@
       "nodeName": "the root element",
       "conditions": "variant=&quot;compact&quot;"
     }
+  },
+  "slotDescriptions": {
+    "attachButton": "The component that renders the attach button.",
+    "attachInput": "The component that renders the attach input."
   }
 }
