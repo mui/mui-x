@@ -10,6 +10,8 @@ import { useChartsContext } from '../context/ChartsProvider';
 import { shortenLabels } from './shortenLabels';
 import { AXIS_LABEL_TICK_LABEL_GAP, TICK_LABEL_GAP } from './utilities';
 import { useAxisTicksProps } from './useAxisTicksProps';
+import { getVisibleLabels } from './getVisibleLabels';
+import { useMounted } from '../hooks/useMounted';
 
 interface ChartsSingleYAxisProps extends ChartsYAxisProps {
   axisLabelHeight: number;
@@ -30,6 +32,7 @@ function ChartsSingleYAxisTicks(inProps: ChartsSingleYAxisProps) {
     Tick,
     TickLabel,
     axisTickLabelProps,
+    reverse,
   } = useAxisTicksProps(inProps);
   const isRtl = useRtl();
 
@@ -43,12 +46,14 @@ function ChartsSingleYAxisTicks(inProps: ChartsSingleYAxisProps) {
     tickInterval,
     tickLabelInterval,
     tickSpacing,
+    tickLabelMinGap,
     width: axisWidth,
   } = defaultizedProps;
 
   const drawingArea = useDrawingArea();
   const { instance } = useChartsContext();
   const isHydrated = useIsHydrated();
+  const isMounted = useMounted();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
@@ -73,25 +78,29 @@ function ChartsSingleYAxisTicks(inProps: ChartsSingleYAxisProps) {
       TICK_LABEL_GAP,
   );
 
+  const visibleLabels = getVisibleLabels(yTicks, {
+    tickLabelStyle: axisTickLabelProps.style,
+    tickLabelInterval,
+    tickLabelMinGap,
+    reverse,
+    isMounted,
+    isInside: instance.isYInside,
+  });
+
   const tickLabels = isHydrated
-    ? shortenLabels(yTicks, drawingArea, tickLabelsMaxWidth, isRtl, axisTickLabelProps.style)
-    : new Map(Array.from(yTicks).map((item) => [item, item.formattedValue]));
+    ? shortenLabels(visibleLabels, drawingArea, tickLabelsMaxWidth, isRtl, axisTickLabelProps.style)
+    : new Map(Array.from(visibleLabels).map((item) => [item, item.formattedValue]));
 
   return (
     <React.Fragment>
       {yTicks.map((item, index) => {
-        const { offset: tickOffset, labelOffset, value } = item;
+        const { offset: tickOffset, labelOffset } = item;
         const xTickLabel = positionSign * (tickSize + TICK_LABEL_GAP);
         const yTickLabel = labelOffset;
-        const skipLabel =
-          typeof tickLabelInterval === 'function' && !tickLabelInterval?.(value, index);
 
-        const showLabel = instance.isYInside(tickOffset);
+        const showTick = instance.isYInside(tickOffset);
         const tickLabel = tickLabels.get(item);
-
-        if (!showLabel) {
-          return null;
-        }
+        const showTickLabel = visibleLabels.has(item);
 
         return (
           <g
@@ -99,7 +108,7 @@ function ChartsSingleYAxisTicks(inProps: ChartsSingleYAxisProps) {
             transform={`translate(0, ${tickOffset})`}
             className={classes.tickContainer}
           >
-            {!disableTicks && (
+            {!disableTicks && showTick && (
               <Tick
                 x2={positionSign * tickSize}
                 className={classes.tick}
@@ -107,7 +116,7 @@ function ChartsSingleYAxisTicks(inProps: ChartsSingleYAxisProps) {
               />
             )}
 
-            {tickLabel !== undefined && !skipLabel && (
+            {tickLabel !== undefined && showTickLabel && (
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
