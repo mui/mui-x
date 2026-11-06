@@ -96,6 +96,8 @@ With this feature, the focused editable cell renders a hidden edit component bef
 The hidden edit component gets the focus.
 When a composition starts, the cell goes into edit mode, and the composition continues in the same edit component.
 The composition replaces the value of the cell, as a printable key does.
+Text typed without a composition, for example from the emoji picker, dictation, or an IME that commits a character directly, also starts edit mode with the inserted text.
+Text pasted without the paste shortcut and dropped text do not, see the limits below.
 The feature works with cell editing and row editing.
 
 The `onCellEditStart` and `onRowEditStart` callbacks receive the `compositionStart` reason.
@@ -118,8 +120,10 @@ import { DataGrid, GridCellEditStartReasons } from '@mui/x-data-grid';
 ```
 
 With the `compositionStart` reason, the `event` argument is a `React.CompositionEvent`, not a keyboard event.
-The type of the argument includes `React.CompositionEvent`.
-Check the reason before you read keyboard or mouse properties, such as `event.key` or `event.shiftKey`.
+Text typed without a composition uses the `printableKeyDown` reason, and the `event` argument is then a `React.ChangeEvent`.
+The type of the argument includes `React.CompositionEvent` and `React.ChangeEvent`.
+Narrow the event type before you read keyboard or mouse properties, such as `event.key` or `event.shiftKey`.
+In `onCellEditStart`, `params.key` is `undefined` for typed text.
 
 :::warning
 This feature is experimental. It has these limits:
@@ -130,6 +134,14 @@ This feature is experimental. It has these limits:
   On these devices, an input that has the focus opens the virtual keyboard.
 - It is not available in cells where `renderCell` returns an element with `tabIndex={params.tabIndex}`, such as a link or a button.
   This element keeps the focus, so that Enter activates it.
+- To prevent edit mode for typed text in `onCellEditStart` or `onRowEditStart`, prevent both the `printableKeyDown` and the `compositionStart` reasons, as in the example above.
+  In `onCellEditStart`, a key-specific check on `params.key` does not match typed text, because `params.key` is `undefined`.
+  Preventing the keydown in `onCellKeyDown` stops a printable key, but not IME text.
+- Text pasted without the paste shortcut, for example with Shift+Insert or the Edit > Paste menu, and dropped text are ignored.
+  The paste shortcut behaves as without the feature.
+- A controlled `cellModesModel` or `rowModesModel` must apply the change synchronously in `onCellModesModelChange` or `onRowModesModelChange`.
+  If the change is applied later, the typed text is lost: the hidden edit component is emptied when edit mode has not started.
+  One keystroke can then also call `onCellEditStart` or `onRowEditStart` twice: once for the keydown, and once for the typed text.
 - Screen readers announce a text field instead of a cell. The name of the text field is the content of the cell.
   An empty cell uses the `emptyCellLabel` locale text.
 - The hidden input receives the keyboard events of the focused cell.
