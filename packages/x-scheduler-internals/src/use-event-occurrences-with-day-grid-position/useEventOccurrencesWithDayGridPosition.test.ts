@@ -233,4 +233,56 @@ describe('useDayListEventOccurrencesWithPosition', () => {
 
     expect(result.days[1].withPosition[0].position).to.deep.equal({ index: 1, daySpan: 2 });
   });
+
+  describe('with the weekends hidden', () => {
+    // Wednesday July 9th to Tuesday July 15th, 2025 without the weekend: Wed, Thu, Fri, Mon, Tue.
+    const weekdays = getDayListFromPlainDates({
+      adapter,
+      firstPlainDate: BaseTemporal.PlainDate.from('2025-07-09'),
+      lastPlainDate: BaseTemporal.PlainDate.from('2025-07-15'),
+      timezone: 'UTC',
+      excludeWeekends: true,
+    });
+
+    it('should span the cells of the dates an event covers', () => {
+      const result = testHook(
+        [
+          EventBuilder.new()
+            .span('2025-07-10T10:00:00Z', '2025-07-14T09:00:00Z') // Thursday to Monday
+            .withDisplayTimezone('UTC')
+            .toProcessed(),
+        ],
+        undefined,
+        { dayList: weekdays, displayTimezone: 'UTC' },
+      );
+
+      expect(result.days[1].withPosition[0].position).to.deep.equal({ index: 1, daySpan: 3 });
+      expect(result.days[2].withPosition[0].position).to.deep.equal({
+        index: 1,
+        daySpan: 1,
+        isInvisible: true,
+      });
+      expect(result.days[3].withPosition[0].position).to.deep.equal({
+        index: 1,
+        daySpan: 1,
+        isInvisible: true,
+      });
+      expect(result.days[4].withPosition).to.have.length(0);
+    });
+
+    it('should span the cells left in the row when an event ends after it', () => {
+      const result = testHook(
+        [
+          EventBuilder.new()
+            .span('2025-07-11T10:00:00Z', '2025-07-18T09:00:00Z') // Friday to next Friday
+            .withDisplayTimezone('UTC')
+            .toProcessed(),
+        ],
+        undefined,
+        { dayList: weekdays, displayTimezone: 'UTC' },
+      );
+
+      expect(result.days[2].withPosition[0].position).to.deep.equal({ index: 1, daySpan: 3 });
+    });
+  });
 });

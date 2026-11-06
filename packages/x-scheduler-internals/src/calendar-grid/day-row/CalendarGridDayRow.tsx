@@ -30,6 +30,19 @@ export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
   const store = useEventCalendarStoreContext();
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const cellsRefs = React.useRef<(HTMLDivElement | null)[]>([]);
+  const cellDayNumbersRef = React.useRef<number[]>([]);
+
+  const getCellDayNumbers = React.useCallback(
+    () => cellDayNumbersRef.current.filter((dayNumber) => dayNumber !== undefined),
+    [],
+  );
+
+  const registerCellDayNumber = React.useCallback((index: number, dayNumber: number) => {
+    cellDayNumbersRef.current[index] = dayNumber;
+    return () => {
+      delete cellDayNumbersRef.current[index];
+    };
+  }, []);
 
   const contextValue: CalendarGridDayRowContext = React.useMemo(
     () => ({
@@ -42,8 +55,10 @@ export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
         dayEndMinute: FULL_DAY_MINUTES,
       },
       rowIndex,
+      getCellDayNumbers,
+      registerCellDayNumber,
     }),
-    [start, end, displayTimezone, rowIndex],
+    [start, end, displayTimezone, rowIndex, getCellDayNumbers, registerCellDayNumber],
   );
 
   const element = useRenderElement('div', componentProps, {
