@@ -366,6 +366,7 @@ export const createColumnsState = ({
     const { field } = newColumn;
     columnsToKeep[field] = true;
     let existingState = columnsState.lookup[field];
+    const isPartialUpdate = existingState != null && newColumn.type === undefined;
 
     if (existingState == null) {
       existingState = {
@@ -379,7 +380,7 @@ export const createColumnsState = ({
     }
 
     // If the column type has changed - merge the existing state with the default column type definition
-    if (existingState && existingState.type !== newColumn.type) {
+    if (existingState && !isPartialUpdate && existingState.type !== newColumn.type) {
       existingState = {
         ...getColTypeDef(newColumn.type),
         field,
@@ -398,7 +399,6 @@ export const createColumnsState = ({
     });
 
     const mergedProps = {
-      ...getColTypeDef(newColumn.type),
       hasBeenResized,
       field,
     };
@@ -406,11 +406,16 @@ export const createColumnsState = ({
     let key: keyof GridColDef;
     for (key in newColumn) {
       if (newColumn[key] !== undefined && key !== 'field') {
-        mergedProps[key] = newColumn[key] as any;
+        Object.assign(mergedProps, { [key]: newColumn[key] as any });
       }
     }
 
-    columnsState.lookup[field] = resolveProps(existingState, mergedProps);
+    const defaultProps = { ...existingState };
+    if (newColumn.width !== undefined && newColumn.flex === undefined) {
+      delete defaultProps.flex;
+    }
+
+    columnsState.lookup[field] = resolveProps(defaultProps, mergedProps);
   });
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
