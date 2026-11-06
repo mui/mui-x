@@ -1,7 +1,9 @@
 import { act, screen } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { createPickerRenderer, adapterToUse, AdapterClassToUse } from 'test/utils/pickers';
+import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('<YearCalendar />', () => {
@@ -209,6 +211,29 @@ describe('<YearCalendar />', () => {
 
     expect(screen.getByRole('radio', { name: '2018', checked: false })).not.to.equal(null);
   });
+
+  it.skipIf(isJSDOM)(
+    'draws a contrast band inside the ring of the selected year with theme.focusVisible',
+    async () => {
+      const { user } = render(
+        <ThemeProvider
+          theme={createTheme({
+            focusVisible: true,
+            palette: { primary: { main: '#1976d2', contrastText: 'rgb(1, 2, 3)' } },
+          })}
+        >
+          <YearCalendar defaultValue={adapterToUse.date('2019-02-02')} />
+        </ThemeProvider>,
+      );
+
+      await user.keyboard('{Tab}');
+
+      const selectedYear = screen.getByRole('radio', { name: '2019' });
+      expect(document.activeElement).to.equal(selectedYear);
+      expect(selectedYear).to.have.style('outline-style', 'solid');
+      expect(selectedYear).to.have.style('box-shadow', 'rgb(1, 2, 3) 0px 0px 0px 4px inset');
+    },
+  );
 
   it('should not format the years again when the value changes', () => {
     const formatCalls: string[] = [];

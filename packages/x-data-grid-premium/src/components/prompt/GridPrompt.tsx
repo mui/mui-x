@@ -10,7 +10,8 @@ import type { GridSingleSelectColDef } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 
-import { keyframes, styled } from '@mui/system';
+import { keyframes, styled } from '@mui/material/styles';
+import * as materialStyles from '@mui/material/styles';
 import { getValueOptions, isSingleSelectColDef, vars } from '@mui/x-data-grid-pro/internals';
 import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -166,7 +167,7 @@ const PromptChangeList = styled('div', {
 const PromptChangesToggle = styled('button', {
   name: 'MuiDataGrid',
   slot: 'PromptChangesToggle',
-})<{ ownerState: OwnerState }>({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   gap: vars.spacing(0.25),
@@ -178,10 +179,20 @@ const PromptChangesToggle = styled('button', {
   border: 'none',
   background: 'none',
   outline: 'none',
-  '&:hover, &:focus-visible': {
+  '&:hover': {
     textDecoration: 'underline',
   },
-});
+  ...(theme.focusVisible
+    ? {
+        ...materialStyles.private_applyInsetFocusVisible?.(1),
+        '&:focus-visible': theme.focusVisible,
+      }
+    : {
+        '&:focus-visible': {
+          textDecoration: 'underline',
+        },
+      }),
+}));
 
 const PromptChangesToggleIcon = styled('svg', {
   name: 'MuiDataGrid',

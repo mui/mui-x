@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Fade from '@mui/material/Fade';
 import { styled, useThemeProps } from '@mui/material/styles';
+import * as materialStyles from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import IconButton from '@mui/material/IconButton';
@@ -83,8 +84,9 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
   slot: 'SwitchViewButton',
 })<{
   ownerState: PickerOwnerState & { view: DateView };
-}>({
+}>(({ theme }) => ({
   marginRight: 'auto',
+  ...(theme.focusVisible && materialStyles.private_applyInsetFocusVisible?.(1)),
   variants: [
     {
       props: { view: 'year' },
@@ -95,7 +97,7 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
       },
     },
   ],
-});
+}));
 
 const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDownIcon, {
   name: 'MuiPickersCalendarHeader',
