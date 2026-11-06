@@ -10,7 +10,7 @@ import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calenda
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
 import { createProcessedDate } from '../../internals/utils/plain-date-utils/adapter';
 import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
-import { getDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
+import { getDayGridCellSpan } from '../../use-event-occurrences-with-day-grid-position/useEventOccurrencesWithDayGridPosition';
 
 export function useCalendarGridPlaceholderInDay(
   day: SchedulerProcessedDay,
@@ -63,8 +63,12 @@ export function useCalendarGridPlaceholderInDay(
 
     // The placeholder can run past the week row: the next rows render their own piece.
     const endInRow = Math.min(rawPlaceholder.end, rowEnd);
-    // The placeholder covers every date up to its end, like the occurrences.
-    const daySpan = toLocalDayNumber(endInRow, displayTimezone) - getDayNumber(day.plainDate) + 1;
+    // The placeholder covers the cells of every date up to its end, like the occurrences.
+    const daySpan = getDayGridCellSpan(
+      row.days,
+      row.days.findIndex((rowDay) => rowDay.key === day.key),
+      toLocalDayNumber(endInRow, displayTimezone),
+    );
 
     const sharedProperties = {
       key: 'occurrence-placeholder',
@@ -129,6 +133,7 @@ export function useCalendarGridPlaceholderInDay(
     originalEvent,
     originalEventId,
     rawPlaceholder,
+    row.days,
     rowEnd,
     findAvailableIndex,
   ]);

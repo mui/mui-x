@@ -1,11 +1,13 @@
 'use client';
 import * as React from 'react';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useCompositeListItem } from '@base-ui/react/internals/composite';
 import { useDirection } from '@base-ui/react/direction-provider';
 import type { TemporalTimezone } from '../../models';
 import { getEndOfDayMs, toEpochMs } from '../../internals/utils/plain-date-utils/timeZone';
+import { getDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
@@ -41,8 +43,16 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     rowsPerType,
   } = useCalendarGridRootContext();
   const isRtl = useDirection() === 'rtl';
-  const { rowIndex } = useCalendarGridDayRowContext();
+  const { rowIndex, registerCellDayNumber } = useCalendarGridDayRowContext();
   const { ref: listItemRef, index } = useCompositeListItem();
+
+  // Registers the date of the cell so the events of the row can map a pointer onto their cells.
+  useIsoLayoutEffect(() => {
+    if (index < 0) {
+      return undefined;
+    }
+    return registerCellDayNumber(index, getDayNumber(value));
+  }, [registerCellDayNumber, index, value]);
   const cellsRefs = useCalendarGridCellsRefsContext();
   const dropTargetRef = useDayCellDropTarget({ value, addPropertiesToDroppedEvent });
   const columnHeaderId = getCalendarGridHeaderCellId(rootId, index);
