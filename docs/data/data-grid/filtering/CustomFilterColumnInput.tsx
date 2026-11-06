@@ -5,7 +5,7 @@ import type { GridFilterFormColumnInputProps } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function AutocompleteColumnInput(props: GridFilterFormColumnInputProps) {
-  const { columns, value, onChange, disabled, className } = props;
+  const { columns, value, onChange, disabled, className, focusElementRef } = props;
   const apiRef = useGridApiContext();
   const selectedColumn =
     columns.find((column) => column.field === value) ?? columns[0];
@@ -25,6 +25,7 @@ function AutocompleteColumnInput(props: GridFilterFormColumnInputProps) {
       renderInput={(params) => (
         <TextField
           {...params}
+          inputRef={focusElementRef}
           label={apiRef.current.getLocaleText('filterPanelColumn')}
         />
       )}

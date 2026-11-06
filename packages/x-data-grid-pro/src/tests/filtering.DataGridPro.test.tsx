@@ -213,6 +213,29 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnForNewFilter.mock.calls.length).to.equal(6);
   });
 
+  // See https://github.com/mui/mui-x/issues/24012
+  it('should focus the first enabled field of an added filter', () => {
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        columns={[{ field: 'brand' }, { field: 'origin' }, { field: 'year' }]}
+      />,
+    );
+    const addButton = screen.getByRole('button', { name: /Add Filter/i });
+
+    fireEvent.click(addButton);
+    expect(document.activeElement).toHaveAccessibleName('Logic operator');
+
+    fireEvent.click(addButton);
+    const columnInputs = screen.getAllByRole('combobox', { name: 'Column' });
+    expect(columnInputs[columnInputs.length - 1]).toHaveFocus();
+  });
+
   it('should pass columns filtered by `filterColumn` to filters column list', () => {
     const filterColumns = () => ['testField'];
     render(

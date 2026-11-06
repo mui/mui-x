@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
+import refType from '@mui/utils/refType';
 import { styled } from '@mui/material/styles';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
@@ -37,6 +38,10 @@ export interface GridFilterFormColumnInputProps {
    * The CSS class of the input.
    */
   className?: string;
+  /**
+   * A ref allowing to set imperative focus.
+   */
+  focusElementRef?: React.Ref<any>;
 }
 
 type OwnerState = DataGridProcessedProps;
@@ -49,7 +54,7 @@ const FilterFormColumnInput = styled('div', {
 export const getGridFilterFormColumnLabel = (col: GridColDef) => col.headerName || col.field;
 
 function GridFilterFormColumnInput(props: GridFilterFormColumnInputProps) {
-  const { item, columns, value, onChange, disabled, className, ...other } = props;
+  const { item, columns, value, onChange, disabled, className, focusElementRef, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const columnSelectId = useId();
@@ -78,6 +83,7 @@ function GridFilterFormColumnInput(props: GridFilterFormColumnInputProps) {
       onChange={handleChange}
       native={isBaseSelectNative}
       disabled={disabled}
+      inputRef={focusElementRef}
       {...rootProps.slotProps?.baseSelect}
     >
       {columns.map((col) => (
@@ -112,6 +118,10 @@ GridFilterFormColumnInput.propTypes /* remove-proptypes */ = {
    * @default false
    */
   disabled: PropTypes.bool,
+  /**
+   * A ref allowing to set imperative focus.
+   */
+  focusElementRef: refType,
   /**
    * The [[GridFilterItem]] of the filter form.
    */

@@ -181,6 +181,7 @@ Use the `filterFormColumnInput` slot to replace the column selector of each filt
 The slot gets the list of `columns` that the user can select and the selected field as `value`.
 Call `onChange` with the new field to update the filter item.
 The grid then keeps or resets the operator and value, the same as with the default selector.
+Pass `focusElementRef` to the focusable element so the grid can move keyboard focus to it when the panel opens or a filter is added.
 
 The demo below uses an Autocomplete to make it easier to find a column in a long list.
 
