@@ -13,7 +13,7 @@ import { MonthCalendarButton } from './MonthCalendarButton';
 import { useNow } from '../internals/hooks/useUtils';
 import type { MonthCalendarClasses } from './monthCalendarClasses';
 import { getMonthCalendarUtilityClass } from './monthCalendarClasses';
-import { getMonthsInYear } from '../internals/utils/date-utils';
+import { findClosestEnabledNumber, getMonthsInYear } from '../internals/utils/date-utils';
 import type { MonthCalendarProps } from './MonthCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
@@ -291,6 +291,17 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
     }
   });
 
+  const months = getMonthsInYear(adapter, currentMonth ?? value ?? referenceDate).map((month) => ({
+    date: month,
+    monthNumber: adapter.getMonth(month),
+    isDisabled: disabled || isMonthDisabled(month),
+  }));
+  // The focused month can get disabled, the months must stay reachable with the keyboard anyway.
+  const tabStopMonth = findClosestEnabledNumber(
+    focusedMonth,
+    months.filter((month) => !month.isDisabled).map((month) => month.monthNumber),
+  );
+
   return (
     <MonthCalendarRoot
       ref={ref}
@@ -301,12 +312,10 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
       monthsPerRow={monthsPerRow}
       {...other}
     >
-      {getMonthsInYear(adapter, currentMonth ?? value ?? referenceDate).map((month) => {
-        const monthNumber = adapter.getMonth(month);
+      {months.map(({ date: month, monthNumber, isDisabled }) => {
         const monthText = adapter.format(month, 'monthShort');
         const monthLabel = adapter.format(month, 'month');
         const isSelected = isSameMonth(monthNumber, selectedMonth, month, value, adapter);
-        const isDisabled = disabled || isMonthDisabled(month);
 
         return (
           <MonthCalendarButton
@@ -315,9 +324,9 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
             value={monthNumber}
             onClick={handleMonthSelection}
             onKeyDown={handleKeyDown}
-            autoFocus={internalHasFocus && monthNumber === focusedMonth}
+            autoFocus={internalHasFocus && monthNumber === tabStopMonth}
             disabled={isDisabled}
-            tabIndex={monthNumber === focusedMonth && !isDisabled ? 0 : -1}
+            tabIndex={monthNumber === tabStopMonth ? 0 : -1}
             onFocus={handleMonthFocus}
             onBlur={handleMonthBlur}
             aria-current={

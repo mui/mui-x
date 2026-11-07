@@ -15,6 +15,7 @@ import { useNow } from '../internals/hooks/useUtils';
 import type { YearCalendarClasses } from './yearCalendarClasses';
 import { getYearCalendarUtilityClass } from './yearCalendarClasses';
 import type { YearCalendarProps } from './YearCalendar.types';
+import { findClosestEnabledNumber } from '../internals/utils/date-utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 import { useControlledValue } from '../internals/hooks/useControlledValue';
@@ -326,6 +327,16 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
     fillerAmount = 0;
   }
 
+  const yearsWithState = years.map((year) => ({
+    ...year,
+    isDisabled: disabled || isYearDisabled(year.date),
+  }));
+  // The focused year can get disabled, the years must stay reachable with the keyboard anyway.
+  const tabStopYear = findClosestEnabledNumber(
+    focusedYear,
+    yearsWithState.filter((year) => !year.isDisabled).map((year) => year.yearNumber),
+  );
+
   return (
     <YearCalendarRoot
       ref={handleRef}
@@ -336,9 +347,8 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
       yearsPerRow={yearsPerRow}
       {...other}
     >
-      {years.map(({ date, yearNumber, label }) => {
+      {yearsWithState.map(({ yearNumber, label, isDisabled }) => {
         const isSelected = yearNumber === selectedYear;
-        const isDisabled = disabled || isYearDisabled(date);
 
         return (
           <YearCalendarButton
@@ -347,9 +357,9 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
             value={yearNumber}
             onClick={handleYearSelection}
             onKeyDown={handleKeyDown}
-            autoFocus={internalHasFocus && yearNumber === focusedYear}
+            autoFocus={internalHasFocus && yearNumber === tabStopYear}
             disabled={isDisabled}
-            tabIndex={yearNumber === focusedYear && !isDisabled ? 0 : -1}
+            tabIndex={yearNumber === tabStopYear ? 0 : -1}
             onFocus={handleYearFocus}
             onBlur={handleYearBlur}
             aria-current={todayYear === yearNumber ? 'date' : undefined}
