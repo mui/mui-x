@@ -18,7 +18,7 @@ import type { DataGridProcessedProps } from '../../../models/props/DataGridProps
 import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsStateSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
-import { clamp } from '../../../utils/utils';
+import { clamp, isNumber } from '../../../utils/utils';
 import type { GridApiCommon } from '../../../models/api/gridApiCommon';
 import type { GridRowEntry } from '../../../models/gridRows';
 import { gridDensityFactorSelector } from '../density/densitySelector';
@@ -182,9 +182,9 @@ export const hydrateColumnsWidth = (
         isFlex = true;
       } else {
         computedWidth = clamp(
-          column.width || GRID_STRING_COL_DEF.width!,
-          column.minWidth || GRID_STRING_COL_DEF.minWidth!,
-          column.maxWidth || GRID_STRING_COL_DEF.maxWidth!,
+          isNumber(column.width) ? column.width : GRID_STRING_COL_DEF.width!,
+          isNumber(column.minWidth) ? column.minWidth : GRID_STRING_COL_DEF.minWidth!,
+          isNumber(column.maxWidth) ? column.maxWidth : GRID_STRING_COL_DEF.maxWidth!,
         );
       }
 
