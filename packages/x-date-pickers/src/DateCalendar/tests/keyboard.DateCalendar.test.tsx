@@ -1,5 +1,7 @@
+import * as React from 'react';
 import { act, screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
 import { vi, describe, it, expect } from 'vitest';
 
@@ -117,6 +119,93 @@ describe('<DateCalendar /> keyboard interactions', () => {
           // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
           expect(document.activeElement).toHaveAccessibleName(expectFocusedDay);
         });
+      });
+
+      it('should focus the closest enabled day when tabbing into the grid and `referenceDate` is disabled', async () => {
+        const { user } = render(
+          <DateCalendar
+            referenceDate={adapterToUse.date('2020-01-10')}
+            shouldDisableDate={(date) =>
+              disabledDates.some((disabled) => adapterToUse.isSameDay(date, disabled))
+            }
+          />,
+        );
+
+        await act(async () => screen.getByRole('button', { name: 'Next month' }).focus());
+        await user.keyboard('{Tab}');
+
+        expect(document.activeElement).toHaveAccessibleName('11');
+      });
+
+      it('should focus the closest enabled day when tabbing into the grid and the focused day becomes disabled', async () => {
+        const { user, setProps } = render(
+          <DateCalendar referenceDate={adapterToUse.date('2020-01-10')} />,
+        );
+
+        setProps({
+          shouldDisableDate: (date: PickerValidDate) =>
+            disabledDates.some((disabled) => adapterToUse.isSameDay(date, disabled)),
+        });
+
+        await act(async () => screen.getByRole('button', { name: 'Next month' }).focus());
+        await user.keyboard('{Tab}');
+
+        expect(document.activeElement).toHaveAccessibleName('11');
+      });
+
+      it('should focus a day when tabbing into the grid and a fully disabled month becomes enabled', async () => {
+        const { user, setProps } = render(
+          <DateCalendar
+            referenceDate={adapterToUse.date('2020-01-15')}
+            shouldDisableDate={(date) => adapterToUse.getMonth(date) === 1}
+          />,
+        );
+
+        await user.click(screen.getByRole('button', { name: 'Next month' }));
+        setProps({ shouldDisableDate: () => false });
+        await user.keyboard('{Tab}');
+
+        expect(document.activeElement).toHaveAccessibleName('1');
+      });
+
+      it('should keep the focused day while the whole month is disabled', async () => {
+        const { user, setProps } = render(
+          <DateCalendar referenceDate={adapterToUse.date('2020-01-20')} />,
+        );
+
+        setProps({ shouldDisableDate: () => true });
+        setProps({ shouldDisableDate: () => false });
+
+        await act(async () => screen.getByRole('button', { name: 'Next month' }).focus());
+        await user.keyboard('{Tab}');
+
+        expect(document.activeElement).toHaveAccessibleName('20');
+      });
+
+      it('should call `onMonthChange` once when `onMonthChange` disables the day that gets focus', async () => {
+        const onMonthChange = vi.fn();
+        function CalendarWithAvailability() {
+          const [disabledDay, setDisabledDay] = React.useState<PickerValidDate | null>(null);
+          return (
+            <DateCalendar
+              defaultValue={adapterToUse.date('2020-01-31')}
+              onMonthChange={(month) => {
+                onMonthChange(month);
+                setDisabledDay(month);
+              }}
+              shouldDisableDate={(date) =>
+                disabledDay != null && adapterToUse.isSameDay(date, disabledDay)
+              }
+            />
+          );
+        }
+        const { user } = render(<CalendarWithAvailability />);
+
+        await act(async () => screen.getByText('31').focus());
+        await user.keyboard('{ArrowRight}');
+
+        expect(onMonthChange.mock.calls.length).to.equal(1);
+        expect(document.activeElement).toHaveAccessibleName('2');
       });
     });
 
