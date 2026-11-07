@@ -137,6 +137,41 @@ describe('Zoom Utils', () => {
       expect(result).to.eq(80);
     });
 
+    it('should place the start of the zoom range at the top for an ordinal y-axis', () => {
+      (['band', 'point'] as const).forEach((scaleType) => {
+        const result = calculateZoomFromPointImpl(
+          defaultDrawingArea,
+          { position: 'left', scaleType },
+          { minStart: 0, maxEnd: 100 },
+          { x: 0, y: 120 },
+        );
+
+        expect(result).to.eq(20);
+      });
+    });
+
+    it('should place the start of the zoom range at the bottom for a reversed ordinal y-axis', () => {
+      const result = calculateZoomFromPointImpl(
+        defaultDrawingArea,
+        { position: 'left', scaleType: 'band', reverse: true },
+        { minStart: 0, maxEnd: 100 },
+        { x: 0, y: 120 },
+      );
+
+      expect(result).to.eq(80);
+    });
+
+    it('should not change the direction of an ordinal x-axis', () => {
+      const result = calculateZoomFromPointImpl(
+        defaultDrawingArea,
+        { position: 'bottom', scaleType: 'band' },
+        { minStart: 0, maxEnd: 100 },
+        { x: 120, y: 0 },
+      );
+
+      expect(result).to.eq(10);
+    });
+
     it('should handle custom min/max range', () => {
       const result = calculateZoomFromPointImpl(
         defaultDrawingArea,
