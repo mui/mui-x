@@ -816,6 +816,55 @@ describe('<DataGridPremium /> - Pivoting', () => {
     });
   });
 
+  // https://github.com/mui/mui-x/issues/23957
+  it('should merge a partial column definition passed to `updateColumns` while in pivot mode', async () => {
+    const apiRef = { current: null } as React.RefObject<GridApi | null>;
+
+    const { setProps } = render(
+      <Test
+        apiRef={apiRef}
+        initialState={{
+          pivoting: {
+            enabled: true,
+            model: {
+              rows: [{ field: 'ticker' }],
+              columns: [],
+              values: [{ field: 'price', aggFunc: 'sum' }],
+            },
+          },
+        }}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$385.55']);
+    });
+    const pivotHeaders = getColumnHeadersTextContent();
+
+    act(() => {
+      apiRef.current?.updateColumns([{ field: 'price', width: 150 }]);
+    });
+
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$385.55']);
+    });
+    expect(getColumnHeadersTextContent()).to.deep.equal(pivotHeaders);
+
+    setProps({ pivotActive: false });
+
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal([
+        '1',
+        '15/03/2024',
+        'AAPL',
+        '$192.45',
+        '5,500',
+        'stock',
+      ]);
+    });
+    expect(apiRef.current?.getColumn('price')).to.include({ type: 'number', headerName: 'Price' });
+  });
+
   it('should not throw if the ID column is used as a value', async () => {
     render(
       <Test
