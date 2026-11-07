@@ -178,7 +178,7 @@ export const useCalendarState = (
     timezone,
   });
 
-  const findClosestEnabledDateInMonth = (date: PickerValidDate) => {
+  const findClosestEnabledDateInMonth = useEventCallback((date: PickerValidDate) => {
     const startOfMonth = adapter.startOfMonth(date);
     const endOfMonth = adapter.endOfMonth(date);
     return findClosestEnabledDate({
@@ -191,7 +191,7 @@ export const useCalendarState = (
       isDateDisabled,
       timezone,
     });
-  };
+  });
 
   // Ensure that `calendarState.currentMonth` timezone is updated when `referenceDate` (or timezone changes)
   // https://github.com/mui/mui-x/issues/10804
@@ -259,14 +259,20 @@ export const useCalendarState = (
   }, []);
 
   // A disabled or missing `focusedDay` leaves the day grid without a tab stop.
+  // While the whole month is disabled, keep the stored day so it comes back once days are enabled.
   useEnhancedEffect(() => {
     const tabStop = calendarState.focusedDay ?? calendarState.currentMonth;
     const focusedDay = isDateDisabled(tabStop) ? findClosestEnabledDateInMonth(tabStop) : tabStop;
-    if (focusedDay !== calendarState.focusedDay) {
+    if (focusedDay != null && focusedDay !== calendarState.focusedDay) {
       focusedDayRef.current = focusedDay;
       dispatch({ type: 'setFocusedDay', focusedDay });
     }
-  });
+  }, [
+    calendarState.focusedDay,
+    calendarState.currentMonth,
+    isDateDisabled,
+    findClosestEnabledDateInMonth,
+  ]);
 
   return {
     referenceDate,

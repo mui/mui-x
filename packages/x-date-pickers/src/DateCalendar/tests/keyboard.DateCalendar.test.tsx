@@ -168,6 +168,20 @@ describe('<DateCalendar /> keyboard interactions', () => {
         expect(document.activeElement).toHaveAccessibleName('1');
       });
 
+      it('should keep the focused day while the whole month is disabled', async () => {
+        const { user, setProps } = render(
+          <DateCalendar referenceDate={adapterToUse.date('2020-01-20')} />,
+        );
+
+        setProps({ shouldDisableDate: () => true });
+        setProps({ shouldDisableDate: () => false });
+
+        await act(async () => screen.getByRole('button', { name: 'Next month' }).focus());
+        await user.keyboard('{Tab}');
+
+        expect(document.activeElement).toHaveAccessibleName('20');
+      });
+
       it('should call `onMonthChange` once when `onMonthChange` disables the day that gets focus', async () => {
         const onMonthChange = vi.fn();
         function CalendarWithAvailability() {
