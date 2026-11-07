@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { SlideDirection } from './PickersSlideTransition';
 import { useIsDateDisabled } from './useIsDateDisabled';
 import type { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '../models';
@@ -37,9 +38,16 @@ const createCalendarStateReducer =
     action:
       | ReducerAction<'finishMonthSwitchingAnimation'>
       | ReducerAction<'setVisibleDate', SetVisibleDatePayload>
+      | ReducerAction<'setFocusedDay', { focusedDay: PickerValidDate | null }>
       | ReducerAction<'changeMonthTimezone', { newTimezone: string }>,
   ): CalendarState => {
     switch (action.type) {
+      case 'setFocusedDay':
+        return {
+          ...state,
+          focusedDay: action.focusedDay,
+        };
+
       case 'setVisibleDate':
         return {
           ...state,
@@ -250,14 +258,19 @@ export const useCalendarState = (
     dispatch({ type: 'finishMonthSwitchingAnimation' });
   }, []);
 
-  const focusedDay =
-    calendarState.focusedDay != null && isDateDisabled(calendarState.focusedDay)
-      ? findClosestEnabledDateInMonth(calendarState.focusedDay)
-      : calendarState.focusedDay;
+  // A disabled or missing `focusedDay` leaves the day grid without a tab stop.
+  useEnhancedEffect(() => {
+    const tabStop = calendarState.focusedDay ?? calendarState.currentMonth;
+    const focusedDay = isDateDisabled(tabStop) ? findClosestEnabledDateInMonth(tabStop) : tabStop;
+    if (focusedDay !== calendarState.focusedDay) {
+      focusedDayRef.current = focusedDay;
+      dispatch({ type: 'setFocusedDay', focusedDay });
+    }
+  });
 
   return {
     referenceDate,
-    calendarState: { ...calendarState, focusedDay },
+    calendarState,
     setVisibleDate,
     isDateDisabled,
     onMonthSwitchingAnimationEnd,
