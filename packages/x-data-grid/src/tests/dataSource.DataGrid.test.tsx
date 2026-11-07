@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
+import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import type { RefObject } from '@mui/x-internals/types';
 import {
   DataGrid,
@@ -409,6 +409,38 @@ describe('<DataGrid /> - Data source', () => {
       expect(gridFocusCellSelector(apiRef)).to.deep.equal({ id: nextRowId, field });
       expect(getCell(2, 1)).toHaveFocus();
     });
+  });
+
+  it('should keep the focus on the pagination button when the page changes with the keyboard', async () => {
+    const { user } = render(<TestDataSource dataSourceCache={null} />);
+    await waitFor(() => {
+      expect(apiRef.current?.getAllRowIds().length).to.equal(10);
+    });
+    const firstPageRowIds = apiRef.current!.getAllRowIds();
+
+    await user.click(getCell(2, 0));
+    const nextPageButton = screen.getByRole('button', { name: /next page/i });
+    await user.tab();
+    expect(nextPageButton).toHaveFocus();
+
+    await user.keyboard('{Enter}');
+    await waitFor(() => {
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
+      expect(apiRef.current!.getAllRowIds().length).to.equal(10);
+      expect(apiRef.current!.getAllRowIds()).not.to.include(firstPageRowIds[0]);
+    });
+    const secondPageRowIds = apiRef.current!.getAllRowIds();
+    await waitFor(() => {
+      expect(nextPageButton).toHaveFocus();
+    });
+
+    await user.keyboard('{Enter}');
+    await waitFor(() => {
+      expect(fetchRowsSpy.mock.calls.length).to.equal(3);
+      expect(apiRef.current!.getAllRowIds().length).to.equal(10);
+      expect(apiRef.current!.getAllRowIds()).not.to.include(secondPageRowIds[0]);
+    });
+    expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(2);
   });
 
   it('should re-fetch the data on pagination change', async () => {

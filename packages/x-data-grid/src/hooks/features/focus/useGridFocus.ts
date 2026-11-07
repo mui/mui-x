@@ -530,7 +530,15 @@ export const useGridFocus = (
       });
 
       if (currentPage.rows.length === 0 && gridRowsLoadingSelector(apiRef)) {
-        return;
+        const doc = ownerDocument(apiRef.current.rootElementRef!.current);
+        const cellElement = apiRef.current.getCellElement(cell.id, cell.field);
+        if (
+          !doc.activeElement ||
+          doc.activeElement === doc.body ||
+          cellElement?.contains(doc.activeElement)
+        ) {
+          return;
+        }
       }
 
       const lastFocusedRowId = cell.id;
