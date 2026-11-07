@@ -1,9 +1,13 @@
 import type * as React from 'react';
 import { describe, it, expect } from 'vitest';
-import { computeFlexColumnsWidth, createColumnsState } from './gridColumnsUtils';
+import {
+  computeFlexColumnsWidth,
+  createColumnsState,
+  hydrateColumnsWidth,
+} from './gridColumnsUtils';
 import type { GridColDef } from '../../../models/colDef/gridColDef';
 import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { GridColumnsState } from './gridColumnsInterfaces';
+import type { GridColumnsRawState, GridColumnsState } from './gridColumnsInterfaces';
 
 describe('gridColumnsUtils', () => {
   describe('createColumnsState', () => {
@@ -72,6 +76,40 @@ describe('gridColumnsUtils', () => {
       expect(stateWithRenderHeader.lookup.default.renderCell).toBeUndefined();
       expect(stateWithRenderHeader.lookup.number.renderCell).toBeUndefined();
       expect(stateWithRenderHeader.lookup.string.renderCell).toBeUndefined();
+    });
+  });
+
+  describe('hydrateColumnsWidth', () => {
+    const getComputedWidth = (column: Omit<GridColDef, 'field'>) => {
+      const rawState: GridColumnsRawState = {
+        orderedFields: ['column'],
+        lookup: { column: { field: 'column', ...column } },
+        columnVisibilityModel: {},
+        initialColumnVisibilityModel: {},
+      };
+
+      return hydrateColumnsWidth(rawState, undefined).lookup.column.computedWidth;
+    };
+
+    it('should respect a `minWidth` of 0', () => {
+      expect(getComputedWidth({ width: 30, minWidth: 0 })).to.equal(30);
+    });
+
+    it('should respect a `width` of 0', () => {
+      expect(getComputedWidth({ width: 0, minWidth: 0 })).to.equal(0);
+      expect(getComputedWidth({ width: 0, minWidth: 20 })).to.equal(20);
+    });
+
+    it('should respect a `maxWidth` of 0', () => {
+      expect(getComputedWidth({ width: 30, minWidth: 0, maxWidth: 0 })).to.equal(0);
+    });
+
+    it('should use the default dimensions when the values are missing or invalid', () => {
+      expect(getComputedWidth({})).to.equal(100);
+      expect(getComputedWidth({ width: 30 })).to.equal(50);
+      expect(getComputedWidth({ width: Number.NaN })).to.equal(100);
+      expect(getComputedWidth({ width: 30, minWidth: Number.NaN })).to.equal(50);
+      expect(getComputedWidth({ width: 200, maxWidth: Number.NaN })).to.equal(200);
     });
   });
 
