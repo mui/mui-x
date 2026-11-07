@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
+import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import type { RefObject } from '@mui/x-internals/types';
 import {
   DataGrid,
@@ -441,6 +441,92 @@ describe('<DataGrid /> - Data source', () => {
       expect(apiRef.current!.getAllRowIds()).not.to.include(secondPageRowIds[0]);
     });
     expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(2);
+  });
+
+  it('should not throw when copying while the next page is loading after a keyboard page change', async () => {
+    let resolveStall: () => void = () => {};
+    const { user, setProps } = render(<TestDataSource dataSourceCache={null} />);
+    await waitFor(() => {
+      expect(apiRef.current?.getAllRowIds().length).to.equal(10);
+    });
+
+    await user.click(getCell(2, 0));
+    const nextPageButton = screen.getByRole('button', { name: /next page/i });
+    await user.tab();
+    expect(nextPageButton).toHaveFocus();
+
+    setProps({
+      stallResponsePromise: new Promise<void>((resolve) => {
+        resolveStall = resolve;
+      }),
+    });
+    await user.keyboard('{Enter}');
+    await waitFor(() => {
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
+      expect(apiRef.current!.getAllRowIds().length).to.equal(0);
+    });
+    expect(nextPageButton).toHaveFocus();
+
+    fireEvent.keyDown(nextPageButton, { key: 'c', keyCode: 67, ctrlKey: true });
+    fireEvent.keyDown(nextPageButton, { key: 'c', keyCode: 67, metaKey: true });
+
+    await act(async () => {
+      resolveStall();
+    });
+    await waitFor(() => {
+      expect(apiRef.current!.getAllRowIds().length).to.equal(10);
+    });
+    expect(nextPageButton).toHaveFocus();
+  });
+
+  ['ctrlKey', 'metaKey'].forEach((key) => {
+    it(`should not throw when ${key} + C is pressed in the grid while server-side sort is loading`, async () => {
+      let resolveStall: () => void = () => {};
+      const { user, setProps } = render(
+        <TestDataSource
+          dataSetOptions={{ ...dataSetOptions, maxColumns: 3 }}
+          dataSourceCache={null}
+          initialState={{
+            pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+            sorting: { sortModel: [{ field: 'id', sort: 'asc' }] },
+          }}
+        />,
+      );
+      await waitFor(() => {
+        expect(apiRef.current?.getAllRowIds().length).to.equal(10);
+      });
+
+      await user.click(getCell(2, 1));
+      const focusedCell = gridFocusCellSelector(apiRef);
+
+      setProps({
+        stallResponsePromise: new Promise<void>((resolve) => {
+          resolveStall = resolve;
+        }),
+      });
+      await act(async () => {
+        apiRef.current!.sortColumn('id', 'desc');
+      });
+      await waitFor(() => {
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
+        expect(apiRef.current!.getAllRowIds().length).to.equal(0);
+      });
+      await sleep(10);
+      expect(gridFocusCellSelector(apiRef)).to.deep.equal(focusedCell);
+
+      expect(document.body).toHaveFocus();
+      await user.tab();
+      const nextPageButton = screen.getByRole('button', { name: /next page/i });
+      expect(nextPageButton).toHaveFocus();
+      fireEvent.keyDown(nextPageButton, { key: 'c', keyCode: 67, [key]: true });
+
+      await act(async () => {
+        resolveStall();
+      });
+      await waitFor(() => {
+        expect(apiRef.current!.getAllRowIds().length).to.equal(10);
+      });
+    });
   });
 
   it('should re-fetch the data on pagination change', async () => {
