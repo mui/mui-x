@@ -1,8 +1,9 @@
 /* eslint-disable no-promise-executor-return */
 import * as React from 'react';
-import { createRenderer, act } from '@mui/internal-test-utils';
+import { createRenderer, act, screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
+import { BarChartPro } from '../BarChartPro/BarChartPro';
 import { LineChartPro } from '../LineChartPro/LineChartPro';
 import type { LineChartProProps } from '../LineChartPro/LineChartPro';
 import { chartsAxisZoomSliderThumbClasses } from './internals/chartsAxisZoomSliderThumbClasses';
@@ -300,6 +301,131 @@ describe.skipIf(isJSDOM)('<ChartsZoomSlider />', () => {
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       expect(getZoomSliderTooltips().length).to.equal(0);
+    });
+  });
+
+  describe('ordinal y-axis', () => {
+    const data = Array.from({ length: 20 }, (_, index) => `G${index}`);
+    const height = 200;
+    const horizontalBarProps = {
+      layout: 'horizontal',
+      series: [{ data: data.map((_, index) => index + 1) }],
+      xAxis: [{ position: 'none' }],
+      yAxis: [
+        {
+          id: 'y',
+          scaleType: 'band',
+          data,
+          width: 30,
+          zoom: { minSpan: 5, slider: { enabled: true, preview: true } },
+        },
+      ],
+      width: 200,
+      height,
+      margin: 0,
+      slotProps: { tooltip: { trigger: 'none' } },
+    } as const;
+    const barOptions = {
+      wrapper: ({ children }: { children?: React.ReactNode }) => (
+        <div style={{ width: 200, height }}>{children}</div>
+      ),
+    };
+
+    const getActiveTrackY = () => {
+      const track = document.querySelector(`.${chartsAxisZoomSliderTrackClasses.active}`)!;
+
+      return {
+        start: Number(track.getAttribute('y')),
+        end: Number(track.getAttribute('y')) + Number(track.getAttribute('height')),
+      };
+    };
+
+    const getMaskHoleY = () => {
+      const hole = document.querySelector('mask rect[fill="black"]')!;
+
+      return {
+        start: Number(hole.getAttribute('y')),
+        end: Number(hole.getAttribute('y')) + Number(hole.getAttribute('height')),
+      };
+    };
+
+    it('should draw the zoom range from the top of the slider', () => {
+      render(
+        <BarChartPro {...horizontalBarProps} initialZoom={[{ axisId: 'y', start: 0, end: 25 }]} />,
+        barOptions,
+      );
+
+      expect(getAxisTickValues('y')).to.deep.equal(['G0', 'G1', 'G2', 'G3', 'G4']);
+      expect(getActiveTrackY()).to.deep.equal({ start: 0, end: height / 4 });
+      expect(getMaskHoleY()).to.deep.equal({ start: 0, end: height / 4 });
+    });
+
+    it('should draw the zoom range from the bottom of the slider when the axis is reversed', () => {
+      render(
+        <BarChartPro
+          {...horizontalBarProps}
+          yAxis={[{ ...horizontalBarProps.yAxis[0], reverse: true }]}
+          initialZoom={[{ axisId: 'y', start: 0, end: 25 }]}
+        />,
+        barOptions,
+      );
+
+      expect(getActiveTrackY()).to.deep.equal({ start: (height * 3) / 4, end: height });
+      expect(getMaskHoleY()).to.deep.equal({ start: (height * 3) / 4, end: height });
+    });
+
+    it('should show the first visible category in the tooltip of the top thumb', () => {
+      render(
+        <BarChartPro
+          {...horizontalBarProps}
+          yAxis={[
+            {
+              ...horizontalBarProps.yAxis[0],
+              zoom: { minSpan: 5, slider: { enabled: true, showTooltip: 'always' } },
+            },
+          ]}
+          initialZoom={[{ axisId: 'y', start: 10, end: 35 }]}
+        />,
+        barOptions,
+      );
+
+      expect(screen.getAllByRole('tooltip')[0].textContent).to.equal('G2');
+    });
+
+    it('should scroll down the categories when dragging the slider down', async () => {
+      const { user } = render(
+        <BarChartPro {...horizontalBarProps} initialZoom={[{ axisId: 'y', start: 0, end: 25 }]} />,
+        barOptions,
+      );
+      const activeTrack = document.querySelector(`.${chartsAxisZoomSliderTrackClasses.active}`)!;
+
+      await user.pointer([
+        { keys: '[MouseLeft>]', target: activeTrack, coords: { x: 0, y: 10 } },
+        { target: activeTrack, coords: { x: 0, y: 60 } },
+        { keys: '[/MouseLeft]', target: activeTrack, coords: { x: 0, y: 60 } },
+      ]);
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(getAxisTickValues('y')).to.deep.equal(['G5', 'G6', 'G7', 'G8', 'G9']);
+      expect(getActiveTrackY()).to.deep.equal({ start: 50, end: 100 });
+    });
+
+    it('should move the start of the zoom range with the top thumb', async () => {
+      const onZoomChange = vi.fn();
+      const { user } = render(
+        <BarChartPro {...horizontalBarProps} onZoomChange={onZoomChange} />,
+        barOptions,
+      );
+      const startThumb = document.querySelector(`.${chartsAxisZoomSliderThumbClasses.start}`)!;
+
+      await user.pointer([
+        { keys: '[MouseLeft>]', target: startThumb, coords: { x: 0, y: 0 } },
+        { target: startThumb, coords: { x: 0, y: 50 } },
+        { keys: '[/MouseLeft]', target: startThumb, coords: { x: 0, y: 50 } },
+      ]);
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(onZoomChange.mock.lastCall![0]).to.deep.equal([{ axisId: 'y', start: 25, end: 100 }]);
     });
   });
 });
