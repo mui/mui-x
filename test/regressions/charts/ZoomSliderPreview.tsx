@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { XAxis } from '@mui/x-charts/models';
-import { BarChartPro, BarChartProProps } from '@mui/x-charts-pro/BarChartPro';
+import type { XAxis } from '@mui/x-charts/models';
+import type { BarChartProProps } from '@mui/x-charts-pro/BarChartPro';
+import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { shareOfRenewables } from 'docs/data/charts/dataset/shareOfRenewables';
 import { countryData } from 'docs/data/charts/dataset/countryData';
 import { createTheme, ThemeProvider } from '@mui/material/styles';

@@ -1,8 +1,8 @@
-import { AdapterFormats } from '@mui/x-date-pickers/models';
+import type { AdapterFormats } from '@mui/x-date-pickers/models';
 import { cleanText } from 'test/utils/pickers';
 import moment from 'moment';
 import { it, expect } from 'vitest';
-import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
+import type { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
 import { TEST_DATE_ISO_STRING } from './describeGregorianAdapter.utils';
 
 export const testLocalization: DescribeGregorianAdapterTestSuite = ({ adapter }) => {

@@ -8,11 +8,12 @@
  * wheel gestures are always considered "ongoing" since they are discrete events.
  */
 
-import { ActiveGesturesRegistry } from '../ActiveGesturesRegistry';
-import { Gesture, GestureEventData, GestureOptions, GestureState } from '../Gesture';
+import type { ActiveGesturesRegistry } from '../ActiveGesturesRegistry';
+import type { GestureEventData, GestureOptions, GestureState } from '../Gesture';
+import { Gesture } from '../Gesture';
 import type { KeyboardManager } from '../KeyboardManager';
-import { PointerData, PointerManager } from '../PointerManager';
-import { TargetElement } from '../types/TargetElement';
+import type { PointerData, PointerManager } from '../PointerManager';
+import type { TargetElement } from '../types/TargetElement';
 import { calculateCentroid, createEventName } from '../utils';
 
 /**

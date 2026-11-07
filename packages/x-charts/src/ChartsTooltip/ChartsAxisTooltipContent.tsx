@@ -25,6 +25,9 @@ export interface ChartsAxisTooltipContentProps {
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<ChartsTooltipClasses>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
   /**
    * The sort in which series items are displayed in the tooltip.
@@ -172,6 +175,9 @@ ChartsAxisTooltipContent.propTypes /* remove-proptypes */ = {
    * @default 'none'
    */
   sort: PropTypes.oneOf(['asc', 'desc', 'none']),
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

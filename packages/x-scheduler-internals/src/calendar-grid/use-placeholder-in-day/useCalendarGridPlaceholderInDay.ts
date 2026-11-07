@@ -1,25 +1,25 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import type { SchedulerProcessedDate } from '../../models';
+import type { SchedulerProcessedDay } from '../../models';
 import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
 import { useAdapterContext } from '../../use-adapter-context';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
-import { processDate } from '../../process-date';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
-import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/adapter';
+import { createProcessedDate } from '../../internals/utils/plain-date-utils/adapter';
 import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
+import { getDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
 
 export function useCalendarGridPlaceholderInDay(
-  day: SchedulerProcessedDate,
+  day: SchedulerProcessedDay,
   row: useEventOccurrencesWithDayGridPosition.ReturnValue,
   maxEvents?: number,
 ): useEventOccurrencesWithDayGridPosition.EventOccurrencePlaceholderWithPosition | null {
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
-  const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext();
+  const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext().axis;
 
   const findAvailableIndex = React.useCallback(
     (excludeKey?: string): number => {
@@ -62,13 +62,9 @@ export function useCalendarGridPlaceholderInDay(
     }
 
     // The placeholder can run past the week row: the next rows render their own piece.
-    const endInRow =
-      adapter.getTime(rawPlaceholder.end) > adapter.getTime(rowEnd) ? rowEnd : rawPlaceholder.end;
+    const endInRow = Math.min(rawPlaceholder.end, rowEnd);
     // The placeholder covers every date up to its end, like the occurrences.
-    const daySpan =
-      buildTemporalPlainDate(adapter, endInRow).dayNumber -
-      toLocalDayNumber(day.timestamp, displayTimezone) +
-      1;
+    const daySpan = toLocalDayNumber(endInRow, displayTimezone) - getDayNumber(day.plainDate) + 1;
 
     const sharedProperties = {
       key: 'occurrence-placeholder',
@@ -90,8 +86,8 @@ export function useCalendarGridPlaceholderInDay(
             timestamp: day.timestamp,
             minutesInDay: day.minutesInDay,
           },
-          end: processDate(endInRow, adapter),
-          timezone: adapter.getTimezone(day.value),
+          end: createProcessedDate(adapter, endInRow, displayTimezone),
+          timezone: displayTimezone,
         },
         position: {
           index: findAvailableIndex(),
@@ -101,16 +97,13 @@ export function useCalendarGridPlaceholderInDay(
     }
 
     if (rawPlaceholder.type === 'external-drag') {
-      const startProcessed = processDate(rawPlaceholder.start, adapter);
-      const endProcessed = processDate(rawPlaceholder.end, adapter);
-
       return {
         ...sharedProperties,
         title: rawPlaceholder.eventData.title ?? '',
         displayTimezone: {
-          start: startProcessed,
-          end: endProcessed,
-          timezone: adapter.getTimezone(rawPlaceholder.start),
+          start: createProcessedDate(adapter, rawPlaceholder.start, displayTimezone),
+          end: createProcessedDate(adapter, rawPlaceholder.end, displayTimezone),
+          timezone: displayTimezone,
         },
         position: {
           index: findAvailableIndex(),
@@ -121,8 +114,8 @@ export function useCalendarGridPlaceholderInDay(
 
     return {
       ...sharedProperties,
-      start: processDate(rawPlaceholder.start, adapter),
-      end: processDate(rawPlaceholder.end, adapter),
+      start: createProcessedDate(adapter, rawPlaceholder.start, displayTimezone),
+      end: createProcessedDate(adapter, rawPlaceholder.end, displayTimezone),
       displayTimezone: { ...originalEvent!.displayTimezone },
       position: {
         index: findAvailableIndex(rawPlaceholder.occurrenceKey),

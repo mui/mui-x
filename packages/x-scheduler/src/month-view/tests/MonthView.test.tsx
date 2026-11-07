@@ -10,6 +10,7 @@ import {
   getAllEventsByTitle,
   ResourceBuilder,
   SchedulerStoreRunner,
+  setSystemTimezone,
   withinEventCalendarToolbar,
 } from 'test/utils/scheduler';
 import { act, screen, within, waitFor } from '@mui/internal-test-utils';
@@ -259,12 +260,12 @@ describe('<MonthView />', () => {
       const eventButtons = within(popover).getAllByRole('button');
 
       expect(eventButtons.map((button) => button.getAttribute('aria-label'))).to.deep.equal([
-        'Event 1, 8:00 AM to 9:00 AM, Thursday, May 1st, 2025',
-        'Event 2, 9:00 AM to 10:00 AM, Thursday, May 1st, 2025',
-        'Event 3, 10:00 AM to 11:00 AM, Thursday, May 1st, 2025',
-        'Event 4, 11:00 AM to 12:00 PM, Thursday, May 1st, 2025',
-        'Event 5, 12:00 PM to 1:00 PM, Thursday, May 1st, 2025',
-        'Event 6, 1:00 PM to 2:00 PM, Thursday, May 1st, 2025',
+        'Event 1, 8:00 AM to 9:00 AM, Thursday, May 1, 2025',
+        'Event 2, 9:00 AM to 10:00 AM, Thursday, May 1, 2025',
+        'Event 3, 10:00 AM to 11:00 AM, Thursday, May 1, 2025',
+        'Event 4, 11:00 AM to 12:00 PM, Thursday, May 1, 2025',
+        'Event 5, 12:00 PM to 1:00 PM, Thursday, May 1, 2025',
+        'Event 6, 1:00 PM to 2:00 PM, Thursday, May 1, 2025',
       ]);
       eventButtons.forEach((button) => {
         expect(button).not.to.have.attribute('aria-labelledby');
@@ -841,7 +842,7 @@ describe('<MonthView />', () => {
       await act(async () => {
         store!.setOccurrencePlaceholder({
           ...placeholder,
-          end: adapter.addHours(placeholder.end, -1),
+          end: placeholder.end - 60 * 60_000,
         });
       });
 
@@ -865,8 +866,8 @@ describe('<MonthView />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'day-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -922,7 +923,7 @@ describe('<MonthView />', () => {
 
       expect(
         screen.getByRole('button', {
-          name: 'Trip, From Monday, May 5th, 2025 7:30 AM to Wednesday, May 7th, 2025 5:00 PM',
+          name: 'Trip, From Monday, May 5, 2025 7:30 AM to Wednesday, May 7, 2025 5:00 PM',
         }),
       ).not.to.equal(null);
     });
@@ -938,7 +939,7 @@ describe('<MonthView />', () => {
 
       expect(
         screen.getByRole('button', {
-          name: 'Multi-day Conference, All day, From Monday, May 5th, 2025 to Wednesday, May 7th, 2025',
+          name: 'Multi-day Conference, All day, From Monday, May 5, 2025 to Wednesday, May 7, 2025',
         }),
       ).not.to.equal(null);
     });
@@ -1102,7 +1103,7 @@ describe('<MonthView />', () => {
       visibleInstances.forEach((instance) => {
         expect(instance).to.have.attribute(
           'aria-label',
-          'Multiple week event, All day, From Monday, May 19th, 2025 to Tuesday, May 27th, 2025',
+          'Multiple week event, All day, From Monday, May 19, 2025 to Tuesday, May 27, 2025',
         );
       });
     });
@@ -1329,9 +1330,9 @@ describe('<MonthView />', () => {
       });
     });
 
-    it('should start each week row on Sunday when weekStartsOn=0', () => {
+    it('should start each week row on Sunday when weekStartsOn=7', () => {
       render(
-        <EventCalendarProvider {...standaloneDefaults} defaultPreferences={{ weekStartsOn: 0 }}>
+        <EventCalendarProvider {...standaloneDefaults} defaultPreferences={{ weekStartsOn: 7 }}>
           <EventDialogProvider>
             <MonthView />
           </EventDialogProvider>
@@ -1348,6 +1349,52 @@ describe('<MonthView />', () => {
         expect(cells.length).to.equal(7);
       });
     });
+
+    it('should end on the week of the last day of the month when the timezone skips that day', () => {
+      // Pacific/Kiritimati skipped Saturday, December 31st, 1994, the last day of its week.
+      render(
+        <EventCalendar
+          events={[]}
+          view="month"
+          visibleDate={new Date('1994-12-15T00:00:00Z')}
+          displayTimezone="Pacific/Kiritimati"
+        />,
+      );
+
+      const cellNumbers = document.querySelectorAll(
+        `.${eventCalendarClasses.monthView} .${eventCalendarClasses.monthViewCellNumber}`,
+      );
+      expect(cellNumbers[cellNumbers.length - 1]).to.have.text('30');
+    });
+
+    // Browsers cannot change their timezone through process.env.TZ.
+    it.skipIf(!isJSDOM)(
+      'should fill an event on two days of the display timezone, whatever the timezone of the system',
+      () => {
+        // Pacific/Apia skipped December 30th, 2011. On a system there, `adapter.isSameDay()` reads
+        // December 30th and 31st as the same day in the other timezones.
+        setSystemTimezone('Pacific/Apia');
+        const event = EventBuilder.new()
+          .title('Trip')
+          .span('2011-12-30T15:00:00Z', '2011-12-31T15:00:00Z')
+          .build();
+
+        render(
+          <EventCalendar
+            events={[event]}
+            view="month"
+            visibleDate={new Date('2011-12-15T00:00:00Z')}
+            displayTimezone="America/New_York"
+          />,
+        );
+
+        // The day after the first one only holds the space of the event.
+        const variants = getAllEventsByTitle('Trip').map((part) =>
+          part.getAttribute('data-variant'),
+        );
+        expect(variants).to.deep.equal(['filled', 'invisible']);
+      },
+    );
 
     it('should display correct ISO week numbers when weekStartsOn=1 and showWeekNumber=true', () => {
       // May 2025 week 1 starts Mon Apr 28.

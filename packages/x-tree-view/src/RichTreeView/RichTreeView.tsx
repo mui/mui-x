@@ -294,6 +294,9 @@ RichTreeView.propTypes /* remove-proptypes */ = {
    * @default null
    */
   itemHeight: PropTypes.number,
+  /**
+   * The items to render in the Tree View.
+   */
   items: PropTypes.array.isRequired,
   /**
    * If `true`, a loading UI is displayed instead of the tree items.

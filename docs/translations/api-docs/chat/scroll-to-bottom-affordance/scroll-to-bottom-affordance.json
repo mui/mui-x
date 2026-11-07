@@ -1,6 +1,16 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "scrollBehavior": {
+      "description": "The scroll behavior used when the button scrolls to the bottom."
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
+  },
   "classDescriptions": {},
-  "slotDescriptions": { "badge": "", "icon": "", "root": "" }
+  "slotDescriptions": {
+    "badge": "The component that renders the badge.",
+    "icon": "The component that renders the icon.",
+    "root": "The component that renders the root."
+  }
 }

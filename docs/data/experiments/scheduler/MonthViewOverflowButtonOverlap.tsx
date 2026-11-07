@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SchedulerEvent } from '@mui/x-scheduler/models';
+import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { StandaloneMonthView } from '@mui/x-scheduler/month-view';
 
 // Two all-day events fill rows 1 and 2 across the whole month. Adding a single

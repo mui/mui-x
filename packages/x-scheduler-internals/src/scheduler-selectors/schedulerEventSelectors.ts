@@ -122,6 +122,11 @@ export const schedulerEventSelectors = {
     return eventCreation?.duration ?? DEFAULT_EVENT_CREATION_CONFIG.duration;
   },
   /**
+   * The deletion config, or `false` when deleting from the UI is disabled (`eventDeletion={false}`
+   * or a read-only scheduler). Programmatic deletion through the store ignores it.
+   */
+  deletionConfig: (state: State) => (state.readOnly ? false : state.eventDeletion),
+  /**
    * Whether an occurrence whose own `resource` carries no shape (`null`/`undefined`) should
    * be edited/created as multi-resource. Reads `eventCreation.canHaveMultipleResources`
    * directly off the raw prop — not through `creationConfig` — so it still resolves when
@@ -159,13 +164,15 @@ export const schedulerEventSelectors = {
   /** Used by writers where no event exists yet (a creation), or that write the whole model into a new one (a copy). */
   canWriteEventDates: (state: State) => canWriteEventDatesSelector(state.eventModelStructure),
   /**
-   * Whether `eventModelStructure` can write a single date back to the model. Used by
-   * `removeUnwritableDates`, which drops only the date that can't be written instead of refusing
-   * the whole update — called from `updateEvents` for a resize-style change, and from the
-   * recurring "all" scope path for an in-place edit.
+   * The dates `eventModelStructure` declares with a getter but no setter, so they can't be
+   * written back to the model. `removeUnwritableDates` drops them from a resize-style change,
+   * the scheduling plugin refuses a cascade carrying one, and every refusal names them in its
+   * dev warning (`datesNotWritableReason`).
    */
-  isDateWritable: (state: State, property: SchedulerEventSide) =>
-    !isPropertyMissingSetter(state.eventModelStructure, property),
+  unwritableDates: (state: State): SchedulerEventSide[] =>
+    (['start', 'end'] as const).filter((property) =>
+      isPropertyMissingSetter(state.eventModelStructure, property),
+    ),
   /**
    * Resolves an event's color. `resourceId` picks which resource's `eventColor` counts when the
    * event itself has none — pass the row's resource id on a resource-row surface (the Event
@@ -206,11 +213,9 @@ export const schedulerEventSelectors = {
     },
   ),
   processedEventRangeIndex: createSelectorMemoized(
-    (state: State) => state.adapter,
     processedEventListSelector,
     (state: State) => state.recurringEventsPlugin,
-    (adapter, events, recurringEventsPlugin) =>
-      createEventRangeIndex(events, adapter, recurringEventsPlugin != null),
+    (events, recurringEventsPlugin) => createEventRangeIndex(events, recurringEventsPlugin != null),
   ),
   idList: (state: State) => state.eventIdList,
   modelList: (state: State) => state.eventModelList,

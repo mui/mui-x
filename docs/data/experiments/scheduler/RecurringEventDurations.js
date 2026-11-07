@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
 import {
   initialEvents,

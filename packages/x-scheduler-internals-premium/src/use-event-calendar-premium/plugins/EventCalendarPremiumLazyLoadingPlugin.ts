@@ -1,6 +1,11 @@
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
-import type { EventCalendarFetchRange } from '@mui/x-scheduler-internals/models';
-import { SchedulerLazyLoadingPlugin } from '../../internals/plugins/SchedulerLazyLoadingPlugin';
+import { toEpochMs } from '@mui/x-scheduler-internals/internals';
+import {
+  SchedulerLazyLoadingPlugin,
+  toWholeDays,
+} from '../../internals/plugins/SchedulerLazyLoadingPlugin';
+import { getDateRangeKey } from '../../internals/utils/queue';
+import type { DateRange } from '../../internals/utils/queue';
 import type {
   EventCalendarPremiumState,
   EventCalendarPremiumParameters,
@@ -25,7 +30,7 @@ export class EventCalendarPremiumLazyLoadingPlugin<
             return null;
           }
 
-          return `${state.adapter.getTime(range.start)}:${state.adapter.getTime(range.end)}`;
+          return getDateRangeKey(range);
         },
 
         (previousKey, nextKey) => {
@@ -42,26 +47,33 @@ export class EventCalendarPremiumLazyLoadingPlugin<
 }
 
 /**
- * Returns the range to fetch for the registered view, spanning whole days,
+ * Returns the range to fetch for the registered view, spanning whole days of the display timezone,
  * or `null` when there is nothing to fetch.
  */
-function getRangeToFetch(state: EventCalendarPremiumState): EventCalendarFetchRange | null {
-  const { viewDefinition, adapter } = state;
+function getRangeToFetch(state: EventCalendarPremiumState): DateRange | null {
+  const { viewDefinition, displayTimezone } = state;
   if (!viewDefinition) {
     return null;
   }
 
   const calendarState = state as EventCalendarState;
-  let range: EventCalendarFetchRange;
   if (viewDefinition.fetchRangeSelector) {
-    range = viewDefinition.fetchRangeSelector(calendarState);
-  } else {
-    const days = viewDefinition.visibleDaysSelector(calendarState);
-    if (days.length === 0) {
-      return null;
-    }
-    range = { start: days[0].value, end: days[days.length - 1].value };
+    const range = viewDefinition.fetchRangeSelector(calendarState);
+    return toWholeDays(
+      {
+        start: toEpochMs(range.start, 0, displayTimezone),
+        end: toEpochMs(range.end, 0, displayTimezone),
+      },
+      displayTimezone,
+    );
   }
 
-  return { start: adapter.startOfDay(range.start), end: adapter.endOfDay(range.end) };
+  const days = viewDefinition.visibleDaysSelector(calendarState);
+  if (days.length === 0) {
+    return null;
+  }
+  return toWholeDays(
+    { start: days[0].timestamp, end: days[days.length - 1].timestamp },
+    displayTimezone,
+  );
 }

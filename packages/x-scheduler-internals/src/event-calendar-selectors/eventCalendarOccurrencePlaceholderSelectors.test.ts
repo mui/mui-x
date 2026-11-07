@@ -10,10 +10,7 @@ import { describe, it, expect } from 'vitest';
 import { eventCalendarOccurrencePlaceholderSelectors } from './eventCalendarOccurrencePlaceholderSelectors';
 import type { EventCalendarState } from '../use-event-calendar';
 import { processDate } from '../process-date';
-import {
-  createAdapterDate,
-  createProcessedDate,
-} from '../internals/utils/plain-date-utils/adapter';
+import { createProcessedDate } from '../internals/utils/plain-date-utils/adapter';
 
 // A UTC creation placeholder on December 30th, 2011, on a Pacific/Apia system, which skipped that
 // date: the adapter's `isSameDay()` counts it as the same day as December 31st.
@@ -30,8 +27,8 @@ function getStateInUTCOnApiaSystem() {
     occurrencePlaceholder: {
       type: 'creation',
       surfaceType: 'day-grid',
-      start: createAdapterDate(systemAdapter, Date.UTC(2011, 11, 30), 'UTC'),
-      end: createAdapterDate(systemAdapter, Date.UTC(2011, 11, 30, 23, 59, 59), 'UTC'),
+      start: Date.UTC(2011, 11, 30),
+      end: Date.UTC(2011, 11, 30, 23, 59, 59),
       resourceId: null,
     },
   };
@@ -47,7 +44,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
       () => {
         const { state, december30, december31 } = getStateInUTCOnApiaSystem();
         // The row starts before the placeholder, so only its start can match.
-        const rowStart = createAdapterDate(state.adapter, Date.UTC(2011, 11, 25), 'UTC');
+        const rowStart = Date.UTC(2011, 11, 25);
         expect(
           eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
             state,
@@ -77,13 +74,17 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.setHours(adapter.addDays(dayStart, -1), 22),
-          end: adapter.setHours(dayStart, 6),
+          start: adapter.getTime(adapter.setHours(adapter.addDays(dayStart, -1), 22)),
+          end: adapter.getTime(adapter.setHours(dayStart, 6)),
           resourceId: null,
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.placeholderInTimeRange(state, dayStart, dayEnd),
+        eventCalendarOccurrencePlaceholderSelectors.placeholderInTimeRange(
+          state,
+          adapter.getTime(dayStart),
+          adapter.getTime(dayEnd),
+        ),
       ).to.equal(state.occurrencePlaceholder);
     });
 
@@ -93,13 +94,17 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.setHours(adapter.addDays(dayStart, -1), 16),
-          end: dayStart,
+          start: adapter.getTime(adapter.setHours(adapter.addDays(dayStart, -1), 16)),
+          end: adapter.getTime(dayStart),
           resourceId: null,
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.placeholderInTimeRange(state, dayStart, dayEnd),
+        eventCalendarOccurrencePlaceholderSelectors.placeholderInTimeRange(
+          state,
+          adapter.getTime(dayStart),
+          adapter.getTime(dayEnd),
+        ),
       ).to.equal(null);
     });
 
@@ -111,16 +116,16 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: rangeEnd,
-          end: adapter.setHours(adapter.addDays(dayStart, 1), 4),
+          start: adapter.getTime(rangeEnd),
+          end: adapter.getTime(adapter.setHours(adapter.addDays(dayStart, 1), 4)),
           resourceId: null,
         },
       };
       expect(
         eventCalendarOccurrencePlaceholderSelectors.placeholderInTimeRange(
           state,
-          rangeStart,
-          rangeEnd,
+          adapter.getTime(rangeStart),
+          adapter.getTime(rangeEnd),
         ),
       ).to.equal(null);
     });
@@ -143,8 +148,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.startOfDay(day),
-          end: adapter.endOfDay(day),
+          start: adapter.getTime(adapter.startOfDay(day)),
+          end: adapter.getTime(adapter.endOfDay(day)),
           resourceId: null,
         },
       };
@@ -161,8 +166,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           eventId: 'event-id',
           occurrenceKey: 'event-id-key',
           surfaceType: 'day-grid',
-          start: adapter.startOfDay(day),
-          end: adapter.endOfDay(day),
+          start: adapter.getTime(adapter.startOfDay(day)),
+          end: adapter.getTime(adapter.endOfDay(day)),
           resourceId: null,
           sourceResourceId: null,
           originalOccurrence: EventBuilder.new().id('event-id').toOccurrence(),
@@ -179,8 +184,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'day-grid',
-          start: adapter.startOfDay(day),
-          end: adapter.endOfDay(day),
+          start: adapter.getTime(adapter.startOfDay(day)),
+          end: adapter.getTime(adapter.endOfDay(day)),
           resourceId: null,
         },
       };
@@ -196,8 +201,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'day-grid',
-          start: adapter.startOfDay(otherDay),
-          end: adapter.endOfDay(otherDay),
+          start: adapter.getTime(adapter.startOfDay(otherDay)),
+          end: adapter.getTime(adapter.endOfDay(otherDay)),
           resourceId: null,
         },
       };
@@ -228,7 +233,11 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     it('should return false when there is no placeholder', () => {
       const state = DEFAULT_EVENT_CALENDAR_STATE;
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(state, dayStart, dayEnd),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
+          state,
+          adapter.getTime(dayStart),
+          adapter.getTime(dayEnd),
+        ),
       ).to.equal(false);
     });
 
@@ -238,13 +247,17 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'day-grid',
-          start: adapter.setHours(dayStart, 10),
-          end: adapter.setHours(dayStart, 11),
+          start: adapter.getTime(adapter.setHours(dayStart, 10)),
+          end: adapter.getTime(adapter.setHours(dayStart, 11)),
           resourceId: null,
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(state, dayStart, dayEnd),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
+          state,
+          adapter.getTime(dayStart),
+          adapter.getTime(dayEnd),
+        ),
       ).to.equal(false);
     });
 
@@ -256,15 +269,19 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           eventId: 'event-id',
           occurrenceKey: 'event-id-key',
           surfaceType: 'time-grid',
-          start: adapter.startOfDay(day),
-          end: adapter.endOfDay(day),
+          start: adapter.getTime(adapter.startOfDay(day)),
+          end: adapter.getTime(adapter.endOfDay(day)),
           resourceId: null,
           sourceResourceId: null,
           originalOccurrence: EventBuilder.new().id('event-id').toOccurrence(),
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(state, dayStart, dayEnd),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
+          state,
+          adapter.getTime(dayStart),
+          adapter.getTime(dayEnd),
+        ),
       ).to.equal(false);
     });
 
@@ -275,13 +292,17 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.setHours(adapter.startOfDay(nextDay), 9),
-          end: adapter.setHours(adapter.startOfDay(nextDay), 10),
+          start: adapter.getTime(adapter.setHours(adapter.startOfDay(nextDay), 9)),
+          end: adapter.getTime(adapter.setHours(adapter.startOfDay(nextDay), 10)),
           resourceId: null,
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(state, dayStart, dayEnd),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
+          state,
+          adapter.getTime(dayStart),
+          adapter.getTime(dayEnd),
+        ),
       ).to.equal(false);
     });
 
@@ -291,13 +312,17 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.setHours(dayStart, 10), // < dayEnd
-          end: adapter.setHours(dayStart, 11), // > dayStart
+          start: adapter.getTime(adapter.setHours(dayStart, 10)), // < dayEnd
+          end: adapter.getTime(adapter.setHours(dayStart, 11)), // > dayStart
           resourceId: null,
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(state, dayStart, dayEnd),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
+          state,
+          adapter.getTime(dayStart),
+          adapter.getTime(dayEnd),
+        ),
       ).to.equal(true);
     });
 
@@ -307,13 +332,17 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: dayEnd, // start < dayEnd is false
-          end: adapter.addMinutes(dayEnd, 30),
+          start: adapter.getTime(dayEnd), // start < dayEnd is false
+          end: adapter.getTime(adapter.addMinutes(dayEnd, 30)),
           resourceId: null,
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(state, dayStart, dayEnd),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
+          state,
+          adapter.getTime(dayStart),
+          adapter.getTime(dayEnd),
+        ),
       ).to.equal(false);
     });
 
@@ -323,13 +352,17 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.addMinutes(dayStart, -60),
-          end: dayStart, // end > dayStart is false
+          start: adapter.getTime(adapter.addMinutes(dayStart, -60)),
+          end: adapter.getTime(dayStart), // end > dayStart is false
           resourceId: null,
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(state, dayStart, dayEnd),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
+          state,
+          adapter.getTime(dayStart),
+          adapter.getTime(dayEnd),
+        ),
       ).to.equal(false);
     });
   });

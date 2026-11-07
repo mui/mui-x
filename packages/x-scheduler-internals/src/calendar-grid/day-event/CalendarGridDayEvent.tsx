@@ -8,19 +8,10 @@ import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
-import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
-import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/adapter';
 import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
-import { createPlainDate } from '../../internals/utils/base-temporal/PlainDate';
-import type { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
-import { ISO_CALENDAR_ID } from '../../internals/utils/base-temporal/calendar';
-import type {
-  SchedulerEventId,
-  SchedulerEventOccurrence,
-  SchedulerResourceId,
-  TemporalSupportedObject,
-} from '../../models';
-import { useAdapterContext } from '../../use-adapter-context';
+import type { BaseTemporal } from '../../internals/utils/base-temporal';
+import { plainDateFromDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
+import type { SchedulerEventId, SchedulerEventOccurrence, SchedulerResourceId } from '../../models';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import {
   schedulerOccurrencePlaceholderSelectors,
@@ -63,9 +54,9 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const isInteractive = true;
 
   // Context hooks
-  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
-  const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext();
+  const { axis: rowAxis } = useCalendarGridDayRowContext();
+  const { start: rowStart, end: rowEnd } = rowAxis;
   const { hasFocus: cellHasFocus } = useCalendarGridDayCellContext();
   const isRtl = useDirection() === 'rtl';
 
@@ -80,14 +71,14 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     const displayTimezone = schedulerOtherSelectors.displayTimezone(store.state);
     const startDay = toLocalDayNumber(start.timestamp, displayTimezone);
     if (!ref.current) {
-      return createPlainDate(startDay, ISO_CALENDAR_ID);
+      return plainDateFromDayNumber(startDay);
     }
 
     // The event covers every date from its start to its end in the row, like its cells.
-    const firstDay = Math.max(startDay, buildTemporalPlainDate(adapter, rowStart).dayNumber);
+    const firstDay = Math.max(startDay, toLocalDayNumber(rowStart, displayTimezone));
     const lastDay = Math.min(
       toLocalDayNumber(end.timestamp, displayTimezone),
-      buildTemporalPlainDate(adapter, rowEnd).dayNumber,
+      toLocalDayNumber(rowEnd, displayTimezone),
     );
     const elementPosition = ref.current.getBoundingClientRect();
     // Measured from the inline start, where the first day of the event is.
@@ -96,10 +87,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
       : input.clientX - elementPosition.left;
     const positionX = offsetFromStart / ref.current.offsetWidth;
 
-    return createPlainDate(
-      firstDay + Math.ceil(positionX * (lastDay - firstDay + 1)) - 1,
-      ISO_CALENDAR_ID,
-    );
+    return plainDateFromDayNumber(firstDay + Math.ceil(positionX * (lastDay - firstDay + 1)) - 1);
   });
 
   const getOriginalOccurrence = useOriginalOccurrence({
@@ -115,8 +103,8 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
       eventId,
       occurrenceKey,
       originalOccurrence: getOriginalOccurrence(),
-      start: start.value,
-      end: end.value,
+      start: start.timestamp,
+      end: end.timestamp,
     }),
   );
 
@@ -126,12 +114,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     draggedDay: getDraggedDay(input),
   }));
 
-  // The all-day row spans whole days, so its window is never trimmed.
-  const elementPosition = useElementPositionInCollection({
-    start,
-    end,
-    collection: { start: rowStart, end: rowEnd, dayStartMinute: 0, dayEndMinute: FULL_DAY_MINUTES },
-  });
+  const elementPosition = useElementPositionInCollection({ start, end, collection: rowAxis });
 
   const {
     state,
@@ -205,8 +188,14 @@ export namespace CalendarGridDayEvent {
     eventId: SchedulerEventId;
     occurrenceKey: string;
     originalOccurrence: SchedulerEventOccurrence;
-    start: TemporalSupportedObject;
-    end: TemporalSupportedObject;
+    /**
+     * The start of the occurrence, as a timestamp in milliseconds.
+     */
+    start: number;
+    /**
+     * The end of the occurrence, as a timestamp in milliseconds.
+     */
+    end: number;
     sourceResourceId?: SchedulerResourceId;
   }
 
@@ -215,6 +204,6 @@ export namespace CalendarGridDayEvent {
     /**
      * The grabbed day, in the timezone of `start`.
      */
-    draggedDay: PlainDate;
+    draggedDay: BaseTemporal.PlainDate;
   }
 }

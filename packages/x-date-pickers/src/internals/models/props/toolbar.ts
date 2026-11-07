@@ -3,6 +3,10 @@ import type { SxProps } from '@mui/system';
 import type { Theme } from '@mui/material/styles';
 
 export interface BaseToolbarProps extends ExportedBaseToolbarProps {
+  /**
+   * The id of the toolbar title element.
+   * The picker uses it to label its popup.
+   */
   titleId?: string;
 }
 
@@ -16,6 +20,9 @@ export interface ExportedBaseToolbarProps {
    * @default "––"
    */
   toolbarPlaceholder?: React.ReactNode;
+  /**
+   * A CSS class name applied to the root element.
+   */
   className?: string;
   /**
    * If `true`, show the toolbar even in desktop mode.

@@ -1,5 +1,6 @@
-import { ScatterChart, ScatterMarkerProps } from '@mui/x-charts/ScatterChart';
-import { ChartsLabelCustomMarkProps } from '@mui/x-charts/ChartsLabel';
+import type { ScatterMarkerProps } from '@mui/x-charts/ScatterChart';
+import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import type { ChartsLabelCustomMarkProps } from '@mui/x-charts/ChartsLabel';
 import data from '../dataset/random/scatterParallel.json';
 
 export default function ScatterCustomShape() {

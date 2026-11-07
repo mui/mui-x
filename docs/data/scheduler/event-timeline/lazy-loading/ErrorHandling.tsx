@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import type { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
@@ -9,8 +10,8 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { useEventTimelinePremiumApiRef } from '@mui/x-scheduler-premium/use-event-timeline-premium-api-ref';
-import { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
-import { SchedulerEvent } from '@mui/x-scheduler-internals/models';
+import type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
+import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import {
   resources as allResources,
   defaultVisibleDate,

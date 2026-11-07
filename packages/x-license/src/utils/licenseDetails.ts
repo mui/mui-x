@@ -1,6 +1,6 @@
-import { AppType } from './licenseAppType';
-import { LicenseModel } from './licenseModel';
-import { PlanScope, PlanVersion } from './licensePlan';
+import type { AppType } from './licenseAppType';
+import type { LicenseModel } from './licenseModel';
+import type { PlanScope, PlanVersion } from './licensePlan';
 
 /**
  * The version of the license key encoding format.

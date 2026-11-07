@@ -6,15 +6,29 @@ import { useComposerContext } from './internals/ComposerContext';
 import type { ComposerHelperTextOwnerState } from './composer.types';
 
 export interface ComposerHelperTextSlots {
+  /**
+   * The component that renders the helper text.
+   */
   helperText: React.ElementType;
 }
 
 export interface ComposerHelperTextSlotProps {
+  /**
+   * The props used for the helper text slot.
+   */
   helperText?: SlotComponentProps<'div', {}, ComposerHelperTextOwnerState>;
 }
 
 export interface ComposerHelperTextProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<ComposerHelperTextSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ComposerHelperTextSlotProps;
 }
 

@@ -5,6 +5,7 @@ import { adapter, createSchedulerRenderer, describeConformance } from 'test/util
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import { describe, it, expect } from 'vitest';
+import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/adapter';
 
 describe('<CalendarGrid.DayEvent />', () => {
   const { render } = createSchedulerRenderer();
@@ -31,8 +32,10 @@ describe('<CalendarGrid.DayEvent />', () => {
     return render(
       <EventCalendarProvider events={events} resources={resources}>
         <CalendarGrid.Root>
-          <CalendarGrid.DayRow start={rowStart} end={rowEnd}>
-            <CalendarGrid.DayCell value={rowStart}>{node}</CalendarGrid.DayCell>
+          <CalendarGrid.DayRow start={adapter.getTime(rowStart)} end={adapter.getTime(rowEnd)}>
+            <CalendarGrid.DayCell value={buildTemporalPlainDate(adapter, rowStart)}>
+              {node}
+            </CalendarGrid.DayCell>
           </CalendarGrid.DayRow>
         </CalendarGrid.Root>
       </EventCalendarProvider>,

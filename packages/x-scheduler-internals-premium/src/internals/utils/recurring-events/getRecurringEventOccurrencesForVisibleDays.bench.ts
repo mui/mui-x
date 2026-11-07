@@ -64,8 +64,8 @@ function expandAll(
   [start, end]: readonly [string, string],
   displayTimezone: TemporalTimezone,
 ) {
-  const rangeStart = adapter.date(start, 'default');
-  const rangeEnd = adapter.date(end, 'default');
+  const rangeStart = adapter.getTime(adapter.date(start, 'default'));
+  const rangeEnd = adapter.getTime(adapter.date(end, 'default'));
   let count = 0;
   for (const event of events) {
     count += getRecurringEventOccurrencesForVisibleDays(

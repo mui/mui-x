@@ -2,7 +2,7 @@ import * as React from 'react';
 import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import Typography from '@mui/material/Typography';
-import { AxisConfig } from '@mui/x-charts/models';
+import type { AxisConfig } from '@mui/x-charts/models';
 
 const purples = [
   '#F0F1FF',

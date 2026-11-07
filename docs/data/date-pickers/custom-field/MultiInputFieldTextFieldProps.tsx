@@ -4,7 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvid
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
-import { FieldOwnerState } from '@mui/x-date-pickers/models';
+import type { FieldOwnerState } from '@mui/x-date-pickers/models';
 
 export default function MultiInputFieldTextFieldProps() {
   return (

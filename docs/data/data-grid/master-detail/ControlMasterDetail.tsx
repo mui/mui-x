@@ -1,12 +1,12 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import {
-  DataGridPro,
+import type {
   GridColDef,
   GridRowsProp,
   GridRowId,
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomCurrency,

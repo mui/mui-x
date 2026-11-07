@@ -1,45 +1,33 @@
 import type { EventCalendarState as State } from '../use-event-calendar';
-import type { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
-import type { Adapter } from '../use-adapter/useAdapter.types';
+import type { SchedulerProcessedDate } from '../models';
 import { toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
 
 // These selectors run for every cell while dragging, so they compare timestamps and day numbers,
 // which are cheaper than the adapter's comparison methods and than plain dates.
 
-function getDayNumber(adapter: Adapter, date: TemporalSupportedObject): number {
-  return toLocalDayNumber(adapter.getTime(date), adapter.getTimezone(date));
-}
-
-function getProcessedDayNumber(state: State, date: SchedulerProcessedDate): number {
-  return toLocalDayNumber(date.timestamp, state.displayTimezone);
+// The placeholder and the bounds of the rows and columns are timestamps read in the display timezone.
+function getDayNumber(state: State, timestamp: number): number {
+  return toLocalDayNumber(timestamp, state.displayTimezone);
 }
 
 export const eventCalendarOccurrencePlaceholderSelectors = {
-  placeholderInDayCell: (
-    state: State,
-    day: SchedulerProcessedDate,
-    rowStart: TemporalSupportedObject,
-  ) => {
+  placeholderInDayCell: (state: State, day: SchedulerProcessedDate, rowStart: number) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder === null || placeholder.surfaceType !== 'day-grid' || placeholder.isHidden) {
       return null;
     }
 
-    const { adapter } = state;
-    const dayNumber = getProcessedDayNumber(state, day);
-    if (dayNumber === getDayNumber(adapter, placeholder.start)) {
+    const dayNumber = getDayNumber(state, day.timestamp);
+    if (dayNumber === getDayNumber(state, placeholder.start)) {
       return placeholder;
     }
 
     // A placeholder starting in a previous row also renders from the first day of this one.
-    if (dayNumber === getDayNumber(adapter, rowStart)) {
+    if (dayNumber === getDayNumber(state, rowStart)) {
       // Inclusive, in either order, like the adapter's `isWithinRange()`.
-      const rowStartTimestamp = adapter.getTime(rowStart);
-      const startTimestamp = adapter.getTime(placeholder.start);
-      const endTimestamp = adapter.getTime(placeholder.end);
       if (
-        Math.min(startTimestamp, endTimestamp) <= rowStartTimestamp &&
-        rowStartTimestamp <= Math.max(startTimestamp, endTimestamp)
+        Math.min(placeholder.start, placeholder.end) <= rowStart &&
+        rowStart <= Math.max(placeholder.start, placeholder.end)
       ) {
         return placeholder;
       }
@@ -47,21 +35,13 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
 
     return null;
   },
-  placeholderInTimeRange: (
-    state: State,
-    start: TemporalSupportedObject,
-    end: TemporalSupportedObject,
-  ) => {
+  placeholderInTimeRange: (state: State, start: number, end: number) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder === null || placeholder.surfaceType !== 'time-grid' || placeholder.isHidden) {
       return null;
     }
 
-    const { adapter } = state;
-    if (
-      adapter.getTime(placeholder.end) <= adapter.getTime(start) ||
-      adapter.getTime(placeholder.start) >= adapter.getTime(end)
-    ) {
+    if (placeholder.end <= start || placeholder.start >= end) {
       return null;
     }
 
@@ -72,25 +52,20 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
     if (placeholder?.surfaceType !== 'day-grid' || placeholder.type !== 'creation') {
       return false;
     }
-    return getProcessedDayNumber(state, day) === getDayNumber(state.adapter, placeholder.start);
+    return getDayNumber(state, day.timestamp) === getDayNumber(state, placeholder.start);
   },
-  isCreatingInTimeRange: (
-    state: State,
-    dayStart: TemporalSupportedObject,
-    dayEnd: TemporalSupportedObject,
-  ) => {
+  isCreatingInTimeRange: (state: State, dayStart: number, dayEnd: number) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder?.surfaceType !== 'time-grid' || placeholder.type !== 'creation') {
       return false;
     }
 
-    const { adapter } = state;
-    if (getDayNumber(adapter, placeholder.start) !== getDayNumber(adapter, dayStart)) {
+    if (getDayNumber(state, placeholder.start) !== getDayNumber(state, dayStart)) {
       return false;
     }
 
-    const startsBeforeEnd = adapter.getTime(placeholder.start) < adapter.getTime(dayEnd);
-    const endsAfterStart = adapter.getTime(placeholder.end) > adapter.getTime(dayStart);
+    const startsBeforeEnd = placeholder.start < dayEnd;
+    const endsAfterStart = placeholder.end > dayStart;
 
     return startsBeforeEnd && endsAfterStart;
   },

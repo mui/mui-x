@@ -1,10 +1,12 @@
 {
   "componentDescription": "It sets up the data providers as well as the `<svg>` for the chart.\n\nThis is a combination of both the `ChartsDataProvider` and `ChartsSurface` components.",
   "propDescriptions": {
+    "apiRef": { "description": "The ref object that exposes the chart API methods." },
     "axesGap": {
       "description": "A gap added between axes when multiple axes are rendered on the same side of the chart."
     },
     "brushConfig": { "description": "Configuration for the brush interaction." },
+    "children": { "description": "The content of the component." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
@@ -125,6 +127,12 @@
     },
     "slotProps": { "description": "The props for the slots." },
     "slots": { "description": "Slots to customize charts&#39; components." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "theme": {
+      "description": "The color mode passed to <code>colors</code> when it is a function. Defaults to the mode of the Material UI theme."
+    },
     "title": {
       "description": "The title of the chart. Used to provide an accessible label for the chart."
     },
@@ -145,9 +153,9 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "baseButton": "",
-    "baseIconButton": "",
+    "baseButton": "The component used for buttons.",
+    "baseIconButton": "The component used for icon buttons.",
     "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps &amp; BaseToggleButtonPropsOverrides&gt;</code>.",
-    "baseToggleButtonGroup": ""
+    "baseToggleButtonGroup": "The component used for toggle button groups."
   }
 }

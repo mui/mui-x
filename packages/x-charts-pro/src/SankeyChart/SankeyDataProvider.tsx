@@ -14,7 +14,13 @@ export interface SankeyDataProviderProps extends Omit<
   ChartsContainerProProps<'sankey', SankeyChartPluginSignatures>,
   'plugins' | 'series' | 'slotProps' | 'slots' | 'dataset' | 'hideLegend' | 'skipAnimation'
 > {
+  /**
+   * The content of the component.
+   */
   children?: React.ReactNode;
+  /**
+   * The series to display in the Sankey chart.
+   */
   series: readonly SankeySeriesType[];
 }
 
@@ -42,12 +48,18 @@ SankeyDataProvider.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The ref object that exposes the chart API methods.
+   */
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
     }),
   }),
+  /**
+   * The content of the component.
+   */
   children: PropTypes.node,
   className: PropTypes.string,
   /**
@@ -167,17 +179,27 @@ SankeyDataProvider.propTypes /* remove-proptypes */ = {
    * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
+  /**
+   * The series to display in the Sankey chart.
+   */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * The configuration for the series types.
    * This is used to define how each series type should be processed, colored, and displayed.
    */
   seriesConfig: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The color mode passed to `colors` when it is a function.
+   * Defaults to the mode of the Material UI theme.
+   */
   theme: PropTypes.oneOf(['dark', 'light']),
   /**
    * The title of the chart.

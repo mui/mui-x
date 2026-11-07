@@ -1,9 +1,10 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
-import { TransitionProps } from '@mui/material/transitions';
+import type { TransitionProps } from '@mui/material/transitions';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
+import type { TreeItemProps } from '@mui/x-tree-view/TreeItem';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { useSpring, animated } from '@react-spring/web';
 
 function TransitionComponent(props: TransitionProps) {

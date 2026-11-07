@@ -11,7 +11,8 @@ import {
   ChartsToolbarImageExportTrigger,
 } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { chartsToolbarClasses, Toolbar, ToolbarButton } from '@mui/x-charts/Toolbar';
-import { useChartProApiContext, ChartProApi } from '@mui/x-charts-pro/context';
+import type { ChartProApi } from '@mui/x-charts-pro/context';
+import { useChartProApiContext } from '@mui/x-charts-pro/context';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';

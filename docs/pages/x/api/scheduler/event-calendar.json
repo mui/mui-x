@@ -15,7 +15,7 @@
     "canDropEventsToTheOutside": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "collapsedResources": { "type": { "name": "object" } },
-    "dateLocale": { "type": { "name": "object" }, "default": "enUS (English)" },
+    "dateLocale": { "type": { "name": "string" }, "default": "\"en-US\"" },
     "defaultCollapsedResources": {
       "type": { "name": "object" },
       "default": "{} - all resources are expanded"
@@ -23,9 +23,9 @@
     "defaultPreferences": {
       "type": {
         "name": "shape",
-        "description": "{ ampm?: bool, isSidePanelOpen?: bool, showEmptyDaysInAgenda?: bool, showWeekends?: bool, showWeekNumber?: bool, weekStartsOn?: 0<br>&#124;&nbsp;1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6 }"
+        "description": "{ ampm?: bool, isSidePanelOpen?: bool, showEmptyDaysInAgenda?: bool, showWeekends?: bool, showWeekNumber?: bool, weekStartsOn?: 1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6<br>&#124;&nbsp;7 }"
       },
-      "default": "{ showWeekends: true, showWeekNumber: false, isSidePanelOpen: true, showEmptyDaysInAgenda: true, ampm: true }"
+      "default": "{ showWeekends: true, showWeekNumber: false, isSidePanelOpen: true, showEmptyDaysInAgenda: true }"
     },
     "defaultView": {
       "type": {
@@ -57,8 +57,8 @@
       }
     },
     "eventDeletion": {
-      "type": { "name": "shape", "description": "{ confirmation?: bool }" },
-      "default": "{ confirmation: true }"
+      "type": { "name": "union", "description": "{ confirmation?: bool }<br>&#124;&nbsp;bool" },
+      "default": "true"
     },
     "eventModelStructure": { "type": { "name": "object" } },
     "events": {
@@ -76,7 +76,7 @@
     "preferences": {
       "type": {
         "name": "shape",
-        "description": "{ ampm?: bool, isSidePanelOpen?: bool, showEmptyDaysInAgenda?: bool, showWeekends?: bool, showWeekNumber?: bool, weekStartsOn?: 0<br>&#124;&nbsp;1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6 }"
+        "description": "{ ampm?: bool, isSidePanelOpen?: bool, showEmptyDaysInAgenda?: bool, showWeekends?: bool, showWeekNumber?: bool, weekStartsOn?: 1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6<br>&#124;&nbsp;7 }"
       }
     },
     "preferencesMenuConfig": {

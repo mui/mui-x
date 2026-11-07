@@ -2,7 +2,13 @@
   "props": {},
   "name": "ComposerSendButton",
   "imports": ["import { ComposerSendButton } from '@mui/x-chat/headless';"],
-  "slots": [{ "name": "sendButton", "description": "", "class": null }],
+  "slots": [
+    {
+      "name": "sendButton",
+      "description": "The component that renders the send button.",
+      "class": null
+    }
+  ],
   "classes": [],
   "muiName": "MuiComposerSendButton",
   "filename": "/packages/x-chat-headless/src/composer/ComposerSendButton.tsx",

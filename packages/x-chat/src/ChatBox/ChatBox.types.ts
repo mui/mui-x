@@ -114,20 +114,21 @@ interface ChatBoxConversationSlotProps {
   conversationHeaderActions?: WithDataAttributes<Partial<ChatConversationHeaderActionsProps>>;
 }
 
-/**
- * Message-list chrome. `messageList` swaps the scrollable root *element* of
- * `<ChatMessageList>` (wrapper-only — the default rows still render inside);
- * `messageGroup` swaps the per-author group wrapper.
- */
-interface ChatBoxMessageListSlots {
-  /**
-   * Styled scrollable root element of `<ChatMessageList>` (wrapper-only). The
-   * default message rows render inside it, so a plain element such as `'section'`
-   * wraps the list rather than replacing it.
-   */
-  messageList?: React.ElementType;
+// The message slot subsets use `extends`, not a multi-key `Pick`. A `Pick` lists its keys
+// in TypeScript union order, which can change between `pnpm docs:api` runs.
+export interface ChatBoxMessageGroupSlots extends ChatBoxMessageSlots {
   /** The per-author group wrapper around consecutive messages. */
   messageGroup?: React.ElementType;
+  /**
+   * The animated dots shown while an assistant response is in flight: as a
+   * trailing row while waiting for the response to start, then inside the
+   * assistant bubble while it streams. Controlled by
+   * `features.streamingIndicator` (`'auto'` by default). Pass `null` to hide it.
+   */
+  streamingIndicator?: React.ElementType | null;
+}
+
+export interface ChatBoxMessageRowSlots extends ChatBoxMessageGroupSlots {
   /**
    * The date separator rendered between message groups. Only rendered when
    * `features.dateDivider` is enabled. Pass `null` to hide it.
@@ -138,21 +139,34 @@ interface ChatBoxMessageListSlots {
    * enabled. Pass `null` to hide it.
    */
   unreadMarker?: React.ElementType | null;
-  /**
-   * The animated dots shown while an assistant response is in flight: as a
-   * trailing row while waiting for the response to start, then inside the
-   * assistant bubble while it streams. Controlled by
-   * `features.streamingIndicator` (`'auto'` by default). Pass `null` to hide it.
-   */
-  streamingIndicator?: React.ElementType | null;
 }
 
-interface ChatBoxMessageListSlotProps {
-  messageList?: WithDataAttributes<Partial<ChatMessageListProps>>;
+/**
+ * Message-list chrome. `messageList` swaps the scrollable root *element* of
+ * `<ChatMessageList>` (wrapper-only — the default rows still render inside);
+ * `messageGroup` swaps the per-author group wrapper.
+ */
+interface ChatBoxMessageListSlots extends ChatBoxMessageRowSlots {
+  /**
+   * Styled scrollable root element of `<ChatMessageList>` (wrapper-only). The
+   * default message rows render inside it, so a plain element such as `'section'`
+   * wraps the list rather than replacing it.
+   */
+  messageList?: React.ElementType;
+}
+
+export interface ChatBoxMessageGroupSlotProps extends ChatBoxMessageSlotProps {
   messageGroup?: WithDataAttributes<Partial<ChatMessageGroupProps>>;
+  streamingIndicator?: WithDataAttributes<Partial<ChatStreamingIndicatorProps>>;
+}
+
+export interface ChatBoxMessageRowSlotProps extends ChatBoxMessageGroupSlotProps {
   dateDivider?: WithDataAttributes<Partial<ChatDateDividerProps>>;
   unreadMarker?: WithDataAttributes<Partial<ChatUnreadMarkerProps>>;
-  streamingIndicator?: WithDataAttributes<Partial<ChatStreamingIndicatorProps>>;
+}
+
+interface ChatBoxMessageListSlotProps extends ChatBoxMessageRowSlotProps {
+  messageList?: WithDataAttributes<Partial<ChatMessageListProps>>;
 }
 
 /**
@@ -281,7 +295,6 @@ export interface ChatBoxSlots
     ChatBoxLayoutSlots,
     ChatBoxConversationSlots,
     ChatBoxMessageListSlots,
-    ChatBoxMessageSlots,
     ChatBoxComposerSlots,
     ChatBoxWidgetSlots {}
 
@@ -290,7 +303,6 @@ export interface ChatBoxSlotProps
     ChatBoxLayoutSlotProps,
     ChatBoxConversationSlotProps,
     ChatBoxMessageListSlotProps,
-    ChatBoxMessageSlotProps,
     ChatBoxComposerSlotProps,
     ChatBoxWidgetSlotProps {}
 
@@ -417,6 +429,9 @@ export interface ChatBoxProps<Cursor = string> extends Omit<
   'slots' | 'slotProps'
 > {
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
   /**
    * Override or extend the styles applied to the component.

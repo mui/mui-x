@@ -1,8 +1,7 @@
+import type { GridAggregationFunction, GridColDef } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
   GRID_AGGREGATION_FUNCTIONS,
-  GridAggregationFunction,
-  GridColDef,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 

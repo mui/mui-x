@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { StandaloneCompactWeekViewPremium } from '@mui/x-scheduler-premium/compact-week-view-premium';
 import {
   initialEvents,

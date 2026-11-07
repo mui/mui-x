@@ -2,7 +2,9 @@
   "props": {},
   "name": "MessageActions",
   "imports": ["import { MessageActions } from '@mui/x-chat/headless';"],
-  "slots": [{ "name": "actions", "description": "", "class": null }],
+  "slots": [
+    { "name": "actions", "description": "The component that renders the actions.", "class": null }
+  ],
   "classes": [],
   "muiName": "MuiMessageActions",
   "filename": "/packages/x-chat-headless/src/message/MessageActions.tsx",

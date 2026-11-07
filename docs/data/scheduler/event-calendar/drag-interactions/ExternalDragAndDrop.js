@@ -5,7 +5,6 @@ import { differenceInMinutes } from 'date-fns/differenceInMinutes';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
-
 // TODO: Estimate if we can avoid all imports from the internals package.
 import { buildIsValidDropTarget } from '@mui/x-scheduler-internals/build-is-valid-drop-target';
 import {

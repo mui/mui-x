@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
-import { PickersTextField, pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
+import {
+  PickersTextField,
+  pickersInputBaseClasses,
+  pickersTextFieldClasses,
+} from '@mui/x-date-pickers/PickersTextField';
 import { createPickerRenderer, PICKERS_TEXT_FIELD_STUB_PROPS } from 'test/utils/pickers';
 import { describe, it, expect } from 'vitest';
 
@@ -101,6 +105,37 @@ describe('<PickersTextField /> - slot forwarding', () => {
     );
 
     expect(screen.getByTestId('custom-helper')).to.have.text('Helper');
+  });
+});
+
+describe('<PickersTextField /> - readOnly', () => {
+  const { render } = createPickerRenderer();
+
+  it('should make the input read-only when `readOnly` is passed', () => {
+    render(<PickersTextField {...PICKERS_TEXT_FIELD_STUB_PROPS} readOnly />);
+
+    expect(document.querySelector('input')).to.have.property('readOnly', true);
+    expect(document.querySelector(`.${pickersInputBaseClasses.root}`)).to.have.class(
+      pickersInputBaseClasses.readOnly,
+    );
+    expect(document.querySelector(`.${pickersTextFieldClasses.root}`)).not.to.have.attribute(
+      'readonly',
+    );
+  });
+
+  it('should let `slotProps.input.readOnly` override `readOnly`', () => {
+    render(
+      <PickersTextField
+        {...PICKERS_TEXT_FIELD_STUB_PROPS}
+        readOnly
+        slotProps={{ input: { readOnly: false } }}
+      />,
+    );
+
+    expect(document.querySelector('input')).to.have.property('readOnly', false);
+    expect(document.querySelector(`.${pickersInputBaseClasses.root}`)).not.to.have.class(
+      pickersInputBaseClasses.readOnly,
+    );
   });
 });
 

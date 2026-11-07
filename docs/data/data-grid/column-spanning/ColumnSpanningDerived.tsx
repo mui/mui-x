@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
-import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import type { GridColDef } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 
 const slotTimesLookup = {
   0: '09:00 - 10:00',

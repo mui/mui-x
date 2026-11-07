@@ -1,9 +1,6 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
-  GridColDef,
-  GridPivotModel,
-} from '@mui/x-data-grid-premium';
+import type { GridColDef, GridPivotModel } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 const pivotModel: GridPivotModel = {

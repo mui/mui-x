@@ -52,6 +52,9 @@ export interface ChartsLayerContainerProps extends React.ComponentProps<'div'> {
    * Used to provide an accessible description for the chart.
    */
   desc?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
 }
 
@@ -142,6 +145,9 @@ ChartsLayerContainer.propTypes /* remove-proptypes */ = {
    * Used to provide an accessible description for the chart.
    */
   desc: PropTypes.string,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

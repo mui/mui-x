@@ -1,7 +1,11 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "render": { "description": "A function to customize the rendering of the component." }
+    "disabled": { "description": "If <code>true</code>, the button is disabled." },
+    "id": { "description": "The id of the button element." },
+    "render": { "description": "A function to customize the rendering of the component." },
+    "size": { "description": "The size of the button." },
+    "tabIndex": { "description": "The <code>tabIndex</code> of the button element." }
   },
   "classDescriptions": {}
 }

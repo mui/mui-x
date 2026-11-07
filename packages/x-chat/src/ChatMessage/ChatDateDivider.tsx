@@ -4,15 +4,23 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { SxProps, Theme } from '@mui/system';
 import { MessageListDateDivider } from '@mui/x-chat-headless';
-import type { MessageListDateDividerProps } from '@mui/x-chat-headless';
+import type {
+  MessageListDateDividerProps,
+  MessageListDateDividerSlots,
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses } from './chatMessageClasses';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatDateDivider');
 
+export interface ChatDateDividerSlots extends MessageListDateDividerSlots {}
+
 export interface ChatDateDividerProps extends MessageListDateDividerProps {
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
 }
 
@@ -98,9 +106,23 @@ ChatDateDivider.propTypes /* remove-proptypes */ = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   className: PropTypes.string,
+  /**
+   * Formats the date displayed in the divider.
+   * @param {Date} date The date of the message.
+   * @returns {React.ReactNode} The formatted date.
+   */
   formatDate: PropTypes.func,
+  /**
+   * The index of the row in `items`.
+   */
   index: PropTypes.number,
+  /**
+   * The ids of the messages in the list, in order.
+   */
   items: PropTypes.arrayOf(PropTypes.string),
+  /**
+   * The id of the message this row belongs to.
+   */
   messageId: PropTypes.string.isRequired,
   /**
    * Decides whether the divider renders above the message, replacing the
@@ -118,8 +140,19 @@ ChatDateDivider.propTypes /* remove-proptypes */ = {
    * calendar day than the previous message's.
    */
   shouldShowDivider: PropTypes.func,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

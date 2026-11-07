@@ -444,6 +444,9 @@ TimeClock.propTypes /* remove-proptypes */ = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   /**
    * The default selected value.
@@ -536,6 +539,9 @@ TimeClock.propTypes /* remove-proptypes */ = {
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
+  /**
+   * If `true`, displays arrow buttons to switch between the views.
+   */
   showViewSwitcher: PropTypes.bool,
   /**
    * The props used for each component slot.

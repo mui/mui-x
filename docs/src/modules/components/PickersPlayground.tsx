@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { alpha, styled } from '@mui/material/styles';
-import dayjs, { Dayjs } from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
@@ -10,7 +11,8 @@ import ToggleButton from '@mui/material/ToggleButton';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import FormGroup from '@mui/material/FormGroup';
-import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
+import type { CheckboxProps } from '@mui/material/Checkbox';
+import Checkbox from '@mui/material/Checkbox';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
@@ -27,13 +29,11 @@ import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
-import {
-  StaticDateTimePicker,
-  StaticDateTimePickerProps,
-} from '@mui/x-date-pickers/StaticDateTimePicker';
-import { DateOrTimeView } from '@mui/x-date-pickers/models';
-import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts';
-import { DateRange } from '@mui/x-date-pickers-pro/models';
+import type { StaticDateTimePickerProps } from '@mui/x-date-pickers/StaticDateTimePicker';
+import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
+import type { DateOrTimeView } from '@mui/x-date-pickers/models';
+import type { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts';
+import type { DateRange } from '@mui/x-date-pickers-pro/models';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';

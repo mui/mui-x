@@ -1,9 +1,5 @@
-import {
-  cleanText,
-  isPickerRangeType,
-  PickerComponentType,
-  PickerRangeComponentType,
-} from 'test/utils/pickers';
+import type { PickerComponentType, PickerRangeComponentType } from 'test/utils/pickers';
+import { cleanText, isPickerRangeType } from 'test/utils/pickers';
 import { expect } from 'vitest';
 
 export const expectFieldValue = (

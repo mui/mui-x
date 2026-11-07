@@ -1,10 +1,9 @@
 import * as React from 'react';
+import type { GridColDef, GridComparatorFn } from '@mui/x-data-grid';
 import {
-  GridColDef,
   DataGrid,
   gridNumberComparator,
   gridStringOrNumberComparator,
-  GridComparatorFn,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 

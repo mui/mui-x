@@ -4,10 +4,8 @@ import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import { useLegend } from '@mui/x-charts/hooks';
 import { LineChart, lineClasses } from '@mui/x-charts/LineChart';
-import {
-  ChartsLabelCustomMarkProps,
-  ChartsLabelMark,
-} from '@mui/x-charts/ChartsLabel';
+import type { ChartsLabelCustomMarkProps } from '@mui/x-charts/ChartsLabel';
+import { ChartsLabelMark } from '@mui/x-charts/ChartsLabel';
 
 function LineWithMark({ color, className }: ChartsLabelCustomMarkProps) {
   return (

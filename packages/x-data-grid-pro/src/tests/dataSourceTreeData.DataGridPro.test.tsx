@@ -14,7 +14,7 @@ import type {
   GridRowModel,
   GridUpdateRowParams,
 } from '@mui/x-data-grid-pro';
-import { actSleep, getCell, getRow } from 'test/utils/helperFn';
+import { actSleep, getCell, getColumnValues, getRow } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, onTestFinished, describe, it, expect } from 'vitest';
 
@@ -1082,6 +1082,216 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       await waitFor(() => {
         expect(getChildren(0)).to.deep.equal([1]);
       });
+    });
+  });
+
+  // https://github.com/mui/mui-x/issues/23635
+  describe('children order', () => {
+    const getTree = () => apiRef.current!.state.rows.tree;
+    const getChildren = (id: GridRowId) => (getTree()[id] as GridGroupNode).children;
+
+    const child = (index: number, descendantCount = 0) => ({
+      id: `c${index}`,
+      name: `Child ${index}`,
+      descendantCount,
+    });
+
+    function createData(): Record<string, any[]> {
+      return {
+        '[]': [
+          { id: 'p1', name: 'Parent 1', descendantCount: 2 },
+          { id: 'p3', name: 'Parent 3', descendantCount: 0 },
+        ],
+        '["Parent 1"]': [child(1), child(3)],
+      };
+    }
+
+    function OrderTest(props: { data: Record<string, any[]>; throttleRowsMs?: number }) {
+      apiRef = useGridApiRef();
+      const { data, throttleRowsMs = 0 } = props;
+
+      const dataSource: GridDataSource = React.useMemo(
+        () => ({
+          getRows: async (params: GridGetRowsParams) => {
+            const rows = data[JSON.stringify(params.groupKeys)] ?? [];
+            return { rows, rowCount: rows.length };
+          },
+          getGroupKey: (row) => row.name,
+          getChildrenCount: (row) => row.descendantCount,
+        }),
+        [data],
+      );
+
+      return (
+        <div style={{ width: 300, height: 400 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            columns={[{ field: 'name' }]}
+            dataSource={dataSource}
+            dataSourceCache={null}
+            treeData
+            disableVirtualization
+            throttleRowsMs={throttleRowsMs}
+          />
+        </div>
+      );
+    }
+
+    async function renderWithExpandedParent(data: Record<string, any[]>) {
+      const view = render(<OrderTest data={data} />);
+      await waitFor(() => {
+        expect(getTree().p1).not.to.equal(undefined);
+      });
+      await view.user.click(within(getCell(0, 0)).getByRole('button'));
+      await waitFor(() => {
+        expect(getChildren('p1')).to.deep.equal(['c1', 'c3']);
+      });
+      return view;
+    }
+
+    it('should insert a new child row at the position returned by the data source', async () => {
+      const data = createData();
+      await renderWithExpandedParent(data);
+
+      data['["Parent 1"]'] = [child(1), child(2), child(3)];
+      act(() => {
+        apiRef.current!.dataSource.fetchRows('p1');
+      });
+
+      await waitFor(() => {
+        expect(getChildren('p1')).to.deep.equal(['c1', 'c2', 'c3']);
+      });
+      expect(getColumnValues(1)).to.deep.equal([
+        'Parent 1',
+        'Child 1',
+        'Child 2',
+        'Child 3',
+        'Parent 3',
+      ]);
+    });
+
+    it('should reorder the children when the data source returns them in another order', async () => {
+      const data = createData();
+      await renderWithExpandedParent(data);
+
+      data['["Parent 1"]'] = [child(3), child(1)];
+      act(() => {
+        apiRef.current!.dataSource.fetchRows('p1');
+      });
+
+      await waitFor(() => {
+        expect(getChildren('p1')).to.deep.equal(['c3', 'c1']);
+      });
+      expect(getColumnValues(1)).to.deep.equal(['Parent 1', 'Child 3', 'Child 1', 'Parent 3']);
+    });
+
+    it('should insert a new root row at the position returned by the data source', async () => {
+      const data = createData();
+      await renderWithExpandedParent(data);
+
+      data['[]'] = [
+        { id: 'p1', name: 'Parent 1', descendantCount: 2 },
+        { id: 'p2', name: 'Parent 2', descendantCount: 0 },
+        { id: 'p3', name: 'Parent 3', descendantCount: 0 },
+      ];
+      act(() => {
+        apiRef.current!.dataSource.fetchRows();
+      });
+
+      await waitFor(() => {
+        expect(getChildren(GRID_ROOT_GROUP_ID)).to.deep.equal(['p1', 'p2', 'p3']);
+      });
+      expect(getChildren('p1')).to.deep.equal(['c1', 'c3']);
+    });
+
+    it('should keep the loaded children and the expansion state of a moved group', async () => {
+      const data = createData();
+      data['["Parent 1"]'] = [child(1, 1), child(3)];
+      data['["Parent 1","Child 1"]'] = [{ id: 'g1', name: 'Grandchild 1', descendantCount: 0 }];
+
+      const { user } = render(<OrderTest data={data} />);
+      await waitFor(() => {
+        expect(getTree().p1).not.to.equal(undefined);
+      });
+      await user.click(within(getCell(0, 0)).getByRole('button'));
+      await waitFor(() => {
+        expect(getChildren('p1')).to.deep.equal(['c1', 'c3']);
+      });
+      await user.click(within(getCell(1, 0)).getByRole('button'));
+      await waitFor(() => {
+        expect(getChildren('c1')).to.deep.equal(['g1']);
+      });
+
+      data['["Parent 1"]'] = [child(0), child(1, 1), child(3)];
+      act(() => {
+        apiRef.current!.dataSource.fetchRows('p1');
+      });
+
+      await waitFor(() => {
+        expect(getChildren('p1')).to.deep.equal(['c0', 'c1', 'c3']);
+      });
+      expect(getChildren('c1')).to.deep.equal(['g1']);
+      expect((getTree().c1 as GridGroupNode).childrenExpanded).to.equal(true);
+    });
+
+    it('should order the root rows when the response starts with a row nested in another group', async () => {
+      const data = createData();
+      await renderWithExpandedParent(data);
+
+      data['[]'] = [
+        child(3),
+        { id: 'p2', name: 'Parent 2', descendantCount: 0 },
+        { id: 'p1', name: 'Parent 1', descendantCount: 2 },
+        { id: 'p3', name: 'Parent 3', descendantCount: 0 },
+      ];
+      act(() => {
+        apiRef.current!.dataSource.fetchRows();
+      });
+
+      await waitFor(() => {
+        expect(getChildren(GRID_ROOT_GROUP_ID)).to.deep.equal(['p2', 'p1', 'p3']);
+      });
+      expect(getChildren('p1')).to.deep.equal(['c1', 'c3']);
+    });
+
+    it('should keep a row updated in the same throttle window as a root re-fetch under its parent', async () => {
+      const data = createData();
+      const { setProps } = await renderWithExpandedParent(data);
+      setProps({ throttleRowsMs: 300 });
+
+      act(() => {
+        apiRef.current!.updateRows([{ id: 'c1', value: 1 }]);
+        apiRef.current!.updateRows([{ id: 'c1', value: 2 }]);
+        apiRef.current!.dataSource.fetchRows();
+      });
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow('c1').value).to.equal(2);
+      });
+      expect(getChildren(GRID_ROOT_GROUP_ID)).to.deep.equal(['p1', 'p3']);
+      expect(getChildren('p1')).to.deep.equal(['c1', 'c3']);
+    });
+
+    it('should keep the order of a root re-fetch followed by an update in the same throttle window', async () => {
+      const data = createData();
+      const { setProps } = await renderWithExpandedParent(data);
+      setProps({ throttleRowsMs: 300 });
+
+      data['[]'] = [
+        { id: 'p1', name: 'Parent 1', descendantCount: 2 },
+        { id: 'p2', name: 'Parent 2', descendantCount: 0 },
+        { id: 'p3', name: 'Parent 3', descendantCount: 0 },
+      ];
+      await act(async () => {
+        apiRef.current!.updateRows([{ id: 'c1', value: 1 }]);
+        await apiRef.current!.dataSource.fetchRows();
+        apiRef.current!.updateRows([{ id: 'c1', value: 2 }]);
+      });
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow('c1').value).to.equal(2);
+      });
+      expect(getChildren(GRID_ROOT_GROUP_ID)).to.deep.equal(['p1', 'p2', 'p3']);
     });
   });
 

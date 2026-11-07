@@ -1,16 +1,21 @@
 'use client';
 import type * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerEventCreationConfig,
   SchedulerOccurrencePlaceholderCreation,
 } from '../../models';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
-import { schedulerEventSelectors } from '../../scheduler-selectors';
+import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 
 interface GetCreationPlaceholderParams {
   event: React.MouseEvent<HTMLDivElement>;
   creationConfig: SchedulerEventCreationConfig;
+  /**
+   * The display timezone, in which the dates of the placeholder are read.
+   */
+  timezone: TemporalTimezone;
 }
 
 export type CreationPlaceholderFields = Omit<SchedulerOccurrencePlaceholderCreation, 'type'>;
@@ -34,7 +39,11 @@ export function useEventCreation(
     store.setOccurrencePlaceholder(
       {
         type: 'creation',
-        ...getCreationPlaceholder({ event, creationConfig }),
+        ...getCreationPlaceholder({
+          event,
+          creationConfig,
+          timezone: schedulerOtherSelectors.displayTimezone(store.state),
+        }),
       },
       event.nativeEvent,
     );

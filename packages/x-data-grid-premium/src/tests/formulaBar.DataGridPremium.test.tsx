@@ -284,6 +284,35 @@ describe('<DataGridPremium /> - Formula bar', () => {
       expect(gridFocusCellSelector(privateApi())).to.deep.equal({ id: 0, field: 'quantity' });
     });
 
+    it('does not commit when Enter or Tab belongs to an IME composition', async () => {
+      render(<Test />);
+      await microtasks();
+      focusCell(0, 'price');
+      typeInBar('9');
+      focusBar();
+      fireEvent.compositionStart(getBarEditable());
+      fireEvent.keyDown(getBarEditable(), { key: 'Enter', keyCode: 229, isComposing: true });
+      fireEvent.keyDown(getBarEditable(), { key: 'Tab', keyCode: 229, isComposing: true });
+      await microtasks();
+      expect(apiRef.current!.getRow(0).price).to.equal(2);
+      expect(gridFocusCellSelector(privateApi())).to.deep.equal({ id: 0, field: 'price' });
+      expect(getBarEditable().textContent).to.equal('9');
+    });
+
+    it('does not discard the draft when Escape cancels an IME composition', async () => {
+      render(<Test />);
+      await microtasks();
+      focusCell(0, 'total');
+      typeInBar('=1 + 1');
+      focusBar();
+      fireEvent.compositionStart(getBarEditable());
+      fireEvent.keyDown(getBarEditable(), { key: 'Escape', keyCode: 229, isComposing: true });
+      await microtasks();
+      // The DOM is not rebuilt during a composition: the published draft is what tells.
+      expect(privateApi().current.state.formula.activeEdit?.draft).to.equal('=1 + 1');
+      expect(getBarEditable().textContent).to.equal('=1 + 1');
+    });
+
     it('discards the draft on Escape', async () => {
       render(<Test />);
       await microtasks();

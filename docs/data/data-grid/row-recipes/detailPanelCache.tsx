@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridProProps, GridRowId } from '@mui/x-data-grid-pro';
+import type { DataGridProProps, GridRowId } from '@mui/x-data-grid-pro';
 
 export interface DetailPanelCacheOptions {
   onExpandedRowIdsChange?: NonNullable<

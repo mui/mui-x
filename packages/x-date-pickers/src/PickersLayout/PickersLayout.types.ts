@@ -99,7 +99,13 @@ export interface PickersLayoutProps<TValue extends PickerValidValue> extends Omi
   React.HTMLAttributes<HTMLDivElement>,
   'children' | 'className'
 > {
+  /**
+   * A CSS class name applied to the root element.
+   */
   className?: string;
+  /**
+   * The content rendered in the content area of the layout.
+   */
   children?: React.ReactNode;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
