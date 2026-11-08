@@ -526,6 +526,42 @@ describe('<DataGrid /> - Filter', () => {
       expect(getRows({ operator: 'contains', value: '(fr)' })).to.deep.equal(['France (fr)']);
     });
 
+    it('should filter values containing a line break with operators "startsWith" and "endsWith"', () => {
+      const getMultilineRows = (item: Omit<GridFilterItem, 'field'>) => {
+        const { unmount } = render(
+          <TestCase
+            filterModel={{ items: [{ field: 'note', ...item }] }}
+            rows={[
+              { id: 0, note: 'Hello\nworld' },
+              { id: 1, note: 'Hello world' },
+              { id: 2, note: 'Goodbye\nworld' },
+              { id: 3, note: 'world\nHello' },
+            ]}
+            columns={[{ field: 'note', type: 'string' }]}
+          />,
+        );
+        const values = getColumnValues(0);
+        unmount();
+        return values;
+      };
+
+      expect(getMultilineRows({ operator: 'startsWith', value: 'Hello' })).to.deep.equal([
+        'Hello\nworld',
+        'Hello world',
+      ]);
+      expect(getMultilineRows({ operator: 'startsWith', value: 'world' })).to.deep.equal([
+        'world\nHello',
+      ]);
+      expect(getMultilineRows({ operator: 'endsWith', value: 'world' })).to.deep.equal([
+        'Hello\nworld',
+        'Hello world',
+        'Goodbye\nworld',
+      ]);
+      expect(getMultilineRows({ operator: 'endsWith', value: 'Hello' })).to.deep.equal([
+        'world\nHello',
+      ]);
+    });
+
     it('should filter with operator "isAnyOf"', () => {
       expect(getRows({ operator: 'isAnyOf', value: ['France (fr)'] })).to.deep.equal([
         'France (fr)',
