@@ -231,11 +231,6 @@ export default withDeploymentConfig({
       module: {
         ...config.module,
         rules: config.module.rules.concat([
-          {
-            // Next adds require.resolveWeak to this published ESM dynamic import.
-            test: /[/\\]@mui[/\\]internal-core-docs[/\\]MarkdownDocs[/\\]RichMarkdownElement\.js$/,
-            type: 'javascript/auto',
-          },
           // used in some /getting-started/templates
           {
             test: /\.md$/,

@@ -58,8 +58,7 @@ async function getFiles(root, excludeRoot = false) {
         const stat = await fs.promises.stat(filePath);
 
         if (stat.isDirectory()) {
-          // Docs-infra generates JS and focused source at build time. Keep
-          // transpiling only the legacy demos while areas migrate in stages.
+          // Docs-infra generates JavaScript and focused source for these demos.
           if (
             fs.existsSync(path.join(filePath, 'index.ts')) &&
             fs.existsSync(path.join(filePath, 'client.ts'))
