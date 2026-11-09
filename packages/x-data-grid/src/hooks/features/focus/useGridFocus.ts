@@ -420,6 +420,17 @@ export const useGridFocus = (
       if (event.relatedTarget?.getAttribute('class')?.includes(gridClasses.cell)) {
         return;
       }
+      // Ignore a focus move inside the focused cell, for example to its editor or checkbox.
+      const focusedCell = gridFocusCellSelector(apiRef);
+      if (
+        focusedCell &&
+        event.relatedTarget &&
+        apiRef.current
+          .getCellElement(focusedCell.id, focusedCell.field)
+          ?.contains(event.relatedTarget as Node)
+      ) {
+        return;
+      }
       logger.debug(`Clearing focus`);
       apiRef.current.setState((state) => ({
         ...state,

@@ -8,7 +8,8 @@ import FormGroup from '@mui/material/FormGroup';
 import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectProps } from '@mui/material/Select';
+import type { SelectProps } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 
 const AntDesignStyledDataGridPro = styled(DataGridPro)(({ theme }) => ({
   border: '1px solid #303030',

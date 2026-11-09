@@ -9,26 +9,23 @@ import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
   SchedulerResourceId,
-  TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import {
   useDraggableEvent,
   useOriginalOccurrence,
   computeElementPositionInCollection,
-  dateToTimelineAxisOffsetMs,
+  timestampToTimelineAxisOffsetMs,
 } from '@mui/x-scheduler-internals/internals';
 import type { useElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { useTimelineGridEventRowContext } from '../event-row/TimelineGridEventRowContext';
 import { TimelineGridEventCssVars } from './TimelineGridEventCssVars';
 import { TimelineGridEventContext } from './TimelineGridEventContext';
-import {
-  eventTimelinePremiumDependencySelectors,
-  eventTimelinePremiumPresetSelectors,
-} from '../../event-timeline-premium-selectors';
+import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
+import type { useEventDependencyDropTarget } from './useEventDependencyDropTarget';
 import { TimelineGridEventDataAttributes } from './TimelineGridEventDataAttributes';
-import { useEventDependencyDropTarget } from './useEventDependencyDropTarget';
+
+const useNoEventDropTarget = (_parameters: useEventDependencyDropTarget.Parameters) => false;
 
 const extraStateAttributesMapping = {
   startingBeforeEdge: (value: boolean) =>
@@ -67,7 +64,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   const isInteractive = true;
 
   // Context hooks
-  const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
   const {
     resourceId: rowResourceId,
@@ -80,12 +76,11 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
 
   // Selector hooks
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
-  const dependencyDropTarget = useStore(
-    store,
-    eventTimelinePremiumDependencySelectors.isCreationTarget,
-    occurrenceKey,
-    rowResourceId,
-  );
+
+  // The feature is frozen at store construction, so the hook is the same on every render.
+  const useEventDropTarget =
+    // eslint-disable-next-line react-compiler/react-compiler
+    store.state.dependenciesFeature?.useEventDropTarget ?? useNoEventDropTarget;
 
   // Feature hooks
   const getOriginalOccurrence = useOriginalOccurrence({
@@ -101,7 +96,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
       // Measured on the axis so it stays consistent with the cursor offsets when a
       // trimmed hour window compresses the days.
       const offsetBeforeRowStart = Math.max(
-        -dateToTimelineAxisOffsetMs(adapter, config, start.value),
+        -timestampToTimelineAxisOffsetMs(config, start.timestamp),
         0,
       );
       const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });
@@ -109,8 +104,8 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
         eventId,
         occurrenceKey,
         originalOccurrence: getOriginalOccurrence(),
-        start: start.value,
-        end: end.value,
+        start: start.timestamp,
+        end: end.timestamp,
         initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
         sourceResourceId: rowResourceId,
       };
@@ -125,13 +120,13 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   const elementPosition = React.useMemo(
     () =>
       elementPositionProp ??
-      computeElementPositionInCollection(adapter, {
+      computeElementPositionInCollection({
         start,
         end,
         collection: config,
         durationMs: config.durationMs,
       }),
-    [adapter, config, elementPositionProp, end, start],
+    [config, elementPositionProp, end, start],
   );
   const { position, duration, startingBeforeEdge, endingAfterEdge } = elementPosition;
 
@@ -157,7 +152,13 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     tabIndex: rowHasFocus ? 0 : -1,
   });
 
-  useEventDependencyDropTarget({ ref, eventId, occurrenceKey, resourceId: rowResourceId });
+  // eslint-disable-next-line react-compiler/react-compiler
+  const dependencyDropTarget = useEventDropTarget({
+    ref,
+    eventId,
+    occurrenceKey,
+    resourceId: rowResourceId,
+  });
 
   const mergedState = {
     ...state,
@@ -216,8 +217,14 @@ export namespace TimelineGridEvent {
     eventId: SchedulerEventId;
     occurrenceKey: string;
     originalOccurrence: SchedulerEventOccurrence;
-    start: TemporalSupportedObject;
-    end: TemporalSupportedObject;
+    /**
+     * The start of the occurrence, as a timestamp in milliseconds.
+     */
+    start: number;
+    /**
+     * The end of the occurrence, as a timestamp in milliseconds.
+     */
+    end: number;
     /**
      * Cursor offset from the event start, in axis milliseconds.
      */

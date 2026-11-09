@@ -3,19 +3,21 @@ import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { styled } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { useStore } from '@base-ui/utils/store';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { formatWeekdayShortMonthShortAndDayOfMonth } from '@mui/x-scheduler-internals/internals';
 import type {
   MoreEventsPopoverProps,
   MoreEventsPopoverProviderProps,
 } from './MoreEventsPopover.types';
 import { EventItem } from '../event/event-item/EventItem';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
-import { formatWeekDayMonthAndDayOfMonth } from '../../utils/date-utils';
 import { EventContextMenuTrigger } from '../event-context-menu';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { isFocusLostWith, isFocusOnDocument } from '../../utils/focus-utils';
@@ -83,9 +85,10 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
   const { open, anchor, cell, occurrences, day, onClose } = props;
 
   // Context hooks
-  const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
+  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
   const { classes } = useEventCalendarStyledContext();
+  const isRtl = useRtl();
 
   // The popover stays open behind the editing surface, so close it when that surface closes.
   React.useEffect(() => {
@@ -193,12 +196,15 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
       className={classes.moreEventsPopover}
       open={open}
       anchorEl={anchorEl}
+      // Aligned with the inline start of the button.
+      anchorOrigin={{ vertical: 'top', horizontal: isRtl ? 'right' : 'left' }}
+      transformOrigin={{ vertical: 'top', horizontal: isRtl ? 'right' : 'left' }}
       onClose={onClose}
       slotProps={{ transition: { onExited: restoreFocusOnExit } }}
     >
       <MoreEventsPopoverHeader className={classes.moreEventsPopoverHeader}>
         <MoreEventsPopoverTitle className={classes.moreEventsPopoverTitle}>
-          {formatWeekDayMonthAndDayOfMonth(day.value, adapter)}
+          {formatWeekdayShortMonthShortAndDayOfMonth(locale, day.plainDate)}
         </MoreEventsPopoverTitle>
       </MoreEventsPopoverHeader>
       <MoreEventsPopoverBody
@@ -217,7 +223,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
             getFocusFallback={getFocusFallback}
           >
             <EventItem
-              variant={isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}
+              variant={isOccurrenceAllDayOrMultipleDay(occurrence) ? 'filled' : 'compact'}
               occurrence={occurrence}
               date={day}
             />

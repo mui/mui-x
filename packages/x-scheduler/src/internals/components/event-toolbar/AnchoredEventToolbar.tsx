@@ -18,8 +18,9 @@ const AnchoredEventToolbarRoot = styled('div', {
   slot: 'AnchoredToolbar',
 })(({ theme }) => ({
   position: 'fixed',
+  // No `left` here: `stylis-plugin-rtl` would flip it to `right`, which stretches the toolbar
+  // against the inline `left` set by `useAnchoredPosition`.
   top: 0,
-  left: 0,
   zIndex: (theme.vars || theme).zIndex.modal,
 }));
 

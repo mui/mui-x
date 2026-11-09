@@ -9,6 +9,9 @@ export interface HeatmapCellOwnerState {
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<HeatmapClasses>;
   value: number;
 }
@@ -19,10 +22,25 @@ export interface HeatmapCellOwnerState {
 export type HeatmapItemOwnerState = HeatmapCellOwnerState;
 
 export interface HeatmapCellProps extends React.ComponentPropsWithRef<'rect'> {
+  /**
+   * The position of the element in the x-axis.
+   */
   x: number;
+  /**
+   * The position of the element in the y-axis.
+   */
   y: number;
+  /**
+   * The width of the element.
+   */
   width: number;
+  /**
+   * The height of the element.
+   */
   height: number;
+  /**
+   * @ignore
+   */
   ownerState: HeatmapCellOwnerState;
 }
 
@@ -59,7 +77,13 @@ HeatmapCell.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The height of the element.
+   */
   height: PropTypes.number.isRequired,
+  /**
+   * @ignore
+   */
   ownerState: PropTypes.shape({
     classes: PropTypes.object,
     color: PropTypes.string.isRequired,
@@ -68,8 +92,17 @@ HeatmapCell.propTypes /* remove-proptypes */ = {
     seriesId: PropTypes.string.isRequired,
     value: PropTypes.number.isRequired,
   }).isRequired,
+  /**
+   * The width of the element.
+   */
   width: PropTypes.number.isRequired,
+  /**
+   * The position of the element in the x-axis.
+   */
   x: PropTypes.number.isRequired,
+  /**
+   * The position of the element in the y-axis.
+   */
   y: PropTypes.number.isRequired,
 } as any;
 

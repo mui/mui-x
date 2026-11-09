@@ -1,5 +1,6 @@
-import { adapter, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
-import { vi, describe, it, expect } from 'vitest';
+import { adapter, ResourceBuilder, setSystemTimezone, storeClasses } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
+import { vi, describe, it, expect, onTestFinished } from 'vitest';
 
 const DEFAULT_PARAMS = { events: [], resources: [ResourceBuilder.new().build()] };
 
@@ -79,6 +80,35 @@ storeClasses.forEach((storeClass) => {
         expect(onVisibleDateChange.mock.calls.length).to.equal(1);
         expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(expected);
       });
+
+      // Browsers cannot change their timezone through process.env.TZ.
+      it.skipIf(!isJSDOM)(
+        'should go to the end of the gap when the default timezone skips midnight',
+        () => {
+          vi.useFakeTimers();
+          onTestFinished(() => {
+            vi.useRealTimers();
+          });
+          // Havana skips from 00:00 to 01:00 on March 8th, 2026.
+          setSystemTimezone('America/Havana');
+          vi.setSystemTime(new Date('2026-03-08T12:00:00Z'));
+          const onVisibleDateChange = vi.fn();
+          const store = new storeClass.Value(
+            {
+              ...DEFAULT_PARAMS,
+              defaultVisibleDate: adapter.date('2026-03-01T12:00:00Z', 'default'),
+              onVisibleDateChange,
+            },
+            adapter,
+          );
+
+          store.goToToday({} as any);
+
+          expect(adapter.getTime(onVisibleDateChange.mock.lastCall?.[0])).to.equal(
+            Date.parse('2026-03-08T05:00:00Z'),
+          );
+        },
+      );
     });
 
     describe('Method: goToDate', () => {

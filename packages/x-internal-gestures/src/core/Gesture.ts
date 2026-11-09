@@ -2,11 +2,11 @@
  * Base Gesture module that provides common functionality for all gesture implementations
  */
 
-import { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
-import { KeyboardKey, KeyboardManager } from './KeyboardManager';
-import { PointerData, PointerManager } from './PointerManager';
-import { CustomEventListener } from './types/CustomEventListener';
-import { TargetElement } from './types/TargetElement';
+import type { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
+import type { KeyboardKey, KeyboardManager } from './KeyboardManager';
+import type { PointerData, PointerManager } from './PointerManager';
+import type { CustomEventListener } from './types/CustomEventListener';
+import type { TargetElement } from './types/TargetElement';
 import { eventList } from './utils/eventList';
 
 /**

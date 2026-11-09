@@ -1,8 +1,12 @@
 {
   "componentDescription": "A button that triggers an image export.\nIt renders the `baseButton` slot.",
   "propDescriptions": {
+    "disabled": { "description": "If <code>true</code>, the button is disabled." },
+    "id": { "description": "The id of the button element." },
     "options": { "description": "The options to apply on the image export." },
-    "render": { "description": "A function to customize the rendering of the component." }
+    "render": { "description": "A function to customize the rendering of the component." },
+    "size": { "description": "The size of the button." },
+    "tabIndex": { "description": "The <code>tabIndex</code> of the button element." }
   },
   "classDescriptions": {}
 }

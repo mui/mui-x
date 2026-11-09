@@ -79,6 +79,7 @@ const schedulerPages: MuiPage[] = [
           { pathname: '/x/react-scheduler/event-timeline/navigation' },
           { pathname: '/x/react-scheduler/event-timeline/drag-interactions' },
           { pathname: '/x/react-scheduler/event-timeline/editing' },
+          { pathname: '/x/react-scheduler/event-timeline/dependencies' },
           { pathname: '/x/react-scheduler/event-timeline/presets' },
           { pathname: '/x/react-scheduler/event-timeline/lazy-loading' },
           { pathname: '/x/react-scheduler/event-timeline/virtualization' },
@@ -275,6 +276,10 @@ const pages: MuiPage[] = [
             children: [
               { pathname: '/x/react-data-grid/formulas', title: 'Overview' },
               {
+                pathname: '/x/react-data-grid/computed-columns',
+                title: 'Computed columns',
+              },
+              {
                 pathname: '/x/react-data-grid/formula-syntax',
                 title: 'Syntax reference',
               },
@@ -395,6 +400,12 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-data-grid/components/pivot-panel',
             title: 'Pivot Panel',
+            planned: true,
+            plan: 'premium',
+          },
+          {
+            pathname: '/x/react-data-grid/components/computed-columns-panel',
+            title: 'Computed Columns Panel',
             planned: true,
             plan: 'premium',
           },

@@ -10,15 +10,16 @@ import { ThemeProvider } from '@mui/internal-core-docs/ThemeContext';
 import findActivePage from '@mui/internal-core-docs/findActivePage';
 import { getProductInfoFromUrl } from '@mui/internal-core-docs/utils';
 import { pathnameToLanguage } from '@mui/internal-core-docs/helpers';
-import { Translations } from '@mui/internal-core-docs/i18n';
-import type { VersionEntry } from '@mui/internal-core-docs/DocsProvider';
+import type { Translations } from '@mui/internal-core-docs/i18n';
+import type { VersionEntry, DocsConfig } from '@mui/internal-core-docs/DocsProvider';
 import { LicenseInfo } from '@mui/x-license';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import xPages from 'docs/data/pages'; // DO NOT REMOVE
 import { postProcessImport } from 'docs/src/modules/utils/postProcessImport';
+import { ExperimentLayout } from 'docs/src/modules/components/ExperimentLayout';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
-import { DEFAULT_DOCS_CONFIG, DocsConfig } from '@mui/internal-core-docs/DocsProvider';
+import { DEFAULT_DOCS_CONFIG } from '@mui/internal-core-docs/DocsProvider';
 import { fontClasses as _fontClasses } from '@mui/internal-core-docs/nextFonts';
 
 import translationsJson from '../translations/translations.json';
@@ -266,10 +267,23 @@ function useThemeWrapper() {
   return router.pathname.startsWith('/playground') ? React.Fragment : ThemeProvider;
 }
 
+function ExperimentPage({
+  component: Component,
+  ...pageProps
+}: { component: AppProps['Component'] } & Record<string, unknown>) {
+  return (
+    <ExperimentLayout>
+      <Component {...pageProps} />
+    </ExperimentLayout>
+  );
+}
+
 export default function MyApp(
   props: AppProps<{ userLanguage: string; translations: Translations; versions: VersionEntry[] }>,
 ) {
   const { Component } = props;
+  const { pathname } = useRouter();
+  const isExperimentPage = pathname === '/x/experiments' || pathname.startsWith('/x/experiments/');
   const pageProps = React.useMemo(() => {
     const {
       userLanguage = 'en',
@@ -292,8 +306,8 @@ export default function MyApp(
   return (
     <DocsApp
       {...props}
-      Component={Component}
-      pageProps={pageProps}
+      Component={isExperimentPage ? ExperimentPage : Component}
+      pageProps={isExperimentPage ? { ...pageProps, component: Component } : pageProps}
       docsConfig={DOCS_CONFIG}
       activePage={activePage}
       activePageParents={activePageParents}

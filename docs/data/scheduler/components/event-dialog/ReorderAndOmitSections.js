@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Divider from '@mui/material/Divider';
-
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   EventDialogDateTimeSection,

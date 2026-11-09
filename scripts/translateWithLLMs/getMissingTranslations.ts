@@ -2,7 +2,8 @@ import * as ts from 'typescript';
 import * as fs from 'fs';
 import * as path from 'path';
 import localeNames from '../localeNames';
-import { PACKAGE_CONFIGS, type TranslatePackageConfig } from './packageConfigs';
+import { PACKAGE_CONFIGS } from './packageConfigs';
+import type { TranslatePackageConfig } from './packageConfigs';
 
 interface EnglishEntry {
   type: 'string' | 'function';

@@ -4,13 +4,13 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import HomeIcon from '@mui/icons-material/Home';
+import type { GridCellParams } from '@mui/x-data-grid-pro';
 import {
   DataGridPro,
   useGridApiRef,
   gridExpandedRowCountSelector,
   gridVisibleColumnDefinitionsSelector,
   gridExpandedSortedRowIdsSelector,
-  GridCellParams,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 

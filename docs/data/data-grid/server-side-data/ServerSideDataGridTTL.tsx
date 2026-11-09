@@ -1,9 +1,6 @@
 import * as React from 'react';
-import {
-  DataGrid,
-  GridDataSource,
-  GridDataSourceCacheDefault,
-} from '@mui/x-data-grid';
+import type { GridDataSource } from '@mui/x-data-grid';
+import { DataGrid, GridDataSourceCacheDefault } from '@mui/x-data-grid';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 const lowTTLCache = new GridDataSourceCacheDefault({ ttl: 1000 * 10 }); // 10 seconds

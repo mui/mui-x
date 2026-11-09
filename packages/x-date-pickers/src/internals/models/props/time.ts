@@ -21,6 +21,9 @@ export interface ExportedBaseClockProps
 
 export interface BaseClockProps<TView extends TimeViewWithMeridiem>
   extends ExportedUseViewsOptions<PickerValue, TView>, ExportedBaseClockProps, FormProps {
+  /**
+   * A CSS class name applied to the root element.
+   */
   className?: string;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.

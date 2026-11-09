@@ -1,10 +1,6 @@
 import * as React from 'react';
-import {
-  DataGrid,
-  DataGridProps,
-  GridRenderEditCellParams,
-  renderEditDateCell,
-} from '@mui/x-data-grid';
+import type { DataGridProps, GridRenderEditCellParams } from '@mui/x-data-grid';
+import { DataGrid, renderEditDateCell } from '@mui/x-data-grid';
 
 const baselineProps: DataGridProps = {
   rows: [

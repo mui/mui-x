@@ -1,4 +1,4 @@
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import renameProps from '../../../util/renameProps';
 
 const props = {

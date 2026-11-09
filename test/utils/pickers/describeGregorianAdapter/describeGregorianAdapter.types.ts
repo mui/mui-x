@@ -1,4 +1,8 @@
-import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '@mui/x-date-pickers/models';
+import type {
+  MuiPickersAdapter,
+  PickersTimezone,
+  PickerValidDate,
+} from '@mui/x-date-pickers/models';
 
 export interface DescribeGregorianAdapterParams<TLocale> {
   prepareAdapter?: (adapter: MuiPickersAdapter<TLocale>) => void;

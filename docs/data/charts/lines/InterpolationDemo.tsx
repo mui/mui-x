@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
-import { CurveType } from '@mui/x-charts/models';
+import type { CurveType } from '@mui/x-charts/models';
 
 const curveTypes: CurveType[] = [
   'linear',

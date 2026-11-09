@@ -1,4 +1,4 @@
-import { TargetElement } from './TargetElement';
+import type { TargetElement } from './TargetElement';
 
 /**
  * Enhanced HTML element type with strongly-typed gesture event handlers.

@@ -118,7 +118,7 @@ export type { FormulaEvaluationContext } from './formulaEvaluator';
 export { evaluateFormula } from './formulaEvaluator';
 
 export type { ValidateFormulaExpressionOptions } from './formulaValidation';
-export { validateFormulaExpression } from './formulaValidation';
+export { collectFunctionCallIssues, validateFormulaExpression } from './formulaValidation';
 
 export type { FormulaRecomputeOrder } from './formulaGraph';
 export { collectAffectedCells, orderForRecompute } from './formulaGraph';

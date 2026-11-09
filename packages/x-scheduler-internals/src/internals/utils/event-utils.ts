@@ -3,6 +3,7 @@ import type {
   TemporalSupportedObject,
   SchedulerProcessedEvent,
   SchedulerProcessedDate,
+  SchedulerProcessedDay,
   SchedulerEventOccurrence,
   SchedulerEventId,
   SchedulerRenderableEventOccurrence,
@@ -10,7 +11,8 @@ import type {
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
-import { getDateKey } from './date-utils';
+import { getDateKey } from './plain-date-utils/adapter';
+import { toLocalDayNumber } from './plain-date-utils/timeZone';
 import type { SchedulerEventRangeIndex } from './event-range-index';
 
 /**
@@ -56,7 +58,7 @@ export function getRecurringOccurrenceKey(
 }
 
 /**
- * The render key of a recurring occurrence, from the `getDateKey()` of its day.
+ * The render key of a recurring occurrence, from the key of its day (`getPlainDateKey()`).
  */
 export function getRecurringOccurrenceKeyFromDateKey(
   eventId: SchedulerEventId,
@@ -102,28 +104,31 @@ export function generateOccurrenceFromEvent({
 }
 
 /**
- *  Returns the key of the days an event occurrence should be visible on.
+ * Returns the key of the days an event occurrence should be visible on.
+ * `dayNumbers` are the day numbers of `days`, read once for all the occurrences of the days.
  */
 export function getDaysTheOccurrenceIsVisibleOn(
   event: SchedulerEventOccurrence,
-  days: SchedulerProcessedDate[],
-  adapter: Adapter,
+  days: SchedulerProcessedDay[],
+  dayNumbers: readonly number[],
 ) {
-  const eventStartStartOfDay = adapter.startOfDay(event.displayTimezone.start.value);
-  const eventEndEndOfDay = adapter.endOfDay(event.displayTimezone.end.value);
+  const { start, end, timezone } = event.displayTimezone;
+  const startDayNumber = toLocalDayNumber(start.timestamp, timezone);
+  const endDayNumber = toLocalDayNumber(end.timestamp, timezone);
 
   const dayKeys: string[] = [];
-  for (const day of days) {
+  for (let index = 0; index < days.length; index += 1) {
+    const dayNumber = dayNumbers[index];
     // If the day is before the event start, skip to the next day
-    if (adapter.isBefore(day.value, eventStartStartOfDay)) {
+    if (dayNumber < startDayNumber) {
       continue;
     }
 
     // If the day is after the event end, break as the days are sorted by start date
-    if (adapter.isAfter(day.value, eventEndEndOfDay)) {
+    if (dayNumber > endDayNumber) {
       break;
     }
-    dayKeys.push(day.key);
+    dayKeys.push(days[index].key);
   }
   return dayKeys;
 }
@@ -247,8 +252,14 @@ export function getResourceSelectionMode(
 
 export interface GetOccurrencesFromEventsParameters {
   adapter: Adapter;
-  start: TemporalSupportedObject;
-  end: TemporalSupportedObject;
+  /**
+   * The first instant of the range, as a timestamp.
+   */
+  start: number;
+  /**
+   * The last instant of the range, as a timestamp.
+   */
+  end: number;
   eventRangeIndex: SchedulerEventRangeIndex;
   visibleResources: Record<string, boolean>;
   displayTimezone: TemporalTimezone;

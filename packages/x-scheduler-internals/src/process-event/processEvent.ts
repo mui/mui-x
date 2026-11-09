@@ -38,7 +38,7 @@ export function processEvent(
       warnOnce(
         [
           'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+          'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events`, to enable recurring events.',
         ].join('\n'),
       );
     }

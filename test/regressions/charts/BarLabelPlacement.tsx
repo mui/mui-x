@@ -1,5 +1,6 @@
-import { XAxis, YAxis } from '@mui/x-charts/models';
-import { BarChart, BarSeries } from '@mui/x-charts/BarChart';
+import type { XAxis, YAxis } from '@mui/x-charts/models';
+import type { BarSeries } from '@mui/x-charts/BarChart';
+import { BarChart } from '@mui/x-charts/BarChart';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';

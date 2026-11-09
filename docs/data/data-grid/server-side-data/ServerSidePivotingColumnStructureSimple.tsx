@@ -1,11 +1,11 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
+import type {
   GridPivotModel,
   GridDataSource,
   GridColDef,
   DataGridPremiumProps,
 } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 
 const columns: GridColDef[] = [
   { field: 'id' },

@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
-import { FadeOptions, HighlightOptions } from '@mui/x-charts/context';
+import type { FadeOptions, HighlightOptions } from '@mui/x-charts/context';
 import { populationByEducationLevelPercentageSeriesLabeled } from './populationByEducationLevel';
 
 export default function HighlightFunnel() {

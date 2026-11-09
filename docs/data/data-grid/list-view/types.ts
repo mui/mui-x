@@ -1,4 +1,4 @@
-import { GridRowId } from '@mui/x-data-grid-premium';
+import type { GridRowId } from '@mui/x-data-grid-premium';
 
 export type FileType =
   | 'pdf'

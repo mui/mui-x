@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import type { TemporalSupportedObject } from '../../models';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import { schedulerEventSelectors } from '../../scheduler-selectors';
+import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import type { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
-import { processDate } from '../../process-date';
+import { createProcessedDate } from '../../internals/utils/plain-date-utils/adapter';
 import { useAdapterContext } from '../../use-adapter-context';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
 
@@ -28,23 +27,21 @@ export function useCalendarGridPlaceholderInRange(
     ? rawPlaceholder.eventId
     : null;
   const originalEvent = useStore(store, schedulerEventSelectors.processedEvent, originalEventId);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
   return React.useMemo(() => {
     if (!rawPlaceholder) {
       return null;
     }
 
-    const startProcessed = processDate(rawPlaceholder.start, adapter);
-    const endProcessed = processDate(rawPlaceholder.end, adapter);
-    const timezone = adapter.getTimezone(rawPlaceholder.start);
     const sharedProperties = {
       key: 'occurrence-placeholder',
       id: originalEventId ?? 'occurrence-placeholder',
       title: originalEvent ? originalEvent.title : '',
       displayTimezone: {
-        start: startProcessed,
-        end: endProcessed,
-        timezone,
+        start: createProcessedDate(adapter, rawPlaceholder.start, displayTimezone),
+        end: createProcessedDate(adapter, rawPlaceholder.end, displayTimezone),
+        timezone: displayTimezone,
       },
     };
 
@@ -81,12 +78,27 @@ export function useCalendarGridPlaceholderInRange(
       ...sharedProperties,
       position,
     };
-  }, [rawPlaceholder, adapter, originalEvent, originalEventId, occurrences, maxIndex]);
+  }, [
+    rawPlaceholder,
+    adapter,
+    displayTimezone,
+    originalEvent,
+    originalEventId,
+    occurrences,
+    maxIndex,
+  ]);
 }
 
 export namespace useCalendarGridPlaceholderInRange {
   export interface Parameters extends useEventOccurrencesWithTimelinePosition.ReturnValue {
-    start: TemporalSupportedObject;
-    end: TemporalSupportedObject;
+    /**
+     * The first instant of the range, as a timestamp read in the display timezone.
+     */
+    start: number;
+    /**
+     * The end of the range, as a timestamp read in the display timezone: the end of a time column,
+     * or the last instant of a day row.
+     */
+    end: number;
   }
 }

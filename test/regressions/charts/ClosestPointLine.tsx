@@ -2,11 +2,8 @@ import * as React from 'react';
 import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useDrawingArea } from '@mui/x-charts/hooks';
-import {
-  getLineItemAtPosition,
-  UseChartCartesianAxisSignature,
-  useChartsContext,
-} from '@mui/x-charts/internals';
+import type { UseChartCartesianAxisSignature } from '@mui/x-charts/internals';
+import { getLineItemAtPosition, useChartsContext } from '@mui/x-charts/internals';
 import { AreaPlot, LinePlot } from '@mui/x-charts/LineChart';
 
 const HEIGHT = 150;

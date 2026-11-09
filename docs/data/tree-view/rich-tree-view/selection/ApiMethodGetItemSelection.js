@@ -4,7 +4,6 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-
 import { useRichTreeViewApiRef } from '@mui/x-tree-view/hooks';
 import { MUI_X_PRODUCTS } from '../../datasets/products';
 

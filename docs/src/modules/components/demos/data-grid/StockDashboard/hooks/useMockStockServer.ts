@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridGetRowsResponse, GridRowModel } from '@mui/x-data-grid-pro';
+import type { GridGetRowsResponse, GridRowModel } from '@mui/x-data-grid-pro';
 import type { StockData } from '../types/stocks';
 import { COMPANY_NAMES } from '../data/stockConstants';
 

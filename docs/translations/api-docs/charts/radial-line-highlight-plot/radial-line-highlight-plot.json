@@ -5,5 +5,7 @@
     "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {},
-  "slotDescriptions": { "radialLineHighlight": "" }
+  "slotDescriptions": {
+    "radialLineHighlight": "The component that renders the radial line highlight."
+  }
 }

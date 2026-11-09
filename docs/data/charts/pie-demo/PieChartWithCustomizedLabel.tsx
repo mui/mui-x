@@ -1,4 +1,4 @@
-import { DefaultizedPieValueType } from '@mui/x-charts/models';
+import type { DefaultizedPieValueType } from '@mui/x-charts/models';
 import { PieChart, pieClasses } from '@mui/x-charts/PieChart';
 
 const data = [

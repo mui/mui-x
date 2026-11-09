@@ -211,6 +211,16 @@ describe('EventContextMenu', () => {
     expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
   });
 
+  it('should open the menu with Edit but no Delete item when `eventDeletion` is `false`', () => {
+    renderEvent(vi.fn(), { eventDeletion: false });
+
+    fireEvent.contextMenu(getEvent());
+
+    expect(screen.getByRole('menu')).not.to.equal(null);
+    expect(screen.getByRole('menuitem', { name: /edit/i })).not.to.equal(null);
+    expect(screen.queryByRole('menuitem', { name: /delete/i })).to.equal(null);
+  });
+
   it('should open the delete confirmation dialog for a recurring event when there is no recurring-events plugin', () => {
     const onEventsChange = vi.fn();
     const event = EventBuilder.new()

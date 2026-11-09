@@ -1,4 +1,3 @@
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
@@ -57,7 +56,6 @@ export interface DependencyArrowObstacle {
 }
 
 export interface DependencyAnchorResolverParameters {
-  adapter: Adapter;
   /**
    * The visible resources with their occurrences, in row render order.
    */
@@ -147,7 +145,6 @@ export function createDependencyAnchorResolver(
   parameters: DependencyAnchorResolverParameters,
 ): DependencyAnchorResolver {
   const {
-    adapter,
     resources,
     rowPositions,
     axis,
@@ -207,7 +204,7 @@ export function createDependencyAnchorResolver(
     // Placed on the axis rather than compared with its bounds: the bounds are midnights,
     // so the hours the window hides at the start of the first day and the end of the
     // last day also come before or after what is on screen.
-    const position = computeElementPositionInCollection(adapter, {
+    const position = computeElementPositionInCollection({
       start: event.displayTimezone.start,
       end: event.displayTimezone.end,
       collection: axis,
@@ -269,7 +266,7 @@ export function createDependencyAnchorResolver(
     }
     let position = positionCache.get(occurrence.key);
     if (position == null) {
-      position = computeElementPositionInCollection(adapter, {
+      position = computeElementPositionInCollection({
         start: occurrence.displayTimezone.start,
         end: occurrence.displayTimezone.end,
         collection: axis,

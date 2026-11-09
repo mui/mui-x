@@ -63,6 +63,7 @@ export const GridRootStyles = styled('div', {
     shouldShowBorderTopRightRadiusSelector,
   );
 
+  const fillPreviewTint = `color-mix(in srgb, ${vars.colors.interactive.focus} 8%, transparent)`;
   const baseBackground = vars.colors.background.base;
   const headerBackground = vars.header.background.base;
   const pinnedBackground = vars.cell.background.pinned;
@@ -271,6 +272,25 @@ export const GridRootStyles = styled('div', {
     [`& .${c.columnHeader}:focus, & .${c.cell}:focus`]: {
       outline: `solid ${vars.colors.interactive.focus} ${focusOutlineWidth}px`,
       outlineOffset: focusOutlineWidth * -1,
+    },
+    // Separate rule, because a browser without `:has()` support drops the whole rule.
+    // `:where()` keeps the specificity of `.cell:focus-within`, so overrides of it still apply.
+    [`& .${c.cell}:has(> :where([data-cell-editor="preMounted"]):focus-within)`]: {
+      outline: `solid ${vars.colors.interactive.focus} ${focusOutlineWidth}px`,
+      outlineOffset: focusOutlineWidth * -1,
+    },
+    // Pre-mounted editor (`imeFastEdit`). It must stay focusable, so do not use `display: none`
+    // or `visibility: hidden`. Without offsets, it needs no positioned ancestor.
+    [`& .${c.cell} > [data-cell-editor="preMounted"]`]: {
+      position: 'absolute',
+      width: 0,
+      height: 0,
+      overflow: 'hidden',
+      opacity: 0,
+      pointerEvents: 'none',
+    },
+    [`& .${c.cell} > [data-cell-editor="editing"]`]: {
+      display: 'contents',
     },
     // Hide the column separator when:
     // - the column is focused and has an outline
@@ -871,6 +891,10 @@ export const GridRootStyles = styled('div', {
     /* Fill handle styles */
     [`& .${c['cell--withFillHandle']}`]: {
       position: 'relative',
+      // Pinned cells must stay sticky, otherwise their `left`/`right` offset displaces them
+      [`&.${c['cell--pinnedLeft']}, &.${c['cell--pinnedRight']}`]: {
+        position: 'sticky',
+      },
       '&::after': {
         content: '""',
         position: 'absolute',
@@ -884,7 +908,9 @@ export const GridRootStyles = styled('div', {
       },
     },
     [`& .${c['cell--fillPreview']}`]: {
-      backgroundColor: `color-mix(in srgb, ${vars.colors.interactive.focus} 8%, transparent)`,
+      // Paint the tint as an image layer on top of the cell's own background color,
+      // so opaque backgrounds (pinned cells) stay opaque.
+      backgroundImage: `linear-gradient(${fillPreviewTint}, ${fillPreviewTint})`,
     },
     [`& .${c['cell--fillPreviewTop']}`]: {
       borderTop: `1px dashed ${vars.colors.interactive.focus}`,

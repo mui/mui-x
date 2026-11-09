@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
-import {
+import type {
   ChartsAxisData,
   RadarItemIdentifier,
   RadarSeriesType,

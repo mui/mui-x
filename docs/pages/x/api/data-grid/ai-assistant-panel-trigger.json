@@ -1,7 +1,19 @@
 {
   "props": {
     "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+    "disabled": { "type": { "name": "bool" } },
+    "id": { "type": { "name": "string" } },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
+    "role": { "type": { "name": "string" } },
+    "size": {
+      "type": {
+        "name": "enum",
+        "description": "'large'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'small'"
+      }
+    },
+    "startIcon": { "type": { "name": "node" } },
+    "tabIndex": { "type": { "name": "number" } },
+    "title": { "type": { "name": "string" } }
   },
   "name": "AiAssistantPanelTrigger",
   "imports": [

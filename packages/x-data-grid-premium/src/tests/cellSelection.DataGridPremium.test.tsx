@@ -95,6 +95,55 @@ describe('<DataGridPremium /> - Cell selection', () => {
     expect(cell02).to.have.class('Mui-selected');
   });
 
+  // https://github.com/mui/mui-x/pull/23448
+  it('should not warn when extending the selection with the keyboard on a page other than the first', async () => {
+    const { user } = render(
+      <TestDataGridSelection
+        rowLength={30}
+        pagination
+        initialState={{ pagination: { paginationModel: { page: 1, pageSize: 3 } } }}
+        pageSizeOptions={[3]}
+        hideFooter={false}
+      />,
+    );
+    const spiedSelectCellRange = spyApi(apiRef.current!, 'selectCellRange');
+    // First cell of the second page (absolute row index 3).
+    const cell = getCell(3, 0);
+    await act(() => {
+      cell.focus();
+    });
+    await user.click(cell);
+    // This extends the selection and calls `scrollToIndexes` internally. Before the fix
+    // it passed a page-relative row index, which is out of bounds on page > 0 and logged a
+    // warning. `vitest-fail-on-console` fails the test if that warning is emitted.
+    await user.keyboard('{Shift>}{ArrowDown}{/Shift}');
+    expect(spiedSelectCellRange.mock.calls.length).to.be.greaterThan(0);
+  });
+
+  it('should use an absolute row index for keyboard selection with server pagination', async () => {
+    const serverData = getBasicGridData(3, 3);
+    const rows = serverData.rows.map((row, index) => ({ ...row, id: index + 3 }));
+    const { user } = render(
+      <TestDataGridSelection
+        rows={rows}
+        columns={serverData.columns}
+        rowCount={6}
+        pagination
+        paginationMode="server"
+        paginationModel={{ page: 1, pageSize: 3 }}
+        pageSizeOptions={[3]}
+        hideFooter={false}
+      />,
+    );
+    const scrollToIndexes = spyApi(apiRef.current!, 'scrollToIndexes');
+    const cell = getCell(0, 0);
+    await user.click(cell);
+
+    await user.keyboard('{Shift>}{ArrowDown}{/Shift}');
+
+    expect(scrollToIndexes.mock.lastCall?.[0]).to.deep.include({ rowIndex: 4 });
+  });
+
   describe('Ctrl + click', () => {
     it('should add the clicked cells to the selection', async () => {
       const { user } = render(<TestDataGridSelection />);
@@ -873,6 +922,23 @@ describe('<DataGridPremium /> - Cell selection', () => {
         expect(getCell(0, 1)).to.have.class(gridClasses['cell--withFillHandle']);
       });
 
+      it.skipIf(isJSDOM)(
+        'should keep pinned cells sticky when they show the fill handle',
+        async () => {
+          const { user } = render(
+            <TestDataGridSelection
+              columns={fillColumns}
+              rows={fillRows}
+              cellSelectionFillHandle
+              initialState={{ pinnedColumns: { left: ['id', 'name'] } }}
+            />,
+          );
+          await user.click(getCell(0, 1)); // pinned column that is not the first one
+          expect(getCell(0, 1)).to.have.class(gridClasses['cell--withFillHandle']);
+          expect(window.getComputedStyle(getCell(0, 1)).position).to.equal('sticky');
+        },
+      );
+
       it('should show fill handle on the bottom-right cell of a multi-cell selection', async () => {
         const { user } = render(
           <TestDataGridSelection columns={fillColumns} rows={fillRows} cellSelectionFillHandle />,
@@ -1586,6 +1652,67 @@ describe('<DataGridPremium /> - Cell selection', () => {
           expect(document.querySelectorAll(`.${gridClasses['cell--fillPreview']}`).length).to.equal(
             0,
           );
+        });
+
+        it('should keep the pinned cell background opaque inside the fill preview', async () => {
+          const { user } = render(
+            <TestDataGridSelection
+              columns={fillColumns}
+              rows={fillRows}
+              cellSelectionFillHandle
+              initialState={{ pinnedColumns: { left: ['id', 'name'] } }}
+            />,
+          );
+
+          await user.click(getCell(0, 1)); // pinned column that is not the first one
+
+          const handleCell = document.querySelector(
+            `.${gridClasses['cell--withFillHandle']}`,
+          )! as HTMLElement;
+
+          /* eslint-disable testing-library/no-unnecessary-act */
+          act(() => {
+            const rect = handleCell.getBoundingClientRect();
+            fireEvent.mouseDown(handleCell, {
+              clientX: rect.right - 4,
+              clientY: rect.bottom - 4,
+            });
+          });
+          act(() => {
+            const targetRect = getCell(2, 1).getBoundingClientRect();
+            document.dispatchEvent(
+              new MouseEvent('mousemove', {
+                clientX: targetRect.x + targetRect.width / 2,
+                clientY: targetRect.y + targetRect.height / 2,
+                bubbles: true,
+              }),
+            );
+          });
+          // Wait for rAF-throttled mousemove handler to execute
+          await act(async () => {
+            await new Promise((resolve) => {
+              requestAnimationFrame(() => {
+                requestAnimationFrame(resolve as FrameRequestCallback);
+              });
+            });
+          });
+
+          // The preview is still active here, the mouse has not been released yet
+          const previewCell = getCell(1, 1); // pinned column, inside the fill preview
+          expect(previewCell).to.have.class(gridClasses['cell--fillPreview']);
+          expect(window.getComputedStyle(previewCell).backgroundColor).to.equal(
+            window.getComputedStyle(getCell(4, 1)).backgroundColor, // same pinned column, outside the preview
+          );
+
+          act(() => {
+            document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+          });
+          /* eslint-enable testing-library/no-unnecessary-act */
+
+          // Wait for the batched row updates triggered by the release to flush
+          await waitFor(() => {
+            expect(getCell(1, 1).textContent).to.equal('Alice');
+          });
         });
       });
 

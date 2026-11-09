@@ -16,9 +16,9 @@ const events = Array.from({ length: eventCount }, (_, index) => {
 });
 const start = adapter.addHours(firstDay, eventCount * 2);
 const end = adapter.addDays(start, 7);
-const eventRangeIndex = createEventRangeIndex(events, adapter, false);
+const eventRangeIndex = createEventRangeIndex(events, false);
 const shuffledEvents = events.map((_, index) => events[(index * 7_919) % eventCount]);
-const shuffledEventRangeIndex = createEventRangeIndex(shuffledEvents, adapter, false);
+const shuffledEventRangeIndex = createEventRangeIndex(shuffledEvents, false);
 const mediumStart = firstDay;
 const mediumBelowThresholdEnd = adapter.addHours(firstDay, eventCount * 4 * 0.2);
 const mediumAboveThresholdEnd = adapter.addHours(firstDay, eventCount * 4 * 0.3);
@@ -52,7 +52,7 @@ describe('event range index', () => {
 
     await bench.compare(
       bench('build index of 50k events', () => {
-        createEventRangeIndex(events, adapter, false);
+        createEventRangeIndex(events, false);
       }),
 
       bench('linear narrow query of 50k events', () => {
@@ -60,11 +60,11 @@ describe('event range index', () => {
       }),
 
       bench('indexed narrow query of 50k chronological events', () => {
-        eventRangeIndex.getEventsForRange(start, end);
+        eventRangeIndex.getEventsForRange(adapter.getTime(start), adapter.getTime(end));
       }),
 
       bench('indexed narrow query of 50k shuffled events', () => {
-        shuffledEventRangeIndex.getEventsForRange(start, end);
+        shuffledEventRangeIndex.getEventsForRange(adapter.getTime(start), adapter.getTime(end));
       }),
 
       bench('numeric linear query matching 20% of 50k shuffled events', () => {
@@ -72,7 +72,10 @@ describe('event range index', () => {
       }),
 
       bench('indexed query matching 20% of 50k shuffled events', () => {
-        shuffledEventRangeIndex.getEventsForRange(mediumStart, mediumBelowThresholdEnd);
+        shuffledEventRangeIndex.getEventsForRange(
+          adapter.getTime(mediumStart),
+          adapter.getTime(mediumBelowThresholdEnd),
+        );
       }),
 
       bench('numeric linear query matching 30% of 50k shuffled events', () => {
@@ -80,7 +83,10 @@ describe('event range index', () => {
       }),
 
       bench('indexed query matching 30% of 50k shuffled events', () => {
-        shuffledEventRangeIndex.getEventsForRange(mediumStart, mediumAboveThresholdEnd);
+        shuffledEventRangeIndex.getEventsForRange(
+          adapter.getTime(mediumStart),
+          adapter.getTime(mediumAboveThresholdEnd),
+        );
       }),
 
       bench('numeric linear broad query of 50k events', () => {
@@ -88,11 +94,14 @@ describe('event range index', () => {
       }),
 
       bench('indexed broad query of 50k chronological events', () => {
-        eventRangeIndex.getEventsForRange(broadStart, broadEnd);
+        eventRangeIndex.getEventsForRange(adapter.getTime(broadStart), adapter.getTime(broadEnd));
       }),
 
       bench('indexed broad query of 50k shuffled events', () => {
-        shuffledEventRangeIndex.getEventsForRange(broadStart, broadEnd);
+        shuffledEventRangeIndex.getEventsForRange(
+          adapter.getTime(broadStart),
+          adapter.getTime(broadEnd),
+        );
       }),
     );
   });

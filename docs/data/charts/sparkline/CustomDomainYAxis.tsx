@@ -4,7 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { Theme } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 import type { NumberValue } from '@mui/x-charts/models';
 

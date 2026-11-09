@@ -1,4 +1,5 @@
-import { DataGrid, GridColumnMenu, GridColumnMenuProps } from '@mui/x-data-grid';
+import type { GridColumnMenuProps } from '@mui/x-data-grid';
+import { DataGrid, GridColumnMenu } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function CustomColumnMenu(props: GridColumnMenuProps) {

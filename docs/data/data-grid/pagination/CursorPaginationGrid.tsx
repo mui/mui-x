@@ -1,10 +1,10 @@
 import * as React from 'react';
-import {
-  DataGrid,
+import type {
   GridRowId,
   GridPaginationModel,
   GridPaginationMeta,
 } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';

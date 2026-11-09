@@ -1,4 +1,4 @@
-import { GridFormulaFunctionDefinition } from '@mui/x-data-grid-premium';
+import type { GridFormulaFunctionDefinition } from '@mui/x-data-grid-premium';
 import { GRID_FORMULA_FUNCTIONS } from '@mui/x-data-grid-premium/formula';
 
 const MARGIN: GridFormulaFunctionDefinition = {

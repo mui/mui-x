@@ -20,7 +20,7 @@ export interface TimelineGridEventRowContext {
    */
   hasFocus: boolean;
   /**
-   * Gets the cursor position in the element in milliseconds.
+   * Gets the cursor position in the element in milliseconds, from its inline-start edge.
    * @param {Object} parameters The parameters of the method.
    * @param {{ clientX: number }} parameters.input The input object provided by the drag and drop library for the current event.
    * @param {React.RefObject<HTMLElement | null>} parameters.elementRef The ref of the element on which the event has been triggered.

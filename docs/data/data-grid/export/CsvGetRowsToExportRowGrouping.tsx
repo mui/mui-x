@@ -1,9 +1,11 @@
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
-import {
-  DataGridPremium,
+import type {
   GridCsvExportOptions,
   GridCsvGetRowsToExportParams,
+} from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
   gridRowTreeSelector,
   gridFilteredSortedRowIdsSelector,
   useGridApiContext,

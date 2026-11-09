@@ -1,13 +1,14 @@
 import * as React from 'react';
 import createDescribe from '@mui/internal-test-utils/createDescribe';
-import {
+import type {
   BasePickerInputProps,
   PickerValidValue,
   UsePickerNonStaticProps,
 } from '@mui/x-date-pickers/internals';
-import { buildFieldInteractions, BuildFieldInteractionsResponse } from 'test/utils/pickers';
-import { PickerComponentFamily } from '../describe.types';
-import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
+import type { BuildFieldInteractionsResponse } from 'test/utils/pickers';
+import { buildFieldInteractions } from 'test/utils/pickers';
+import type { PickerComponentFamily } from '../describe.types';
+import type { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
 import { testControlledUnControlled } from './testControlledUnControlled';
 import { testPickerOpenCloseLifeCycle } from './testPickerOpenCloseLifeCycle';
 import { testPickerActionBar } from './testPickerActionBar';

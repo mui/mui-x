@@ -1,5 +1,17 @@
 {
   "props": {
+    "cornerRadius": { "type": { "name": "number" }, "required": true },
+    "dataIndex": { "type": { "name": "number" }, "required": true },
+    "endAngle": { "type": { "name": "number" }, "required": true },
+    "innerRadius": { "type": { "name": "number" }, "required": true },
+    "isFaded": { "type": { "name": "bool" }, "required": true },
+    "isFocused": { "type": { "name": "bool" }, "required": true },
+    "isHighlighted": { "type": { "name": "bool" }, "required": true },
+    "outerRadius": { "type": { "name": "number" }, "required": true },
+    "paddingAngle": { "type": { "name": "number" }, "required": true },
+    "seriesId": { "type": { "name": "string" }, "required": true },
+    "startAngle": { "type": { "name": "number" }, "required": true },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "skipAnimation": { "type": { "name": "bool" } },
     "skipInteraction": { "type": { "name": "bool" } }
   },

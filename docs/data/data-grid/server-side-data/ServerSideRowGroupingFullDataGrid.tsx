@@ -1,9 +1,11 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
+import type {
   GridDataSource,
   GridGroupingColDefOverride,
   GridValidRowModel,
+} from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';

@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { SxProps, Theme } from '@mui/system';
 import { ConversationHeaderActions } from '@mui/x-chat-headless';
-import type { ConversationHeaderActionsProps } from '@mui/x-chat-headless';
+import type {
+  ConversationHeaderActionsProps,
+  ConversationHeaderActionsSlots,
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatConversationUtilityClasses } from './chatConversationClasses';
@@ -12,9 +15,17 @@ import type { ChatConversationClasses } from './chatConversationClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatConversationHeaderActions');
 
+export interface ChatConversationHeaderActionsSlots extends ConversationHeaderActionsSlots {}
+
 export interface ChatConversationHeaderActionsProps extends ConversationHeaderActionsProps {
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<ChatConversationClasses>;
 }
 
@@ -64,11 +75,28 @@ ChatConversationHeaderActions.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The content of the component.
+   */
   children: PropTypes.node,
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

@@ -1,5 +1,6 @@
 import { ApiKeyJwtClient } from '../auth/api-key-jwt-client';
-import { createGenerateReactCodeTool, type GenerateReactCodeTool } from './tools';
+import { createGenerateReactCodeTool } from './tools';
+import type { GenerateReactCodeTool } from './tools';
 import type { Logger } from '../types';
 
 export interface CreateCodegenToolOptions {

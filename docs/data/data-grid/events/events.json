@@ -48,7 +48,7 @@
     "name": "cellEditStart",
     "description": "Fired when the cell turns to edit mode.",
     "params": "GridCellEditStartParams",
-    "event": "MuiEvent<React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>>",
+    "event": "MuiEvent<React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement> | React.CompositionEvent<HTMLElement>>",
     "componentProp": "onCellEditStart"
   },
   {
@@ -231,6 +231,13 @@
     "componentProp": "onColumnWidthChange"
   },
   {
+    "projects": ["x-data-grid-premium"],
+    "name": "computedColumnsChange",
+    "description": "Fired when the computed columns model changes.",
+    "params": "GridComputedColumnsModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "debouncedResize",
     "description": "Fired when the grid is resized with a debounced time of 60ms.",
@@ -291,7 +298,7 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "menuClose",
-    "description": "Fired when the grid menu is closed.",
+    "description": "Fired when a grid menu is closed. This includes the column menu, the actions cell menu, and the toolbar menus.",
     "params": "GridMenuParams",
     "event": "MuiEvent<{}>",
     "componentProp": "onMenuClose"
@@ -299,7 +306,7 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "menuOpen",
-    "description": "Fired when the menu is opened.",
+    "description": "Fired when a grid menu is opened. This includes the column menu, the actions cell menu, and the toolbar menus.",
     "params": "GridMenuParams",
     "event": "MuiEvent<{}>",
     "componentProp": "onMenuOpen"
@@ -412,7 +419,7 @@
     "name": "rowEditStart",
     "description": "Fired when the row turns to edit mode.",
     "params": "GridRowEditStartParams",
-    "event": "MuiEvent<React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>>",
+    "event": "MuiEvent<React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement> | React.CompositionEvent<HTMLElement>>",
     "componentProp": "onRowEditStart"
   },
   {

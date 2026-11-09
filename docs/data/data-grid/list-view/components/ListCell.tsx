@@ -1,9 +1,8 @@
 import * as React from 'react';
+import type { GridDensity, GridRenderCellParams } from '@mui/x-data-grid-premium';
 import {
   gridColumnVisibilityModelSelector,
-  GridDensity,
   gridDensitySelector,
-  GridRenderCellParams,
   useGridApiContext,
   useGridSelector,
 } from '@mui/x-data-grid-premium';
@@ -20,7 +19,7 @@ import {
 } from './Card';
 import { FileIcon } from './FileIcon';
 import { formatDate, formatSize } from '../utils';
-import { RowModel } from '../types';
+import type { RowModel } from '../types';
 
 interface ListCellProps extends GridRenderCellParams<RowModel> {
   onOpenActions: () => void;

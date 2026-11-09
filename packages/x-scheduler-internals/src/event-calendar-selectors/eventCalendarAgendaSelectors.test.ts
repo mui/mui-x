@@ -1,9 +1,14 @@
-import { adapter, EventBuilder, getEventCalendarStateFromParameters } from 'test/utils/scheduler';
+import {
+  adapter,
+  EventBuilder,
+  getEventCalendarStateFromParameters,
+  processDay,
+} from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import { processDate } from '../process-date';
 import { eventCalendarAgendaSelectors } from './eventCalendarAgendaSelectors';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import type { EventCalendarState } from '../use-event-calendar';
+import { buildTemporalPlainDate } from '../internals/utils/plain-date-utils/adapter';
 
 describe('eventCalendarEventSelectors', () => {
   describe('baseVisibleDays', () => {
@@ -17,9 +22,9 @@ describe('eventCalendarEventSelectors', () => {
       const days = eventCalendarAgendaSelectors.baseVisibleDays(state);
 
       expect(days).to.have.length(9);
-      expect(days[0]).to.deep.equal(processDate(adapter.date('2025-07-01Z', 'default'), adapter));
+      expect(days[0]).to.deep.equal(processDay(adapter.date('2025-07-01Z', 'default'), adapter));
       expect(days[days.length - 1]).to.deep.equal(
-        processDate(adapter.date('2025-07-11Z', 'default'), adapter),
+        processDay(adapter.date('2025-07-11Z', 'default'), adapter),
       );
     });
   });
@@ -70,18 +75,18 @@ describe('eventCalendarEventSelectors', () => {
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(visibleDays).to.deep.equal([
-        processDate(adapter.date('2025-01-01Z', 'default'), adapter),
-        processDate(adapter.date('2025-01-03Z', 'default'), adapter),
-        processDate(adapter.date('2025-01-05Z', 'default'), adapter),
-        processDate(adapter.date('2025-01-08Z', 'default'), adapter),
-        processDate(adapter.date('2025-01-09Z', 'default'), adapter),
-        processDate(adapter.date('2025-01-10Z', 'default'), adapter),
-        processDate(adapter.date('2025-01-11Z', 'default'), adapter),
-        processDate(adapter.date('2025-01-13Z', 'default'), adapter),
-        processDate(adapter.date('2025-01-14Z', 'default'), adapter),
-        processDate(adapter.date('2025-01-16Z', 'default'), adapter),
-        processDate(adapter.date('2025-01-18Z', 'default'), adapter),
-        processDate(adapter.date('2025-01-20Z', 'default'), adapter),
+        processDay(adapter.date('2025-01-01Z', 'default'), adapter),
+        processDay(adapter.date('2025-01-03Z', 'default'), adapter),
+        processDay(adapter.date('2025-01-05Z', 'default'), adapter),
+        processDay(adapter.date('2025-01-08Z', 'default'), adapter),
+        processDay(adapter.date('2025-01-09Z', 'default'), adapter),
+        processDay(adapter.date('2025-01-10Z', 'default'), adapter),
+        processDay(adapter.date('2025-01-11Z', 'default'), adapter),
+        processDay(adapter.date('2025-01-13Z', 'default'), adapter),
+        processDay(adapter.date('2025-01-14Z', 'default'), adapter),
+        processDay(adapter.date('2025-01-16Z', 'default'), adapter),
+        processDay(adapter.date('2025-01-18Z', 'default'), adapter),
+        processDay(adapter.date('2025-01-20Z', 'default'), adapter),
       ]);
     });
 
@@ -119,18 +124,18 @@ describe('eventCalendarEventSelectors', () => {
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(visibleDays).to.deep.equal([
-        processDate(adapter.date('2025-10-03Z', 'default'), adapter),
-        processDate(adapter.date('2025-10-06Z', 'default'), adapter),
-        processDate(adapter.date('2025-10-07Z', 'default'), adapter),
-        processDate(adapter.date('2025-10-08Z', 'default'), adapter),
-        processDate(adapter.date('2025-10-09Z', 'default'), adapter),
-        processDate(adapter.date('2025-10-10Z', 'default'), adapter),
-        processDate(adapter.date('2025-10-13Z', 'default'), adapter),
-        processDate(adapter.date('2025-10-14Z', 'default'), adapter),
-        processDate(adapter.date('2025-10-15Z', 'default'), adapter),
-        processDate(adapter.date('2025-10-16Z', 'default'), adapter),
-        processDate(adapter.date('2025-10-17Z', 'default'), adapter),
-        processDate(adapter.date('2025-10-20Z', 'default'), adapter),
+        processDay(adapter.date('2025-10-03Z', 'default'), adapter),
+        processDay(adapter.date('2025-10-06Z', 'default'), adapter),
+        processDay(adapter.date('2025-10-07Z', 'default'), adapter),
+        processDay(adapter.date('2025-10-08Z', 'default'), adapter),
+        processDay(adapter.date('2025-10-09Z', 'default'), adapter),
+        processDay(adapter.date('2025-10-10Z', 'default'), adapter),
+        processDay(adapter.date('2025-10-13Z', 'default'), adapter),
+        processDay(adapter.date('2025-10-14Z', 'default'), adapter),
+        processDay(adapter.date('2025-10-15Z', 'default'), adapter),
+        processDay(adapter.date('2025-10-16Z', 'default'), adapter),
+        processDay(adapter.date('2025-10-17Z', 'default'), adapter),
+        processDay(adapter.date('2025-10-20Z', 'default'), adapter),
       ]);
     });
 
@@ -195,7 +200,7 @@ describe('eventCalendarEventSelectors', () => {
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(visibleDays).to.deep.equal([
-        processDate(adapter.date('2025-07-17Z', 'default'), adapter),
+        processDay(adapter.date('2025-07-17Z', 'default'), adapter),
       ]);
     });
 
@@ -212,8 +217,25 @@ describe('eventCalendarEventSelectors', () => {
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(visibleDays).to.deep.equal([
-        processDate(adapter.date('2024-06-28Z', 'default'), adapter),
+        processDay(adapter.date('2024-06-28Z', 'default'), adapter),
       ]);
+    });
+
+    it('should not list a day twice when a scanned chunk ends on a skipped day', () => {
+      // Pacific/Apia skipped December 30th, 2011, the last day of the second chunk.
+      const state = getEventCalendarStateFromParameters({
+        events: [EventBuilder.new().singleDay('2011-12-31T00:00:00Z').build()],
+        visibleDate: adapter.date('2011-12-07T12:00:00', 'Pacific/Apia'),
+        displayTimezone: 'Pacific/Apia',
+        defaultPreferences: {
+          showWeekends: true,
+          showEmptyDaysInAgenda: false,
+        },
+      });
+
+      const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
+
+      expect(visibleDays.map((day) => day.key)).to.deep.equal(['2011-12-31']);
     });
 
     it('should not find an event past the horizon when showEmptyDaysInAgenda=false', () => {
@@ -260,7 +282,7 @@ describe('eventCalendarEventSelectors', () => {
 
       const range = eventCalendarAgendaSelectors.fetchRange(state);
 
-      expect(adapter.isSameDay(range.end, adapter.date('2025-07-11Z', 'default'))).to.equal(true);
+      expect(range.end.toString()).to.equal('2025-07-11');
     });
 
     it('should span the base days when showEmptyDaysInAgenda=true', () => {
@@ -275,8 +297,8 @@ describe('eventCalendarEventSelectors', () => {
 
       const range = eventCalendarAgendaSelectors.fetchRange(state);
 
-      expect(adapter.isSameDay(range.start, adapter.date('2024-01-01Z', 'default'))).to.equal(true);
-      expect(adapter.isSameDay(range.end, adapter.date('2024-01-12Z', 'default'))).to.equal(true);
+      expect(range.start.toString()).to.equal('2024-01-01');
+      expect(range.end.toString()).to.equal('2024-01-12');
     });
 
     it('should span the whole horizon when showEmptyDaysInAgenda=false', () => {
@@ -291,8 +313,8 @@ describe('eventCalendarEventSelectors', () => {
 
       const range = eventCalendarAgendaSelectors.fetchRange(state);
 
-      expect(adapter.isSameDay(range.start, adapter.date('2024-01-01Z', 'default'))).to.equal(true);
-      expect(adapter.isSameDay(range.end, adapter.date('2024-06-28Z', 'default'))).to.equal(true);
+      expect(range.start.toString()).to.equal('2024-01-01');
+      expect(range.end.toString()).to.equal('2024-06-28');
     });
 
     it('should not depend on the events or the loading state when showEmptyDaysInAgenda=false', () => {
@@ -316,8 +338,8 @@ describe('eventCalendarEventSelectors', () => {
       const reference = eventCalendarAgendaSelectors.fetchRange(emptyState);
       for (const state of [stateWithEvents, loadingState]) {
         const range = eventCalendarAgendaSelectors.fetchRange(state);
-        expect(adapter.isEqual(range.start, reference.start)).to.equal(true);
-        expect(adapter.isEqual(range.end, reference.end)).to.equal(true);
+        expect(range.start.equals(reference.start)).to.equal(true);
+        expect(range.end.equals(reference.end)).to.equal(true);
       }
     });
   });
@@ -333,8 +355,8 @@ describe('eventCalendarEventSelectors', () => {
       const days = eventCalendarAgendaSelectors.baseVisibleDays(state);
 
       expect(days).to.have.length(5);
-      expect(days[0]).to.deep.equal(processDate(adapter.date('2025-07-01Z', 'default'), adapter));
-      expect(days[4]).to.deep.equal(processDate(adapter.date('2025-07-05Z', 'default'), adapter));
+      expect(days[0]).to.deep.equal(processDay(adapter.date('2025-07-01Z', 'default'), adapter));
+      expect(days[4]).to.deep.equal(processDay(adapter.date('2025-07-05Z', 'default'), adapter));
     });
 
     it("should return the whole month of the visible date when dayCount is 'month'", () => {
@@ -348,8 +370,8 @@ describe('eventCalendarEventSelectors', () => {
       const days = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(days).to.have.length(31);
-      expect(days[0]).to.deep.equal(processDate(adapter.date('2025-07-01Z', 'default'), adapter));
-      expect(days[30]).to.deep.equal(processDate(adapter.date('2025-07-31Z', 'default'), adapter));
+      expect(days[0]).to.deep.equal(processDay(adapter.date('2025-07-01Z', 'default'), adapter));
+      expect(days[30]).to.deep.equal(processDay(adapter.date('2025-07-31Z', 'default'), adapter));
     });
 
     it("should only keep the days of the month that have events when hiding the empty days in 'month' mode", () => {
@@ -367,15 +389,13 @@ describe('eventCalendarEventSelectors', () => {
       const days = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(days.map((day) => day.key)).to.deep.equal([
-        processDate(adapter.date('2025-07-03Z', 'default'), adapter).key,
-        processDate(adapter.date('2025-07-20Z', 'default'), adapter).key,
+        processDay(adapter.date('2025-07-03Z', 'default'), adapter).key,
+        processDay(adapter.date('2025-07-20Z', 'default'), adapter).key,
       ]);
 
       const fetchRange = eventCalendarAgendaSelectors.fetchRange(state);
-      expect(fetchRange.start).toEqualDateTime(adapter.date('2025-07-01Z', 'default'));
-      expect(adapter.isSameDay(fetchRange.end, adapter.date('2025-07-31Z', 'default'))).to.equal(
-        true,
-      );
+      expect(fetchRange.start.toString()).to.equal('2025-07-01');
+      expect(fetchRange.end.toString()).to.equal('2025-07-31');
     });
 
     it("should keep every day of the month that has events when hiding the empty days in 'month' mode", () => {
@@ -408,7 +428,7 @@ describe('eventCalendarEventSelectors', () => {
       const days = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(days.map((day) => day.key)).to.deep.equal(
-        occupiedDays.map((day) => processDate(adapter.date(day, 'default'), adapter).key),
+        occupiedDays.map((day) => processDay(adapter.date(day, 'default'), adapter).key),
       );
     });
 
@@ -431,11 +451,11 @@ describe('eventCalendarEventSelectors', () => {
       const days = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(days.map((day) => day.key)).to.deep.equal([
-        processDate(adapter.date('2025-07-02Z', 'default'), adapter).key,
-        processDate(adapter.date('2025-07-08Z', 'default'), adapter).key,
-        processDate(adapter.date('2025-07-10Z', 'default'), adapter).key,
-        processDate(adapter.date('2025-07-15Z', 'default'), adapter).key,
-        processDate(adapter.date('2025-07-20Z', 'default'), adapter).key,
+        processDay(adapter.date('2025-07-02Z', 'default'), adapter).key,
+        processDay(adapter.date('2025-07-08Z', 'default'), adapter).key,
+        processDay(adapter.date('2025-07-10Z', 'default'), adapter).key,
+        processDay(adapter.date('2025-07-15Z', 'default'), adapter).key,
+        processDay(adapter.date('2025-07-20Z', 'default'), adapter).key,
       ]);
     });
 
@@ -449,12 +469,8 @@ describe('eventCalendarEventSelectors', () => {
 
       expect(eventCalendarAgendaSelectors.baseVisibleDays(state)).to.have.length(0);
       const fetchRange = eventCalendarAgendaSelectors.fetchRange(state);
-      expect(adapter.isSameDay(fetchRange.start, adapter.date('2025-07-05Z', 'default'))).to.equal(
-        true,
-      );
-      expect(adapter.isSameDay(fetchRange.end, adapter.date('2025-07-06Z', 'default'))).to.equal(
-        true,
-      );
+      expect(fetchRange.start.toString()).to.equal('2025-07-05');
+      expect(fetchRange.end.toString()).to.equal('2025-07-06');
     });
 
     it('should fetch at least the displayed days when dayCount exceeds the scan horizon', () => {
@@ -468,7 +484,9 @@ describe('eventCalendarEventSelectors', () => {
 
       const fetchRange = eventCalendarAgendaSelectors.fetchRange(state);
 
-      expect(adapter.isSameDay(fetchRange.end, adapter.addDays(visibleDate, 199))).to.equal(true);
+      expect(
+        fetchRange.end.equals(buildTemporalPlainDate(adapter, visibleDate).add({ days: 199 })),
+      ).to.equal(true);
     });
   });
 });

@@ -26,8 +26,8 @@ const defaultPreferences = {
 
 Available properties:
 
-- `ampm`: Whether the component displays time in 12-hour format with AM/PM.
-- `weekStartsOn`: The first day of the week, from `0` (Sunday) to `6` (Saturday). Defaults to the locale's first day of the week.
+- `ampm`: Whether the component displays time in 12-hour format with AM/PM. Defaults to the hour cycle of the [date locale](/x/react-scheduler/event-timeline/localization/#date-locale).
+- `weekStartsOn`: The first day of the week, as an ISO weekday, from `1` (Monday) to `7` (Sunday). Defaults to the first day of the week of the [date locale](/x/react-scheduler/event-timeline/localization/#date-locale).
 
 {{"demo": "DefaultPreferences.js", "bg": "inline", "defaultCodeOpen": false}}
 

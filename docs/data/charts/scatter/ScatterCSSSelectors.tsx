@@ -1,4 +1,5 @@
-import { ScatterChart, ScatterSeries } from '@mui/x-charts/ScatterChart';
+import type { ScatterSeries } from '@mui/x-charts/ScatterChart';
+import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import data from '../dataset/random/scatterParallel.json';
 
 const series: ScatterSeries[] = [

@@ -19,8 +19,9 @@ import { createDependencyAnchorResolver } from '../content/timeline-dependencies
 export const collectionStart = adapter.date('2024-01-15', 'default');
 export const collectionEnd = adapter.endOfDay(collectionStart);
 export const fullDayAxis: TimelineAxis = {
-  start: collectionStart,
-  end: collectionEnd,
+  start: adapter.getTime(collectionStart),
+  end: adapter.getTime(collectionEnd),
+  timezone: 'default',
   dayStartMinute: 0,
   dayEndMinute: 1440,
 };
@@ -47,9 +48,9 @@ export const eventB = EventBuilder.new()
 export function getOccurrences(events: SchedulerProcessedEvent[]) {
   return getOccurrencesFromEvents({
     adapter,
-    start: collectionStart,
-    end: collectionEnd,
-    eventRangeIndex: createEventRangeIndex(events, adapter, false),
+    start: adapter.getTime(collectionStart),
+    end: adapter.getTime(collectionEnd),
+    eventRangeIndex: createEventRangeIndex(events, false),
     displayTimezone: 'default',
     visibleResources: {},
     recurringEventsPlugin: null,
@@ -81,11 +82,10 @@ export function buildResolver(parameters: {
   processedEventLookup?: ResolverParameters['processedEventLookup'];
 }) {
   return createDependencyAnchorResolver({
-    adapter,
     resources: parameters.resources,
     rowPositions: parameters.rowPositions,
     axis: parameters.axis ?? fullDayAxis,
-    durationMs: getTimelineAxisDurationMs(adapter, parameters.axis ?? fullDayAxis),
+    durationMs: getTimelineAxisDurationMs(parameters.axis ?? fullDayAxis),
     positionByOccurrenceKey: parameters.positionByOccurrenceKey,
     eventsWidth: parameters.eventsWidth ?? EVENTS_WIDTH,
     laneMetrics,

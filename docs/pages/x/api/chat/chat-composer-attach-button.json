@@ -1,17 +1,38 @@
 {
-  "props": {},
+  "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    }
+  },
   "name": "ChatComposerAttachButton",
   "imports": [
     "import { ChatComposerAttachButton } from '@mui/x-chat/ChatComposer';",
     "import { ChatComposerAttachButton } from '@mui/x-chat';"
   ],
-  "classes": [
+  "slots": [
     {
-      "key": "attachButton",
-      "className": "MuiChatComposerAttachButton-attachButton",
-      "description": "Styles applied to the attach button element.",
-      "isGlobal": false
+      "name": "attachButton",
+      "description": "The component that renders the attach button.",
+      "class": "MuiChatComposerAttachButton-attachButton"
     },
+    {
+      "name": "attachInput",
+      "description": "The component that renders the attach input.",
+      "class": null
+    }
+  ],
+  "classes": [
     {
       "key": "attachmentList",
       "className": "MuiChatComposerAttachButton-attachmentList",

@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { useDirection } from '@base-ui/react/direction-provider';
 import type { TimelineGridColumnType } from '../../models/timelineGrid';
 import { useTimelineGridRootContext } from '../../timeline-grid/root/TimelineGridRootContext';
 import { useTimelineGridBodyRowContext } from '../../timeline-grid/body-row/TimelineGridBodyRowContext';
@@ -32,6 +33,9 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
   } = useTimelineGridRootContext();
 
   const bodyRowContext = useTimelineGridBodyRowContext();
+  const isRtl = useDirection() === 'rtl';
+  const previousColumnKey = isRtl ? 'ArrowRight' : 'ArrowLeft';
+  const nextColumnKey = isRtl ? 'ArrowLeft' : 'ArrowRight';
   const index = bodyRowContext.index;
 
   if (process.env.NODE_ENV !== 'production') {
@@ -91,14 +95,14 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
       }
       return true;
     }
-    if (event.key === 'ArrowLeft') {
+    if (event.key === previousColumnKey) {
       event.preventDefault();
       if (typeIndex > 0) {
         setFocusedCell({ columnType: columnTypes[typeIndex - 1], rowIndex });
       }
       return true;
     }
-    if (event.key === 'ArrowRight') {
+    if (event.key === nextColumnKey) {
       event.preventDefault();
       if (typeIndex < columnTypes.length - 1) {
         setFocusedCell({ columnType: columnTypes[typeIndex + 1], rowIndex });

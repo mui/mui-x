@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
-import { DataGrid, GridColDef, GridValueGetter } from '@mui/x-data-grid';
+import type { GridColDef, GridValueGetter } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 
 const rows = [
   { id: 1, lastName: 'Snow', firstName: 'Jon' },

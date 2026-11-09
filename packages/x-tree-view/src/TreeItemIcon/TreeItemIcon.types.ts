@@ -29,6 +29,9 @@ export interface TreeItemIconSlotProps {
 }
 
 export interface TreeItemIconProps {
+  /**
+   * The status of the item, used to pick the icon (for example expanded or collapsed).
+   */
   status: UseTreeItemStatus;
   /**
    * Overridable component slots.

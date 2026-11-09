@@ -166,4 +166,62 @@ describe('EventContextMenu - recurring events (Premium)', () => {
       expect(dialog.contains(document.activeElement)).to.equal(true);
     });
   });
+
+  describe('eventDeletion={false}', () => {
+    const originalMatchMedia = window.matchMedia;
+    afterEach(() => {
+      window.matchMedia = originalMatchMedia;
+    });
+
+    function renderRecurringEvent() {
+      const weeklyEvent = EventBuilder.new(adapter)
+        .title('Weekly sync')
+        .singleDay('2025-07-03T09:00:00Z', 30)
+        .recurrent('WEEKLY')
+        .build();
+      render(
+        <EventCalendarPremium
+          events={[weeklyEvent]}
+          resources={[]}
+          defaultView="day"
+          defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          eventDeletion={false}
+        />,
+      );
+    }
+
+    function getEvent() {
+      return screen.getByRole('button', { name: /^Weekly sync,/ });
+    }
+
+    it('should not offer Delete in the context menu of a recurring occurrence', () => {
+      window.matchMedia = createMatchMedia(false);
+      renderRecurringEvent();
+
+      fireEvent.contextMenu(getEvent());
+
+      expect(screen.getByRole('menuitem', { name: /edit/i })).not.to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: /delete/i })).to.equal(null);
+    });
+
+    it('should not render the Delete event button in the editing dialog of a recurring occurrence', async () => {
+      window.matchMedia = createMatchMedia(false);
+      renderRecurringEvent();
+
+      fireEvent.click(getEvent());
+
+      expect(await screen.findByRole('button', { name: 'Save' })).not.to.equal(null);
+      expect(screen.queryByRole('button', { name: 'Delete event' })).to.equal(null);
+    });
+
+    it('should not render the toolbar Delete button for a recurring occurrence', () => {
+      window.matchMedia = createMatchMedia(true);
+      renderRecurringEvent();
+
+      fireEvent.click(getEvent());
+
+      expect(screen.getByRole('button', { name: 'Edit event' })).not.to.equal(null);
+      expect(screen.queryByRole('button', { name: 'Delete event' })).to.equal(null);
+    });
+  });
 });

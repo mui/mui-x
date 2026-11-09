@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { StandaloneMonthView } from '@mui/x-scheduler/month-view';
 import {
   initialEvents,

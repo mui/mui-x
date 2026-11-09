@@ -1,7 +1,7 @@
 import Stack from '@mui/material/Stack';
 import { interpolateBlues } from 'd3-scale-chromatic';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
-import { HeatmapValueType } from '@mui/x-charts-pro/models';
+import type { HeatmapValueType } from '@mui/x-charts-pro/models';
 
 const dataset = [
   {

@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { screen, within } from '@mui/internal-test-utils';
-import { adapter, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
+import {
+  adapter,
+  createSchedulerRenderer,
+  EventBuilder,
+  setSystemTimezone,
+} from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { describe, it, expect } from 'vitest';
 
@@ -223,6 +229,44 @@ describe('<DayTimeGrid /> - events crossing midnight', () => {
       },
     );
   });
+
+  // Browsers cannot change their timezone through process.env.TZ.
+  it.skipIf(!isJSDOM).each([
+    {
+      // Pacific/Apia skipped December 30th, 2011: on a system there, `adapter.addDays()` moves the
+      // dates of the other timezones by two days around it.
+      systemTimezone: 'Pacific/Apia',
+      displayTimezone: 'America/New_York',
+      start: '2011-12-29T13:00:00Z',
+      end: '2011-12-30T13:00:00Z',
+    },
+    {
+      // America/Santiago repeats the last hour of April 4th, 2026: on some systems,
+      // `adapter.addDays()` resolves 23:00 to its second occurrence, an hour after the end.
+      systemTimezone: 'America/New_York',
+      displayTimezone: 'America/Santiago',
+      start: '2026-04-04T02:00:00Z',
+      end: '2026-04-05T02:00:00Z',
+    },
+  ])(
+    'should render an event of one day on the wall clock of $displayTimezone in the day grid on a $systemTimezone system',
+    ({ systemTimezone, displayTimezone, start, end }) => {
+      setSystemTimezone(systemTimezone);
+      const event = EventBuilder.new().title('Day shift').span(start, end).build();
+
+      render(
+        <EventCalendar
+          events={[event]}
+          visibleDate={new Date(start)}
+          displayTimezone={displayTimezone}
+          view="week"
+        />,
+      );
+
+      expect(getDayGridEvents(/Day shift/)).to.have.length(1);
+      expect(document.querySelector(`.${eventCalendarClasses.timeGridEvent}`)).to.equal(null);
+    },
+  );
 
   describe('day view', () => {
     it('should render a timed event crossing midnight in the time grid', () => {

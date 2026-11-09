@@ -13,8 +13,9 @@ import type { DataGridPremiumProps, DataGridPremiumProcessedProps } from './data
  */
 export interface GridFormulaFeature {
   /**
-   * Initializes the `formula` state slice and the internal evaluation cache,
-   * and runs the initial evaluation pass.
+   * Initializes the `formula` state slice and runs the initial evaluation pass.
+   * The internal evaluation cache is created on first use, which is the injection of
+   * the computed columns during the columns state initialization when there are any.
    * Wired after the rows state initializer — the initial pass reads the rows lookup.
    */
   stateInitializer: GridStateInitializer<
@@ -22,9 +23,10 @@ export interface GridFormulaFeature {
     GridPrivateApiPremium
   >;
   /**
-   * Registers the `hydrateColumns` pipe processor that wraps `allowFormulas`
-   * columns and injects the A1 row-number column.
-   * Wired before the column pinning pre-processors.
+   * Registers the `hydrateColumns` pipe processors that inject the computed
+   * columns, wrap `allowFormulas` columns and inject the A1 row-number column.
+   * Wired before the aggregation pre-processors (aggregation wraps the computed
+   * columns) and the column pinning pre-processors.
    * @param {RefObject<GridPrivateApiPremium>} apiRef The private API ref.
    * @param {DataGridPremiumProcessedProps} props The processed props.
    */

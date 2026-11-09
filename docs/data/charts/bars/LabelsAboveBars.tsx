@@ -1,6 +1,7 @@
 import { useAnimate } from '@mui/x-charts/hooks';
 import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
-import { BarLabelProps, BarPlot } from '@mui/x-charts/BarChart';
+import type { BarLabelProps } from '@mui/x-charts/BarChart';
+import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { styled } from '@mui/material/styles';
