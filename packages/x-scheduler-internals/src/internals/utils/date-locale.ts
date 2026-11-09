@@ -116,7 +116,6 @@ function getRegionFirstDay(region: string | undefined): WeekStartsOn {
 const FRIDAY_SATURDAY_WEEKEND_REGIONS = new Set(
   'BH DZ EG IL IQ JO KW LY OM QA SA SD SY YE'.split(' '),
 );
-const SUNDAY_WEEKEND_REGIONS = new Set(['IN', 'UG']);
 const SATURDAY_SUNDAY_WEEKEND = [6, 7];
 
 function getRegionWeekend(region: string | undefined): readonly number[] {
@@ -126,7 +125,8 @@ function getRegionWeekend(region: string | undefined): readonly number[] {
   if (FRIDAY_SATURDAY_WEEKEND_REGIONS.has(region)) {
     return [5, 6];
   }
-  if (SUNDAY_WEEKEND_REGIONS.has(region)) {
+  // India and Uganda rest on Sunday.
+  if (region === 'IN' || region === 'UG') {
     return [7];
   }
   // Afghanistan rests on Thursday and Friday.

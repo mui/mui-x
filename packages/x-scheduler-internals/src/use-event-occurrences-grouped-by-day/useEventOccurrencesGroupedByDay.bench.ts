@@ -53,9 +53,10 @@ function runMonthView(scenario: ReturnType<typeof createMonthViewScenario>) {
     ).add({ days: 6 }),
     timezone: displayTimezone,
   });
+  const weekend = [6, 7];
   let weekendCount = 0;
   for (const day of days) {
-    weekendCount += isWeekendPlainDate(day.plainDate, [6, 7]) ? 1 : 0;
+    weekendCount += isWeekendPlainDate(day.plainDate, weekend) ? 1 : 0;
   }
   const occurrencesByDay = innerGetEventOccurrencesGroupedByDay({
     adapter,

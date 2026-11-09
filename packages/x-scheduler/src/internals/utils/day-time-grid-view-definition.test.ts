@@ -12,8 +12,13 @@ describe('createDayTimeGridViewDefinition', () => {
   // 2025-07-03 is a Thursday.
   const visibleDate = adapter.date('2025-07-03T00:00:00Z', 'default');
 
-  function getState(defaultPreferences?: Partial<EventCalendarPreferences>) {
-    return getEventCalendarStateFromParameters({ events: [], visibleDate, defaultPreferences });
+  function getState(defaultPreferences?: Partial<EventCalendarPreferences>, dateLocale?: string) {
+    return getEventCalendarStateFromParameters({
+      events: [],
+      visibleDate,
+      defaultPreferences,
+      dateLocale,
+    });
   }
 
   describe('contiguous day counts', () => {
@@ -65,14 +70,7 @@ describe('createDayTimeGridViewDefinition', () => {
     it('should exclude the weekend of the date locale when showWeekends is false', () => {
       const getDayKeys = (dateLocale: string) =>
         createDayTimeGridViewDefinition(7)
-          .visibleDaysSelector(
-            getEventCalendarStateFromParameters({
-              events: [],
-              visibleDate,
-              dateLocale,
-              defaultPreferences: { showWeekends: false },
-            }),
-          )
+          .visibleDaysSelector(getState({ showWeekends: false }, dateLocale))
           .map((day) => day.key);
 
       // Saudi Arabia: the weeks start on Sunday, and the weekend is Friday and Saturday.

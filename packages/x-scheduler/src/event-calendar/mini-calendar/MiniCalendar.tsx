@@ -12,6 +12,7 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-eve
 import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
+  schedulerPreferenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
@@ -175,7 +176,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
     const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
     const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
     const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
-    const weekend = useStore(store, eventCalendarPreferenceSelectors.weekend);
+    const weekend = useStore(store, schedulerPreferenceSelectors.weekend);
     const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
     // The first day of the displayed month.

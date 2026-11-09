@@ -5,7 +5,6 @@ import { createProcessedDate } from '../internals/utils/plain-date-utils/adapter
 import { getSkippedDays, toEpochMs } from '../internals/utils/plain-date-utils/timeZone';
 import {
   getDayNumber,
-  isWeekendPlainDate,
   plainDateFromDayNumber,
 } from '../internals/utils/plain-date-utils/plainDate';
 
@@ -30,10 +29,7 @@ export function getDayListFromPlainDates(parameters: {
   // Walks the day numbers, so each day reuses its cached plain date instead of building one with `add()`.
   for (let dayNumber = getDayNumber(firstPlainDate); dayNumber <= lastDayNumber; dayNumber += 1) {
     const plainDate = plainDateFromDayNumber(dayNumber);
-    if (
-      !skippedDays.has(dayNumber) &&
-      !(excludedWeekdays && isWeekendPlainDate(plainDate, excludedWeekdays))
-    ) {
+    if (!skippedDays.has(dayNumber) && !excludedWeekdays?.includes(plainDate.dayOfWeek)) {
       days.push({
         ...createProcessedDate(adapter, toEpochMs(plainDate, 0, timezone), timezone),
         plainDate,
