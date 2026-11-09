@@ -29,6 +29,16 @@ const dataSetOptions = { rowLength: 100, maxColumns: 1, editable: true };
 
 const SUPPORTS_ACTIVITY = 'Activity' in React;
 
+// The number of tab stops between a cell and "Go to next page" differs between jsdom and
+// a real browser (the "Rows per page" select is one in the browser), so tab until it has the focus.
+async function tabUntilFocused(user: { tab: () => Promise<void> }, element: HTMLElement) {
+  for (let i = 0; i < 10 && document.activeElement !== element; i += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    await user.tab();
+  }
+  expect(element).toHaveFocus();
+}
+
 describe('<DataGrid /> - Data source', () => {
   const { render } = createRenderer();
   const fetchRowsSpy = vi.fn();
@@ -420,8 +430,7 @@ describe('<DataGrid /> - Data source', () => {
 
     await user.click(getCell(2, 0));
     const nextPageButton = screen.getByRole('button', { name: /next page/i });
-    await user.tab();
-    expect(nextPageButton).toHaveFocus();
+    await tabUntilFocused(user, nextPageButton);
 
     await user.keyboard('{Enter}');
     await waitFor(() => {
@@ -452,8 +461,7 @@ describe('<DataGrid /> - Data source', () => {
 
     await user.click(getCell(2, 0));
     const nextPageButton = screen.getByRole('button', { name: /next page/i });
-    await user.tab();
-    expect(nextPageButton).toHaveFocus();
+    await tabUntilFocused(user, nextPageButton);
 
     setProps({
       stallResponsePromise: new Promise<void>((resolve) => {
@@ -515,9 +523,8 @@ describe('<DataGrid /> - Data source', () => {
       expect(gridFocusCellSelector(apiRef)).to.deep.equal(focusedCell);
 
       expect(document.body).toHaveFocus();
-      await user.tab();
       const nextPageButton = screen.getByRole('button', { name: /next page/i });
-      expect(nextPageButton).toHaveFocus();
+      await tabUntilFocused(user, nextPageButton);
       fireEvent.keyDown(nextPageButton, { key: 'c', keyCode: 67, [key]: true });
 
       await act(async () => {
