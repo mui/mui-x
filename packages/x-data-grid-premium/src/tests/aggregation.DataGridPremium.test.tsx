@@ -1,6 +1,12 @@
 import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, screen, within, act, fireEvent, waitFor } from '@mui/internal-test-utils';
-import { getCell, getColumnHeaderCell, getColumnValues, microtasks } from 'test/utils/helperFn';
+import {
+  getCell,
+  getColumnHeaderCell,
+  getColumnHeadersTextContent,
+  getColumnValues,
+  microtasks,
+} from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import {
   DataGridPremium,
@@ -66,6 +72,33 @@ describe('<DataGridPremium /> - Aggregation', () => {
   }
 
   describe('Setting aggregation model', () => {
+    it('should keep applying pipes after an aggregation update throws', async () => {
+      const { setProps } = await render(
+        <Test
+          rows={[
+            { id: 0, item: 'Apple', price: 2 },
+            { id: 1, item: 'Banana', price: 4 },
+            { id: 2, item: 'Banana', price: 3 },
+          ]}
+          columns={[{ field: 'item' }, { field: 'price', type: 'number' }]}
+          groupingColDef={{ headerName: 'Group' }}
+          initialState={{
+            filter: { filterModel: { items: [{ field: 'price', operator: '>', value: 0 }] } },
+          }}
+        />,
+      );
+
+      setProps({ columns: [{ field: 'item' }, { field: 'price', type: 'string' }] });
+      expect(() => {
+        act(() => apiRef.current!.setAggregationModel({ price: 'size' }));
+      }).to.throw('No filter operator ">" found for column "price"');
+
+      act(() => apiRef.current!.setFilterModel({ items: [] }));
+      act(() => apiRef.current!.setRowGroupingModel(['item']));
+
+      expect(getColumnHeadersTextContent()).to.include('Group');
+    });
+
     describe('initialState: aggregation.model', () => {
       it('should allow to initialize aggregation', async () => {
         await render(<Test initialState={{ aggregation: { model: { id: 'max' } } }} />);
