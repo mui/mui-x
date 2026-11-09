@@ -536,6 +536,7 @@ describe('<DataGrid /> - Filter', () => {
               { id: 1, note: 'Hello world' },
               { id: 2, note: 'Goodbye\nworld' },
               { id: 3, note: 'world\nHello' },
+              { id: 4, note: 'Hello\r\nworld' },
             ]}
             columns={[{ field: 'note', type: 'string' }]}
           />,
@@ -548,6 +549,7 @@ describe('<DataGrid /> - Filter', () => {
       expect(getMultilineRows({ operator: 'startsWith', value: 'Hello' })).to.deep.equal([
         'Hello\nworld',
         'Hello world',
+        'Hello\r\nworld',
       ]);
       expect(getMultilineRows({ operator: 'startsWith', value: 'world' })).to.deep.equal([
         'world\nHello',
@@ -556,6 +558,7 @@ describe('<DataGrid /> - Filter', () => {
         'Hello\nworld',
         'Hello world',
         'Goodbye\nworld',
+        'Hello\r\nworld',
       ]);
       expect(getMultilineRows({ operator: 'endsWith', value: 'Hello' })).to.deep.equal([
         'world\nHello',

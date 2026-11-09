@@ -106,7 +106,7 @@ export const getGridStringOperators = (
       }
       const filterItemValue = disableTrim ? filterItem.value : filterItem.value.trim();
 
-      const filterRegex = new RegExp(`.*${escapeRegExp(filterItemValue)}$`, 'i');
+      const filterRegex = new RegExp(`${escapeRegExp(filterItemValue)}$`, 'i');
       return (value): boolean => {
         return value != null ? filterRegex.test(value.toString()) : false;
       };
