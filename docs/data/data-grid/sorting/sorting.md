@@ -108,12 +108,12 @@ You can re-use them by importing the following functions:
 - `gridDateComparator` (used by the `date` and `date-time` columns)
 
 These comparators all sort `null` and `undefined` values before the other values.
-To handle these values the same way in your own comparator, call `gridNillComparator` first.
+To handle these values the same way in your own comparator, call `gridNilComparator` first.
 It returns the result of the comparison when at least one of the values is `null` or `undefined`, and `null` when you need to compare the values yourself:
 
 ```tsx
 const lengthComparator: GridComparatorFn<string | null> = (v1, v2) =>
-  gridNillComparator(v1, v2) ?? v1!.length - v2!.length;
+  gridNilComparator(v1, v2) ?? v1!.length - v2!.length;
 ```
 
 To extend or modify this behavior in a specific column, you can pass in a custom comparator, and override the `sortComparator` property of the `GridColDef` interface.

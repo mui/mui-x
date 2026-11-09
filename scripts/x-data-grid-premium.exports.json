@@ -544,7 +544,7 @@
   { "name": "GridMultiSelectCellProps", "kind": "Interface" },
   { "name": "GridMultiSelectColDef", "kind": "Interface" },
   { "name": "GridMultiSelectionApi", "kind": "Interface" },
-  { "name": "gridNillComparator", "kind": "Variable" },
+  { "name": "gridNilComparator", "kind": "Variable" },
   { "name": "GridNoColumnsOverlay", "kind": "Variable" },
   { "name": "GridNoRowsOverlay", "kind": "Variable" },
   { "name": "gridNumberComparator", "kind": "Variable" },
