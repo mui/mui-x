@@ -187,7 +187,7 @@ describe('<DataGrid /> - Accessibility', () => {
       await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
 
       expect(screen.getByRole('menu')).not.to.equal(null);
-      expect(screen.queryByRole('tooltip')).to.equal(null);
+      expect(screen.getByRole('menu').closest('[role="tooltip"]')).to.equal(null);
     });
 
     it('should use role="dialog" on the columns panel labelled by its trigger', async () => {
@@ -201,7 +201,7 @@ describe('<DataGrid /> - Accessibility', () => {
       const dialog = screen.getByRole('dialog');
       expect(button).to.have.attribute('aria-controls', dialog.id);
       expect(dialog).to.have.attribute('aria-labelledby', button.id);
-      expect(screen.queryByRole('tooltip')).to.equal(null);
+      expect(dialog.closest('[role="tooltip"]')).to.equal(null);
     });
 
     it('should use role="dialog" on the filter panel labelled by its trigger', async () => {
@@ -215,7 +215,7 @@ describe('<DataGrid /> - Accessibility', () => {
       const dialog = screen.getByRole('dialog');
       expect(button).to.have.attribute('aria-controls', dialog.id);
       expect(dialog).to.have.attribute('aria-labelledby', button.id);
-      expect(screen.queryByRole('tooltip')).to.equal(null);
+      expect(dialog.closest('[role="tooltip"]')).to.equal(null);
     });
 
     it('should fall back to an aria-label on the filter panel opened from the column menu', async () => {
