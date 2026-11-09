@@ -1395,6 +1395,47 @@ describe('<DataGridPremium /> - Clipboard', () => {
       expect(apiRef.current?.getRow(1).name).to.equal('Alice');
     });
 
+    (['input', 'textarea'] as const).forEach((Field) => {
+      it(`should paste into the row from a read-only ${Field} rendered inside a cell`, async () => {
+        const columns: GridColDef[] = [
+          {
+            field: 'name',
+            editable: true,
+            renderCell: () => <Field readOnly name="cell-field" />,
+          },
+        ];
+        const rows = [
+          { id: 1, name: 'Alice' },
+          { id: 2, name: 'Bob' },
+        ];
+
+        function TestCase() {
+          apiRef = useGridApiRef();
+          return (
+            <div style={{ width: 300, height: 300 }}>
+              <DataGridPremium
+                apiRef={apiRef}
+                columns={columns}
+                rows={rows}
+                disableRowSelectionOnClick
+              />
+            </div>
+          );
+        }
+
+        const { user } = render(<TestCase />);
+
+        const cellField = document.querySelector<HTMLElement>('[name="cell-field"]')!;
+        await user.click(cellField);
+
+        paste(cellField, 'pasted');
+
+        await waitFor(() => {
+          expect(apiRef.current?.getRow(1).name).to.equal('pasted');
+        });
+      });
+    });
+
     it('should wire pasted csv through pastedValueParser into a multiSelect array', async () => {
       const columns: GridColDef[] = [
         {

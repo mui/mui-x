@@ -88,9 +88,13 @@ export function isEventTargetTextEntryElement(event: React.SyntheticEvent | Even
     return false;
   }
   if (target.tagName === 'INPUT') {
-    return !NON_TEXT_INPUT_TYPES.has((target as HTMLInputElement).type);
+    const input = target as HTMLInputElement;
+    return !input.readOnly && !NON_TEXT_INPUT_TYPES.has(input.type);
   }
-  return target.tagName === 'TEXTAREA' || target.isContentEditable === true;
+  if (target.tagName === 'TEXTAREA') {
+    return !(target as HTMLTextAreaElement).readOnly;
+  }
+  return target.isContentEditable === true;
 }
 
 export function getFieldFromHeaderElem(colCellEl: Element): string {
