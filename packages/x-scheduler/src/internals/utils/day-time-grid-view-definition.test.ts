@@ -62,6 +62,38 @@ describe('createDayTimeGridViewDefinition', () => {
       expect(days).to.have.length(5);
     });
 
+    it('should exclude the weekend of the date locale when showWeekends is false', () => {
+      const getDayKeys = (dateLocale: string) =>
+        createDayTimeGridViewDefinition(7)
+          .visibleDaysSelector(
+            getEventCalendarStateFromParameters({
+              events: [],
+              visibleDate,
+              dateLocale,
+              defaultPreferences: { showWeekends: false },
+            }),
+          )
+          .map((day) => day.key);
+
+      // Saudi Arabia: the weeks start on Sunday, and the weekend is Friday and Saturday.
+      expect(getDayKeys('ar-SA')).to.deep.equal([
+        '2025-06-29',
+        '2025-06-30',
+        '2025-07-01',
+        '2025-07-02',
+        '2025-07-03',
+      ]);
+      // Iran: the weeks start on Saturday, and the weekend is Friday only.
+      expect(getDayKeys('fa-IR')).to.deep.equal([
+        '2025-06-28',
+        '2025-06-29',
+        '2025-06-30',
+        '2025-07-01',
+        '2025-07-02',
+        '2025-07-03',
+      ]);
+    });
+
     it('respects the weekStartsOn preference', () => {
       const sundayStart = createDayTimeGridViewDefinition(7).visibleDaysSelector(
         getState({ showWeekends: true, weekStartsOn: 7 }),

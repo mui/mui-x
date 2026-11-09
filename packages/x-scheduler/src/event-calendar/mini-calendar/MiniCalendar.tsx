@@ -175,6 +175,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
     const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
     const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
     const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
+    const weekend = useStore(store, eventCalendarPreferenceSelectors.weekend);
     const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
     // The first day of the displayed month.
@@ -261,7 +262,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
               aria-label={formatWeekday(locale, day.plainDate)}
               aria-colindex={dayIndex + 1}
               className={classes.miniCalendarWeekdayCell}
-              data-weekend={isWeekendPlainDate(day.plainDate) || undefined}
+              data-weekend={isWeekendPlainDate(day.plainDate, weekend) || undefined}
             >
               {formatWeekdayNarrow(locale, day.plainDate)}
             </MiniCalendarWeekdayCell>

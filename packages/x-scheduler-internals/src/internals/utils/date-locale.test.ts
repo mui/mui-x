@@ -21,10 +21,51 @@ import {
 
 describe('date-locale', () => {
   describe('getLocaleWeekInfo', () => {
-    it('should return the first day of the week and the minimal days of the first week', () => {
-      expect(getLocaleWeekInfo('en-US')).to.deep.equal({ firstDay: 7, minimalDays: 1 });
-      expect(getLocaleWeekInfo('fr-FR')).to.deep.equal({ firstDay: 1, minimalDays: 4 });
-      expect(getLocaleWeekInfo('ar-EG')).to.deep.equal({ firstDay: 6, minimalDays: 1 });
+    it('should return the first day of the week, the weekend and the minimal days of the first week', () => {
+      expect(getLocaleWeekInfo('en-US')).to.deep.equal({
+        firstDay: 7,
+        weekend: [6, 7],
+        minimalDays: 1,
+      });
+      expect(getLocaleWeekInfo('fr-FR')).to.deep.equal({
+        firstDay: 1,
+        weekend: [6, 7],
+        minimalDays: 4,
+      });
+      expect(getLocaleWeekInfo('ar-EG')).to.deep.equal({
+        firstDay: 6,
+        weekend: [5, 6],
+        minimalDays: 1,
+      });
+    });
+
+    it('should return the weekend of the region of the locale', () => {
+      // Friday and Saturday.
+      expect(getLocaleWeekInfo('ar-SA').weekend).to.deep.equal([5, 6]);
+      expect(getLocaleWeekInfo('he-IL').weekend).to.deep.equal([5, 6]);
+      // Friday only.
+      expect(getLocaleWeekInfo('fa-IR').weekend).to.deep.equal([5]);
+      // Sunday only.
+      expect(getLocaleWeekInfo('en-IN').weekend).to.deep.equal([7]);
+      // Thursday and Friday.
+      expect(getLocaleWeekInfo('ps-AF').weekend).to.deep.equal([4, 5]);
+      // The United Arab Emirates rest on Saturday and Sunday since 2022.
+      expect(getLocaleWeekInfo('ar-AE').weekend).to.deep.equal([6, 7]);
+    });
+
+    it('should read the weekend of the likely region of the language', () => {
+      // Persian is likely spoken in Iran, and Arabic in Egypt.
+      expect(getLocaleWeekInfo('fa').weekend).to.deep.equal([5]);
+      expect(getLocaleWeekInfo('ar').weekend).to.deep.equal([5, 6]);
+    });
+
+    it('should read the weekend of the region of the locale extension', () => {
+      expect(getLocaleWeekInfo('en-US-u-rg-sazzzz').weekend).to.deep.equal([5, 6]);
+    });
+
+    it('should keep the weekend of the region with another first day of the week or calendar', () => {
+      expect(getLocaleWeekInfo('ar-SA-u-fw-mon').weekend).to.deep.equal([5, 6]);
+      expect(getLocaleWeekInfo('ar-SA-u-ca-iso8601').weekend).to.deep.equal([5, 6]);
     });
 
     it('should follow the first day of the week of the locale extension', () => {
@@ -39,18 +80,18 @@ describe('date-locale', () => {
     });
 
     it('should read the first week of the year of the region of the locale extension', () => {
-      expect(getLocaleWeekInfo('en-US-u-rg-gbzzzz')).to.deep.equal({ firstDay: 1, minimalDays: 4 });
-      expect(getLocaleWeekInfo('en-GB-u-rg-uszzzz')).to.deep.equal({ firstDay: 7, minimalDays: 1 });
+      expect(getLocaleWeekInfo('en-US-u-rg-gbzzzz')).to.include({ firstDay: 1, minimalDays: 4 });
+      expect(getLocaleWeekInfo('en-GB-u-rg-uszzzz')).to.include({ firstDay: 7, minimalDays: 1 });
       // Not an extension.
       expect(getLocaleWeekInfo('en-US-x-rg-gbzzzz').minimalDays).to.equal(1);
     });
 
     it('should use the first week of ISO 8601 with the ISO 8601 calendar', () => {
-      expect(getLocaleWeekInfo('en-US-u-ca-iso8601')).to.deep.equal({
+      expect(getLocaleWeekInfo('en-US-u-ca-iso8601')).to.include({
         firstDay: 1,
         minimalDays: 4,
       });
-      expect(getLocaleWeekInfo('fr-CA-u-ca-iso8601')).to.deep.equal({
+      expect(getLocaleWeekInfo('fr-CA-u-ca-iso8601')).to.include({
         firstDay: 1,
         minimalDays: 4,
       });
@@ -65,33 +106,49 @@ describe('date-locale', () => {
         delete prototype.weekInfo;
         expect(getLocaleWeekInfo('en-US-x-fallback')).to.deep.equal({
           firstDay: 7,
+          weekend: [6, 7],
           minimalDays: 1,
         });
         expect(getLocaleWeekInfo('de-AT-x-fallback')).to.deep.equal({
           firstDay: 1,
+          weekend: [6, 7],
           minimalDays: 4,
         });
         expect(getLocaleWeekInfo('ar-EG-x-fallback')).to.deep.equal({
           firstDay: 6,
+          weekend: [5, 6],
           minimalDays: 1,
         });
         expect(getLocaleWeekInfo('dv-MV-x-fallback').firstDay).to.equal(5);
         // The extensions of the first day of the week and of the region.
         expect(getLocaleWeekInfo('de-DE-u-fw-sun-x-fallback').firstDay).to.equal(7);
         // The ISO 8601 calendar starts the weeks on Monday, after the `fw` and `rg` extensions.
-        expect(getLocaleWeekInfo('en-US-u-ca-iso8601-x-fallback')).to.deep.equal({
+        expect(getLocaleWeekInfo('en-US-u-ca-iso8601-x-fallback')).to.include({
           firstDay: 1,
           minimalDays: 4,
         });
         expect(getLocaleWeekInfo('en-US-u-ca-iso8601-fw-sun-x-fallback').firstDay).to.equal(7);
         expect(getLocaleWeekInfo('en-US-u-ca-iso8601-rg-egzzzz-x-fallback')).to.deep.equal({
           firstDay: 6,
+          weekend: [5, 6],
           minimalDays: 4,
         });
-        expect(getLocaleWeekInfo('de-DE-u-rg-uszzzz-x-fallback')).to.deep.equal({
+        expect(getLocaleWeekInfo('de-DE-u-rg-uszzzz-x-fallback')).to.include({
           firstDay: 7,
           minimalDays: 1,
         });
+        // The weekend of the region, of the likely region of the language, and of the `rg`
+        // extension, whatever the `fw` extension and the calendar.
+        expect(getLocaleWeekInfo('ar-SA-x-fallback').weekend).to.deep.equal([5, 6]);
+        expect(getLocaleWeekInfo('fa-IR-x-fallback').weekend).to.deep.equal([5]);
+        expect(getLocaleWeekInfo('en-IN-x-fallback').weekend).to.deep.equal([7]);
+        expect(getLocaleWeekInfo('ps-AF-x-fallback').weekend).to.deep.equal([4, 5]);
+        expect(getLocaleWeekInfo('ar-AE-x-fallback').weekend).to.deep.equal([6, 7]);
+        expect(getLocaleWeekInfo('fa-x-fallback').weekend).to.deep.equal([5]);
+        expect(getLocaleWeekInfo('en-US-u-rg-sazzzz-x-fallback').weekend).to.deep.equal([5, 6]);
+        expect(getLocaleWeekInfo('ar-SA-u-ca-iso8601-fw-mon-x-fallback').weekend).to.deep.equal([
+          5, 6,
+        ]);
       } finally {
         if (getWeekInfo) {
           Object.defineProperty(prototype, 'getWeekInfo', getWeekInfo);

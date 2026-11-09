@@ -11,6 +11,8 @@ const allPreferencesSelector = createSelectorMemoized(
   }),
 );
 
+const NO_WEEKDAYS: readonly number[] = [];
+
 export const eventCalendarPreferenceSelectors = {
   all: allPreferencesSelector,
   menuConfig: (state: State) => state.preferencesMenuConfig,
@@ -21,4 +23,13 @@ export const eventCalendarPreferenceSelectors = {
   isSidePanelOpen: (state: State) => allPreferencesSelector(state).isSidePanelOpen,
   weekInfo: schedulerPreferenceSelectors.weekInfo,
   weekStartsOn: schedulerPreferenceSelectors.weekStartsOn,
+  weekend: schedulerPreferenceSelectors.weekend,
+  /**
+   * The ISO weekdays the views leave out: the weekend of the locale of the dates when the
+   * `showWeekends` preference is off.
+   */
+  hiddenWeekdays: (state: State) =>
+    allPreferencesSelector(state).showWeekends
+      ? NO_WEEKDAYS
+      : schedulerPreferenceSelectors.weekend(state),
 };

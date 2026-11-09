@@ -37,4 +37,8 @@ export const schedulerPreferenceSelectors = {
    */
   weekInfo: weekInfoSelector,
   weekStartsOn: (state: State) => weekInfoSelector(state).firstDay,
+  /**
+   * The ISO weekdays of the weekend of the locale of the dates.
+   */
+  weekend: (state: State) => weekInfoSelector(state).weekend,
 };

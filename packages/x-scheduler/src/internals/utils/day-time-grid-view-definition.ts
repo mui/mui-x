@@ -46,16 +46,16 @@ export function createDayTimeGridViewDefinition(
         (state: State) => state.adapter,
         schedulerOtherSelectors.visiblePlainDate,
         schedulerOtherSelectors.displayTimezone,
-        eventCalendarPreferenceSelectors.showWeekends,
+        eventCalendarPreferenceSelectors.hiddenWeekdays,
         eventCalendarPreferenceSelectors.weekStartsOn,
-        (adapter, visiblePlainDate, timezone, showWeekends, weekStartsOn) => {
+        (adapter, visiblePlainDate, timezone, hiddenWeekdays, weekStartsOn) => {
           const weekStart = getPlainDateWeekStart(visiblePlainDate, weekStartsOn);
           return getDayListFromPlainDates({
             adapter,
             firstPlainDate: weekStart,
             lastPlainDate: weekStart.add({ days: DAYS_IN_WEEK - 1 }),
             timezone,
-            excludeWeekends: !showWeekends,
+            excludedWeekdays: hiddenWeekdays,
           });
         },
       ),

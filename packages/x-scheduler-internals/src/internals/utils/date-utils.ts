@@ -76,7 +76,10 @@ export function getPlainDateWeekStart(
  * The first week of a year is the first one with at least `weekInfo.minimalDays` days in that
  * year. With weeks starting on Monday and 4 minimal days, the result is the ISO 8601 week number.
  */
-export function getWeekNumber(plainDate: BaseTemporal.PlainDate, weekInfo: WeekInfo): number {
+export function getWeekNumber(
+  plainDate: BaseTemporal.PlainDate,
+  weekInfo: Pick<WeekInfo, 'firstDay' | 'minimalDays'>,
+): number {
   const { firstDay: weekStartsOn, minimalDays } = weekInfo;
   const weekStartPlainDate = getPlainDateWeekStart(plainDate, weekStartsOn);
   // A week belongs to the year of its last `minimalDays` days, and the first week of a year holds
