@@ -56,33 +56,30 @@ describe('<DataGrid />', () => {
     expect(document.querySelector('[aria-label="Grid one"]')).to.equal(mainElement);
   });
 
-  it('should log an error when data or aria attributes are passed as props', () => {
+  it('should log an error when unsupported aria attributes are passed as props', () => {
     expect(() => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid
             {...baselineProps}
             columns={[{ field: 'brand' }]}
-            data-cy="grid-cy"
             aria-describedby="grid-description"
           />
         </div>,
       );
-    }).toErrorDev(
-      'MUI X Data Grid: The `data-cy`, `aria-describedby` prop(s) are not forwarded to the DOM.',
-    );
-    expect(document.querySelector('[data-cy="grid-cy"]')).to.equal(null);
+    }).toErrorDev('MUI X Data Grid: The `aria-describedby` prop(s) are not forwarded to the DOM.');
+    expect(document.querySelector('[aria-describedby="grid-description"]')).to.equal(null);
   });
 
-  it('should not log an error for other `data-*` props, such as ones injected by build tools', () => {
+  it('should not log an error for `data-*` props', () => {
     expect(() => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid
             {...baselineProps}
             columns={[{ field: 'brand' }]}
+            data-testid="grid"
             data-sentry-element="DataGrid"
-            data-source-file="Orders.tsx"
           />
         </div>,
       );
