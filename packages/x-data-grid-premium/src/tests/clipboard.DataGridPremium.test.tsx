@@ -1835,6 +1835,34 @@ describe('<DataGridPremium /> - Clipboard', () => {
         expect(apiRef.current!.getRow('new-1').currencyPair).to.equal('C');
       });
 
+      it('should add rows on the next paste when `createRows()` returns a row without an id', async () => {
+        const createRows = vi
+          .fn(createNewRows)
+          .mockImplementationOnce(() => [{} as { id: string }, { id: 'new-1' }])
+          .mockImplementationOnce(({ count }) =>
+            Array.from({ length: count }, (_, index) => ({ id: `next-${index}` })),
+          );
+        const { user } = render(<Test clipboardPasteOptions={{ createRows }} />);
+
+        await expect(async () => {
+          await pasteIntoCell(user, getCell(3, 1), clipboardData);
+          await waitFor(() => {
+            expect(apiRef.current!.getRowsCount()).to.equal(5);
+          });
+        }).toWarnDev(
+          'MUI X: The row with id "undefined" returned by `clipboardPasteOptions.createRows()` was ignored, because its id is missing or not unique.',
+        );
+        expect(apiRef.current!.getRow('new-1').currencyPair).to.equal('C');
+
+        // The id-less row of the first paste must not block the rows of the next paste
+        await pasteIntoCell(user, getCellByRowId('new-1', 'currencyPair'), clipboardData);
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRowsCount()).to.equal(7);
+        });
+        expect(createRows.mock.calls).to.have.length(2);
+      });
+
       it('should not keep the fields of a class row that `processRowUpdate()` removed', async () => {
         class Product {
           id: string;

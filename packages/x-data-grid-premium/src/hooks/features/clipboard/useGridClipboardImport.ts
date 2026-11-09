@@ -166,11 +166,12 @@ export class CellValueUpdater {
     const rowIds: Array<GridRowId | undefined> = [];
 
     rows.forEach((row) => {
-      const rowId = getRowIdFromRowModel(row, getRowId);
-      if (apiRef.current.getRow(rowId) !== null || this.rowsToCreate.has(rowId)) {
+      // Do not throw on a missing id, so that one bad row skips only that row
+      const rowId = getRowId ? getRowId(row) : row.id;
+      if (rowId == null || apiRef.current.getRow(rowId) !== null || this.rowsToCreate.has(rowId)) {
         warnOnce(
           [
-            `MUI X: The row with id "${rowId}" returned by \`clipboardPasteOptions.createRows()\` was ignored, because its id is not unique.`,
+            `MUI X: The row with id "${rowId}" returned by \`clipboardPasteOptions.createRows()\` was ignored, because its id is missing or not unique.`,
             'Return rows with ids that are not used by other rows.',
           ].join('\n'),
         );
@@ -347,7 +348,7 @@ export class CellValueUpdater {
     );
 
     // Insert the created rows in the order of the paste
-    const createdRowIds: GridRowId[] = [];
+    const createdRowIds = new Set<GridRowId>();
     rowIdsToUpdate.forEach((rowId) => {
       const row = rowsToInsert.get(rowId);
       if (!row) {
@@ -358,7 +359,7 @@ export class CellValueUpdater {
       if (
         finalRowId == null ||
         apiRef.current.getRow(finalRowId) !== null ||
-        createdRowIds.includes(finalRowId)
+        createdRowIds.has(finalRowId)
       ) {
         warnOnce(
           [
@@ -368,7 +369,7 @@ export class CellValueUpdater {
         );
         return;
       }
-      createdRowIds.push(finalRowId);
+      createdRowIds.add(finalRowId);
       rowUpdates.push(row);
     });
 
@@ -756,24 +757,25 @@ export const useGridClipboardImport = (
       });
       const rowIdsToCreate = await getRowIdsToCreate(pastedData, cellTarget, cellUpdater);
 
-      apiRef.current.publishEvent('clipboardPasteStart', {
-        data: pastedData,
-        startCell: cellTarget?.cell,
-      });
-
-      defaultPasteResolver({
-        pastedData,
-        apiRef: getPublicApiRef(apiRef),
-        updateCell: (...args) => {
-          cellUpdater.updateCell(...args);
-        },
-        cellTarget,
-        rowIdsToCreate,
-      });
-
       try {
+        apiRef.current.publishEvent('clipboardPasteStart', {
+          data: pastedData,
+          startCell: cellTarget?.cell,
+        });
+
+        defaultPasteResolver({
+          pastedData,
+          apiRef: getPublicApiRef(apiRef),
+          updateCell: (...args) => {
+            cellUpdater.updateCell(...args);
+          },
+          cellTarget,
+          rowIdsToCreate,
+        });
+
         await cellUpdater.applyUpdates();
       } finally {
+        // `getRowIdsToCreate()` returns rows only when this paste set the flag
         if (rowIdsToCreate.length > 0) {
           rowCreationInProgressRef.current = false;
         }
