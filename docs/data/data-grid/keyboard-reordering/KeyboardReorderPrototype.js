@@ -17,27 +17,12 @@ import {
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-// Prototype of keyboard reordering with a row or column level object that is neither focus nor,
-// depending on the variant, selection. Built on the public API only, so the interaction can be
-// explored before it moves into the packages. Shared by the demos of the page.
+// Prototype of keyboard reordering, with one mode per solution under review. Built on the public
+// API only, so the interaction can be explored before it moves into the packages.
 
 const HANDLE_FIELD = GRID_REORDER_COL_DEF.field;
 const SPECIAL_FIELDS = [HANDLE_FIELD, GRID_CHECKBOX_SELECTION_FIELD];
 const FLASH_DURATION = 1500;
-
-const ROW_INSTRUCTIONS = {
-  escape: 'Shift plus arrow keys extend, Alt plus arrow keys move, Escape clears.',
-  edgeArrows:
-    'Shift plus Up and Down extend, Alt plus Up and Down move, Arrow Right or Escape clears.',
-  none: '',
-};
-
-const COLUMN_INSTRUCTIONS = {
-  escape: 'Shift plus arrow keys extend, Alt plus arrow keys move, Escape clears.',
-  edgeArrows:
-    'Shift plus Left and Right extend, Alt plus Left and Right move, Arrow Down or Escape clears.',
-  none: '',
-};
 
 const visuallyHidden = {
   position: 'absolute',
@@ -77,12 +62,7 @@ function rowSelector(id) {
 }
 
 export default function KeyboardReorderPrototype(props) {
-  const {
-    highlightTrigger,
-    moveFromAnyCell = false,
-    moveSelectedRows = false,
-    selectionIsHighlight = false,
-  } = props;
+  const { solution } = props;
   const apiRef = useGridApiRef();
   const theme = useTheme();
   const { data } = useDemoData({
@@ -93,24 +73,31 @@ export default function KeyboardReorderPrototype(props) {
 
   const [rowSelection, setRowSelection] = React.useState(true);
   const [checkboxSelection, setCheckboxSelection] = React.useState(true);
-  const [cellSelection, setCellSelection] = React.useState(selectionIsHighlight);
+  const [cellSelection, setCellSelection] = React.useState(false);
 
-  // In the "selection is the highlight" variant, the persistent highlight only exists without selection
+  const usesEdgeArrows = solution === 'highlight';
   const hasSelection = rowSelection || cellSelection;
-  const highlightEnabled = selectionIsHighlight
-    ? !hasSelection
-    : highlightTrigger !== 'none';
-  const effectiveTrigger = highlightEnabled ? highlightTrigger : 'none';
-  const highlightStyle = selectionIsHighlight ? 'outline' : 'fill';
-  const cellRangesAreSelection = selectionIsHighlight && cellSelection;
+  const rowsUseSelection = solution !== 'highlight' && hasSelection;
+  const columnsUseSelection = solution === 'selection' && hasSelection;
+  const rowsUseHighlight =
+    solution === 'highlight' || (solution === 'selection' && !hasSelection);
+  const columnsUseHighlight = solution !== 'selection' || !hasSelection;
+  const rowsAreCellRanges = rowsUseSelection && cellSelection && !rowSelection;
+  // The fallback highlight stands in for selection, so it uses the keys that extend a selection
+  const extendsHighlightWithShift = solution === 'selection' && !hasSelection;
+  const highlightEnabled = rowsUseHighlight || columnsUseHighlight;
+  // The fallback of the `selection` solution never sits next to a selection, so an outline is enough
+  const highlightVariant = solution === 'selection' ? 'outline' : 'muted';
 
   const [highlight, setHighlight] = React.useState(null);
   const highlightRef = React.useRef(null);
-  // Set by the Shift+Arrow handlers: the focus change they trigger must extend, not replace
+  const [selectedColumns, setSelectedColumns] = React.useState([]);
+  const selectedColumnsRef = React.useRef([]);
+  // Set by the extend handlers: the focus change they trigger must extend, not replace
   const skipNextFocusRef = React.useRef(false);
   const movingRef = React.useRef(false);
   const [announcement, setAnnouncement] = React.useState({ key: 0, text: '' });
-  // Temporary mark on what just moved, for moves that start from an element without a highlight
+  // Temporary mark on what just moved, for moves that leave nothing selected or highlighted
   const [flash, setFlash] = React.useState(null);
   const flashTimeoutRef = React.useRef(undefined);
 
@@ -119,12 +106,25 @@ export default function KeyboardReorderPrototype(props) {
     setHighlight(next);
   }, []);
 
-  // A highlight can't outlive the configuration that allows it
+  const updateSelectedColumns = React.useCallback((next) => {
+    selectedColumnsRef.current = next;
+    setSelectedColumns(next);
+  }, []);
+
+  // A highlight or a column selection can't outlive the configuration that allows it
   React.useEffect(() => {
     if (!highlightEnabled && highlightRef.current) {
       updateHighlight(null);
     }
-  }, [highlightEnabled, updateHighlight]);
+    if (!columnsUseSelection && selectedColumnsRef.current.length > 0) {
+      updateSelectedColumns([]);
+    }
+  }, [
+    columnsUseSelection,
+    highlightEnabled,
+    updateHighlight,
+    updateSelectedColumns,
+  ]);
 
   const announce = React.useCallback((text) => {
     setAnnouncement((prev) => ({ key: prev.key + 1, text }));
@@ -143,7 +143,7 @@ export default function KeyboardReorderPrototype(props) {
     [apiRef],
   );
 
-  // --- Selection as the row/column level object -------------------------------------------------
+  // --- Selection as the row and column level object ------------------------------------------------
 
   const getDataFields = React.useCallback(
     () =>
@@ -153,21 +153,10 @@ export default function KeyboardReorderPrototype(props) {
     [apiRef],
   );
 
-  // Fields whose cells are all selected: the "selected columns" of the cell selection
-  const getFullySelectedColumns = React.useCallback(() => {
-    const api = apiRef.current;
-    if (!api || !cellRangesAreSelection) {
-      return [];
-    }
-    const model = api.getCellSelectionModel();
-    const rows = gridExpandedSortedRowIdsSelector(apiRef);
-    return getDataFields().filter((field) => rows.every((id) => model[id]?.[field]));
-  }, [apiRef, cellRangesAreSelection, getDataFields]);
-
   // Rows whose data cells are all selected: the "selected rows" of the cell selection
   const getFullySelectedRowsFromCells = React.useCallback(() => {
     const api = apiRef.current;
-    if (!api || !cellRangesAreSelection) {
+    if (!api || !rowsAreCellRanges) {
       return [];
     }
     const model = api.getCellSelectionModel();
@@ -175,7 +164,7 @@ export default function KeyboardReorderPrototype(props) {
     return gridExpandedSortedRowIdsSelector(apiRef).filter((id) =>
       fields.every((field) => model[id]?.[field]),
     );
-  }, [apiRef, cellRangesAreSelection, getDataFields]);
+  }, [apiRef, rowsAreCellRanges, getDataFields]);
 
   const getSelectedRowIds = React.useCallback(() => {
     if (rowSelection) {
@@ -184,35 +173,45 @@ export default function KeyboardReorderPrototype(props) {
     return new Set(getFullySelectedRowsFromCells());
   }, [apiRef, getFullySelectedRowsFromCells, rowSelection]);
 
+  // Selecting columns replaces the selected rows and cells, like selecting a column in a spreadsheet
   const selectColumns = React.useCallback(
     (fields) => {
       const api = apiRef.current;
-      const rows = gridExpandedSortedRowIdsSelector(apiRef);
-      if (!api || fields.length === 0 || rows.length === 0) {
+      if (!api || fields.length === 0) {
         return;
       }
-      const visible = gridVisibleColumnFieldsSelector(apiRef);
+      if (rowSelection) {
+        api.setRowSelectionModel({ type: 'include', ids: new Set() });
+      }
+      if (cellSelection) {
+        api.setCellSelectionModel({});
+      }
+      const dataFields = getDataFields();
       const ordered = [...fields].sort(
-        (a, b) => visible.indexOf(a) - visible.indexOf(b),
+        (a, b) => dataFields.indexOf(a) - dataFields.indexOf(b),
       );
-      api.selectCellRange(
-        { id: rows[0], field: ordered[0] },
-        { id: rows[rows.length - 1], field: ordered[ordered.length - 1] },
-      );
-      const count = getDataFields().length;
+      updateSelectedColumns(ordered);
       if (ordered.length === 1) {
         announce(
           `Column ${getColumnLabel(ordered[0])} selected, ${
-            getDataFields().indexOf(ordered[0]) + 1
+            dataFields.indexOf(ordered[0]) + 1
           } of ${
-            count
+            dataFields.length
           }. Shift plus Left and Right extend, Alt plus Left and Right move.`,
         );
       } else {
         announce(`${ordered.length} columns selected.`);
       }
     },
-    [apiRef, announce, getColumnLabel, getDataFields],
+    [
+      apiRef,
+      announce,
+      cellSelection,
+      getColumnLabel,
+      getDataFields,
+      rowSelection,
+      updateSelectedColumns,
+    ],
   );
 
   const selectRowsAsCells = React.useCallback(
@@ -241,7 +240,26 @@ export default function KeyboardReorderPrototype(props) {
     [apiRef, announce, getDataFields, getRowLabel],
   );
 
-  // --- Persistent highlight (only without selection in the "selection is the highlight" variant) --
+  // Selecting rows or cells replaces the selected columns
+  const handleRowSelectionChange = React.useCallback(
+    (model) => {
+      if (model.type === 'exclude' || model.ids.size > 0) {
+        updateSelectedColumns([]);
+      }
+    },
+    [updateSelectedColumns],
+  );
+
+  const handleCellSelectionChange = React.useCallback(
+    (model) => {
+      if (Object.keys(model).length > 0) {
+        updateSelectedColumns([]);
+      }
+    },
+    [updateSelectedColumns],
+  );
+
+  // --- Highlight -----------------------------------------------------------------------------------
 
   const flashMoved = React.useCallback(
     (axis, ids) => {
@@ -258,17 +276,14 @@ export default function KeyboardReorderPrototype(props) {
         if (ids.every((id) => selected.has(id))) {
           return;
         }
-      } else {
-        const selected = getFullySelectedColumns();
-        if (ids.every((id) => selected.includes(id))) {
-          return;
-        }
+      } else if (ids.every((id) => selectedColumnsRef.current.includes(id))) {
+        return;
       }
       clearTimeout(flashTimeoutRef.current);
       setFlash({ axis, ids });
       flashTimeoutRef.current = setTimeout(() => setFlash(null), FLASH_DURATION);
     },
-    [getFullySelectedColumns, getSelectedRowIds],
+    [getSelectedRowIds],
   );
 
   React.useEffect(() => () => clearTimeout(flashTimeoutRef.current), []);
@@ -278,17 +293,20 @@ export default function KeyboardReorderPrototype(props) {
     announce('Highlight cleared.');
   }, [announce, updateHighlight]);
 
+  const clearSelectedColumns = React.useCallback(() => {
+    updateSelectedColumns([]);
+    announce('Column selection cleared.');
+  }, [announce, updateSelectedColumns]);
+
   const highlightRow = React.useCallback(
     (id) => {
       const visible = gridExpandedSortedRowIdsSelector(apiRef);
       updateHighlight({ axis: 'row', anchor: id, ids: [id] });
       announce(
-        `Row ${getRowLabel(id)} highlighted, ${visible.indexOf(id) + 1} of ${visible.length}. ${
-          ROW_INSTRUCTIONS[effectiveTrigger]
-        }`,
+        `Row ${getRowLabel(id)} highlighted, ${visible.indexOf(id) + 1} of ${visible.length}. Alt plus Shift plus Up and Down extend, Alt plus Up and Down move, Arrow Right or Escape clears.`,
       );
     },
-    [apiRef, announce, effectiveTrigger, getRowLabel, updateHighlight],
+    [apiRef, announce, getRowLabel, updateHighlight],
   );
 
   const highlightColumn = React.useCallback(
@@ -298,14 +316,64 @@ export default function KeyboardReorderPrototype(props) {
       announce(
         `Column ${getColumnLabel(field)} highlighted, ${visible.indexOf(field) + 1} of ${
           visible.length
-        }. ${COLUMN_INSTRUCTIONS[effectiveTrigger]}`,
+        }. Alt plus Shift plus Left and Right extend, Alt plus Left and Right move, Arrow Down or Escape clears.`,
       );
     },
-    [apiRef, announce, effectiveTrigger, getColumnLabel, updateHighlight],
+    [apiRef, announce, getColumnLabel, updateHighlight],
   );
 
-  // Level 2 follows level 1: the highlight follows the focus and switches axis with the area.
-  // Focus moving inside the highlighted block keeps the block; moving outside collapses it.
+  // Returns the row that receives the focus, or `null` when the highlight didn't change.
+  // Only the `highlight` solution needs a highlight to exist first; the others start one here.
+  const extendRowHighlight = React.useCallback(
+    (id, key) => {
+      const current = highlightRef.current;
+      if (current?.axis !== 'row' && usesEdgeArrows) {
+        announce('Highlight the row first, with Arrow Left on its first cell.');
+        return null;
+      }
+      const anchor = current?.axis === 'row' ? current.anchor : id;
+      const visible = gridExpandedSortedRowIdsSelector(apiRef);
+      const nextIndex = visible.indexOf(id) + (key === 'ArrowDown' ? 1 : -1);
+      if (nextIndex < 0 || nextIndex >= visible.length) {
+        return null;
+      }
+      const ids = sliceBetween(visible, anchor, visible[nextIndex]);
+      updateHighlight({ axis: 'row', anchor, ids });
+      skipNextFocusRef.current = true;
+      announce(`${ids.length} ${ids.length === 1 ? 'row' : 'rows'} highlighted.`);
+      return visible[nextIndex];
+    },
+    [apiRef, announce, updateHighlight, usesEdgeArrows],
+  );
+
+  // Returns the column that receives the focus, or `null` when the highlight didn't change
+  const extendColumnHighlight = React.useCallback(
+    (field, key) => {
+      const current = highlightRef.current;
+      if (current?.axis !== 'column' && usesEdgeArrows) {
+        announce('Highlight the column first, with Arrow Up on its header.');
+        return null;
+      }
+      const anchor = current?.axis === 'column' ? current.anchor : field;
+      const fields = getDataFields();
+      const index = fields.indexOf(field);
+      const next = fields[index + (key === 'ArrowRight' ? 1 : -1)];
+      if (index < 0 || next === undefined) {
+        return null;
+      }
+      const ids = sliceBetween(fields, anchor, next);
+      updateHighlight({ axis: 'column', anchor, ids });
+      skipNextFocusRef.current = true;
+      announce(
+        `${ids.length} ${ids.length === 1 ? 'column' : 'columns'} highlighted.`,
+      );
+      return next;
+    },
+    [announce, getDataFields, updateHighlight, usesEdgeArrows],
+  );
+
+  // In the `highlight` solution the highlight follows the focus and switches axis with the area.
+  // In the others it only marks what just moved, so moving the focus away clears it.
   React.useEffect(() => {
     const api = apiRef.current;
     if (!api) {
@@ -323,7 +391,11 @@ export default function KeyboardReorderPrototype(props) {
       if (current.axis === 'row' && current.ids.includes(params.id)) {
         return;
       }
-      updateHighlight({ axis: 'row', anchor: params.id, ids: [params.id] });
+      if (usesEdgeArrows) {
+        updateHighlight({ axis: 'row', anchor: params.id, ids: [params.id] });
+      } else if (current.axis !== 'column' || !current.ids.includes(params.field)) {
+        updateHighlight(null);
+      }
     });
     const unsubscribeHeader = api.subscribeEvent('columnHeaderFocus', (params) => {
       const current = highlightRef.current;
@@ -337,13 +409,21 @@ export default function KeyboardReorderPrototype(props) {
       if (current.axis === 'column' && current.ids.includes(params.field)) {
         return;
       }
-      updateHighlight({ axis: 'column', anchor: params.field, ids: [params.field] });
+      if (usesEdgeArrows) {
+        updateHighlight({
+          axis: 'column',
+          anchor: params.field,
+          ids: [params.field],
+        });
+      } else {
+        updateHighlight(null);
+      }
     });
     return () => {
       unsubscribeCell();
       unsubscribeHeader();
     };
-  }, [apiRef, updateHighlight]);
+  }, [apiRef, updateHighlight, usesEdgeArrows]);
 
   // --- Moves --------------------------------------------------------------------------------------
 
@@ -494,56 +574,104 @@ export default function KeyboardReorderPrototype(props) {
     [apiRef, announce, flashMoved, getColumnLabel],
   );
 
-  // The rows an Alt+Up/Down press moves from a body cell, or `null` with the reason it moves nothing
+  // The rows an Alt+Up/Down press moves from a body cell, or the reason it moves nothing.
+  // Where moves start from any cell, this also selects or highlights the row that is about to move.
   const getRowsToMove = React.useCallback(
     (id, field) => {
       const current = highlightRef.current;
       if (current?.axis === 'row') {
         return current.ids;
       }
-      if (moveSelectedRows || selectionIsHighlight) {
+      if (solution === 'highlight') {
+        return field === HANDLE_FIELD
+          ? [id]
+          : 'Highlight the row to move it, or focus its drag handle.';
+      }
+      if (current?.axis === 'column') {
+        updateHighlight(null);
+      }
+      if (rowsUseSelection) {
         const selected = getSelectedRowIds();
         if (selected.has(id)) {
-          const visible = gridExpandedSortedRowIdsSelector(apiRef);
-          return visible.filter((rowId) => selected.has(rowId));
+          return gridExpandedSortedRowIdsSelector(apiRef).filter((rowId) =>
+            selected.has(rowId),
+          );
         }
+        if (rowSelection) {
+          apiRef.current?.selectRow(id, true, true);
+        } else {
+          selectRowsAsCells([id]);
+        }
+      } else if (rowsUseHighlight) {
+        updateHighlight({ axis: 'row', anchor: id, ids: [id] });
       }
-      if (moveFromAnyCell || field === HANDLE_FIELD) {
-        return [id];
-      }
-      return hasSelection
-        ? 'Select the row to move it, or focus its drag handle.'
-        : 'Highlight the row to move it, or focus its drag handle.';
+      return [id];
     },
     [
       apiRef,
       getSelectedRowIds,
-      hasSelection,
-      moveFromAnyCell,
-      moveSelectedRows,
-      selectionIsHighlight,
+      rowSelection,
+      rowsUseHighlight,
+      rowsUseSelection,
+      selectRowsAsCells,
+      solution,
+      updateHighlight,
     ],
   );
 
-  // The columns an Alt+Left/Right press moves, or `null` with the reason it moves nothing
+  // The columns an Alt+Left/Right press moves, or the reason it moves nothing.
+  // Where moves start from any cell, this also selects or highlights the column that is about to move.
   const getColumnsToMove = React.useCallback(
     (field, fromHeader) => {
       const current = highlightRef.current;
       if (current?.axis === 'column') {
         return current.ids;
       }
-      const selectedColumns = getFullySelectedColumns();
-      if (selectedColumns.includes(field)) {
-        return selectedColumns;
+      if (solution === 'highlight') {
+        return fromHeader
+          ? [field]
+          : 'Highlight the column to move it, or focus its header.';
       }
-      if (fromHeader || moveFromAnyCell) {
+      // `moveColumns` refuses these and says why
+      if (SPECIAL_FIELDS.includes(field)) {
         return [field];
       }
-      return cellRangesAreSelection
-        ? 'Select the column to move it, or focus its header.'
-        : 'Focus the column header to move the column.';
+      if (columnsUseSelection) {
+        if (selectedColumnsRef.current.includes(field)) {
+          return selectedColumnsRef.current;
+        }
+        selectColumns([field]);
+      } else if (columnsUseHighlight) {
+        updateHighlight({ axis: 'column', anchor: field, ids: [field] });
+      }
+      return [field];
     },
-    [cellRangesAreSelection, getFullySelectedColumns, moveFromAnyCell],
+    [
+      columnsUseHighlight,
+      columnsUseSelection,
+      selectColumns,
+      solution,
+      updateHighlight,
+    ],
+  );
+
+  // Inside a selection of columns, Shift+Left/Right grows it by whole columns.
+  // Returns the column that receives the focus, or `null` when the selection didn't change.
+  const growSelectedColumns = React.useCallback(
+    (key) => {
+      const fields = getDataFields();
+      const indexes = selectedColumnsRef.current.map((field) =>
+        fields.indexOf(field),
+      );
+      const edge =
+        key === 'ArrowRight' ? Math.max(...indexes) + 1 : Math.min(...indexes) - 1;
+      if (edge < 0 || edge >= fields.length) {
+        return null;
+      }
+      selectColumns([...selectedColumnsRef.current, fields[edge]]);
+      return fields[edge];
+    },
+    [getDataFields, selectColumns],
   );
 
   // --- Key handlers -------------------------------------------------------------------------------
@@ -558,20 +686,22 @@ export default function KeyboardReorderPrototype(props) {
       const isRowHighlighted =
         current?.axis === 'row' && current.ids.includes(params.id);
 
-      // Escape always clears. With the `escape` trigger it also highlights;
-      // otherwise an Escape with nothing to clear is left to the page, for example to close a dialog.
-      if (event.key === 'Escape' && (current || effectiveTrigger === 'escape')) {
+      // With nothing to clear, Escape is left to the page, for example to close a dialog
+      if (
+        event.key === 'Escape' &&
+        (current || selectedColumnsRef.current.length > 0)
+      ) {
         event.defaultMuiPrevented = true;
         event.stopPropagation();
         if (current) {
           clearHighlight();
         } else {
-          highlightRow(params.id);
+          clearSelectedColumns();
         }
         return;
       }
 
-      if (effectiveTrigger === 'edgeArrows' && !hasModifier(event)) {
+      if (usesEdgeArrows && !hasModifier(event)) {
         const isFirstCell = api.getColumnIndex(params.field) === 0;
         if (isFirstCell && event.key === 'ArrowLeft') {
           // Arrow Left at the edge of the row highlights it; the focus stays on the cell
@@ -594,10 +724,9 @@ export default function KeyboardReorderPrototype(props) {
       const isVertical = event.key === 'ArrowUp' || event.key === 'ArrowDown';
       const isHorizontal = event.key === 'ArrowLeft' || event.key === 'ArrowRight';
 
-      // Selection as the level object: Ctrl+Space selects the column (APG grid pattern),
-      // Shift+Space the row when row selection is off and cell selection is on
+      // Ctrl+Space selects the column (APG grid pattern)
       if (
-        cellRangesAreSelection &&
+        columnsUseSelection &&
         event.key === ' ' &&
         (event.ctrlKey || event.metaKey)
       ) {
@@ -608,65 +737,58 @@ export default function KeyboardReorderPrototype(props) {
         }
         return;
       }
-      if (
-        cellRangesAreSelection &&
-        !rowSelection &&
-        event.key === ' ' &&
-        event.shiftKey
-      ) {
+      // Shift+Space selects the row, as a range of cells when row selection is off
+      if (rowsAreCellRanges && event.key === ' ' && event.shiftKey) {
         event.preventDefault();
         event.defaultMuiPrevented = true;
         selectRowsAsCells([params.id]);
         return;
       }
 
-      if (event.shiftKey && !event.altKey && isVertical && current?.axis === 'row') {
+      const isArrow = isVertical || isHorizontal;
+      const isAltShiftArrow = isArrow && event.altKey && event.shiftKey;
+      const extendsHighlight = extendsHighlightWithShift
+        ? isArrow && event.shiftKey && !event.altKey
+        : isAltShiftArrow;
+
+      if (isAltShiftArrow || extendsHighlight) {
         event.preventDefault();
         event.defaultMuiPrevented = true;
-        const visible = gridExpandedSortedRowIdsSelector(apiRef);
-        const nextIndex =
-          visible.indexOf(params.id) + (event.key === 'ArrowDown' ? 1 : -1);
-        if (nextIndex < 0 || nextIndex >= visible.length) {
-          return;
+        if (extendsHighlight && isVertical && rowsUseHighlight) {
+          const nextId = extendRowHighlight(params.id, event.key);
+          if (nextId !== null) {
+            api.setCellFocus(nextId, params.field);
+            api.scrollToIndexes({
+              rowIndex: gridExpandedSortedRowIdsSelector(apiRef).indexOf(nextId),
+              colIndex: api.getColumnIndex(params.field),
+            });
+          }
+        } else if (
+          extendsHighlight &&
+          isHorizontal &&
+          columnsUseHighlight &&
+          !usesEdgeArrows
+        ) {
+          const nextField = extendColumnHighlight(params.field, event.key);
+          if (nextField !== null) {
+            api.setCellFocus(params.id, nextField);
+            api.scrollToIndexes({ colIndex: api.getColumnIndex(nextField) });
+          }
         }
-        const ids = sliceBetween(visible, current.anchor, visible[nextIndex]);
-        updateHighlight({ axis: 'row', anchor: current.anchor, ids });
-        skipNextFocusRef.current = true;
-        api.setCellFocus(visible[nextIndex], params.field);
-        api.scrollToIndexes({
-          rowIndex: nextIndex,
-          colIndex: api.getColumnIndex(params.field),
-        });
-        announce(`${ids.length} ${ids.length === 1 ? 'row' : 'rows'} highlighted.`);
         return;
       }
 
-      // A full-column cell range grows by whole columns, a full-row range by whole rows
-      if (
-        cellRangesAreSelection &&
-        event.shiftKey &&
-        !event.altKey &&
-        (isHorizontal || isVertical)
-      ) {
-        if (isHorizontal) {
-          const selectedColumns = getFullySelectedColumns();
-          if (selectedColumns.includes(params.field)) {
-            event.preventDefault();
-            event.defaultMuiPrevented = true;
-            const fields = getDataFields();
-            const indexes = selectedColumns.map((field) => fields.indexOf(field));
-            const edge =
-              event.key === 'ArrowRight'
-                ? Math.max(...indexes) + 1
-                : Math.min(...indexes) - 1;
-            if (edge >= 0 && edge < fields.length) {
-              selectColumns([...selectedColumns, fields[edge]]);
-              skipNextFocusRef.current = true;
-              api.setCellFocus(params.id, fields[edge]);
-            }
-            return;
+      if (event.shiftKey && !event.altKey && (isHorizontal || isVertical)) {
+        if (isHorizontal && selectedColumnsRef.current.includes(params.field)) {
+          event.preventDefault();
+          event.defaultMuiPrevented = true;
+          const nextField = growSelectedColumns(event.key);
+          if (nextField !== null) {
+            api.setCellFocus(params.id, nextField);
           }
-        } else if (!rowSelection) {
+          return;
+        }
+        if (isVertical && rowsAreCellRanges) {
           const selectedRows = getFullySelectedRowsFromCells();
           if (selectedRows.includes(params.id)) {
             event.preventDefault();
@@ -679,7 +801,6 @@ export default function KeyboardReorderPrototype(props) {
                 : Math.min(...indexes) - 1;
             if (edge >= 0 && edge < rows.length) {
               selectRowsAsCells([...selectedRows, rows[edge]]);
-              skipNextFocusRef.current = true;
               api.setCellFocus(rows[edge], params.field);
               api.scrollToIndexes({
                 rowIndex: edge,
@@ -693,6 +814,7 @@ export default function KeyboardReorderPrototype(props) {
 
       if (
         event.altKey &&
+        !event.shiftKey &&
         (isVertical || event.key === 'Home' || event.key === 'End')
       ) {
         // Swallowed on every cell: Alt+Arrow must neither move the focus like a plain arrow
@@ -712,7 +834,7 @@ export default function KeyboardReorderPrototype(props) {
           event.key === 'Home' || event.key === 'End',
           params.field,
         );
-      } else if (event.altKey && isHorizontal) {
+      } else if (event.altKey && !event.shiftKey && isHorizontal) {
         // Alt+Left/Right is browser history navigation
         event.preventDefault();
         event.defaultMuiPrevented = true;
@@ -735,21 +857,25 @@ export default function KeyboardReorderPrototype(props) {
     [
       apiRef,
       announce,
-      cellRangesAreSelection,
       clearHighlight,
-      effectiveTrigger,
+      clearSelectedColumns,
+      columnsUseHighlight,
+      columnsUseSelection,
+      extendColumnHighlight,
+      extendRowHighlight,
+      extendsHighlightWithShift,
       getColumnsToMove,
-      getDataFields,
-      getFullySelectedColumns,
       getFullySelectedRowsFromCells,
       getRowsToMove,
+      growSelectedColumns,
       highlightRow,
       moveColumns,
       moveRows,
-      rowSelection,
+      rowsAreCellRanges,
+      rowsUseHighlight,
       selectColumns,
       selectRowsAsCells,
-      updateHighlight,
+      usesEdgeArrows,
     ],
   );
 
@@ -765,18 +891,21 @@ export default function KeyboardReorderPrototype(props) {
       const isColumnHighlighted =
         current?.axis === 'column' && current.ids.includes(params.field);
 
-      if (event.key === 'Escape' && (current || effectiveTrigger === 'escape')) {
+      if (
+        event.key === 'Escape' &&
+        (current || selectedColumnsRef.current.length > 0)
+      ) {
         event.defaultMuiPrevented = true;
         event.stopPropagation();
         if (current) {
           clearHighlight();
         } else {
-          highlightColumn(params.field);
+          clearSelectedColumns();
         }
         return;
       }
 
-      if (effectiveTrigger === 'edgeArrows' && !hasModifier(event)) {
+      if (usesEdgeArrows && !hasModifier(event)) {
         if (event.key === 'ArrowUp') {
           // Arrow Up at the edge of the column highlights it; the focus stays on the header
           event.preventDefault();
@@ -798,7 +927,7 @@ export default function KeyboardReorderPrototype(props) {
       const isHorizontal = event.key === 'ArrowLeft' || event.key === 'ArrowRight';
 
       if (
-        cellRangesAreSelection &&
+        columnsUseSelection &&
         event.key === ' ' &&
         (event.ctrlKey || event.metaKey)
       ) {
@@ -810,47 +939,43 @@ export default function KeyboardReorderPrototype(props) {
         return;
       }
 
-      if (event.shiftKey && !event.altKey && isHorizontal) {
-        if (current?.axis === 'column') {
-          event.preventDefault();
-          event.defaultMuiPrevented = true;
-          const visible = gridVisibleColumnFieldsSelector(apiRef);
-          const nextIndex =
-            visible.indexOf(params.field) + (event.key === 'ArrowRight' ? 1 : -1);
-          if (nextIndex < 0 || nextIndex >= visible.length) {
-            return;
+      const isAltShiftArrow = isHorizontal && event.altKey && event.shiftKey;
+      const extendsHighlight = extendsHighlightWithShift
+        ? isHorizontal && event.shiftKey && !event.altKey
+        : isAltShiftArrow;
+
+      if (isAltShiftArrow || extendsHighlight) {
+        event.preventDefault();
+        event.defaultMuiPrevented = true;
+        if (extendsHighlight && columnsUseHighlight) {
+          const nextField = extendColumnHighlight(params.field, event.key);
+          if (nextField !== null) {
+            api.scrollToIndexes({ colIndex: api.getColumnIndex(nextField) });
+            api.setColumnHeaderFocus(nextField, event);
           }
-          const ids = sliceBetween(visible, current.anchor, visible[nextIndex]);
-          updateHighlight({ axis: 'column', anchor: current.anchor, ids });
-          skipNextFocusRef.current = true;
-          api.scrollToIndexes({ colIndex: nextIndex });
-          api.setColumnHeaderFocus(visible[nextIndex], event);
-          announce(
-            `${ids.length} ${ids.length === 1 ? 'column' : 'columns'} highlighted.`,
-          );
-          return;
         }
-        const selectedColumns = getFullySelectedColumns();
-        if (selectedColumns.includes(params.field)) {
-          event.preventDefault();
-          event.defaultMuiPrevented = true;
-          const fields = getDataFields();
-          const indexes = selectedColumns.map((field) => fields.indexOf(field));
-          const edge =
-            event.key === 'ArrowRight'
-              ? Math.max(...indexes) + 1
-              : Math.min(...indexes) - 1;
-          if (edge >= 0 && edge < fields.length) {
-            selectColumns([...selectedColumns, fields[edge]]);
-            api.scrollToIndexes({ colIndex: api.getColumnIndex(fields[edge]) });
-            api.setColumnHeaderFocus(fields[edge], event);
-          }
-          return;
+        return;
+      }
+
+      if (
+        event.shiftKey &&
+        !event.altKey &&
+        isHorizontal &&
+        selectedColumnsRef.current.includes(params.field)
+      ) {
+        event.preventDefault();
+        event.defaultMuiPrevented = true;
+        const nextField = growSelectedColumns(event.key);
+        if (nextField !== null) {
+          api.scrollToIndexes({ colIndex: api.getColumnIndex(nextField) });
+          api.setColumnHeaderFocus(nextField, event);
         }
+        return;
       }
 
       if (
         event.altKey &&
+        !event.shiftKey &&
         (isHorizontal || event.key === 'Home' || event.key === 'End')
       ) {
         // Alt+Left/Right is browser history navigation: always prevent it from a header
@@ -877,24 +1002,35 @@ export default function KeyboardReorderPrototype(props) {
   }, [
     apiRef,
     announce,
-    cellRangesAreSelection,
     clearHighlight,
-    effectiveTrigger,
+    clearSelectedColumns,
+    columnsUseHighlight,
+    columnsUseSelection,
+    extendColumnHighlight,
+    extendsHighlightWithShift,
     getColumnsToMove,
-    getDataFields,
-    getFullySelectedColumns,
+    growSelectedColumns,
     highlightColumn,
     moveColumns,
     selectColumns,
-    updateHighlight,
+    usesEdgeArrows,
   ]);
 
   // --- Styles -------------------------------------------------------------------------------------
 
   const gridSx = React.useMemo(() => {
-    const tint = alpha(theme.palette.primary.main, 0.12);
-    const strongTint = alpha(theme.palette.primary.main, 0.2);
-    const edge = theme.palette.primary.main;
+    const flashTint = alpha(theme.palette.primary.main, 0.12);
+    const flashStrongTint = alpha(theme.palette.primary.main, 0.2);
+    const flashEdge = alpha(theme.palette.primary.main, 0.5);
+    const outlineEdge = theme.palette.primary.main;
+    const selectedTint = alpha(
+      theme.palette.primary.main,
+      theme.palette.action.selectedOpacity,
+    );
+    // Gray and lighter than the selection, so a row can be selected and highlighted at once
+    const mutedTint = alpha(theme.palette.grey[500], 0.16);
+    const mutedEdge = theme.palette.grey[500];
+
     const styles = {
       // Lets the temporary mark of a move fade out
       [`& .${gridClasses.row}, & .${gridClasses.cell}, & .${gridClasses.columnHeader}`]:
@@ -902,52 +1038,78 @@ export default function KeyboardReorderPrototype(props) {
           transition: 'background-color 400ms, box-shadow 400ms',
         },
     };
-    const markRows = (ids, color, outline) => {
-      styles[ids.map((id) => `&& ${rowSelector(id)}`).join(', ')] = outline
-        ? { boxShadow: `inset 0 0 0 2px ${color}` }
-        : {
-            backgroundColor: tint,
-            boxShadow: `inset 3px 0 0 ${color}`,
-            '&:hover, &.Mui-selected, &.Mui-selected:hover': {
-              backgroundColor: strongTint,
-            },
-          };
+    const markRows = (ids, variant) => {
+      const rowStyles = {
+        flash: {
+          backgroundColor: flashTint,
+          boxShadow: `inset 3px 0 0 ${flashEdge}`,
+          '&:hover, &.Mui-selected, &.Mui-selected:hover': {
+            backgroundColor: flashStrongTint,
+          },
+        },
+        // A selected row keeps its own background and only gains the edge
+        muted: {
+          boxShadow: `inset 3px 0 0 ${mutedEdge}`,
+          '&:not(.Mui-selected), &:not(.Mui-selected):hover': {
+            backgroundColor: mutedTint,
+          },
+        },
+        outline: { boxShadow: `inset 0 0 0 2px ${outlineEdge}` },
+      };
+      styles[ids.map((id) => `&& ${rowSelector(id)}`).join(', ')] =
+        rowStyles[variant];
     };
-    const markColumns = (fields, color, outline) => {
+    const markColumns = (fields, variant) => {
       const headers = fields
         .map((field) => `&& .${gridClasses.columnHeader}[data-field="${field}"]`)
         .join(', ');
       const cells = fields
         .map((field) => `&& .${gridClasses.cell}[data-field="${field}"]`)
         .join(', ');
-      if (outline) {
-        styles[headers] = { boxShadow: `inset 0 0 0 2px ${color}` };
-        styles[cells] = {
-          boxShadow: `inset 2px 0 0 ${color}, inset -2px 0 0 ${color}`,
-        };
-      } else {
-        styles[headers] = {
-          backgroundColor: tint,
-          boxShadow: `inset 0 3px 0 ${color}`,
-        };
-        styles[cells] = { backgroundColor: tint };
-      }
+      const columnStyles = {
+        flash: {
+          header: {
+            backgroundColor: flashTint,
+            boxShadow: `inset 0 3px 0 ${flashEdge}`,
+          },
+          cell: { backgroundColor: flashTint },
+        },
+        muted: {
+          header: {
+            backgroundColor: mutedTint,
+            boxShadow: `inset 0 3px 0 ${mutedEdge}`,
+          },
+          cell: { backgroundColor: mutedTint },
+        },
+        outline: {
+          header: { boxShadow: `inset 0 0 0 2px ${outlineEdge}` },
+          cell: {
+            boxShadow: `inset 2px 0 0 ${outlineEdge}, inset -2px 0 0 ${outlineEdge}`,
+          },
+        },
+        selected: {
+          header: { backgroundColor: selectedTint },
+          cell: { backgroundColor: selectedTint },
+        },
+      };
+      styles[headers] = columnStyles[variant].header;
+      styles[cells] = columnStyles[variant].cell;
     };
-    if (flash) {
-      // Lighter than a highlight: a temporary mark on what just moved
-      if (flash.axis === 'row') {
-        markRows(flash.ids, alpha(edge, 0.5), false);
-      } else {
-        markColumns(flash.ids, alpha(edge, 0.5), false);
-      }
+    if (flash?.axis === 'row') {
+      markRows(flash.ids, 'flash');
+    } else if (flash?.axis === 'column') {
+      markColumns(flash.ids, 'flash');
+    }
+    if (selectedColumns.length > 0) {
+      markColumns(selectedColumns, 'selected');
     }
     if (highlight?.axis === 'row') {
-      markRows(highlight.ids, edge, highlightStyle === 'outline');
+      markRows(highlight.ids, highlightVariant);
     } else if (highlight?.axis === 'column') {
-      markColumns(highlight.ids, edge, highlightStyle === 'outline');
+      markColumns(highlight.ids, highlightVariant);
     }
     return styles;
-  }, [flash, highlight, highlightStyle, theme]);
+  }, [flash, highlight, highlightVariant, selectedColumns, theme]);
 
   const highlightDescription = React.useMemo(() => {
     if (!highlight) {
@@ -1000,13 +1162,6 @@ export default function KeyboardReorderPrototype(props) {
           }
           label="Cell selection"
         />
-        {selectionIsHighlight && (
-          <Typography variant="body2" color="text.secondary">
-            {hasSelection
-              ? 'Selection is the highlight.'
-              : `No selection: the ${highlightTrigger === 'escape' ? 'Esc' : 'edge arrow'} highlight is on, drawn as an outline.`}
-          </Typography>
-        )}
       </Box>
       <Box
         sx={{
@@ -1018,9 +1173,17 @@ export default function KeyboardReorderPrototype(props) {
           fontVariantNumeric: 'tabular-nums',
         }}
       >
-        <Typography variant="body2">
-          <strong>Highlight:</strong> {highlightDescription}
-        </Typography>
+        {highlightEnabled && (
+          <Typography variant="body2">
+            <strong>Highlight:</strong> {highlightDescription}
+          </Typography>
+        )}
+        {columnsUseSelection && (
+          <Typography variant="body2">
+            <strong>Selected columns:</strong>{' '}
+            {selectedColumns.map(getColumnLabel).join(', ') || 'none'}
+          </Typography>
+        )}
         <Typography variant="body2" color="text.secondary">
           <strong>Announced:</strong> {announcement.text || '—'}
         </Typography>
@@ -1042,6 +1205,8 @@ export default function KeyboardReorderPrototype(props) {
           checkboxSelection={rowSelection && checkboxSelection}
           cellSelection={cellSelection}
           onCellKeyDown={handleCellKeyDown}
+          onRowSelectionModelChange={handleRowSelectionChange}
+          onCellSelectionModelChange={handleCellSelectionChange}
           sx={gridSx}
         />
       </div>

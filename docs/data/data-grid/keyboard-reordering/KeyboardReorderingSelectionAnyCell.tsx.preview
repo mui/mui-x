@@ -1,5 +1,0 @@
-<KeyboardReorderPrototype
-  highlightTrigger="escape"
-  selectionIsHighlight
-  moveFromAnyCell
-/>
