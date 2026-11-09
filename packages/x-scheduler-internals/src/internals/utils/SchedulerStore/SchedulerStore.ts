@@ -834,8 +834,9 @@ export class SchedulerStore<
       if (process.env.NODE_ENV !== 'production') {
         warnOnce(
           [
-            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-            'Use <EventCalendarPremium /> or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events` to enable recurring events.',
+            'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
+            'Recurring events are a Premium feature: pass `features={{ recurringEvents: recurringEventsFeature }}`, with `recurringEventsFeature` imported from `@mui/x-scheduler-premium/recurring-events`, to <EventCalendarPremium />, to a premium standalone view or to <EventTimelinePremium />.',
+            'See https://mui.com/x/react-scheduler/recurring-events/ for more details.',
           ].join('\n'),
         );
       }
@@ -956,8 +957,9 @@ export class SchedulerStore<
       if (process.env.NODE_ENV !== 'production') {
         warnOnce(
           [
-            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-            'Use <EventCalendarPremium /> or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events` to enable recurring events.',
+            'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
+            'Recurring events are a Premium feature: pass `features={{ recurringEvents: recurringEventsFeature }}`, with `recurringEventsFeature` imported from `@mui/x-scheduler-premium/recurring-events`, to <EventCalendarPremium />, to a premium standalone view or to <EventTimelinePremium />.',
+            'See https://mui.com/x/react-scheduler/recurring-events/ for more details.',
           ].join('\n'),
         );
       }
@@ -977,8 +979,9 @@ export class SchedulerStore<
       if (process.env.NODE_ENV !== 'production') {
         warnOnce(
           [
-            'MUI X Scheduler: Recurring event updates are a premium feature.',
-            'Use <EventCalendarPremium /> or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events` to enable recurring events.',
+            'MUI X Scheduler: Recurring events are not enabled. The recurring event update will be ignored.',
+            'Recurring events are a Premium feature: pass `features={{ recurringEvents: recurringEventsFeature }}`, with `recurringEventsFeature` imported from `@mui/x-scheduler-premium/recurring-events`, to <EventCalendarPremium />, to a premium standalone view or to <EventTimelinePremium />.',
+            'See https://mui.com/x/react-scheduler/recurring-events/ for more details.',
           ].join('\n'),
         );
       }
@@ -995,8 +998,9 @@ export class SchedulerStore<
       if (process.env.NODE_ENV !== 'production') {
         warnOnce(
           [
-            'MUI X Scheduler: Recurring event deletions are a premium feature.',
-            'Use <EventCalendarPremium /> or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events` to enable recurring events.',
+            'MUI X Scheduler: Recurring events are not enabled. The recurring event deletion will be ignored.',
+            'Recurring events are a Premium feature: pass `features={{ recurringEvents: recurringEventsFeature }}`, with `recurringEventsFeature` imported from `@mui/x-scheduler-premium/recurring-events`, to <EventCalendarPremium />, to a premium standalone view or to <EventTimelinePremium />.',
+            'See https://mui.com/x/react-scheduler/recurring-events/ for more details.',
           ].join('\n'),
         );
       }

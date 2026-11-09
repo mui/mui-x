@@ -45,10 +45,7 @@ const StandaloneMonthViewPremium = React.forwardRef(function StandaloneMonthView
     featuresProp,
     'StandaloneMonthViewPremium',
   );
-  const storeParameters = React.useMemo(
-    () => ({ ...parameters, storeFeatures }),
-    [parameters, storeFeatures],
-  );
+  const storeParameters = { ...parameters, storeFeatures };
 
   return (
     <EventCalendarProvider

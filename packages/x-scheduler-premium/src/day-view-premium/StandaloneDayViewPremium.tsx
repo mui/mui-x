@@ -45,10 +45,7 @@ const StandaloneDayViewPremium = React.forwardRef(function StandaloneDayViewPrem
     featuresProp,
     'StandaloneDayViewPremium',
   );
-  const storeParameters = React.useMemo(
-    () => ({ ...parameters, storeFeatures }),
-    [parameters, storeFeatures],
-  );
+  const storeParameters = { ...parameters, storeFeatures };
 
   return (
     <EventCalendarProvider

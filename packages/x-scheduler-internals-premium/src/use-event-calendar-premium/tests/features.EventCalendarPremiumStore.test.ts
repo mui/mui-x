@@ -11,7 +11,11 @@ import {
   schedulerOccurrenceSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { DEBOUNCE_MS } from '../../internals/utils/queue';
+import {
+  flushDebounce,
+  flushEffect,
+  noopPersistEvents,
+} from '../../internals/tests/disposeTestHelpers';
 import { schedulerRecurringEventsPlugin } from '../../internals/plugins/schedulerRecurringEventsPlugin';
 import { EventCalendarPremiumStore } from '../EventCalendarPremiumStore';
 
@@ -23,7 +27,7 @@ const dailyEvent = EventBuilder.new()
   .recurrent('DAILY')
   .build();
 
-const FEATURE_WARNING = 'with the `recurringEvents` feature';
+const FEATURE_WARNING = 'Recurring events are not enabled';
 
 const rangeStart = Date.parse('2025-07-01T00:00:00Z');
 const rangeEnd = Date.parse('2025-07-03T23:59:59Z');
@@ -99,10 +103,10 @@ describe('Features - EventCalendarPremiumStore', () => {
       vi.useRealTimers();
     });
 
-    it('should warn with the feature message for rrule events loaded through the dataSource', async () => {
+    it('should warn and render once the rrule events loaded through the dataSource', async () => {
       const dataSource = {
         getEvents: vi.fn(async () => [dailyEvent]),
-        persistEvents: async () => ({ success: true }),
+        persistEvents: noopPersistEvents,
       };
       const parameters = {
         events: [],
@@ -115,11 +119,13 @@ describe('Features - EventCalendarPremiumStore', () => {
       await expect(async () => {
         // The first fetch fires when a view registers its definition.
         store.setViewDefinition(buildViewDefinition());
-        await Promise.resolve();
-        await Promise.resolve();
-        await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
+        await flushEffect();
+        await flushDebounce();
       }).toWarnDev(FEATURE_WARNING);
+
       expect(store.state.eventIdList).to.deep.equal(['daily']);
+      expect(schedulerEventSelectors.isRecurring(store.state, 'daily')).to.equal(false);
+      expect(countOccurrences(store)).to.equal(1);
     });
   });
 });

@@ -46,10 +46,7 @@ const StandaloneCompactWeekViewPremium = React.forwardRef(function StandaloneCom
     featuresProp,
     'StandaloneCompactWeekViewPremium',
   );
-  const storeParameters = React.useMemo(
-    () => ({ ...parameters, storeFeatures }),
-    [parameters, storeFeatures],
-  );
+  const storeParameters = { ...parameters, storeFeatures };
 
   return (
     <ResponsiveTypographyContainer>

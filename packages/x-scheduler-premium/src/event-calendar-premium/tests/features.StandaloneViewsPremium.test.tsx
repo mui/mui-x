@@ -13,9 +13,8 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
   getAllEventsByTitle,
-  getEventNamePattern,
 } from 'test/utils/scheduler';
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { describe, it, expect } from 'vitest';
 
 const dailyEvent = EventBuilder.new()
@@ -24,27 +23,58 @@ const dailyEvent = EventBuilder.new()
   .recurrent('DAILY', { count: 3 })
   .build();
 
+const seriesStart = adapter.date('2025-07-01T00:00:00Z', 'default');
+const secondDay = adapter.date('2025-07-02T00:00:00Z', 'default');
+
+// Single-day views show July 2nd with the feature, where only an expanded series has an occurrence.
 const views = [
-  { name: 'StandaloneDayViewPremium', View: StandaloneDayViewPremium, day: 2, expanded: 1 },
-  { name: 'StandaloneWeekViewPremium', View: StandaloneWeekViewPremium, day: 1, expanded: 3 },
-  { name: 'StandaloneMonthViewPremium', View: StandaloneMonthViewPremium, day: 1, expanded: 3 },
-  { name: 'StandaloneAgendaViewPremium', View: StandaloneAgendaViewPremium, day: 1, expanded: 3 },
+  {
+    name: 'StandaloneDayViewPremium',
+    View: StandaloneDayViewPremium,
+    isCompact: false,
+    expandedVisibleDate: secondDay,
+    expanded: 1,
+  },
+  {
+    name: 'StandaloneWeekViewPremium',
+    View: StandaloneWeekViewPremium,
+    isCompact: false,
+    expandedVisibleDate: seriesStart,
+    expanded: 3,
+  },
+  {
+    name: 'StandaloneMonthViewPremium',
+    View: StandaloneMonthViewPremium,
+    isCompact: false,
+    expandedVisibleDate: seriesStart,
+    expanded: 3,
+  },
+  {
+    name: 'StandaloneAgendaViewPremium',
+    View: StandaloneAgendaViewPremium,
+    isCompact: false,
+    expandedVisibleDate: seriesStart,
+    expanded: 3,
+  },
   {
     name: 'StandaloneCompactDayViewPremium',
     View: StandaloneCompactDayViewPremium,
-    day: 2,
+    isCompact: true,
+    expandedVisibleDate: secondDay,
     expanded: 1,
   },
   {
     name: 'StandaloneCompactThreeDayViewPremium',
     View: StandaloneCompactThreeDayViewPremium,
-    day: 1,
+    isCompact: true,
+    expandedVisibleDate: seriesStart,
     expanded: 3,
   },
   {
     name: 'StandaloneCompactWeekViewPremium',
     View: StandaloneCompactWeekViewPremium,
-    day: 1,
+    isCompact: true,
+    expandedVisibleDate: seriesStart,
     expanded: 3,
   },
 ] as const;
@@ -54,20 +84,16 @@ describe('Standalone premium views - features', () => {
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
-  views.forEach(({ name, View, day, expanded }) => {
+  views.forEach(({ name, View, isCompact, expandedVisibleDate, expanded }) => {
     describe(`<${name} />`, () => {
-      const visibleDate = adapter.date(`2025-07-0${day}T00:00:00Z`, 'default');
       const Component = View as React.ComponentType<any>;
 
       it('should render a recurring event once without the recurring events feature', () => {
         expect(() => {
-          render(<Component events={[dailyEvent]} visibleDate={visibleDate} />);
-        }).toWarnDev('with the `recurringEvents` feature');
+          render(<Component events={[dailyEvent]} visibleDate={seriesStart} />);
+        }).toWarnDev('Recurring events are not enabled');
 
-        // Single-day views show July 2nd, where only an expanded series has an occurrence.
-        expect(screen.queryAllByLabelText(getEventNamePattern(dailyEvent.title))).to.have.length(
-          expanded === 1 ? 0 : 1,
-        );
+        expect(getAllEventsByTitle(dailyEvent.title)).to.have.length(1);
       });
 
       it('should expand a recurring event with the recurring events feature', () => {
@@ -75,30 +101,42 @@ describe('Standalone premium views - features', () => {
           <Component
             features={{ recurringEvents: recurringEventsFeature }}
             events={[dailyEvent]}
-            visibleDate={visibleDate}
+            visibleDate={expandedVisibleDate}
           />,
         );
 
         expect(getAllEventsByTitle(dailyEvent.title)).to.have.length(expanded);
       });
+
+      it('should show the recurrence tab with the recurring events feature', () => {
+        render(
+          <Component
+            features={{ recurringEvents: recurringEventsFeature }}
+            events={[dailyEvent]}
+            visibleDate={expandedVisibleDate}
+            onEventsChange={() => {}}
+          />,
+        );
+
+        fireEvent.click(getAllEventsByTitle(dailyEvent.title)[0]);
+        if (isCompact) {
+          // The compact layout arms the event first and opens the drawer from its toolbar.
+          fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
+        }
+
+        expect(screen.getByRole('tab', { name: 'Recurrence' })).not.to.equal(null);
+      });
+
+      it('should warn with the view name when a feature changes after mount', () => {
+        let setProps!: ReturnType<typeof render>['setProps'];
+        expect(() => {
+          ({ setProps } = render(<Component events={[dailyEvent]} visibleDate={seriesStart} />));
+        }).toWarnDev('Recurring events are not enabled');
+
+        expect(() => {
+          setProps({ features: { recurringEvents: recurringEventsFeature } });
+        }).toWarnDev(`The \`features\` prop of <${name} /> changed after the first render`);
+      });
     });
-  });
-
-  it('should warn with the view name when a feature changes after mount', () => {
-    let setProps!: ReturnType<typeof render>['setProps'];
-    expect(() => {
-      ({ setProps } = render(
-        <StandaloneDayViewPremium
-          events={[dailyEvent]}
-          visibleDate={adapter.date('2025-07-01T00:00:00Z', 'default')}
-        />,
-      ));
-    }).toWarnDev('with the `recurringEvents` feature');
-
-    expect(() => {
-      setProps({ features: { recurringEvents: recurringEventsFeature } });
-    }).toWarnDev(
-      'The `features` prop of <StandaloneDayViewPremium /> changed after the first render',
-    );
   });
 });

@@ -44,10 +44,7 @@ const StandaloneCompactThreeDayViewPremium = React.forwardRef(
       featuresProp,
       'StandaloneCompactThreeDayViewPremium',
     );
-    const storeParameters = React.useMemo(
-      () => ({ ...parameters, storeFeatures }),
-      [parameters, storeFeatures],
-    );
+    const storeParameters = { ...parameters, storeFeatures };
 
     return (
       <ResponsiveTypographyContainer>

@@ -163,7 +163,15 @@ const event = {
 };
 ```
 
-The Event Timeline expands recurring events only when the `recurringEvents` feature is enabled through the `features` prop.
+The Event Timeline expands recurring events only when the `recurringEvents` feature is enabled through the `features` prop:
+
+```tsx
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
+
+<EventTimelinePremium features={{ recurringEvents: recurringEventsFeature }} />;
+```
+
 See [Recurring events](/x/react-scheduler/recurring-events/) for details.
 
 ## Store data in custom properties

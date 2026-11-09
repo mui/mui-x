@@ -41,7 +41,7 @@ describe('EventCalendarPremium - features', () => {
   }
 
   it('should render a recurring event once without the recurring events feature', async () => {
-    await expect(() => renderSettled(<Calendar />)).toWarnDev('with the `recurringEvents` feature');
+    await expect(() => renderSettled(<Calendar />)).toWarnDev('Recurring events are not enabled');
 
     expect(getAllEventsByTitle(dailyEvent.title)).to.have.length(1);
   });
@@ -56,7 +56,7 @@ describe('EventCalendarPremium - features', () => {
     let view!: Awaited<ReturnType<typeof renderSettled>>;
     await expect(async () => {
       view = await renderSettled(<Calendar />);
-    }).toWarnDev('with the `recurringEvents` feature');
+    }).toWarnDev('Recurring events are not enabled');
 
     await view.user.click(getAllEventsByTitle(dailyEvent.title)[0]);
     await waitFor(() => {
@@ -87,7 +87,7 @@ describe('EventCalendarPremium - features', () => {
           onEventsChange={handleEventsChange}
         />,
       ),
-    ).toWarnDev('with the `recurringEvents` feature');
+    ).toWarnDev('Recurring events are not enabled');
 
     const eventElement = getAllEventsByTitle(dailyEvent.title)[0];
     mockElementBounds(eventElement, { left: 0, width: 100 });
@@ -108,7 +108,7 @@ describe('EventCalendarPremium - features', () => {
     let view!: Awaited<ReturnType<typeof renderSettled>>;
     await expect(async () => {
       view = await renderSettled(<Calendar onEventsChange={handleEventsChange} />);
-    }).toWarnDev('with the `recurringEvents` feature');
+    }).toWarnDev('Recurring events are not enabled');
 
     await view.user.click(getAllEventsByTitle(dailyEvent.title)[0]);
     await waitFor(() => {
@@ -137,12 +137,30 @@ describe('EventCalendarPremium - features', () => {
     let setProps!: Awaited<ReturnType<typeof renderSettled>>['setProps'];
     await expect(async () => {
       ({ setProps } = await renderSettled(<Calendar />));
-    }).toWarnDev('with the `recurringEvents` feature');
+    }).toWarnDev('Recurring events are not enabled');
 
     expect(() => {
       setProps({ features: { recurringEvents: recurringEventsFeature } });
     }).toWarnDev('The `features` prop of <EventCalendarPremium /> changed after the first render');
 
     expect(getAllEventsByTitle(dailyEvent.title)).to.have.length(1);
+  });
+
+  it('should keep the recurring events feature when it is removed after mount', async () => {
+    const { setProps, user } = await renderSettled(
+      <Calendar features={{ recurringEvents: recurringEventsFeature }} />,
+    );
+
+    expect(() => {
+      setProps({ features: undefined });
+    }).toWarnDev('The `features` prop of <EventCalendarPremium /> changed after the first render');
+
+    expect(getAllEventsByTitle(dailyEvent.title)).to.have.length(3);
+
+    await user.click(getAllEventsByTitle(dailyEvent.title)[0]);
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.to.equal(null);
+    });
+    expect(screen.queryByRole('tab', { name: 'Recurrence' })).not.to.equal(null);
   });
 });

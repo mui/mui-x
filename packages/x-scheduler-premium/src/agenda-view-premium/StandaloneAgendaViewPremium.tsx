@@ -45,10 +45,7 @@ const StandaloneAgendaViewPremium = React.forwardRef(function StandaloneAgendaVi
     featuresProp,
     'StandaloneAgendaViewPremium',
   );
-  const storeParameters = React.useMemo(
-    () => ({ ...parameters, storeFeatures }),
-    [parameters, storeFeatures],
-  );
+  const storeParameters = { ...parameters, storeFeatures };
 
   return (
     <EventCalendarProvider

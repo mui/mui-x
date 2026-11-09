@@ -755,7 +755,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         </EventCalendarProvider>,
       );
     }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+      'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
     ]);
 
     expect(screen.queryByText(/repeats/i)).to.equal(null);
@@ -791,7 +791,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         </EventCalendarProvider>,
       ));
     }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+      'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
     ]);
 
     await user.type(screen.getByRole('textbox', { name: /event title/i }), ' (renamed)');
@@ -825,7 +825,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         </EventCalendarProvider>,
       );
     }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+      'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
     ]);
   });
 
@@ -846,7 +846,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         </EventCalendarProvider>,
       );
     }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+      'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
     ]);
   });
 
@@ -882,7 +882,9 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
           />
         </EventCalendarProvider>,
       );
-    }).toWarnDev(['MUI X Scheduler: Recurring event updates are a premium feature.']);
+    }).toWarnDev([
+      'MUI X Scheduler: Recurring events are not enabled. The recurring event update will be ignored.',
+    ]);
   });
 
   describe('read-only date and time', () => {

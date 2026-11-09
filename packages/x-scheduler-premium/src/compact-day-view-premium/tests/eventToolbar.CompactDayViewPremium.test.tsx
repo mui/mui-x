@@ -52,7 +52,7 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
     expect(screen.getByText(/All events/i)).not.to.equal(null);
   });
 
-  it('should delete the event directly without the recurring events feature', () => {
+  it('should use the plain delete confirmation without the recurring events feature', () => {
     const onEventsChange = vi.fn();
     const event = EventBuilder.new()
       .id('event-1')
@@ -68,7 +68,7 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
           onEventsChange={onEventsChange}
         />,
       );
-    }).toWarnDev('with the `recurringEvents` feature');
+    }).toWarnDev('Recurring events are not enabled');
 
     fireEvent.click(screen.getByRole('button', { name: /Daily Standup/i }));
     fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));

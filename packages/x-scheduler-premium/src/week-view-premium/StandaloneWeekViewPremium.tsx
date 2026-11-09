@@ -45,10 +45,7 @@ const StandaloneWeekViewPremium = React.forwardRef(function StandaloneWeekViewPr
     featuresProp,
     'StandaloneWeekViewPremium',
   );
-  const storeParameters = React.useMemo(
-    () => ({ ...parameters, storeFeatures }),
-    [parameters, storeFeatures],
-  );
+  const storeParameters = { ...parameters, storeFeatures };
 
   return (
     <EventCalendarProvider

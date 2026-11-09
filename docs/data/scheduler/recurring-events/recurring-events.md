@@ -54,7 +54,16 @@ The `features` prop is read once, when the component mounts.
 To change it, remount the component, for example with a `key`.
 :::
 
-With the feature, the component expands recurring events only for the visible range, keeps the original duration, and handles all-day and multi-day spans.
+:::warning
+Without the feature, the `rrule` stays in your data but is ignored:
+
+- The event renders once, on its start date, even when that occurrence was deleted or edited on its own (the `exDates` are not applied).
+- The event dialog has no Recurrence tab, and no dialog asks which occurrences a change applies to.
+- Editing, moving, or deleting the event applies to the event stored in your data, which is the whole series.
+
+:::
+
+With the feature, the Scheduler expands recurring events only for the visible range, keeps the original duration, and handles all-day and multi-day spans.
 
 The rule is evaluated in the event's `timezone`, even when it is edited from the event dialog while the calendar displays another timezone.
 See [Recurring events and timezones](/x/react-scheduler/timezone/#recurring-events-and-timezones) for details.
