@@ -13,23 +13,6 @@ import type {
 } from '@mui/x-charts/internals';
 import type { ChartDrawingArea } from '@mui/x-charts/hooks';
 
-/**
- * Whether the zoom range runs in the opposite direction of the slider's default one, which is
- * left to right for the x-axis and bottom to top for the y-axis.
- *
- * Ordinal y-axes need a special case: they draw their first value at the top, so the default
- * direction of their zoom range is already reversed.
- */
-export function isZoomSliderReversed(
-  axis: Pick<DefaultedXAxis | DefaultedYAxis, 'position' | 'reverse' | 'scaleType'>,
-) {
-  const isYAxis = axis.position === 'left' || axis.position === 'right';
-  const isOrdinal = axis.scaleType === 'band' || axis.scaleType === 'point';
-  const reverse = axis.reverse ?? false;
-
-  return isYAxis && isOrdinal ? !reverse : reverse;
-}
-
 export function calculateZoomFromPoint(state: ChartState<any>, axisId: AxisId, point: DOMPoint) {
   const axis = selectorChartRawAxis(state, axisId);
 
@@ -47,8 +30,8 @@ export function calculateZoomFromPoint(state: ChartState<any>, axisId: AxisId, p
 
 export function calculateZoomFromPointImpl(
   drawingArea: ChartDrawingArea,
-  axis: Pick<DefaultedXAxis | DefaultedYAxis, 'position' | 'reverse' | 'scaleType'>,
-  zoomOptions: Pick<DefaultizedZoomOptions, 'minStart' | 'maxEnd'>,
+  axis: Pick<DefaultedXAxis | DefaultedYAxis, 'position'>,
+  zoomOptions: Pick<DefaultizedZoomOptions, 'minStart' | 'maxEnd' | 'reverse'>,
   point: Pick<DOMPoint, 'x' | 'y'>,
 ) {
   const { left, top, height, width } = drawingArea;
@@ -64,7 +47,7 @@ export function calculateZoomFromPointImpl(
     pointerZoom = ((top + height - point.y) / height) * range;
   }
 
-  if (isZoomSliderReversed(axis)) {
+  if (zoomOptions.reverse) {
     pointerZoom = maxEnd - pointerZoom;
   } else {
     pointerZoom += minStart;

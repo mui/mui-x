@@ -96,8 +96,8 @@ describe('Zoom Utils', () => {
     it('should calculate correct zoom value for x-axis (bottom position)', () => {
       const result = calculateZoomFromPointImpl(
         defaultDrawingArea,
-        { position: 'bottom', reverse: false },
-        { minStart: 0, maxEnd: 100 },
+        { position: 'bottom' },
+        { minStart: 0, maxEnd: 100, reverse: false },
         { x: 200, y: 0 },
       );
 
@@ -107,8 +107,8 @@ describe('Zoom Utils', () => {
     it('should calculate correct zoom value for y-axis (left position)', () => {
       const result = calculateZoomFromPointImpl(
         defaultDrawingArea,
-        { position: 'left', reverse: false },
-        { minStart: 0, maxEnd: 100 },
+        { position: 'left' },
+        { minStart: 0, maxEnd: 100, reverse: false },
         { x: 0, y: 100 },
       );
 
@@ -118,8 +118,8 @@ describe('Zoom Utils', () => {
     it('should handle reversed x-axis', () => {
       const result = calculateZoomFromPointImpl(
         defaultDrawingArea,
-        { position: 'bottom', reverse: true },
-        { minStart: 0, maxEnd: 100 },
+        { position: 'bottom' },
+        { minStart: 0, maxEnd: 100, reverse: true },
         { x: 300, y: 0 },
       );
 
@@ -129,54 +129,19 @@ describe('Zoom Utils', () => {
     it('should handle reversed y-axis', () => {
       const result = calculateZoomFromPointImpl(
         defaultDrawingArea,
-        { position: 'left', reverse: true },
-        { minStart: 0, maxEnd: 100 },
+        { position: 'left' },
+        { minStart: 0, maxEnd: 100, reverse: true },
         { x: 0, y: 180 },
       );
 
       expect(result).to.eq(80);
     });
 
-    it('should place the start of the zoom range at the top for an ordinal y-axis', () => {
-      (['band', 'point'] as const).forEach((scaleType) => {
-        const result = calculateZoomFromPointImpl(
-          defaultDrawingArea,
-          { position: 'left', scaleType },
-          { minStart: 0, maxEnd: 100 },
-          { x: 0, y: 120 },
-        );
-
-        expect(result).to.eq(20);
-      });
-    });
-
-    it('should place the start of the zoom range at the bottom for a reversed ordinal y-axis', () => {
-      const result = calculateZoomFromPointImpl(
-        defaultDrawingArea,
-        { position: 'left', scaleType: 'band', reverse: true },
-        { minStart: 0, maxEnd: 100 },
-        { x: 0, y: 120 },
-      );
-
-      expect(result).to.eq(80);
-    });
-
-    it('should not change the direction of an ordinal x-axis', () => {
-      const result = calculateZoomFromPointImpl(
-        defaultDrawingArea,
-        { position: 'bottom', scaleType: 'band' },
-        { minStart: 0, maxEnd: 100 },
-        { x: 120, y: 0 },
-      );
-
-      expect(result).to.eq(10);
-    });
-
     it('should handle custom min/max range', () => {
       const result = calculateZoomFromPointImpl(
         defaultDrawingArea,
-        { position: 'bottom', reverse: false },
-        { minStart: 20, maxEnd: 80 },
+        { position: 'bottom' },
+        { minStart: 20, maxEnd: 80, reverse: false },
         { x: 150, y: 0 },
       );
 

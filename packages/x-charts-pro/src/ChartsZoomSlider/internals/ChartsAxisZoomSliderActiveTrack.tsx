@@ -18,12 +18,7 @@ import { selectorChartAxisZoomData } from '../../internals/plugins/useChartProZo
 import type { UseChartProZoomSignature } from '../../internals/plugins/useChartProZoom';
 import { ChartsAxisZoomSliderThumb } from './ChartsAxisZoomSliderThumb';
 import { ChartsTooltipZoomSliderValue } from './ChartsTooltipZoomSliderValue';
-import {
-  calculateZoomEnd,
-  calculateZoomFromPoint,
-  calculateZoomStart,
-  isZoomSliderReversed,
-} from './zoom-utils';
+import { calculateZoomEnd, calculateZoomFromPoint, calculateZoomStart } from './zoom-utils';
 import {
   ZOOM_SLIDER_THUMB_HEIGHT,
   ZOOM_SLIDER_THUMB_WIDTH,
@@ -422,7 +417,7 @@ function getZoomSliderTooltipsText(axis: ComputedAxis, drawingArea: ChartDrawing
     [start, end] = [end, start]; // Invert for y-axis
   }
 
-  if (isZoomSliderReversed(axis)) {
+  if (axis.zoom?.reverse) {
     [start, end] = [end, start]; // Reverse the start and end if the zoom range is reversed
   }
 
