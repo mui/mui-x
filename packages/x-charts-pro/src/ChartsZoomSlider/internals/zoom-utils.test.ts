@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { calculateZoomEnd, calculateZoomStart, calculateZoomFromPointImpl } from './zoom-utils';
+import {
+  calculateZoomEnd,
+  calculateZoomStart,
+  calculateZoomFromPointImpl,
+  getZoomSliderKeyMovement,
+} from './zoom-utils';
 import type { ZoomData } from '../../models';
 
 describe('Zoom Utils', () => {
@@ -146,6 +151,57 @@ describe('Zoom Utils', () => {
       );
 
       expect(result).to.eq(35);
+    });
+  });
+
+  describe('getZoomSliderKeyMovement', () => {
+    const press = (
+      key: string,
+      modifiers: Partial<Record<'altKey' | 'ctrlKey' | 'metaKey' | 'shiftKey', boolean>> = {},
+    ) => ({
+      key,
+      altKey: false,
+      ctrlKey: false,
+      metaKey: false,
+      shiftKey: false,
+      ...modifiers,
+    });
+
+    it('should move by one step with the arrow keys', () => {
+      expect(getZoomSliderKeyMovement(press('ArrowRight'), false)).to.eq(1);
+      expect(getZoomSliderKeyMovement(press('ArrowUp'), false)).to.eq(1);
+      expect(getZoomSliderKeyMovement(press('ArrowLeft'), false)).to.eq(-1);
+      expect(getZoomSliderKeyMovement(press('ArrowDown'), false)).to.eq(-1);
+    });
+
+    it('should move by a large step with the page keys', () => {
+      expect(getZoomSliderKeyMovement(press('PageUp'), false)).to.eq(10);
+      expect(getZoomSliderKeyMovement(press('PageDown'), false)).to.eq(-10);
+    });
+
+    it('should follow the slider on screen when it is reversed', () => {
+      expect(getZoomSliderKeyMovement(press('ArrowRight'), true)).to.eq(-1);
+      expect(getZoomSliderKeyMovement(press('ArrowDown'), true)).to.eq(1);
+      expect(getZoomSliderKeyMovement(press('PageUp'), true)).to.eq(-10);
+    });
+
+    it('should go to the bounds with Home and End, even when reversed', () => {
+      expect(getZoomSliderKeyMovement(press('Home'), false)).to.eq(-Infinity);
+      expect(getZoomSliderKeyMovement(press('End'), false)).to.eq(Infinity);
+      expect(getZoomSliderKeyMovement(press('Home'), true)).to.eq(-Infinity);
+      expect(getZoomSliderKeyMovement(press('End'), true)).to.eq(Infinity);
+    });
+
+    it('should ignore the keys that are not bound', () => {
+      expect(getZoomSliderKeyMovement(press('Enter'), false)).to.eq(null);
+      expect(getZoomSliderKeyMovement(press('+'), false)).to.eq(null);
+    });
+
+    it('should ignore the modified keys', () => {
+      expect(getZoomSliderKeyMovement(press('ArrowRight', { shiftKey: true }), false)).to.eq(null);
+      expect(getZoomSliderKeyMovement(press('ArrowRight', { altKey: true }), false)).to.eq(null);
+      expect(getZoomSliderKeyMovement(press('Home', { ctrlKey: true }), false)).to.eq(null);
+      expect(getZoomSliderKeyMovement(press('End', { metaKey: true }), false)).to.eq(null);
     });
   });
 });

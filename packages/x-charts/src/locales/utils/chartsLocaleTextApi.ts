@@ -465,6 +465,35 @@ export interface ChartsLocaleText {
     end: number;
   }) => string;
   /**
+   * The accessible name of the zoom slider handle that moves the start of the visible range.
+   * @param {object} params - The parameters for the label getter.
+   * @param {'x'|'y'} params.axisDirection - The direction of the zoomed axis.
+   * @returns {string} The localized accessible name of the handle.
+   */
+  zoomSliderStartLabel: (params: { axisDirection: 'x' | 'y' }) => string;
+  /**
+   * The accessible name of the zoom slider handle that moves the end of the visible range.
+   * @param {object} params - The parameters for the label getter.
+   * @param {'x'|'y'} params.axisDirection - The direction of the zoomed axis.
+   * @returns {string} The localized accessible name of the handle.
+   */
+  zoomSliderEndLabel: (params: { axisDirection: 'x' | 'y' }) => string;
+  /**
+   * The accessible name of the zoom slider track that moves the whole visible range.
+   * @param {object} params - The parameters for the label getter.
+   * @param {'x'|'y'} params.axisDirection - The direction of the zoomed axis.
+   * @returns {string} The localized accessible name of the track.
+   */
+  zoomSliderRangeLabel: (params: { axisDirection: 'x' | 'y' }) => string;
+  /**
+   * The value of the zoom slider track announced by screen readers.
+   * @param {object} params - The parameters for the value getter.
+   * @param {string} params.start - The formatted value at the start of the visible range, as it appears in the zoom slider tooltip.
+   * @param {string} params.end - The formatted value at the end of the visible range, as it appears in the zoom slider tooltip.
+   * @returns {string} The localized value of the track.
+   */
+  zoomSliderRangeValueText: (params: { start: string; end: string }) => string;
+  /**
    * The description of a bar series item for accessibility purpose.
    * @param {object} params - The parameters for the description getter.
    * @param {number|null} params.value - The value of the bar item.

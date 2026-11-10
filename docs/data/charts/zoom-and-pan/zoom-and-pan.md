@@ -99,6 +99,25 @@ Set the `minStart`, `maxEnd`, `minSpan`, and `maxSpan` properties on the axis co
 
 The zoom slider does not display values outside the range delimited by `minStart` and `maxEnd`.
 
+### Keyboard
+
+The zoom slider handles and the selected range between them are focusable with the <kbd class="key">Tab</kbd> key.
+Screen readers announce them as sliders, with the axis values at the start and end of the visible range.
+
+|                                                                 Keys | Description                                                                                              |
+| -------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------- |
+|  <kbd class="key">Arrow Right</kbd>, <kbd class="key">Arrow Up</kbd> | Move the focused element by 1% of the axis, to the right on a horizontal slider or up on a vertical one  |
+| <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Down</kbd> | Move the focused element by 1% of the axis, to the left on a horizontal slider or down on a vertical one |
+|                                       <kbd class="key">Page Up</kbd> | Same as <kbd class="key">Arrow Up</kbd>, by 10% of the axis                                              |
+|                                     <kbd class="key">Page Down</kbd> | Same as <kbd class="key">Arrow Down</kbd>, by 10% of the axis                                            |
+|                                          <kbd class="key">Home</kbd> | Move the focused element to the start of the axis                                                        |
+|                                           <kbd class="key">End</kbd> | Move the focused element to the end of the axis                                                          |
+
+A handle moves one end of the visible range, within the limits above, and the selected range moves both ends at once.
+The keys combined with a modifier are left to the [keyboard zoom and pan](#keyboard-zoom-and-pan) of the chart.
+
+The accessible names of the handles and the range are customizable with the `zoomSliderStartLabel`, `zoomSliderEndLabel`, `zoomSliderRangeLabel`, and `zoomSliderRangeValueText` [localization keys](/x/react-charts/localization/#localize-text).
+
 ### Composition
 
 When composing a custom component, render the `ChartsZoomSlider` component to show the axes' sliders.
