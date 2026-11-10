@@ -42,4 +42,14 @@ describe('useDisarmOnEscape', () => {
 
     expect(onDisarm.mock.calls.length).to.equal(0);
   });
+
+  it('should stop listening once unmounted', () => {
+    const onDisarm = vi.fn();
+    const { unmount } = renderUseDisarm({ onDisarm });
+
+    unmount();
+    pressKey('Escape');
+
+    expect(onDisarm.mock.calls.length).to.equal(0);
+  });
 });

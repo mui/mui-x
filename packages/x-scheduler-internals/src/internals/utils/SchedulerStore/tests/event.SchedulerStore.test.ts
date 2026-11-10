@@ -2144,25 +2144,6 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
-    describe('dev warnings', () => {
-      it('should warn in dev when events are updated without onEventsChange nor dataSource', () => {
-        const event = EventBuilder.new().build();
-        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] }, adapter);
-
-        expect(() => {
-          store.updateEvent({ id: event.id, title: 'updated' });
-        }).toWarnDev([
-          'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
-        ]);
-      });
-    });
-  });
-});
-
-// `dataSource` is a Premium-only parameter: only the Premium stores attach the lazy-loading
-// plugin, so the community store is not expected to honor it.
-premiumStoreClasses.forEach((storeClass) => {
-  describe(`Event - ${storeClass.name}`, () => {
     describe('Method: updateRecurringEvent', () => {
       it.skipIf(storeClass.name !== 'EventCalendarStore')(
         'should warn and ignore the update without the recurring events plugin',
@@ -2187,7 +2168,28 @@ premiumStoreClasses.forEach((storeClass) => {
           expect(store.state.pendingRecurringEventOperation).to.equal(null);
         },
       );
+    });
 
+    describe('dev warnings', () => {
+      it('should warn in dev when events are updated without onEventsChange nor dataSource', () => {
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] }, adapter);
+
+        expect(() => {
+          store.updateEvent({ id: event.id, title: 'updated' });
+        }).toWarnDev([
+          'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
+        ]);
+      });
+    });
+  });
+});
+
+// `dataSource` is a Premium-only parameter: only the Premium stores attach the lazy-loading
+// plugin, so the community store is not expected to honor it.
+premiumStoreClasses.forEach((storeClass) => {
+  describe(`Event - ${storeClass.name}`, () => {
+    describe('Method: updateRecurringEvent', () => {
       it('should keep the stored BYMONTHDAY when only the count changes from another timezone', () => {
         // The rule is passed through as is: saving it with a new count keeps the 3rd.
         const event = utcJuly4AllDayBuilder()

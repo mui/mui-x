@@ -524,6 +524,18 @@ storeClasses.forEach((storeClass) => {
     });
 
     describe('resourceDepth', () => {
+      it('should return the depth of a nested resource', () => {
+        const resources = [
+          {
+            id: 'parent',
+            title: 'Parent',
+            children: [{ id: 'child', title: 'Child' }],
+          },
+        ];
+        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        expect(schedulerResourceSelectors.resourceDepth(state, 'child')).to.equal(1);
+      });
+
       it('should return 0 for a non-existent resource', () => {
         const resources = [{ id: 'resource-1', title: 'Resource 1' }];
         const state = new storeClass.Value({ events: [], resources }, adapter).state;
