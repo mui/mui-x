@@ -55,12 +55,14 @@ storeClasses.forEach((storeClass) => {
         const state = new storeClass.Value({ ...BASE_PARAMS }, adapter).state;
         expect(schedulerPreferenceSelectors.weekInfo(state)).to.deep.equal({
           firstDay: 7,
+          weekend: [6, 7],
           minimalDays: 1,
         });
         const frenchState = new storeClass.Value({ ...BASE_PARAMS, dateLocale: 'fr-FR' }, adapter)
           .state;
         expect(schedulerPreferenceSelectors.weekInfo(frenchState)).to.deep.equal({
           firstDay: 1,
+          weekend: [6, 7],
           minimalDays: 4,
         });
       });
@@ -72,8 +74,27 @@ storeClasses.forEach((storeClass) => {
         ).state;
         expect(schedulerPreferenceSelectors.weekInfo(state)).to.deep.equal({
           firstDay: 1,
+          weekend: [6, 7],
           minimalDays: 1,
         });
+      });
+    });
+
+    describe('weekend', () => {
+      it('should return the weekend of the date locale', () => {
+        const state = new storeClass.Value({ ...BASE_PARAMS }, adapter).state;
+        expect(schedulerPreferenceSelectors.weekend(state)).to.deep.equal([6, 7]);
+        const saudiState = new storeClass.Value({ ...BASE_PARAMS, dateLocale: 'ar-SA' }, adapter)
+          .state;
+        expect(schedulerPreferenceSelectors.weekend(saudiState)).to.deep.equal([5, 6]);
+      });
+
+      it('should keep the weekend of the date locale when weekStartsOn is set', () => {
+        const state = new storeClass.Value(
+          { ...BASE_PARAMS, dateLocale: 'ar-SA', preferences: { weekStartsOn: 1 } },
+          adapter,
+        ).state;
+        expect(schedulerPreferenceSelectors.weekend(state)).to.deep.equal([5, 6]);
       });
     });
   });

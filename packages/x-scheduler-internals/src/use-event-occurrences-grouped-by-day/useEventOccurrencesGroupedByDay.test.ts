@@ -12,7 +12,6 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   const day1Str = '2024-01-11T00:00:00Z';
   const day2Str = '2024-01-12T00:00:00Z';
   const days = getDayListFromPlainDates({
-    adapter,
     firstPlainDate: BaseTemporal.PlainDate.from('2024-01-10'),
     lastPlainDate: BaseTemporal.PlainDate.from('2024-01-12'),
     timezone: 'default',
@@ -179,7 +178,6 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     // In America/Santiago, the clocks go back from 24:00 to 23:00 on April 6th, 2024.
     // 2024-04-07T03:30:00Z is the second 23:30 of April 6th.
     const [lastDay] = getDayListFromPlainDates({
-      adapter,
       firstPlainDate: BaseTemporal.PlainDate.from('2024-04-06'),
       lastPlainDate: BaseTemporal.PlainDate.from('2024-04-06'),
       timezone: 'America/Santiago',

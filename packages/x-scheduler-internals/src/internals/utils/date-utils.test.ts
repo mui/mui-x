@@ -12,19 +12,19 @@ describe('date-utils', () => {
     const end = adapter.date('2025-01-08T18:00:00.000Z', 'default');
 
     it('returns the bounds unchanged when allDay is false', () => {
-      const result = normalizeAllDayBounds(adapter, start, end, false);
+      const result = normalizeAllDayBounds(adapter, start, end, false, 'default');
       expect(adapter.getHours(result.start)).to.equal(9);
       expect(adapter.getHours(result.end)).to.equal(18);
     });
 
     it('returns the bounds unchanged when allDay is undefined', () => {
-      const result = normalizeAllDayBounds(adapter, start, end, undefined);
+      const result = normalizeAllDayBounds(adapter, start, end, undefined, 'default');
       expect(adapter.getHours(result.start)).to.equal(9);
       expect(adapter.getHours(result.end)).to.equal(18);
     });
 
     it('snaps an all-day event to the whole day', () => {
-      const result = normalizeAllDayBounds(adapter, start, end, true);
+      const result = normalizeAllDayBounds(adapter, start, end, true, 'default');
       expect(adapter.getHours(result.start)).to.equal(0);
       expect(adapter.getMinutes(result.start)).to.equal(0);
       expect(adapter.getHours(result.end)).to.equal(23);
@@ -34,7 +34,7 @@ describe('date-utils', () => {
 
     it('preserves the span when flattening a multi-day all-day event', () => {
       const multiDayEnd = adapter.date('2025-01-10T18:00:00.000Z', 'default');
-      const result = normalizeAllDayBounds(adapter, start, multiDayEnd, true);
+      const result = normalizeAllDayBounds(adapter, start, multiDayEnd, true, 'default');
       expect(adapter.getDate(result.start)).to.equal(8);
       expect(adapter.getHours(result.start)).to.equal(0);
       expect(adapter.getDate(result.end)).to.equal(10);
@@ -46,14 +46,13 @@ describe('date-utils', () => {
     it('should end the day on the later 23:59:59.999 when a DST transition repeats its last hour', () => {
       // America/Santiago falls back from 00:00 -03:00 to 23:00 -04:00 on April 6th, 2024.
       const day = adapter.date('2024-04-06T12:00:00', 'America/Santiago');
-      const result = normalizeAllDayBounds(adapter, day, day, true);
+      const result = normalizeAllDayBounds(adapter, day, day, true, 'America/Santiago');
       expect(new Date(adapter.getTime(result.start)).toISOString()).to.equal(
         '2024-04-06T03:00:00.000Z',
       );
       expect(new Date(adapter.getTime(result.end)).toISOString()).to.equal(
         '2024-04-07T03:59:59.999Z',
       );
-      expect(adapter.getTimezone(result.end)).to.equal('America/Santiago');
     });
   });
 

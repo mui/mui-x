@@ -10,7 +10,6 @@ import { BaseTemporal } from '../internals/utils/base-temporal';
 
 describe('useDayListEventOccurrencesWithPosition', () => {
   const days = getDayListFromPlainDates({
-    adapter,
     firstPlainDate: BaseTemporal.PlainDate.from('2024-01-15'),
     lastPlainDate: BaseTemporal.PlainDate.from('2024-01-17'),
     timezone: 'default',
@@ -186,7 +185,6 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
     const timezone = 'America/Havana';
     const dayList = getDayListFromPlainDates({
-      adapter,
       firstPlainDate: BaseTemporal.PlainDate.from('2026-03-08'),
       lastPlainDate: BaseTemporal.PlainDate.from('2026-03-09'),
       timezone,
@@ -214,7 +212,6 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   it('should span every date an event covers after a DST transition at midnight', () => {
     // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
     const havanaDays = getDayListFromPlainDates({
-      adapter,
       firstPlainDate: BaseTemporal.PlainDate.from('2026-03-08'),
       lastPlainDate: BaseTemporal.PlainDate.from('2026-03-10'),
       timezone: 'America/Havana',

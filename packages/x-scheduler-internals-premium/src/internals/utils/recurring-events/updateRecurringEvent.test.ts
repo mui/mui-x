@@ -46,7 +46,7 @@ describe('recurring-events/updateRecurringEvent', () => {
           dataTimezone: {
             ...defaultEvent.dataTimezone,
             rrule: originalRule,
-            start: processDate(originalSeriesStart, adapter),
+            start: processDate(originalSeriesStart, adapter, defaultEvent.dataTimezone.timezone),
           },
         },
         split,
@@ -294,9 +294,7 @@ describe('recurring-events/updateRecurringEvent', () => {
        * UTC = 2025-01-04T04:30:00Z
        */
 
-      // updateRecurringEvent internally receives the occurrence converted into NY.
-      const occurrenceStart = adapter.date('2025-01-04T04:30:00Z', 'default');
-      const occurrenceStartDataTz = adapter.setTimezone(occurrenceStart, 'America/New_York'); // → 23:30 Jan 3 NY
+      const occurrenceStart = adapter.date('2025-01-04T04:30:00Z', 'default'); // 23:30 Jan 3 NY
 
       // User modifies only the hour, keeping the same NY calendar day:
       const changes = {
@@ -305,17 +303,13 @@ describe('recurring-events/updateRecurringEvent', () => {
         end: adapter.date('2025-01-03T22:30:00', 'America/New_York'), // 10:30 PM Jan 3 NY
       };
 
-      const updated = applyRecurringUpdateFollowing(
-        adapter,
-        original,
-        occurrenceStartDataTz,
-        changes,
-      );
+      const updated = applyRecurringUpdateFollowing(adapter, original, occurrenceStart, changes);
 
       const until = (updated.updated![0].rrule as SchedulerProcessedEventRecurrenceRule).until!;
 
-      // The UI thinks it's Jan 4 (display timezone), but truncation MUST use Jan 3 NY → until Jan 2.
-      expect(adapter.getDate(until)).to.equal(2);
+      // The UI thinks it's Jan 4 (display timezone), but truncation MUST use Jan 3 NY → until the
+      // start of Jan 2 NY.
+      expect(new Date(adapter.getTime(until)).toISOString()).to.equal('2025-01-02T05:00:00.000Z');
     });
 
     it('should drop the original series when occurrence is on the DTSTART day (no remaining occurrences)', () => {
@@ -544,7 +538,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default'); // Sunday
       const newStart = adapter.date('2025-01-11T11:00:00Z', 'default'); // Saturday
 
-      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart);
+      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart, 'default');
 
       expect(next).to.deep.equal({ freq: 'WEEKLY', byDay: ['SA'] });
     });
@@ -557,7 +551,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default'); // SU
       const newStart = adapter.date('2025-01-11T11:00:00Z', 'default'); // SA
 
-      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart);
+      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart, 'default');
 
       expect(next).to.deep.equal({ freq: 'WEEKLY', byDay: ['MO', 'WE', 'SA'] });
     });
@@ -570,7 +564,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default'); // SU
       const newStart = adapter.date('2025-01-11T11:00:00Z', 'default'); // SA
 
-      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart);
+      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart, 'default');
 
       // MO before WE before SA, though SU moved to SA.
       expect(next.byDay).to.deep.equal(['MO', 'WE', 'SA']);
@@ -581,7 +575,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default');
       const newStart = adapter.date('2025-01-12T11:00:00Z', 'default');
 
-      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart);
+      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart, 'default');
 
       expect(next).to.deep.equal({ freq: 'MONTHLY', byMonthDay: [12] });
     });
@@ -592,9 +586,43 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = adapter.date('2025-01-14T09:00:00Z', 'default'); // second Tuesday
       const newStart = adapter.date('2025-01-18T11:00:00Z', 'default'); // third Saturday
 
-      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart);
+      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart, 'default');
 
       expect(next).to.deep.equal({ freq: 'MONTHLY', byDay: ['3SA'] });
+    });
+
+    it('should read the weekdays in the timezone for WEEKLY', () => {
+      const rrule = { freq: 'WEEKLY' as const, byDay: ['SU' as const] };
+      // Monday and Saturday at 03:00 UTC are Sunday and Friday at 22:00 in New York.
+      const occurrenceStart = adapter.date('2025-01-06T03:00:00Z', 'default');
+      const newStart = adapter.date('2025-01-11T03:00:00Z', 'default');
+
+      const next = adjustRRuleForAllMove(
+        adapter,
+        rrule,
+        occurrenceStart,
+        newStart,
+        'America/New_York',
+      );
+
+      expect(next).to.deep.equal({ freq: 'WEEKLY', byDay: ['FR'] });
+    });
+
+    it('should read the day of the month in the timezone for MONTHLY (BYMONTHDAY)', () => {
+      const rrule = { freq: 'MONTHLY' as const, byMonthDay: [5] };
+      const occurrenceStart = adapter.date('2025-01-06T03:00:00Z', 'default');
+      // January 12th at 03:00 UTC is January 11th at 22:00 in New York.
+      const newStart = adapter.date('2025-01-12T03:00:00Z', 'default');
+
+      const next = adjustRRuleForAllMove(
+        adapter,
+        rrule,
+        occurrenceStart,
+        newStart,
+        'America/New_York',
+      );
+
+      expect(next).to.deep.equal({ freq: 'MONTHLY', byMonthDay: [11] });
     });
 
     it('should return the same rule (no weekday pattern to adjust)', () => {
@@ -602,7 +630,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default');
       const newStart = adapter.date('2025-01-12T11:00:00Z', 'default');
 
-      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart);
+      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart, 'default');
 
       expect(next).to.deep.equal(rrule);
     });
@@ -1187,7 +1215,7 @@ describe('recurring-events/updateRecurringEvent', () => {
     });
   });
 
-  // TZDate resolves DST transitions with the timezone of the system, the plain dates don't.
+  // The DST transitions must resolve the same way whatever the timezone of the system.
   describe.each(['UTC', 'America/New_York'])('system timezone: %s', (systemTimezone) => {
     // Europe/Paris falls back from 03:00 CEST to 02:00 CET on October 26th, 2025.
     it.skipIf(!isJSDOM && systemTimezone !== 'UTC').each([

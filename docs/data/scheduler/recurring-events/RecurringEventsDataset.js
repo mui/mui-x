@@ -1,11 +1,14 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import {
   initialEvents,
   defaultVisibleDate,
   resources,
 } from '../datasets/personal-agenda-rrule';
+
+const features = { recurringEvents: recurringEventsFeature };
 
 export default function RecurringEventsDataset() {
   const [events, setEvents] = React.useState(initialEvents);
@@ -13,6 +16,7 @@ export default function RecurringEventsDataset() {
   return (
     <Box sx={{ height: 600, width: '100%', px: { xs: 2, md: 0 } }}>
       <EventCalendarPremium
+        features={features}
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}

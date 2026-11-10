@@ -134,6 +134,14 @@ describe('timeZone', () => {
       );
     });
 
+    it('should resolve a wall-clock time with an offset between -01:00 and 00:00', () => {
+      // Africa/Monrovia used -00:44:30 until 1972.
+      expect(epochMsOf('1970-01-01', '00:00', 'Africa/Monrovia')).to.equal(
+        '1970-01-01T00:44:30.000Z',
+      );
+      expect(epochMsOf('2026-01-01', '00:30', '-00:30')).to.equal('2026-01-01T01:00:00.000Z');
+    });
+
     it('should round-trip with toPlainDate and toMsInDay outside DST transitions', () => {
       const epochMs = Date.UTC(2025, 4, 20, 17, 45, 12, 345);
       for (const timezone of ['default', 'UTC', 'Europe/Paris', 'Asia/Kathmandu', 'Pacific/Apia']) {

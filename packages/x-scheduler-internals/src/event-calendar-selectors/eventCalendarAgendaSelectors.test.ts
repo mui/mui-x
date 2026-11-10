@@ -27,6 +27,29 @@ describe('eventCalendarEventSelectors', () => {
         processDay(adapter.date('2025-07-11Z', 'default'), adapter),
       );
     });
+
+    it('should skip the weekend of the date locale when weekends are hidden', () => {
+      // Saudi Arabia rests on Friday and Saturday.
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        visibleDate: adapter.date('2025-07-01', 'default'), // Tuesday
+        dateLocale: 'ar-SA',
+        defaultPreferences: { showWeekends: false },
+      });
+
+      const days = eventCalendarAgendaSelectors.baseVisibleDays(state);
+
+      expect(days.map((day) => day.key)).to.deep.equal([
+        '2025-07-01',
+        '2025-07-02',
+        '2025-07-03',
+        '2025-07-06',
+        '2025-07-07',
+        '2025-07-08',
+        '2025-07-09',
+        '2025-07-10',
+      ]);
+    });
   });
 
   describe('visibleDays', () => {
@@ -87,6 +110,43 @@ describe('eventCalendarEventSelectors', () => {
         processDay(adapter.date('2025-01-16Z', 'default'), adapter),
         processDay(adapter.date('2025-01-18Z', 'default'), adapter),
         processDay(adapter.date('2025-01-20Z', 'default'), adapter),
+      ]);
+    });
+
+    it('should skip the weekend of the date locale when looking for more days with events', () => {
+      // One event per day from Friday, October 3rd to Monday, October 27th, 2025.
+      const events = Array.from({ length: 25 }, (_, index) =>
+        EventBuilder.new()
+          .fullDay(`2025-10-${String(index + 3).padStart(2, '0')}Z`)
+          .build(),
+      );
+
+      // Saudi Arabia rests on Friday and Saturday.
+      const state = getEventCalendarStateFromParameters({
+        events,
+        visibleDate: adapter.date('2025-10-03', 'default'), // Friday
+        dateLocale: 'ar-SA',
+        defaultPreferences: {
+          showWeekends: false,
+          showEmptyDaysInAgenda: false,
+        },
+      });
+
+      const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
+
+      expect(visibleDays.map((day) => day.key)).to.deep.equal([
+        '2025-10-05',
+        '2025-10-06',
+        '2025-10-07',
+        '2025-10-08',
+        '2025-10-09',
+        '2025-10-12',
+        '2025-10-13',
+        '2025-10-14',
+        '2025-10-15',
+        '2025-10-16',
+        '2025-10-19',
+        '2025-10-20',
       ]);
     });
 
@@ -485,7 +545,9 @@ describe('eventCalendarEventSelectors', () => {
       const fetchRange = eventCalendarAgendaSelectors.fetchRange(state);
 
       expect(
-        fetchRange.end.equals(buildTemporalPlainDate(adapter, visibleDate).add({ days: 199 })),
+        fetchRange.end.equals(
+          buildTemporalPlainDate(adapter, visibleDate, 'default').add({ days: 199 }),
+        ),
       ).to.equal(true);
     });
   });

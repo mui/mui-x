@@ -220,13 +220,14 @@ describe('recurring-events/deleteRecurringEvent', () => {
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 
+      // 23:30 on January 3rd in New York, January 4th in UTC and Madrid.
       const occurrenceStart = adapter.date('2025-01-04T04:30:00Z', 'default');
-      const occurrenceStartDataTz = adapter.setTimezone(occurrenceStart, 'America/New_York');
 
-      const result = applyRecurringDeleteFollowing(adapter, original, occurrenceStartDataTz);
+      const result = applyRecurringDeleteFollowing(adapter, original, occurrenceStart);
       const until = (result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule).until!;
 
-      expect(adapter.getDate(until)).to.equal(2);
+      // The start of January 2nd in New York.
+      expect(new Date(adapter.getTime(until)).toISOString()).to.equal('2025-01-02T05:00:00.000Z');
     });
 
     it('should truncate the series to the last day that exists before the occurrence', () => {
