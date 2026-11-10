@@ -1,7 +1,8 @@
 // Global company live updates
 // Changes a calendar sync could push to the global company dataset.
 
-import { SchedulerEvent, SchedulerEventRecurrenceRule } from '@mui/x-scheduler/models';
+import type { SchedulerEvent, SchedulerEventRecurrenceRule } from '@mui/x-scheduler/models';
+import type { Random, Team } from './globalCompanyDataset';
 import {
   createProjectSeries,
   createRandom,
@@ -14,8 +15,6 @@ import {
   getWeekDay,
   parseDay,
   parseMinutes,
-  Random,
-  Team,
   timed,
 } from './globalCompanyDataset';
 

@@ -8,8 +8,8 @@ import TextField from '@mui/material/TextField';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
-
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import {
   createGlobalCompanyDataset,
   formatDay,
@@ -34,6 +34,7 @@ const SAMPLE_COUNT = 100;
 const DEFAULT_VISIBLE_DATE = new Date(`${formatDay(TODAY)}T12:00:00Z`);
 // The visible weeks start on Monday, like the weeks the updates target.
 const DEFAULT_PREFERENCES = { weekStartsOn: 1 };
+const FEATURES = { recurringEvents: recurringEventsFeature };
 
 // The durations run from the change to the next frame after the calendar renders it.
 
@@ -291,6 +292,7 @@ function StressTestCalendar(props) {
           <Typography>Building the calendar…</Typography>
         ) : (
           <EventCalendarPremium
+            features={FEATURES}
             events={events}
             onEventsChange={handleEventsChange}
             resources={scenario.resources}

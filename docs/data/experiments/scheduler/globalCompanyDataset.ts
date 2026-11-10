@@ -3,7 +3,7 @@
 // are recurring series that started years ago.
 
 import { Chance } from 'chance';
-import {
+import type {
   SchedulerEvent,
   SchedulerEventColor,
   SchedulerEventRecurrenceRule,
