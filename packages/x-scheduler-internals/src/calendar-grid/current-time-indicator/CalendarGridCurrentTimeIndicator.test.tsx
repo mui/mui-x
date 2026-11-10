@@ -2,7 +2,7 @@ import { screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import {
-  adapter,
+  createDate,
   createSchedulerRenderer,
   describeConformance,
   setSystemTimezone,
@@ -14,7 +14,7 @@ import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 describe('<CalendarGrid.CurrentTimeIndicator />', () => {
   const { render } = createSchedulerRenderer();
 
-  const day = adapter.now('default');
+  const day = new Date();
 
   describeConformance(<CalendarGrid.CurrentTimeIndicator />, () => ({
     refInstanceof: window.HTMLDivElement,
@@ -42,7 +42,7 @@ describe('<CalendarGrid.CurrentTimeIndicator />', () => {
       () => {
         setSystemTimezone('UTC');
         // Another day than today, to check that only the time of day of now is used.
-        const columnDay = adapter.date('2025-05-06T12:00:00Z', 'America/New_York');
+        const columnDay = createDate('2025-05-06T12:00:00Z', 'America/New_York');
 
         renderAtNow(
           <EventCalendarProvider events={[]} displayTimezone="America/New_York">

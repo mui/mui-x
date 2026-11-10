@@ -4,7 +4,7 @@ import { EventTimelinePremiumProvider } from '@mui/x-scheduler-internals-premium
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
-  adapter,
+  createDate,
   createSchedulerRenderer,
   describeConformance,
   mockElementBounds,
@@ -43,7 +43,7 @@ describe('<TimelineGrid.EventRow />', () => {
         events={[]}
         resources={[resource]}
         displayTimezone={timezone}
-        visibleDate={adapter.date('2025-07-03T06:15:00Z', timezone)} // noon in Kathmandu
+        visibleDate={createDate('2025-07-03T06:15:00Z', timezone)} // noon in Kathmandu
         preset="dayAndHour"
       >
         <TimelineGrid.Root>

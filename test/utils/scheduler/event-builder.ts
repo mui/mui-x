@@ -19,18 +19,16 @@ import {
 import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import type { TemporalAdapter, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { adapter as defaultAdapter } from './adapters';
+import { addMilliseconds, addMinutes, createDate, endOfDay, startOfDay } from './dates';
 
 export const DEFAULT_TESTING_VISIBLE_DATE_STR = '2025-07-03T00:00:00Z';
-export const DEFAULT_TESTING_VISIBLE_DATE = defaultAdapter.date(
-  DEFAULT_TESTING_VISIBLE_DATE_STR,
-  'default',
-);
+export const DEFAULT_TESTING_VISIBLE_DATE = createDate(DEFAULT_TESTING_VISIBLE_DATE_STR);
 
 /**
  * Serializes a date as a UTC instant.
  */
 function toInstantString(value: Date): string {
-  return new Date(value.getTime()).toISOString();
+  return value.toISOString();
 }
 
 /**
@@ -38,7 +36,7 @@ function toInstantString(value: Date): string {
  *
  * Scope:
  * - Builds a valid SchedulerEvent with string dates (instant or wall-time).
- * - Uses the provided (or default) adapter for date computations.
+ * - Passes the provided (or default) adapter to the Scheduler functions that take one.
  * - Can optionally derive a SchedulerEventOccurrence via .toOccurrence().
  */
 export class EventBuilder {
@@ -49,7 +47,7 @@ export class EventBuilder {
   protected constructor(protected adapter: TemporalAdapter) {
     const id = crypto.randomUUID();
     const start = DEFAULT_TESTING_VISIBLE_DATE;
-    const end = this.adapter.addMinutes(start, 60);
+    const end = addMinutes(start, 60);
 
     this.event = {
       id,
@@ -182,12 +180,12 @@ export class EventBuilder {
 
   /**
    * Create a single-day timed event starting at `start` with the given duration (minutes).
-   * Computes the end from the start using the adapter.
+   * Computes the end from the start.
    */
   singleDay(start: string, durationMinutes = 60) {
     const dataTimezone = this.event.timezone ?? 'default';
     const startDate = resolveEventDate(start, dataTimezone);
-    const endDate = this.adapter.addMinutes(startDate, durationMinutes);
+    const endDate = addMinutes(startDate, durationMinutes);
     this.event.start = start;
     this.event.end = toInstantString(endDate);
     return this;
@@ -200,8 +198,8 @@ export class EventBuilder {
   fullDay(date: string) {
     const dataTimezone = this.event.timezone ?? 'default';
     const d = resolveEventDate(date, dataTimezone);
-    this.event.start = toInstantString(this.adapter.startOfDay(d));
-    this.event.end = toInstantString(this.adapter.endOfDay(d));
+    this.event.start = toInstantString(startOfDay(d));
+    this.event.end = toInstantString(endOfDay(d));
     this.event.allDay = true;
     return this;
   }
@@ -276,7 +274,7 @@ export class EventBuilder {
     );
     const originalDurationMs =
       baseProcessed.dataTimezone.end.timestamp - baseProcessed.dataTimezone.start.timestamp;
-    const rawEnd = this.adapter.addMilliseconds(rawStart, originalDurationMs);
+    const rawEnd = addMilliseconds(rawStart, originalDurationMs);
 
     const occurrenceModel: SchedulerEvent = {
       ...this.event,

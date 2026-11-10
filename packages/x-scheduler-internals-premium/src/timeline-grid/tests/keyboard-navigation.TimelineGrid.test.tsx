@@ -11,7 +11,7 @@ import type {
 } from '@mui/x-scheduler-internals-premium/models';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
-  adapter,
+  addHours,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -79,10 +79,7 @@ describe('TimelineGrid keyboard navigation', () => {
                       occurrenceKey={`occ-${resourceId}`}
                       dataTimezone={undefined}
                       start={processDate(DEFAULT_TESTING_VISIBLE_DATE, 'default')}
-                      end={processDate(
-                        adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 1),
-                        'default',
-                      )}
+                      end={processDate(addHours(DEFAULT_TESTING_VISIBLE_DATE, 1), 'default')}
                       renderDragPreview={() => null}
                       data-testid={`event-${resourceId}`}
                     />

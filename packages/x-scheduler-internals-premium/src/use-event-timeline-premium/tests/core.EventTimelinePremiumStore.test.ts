@@ -1,4 +1,4 @@
-import { adapter, ResourceBuilder } from 'test/utils/scheduler';
+import { ResourceBuilder, startOfDay } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { disposeSymbol } from '@mui/x-internals/disposable';
@@ -71,7 +71,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         preset: 'dayAndHour',
         presetConfig: EMPTY_OBJECT,
         presets: ['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year'],
-        visibleDate: adapter.startOfDay(adapter.now('default')),
+        visibleDate: startOfDay(new Date()),
         visibleResources: {},
         collapsedResources: {},
         isLoading: false,

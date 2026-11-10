@@ -1,4 +1,4 @@
-import { adapter } from 'test/utils/scheduler';
+import { createDate } from 'test/utils/scheduler';
 import type {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
@@ -11,10 +11,10 @@ import { describe, it, expect } from 'vitest';
 import { RecurringSeries } from './RecurringSeries';
 
 /**
- * The DTSTART parameters of a series starting at `start`, in the timezone it is labeled with.
+ * The DTSTART parameters of a series starting at `start`, in `timezone`.
  */
-function seriesStart(start: TemporalSupportedObject) {
-  return { start: adapter.getTime(start), timezone: adapter.getTimezone(start) };
+function seriesStart(start: TemporalSupportedObject, timezone: TemporalTimezone) {
+  return { start: start.getTime(), timezone };
 }
 
 /**
@@ -25,9 +25,13 @@ function countRemaining(
   start: TemporalSupportedObject,
   date: TemporalSupportedObject,
   count: number,
+  timezone: TemporalTimezone = 'UTC',
 ) {
-  const series = new RecurringSeries({ rule: { ...rule, count }, ...seriesStart(start) });
-  const datePlainDate = toPlainDate(date.getTime(), adapter.getTimezone(date));
+  const series = new RecurringSeries({
+    rule: { ...rule, count },
+    ...seriesStart(start, timezone),
+  });
+  const datePlainDate = toPlainDate(date.getTime(), timezone);
   return count - series.countOccurrencesBefore(datePlainDate.add({ days: 1 }));
 }
 
@@ -41,8 +45,8 @@ function createSeries(
 ) {
   return new RecurringSeries({
     rule,
-    ...seriesStart(adapter.date(start, 'UTC')),
-    exDates: exDates?.map((exDate) => adapter.date(exDate, 'UTC')),
+    ...seriesStart(createDate(start, 'UTC'), 'UTC'),
+    exDates: exDates?.map((exDate) => createDate(exDate, 'UTC')),
   });
 }
 
@@ -54,8 +58,8 @@ function getOccurrenceDays(
   exDates?: string[],
 ) {
   const series = createSeries(rule, start, exDates);
-  const fromPlainDate = toPlainDate(adapter.date(from, 'UTC').getTime(), 'UTC');
-  const lastPlainDate = toPlainDate(adapter.date(to, 'UTC').getTime(), 'UTC');
+  const fromPlainDate = toPlainDate(createDate(from, 'UTC').getTime(), 'UTC');
+  const lastPlainDate = toPlainDate(createDate(to, 'UTC').getTime(), 'UTC');
   return series.getOccurrenceDays(fromPlainDate, lastPlainDate).map((day) => day.toString());
 }
 
@@ -153,18 +157,18 @@ describe('recurring-events/RecurringSeries', () => {
   describe('UNTIL and exDates after 9999', () => {
     it('should read them in a timezone east of UTC', () => {
       // December 31st, 9999, a common "no end date", is already January 1st, 10000 in Tokyo.
-      const lastInstant = adapter.date('9999-12-31T23:59:59Z', 'UTC');
+      const lastInstant = createDate('9999-12-31T23:59:59Z', 'UTC');
       const getLastDays = (timezone: TemporalTimezone, exDates: TemporalSupportedObject[]) => {
         const series = new RecurringSeries({
           rule: { freq: 'DAILY', until: lastInstant },
-          start: adapter.getTime(adapter.date('2026-01-05T09:00:00Z', 'UTC')),
+          start: createDate('2026-01-05T09:00:00Z', 'UTC').getTime(),
           timezone,
           exDates,
         });
         return series
           .getOccurrenceDays(
-            toPlainDate(adapter.date('9999-12-31T00:00:00', 'UTC').getTime(), 'UTC'),
-            toPlainDate(adapter.date('+010000-01-02T00:00:00', 'UTC').getTime(), 'UTC'),
+            toPlainDate(createDate('9999-12-31T00:00:00', 'UTC').getTime(), 'UTC'),
+            toPlainDate(createDate('+010000-01-02T00:00:00', 'UTC').getTime(), 'UTC'),
           )
           .map((day) => day.toString());
       };
@@ -271,10 +275,10 @@ describe('recurring-events/RecurringSeries', () => {
     it('should ignore the excluded occurrences', () => {
       const series = new RecurringSeries({
         rule: { freq: 'WEEKLY' },
-        ...seriesStart(adapter.date('2025-01-06T09:00:00', 'UTC')),
-        exDates: [adapter.date('2025-01-06T09:00:00', 'UTC')],
+        ...seriesStart(createDate('2025-01-06T09:00:00', 'UTC'), 'UTC'),
+        exDates: [createDate('2025-01-06T09:00:00', 'UTC')],
       });
-      const day = (date: string) => toPlainDate(adapter.date(date, 'UTC').getTime(), 'UTC');
+      const day = (date: string) => toPlainDate(createDate(date, 'UTC').getTime(), 'UTC');
       expect(series.hasOccurrenceBefore(day('2025-01-13T00:00:00'))).to.equal(false);
       expect(series.hasOccurrenceBefore(day('2025-01-14T00:00:00'))).to.equal(true);
     });
@@ -285,8 +289,8 @@ describe('recurring-events/RecurringSeries', () => {
       // February 29th: excluding 2024 leaves 2028.
       const series = new RecurringSeries({
         rule: { freq: 'YEARLY', count: 2 },
-        ...seriesStart(adapter.date('2024-02-29T09:00:00', 'UTC')),
-        exDates: [adapter.date('2024-02-29T09:00:00', 'UTC')],
+        ...seriesStart(createDate('2024-02-29T09:00:00', 'UTC'), 'UTC'),
+        exDates: [createDate('2024-02-29T09:00:00', 'UTC')],
       });
       expect(series.hasOccurrence()).to.equal(true);
     });
@@ -298,7 +302,7 @@ describe('recurring-events/RecurringSeries', () => {
       ).to.equal(false);
       expect(
         createSeries(
-          { freq: 'DAILY', until: adapter.date('2025-01-02T09:00:00', 'UTC') },
+          { freq: 'DAILY', until: createDate('2025-01-02T09:00:00', 'UTC') },
           '2025-01-01T09:00:00',
           exDates,
         ).hasOccurrence(),
@@ -316,8 +320,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(),
-          adapter.date('2025-03-10', 'UTC'),
-          adapter.date('2025-03-09T23:59:59', 'UTC'),
+          createDate('2025-03-10', 'UTC'),
+          createDate('2025-03-09T23:59:59', 'UTC'),
           100,
         ),
       ).to.equal(100);
@@ -327,8 +331,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(1_000_000),
-          adapter.date('2025-03-10', 'UTC'),
-          adapter.date('2025-03-09T23:59:59', 'UTC'),
+          createDate('2025-03-10', 'UTC'),
+          createDate('2025-03-09T23:59:59', 'UTC'),
           100,
         ),
       ).to.equal(100);
@@ -338,8 +342,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(),
-          adapter.date('2025-01-01', 'UTC'),
-          adapter.date('2025-01-05T23:59:59', 'UTC'), // 1,2,3,4,5 = 5 occurrences
+          createDate('2025-01-01', 'UTC'),
+          createDate('2025-01-05T23:59:59', 'UTC'), // 1,2,3,4,5 = 5 occurrences
           100,
         ),
       ).to.equal(95); // 100 - 5
@@ -349,8 +353,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(2),
-          adapter.date('2025-01-01', 'UTC'),
-          adapter.date('2025-01-11T00:00:00', 'UTC'), // Days: 1,3,5,7,9,11 => 6 occurrences
+          createDate('2025-01-01', 'UTC'),
+          createDate('2025-01-11T00:00:00', 'UTC'), // Days: 1,3,5,7,9,11 => 6 occurrences
           100,
         ),
       ).to.equal(94); // 100 - 6
@@ -361,9 +365,10 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(),
-          adapter.date('2011-12-29T09:00:00', 'Pacific/Apia'),
-          adapter.date('2011-12-31T09:00:00', 'Pacific/Apia'),
+          createDate('2011-12-29T09:00:00', 'Pacific/Apia'),
+          createDate('2011-12-31T09:00:00', 'Pacific/Apia'),
           4,
+          'Pacific/Apia',
         ),
       ).to.equal(2);
     });
@@ -372,8 +377,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(),
-          adapter.date('2025-01-01', 'UTC'),
-          adapter.date('2025-01-10T23:59:59', 'UTC'), // 10 occurrences
+          createDate('2025-01-01', 'UTC'),
+          createDate('2025-01-10T23:59:59', 'UTC'), // 10 occurrences
           5,
         ),
       ).to.equal(0); // 5 - 10 = -5, clamped to 0
@@ -381,12 +386,12 @@ describe('recurring-events/RecurringSeries', () => {
 
     it('should not count the days after UNTIL', () => {
       const series = createSeries(
-        { freq: 'DAILY', until: adapter.date('2025-01-05T09:00:00', 'UTC') },
+        { freq: 'DAILY', until: createDate('2025-01-05T09:00:00', 'UTC') },
         '2025-01-01T09:00:00',
       );
       expect(
         series.countOccurrencesBefore(
-          toPlainDate(adapter.date('2025-01-10T00:00:00', 'UTC').getTime(), 'UTC'),
+          toPlainDate(createDate('2025-01-10T00:00:00', 'UTC').getTime(), 'UTC'),
         ),
       ).to.equal(5);
     });
@@ -406,8 +411,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(['TU']),
-          adapter.date('2025-06-10', 'UTC'),
-          adapter.date('2025-06-09T23:59:59', 'UTC'), // Mon before start,
+          createDate('2025-06-10', 'UTC'),
+          createDate('2025-06-09T23:59:59', 'UTC'), // Mon before start,
           100,
         ),
       ).to.equal(100);
@@ -417,8 +422,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(['TU']),
-          adapter.date('2025-06-10', 'UTC'), // Tuesday
-          adapter.date('2025-06-10T23:59:59', 'UTC'),
+          createDate('2025-06-10', 'UTC'), // Tuesday
+          createDate('2025-06-10T23:59:59', 'UTC'),
           100,
         ),
       ).to.equal(99); // 100 - 1
@@ -428,8 +433,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(['TU']),
-          adapter.date('2025-06-10', 'UTC'), // Tuesday
-          adapter.date('2025-07-08T12:00:00', 'UTC'), // 5 Tuesdays inclusive
+          createDate('2025-06-10', 'UTC'), // Tuesday
+          createDate('2025-07-08T12:00:00', 'UTC'), // 5 Tuesdays inclusive
           100,
         ),
       ).to.equal(95); // 100 - 5
@@ -440,8 +445,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(['MO', 'WE']),
-          adapter.date('2025-06-02', 'UTC'), // Monday,
-          adapter.date('2025-06-18T23:59:59', 'UTC'), // includes weeks of Jun 2,9,16
+          createDate('2025-06-02', 'UTC'), // Monday,
+          createDate('2025-06-18T23:59:59', 'UTC'), // includes weeks of Jun 2,9,16
           100,
         ),
       ).to.equal(94); // 100 - 6
@@ -451,8 +456,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(['TU'], 2),
-          adapter.date('2025-06-10', 'UTC'), // Tuesday,
-          adapter.date('2025-07-22T12:00:00', 'UTC'),
+          createDate('2025-06-10', 'UTC'), // Tuesday,
+          createDate('2025-07-22T12:00:00', 'UTC'),
           100,
         ),
       ).to.equal(96); // 100 - 4
@@ -463,8 +468,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(['TU']),
-          adapter.date('2025-06-10', 'UTC'), // Tuesday
-          adapter.date('2025-06-23T12:00:00', 'UTC'), // Monday of week containing Tue 24
+          createDate('2025-06-10', 'UTC'), // Tuesday
+          createDate('2025-06-23T12:00:00', 'UTC'), // Monday of week containing Tue 24
           100,
         ),
       ).to.equal(98); // 100 - 2
@@ -474,8 +479,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(['FR', 'MO']),
-          adapter.date('2025-06-02', 'UTC'), // Monday,
-          adapter.date('2025-06-13T23:59:59', 'UTC'), // Mon 2, Fri 6, Mon 9, Fri 13 => 4
+          createDate('2025-06-02', 'UTC'), // Monday,
+          createDate('2025-06-13T23:59:59', 'UTC'), // Mon 2, Fri 6, Mon 9, Fri 13 => 4
           100,
         ),
       ).to.equal(96); // 100 - 4
@@ -485,8 +490,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(['TU']),
-          adapter.date('2025-06-10', 'UTC'), // Tuesday
-          adapter.date('2025-07-08T12:00:00', 'UTC'), // 5 Tuesdays inclusive
+          createDate('2025-06-10', 'UTC'), // Tuesday
+          createDate('2025-07-08T12:00:00', 'UTC'), // 5 Tuesdays inclusive
           3,
         ),
       ).to.equal(0); // 3 - 5 = -2, clamped to 0
@@ -505,8 +510,8 @@ describe('recurring-events/RecurringSeries', () => {
         expect(
           countRemaining(
             createRule(10),
-            adapter.date('2025-06-10', 'UTC'),
-            adapter.date('2025-05-31T23:59:59', 'UTC'),
+            createDate('2025-06-10', 'UTC'),
+            createDate('2025-05-31T23:59:59', 'UTC'),
             100,
           ),
         ).to.equal(100);
@@ -516,8 +521,8 @@ describe('recurring-events/RecurringSeries', () => {
         expect(
           countRemaining(
             createRule(10),
-            adapter.date('2025-06-10', 'UTC'),
-            adapter.date('2025-06-09T23:59:59', 'UTC'),
+            createDate('2025-06-10', 'UTC'),
+            createDate('2025-06-09T23:59:59', 'UTC'),
             100,
           ),
         ).to.equal(100);
@@ -527,8 +532,8 @@ describe('recurring-events/RecurringSeries', () => {
         expect(
           countRemaining(
             createRule(10),
-            adapter.date('2025-01-10', 'UTC'),
-            adapter.date('2025-04-10T12:00:00', 'UTC'), // Jan, Feb, Mar, Apr = 4
+            createDate('2025-01-10', 'UTC'),
+            createDate('2025-04-10T12:00:00', 'UTC'), // Jan, Feb, Mar, Apr = 4
             100,
           ),
         ).to.equal(96); // 100 - 4
@@ -538,8 +543,8 @@ describe('recurring-events/RecurringSeries', () => {
         expect(
           countRemaining(
             createRule(10, 2),
-            adapter.date('2025-01-10', 'UTC'),
-            adapter.date('2025-11-10T09:00:00', 'UTC'), // Jan, Mar, May, Jul, Sep, Nov = 6
+            createDate('2025-01-10', 'UTC'),
+            createDate('2025-11-10T09:00:00', 'UTC'), // Jan, Mar, May, Jul, Sep, Nov = 6
             100,
           ),
         ).to.equal(94); // 100 - 6
@@ -549,8 +554,8 @@ describe('recurring-events/RecurringSeries', () => {
         expect(
           countRemaining(
             createRule(31),
-            adapter.date('2025-01-31', 'UTC'),
-            adapter.date('2025-05-31T09:00:00', 'UTC'), // Jan(31), Mar(31), May(31) = 3
+            createDate('2025-01-31', 'UTC'),
+            createDate('2025-05-31T09:00:00', 'UTC'), // Jan(31), Mar(31), May(31) = 3
             100,
           ),
         ).to.equal(97); // 100 - 3
@@ -560,8 +565,8 @@ describe('recurring-events/RecurringSeries', () => {
         expect(
           countRemaining(
             createRule(20),
-            adapter.date('2025-01-20', 'UTC'),
-            adapter.date('2025-02-15T09:00:00', 'UTC'), // Feb 20 not reached = 1
+            createDate('2025-01-20', 'UTC'),
+            createDate('2025-02-15T09:00:00', 'UTC'), // Feb 20 not reached = 1
             100,
           ),
         ).to.equal(99); // 100 - 1
@@ -571,8 +576,8 @@ describe('recurring-events/RecurringSeries', () => {
         expect(
           countRemaining(
             createRule(10),
-            adapter.date('2025-01-10', 'UTC'),
-            adapter.date('2025-06-10T12:00:00', 'UTC'), // Jan–Jun = 6 occurrences
+            createDate('2025-01-10', 'UTC'),
+            createDate('2025-06-10T12:00:00', 'UTC'), // Jan–Jun = 6 occurrences
             4,
           ),
         ).to.equal(0); // 4 - 6 = -2, clamped to 0
@@ -594,8 +599,8 @@ describe('recurring-events/RecurringSeries', () => {
         expect(
           countRemaining(
             createByDayRule(['2TU']),
-            adapter.date('2025-07-01', 'UTC'), // before 2nd Tuesday (Jul 8)
-            adapter.date('2025-10-31T23:59:59', 'UTC'),
+            createDate('2025-07-01', 'UTC'), // before 2nd Tuesday (Jul 8)
+            createDate('2025-10-31T23:59:59', 'UTC'),
             100,
           ),
         ).to.equal(96); // 100 - 4
@@ -606,8 +611,8 @@ describe('recurring-events/RecurringSeries', () => {
         expect(
           countRemaining(
             createByDayRule(['2TU'], 2),
-            adapter.date('2025-07-01', 'UTC'), // before 2nd Tuesday (Jul 8)
-            adapter.date('2025-10-31T23:59:59', 'UTC'),
+            createDate('2025-07-01', 'UTC'), // before 2nd Tuesday (Jul 8)
+            createDate('2025-10-31T23:59:59', 'UTC'),
             100,
           ),
         ).to.equal(98); // 100 - 2
@@ -618,8 +623,8 @@ describe('recurring-events/RecurringSeries', () => {
         expect(
           countRemaining(
             createByDayRule(['2TU']),
-            adapter.date('2025-07-20', 'UTC'), // after Jul 8
-            adapter.date('2025-08-31T23:59:59', 'UTC'),
+            createDate('2025-07-20', 'UTC'), // after Jul 8
+            createDate('2025-08-31T23:59:59', 'UTC'),
             100,
           ),
         ).to.equal(99); // 100 - 1
@@ -630,8 +635,8 @@ describe('recurring-events/RecurringSeries', () => {
         expect(
           countRemaining(
             createByDayRule(['-1FR']),
-            adapter.date('2025-07-01', 'UTC'),
-            adapter.date('2025-10-31T23:59:59', 'UTC'),
+            createDate('2025-07-01', 'UTC'),
+            createDate('2025-10-31T23:59:59', 'UTC'),
             100,
           ),
         ).to.equal(96); // 100 - 4
@@ -642,8 +647,8 @@ describe('recurring-events/RecurringSeries', () => {
         expect(
           countRemaining(
             createByDayRule(['-2WE']),
-            adapter.date('2025-07-01', 'UTC'),
-            adapter.date('2025-09-30T23:59:59', 'UTC'),
+            createDate('2025-07-01', 'UTC'),
+            createDate('2025-09-30T23:59:59', 'UTC'),
             100,
           ),
         ).to.equal(97); // 100 - 3
@@ -654,8 +659,8 @@ describe('recurring-events/RecurringSeries', () => {
         expect(
           countRemaining(
             createByDayRule(['-5MO']),
-            adapter.date('2025-06-01', 'UTC'), // Jun 2025 has 5 Mondays
-            adapter.date('2025-07-31T23:59:59', 'UTC'),
+            createDate('2025-06-01', 'UTC'), // Jun 2025 has 5 Mondays
+            createDate('2025-07-31T23:59:59', 'UTC'),
             100,
           ),
         ).to.equal(99); // 100 - 1
@@ -666,8 +671,8 @@ describe('recurring-events/RecurringSeries', () => {
         expect(
           countRemaining(
             { freq: 'MONTHLY', interval: 12, byDay: ['5TU'] },
-            adapter.date('2000-02-29', 'UTC'),
-            adapter.date('2055-12-31T23:59:59', 'UTC'),
+            createDate('2000-02-29', 'UTC'),
+            createDate('2055-12-31T23:59:59', 'UTC'),
             100,
           ),
         ).to.equal(98);
@@ -685,8 +690,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(),
-          adapter.date('2025-06-10', 'UTC'),
-          adapter.date('2024-12-31T23:59:59', 'UTC'),
+          createDate('2025-06-10', 'UTC'),
+          createDate('2024-12-31T23:59:59', 'UTC'),
           100,
         ),
       ).to.equal(100);
@@ -696,8 +701,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(),
-          adapter.date('2025-06-10', 'UTC'),
-          adapter.date('2025-01-01T00:00:00', 'UTC'),
+          createDate('2025-06-10', 'UTC'),
+          createDate('2025-01-01T00:00:00', 'UTC'),
           100,
         ),
       ).to.equal(100);
@@ -707,8 +712,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(),
-          adapter.date('2025-03-15', 'UTC'),
-          adapter.date('2025-03-15T23:59:59', 'UTC'),
+          createDate('2025-03-15', 'UTC'),
+          createDate('2025-03-15T23:59:59', 'UTC'),
           100,
         ),
       ).to.equal(99); // 100 - 1
@@ -718,8 +723,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(),
-          adapter.date('2023-02-05', 'UTC'),
-          adapter.date('2026-02-05T09:00:00', 'UTC'), // 2023,24,25,26 => 4 occurrences
+          createDate('2023-02-05', 'UTC'),
+          createDate('2026-02-05T09:00:00', 'UTC'), // 2023,24,25,26 => 4 occurrences
           100,
         ),
       ).to.equal(96); // 100 - 4
@@ -729,8 +734,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(2),
-          adapter.date('2022-07-20', 'UTC'),
-          adapter.date('2030-07-20T09:00:00', 'UTC'), // 2022,24,26,28,30 => 5 occurrences
+          createDate('2022-07-20', 'UTC'),
+          createDate('2030-07-20T09:00:00', 'UTC'), // 2022,24,26,28,30 => 5 occurrences
           100,
         ),
       ).to.equal(95); // 100 - 5
@@ -740,8 +745,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(),
-          adapter.date('2024-02-29', 'UTC'),
-          adapter.date('2032-12-31T23:59:59', 'UTC'), // 2024, 2028, 2032 => 3 occurrences
+          createDate('2024-02-29', 'UTC'),
+          createDate('2032-12-31T23:59:59', 'UTC'), // 2024, 2028, 2032 => 3 occurrences
           100,
         ),
       ).to.equal(97); // 100 - 3
@@ -752,8 +757,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(25),
-          adapter.date('2000-02-29', 'UTC'),
-          adapter.date('2400-12-31T23:59:59', 'UTC'),
+          createDate('2000-02-29', 'UTC'),
+          createDate('2400-12-31T23:59:59', 'UTC'),
           100,
         ),
       ).to.equal(98);
@@ -763,8 +768,8 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         countRemaining(
           createRule(),
-          adapter.date('2023-02-05', 'UTC'),
-          adapter.date('2030-02-05T09:00:00', 'UTC'), // 2023–2030 => 8 occurrences
+          createDate('2023-02-05', 'UTC'),
+          createDate('2030-02-05T09:00:00', 'UTC'), // 2023–2030 => 8 occurrences
           5,
         ),
       ).to.equal(0); // 5 - 8 = -3, clamped to 0

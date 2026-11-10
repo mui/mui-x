@@ -1,4 +1,4 @@
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { addDays, createDate, EventBuilder } from 'test/utils/scheduler';
 import { describe, expect, it } from 'vitest';
 import {
   createEventRangeIndex,
@@ -19,8 +19,8 @@ describe('createEventRangeIndex', () => {
     const index = createEventRangeIndex(events, false);
 
     const result = index.getEventsForRange(
-      adapter.getTime(adapter.date('2025-01-15T10:00:00Z', 'default')),
-      adapter.getTime(adapter.date('2025-01-15T13:00:00Z', 'default')),
+      createDate('2025-01-15T10:00:00Z').getTime(),
+      createDate('2025-01-15T13:00:00Z').getTime(),
     );
 
     expect(result.map((event) => event.id)).to.deep.equal([
@@ -47,8 +47,8 @@ describe('createEventRangeIndex', () => {
     const index = createEventRangeIndex(events, false);
 
     const result = index.getEventsForRange(
-      adapter.getTime(adapter.date('2025-01-15T10:00:00Z', 'default')),
-      adapter.getTime(adapter.date('2025-01-15T12:00:00Z', 'default')),
+      createDate('2025-01-15T10:00:00Z').getTime(),
+      createDate('2025-01-15T12:00:00Z').getTime(),
     );
 
     expect(result.map((event) => event.id)).to.deep.equal(['ends-at-start', 'starts-at-end']);
@@ -60,19 +60,19 @@ describe('createEventRangeIndex', () => {
       .singleDay('2025-01-01T09:00:00Z')
       .rrule({ freq: 'DAILY' })
       .toProcessed();
-    const start = adapter.date('2025-02-01T00:00:00Z', 'default');
-    const end = adapter.date('2025-02-02T00:00:00Z', 'default');
+    const start = createDate('2025-02-01T00:00:00Z');
+    const end = createDate('2025-02-02T00:00:00Z');
 
     expect(
       createEventRangeIndex([recurringEvent], true).getEventsForRange(
-        adapter.getTime(start),
-        adapter.getTime(end),
+        start.getTime(),
+        end.getTime(),
       ),
     ).to.have.length(1);
     expect(
       createEventRangeIndex([recurringEvent], false).getEventsForRange(
-        adapter.getTime(start),
-        adapter.getTime(end),
+        start.getTime(),
+        end.getTime(),
       ),
     ).to.have.length(0);
   });
@@ -80,9 +80,9 @@ describe('createEventRangeIndex', () => {
   it.each([9, 10, 11])(
     'should preserve mixed recurring candidates with %s of 40 range entries matching',
     (matchCount) => {
-      const firstDay = adapter.date('2025-02-01T00:00:00Z', 'default');
+      const firstDay = createDate('2025-02-01T00:00:00Z');
       const events = Array.from({ length: 40 }, (_, eventIndex) => {
-        const eventStart = adapter.addDays(firstDay, (eventIndex * 17) % 40);
+        const eventStart = addDays(firstDay, (eventIndex * 17) % 40);
         const event = EventBuilder.new()
           .id(eventIndex)
           .span(eventStart.toISOString(), eventStart.toISOString())
@@ -94,12 +94,12 @@ describe('createEventRangeIndex', () => {
           .toProcessed();
         return [recurring, event];
       }).flat();
-      const start = adapter.addDays(firstDay, 5);
-      const end = adapter.addDays(start, matchCount - 1);
+      const start = addDays(firstDay, 5);
+      const end = addDays(start, matchCount - 1);
       const rangeMatches = events.filter(
         (event) =>
-          event.displayTimezone.start.timestamp <= adapter.getTime(end) &&
-          event.displayTimezone.end.timestamp >= adapter.getTime(start),
+          event.displayTimezone.start.timestamp <= end.getTime() &&
+          event.displayTimezone.end.timestamp >= start.getTime(),
       );
       expect(rangeMatches).to.have.length(matchCount);
       const expected = events.filter(
@@ -107,16 +107,10 @@ describe('createEventRangeIndex', () => {
       );
 
       expect(
-        createEventRangeIndex(events, true).getEventsForRange(
-          adapter.getTime(start),
-          adapter.getTime(end),
-        ),
+        createEventRangeIndex(events, true).getEventsForRange(start.getTime(), end.getTime()),
       ).to.deep.equal(expected);
       expect(
-        createEventRangeIndex(events, false).getEventsForRange(
-          adapter.getTime(start),
-          adapter.getTime(end),
-        ),
+        createEventRangeIndex(events, false).getEventsForRange(start.getTime(), end.getTime()),
       ).to.deep.equal(rangeMatches);
     },
   );
@@ -134,8 +128,8 @@ describe('createEventRangeIndex', () => {
     const index = createEventRangeIndex([outside, ...events], true);
 
     const result = index.getEventsForRange(
-      adapter.getTime(adapter.date('2025-02-01T00:00:00Z', 'default')),
-      adapter.getTime(adapter.date('2025-02-02T00:00:00Z', 'default')),
+      createDate('2025-02-01T00:00:00Z').getTime(),
+      createDate('2025-02-02T00:00:00Z').getTime(),
     );
 
     expect(result).to.have.length(events.length);
@@ -146,36 +140,33 @@ describe('createEventRangeIndex', () => {
     const index = createEventRangeIndex([], false);
     expect(
       index.getEventsForRange(
-        adapter.getTime(adapter.date('2025-01-01T00:00:00Z', 'default')),
-        adapter.getTime(adapter.date('2025-02-01T00:00:00Z', 'default')),
+        createDate('2025-01-01T00:00:00Z').getTime(),
+        createDate('2025-02-01T00:00:00Z').getTime(),
       ),
     ).to.deep.equal([]);
   });
 
   it('should include zero-duration events on both range boundaries', () => {
-    const firstDay = adapter.date('2025-01-01T00:00:00Z', 'default');
+    const firstDay = createDate('2025-01-01T00:00:00Z');
     const events = Array.from({ length: 12 }, (_, id) => {
-      const point = adapter.addDays(firstDay, id).toISOString();
+      const point = addDays(firstDay, id).toISOString();
       return EventBuilder.new().id(id).span(point, point).toProcessed();
     });
     const index = createEventRangeIndex(events, false);
 
     expect(
-      index.getEventsForRange(
-        adapter.getTime(firstDay),
-        adapter.getTime(adapter.addDays(firstDay, 1)),
-      ),
+      index.getEventsForRange(firstDay.getTime(), addDays(firstDay, 1).getTime()),
     ).to.deep.equal(events.slice(0, 2));
-    expect(
-      index.getEventsForRange(adapter.getTime(firstDay), adapter.getTime(firstDay)),
-    ).to.deep.equal([events[0]]);
+    expect(index.getEventsForRange(firstDay.getTime(), firstDay.getTime())).to.deep.equal([
+      events[0],
+    ]);
   });
 
   it('should match a linear overlap scan across different ranges', () => {
-    const firstDay = adapter.date('2025-01-01T00:00:00Z', 'default');
+    const firstDay = createDate('2025-01-01T00:00:00Z');
     const events = Array.from({ length: 200 }, (_, eventIndex) => {
-      const eventStart = adapter.addDays(firstDay, eventIndex);
-      const eventEnd = adapter.addDays(eventStart, (eventIndex % 20) + 1);
+      const eventStart = addDays(firstDay, eventIndex);
+      const eventEnd = addDays(eventStart, (eventIndex % 20) + 1);
       return EventBuilder.new()
         .id(eventIndex)
         .span(eventStart.toISOString(), eventEnd.toISOString())
@@ -185,69 +176,69 @@ describe('createEventRangeIndex', () => {
 
     for (const width of [0, 3, 39, 40, 41, 100, 250]) {
       for (let day = -10; day < 230; day += 7) {
-        const rangeStart = adapter.addDays(firstDay, day);
-        const rangeEnd = adapter.addDays(rangeStart, width);
+        const rangeStart = addDays(firstDay, day);
+        const rangeEnd = addDays(rangeStart, width);
         const expected = events.filter(
           (event) =>
-            !adapter.isAfter(event.displayTimezone.start.value, rangeEnd) &&
-            !adapter.isBefore(event.displayTimezone.end.value, rangeStart),
+            event.displayTimezone.start.value.getTime() <= rangeEnd.getTime() &&
+            event.displayTimezone.end.value.getTime() >= rangeStart.getTime(),
         );
 
-        expect(
-          index.getEventsForRange(adapter.getTime(rangeStart), adapter.getTime(rangeEnd)),
-        ).to.deep.equal(expected);
+        expect(index.getEventsForRange(rangeStart.getTime(), rangeEnd.getTime())).to.deep.equal(
+          expected,
+        );
       }
     }
   });
 
   it('should preserve input order for a broad query over shuffled events', () => {
-    const firstDay = adapter.date('2025-01-01T00:00:00Z', 'default');
+    const firstDay = createDate('2025-01-01T00:00:00Z');
     const events = Array.from({ length: 40 }, (_, eventIndex) => {
-      const eventStart = adapter.addDays(firstDay, (eventIndex * 17) % 40);
+      const eventStart = addDays(firstDay, (eventIndex * 17) % 40);
       return EventBuilder.new()
         .id(eventIndex)
-        .span(eventStart.toISOString(), adapter.addDays(eventStart, 1).toISOString())
+        .span(eventStart.toISOString(), addDays(eventStart, 1).toISOString())
         .toProcessed();
     });
     const index = createEventRangeIndex(events, false);
-    const rangeStart = adapter.addDays(firstDay, 5);
-    const rangeEnd = adapter.addDays(firstDay, 30);
+    const rangeStart = addDays(firstDay, 5);
+    const rangeEnd = addDays(firstDay, 30);
     const expected = events.filter(
       (event) =>
-        event.displayTimezone.start.timestamp <= adapter.getTime(rangeEnd) &&
-        event.displayTimezone.end.timestamp >= adapter.getTime(rangeStart),
+        event.displayTimezone.start.timestamp <= rangeEnd.getTime() &&
+        event.displayTimezone.end.timestamp >= rangeStart.getTime(),
     );
 
     expect(expected.length).to.be.greaterThan(
       events.length * EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD,
     );
-    expect(
-      index.getEventsForRange(adapter.getTime(rangeStart), adapter.getTime(rangeEnd)),
-    ).to.deep.equal(expected);
+    expect(index.getEventsForRange(rangeStart.getTime(), rangeEnd.getTime())).to.deep.equal(
+      expected,
+    );
   });
 
   it('should preserve input order for a narrow indexed query over shuffled events', () => {
-    const firstDay = adapter.date('2025-01-01T00:00:00Z', 'default');
+    const firstDay = createDate('2025-01-01T00:00:00Z');
     const events = Array.from({ length: 100 }, (_, eventIndex) => {
-      const eventStart = adapter.addDays(firstDay, (eventIndex * 37) % 100);
+      const eventStart = addDays(firstDay, (eventIndex * 37) % 100);
       return EventBuilder.new()
         .id(eventIndex)
-        .span(eventStart.toISOString(), adapter.addDays(eventStart, 1).toISOString())
+        .span(eventStart.toISOString(), addDays(eventStart, 1).toISOString())
         .toProcessed();
     });
     const index = createEventRangeIndex(events, false);
-    const rangeStart = adapter.addDays(firstDay, 40);
-    const rangeEnd = adapter.addDays(firstDay, 45);
+    const rangeStart = addDays(firstDay, 40);
+    const rangeEnd = addDays(firstDay, 45);
     const expected = events.filter(
       (event) =>
-        event.displayTimezone.start.timestamp <= adapter.getTime(rangeEnd) &&
-        event.displayTimezone.end.timestamp >= adapter.getTime(rangeStart),
+        event.displayTimezone.start.timestamp <= rangeEnd.getTime() &&
+        event.displayTimezone.end.timestamp >= rangeStart.getTime(),
     );
 
     expect(expected.length).to.be.lessThan(events.length * EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD);
-    expect(
-      index.getEventsForRange(adapter.getTime(rangeStart), adapter.getTime(rangeEnd)),
-    ).to.deep.equal(expected);
+    expect(index.getEventsForRange(rangeStart.getTime(), rangeEnd.getTime())).to.deep.equal(
+      expected,
+    );
   });
 
   it('should return a copy in input order when the range overlaps every event', () => {
@@ -258,8 +249,8 @@ describe('createEventRangeIndex', () => {
     const index = createEventRangeIndex(events, false);
 
     const result = index.getEventsForRange(
-      adapter.getTime(adapter.date('2025-01-01T00:00:00Z', 'default')),
-      adapter.getTime(adapter.date('2025-01-03T00:00:00Z', 'default')),
+      createDate('2025-01-01T00:00:00Z').getTime(),
+      createDate('2025-01-03T00:00:00Z').getTime(),
     );
 
     expect(result).to.deep.equal(events);
@@ -281,8 +272,8 @@ describe('createEventRangeIndex', () => {
     expect(
       createEventRangeIndex(events, false)
         .getEventsForRange(
-          adapter.getTime(adapter.date('1959-12-31T00:00:00Z', 'default')),
-          adapter.getTime(adapter.date('1960-01-03T00:00:00Z', 'default')),
+          createDate('1959-12-31T00:00:00Z').getTime(),
+          createDate('1960-01-03T00:00:00Z').getTime(),
         )
         .map((event) => event.id),
     ).to.deep.equal(['before-epoch']);

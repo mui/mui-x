@@ -1,15 +1,16 @@
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import { screen, fireEvent, within } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
 import { clearLicenseStatusCache } from '@mui/x-license/internals';
 import { TEST_LICENSE_KEY_PREMIUM } from 'test/utils/licenseKeys';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import {
-  adapter,
+  createDate,
   createSchedulerRenderer,
-  EventBuilder,
-  utcJuly4AllDayBuilder,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
+  EventBuilder,
+  utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
 import { StandaloneCompactDayViewPremium } from '@mui/x-scheduler-premium/compact-day-view-premium';
 import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
@@ -102,7 +103,7 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
       <StandaloneCompactDayViewPremium
         features={{ recurringEvents: recurringEventsFeature }}
         events={[event]}
-        visibleDate={adapter.date('2025-07-03T00:00:00', 'America/New_York')}
+        visibleDate={createDate('2025-07-03T00:00:00', 'America/New_York')}
         displayTimezone="America/New_York"
         onEventsChange={onEventsChange}
       />,
@@ -117,7 +118,7 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
     const series = updatedEvents.find((item: SchedulerEvent) => item.id === 'event-1')!;
     expect(series.exDates).to.have.length(1);
     expect(
-      adapter.formatByString(adapter.date(String(series.exDates![0]), 'UTC'), 'yyyy-MM-dd'),
+      toPlainDate(createDate(String(series.exDates![0]), 'UTC').getTime(), 'UTC').toString(),
     ).to.equal('2025-07-04');
   });
 });

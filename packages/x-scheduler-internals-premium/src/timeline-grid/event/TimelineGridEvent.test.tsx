@@ -2,10 +2,11 @@ import { screen } from '@mui/internal-test-utils';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { EventTimelinePremiumProvider } from '@mui/x-scheduler-internals-premium/event-timeline-premium-provider';
 import {
-  adapter,
   createSchedulerRenderer,
   describeConformance,
+  endOfDay,
   ResourceBuilder,
+  startOfDay,
 } from 'test/utils/scheduler';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { describe, it, expect } from 'vitest';
@@ -13,8 +14,8 @@ import { describe, it, expect } from 'vitest';
 describe('<TimelineGrid.Event />', () => {
   const { render } = createSchedulerRenderer();
 
-  const start = processDate(adapter.startOfDay(adapter.now('default')), 'default');
-  const end = processDate(adapter.endOfDay(adapter.now('default')), 'default');
+  const start = processDate(startOfDay(new Date()), 'default');
+  const end = processDate(endOfDay(new Date()), 'default');
 
   // Mounts the event in the row context it needs.
   function renderEvent(node: React.ReactElement) {

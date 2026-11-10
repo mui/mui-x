@@ -1,9 +1,14 @@
 import {
-  adapter,
+  addDays,
+  addMinutes,
+  createDate,
   DEFAULT_EVENT_CALENDAR_STATE,
+  endOfDay,
   EventBuilder,
   processDay,
+  setHours,
   setSystemTimezone,
+  startOfDay,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
@@ -135,9 +140,9 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
   });
 
   describe('placeholderInTimeRange', () => {
-    const day = adapter.date('2024-01-15', 'default');
-    const dayStart = adapter.startOfDay(day);
-    const dayEnd = adapter.endOfDay(day);
+    const day = createDate('2024-01-15');
+    const dayStart = startOfDay(day);
+    const dayEnd = endOfDay(day);
 
     it('should return the placeholder when it crosses into the range from the previous day', () => {
       const state: EventCalendarState = {
@@ -145,16 +150,16 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.getTime(adapter.setHours(adapter.addDays(dayStart, -1), 22)),
-          end: adapter.getTime(adapter.setHours(dayStart, 6)),
+          start: setHours(addDays(dayStart, -1), 22).getTime(),
+          end: setHours(dayStart, 6).getTime(),
           resourceId: null,
         },
       };
       expect(
         eventCalendarOccurrencePlaceholderSelectors.placeholderInTimeRange(
           state,
-          adapter.getTime(dayStart),
-          adapter.getTime(dayEnd),
+          dayStart.getTime(),
+          dayEnd.getTime(),
         ),
       ).to.equal(state.occurrencePlaceholder);
     });
@@ -165,45 +170,45 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.getTime(adapter.setHours(adapter.addDays(dayStart, -1), 16)),
-          end: adapter.getTime(dayStart),
+          start: setHours(addDays(dayStart, -1), 16).getTime(),
+          end: dayStart.getTime(),
           resourceId: null,
         },
       };
       expect(
         eventCalendarOccurrencePlaceholderSelectors.placeholderInTimeRange(
           state,
-          adapter.getTime(dayStart),
-          adapter.getTime(dayEnd),
+          dayStart.getTime(),
+          dayEnd.getTime(),
         ),
       ).to.equal(null);
     });
 
     it('should return null when the placeholder starts exactly at the end of the range', () => {
-      const rangeStart = adapter.setHours(dayStart, 8);
-      const rangeEnd = adapter.setHours(dayStart, 20);
+      const rangeStart = setHours(dayStart, 8);
+      const rangeEnd = setHours(dayStart, 20);
       const state: EventCalendarState = {
         ...DEFAULT_EVENT_CALENDAR_STATE,
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.getTime(rangeEnd),
-          end: adapter.getTime(adapter.setHours(adapter.addDays(dayStart, 1), 4)),
+          start: rangeEnd.getTime(),
+          end: setHours(addDays(dayStart, 1), 4).getTime(),
           resourceId: null,
         },
       };
       expect(
         eventCalendarOccurrencePlaceholderSelectors.placeholderInTimeRange(
           state,
-          adapter.getTime(rangeStart),
-          adapter.getTime(rangeEnd),
+          rangeStart.getTime(),
+          rangeEnd.getTime(),
         ),
       ).to.equal(null);
     });
   });
 
   describe('isCreatingInDayCell', () => {
-    const day = adapter.date('2024-01-15', 'default');
+    const day = createDate('2024-01-15');
     const processedDay = processDay(day);
 
     it('should return false when there is no placeholder', () => {
@@ -219,8 +224,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.getTime(adapter.startOfDay(day)),
-          end: adapter.getTime(adapter.endOfDay(day)),
+          start: startOfDay(day).getTime(),
+          end: endOfDay(day).getTime(),
           resourceId: null,
         },
       };
@@ -237,8 +242,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           eventId: 'event-id',
           occurrenceKey: 'event-id-key',
           surfaceType: 'day-grid',
-          start: adapter.getTime(adapter.startOfDay(day)),
-          end: adapter.getTime(adapter.endOfDay(day)),
+          start: startOfDay(day).getTime(),
+          end: endOfDay(day).getTime(),
           resourceId: null,
           sourceResourceId: null,
           originalOccurrence: EventBuilder.new().id('event-id').toOccurrence(),
@@ -255,8 +260,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'day-grid',
-          start: adapter.getTime(adapter.startOfDay(day)),
-          end: adapter.getTime(adapter.endOfDay(day)),
+          start: startOfDay(day).getTime(),
+          end: endOfDay(day).getTime(),
           resourceId: null,
         },
       };
@@ -267,14 +272,14 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
 
     it('should return false when day does not match placeholder.start day', () => {
       // The placeholder starts the day before and ends on the day.
-      const previousDay = adapter.addDays(day, -1);
+      const previousDay = addDays(day, -1);
       const state: EventCalendarState = {
         ...DEFAULT_EVENT_CALENDAR_STATE,
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'day-grid',
-          start: adapter.getTime(adapter.startOfDay(previousDay)),
-          end: adapter.getTime(adapter.endOfDay(day)),
+          start: startOfDay(previousDay).getTime(),
+          end: endOfDay(day).getTime(),
           resourceId: null,
         },
       };
@@ -298,9 +303,9 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
   });
 
   describe('isCreatingInTimeRange', () => {
-    const day = adapter.date('2024-01-15', 'default');
-    const dayStart = adapter.startOfDay(day);
-    const dayEnd = adapter.endOfDay(day);
+    const day = createDate('2024-01-15');
+    const dayStart = startOfDay(day);
+    const dayEnd = endOfDay(day);
     const plainDate = processDay(day).plainDate;
 
     it('should return false when there is no placeholder', () => {
@@ -309,8 +314,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
           plainDate,
-          adapter.getTime(dayStart),
-          adapter.getTime(dayEnd),
+          dayStart.getTime(),
+          dayEnd.getTime(),
         ),
       ).to.equal(false);
     });
@@ -321,8 +326,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'day-grid',
-          start: adapter.getTime(adapter.setHours(dayStart, 10)),
-          end: adapter.getTime(adapter.setHours(dayStart, 11)),
+          start: setHours(dayStart, 10).getTime(),
+          end: setHours(dayStart, 11).getTime(),
           resourceId: null,
         },
       };
@@ -330,8 +335,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
           plainDate,
-          adapter.getTime(dayStart),
-          adapter.getTime(dayEnd),
+          dayStart.getTime(),
+          dayEnd.getTime(),
         ),
       ).to.equal(false);
     });
@@ -344,8 +349,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           eventId: 'event-id',
           occurrenceKey: 'event-id-key',
           surfaceType: 'time-grid',
-          start: adapter.getTime(adapter.startOfDay(day)),
-          end: adapter.getTime(adapter.endOfDay(day)),
+          start: startOfDay(day).getTime(),
+          end: endOfDay(day).getTime(),
           resourceId: null,
           sourceResourceId: null,
           originalOccurrence: EventBuilder.new().id('event-id').toOccurrence(),
@@ -355,8 +360,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
           plainDate,
-          adapter.getTime(dayStart),
-          adapter.getTime(dayEnd),
+          dayStart.getTime(),
+          dayEnd.getTime(),
         ),
       ).to.equal(false);
     });
@@ -367,8 +372,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.getTime(adapter.setHours(adapter.addDays(dayStart, -1), 22)),
-          end: adapter.getTime(adapter.setHours(dayStart, 6)),
+          start: setHours(addDays(dayStart, -1), 22).getTime(),
+          end: setHours(dayStart, 6).getTime(),
           resourceId: null,
         },
       };
@@ -376,8 +381,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
           plainDate,
-          adapter.getTime(dayStart),
-          adapter.getTime(dayEnd),
+          dayStart.getTime(),
+          dayEnd.getTime(),
         ),
       ).to.equal(false);
     });
@@ -388,8 +393,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.getTime(adapter.setHours(dayStart, 10)), // < dayEnd
-          end: adapter.getTime(adapter.setHours(dayStart, 11)), // > dayStart
+          start: setHours(dayStart, 10).getTime(), // < dayEnd
+          end: setHours(dayStart, 11).getTime(), // > dayStart
           resourceId: null,
         },
       };
@@ -397,8 +402,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
           plainDate,
-          adapter.getTime(dayStart),
-          adapter.getTime(dayEnd),
+          dayStart.getTime(),
+          dayEnd.getTime(),
         ),
       ).to.equal(true);
     });
@@ -409,8 +414,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.getTime(dayEnd), // start < dayEnd is false
-          end: adapter.getTime(adapter.addMinutes(dayEnd, 30)),
+          start: dayEnd.getTime(), // start < dayEnd is false
+          end: addMinutes(dayEnd, 30).getTime(),
           resourceId: null,
         },
       };
@@ -418,8 +423,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
           plainDate,
-          adapter.getTime(dayStart),
-          adapter.getTime(dayEnd),
+          dayStart.getTime(),
+          dayEnd.getTime(),
         ),
       ).to.equal(false);
     });
@@ -427,14 +432,14 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     it('should return false when end == dayStart', () => {
       // A time grid that starts at 08:00 passes it as the start of the range, so a placeholder of
       // the same day can end exactly where the range starts.
-      const windowStart = adapter.setHours(dayStart, 8);
+      const windowStart = setHours(dayStart, 8);
       const state: EventCalendarState = {
         ...DEFAULT_EVENT_CALENDAR_STATE,
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.getTime(adapter.setHours(dayStart, 7)),
-          end: adapter.getTime(windowStart), // end > dayStart is false
+          start: setHours(dayStart, 7).getTime(),
+          end: windowStart.getTime(), // end > dayStart is false
           resourceId: null,
         },
       };
@@ -442,8 +447,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
           plainDate,
-          adapter.getTime(windowStart),
-          adapter.getTime(dayEnd),
+          windowStart.getTime(),
+          dayEnd.getTime(),
         ),
       ).to.equal(false);
     });

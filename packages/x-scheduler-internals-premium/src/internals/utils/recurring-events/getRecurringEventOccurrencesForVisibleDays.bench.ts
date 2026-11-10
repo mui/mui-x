@@ -5,7 +5,7 @@ import type {
   SchedulerEventRecurrenceRule,
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { createDate, EventBuilder } from 'test/utils/scheduler';
 import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventOccurrencesForVisibleDays';
 
 const RULES: SchedulerEventRecurrenceRule[] = [
@@ -65,8 +65,8 @@ function expandAll(
   [start, end]: readonly [string, string],
   displayTimezone: TemporalTimezone,
 ) {
-  const rangeStart = adapter.getTime(adapter.date(start, 'default'));
-  const rangeEnd = adapter.getTime(adapter.date(end, 'default'));
+  const rangeStart = createDate(start).getTime();
+  const rangeEnd = createDate(end).getTime();
   let count = 0;
   for (const event of events) {
     count += getRecurringEventOccurrencesForVisibleDays(

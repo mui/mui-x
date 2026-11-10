@@ -1,17 +1,46 @@
 import { describe, it, expect } from 'vitest';
-import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapter-date-fns';
-import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
-import { adapter, setSystemTimezone } from 'test/utils/scheduler';
+import { createDate, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { processDate } from '../../../process-date';
 import { createDateFromWallTime, createProcessedDate, isInstantString } from './date';
 import { toPlainDate } from './timeZone';
-import type { TemporalSupportedObject } from '../../../models';
+
+/**
+ * The date and the minutes of the day of an instant in `timezone`, as the getters of `Date` read
+ * them for the timezone of the system and `Intl.DateTimeFormat` for the others: the reference the
+ * plain dates and the processed dates are checked against.
+ */
+function readReference(epochMs: number, timezone: string) {
+  const date = new Date(epochMs);
+  if (timezone === 'default') {
+    return {
+      key: [date.getFullYear(), date.getMonth() + 1, date.getDate()]
+        .map((field, index) => String(field).padStart(index === 0 ? 4 : 2, '0'))
+        .join('-'),
+      minutesInDay: date.getHours() * 60 + date.getMinutes(),
+    };
+  }
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: timezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(date);
+  const read = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)!.value;
+  return {
+    key: `${read('year')}-${read('month')}-${read('day')}`,
+    minutesInDay: Number(read('hour')) * 60 + Number(read('minute')),
+  };
+}
 
 describe('plain-date-utils/date', () => {
   it('should build the plain date of a value in a timezone', () => {
     // 2025-03-03T00:30Z is March 2nd in Los Angeles.
-    const value = adapter.date('2025-03-03T00:30:00Z', 'default');
+    const value = createDate('2025-03-03T00:30:00Z');
     const plainDate = toPlainDate(value.getTime(), 'America/Los_Angeles');
     expect(plainDate.toString()).to.equal('2025-03-02');
   });
@@ -28,7 +57,7 @@ describe('plain-date-utils/date', () => {
     '2011-12-30T10:00:00Z',
   ];
 
-  it('should build the date the adapter reads in the timezone', () => {
+  it('should build the date Intl reads in the timezone', () => {
     for (const timezone of [
       'UTC',
       'America/New_York',
@@ -41,60 +70,44 @@ describe('plain-date-utils/date', () => {
       'Pacific/Apia',
     ]) {
       for (const instant of INSTANTS) {
-        const value = adapter.date(instant, 'default');
+        const value = createDate(instant);
         expect(
           toPlainDate(value.getTime(), timezone).toString(),
           `${instant} in ${timezone}`,
-        ).to.equal(adapter.formatByString(adapter.setTimezone(value, timezone), 'yyyy-MM-dd'));
+        ).to.equal(readReference(value.getTime(), timezone).key);
       }
     }
   });
 
   // Browsers cannot change their timezone through process.env.TZ.
   it.skipIf(!isJSDOM)(
-    'should build the date the adapter reads in the timezone of the system',
+    'should build the date the getters of Date read in the timezone of the system',
     () => {
       setSystemTimezone('Australia/Lord_Howe');
       for (const instant of INSTANTS) {
-        const value = adapter.date(instant, 'default');
+        const value = createDate(instant);
         expect(toPlainDate(value.getTime(), 'default').toString(), instant).to.equal(
-          adapter.formatByString(value, 'yyyy-MM-dd'),
+          readReference(value.getTime(), 'default').key,
         );
       }
     },
   );
 
-  // The fields of a processed date as the adapter reads them in `timezone`, which processed dates
-  // must match.
-  const readThroughAdapter = (
-    currentAdapter: TemporalAdapter,
-    value: TemporalSupportedObject,
-    timezone: string,
-  ) => {
-    const valueInTimezone = currentAdapter.setTimezone(value, timezone);
-    return {
-      key: currentAdapter.formatByString(valueInTimezone, 'yyyy-MM-dd'),
-      timestamp: currentAdapter.getTime(value),
-      minutesInDay:
-        currentAdapter.getHours(valueInTimezone) * 60 + currentAdapter.getMinutes(valueInTimezone),
-    };
-  };
-
   it.each(['default', 'UTC', 'America/New_York', 'Asia/Kolkata'])(
-    'should process a date in %s like the adapter reads it',
+    'should process a date in %s like the reference reads it',
     (timezone) => {
       const epochMs = Date.UTC(2025, 10, 2, 5, 30);
       const value = new Date(epochMs);
       // A plain `Date`, not a subclass carrying a timezone.
       expect(value.constructor).to.equal(Date);
-      expect(adapter.getTime(value)).to.equal(epochMs);
+      expect(value.getTime()).to.equal(epochMs);
 
       const { value: processedValue, ...processed } = processDate(value, timezone);
       expect(processedValue).to.equal(value);
-      expect(processed).to.deep.equal(readThroughAdapter(adapter, value, timezone));
+      expect(processed).to.deep.equal({ ...readReference(epochMs, timezone), timestamp: epochMs });
       const { value: createdValue, ...created } = createProcessedDate(epochMs, timezone);
       expect(createdValue.constructor).to.equal(Date);
-      expect(created).to.deep.equal(readThroughAdapter(adapter, createdValue, timezone));
+      expect(created).to.deep.equal({ ...readReference(epochMs, timezone), timestamp: epochMs });
     },
   );
 
@@ -110,19 +123,17 @@ describe('plain-date-utils/date', () => {
 
   // Browsers cannot change their timezone through process.env.TZ.
   it.skipIf(!isJSDOM).each(['America/New_York', 'Australia/Lord_Howe', 'Asia/Kolkata'])(
-    'should process a date like the adapter reads it in the system timezone %s',
+    'should process a date like the getters of Date read it in the system timezone %s',
     (systemTimezone) => {
       setSystemTimezone(systemTimezone);
-      // A new adapter, as adapters cache data computed in the current system timezone.
-      const systemAdapter = new TemporalAdapterDateFns();
       // 01:30 in New York, on the day it falls back, and 16:30 in Lord Howe.
       const epochMs = Date.UTC(2025, 10, 2, 5, 30);
-      const value = systemAdapter.date(new Date(epochMs).toISOString(), 'default');
+      const reference = { ...readReference(epochMs, 'default'), timestamp: epochMs };
 
-      const { value: processedValue, ...processed } = processDate(value, 'default');
-      expect(processed).to.deep.equal(readThroughAdapter(systemAdapter, value, 'default'));
+      const { value: processedValue, ...processed } = processDate(new Date(epochMs), 'default');
+      expect(processed).to.deep.equal(reference);
       const { value: createdValue, ...created } = createProcessedDate(epochMs, 'default');
-      expect(created).to.deep.equal(readThroughAdapter(systemAdapter, createdValue, 'default'));
+      expect(created).to.deep.equal(reference);
     },
   );
 
@@ -149,7 +160,7 @@ describe('plain-date-utils/date', () => {
   describe('createDateFromWallTime', () => {
     const resolve = (value: string, timezone: string) => {
       const date = createDateFromWallTime(value, timezone);
-      return date === null ? null : new Date(adapter.getTime(date)).toISOString();
+      return date === null ? null : date.toISOString();
     };
 
     it('should read dates and times with or without seconds and milliseconds', () => {

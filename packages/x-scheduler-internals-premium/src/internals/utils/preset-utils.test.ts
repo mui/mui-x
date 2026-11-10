@@ -1,4 +1,4 @@
-import { adapter, setSystemTimezone } from 'test/utils/scheduler';
+import { createDate, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 import { BaseTemporal } from '@mui/x-scheduler-internals/internals';
@@ -33,13 +33,11 @@ describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
         setSystemTimezone('Europe/Paris');
         // London leaves summer time on October 25th, 2026, when 02:00 becomes 01:00 again.
         const nextVisibleDate = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset].navigate(
-          adapter.date(visibleDate, 'Europe/London'),
+          createDate(visibleDate, 'Europe/London'),
           1,
           'Europe/London',
         );
-        expect(adapter.toJsDate(nextVisibleDate).toISOString()).to.equal(
-          '2026-10-25T02:00:00.000Z',
-        );
+        expect(nextVisibleDate.toISOString()).to.equal('2026-10-25T02:00:00.000Z');
       },
     );
 
@@ -54,13 +52,11 @@ describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
         setSystemTimezone('UTC');
         // Paris leaves summer time on October 25th, 2026, when 03:00 becomes 02:00 again.
         const nextVisibleDate = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset].navigate(
-          adapter.date(visibleDate, 'Europe/Paris'),
+          createDate(visibleDate, 'Europe/Paris'),
           1,
           'Europe/Paris',
         );
-        expect(adapter.toJsDate(nextVisibleDate).toISOString()).to.equal(
-          '2026-10-25T00:30:00.000Z',
-        );
+        expect(nextVisibleDate.toISOString()).to.equal('2026-10-25T00:30:00.000Z');
       },
     );
 
@@ -75,13 +71,11 @@ describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
         setSystemTimezone('Europe/London');
         // Paris enters summer time on March 28th, 2027, when 02:00 becomes 03:00.
         const nextVisibleDate = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset].navigate(
-          adapter.date(visibleDate, 'Europe/Paris'),
+          createDate(visibleDate, 'Europe/Paris'),
           1,
           'Europe/Paris',
         );
-        expect(adapter.toJsDate(nextVisibleDate).toISOString()).to.equal(
-          '2027-03-28T01:30:00.000Z',
-        );
+        expect(nextVisibleDate.toISOString()).to.equal('2027-03-28T01:30:00.000Z');
       },
     );
   });

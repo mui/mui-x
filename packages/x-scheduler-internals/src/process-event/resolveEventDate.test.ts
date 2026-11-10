@@ -1,4 +1,3 @@
-import { adapter } from 'test/utils/scheduler/adapters';
 import { setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';
@@ -22,7 +21,7 @@ describe('resolveEventDate', () => {
 
   it('should use "default" timezone when dataTimezone is "default"', () => {
     const result = resolveEventDate('2025-01-01T09:00:00', 'default');
-    expect(adapter.getHours(result)).to.equal(9);
+    expect(result.getHours()).to.equal(9);
   });
 
   // The DST transitions must resolve the same way whatever the timezone of the system.
@@ -37,12 +36,12 @@ describe('resolveEventDate', () => {
           }
           // Europe/Paris falls back from 03:00 CEST to 02:00 CET on October 26th, 2025.
           const repeated = resolveEventDate('2025-10-26T02:30:00', 'Europe/Paris');
-          expect(new Date(adapter.getTime(repeated)).toISOString()).to.equal(
+          expect(new Date(repeated.getTime()).toISOString()).to.equal(
             '2025-10-26T00:30:00.000Z', // The first 02:30, in CEST
           );
           // Europe/Paris springs forward from 02:00 CET to 03:00 CEST on March 30th, 2025.
           const skipped = resolveEventDate('2025-03-30T02:30:00', 'Europe/Paris');
-          expect(new Date(adapter.getTime(skipped)).toISOString()).to.equal(
+          expect(new Date(skipped.getTime()).toISOString()).to.equal(
             '2025-03-30T01:30:00.000Z', // 03:30 CEST
           );
         },

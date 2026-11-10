@@ -1,5 +1,5 @@
 import {
-  adapter,
+  createDate,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
   getEventTimelinePremiumStateFromParameters,
@@ -32,8 +32,8 @@ function buildPlaceholder(
   return {
     type: 'internal-drag',
     surfaceType: 'timeline',
-    start: adapter.getTime(adapter.date('2025-07-03T10:00:00Z', 'default')),
-    end: adapter.getTime(adapter.date('2025-07-03T11:00:00Z', 'default')),
+    start: createDate('2025-07-03T10:00:00Z').getTime(),
+    end: createDate('2025-07-03T11:00:00Z').getTime(),
     eventId: 'event-1',
     occurrenceKey: 'event-1',
     resourceId: resourceB.id,

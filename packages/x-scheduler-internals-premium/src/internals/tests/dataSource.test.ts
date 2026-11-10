@@ -3,7 +3,14 @@ import type {
   SchedulerEventId,
   SchedulerEventModelStructure,
 } from '@mui/x-scheduler-internals/models';
-import { adapter, premiumStoreClasses, ResourceBuilder } from 'test/utils/scheduler';
+import {
+  addDays,
+  createDate,
+  endOfDay,
+  premiumStoreClasses,
+  ResourceBuilder,
+  startOfDay,
+} from 'test/utils/scheduler';
 import { SchedulerDataSourceCacheDefault } from '../utils/cache';
 import { DEBOUNCE_MS } from '../utils/queue';
 
@@ -11,8 +18,8 @@ const DEFAULT_PARAMS = { events: [], resources: [ResourceBuilder.new().build()] 
 
 // The lazy loading fetches ranges of timestamps.
 const toRange = (start: Date, end: Date) => ({
-  start: adapter.getTime(start),
-  end: adapter.getTime(end),
+  start: start.getTime(),
+  end: end.getTime(),
 });
 const SOMETHING_WENT_WRONG_LOG =
   'MUI X Scheduler: The user was shown the `somethingWentWrongError` error, caused by:';
@@ -56,8 +63,8 @@ premiumStoreClasses.forEach((storeClass) => {
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
-      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
-      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      const start = createDate('2025-07-01T00:00:00Z');
+      const end = createDate('2025-07-07T00:00:00Z');
 
       // Initial state check
       expect(store.state.eventIdList).toHaveLength(0);
@@ -68,7 +75,7 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(dataSource.getEvents.mock.calls.length).to.equal(1);
       expect(dataSource.getEvents.mock.calls[0][0]).toEqual(start);
       // The range ends at the end of its last day, which the cache covers.
-      expect(dataSource.getEvents.mock.calls[0][1]).toEqual(adapter.endOfDay(end));
+      expect(dataSource.getEvents.mock.calls[0][1]).toEqual(endOfDay(end));
 
       // Check if events are updated in store
       expect(store.state.eventIdList).toHaveLength(1);
@@ -83,23 +90,23 @@ premiumStoreClasses.forEach((storeClass) => {
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       // First fetch
-      const start1 = adapter.date('2025-07-01T00:00:00Z', 'default');
-      const end1 = adapter.date('2025-07-07T00:00:00Z', 'default');
+      const start1 = createDate('2025-07-01T00:00:00Z');
+      const end1 = createDate('2025-07-07T00:00:00Z');
 
       await store.lazyLoading?.queueDataFetchForRange(toRange(start1, end1), true);
 
       expect(dataSource.getEvents.mock.calls.length).to.equal(1);
       expect(dataSource.getEvents.mock.calls[0][0]).toEqual(start1);
-      expect(dataSource.getEvents.mock.calls[0][1]).toEqual(adapter.endOfDay(end1));
+      expect(dataSource.getEvents.mock.calls[0][1]).toEqual(endOfDay(end1));
 
       // Second fetch (different range)
-      const start2 = adapter.date('2025-08-01T00:00:00Z', 'default');
-      const end2 = adapter.date('2025-08-07T00:00:00Z', 'default');
+      const start2 = createDate('2025-08-01T00:00:00Z');
+      const end2 = createDate('2025-08-07T00:00:00Z');
       await store.lazyLoading?.queueDataFetchForRange(toRange(start2, end2), true);
 
       expect(dataSource.getEvents.mock.calls.length).to.equal(2);
       expect(dataSource.getEvents.mock.calls[1][0]).toEqual(start2);
-      expect(dataSource.getEvents.mock.calls[1][1]).toEqual(adapter.endOfDay(end2));
+      expect(dataSource.getEvents.mock.calls[1][1]).toEqual(endOfDay(end2));
     });
 
     it('should reuse cached event processing until processing options change', async () => {
@@ -116,19 +123,13 @@ premiumStoreClasses.forEach((storeClass) => {
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       await store.lazyLoading?.queueDataFetchForRange(
-        toRange(
-          adapter.date('2025-07-01T00:00:00Z', 'default'),
-          adapter.date('2025-07-07T00:00:00Z', 'default'),
-        ),
+        toRange(createDate('2025-07-01T00:00:00Z'), createDate('2025-07-07T00:00:00Z')),
         true,
       );
       const firstProcessedEvent = store.state.processedEventLookup.get('1');
 
       await store.lazyLoading?.queueDataFetchForRange(
-        toRange(
-          adapter.date('2025-08-01T00:00:00Z', 'default'),
-          adapter.date('2025-08-07T00:00:00Z', 'default'),
-        ),
+        toRange(createDate('2025-08-01T00:00:00Z'), createDate('2025-08-07T00:00:00Z')),
         true,
       );
 
@@ -141,10 +142,7 @@ premiumStoreClasses.forEach((storeClass) => {
         displayTimezone: 'Europe/Paris',
       });
       await store.lazyLoading?.queueDataFetchForRange(
-        toRange(
-          adapter.date('2025-09-01T00:00:00Z', 'default'),
-          adapter.date('2025-09-07T00:00:00Z', 'default'),
-        ),
+        toRange(createDate('2025-09-01T00:00:00Z'), createDate('2025-09-07T00:00:00Z')),
         true,
       );
 
@@ -160,16 +158,16 @@ premiumStoreClasses.forEach((storeClass) => {
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       // Fetch a large range
-      const start = adapter.date('2025-09-01T00:00:00Z', 'default');
-      const end = adapter.date('2025-09-30T00:00:00Z', 'default');
+      const start = createDate('2025-09-01T00:00:00Z');
+      const end = createDate('2025-09-30T00:00:00Z');
 
       await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
       // Fetch a sub-range
-      const subStart = adapter.date('2025-09-10T00:00:00Z', 'default');
-      const subEnd = adapter.date('2025-09-15T00:00:00Z', 'default');
+      const subStart = createDate('2025-09-10T00:00:00Z');
+      const subEnd = createDate('2025-09-15T00:00:00Z');
 
       await store.lazyLoading?.queueDataFetchForRange(toRange(subStart, subEnd));
 
@@ -185,16 +183,15 @@ premiumStoreClasses.forEach((storeClass) => {
         persistEvents: async () => ({ success: true }),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
-      const day = (offset: number) =>
-        adapter.addDays(adapter.date('2025-09-01T00:00:00Z', 'default'), offset);
+      const day = (offset: number) => addDays(createDate('2025-09-01T00:00:00Z'), offset);
 
       await store.lazyLoading?.queueDataFetchForRange(toRange(day(0), day(9)), true);
       await store.lazyLoading?.queueDataFetchForRange(toRange(day(5), day(14)), true);
 
       expect(dataSource.getEvents.mock.calls).to.have.length(2);
       const [start, end] = dataSource.getEvents.mock.calls[1];
-      expect(adapter.isEqual(start, adapter.startOfDay(day(10)))).to.equal(true);
-      expect(adapter.isEqual(end, adapter.endOfDay(day(14)))).to.equal(true);
+      expect(start.getTime() === startOfDay(day(10)).getTime()).to.equal(true);
+      expect(end.getTime() === endOfDay(day(14)).getTime()).to.equal(true);
     });
 
     it('should only request the days before the cached range when extending it backward', async () => {
@@ -203,16 +200,15 @@ premiumStoreClasses.forEach((storeClass) => {
         persistEvents: async () => ({ success: true }),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
-      const day = (offset: number) =>
-        adapter.addDays(adapter.date('2025-09-01T00:00:00Z', 'default'), offset);
+      const day = (offset: number) => addDays(createDate('2025-09-01T00:00:00Z'), offset);
 
       await store.lazyLoading?.queueDataFetchForRange(toRange(day(10), day(19)), true);
       await store.lazyLoading?.queueDataFetchForRange(toRange(day(5), day(14)), true);
 
       expect(dataSource.getEvents.mock.calls).to.have.length(2);
       const [start, end] = dataSource.getEvents.mock.calls[1];
-      expect(adapter.isEqual(start, day(5))).to.equal(true);
-      expect(adapter.isEqual(end, adapter.endOfDay(day(9)))).to.equal(true);
+      expect(start.getTime() === day(5).getTime()).to.equal(true);
+      expect(end.getTime() === endOfDay(day(9)).getTime()).to.equal(true);
     });
 
     it('should request the smallest range covering the gaps between cached ranges', async () => {
@@ -221,8 +217,7 @@ premiumStoreClasses.forEach((storeClass) => {
         persistEvents: async () => ({ success: true }),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
-      const day = (offset: number) =>
-        adapter.addDays(adapter.date('2025-09-01T00:00:00Z', 'default'), offset);
+      const day = (offset: number) => addDays(createDate('2025-09-01T00:00:00Z'), offset);
 
       await store.lazyLoading?.queueDataFetchForRange(toRange(day(0), day(4)), true);
       await store.lazyLoading?.queueDataFetchForRange(toRange(day(20), day(24)), true);
@@ -230,8 +225,8 @@ premiumStoreClasses.forEach((storeClass) => {
 
       expect(dataSource.getEvents.mock.calls).to.have.length(3);
       const [start, end] = dataSource.getEvents.mock.calls[2];
-      expect(adapter.isEqual(start, adapter.startOfDay(day(5)))).to.equal(true);
-      expect(adapter.isEqual(end, adapter.endOfDay(day(19)))).to.equal(true);
+      expect(start.getTime() === startOfDay(day(5)).getTime()).to.equal(true);
+      expect(end.getTime() === endOfDay(day(19)).getTime()).to.equal(true);
     });
 
     it('should not flip isLoading when the requested range is already cached', async () => {
@@ -240,8 +235,8 @@ premiumStoreClasses.forEach((storeClass) => {
         persistEvents: async () => ({ success: true }),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
-      const start = adapter.date('2025-09-01T00:00:00Z', 'default');
-      const end = adapter.date('2025-09-10T00:00:00Z', 'default');
+      const start = createDate('2025-09-01T00:00:00Z');
+      const end = createDate('2025-09-10T00:00:00Z');
 
       await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
       expect(store.state.isLoading).to.equal(false);
@@ -295,15 +290,15 @@ premiumStoreClasses.forEach((storeClass) => {
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       // Populate the store via lazy loading (mockFetchData seeds an event with id '1')
-      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
-      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      const start = createDate('2025-07-01T00:00:00Z');
+      const end = createDate('2025-07-07T00:00:00Z');
       await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       store.updateEvent({
         id: '1',
         title: 'Event 1 Updated',
-        start: adapter.date('2025-07-01T11:00:00Z', 'default'),
-        end: adapter.date('2025-07-01T12:00:00Z', 'default'),
+        start: createDate('2025-07-01T11:00:00Z'),
+        end: createDate('2025-07-01T12:00:00Z'),
       });
 
       await vi.waitFor(() => expect(persistEventsSpy.mock.calls.length).to.equal(1));
@@ -326,8 +321,8 @@ premiumStoreClasses.forEach((storeClass) => {
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
-      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
-      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      const start = createDate('2025-07-01T00:00:00Z');
+      const end = createDate('2025-07-07T00:00:00Z');
       await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
       expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
@@ -355,8 +350,8 @@ premiumStoreClasses.forEach((storeClass) => {
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
-      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
-      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      const start = createDate('2025-07-01T00:00:00Z');
+      const end = createDate('2025-07-07T00:00:00Z');
       await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       store.updateEvent({
@@ -449,8 +444,8 @@ premiumStoreClasses.forEach((storeClass) => {
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
-      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
-      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      const start = createDate('2025-07-01T00:00:00Z');
+      const end = createDate('2025-07-07T00:00:00Z');
       await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       const { created: createdIds } = (store as any).updateEvents({
@@ -488,8 +483,8 @@ premiumStoreClasses.forEach((storeClass) => {
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
-      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
-      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      const start = createDate('2025-07-01T00:00:00Z');
+      const end = createDate('2025-07-07T00:00:00Z');
       await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       store.deleteEvent('1');
@@ -583,15 +578,15 @@ premiumStoreClasses.forEach((storeClass) => {
       });
 
       // Now seed the store from the dataSource and update an event by its custom id
-      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
-      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      const start = createDate('2025-07-01T00:00:00Z');
+      const end = createDate('2025-07-07T00:00:00Z');
       await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       store.updateEvent({
         id: '1',
         title: 'Event 1 Updated',
-        start: adapter.date('2025-07-01T11:00:00Z', 'default'),
-        end: adapter.date('2025-07-01T12:00:00Z', 'default'),
+        start: createDate('2025-07-01T11:00:00Z'),
+        end: createDate('2025-07-01T12:00:00Z'),
       });
 
       await vi.waitFor(() => expect(persistEventsSpy.mock.calls.length).to.equal(2));
@@ -663,8 +658,8 @@ premiumStoreClasses.forEach((storeClass) => {
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, eventModelStructure, dataSource });
 
-      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
-      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      const start = createDate('2025-07-01T00:00:00Z');
+      const end = createDate('2025-07-07T00:00:00Z');
       await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       // Without a structure-aware cache, both events would collide on key "undefined"
@@ -694,8 +689,8 @@ premiumStoreClasses.forEach((storeClass) => {
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       // Populate the store via lazy loading
-      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
-      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      const start = createDate('2025-07-01T00:00:00Z');
+      const end = createDate('2025-07-07T00:00:00Z');
       await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       const initialIds = [...store.state.eventIdList];
@@ -724,8 +719,8 @@ premiumStoreClasses.forEach((storeClass) => {
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
-      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
-      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      const start = createDate('2025-07-01T00:00:00Z');
+      const end = createDate('2025-07-07T00:00:00Z');
       await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       await expect(async () => {
@@ -751,8 +746,8 @@ premiumStoreClasses.forEach((storeClass) => {
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
-      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
-      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      const start = createDate('2025-07-01T00:00:00Z');
+      const end = createDate('2025-07-07T00:00:00Z');
       await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
       await expect(async () => {
@@ -773,8 +768,8 @@ premiumStoreClasses.forEach((storeClass) => {
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
-      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
-      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      const start = createDate('2025-07-01T00:00:00Z');
+      const end = createDate('2025-07-07T00:00:00Z');
 
       await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
 
@@ -785,14 +780,14 @@ premiumStoreClasses.forEach((storeClass) => {
     });
 
     it('should clear state.errors when fetching a range that is already covered', async () => {
-      const startCached = adapter.date('2025-07-01T00:00:00Z', 'default');
-      const endCached = adapter.date('2025-07-07T00:00:00Z', 'default');
-      const startFailing = adapter.date('2025-08-01T00:00:00Z', 'default');
-      const endFailing = adapter.date('2025-08-07T00:00:00Z', 'default');
+      const startCached = createDate('2025-07-01T00:00:00Z');
+      const endCached = createDate('2025-07-07T00:00:00Z');
+      const startFailing = createDate('2025-08-01T00:00:00Z');
+      const endFailing = createDate('2025-08-07T00:00:00Z');
 
       const dataSource = {
         getEvents: vi.fn(async (start: Date) => {
-          if (adapter.isEqual(start, startFailing)) {
+          if (start.getTime() === startFailing.getTime()) {
             throw new Error('Range failed');
           }
           return [
@@ -834,8 +829,8 @@ premiumStoreClasses.forEach((storeClass) => {
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
-      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
-      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      const start = createDate('2025-07-01T00:00:00Z');
+      const end = createDate('2025-07-07T00:00:00Z');
 
       expect(store.state.isLoading).toBe(true);
 
@@ -863,8 +858,8 @@ premiumStoreClasses.forEach((storeClass) => {
         };
         const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
-        const start = adapter.date('2025-07-01T00:00:00Z', 'default');
-        const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+        const start = createDate('2025-07-01T00:00:00Z');
+        const end = createDate('2025-07-07T00:00:00Z');
 
         store.lazyLoading?.queueDataFetchForRange(toRange(start, end));
         store.lazyLoading?.queueDataFetchForRange(toRange(start, end));
@@ -910,10 +905,10 @@ premiumStoreClasses.forEach((storeClass) => {
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
-      const start1 = adapter.date('2025-07-01T00:00:00Z', 'default');
-      const end1 = adapter.date('2025-07-07T00:00:00Z', 'default');
-      const start2 = adapter.date('2025-08-01T00:00:00Z', 'default');
-      const end2 = adapter.date('2025-08-07T00:00:00Z', 'default');
+      const start1 = createDate('2025-07-01T00:00:00Z');
+      const end1 = createDate('2025-07-07T00:00:00Z');
+      const start2 = createDate('2025-08-01T00:00:00Z');
+      const end2 = createDate('2025-08-07T00:00:00Z');
 
       await expect(async () => {
         await store.lazyLoading?.queueDataFetchForRange(toRange(start1, end1), true);
@@ -934,8 +929,8 @@ premiumStoreClasses.forEach((storeClass) => {
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
-      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
-      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      const start = createDate('2025-07-01T00:00:00Z');
+      const end = createDate('2025-07-07T00:00:00Z');
 
       // Populate the cache so the next fetch hits the branch outside
       // loadEventsFromDataSource's inner try/catch.
@@ -964,8 +959,8 @@ premiumStoreClasses.forEach((storeClass) => {
     });
 
     it('should clear state.errors after a successful eventsUpdated', async () => {
-      const startFailing = adapter.date('2025-07-01T00:00:00Z', 'default');
-      const endFailing = adapter.date('2025-07-07T00:00:00Z', 'default');
+      const startFailing = createDate('2025-07-01T00:00:00Z');
+      const endFailing = createDate('2025-07-07T00:00:00Z');
       const dataSource = {
         getEvents: vi.fn(async (): Promise<TestEvent[]> => {
           throw new Error('Fetch failed');

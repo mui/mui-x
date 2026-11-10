@@ -1,14 +1,15 @@
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import { screen, act } from '@mui/internal-test-utils';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
 import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import {
-  adapter,
+  createDate,
   createSchedulerRenderer,
   EventBuilder,
   getMonthViewCell,
-  utcJuly4AllDayBuilder,
-  simulateDragAndDrop,
   mockElementBounds,
+  simulateDragAndDrop,
+  utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
 import { vi, describe, it, expect } from 'vitest';
 
@@ -29,7 +30,7 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
       <EventCalendarPremium
         features={{ recurringEvents: recurringEventsFeature }}
         events={[event]}
-        visibleDate={adapter.date('2025-07-03T00:00:00Z', 'default')}
+        visibleDate={createDate('2025-07-03T00:00:00Z')}
         view="month"
         views={['month']}
         displayTimezone="America/New_York"
@@ -58,7 +59,7 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
     const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
     expect(series.exDates).to.have.length(1);
     expect(
-      adapter.formatByString(adapter.date(String(series.exDates[0]), 'UTC'), 'yyyy-MM-dd'),
+      toPlainDate(createDate(String(series.exDates[0]), 'UTC').getTime(), 'UTC').toString(),
     ).to.equal('2025-07-04');
 
     // The detached one-off lands on the day the user dropped it on (New York July 8th),
@@ -66,10 +67,10 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
     const detached = updatedEvents.find((item: { id: string }) => item.id !== event.id)!;
     expect(detached.rrule).to.equal(undefined);
     expect(
-      adapter.formatByString(
-        adapter.setTimezone(adapter.date(String(detached.start), 'UTC'), 'America/New_York'),
-        'yyyy-MM-dd',
-      ),
+      toPlainDate(
+        createDate(String(detached.start), 'UTC').getTime(),
+        'America/New_York',
+      ).toString(),
     ).to.equal('2025-07-08');
   });
 
@@ -89,7 +90,7 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
       <EventCalendarPremium
         features={{ recurringEvents: recurringEventsFeature }}
         events={[event]}
-        visibleDate={adapter.date('2025-07-03T00:00:00Z', 'default')}
+        visibleDate={createDate('2025-07-03T00:00:00Z')}
         view="week"
         views={['week']}
         displayTimezone="UTC"
@@ -121,10 +122,10 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
     const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
     expect(series.exDates).to.have.length(1);
     expect(
-      adapter.formatByString(
-        adapter.date(String(series.exDates[0]), 'America/New_York'),
-        'yyyy-MM-dd',
-      ),
+      toPlainDate(
+        createDate(String(series.exDates[0]), 'America/New_York').getTime(),
+        'America/New_York',
+      ).toString(),
     ).to.equal('2025-07-03');
   });
 });

@@ -1,4 +1,3 @@
-import { adapter } from 'test/utils/scheduler/adapters';
 import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { EventBuilder } from 'test/utils/scheduler/event-builder';
 import { utcJuly4AllDayBuilder } from 'test/utils/scheduler/fixtures';
@@ -37,7 +36,7 @@ describe('processEvent', () => {
       expect(start.key).to.equal('2025-01-02');
       expect(start.minutesInDay).to.equal(0);
       expect(end.minutesInDay).to.equal(120);
-      expect(adapter.getTime(start.value)).to.equal(Date.parse('2025-01-01T10:00:00Z'));
+      expect(start.value.getTime()).to.equal(Date.parse('2025-01-01T10:00:00Z'));
       // A plain `Date`, not a subclass carrying a timezone.
       expect(start.value.constructor).to.equal(Date);
     });
@@ -70,7 +69,7 @@ describe('processEvent', () => {
       const processed = processEvent(event, 'America/New_York');
 
       expect(processed.displayTimezone.exDates).to.have.length(1);
-      expect(adapter.getTime(processed.displayTimezone.exDates![0])).to.equal(
+      expect(processed.displayTimezone.exDates![0].getTime()).to.equal(
         Date.parse('2025-01-05T00:00:00Z'),
       );
     });
@@ -87,7 +86,7 @@ describe('processEvent', () => {
 
       const processed = processEvent(event, 'Asia/Tokyo', schedulerRecurringEventsPlugin);
 
-      expect(adapter.getTime(processed.dataTimezone.rrule!.until!)).to.equal(
+      expect(processed.dataTimezone.rrule!.until!.getTime()).to.equal(
         Date.parse('2025-01-10T23:59:00Z'),
       );
     });
@@ -104,7 +103,7 @@ describe('processEvent', () => {
         schedulerRecurringEventsPlugin,
       );
 
-      expect(adapter.getTime(processed.dataTimezone.rrule!.until!)).to.equal(
+      expect(processed.dataTimezone.rrule!.until!.getTime()).to.equal(
         Date.parse('2025-01-10T23:00:00Z'),
       );
     });
@@ -200,7 +199,7 @@ describe('processEvent', () => {
       expect(processed.dataTimezone.end.minutesInDay).to.equal(10 * 60);
       expect(
         toWallClockIsoString(
-          adapter.getTime(processed.dataTimezone.exDates![0]),
+          processed.dataTimezone.exDates![0].getTime(),
           processed.dataTimezone.timezone,
         ),
       ).to.equal('2025-01-05T09:00:00');
