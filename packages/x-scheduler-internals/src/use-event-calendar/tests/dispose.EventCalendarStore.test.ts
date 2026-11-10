@@ -18,13 +18,13 @@ describe('Dispose - EventCalendarStore', () => {
 
   it('should stop the per-minute timer after dispose', async () => {
     const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
-    const initialNow = store.state.nowUpdatedEveryMinute;
+    const initialNow = store.state.nowTimestamp;
 
     store[disposeSymbol]();
 
     vi.advanceTimersByTime(ONE_MINUTE_IN_MS * 2);
 
-    expect(store.state.nowUpdatedEveryMinute).to.equal(initialNow);
+    expect(store.state.nowTimestamp).to.equal(initialNow);
   });
 
   it('should remove user-registered event listeners after dispose', async () => {

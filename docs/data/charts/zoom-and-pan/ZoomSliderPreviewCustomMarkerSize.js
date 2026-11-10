@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';

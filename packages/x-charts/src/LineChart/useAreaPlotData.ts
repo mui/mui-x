@@ -10,10 +10,23 @@ import { DEFAULT_X_AXIS_KEY } from '../constants';
 import type { SeriesId } from '../models/seriesType/common';
 
 interface AreaPlotDataPoint {
+  /**
+   * The SVG path of the element.
+   */
   d: string;
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: SeriesId;
+  /**
+   * The color of the element.
+   */
   color: string;
   area?: boolean;
+  /**
+   * The id of the gradient used to color the element.
+   * The `gradientId` is used as `url(#gradientId)`.
+   */
   gradientId?: string;
 }
 

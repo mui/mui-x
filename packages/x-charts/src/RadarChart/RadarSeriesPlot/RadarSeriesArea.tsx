@@ -17,6 +17,9 @@ import {
 
 interface GetPathPropsParams {
   seriesId: SeriesId;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: RadarClasses;
   getHighlightState: (item: HighlightItemIdentifierWithType<'radar'> | null) => HighlightState;
   points: { x: number; y: number }[];

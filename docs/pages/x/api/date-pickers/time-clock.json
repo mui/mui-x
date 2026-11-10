@@ -4,6 +4,7 @@
     "ampmInClock": { "type": { "name": "bool" }, "default": "false" },
     "autoFocus": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "className": { "type": { "name": "string" } },
     "defaultValue": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
@@ -55,6 +56,7 @@
         "returned": "boolean"
       }
     },
+    "showViewSwitcher": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { LineChart, LineChartProps } from '@mui/x-charts/LineChart';
+import type { LineChartProps } from '@mui/x-charts/LineChart';
+import { LineChart } from '@mui/x-charts/LineChart';
 import {
   ChartsReferenceLine,
   referenceLineClasses,

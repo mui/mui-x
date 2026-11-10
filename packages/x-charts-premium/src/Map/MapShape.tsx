@@ -7,9 +7,21 @@ import type { SeriesId } from '@mui/x-charts/internals';
 import { useItemHighlightState } from '../hooks';
 
 export type MapShapeProps = Omit<React.SVGProps<SVGPathElement>, 'ref'> & {
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: SeriesId;
+  /**
+   * The name of the geographic feature.
+   */
   featureName: string;
+  /**
+   * The SVG path of the shape.
+   */
   d: string;
+  /**
+   * The color of the shape.
+   */
   color: string;
 };
 
@@ -56,7 +68,13 @@ MapShape.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The name of the geographic feature.
+   */
   featureName: PropTypes.string.isRequired,
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: PropTypes.string.isRequired,
 } as any;
 

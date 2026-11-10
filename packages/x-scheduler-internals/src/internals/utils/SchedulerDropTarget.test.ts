@@ -41,8 +41,8 @@ premiumStoreClasses.forEach((storeClass) => {
           originalOccurrence: occurrence,
           sourceResourceId: null,
           resourceId: null,
-          start: occurrence.displayTimezone.start.value,
-          end: adapter.addDays(occurrence.displayTimezone.end.value, 1),
+          start: occurrence.displayTimezone.start.timestamp,
+          end: adapter.getTime(adapter.addDays(occurrence.displayTimezone.end.value, 1)),
         },
       );
       store.selectRecurringEventScope('all');
@@ -81,8 +81,8 @@ premiumStoreClasses.forEach((storeClass) => {
           originalOccurrence: occurrence,
           sourceResourceId: null,
           resourceId: null,
-          start: occurrence.displayTimezone.start.value,
-          end: adapter.addDays(occurrence.displayTimezone.end.value, 1),
+          start: occurrence.displayTimezone.start.timestamp,
+          end: adapter.getTime(adapter.addDays(occurrence.displayTimezone.end.value, 1)),
         },
       );
 
@@ -121,8 +121,8 @@ premiumStoreClasses.forEach((storeClass) => {
           originalOccurrence: occurrence,
           sourceResourceId: null,
           resourceId: null,
-          start,
-          end,
+          start: adapter.getTime(start),
+          end: adapter.getTime(end),
         },
         () => ({ allDay: false }),
       );

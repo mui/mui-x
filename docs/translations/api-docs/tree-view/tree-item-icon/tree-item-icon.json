@@ -2,7 +2,10 @@
   "componentDescription": "",
   "propDescriptions": {
     "slotProps": { "description": "The props used for each component slot." },
-    "slots": { "description": "Overridable component slots." }
+    "slots": { "description": "Overridable component slots." },
+    "status": {
+      "description": "The status of the item, used to pick the icon (for example expanded or collapsed)."
+    }
   },
   "classDescriptions": {},
   "slotDescriptions": {

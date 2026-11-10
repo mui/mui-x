@@ -54,7 +54,12 @@ const usePickerLayout = <TValue extends PickerValidValue>(
   const { children, slots, slotProps, classes: classesProp } = props;
 
   const ownerState = React.useMemo<PickerLayoutOwnerState>(
-    () => ({ ...pickerOwnerState, layoutDirection: isRtl ? 'rtl' : 'ltr', hasShortcuts: false }),
+    () => ({
+      ...pickerOwnerState,
+      layoutDirection: isRtl ? 'rtl' : 'ltr',
+      hasShortcuts: false,
+      hasToolbar: false,
+    }),
     [pickerOwnerState, isRtl],
   );
   const classes = useUtilityClasses(classesProp, ownerState);
@@ -85,6 +90,7 @@ const usePickerLayout = <TValue extends PickerValidValue>(
     ownerState,
   });
   const toolbar = toolbarHasView(toolbarProps) && !!Toolbar ? <Toolbar {...toolbarProps} /> : null;
+  const hasToolbar = toolbar !== null && !(toolbarProps as BaseToolbarProps).hidden;
 
   // Content
   const content = children;
@@ -112,7 +118,7 @@ const usePickerLayout = <TValue extends PickerValidValue>(
     tabs,
     actionBar,
     shortcuts,
-    ownerState: { ...ownerState, hasShortcuts },
+    ownerState: { ...ownerState, hasShortcuts, hasToolbar },
   };
 };
 

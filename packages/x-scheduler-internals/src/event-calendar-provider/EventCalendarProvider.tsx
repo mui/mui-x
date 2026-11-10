@@ -26,7 +26,7 @@ export namespace EventCalendarProvider {
     children: React.ReactNode;
     /**
      * The store class to use for this provider.
-     * A premium store reads parameters this interface does not declare (`dataSource`); they reach
+     * A premium store reads parameters this interface does not declare (`dataSource`, `storeFeatures`); they reach
      * its constructor through the JSX spread, which skips excess-property checks.
      * @default EventCalendarStore
      */

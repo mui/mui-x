@@ -9,7 +9,7 @@ import {
 } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import { DayView } from '@mui/x-scheduler/day-view';
 import { EventCalendarProvider, EventDialogProvider } from '@mui/x-scheduler/internals';
-import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
+import { useFrozenEventCalendarPremiumFeatures } from '../event-calendar-premium/features/useFrozenEventCalendarPremiumFeatures';
 import type { StandaloneDayViewPremiumProps } from './DayViewPremium.types';
 
 const packageInfo = {
@@ -40,17 +40,22 @@ const StandaloneDayViewPremium = React.forwardRef(function StandaloneDayViewPrem
     typeof props
   >(props);
 
-  const { localeText, slots, slotProps, ...other } = forwardedProps;
+  const { localeText, slots, slotProps, features: featuresProp, ...other } = forwardedProps;
+  const { features, storeFeatures } = useFrozenEventCalendarPremiumFeatures(
+    featuresProp,
+    'StandaloneDayViewPremium',
+  );
+  const storeParameters = { ...parameters, storeFeatures };
 
   return (
     <EventCalendarProvider
-      {...parameters}
+      {...storeParameters}
       storeClass={EventCalendarPremiumStore}
       localeText={localeText}
       slots={slots}
       slotProps={slotProps}
     >
-      <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
+      <EventDialogProvider optionalRenderers={features.recurringEvents?.optionalRenderers}>
         <DayView ref={forwardedRef} {...other} />
         {watermark}
       </EventDialogProvider>
@@ -98,16 +103,17 @@ StandaloneDayViewPremium.propTypes /* remove-proptypes */ = {
     persistEvents: PropTypes.func.isRequired,
   }),
   /**
-   * The locale object from `date-fns` used to format dates.
-   * This affects day names, month names, week start day, and other locale-dependent formatting.
-   * Import a locale from `date-fns/locale` and pass it to this prop.
-   * @default enUS (English)
+   * The locale of the dates, as a BCP 47 language tag such as `"fr-FR"`, like the locales of
+   * `Intl.DateTimeFormat`.
+   * This affects day names, month names, the first day of the week, the days of the weekend,
+   * week numbers, the 12-hour or 24-hour clock and the other locale-dependent formatting.
+   * @default "en-US"
    */
-  dateLocale: PropTypes.object,
+  dateLocale: PropTypes.string,
   /**
    * The default preferences for the calendar.
    * To use controlled preferences, use the `preferences` prop.
-   * @default { showWeekends: true, showWeekNumber: false, isSidePanelOpen: true, showEmptyDaysInAgenda: true, ampm: true }
+   * @default { showWeekends: true, showWeekNumber: false, isSidePanelOpen: true, showEmptyDaysInAgenda: true }
    */
   defaultPreferences: PropTypes.shape({
     ampm: PropTypes.bool,
@@ -115,7 +121,7 @@ StandaloneDayViewPremium.propTypes /* remove-proptypes */ = {
     showEmptyDaysInAgenda: PropTypes.bool,
     showWeekends: PropTypes.bool,
     showWeekNumber: PropTypes.bool,
-    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
+    weekStartsOn: PropTypes.oneOf([1, 2, 3, 4, 5, 6, 7]),
   }),
   /**
    * The view initially displayed in the calendar.
@@ -145,7 +151,8 @@ StandaloneDayViewPremium.propTypes /* remove-proptypes */ = {
    * "locale" (use the user's current locale timezone),
    * or "UTC".
    *
-   * This timezone only affects rendering, events keep their original data timezone.
+   * Events keep their original data timezone. The visible range starts on the day of the visible
+   * date in this timezone, and the next and previous navigation return dates in this timezone.
    * @default "default"
    */
   displayTimezone: PropTypes.string,
@@ -183,6 +190,19 @@ StandaloneDayViewPremium.propTypes /* remove-proptypes */ = {
     PropTypes.bool,
   ]),
   /**
+   * Configures how events are deleted.
+   * If `false`, event deletion is disabled.
+   * If `true`, event deletion is enabled with default configuration.
+   * If an object, event deletion is enabled with the provided configuration.
+   * @default true
+   */
+  eventDeletion: PropTypes.oneOfType([
+    PropTypes.shape({
+      confirmation: PropTypes.bool,
+    }),
+    PropTypes.bool,
+  ]),
+  /**
    * The structure of the event model.
    * It defines how to read and write the properties of the event model.
    * If not provided, the event model is assumed to match the `CalendarEvent` interface.
@@ -196,6 +216,12 @@ StandaloneDayViewPremium.propTypes /* remove-proptypes */ = {
    * @default []
    */
   events: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * The optional features of the view: `recurringEvents` from `@mui/x-scheduler-premium/recurring-events`.
+   * They are read once when the component mounts, later changes are ignored.
+   * @example { recurringEvents: recurringEventsFeature }
+   */
+  features: PropTypes.object,
   /**
    * Set the locale text of the view.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)
@@ -240,7 +266,7 @@ StandaloneDayViewPremium.propTypes /* remove-proptypes */ = {
     showEmptyDaysInAgenda: PropTypes.bool,
     showWeekends: PropTypes.bool,
     showWeekNumber: PropTypes.bool,
-    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
+    weekStartsOn: PropTypes.oneOf([1, 2, 3, 4, 5, 6, 7]),
   }),
   /**
    * Config of the preferences menu.
@@ -308,8 +334,9 @@ StandaloneDayViewPremium.propTypes /* remove-proptypes */ = {
   /**
    * Configuration applied to the view, keyed by the view name.
    * For the `day` view, `startTime` and `endTime` (whole hours between 0 and 24)
-   * limit the hours displayed in the time grid, and `initialScrollTime` is the hour the grid
-   * scrolls to on mount.
+   * limit the hours displayed in the time grid, `initialScrollTime` is the hour the grid
+   * scrolls to on mount, and `timeGridEvents` sets which timed events are rendered in the
+   * time grid.
    * @example { day: { startTime: 8, endTime: 20, initialScrollTime: 9 } }
    */
   viewConfig: PropTypes.shape({
@@ -317,6 +344,7 @@ StandaloneDayViewPremium.propTypes /* remove-proptypes */ = {
       endTime: PropTypes.number,
       initialScrollTime: PropTypes.number,
       startTime: PropTypes.number,
+      timeGridEvents: PropTypes.oneOf(['same-day-only', 'shorter-than-one-day']),
     }),
   }),
   /**

@@ -1,6 +1,7 @@
-import type { Selector } from 'reselect';
 import type { ChartAnyPluginSignature } from '../models/plugin';
 import type { ChartState } from '../models/chart';
+
+type Selector<State, Result> = (state: State) => Result;
 
 export type ChartRootSelector<
   TSignature extends ChartAnyPluginSignature,

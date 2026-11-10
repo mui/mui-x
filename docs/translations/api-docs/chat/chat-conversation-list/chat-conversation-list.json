@@ -1,28 +1,18 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
     "variant": {
       "description": "The visual variant of the conversation list. - <code>&#39;default&#39;</code> – shows avatar, title, preview, timestamp, and unread badge. - <code>&#39;compact&#39;</code> – shows only a small unread indicator, the title, and an actions button."
     }
   },
   "classDescriptions": {
     "compact": { "description": "Applied when variant=&quot;compact&quot;" },
-    "item": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the list item element"
-    },
-    "itemActions": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the item actions element"
-    },
-    "itemAvatar": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the item avatar element"
-    },
-    "itemContent": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the item content element"
-    },
     "itemFocused": { "description": "Applied to a focused conversation item" },
     "itemPreview": {
       "description": "Styles applied to {{nodeName}}.",
@@ -41,14 +31,21 @@
     "itemUnreadBadge": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the item unread badge element"
-    },
-    "root": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the conversation list root element"
-    },
-    "scroller": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the scroller element"
     }
+  },
+  "slotDescriptions": {
+    "item": "The component that renders the item.",
+    "itemActions": "The component that renders the item actions.",
+    "itemAvatar": "The component that renders the item avatar.",
+    "itemContent": "The component that renders the item content.",
+    "preview": "The component that renders the preview.",
+    "root": "The component that renders the root.",
+    "scrollbar": "The component that renders the scrollbar.",
+    "scrollbarThumb": "The component that renders the scrollbar thumb.",
+    "scroller": "The component that renders the scroller.",
+    "timestamp": "The component that renders the timestamp.",
+    "title": "The component that renders the title.",
+    "unreadBadge": "The component that renders the unread badge.",
+    "viewport": "The component that renders the viewport."
   }
 }

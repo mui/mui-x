@@ -12,6 +12,7 @@ import {
   getColumnValues,
   getRows,
   getColumnHeaderCell,
+  raf,
 } from 'test/utils/helperFn';
 import {
   useGridApiRef,
@@ -650,6 +651,103 @@ describe('<DataGridPro /> - Rows', () => {
       firstRow = renderingZone.firstChild;
       await waitFor(() => {
         expect(firstRow).to.have.attr('data-rowindex', '1');
+      });
+    });
+
+    describe('controlled layout', () => {
+      const controlledLayout = { virtualizerLayoutMode: 'controlled' as const };
+
+      // Lets the browser fire the scroll event and the grid handle it, like a real scroll.
+      const scrollTo = (position: { top?: number; left?: number }) =>
+        act(async () => {
+          grid('virtualScroller')!.scrollTo(position);
+          await raf();
+        });
+
+      function expectViewportCovered() {
+        const { viewportInnerSize } = apiRef.current!.state.dimensions;
+        const viewportTop = grid('columnHeaders')!.getBoundingClientRect().bottom;
+        const viewportLeft = grid('virtualScroller')!.getBoundingClientRect().left;
+
+        const rows = $$('[role="row"][data-rowindex]');
+        const rowRects = rows.map((row) => row.getBoundingClientRect());
+        expect(Math.min(...rowRects.map((rect) => rect.top))).to.be.at.most(viewportTop + 0.5);
+        expect(Math.max(...rowRects.map((rect) => rect.bottom))).to.be.at.least(
+          viewportTop + viewportInnerSize.height - 0.5,
+        );
+
+        const cellRects = $$(rows[0], '[role="gridcell"]').map((cell) =>
+          cell.getBoundingClientRect(),
+        );
+        expect(Math.min(...cellRects.map((rect) => rect.left))).to.be.at.most(viewportLeft + 0.5);
+        expect(Math.max(...cellRects.map((rect) => rect.right))).to.be.at.least(
+          viewportLeft + viewportInnerSize.width - 0.5,
+        );
+      }
+
+      it('should render the rows in the viewport when scrolling up by less than a row', async () => {
+        const rowHeight = 50;
+        render(
+          <TestCaseVirtualization rowHeight={rowHeight} experimentalFeatures={controlledLayout} />,
+        );
+
+        // Start in the middle of a row, so the steps below reach the previous row before
+        // they add up to a full row height.
+        const initialTop = 20 * rowHeight + rowHeight / 2;
+        await scrollTo({ top: initialTop });
+        for (let top = initialTop - 10; top >= 18 * rowHeight; top -= 10) {
+          // eslint-disable-next-line no-await-in-loop
+          await scrollTo({ top });
+          expectViewportCovered();
+        }
+      });
+
+      it('should render the rows in the viewport when scrolling down past rows shorter than the average', async () => {
+        // Every 10th row is tall, so the other rows are shorter than the average row height
+        // and a scroll smaller than the average can bring several of them into view.
+        render(
+          <TestCaseVirtualization
+            getRowHeight={({ id }) => (Number(id) % 10 === 0 ? 300 : 25)}
+            experimentalFeatures={controlledLayout}
+          />,
+        );
+
+        for (let top = 0; top <= 600; top += 40) {
+          // eslint-disable-next-line no-await-in-loop
+          await scrollTo({ top });
+          expectViewportCovered();
+        }
+      });
+
+      it('should render the columns in the viewport when scrolling left by less than a column', async () => {
+        const columnWidth = 100;
+        render(<TestCaseVirtualization nbCols={20} experimentalFeatures={controlledLayout} />);
+
+        // Start in the middle of a column and step by less than the column threshold.
+        const initialLeft = 10 * columnWidth + columnWidth / 2;
+        await scrollTo({ left: initialLeft });
+        for (let left = initialLeft - 10; left >= 8 * columnWidth; left -= 10) {
+          // eslint-disable-next-line no-await-in-loop
+          await scrollTo({ left });
+          expectViewportCovered();
+        }
+      });
+
+      it('should render the columns in the viewport when scrolling right past columns narrower than the threshold', async () => {
+        const columns = Array.from({ length: 60 }, (_, index) => ({
+          field: `column${index}`,
+          width: 30,
+          minWidth: 30,
+        }));
+        render(
+          <TestCaseVirtualization columns={columns} experimentalFeatures={controlledLayout} />,
+        );
+
+        for (let left = 0; left <= 400; left += 10) {
+          // eslint-disable-next-line no-await-in-loop
+          await scrollTo({ left });
+          expectViewportCovered();
+        }
       });
     });
 

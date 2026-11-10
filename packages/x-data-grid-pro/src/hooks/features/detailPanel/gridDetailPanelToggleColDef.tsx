@@ -18,7 +18,8 @@ export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
   sortable: false,
   filterable: false,
   resizable: false,
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Premium augmentation adds aggregable only when the Premium package is included.
+  // @ts-ignore Premium augmentation adds aggregable only when the Premium package is included.
   aggregable: false,
   chartable: false,
   disableColumnMenu: true,

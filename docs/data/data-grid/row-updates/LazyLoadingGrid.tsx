@@ -1,15 +1,9 @@
 import * as React from 'react';
 import debounce from '@mui/utils/debounce';
-import {
-  DataGridPro,
-  GridFetchRowsParams,
-  useGridApiRef,
-} from '@mui/x-data-grid-pro';
-import {
-  createFakeServer,
-  loadServerRows,
-  UseDemoDataOptions,
-} from '@mui/x-data-grid-generator';
+import type { GridFetchRowsParams } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import type { UseDemoDataOptions } from '@mui/x-data-grid-generator';
+import { createFakeServer, loadServerRows } from '@mui/x-data-grid-generator';
 
 const DATASET_OPTION: UseDemoDataOptions = {
   dataSet: 'Employee',
@@ -19,11 +13,9 @@ const DATASET_OPTION: UseDemoDataOptions = {
 const { columnsWithDefaultColDef, useQuery, ...data } =
   createFakeServer(DATASET_OPTION);
 
-const emptyObject = {};
-
 export default function LazyLoadingGrid() {
   // dataServerSide simulates your database.
-  const { rows: rowsServerSide } = useQuery(emptyObject);
+  const { rows: rowsServerSide } = useQuery({});
 
   const apiRef = useGridApiRef();
   const [initialRows, setInitialRows] = React.useState<typeof rowsServerSide>([]);

@@ -1,0 +1,7 @@
+<StandaloneCompactWeekViewPremium
+  features={features}
+  events={events}
+  resources={resources}
+  defaultVisibleDate={defaultVisibleDate}
+  onEventsChange={setEvents}
+/>

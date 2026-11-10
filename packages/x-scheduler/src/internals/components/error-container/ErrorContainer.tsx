@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSharedComponentsStyledContext } from '../SharedComponentsStyledContext';
+import { getUserFacingErrorMessage } from '../../utils/user-facing-error';
 
 export interface ErrorContainerProps {
   className?: string;
@@ -24,7 +25,7 @@ const ErrorContainerRoot = styled('div', {
   alignItems: 'flex-end',
   gap: 16,
   bottom: 16,
-  right: 16,
+  insetInlineEnd: 16,
 });
 
 const ErrorAlert = styled(Alert, {
@@ -50,12 +51,12 @@ const ErrorMessage = styled(Typography, {
 export function ErrorContainer(props: ErrorContainerProps) {
   const { className } = props;
   const store = useSchedulerStoreContext();
-  const { classes } = useSharedComponentsStyledContext();
+  const { classes, localeText } = useSharedComponentsStyledContext();
   const errors = useStore(store, schedulerOtherSelectors.errors);
 
   return (
     <ErrorContainerRoot className={clsx(classes.errorContainer, className)}>
-      {errors.map(({ error, key }) => (
+      {errors.map(({ key, ...error }) => (
         <ErrorAlert
           className={classes.errorAlert}
           severity="error"
@@ -63,7 +64,7 @@ export function ErrorContainer(props: ErrorContainerProps) {
           onClose={() => store.dismissError(key)}
         >
           <ErrorMessage className={classes.errorMessage} variant="body2">
-            {error.message}
+            {getUserFacingErrorMessage(localeText, error)}
           </ErrorMessage>
         </ErrorAlert>
       ))}

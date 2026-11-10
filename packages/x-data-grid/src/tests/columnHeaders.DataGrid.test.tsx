@@ -1,7 +1,7 @@
 import { createRenderer, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { DataGrid } from '@mui/x-data-grid';
 import { getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -188,6 +188,35 @@ describe('<DataGrid /> - Column headers', () => {
       });
     });
 
+    it('should call onMenuOpen and onMenuClose only when a menu opens or closes', async () => {
+      const onMenuOpen = vi.fn();
+      const onMenuClose = vi.fn();
+      const { user } = render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid
+            {...baselineProps}
+            columns={[{ field: 'brand' }]}
+            showToolbar
+            onMenuOpen={onMenuOpen}
+            onMenuClose={onMenuClose}
+          />
+        </div>,
+      );
+
+      expect(onMenuOpen).toHaveBeenCalledTimes(0);
+      expect(onMenuClose).toHaveBeenCalledTimes(0);
+
+      await user.click(within(getColumnHeaderCell(0)).getByLabelText('brand column menu'));
+      expect(onMenuOpen).toHaveBeenCalledTimes(1);
+      expect(onMenuClose).toHaveBeenCalledTimes(0);
+
+      await user.click(within(getColumnHeaderCell(0)).getByLabelText('brand column menu'));
+      await waitFor(() => {
+        expect(onMenuClose).toHaveBeenCalledTimes(1);
+      });
+      expect(onMenuOpen).toHaveBeenCalledTimes(1);
+    });
+
     it('should prevent wheel scroll event from closing the menu when scrolling within the menu', async () => {
       const { user } = render(
         <div style={{ width: 300, height: 500 }}>
@@ -235,13 +264,13 @@ describe('<DataGrid /> - Column headers', () => {
         </div>,
       );
 
-      expect(screen.queryByRole('tooltip')).to.equal(null);
+      expect(screen.queryByRole('menu')).to.equal(null);
 
       await user.keyboard('{Tab}');
       expect(screen.getAllByRole('columnheader')[0]).toHaveFocus();
 
       await user.keyboard('{Control>}{Enter}');
-      expect(screen.queryByRole('tooltip')).to.not.equal(null);
+      expect(screen.queryByRole('menu')).to.not.equal(null);
     });
   });
 
@@ -277,6 +306,30 @@ describe('<DataGrid /> - Column headers', () => {
     expect(screen.queryByRole('menuitem', { name: /unsort/i })).to.equal(null);
   });
 
+  it('should focus the column header when clicking the sort icon', async () => {
+    const { user } = render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          {...baselineProps}
+          columns={[{ field: 'brand' }, { field: 'id' }]}
+          initialState={{ sorting: { sortModel: [{ field: 'brand', sort: 'asc' }] } }}
+        />
+      </div>,
+    );
+    const sortButton = within(getColumnHeaderCell(0)).getByRole('button', {
+      name: 'Sort brand in descending order',
+    });
+
+    await user.click(sortButton);
+    await user.click(sortButton);
+
+    expect(getColumnHeaderCell(0)).not.to.have.class('MuiDataGrid-columnHeader--sorted');
+    expect(getColumnHeaderCell(0)).toHaveFocus();
+
+    await user.keyboard('{ArrowRight}');
+    expect(getColumnHeaderCell(1)).toHaveFocus();
+  });
+
   it('should use baseTooltip slot for sort icon', () => {
     function CustomTooltip({ title, children, enterDelay, ...other }: any) {
       return (
@@ -310,4 +363,35 @@ describe('<DataGrid /> - Column headers', () => {
     expect(tooltip!.getAttribute('data-title')).to.equal('Sort');
     expect(sortButton.getAttribute('title')).to.equal(null);
   });
+
+  // Needs real CSS to compute `visibility` and `opacity`.
+  it.skipIf(isJSDOM)(
+    'should show the header icons of an unsorted column when its header gets keyboard focus',
+    async () => {
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} columns={[{ field: 'brand' }]} />
+        </div>,
+      );
+
+      const columnCell = getColumnHeaderCell(0);
+      const iconButtonContainer = columnCell.querySelector<HTMLElement>(
+        '.MuiDataGrid-iconButtonContainer',
+      )!;
+      const sortButton = columnCell.querySelector<HTMLElement>('.MuiDataGrid-sortButton')!;
+      const menuIcon = columnCell.querySelector<HTMLElement>('.MuiDataGrid-menuIcon')!;
+
+      expect(window.getComputedStyle(iconButtonContainer).visibility).to.equal('hidden');
+      expect(window.getComputedStyle(menuIcon).visibility).to.equal('hidden');
+
+      await user.keyboard('{Tab}');
+      expect(columnCell).toHaveFocus();
+
+      await waitFor(() => {
+        expect(window.getComputedStyle(iconButtonContainer).visibility).to.equal('visible');
+        expect(window.getComputedStyle(sortButton).opacity).to.equal('1');
+        expect(window.getComputedStyle(menuIcon).visibility).to.equal('visible');
+      });
+    },
+  );
 });

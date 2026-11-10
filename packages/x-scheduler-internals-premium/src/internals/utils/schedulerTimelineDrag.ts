@@ -45,9 +45,8 @@ export interface SchedulerDependencyTargetPayload {
    */
   side: SchedulerEventSide;
   /**
-   * `false` for a recurring or read-only event: hovering it gives no highlight or
-   * snap, but a drop still goes through `addDependency` so its rejection reaches the
-   * user.
+   * `false` for a recurring event: hovering it gives no highlight or snap, but a drop
+   * still goes through `addDependency` so its rejection reaches the user.
    */
   isValid: boolean;
 }

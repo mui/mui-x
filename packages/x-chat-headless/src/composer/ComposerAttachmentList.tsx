@@ -9,15 +9,29 @@ import { useComposerContext } from './internals/ComposerContext';
 import type { ComposerAttachmentListOwnerState } from './composer.types';
 
 export interface ComposerAttachmentListSlots {
+  /**
+   * The component that renders the attachment list.
+   */
   attachmentList: React.ElementType;
 }
 
 export interface ComposerAttachmentListSlotProps {
+  /**
+   * The props used for the attachment list slot.
+   */
   attachmentList?: SlotComponentProps<'div', {}, ComposerAttachmentListOwnerState>;
 }
 
 export interface ComposerAttachmentListProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<ComposerAttachmentListSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ComposerAttachmentListSlotProps;
 }
 

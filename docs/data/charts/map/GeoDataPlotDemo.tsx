@@ -7,7 +7,7 @@ import countriesTopology from 'visionscarto-world-atlas/world/110m.json';
 import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
 import { GeoDataPlot } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
+import type { ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
 
 const countries = topojsonFeature(
   countriesTopology as any,

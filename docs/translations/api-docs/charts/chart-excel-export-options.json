@@ -1,0 +1,18 @@
+{
+  "interfaceDescription": "The options to apply on the Excel export.",
+  "propertiesDescriptions": {
+    "escapeFormulas": {
+      "description": "If <code>false</code>, the formulas in the cells will not be escaped.<br />It is not recommended to disable this option as it exposes the user to potential CSV injection attacks.<br />See <a href=\"https://owasp.org/www-community/attacks/CSV_Injection\">https://owasp.org/www-community/attacks/CSV_Injection</a> for more information."
+    },
+    "fileName": { "description": "The name of the file without the extension." },
+    "includeFormattedValues": {
+      "description": "If <code>true</code>, a <code>formatted*</code> column is added next to each value, using the series <code>valueFormatter</code>."
+    },
+    "includeHeaders": {
+      "description": "If <code>true</code>, a header row is written on each sheet."
+    },
+    "includeHiddenSeries": {
+      "description": "If <code>true</code>, series and items hidden through the legend are exported."
+    }
+  }
+}

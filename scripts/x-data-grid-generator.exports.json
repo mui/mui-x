@@ -1,5 +1,7 @@
 [
   { "name": "BASE_URL", "kind": "Variable" },
+  { "name": "clearDemoDataCache", "kind": "Function" },
+  { "name": "clearMockServerCache", "kind": "Function" },
   { "name": "ColumnsOptions", "kind": "Interface" },
   { "name": "createFakeServer", "kind": "Variable" },
   { "name": "currencyPairs", "kind": "Variable" },

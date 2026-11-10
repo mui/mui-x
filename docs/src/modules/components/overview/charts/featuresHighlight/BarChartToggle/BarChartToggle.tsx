@@ -2,7 +2,7 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { SelectOptions } from './types';
+import type { SelectOptions } from './types';
 import AdvancedFeaturesToggle from './AdvancedFeaturesToggle';
 import BarChartDemo from './BarChartDemo';
 import { sxColors } from '../colors';

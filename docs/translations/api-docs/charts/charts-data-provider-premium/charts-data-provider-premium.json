@@ -1,6 +1,7 @@
 {
   "componentDescription": "Orchestrates the data providers for the chart components and hooks.\n\nUse this component if you have custom HTML components that need to access the chart data.",
   "propDescriptions": {
+    "apiRef": { "description": "The ref object that exposes the chart API methods." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
@@ -26,21 +27,24 @@
     },
     "slotProps": { "description": "The props for the slots." },
     "slots": { "description": "Slots to customize charts&#39; components." },
+    "theme": {
+      "description": "The color mode passed to <code>colors</code> when it is a function. Defaults to the mode of the Material UI theme."
+    },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     }
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "baseButton": "",
-    "baseDivider": "",
-    "baseIconButton": "",
-    "baseMenuItem": "",
-    "baseMenuList": "",
-    "basePopper": "",
+    "baseButton": "The component used for buttons.",
+    "baseDivider": "The component used for dividers.",
+    "baseIconButton": "The component used for icon buttons.",
+    "baseMenuItem": "The component used for menu items.",
+    "baseMenuList": "The component used for menu lists.",
+    "basePopper": "The component used for poppers.",
     "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps &amp; BaseToggleButtonPropsOverrides&gt;</code>.",
-    "baseToggleButtonGroup": "",
-    "baseTooltip": "",
+    "baseToggleButtonGroup": "The component used for toggle button groups.",
+    "baseTooltip": "The component used for tooltips.",
     "exportIcon": "Icon displayed on the toolbar&#39;s export button.",
     "zoomInIcon": "Icon displayed on the toolbar&#39;s zoom in button.",
     "zoomOutIcon": "Icon displayed on the toolbar&#39;s zoom out button."

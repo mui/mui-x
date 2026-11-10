@@ -288,6 +288,9 @@ PickersSectionList.propTypes /* remove-proptypes */ = {
       content: PropTypes.object.isRequired,
     }),
   ).isRequired,
+  /**
+   * The ref used to access the DOM elements of the sections.
+   */
   sectionListRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({

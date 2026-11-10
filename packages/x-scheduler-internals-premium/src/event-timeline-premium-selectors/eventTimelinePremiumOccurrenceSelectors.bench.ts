@@ -1,8 +1,5 @@
 import { describe, test } from 'vitest';
-import {
-  computeElementPositionInCollection,
-  getTimelineAxisDurationMs,
-} from '@mui/x-scheduler-internals/internals';
+import { computeElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { sortEventOccurrences } from '@mui/x-scheduler-internals/sort-event-occurrences';
 import {
@@ -10,7 +7,7 @@ import {
   computeOccurrencesMaxIndex,
 } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import {
-  adapter,
+  DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
   getEventTimelinePremiumStateFromParameters,
   ResourceBuilder,
@@ -29,11 +26,10 @@ const state = getEventTimelinePremiumStateFromParameters({
   preset: 'dayAndHour',
 });
 const config = eventTimelinePremiumPresetSelectors.config(state);
-const durationMs = getTimelineAxisDurationMs(adapter, config);
-const start = config.start;
-const end = adapter.addHours(start, 1);
+const durationMs = config.durationMs;
+// One hour at the start of the range, which starts on the default visible date.
 const occurrenceTemplate = EventBuilder.new()
-  .span(start.toISOString(), end.toISOString())
+  .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
   .toOccurrence();
 const groupedOccurrences = resources.map((resource, resourceIndex) => ({
   resource,
@@ -75,8 +71,8 @@ describe('event timeline resource layout', () => {
               collection: config,
               durationMs,
             };
-            result += computeElementPositionInCollection(adapter, parameters).duration;
-            result += computeElementPositionInCollection(adapter, parameters).duration;
+            result += computeElementPositionInCollection(parameters).duration;
+            result += computeElementPositionInCollection(parameters).duration;
           }
         }
 
@@ -100,7 +96,6 @@ describe('event timeline resource layout', () => {
         for (const { occurrences } of groupedOccurrences.slice(0, 10)) {
           const positionedOccurrences = addLanePositionsToOccurrences(occurrences);
           result += addTimelinePositionsToOccurrences({
-            adapter,
             config,
             occurrences: positionedOccurrences,
             positionByOccurrenceKey: null,

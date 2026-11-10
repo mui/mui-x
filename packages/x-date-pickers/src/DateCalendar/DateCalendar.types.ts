@@ -99,6 +99,9 @@ export interface DateCalendarProps
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
    */
   referenceDate?: PickerValidDate;
+  /**
+   * A CSS class name applied to the root element.
+   */
   className?: string;
   /**
    * Override or extend the styles applied to the component.

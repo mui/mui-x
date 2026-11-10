@@ -37,11 +37,29 @@ export interface MessageListRootHandle {
 }
 
 export interface MessageListRootSlots {
+  /**
+   * The component that renders the message list.
+   */
   messageList: React.ElementType;
+  /**
+   * The component that renders the message list scroller.
+   */
   messageListScroller: React.ElementType;
+  /**
+   * The component that renders the message list content.
+   */
   messageListContent: React.ElementType;
+  /**
+   * The component that renders the message list overlay.
+   */
   messageListOverlay: React.ElementType;
+  /**
+   * The component that renders the message list scrollbar.
+   */
   messageListScrollbar: React.ElementType;
+  /**
+   * The component that renders the message list scrollbar thumb.
+   */
   messageListScrollbarThumb: React.ElementType;
   /**
    * The visually-hidden `role="status"` element announcing streaming
@@ -52,11 +70,29 @@ export interface MessageListRootSlots {
 }
 
 export interface MessageListRootSlotProps {
+  /**
+   * The props used for the message list slot.
+   */
   messageList?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  /**
+   * The props used for the message list scroller slot.
+   */
   messageListScroller?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  /**
+   * The props used for the message list content slot.
+   */
   messageListContent?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  /**
+   * The props used for the message list overlay slot.
+   */
   messageListOverlay?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  /**
+   * The props used for the message list scrollbar slot.
+   */
   messageListScrollbar?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  /**
+   * The props used for the message list scrollbar thumb slot.
+   */
   messageListScrollbarThumb?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
   messageListStatus?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
 }
@@ -74,6 +110,9 @@ export interface MessageListRootProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   'children'
 > {
+  /**
+   * The ids of the messages to render, in order.
+   */
   items?: string[];
   /**
    * Floating layer rendered above the message list, anchored to its bottom edge; pointer-transparent.
@@ -81,7 +120,18 @@ export interface MessageListRootProps extends Omit<
    */
   overlay?: React.ReactNode;
   renderItem(params: { id: string; index: number }): React.ReactNode;
+  /**
+   * Returns the React key of a row.
+   * @param {string} id The id of the message.
+   * @param {number} index The index of the row.
+   * @returns {React.Key} The key of the row.
+   * @default (id) => id
+   */
   getItemKey?: (id: string, index: number) => React.Key;
+  /**
+   * The estimated height of a row in pixels, used until the row is measured.
+   * @default 84
+   */
   estimatedItemSize?: number;
   /**
    * Callback fired when the viewport enters the top zone of the list — within
@@ -127,7 +177,15 @@ export interface MessageListRootProps extends Omit<
    * @default true
    */
   enableRovingFocus?: boolean;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<MessageListRootSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: MessageListRootSlotProps;
 }
 
@@ -139,9 +197,23 @@ interface MessageListViewProps {
   itemIds: string[];
   overlay: React.ReactNode;
   renderItem: MessageListRootProps['renderItem'];
+  /**
+   * Returns the React key of a row.
+   * @param {string} id The id of the message.
+   * @param {number} index The index of the row.
+   * @returns {React.Key} The key of the row.
+   */
   getItemKey: NonNullable<MessageListRootProps['getItemKey']>;
   statusAnnouncement: string;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: Partial<MessageListRootSlots> | undefined;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: MessageListRootSlotProps | undefined;
   other: Omit<
     MessageListRootProps,
@@ -159,6 +231,9 @@ interface MessageListViewProps {
 
 interface MessageListRenderedRowProps {
   id: string;
+  /**
+   * The index of the row.
+   */
   index: number;
   renderItem: MessageListRootProps['renderItem'];
   registerRowElement(id: string, element: HTMLDivElement | null): void;

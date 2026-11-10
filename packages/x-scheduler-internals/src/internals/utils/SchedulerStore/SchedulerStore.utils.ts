@@ -5,7 +5,6 @@ import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/i
 import type {
   SchedulerProcessedEvent,
   SchedulerEventId,
-  SchedulerOccurrencePlaceholder,
   SchedulerResource,
   SchedulerResourceId,
   SchedulerEventModelStructure,
@@ -19,44 +18,43 @@ import type { Adapter } from '../../../use-adapter/useAdapter.types';
 import type { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 import { dateToEventString } from '../date-utils';
+import { schedulerEventSelectors } from '../../../scheduler-selectors/schedulerEventSelectors';
 
 /**
- * Determines if the occurrence placeholder has changed in a meaningful way that requires updating the store.
+ * Names the `eventModelStructure` date(s) — `start`, `end`, or both — that have a getter but no
+ * setter, so every writer that refuses a whole event (a creation, a move, a paste, or a
+ * dependency push) because of it can point at the specific property instead of a generic
+ * "start and / or end".
  */
-export function shouldUpdateOccurrencePlaceholder(
-  adapter: Adapter,
-  previous: SchedulerOccurrencePlaceholder | null,
-  next: SchedulerOccurrencePlaceholder | null,
-): boolean {
-  if (next == null || previous == null) {
-    return next !== previous;
-  }
-
-  const untypedPrevious = previous as Record<string, any>;
-  const untypedNext = next as Record<string, any>;
-
-  // Compare keys present in `next`.
-  for (const key in untypedNext) {
-    if (key === 'start' || key === 'end') {
-      if (!adapter.isEqual(untypedNext[key], untypedPrevious[key])) {
-        return true;
-      }
-    } else if (!Object.is(untypedNext[key], untypedPrevious[key])) {
-      return true;
-    }
-  }
-
-  // Catch keys present in `previous` but removed from `next` (e.g. `isHidden`).
-  for (const key in untypedPrevious) {
-    if (!(key in untypedNext)) {
-      return true;
-    }
-  }
-
-  return false;
+export function datesNotWritableReason(state: SchedulerState): string {
+  const properties = schedulerEventSelectors.unwritableDates(state);
+  const names = properties.map((property) => `\`${property}\``).join(' and ');
+  const pronoun = properties.length > 1 ? 'they' : 'it';
+  return `\`eventModelStructure\` declares ${names} with a getter but no setter, so ${pronoun} cannot be written back to your event model. Add a \`setter\` to make ${pronoun === 'it' ? 'it' : 'them'} editable.`;
 }
 
-export const DEFAULT_EVENT_MODEL_STRUCTURE: SchedulerEventModelStructure<any> = {};
+/**
+ * Resolves `shouldEventRequireResource` and warns when it is enabled without any resource.
+ */
+export function getShouldEventRequireResource(
+  parameters: SchedulerParameters<any, any>,
+  defaultValue: boolean,
+): boolean {
+  const shouldEventRequireResource = parameters.shouldEventRequireResource ?? defaultValue;
+  if (
+    shouldEventRequireResource &&
+    (parameters.resources == null || parameters.resources.length === 0)
+  ) {
+    warnOnce(
+      [
+        'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
+        'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
+        'Either provide at least one resource, or set `shouldEventRequireResource={false}`.',
+      ].join('\n'),
+    );
+  }
+  return shouldEventRequireResource;
+}
 
 const EVENT_PROPERTIES_LOOKUP: { [P in keyof SchedulerEvent]-?: true } = {
   id: true,
@@ -141,10 +139,9 @@ export function getProcessedEventFromModel<TEvent extends object>(
   const modelInDefaultFormat = {} as SchedulerEvent;
 
   for (const key of EVENT_PROPERTIES) {
-    // @ts-ignore
     const getter = eventModelStructure?.[key]?.getter;
 
-    // @ts-ignore
+    // @ts-expect-error Each property getter returns its corresponding property type, but the key is a union.
     modelInDefaultFormat[key] = getter ? getter(model) : model[key];
   }
 
@@ -270,15 +267,14 @@ function createOrUpdateEventModelFromBuiltInEventModel<
       const typedKey = key as keyof SchedulerEvent;
       const setter = eventModelStructure?.[typedKey]?.setter;
       if (setter) {
-        // @ts-ignore
         propertiesWithSetter.push([setter, changes[key]]);
       } else if (changes[key] === undefined) {
-        // @ts-ignore
+        // @ts-expect-error Custom event models do not declare an index signature for property names.
         delete eventModel[key];
       }
       // If the property was set to its default value, remove it from the model
       else if (oldModel != null && key === 'allDay' && changes[key] === false) {
-        // @ts-ignore
+        // @ts-expect-error Custom event models do not declare an index signature for property names.
         delete eventModel[key];
       } else {
         setOwnProperty(eventModel, key, changes[key]);
@@ -305,7 +301,8 @@ export function getProcessedResourceFromModel<TResource extends object>(
   for (const key of RESOURCE_PROPERTIES) {
     const getter = resourceModelStructure?.[key]?.getter;
 
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Custom resource indexing errors only in consumers enabling noImplicitAny.
+    // @ts-ignore Custom resource indexing errors only in consumers enabling noImplicitAny.
     const resourceProperty = getter ? getter(resource) : resource[key];
 
     if (key === 'children' && Array.isArray(resourceProperty)) {
@@ -313,12 +310,11 @@ export function getProcessedResourceFromModel<TResource extends object>(
       const children = resourceProperty.map((child) =>
         getProcessedResourceFromModel(child, resourceModelStructure),
       );
-      // @ts-ignore
       processedResource[key] = children;
       continue;
     }
 
-    // @ts-ignore
+    // @ts-expect-error The resource getter returns the value for this key, but TypeScript loses the correlation.
     processedResource[key] = resourceProperty;
   }
 

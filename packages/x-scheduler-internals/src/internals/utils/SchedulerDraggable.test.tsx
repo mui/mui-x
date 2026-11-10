@@ -2,6 +2,7 @@ import * as React from 'react';
 import { act, screen } from '@mui/internal-test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
+  adapter,
   cancelDrag,
   createSchedulerRenderer,
   EventBuilder,
@@ -11,14 +12,15 @@ import {
 import { EventCalendarProvider } from '../../event-calendar-provider';
 import { SchedulerDraggable } from './SchedulerDraggable';
 import { schedulerDayEventMoveKind } from './schedulerDrag';
+import { buildTemporalPlainDate } from './plain-date-utils/adapter';
 import type { CalendarGridDayEvent } from '../../calendar-grid/day-event/CalendarGridDayEvent';
 
 const occurrence = EventBuilder.new().fullDay('2025-07-03').toOccurrence();
 const snapshot: CalendarGridDayEvent.DragData = {
   originalOccurrence: occurrence,
-  start: occurrence.displayTimezone.start.value,
-  end: occurrence.displayTimezone.end.value,
-  draggedDay: occurrence.displayTimezone.start.value,
+  start: occurrence.displayTimezone.start.timestamp,
+  end: occurrence.displayTimezone.end.timestamp,
+  draggedDay: buildTemporalPlainDate(adapter, occurrence.displayTimezone.start.value),
 };
 
 function Fixture({

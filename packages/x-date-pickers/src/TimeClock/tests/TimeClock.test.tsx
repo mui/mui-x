@@ -176,6 +176,44 @@ describe('<TimeClock />', () => {
     expect(reason).to.equal('partial');
   });
 
+  it('should increase hour selection by 5 on PageUp press at noon', async () => {
+    const handleChange = vi.fn();
+    const { user } = render(
+      <TimeClock
+        autoFocus
+        value={adapterToUse.date('2019-01-01T12:20:00')}
+        onChange={handleChange}
+      />,
+    );
+
+    await user.keyboard('{PageUp}');
+
+    expect(handleChange.mock.calls.length).to.equal(1);
+    const [newDate, reason] = handleChange.mock.calls[0];
+    expect(adapterToUse.getHours(newDate)).to.equal(17);
+    expect(adapterToUse.getMinutes(newDate)).to.equal(20);
+    expect(reason).to.equal('partial');
+  });
+
+  it('should keep the hour selection on PageDown press at noon', async () => {
+    const handleChange = vi.fn();
+    const { user } = render(
+      <TimeClock
+        autoFocus
+        value={adapterToUse.date('2019-01-01T12:20:00')}
+        onChange={handleChange}
+      />,
+    );
+
+    await user.keyboard('{PageDown}');
+
+    expect(handleChange.mock.calls.length).to.equal(1);
+    const [newDate, reason] = handleChange.mock.calls[0];
+    expect(adapterToUse.getHours(newDate)).to.equal(12);
+    expect(adapterToUse.getMinutes(newDate)).to.equal(20);
+    expect(reason).to.equal('partial');
+  });
+
   [
     {
       keyName: 'Enter',

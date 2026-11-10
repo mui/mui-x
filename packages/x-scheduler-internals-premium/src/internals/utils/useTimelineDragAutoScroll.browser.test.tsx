@@ -16,9 +16,9 @@ import { useTimelineDragAutoScroll } from './useTimelineDragAutoScroll';
 
 const eventData = { id: 'event', title: 'Event' };
 
-function Timeline() {
+function Timeline({ isRtl = false }: { isRtl?: boolean }) {
   const scrollerRef = React.useRef<HTMLDivElement>(null);
-  useTimelineDragAutoScroll({ scrollerRef, pinnedLeftWidth: 80 });
+  useTimelineDragAutoScroll({ scrollerRef, pinnedLeftWidth: 80, isRtl });
   return (
     <React.Fragment>
       <ExternalEventSource eventData={eventData} data-testid="source" />
@@ -57,5 +57,16 @@ describe.skipIf(isJSDOM)('timeline drag auto-scroll', () => {
     cancelDrag();
     view.unmount();
     expect(Object.hasOwn(grid, 'getBoundingClientRect')).toBe(false);
+  });
+
+  it('should exclude the pinned title column from the right edge in RTL', () => {
+    render(
+      <EventTimelinePremiumProvider events={[]} resources={[ResourceBuilder.new().build()]}>
+        <Timeline isRtl />
+      </EventTimelinePremiumProvider>,
+    );
+    const grid = screen.getByTestId('timeline');
+    expect(grid.getBoundingClientRect().left).toBe(0);
+    expect(grid.getBoundingClientRect().width).toBe(220);
   });
 });

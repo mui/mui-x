@@ -15,6 +15,10 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "tabIndex": { "description": "The <code>tabIndex</code> of the root element." },
     "toggleVisibilityOnClick": {
       "description": "If <code>true</code>, clicking on a legend item will toggle the visibility of the corresponding series."
     }

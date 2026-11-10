@@ -2,7 +2,8 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { useTreeItem, UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
+import type { UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
+import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
 import {
   TreeItemContent,
   TreeItemIconContainer,

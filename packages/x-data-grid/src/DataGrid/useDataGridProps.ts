@@ -73,7 +73,7 @@ export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridP
         keyof DataGridPropsWithDefaultValues<any>
       >
     ).reduce((acc, key) => {
-      // @ts-ignore
+      // @ts-expect-error The default and themed values match this key, but TypeScript intersects all property types.
       acc[key] = themedProps[key] ?? DATA_GRID_PROPS_DEFAULT_VALUES[key];
       return acc;
     }, {} as DataGridPropsWithDefaultValues<any>);

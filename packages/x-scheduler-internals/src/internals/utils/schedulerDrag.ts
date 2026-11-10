@@ -4,7 +4,6 @@ import type {
   SchedulerEventSide,
   SchedulerResourceId,
   SchedulerOccurrencePlaceholderExternalDragData,
-  TemporalSupportedObject,
 } from '../../models';
 import type { CalendarGridDayEvent } from '../../calendar-grid/day-event/CalendarGridDayEvent';
 import type { CalendarGridDayEventResizeHandler } from '../../calendar-grid/day-event-resize-handler/CalendarGridDayEventResizeHandler';
@@ -28,8 +27,14 @@ export interface SchedulerEventDragPayload {
 /** The snapshot captured when an event move or resize starts. */
 export interface SchedulerEventDragData {
   originalOccurrence: SchedulerEventOccurrence;
-  start: TemporalSupportedObject;
-  end: TemporalSupportedObject;
+  /**
+   * The start of the occurrence, as a timestamp in milliseconds.
+   */
+  start: number;
+  /**
+   * The end of the occurrence, as a timestamp in milliseconds.
+   */
+  end: number;
   /**
    * The id of the resource row the occurrence was dragged from.
    * Only rows that know which resource they represent, such as the Event Timeline Premium, report it.
@@ -43,7 +48,9 @@ export interface SchedulerEventDragData {
  */
 export interface SchedulerAxisEventDragData extends SchedulerEventDragData {
   /**
-   * How far from the start of the event the pointer grabbed it, in milliseconds of the axis.
+   * How far from the start of the event the pointer grabbed it, measured like the offsets of the
+   * surface: in milliseconds of the axis on a timeline row, in elapsed milliseconds in a day
+   * column.
    */
   initialCursorPositionInEventMs: number;
 }

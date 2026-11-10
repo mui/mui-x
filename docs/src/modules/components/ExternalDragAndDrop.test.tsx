@@ -24,7 +24,7 @@ describe.each([
     const source = screen.getByText('External Event 1 (30 mins)');
     const externalList = source.parentElement!;
     const target = document.querySelector<HTMLElement>(
-      '.MuiEventTimeline-eventsCell[data-drop-target], .MuiEventCalendar-dayTimeGridColumn[data-drop-target], .MuiEventCalendar-monthViewCell[data-drop-target]',
+      '.MuiEventTimeline-eventsCell, .MuiEventCalendar-dayTimeGridColumn, .MuiEventCalendar-monthViewCell',
     )!;
     expect(target).not.toBe(null);
     mockElementBounds(target, { left: 0, top: 0, width: 1000, height: 1000 });

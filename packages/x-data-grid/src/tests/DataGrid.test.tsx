@@ -95,7 +95,7 @@ describe('<DataGrid />', () => {
                 keyof typeof DATA_GRID_PROPS_DEFAULT_VALUES
               >
             ).reduce((acc, key) => {
-              // @ts-ignore
+              // @ts-expect-error Populate an initially empty object with undefined values for every defaulted prop.
               acc[key] = undefined;
               return acc;
             }, {})}

@@ -18,6 +18,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
 } from 'test/utils/scheduler';
 import { StandaloneCompactDayViewPremium } from '@mui/x-scheduler-premium/compact-day-view-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 /**
@@ -50,6 +51,7 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
     const [events, setEvents] = React.useState<SchedulerEvent[]>([initialEvent]);
     return (
       <StandaloneCompactDayViewPremium
+        features={{ recurringEvents: recurringEventsFeature }}
         events={events}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
         displayTimezone={displayTimezone}

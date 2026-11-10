@@ -65,18 +65,42 @@ For example, `useChartClosestPoint()` depends on `useChartCartesianAxis()` and o
 - `[useChartCartesianAxis, useChartClosestPoint]` works because the cartesian plugin comes first.
 - `[useChartCartesianAxis, useChartClosestPoint, useChartHighlight]` works with limited behavior: you get highlighting, but not highlight based on closest point.
 
-| Plugin                                               | Dependencies              | Optional dependency                                |
-| :--------------------------------------------------- | :------------------------ | :------------------------------------------------- |
-| `useChartCartesianAxis()`                            |                           | `useChartInteraction()`                            |
-| `useChartPolarAxis()`                                |                           | `useChartInteraction()`                            |
-| `useChartHighlight()`                                |                           |                                                    |
-| `useChartTooltip()`                                  |                           |                                                    |
-| `useChartInteraction()`                              |                           | `useChartTooltip()`                                |
-| `useChartClosestPoint()`                             | `useChartCartesianAxis()` | `useChartInteraction()`,<br/>`useChartHighlight()` |
-| `useChartZAxis()`                                    |                           |                                                    |
-| `useChartBrush()`                                    |                           |                                                    |
-| `useChartProExport()` <span class="plan-pro"></span> |                           |                                                    |
-| `useChartProZoom()` <span class="plan-pro"></span>   | `useChartCartesianAxis()` |                                                    |
+| Plugin                                                       | Dependencies              | Optional dependency                                |
+| :----------------------------------------------------------- | :------------------------ | :------------------------------------------------- |
+| `useChartCartesianAxis()`                                    |                           | `useChartInteraction()`                            |
+| `useChartPolarAxis()`                                        |                           | `useChartInteraction()`                            |
+| `useChartHighlight()`                                        |                           |                                                    |
+| `useChartTooltip()`                                          |                           |                                                    |
+| `useChartInteraction()`                                      |                           | `useChartTooltip()`                                |
+| `useChartClosestPoint()`                                     | `useChartCartesianAxis()` | `useChartInteraction()`,<br/>`useChartHighlight()` |
+| `useChartZAxis()`                                            |                           |                                                    |
+| `useChartBrush()`                                            |                           |                                                    |
+| `useChartProExport()` <span class="plan-pro"></span>         |                           |                                                    |
+| `useChartProZoom()` <span class="plan-pro"></span>           | `useChartCartesianAxis()` |                                                    |
+| `useChartPremiumExport()` <span class="plan-premium"></span> |                           |                                                    |
+
+### Excel export [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+`useChartPremiumExport()` is not part of the default plugins, so add it to the array to give the chart's `apiRef` the `getDataAsExcel()` and `exportAsExcel()` methods.
+Charts that do not export it never load the Excel code.
+
+```tsx
+import { ChartsContainerPremium } from '@mui/x-charts-premium/ChartsContainerPremium';
+import { BAR_CHART_PREMIUM_PLUGINS } from '@mui/x-charts-premium/BarChartPremium';
+import { useChartPremiumExport } from '@mui/x-charts-premium/plugins';
+
+const plugins = [...BAR_CHART_PREMIUM_PLUGINS, useChartPremiumExport];
+
+function MyChart() {
+  const apiRef = React.useRef(undefined);
+
+  return (
+    <ChartsContainerPremium apiRef={apiRef} plugins={plugins}>
+      {/* ... */}
+    </ChartsContainerPremium>
+  );
+}
+```
 
 ## Custom plugins
 

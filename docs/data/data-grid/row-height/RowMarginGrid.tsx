@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGrid, GridRowSpacingParams, gridClasses } from '@mui/x-data-grid';
+import type { GridRowSpacingParams } from '@mui/x-data-grid';
+import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { grey } from '@mui/material/colors';
 

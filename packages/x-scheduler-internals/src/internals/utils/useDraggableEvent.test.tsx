@@ -20,6 +20,7 @@ import { useDraggableEvent } from './useDraggableEvent';
 import { SchedulerDraggable } from './SchedulerDraggable';
 import { SchedulerDropTarget } from './SchedulerDropTarget';
 import { schedulerDayEventMoveKind, schedulerExternalEventKind } from './schedulerDrag';
+import { buildTemporalPlainDate } from './plain-date-utils/adapter';
 
 const builder = EventBuilder.new().fullDay('2025-07-03').draggable(true);
 const occurrence = builder.toOccurrence();
@@ -36,7 +37,9 @@ function Source() {
     position: { position: 0, duration: 1, startingBeforeEdge: false, endingAfterEdge: false },
     isDraggable: true,
     renderDragPreview: () => null,
-    getExtraDragData: () => ({ draggedDay: occurrence.displayTimezone.start.value }),
+    getExtraDragData: () => ({
+      draggedDay: buildTemporalPlainDate(adapter, occurrence.displayTimezone.start.value),
+    }),
   });
   return <SchedulerDraggable {...draggableProps} render={<div data-testid="source" />} />;
 }
@@ -52,8 +55,8 @@ describe('useDraggableEvent', () => {
 
   it('should commit the last preview when the drop position returns no data', async () => {
     const onEventsChange = vi.fn();
-    const start = adapter.addDays(occurrence.displayTimezone.start.value, 1);
-    const end = adapter.addDays(occurrence.displayTimezone.end.value, 1);
+    const start = adapter.getTime(adapter.addDays(occurrence.displayTimezone.start.value, 1));
+    const end = adapter.getTime(adapter.addDays(occurrence.displayTimezone.end.value, 1));
     const getEventDropDates = vi.fn<SchedulerDropTarget.GetEventDropDates>(() => ({ start, end }));
     render(
       <EventCalendarProvider
@@ -77,15 +80,13 @@ describe('useDraggableEvent', () => {
     getEventDropDates.mockReturnValue(undefined);
     dropDrag(screen.getByTestId('target'), { clientX: 110 });
     expect(onEventsChange).toHaveBeenCalledTimes(1);
-    expect(
-      adapter.isEqual(adapter.date(onEventsChange.mock.calls[0][0][0].start, 'default'), start),
-    ).toBe(true);
+    expect(new Date(onEventsChange.mock.calls[0][0][0].start).getTime()).toBe(start);
   });
 
   it('should commit a pen drop that ends within 5px of where the drag activated', async () => {
     const onEventsChange = vi.fn();
-    const start = adapter.addDays(occurrence.displayTimezone.start.value, 1);
-    const end = adapter.addDays(occurrence.displayTimezone.end.value, 1);
+    const start = adapter.getTime(adapter.addDays(occurrence.displayTimezone.start.value, 1));
+    const end = adapter.getTime(adapter.addDays(occurrence.displayTimezone.end.value, 1));
     render(
       <EventCalendarProvider
         events={[builder.build()]}
@@ -112,8 +113,8 @@ describe('useDraggableEvent', () => {
 
   it('should clear the placeholder unless the drag lands on a Scheduler target', async () => {
     let store!: SchedulerStoreInContext<any, any>;
-    const start = adapter.addDays(occurrence.displayTimezone.start.value, 1);
-    const end = adapter.addDays(occurrence.displayTimezone.end.value, 1);
+    const start = adapter.getTime(adapter.addDays(occurrence.displayTimezone.start.value, 1));
+    const end = adapter.getTime(adapter.addDays(occurrence.displayTimezone.end.value, 1));
     render(
       <EventCalendarProvider events={[builder.build()]} resources={[]}>
         <StoreProbe
@@ -152,8 +153,8 @@ describe('useDraggableEvent', () => {
 describe('SchedulerDropTarget when the pointer leaves it', () => {
   const { render } = createSchedulerRenderer();
 
-  const start = adapter.addDays(occurrence.displayTimezone.start.value, 1);
-  const end = adapter.addDays(occurrence.displayTimezone.end.value, 1);
+  const start = adapter.getTime(adapter.addDays(occurrence.displayTimezone.start.value, 1));
+  const end = adapter.getTime(adapter.addDays(occurrence.displayTimezone.end.value, 1));
 
   function setup(parameters: { external?: boolean; canDropEventsToTheOutside?: boolean }) {
     const { external = false, canDropEventsToTheOutside = false } = parameters;
@@ -229,8 +230,8 @@ describe('SchedulerDropTarget when the pointer leaves it', () => {
 describe('useDraggableEvent when the virtualizer unmounts mid-drag', () => {
   const { render } = createSchedulerRenderer();
 
-  const start = adapter.addDays(occurrence.displayTimezone.start.value, 1);
-  const end = adapter.addDays(occurrence.displayTimezone.end.value, 1);
+  const start = adapter.getTime(adapter.addDays(occurrence.displayTimezone.start.value, 1));
+  const end = adapter.getTime(adapter.addDays(occurrence.displayTimezone.end.value, 1));
 
   function Fixture({
     showSource = true,
@@ -337,8 +338,8 @@ describe('useDraggableEvent when the virtualizer unmounts mid-drag', () => {
     // Two calendars on the page, both showing the event.
     let store!: SchedulerStoreInContext<any, any>;
     const onEventsChangeOther = vi.fn();
-    const start = adapter.addDays(occurrence.displayTimezone.start.value, 1);
-    const end = adapter.addDays(occurrence.displayTimezone.end.value, 1);
+    const start = adapter.getTime(adapter.addDays(occurrence.displayTimezone.start.value, 1));
+    const end = adapter.getTime(adapter.addDays(occurrence.displayTimezone.end.value, 1));
     render(
       <React.Fragment>
         <EventCalendarProvider events={[builder.build()]} resources={[]}>

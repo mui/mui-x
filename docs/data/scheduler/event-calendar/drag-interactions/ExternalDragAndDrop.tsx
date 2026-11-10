@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { styled, Theme } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { teal } from '@mui/material/colors';
 import { differenceInMinutes } from 'date-fns/differenceInMinutes';
 import { Draggable } from '@base-ui/react/draggable';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
-import {
+import type {
   SchedulerEventOccurrence,
   SchedulerOccurrencePlaceholderExternalDragData,
 } from '@mui/x-scheduler/models';

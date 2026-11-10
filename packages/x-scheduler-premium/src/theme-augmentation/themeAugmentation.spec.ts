@@ -16,6 +16,9 @@ createTheme({
             backgroundColor: 'green',
           },
         },
+        dependencyArrows: {
+          color: 'purple',
+        },
         // @ts-expect-error invalid MuiEventTimeline class key
         invalidClassKey: {
           backgroundColor: 'blue',

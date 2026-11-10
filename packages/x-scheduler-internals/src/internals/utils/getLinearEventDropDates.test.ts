@@ -12,15 +12,15 @@ import {
 import type { SchedulerAxisEventDragData } from './schedulerDrag';
 
 const HOUR_MS = 60 * 60 * 1000;
-const DAY_START = adapter.date('2025-07-03T00:00:00', 'default');
-const at = (hours: number) => adapter.addMilliseconds(DAY_START, hours * HOUR_MS);
+const DAY_START = adapter.getTime(adapter.date('2025-07-03T00:00:00', 'default'));
+const at = (hours: number) => DAY_START + hours * HOUR_MS;
 
 /** A whole day, with a window the events have to stay in. */
 const daySurface: LinearDropSurface = {
   axis: 'y',
   durationMs: 24 * HOUR_MS,
-  offsetToDate: (offsetMs) => adapter.addMilliseconds(DAY_START, offsetMs),
-  dateToOffset: (date) => adapter.getTime(date) - adapter.getTime(DAY_START),
+  offsetToDate: (offsetMs) => DAY_START + offsetMs,
+  dateToOffset: (date) => date - DAY_START,
   bounds: { start: at(0), end: at(24) },
 };
 
@@ -28,9 +28,8 @@ const daySurface: LinearDropSurface = {
 const trimmedSurface: LinearDropSurface = {
   axis: 'x',
   durationMs: 12 * HOUR_MS,
-  offsetToDate: (offsetMs) => adapter.addMilliseconds(at(8), offsetMs),
-  dateToOffset: (date) =>
-    Math.min(Math.max(adapter.getTime(date) - adapter.getTime(at(8)), 0), 12 * HOUR_MS),
+  offsetToDate: (offsetMs) => at(8) + offsetMs,
+  dateToOffset: (date) => Math.min(Math.max(date - at(8), 0), 12 * HOUR_MS),
 };
 
 const occurrence = EventBuilder.new().toOccurrence();
@@ -69,7 +68,6 @@ function getDragData(
 
 function move(surface: LinearDropSurface, source: SchedulerDropTarget.Source, fraction: number) {
   return getLinearEventDropDates({
-    adapter,
     source,
     target: createTarget(fraction, surface.axis),
     surface,
@@ -85,20 +83,20 @@ describe('getLinearEventDropDates', () => {
     it('should keep the grab position under the pointer and round to 15 minutes', () => {
       // 15:37 minus the 30 minutes grabbed into the event is 15:07, which rounds to 15:00.
       const dates = move(daySurface, source, (15 + 37 / 60) / 24)!;
-      expect(dates.start).toEqualDateTime(at(15));
-      expect(dates.end).toEqualDateTime(at(16));
+      expect(dates.start).toBe(at(15));
+      expect(dates.end).toBe(at(16));
     });
 
     it('should keep the event inside the window at the end of the day', () => {
       const dates = move(daySurface, source, 23.9 / 24)!;
-      expect(dates.start).toEqualDateTime(at(23));
-      expect(dates.end).toEqualDateTime(at(24));
+      expect(dates.start).toBe(at(23));
+      expect(dates.end).toBe(at(24));
     });
 
     it('should keep the event inside the window at the start of the day', () => {
       const dates = move(daySurface, source, 0.2 / 24)!;
-      expect(dates.start).toEqualDateTime(at(0));
-      expect(dates.end).toEqualDateTime(at(1));
+      expect(dates.start).toBe(at(0));
+      expect(dates.end).toBe(at(1));
     });
 
     it('should return nothing while the drag data is not captured yet', () => {
@@ -113,8 +111,27 @@ describe('getLinearEventDropDates', () => {
       // 7:00 to 9:00: its rendered start is the 8:00 edge of the window, and the pointer stays there.
       const hiddenStart = createSource(schedulerTimeEventMoveKind, getDragData(7, 9, 0));
       const dates = move(trimmedSurface, hiddenStart, 0)!;
-      expect(dates.start).toEqualDateTime(at(7));
-      expect(dates.end).toEqualDateTime(at(9));
+      expect(dates.start).toBe(at(7));
+      expect(dates.end).toBe(at(9));
+    });
+
+    it('should read a reversed axis from the right edge', () => {
+      // 4 hours from the right edge of the 8:00 to 20:00 window is 12:00.
+      const reversedSurface: LinearDropSurface = { ...trimmedSurface, reversed: true };
+      const dates = move(
+        reversedSurface,
+        createSource(schedulerTimeEventMoveKind, getDragData(10, 11, 0)),
+        1 - 4 / 12,
+      )!;
+      expect(dates.start).toBe(at(12));
+      expect(dates.end).toBe(at(13));
+    });
+
+    it('should let an event leave the window when the surface does not bound its move', () => {
+      const unboundedSurface: LinearDropSurface = { ...daySurface, isMoveBounded: () => false };
+      const dates = move(unboundedSurface, source, 23.9 / 24)!;
+      expect(dates.start).toBe(at(23.5));
+      expect(dates.end).toBe(at(24.5));
     });
   });
 
@@ -123,14 +140,14 @@ describe('getLinearEventDropDates', () => {
       // Grabbed at the end of the 10:00 to 11:00 event, then moved to 16:00.
       const source = createSource(schedulerTimeEventResizeKind, getDragData(10, 11, 60, 'end'));
       const dates = move(daySurface, source, 16 / 24)!;
-      expect(dates.start).toEqualDateTime(at(10));
-      expect(dates.end).toEqualDateTime(at(16));
+      expect(dates.start).toBe(at(10));
+      expect(dates.end).toBe(at(16));
     });
 
     it('should keep 15 minutes between the start and a dragged end', () => {
       const source = createSource(schedulerTimeEventResizeKind, getDragData(10, 11, 60, 'end'));
       const dates = move(daySurface, source, 9 / 24)!;
-      expect(dates.end).toEqualDateTime(at(10.25));
+      expect(dates.end).toBe(at(10.25));
     });
 
     it('should clamp an end that the grab offset pushes past the window', () => {
@@ -138,26 +155,26 @@ describe('getLinearEventDropDates', () => {
       // puts the end 15 minutes after midnight.
       const source = createSource(schedulerTimeEventResizeKind, getDragData(10, 11, 45, 'end'));
       const dates = move(daySurface, source, 1)!;
-      expect(dates.end).toEqualDateTime(at(24));
+      expect(dates.end).toBe(at(24));
     });
 
     it('should keep the end inside the window', () => {
       const source = createSource(schedulerTimeEventResizeKind, getDragData(10, 11, 60, 'end'));
       const dates = move(daySurface, source, 1)!;
-      expect(dates.end).toEqualDateTime(at(24));
+      expect(dates.end).toBe(at(24));
     });
 
     it('should keep 15 minutes between a dragged start and the end', () => {
       const source = createSource(schedulerTimeEventResizeKind, getDragData(10, 11, 0, 'start'));
       const dates = move(daySurface, source, 12 / 24)!;
-      expect(dates.start).toEqualDateTime(at(10.75));
-      expect(dates.end).toEqualDateTime(at(11));
+      expect(dates.start).toBe(at(10.75));
+      expect(dates.end).toBe(at(11));
     });
 
     it('should not let the start leave the window', () => {
       const source = createSource(schedulerTimeEventResizeKind, getDragData(10, 11, 0, 'start'));
       const dates = move(daySurface, source, -0.2)!;
-      expect(dates.start).toEqualDateTime(at(0));
+      expect(dates.start).toBe(at(0));
     });
   });
 
@@ -165,14 +182,13 @@ describe('getLinearEventDropDates', () => {
     it('should start it under the pointer', () => {
       const source = createSource(schedulerExternalEventKind, {});
       const dates = getLinearEventDropDates({
-        adapter,
         source,
         target: createTarget(9 / 24, 'y'),
         surface: daySurface,
         moveKind: schedulerTimeEventMoveKind,
         resizeKind: schedulerTimeEventResizeKind,
       })!;
-      expect(dates.start).toEqualDateTime(at(9));
+      expect(dates.start).toBe(at(9));
       expect(dates.end).toBe(undefined);
     });
   });
@@ -180,12 +196,12 @@ describe('getLinearEventDropDates', () => {
   describe('getLinearPointerDate', () => {
     it('should stop one slot before the end of the axis', () => {
       // Rounding alone would send the last minutes of the day to the midnight after it.
-      expect(
-        getLinearPointerDate({ target: createTarget(1, 'y'), surface: daySurface }),
-      ).toEqualDateTime(at(23.75));
+      expect(getLinearPointerDate({ target: createTarget(1, 'y'), surface: daySurface })).toBe(
+        at(23.75),
+      );
       expect(
         getLinearPointerDate({ target: createTarget(23.95 / 24, 'y'), surface: daySurface }),
-      ).toEqualDateTime(at(23.75));
+      ).toBe(at(23.75));
     });
   });
 });

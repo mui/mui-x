@@ -8,9 +8,15 @@
     "elements": {
       "description": "The elements to render. Each element contains the prop to edit a section of the value."
     },
+    "sectionListRef": { "description": "The ref used to access the DOM elements of the sections." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {},
-  "slotDescriptions": { "root": "", "section": "", "sectionContent": "", "sectionSeparator": "" }
+  "slotDescriptions": {
+    "root": "The component that renders the root.",
+    "section": "The component that renders a section.",
+    "sectionContent": "The component that renders the editable content of a section.",
+    "sectionSeparator": "The component that renders the separator before or after a section."
+  }
 }

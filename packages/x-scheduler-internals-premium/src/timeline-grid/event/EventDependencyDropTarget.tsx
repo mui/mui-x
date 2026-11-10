@@ -17,9 +17,9 @@ import type { SchedulerDependencyDragPayload } from '../../internals/utils/sched
 /**
  * Registers an element of an event (its body, or one of its dependency terminals) as
  * a drop target for the create-dependency gesture.
- * Recurring and read-only events register as invalid targets: they never get the drop
- * highlight or the snapped preview, but dropping on one surfaces the rejection instead
- * of dissolving the gesture in silence.
+ * Recurring events register as invalid targets: they never get the drop highlight or
+ * the snapped preview, but dropping on one surfaces the rejection instead of dissolving
+ * the gesture in silence.
  * Declarative only: the drop itself is finalized by the creation monitor on the grid
  * root, which reads the hovered target's payload.
  */
@@ -35,11 +35,11 @@ function EnabledEventDependencyDropTarget(props: EventDependencyDropTarget.Props
 
   const store = useEventTimelinePremiumStoreContext();
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, eventId);
-  const isReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, eventId);
 
   const payload = React.useMemo(
-    () => ({ eventId, occurrenceKey, resourceId, side, isValid: !isRecurring && !isReadOnly }),
-    [eventId, occurrenceKey, resourceId, side, isRecurring, isReadOnly],
+    // A read-only event is a valid target: the cascade veto protects it.
+    () => ({ eventId, occurrenceKey, resourceId, side, isValid: !isRecurring }),
+    [eventId, occurrenceKey, resourceId, side, isRecurring],
   );
 
   // An event cannot depend on itself. A stable identity: the engine re-resolves the hovered

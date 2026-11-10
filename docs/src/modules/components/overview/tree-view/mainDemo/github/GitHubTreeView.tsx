@@ -1,20 +1,15 @@
 import * as React from 'react';
 import { animated, useSpring } from '@react-spring/web';
-import {
-  ThemeOptions,
-  ThemeProvider,
-  createTheme,
-  useTheme,
-  alpha,
-  styled,
-} from '@mui/material/styles';
-import { TransitionProps } from '@mui/material/transitions';
+import type { ThemeOptions } from '@mui/material/styles';
+import { ThemeProvider, createTheme, useTheme, alpha, styled } from '@mui/material/styles';
+import type { TransitionProps } from '@mui/material/transitions';
 import FolderIcon from '@mui/icons-material/Folder';
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 import Stack from '@mui/material/Stack';
 import { useTreeItemModel } from '@mui/x-tree-view/hooks';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { useTreeItem, UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
+import type { UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
+import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
 import {
   TreeItemCheckbox,
   TreeItemContent,
@@ -25,7 +20,8 @@ import {
 } from '@mui/x-tree-view/TreeItem';
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
-import { ExtendedTreeItemProps, ITEMS, ItemType } from './items';
+import type { ExtendedTreeItemProps, ItemType } from './items';
+import { ITEMS } from './items';
 import StateAddedIcon from '../../icons/StateAddedIcon';
 import StateDeletedIcon from '../../icons/StateDeletedIcon';
 import StateModifiedIcon from '../../icons/StateModifiedIcon';

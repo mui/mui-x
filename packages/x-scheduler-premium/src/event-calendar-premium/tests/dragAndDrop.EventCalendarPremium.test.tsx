@@ -1,5 +1,6 @@
 import { screen, act } from '@mui/internal-test-utils';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import {
   adapter,
   createSchedulerRenderer,
@@ -27,6 +28,7 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
 
     const { user } = await renderSettled(
       <EventCalendarPremium
+        features={{ recurringEvents: recurringEventsFeature }}
         events={[event]}
         visibleDate={adapter.date('2025-07-03T00:00:00Z', 'default')}
         view="month"
@@ -86,6 +88,7 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
 
     const { user } = await renderSettled(
       <EventCalendarPremium
+        features={{ recurringEvents: recurringEventsFeature }}
         events={[event]}
         visibleDate={adapter.date('2025-07-03T00:00:00Z', 'default')}
         view="week"

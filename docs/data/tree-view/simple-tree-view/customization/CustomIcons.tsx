@@ -1,7 +1,8 @@
 import Box from '@mui/material/Box';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
-import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
+import type { SvgIconProps } from '@mui/material/SvgIcon';
+import SvgIcon from '@mui/material/SvgIcon';
 import { styled } from '@mui/material/styles';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';

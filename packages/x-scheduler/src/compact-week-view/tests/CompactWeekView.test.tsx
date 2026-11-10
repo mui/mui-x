@@ -2,6 +2,7 @@ import {
   adapter,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
+  EventBuilder,
 } from 'test/utils/scheduler';
 import { within } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
@@ -105,6 +106,21 @@ describe('<CompactWeekView />', () => {
           viewConfig: { week: { startTime: 8, endTime: 20, initialScrollTime: 6 } },
         });
       }).toWarnDev(['MUI X Scheduler: `viewConfig.week` received an invalid `initialScrollTime`']);
+    });
+
+    it('should forward `timeGridEvents` from the `week` key', () => {
+      const nightShift = EventBuilder.new()
+        .title('Night shift')
+        .span('2025-07-03T22:00:00Z', '2025-07-04T06:00:00Z')
+        .build();
+
+      renderWithProviders(<CompactWeekView />, [nightShift], {
+        viewConfig: { week: { timeGridEvents: 'same-day-only' } },
+      });
+
+      const root = getDayTimeGrid();
+      expect(root.querySelector(`.${eventCalendarClasses.timeGridEvent}`)).to.equal(null);
+      expect(root.querySelector(`.${eventCalendarClasses.dayGridEvent}`)).not.to.equal(null);
     });
   });
 });

@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
     "onItemClick": {
       "description": "Callback fired when a marker is clicked directly. For closest-point clicks (the <code>ScatterChart</code> default), pass <code>onItemClick</code> to the chart container instead.",
       "typeDescriptions": {
@@ -40,6 +41,6 @@
   },
   "slotDescriptions": {
     "marker": "The component that renders the marker for a scatter point.",
-    "scatter": ""
+    "scatter": "The component that renders the scatter markers."
   }
 }

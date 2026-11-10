@@ -45,7 +45,13 @@ ChartsAxisHighlight.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The type of highlight for the x-axis.
+   */
   x: PropTypes.oneOf(['band', 'line', 'none']),
+  /**
+   * The type of highlight for the y-axis.
+   */
   y: PropTypes.oneOf(['band', 'line', 'none']),
 } as any;
 

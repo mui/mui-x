@@ -8,6 +8,7 @@ import type {
 import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
 import type { EventCalendarLocaleText, SchedulerSlotsAndSlotProps } from '@mui/x-scheduler/models';
 import type { AgendaViewProps } from '@mui/x-scheduler/agenda-view';
+import type { EventCalendarPremiumFeatures } from '../event-calendar-premium/features/EventCalendarPremiumFeatures.types';
 
 export interface StandaloneAgendaViewPremiumProps<TEvent extends object, TResource extends object>
   extends
@@ -22,15 +23,23 @@ export interface StandaloneAgendaViewPremiumProps<TEvent extends object, TResour
     SchedulerSlotsAndSlotProps {
   /**
    * Configuration applied to the view, keyed by the view name.
-   * The `agenda` view does not support any configuration keys yet.
+   * For the `agenda` view, `dayCount` is how many days are displayed (and how far the
+   * navigation moves), or `'month'` to display the month of the visible date and navigate one month at a time.
+   * @example { agenda: { dayCount: 'month' } }
    */
-  viewConfig?: Omit<EventCalendarViewConfig, 'day' | 'week'>;
+  viewConfig?: Pick<EventCalendarViewConfig, 'agenda'>;
   /**
    * Set the locale text of the view.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)
    * in the GitHub repository.
    */
   localeText?: Partial<EventCalendarLocaleText>;
+  /**
+   * The optional features of the view: `recurringEvents` from `@mui/x-scheduler-premium/recurring-events`.
+   * They are read once when the component mounts, later changes are ignored.
+   * @example { recurringEvents: recurringEventsFeature }
+   */
+  features?: EventCalendarPremiumFeatures;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

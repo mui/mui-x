@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-generator",
-  "version": "9.14.0",
+  "version": "9.17.0",
   "author": "MUI Team",
   "description": "Generate fake data for demo purposes only.",
   "license": "MIT",
@@ -31,7 +31,7 @@
     "@mui/x-data-grid": "workspace:^",
     "@mui/x-data-grid-premium": "workspace:^",
     "@mui/x-data-grid-pro": "workspace:^",
-    "@mui/x-internals": "workspace:^",
+    "@mui/x-internals": "workspace:*",
     "chance": "catalog:",
     "clsx": "catalog:",
     "lru-cache": "^11.5.3"
@@ -61,9 +61,6 @@
     "@emotion/styled": {
       "optional": true
     }
-  },
-  "engines": {
-    "node": ">=14.0.0"
   },
   "exports": {
     ".": "./src/index.ts",

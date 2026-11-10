@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
-import { GeoDataPlot, MapImagePlot, D3NamedProjection } from '@mui/x-charts-premium/Map';
+import type { D3NamedProjection } from '@mui/x-charts-premium/Map';
+import { GeoDataPlot, MapImagePlot } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { marsRegions } from 'docs/data/charts/map/marsRegions';
 
@@ -58,10 +59,8 @@ export default function MapImageProjections() {
           </ChartsGeoDataProviderPremium>
         </div>
       ))}
-      {ready.size === PROJECTIONS.length && (
-        // Visible (1×1) so Playwright's `waitForSelector` (state: 'visible') resolves.
-        <div data-testid="map-images-ready" style={{ width: 1, height: 1 }} />
-      )}
+      {/* `MapImagePlot` reprojects each raster asynchronously, hold the screenshot until all are done. */}
+      {ready.size < PROJECTIONS.length && <div data-screenshot-pending />}
     </div>
   );
 }

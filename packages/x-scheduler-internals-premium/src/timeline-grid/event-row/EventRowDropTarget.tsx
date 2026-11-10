@@ -2,14 +2,16 @@
 import {
   schedulerExternalEventKind,
   SchedulerDropTarget,
-  dateToTimelineAxisOffsetMs,
-  timelineAxisOffsetToDate,
+  isStartMinuteOutsideAxisWindow,
+  timelineAxisOffsetToTimestamp,
+  timestampToTimelineAxisOffsetMs,
+  toMsInDay,
   getLinearEventDropDates,
 } from '@mui/x-scheduler-internals/internals';
 import type { LinearDropSurface } from '@mui/x-scheduler-internals/internals';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { useDirection } from '@base-ui/react/direction-provider';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { useTimelineGridEventRowContext } from './TimelineGridEventRowContext';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -30,8 +32,8 @@ export function EventRowDropTarget(props: EventRowDropTarget.Props) {
   const { resourceId } = useTimelineGridEventRowContext();
 
   // Context hooks
-  const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
+  const isRtl = useDirection() === 'rtl';
 
   // Selector hooks
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
@@ -40,14 +42,30 @@ export function EventRowDropTarget(props: EventRowDropTarget.Props) {
   // take no space, so px↔date conversions go through the axis helpers.
   const surface: LinearDropSurface = {
     axis: 'x',
+    // The time axis starts at the inline-start edge, which is the right edge in RTL.
+    reversed: isRtl,
     durationMs: config.durationMs,
-    offsetToDate: (offsetMs) => timelineAxisOffsetToDate(adapter, config, offsetMs),
-    dateToOffset: (date) => dateToTimelineAxisOffsetMs(adapter, config, date),
+    offsetToDate: (offsetMs) => timelineAxisOffsetToTimestamp(config, offsetMs),
+    dateToOffset: (date) => timestampToTimelineAxisOffsetMs(config, date),
+    // A visible start has no remainder, even in the second occurrence of an hour repeated by a
+    // fall-back transition, which the axis reads as the first one.
+    getHiddenStartRemainderMs: (start) => {
+      const startMsInDay = toMsInDay(start, config.timezone);
+      if (!isStartMinuteOutsideAxisWindow(config, Math.floor(startMsInDay / 60_000))) {
+        return 0;
+      }
+      return (
+        start -
+        timelineAxisOffsetToTimestamp(
+          config,
+          timestampToTimelineAxisOffsetMs(config, start, startMsInDay),
+        )
+      );
+    },
   };
 
   const getEventDropDates: SchedulerDropTarget.GetEventDropDates = ({ source, target }) =>
     getLinearEventDropDates({
-      adapter,
       source,
       target,
       surface,

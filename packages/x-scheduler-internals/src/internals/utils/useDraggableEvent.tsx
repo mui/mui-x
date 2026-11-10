@@ -58,8 +58,8 @@ export function useDraggableEvent<TData extends SchedulerEventDragData>(
     (input: { clientX: number; clientY: number }) =>
       ({
         originalOccurrence: getOriginalOccurrence(),
-        start: start.value,
-        end: end.value,
+        start: start.timestamp,
+        end: end.timestamp,
         ...getExtraDragData(input),
       }) as TData,
   );

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGridPro, useGridApiRef, GridColDef } from '@mui/x-data-grid-pro';
+import type { GridColDef } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import { interval } from 'rxjs';
 import { randomInt, randomUserName } from '@mui/x-data-grid-generator';
 

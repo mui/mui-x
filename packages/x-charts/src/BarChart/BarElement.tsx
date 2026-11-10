@@ -38,14 +38,41 @@ export type BarElementProps = Omit<
      */
     slots?: BarElementSlots;
 
+    /**
+     * The position of the element in the x-axis.
+     */
     x: number;
+    /**
+     * The position in the x-axis of the stack this bar belongs to.
+     */
     xOrigin: number;
+    /**
+     * The position of the element in the y-axis.
+     */
     y: number;
+    /**
+     * The position in the y-axis of the stack this bar belongs to.
+     */
     yOrigin: number;
+    /**
+     * The width of the element.
+     */
     width: number;
+    /**
+     * The height of the element.
+     */
     height: number;
+    /**
+     * The orientation of the bar.
+     */
     layout: 'horizontal' | 'vertical';
+    /**
+     * If `true`, animations are skipped.
+     */
     skipAnimation: boolean;
+    /**
+     * If `true`, the element is hidden.
+     */
     hidden?: boolean;
   };
 
@@ -128,11 +155,29 @@ BarElement.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
+  /**
+   * The index of the data point in the series.
+   */
   dataIndex: PropTypes.number.isRequired,
+  /**
+   * If `true`, the element is hidden.
+   */
   hidden: PropTypes.bool,
+  /**
+   * The orientation of the bar.
+   */
   layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: PropTypes.string.isRequired,
+  /**
+   * If `true`, animations are skipped.
+   */
   skipAnimation: PropTypes.bool.isRequired,
   /**
    * The props used for each component slot.
@@ -144,7 +189,13 @@ BarElement.propTypes /* remove-proptypes */ = {
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * The position in the x-axis of the stack this bar belongs to.
+   */
   xOrigin: PropTypes.number.isRequired,
+  /**
+   * The position in the y-axis of the stack this bar belongs to.
+   */
   yOrigin: PropTypes.number.isRequired,
 } as any;
 

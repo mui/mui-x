@@ -9,6 +9,9 @@ interface ChartsGridVerticalProps {
   axis: ComputedXAxis;
   start: number;
   end: number;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: Partial<ChartsGridClasses>;
 }
 

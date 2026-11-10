@@ -5,15 +5,18 @@ import {
   gridVisibleColumnFieldsSelector,
   gridColumnFieldsSelector,
 } from '@mui/x-data-grid-pro';
+import { asReplaceUpdates, getRowIndexRelativeToAllRows } from '@mui/x-data-grid-pro/internals';
 import type {
   GridCellEditStopParams,
   GridRowEditStopParams,
   GridEvents,
-  GridRowModelReplace,
   GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import type { GridApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { GridPremiumFeatureDependencies } from '../../../models/gridFeatureDependencies';
+import { createComputedColumnsHistoryHandler } from '../computedColumns/gridComputedColumnsHistory';
+import type { GridComputedColumnsHistoryData } from '../computedColumns/gridComputedColumnsHistory';
 import type {
   GridHistoryEventHandler,
   GridCellEditHistoryData,
@@ -82,15 +85,10 @@ export const createCellEditHistoryHandler = (
         return false;
       }
 
-      const { rowIdToIndexMap, range } = gridVisibleRowsSelector(apiRef);
+      const { rowIdToIndexMap } = gridVisibleRowsSelector(apiRef);
 
       // Check if row is in the current page
-      const rowIndex = rowIdToIndexMap.get(id);
-      if (
-        rowIndex === undefined ||
-        rowIndex < (range?.firstRowIndex || 0) ||
-        rowIndex > (range?.lastRowIndex || rowIndex)
-      ) {
+      if (!rowIdToIndexMap.has(id)) {
         return false;
       }
 
@@ -135,7 +133,7 @@ export const createCellEditHistoryHandler = (
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, field);
         apiRef.current.scrollToIndexes({
-          rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+          rowIndex: getRowIndexRelativeToAllRows(apiRef, id),
           colIndex: apiRef.current.getColumnIndex(field),
         });
       });
@@ -163,7 +161,7 @@ export const createCellEditHistoryHandler = (
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, field);
         apiRef.current.scrollToIndexes({
-          rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+          rowIndex: getRowIndexRelativeToAllRows(apiRef, id),
           colIndex: apiRef.current.getColumnIndex(field),
         });
       });
@@ -198,15 +196,10 @@ export const createRowEditHistoryHandler = (
     validate: (data: GridRowEditHistoryData, direction: 'undo' | 'redo') => {
       const { id, oldRow, newRow } = data;
 
-      const { rowIdToIndexMap, range } = gridVisibleRowsSelector(apiRef);
+      const { rowIdToIndexMap } = gridVisibleRowsSelector(apiRef);
 
       // Check if row is in the current page
-      const rowIndex = rowIdToIndexMap.get(id);
-      if (
-        rowIndex === undefined ||
-        rowIndex < (range?.firstRowIndex || 0) ||
-        rowIndex > (range?.lastRowIndex || rowIndex)
-      ) {
+      if (!rowIdToIndexMap.has(id)) {
         return false;
       }
 
@@ -251,7 +244,7 @@ export const createRowEditHistoryHandler = (
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, Object.keys(oldRow)[0]);
         apiRef.current.scrollToIndexes({
-          rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+          rowIndex: getRowIndexRelativeToAllRows(apiRef, id),
           colIndex: 0,
         });
       });
@@ -279,24 +272,13 @@ export const createRowEditHistoryHandler = (
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, Object.keys(newRow)[0]);
         apiRef.current.scrollToIndexes({
-          rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+          rowIndex: getRowIndexRelativeToAllRows(apiRef, id),
           colIndex: 0,
         });
       });
     },
   };
 };
-
-/**
- * Restores the captured rows as they are, instead of merging them into whatever is
- * stored now. Both sides of the history entry hold complete rows — the ones the grid
- * had before the paste and the ones `processRowUpdate()` returned — so there is nothing
- * to merge them into. A merge would build a copy of each row, dropping the identity and
- * the `#private` state that the paste itself preserved, and it could never undo a field
- * the paste added.
- */
-const asReplaceUpdates = (rows: GridValidRowModel[]): GridRowModelReplace[] =>
-  rows.map((row) => ({ _action: 'replace', row }));
 
 /**
  * Create the default handler for clipboardPasteEnd events.
@@ -316,16 +298,11 @@ export const createClipboardPasteHistoryHandler = (
       }
 
       // Check if all affected rows are still visible and have expected values
-      const { rowIdToIndexMap, range } = gridVisibleRowsSelector(apiRef);
+      const { rowIdToIndexMap } = gridVisibleRowsSelector(apiRef);
 
       for (let i = 0; i < updatedRowIds.length; i += 1) {
         const rowId = updatedRowIds[i];
-        const rowIndex = rowIdToIndexMap.get(rowId);
-        if (
-          rowIndex === undefined ||
-          rowIndex < (range?.firstRowIndex || 0) ||
-          rowIndex > (range?.lastRowIndex || rowIndex)
-        ) {
+        if (!rowIdToIndexMap.has(rowId)) {
           return false;
         }
 
@@ -371,15 +348,21 @@ export const createClipboardPasteHistoryHandler = (
           }
         }
 
-        // Restore all rows to their original state
+        // Restore all rows to their original state.
+        // Replace instead of merge: keeps row identity and `#private` state, and removes fields the paste added.
         apiRef.current.updateRows(asReplaceUpdates(oldRowsValues));
 
         if (differentFieldIndex >= 0) {
           requestAnimationFrame(() => {
-            apiRef.current.setCellFocus(firstNewRowId, columnOrder[differentFieldIndex]);
+            const focusField = columnOrder[differentFieldIndex];
+            const colIndex = apiRef.current.getColumnIndex(focusField);
+            apiRef.current.setCellFocus(firstNewRowId, focusField);
             apiRef.current.scrollToIndexes({
-              rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(firstNewRowId),
-              colIndex: differentFieldIndex,
+              rowIndex: getRowIndexRelativeToAllRows(apiRef, firstNewRowId),
+              // `differentFieldIndex` is an index into all columns, so a hidden column
+              // before it would make it point past the visible columns. Resolve it to a
+              // visible index and skip the horizontal scroll when the column is hidden.
+              colIndex: colIndex === -1 ? undefined : colIndex,
             });
           });
         }
@@ -414,10 +397,15 @@ export const createClipboardPasteHistoryHandler = (
 
         if (differentFieldIndex >= 0) {
           requestAnimationFrame(() => {
-            apiRef.current.setCellFocus(firstNewRowId, columnOrder[differentFieldIndex]);
+            const focusField = columnOrder[differentFieldIndex];
+            const colIndex = apiRef.current.getColumnIndex(focusField);
+            apiRef.current.setCellFocus(firstNewRowId, focusField);
             apiRef.current.scrollToIndexes({
-              rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(firstNewRowId),
-              colIndex: differentFieldIndex,
+              rowIndex: getRowIndexRelativeToAllRows(apiRef, firstNewRowId),
+              // `differentFieldIndex` is an index into all columns, so a hidden column
+              // before it would make it point past the visible columns. Resolve it to a
+              // visible index and skip the horizontal scroll when the column is hidden.
+              colIndex: colIndex === -1 ? undefined : colIndex,
             });
           });
         }
@@ -431,14 +419,37 @@ export const createClipboardPasteHistoryHandler = (
  */
 export const createDefaultHistoryHandlers = (
   apiRef: RefObject<GridApiPremium>,
-  props: Pick<DataGridPremiumProcessedProps, 'columns' | 'isCellEditable' | 'dataSource'>,
+  props: Pick<
+    DataGridPremiumProcessedProps,
+    'columns' | 'isCellEditable' | 'dataSource' | 'disableComputedColumns' | 'disableFormulas'
+  > & {
+    /**
+     * The injected formula feature (`featureDependencies.formula`). Passed on its own
+     * because the `featureDependencies` object is usually created inline: the feature
+     * itself cannot change after the first render.
+     */
+    formulaFeature: GridPremiumFeatureDependencies['formula'];
+  },
 ) => {
   const handlers = {} as Record<
     GridEvents,
     | GridHistoryEventHandler<GridCellEditHistoryData>
     | GridHistoryEventHandler<GridRowEditHistoryData>
     | GridHistoryEventHandler<GridClipboardPasteHistoryData>
+    | GridHistoryEventHandler<GridComputedColumnsHistoryData>
   >;
+
+  // Computed columns are tracked whenever they are available, editing or not: a
+  // handler on every grid would put the undo/redo buttons in every toolbar.
+  const canHaveComputedColumns =
+    props.formulaFeature !== undefined &&
+    !props.disableComputedColumns &&
+    !props.disableFormulas &&
+    !props.dataSource;
+
+  if (canHaveComputedColumns) {
+    handlers.computedColumnsChange = createComputedColumnsHistoryHandler(apiRef);
+  }
 
   const canHaveEditing = props.isCellEditable || props.columns.some((col) => col.editable);
 

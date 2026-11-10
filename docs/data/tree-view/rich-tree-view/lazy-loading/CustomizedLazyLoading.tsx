@@ -2,10 +2,11 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import Skeleton from '@mui/material/Skeleton';
-import { TransitionProps } from '@mui/material/transitions';
+import type { TransitionProps } from '@mui/material/transitions';
 import { useSpring, animated } from '@react-spring/web';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
-import { TreeItem, TreeItemProps, treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import type { TreeItemProps } from '@mui/x-tree-view/TreeItem';
+import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import {
   TreeItemLoader,
   treeItemLoaderClasses,

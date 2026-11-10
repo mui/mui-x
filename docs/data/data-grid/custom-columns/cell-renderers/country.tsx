@@ -1,9 +1,9 @@
 import * as React from 'react';
-import {
+import type {
   GridRenderCellParams,
   GridRenderEditCellParams,
-  useGridApiContext,
 } from '@mui/x-data-grid';
+import { useGridApiContext } from '@mui/x-data-grid';
 import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
 import type { AutocompleteProps } from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';

@@ -14,14 +14,25 @@ import type { Theme } from '@mui/material/styles';
 // `em` in the grid track resolves against the EventsCell's font-size, which
 // inherits `theme.typography.body2.fontSize` from the `EventTimelinePremium` root.
 export function getEventsCellLaneMinHeight(theme: Theme): number {
-  const fontSizeRem = parseFloat(String(theme.typography.body2.fontSize));
-  const fontSize =
-    Number.isFinite(fontSizeRem) && fontSizeRem > 0
-      ? fontSizeRem * (theme.typography.htmlFontSize ?? 16)
-      : 14;
+  const fontSize = getBody2FontSizeInPx(theme) ?? 14;
   const lineHeight = Number(theme.typography.body2.lineHeight) || 1.43;
   const extra = parseFloat(theme.spacing(1.125)) || 9;
   return lineHeight * fontSize + extra;
+}
+
+// A theme gives the font size as a number of px or as a CSS length. Px are used as they
+// are; other lengths (rem, em) go through `htmlFontSize`, as the timeline inherits the
+// root font size.
+function getBody2FontSizeInPx(theme: Theme): number | null {
+  const fontSize = theme.typography.body2.fontSize;
+  const value = parseFloat(String(fontSize));
+  if (!Number.isFinite(value) || value <= 0) {
+    return null;
+  }
+  if (typeof fontSize === 'number' || String(fontSize).trim().toLowerCase().endsWith('px')) {
+    return value;
+  }
+  return value * (theme.typography.htmlFontSize ?? 16);
 }
 
 export function getRowHeightForLaneCount(theme: Theme, laneCount: number): number {

@@ -1,7 +1,6 @@
 import type { Draggable } from '@base-ui/react/draggable';
 import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
-import type { Adapter } from '../../use-adapter/useAdapter.types';
-import type { TemporalSupportedObject } from '../../models';
+import { roundToDragPrecision } from './drag-utils';
 import { schedulerExternalEventKind } from './schedulerDrag';
 import type {
   SchedulerAxisEventDragData,
@@ -12,7 +11,9 @@ import type { SchedulerDropTarget } from './SchedulerDropTarget';
 
 /**
  * A drop target where the pointer maps to a date along one axis, such as a day column or a
- * timeline row.
+ * timeline row. The dates are timestamps in milliseconds. The offsets are milliseconds from the
+ * start of the axis, in the unit of the surface: the hidden hours of a timeline row take no space,
+ * and a day column counts the time elapsed, which differs from its wall-clock hours on DST days.
  */
 export interface LinearDropSurface {
   /**
@@ -20,32 +21,53 @@ export interface LinearDropSurface {
    */
   axis: 'x' | 'y';
   /**
-   * How long the target is along its axis, in milliseconds of the axis.
+   * Whether the dates run from the right edge of the target, as on a horizontal axis in RTL.
+   * @default false
+   */
+  reversed?: boolean;
+  /**
+   * How long the target is along its axis, as an offset.
    * The axis skips hidden hours, so it can be shorter than the dates it spans.
    */
   durationMs: number;
   /**
-   * Maps an offset from the start of the axis, in milliseconds of the axis, to a date.
+   * Maps the position of the pointer along the axis, from 0 at the start of the dates to 1 at
+   * their end, to an offset from the start of the axis.
+   * Defaults to a linear mapping over `durationMs`.
    */
-  offsetToDate: (offsetMs: number) => TemporalSupportedObject;
+  fractionToOffsetMs?: (fraction: number) => number;
+  /**
+   * Maps an offset from the start of the axis to a date.
+   */
+  offsetToDate: (offsetMs: number) => number;
   /**
    * Maps a date to an offset from the start of the axis. A date that falls in hidden hours maps
    * to the edge of the visible hours.
    */
-  dateToOffset: (date: TemporalSupportedObject) => number;
+  dateToOffset: (date: number) => number;
+  /**
+   * The part of the start of a moved event that the axis does not render, because it falls in
+   * hidden hours. The move carries it over, so an unmoved drag maps back to the exact dates.
+   * Defaults to the distance between the start and the date the axis renders it at.
+   */
+  getHiddenStartRemainderMs?: (start: number) => number;
   /**
    * The dates an event has to stay within, when the surface holds a single window such as a day.
    */
-  bounds?: { start: TemporalSupportedObject; end: TemporalSupportedObject };
-}
-
-/** Rounds an offset in milliseconds to the grid an event snaps to while it is dragged. */
-function roundToDragPrecision(offsetMs: number) {
-  return Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
+  bounds?: { start: number; end: number };
+  /**
+   * Whether a moved event with these dates has to stay within `bounds`.
+   * @default () => true
+   */
+  isMoveBounded?: (start: number, end: number) => boolean;
 }
 
 function getCursorOffsetMs(target: Draggable.Target.Record, surface: LinearDropSurface) {
-  return Math.round(surface.durationMs * target.getSnappedLocalPoint()[surface.axis]);
+  const point = target.getSnappedLocalPoint()[surface.axis];
+  const fraction = surface.reversed ? 1 - point : point;
+  return surface.fractionToOffsetMs
+    ? surface.fractionToOffsetMs(fraction)
+    : Math.round(surface.durationMs * fraction);
 }
 
 /**
@@ -56,7 +78,7 @@ function getCursorOffsetMs(target: Draggable.Target.Record, surface: LinearDropS
 export function getLinearPointerDate(parameters: {
   target: Draggable.Target.Record;
   surface: LinearDropSurface;
-}): TemporalSupportedObject {
+}): number {
   const { target, surface } = parameters;
   const lastStartOffsetMs = surface.durationMs - EVENT_DRAG_PRECISION_MS;
   return surface.offsetToDate(
@@ -72,15 +94,15 @@ export function getLinearEventDropDates<
   TMoveData extends SchedulerAxisEventDragData,
   TResizeData extends SchedulerAxisEventResizeDragData,
 >(parameters: {
-  adapter: Adapter;
   source: SchedulerDropTarget.Source;
   target: Draggable.Target.Record;
   surface: LinearDropSurface;
   moveKind: Draggable.Kind<SchedulerEventDragPayload, TMoveData>;
   resizeKind: Draggable.Kind<SchedulerEventDragPayload, TResizeData>;
 }): SchedulerDropTarget.DropDates | undefined {
-  const { adapter, source, target, surface, moveKind, resizeKind } = parameters;
+  const { source, target, surface, moveKind, resizeKind } = parameters;
   const { bounds } = surface;
+  const precisionMs = EVENT_DRAG_PRECISION_MINUTE * 60_000;
 
   const cursorOffsetMs = getCursorOffsetMs(target, surface);
   const toDate = (offsetMs: number) => surface.offsetToDate(roundToDragPrecision(offsetMs));
@@ -90,35 +112,27 @@ export function getLinearEventDropDates<
     if (!data) {
       return undefined;
     }
-    const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
+    const eventDurationMs = data.end - data.start;
 
     // `cursorOffsetMs - initialCursorPositionInEventMs` reconstructs the *rendered* start edge
     // plus the drag delta. When the real start hides inside the hidden hours, the rendered edge
     // is its window-clamped anchor: carry the hidden remainder over to the new anchor so an
     // unmoved drag maps back to the exact original dates instead of silently snapping the start
     // to the window edge.
-    const startAnchor = surface.offsetToDate(surface.dateToOffset(data.start));
-    const hiddenRemainderMs = adapter.getTime(data.start) - adapter.getTime(startAnchor);
+    const hiddenRemainderMs = surface.getHiddenStartRemainderMs
+      ? surface.getHiddenStartRemainderMs(data.start)
+      : data.start - surface.offsetToDate(surface.dateToOffset(data.start));
 
-    let newStart = adapter.addMilliseconds(
-      toDate(cursorOffsetMs - data.initialCursorPositionInEventMs),
-      hiddenRemainderMs,
-    );
+    let newStart = toDate(cursorOffsetMs - data.initialCursorPositionInEventMs) + hiddenRemainderMs;
 
     // Keep the event inside the window of the surface.
-    if (bounds) {
-      if (adapter.isBefore(newStart, bounds.start)) {
-        newStart = bounds.start;
-      }
-      const maxStart = adapter.addMilliseconds(bounds.end, -eventDurationMs);
-      if (adapter.isAfter(newStart, maxStart)) {
-        newStart = maxStart;
-      }
+    if (bounds && (surface.isMoveBounded?.(data.start, data.end) ?? true)) {
+      newStart = Math.min(Math.max(newStart, bounds.start), bounds.end - eventDurationMs);
     }
 
     // The event keeps its real duration even when it spans hidden hours, so the real start and
     // end both shift by the same amount as their rendered anchors.
-    return { start: newStart, end: adapter.addMilliseconds(newStart, eventDurationMs) };
+    return { start: newStart, end: newStart + eventDurationMs };
   }
 
   if (resizeKind.matches(source)) {
@@ -130,22 +144,20 @@ export function getLinearEventDropDates<
     // The event keeps one drag precision step of duration: the snap step is also the minimum.
     if (data.side === 'start') {
       let newStart = toDate(cursorOffsetMs - data.initialCursorPositionInEventMs);
-      if (bounds && adapter.isBefore(newStart, bounds.start)) {
-        newStart = bounds.start;
+      if (bounds) {
+        newStart = Math.max(newStart, bounds.start);
       }
-      const maxStart = adapter.addMinutes(data.end, -EVENT_DRAG_PRECISION_MINUTE);
-      return { start: adapter.isBefore(newStart, maxStart) ? newStart : maxStart, end: data.end };
+      return { start: Math.min(newStart, data.end - precisionMs), end: data.end };
     }
 
     // The offset from the grab point to the event end is measured on the axis: the real duration
     // would overshoot when the event spans hidden hours.
     const eventAxisDurationMs = surface.dateToOffset(data.end) - surface.dateToOffset(data.start);
     let newEnd = toDate(cursorOffsetMs - data.initialCursorPositionInEventMs + eventAxisDurationMs);
-    if (bounds && adapter.isAfter(newEnd, bounds.end)) {
-      newEnd = bounds.end;
+    if (bounds) {
+      newEnd = Math.min(newEnd, bounds.end);
     }
-    const minEnd = adapter.addMinutes(data.start, EVENT_DRAG_PRECISION_MINUTE);
-    return { start: data.start, end: adapter.isAfter(newEnd, minEnd) ? newEnd : minEnd };
+    return { start: data.start, end: Math.max(newEnd, data.start + precisionMs) };
   }
 
   if (schedulerExternalEventKind.matches(source)) {

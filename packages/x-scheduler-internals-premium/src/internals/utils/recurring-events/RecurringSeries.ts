@@ -1,0 +1,527 @@
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
+import {
+  addMonthsToDayNumber,
+  dayNumberToIsoDate,
+  getDayNumber,
+  getDaysInIsoMonth,
+  getIsoDayOfWeek,
+  getSkippedDays,
+  getStartOfMonthDayNumber,
+  getStartOfWeekDayNumber,
+  LAST_SUPPORTED_DAY,
+  plainDateFromDayNumber,
+  toLocalDayNumber,
+  toMsInDay,
+} from '@mui/x-scheduler-internals/internals';
+import type {
+  RecurringEventWeekDayCode,
+  SchedulerProcessedEvent,
+  SchedulerProcessedEventRecurrenceRule,
+  TemporalSupportedObject,
+} from '@mui/x-scheduler-internals/models';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import {
+  NOT_LOCALIZED_WEEK_DAYS_INDEXES,
+  parsesByDayForMonthlyFrequency,
+  parsesByDayForWeeklyFrequency,
+} from './internal-utils';
+
+/**
+ * The Gregorian calendar repeats every 400 years, days of the week included.
+ * A monthly or yearly rule that matches no month during that cycle never matches.
+ */
+const MONTHS_PER_GREGORIAN_CYCLE = 12 * 400;
+
+/**
+ * The days the timezone skips are looked up by periods of this many days.
+ */
+const SKIPPED_DAYS_PERIOD = 31;
+
+/**
+ * Returns how many steps of `interval` periods visit every period of a cycle of `cycleLength`
+ * periods, plus one so that a match skipped in the first period because it is before the minimum
+ * date is found again.
+ */
+function getMaxSearchSteps(cycleLength: number, interval: number): number {
+  let divisor = cycleLength;
+  let remainder = interval % cycleLength;
+  while (remainder !== 0) {
+    [divisor, remainder] = [remainder, divisor % remainder];
+  }
+  return cycleLength / divisor + 1;
+}
+
+/**
+ * Returns the ISO day of the week (1 for Monday to 7 for Sunday) of a week day code.
+ */
+function getDayOfWeekFromCode(code: RecurringEventWeekDayCode): number {
+  return NOT_LOCALIZED_WEEK_DAYS_INDEXES.get(code)! + 1;
+}
+
+/**
+ * Returns the number of days of the month starting on `monthStart`.
+ */
+function getDaysInMonth(monthStart: number): number {
+  const isoDate = dayNumberToIsoDate(monthStart);
+  return getDaysInIsoMonth(isoDate.year, isoDate.month);
+}
+
+/**
+ * Returns the Nth `dayOfWeek` of the month starting on `monthStart`.
+ * ordinal > 0 → Nth from the start (1..5). ordinal < 0 → Nth from the end (-1 = last).
+ * If that occurrence doesn't exist in the month, or is after the last day BaseTemporal supports,
+ * returns null.
+ */
+function getNthWeekdayOfMonth(
+  monthStart: number,
+  dayOfWeek: number,
+  ordinal: number,
+): number | null {
+  const daysInMonth = getDaysInMonth(monthStart);
+  let day: number;
+  if (ordinal > 0) {
+    day = 1 + ((dayOfWeek - getIsoDayOfWeek(monthStart) + 7) % 7) + 7 * (ordinal - 1);
+  } else {
+    const lastDayOfWeek = getIsoDayOfWeek(monthStart + daysInMonth - 1);
+    day = daysInMonth - ((lastDayOfWeek - dayOfWeek + 7) % 7) + 7 * (ordinal + 1);
+  }
+  return day >= 1 && day <= daysInMonth ? addDays(monthStart, day - 1) : null;
+}
+
+/**
+ * Returns `day` moved forward by `days`, or `null` after the last day BaseTemporal supports, which
+ * a rule with a large interval reaches in a few steps.
+ */
+function addDays(day: number, days: number): number | null {
+  const dayNumber = day + days;
+  return dayNumber > LAST_SUPPORTED_DAY ? null : dayNumber;
+}
+
+/**
+ * Returns the first day of the month `months` after the one starting on `monthStart`, or `null`
+ * after the last day BaseTemporal supports.
+ */
+function addMonths(monthStart: number, months: number): number | null {
+  const dayNumber = addMonthsToDayNumber(monthStart, months);
+  // `<=` also rejects the NaN of a month count too large to compute.
+  return dayNumber <= LAST_SUPPORTED_DAY ? dayNumber : null;
+}
+
+/**
+ * Steps through the days the frequency, interval and BY* parts of a rule match, from the first
+ * occurrence. Expects a rule validated by `parseRRule()`.
+ *
+ * A yearly rule has no BY* part, so it matches the day of DTSTART every 12 × INTERVAL months.
+ *
+ * The days are day numbers. The days of a daily or weekly rule repeat every period, so they're
+ * counted without stepping through them.
+ */
+class RuleDays {
+  /**
+   * The step between two periods of the rule, in days, weeks, or months for monthly and yearly
+   * rules.
+   */
+  declare private readonly interval: number;
+
+  /**
+   * How many months to try before concluding that the rule never matches again.
+   */
+  declare private readonly maxSearchSteps: number;
+
+  // Daily and weekly: the rule matches the same days of each period of `periodLength` days from
+  // `periodStart`, at these sorted offsets. Empty for the monthly and yearly rules.
+  private periodOffsets: number[] = [];
+
+  private periodStart: number = 0;
+
+  private periodLength: number = 0;
+
+  // Monthly and yearly: byDay (e.g., "2nd Tuesday") or the day of the month (e.g., "the 15th")
+  private monthlyByDay: { ord: number; dayOfWeek: number } | null = null;
+
+  private monthlyTargetDay: number = 0;
+
+  constructor(
+    rule: SchedulerProcessedEventRecurrenceRule,
+    public readonly seriesStart: number,
+  ) {
+    // Finite even for a yearly interval like Number.MAX_VALUE, which `getMaxSearchSteps()` needs.
+    this.interval = Math.min(
+      (rule.freq === 'YEARLY' ? 12 : 1) * (rule.interval ?? 1),
+      Number.MAX_VALUE,
+    );
+    this.maxSearchSteps = getMaxSearchSteps(MONTHS_PER_GREGORIAN_CYCLE, this.interval);
+
+    switch (rule.freq) {
+      case 'DAILY':
+        this.periodOffsets = [0];
+        this.periodStart = seriesStart;
+        this.periodLength = this.interval;
+        break;
+      case 'WEEKLY': {
+        const weekDays = parsesByDayForWeeklyFrequency(rule.byDay)?.map(getDayOfWeekFromCode) ?? [
+          getIsoDayOfWeek(seriesStart),
+        ];
+        this.periodOffsets = Array.from(new Set(weekDays), (weekDay) => weekDay - 1).toSorted(
+          (a, b) => a - b,
+        );
+        // RFC 5545 weeks start on Monday (WKST=MO) whatever the locale, otherwise BYDAY like SU+TU
+        // can go backwards.
+        this.periodStart = getStartOfWeekDayNumber(seriesStart, 1);
+        // Finite even for an interval like Number.MAX_VALUE, whose next period is never reached.
+        this.periodLength = Math.min(7 * this.interval, Number.MAX_VALUE);
+        break;
+      }
+      default: {
+        if (rule.byDay?.length) {
+          const { ord, code } = parsesByDayForMonthlyFrequency(rule.byDay);
+          this.monthlyByDay = { ord, dayOfWeek: getDayOfWeekFromCode(code) };
+        } else {
+          // Without COUNT, only the first value is used.
+          this.monthlyTargetDay = rule.byMonthDay?.[0] ?? dayNumberToIsoDate(seriesStart).day;
+        }
+        break;
+      }
+    }
+  }
+
+  /**
+   * Returns the number of days of the rule before `day`, or `null` for the monthly and yearly
+   * rules, whose days are counted by stepping through them.
+   */
+  public countBefore(day: number): number | null {
+    if (this.periodOffsets.length === 0) {
+      return null;
+    }
+    // The days of the first period before DTSTART aren't days of the rule.
+    return Math.max(
+      0,
+      this.countPeriodDaysBefore(day) - this.countPeriodDaysBefore(this.seriesStart),
+    );
+  }
+
+  /**
+   * Returns the day of a daily or weekly rule at `index`, from 0 for the first one.
+   */
+  public getDayAt(index: number): number {
+    const { periodOffsets } = this;
+    const position = index + this.countPeriodDaysBefore(this.seriesStart);
+    const periods = Math.floor(position / periodOffsets.length);
+    return (
+      this.periodStart +
+      periods * this.periodLength +
+      periodOffsets[position - periods * periodOffsets.length]
+    );
+  }
+
+  /**
+   * Returns the first day on or after `day`.
+   */
+  public getFirstFrom(day: number): number | null {
+    const daysBefore = this.countBefore(day);
+    if (daysBefore !== null) {
+      const first = this.getDayAt(daysBefore);
+      return first > LAST_SUPPORTED_DAY ? null : first;
+    }
+
+    // Skips the whole intervals of months before `day`.
+    const { interval, seriesStart } = this;
+    const isoDate = dayNumberToIsoDate(day);
+    const seriesStartIsoDate = dayNumberToIsoDate(seriesStart);
+    const monthsDiff =
+      (isoDate.year - seriesStartIsoDate.year) * 12 + isoDate.month - seriesStartIsoDate.month;
+    const startingMonth = addMonths(
+      getStartOfMonthDayNumber(seriesStart),
+      monthsDiff > 0 ? Math.floor(monthsDiff / interval) * interval : 0,
+    );
+    return startingMonth === null
+      ? null
+      : this.findFirstInMonth(startingMonth, Math.max(seriesStart, day));
+  }
+
+  /**
+   * Returns the day following `day`, a day of the rule.
+   */
+  public getNext(day: number): number | null {
+    const { periodOffsets } = this;
+    if (periodOffsets.length > 0) {
+      // The next day of the period, or the first one of the next period.
+      const offset = (day - this.periodStart) % this.periodLength;
+      const nextOffset = periodOffsets.find((periodOffset) => periodOffset > offset);
+      return addDays(day, (nextOffset ?? this.periodLength + periodOffsets[0]) - offset);
+    }
+    const nextMonth = addMonths(getStartOfMonthDayNumber(day), this.interval);
+    return nextMonth === null ? null : this.findFirstInMonth(nextMonth, this.seriesStart);
+  }
+
+  /**
+   * Returns the number of days of the periods before `day`, including the days of the first period
+   * before DTSTART.
+   */
+  private countPeriodDaysBefore(day: number): number {
+    const { periodOffsets, periodLength } = this;
+    const elapsed = day - this.periodStart;
+    const periods = Math.floor(elapsed / periodLength);
+    const rest = elapsed - periods * periodLength;
+    return periods * periodOffsets.length + periodOffsets.filter((offset) => offset < rest).length;
+  }
+
+  private findFirstInMonth(monthStart: number, minDay: number): number | null {
+    let month: number | null = monthStart;
+    for (let i = 0; i < this.maxSearchSteps && month !== null; i += 1) {
+      let candidate: number | null = null;
+      if (this.monthlyByDay !== null) {
+        // Monthly by weekday (e.g., "2nd Tuesday of the month")
+        candidate = getNthWeekdayOfMonth(month, this.monthlyByDay.dayOfWeek, this.monthlyByDay.ord);
+      } else if (this.monthlyTargetDay <= getDaysInMonth(month)) {
+        // Monthly by day of month (e.g., "the 15th")
+        candidate = addDays(month, this.monthlyTargetDay - 1);
+      }
+
+      if (candidate !== null && candidate >= minDay) {
+        return candidate;
+      }
+      month = addMonths(month, this.interval);
+    }
+    return null;
+  }
+}
+
+export interface RecurringSeriesParameters {
+  /**
+   * The rule of the series, as `parseRRule()` returns it.
+   */
+  rule: SchedulerProcessedEventRecurrenceRule;
+  /**
+   * The instant of the first occurrence (DTSTART).
+   */
+  start: number;
+  /**
+   * The timezone of the series.
+   */
+  timezone: TemporalTimezone;
+  /**
+   * The excluded occurrences (EXDATE), labeled in the timezone of the series.
+   */
+  exDates?: readonly TemporalSupportedObject[];
+}
+
+/**
+ * A recurring series in its timezone: the days its occurrences fall on, given its rule, UNTIL,
+ * COUNT and EXDATE, and the days the timezone skips. Days are plain dates in the timezone of the
+ * series.
+ *
+ * An excluded occurrence counts toward COUNT, as in RFC 5545. A day the timezone skips, like
+ * December 30th, 2011 in Pacific/Apia, has no occurrence and doesn't count toward COUNT.
+ */
+export class RecurringSeries {
+  declare public readonly timezone: TemporalTimezone;
+
+  /**
+   * The date of the first occurrence (DTSTART).
+   */
+  declare public readonly startPlainDate: BaseTemporal.PlainDate;
+
+  /**
+   * The wall-clock time of the first occurrence, in milliseconds since midnight.
+   */
+  declare public readonly startMsInDay: number;
+
+  declare private readonly ruleDays: RuleDays;
+
+  declare private readonly count: number;
+
+  // `Infinity` without UNTIL.
+  declare private readonly untilDay: number;
+
+  declare private readonly excludedDays: Set<number>;
+
+  private readonly skippedDaysByPeriod = new Map<number, Set<number>>();
+
+  constructor(adapter: Adapter, parameters: RecurringSeriesParameters) {
+    const { rule, timezone } = parameters;
+    const toDay = (date: TemporalSupportedObject) =>
+      toLocalDayNumber(adapter.getTime(date), timezone);
+
+    const startDay = toLocalDayNumber(parameters.start, timezone);
+
+    this.timezone = timezone;
+    this.startPlainDate = plainDateFromDayNumber(startDay);
+    this.startMsInDay = toMsInDay(parameters.start, timezone);
+    this.ruleDays = new RuleDays(rule, startDay);
+    // A fractional COUNT is rounded up.
+    this.count = Math.ceil(rule.count ?? Infinity);
+    this.untilDay = rule.until ? toDay(rule.until) : Infinity;
+    this.excludedDays = new Set(parameters.exDates?.map(toDay));
+  }
+
+  /**
+   * Returns the series of a processed event, in its data timezone.
+   * `exDates` replaces the excluded occurrences of the event.
+   */
+  public static fromEvent(
+    adapter: Adapter,
+    event: SchedulerProcessedEvent,
+    exDates: readonly TemporalSupportedObject[] | undefined = event.dataTimezone.exDates,
+  ): RecurringSeries {
+    return new RecurringSeries(adapter, {
+      rule: event.dataTimezone.rrule!,
+      start: event.dataTimezone.start.timestamp,
+      timezone: event.dataTimezone.timezone,
+      exDates,
+    });
+  }
+
+  /**
+   * Returns the days of the occurrences from `from` to `to`, both included, in order.
+   */
+  public getOccurrenceDays(
+    from: BaseTemporal.PlainDate,
+    to: BaseTemporal.PlainDate,
+  ): BaseTemporal.PlainDate[] {
+    const days: BaseTemporal.PlainDate[] = [];
+    this.visitOccurrences(getDayNumber(from), getDayNumber(to), (day, isExcluded) => {
+      if (!isExcluded) {
+        days.push(plainDateFromDayNumber(day));
+      }
+      return true;
+    });
+    return days;
+  }
+
+  /**
+   * Returns the number of occurrences before `day` that count toward COUNT, up to COUNT.
+   */
+  public countOccurrencesBefore(day: BaseTemporal.PlainDate): number {
+    return this.countBefore(Math.min(this.untilDay + 1, getDayNumber(day)));
+  }
+
+  /**
+   * Returns whether an occurrence that isn't excluded falls before `day`.
+   */
+  public hasOccurrenceBefore(day: BaseTemporal.PlainDate): boolean {
+    return this.hasOccurrenceUntil(getDayNumber(day) - 1);
+  }
+
+  /**
+   * Returns whether the series has an occurrence that isn't excluded.
+   */
+  public hasOccurrence(): boolean {
+    return (
+      (this.count === Infinity && this.untilDay === Infinity) || this.hasOccurrenceUntil(Infinity)
+    );
+  }
+
+  /**
+   * Returns whether an occurrence that isn't excluded falls on or before `to`.
+   */
+  private hasOccurrenceUntil(to: number): boolean {
+    let hasOccurrence = false;
+    this.visitOccurrences(this.ruleDays.seriesStart, to, (_day, isExcluded) => {
+      hasOccurrence = !isExcluded;
+      return !hasOccurrence;
+    });
+    return hasOccurrence;
+  }
+
+  /**
+   * Visits the occurrences from the first one on or after `from` to `to` or UNTIL, in order, while
+   * `visit` returns `true`. Visits the excluded occurrences too, as they count toward COUNT.
+   */
+  private visitOccurrences(
+    from: number,
+    to: number,
+    visit: (day: number, isExcluded: boolean) => boolean,
+  ): void {
+    const { ruleDays } = this;
+    const last = Math.min(to, this.untilDay);
+    // Stops before counting or looking up the timezone, as the next day can be millennia away.
+    const first = ruleDays.getFirstFrom(from);
+    if (first === null || first > last) {
+      return;
+    }
+
+    // COUNT includes the occurrences before `from`.
+    let remainingCount = this.count;
+    if (remainingCount !== Infinity) {
+      remainingCount -= this.countBefore(first);
+    }
+
+    for (
+      let day: number | null = first;
+      day !== null && remainingCount > 0;
+      day = ruleDays.getNext(day)
+    ) {
+      if (day > last) {
+        return;
+      }
+      if (!this.isSkippedDay(day)) {
+        remainingCount -= 1;
+        if (!visit(day, this.excludedDays.has(day))) {
+          return;
+        }
+      }
+    }
+  }
+
+  /**
+   * Returns the number of occurrences before `end` that count toward COUNT, up to COUNT.
+   */
+  private countBefore(end: number): number {
+    const { ruleDays } = this;
+    const startDay = ruleDays.seriesStart;
+    let lastDay = startDay;
+    const countDays = (isSkippedDay: (day: number) => boolean) => {
+      let count = 0;
+      for (
+        let day = ruleDays.getFirstFrom(startDay);
+        day !== null && day < end && count < this.count;
+        day = ruleDays.getNext(day)
+      ) {
+        if (!isSkippedDay(day)) {
+          count += 1;
+          lastDay = day;
+        }
+      }
+      return count;
+    };
+
+    // Counts the days of the rule, then looks for the days the timezone skips among the counted
+    // ones only, so that an expired series doesn't look them up until `end`.
+    let count = ruleDays.countBefore(end);
+    if (count === null) {
+      count = countDays(() => false);
+    } else {
+      count = Math.min(count, this.count);
+      if (count > 0) {
+        lastDay = ruleDays.getDayAt(count - 1);
+      }
+    }
+    if (
+      count === 0 ||
+      getSkippedDays(this.startPlainDate, plainDateFromDayNumber(lastDay + 1), this.timezone)
+        .size === 0
+    ) {
+      return count;
+    }
+    // The timezone skips a counted day, around a move of the date line.
+    return countDays((day) => this.isSkippedDay(day));
+  }
+
+  private isSkippedDay(day: number): boolean {
+    const period = Math.floor(day / SKIPPED_DAYS_PERIOD);
+    let skippedDays = this.skippedDaysByPeriod.get(period);
+    if (skippedDays === undefined) {
+      // The last period stops at the last supported day, which no timezone skips: the day after it
+      // has no plain date.
+      skippedDays = getSkippedDays(
+        plainDateFromDayNumber(period * SKIPPED_DAYS_PERIOD),
+        plainDateFromDayNumber(Math.min((period + 1) * SKIPPED_DAYS_PERIOD, LAST_SUPPORTED_DAY)),
+        this.timezone,
+      );
+      this.skippedDaysByPeriod.set(period, skippedDays);
+    }
+    return skippedDays.has(day);
+  }
+}

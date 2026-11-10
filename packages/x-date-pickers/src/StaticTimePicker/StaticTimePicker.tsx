@@ -98,6 +98,9 @@ StaticTimePicker.propTypes /* remove-proptypes */ = {
    * - the `input` element if there is a field rendered.
    */
   autoFocus: PropTypes.bool,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   /**
    * The default value.

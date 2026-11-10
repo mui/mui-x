@@ -2,11 +2,26 @@
   "props": {
     "alwaysVisible": { "type": { "name": "bool" }, "default": "false" },
     "autoSubmit": { "type": { "name": "bool" }, "default": "false" },
+    "children": { "type": { "name": "node" } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "suggestions": {
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;{ label?: string, value: string }<br>&#124;&nbsp;string&gt;"
       }
+    },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
     }
   },
   "name": "ChatSuggestions",
@@ -14,20 +29,19 @@
     "import { ChatSuggestions } from '@mui/x-chat/ChatSuggestions';",
     "import { ChatSuggestions } from '@mui/x-chat';"
   ],
-  "classes": [
+  "slots": [
     {
-      "key": "item",
-      "className": "MuiChatSuggestions-item",
-      "description": "Styles applied to each suggestion item.",
-      "isGlobal": false
+      "name": "root",
+      "description": "The component that renders the root.",
+      "class": "MuiChatSuggestions-root"
     },
     {
-      "key": "root",
-      "className": "MuiChatSuggestions-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
+      "name": "item",
+      "description": "The component that renders each suggestion.",
+      "class": "MuiChatSuggestions-item"
     }
   ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": null,
   "muiName": "MuiChatSuggestions",

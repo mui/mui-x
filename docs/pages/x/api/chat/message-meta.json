@@ -3,10 +3,14 @@
   "name": "MessageMeta",
   "imports": ["import { MessageMeta } from '@mui/x-chat/headless';"],
   "slots": [
-    { "name": "meta", "description": "", "class": null },
-    { "name": "timestamp", "description": "", "class": null },
-    { "name": "status", "description": "", "class": null },
-    { "name": "edited", "description": "", "class": null },
+    { "name": "meta", "description": "The component that renders the meta.", "class": null },
+    {
+      "name": "timestamp",
+      "description": "The component that renders the timestamp.",
+      "class": null
+    },
+    { "name": "status", "description": "The component that renders the status.", "class": null },
+    { "name": "edited", "description": "The component that renders the edited.", "class": null },
     {
       "name": "streamingProgress",
       "description": "The root element of the streaming progress indicator.\nRendered by Base UI `Progress.Root` when `message.status === 'streaming'`.\nProvides `role=\"progressbar\"` and `aria-valuetext` for screen readers.",
