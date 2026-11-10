@@ -87,6 +87,7 @@ import {
   createComputedColumnValidationScope,
   validateComputedColumnDefinition,
 } from './gridComputedColumnsValidation';
+import { findComputedColumnCellCycle } from './gridFormulaDraftCycles';
 import type { GridComputedColumnsPrivateApi } from '../computedColumns/gridComputedColumnsInterfaces';
 
 export const formulaStateInitializer: GridStateInitializer<
@@ -601,19 +602,27 @@ export const useGridFormula = (
   const validateComputedColumnDefinitionMethod = React.useCallback<
     GridComputedColumnsPrivateApi['validateComputedColumnDefinition']
   >(
-    (definition, options) =>
-      validateComputedColumnDefinition(
-        definition,
-        createComputedColumnValidationScope(
-          apiRef,
-          apiRef.current.caches.formula!,
-          gridColumnLookupSelector(apiRef),
-          a1NotationActive,
-          // The editor validates every keystroke: a draft is not interned.
-          { intern: false },
-        ),
-        options,
-      ),
+    (definition, options) => {
+      const cache = apiRef.current.caches.formula!;
+      const scope = createComputedColumnValidationScope(
+        apiRef,
+        cache,
+        gridColumnLookupSelector(apiRef),
+        a1NotationActive,
+        // The editor validates every keystroke: a draft is not interned.
+        { intern: false },
+      );
+      // A cycle the cell data closes on an unchanged formula is the one the cells already show.
+      const storedFormula =
+        options?.ignoreField === undefined
+          ? undefined
+          : cache.computedColumns.records.get(options.ignoreField)?.definition.formula;
+      if (definition.formula !== storedFormula) {
+        scope.findCellCycle = (field, fieldRefs) =>
+          findComputedColumnCellCycle(apiRef, field, fieldRefs);
+      }
+      return validateComputedColumnDefinition(definition, scope, options);
+    },
     [apiRef, a1NotationActive],
   );
 

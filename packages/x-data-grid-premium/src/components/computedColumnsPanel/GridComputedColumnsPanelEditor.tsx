@@ -31,7 +31,10 @@ import { deriveComputedColumnField } from '../../hooks/features/computedColumns/
 import { isComputedColumnEditable } from '../../hooks/features/computedColumns/gridComputedColumnsUtils';
 import { getFormulaExpression, isFormulaSource } from '../../hooks/features/formula/engine';
 import type { FormulaSourceSpan } from '../../hooks/features/formula/engine';
-import { previewFormulaResult } from '../../hooks/features/formula/gridFormulaPreview';
+import {
+  DRAFT_COMPUTED_FIELD,
+  previewComputedColumnResult,
+} from '../../hooks/features/formula/gridFormulaPreview';
 import { gridFormulaActiveEditSelector } from '../../hooks/features/formula/gridFormulaSelectors';
 import { coerceComputedResult } from '../../hooks/features/formula/gridComputedColumnsRuntime';
 import {
@@ -47,11 +50,6 @@ import { GridFormulaEditable, isComposingKeyEvent } from '../GridFormulaEditable
 import type { GridFormulaEditableHandle } from '../GridFormulaEditable';
 import { GridComputedColumnsPanelReferencePane } from './GridComputedColumnsPanelReferencePane';
 
-/**
- * The field of a draft that has none yet (a new column before it has a name):
- * the reference model and the preview need an owner cell.
- */
-const DRAFT_FIELD_PLACEHOLDER = '__computed_draft__';
 const PREVIEW_DEBOUNCE_MS = 150;
 const EMPTY_SPANS: FormulaSourceSpan[] = [];
 const CURRENCY_CODE_REGEX = /^[A-Za-z]{3}$/;
@@ -486,6 +484,7 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
   // is locked or unlocked under the editor (see the effect below).
   const [storedDefinition, setStoredDefinition] = React.useState(session.definition);
   const isEditing = storedDefinition !== null;
+  const ignoreField = storedDefinition?.field;
   const a1Notation = Boolean(rootProps.formulaA1Notation);
 
   const [draft, setDraft] = React.useState<EditorDraft>(() => createDraft(storedDefinition));
@@ -603,13 +602,9 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
   // a keystroke.
   const columnLookup = useGridSelector(apiRef, gridColumnLookupSelector);
   const validation = React.useMemo<GridComputedColumnValidationResult>(
-    () =>
-      apiRef.current.validateComputedColumnDefinition!(
-        draftDefinition,
-        isEditing ? { ignoreField: storedDefinition.field } : undefined,
-      ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- `columnLookup` is read through the state
-    [apiRef, columnLookup, draftDefinition, isEditing, storedDefinition],
+    () => apiRef.current.validateComputedColumnDefinition!(draftDefinition, { ignoreField }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- `columnLookup` and the stored formula are read through the state
+    [apiRef, columnLookup, draftDefinition, ignoreField, storedDefinition],
   );
 
   // The shape rules guard the fields the editor creates. The field of a stored column is
@@ -634,18 +629,20 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
     !hasBlockingIssue(validation, draftDefinition) && !currencyInvalid && !decimalsInvalid;
   const showValidation = (dirty || isEditing) && validation.issues.length > 0;
 
-  // ----- Preview (debounced, through the cell path) -----
+  // ----- Preview (debounced) -----
 
   const [rawPreview, setRawPreview] = React.useState<GridFormulaResult | null>(null);
   const expression = getFormulaExpression(draftDefinition.formula).trim();
-  const ownerField = draftDefinition.field === '' ? DRAFT_FIELD_PLACEHOLDER : draftDefinition.field;
+  // A new column before it has a name: the reference model and the preview need an owner cell.
+  const ownerField = draftDefinition.field === '' ? DRAFT_COMPUTED_FIELD : draftDefinition.field;
 
   const computePreview = React.useCallback(
     (rowId: GridRowId) =>
-      previewFormulaResult(apiRef, { id: rowId, field: ownerField }, `=${expression}`, {
+      previewComputedColumnResult(apiRef, rowId, draftDefinition.field, `=${expression}`, {
+        ignoreField,
         a1Notation,
       }),
-    [apiRef, expression, ownerField, a1Notation],
+    [apiRef, draftDefinition.field, expression, ignoreField, a1Notation],
   );
 
   // What the result depends on besides the draft, none of which a render of the
@@ -875,10 +872,7 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
           formatInvalid.currency ||
           formatInvalid.decimals ||
           hasBlockingIssue(
-            apiRef.current.validateComputedColumnDefinition!(
-              definition,
-              isEditing ? { ignoreField: storedDefinition.field } : undefined,
-            ),
+            apiRef.current.validateComputedColumnDefinition!(definition, { ignoreField }),
             definition,
           )
         ) {
@@ -909,6 +903,7 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
     onDone({ type: 'applied', field });
   }, [
     apiRef,
+    ignoreField,
     canApply,
     computePreview,
     draft,

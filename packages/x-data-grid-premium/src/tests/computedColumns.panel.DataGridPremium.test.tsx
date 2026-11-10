@@ -2308,6 +2308,116 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
     });
   });
 
+  describe('preview of the applied draft', () => {
+    beforeEach(() => {
+      fakePreviewTimers();
+    });
+
+    const cycleProps: Partial<DataGridPremiumProps> = {
+      columns: [
+        { field: 'price', type: 'number' },
+        { field: 'qty', type: 'number', allowFormulas: true, editable: true },
+      ],
+      rows: [
+        { id: 1, price: 10, qty: '=total' },
+        { id: 2, price: 5, qty: 3 },
+      ],
+      initialState: {
+        computedColumns: {
+          model: [define('total', '=price * 2'), define('double', '=total * 2')],
+        },
+      },
+    };
+
+    it('shows #CYCLE! for a draft reading a computed column that depends on the edited one', async () => {
+      await render(<Test {...cycleProps} />);
+      await openEditor('total', { sampleRowId: 2 });
+      typeFormula('=double + 1');
+      await advancePreview();
+      expect(getPreviewText()).to.equal('#CYCLE!');
+      expect(getValidationMessages()).to.deep.equal([
+        'Circular reference: total → double → total.',
+      ]);
+    });
+
+    it('shows #REF! for a positional reference', async () => {
+      await render(<Test {...cycleProps} />);
+      await openEditor('total', { sampleRowId: 2 });
+      typeFormula('=SUM(COLUMN_VALUES("price"))');
+      await advancePreview();
+      expect(getPreviewText()).to.equal('#REF!');
+    });
+
+    it('reports a cycle closed through a cell formula and shows #CYCLE! in its row only', async () => {
+      await render(<Test {...cycleProps} />);
+      await openEditor('total', { sampleRowId: 1 });
+      typeFormula('=qty + 1');
+      await advancePreview();
+      expect(getPreviewText()).to.equal('#CYCLE!');
+      expect(getValidationMessages()).to.deep.equal(['Circular reference: total → qty → total.']);
+      expect(getButton('Apply')).to.have.property('disabled', true);
+
+      await focusCell(2, 'price');
+      await advancePreview();
+      expect(getPreviewText()).to.equal('4');
+    });
+
+    it('follows a cycle through a computed column with a static result', async () => {
+      await render(
+        <Test
+          {...cycleProps}
+          initialState={{
+            computedColumns: {
+              model: [
+                define('total', '=price * 2'),
+                define('bad', '=qty + SUM(COLUMN_VALUES("price"))'),
+              ],
+            },
+          }}
+        />,
+      );
+      await openEditor('total', { sampleRowId: 1 });
+      typeFormula('=bad + 1');
+      await advancePreview();
+      expect(getPreviewText()).to.equal('#CYCLE!');
+      expect(getValidationMessages()).to.deep.equal(['Circular reference: total → qty → total.']);
+    });
+
+    it('reports a cycle closed through a range over the edited column', async () => {
+      await render(
+        <Test
+          {...cycleProps}
+          rows={[
+            { id: 1, price: 10, qty: '=SUM(COLUMN_VALUES("total"))' },
+            { id: 2, price: 5, qty: 3 },
+          ]}
+        />,
+      );
+      await openEditor('total', { sampleRowId: 1 });
+      typeFormula('=qty + 1');
+      await advancePreview();
+      expect(getPreviewText()).to.equal('#CYCLE!');
+      expect(getValidationMessages()).to.deep.equal(['Circular reference: total → qty → total.']);
+
+      await focusCell(2, 'price');
+      await advancePreview();
+      expect(getPreviewText()).to.equal('4');
+    });
+
+    it('does not block an edit that keeps a formula already on a cell formula cycle', async () => {
+      await render(
+        <Test
+          {...cycleProps}
+          initialState={{ computedColumns: { model: [define('total', '=qty + 1')] } }}
+        />,
+      );
+      await openEditor('total', { sampleRowId: 2 });
+      typeName('Renamed');
+      expect(getValidationMessages()).to.deep.equal([]);
+      expect(getButton('Apply')).to.have.property('disabled', false);
+    });
+  });
+
   describe('number format preservation', () => {
     const renderWithFormat = (numberFormat: Intl.NumberFormatOptions) =>
       render(
