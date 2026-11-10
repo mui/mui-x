@@ -4,14 +4,15 @@ import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
 import { adapter, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { processDate } from '../../../process-date';
-import { buildTemporalPlainDate, createDateFromWallTime, createProcessedDate } from './date';
+import { createDateFromWallTime, createProcessedDate } from './date';
+import { toPlainDate } from './timeZone';
 import type { TemporalSupportedObject } from '../../../models';
 
 describe('plain-date-utils/date', () => {
   it('should build the plain date of a value in a timezone', () => {
     // 2025-03-03T00:30Z is March 2nd in Los Angeles.
     const value = adapter.date('2025-03-03T00:30:00Z', 'default');
-    const plainDate = buildTemporalPlainDate(value, 'America/Los_Angeles');
+    const plainDate = toPlainDate(value.getTime(), 'America/Los_Angeles');
     expect(plainDate.toString()).to.equal('2025-03-02');
   });
 
@@ -42,7 +43,7 @@ describe('plain-date-utils/date', () => {
       for (const instant of INSTANTS) {
         const value = adapter.date(instant, 'default');
         expect(
-          buildTemporalPlainDate(value, timezone).toString(),
+          toPlainDate(value.getTime(), timezone).toString(),
           `${instant} in ${timezone}`,
         ).to.equal(adapter.formatByString(adapter.setTimezone(value, timezone), 'yyyy-MM-dd'));
       }
@@ -56,7 +57,7 @@ describe('plain-date-utils/date', () => {
       setSystemTimezone('Australia/Lord_Howe');
       for (const instant of INSTANTS) {
         const value = adapter.date(instant, 'default');
-        expect(buildTemporalPlainDate(value, 'default').toString(), instant).to.equal(
+        expect(toPlainDate(value.getTime(), 'default').toString(), instant).to.equal(
           adapter.formatByString(value, 'yyyy-MM-dd'),
         );
       }

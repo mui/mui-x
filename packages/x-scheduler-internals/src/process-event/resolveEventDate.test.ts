@@ -53,5 +53,13 @@ describe('resolveEventDate', () => {
     expect(() => resolveEventDate('not-a-date', 'default', 'event-1')).to.throw(
       /MUI X Scheduler: The date "not-a-date" of event "event-1" is not a valid date/,
     );
+    expect(() => resolveEventDate('not-a-date', 'America/New_York', 'event-1')).to.throw(
+      /MUI X Scheduler: The date "not-a-date" of event "event-1" is not a valid date/,
+    );
+  });
+
+  it('should read a date-time with an offset as an instant', () => {
+    const result = resolveEventDate('2025-01-01T09:00:00+02:00', 'America/New_York');
+    expect(result.toISOString()).to.equal('2025-01-01T07:00:00.000Z');
   });
 });

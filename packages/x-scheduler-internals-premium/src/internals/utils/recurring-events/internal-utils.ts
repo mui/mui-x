@@ -1,12 +1,12 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import {
-  buildTemporalPlainDate,
   getDayNumber,
   getStartOfDayMs,
   MS_PER_DAY,
   toEpochMs,
   toLocalMs,
   toMsInDay,
+  toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import type {
@@ -29,9 +29,9 @@ export function createStartOfPreviousDay(
 
 /**
  * Moves the end of an event to `plainDate` on the wall clock of `timezone`, like
- * `moveToPlainDate()`, except that a time a DST transition repeats resolves to its first instant at
- * or after `startMs`, so that the end of an event starting in the second occurrence of a repeated
- * hour doesn't come before its start.
+ * `moveTimestampToPlainDate()`, except that a time a DST transition repeats resolves to its first
+ * instant at or after `startMs`, so that the end of an event starting in the second occurrence of a
+ * repeated hour doesn't come before its start.
  */
 export function moveEndToPlainDate(
   end: TemporalSupportedObject,
@@ -87,7 +87,7 @@ export function getWeekDayCode(
   date: TemporalSupportedObject,
   timezone: TemporalTimezone,
 ): RecurringEventWeekDayCode {
-  return getPlainDateWeekDayCode(buildTemporalPlainDate(date, timezone));
+  return getPlainDateWeekDayCode(toPlainDate(date.getTime(), timezone));
 }
 
 /**

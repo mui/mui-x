@@ -9,7 +9,7 @@ import {
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
-import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 
 describe('<CalendarGrid.CurrentTimeIndicator />', () => {
   const { render } = createSchedulerRenderer();
@@ -22,7 +22,7 @@ describe('<CalendarGrid.CurrentTimeIndicator />', () => {
       return render(
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
-            <CalendarGrid.TimeColumn value={buildTemporalPlainDate(day, 'default')}>
+            <CalendarGrid.TimeColumn value={toPlainDate(day.getTime(), 'default')}>
               {node}
             </CalendarGrid.TimeColumn>
           </CalendarGrid.Root>
@@ -47,9 +47,7 @@ describe('<CalendarGrid.CurrentTimeIndicator />', () => {
         renderAtNow(
           <EventCalendarProvider events={[]} displayTimezone="America/New_York">
             <CalendarGrid.Root>
-              <CalendarGrid.TimeColumn
-                value={buildTemporalPlainDate(columnDay, 'America/New_York')}
-              >
+              <CalendarGrid.TimeColumn value={toPlainDate(columnDay.getTime(), 'America/New_York')}>
                 <CalendarGrid.CurrentTimeIndicator data-testid="indicator" />
               </CalendarGrid.TimeColumn>
             </CalendarGrid.Root>

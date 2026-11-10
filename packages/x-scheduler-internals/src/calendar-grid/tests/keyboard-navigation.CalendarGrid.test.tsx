@@ -7,7 +7,7 @@ import type { GridRowType } from '@mui/x-scheduler-internals/models';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { adapter, createSchedulerRenderer, processDay } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/date';
+import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
 
 /**
  * Integration tests for keyboard navigation across the CalendarGrid.
@@ -21,7 +21,7 @@ describe('CalendarGrid keyboard navigation', () => {
 
   // The days of the cells of a row.
   const toRowDays = (rowDays: ReturnType<typeof adapter.date>[]) =>
-    rowDays.map((day) => ({ plainDate: buildTemporalPlainDate(day, 'default') }));
+    rowDays.map((day) => ({ plainDate: toPlainDate(day.getTime(), 'default') }));
 
   function GridWithHeaderAndDayCells({
     rowTypes,
@@ -48,7 +48,7 @@ describe('CalendarGrid keyboard navigation', () => {
             {days.map((day, i) => (
               <CalendarGrid.DayCell
                 key={i}
-                value={buildTemporalPlainDate(day, 'default')}
+                value={toPlainDate(day.getTime(), 'default')}
                 data-testid={`day-${i}`}
               />
             ))}
@@ -204,7 +204,7 @@ describe('CalendarGrid keyboard navigation', () => {
               {week0Days.map((day, i) => (
                 <CalendarGrid.DayCell
                   key={i}
-                  value={buildTemporalPlainDate(day, 'default')}
+                  value={toPlainDate(day.getTime(), 'default')}
                   data-testid={`w0-${i}`}
                 />
               ))}
@@ -218,7 +218,7 @@ describe('CalendarGrid keyboard navigation', () => {
               {week1Days.map((day, i) => (
                 <CalendarGrid.DayCell
                   key={i}
-                  value={buildTemporalPlainDate(day, 'default')}
+                  value={toPlainDate(day.getTime(), 'default')}
                   data-testid={`w1-${i}`}
                 />
               ))}
@@ -232,7 +232,7 @@ describe('CalendarGrid keyboard navigation', () => {
               {week2Days.map((day, i) => (
                 <CalendarGrid.DayCell
                   key={i}
-                  value={buildTemporalPlainDate(day, 'default')}
+                  value={toPlainDate(day.getTime(), 'default')}
                   data-testid={`w2-${i}`}
                 />
               ))}
@@ -387,7 +387,7 @@ describe('CalendarGrid keyboard navigation', () => {
               {days.slice(0, 3).map((day, i) => (
                 <CalendarGrid.DayCell
                   key={i}
-                  value={buildTemporalPlainDate(day, 'default')}
+                  value={toPlainDate(day.getTime(), 'default')}
                   data-testid={`day-${i}`}
                 />
               ))}
@@ -396,7 +396,7 @@ describe('CalendarGrid keyboard navigation', () => {
               {days.slice(0, 3).map((day, i) => (
                 <CalendarGrid.TimeColumn
                   key={i}
-                  value={buildTemporalPlainDate(day, 'default')}
+                  value={toPlainDate(day.getTime(), 'default')}
                   data-testid={`time-${i}`}
                 />
               ))}
@@ -468,7 +468,7 @@ describe('CalendarGrid keyboard navigation', () => {
               days={toRowDays([day1, day2])}
             >
               <CalendarGrid.DayCell
-                value={buildTemporalPlainDate(day1, 'default')}
+                value={toPlainDate(day1.getTime(), 'default')}
                 data-testid="cell-0"
               >
                 <CalendarGrid.DayEvent
@@ -482,7 +482,7 @@ describe('CalendarGrid keyboard navigation', () => {
                 />
               </CalendarGrid.DayCell>
               <CalendarGrid.DayCell
-                value={buildTemporalPlainDate(day2, 'default')}
+                value={toPlainDate(day2.getTime(), 'default')}
                 data-testid="cell-1"
               >
                 <CalendarGrid.DayEvent
@@ -531,7 +531,7 @@ describe('CalendarGrid keyboard navigation', () => {
           <CalendarGrid.Root rowTypes={['time-grid']} rowsPerType={{}}>
             <CalendarGrid.TimeScrollableContent>
               <CalendarGrid.TimeColumn
-                value={buildTemporalPlainDate(day1, 'default')}
+                value={toPlainDate(day1.getTime(), 'default')}
                 data-testid="col-0"
               >
                 <CalendarGrid.TimeEvent
@@ -545,7 +545,7 @@ describe('CalendarGrid keyboard navigation', () => {
                 />
               </CalendarGrid.TimeColumn>
               <CalendarGrid.TimeColumn
-                value={buildTemporalPlainDate(day2, 'default')}
+                value={toPlainDate(day2.getTime(), 'default')}
                 data-testid="col-1"
               >
                 <CalendarGrid.TimeEvent

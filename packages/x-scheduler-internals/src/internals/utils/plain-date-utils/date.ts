@@ -1,7 +1,7 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../../models';
+import { processDate } from '../../../process-date/processDate';
 import type { BaseTemporal } from '../base-temporal';
-import { MS_PER_DAY } from './dayNumber';
 import type { PlainDateDuration } from './plainDate';
 import {
   getEndOfDayMs,
@@ -12,26 +12,13 @@ import {
   toLocalMs,
   toPlainDate,
 } from './timeZone';
-import { getPlainDateKey, plainDateFromDayNumber } from './plainDate';
 
-// Translates between the `Date` objects of the Scheduler and plain dates, so that code working on
-// plain dates receives and returns the same values as the rest of the Scheduler.
-// The `Date` objects are instants: their getters read the timezone of the system, so their date and
-// time are always read in an explicit timezone.
-
-/**
- * Builds the plain date of a date in `timezone`.
- */
-export function buildTemporalPlainDate(
-  date: TemporalSupportedObject,
-  timezone: TemporalTimezone,
-): BaseTemporal.PlainDate {
-  return toPlainDate(date.getTime(), timezone);
-}
+// Creates and reads the `Date` objects of the Scheduler. Their getters read the timezone of the
+// system, so their date and time are always read in an explicit timezone.
 
 /**
  * Creates the date of the first instant of a plain date in `timezone`, the reverse of
- * `buildTemporalPlainDate()`. A day whose midnight a DST transition skips starts at the end of the
+ * `toPlainDate()`. A day whose midnight a DST transition skips starts at the end of the
  * gap.
  */
 export function createStartOfPlainDate(
@@ -51,13 +38,6 @@ export function createEndOfPlainDate(
 ): TemporalSupportedObject {
   const nextPlainDate = plainDate.add({ days: 1 });
   return new Date(toEpochMs(nextPlainDate, 0, timezone) - 1);
-}
-
-/**
- * Whether `value` is a date with a valid instant.
- */
-export function isValidDate(value: TemporalSupportedObject | null | undefined): boolean {
-  return value != null && !Number.isNaN(value.getTime());
 }
 
 // An ISO date (`yyyy-MM-dd`), or an ISO date followed by a time.
@@ -90,6 +70,9 @@ export function createDateFromWallTime(
  */
 export function createDateFromString(value: string, timezone: TemporalTimezone): Date {
   const epochMs = Date.parse(value);
+  if (Number.isNaN(epochMs)) {
+    return new Date(NaN);
+  }
   // `Date.parse()` reads a date-only string as UTC midnight, and the date-times without an offset
   // in the timezone of the system.
   const isDateOnly = !value.includes('T');
@@ -121,44 +104,13 @@ export function normalizeAllDayBounds(
 }
 
 /**
- * Returns the processed date of `value`, the date of the instant `epochMs` in `timezone`.
- * Reads the date and time from the offsets of the timezone instead of the getters of the date.
- */
-export function buildProcessedDate(
-  value: TemporalSupportedObject,
-  epochMs: number,
-  timezone: TemporalTimezone,
-): SchedulerProcessedDate {
-  // The wall clock is read once, as this runs for each occurrence of the visible range.
-  const localMs = toLocalMs(epochMs, timezone);
-  const dayNumber = Math.floor(localMs / MS_PER_DAY);
-  return {
-    value,
-    key: getPlainDateKey(plainDateFromDayNumber(dayNumber)),
-    timestamp: epochMs,
-    minutesInDay: Math.floor((localMs - dayNumber * MS_PER_DAY) / 60_000),
-  };
-}
-
-/**
  * Returns the processed date of an instant in `timezone`.
  */
 export function createProcessedDate(
   epochMs: number,
   timezone: TemporalTimezone,
 ): SchedulerProcessedDate {
-  return buildProcessedDate(new Date(epochMs), epochMs, timezone);
-}
-
-/**
- * Moves a date to `plainDate` like `moveTimestampToPlainDate()`, in `timezone`.
- */
-export function moveToPlainDate(
-  date: TemporalSupportedObject,
-  plainDate: BaseTemporal.PlainDate,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject {
-  return new Date(moveTimestampToPlainDate(date.getTime(), plainDate, timezone));
+  return processDate(new Date(epochMs), timezone);
 }
 
 /**
@@ -171,5 +123,8 @@ export function addToDate(
   duration: PlainDateDuration,
   timezone: TemporalTimezone,
 ): TemporalSupportedObject {
-  return moveToPlainDate(date, buildTemporalPlainDate(date, timezone).add(duration), timezone);
+  const epochMs = date.getTime();
+  return new Date(
+    moveTimestampToPlainDate(epochMs, toPlainDate(epochMs, timezone).add(duration), timezone),
+  );
 }

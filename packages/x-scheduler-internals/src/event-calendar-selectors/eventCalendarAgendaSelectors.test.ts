@@ -8,7 +8,7 @@ import { describe, it, expect } from 'vitest';
 import { eventCalendarAgendaSelectors } from './eventCalendarAgendaSelectors';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import type { EventCalendarState } from '../use-event-calendar';
-import { buildTemporalPlainDate } from '../internals/utils/plain-date-utils/date';
+import { toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
 
 describe('eventCalendarEventSelectors', () => {
   describe('baseVisibleDays', () => {
@@ -541,7 +541,7 @@ describe('eventCalendarEventSelectors', () => {
       const fetchRange = eventCalendarAgendaSelectors.fetchRange(state);
 
       expect(
-        fetchRange.end.equals(buildTemporalPlainDate(visibleDate, 'default').add({ days: 199 })),
+        fetchRange.end.equals(toPlainDate(visibleDate.getTime(), 'default').add({ days: 199 })),
       ).to.equal(true);
     });
   });

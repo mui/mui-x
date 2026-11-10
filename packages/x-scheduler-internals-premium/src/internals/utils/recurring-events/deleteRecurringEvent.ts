@@ -4,10 +4,7 @@ import type {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
-import {
-  buildTemporalPlainDate,
-  createStartOfPlainDate,
-} from '@mui/x-scheduler-internals/internals';
+import { createStartOfPlainDate, toPlainDate } from '@mui/x-scheduler-internals/internals';
 import { createStartOfPreviousDay } from './internal-utils';
 import { RecurringSeries } from './RecurringSeries';
 
@@ -52,7 +49,7 @@ export function applyRecurringDeleteOnlyThis(
   const exDates = [
     ...(originalEvent.dataTimezone.exDates ?? []),
     createStartOfPlainDate(
-      buildTemporalPlainDate(occurrenceStart, originalEvent.dataTimezone.timezone),
+      toPlainDate(occurrenceStart.getTime(), originalEvent.dataTimezone.timezone),
       originalEvent.dataTimezone.timezone,
     ),
   ];
@@ -76,8 +73,8 @@ export function applyRecurringDeleteFollowing(
   originalEvent: SchedulerProcessedEvent,
   occurrenceStart: TemporalSupportedObject,
 ): UpdateEventsParameters {
-  const occurrencePlainDate = buildTemporalPlainDate(
-    occurrenceStart,
+  const occurrencePlainDate = toPlainDate(
+    occurrenceStart.getTime(),
     originalEvent.dataTimezone.timezone,
   );
   if (!RecurringSeries.fromEvent(originalEvent).hasOccurrenceBefore(occurrencePlainDate)) {

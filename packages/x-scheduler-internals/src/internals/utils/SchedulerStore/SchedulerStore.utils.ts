@@ -1,8 +1,9 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { generateId } from '@base-ui/utils/generateId';
 import { warnOnce } from '@mui/x-internals/warning';
-import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
+  TemporalSupportedObject,
   SchedulerProcessedEvent,
   SchedulerEventId,
   SchedulerResource,
@@ -327,12 +328,12 @@ ${JSON.stringify(event)}`,
   }
 }
 
-type ProcessedEventLookupContext = [
-  displayTimezone: TemporalTimezone,
-  eventModelStructure: SchedulerEventModelStructure<any> | undefined,
-  processedEventByModel: WeakMap<object, SchedulerProcessedEvent>,
-  recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null,
-];
+interface ProcessedEventLookupContext {
+  displayTimezone: TemporalTimezone;
+  eventModelStructure: SchedulerEventModelStructure<any> | undefined;
+  processedEventByModel: WeakMap<object, SchedulerProcessedEvent>;
+  recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
+}
 
 const processedEventLookupContext = new WeakMap<
   Map<SchedulerEventId, SchedulerProcessedEvent>,
@@ -382,10 +383,12 @@ export function buildEventsState<TEvent extends object, TResource extends object
   const canReusePrevious =
     previousState !== undefined &&
     previousContext !== undefined &&
-    previousContext[0] === displayTimezone &&
-    previousContext[1] === eventModelStructure &&
-    previousContext[3] === recurringEventsPlugin;
-  const previousProcessedEventByModel = canReusePrevious ? previousContext[2] : null;
+    previousContext.displayTimezone === displayTimezone &&
+    previousContext.eventModelStructure === eventModelStructure &&
+    previousContext.recurringEventsPlugin === recurringEventsPlugin;
+  const previousProcessedEventByModel = canReusePrevious
+    ? previousContext.processedEventByModel
+    : null;
   const processedEventByModel = new WeakMap<object, SchedulerProcessedEvent>();
   let hasSameEventIds = canReusePrevious;
   let eventModelMismatchCount = 0;
@@ -457,12 +460,12 @@ export function buildEventsState<TEvent extends object, TResource extends object
     ? previousState!.processedEventLookup
     : processedEventLookup;
 
-  processedEventLookupContext.set(nextProcessedEventLookup, [
+  processedEventLookupContext.set(nextProcessedEventLookup, {
     displayTimezone,
     eventModelStructure,
     processedEventByModel,
     recurringEventsPlugin,
-  ]);
+  });
 
   return {
     eventIdList: hasSameEventIds ? previousState!.eventIdList : eventIdList,

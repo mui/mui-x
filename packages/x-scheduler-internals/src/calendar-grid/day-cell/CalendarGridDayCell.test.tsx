@@ -14,7 +14,7 @@ import {
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
-import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/date';
+import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
 
 describe('<CalendarGrid.DayCell />', () => {
   const { render } = createSchedulerRenderer();
@@ -37,7 +37,7 @@ describe('<CalendarGrid.DayCell />', () => {
           <CalendarGrid.DayRow
             start={adapter.getTime(adapter.startOfDay(day))}
             end={adapter.getTime(adapter.endOfDay(day))}
-            days={[{ plainDate: buildTemporalPlainDate(day, 'default') }]}
+            days={[{ plainDate: toPlainDate(day.getTime(), 'default') }]}
           >
             {children}
           </CalendarGrid.DayRow>
@@ -47,7 +47,7 @@ describe('<CalendarGrid.DayCell />', () => {
   }
 
   describeConformance(
-    <CalendarGrid.DayCell value={buildTemporalPlainDate(day, 'default')} />,
+    <CalendarGrid.DayCell value={toPlainDate(day.getTime(), 'default')} />,
     () => ({
       refInstanceof: window.HTMLDivElement,
       render: (node) => render(<DayCellWrapper>{node}</DayCellWrapper>),
@@ -61,7 +61,7 @@ describe('<CalendarGrid.DayCell />', () => {
 
       const { user } = render(
         <DayCellWrapper onEventEditingStart={onEventEditingStart}>
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(day, 'default')} />
+          <CalendarGrid.DayCell value={toPlainDate(day.getTime(), 'default')} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as any}
             onMount={(s) => {
@@ -92,7 +92,7 @@ describe('<CalendarGrid.DayCell />', () => {
 
     async function createInSantiago(value: TemporalSupportedObject) {
       let store: AnyEventCalendarStore | null = null;
-      const cellDate = buildTemporalPlainDate(value, 'America/Santiago');
+      const cellDate = toPlainDate(value.getTime(), 'America/Santiago');
       const { user } = render(
         <EventCalendarProvider events={[]} displayTimezone="America/Santiago">
           <CalendarGrid.Root>
@@ -153,7 +153,7 @@ describe('<CalendarGrid.DayCell />', () => {
 
       const { user } = render(
         <DayCellWrapper>
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(day, 'default')}>
+          <CalendarGrid.DayCell value={toPlainDate(day.getTime(), 'default')}>
             <button type="button">child</button>
           </CalendarGrid.DayCell>
           <SchedulerStoreRunner<AnyEventCalendarStore>
@@ -177,7 +177,7 @@ describe('<CalendarGrid.DayCell />', () => {
 
       const { user } = render(
         <DayCellWrapper eventCreation={false}>
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(day, 'default')} />
+          <CalendarGrid.DayCell value={toPlainDate(day.getTime(), 'default')} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as any}
             onMount={(s) => {
@@ -200,8 +200,8 @@ describe('<CalendarGrid.DayCell />', () => {
       const day2 = adapter.addDays(day, 1);
       const { user } = render(
         <DayCellWrapper rowTypes={['day-grid']} rowsPerType={{}}>
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(day, 'default')} />
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(day2, 'default')} />
+          <CalendarGrid.DayCell value={toPlainDate(day.getTime(), 'default')} />
+          <CalendarGrid.DayCell value={toPlainDate(day2.getTime(), 'default')} />
         </DayCellWrapper>,
       );
 
@@ -216,8 +216,8 @@ describe('<CalendarGrid.DayCell />', () => {
       const day2 = adapter.addDays(day, 1);
       const { user } = render(
         <DayCellWrapper rowTypes={['day-grid']} rowsPerType={{}}>
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(day, 'default')} />
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(day2, 'default')} />
+          <CalendarGrid.DayCell value={toPlainDate(day.getTime(), 'default')} />
+          <CalendarGrid.DayCell value={toPlainDate(day2.getTime(), 'default')} />
         </DayCellWrapper>,
       );
 
@@ -231,7 +231,7 @@ describe('<CalendarGrid.DayCell />', () => {
     it('should not move focus on ArrowRight at the last column', async () => {
       const { user } = render(
         <DayCellWrapper rowTypes={['day-grid']} rowsPerType={{}}>
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(day, 'default')} />
+          <CalendarGrid.DayCell value={toPlainDate(day.getTime(), 'default')} />
         </DayCellWrapper>,
       );
 
@@ -245,7 +245,7 @@ describe('<CalendarGrid.DayCell />', () => {
     it('should not move focus on ArrowLeft at the first column', async () => {
       const { user } = render(
         <DayCellWrapper rowTypes={['day-grid']} rowsPerType={{}}>
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(day, 'default')} />
+          <CalendarGrid.DayCell value={toPlainDate(day.getTime(), 'default')} />
         </DayCellWrapper>,
       );
 
@@ -260,8 +260,8 @@ describe('<CalendarGrid.DayCell />', () => {
       const day2 = adapter.addDays(day, 1);
       const { user } = render(
         <DayCellWrapper rowTypes={['day-grid']} rowsPerType={{}}>
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(day, 'default')} />
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(day2, 'default')} />
+          <CalendarGrid.DayCell value={toPlainDate(day.getTime(), 'default')} />
+          <CalendarGrid.DayCell value={toPlainDate(day2.getTime(), 'default')} />
         </DayCellWrapper>,
       );
 

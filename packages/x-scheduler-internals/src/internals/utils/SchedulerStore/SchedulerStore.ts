@@ -1241,10 +1241,7 @@ export class SchedulerStore<
     // Narrowed on the property directly (not `isMovingDates`) so TypeScript can see
     // `cleanChanges.start` is defined here.
     if (cleanChanges.start != null) {
-      cleanChanges.end = new Date(
-        cleanChanges.start.getTime() +
-          (original.dataTimezone.end.timestamp - original.dataTimezone.start.timestamp),
-      );
+      cleanChanges.end = getOccurrenceEnd({ event: original, occurrenceStart: cleanChanges.start });
     }
 
     const refuse = (reason: string) => {

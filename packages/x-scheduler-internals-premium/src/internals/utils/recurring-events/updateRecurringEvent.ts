@@ -12,7 +12,6 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import type { BaseTemporal, UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
 import {
-  buildTemporalPlainDate,
   extractStandaloneEvent,
   dateToEventString,
   getOccurrenceEnd,
@@ -150,14 +149,14 @@ export function applyRecurringUpdateAll(
   // 1) Detect if caller changed the date part of start or end (vs only time)
   const dataTimezone = originalEvent.dataTimezone.timezone;
   const occurrenceEnd = getOccurrenceEnd({ occurrenceStart, event: originalEvent });
-  const occurrencePlainDate = buildTemporalPlainDate(occurrenceStart, dataTimezone);
+  const occurrencePlainDate = toPlainDate(occurrenceStart.getTime(), dataTimezone);
   const touchedStartDate =
     changes.start != null &&
-    !buildTemporalPlainDate(changes.start, dataTimezone).equals(occurrencePlainDate);
+    !toPlainDate(changes.start.getTime(), dataTimezone).equals(occurrencePlainDate);
   const touchedEndDate =
     changes.end != null &&
-    !buildTemporalPlainDate(changes.end, dataTimezone).equals(
-      buildTemporalPlainDate(occurrenceEnd, dataTimezone),
+    !toPlainDate(changes.end.getTime(), dataTimezone).equals(
+      toPlainDate(occurrenceEnd.getTime(), dataTimezone),
     );
 
   // 2) Is the edited occurrence the first of the series (DTSTART)?
@@ -267,7 +266,7 @@ export function adjustRRuleForAllMove(
     ];
     nextRRule.byDay = realignWeeklyByDay(normalized, occurrenceStart, newStart, timezone);
   } else if (rrule.freq === 'MONTHLY') {
-    return realignMonthlyRule(rrule, buildTemporalPlainDate(newStart, timezone));
+    return realignMonthlyRule(rrule, toPlainDate(newStart.getTime(), timezone));
   }
 
   return nextRRule;
@@ -347,7 +346,7 @@ export function decideSplitRRule(
   if (originalRule.freq === 'MONTHLY' && changes.start) {
     realignedRule = realignMonthlyRule(
       realignedRule,
-      buildTemporalPlainDate(changes.start, dataTimezone),
+      toPlainDate(changes.start.getTime(), dataTimezone),
     );
   }
 
@@ -355,7 +354,7 @@ export function decideSplitRRule(
   if (originalRule.count) {
     // The excluded occurrences still count toward COUNT.
     const series = RecurringSeries.fromEvent(originalEvent);
-    const splitPlainDate = buildTemporalPlainDate(splitStart, dataTimezone);
+    const splitPlainDate = toPlainDate(splitStart.getTime(), dataTimezone);
     const remaining = originalRule.count - series.countOccurrencesBefore(splitPlainDate);
     // If no occurrences remain, the split segment is non-recurring.
     if (remaining <= 0) {

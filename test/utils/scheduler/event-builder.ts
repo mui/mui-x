@@ -16,7 +16,7 @@ import {
   schedulerRecurringEventsPlugin,
   getWeekDayCode,
 } from '@mui/x-scheduler-internals-premium/internals';
-import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import type { TemporalAdapter, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { adapter as defaultAdapter } from './adapters';
 
@@ -240,7 +240,7 @@ export class EventBuilder {
       const code = getWeekDayCode(anchor, dataTimezone);
       base = { ...base, byDay: [code] };
     } else if (kind === 'MONTHLY') {
-      const dayOfMonth = buildTemporalPlainDate(anchor, dataTimezone).day;
+      const dayOfMonth = toPlainDate(anchor.getTime(), dataTimezone).day;
       base = { ...base, byMonthDay: [dayOfMonth] };
     }
 

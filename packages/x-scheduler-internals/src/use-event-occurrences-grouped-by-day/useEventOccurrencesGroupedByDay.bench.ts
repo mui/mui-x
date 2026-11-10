@@ -4,10 +4,8 @@ import { adapter, EventBuilder, getEventCalendarStateFromParameters } from 'test
 import { getDayListFromPlainDates } from '../get-day-list';
 import { isWeekendPlainDate } from '../internals/utils/plain-date-utils/plainDate';
 import { getPlainDateWeekStart } from '../internals/utils/date-utils';
-import {
-  buildTemporalPlainDate,
-  createStartOfPlainDate,
-} from '../internals/utils/plain-date-utils/date';
+import { createStartOfPlainDate } from '../internals/utils/plain-date-utils/date';
+import { toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
 import { createEventRangeIndex } from '../internals/utils/event-range-index';
 import { eventCalendarAgendaSelectors } from '../event-calendar-selectors';
 import { innerGetEventOccurrencesGroupedByDay } from './useEventOccurrencesGroupedByDay';
@@ -20,7 +18,7 @@ function createMonthViewScenario(displayTimezone: TemporalTimezone) {
     displayTimezone,
   );
   const gridStart = createStartOfPlainDate(
-    getPlainDateWeekStart(buildTemporalPlainDate(visibleDate, 'default').with({ day: 1 }), 1),
+    getPlainDateWeekStart(toPlainDate(visibleDate.getTime(), 'default').with({ day: 1 }), 1),
     displayTimezone,
   );
   // Events of 30 minutes to 30 hours, every 53 minutes across the 6 weeks of the grid.
@@ -42,7 +40,7 @@ function createMonthViewScenario(displayTimezone: TemporalTimezone) {
 
 function runMonthView(scenario: ReturnType<typeof createMonthViewScenario>) {
   const { visibleDate, displayTimezone, eventRangeIndex } = scenario;
-  const visiblePlainDate = buildTemporalPlainDate(visibleDate, 'default');
+  const visiblePlainDate = toPlainDate(visibleDate.getTime(), 'default');
   const days = getDayListFromPlainDates({
     firstPlainDate: getPlainDateWeekStart(visiblePlainDate.with({ day: 1 }), 1),
     lastPlainDate: getPlainDateWeekStart(

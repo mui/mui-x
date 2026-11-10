@@ -3,7 +3,7 @@ import { adapter, createSchedulerRenderer, describeConformance } from 'test/util
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { describe } from 'vitest';
-import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 
 describe('<CalendarGrid.TimeEventResizeHandler />', () => {
   const { render } = createSchedulerRenderer();
@@ -17,7 +17,7 @@ describe('<CalendarGrid.TimeEventResizeHandler />', () => {
       return render(
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
-            <CalendarGrid.TimeColumn value={buildTemporalPlainDate(eventStart.value, 'default')}>
+            <CalendarGrid.TimeColumn value={toPlainDate(eventStart.value.getTime(), 'default')}>
               <CalendarGrid.TimeEvent
                 eventId="fake-id"
                 occurrenceKey="fake-key"

@@ -1,16 +1,19 @@
-import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { SchedulerEventId } from '../models';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type { TemporalSupportedObject, SchedulerEventId } from '../models';
 import {
   createDateFromString,
   createDateFromWallTime,
-  isValidDate,
 } from '../internals/utils/plain-date-utils/date';
+
+// A string that ends with `Z`, or a date-time that ends with an offset, like
+// `2025-01-01T09:00:00+02:00`.
+const INSTANT_REGEXP = /(?:Z|T.*[+-]\d{2}:?\d{2})$/;
 
 /**
  * Resolves an event date string to a `TemporalSupportedObject`, the `Date` of its instant.
  *
- * - Strings ending with `"Z"` are treated as instants (UTC).
- * - Strings without `"Z"` are treated as wall-time and interpreted in `dataTimezone`.
+ * - Strings ending with `"Z"` or an offset are treated as instants.
+ * - Other strings are treated as wall-time and interpreted in `dataTimezone`.
  *   A wall-clock time skipped by a DST transition moves forward by the length of the gap, and a
  *   repeated one refers to its first instant, whatever the timezone of the system (RFC 5545).
  */
@@ -20,7 +23,7 @@ export function resolveEventDate(
   eventId?: SchedulerEventId,
 ): TemporalSupportedObject {
   let date: TemporalSupportedObject | null = null;
-  if (value.endsWith('Z')) {
+  if (INSTANT_REGEXP.test(value)) {
     date = new Date(value);
   } else if (dataTimezone !== 'default' && dataTimezone !== 'system') {
     date = createDateFromWallTime(value, dataTimezone);
@@ -28,7 +31,7 @@ export function resolveEventDate(
   // `Date` already resolves the wall-clock times of the system timezone like RFC 5545.
   date ??= createDateFromString(value, dataTimezone);
 
-  if (!isValidDate(date)) {
+  if (Number.isNaN(date.getTime())) {
     const eventRef = eventId === undefined ? '' : ` of event "${eventId}"`;
     throw new Error(
       `MUI X Scheduler: The date "${value}"${eventRef} is not a valid date.\n` +

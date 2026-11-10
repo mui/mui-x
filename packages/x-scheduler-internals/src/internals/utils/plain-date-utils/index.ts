@@ -15,12 +15,9 @@ export {
 } from './timeZone';
 export {
   addToDate,
-  buildTemporalPlainDate,
   createEndOfPlainDate,
   createProcessedDate,
   createStartOfPlainDate,
-  isValidDate,
-  moveToPlainDate,
   normalizeAllDayBounds,
 } from './date';
 export {

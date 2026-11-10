@@ -2,7 +2,7 @@ import { adapter } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
-import { buildTemporalPlainDate, getDayNumber } from '@mui/x-scheduler-internals/internals';
+import { getDayNumber, toPlainDate } from '@mui/x-scheduler-internals/internals';
 import type { TimelineAxisWindow } from '@mui/x-scheduler-internals/internals';
 import type { PresetHeaderUnit } from '../../models';
 import { iterate } from './iterate';
@@ -19,8 +19,8 @@ function iterateRange(
   // The ranges of the tests run from the first instant of a date to the last instant of a date,
   // read in the timezone the test creates them in.
   const range = {
-    startPlainDate: buildTemporalPlainDate(start, adapter.getTimezone(start)),
-    endPlainDate: buildTemporalPlainDate(end, adapter.getTimezone(end)).add({ days: 1 }),
+    startPlainDate: toPlainDate(start.getTime(), adapter.getTimezone(start)),
+    endPlainDate: toPlainDate(end.getTime(), adapter.getTimezone(end)).add({ days: 1 }),
     ...hourWindow,
   };
   return iterate(unit, tickUnit, range, weekStartsOn);

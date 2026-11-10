@@ -31,11 +31,10 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getMonthlyReference, getWeeklyDays } from '@mui/x-scheduler-internals-premium/internals';
 import {
-  buildTemporalPlainDate,
-  isValidDate,
   formatWeekday,
   formatWeekdayShort,
   getEndOfDayMs,
+  toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import type { EndsSelection } from '@mui/x-scheduler/internals';
 import {
@@ -211,7 +210,9 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     // Clearing the "Ends until" date stores an invalid date to keep the mode on
     // `until`; the submit must not serialize it.
     validate: (value, allValues) =>
-      allValues.recurrenceSelection === 'custom' && value.until != null && !isValidDate(value.until)
+      allValues.recurrenceSelection === 'custom' &&
+      value.until != null &&
+      Number.isNaN(value.until.getTime())
         ? localeText.invalidDateError
         : null,
   });
@@ -668,8 +669,10 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
               <TextField
                 type="date"
                 value={
-                  customEndsValue === 'until' && isValidDate(rruleDraft.until)
-                    ? buildTemporalPlainDate(rruleDraft.until!, eventTimezone).toString()
+                  customEndsValue === 'until' &&
+                  rruleDraft.until != null &&
+                  !Number.isNaN(rruleDraft.until.getTime())
+                    ? toPlainDate(rruleDraft.until.getTime(), eventTimezone).toString()
                     : ''
                 }
                 onChange={handleChangeUntil}

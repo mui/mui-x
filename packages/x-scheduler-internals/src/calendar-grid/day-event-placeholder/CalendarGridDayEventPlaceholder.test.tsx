@@ -3,14 +3,14 @@ import { adapter, createSchedulerRenderer, describeConformance } from 'test/util
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { describe } from 'vitest';
-import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/date';
+import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
 
 describe('<CalendarGrid.DayEventPlaceholder />', () => {
   const { render } = createSchedulerRenderer();
 
   const eventStart = processDate(adapter.now('default'), 'default');
   const eventEnd = processDate(adapter.addHours(eventStart.value, 1), 'default');
-  const cellDate = buildTemporalPlainDate(eventStart.value, 'default');
+  const cellDate = toPlainDate(eventStart.value.getTime(), 'default');
 
   describeConformance(
     <CalendarGrid.DayEventPlaceholder start={eventStart} end={eventEnd} />,

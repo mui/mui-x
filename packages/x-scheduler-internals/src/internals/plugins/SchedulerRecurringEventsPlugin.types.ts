@@ -1,5 +1,6 @@
-import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
+  TemporalSupportedObject,
   RecurringEventPresetKey,
   RecurringEventScope,
   SchedulerEventOccurrence,
