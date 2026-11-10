@@ -1,5 +1,6 @@
-import { screen } from '@mui/internal-test-utils';
+import { act, screen } from '@mui/internal-test-utils';
 import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
+import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
@@ -71,6 +72,146 @@ describe('<MonthCalendar />', () => {
 
       expect(screen.getByRole('radio', { name: 'January', checked: false })).not.to.equal(null);
       expect(screen.getByRole('radio', { name: 'February', checked: false })).not.to.equal(null);
+    });
+  });
+
+  describe('tab stop', () => {
+    const getTabStops = () =>
+      screen
+        .getAllByRole('radio')
+        .filter((month) => month.getAttribute('tabindex') === '0')
+        .map((month) => month.getAttribute('aria-label'));
+
+    const isMonth = (date: PickerValidDate, month: number) => adapterToUse.getMonth(date) === month;
+
+    it('should fall back to the closest enabled month when the reference month is disabled', () => {
+      render(
+        <MonthCalendar
+          referenceDate={adapterToUse.date('2019-06-15')}
+          shouldDisableMonth={(month) => isMonth(month, 5)}
+        />,
+      );
+
+      expect(getTabStops()).to.deep.equal(['July']);
+    });
+
+    it('should skip the disabled months when looking for the closest enabled month', () => {
+      render(
+        <MonthCalendar
+          referenceDate={adapterToUse.date('2019-06-15')}
+          shouldDisableMonth={(month) => [5, 6, 7, 4].includes(adapterToUse.getMonth(month))}
+        />,
+      );
+
+      expect(getTabStops()).to.deep.equal(['April']);
+    });
+
+    it('should fall back to the closest enabled month when the selected month is disabled', () => {
+      render(
+        <MonthCalendar
+          value={adapterToUse.date('2019-12-15')}
+          shouldDisableMonth={(month) => isMonth(month, 11)}
+        />,
+      );
+
+      expect(getTabStops()).to.deep.equal(['November']);
+    });
+
+    it('should move the tab stop when the focusable month gets disabled and restore it when it gets enabled', () => {
+      const { setProps } = render(
+        <MonthCalendar referenceDate={adapterToUse.date('2019-02-15')} />,
+      );
+
+      expect(getTabStops()).to.deep.equal(['February']);
+
+      setProps({ shouldDisableMonth: (month: PickerValidDate) => isMonth(month, 1) });
+      expect(getTabStops()).to.deep.equal(['March']);
+
+      setProps({ shouldDisableMonth: undefined });
+      expect(getTabStops()).to.deep.equal(['February']);
+    });
+
+    it('should let the keyboard reach the months when the focusable month is disabled', async () => {
+      const { user } = render(
+        <MonthCalendar
+          referenceDate={adapterToUse.date('2019-06-15')}
+          shouldDisableMonth={(month) => isMonth(month, 5)}
+        />,
+      );
+
+      await user.tab();
+
+      expect(screen.getByRole('radio', { name: 'July' })).toHaveFocus();
+    });
+
+    it('should auto focus the closest enabled month when the focusable month is disabled', () => {
+      render(
+        <MonthCalendar
+          autoFocus
+          referenceDate={adapterToUse.date('2019-06-15')}
+          shouldDisableMonth={(month) => isMonth(month, 5)}
+        />,
+      );
+
+      expect(screen.getByRole('radio', { name: 'July' })).toHaveFocus();
+    });
+
+    it('should not have a tab stop when all the months are disabled', () => {
+      render(<MonthCalendar shouldDisableMonth={() => true} />);
+
+      expect(getTabStops()).to.deep.equal([]);
+    });
+
+    it('should not have a tab stop when the calendar is disabled', () => {
+      render(<MonthCalendar disabled />);
+
+      expect(getTabStops()).to.deep.equal([]);
+    });
+
+    it('should not take the focus back after leaving the calendar when the auto focused month gets disabled', () => {
+      const { setProps } = render(
+        <MonthCalendar
+          autoFocus
+          value={adapterToUse.date('2019-06-15')}
+          shouldDisableMonth={(month) => isMonth(month, 5)}
+        />,
+      );
+
+      const july = screen.getByRole('radio', { name: 'July' });
+      expect(july).toHaveFocus();
+
+      act(() => july.blur());
+
+      setProps({
+        shouldDisableMonth: (month: PickerValidDate) =>
+          [5, 6].includes(adapterToUse.getMonth(month)),
+      });
+
+      expect(getTabStops()).to.deep.equal(['May']);
+      expect(document.body).toHaveFocus();
+    });
+
+    it('should validate the focused month against the displayed year', async () => {
+      const onMonthFocus = vi.fn();
+      const { user } = render(
+        <MonthCalendar
+          value={adapterToUse.date('2020-07-15')}
+          currentMonth={adapterToUse.date('2021-01-01')}
+          minDate={adapterToUse.date('2020-06-01')}
+          maxDate={adapterToUse.date('2021-05-31')}
+          onMonthFocus={onMonthFocus}
+        />,
+      );
+
+      await user.tab();
+
+      expect(screen.getByRole('radio', { name: 'May' })).toHaveFocus();
+      expect(onMonthFocus.mock.lastCall).to.deep.equal([4]);
+
+      await user.keyboard('{ArrowLeft}');
+
+      expect(screen.getByRole('radio', { name: 'April' })).toHaveFocus();
+      expect(onMonthFocus.mock.lastCall).to.deep.equal([3]);
     });
   });
 
