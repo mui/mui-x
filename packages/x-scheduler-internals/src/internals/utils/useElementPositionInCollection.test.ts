@@ -5,7 +5,7 @@ import { processDate } from '../../process-date';
 
 describe('computeElementPositionInCollection', () => {
   const date = (value: string) => adapter.date(value, 'UTC');
-  const processed = (value: string) => processDate(date(value), adapter);
+  const processed = (value: string) => processDate(date(value), adapter, 'UTC');
 
   // 4-day collection: Jan 5 → Jan 8, like the `dayAndHour` timeline preset.
   const collectionStart = date('2025-01-05T00:00:00.000Z');

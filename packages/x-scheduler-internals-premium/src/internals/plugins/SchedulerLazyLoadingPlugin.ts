@@ -207,8 +207,8 @@ export class SchedulerLazyLoadingPlugin<
     let requestToRefetch: typeof this.latestRequest = null;
     try {
       const events = await dataSource.getEvents(
-        createAdapterDate(adapter, range.start, displayTimezone),
-        createAdapterDate(adapter, range.end, displayTimezone),
+        createAdapterDate(range.start),
+        createAdapterDate(range.end),
       );
       const latestRequest = this.latestRequest;
 
