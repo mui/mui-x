@@ -98,6 +98,38 @@ describe('<DataGridPro /> - Columns reorder', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
   });
 
+  it('setColumnIndex should count hidden columns in the target index', async () => {
+    let apiRef: RefObject<GridApi | null> = { current: null };
+    const rows = [{ id: 0, hidden: 0, a: 1, b: 2, c: 3 }];
+    const columns = [{ field: 'hidden' }, { field: 'a' }, { field: 'b' }, { field: 'c' }];
+
+    function Test() {
+      apiRef = useGridApiRef();
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            rows={rows}
+            columns={columns}
+            initialState={{ columns: { columnVisibilityModel: { hidden: false } } }}
+          />
+        </div>
+      );
+    }
+
+    render(<Test />);
+    const handleColumnIndexChange = vi.fn();
+    apiRef.current?.subscribeEvent('columnIndexChange', handleColumnIndexChange);
+    await act(() => apiRef.current?.setColumnIndex('c', 2));
+    expect(getColumnHeadersTextContent()).to.deep.equal(['a', 'c', 'b']);
+    expect(apiRef.current?.getColumnIndex('c', false)).to.equal(2);
+    expect(handleColumnIndexChange.mock.calls[0][0]).to.deep.include({
+      targetIndex: 2,
+      oldIndex: 3,
+    });
+  });
+
   it('should allow to reorder columns by dropping outside the header row', () => {
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
