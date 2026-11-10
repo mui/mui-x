@@ -256,12 +256,14 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     const day = adapter.date('2024-01-15', 'default');
     const dayStart = adapter.startOfDay(day);
     const dayEnd = adapter.endOfDay(day);
+    const plainDate = processDay(day).plainDate;
 
     it('should return false when there is no placeholder', () => {
       const state = DEFAULT_EVENT_CALENDAR_STATE;
       expect(
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
+          plainDate,
           adapter.getTime(dayStart),
           adapter.getTime(dayEnd),
         ),
@@ -282,6 +284,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
       expect(
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
+          plainDate,
           adapter.getTime(dayStart),
           adapter.getTime(dayEnd),
         ),
@@ -306,6 +309,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
       expect(
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
+          plainDate,
           adapter.getTime(dayStart),
           adapter.getTime(dayEnd),
         ),
@@ -327,6 +331,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
       expect(
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
+          plainDate,
           adapter.getTime(dayStart),
           adapter.getTime(dayEnd),
         ),
@@ -347,6 +352,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
       expect(
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
+          plainDate,
           adapter.getTime(dayStart),
           adapter.getTime(dayEnd),
         ),
@@ -367,6 +373,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
       expect(
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
+          plainDate,
           adapter.getTime(dayStart),
           adapter.getTime(dayEnd),
         ),
@@ -390,6 +397,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
       expect(
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
+          plainDate,
           adapter.getTime(windowStart),
           adapter.getTime(dayEnd),
         ),

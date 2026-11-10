@@ -179,11 +179,7 @@ export function timestampToTimelineAxisOffsetMs(
   // Day numbers, as this runs for every event.
   const dayIndex =
     toLocalDayNumber(timestamp, axis.timezone) - toLocalDayNumber(axis.start, axis.timezone);
-  const clampedMsInDay = Math.min(
-    Math.max(msInDay, axis.dayStartMinute * MS_PER_MINUTE),
-    axis.dayEndMinute * MS_PER_MINUTE,
-  );
-  return (
-    dayIndex * getTimelineAxisDayMs(axis) + (clampedMsInDay - axis.dayStartMinute * MS_PER_MINUTE)
-  );
+  const dayStartMs = axis.dayStartMinute * MS_PER_MINUTE;
+  const clampedMsInDay = Math.min(Math.max(msInDay, dayStartMs), axis.dayEndMinute * MS_PER_MINUTE);
+  return dayIndex * getTimelineAxisDayMs(axis) + (clampedMsInDay - dayStartMs);
 }
