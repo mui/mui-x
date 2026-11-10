@@ -20,7 +20,11 @@ const snapshot: CalendarGridDayEvent.DragData = {
   originalOccurrence: occurrence,
   start: occurrence.displayTimezone.start.timestamp,
   end: occurrence.displayTimezone.end.timestamp,
-  draggedDay: buildTemporalPlainDate(adapter, occurrence.displayTimezone.start.value),
+  draggedDay: buildTemporalPlainDate(
+    adapter,
+    occurrence.displayTimezone.start.value,
+    adapter.getTimezone(occurrence.displayTimezone.start.value),
+  ),
 };
 
 function Fixture({

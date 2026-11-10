@@ -38,7 +38,11 @@ function Source() {
     isDraggable: true,
     renderDragPreview: () => null,
     getExtraDragData: () => ({
-      draggedDay: buildTemporalPlainDate(adapter, occurrence.displayTimezone.start.value),
+      draggedDay: buildTemporalPlainDate(
+        adapter,
+        occurrence.displayTimezone.start.value,
+        adapter.getTimezone(occurrence.displayTimezone.start.value),
+      ),
     }),
   });
   return <SchedulerDraggable {...draggableProps} render={<div data-testid="source" />} />;
