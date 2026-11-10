@@ -235,4 +235,19 @@ describe('loadStyleSheets', () => {
 
     expect(nonces).to.deep.equal(['the-nonce', 'the-nonce']);
   });
+
+  it('sets the nonce that `@mui/x-*` 9.14.0 and earlier pass as a string', () => {
+    const targetDocument = createTargetDocument();
+    const sourceDocument = createSourceDocument(
+      '<style>body { margin: 0; }</style><link rel="stylesheet" href="https://example.com/styles.css" />',
+    );
+
+    loadStyleSheets(targetDocument, sourceDocument, 'the-nonce');
+
+    const nonces = Array.from(targetDocument.head.querySelectorAll<HTMLElement>('style, link')).map(
+      (element) => element.nonce || element.getAttribute('nonce'),
+    );
+
+    expect(nonces).to.deep.equal(['the-nonce', 'the-nonce']);
+  });
 });

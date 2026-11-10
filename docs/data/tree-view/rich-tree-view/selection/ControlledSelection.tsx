@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import {
+import type {
   TreeViewDefaultItemModelProperties,
   TreeViewItemId,
 } from '@mui/x-tree-view/models';

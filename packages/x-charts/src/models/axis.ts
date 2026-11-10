@@ -178,14 +178,23 @@ export interface ChartsAxisProps extends TickParams {
    * @default {}
    */
   slotProps?: Partial<ChartsAxisSlotProps>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps;
 }
 
 export interface ChartsYAxisProps extends ChartsAxisProps {
+  /**
+   * The direction of the axis.
+   */
   axis?: 'y';
 }
 
 export interface ChartsXAxisProps extends ChartsAxisProps {
+  /**
+   * The direction of the axis.
+   */
   axis?: 'x';
   /**
    * The minimum gap in pixels between two tick labels.
@@ -228,6 +237,9 @@ type AxisSideConfig<AxisProps extends ChartsCartesianAxisProps> = {
 };
 
 export interface ChartsRotationAxisProps extends Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
+  /**
+   * The direction of the axis.
+   */
   axis?: 'rotation';
   /**
    * If true, the tick labels are not rendered.
@@ -271,6 +283,9 @@ export interface ChartsRotationAxisProps extends Omit<ChartsAxisProps, 'slots' |
 }
 
 export interface ChartsRadiusAxisProps extends Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
+  /**
+   * The direction of the axis.
+   */
   axis?: 'radius';
   /**
    * If true, the tick labels are not rendered.
@@ -789,7 +804,8 @@ export interface ChartsAxisData {
   seriesValues: Record<
     string,
     HasProperty<ChartsTypeFeatureFlags, 'seriesValuesOverride'> extends true
-      ? // @ts-ignore this property is added through module augmentation
+      ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Premium supplies seriesValuesOverride only when its augmentation is loaded.
+        // @ts-ignore Premium supplies seriesValuesOverride only when its augmentation is loaded.
         ChartsTypeFeatureFlags['seriesValuesOverride']
       : number | null | undefined
   >;

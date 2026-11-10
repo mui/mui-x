@@ -6,7 +6,7 @@ import renamePickerClasses from '../rename-picker-classes';
 import removeDisableMargin from '../remove-disable-margin';
 import removeEnableAccessibleFieldDOMStructure from '../remove-enable-accessible-field-dom-structure';
 import migrateTextFieldProps from '../migrate-text-field-props';
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 // Order matters: removePickerDay2 must run before renamePickerDay2
 // because it looks for `PickerDay2` identifiers in slot objects.

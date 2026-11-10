@@ -1,11 +1,7 @@
-import * as React from 'react';
+import type * as React from 'react';
 import { afterAll } from 'vitest';
-import {
-  ConformanceOptions,
-  MuiRenderResult,
-  RenderOptions,
-  createDescribe,
-} from '@mui/internal-test-utils';
+import type { ConformanceOptions, MuiRenderResult, RenderOptions } from '@mui/internal-test-utils';
+import { createDescribe } from '@mui/internal-test-utils';
 import { testPropForwarding } from './conformanceTests/propForwarding';
 import { testRefForwarding } from './conformanceTests/refForwarding';
 import { testClassName } from './conformanceTests/className';

@@ -2,7 +2,6 @@ import { interpolateBlues } from 'd3-scale-chromatic';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
-
 import bikeData from '../dataset/ParisBicycle.json';
 
 const days = [

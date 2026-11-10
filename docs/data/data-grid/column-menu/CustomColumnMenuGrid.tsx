@@ -1,11 +1,10 @@
 import * as React from 'react';
+import type { GridColumnMenuItemProps, GridColumnMenuProps } from '@mui/x-data-grid';
 import {
   DataGrid,
   GridColumnMenuFilterItem,
   GridColumnMenuSortItem,
   GridColumnMenuColumnsItem,
-  GridColumnMenuItemProps,
-  GridColumnMenuProps,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import MenuList from '@mui/material/MenuList';

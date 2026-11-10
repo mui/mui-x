@@ -4,7 +4,7 @@ import type { GridStateCommunity } from '../../../models/gridStateCommunity';
 import type { GridPivotingStatePartial } from './gridPivotingInterfaces';
 
 const gridPivotingStateSelector = createRootSelector(
-  // @ts-ignore
+  // @ts-expect-error Pivoting is added to community state only by Premium augmentation.
   (state: GridStateCommunity) => state.pivoting as GridPivotingStatePartial,
 );
 

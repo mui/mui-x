@@ -1,9 +1,9 @@
-import {
-  DataGrid,
+import type {
   GridColDef,
   GridRenderCellParams,
   GridRowsProp,
 } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';

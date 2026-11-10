@@ -1,9 +1,8 @@
 import * as React from 'react';
+import type { GridRenderCellParams, GridGroupNode } from '@mui/x-data-grid-pro';
 import {
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
-  GridRenderCellParams,
-  GridGroupNode,
   useGridRootProps,
   useGridApiContext,
 } from '@mui/x-data-grid-pro';

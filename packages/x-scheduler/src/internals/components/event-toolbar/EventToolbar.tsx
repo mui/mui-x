@@ -1,14 +1,17 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import EditRounded from '@mui/icons-material/EditRounded';
 import DeleteRounded from '@mui/icons-material/DeleteRounded';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventEditingContext, useEventEditingStyledContext } from '../event-editing';
 import { useDisarmOnEscape } from '../armed-occurrence';
+import { deleteOccurrenceAndRestoreFocus } from '../../utils/focus-utils';
 
 // `Paper` (elevation 3) supplies the `background.paper` fill and `shadows[3]` box shadow.
 const EventToolbarRoot = styled(Paper, {
@@ -50,6 +53,7 @@ export function EventToolbar(props: EventToolbarProps) {
   const { occurrence } = props;
 
   const store = useSchedulerStoreContext();
+  const deletionConfig = useStore(store, schedulerEventSelectors.deletionConfig);
   const { stopEditing, anchor, stableAnchorRef } = useEventEditingContext();
   const { classes, localeText } = useEventEditingStyledContext();
 
@@ -67,10 +71,8 @@ export function EventToolbar(props: EventToolbarProps) {
     );
   };
 
-  // Recurring events open the scope dialog (which closes the surface on submit);
-  // single events delete immediately and close.
   const handleDelete = () => {
-    store.deleteOccurrence(occurrence, stopEditing);
+    deleteOccurrenceAndRestoreFocus(store, occurrence, anchor, stopEditing);
   };
 
   return (
@@ -87,13 +89,15 @@ export function EventToolbar(props: EventToolbarProps) {
       >
         <EditRounded fontSize="small" />
       </EventToolbarButton>
-      <EventToolbarButton
-        className={classes.eventToolbarDeleteButton}
-        aria-label={localeText.deleteEventButtonAriaLabel}
-        onClick={handleDelete}
-      >
-        <DeleteRounded fontSize="small" />
-      </EventToolbarButton>
+      {deletionConfig !== false && (
+        <EventToolbarButton
+          className={classes.eventToolbarDeleteButton}
+          aria-label={localeText.deleteEventButtonAriaLabel}
+          onClick={handleDelete}
+        >
+          <DeleteRounded fontSize="small" />
+        </EventToolbarButton>
+      )}
     </EventToolbarRoot>
   );
 }

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-chat",
-  "version": "9.0.0-alpha.19",
+  "version": "9.0.0-alpha.21",
   "author": "MUI Team",
   "description": "The community edition of the MUI X Chat components.",
   "license": "MIT",
@@ -80,9 +80,6 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"
-  },
-  "engines": {
-    "node": ">=14.0.0"
   },
   "imports": {
     "#formatErrorMessage": "@mui/x-internals/formatErrorMessage",

@@ -3,6 +3,7 @@ import {
   adapter,
   createSchedulerRenderer,
   EventBuilder,
+  EventTimelinePremiumStoreWithFeatures,
   ResourceBuilder,
   StoreSpy,
 } from 'test/utils/scheduler';
@@ -14,7 +15,6 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import {
   EventDialogContent,
   EventEditingOptionalRenderersContext,
@@ -32,7 +32,10 @@ const editingStyledContextValue = {
   classes: eventTimelinePremiumClasses,
   localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 };
-const sharedComponentsStyledContextValue = { classes: eventTimelinePremiumClasses };
+const sharedComponentsStyledContextValue = {
+  classes: eventTimelinePremiumClasses,
+  localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+};
 
 /**
  * Wraps EventDialogContent with the premium renderers the production code supplies at
@@ -41,14 +44,23 @@ const sharedComponentsStyledContextValue = { classes: eventTimelinePremiumClasse
  * need) in favor of directly seeding a `type: 'creation'` placeholder on a hand-built store,
  * the same technique the Event Calendar's own creation tests already use.
  */
-function TestEventDialogContent(props: React.ComponentProps<typeof EventDialogContent>) {
+function TestEventDialogContent(
+  props: React.ComponentProps<typeof EventDialogContent> & {
+    localeText?: typeof EVENT_TIMELINE_DEFAULT_LOCALE_TEXT;
+  },
+) {
+  const { localeText, ...other } = props;
+  const editingValue = React.useMemo(
+    () => (localeText ? { ...editingStyledContextValue, localeText } : editingStyledContextValue),
+    [localeText],
+  );
   return (
-    <EventEditingStyledContext.Provider value={editingStyledContextValue}>
+    <EventEditingStyledContext.Provider value={editingValue}>
       <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
         <EventEditingOptionalRenderersContext.Provider
           value={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}
         >
-          <EventDialogContent {...props} />
+          <EventDialogContent {...other} />
         </EventEditingOptionalRenderersContext.Provider>
       </SharedComponentsStyledContext.Provider>
     </EventEditingStyledContext.Provider>
@@ -81,15 +93,15 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
     const start = adapter.date('2025-07-03T09:00:00Z', 'default');
     const end = adapter.date('2025-07-03T09:30:00Z', 'default');
 
-    const store = new EventTimelinePremiumStore(
+    const store = new EventTimelinePremiumStoreWithFeatures(
       { events: [], resources, eventCreation, onEventsChange: () => {} },
       adapter,
     );
     store.setOccurrencePlaceholder({
       type: 'creation',
       surfaceType: 'timeline',
-      start,
-      end,
+      start: adapter.getTime(start),
+      end: adapter.getTime(end),
       lockSurfaceType: true,
       resourceId: rowResource.id,
     });
@@ -206,11 +218,11 @@ describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
    * Renders the dialog editing `predecessor`, whose FinishToStart successor is
    * read-only: a save moving it past 10:00 is vetoed.
    */
-  async function renderEditDialog() {
+  async function renderEditDialog(localeText?: typeof EVENT_TIMELINE_DEFAULT_LOCALE_TEXT) {
     const onEventsChange = vi.fn();
     const onClose = vi.fn();
 
-    const store = new EventTimelinePremiumStore(
+    const store = new EventTimelinePremiumStoreWithFeatures(
       {
         events: [predecessor, readOnlySuccessor],
         resources,
@@ -234,6 +246,7 @@ describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
           container={document.body}
           occurrence={editedOccurrence}
           onClose={onClose}
+          localeText={localeText}
         />
       </SchedulerStoreContext.Provider>,
     );
@@ -264,6 +277,22 @@ describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
     expect(store.state.errors).to.have.length(0);
     expect(currentDialog.getByText(/"Locked successor"/)).not.to.equal(null);
     expect(currentDialog.getByLabelText(/start time/i)).to.have.value('11:00');
+    expect(document.activeElement).to.equal(currentDialog.getByLabelText(/end time/i));
+  });
+
+  it('should show the veto of the save from the localeText', async () => {
+    const { user, currentDialog } = await renderEditDialog({
+      ...EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+      readOnlyEventMovedError: (title) => `No se puede mover "${title}".`,
+    });
+
+    await user.clear(currentDialog.getByLabelText(/start time/i));
+    await user.type(currentDialog.getByLabelText(/start time/i), '11:00');
+    await user.clear(currentDialog.getByLabelText(/end time/i));
+    await user.type(currentDialog.getByLabelText(/end time/i), '12:00');
+    await user.click(currentDialog.getByRole('button', { name: /save/i }));
+
+    expect(currentDialog.getByText('No se puede mover "Locked successor".')).not.to.equal(null);
   });
 
   it('should show the General tab when a save submitted from the Recurrence tab is vetoed', async () => {
@@ -284,6 +313,19 @@ describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
     expect(onEventsChange.mock.calls.length).to.equal(0);
     expect(generalPanel).not.to.have.attribute('hidden');
     expect(currentDialog.getByText(/"Locked successor"/)).not.to.equal(null);
+    expect(document.activeElement).to.equal(currentDialog.getByLabelText(/end time/i));
+  });
+
+  it('should focus the end date when an all-day save is vetoed', async () => {
+    const { user, currentDialog, onEventsChange } = await renderEditDialog();
+
+    // All day ends at the end of the day: past the read-only successor's 10:00 start.
+    await user.click(currentDialog.getByRole('switch', { name: /all day/i }));
+    await user.click(currentDialog.getByRole('button', { name: /save/i }));
+
+    expect(onEventsChange.mock.calls.length).to.equal(0);
+    expect(currentDialog.getByText(/"Locked successor"/)).not.to.equal(null);
+    expect(document.activeElement).to.equal(currentDialog.getByLabelText(/end date/i));
   });
 
   it('should save after the vetoed dates are edited back into a valid range', async () => {

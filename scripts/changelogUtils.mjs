@@ -255,6 +255,11 @@ async function generateChangelog({
     .filter((item) => !item.labels?.some((label) => excludeLabels.includes(label)))
     .filter((item) => !excludeTitleTags.some((tag) => item.commit.message.includes(tag)))
     .forEach((commitItem) => {
+      // the `package: codemod` label wins over the title tag
+      if (commitItem.labels?.includes('package: codemod')) {
+        codemodCommits.push(commitItem);
+        return;
+      }
       const tags = parseTags(commitItem.commit.message).split(',');
       // a `docs` tag wins over the product one: `[docs][charts]` is a docs change
       if (tags.includes('docs')) {
@@ -402,6 +407,7 @@ async function generateChangelog({
    * @param {import('@octokit/rest').Octokit.ReposCompareCommitsResponseCommitsItem[]} [options.proCommits] - The commits for the Pro package (if applicable)
    * @param {import('@octokit/rest').Octokit.ReposCompareCommitsResponseCommitsItem[]} [options.premiumCommits] - The commits for the Premium package (if applicable)
    * @param {string} [options.changelogKey] - The key to use for changelog messages (e.g., 'DataGrid', 'charts')
+   * @param {boolean} [options.internal] - Whether to omit the section when there are no commits
    * @returns {string} The formatted changelog section for the product
    */
   const logProductSection = ({
@@ -411,6 +417,7 @@ async function generateChangelog({
     proCommits = null,
     premiumCommits = null,
     changelogKey,
+    internal = false,
   }) => {
     const hasProVersion = proCommits !== null;
     const hasPremiumVersion = premiumCommits !== null;
@@ -421,9 +428,9 @@ async function generateChangelog({
       (proCommits?.length ?? 0) === 0 &&
       (premiumCommits?.length ?? 0) === 0;
 
-    // Keep rendering `Internal changes.` when a package is bumped without
+    // Keep rendering `Internal changes.` when a regular package is bumped without
     // commits (e.g. an `x-internals` update propagating a version bump).
-    if (hasNoCommits && !isPackageBumped(packageName, packageVersion)) {
+    if (hasNoCommits && (internal || !isPackageBumped(packageName, packageVersion))) {
       return '';
     }
 
@@ -591,6 +598,7 @@ ${logProductSection({
   packageName: 'x-codemod',
   baseCommits: codemodCommits,
   changelogKey: 'codemod',
+  internal: true,
 })}
 
 ${logOtherSection({

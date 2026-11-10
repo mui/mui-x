@@ -26,6 +26,7 @@ describe('Core - EventCalendarStore', () => {
 
       const expectedState = {
         adapter,
+        dateLocale: 'en-US',
         areEventsDraggable: true,
         areEventsResizable: true,
         canDragEventsFromTheOutside: false,
@@ -34,14 +35,16 @@ describe('Core - EventCalendarStore', () => {
         selection: null,
         eventColor: 'teal',
         eventCreation: true,
+        eventDeletion: { confirmation: true },
         eventIdList: [],
         eventModelList: [],
         eventModelLookup: new Map(),
         eventModelStructure: undefined,
         displayTimezone: 'default',
         editingOccurrence: null,
-        nowUpdatedEveryMinute: adapter.now('default'),
+        nowTimestamp: Date.now(),
         occurrencePlaceholder: null,
+        pendingDeleteConfirmation: null,
         pendingRecurringEventOperation: null,
         preferences: EMPTY_OBJECT,
         preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
@@ -177,8 +180,8 @@ describe('Core - EventCalendarStore', () => {
         const placeholder = {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.date('2024-01-15T10:00:00', 'default'),
-          end: adapter.date('2024-01-15T10:30:00', 'default'),
+          start: adapter.getTime(adapter.date('2024-01-15T10:00:00', 'default')),
+          end: adapter.getTime(adapter.date('2024-01-15T10:30:00', 'default')),
         } as any;
         store.setOccurrencePlaceholder(placeholder);
 
@@ -199,8 +202,8 @@ describe('Core - EventCalendarStore', () => {
         const placeholder = {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.date('2024-01-15T10:00:00', 'default'),
-          end: adapter.date('2024-01-15T10:30:00', 'default'),
+          start: adapter.getTime(adapter.date('2024-01-15T10:00:00', 'default')),
+          end: adapter.getTime(adapter.date('2024-01-15T10:30:00', 'default')),
         } as any;
         store.setOccurrencePlaceholder(placeholder, nativeEvent);
 
@@ -243,7 +246,10 @@ describe('Core - EventCalendarStore', () => {
     describe('setEditingOccurrenceTimes', () => {
       it('should refresh the edited occurrence times, keeping the mode', () => {
         const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
-        store.startEditing(occurrence('event-1'), 'armed');
+        store.startEditing(
+          EventBuilder.new(adapter).id('event-1').singleDay('2024-01-15T09:00:00').toOccurrence(),
+          'armed',
+        );
         const start = adapter.date('2024-01-15T10:00:00', 'default');
         const end = adapter.date('2024-01-15T11:30:00', 'default');
 
@@ -285,7 +291,11 @@ describe('Core - EventCalendarStore', () => {
         // A rule added from the dialog is built on the data-timezone start.
         expect(editing.dataTimezone.start.timestamp).to.equal(adapter.getTime(start));
         expect(editing.dataTimezone.end.timestamp).to.equal(adapter.getTime(end));
-        expect(adapter.getTimezone(editing.dataTimezone.start.value)).to.equal('UTC');
+        // Read in the data timezone: 14:00 UTC.
+        expect(editing.dataTimezone.start.minutesInDay).to.equal(14 * 60);
+        // Read in the display timezone: 09:00 in New York.
+        expect(editing.displayTimezone.start.minutesInDay).to.equal(9 * 60);
+        expect(editing.displayTimezone.end.minutesInDay).to.equal(11 * 60);
       });
 
       it('should keep a bound left out on its stored value in both timezones', () => {
@@ -315,8 +325,8 @@ describe('Core - EventCalendarStore', () => {
         store.setOccurrencePlaceholder({
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.date('2024-01-15T10:00:00', 'default'),
-          end: adapter.date('2024-01-15T11:00:00', 'default'),
+          start: adapter.getTime(adapter.date('2024-01-15T10:00:00', 'default')),
+          end: adapter.getTime(adapter.date('2024-01-15T11:00:00', 'default')),
           resourceId: null,
         });
 
@@ -325,6 +335,39 @@ describe('Core - EventCalendarStore', () => {
         expect(store.state.editingOccurrence).to.equal(null);
         expect(store.state.occurrencePlaceholder).to.equal(null);
       });
+    });
+  });
+
+  describe('setOccurrencePlaceholder', () => {
+    const placeholder = {
+      type: 'creation',
+      surfaceType: 'time-grid',
+      start: Date.UTC(2024, 0, 15, 10),
+      end: Date.UTC(2024, 0, 15, 11),
+      resourceId: null,
+    } as const;
+
+    it('should keep the stored placeholder when it receives one with the same fields', () => {
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      const stored = { ...placeholder };
+      store.setOccurrencePlaceholder(stored);
+      store.setOccurrencePlaceholder({ ...placeholder });
+
+      expect(store.state.occurrencePlaceholder).to.equal(stored);
+    });
+
+    it('should store a placeholder whose fields changed', () => {
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      store.setOccurrencePlaceholder({ ...placeholder });
+      const moved = { ...placeholder, start: Date.UTC(2024, 0, 15, 10, 30) };
+      store.setOccurrencePlaceholder(moved);
+      const hidden = { ...moved, isHidden: true };
+      store.setOccurrencePlaceholder(hidden);
+      expect(store.state.occurrencePlaceholder).to.equal(hidden);
+
+      // A drag that re-enters the surface drops `isHidden`.
+      store.setOccurrencePlaceholder(moved);
+      expect(store.state.occurrencePlaceholder).to.equal(moved);
     });
   });
 

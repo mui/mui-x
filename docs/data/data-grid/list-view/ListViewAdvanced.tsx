@@ -1,14 +1,16 @@
 import * as React from 'react';
+import type {
+  GridColDef,
+  GridRowParams,
+  GridRowId,
+  GridRenderCellParams,
+} from '@mui/x-data-grid-premium';
 import {
   GridActionsCellItem,
-  GridColDef,
   useGridApiRef,
-  GridRowParams,
   DataGridPremium,
-  GridRowId,
   gridClasses,
   GridActionsCell,
-  GridRenderCellParams,
   useGridApiContext,
 } from '@mui/x-data-grid-premium';
 import EditIcon from '@mui/icons-material/Edit';
@@ -26,7 +28,7 @@ import { ListCell } from './components/ListCell';
 import { Toolbar } from './components/Toolbar';
 import { INITIAL_ROWS } from './data';
 import { FILE_TYPES } from './constants';
-import { RowModel, FileType } from './types';
+import type { RowModel, FileType } from './types';
 import { formatDate, formatSize, stringAvatar } from './utils';
 import { ActionDrawer } from './components/ActionDrawer';
 import { RenameDialog } from './components/RenameDialog';

@@ -1,7 +1,7 @@
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { expectFieldValue } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
-import { vi, describe, it, expect } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 describe('<TimeField /> - Timezone', () => {
   describeAdapters('DST meridiem toggling', TimeField, ({ adapter, renderWithProps }) => {
@@ -65,5 +65,27 @@ describe('<TimeField /> - Timezone', () => {
         expect(onChange.mock.lastCall?.[0]).toEqualDateTime(expectedDate);
       });
     });
+  });
+
+  describeAdapters('Day without midnight', TimeField, ({ adapter, renderWithProps }) => {
+    beforeEach(() => {
+      // `America/Santiago` skips from 00:00 to 01:00 on 2026-09-06.
+      vi.setSystemTime(new Date('2026-09-06T15:00:00.000Z'));
+    });
+
+    it.skipIf(!adapter.isTimezoneCompatible)(
+      'should accept every hour in a 12-hour format',
+      async () => {
+        const view = renderWithProps({
+          format: adapter.formats.fullTime12h,
+          timezone: 'America/Santiago',
+        });
+
+        await view.selectSection('hours');
+        await view.pressKey('1');
+        await view.pressKey('0');
+        expectFieldValue(view.getSectionsContainer(), '10:mm aa');
+      },
+    );
   });
 });

@@ -46,7 +46,14 @@ export interface RangeButtonConfig {
 }
 
 export interface ChartsToolbarProProps extends ChartsToolbarProps {
+  /**
+   * The options of the print export.
+   * Set `disableToolbarButton` to remove the print entry from the export menu.
+   */
   printOptions?: ChartsToolbarPrintExportOptions;
+  /**
+   * The image export options. Each option adds an entry to the export menu.
+   */
   imageExportOptions?: ChartsToolbarImageExportOptions[];
   /**
    * Configuration for range buttons shown in the toolbar.
@@ -58,6 +65,13 @@ export interface ChartsToolbarProProps extends ChartsToolbarProps {
    * Defaults to the first x-axis with zoom enabled and a time scale.
    */
   rangeButtonsAxisId?: AxisId;
+  /**
+   * Extra items rendered at the end of the export menu.
+   * @param {object} params The render params.
+   * @param {Function} params.onClose Closes the export menu.
+   * @returns {React.ReactNode} The menu items.
+   */
+  exportMenuItems?: (params: { onClose: () => void }) => React.ReactNode;
 }
 
 const DEFAULT_IMAGE_EXPORT_OPTIONS: ChartsToolbarImageExportOptions[] = [{ type: 'image/png' }];
@@ -82,6 +96,7 @@ function ChartsToolbarPro({
   imageExportOptions: rawImageExportOptions,
   rangeButtons,
   rangeButtonsAxisId,
+  exportMenuItems,
   ...other
 }: ChartsToolbarProProps) {
   const { slots, slotProps } = useChartsSlots<ChartsSlotsPro>();
@@ -93,7 +108,10 @@ function ChartsToolbarPro({
   const exportMenuTriggerId = useId();
   const isZoomEnabled = store.use(selectorChartZoomIsEnabled);
   const imageExportOptionList = rawImageExportOptions ?? DEFAULT_IMAGE_EXPORT_OPTIONS;
-  const showExportMenu = !printOptions?.disableToolbarButton || imageExportOptionList.length > 0;
+  const showExportMenu =
+    !printOptions?.disableToolbarButton ||
+    imageExportOptionList.length > 0 ||
+    exportMenuItems != null;
 
   const children: Array<React.JSX.Element> = [];
 
@@ -210,6 +228,7 @@ function ChartsToolbarPro({
                 {localeText.toolbarExportImage(imageExportOptions.type)}
               </ChartsToolbarImageExportTrigger>
             ))}
+            {exportMenuItems?.({ onClose: closeExportMenu })}
           </MenuList>
         </ChartsMenu>
       </React.Fragment>,
@@ -228,6 +247,16 @@ ChartsToolbarPro.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Extra items rendered at the end of the export menu.
+   * @param {object} params The render params.
+   * @param {Function} params.onClose Closes the export menu.
+   * @returns {React.ReactNode} The menu items.
+   */
+  exportMenuItems: PropTypes.func,
+  /**
+   * The image export options. Each option adds an entry to the export menu.
+   */
   imageExportOptions: PropTypes.arrayOf(
     PropTypes.shape({
       copyStyles: PropTypes.bool,
@@ -240,6 +269,10 @@ ChartsToolbarPro.propTypes /* remove-proptypes */ = {
       type: PropTypes.string.isRequired,
     }),
   ),
+  /**
+   * The options of the print export.
+   * Set `disableToolbarButton` to remove the print entry from the export menu.
+   */
   printOptions: PropTypes.object,
   /**
    * Configuration for range buttons shown in the toolbar.

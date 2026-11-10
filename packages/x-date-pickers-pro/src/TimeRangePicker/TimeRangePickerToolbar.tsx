@@ -50,6 +50,9 @@ const useUtilityClasses = (
 
 export interface TimeRangePickerToolbarProps
   extends Omit<BaseToolbarProps, 'toolbarFormat'>, ExportedTimeRangePickerToolbarProps {
+  /**
+   * 12h/24h view for hour selection clock.
+   */
   ampm: boolean;
 }
 
@@ -196,6 +199,9 @@ TimeRangePickerToolbarTimeElement.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * 12h/24h view for hour selection clock.
+   */
   ampm: PropTypes.bool.isRequired,
   onViewChange: PropTypes.func.isRequired,
   separatorClasses: PropTypes.string.isRequired,
@@ -284,11 +290,17 @@ TimeRangePickerToolbar.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * 12h/24h view for hour selection clock.
+   */
   ampm: PropTypes.bool.isRequired,
   /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   /**
    * If `true`, show the toolbar even in desktop mode.
@@ -303,6 +315,10 @@ TimeRangePickerToolbar.propTypes /* remove-proptypes */ = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The id of the toolbar title element.
+   * The picker uses it to label its popup.
+   */
   titleId: PropTypes.string,
   /**
    * Toolbar value placeholder—it is displayed when the value is empty.

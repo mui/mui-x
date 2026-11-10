@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { DescribeHijriAdapterTestSuite } from './describeHijriAdapter.types';
+import type { DescribeHijriAdapterTestSuite } from './describeHijriAdapter.types';
 import { TEST_DATE_ISO_STRING } from '../describeGregorianAdapter';
 
 export const testCalculations: DescribeHijriAdapterTestSuite = ({ adapter }) => {

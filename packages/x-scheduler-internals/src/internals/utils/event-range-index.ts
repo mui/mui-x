@@ -1,16 +1,15 @@
-import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedEvent } from '../../models';
-import type { Adapter } from '../../use-adapter/useAdapter.types';
 
 export const EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD = 0.25;
 
 type EventRangeEntry = [event: SchedulerProcessedEvent, index: number, start: number, end: number];
 
 export interface SchedulerEventRangeIndex {
-  getEventsForRange(
-    start: TemporalSupportedObject,
-    end: TemporalSupportedObject,
-  ): SchedulerProcessedEvent[];
+  /**
+   * Returns the events that overlap the range from the timestamp `start` to the timestamp `end`,
+   * both included.
+   */
+  getEventsForRange(start: number, end: number): SchedulerProcessedEvent[];
 }
 
 function buildMaxEndIndex(entries: EventRangeEntry[]) {
@@ -100,7 +99,6 @@ function queryMaxEndIndex(
  */
 export function createEventRangeIndex(
   events: SchedulerProcessedEvent[],
-  adapter: Adapter,
   expandRecurringEvents: boolean,
 ): SchedulerEventRangeIndex {
   const recurringEntries: EventRangeEntry[] = [];
@@ -128,10 +126,7 @@ export function createEventRangeIndex(
   const latestRangeStart = rangeEntries[rangeEntries.length - 1]?.[2] ?? -Infinity;
 
   return {
-    getEventsForRange(start, end) {
-      const startTimestamp = adapter.getTime(start);
-      const endTimestamp = adapter.getTime(end);
-
+    getEventsForRange(startTimestamp, endTimestamp) {
       if (startTimestamp <= earliestRangeEnd && endTimestamp >= latestRangeStart) {
         return events.slice();
       }

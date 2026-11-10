@@ -3,17 +3,42 @@
   "propDescriptions": {
     "calendars": { "description": "The number of calendars rendered." },
     "classes": { "description": "Override or extend the styles applied to the component." },
+    "className": { "description": "A CSS class name applied to the root element." },
+    "currentMonth": { "description": "The first visible month." },
+    "disabled": {
+      "description": "If <code>true</code>, the view cannot be switched. The switch button is hidden and a click on the label does nothing."
+    },
+    "disableFuture": {
+      "description": "If <code>true</code>, disable values after the current date."
+    },
+    "disablePast": {
+      "description": "If <code>true</code>, disable values before the current date."
+    },
     "format": { "description": "Format used to display the date." },
     "labelId": {
       "description": "Id of the calendar text element. It is used to establish an <code>aria-labelledby</code> relationship with the calendar <code>grid</code> element."
     },
+    "maxDate": { "description": "Maximal selectable date." },
+    "minDate": { "description": "Minimal selectable date." },
     "month": { "description": "Month used for this header." },
     "monthIndex": { "description": "Index of the month used for this header." },
+    "onMonthChange": {
+      "description": "Callback fired when the displayed month changes.",
+      "typeDescriptions": { "date": { "name": "date", "description": "The new displayed month." } }
+    },
+    "onViewChange": {
+      "description": "Callback fired when the view changes.",
+      "typeDescriptions": { "view": { "name": "view", "description": "The new view." } }
+    },
+    "reduceAnimations": { "description": "If <code>true</code>, disable heavy animations." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
-    }
+    },
+    "timezone": { "description": "The timezone used to compare dates." },
+    "view": { "description": "The visible view." },
+    "views": { "description": "Available views." }
   },
   "classDescriptions": {
     "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the label element" },

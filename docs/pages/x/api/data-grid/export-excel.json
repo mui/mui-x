@@ -1,12 +1,24 @@
 {
   "props": {
+    "disabled": { "type": { "name": "bool" } },
+    "id": { "type": { "name": "string" } },
     "options": {
       "type": {
         "name": "shape",
         "description": "{ allColumns?: bool, columnsStyles?: object, escapeFormulas?: bool, exceljsPostProcess?: func, exceljsPreProcess?: func, fields?: Array&lt;string&gt;, fileName?: string, getRowsToExport?: func, includeColumnGroupsHeaders?: bool, includeHeaders?: bool, valueOptionsSheetName?: string, worker?: func }"
       }
     },
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
+    "role": { "type": { "name": "string" } },
+    "size": {
+      "type": {
+        "name": "enum",
+        "description": "'large'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'small'"
+      }
+    },
+    "startIcon": { "type": { "name": "node" } },
+    "tabIndex": { "type": { "name": "number" } },
+    "title": { "type": { "name": "string" } }
   },
   "name": "ExportExcel",
   "imports": [

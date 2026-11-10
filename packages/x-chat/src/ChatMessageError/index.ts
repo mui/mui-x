@@ -1,5 +1,5 @@
 export { ChatMessageError } from './ChatMessageError';
-export type { ChatMessageErrorProps } from './ChatMessageError';
+export type { ChatMessageErrorProps, ChatMessageErrorSlots } from './ChatMessageError';
 export {
   chatMessageErrorClasses,
   getChatMessageErrorUtilityClass,

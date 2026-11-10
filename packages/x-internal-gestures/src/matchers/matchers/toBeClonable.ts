@@ -1,6 +1,6 @@
 import { Gesture } from '../../core';
-import { AnyGesture } from '../AnyGesture';
-import { MatcherState, SyncMatcherFn } from '../Matcher.types';
+import type { AnyGesture } from '../AnyGesture';
+import type { MatcherState, SyncMatcherFn } from '../Matcher.types';
 import { messages } from '../messages';
 
 export type ToBeClonable<R = AnyGesture> = {

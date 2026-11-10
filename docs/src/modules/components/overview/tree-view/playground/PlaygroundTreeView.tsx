@@ -1,14 +1,7 @@
 import * as React from 'react';
 import { animated, useSpring } from '@react-spring/web';
-import {
-  ThemeOptions,
-  ThemeProvider,
-  createTheme,
-  useTheme,
-  alpha,
-  styled,
-  Theme,
-} from '@mui/material/styles';
+import type { ThemeOptions, Theme } from '@mui/material/styles';
+import { ThemeProvider, createTheme, useTheme, alpha, styled } from '@mui/material/styles';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import FolderIcon from '@mui/icons-material/Folder';
@@ -19,13 +12,13 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import {
-  useTreeItem,
+import type {
   UseTreeItemParameters,
   UseTreeItemContentSlotOwnProps,
   UseTreeItemGroupTransitionSlotOwnProps,
   UseTreeItemStatus,
 } from '@mui/x-tree-view/useTreeItem';
+import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
 import {
   TreeItemCheckbox,
   TreeItemContent,
@@ -38,9 +31,10 @@ import {
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { useTreeItemModel } from '@mui/x-tree-view/hooks';
-import { TreeViewSelectionPropagation } from '@mui/x-tree-view/models';
-import { Corner, Density } from './PlaygroundThemeConfig';
-import { ExtendedTreeItemProps, ITEMS } from './items';
+import type { TreeViewSelectionPropagation } from '@mui/x-tree-view/models';
+import type { Corner, Density } from './PlaygroundThemeConfig';
+import type { ExtendedTreeItemProps } from './items';
+import { ITEMS } from './items';
 
 const CustomGroupTransition = styled(TreeItemGroupTransition, {
   shouldForwardProp: (prop) => prop !== 'showChildrenOutline',

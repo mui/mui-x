@@ -8,7 +8,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { ChatBox } from '@mui/x-chat';
-
 import {
   createChunkStream,
   randomId,

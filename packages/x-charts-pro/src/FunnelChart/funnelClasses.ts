@@ -24,6 +24,9 @@ export interface FunnelSectionOwnerState {
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<FunnelClasses>;
 }
 
@@ -43,6 +46,9 @@ export const funnelClasses: FunnelClasses = generateUtilityClasses('MuiFunnelCha
 
 export interface UseUtilityClassesOptions {
   variant?: 'filled' | 'outlined';
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<FunnelClasses>;
 }
 

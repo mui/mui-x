@@ -5,7 +5,12 @@ import type {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
-import { hasOccurrenceBefore, hasRemainingOccurrence } from './seriesOccurrence';
+import {
+  buildTemporalPlainDate,
+  createStartOfPlainDate,
+} from '@mui/x-scheduler-internals/internals';
+import { createStartOfPreviousDay } from './internal-utils';
+import { RecurringSeries } from './RecurringSeries';
 
 export function deleteRecurringEvent(
   adapter: Adapter,
@@ -39,7 +44,7 @@ export function deleteRecurringEvent(
 /**
  * Deletes a single occurrence by adding an EXDATE to the series.
  * Drops the whole series when excluding the occurrence would leave no occurrence.
- * Expects `occurrenceStart` labeled in the event's data timezone.
+ * Reads `occurrenceStart` in the event's data timezone.
  * @returns The updated list of events.
  */
 export function applyRecurringDeleteOnlyThis(
@@ -49,10 +54,13 @@ export function applyRecurringDeleteOnlyThis(
 ): UpdateEventsParameters {
   const exDates = [
     ...(originalEvent.dataTimezone.exDates ?? []),
-    adapter.startOfDay(occurrenceStart),
+    createStartOfPlainDate(
+      buildTemporalPlainDate(adapter, occurrenceStart, originalEvent.dataTimezone.timezone),
+      originalEvent.dataTimezone.timezone,
+    ),
   ];
 
-  if (!hasRemainingOccurrence(adapter, originalEvent, exDates)) {
+  if (!RecurringSeries.fromEvent(adapter, originalEvent, exDates).hasOccurrence()) {
     return { deleted: [originalEvent.id] };
   }
 
@@ -64,7 +72,7 @@ export function applyRecurringDeleteOnlyThis(
 /**
  * Deletes the edited occurrence and every following one by truncating the rule to end the day
  * before. Drops the whole series when no occurrence remains before the edited one.
- * Expects `occurrenceStart` labeled in the event's data timezone.
+ * Reads `occurrenceStart` in the event's data timezone.
  * @returns The updated list of events.
  */
 export function applyRecurringDeleteFollowing(
@@ -72,11 +80,19 @@ export function applyRecurringDeleteFollowing(
   originalEvent: SchedulerProcessedEvent,
   occurrenceStart: TemporalSupportedObject,
 ): UpdateEventsParameters {
-  if (!hasOccurrenceBefore(adapter, originalEvent, occurrenceStart)) {
+  const occurrencePlainDate = buildTemporalPlainDate(
+    adapter,
+    occurrenceStart,
+    originalEvent.dataTimezone.timezone,
+  );
+  if (!RecurringSeries.fromEvent(adapter, originalEvent).hasOccurrenceBefore(occurrencePlainDate)) {
     return { deleted: [originalEvent.id] };
   }
 
-  const untilDate = adapter.addDays(adapter.startOfDay(occurrenceStart), -1);
+  const untilDate = createStartOfPreviousDay(
+    occurrencePlainDate,
+    originalEvent.dataTimezone.timezone,
+  );
   const { count, until, ...baseRule } = originalEvent.dataTimezone.rrule!;
   return {
     updated: [{ id: originalEvent.id, rrule: { ...baseRule, until: untilDate } }],

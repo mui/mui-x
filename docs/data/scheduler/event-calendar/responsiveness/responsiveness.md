@@ -30,7 +30,7 @@ Current tokens:
 | `--EventCalendar-fontSize-eventTitle`      | Event title on every event card                         |
 | `--EventCalendar-fontSize-dayNumber`       | Day-number circle in the week/day views                 |
 | `--EventCalendar-fontSize-agendaDayNumber` | Day-number cell in the agenda view                      |
-| `--EventCalendar-fontSize-timeText`        | Time axis, time on event cards, "all day" label         |
+| `--EventCalendar-fontSize-timeText`        | Time axis, time on event cards                          |
 | `--EventCalendar-size-fixedCellWidth`      | Width of the fixed left column hosting time-axis labels |
 
 Current breakpoints:
@@ -48,7 +48,7 @@ const theme = createTheme({
   components: {
     MuiEventCalendar: {
       styleOverrides: {
-        ResponsiveTypographyContainer: {
+        responsiveTypographyContainer: {
           '--EventCalendar-fontSize-eventTitle-sm': '0.7rem',
           '--EventCalendar-fontSize-dayNumber-sm': '1.1rem',
         },
@@ -58,7 +58,7 @@ const theme = createTheme({
 });
 ```
 
-Overriding the effective var directly is also valid. It disables the tier switching for that token.
+To use the same value at every width, set all three tiers (`-sm`, `-md`, and `-lg`) of the token. Overriding the effective var on this slot only applies to the `lg` tier, since the narrower tiers set it again on the descendants.
 
 ### Demo
 

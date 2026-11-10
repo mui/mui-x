@@ -1,12 +1,24 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "adapter": { "description": "The adapter that connects the chat to your backend." },
+    "children": { "description": "The content of the component." },
     "density": {
       "description": "The vertical spacing density of chat messages. When provided, wraps descendant components with <code>ChatDensityProvider</code>. - <code>&#39;compact&#39;</code> – Reduced vertical spacing between messages. - <code>&#39;standard&#39;</code> – Default spacing. - <code>&#39;comfortable&#39;</code> – Increased vertical spacing between messages."
     },
     "features": {
       "description": "Runtime feature flags for the chat controller (e.g. outbound typing signals)."
     },
+    "localeText": { "description": "The props used for the locale text slot." },
+    "onData": { "description": "Callback fired when a data part is received." },
+    "onError": { "description": "Callback fired when an error occurs." },
+    "onFinish": {
+      "description": "Callback fired when the assistant finishes a response, including when it is aborted, disconnected, or fails."
+    },
+    "onToolCall": { "description": "Callback fired when the assistant calls a tool." },
+    "partRenderers": { "description": "Custom renderers for message parts, by part type." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
     "storeClass": { "description": "The store class to use for this provider." },
     "streamFlushInterval": {
       "description": "Flush interval in milliseconds for batching rapid streaming deltas before applying them to the store."
@@ -16,5 +28,5 @@
     }
   },
   "classDescriptions": {},
-  "slotDescriptions": { "root": "" }
+  "slotDescriptions": { "root": "The component that renders the root." }
 }

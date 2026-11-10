@@ -15,11 +15,24 @@ import type { LineClasses } from './lineClasses';
 import type { LinePropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface LineElementOwnerState {
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: SeriesId;
+  /**
+   * The color of the line.
+   */
   color: string;
+  /**
+   * The id of the gradient used to color the element.
+   * The `gradientId` is used as `url(#gradientId)`.
+   */
   gradientId?: string;
   isFaded: boolean;
   isHighlighted: boolean;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<Pick<LineClasses, 'line'>>;
   /** If `true`, the line is hidden. */
   hidden?: boolean;
@@ -42,6 +55,9 @@ export interface LineElementProps
     Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'>,
     Pick<AnimatedLineProps, 'skipAnimation'>,
     Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color'> {
+  /**
+   * The SVG path of the element.
+   */
   d: string;
   /** If `true`, the line is hidden. */
   hidden?: boolean;
@@ -128,14 +144,30 @@ LineElement.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
+  /**
+   * The color of the line.
+   */
   color: PropTypes.string.isRequired,
+  /**
+   * The SVG path of the element.
+   */
   d: PropTypes.string.isRequired,
+  /**
+   * The id of the gradient used to color the element.
+   * The `gradientId` is used as `url(#gradientId)`.
+   */
   gradientId: PropTypes.string,
   /**
    * If `true`, the line is hidden.
    */
   hidden: PropTypes.bool,
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: PropTypes.string.isRequired,
   /**
    * If `true`, animations are skipped.

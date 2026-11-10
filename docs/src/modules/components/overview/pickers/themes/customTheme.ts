@@ -1,6 +1,7 @@
-import { alpha, ThemeOptions } from '@mui/material/styles';
+import type { ThemeOptions } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 import { dateRangePickerDayClasses } from '@mui/x-date-pickers-pro/DateRangePickerDay';
-import { Config, PaletteMode } from './themes.types';
+import type { Config, PaletteMode } from './themes.types';
 
 declare module '@mui/material/styles' {
   interface Mixins {

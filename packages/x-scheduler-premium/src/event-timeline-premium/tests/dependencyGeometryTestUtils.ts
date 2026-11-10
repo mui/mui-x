@@ -10,7 +10,7 @@ import type {
   SchedulerDependency,
   SchedulerDependencyType,
 } from '@mui/x-scheduler-internals-premium/models';
-import { createDependencyAnchorResolver } from '../content/timeline-dependency-arrows/dependencyAnchorResolver';
+import { createDependencyAnchorResolver } from '../content/timeline-dependencies/dependencyAnchorResolver';
 
 // Shared by the dependency tests, the anchor resolver and the arrow geometry ones included. Lives in `tests/` so
 // the declaration build (which excludes that folder) never follows its `test/utils`
@@ -19,8 +19,9 @@ import { createDependencyAnchorResolver } from '../content/timeline-dependency-a
 export const collectionStart = adapter.date('2024-01-15', 'default');
 export const collectionEnd = adapter.endOfDay(collectionStart);
 export const fullDayAxis: TimelineAxis = {
-  start: collectionStart,
-  end: collectionEnd,
+  start: adapter.getTime(collectionStart),
+  end: adapter.getTime(collectionEnd),
+  timezone: 'default',
   dayStartMinute: 0,
   dayEndMinute: 1440,
 };
@@ -47,13 +48,17 @@ export const eventB = EventBuilder.new()
 export function getOccurrences(events: SchedulerProcessedEvent[]) {
   return getOccurrencesFromEvents({
     adapter,
-    start: collectionStart,
-    end: collectionEnd,
-    eventRangeIndex: createEventRangeIndex(events, adapter, false),
+    start: adapter.getTime(collectionStart),
+    end: adapter.getTime(collectionEnd),
+    eventRangeIndex: createEventRangeIndex(events, false),
     displayTimezone: 'default',
     visibleResources: {},
     recurringEventsPlugin: null,
   });
+}
+
+export function buildEventLookup(...events: SchedulerProcessedEvent[]) {
+  return new Map(events.map((event) => [event.id, event]));
 }
 
 export function buildDependency(
@@ -74,16 +79,17 @@ export function buildResolver(parameters: {
   eventsWidth?: number;
   positionByOccurrenceKey?: ResolverParameters['positionByOccurrenceKey'];
   endpointIds?: ResolverParameters['endpointIds'];
+  processedEventLookup?: ResolverParameters['processedEventLookup'];
 }) {
   return createDependencyAnchorResolver({
-    adapter,
     resources: parameters.resources,
     rowPositions: parameters.rowPositions,
     axis: parameters.axis ?? fullDayAxis,
-    durationMs: getTimelineAxisDurationMs(adapter, parameters.axis ?? fullDayAxis),
+    durationMs: getTimelineAxisDurationMs(parameters.axis ?? fullDayAxis),
     positionByOccurrenceKey: parameters.positionByOccurrenceKey,
     eventsWidth: parameters.eventsWidth ?? EVENTS_WIDTH,
     laneMetrics,
+    processedEventLookup: parameters.processedEventLookup ?? new Map(),
     endpointIds: parameters.endpointIds,
   });
 }

@@ -1,4 +1,5 @@
-import { ScatterChart, ScatterSeries } from '@mui/x-charts/ScatterChart';
+import type { ScatterSeries } from '@mui/x-charts/ScatterChart';
+import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { ChartsTooltipContainer, useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';

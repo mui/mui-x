@@ -612,6 +612,29 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         ).to.equal(11);
       });
     });
+
+    it('should remove fields dropped by the server on revalidation', async () => {
+      let dropField = false;
+      transformGetRowsResponse = (response: GridGetRowsResponse) => ({
+        ...response,
+        rows: dropField ? response.rows : response.rows.map((row) => ({ ...row, extra: 'x' })),
+      });
+      render(
+        <TestDataSourceLazyLoader
+          mockServerRowCount={12}
+          dataSourceCache={null}
+          dataSourceRevalidateMs={1}
+          onFetchRows={vi.fn()}
+        />,
+      );
+      const getLoadedRows = () => Array.from(apiRef.current!.getRowModels().values());
+      await waitFor(() => expect(getLoadedRows()[0]).to.have.property('extra', 'x'));
+      dropField = true;
+
+      await waitFor(() => {
+        expect(getLoadedRows().some((row) => 'extra' in row)).to.equal(false);
+      });
+    });
   });
 
   describe('Nested viewport loading', () => {

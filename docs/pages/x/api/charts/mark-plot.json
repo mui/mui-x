@@ -22,7 +22,14 @@
     "import { MarkPlot } from '@mui/x-charts-pro';",
     "import { MarkPlot } from '@mui/x-charts-premium';"
   ],
-  "slots": [{ "name": "mark", "description": "", "class": null }],
+  "slots": [
+    {
+      "name": "mark",
+      "description": "The component that renders the marks.",
+      "default": "MarkElement",
+      "class": null
+    }
+  ],
   "classes": [],
   "muiName": "MuiMarkPlot",
   "filename": "/packages/x-charts/src/LineChart/MarkPlot.tsx",

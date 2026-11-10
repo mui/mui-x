@@ -27,6 +27,8 @@ import {
   getCell,
   getColumnHeaderCell,
   getColumnHeadersTextContent,
+  getRow,
+  getActiveCell,
   grid,
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
@@ -202,6 +204,14 @@ describe('<DataGridPro /> - Column pinning', () => {
     const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
     expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id', '1M']);
+  });
+
+  it('should focus the last unpinned cell after a click on the empty space of a row', async () => {
+    const { user } = render(
+      <TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['id'] } }} />,
+    );
+    await user.click(getRow(0).querySelector(`.${gridClasses.cellEmpty}`)!);
+    expect(getActiveCell()).to.equal('0-1');
   });
 
   it('should not override the first left pinned column when checkboxSelection=true', () => {

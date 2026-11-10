@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
+import ChevronLeftRounded from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightRounded from '@mui/icons-material/ChevronRightRounded';
 import ExpandMoreRounded from '@mui/icons-material/ExpandMoreRounded';
 import { useStore } from '@base-ui/utils/store';
@@ -34,13 +36,13 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
 })(({ theme }) => ({
   flex: '0 0 auto',
   width: 'var(--title-column-width)',
-  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+  borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   overflow: 'hidden',
   padding: theme.spacing(2),
   // Indent each level so a child's toggle center lines up under its parent's
   // legend dot center: half the toggle + the gap + half the dot.
-  paddingLeft: `calc(${theme.spacing(2)} + var(--resource-depth) * ((${TOGGLE_SIZE}px + ${DOT_SIZE}px) / 2 + ${theme.spacing(1)}))`,
+  paddingInlineStart: `calc(${theme.spacing(2)} + var(--resource-depth) * ((${TOGGLE_SIZE}px + ${DOT_SIZE}px) / 2 + ${theme.spacing(1)}))`,
   alignContent: 'start',
   fontSize: theme.typography.body2.fontSize,
   display: 'flex',
@@ -79,12 +81,12 @@ const EventTimelinePremiumTitleCellContent = styled('span', {
   flexShrink: 0,
   whiteSpace: 'nowrap',
   // Shared horizontal scroll for all title cells (the header title cell is not
-  // wrapped in this element and therefore does not move). Uses `left` rather than
+  // wrapped in this element and therefore does not move). Uses an inset rather than
   // `transform` so the text isn't promoted to its own compositing layer — that
   // caused a sub-pixel vertical shift of the label on Windows when rows relaid
   // out on collapse/expand.
   position: 'relative',
-  left: 'calc(-1 * var(--title-scroll-left, 0) * 1px)',
+  insetInlineStart: 'calc(-1 * var(--title-scroll-left, 0) * 1px)',
 }));
 
 const ResourceLegendColor = styled('span', {
@@ -142,6 +144,9 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
     EventTimelinePremiumSlots,
     EventTimelinePremiumSlotProps
   >();
+
+  const isRtl = useRtl();
+  const CollapsedIcon = isRtl ? ChevronLeftRounded : ChevronRightRounded;
 
   // Selector hooks
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resourceId);
@@ -222,7 +227,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
       <EventTimelinePremiumTitleCellContent ref={contentRef} className={classes.titleCellContent}>
         {hasVisibleChildren ? (
           <ResourceCollapseChevron aria-hidden>
-            {isCollapsed ? <ChevronRightRounded /> : <ExpandMoreRounded />}
+            {isCollapsed ? <CollapsedIcon /> : <ExpandMoreRounded />}
           </ResourceCollapseChevron>
         ) : (
           <ResourceCollapseSpacer aria-hidden />

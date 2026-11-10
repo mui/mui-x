@@ -139,6 +139,51 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
+    describe('isDeleteConfirmationDialogOpen', () => {
+      it('should return false when no deletion is pending', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        expect(schedulerOtherSelectors.isDeleteConfirmationDialogOpen(store.state)).to.equal(false);
+      });
+
+      it('should return true once a deletion has been requested', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        store.requestEventDeletion({ eventId: 'event-1' });
+        expect(schedulerOtherSelectors.isDeleteConfirmationDialogOpen(store.state)).to.equal(true);
+      });
+
+      it('should return false again once the deletion is resolved', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        store.requestEventDeletion({ eventId: 'event-1' });
+        store.resolveEventDeletion(false);
+        expect(schedulerOtherSelectors.isDeleteConfirmationDialogOpen(store.state)).to.equal(false);
+      });
+    });
+
+    describe('isConfirmationDialogOpen', () => {
+      it('should return false when neither the scope dialog nor the delete confirmation is open', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        expect(schedulerOtherSelectors.isConfirmationDialogOpen(store.state)).to.equal(false);
+      });
+
+      it('should return true while the delete confirmation dialog is open', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        store.requestEventDeletion({ eventId: 'event-1' });
+        expect(schedulerOtherSelectors.isConfirmationDialogOpen(store.state)).to.equal(true);
+      });
+
+      it.skipIf(storeClass.name === 'EventCalendarStore')(
+        'should return true while only the recurring scope dialog is open',
+        () => {
+          const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+          store.deleteRecurringEvent({
+            eventId: 'event-1',
+            occurrenceStart: adapter.date('2025-07-07T10:00:00', 'default'),
+          });
+          expect(schedulerOtherSelectors.isConfirmationDialogOpen(store.state)).to.equal(true);
+        },
+      );
+    });
+
     describe('shouldEventRequireResource', () => {
       it('should return true when set and resources are configured', () => {
         const store = new storeClass.Value(
@@ -162,68 +207,6 @@ storeClasses.forEach((storeClass) => {
           'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
         ]);
         expect(result).to.equal(false);
-      });
-    });
-
-    describe('visibleDate', () => {
-      it('should return the visibleDate with the default display timezone applied', () => {
-        const visibleDate = adapter.date('2025-07-03T00:00:00Z', 'default');
-        const state = new storeClass.Value({ ...BASE_PARAMS, visibleDate }, adapter).state;
-        const result = schedulerOtherSelectors.visibleDate(state);
-
-        expect(result).toEqualDateTime(visibleDate);
-      });
-
-      it('should apply the configured display timezone to the visibleDate', () => {
-        const visibleDate = adapter.date('2025-07-03T12:00:00Z', 'default');
-        const state = new storeClass.Value(
-          { ...BASE_PARAMS, visibleDate, displayTimezone: 'America/New_York' },
-          adapter,
-        ).state;
-        const result = schedulerOtherSelectors.visibleDate(state);
-
-        // The result should have the timezone applied
-        expect(adapter.getTimezone(result)).to.equal('America/New_York');
-      });
-
-      it('should return same reference when inputs have not changed', () => {
-        const visibleDate = adapter.date('2025-07-03T00:00:00Z', 'default');
-        const state = new storeClass.Value({ ...BASE_PARAMS, visibleDate }, adapter).state;
-        const result1 = schedulerOtherSelectors.visibleDate(state);
-        const result2 = schedulerOtherSelectors.visibleDate(state);
-
-        expect(result1).to.equal(result2);
-      });
-
-      it('should return a new reference when visibleDate changes', () => {
-        const visibleDate = adapter.date('2025-07-03T00:00:00Z', 'default');
-        const store = new storeClass.Value({ ...BASE_PARAMS, visibleDate }, adapter);
-        const result1 = schedulerOtherSelectors.visibleDate(store.state);
-
-        const newVisibleDate = adapter.date('2025-07-04T00:00:00Z', 'default');
-        store.updateStateFromParameters({ ...BASE_PARAMS, visibleDate: newVisibleDate }, adapter);
-        const result2 = schedulerOtherSelectors.visibleDate(store.state);
-
-        expect(result1).to.not.equal(result2);
-        expect(result2).toEqualDateTime(newVisibleDate);
-      });
-
-      it('should return a new reference when display timezone changes', () => {
-        const visibleDate = adapter.date('2025-07-03T12:00:00Z', 'default');
-        const store = new storeClass.Value(
-          { ...BASE_PARAMS, visibleDate, displayTimezone: 'default' },
-          adapter,
-        );
-        const result1 = schedulerOtherSelectors.visibleDate(store.state);
-
-        store.updateStateFromParameters(
-          { ...BASE_PARAMS, visibleDate, displayTimezone: 'America/New_York' },
-          adapter,
-        );
-        const result2 = schedulerOtherSelectors.visibleDate(store.state);
-
-        expect(result1).to.not.equal(result2);
-        expect(adapter.getTimezone(result2)).to.equal('America/New_York');
       });
     });
   });

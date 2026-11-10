@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { defaultVisibleDate } from '../../datasets/company-roadmap';
 

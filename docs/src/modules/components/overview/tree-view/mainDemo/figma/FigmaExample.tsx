@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import FigmaTreeView from './FigmaTreeView';
 import FigmaCard from './FigmaCard';
-import { IdType } from './items';
+import type { IdType } from './items';
 
 export default function FigmaExample() {
   const [selectedItem, setSelectedItem] = React.useState<IdType | null>(null);

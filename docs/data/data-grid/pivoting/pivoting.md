@@ -27,6 +27,7 @@ Pivoting is enabled by default and can be accessed through the icon in the toolb
 In the demo below, the pivot panel is already open and some pivoting parameters have been set.
 Use the **Pivot** switch at the top of the panel to toggle pivoting off and on.
 You can drag and drop existing columns in the **Rows**, **Columns**, and **Values** dropdown menus to change how the data is pivoted.
+On touch screens, press and hold a field to start dragging it.
 
 {{"demo": "GridPivotingQuickStart.js", "bg": "inline", "defaultCodeOpen": false}}
 

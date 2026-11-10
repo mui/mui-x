@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import type {
+  SchedulerEvent,
+  SchedulerResource,
+} from '@mui/x-scheduler-premium/models';
 
 const initialEvents: SchedulerEvent[] = [
   {

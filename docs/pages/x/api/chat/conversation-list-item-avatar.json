@@ -3,8 +3,8 @@
   "name": "ConversationListItemAvatar",
   "imports": ["import { ConversationListItemAvatar } from '@mui/x-chat/headless';"],
   "slots": [
-    { "name": "root", "description": "", "class": null },
-    { "name": "image", "description": "", "class": null }
+    { "name": "root", "description": "The component that renders the root.", "class": null },
+    { "name": "image", "description": "The component that renders the image.", "class": null }
   ],
   "classes": [],
   "muiName": "MuiConversationListItemAvatar",

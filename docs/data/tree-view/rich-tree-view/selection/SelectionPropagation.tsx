@@ -4,7 +4,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeViewSelectionPropagation } from '@mui/x-tree-view/models';
+import type { TreeViewSelectionPropagation } from '@mui/x-tree-view/models';
 import { EMPLOYEES_DATASET } from '../../datasets/employees';
 
 export default function SelectionPropagation() {

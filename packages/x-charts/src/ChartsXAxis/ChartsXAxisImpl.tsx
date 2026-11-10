@@ -22,6 +22,9 @@ const XAxisRoot = styled(AxisRoot, {
 })({});
 
 interface ChartsXAxisImplProps extends Omit<ChartsXAxisProps, 'axis'> {
+  /**
+   * The computed axis to render.
+   */
   axis: ComputedAxis<ScaleName, any, ChartsXAxisProps>;
 }
 

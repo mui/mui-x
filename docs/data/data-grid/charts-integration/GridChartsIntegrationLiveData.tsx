@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { interval } from 'rxjs';
+import type { GridColDef } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
   GridChartsPanel,
   GridChartsIntegrationContextProvider,
   GridChartsRendererProxy,
-  GridColDef,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import { randomInt } from '@mui/x-data-grid-generator';
@@ -13,8 +13,9 @@ import {
   ChartsRenderer,
   configurationOptions,
 } from '@mui/x-charts-premium/ChartsRenderer';
-import { BarChartPro, BarChartProProps } from '@mui/x-charts-pro/BarChartPro';
-import { AxisConfig } from '@mui/x-charts/models';
+import type { BarChartProProps } from '@mui/x-charts-pro/BarChartPro';
+import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import type { AxisConfig } from '@mui/x-charts/models';
 
 const columns: GridColDef[] = [
   { field: 'id' },

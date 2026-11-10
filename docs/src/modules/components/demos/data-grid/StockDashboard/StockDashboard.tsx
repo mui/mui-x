@@ -4,12 +4,14 @@ import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import {
-  DataGridPremium,
+import type {
   GridApiPremium,
   GridColDef,
   GridColumnVisibilityModel,
   GridRenderCellParams,
+} from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
   gridRowSelectionIdsSelector,
   useGridApiRef,
   useGridSelector,

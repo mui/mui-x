@@ -71,6 +71,40 @@ function getReactCompilerFilesForPackages(packageInfo) {
     );
 }
 
+const INTERNALS_INDEX_RESTRICTED_ZONES = [
+  ...CHARTS_PACKAGES,
+  ...PICKERS_PACKAGES,
+  ...TREE_VIEW_PACKAGES,
+  ...SCHEDULER_PACKAGES,
+].map((packageName) => ({
+  target: `./packages/${packageName}/src/**/!(*.test.*|*.spec.*)`,
+  from: `./packages/${packageName}/src/internals/index.ts`,
+  message: `Use a more specific import instead. E.g. import { MyInternal } from '../internals/MyInternal';`,
+}));
+
+// The copy of BaseTemporal from the Base UI version, and the internals its `ZonedDateTime` imports.
+const BASE_TEMPORAL_COPY = 'packages/x-scheduler-internals/src/internals/utils/base-temporal';
+const BASE_TEMPORAL_COPY_INTERNALS =
+  'packages/x-scheduler-internals/src/internals/utils/internals/temporal-utils';
+
+// The Scheduler only uses the public API of the BaseTemporal copy: the exports of its index. Its
+// other modules are internals of the library.
+const BASE_TEMPORAL_COPY_RESTRICTED_ZONES = [
+  {
+    target: ['./packages', './test'],
+    from: `./${BASE_TEMPORAL_COPY}`,
+    except: ['./index.ts'],
+    message:
+      'Import `BaseTemporal` from the index of the copy, and the day number helpers from `plain-date-utils`.',
+  },
+  {
+    target: ['./packages', './test'],
+    from: `./${BASE_TEMPORAL_COPY_INTERNALS}`,
+    message:
+      'These are internals of the BaseTemporal copy. Use `BaseTemporal.ZonedDateTime` from the index of the copy instead.',
+  },
+];
+
 const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/material',
   '@mui/utils',
@@ -87,6 +121,37 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/x-scheduler-internals',
   '@mui/x-scheduler-internals-premium',
 ];
+
+// React APIs missing from React 17, which the peer range still supports.
+const REACT_17_MISSING_APIS = [
+  {
+    property: 'useId',
+    message: 'Use `@mui/utils/useId` or `@base-ui/utils/useId` instead.',
+  },
+  {
+    property: 'useSyncExternalStore',
+    message: "Use `useSyncExternalStore` from 'use-sync-external-store/shim' instead.",
+  },
+  ...[
+    'useInsertionEffect',
+    'useTransition',
+    'startTransition',
+    'useDeferredValue',
+    'use',
+    'useActionState',
+    'useOptimistic',
+    'useEffectEvent',
+    'Activity',
+    'cache',
+  ].map((property) => ({
+    property,
+    message: 'Read it from `SafeReact` (`@base-ui/utils/safeReact`) and add a fallback.',
+  })),
+].map(({ property, message }) => ({
+  object: 'React',
+  property,
+  message: `\`React.${property}\` does not exist in React 17. ${message}`,
+}));
 
 const packageFilesWithReactCompiler = getReactCompilerFilesForPackages([
   {
@@ -159,16 +224,7 @@ export default defineConfig(
       'import/no-restricted-paths': [
         'error',
         {
-          zones: [
-            ...CHARTS_PACKAGES,
-            ...PICKERS_PACKAGES,
-            ...TREE_VIEW_PACKAGES,
-            ...SCHEDULER_PACKAGES,
-          ].map((packageName) => ({
-            target: `./packages/${packageName}/src/**/!(*.test.*|*.spec.*)`,
-            from: `./packages/${packageName}/src/internals/index.ts`,
-            message: `Use a more specific import instead. E.g. import { MyInternal } from '../internals/MyInternal';`,
-          })),
+          zones: [...INTERNALS_INDEX_RESTRICTED_ZONES, ...BASE_TEMPORAL_COPY_RESTRICTED_ZONES],
         },
       ],
       'no-restricted-imports': 'off',
@@ -200,7 +256,6 @@ export default defineConfig(
       // TODO move to @mui/internal-code-infra/eslint, these are false positive
       'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
       // migration rules
-      '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-require-imports': 'off',
       'react-hooks/exhaustive-deps': [
         'error',
@@ -261,12 +316,10 @@ export default defineConfig(
   },
   {
     files: [
-      `packages/x-charts{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-data-grid{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-date-pickers{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-scheduler{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-tree-view{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-chat{,-*}/**/*${EXTENSION_TS}`,
+      `packages/**/*${EXTENSION_TS}`,
+      `docs/**/*${EXTENSION_TS}`,
+      `scripts/**/*${EXTENSION_TS}`,
+      `test/**/*${EXTENSION_TS}`,
     ],
     rules: {
       '@typescript-eslint/consistent-type-imports': [
@@ -276,6 +329,20 @@ export default defineConfig(
         },
       ],
       'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
+    },
+  },
+  {
+    // A copy of BaseTemporal from the Base UI version, which keeps its code style. Change the Base UI
+    // version first, then copy it again.
+    files: [
+      `${BASE_TEMPORAL_COPY}/*${EXTENSION_TS}`,
+      `${BASE_TEMPORAL_COPY_INTERNALS}/*${EXTENSION_TS}`,
+    ],
+    rules: {
+      'import/consistent-type-specifier-style': 'off',
+      // The copy imports its own modules, so it keeps only the zones of the internals index.
+      'import/no-restricted-paths': ['error', { zones: INTERNALS_INDEX_RESTRICTED_ZONES }],
+      'jsdoc/no-bad-blocks': 'off',
     },
   },
   {
@@ -349,6 +416,7 @@ export default defineConfig(
         },
       ],
       'mui/disallow-react-api-in-server-components': 'error',
+      'no-restricted-properties': ['error', ...REACT_17_MISSING_APIS],
     },
   },
 
@@ -379,11 +447,26 @@ export default defineConfig(
   // Common config from core start
   {
     files: [`docs/**/*${EXTENSION_TS}`],
+    ignores: ['**/*.config.*', '**/scripts/**'],
     extends: createDocsConfig(),
     rules: {
       '@next/next/no-img-element': 'off',
       'react/jsx-filename-extension': 'off',
       'react-hooks/set-state-in-effect': 'off',
+    },
+  },
+
+  // Type-aware docs linting exceeds CI memory: JS demo twins fall outside the
+  // docs project and each gets an inferred one.
+  {
+    files: [`docs/**/*${EXTENSION_TS}`],
+    languageOptions: {
+      parserOptions: {
+        projectService: false,
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-deprecated': 'off',
     },
   },
 
@@ -487,6 +570,32 @@ export default defineConfig(
     files: ['packages/x-telemetry/**/*{.tsx,.ts,.js}'],
     rules: {
       'no-console': 'off',
+    },
+  },
+  // `@mui/internal-code-infra` lints the sources of packages that declare `engines.node` with
+  // `n/no-unsupported-features/node-builtins`. It also reports APIs that exist on every version in
+  // the range but were still documented as experimental there. Only the APIs below are ignored, so
+  // anything else is still checked. Options here replace code-infra's `ignores` (browser globals
+  // such as `localStorage`), which these packages don't reference.
+  {
+    files: [`packages/x-codemod/src/**/*${EXTENSION_TS}`],
+    rules: {
+      // `import.meta.dirname` exists since Node.js 20.11 but not in 21.0 and 21.1, which
+      // `>=20.19` allows. It is only read in each codemod's `testConfig`, which only `*.test.ts`
+      // files call, so it runs on the repo's Node.js and never in the published CLI.
+      'n/no-unsupported-features/node-builtins': ['error', { ignores: ['import.meta.dirname'] }],
+    },
+  },
+  {
+    files: [`packages/x-telemetry/src/**/*${EXTENSION_TS}`],
+    rules: {
+      // `fetch` and `Response` (Node.js 18) and the global `crypto` (Node.js 19) work without flags
+      // on every version in `>=20`. The rule reports them because Node.js only marked them stable
+      // in 21 and 23.
+      'n/no-unsupported-features/node-builtins': [
+        'error',
+        { ignores: ['fetch', 'Response', 'crypto'] },
+      ],
     },
   },
   {

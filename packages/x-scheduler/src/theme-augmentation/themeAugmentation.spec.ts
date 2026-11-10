@@ -16,6 +16,9 @@ createTheme({
             backgroundColor: 'green',
           },
         },
+        responsiveTypographyContainer: {
+          '--EventCalendar-fontSize-eventTitle-sm': '0.7rem',
+        },
         // @ts-expect-error invalid MuiEventCalendar class key
         invalidClassKey: {
           backgroundColor: 'blue',

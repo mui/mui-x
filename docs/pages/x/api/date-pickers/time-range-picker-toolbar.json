@@ -1,6 +1,8 @@
 {
   "props": {
+    "ampm": { "type": { "name": "bool" }, "required": true },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "className": { "type": { "name": "string" } },
     "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
     "sx": {
       "type": {
@@ -9,6 +11,7 @@
       },
       "additionalInfo": { "sx": true }
     },
+    "titleId": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
   "name": "TimeRangePickerToolbar",

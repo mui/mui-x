@@ -12,8 +12,13 @@ import type {
   SchedulerDependenciesParameters,
   SchedulerDependenciesState,
   SchedulerDependencyCreation,
+  SchedulerDependencyEditor,
 } from '../models/dependency';
 import type { SchedulerLazyLoadingParameters } from '../models/lazyLoading';
+import type {
+  EventTimelinePremiumDependenciesStoreFeature,
+  EventTimelinePremiumStoreFeatures,
+} from '../internals/features/eventTimelinePremiumStoreFeatures';
 
 export interface EventTimelinePremiumState extends SchedulerState, SchedulerDependenciesState {
   /**
@@ -33,14 +38,23 @@ export interface EventTimelinePremiumState extends SchedulerState, SchedulerDepe
    */
   presetConfig: EventTimelinePremiumPresetConfig;
   /**
-   * Whether the dependencies feature is enabled, i.e. the internal `dependencies`
-   * parameter is provided.
+   * The dependencies feature received at construction, or `null` without it.
+   * @internal
+   */
+  dependenciesFeature: EventTimelinePremiumDependenciesStoreFeature | null;
+  /**
+   * Whether the dependencies feature is enabled, i.e. the store received it and the
+   * `dependencies` parameter is provided.
    */
   areDependenciesEnabled: boolean;
   /**
    * The pending create-dependency drag gesture, or `null` when none is in progress.
    */
   dependencyCreation: SchedulerDependencyCreation | null;
+  /**
+   * The dependency open in the dependency dialog, or `null` when the dialog is closed.
+   */
+  dependencyEditor: SchedulerDependencyEditor | null;
   /**
    * `false` until the first parameters→state mapping has applied, then `true`.
    * Gates the lazy-loading plugin's first fetch so it doesn't run against the
@@ -51,7 +65,10 @@ export interface EventTimelinePremiumState extends SchedulerState, SchedulerDepe
 }
 
 export interface EventTimelinePremiumParameters<TEvent extends object, TResource extends object>
-  extends SchedulerParameters<TEvent, TResource>, SchedulerLazyLoadingParameters<TEvent> {
+  extends
+    SchedulerParameters<TEvent, TResource>,
+    SchedulerLazyLoadingParameters<TEvent>,
+    SchedulerDependenciesParameters {
   /**
    * The preset currently displayed in the timeline.
    */
@@ -80,7 +97,7 @@ export interface EventTimelinePremiumParameters<TEvent extends object, TResource
   /**
    * The default preferences for the timeline.
    * To use controlled preferences, use the `preferences` prop.
-   * @default { ampm: true }
+   * @default {}
    */
   defaultPreferences?: Partial<EventTimelinePremiumPreferences>;
   /**
@@ -102,14 +119,15 @@ export interface EventTimelinePremiumParameters<TEvent extends object, TResource
 }
 
 /**
- * Parameters accepted by the timeline store, including the dependencies parameters
- * that are not publicly exposed yet.
- * `dependencies` / `onDependenciesChange` move to `EventTimelinePremiumParameters`
- * when the dependencies feature becomes public.
+ * Parameters accepted by the timeline store: the component parameters and the store features.
  * @internal
  */
 export interface EventTimelinePremiumStoreParameters<
   TEvent extends object,
   TResource extends object,
->
-  extends EventTimelinePremiumParameters<TEvent, TResource>, SchedulerDependenciesParameters {}
+> extends EventTimelinePremiumParameters<TEvent, TResource> {
+  /**
+   * Optional features of the store, read only when the store is created.
+   */
+  storeFeatures?: EventTimelinePremiumStoreFeatures;
+}

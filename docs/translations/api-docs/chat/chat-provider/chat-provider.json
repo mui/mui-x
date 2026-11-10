@@ -1,9 +1,18 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "adapter": { "description": "The adapter that connects the chat to your backend." },
+    "children": { "description": "The content of the component." },
     "features": {
       "description": "Runtime feature flags for the chat controller (e.g. outbound typing signals)."
     },
+    "onData": { "description": "Callback fired when a data part is received." },
+    "onError": { "description": "Callback fired when an error occurs." },
+    "onFinish": {
+      "description": "Callback fired when the assistant finishes a response, including when it is aborted, disconnected, or fails."
+    },
+    "onToolCall": { "description": "Callback fired when the assistant calls a tool." },
+    "partRenderers": { "description": "Custom renderers for message parts, by part type." },
     "storeClass": { "description": "The store class to use for this provider." },
     "streamFlushInterval": {
       "description": "Flush interval in milliseconds for batching rapid streaming deltas before applying them to the store."

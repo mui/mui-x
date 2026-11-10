@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "children": { "description": "The content of the component." },
     "cornerRadius": {
       "description": "The radius applied to arc corners (similar to border radius). Set it to &#39;50%&#39; to get rounded arc."
     },
@@ -33,6 +34,9 @@
       "description": "If <code>true</code>, animations are skipped. If unset or <code>false</code>, the animations respects the user&#39;s <code>prefers-reduced-motion</code> setting."
     },
     "startAngle": { "description": "The start angle (deg)." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
     "title": {
       "description": "The title of the chart. Used to provide an accessible label for the chart."
     },

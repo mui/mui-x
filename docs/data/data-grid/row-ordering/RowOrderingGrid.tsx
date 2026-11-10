@@ -1,9 +1,6 @@
 import * as React from 'react';
-import {
-  DataGridPro,
-  GridRowModel,
-  GridRowOrderChangeParams,
-} from '@mui/x-data-grid-pro';
+import type { GridRowModel, GridRowOrderChangeParams } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function updateRowPosition(

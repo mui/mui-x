@@ -8,7 +8,7 @@
  * 4. Distributing events to registered gesture recognizers
  */
 
-import { TargetElement } from './types/TargetElement';
+import type { TargetElement } from './types/TargetElement';
 
 /**
  * Normalized representation of a pointer, containing all relevant information

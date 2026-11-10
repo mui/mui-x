@@ -1,12 +1,9 @@
 import * as React from 'react';
-import Select, { SelectProps } from '@mui/material/Select';
+import type { SelectProps } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import {
-  DataGrid,
-  GridRenderEditCellParams,
-  useGridApiContext,
-  DataGridProps,
-} from '@mui/x-data-grid';
+import type { GridRenderEditCellParams, DataGridProps } from '@mui/x-data-grid';
+import { DataGrid, useGridApiContext } from '@mui/x-data-grid';
 
 function SelectEditInputCell(props: GridRenderEditCellParams) {
   const { id, value, field } = props;

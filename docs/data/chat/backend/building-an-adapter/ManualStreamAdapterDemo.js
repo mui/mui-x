@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import { useChat } from '@mui/x-chat/headless';
-
 import Button from '@mui/material/Button';
 
 const CONVERSATION_ID = 'build-adapter-demo';

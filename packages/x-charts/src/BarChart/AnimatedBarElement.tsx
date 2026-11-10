@@ -8,7 +8,13 @@ export interface BarProps extends Omit<
   React.SVGProps<SVGRectElement>,
   'color' | 'ref' | 'x' | 'y' | 'height' | 'width'
 > {
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: SeriesId;
+  /**
+   * The index of the data point in the series.
+   */
   dataIndex: number;
   color: string;
   ownerState: BarElementOwnerState;

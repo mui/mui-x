@@ -13,7 +13,7 @@ import { MonthCalendarButton } from './MonthCalendarButton';
 import { useNow } from '../internals/hooks/useUtils';
 import type { MonthCalendarClasses } from './monthCalendarClasses';
 import { getMonthCalendarUtilityClass } from './monthCalendarClasses';
-import { getMonthsInYear } from '../internals/utils/date-utils';
+import { findClosestEnabledNumber, getMonthsInYear } from '../internals/utils/date-utils';
 import type { MonthCalendarProps } from './MonthCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
@@ -233,7 +233,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
   });
 
   const focusMonth = useEventCallback((month: number) => {
-    if (!isMonthDisabled(adapter.setMonth(value ?? currentMonth ?? referenceDate, month))) {
+    if (!isMonthDisabled(adapter.setMonth(currentMonth ?? value ?? referenceDate, month))) {
       setFocusedMonth(month);
       changeHasFocus(true);
       if (onMonthFocus) {
@@ -252,15 +252,14 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
 
   const handleKeyDown = useEventCallback((event: React.KeyboardEvent, month: number) => {
     const monthsInYear = 12;
-    const monthsInRow = 3;
 
     switch (event.key) {
       case 'ArrowUp':
-        focusMonth((monthsInYear + month - monthsInRow) % monthsInYear);
+        focusMonth((monthsInYear + month - monthsPerRow) % monthsInYear);
         event.preventDefault();
         break;
       case 'ArrowDown':
-        focusMonth((monthsInYear + month + monthsInRow) % monthsInYear);
+        focusMonth((monthsInYear + month + monthsPerRow) % monthsInYear);
         event.preventDefault();
         break;
       case 'ArrowLeft':
@@ -286,8 +285,19 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
     focusMonth(month);
   });
 
+  const months = getMonthsInYear(adapter, currentMonth ?? value ?? referenceDate).map((month) => ({
+    date: month,
+    monthNumber: adapter.getMonth(month),
+    isDisabled: disabled || isMonthDisabled(month),
+  }));
+  // The focused month can get disabled, the months must stay reachable with the keyboard anyway.
+  const tabStopMonth = findClosestEnabledNumber(
+    focusedMonth,
+    months.filter((month) => !month.isDisabled).map((month) => month.monthNumber),
+  );
+
   const handleMonthBlur = useEventCallback((event: React.FocusEvent, month: number) => {
-    if (focusedMonth === month) {
+    if (tabStopMonth === month) {
       changeHasFocus(false);
     }
   });
@@ -302,12 +312,10 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
       monthsPerRow={monthsPerRow}
       {...other}
     >
-      {getMonthsInYear(adapter, currentMonth ?? value ?? referenceDate).map((month) => {
-        const monthNumber = adapter.getMonth(month);
+      {months.map(({ date: month, monthNumber, isDisabled }) => {
         const monthText = adapter.format(month, 'monthShort');
         const monthLabel = adapter.format(month, 'month');
         const isSelected = isSameMonth(monthNumber, selectedMonth, month, value, adapter);
-        const isDisabled = disabled || isMonthDisabled(month);
 
         return (
           <MonthCalendarButton
@@ -316,9 +324,9 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
             value={monthNumber}
             onClick={handleMonthSelection}
             onKeyDown={handleKeyDown}
-            autoFocus={internalHasFocus && monthNumber === focusedMonth}
+            autoFocus={internalHasFocus && monthNumber === tabStopMonth}
             disabled={isDisabled}
-            tabIndex={monthNumber === focusedMonth && !isDisabled ? 0 : -1}
+            tabIndex={monthNumber === tabStopMonth ? 0 : -1}
             onFocus={handleMonthFocus}
             onBlur={handleMonthBlur}
             aria-current={
@@ -342,12 +350,21 @@ MonthCalendar.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If `true`, the component is focused when it mounts.
+   */
   autoFocus: PropTypes.bool,
   /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
+  /**
+   * @ignore
+   */
   currentMonth: PropTypes.object,
   /**
    * The default selected value.
@@ -375,7 +392,13 @@ MonthCalendar.propTypes /* remove-proptypes */ = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * @ignore
+   */
   gridLabelId: PropTypes.string,
+  /**
+   * @ignore
+   */
   hasFocus: PropTypes.bool,
   /**
    * Maximal selectable date.
@@ -397,7 +420,13 @@ MonthCalendar.propTypes /* remove-proptypes */ = {
    * @param {PickerValidDate} value The new value.
    */
   onChange: PropTypes.func,
+  /**
+   * @ignore
+   */
   onFocusedViewChange: PropTypes.func,
+  /**
+   * @ignore
+   */
   onMonthFocus: PropTypes.func,
   /**
    * If `true`, the component is read-only.

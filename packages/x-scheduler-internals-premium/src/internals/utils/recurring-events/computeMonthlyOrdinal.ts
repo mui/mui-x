@@ -1,24 +1,15 @@
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
-import { getWeekDayCode, nthWeekdayOfMonth } from './internal-utils';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 
 /**
  * Computes the ordinal for a MONTHLY BYDAY rule for a given date.
  * @returns {number} - The ordinal: -1 for last, otherwise 1..5.
  */
-export function computeMonthlyOrdinal(adapter: Adapter, date: TemporalSupportedObject): number {
-  const dayStart = adapter.startOfDay(date);
-  const monthStart = adapter.startOfMonth(date);
-  const code = getWeekDayCode(adapter, date);
-
+export function computeMonthlyOrdinal(plainDate: BaseTemporal.PlainDate): number {
   // Is it the last same-weekday of the month? (-1)
-  const lastSameWeekday = nthWeekdayOfMonth(adapter, monthStart, code, -1)!;
-  if (adapter.isSameDay(dayStart, lastSameWeekday)) {
+  if (plainDate.day + 7 > plainDate.daysInMonth) {
     return -1;
   }
 
-  // First same-weekday of the month (1..5)
-  const firstSameWeekday = nthWeekdayOfMonth(adapter, monthStart, code, 1)!;
-  const daysDiff = adapter.differenceInDays(dayStart, firstSameWeekday);
-  return Math.floor(daysDiff / 7) + 1;
+  // Same weekdays are 7 days apart, so the 1st one falls on days 1..7, the 2nd on 8..14, etc.
+  return Math.ceil(plainDate.day / 7);
 }
