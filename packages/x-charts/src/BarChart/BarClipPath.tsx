@@ -5,16 +5,40 @@ import { useAnimate } from '../hooks/animation';
 
 interface UseAnimateBarClipPathParams {
   ref?: React.Ref<SVGPathElement>;
+  /**
+   * The orientation of the bar.
+   */
   layout: 'vertical' | 'horizontal';
   hasNegative: boolean;
   hasPositive: boolean;
+  /**
+   * The position in the x-axis of the stack this bar belongs to.
+   */
   xOrigin: number;
+  /**
+   * The position in the y-axis of the stack this bar belongs to.
+   */
   yOrigin: number;
+  /**
+   * The position of the element in the x-axis.
+   */
   x: number;
+  /**
+   * The position of the element in the y-axis.
+   */
   y: number;
+  /**
+   * The width of the element.
+   */
   width: number;
+  /**
+   * The height of the element.
+   */
   height: number;
   borderRadius: number;
+  /**
+   * If `true`, animations are skipped.
+   */
   skipAnimation: boolean;
 }
 
@@ -94,13 +118,37 @@ export interface BarClipPathProps {
   borderRadius?: number;
   hasNegative: boolean;
   hasPositive: boolean;
+  /**
+   * The orientation of the bar.
+   */
   layout?: 'vertical' | 'horizontal';
+  /**
+   * The position of the element in the x-axis.
+   */
   x: number;
+  /**
+   * The position of the element in the y-axis.
+   */
   y: number;
+  /**
+   * The position in the x-axis of the stack this bar belongs to.
+   */
   xOrigin: number;
+  /**
+   * The position in the y-axis of the stack this bar belongs to.
+   */
   yOrigin: number;
+  /**
+   * The width of the element.
+   */
   width: number;
+  /**
+   * The height of the element.
+   */
   height: number;
+  /**
+   * If `true`, animations are skipped.
+   */
   skipAnimation: boolean;
 }
 

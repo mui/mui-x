@@ -89,7 +89,7 @@ export interface EventCalendarParameters<
   /**
    * The default preferences for the calendar.
    * To use controlled preferences, use the `preferences` prop.
-   * @default { showWeekends: true, showWeekNumber: false, isSidePanelOpen: true, showEmptyDaysInAgenda: true, ampm: true }
+   * @default { showWeekends: true, showWeekNumber: false, isSidePanelOpen: true, showEmptyDaysInAgenda: true }
    */
   defaultPreferences?: Partial<EventCalendarPreferences>;
   /**

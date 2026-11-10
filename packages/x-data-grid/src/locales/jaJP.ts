@@ -215,6 +215,15 @@ const jaJPGrid: Partial<GridLocaleText> = {
   columnHeaderFiltersTooltipActive: (count) => `${count}件のフィルターを適用中`,
   columnHeaderFiltersLabel: 'フィルター表示',
   columnHeaderSortIconLabel: 'ソート',
+  columnHeaderSortIconAriaLabel: (columnName, direction) => {
+    if (direction === 'asc') {
+      return `${columnName}を昇順でソート`;
+    }
+    if (direction === 'desc') {
+      return `${columnName}を降順でソート`;
+    }
+    return `${columnName}のソートを解除`;
+  },
 
   // Rows selected footer text
   footerRowSelected: (count) => `${count}行を選択中`,
@@ -236,6 +245,9 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: '真',
   booleanCellFalseLabel: '偽',
+
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
 
   // Long text cell
   longTextCellExpandLabel: '展開',

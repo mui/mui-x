@@ -3,19 +3,19 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import {
-  getEndOfDayMs,
-  toEpochMs,
-  toPlainDateTime,
+  getPlainDateTimelineAxis,
+  isWeekendPlainDate,
   useCalendarGridTimeColumnContext,
 } from '@mui/x-scheduler-internals/internals';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerOtherSelectors,
+  schedulerPreferenceSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { EventSkeleton } from '../event-skeleton';
 import { useEventEditingContext } from '../event-editing';
 import { EventContextMenuTrigger } from '../event-context-menu';
@@ -79,26 +79,21 @@ const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
   backgroundColor: (theme.vars || theme).palette.primary.main,
 }));
 
-const HOUR_MS = 3_600_000;
-
 export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, showCurrentTimeIndicator, index, colIndex, startTime, endTime } = props;
 
-  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { classes } = useEventCalendarStyledContext();
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
-  // Built on the wall clock like the axis of the column.
-  const { start, end } = React.useMemo(() => {
-    const plainDate = toPlainDateTime(day.timestamp, displayTimezone).date;
-    return {
-      start: toEpochMs(plainDate, startTime * HOUR_MS, displayTimezone),
-      end:
-        endTime === 24
-          ? getEndOfDayMs(day.timestamp, displayTimezone)
-          : toEpochMs(plainDate, endTime * HOUR_MS, displayTimezone),
-    };
-  }, [day.timestamp, displayTimezone, startTime, endTime]);
+  const weekend = useStore(store, schedulerPreferenceSelectors.weekend);
+  const dayStartMinute = startTime * 60;
+  const dayEndMinute = endTime * 60;
+  // The bounds of the column, which builds them the same way.
+  const { start, end } = React.useMemo(
+    () =>
+      getPlainDateTimelineAxis(day.plainDate, { dayStartMinute, dayEndMinute }, displayTimezone),
+    [day.plainDate, dayStartMinute, dayEndMinute, displayTimezone],
+  );
 
   // Only place occurrences that overlap the visible `[start, end)` window. Occurrences entirely
   // before `startTime` or after `endTime` would otherwise be clamped to a zero-height sliver pinned
@@ -121,13 +116,12 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   return (
     <DayTimeGridColumn
       className={classes.dayTimeGridColumn}
-      start={start}
-      end={end}
-      dayStartMinute={startTime * 60}
-      dayEndMinute={endTime * 60}
+      value={day.plainDate}
+      dayStartMinute={dayStartMinute}
+      dayEndMinute={dayEndMinute}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       aria-colindex={colIndex}
-      data-weekend={isWeekend(adapter, day.value) || undefined}
+      data-weekend={isWeekendPlainDate(day.plainDate, weekend) || undefined}
       style={{ '--columns-count': maxIndex } as React.CSSProperties}
     >
       <ColumnInteractiveLayer

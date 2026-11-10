@@ -1,5 +1,5 @@
-import { JSXAttribute, JSXElement } from 'jscodeshift';
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JSXAttribute, JSXElement } from 'jscodeshift';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 /**
  * @param {import('jscodeshift').FileInfo} file

@@ -67,6 +67,9 @@ TreeItemDragAndDropOverlay.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The reordering action that would happen if the dragged item is dropped here.
+   */
   action: PropTypes.oneOf(['make-child', 'move-to-parent', 'reorder-above', 'reorder-below']),
   style: PropTypes.object,
 } as any;

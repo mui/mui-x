@@ -2,7 +2,7 @@
 // Events defined using wall-time strings (no Z suffix).
 // Scheduler interprets these in the event's timezone.
 
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 
 export const resources: SchedulerResource[] = [
   { id: 'ny', title: 'New York', eventColor: 'purple' },

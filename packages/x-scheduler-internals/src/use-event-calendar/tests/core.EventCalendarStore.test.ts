@@ -26,6 +26,7 @@ describe('Core - EventCalendarStore', () => {
 
       const expectedState = {
         adapter,
+        dateLocale: 'en-US',
         areEventsDraggable: true,
         areEventsResizable: true,
         canDragEventsFromTheOutside: false,

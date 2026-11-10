@@ -1,15 +1,15 @@
 import * as ts from 'typescript';
 import path from 'path';
 import { renderMarkdown } from '@mui/internal-markdown';
+import type { DocumentedInterfaces } from './utils';
 import {
-  DocumentedInterfaces,
   getSymbolDescription,
   getSymbolJSDocTags,
   linkify,
   stringifySymbol,
   writePrettifiedFile,
 } from './utils';
-import { XProjectNames, XTypeScriptProjects } from '../createXTypeScriptProjects';
+import type { XProjectNames, XTypeScriptProjects } from '../createXTypeScriptProjects';
 
 interface BuildEventsDocumentationOptions {
   projects: XTypeScriptProjects;

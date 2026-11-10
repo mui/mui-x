@@ -1,7 +1,7 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
-import {
+import type {
   AxisValueFormatterContext,
   HeatmapValueType,
   XAxis,

@@ -1,10 +1,10 @@
-import {
-  DataGridPremium,
+import type {
   GridExceljsProcessInput,
   GridColDef,
   DataGridPremiumProps,
   GridExcelExportOptions,
 } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 
 const rows = [
   {

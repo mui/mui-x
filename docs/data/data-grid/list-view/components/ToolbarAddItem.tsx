@@ -10,8 +10,9 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
-import { ButtonProps } from '@mui/material/Button';
-import { Drawer, DrawerHeader, DrawerProps } from './Drawer';
+import type { ButtonProps } from '@mui/material/Button';
+import type { DrawerProps } from './Drawer';
+import { Drawer, DrawerHeader } from './Drawer';
 
 const ListItemUploadButton = React.forwardRef<HTMLLabelElement, ButtonProps>(
   function ListItemUploadButton(props, ref) {

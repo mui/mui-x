@@ -1,14 +1,12 @@
-import type {
-  TemporalAdapter,
-  TemporalSupportedObject,
-  TemporalTimezone,
-} from '@base-ui/react/internals/temporal';
-import { MS_PER_DAY } from './base-temporal/iso';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
+import { MS_PER_DAY } from './plain-date-utils/dayNumber';
+import type { BaseTemporal } from './base-temporal';
 import {
   localToEpochMs,
+  toEpochMs,
   toLocalDayNumber,
   toLocalMs,
-  toPlainDateTime,
+  toMsInDay,
 } from './plain-date-utils/timeZone';
 
 const MINUTE_MS = 60_000;
@@ -32,9 +30,9 @@ export interface TimelineAxisWindow {
 /**
  * A displayed date range with the hour window shown for each day. When the window is
  * trimmed, the axis is piecewise — the hidden hours of each day take no space — so
- * px↔date conversions must go through these helpers. Built by the time-grid columns and the
- * day-grid rows from their timestamps, and from the timeline's preset config (horizontal axis)
- * with `getTimelineAxis()`.
+ * px↔date conversions must go through these helpers. Built by the time-grid columns from their
+ * date, by the day-grid rows from their timestamps, and by the timeline's preset config
+ * (horizontal axis) from its dates.
  */
 export interface TimelineAxis extends TimelineAxisWindow {
   /**
@@ -52,24 +50,23 @@ export interface TimelineAxis extends TimelineAxisWindow {
 }
 
 /**
- * The range of an axis as adapter values, as the timeline's preset config holds it.
+ * The axis of the hour window of a date in `timezone`, the axis of a column of the time grid. It
+ * starts on the first displayed instant, and ends on the last instant of the date when the window
+ * runs to the end of the day, otherwise on the exclusive end of the window.
  */
-export interface TimelineAxisRange extends TimelineAxisWindow {
-  start: TemporalSupportedObject;
-  end: TemporalSupportedObject;
-}
-
-/**
- * Reads the bounds of a range once, in the timezone of its start. Both bounds, and the dates
- * placed on the axis, are read in that timezone.
- */
-export function getTimelineAxis(adapter: TemporalAdapter, range: TimelineAxisRange): TimelineAxis {
+export function getPlainDateTimelineAxis(
+  plainDate: BaseTemporal.PlainDate,
+  window: TimelineAxisWindow,
+  timezone: TemporalTimezone,
+): TimelineAxis {
+  const { dayStartMinute, dayEndMinute } = window;
+  const endMs = toEpochMs(plainDate, dayEndMinute * MINUTE_MS, timezone);
   return {
-    start: adapter.getTime(range.start),
-    end: adapter.getTime(range.end),
-    timezone: adapter.getTimezone(range.start),
-    dayStartMinute: range.dayStartMinute,
-    dayEndMinute: range.dayEndMinute,
+    start: toEpochMs(plainDate, dayStartMinute * MINUTE_MS, timezone),
+    end: dayEndMinute === FULL_DAY_MINUTES ? endMs - 1 : endMs,
+    timezone,
+    dayStartMinute,
+    dayEndMinute,
   };
 }
 
@@ -178,7 +175,7 @@ export function resolveRepeatedTimeFrom(
 export function timestampToTimelineAxisOffsetMs(
   axis: TimelineAxis,
   timestamp: number,
-  msInDay: number = toPlainDateTime(timestamp, axis.timezone).msInDay,
+  msInDay: number = toMsInDay(timestamp, axis.timezone),
 ): number {
   // Day numbers, as this runs for every event.
   const dayIndex =

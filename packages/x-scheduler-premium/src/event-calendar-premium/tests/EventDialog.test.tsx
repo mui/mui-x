@@ -4,7 +4,6 @@ import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   adapter,
   createSchedulerRenderer,
-  dateLocaleFr,
   EventBuilder,
   utcJuly4AllDayBuilder,
   ResourceBuilder,
@@ -2939,7 +2938,10 @@ describe('<EventDialogContent open />', () => {
 
         const { user } = render(
           <EventCalendarProvider
-            {...({ dataSource } as {})}
+            {...({
+              dataSource,
+              storeFeatures: { recurringEvents: schedulerRecurringEventsPlugin },
+            } as {})}
             resources={resources}
             storeClass={EventCalendarPremiumStore}
           >
@@ -4024,7 +4026,7 @@ describe('<EventDialogContent open />', () => {
             <EventCalendarProvider
               events={[DEFAULT_EVENT]}
               resources={resources}
-              dateLocale={dateLocaleFr}
+              dateLocale="fr-FR"
               storeClass={PremiumTestStore}
             >
               <TestEventDialogContent open {...defaultProps} />

@@ -1,20 +1,22 @@
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { describe, it, expect } from 'vitest';
-import { processDate } from '../process-date';
+import { getDayListFromPlainDates } from '../get-day-list';
+import { BaseTemporal } from '../internals/utils/base-temporal';
 import { innerGetEventOccurrencesGroupedByDay } from './useEventOccurrencesGroupedByDay';
-import type { SchedulerProcessedDate, SchedulerProcessedEvent } from '../models';
+import type { SchedulerProcessedDay, SchedulerProcessedEvent } from '../models';
 import { createEventRangeIndex } from '../internals/utils/event-range-index';
 
 describe('innerGetEventOccurrencesGroupedByDay', () => {
   const day0Str = '2024-01-10T00:00:00Z';
   const day1Str = '2024-01-11T00:00:00Z';
   const day2Str = '2024-01-12T00:00:00Z';
-  const days: SchedulerProcessedDate[] = [
-    processDate(adapter.date(day0Str, 'default'), adapter),
-    processDate(adapter.date(day1Str, 'default'), adapter),
-    processDate(adapter.date(day2Str, 'default'), adapter),
-  ];
+  const days = getDayListFromPlainDates({
+    adapter,
+    firstPlainDate: BaseTemporal.PlainDate.from('2024-01-10'),
+    lastPlainDate: BaseTemporal.PlainDate.from('2024-01-12'),
+    timezone: 'default',
+  });
 
   const resourceA = ResourceBuilder.new().build();
   const resourceB = ResourceBuilder.new().build();
@@ -24,7 +26,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     [resourceB.id]: true,
   };
 
-  function run(events: SchedulerProcessedEvent[], visibleDays: SchedulerProcessedDate[] = days) {
+  function run(events: SchedulerProcessedEvent[], visibleDays: SchedulerProcessedDay[] = days) {
     return innerGetEventOccurrencesGroupedByDay({
       adapter,
       days: visibleDays,
@@ -176,7 +178,12 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   it('should include an event in the repeated last hour of the last day', () => {
     // In America/Santiago, the clocks go back from 24:00 to 23:00 on April 6th, 2024.
     // 2024-04-07T03:30:00Z is the second 23:30 of April 6th.
-    const lastDay = processDate(adapter.date('2024-04-06T12:00:00Z', 'America/Santiago'), adapter);
+    const [lastDay] = getDayListFromPlainDates({
+      adapter,
+      firstPlainDate: BaseTemporal.PlainDate.from('2024-04-06'),
+      lastPlainDate: BaseTemporal.PlainDate.from('2024-04-06'),
+      timezone: 'America/Santiago',
+    });
     const event = EventBuilder.new(adapter)
       .span('2024-04-07T03:30:00Z', '2024-04-07T03:45:00Z')
       .withDisplayTimezone('America/Santiago')

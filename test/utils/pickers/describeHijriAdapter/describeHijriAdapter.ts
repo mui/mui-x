@@ -1,10 +1,10 @@
 import createDescribe from '@mui/internal-test-utils/createDescribe';
-import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
+import type { MuiPickersAdapter } from '@mui/x-date-pickers/models';
 import { describe, beforeAll, afterAll } from 'vitest';
 import { testCalculations } from './testCalculations';
 import { testLocalization } from './testLocalization';
 import { testFormat } from './testFormat';
-import { DescribeHijriAdapterParams } from './describeHijriAdapter.types';
+import type { DescribeHijriAdapterParams } from './describeHijriAdapter.types';
 
 function innerJalaliDescribeAdapter(
   Adapter: new (...args: any) => MuiPickersAdapter,

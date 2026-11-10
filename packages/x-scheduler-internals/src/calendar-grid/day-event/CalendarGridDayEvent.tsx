@@ -9,9 +9,8 @@ import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
-import { createPlainDate } from '../../internals/utils/base-temporal/PlainDate';
-import type { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
-import { ISO_CALENDAR_ID } from '../../internals/utils/base-temporal/calendar';
+import type { BaseTemporal } from '../../internals/utils/base-temporal';
+import { plainDateFromDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
 import type { SchedulerEventId, SchedulerEventOccurrence, SchedulerResourceId } from '../../models';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import {
@@ -72,7 +71,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     const displayTimezone = schedulerOtherSelectors.displayTimezone(store.state);
     const startDay = toLocalDayNumber(start.timestamp, displayTimezone);
     if (!ref.current) {
-      return createPlainDate(startDay, ISO_CALENDAR_ID);
+      return plainDateFromDayNumber(startDay);
     }
 
     // The event covers every date from its start to its end in the row, like its cells.
@@ -88,10 +87,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
       : input.clientX - elementPosition.left;
     const positionX = offsetFromStart / ref.current.offsetWidth;
 
-    return createPlainDate(
-      firstDay + Math.ceil(positionX * (lastDay - firstDay + 1)) - 1,
-      ISO_CALENDAR_ID,
-    );
+    return plainDateFromDayNumber(firstDay + Math.ceil(positionX * (lastDay - firstDay + 1)) - 1);
   });
 
   const getOriginalOccurrence = useOriginalOccurrence({
@@ -208,6 +204,6 @@ export namespace CalendarGridDayEvent {
     /**
      * The grabbed day, in the timezone of `start`.
      */
-    draggedDay: PlainDate;
+    draggedDay: BaseTemporal.PlainDate;
   }
 }

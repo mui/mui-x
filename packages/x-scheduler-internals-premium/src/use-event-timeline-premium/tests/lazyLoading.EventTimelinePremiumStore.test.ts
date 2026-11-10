@@ -409,8 +409,12 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     const store = new EventTimelinePremiumStore(params, adapter);
     store.updateStateFromParameters(params, adapter);
 
-    await flushEffect();
-    await flushDebounce();
+    await expect(async () => {
+      await flushEffect();
+      await flushDebounce();
+    }).toErrorDev([
+      'MUI X Scheduler: The user was shown the `somethingWentWrongError` error, caused by: Error: Transient',
+    ]);
     expect(store.state.errors).to.have.length(1);
 
     store.goToNextVisibleDate(noopUIEvent);

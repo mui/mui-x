@@ -200,7 +200,7 @@ describe('Preset - EventTimelinePremiumStore', () => {
 
       // The next span starts on April 1st in Paris, the day after the four days of the first one.
       expect(
-        new Date(eventTimelinePremiumPresetSelectors.axis(store.state).start).toISOString(),
+        new Date(eventTimelinePremiumPresetSelectors.config(store.state).start).toISOString(),
       ).to.equal('2026-03-31T22:00:00.000Z');
       // April 1st at 23:30 in Paris, labeled with the display timezone.
       const changedVisibleDate = onVisibleDateChange.mock.lastCall?.[0];
@@ -212,7 +212,7 @@ describe('Preset - EventTimelinePremiumStore', () => {
       store.goToPreviousVisibleDate({} as any);
 
       expect(
-        new Date(eventTimelinePremiumPresetSelectors.axis(store.state).start).toISOString(),
+        new Date(eventTimelinePremiumPresetSelectors.config(store.state).start).toISOString(),
       ).to.equal('2026-03-27T23:00:00.000Z');
     });
   });

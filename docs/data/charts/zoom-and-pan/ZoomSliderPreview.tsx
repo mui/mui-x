@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { LineChartPro, LineChartProProps } from '@mui/x-charts-pro/LineChartPro';
-import {
+import type { LineChartProProps } from '@mui/x-charts-pro/LineChartPro';
+import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
+import type {
   AxisValueFormatterContext,
   ScatterValueType,
   XAxis,
@@ -9,17 +10,14 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-import {
-  ScatterChartPro,
-  ScatterChartProProps,
-} from '@mui/x-charts-pro/ScatterChartPro';
-import { BarChartPro, BarChartProProps } from '@mui/x-charts-pro/BarChartPro';
-import {
-  BarChartPremium,
-  BarChartPremiumProps,
-} from '@mui/x-charts-premium/BarChartPremium';
+import type { ScatterChartProProps } from '@mui/x-charts-pro/ScatterChartPro';
+import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
+import type { BarChartProProps } from '@mui/x-charts-pro/BarChartPro';
+import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import type { BarChartPremiumProps } from '@mui/x-charts-premium/BarChartPremium';
+import { BarChartPremium } from '@mui/x-charts-premium/BarChartPremium';
 import { CandlestickChart as CandlestickChart } from '@mui/x-charts-premium/CandlestickChart';
-import { OHLCValueType } from '@mui/x-charts-premium/models';
+import type { OHLCValueType } from '@mui/x-charts-premium/models';
 import {
   dateAxisFormatter,
   usUnemploymentRate,

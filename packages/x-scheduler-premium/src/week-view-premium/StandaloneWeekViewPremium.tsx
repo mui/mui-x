@@ -9,7 +9,7 @@ import {
 } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import { WeekView } from '@mui/x-scheduler/week-view';
 import { EventCalendarProvider, EventDialogProvider } from '@mui/x-scheduler/internals';
-import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
+import { useFrozenEventCalendarPremiumFeatures } from '../event-calendar-premium/features/useFrozenEventCalendarPremiumFeatures';
 import type { StandaloneWeekViewPremiumProps } from './WeekViewPremium.types';
 
 const packageInfo = {
@@ -40,17 +40,22 @@ const StandaloneWeekViewPremium = React.forwardRef(function StandaloneWeekViewPr
     typeof props
   >(props);
 
-  const { localeText, slots, slotProps, ...other } = forwardedProps;
+  const { localeText, slots, slotProps, features: featuresProp, ...other } = forwardedProps;
+  const { features, storeFeatures } = useFrozenEventCalendarPremiumFeatures(
+    featuresProp,
+    'StandaloneWeekViewPremium',
+  );
+  const storeParameters = { ...parameters, storeFeatures };
 
   return (
     <EventCalendarProvider
-      {...parameters}
+      {...storeParameters}
       storeClass={EventCalendarPremiumStore}
       localeText={localeText}
       slots={slots}
       slotProps={slotProps}
     >
-      <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
+      <EventDialogProvider optionalRenderers={features.recurringEvents?.optionalRenderers}>
         <WeekView ref={forwardedRef} {...other} />
         {watermark}
       </EventDialogProvider>
@@ -98,16 +103,17 @@ StandaloneWeekViewPremium.propTypes /* remove-proptypes */ = {
     persistEvents: PropTypes.func.isRequired,
   }),
   /**
-   * The locale object from `date-fns` used to format dates.
-   * This affects day names, month names, week start day, and other locale-dependent formatting.
-   * Import a locale from `date-fns/locale` and pass it to this prop.
-   * @default enUS (English)
+   * The locale of the dates, as a BCP 47 language tag such as `"fr-FR"`, like the locales of
+   * `Intl.DateTimeFormat`.
+   * This affects day names, month names, the first day of the week, the days of the weekend,
+   * week numbers, the 12-hour or 24-hour clock and the other locale-dependent formatting.
+   * @default "en-US"
    */
-  dateLocale: PropTypes.object,
+  dateLocale: PropTypes.string,
   /**
    * The default preferences for the calendar.
    * To use controlled preferences, use the `preferences` prop.
-   * @default { showWeekends: true, showWeekNumber: false, isSidePanelOpen: true, showEmptyDaysInAgenda: true, ampm: true }
+   * @default { showWeekends: true, showWeekNumber: false, isSidePanelOpen: true, showEmptyDaysInAgenda: true }
    */
   defaultPreferences: PropTypes.shape({
     ampm: PropTypes.bool,
@@ -115,7 +121,7 @@ StandaloneWeekViewPremium.propTypes /* remove-proptypes */ = {
     showEmptyDaysInAgenda: PropTypes.bool,
     showWeekends: PropTypes.bool,
     showWeekNumber: PropTypes.bool,
-    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
+    weekStartsOn: PropTypes.oneOf([1, 2, 3, 4, 5, 6, 7]),
   }),
   /**
    * The view initially displayed in the calendar.
@@ -211,6 +217,12 @@ StandaloneWeekViewPremium.propTypes /* remove-proptypes */ = {
    */
   events: PropTypes.arrayOf(PropTypes.object),
   /**
+   * The optional features of the view: `recurringEvents` from `@mui/x-scheduler-premium/recurring-events`.
+   * They are read once when the component mounts, later changes are ignored.
+   * @example { recurringEvents: recurringEventsFeature }
+   */
+  features: PropTypes.object,
+  /**
    * Set the locale text of the view.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)
    * in the GitHub repository.
@@ -254,7 +266,7 @@ StandaloneWeekViewPremium.propTypes /* remove-proptypes */ = {
     showEmptyDaysInAgenda: PropTypes.bool,
     showWeekends: PropTypes.bool,
     showWeekNumber: PropTypes.bool,
-    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
+    weekStartsOn: PropTypes.oneOf([1, 2, 3, 4, 5, 6, 7]),
   }),
   /**
    * Config of the preferences menu.

@@ -7,6 +7,7 @@ import type {
   SchedulerSlots,
 } from '@mui/x-scheduler/models';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { StandaloneDayViewPremium } from '@mui/x-scheduler-premium/day-view-premium';
 import { StandaloneWeekViewPremium } from '@mui/x-scheduler-premium/week-view-premium';
@@ -87,6 +88,7 @@ describe('eventDialogGeneralTab slot - premium surfaces', () => {
   it('should keep the recurrence tab working when the general tab is replaced by the slot', async () => {
     await renderSettled(
       <EventCalendarPremium
+        features={{ recurringEvents: recurringEventsFeature }}
         events={[event]}
         resources={[engineering]}
         visibleDate={visibleDate}

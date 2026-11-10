@@ -1,11 +1,17 @@
 export { ChatStreamingIndicator } from './ChatStreamingIndicator';
-export type { ChatStreamingIndicatorProps } from './ChatStreamingIndicator';
+export type {
+  ChatStreamingIndicatorProps,
+  ChatStreamingIndicatorSlots,
+} from './ChatStreamingIndicator';
 export { ChatTypingIndicator } from './ChatTypingIndicator';
-export type { ChatTypingIndicatorProps } from './ChatTypingIndicator';
+export type { ChatTypingIndicatorProps, ChatTypingIndicatorSlots } from './ChatTypingIndicator';
 export { ChatUnreadMarker } from './ChatUnreadMarker';
-export type { ChatUnreadMarkerProps } from './ChatUnreadMarker';
+export type { ChatUnreadMarkerProps, ChatUnreadMarkerSlots } from './ChatUnreadMarker';
 export { ChatScrollToBottomAffordance } from './ChatScrollToBottomAffordance';
-export type { ChatScrollToBottomAffordanceProps } from './ChatScrollToBottomAffordance';
+export type {
+  ChatScrollToBottomAffordanceProps,
+  ChatScrollToBottomAffordanceSlots,
+} from './ChatScrollToBottomAffordance';
 export {
   chatStreamingIndicatorClasses,
   getChatStreamingIndicatorUtilityClass,

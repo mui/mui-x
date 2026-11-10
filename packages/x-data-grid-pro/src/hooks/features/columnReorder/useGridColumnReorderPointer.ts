@@ -17,7 +17,11 @@ import {
 import type { DragPreview, PointerDragPosition } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { isElementInGrid, useGridPointerDragRouting } from '../../utils/useGridPointerDragRouting';
+import {
+  isElementInGrid,
+  isPointerDownOnHandleControl,
+  useGridPointerDragRouting,
+} from '../../utils/useGridPointerDragRouting';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 import { useUtilityClasses } from './useGridColumnReorder';
 import {
@@ -63,10 +67,6 @@ const TARGET_SELECTOR = `.${gridClasses.columnHeader}[data-field], .${gridClasse
 // this far inside it: the resize separator of a pinned column overhangs the scrollable columns by 5px
 // (`columnSeparatorOffset`) and resolves to the pinned header.
 const EDGE_HIT_TEST_INSET = 12;
-
-// A slow tap on the sort or menu button must stay a tap, not start a drag.
-// Only native controls; a custom header control as `div[role="button"]` isn't covered.
-const INTERACTIVE_CONTROL_SELECTOR = 'button, a, input, select, textarea';
 
 /**
  * Column reordering with pointer events, for touch and pen input.
@@ -353,8 +353,8 @@ export const useGridColumnReorderPointer = (
     // `draggable` is `true` only when the column can be reordered, so those rules aren't repeated here
     handleSelector: `.${gridClasses.columnHeaderDraggableContainer}[draggable="true"]`,
     onPointerDown: (event, handle) => {
-      const control = (event.target as Element | null)?.closest?.(INTERACTIVE_CONTROL_SELECTOR);
-      if (control && handle.contains(control)) {
+      // A slow tap on the sort or menu button must stay a tap
+      if (isPointerDownOnHandleControl(event, handle)) {
         return;
       }
       const field = getTargetField(handle);

@@ -270,14 +270,52 @@ describe('MiniCalendar', () => {
     });
   });
 
+  describe('weekend of the date locale', () => {
+    function getWeekdayHeaderFlags() {
+      return within(getMiniCalendar())
+        .getAllByRole('columnheader')
+        .map((header) => header.hasAttribute('data-weekend'));
+    }
+
+    it('should mark Saturday and Sunday in the weekday headers in the United States', () => {
+      render(<EventCalendar events={[]} />);
+
+      // From Sunday to Saturday.
+      expect(getWeekdayHeaderFlags()).to.deep.equal([
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+      ]);
+    });
+
+    it('should mark Friday and Saturday in the weekday headers in Saudi Arabia', () => {
+      render(<EventCalendar events={[]} dateLocale="ar-SA" />);
+
+      // From Sunday to Saturday.
+      expect(getWeekdayHeaderFlags()).to.deep.equal([
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+      ]);
+    });
+  });
+
   describe('weekStartsOn preference', () => {
     function getFirstWeekdayHeader() {
       const miniCalendar = getMiniCalendar();
       return within(miniCalendar).getAllByRole('columnheader')[0];
     }
 
-    it('should show Sunday as the first weekday header when weekStartsOn is 0', () => {
-      render(<EventCalendar events={[]} defaultPreferences={{ weekStartsOn: 0 }} />);
+    it('should show Sunday as the first weekday header when weekStartsOn is 7', () => {
+      render(<EventCalendar events={[]} defaultPreferences={{ weekStartsOn: 7 }} />);
 
       expect(getFirstWeekdayHeader().getAttribute('aria-label')).to.match(/sunday/i);
     });

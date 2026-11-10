@@ -58,7 +58,13 @@ function resolveMessageIndex(messageId: string, index: number | undefined, items
 }
 
 export interface MessageGroupSlots {
+  /**
+   * The component that renders the group.
+   */
   group: React.ElementType;
+  /**
+   * The component that renders the author name.
+   */
   authorName: React.ElementType;
   /**
    * The timestamp element rendered next to the author name in compact mode.
@@ -69,15 +75,33 @@ export interface MessageGroupSlots {
 }
 
 export interface MessageGroupSlotProps {
+  /**
+   * The props used for the group slot.
+   */
   group?: SlotComponentProps<'div', {}, MessageGroupOwnerState>;
+  /**
+   * The props used for the author name slot.
+   */
   authorName?: SlotComponentProps<'div', {}, MessageGroupOwnerState>;
   groupTimestamp?: SlotComponentProps<'span', {}, MessageGroupOwnerState>;
 }
 
 export interface MessageGroupProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
+  /**
+   * The content of the component.
+   */
   children?: React.ReactNode;
+  /**
+   * The id of the message this row belongs to.
+   */
   messageId: string;
+  /**
+   * The index of the row in `items`.
+   */
   index?: number;
+  /**
+   * The ids of the messages in the list, in order.
+   */
   items?: string[];
   /**
    * A function that maps a message to a group key.
@@ -86,7 +110,15 @@ export interface MessageGroupProps extends Omit<React.HTMLAttributes<HTMLDivElem
    * @default (message) => message.author?.id ?? message.role ?? ''
    */
   groupKey?: GroupKeyFn;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<MessageGroupSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: MessageGroupSlotProps;
 }
 

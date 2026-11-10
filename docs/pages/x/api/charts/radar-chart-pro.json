@@ -11,6 +11,12 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
+    "apiRef": {
+      "type": {
+        "name": "shape",
+        "description": "{ current?: { exportAsImage: func, exportAsPrint: func } }"
+      }
+    },
     "className": { "type": { "name": "string" } },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
@@ -123,6 +129,14 @@
         "returned": "string"
       }
     },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "theme": { "type": { "name": "enum", "description": "'dark'<br>&#124;&nbsp;'light'" } },
     "title": { "type": { "name": "string" } },
     "tooltipItem": {
       "type": {
@@ -138,19 +152,49 @@
     "import { RadarChartPro } from '@mui/x-charts-pro';"
   ],
   "slots": [
-    { "name": "baseButton", "description": "", "class": null },
-    { "name": "baseDivider", "description": "", "class": null },
-    { "name": "baseIconButton", "description": "", "class": null },
-    { "name": "baseMenuItem", "description": "", "class": null },
-    { "name": "baseMenuList", "description": "", "class": null },
-    { "name": "basePopper", "description": "", "class": null },
+    {
+      "name": "baseButton",
+      "description": "The component used for buttons.",
+      "default": "Button",
+      "class": null
+    },
+    {
+      "name": "baseDivider",
+      "description": "The component used for dividers.",
+      "default": "Divider",
+      "class": null
+    },
+    {
+      "name": "baseIconButton",
+      "description": "The component used for icon buttons.",
+      "default": "IconButton",
+      "class": null
+    },
+    { "name": "baseMenuItem", "description": "The component used for menu items.", "class": null },
+    {
+      "name": "baseMenuList",
+      "description": "The component used for menu lists.",
+      "default": "MenuList",
+      "class": null
+    },
+    { "name": "basePopper", "description": "The component used for poppers.", "class": null },
     {
       "name": "baseToggleButton",
       "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
       "class": null
     },
-    { "name": "baseToggleButtonGroup", "description": "", "class": null },
-    { "name": "baseTooltip", "description": "", "class": null },
+    {
+      "name": "baseToggleButtonGroup",
+      "description": "The component used for toggle button groups.",
+      "default": "ToggleButtonGroup",
+      "class": null
+    },
+    {
+      "name": "baseTooltip",
+      "description": "The component used for tooltips.",
+      "default": "Tooltip",
+      "class": null
+    },
     {
       "name": "exportIcon",
       "description": "Icon displayed on the toolbar's export button.",

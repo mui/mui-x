@@ -10,7 +10,6 @@ import {
   ChatMessageList,
 } from '@mui/x-chat';
 import { ChatRoot } from '@mui/x-chat/headless';
-
 import {
   createChunkStream,
   createTextResponseChunks,

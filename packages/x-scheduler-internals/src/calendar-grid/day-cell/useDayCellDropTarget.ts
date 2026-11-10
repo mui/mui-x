@@ -3,14 +3,14 @@ import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import type { SchedulerEvent } from '../../models';
-import type { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
+import type { BaseTemporal } from '../../internals/utils/base-temporal';
+import { getDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
 import {
   addDaysOnWallClock,
   getEndOfDayMs,
   moveTimestampToPlainDate,
   toEpochMs,
   toLocalDayNumber,
-  toPlainDateTime,
 } from '../../internals/utils/plain-date-utils/timeZone';
 import { useDropTarget } from '../../internals/utils/useDropTarget';
 
@@ -47,11 +47,11 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
       // Move a Day Grid Event within the Day Grid, or a Time Grid Event into it
       if (data.source === 'CalendarGridDayEvent' || data.source === 'CalendarGridTimeEvent') {
         // The day under the grab point.
-        const grabbedPlainDate =
+        const grabbedDayNumber =
           data.source === 'CalendarGridDayEvent'
-            ? data.draggedDay
-            : toPlainDateTime(data.start + data.initialCursorPositionInEventMs, timezone).date;
-        const dayCount = value.dayNumber - grabbedPlainDate.dayNumber;
+            ? getDayNumber(data.draggedDay)
+            : toLocalDayNumber(data.start + data.initialCursorPositionInEventMs, timezone);
+        const dayCount = getDayNumber(value) - grabbedDayNumber;
         return getDataFromInside(
           data,
           addDaysOnWallClock(data.start, dayCount, timezone),
@@ -62,7 +62,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
       // Resize a Day Grid Event
       if (data.source === 'CalendarGridDayEventResizeHandler') {
         if (data.side === 'start') {
-          const order = value.dayNumber - toLocalDayNumber(data.end, timezone);
+          const order = getDayNumber(value) - toLocalDayNumber(data.end, timezone);
           if (order > 0) {
             return undefined;
           }
@@ -74,7 +74,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
         }
 
         if (data.side === 'end') {
-          const order = value.dayNumber - toLocalDayNumber(data.start, timezone);
+          const order = getDayNumber(value) - toLocalDayNumber(data.start, timezone);
           if (order < 0) {
             return undefined;
           }
@@ -109,7 +109,7 @@ export namespace useDayCellDropTarget {
     /**
      * The day of the cell, read in the display timezone.
      */
-    value: PlainDate;
+    value: BaseTemporal.PlainDate;
     /**
      * Add properties to the event dropped in the cell before storing it in the store.
      */

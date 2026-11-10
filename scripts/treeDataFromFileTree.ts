@@ -1,6 +1,8 @@
-import { promises as fs, Stats } from 'fs';
+import type { Stats } from 'fs';
+import { promises as fs } from 'fs';
 import path from 'path';
-import yargs, { ArgumentsCamelCase } from 'yargs';
+import type { ArgumentsCamelCase } from 'yargs';
+import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 interface Node {

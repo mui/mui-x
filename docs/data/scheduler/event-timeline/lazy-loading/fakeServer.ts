@@ -1,4 +1,4 @@
-import { SchedulerEvent, SchedulerEventId } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent, SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import { initialEvents, resources, defaultVisibleDate } from '../../datasets/broadway';
 
 export { resources, defaultVisibleDate };

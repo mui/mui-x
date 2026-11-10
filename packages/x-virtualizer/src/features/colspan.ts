@@ -1,10 +1,10 @@
 import useEventCallback from '@mui/utils/useEventCallback';
-import { Store } from '@base-ui/utils/store';
+import type { Store } from '@base-ui/utils/store';
 import type { integer } from '@mui/x-internals/types';
 import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 import type { ColumnWithWidth, RowId } from '../models';
 import type { CellColSpanInfo } from '../models/colspan';
-import { Virtualization } from './virtualization';
+import type { Virtualization } from './virtualization';
 
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
 

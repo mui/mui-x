@@ -81,7 +81,7 @@ Clicking an event or creating a new one opens the event dialog.
 The dialog has two tabs:
 
 - **General**: title, start/end date and time, all-day toggle, resource and color selectors, and description.
-- **Recurrence**: frequency, interval, days of the week, and end condition.
+- **Recurrence**: frequency, interval, days of the week, and end condition. Shown when the [`recurringEvents` feature](/x/react-scheduler/recurring-events/) is enabled.
 
 Click any event in the demo below to open the dialog.
 From there you can edit the event details or delete it.

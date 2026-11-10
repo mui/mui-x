@@ -156,7 +156,7 @@ export class SchedulerLazyLoadingPlugin<
       if (this.disposables.disposed) {
         return;
       }
-      this.store.pushError(error);
+      this.store.pushUserFacingError({ code: 'somethingWentWrongError' }, { error });
       this.store.set('isLoading', false);
     }
   };
@@ -250,7 +250,7 @@ export class SchedulerLazyLoadingPlugin<
         isStale = true;
         return;
       }
-      this.store.pushError(error);
+      this.store.pushUserFacingError({ code: 'somethingWentWrongError' }, { error });
     } finally {
       if (!this.disposables.disposed && !isStale && !requestToRefetch) {
         this.store.set('isLoading', false);
@@ -291,7 +291,7 @@ export class SchedulerLazyLoadingPlugin<
         }
         return;
       }
-      this.store.pushError(error);
+      this.store.pushUserFacingError({ code: 'somethingWentWrongError' }, { error });
       return;
     }
 
@@ -306,12 +306,13 @@ export class SchedulerLazyLoadingPlugin<
     }
 
     if (!persistResult.success) {
-      this.store.pushError(
-        new Error(
-          'MUI X Scheduler: `dataSource.persistEvents` returned `{ success: false }`, so the cache was not updated and the UI is now out of sync with your data source. ' +
-            'To surface a specific message to the user, throw a descriptive Error from `persistEvents` instead. ' +
+      this.store.pushUserFacingError(
+        { code: 'somethingWentWrongError' },
+        {
+          error:
+            '`dataSource.persistEvents` returned `{ success: false }`, so the cache was not updated and the UI is now out of sync with your data source. ' +
             'See the `persistEvents` contract at https://mui.com/x/react-scheduler/event-calendar/lazy-loading/ (EventCalendar) or https://mui.com/x/react-scheduler/event-timeline/lazy-loading/ (EventTimeline).',
-        ),
+        },
       );
       return;
     }

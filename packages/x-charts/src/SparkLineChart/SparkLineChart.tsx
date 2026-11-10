@@ -73,6 +73,9 @@ export interface SparkLineChartProps<PlotType extends 'line' | 'bar' = 'line' | 
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   yAxis?: YAxis;
+  /**
+   * The configuration of axes highlight.
+   */
   axisHighlight?: ChartsAxisHighlightProps;
   /**
    * Type of plot used.
@@ -109,6 +112,8 @@ export interface SparkLineChartProps<PlotType extends 'line' | 'bar' = 'line' | 
    */
   area?: PlotType extends 'line' ? LineSeriesType['area'] : never;
   /**
+   * The type of curve to use for the line.
+   * Read more about curves at [line interpolation](https://mui.com/x/react-charts/lines/#interpolation).
    * @default 'linear'
    */
   curve?: PlotType extends 'line' ? LineSeriesType['curve'] : never;
@@ -327,6 +332,9 @@ SparkLineChart.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The ref object that exposes the chart API methods.
+   */
   apiRef: PropTypes.shape({
     current: PropTypes.object,
   }),
@@ -336,6 +344,9 @@ SparkLineChart.propTypes /* remove-proptypes */ = {
    * @default false
    */
   area: PropTypes.bool,
+  /**
+   * The configuration of axes highlight.
+   */
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
     y: PropTypes.oneOf(['band', 'line', 'none']),
@@ -358,6 +369,9 @@ SparkLineChart.propTypes /* remove-proptypes */ = {
     preventHighlight: PropTypes.bool,
     preventTooltip: PropTypes.bool,
   }),
+  /**
+   * The content of the component.
+   */
   children: PropTypes.node,
   className: PropTypes.string,
   /**
@@ -379,6 +393,8 @@ SparkLineChart.propTypes /* remove-proptypes */ = {
    */
   color: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   /**
+   * The type of curve to use for the line.
+   * Read more about curves at [line interpolation](https://mui.com/x/react-charts/lines/#interpolation).
    * @default 'linear'
    */
   curve: PropTypes.oneOf([
@@ -749,11 +765,18 @@ SparkLineChart.propTypes /* remove-proptypes */ = {
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The color mode passed to `colors` when it is a function.
+   * Defaults to the mode of the Material UI theme.
+   */
   theme: PropTypes.oneOf(['dark', 'light']),
   /**
    * The title of the chart.

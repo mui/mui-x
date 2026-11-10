@@ -1,10 +1,9 @@
+import type { GridColDef, GridRowsProp } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
   Toolbar,
   ToolbarButton,
   ComputedColumnsPanelTrigger,
-  GridColDef,
-  GridRowsProp,
 } from '@mui/x-data-grid-premium';
 import { formulaFeature } from '@mui/x-data-grid-premium/formula';
 import Tooltip from '@mui/material/Tooltip';

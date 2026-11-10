@@ -1,4 +1,4 @@
-import { RangeBarValueType } from '@mui/x-charts-premium/models';
+import type { RangeBarValueType } from '@mui/x-charts-premium/models';
 
 export const months = [
   'January',

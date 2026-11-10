@@ -2,7 +2,9 @@
   "props": {},
   "name": "StreamingIndicator",
   "imports": ["import { StreamingIndicator } from '@mui/x-chat/headless';"],
-  "slots": [{ "name": "root", "description": "", "class": null }],
+  "slots": [
+    { "name": "root", "description": "The component that renders the root.", "class": null }
+  ],
   "classes": [],
   "spread": true,
   "themeDefaultProps": null,

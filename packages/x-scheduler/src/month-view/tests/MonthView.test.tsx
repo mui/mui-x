@@ -260,12 +260,12 @@ describe('<MonthView />', () => {
       const eventButtons = within(popover).getAllByRole('button');
 
       expect(eventButtons.map((button) => button.getAttribute('aria-label'))).to.deep.equal([
-        'Event 1, 8:00 AM to 9:00 AM, Thursday, May 1st, 2025',
-        'Event 2, 9:00 AM to 10:00 AM, Thursday, May 1st, 2025',
-        'Event 3, 10:00 AM to 11:00 AM, Thursday, May 1st, 2025',
-        'Event 4, 11:00 AM to 12:00 PM, Thursday, May 1st, 2025',
-        'Event 5, 12:00 PM to 1:00 PM, Thursday, May 1st, 2025',
-        'Event 6, 1:00 PM to 2:00 PM, Thursday, May 1st, 2025',
+        'Event 1, 8:00 AM to 9:00 AM, Thursday, May 1, 2025',
+        'Event 2, 9:00 AM to 10:00 AM, Thursday, May 1, 2025',
+        'Event 3, 10:00 AM to 11:00 AM, Thursday, May 1, 2025',
+        'Event 4, 11:00 AM to 12:00 PM, Thursday, May 1, 2025',
+        'Event 5, 12:00 PM to 1:00 PM, Thursday, May 1, 2025',
+        'Event 6, 1:00 PM to 2:00 PM, Thursday, May 1, 2025',
       ]);
       eventButtons.forEach((button) => {
         expect(button).not.to.have.attribute('aria-labelledby');
@@ -923,7 +923,7 @@ describe('<MonthView />', () => {
 
       expect(
         screen.getByRole('button', {
-          name: 'Trip, From Monday, May 5th, 2025 7:30 AM to Wednesday, May 7th, 2025 5:00 PM',
+          name: 'Trip, From Monday, May 5, 2025 7:30 AM to Wednesday, May 7, 2025 5:00 PM',
         }),
       ).not.to.equal(null);
     });
@@ -939,7 +939,7 @@ describe('<MonthView />', () => {
 
       expect(
         screen.getByRole('button', {
-          name: 'Multi-day Conference, All day, From Monday, May 5th, 2025 to Wednesday, May 7th, 2025',
+          name: 'Multi-day Conference, All day, From Monday, May 5, 2025 to Wednesday, May 7, 2025',
         }),
       ).not.to.equal(null);
     });
@@ -1103,7 +1103,7 @@ describe('<MonthView />', () => {
       visibleInstances.forEach((instance) => {
         expect(instance).to.have.attribute(
           'aria-label',
-          'Multiple week event, All day, From Monday, May 19th, 2025 to Tuesday, May 27th, 2025',
+          'Multiple week event, All day, From Monday, May 19, 2025 to Tuesday, May 27, 2025',
         );
       });
     });
@@ -1306,6 +1306,115 @@ describe('<MonthView />', () => {
     });
   });
 
+  describe('weekend of the date locale', () => {
+    function getDataRows() {
+      return within(screen.getByRole('grid'))
+        .getAllByRole('row')
+        .filter((row) => row.getAttribute('aria-rowindex') !== '1');
+    }
+
+    function getHeaderTexts() {
+      return screen.getAllByRole('columnheader').map((header) => header.textContent);
+    }
+
+    function formatWeekdays(dateLocale: string, dates: string[]) {
+      const formatter = new Intl.DateTimeFormat(dateLocale, { weekday: 'short', timeZone: 'UTC' });
+      return dates.map((date) => formatter.format(new Date(date)));
+    }
+
+    function renderMonthView(dateLocale: string, showWeekends: boolean) {
+      render(
+        <EventCalendarProvider
+          {...standaloneDefaults}
+          dateLocale={dateLocale}
+          defaultPreferences={{ showWeekends }}
+        >
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+    }
+
+    it('should mark Saturday and Sunday as the weekend in the United States', () => {
+      renderMonthView('en-US', true);
+
+      // The weeks start on Sunday.
+      getDataRows().forEach((row) => {
+        const cells = within(row).getAllByRole('gridcell');
+        expect(cells.map((cell) => cell.hasAttribute('data-weekend'))).to.deep.equal([
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+        ]);
+      });
+    });
+
+    it('should mark Friday and Saturday as the weekend in Saudi Arabia', () => {
+      renderMonthView('ar-SA', true);
+
+      // The weeks start on Sunday.
+      getDataRows().forEach((row) => {
+        const cells = within(row).getAllByRole('gridcell');
+        expect(cells.map((cell) => cell.hasAttribute('data-weekend'))).to.deep.equal([
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          true,
+        ]);
+      });
+    });
+
+    it('should hide Friday and Saturday in Saudi Arabia when showWeekends=false', () => {
+      renderMonthView('ar-SA', false);
+
+      expect(screen.getByRole('grid')).to.have.attribute('aria-colcount', '5');
+      getDataRows().forEach((row) => {
+        const cells = within(row).getAllByRole('gridcell');
+        expect(cells.length).to.equal(5);
+        cells.forEach((cell) => expect(cell).not.to.have.attribute('data-weekend'));
+      });
+      // From Sunday, April 27th to Thursday, May 1st, 2025.
+      expect(getHeaderTexts()).to.deep.equal(
+        formatWeekdays('ar-SA', [
+          '2025-04-27',
+          '2025-04-28',
+          '2025-04-29',
+          '2025-04-30',
+          '2025-05-01',
+        ]),
+      );
+    });
+
+    it('should keep 6 days per week when the weekend has one day and showWeekends=false', () => {
+      // Iran: the weeks start on Saturday, and the weekend is Friday only.
+      renderMonthView('fa-IR', false);
+
+      expect(screen.getByRole('grid')).to.have.attribute('aria-colcount', '6');
+      getDataRows().forEach((row) => {
+        expect(within(row).getAllByRole('gridcell').length).to.equal(6);
+      });
+      // From Saturday, April 26th to Thursday, May 1st, 2025.
+      expect(getHeaderTexts()).to.deep.equal(
+        formatWeekdays('fa-IR', [
+          '2025-04-26',
+          '2025-04-27',
+          '2025-04-28',
+          '2025-04-29',
+          '2025-04-30',
+          '2025-05-01',
+        ]),
+      );
+    });
+  });
+
   describe('weekStartsOn preference', () => {
     it('should start each week row on Monday when weekStartsOn=1', () => {
       // May 2025: With weekStartsOn=1 the first week row starts on Monday Apr 28.
@@ -1330,9 +1439,9 @@ describe('<MonthView />', () => {
       });
     });
 
-    it('should start each week row on Sunday when weekStartsOn=0', () => {
+    it('should start each week row on Sunday when weekStartsOn=7', () => {
       render(
-        <EventCalendarProvider {...standaloneDefaults} defaultPreferences={{ weekStartsOn: 0 }}>
+        <EventCalendarProvider {...standaloneDefaults} defaultPreferences={{ weekStartsOn: 7 }}>
           <EventDialogProvider>
             <MonthView />
           </EventDialogProvider>

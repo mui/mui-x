@@ -9,9 +9,9 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { Button } from '@base-ui/react/button';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
+import { formatMonthShortAndDayOfMonth, toPlainDate } from '@mui/x-scheduler-internals/internals';
 import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
 import type { EventItemProps } from './EventItem.types';
 import { useFormatTime } from '../../../hooks/useFormatTime';
@@ -200,7 +200,7 @@ export const EventItem = React.forwardRef(function EventItem(
             >
               <EventItemCardContent className={classes.eventItemCardContent}>
                 <EventItemTime className={classes.eventItemTime} data-compact>
-                  <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
+                  <span>{formatTime(occurrence.displayTimezone.start)}</span>
                 </EventItemTime>
                 <EventItemTitle className={classes.eventItemTitle}>
                   {occurrence.title}
@@ -287,15 +287,16 @@ function MultiDayDateLabel(props: {
 }) {
   const { occurrence, formatTime } = props;
 
-  const adapter = useAdapterContext();
+  const store = useEventCalendarStoreContext();
+  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
   const { classes, localeText } = useEventCalendarStyledContext();
 
   if (isOccurrenceMultiDay(occurrence)) {
-    const format = `${adapter.formats.dayOfMonth} ${adapter.formats.month3Letters}`;
+    const { end, timezone } = occurrence.displayTimezone;
     return (
       <EventItemTime className={classes.eventItemTime} as="span">
         {localeText.eventItemMultiDayLabel(
-          adapter.formatByString(occurrence.displayTimezone.end.value, format),
+          formatMonthShortAndDayOfMonth(locale, toPlainDate(end.timestamp, timezone)),
         )}
       </EventItemTime>
     );
@@ -309,8 +310,8 @@ function MultiDayDateLabel(props: {
   }
   return (
     <EventItemTime className={classes.eventItemTime}>
-      <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
-      <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
+      <span>{formatTime(occurrence.displayTimezone.start)}</span>
+      <span> - {formatTime(occurrence.displayTimezone.end)}</span>
     </EventItemTime>
   );
 }

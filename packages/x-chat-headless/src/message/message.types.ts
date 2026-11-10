@@ -6,12 +6,18 @@ import type { ChatDensity } from '../chat/internals/ChatDensityContext';
 import type { ResolvedMessageAuthor } from '../internals/messageAuthor';
 
 export interface MessageOwnerState {
+  /**
+   * The id of the message.
+   */
   messageId: string;
   message: ChatMessage | null;
   role?: ChatRole;
   status?: ChatMessageStatus;
   streaming: boolean;
   error: boolean;
+  /**
+   * If `true`, the message is part of a group with the previous message.
+   */
   isGrouped: boolean;
   variant: ChatVariant;
   density: ChatDensity;

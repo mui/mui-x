@@ -316,7 +316,7 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
   const result = store.updateEvent(changes);
   if (!result.applied) {
     // The drop has no other surface for the rejection.
-    store.pushError(result.rejection, { transient: true });
+    store.pushUserFacingError(result.rejection, { transient: true });
     return;
   }
 

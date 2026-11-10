@@ -1,5 +1,5 @@
 export { ChatConversationList } from './ChatConversationList';
-export type { ChatConversationListProps } from './ChatConversationList';
+export type { ChatConversationListProps, ChatConversationListSlots } from './ChatConversationList';
 export {
   chatConversationListClasses,
   getChatConversationListUtilityClass,

@@ -4,10 +4,9 @@ import Button from '@mui/material/Button';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { alpha } from '@mui/material/styles';
+import type { GridRowModel, GridRowOrderChangeParams } from '@mui/x-data-grid-pro';
 import {
   DataGridPro,
-  GridRowModel,
-  GridRowOrderChangeParams,
   gridPageSelector,
   gridPageCountSelector,
   useGridApiContext,

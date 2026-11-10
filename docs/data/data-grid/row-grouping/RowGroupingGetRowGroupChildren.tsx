@@ -1,12 +1,13 @@
 import { gridRowNodeSelector } from '@mui/x-data-grid';
 import * as React from 'react';
+import type { GridEventListener } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
-  GridEventListener,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
-import { Movie, useMovieData } from '@mui/x-data-grid-generator';
+import type { Movie } from '@mui/x-data-grid-generator';
+import { useMovieData } from '@mui/x-data-grid-generator';
 import Alert from '@mui/material/Alert';
 
 export default function RowGroupingGetRowGroupChildren() {

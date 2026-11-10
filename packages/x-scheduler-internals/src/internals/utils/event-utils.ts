@@ -3,6 +3,7 @@ import type {
   TemporalSupportedObject,
   SchedulerProcessedEvent,
   SchedulerProcessedDate,
+  SchedulerProcessedDay,
   SchedulerEventOccurrence,
   SchedulerEventId,
   SchedulerRenderableEventOccurrence,
@@ -103,12 +104,12 @@ export function generateOccurrenceFromEvent({
 }
 
 /**
- *  Returns the key of the days an event occurrence should be visible on.
+ * Returns the key of the days an event occurrence should be visible on.
+ * `dayNumbers` are the day numbers of `days`, read once for all the occurrences of the days.
  */
 export function getDaysTheOccurrenceIsVisibleOn(
   event: SchedulerEventOccurrence,
-  days: SchedulerProcessedDate[],
-  // The day numbers of `days`, which the callers that loop over many occurrences read once.
+  days: SchedulerProcessedDay[],
   dayNumbers: readonly number[],
 ) {
   const { start, end, timezone } = event.displayTimezone;
@@ -117,13 +118,14 @@ export function getDaysTheOccurrenceIsVisibleOn(
 
   const dayKeys: string[] = [];
   for (let index = 0; index < days.length; index += 1) {
+    const dayNumber = dayNumbers[index];
     // If the day is before the event start, skip to the next day
-    if (dayNumbers[index] < startDayNumber) {
+    if (dayNumber < startDayNumber) {
       continue;
     }
 
     // If the day is after the event end, break as the days are sorted by start date
-    if (dayNumbers[index] > endDayNumber) {
+    if (dayNumber > endDayNumber) {
       break;
     }
     dayKeys.push(days[index].key);

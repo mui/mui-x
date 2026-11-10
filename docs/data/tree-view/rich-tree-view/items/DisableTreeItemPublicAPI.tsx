@@ -4,12 +4,13 @@ import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeItem, TreeItemContent, TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import {
-  useTreeItem,
+import type { TreeItemProps } from '@mui/x-tree-view/TreeItem';
+import { TreeItem, TreeItemContent } from '@mui/x-tree-view/TreeItem';
+import type {
   UseTreeItemContentSlotOwnProps,
   UseTreeItemStatus,
 } from '@mui/x-tree-view/useTreeItem';
+import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
 import { MUI_X_PRODUCTS } from '../../datasets/disabledAndEditableProducts';
 
 interface CustomContentProps extends UseTreeItemContentSlotOwnProps {

@@ -1,5 +1,12 @@
 {
   "props": {
+    "status": {
+      "type": {
+        "name": "shape",
+        "description": "{ disabled: bool, editable: bool, editing: bool, error: bool, expandable: bool, expanded: bool, focused: bool, indeterminate?: bool, loading: bool, selected: bool }"
+      },
+      "required": true
+    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },

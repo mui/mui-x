@@ -46,6 +46,24 @@ describe('<TimelineGrid.Event />', () => {
     }),
   );
 
+  it('should render events without the dependencies feature', () => {
+    renderEvent(
+      <TimelineGrid.Event
+        eventId="fake-id"
+        occurrenceKey="fake-key"
+        dataTimezone={undefined}
+        start={start}
+        end={end}
+        renderDragPreview={() => null}
+        data-testid="event"
+      />,
+    );
+
+    const event = screen.getByTestId('event');
+    expect(event).not.to.equal(null);
+    expect(event).not.to.have.attribute('data-dependency-drop-target');
+  });
+
   it('should use a precomputed timeline position', () => {
     renderEvent(
       <TimelineGrid.Event

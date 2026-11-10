@@ -1,12 +1,11 @@
 import * as React from 'react';
-import {
-  DataGrid,
-  GridCellModes,
+import type {
   GridCellModesModel,
   GridCellParams,
   GridRowsProp,
   GridColDef,
 } from '@mui/x-data-grid';
+import { DataGrid, GridCellModes } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
   randomTraderName,

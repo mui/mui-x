@@ -12,6 +12,9 @@ export interface FunnelSectionProps extends Omit<React.SVGProps<SVGPathElement>,
   seriesId: SeriesId;
   dataIndex: number;
   color: string;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<FunnelClasses>;
   variant?: 'filled' | 'outlined';
 }

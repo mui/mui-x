@@ -1,10 +1,12 @@
 import * as React from 'react';
-import {
-  DataGridPro,
-  useGridApiRef,
+import type {
   GridInitialState,
   GridDataSource,
   GridGetRowsResponse,
+} from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  useGridApiRef,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-pro';
 import Button from '@mui/material/Button';

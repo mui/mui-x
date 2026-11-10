@@ -19,6 +19,7 @@ const allParameters: Record<keyof EventTimelinePremiumParameters<any, any>, unkn
   defaultPreset: 'defaultPreset',
   defaultVisibleDate: 'defaultVisibleDate',
   defaultVisibleResources: 'defaultVisibleResources',
+  dependencies: 'dependencies',
   displayTimezone: 'displayTimezone',
   eventColor: 'eventColor',
   eventCreation: 'eventCreation',
@@ -26,6 +27,7 @@ const allParameters: Record<keyof EventTimelinePremiumParameters<any, any>, unkn
   eventModelStructure: 'eventModelStructure',
   events: 'events',
   onCollapsedResourcesChange: 'onCollapsedResourcesChange',
+  onDependenciesChange: 'onDependenciesChange',
   onEventEditingStart: 'onEventEditingStart',
   onEventsChange: 'onEventsChange',
   onPresetChange: 'onPresetChange',
@@ -83,6 +85,24 @@ describe('useExtractEventTimelinePremiumParameters', () => {
 
     expect(result.current.parameters.onEventEditingStart).to.equal(onEventEditingStart);
     expect(result.current.forwardedProps).to.not.have.property('onEventEditingStart');
+  });
+
+  it('should forward `dependencies` and `onDependenciesChange` to the parameters object instead of the forwarded props', () => {
+    const dependencies: never[] = [];
+    const onDependenciesChange = () => {};
+    const { result } = renderHook(() =>
+      useExtractEventTimelinePremiumParameters({
+        events: [],
+        resources: [ResourceBuilder.new().build()],
+        dependencies,
+        onDependenciesChange,
+      }),
+    );
+
+    expect(result.current.parameters.dependencies).to.equal(dependencies);
+    expect(result.current.parameters.onDependenciesChange).to.equal(onDependenciesChange);
+    expect(result.current.forwardedProps).to.not.have.property('dependencies');
+    expect(result.current.forwardedProps).to.not.have.property('onDependenciesChange');
   });
 
   it('should not forward any parameter to the forwarded props', () => {

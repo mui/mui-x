@@ -11,6 +11,9 @@ export interface IndividualBarPlotProps {
   completedData: ProcessedBarSeriesData[];
   masksData: MaskData[];
   borderRadius?: number;
+  /**
+   * If `true`, animations are skipped.
+   */
   skipAnimation?: boolean;
   onItemClick?: (event: ChartsActivationEvent, barItemIdentifier: BarItemIdentifier) => void;
   slotProps?: BarPlotSlotProps;

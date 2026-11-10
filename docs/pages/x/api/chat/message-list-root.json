@@ -3,12 +3,36 @@
   "name": "MessageListRoot",
   "imports": ["import { MessageListRoot } from '@mui/x-chat/headless';"],
   "slots": [
-    { "name": "messageList", "description": "", "class": null },
-    { "name": "messageListScroller", "description": "", "class": null },
-    { "name": "messageListContent", "description": "", "class": null },
-    { "name": "messageListOverlay", "description": "", "class": null },
-    { "name": "messageListScrollbar", "description": "", "class": null },
-    { "name": "messageListScrollbarThumb", "description": "", "class": null },
+    {
+      "name": "messageList",
+      "description": "The component that renders the message list.",
+      "class": null
+    },
+    {
+      "name": "messageListScroller",
+      "description": "The component that renders the message list scroller.",
+      "class": null
+    },
+    {
+      "name": "messageListContent",
+      "description": "The component that renders the message list content.",
+      "class": null
+    },
+    {
+      "name": "messageListOverlay",
+      "description": "The component that renders the message list overlay.",
+      "class": null
+    },
+    {
+      "name": "messageListScrollbar",
+      "description": "The component that renders the message list scrollbar.",
+      "class": null
+    },
+    {
+      "name": "messageListScrollbarThumb",
+      "description": "The component that renders the message list scrollbar thumb.",
+      "class": null
+    },
     {
       "name": "messageListStatus",
       "description": "The visually-hidden `role=\"status\"` element announcing streaming\ntransitions (\"Assistant is responding\" / \"Response complete\") to screen\nreaders. Pass `null`-rendering component to silence the announcements.",

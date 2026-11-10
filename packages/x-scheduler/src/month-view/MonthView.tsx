@@ -6,14 +6,16 @@ import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import type {
   EventCalendarViewDefinition,
   GridRowType,
-  SchedulerProcessedDate,
+  SchedulerProcessedDay,
 } from '@mui/x-scheduler-internals/models';
 import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
 import {
+  formatWeekdayShort,
+  getDayNumber,
   getPlainDateWeekStart,
+  getStartOfMonthDayNumber,
   plainDateFromDayNumber,
 } from '@mui/x-scheduler-internals/internals';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import type { EventCalendarState as State } from '@mui/x-scheduler-internals/use-event-calendar';
@@ -126,22 +128,20 @@ const MONTH_VIEW_DEFINITION: EventCalendarViewDefinition = {
     // The day number of the first day of the month, so a move inside the month keeps the days.
     (state: State) => {
       const visiblePlainDate = schedulerOtherSelectors.visiblePlainDate(state);
-      return visiblePlainDate.dayNumber - visiblePlainDate.day + 1;
+      return getStartOfMonthDayNumber(getDayNumber(visiblePlainDate));
     },
     schedulerOtherSelectors.displayTimezone,
-    eventCalendarPreferenceSelectors.showWeekends,
+    eventCalendarPreferenceSelectors.hiddenWeekdays,
     eventCalendarPreferenceSelectors.weekStartsOn,
-    (adapter, firstDayNumber, timezone, showWeekends, weekStartsOn) => {
+    (adapter, firstDayNumber, timezone, hiddenWeekdays, weekStartsOn) => {
       const firstOfMonth = plainDateFromDayNumber(firstDayNumber);
       const lastOfMonth = firstOfMonth.with({ day: firstOfMonth.daysInMonth });
       return getDayListFromPlainDates({
         adapter,
-        firstPlainDate: getPlainDateWeekStart(adapter, firstOfMonth, weekStartsOn),
-        lastPlainDate: getPlainDateWeekStart(adapter, lastOfMonth, weekStartsOn).add({
-          days: 6,
-        }),
+        firstPlainDate: getPlainDateWeekStart(firstOfMonth, weekStartsOn),
+        lastPlainDate: getPlainDateWeekStart(lastOfMonth, weekStartsOn).add({ days: 6 }),
         timezone,
-        excludeWeekends: !showWeekends,
+        excludedWeekdays: hiddenWeekdays,
       });
     },
   ),
@@ -156,7 +156,6 @@ export const MonthView = React.memo(
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
     // Context hooks
-    const adapter = useAdapterContext();
     const { classes, localeText } = useEventCalendarStyledContext();
     const store = useEventCalendarStoreContext();
 
@@ -165,7 +164,8 @@ export const MonthView = React.memo(
 
     // Selector hooks
     const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
-    const showWeekends = useStore(store, eventCalendarPreferenceSelectors.showWeekends);
+    const hiddenWeekdays = useStore(store, eventCalendarPreferenceSelectors.hiddenWeekdays);
+    const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
     // State hooks
     const [maxEvents, setMaxEvents] = React.useState<number>(2);
@@ -174,13 +174,13 @@ export const MonthView = React.memo(
     const { days } = useEventCalendarView(MONTH_VIEW_DEFINITION);
 
     const weeks = React.useMemo(() => {
-      const chunkSize = showWeekends ? 7 : 5;
-      const result: SchedulerProcessedDate[][] = [];
+      const chunkSize = 7 - hiddenWeekdays.length;
+      const result: SchedulerProcessedDay[][] = [];
       for (let i = 0; i < days.length; i += chunkSize) {
         result.push(days.slice(i, i + chunkSize));
       }
       return result;
-    }, [days, showWeekends]);
+    }, [days, hiddenWeekdays]);
 
     const monthViewRowsPerType = React.useMemo(
       () => ({ 'day-grid': weeks.length }) as const,
@@ -235,7 +235,7 @@ export const MonthView = React.memo(
                   aria-colindex={dayIdx + 1}
                   skipDataCurrent
                 >
-                  {adapter.formatByString(weekDay.value, 'ccc')}
+                  {formatWeekdayShort(locale, weekDay.plainDate)}
                 </MonthViewHeaderCell>
               ))}
             </MonthViewHeader>

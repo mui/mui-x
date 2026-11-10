@@ -1,11 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Rating, { RatingProps } from '@mui/material/Rating';
-import {
-  DataGrid,
-  GridFilterInputValueProps,
-  getGridNumericOperators,
-} from '@mui/x-data-grid';
+import type { RatingProps } from '@mui/material/Rating';
+import Rating from '@mui/material/Rating';
+import type { GridFilterInputValueProps } from '@mui/x-data-grid';
+import { DataGrid, getGridNumericOperators } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function RatingInputValue(props: GridFilterInputValueProps) {

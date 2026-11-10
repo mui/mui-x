@@ -1,4 +1,4 @@
-import { adapter, EventBuilder, setSystemTimezone } from 'test/utils/scheduler';
+import { EventBuilder, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 import { enUS } from '../../locales/enUS';
@@ -18,7 +18,7 @@ function getName(
 ) {
   return getEventAccessibleName({
     occurrence,
-    adapter,
+    locale: 'en-US',
     ampm: true,
     localeText,
     isRecurring: false,
@@ -32,21 +32,21 @@ describe('getEventAccessibleName', () => {
   it('should announce the title, the time range and the date of a timed event', () => {
     const occurrence = timedOccurrence('Running', '2025-07-03T07:30:00', '2025-07-03T08:30:00');
 
-    expect(getName(occurrence)).to.equal('Running, 7:30 AM to 8:30 AM, Thursday, July 3rd, 2025');
+    expect(getName(occurrence)).to.equal('Running, 7:30 AM to 8:30 AM, Thursday, July 3, 2025');
   });
 
   it('should format the time range in 24-hour format when ampm is false', () => {
     const occurrence = timedOccurrence('Running', '2025-07-03T16:00:00', '2025-07-03T17:00:00');
 
     expect(getName(occurrence, { ampm: false })).to.equal(
-      'Running, 16:00 to 17:00, Thursday, July 3rd, 2025',
+      'Running, 16:00 to 17:00, Thursday, July 3, 2025',
     );
   });
 
   it('should announce "All day" instead of a time range for a single-day all-day event', () => {
     const occurrence = EventBuilder.new().title('Conference').fullDay('2025-07-03').toOccurrence();
 
-    expect(getName(occurrence)).to.equal('Conference, All day, Thursday, July 3rd, 2025');
+    expect(getName(occurrence)).to.equal('Conference, All day, Thursday, July 3, 2025');
   });
 
   it('should announce the date range of a multi-day all-day event', () => {
@@ -56,7 +56,7 @@ describe('getEventAccessibleName', () => {
       .toOccurrence();
 
     expect(getName(occurrence)).to.equal(
-      'Conference, All day, From Thursday, July 3rd, 2025 to Saturday, July 5th, 2025',
+      'Conference, All day, From Thursday, July 3, 2025 to Saturday, July 5, 2025',
     );
   });
 
@@ -64,7 +64,7 @@ describe('getEventAccessibleName', () => {
     const occurrence = timedOccurrence('Trip', '2025-07-03T07:30:00', '2025-07-05T17:00:00');
 
     expect(getName(occurrence)).to.equal(
-      'Trip, From Thursday, July 3rd, 2025 7:30 AM to Saturday, July 5th, 2025 5:00 PM',
+      'Trip, From Thursday, July 3, 2025 7:30 AM to Saturday, July 5, 2025 5:00 PM',
     );
   });
 
@@ -72,7 +72,7 @@ describe('getEventAccessibleName', () => {
     const occurrence = timedOccurrence('Running', '2025-07-03T07:30:00', '2025-07-03T08:30:00');
 
     expect(getName(occurrence, { resourceName: 'Sport' })).to.equal(
-      'Running, 7:30 AM to 8:30 AM, Thursday, July 3rd, 2025, Resource: Sport',
+      'Running, 7:30 AM to 8:30 AM, Thursday, July 3, 2025, Resource: Sport',
     );
   });
 
@@ -80,7 +80,7 @@ describe('getEventAccessibleName', () => {
     const occurrence = timedOccurrence('Running', '2025-07-03T07:30:00', '2025-07-03T08:30:00');
 
     expect(getName(occurrence, { isRecurring: true })).to.equal(
-      'Running, 7:30 AM to 8:30 AM, Thursday, July 3rd, 2025, Recurring',
+      'Running, 7:30 AM to 8:30 AM, Thursday, July 3, 2025, Recurring',
     );
   });
 
@@ -97,14 +97,14 @@ describe('getEventAccessibleName', () => {
     expect(
       getName(occurrence, { localeText: esLocaleText, isRecurring: true, resourceName: 'Deporte' }),
     ).to.equal(
-      'Correr, de 7:30 AM a 8:30 AM, Thursday, July 3rd, 2025, Recurso: Deporte, Recurrente',
+      'Correr, de 7:30 AM a 8:30 AM, Thursday, July 3, 2025, Recurso: Deporte, Recurrente',
     );
   });
 
   it('should skip an empty title instead of announcing a leading separator', () => {
     const occurrence = timedOccurrence('', '2025-07-03T07:30:00', '2025-07-03T08:30:00');
 
-    expect(getName(occurrence)).to.equal('7:30 AM to 8:30 AM, Thursday, July 3rd, 2025');
+    expect(getName(occurrence)).to.equal('7:30 AM to 8:30 AM, Thursday, July 3, 2025');
   });
 
   it('should let the locale reorder the parts through eventAriaLabel', () => {
@@ -116,7 +116,7 @@ describe('getEventAccessibleName', () => {
     };
 
     expect(getName(occurrence, { localeText: reorderingLocaleText })).to.equal(
-      'Thursday, July 3rd, 2025 7:30 AM to 8:30 AM Running',
+      'Thursday, July 3, 2025 7:30 AM to 8:30 AM Running',
     );
   });
 
@@ -128,7 +128,7 @@ describe('getEventAccessibleName', () => {
       .withDisplayTimezone('Asia/Tokyo')
       .toOccurrence();
 
-    expect(getName(occurrence)).to.equal('Late call, 8:30 AM to 9:30 AM, Friday, July 4th, 2025');
+    expect(getName(occurrence)).to.equal('Late call, 8:30 AM to 9:30 AM, Friday, July 4, 2025');
   });
 
   // Browsers cannot change their timezone through process.env.TZ.
@@ -146,7 +146,7 @@ describe('getEventAccessibleName', () => {
         .toOccurrence();
 
       expect(getName(occurrence)).to.equal(
-        'Trip, From Friday, December 30th, 2011 10:00 AM to Saturday, December 31st, 2011 10:00 AM',
+        'Trip, From Friday, December 30, 2011 10:00 AM to Saturday, December 31, 2011 10:00 AM',
       );
     },
   );

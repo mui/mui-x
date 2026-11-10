@@ -1,12 +1,14 @@
 import * as React from 'react';
-import {
-  DataGridPro,
+import type {
   GridRowModel,
-  GridActionsCellItem,
   GridColDef,
   GridRowId,
-  GridActionsCell,
   GridRenderCellParams,
+} from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GridActionsCellItem,
+  GridActionsCell,
 } from '@mui/x-data-grid-pro';
 import ArrowUpIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownIcon from '@mui/icons-material/ArrowDownward';
