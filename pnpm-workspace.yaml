@@ -86,7 +86,7 @@ catalog:
 engineStrict: true
 updateNotifier: false
 autoDedupe: true
-# Required while transitive dependencies use the SHA-pinned material-ui preview overrides below.
+# Required while transitive dependencies use the SHA-pinned preview overrides below.
 blockExoticSubdeps: false
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
@@ -122,13 +122,14 @@ allowBuilds:
   msw: false
 
 overrides:
-  '@mui/internal-docs-infra': 0.13.1-canary.29
-  # Docs previews: material-ui #49464; public runtime: #48842.
+  # Docs-infra: mui-public #2047; core-docs: material-ui #49464.
+  '@mui/internal-docs-infra': https://pkg.pr.new/mui/mui-public/@mui/internal-docs-infra@f2ecd5d3e1c138f1c20f5f43c5d8bcf21eb37a1f
+  # Other docs previews: material-ui #49464; public runtime: #48842.
   # Hold the public runtime until MUI X supports material-ui #49612.
   '@mui/core-downloads-tracker': https://pkg.pr.new/mui/material-ui/@mui/core-downloads-tracker@40645cf
   '@mui/icons-material': https://pkg.pr.new/mui/material-ui/@mui/icons-material@40645cf
   '@mui/internal-api-docs-builder': https://pkg.pr.new/mui/material-ui/@mui/internal-api-docs-builder@080b0262e3
-  '@mui/internal-core-docs': https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@3c3bf45070
+  '@mui/internal-core-docs': https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@8220a7120a17e98936c9ade01e42572012085616
   '@mui/internal-docs-utils': https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@080b0262e3
   '@mui/internal-markdown': https://pkg.pr.new/mui/material-ui/@mui/internal-markdown@080b0262e3
   '@mui/internal-scripts': https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@080b0262e3
