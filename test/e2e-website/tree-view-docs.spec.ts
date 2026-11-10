@@ -114,6 +114,31 @@ test.describe('Tree View docs-infra migration', () => {
     }
   });
 
+  test('preserves the server-rendered preview while live controls hydrate', async ({ page }) => {
+    let releaseScripts!: () => void;
+    const scriptsReady = new Promise<void>((resolve) => {
+      releaseScripts = resolve;
+    });
+    await page.route('**/_next/static/**/*.js', async (route) => {
+      await scriptsReady;
+      await route.continue();
+    });
+
+    try {
+      await page.goto(ITEMS_PATH, { waitUntil: 'commit' });
+      const demo = getDemo(page, 'BasicSimpleTreeView');
+      const item = demo.getByRole('treeitem', { name: 'Data Grid', exact: true });
+      await expect(item).toBeVisible();
+      const initial = await item.elementHandle();
+
+      releaseScripts();
+      await readyDemo(page, 'BasicSimpleTreeView');
+      expect(await initial?.evaluate((element) => element.isConnected)).toBe(true);
+    } finally {
+      releaseScripts();
+    }
+  });
+
   test('source deep links select the language and override the stored preference', async ({
     page,
   }) => {
