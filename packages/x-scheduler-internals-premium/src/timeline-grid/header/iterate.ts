@@ -14,7 +14,7 @@ type DayHeaderUnit = Exclude<PresetHeaderUnit, 'hour'>;
 
 /**
  * The range a header walks: its first date, the date after its last one, and the hour window of
- * each day.
+ * each day, which starts and ends on whole hours, its start before its end.
  */
 export interface IteratedRange extends TimelineAxisWindow {
   startPlainDate: BaseTemporal.PlainDate;
@@ -22,20 +22,10 @@ export interface IteratedRange extends TimelineAxisWindow {
 }
 
 /**
- * The wall-clock hours of the hour window, from `startHour` (inclusive) to `endHour` (exclusive):
- * the hour columns of every day when the ticks are hours.
- */
-function getHourWindow(range: TimelineAxisWindow) {
-  return {
-    startHour: Math.ceil(range.dayStartMinute / 60),
-    endHour: Math.ceil(range.dayEndMinute / 60),
-  };
-}
-
-/**
  * Cells are walked on the day numbers of the dates of the range. A date or an hour that a DST
  * transition skips keeps its cell, as the walk reads no timezone.
- * The hour window of the range only applies to the hour cells and the hour ticks.
+ * The hour window of the range gives the hour cells and the hour ticks. An hour row is only
+ * walked over hour ticks.
  */
 export function iterate(
   unit: PresetHeaderUnit,
@@ -53,14 +43,14 @@ export function iterate(
     );
   }
 
-  if (unit === 'hour') {
-    return iterateHourCells(range);
-  }
+  // Hour cells and hour ticks are a wall-clock grid: every day contributes the same columns whatever
+  // its real hours are, so a cell spans the hour columns of its days rather than its elapsed hours.
+  const startHour = Math.ceil(range.dayStartMinute / 60);
+  const hoursPerDay = Math.ceil(range.dayEndMinute / 60) - startHour;
 
-  // Hour ticks are a wall-clock grid: every day contributes the same columns whatever its real
-  // hours are, so a cell spans the hour columns of its days rather than its elapsed hours.
-  const { startHour, endHour } = getHourWindow(range);
-  const hoursPerDay = endHour - startHour;
+  if (unit === 'hour') {
+    return iterateHourCells(rangeStart, rangeEnd, startHour, hoursPerDay);
+  }
 
   const cells: IteratedCell[] = [];
   let cursor = startOf(rangeStart, unit, weekStartsOn);
@@ -109,6 +99,18 @@ function throwTooManyCells(unit: PresetHeaderUnit, tickUnit: PresetHeaderUnit): 
 }
 
 /**
+ * Throws for a unit the walk doesn't know. Typed `never` so that the switches on the units stay
+ * exhaustive.
+ */
+function throwUnsupportedUnit(unit: never): never {
+  throw new Error(
+    `MUI X Scheduler: Unsupported header unit "${unit}". ` +
+      `TimelineGridHeader cannot iterate cells for an unknown unit, so the header would render incorrectly. ` +
+      `Use one of: 'hour', 'day', 'week', 'month', 'year'.`,
+  );
+}
+
+/**
  * Emits one cell per displayed wall-clock hour of every day in the range, the same grid
  * the Event Calendar's time axis builds. The columns are decided by arithmetic on the
  * hour window, not by walking real time, so a day keeps its column count across a DST
@@ -116,20 +118,22 @@ function throwTooManyCells(unit: PresetHeaderUnit, tickUnit: PresetHeaderUnit): 
  * repeated by fall-back gets a single one. Events absorb the difference by stretching or
  * shrinking over the fixed grid.
  */
-function iterateHourCells(range: IteratedRange): IteratedCell[] {
-  const { startHour, endHour } = getHourWindow(range);
-
-  const firstDay = getDayNumber(range.startPlainDate);
-  const dayCount = getDayNumber(range.endPlainDate) - firstDay;
-
+function iterateHourCells(
+  rangeStart: number,
+  rangeEnd: number,
+  startHour: number,
+  hoursPerDay: number,
+): IteratedCell[] {
   // Same runaway guard as the generic walk, checked up front since the count is known.
-  if (dayCount * (endHour - startHour) > 10_000) {
+  if ((rangeEnd - rangeStart) * hoursPerDay > 10_000) {
     throwTooManyCells('hour', 'hour');
   }
 
+  const endHour = startHour + hoursPerDay;
+  const dayCount = rangeEnd - rangeStart;
   const cells: IteratedCell[] = [];
   for (let dayIndex = 0; dayIndex < dayCount; dayIndex += 1) {
-    const dayNumber = firstDay + dayIndex;
+    const dayNumber = rangeStart + dayIndex;
     const plainDate = plainDateFromDayNumber(dayNumber);
     for (let hour = startHour; hour < endHour; hour += 1) {
       cells.push({
@@ -162,11 +166,7 @@ function startOf(dayNumber: number, unit: DayHeaderUnit, weekStartsOn: WeekStart
     case 'year':
       return getStartOfYearDayNumber(dayNumber);
     default:
-      throw new Error(
-        `MUI X Scheduler: Unsupported header unit "${unit}". ` +
-          `TimelineGridHeader cannot iterate cells for an unknown unit, so the header would render incorrectly. ` +
-          `Use one of: 'hour', 'day', 'week', 'month', 'year'.`,
-      );
+      return throwUnsupportedUnit(unit);
   }
 }
 
@@ -184,11 +184,7 @@ function addUnit(dayNumber: number, unit: DayHeaderUnit): number {
     case 'year':
       return addMonthsToDayNumber(dayNumber, 12);
     default:
-      throw new Error(
-        `MUI X Scheduler: Unsupported header unit "${unit}". ` +
-          `TimelineGridHeader cannot iterate cells for an unknown unit, so the header would render incorrectly. ` +
-          `Use one of: 'hour', 'day', 'week', 'month', 'year'.`,
-      );
+      return throwUnsupportedUnit(unit);
   }
 }
 
@@ -206,7 +202,8 @@ function differenceInMonths(later: number, earlier: number): number {
 }
 
 /**
- * The number of whole units from the day number `earlier` to the later day number `later`.
+ * The number of whole units from the day number `earlier` to the later day number `later`. As
+ * `later` is never before `earlier`, rounding down counts the whole units.
  */
 function differenceInUnits(later: number, earlier: number, unit: DayHeaderUnit): number {
   switch (unit) {
@@ -219,10 +216,6 @@ function differenceInUnits(later: number, earlier: number, unit: DayHeaderUnit):
     case 'year':
       return Math.floor(differenceInMonths(later, earlier) / 12);
     default:
-      throw new Error(
-        `MUI X Scheduler: Unsupported header unit "${unit}". ` +
-          `TimelineGridHeader cannot iterate cells for an unknown unit, so the header would render incorrectly. ` +
-          `Use one of: 'hour', 'day', 'week', 'month', 'year'.`,
-      );
+      return throwUnsupportedUnit(unit);
   }
 }
