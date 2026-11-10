@@ -324,7 +324,7 @@ export function serializeRRule(rule: SchedulerProcessedEventRecurrenceRule): str
 
   if (rule.until) {
     // RFC 5545 writes UNTIL as a UTC date-time like `20250105T093000Z`.
-    const isoString = new Date(rule.until.getTime()).toISOString();
+    const isoString = rule.until.toISOString();
     const untilIso = `${isoString.slice(0, 19).replace(/[-:]/g, '')}Z`;
 
     parts.push(`UNTIL=${untilIso}`);

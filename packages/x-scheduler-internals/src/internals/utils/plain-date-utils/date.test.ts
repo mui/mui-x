@@ -4,7 +4,7 @@ import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
 import { adapter, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { processDate } from '../../../process-date';
-import { createDateFromWallTime, createProcessedDate } from './date';
+import { createDateFromWallTime, createProcessedDate, isInstantString } from './date';
 import { toPlainDate } from './timeZone';
 import type { TemporalSupportedObject } from '../../../models';
 
@@ -126,6 +126,26 @@ describe('plain-date-utils/date', () => {
     },
   );
 
+  describe('isInstantString', () => {
+    it.each([
+      '2025-01-01T09:00:00Z',
+      '2025-01-01T09:00:00-05:00',
+      '2025-01-01T09:00:00-03:30',
+      '2025-01-01T09:00:00+0200',
+      '2025-01-01T09:00:00.000+01:00',
+      '2025-01-01t09:00:00z',
+    ])('should read %s as an instant', (value) => {
+      expect(isInstantString(value)).to.equal(true);
+    });
+
+    it.each(['2025-01-01T09:00:00', '2025-01-01', '2025/01/01', '+02'])(
+      'should read %s as a wall-clock time',
+      (value) => {
+        expect(isInstantString(value)).to.equal(false);
+      },
+    );
+  });
+
   describe('createDateFromWallTime', () => {
     const resolve = (value: string, timezone: string) => {
       const date = createDateFromWallTime(value, timezone);
@@ -160,6 +180,12 @@ describe('plain-date-utils/date', () => {
       expect(resolve('2025-01-01T09:30', 'America/New_York')).to.equal('2025-01-01T14:30:00.000Z');
       expect(resolve('2025-01-01T09:30:15.5', 'UTC')).to.equal('2025-01-01T09:30:15.500Z');
       expect(resolve('2025-01-01T09:30:00', 'Asia/Tokyo')).to.equal('2025-01-01T00:30:00.000Z');
+    });
+
+    it('should read the years and the months at midnight of their first day', () => {
+      expect(resolve('2025-01', 'America/New_York')).to.equal('2025-01-01T05:00:00.000Z');
+      expect(resolve('2025', 'America/New_York')).to.equal('2025-01-01T05:00:00.000Z');
+      expect(resolve('2025-02T09:30', 'America/New_York')).to.equal('2025-02-01T14:30:00.000Z');
     });
 
     it('should move the dates and times above their range forward, like Date', () => {

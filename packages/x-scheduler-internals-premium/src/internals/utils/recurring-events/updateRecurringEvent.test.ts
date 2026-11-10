@@ -3,6 +3,7 @@ import { isJSDOM } from 'test/utils/skipIf';
 import type {
   SchedulerEventUpdatedProperties,
   RecurringEventByDayValue,
+  SchedulerEventRecurrenceRule,
   SchedulerProcessedEventRecurrenceRule,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
@@ -394,6 +395,34 @@ describe('recurring-events/updateRecurringEvent', () => {
       const createdEvent = updatedEvents.created![0];
       expect(createdEvent.start).not.to.include('Z');
       expect(createdEvent.end).not.to.include('Z');
+    });
+
+    it('should write the dates of a series with offsets as instants', () => {
+      const offsetEvent = EventBuilder.new()
+        .span('2025-01-01T09:00:00+01:00', '2025-01-01T10:00:00+01:00')
+        .withDataTimezone('Europe/Paris')
+        .rrule({ freq: 'DAILY', interval: 1, until: '2025-01-10T09:00:00+01:00' })
+        .exDates(['2025-01-07T09:00:00+01:00'])
+        .toProcessed();
+
+      const updatedEvents = applyRecurringUpdateFollowing(
+        offsetEvent,
+        new Date('2025-01-05T08:00:00Z'),
+        {
+          id: offsetEvent.id,
+          start: new Date('2025-01-05T10:00:00Z'),
+          end: new Date('2025-01-05T11:00:00Z'),
+          exDates: [new Date('2025-01-08T10:00:00Z')],
+        },
+      );
+
+      const createdEvent = updatedEvents.created![0];
+      expect(createdEvent.start).to.equal('2025-01-05T10:00:00.000Z');
+      expect(createdEvent.end).to.equal('2025-01-05T11:00:00.000Z');
+      expect(createdEvent.exDates).to.deep.equal(['2025-01-08T10:00:00.000Z']);
+      expect((createdEvent.rrule as SchedulerEventRecurrenceRule).until).to.equal(
+        '2025-01-10T08:00:00.000Z',
+      );
     });
 
     it('should start the new series at the occurrence date, not DTSTART, when changes.start is not provided', () => {

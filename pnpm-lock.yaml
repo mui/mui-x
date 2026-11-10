@@ -1988,9 +1988,6 @@ importers:
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
-      use-sync-external-store:
-        specifier: 'catalog:'
-        version: 1.7.0(react@19.3.1)
     devDependencies:
       '@date-fns/tz':
         specifier: 'catalog:'
@@ -2001,9 +1998,6 @@ importers:
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
-      '@types/use-sync-external-store':
-        specifier: 'catalog:'
-        version: 1.7.0
       date-fns:
         specifier: 'catalog:'
         version: 4.4.0

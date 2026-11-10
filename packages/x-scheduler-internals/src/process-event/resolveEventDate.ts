@@ -19,14 +19,9 @@ export function resolveEventDate(
   dataTimezone: TemporalTimezone,
   eventId?: SchedulerEventId,
 ): TemporalSupportedObject {
-  let date: TemporalSupportedObject | null = null;
-  if (isInstantString(value)) {
-    date = new Date(value);
-  } else if (dataTimezone !== 'default' && dataTimezone !== 'system') {
-    date = createDateFromWallTime(value, dataTimezone);
-  }
-  // `Date` already resolves the wall-clock times of the system timezone like RFC 5545.
-  date ??= createDateFromString(value, dataTimezone);
+  const date = isInstantString(value)
+    ? new Date(value)
+    : (createDateFromWallTime(value, dataTimezone) ?? createDateFromString(value, dataTimezone));
 
   if (Number.isNaN(date.getTime())) {
     const eventRef = eventId === undefined ? '' : ` of event "${eventId}"`;
