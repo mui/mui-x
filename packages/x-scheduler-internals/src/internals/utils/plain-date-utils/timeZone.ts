@@ -99,23 +99,11 @@ function getTimezoneOffsetMs(timezone: TemporalTimezone, epochMs: number): numbe
 }
 
 /**
- * The offset the adapter uses for `timezone` at an instant, in milliseconds.
- * `TZDate` reads the offsets between -01:00 and 00:00 as positive, such as the -00:44:30 of
- * Africa/Monrovia until 1972. Plain dates follow it to match the adapter values of the Scheduler.
- */
-function getAdapterOffsetMs(timezone: TemporalTimezone, epochMs: number): number {
-  const offsetMs = getTimezoneOffsetMs(timezone, epochMs);
-  return offsetMs < 0 && offsetMs > -3_600_000 && timezone !== 'default' && timezone !== 'system'
-    ? -offsetMs
-    : offsetMs;
-}
-
-/**
  * The wall-clock time of an instant in `timezone`, in milliseconds since 1970-01-01T00:00 of the
  * wall clock.
  */
 export function toLocalMs(epochMs: number, timezone: TemporalTimezone): number {
-  return epochMs + getAdapterOffsetMs(timezone, epochMs);
+  return epochMs + getTimezoneOffsetMs(timezone, epochMs);
 }
 
 /**
@@ -161,8 +149,8 @@ export function toWallClockIsoString(epochMs: number, timezone: TemporalTimezone
  */
 export function localToEpochMs(localMs: number, timezone: TemporalTimezone): number {
   // Offsets are below a day, so the instant lies between these two.
-  const offsetBefore = getAdapterOffsetMs(timezone, localMs - MS_PER_DAY);
-  const offsetAfter = getAdapterOffsetMs(timezone, localMs + MS_PER_DAY);
+  const offsetBefore = getTimezoneOffsetMs(timezone, localMs - MS_PER_DAY);
+  const offsetAfter = getTimezoneOffsetMs(timezone, localMs + MS_PER_DAY);
   if (offsetBefore === offsetAfter) {
     return localMs - offsetBefore;
   }
@@ -170,8 +158,8 @@ export function localToEpochMs(localMs: number, timezone: TemporalTimezone): num
   // A transition happens around this wall-clock time.
   const instantBefore = localMs - offsetBefore;
   const instantAfter = localMs - offsetAfter;
-  const isValidBefore = getAdapterOffsetMs(timezone, instantBefore) === offsetBefore;
-  const isValidAfter = getAdapterOffsetMs(timezone, instantAfter) === offsetAfter;
+  const isValidBefore = getTimezoneOffsetMs(timezone, instantBefore) === offsetBefore;
+  const isValidAfter = getTimezoneOffsetMs(timezone, instantAfter) === offsetAfter;
   if (isValidBefore && isValidAfter) {
     // Repeated time: both instants show it.
     return Math.min(instantBefore, instantAfter);

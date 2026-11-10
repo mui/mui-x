@@ -5,15 +5,12 @@ import { schedulerEventSelectors, schedulerOtherSelectors } from '../../schedule
 import type { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { createProcessedDate } from '../../internals/utils/plain-date-utils/adapter';
-import { useAdapterContext } from '../../use-adapter-context';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
 
 export function useCalendarGridPlaceholderInRange(
   parameters: useCalendarGridPlaceholderInRange.Parameters,
 ): useEventOccurrencesWithTimelinePosition.EventOccurrencePlaceholderWithPosition | null {
   const { start, end, occurrences, maxIndex } = parameters;
-
-  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
 
   const rawPlaceholder = useStore(
@@ -39,8 +36,8 @@ export function useCalendarGridPlaceholderInRange(
       id: originalEventId ?? 'occurrence-placeholder',
       title: originalEvent ? originalEvent.title : '',
       displayTimezone: {
-        start: createProcessedDate(adapter, rawPlaceholder.start, displayTimezone),
-        end: createProcessedDate(adapter, rawPlaceholder.end, displayTimezone),
+        start: createProcessedDate(rawPlaceholder.start, displayTimezone),
+        end: createProcessedDate(rawPlaceholder.end, displayTimezone),
         timezone: displayTimezone,
       },
     };
@@ -78,15 +75,7 @@ export function useCalendarGridPlaceholderInRange(
       ...sharedProperties,
       position,
     };
-  }, [
-    rawPlaceholder,
-    adapter,
-    displayTimezone,
-    originalEvent,
-    originalEventId,
-    occurrences,
-    maxIndex,
-  ]);
+  }, [rawPlaceholder, displayTimezone, originalEvent, originalEventId, occurrences, maxIndex]);
 }
 
 export namespace useCalendarGridPlaceholderInRange {

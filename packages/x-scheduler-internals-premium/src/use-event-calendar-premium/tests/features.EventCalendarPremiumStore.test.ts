@@ -9,7 +9,6 @@ import type { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
 import {
   schedulerEventSelectors,
   schedulerOccurrenceSelectors,
-  schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
   flushDebounce,
@@ -37,7 +36,7 @@ const buildViewDefinition = (): any => ({
   siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
   visibleDaysSelector: (state: any): SchedulerProcessedDate[] =>
     Array.from({ length: 7 }, (_, i) => {
-      const value = adapter.addDays(schedulerOtherSelectors.visibleDate(state), i);
+      const value = adapter.addDays(state.visibleDate, i);
       return {
         value,
         key: String(adapter.getTime(value)),

@@ -3,7 +3,6 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   createProcessedDate,
   useElementPositionInCollection,
@@ -22,8 +21,6 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
     componentProps: TimelineGridCurrentTimeIndicator.Props,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const adapter = useAdapterContext();
-
     const {
       // Rendering props
       className,
@@ -39,8 +36,8 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
     const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
     const processedNow = React.useMemo(
-      () => createProcessedDate(adapter, nowTimestamp, displayTimezone),
-      [adapter, nowTimestamp, displayTimezone],
+      () => createProcessedDate(nowTimestamp, displayTimezone),
+      [nowTimestamp, displayTimezone],
     );
 
     const { position } = useElementPositionInCollection({

@@ -8,7 +8,6 @@ import type {
   SchedulerRenderableEventOccurrence,
   TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   BaseTemporal,
   createAdapterDate,
@@ -398,14 +397,13 @@ export function getRecurrenceRuleBound(
  * which keeps the rule ending on a date and fails the validation of the Recurrence tab.
  */
 export function getRecurrenceUntil(
-  adapter: Adapter,
   rawDate: string,
   eventTimezone: TemporalTimezone,
 ): TemporalSupportedObject {
   const plainDate = readDateField(rawDate);
   return plainDate == null
-    ? createAdapterDate(adapter, NaN, eventTimezone)
-    : createEndOfPlainDate(adapter, plainDate, eventTimezone);
+    ? createAdapterDate(NaN)
+    : createEndOfPlainDate(plainDate, eventTimezone);
 }
 
 /**

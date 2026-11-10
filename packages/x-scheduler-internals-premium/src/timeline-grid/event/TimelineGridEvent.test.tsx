@@ -13,8 +13,8 @@ import { describe, it, expect } from 'vitest';
 describe('<TimelineGrid.Event />', () => {
   const { render } = createSchedulerRenderer();
 
-  const start = processDate(adapter.startOfDay(adapter.now('default')), adapter);
-  const end = processDate(adapter.endOfDay(adapter.now('default')), adapter);
+  const start = processDate(adapter.startOfDay(adapter.now('default')), adapter, 'default');
+  const end = processDate(adapter.endOfDay(adapter.now('default')), adapter, 'default');
 
   // Mounts the event in the row context it needs.
   function renderEvent(node: React.ReactElement) {
