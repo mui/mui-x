@@ -135,25 +135,18 @@ export const nbNOLocaleText: Partial<ChartsLocaleText> = {
   //   return `Showing ${Math.round(start)}% to ${Math.round(end)}% of the ${axisName}`;
   // },
   // zoomSliderStartLabel: function zoomSliderStartLabel({
-  //   axisDirection
+  //   axisDirection,
+  //   axisLabel
   // }) {
-  //   return `${axisDirection === 'x' ? 'Horizontal' : 'Vertical'} axis zoom start`;
+  //   const axisName = axisLabel ?? (axisDirection === 'x' ? 'Horizontal axis' : 'Vertical axis');
+  //   return `${axisName} zoom start`;
   // },
   // zoomSliderEndLabel: function zoomSliderEndLabel({
-  //   axisDirection
+  //   axisDirection,
+  //   axisLabel
   // }) {
-  //   return `${axisDirection === 'x' ? 'Horizontal' : 'Vertical'} axis zoom end`;
-  // },
-  // zoomSliderRangeLabel: function zoomSliderRangeLabel({
-  //   axisDirection
-  // }) {
-  //   return `${axisDirection === 'x' ? 'Horizontal' : 'Vertical'} axis zoom range`;
-  // },
-  // zoomSliderRangeValueText: function zoomSliderRangeValueText({
-  //   start,
-  //   end
-  // }) {
-  //   return `${start} to ${end}`;
+  //   const axisName = axisLabel ?? (axisDirection === 'x' ? 'Horizontal axis' : 'Vertical axis');
+  //   return `${axisName} zoom end`;
   // },
   // barDescription: function barDescription({
   //   value,

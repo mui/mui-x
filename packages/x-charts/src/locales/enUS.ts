@@ -131,17 +131,13 @@ export const enUSLocaleText: ChartsLocaleText = {
     const axisName = axisDirection === 'x' ? 'horizontal axis' : 'vertical axis';
     return `Showing ${Math.round(start)}% to ${Math.round(end)}% of the ${axisName}`;
   },
-  zoomSliderStartLabel: function zoomSliderStartLabel({ axisDirection }) {
-    return `${axisDirection === 'x' ? 'Horizontal' : 'Vertical'} axis zoom start`;
+  zoomSliderStartLabel: function zoomSliderStartLabel({ axisDirection, axisLabel }) {
+    const axisName = axisLabel ?? (axisDirection === 'x' ? 'Horizontal axis' : 'Vertical axis');
+    return `${axisName} zoom start`;
   },
-  zoomSliderEndLabel: function zoomSliderEndLabel({ axisDirection }) {
-    return `${axisDirection === 'x' ? 'Horizontal' : 'Vertical'} axis zoom end`;
-  },
-  zoomSliderRangeLabel: function zoomSliderRangeLabel({ axisDirection }) {
-    return `${axisDirection === 'x' ? 'Horizontal' : 'Vertical'} axis zoom range`;
-  },
-  zoomSliderRangeValueText: function zoomSliderRangeValueText({ start, end }) {
-    return `${start} to ${end}`;
+  zoomSliderEndLabel: function zoomSliderEndLabel({ axisDirection, axisLabel }) {
+    const axisName = axisLabel ?? (axisDirection === 'x' ? 'Horizontal axis' : 'Vertical axis');
+    return `${axisName} zoom end`;
   },
   barDescription: function barDescription({
     value,

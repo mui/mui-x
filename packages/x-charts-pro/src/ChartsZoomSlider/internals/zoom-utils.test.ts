@@ -3,6 +3,7 @@ import {
   calculateZoomEnd,
   calculateZoomStart,
   calculateZoomFromPointImpl,
+  getZoomSliderKeyboardStep,
   getZoomSliderKeyMovement,
 } from './zoom-utils';
 import type { ZoomData } from '../../models';
@@ -192,6 +193,17 @@ describe('Zoom Utils', () => {
       expect(getZoomSliderKeyMovement(press('End'), true)).to.eq(Infinity);
     });
 
+    it('should move by the given step with the arrow keys', () => {
+      expect(getZoomSliderKeyMovement(press('ArrowRight'), false, 25)).to.eq(25);
+      expect(getZoomSliderKeyMovement(press('ArrowLeft'), false, 25)).to.eq(-25);
+      expect(getZoomSliderKeyMovement(press('ArrowRight'), true, 25)).to.eq(-25);
+    });
+
+    it('should not move by less than a step with the page keys', () => {
+      expect(getZoomSliderKeyMovement(press('PageUp'), false, 25)).to.eq(25);
+      expect(getZoomSliderKeyMovement(press('PageDown'), false, 25)).to.eq(-25);
+    });
+
     it('should ignore the keys that are not bound', () => {
       expect(getZoomSliderKeyMovement(press('Enter'), false)).to.eq(null);
       expect(getZoomSliderKeyMovement(press('+'), false)).to.eq(null);
@@ -202,6 +214,31 @@ describe('Zoom Utils', () => {
       expect(getZoomSliderKeyMovement(press('ArrowRight', { altKey: true }), false)).to.eq(null);
       expect(getZoomSliderKeyMovement(press('Home', { ctrlKey: true }), false)).to.eq(null);
       expect(getZoomSliderKeyMovement(press('End', { metaKey: true }), false)).to.eq(null);
+    });
+  });
+
+  describe('getZoomSliderKeyboardStep', () => {
+    it('should be one category on a band axis', () => {
+      expect(getZoomSliderKeyboardStep({ scaleType: 'band', data: ['A', 'B', 'C', 'D'] })).to.eq(
+        25,
+      );
+    });
+
+    it('should be the distance between two points on a point axis', () => {
+      expect(getZoomSliderKeyboardStep({ scaleType: 'point', data: ['A', 'B', 'C'] })).to.eq(50);
+    });
+
+    it('should not be below 1% when the axis has many categories', () => {
+      const data = Array.from({ length: 1000 }, (_, index) => index);
+
+      expect(getZoomSliderKeyboardStep({ scaleType: 'band', data })).to.eq(1);
+    });
+
+    it('should be 1% on the other axes', () => {
+      expect(getZoomSliderKeyboardStep({ scaleType: 'linear' })).to.eq(1);
+      expect(getZoomSliderKeyboardStep({ scaleType: 'band', data: [] })).to.eq(1);
+      expect(getZoomSliderKeyboardStep({ scaleType: 'point', data: ['A'] })).to.eq(1);
+      expect(getZoomSliderKeyboardStep(undefined)).to.eq(1);
     });
   });
 });

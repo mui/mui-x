@@ -24,6 +24,7 @@ import {
   calculateZoomEnd,
   calculateZoomFromPoint,
   calculateZoomStart,
+  getZoomSliderKeyboardStep,
   getZoomSliderKeyMovement,
 } from './zoom-utils';
 import {
@@ -71,7 +72,7 @@ const ZoomSliderActiveTrackRect = styled('rect', {
 }));
 
 /**
- * Invisible HTML element laid over a part of the zoom slider, which makes it focusable and operable
+ * Invisible HTML element laid over a handle of the zoom slider, which makes it focusable and operable
  * with the keyboard. The chart SVG is hidden from assistive technologies, so the slider is exposed
  * through these elements, the same way the accessibility proxy exposes the chart items.
  * Pointer events go through it to the SVG elements below.
@@ -88,6 +89,52 @@ const ZoomSliderControl = styled('div', {
     outline: `2px solid ${(theme.vars || theme).palette.text.primary}`,
   },
 }));
+
+interface ZoomSliderHandleControlProps {
+  label: string;
+  orientation: 'horizontal' | 'vertical';
+  min: number;
+  max: number;
+  now: number;
+  /**
+   * The formatted value of the handle, announced instead of `now` when it is not empty.
+   */
+  text: string;
+  onKeyDown: React.KeyboardEventHandler<HTMLDivElement>;
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
+
+function ZoomSliderHandleControl({
+  label,
+  orientation,
+  min,
+  max,
+  now,
+  text,
+  onKeyDown,
+  left,
+  top,
+  width,
+  height,
+}: ZoomSliderHandleControlProps) {
+  return (
+    <ZoomSliderControl
+      role="slider"
+      tabIndex={0}
+      aria-label={label}
+      aria-orientation={orientation}
+      aria-valuemin={min}
+      aria-valuemax={max}
+      aria-valuenow={now}
+      aria-valuetext={text !== '' ? text : undefined}
+      onKeyDown={onKeyDown}
+      style={{ left, top, width, height }}
+    />
+  );
+}
 
 export interface ChartsAxisZoomSliderActiveTrackProps {
   axisId: AxisId;
@@ -249,48 +296,30 @@ export function ChartsAxisZoomSliderActiveTrack({
   ]);
 
   const updateZoomStart = (getNewStart: (zoom: ZoomData) => number | null) => {
-    instance.setZoomData((prevZoomData) => {
-      const zoomOptions = selectorChartAxisZoomOptionsLookup(store.state, axisId);
+    const zoomOptions = selectorChartAxisZoomOptionsLookup(store.state, axisId);
 
-      return prevZoomData.map((zoom) => {
-        if (zoom.axisId === axisId) {
-          const newStart = getNewStart(zoom);
+    instance.setAxisZoomData(axisId, (zoom) => {
+      const newStart = getNewStart(zoom);
 
-          if (newStart === null) {
-            return zoom;
-          }
-
-          return {
-            ...zoom,
-            start: calculateZoomStart(newStart, zoom, zoomOptions),
-          };
-        }
-
+      if (newStart === null) {
         return zoom;
-      });
+      }
+
+      return { ...zoom, start: calculateZoomStart(newStart, zoom, zoomOptions) };
     });
   };
 
   const updateZoomEnd = (getNewEnd: (zoom: ZoomData) => number | null) => {
-    instance.setZoomData((prevZoomData) => {
-      const zoomOptions = selectorChartAxisZoomOptionsLookup(store.state, axisId);
+    const zoomOptions = selectorChartAxisZoomOptionsLookup(store.state, axisId);
 
-      return prevZoomData.map((zoom) => {
-        if (zoom.axisId === axisId) {
-          const newEnd = getNewEnd(zoom);
+    instance.setAxisZoomData(axisId, (zoom) => {
+      const newEnd = getNewEnd(zoom);
 
-          if (newEnd === null) {
-            return zoom;
-          }
-
-          return {
-            ...zoom,
-            end: calculateZoomEnd(newEnd, zoom, zoomOptions),
-          };
-        }
-
+      if (newEnd === null) {
         return zoom;
-      });
+      }
+
+      return { ...zoom, end: calculateZoomEnd(newEnd, zoom, zoomOptions) };
     });
   };
 
@@ -318,8 +347,10 @@ export function ChartsAxisZoomSliderActiveTrack({
     updateZoomEnd(() => calculateZoomFromPoint(store.state, axisId, point));
   };
 
+  const keyboardStep = getZoomSliderKeyboardStep(axis);
+
   const onStartThumbKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const movement = getZoomSliderKeyMovement(event, reverse ?? false);
+    const movement = getZoomSliderKeyMovement(event, reverse ?? false, keyboardStep);
 
     if (movement === null) {
       return;
@@ -331,7 +362,7 @@ export function ChartsAxisZoomSliderActiveTrack({
   };
 
   const onEndThumbKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const movement = getZoomSliderKeyMovement(event, reverse ?? false);
+    const movement = getZoomSliderKeyMovement(event, reverse ?? false, keyboardStep);
 
     if (movement === null) {
       return;
@@ -339,17 +370,6 @@ export function ChartsAxisZoomSliderActiveTrack({
 
     event.preventDefault();
     updateZoomEnd((zoom) => zoom.end + movement);
-  };
-
-  const onActiveTrackKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const movement = getZoomSliderKeyMovement(event, reverse ?? false);
-
-    if (movement === null) {
-      return;
-    }
-
-    event.preventDefault();
-    instance.moveZoomRange(axisId, movement);
   };
 
   let previewX: number;
@@ -361,7 +381,7 @@ export function ChartsAxisZoomSliderActiveTrack({
   let endThumbX: number;
   let endThumbY: number;
 
-  const { minStart, maxEnd } = selectorChartAxisZoomOptionsLookup(store.state, axisId);
+  const { minStart, maxEnd, minSpan } = selectorChartAxisZoomOptionsLookup(store.state, axisId);
   const range = maxEnd - minStart;
   const zoomStart = Math.max(minStart, zoomData.start);
   const zoomEnd = Math.min(zoomData.end, maxEnd);
@@ -423,8 +443,42 @@ export function ChartsAxisZoomSliderActiveTrack({
 
   const orientation = axisDirection === 'x' ? 'horizontal' : 'vertical';
 
+  const axisLabel = axis?.label;
+  const startHandle: ZoomSliderHandleControlProps = {
+    label: localeText.zoomSliderStartLabel({ axisDirection, axisLabel }),
+    orientation,
+    min: minStart,
+    max: Math.max(zoomStart, zoomEnd - minSpan),
+    now: zoomStart,
+    text: tooltipStart,
+    onKeyDown: onStartThumbKeyDown,
+    left: x + startThumbX,
+    top: y + startThumbY,
+    width: previewThumbWidth,
+    height: previewThumbHeight,
+  };
+  const endHandle: ZoomSliderHandleControlProps = {
+    label: localeText.zoomSliderEndLabel({ axisDirection, axisLabel }),
+    orientation,
+    min: Math.min(zoomEnd, zoomStart + minSpan),
+    max: maxEnd,
+    now: zoomEnd,
+    text: tooltipEnd,
+    onKeyDown: onEndThumbKeyDown,
+    left: x + endThumbX,
+    top: y + endThumbY,
+    width: previewThumbWidth,
+    height: previewThumbHeight,
+  };
+  // The handles are in the order they appear on the screen, which is not the one of the zoom for a
+  // vertical slider: its start is at the bottom, so the focus goes top to bottom.
+  const handles =
+    axisDirection === 'y' && endThumbY < startThumbY
+      ? [endHandle, startHandle]
+      : [startHandle, endHandle];
+
   const handleBlur = (event: React.FocusEvent<HTMLDivElement>) => {
-    // The focus moving between the handles and the track stays in the slider.
+    // The focus moving between the handles stays in the slider.
     if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
       onBlur?.();
     }
@@ -489,61 +543,9 @@ export function ChartsAxisZoomSliderActiveTrack({
         ReactDOM.createPortal(
           // `display: contents` keeps the wrapper out of the layout of the layer container.
           <div style={{ display: 'contents' }} onFocus={onFocus} onBlur={handleBlur}>
-            <ZoomSliderControl
-              role="slider"
-              tabIndex={0}
-              aria-label={localeText.zoomSliderStartLabel({ axisDirection })}
-              aria-orientation={orientation}
-              aria-valuemin={minStart}
-              aria-valuemax={maxEnd}
-              aria-valuenow={zoomStart}
-              aria-valuetext={tooltipStart !== '' ? tooltipStart : undefined}
-              onKeyDown={onStartThumbKeyDown}
-              style={{
-                left: x + startThumbX,
-                top: y + startThumbY,
-                width: previewThumbWidth,
-                height: previewThumbHeight,
-              }}
-            />
-            <ZoomSliderControl
-              role="slider"
-              tabIndex={0}
-              aria-label={localeText.zoomSliderRangeLabel({ axisDirection })}
-              aria-orientation={orientation}
-              aria-valuemin={minStart}
-              aria-valuemax={maxEnd - (zoomEnd - zoomStart)}
-              aria-valuenow={zoomStart}
-              aria-valuetext={
-                tooltipStart !== '' && tooltipEnd !== ''
-                  ? localeText.zoomSliderRangeValueText({ start: tooltipStart, end: tooltipEnd })
-                  : undefined
-              }
-              onKeyDown={onActiveTrackKeyDown}
-              style={{
-                left: x + activeTrackX,
-                top: y + activeTrackY,
-                width: previewWidth,
-                height: previewHeight,
-              }}
-            />
-            <ZoomSliderControl
-              role="slider"
-              tabIndex={0}
-              aria-label={localeText.zoomSliderEndLabel({ axisDirection })}
-              aria-orientation={orientation}
-              aria-valuemin={minStart}
-              aria-valuemax={maxEnd}
-              aria-valuenow={zoomEnd}
-              aria-valuetext={tooltipEnd !== '' ? tooltipEnd : undefined}
-              onKeyDown={onEndThumbKeyDown}
-              style={{
-                left: x + endThumbX,
-                top: y + endThumbY,
-                width: previewThumbWidth,
-                height: previewThumbHeight,
-              }}
-            />
+            {handles.map((handle) => (
+              <ZoomSliderHandleControl key={handle.label} {...handle} />
+            ))}
           </div>,
           layerContainer,
         )}

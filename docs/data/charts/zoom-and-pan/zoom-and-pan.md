@@ -101,22 +101,24 @@ The zoom slider does not display values outside the range delimited by `minStart
 
 ### Keyboard
 
-The zoom slider handles and the selected range between them are focusable with the <kbd class="key">Tab</kbd> key.
-Screen readers announce them as sliders, with the axis values at the start and end of the visible range.
+The zoom slider handles are focusable with the <kbd class="key">Tab</kbd> key.
+Screen readers announce them as sliders, with the axis value at the start or the end of the visible range.
 
-|                                                                 Keys | Description                                                                                              |
-| -------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------- |
-|  <kbd class="key">Arrow Right</kbd>, <kbd class="key">Arrow Up</kbd> | Move the focused element by 1% of the axis, to the right on a horizontal slider or up on a vertical one  |
-| <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Down</kbd> | Move the focused element by 1% of the axis, to the left on a horizontal slider or down on a vertical one |
-|                                       <kbd class="key">Page Up</kbd> | Same as <kbd class="key">Arrow Up</kbd>, by 10% of the axis                                              |
-|                                     <kbd class="key">Page Down</kbd> | Same as <kbd class="key">Arrow Down</kbd>, by 10% of the axis                                            |
-|                                          <kbd class="key">Home</kbd> | Move the focused element to the start of the axis                                                        |
-|                                           <kbd class="key">End</kbd> | Move the focused element to the end of the axis                                                          |
+|                                                                 Keys | Description                                                                                             |
+| -------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------ |
+|  <kbd class="key">Arrow Right</kbd>, <kbd class="key">Arrow Up</kbd> | Move the focused handle by 1% of the axis, to the right on a horizontal slider or up on a vertical one  |
+| <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Down</kbd> | Move the focused handle by 1% of the axis, to the left on a horizontal slider or down on a vertical one |
+|                                       <kbd class="key">Page Up</kbd> | Same as <kbd class="key">Arrow Up</kbd>, by 10% of the axis                                             |
+|                                     <kbd class="key">Page Down</kbd> | Same as <kbd class="key">Arrow Down</kbd>, by 10% of the axis                                           |
+|                                          <kbd class="key">Home</kbd> | Move the focused handle to the start of the axis                                                        |
+|                                           <kbd class="key">End</kbd> | Move the focused handle to the end of the axis                                                          |
 
-A handle moves one end of the visible range, within the limits above, and the selected range moves both ends at once.
-The keys combined with a modifier are left to the [keyboard zoom and pan](#keyboard-zoom-and-pan) of the chart.
+On a band or a point axis, the arrow keys move the handle by one category instead of 1% of the axis.
+A handle stops before it makes the visible range smaller than `minSpan`.
+To pan the whole range, use <kbd class="key">Shift</kbd>+ arrow keys on the chart, as described in [Keyboard zoom and pan](#keyboard-zoom-and-pan).
 
-The accessible names of the handles and the range are customizable with the `zoomSliderStartLabel`, `zoomSliderEndLabel`, `zoomSliderRangeLabel`, and `zoomSliderRangeValueText` [localization keys](/x/react-charts/localization/#localize-text).
+The accessible names of the handles are customizable with the `zoomSliderStartLabel` and `zoomSliderEndLabel` [localization keys](/x/react-charts/localization/#localize-text).
+They receive the label of the axis, which tells the sliders of several axes apart.
 
 ### Composition
 

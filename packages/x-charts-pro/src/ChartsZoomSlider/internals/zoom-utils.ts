@@ -6,6 +6,7 @@ import {
 import type {
   AxisId,
   ChartState,
+  ComputedAxis,
   DefaultedXAxis,
   DefaultedYAxis,
   DefaultizedZoomOptions,
@@ -86,6 +87,32 @@ export function calculateZoomEnd(
 }
 
 /**
+ * The portion of the axis extent, in percent, a zoom slider handle moves by on an arrow key press.
+ *
+ * It is one category on a band or a point axis, so that every key press changes the visible range,
+ * and a fixed step on the other axes.
+ * @param {Pick<ComputedAxis, 'scaleType' | 'data'> | undefined} axis The zoomed axis.
+ * @returns {number} The step, in percent of the axis extent.
+ */
+export function getZoomSliderKeyboardStep(
+  axis: Pick<ComputedAxis, 'scaleType' | 'data'> | undefined,
+): number {
+  const length = axis?.data?.length ?? 0;
+
+  // A band axis has one band per category, whereas a point axis has one point per category with
+  // a gap between two consecutive ones.
+  if (axis?.scaleType === 'band' && length > 0) {
+    return Math.max(ZOOM_SLIDER_KEYBOARD_STEP, 100 / length);
+  }
+
+  if (axis?.scaleType === 'point' && length > 1) {
+    return Math.max(ZOOM_SLIDER_KEYBOARD_STEP, 100 / (length - 1));
+  }
+
+  return ZOOM_SLIDER_KEYBOARD_STEP;
+}
+
+/**
  * The zoom change bound to a key pressed on a zoom slider handle or track, or `null` when the key
  * is not bound.
  *
@@ -95,11 +122,13 @@ export function calculateZoomEnd(
  * Modified keys are left to the browser, and to the keyboard zoom and pan of the chart.
  * @param {Pick<KeyboardEvent, 'key' | 'altKey' | 'ctrlKey' | 'metaKey' | 'shiftKey'>} event The key press.
  * @param {boolean} reverse Whether the zoom slider is reversed.
+ * @param {number} step The change on an arrow key press, in percent of the axis extent.
  * @returns {number | null} The change to apply to the zoom, in percent of the axis extent.
  */
 export function getZoomSliderKeyMovement(
   event: Pick<KeyboardEvent, 'key' | 'altKey' | 'ctrlKey' | 'metaKey' | 'shiftKey'>,
   reverse: boolean,
+  step: number = ZOOM_SLIDER_KEYBOARD_STEP,
 ): number | null {
   if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
     return null;
@@ -109,17 +138,17 @@ export function getZoomSliderKeyMovement(
   switch (event.key) {
     case 'ArrowRight':
     case 'ArrowUp':
-      movement = ZOOM_SLIDER_KEYBOARD_STEP;
+      movement = step;
       break;
     case 'ArrowLeft':
     case 'ArrowDown':
-      movement = -ZOOM_SLIDER_KEYBOARD_STEP;
+      movement = -step;
       break;
     case 'PageUp':
-      movement = ZOOM_SLIDER_KEYBOARD_LARGE_STEP;
+      movement = Math.max(ZOOM_SLIDER_KEYBOARD_LARGE_STEP, step);
       break;
     case 'PageDown':
-      movement = -ZOOM_SLIDER_KEYBOARD_LARGE_STEP;
+      movement = -Math.max(ZOOM_SLIDER_KEYBOARD_LARGE_STEP, step);
       break;
     case 'Home':
       return -Infinity;
