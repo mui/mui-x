@@ -62,6 +62,7 @@ export interface GridColumnApi {
    * Returns the index position of a column among all columns, including the hidden ones.
    * @param {string} field The column field.
    * @returns {number} The index of the column.
+   * @deprecated Use `getColumnIndex(field, false)` instead.
    */
   getColumnIndexRelativeToVisibleColumns: (field: string) => number;
 }

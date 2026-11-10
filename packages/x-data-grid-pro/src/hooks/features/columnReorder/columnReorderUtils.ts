@@ -265,7 +265,7 @@ export function finishColumnReorder(
       // Emit the columnOrderChange event only once when the reordering stops.
       const columnOrderChangeParams: GridColumnOrderChangeParams = {
         column: draggedColumn,
-        targetIndex: apiRef.current.getColumnIndexRelativeToVisibleColumns(dragField),
+        targetIndex: apiRef.current.getColumnIndex(dragField, false),
         oldIndex: originIndex,
       };
 
