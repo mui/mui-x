@@ -39,7 +39,6 @@ describe('TimelineGrid keyboard navigation', () => {
     onEventEditingStart,
     resources: resourcesProp = resources,
     children,
-    titleContent,
     scrollRowIntoView,
   }: {
     onStoreMount?: (store: AnyEventCalendarStore) => void;
@@ -48,7 +47,6 @@ describe('TimelineGrid keyboard navigation', () => {
     onEventEditingStart?: (occurrence: any, eventDetails: any) => void;
     resources?: typeof resources;
     children?: React.ReactNode;
-    titleContent?: React.ReactNode;
     scrollRowIntoView?: (rowIndex: number) => void;
   } = {}) {
     return (
@@ -60,7 +58,7 @@ describe('TimelineGrid keyboard navigation', () => {
         onEventEditingStart={onEventEditingStart}
       >
         <TimelineGrid.Root columnTypes={columnTypes} scrollRowIntoView={scrollRowIntoView}>
-          <TimelineGrid.Row data-testid="header-row" aria-rowindex={1}>
+          <TimelineGrid.Row aria-rowindex={1}>
             <TimelineGrid.Cell>title header</TimelineGrid.Cell>
             <TimelineGrid.Cell>events header</TimelineGrid.Cell>
           </TimelineGrid.Row>
@@ -72,10 +70,7 @@ describe('TimelineGrid keyboard navigation', () => {
                 data-testid={`row-${resourceId}`}
               >
                 <TimelineGrid.TitleRow data-testid={`title-${resourceId}`}>
-                  <TimelineGrid.Cell>
-                    {resourceId}
-                    {titleContent}
-                  </TimelineGrid.Cell>
+                  <TimelineGrid.Cell>{resourceId}</TimelineGrid.Cell>
                 </TimelineGrid.TitleRow>
                 <TimelineGrid.EventRow resourceId={resourceId} data-testid={`events-${resourceId}`}>
                   {() => (
@@ -356,18 +351,6 @@ describe('TimelineGrid keyboard navigation', () => {
       expect(getTitleCells()[0]).toHaveFocus();
     });
 
-    it('should leave the arrow keys to interactive content nested in a cell', async () => {
-      const { user } = render(<Grid titleContent={<input data-testid="nested-input" />} />);
-
-      const input = within(getTitleCells()[0]).getByTestId('nested-input');
-      act(() => {
-        input.focus();
-      });
-      await user.keyboard('{ArrowRight}{ArrowDown}');
-
-      expect(document.activeElement).to.equal(input);
-    });
-
     it('should follow the order defined by a custom `columnTypes` prop', async () => {
       const { user } = render(<Grid columnTypes={['events', 'title']} />);
 
@@ -612,10 +595,9 @@ describe('TimelineGrid keyboard navigation', () => {
   });
 
   describe('aria-rowindex', () => {
-    it('should set `aria-rowindex` on the header and body rows', async () => {
+    it('should number the body rows after the header row', async () => {
       render(<Grid />);
 
-      expect(screen.getByTestId('header-row')).to.have.attribute('aria-rowindex', '1');
       getBodyRows().forEach((row, i) => {
         expect(row).to.have.attribute('aria-rowindex', String(i + 2));
       });

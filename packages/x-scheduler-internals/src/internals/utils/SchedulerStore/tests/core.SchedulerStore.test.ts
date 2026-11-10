@@ -265,6 +265,33 @@ storeClasses.forEach((storeClass) => {
         expect(store.state.errors).to.have.length(1);
       });
 
+      it('should dismiss only the error with the given key and keep the order of the others', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+
+        store.pushUserFacingError(failure);
+        const secondKey = store.pushUserFacingError(rejection);
+        store.pushUserFacingError({ code: 'eventChangedWhileConfirmingError' });
+        store.dismissError(secondKey);
+
+        expect(store.state.errors.map((entry) => entry.code)).to.deep.equal([
+          'somethingWentWrongError',
+          'eventChangedWhileConfirmingError',
+        ]);
+      });
+
+      it('should keep every error when dismissing a key that does not exist', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+
+        store.pushUserFacingError(failure);
+        store.pushUserFacingError(rejection);
+        const [first, second] = store.state.errors;
+        store.dismissError('does-not-exist');
+
+        expect(store.state.errors).to.have.length(2);
+        expect(store.state.errors[0]).to.equal(first);
+        expect(store.state.errors[1]).to.equal(second);
+      });
+
       it('should replace a transient error with the same code instead of stacking it', () => {
         const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
 

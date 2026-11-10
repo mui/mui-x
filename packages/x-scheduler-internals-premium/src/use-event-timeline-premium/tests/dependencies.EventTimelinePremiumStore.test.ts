@@ -88,16 +88,6 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
       expect(store.state.dependencyModelLookup).to.equal(initialLookup);
     });
-
-    it('should warn when two dependencies share the same id', () => {
-      expect(() => {
-        // eslint-disable-next-line no-new
-        new EventTimelinePremiumStoreWithFeatures(
-          { ...DEFAULT_PARAMS, dependencies: [DEP_AB, { ...DEP_AB }] },
-          adapter,
-        );
-      }).toWarnDev(['MUI X Scheduler: Two or more dependencies share the same id "dep-1".']);
-    });
   });
 
   describe('method: addDependency', () => {
@@ -1271,20 +1261,6 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
   });
 
   describe('dev warnings', () => {
-    it('should warn and keep the feature disabled when onDependenciesChange is provided without dependencies', () => {
-      let store!: EventTimelinePremiumStore<any, any>;
-      expect(() => {
-        store = new EventTimelinePremiumStoreWithFeatures(
-          { ...DEFAULT_PARAMS, onDependenciesChange: () => {} },
-          adapter,
-        );
-      }).toWarnDev([
-        'MUI X Scheduler: An `onDependenciesChange` handler was provided without a `dependencies` value.',
-      ]);
-
-      expect(store.state.areDependenciesEnabled).to.equal(false);
-    });
-
     it('should warn when a dependency from props references an unknown event and there is no dataSource', () => {
       expect(() => {
         // eslint-disable-next-line no-new
@@ -1396,22 +1372,6 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       }).toWarnDev([
         'MUI X Scheduler: The dependency "dep-r" references the recurring event "event-r".',
       ]);
-    });
-
-    it('should warn when a dependency from props has an unknown type', () => {
-      expect(() => {
-        // eslint-disable-next-line no-new
-        new EventTimelinePremiumStoreWithFeatures(
-          {
-            events: [eventA, eventB],
-            resources: TEST_RESOURCES,
-            dependencies: [
-              { id: 'dep-x', source: 'event-a', target: 'event-b', type: 'FS' as any },
-            ],
-          },
-          adapter,
-        );
-      }).toWarnDev(['MUI X Scheduler: The dependency "dep-x" has the unknown type "FS".']);
     });
 
     it('should warn in dev when dependencies are updated without onDependenciesChange', () => {

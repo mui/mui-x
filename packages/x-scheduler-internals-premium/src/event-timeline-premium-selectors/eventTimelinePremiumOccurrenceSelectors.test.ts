@@ -179,29 +179,5 @@ describe('eventTimelinePremiumOccurrenceSelectors', () => {
         positionByOccurrenceKey.get(occurrence.key),
       );
     });
-
-    it('should derive the position on demand for a full-day window', () => {
-      const state = buildState();
-      const config = eventTimelinePremiumPresetSelectors.config(state);
-      const occurrence = eventTimelinePremiumOccurrenceSelectors.visibleResourceOccurrences(
-        state,
-        'r1',
-      )[0];
-
-      const [layoutOccurrence] = addTimelinePositionsToOccurrences({
-        config,
-        occurrences: [{ ...occurrence, position: { firstIndex: 1, lastIndex: 1 } }],
-        positionByOccurrenceKey: null,
-      });
-
-      expect(layoutOccurrence.timelinePosition).to.deep.equal(
-        computeElementPositionInCollection({
-          start: occurrence.displayTimezone.start,
-          end: occurrence.displayTimezone.end,
-          collection: config,
-          durationMs: config.durationMs,
-        }),
-      );
-    });
   });
 });

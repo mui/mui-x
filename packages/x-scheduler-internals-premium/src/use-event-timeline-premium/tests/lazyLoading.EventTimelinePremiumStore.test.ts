@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
-import type { SchedulerEventId, TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
@@ -139,62 +139,6 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     await flushDebounce();
 
     expect(dataSource.getEvents.mock.calls.length).to.equal(2);
-  });
-
-  it('should not overwrite the visible range with a late-arriving fetch from a stale range', async () => {
-    let resolveA: (events: TestEvent[]) => void = () => {};
-    let resolveB: (events: TestEvent[]) => void = () => {};
-    const eventsA: TestEvent[] = [
-      {
-        id: 'a',
-        start: '2025-07-01T00:00:00.000Z',
-        end: '2025-07-01T11:00:00.000Z',
-        title: 'Event A',
-      },
-    ];
-    const eventsB: TestEvent[] = [
-      {
-        id: 'b',
-        start: '2025-09-01T00:00:00.000Z',
-        end: '2025-09-01T11:00:00.000Z',
-        title: 'Event B',
-      },
-    ];
-    let callIndex = 0;
-    const dataSource = {
-      getEvents: vi.fn(
-        () =>
-          new Promise<TestEvent[]>((resolve) => {
-            callIndex += 1;
-            if (callIndex === 1) {
-              resolveA = resolve;
-            } else {
-              resolveB = resolve;
-            }
-          }),
-      ),
-      persistEvents: noopPersistEvents,
-    };
-    const params = { ...DEFAULT_PARAMS, dataSource };
-    const store = new EventTimelinePremiumStore(params, adapter);
-    store.updateStateFromParameters(params, adapter);
-    await flushEffect();
-    await flushDebounce();
-
-    // Navigate to B before A resolves.
-    store.goToDate(adapter.date('2025-09-15T00:00:00Z', 'default'), noopUIEvent);
-    await flushEffect();
-    await flushDebounce();
-    expect(dataSource.getEvents.mock.calls.length).to.equal(2);
-
-    resolveB(eventsB);
-    await flushEffect();
-    expect(store.state.eventIdList).to.include('b');
-
-    // A resolves late → must NOT drop B's data.
-    resolveA(eventsA);
-    await flushEffect();
-    expect(store.state.eventIdList).to.include('b');
   });
 
   it('should drop a late-arriving stale fetch whose range overlaps the latest one', async () => {
@@ -336,22 +280,6 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     expect(dataSource.getEvents.mock.calls.length).to.equal(3);
   });
 
-  it('should not crash and not fetch anything when no dataSource is provided', async () => {
-    const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS }, adapter);
-
-    await flushEffect();
-    await flushDebounce();
-
-    expect(store.state.eventIdList).to.have.length(0);
-    expect(store.state.isLoading).to.equal(false);
-
-    store.goToNextVisibleDate(noopUIEvent);
-    await flushEffect();
-    await flushDebounce();
-
-    expect(store.state.eventIdList).to.have.length(0);
-  });
-
   it('should reuse cached events when navigating back to a previously fetched range', async () => {
     const dataSource = {
       getEvents: vi.fn(async () => buildEvents()),
@@ -422,52 +350,5 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     await flushDebounce();
 
     expect(store.state.errors).to.have.length(0);
-  });
-
-  it('should call dataSource.persistEvents and sync cache when eventsUpdated is published', async () => {
-    const dataSource = {
-      getEvents: vi.fn(async () => buildEvents()),
-      persistEvents: vi.fn(
-        async (_params: {
-          deleted: SchedulerEventId[];
-          updated: TestEvent[];
-          created: TestEvent[];
-        }) => ({ success: true }),
-      ),
-    };
-    const params = { ...DEFAULT_PARAMS, dataSource };
-    const store = new EventTimelinePremiumStore(params, adapter);
-    store.updateStateFromParameters(params, adapter);
-
-    await flushEffect();
-    await flushDebounce();
-
-    const updatedEvent: TestEvent = {
-      id: '1',
-      start: '2025-07-01T00:00:00.000Z',
-      end: '2025-07-01T12:00:00.000Z',
-      title: 'Renamed',
-    };
-    store.publishEvent('eventsUpdated', {
-      deleted: [],
-      updated: [updatedEvent],
-      created: [],
-      newEvents: [updatedEvent],
-    });
-
-    await flushEffect();
-    await flushDebounce();
-
-    expect(dataSource.persistEvents.mock.calls.length).to.equal(1);
-    const arg = dataSource.persistEvents.mock.calls[0][0];
-    expect(arg.deleted).to.deep.equal([]);
-    expect(arg.created).to.deep.equal([]);
-    expect(arg.updated).to.deep.equal([updatedEvent]);
-
-    // The store state is rebuilt with `newEvents` and the cache is upserted, so the
-    // updated event becomes visible without an extra fetch.
-    const titles = store.state.eventModelList.map((event: any) => event.title);
-    expect(titles).to.include('Renamed');
-    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
   });
 });

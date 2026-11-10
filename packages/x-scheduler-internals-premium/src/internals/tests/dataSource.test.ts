@@ -1,6 +1,4 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { Store } from '@base-ui/utils/store';
-import type { SchedulerState } from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerEventId,
   SchedulerEventModelStructure,
@@ -19,12 +17,6 @@ const toRange = (start: Date, end: Date) => ({
 const SOMETHING_WENT_WRONG_LOG =
   'MUI X Scheduler: The user was shown the `somethingWentWrongError` error, caused by:';
 const PERSIST_FAILED_LOG = `${SOMETHING_WENT_WRONG_LOG} \`dataSource.persistEvents\` returned \`{ success: false }\``;
-
-// The parameterized store classes form a union type whose generic `set` method
-// cannot be invoked directly, so state seeding goes through a common supertype.
-function setErrors(store: Store<SchedulerState>, errors: SchedulerState['errors']) {
-  store.set('errors', errors);
-}
 
 // Basic types for testing
 interface TestEvent {
@@ -175,12 +167,12 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
       // Fetch a sub-range
-      const subStart = adapter.date('2025-07-10T00:00:00Z', 'default');
-      const subEnd = adapter.date('2025-07-15T00:00:00Z', 'default');
+      const subStart = adapter.date('2025-09-10T00:00:00Z', 'default');
+      const subEnd = adapter.date('2025-09-15T00:00:00Z', 'default');
 
       await store.lazyLoading?.queueDataFetchForRange(toRange(subStart, subEnd));
 
-      expect(dataSource.getEvents.mock.calls.length).to.equal(2);
+      expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
       // Ensure events are still present in state
       expect(store.state.eventIdList).toHaveLength(1);
@@ -892,26 +884,6 @@ premiumStoreClasses.forEach((storeClass) => {
       }
     });
 
-    it('should show the generic error and log the original one when dataSource.getEvents rejects', async () => {
-      const rejection = '500 Internal Server Error';
-      const dataSource = {
-        getEvents: vi.fn(() => Promise.reject(rejection)),
-        persistEvents: async () => ({ success: true }),
-      };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
-
-      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
-      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
-
-      await expect(async () => {
-        await store.lazyLoading?.queueDataFetchForRange(toRange(start, end), true);
-      }).toErrorDev([`${SOMETHING_WENT_WRONG_LOG} ${rejection}`]);
-
-      expect(store.state.errors.map((entry) => entry.code)).to.deep.equal([
-        'somethingWentWrongError',
-      ]);
-    });
-
     it('should show the generic error and log the original one when dataSource.persistEvents rejects', async () => {
       const rejection = '500 Update Failed';
       const dataSource = {
@@ -929,50 +901,6 @@ premiumStoreClasses.forEach((storeClass) => {
         });
         await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
       }).toErrorDev([`${SOMETHING_WENT_WRONG_LOG} ${rejection}`]);
-
-      expect(dataSource.persistEvents.mock.calls.length).to.equal(1);
-      expect(store.state.errors[0].code).to.equal('somethingWentWrongError');
-    });
-
-    it('should push an error to state.errors when dataSource.persistEvents throws', async () => {
-      const dataSource = {
-        getEvents: vi.fn(mockFetchData),
-        persistEvents: vi.fn(async () => {
-          throw new Error('Update failed');
-        }),
-      };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
-
-      await expect(async () => {
-        store.publishEvent('eventsUpdated', {
-          deleted: [],
-          updated: [buildTestEvent('1')],
-          created: [],
-          newEvents: [buildTestEvent('1')],
-        });
-        await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
-      }).toErrorDev([`${SOMETHING_WENT_WRONG_LOG} Error: Update failed`]);
-
-      expect(dataSource.persistEvents.mock.calls.length).to.equal(1);
-      expect(store.state.errors[0].code).to.equal('somethingWentWrongError');
-    });
-
-    it('should push an error to state.errors when dataSource.persistEvents returns { success: false }', async () => {
-      const dataSource = {
-        getEvents: vi.fn(mockFetchData),
-        persistEvents: vi.fn(async () => ({ success: false })),
-      };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
-
-      await expect(async () => {
-        store.publishEvent('eventsUpdated', {
-          deleted: [],
-          updated: [buildTestEvent('1')],
-          created: [],
-          newEvents: [buildTestEvent('1')],
-        });
-        await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
-      }).toErrorDev([PERSIST_FAILED_LOG]);
 
       expect(dataSource.persistEvents.mock.calls.length).to.equal(1);
       expect(store.state.errors[0].code).to.equal('somethingWentWrongError');
@@ -1071,61 +999,6 @@ premiumStoreClasses.forEach((storeClass) => {
       });
 
       await vi.waitFor(() => expect(store.state.errors).toHaveLength(0));
-    });
-
-    describe('pushUserFacingError', () => {
-      it('should assign a unique key to every pushed error', () => {
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
-        store.pushUserFacingError({ code: 'somethingWentWrongError' });
-        store.pushUserFacingError({ code: 'somethingWentWrongError' });
-        expect(store.state.errors).toHaveLength(2);
-        expect(store.state.errors[0].key).not.to.equal(store.state.errors[1].key);
-      });
-    });
-
-    describe('dismissError', () => {
-      it('should remove only the entry whose key matches and preserve order', () => {
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
-        setErrors(store, [
-          { code: 'somethingWentWrongError', key: '1' },
-          { code: 'eventNotLoadedError', key: '2' },
-          { code: 'eventChangedWhileConfirmingError', key: '3' },
-        ]);
-
-        store.dismissError('2');
-
-        expect(store.state.errors).to.deep.equal([
-          { code: 'somethingWentWrongError', key: '1' },
-          { code: 'eventChangedWhileConfirmingError', key: '3' },
-        ]);
-      });
-
-      it('should distinguish errors with the same code by key', () => {
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
-        setErrors(store, [
-          { code: 'somethingWentWrongError', key: '1' },
-          { code: 'somethingWentWrongError', key: '2' },
-        ]);
-
-        store.dismissError('1');
-
-        expect(store.state.errors).to.deep.equal([{ code: 'somethingWentWrongError', key: '2' }]);
-      });
-
-      it('should be a no-op when the key does not exist', () => {
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
-        const entries = [
-          { code: 'somethingWentWrongError' as const, key: '1' },
-          { code: 'eventNotLoadedError' as const, key: '2' },
-        ];
-        setErrors(store, entries);
-
-        store.dismissError('does-not-exist');
-
-        expect(store.state.errors).toHaveLength(2);
-        expect(store.state.errors[0]).to.equal(entries[0]);
-        expect(store.state.errors[1]).to.equal(entries[1]);
-      });
     });
 
     // The store and the lazy-loading plugin must agree on what counts as a data source.

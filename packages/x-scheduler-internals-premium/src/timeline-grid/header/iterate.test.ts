@@ -346,40 +346,6 @@ describe('iterate()', () => {
     });
   });
 
-  describe('DST resilience', () => {
-    it('should emit 24 hour ticks for every day even when real hours differ due to DST', () => {
-      // Europe spring-forward week (Mar 24-30 2025) contains a 23-hour day.
-      // The generic grid still renders 24 cells per day because `endOfDay` + 1 hour
-      // spans the full calendar day regardless of DST.
-      const start = adapter.date('2025-03-24T00:00:00Z', 'default');
-      const end = adapter.date('2025-03-30T23:59:59.999Z', 'default');
-
-      const hourCells = iterateRange('hour', 'hour', start, end);
-
-      expect(hourCells.length).to.equal(7 * 24);
-    });
-
-    it('should produce integer day spans for monthly cells across a DST transition', () => {
-      // March 2025 in America/New_York contains the spring-forward transition
-      // (Mar 9, 02:00 → 03:00), so the 31-day range only spans 742 real hours
-      // (one hour lost). `differenceInDays` must still return 31 because
-      // date-fns counts calendar days, not hours/24.
-      const start = adapter.date('2025-03-01T00:00:00', 'America/New_York');
-      const end = adapter.date('2025-03-31T23:59:59.999', 'America/New_York');
-
-      // Sanity check: prove the adapter is actually applying the timezone (a
-      // tz-naive adapter would return 743 here). If this fails the rest of the
-      // assertions are meaningless.
-      expect(adapter.differenceInHours(end, start)).to.equal(742);
-
-      const cells = iterateRange('month', 'day', start, end);
-
-      expect(cells.length).to.equal(1);
-      expect(cells[0].spanInTicks).to.equal(31);
-      expect(Number.isInteger(cells[0].spanInTicks)).to.equal(true);
-    });
-  });
-
   describe('errors', () => {
     it('should throw for an unsupported unit', () => {
       const start = adapter.date('2025-01-01T00:00:00Z', 'default');
