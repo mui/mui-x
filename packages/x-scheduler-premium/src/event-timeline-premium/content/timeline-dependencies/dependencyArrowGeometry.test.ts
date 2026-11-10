@@ -57,6 +57,7 @@ describe('dependencyArrowGeometry', () => {
       expect(arrows[0].maxXFraction).to.equal(780 / EVENTS_WIDTH);
       expect(arrows[0].minRowIndex).to.equal(0);
       expect(arrows[0].maxRowIndex).to.equal(0);
+      expect(arrows[0].targetEdge).to.equal('start');
     });
 
     it('should build the path and the hit-area lazily', () => {
@@ -72,18 +73,6 @@ describe('dependencyArrowGeometry', () => {
 
       expect(Object.getOwnPropertyDescriptor(arrows[0], 'd')!.get).to.be.a('function');
       expect(Object.getOwnPropertyDescriptor(arrows[0], 'hitD')!.get).to.be.a('function');
-    });
-
-    it('should expose the start edge as the target edge of a FinishToStart arrow', () => {
-      const arrows = computeDependencyArrows(
-        buildResolver({
-          resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventB]) }],
-          rowPositions: [0],
-        }),
-        [buildDependency('dep-1', 'event-a', 'event-b')],
-      );
-
-      expect(arrows[0].targetEdge).to.equal('start');
     });
 
     it('should connect the end edges of both events for a FinishToFinish dependency', () => {

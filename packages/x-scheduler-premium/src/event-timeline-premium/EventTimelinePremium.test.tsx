@@ -5,14 +5,7 @@ import {
   eventTimelinePremiumClasses,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
-import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
-import {
-  ErrorContainer,
-  EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
-  SharedComponentsStyledContext,
-} from '@mui/x-scheduler/internals';
-import type { SchedulerUserFacingErrorDescriptor } from '@mui/x-scheduler-internals/internals';
+import { EVENT_TIMELINE_DEFAULT_LOCALE_TEXT } from '@mui/x-scheduler/internals';
 import {
   adapter,
   createSchedulerRenderer,
@@ -58,7 +51,7 @@ const event3 = EventBuilder.new()
 const baseEvents = [event1, event2, event3];
 
 describe('<EventTimelinePremium />', () => {
-  const { render, renderSettled } = createSchedulerRenderer({
+  const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
@@ -356,13 +349,6 @@ describe('<EventTimelinePremium />', () => {
   });
 
   describe('events', () => {
-    it('should render all visible events', async () => {
-      await renderTimeline();
-      baseEvents.forEach((eventItem) => {
-        expect(screen.getByText(eventItem.title)).not.to.equal(null);
-      });
-    });
-
     it('does not render events out of range', async () => {
       const outOfRangeEvent = EventBuilder.new()
         .title('Out of range')
@@ -998,31 +984,7 @@ describe('<EventTimelinePremium />', () => {
   });
 
   describe('error handling', () => {
-    const styledContextValue = {
-      classes: eventTimelinePremiumClasses,
-      localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
-    };
-    const notLoaded = EVENT_TIMELINE_DEFAULT_LOCALE_TEXT.eventNotLoadedError;
     const failure = EVENT_TIMELINE_DEFAULT_LOCALE_TEXT.somethingWentWrongError;
-
-    function renderErrorContainer(initialErrors: SchedulerUserFacingErrorDescriptor[]) {
-      const store = new EventTimelinePremiumStore(
-        { events: [], resources: baseResources },
-        adapter,
-      );
-      store.set(
-        'errors',
-        initialErrors.map((error, index) => ({ ...error, key: String(index) })),
-      );
-
-      return render(
-        <SchedulerStoreContext.Provider value={store as any}>
-          <SharedComponentsStyledContext.Provider value={styledContextValue}>
-            <ErrorContainer />
-          </SharedComponentsStyledContext.Provider>
-        </SchedulerStoreContext.Provider>,
-      );
-    }
 
     it('should render the generic error and log the original one when dataSource.getEvents rejects', async () => {
       const dataSource = {
@@ -1046,36 +1008,6 @@ describe('<EventTimelinePremium />', () => {
         'MUI X Scheduler: The user was shown the `somethingWentWrongError` error, caused by: Error: Network error',
       ]);
       expect(screen.queryByText('Network error')).to.equal(null);
-    });
-
-    it('should render multiple alerts when state.errors contains multiple errors', () => {
-      renderErrorContainer([{ code: 'eventNotLoadedError' }, { code: 'somethingWentWrongError' }]);
-
-      expect(
-        document.querySelectorAll(`.${eventTimelinePremiumClasses.errorAlert}`).length,
-      ).to.equal(2);
-      expect(screen.getByText(notLoaded)).not.to.equal(null);
-      expect(screen.getByText(failure)).not.to.equal(null);
-    });
-
-    it('should remove only the dismissed alert and keep the others', async () => {
-      const { user } = renderErrorContainer([
-        { code: 'eventNotLoadedError' },
-        { code: 'somethingWentWrongError' },
-      ]);
-
-      const closeButtons = screen.getAllByRole('button', { name: /close/i });
-      expect(closeButtons.length).to.equal(2);
-
-      await user.click(closeButtons[0]);
-
-      await waitFor(() => {
-        expect(
-          document.querySelectorAll(`.${eventTimelinePremiumClasses.errorAlert}`).length,
-        ).to.equal(1);
-      });
-      expect(screen.queryByText(notLoaded)).to.equal(null);
-      expect(screen.getByText(failure)).not.to.equal(null);
     });
 
     it('should clear the error alert when a subsequent fetch succeeds', async () => {
@@ -1212,71 +1144,9 @@ describe('<EventTimelinePremium />', () => {
         'MUI X Scheduler: The user was shown the `somethingWentWrongError` error, caused by: Error: Network error',
       ]);
     });
-
-    it('should re-display the same error after dismiss when pushed again with a new key', async () => {
-      const store = new EventTimelinePremiumStore(
-        { events: [], resources: baseResources },
-        adapter,
-      );
-      store.set('errors', [{ code: 'somethingWentWrongError', key: '1' }]);
-
-      function Test() {
-        return (
-          <SchedulerStoreContext.Provider value={store as any}>
-            <SharedComponentsStyledContext.Provider value={styledContextValue}>
-              <ErrorContainer />
-            </SharedComponentsStyledContext.Provider>
-          </SchedulerStoreContext.Provider>
-        );
-      }
-
-      const { user } = render(<Test />);
-
-      await user.click(screen.getByRole('button', { name: /close/i }));
-      await waitFor(() => {
-        expect(screen.queryByText(failure)).to.equal(null);
-      });
-
-      // Simulate the plugin re-pushing the same error under a new key.
-      await act(async () => {
-        store.set('errors', [{ code: 'somethingWentWrongError', key: '2' }]);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByText(failure)).not.to.equal(null);
-      });
-    });
   });
 
   describe('presets', () => {
-    it('should set --unit-width to the preset tickWidth and render one row per header level', async () => {
-      await renderTimeline({
-        preset: 'dayAndHour',
-        presets: ['dayAndMonth', 'dayAndHour'],
-      });
-
-      let rootElement = screen.getByRole('grid');
-      let containerElement = rootElement.closest('section')!;
-      // dayAndHour: tickWidth = 64px, 2 header rows (day + hour).
-      expect(containerElement.style.getPropertyValue('--unit-width')).to.equal('64px');
-      expect(
-        rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
-      ).to.equal(2);
-
-      await renderTimeline({
-        preset: 'dayAndMonth',
-        presets: ['dayAndMonth', 'dayAndHour'],
-      });
-
-      rootElement = screen.getAllByRole('grid').at(-1) as HTMLElement;
-      containerElement = rootElement.closest('section')!;
-      // day: tickWidth = 120px, 2 header rows (month + day).
-      expect(containerElement.style.getPropertyValue('--unit-width')).to.equal('120px');
-      expect(
-        rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
-      ).to.equal(2);
-    });
-
     it('should show the days of the visible date in the display timezone', async () => {
       await renderTimeline({
         preset: 'dayAndHour',

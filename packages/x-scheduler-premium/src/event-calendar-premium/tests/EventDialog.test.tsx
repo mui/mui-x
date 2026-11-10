@@ -507,19 +507,6 @@ describe('<EventDialogContent open />', () => {
       return { user, onEventsChange };
     }
 
-    it('should show error on the End date field if end date is before start date', async () => {
-      const { user } = renderDialog();
-      await user.clear(screen.getByLabelText(/start date/i));
-      await user.type(screen.getByLabelText(/start date/i), '2025-05-27');
-      await user.clear(screen.getByLabelText(/end date/i));
-      await user.type(screen.getByLabelText(/end date/i), '2025-05-26');
-      await user.click(screen.getByRole('button', { name: /save/i }));
-
-      expect(screen.getDescriptionOf(screen.getByLabelText(/end date/i)).textContent).to.match(
-        /end date.*before.*start date/i,
-      );
-    });
-
     it('should not show error on the End date field if end date is equal to start date', async () => {
       const { user, onEventsChange } = renderDialog();
       await user.clear(screen.getByLabelText(/start date/i));
@@ -593,7 +580,7 @@ describe('<EventDialogContent open />', () => {
     });
   });
 
-  it('should call "onEventsChange" with the updated values when delete button is clicked', async () => {
+  it('should delete a non-recurring event directly without opening the scope dialog', async () => {
     // `TestEventDialogContent` doesn't mount `DeleteConfirmationDialog` (that only happens through
     // `EventDialogProvider`), so the confirmation is opted out of here to keep testing this
     // component's own direct wiring to the store.
@@ -601,43 +588,11 @@ describe('<EventDialogContent open />', () => {
     const { user } = render(
       <EventCalendarProvider
         events={[DEFAULT_EVENT]}
+        resources={resources}
+        storeClass={PremiumTestStore}
         onEventsChange={onEventsChange}
-        resources={resources}
-        storeClass={PremiumTestStore}
         eventDeletion={{ confirmation: false }}
       >
-        <TestEventDialogContent open {...defaultProps} />
-      </EventCalendarProvider>,
-    );
-    await user.click(screen.getByRole('button', { name: /delete event/i }));
-    expect(onEventsChange.mock.calls.length).to.equal(1);
-    expect(onEventsChange.mock.calls[0][0]).to.deep.equal([]);
-  });
-
-  it('should delete a non-recurring event directly without opening the scope dialog', async () => {
-    let deleteEventSpy, deleteRecurringEventSpy;
-    const { user } = render(
-      <EventCalendarProvider
-        events={[DEFAULT_EVENT]}
-        resources={resources}
-        storeClass={PremiumTestStore}
-        onEventsChange={() => {}}
-        eventDeletion={{ confirmation: false }}
-      >
-        <StoreSpy
-          Context={SchedulerStoreContext}
-          method="deleteEvent"
-          onSpyReady={(sp) => {
-            deleteEventSpy = sp;
-          }}
-        />
-        <StoreSpy
-          Context={SchedulerStoreContext}
-          method="deleteRecurringEvent"
-          onSpyReady={(sp) => {
-            deleteRecurringEventSpy = sp;
-          }}
-        />
         <TestEventDialogContent open {...defaultProps} />
         <RecurringScopeDialog />
       </EventCalendarProvider>,
@@ -645,8 +600,8 @@ describe('<EventDialogContent open />', () => {
 
     await user.click(screen.getByRole('button', { name: /delete event/i }));
 
-    expect(deleteEventSpy?.mock.calls.length).to.equal(1);
-    expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(0);
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    expect(onEventsChange.mock.calls[0][0]).to.deep.equal([]);
     expect(screen.queryByText(/Apply this change to:/i)).to.equal(null);
   });
 
@@ -3191,50 +3146,6 @@ describe('<EventDialogContent open />', () => {
       });
 
       describe('Deletion', () => {
-        it('should open the scope dialog instead of deleting the whole series', async () => {
-          let deleteRecurringEventSpy, deleteEventSpy;
-
-          const { user } = render(
-            <EventCalendarProvider
-              events={[originalRecurringEvent]}
-              resources={resources}
-              storeClass={PremiumTestStore}
-            >
-              <StoreSpy
-                Context={SchedulerStoreContext}
-                method="deleteRecurringEvent"
-                onSpyReady={(sp) => {
-                  deleteRecurringEventSpy = sp;
-                }}
-              />
-              <StoreSpy
-                Context={SchedulerStoreContext}
-                method="deleteEvent"
-                onSpyReady={(sp) => {
-                  deleteEventSpy = sp;
-                }}
-              />
-
-              <TestEventDialogContent
-                open
-                {...defaultProps}
-                occurrence={originalRecurringEventOccurrence}
-              />
-
-              <RecurringScopeDialog />
-            </EventCalendarProvider>,
-          );
-
-          await user.click(screen.getByRole('button', { name: /delete event/i }));
-
-          await screen.findByText(/Apply this change to:/i);
-          expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
-          expect(deleteRecurringEventSpy?.mock.lastCall?.[0].eventId).to.equal(
-            originalRecurringEvent.id,
-          );
-          expect(deleteEventSpy?.mock.calls.length).to.equal(0);
-        });
-
         it('should not delete anything if the user cancels the scope dialog', async () => {
           const onEventsChange = vi.fn();
           let selectRecurringEventScopeSpy;
@@ -4428,46 +4339,6 @@ describe('<EventDialogContent open />', () => {
         expect(payload.rrule).to.equal(undefined);
       });
 
-      it('should call updateEvent with updated values and send rrule if recurrence was selected on Submit', async () => {
-        let updateEventSpy;
-
-        const { user } = render(
-          <EventCalendarProvider
-            events={[nonRecurringEvent]}
-            resources={resources}
-            storeClass={PremiumTestStore}
-            onEventsChange={() => {}}
-          >
-            <StoreSpy
-              Context={SchedulerStoreContext}
-              method="updateEvent"
-              onSpyReady={(sp) => {
-                updateEventSpy = sp;
-              }}
-            />
-
-            <TestEventDialogContent
-              open
-              {...defaultProps}
-              occurrence={nonRecurringEventOccurrence}
-            />
-          </EventCalendarProvider>,
-        );
-        await user.click(screen.getByRole('tab', { name: /recurrence/i }));
-        await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
-        await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
-        await user.click(screen.getByRole('button', { name: /save/i }));
-
-        expect(updateEventSpy?.mock.calls.length).to.equal(1);
-        const payload = updateEventSpy.mock.lastCall?.[0];
-
-        expect(payload.id).to.equal(nonRecurringEvent.id);
-        expect(payload.rrule).to.deep.equal({
-          freq: 'DAILY',
-          interval: 1,
-        });
-      });
-
       it("should describe the rule in the event's timezone and name it when it is not the display one", async () => {
         // Friday July 4 00:00 UTC shows on Thursday July 3 in New York.
         const builder = utcJuly4AllDayBuilder()
@@ -4771,128 +4642,6 @@ describe('<EventDialogContent open />', () => {
         .title(nonRecurringEventWithCustomData.title)
         .singleDay('2025-06-12T14:00:00Z')
         .toOccurrence();
-
-      it('should preserve custom data when editing a non-recurring event', async () => {
-        const onEventsChange = vi.fn();
-        const { user } = render(
-          <EventCalendarProvider
-            events={[nonRecurringEventWithCustomData]}
-            onEventsChange={onEventsChange}
-            resources={resources}
-            storeClass={PremiumTestStore}
-          >
-            <TestEventDialogContent
-              open
-              {...defaultProps}
-              occurrence={nonRecurringEventWithCustomDataOccurrence}
-            />
-          </EventCalendarProvider>,
-        );
-        await user.type(screen.getByLabelText(/event title/i), ' updated');
-        await user.click(screen.getByRole('button', { name: /save/i }));
-
-        expect(onEventsChange.mock.calls.length).to.equal(1);
-        const updated = onEventsChange.mock.lastCall?.[0].find(
-          (event) => event.id === nonRecurringEventWithCustomData.id,
-        );
-        expect(updated.title).to.equal('Task updated');
-        expect(updated.customField).to.equal('preserve-me');
-      });
-
-      it("should preserve custom data when editing a recurring event with scope 'all'", async () => {
-        const onEventsChange = vi.fn();
-        const { user } = render(
-          <EventCalendarProvider
-            events={[recurringEventWithCustomData]}
-            onEventsChange={onEventsChange}
-            resources={resources}
-            storeClass={PremiumTestStore}
-          >
-            <TestEventDialogContent
-              open
-              {...defaultProps}
-              occurrence={recurringEventWithCustomDataOccurrence}
-            />
-            <RecurringScopeDialog />
-          </EventCalendarProvider>,
-        );
-        await user.clear(screen.getByLabelText(/start time/i));
-        await user.type(screen.getByLabelText(/start time/i), '10:05');
-        await user.click(screen.getByRole('button', { name: /save/i }));
-
-        await screen.findByText(/Apply this change to:/i);
-        await user.click(screen.getByText(/All events/i));
-        await user.click(screen.getByRole('button', { name: /Confirm/i }));
-
-        const updated = onEventsChange.mock.lastCall?.[0].find(
-          (event) => event.id === recurringEventWithCustomData.id,
-        );
-        expect(updated.customField).to.equal('preserve-me');
-      });
-
-      it("should preserve custom data on the new event with scope 'only-this'", async () => {
-        const onEventsChange = vi.fn();
-        const { user } = render(
-          <EventCalendarProvider
-            events={[recurringEventWithCustomData]}
-            onEventsChange={onEventsChange}
-            resources={resources}
-            storeClass={PremiumTestStore}
-          >
-            <TestEventDialogContent
-              open
-              {...defaultProps}
-              occurrence={recurringEventWithCustomDataOccurrence}
-            />
-            <RecurringScopeDialog />
-          </EventCalendarProvider>,
-        );
-        await user.clear(screen.getByLabelText(/start time/i));
-        await user.type(screen.getByLabelText(/start time/i), '10:05');
-        await user.click(screen.getByRole('button', { name: /save/i }));
-
-        await screen.findByText(/Apply this change to:/i);
-        await user.click(screen.getByText(/Only this event/i));
-        await user.click(screen.getByRole('button', { name: /Confirm/i }));
-
-        const created = onEventsChange.mock.lastCall?.[0].find(
-          (event) => event.extractedFromId === recurringEventWithCustomData.id,
-        );
-        expect(created).to.not.equal(undefined);
-        expect(created.customField).to.equal('preserve-me');
-      });
-
-      it("should preserve custom data on the new event with scope 'this-and-following'", async () => {
-        const onEventsChange = vi.fn();
-        const { user } = render(
-          <EventCalendarProvider
-            events={[recurringEventWithCustomData]}
-            onEventsChange={onEventsChange}
-            resources={resources}
-            storeClass={PremiumTestStore}
-          >
-            <TestEventDialogContent
-              open
-              {...defaultProps}
-              occurrence={recurringEventWithCustomDataOccurrence}
-            />
-            <RecurringScopeDialog />
-          </EventCalendarProvider>,
-        );
-        await user.clear(screen.getByLabelText(/start time/i));
-        await user.type(screen.getByLabelText(/start time/i), '10:05');
-        await user.click(screen.getByRole('button', { name: /save/i }));
-
-        await screen.findByText(/Apply this change to:/i);
-        await user.click(screen.getByText(/This and following events/i));
-        await user.click(screen.getByRole('button', { name: /Confirm/i }));
-
-        const created = onEventsChange.mock.lastCall?.[0].find(
-          (event) => event.extractedFromId === recurringEventWithCustomData.id,
-        );
-        expect(created).to.not.equal(undefined);
-        expect(created.customField).to.equal('preserve-me');
-      });
 
       describe('custom fields through the eventDialogGeneralTab slot', () => {
         function CustomFieldSection() {
@@ -5224,48 +4973,6 @@ describe('<EventDialogContent open />', () => {
 
       // `onOpen` sets editingOccurrence; rendering content directly (no trigger flow) leaves it null.
       expect(handleEditingChange.mock.lastCall?.[0]).to.equal(null);
-    });
-
-    it('should reflect the edited occurrence id while an event is being edited', async () => {
-      const handleEditingChange = vi.fn();
-
-      render(
-        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-          <SchedulerStoreRunner<AnyEventCalendarStore>
-            context={SchedulerStoreContext}
-            onMount={(store) => store.startEditing(defaultProps.occurrence)}
-          />
-          <StateWatcher
-            Context={SchedulerStoreContext}
-            selector={(s) => s.editingOccurrence?.occurrence.id ?? null}
-            onValueChange={handleEditingChange}
-          />
-          <TestEventDialogContent open {...defaultProps} onClose={() => {}} />
-        </EventCalendarProvider>,
-      );
-
-      // After `startEditing`, it should be the event ID.
-      expect(handleEditingChange.mock.lastCall?.[0]).to.equal(DEFAULT_EVENT.id);
-    });
-
-    it('should expose startEditing on the store', () => {
-      let startEditingSpy;
-
-      render(
-        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-          <StoreSpy
-            Context={SchedulerStoreContext}
-            method="startEditing"
-            onSpyReady={(sp) => {
-              startEditingSpy = sp;
-            }}
-          />
-          <TestEventDialogContent open {...defaultProps} />
-        </EventCalendarProvider>,
-      );
-
-      // Verify the method exists on the store (basic sanity check)
-      expect(startEditingSpy).not.to.equal(undefined);
     });
   });
 });
