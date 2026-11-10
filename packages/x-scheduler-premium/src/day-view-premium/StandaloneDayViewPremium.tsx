@@ -9,7 +9,7 @@ import {
 } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import { DayView } from '@mui/x-scheduler/day-view';
 import { EventCalendarProvider, EventDialogProvider } from '@mui/x-scheduler/internals';
-import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
+import { useFrozenEventCalendarPremiumFeatures } from '../event-calendar-premium/features/useFrozenEventCalendarPremiumFeatures';
 import type { StandaloneDayViewPremiumProps } from './DayViewPremium.types';
 
 const packageInfo = {
@@ -40,17 +40,22 @@ const StandaloneDayViewPremium = React.forwardRef(function StandaloneDayViewPrem
     typeof props
   >(props);
 
-  const { localeText, slots, slotProps, ...other } = forwardedProps;
+  const { localeText, slots, slotProps, features: featuresProp, ...other } = forwardedProps;
+  const { features, storeFeatures } = useFrozenEventCalendarPremiumFeatures(
+    featuresProp,
+    'StandaloneDayViewPremium',
+  );
+  const storeParameters = { ...parameters, storeFeatures };
 
   return (
     <EventCalendarProvider
-      {...parameters}
+      {...storeParameters}
       storeClass={EventCalendarPremiumStore}
       localeText={localeText}
       slots={slots}
       slotProps={slotProps}
     >
-      <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
+      <EventDialogProvider optionalRenderers={features.recurringEvents?.optionalRenderers}>
         <DayView ref={forwardedRef} {...other} />
         {watermark}
       </EventDialogProvider>
@@ -211,6 +216,12 @@ StandaloneDayViewPremium.propTypes /* remove-proptypes */ = {
    * @default []
    */
   events: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * The optional features of the view: `recurringEvents` from `@mui/x-scheduler-premium/recurring-events`.
+   * They are read once when the component mounts, later changes are ignored.
+   * @example { recurringEvents: recurringEventsFeature }
+   */
+  features: PropTypes.object,
   /**
    * Set the locale text of the view.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)

@@ -16,6 +16,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
 } from 'test/utils/scheduler';
 import { StandaloneDayViewPremium } from '@mui/x-scheduler-premium/day-view-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 /**
@@ -51,6 +52,7 @@ describe('StandaloneDayViewPremium - anchored toolbar (recurring resize)', () =>
     const [events, setEvents] = React.useState<SchedulerEvent[]>([initialEvent]);
     return (
       <StandaloneDayViewPremium
+        features={{ recurringEvents: recurringEventsFeature }}
         events={events}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
         onEventsChange={setEvents}

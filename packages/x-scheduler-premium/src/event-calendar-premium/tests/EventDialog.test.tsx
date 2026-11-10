@@ -2938,7 +2938,10 @@ describe('<EventDialogContent open />', () => {
 
         const { user } = render(
           <EventCalendarProvider
-            {...({ dataSource } as {})}
+            {...({
+              dataSource,
+              storeFeatures: { recurringEvents: schedulerRecurringEventsPlugin },
+            } as {})}
             resources={resources}
             storeClass={EventCalendarPremiumStore}
           >

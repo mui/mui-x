@@ -23,7 +23,7 @@ const dailyEvent = EventBuilder.new()
   .recurrent('DAILY')
   .build();
 
-const FEATURE_WARNING = 'with the `recurringEvents` feature';
+const FEATURE_WARNING = 'Recurring events are not enabled';
 const DEPENDENCIES_FEATURE_WARNING = 'the dependencies feature is missing';
 
 const predecessor = EventBuilder.new()

@@ -1,6 +1,9 @@
 import * as React from 'react';
 import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
+
+const features = { recurringEvents: recurringEventsFeature };
 
 const defaultVisibleDate = new Date('2025-07-01T00:00:00');
 
@@ -42,6 +45,7 @@ export default function EventDialog() {
   return (
     <div style={{ height: '600px', width: '100%' }}>
       <EventCalendarPremium
+        features={features}
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}

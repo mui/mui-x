@@ -990,7 +990,7 @@ storeClasses.forEach((storeClass) => {
               adapter,
             );
           }).toWarnDev([
-            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+            'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
           ]);
 
           expect(() => {
@@ -1012,7 +1012,7 @@ storeClasses.forEach((storeClass) => {
               adapter,
             );
           }).toWarnDev([
-            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+            'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
           ]);
 
           store.updateEvent({ id: event.id, title: 'updated', rrule: { freq: 'WEEKLY' } });
@@ -1140,7 +1140,7 @@ storeClasses.forEach((storeClass) => {
               adapter,
             );
           }).toWarnDev([
-            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+            'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
           ]);
 
           // The rule is ignored without the plugin, so there is no scope to ask for.
@@ -1165,7 +1165,7 @@ storeClasses.forEach((storeClass) => {
               adapter,
             );
           }).toWarnDev([
-            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+            'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
           ]);
 
           // No plugin to open a scope dialog with, so this goes through the confirmation dialog
