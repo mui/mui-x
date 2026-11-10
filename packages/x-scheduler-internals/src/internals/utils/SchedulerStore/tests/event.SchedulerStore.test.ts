@@ -1007,6 +1007,28 @@ storeClasses.forEach((storeClass) => {
         },
       );
 
+      it.skipIf(storeClass.name !== 'EventCalendarStore')(
+        'should warn and ignore the rrule of the changes of a non-recurring event without the recurring events plugin',
+        () => {
+          const onEventsChange = vi.fn();
+          const event = EventBuilder.new().build();
+          const store = new storeClass.Value(
+            { resources: TEST_RESOURCES, events: [event], onEventsChange },
+            adapter,
+          );
+
+          expect(() => {
+            store.updateEvent({ id: event.id, title: 'updated', rrule: 'FREQ=DAILY' });
+          }).toWarnDev([
+            'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
+          ]);
+
+          const updated = onEventsChange.mock.lastCall?.[0][0];
+          expect(updated.title).to.equal('updated');
+          expect(updated.rrule).to.equal(undefined);
+        },
+      );
+
       it('should warn in dev when the same id is in both `deleted` and `updated`', () => {
         const event = EventBuilder.new().build();
         const store = new storeClass.Value(
@@ -1540,6 +1562,28 @@ storeClasses.forEach((storeClass) => {
         expect(onEventsChange.mock.calls.length).to.equal(1);
         expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([{ ...newEvent, id: createdId }]);
       });
+
+      it.skipIf(storeClass.name !== 'EventCalendarStore')(
+        'should warn and strip the rrule without the recurring events plugin',
+        () => {
+          const onEventsChange = vi.fn();
+          const store = new storeClass.Value(
+            { resources: TEST_RESOURCES, events: [], onEventsChange },
+            adapter,
+          );
+
+          expect(() => {
+            store.createEvent({
+              ...EventBuilder.new().toCreationProperties(),
+              rrule: 'FREQ=DAILY',
+            });
+          }).toWarnDev([
+            'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
+          ]);
+
+          expect(onEventsChange.mock.lastCall?.[0][0].rrule).to.equal(undefined);
+        },
+      );
     });
 
     describe('Method: duplicateEventOccurrence', () => {
@@ -2120,6 +2164,30 @@ storeClasses.forEach((storeClass) => {
 premiumStoreClasses.forEach((storeClass) => {
   describe(`Event - ${storeClass.name}`, () => {
     describe('Method: updateRecurringEvent', () => {
+      it.skipIf(storeClass.name !== 'EventCalendarStore')(
+        'should warn and ignore the update without the recurring events plugin',
+        () => {
+          const onEventsChange = vi.fn();
+          const event = EventBuilder.new().build();
+          const store = new storeClass.Value(
+            { resources: TEST_RESOURCES, events: [event], onEventsChange },
+            adapter,
+          );
+
+          expect(() => {
+            store.updateRecurringEvent({
+              occurrenceStart: adapter.date(event.start as string, 'default'),
+              changes: { id: event.id, title: 'updated' },
+            });
+          }).toWarnDev([
+            'MUI X Scheduler: Recurring events are not enabled. The recurring event update will be ignored.',
+          ]);
+
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+          expect(store.state.pendingRecurringEventOperation).to.equal(null);
+        },
+      );
+
       it('should keep the stored BYMONTHDAY when only the count changes from another timezone', () => {
         // The rule is passed through as is: saving it with a new count keeps the 3rd.
         const event = utcJuly4AllDayBuilder()

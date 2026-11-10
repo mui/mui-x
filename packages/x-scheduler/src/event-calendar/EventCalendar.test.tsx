@@ -8,6 +8,12 @@ import {
   ResourceBuilder,
   withinMonthView,
   setSystemTimezone,
+  changeTo24HoursFormat,
+  changeTo12HoursFormat,
+  openPreferencesMenu,
+  toggleShowWeekends,
+  toggleShowWeekNumber,
+  toggleShowEmptyDaysInAgenda,
 } from 'test/utils/scheduler';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import type { EventCalendarPreferences } from '@mui/x-scheduler/models';
@@ -18,14 +24,6 @@ import { vi, describe, it, expect } from 'vitest';
 import { ErrorContainer } from '../internals/components/error-container';
 import { SharedComponentsStyledContext } from '../internals/components/SharedComponentsStyledContext';
 import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../internals/constants/defaultLocaleText';
-import {
-  changeTo24HoursFormat,
-  changeTo12HoursFormat,
-  openPreferencesMenu,
-  toggleShowWeekends,
-  toggleShowWeekNumber,
-  toggleShowEmptyDaysInAgenda,
-} from '../internals/utils/test-utils';
 
 describe('EventCalendar', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-26') });

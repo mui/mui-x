@@ -22,7 +22,7 @@ describe('focusFirstInvalid', () => {
       <input id="second" aria-invalid="true" />
     `);
 
-    expect(focusFirstInvalid(form)).to.equal(true);
+    focusFirstInvalid(form);
     const first = form.querySelector<HTMLInputElement>('#first')!;
     expect(document.activeElement).to.equal(first);
     expect([first.selectionStart, first.selectionEnd]).to.deep.equal([0, 3]);
@@ -31,7 +31,8 @@ describe('focusFirstInvalid', () => {
   it('should skip an aria-hidden invalid control, like the hidden input of a Select', () => {
     const form = mount(`<input aria-hidden="true" tabindex="-1" aria-invalid="true" />`);
 
-    expect(focusFirstInvalid(form)).to.equal(false);
+    focusFirstInvalid(form);
+    expect(document.activeElement).to.equal(document.body);
   });
 
   it('should focus the next visible invalid control after an aria-hidden one', () => {
@@ -40,7 +41,7 @@ describe('focusFirstInvalid', () => {
       <div id="combobox" role="combobox" tabindex="0" aria-invalid="true"></div>
     `);
 
-    expect(focusFirstInvalid(form)).to.equal(true);
+    focusFirstInvalid(form);
     expect(document.activeElement).to.equal(form.querySelector('#combobox'));
   });
 
@@ -50,7 +51,7 @@ describe('focusFirstInvalid', () => {
       <input id="visible" aria-invalid="true" />
     `);
 
-    expect(focusFirstInvalid(form)).to.equal(true);
+    focusFirstInvalid(form);
     expect(document.activeElement).to.equal(form.querySelector('#visible'));
   });
 
@@ -60,20 +61,21 @@ describe('focusFirstInvalid', () => {
       <input id="enabled" aria-invalid="true" />
     `);
 
-    expect(focusFirstInvalid(form)).to.equal(true);
+    focusFirstInvalid(form);
     expect(document.activeElement).to.equal(form.querySelector('#enabled'));
   });
 
-  it('should return false when the only invalid control is hidden', () => {
+  it('should not move the focus when the only invalid control is hidden', () => {
     const form = mount(`<div hidden><input aria-invalid="true" /></div>`);
 
-    expect(focusFirstInvalid(form)).to.equal(false);
+    focusFirstInvalid(form);
     expect(document.activeElement).to.equal(document.body);
   });
 
-  it('should return false when no control is invalid', () => {
+  it('should not move the focus when no control is invalid', () => {
     const form = mount(`<input />`);
 
-    expect(focusFirstInvalid(form)).to.equal(false);
+    focusFirstInvalid(form);
+    expect(document.activeElement).to.equal(document.body);
   });
 });

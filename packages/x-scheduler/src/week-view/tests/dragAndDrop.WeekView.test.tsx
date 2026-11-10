@@ -155,10 +155,8 @@ describe('WeekView - Drag and Drop', () => {
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
     expect(updatedEvents[0].allDay).to.not.equal(true);
-    // The event should have moved to around 14:00 (the exact time depends on
-    // the drag precision and the initialCursorPositionInEventMs calculation)
-    const newStartHour = new Date(updatedEvents[0].start).getUTCHours();
-    expect(newStartHour).to.not.equal(10); // Should have moved from 10:00
+    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2025-07-03T14:00:00.000Z');
+    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2025-07-03T15:00:00.000Z');
   });
 
   it('should move a time event to a different day in the time grid', async () => {
@@ -788,6 +786,8 @@ describe('WeekView - Drag and Drop', () => {
     mockAllTimeGridColumnBounds();
 
     const eventElement = screen.getByRole('button', { name: /Morning Meeting/i });
+    // 10:00 → 11:00 on the 1px-per-minute column, grabbed by its end handle at the bottom.
+    mockElementBounds(eventElement, { top: clientYForTime(0, 24, 10), height: 60, width: 200 });
     const endHandle = getResizeHandle(eventElement, 'end');
     const columns = getTimeGridColumns();
     const sameColumn = columns[JULY_3_COLUMN_INDEX];
@@ -798,17 +798,15 @@ describe('WeekView - Drag and Drop', () => {
       simulateDragAndDrop({
         source: endHandle,
         target: sameColumn,
+        sourceClientY: clientYForTime(0, 24, 11),
         targetClientY,
       });
     });
 
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
-    // Start should remain at 10:00
-    expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(10);
-    // End should have moved later
-    const newEndHour = new Date(updatedEvents[0].end).getUTCHours();
-    expect(newEndHour).to.not.equal(11);
+    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2025-07-03T10:00:00.000Z');
+    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2025-07-03T16:00:00.000Z');
   });
 
   it('should resize a time event start to an earlier time', async () => {
@@ -843,11 +841,8 @@ describe('WeekView - Drag and Drop', () => {
 
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
-    // Start should have moved earlier
-    const newStartHour = new Date(updatedEvents[0].start).getUTCHours();
-    expect(newStartHour).to.not.equal(10);
-    // End should remain at 11:00
-    expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(11);
+    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2025-07-03T08:00:00.000Z');
+    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2025-07-03T11:00:00.000Z');
   });
 
   it('should resize an all-day event end to a different day', async () => {
@@ -876,10 +871,8 @@ describe('WeekView - Drag and Drop', () => {
 
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
-    // Start should remain on July 3
-    expect(new Date(updatedEvents[0].start).getUTCDate()).to.equal(3);
-    // End should have moved
-    expect(new Date(updatedEvents[0].end).getUTCDate()).to.not.equal(4);
+    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2025-07-03T00:00:00.000Z');
+    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2025-07-05T23:59:59.999Z');
   });
 
   it('should resize an all-day event start to a different day', async () => {
@@ -908,9 +901,7 @@ describe('WeekView - Drag and Drop', () => {
 
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
-    // Start should have moved
-    expect(new Date(updatedEvents[0].start).getUTCDate()).to.not.equal(2);
-    // End should remain on July 4
-    expect(new Date(updatedEvents[0].end).getUTCDate()).to.equal(4);
+    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2025-07-01T00:00:00.000Z');
+    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2025-07-04T23:59:59.000Z');
   });
 });
