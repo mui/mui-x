@@ -2,7 +2,6 @@ import * as React from 'react';
 import { act, screen, waitFor, within } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
-  adapter,
   createSchedulerRenderer,
   EventBuilder,
   ResourceBuilder,
@@ -231,8 +230,8 @@ describe('EventCalendar', () => {
     ] as const)(
       'should mark the current day of the display timezone in the $view view, whatever the timezone of the system',
       ({ view, viewLabel, currentColumnCount }) => {
-        // Pacific/Apia skipped December 30th, 2011. On a system there, `adapter.isSameDay()` reads
-        // December 30th and 31st as the same day in the other timezones.
+        // Pacific/Apia skipped December 30th, 2011: on a system there, the getters of `Date` read
+        // December 30th and 31st of the other timezones as the same day.
         setSystemTimezone('Pacific/Apia');
         // It's still December 30th at 21:00 in New York, but December 31st in UTC and in Apia.
         const now = new Date('2011-12-31T02:00:00Z');
@@ -739,7 +738,7 @@ describe('EventCalendar', () => {
       initialErrors: SchedulerUserFacingErrorDescriptor[],
       localeText = EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
     ) {
-      const store = new EventCalendarStore({ events: [] }, adapter);
+      const store = new EventCalendarStore({ events: [] });
       store.set(
         'errors',
         initialErrors.map((error, index) => ({ ...error, key: String(index) })),

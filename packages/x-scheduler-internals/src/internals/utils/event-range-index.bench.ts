@@ -9,7 +9,7 @@ const eventCount = 50_000;
 const firstDay = adapter.date('2020-01-01T00:00:00Z', 'default');
 const events = Array.from({ length: eventCount }, (_, index) => {
   const start = adapter.addHours(firstDay, index * 4);
-  return EventBuilder.new(adapter)
+  return EventBuilder.new()
     .id(index)
     .span(start.toISOString(), adapter.addHours(start, 1).toISOString())
     .toProcessed();

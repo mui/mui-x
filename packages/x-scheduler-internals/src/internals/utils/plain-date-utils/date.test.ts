@@ -1,22 +1,17 @@
 import { describe, it, expect } from 'vitest';
 import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapter-date-fns';
+import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
 import { adapter, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { processDate } from '../../../process-date';
-import {
-  buildTemporalPlainDate,
-  createAdapterDate,
-  createAdapterDateFromWallTime,
-  createProcessedDate,
-} from './adapter';
+import { buildTemporalPlainDate, createDateFromWallTime, createProcessedDate } from './date';
 import type { TemporalSupportedObject } from '../../../models';
-import type { Adapter } from '../../../use-adapter/useAdapter.types';
 
-describe('base-temporal adapter bridge', () => {
+describe('plain-date-utils/date', () => {
   it('should build the plain date of a value in a timezone', () => {
     // 2025-03-03T00:30Z is March 2nd in Los Angeles.
     const value = adapter.date('2025-03-03T00:30:00Z', 'default');
-    const plainDate = buildTemporalPlainDate(adapter, value, 'America/Los_Angeles');
+    const plainDate = buildTemporalPlainDate(value, 'America/Los_Angeles');
     expect(plainDate.toString()).to.equal('2025-03-02');
   });
 
@@ -47,7 +42,7 @@ describe('base-temporal adapter bridge', () => {
       for (const instant of INSTANTS) {
         const value = adapter.date(instant, 'default');
         expect(
-          buildTemporalPlainDate(adapter, value, timezone).toString(),
+          buildTemporalPlainDate(value, timezone).toString(),
           `${instant} in ${timezone}`,
         ).to.equal(adapter.formatByString(adapter.setTimezone(value, timezone), 'yyyy-MM-dd'));
       }
@@ -61,7 +56,7 @@ describe('base-temporal adapter bridge', () => {
       setSystemTimezone('Australia/Lord_Howe');
       for (const instant of INSTANTS) {
         const value = adapter.date(instant, 'default');
-        expect(buildTemporalPlainDate(adapter, value, 'default').toString(), instant).to.equal(
+        expect(buildTemporalPlainDate(value, 'default').toString(), instant).to.equal(
           adapter.formatByString(value, 'yyyy-MM-dd'),
         );
       }
@@ -71,7 +66,7 @@ describe('base-temporal adapter bridge', () => {
   // The fields of a processed date as the adapter reads them in `timezone`, which processed dates
   // must match.
   const readThroughAdapter = (
-    currentAdapter: Adapter,
+    currentAdapter: TemporalAdapter,
     value: TemporalSupportedObject,
     timezone: string,
   ) => {
@@ -88,12 +83,12 @@ describe('base-temporal adapter bridge', () => {
     'should process a date in %s like the adapter reads it',
     (timezone) => {
       const epochMs = Date.UTC(2025, 10, 2, 5, 30);
-      const value = createAdapterDate(epochMs);
+      const value = new Date(epochMs);
       // A plain `Date`, not a subclass carrying a timezone.
       expect(value.constructor).to.equal(Date);
       expect(adapter.getTime(value)).to.equal(epochMs);
 
-      const { value: processedValue, ...processed } = processDate(value, adapter, timezone);
+      const { value: processedValue, ...processed } = processDate(value, timezone);
       expect(processedValue).to.equal(value);
       expect(processed).to.deep.equal(readThroughAdapter(adapter, value, timezone));
       const { value: createdValue, ...created } = createProcessedDate(epochMs, timezone);
@@ -123,16 +118,16 @@ describe('base-temporal adapter bridge', () => {
       const epochMs = Date.UTC(2025, 10, 2, 5, 30);
       const value = systemAdapter.date(new Date(epochMs).toISOString(), 'default');
 
-      const { value: processedValue, ...processed } = processDate(value, systemAdapter, 'default');
+      const { value: processedValue, ...processed } = processDate(value, 'default');
       expect(processed).to.deep.equal(readThroughAdapter(systemAdapter, value, 'default'));
       const { value: createdValue, ...created } = createProcessedDate(epochMs, 'default');
       expect(created).to.deep.equal(readThroughAdapter(systemAdapter, createdValue, 'default'));
     },
   );
 
-  describe('createAdapterDateFromWallTime', () => {
+  describe('createDateFromWallTime', () => {
     const resolve = (value: string, timezone: string) => {
-      const date = createAdapterDateFromWallTime(value, timezone);
+      const date = createDateFromWallTime(value, timezone);
       return date === null ? null : new Date(adapter.getTime(date)).toISOString();
     };
 

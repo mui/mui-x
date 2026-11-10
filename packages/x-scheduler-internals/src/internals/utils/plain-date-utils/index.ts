@@ -14,15 +14,15 @@ export {
   toWallClockIsoString,
 } from './timeZone';
 export {
-  addToAdapterDate,
+  addToDate,
   buildTemporalPlainDate,
-  createAdapterDate,
   createEndOfPlainDate,
   createProcessedDate,
   createStartOfPlainDate,
+  isValidDate,
   moveToPlainDate,
   normalizeAllDayBounds,
-} from './adapter';
+} from './date';
 export {
   getDayNumber,
   getPlainDateKey,

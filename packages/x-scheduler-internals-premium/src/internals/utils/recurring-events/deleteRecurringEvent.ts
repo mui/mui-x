@@ -1,4 +1,3 @@
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type {
   RecurringEventScope,
   SchedulerProcessedEvent,
@@ -13,14 +12,13 @@ import { createStartOfPreviousDay } from './internal-utils';
 import { RecurringSeries } from './RecurringSeries';
 
 export function deleteRecurringEvent(
-  adapter: Adapter,
   originalEvent: SchedulerProcessedEvent,
   occurrenceStart: TemporalSupportedObject,
   scope: RecurringEventScope,
 ): UpdateEventsParameters {
   switch (scope) {
     case 'this-and-following': {
-      return applyRecurringDeleteFollowing(adapter, originalEvent, occurrenceStart);
+      return applyRecurringDeleteFollowing(originalEvent, occurrenceStart);
     }
 
     case 'all': {
@@ -28,7 +26,7 @@ export function deleteRecurringEvent(
     }
 
     case 'only-this': {
-      return applyRecurringDeleteOnlyThis(adapter, originalEvent, occurrenceStart);
+      return applyRecurringDeleteOnlyThis(originalEvent, occurrenceStart);
     }
 
     default: {
@@ -48,19 +46,18 @@ export function deleteRecurringEvent(
  * @returns The updated list of events.
  */
 export function applyRecurringDeleteOnlyThis(
-  adapter: Adapter,
   originalEvent: SchedulerProcessedEvent,
   occurrenceStart: TemporalSupportedObject,
 ): UpdateEventsParameters {
   const exDates = [
     ...(originalEvent.dataTimezone.exDates ?? []),
     createStartOfPlainDate(
-      buildTemporalPlainDate(adapter, occurrenceStart, originalEvent.dataTimezone.timezone),
+      buildTemporalPlainDate(occurrenceStart, originalEvent.dataTimezone.timezone),
       originalEvent.dataTimezone.timezone,
     ),
   ];
 
-  if (!RecurringSeries.fromEvent(adapter, originalEvent, exDates).hasOccurrence()) {
+  if (!RecurringSeries.fromEvent(originalEvent, exDates).hasOccurrence()) {
     return { deleted: [originalEvent.id] };
   }
 
@@ -76,16 +73,14 @@ export function applyRecurringDeleteOnlyThis(
  * @returns The updated list of events.
  */
 export function applyRecurringDeleteFollowing(
-  adapter: Adapter,
   originalEvent: SchedulerProcessedEvent,
   occurrenceStart: TemporalSupportedObject,
 ): UpdateEventsParameters {
   const occurrencePlainDate = buildTemporalPlainDate(
-    adapter,
     occurrenceStart,
     originalEvent.dataTimezone.timezone,
   );
-  if (!RecurringSeries.fromEvent(adapter, originalEvent).hasOccurrenceBefore(occurrencePlainDate)) {
+  if (!RecurringSeries.fromEvent(originalEvent).hasOccurrenceBefore(occurrencePlainDate)) {
     return { deleted: [originalEvent.id] };
   }
 

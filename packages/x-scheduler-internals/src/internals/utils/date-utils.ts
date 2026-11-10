@@ -1,6 +1,5 @@
 import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
-import type { Adapter } from '../../use-adapter/useAdapter.types';
 import type { BaseTemporal } from './base-temporal';
 import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
 import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
@@ -14,15 +13,14 @@ import { toWallClockIsoString } from './plain-date-utils/timeZone';
  * data timezone without the `Z` suffix.
  */
 export function dateToEventString(
-  adapter: Adapter,
   date: TemporalSupportedObject,
   originalString: string,
   dataTimezone: TemporalTimezone,
 ): string {
   if (originalString.endsWith('Z')) {
-    return new Date(adapter.getTime(date)).toISOString();
+    return new Date(date.getTime()).toISOString();
   }
-  return toWallClockIsoString(adapter.getTime(date), dataTimezone);
+  return toWallClockIsoString(date.getTime(), dataTimezone);
 }
 
 /**
@@ -32,14 +30,12 @@ export function dateToEventString(
 export function getOccurrenceEnd({
   event,
   occurrenceStart,
-  adapter,
 }: {
   event: SchedulerProcessedEvent;
   occurrenceStart: TemporalSupportedObject;
-  adapter: Adapter;
 }): TemporalSupportedObject {
   const durationMs = event.dataTimezone.end.timestamp - event.dataTimezone.start.timestamp;
-  return adapter.addMilliseconds(occurrenceStart, durationMs);
+  return new Date(occurrenceStart.getTime() + durationMs);
 }
 
 function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {

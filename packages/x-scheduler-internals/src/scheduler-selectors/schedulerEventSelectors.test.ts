@@ -1,4 +1,3 @@
-import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapter-date-fns';
 import {
   EventBuilder,
   ResourceBuilder,
@@ -62,12 +61,6 @@ describe('schedulerEventSelectors', () => {
       expect(schedulerEventSelectors.processedEventRangeIndex(stateInAnotherTimezone)).not.to.equal(
         index,
       );
-      expect(
-        schedulerEventSelectors.processedEventRangeIndex({
-          ...state,
-          adapter: new TemporalAdapterDateFns(),
-        }),
-      ).not.to.equal(index);
     });
   });
 

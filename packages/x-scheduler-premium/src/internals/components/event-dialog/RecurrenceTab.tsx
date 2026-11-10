@@ -24,7 +24,6 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   schedulerOtherSelectors,
   schedulerPreferenceSelectors,
@@ -33,7 +32,7 @@ import {
 import { getMonthlyReference, getWeeklyDays } from '@mui/x-scheduler-internals-premium/internals';
 import {
   buildTemporalPlainDate,
-  createAdapterDate,
+  isValidDate,
   formatWeekday,
   formatWeekdayShort,
   getEndOfDayMs,
@@ -195,7 +194,6 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const { occurrence, tabValue } = props;
 
   // Context hooks
-  const adapter = useAdapterContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
@@ -213,9 +211,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     // Clearing the "Ends until" date stores an invalid date to keep the mode on
     // `until`; the submit must not serialize it.
     validate: (value, allValues) =>
-      allValues.recurrenceSelection === 'custom' &&
-      value.until != null &&
-      !adapter.isValid(value.until)
+      allValues.recurrenceSelection === 'custom' && value.until != null && !isValidDate(value.until)
         ? localeText.invalidDateError
         : null,
   });
@@ -328,7 +324,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     switch (endsSelection) {
       case 'until': {
         // The end of the event's last day, in its own timezone.
-        const until = createAdapterDate(getEndOfDayMs(ruleBounds.end, eventTimezone));
+        const until = new Date(getEndOfDayMs(ruleBounds.end, eventTimezone));
         updateCustomDraft({ until, count: undefined });
         break;
       }
@@ -672,8 +668,8 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
               <TextField
                 type="date"
                 value={
-                  customEndsValue === 'until' && adapter.isValid(rruleDraft.until ?? null)
-                    ? buildTemporalPlainDate(adapter, rruleDraft.until!, eventTimezone).toString()
+                  customEndsValue === 'until' && isValidDate(rruleDraft.until)
+                    ? buildTemporalPlainDate(rruleDraft.until!, eventTimezone).toString()
                     : ''
                 }
                 onChange={handleChangeUntil}

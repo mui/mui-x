@@ -8,8 +8,8 @@ import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
 describe('<CalendarGrid.TimeEventResizeHandler />', () => {
   const { render } = createSchedulerRenderer();
 
-  const eventStart = processDate(adapter.now('default'), adapter, 'default');
-  const eventEnd = processDate(adapter.addHours(eventStart.value, 1), adapter, 'default');
+  const eventStart = processDate(adapter.now('default'), 'default');
+  const eventEnd = processDate(adapter.addHours(eventStart.value, 1), 'default');
 
   describeConformance(<CalendarGrid.TimeEventResizeHandler side="start" />, () => ({
     refInstanceof: window.HTMLDivElement,
@@ -17,9 +17,7 @@ describe('<CalendarGrid.TimeEventResizeHandler />', () => {
       return render(
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
-            <CalendarGrid.TimeColumn
-              value={buildTemporalPlainDate(adapter, eventStart.value, 'default')}
-            >
+            <CalendarGrid.TimeColumn value={buildTemporalPlainDate(eventStart.value, 'default')}>
               <CalendarGrid.TimeEvent
                 eventId="fake-id"
                 occurrenceKey="fake-key"

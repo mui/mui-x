@@ -26,8 +26,8 @@ function countRemaining(
   date: TemporalSupportedObject,
   count: number,
 ) {
-  const series = new RecurringSeries(adapter, { rule: { ...rule, count }, ...seriesStart(start) });
-  const datePlainDate = buildTemporalPlainDate(adapter, date, adapter.getTimezone(date));
+  const series = new RecurringSeries({ rule: { ...rule, count }, ...seriesStart(start) });
+  const datePlainDate = buildTemporalPlainDate(date, adapter.getTimezone(date));
   return count - series.countOccurrencesBefore(datePlainDate.add({ days: 1 }));
 }
 
@@ -39,7 +39,7 @@ function createSeries(
   start: string,
   exDates?: string[],
 ) {
-  return new RecurringSeries(adapter, {
+  return new RecurringSeries({
     rule,
     ...seriesStart(adapter.date(start, 'UTC')),
     exDates: exDates?.map((exDate) => adapter.date(exDate, 'UTC')),
@@ -54,8 +54,8 @@ function getOccurrenceDays(
   exDates?: string[],
 ) {
   const series = createSeries(rule, start, exDates);
-  const fromPlainDate = buildTemporalPlainDate(adapter, adapter.date(from, 'UTC'), 'UTC');
-  const toPlainDate = buildTemporalPlainDate(adapter, adapter.date(to, 'UTC'), 'UTC');
+  const fromPlainDate = buildTemporalPlainDate(adapter.date(from, 'UTC'), 'UTC');
+  const toPlainDate = buildTemporalPlainDate(adapter.date(to, 'UTC'), 'UTC');
   return series.getOccurrenceDays(fromPlainDate, toPlainDate).map((day) => day.toString());
 }
 
@@ -155,7 +155,7 @@ describe('recurring-events/RecurringSeries', () => {
       // December 31st, 9999, a common "no end date", is already January 1st, 10000 in Tokyo.
       const lastInstant = adapter.date('9999-12-31T23:59:59Z', 'UTC');
       const getLastDays = (timezone: TemporalTimezone, exDates: TemporalSupportedObject[]) => {
-        const series = new RecurringSeries(adapter, {
+        const series = new RecurringSeries({
           rule: { freq: 'DAILY', until: lastInstant },
           start: adapter.getTime(adapter.date('2026-01-05T09:00:00Z', 'UTC')),
           timezone,
@@ -163,8 +163,8 @@ describe('recurring-events/RecurringSeries', () => {
         });
         return series
           .getOccurrenceDays(
-            buildTemporalPlainDate(adapter, adapter.date('9999-12-31T00:00:00', 'UTC'), 'UTC'),
-            buildTemporalPlainDate(adapter, adapter.date('+010000-01-02T00:00:00', 'UTC'), 'UTC'),
+            buildTemporalPlainDate(adapter.date('9999-12-31T00:00:00', 'UTC'), 'UTC'),
+            buildTemporalPlainDate(adapter.date('+010000-01-02T00:00:00', 'UTC'), 'UTC'),
           )
           .map((day) => day.toString());
       };
@@ -269,13 +269,12 @@ describe('recurring-events/RecurringSeries', () => {
 
   describe('hasOccurrenceBefore', () => {
     it('should ignore the excluded occurrences', () => {
-      const series = new RecurringSeries(adapter, {
+      const series = new RecurringSeries({
         rule: { freq: 'WEEKLY' },
         ...seriesStart(adapter.date('2025-01-06T09:00:00', 'UTC')),
         exDates: [adapter.date('2025-01-06T09:00:00', 'UTC')],
       });
-      const day = (date: string) =>
-        buildTemporalPlainDate(adapter, adapter.date(date, 'UTC'), 'UTC');
+      const day = (date: string) => buildTemporalPlainDate(adapter.date(date, 'UTC'), 'UTC');
       expect(series.hasOccurrenceBefore(day('2025-01-13T00:00:00'))).to.equal(false);
       expect(series.hasOccurrenceBefore(day('2025-01-14T00:00:00'))).to.equal(true);
     });
@@ -284,7 +283,7 @@ describe('recurring-events/RecurringSeries', () => {
   describe('hasOccurrence', () => {
     it('should find an occurrence that is years away', () => {
       // February 29th: excluding 2024 leaves 2028.
-      const series = new RecurringSeries(adapter, {
+      const series = new RecurringSeries({
         rule: { freq: 'YEARLY', count: 2 },
         ...seriesStart(adapter.date('2024-02-29T09:00:00', 'UTC')),
         exDates: [adapter.date('2024-02-29T09:00:00', 'UTC')],
@@ -387,7 +386,7 @@ describe('recurring-events/RecurringSeries', () => {
       );
       expect(
         series.countOccurrencesBefore(
-          buildTemporalPlainDate(adapter, adapter.date('2025-01-10T00:00:00', 'UTC'), 'UTC'),
+          buildTemporalPlainDate(adapter.date('2025-01-10T00:00:00', 'UTC'), 'UTC'),
         ),
       ).to.equal(5);
     });

@@ -5,13 +5,13 @@ import { adapter, createSchedulerRenderer, describeConformance } from 'test/util
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import { describe, it, expect } from 'vitest';
-import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/adapter';
+import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/date';
 
 describe('<CalendarGrid.DayEvent />', () => {
   const { render } = createSchedulerRenderer();
 
-  const eventStart = processDate(adapter.now('default'), adapter, 'default');
-  const eventEnd = processDate(adapter.addHours(eventStart.value, 1), adapter, 'default');
+  const eventStart = processDate(adapter.now('default'), 'default');
+  const eventEnd = processDate(adapter.addHours(eventStart.value, 1), 'default');
 
   type ProviderProps = React.ComponentProps<typeof EventCalendarProvider>;
 
@@ -29,7 +29,7 @@ describe('<CalendarGrid.DayEvent />', () => {
       rowStart = eventStart.value,
       rowEnd = eventEnd.value,
     } = options;
-    const cellDate = buildTemporalPlainDate(adapter, rowStart, 'default');
+    const cellDate = buildTemporalPlainDate(rowStart, 'default');
     return render(
       <EventCalendarProvider events={events} resources={resources}>
         <CalendarGrid.Root>
@@ -73,8 +73,8 @@ describe('<CalendarGrid.DayEvent />', () => {
           eventId="fake-id"
           occurrenceKey="fake-key"
           dataTimezone={undefined}
-          start={processDate(adapter.date(start, 'default'), adapter, 'default')}
-          end={processDate(adapter.date(end, 'default'), adapter, 'default')}
+          start={processDate(adapter.date(start, 'default'), 'default')}
+          end={processDate(adapter.date(end, 'default'), 'default')}
           renderDragPreview={() => null}
           data-testid="event"
         />,

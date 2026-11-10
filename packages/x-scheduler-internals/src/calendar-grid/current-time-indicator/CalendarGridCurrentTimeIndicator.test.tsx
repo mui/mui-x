@@ -22,7 +22,7 @@ describe('<CalendarGrid.CurrentTimeIndicator />', () => {
       return render(
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
-            <CalendarGrid.TimeColumn value={buildTemporalPlainDate(adapter, day, 'default')}>
+            <CalendarGrid.TimeColumn value={buildTemporalPlainDate(day, 'default')}>
               {node}
             </CalendarGrid.TimeColumn>
           </CalendarGrid.Root>
@@ -48,7 +48,7 @@ describe('<CalendarGrid.CurrentTimeIndicator />', () => {
           <EventCalendarProvider events={[]} displayTimezone="America/New_York">
             <CalendarGrid.Root>
               <CalendarGrid.TimeColumn
-                value={buildTemporalPlainDate(adapter, columnDay, 'America/New_York')}
+                value={buildTemporalPlainDate(columnDay, 'America/New_York')}
               >
                 <CalendarGrid.CurrentTimeIndicator data-testid="indicator" />
               </CalendarGrid.TimeColumn>

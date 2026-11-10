@@ -1,4 +1,3 @@
-import { adapter } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import type { SchedulerEvent, SchedulerEventUpdatedProperties } from '../../../models';
 import { getCustomEventProperties, getUpdatedEventModelFromChanges } from './SchedulerStore.utils';
@@ -52,7 +51,6 @@ describe('getUpdatedEventModelFromChanges', () => {
       oldModel,
       changes,
       undefined,
-      adapter,
       oldModel as SchedulerEvent,
     );
     expect(Object.getOwnPropertyDescriptor(updated, '__proto__')?.value).to.deep.equal({

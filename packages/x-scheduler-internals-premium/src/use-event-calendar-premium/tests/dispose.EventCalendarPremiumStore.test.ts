@@ -47,7 +47,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
       getEvents: vi.fn(() => fetchPromise),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
@@ -70,7 +70,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
       getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition());
 
     // Initial fetch is immediate; let it settle.
@@ -96,7 +96,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
       getEvents: vi.fn(async () => buildEvents()),
       persistEvents: vi.fn(noopPersistEvents),
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
@@ -126,7 +126,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
       getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
@@ -148,7 +148,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
       getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
@@ -163,7 +163,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
       getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition());
 
     // First fetch hydrates the cache for the initial range.
@@ -195,7 +195,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
       getEvents: vi.fn(async () => buildEvents()),
       persistEvents: vi.fn(() => persistPromise),
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();

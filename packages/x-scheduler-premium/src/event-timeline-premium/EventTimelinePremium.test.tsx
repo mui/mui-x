@@ -1006,10 +1006,7 @@ describe('<EventTimelinePremium />', () => {
     const failure = EVENT_TIMELINE_DEFAULT_LOCALE_TEXT.somethingWentWrongError;
 
     function renderErrorContainer(initialErrors: SchedulerUserFacingErrorDescriptor[]) {
-      const store = new EventTimelinePremiumStore(
-        { events: [], resources: baseResources },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStore({ events: [], resources: baseResources });
       store.set(
         'errors',
         initialErrors.map((error, index) => ({ ...error, key: String(index) })),
@@ -1214,10 +1211,7 @@ describe('<EventTimelinePremium />', () => {
     });
 
     it('should re-display the same error after dismiss when pushed again with a new key', async () => {
-      const store = new EventTimelinePremiumStore(
-        { events: [], resources: baseResources },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStore({ events: [], resources: baseResources });
       store.set('errors', [{ code: 'somethingWentWrongError', key: '1' }]);
 
       function Test() {

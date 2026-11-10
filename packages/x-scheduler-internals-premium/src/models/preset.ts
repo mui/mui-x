@@ -1,9 +1,5 @@
 import type * as React from 'react';
-import type {
-  TemporalAdapter,
-  TemporalSupportedObject,
-  TemporalTimezone,
-} from '@base-ui/react/internals/temporal';
+import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 
@@ -144,7 +140,6 @@ export interface PresetDefinition {
    * `amount = ±unitCount`.
    */
   navigate: (
-    adapter: TemporalAdapter,
     date: TemporalSupportedObject,
     amount: number,
     timezone: TemporalTimezone,

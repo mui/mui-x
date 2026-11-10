@@ -8,7 +8,6 @@ import type {
   SchedulerProcessedEvent,
   SchedulerProcessedEventRecurrenceRule,
 } from '../../models';
-import type { Adapter } from '../../use-adapter/useAdapter.types';
 import type { BaseTemporal } from '../utils/base-temporal';
 import type { UpdateEventsParameters } from '../utils/SchedulerStore/SchedulerStore.types';
 
@@ -20,7 +19,6 @@ export interface SchedulerRecurringEventsPluginInterface {
    * inputs are trusted and normalized.
    */
   parseRRule(
-    adapter: Adapter,
     input: string | SchedulerEventRecurrenceRule,
     timezone: TemporalTimezone,
   ): SchedulerProcessedEventRecurrenceRule;
@@ -34,7 +32,6 @@ export interface SchedulerRecurringEventsPluginInterface {
     event: SchedulerProcessedEvent,
     start: number,
     end: number,
-    adapter: Adapter,
     displayTimezone: TemporalTimezone,
   ): SchedulerEventOccurrence[];
 
@@ -43,7 +40,6 @@ export interface SchedulerRecurringEventsPluginInterface {
    * a single occurrence, the occurrence and the following ones, or the entire series.
    */
   updateRecurringEvent(
-    adapter: Adapter,
     originalEvent: SchedulerProcessedEvent,
     occurrenceStart: TemporalSupportedObject,
     changes: SchedulerEventUpdatedProperties,
@@ -55,7 +51,6 @@ export interface SchedulerRecurringEventsPluginInterface {
    * a single occurrence, the occurrence and the following ones, or the entire series.
    */
   deleteRecurringEvent(
-    adapter: Adapter,
     originalEvent: SchedulerProcessedEvent,
     occurrenceStart: TemporalSupportedObject,
     scope: RecurringEventScope,
@@ -84,7 +79,6 @@ export interface SchedulerRecurringEventsPluginInterface {
    * Returns `true` if both recurrence rules serialize to the same RRULE string.
    */
   isSameRRule(
-    adapter: Adapter,
     rruleA: SchedulerProcessedEventRecurrenceRule | undefined,
     rruleB: SchedulerProcessedEventRecurrenceRule | undefined,
   ): boolean;

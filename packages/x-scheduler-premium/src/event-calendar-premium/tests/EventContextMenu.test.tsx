@@ -30,8 +30,8 @@ import { RecurringScopeDialog } from '../../internals/components/recurring-scope
  * one in `event-calendar-premium/tests/EventDialog.test.tsx`.
  */
 class PremiumTestStore extends ExtendableEventCalendarStore<any, any> {
-  public constructor(parameters: any, adapterParam: any) {
-    super(parameters, adapterParam, 'EventCalendarPremiumStore', schedulerRecurringEventsPlugin);
+  public constructor(parameters: any) {
+    super(parameters, 'EventCalendarPremiumStore', schedulerRecurringEventsPlugin);
   }
 }
 
@@ -39,7 +39,7 @@ describe('EventContextMenu - recurring events (Premium)', () => {
   const { render } = createSchedulerRenderer();
 
   it('should open the recurring scope dialog instead of deleting immediately when Delete is clicked on a recurring occurrence', () => {
-    const weeklyEventBuilder = EventBuilder.new(adapter)
+    const weeklyEventBuilder = EventBuilder.new()
       .title('Weekly sync')
       .singleDay('2025-05-26T09:00:00Z', 30)
       .recurrent('WEEKLY');
@@ -144,7 +144,7 @@ describe('EventContextMenu - recurring events (Premium)', () => {
     });
 
     it('should leave focus in the scope dialog once the menu has closed', async () => {
-      const weeklyEvent = EventBuilder.new(adapter)
+      const weeklyEvent = EventBuilder.new()
         .title('Weekly sync')
         .singleDay('2025-07-03T09:00:00Z', 30)
         .recurrent('WEEKLY')
@@ -258,7 +258,7 @@ describe('EventContextMenu - recurring events (Premium)', () => {
     });
 
     function renderRecurringEvent() {
-      const weeklyEvent = EventBuilder.new(adapter)
+      const weeklyEvent = EventBuilder.new()
         .title('Weekly sync')
         .singleDay('2025-07-03T09:00:00Z', 30)
         .recurrent('WEEKLY')

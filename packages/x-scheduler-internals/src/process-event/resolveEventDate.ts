@@ -1,7 +1,10 @@
 import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { Adapter } from '../use-adapter';
 import type { SchedulerEventId } from '../models';
-import { createAdapterDateFromWallTime } from '../internals/utils/plain-date-utils/adapter';
+import {
+  createDateFromString,
+  createDateFromWallTime,
+  isValidDate,
+} from '../internals/utils/plain-date-utils/date';
 
 /**
  * Resolves an event date string to a `TemporalSupportedObject`, the `Date` of its instant.
@@ -14,19 +17,18 @@ import { createAdapterDateFromWallTime } from '../internals/utils/plain-date-uti
 export function resolveEventDate(
   value: string,
   dataTimezone: TemporalTimezone,
-  adapter: Adapter,
   eventId?: SchedulerEventId,
 ): TemporalSupportedObject {
   let date: TemporalSupportedObject | null = null;
   if (value.endsWith('Z')) {
-    date = adapter.date(value, 'default');
+    date = new Date(value);
   } else if (dataTimezone !== 'default' && dataTimezone !== 'system') {
-    date = createAdapterDateFromWallTime(value, dataTimezone);
+    date = createDateFromWallTime(value, dataTimezone);
   }
   // `Date` already resolves the wall-clock times of the system timezone like RFC 5545.
-  date ??= adapter.date(value, dataTimezone);
+  date ??= createDateFromString(value, dataTimezone);
 
-  if (!adapter.isValid(date)) {
+  if (!isValidDate(date)) {
     const eventRef = eventId === undefined ? '' : ` of event "${eventId}"`;
     throw new Error(
       `MUI X Scheduler: The date "${value}"${eventRef} is not a valid date.\n` +

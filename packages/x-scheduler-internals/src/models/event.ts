@@ -9,6 +9,13 @@ import type { BaseTemporal } from '../internals/utils/base-temporal';
 
 export type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 
+declare module '@base-ui/react/internals/temporal' {
+  interface TemporalSupportedObjectLookup {
+    // The Scheduler creates and reads `Date` objects.
+    'x-scheduler': Date;
+  }
+}
+
 /**
  * Base shape for processed scheduler events.
  *

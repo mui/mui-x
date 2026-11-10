@@ -10,7 +10,6 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import {
   BaseTemporal,
-  createAdapterDate,
   createEndOfPlainDate,
   formatMonthAndDayOfMonth,
   formatWeekday,
@@ -401,14 +400,12 @@ export function getRecurrenceUntil(
   eventTimezone: TemporalTimezone,
 ): TemporalSupportedObject {
   const plainDate = readDateField(rawDate);
-  return plainDate == null
-    ? createAdapterDate(NaN)
-    : createEndOfPlainDate(plainDate, eventTimezone);
+  return plainDate == null ? new Date(NaN) : createEndOfPlainDate(plainDate, eventTimezone);
 }
 
 /**
  * The canonical IANA identifier of a timezone; `default` and `system` resolve to the system
- * timezone, as the adapter does.
+ * timezone.
  */
 function getTimezoneId(timezone: TemporalTimezone): string {
   const id =

@@ -1,4 +1,3 @@
-import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapter-date-fns';
 import {
   adapter,
   EventBuilder,
@@ -17,8 +16,6 @@ import { vi, describe, it, expect } from 'vitest';
 import { schedulerEventSelectors } from '../../../../scheduler-selectors';
 
 const TEST_RESOURCES = [ResourceBuilder.new().build()];
-
-const otherAdapter = new TemporalAdapterDateFns();
 
 // Pins the reason text `datesNotWritableReason` in `SchedulerStore.utils.ts` builds:
 // `toWarnDev` matches by `includes`, so an assertion naming only the first line of a warning
@@ -104,15 +101,12 @@ storeClasses.forEach((storeClass) => {
           events?: MyEvent[];
         },
       ) =>
-        new storeClass.Value(
-          {
-            resources: TEST_RESOURCES,
-            events: overrides?.events ?? [{ ...unchangedEvent }],
-            eventModelStructure: overrides?.eventModelStructure ?? readOnlyStartStructure,
-            onEventsChange,
-          },
-          adapter,
-        );
+        new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: overrides?.events ?? [{ ...unchangedEvent }],
+          eventModelStructure: overrides?.eventModelStructure ?? readOnlyStartStructure,
+          onEventsChange,
+        });
 
       it('should use the provided event model structure to read event properties', () => {
         const events: MyEvent[] = [
@@ -125,26 +119,19 @@ storeClasses.forEach((storeClass) => {
           },
         ];
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events, eventModelStructure },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events,
+          eventModelStructure,
+        });
         const event = schedulerEventSelectors.processedEvent(store.state, '1');
 
         expect(event).to.deep.contain({
           id: '1',
           title: 'Event 1',
           displayTimezone: {
-            start: processDate(
-              adapter.date('2025-07-01T09:00:00.000Z', 'default'),
-              adapter,
-              'default',
-            ),
-            end: processDate(
-              adapter.date('2025-07-01T10:00:00.000Z', 'default'),
-              adapter,
-              'default',
-            ),
+            start: processDate(adapter.date('2025-07-01T09:00:00.000Z', 'default'), 'default'),
+            end: processDate(adapter.date('2025-07-01T10:00:00.000Z', 'default'), 'default'),
             timezone: 'default',
             exDates: undefined,
           },
@@ -165,10 +152,12 @@ storeClasses.forEach((storeClass) => {
           },
         ];
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events, eventModelStructure, onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events,
+          eventModelStructure,
+          onEventsChange,
+        });
         store.updateEvent({
           id: '1',
           title: 'Event 1 updated',
@@ -195,10 +184,12 @@ storeClasses.forEach((storeClass) => {
 
         const events: MyEvent[] = [];
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events, eventModelStructure, onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events,
+          eventModelStructure,
+          onEventsChange,
+        });
         const createdId = store.createEvent({
           title: 'Event 1',
           start: adapter.date('2025-07-01T09:00:00.000Z', 'default'),
@@ -232,10 +223,12 @@ storeClasses.forEach((storeClass) => {
           },
         ];
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events, eventModelStructure, onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events,
+          eventModelStructure,
+          onEventsChange,
+        });
 
         const start = adapter.date('2025-07-01T11:00:00.000Z', 'default');
         const end = adapter.date('2025-07-01T12:00:00.000Z', 'default');
@@ -377,16 +370,13 @@ storeClasses.forEach((storeClass) => {
         it('should reject a move on an all-day event viewed in another timezone even when start is unchanged', () => {
           const event = utcJuly4AllDayBuilder().id('1').build();
           const onEventsChange = vi.fn();
-          const store = new storeClass.Value(
-            {
-              resources: TEST_RESOURCES,
-              events: [event],
-              eventModelStructure: { start: { getter: (evt: any) => evt.start } },
-              displayTimezone: 'America/New_York',
-              onEventsChange,
-            },
-            adapter,
-          );
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            eventModelStructure: { start: { getter: (evt: any) => evt.start } },
+            displayTimezone: 'America/New_York',
+            onEventsChange,
+          });
           const dataStart = schedulerEventSelectors.processedEvent(store.state, '1')!.dataTimezone
             .start.value;
 
@@ -668,15 +658,12 @@ storeClasses.forEach((storeClass) => {
           },
         ];
 
-        const store = new storeClass.Value(
-          {
-            resources: TEST_RESOURCES,
-            events,
-            eventModelStructure: eventModelStructure2,
-            showCurrentTimeIndicator: false,
-          },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events,
+          eventModelStructure: eventModelStructure2,
+          showCurrentTimeIndicator: false,
+        });
 
         // Called to convert Event 1 on mount.
         expect(idGetter.mock.calls.length).to.equal(1);
@@ -685,28 +672,22 @@ storeClasses.forEach((storeClass) => {
         const initialEventModelLookup = store.state.eventModelLookup;
         const initialProcessedEventLookup = store.state.processedEventLookup;
 
-        store.updateStateFromParameters(
-          {
-            resources: TEST_RESOURCES,
-            events,
-            eventModelStructure: eventModelStructure2,
-            showCurrentTimeIndicator: true,
-          },
-          adapter,
-        );
+        store.updateStateFromParameters({
+          resources: TEST_RESOURCES,
+          events,
+          eventModelStructure: eventModelStructure2,
+          showCurrentTimeIndicator: true,
+        });
 
         // Not called again when updating a non-related parameter.
         expect(idGetter.mock.calls.length).to.equal(1);
 
-        store.updateStateFromParameters(
-          {
-            resources: TEST_RESOURCES,
-            events: [...events],
-            eventModelStructure: eventModelStructure2,
-            showCurrentTimeIndicator: true,
-          },
-          adapter,
-        );
+        store.updateStateFromParameters({
+          resources: TEST_RESOURCES,
+          events: [...events],
+          eventModelStructure: eventModelStructure2,
+          showCurrentTimeIndicator: true,
+        });
 
         expect(idGetter.mock.calls.length).to.equal(1);
         expect(store.state.eventIdList).to.equal(initialEventIdList);
@@ -723,15 +704,12 @@ storeClasses.forEach((storeClass) => {
           },
         ];
 
-        store.updateStateFromParameters(
-          {
-            resources: TEST_RESOURCES,
-            events: events2,
-            eventModelStructure: eventModelStructure2,
-            showCurrentTimeIndicator: true,
-          },
-          adapter,
-        );
+        store.updateStateFromParameters({
+          resources: TEST_RESOURCES,
+          events: events2,
+          eventModelStructure: eventModelStructure2,
+          showCurrentTimeIndicator: true,
+        });
 
         // Only the new model is processed.
         expect(idGetter.mock.calls.length).to.equal(2);
@@ -739,15 +717,12 @@ storeClasses.forEach((storeClass) => {
         const processedEvent2 = schedulerEventSelectors.processedEvent(store.state, '2');
 
         const events3 = [events2[0], { ...events2[1], title: 'Event 2 updated' }];
-        store.updateStateFromParameters(
-          {
-            resources: TEST_RESOURCES,
-            events: events3,
-            eventModelStructure: eventModelStructure2,
-            showCurrentTimeIndicator: true,
-          },
-          adapter,
-        );
+        store.updateStateFromParameters({
+          resources: TEST_RESOURCES,
+          events: events3,
+          eventModelStructure: eventModelStructure2,
+          showCurrentTimeIndicator: true,
+        });
 
         expect(idGetter.mock.calls.length).to.equal(3);
         expect(schedulerEventSelectors.processedEvent(store.state, '1')).to.equal(processedEvent1);
@@ -756,16 +731,13 @@ storeClasses.forEach((storeClass) => {
         );
 
         const event2BeforeTimezoneChange = schedulerEventSelectors.processedEvent(store.state, '2');
-        store.updateStateFromParameters(
-          {
-            resources: TEST_RESOURCES,
-            events: events3,
-            eventModelStructure: eventModelStructure2,
-            displayTimezone: 'Europe/Paris',
-            showCurrentTimeIndicator: true,
-          },
-          adapter,
-        );
+        store.updateStateFromParameters({
+          resources: TEST_RESOURCES,
+          events: events3,
+          eventModelStructure: eventModelStructure2,
+          displayTimezone: 'Europe/Paris',
+          showCurrentTimeIndicator: true,
+        });
 
         // The display timezone affects every processed event.
         expect(idGetter.mock.calls.length).to.equal(5);
@@ -776,51 +748,28 @@ storeClasses.forEach((storeClass) => {
           event2BeforeTimezoneChange,
         );
 
-        const event2BeforeAdapterChange = schedulerEventSelectors.processedEvent(store.state, '2');
-        store.updateStateFromParameters(
-          {
-            resources: TEST_RESOURCES,
-            events: events3,
-            eventModelStructure: eventModelStructure2,
-            displayTimezone: 'Europe/Paris',
-            showCurrentTimeIndicator: true,
-          },
-          otherAdapter,
-        );
-
-        expect(idGetter.mock.calls.length).to.equal(7);
-        expect(schedulerEventSelectors.processedEvent(store.state, '2')).not.to.equal(
-          event2BeforeAdapterChange,
-        );
-
         const updatedEventModelStructure = { ...eventModelStructure2 };
-        store.updateStateFromParameters(
-          {
-            resources: TEST_RESOURCES,
-            events: events3,
-            eventModelStructure: updatedEventModelStructure,
-            displayTimezone: 'Europe/Paris',
-            showCurrentTimeIndicator: true,
-          },
-          otherAdapter,
-        );
+        store.updateStateFromParameters({
+          resources: TEST_RESOURCES,
+          events: events3,
+          eventModelStructure: updatedEventModelStructure,
+          displayTimezone: 'Europe/Paris',
+          showCurrentTimeIndicator: true,
+        });
 
         // Called again to convert Event 1 and Event 2 because props.eventModelStructure changed.
-        expect(idGetter.mock.calls.length).to.equal(9);
+        expect(idGetter.mock.calls.length).to.equal(7);
 
         const processedEventsBeforeReorder = store.state.processedEventLookup;
-        store.updateStateFromParameters(
-          {
-            resources: TEST_RESOURCES,
-            events: [events3[1], events3[0]],
-            eventModelStructure: updatedEventModelStructure,
-            displayTimezone: 'Europe/Paris',
-            showCurrentTimeIndicator: true,
-          },
-          otherAdapter,
-        );
+        store.updateStateFromParameters({
+          resources: TEST_RESOURCES,
+          events: [events3[1], events3[0]],
+          eventModelStructure: updatedEventModelStructure,
+          displayTimezone: 'Europe/Paris',
+          showCurrentTimeIndicator: true,
+        });
 
-        expect(idGetter.mock.calls.length).to.equal(9);
+        expect(idGetter.mock.calls.length).to.equal(7);
         expect(store.state.eventIdList).to.deep.equal(['2', '1']);
         expect(store.state.processedEventLookup.get('1')).to.equal(
           processedEventsBeforeReorder.get('1'),
@@ -841,10 +790,7 @@ storeClasses.forEach((storeClass) => {
 
         expect(() => {
           // eslint-disable-next-line no-new
-          new storeClass.Value(
-            { resources: TEST_RESOURCES, events: [validEvent, eventWithoutId] },
-            adapter,
-          );
+          new storeClass.Value({ resources: TEST_RESOURCES, events: [validEvent, eventWithoutId] });
         }).to.throw(/All events must have a unique `id`/);
       });
 
@@ -853,7 +799,7 @@ storeClasses.forEach((storeClass) => {
         const second = EventBuilder.new().id('1').title('Second').build();
 
         const createStore = () =>
-          new storeClass.Value({ resources: TEST_RESOURCES, events: [first, second] }, adapter);
+          new storeClass.Value({ resources: TEST_RESOURCES, events: [first, second] });
 
         let store!: ReturnType<typeof createStore>;
         expect(() => {
@@ -869,10 +815,7 @@ storeClasses.forEach((storeClass) => {
         const initialEventModelLookup = store.state.eventModelLookup;
         const initialProcessedEventLookup = store.state.processedEventLookup;
 
-        store.updateStateFromParameters(
-          { resources: TEST_RESOURCES, events: [first, second] },
-          adapter,
-        );
+        store.updateStateFromParameters({ resources: TEST_RESOURCES, events: [first, second] });
 
         expect(store.state.eventIdList).to.equal(initialEventIdList);
         expect(store.state.eventModelLookup).to.equal(initialEventModelLookup);
@@ -885,10 +828,11 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new().description('To remove').build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
 
         store.updateEvent({ id: event.id, description: undefined });
 
@@ -901,10 +845,11 @@ storeClasses.forEach((storeClass) => {
         const event1 = EventBuilder.new().build();
         const event2 = EventBuilder.new().build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event1, event2], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event1, event2],
+          onEventsChange,
+        });
 
         store.updateEvent({
           id: event2.id,
@@ -939,10 +884,12 @@ storeClasses.forEach((storeClass) => {
           .withDataTimezone(dataTimezone)
           .build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange, displayTimezone },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+          displayTimezone,
+        });
 
         // New instants (what the UI would provide as absolute values)
         const newStart = adapter.date('2025-03-10T14:00:00Z', 'default');
@@ -974,10 +921,11 @@ storeClasses.forEach((storeClass) => {
           priority: 'high',
         } as SchedulerEvent;
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
 
         store.updateEvent({ id: event.id, title: 'Updated title' });
 
@@ -993,10 +941,11 @@ storeClasses.forEach((storeClass) => {
 
           let store: any;
           expect(() => {
-            store = new storeClass.Value(
-              { resources: TEST_RESOURCES, events: [event], onEventsChange: () => {} },
-              adapter,
-            );
+            store = new storeClass.Value({
+              resources: TEST_RESOURCES,
+              events: [event],
+              onEventsChange: () => {},
+            });
           }).toWarnDev([
             'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
           ]);
@@ -1015,10 +964,11 @@ storeClasses.forEach((storeClass) => {
 
           let store: any;
           expect(() => {
-            store = new storeClass.Value(
-              { resources: TEST_RESOURCES, events: [event], onEventsChange },
-              adapter,
-            );
+            store = new storeClass.Value({
+              resources: TEST_RESOURCES,
+              events: [event],
+              onEventsChange,
+            });
           }).toWarnDev([
             'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
           ]);
@@ -1033,10 +983,11 @@ storeClasses.forEach((storeClass) => {
 
       it('should warn in dev when the same id is in both `deleted` and `updated`', () => {
         const event = EventBuilder.new().build();
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange: () => {} },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange: () => {},
+        });
 
         expect(() => {
           (store as any).updateEvents({
@@ -1056,15 +1007,12 @@ storeClasses.forEach((storeClass) => {
         const builder = EventBuilder.new();
         const event = builder.build();
 
-        const store = new storeClass.Value(
-          {
-            resources: TEST_RESOURCES,
-            events: [event],
-            onEventsChange,
-            eventDeletion: { confirmation: false },
-          },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+          eventDeletion: { confirmation: false },
+        });
 
         store.deleteOccurrence(builder.toOccurrence(), onDelete);
         expect(onDelete.mock.calls.length).to.equal(1);
@@ -1077,10 +1025,11 @@ storeClasses.forEach((storeClass) => {
         const builder = EventBuilder.new();
         const event = builder.build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
 
         store.deleteOccurrence(builder.toOccurrence(), onDelete);
         expect(onDelete.mock.calls.length).to.equal(0);
@@ -1097,10 +1046,11 @@ storeClasses.forEach((storeClass) => {
         const builder = EventBuilder.new();
         const event = builder.build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
 
         store.deleteOccurrence(builder.toOccurrence(), onDelete);
         store.resolveEventDeletion(true);
@@ -1115,10 +1065,11 @@ storeClasses.forEach((storeClass) => {
         const builder = EventBuilder.new();
         const event = builder.build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
 
         store.deleteOccurrence(builder.toOccurrence(), onDelete);
         store.resolveEventDeletion(false);
@@ -1138,15 +1089,12 @@ storeClasses.forEach((storeClass) => {
 
           let store: any;
           expect(() => {
-            store = new storeClass.Value(
-              {
-                resources: TEST_RESOURCES,
-                events: [event],
-                onEventsChange,
-                eventDeletion: { confirmation: false },
-              },
-              adapter,
-            );
+            store = new storeClass.Value({
+              resources: TEST_RESOURCES,
+              events: [event],
+              onEventsChange,
+              eventDeletion: { confirmation: false },
+            });
           }).toWarnDev([
             'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
           ]);
@@ -1168,10 +1116,11 @@ storeClasses.forEach((storeClass) => {
 
           let store: any;
           expect(() => {
-            store = new storeClass.Value(
-              { resources: TEST_RESOURCES, events: [event], onEventsChange },
-              adapter,
-            );
+            store = new storeClass.Value({
+              resources: TEST_RESOURCES,
+              events: [event],
+              onEventsChange,
+            });
           }).toWarnDev([
             'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
           ]);
@@ -1202,10 +1151,11 @@ storeClasses.forEach((storeClass) => {
           const builder = EventBuilder.new().recurrent('DAILY');
           const event = builder.build();
 
-          const store = new storeClass.Value(
-            { resources: TEST_RESOURCES, events: [event], onEventsChange },
-            adapter,
-          );
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            onEventsChange,
+          });
           const occurrence = builder.toOccurrence();
 
           // Nothing is deleted until the user picks a scope; `onDelete` waits for it too.
@@ -1241,15 +1191,12 @@ storeClasses.forEach((storeClass) => {
             .recurrent('DAILY')
             .toOccurrence();
 
-          const store = new storeClass.Value(
-            {
-              resources: TEST_RESOURCES,
-              events: [event],
-              onEventsChange,
-              eventDeletion: { confirmation: false },
-            },
-            adapter,
-          );
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            onEventsChange,
+            eventDeletion: { confirmation: false },
+          });
 
           store.deleteOccurrence(staleOccurrence);
           expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
@@ -1263,10 +1210,11 @@ storeClasses.forEach((storeClass) => {
         // before a `dataSource` persist feeds it back.
         const pendingOccurrence = EventBuilder.new().id('split').recurrent('DAILY').toOccurrence();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          onEventsChange,
+        });
 
         store.deleteOccurrence(pendingOccurrence, onDelete);
         expect(onDelete.mock.calls.length).to.equal(0);
@@ -1284,10 +1232,11 @@ storeClasses.forEach((storeClass) => {
         () => {
           const onEventsChange = vi.fn();
           const onSubmit = vi.fn();
-          const store = new storeClass.Value(
-            { resources: TEST_RESOURCES, events: [], onEventsChange },
-            adapter,
-          );
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [],
+            onEventsChange,
+          });
           store.deleteRecurringEvent({
             eventId: 'gone',
             occurrenceStart: adapter.date('2025-05-26T10:00:00', 'default'),
@@ -1314,14 +1263,11 @@ storeClasses.forEach((storeClass) => {
         const event2 = EventBuilder.new().build();
         const event3 = EventBuilder.new().build();
 
-        const store = new storeClass.Value(
-          {
-            resources: TEST_RESOURCES,
-            events: [event1, event2, event3],
-            onEventsChange,
-          },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event1, event2, event3],
+          onEventsChange,
+        });
         store.deleteEvent(event2.id);
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
@@ -1332,26 +1278,25 @@ storeClasses.forEach((storeClass) => {
 
     describe('Method: requestEventDeletion / resolveEventDeletion', () => {
       it('should default `eventDeletion.confirmation` to `true`, including when explicitly `undefined`', () => {
-        const defaultStore = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [] },
-          adapter,
-        );
+        const defaultStore = new storeClass.Value({ resources: TEST_RESOURCES, events: [] });
         expect(defaultStore.state.eventDeletion).to.deep.equal({ confirmation: true });
 
-        const undefinedStore = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [], eventDeletion: { confirmation: undefined } },
-          adapter,
-        );
+        const undefinedStore = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          eventDeletion: { confirmation: undefined },
+        });
         expect(undefinedStore.state.eventDeletion).to.deep.equal({ confirmation: true });
       });
 
       it('should open the delete confirmation dialog instead of deleting immediately by default', () => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
 
         store.requestEventDeletion({ eventId: event.id });
 
@@ -1366,10 +1311,11 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const onSubmit = vi.fn();
         const event = EventBuilder.new().build();
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
 
         store.requestEventDeletion({ eventId: event.id, onSubmit });
         store.resolveEventDeletion(true);
@@ -1384,18 +1330,16 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const onSubmit = vi.fn();
         const event = EventBuilder.new().build();
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
 
         store.requestEventDeletion({ eventId: event.id, onSubmit });
         // A controlled `events` change (or a dataSource refetch) can drop the event while the
         // confirmation dialog is still open.
-        store.updateStateFromParameters(
-          { resources: TEST_RESOURCES, events: [], onEventsChange },
-          adapter,
-        );
+        store.updateStateFromParameters({ resources: TEST_RESOURCES, events: [], onEventsChange });
 
         store.resolveEventDeletion(true);
 
@@ -1410,18 +1354,20 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const onSubmit = vi.fn();
         const event = EventBuilder.new().build();
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
 
         store.requestEventDeletion({ eventId: event.id, onSubmit });
         // The confirmation was requested for a flat delete; a controlled `events` update can turn
         // the event read-only while the dialog is still open.
-        store.updateStateFromParameters(
-          { resources: TEST_RESOURCES, events: [{ ...event, readOnly: true }], onEventsChange },
-          adapter,
-        );
+        store.updateStateFromParameters({
+          resources: TEST_RESOURCES,
+          events: [{ ...event, readOnly: true }],
+          onEventsChange,
+        });
 
         store.resolveEventDeletion(true);
 
@@ -1439,19 +1385,21 @@ storeClasses.forEach((storeClass) => {
           const onSubmit = vi.fn();
           const event = EventBuilder.new().id('meeting').build();
           const recurringEvent = EventBuilder.new().id('meeting').recurrent('DAILY').build();
-          const store = new storeClass.Value(
-            { resources: TEST_RESOURCES, events: [event], onEventsChange },
-            adapter,
-          );
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            onEventsChange,
+          });
 
           store.requestEventDeletion({ eventId: event.id, onSubmit });
           // The confirmation was requested for a flat delete; a controlled `events` update can
           // give the event a recurrence rule while the dialog is open, which now needs a scope
           // choice instead.
-          store.updateStateFromParameters(
-            { resources: TEST_RESOURCES, events: [recurringEvent], onEventsChange },
-            adapter,
-          );
+          store.updateStateFromParameters({
+            resources: TEST_RESOURCES,
+            events: [recurringEvent],
+            onEventsChange,
+          });
 
           store.resolveEventDeletion(true);
 
@@ -1467,10 +1415,11 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const onSubmit = vi.fn();
         const event = EventBuilder.new().build();
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
 
         store.requestEventDeletion({ eventId: event.id, onSubmit });
         store.resolveEventDeletion(false);
@@ -1482,10 +1431,11 @@ storeClasses.forEach((storeClass) => {
 
       it('should be a no-op when resolved with no pending deletion', () => {
         const onEventsChange = vi.fn();
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          onEventsChange,
+        });
 
         store.resolveEventDeletion(true);
 
@@ -1496,15 +1446,12 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const onSubmit = vi.fn();
         const event = EventBuilder.new().build();
-        const store = new storeClass.Value(
-          {
-            resources: TEST_RESOURCES,
-            events: [event],
-            onEventsChange,
-            eventDeletion: { confirmation: false },
-          },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+          eventDeletion: { confirmation: false },
+        });
 
         store.requestEventDeletion({ eventId: event.id, onSubmit });
 
@@ -1519,13 +1466,10 @@ storeClasses.forEach((storeClass) => {
         const onSubmit = vi.fn();
         const event = EventBuilder.new().build();
         const params = { resources: TEST_RESOURCES, events: [event], onEventsChange };
-        const store = new storeClass.Value(params, adapter);
+        const store = new storeClass.Value(params);
 
         // Confirmation is on by default; requesting a deletion now would only open the dialog.
-        store.updateStateFromParameters(
-          { ...params, eventDeletion: { confirmation: false } },
-          adapter,
-        );
+        store.updateStateFromParameters({ ...params, eventDeletion: { confirmation: false } });
 
         store.requestEventDeletion({ eventId: event.id, onSubmit });
 
@@ -1537,39 +1481,41 @@ storeClasses.forEach((storeClass) => {
 
       it('should keep the same `eventDeletion` reference when an unrelated update leaves `confirmation` unchanged', () => {
         const params = { resources: TEST_RESOURCES, events: [], onEventsChange: vi.fn() };
-        const store = new storeClass.Value(params, adapter);
+        const store = new storeClass.Value(params);
         const eventDeletionBefore = store.state.eventDeletion;
 
         // A parent re-rendering for an unrelated reason (e.g. a fresh inline callback) shouldn't
         // make the store treat an unchanged `confirmation` as a change: `Store.update()` compares
         // each key by reference, so a fresh object here would spuriously notify every subscriber.
-        store.updateStateFromParameters({ ...params, onEventsChange: vi.fn() }, adapter);
+        store.updateStateFromParameters({ ...params, onEventsChange: vi.fn() });
 
         expect(store.state.eventDeletion).to.equal(eventDeletionBefore);
       });
 
       it('should normalize `eventDeletion={false}` to `false` and `eventDeletion={true}` to the default config', () => {
-        const disabledStore = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [], eventDeletion: false },
-          adapter,
-        );
+        const disabledStore = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          eventDeletion: false,
+        });
         expect(disabledStore.state.eventDeletion).to.equal(false);
 
-        const enabledStore = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [], eventDeletion: true },
-          adapter,
-        );
+        const enabledStore = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          eventDeletion: true,
+        });
         expect(enabledStore.state.eventDeletion).to.deep.equal({ confirmation: true });
       });
 
       it('should toggle `eventDeletion` between `false` and enabled through `updateStateFromParameters`', () => {
         const params = { resources: TEST_RESOURCES, events: [], onEventsChange: vi.fn() };
-        const store = new storeClass.Value({ ...params, eventDeletion: false }, adapter);
+        const store = new storeClass.Value({ ...params, eventDeletion: false });
 
-        store.updateStateFromParameters({ ...params, eventDeletion: true }, adapter);
+        store.updateStateFromParameters({ ...params, eventDeletion: true });
         expect(store.state.eventDeletion).to.deep.equal({ confirmation: true });
 
-        store.updateStateFromParameters({ ...params, eventDeletion: false }, adapter);
+        store.updateStateFromParameters({ ...params, eventDeletion: false });
         expect(store.state.eventDeletion).to.equal(false);
       });
 
@@ -1577,10 +1523,12 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const onSubmit = vi.fn();
         const event = EventBuilder.new().build();
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange, eventDeletion: false },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+          eventDeletion: false,
+        });
 
         // `eventDeletion={false}` only removes the UI affordances, a programmatic request still applies.
         store.requestEventDeletion({ eventId: event.id, onSubmit });
@@ -1595,15 +1543,12 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const event1 = EventBuilder.new().build();
         const event2 = EventBuilder.new().build();
-        const store = new storeClass.Value(
-          {
-            resources: TEST_RESOURCES,
-            events: [event1, event2],
-            onEventsChange,
-            eventDeletion: false,
-          },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event1, event2],
+          onEventsChange,
+          eventDeletion: false,
+        });
 
         store.deleteEvent(event1.id);
 
@@ -1617,10 +1562,11 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const event1 = EventBuilder.new().build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event1], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event1],
+          onEventsChange,
+        });
 
         const newEvent = EventBuilder.new().toCreationProperties();
 
@@ -1636,15 +1582,12 @@ storeClasses.forEach((storeClass) => {
       it('should not inject timezone into the created event model', () => {
         const onEventsChange = vi.fn();
 
-        const store = new storeClass.Value(
-          {
-            resources: TEST_RESOURCES,
-            events: [],
-            displayTimezone: 'Europe/Paris',
-            onEventsChange,
-          },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          displayTimezone: 'Europe/Paris',
+          onEventsChange,
+        });
 
         const newEvent = EventBuilder.new().toCreationProperties();
         const createdId = store.createEvent(newEvent);
@@ -1659,10 +1602,11 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
 
         const start = adapter.date('2025-07-01T09:00:00Z', 'default');
         const end = adapter.date('2025-07-01T10:00:00Z', 'default');
@@ -1687,10 +1631,11 @@ storeClasses.forEach((storeClass) => {
           const onEventsChange = vi.fn();
           const event = EventBuilder.new().recurrent('DAILY').exDates(['2025-07-14Z']).build();
 
-          const store = new storeClass.Value(
-            { resources: TEST_RESOURCES, events: [event], onEventsChange },
-            adapter,
-          );
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            onEventsChange,
+          });
 
           const start = adapter.date('2025-07-01T09:00:00Z', 'default');
           const end = adapter.date('2025-07-01T10:00:00Z', 'default');
@@ -1721,10 +1666,11 @@ storeClasses.forEach((storeClass) => {
           priority: 'high',
         } as SchedulerEvent;
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
 
         const start = adapter.date('2025-07-01T09:00:00Z', 'default');
         const end = adapter.date('2025-07-01T10:00:00Z', 'default');
@@ -1740,7 +1686,7 @@ storeClasses.forEach((storeClass) => {
     describe('Method: copyEvent', () => {
       it('should set the copiedEvent state with the event and action', () => {
         const event = EventBuilder.new().build();
-        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] }, adapter);
+        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] });
         store.copyEvent(event.id);
 
         expect(store.state.copiedEvent).to.deep.equal({
@@ -1753,7 +1699,7 @@ storeClasses.forEach((storeClass) => {
     describe('Method: cutEvent', () => {
       it('should set the copiedEvent state with the event and action', () => {
         const event = EventBuilder.new().build();
-        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] }, adapter);
+        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] });
         store.cutEvent(event.id);
 
         expect(store.state.copiedEvent).to.deep.equal({
@@ -1766,7 +1712,7 @@ storeClasses.forEach((storeClass) => {
     describe('Method: pasteEvent', () => {
       it('should do nothing if there is no copiedEvent', () => {
         const event = EventBuilder.new().build();
-        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] }, adapter);
+        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] });
         const oldState = store.state;
         store.pasteEvent({ start: adapter.date('2025-07-01T09:00:00Z', 'default') });
         expect(store.state).to.deep.equal(oldState);
@@ -1776,10 +1722,11 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
         store.copyEvent(event.id);
 
         const createdEventId = store.pasteEvent({
@@ -1806,10 +1753,11 @@ storeClasses.forEach((storeClass) => {
           priority: 'high',
         } as SchedulerEvent;
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
         store.copyEvent(event.id);
 
         const createdEventId = store.pasteEvent({
@@ -1828,10 +1776,11 @@ storeClasses.forEach((storeClass) => {
         const resource2 = ResourceBuilder.new().build();
         const event = EventBuilder.new().resource(resource1).build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
         store.copyEvent(event.id);
 
         const createdEventId = store.pasteEvent({
@@ -1854,10 +1803,11 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
         store.copyEvent(event.id);
 
         const createdEventId = store.pasteEvent({
@@ -1880,10 +1830,11 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
         store.cutEvent(event.id);
 
         const createdEventId = store.pasteEvent({
@@ -1907,10 +1858,11 @@ storeClasses.forEach((storeClass) => {
         const resource2 = ResourceBuilder.new().build();
         const event = EventBuilder.new().resource(resource1).build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
         store.cutEvent(event.id);
 
         const createdEventId = store.pasteEvent({
@@ -1931,10 +1883,11 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
         store.cutEvent(event.id);
 
         const createdEventId = store.pasteEvent({
@@ -1955,10 +1908,11 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
         store.cutEvent(event.id);
 
         store.pasteEvent({ start: adapter.date('2025-07-01T09:00:00Z', 'default') });
@@ -1978,10 +1932,11 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
         store.copyEvent(event.id);
 
         const firstPastedId = store.pasteEvent({
@@ -2009,15 +1964,12 @@ storeClasses.forEach((storeClass) => {
           .build();
 
         const createStore = (onEventsChange: (...args: any[]) => void, extra?: object) =>
-          new storeClass.Value(
-            {
-              resources: TEST_RESOURCES,
-              events: [readOnlyEvent],
-              onEventsChange,
-              ...extra,
-            },
-            adapter,
-          );
+          new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [readOnlyEvent],
+            onEventsChange,
+            ...extra,
+          });
 
         // `readOnly` has always been a UI-only gate (it disables the drag/resize gestures and the
         // dialog's fields) — `updateEvent()` itself doesn't enforce it, matching every other
@@ -2113,10 +2065,12 @@ storeClasses.forEach((storeClass) => {
           onEventsChange: (...args: any[]) => void,
           extra?: object,
         ) =>
-          new storeClass.Value(
-            { resources: TEST_RESOURCES, events: [writableEvent], onEventsChange, ...extra },
-            adapter,
-          );
+          new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [writableEvent],
+            onEventsChange,
+            ...extra,
+          });
 
         // Shared by the fallback tests below: the event already sits on the read-only resource, so
         // a paste that doesn't name a destination still resolves and checks one.
@@ -2128,10 +2082,11 @@ storeClasses.forEach((storeClass) => {
           .resource(readOnlyResource)
           .build();
         const createStoreWithEventOnReadOnlyResource = (onEventsChange: (...args: any[]) => void) =>
-          new storeClass.Value(
-            { resources: [readOnlyResource], events: [eventOnReadOnlyResource], onEventsChange },
-            adapter,
-          );
+          new storeClass.Value({
+            resources: [readOnlyResource],
+            events: [eventOnReadOnlyResource],
+            onEventsChange,
+          });
 
         it('should refuse to paste a copy when the destination resource is read-only and keep it in the clipboard', () => {
           const onEventsChange = vi.fn();
@@ -2241,7 +2196,7 @@ storeClasses.forEach((storeClass) => {
     describe('dev warnings', () => {
       it('should warn in dev when events are updated without onEventsChange nor dataSource', () => {
         const event = EventBuilder.new().build();
-        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] }, adapter);
+        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] });
 
         expect(() => {
           store.updateEvent({ id: event.id, title: 'updated' });
@@ -2265,15 +2220,12 @@ premiumStoreClasses.forEach((storeClass) => {
           .recurrent('MONTHLY', { byMonthDay: [3] })
           .build();
         const onEventsChange = vi.fn();
-        const store = new storeClass.Value(
-          {
-            resources: TEST_RESOURCES,
-            events: [event],
-            displayTimezone: 'America/New_York',
-            onEventsChange,
-          },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'America/New_York',
+          onEventsChange,
+        });
         const occurrence = schedulerEventSelectors.processedEventRequired(store.state, 'report');
         expect(occurrence.dataTimezone.rrule!.byMonthDay).to.deep.equal([3]);
 
@@ -2309,15 +2261,12 @@ premiumStoreClasses.forEach((storeClass) => {
             .recurrent('DAILY')
             .build();
           const onEventsChange = vi.fn();
-          const store = new storeClass.Value(
-            {
-              resources: TEST_RESOURCES,
-              events: [event],
-              displayTimezone: 'America/New_York',
-              onEventsChange,
-            },
-            adapter,
-          );
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'America/New_York',
+            onEventsChange,
+          });
 
           store.updateRecurringEvent({
             occurrenceStart: adapter.date('2025-07-20T00:00:00', 'UTC'),
@@ -2344,10 +2293,7 @@ premiumStoreClasses.forEach((storeClass) => {
           getEvents: async () => [event],
           persistEvents: async () => ({ success: true }),
         };
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [], dataSource },
-          adapter,
-        );
+        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [], dataSource });
 
         expect(() => {
           store.createEvent(EventBuilder.new().toCreationProperties());

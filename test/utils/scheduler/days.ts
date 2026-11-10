@@ -3,7 +3,6 @@ import type {
   SchedulerProcessedDay,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
 
@@ -12,11 +11,10 @@ import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
  */
 export function processDay(
   date: TemporalSupportedObject,
-  adapter: Adapter,
   timezone: TemporalTimezone = 'default',
 ): SchedulerProcessedDay {
   return {
-    ...processDate(date, adapter, timezone),
-    plainDate: buildTemporalPlainDate(adapter, date, timezone),
+    ...processDate(date, timezone),
+    plainDate: buildTemporalPlainDate(date, timezone),
   };
 }
