@@ -5,19 +5,20 @@ import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/
 import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import type { WeekInfo } from './date-locale';
 import { toWallClockIsoString } from './plain-date-utils/timeZone';
+import { isInstantString } from './plain-date-utils/date';
 
 /**
  * Converts a `TemporalSupportedObject` back to a string, respecting the
- * original date format: instant strings (ending with `Z`) stay as UTC ISO
- * strings, while wall-time strings (no `Z`) are formatted in the event's
- * data timezone without the `Z` suffix.
+ * original date format: instant strings (ending with `Z` or an offset) become UTC ISO
+ * strings, while wall-time strings are formatted in the event's data timezone
+ * without the `Z` suffix.
  */
 export function dateToEventString(
   date: TemporalSupportedObject,
   originalString: string,
   dataTimezone: TemporalTimezone,
 ): string {
-  if (originalString.endsWith('Z')) {
+  if (isInstantString(originalString)) {
     return new Date(date.getTime()).toISOString();
   }
   return toWallClockIsoString(date.getTime(), dataTimezone);

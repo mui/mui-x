@@ -40,6 +40,18 @@ export function createEndOfPlainDate(
   return new Date(toEpochMs(nextPlainDate, 0, timezone) - 1);
 }
 
+// A string that ends with `Z`, or a date-time that ends with an offset, like
+// `2025-01-01T09:00:00+02:00`.
+const INSTANT_REGEXP = /(?:Z|T.*[+-]\d{2}:?\d{2})$/;
+
+/**
+ * Whether an event date string is an instant: it ends with `Z` or with an offset.
+ * Other strings are wall-clock times read in the data timezone.
+ */
+export function isInstantString(value: string): boolean {
+  return INSTANT_REGEXP.test(value);
+}
+
 // An ISO date (`yyyy-MM-dd`), or an ISO date followed by a time.
 const ISO_DATE_REGEXP = /^\d{4}-\d{2}-\d{2}(?:T|$)/;
 const ISO_DATE_ONLY_REGEXP = /^\d{4}-\d{2}-\d{2}$/;

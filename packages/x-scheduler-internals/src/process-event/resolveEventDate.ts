@@ -3,11 +3,8 @@ import type { TemporalSupportedObject, SchedulerEventId } from '../models';
 import {
   createDateFromString,
   createDateFromWallTime,
+  isInstantString,
 } from '../internals/utils/plain-date-utils/date';
-
-// A string that ends with `Z`, or a date-time that ends with an offset, like
-// `2025-01-01T09:00:00+02:00`.
-const INSTANT_REGEXP = /(?:Z|T.*[+-]\d{2}:?\d{2})$/;
 
 /**
  * Resolves an event date string to a `TemporalSupportedObject`, the `Date` of its instant.
@@ -23,7 +20,7 @@ export function resolveEventDate(
   eventId?: SchedulerEventId,
 ): TemporalSupportedObject {
   let date: TemporalSupportedObject | null = null;
-  if (INSTANT_REGEXP.test(value)) {
+  if (isInstantString(value)) {
     date = new Date(value);
   } else if (dataTimezone !== 'default' && dataTimezone !== 'system') {
     date = createDateFromWallTime(value, dataTimezone);
