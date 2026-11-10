@@ -230,23 +230,49 @@ export function useGridColumns(
     [apiRef],
   );
 
+  // TODO v10: default `useVisibleColumns` to `true`.
   const setColumnIndex = React.useCallback<GridColumnReorderApi['setColumnIndex']>(
-    (field, targetIndexPosition) => {
+    (field, targetIndexPosition, useVisibleColumns) => {
       const column = apiRef.current.getColumn(field);
       if (!column) {
         return;
       }
       const allColumns = gridColumnFieldsSelector(apiRef);
+      const visibilityModel = gridColumnVisibilityModelSelector(apiRef);
+      const isVisible = (columnField: string) => visibilityModel[columnField] !== false;
+      if (useVisibleColumns === undefined && !allColumns.every(isVisible)) {
+        warnOnce(
+          [
+            'MUI X: `setColumnIndex()` was called without `useVisibleColumns` while some columns are hidden.',
+            'The target index counts all columns, including the hidden ones. In v10, it will count only the visible columns by default.',
+            'Pass `false` as the third argument to keep the current behavior, or `true` to count only the visible columns.',
+          ].join('\n'),
+        );
+      }
       const oldIndexPosition = getColumnIndexRelativeToVisibleColumns(field);
-      if (oldIndexPosition === targetIndexPosition) {
+      const updatedColumns = allColumns.filter((columnField) => columnField !== field);
+      let targetIndex = targetIndexPosition;
+      if (useVisibleColumns) {
+        // Before the visible column at the target index, or after the last one.
+        const otherVisibleColumns = updatedColumns.filter(isVisible);
+        const anchor = otherVisibleColumns[targetIndexPosition];
+        const lastVisibleColumn = otherVisibleColumns[otherVisibleColumns.length - 1];
+        if (anchor !== undefined) {
+          targetIndex = updatedColumns.indexOf(anchor);
+        } else {
+          targetIndex =
+            lastVisibleColumn === undefined
+              ? updatedColumns.length
+              : updatedColumns.indexOf(lastVisibleColumn) + 1;
+        }
+      }
+      if (oldIndexPosition === targetIndex) {
         return;
       }
 
-      logger.debug(`Moving column ${field} to index ${targetIndexPosition}`);
+      logger.debug(`Moving column ${field} to index ${targetIndex}`);
 
-      const updatedColumns = [...allColumns];
-      const fieldRemoved = updatedColumns.splice(oldIndexPosition, 1)[0];
-      updatedColumns.splice(targetIndexPosition, 0, fieldRemoved);
+      updatedColumns.splice(targetIndex, 0, field);
       setGridColumnsState({
         ...gridColumnsStateSelector(apiRef),
         orderedFields: updatedColumns,

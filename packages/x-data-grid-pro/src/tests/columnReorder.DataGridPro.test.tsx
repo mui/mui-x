@@ -98,7 +98,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
   });
 
-  it('setColumnIndex should count hidden columns in the target index', async () => {
+  describe('setColumnIndex with hidden columns', () => {
     let apiRef: RefObject<GridApi | null> = { current: null };
     const rows = [{ id: 0, hidden: 0, a: 1, b: 2, c: 3 }];
     const columns = [{ field: 'hidden' }, { field: 'a' }, { field: 'b' }, { field: 'c' }];
@@ -118,15 +118,36 @@ describe('<DataGridPro /> - Columns reorder', () => {
       );
     }
 
-    render(<Test />);
-    const handleColumnIndexChange = vi.fn();
-    apiRef.current?.subscribeEvent('columnIndexChange', handleColumnIndexChange);
-    await act(() => apiRef.current?.setColumnIndex('c', 2));
-    expect(getColumnHeadersTextContent()).to.deep.equal(['a', 'c', 'b']);
-    expect(apiRef.current?.getColumnIndex('c', false)).to.equal(2);
-    expect(handleColumnIndexChange.mock.calls[0][0]).to.deep.include({
-      targetIndex: 2,
-      oldIndex: 3,
+    it('should count all columns with `useVisibleColumns: false`', async () => {
+      render(<Test />);
+      const handleColumnIndexChange = vi.fn();
+      apiRef.current?.subscribeEvent('columnIndexChange', handleColumnIndexChange);
+      await act(() => apiRef.current?.setColumnIndex('c', 2, false));
+      expect(getColumnHeadersTextContent()).to.deep.equal(['a', 'c', 'b']);
+      expect(apiRef.current?.getColumnIndex('c', false)).to.equal(2);
+      expect(handleColumnIndexChange.mock.calls[0][0]).to.deep.include({
+        targetIndex: 2,
+        oldIndex: 3,
+      });
+    });
+
+    it('should count the visible columns with `useVisibleColumns: true`', async () => {
+      render(<Test />);
+      await act(() => apiRef.current?.setColumnIndex('c', 1, true));
+      expect(getColumnHeadersTextContent()).to.deep.equal(['a', 'c', 'b']);
+      expect(apiRef.current?.getColumnIndex('c')).to.equal(1);
+
+      await act(() => apiRef.current?.setColumnIndex('a', 2, true));
+      expect(getColumnHeadersTextContent()).to.deep.equal(['c', 'b', 'a']);
+      expect(apiRef.current?.getColumnIndex('a')).to.equal(2);
+    });
+
+    it('should warn that the default changes in v10 when `useVisibleColumns` is omitted', async () => {
+      render(<Test />);
+      await expect(() => act(() => apiRef.current?.setColumnIndex('c', 2))).toWarnDev([
+        'MUI X: `setColumnIndex()` was called without `useVisibleColumns`',
+      ]);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['a', 'c', 'b']);
     });
   });
 

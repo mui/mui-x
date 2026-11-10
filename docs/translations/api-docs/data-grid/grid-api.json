@@ -173,7 +173,7 @@
       "description": "Sets the focus to the column header at the given <code>field</code>."
     },
     "setColumnIndex": {
-      "description": "Moves a column from its original position to the position given by <code>targetIndexPosition</code>.<br />The position counts all columns, including the hidden ones, like <code>getColumnIndex(field, false)</code>."
+      "description": "Moves a column from its original position to the position given by <code>targetIndexPosition</code>.<br />By default, the position counts all columns, including the hidden ones, like <code>getColumnIndex(field, false)</code>.<br />Pass <code>true</code> to <code>useVisibleColumns</code> to count only the visible columns."
     },
     "setColumnVisibility": {
       "description": "Changes the visibility of the column referred by <code>field</code>."
