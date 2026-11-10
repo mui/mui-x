@@ -25,6 +25,13 @@ describe('recurring-events/internal-utils', () => {
       expect(getWeekDayCode(adapter, adapter.addDays(testMonday, 5), 'default')).to.equal('SA');
       expect(getWeekDayCode(adapter, adapter.addDays(testMonday, 6), 'default')).to.equal('SU');
     });
+
+    it('should read the weekday in the timezone', () => {
+      // Monday at 03:00 UTC is Sunday at 22:00 in New York.
+      const date = adapter.date('2025-10-20T03:00:00Z', 'default');
+      expect(getWeekDayCode(adapter, date, 'UTC')).to.equal('MO');
+      expect(getWeekDayCode(adapter, date, 'America/New_York')).to.equal('SU');
+    });
   });
 
   describe('BYDAY parsers: tokenizeByDay / parseWeeklyByDayPlain / parseMonthlyByDayOrdinalSingle', () => {

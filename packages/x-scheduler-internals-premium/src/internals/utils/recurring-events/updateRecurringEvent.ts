@@ -14,10 +14,11 @@ import type {
 import type { BaseTemporal, UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
 import {
   buildTemporalPlainDate,
+  createAdapterDate,
   extractStandaloneEvent,
   dateToEventString,
   getOccurrenceEnd,
-  moveToPlainDate,
+  moveTimestampToPlainDate,
   toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import {
@@ -175,22 +176,21 @@ export function applyRecurringUpdateAll(
   // for the end, to its first instant at or after the start. Only the bounds in `changes` are
   // written, so that the other one keeps its instant.
   if (!editedIsDtstart) {
+    let startMs = seriesStart.timestamp;
     if (changes.start != null) {
-      eventUpdatedProperties.start = moveToPlainDate(
-        adapter,
-        changes.start,
+      startMs = moveTimestampToPlainDate(
+        adapter.getTime(changes.start),
         seriesStartPlainDate,
         dataTimezone,
       );
+      eventUpdatedProperties.start = createAdapterDate(startMs);
     }
     if (changes.end != null) {
       eventUpdatedProperties.end = moveEndToPlainDate(
         adapter,
         changes.end,
         toPlainDate(originalEvent.dataTimezone.end.timestamp, dataTimezone),
-        eventUpdatedProperties.start == null
-          ? seriesStart.timestamp
-          : adapter.getTime(eventUpdatedProperties.start),
+        startMs,
         dataTimezone,
       );
     }

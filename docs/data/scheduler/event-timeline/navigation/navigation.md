@@ -91,6 +91,7 @@ apiRef.current.goToNextVisibleDate(event);
 apiRef.current.goToPreviousVisibleDate(event);
 ```
 
-The steps move the visible date on the days of `displayTimezone`, and `onVisibleDateChange` receives the new date in that timezone.
+The steps move the visible date on the days of `displayTimezone`, and `onVisibleDateChange` receives an instant on the new day in that timezone.
+Read its day in `displayTimezone`, as the timezone of the browser can put it on another day.
 
 {{"demo": "ExternalNavigation.js", "bg": "inline", "defaultCodeOpen": false}}

@@ -7,14 +7,15 @@ import { describe, it, expect } from 'vitest';
 describe('resolveEventDate', () => {
   it('should convert Z-string to an instant', () => {
     const result = resolveEventDate('2025-01-01T10:00:00Z', 'America/New_York', adapter);
-    expect(result).to.be.instanceOf(Date);
+    // A plain `Date`, not a subclass carrying a timezone.
+    expect(result.constructor).to.equal(Date);
     expect(result.getTime()).to.equal(new Date('2025-01-01T10:00:00Z').getTime());
   });
 
   it('should convert non-Z string to wall-time in the given dataTimezone', () => {
     // "2025-01-01T09:00:00" in America/New_York means 09:00 local → 14:00 UTC (EST = UTC-5)
     const result = resolveEventDate('2025-01-01T09:00:00', 'America/New_York', adapter);
-    expect(result).to.be.instanceOf(Date);
+    expect(result.constructor).to.equal(Date);
     expect(result.getTime()).to.equal(new Date('2025-01-01T14:00:00Z').getTime());
   });
 

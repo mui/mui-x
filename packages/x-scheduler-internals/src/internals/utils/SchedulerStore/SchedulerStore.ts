@@ -75,9 +75,9 @@ import {
 } from '../event-utils';
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
-import { createStartOfPlainDate } from '../plain-date-utils/adapter';
+import { createAdapterDate } from '../plain-date-utils/adapter';
 import { checkDateLocale, DEFAULT_DATE_LOCALE } from '../date-locale';
-import { toLocalDayNumber, toPlainDate } from '../plain-date-utils/timeZone';
+import { getStartOfDayMs, toLocalDayNumber } from '../plain-date-utils/timeZone';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
@@ -86,7 +86,7 @@ const ONE_MINUTE_IN_MS = 60 * 1000;
  * the end of the gap.
  */
 function createStartOfToday(nowTimestamp: number, timezone: TemporalTimezone) {
-  return createStartOfPlainDate(toPlainDate(nowTimestamp, timezone), timezone);
+  return createAdapterDate(getStartOfDayMs(nowTimestamp, timezone));
 }
 
 /**

@@ -1040,6 +1040,11 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
     expect(
       result.map((o) => formatWallClock(o.dataTimezone.start, o.dataTimezone.timezone)),
     ).to.deep.equal(['2026-01-01 00:30', '2026-02-01 00:30', '2026-03-01 00:30']);
+    // 00:30 at -00:30 is 01:00 UTC. Reading the offset as +00:30 gives the same wall-clock times
+    // but 00:00 UTC.
+    expect(result.map((o) => new Date(o.dataTimezone.start.timestamp).toISOString())).to.deep.equal(
+      ['2026-01-01T01:00:00.000Z', '2026-02-01T01:00:00.000Z', '2026-03-01T01:00:00.000Z'],
+    );
     expect(result.map((o) => o.dataTimezone.start.key)).to.deep.equal([
       '2026-01-01',
       '2026-02-01',

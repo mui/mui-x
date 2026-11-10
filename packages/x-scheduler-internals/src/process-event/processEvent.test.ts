@@ -1,6 +1,7 @@
 import { adapter } from 'test/utils/scheduler/adapters';
 import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { EventBuilder } from 'test/utils/scheduler/event-builder';
+import { utcJuly4AllDayBuilder } from 'test/utils/scheduler/fixtures';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { toWallClockIsoString } from '@mui/x-scheduler-internals/internals';
@@ -42,6 +43,16 @@ describe('processEvent', () => {
       expect(adapter.getTime(start.value)).to.equal(Date.parse('2025-01-01T10:00:00Z'));
       // A plain `Date`, not a subclass carrying a timezone.
       expect(start.value.constructor).to.equal(Date);
+    });
+
+    it('should spread an all-day event over whole days of the display timezone', () => {
+      // July 4th in UTC runs from 20:00 on July 3rd to 19:59 on July 4th in New York.
+      const processed = processEvent(utcJuly4AllDayBuilder().build(), 'America/New_York', adapter);
+
+      const { start, end } = processed.displayTimezone;
+      expect([start.key, start.minutesInDay]).to.deep.equal(['2025-07-03', 0]);
+      expect([end.key, end.minutesInDay]).to.deep.equal(['2025-07-04', 23 * 60 + 59]);
+      expect(processed.dataTimezone.start.key).to.equal('2025-07-04');
     });
 
     it('should read an end after 9999 in a timezone east of UTC', () => {

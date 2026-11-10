@@ -57,6 +57,8 @@ export function createEndOfPlainDate(
 
 /**
  * Creates the adapter value of an instant: a `Date`.
+ * This is the one place that decides what the values the Scheduler creates are: an adapter whose
+ * values aren't `Date`s needs this function to create them.
  */
 export function createAdapterDate(epochMs: number): TemporalSupportedObject {
   return new Date(epochMs);

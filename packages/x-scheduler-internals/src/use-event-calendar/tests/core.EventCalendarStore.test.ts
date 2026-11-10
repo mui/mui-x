@@ -293,6 +293,9 @@ describe('Core - EventCalendarStore', () => {
         expect(editing.dataTimezone.end.timestamp).to.equal(adapter.getTime(end));
         // Read in the data timezone: 14:00 UTC.
         expect(editing.dataTimezone.start.minutesInDay).to.equal(14 * 60);
+        // Read in the display timezone: 09:00 in New York.
+        expect(editing.displayTimezone.start.minutesInDay).to.equal(9 * 60);
+        expect(editing.displayTimezone.end.minutesInDay).to.equal(11 * 60);
       });
 
       it('should keep a bound left out on its stored value in both timezones', () => {

@@ -36,7 +36,7 @@ function armRecurringOccurrence(store: any) {
   const editedOccurrence = {
     id: 'standup',
     key: 'standup::2025-07-07',
-    displayTimezone: { start, end },
+    displayTimezone: { timezone: 'default', start, end },
     // Present on every real occurrence: without it the repoint skips the data-timezone
     // identity branch these tests are about.
     dataTimezone: { timezone: 'default', start, end, rrule: RRULE },
@@ -63,6 +63,7 @@ storeClasses.forEach((storeClass) => {
           isRecurring: false,
           dataStart: newStart,
           dataEnd: newEnd,
+          dataTimezone: 'default',
         });
 
         const occurrence = schedulerOtherSelectors.editingOccurrence(
@@ -90,6 +91,7 @@ storeClasses.forEach((storeClass) => {
           isRecurring: true,
           dataStart: newStart,
           dataEnd: newEnd,
+          dataTimezone: 'default',
         });
 
         const occurrence = schedulerOtherSelectors.editingOccurrence(
@@ -111,8 +113,8 @@ storeClasses.forEach((storeClass) => {
         const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
         armRecurringOccurrence(store);
 
-        // 23:00 on the 8th in America/New_York is 03:00 UTC on the 9th: the display and data days differ.
-        const displayStart = adapter.date('2025-07-08T23:00:00', 'America/New_York');
+        // 23:00 UTC on the 8th is 13:00 on the 9th in Pacific/Kiritimati, the data timezone.
+        const displayStart = adapter.date('2025-07-08T23:00:00Z', 'default');
         const displayEnd = adapter.addHours(displayStart, 1);
 
         (store as any).repointEditingOccurrence({
@@ -120,24 +122,15 @@ storeClasses.forEach((storeClass) => {
           start: displayStart,
           end: displayEnd,
           isRecurring: true,
-          dataStart: adapter.setTimezone(displayStart, 'UTC'),
-          dataEnd: adapter.setTimezone(displayEnd, 'UTC'),
+          dataStart: displayStart,
+          dataEnd: displayEnd,
+          dataTimezone: 'Pacific/Kiritimati',
         });
 
         const occurrence = schedulerOtherSelectors.editingOccurrence(store.state)!;
-        // Rendered keys expand in the data timezone, so the repointed key must match the data-tz day...
-        expect(occurrence.key).to.equal(
-          getRecurringOccurrenceKey(
-            'following-event',
-            adapter.setTimezone(displayStart, 'UTC'),
-            adapter,
-            'UTC',
-          ),
-        );
-        // ...and must not use the display-timezone day, which differs here.
-        expect(occurrence.key).to.not.equal(
-          getRecurringOccurrenceKey('following-event', displayStart, adapter, 'America/New_York'),
-        );
+        // Rendered keys expand in the data timezone, so the repointed key must match the data-tz day.
+        // In the display timezone, the timezone of the system, it's the 8th in UTC and west of it.
+        expect(occurrence.key).to.equal('following-event::2025-07-09');
       });
 
       it('should be a no-op when nothing is being edited', () => {
@@ -150,6 +143,7 @@ storeClasses.forEach((storeClass) => {
           isRecurring: false,
           dataStart: newStart,
           dataEnd: newEnd,
+          dataTimezone: 'default',
         });
 
         expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
