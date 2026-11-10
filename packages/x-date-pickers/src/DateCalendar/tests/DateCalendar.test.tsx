@@ -704,6 +704,40 @@ describe('<DateCalendar />', () => {
       expect(onChange.mock.calls.length).to.equal(1);
       expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2019, 3, 1, 12, 20));
     });
+
+    it('should let the keyboard reach the months when the current month is disabled', async () => {
+      const { user } = render(
+        <DateCalendar
+          referenceDate={adapterToUse.date('2019-06-15')}
+          shouldDisableMonth={(month) => adapterToUse.getMonth(month) === 5}
+          views={['month', 'day']}
+          openTo="month"
+        />,
+      );
+
+      const july = screen.getByRole('radio', { name: 'July' });
+      expect(july).to.have.attribute('tabindex', '0');
+
+      // The view switch button of the header comes first.
+      await user.tab();
+      await user.tab();
+
+      expect(july).toHaveFocus();
+    });
+
+    it('should auto focus the closest enabled month when the current month is disabled', () => {
+      render(
+        <DateCalendar
+          autoFocus
+          referenceDate={adapterToUse.date('2019-06-15')}
+          shouldDisableMonth={(month) => adapterToUse.getMonth(month) === 5}
+          views={['month', 'day']}
+          openTo="month"
+        />,
+      );
+
+      expect(screen.getByRole('radio', { name: 'July' })).toHaveFocus();
+    });
   });
 
   describe('view: year', () => {

@@ -1,4 +1,4 @@
-import { screen } from '@mui/internal-test-utils';
+import { act, screen } from '@mui/internal-test-utils';
 import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
 import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
@@ -166,6 +166,52 @@ describe('<MonthCalendar />', () => {
       render(<MonthCalendar disabled />);
 
       expect(getTabStops()).to.deep.equal([]);
+    });
+
+    it('should not take the focus back after leaving the calendar when the auto focused month gets disabled', () => {
+      const { setProps } = render(
+        <MonthCalendar
+          autoFocus
+          value={adapterToUse.date('2019-06-15')}
+          shouldDisableMonth={(month) => isMonth(month, 5)}
+        />,
+      );
+
+      const july = screen.getByRole('radio', { name: 'July' });
+      expect(july).toHaveFocus();
+
+      act(() => july.blur());
+
+      setProps({
+        shouldDisableMonth: (month: PickerValidDate) =>
+          [5, 6].includes(adapterToUse.getMonth(month)),
+      });
+
+      expect(getTabStops()).to.deep.equal(['May']);
+      expect(document.body).toHaveFocus();
+    });
+
+    it('should validate the focused month against the displayed year', async () => {
+      const onMonthFocus = vi.fn();
+      const { user } = render(
+        <MonthCalendar
+          value={adapterToUse.date('2020-07-15')}
+          currentMonth={adapterToUse.date('2021-01-01')}
+          minDate={adapterToUse.date('2020-06-01')}
+          maxDate={adapterToUse.date('2021-05-31')}
+          onMonthFocus={onMonthFocus}
+        />,
+      );
+
+      await user.tab();
+
+      expect(screen.getByRole('radio', { name: 'May' })).toHaveFocus();
+      expect(onMonthFocus.mock.lastCall).to.deep.equal([4]);
+
+      await user.keyboard('{ArrowLeft}');
+
+      expect(screen.getByRole('radio', { name: 'April' })).toHaveFocus();
+      expect(onMonthFocus.mock.lastCall).to.deep.equal([3]);
     });
   });
 

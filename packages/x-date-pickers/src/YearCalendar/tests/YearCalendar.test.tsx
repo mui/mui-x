@@ -276,6 +276,30 @@ describe('<YearCalendar />', () => {
 
       expect(getTabStops()).to.deep.equal([]);
     });
+
+    it('should not take the focus back after leaving the calendar when the auto focused year gets disabled', () => {
+      const { setProps } = render(
+        <YearCalendar
+          {...defaultProps}
+          autoFocus
+          value={adapterToUse.date('2019-06-15')}
+          shouldDisableYear={(year) => adapterToUse.getYear(year) === 2019}
+        />,
+      );
+
+      const year2020 = screen.getByRole('radio', { name: '2020' });
+      expect(year2020).toHaveFocus();
+
+      act(() => year2020.blur());
+
+      setProps({
+        shouldDisableYear: (year: PickerValidDate) =>
+          [2019, 2020].includes(adapterToUse.getYear(year)),
+      });
+
+      expect(getTabStops()).to.deep.equal(['2018']);
+      expect(document.body).toHaveFocus();
+    });
   });
 
   it('should not mark the `referenceDate` year as selected', () => {

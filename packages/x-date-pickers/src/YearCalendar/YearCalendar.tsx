@@ -275,12 +275,6 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
     focusYear(year);
   });
 
-  const handleYearBlur = useEventCallback((event: React.FocusEvent, year: number) => {
-    if (focusedYear === year) {
-      changeHasFocus(false);
-    }
-  });
-
   const scrollerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, scrollerRef);
   React.useEffect(() => {
@@ -336,6 +330,12 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
     focusedYear,
     yearsWithState.filter((year) => !year.isDisabled).map((year) => year.yearNumber),
   );
+
+  const handleYearBlur = useEventCallback((event: React.FocusEvent, year: number) => {
+    if (tabStopYear === year) {
+      changeHasFocus(false);
+    }
+  });
 
   return (
     <YearCalendarRoot

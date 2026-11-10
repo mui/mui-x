@@ -233,7 +233,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
   });
 
   const focusMonth = useEventCallback((month: number) => {
-    if (!isMonthDisabled(adapter.setMonth(value ?? currentMonth ?? referenceDate, month))) {
+    if (!isMonthDisabled(adapter.setMonth(currentMonth ?? value ?? referenceDate, month))) {
       setFocusedMonth(month);
       changeHasFocus(true);
       if (onMonthFocus) {
@@ -285,12 +285,6 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
     focusMonth(month);
   });
 
-  const handleMonthBlur = useEventCallback((event: React.FocusEvent, month: number) => {
-    if (focusedMonth === month) {
-      changeHasFocus(false);
-    }
-  });
-
   const months = getMonthsInYear(adapter, currentMonth ?? value ?? referenceDate).map((month) => ({
     date: month,
     monthNumber: adapter.getMonth(month),
@@ -301,6 +295,12 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
     focusedMonth,
     months.filter((month) => !month.isDisabled).map((month) => month.monthNumber),
   );
+
+  const handleMonthBlur = useEventCallback((event: React.FocusEvent, month: number) => {
+    if (tabStopMonth === month) {
+      changeHasFocus(false);
+    }
+  });
 
   return (
     <MonthCalendarRoot
