@@ -58,6 +58,21 @@ describe('resolveEventDate', () => {
     );
   });
 
+  // Browsers cannot change their timezone through process.env.TZ.
+  it.skipIf(!isJSDOM)('should read a date in another format at midnight in dataTimezone', () => {
+    setSystemTimezone('America/New_York');
+    // `Date.parse()` reads `2025/01/01` in the timezone of the system, not as UTC.
+    expect(resolveEventDate('2025/01/01', 'default').toISOString()).to.equal(
+      '2025-01-01T05:00:00.000Z',
+    );
+    expect(resolveEventDate('2025/01/01', 'Europe/Paris').toISOString()).to.equal(
+      '2024-12-31T23:00:00.000Z',
+    );
+    expect(resolveEventDate('2025-01-01', 'default').toISOString()).to.equal(
+      '2025-01-01T05:00:00.000Z',
+    );
+  });
+
   it('should read a date-time with an offset as an instant', () => {
     const result = resolveEventDate('2025-01-01T09:00:00+02:00', 'America/New_York');
     expect(result.toISOString()).to.equal('2025-01-01T07:00:00.000Z');

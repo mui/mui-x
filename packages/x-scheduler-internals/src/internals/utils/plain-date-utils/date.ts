@@ -42,6 +42,7 @@ export function createEndOfPlainDate(
 
 // An ISO date (`yyyy-MM-dd`), or an ISO date followed by a time.
 const ISO_DATE_REGEXP = /^\d{4}-\d{2}-\d{2}(?:T|$)/;
+const ISO_DATE_ONLY_REGEXP = /^\d{4}-\d{2}-\d{2}$/;
 
 /**
  * Creates the date of an ISO date or date-time without an offset, read as a wall-clock time in
@@ -66,20 +67,20 @@ export function createDateFromWallTime(
 /**
  * Creates the date of a string that `createDateFromWallTime()` doesn't read, like a date-time with
  * an offset or a format other than ISO 8601. `Date.parse()` reads it, and its wall-clock time in the
- * timezone of the system, or its date for a date-only string, is then read in `timezone`.
+ * timezone of the system, or its date for an ISO date, is then read in `timezone`.
  */
 export function createDateFromString(value: string, timezone: TemporalTimezone): Date {
   const epochMs = Date.parse(value);
   if (Number.isNaN(epochMs)) {
     return new Date(NaN);
   }
-  // `Date.parse()` reads a date-only string as UTC midnight, and the date-times without an offset
-  // in the timezone of the system.
-  const isDateOnly = !value.includes('T');
-  if (!isDateOnly && (timezone === 'default' || timezone === 'system')) {
+  // `Date.parse()` reads an ISO date as UTC midnight, and the other strings without an offset, like
+  // `2025/01/01`, in the timezone of the system.
+  const isUtc = ISO_DATE_ONLY_REGEXP.test(value);
+  if (!isUtc && (timezone === 'default' || timezone === 'system')) {
     return new Date(epochMs);
   }
-  const wallClockMs = isDateOnly ? epochMs : toLocalMs(epochMs, 'default');
+  const wallClockMs = isUtc ? epochMs : toLocalMs(epochMs, 'default');
   return new Date(localToEpochMs(wallClockMs, timezone));
 }
 
