@@ -42,7 +42,7 @@ describe('<CalendarGrid.CurrentTimeIndicator />', () => {
       () => {
         setSystemTimezone('UTC');
         // Another day than today, to check that only the time of day of now is used.
-        const columnDay = createDate('2025-05-06T12:00:00Z', 'America/New_York');
+        const columnDay = createDate('2025-05-06T12:00:00Z');
 
         renderAtNow(
           <EventCalendarProvider events={[]} displayTimezone="America/New_York">

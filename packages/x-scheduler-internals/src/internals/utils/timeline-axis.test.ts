@@ -20,8 +20,8 @@ import { BaseTemporal } from './base-temporal';
 const MINUTE = 60_000;
 
 describe('timeline-axis', () => {
-  const start = createDate('2025-01-05T00:00:00.000Z', 'UTC');
-  const end = endOfDay(createDate('2025-01-08T00:00:00.000Z', 'UTC'), 'UTC');
+  const start = createDate('2025-01-05T00:00:00.000Z');
+  const end = endOfDay(createDate('2025-01-08T00:00:00.000Z'), 'UTC');
 
   const fullAxis = createTimelineAxis({
     start,
@@ -151,27 +151,27 @@ describe('timeline-axis', () => {
 
   describe('timestampToTimelineAxisOffsetMs', () => {
     it('should return the real ms difference for the full-day window', () => {
-      const date = createDate('2025-01-06T02:00:00.000Z', 'UTC');
+      const date = createDate('2025-01-06T02:00:00.000Z');
       expect(timestampToTimelineAxisOffsetMs(fullAxis, date.getTime())).to.equal(26 * 60 * MINUTE);
     });
 
     it('should map a date inside the window of a trimmed axis', () => {
-      const date = createDate('2025-01-06T10:00:00.000Z', 'UTC');
+      const date = createDate('2025-01-06T10:00:00.000Z');
       expect(timestampToTimelineAxisOffsetMs(trimmedAxis, date.getTime())).to.equal(840 * MINUTE);
     });
 
     it('should clamp a date outside the visible window to the day edge', () => {
-      const hidden = createDate('2025-01-05T22:00:00.000Z', 'UTC');
+      const hidden = createDate('2025-01-05T22:00:00.000Z');
       expect(timestampToTimelineAxisOffsetMs(trimmedAxis, hidden.getTime())).to.equal(720 * MINUTE);
     });
 
     it('should return a negative offset for a date before the collection start', () => {
-      const date = createDate('2025-01-04T10:00:00.000Z', 'UTC');
+      const date = createDate('2025-01-04T10:00:00.000Z');
       expect(timestampToTimelineAxisOffsetMs(trimmedAxis, date.getTime())).to.equal(-600 * MINUTE);
     });
 
     it('should round-trip with timelineAxisOffsetToTimestamp inside the window', () => {
-      const date = createDate('2025-01-07T15:30:00.000Z', 'UTC');
+      const date = createDate('2025-01-07T15:30:00.000Z');
       const offset = timestampToTimelineAxisOffsetMs(trimmedAxis, date.getTime());
       expect(timelineAxisOffsetToTimestamp(trimmedAxis, offset)).to.equal(date.getTime());
     });

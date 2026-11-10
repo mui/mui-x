@@ -12,7 +12,6 @@ import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
-  differenceInDays,
   EventBuilder,
   getAllEventsByTitle,
   getEventByTitle,
@@ -498,7 +497,9 @@ describe('<EventTimelinePremium />', () => {
     it('should render events correctly in the dayAndWeek preset', async () => {
       const totalWidth = 64 * 7 * 16; // 64px * 7 days * 16 weeks
       const weekStart = startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
-      const weekDayNumber = differenceInDays(createDate(baseEvents[0].start), weekStart);
+      const weekDayNumber = Math.floor(
+        (Date.parse(baseEvents[0].start) - weekStart.getTime()) / (24 * 60 * 60 * 1000),
+      );
       const dayBoundaries = { start: weekDayNumber * 64, end: (weekDayNumber + 1) * 64 };
 
       await renderTimeline({ preset: 'dayAndWeek' });
@@ -1259,7 +1260,7 @@ describe('<EventTimelinePremium />', () => {
         const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
         const { user } = await renderTimeline({
           events: [],
-          visibleDate: createDate('2025-07-03T12:00:00Z', displayTimezone ?? 'default'),
+          visibleDate: createDate('2025-07-03T12:00:00Z'),
           displayTimezone,
           onEventEditingStart,
         });

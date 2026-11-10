@@ -43,7 +43,7 @@ describe('<TimelineGrid.EventRow />', () => {
         events={[]}
         resources={[resource]}
         displayTimezone={timezone}
-        visibleDate={createDate('2025-07-03T06:15:00Z', timezone)} // noon in Kathmandu
+        visibleDate={createDate('2025-07-03T06:15:00Z')} // noon in Kathmandu
         preset="dayAndHour"
       >
         <TimelineGrid.Root>

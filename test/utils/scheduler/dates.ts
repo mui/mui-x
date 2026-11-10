@@ -1,14 +1,12 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import {
+  createStartOfPlainDate,
   getEndOfDayMs,
   getPlainDateWeekStart,
   getStartOfDayMs,
   localToEpochMs,
-  MS_PER_DAY,
   moveTimestampToPlainDate,
-  toEpochMs,
   toLocalDayNumber,
-  toLocalMs,
   toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import type { PlainDateDuration } from '@mui/x-scheduler-internals/internals';
@@ -35,7 +33,7 @@ export function createDate(value: string, timezone: TemporalTimezone = 'default'
   return new Date(localToEpochMs(wallClockMs, timezone));
 }
 
-export function addMilliseconds(date: Date, amount: number): Date {
+function addMilliseconds(date: Date, amount: number): Date {
   return new Date(date.getTime() + amount);
 }
 
@@ -93,15 +91,7 @@ export function endOfDay(date: Date, timezone: TemporalTimezone = 'default'): Da
  */
 export function startOfWeek(date: Date, timezone: TemporalTimezone = 'default'): Date {
   const plainDate = toPlainDate(date.getTime(), timezone);
-  return new Date(toEpochMs(getPlainDateWeekStart(plainDate, 7), 0, timezone));
-}
-
-/**
- * The last instant of the week of `date` in `timezone`, with weeks starting on Sunday.
- */
-export function endOfWeek(date: Date, timezone: TemporalTimezone = 'default'): Date {
-  const plainDate = toPlainDate(date.getTime(), timezone);
-  return new Date(toEpochMs(getPlainDateWeekStart(plainDate, 7).add({ days: 7 }), 0, timezone) - 1);
+  return createStartOfPlainDate(getPlainDateWeekStart(plainDate, 7), timezone);
 }
 
 /**
@@ -109,31 +99,7 @@ export function endOfWeek(date: Date, timezone: TemporalTimezone = 'default'): D
  */
 export function startOfMonth(date: Date, timezone: TemporalTimezone = 'default'): Date {
   const plainDate = toPlainDate(date.getTime(), timezone);
-  return new Date(toEpochMs(plainDate.with({ day: 1 }), 0, timezone));
-}
-
-/**
- * Sets the hour of `date` on the wall clock of `timezone`, keeping its minutes and seconds.
- */
-export function setHours(date: Date, hours: number, timezone: TemporalTimezone = 'default'): Date {
-  const localMs = toLocalMs(date.getTime(), timezone);
-  const dayStartMs = Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY;
-  return new Date(
-    localToEpochMs(dayStartMs + hours * HOUR_MS + ((localMs - dayStartMs) % HOUR_MS), timezone),
-  );
-}
-
-/**
- * The number of full days from `earlier` to `later` on the wall clock of `timezone`.
- */
-export function differenceInDays(
-  later: Date,
-  earlier: Date,
-  timezone: TemporalTimezone = 'default',
-): number {
-  return Math.trunc(
-    (toLocalMs(later.getTime(), timezone) - toLocalMs(earlier.getTime(), timezone)) / MS_PER_DAY,
-  );
+  return createStartOfPlainDate(plainDate.with({ day: 1 }), timezone);
 }
 
 /**

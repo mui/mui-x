@@ -228,7 +228,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
       const until = (result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule).until!;
 
       // The start of January 2nd in New York.
-      expect(new Date(until.getTime()).toISOString()).to.equal('2025-01-02T05:00:00.000Z');
+      expect(until.toISOString()).to.equal('2025-01-02T05:00:00.000Z');
     });
 
     it('should truncate the series to the last day that exists before the occurrence', () => {

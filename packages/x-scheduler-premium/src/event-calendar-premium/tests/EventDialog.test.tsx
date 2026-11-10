@@ -2208,15 +2208,15 @@ describe('<EventDialogContent open />', () => {
         const series = newEvents.find((event) => event.id === weeklyEvent.id)!;
         expect(series.exDates).to.have.length(1);
         expect(
-          toPlainDate(createDate(String(series.exDates![0]), 'UTC').getTime(), 'UTC').toString(),
-        ).to.equal('2025-07-04');
+          toPlainDate(createDate(String(series.exDates![0]), 'UTC').getTime(), 'UTC'),
+        ).toEqualPlainDate('2025-07-04');
 
         const detached = newEvents.find((event) => event.id !== weeklyEvent.id)!;
         expect(detached.title).to.equal('Weekly sync renamed');
         expect(detached.rrule).to.equal(undefined);
         expect(
-          toPlainDate(createDate(String(detached.start), 'UTC').getTime(), 'UTC').toString(),
-        ).to.equal('2025-07-04');
+          toPlainDate(createDate(String(detached.start), 'UTC').getTime(), 'UTC'),
+        ).toEqualPlainDate('2025-07-04');
       });
 
       it("should move the whole series to the edited day as displayed with scope 'all'", async () => {
@@ -2259,11 +2259,11 @@ describe('<EventDialogContent open />', () => {
           (event: SchedulerEvent) => event.id === weeklyEvent.id,
         )!;
         const updatedStartInNewYork = createDate(String(updated.start), 'UTC');
-        expect(
-          toPlainDate(updatedStartInNewYork.getTime(), 'America/New_York').toString(),
-        ).to.equal('2025-07-04');
+        expect(toPlainDate(updatedStartInNewYork.getTime(), 'America/New_York')).toEqualPlainDate(
+          '2025-07-04',
+        );
         const updatedEndInNewYork = createDate(String(updated.end), 'UTC');
-        expect(toPlainDate(updatedEndInNewYork.getTime(), 'America/New_York').toString()).to.equal(
+        expect(toPlainDate(updatedEndInNewYork.getTime(), 'America/New_York')).toEqualPlainDate(
           '2025-07-05',
         );
         // The start's data-timezone day is unchanged, so the BYDAY stays put.
@@ -2319,7 +2319,7 @@ describe('<EventDialogContent open />', () => {
         // move in the data timezone, so the BYDAY stays FR (not the display day's SA).
         expect(updated.rrule).to.deep.equal(tokyoEvent.rrule);
         const updatedStartInTokyo = createDate(String(updated.start), 'UTC');
-        expect(toPlainDate(updatedStartInTokyo.getTime(), 'Asia/Tokyo').toString()).to.equal(
+        expect(toPlainDate(updatedStartInTokyo.getTime(), 'Asia/Tokyo')).toEqualPlainDate(
           '2025-07-05',
         );
       });
@@ -2402,7 +2402,7 @@ describe('<EventDialogContent open />', () => {
         expect(updated.rrule).to.deep.equal(weeklyEvent.rrule);
         // The edited end applies as the day the user was looking at.
         const updatedEndInNewYork = createDate(String(updated.end), 'UTC');
-        expect(toPlainDate(updatedEndInNewYork.getTime(), 'America/New_York').toString()).to.equal(
+        expect(toPlainDate(updatedEndInNewYork.getTime(), 'America/New_York')).toEqualPlainDate(
           '2025-07-05',
         );
       });
@@ -2479,18 +2479,15 @@ describe('<EventDialogContent open />', () => {
         const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall?.[0];
         const series = newEvents.find((event) => event.id === weeklyEvent.id)!;
         expect(
-          toPlainDate(
-            createDate(String((series.rrule as any).until), 'UTC').getTime(),
-            'UTC',
-          ).toString(),
-        ).to.equal('2025-07-10');
+          toPlainDate(createDate(String((series.rrule as any).until), 'UTC').getTime(), 'UTC'),
+        ).toEqualPlainDate('2025-07-10');
 
         const split = newEvents.find((event) => event.id !== weeklyEvent.id)!;
         expect(split.title).to.equal('Weekly sync renamed');
         expect(split.rrule).to.not.equal(undefined);
         expect(
-          toPlainDate(createDate(String(split.start), 'UTC').getTime(), 'UTC').toString(),
-        ).to.equal('2025-07-11');
+          toPlainDate(createDate(String(split.start), 'UTC').getTime(), 'UTC'),
+        ).toEqualPlainDate('2025-07-11');
       });
 
       it('should identify an occurrence across a DST transition by its data-timezone start', async () => {

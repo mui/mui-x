@@ -59,19 +59,16 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
     const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
     expect(series.exDates).to.have.length(1);
     expect(
-      toPlainDate(createDate(String(series.exDates[0]), 'UTC').getTime(), 'UTC').toString(),
-    ).to.equal('2025-07-04');
+      toPlainDate(createDate(String(series.exDates[0]), 'UTC').getTime(), 'UTC'),
+    ).toEqualPlainDate('2025-07-04');
 
     // The detached one-off lands on the day the user dropped it on (New York July 8th),
     // not a day shifted by re-reading the display bounds as the base.
     const detached = updatedEvents.find((item: { id: string }) => item.id !== event.id)!;
     expect(detached.rrule).to.equal(undefined);
     expect(
-      toPlainDate(
-        createDate(String(detached.start), 'UTC').getTime(),
-        'America/New_York',
-      ).toString(),
-    ).to.equal('2025-07-08');
+      toPlainDate(createDate(String(detached.start), 'UTC').getTime(), 'America/New_York'),
+    ).toEqualPlainDate('2025-07-08');
   });
 
   it('should exclude the dragged occurrence of its own day when a timed one is moved from another timezone', async () => {
@@ -125,7 +122,7 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
       toPlainDate(
         createDate(String(series.exDates[0]), 'America/New_York').getTime(),
         'America/New_York',
-      ).toString(),
-    ).to.equal('2025-07-03');
+      ),
+    ).toEqualPlainDate('2025-07-03');
   });
 });

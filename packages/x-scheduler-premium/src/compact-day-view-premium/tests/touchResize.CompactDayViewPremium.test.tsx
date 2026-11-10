@@ -162,8 +162,8 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
     const series = updatedEvents.find((item) => item.id === 'event-1')!;
     expect(series.exDates).to.have.length(1);
     expect(
-      toPlainDate(createDate(String(series.exDates![0]), 'UTC').getTime(), 'UTC').toString(),
-    ).to.equal('2025-07-03');
+      toPlainDate(createDate(String(series.exDates![0]), 'UTC').getTime(), 'UTC'),
+    ).toEqualPlainDate('2025-07-03');
     const detached = updatedEvents.find((item) => item.id !== 'event-1')!;
     expect(detached.rrule).to.equal(undefined);
     expect(new Date(detached.start).toISOString()).to.equal('2025-07-02T20:00:00.000Z');

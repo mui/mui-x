@@ -123,7 +123,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
         dataSource,
         displayTimezone: 'America/Santiago',
         // Midnight on April 5th, 2026 in Santiago.
-        defaultVisibleDate: createDate('2026-04-05T04:00:00Z', 'America/Santiago'),
+        defaultVisibleDate: createDate('2026-04-05T04:00:00Z'),
       });
       store.setViewDefinition(buildViewDefinition(1));
 
@@ -689,7 +689,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     await flushDebounce();
     expect(dataSource.getEvents.mock.calls).to.have.length(1);
     const [start] = dataSource.getEvents.mock.calls[0];
-    expect(start.getTime() === startOfDay(morning).getTime()).to.equal(true);
+    expect(start).toEqualDateTime(startOfDay(morning));
 
     store.goToDate(startOfDay(morning), noopUIEvent);
     await flushEffect();
@@ -712,7 +712,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     await flushDebounce();
 
     const [start, end] = dataSource.getEvents.mock.calls[0];
-    expect(start.getTime() === startOfDay(DEFAULT_TESTING_VISIBLE_DATE).getTime()).to.equal(true);
+    expect(start).toEqualDateTime(startOfDay(DEFAULT_TESTING_VISIBLE_DATE));
     expect(end.getTime() === endOfDay(addDays(DEFAULT_TESTING_VISIBLE_DATE, 6)).getTime()).to.equal(
       true,
     );
@@ -788,12 +788,8 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
 
       expect(dataSource.getEvents.mock.calls).to.have.length(2);
       const [start, end] = dataSource.getEvents.mock.calls[1];
-      expect(
-        start.getTime() === startOfDay(addDays(DEFAULT_TESTING_VISIBLE_DATE, 180)).getTime(),
-      ).to.equal(true);
-      expect(
-        end.getTime() === endOfDay(addDays(DEFAULT_TESTING_VISIBLE_DATE, 191)).getTime(),
-      ).to.equal(true);
+      expect(start).toEqualDateTime(startOfDay(addDays(DEFAULT_TESTING_VISIBLE_DATE, 180)));
+      expect(end).toEqualDateTime(endOfDay(addDays(DEFAULT_TESTING_VISIBLE_DATE, 191)));
 
       // Navigating back to the cached horizon fetches nothing
       store.goToDate(DEFAULT_TESTING_VISIBLE_DATE, noopUIEvent);

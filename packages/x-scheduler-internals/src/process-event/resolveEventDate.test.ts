@@ -36,12 +36,12 @@ describe('resolveEventDate', () => {
           }
           // Europe/Paris falls back from 03:00 CEST to 02:00 CET on October 26th, 2025.
           const repeated = resolveEventDate('2025-10-26T02:30:00', 'Europe/Paris');
-          expect(new Date(repeated.getTime()).toISOString()).to.equal(
+          expect(repeated.toISOString()).to.equal(
             '2025-10-26T00:30:00.000Z', // The first 02:30, in CEST
           );
           // Europe/Paris springs forward from 02:00 CET to 03:00 CEST on March 30th, 2025.
           const skipped = resolveEventDate('2025-03-30T02:30:00', 'Europe/Paris');
-          expect(new Date(skipped.getTime()).toISOString()).to.equal(
+          expect(skipped.toISOString()).to.equal(
             '2025-03-30T01:30:00.000Z', // 03:30 CEST
           );
         },

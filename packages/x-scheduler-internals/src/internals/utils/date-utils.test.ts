@@ -47,8 +47,8 @@ describe('date-utils', () => {
       // America/Santiago falls back from 00:00 -03:00 to 23:00 -04:00 on April 6th, 2024.
       const day = createDate('2024-04-06T12:00:00', 'America/Santiago');
       const result = normalizeAllDayBounds(day, day, true, 'America/Santiago');
-      expect(new Date(result.start.getTime()).toISOString()).to.equal('2024-04-06T03:00:00.000Z');
-      expect(new Date(result.end.getTime()).toISOString()).to.equal('2024-04-07T03:59:59.999Z');
+      expect(result.start.toISOString()).to.equal('2024-04-06T03:00:00.000Z');
+      expect(result.end.toISOString()).to.equal('2024-04-07T03:59:59.999Z');
     });
   });
 

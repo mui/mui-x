@@ -1,7 +1,6 @@
 import {
   addWeeks,
   createDate,
-  endOfWeek,
   getEventTimelinePremiumStateFromParameters,
   ResourceBuilder,
   setSystemTimezone,
@@ -80,9 +79,8 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       expect(config.tickCount).to.equal(16 * 7);
       // July 3, 2025 is a Thursday → week starts Monday June 30
       expect(new Date(config.start)).toEqualDateTime(startOfWeek(VISIBLE_DATE));
-      expect(new Date(config.end)).toEqualDateTime(
-        endOfWeek(addWeeks(startOfWeek(VISIBLE_DATE), 15)),
-      );
+      // The last instant of the 16th week.
+      expect(config.end).to.equal(addWeeks(startOfWeek(VISIBLE_DATE), 16).getTime() - 1);
     });
 
     it('should return the configuration for the monthAndYear preset', () => {

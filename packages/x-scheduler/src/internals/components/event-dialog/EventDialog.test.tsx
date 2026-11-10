@@ -1040,7 +1040,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.getByLabelText(/start date/i)).to.have.value('2025-05-27');
       expect(onRender.mock.calls.length).to.equal(rendersBefore);
 
-      expect(toPlainDate(getPlaceholder().start, 'default').toString()).to.equal('2025-05-27');
+      expect(toPlainDate(getPlaceholder().start, 'default')).toEqualPlainDate('2025-05-27');
     });
 
     it('should keep the placeholder in place while a custom field holds a date that does not exist', () => {

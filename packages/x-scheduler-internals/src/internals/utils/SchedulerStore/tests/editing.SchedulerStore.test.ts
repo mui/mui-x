@@ -549,7 +549,7 @@ premiumStoreClasses.forEach((storeClass) => {
         const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
         expect(occurrence.key).to.equal(armed.key);
         expect(
-          toWallClockIsoString(occurrence.displayTimezone.start.value.getTime(), 'Asia/Tokyo'),
+          toWallClockIsoString(occurrence.displayTimezone.start.timestamp, 'Asia/Tokyo'),
         ).to.equal('2025-07-08T19:00:00');
       });
     });
@@ -743,7 +743,7 @@ premiumStoreClasses.forEach((storeClass) => {
         const updated = onEventsChange.mock.lastCall?.[0].find(
           (candidate: any) => candidate.id === 'standup',
         );
-        expect(createDate(updated.end).getTime() === addMinutes(dayA, 90).getTime()).to.equal(true);
+        expect(createDate(updated.end)).toEqualDateTime(addMinutes(dayA, 90));
         // `start` was stripped out of the change entirely (not merely resubmitted unchanged), so
         // the model keeps its original string as-is instead of being reformatted.
         expect(updated.start).to.equal(RECURRING_EVENT.start);

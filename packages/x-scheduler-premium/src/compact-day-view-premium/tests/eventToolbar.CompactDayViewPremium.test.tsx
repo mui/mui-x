@@ -118,7 +118,7 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
     const series = updatedEvents.find((item: SchedulerEvent) => item.id === 'event-1')!;
     expect(series.exDates).to.have.length(1);
     expect(
-      toPlainDate(createDate(String(series.exDates![0]), 'UTC').getTime(), 'UTC').toString(),
-    ).to.equal('2025-07-04');
+      toPlainDate(createDate(String(series.exDates![0]), 'UTC').getTime(), 'UTC'),
+    ).toEqualPlainDate('2025-07-04');
   });
 });

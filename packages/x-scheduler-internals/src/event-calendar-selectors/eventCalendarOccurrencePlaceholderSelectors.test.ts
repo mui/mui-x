@@ -6,7 +6,6 @@ import {
   endOfDay,
   EventBuilder,
   processDay,
-  setHours,
   setSystemTimezone,
   startOfDay,
 } from 'test/utils/scheduler';
@@ -150,8 +149,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: setHours(addDays(dayStart, -1), 22).getTime(),
-          end: setHours(dayStart, 6).getTime(),
+          start: createDate('2024-01-14T22:00:00').getTime(),
+          end: createDate('2024-01-15T06:00:00').getTime(),
           resourceId: null,
         },
       };
@@ -170,7 +169,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: setHours(addDays(dayStart, -1), 16).getTime(),
+          start: createDate('2024-01-14T16:00:00').getTime(),
           end: dayStart.getTime(),
           resourceId: null,
         },
@@ -185,15 +184,15 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     });
 
     it('should return null when the placeholder starts exactly at the end of the range', () => {
-      const rangeStart = setHours(dayStart, 8);
-      const rangeEnd = setHours(dayStart, 20);
+      const rangeStart = createDate('2024-01-15T08:00:00');
+      const rangeEnd = createDate('2024-01-15T20:00:00');
       const state: EventCalendarState = {
         ...DEFAULT_EVENT_CALENDAR_STATE,
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
           start: rangeEnd.getTime(),
-          end: setHours(addDays(dayStart, 1), 4).getTime(),
+          end: createDate('2024-01-16T04:00:00').getTime(),
           resourceId: null,
         },
       };
@@ -326,8 +325,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'day-grid',
-          start: setHours(dayStart, 10).getTime(),
-          end: setHours(dayStart, 11).getTime(),
+          start: createDate('2024-01-15T10:00:00').getTime(),
+          end: createDate('2024-01-15T11:00:00').getTime(),
           resourceId: null,
         },
       };
@@ -372,8 +371,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: setHours(addDays(dayStart, -1), 22).getTime(),
-          end: setHours(dayStart, 6).getTime(),
+          start: createDate('2024-01-14T22:00:00').getTime(),
+          end: createDate('2024-01-15T06:00:00').getTime(),
           resourceId: null,
         },
       };
@@ -393,8 +392,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: setHours(dayStart, 10).getTime(), // < dayEnd
-          end: setHours(dayStart, 11).getTime(), // > dayStart
+          start: createDate('2024-01-15T10:00:00').getTime(), // < dayEnd
+          end: createDate('2024-01-15T11:00:00').getTime(), // > dayStart
           resourceId: null,
         },
       };
@@ -432,13 +431,13 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     it('should return false when end == dayStart', () => {
       // A time grid that starts at 08:00 passes it as the start of the range, so a placeholder of
       // the same day can end exactly where the range starts.
-      const windowStart = setHours(dayStart, 8);
+      const windowStart = createDate('2024-01-15T08:00:00');
       const state: EventCalendarState = {
         ...DEFAULT_EVENT_CALENDAR_STATE,
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: setHours(dayStart, 7).getTime(),
+          start: createDate('2024-01-15T07:00:00').getTime(),
           end: windowStart.getTime(), // end > dayStart is false
           resourceId: null,
         },

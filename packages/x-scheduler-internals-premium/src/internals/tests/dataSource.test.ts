@@ -190,8 +190,8 @@ premiumStoreClasses.forEach((storeClass) => {
 
       expect(dataSource.getEvents.mock.calls).to.have.length(2);
       const [start, end] = dataSource.getEvents.mock.calls[1];
-      expect(start.getTime() === startOfDay(day(10)).getTime()).to.equal(true);
-      expect(end.getTime() === endOfDay(day(14)).getTime()).to.equal(true);
+      expect(start).toEqualDateTime(startOfDay(day(10)));
+      expect(end).toEqualDateTime(endOfDay(day(14)));
     });
 
     it('should only request the days before the cached range when extending it backward', async () => {
@@ -207,8 +207,8 @@ premiumStoreClasses.forEach((storeClass) => {
 
       expect(dataSource.getEvents.mock.calls).to.have.length(2);
       const [start, end] = dataSource.getEvents.mock.calls[1];
-      expect(start.getTime() === day(5).getTime()).to.equal(true);
-      expect(end.getTime() === endOfDay(day(9)).getTime()).to.equal(true);
+      expect(start).toEqualDateTime(day(5));
+      expect(end).toEqualDateTime(endOfDay(day(9)));
     });
 
     it('should request the smallest range covering the gaps between cached ranges', async () => {
@@ -225,8 +225,8 @@ premiumStoreClasses.forEach((storeClass) => {
 
       expect(dataSource.getEvents.mock.calls).to.have.length(3);
       const [start, end] = dataSource.getEvents.mock.calls[2];
-      expect(start.getTime() === startOfDay(day(5)).getTime()).to.equal(true);
-      expect(end.getTime() === endOfDay(day(19)).getTime()).to.equal(true);
+      expect(start).toEqualDateTime(startOfDay(day(5)));
+      expect(end).toEqualDateTime(endOfDay(day(19)));
     });
 
     it('should not flip isLoading when the requested range is already cached', async () => {

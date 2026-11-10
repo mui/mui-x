@@ -19,17 +19,10 @@ import {
 import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import type { TemporalAdapter, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { adapter as defaultAdapter } from './adapters';
-import { addMilliseconds, addMinutes, createDate, endOfDay, startOfDay } from './dates';
+import { addMinutes, createDate, endOfDay, startOfDay } from './dates';
 
 export const DEFAULT_TESTING_VISIBLE_DATE_STR = '2025-07-03T00:00:00Z';
 export const DEFAULT_TESTING_VISIBLE_DATE = createDate(DEFAULT_TESTING_VISIBLE_DATE_STR);
-
-/**
- * Serializes a date as a UTC instant.
- */
-function toInstantString(value: Date): string {
-  return value.toISOString();
-}
 
 /**
  * Minimal event builder for tests.
@@ -52,8 +45,8 @@ export class EventBuilder {
     this.event = {
       id,
       title: `Event ${id}`,
-      start: toInstantString(start),
-      end: toInstantString(end),
+      start: start.toISOString(),
+      end: end.toISOString(),
       description: `Event ${id} description`,
     };
   }
@@ -187,7 +180,7 @@ export class EventBuilder {
     const startDate = resolveEventDate(start, dataTimezone);
     const endDate = addMinutes(startDate, durationMinutes);
     this.event.start = start;
-    this.event.end = toInstantString(endDate);
+    this.event.end = endDate.toISOString();
     return this;
   }
 
@@ -198,8 +191,8 @@ export class EventBuilder {
   fullDay(date: string) {
     const dataTimezone = this.event.timezone ?? 'default';
     const d = resolveEventDate(date, dataTimezone);
-    this.event.start = toInstantString(startOfDay(d));
-    this.event.end = toInstantString(endOfDay(d));
+    this.event.start = startOfDay(d).toISOString();
+    this.event.end = endOfDay(d).toISOString();
     this.event.allDay = true;
     return this;
   }
@@ -274,12 +267,12 @@ export class EventBuilder {
     );
     const originalDurationMs =
       baseProcessed.dataTimezone.end.timestamp - baseProcessed.dataTimezone.start.timestamp;
-    const rawEnd = addMilliseconds(rawStart, originalDurationMs);
+    const rawEnd = new Date(rawStart.getTime() + originalDurationMs);
 
     const occurrenceModel: SchedulerEvent = {
       ...this.event,
-      start: toInstantString(rawStart),
-      end: toInstantString(rawEnd),
+      start: rawStart.toISOString(),
+      end: rawEnd.toISOString(),
     };
 
     const processed = processEvent(

@@ -485,8 +485,6 @@ describe('recurring-events/updateRecurringEvent', () => {
   });
 
   describe('applyRecurringUpdateAll', () => {
-    const inParis = (value: string) => createDate(value);
-
     it('should replace exactly one event without creating duplicates', () => {
       const occurrenceStart = createDate('2025-01-05T09:00:00Z');
       const changes = {
@@ -541,10 +539,10 @@ describe('recurring-events/updateRecurringEvent', () => {
           .toProcessed();
 
         // Move a later occurrence to 02:30: the series keeps its first day at 02:30.
-        const updated = applyRecurringUpdateAll(original, inParis('2026-10-27T08:00:00Z'), {
+        const updated = applyRecurringUpdateAll(original, createDate('2026-10-27T08:00:00Z'), {
           id: original.id,
-          start: inParis('2026-10-27T01:30:00Z'), // 02:30 CET
-          end: inParis('2026-10-27T01:45:00Z'),
+          start: createDate('2026-10-27T01:30:00Z'), // 02:30 CET
+          end: createDate('2026-10-27T01:45:00Z'),
         });
 
         expect(updated.updated![0].start!.toISOString()).to.equal(
@@ -563,8 +561,8 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       const updated = applyRecurringUpdateAll(original, original.dataTimezone.start.value, {
         id: original.id,
-        start: inParis('2026-10-25T01:05:00Z'), // the second 02:05
-        end: inParis('2026-10-25T01:20:00Z'), // the second 02:20
+        start: createDate('2026-10-25T01:05:00Z'), // the second 02:05
+        end: createDate('2026-10-25T01:20:00Z'), // the second 02:20
       });
 
       expect(updated.updated![0].start!.toISOString()).to.equal('2026-10-25T01:05:00.000Z');
@@ -579,18 +577,18 @@ describe('recurring-events/updateRecurringEvent', () => {
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 
-      const resizeStart = applyRecurringUpdateAll(original, inParis('2026-10-27T01:30:00Z'), {
+      const resizeStart = applyRecurringUpdateAll(original, createDate('2026-10-27T01:30:00Z'), {
         id: original.id,
-        start: inParis('2026-10-27T00:50:00Z'), // 01:50 CET
+        start: createDate('2026-10-27T00:50:00Z'), // 01:50 CET
       });
       expect(resizeStart.updated![0].start!.toISOString()).to.equal(
         '2026-10-24T23:50:00.000Z', // 01:50 CEST
       );
       expect(resizeStart.updated![0]).not.to.have.property('end');
 
-      const resizeEnd = applyRecurringUpdateAll(original, inParis('2026-10-27T01:30:00Z'), {
+      const resizeEnd = applyRecurringUpdateAll(original, createDate('2026-10-27T01:30:00Z'), {
         id: original.id,
-        end: inParis('2026-10-27T02:45:00Z'), // 03:45 CET
+        end: createDate('2026-10-27T02:45:00Z'), // 03:45 CET
       });
       expect(resizeEnd.updated![0]).not.to.have.property('start');
       expect(resizeEnd.updated![0].end!.toISOString()).to.equal(
@@ -606,9 +604,9 @@ describe('recurring-events/updateRecurringEvent', () => {
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 
-      const resizeEnd = applyRecurringUpdateAll(original, inParis('2026-10-27T01:10:00Z'), {
+      const resizeEnd = applyRecurringUpdateAll(original, createDate('2026-10-27T01:10:00Z'), {
         id: original.id,
-        end: inParis('2026-10-27T01:40:00Z'), // 02:40 CET
+        end: createDate('2026-10-27T01:40:00Z'), // 02:40 CET
       });
       // The first 02:40 of October 25th, CEST, is before the start.
       expect(resizeEnd.updated![0]).not.to.have.property('start');
@@ -616,9 +614,9 @@ describe('recurring-events/updateRecurringEvent', () => {
         '2026-10-25T01:40:00.000Z', // the second 02:40, CET
       );
 
-      const resizeStart = applyRecurringUpdateAll(original, inParis('2026-10-27T01:10:00Z'), {
+      const resizeStart = applyRecurringUpdateAll(original, createDate('2026-10-27T01:10:00Z'), {
         id: original.id,
-        start: inParis('2026-10-27T01:20:00Z'), // 02:20 CET
+        start: createDate('2026-10-27T01:20:00Z'), // 02:20 CET
       });
       expect(resizeStart.updated![0].start!.toISOString()).to.equal(
         '2026-10-25T00:20:00.000Z', // the first 02:20, CEST
@@ -634,10 +632,10 @@ describe('recurring-events/updateRecurringEvent', () => {
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 
-      const updated = applyRecurringUpdateAll(original, inParis('2026-03-31T07:00:00Z'), {
+      const updated = applyRecurringUpdateAll(original, createDate('2026-03-31T07:00:00Z'), {
         id: original.id,
-        start: inParis('2026-03-31T00:30:00Z'), // 02:30 CEST
-        end: inParis('2026-03-31T02:00:00Z'), // 04:00 CEST
+        start: createDate('2026-03-31T00:30:00Z'), // 02:30 CEST
+        end: createDate('2026-03-31T02:00:00Z'), // 04:00 CEST
       });
 
       expect(updated.updated![0].start!.toISOString()).to.equal(
@@ -657,10 +655,10 @@ describe('recurring-events/updateRecurringEvent', () => {
         .toProcessed();
 
       // Drag the occurrence of October 24th to October 25th.
-      const updated = applyRecurringUpdateAll(original, inParis('2026-10-23T22:00:00Z'), {
+      const updated = applyRecurringUpdateAll(original, createDate('2026-10-23T22:00:00Z'), {
         id: original.id,
-        start: inParis('2026-10-24T22:00:00Z'),
-        end: inParis('2026-10-25T22:59:59.999Z'),
+        start: createDate('2026-10-24T22:00:00Z'),
+        end: createDate('2026-10-25T22:59:59.999Z'),
       });
 
       expect(updated.updated![0].start!.toISOString()).to.equal('2026-09-30T22:00:00.000Z');
@@ -906,8 +904,8 @@ describe('recurring-events/updateRecurringEvent', () => {
         title: 'Edit only this',
       });
 
-      // EXDATE should match America/New_York startOfDay, not the day of the zone the
-      // instant happens to carry.
+      // EXDATE should be the start of the day of the occurrence in America/New_York, the data
+      // timezone.
       expect(updated.updated![0].exDates![0].getTime()).to.equal(
         startOfDay(occurrenceStart, 'America/New_York').getTime(),
       );
@@ -954,8 +952,8 @@ describe('recurring-events/updateRecurringEvent', () => {
           .toProcessed();
         const [occurrence] = getRecurringEventOccurrencesForVisibleDays(
           event,
-          createDate('2025-10-26T00:00:00Z').getTime(),
-          createDate('2025-10-26T12:00:00Z').getTime(),
+          Date.parse('2025-10-26T00:00:00Z'),
+          Date.parse('2025-10-26T12:00:00Z'),
           'Europe/Paris',
         );
         const changes: SchedulerEventUpdatedProperties = { id: event.id, title: 'New title' };

@@ -296,8 +296,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
     expect(series.exDates).to.have.length(1);
     expect(
-      toPlainDate(createDate(String(series.exDates[0]), 'UTC').getTime(), 'UTC').toString(),
-    ).to.equal('2025-07-04');
+      toPlainDate(createDate(String(series.exDates[0]), 'UTC').getTime(), 'UTC'),
+    ).toEqualPlainDate('2025-07-04');
 
     // The dragged occurrence detaches as a one-off keeping its all-day span. The landing
     // day depends on the pointer-to-axis math, so it is pinned in the month view instead,
@@ -351,8 +351,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
     expect(series.exDates).to.have.length(1);
     expect(
-      toPlainDate(createDate(String(series.exDates[0]), 'UTC').getTime(), 'UTC').toString(),
-    ).to.equal('2025-07-04');
+      toPlainDate(createDate(String(series.exDates[0]), 'UTC').getTime(), 'UTC'),
+    ).toEqualPlainDate('2025-07-04');
 
     // Dragging a secondary appearance detaches the occurrence without dropping the
     // resources it belongs to: the key does not identify which row it was dragged from.

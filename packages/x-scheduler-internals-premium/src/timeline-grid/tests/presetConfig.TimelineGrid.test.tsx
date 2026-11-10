@@ -7,7 +7,6 @@ import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   addDays,
   addHours,
-  addMilliseconds,
   addMinutes,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
@@ -329,8 +328,8 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
         store!.set('occurrencePlaceholder', {
           type: 'creation',
           surfaceType: 'timeline',
-          start: addMilliseconds(windowStart, -30_000).getTime(),
-          end: addMilliseconds(windowStart, 30_000).getTime(),
+          start: windowStart.getTime() - 30_000,
+          end: windowStart.getTime() + 30_000,
           resourceId: resource.id,
           lockSurfaceType: true,
         });

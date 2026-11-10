@@ -19,8 +19,8 @@ describe('createEventRangeIndex', () => {
     const index = createEventRangeIndex(events, false);
 
     const result = index.getEventsForRange(
-      createDate('2025-01-15T10:00:00Z').getTime(),
-      createDate('2025-01-15T13:00:00Z').getTime(),
+      Date.parse('2025-01-15T10:00:00Z'),
+      Date.parse('2025-01-15T13:00:00Z'),
     );
 
     expect(result.map((event) => event.id)).to.deep.equal([
@@ -47,8 +47,8 @@ describe('createEventRangeIndex', () => {
     const index = createEventRangeIndex(events, false);
 
     const result = index.getEventsForRange(
-      createDate('2025-01-15T10:00:00Z').getTime(),
-      createDate('2025-01-15T12:00:00Z').getTime(),
+      Date.parse('2025-01-15T10:00:00Z'),
+      Date.parse('2025-01-15T12:00:00Z'),
     );
 
     expect(result.map((event) => event.id)).to.deep.equal(['ends-at-start', 'starts-at-end']);
@@ -128,8 +128,8 @@ describe('createEventRangeIndex', () => {
     const index = createEventRangeIndex([outside, ...events], true);
 
     const result = index.getEventsForRange(
-      createDate('2025-02-01T00:00:00Z').getTime(),
-      createDate('2025-02-02T00:00:00Z').getTime(),
+      Date.parse('2025-02-01T00:00:00Z'),
+      Date.parse('2025-02-02T00:00:00Z'),
     );
 
     expect(result).to.have.length(events.length);
@@ -140,8 +140,8 @@ describe('createEventRangeIndex', () => {
     const index = createEventRangeIndex([], false);
     expect(
       index.getEventsForRange(
-        createDate('2025-01-01T00:00:00Z').getTime(),
-        createDate('2025-02-01T00:00:00Z').getTime(),
+        Date.parse('2025-01-01T00:00:00Z'),
+        Date.parse('2025-02-01T00:00:00Z'),
       ),
     ).to.deep.equal([]);
   });
@@ -180,8 +180,8 @@ describe('createEventRangeIndex', () => {
         const rangeEnd = addDays(rangeStart, width);
         const expected = events.filter(
           (event) =>
-            event.displayTimezone.start.value.getTime() <= rangeEnd.getTime() &&
-            event.displayTimezone.end.value.getTime() >= rangeStart.getTime(),
+            event.displayTimezone.start.timestamp <= rangeEnd.getTime() &&
+            event.displayTimezone.end.timestamp >= rangeStart.getTime(),
         );
 
         expect(index.getEventsForRange(rangeStart.getTime(), rangeEnd.getTime())).to.deep.equal(
@@ -249,8 +249,8 @@ describe('createEventRangeIndex', () => {
     const index = createEventRangeIndex(events, false);
 
     const result = index.getEventsForRange(
-      createDate('2025-01-01T00:00:00Z').getTime(),
-      createDate('2025-01-03T00:00:00Z').getTime(),
+      Date.parse('2025-01-01T00:00:00Z'),
+      Date.parse('2025-01-03T00:00:00Z'),
     );
 
     expect(result).to.deep.equal(events);
@@ -271,10 +271,7 @@ describe('createEventRangeIndex', () => {
 
     expect(
       createEventRangeIndex(events, false)
-        .getEventsForRange(
-          createDate('1959-12-31T00:00:00Z').getTime(),
-          createDate('1960-01-03T00:00:00Z').getTime(),
-        )
+        .getEventsForRange(Date.parse('1959-12-31T00:00:00Z'), Date.parse('1960-01-03T00:00:00Z'))
         .map((event) => event.id),
     ).to.deep.equal(['before-epoch']);
   });
