@@ -1,29 +1,26 @@
 import type { EventCalendarState as State } from '../use-event-calendar';
-import type { SchedulerProcessedDate } from '../models';
+import type { SchedulerProcessedDay } from '../models';
+import { getDayNumber } from '../internals/utils/plain-date-utils/plainDate';
 import { toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
 
-// These selectors run for every cell while dragging, so they compare timestamps and day numbers,
-// which are cheaper than plain dates.
-
-// The placeholder and the bounds of the rows and columns are timestamps read in the display timezone.
-function getDayNumber(state: State, timestamp: number): number {
-  return toLocalDayNumber(timestamp, state.displayTimezone);
-}
+// These selectors run for every cell while dragging, so they compare timestamps and day numbers.
+// A day cell reads the day number of its plain date. The placeholder and the bounds of the rows and
+// columns are timestamps, whose day numbers are read in the display timezone.
 
 export const eventCalendarOccurrencePlaceholderSelectors = {
-  placeholderInDayCell: (state: State, day: SchedulerProcessedDate, rowStart: number) => {
+  placeholderInDayCell: (state: State, day: SchedulerProcessedDay, rowStart: number) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder === null || placeholder.surfaceType !== 'day-grid' || placeholder.isHidden) {
       return null;
     }
 
-    const dayNumber = getDayNumber(state, day.timestamp);
-    if (dayNumber === getDayNumber(state, placeholder.start)) {
+    const dayNumber = getDayNumber(day.plainDate);
+    if (dayNumber === toLocalDayNumber(placeholder.start, state.displayTimezone)) {
       return placeholder;
     }
 
     // A placeholder starting in a previous row also renders from the first day of this one.
-    if (dayNumber === getDayNumber(state, rowStart)) {
+    if (dayNumber === toLocalDayNumber(rowStart, state.displayTimezone)) {
       // Inclusive, in either order.
       if (
         Math.min(placeholder.start, placeholder.end) <= rowStart &&
@@ -47,12 +44,14 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
 
     return placeholder;
   },
-  isCreatingInDayCell: (state: State, day: SchedulerProcessedDate) => {
+  isCreatingInDayCell: (state: State, day: SchedulerProcessedDay) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder?.surfaceType !== 'day-grid' || placeholder.type !== 'creation') {
       return false;
     }
-    return getDayNumber(state, day.timestamp) === getDayNumber(state, placeholder.start);
+    return (
+      getDayNumber(day.plainDate) === toLocalDayNumber(placeholder.start, state.displayTimezone)
+    );
   },
   isCreatingInTimeRange: (state: State, dayStart: number, dayEnd: number) => {
     const placeholder = state.occurrencePlaceholder;
@@ -60,7 +59,10 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
       return false;
     }
 
-    if (getDayNumber(state, placeholder.start) !== getDayNumber(state, dayStart)) {
+    if (
+      toLocalDayNumber(placeholder.start, state.displayTimezone) !==
+      toLocalDayNumber(dayStart, state.displayTimezone)
+    ) {
       return false;
     }
 

@@ -2,14 +2,13 @@ import {
   adapter,
   DEFAULT_EVENT_CALENDAR_STATE,
   EventBuilder,
+  processDay,
   setSystemTimezone,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 import { eventCalendarOccurrencePlaceholderSelectors } from './eventCalendarOccurrencePlaceholderSelectors';
 import type { EventCalendarState } from '../use-event-calendar';
-import { processDate } from '../process-date';
-import { createProcessedDate } from '../internals/utils/plain-date-utils/date';
 
 // A UTC creation placeholder on December 30th, 2011, on a Pacific/Apia system, which skipped that
 // date: read in the timezone of the system, it falls on December 31st.
@@ -27,8 +26,8 @@ function getStateInUTCOnApiaSystem() {
       resourceId: null,
     },
   };
-  const december30 = createProcessedDate(Date.UTC(2011, 11, 30), 'UTC');
-  const december31 = createProcessedDate(Date.UTC(2011, 11, 31), 'UTC');
+  const december30 = processDay(new Date(Date.UTC(2011, 11, 30)), 'UTC');
+  const december31 = processDay(new Date(Date.UTC(2011, 11, 31)), 'UTC');
   return { state, december30, december31 };
 }
 
@@ -56,6 +55,39 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         ).to.equal(null);
       },
     );
+
+    // A placeholder from Monday, January 8th to Wednesday, January 17th, 2024, across two rows.
+    const state: EventCalendarState = {
+      ...DEFAULT_EVENT_CALENDAR_STATE,
+      displayTimezone: 'UTC',
+      occurrencePlaceholder: {
+        type: 'creation',
+        surfaceType: 'day-grid',
+        start: Date.UTC(2024, 0, 8, 9),
+        end: Date.UTC(2024, 0, 17, 18),
+        resourceId: null,
+      },
+    };
+    // The second row starts on Sunday, January 14th.
+    const rowStart = Date.UTC(2024, 0, 14);
+
+    it('should render a placeholder from a previous row on the first day of the row', () => {
+      const firstDay = processDay(new Date(rowStart), 'UTC');
+      expect(
+        eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(state, firstDay, rowStart),
+      ).to.equal(state.occurrencePlaceholder);
+    });
+
+    it('should not render a placeholder from a previous row on the other days of the row', () => {
+      const secondDay = processDay(new Date(Date.UTC(2024, 0, 15)), 'UTC');
+      expect(
+        eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
+          state,
+          secondDay,
+          rowStart,
+        ),
+      ).to.equal(null);
+    });
   });
 
   describe('placeholderInTimeRange', () => {
@@ -128,7 +160,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
 
   describe('isCreatingInDayCell', () => {
     const day = adapter.date('2024-01-15', 'default');
-    const processedDay = processDate(day, 'default');
+    const processedDay = processDay(day);
 
     it('should return false when there is no placeholder', () => {
       const state = DEFAULT_EVENT_CALENDAR_STATE;
