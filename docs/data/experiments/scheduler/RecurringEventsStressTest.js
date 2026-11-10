@@ -30,7 +30,7 @@ const DISPLAY_TIMEZONES = [
 ];
 
 const SAMPLE_COUNT = 100;
-// Noon UTC is on the same day in the display timezones of the experiment.
+// Noon UTC keeps this Thursday in the same Monday-start week in every display timezone.
 const DEFAULT_VISIBLE_DATE = new Date(`${formatDay(TODAY)}T12:00:00Z`);
 // The visible weeks start on Monday, like the weeks the updates target.
 const DEFAULT_PREFERENCES = { weekStartsOn: 1 };
@@ -41,7 +41,13 @@ const DEFAULT_PREFERENCES = { weekStartsOn: 1 };
 const pendingChanges = new WeakMap();
 
 function createStats(lastUpdate) {
-  return { loadDuration: undefined, durations: [], updateCount: 0, lastUpdate };
+  return {
+    loadDuration: undefined,
+    loadWasHidden: false,
+    durations: [],
+    updateCount: 0,
+    lastUpdate,
+  };
 }
 
 function formatDuration(duration) {
@@ -55,8 +61,9 @@ function getP95(values) {
 /**
  * Reads the stats and counts the events twice per second, with the frames per second since
  * the last read. The updates per second cover two seconds, as low rates need a longer window.
+ * Both windows restart when visibility or the live toggle changes.
  */
-function useStatsSnapshot(statsRef, eventsRef) {
+function useStatsSnapshot(statsRef, eventsRef, isLive) {
   const [snapshot, setSnapshot] = React.useState(null);
 
   React.useEffect(() => {
@@ -65,6 +72,14 @@ function useStatsSnapshot(statsRef, eventsRef) {
     let rateStart = windowStart;
     let rateUpdateCount = statsRef.current.updateCount;
     let updatesPerSecond = 0;
+    const resetWindow = () => {
+      frameCount = 0;
+      windowStart = performance.now();
+      rateStart = windowStart;
+      rateUpdateCount = statsRef.current.updateCount;
+      updatesPerSecond = 0;
+    };
+    document.addEventListener('visibilitychange', resetWindow);
     let frame = requestAnimationFrame(function countFrame(now) {
       frameCount += 1;
       if (now - windowStart >= 500) {
@@ -95,16 +110,19 @@ function useStatsSnapshot(statsRef, eventsRef) {
       }
       frame = requestAnimationFrame(countFrame);
     });
-    return () => cancelAnimationFrame(frame);
-  }, [statsRef, eventsRef]);
+    return () => {
+      cancelAnimationFrame(frame);
+      document.removeEventListener('visibilitychange', resetWindow);
+    };
+  }, [statsRef, eventsRef, isLive]);
 
   return snapshot;
 }
 
-// Its props never change, so the updates don't render it.
+// Event updates don't change its props, so they don't render it.
 const StatsPanel = React.memo(function StatsPanel(props) {
-  const { statsRef, eventsRef } = props;
-  const snapshot = useStatsSnapshot(statsRef, eventsRef);
+  const { statsRef, eventsRef, isLive } = props;
+  const snapshot = useStatsSnapshot(statsRef, eventsRef, isLive);
 
   if (snapshot == null) {
     return <Typography variant="body2">Measuring…</Typography>;
@@ -114,7 +132,12 @@ const StatsPanel = React.memo(function StatsPanel(props) {
     <Stack spacing={0.5}>
       <Stack direction="row" spacing={3} useFlexGap sx={{ flexWrap: 'wrap' }}>
         <Typography variant="body2">
-          Load: <b>{formatDuration(snapshot.loadDuration)}</b>
+          Load:{' '}
+          <b>
+            {snapshot.loadWasHidden
+              ? 'Not measured (tab hidden)'
+              : formatDuration(snapshot.loadDuration)}
+          </b>
         </Typography>
         <Typography variant="body2">
           Last update: <b>{formatDuration(snapshot.lastDuration)}</b>
@@ -156,6 +179,18 @@ function StressTestCalendar(props) {
   const eventsRef = React.useRef(events);
   const statsRef = React.useRef(createStats('No update yet'));
   const visibleDayRef = React.useRef(TODAY);
+  const lastHiddenAtRef = React.useRef(-Infinity);
+
+  React.useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState !== 'visible') {
+        lastHiddenAtRef.current = performance.now();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () =>
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
 
   const commitEvents = React.useCallback((nextEvents, isLoad) => {
     pendingChanges.set(nextEvents, { start: performance.now(), isLoad });
@@ -194,10 +229,20 @@ function StressTestCalendar(props) {
     pendingChanges.delete(events);
     // A hidden tab runs no frame, so the duration would include the time it stays hidden.
     if (document.visibilityState !== 'visible') {
+      if (pending.isLoad) {
+        statsRef.current.loadWasHidden = true;
+      }
       return;
     }
     const stats = statsRef.current;
     requestAnimationFrame(() => {
+      // A tab can hide after the effect and only run this frame when it returns.
+      if (lastHiddenAtRef.current >= pending.start) {
+        if (pending.isLoad) {
+          stats.loadWasHidden = true;
+        }
+        return;
+      }
       const duration = performance.now() - pending.start;
       if (pending.isLoad) {
         stats.loadDuration = duration;
@@ -240,7 +285,7 @@ function StressTestCalendar(props) {
 
   return (
     <Stack spacing={2}>
-      <StatsPanel statsRef={statsRef} eventsRef={eventsRef} />
+      <StatsPanel statsRef={statsRef} eventsRef={eventsRef} isLive={isLive} />
       <Box sx={{ height: 800, width: '100%' }}>
         {scenario == null ? (
           <Typography>Building the calendar…</Typography>

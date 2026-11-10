@@ -317,9 +317,9 @@ function addOfficeEvents(office, calendar) {
 }
 
 function addTeamEvents(team, calendar) {
-  const { random, today } = calendar;
+  const { random } = calendar;
   const base = { timezone: team.office.timezone, resource: team.id };
-  const teamStart = random.int(FIRST_DAY, today - 90);
+  const teamStart = random.int(FIRST_DAY, TODAY - 90);
   const people = Array.from({ length: random.int(5, 11) }, () =>
     random.pick(FIRST_NAMES),
   );
@@ -333,7 +333,7 @@ function addTeamEvents(team, calendar) {
     title: `Standup · ${team.title}`,
     ...timed(standupDay, standupMinutes, 15),
     rrule: { freq: 'WEEKLY', byDay: ['MO', 'TU', 'WE', 'TH', 'FR'] },
-    exDates: getHolidayExDates(team.office, standupDay, today + 365, standupMinutes),
+    exDates: getHolidayExDates(team.office, standupDay, TODAY + 365, standupMinutes),
   });
 
   const sprintStart = getMonday(teamStart) + 7;
@@ -383,7 +383,7 @@ function addTeamEvents(team, calendar) {
   }
 
   people.forEach((person, index) => {
-    const joinDay = index === 0 ? teamStart : random.int(teamStart, today - 14);
+    const joinDay = index === 0 ? teamStart : random.int(teamStart, TODAY - 14);
 
     // A part-time schedule, with a day off every week or every other week.
     if (random.bool(0.15)) {
@@ -401,7 +401,7 @@ function addTeamEvents(team, calendar) {
     }
 
     if (random.bool(0.3)) {
-      const firstDay = getNextWeekday(today + random.int(-28, 28));
+      const firstDay = getNextWeekday(TODAY + random.int(-28, 28));
       calendar.add({
         ...base,
         id: `${team.id}-time-off-${index}`,
@@ -435,7 +435,7 @@ function addTeamEvents(team, calendar) {
 
   // A project that ended, or ends soon.
   if (random.bool(0.7)) {
-    const day = getNextWeekday(random.int(teamStart, today - 60));
+    const day = getNextWeekday(random.int(teamStart, TODAY - 60));
     const until = formatEndOfDay(day + 7 * random.int(8, 40));
     calendar.add(
       createProjectSeries(team, day, `${team.id}-project`, random, { until }),
@@ -444,7 +444,7 @@ function addTeamEvents(team, calendar) {
 
   // A recent hire with a fixed number of onboarding sessions.
   if (random.bool(0.5)) {
-    const day = getNextWeekday(today - random.int(0, 70));
+    const day = getNextWeekday(TODAY - random.int(0, 70));
     calendar.add({
       ...base,
       id: `${team.id}-onboarding`,
@@ -478,7 +478,7 @@ function addTeamEvents(team, calendar) {
 
   const meetingCount = random.int(6, 12);
   for (let index = 0; index < meetingCount; index += 1) {
-    const day = getNextWeekday(today + random.int(-28, 28));
+    const day = getNextWeekday(TODAY + random.int(-28, 28));
     calendar.add(
       createTeamMeeting(team, day, `${team.id}-meeting-${index}`, random),
     );
@@ -494,7 +494,6 @@ export function createGlobalCompanyDataset(seriesCount, seed) {
   let currentSeriesCount = 0;
   const calendar = {
     random: createRandom(seed),
-    today: TODAY,
     add: (event) => {
       events.push(event);
       if (event.rrule != null) {

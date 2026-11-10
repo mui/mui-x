@@ -298,8 +298,8 @@ const deleteEvent = (events, context) => {
 };
 
 // The events created balance the ones deleted, and the restored occurrences balance the
-// cancelled and moved ones, so the calendar keeps roughly its size.
-// The splits add series, but they don't add occurrences.
+// cancelled and moved ones, so the calendar keeps roughly its event count.
+// Standalone events give way to split series over a run; splits don't add occurrences.
 const LIVE_UPDATERS = [
   [cancelOccurrence, 3],
   [restoreOccurrence, 6],
@@ -316,7 +316,8 @@ const UPDATERS = LIVE_UPDATERS.map(([updater]) => updater);
 const WEIGHTS = LIVE_UPDATERS.map(([, weight]) => weight);
 
 /**
- * Returns a function that applies a random change to the events between `firstDay` and `lastDay`.
+ * Returns a function that applies a random change, mostly between `firstDay` and `lastDay`.
+ * Renames and deletions pick from the whole calendar.
  * A seed always gives the same sequence of changes.
  */
 export function createLiveUpdates(teams, seed) {
