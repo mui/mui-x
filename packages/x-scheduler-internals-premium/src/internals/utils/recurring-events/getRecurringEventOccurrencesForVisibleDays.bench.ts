@@ -120,7 +120,8 @@ describe('recurring event expansion', () => {
   );
 
   test('long-running series with COUNT', { timeout: 0 }, async ({ bench }) => {
-    // COUNT is enforced by replaying the series from DTSTART up to the visible range.
+    // COUNT includes the occurrences from DTSTART to the visible range: the daily and weekly series
+    // count them, the monthly one steps through them.
     const events = (['DAILY', 'WEEKLY', 'MONTHLY'] as const).map((freq) =>
       EventBuilder.new(adapter)
         .withDataTimezone('America/New_York')
@@ -141,9 +142,9 @@ describe('recurring event expansion', () => {
   });
 
   test('weekly series with COUNT since 1970', { timeout: 0 }, async ({ bench }) => {
-    // Each series steps through about 8,800 days before the visible range, on other days of the
-    // week than the previous one, so two of them step through more days than the Scheduler keeps
-    // plain dates for.
+    // Each series has about 8,800 days before the visible range, and the first two fall on different
+    // days of the week. A plain date for each of these days would need more than the Scheduler
+    // caches, and would empty the cache on every expansion.
     const BY_DAYS: RecurringEventWeekDayCode[][] = [
       ['MO', 'WE', 'FR'],
       ['TU', 'TH', 'SA'],

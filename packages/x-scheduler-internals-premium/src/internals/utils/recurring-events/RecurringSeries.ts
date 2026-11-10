@@ -114,9 +114,8 @@ function addMonths(monthStart: number, months: number): number | null {
  *
  * A yearly rule has no BY* part, so it matches the day of DTSTART every 12 × INTERVAL months.
  *
- * The days are day numbers: a series with COUNT counts all its days since DTSTART on every
- * expansion, and only the days it returns become plain dates. The days of a daily or weekly rule
- * repeat every period, so they're counted without stepping through them.
+ * The days are day numbers. The days of a daily or weekly rule repeat every period, so they're
+ * counted without stepping through them.
  */
 class RuleDays {
   /**
@@ -147,7 +146,11 @@ class RuleDays {
     rule: SchedulerProcessedEventRecurrenceRule,
     public readonly seriesStart: number,
   ) {
-    this.interval = (rule.freq === 'YEARLY' ? 12 : 1) * (rule.interval ?? 1);
+    // Finite even for a yearly interval like Number.MAX_VALUE, which `getMaxSearchSteps()` needs.
+    this.interval = Math.min(
+      (rule.freq === 'YEARLY' ? 12 : 1) * (rule.interval ?? 1),
+      Number.MAX_VALUE,
+    );
     this.maxSearchSteps = getMaxSearchSteps(MONTHS_PER_GREGORIAN_CYCLE, this.interval);
 
     switch (rule.freq) {
