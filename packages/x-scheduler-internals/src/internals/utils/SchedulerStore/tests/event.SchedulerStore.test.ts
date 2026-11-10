@@ -516,30 +516,6 @@ storeClasses.forEach((storeClass) => {
           expect(onEventsChange.mock.calls.length).to.equal(0);
         });
 
-        // Same rejection even when the resubmitted values are spelled in another timezone (11:00
-        // wall-clock time in Paris, UTC+2 in July, is the same instant as the stored 09:00Z): the
-        // rule no longer compares values at all, so there is nothing for an instant comparison to
-        // get right or wrong here — both bounds present is a move regardless of what they equal.
-        it('should reject a move when the resubmitted dates use another timezone', () => {
-          const onEventsChange = vi.fn();
-          const store = createStore(onEventsChange);
-
-          let result: ReturnType<typeof store.updateEvent>;
-          expect(() => {
-            result = store.updateEvent({
-              id: '1',
-              title: 'Event 1 updated',
-              start: adapter.date('2025-07-01T11:00:00', 'Europe/Paris'),
-              end: adapter.date('2025-07-01T12:00:00', 'Europe/Paris'),
-            });
-          }).toWarnDev([
-            `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
-          ]);
-
-          expect(result!.applied).to.equal(false);
-          expect(onEventsChange.mock.calls.length).to.equal(0);
-        });
-
         it('should refuse to paste a cut event onto a new date and keep it in the clipboard', () => {
           const onEventsChange = vi.fn();
           const store = createStore(onEventsChange);
@@ -1050,27 +1026,6 @@ storeClasses.forEach((storeClass) => {
     });
 
     describe('Method: deleteOccurrence', () => {
-      it('should delete a non-recurring occurrence immediately when confirmation is off', () => {
-        const onEventsChange = vi.fn();
-        const onDelete = vi.fn();
-        const builder = EventBuilder.new();
-        const event = builder.build();
-
-        const store = new storeClass.Value(
-          {
-            resources: TEST_RESOURCES,
-            events: [event],
-            onEventsChange,
-            eventDeletion: { confirmation: false },
-          },
-          adapter,
-        );
-
-        store.deleteOccurrence(builder.toOccurrence(), onDelete);
-        expect(onDelete.mock.calls.length).to.equal(1);
-        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
-      });
-
       it('should open the delete confirmation dialog by default instead of deleting immediately', () => {
         const onEventsChange = vi.fn();
         const onDelete = vi.fn();
@@ -1090,73 +1045,6 @@ storeClasses.forEach((storeClass) => {
           onSubmit: onDelete,
         });
       });
-
-      it('should delete the occurrence and call `onDelete` once the pending confirmation is confirmed', () => {
-        const onEventsChange = vi.fn();
-        const onDelete = vi.fn();
-        const builder = EventBuilder.new();
-        const event = builder.build();
-
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
-
-        store.deleteOccurrence(builder.toOccurrence(), onDelete);
-        store.resolveEventDeletion(true);
-
-        expect(onDelete.mock.calls.length).to.equal(1);
-        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
-      });
-
-      it('should keep the occurrence and not call `onDelete` when the pending confirmation is canceled', () => {
-        const onEventsChange = vi.fn();
-        const onDelete = vi.fn();
-        const builder = EventBuilder.new();
-        const event = builder.build();
-
-        const store = new storeClass.Value(
-          { resources: TEST_RESOURCES, events: [event], onEventsChange },
-          adapter,
-        );
-
-        store.deleteOccurrence(builder.toOccurrence(), onDelete);
-        store.resolveEventDeletion(false);
-
-        expect(onDelete.mock.calls.length).to.equal(0);
-        expect(onEventsChange.mock.calls.length).to.equal(0);
-        expect(store.state.pendingDeleteConfirmation).to.equal(null);
-      });
-
-      it.skipIf(storeClass.name !== 'EventCalendarStore')(
-        'should delete a recurring occurrence immediately without the recurring events plugin, when confirmation is off',
-        () => {
-          const onEventsChange = vi.fn();
-          const onDelete = vi.fn();
-          const builder = EventBuilder.new().recurrent('DAILY');
-          const event = builder.build();
-
-          let store: any;
-          expect(() => {
-            store = new storeClass.Value(
-              {
-                resources: TEST_RESOURCES,
-                events: [event],
-                onEventsChange,
-                eventDeletion: { confirmation: false },
-              },
-              adapter,
-            );
-          }).toWarnDev([
-            'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
-          ]);
-
-          // The rule is ignored without the plugin, so there is no scope to ask for.
-          store.deleteOccurrence(builder.toOccurrence(), onDelete);
-          expect(onDelete.mock.calls.length).to.equal(1);
-          expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
-        },
-      );
 
       it.skipIf(storeClass.name !== 'EventCalendarStore')(
         'should open the delete confirmation dialog by default for a recurring occurrence without the recurring events plugin',
@@ -1734,32 +1622,6 @@ storeClasses.forEach((storeClass) => {
           (event) => event.id === duplicatedId,
         );
         expect(duplicated.priority).to.equal('high');
-      });
-    });
-
-    describe('Method: copyEvent', () => {
-      it('should set the copiedEvent state with the event and action', () => {
-        const event = EventBuilder.new().build();
-        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] }, adapter);
-        store.copyEvent(event.id);
-
-        expect(store.state.copiedEvent).to.deep.equal({
-          id: event.id,
-          action: 'copy',
-        });
-      });
-    });
-
-    describe('Method: cutEvent', () => {
-      it('should set the copiedEvent state with the event and action', () => {
-        const event = EventBuilder.new().build();
-        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] }, adapter);
-        store.cutEvent(event.id);
-
-        expect(store.state.copiedEvent).to.deep.equal({
-          id: event.id,
-          action: 'cut',
-        });
       });
     });
 

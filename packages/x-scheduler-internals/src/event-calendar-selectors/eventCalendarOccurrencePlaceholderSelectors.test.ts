@@ -347,20 +347,23 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     });
 
     it('should return false when end == dayStart', () => {
+      // A time grid that starts at 08:00 passes it as the start of the range, so a placeholder of
+      // the same day can end exactly where the range starts.
+      const windowStart = adapter.setHours(dayStart, 8);
       const state: EventCalendarState = {
         ...DEFAULT_EVENT_CALENDAR_STATE,
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.getTime(adapter.addMinutes(dayStart, -60)),
-          end: adapter.getTime(dayStart), // end > dayStart is false
+          start: adapter.getTime(adapter.setHours(dayStart, 7)),
+          end: adapter.getTime(windowStart), // end > dayStart is false
           resourceId: null,
         },
       };
       expect(
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
-          adapter.getTime(dayStart),
+          adapter.getTime(windowStart),
           adapter.getTime(dayEnd),
         ),
       ).to.equal(false);

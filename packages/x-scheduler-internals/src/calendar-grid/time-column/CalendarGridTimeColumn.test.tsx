@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
@@ -83,7 +83,11 @@ describe('<CalendarGrid.TimeColumn />', () => {
       );
 
       const cell = screen.getByRole('gridcell');
-      await user.click(cell);
+      // Focus without clicking, so the Enter keypress is the only creation trigger.
+      act(() => {
+        cell.focus();
+      });
+      expect(store!.state.occurrencePlaceholder).to.equal(null);
       await user.keyboard('{Enter}');
 
       expect(store!.state.occurrencePlaceholder).not.to.equal(null);

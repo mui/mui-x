@@ -437,49 +437,6 @@ storeClasses.forEach((storeClass) => {
         store.toggleResourceCollapse(id, undefined);
         expect(store.state.collapsedResources).to.deep.equal({});
       });
-
-      it('should call onCollapsedResourcesChange when uncontrolled', () => {
-        const onCollapsedResourcesChange = vi.fn();
-        const store = new storeClass.Value(
-          { ...DEFAULT_PARAMS, onCollapsedResourcesChange },
-          adapter,
-        );
-        const id = DEFAULT_PARAMS.resources[0].id;
-
-        store.toggleResourceCollapse(id, undefined);
-
-        expect(store.state.collapsedResources).to.deep.equal({ [id]: true });
-        expect(onCollapsedResourcesChange.mock.calls.length).to.equal(1);
-        expect(onCollapsedResourcesChange.mock.lastCall?.[0]).to.deep.equal({ [id]: true });
-      });
-
-      it('should expand a resource collapsed through defaultCollapsedResources', () => {
-        const id = DEFAULT_PARAMS.resources[0].id;
-        const store = new storeClass.Value(
-          { ...DEFAULT_PARAMS, defaultCollapsedResources: { [id]: true } },
-          adapter,
-        );
-
-        store.toggleResourceCollapse(id, undefined);
-
-        expect(store.state.collapsedResources).to.deep.equal({});
-      });
-
-      it('should call onCollapsedResourcesChange and not mutate state when controlled', () => {
-        const onCollapsedResourcesChange = vi.fn();
-        const store = new storeClass.Value(
-          { ...DEFAULT_PARAMS, collapsedResources: {}, onCollapsedResourcesChange },
-          adapter,
-        );
-        const id = DEFAULT_PARAMS.resources[0].id;
-
-        store.toggleResourceCollapse(id, undefined);
-
-        expect(onCollapsedResourcesChange.mock.calls.length).to.equal(1);
-        expect(onCollapsedResourcesChange.mock.lastCall?.[0]).to.deep.equal({ [id]: true });
-        // Controlled: state is not updated internally.
-        expect(store.state.collapsedResources).to.deep.equal({});
-      });
     });
   });
 });

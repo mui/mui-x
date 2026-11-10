@@ -45,35 +45,7 @@ const allParameters: Record<keyof EventCalendarParameters<any, any>, unknown> = 
 };
 
 describe('useExtractEventCalendarParameters', () => {
-  it('should forward `shouldEventRequireResource` to the parameters object', () => {
-    const { result } = renderHook(() =>
-      useExtractEventCalendarParameters({ events: [], shouldEventRequireResource: true }),
-    );
-
-    expect(result.current.parameters.shouldEventRequireResource).to.equal(true);
-  });
-
-  it('should forward `onEventEditingStart` to the parameters object instead of the forwarded props', () => {
-    const onEventEditingStart = () => {};
-    const { result } = renderHook(() =>
-      useExtractEventCalendarParameters({ events: [], onEventEditingStart }),
-    );
-
-    expect(result.current.parameters.onEventEditingStart).to.equal(onEventEditingStart);
-    expect(result.current.forwardedProps).to.not.have.property('onEventEditingStart');
-  });
-
-  it('should forward `onPreferencesChange` to the parameters object instead of the forwarded props', () => {
-    const onPreferencesChange = () => {};
-    const { result } = renderHook(() =>
-      useExtractEventCalendarParameters({ events: [], onPreferencesChange }),
-    );
-
-    expect(result.current.parameters.onPreferencesChange).to.equal(onPreferencesChange);
-    expect(result.current.forwardedProps).to.not.have.property('onPreferencesChange');
-  });
-
-  it('should not forward any parameter to the forwarded props', () => {
+  it('should route every parameter to the parameters object and none to the forwarded props', () => {
     const { result } = renderHook(() =>
       useExtractEventCalendarParameters({
         ...(allParameters as EventCalendarParameters<any, any>),
@@ -81,6 +53,7 @@ describe('useExtractEventCalendarParameters', () => {
       }),
     );
 
+    expect(result.current.parameters).to.deep.equal(allParameters);
     expect(result.current.forwardedProps).to.deep.equal({ 'data-testid': 'forwarded' });
   });
 });

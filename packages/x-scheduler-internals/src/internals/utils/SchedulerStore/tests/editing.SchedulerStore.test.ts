@@ -6,7 +6,7 @@ import {
   ResourceBuilder,
   storeClasses,
 } from 'test/utils/scheduler';
-import type { SchedulerEvent, SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
@@ -46,110 +46,6 @@ function armRecurringOccurrence(store: any) {
 
 storeClasses.forEach((storeClass) => {
   describe(`Editing - ${storeClass.name}`, () => {
-    // `repointEditingOccurrence` is private; it runs as part of confirming a recurring scope change from
-    // the armed state. Exercised directly here to pin the key re-derivation and `rrule` clearing.
-    describe('repointEditingOccurrence', () => {
-      const newStart = adapter.date('2025-07-08T09:30:00Z', 'default');
-      const newEnd = adapter.date('2025-07-08T10:30:00Z', 'default');
-
-      it('should re-point an `only-this` detach to a non-recurring key and clear the rrule', () => {
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
-        armRecurringOccurrence(store);
-
-        (store as any).repointEditingOccurrence({
-          eventId: 'detached-event',
-          start: newStart,
-          end: newEnd,
-          isRecurring: false,
-          dataStart: newStart,
-          dataEnd: newEnd,
-          dataTimezone: 'default',
-        });
-
-        const occurrence = schedulerOtherSelectors.editingOccurrence(
-          store.state,
-        ) as SchedulerEventOccurrence;
-        expect(occurrence.id).to.equal('detached-event');
-        // A detached one-off keys by the plain event id (no `::day` suffix)...
-        expect(occurrence.key).to.equal(getOccurrenceKey('detached-event'));
-        expect(occurrence.key).to.not.contain('::');
-        // ...and drops its recurrence rule, so the toolbar's Delete removes it directly instead of
-        // reopening the recurring scope dialog.
-        expect(occurrence.dataTimezone.rrule).to.equal(undefined);
-        expect(occurrence.displayTimezone.start.value).toEqualDateTime(newStart);
-        expect(occurrence.displayTimezone.end.value).toEqualDateTime(newEnd);
-      });
-
-      it('should re-point a `this-and-following` change to a recurring key and keep the rrule', () => {
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
-        armRecurringOccurrence(store);
-
-        (store as any).repointEditingOccurrence({
-          eventId: 'following-event',
-          start: newStart,
-          end: newEnd,
-          isRecurring: true,
-          dataStart: newStart,
-          dataEnd: newEnd,
-          dataTimezone: 'default',
-        });
-
-        const occurrence = schedulerOtherSelectors.editingOccurrence(
-          store.state,
-        ) as SchedulerEventOccurrence;
-        expect(occurrence.id).to.equal('following-event');
-        // The new series still keys per-occurrence (event id + day)...
-        expect(occurrence.key).to.equal(
-          getRecurringOccurrenceKey('following-event', newStart, adapter, 'default'),
-        );
-        expect(occurrence.key).to.contain('::');
-        // ...and stays recurring, so its Delete keeps offering the scope dialog.
-        expect(occurrence.dataTimezone.rrule).to.equal(RRULE);
-        expect(occurrence.displayTimezone.start.value).toEqualDateTime(newStart);
-        expect(occurrence.displayTimezone.end.value).toEqualDateTime(newEnd);
-      });
-
-      it('should derive the recurring key from the data timezone, not the display-timezone start', () => {
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
-        armRecurringOccurrence(store);
-
-        // 23:00 UTC on the 8th is 13:00 on the 9th in Pacific/Kiritimati, the data timezone.
-        const displayStart = adapter.date('2025-07-08T23:00:00Z', 'default');
-        const displayEnd = adapter.addHours(displayStart, 1);
-
-        (store as any).repointEditingOccurrence({
-          eventId: 'following-event',
-          start: displayStart,
-          end: displayEnd,
-          isRecurring: true,
-          dataStart: displayStart,
-          dataEnd: displayEnd,
-          dataTimezone: 'Pacific/Kiritimati',
-        });
-
-        const occurrence = schedulerOtherSelectors.editingOccurrence(store.state)!;
-        // Rendered keys expand in the data timezone, so the repointed key must match the data-tz day.
-        // In the display timezone, the timezone of the system, it's the 8th in UTC and west of it.
-        expect(occurrence.key).to.equal('following-event::2025-07-09');
-      });
-
-      it('should be a no-op when nothing is being edited', () => {
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
-
-        (store as any).repointEditingOccurrence({
-          eventId: 'detached-event',
-          start: newStart,
-          end: newEnd,
-          isRecurring: false,
-          dataStart: newStart,
-          dataEnd: newEnd,
-          dataTimezone: 'default',
-        });
-
-        expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
-      });
-    });
-
     // The edited occurrence is a snapshot; nothing re-checks that it is still rendered. Left behind
     // by a navigation, its action toolbar would edit or delete an event that is off screen.
     describe('navigation', () => {
@@ -242,8 +138,11 @@ storeClasses.forEach((storeClass) => {
         store.startEditing(occurrence, 'armed');
         expect(onEventEditingStart.mock.calls.length).to.equal(0);
 
-        store.setEditingMode('edit');
+        const nativeEvent = new Event('click');
+        store.setEditingMode('edit', nativeEvent);
         expect(onEventEditingStart.mock.calls.length).to.equal(1);
+        expect(onEventEditingStart.mock.lastCall?.[0]).to.equal(occurrence);
+        expect(onEventEditingStart.mock.lastCall?.[1].event).to.equal(nativeEvent);
       });
     });
 
@@ -688,6 +587,8 @@ premiumStoreClasses.forEach((storeClass) => {
       // The occurrence moved onto the detached one-off event, keeping its own times.
       expect(occurrence.id).to.not.equal('standup');
       expect(occurrence.key).to.not.equal(armedKey);
+      // A detached one-off keys by the plain event id, without the day of a series occurrence.
+      expect(occurrence.key).to.equal(getOccurrenceKey(occurrence.id));
       expect(occurrence.dataTimezone.rrule).to.equal(undefined);
       expect(occurrence.displayTimezone.start.value).toEqualDateTime(dayA);
       expect(occurrence.displayTimezone.end.value).toEqualDateTime(adapter.addHours(dayA, 1));

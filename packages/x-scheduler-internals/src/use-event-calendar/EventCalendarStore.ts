@@ -21,8 +21,8 @@ import {
 import type { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
 import type { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 
-export const DEFAULT_VIEWS: CalendarView[] = ['day', 'week', 'month', 'agenda'];
-export const DEFAULT_VIEW: CalendarView = 'week';
+const DEFAULT_VIEWS: CalendarView[] = ['day', 'week', 'month', 'agenda'];
+const DEFAULT_VIEW: CalendarView = 'week';
 export const DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE = false;
 
 export const DEFAULT_EVENT_CALENDAR_PREFERENCES: EventCalendarPreferences = {
@@ -32,7 +32,7 @@ export const DEFAULT_EVENT_CALENDAR_PREFERENCES: EventCalendarPreferences = {
   showEmptyDaysInAgenda: true,
   isSidePanelOpen: true,
 };
-export const DEFAULT_PREFERENCES_MENU_CONFIG: EventCalendarPreferencesMenuConfig = {
+const DEFAULT_PREFERENCES_MENU_CONFIG: EventCalendarPreferencesMenuConfig = {
   toggleWeekendVisibility: true,
   toggleWeekNumberVisibility: true,
   toggleEmptyDaysInAgenda: true,

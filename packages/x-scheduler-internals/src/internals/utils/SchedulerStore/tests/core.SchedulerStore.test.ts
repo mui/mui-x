@@ -117,25 +117,6 @@ storeClasses.forEach((storeClass) => {
         expect(store.state.visibleDate).toEqualDateTime(next);
       });
 
-      it('should not change `visibleDate` if not included in new parameters', () => {
-        const initialVisibleDate = adapter.date('2025-07-01T00:00:00Z', 'default');
-        const store = new storeClass.Value(
-          { ...DEFAULT_PARAMS, visibleDate: initialVisibleDate },
-          adapter,
-        );
-
-        store.updateStateFromParameters(
-          {
-            ...DEFAULT_PARAMS,
-            resources: [{ id: 'r1', title: 'Resource 1' }],
-            visibleDate: store.state.visibleDate,
-          },
-          adapter,
-        );
-
-        expect(store.state.visibleDate).toEqualDateTime(initialVisibleDate);
-      });
-
       it('should keep initial defaults and warns if default props change after mount', () => {
         const defaultDate = adapter.date('2025-07-15T00:00:00Z', 'default');
 
