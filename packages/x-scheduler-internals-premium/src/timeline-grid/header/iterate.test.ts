@@ -101,14 +101,10 @@ describe('iterate()', () => {
     it('should span the cells wider than a day by the visible hours of their days', () => {
       // Saturday, January 4th to Monday, January 6th, 2025, in weeks starting on Sunday: the first
       // week cell keeps one day of the range and the second one two.
-      const cells = iterateRange(
-        'week',
-        'hour',
-        adapter.date('2025-01-04T00:00:00', 'UTC'),
-        adapter.date('2025-01-06T23:59:59.999', 'UTC'),
-        7,
-        { dayStartMinute: 480, dayEndMinute: 1200 },
-      );
+      const cells = iterateRange('week', 'hour', '2025-01-04', '2025-01-06', 7, {
+        dayStartMinute: 480,
+        dayEndMinute: 1200,
+      });
 
       expect(cells.map((cell) => cell.spanInTicks)).to.deep.equal([12, 24]);
     });
@@ -346,19 +342,9 @@ describe('iterate()', () => {
 
     it('should count the whole months of a clamped cell over month ticks', () => {
       // From January 31st to April 30th, the third month isn't whole.
-      const cells = iterateRange(
-        'year',
-        'month',
-        adapter.date('2025-01-31T00:00:00', 'UTC'),
-        adapter.date('2025-04-29T23:59:59.999', 'UTC'),
-      );
+      const cells = iterateRange('year', 'month', '2025-01-31', '2025-04-29');
       // From February 29th to April 1st, the second month isn't whole.
-      const leapYearCells = iterateRange(
-        'year',
-        'month',
-        adapter.date('2024-02-29T00:00:00', 'UTC'),
-        adapter.date('2024-03-31T23:59:59.999', 'UTC'),
-      );
+      const leapYearCells = iterateRange('year', 'month', '2024-02-29', '2024-03-31');
 
       expect(cells.map((cell) => cell.spanInTicks)).to.deep.equal([2]);
       expect(leapYearCells.map((cell) => cell.spanInTicks)).to.deep.equal([1]);
@@ -407,12 +393,9 @@ describe('iterate()', () => {
     });
 
     it('should throw when the walk would produce more than 10,000 cells', () => {
-      const start = adapter.date('2000-01-01T00:00:00', 'UTC');
-
-      expect(iterateRange('day', 'day', start, adapter.addDays(start, 9_999))).to.have.length(
-        10_000,
-      );
-      expect(() => iterateRange('day', 'day', start, adapter.addDays(start, 10_000))).to.throw(
+      // 10,000 days from January 1st, 2000 to May 18th, 2027.
+      expect(iterateRange('day', 'day', '2000-01-01', '2027-05-18')).to.have.length(10_000);
+      expect(() => iterateRange('day', 'day', '2000-01-01', '2027-05-19')).to.throw(
         /produced more than 10,000 cells/,
       );
     });
@@ -446,13 +429,7 @@ describe('iterate()', () => {
       'should start every week cell on the ISO weekday %i across a year boundary',
       (weekStartsOn) => {
         // From Saturday, December 20th, 2025 to Tuesday, January 20th, 2026: 32 days.
-        const cells = iterateRange(
-          'week',
-          'day',
-          adapter.date('2025-12-20T00:00:00', 'UTC'),
-          adapter.date('2026-01-20T23:59:59.999', 'UTC'),
-          weekStartsOn,
-        );
+        const cells = iterateRange('week', 'day', '2025-12-20', '2026-01-20', weekStartsOn);
 
         cells.forEach((cell) => expect(cell.plainDate.dayOfWeek).to.equal(weekStartsOn));
         expect(cells.reduce((sum, cell) => sum + cell.spanInTicks, 0)).to.equal(32);
