@@ -145,7 +145,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     it('should warn that the default changes in v10 when `useVisibleColumns` is omitted', async () => {
       render(<Test />);
       await expect(() => act(() => apiRef.current?.setColumnIndex('c', 2))).toWarnDev([
-        'MUI X: `setColumnIndex()` was called without `useVisibleColumns`',
+        'MUI X: The default value of `useVisibleColumns` in `setColumnIndex()` will change',
       ]);
       expect(getColumnHeadersTextContent()).to.deep.equal(['a', 'c', 'b']);
     });

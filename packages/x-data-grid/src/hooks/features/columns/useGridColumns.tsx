@@ -238,9 +238,9 @@ export function useGridColumns(
       if (useVisibleColumns === undefined && !allColumns.every(isVisible)) {
         warnOnce(
           [
-            'MUI X: `setColumnIndex()` was called without `useVisibleColumns` while some columns are hidden.',
-            'The target index counts all columns, including the hidden ones. In v10, it will count only the visible columns by default.',
-            'Pass `false` as the third argument to keep the current behavior, or `true` to count only the visible columns.',
+            'MUI X: The default value of `useVisibleColumns` in `setColumnIndex()` will change from `false` to `true` in v10.',
+            'With hidden columns, the target index then counts only the visible columns.',
+            'Pass `useVisibleColumns` explicitly to silence this warning: `false` keeps the current behavior.',
           ].join('\n'),
         );
       }
