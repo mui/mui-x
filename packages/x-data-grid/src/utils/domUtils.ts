@@ -1,6 +1,7 @@
 import { gridClasses } from '../constants/gridClasses';
 import type { GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
 import type { GridRowId } from '../models/gridRows';
+import { isEventFromPreMountedEditor } from './cellEditor';
 
 export function isOverflown(element: Element): boolean {
   return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
@@ -84,7 +85,8 @@ const NON_TEXT_INPUT_TYPES = new Set([
  */
 export function isEventTargetTextEntryElement(event: React.SyntheticEvent | Event) {
   const target = event.target as HTMLElement | null;
-  if (!target || target.nodeType !== 1) {
+  // The pre-mounted editor (`imeFastEdit`) stands in for the cell, so the grid handles its keys.
+  if (!target || target.nodeType !== 1 || isEventFromPreMountedEditor(event)) {
     return false;
   }
   if (target.tagName === 'INPUT') {
