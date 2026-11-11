@@ -329,18 +329,14 @@ export interface GridFormulaInternalCache {
    */
   typeChangeReset: {
     /**
-     * The `orderedFields` of the columns state the reset ran for. Matched by identity, so
-     * another `columnsChange` (the nested one of the grouping columns sync included) can't read
-     * it, even when a listener threw before the one that consumes it.
+     * The `orderedFields` of the columns state the reset ran for, once the grouping columns are
+     * synced. Matched by identity, so another `columnsChange` can't read it, even when a
+     * listener threw before the one that consumes it.
      */
     orderedFields: readonly string[];
     /**
-     * The fields whose type changed: the filter items of the row grouping columns that read
-     * them are reset once these columns are built from the rebuilt records.
-     */
-    fields: Set<string>;
-    /**
-     * The reset of the filter items of these fields, or `null` when no item changed.
+     * The reset of the filter items of the computed columns whose type changed and of the row
+     * grouping columns that read them, or `null` when no item changed.
      */
     filterItemsReset: GridFilterItemsReset | null;
   } | null;

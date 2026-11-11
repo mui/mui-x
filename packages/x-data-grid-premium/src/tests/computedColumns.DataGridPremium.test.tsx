@@ -3087,6 +3087,146 @@ describe('<DataGridPremium /> - Computed columns', () => {
             expect(getFilterItems()).to.deep.equal([filtered]);
             expect(getLeafValuesOf('item')).to.deep.equal(['Banana']);
           });
+
+          // The regroup filters the new keys with the grouping column: its item must be fitted
+          // to the rebuilt column first. A date operator throws on a string key.
+          it('should not throw when the grid is grouped by a computed column whose type changed and its grouping column is filtered', async () => {
+            const when: GridComputedColumnDefinition = {
+              field: 'when',
+              headerName: 'When',
+              formula: '=day',
+              type: 'dateTime',
+            };
+            await render(
+              <Test
+                rows={[
+                  { id: 0, item: 'Apple', day: new Date(2024, 0, 1) },
+                  { id: 1, item: 'Banana', day: new Date(2024, 5, 1) },
+                ]}
+                columns={[{ field: 'item' }, { field: 'day', type: 'dateTime' }]}
+                defaultGroupingExpansionDepth={-1}
+                initialState={{
+                  computedColumns: { model: [when] },
+                  rowGrouping: { model: ['when'] },
+                  filter: {
+                    filterModel: {
+                      items: [
+                        {
+                          field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+                          operator: 'after',
+                          value: new Date(2024, 2, 1),
+                        },
+                      ],
+                    },
+                  },
+                }}
+              />,
+            );
+            expect(getLeafValuesOf('item')).to.deep.equal(['Banana']);
+            expect(() => {
+              act(() =>
+                apiRef.current!.updateComputedColumn('when', { type: 'string', formula: '=item' }),
+              );
+            }).not.toWarnDev();
+            expect(getFilterItems()).to.deep.equal([
+              {
+                field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+                operator: 'contains',
+                value: undefined,
+              },
+            ]);
+            expect(getGroupingValues()).to.deep.equal(['Apple (1)', 'Banana (1)']);
+            expectColumnsToBeHydratedAgain();
+          });
+
+          // Removing a filtered column makes the core filter again: the item of the grouping
+          // column must be fitted to the rebuilt column before.
+          it('should not throw when the leaf field changes type and a filtered computed column is removed at once', async () => {
+            await render(
+              <Test
+                rows={unevenRows}
+                columns={categoryColumns}
+                groupingColDef={{ leafField: 'double' }}
+                defaultGroupingExpansionDepth={-1}
+                initialState={{
+                  computedColumns: { model: [double, half] },
+                  rowGrouping: { model: ['category'] },
+                  filter: {
+                    filterModel: {
+                      items: [
+                        {
+                          id: 1,
+                          field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+                          operator: '>',
+                          value: 7,
+                        },
+                        { id: 2, field: 'half', operator: '>', value: 0 },
+                      ],
+                    },
+                  },
+                }}
+              />,
+            );
+            expect(getLeafValuesOf('item')).to.deep.equal(['Apple', 'Banana']);
+            expect(() => {
+              act(() => apiRef.current!.setComputedColumns([{ ...double, ...toText }]));
+            }).not.toWarnDev();
+            expect(getFields()).not.to.include('half');
+            expect(getFilterItems()).to.deep.equal([
+              {
+                field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+                operator: 'contains',
+                value: undefined,
+              },
+            ]);
+            expect(getLeafValuesOf('item')).to.deep.equal(['Apple', 'Banana', 'Cherry']);
+            expectColumnsToBeHydratedAgain();
+          });
+
+          // The reset filters once: with the rebuilt grouping column, whose `isEmpty` reads the
+          // new text values.
+          it('should filter the grouping column with the new type when the reset leaves its item as it is', async () => {
+            await render(
+              <Test
+                rows={unevenRows}
+                columns={categoryColumns}
+                groupingColDef={{ leafField: 'double' }}
+                defaultGroupingExpansionDepth={-1}
+                initialState={{
+                  computedColumns: { model: [double] },
+                  rowGrouping: { model: ['category'] },
+                  filter: {
+                    filterModel: {
+                      items: [
+                        { id: 1, field: 'double', operator: '>', value: 7 },
+                        {
+                          id: 2,
+                          field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+                          operator: 'isEmpty',
+                        },
+                      ],
+                    },
+                  },
+                }}
+              />,
+            );
+            expect(getLeafValuesOf('item')).to.deep.equal([]);
+            act(() =>
+              apiRef.current!.updateComputedColumn('double', {
+                type: 'string',
+                formula: '=IF(price = 8, "", price & "!")',
+              }),
+            );
+            expect(getFilterItems()).to.deep.equal([
+              { field: 'double', operator: 'contains', value: undefined },
+              {
+                field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+                operator: 'isEmpty',
+                value: undefined,
+              },
+            ]);
+            expect(getLeafValuesOf('item')).to.deep.equal(['Banana']);
+          });
         });
 
         describe('with a controlled filter model', () => {
@@ -3193,12 +3333,12 @@ describe('<DataGridPremium /> - Computed columns', () => {
               />,
             );
             expect(getLeafValuesOf('item')).to.deep.equal(['Banana']);
-            // The grouping column is reset after the computed field, while the state still holds
-            // the items the parent has not passed back: the last model must hold both resets.
+            // The computed field and the grouping column that reads it are reset together: the
+            // parent gets one model that holds both resets.
             expect(() => {
               act(() => apiRef.current!.updateComputedColumn('double', toText));
             }).not.toWarnDev();
-            expect(onFilterModelChange.mock.calls.length).to.equal(2);
+            expect(onFilterModelChange.mock.calls.length).to.equal(1);
             expect(getItemsOf(onFilterModelChange.mock.lastCall![0])).to.deep.equal([
               resetItem,
               {

@@ -220,12 +220,13 @@ function warnViewNotApplied(step: ViewStep, error: unknown) {
  * Applies the filtering or the sorting again, and returns whether it was applied. It runs inside
  * the hydration of the columns when a hydration published `columnsChange`, where a throw would
  * leave the pipe processing of the grid locked. The filter items of a computed column whose type
- * changed, and of the grouping columns that read it, are fitted to the new type first
- * (`resetFilterItemsOfFields`), but the core can still fail with a column or a model made for
- * one type: a `computedColDef` comparator or operator written for one type, or an item that was
- * already broken. The core throws before it sets the state, so nothing changes:
- * the view keeps its rows and order, and the error comes at the next filtering or sorting, like
- * after the type change of a regular column. A step that fails logs a warning in development.
+ * changed, and of the grouping columns that read it, are fitted to the new type first, once these
+ * grouping columns are built from the rebuilt records (`handleTypeChangedColumns`), but the core
+ * can still fail with a column or a model made for one type: a `computedColDef` comparator or
+ * operator written for one type, or an item that was already broken. The core throws before it
+ * sets the state, so nothing changes: the view keeps its rows and order, and the error comes at
+ * the next filtering or sorting, like after the type change of a regular column. A step that
+ * fails logs a warning in development.
  * A regroup (`catchViewFailure`) fails when the filtering or the sorting of the rebuilt tree does,
  * or the tree creation, or another listener of its `rowsSet`: both are then applied again. Until
  * the next filtering that succeeds, the group rows can show stale or missing counts, and until the
@@ -246,17 +247,17 @@ function tryToApplyView(step: ViewStep, apply: () => void) {
  * value is cleared. The end user can change the type of a computed column, so the grid makes
  * the filter model fit it, on the column and on the row grouping columns that read it: an
  * operator that is gone (`>` on a `string` column) or a value of the previous type (`isAnyOf`
- * with numbers) would make every later filtering throw. An item already reset is left alone,
- * so a nested `columnsChange` changes nothing. `setFilterModel` sets the model before it
- * filters, so when the filtering fails, the reset items stay and only the rows keep their
+ * with numbers) would make every later filtering throw. An item already reset is left alone.
+ * The caller resets the computed columns and the grouping columns that read them in one call:
+ * one filtering, and one model for a controlled parent. `setFilterModel` sets the model before
+ * it filters, so when the filtering fails, the reset items stay and only the rows keep their
  * previous filtering.
  * A controlled model only changes when the parent passes it back, after the event: until then,
  * the state keeps the items that don't fit (`pending`). The filtering that `setFilterModel` runs
  * with them fails without a warning, since the parent's model is filtered when it arrives. A
- * reset that runs before that, in a later event (a second type change) or in the same one (the
- * grouping columns), starts from the model the pending reset sent, so that the last model the
- * parent gets holds every reset. Without `onFilterModelChange`, the parent can't pass the model
- * back: the grid warns in development.
+ * reset that runs before that, in a later event (a second type change), starts from the model
+ * the pending reset sent, so that the last model the parent gets holds every reset. Without
+ * `onFilterModelChange`, the parent can't pass the model back: the grid warns in development.
  * Returns `null` when no item changed.
  */
 function resetFilterItemsOfFields(
@@ -533,7 +534,8 @@ export const useGridFormula = (
    * the position-dependent formulas without reporting a computed change. The
    * filtering is skipped when the reset of the filter items after a type
    * change already applied it with the new values and the rebuilt grouping
-   * columns (`filterItemsReset: 'reapplied'`), and when a controlled parent
+   * columns (`filterItemsReset: 'reapplied'`: `handleTypeChangedColumns`
+   * builds them before it resets), and when a controlled parent
    * has not passed the reset items back yet (`'pending'`): the state still
    * holds the items that don't fit the new type, and the model of the parent
    * is filtered when it arrives. A
@@ -819,61 +821,102 @@ export const useGridFormula = (
    * the identities recorded here, so it never requests a third one. Synchronous on
    * purpose: `requestPipeProcessorsApplication` is a no-op while the hydration that
    * published this event is still running.
+   * After a type change, `handleTypeChangedColumns` syncs before the regular `columnsChange`
+   * listeners and doesn't publish (`syncGroupingColumns(false)`): they all run after it and read
+   * the synced state. A nested `columnsChange` would filter with the grouping columns' items made
+   * for the previous type (core's prune of the removed columns) before they are reset.
    */
-  const syncGroupingColumns = React.useCallback(() => {
-    const { records, hydratedColDefs } = apiRef.current.caches.formula!.computedColumns;
-    const changedFields: string[] = [];
-    for (const [field, record] of records) {
-      if (hydratedColDefs.get(field) !== record.colDef) {
-        hydratedColDefs.set(field, record.colDef);
-        changedFields.push(field);
+  const syncGroupingColumns = React.useCallback(
+    (publish: boolean = true) => {
+      const { records, hydratedColDefs } = apiRef.current.caches.formula!.computedColumns;
+      const changedFields: string[] = [];
+      for (const [field, record] of records) {
+        if (hydratedColDefs.get(field) !== record.colDef) {
+          hydratedColDefs.set(field, record.colDef);
+          changedFields.push(field);
+        }
       }
-    }
-    for (const field of Array.from(hydratedColDefs.keys())) {
-      if (!records.has(field)) {
-        hydratedColDefs.delete(field);
-        // A grouping column still copies from the removed column.
-        changedFields.push(field);
+      for (const field of Array.from(hydratedColDefs.keys())) {
+        if (!records.has(field)) {
+          hydratedColDefs.delete(field);
+          // A grouping column still copies from the removed column.
+          changedFields.push(field);
+        }
       }
-    }
-    if (changedFields.length === 0) {
-      return;
-    }
-    const groupedFields = gridRowGroupingSanitizedModelSelector(apiRef);
-    if (groupedFields.length === 0) {
-      return;
-    }
-    // The leaf fields are only resolved when no grouped field was rebuilt: a
-    // `groupingColDef` function runs only when a computed column was.
-    const groupingColumnsStale =
-      changedFields.some((field) => groupedFields.includes(field)) ||
-      (!props.disableRowGrouping &&
-        getGroupingLeafFields(
-          props.groupingColDef,
-          props.rowGroupingColumnMode,
-          groupedFields,
-        ).some((field) => changedFields.includes(field)));
-    if (!groupingColumnsStale) {
-      return;
-    }
-    const columnsState = createColumnsState({
-      apiRef,
-      columnsToUpsert: [],
-      initialState: undefined,
-      keepOnlyColumnsToUpsert: false,
-    });
-    apiRef.current.setState((state) => ({ ...state, columns: columnsState }));
-    apiRef.current.publishEvent('columnsChange', columnsState.orderedFields);
-  }, [apiRef, props.disableRowGrouping, props.groupingColDef, props.rowGroupingColumnMode]);
+      if (changedFields.length === 0) {
+        return;
+      }
+      const groupedFields = gridRowGroupingSanitizedModelSelector(apiRef);
+      if (groupedFields.length === 0) {
+        return;
+      }
+      // The leaf fields are only resolved when no grouped field was rebuilt: a
+      // `groupingColDef` function runs only when a computed column was.
+      const groupingColumnsStale =
+        changedFields.some((field) => groupedFields.includes(field)) ||
+        (!props.disableRowGrouping &&
+          getGroupingLeafFields(
+            props.groupingColDef,
+            props.rowGroupingColumnMode,
+            groupedFields,
+          ).some((field) => changedFields.includes(field)));
+      if (!groupingColumnsStale) {
+        return;
+      }
+      const columnsState = createColumnsState({
+        apiRef,
+        columnsToUpsert: [],
+        initialState: undefined,
+        keepOnlyColumnsToUpsert: false,
+      });
+      apiRef.current.setState((state) => ({ ...state, columns: columnsState }));
+      if (publish) {
+        apiRef.current.publishEvent('columnsChange', columnsState.orderedFields);
+      }
+    },
+    [apiRef, props.disableRowGrouping, props.groupingColDef, props.rowGroupingColumnMode],
+  );
+
+  /**
+   * Adds to `fields` the row grouping columns that read one of them: a grouping column copies
+   * the filter operators of its source column (see `getGroupingColumnSources`). Called once the
+   * grouping columns are built from the rebuilt records, so their items are fitted to the
+   * operators they filter with now.
+   */
+  const addGroupingColumnsOfSources = React.useCallback(
+    (fields: Set<string>) => {
+      const groupedFields = gridRowGroupingSanitizedModelSelector(apiRef);
+      if (props.disableRowGrouping || groupedFields.length === 0) {
+        return fields;
+      }
+      const lookup = gridColumnLookupSelector(apiRef);
+      const sources = getGroupingColumnSources(
+        props.groupingColDef,
+        props.rowGroupingColumnMode,
+        groupedFields,
+        lookup,
+      );
+      const result = new Set(fields);
+      for (const [groupingField, source] of sources) {
+        if (lookup[groupingField] && fields.has(source)) {
+          result.add(groupingField);
+        }
+      }
+      return result;
+    },
+    [apiRef, props.disableRowGrouping, props.groupingColDef, props.rowGroupingColumnMode],
+  );
 
   /**
    * Runs before the other `columnsChange` listeners: the regroup of the row grouping, the first
    * of them, filters the rebuilt tree, and a filter item made for the previous type of a grouped
-   * computed column would make it throw out of the hydration. The fields are moved out of the
-   * cache, so a later `columnsChange` (the nested one of `syncGroupingColumns` included) can't
-   * reset a filter the user set since, even when a listener after this one threw. The grouping
-   * columns that read them still copy from the previous records here: their filter items are
-   * reset by `handleColumnsChange`, after `syncGroupingColumns`.
+   * computed column, or of a grouping column that reads it, would make it throw out of the
+   * hydration. So the grouping columns are built from the rebuilt records first, without a
+   * nested `columnsChange` (`syncGroupingColumns`), and the filter items of the computed columns
+   * and of the grouping columns that read them are reset in one model: the filtering it applies
+   * already uses the rebuilt grouping columns, and a controlled parent gets one model. The
+   * fields are moved out of the cache, so a later `columnsChange` can't reset a filter the user
+   * set since, even when a listener after this one threw.
    */
   const handleTypeChangedColumns = React.useCallback<GridEventListener<'columnsChange'>>(() => {
     const cache = apiRef.current.caches.formula!;
@@ -886,55 +929,20 @@ export const useGridFormula = (
     // its type.
     const lookup = gridColumnLookupSelector(apiRef);
     const computedFields = new Set(Array.from(fields).filter((field) => lookup[field]?.computed));
+    if (computedFields.size === 0) {
+      return;
+    }
+    syncGroupingColumns(false);
     cache.typeChangeReset = {
+      // After the sync, which builds a new columns state.
       orderedFields: gridColumnFieldsSelector(apiRef),
-      fields: computedFields,
       filterItemsReset: resetFilterItemsOfFields(
         apiRef,
-        computedFields,
+        addGroupingColumnsOfSources(computedFields),
         props.onFilterModelChange !== undefined,
       ),
     };
-  }, [apiRef, props.onFilterModelChange]);
-
-  /**
-   * Resets the filter items of the row grouping columns that read a field whose type changed:
-   * a grouping column copies the filter operators of its source column (see
-   * `getGroupingColumnSources`). Runs once the grouping columns are built from the rebuilt
-   * records, so the items are fitted to the operators they filter with now.
-   * Returns `null` when no item changed.
-   */
-  const resetGroupingColumnsFilterItems = React.useCallback(
-    (typeChangedFields: Set<string>): GridFilterItemsReset | null => {
-      const groupedFields = gridRowGroupingSanitizedModelSelector(apiRef);
-      if (props.disableRowGrouping || groupedFields.length === 0) {
-        return null;
-      }
-      const lookup = gridColumnLookupSelector(apiRef);
-      const groupingFields = new Set<string>();
-      const sources = getGroupingColumnSources(
-        props.groupingColDef,
-        props.rowGroupingColumnMode,
-        groupedFields,
-        lookup,
-      );
-      for (const [groupingField, source] of sources) {
-        if (lookup[groupingField] && typeChangedFields.has(source)) {
-          groupingFields.add(groupingField);
-        }
-      }
-      return groupingFields.size === 0
-        ? null
-        : resetFilterItemsOfFields(apiRef, groupingFields, props.onFilterModelChange !== undefined);
-    },
-    [
-      apiRef,
-      props.disableRowGrouping,
-      props.groupingColDef,
-      props.onFilterModelChange,
-      props.rowGroupingColumnMode,
-    ],
-  );
+  }, [addGroupingColumnsOfSources, apiRef, props.onFilterModelChange, syncGroupingColumns]);
 
   /**
    * The filter state changed: a pending reset of the filter items reached the state, or the
@@ -1003,18 +1011,17 @@ export const useGridFormula = (
       // Before the dependent features: the grouping columns sort and filter with the comparator
       // and the operators they copy from the rebuilt records. The nested `columnsChange` of the
       // extra hydration finds the signature bookkeeping above done, so it takes the cheap branch.
+      // After a type change, `handleTypeChangedColumns` already synced them: nothing to do.
       syncGroupingColumns();
       const fieldsReset = typeChangeReset?.filterItemsReset ?? null;
-      const groupingColumnsReset =
-        typeChangeReset === null ? null : resetGroupingColumnsFilterItems(typeChangeReset.fields);
       let filterItemsReset: 'reapplied' | 'pending' | undefined;
-      if (fieldsReset === 'pending' || groupingColumnsReset === 'pending') {
+      if (fieldsReset === 'pending') {
         filterItemsReset = 'pending';
       } else if (
-        groupingColumnsReset === 'applied' ||
-        // The reset of the fields ran before the pass: the cells the pass changed were not
-        // evaluated yet when it applied the filtering.
-        (fieldsReset === 'applied' && (changedCells === null || changedCells.length === 0))
+        // The reset ran before the pass: the cells the pass changed were not evaluated yet when
+        // it applied the filtering.
+        fieldsReset === 'applied' &&
+        (changedCells === null || changedCells.length === 0)
       ) {
         filterItemsReset = 'reapplied';
       }
@@ -1029,7 +1036,6 @@ export const useGridFormula = (
   }, [
     apiRef,
     computeEffectiveFormulaFields,
-    resetGroupingColumnsFilterItems,
     runPass,
     syncGroupingColumns,
     triggerDependentFeatures,
