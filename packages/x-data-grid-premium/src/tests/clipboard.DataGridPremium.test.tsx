@@ -1349,6 +1349,93 @@ describe('<DataGridPremium /> - Clipboard', () => {
       },
     );
 
+    // https://github.com/mui/mui-x/issues/24092
+    it('should not intercept paste shortcuts from a text field rendered inside a cell', async () => {
+      const handleBlur = vi.fn();
+      const handlePasteStart = vi.fn();
+      const columns: GridColDef[] = [
+        {
+          field: 'name',
+          editable: true,
+          renderCell: () => <input type="text" name="cell-input" onBlur={handleBlur} />,
+        },
+      ];
+      const rows = [
+        { id: 1, name: 'Alice' },
+        { id: 2, name: 'Bob' },
+      ];
+
+      function TestCase() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              columns={columns}
+              rows={rows}
+              disableRowSelectionOnClick
+              onClipboardPasteStart={handlePasteStart}
+            />
+          </div>
+        );
+      }
+
+      const { user } = render(<TestCase />);
+
+      const cellInput = document.querySelector<HTMLInputElement>('input[name="cell-input"]')!;
+      await user.click(cellInput);
+      expect(cellInput).toHaveFocus();
+
+      paste(cellInput, 'pasted');
+
+      // The grid must not move the focus to its hidden input to read the clipboard
+      expect(cellInput).toHaveFocus();
+      expect(handleBlur.mock.calls.length).to.equal(0);
+      expect(handlePasteStart.mock.calls.length).to.equal(0);
+      expect(apiRef.current?.getRow(1).name).to.equal('Alice');
+    });
+
+    (['input', 'textarea'] as const).forEach((Field) => {
+      it(`should paste into the row from a read-only ${Field} rendered inside a cell`, async () => {
+        const columns: GridColDef[] = [
+          {
+            field: 'name',
+            editable: true,
+            renderCell: () => <Field readOnly name="cell-field" />,
+          },
+        ];
+        const rows = [
+          { id: 1, name: 'Alice' },
+          { id: 2, name: 'Bob' },
+        ];
+
+        function TestCase() {
+          apiRef = useGridApiRef();
+          return (
+            <div style={{ width: 300, height: 300 }}>
+              <DataGridPremium
+                apiRef={apiRef}
+                columns={columns}
+                rows={rows}
+                disableRowSelectionOnClick
+              />
+            </div>
+          );
+        }
+
+        const { user } = render(<TestCase />);
+
+        const cellField = document.querySelector<HTMLElement>('[name="cell-field"]')!;
+        await user.click(cellField);
+
+        paste(cellField, 'pasted');
+
+        await waitFor(() => {
+          expect(apiRef.current?.getRow(1).name).to.equal('pasted');
+        });
+      });
+    });
+
     it('should wire pasted csv through pastedValueParser into a multiSelect array', async () => {
       const columns: GridColDef[] = [
         {

@@ -26,6 +26,7 @@ import {
   isPasteShortcut,
   useGridLogger,
   isEventTargetInPortal,
+  isEventTargetTextEntryElement,
   isReplaceUpdate,
   getReplaceRow,
 } from '@mui/x-data-grid/internals';
@@ -383,6 +384,10 @@ export const useGridClipboardImport = (
       // Ignore portal
       // Do not apply shortcuts if the focus is not on the cell root component
       if (isEventTargetInPortal(event)) {
+        return;
+      }
+      // Let the browser paste into a text field rendered inside the cell
+      if (isEventTargetTextEntryElement(event)) {
         return;
       }
       if (!enableClipboardPaste) {
