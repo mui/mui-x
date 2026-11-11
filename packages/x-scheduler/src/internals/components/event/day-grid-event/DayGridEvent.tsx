@@ -23,7 +23,7 @@ import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
 import type { PaletteName } from '../../../utils/tokens';
-import { getPaletteVariants } from '../../../utils/tokens';
+import { getPaletteVariants, highlightStyles } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
 import { getArrowEdgeStyles, getArrowFocusVisibleStyles } from '../arrowClips';
@@ -54,9 +54,7 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
   slot: 'DayGridEvent',
 })<{ 'data-variant'?: 'filled' | 'invisible' | 'compact' | 'placeholder'; palette?: PaletteName }>(
   ({ theme }) => ({
-    '&[data-highlight]': { transition: 'opacity 150ms' },
-    '&[data-highlight="dimmed"]': { opacity: 0.25 },
-    '&[data-highlight="highlighted"]': { outline: '2px solid var(--event-main)', outlineOffset: 1 },
+    ...highlightStyles,
     ...(DayGridEventBaseStyles(theme) as any),
     '&:focus-visible': {
       outline: '2px solid var(--event-surface-accent)',

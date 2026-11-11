@@ -89,6 +89,20 @@ const resourceHasVisibleChildrenLookupSelector = createSelectorMemoized(
 export const schedulerResourceSelectors = {
   processedResource: (state: State, resourceId: string | null | undefined) =>
     resourceId == null ? null : (state.processedResourceLookup.get(resourceId) ?? null),
+  /**
+   * Whether `resourceId` is `ancestorId` or one of its descendants.
+   */
+  isResourceOrDescendant: (state: State, resourceId: string, ancestorId: string): boolean => {
+    const parentLookup = resourceParentIdLookupSelector(state);
+    let currentId: string | null = resourceId;
+    while (currentId != null) {
+      if (currentId === ancestorId) {
+        return true;
+      }
+      currentId = parentLookup.get(currentId) ?? null;
+    }
+    return false;
+  },
   processedResourceList: createSelectorMemoized(
     (state: State) => state.resourceIdList,
     (state: State) => state.processedResourceLookup,

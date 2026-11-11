@@ -158,6 +158,8 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
 
     const view = useStore(store, eventCalendarViewSelectors.view);
     const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
+    // the resources tree renders nothing without resources, and neither should its divider
+    const hasResources = useStore(store, (state) => state.processedResourceLookup.size > 0);
 
     // The compact drawer keeps its own state (default closed) rather than reusing
     // `isSidePanelOpen` (default open), so it never covers the calendar on load.
@@ -236,7 +238,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
               <ResourcesTree />
               {sidePanelExtra ? (
                 <React.Fragment>
-                  <Divider className={classes.sidePanelDivider} />
+                  {hasResources ? <Divider className={classes.sidePanelDivider} /> : null}
                   {sidePanelExtra}
                 </React.Fragment>
               ) : null}

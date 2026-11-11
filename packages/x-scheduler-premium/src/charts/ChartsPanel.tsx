@@ -7,11 +7,8 @@ import { useStore } from '@base-ui/utils/store';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import {
-  eventColorTokens,
-  useDisarmOnEscape,
-  useDisarmOnOutsidePointer,
-} from '@mui/x-scheduler/internals';
+import { eventColorTokens, useDisarmOnEscape } from '@mui/x-scheduler/internals';
+import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import type { SchedulerOccurrenceHighlight } from '@mui/x-scheduler-internals/internals';
 import type { ChartsCardId, ChartsMetric, ChartsRendererComponent } from './chartsFeature';
 import type { ChartsResourceInfo } from './useChartsDatasets';
@@ -61,7 +58,6 @@ interface ChartsPanelProps {
 }
 
 export function ChartsPanel({ renderer: Renderer, cards, metric }: ChartsPanelProps) {
-  const unit = metric === 'hours' ? ' h' : '';
   const store = useEventCalendarStoreContext();
   const {
     days,
@@ -70,47 +66,57 @@ export function ChartsPanel({ renderer: Renderer, cards, metric }: ChartsPanelPr
     resources,
     hoursPerDay,
     shareByResource,
-    shareItems,
     roots,
     hasNestedResources,
   } = useChartsDatasets(metric);
-
-  const colorOf = React.useMemo(
-    () => new Map(resources.map((resource) => [resource.id, resource.color])),
-    [resources],
-  );
 
   // Click toggles the highlight.
   const toggleHighlight = (next: SchedulerOccurrenceHighlight) => {
     store.setOccurrenceHighlight(isDeepEqual(store.state.occurrenceHighlight, next) ? null : next);
   };
-  const highlightResource = (resourceId: string): SchedulerOccurrenceHighlight => ({
+  const resourceHighlight = (resourceId: string): SchedulerOccurrenceHighlight => ({
     resourceId: resourceId === NO_RESOURCE ? null : resourceId,
   });
 
   // A pinned highlight must not outlive the panel being visible.
   const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
+  const clearHighlight = React.useCallback(() => store.setOccurrenceHighlight(null), [store]);
   React.useEffect(() => {
     if (!isSidePanelOpen) {
-      store.setOccurrenceHighlight(null);
+      clearHighlight();
     }
-  }, [isSidePanelOpen, store]);
+    return clearHighlight;
+  }, [isSidePanelOpen, clearHighlight]);
 
-  // Same pattern as armed events: a click anywhere but on a bar or a slice clears the
-  // highlight and is swallowed, so it does not create an event; Escape clears it too.
-  // The anchor is an empty element so that the rest of the panel counts as outside.
-  const highlight = useStore(store, (state) => state.occurrenceHighlight);
-  const clearHighlight = React.useCallback(() => store.setOccurrenceHighlight(null), [store]);
-  const outsideAnchorRef = React.useRef<HTMLSpanElement>(null);
-  useDisarmOnOutsidePointer({
-    ref: outsideAnchorRef,
-    active: highlight != null,
-    onDisarm: clearHighlight,
-    ignoreSelector: CHART_ITEM_SELECTOR,
-    global: true,
-  });
-  useDisarmOnEscape({ active: highlight != null, onDisarm: clearHighlight });
-  React.useEffect(() => () => store.setOccurrenceHighlight(null), [store]);
+  // A click anywhere but on a bar or a slice clears the highlight. Inside the calendar grid the
+  // click is also swallowed so that it does not create an event, except on an event, which opens
+  // as usual; everywhere else (resources tree, toolbar, the app) the click keeps its effect.
+  const isHighlighting = useStore(store, (state) => state.occurrenceHighlight != null);
+  const rootRef = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    const node = rootRef.current;
+    if (!isHighlighting || !node) {
+      return undefined;
+    }
+    const onClickCapture = (event: MouseEvent) => {
+      const target = event.composedPath()[0];
+      if (!(target instanceof Element) || target.closest(CHART_ITEM_SELECTOR)) {
+        return;
+      }
+      if (
+        target.closest(`.${eventCalendarClasses.content}`) &&
+        !target.closest('[data-highlight]')
+      ) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
+      clearHighlight();
+    };
+    const doc = node.ownerDocument;
+    doc.addEventListener('click', onClickCapture, true);
+    return () => doc.removeEventListener('click', onClickCapture, true);
+  }, [isHighlighting, clearHighlight]);
+  useDisarmOnEscape({ active: isHighlighting, onDisarm: clearHighlight });
 
   const renderHoursPerDay = (
     <Renderer
@@ -135,10 +141,6 @@ export function ChartsPanel({ renderer: Renderer, cards, metric }: ChartsPanelPr
             },
           ]}
           yAxis={[{ width: 28 }]}
-          series={props.series.map((series: { id: string }) => ({
-            ...series,
-            color: colorOf.get(series.id),
-          }))}
           slotProps={{ ...props.slotProps, tooltip: { trigger: 'none' } }}
           onItemClick={(
             _event: React.MouseEvent,
@@ -147,8 +149,10 @@ export function ChartsPanel({ renderer: Renderer, cards, metric }: ChartsPanelPr
             const day = days[dataIndex];
             if (day) {
               toggleHighlight({
-                ...highlightResource(seriesId),
+                ...resourceHighlight(seriesId),
                 range: { start: day.timestamp, end: dayEnds[dataIndex] },
+                // all-day events have no hours, so they are not in the bar
+                timedOnly: metric === 'hours',
               });
             }
           }}
@@ -158,8 +162,8 @@ export function ChartsPanel({ renderer: Renderer, cards, metric }: ChartsPanelPr
   );
 
   // One ring per dimension: the roots inside when the resources are nested, the resources outside.
-  // The rows are sorted by root, so the items of each ring follow the order of `roots` / `shareItems`.
-  const ringItems: ChartsResourceInfo[][] = hasNestedResources ? [roots, shareItems] : [shareItems];
+  // The rows are in tree order, so the items of each ring follow `roots` / `resources`.
+  const ringItems: ChartsResourceInfo[][] = hasNestedResources ? [roots, resources] : [resources];
   const renderShareByResource = (
     <Renderer
       chartType="pie"
@@ -187,15 +191,19 @@ export function ChartsPanel({ renderer: Renderer, cards, metric }: ChartsPanelPr
               const resource = ringItems[ringIndex][itemIndex];
               return { ...item, id: resource.id, label: resource.label, color: resource.color };
             }),
-            valueFormatter: (item: { value: number }) => `${item.value}${unit}`,
           }))}
           onItemClick={(
             _event: React.MouseEvent,
             { seriesId, dataIndex }: { seriesId: string; dataIndex: number },
           ) => {
-            const resource = ringItems[Number(seriesId.slice('ring-'.length))]?.[dataIndex];
+            const ringIndex = Number(seriesId.slice('ring-'.length));
+            const resource = ringItems[ringIndex]?.[dataIndex];
             if (resource) {
-              toggleHighlight(highlightResource(resource.id));
+              toggleHighlight({
+                ...resourceHighlight(resource.id),
+                // the inner ring sums the descendants of each root
+                includeDescendants: hasNestedResources && ringIndex === 0,
+              });
             }
           }}
         />
@@ -215,8 +223,7 @@ export function ChartsPanel({ renderer: Renderer, cards, metric }: ChartsPanelPr
   };
 
   return (
-    <PanelRoot>
-      <span ref={outsideAnchorRef} hidden />
+    <PanelRoot ref={rootRef}>
       {cards.map((cardId) => (
         <Card key={cardId}>
           <CardTitle>{cardLookup[cardId].title}</CardTitle>

@@ -19,7 +19,7 @@ import type { TimeGridEventProps } from './TimeGridEvent.types';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import type { PaletteName } from '../../../utils/tokens';
-import { getPaletteVariants } from '../../../utils/tokens';
+import { getPaletteVariants, highlightStyles } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
 import { useTimeGridEvent } from './useTimeGridEvent';
@@ -169,21 +169,10 @@ const getTimeGridEventRootStyles = (theme: Theme): CSSObject => ({
   },
 });
 
-const highlightStyles = {
-  '&[data-highlight]': { transition: 'opacity 150ms' },
-  '&[data-highlight="dimmed"]': { opacity: 0.25 },
-  '&[data-highlight="highlighted"]': {
-    outline: '2px solid var(--event-main)',
-    outlineOffset: 1,
-    zIndex: 2,
-  },
-};
-
 const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   name: 'MuiEventCalendar',
   slot: 'TimeGridEventRoot',
 })<{ palette?: PaletteName }>(({ theme }) => ({
-  // before the root styles so the armed and editing outlines win over the highlight one
   ...highlightStyles,
   ...getTimeGridEventRootStyles(theme),
   padding: theme.spacing(0.5, 1, 0.5, 1),

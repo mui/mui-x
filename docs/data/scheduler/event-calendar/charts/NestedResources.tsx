@@ -10,11 +10,7 @@ import {
 } from 'docs/data/scheduler/datasets/software-company';
 
 const features = {
-  charts: createChartsFeature({
-    renderer: ChartsRenderer,
-    cards: ['shareByResource'],
-    metric: 'count',
-  }),
+  charts: createChartsFeature({ renderer: ChartsRenderer, metric: 'count' }),
 };
 
 export default function NestedResources() {

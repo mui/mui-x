@@ -89,14 +89,24 @@ export interface SchedulerEditingState {
  */
 export interface SchedulerOccurrenceHighlight {
   /**
-   * A resource (and its descendants), `null` for occurrences without resource,
-   * `undefined` for any resource.
+   * The resource the occurrences are attributed to (their first visible resource),
+   * `null` for occurrences without a visible resource.
    */
-  resourceId?: SchedulerResourceId | null;
+  resourceId: SchedulerResourceId | null;
+  /**
+   * Whether the occurrences attributed to a descendant of `resourceId` match too.
+   * @default false
+   */
+  includeDescendants?: boolean;
   /**
    * Half-open time range `[start, end)` as timestamps, `undefined` for any time.
    */
   range?: { start: number; end: number };
+  /**
+   * Whether all-day occurrences are left out.
+   * @default false
+   */
+  timedOnly?: boolean;
 }
 
 export interface SchedulerState<TEvent extends object = any> {

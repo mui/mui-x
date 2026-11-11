@@ -263,6 +263,12 @@ export class SchedulerStore<
     this.disposables.defer(
       this.registerStoreEffect(schedulerOtherSelectors.visibleTimestamp, this.stopEditing),
     );
+    // A highlight describes the visible range: left behind by a date change it would dim everything.
+    this.disposables.defer(
+      this.registerStoreEffect(schedulerOtherSelectors.visibleTimestamp, () =>
+        this.setOccurrenceHighlight(null),
+      ),
+    );
 
     const timeUntilNextMinuteMs = ONE_MINUTE_IN_MS - (Date.now() % ONE_MINUTE_IN_MS);
 
