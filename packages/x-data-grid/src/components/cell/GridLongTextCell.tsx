@@ -118,6 +118,9 @@ const GridLongTextCellPopper = styled(NotRendered<GridSlotProps['basePopper']>, 
   },
 }));
 
+// Untyped columns (`any`) keep the default value type.
+type GridLongTextCellValue<V> = 0 extends 1 & V ? string | null : V;
+
 export interface GridLongTextCellProps<
   V extends React.ReactNode = string | null,
 > extends GridRenderCellParams<any, V, React.ReactNode> {
@@ -126,7 +129,7 @@ export interface GridLongTextCellProps<
    * @param {V} value The cell value.
    * @returns {React.ReactNode} The content to render in the popup.
    */
-  renderContent?: (value: V) => React.ReactNode;
+  renderContent?: (value: GridLongTextCellValue<V>) => React.ReactNode;
   /**
    * Props passed to internal components.
    */
@@ -169,7 +172,7 @@ function GridLongTextCell<V extends React.ReactNode = string | null>(
   const rowHeight = useGridSelector(apiRef, gridRowHeightSelector);
 
   const expandLabel = apiRef.current.getLocaleText('longTextCellExpandLabel');
-  const hasTextValue = typeof value === 'number' || (typeof value === 'string' && value !== '');
+  const hasTextValue = ['string', 'number', 'bigint'].includes(typeof value) && value !== '';
 
   const [popupOpen, setPopupOpen] = React.useState(false);
   const cellRef = React.useRef<HTMLDivElement>(null);
@@ -289,7 +292,7 @@ function GridLongTextCell<V extends React.ReactNode = string | null>(
             } as React.CSSProperties
           }
         >
-          {renderContent ? renderContent(value as V) : value}
+          {renderContent ? renderContent(value as GridLongTextCellValue<V>) : value}
           <GridLongTextCellCornerButton
             type="button"
             aria-label={apiRef.current.getLocaleText('longTextCellCollapseLabel')}

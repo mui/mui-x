@@ -365,6 +365,19 @@ describe('<DataGrid /> - Cells', () => {
       expect(screen.getByTestId('popup-content')).not.to.equal(null);
     });
 
+    it('should not include an empty value in the expand button label', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...longTextBaselineProps} rows={[{ id: 0, bio: null }]} />
+        </div>,
+      );
+
+      expect(getCell(0, 0).querySelector('button[aria-haspopup="dialog"]')).to.have.attribute(
+        'aria-label',
+        'Expand',
+      );
+    });
+
     describe('popup', () => {
       it('should display full text in edit popup', async () => {
         const { user } = render(
