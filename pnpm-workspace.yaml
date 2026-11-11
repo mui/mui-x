@@ -121,8 +121,7 @@ allowBuilds:
   msw: false
 
 overrides:
-  # Docs-infra: mui-public #2047; core-docs: material-ui #49464.
-  '@mui/internal-docs-infra': https://pkg.pr.new/mui/mui-public/@mui/internal-docs-infra@4819565e3d64955d97f18166bfcbe2243141a68d
+  '@mui/internal-docs-infra': 0.13.1-canary.32
   # Other docs previews: material-ui #49464; public runtime: #48842.
   # Hold the public runtime until MUI X supports material-ui #49612.
   '@mui/core-downloads-tracker': https://pkg.pr.new/mui/material-ui/@mui/core-downloads-tracker@40645cf
