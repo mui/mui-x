@@ -52,6 +52,7 @@ describe('<EventTimelinePremiumHeader />', () => {
     defaultPreferences?: { ampm?: boolean; weekStartsOn?: WeekStartsOn };
     visibleDate?: typeof DEFAULT_TESTING_VISIBLE_DATE;
     displayTimezone?: string;
+    dateLocale?: string;
     presetConfig?: EventTimelinePremiumPresetConfig;
   }) {
     // The grid is virtualized; sizing the host wide enough to fit the largest preset
@@ -68,6 +69,7 @@ describe('<EventTimelinePremiumHeader />', () => {
           presetConfig={options.presetConfig}
           defaultPreferences={options.defaultPreferences}
           displayTimezone={options.displayTimezone}
+          dateLocale={options.dateLocale}
         />
       </div>,
     );
@@ -193,6 +195,22 @@ describe('<EventTimelinePremiumHeader />', () => {
       expect(dayCells[1].dataset.weekend).to.equal(undefined); // Fri
       expect(dayCells[2].dataset.weekend).to.equal(''); // Sat
       expect(dayCells[3].dataset.weekend).to.equal(''); // Sun
+    });
+
+    it('should mark the weekend of the date locale', async () => {
+      // Saudi Arabia rests on Friday and Saturday.
+      await renderHeader({ preset: 'dayAndHour', dateLocale: 'ar-SA' });
+
+      const dayCells = Array.from(
+        document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="day"]`),
+      );
+      // Visible range: Jul 3 (Thu), Jul 4 (Fri), Jul 5 (Sat), Jul 6 (Sun).
+      expect(dayCells.map((cell) => cell.dataset.weekend)).to.deep.equal([
+        undefined,
+        '',
+        '',
+        undefined,
+      ]);
     });
 
     it('should not mark a weekday skipped by a transition as a weekend', async () => {

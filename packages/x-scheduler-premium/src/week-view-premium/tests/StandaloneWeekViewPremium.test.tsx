@@ -6,6 +6,7 @@ import {
 } from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
 import { StandaloneWeekViewPremium } from '@mui/x-scheduler-premium/week-view-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { esES } from '@mui/x-scheduler/locales';
 import { describe, it, expect } from 'vitest';
@@ -49,6 +50,7 @@ describe('<StandaloneWeekViewPremium />', () => {
 
       render(
         <StandaloneWeekViewPremium
+          features={{ recurringEvents: recurringEventsFeature }}
           events={[nightShift]}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
         />,

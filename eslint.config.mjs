@@ -182,6 +182,7 @@ export default defineConfig(
     enableReactCompiler: isAnyReactCompilerPluginEnabled,
     materialUi: true,
     markdown: true,
+    consistentTypeImports: true,
   }),
   // eslint-plugin-mdx loads `.remarkrc.mjs` itself, but ESLint doesn't know
   // that file is a config dependency, so `--cache` doesn't invalidate when
@@ -312,23 +313,6 @@ export default defineConfig(
       'import/no-cycle': 'error',
       // Charts have no semantics, so we often need to query by container
       'testing-library/no-container': 'off',
-    },
-  },
-  {
-    files: [
-      `packages/**/*${EXTENSION_TS}`,
-      `docs/**/*${EXTENSION_TS}`,
-      `scripts/**/*${EXTENSION_TS}`,
-      `test/**/*${EXTENSION_TS}`,
-    ],
-    rules: {
-      '@typescript-eslint/consistent-type-imports': [
-        'error',
-        {
-          fixStyle: 'separate-type-imports',
-        },
-      ],
-      'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
     },
   },
   {

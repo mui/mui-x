@@ -12,8 +12,8 @@ import { describe } from 'vitest';
 describe('<TimelineGrid.EventPlaceholder />', () => {
   const { render } = createSchedulerRenderer();
 
-  const start = processDate(adapter.startOfDay(adapter.now('default')), adapter);
-  const end = processDate(adapter.endOfDay(adapter.now('default')), adapter);
+  const start = processDate(adapter.startOfDay(adapter.now('default')), adapter, 'default');
+  const end = processDate(adapter.endOfDay(adapter.now('default')), adapter, 'default');
 
   describeConformance(<TimelineGrid.EventPlaceholder start={start} end={end} />, () => ({
     refInstanceof: window.HTMLDivElement,

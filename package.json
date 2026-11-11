@@ -27,7 +27,7 @@
     "eslint": "eslint . --cache --report-unused-disable-directives --max-warnings 0",
     "eslint:fix": "pnpm eslint --fix",
     "eslint:ci": "eslint . --report-unused-disable-directives --max-warnings 0",
-    "stylelint": "stylelint --reportInvalidScopeDisables --reportNeedlessDisables \"docs/**/*.?(c|m)[jt]s?(x)\" \"**/*.css\" --ignore-path .lintignore",
+    "stylelint": "stylelint --report-invalid-scope-disables --report-needless-disables \"docs/**/*.?(c|m)[jt]s?(x)\" \"**/*.css\" --ignore-path .lintignore",
     "vale:fix": "pnpm valelint --auto-fix all",
     "valelint": "pnpm code-infra vale sync --vale-version $npm_package_config_valeVersion && git ls-files | grep -E \"\\.(md|mdx)$\" | xargs pnpm code-infra vale --vale-version $npm_package_config_valeVersion --filter='.Level==\"error\"'",
     "prettier": "pretty-quick --ignore-path .lintignore --branch master",
@@ -69,7 +69,7 @@
     "@babel/plugin-syntax-typescript": "8.0.3",
     "@babel/plugin-transform-object-rest-spread": "8.0.1",
     "@babel/traverse": "catalog:",
-    "@babel/types": "8.0.6",
+    "@babel/types": "8.1.0",
     "@base-ui/utils": "catalog:",
     "@emotion/cache": "catalog:",
     "@eslint/compat": "2.1.1",
@@ -78,7 +78,7 @@
     "@mui/internal-babel-plugin-display-name": "2.0.1-canary.2",
     "@mui/internal-babel-plugin-minify-errors": "3.0.1-canary.2",
     "@mui/internal-bundle-size-checker": "1.1.1-canary.6",
-    "@mui/internal-code-infra": "0.1.1-canary.27",
+    "@mui/internal-code-infra": "0.1.1-canary.29",
     "@mui/internal-core-docs": "catalog:",
     "@mui/internal-markdown": "4.0.1-canary.0",
     "@mui/internal-netlify-cache": "0.1.1-canary.2",
@@ -86,7 +86,7 @@
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/utils": "catalog:",
-    "@netlify/types": "3.3.0",
+    "@netlify/types": "3.3.1",
     "@next/eslint-plugin-next": "16.4.3",
     "@octokit/plugin-retry": "8.1.1",
     "@octokit/rest": "22.0.1",
@@ -108,7 +108,7 @@
     "babel-plugin-react-remove-properties": "catalog:",
     "babel-plugin-search-and-replace": "1.1.1",
     "babel-plugin-transform-replace-expressions": "0.2.0",
-    "concurrently": "10.0.6",
+    "concurrently": "10.0.7",
     "cross-env": "catalog:",
     "date-fns": "catalog:",
     "date-fns-jalali-v2": "npm:date-fns-jalali@2.30.0-0",
@@ -125,7 +125,7 @@
     "moment": "catalog:",
     "moment-timezone": "catalog:",
     "picomatch": "4.0.7",
-    "pkg-pr-new": "0.0.92",
+    "pkg-pr-new": "0.0.93",
     "playwright": "catalog:",
     "prettier": "3.9.10",
     "pretty-quick": "4.2.2",
@@ -135,7 +135,7 @@
     "rimraf": "catalog:",
     "serve": "catalog:",
     "string-replace-loader": "3.3.0",
-    "stylelint": "17.16.0",
+    "stylelint": "18.0.0",
     "supports-color": "11.0.0",
     "tsx": "catalog:",
     "typescript": "npm:@typescript/typescript6@6.0.2",
@@ -148,11 +148,11 @@
     "zod": "4.6.7"
   },
   "config": {
-    "valeVersion": "3.25.1"
+    "valeVersion": "3.26.0"
   },
-  "packageManager": "pnpm@12.17.0",
+  "packageManager": "pnpm@12.18.0",
   "engines": {
-    "pnpm": "12.17.0",
+    "pnpm": "12.18.0",
     "node": ">=22.23.4"
   }
 }

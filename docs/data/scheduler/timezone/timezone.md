@@ -79,7 +79,8 @@ If no `timezone` is set, the component uses the default timezone of your date li
 The `displayTimezone` prop controls how all events are rendered in the UI.
 
 Changing `displayTimezone` does not modify the event data or change when an event occurs.
-The visible date is read in `displayTimezone` too: the visible range starts on the day of `visibleDate` in that timezone, and the next and previous buttons pass a date in that timezone to `onVisibleDateChange`.
+The visible date is read in `displayTimezone` too: the visible range starts on the day of `visibleDate` in that timezone, and the next and previous buttons pass `onVisibleDateChange` an instant on the new day in that timezone.
+Read its day in `displayTimezone`, as the timezone of the browser can put it on another day.
 
 ```tsx
 <EventCalendar

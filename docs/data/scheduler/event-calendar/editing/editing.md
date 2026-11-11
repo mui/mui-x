@@ -82,7 +82,7 @@ The dialog has two tabs:
 
 - **General**: title, start/end date and time, all-day toggle, resource and color selectors, and description.
 - **Recurrence**: frequency, interval, days of the week, and end condition.
-  Only available with the Premium package (`@mui/x-scheduler-premium`).
+  Only available with the Premium package (`@mui/x-scheduler-premium`), when the [`recurringEvents` feature](/x/react-scheduler/recurring-events/) is enabled.
 
 Click any event in the demo below to open the dialog.
 From there you can edit the event details or delete it.
@@ -90,7 +90,7 @@ From there you can edit the event details or delete it.
 {{"demo": "EventDialog.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
-This demo uses `EventCalendarPremium` to showcase the Recurrence tab.
+This demo uses `EventCalendarPremium` with the `recurringEvents` feature to showcase the Recurrence tab.
 All other dialog features (editing title, dates, resources, colors, description, and deleting events) are available in the standard `EventCalendar` component.
 :::
 

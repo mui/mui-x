@@ -59,6 +59,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "default": "[]"
     },
+    "features": { "type": { "name": "object" } },
     "localeText": { "type": { "name": "object" } },
     "onEventEditingStart": { "type": { "name": "func" } },
     "onEventsChange": { "type": { "name": "func" } },

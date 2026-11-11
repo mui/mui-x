@@ -9,15 +9,17 @@ import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
 describe('<CalendarGrid.TimeEvent />', () => {
   const { render } = createSchedulerRenderer();
 
-  const eventStart = processDate(adapter.now('default'), adapter);
-  const eventEnd = processDate(adapter.addHours(eventStart.value, 1), adapter);
+  const eventStart = processDate(adapter.now('default'), adapter, 'default');
+  const eventEnd = processDate(adapter.addHours(eventStart.value, 1), adapter, 'default');
 
   // Mounts the event in the column context it needs.
   function renderEvent(node: React.ReactElement) {
     return render(
       <EventCalendarProvider events={[]}>
         <CalendarGrid.Root>
-          <CalendarGrid.TimeColumn value={buildTemporalPlainDate(adapter, eventStart.value)}>
+          <CalendarGrid.TimeColumn
+            value={buildTemporalPlainDate(adapter, eventStart.value, 'default')}
+          >
             {node}
           </CalendarGrid.TimeColumn>
         </CalendarGrid.Root>

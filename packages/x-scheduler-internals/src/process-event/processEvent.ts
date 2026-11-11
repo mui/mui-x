@@ -21,24 +21,21 @@ export function processEvent(
     ? model.exDates.map((exDate) => resolveEventDate(exDate, dataTimezone, adapter, model.id))
     : undefined;
 
-  const startInDisplayTz = adapter.setTimezone(startInstant, displayTimezone);
-  const endInDisplayTz = adapter.setTimezone(endInstant, displayTimezone);
   const displayBounds = normalizeAllDayBounds(
     adapter,
-    startInDisplayTz,
-    endInDisplayTz,
+    startInstant,
+    endInstant,
     model.allDay,
+    displayTimezone,
   );
-  const exDatesInDisplayTz = resolvedExDates
-    ? resolvedExDates.map((exDate) => adapter.setTimezone(exDate, displayTimezone))
-    : undefined;
 
   if (recurringEventsPlugin == null && model.rrule != null) {
     if (process.env.NODE_ENV !== 'production') {
       warnOnce(
         [
-          'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-          'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events`, to enable recurring events.',
+          'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
+          'Recurring events are a Premium feature: pass `features={{ recurringEvents: recurringEventsFeature }}`, with `recurringEventsFeature` imported from `@mui/x-scheduler-premium/recurring-events`, to <EventCalendarPremium />, to a premium standalone view or to <EventTimelinePremium />.',
+          'See https://mui.com/x/react-scheduler/recurring-events/ for more details.',
         ].join('\n'),
       );
     }
@@ -54,17 +51,17 @@ export function processEvent(
     title: model.title,
     description: model.description,
     dataTimezone: {
-      start: processDate(startInstant, adapter),
-      end: processDate(endInstant, adapter),
+      start: processDate(startInstant, adapter, dataTimezone),
+      end: processDate(endInstant, adapter, dataTimezone),
       timezone: dataTimezone,
       rrule: parsedDataRRule,
       exDates: resolvedExDates,
     },
     displayTimezone: {
-      start: processDate(displayBounds.start, adapter),
-      end: processDate(displayBounds.end, adapter),
+      start: processDate(displayBounds.start, adapter, displayTimezone),
+      end: processDate(displayBounds.end, adapter, displayTimezone),
       timezone: displayTimezone,
-      exDates: exDatesInDisplayTz,
+      exDates: resolvedExDates,
     },
     resource: model.resource,
     allDay: model.allDay ?? false,

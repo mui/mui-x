@@ -20,6 +20,7 @@ export interface SchedulerPreferences {
 export interface EventCalendarPreferences extends SchedulerPreferences {
   /**
    * Whether weekends are shown in the calendar.
+   * The days of the weekend are those of the `dateLocale`.
    * @default true
    */
   showWeekends: boolean;

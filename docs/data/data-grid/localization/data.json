@@ -163,7 +163,7 @@
     "languageTag": "id-ID",
     "importName": "idID",
     "localeName": "Indonesian",
-    "missingKeysCount": 98,
+    "missingKeysCount": 0,
     "totalKeysCount": 293,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/idID.ts"
   },

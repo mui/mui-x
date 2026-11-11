@@ -23,15 +23,10 @@ import type {
  * in `timezone`. A day the timezone skips, like December 30th, 2011 in Pacific/Apia, is passed over.
  */
 export function createStartOfPreviousDay(
-  adapter: Adapter,
   plainDate: BaseTemporal.PlainDate,
   timezone: TemporalTimezone,
 ): TemporalSupportedObject {
-  return createAdapterDate(
-    adapter,
-    getStartOfDayMs(toEpochMs(plainDate, 0, timezone) - 1, timezone),
-    timezone,
-  );
+  return createAdapterDate(getStartOfDayMs(toEpochMs(plainDate, 0, timezone) - 1, timezone));
 }
 
 /**
@@ -56,7 +51,7 @@ export function moveEndToPlainDate(
       endMs = laterMs;
     }
   }
-  return createAdapterDate(adapter, endMs, timezone);
+  return createAdapterDate(endMs);
 }
 
 /**
@@ -89,13 +84,14 @@ export function getPlainDateWeekDayCode(
 }
 
 /**
- * Returns the week day code (MO..SU) for a given date, read in the timezone it is labeled with.
+ * Returns the week day code (MO..SU) for a given date, read in `timezone`.
  */
 export function getWeekDayCode(
   adapter: Adapter,
   date: TemporalSupportedObject,
+  timezone: TemporalTimezone,
 ): RecurringEventWeekDayCode {
-  return getPlainDateWeekDayCode(buildTemporalPlainDate(adapter, date));
+  return getPlainDateWeekDayCode(buildTemporalPlainDate(adapter, date, timezone));
 }
 
 /**

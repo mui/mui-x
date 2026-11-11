@@ -8,6 +8,7 @@ import {
   EventBuilder,
 } from 'test/utils/scheduler';
 import { StandaloneAgendaViewPremium } from '@mui/x-scheduler-premium/agenda-view-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
@@ -27,6 +28,7 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
   ) {
     return render(
       <StandaloneAgendaViewPremium
+        features={{ recurringEvents: recurringEventsFeature }}
         dataSource={{ getEvents, persistEvents: async () => ({ success: true }) }}
         defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
         {...props}
@@ -169,6 +171,7 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
         return (
           <React.Fragment>
             <StandaloneAgendaViewPremium
+              features={{ recurringEvents: recurringEventsFeature }}
               dataSource={{ getEvents, persistEvents: async () => ({ success: true }) }}
               visibleDate={visibleDate}
               onVisibleDateChange={setVisibleDate}
