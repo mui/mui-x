@@ -20,6 +20,7 @@ import {
 } from '@mui/x-scheduler/internals';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import type { MockInstance } from 'vitest';
 import { RecurringScopeDialog } from '../../internals/components/recurring-scope-dialog/RecurringScopeDialog';
@@ -150,6 +151,7 @@ describe('EventContextMenu - recurring events (Premium)', () => {
         .build();
       render(
         <EventCalendarPremium
+          features={{ recurringEvents: recurringEventsFeature }}
           events={[weeklyEvent]}
           resources={[]}
           defaultView="day"
@@ -262,6 +264,7 @@ describe('EventContextMenu - recurring events (Premium)', () => {
         .build();
       render(
         <EventCalendarPremium
+          features={{ recurringEvents: recurringEventsFeature }}
           events={[weeklyEvent]}
           resources={[]}
           defaultView="day"

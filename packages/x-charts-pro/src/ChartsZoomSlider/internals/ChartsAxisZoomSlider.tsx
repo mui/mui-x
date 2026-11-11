@@ -124,7 +124,7 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
       axis.position === 'bottom'
         ? drawingArea.top + drawingArea.height + axis.offset + axisSize + ZOOM_SLIDER_MARGIN
         : drawingArea.top - axis.offset - axisSize - sliderSize - ZOOM_SLIDER_MARGIN;
-    reverse = axis.reverse ?? false;
+    reverse = axis.zoom?.reverse ?? false;
     axisPosition = axis.position ?? 'bottom';
     tooltipConditions = axis.zoom?.slider?.showTooltip ?? DEFAULT_ZOOM_SLIDER_SHOW_TOOLTIP;
   } else {
@@ -141,7 +141,7 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
         ? drawingArea.left + drawingArea.width + axis.offset + axisSize + ZOOM_SLIDER_MARGIN
         : drawingArea.left - axis.offset - axisSize - sliderSize - ZOOM_SLIDER_MARGIN;
     y = drawingArea.top;
-    reverse = axis.reverse ?? false;
+    reverse = axis.zoom?.reverse ?? false;
     axisPosition = axis.position ?? 'left';
     tooltipConditions = axis.zoom?.slider?.showTooltip ?? DEFAULT_ZOOM_SLIDER_SHOW_TOOLTIP;
   }

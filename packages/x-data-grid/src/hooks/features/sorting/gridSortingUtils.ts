@@ -170,7 +170,8 @@ export const getNextGridSortDirection = (
   return sortingOrder[currentIdx + 1];
 };
 
-const gridNillComparator = (v1: any, v2: any): number | null => {
+/** Returns `null` when both values are non-nil. */
+export const gridNilComparator = (v1: any, v2: any): number | null => {
   if (v1 == null && v2 != null) {
     return -1;
   }
@@ -187,9 +188,9 @@ const gridNillComparator = (v1: any, v2: any): number | null => {
 const collator = new Intl.Collator();
 
 export const gridStringOrNumberComparator: GridComparatorFn = (value1, value2) => {
-  const nillResult = gridNillComparator(value1, value2);
-  if (nillResult !== null) {
-    return nillResult;
+  const nilResult = gridNilComparator(value1, value2);
+  if (nilResult !== null) {
+    return nilResult;
   }
 
   if (typeof value1 === 'string') {
@@ -199,18 +200,18 @@ export const gridStringOrNumberComparator: GridComparatorFn = (value1, value2) =
 };
 
 export const gridNumberComparator: GridComparatorFn = (value1, value2) => {
-  const nillResult = gridNillComparator(value1, value2);
-  if (nillResult !== null) {
-    return nillResult;
+  const nilResult = gridNilComparator(value1, value2);
+  if (nilResult !== null) {
+    return nilResult;
   }
 
   return Number(value1) - Number(value2);
 };
 
 export const gridDateComparator: GridComparatorFn = (value1, value2) => {
-  const nillResult = gridNillComparator(value1, value2);
-  if (nillResult !== null) {
-    return nillResult;
+  const nilResult = gridNilComparator(value1, value2);
+  if (nilResult !== null) {
+    return nilResult;
   }
 
   if (value1! > value2!) {

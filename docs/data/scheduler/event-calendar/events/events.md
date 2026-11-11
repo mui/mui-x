@@ -164,6 +164,7 @@ const event = {
 };
 ```
 
+The Event Calendar expands recurring events only when the `recurringEvents` feature is enabled through the `features` prop.
 See [Recurring events](/x/react-scheduler/recurring-events/) for details.
 
 ## Store data in custom properties

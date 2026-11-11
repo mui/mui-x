@@ -300,7 +300,7 @@ export const useDataGridPremiumComponent = (
   useGridPagination(apiRef, props);
   useGridRowReorder(apiRef, props);
   useGridRowReorderPointer(apiRef, props);
-  useGridScroll(apiRef, props);
+  useGridScroll(apiRef);
   useGridInfiniteLoader(apiRef, props);
   useGridLazyLoader(apiRef, props);
   useGridDataSourceLazyLoader(apiRef, props);

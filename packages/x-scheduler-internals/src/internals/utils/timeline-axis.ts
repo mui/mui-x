@@ -180,18 +180,6 @@ export function timestampToTimelineAxisOffsetMs(
   // Day numbers, as this runs for every event.
   const dayIndex =
     toLocalDayNumber(timestamp, axis.timezone) - toLocalDayNumber(axis.start, axis.timezone);
-  return getTimelineAxisOffsetMs(axis, dayIndex, msInDay);
-}
-
-/**
- * The axis offset of a wall-clock time on the `dayIndex`-th day of the axis, clamped to the
- * displayed window of that day.
- */
-export function getTimelineAxisOffsetMs(
-  axis: TimelineAxisWindow,
-  dayIndex: number,
-  msInDay: number,
-): number {
   const clampedMsInDay = Math.min(
     Math.max(msInDay, axis.dayStartMinute * MINUTE_MS),
     axis.dayEndMinute * MINUTE_MS,

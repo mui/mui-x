@@ -75,7 +75,6 @@ describe('recurring-events/rRuleString', () => {
       );
 
       expect(adapter.getTime(fromString.until!)).to.equal(adapter.getTime(fromObject.until!));
-      expect(adapter.getTimezone(fromString.until!)).to.equal('America/New_York');
     });
 
     describe('with a host timezone that observes daylight saving time', () => {

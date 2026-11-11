@@ -19,6 +19,7 @@ import {
 import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
+  schedulerPreferenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
@@ -181,6 +182,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
   const visiblePlainDate = useStore(store, schedulerOtherSelectors.visiblePlainDate);
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
+  const weekend = useStore(store, schedulerPreferenceSelectors.weekend);
   const isCreatingAnEvent = useStore(
     store,
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
@@ -238,7 +240,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       data-current={isToday || undefined}
       aria-current={isToday ? 'date' : undefined}
       data-other-month={!isCurrentMonth || undefined}
-      data-weekend={isWeekendPlainDate(day.plainDate) || undefined}
+      data-weekend={isWeekendPlainDate(day.plainDate, weekend) || undefined}
       lockSurfaceType
       style={{ '--row-count': rowCount } as React.CSSProperties}
     >
