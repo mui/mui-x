@@ -356,6 +356,9 @@ export default defineConfig(
       parserOptions: {
         tsconfigRootDir: dirname,
         projectService: true,
+        // TODO: Remove when https://github.com/typescript-eslint/typescript-eslint/issues/13109 is fixed.
+        // Single-run Programs of typescript-eslint >=8.72.1 double the heap and OOM in CI.
+        disallowAutomaticSingleRunInference: true,
       },
     },
   },
@@ -421,6 +424,7 @@ export default defineConfig(
       parserOptions: {
         tsconfigRootDir: dirname,
         projectService: true,
+        disallowAutomaticSingleRunInference: true,
       },
     },
     rules: {
