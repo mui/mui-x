@@ -303,9 +303,9 @@ Use the `--DataGrid-cellOffsetMultiplier` CSS variable to change the default cel
 
 ### Single grouping column
 
-When using `rowGroupingColumnMode = "single"`, the default behavior is to sort each grouping criterion using the column's `sortComparator`, then apply the `filterOperators` from the top-level grouping criteria.
+When using `rowGroupingColumnMode = "single"`, the default behavior is to sort each grouping criterion using the column's `getSortComparator` or `sortComparator`, then apply the `filterOperators` from the top-level grouping criteria.
 
-If you're rendering leaves with the `leafField` property of the `groupingColDef`, then sorting and filtering will be applied on the leaves based on the `sortComparator` and `filterOperators` of their original column.
+If you're rendering leaves with the `leafField` property of the `groupingColDef`, then sorting and filtering will be applied on the leaves based on the `getSortComparator` or `sortComparator` and the `filterOperators` of their original column.
 
 You can force the filtering to be applied to other grouping criteria using the `mainGroupingCriteria` property of `groupingColDef`.
 
@@ -313,15 +313,20 @@ You can force the filtering to be applied to other grouping criteria using the `
 
 ### Multiple grouping columns
 
-When using `rowGroupingColumnMode = "multiple"`, the default behavior is to apply the `sortComparator` and `filterOperators` of the grouping criteria of each grouping column.
+When using `rowGroupingColumnMode = "multiple"`, the default behavior is to apply the `getSortComparator` or `sortComparator` and the `filterOperators` of the grouping criteria of each grouping column.
 
-If you're rendering leaves in one of those columns with the `leafField` property of `groupingColDef`, then sorting and filtering will be applied on the leaves for this grouping column based on the `sortComparator` and `filterOperators` of their original column.
+If you're rendering leaves in one of those columns with the `leafField` property of `groupingColDef`, then sorting and filtering will be applied on the leaves for this grouping column based on the `getSortComparator` or `sortComparator` and the `filterOperators` of their original column.
 
 If you want to render leaves but apply the sorting and filtering on the grouping criteria of the column, you can force it by setting the `mainGroupingCriteria` property `groupingColDef` to be equal to the grouping criteria.
 
 In the example below, sorting and filtering from the **Company** grouping column are applied to the `company` field, while sorting and filtering from the **Director** grouping column are applied to the `director` field even though it has leaves.
 
 {{"demo": "RowGroupingSortingMultipleGroupingColDef.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::info
+A column with a `groupingValueGetter` sorts its groups with its `sortComparator`, even if it has a `getSortComparator`.
+Its groups hold the values returned by `groupingValueGetter` instead of its cell values, so make sure that its `sortComparator` can compare them.
+:::
 
 :::warning
 If you're dynamically switching the `leafField` or `mainGroupingCriteria`, sorting and filtering models will not be cleaned up automatically, and the sorting or filtering will not be reapplied.
