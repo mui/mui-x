@@ -139,7 +139,8 @@ If needed, you can extend the configuration to render the UI elements for the ad
 ### Nested pie charts
 
 When the pie chart receives several dimensions, it draws one ring per dimension: the first dimension in the innermost ring and the last one in the outermost ring.
-Each ring sums the values of the ring outside it, so the inner rings show the totals of their groups.
+Each ring sums the values of the ring outside it, whatever the aggregation function of the value, so the inner rings show the totals of their groups.
+Colors are assigned per item in each ring, independently of the parent ring.
 
 The default configuration limits the pie chart to one dimension.
 Raise `maxDimensions` for the `pie` chart type in the `schema` prop of `<GridChartsPanel />` to let users build nested rings from the panel.

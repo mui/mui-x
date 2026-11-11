@@ -383,7 +383,8 @@ export const getLocalizedConfigurationOptions = (
               label: localeText.chartConfigurationSeriesGap,
               type: 'number',
               default: 10,
-              isDisabled: ({ values }: { values: any[] }) => values.length < 2,
+              isDisabled: ({ dimensions, values }: { dimensions: any[]; values: any[] }) =>
+                values.length * Math.max(dimensions.length, 1) < 2,
               htmlAttributes: {
                 min: '0',
               },

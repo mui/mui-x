@@ -37,36 +37,56 @@ const getLegendPosition = (position: string) => {
 const formatDimensionValue = (item: string | number | Date | null) =>
   item instanceof Date ? item.toLocaleDateString() : String(item);
 
+interface PieNode {
+  label: string;
+  value: number;
+  children: Map<string, PieNode>;
+}
+
 /**
- * Sums the values of one series per group of the dimension level `levelIndex`,
- * where a group is identified by the dimension values from the first level to `levelIndex`.
+ * Groups the rows of one value series by dimension (first dimension at the root) and returns
+ * the items of one ring per dimension, each group summing its children and the children
+ * listed right after their parent so the rings line up.
  */
-const getPieLevelData = (
+const getPieRings = (
   dimensions: ChartsRendererProps['dimensions'],
   valueItem: ChartsRendererProps['values'][number],
-  levelIndex: number,
 ) => {
-  const groups = new Map<string, { id: string; value: number; label: string }>();
+  const root: PieNode = { label: '', value: 0, children: new Map() };
 
   valueItem.data.forEach((item, dataIndex) => {
-    const path = dimensions
-      .slice(0, levelIndex + 1)
-      .map((dimension) => formatDimensionValue(dimension.data[dataIndex]));
-    const key = path.join('\u0000');
-    const group = groups.get(key);
-
-    if (group) {
-      group.value += item || 0;
-    } else {
-      groups.set(key, {
-        id: `${valueItem.id}-${levelIndex}-${groups.size}`,
-        value: item || 0,
-        label: `${path[levelIndex]} - ${valueItem.label}`,
-      });
-    }
+    let node = root;
+    dimensions.forEach((dimension) => {
+      const dimensionValue = formatDimensionValue(dimension.data[dataIndex]);
+      let child = node.children.get(dimensionValue);
+      if (!child) {
+        child = {
+          label: node === root ? dimensionValue : `${node.label} - ${dimensionValue}`,
+          value: 0,
+          children: new Map(),
+        };
+        node.children.set(dimensionValue, child);
+      }
+      child.value += item || 0;
+      node = child;
+    });
   });
 
-  return Array.from(groups.values());
+  const rings: { id: string; value: number; label: string }[][] = dimensions.map(() => []);
+  const visit = (node: PieNode, levelIndex: number) => {
+    node.children.forEach((child) => {
+      const ring = rings[levelIndex];
+      ring.push({
+        id: `${valueItem.id}-${levelIndex}-${ring.length}`,
+        value: child.value,
+        label: `${child.label} - ${valueItem.label}`,
+      });
+      visit(child, levelIndex + 1);
+    });
+  };
+  visit(root, 0);
+
+  return rings;
 };
 
 export interface ChartsRendererProps {
@@ -299,15 +319,14 @@ function ChartsRenderer({
   }
 
   if (chartType === 'pie') {
-    // each value series takes one ring per dimension level, from the first dimension (innermost ring)
-    // to the last one (outermost ring); with a single dimension that is one ring per value series
-    const levelCount = hasMultipleDimensions ? dimensions.length : 1;
+    // each value series takes one ring per dimension, from the first dimension (innermost ring)
+    // to the last one (outermost ring)
+    const levelCount = Math.max(dimensions.length, 1);
     const ringCount = values.length * levelCount;
 
     // - `chartConfiguration.outerRadius - chartConfiguration.innerRadius` is available radius for the whole chart
-    // - to get the radius for each ring, we need to substract all the gaps
-    //   between the rings from the total available radius (`chartConfiguration.seriesGap * ringCount - 1` - there is always
-    //   one gap less than the number of rings)
+    // - to get the radius for each ring, we need to substract the gaps between the rings
+    //   (`chartConfiguration.seriesGap * ringCount`) and one pixel from the total available radius
     // - then we divide the result by the number of rings to get the radius for each ring
     const radiusPerRing =
       (chartConfiguration.outerRadius -
@@ -316,18 +335,22 @@ function ChartsRenderer({
         1) /
       ringCount;
 
-    const seriesProp = values.flatMap((valueItem, valueIndex) =>
-      Array.from({ length: levelCount }, (_, levelIndex) => {
+    const seriesProp = values.flatMap((valueItem, valueIndex) => {
+      const rings = hasMultipleDimensions
+        ? getPieRings(dimensions, valueItem)
+        : [
+            valueItem.data.map((item, itemIndex) => ({
+              id: `${valueItem.id}-${itemIndex}`,
+              value: item || 0,
+              label: `${String(dimensionData[itemIndex])} - ${valueItem.label}`,
+            })),
+          ];
+
+      return rings.map((data, levelIndex) => {
         const ringIndex = valueIndex * levelCount + levelIndex;
 
         return {
-          data: hasMultipleDimensions
-            ? getPieLevelData(dimensions, valueItem, levelIndex)
-            : valueItem.data.map((item, itemIndex) => ({
-                id: `${valueItem.id}-${itemIndex}`,
-                value: item || 0,
-                label: `${String(dimensionData[itemIndex])} - ${valueItem.label}`,
-              })),
+          data,
           arcLabel: chartConfiguration.itemLabel === 'value' ? ('value' as const) : undefined,
           // each ring starts from
           // - inner radius of the chart
@@ -347,8 +370,8 @@ function ChartsRenderer({
           endAngle: chartConfiguration.endAngle,
           paddingAngle: chartConfiguration.paddingAngle,
         };
-      }),
-    );
+      });
+    });
 
     const legendPosition = getLegendPosition(
       chartConfiguration.pieLegendDirection === 'vertical'

@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { vi, describe, it, expect } from 'vitest';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { ChartsRenderer } from '@mui/x-charts-premium/ChartsRenderer';
@@ -107,118 +108,173 @@ describe('<ChartsRenderer />', () => {
     ];
     const hours = [{ id: 'hours', label: 'Hours', data: [2, 3, 5] }];
 
-    it('should draw one ring per value series when there is one dimension', () => {
+    const getPieSeries = (
+      props: Partial<React.ComponentProps<typeof ChartsRenderer>>,
+    ): Record<string, any>[] => {
       const onRenderSpy = vi.fn();
       render(
         <ChartsRenderer
-          dimensions={[{ id: 'member', label: 'Member', data: ['Ana', 'Bea'] }]}
-          values={[
-            { id: 'hours', label: 'Hours', data: [2, 3] },
-            { id: 'count', label: 'Count', data: [1, 1] },
-          ]}
+          dimensions={nestedDimensions}
+          values={hours}
           chartType="pie"
           configuration={{}}
           onRender={onRenderSpy}
+          {...props}
         />,
       );
+      return onRenderSpy.mock.lastCall?.[1].series;
+    };
 
-      const props = onRenderSpy.mock.lastCall?.[1];
-      expect(props.series).to.have.length(2);
-      expect(props.series[0].data.map((item: any) => item.label)).to.deep.equal([
+    const toLabelValue = (series: Record<string, any>) =>
+      series.data.map((item: any) => ({ label: item.label, value: item.value }));
+
+    it('should draw one ring per value series when there is one dimension', () => {
+      const series = getPieSeries({
+        dimensions: [{ id: 'member', label: 'Member', data: ['Ana', 'Bea'] }],
+        values: [
+          { id: 'hours', label: 'Hours', data: [2, 3] },
+          { id: 'count', label: 'Count', data: [1, 1] },
+        ],
+      });
+
+      expect(series).to.have.length(2);
+      expect(series[0].data.map((item: any) => item.label)).to.deep.equal([
         'Ana - Hours',
         'Bea - Hours',
       ]);
-      expect(props.series[1].data.map((item: any) => item.label)).to.deep.equal([
+      expect(series[1].data.map((item: any) => item.label)).to.deep.equal([
         'Ana - Count',
         'Bea - Count',
       ]);
     });
 
-    it('should draw one ring per dimension level when there are several dimensions', () => {
-      const onRenderSpy = vi.fn();
-      render(
-        <ChartsRenderer
-          dimensions={nestedDimensions}
-          values={hours}
-          chartType="pie"
-          configuration={{}}
-          onRender={onRenderSpy}
-        />,
-      );
+    it('should number repeated items when there is one dimension', () => {
+      const [ring] = getPieSeries({
+        dimensions: [{ id: 'member', label: 'Member', data: ['Ana', 'Ana'] }],
+        values: [{ id: 'hours', label: 'Hours', data: [2, 3] }],
+      });
 
-      const props = onRenderSpy.mock.lastCall?.[1];
-      expect(props.series).to.have.length(2);
-      expect(
-        props.series[0].data.map((item: any) => ({ label: item.label, value: item.value })),
-      ).to.deep.equal([
+      expect(ring.data.map((item: any) => item.label)).to.deep.equal([
+        'Ana - Hours',
+        'Ana (2) - Hours',
+      ]);
+      expect(ring.data.map((item: any) => item.id)).to.deep.equal(['hours-0', 'hours-1']);
+    });
+
+    it('should draw one ring per dimension level when there are several dimensions', () => {
+      const series = getPieSeries({});
+
+      expect(series).to.have.length(2);
+      expect(toLabelValue(series[0])).to.deep.equal([
         { label: 'Design - Hours', value: 5 },
         { label: 'Engineering - Hours', value: 5 },
       ]);
-      expect(
-        props.series[1].data.map((item: any) => ({ label: item.label, value: item.value })),
-      ).to.deep.equal([
-        { label: 'Ana - Hours', value: 2 },
-        { label: 'Bea - Hours', value: 3 },
-        { label: 'Carl - Hours', value: 5 },
+      expect(toLabelValue(series[1])).to.deep.equal([
+        { label: 'Design - Ana - Hours', value: 2 },
+        { label: 'Design - Bea - Hours', value: 3 },
+        { label: 'Engineering - Carl - Hours', value: 5 },
       ]);
     });
 
     it('should place the first dimension in the innermost ring', () => {
-      const onRenderSpy = vi.fn();
-      render(
-        <ChartsRenderer
-          dimensions={nestedDimensions}
-          values={hours}
-          chartType="pie"
-          configuration={{ innerRadius: 50, outerRadius: 150, seriesGap: 10 }}
-          onRender={onRenderSpy}
-        />,
-      );
+      const [root, leaf] = getPieSeries({
+        configuration: { innerRadius: 50, outerRadius: 150, seriesGap: 10 },
+      });
 
-      const [root, leaf] = onRenderSpy.mock.lastCall![1].series;
-      expect(root.innerRadius).to.equal(50);
-      expect(root.outerRadius).to.be.lessThan(leaf.innerRadius);
-      expect(leaf.outerRadius).to.be.lessThanOrEqual(150);
+      expect(root.data.map((item: any) => item.label)).to.deep.equal([
+        'Design - Hours',
+        'Engineering - Hours',
+      ]);
+      expect([root.innerRadius, root.outerRadius]).to.deep.equal([50, 89.5]);
+      expect([leaf.innerRadius, leaf.outerRadius]).to.deep.equal([99.5, 139]);
+    });
+
+    it('should group the children under their parent even when the rows are interleaved', () => {
+      const [root, leaf] = getPieSeries({
+        dimensions: [
+          { id: 'team', label: 'Team', data: ['Design', 'Engineering', 'Design'] },
+          { id: 'member', label: 'Member', data: ['Ana', 'Carl', 'Bea'] },
+        ],
+      });
+
+      expect(toLabelValue(root)).to.deep.equal([
+        { label: 'Design - Hours', value: 7 },
+        { label: 'Engineering - Hours', value: 3 },
+      ]);
+      expect(toLabelValue(leaf)).to.deep.equal([
+        { label: 'Design - Ana - Hours', value: 2 },
+        { label: 'Design - Bea - Hours', value: 5 },
+        { label: 'Engineering - Carl - Hours', value: 3 },
+      ]);
     });
 
     it('should keep children with the same label apart when their parents differ', () => {
-      const onRenderSpy = vi.fn();
-      render(
-        <ChartsRenderer
-          dimensions={[
-            { id: 'team', label: 'Team', data: ['Design', 'Engineering'] },
-            { id: 'member', label: 'Member', data: ['Other', 'Other'] },
-          ]}
-          values={[{ id: 'hours', label: 'Hours', data: [2, 3] }]}
-          chartType="pie"
-          configuration={{}}
-          onRender={onRenderSpy}
-        />,
-      );
+      const [, leaf] = getPieSeries({
+        dimensions: [
+          { id: 'team', label: 'Team', data: ['Design', 'Engineering'] },
+          { id: 'member', label: 'Member', data: ['Other', 'Other'] },
+        ],
+        values: [{ id: 'hours', label: 'Hours', data: [2, 3] }],
+      });
 
-      const [, leaf] = onRenderSpy.mock.lastCall![1].series;
-      expect(leaf.data.map((item: any) => item.value)).to.deep.equal([2, 3]);
+      expect(toLabelValue(leaf)).to.deep.equal([
+        { label: 'Design - Other - Hours', value: 2 },
+        { label: 'Engineering - Other - Hours', value: 3 },
+      ]);
+    });
+
+    it('should group the intermediate levels by their full path', () => {
+      const series = getPieSeries({
+        dimensions: [
+          { id: 'team', label: 'Team', data: ['A', 'A', 'B'] },
+          { id: 'dept', label: 'Dept', data: ['x', 'x', 'x'] },
+          { id: 'member', label: 'Member', data: ['p', 'q', 'r'] },
+        ],
+        values: [{ id: 'hours', label: 'Hours', data: [1, 2, 4] }],
+      });
+
+      expect(series).to.have.length(3);
+      expect(toLabelValue(series[0])).to.deep.equal([
+        { label: 'A - Hours', value: 3 },
+        { label: 'B - Hours', value: 4 },
+      ]);
+      expect(toLabelValue(series[1])).to.deep.equal([
+        { label: 'A - x - Hours', value: 3 },
+        { label: 'B - x - Hours', value: 4 },
+      ]);
+      expect(series[2].data.map((item: any) => item.value)).to.deep.equal([1, 2, 4]);
+      expect(series.map((ring: any) => [ring.innerRadius, ring.outerRadius])).to.deep.equal([
+        [50, 73],
+        [83, 106],
+        [116, 139],
+      ]);
+    });
+
+    it('should count null values as zero in every ring', () => {
+      const [root, leaf] = getPieSeries({
+        values: [{ id: 'hours', label: 'Hours', data: [2, null, 5] }],
+      });
+
+      expect(root.data.map((item: any) => item.value)).to.deep.equal([2, 5]);
+      expect(leaf.data.map((item: any) => item.value)).to.deep.equal([2, 0, 5]);
     });
 
     it('should draw the dimension levels of each value series as consecutive rings', () => {
-      const onRenderSpy = vi.fn();
-      render(
-        <ChartsRenderer
-          dimensions={nestedDimensions}
-          values={[...hours, { id: 'count', label: 'Count', data: [1, 1, 1] }]}
-          chartType="pie"
-          configuration={{}}
-          onRender={onRenderSpy}
-        />,
-      );
+      const series = getPieSeries({
+        values: [...hours, { id: 'count', label: 'Count', data: [1, 1, 1] }],
+        configuration: { itemLabel: 'value' },
+      });
 
-      const props = onRenderSpy.mock.lastCall?.[1];
-      expect(props.series.map((series: any) => series.data[0].label)).to.deep.equal([
+      expect(series.map((ring: any) => ring.data[0].label)).to.deep.equal([
         'Design - Hours',
-        'Ana - Hours',
+        'Design - Ana - Hours',
         'Design - Count',
-        'Ana - Count',
+        'Design - Ana - Count',
       ]);
+      expect(series.every((ring: any) => ring.arcLabel === 'value')).to.equal(true);
+
+      const ids = series.flatMap((ring: any) => ring.data.map((item: any) => item.id));
+      expect(new Set(ids).size).to.equal(ids.length);
     });
   });
 });
