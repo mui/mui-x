@@ -19,6 +19,10 @@ describe('CalendarGrid keyboard navigation', () => {
   const baseDay = adapter.date('2025-05-05T12:00:00', 'default');
   const days = Array.from({ length: 7 }, (_, i) => adapter.addDays(baseDay, i));
 
+  // The days of the cells of a row.
+  const toRowDays = (rowDays: ReturnType<typeof adapter.date>[]) =>
+    rowDays.map((day) => ({ plainDate: buildTemporalPlainDate(adapter, day, 'default') }));
+
   function GridWithHeaderAndDayCells({
     rowTypes,
     rowsPerType,
@@ -43,6 +47,7 @@ describe('CalendarGrid keyboard navigation', () => {
           <CalendarGrid.DayRow
             start={adapter.getTime(days[0])}
             end={adapter.getTime(adapter.endOfDay(days[6]))}
+            days={toRowDays(days)}
           >
             {days.map((day, i) => (
               <CalendarGrid.DayCell
@@ -202,6 +207,7 @@ describe('CalendarGrid keyboard navigation', () => {
               rowIndex={0}
               start={adapter.getTime(week0Days[0])}
               end={adapter.getTime(adapter.endOfDay(week0Days[6]))}
+              days={toRowDays(week0Days)}
             >
               {week0Days.map((day, i) => (
                 <CalendarGrid.DayCell
@@ -215,6 +221,7 @@ describe('CalendarGrid keyboard navigation', () => {
               rowIndex={1}
               start={adapter.getTime(week1Days[0])}
               end={adapter.getTime(adapter.endOfDay(week1Days[6]))}
+              days={toRowDays(week1Days)}
             >
               {week1Days.map((day, i) => (
                 <CalendarGrid.DayCell
@@ -228,6 +235,7 @@ describe('CalendarGrid keyboard navigation', () => {
               rowIndex={2}
               start={adapter.getTime(week2Days[0])}
               end={adapter.getTime(adapter.endOfDay(week2Days[6]))}
+              days={toRowDays(week2Days)}
             >
               {week2Days.map((day, i) => (
                 <CalendarGrid.DayCell
@@ -386,6 +394,7 @@ describe('CalendarGrid keyboard navigation', () => {
             <CalendarGrid.DayRow
               start={adapter.getTime(days[0])}
               end={adapter.getTime(adapter.endOfDay(days[2]))}
+              days={toRowDays(days.slice(0, 3))}
             >
               {days.slice(0, 3).map((day, i) => (
                 <CalendarGrid.DayCell
@@ -468,6 +477,7 @@ describe('CalendarGrid keyboard navigation', () => {
             <CalendarGrid.DayRow
               start={adapter.getTime(day1)}
               end={adapter.getTime(adapter.endOfDay(day2))}
+              days={toRowDays([day1, day2])}
             >
               <CalendarGrid.DayCell
                 value={buildTemporalPlainDate(adapter, day1, 'default')}

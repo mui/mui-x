@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import type { SchedulerProcessedDay } from '../../models';
 import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
@@ -9,10 +8,10 @@ import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calenda
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
 import { createProcessedDate } from '../../internals/utils/plain-date-utils/adapter';
 import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
-import { getDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
+import { getDayGridCellSpan } from '../../use-event-occurrences-with-day-grid-position';
 
 export function useCalendarGridPlaceholderInDay(
-  day: SchedulerProcessedDay,
+  day: useEventOccurrencesWithDayGridPosition.DayData,
   row: useEventOccurrencesWithDayGridPosition.ReturnValue,
   maxEvents?: number,
 ): useEventOccurrencesWithDayGridPosition.EventOccurrencePlaceholderWithPosition | null {
@@ -61,8 +60,12 @@ export function useCalendarGridPlaceholderInDay(
 
     // The placeholder can run past the week row: the next rows render their own piece.
     const endInRow = Math.min(rawPlaceholder.end, rowEnd);
-    // The placeholder covers every date up to its end, like the occurrences.
-    const daySpan = toLocalDayNumber(endInRow, displayTimezone) - getDayNumber(day.plainDate) + 1;
+    // The placeholder covers the cells of every date up to its end, like the occurrences.
+    const daySpan = getDayGridCellSpan(
+      row.days,
+      row.days.indexOf(day),
+      toLocalDayNumber(endInRow, displayTimezone),
+    );
 
     const sharedProperties = {
       key: 'occurrence-placeholder',
@@ -126,6 +129,7 @@ export function useCalendarGridPlaceholderInDay(
     originalEvent,
     originalEventId,
     rawPlaceholder,
+    row.days,
     rowEnd,
     findAvailableIndex,
   ]);

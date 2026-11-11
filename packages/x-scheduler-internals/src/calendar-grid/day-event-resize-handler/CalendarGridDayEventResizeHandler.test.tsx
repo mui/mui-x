@@ -13,13 +13,16 @@ describe('<CalendarGrid.DayEventResizeHandler />', () => {
     render(node) {
       const eventStart = processDate(adapter.now('default'), adapter, 'default');
       const eventEnd = processDate(adapter.addHours(eventStart.value, 1), adapter, 'default');
+      const cellDate = buildTemporalPlainDate(adapter, eventStart.value, 'default');
       return render(
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
-            <CalendarGrid.DayRow start={eventStart.timestamp} end={eventEnd.timestamp}>
-              <CalendarGrid.DayCell
-                value={buildTemporalPlainDate(adapter, eventStart.value, 'default')}
-              >
+            <CalendarGrid.DayRow
+              start={eventStart.timestamp}
+              end={eventEnd.timestamp}
+              days={[{ plainDate: cellDate }]}
+            >
+              <CalendarGrid.DayCell value={cellDate}>
                 <CalendarGrid.DayEvent
                   eventId="fake-id"
                   occurrenceKey="fake-key"

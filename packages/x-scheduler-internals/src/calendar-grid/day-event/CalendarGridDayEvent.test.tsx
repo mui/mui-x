@@ -29,13 +29,16 @@ describe('<CalendarGrid.DayEvent />', () => {
       rowStart = eventStart.value,
       rowEnd = eventEnd.value,
     } = options;
+    const cellDate = buildTemporalPlainDate(adapter, rowStart, 'default');
     return render(
       <EventCalendarProvider events={events} resources={resources}>
         <CalendarGrid.Root>
-          <CalendarGrid.DayRow start={adapter.getTime(rowStart)} end={adapter.getTime(rowEnd)}>
-            <CalendarGrid.DayCell value={buildTemporalPlainDate(adapter, rowStart, 'default')}>
-              {node}
-            </CalendarGrid.DayCell>
+          <CalendarGrid.DayRow
+            start={adapter.getTime(rowStart)}
+            end={adapter.getTime(rowEnd)}
+            days={[{ plainDate: cellDate }]}
+          >
+            <CalendarGrid.DayCell value={cellDate}>{node}</CalendarGrid.DayCell>
           </CalendarGrid.DayRow>
         </CalendarGrid.Root>
       </EventCalendarProvider>,
