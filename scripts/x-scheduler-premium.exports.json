@@ -1,6 +1,9 @@
 [
   { "name": "EventCalendarPremium", "kind": "Variable" },
   { "name": "EventCalendarPremiumApiRef", "kind": "TypeAlias" },
+  { "name": "EventCalendarPremiumChartsCard", "kind": "TypeAlias" },
+  { "name": "EventCalendarPremiumChartsMetric", "kind": "TypeAlias" },
+  { "name": "EventCalendarPremiumChartsOptions", "kind": "Interface" },
   { "name": "EventCalendarPremiumFeatures", "kind": "Interface" },
   { "name": "EventCalendarPremiumProps", "kind": "Interface" },
   { "name": "EventDialogGeneralTabPropsOverrides", "kind": "Interface" },

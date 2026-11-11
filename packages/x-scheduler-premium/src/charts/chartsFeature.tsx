@@ -1,14 +1,10 @@
 'use client';
 import * as React from 'react';
-import { warnOnce } from '@mui/x-internals/warning';
 import type { Dataset } from '@mui/x-internals/types';
 import type { EventCalendarPremiumChartsFeature } from '../event-calendar-premium/features/EventCalendarPremiumFeatures.types';
 import { ChartsPanel } from './ChartsPanel';
 
-export type ChartsCardId = 'hoursPerDay' | 'shareByResource';
-export type ChartsMetric = 'hours' | 'count';
-
-export type ChartsRendererCallback = (
+export type EventCalendarPremiumChartsRendererCallback = (
   type: string,
   props: Record<string, any>,
   Component: React.ComponentType<any>,
@@ -18,56 +14,41 @@ export type ChartsRendererCallback = (
  * The shape of the `ChartsRenderer` component of `@mui/x-charts-premium`,
  * the same one the Data Grid receives through `<GridChartsRendererProxy />`.
  */
-export type ChartsRendererComponent = React.ComponentType<{
+export type EventCalendarPremiumChartsRenderer = React.ComponentType<{
   dimensions: Dataset<string | number | Date | null>;
   values: Dataset<number | null>;
   chartType: string;
   configuration: Record<string, any>;
-  onRender?: ChartsRendererCallback;
+  onRender?: EventCalendarPremiumChartsRendererCallback;
 }>;
 
-export interface ChartsFeatureConfig {
+export interface EventCalendarPremiumChartsFeatureConfig {
   /**
    * The component that renders the charts.
    * Pass the `ChartsRenderer` component from `@mui/x-charts-premium/ChartsRenderer`.
    */
-  renderer: ChartsRendererComponent;
-  /**
-   * The cards to render, in order.
-   * @default ['hoursPerDay', 'shareByResource']
-   */
-  cards?: ChartsCardId[];
-  /**
-   * What the cards measure: hours of the events, or number of events.
-   * All-day events have no hours, so use `count` for datasets made of all-day events.
-   * @default 'hours'
-   */
-  metric?: ChartsMetric;
+  renderer: EventCalendarPremiumChartsRenderer;
 }
-
-const DEFAULT_CARDS: ChartsCardId[] = ['hoursPerDay', 'shareByResource'];
 
 /**
  * Creates the charts feature of the Event Calendar.
+ * The cards are configured through the `charts` prop of the Event Calendar.
  */
 export function createChartsFeature(
-  config: ChartsFeatureConfig,
+  config: EventCalendarPremiumChartsFeatureConfig,
 ): EventCalendarPremiumChartsFeature {
-  const { renderer, cards = DEFAULT_CARDS, metric = 'hours' } = config;
-
-  if (process.env.NODE_ENV !== 'production' && !renderer) {
-    warnOnce(
-      'MUI X Scheduler: The charts feature needs a `renderer` to draw the cards. ' +
+  const { renderer } = config;
+  if (!renderer) {
+    throw new Error(
+      'MUI X Scheduler: The charts feature was created without a `renderer`. ' +
+        'The cards cannot be drawn without it. ' +
         'Pass the `ChartsRenderer` component from `@mui/x-charts-premium/ChartsRenderer` to `createChartsFeature`.',
     );
   }
 
   return {
-    Panel: function ConfiguredChartsPanel() {
-      if (!renderer) {
-        return null;
-      }
-      return <ChartsPanel renderer={renderer} cards={cards} metric={metric} />;
+    Panel: function ChartsFeaturePanel() {
+      return <ChartsPanel renderer={renderer} />;
     },
   };
 }

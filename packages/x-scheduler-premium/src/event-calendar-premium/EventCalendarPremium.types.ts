@@ -9,8 +9,14 @@ import type { EventCalendarSchedulerParametersOverrides } from '@mui/x-scheduler
 import type { EventCalendarLocaleText, SchedulerSlotsAndSlotProps } from '@mui/x-scheduler/models';
 import type { EventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import type { EventCalendarPremiumFeatures } from './features/EventCalendarPremiumFeatures.types';
+import type { EventCalendarPremiumChartsOptions } from './charts/EventCalendarPremiumChartsContext';
 
 export type { EventCalendarPremiumFeatures } from './features/EventCalendarPremiumFeatures.types';
+export type {
+  EventCalendarPremiumChartsOptions,
+  EventCalendarPremiumChartsCard,
+  EventCalendarPremiumChartsMetric,
+} from './charts/EventCalendarPremiumChartsContext';
 
 export type EventCalendarPremiumApiRef<
   TEvent extends object = any,
@@ -44,11 +50,16 @@ export interface EventCalendarPremiumProps<TEvent extends object, TResource exte
    */
   apiRef?: EventCalendarPremiumApiRef;
   /**
-   * The optional features of the Event Calendar: `recurringEvents` from `@mui/x-scheduler-premium/recurring-events`.
+   * The optional features of the Event Calendar: `recurringEvents` from `@mui/x-scheduler-premium/recurring-events`,
+   * `charts` from `@mui/x-scheduler-premium/charts`.
    * They are read once when the component mounts, later changes are ignored.
    * @example { recurringEvents: recurringEventsFeature }
    */
   features?: EventCalendarPremiumFeatures;
+  /**
+   * The cards of the charts feature (`features.charts`) and what they measure.
+   */
+  charts?: EventCalendarPremiumChartsOptions;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

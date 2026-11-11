@@ -14,4 +14,8 @@ export interface SidePanelDrawerProps extends React.HTMLAttributes<HTMLDivElemen
    * drawer scoped to the root container query and positioned relative to the calendar.
    */
   container?: React.RefObject<HTMLElement | null>;
+  /**
+   * SPIKE: extra content rendered under the resources (charts feature).
+   */
+  sidePanelExtra?: React.ReactNode;
 }

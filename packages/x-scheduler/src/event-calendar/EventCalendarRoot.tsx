@@ -260,6 +260,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
           open={isCompactDrawerOpen}
           onClose={() => setIsCompactDrawerOpen(false)}
           container={rootRef}
+          sidePanelExtra={sidePanelExtra}
         />
         <ErrorContainer />
         {children}

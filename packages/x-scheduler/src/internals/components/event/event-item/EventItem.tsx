@@ -6,6 +6,7 @@ import { useStore } from '@base-ui/utils/store';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import {
   schedulerEventSelectors,
+  schedulerOccurrenceSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { Button } from '@base-ui/react/button';
@@ -17,7 +18,7 @@ import type { EventItemProps } from './EventItem.types';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import type { PaletteName } from '../../../utils/tokens';
-import { getPaletteVariants } from '../../../utils/tokens';
+import { getPaletteVariants, highlightStyles } from '../../../utils/tokens';
 import { getArrowEdgeStyles, getArrowFocusVisibleStyles } from '../arrowClips';
 import { isOccurrenceMultiDay } from '../../../utils/event-utils';
 
@@ -25,6 +26,7 @@ const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'EventItemCard',
 })<{ 'data-variant'?: 'compact' | 'filled' | 'regular'; palette?: PaletteName }>(({ theme }) => ({
+  ...highlightStyles,
   padding: 0,
   borderRadius: theme.shape.borderRadius,
   cursor: 'pointer',
@@ -171,6 +173,7 @@ export const EventItem = React.forwardRef(function EventItem(
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
   const isEditing = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
+  const highlightState = useStore(store, schedulerOccurrenceSelectors.highlightState, occurrence);
 
   // Selector hooks
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
@@ -255,6 +258,7 @@ export const EventItem = React.forwardRef(function EventItem(
           data-variant={variant}
           data-palette={color}
           data-editing={isEditing || undefined}
+          data-highlight={highlightState === 'none' ? undefined : highlightState}
           // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
           data-event-id={occurrence.id}
           // Read by the agenda's delete-focus fallback (`captureFocusFallback`).

@@ -12,9 +12,13 @@ export interface EventCalendarPremiumFeatures {
   charts?: EventCalendarPremiumChartsFeature;
 }
 
+/**
+ * The charts feature, created with `createChartsFeature` from `@mui/x-scheduler-premium/charts`.
+ * Its members are internal and can change: pass the created feature as is.
+ */
 export interface EventCalendarPremiumChartsFeature {
   /**
-   * Renders the insights cards in the side panel.
+   * Renders the cards in the side panel.
    */
   Panel: React.ComponentType;
 }

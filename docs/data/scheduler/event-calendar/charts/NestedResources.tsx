@@ -9,9 +9,7 @@ import {
   resources,
 } from 'docs/data/scheduler/datasets/software-company';
 
-const features = {
-  charts: createChartsFeature({ renderer: ChartsRenderer, metric: 'count' }),
-};
+const features = { charts: createChartsFeature({ renderer: ChartsRenderer }) };
 
 export default function NestedResources() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);

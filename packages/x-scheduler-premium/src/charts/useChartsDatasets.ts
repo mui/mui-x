@@ -13,9 +13,13 @@ import {
   schedulerOtherSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { getEndOfDayMs } from '@mui/x-scheduler-internals/internals';
+import {
+  eventCalendarPreferenceSelectors,
+  eventCalendarViewSelectors,
+} from '@mui/x-scheduler-internals/event-calendar-selectors';
+import { getEndOfDayMs, getPlainDateWeekStart } from '@mui/x-scheduler-internals/internals';
 import { eventColorTokens } from '@mui/x-scheduler/internals';
-import type { ChartsMetric } from './chartsFeature';
+import type { EventCalendarPremiumChartsMetric } from '../event-calendar-premium/charts/EventCalendarPremiumChartsContext';
 
 const EMPTY_DAYS: SchedulerProcessedDay[] = [];
 export const NO_RESOURCE = '__no-resource__';
@@ -66,9 +70,25 @@ export interface ChartsResourceInfo {
 }
 
 /**
+ * A column of the "by day" card: one day, or one week in the month view.
+ */
+export interface ChartsPeriod {
+  key: string;
+  /**
+   * The day of month of the first day.
+   */
+  label: string;
+  /**
+   * Half-open range `[start, end)` of the period, as timestamps.
+   */
+  start: number;
+  end: number;
+}
+
+/**
  * Aggregates the occurrences of the visible days into chart datasets.
  */
-export function useChartsDatasets(metric: ChartsMetric) {
+export function useChartsDatasets(metric: EventCalendarPremiumChartsMetric) {
   const store = useEventCalendarStoreContext();
   const days = useStore(
     store,
@@ -80,6 +100,9 @@ export function useChartsDatasets(metric: ChartsMetric) {
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const defaultColor = useStore(store, (state) => state.eventColor);
   const parentLookup = useStore(store, schedulerResourceSelectors.resourceParentIdLookup);
+  const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
+  // the month grid has too many days for one column each, so it gets one column per week
+  const isByWeek = useStore(store, eventCalendarViewSelectors.view) === 'month';
 
   return React.useMemo(() => {
     // the flat list is in tree order (parents before their children), which the rings rely on
@@ -93,26 +116,42 @@ export function useChartsDatasets(metric: ChartsMetric) {
         ),
       }));
 
-    // exclusive end of each day in the display timezone (DST days are not 24 h long)
-    const dayEnds = days.map((day) => getEndOfDayMs(day.timestamp, displayTimezone) + 1);
+    // the periods of the "by day" card, with the exclusive end of each one in the display
+    // timezone (DST days are not 24 h long)
+    const periods: ChartsPeriod[] = [];
+    const periodIndexOfDay: number[] = [];
+    days.forEach((day) => {
+      const key = isByWeek
+        ? getPlainDateWeekStart(day.plainDate, weekStartsOn).toString()
+        : day.key;
+      const end = getEndOfDayMs(day.timestamp, displayTimezone) + 1;
+      const last = periods[periods.length - 1];
+      if (last?.key === key) {
+        last.end = end;
+      } else {
+        periods.push({ key, label: String(day.plainDate.day), start: day.timestamp, end });
+      }
+      periodIndexOfDay.push(periods.length - 1);
+    });
 
-    // per day and per resource, and per resource over the visible days
+    // per period and per resource, and per resource over the visible days
     // (in count mode, a multi-day occurrence counts once in the share)
-    const amountsByDay: Record<string, number>[] = days.map(() => ({}));
+    const amountsByPeriod: Record<string, number>[] = periods.map(() => ({}));
     const totals: Record<string, number> = {};
     const countedKeys = new Set<string>();
     let hasNoResource = false;
     days.forEach((day, dayIndex) => {
+      const dayEnd = getEndOfDayMs(day.timestamp, displayTimezone) + 1;
+      const amounts = amountsByPeriod[periodIndexOfDay[dayIndex]];
       for (const occurrence of occurrencesByDay.get(day.key) ?? []) {
-        if (!isInDay(occurrence, day.timestamp, dayEnds[dayIndex])) {
+        if (!isInDay(occurrence, day.timestamp, dayEnd)) {
           continue;
         }
         const resourceId =
           schedulerOccurrenceSelectors.attributedResourceId(store.state, occurrence) ?? NO_RESOURCE;
         hasNoResource ||= resourceId === NO_RESOURCE;
-        const amount =
-          metric === 'count' ? 1 : hoursInDay(occurrence, day.timestamp, dayEnds[dayIndex]);
-        amountsByDay[dayIndex][resourceId] = (amountsByDay[dayIndex][resourceId] ?? 0) + amount;
+        const amount = metric === 'count' ? 1 : hoursInDay(occurrence, day.timestamp, dayEnd);
+        amounts[resourceId] = (amounts[resourceId] ?? 0) + amount;
         if (metric === 'count') {
           if (countedKeys.has(occurrence.key)) {
             continue;
@@ -130,16 +169,15 @@ export function useChartsDatasets(metric: ChartsMetric) {
         ]
       : resources;
 
-    // day keys are unique across months (the band scale drops duplicate categories),
+    // the period keys are unique across months (the band scale drops duplicate categories),
     // the day of month is shown through the axis formatter
-    const dayLabelLookup = new Map(days.map((day) => [day.key, String(day.plainDate.day)]));
-    const hoursPerDay: { dimensions: Dataset<string>; values: Dataset<number> } = {
-      dimensions: [{ id: 'day', label: '', data: days.map((day) => day.key) }],
+    const byDay: { dimensions: Dataset<string>; values: Dataset<number> } = {
+      dimensions: [{ id: 'period', label: '', data: periods.map((period) => period.key) }],
       values: series.map((resource) => ({
         id: resource.id,
         label: resource.label,
         color: resource.color,
-        data: amountsByDay.map((perResource) => round(perResource[resource.id] ?? 0)),
+        data: amountsByPeriod.map((amounts) => round(amounts[resource.id] ?? 0)),
       })),
     };
 
@@ -159,7 +197,7 @@ export function useChartsDatasets(metric: ChartsMetric) {
       label: 'Resource',
       data: series.map((resource) => resource.id),
     };
-    const shareByResource: { dimensions: Dataset<string>; values: Dataset<number> } = {
+    const byResource: { dimensions: Dataset<string>; values: Dataset<number> } = {
       dimensions: hasNestedResources
         ? [{ id: 'root', label: 'Root', data: series.map(rootIdOf) }, resourceDimension]
         : [resourceDimension],
@@ -173,12 +211,11 @@ export function useChartsDatasets(metric: ChartsMetric) {
     };
 
     return {
-      days,
-      dayEnds,
-      dayLabelLookup,
+      periods,
+      isByWeek,
       resources: series,
-      hoursPerDay,
-      shareByResource,
+      byDay,
+      byResource,
       roots,
       hasNestedResources,
     };
@@ -190,6 +227,8 @@ export function useChartsDatasets(metric: ChartsMetric) {
     visibleResources,
     defaultColor,
     parentLookup,
+    weekStartsOn,
+    isByWeek,
     store,
     metric,
   ]);

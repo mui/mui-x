@@ -10,9 +10,17 @@ import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { eventColorTokens, useDisarmOnEscape } from '@mui/x-scheduler/internals';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import type { SchedulerOccurrenceHighlight } from '@mui/x-scheduler-internals/internals';
-import type { ChartsCardId, ChartsMetric, ChartsRendererComponent } from './chartsFeature';
+import type {
+  EventCalendarPremiumChartsCard,
+  EventCalendarPremiumChartsMetric,
+} from '../event-calendar-premium/charts/EventCalendarPremiumChartsContext';
+import { EventCalendarPremiumChartsContext } from '../event-calendar-premium/charts/EventCalendarPremiumChartsContext';
+import type { EventCalendarPremiumChartsRenderer } from './chartsFeature';
 import type { ChartsResourceInfo } from './useChartsDatasets';
 import { NO_RESOURCE, useChartsDatasets } from './useChartsDatasets';
+
+const DEFAULT_CARDS: EventCalendarPremiumChartsCard[] = ['byResource'];
+const DEFAULT_METRIC: EventCalendarPremiumChartsMetric = 'count';
 
 const paletteEntries = Object.entries(eventColorTokens);
 const PanelRoot = styled('div')(({ theme }) => ({
@@ -52,23 +60,16 @@ const CardTitle = styled(Typography)(({ theme }) => ({
 const CHART_ITEM_SELECTOR = `.${generateUtilityClass('MuiBarChart', 'element')}, .${generateUtilityClass('MuiPieChart', 'arc')}`;
 
 interface ChartsPanelProps {
-  renderer: ChartsRendererComponent;
-  cards: ChartsCardId[];
-  metric: ChartsMetric;
+  renderer: EventCalendarPremiumChartsRenderer;
 }
 
-export function ChartsPanel({ renderer: Renderer, cards, metric }: ChartsPanelProps) {
+export function ChartsPanel({ renderer: Renderer }: ChartsPanelProps) {
+  const { cards = DEFAULT_CARDS, metric = DEFAULT_METRIC } = React.useContext(
+    EventCalendarPremiumChartsContext,
+  );
   const store = useEventCalendarStoreContext();
-  const {
-    days,
-    dayEnds,
-    dayLabelLookup,
-    resources,
-    hoursPerDay,
-    shareByResource,
-    roots,
-    hasNestedResources,
-  } = useChartsDatasets(metric);
+  const { periods, isByWeek, resources, byDay, byResource, roots, hasNestedResources } =
+    useChartsDatasets(metric);
 
   // Click toggles the highlight.
   const toggleHighlight = (next: SchedulerOccurrenceHighlight) => {
@@ -118,11 +119,12 @@ export function ChartsPanel({ renderer: Renderer, cards, metric }: ChartsPanelPr
   }, [isHighlighting, clearHighlight]);
   useDisarmOnEscape({ active: isHighlighting, onDisarm: clearHighlight });
 
-  const renderHoursPerDay = (
+  const periodLabelLookup = new Map(periods.map((period) => [period.key, period.label]));
+  const renderByDay = (
     <Renderer
       chartType="column"
-      dimensions={hoursPerDay.dimensions}
-      values={hoursPerDay.values}
+      dimensions={byDay.dimensions}
+      values={byDay.values}
       configuration={{
         stacked: true,
         height: 150,
@@ -137,7 +139,7 @@ export function ChartsPanel({ renderer: Renderer, cards, metric }: ChartsPanelPr
           xAxis={[
             {
               ...props.xAxis?.[0],
-              valueFormatter: (key: string) => dayLabelLookup.get(key) ?? key,
+              valueFormatter: (key: string) => periodLabelLookup.get(key) ?? key,
             },
           ]}
           yAxis={[{ width: 28 }]}
@@ -146,11 +148,11 @@ export function ChartsPanel({ renderer: Renderer, cards, metric }: ChartsPanelPr
             _event: React.MouseEvent,
             { seriesId, dataIndex }: { seriesId: string; dataIndex: number },
           ) => {
-            const day = days[dataIndex];
-            if (day) {
+            const period = periods[dataIndex];
+            if (period) {
               toggleHighlight({
                 ...resourceHighlight(seriesId),
-                range: { start: day.timestamp, end: dayEnds[dataIndex] },
+                range: { start: period.start, end: period.end },
                 // all-day events have no hours, so they are not in the bar
                 timedOnly: metric === 'hours',
               });
@@ -164,11 +166,11 @@ export function ChartsPanel({ renderer: Renderer, cards, metric }: ChartsPanelPr
   // One ring per dimension: the roots inside when the resources are nested, the resources outside.
   // The rows are in tree order, so the items of each ring follow `roots` / `resources`.
   const ringItems: ChartsResourceInfo[][] = hasNestedResources ? [roots, resources] : [resources];
-  const renderShareByResource = (
+  const renderByResource = (
     <Renderer
       chartType="pie"
-      dimensions={shareByResource.dimensions}
-      values={shareByResource.values}
+      dimensions={byResource.dimensions}
+      values={byResource.values}
       configuration={{
         height: 150,
         width: 228,
@@ -211,15 +213,13 @@ export function ChartsPanel({ renderer: Renderer, cards, metric }: ChartsPanelPr
     />
   );
 
-  const cardLookup: Record<ChartsCardId, { title: string; content: React.ReactNode }> = {
-    hoursPerDay: {
-      title: metric === 'hours' ? 'Hours per day' : 'Events per day',
-      content: renderHoursPerDay,
-    },
-    shareByResource: {
-      title: 'Share by resource',
-      content: renderShareByResource,
-    },
+  const byDayTitle = `${metric === 'hours' ? 'Hours' : 'Events'} per ${isByWeek ? 'week' : 'day'}`;
+  const cardLookup: Record<
+    EventCalendarPremiumChartsCard,
+    { title: string; content: React.ReactNode }
+  > = {
+    byDay: { title: byDayTitle, content: renderByDay },
+    byResource: { title: 'Share by resource', content: renderByResource },
   };
 
   return (
