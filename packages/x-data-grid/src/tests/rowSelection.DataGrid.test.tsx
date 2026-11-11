@@ -602,7 +602,7 @@ describe('<DataGrid /> - Row selection', () => {
       const filterButton = screen.getByText('Filter');
       await user.click(filterButton);
 
-      await user.keyboard('1');
+      await user.type(screen.getByLabelText('Value'), '1');
 
       await waitFor(() => {
         // Previous selection is cleaned with only the filtered rows
@@ -629,7 +629,7 @@ describe('<DataGrid /> - Row selection', () => {
       const filterButton = screen.getByText('Filter');
       await user.click(filterButton);
 
-      await user.keyboard('1');
+      await user.type(screen.getByLabelText('Value'), '1');
 
       await waitFor(() => {
         // Previous selection is cleared and only the filtered row is selected
