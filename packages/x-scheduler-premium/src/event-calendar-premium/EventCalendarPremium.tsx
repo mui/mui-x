@@ -1,4 +1,5 @@
 'use client';
+import { Draggable } from '@base-ui/react/draggable';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
@@ -95,13 +96,16 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
             <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
               <SchedulerDirectionProvider>
-                <EventDialogProvider
-                  optionalRenderers={features.recurringEvents?.optionalRenderers}
-                >
-                  <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
-                    {watermark}
-                  </EventCalendarRoot>
-                </EventDialogProvider>
+                {/* The floating drag preview only reads the contexts above its provider. */}
+                <Draggable.Provider>
+                  <EventDialogProvider
+                    optionalRenderers={features.recurringEvents?.optionalRenderers}
+                  >
+                    <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
+                      {watermark}
+                    </EventCalendarRoot>
+                  </EventDialogProvider>
+                </Draggable.Provider>
               </SchedulerDirectionProvider>
             </SchedulerSlotsProvider>
           </SharedComponentsStyledContext.Provider>

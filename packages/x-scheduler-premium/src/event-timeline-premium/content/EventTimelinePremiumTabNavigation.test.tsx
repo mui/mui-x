@@ -7,6 +7,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
   getEventNamePattern,
+  getEventRow,
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
@@ -371,16 +372,6 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
     // unscoped lookup can resolve to a same-key copy mounted in a different row.
     const resourceB = ResourceBuilder.new().title('B').build();
     const resourceA = ResourceBuilder.new().title('A').build();
-
-    function getEventRow(resourceId: string): HTMLElement {
-      const row = document.querySelector<HTMLElement>(
-        `.MuiEventTimeline-eventsCell[data-resource-id="${resourceId}"]`,
-      );
-      if (!row) {
-        throw new Error(`Could not find event row for resource "${resourceId}"`);
-      }
-      return row;
-    }
 
     // `getByText` resolves to the innermost element with that text (a `<span>`
     // clamp, not focusable); walk up to the event root that actually carries

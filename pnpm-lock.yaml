@@ -168,9 +168,6 @@ settings:
 
 catalogs:
   default:
-    '@atlaskit/pragmatic-drag-and-drop':
-      specifier: ^4.0.0
-      version: 4.0.0
     '@babel/cli':
       specifier: ^8.1.0
       version: 8.1.0
@@ -193,11 +190,8 @@ catalogs:
       specifier: ^8.1.0
       version: 8.1.0
     '@base-ui/react':
-      specifier: ^1.9.0
-      version: 1.9.0
-    '@base-ui/utils':
-      specifier: ^0.5.0
-      version: 0.5.0
+      specifier: https://pkg.pr.new/mui/base-ui/@base-ui/react@48d7b8ce0
+      version: https://pkg.pr.new/mui/base-ui/@base-ui/react@48d7b8ce0
     '@date-fns/tz':
       specifier: ^1.5.0
       version: 1.5.0
@@ -386,6 +380,7 @@ catalogs:
       version: 18.2.0
 
 overrides:
+  '@base-ui/utils': https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
   stylis: ^4.4.0
   caniuse-lite: ^1.0.30001819
 
@@ -393,9 +388,6 @@ importers:
 
   .:
     devDependencies:
-      '@atlaskit/pragmatic-drag-and-drop-unit-testing':
-        specifier: 2.1.0
-        version: 2.1.0
       '@babel/core':
         specifier: 'catalog:'
         version: 8.1.0
@@ -412,8 +404,8 @@ importers:
         specifier: 8.1.0
         version: 8.1.0
       '@base-ui/utils':
-        specifier: 'catalog:'
-        version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@emotion/cache':
         specifier: 'catalog:'
         version: 11.14.0
@@ -642,12 +634,12 @@ importers:
 
   docs:
     dependencies:
-      '@atlaskit/pragmatic-drag-and-drop':
-        specifier: 'catalog:'
-        version: 4.0.0
       '@babel/core':
         specifier: 'catalog:'
         version: 8.1.0
+      '@base-ui/react':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/react@48d7b8ce0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@date-fns/tz':
         specifier: 'catalog:'
         version: 1.5.0
@@ -671,7 +663,7 @@ importers:
         version: 9.5.0(@mui/material@9.5.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@types/react@19.3.0)(react@19.3.1)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
-        version: 10.0.0-canary.0(0033736562b530265e1a219909ff92b6)
+        version: 10.0.0-canary.0(ec38c97620ea4b6b48e4204ce87509a9)
       '@mui/internal-docs-infra':
         specifier: 0.13.1-canary.29
         version: 0.13.1-canary.29(@types/react@19.3.0)(next@16.4.3(@babel/core@8.1.0)(@opentelemetry/api@1.10.0)(@playwright/test@1.64.1)(@types/node@22.20.5)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(prettier@3.9.10)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@11.0.0)
@@ -982,8 +974,8 @@ importers:
         specifier: 'catalog:'
         version: 8.0.7
       '@base-ui/utils':
-        specifier: 'catalog:'
-        version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
@@ -1050,8 +1042,8 @@ importers:
         specifier: 'catalog:'
         version: 8.0.7
       '@base-ui/utils':
-        specifier: 'catalog:'
-        version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
@@ -1119,8 +1111,8 @@ importers:
         specifier: 'catalog:'
         version: 8.0.7
       '@base-ui/utils':
-        specifier: 'catalog:'
-        version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
@@ -1283,8 +1275,8 @@ importers:
         specifier: 'catalog:'
         version: 8.0.7
       '@base-ui/utils':
-        specifier: 'catalog:'
-        version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
@@ -1343,10 +1335,10 @@ importers:
         version: 8.0.7
       '@base-ui/react':
         specifier: 'catalog:'
-        version: 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/react@48d7b8ce0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@base-ui/utils':
-        specifier: 'catalog:'
-        version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.5.0(@types/react@19.3.0)(react@19.3.1)
@@ -1409,8 +1401,8 @@ importers:
         specifier: 'catalog:'
         version: 8.0.7
       '@base-ui/utils':
-        specifier: 'catalog:'
-        version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
@@ -1533,8 +1525,8 @@ importers:
         specifier: 'catalog:'
         version: 8.0.7
       '@base-ui/utils':
-        specifier: 'catalog:'
-        version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
@@ -1604,8 +1596,8 @@ importers:
         specifier: 'catalog:'
         version: 8.0.7
       '@base-ui/utils':
-        specifier: 'catalog:'
-        version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
@@ -1832,8 +1824,8 @@ importers:
         specifier: 'catalog:'
         version: 8.0.7
       '@base-ui/utils':
-        specifier: 'catalog:'
-        version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       react:
         specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 19.3.1
@@ -1848,8 +1840,8 @@ importers:
         specifier: 'catalog:'
         version: 8.0.7
       '@base-ui/utils':
-        specifier: 'catalog:'
-        version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.5.0(@types/react@19.3.0)(react@19.3.1)
@@ -1904,10 +1896,10 @@ importers:
         version: 8.0.7
       '@base-ui/react':
         specifier: 'catalog:'
-        version: 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/react@48d7b8ce0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@base-ui/utils':
-        specifier: 'catalog:'
-        version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
@@ -1967,21 +1959,15 @@ importers:
 
   packages/x-scheduler-internals:
     dependencies:
-      '@atlaskit/pragmatic-drag-and-drop':
-        specifier: 'catalog:'
-        version: 4.0.0
-      '@atlaskit/pragmatic-drag-and-drop-auto-scroll':
-        specifier: ^3.2.1
-        version: 3.2.1
       '@babel/runtime':
         specifier: 'catalog:'
         version: 8.0.7
       '@base-ui/react':
         specifier: 'catalog:'
-        version: 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/react@48d7b8ce0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@base-ui/utils':
-        specifier: 'catalog:'
-        version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@date-fns/tz':
         specifier: 'catalog:'
         version: 1.5.0
@@ -2020,18 +2006,15 @@ importers:
 
   packages/x-scheduler-internals-premium:
     dependencies:
-      '@atlaskit/pragmatic-drag-and-drop':
-        specifier: 'catalog:'
-        version: 4.0.0
       '@babel/runtime':
         specifier: 'catalog:'
         version: 8.0.7
       '@base-ui/react':
         specifier: 'catalog:'
-        version: 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/react@48d7b8ce0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@base-ui/utils':
-        specifier: 'catalog:'
-        version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -2075,10 +2058,10 @@ importers:
         version: 8.0.7
       '@base-ui/react':
         specifier: 'catalog:'
-        version: 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/react@48d7b8ce0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@base-ui/utils':
-        specifier: 'catalog:'
-        version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
@@ -2177,8 +2160,8 @@ importers:
         specifier: 'catalog:'
         version: 8.0.7
       '@base-ui/utils':
-        specifier: 'catalog:'
-        version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
@@ -2227,8 +2210,8 @@ importers:
         specifier: 'catalog:'
         version: 8.0.7
       '@base-ui/utils':
-        specifier: 'catalog:'
-        version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
@@ -2283,8 +2266,8 @@ importers:
         specifier: 'catalog:'
         version: 8.0.7
       '@base-ui/utils':
-        specifier: 'catalog:'
-        version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.5.0(@types/react@19.3.0)(react@19.3.1)
@@ -2316,10 +2299,10 @@ importers:
         version: 8.0.7
       '@base-ui/react':
         specifier: 'catalog:'
-        version: 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/react@48d7b8ce0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@base-ui/utils':
-        specifier: 'catalog:'
-        version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@emotion/cache':
         specifier: 'catalog:'
         version: 11.14.0
@@ -2816,15 +2799,6 @@ packages:
   '@asamuzakjp/dom-selector@10.0.5':
     resolution: {integrity: sha512-EgmJ7oEaGQECTn3H3wmnQpEy4hKY66VvM7VQndwPIQob3p877BgbyOUE3EX0LgXQCciF2H8KMdR+RznqjMNOLw==}
     engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
-
-  '@atlaskit/pragmatic-drag-and-drop-auto-scroll@3.2.1':
-    resolution: {integrity: sha512-2fhWAG48EjPoKhoHLG6RcT3/VaCzYEbRb6BtA/Vcfx4FrL0P1KrEgBJ6OAwB0X8MOV6UH22YgjFFHjv8fQD9rA==}
-
-  '@atlaskit/pragmatic-drag-and-drop-unit-testing@2.1.0':
-    resolution: {integrity: sha512-wgJ6NI5trVtZhtBep9sOBqRbNBdnjFrOc30bWJWitZuZe+H31UB21w2ry1UthpHdFeIesu3Arev8tU3GqDFa3g==}
-
-  '@atlaskit/pragmatic-drag-and-drop@4.0.0':
-    resolution: {integrity: sha512-pyDo2B5NiaExoKGmgeXKGNUL4aR4UzzSZm8QWWjYTEyBLVqSqKyKUwtVxMw2YEkakagOGFONUdHM32LAH2nPug==}
 
   '@babel/cli@8.1.0':
     resolution: {integrity: sha512-C4fCHysy+LdXz6nsk59mAKoYBrYTxkbJb6sCEqyx1E8C5+77dEc4I4FjmIO6crtWvHxvn+sL5VD/tIjtQMYceQ==}
@@ -3582,8 +3556,26 @@ packages:
       date-fns:
         optional: true
 
-  '@base-ui/utils@0.5.0':
-    resolution: {integrity: sha512-dYGGcEttjkYiMoa5nHm8vLaJ2UcuTWxo3BFAwOYXeRg/q7UVVvA6cacEIXEs3FgBfK1CGtW1ptElqs7wsx+t9A==}
+  '@base-ui/react@https://pkg.pr.new/mui/base-ui/@base-ui/react@48d7b8ce0':
+    resolution: {integrity: sha512-hhlGGvWinYbvs36EHLp4EdTalhzkpzF6N5EpC4DvFJUgGye73sF0ltevt5M5BgrrlHxv4UJIpwDfFMG8Lc/xng==, tarball: https://pkg.pr.new/mui/base-ui/@base-ui/react@48d7b8ce0}
+    version: 1.9.0
+    peerDependencies:
+      '@date-fns/tz': ^1.2.0
+      '@types/react': ^17 || ^18 || ^19
+      date-fns: ^4.0.0
+      react: ^17 || ^18 || ^19
+      react-dom: ^17 || ^18 || ^19
+    peerDependenciesMeta:
+      '@date-fns/tz':
+        optional: true
+      '@types/react':
+        optional: true
+      date-fns:
+        optional: true
+
+  '@base-ui/utils@https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0':
+    resolution: {integrity: sha512-SG1PycoaGqA/KqN7CKa1p8NUQorO9FvpqxLQwPQ3NYseFObSM4KRXb0+lqa/zlsZkpdksrZxJqeBJdp0EmNU+Q==, tarball: https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0}
+    version: 0.5.0
     peerDependencies:
       '@types/react': ^17 || ^18 || ^19
       react: ^17 || ^18 || ^19
@@ -6648,9 +6640,6 @@ packages:
   bin-links@7.0.1:
     resolution: {integrity: sha512-lgxd7FtxW02eSuafotQOGEQf1iGfDExMz2BRaL+e1tU5xTLx+vvSVA5oHIO6B1tR91LDKcWqYGsktUHdFMtHHQ==}
     engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
-
-  bind-event-listener@3.0.0:
-    resolution: {integrity: sha512-PJvH288AWQhKs2v9zyfYdPzlPqf5bXbGMmhmUIY9x4dAUGIWgomO771oBQNwJnMQSnUIXhKu6sgzpBRXTlvb8Q==}
 
   bl@4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
@@ -10025,9 +10014,6 @@ packages:
   quotation@2.0.3:
     resolution: {integrity: sha512-yEc24TEgCFLXx7D4JHJJkK4JFVtatO8fziwUxY4nB/Jbea9o9CVS3gt22mA0W7rPYAGW2fWzYDSOtD94PwOyqA==}
 
-  raf-schd@4.0.3:
-    resolution: {integrity: sha512-tQkJl2GRWh83ui2DiPTJz9wEiMN20syf+5oKfB03yYP7ioZcJwsIK8FjrtLwH1m7C7e+Tt2yYBlrOpdT+dyeIQ==}
-
   range-parser@1.2.0:
     resolution: {integrity: sha512-kA5WQoNVo4t9lNx2kQNFCxKeBl5IbbSNBl1M/tLkw9WCn+hxNBAW5Qh8gdhs63CJnhjJ2zQWFoqPJP2sK1AV5A==}
     engines: {node: '>= 0.6'}
@@ -11751,21 +11737,6 @@ snapshots:
       is-potential-custom-element-name: 1.0.1
       lru-cache: 11.5.3
 
-  '@atlaskit/pragmatic-drag-and-drop-auto-scroll@3.2.1':
-    dependencies:
-      '@atlaskit/pragmatic-drag-and-drop': 4.0.0
-      '@babel/runtime': 7.29.10
-
-  '@atlaskit/pragmatic-drag-and-drop-unit-testing@2.1.0':
-    dependencies:
-      '@babel/runtime': 7.29.10
-
-  '@atlaskit/pragmatic-drag-and-drop@4.0.0':
-    dependencies:
-      '@babel/runtime': 7.29.10
-      bind-event-listener: 3.0.0
-      raf-schd: 4.0.3
-
   '@babel/cli@8.1.0(@babel/core@8.1.0)':
     dependencies:
       '@babel/core': 8.1.0
@@ -12667,7 +12638,7 @@ snapshots:
   '@base-ui/react@1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@babel/runtime': 8.0.7
-      '@base-ui/utils': 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@base-ui/utils': https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@floating-ui/react-dom': 2.1.9(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@floating-ui/utils': 0.2.12
       react: 19.3.1
@@ -12678,7 +12649,21 @@ snapshots:
       '@types/react': 19.3.0
       date-fns: 4.4.0
 
-  '@base-ui/utils@0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@base-ui/react@https://pkg.pr.new/mui/base-ui/@base-ui/react@48d7b8ce0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+    dependencies:
+      '@babel/runtime': 8.0.7
+      '@base-ui/utils': https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@floating-ui/react-dom': 2.1.9(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@floating-ui/utils': 0.2.12
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
+      use-sync-external-store: 1.7.0(react@19.3.1)
+    optionalDependencies:
+      '@date-fns/tz': 1.5.0
+      '@types/react': 19.3.0
+      date-fns: 4.4.0
+
+  '@base-ui/utils@https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@babel/runtime': 8.0.7
       '@floating-ui/utils': 0.2.12
@@ -13726,6 +13711,41 @@ snapshots:
     dependencies:
       '@babel/runtime': 8.0.7
       '@base-ui/react': 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@docsearch/react': 5.2.0(@algolia/client-search@5.59.0)(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(search-insights@2.17.3)
+      '@emotion/cache': 11.14.0
+      '@emotion/react': 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
+      '@mui/icons-material': 9.5.0(@mui/material@9.5.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@types/react@19.3.0)(react@19.3.1)
+      '@mui/internal-docs-infra': 0.13.1-canary.29(@types/react@19.3.0)(next@16.4.3(@babel/core@8.1.0)(@opentelemetry/api@1.10.0)(@playwright/test@1.64.1)(@types/node@22.20.5)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(prettier@3.9.10)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@11.0.0)
+      '@mui/internal-markdown': 4.0.1-canary.0
+      '@mui/material': 9.5.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@mui/material-nextjs': 9.5.0(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/server@11.11.0)(@types/react@19.3.0)(next@16.4.3(@babel/core@8.1.0)(@opentelemetry/api@1.10.0)(@playwright/test@1.64.1)(@types/node@22.20.5)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
+      '@mui/stylis-plugin-rtl': 9.5.0(stylis@4.4.0)
+      '@mui/system': 9.5.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)
+      '@mui/utils': 9.5.0(@types/react@19.3.0)(react@19.3.1)
+      '@types/react': 19.3.0
+      '@types/stylis': 4.2.7
+      clipboard-copy: 4.0.1
+      clsx: 2.1.1
+      csstype: 3.2.3
+      es-toolkit: 1.53.2
+      fg-loadcss: 3.1.0
+      lz-string: 1.5.0
+      next: 16.4.3(@babel/core@8.1.0)(@opentelemetry/api@1.10.0)(@playwright/test@1.64.1)(@types/node@22.20.5)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      nprogress: 0.2.0
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
+      react-runner: 1.0.5(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react-simple-code-editor: 0.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      stylis: 4.4.0
+    transitivePeerDependencies:
+      - prettier
+      - supports-color
+
+  '@mui/internal-core-docs@10.0.0-canary.0(ec38c97620ea4b6b48e4204ce87509a9)':
+    dependencies:
+      '@babel/runtime': 8.0.7
+      '@base-ui/react': https://pkg.pr.new/mui/base-ui/@base-ui/react@48d7b8ce0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@docsearch/react': 5.2.0(@algolia/client-search@5.59.0)(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(search-insights@2.17.3)
       '@emotion/cache': 11.14.0
       '@emotion/react': 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
@@ -15800,8 +15820,6 @@ snapshots:
       proc-log: 7.0.0
       read-cmd-shim: 7.0.1
       write-file-atomic: 8.0.0
-
-  bind-event-listener@3.0.0: {}
 
   bl@4.1.0:
     dependencies:
@@ -19820,8 +19838,6 @@ snapshots:
   queue-microtask@1.2.3: {}
 
   quotation@2.0.3: {}
-
-  raf-schd@4.0.3: {}
 
   range-parser@1.2.0: {}
 

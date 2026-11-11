@@ -17,6 +17,10 @@ const TitleTextField = styled(TextField, {
     lineHeight: theme.typography.h6.lineHeight,
     fontWeight: theme.typography.h6.fontWeight,
   },
+  // The header is a drag handle and disables selection. Safari applies that to the input too.
+  [`& .${inputBaseClasses.input}`]: {
+    userSelect: 'text',
+  },
 }));
 
 // Rendering the title in its own section keeps typing from re-rendering the

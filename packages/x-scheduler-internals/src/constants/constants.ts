@@ -21,6 +21,12 @@ export const EVENT_DRAG_PRECISION_MINUTE = 15;
 export const EVENT_DRAG_PRECISION_MS = EVENT_DRAG_PRECISION_MINUTE * 60 * 1000;
 
 /**
+ * How far, in pixels, a finger or pen must travel from where a time grid resize started before the
+ * drop changes the event. A press on the handle starts the drag at once, so a tap is one too.
+ */
+export const EVENT_DRAG_TAP_SLOP_PX = 5;
+
+/**
  * Maximum number of days the Agenda view is allowed to scan forward
  * when looking for event occurrences.
  * This acts as a hard limit to prevent excessive iteration

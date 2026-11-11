@@ -1,47 +1,36 @@
 'use client';
 import * as React from 'react';
-import { autoScrollForElements } from '@atlaskit/pragmatic-drag-and-drop-auto-scroll/element';
-import { unsafeOverflowAutoScrollForElements } from '@atlaskit/pragmatic-drag-and-drop-auto-scroll/unsafe-overflow/element';
-import { buildIsValidDropTarget } from '../build-is-valid-drop-target/buildIsValidDropTarget';
+import { Draggable } from '@base-ui/react/draggable';
+import {
+  schedulerTimeEventMoveKind,
+  schedulerTimeEventResizeKind,
+  schedulerExternalEventKind,
+} from '../internals/utils/schedulerDrag';
 
-const OVERFLOW_PX = 160;
+const viewportOptions = {
+  accept: [schedulerTimeEventMoveKind, schedulerTimeEventResizeKind, schedulerExternalEventKind],
+  overflowMargin: { top: 160, bottom: 160 },
+};
+const getViewportOptions = () => viewportOptions;
 
-// Only event drags should autoscroll the grid; other element drags (e.g. the dialog) carry no `source`.
-// Exported for unit testing (the effect itself is a no-op under `NODE_ENV === 'test'`).
-export const canAutoScrollForDrag = buildIsValidDropTarget([
-  'CalendarGridTimeEvent',
-  'CalendarGridTimeEventResizeHandler',
-  'StandaloneEvent',
-]);
-
+/**
+ * Scrolls the element vertically while a time grid event, a time grid resize handle or an external
+ * event is dragged near its edges, or up to 160px beyond them once the drag has entered the element.
+ * A drag that moves further than that has to enter the element again.
+ * It registers the element with the drag engine, so it needs a `Draggable.Provider` above the
+ * component that calls it. Use it when the element that scrolls is not rendered by a
+ * `Draggable.Viewport` you control.
+ */
 export function useAutoScrollForTimeGrid(ref: React.RefObject<HTMLElement | null>): void {
+  const manager = Draggable.useManager();
   React.useEffect(() => {
     const element = ref.current;
-    if (!element || process.env.NODE_ENV === 'test') {
+    if (!element) {
       return undefined;
     }
 
-    const cleanupMain = autoScrollForElements({
-      element,
-      canScroll: ({ source }) => canAutoScrollForDrag(source.data),
-      getAllowedAxis: () => 'vertical',
-      getConfiguration: () => ({ maxScrollSpeed: 'standard' }),
-    });
-
-    const cleanupOverflow = unsafeOverflowAutoScrollForElements({
-      element,
-      canScroll: ({ source }) => canAutoScrollForDrag(source.data),
-      getOverflow: () => ({
-        forTopEdge: { top: OVERFLOW_PX },
-        forBottomEdge: { bottom: OVERFLOW_PX },
-      }),
-      getAllowedAxis: () => 'vertical',
-      getConfiguration: () => ({ maxScrollSpeed: 'standard' }),
-    });
-
-    return () => {
-      cleanupMain();
-      cleanupOverflow();
-    };
-  }, [ref]);
+    // The time grid only overflows vertically. Let native overflow select the axis;
+    // canceling horizontal scroll would keep the engine's frame loop engaged.
+    return manager.registerViewport(element, getViewportOptions);
+  }, [manager, ref]);
 }

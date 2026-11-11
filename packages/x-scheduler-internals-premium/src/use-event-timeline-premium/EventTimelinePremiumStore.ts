@@ -2,6 +2,7 @@ import type * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { EMPTY_ARRAY, EMPTY_OBJECT } from '@base-ui/utils/empty';
+import { Draggable } from '@base-ui/react/draggable';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { SchedulerParametersToStateMapper } from '@mui/x-scheduler-internals/internals';
 import {
@@ -36,6 +37,7 @@ import {
   getPresetPxPerDay,
 } from '../internals/utils/preset-utils';
 import type { EventTimelinePremiumDependenciesStoreFeature } from '../internals/features/eventTimelinePremiumStoreFeatures';
+import type { SchedulerDependencyDragPayload } from '../internals/utils/schedulerTimelineDrag';
 
 const EMPTY_DEPENDENCIES_STATE: SchedulerDependenciesState = {
   dependencyModelList: EMPTY_ARRAY,
@@ -223,6 +225,13 @@ export class EventTimelinePremiumStore<
   EventTimelinePremiumState,
   EventTimelinePremiumStoreParameters<TEvent, TResource>
 > {
+  /**
+   * The kind of the create-dependency drags of this timeline. The drop targets and monitors
+   * accept it, so a drag that started in another timeline never reaches them.
+   */
+  public readonly dependencyDragKind =
+    Draggable.createKind<SchedulerDependencyDragPayload>('scheduler-dependency');
+
   declare public lazyLoading: EventTimelinePremiumLazyLoadingPlugin<TEvent>;
 
   declare public scheduling: SchedulerSchedulingPlugin<

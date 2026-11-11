@@ -1,4 +1,5 @@
 'use client';
+import { Draggable } from '@base-ui/react/draggable';
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -21,7 +22,7 @@ import {
   SharedComponentsStyledContext,
   SchedulerDirectionProvider,
 } from '@mui/x-scheduler/internals';
-import { DEFAULT_TESTING_VISIBLE_DATE, mockElementBounds } from 'test/utils/scheduler';
+import { DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
 import { buildDependency, resource1, resource2 } from './dependencyGeometryTestUtils';
 import { EventTimelinePremiumContent } from '../content';
 import { EventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
@@ -34,33 +35,8 @@ import type { EventTimelinePremiumFeatures } from '../features/EventTimelinePrem
 
 export { buildDependency, resource1, resource2 };
 
-/**
- * Applies mock bounds to all timeline event rows, so jsdom drops resolve positions.
- */
-export function mockAllEventRowBounds(width = 6720) {
-  const rows = document.querySelectorAll<HTMLElement>(
-    `.MuiEventTimeline-eventsCell[data-drop-target-for-element]`,
-  );
-  for (const row of rows) {
-    mockElementBounds(row, { left: 0, width, height: 40 });
-  }
-  return rows;
-}
-
-/**
- * Returns the timeline event row for a given resource id.
- */
-export function getEventRow(resourceId: string): HTMLElement {
-  const row = document.querySelector<HTMLElement>(
-    `.MuiEventTimeline-eventsCell[data-resource-id="${resourceId}"]`,
-  );
-  if (!row) {
-    throw /* minify-error-disabled */ new Error(
-      `Could not find event row for resource "${resourceId}"`,
-    );
-  }
-  return row;
-}
+// Some suites import the row helpers from here.
+export { getEventRow, mockAllEventRowBounds } from 'test/utils/scheduler';
 
 // Module scope so the identity survives re-renders: the store compares the resources
 // parameter by reference, and a fresh array on every render would rebuild the whole
@@ -94,6 +70,7 @@ interface TestTimelineProps {
   dependencies?: SchedulerDependency[];
   presetConfig?: PresetConfig;
   readOnly?: boolean;
+  canDragEventsFromTheOutside?: boolean;
   eventModelStructure?: SchedulerEventModelStructure<SchedulerEvent>;
   /**
    * @default both features
@@ -120,6 +97,7 @@ export function TestTimeline({
   dependencies: initialDependencies,
   presetConfig,
   readOnly,
+  canDragEventsFromTheOutside,
   eventModelStructure,
   features: featuresProp = defaultFeatures,
   localeText,
@@ -157,6 +135,7 @@ export function TestTimeline({
     resources,
     dependencies,
     readOnly,
+    canDragEventsFromTheOutside,
     eventModelStructure,
     onEventsChange: setEvents,
     onDependenciesChange: dependenciesEnabled
@@ -180,17 +159,19 @@ export function TestTimeline({
   const storeContextValue = store as any;
 
   return (
-    <SchedulerStoreContext.Provider value={storeContextValue}>
-      <EventTimelinePremiumFeaturesContext.Provider value={features}>
-        <EventTimelinePremiumStyledContext.Provider value={styledContext}>
-          <EventEditingStyledContext.Provider value={styledContext}>
-            <SharedComponentsStyledContext.Provider value={sharedStyledContext}>
-              <EventTimelinePremiumContent />
-            </SharedComponentsStyledContext.Provider>
-          </EventEditingStyledContext.Provider>
-        </EventTimelinePremiumStyledContext.Provider>
-      </EventTimelinePremiumFeaturesContext.Provider>
-    </SchedulerStoreContext.Provider>
+    <Draggable.Provider>
+      <SchedulerStoreContext.Provider value={storeContextValue}>
+        <EventTimelinePremiumFeaturesContext.Provider value={features}>
+          <EventTimelinePremiumStyledContext.Provider value={styledContext}>
+            <EventEditingStyledContext.Provider value={styledContext}>
+              <SharedComponentsStyledContext.Provider value={sharedStyledContext}>
+                <EventTimelinePremiumContent />
+              </SharedComponentsStyledContext.Provider>
+            </EventEditingStyledContext.Provider>
+          </EventTimelinePremiumStyledContext.Provider>
+        </EventTimelinePremiumFeaturesContext.Provider>
+      </SchedulerStoreContext.Provider>
+    </Draggable.Provider>
   );
 }
 

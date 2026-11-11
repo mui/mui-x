@@ -1,9 +1,10 @@
 'use client';
+import { Draggable } from '@base-ui/react/draggable';
 import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { useDirection } from '@base-ui/react/direction-provider';
 import { useStore } from '@base-ui/utils/store';
-import { isCoarsePointer, useElementDragMarker } from '@mui/x-scheduler-internals/internals';
+import { isCoarsePointer } from '@mui/x-scheduler-internals/internals';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyId } from '@mui/x-scheduler-internals-premium/models';
@@ -61,8 +62,8 @@ const DependencyInteractionsSvg = styled('svg', {
     cursor: 'pointer',
     color: (theme.vars || theme).palette.error.main,
   },
-  // The overlay is no drop target's ancestor: a dragover landing on a hit-area would
-  // refuse the drop right over an arrow, so any drag mutes every opted-in child.
+  // The overlay is no drop target's ancestor: a hit-area under the pointer would hide the
+  // drop target beneath it from the engine, so any drag mutes every opted-in child.
   '&[data-drag-active] *': {
     pointerEvents: 'none',
   },
@@ -109,7 +110,10 @@ function DependencyInteractionsLayer({
   const isReadOnly = useStore(store, eventTimelinePremiumDependencySelectors.isReadOnly);
 
   useDependencySelectionInteraction(svgRef);
-  useElementDragMarker(svgRef);
+  // Any drag mutes the hit-areas, not only the Scheduler ones: they would hide the drop targets
+  // under the pointer from the engine's hit test. Read from the engine, so an svg that mounts
+  // mid-drag, as its arrows come into view, is muted too.
+  const isDragging = Draggable.useActiveDrag() !== null;
 
   if (visibleArrows.length === 0 || eventsWidth <= 0 || height <= 0) {
     return null;
@@ -163,6 +167,7 @@ function DependencyInteractionsLayer({
       ref={svgRef}
       aria-hidden
       data-dependency-interactions=""
+      data-drag-active={isDragging ? '' : undefined}
       width={eventsWidth}
       height={height}
       viewBox={`0 ${offsetTop} ${eventsWidth} ${height}`}

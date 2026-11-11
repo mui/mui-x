@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import type { Store } from '@base-ui/utils/store';
 import { useStore } from '@base-ui/utils/store';
 import type { RenderDragPreviewParameters } from '@mui/x-scheduler-internals/models';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
@@ -22,24 +21,26 @@ const EventDragPreviewRoot = styled('div', {
   variants: getPaletteVariants(theme),
 }));
 
-const fakeStore = {
-  subscribe: () => {},
-  getSnapshot: () => ({}),
-} as unknown as Store<any>;
+function InternalEventDragPreview(
+  props: Extract<RenderDragPreviewParameters, { type: 'internal-event' }>,
+) {
+  const store = useSchedulerStoreContext();
+  const color = useStore(store, schedulerEventSelectors.color, props.data.id, undefined);
+  return <EventDragPreviewContent title={props.data.title} color={color} />;
+}
 
-export function EventDragPreview(props: RenderDragPreviewParameters) {
-  const store = useSchedulerStoreContext(true);
+function EventDragPreviewContent({ title, color }: { title: string; color: PaletteName }) {
   const styledContext = React.useContext(EventCalendarStyledContext);
-  const color = useStore(
-    store ?? fakeStore,
-    store ? schedulerEventSelectors.color : () => 'teal' as const,
-    props.data.id,
-    undefined,
-  );
-
   return (
     <EventDragPreviewRoot className={styledContext?.classes.eventDragPreview} data-palette={color}>
-      {props.data.title}
+      {title}
     </EventDragPreviewRoot>
   );
+}
+
+export function EventDragPreview(props: RenderDragPreviewParameters) {
+  if (props.type === 'standalone-event') {
+    return <EventDragPreviewContent title={props.data.title} color={props.data.color ?? 'teal'} />;
+  }
+  return <InternalEventDragPreview {...props} />;
 }

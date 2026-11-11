@@ -76,7 +76,7 @@ const DependencyDialogLagUnit = styled(Select, {
 });
 
 export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
-  const { dependency, titleId, dragHandlerRef, onClose } = props;
+  const { dependency, titleId, onClose } = props;
   const store = useEventTimelinePremiumStoreContext();
   const { schedulerId, classes, localeText } = useEventTimelinePremiumStyledContext();
   const isTargetAllDay = useStore(
@@ -190,7 +190,7 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
 
   return (
     <DependencyDialogForm onSubmit={handleSubmit} className={classes.dependencyDialogForm}>
-      <DependencyDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
+      <DependencyDialogHeader onClose={onClose}>
         <Typography variant="h6" id={titleId} className={classes.dependencyDialogTitle}>
           {localeText.dependencyEditTitle}
         </Typography>

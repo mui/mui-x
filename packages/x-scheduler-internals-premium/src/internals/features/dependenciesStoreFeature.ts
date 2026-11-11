@@ -1,20 +1,20 @@
 import { useStore } from '@base-ui/utils/store';
+import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors/eventTimelinePremiumDependencySelectors';
-import { useEventDependencyDropTarget } from '../../timeline-grid/event/useEventDependencyDropTarget';
+import { EventDependencyDropTarget } from '../../timeline-grid/event/EventDependencyDropTarget';
 import { SchedulerSchedulingPlugin } from '../plugins/SchedulerSchedulingPlugin';
 import { buildDependenciesState, isDependencyActive } from '../utils/dependency-utils';
 import { useDependencyCreationMonitor } from '../utils/useDependencyCreationMonitor';
 import type { EventTimelinePremiumDependenciesStoreFeature } from './eventTimelinePremiumStoreFeatures';
 
-function useEventDropTarget(parameters: useEventDependencyDropTarget.Parameters) {
-  useEventDependencyDropTarget(parameters);
+function useIsEventDropTarget(occurrenceKey: string, resourceId: SchedulerResourceId) {
   const store = useEventTimelinePremiumStoreContext();
   return useStore(
     store,
     eventTimelinePremiumDependencySelectors.isCreationTarget,
-    parameters.occurrenceKey,
-    parameters.resourceId,
+    occurrenceKey,
+    resourceId,
   );
 }
 
@@ -27,5 +27,6 @@ export const dependenciesStoreFeature: EventTimelinePremiumDependenciesStoreFeat
   buildState: buildDependenciesState,
   isDependencyActive,
   useCreationMonitor: useDependencyCreationMonitor,
-  useEventDropTarget,
+  EventDropTarget: EventDependencyDropTarget,
+  useIsEventDropTarget,
 };

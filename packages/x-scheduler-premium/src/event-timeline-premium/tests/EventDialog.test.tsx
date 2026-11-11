@@ -1,3 +1,4 @@
+import { Draggable } from '@base-ui/react/draggable';
 import * as React from 'react';
 import {
   adapter,
@@ -114,20 +115,22 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
       .toOccurrence();
 
     const utils = await renderSettled(
-      <SchedulerStoreContext.Provider value={store as any}>
-        <StoreSpy
-          Context={SchedulerStoreContext}
-          method="createEvent"
-          onSpyReady={onCreateEventSpyReady}
-        />
-        <TestEventDialogContent
-          open
-          anchor={anchor}
-          container={document.body}
-          occurrence={creationOccurrence}
-          onClose={() => {}}
-        />
-      </SchedulerStoreContext.Provider>,
+      <Draggable.Provider>
+        <SchedulerStoreContext.Provider value={store as any}>
+          <StoreSpy
+            Context={SchedulerStoreContext}
+            method="createEvent"
+            onSpyReady={onCreateEventSpyReady}
+          />
+          <TestEventDialogContent
+            open
+            anchor={anchor}
+            container={document.body}
+            occurrence={creationOccurrence}
+            onClose={() => {}}
+          />
+        </SchedulerStoreContext.Provider>
+      </Draggable.Provider>,
     );
 
     // EventDialogContent renders a desktop Dialog and a mobile Drawer variant at the same
@@ -239,16 +242,18 @@ describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
     };
 
     const utils = await renderSettled(
-      <SchedulerStoreContext.Provider value={store as any}>
-        <TestEventDialogContent
-          open
-          anchor={anchor}
-          container={document.body}
-          occurrence={editedOccurrence}
-          onClose={onClose}
-          localeText={localeText}
-        />
-      </SchedulerStoreContext.Provider>,
+      <Draggable.Provider>
+        <SchedulerStoreContext.Provider value={store as any}>
+          <TestEventDialogContent
+            open
+            anchor={anchor}
+            container={document.body}
+            occurrence={editedOccurrence}
+            onClose={onClose}
+            localeText={localeText}
+          />
+        </SchedulerStoreContext.Provider>
+      </Draggable.Provider>,
     );
 
     // Same desktop Dialog + mobile Drawer duplication as the creation suite above:

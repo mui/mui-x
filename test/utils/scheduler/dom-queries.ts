@@ -1,5 +1,6 @@
 import { screen, within } from '@mui/internal-test-utils';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { mockElementBounds } from './dnd';
 
 /**
  * Returns a `within` scope for the EventCalendar header toolbar.
@@ -65,4 +66,46 @@ export function getEventByTitle(title: string) {
 
 export function getAllEventsByTitle(title: string) {
   return screen.getAllByLabelText(getEventNamePattern(title));
+}
+
+/**
+ * Returns the drop targets of the time grid columns in DOM order, one per rendered day.
+ */
+export function getTimeGridColumns(): HTMLElement[] {
+  return Array.from(document.querySelectorAll<HTMLElement>(`.MuiEventCalendar-dayTimeGridColumn`));
+}
+
+/**
+ * Returns the drop target of the first time grid column, the only one of a day view.
+ */
+export function getTimeGridColumn(): HTMLElement {
+  const [column] = getTimeGridColumns();
+  if (!column) {
+    throw new Error('Could not find a time grid column');
+  }
+  return column;
+}
+
+/**
+ * Returns the timeline event row for a given resource id.
+ */
+export function getEventRow(resourceId: string): HTMLElement {
+  const row = document.querySelector<HTMLElement>(
+    `.MuiEventTimeline-eventsCell[data-resource-id="${resourceId}"]`,
+  );
+  if (!row) {
+    throw new Error(`Could not find event row for resource "${resourceId}"`);
+  }
+  return row;
+}
+
+/**
+ * Applies mock bounds to all timeline event rows, so jsdom drops resolve positions.
+ */
+export function mockAllEventRowBounds(width = 6720) {
+  const rows = document.querySelectorAll<HTMLElement>(`.MuiEventTimeline-eventsCell`);
+  for (const row of rows) {
+    mockElementBounds(row, { left: 0, width, height: 40 });
+  }
+  return rows;
 }

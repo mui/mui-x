@@ -1,5 +1,7 @@
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { styled } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
@@ -33,18 +35,21 @@ const EventDialogTitle = styled(Typography, {
 type ReadonlyContentProps = {
   occurrence: SchedulerRenderableEventOccurrence;
   onClose: () => void;
-  dragHandlerRef: React.RefObject<HTMLElement | null>;
 };
 
 export default function ReadonlyContent(props: ReadonlyContentProps) {
-  const { occurrence, onClose, dragHandlerRef } = props;
+  const { occurrence, onClose } = props;
 
   // Context hooks
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
 
-  return (
-    <ReadonlyContentDragContainer ref={dragHandlerRef}>
-      <EventDialogHeader onClose={onClose}>
+  // With a mouse, the whole section moves the dialog. On touch, a long press on the details
+  // selects their text, so only the header does.
+  const isCoarsePointer = useMediaQuery('(pointer: coarse)', { noSsr: true });
+
+  const content = (
+    <React.Fragment>
+      <EventDialogHeader onClose={onClose} isDraggable={isCoarsePointer}>
         <EventDialogTitle
           variant="h6"
           id={`${schedulerId}-event-dialog-title`}
@@ -64,6 +69,12 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
           {localeText.closeButtonLabel}
         </Button>
       </EventDialogActions>
-    </ReadonlyContentDragContainer>
+    </React.Fragment>
   );
+
+  if (isCoarsePointer) {
+    return <ReadonlyContentDragContainer>{content}</ReadonlyContentDragContainer>;
+  }
+
+  return <Draggable.Handle render={<ReadonlyContentDragContainer />}>{content}</Draggable.Handle>;
 }

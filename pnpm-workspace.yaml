@@ -6,7 +6,6 @@ packages:
   - bundle-size
 
 catalog:
-  '@atlaskit/pragmatic-drag-and-drop': ^4.0.0
   '@babel/cli': ^8.1.0
   '@babel/core': ^8.1.0
   '@babel/plugin-transform-modules-commonjs': ^8.0.1
@@ -14,8 +13,8 @@ catalog:
   '@babel/preset-typescript': ^8.0.7
   '@babel/runtime': '^7.29.7 || ^8.0.0'
   '@babel/traverse': ^8.1.0
-  '@base-ui/react': ^1.9.0
-  '@base-ui/utils': ^0.5.0
+  '@base-ui/react': https://pkg.pr.new/mui/base-ui/@base-ui/react@48d7b8ce0
+  '@base-ui/utils': https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
   '@date-fns/tz': ^1.5.0
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
@@ -85,7 +84,9 @@ catalog:
 engineStrict: true
 updateNotifier: false
 autoDedupe: true
-blockExoticSubdeps: true
+# The pinned Base UI drag-engine preview depends on its matching utils preview.
+# Restore this restriction when the drag engine is released.
+blockExoticSubdeps: false
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - '@mui/*'
@@ -120,6 +121,7 @@ allowBuilds:
   msw: false
 
 overrides:
+  '@base-ui/utils': https://pkg.pr.new/mui/base-ui/@base-ui/utils@48d7b8ce0
   # Pin the version otherwise emotion uses its own version resulting in docs build error
   # @TODO: Debug a fix separately and remove the override
   stylis: ^4.4.0

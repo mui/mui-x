@@ -73,7 +73,6 @@ export interface DependencyDialogViewProps extends Pick<
 > {
   dependency: SchedulerDependency;
   titleId: string;
-  dragHandlerRef: React.RefObject<HTMLElement | null>;
   onClose: () => void;
 }
 

@@ -1,27 +1,17 @@
 'use client';
-import * as React from 'react';
 import { useDraggableDialog } from '@mui/x-scheduler-internals/use-draggable-dialog';
 import { useAnchoredPosition } from './useAnchoredPosition';
 
 /**
- * Positions a dialog paper next to `anchor` and lets the user drag it by `dragHandlerRef`.
- * Returns the ref to put on the paper.
+ * Positions a dialog paper next to `anchor` and lets the user drag it by the `Draggable.Handle`
+ * rendered inside it.
+ * Spread `draggableProps` on a `Draggable.Root`, render the paper with a `Draggable.Trigger`
+ * inside it, and attach `paperRef` to the paper.
  */
-export function useDraggableAnchoredPaper(
-  anchor: HTMLElement | null,
-  dragHandlerRef: React.RefObject<HTMLElement | null>,
-) {
-  const paperRef = React.useRef<HTMLDivElement>(null);
-
-  const mutateStyle = React.useCallback((style: string) => {
-    if (paperRef.current) {
-      paperRef.current.style.transform = style;
-    }
-  }, []);
-
-  const resetDrag = useDraggableDialog(paperRef, dragHandlerRef, mutateStyle);
+export function useDraggableAnchoredPaper(anchor: HTMLElement | null) {
+  const { elementRef: paperRef, resetDrag, draggableProps } = useDraggableDialog();
 
   useAnchoredPosition({ anchor, popupRef: paperRef, onReposition: resetDrag });
 
-  return paperRef;
+  return { paperRef, draggableProps };
 }

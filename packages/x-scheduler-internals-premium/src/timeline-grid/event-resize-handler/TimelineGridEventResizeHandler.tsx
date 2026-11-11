@@ -1,15 +1,12 @@
 'use client';
+import { SchedulerDraggable, useEventResizeHandler } from '@mui/x-scheduler-internals/internals';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
-import {
-  useEventResizeHandler,
-  isResizeHandlerEnabled,
-} from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEventSide } from '@mui/x-scheduler-internals/models';
 import { useTimelineGridEventContext } from '../event/TimelineGridEventContext';
 import type { TimelineGridEvent } from '../event/TimelineGridEvent';
+import { schedulerTimelineEventResizeKind } from '../../internals/utils/schedulerTimelineDrag';
 
 export const TimelineGridEventResizeHandler = React.forwardRef(
   function TimelineGridEventResizeHandler(
@@ -30,35 +27,25 @@ export const TimelineGridEventResizeHandler = React.forwardRef(
     // Context hooks
     const contextValue = useTimelineGridEventContext();
 
-    // Ref hooks
-    const ref = React.useRef<HTMLDivElement>(null);
+    const { state, enabled, getDragData } = useEventResizeHandler({ context: contextValue, side });
 
-    // Feature hooks
-    const getDragData = useStableCallback((input) => ({
-      ...contextValue.getSharedDragData(input),
-      source: 'TimelineGridEventResizeHandler',
-      side,
-    }));
-
-    const enabled = isResizeHandlerEnabled({
-      side,
-      isEventStartClipped: contextValue.isEventStartClipped,
-      isEventEndClipped: contextValue.isEventEndClipped,
-    });
-
-    const { state } = useEventResizeHandler({
-      ref,
-      side,
-      enabled,
-      getDragData,
-    });
-
-    return useRenderElement('div', componentProps, {
+    const element = useRenderElement('div', componentProps, {
       enabled,
       state,
-      ref: [forwardedRef, ref],
+      ref: forwardedRef,
       props: [elementProps],
     });
+
+    return (
+      element && (
+        <SchedulerDraggable
+          kind={schedulerTimelineEventResizeKind}
+          getDragData={getDragData}
+          dragCursor="ew-resize"
+          render={element}
+        />
+      )
+    );
   },
 );
 
@@ -68,8 +55,7 @@ export namespace TimelineGridEventResizeHandler {
   export interface Props
     extends BaseUIComponentProps<'div', State>, useEventResizeHandler.PublicParameters {}
 
-  export interface DragData extends TimelineGridEvent.SharedDragData {
-    source: 'TimelineGridEventResizeHandler';
+  export interface DragData extends TimelineGridEvent.DragData {
     side: SchedulerEventSide;
   }
 }

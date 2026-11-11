@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { styled } from '@mui/material/styles';
 import { useId } from '@base-ui/utils/useId';
 import { EventCalendarProvider as UnstyledEventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
@@ -86,7 +87,10 @@ export function EventCalendarProvider<TEvent extends object, TResource extends o
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledValue}>
             <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
               <SchedulerDirectionProvider>
-                <StandaloneViewRoot>{children}</StandaloneViewRoot>
+                {/* The floating drag preview only reads the contexts above its provider. */}
+                <Draggable.Provider>
+                  <StandaloneViewRoot>{children}</StandaloneViewRoot>
+                </Draggable.Provider>
               </SchedulerDirectionProvider>
             </SchedulerSlotsProvider>
           </SharedComponentsStyledContext.Provider>

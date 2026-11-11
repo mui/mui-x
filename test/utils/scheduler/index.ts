@@ -16,6 +16,7 @@ export * from './resource-builder';
 export * from './storeClasses';
 export * from './dom-queries';
 export * from './dnd';
+export * from './ExternalEventSource';
 export * from './pointer';
 export * from './system-timezone';
 

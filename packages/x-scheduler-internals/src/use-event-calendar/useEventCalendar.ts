@@ -6,6 +6,7 @@ import type { ExtendableEventCalendarStore } from './EventCalendarStore';
 import { EventCalendarStore } from './EventCalendarStore';
 import type { EventCalendarParameters } from './EventCalendarStore.types';
 import type { Adapter } from '../use-adapter/useAdapter.types';
+import { useExternalDragPlaceholderCleanup } from '../internals/utils/useExternalDragPlaceholderCleanup';
 
 export type EventCalendarStoreConstructor<
   TEvent extends object = any,
@@ -27,6 +28,8 @@ export function useEventCalendar<TEvent extends object, TResource extends object
     () => store.updateStateFromParameters(parameters, adapter),
     [store, adapter, parameters],
   );
+
+  useExternalDragPlaceholderCleanup(store);
 
   return store;
 }

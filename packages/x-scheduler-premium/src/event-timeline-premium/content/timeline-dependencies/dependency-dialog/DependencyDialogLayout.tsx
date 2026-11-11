@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { styled } from '@mui/material/styles';
 import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
@@ -29,19 +30,15 @@ export const DependencyDialogActions = styled(DialogActions, {
 /**
  * The header of the dependency dialog: its title, the close button, and the handle to drag it.
  */
-export function DependencyDialogHeader(props: {
-  onClose: () => void;
-  dragHandlerRef: React.RefObject<HTMLElement | null>;
-  children: React.ReactNode;
-}) {
-  const { onClose, dragHandlerRef, children } = props;
+export function DependencyDialogHeader(props: { onClose: () => void; children: React.ReactNode }) {
+  const { onClose, children } = props;
   const { classes, localeText } = useEventTimelinePremiumStyledContext();
 
   return (
-    <DependencyDialogHeaderRoot
-      ref={dragHandlerRef}
-      className={classes.dependencyDialogHeader}
-      data-draggable=""
+    <Draggable.Handle
+      render={
+        <DependencyDialogHeaderRoot className={classes.dependencyDialogHeader} data-draggable="" />
+      }
     >
       {children}
       <IconButton
@@ -51,6 +48,6 @@ export function DependencyDialogHeader(props: {
       >
         <CloseRounded />
       </IconButton>
-    </DependencyDialogHeaderRoot>
+    </Draggable.Handle>
   );
 }

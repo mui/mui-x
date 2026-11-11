@@ -1,9 +1,13 @@
 import type { SchedulerRecurringEventsPluginInterface } from '@mui/x-scheduler-internals/internals';
-import type { SchedulerEventUpdatedProperties } from '@mui/x-scheduler-internals/models';
+import type * as React from 'react';
+import type {
+  SchedulerEventUpdatedProperties,
+  SchedulerResourceId,
+} from '@mui/x-scheduler-internals/models';
 import type { SchedulerDependenciesState, SchedulerDependency } from '../../models';
 import type { SchedulerSchedulingPlugin } from '../plugins/SchedulerSchedulingPlugin';
 import type { isDependencyActive } from '../utils/dependency-utils';
-import type { useEventDependencyDropTarget } from '../../timeline-grid/event/useEventDependencyDropTarget';
+import type { EventDependencyDropTarget } from '../../timeline-grid/event/EventDependencyDropTarget';
 import type { EventTimelinePremiumStore } from '../../use-event-timeline-premium/EventTimelinePremiumStore';
 import type {
   EventTimelinePremiumState,
@@ -30,10 +34,13 @@ export interface EventTimelinePremiumDependenciesStoreFeature {
    */
   useCreationMonitor(): void;
   /**
-   * Registers an event element as a drop target of the create-dependency gesture.
-   * Returns whether the gesture currently targets it.
+   * Registers the event element it renders as a drop target of the create-dependency gesture.
    */
-  useEventDropTarget(parameters: useEventDependencyDropTarget.Parameters): boolean;
+  EventDropTarget: React.ComponentType<EventDependencyDropTarget.Props>;
+  /**
+   * Returns whether the create-dependency gesture currently targets the event.
+   */
+  useIsEventDropTarget(occurrenceKey: string, resourceId: SchedulerResourceId): boolean;
 }
 
 /**

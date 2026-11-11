@@ -130,10 +130,11 @@ describe('<EventTimelinePremium /> - RTL', () => {
       expect(document.querySelector(`.${classes.event}`)).not.to.equal(null);
     });
 
-    // The title column stays pinned at the inline start (the right edge).
+    // The title column stays pinned at the inline start (the right edge). The drag auto-scroll
+    // makes the scroller report the events area alone, so its own rect is read from the prototype.
     const titleCell = document.querySelector<HTMLElement>(`.${classes.titleCell}`)!;
     expect(titleCell.getBoundingClientRect().right).to.be.closeTo(
-      scroller.getBoundingClientRect().right,
+      Element.prototype.getBoundingClientRect.call(scroller).right,
       1,
     );
   });

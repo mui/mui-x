@@ -13,7 +13,7 @@ import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
 import { useCalendarGridCellsRefsContext } from '../../internals/utils/CalendarGridCellsRefsContext';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
-import { useDayCellDropTarget } from './useDayCellDropTarget';
+import { DayCellDropTarget } from './DayCellDropTarget';
 import { CalendarGridDayCellContext } from './CalendarGridDayCellContext';
 
 export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell(
@@ -44,7 +44,6 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
   const { rowIndex } = useCalendarGridDayRowContext();
   const { ref: listItemRef, index } = useCompositeListItem();
   const cellsRefs = useCalendarGridCellsRefsContext();
-  const dropTargetRef = useDayCellDropTarget({ value, addPropertiesToDroppedEvent });
   const columnHeaderId = getCalendarGridHeaderCellId(rootId, index);
 
   const cellRef = React.useRef<HTMLDivElement>(null);
@@ -120,7 +119,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
   };
 
   const element = useRenderElement('div', componentProps, {
-    ref: [forwardedRef, dropTargetRef, listItemRef, cellRef],
+    ref: [forwardedRef, listItemRef, cellRef],
     props: [
       {
         role: 'gridcell',
@@ -135,7 +134,11 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
 
   return (
     <CalendarGridDayCellContext.Provider value={contextValue}>
-      {element}
+      <DayCellDropTarget
+        value={value}
+        addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
+        render={element}
+      />
     </CalendarGridDayCellContext.Provider>
   );
 });
@@ -143,8 +146,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
 export namespace CalendarGridDayCell {
   export interface State {}
 
-  export interface Props
-    extends BaseUIComponentProps<'div', State>, useDayCellDropTarget.Parameters {
+  export interface Props extends BaseUIComponentProps<'div', State>, DayCellDropTarget.Parameters {
     /**
      * Whether to lock the surface type of the created event placeholder.
      * When true, the surfaceType will not be updated when editing the placeholder.

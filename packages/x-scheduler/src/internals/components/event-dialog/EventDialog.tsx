@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { useStore } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import type { PaperProps } from '@mui/material/Paper';
@@ -43,20 +44,25 @@ const EventDialogPaper = styled(Paper, {
 
 interface EventDialogDraggablePaperProps extends PaperProps {
   anchor: HTMLElement | null;
-  dragHandlerRef: React.RefObject<HTMLElement | null>;
 }
 
 /**
  * The draggable paper of the event dialog, positioned next to `anchor`.
- * Pass `anchor` and `dragHandlerRef` through `slotProps.paper`.
+ * Pass `anchor` through `slotProps.paper`.
  */
 const EventDialogDraggablePaper = function EventDialogDraggablePaper(
   props: EventDialogDraggablePaperProps,
 ) {
-  const { anchor, dragHandlerRef, className, ...other } = props;
-  const paperRef = useDraggableAnchoredPaper(anchor, dragHandlerRef);
+  const { anchor, className, ...other } = props;
+  const { paperRef, draggableProps } = useDraggableAnchoredPaper(anchor);
 
-  return <EventDialogPaper {...other} ref={paperRef} className={className} />;
+  return (
+    <Draggable.Root {...draggableProps}>
+      <Draggable.Trigger
+        render={<EventDialogPaper {...other} ref={paperRef} className={className} />}
+      />
+    </Draggable.Root>
+  );
 } as any as DialogProps['PaperComponent'];
 
 export const EventDialogContent = React.forwardRef(function EventDialogContent(
@@ -73,13 +79,10 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
   // Selector hooks
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
 
-  // Ref hooks
-  const dragHandlerRef = React.useRef<HTMLElement>(null);
-
   // Read-only events have no editing form; editable events open the form fresh on each occurrence
   // (keyed) so it initializes from the current times.
   const content = isEventReadOnly ? (
-    <ReadonlyContent occurrence={occurrence} onClose={onClose} dragHandlerRef={dragHandlerRef} />
+    <ReadonlyContent occurrence={occurrence} onClose={onClose} />
   ) : (
     <FormContent
       // Remount on a retarget so the form re-seeds instead of keeping the old draft.
@@ -87,7 +90,6 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       key={occurrence.key}
       occurrence={occurrence}
       onClose={onClose}
-      dragHandlerRef={dragHandlerRef}
       anchor={anchor}
     />
   );
@@ -105,7 +107,6 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
         paper: {
           className: classes.eventDialogPaper,
           anchor,
-          dragHandlerRef,
         } as PaperProps,
       }}
       {...other}

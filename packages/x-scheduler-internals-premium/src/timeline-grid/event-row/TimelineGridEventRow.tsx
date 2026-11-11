@@ -1,8 +1,10 @@
 'use client';
 import * as React from 'react';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
+import { useDirection } from '@base-ui/react/direction-provider';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import {
   floorToWallClockMinutes,
@@ -13,7 +15,7 @@ import {
 import { EVENT_CREATION_PRECISION_MINUTE } from '@mui/x-scheduler-internals/constants';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { TimelineGridEventRowContext } from './TimelineGridEventRowContext';
-import { useEventRowDropTarget } from './useEventRowDropTarget';
+import { EventRowDropTarget } from './EventRowDropTarget';
 import { usePlaceholderInRow } from './usePlaceholderInRow';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import {
@@ -52,6 +54,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
 
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
+  const isRtl = useDirection() === 'rtl';
 
   const { rowRef, hasFocus, handleKeyDown, handleFocus } = useTimelineGridRowKeyboard({
     columnType: 'events',
@@ -88,15 +91,29 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   );
 
   // Feature hooks
-  const { getCursorPositionInElementMs, ref: dropTargetRef } = useEventRowDropTarget({
-    resourceId,
-    addPropertiesToDroppedEvent,
-  });
+  const getCursorPositionInElementMs: TimelineGridEventRowContext['getCursorPositionInElementMs'] =
+    useStableCallback(({ input, elementRef }) => {
+      if (!rowRef.current || !elementRef.current) {
+        return 0;
+      }
+
+      const clientX = input.clientX;
+      const elementPosition = elementRef.current.getBoundingClientRect();
+      // The time axis starts at the inline-start edge, which is the right edge in RTL.
+      const offsetFromStart = isRtl
+        ? elementPosition.right - clientX
+        : clientX - elementPosition.left;
+      const positionX = offsetFromStart / rowRef.current.offsetWidth;
+
+      // A cursor on (or past) either edge must not map beyond the axis: the offset
+      // would resolve into the day before or after the collection.
+      return Math.min(Math.max(Math.round(config.durationMs * positionX), 0), config.durationMs);
+    });
 
   const eventCreationProps = useEventCreation(({ event, creationConfig, timezone }) => {
     const offsetMs = getCursorPositionInElementMs({
       input: { clientX: event.clientX },
-      elementRef: dropTargetRef,
+      elementRef: rowRef,
     });
     // The new event starts at the cursor: cap the offset to the last slot of the axis
     // so a click on the exact end edge does not create the event on the day after
@@ -173,7 +190,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   };
 
   const element = useRenderElement('div', componentProps, {
-    ref: [forwardedRef, dropTargetRef, rowRef],
+    ref: [forwardedRef, rowRef],
     state,
     stateAttributesMapping,
     props: [
@@ -191,7 +208,10 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
 
   return (
     <TimelineGridEventRowContext.Provider value={contextValue}>
-      {element}
+      <EventRowDropTarget
+        addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
+        render={element}
+      />
     </TimelineGridEventRowContext.Provider>
   );
 });
@@ -209,7 +229,13 @@ export namespace TimelineGridEventRow {
   }
 
   export interface Props
-    extends Omit<BaseUIComponentProps<'div', State>, 'children'>, useEventRowDropTarget.Parameters {
+    extends
+      Omit<BaseUIComponentProps<'div', State>, 'children'>,
+      Pick<EventRowDropTarget.Props, 'addPropertiesToDroppedEvent'> {
+    /**
+     * The id of the resource to drop the event onto.
+     */
+    resourceId: SchedulerResourceId;
     children: (parameters: ChildrenParameters) => React.ReactNode;
   }
 

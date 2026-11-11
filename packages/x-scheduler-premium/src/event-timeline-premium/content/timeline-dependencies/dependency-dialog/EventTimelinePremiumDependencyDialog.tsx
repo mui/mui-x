@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
@@ -44,16 +45,19 @@ const DependencyDialogPaper = styled(Paper, {
 
 interface DependencyDialogDraggablePaperProps extends PaperProps {
   anchor: HTMLElement | null;
-  dragHandlerRef: React.RefObject<HTMLElement | null>;
 }
 
 const DependencyDialogDraggablePaper = function DependencyDialogDraggablePaper(
   props: DependencyDialogDraggablePaperProps,
 ) {
-  const { anchor, dragHandlerRef, ...other } = props;
-  const paperRef = useDraggableAnchoredPaper(anchor, dragHandlerRef);
+  const { anchor, ...other } = props;
+  const { paperRef, draggableProps } = useDraggableAnchoredPaper(anchor);
 
-  return <DependencyDialogPaper {...other} ref={paperRef} />;
+  return (
+    <Draggable.Root {...draggableProps}>
+      <Draggable.Trigger render={<DependencyDialogPaper {...other} ref={paperRef} />} />
+    </Draggable.Root>
+  );
 } as any as DialogProps['PaperComponent'];
 
 // Narrower than the event dialog: it only has four fields.
@@ -81,10 +85,7 @@ export function EventTimelinePremiumDependencyDialog() {
   return <DependencyDialog editor={editor} />;
 }
 
-interface DependencyDialogContentProps extends Omit<
-  DependencyDialogViewProps,
-  'titleId' | 'dragHandlerRef'
-> {
+interface DependencyDialogContentProps extends Omit<DependencyDialogViewProps, 'titleId'> {
   anchor: HTMLElement;
 }
 
@@ -96,10 +97,9 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
   const store = useEventTimelinePremiumStoreContext();
   const { schedulerId, classes } = useEventTimelinePremiumStyledContext();
   const isReadOnly = useStore(store, eventTimelinePremiumDependencySelectors.isReadOnly);
-  const dragHandlerRef = React.useRef<HTMLElement>(null);
   const titleId = `${schedulerId}-dependency-dialog-title`;
 
-  const viewProps = { ...other, titleId, dragHandlerRef };
+  const viewProps = { ...other, titleId };
 
   return (
     <DependencyDialogRoot
@@ -113,7 +113,6 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
         paper: {
           className: classes.dependencyDialogPaper,
           anchor,
-          dragHandlerRef,
         } as DependencyDialogDraggablePaperProps,
       }}
     >

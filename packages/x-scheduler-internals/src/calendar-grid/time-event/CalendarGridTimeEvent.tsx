@@ -1,17 +1,18 @@
 'use client';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
+import { schedulerTimeEventMoveKind } from '../../internals/utils/schedulerDrag';
+import type { SchedulerAxisEventDragData } from '../../internals/utils/schedulerDrag';
+import { SchedulerDraggable } from '../../internals/utils/SchedulerDraggable';
 import { CalendarGridTimeEventCssVars } from './CalendarGridTimeEventCssVars';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { computeElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import type { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { CalendarGridTimeEventContext } from './CalendarGridTimeEventContext';
-import type { SchedulerEventId, SchedulerEventOccurrence, SchedulerResourceId } from '../../models';
-import { useOriginalOccurrence } from '../../internals/utils/useOriginalOccurrence';
+import type { useOriginalOccurrence } from '../../internals/utils/useOriginalOccurrence';
 
 export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeEvent(
   componentProps: CalendarGridTimeEvent.Props,
@@ -49,38 +50,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Feature hooks
-  const getOriginalOccurrence = useOriginalOccurrence({
-    eventId,
-    occurrenceKey,
-    start,
-    end,
-    dataTimezone,
-  });
-
-  const getSharedDragData: CalendarGridTimeEventContext['getSharedDragData'] = useStableCallback(
-    (input) => {
-      // No `input` (pointer-based resize) — skip the layout-reading cursor measurement.
-      const initialCursorPositionInEventMs = input
-        ? Math.max(columnStart - start.timestamp, 0) +
-          getCursorPositionInElementMs({ input, elementRef: ref, elementStart: start.timestamp })
-        : 0;
-
-      return {
-        eventId,
-        occurrenceKey,
-        originalOccurrence: getOriginalOccurrence(),
-        start: start.timestamp,
-        end: end.timestamp,
-        initialCursorPositionInEventMs,
-      };
-    },
-  );
-
-  const getDragData = useStableCallback((input) => ({
-    ...getSharedDragData(input),
-    source: 'CalendarGridTimeEvent',
-  }));
-
   const elementPosition = React.useMemo(
     () =>
       elementPositionProp ??
@@ -89,19 +58,20 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   );
   const { position, duration } = elementPosition;
 
-  const {
-    state,
-    preview,
-    contextValue: draggableEventContextValue,
-  } = useDraggableEvent({
-    ref,
+  const { state, draggableProps, contextValue } = useDraggableEvent({
+    kind: schedulerTimeEventMoveKind,
     start,
     end,
     occurrenceKey,
     eventId,
+    dataTimezone,
     isDraggable,
     renderDragPreview,
-    getDragData,
+    getExtraDragData: (input) => ({
+      initialCursorPositionInEventMs:
+        Math.max(columnStart - start.timestamp, 0) +
+        getCursorPositionInElementMs({ input, elementRef: ref, elementStart: start.timestamp }),
+    }),
     position: elementPosition,
   });
 
@@ -110,11 +80,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     native: nativeButton,
     tabIndex: columnHasFocus ? 0 : -1,
   });
-
-  const contextValue: CalendarGridTimeEventContext = React.useMemo(
-    () => ({ ...draggableEventContextValue, getSharedDragData }),
-    [draggableEventContextValue, getSharedDragData],
-  );
 
   const element = useRenderElement('div', componentProps, {
     state,
@@ -133,8 +98,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
 
   return (
     <CalendarGridTimeEventContext.Provider value={contextValue}>
-      {element}
-      {preview.element}
+      <SchedulerDraggable {...draggableProps} render={element} />
     </CalendarGridTimeEventContext.Provider>
   );
 });
@@ -161,23 +125,5 @@ export namespace CalendarGridTimeEvent {
     elementPosition?: useElementPositionInCollection.ReturnValue;
   }
 
-  export interface SharedDragData {
-    eventId: SchedulerEventId;
-    occurrenceKey: string;
-    originalOccurrence: SchedulerEventOccurrence;
-    /**
-     * The start of the occurrence, as a timestamp in milliseconds.
-     */
-    start: number;
-    /**
-     * The end of the occurrence, as a timestamp in milliseconds.
-     */
-    end: number;
-    initialCursorPositionInEventMs: number;
-    sourceResourceId?: SchedulerResourceId;
-  }
-
-  export interface DragData extends SharedDragData {
-    source: 'CalendarGridTimeEvent';
-  }
+  export interface DragData extends SchedulerAxisEventDragData {}
 }

@@ -35,7 +35,7 @@ const DependencyDialogLagNote = styled('span', {
 }));
 
 export function DependencyDialogReadonlyContent(props: DependencyDialogViewProps) {
-  const { dependency, titleId, dragHandlerRef, onClose } = props;
+  const { dependency, titleId, onClose } = props;
   const store = useEventTimelinePremiumStoreContext();
   const { classes, localeText } = useEventTimelinePremiumStyledContext();
   const lag = getDependencyLag(dependency);
@@ -51,7 +51,7 @@ export function DependencyDialogReadonlyContent(props: DependencyDialogViewProps
 
   return (
     <DependencyDialogForm as="section" className={classes.dependencyDialogForm}>
-      <DependencyDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
+      <DependencyDialogHeader onClose={onClose}>
         <Typography variant="h6" id={titleId} className={classes.dependencyDialogTitle}>
           {localeText.dependencyDetailsTitle}
         </Typography>

@@ -3,14 +3,7 @@ import * as React from 'react';
 import type { useDraggableEvent } from '@mui/x-scheduler-internals/internals';
 import type { TimelineGridEvent } from './TimelineGridEvent';
 
-export interface TimelineGridEventContext extends useDraggableEvent.ContextValue {
-  /**
-   * Gets the drag data shared by the TimelineGrid.Event and TimelineGrid.EventResizeHandler parts.
-   * @param {{ clientX: number }} input The input object provided by the drag and drop library for the current event.
-   * @returns {TimelineGridEvent.SharedDragData} The shared drag data.
-   */
-  getSharedDragData: (input: { clientX: number }) => TimelineGridEvent.SharedDragData;
-}
+export interface TimelineGridEventContext extends useDraggableEvent.ContextValue<TimelineGridEvent.DragData> {}
 
 export const TimelineGridEventContext = React.createContext<TimelineGridEventContext | undefined>(
   undefined,

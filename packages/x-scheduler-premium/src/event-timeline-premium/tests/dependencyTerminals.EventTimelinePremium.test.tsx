@@ -1,3 +1,10 @@
+import {
+  cancelDrag,
+  dropDrag,
+  moveDrag,
+  moveDragAndWait,
+  startDrag,
+} from 'test/utils/scheduler/dnd';
 import { act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
@@ -11,6 +18,7 @@ import {
   simulateDragAndDrop,
 } from 'test/utils/scheduler';
 import { describe, it, expect, vi, afterEach } from 'vitest';
+import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import {
   buildDependency,
   createDependencyTimelineRenderer,
@@ -107,10 +115,8 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
   const { renderTimeline } = createDependencyTimelineRenderer(renderSettled);
 
   afterEach(() => {
-    // A failed assertion mid-gesture must not leak pragmatic's global drag state or
-    // an armed click swallow into the next test.
-    fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
-    fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });
+    // A failed assertion mid-gesture must not leak an armed click swallow into the next test.
+    dropDrag(document.body, {});
     fireEvent.click(document.body);
   });
 
@@ -608,13 +614,13 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(getTerminal('Event A', undefined, 'start')!.hasAttribute('data-visible')).to.equal(
         true,
       );
-      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const source = getTerminal('Event A')!;
       const target = getEventElement('Event B');
-      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+      startDrag(source, {});
+      moveDrag(target, {});
+      moveDrag(target, {});
 
-      // A native drag suppresses the hover: the target's terminals must show by state
+      // A drag captures the pointer, which suppresses the hover: the target's terminals must show by state
       // so the user can drop on the edge they want.
       await waitFor(() => {
         expect(getTerminal('Event B', undefined, 'start')!.hasAttribute('data-visible')).to.equal(
@@ -628,20 +634,20 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         false,
       );
 
-      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+      dropDrag(document.body, {});
+      cancelDrag();
     });
 
     it('should mark the terminal of the edge the gesture would drop on', async () => {
       await renderTimeline({ events: [eventA, eventB], dependencies: [] });
 
-      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const source = getTerminal('Event A')!;
       const target = getEventElement('Event B');
       const startTerminal = getTerminal('Event B', undefined, 'start')!;
       const endTerminal = getTerminal('Event B', undefined, 'end')!;
-      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+      startDrag(source, {});
+      moveDrag(target, {});
+      moveDrag(target, {});
 
       // Over the body the drop targets the start edge: its terminal reads as acquired,
       // the other one only as available.
@@ -650,69 +656,67 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       });
       expect(endTerminal.hasAttribute('data-dependency-drop-target')).to.equal(false);
 
-      fireEvent.dragEnter(endTerminal, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(endTerminal, { dataTransfer: new DataTransfer() });
+      moveDrag(endTerminal, {});
+      moveDrag(endTerminal, {});
 
       await waitFor(() => {
         expect(endTerminal.hasAttribute('data-dependency-drop-target')).to.equal(true);
       });
       expect(startTerminal.hasAttribute('data-dependency-drop-target')).to.equal(false);
 
-      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+      dropDrag(document.body, {});
+      cancelDrag();
     });
 
     it('should anchor the provisional line on the dragged edge', async () => {
       await renderTimeline({ events: [eventA, eventB], dependencies: [] });
 
-      const startSource = getTerminal('Event A', undefined, 'start')!.closest(
-        '[draggable="true"]',
-      )!;
+      const startSource = getTerminal('Event A', undefined, 'start')!;
       const target = getEventElement('Event B');
-      fireEvent.dragStart(startSource, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+      startDrag(startSource, {});
+      moveDrag(target, {});
+      moveDrag(target, {});
       await waitFor(() => {
-        expect(document.querySelector('[data-dependency-drag-line]')).not.to.equal(null);
+        expect(document.querySelector('[data-dependency-drag-line][d]')).not.to.equal(null);
       });
       const fromStartX = getLineStartX(document.querySelector('[data-dependency-drag-line]')!);
-      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnd(startSource, { dataTransfer: new DataTransfer() });
+      dropDrag(document.body, {});
+      cancelDrag();
       await waitFor(() => {
         expect(document.querySelector('[data-dependency-drag-line]')).to.equal(null);
       });
 
-      const endSource = getTerminal('Event A')!.closest('[draggable="true"]')!;
-      fireEvent.dragStart(endSource, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+      const endSource = getTerminal('Event A')!;
+      startDrag(endSource, {});
+      moveDrag(target, {});
+      moveDrag(target, {});
       await waitFor(() => {
-        expect(document.querySelector('[data-dependency-drag-line]')).not.to.equal(null);
+        expect(document.querySelector('[data-dependency-drag-line][d]')).not.to.equal(null);
       });
       const fromEndX = getLineStartX(document.querySelector('[data-dependency-drag-line]')!);
 
       expect(fromStartX).to.be.lessThan(fromEndX);
 
-      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnd(endSource, { dataTransfer: new DataTransfer() });
+      dropDrag(document.body, {});
+      cancelDrag();
     });
 
     it('should snap the provisional line to the hovered terminal edge', async () => {
       await renderTimeline({ events: [eventA, eventB], dependencies: [] });
 
-      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const source = getTerminal('Event A')!;
       const target = getEventElement('Event B');
-      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+      startDrag(source, {});
+      moveDrag(target, {});
+      moveDrag(target, {});
       await waitFor(() => {
-        expect(document.querySelector('[data-dependency-drag-line]')).not.to.equal(null);
+        expect(document.querySelector('[data-dependency-drag-line][d]')).not.to.equal(null);
       });
       const snappedToStartX = getLineEnd(document.querySelector('[data-dependency-drag-line]')!).x;
 
       const endTerminal = getTerminal('Event B', undefined, 'end')!;
-      fireEvent.dragEnter(endTerminal, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(endTerminal, { dataTransfer: new DataTransfer() });
+      moveDrag(endTerminal, {});
+      moveDrag(endTerminal, {});
 
       await waitFor(() => {
         expect(
@@ -720,8 +724,22 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         ).to.be.greaterThan(snappedToStartX);
       });
 
-      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+      dropDrag(document.body, {});
+      cancelDrag();
+    });
+
+    it('should show a crosshair cursor during a terminal drag', async () => {
+      await renderTimeline({ events: [eventA, eventB], dependencies: [] });
+
+      startDrag(getTerminal('Event A')!, {});
+      await moveDragAndWait(document.body, { clientX: 120, clientY: 40 });
+
+      // Base UI locks the cursor a few frames after the drag starts, once the lift has painted.
+      await waitFor(() => {
+        expect(document.documentElement.style.getPropertyValue('--drag-cursor')).to.equal(
+          'crosshair',
+        );
+      });
     });
 
     it('should ignore dropping a terminal on its own event', async () => {
@@ -732,13 +750,13 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         onDependenciesChange: handleDependenciesChange,
       });
 
-      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const source = getTerminal('Event A')!;
       const ownEvent = getEventElement('Event A');
       const validTarget = getEventElement('Event B');
 
-      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnter(validTarget, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(validTarget, { dataTransfer: new DataTransfer() });
+      startDrag(source, {});
+      moveDrag(validTarget, {});
+      moveDrag(validTarget, {});
 
       // Hovering the valid target proves the drag reached the highlight stage before
       // asserting that the source event never gets it.
@@ -746,16 +764,16 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         expect(validTarget.hasAttribute('data-dependency-drop-target')).to.equal(true);
       });
 
-      fireEvent.dragEnter(ownEvent, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(ownEvent, { dataTransfer: new DataTransfer() });
+      moveDrag(ownEvent, {});
+      moveDrag(ownEvent, {});
 
       await waitFor(() => {
         expect(validTarget.hasAttribute('data-dependency-drop-target')).to.equal(false);
       });
       expect(ownEvent.hasAttribute('data-dependency-drop-target')).to.equal(false);
 
-      fireEvent.drop(ownEvent, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+      dropDrag(ownEvent, {});
+      cancelDrag();
 
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(store.state.errors).to.have.length(0);
@@ -799,10 +817,9 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
           expect(grid.scrollHeight).to.be.greaterThan(grid.clientHeight);
         });
 
-        const source = getTerminal('Event first row')!.closest('[draggable="true"]')!;
-        fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
-        fireEvent.dragOver(document.body, {
-          dataTransfer: new DataTransfer(),
+        const source = getTerminal('Event first row')!;
+        startDrag(source, {});
+        moveDrag(document.body, {
           clientX: 120,
           clientY: 40,
         });
@@ -820,14 +837,14 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         expect(store.state.dependencyCreation).not.to.equal(null);
 
         const target = getEventElement('Event last row');
-        fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
-        fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+        moveDrag(target, {});
+        moveDrag(target, {});
         await waitFor(() => {
           expect(target.hasAttribute('data-dependency-drop-target')).to.equal(true);
         });
 
-        fireEvent.drop(target, { dataTransfer: new DataTransfer() });
-        fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });
+        dropDrag(target, {});
+        cancelDrag();
 
         expect(handleDependenciesChange.mock.calls.length).to.equal(1);
         const [dependency] = handleDependenciesChange.mock.calls[0][0];
@@ -847,10 +864,9 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         onDependenciesChange: handleDependenciesChange,
       });
 
-      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
-      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(document.body, {
-        dataTransfer: new DataTransfer(),
+      const source = getTerminal('Event A')!;
+      startDrag(source, {});
+      moveDrag(document.body, {
         clientX: 120,
         clientY: 40,
       });
@@ -858,8 +874,8 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         expect(store.state.dependencyCreation).not.to.equal(null);
       });
 
-      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+      dropDrag(document.body, {});
+      cancelDrag();
 
       await waitFor(() => {
         expect(store.state.dependencyCreation).to.equal(null);
@@ -876,18 +892,17 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         onDependenciesChange: handleDependenciesChange,
       });
 
-      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const source = getTerminal('Event A')!;
       const target = getEventElement('Event B');
-      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+      startDrag(source, {});
+      moveDrag(target, {});
+      moveDrag(target, {});
       await waitFor(() => {
         expect(target.hasAttribute('data-dependency-drop-target')).to.equal(true);
       });
 
-      // Canceling (e.g. with Escape) ends the drag without a drop: pragmatic routes
-      // it through `onDrop` with no drop targets.
-      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+      // A canceled pointer ends the drag without a drop: the monitor's `onMoveEnd` gets no target.
+      cancelDrag();
 
       await waitFor(() => {
         expect(store.state.dependencyCreation).to.equal(null);
@@ -899,13 +914,13 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     it('should not highlight a recurring event during a terminal drag', async () => {
       await renderTimeline({ events: [eventA, eventB, recurringEvent], dependencies: [] });
 
-      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const source = getTerminal('Event A')!;
       const validTarget = getEventElement('Event B');
       const recurringTarget = getRecurringEventElement('Recurring event');
 
-      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnter(validTarget, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(validTarget, { dataTransfer: new DataTransfer() });
+      startDrag(source, {});
+      moveDrag(validTarget, {});
+      moveDrag(validTarget, {});
 
       // Hovering the valid target proves the drag reached the highlight stage before
       // asserting that the recurring one never gets it.
@@ -913,8 +928,8 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         expect(validTarget.hasAttribute('data-dependency-drop-target')).to.equal(true);
       });
 
-      fireEvent.dragEnter(recurringTarget, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(recurringTarget, { dataTransfer: new DataTransfer() });
+      moveDrag(recurringTarget, {});
+      moveDrag(recurringTarget, {});
 
       await waitFor(() => {
         expect(validTarget.hasAttribute('data-dependency-drop-target')).to.equal(false);
@@ -922,8 +937,8 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(recurringTarget.hasAttribute('data-dependency-drop-target')).to.equal(false);
 
       // End the gesture: a drag left in flight leaks into the next test's timeline.
-      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+      dropDrag(document.body, {});
+      cancelDrag();
     });
 
     it('should surface an error when dropping a terminal on a recurring event', async () => {
@@ -977,14 +992,14 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     it('should highlight the hovered target event during a terminal drag', async () => {
       const { store } = await renderTimeline({ events: [eventA, eventB], dependencies: [] });
 
-      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const source = getTerminal('Event A')!;
       const target = getEventElement('Event B');
 
-      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+      startDrag(source, {});
+      moveDrag(target, {});
+      moveDrag(target, {});
 
-      // Pragmatic-dnd processes drag events asynchronously.
+      // Base UI processes drag moves on animation frames.
       await waitFor(() => {
         expect(target.hasAttribute('data-dependency-drop-target')).to.equal(true);
       });
@@ -993,22 +1008,22 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(store.state.dependencyCreation?.sourceSide).to.equal('end');
 
       // End the gesture: a drag left in flight leaks into the next test's timeline.
-      fireEvent.drop(target, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+      dropDrag(target, {});
+      cancelDrag();
     });
 
     it('should render the provisional line during a terminal drag', async () => {
       await renderTimeline({ events: [eventA, eventB], dependencies: [] });
 
-      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const source = getTerminal('Event A')!;
       const target = getEventElement('Event B');
 
-      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+      startDrag(source, {});
+      moveDrag(target, {});
+      moveDrag(target, {});
 
       await waitFor(() => {
-        expect(document.querySelector('[data-dependency-drag-line]')).not.to.equal(null);
+        expect(document.querySelector('[data-dependency-drag-line][d]')).not.to.equal(null);
       });
 
       // Snapped on the hovered target: solid straight line into an arrowhead.
@@ -1017,8 +1032,8 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(snappedLine.getAttribute('stroke-dasharray')).to.equal(null);
       expect(snappedLine.getAttribute('marker-end')).to.contain('dependency-arrowhead-creation');
 
-      fireEvent.drop(target, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+      dropDrag(target, {});
+      cancelDrag();
 
       await waitFor(() => {
         expect(document.querySelector('[data-dependency-drag-line]')).to.equal(null);
@@ -1028,16 +1043,15 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     it('should render the provisional line when dragging over empty space with no visible arrows', async () => {
       const { store } = await renderTimeline({ events: [eventA, eventB], dependencies: [] });
 
-      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const source = getTerminal('Event A')!;
 
-      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(document.body, {
-        dataTransfer: new DataTransfer(),
+      startDrag(source, {});
+      moveDrag(document.body, {
         clientX: 120,
         clientY: 40,
       });
 
-      // Pragmatic publishes the drag start asynchronously; the svg must mount on it
+      // Base UI publishes the drag start; the svg must mount on it
       // even though there is no line to draw yet — its rect is what the line needs.
       await waitFor(() => {
         expect(store.state.dependencyCreation).not.to.equal(null);
@@ -1046,14 +1060,13 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       // The next cursor move draws the line, away from any drop target: the
       // cursor-following monitor writes the path attribute directly on the DOM.
-      fireEvent.dragOver(document.body, {
-        dataTransfer: new DataTransfer(),
+      moveDrag(document.body, {
         clientX: 140,
         clientY: 60,
       });
 
       await waitFor(() => {
-        expect(document.querySelector('[data-dependency-drag-line]')).not.to.equal(null);
+        expect(document.querySelector('[data-dependency-drag-line][d]')).not.to.equal(null);
       });
       await waitFor(() => {
         expect(document.querySelector('[data-dependency-drag-line]')!.getAttribute('d')).to.match(
@@ -1077,8 +1090,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       };
 
       const firstEnd = await sampleLineEnd(140);
-      fireEvent.dragOver(document.body, {
-        dataTransfer: new DataTransfer(),
+      moveDrag(document.body, {
         clientX: 170,
         clientY: 85,
       });
@@ -1087,8 +1099,8 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(nextEnd.x - firstEnd.x).to.equal(30);
       expect(nextEnd.y - firstEnd.y).to.equal(25);
 
-      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+      dropDrag(document.body, {});
+      cancelDrag();
     });
 
     it('should surface an error and select the existing arrow when the drop duplicates a dependency', async () => {
@@ -1144,6 +1156,13 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
   });
 
   describe('selection and deletion', () => {
+    const eventC = EventBuilder.new()
+      .id('event-c')
+      .title('Event C')
+      .singleDay('2025-07-03T13:00:00Z')
+      .resource(resource2)
+      .build();
+
     it('should select an arrow on click and delete it with the arrowhead button', async () => {
       const handleDependenciesChange = vi.fn();
       await renderTimeline({
@@ -1299,39 +1318,88 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     });
 
     it('should keep the selection when Escape cancels an in-flight creation drag', async () => {
+      const handleDependenciesChange = vi.fn();
       const { store } = await renderTimeline({
-        events: [eventA, eventB],
+        events: [eventA, eventB, eventC],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        onDependenciesChange: handleDependenciesChange,
       });
 
       fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
       expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
 
-      const source = getTerminal('Event B')!.closest('[draggable="true"]')!;
-      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(document.body, {
-        dataTransfer: new DataTransfer(),
-        clientX: 120,
-        clientY: 40,
-      });
+      const target = getEventElement('Event C');
+      startDrag(getTerminal('Event B')!, {});
+      moveDrag(target, {});
+      moveDrag(target, {});
       await waitFor(() => {
-        expect(store.state.dependencyCreation).not.to.equal(null);
+        expect(target.hasAttribute('data-dependency-drop-target')).to.equal(true);
       });
 
-      // Escape cancels the drag (pragmatic handles it); the same keystroke must not
+      // Escape cancels the drag (Base UI handles it); the same keystroke must not
       // also drop the selection.
       fireEvent.keyDown(document.body, { key: 'Escape' });
-      expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
-
-      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
       await waitFor(() => {
         expect(store.state.dependencyCreation).to.equal(null);
       });
+      expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
+
+      // The button is still down: releasing it over the valid target creates nothing.
+      dropDrag(target, {});
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
+      expect(store.state.errors).to.have.length(0);
 
       // With no gesture in flight, Escape deselects again.
       fireEvent.keyDown(document.body, { key: 'Escape' });
       expect(store.state.selection).to.equal(null);
+    });
+
+    it('should let a link drag reach the terminal under the delete button of the selected arrow', async () => {
+      const handleDependenciesChange = vi.fn();
+      const { store } = await renderTimeline({
+        events: [eventA, eventB, eventC],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b', 'FinishToFinish')],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+      // The delete button of a FinishToFinish arrow covers the end terminal of its target.
+      const getTargetTerminal = () => getTerminal('Event B', undefined, 'end')!;
+      expect(getTargetTerminal().hasAttribute('data-dependency-muted')).to.equal(true);
+
+      // jsdom has no layout to hit test: the browser also checks that the pointer reaches the
+      // terminal, which a muted terminal lets through to the empty cell under it.
+      const hitTest = isJSDOM ? {} : { mockHitTest: false };
+      const centerOf = (element: Element) => {
+        const rect = element.getBoundingClientRect();
+        return { clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 };
+      };
+      const source = getTerminal('Event C')!;
+      startDrag(source, { ...centerOf(source), ...hitTest });
+      // Over the target event first, which reveals its terminals.
+      await moveDragAndWait(getEventElement('Event B'), {
+        ...centerOf(getEventElement('Event B')),
+        ...hitTest,
+      });
+      await moveDragAndWait(getTargetTerminal(), { ...centerOf(getTargetTerminal()), ...hitTest });
+      await waitFor(() => {
+        expect(getTargetTerminal().hasAttribute('data-dependency-drop-target')).to.equal(true);
+      });
+      expect(getTargetTerminal().hasAttribute('data-dependency-muted')).to.equal(false);
+
+      dropDrag(getTargetTerminal(), { ...centerOf(getTargetTerminal()), ...hitTest });
+
+      expect(handleDependenciesChange.mock.calls.length).to.equal(1);
+      const created = handleDependenciesChange.mock.calls[0][0].find(
+        (dependency: SchedulerDependency) => dependency.id !== 'dep-1',
+      );
+      expect(created).to.include({ source: 'event-c', target: 'event-b', type: 'FinishToFinish' });
+      // The arrow is still selected: its delete button covers the terminal again.
+      await waitFor(() => {
+        expect(store.state.dependencyCreation).to.equal(null);
+      });
+      expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
+      expect(getTargetTerminal().hasAttribute('data-dependency-muted')).to.equal(true);
     });
 
     it('should deselect when clicking away from the arrow', async () => {
@@ -1526,6 +1594,32 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(handleClick.mock.calls.length).to.equal(1);
     });
 
+    it('should not swallow a click without a press after a deselecting press turned into a drag', async () => {
+      const { store } = await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+
+      // The press on the event deselects and arms the swallow for its click, but it turns
+      // into a drag, and the drag engine swallows the click that ends it.
+      startDrag(getEventElement('Event A'), {});
+      expect(store.state.selection).to.equal(null);
+      await moveDragAndWait(document.body, { clientX: 300, clientY: 40 });
+      dropDrag(document.body, {});
+
+      // A click without a press, like the one assistive technology sends.
+      const appButton = document.createElement('button');
+      document.body.appendChild(appButton);
+      const handleClick = vi.fn();
+      appButton.addEventListener('click', handleClick);
+      appButton.click();
+      appButton.remove();
+
+      expect(handleClick.mock.calls.length).to.equal(1);
+    });
+
     it('should not delete the arrow when typing Backspace in an editable element', async () => {
       const handleDependenciesChange = await setupSelectedArrow();
 
@@ -1679,10 +1773,9 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         dependencies: [],
       });
 
-      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
-      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(document.body, {
-        dataTransfer: new DataTransfer(),
+      const source = getTerminal('Event A')!;
+      startDrag(source, {});
+      moveDrag(document.body, {
         clientX: 120,
         clientY: 40,
       });
@@ -1696,9 +1789,9 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       expect(store.state.dependencyCreation).to.equal(null);
 
-      // Unmounting does not deliver a native dragend: end the gesture so pragmatic's
+      // End the active pointer gesture before unmounting so Base UI's
       // global drag state does not leak into the next test.
-      fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });
+      cancelDrag();
     });
   });
 
@@ -1935,10 +2028,9 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     it('should keep only the dragged appearance terminal revealed during the gesture', async () => {
       const { store } = await renderTimeline({ events: [sharedEvent, eventB], dependencies: [] });
 
-      const source = getTerminal('Shared event', 'r2')!.closest('[draggable="true"]')!;
-      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(document.body, {
-        dataTransfer: new DataTransfer(),
+      const source = getTerminal('Shared event', 'r2')!;
+      startDrag(source, {});
+      moveDrag(document.body, {
         clientX: 120,
         clientY: 40,
       });
@@ -1949,8 +2041,8 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(getTerminal('Shared event', 'r2')!.hasAttribute('data-visible')).to.equal(true);
       expect(getTerminal('Shared event', 'r1')!.hasAttribute('data-visible')).to.equal(false);
 
-      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+      dropDrag(document.body, {});
+      cancelDrag();
     });
 
     it('should render a delete button on every appearance of a selected dependency', async () => {
@@ -1989,11 +2081,11 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     it('should highlight only the hovered row appearance of a multi-resource drop target', async () => {
       await renderTimeline({ events: [eventA, sharedEvent], dependencies: [] });
 
-      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const source = getTerminal('Event A')!;
       const r1Appearance = getAppearanceElement('Shared event', 'r1');
-      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnter(r1Appearance, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(r1Appearance, { dataTransfer: new DataTransfer() });
+      startDrag(source, {});
+      moveDrag(r1Appearance, {});
+      moveDrag(r1Appearance, {});
 
       await waitFor(() => {
         expect(r1Appearance.hasAttribute('data-dependency-drop-target')).to.equal(true);
@@ -2013,8 +2105,8 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         false,
       );
 
-      fireEvent.drop(r1Appearance, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+      dropDrag(r1Appearance, {});
+      cancelDrag();
     });
   });
 
@@ -2036,10 +2128,9 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     it('should discard the in-flight gesture when the feature is disabled mid-drag', async () => {
       const view = await renderTimeline({ events: [eventA, eventB], dependencies: [] });
 
-      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
-      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(document.body, {
-        dataTransfer: new DataTransfer(),
+      const source = getTerminal('Event A')!;
+      startDrag(source, {});
+      moveDrag(document.body, {
         clientX: 120,
         clientY: 40,
       });
@@ -2057,8 +2148,8 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(document.querySelector('[data-dependency-drag-line]')).to.equal(null);
       expect(getTerminal('Event A')).to.equal(null);
 
-      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });
+      dropDrag(document.body, {});
+      cancelDrag();
     });
 
     it('should drop the selection and its arrows when the feature is disabled', async () => {
@@ -2154,19 +2245,19 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         onDependenciesChangeB: handleDependenciesChangeB,
       });
 
-      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const source = getTerminal('Event A')!;
       const target = getEventElement('Event B');
-      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+      startDrag(source, {});
+      moveDrag(target, {});
+      moveDrag(target, {});
 
       await waitFor(() => {
         expect(storeA.state.dependencyCreation).not.to.equal(null);
       });
       expect(storeB.state.dependencyCreation).to.equal(null);
 
-      fireEvent.drop(target, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+      dropDrag(target, {});
+      cancelDrag();
 
       await waitFor(() => {
         expect(storeA.state.dependencyCreation).to.equal(null);
@@ -2181,13 +2272,13 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         onDependenciesChangeB: handleDependenciesChangeB,
       });
 
-      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const source = getTerminal('Event A')!;
       const sameTimelineTarget = getEventElement('Event B');
       const otherTimelineTarget = getEventElement('Event C');
 
-      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnter(sameTimelineTarget, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(sameTimelineTarget, { dataTransfer: new DataTransfer() });
+      startDrag(source, {});
+      moveDrag(sameTimelineTarget, {});
+      moveDrag(sameTimelineTarget, {});
 
       // Hovering the same-timeline target proves the drag reached the highlight stage
       // before asserting that the other timeline's event never gets it.
@@ -2195,16 +2286,16 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         expect(sameTimelineTarget.hasAttribute('data-dependency-drop-target')).to.equal(true);
       });
 
-      fireEvent.dragEnter(otherTimelineTarget, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(otherTimelineTarget, { dataTransfer: new DataTransfer() });
+      moveDrag(otherTimelineTarget, {});
+      moveDrag(otherTimelineTarget, {});
 
       await waitFor(() => {
         expect(sameTimelineTarget.hasAttribute('data-dependency-drop-target')).to.equal(false);
       });
       expect(otherTimelineTarget.hasAttribute('data-dependency-drop-target')).to.equal(false);
 
-      fireEvent.drop(otherTimelineTarget, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+      dropDrag(otherTimelineTarget, {});
+      cancelDrag();
 
       await waitFor(() => {
         expect(storeA.state.dependencyCreation).to.equal(null);
@@ -2291,22 +2382,14 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         direction,
       });
 
-      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
-      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
-      fireEvent.dragOver(document.body, {
-        dataTransfer: new DataTransfer(),
-        clientX: 300,
-        clientY: 60,
-      });
+      startDrag(getTerminal('Event A')!, {});
+      // Over no event, so the line follows the cursor instead of snapping to a target.
+      await moveDragAndWait(document.body, { clientX: 300, clientY: 60 });
       await waitFor(() => {
         expect(store.state.dependencyCreation).not.to.equal(null);
       });
 
-      fireEvent.dragOver(document.body, {
-        dataTransfer: new DataTransfer(),
-        clientX: 320,
-        clientY: 80,
-      });
+      await moveDragAndWait(document.body, { clientX: 320, clientY: 80 });
 
       await waitFor(() => {
         const line = document.querySelector<SVGPathElement>('[data-dependency-drag-line]');
@@ -2315,8 +2398,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         expect(toClientPoint(line!, x, y).x).to.be.closeTo(320, 1);
       });
 
-      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
-      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+      dropDrag(document.body, {});
     });
 
     it('should open the dependency editor at the double-clicked point of the arrow', async () => {
