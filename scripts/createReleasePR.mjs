@@ -12,7 +12,8 @@
  *      - Start alpha prerelease (if no prerelease exists)
  *      - Increase alpha version or start beta (if alpha exists)
  *      - Increase beta version or go to major (if beta exists)
- * 4. Creating a new branch from upstream/master (for latest major) or upstream/vX.x (for older versions)
+ * 4. Creating a new branch from upstream/vX.x (if it exists and is selected) or upstream/master;
+ *    the previous release tag is read from the same branch
  * 5. Updating the root package.json with the new version
  * 6. Running the lerna version script to update all package versions
  * 7. Generating the changelog with actual package versions
