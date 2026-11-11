@@ -5,9 +5,11 @@ import {
   gridColumnLookupSelector,
   gridColumnVisibilityModelSelector,
 } from '@mui/x-data-grid-pro';
+import type { GridColumnsInitialState } from '@mui/x-data-grid-pro';
 import { unwrapPrivateAPI } from '@mui/x-data-grid-pro/internals';
 import type { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { GridHistoryEventHandler } from '../history/gridHistoryInterfaces';
+import { gridPivotActiveSelector } from '../pivoting/gridPivotingSelectors';
 import type {
   GridComputedColumnSnapshot,
   GridComputedColumnsInternalCache,
@@ -53,6 +55,38 @@ const clearHistoryEcho = (cache: GridComputedColumnsInternalCache) => {
 };
 
 /**
+ * Snapshots the computed columns of `from` that are not in `keptFields`, as they stand in
+ * the columns state exported when pivoting was activated, which deactivating it restores.
+ * A field of a data column was never a computed column.
+ */
+function captureColumnsBeforePivoting(
+  privateApi: GridPrivateApiPremium,
+  columnsState: GridColumnsInitialState,
+  from: GridComputedColumnsModel,
+  keptFields: Set<string>,
+): GridComputedColumnSnapshot[] {
+  const { orderedFields = [], dimensions = {}, columnVisibilityModel = {} } = columnsState;
+  const dataColumns = privateApi.caches.pivoting.nonPivotDataRef.current?.columns;
+
+  const snapshots: GridComputedColumnSnapshot[] = [];
+  for (const definition of from) {
+    const { field } = definition;
+    const index = orderedFields.indexOf(field);
+    if (keptFields.has(field) || index === -1 || dataColumns?.has(field)) {
+      continue;
+    }
+    snapshots.push({
+      field,
+      index,
+      // The exported dimensions only hold the columns the user resized.
+      width: dimensions[field]?.width,
+      visible: columnVisibilityModel[field] !== false,
+    });
+  }
+  return snapshots;
+}
+
+/**
  * Snapshots the computed columns of `from` that `to` does not define, as they stand in
  * the columns state now. Definitions the grid never injected (a field taken by a data
  * column, or an unavailable feature) have no column to capture.
@@ -63,6 +97,17 @@ function captureColumns(
   to: GridComputedColumnsModel,
 ): GridComputedColumnSnapshot[] {
   const keptFields = getFields(to);
+
+  // While pivoting is active, the columns state only holds the pivot columns: the computed
+  // columns are where they were before pivoting, and come back there once it is deactivated.
+  if (gridPivotActiveSelector(apiRef)) {
+    const privateApi = getPrivateApi(apiRef);
+    const columnsBeforePivoting = privateApi.caches.pivoting.exportedStateRef.current?.columns;
+    if (columnsBeforePivoting) {
+      return captureColumnsBeforePivoting(privateApi, columnsBeforePivoting, from, keptFields);
+    }
+  }
+
   const lookup = gridColumnLookupSelector(apiRef);
   const orderedFields = gridColumnFieldsSelector(apiRef);
   const visibilityModel = gridColumnVisibilityModelSelector(apiRef);
