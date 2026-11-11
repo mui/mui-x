@@ -448,6 +448,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
             gridClasses.filterFormOperatorInput,
             gridClasses.filterFormValueInput,
           ];
+
           for (const fieldClass of fieldClasses) {
             const field = rootRef.current?.querySelector<HTMLElement>(`.${fieldClass}`);
             if (!field) {
