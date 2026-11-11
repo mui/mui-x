@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen } from '@mui/internal-test-utils';
+import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { vi, describe, it, expect, beforeEach, onTestFinished } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { clearWarningsCache } from '@mui/x-internals/warning';
@@ -79,7 +79,7 @@ describe.skipIf(!isJSDOM)('<ChartsToolbarPremium />', () => {
     await user.click(screen.getByRole('button', { name: 'Export' }));
     await user.click(screen.getByRole('menuitem', { name: 'Export as Excel' }));
 
-    await vi.waitFor(() => expect(downloads).to.deep.equal(['sales.xlsx']));
+    await waitFor(() => expect(downloads).to.deep.equal(['sales.xlsx']));
   });
 
   it('hides the entry when disableToolbarButton is set', async () => {
