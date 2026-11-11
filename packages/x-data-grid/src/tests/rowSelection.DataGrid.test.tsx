@@ -1015,6 +1015,10 @@ describe('<DataGrid /> - Row selection', () => {
       onRowSelectionModelChange.mockClear();
       setProps({ rows: data.rows.filter((row) => row.id !== 1) });
       expect(onRowSelectionModelChange.mock.calls).to.have.length(0);
+
+      // The removed row lost its state. It comes back with the default state of the `exclude` model.
+      setProps({ rows: data.rows });
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
     });
 
     it('should keep the id of a filtered row in an `exclude` model', () => {
@@ -1032,6 +1036,28 @@ describe('<DataGrid /> - Row selection', () => {
       expect(onRowSelectionModelChange.mock.calls).to.have.length(0);
 
       setProps({ filterModel: { items: [] } });
+      expect(onRowSelectionModelChange.mock.calls).to.have.length(0);
+      expect(getSelectedRowIds()).to.deep.equal([0, 2, 3]);
+    });
+
+    it('should keep the id of a missing row in an `exclude` model with paginationMode="server"', () => {
+      const data = getBasicGridData(4, 2);
+      const onRowSelectionModelChange = vi.fn();
+
+      const { setProps } = render(
+        <TestDataGridSelection
+          columns={data.columns}
+          rows={data.rows}
+          paginationMode="server"
+          rowCount={4}
+          checkboxSelection
+          rowSelectionModel={excludeRowSelection([1])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      // The row can be on another page, so the grid keeps its id and emits no change event.
+      setProps({ rows: data.rows.filter((row) => row.id !== 1) });
       expect(onRowSelectionModelChange.mock.calls).to.have.length(0);
       expect(getSelectedRowIds()).to.deep.equal([0, 2, 3]);
     });

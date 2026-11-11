@@ -649,9 +649,10 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
         if (selectionManager.has(id)) {
           selectionManager.unselect(id);
           hasChanged = true;
-        } else if (hasAllRows && !rowsLookup[id]) {
+        } else if (hasAllRows && !rowTree[id]) {
           // The row was removed from the rows, so the `exclude` model drops its stale id.
           // Rows that are filtered out keep their id, so they stay deselected when they come back.
+          // Use the tree, because auto-generated group rows are never in the lookup.
           newSelectionModel.ids.delete(id);
           hasChanged = true;
         }
