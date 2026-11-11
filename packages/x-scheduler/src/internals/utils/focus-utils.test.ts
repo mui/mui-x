@@ -186,6 +186,19 @@ describe('captureFocusFallback / resolveFocusFallback', () => {
       expect(resolveConnectedFocusFallback(snapshot)).to.equal(document.getElementById('third'));
     });
 
+    it('should keep the surviving occurrences of the same event', () => {
+      mountAgenda([
+        { id: 'mon', eventId: 'daily', timestamp: 1 },
+        { id: 'tue', eventId: 'daily', timestamp: 2 },
+        { id: 'other', eventId: 'other-event', timestamp: 3 },
+      ]);
+
+      const snapshot = captureFocusFallback(document.getElementById('mon')!, 'daily', 1)!;
+      document.getElementById('mon')!.closest('li')!.remove();
+
+      expect(resolveConnectedFocusFallback(snapshot)).to.equal(document.getElementById('tue'));
+    });
+
     it('should return the owning cell inside a grid', () => {
       const event = mountEvent(
         '<div role="grid"><div role="gridcell" id="cell" tabindex="0"><div id="event" tabindex="0"></div></div></div>',

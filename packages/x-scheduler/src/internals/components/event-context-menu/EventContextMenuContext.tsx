@@ -2,12 +2,11 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
-import { isCoarsePointer } from '@mui/x-scheduler-internals/internals';
+import { isCoarsePointer, isEventOccurrence } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import {
   captureFocusFallback,
-  getOccurrenceTimestamp,
-  resolveConnectedFocusFallback,
+  resolveFocusFallback,
   useMoveFocusOutOnUnmount,
 } from '../../utils/focus-utils';
 import { useEventEditingTriggerProps } from '../event-editing';
@@ -61,11 +60,10 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
       options: OpenEventContextMenuOptions = {},
     ) => {
       // Read while the anchor is still mounted.
-      const snapshot = captureFocusFallback(
-        anchorEl,
-        occurrence.id,
-        getOccurrenceTimestamp(occurrence),
-      );
+      const occurrenceTimestamp = isEventOccurrence(occurrence)
+        ? occurrence.dataTimezone.start.timestamp
+        : 0;
+      const snapshot = captureFocusFallback(anchorEl, occurrence.id, occurrenceTimestamp);
       setState({
         open: true,
         occurrence,
@@ -76,7 +74,18 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
         // Other events can be removed in the same update, so only the ones still mounted are kept.
         getFocusFallback:
           options.getFocusFallback ??
-          (() => (snapshot ? resolveConnectedFocusFallback(snapshot) : null)),
+          (() =>
+            snapshot
+              ? resolveFocusFallback(
+                  {
+                    ...snapshot,
+                    candidates: snapshot.candidates.filter(
+                      (candidate) => candidate.element.isConnected,
+                    ),
+                  },
+                  null,
+                )
+              : null),
       });
     },
   );

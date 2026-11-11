@@ -174,6 +174,7 @@ describe('EventContextMenu - recurring events (Premium)', () => {
       const [events, setEvents] = React.useState(props.initialEvents);
       return (
         <EventCalendarPremium
+          features={{ recurringEvents: recurringEventsFeature }}
           events={events}
           onEventsChange={setEvents}
           resources={[]}

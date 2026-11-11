@@ -119,7 +119,11 @@ export function resolveFocusFallback(
     return true;
   };
 
-  const survivors = snapshot.candidates.filter((candidate) => !isAlsoRemoved(candidate));
+  return pickNearestCandidate(snapshot.candidates.filter((candidate) => !isAlsoRemoved(candidate)));
+}
+
+/** The next of `survivors` after the removed element, else the previous one. */
+function pickNearestCandidate(survivors: AgendaFallbackCandidate[]): HTMLElement | null {
   return (
     survivors.find((candidate) => candidate.isAfter)?.element ??
     survivors.filter((candidate) => !candidate.isAfter).pop()?.element ??
@@ -128,16 +132,16 @@ export function resolveFocusFallback(
 }
 
 /**
- * `resolveFocusFallback` for a removal with no scope to go by: only the rows still in the document
- * are candidates.
+ * `resolveFocusFallback` once the removal has already landed: the rows still in the document are
+ * exactly the ones that survived it, so every one of them is a candidate — including the other
+ * occurrences of the same event, unlike a scope-less `resolveFocusFallback`.
  */
 export function resolveConnectedFocusFallback(snapshot: FocusFallbackSnapshot): HTMLElement | null {
-  return resolveFocusFallback(
-    {
-      ...snapshot,
-      candidates: snapshot.candidates.filter((candidate) => candidate.element.isConnected),
-    },
-    null,
+  if (snapshot.owner != null) {
+    return snapshot.owner;
+  }
+  return pickNearestCandidate(
+    snapshot.candidates.filter((candidate) => candidate.element.isConnected),
   );
 }
 
