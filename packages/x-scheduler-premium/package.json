@@ -79,8 +79,8 @@
     "@mui/icons-material": "^7.3.0 || ^9.0.0",
     "@mui/material": "^7.3.0 || ^9.0.0",
     "@mui/system": "^7.3.0 || ^9.0.0",
-    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
   },
   "peerDependenciesMeta": {
     "@emotion/react": {
@@ -96,7 +96,6 @@
     "@mui/material": "catalog:",
     "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
-    "@types/use-sync-external-store": "catalog:",
     "date-fns": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

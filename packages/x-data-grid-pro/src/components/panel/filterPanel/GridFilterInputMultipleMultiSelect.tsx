@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useId from '@mui/utils/useId';
 import type { GridMultiSelectColDef } from '@mui/x-data-grid';
 import { useGridRootProps } from '@mui/x-data-grid';
 import { getValueOptions, isMultiSelectColDef } from '@mui/x-data-grid/internals';
@@ -29,8 +28,8 @@ function GridFilterInputMultipleMultiSelect(props: GridFilterInputMultipleMultiS
     ...other
   } = props;
 
-  const id = useId();
-  const labelId = useId();
+  const id = React.useId();
+  const labelId = React.useId();
   const rootProps = useGridRootProps();
 
   const resolvedColumn = apiRef.current.getColumn(item.field) as GridMultiSelectColDef | undefined;

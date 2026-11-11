@@ -6,7 +6,6 @@ import { errorOnce } from '@mui/x-internals/warning';
 import { styled, useThemeProps } from '@mui/material/styles';
 import type { SxProps, Theme } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
-import useId from '@mui/utils/useId';
 import { useUtilityClasses } from '../ChartsSurface/chartsSurfaceClasses';
 import {
   selectorChartPropsHeight,
@@ -81,7 +80,7 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
 
     const chartsLayerContainerRef = useChartsLayerContainerRef();
     const handleRef = useForkRef(chartsLayerContainerRef, ref);
-    const descId = useId();
+    const descId = React.useId();
 
     if (process.env.NODE_ENV !== 'production') {
       React.Children.forEach(children, (child) => {

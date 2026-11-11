@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import useId from '@mui/utils/useId';
 import { Scatter } from './Scatter';
 import type { ScatterProps, ScatterSlotProps, ScatterSlots } from './Scatter';
 import { useScatterSeriesContext } from '../hooks/useScatterSeries';
@@ -99,12 +98,11 @@ function ScatterPlot(props: ScatterPlotProps) {
 
   const { instance } = useChartsContext<[UseProgressiveRenderingSignature]>();
   const store = useStore<[UseProgressiveRenderingSignature]>();
-  const plotId = useId();
+  const plotId = React.useId();
   const seriesIds = seriesData?.seriesOrder ?? EMPTY_SERIES_IDS;
   const isProgressive = store.use(selectorShouldUseProgressiveRenderer, seriesIds, renderer);
   React.useEffect(
-    // `plotId` is `undefined` on the first render in React 17.
-    () => (plotId ? instance.registerProgressivePlan(plotId, seriesIds, renderer) : undefined),
+    () => instance.registerProgressivePlan(plotId, seriesIds, renderer),
     [instance, plotId, seriesIds, renderer],
   );
 

@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { useId } from '@base-ui/utils/useId';
 import { EventCalendarProvider as UnstyledEventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import type { EventCalendarLocaleText } from '../../models/translations';
 import type { SchedulerSlotsAndSlotProps } from '../../models/slots';
@@ -51,7 +50,7 @@ export function EventCalendarProvider<TEvent extends object, TResource extends o
   props: EventCalendarProviderProps<TEvent, TResource>,
 ) {
   const { children, localeText, slots, slotProps, ...other } = props;
-  const schedulerId = useId();
+  const schedulerId = React.useId();
 
   const mergedLocaleText = React.useMemo(
     () => ({ ...EVENT_CALENDAR_DEFAULT_LOCALE_TEXT, ...localeText }),

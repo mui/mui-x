@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import useId from '@mui/utils/useId';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   GridMenu,
@@ -201,8 +200,8 @@ function GridComputedColumnsPanelListItemMenu(props: GridComputedColumnsPanelLis
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const [open, setOpen] = React.useState(false);
-  const menuId = useId();
-  const triggerId = useId();
+  const menuId = React.useId();
+  const triggerId = React.useId();
   const triggerRef = React.useRef<HTMLButtonElement>(null);
 
   const handleClose = () => {

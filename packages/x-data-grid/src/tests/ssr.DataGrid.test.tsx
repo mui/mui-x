@@ -1,7 +1,8 @@
 import * as React from 'react';
+import * as ReactDOMClient from 'react-dom/client';
 import * as ReactDOMServer from 'react-dom/server';
 import { describe, it, expect } from 'vitest';
-import { act, reactMajor } from '@mui/internal-test-utils';
+import { act } from '@mui/internal-test-utils';
 import { DataGrid, useGridApiContext, useGridSelector } from '@mui/x-data-grid';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -20,12 +21,8 @@ const hasHydrationError = (errors: string[]) =>
   errors.some((error) => /hydration|did not match/i.test(error));
 
 describe('<DataGrid /> - SSR', () => {
-  // `react-dom/client` only exists in React 18+, so it is imported dynamically inside the test
-  // to avoid breaking module resolution on the React 17 lane.
-  it.skipIf(reactMajor < 18)('should not report hydration errors', async () => {
+  it('should not report hydration errors', async () => {
     async function hydrateWithoutConsoleErrors(tree: React.ReactElement) {
-      const ReactDOMClient = await import('react-dom/client');
-
       const container = document.createElement('div');
       document.body.appendChild(container);
       container.innerHTML = ReactDOMServer.renderToString(tree);
@@ -73,12 +70,9 @@ describe('<DataGrid /> - SSR', () => {
   // while selector subscribers registered during render are not committed yet. The suspended
   // footer below mimics that timing: it subscribes with `useGridSelector`, suspends before
   // mount, and then triggers a grid state update while React still considers the fiber unmounted.
-  // `react-dom/client` only exists in React 18+, so it is imported dynamically inside the test
-  // to avoid breaking module resolution on the React 17 lane.
-  it.skipIf(isJSDOM || reactMajor < 18)(
+  it.skipIf(isJSDOM)(
     'should not notify grid selector subscribers before they have mounted',
     async () => {
-      const ReactDOMClient = await import('react-dom/client');
       let shouldSuspend = false;
       let didSuspend = false;
       let promise: Promise<void> | null = null;

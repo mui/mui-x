@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import useForkRef from '@mui/utils/useForkRef';
 import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
@@ -31,8 +30,8 @@ const GridToolbarColumnsButton = forwardRef<HTMLButtonElement, GridToolbarColumn
     const { slotProps = {} } = props;
     const buttonProps = slotProps.button || {};
     const tooltipProps = slotProps.tooltip || {};
-    const columnButtonId = useId();
-    const columnPanelId = useId();
+    const columnButtonId = React.useId();
+    const columnPanelId = React.useId();
 
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();

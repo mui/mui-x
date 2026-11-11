@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useId from '@mui/utils/useId';
 import type { TextFieldProps } from '../../../models/gridBaseSlots';
 import type { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 import type { GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
@@ -77,8 +76,8 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     ...other
   } = props;
   const filterValue = item.value ?? '';
-  const id = useId();
-  const labelId = useId();
+  const id = React.useId();
+  const labelId = React.useId();
   const rootProps = useGridRootProps();
 
   const isSelectNative = rootProps.slotProps?.baseSelect?.native ?? false;

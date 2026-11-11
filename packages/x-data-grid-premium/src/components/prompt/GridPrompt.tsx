@@ -12,7 +12,6 @@ import capitalize from '@mui/utils/capitalize';
 
 import { keyframes, styled } from '@mui/system';
 import { getValueOptions, isSingleSelectColDef, vars } from '@mui/x-data-grid-pro/internals';
-import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import type {
@@ -211,7 +210,7 @@ function GridPrompt(props: GridPromptProps) {
   const classes = useUtilityClasses(ownerState);
   const apiRef = useGridApiContext();
   const columns = useGridSelector(apiRef, gridColumnLookupSelector);
-  const changesListId = useId();
+  const changesListId = React.useId();
 
   const getColumnName = React.useCallback(
     (column: string) => columns[column]?.headerName ?? column,

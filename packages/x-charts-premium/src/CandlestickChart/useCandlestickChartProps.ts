@@ -1,5 +1,4 @@
 import * as React from 'react';
-import useId from '@mui/utils/useId';
 import type { ChartsGridProps } from '@mui/x-charts/ChartsGrid';
 import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import type { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
@@ -42,7 +41,7 @@ export function useCandlestickChartProps(props: CandlestickChartProps) {
     ...other
   } = props;
 
-  const id = useId();
+  const id = React.useId();
   const clipPathId = `${id}-clip-path`;
 
   const xAxisWithDefault: XAxis[] | undefined = React.useMemo(

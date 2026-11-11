@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import useId from '@mui/utils/useId';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 import { useRtl } from '@mui/system/RtlProvider';
@@ -140,7 +139,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
 
   const label = headerName ?? groupId;
 
-  const id = useId();
+  const id = React.useId();
   const elementId = groupId === null ? `empty-group-cell-${id}` : groupId;
   const classes = useUtilityClasses(ownerState);
 

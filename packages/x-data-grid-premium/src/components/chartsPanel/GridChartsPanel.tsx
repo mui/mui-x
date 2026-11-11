@@ -2,7 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import useId from '@mui/utils/useId';
 import type { GridChartsConfigurationOptions } from '@mui/x-internals/types';
 import { useGridSelector, vars } from '@mui/x-data-grid-pro/internals';
 import { GridMenu, GridOverlay } from '@mui/x-data-grid-pro';
@@ -84,8 +83,8 @@ function GridChartsPanelChartSelector(props: {
   const { activeChartId, chartEntries } = props;
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const [open, setOpen] = React.useState(false);
-  const menuId = useId();
-  const triggerId = useId();
+  const menuId = React.useId();
+  const triggerId = React.useId();
   const activeChart = chartEntries.find(([chartId]) => chartId === activeChartId);
 
   return (

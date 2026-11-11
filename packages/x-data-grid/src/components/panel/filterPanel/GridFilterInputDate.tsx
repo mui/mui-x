@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useId from '@mui/utils/useId';
 import { useTimeout } from '../../../hooks/utils/useTimeout';
 import type { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
@@ -58,7 +57,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
     convertFilterItemValueToInputValue(item.value, type),
   );
   const [applying, setIsApplying] = React.useState(false);
-  const id = useId();
+  const id = React.useId();
   const rootProps = useGridRootProps();
   const debounceMs = disableDebounce ? 0 : rootProps.filterDebounceMs;
 

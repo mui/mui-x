@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { vars } from '@mui/x-data-grid-pro/internals';
-import useId from '@mui/utils/useId';
 import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
@@ -39,7 +38,7 @@ const CollapsibleRoot = styled('div', {
 function Collapsible(props: CollapsibleProps) {
   const { className, children, initiallyOpen = true, ...other } = props;
   const [open, setOpen] = React.useState(initiallyOpen);
-  const panelId = useId();
+  const panelId = React.useId();
   const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes, open };
   const classes = useUtilityClasses(ownerState);

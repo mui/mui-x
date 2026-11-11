@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import useId from '@mui/utils/useId';
 import type { ChartsClipPathProps } from '../ChartsClipPath';
 import type { ChartsRadialGridProps } from '../ChartsRadialGrid';
 import type { ChartsRadialAxisHighlightProps } from '../ChartsRadialAxisHighlight';
@@ -44,7 +43,7 @@ export const useRadialLineChartProps = (props: RadialLineChartProps) => {
     ...other
   } = props;
 
-  const id = useId();
+  const id = React.useId();
   const clipPathId = `${id}-clip-path`;
 
   const seriesWithDefault = React.useMemo(

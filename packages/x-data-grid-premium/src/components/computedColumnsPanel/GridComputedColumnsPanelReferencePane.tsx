@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import useId from '@mui/utils/useId';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   getDataGridUtilityClass,
@@ -176,7 +175,7 @@ function GridComputedColumnsPanelReferencePane(props: GridComputedColumnsPanelRe
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
-  const id = useId();
+  const id = React.useId();
   const [query, setQuery] = React.useState('');
 
   const referenceableFields = useGridSelector(apiRef, gridFormulaReferenceableFieldsSelector);

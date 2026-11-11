@@ -2,7 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import refType from '@mui/utils/refType';
-import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import type { TextFieldProps } from '../../../models/gridBaseSlots';
 import type { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
@@ -28,8 +27,8 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   );
   const rootProps = useGridRootProps();
 
-  const labelId = useId();
-  const selectId = useId();
+  const labelId = React.useId();
+  const selectId = React.useId();
 
   const baseSelectProps = rootProps.slotProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? false;
