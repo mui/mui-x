@@ -1875,6 +1875,37 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     });
   });
 
+  describe('unwritable date', () => {
+    // Outside the test: the store compares `eventModelStructure` by reference.
+    const getterOnlyStart = { start: { getter: (event: any) => event.start } };
+
+    it('should reject the drop when the target would need a date that cannot be written back, and surface an error', async () => {
+      const handleDependenciesChange = vi.fn();
+      const overlappingEvent = EventBuilder.new()
+        .id('event-o')
+        .title('Overlapping event')
+        .singleDay('2025-07-03T09:30:00Z')
+        .resource(resource1)
+        .build();
+      const { store } = await renderTimeline({
+        events: [eventA, overlappingEvent],
+        dependencies: [],
+        eventModelStructure: getterOnlyStart,
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      expect(() => simulateTerminalDrag('Event A', getEventElement('Overlapping event'))).toWarnDev(
+        [
+          'MUI X Scheduler: A change was not applied because keeping a dependency would move an event whose date could not be written back.',
+        ],
+      );
+
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
+      expect(store.state.errors).to.have.length(1);
+      expect(store.state.errors[0].code).to.equal('dependencyDatesNotWritableError');
+    });
+  });
+
   describe('multi-resource events', () => {
     // Both appearances share the occurrence key (it derives from the event id): only
     // the resource distinguishes them.

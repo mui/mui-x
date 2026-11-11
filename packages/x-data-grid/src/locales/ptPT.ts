@@ -252,6 +252,9 @@ const ptPTGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'sim',
   booleanCellFalseLabel: 'não',
 
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
+
   // Long text cell
   longTextCellExpandLabel: 'Expandir',
   longTextCellCollapseLabel: 'Colapsar',

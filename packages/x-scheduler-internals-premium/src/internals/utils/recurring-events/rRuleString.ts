@@ -189,18 +189,12 @@ export function parseRRule(
   timezone: TemporalTimezone,
 ): SchedulerProcessedEventRecurrenceRule {
   const rule =
-    typeof input === 'object'
-      ? readRuleObject(adapter, input, timezone)
-      : readRuleString(adapter, input, timezone);
+    typeof input === 'object' ? readRuleObject(adapter, input, timezone) : readRuleString(input);
   validateRule(rule);
   return rule;
 }
 
-function readRuleString(
-  adapter: Adapter,
-  input: string,
-  timezone: TemporalTimezone,
-): SchedulerProcessedEventRecurrenceRule {
+function readRuleString(input: string): SchedulerProcessedEventRecurrenceRule {
   const rruleObject: Record<string, string> = {};
   const parts = input
     .split(';')
@@ -300,7 +294,7 @@ function readRuleString(
       );
     }
 
-    rrule.until = createAdapterDate(adapter, parsed, timezone);
+    rrule.until = createAdapterDate(parsed);
   }
 
   return rrule;

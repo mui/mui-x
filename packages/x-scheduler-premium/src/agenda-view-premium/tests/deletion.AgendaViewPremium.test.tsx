@@ -6,6 +6,7 @@ import {
   EventBuilder,
 } from 'test/utils/scheduler';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { describe, it, expect } from 'vitest';
 
@@ -52,6 +53,7 @@ describe('<EventCalendarPremium /> - Agenda view event deletion (Data Source)', 
 
     await renderSettled(
       <EventCalendarPremium
+        features={{ recurringEvents: recurringEventsFeature }}
         dataSource={dataSource}
         defaultView="agenda"
         defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
@@ -110,6 +112,7 @@ describe('<EventCalendarPremium /> - Agenda view event deletion (Data Source)', 
 
     await renderSettled(
       <EventCalendarPremium
+        features={{ recurringEvents: recurringEventsFeature }}
         dataSource={dataSource}
         defaultView="agenda"
         defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
@@ -147,6 +150,7 @@ describe('<EventCalendarPremium /> - Agenda view recurring event deletion (focus
       const [currentEvents, setCurrentEvents] = React.useState<SchedulerEvent[]>(events);
       return (
         <EventCalendarPremium
+          features={{ recurringEvents: recurringEventsFeature }}
           events={currentEvents}
           onEventsChange={setCurrentEvents}
           defaultView="agenda"

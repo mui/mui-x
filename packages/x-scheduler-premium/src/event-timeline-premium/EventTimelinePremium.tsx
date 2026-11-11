@@ -254,8 +254,8 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
   /**
    * The locale of the dates, as a BCP 47 language tag such as `"fr-FR"`, like the locales of
    * `Intl.DateTimeFormat`.
-   * This affects day names, month names, the first day of the week, week numbers, the 12-hour
-   * or 24-hour clock and the other locale-dependent formatting.
+   * This affects day names, month names, the first day of the week, the days of the weekend,
+   * week numbers, the 12-hour or 24-hour clock and the other locale-dependent formatting.
    * @default "en-US"
    */
   dateLocale: PropTypes.string,
@@ -298,6 +298,23 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    * @default {} - all resources are visible
    */
   defaultVisibleResources: PropTypes.object,
+  /**
+   * The dependencies between events.
+   * Requires `dependenciesFeature` from `@mui/x-scheduler-premium/dependencies`.
+   * With it, any value, even an empty array, enables the dependencies.
+   * Pass `onDependenciesChange` to keep the changes users make.
+   */
+  dependencies: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      lag: PropTypes.number,
+      lagUnit: PropTypes.oneOf(['day', 'hour', 'minute', 'week']),
+      source: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      target: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.oneOf(['FinishToFinish', 'FinishToStart', 'StartToFinish', 'StartToStart'])
+        .isRequired,
+    }),
+  ),
   /**
    * The timezone used to display events in the scheduler.
    *
@@ -374,28 +391,12 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    */
   events: PropTypes.arrayOf(PropTypes.object),
   /**
-   * The optional features of the Event Timeline.
+   * The optional features of the Event Timeline: `recurringEvents` from `@mui/x-scheduler-premium/recurring-events`
+   * and `dependencies` from `@mui/x-scheduler-premium/dependencies`.
    * They are read once when the component mounts, later changes are ignored.
-   * @example { recurringEvents: recurringEventsFeature }
+   * @example { recurringEvents: recurringEventsFeature, dependencies: dependenciesFeature }
    */
-  features: PropTypes.shape({
-    recurringEvents: PropTypes.shape({
-      optionalRenderers: PropTypes.shape({
-        recurrenceTab: PropTypes.elementType,
-        recurringScopeDialog: PropTypes.elementType,
-      }).isRequired,
-      store: PropTypes.shape({
-        applyDataTimezoneToEventUpdate: PropTypes.func.isRequired,
-        computePresets: PropTypes.func.isRequired,
-        deleteRecurringEvent: PropTypes.func.isRequired,
-        getDefaultPresetKey: PropTypes.func.isRequired,
-        getOccurrencesForVisibleDays: PropTypes.func.isRequired,
-        isSameRRule: PropTypes.func.isRequired,
-        parseRRule: PropTypes.func.isRequired,
-        updateRecurringEvent: PropTypes.func.isRequired,
-      }).isRequired,
-    }),
-  }),
+  features: PropTypes.object,
   /**
    * Returns the accessible name of an event block.
    * Use it to announce details rendered through the `timelineEventContent` slot.
@@ -413,6 +414,10 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    * Event handler called when the collapsed resources change.
    */
   onCollapsedResourcesChange: PropTypes.func,
+  /**
+   * Event handler called when the dependencies change.
+   */
+  onDependenciesChange: PropTypes.func,
   /**
    * Event handler called right before the built-in event dialog (or its mobile drawer variant) opens,
    * regardless of what triggered it (pointer, keyboard, the armed toolbar's Edit action or event creation).

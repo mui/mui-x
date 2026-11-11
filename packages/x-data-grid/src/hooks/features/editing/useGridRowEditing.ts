@@ -7,7 +7,7 @@ import { errorOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { useGridEvent, useGridEventPriority } from '../../utils/useGridEvent';
 import type { GridEventListener } from '../../../models/events/gridEventListener';
-import { GridEditModes, GridRowModes } from '../../../models/gridEditRowModel';
+import { GridEditModes, GridRowModes, GridCellModes } from '../../../models/gridEditRowModel';
 import type {
   GridEditingState,
   GridEditCellProps,
@@ -29,7 +29,8 @@ import type {
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector, gridRowIsEditingSelector } from './gridEditingSelectors';
 import type { GridRowId, GridValidRowModel } from '../../../models/gridRows';
-import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
+import { isPrintableKey, isPasteShortcut, isImeKeyDown } from '../../../utils/keyboardUtils';
+import { isEventFromPreMountedEditor } from '../../../utils/cellEditor';
 import {
   gridColumnDefinitionsSelector,
   gridVisibleColumnFieldsSelector,
@@ -196,9 +197,8 @@ export const useGridRowEditing = (
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       if (params.cellMode === GridRowModes.Edit) {
-        // Wait until IME is settled for Asian languages like Japanese and Chinese
-        // TODO: to replace at one point. See https://github.com/mui/material-ui/pull/39713#discussion_r1381678957.
-        if (event.which === 229) {
+        // Wait until the IME composition ends.
+        if (isImeKeyDown(event)) {
           return;
         }
 
@@ -249,6 +249,11 @@ export const useGridRowEditing = (
           apiRef.current.publishEvent('rowEditStop', newParams, event);
         }
       } else if (params.isEditable) {
+        // The composition starts edit mode instead, see `handleCellCompositionStart`.
+        if (isEventFromPreMountedEditor(event) && isImeKeyDown(event)) {
+          return;
+        }
+
         let reason: GridRowEditStartReasons | undefined;
 
         const canStartEditing = apiRef.current.unstable_applyPipeProcessors(
@@ -286,6 +291,25 @@ export const useGridRowEditing = (
     [apiRef, hasFieldsWithErrors],
   );
 
+  const handleCellCompositionStart = React.useCallback<GridEventListener<'cellCompositionStart'>>(
+    (params, event) => {
+      if (params.cellMode !== GridCellModes.View || !params.isEditable) {
+        return;
+      }
+      if (apiRef.current.getRowMode(params.id) !== GridRowModes.View) {
+        return;
+      }
+      const rowParams = apiRef.current.getRowParams(params.id);
+      const newParams: GridRowEditStartParams = {
+        ...rowParams,
+        field: params.field,
+        reason: GridRowEditStartReasons.compositionStart,
+      };
+      apiRef.current.publishEvent('rowEditStart', newParams, event);
+    },
+    [apiRef],
+  );
+
   const handleRowEditStart = React.useCallback<GridEventListener<'rowEditStart'>>(
     (params) => {
       const { id, field, reason } = params;
@@ -294,7 +318,8 @@ export const useGridRowEditing = (
 
       if (
         reason === GridRowEditStartReasons.printableKeyDown ||
-        reason === GridRowEditStartReasons.deleteKeyDown
+        reason === GridRowEditStartReasons.deleteKeyDown ||
+        reason === GridRowEditStartReasons.compositionStart
       ) {
         startRowEditModeParams.deleteValue = !!field;
       }
@@ -330,6 +355,7 @@ export const useGridRowEditing = (
   useGridEvent(apiRef, 'cellFocusIn', runIfEditModeIsRow(handleCellFocusIn));
   useGridEvent(apiRef, 'cellFocusOut', runIfEditModeIsRow(handleCellFocusOut));
   useGridEvent(apiRef, 'cellKeyDown', runIfEditModeIsRow(handleCellKeyDown));
+  useGridEvent(apiRef, 'cellCompositionStart', runIfEditModeIsRow(handleCellCompositionStart));
 
   useGridEvent(apiRef, 'rowEditStart', runIfEditModeIsRow(handleRowEditStart));
   useGridEvent(apiRef, 'rowEditStop', runIfEditModeIsRow(handleRowEditStop));

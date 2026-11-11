@@ -3,11 +3,14 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { calendarEvents, calendarResources, calendarDefaultVisibleDate } from './data';
 import type { CustomThemeName } from './DemoThemeSelector';
 import { DemoThemeSelector, SchedulerDemoThemeProvider } from './DemoThemeSelector';
 import LicenseCard from '../LicenseCard';
+
+const features = { recurringEvents: recurringEventsFeature };
 
 export default function CalendarDemo() {
   const [selectedTheme, setSelectedTheme] = React.useState<CustomThemeName>('default');
@@ -38,6 +41,7 @@ export default function CalendarDemo() {
         >
           <Box sx={{ minHeight: 0, flexGrow: 1 }}>
             <EventCalendarPremium
+              features={features}
               events={calendarEventsState}
               onEventsChange={setCalendarEventsState}
               resources={calendarResources}
@@ -59,7 +63,7 @@ export default function CalendarDemo() {
         <LicenseCard
           plan="premium"
           title="Premium features"
-          description="Adds recurring events, exception dates, DST-aware recurrence, and lazy loading through data sources. Same API as Community, so upgrading is a one-line change."
+          description="Adds recurring events, exception dates, DST-aware recurrence, and lazy loading through data sources. Same API as Community: swap the import to upgrade, then opt in to recurring events."
         />
       </Stack>
     </Stack>

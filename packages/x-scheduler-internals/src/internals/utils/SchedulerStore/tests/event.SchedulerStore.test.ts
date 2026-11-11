@@ -20,7 +20,7 @@ const TEST_RESOURCES = [ResourceBuilder.new().build()];
 
 const otherAdapter = new TemporalAdapterDateFns();
 
-// Pins the reason text `datesNotWritableReason` in `SchedulerStore.ts` builds (not exported):
+// Pins the reason text `datesNotWritableReason` in `SchedulerStore.utils.ts` builds:
 // `toWarnDev` matches by `includes`, so an assertion naming only the first line of a warning
 // never pins this text. Written out as literals, not by calling an equivalent helper here — a
 // helper that rebuilt the same string the same way would mirror a bug in the pronoun or
@@ -135,8 +135,16 @@ storeClasses.forEach((storeClass) => {
           id: '1',
           title: 'Event 1',
           displayTimezone: {
-            start: processDate(adapter.date('2025-07-01T09:00:00.000Z', 'default'), adapter),
-            end: processDate(adapter.date('2025-07-01T10:00:00.000Z', 'default'), adapter),
+            start: processDate(
+              adapter.date('2025-07-01T09:00:00.000Z', 'default'),
+              adapter,
+              'default',
+            ),
+            end: processDate(
+              adapter.date('2025-07-01T10:00:00.000Z', 'default'),
+              adapter,
+              'default',
+            ),
             timezone: 'default',
             exDates: undefined,
           },
@@ -990,7 +998,7 @@ storeClasses.forEach((storeClass) => {
               adapter,
             );
           }).toWarnDev([
-            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+            'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
           ]);
 
           expect(() => {
@@ -1012,7 +1020,7 @@ storeClasses.forEach((storeClass) => {
               adapter,
             );
           }).toWarnDev([
-            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+            'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
           ]);
 
           store.updateEvent({ id: event.id, title: 'updated', rrule: { freq: 'WEEKLY' } });
@@ -1140,7 +1148,7 @@ storeClasses.forEach((storeClass) => {
               adapter,
             );
           }).toWarnDev([
-            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+            'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
           ]);
 
           // The rule is ignored without the plugin, so there is no scope to ask for.
@@ -1165,7 +1173,7 @@ storeClasses.forEach((storeClass) => {
               adapter,
             );
           }).toWarnDev([
-            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+            'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
           ]);
 
           // No plugin to open a scope dialog with, so this goes through the confirmation dialog

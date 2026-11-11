@@ -36,6 +36,7 @@ export type SchedulerUserFacingErrorCode =
   | 'datesNotWritableError'
   | 'eventNotCreatableError'
   | 'dependencyCascadeBlockedError'
+  | 'dependencyDatesNotWritableError'
   | 'dependencyCycleError'
   | 'dependencyDuplicateError'
   | 'dependencyRecurringEventError'
@@ -47,7 +48,7 @@ export type SchedulerUserFacingErrorCode =
  */
 export type SchedulerUserFacingErrorDescriptor =
   | { code: SchedulerUserFacingErrorCode; params?: undefined }
-  | { code: 'readOnlyEventMovedError'; params: { title: string } };
+  | { code: 'readOnlyEventMovedError' | 'unwritableEventMovedError'; params: { title: string } };
 
 export type UserFacingError = SchedulerUserFacingErrorDescriptor & {
   /**
@@ -454,8 +455,8 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   /**
    * The locale of the dates, as a BCP 47 language tag such as `"fr-FR"`, like the locales of
    * `Intl.DateTimeFormat`.
-   * This affects day names, month names, the first day of the week, week numbers, the 12-hour
-   * or 24-hour clock and the other locale-dependent formatting.
+   * This affects day names, month names, the first day of the week, the days of the weekend,
+   * week numbers, the 12-hour or 24-hour clock and the other locale-dependent formatting.
    * @default "en-US"
    */
   dateLocale?: string;

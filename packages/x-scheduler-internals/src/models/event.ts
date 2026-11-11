@@ -28,8 +28,7 @@ interface SchedulerProcessedEventBase {
   title: string;
 
   /**
-   * Values prepared for rendering and user interaction.
-   * Always expressed in the display timezone.
+   * Values prepared for rendering and user interaction, read in the display timezone.
    */
   displayTimezone: {
     /**
@@ -47,8 +46,7 @@ interface SchedulerProcessedEventBase {
      * */
     timezone: TemporalTimezone;
     /**
-     * Exception dates projected to the display timezone for UI purposes.
-     * Must be converted back to the dataTimezone representation when persisted.
+     * The instants of the exception dates, the same as in `dataTimezone`.
      */
     exDates?: TemporalSupportedObject[];
   };
@@ -396,7 +394,8 @@ export type SchedulerOccurrencePlaceholder =
 
 export interface SchedulerProcessedDate {
   /**
-   * The date object.
+   * The instant of the date. Read its date and time in the timezone of the processed date through
+   * `key`, `minutesInDay` and `timestamp`.
    */
   value: TemporalSupportedObject;
   /**

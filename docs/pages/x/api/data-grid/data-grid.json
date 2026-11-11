@@ -76,7 +76,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ virtualizerLayoutMode?: 'controlled'<br>&#124;&nbsp;'uncontrolled', warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ imeFastEdit?: bool, virtualizerLayoutMode?: 'controlled'<br>&#124;&nbsp;'uncontrolled', warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
@@ -2085,6 +2085,12 @@
       "key": "pivotPanelField",
       "className": "MuiDataGrid-pivotPanelField",
       "description": "Styles applied to the pivot panel field.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelField--dragging",
+      "className": "MuiDataGrid-pivotPanelField--dragging",
+      "description": "Styles applied to the drag preview of a pivot panel field when it's dragged with touch or pen.",
       "isGlobal": false
     },
     {

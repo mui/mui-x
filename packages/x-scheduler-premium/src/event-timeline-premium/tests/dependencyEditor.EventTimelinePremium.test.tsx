@@ -55,6 +55,11 @@ const laterEvent = EventBuilder.new()
   .resource(resource2)
   .build();
 
+// Module scope: the store compares `eventModelStructure` by reference.
+const getterOnlyStart = { start: { getter: (event: any) => event.start } };
+const UNWRITABLE_CASCADE_WARNING =
+  'MUI X Scheduler: A change was not applied because keeping a dependency would move an event whose date could not be written back.';
+
 function getHitArea(dependencyId: string) {
   return document.querySelector(`[data-dependency-hit="${dependencyId}"]`)!;
 }
@@ -512,6 +517,55 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       chooseLagUnit(dialog, 'minutes');
 
       expect(getLagInput(dialog)).not.to.have.attribute('aria-describedby');
+    });
+
+    // Changing `dep-1` to Finish to start, or adding a lag, would push the start of `event-o`,
+    // which isn't read-only but whose start `eventModelStructure` can't write back.
+    function renderUnwritableCascade(
+      onDependenciesChange?: (value: SchedulerDependency[]) => void,
+    ) {
+      return renderTimeline({
+        events: [eventA, overlappingEvent],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-o', 'StartToStart')],
+        eventModelStructure: getterOnlyStart,
+        onDependenciesChange,
+      });
+    }
+
+    it('should show the rejection on the type when the new type would move an event whose dates cannot be written back', async () => {
+      const handleDependenciesChange = vi.fn();
+      const { store } = await renderUnwritableCascade(handleDependenciesChange);
+      const targetStart = getStartTimestamp(store, 'event-o');
+
+      const dialog = openDialog('dep-1');
+      chooseType(dialog, 'Finish to start');
+      await expect(() => save(dialog)).toWarnDev([UNWRITABLE_CASCADE_WARNING]);
+
+      const typeSelect = within(dialog).getByRole('combobox', { name: 'Type' });
+      expect(typeSelect).toHaveAccessibleDescription(
+        "This change would move an event whose dates can't be changed, so it was not applied.",
+      );
+      expect(document.activeElement).to.equal(typeSelect);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
+      expect(getStartTimestamp(store, 'event-o')).to.equal(targetStart);
+    });
+
+    it('should show the rejection on the lag when the new lag would move an event whose dates cannot be written back', async () => {
+      await renderUnwritableCascade();
+
+      // A 1-hour Start to start lag pushes `event-o` to 10:00.
+      const dialog = openDialog('dep-1');
+      fireEvent.change(getLagInput(dialog), { target: { value: '1' } });
+      chooseLagUnit(dialog, 'hours');
+      await expect(() => save(dialog)).toWarnDev([UNWRITABLE_CASCADE_WARNING]);
+
+      expect(getLagInput(dialog)).toHaveAccessibleDescription(
+        "This change would move an event whose dates can't be changed, so it was not applied.",
+      );
+      expect(within(dialog).getByRole('combobox', { name: 'Type' })).not.to.have.attribute(
+        'aria-describedby',
+      );
+      expect(document.activeElement).to.equal(getLagInput(dialog));
     });
 
     it('should emit nothing when closed, and show the original values when reopened', async () => {

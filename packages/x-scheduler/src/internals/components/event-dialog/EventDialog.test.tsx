@@ -168,14 +168,12 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       const onEventsChange = vi.fn();
       const event: SchedulerEvent = builder.withDisplayTimezone(displayTimezone).build();
       const occurrence = builder.toOccurrence();
-      const rawStart = adapter.setTimezone(occurrence.dataTimezone.start.value, displayTimezone);
-      const rawEnd = adapter.setTimezone(occurrence.dataTimezone.end.value, displayTimezone);
       const snapshot = {
         ...occurrence,
         displayTimezone: {
           ...occurrence.displayTimezone,
-          start: processDate(rawStart, adapter),
-          end: processDate(rawEnd, adapter),
+          start: processDate(occurrence.dataTimezone.start.value, adapter, displayTimezone),
+          end: processDate(occurrence.dataTimezone.end.value, adapter, displayTimezone),
         },
       };
 
@@ -755,7 +753,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         </EventCalendarProvider>,
       );
     }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+      'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
     ]);
 
     expect(screen.queryByText(/repeats/i)).to.equal(null);
@@ -791,7 +789,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         </EventCalendarProvider>,
       ));
     }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+      'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
     ]);
 
     await user.type(screen.getByRole('textbox', { name: /event title/i }), ' (renamed)');
@@ -825,7 +823,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         </EventCalendarProvider>,
       );
     }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+      'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
     ]);
   });
 
@@ -846,7 +844,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         </EventCalendarProvider>,
       );
     }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+      'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
     ]);
   });
 
@@ -882,7 +880,9 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
           />
         </EventCalendarProvider>,
       );
-    }).toWarnDev(['MUI X Scheduler: Recurring event updates are a premium feature.']);
+    }).toWarnDev([
+      'MUI X Scheduler: Recurring events are not enabled. The recurring event update will be ignored.',
+    ]);
   });
 
   describe('read-only date and time', () => {
@@ -1152,10 +1152,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(onRender.mock.calls.length).to.equal(rendersBefore);
 
       expect(
-        adapter.formatByString(
-          createAdapterDate(adapter, getPlaceholder().start, 'default'),
-          'yyyy-MM-dd',
-        ),
+        adapter.formatByString(createAdapterDate(getPlaceholder().start), 'yyyy-MM-dd'),
       ).to.equal('2025-05-27');
     });
 

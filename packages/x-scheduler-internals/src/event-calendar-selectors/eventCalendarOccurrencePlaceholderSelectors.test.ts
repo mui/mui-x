@@ -32,8 +32,8 @@ function getStateInUTCOnApiaSystem() {
       resourceId: null,
     },
   };
-  const december30 = createProcessedDate(systemAdapter, Date.UTC(2011, 11, 30), 'UTC');
-  const december31 = createProcessedDate(systemAdapter, Date.UTC(2011, 11, 31), 'UTC');
+  const december30 = createProcessedDate(Date.UTC(2011, 11, 30), 'UTC');
+  const december31 = createProcessedDate(Date.UTC(2011, 11, 31), 'UTC');
   return { state, december30, december31 };
 }
 
@@ -133,7 +133,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
 
   describe('isCreatingInDayCell', () => {
     const day = adapter.date('2024-01-15', 'default');
-    const processedDay = processDate(day, adapter);
+    const processedDay = processDate(day, adapter, 'default');
 
     it('should return false when there is no placeholder', () => {
       const state = DEFAULT_EVENT_CALENDAR_STATE;

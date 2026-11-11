@@ -23,7 +23,7 @@ const DEFAULT_PARAMS = {
 
 const RRULE = { freq: 'DAILY' } as any;
 
-// Mirrors `datesNotWritableReason` in `SchedulerStore.ts` (not exported): `toWarnDev` matches by
+// Mirrors `datesNotWritableReason` in `SchedulerStore.utils.ts`: `toWarnDev` matches by
 // `includes`, so asserting only the first line of a warning never pins this text. Every fixture
 // in this file locks `start` only.
 const DATES_NOT_WRITABLE_REASON =
@@ -31,12 +31,12 @@ const DATES_NOT_WRITABLE_REASON =
 
 // A minimal edited occurrence of a recurring series (only the fields `repointEditingOccurrence` reads).
 function armRecurringOccurrence(store: any) {
-  const start = processDate(adapter.date('2025-07-07T09:00:00Z', 'default'), adapter);
-  const end = processDate(adapter.date('2025-07-07T10:00:00Z', 'default'), adapter);
+  const start = processDate(adapter.date('2025-07-07T09:00:00Z', 'default'), adapter, 'default');
+  const end = processDate(adapter.date('2025-07-07T10:00:00Z', 'default'), adapter, 'default');
   const editedOccurrence = {
     id: 'standup',
     key: 'standup::2025-07-07',
-    displayTimezone: { start, end },
+    displayTimezone: { timezone: 'default', start, end },
     // Present on every real occurrence: without it the repoint skips the data-timezone
     // identity branch these tests are about.
     dataTimezone: { timezone: 'default', start, end, rrule: RRULE },
@@ -63,6 +63,7 @@ storeClasses.forEach((storeClass) => {
           isRecurring: false,
           dataStart: newStart,
           dataEnd: newEnd,
+          dataTimezone: 'default',
         });
 
         const occurrence = schedulerOtherSelectors.editingOccurrence(
@@ -90,6 +91,7 @@ storeClasses.forEach((storeClass) => {
           isRecurring: true,
           dataStart: newStart,
           dataEnd: newEnd,
+          dataTimezone: 'default',
         });
 
         const occurrence = schedulerOtherSelectors.editingOccurrence(
@@ -98,7 +100,7 @@ storeClasses.forEach((storeClass) => {
         expect(occurrence.id).to.equal('following-event');
         // The new series still keys per-occurrence (event id + day)...
         expect(occurrence.key).to.equal(
-          getRecurringOccurrenceKey('following-event', newStart, adapter),
+          getRecurringOccurrenceKey('following-event', newStart, adapter, 'default'),
         );
         expect(occurrence.key).to.contain('::');
         // ...and stays recurring, so its Delete keeps offering the scope dialog.
@@ -111,8 +113,8 @@ storeClasses.forEach((storeClass) => {
         const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
         armRecurringOccurrence(store);
 
-        // 23:00 on the 8th in America/New_York is 03:00 UTC on the 9th: the display and data days differ.
-        const displayStart = adapter.date('2025-07-08T23:00:00', 'America/New_York');
+        // 23:00 UTC on the 8th is 13:00 on the 9th in Pacific/Kiritimati, the data timezone.
+        const displayStart = adapter.date('2025-07-08T23:00:00Z', 'default');
         const displayEnd = adapter.addHours(displayStart, 1);
 
         (store as any).repointEditingOccurrence({
@@ -120,23 +122,15 @@ storeClasses.forEach((storeClass) => {
           start: displayStart,
           end: displayEnd,
           isRecurring: true,
-          dataStart: adapter.setTimezone(displayStart, 'UTC'),
-          dataEnd: adapter.setTimezone(displayEnd, 'UTC'),
+          dataStart: displayStart,
+          dataEnd: displayEnd,
+          dataTimezone: 'Pacific/Kiritimati',
         });
 
         const occurrence = schedulerOtherSelectors.editingOccurrence(store.state)!;
-        // Rendered keys expand in the data timezone, so the repointed key must match the data-tz day...
-        expect(occurrence.key).to.equal(
-          getRecurringOccurrenceKey(
-            'following-event',
-            adapter.setTimezone(displayStart, 'UTC'),
-            adapter,
-          ),
-        );
-        // ...and must not use the display-timezone day, which differs here.
-        expect(occurrence.key).to.not.equal(
-          getRecurringOccurrenceKey('following-event', displayStart, adapter),
-        );
+        // Rendered keys expand in the data timezone, so the repointed key must match the data-tz day.
+        // In the display timezone, the timezone of the system, it's the 8th in UTC and west of it.
+        expect(occurrence.key).to.equal('following-event::2025-07-09');
       });
 
       it('should be a no-op when nothing is being edited', () => {
@@ -149,6 +143,7 @@ storeClasses.forEach((storeClass) => {
           isRecurring: false,
           dataStart: newStart,
           dataEnd: newEnd,
+          dataTimezone: 'default',
         });
 
         expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
@@ -209,8 +204,8 @@ storeClasses.forEach((storeClass) => {
           id: 'standup',
           key: 'standup::2025-07-07',
           displayTimezone: {
-            start: processDate(adapter.date('2025-07-07T09:00:00Z', 'default'), adapter),
-            end: processDate(adapter.date('2025-07-07T10:00:00Z', 'default'), adapter),
+            start: processDate(adapter.date('2025-07-07T09:00:00Z', 'default'), adapter, 'default'),
+            end: processDate(adapter.date('2025-07-07T10:00:00Z', 'default'), adapter, 'default'),
           },
         } as any;
       }
@@ -258,8 +253,8 @@ storeClasses.forEach((storeClass) => {
           id: 'standup',
           key: 'standup::2025-07-07',
           displayTimezone: {
-            start: processDate(adapter.date('2025-07-07T09:00:00Z', 'default'), adapter),
-            end: processDate(adapter.date('2025-07-07T10:00:00Z', 'default'), adapter),
+            start: processDate(adapter.date('2025-07-07T09:00:00Z', 'default'), adapter, 'default'),
+            end: processDate(adapter.date('2025-07-07T10:00:00Z', 'default'), adapter, 'default'),
           },
         } as any;
       }
@@ -348,15 +343,15 @@ premiumStoreClasses.forEach((storeClass) => {
       store.startEditing(
         {
           id: 'standup',
-          key: getRecurringOccurrenceKey('standup', occurrenceStart, adapter),
+          key: getRecurringOccurrenceKey('standup', occurrenceStart, adapter, 'default'),
           displayTimezone: {
-            start: processDate(occurrenceStart, adapter),
-            end: processDate(adapter.addHours(occurrenceStart, 1), adapter),
+            start: processDate(occurrenceStart, adapter, 'default'),
+            end: processDate(adapter.addHours(occurrenceStart, 1), adapter, 'default'),
           },
           dataTimezone: {
             timezone: 'default',
-            start: processDate(occurrenceStart, adapter),
-            end: processDate(adapter.addHours(occurrenceStart, 1), adapter),
+            start: processDate(occurrenceStart, adapter, 'default'),
+            end: processDate(adapter.addHours(occurrenceStart, 1), adapter, 'default'),
             rrule: RRULE,
           },
         } as any,
@@ -366,7 +361,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
     it('should keep the armed occurrence when a different occurrence is resized', () => {
       const store = createStore();
-      const armedKey = getRecurringOccurrenceKey('standup', dayA, adapter);
+      const armedKey = getRecurringOccurrenceKey('standup', dayA, adapter, 'default');
       armOccurrence(store, dayA);
 
       // Resize occurrence B (the 8th), then confirm the scope.
@@ -387,7 +382,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
     it('should re-point when the armed occurrence itself is resized', () => {
       const store = createStore();
-      const armedKey = getRecurringOccurrenceKey('standup', dayA, adapter);
+      const armedKey = getRecurringOccurrenceKey('standup', dayA, adapter, 'default');
       armOccurrence(store, dayA);
 
       const resizedStart = adapter.addMinutes(dayA, 30);
@@ -445,7 +440,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
     it("should keep the armed occurrence on a same-day scope 'all' time change", () => {
       const store = createStore();
-      const armedKey = getRecurringOccurrenceKey('standup', dayB, adapter);
+      const armedKey = getRecurringOccurrenceKey('standup', dayB, adapter, 'default');
       armOccurrence(store, dayB);
 
       const movedStart = adapter.addHours(dayB, 1);
@@ -464,7 +459,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
     it("should keep the armed occurrence on an end-only same-day scope 'all' change", () => {
       const store = createStore();
-      const armedKey = getRecurringOccurrenceKey('standup', dayB, adapter);
+      const armedKey = getRecurringOccurrenceKey('standup', dayB, adapter, 'default');
       armOccurrence(store, dayB);
 
       // A resize handle or the dialog can submit a single bound; the untouched start
@@ -599,7 +594,12 @@ premiumStoreClasses.forEach((storeClass) => {
         const base = lateBuilder.toOccurrence('2025-07-08T23:00:00Z') as any;
         const armed = {
           ...base,
-          key: getRecurringOccurrenceKey('late', base.dataTimezone.start.value, adapter),
+          key: getRecurringOccurrenceKey(
+            'late',
+            base.dataTimezone.start.value,
+            adapter,
+            base.dataTimezone.timezone,
+          ),
         };
         store.startEditing(armed, 'armed');
         return { store, armed };
@@ -674,7 +674,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
     it('should re-point a rename-only scope change onto the detached event', () => {
       const store = createStore();
-      const armedKey = getRecurringOccurrenceKey('standup', dayA, adapter);
+      const armedKey = getRecurringOccurrenceKey('standup', dayA, adapter, 'default');
       armOccurrence(store, dayA);
 
       // A rename carries no start/end in the changes.
@@ -711,7 +711,12 @@ premiumStoreClasses.forEach((storeClass) => {
       // expansion key, which derives from the data-timezone day.
       const armed = {
         ...base,
-        key: getRecurringOccurrenceKey('weekly-tz', base.dataTimezone.start.value, adapter),
+        key: getRecurringOccurrenceKey(
+          'weekly-tz',
+          base.dataTimezone.start.value,
+          adapter,
+          base.dataTimezone.timezone,
+        ),
       };
       store.startEditing(armed, 'armed');
 
@@ -726,7 +731,12 @@ premiumStoreClasses.forEach((storeClass) => {
       // display bounds sit on July 10th and cannot stand in for the identity.
       expect(occurrence.id).to.not.equal('weekly-tz');
       expect(occurrence.key).to.equal(
-        getRecurringOccurrenceKey(occurrence.id, armed.dataTimezone.start.value, adapter),
+        getRecurringOccurrenceKey(
+          occurrence.id,
+          armed.dataTimezone.start.value,
+          adapter,
+          armed.dataTimezone.timezone,
+        ),
       );
       expect(occurrence.dataTimezone.start.timestamp).to.equal(
         adapter.getTime(adapter.date('2025-07-11T00:00:00', 'UTC')),
@@ -781,9 +791,7 @@ premiumStoreClasses.forEach((storeClass) => {
           adapter,
           'default',
         )
-        .map((occurrence) =>
-          adapter.formatByString(occurrence.dataTimezone.start.value, 'yyyy-MM-dd'),
-        );
+        .map((occurrence) => occurrence.dataTimezone.start.key);
 
       expect(days).to.include('2025-02-28');
       expect(days).to.not.include('2025-03-01');
@@ -914,7 +922,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
         it('should keep the armed occurrence on its day when its unwritable start is "moved"', () => {
           const store = createControlledStore([weeklyStandupEvent], readOnlyStartStructure);
-          const armedKey = getRecurringOccurrenceKey('standup', secondMonday, adapter);
+          const armedKey = getRecurringOccurrenceKey('standup', secondMonday, adapter, 'default');
           armOccurrence(store, secondMonday);
 
           expect(() => {

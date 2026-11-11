@@ -131,7 +131,8 @@ export type DescribeTreeViewRenderer<TStore extends TreeViewAnyStore> = <
      * If `true`, the Tree View will be wrapped with an error boundary.
      */
     withErrorBoundary?: boolean;
-  } & UseTreeViewStoreParameters<TStore> & {
+  } & UseTreeViewStoreParameters<TStore> &
+    Omit<React.HTMLAttributes<HTMLUListElement>, 'children'> & {
       slots?: TreeViewSlots & {
         item?: React.ElementType<TreeItemProps>;
       };

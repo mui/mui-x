@@ -54,29 +54,33 @@ describe('eventCalendarPreferenceSelectors', () => {
     });
   });
 
-  describe('showWeekends', () => {
-    it('should return the default showWeekends preference when none is set in the state', () => {
-      const state = getEventCalendarStateFromParameters({ events: [] });
-      const showWeekends = eventCalendarPreferenceSelectors.showWeekends(state);
-      expect(showWeekends).to.equal(DEFAULT_EVENT_CALENDAR_PREFERENCES.showWeekends);
+  describe('hiddenWeekdays', () => {
+    it('should return no weekday when none is set in the state, as the weekends are shown by default', () => {
+      const state = getEventCalendarStateFromParameters({ events: [], dateLocale: 'ar-SA' });
+      expect(eventCalendarPreferenceSelectors.hiddenWeekdays(state)).to.deep.equal([]);
     });
 
-    it('should return the custom showWeekends preference when it is set in the state (false)', () => {
+    it('should return no weekday when the weekends are shown', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        dateLocale: 'ar-SA',
+        preferences: { showWeekends: true },
+      });
+      expect(eventCalendarPreferenceSelectors.hiddenWeekdays(state)).to.deep.equal([]);
+    });
+
+    it('should return the weekend of the date locale when the weekends are hidden', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
         preferences: { showWeekends: false },
       });
-      const showWeekends = eventCalendarPreferenceSelectors.showWeekends(state);
-      expect(showWeekends).to.equal(false);
-    });
-
-    it('should return the custom showWeekends preference when it is set in the state (true)', () => {
-      const state = getEventCalendarStateFromParameters({
+      expect(eventCalendarPreferenceSelectors.hiddenWeekdays(state)).to.deep.equal([6, 7]);
+      const iranianState = getEventCalendarStateFromParameters({
         events: [],
-        preferences: { showWeekends: true },
+        dateLocale: 'fa-IR',
+        preferences: { showWeekends: false },
       });
-      const showWeekends = eventCalendarPreferenceSelectors.showWeekends(state);
-      expect(showWeekends).to.equal(true);
+      expect(eventCalendarPreferenceSelectors.hiddenWeekdays(iranianState)).to.deep.equal([5]);
     });
   });
 
