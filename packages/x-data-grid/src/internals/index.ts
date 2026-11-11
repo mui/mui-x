@@ -236,6 +236,7 @@ export {
   getGridCellElement,
   getGridRowElement,
   isEventTargetInPortal,
+  isEventTargetTextEntryElement,
 } from '../utils/domUtils';
 export {
   isNavigationKey,
