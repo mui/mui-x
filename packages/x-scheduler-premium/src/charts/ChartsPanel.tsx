@@ -2,23 +2,37 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { ChartsRenderer } from '@mui/x-charts-premium/ChartsRenderer';
-import { barClasses } from '@mui/x-charts/BarChart';
-import { PieChart, pieClasses } from '@mui/x-charts/PieChart';
+import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { useStore } from '@base-ui/utils/store';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { useDisarmOnEscape, useDisarmOnOutsidePointer } from '@mui/x-scheduler/internals';
+import {
+  eventColorTokens,
+  useDisarmOnEscape,
+  useDisarmOnOutsidePointer,
+} from '@mui/x-scheduler/internals';
 import type { SchedulerOccurrenceHighlight } from '@mui/x-scheduler-internals/internals';
-import type { ChartsCardId, ChartsMetric } from './chartsFeature';
+import type { ChartsCardId, ChartsMetric, ChartsRendererComponent } from './chartsFeature';
+import type { ChartsResourceInfo } from './useChartsDatasets';
 import { NO_RESOURCE, useChartsDatasets } from './useChartsDatasets';
 
+const paletteEntries = Object.entries(eventColorTokens);
 const PanelRoot = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
   width: 246,
+  // the chart colors follow the event palettes in both modes (see `chartColorVar`)
+  ...Object.fromEntries(
+    paletteEntries.map(([name, tokens]) => [`--scheduler-charts-${name}`, tokens.light.main]),
+  ),
+  ...theme.applyStyles(
+    'dark',
+    Object.fromEntries(
+      paletteEntries.map(([name, tokens]) => [`--scheduler-charts-${name}`, tokens.dark.main]),
+    ),
+  ),
 }));
 
 // Mirrors ResourcesTreeRoot / ResourcesTreeLabel so the cards read as side panel sections.
@@ -36,12 +50,17 @@ const CardTitle = styled(Typography)(({ theme }) => ({
   paddingBottom: theme.spacing(1),
 }));
 
+// The elements a click toggles instead of clearing the highlight.
+// Same class names as `barClasses.element` and `pieClasses.arc` of `@mui/x-charts`.
+const CHART_ITEM_SELECTOR = `.${generateUtilityClass('MuiBarChart', 'element')}, .${generateUtilityClass('MuiPieChart', 'arc')}`;
+
 interface ChartsPanelProps {
+  renderer: ChartsRendererComponent;
   cards: ChartsCardId[];
   metric: ChartsMetric;
 }
 
-export function ChartsPanel({ cards, metric }: ChartsPanelProps) {
+export function ChartsPanel({ renderer: Renderer, cards, metric }: ChartsPanelProps) {
   const unit = metric === 'hours' ? ' h' : '';
   const store = useEventCalendarStoreContext();
   const {
@@ -51,6 +70,7 @@ export function ChartsPanel({ cards, metric }: ChartsPanelProps) {
     resources,
     hoursPerDay,
     shareByResource,
+    shareItems,
     roots,
     hasNestedResources,
   } = useChartsDatasets(metric);
@@ -86,14 +106,14 @@ export function ChartsPanel({ cards, metric }: ChartsPanelProps) {
     ref: outsideAnchorRef,
     active: highlight != null,
     onDisarm: clearHighlight,
-    ignoreSelector: `.${barClasses.element}, .${pieClasses.arc}`,
+    ignoreSelector: CHART_ITEM_SELECTOR,
     global: true,
   });
   useDisarmOnEscape({ active: highlight != null, onDisarm: clearHighlight });
   React.useEffect(() => () => store.setOccurrenceHighlight(null), [store]);
 
   const renderHoursPerDay = (
-    <ChartsRenderer
+    <Renderer
       chartType="column"
       dimensions={hoursPerDay.dimensions}
       values={hoursPerDay.values}
@@ -137,47 +157,49 @@ export function ChartsPanel({ cards, metric }: ChartsPanelProps) {
     />
   );
 
-  const leafSeries = {
-    id: 'leaves',
-    data: shareByResource.values[0].data.map((value, index) => ({
-      id: resources[index].id,
-      value,
-      label: resources[index].label,
-      color: resources[index].color,
-    })),
-    innerRadius: hasNestedResources ? 46 : 34,
-    outerRadius: 64,
-    paddingAngle: 0,
-    valueFormatter: (item: { value: number }) => `${item.value}${unit}`,
-  };
-  const rootSeries = {
-    id: 'roots',
-    data: roots.map((root) => ({
-      id: root.id,
-      value: root.value,
-      label: root.label,
-      color: root.color,
-    })),
-    innerRadius: 22,
-    outerRadius: 42,
-    paddingAngle: 0,
-    valueFormatter: (item: { value: number }) => `${item.value}${unit}`,
-  };
-
+  // One ring per dimension: the roots inside when the resources are nested, the resources outside.
+  // The rows are sorted by root, so the items of each ring follow the order of `roots` / `shareItems`.
+  const ringItems: ChartsResourceInfo[][] = hasNestedResources ? [roots, shareItems] : [shareItems];
   const renderShareByResource = (
-    <PieChart
-      height={150}
-      width={228}
-      margin={{ left: 0, right: 0, top: 4, bottom: 4 }}
-      series={hasNestedResources ? [rootSeries, leafSeries] : [leafSeries]}
-      hideLegend
-      slotProps={{ tooltip: { trigger: 'none' } }}
-      onItemClick={(_event, { seriesId, dataIndex }) => {
-        const resource = seriesId === 'roots' ? roots[dataIndex] : resources[dataIndex];
-        if (resource) {
-          toggleHighlight(highlightResource(resource.id));
-        }
+    <Renderer
+      chartType="pie"
+      dimensions={shareByResource.dimensions}
+      values={shareByResource.values}
+      configuration={{
+        height: 150,
+        width: 228,
+        innerRadius: 22,
+        outerRadius: 64,
+        seriesGap: 4,
+        paddingAngle: 0,
+        pieLegendDirection: 'vertical',
+        pieLegendPositionVertical: 'none',
+        pieTooltipTrigger: 'none',
       }}
+      onRender={(_type, props, Component) => (
+        <Component
+          {...props}
+          margin={{ left: 0, right: 0, top: 4, bottom: 4 }}
+          series={props.series.map((series: Record<string, any>, ringIndex: number) => ({
+            ...series,
+            id: `ring-${ringIndex}`,
+            data: series.data.map((item: Record<string, any>, itemIndex: number) => {
+              const resource = ringItems[ringIndex][itemIndex];
+              return { ...item, id: resource.id, label: resource.label, color: resource.color };
+            }),
+            valueFormatter: (item: { value: number }) => `${item.value}${unit}`,
+          }))}
+          onItemClick={(
+            _event: React.MouseEvent,
+            { seriesId, dataIndex }: { seriesId: string; dataIndex: number },
+          ) => {
+            const resource = ringItems[Number(seriesId.slice('ring-'.length))]?.[dataIndex];
+            if (resource) {
+              toggleHighlight(highlightResource(resource.id));
+            }
+          }}
+        />
+      )}
     />
   );
 

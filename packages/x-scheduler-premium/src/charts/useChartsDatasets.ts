@@ -21,6 +21,14 @@ export const NO_RESOURCE = '__no-resource__';
 const MS_PER_HOUR = 3_600_000;
 
 /**
+ * The CSS variable holding the chart color of an event palette, defined on the charts panel
+ * for the light and the dark mode.
+ */
+export function chartColorVar(colorName: string) {
+  return colorName in eventColorTokens ? `var(--scheduler-charts-${colorName})` : '#888';
+}
+
+/**
  * The resource an occurrence is attributed to: its first visible resource, or `NO_RESOURCE`.
  */
 function occurrenceResourceId(
@@ -85,16 +93,12 @@ export function useChartsDatasets(metric: ChartsMetric) {
   const parentLookup = useStore(store, schedulerResourceSelectors.resourceParentIdLookup);
 
   return React.useMemo(() => {
-    const resources: ChartsResourceInfo[] = resourceList
-      .filter((resource) => visibleResources[resource.id] !== false)
-      .map((resource) => {
-        const colorName = schedulerResourceSelectors.defaultEventColor(store.state, resource.id);
-        return {
-          id: String(resource.id),
-          label: resource.title,
-          color: eventColorTokens[colorName as keyof typeof eventColorTokens]?.light.main ?? '#888',
-        };
-      });
+    const allResources: ChartsResourceInfo[] = resourceList.map((resource) => ({
+      id: String(resource.id),
+      label: resource.title,
+      color: chartColorVar(schedulerResourceSelectors.defaultEventColor(store.state, resource.id)),
+    }));
+    const resources = allResources.filter((resource) => visibleResources[resource.id] !== false);
     const resourceIds = new Set(resources.map((resource) => resource.id));
     const hasNoResource = days.some((day) =>
       (occurrencesByDay.get(day.key) ?? []).some(
@@ -128,8 +132,7 @@ export function useChartsDatasets(metric: ChartsMetric) {
           {
             id: NO_RESOURCE,
             label: 'No resource',
-            color:
-              eventColorTokens[defaultColor as keyof typeof eventColorTokens]?.light.main ?? '#888',
+            color: chartColorVar(defaultColor),
           },
         ]
       : resources;
@@ -171,15 +174,8 @@ export function useChartsDatasets(metric: ChartsMetric) {
         }
       }
     });
-    const totals = series.map((resource) => round(totalsByResource[resource.id] ?? 0));
-    const shareByResource: { dimensions: Dataset<string>; values: Dataset<number> } = {
-      dimensions: [
-        { id: 'resource', label: 'Resource', data: series.map((resource) => resource.label) },
-      ],
-      values: [{ id: 'hours', label: 'Hours', data: totals }],
-    };
-
-    // nested resources: hours of each root = own hours + hours of all its descendants
+    // nested resources: the renderer draws one ring per dimension (root inside, resource outside)
+    // and groups the rows by root, so the rows are sorted by root to keep the item order predictable
     const rootOf = (resourceId: string): string => {
       let current = resourceId;
       let parent = parentLookup.get(current);
@@ -189,16 +185,40 @@ export function useChartsDatasets(metric: ChartsMetric) {
       }
       return current;
     };
-    const rootTotals = new Map<string, number>();
-    series.forEach((resource, index) => {
-      const root = resource.id === NO_RESOURCE ? NO_RESOURCE : rootOf(resource.id);
-      rootTotals.set(root, (rootTotals.get(root) ?? 0) + totals[index]);
+    const rootIdOf = (resource: ChartsResourceInfo) =>
+      resource.id === NO_RESOURCE ? NO_RESOURCE : rootOf(resource.id);
+    const hasNestedResources = series.some((resource) => rootIdOf(resource) !== resource.id);
+    const rootOrder = new Map<string, number>();
+    series.forEach((resource) => {
+      const rootId = rootIdOf(resource);
+      if (!rootOrder.has(rootId)) {
+        rootOrder.set(rootId, rootOrder.size);
+      }
     });
-    const roots = series
-      .filter((resource) => resource.id === NO_RESOURCE || rootOf(resource.id) === resource.id)
-      .map((resource) => ({ ...resource, value: round(rootTotals.get(resource.id) ?? 0) }));
-    const hasNestedResources = series.some(
-      (resource) => resource.id !== NO_RESOURCE && rootOf(resource.id) !== resource.id,
+    const shareItems = hasNestedResources
+      ? [...series].sort((a, b) => rootOrder.get(rootIdOf(a))! - rootOrder.get(rootIdOf(b))!)
+      : series;
+    const totals = shareItems.map((resource) => round(totalsByResource[resource.id] ?? 0));
+    const resourceDimension = {
+      id: 'resource',
+      label: 'Resource',
+      data: shareItems.map((resource) => resource.id),
+    };
+    const shareByResource: { dimensions: Dataset<string>; values: Dataset<number> } = {
+      dimensions: hasNestedResources
+        ? [{ id: 'root', label: 'Root', data: shareItems.map(rootIdOf) }, resourceDimension]
+        : [resourceDimension],
+      values: [{ id: 'hours', label: 'Hours', data: totals }],
+    };
+    // a hidden root still gets an inner slice when some of its descendants are visible
+    const roots = Array.from(rootOrder.keys()).map(
+      (rootId) =>
+        series.find((resource) => resource.id === rootId) ??
+        allResources.find((resource) => resource.id === rootId) ?? {
+          id: rootId,
+          label: rootId,
+          color: '#888',
+        },
     );
 
     return {
@@ -208,6 +228,7 @@ export function useChartsDatasets(metric: ChartsMetric) {
       resources: series,
       hoursPerDay,
       shareByResource,
+      shareItems,
       roots,
       hasNestedResources,
     };

@@ -2,15 +2,16 @@ import * as React from 'react';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
 import { createChartsFeature } from '@mui/x-scheduler-premium/charts';
+import { ChartsRenderer } from '@mui/x-charts-premium/ChartsRenderer';
 import {
   initialEvents,
   defaultVisibleDate,
   resources,
 } from 'docs/data/scheduler/datasets/personal-agenda';
 
-const features = { charts: createChartsFeature({ cards: ['hoursPerDay'] }) };
+const features = { charts: createChartsFeature({ renderer: ChartsRenderer }) };
 
-export default function ChartsInsightsHoursPerDay() {
+export default function BasicCharts() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (

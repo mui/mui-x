@@ -54,6 +54,7 @@ const schedulerPages: MuiPage[] = [
             title: 'Responsiveness 🧪',
           },
           { pathname: '/x/react-scheduler/event-calendar/lazy-loading', plan: 'premium' },
+          { pathname: '/x/react-scheduler/event-calendar/charts', plan: 'premium' },
           {
             pathname: '/x/react-scheduler/event-calendar/filtering',
             plan: 'premium',
