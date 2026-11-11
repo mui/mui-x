@@ -223,6 +223,12 @@ export interface GridComputedColumnsRuntimeCache {
    * grouped computed field one pass behind — a changed identity requests the second pass.
    */
   hydratedColDefs: Map<string, GridColDef>;
+  /**
+   * The computed fields whose record was rebuilt with another `type` since the last
+   * `columnsChange`. The filter items made for the previous type are fitted to the new one
+   * when the columns state that holds the rebuilt record is published.
+   */
+  typeChangedFields: Set<string>;
 }
 
 export interface GridFormulaInternalCache {
@@ -295,6 +301,14 @@ export interface GridFormulaInternalCache {
    * cascades into another formula pass, which must not fire it again.
    */
   suppressRegroupTrigger: boolean;
+  /**
+   * The `orderedFields` of the columns state for which the reset of the filter items after a
+   * type change applied the filtering. Matched by identity, so a later `columnsChange` can't
+   * read it.
+   * In the cache rather than a ref, so a second subscription of the listeners (React 18
+   * StrictMode) reads the same value.
+   */
+  filtersReappliedFor: readonly string[] | null;
   /**
    * Last value resolved for each raw (non-formula) dependency cell,
    * keyed by stringified row id then field. Compared on row change to decide

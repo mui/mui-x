@@ -433,6 +433,10 @@ export function ensureComputedColumnRecords(
       }
     } else {
       record = buildComputedColumnRecord(apiRef, cache, definition, previous, computedColDef);
+      // `type` is an own property of the computed columns: only the definition changes it.
+      if (previous !== undefined && previous.colDef.type !== record.colDef.type) {
+        runtime.typeChangedFields.add(definition.field);
+      }
       if (record.baseColDef.valueGetter !== previous?.baseColDef.valueGetter) {
         evaluationChanged = true;
       }
