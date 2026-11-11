@@ -3,6 +3,7 @@ import type {
   GridValidRowModel,
   GridColDef,
   GridCellCoordinates,
+  GridFilterModel,
 } from '@mui/x-data-grid-pro';
 import type { GridStateColDef } from '@mui/x-data-grid/internals';
 import type { FormulaExcelExportLayout, ExcelFormulaCell } from './gridFormulaExcelExport';
@@ -231,6 +232,17 @@ export interface GridComputedColumnsRuntimeCache {
   typeChangedFields: Set<string>;
 }
 
+/**
+ * How the filter model with the filter items fitted to the new type of a computed column was
+ * applied:
+ * - `applied`: the model is set and the rows are filtered with it.
+ * - `failed`: the model is set, but its filtering failed (warned in development).
+ * - `pending`: the filter model is controlled. The parent got the model through
+ *   `onFilterModelChange`, but the state keeps the previous items until the parent passes it
+ *   back, after the event. The model the parent passes is filtered when it arrives.
+ */
+export type GridFilterItemsReset = 'applied' | 'failed' | 'pending';
+
 export interface GridFormulaInternalCache {
   /**
    * Interning parser: identical sources share one parse result.
@@ -302,6 +314,14 @@ export interface GridFormulaInternalCache {
    */
   suppressRegroupTrigger: boolean;
   /**
+   * The model the last reset of the filter items sent to a controlled parent, while the state
+   * still holds `stateModel`, the model it was sent for. A reset in a later event, before the
+   * parent passed the model back, starts from it: the last model the parent gets must hold every
+   * reset. Dropped at the next `filterModelChange` (the state changed, even back to an earlier
+   * model object), and when the state model is no longer `stateModel`.
+   */
+  pendingFilterItemsReset: { stateModel: GridFilterModel; filterModel: GridFilterModel } | null;
+  /**
    * Left by the reset of the filter items after a type change (the priority `columnsChange`
    * listener) for the formula `columnsChange` listener of the same event, which consumes it.
    * In the cache rather than a ref, so a second subscription of the listeners (React 18
@@ -320,9 +340,9 @@ export interface GridFormulaInternalCache {
      */
     fields: Set<string>;
     /**
-     * Whether the reset applied the filtering.
+     * The reset of the filter items of these fields, or `null` when no item changed.
      */
-    filtersReapplied: boolean;
+    filterItemsReset: GridFilterItemsReset | null;
   } | null;
   /**
    * Last value resolved for each raw (non-formula) dependency cell,
