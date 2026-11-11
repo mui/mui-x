@@ -146,7 +146,7 @@ GridFilterInputDate.propTypes /* remove-proptypes */ = {
   disableDebounce: PropTypes.bool,
   /**
    * A ref allowing to set imperative focus.
-   * @deprecated The grid no longer passes this prop. Use `inputRef` instead.
+   * @deprecated The grid no longer passes this prop. Header filters focus the input through `inputRef`.
    */
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,

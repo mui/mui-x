@@ -622,8 +622,7 @@ describe('<DataGrid /> - Filter panel', () => {
         'aria-pressed',
         'true',
       );
-      // The slot ignores `focusElementRef`, so focus falls back to the operator input.
-      expect(screen.getByRole('combobox', { name: 'Operator' })).toHaveFocus();
+      expect(within(input).getByRole('button', { name: 'brand' })).toHaveFocus();
     });
 
     it('should update the filter item when the custom column input calls onChange', () => {

@@ -20,6 +20,7 @@ import type {
   FilterColumnsArgs,
   GridColDef,
   GridFilterItem,
+  GridSlotProps,
 } from '@mui/x-data-grid-pro';
 import {
   getColumnHeaderCell,
@@ -232,6 +233,65 @@ describe('<DataGridPro /> - Filter', () => {
     expect(document.activeElement).toHaveAccessibleName('Logic operator');
 
     fireEvent.click(addButton);
+    const columnInputs = screen.getAllByRole('combobox', { name: 'Column' });
+    expect(columnInputs[columnInputs.length - 1]).toHaveFocus();
+  });
+
+  it('should focus the first field with a `baseSelect` that only forwards its documented props', () => {
+    function PlainSelect(props: GridSlotProps['baseSelect']) {
+      const { id, className, value, onChange, disabled, label, slotProps, children } = props;
+      return (
+        <select
+          id={id}
+          className={className}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          aria-label={slotProps?.htmlInput?.['aria-label'] ?? (label as string)}
+        >
+          {children}
+        </select>
+      );
+    }
+
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        columns={[{ field: 'brand' }, { field: 'origin' }, { field: 'year' }]}
+        slots={{ baseSelect: PlainSelect }}
+        slotProps={{ baseSelect: { native: true } }}
+      />,
+    );
+    expect(screen.getByRole('combobox', { name: 'Column' })).toHaveFocus();
+
+    fireEvent.click(screen.getByRole('button', { name: /Add Filter/i }));
+    expect(document.activeElement).toHaveAccessibleName('Logic operator');
+  });
+
+  // jsdom focuses elements hidden with `display: none`.
+  it.skipIf(isJSDOM)('should skip a logic operator hidden with `logicOperatorInputProps`', () => {
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        columns={[{ field: 'brand' }, { field: 'origin' }]}
+        slotProps={{
+          filterPanel: {
+            filterFormProps: { logicOperatorInputProps: { sx: { display: 'none' } } },
+          },
+        }}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /Add Filter/i }));
     const columnInputs = screen.getAllByRole('combobox', { name: 'Column' });
     expect(columnInputs[columnInputs.length - 1]).toHaveFocus();
   });

@@ -21,7 +21,7 @@ export type GridFilterInputValueProps<
   inputRef?: React.Ref<HTMLElement | null>;
   /**
    * A ref allowing to set imperative focus.
-   * @deprecated The grid no longer passes this prop. Use `inputRef` instead.
+   * @deprecated The grid no longer passes this prop. Header filters focus the input through `inputRef`.
    */
   focusElementRef?: React.Ref<any>;
   headerFilterMenu?: React.ReactNode;

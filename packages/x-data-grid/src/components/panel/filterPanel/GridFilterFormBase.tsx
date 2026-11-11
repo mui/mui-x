@@ -4,9 +4,12 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
+import useForkRef from '@mui/utils/useForkRef';
+import ownerDocument from '@mui/utils/ownerDocument';
 import capitalize from '@mui/utils/capitalize';
 import { styled } from '@mui/material/styles';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { getTabbableDescendants } from '@mui/x-internals/domUtils';
 import { vars } from '../../../constants/cssVariables';
 import {
   gridFilterableColumnDefinitionsSelector,
@@ -19,7 +22,7 @@ import type { GridFilterModel } from '../../../models/gridFilterModel';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { getDataGridUtilityClass } from '../../../constants/gridClasses';
+import { getDataGridUtilityClass, gridClasses } from '../../../constants/gridClasses';
 import type {
   GridColDef,
   GridSingleSelectColDef,
@@ -240,9 +243,8 @@ const GridFilterFormBase = forwardRef<HTMLDivElement, GridFilterFormBaseProps>(
     const operatorSelectLabelId = useId();
     const rootProps = useGridRootProps();
     const classes = useUtilityClasses(rootProps);
-    const logicOperatorRef = React.useRef<any>(null);
-    const columnInputRef = React.useRef<any>(null);
-    const filterSelectorRef = React.useRef<HTMLInputElement>(null);
+    const rootRef = React.useRef<HTMLDivElement>(null);
+    const handleRootRef = useForkRef(ref, rootRef);
     const multiFilterOperator = filterModel.logicOperator ?? GridLogicOperator.And;
 
     const hasLogicOperatorColumn: boolean = hasMultipleFilters && logicOperators.length > 0;
@@ -440,15 +442,28 @@ const GridFilterFormBase = forwardRef<HTMLDivElement, GridFilterFormBaseProps>(
       deleteFilter(item);
     };
 
-    // Focus the first enabled field, so the column and operator are announced before the value.
+    // Focus the first field that takes focus, so the column and operator are announced first.
     React.useImperativeHandle(
       focusElementRef,
       () => ({
         focus: () => {
-          if (isLogicOperatorFocusable) {
-            logicOperatorRef.current?.focus();
-          } else {
-            (columnInputRef.current ?? filterSelectorRef.current)?.focus();
+          const fieldClasses = [
+            ...(isLogicOperatorFocusable ? [gridClasses.filterFormLogicOperatorInput] : []),
+            gridClasses.filterFormColumnInput,
+            gridClasses.filterFormOperatorInput,
+            gridClasses.filterFormValueInput,
+          ];
+          for (const fieldClass of fieldClasses) {
+            const field = rootRef.current?.querySelector<HTMLElement>(`.${fieldClass}`);
+            if (!field) {
+              continue;
+            }
+            // A custom slot can put the class on the focusable element itself.
+            const target = field.tabIndex >= 0 ? field : getTabbableDescendants(field)[0];
+            target?.focus();
+            if (target && target === ownerDocument(target).activeElement) {
+              return;
+            }
           }
         },
       }),
@@ -461,7 +476,7 @@ const GridFilterFormBase = forwardRef<HTMLDivElement, GridFilterFormBaseProps>(
         data-id={item.id}
         ownerState={rootProps}
         {...other}
-        ref={ref}
+        ref={handleRootRef}
       >
         <FilterFormDeleteIcon
           {...deleteIconProps}
@@ -511,7 +526,6 @@ const GridFilterFormBase = forwardRef<HTMLDivElement, GridFilterFormBaseProps>(
           onChange={changeLogicOperator}
           disabled={isLogicOperatorDisabled}
           native={isBaseSelectNative}
-          inputRef={logicOperatorRef}
           {...rootProps.slotProps?.baseSelect}
         >
           {logicOperators.map((logicOperator) => (
@@ -538,7 +552,6 @@ const GridFilterFormBase = forwardRef<HTMLDivElement, GridFilterFormBaseProps>(
           value={selectedField}
           onChange={changeColumn}
           disabled={readOnly}
-          focusElementRef={columnInputRef}
         />
         <FilterFormOperatorInput
           as={rootProps.slots.baseSelect}
@@ -552,7 +565,6 @@ const GridFilterFormBase = forwardRef<HTMLDivElement, GridFilterFormBaseProps>(
           value={item.operator}
           onChange={changeOperator}
           native={isBaseSelectNative}
-          inputRef={filterSelectorRef}
           disabled={readOnly}
           {...rootProps.slotProps?.baseSelect}
         >
