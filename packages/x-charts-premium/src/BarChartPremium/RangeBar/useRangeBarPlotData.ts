@@ -56,12 +56,13 @@ export function useRangeBarPlotData(
 
     const xScale = xAxisConfig.scale;
     const yScale = yAxisConfig.scale;
+    const valueScale = verticalLayout ? yScale : xScale;
     const xOrigin = Math.round(xScale(0) ?? 0);
     const yOrigin = Math.round(yScale(0) ?? 0);
 
     const colorGetter = getColor(series[seriesId], xAxes[xAxisId], yAxes[yAxisId]);
 
-    const { data: currentSeriesData, layout } = series[seriesId];
+    const { data: currentSeriesData, layout, barLabel, barLabelPlacement } = series[seriesId];
 
     const seriesDataPoints: ProcessedRangeBarData[] = [];
 
@@ -78,12 +79,15 @@ export function useRangeBarPlotData(
         continue;
       }
 
+      const value = currentSeriesData[dataIndex];
+
       const result = {
         seriesId,
         dataIndex,
         color: colorGetter(dataIndex),
-        value: currentSeriesData[dataIndex],
+        value,
         hidden: series[seriesId].hidden,
+        startCoordinate: Math.round(valueScale(value![0]) ?? 0),
         ...dimensions,
       };
 
@@ -94,6 +98,8 @@ export function useRangeBarPlotData(
       seriesId,
       data: seriesDataPoints,
       layout,
+      barLabel,
+      barLabelPlacement,
       xOrigin,
       yOrigin,
     };

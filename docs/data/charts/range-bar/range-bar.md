@@ -68,6 +68,34 @@ You can use this attribute to target elements based on their series.
 
 {{"demo": "RangeBarGradient.js"}}
 
+## Labels
+
+You can display labels on the range bars.
+
+If you provide `'value'` to the `barLabel` property of a range bar series, the range of that bar is shown as `start – end`.
+Alternatively, the `barLabel` property accepts a function that is called with the range bar item and context about the bar.
+
+To customize the position of the label, set a series' `barLabelPlacement` property to one of the following values:
+
+- `center`: the label is centered on the bar.
+- `outside`: the label is placed after the end of the range, from the point of view of its start.
+  For a vertical range bar whose end is greater than its start, the label is above its top edge.
+
+{{"demo": "RangeBarLabel.js"}}
+
+:::info
+Labels are not rendered when using the [WebGL renderer](#performance).
+:::
+
+### Custom labels
+
+To display, change, or hide labels based on conditional logic, provide a function to the `barLabel` property.
+Labels are not displayed if the function returns `null`.
+
+The example below displays the temperature amplitude of each month and hides labels when the bar height is lower than 40px.
+
+{{"demo": "RangeBarCustomLabels.js"}}
+
 ## Click event
 
 The click event handlers work similarly to bar charts.
