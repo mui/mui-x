@@ -23,7 +23,7 @@ catalog:
   '@mui/icons-material': 9.5.0
   '@mui/internal-test-utils': 2.1.1-canary.5
   '@mui/internal-core-docs': 10.0.0-canary.0
-  '@mui/internal-docs-infra': 0.13.1-canary.29
+  '@mui/internal-docs-infra': 0.13.1-canary.32
   '@mui/material': 9.5.0
   '@mui/stylis-plugin-rtl': 9.5.0
   '@mui/system': 9.5.0
@@ -122,8 +122,7 @@ allowBuilds:
   msw: false
 
 overrides:
-  # Docs-infra: mui-public #2047; core-docs: material-ui #49464.
-  '@mui/internal-docs-infra': https://pkg.pr.new/mui/mui-public/@mui/internal-docs-infra@4819565e3d64955d97f18166bfcbe2243141a68d
+  '@mui/internal-docs-infra': 0.13.1-canary.32
   # Other docs previews: material-ui #49464; public runtime: #48842.
   # Hold the public runtime until MUI X supports material-ui #49612.
   '@mui/core-downloads-tracker': https://pkg.pr.new/mui/material-ui/@mui/core-downloads-tracker@40645cf
