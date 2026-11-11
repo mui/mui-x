@@ -881,6 +881,42 @@ describe('<MonthView />', () => {
       ).map((element) => element.style.getPropertyValue('--grid-column-span'));
       expect(spans).to.deep.equal(['2', '3']);
     });
+
+    it('should span the cells of a creation placeholder in a row without weekends', () => {
+      // Thursday July 10th to Monday July 14th, in the row Wed 9th, Thu 10th, Fri 11th, Mon 14th and Tue 15th.
+      render(
+        <EventCalendarProvider
+          events={[]}
+          resources={[]}
+          displayTimezone="UTC"
+          visibleDate={new Date('2025-07-15T00:00:00Z')}
+          defaultPreferences={{ showWeekends: false, weekStartsOn: 3 }}
+        >
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
+            onMount={(store) =>
+              store.setOccurrencePlaceholder({
+                type: 'creation',
+                surfaceType: 'day-grid',
+                start: Date.parse('2025-07-10T00:00:00Z'),
+                end: Date.parse('2025-07-14T23:59:59.999Z'),
+                lockSurfaceType: false,
+                resourceId: null,
+              })
+            }
+          />
+        </EventCalendarProvider>,
+      );
+
+      // Thursday, Friday and Monday.
+      const spans = Array.from(
+        document.querySelectorAll<HTMLElement>('[style*="--grid-column-span"]'),
+      ).map((element) => element.style.getPropertyValue('--grid-column-span'));
+      expect(spans).to.deep.equal(['3']);
+    });
   });
 
   describe('All day events', () => {

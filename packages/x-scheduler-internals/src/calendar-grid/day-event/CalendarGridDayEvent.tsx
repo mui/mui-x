@@ -55,7 +55,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   // Context hooks
   const store = useEventCalendarStoreContext();
-  const { axis: rowAxis, getCellDayNumbers } = useCalendarGridDayRowContext();
+  const { axis: rowAxis, dayNumbers } = useCalendarGridDayRowContext();
   const { start: rowStart, end: rowEnd } = rowAxis;
   const { hasFocus: cellHasFocus } = useCalendarGridDayCellContext();
   const isRtl = useDirection() === 'rtl';
@@ -88,11 +88,8 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     const positionX = offsetFromStart / ref.current.offsetWidth;
 
     // The event covers the cells of these dates, and a row can skip dates (hidden weekends).
-    const cellDays = getCellDayNumbers().filter((day) => day >= firstDay && day <= lastDay);
-    if (cellDays.length === 0) {
-      return plainDateFromDayNumber(firstDay + Math.ceil(positionX * (lastDay - firstDay + 1)) - 1);
-    }
-
+    // The event renders in one of them, so there is at least one.
+    const cellDays = dayNumbers.filter((day) => day >= firstDay && day <= lastDay);
     const cellIndex = Math.min(
       Math.max(Math.ceil(positionX * cellDays.length) - 1, 0),
       cellDays.length - 1,

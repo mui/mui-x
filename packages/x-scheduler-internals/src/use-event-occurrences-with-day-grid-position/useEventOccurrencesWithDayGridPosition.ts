@@ -20,6 +20,7 @@ function getDayCount(occurrence: SchedulerEventOccurrence) {
 /**
  * The number of cells from the `fromIndex`-th day of `days` covering the dates up to `lastDayNumber`.
  * A row can skip dates (hidden weekends, days a timezone skips), so it counts the cells rather than the dates.
+ * `fromIndex` must be the index of a day of `days`: that day always counts, so the span is at least 1.
  */
 export function getDayGridCellSpan(
   days: SchedulerProcessedDay[],

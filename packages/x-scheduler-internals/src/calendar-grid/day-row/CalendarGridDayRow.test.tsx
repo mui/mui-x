@@ -12,6 +12,7 @@ describe('<CalendarGrid.DayRow />', () => {
     <CalendarGrid.DayRow
       start={adapter.getTime(adapter.startOfDay(day))}
       end={adapter.getTime(adapter.endOfDay(day))}
+      days={[]}
     />,
     () => ({
       refInstanceof: window.HTMLDivElement,

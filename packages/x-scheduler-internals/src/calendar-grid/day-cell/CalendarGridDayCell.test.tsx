@@ -40,6 +40,7 @@ describe('<CalendarGrid.DayCell />', () => {
           <CalendarGrid.DayRow
             start={adapter.getTime(adapter.startOfDay(day))}
             end={adapter.getTime(adapter.endOfDay(day))}
+            days={[{ plainDate: buildTemporalPlainDate(adapter, day, 'default') }]}
           >
             {children}
           </CalendarGrid.DayRow>
@@ -94,13 +95,16 @@ describe('<CalendarGrid.DayCell />', () => {
 
     async function createInSantiago(value: TemporalSupportedObject) {
       let store: AnyEventCalendarStore | null = null;
+      const cellDate = buildTemporalPlainDate(adapter, value, 'America/Santiago');
       const { user } = render(
         <EventCalendarProvider events={[]} displayTimezone="America/Santiago">
           <CalendarGrid.Root>
-            <CalendarGrid.DayRow start={adapter.getTime(value)} end={adapter.getTime(value)}>
-              <CalendarGrid.DayCell
-                value={buildTemporalPlainDate(adapter, value, 'America/Santiago')}
-              />
+            <CalendarGrid.DayRow
+              start={adapter.getTime(value)}
+              end={adapter.getTime(value)}
+              days={[{ plainDate: cellDate }]}
+            >
+              <CalendarGrid.DayCell value={cellDate} />
             </CalendarGrid.DayRow>
           </CalendarGrid.Root>
           <SchedulerStoreRunner<AnyEventCalendarStore>

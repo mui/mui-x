@@ -9,6 +9,8 @@ import { CalendarGridCellsRefsContext } from '../../internals/utils/CalendarGrid
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { schedulerOtherSelectors } from '../../scheduler-selectors';
 import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
+import { getDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
+import type { SchedulerProcessedDay } from '../../models';
 
 export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
   componentProps: CalendarGridDayRow.Props,
@@ -22,6 +24,7 @@ export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
     // Internal props
     start,
     end,
+    days,
     rowIndex = 0,
     // Props forwarded to the DOM element
     ...elementProps
@@ -30,19 +33,8 @@ export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
   const store = useEventCalendarStoreContext();
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const cellsRefs = React.useRef<(HTMLDivElement | null)[]>([]);
-  const cellDayNumbersRef = React.useRef<number[]>([]);
 
-  const getCellDayNumbers = React.useCallback(
-    () => cellDayNumbersRef.current.filter((dayNumber) => dayNumber !== undefined),
-    [],
-  );
-
-  const registerCellDayNumber = React.useCallback((index: number, dayNumber: number) => {
-    cellDayNumbersRef.current[index] = dayNumber;
-    return () => {
-      delete cellDayNumbersRef.current[index];
-    };
-  }, []);
+  const dayNumbers = React.useMemo(() => days.map((day) => getDayNumber(day.plainDate)), [days]);
 
   const contextValue: CalendarGridDayRowContext = React.useMemo(
     () => ({
@@ -55,10 +47,9 @@ export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
         dayEndMinute: FULL_DAY_MINUTES,
       },
       rowIndex,
-      getCellDayNumbers,
-      registerCellDayNumber,
+      dayNumbers,
     }),
-    [start, end, displayTimezone, rowIndex, getCellDayNumbers, registerCellDayNumber],
+    [start, end, displayTimezone, rowIndex, dayNumbers],
   );
 
   const element = useRenderElement('div', componentProps, {
@@ -89,6 +80,12 @@ export namespace CalendarGridDayRow {
      * The last instant of the row, as a timestamp read in the display timezone.
      */
     end: number;
+    /**
+     * The days of the cells of the row, in their order.
+     * A row can skip dates (hidden weekends, days a timezone skips), so its cells are not every date
+     * between `start` and `end`.
+     */
+    days: readonly Pick<SchedulerProcessedDay, 'plainDate'>[];
     /**
      * The index of this row within its row type.
      * Used to uniquely identify the row for keyboard navigation when there are

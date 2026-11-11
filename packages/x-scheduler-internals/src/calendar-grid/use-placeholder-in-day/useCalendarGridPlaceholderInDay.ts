@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import type { SchedulerProcessedDay } from '../../models';
 import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
@@ -9,10 +8,10 @@ import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calenda
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
 import { createProcessedDate } from '../../internals/utils/plain-date-utils/adapter';
 import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
-import { getDayGridCellSpan } from '../../use-event-occurrences-with-day-grid-position/useEventOccurrencesWithDayGridPosition';
+import { getDayGridCellSpan } from '../../use-event-occurrences-with-day-grid-position';
 
 export function useCalendarGridPlaceholderInDay(
-  day: SchedulerProcessedDay,
+  day: useEventOccurrencesWithDayGridPosition.DayData,
   row: useEventOccurrencesWithDayGridPosition.ReturnValue,
   maxEvents?: number,
 ): useEventOccurrencesWithDayGridPosition.EventOccurrencePlaceholderWithPosition | null {
@@ -64,7 +63,7 @@ export function useCalendarGridPlaceholderInDay(
     // The placeholder covers the cells of every date up to its end, like the occurrences.
     const daySpan = getDayGridCellSpan(
       row.days,
-      row.days.findIndex((rowDay) => rowDay.key === day.key),
+      row.days.indexOf(day),
       toLocalDayNumber(endInRow, displayTimezone),
     );
 
