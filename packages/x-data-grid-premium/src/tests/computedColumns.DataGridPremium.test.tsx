@@ -28,6 +28,7 @@ import type {
   GridComputedColumnDefinition,
   GridComputedColumnsModel,
   GridFilterItem,
+  GridFilterOperator,
   GridSortCellParams,
   GridSortModel,
 } from '@mui/x-data-grid-premium';
@@ -2479,7 +2480,7 @@ describe('<DataGridPremium /> - Computed columns', () => {
           expectColumnsToBeHydratedAgain();
         });
 
-        it('should not throw when the grouping column of a computed criterion is filtered', async () => {
+        it('should reset the filter items of the grouping column of a computed criterion', async () => {
           await render(
             <Test
               rows={fruitRows}
@@ -2498,9 +2499,23 @@ describe('<DataGridPremium /> - Computed columns', () => {
               }}
             />,
           );
-          expect(() =>
-            act(() => apiRef.current!.updateComputedColumn('double', toText)),
-          ).not.to.throw();
+          expect(() => {
+            act(() => apiRef.current!.updateComputedColumn('double', toText));
+          }).not.toWarnDev();
+          // The grouping column copies the operators of the criterion.
+          expect(getFilterItems()).to.deep.equal([
+            {
+              field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+              operator: 'contains',
+              value: undefined,
+            },
+          ]);
+          expect(getColumnValuesOf('item').filter(Boolean)).to.deep.equal([
+            'Apple',
+            'Banana',
+            'Cherry',
+          ]);
+          expect(() => act(() => apiRef.current!.updateRows([{ id: 0, price: 5 }]))).not.to.throw();
           expectColumnsToBeHydratedAgain();
         });
 
@@ -2797,6 +2812,280 @@ describe('<DataGridPremium /> - Computed columns', () => {
           expect(() => act(() => apiRef.current!.updateRows([{ id: 0, base: 500 }]))).to.throw(
             'getter bug: too big',
           );
+        });
+
+        describe('on the row grouping columns', () => {
+          // The text order differs from the number order: "50!" sorts before "6!" and "8!".
+          const unevenRows = [
+            { id: 0, item: 'Apple', price: 50, category: 'Fruit' },
+            { id: 1, item: 'Banana', price: 8, category: 'Fruit' },
+            { id: 2, item: 'Cherry', price: 6, category: 'Fruit' },
+          ];
+          const categoryColumns = [...fruitColumns, { field: 'category' }];
+          const categoryGroupingField = '__row_group_by_columns_group_category__';
+          const doubleGroupingField = '__row_group_by_columns_group_double__';
+
+          it('should sort again with the comparator of the new type of the leaf field', async () => {
+            await render(
+              <Test
+                rows={unevenRows}
+                columns={categoryColumns}
+                groupingColDef={{ leafField: 'double' }}
+                defaultGroupingExpansionDepth={-1}
+                initialState={{
+                  computedColumns: { model: [double] },
+                  rowGrouping: { model: ['category'] },
+                  sorting: {
+                    sortModel: [{ field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, sort: 'desc' }],
+                  },
+                }}
+              />,
+            );
+            expect(getLeafValuesOf('item')).to.deep.equal(['Apple', 'Banana', 'Cherry']);
+            expect(() => {
+              act(() => apiRef.current!.updateComputedColumn('double', toText));
+            }).not.toWarnDev();
+            expect(getLeafValuesOf('item')).to.deep.equal(['Banana', 'Cherry', 'Apple']);
+          });
+
+          it('should sort again with the comparator of the new type of the leaf field in the `multiple` mode', async () => {
+            await render(
+              <Test
+                rows={unevenRows}
+                columns={categoryColumns}
+                rowGroupingColumnMode="multiple"
+                groupingColDef={{ leafField: 'double' }}
+                defaultGroupingExpansionDepth={-1}
+                initialState={{
+                  computedColumns: { model: [double] },
+                  rowGrouping: { model: ['category'] },
+                  sorting: { sortModel: [{ field: categoryGroupingField, sort: 'desc' }] },
+                }}
+              />,
+            );
+            expect(getLeafValuesOf('item')).to.deep.equal(['Apple', 'Banana', 'Cherry']);
+            act(() => apiRef.current!.updateComputedColumn('double', toText));
+            expect(getLeafValuesOf('item')).to.deep.equal(['Banana', 'Cherry', 'Apple']);
+          });
+
+          // The regroup sorts the rebuilt tree, and the comparators of a criterion read its
+          // column live: it must keep working with the grouping columns synced first.
+          it('should sort the groups again with the comparator of the new type of the criterion', async () => {
+            await render(
+              <Test
+                rows={unevenRows}
+                columns={categoryColumns}
+                defaultGroupingExpansionDepth={-1}
+                initialState={{
+                  computedColumns: { model: [double] },
+                  rowGrouping: { model: ['double'] },
+                  sorting: {
+                    sortModel: [{ field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, sort: 'desc' }],
+                  },
+                }}
+              />,
+            );
+            expect(getGroupingValues()).to.deep.equal(['50 (1)', '8 (1)', '6 (1)']);
+            act(() => apiRef.current!.updateComputedColumn('double', toText));
+            expect(getGroupingValues()).to.deep.equal(['8! (1)', '6! (1)', '50! (1)']);
+          });
+
+          it('should reset the filter items of the grouping column whose leaf field changed type', async () => {
+            await render(
+              <Test
+                rows={unevenRows}
+                columns={categoryColumns}
+                groupingColDef={{ leafField: 'double' }}
+                defaultGroupingExpansionDepth={-1}
+                initialState={{
+                  computedColumns: { model: [double] },
+                  rowGrouping: { model: ['category'] },
+                  filter: {
+                    filterModel: {
+                      items: [
+                        { field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, operator: '>', value: 7 },
+                      ],
+                    },
+                  },
+                }}
+              />,
+            );
+            expect(getLeafValuesOf('item')).to.deep.equal(['Apple', 'Banana']);
+            expect(() => {
+              act(() => apiRef.current!.updateComputedColumn('double', toText));
+            }).not.toWarnDev();
+            expect(getFilterItems()).to.deep.equal([
+              {
+                field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+                operator: 'contains',
+                value: undefined,
+              },
+            ]);
+            expect(getLeafValuesOf('item')).to.deep.equal(['Apple', 'Banana', 'Cherry']);
+            expect(() =>
+              act(() => apiRef.current!.updateRows([{ id: 0, price: 5 }])),
+            ).not.to.throw();
+            expectColumnsToBeHydratedAgain();
+          });
+
+          it('should filter once after the reset of the filter items of a grouping column', async () => {
+            await render(
+              <Test
+                rows={unevenRows}
+                columns={categoryColumns}
+                groupingColDef={{ leafField: 'double' }}
+                defaultGroupingExpansionDepth={-1}
+                initialState={{
+                  computedColumns: { model: [double] },
+                  rowGrouping: { model: ['category'] },
+                  filter: {
+                    filterModel: {
+                      items: [
+                        { field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, operator: '>', value: 7 },
+                      ],
+                    },
+                  },
+                }}
+              />,
+            );
+            const counts = countViewEvents();
+            act(() => apiRef.current!.updateComputedColumn('double', toText));
+            expect(counts.filteredRowsSet).to.equal(1);
+          });
+
+          it('should only reset the filter items of the grouping column that reads the changed field', async () => {
+            await render(
+              <Test
+                rows={unevenRows}
+                columns={categoryColumns}
+                rowGroupingColumnMode="multiple"
+                defaultGroupingExpansionDepth={-1}
+                initialState={{
+                  computedColumns: { model: [double] },
+                  rowGrouping: { model: ['category', 'double'] },
+                  filter: {
+                    filterModel: {
+                      items: [
+                        { id: 0, field: categoryGroupingField, operator: 'contains', value: 'Fr' },
+                        { id: 1, field: doubleGroupingField, operator: '>', value: 7 },
+                      ],
+                    },
+                  },
+                }}
+              />,
+            );
+            expect(() => {
+              act(() => apiRef.current!.updateComputedColumn('double', toText));
+            }).not.toWarnDev();
+            expect(getFilterItems()).to.deep.equal([
+              { field: categoryGroupingField, operator: 'contains', value: 'Fr' },
+              { field: doubleGroupingField, operator: 'contains', value: undefined },
+            ]);
+            expectColumnsToBeHydratedAgain();
+          });
+
+          it('should reset the filter items of a grouping column to the operators of its `groupingColDef`', async () => {
+            const atLeast: GridFilterOperator = {
+              value: 'atLeast',
+              getApplyFilterFn: (filterItem) =>
+                filterItem.value == null
+                  ? null
+                  : (value) => Number.parseFloat(String(value)) >= filterItem.value,
+            };
+            await render(
+              <Test
+                rows={unevenRows}
+                columns={categoryColumns}
+                groupingColDef={{ leafField: 'double', filterOperators: [atLeast] }}
+                defaultGroupingExpansionDepth={-1}
+                initialState={{
+                  computedColumns: { model: [double] },
+                  rowGrouping: { model: ['category'] },
+                  filter: {
+                    filterModel: {
+                      items: [
+                        {
+                          field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+                          operator: 'atLeast',
+                          value: 7,
+                        },
+                      ],
+                    },
+                  },
+                }}
+              />,
+            );
+            expect(getLeafValuesOf('item')).to.deep.equal(['Apple', 'Banana']);
+            act(() => apiRef.current!.updateComputedColumn('double', toText));
+            // The operator of the `groupingColDef` still exists: only the value is cleared.
+            expect(getFilterItems()).to.deep.equal([
+              {
+                field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+                operator: 'atLeast',
+                value: undefined,
+              },
+            ]);
+            expect(getLeafValuesOf('item')).to.deep.equal(['Apple', 'Banana', 'Cherry']);
+          });
+
+          it('should keep the filter items of the grouping column when only the formula of the leaf field changes', async () => {
+            await render(
+              <Test
+                rows={unevenRows}
+                columns={categoryColumns}
+                groupingColDef={{ leafField: 'double' }}
+                defaultGroupingExpansionDepth={-1}
+                initialState={{
+                  computedColumns: { model: [double] },
+                  rowGrouping: { model: ['category'] },
+                  filter: {
+                    filterModel: {
+                      items: [
+                        { field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, operator: '>', value: 7 },
+                      ],
+                    },
+                  },
+                }}
+              />,
+            );
+            act(() => apiRef.current!.updateComputedColumn('double', { formula: '=price / 2' }));
+            expect(getFilterItems()).to.deep.equal([
+              { field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, operator: '>', value: 7 },
+            ]);
+            expect(getLeafValuesOf('item')).to.deep.equal(['Apple']);
+          });
+
+          it('should not reset a filter of the grouping column set after the type change at the next change of the columns', async () => {
+            await render(
+              <Test
+                rows={unevenRows}
+                columns={categoryColumns}
+                groupingColDef={{ leafField: 'double' }}
+                defaultGroupingExpansionDepth={-1}
+                initialState={{
+                  computedColumns: { model: [double] },
+                  rowGrouping: { model: ['category'] },
+                  filter: {
+                    filterModel: {
+                      items: [
+                        { field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, operator: '>', value: 7 },
+                      ],
+                    },
+                  },
+                }}
+              />,
+            );
+            act(() => apiRef.current!.updateComputedColumn('double', toText));
+            const filtered = {
+              field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+              operator: 'contains',
+              value: '8',
+            };
+            act(() => apiRef.current!.setFilterModel({ items: [filtered] }));
+            act(() => apiRef.current!.setColumnIndex('double', 0));
+            expect(getFilterItems()).to.deep.equal([filtered]);
+            expect(getLeafValuesOf('item')).to.deep.equal(['Banana']);
+          });
         });
       });
     });

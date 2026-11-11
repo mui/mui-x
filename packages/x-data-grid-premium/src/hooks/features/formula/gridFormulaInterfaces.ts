@@ -302,13 +302,28 @@ export interface GridFormulaInternalCache {
    */
   suppressRegroupTrigger: boolean;
   /**
-   * The `orderedFields` of the columns state for which the reset of the filter items after a
-   * type change applied the filtering. Matched by identity, so a later `columnsChange` can't
-   * read it.
+   * Left by the reset of the filter items after a type change (the priority `columnsChange`
+   * listener) for the formula `columnsChange` listener of the same event, which consumes it.
    * In the cache rather than a ref, so a second subscription of the listeners (React 18
    * StrictMode) reads the same value.
    */
-  filtersReappliedFor: readonly string[] | null;
+  typeChangeReset: {
+    /**
+     * The `orderedFields` of the columns state the reset ran for. Matched by identity, so
+     * another `columnsChange` (the nested one of the grouping columns sync included) can't read
+     * it, even when a listener threw before the one that consumes it.
+     */
+    orderedFields: readonly string[];
+    /**
+     * The fields whose type changed: the filter items of the row grouping columns that read
+     * them are reset once these columns are built from the rebuilt records.
+     */
+    fields: Set<string>;
+    /**
+     * Whether the reset applied the filtering.
+     */
+    filtersReapplied: boolean;
+  } | null;
   /**
    * Last value resolved for each raw (non-formula) dependency cell,
    * keyed by stringified row id then field. Compared on row change to decide

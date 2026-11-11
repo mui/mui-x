@@ -72,7 +72,7 @@ export function createFormulaInternalCache(
     positionContextFields: null,
     positionContextVersion: 0,
     suppressRegroupTrigger: false,
-    filtersReappliedFor: null,
+    typeChangeReset: null,
     trackedValues: new Map(),
     lastRowIdToModelLookup: null,
     formulaFields: [],
