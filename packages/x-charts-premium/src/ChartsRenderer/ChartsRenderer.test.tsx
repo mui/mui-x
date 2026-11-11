@@ -208,6 +208,24 @@ describe('<ChartsRenderer />', () => {
       ]);
     });
 
+    it('should sum the rows that share the same path', () => {
+      const [root, leaf] = getPieSeries({
+        dimensions: [
+          { id: 'team', label: 'Team', data: ['Design', 'Design', 'Engineering'] },
+          { id: 'member', label: 'Member', data: ['Ana', 'Ana', 'Carl'] },
+        ],
+      });
+
+      expect(toLabelValue(root)).to.deep.equal([
+        { label: 'Design - Hours', value: 5 },
+        { label: 'Engineering - Hours', value: 5 },
+      ]);
+      expect(toLabelValue(leaf)).to.deep.equal([
+        { label: 'Design - Ana - Hours', value: 5 },
+        { label: 'Engineering - Carl - Hours', value: 5 },
+      ]);
+    });
+
     it('should keep children with the same label apart when their parents differ', () => {
       const [, leaf] = getPieSeries({
         dimensions: [
@@ -248,6 +266,37 @@ describe('<ChartsRenderer />', () => {
         [83, 106],
         [116, 139],
       ]);
+    });
+
+    it('should ignore the padding angle when there are several dimensions', () => {
+      const series = getPieSeries({ configuration: { paddingAngle: 10 } });
+
+      expect(series.map((ring) => ring.paddingAngle)).to.deep.equal([0, 0]);
+    });
+
+    it('should apply the padding angle when there is one dimension', () => {
+      const [ring] = getPieSeries({
+        dimensions: [{ id: 'member', label: 'Member', data: ['Ana', 'Bea'] }],
+        values: [{ id: 'hours', label: 'Hours', data: [2, 3] }],
+        configuration: { paddingAngle: 10 },
+      });
+
+      expect(ring.paddingAngle).to.equal(10);
+    });
+
+    it('should not give the rings a negative radius when they do not fit', () => {
+      const series = getPieSeries({
+        values: Array.from({ length: 5 }, (_, index) => ({
+          id: `value-${index}`,
+          label: `Value ${index}`,
+          data: [2, 3, 5],
+        })),
+      });
+
+      expect(series).to.have.length(10);
+      series.forEach((ring) => {
+        expect(ring.outerRadius).to.equal(ring.innerRadius);
+      });
     });
 
     it('should count null values as zero in every ring', () => {

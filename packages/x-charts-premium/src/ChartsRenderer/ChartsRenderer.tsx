@@ -328,12 +328,14 @@ function ChartsRenderer({
     // - to get the radius for each ring, we need to substract the gaps between the rings
     //   (`chartConfiguration.seriesGap * ringCount`) and one pixel from the total available radius
     // - then we divide the result by the number of rings to get the radius for each ring
-    const radiusPerRing =
+    const radiusPerRing = Math.max(
+      0,
       (chartConfiguration.outerRadius -
         chartConfiguration.innerRadius -
         chartConfiguration.seriesGap * ringCount -
         1) /
-      ringCount;
+        ringCount,
+    );
 
     const seriesProp = values.flatMap((valueItem, valueIndex) => {
       const rings = hasMultipleDimensions
@@ -368,7 +370,8 @@ function ChartsRenderer({
           cornerRadius: chartConfiguration.cornerRadius,
           startAngle: chartConfiguration.startAngle,
           endAngle: chartConfiguration.endAngle,
-          paddingAngle: chartConfiguration.paddingAngle,
+          // the padding is added per arc, so rings with a different number of arcs would not line up
+          paddingAngle: hasMultipleDimensions ? 0 : chartConfiguration.paddingAngle,
         };
       });
     });

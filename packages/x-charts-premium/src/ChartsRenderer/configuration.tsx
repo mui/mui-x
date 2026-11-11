@@ -393,6 +393,7 @@ export const getLocalizedConfigurationOptions = (
               label: localeText.chartConfigurationPaddingAngle,
               type: 'number',
               default: 0,
+              isDisabled: ({ dimensions }: { dimensions: any[] }) => dimensions.length > 1,
             },
             cornerRadius: {
               label: localeText.chartConfigurationCornerRadius,
