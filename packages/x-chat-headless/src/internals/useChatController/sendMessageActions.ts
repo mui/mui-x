@@ -9,6 +9,7 @@ import type {
   ChatOnData,
   ChatOnError,
   ChatOnFinish,
+  ChatOnFinishPayload,
   ChatOnToolCall,
 } from '../../types';
 import type { ChatDraftAttachment } from '../../types/chat-entities';
@@ -73,12 +74,17 @@ export function createSendMessageActions<Cursor = string>(params: {
   ): Promise<ProcessStreamResult> {
     const adapter = runtimeRef.current.adapter;
     const shouldDeferFinish = Boolean(adapter.reconnectToStream);
+    let capturedFinishPayload: ChatOnFinishPayload | undefined;
     const processOptions = {
       conversationId,
       signal: abortController.signal,
       flushInterval: runtimeRef.current.streamFlushInterval,
       onToolCall: runtimeRef.current.onToolCall,
-      onFinish: shouldDeferFinish ? undefined : runtimeRef.current.onFinish,
+      onFinish: shouldDeferFinish
+        ? (payload: ChatOnFinishPayload) => {
+            capturedFinishPayload = payload;
+          }
+        : runtimeRef.current.onFinish,
       onData: runtimeRef.current.onData,
       // Unique-per-run fallback the stream binds to when the adapter omits a
       // `messageId` on `start`. A backend-supplied id still overrides it (see
@@ -102,7 +108,15 @@ export function createSendMessageActions<Cursor = string>(params: {
       });
     };
 
-    const result = await processStream(store, stream, processOptions);
+    let result: ProcessStreamResult;
+    try {
+      result = await processStream(store, stream, processOptions);
+    } catch (error) {
+      if (capturedFinishPayload && runtimeRef.current.onFinish) {
+        await runtimeRef.current.onFinish(capturedFinishPayload);
+      }
+      throw error;
+    }
 
     if (
       !result.isDisconnect ||
@@ -128,13 +142,14 @@ export function createSendMessageActions<Cursor = string>(params: {
         return result;
       }
 
-      return await processStream(store, reconnectStream, {
+      const reconnectResult = await processStream(store, reconnectStream, {
         ...processOptions,
-        onFinish: runtimeRef.current.onFinish,
         messageId: result.messageId,
         reconnectFromSequence: result.nextSequence,
         seenEventIds: result.seenEventIds,
       });
+      await emitDeferredFinish(reconnectResult);
+      return reconnectResult;
     } catch (error) {
       store.setStreaming(false);
 
