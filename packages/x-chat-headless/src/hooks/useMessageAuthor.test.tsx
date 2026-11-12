@@ -47,6 +47,38 @@ describe('useMessageAuthor', () => {
     expect(authors.m2.every((author) => author === authors.m2[0])).toBe(true);
   });
 
+  it('does not re-render rows when the active conversation changes without touching participants', () => {
+    const store = new ChatStore({
+      initialMessages: messages,
+      initialConversations: [
+        { id: 'c1', title: 'First', participants: [{ id: 'alice', displayName: 'Alice' }] },
+      ],
+      initialActiveConversationId: 'c1',
+    });
+    const renderCounts: Record<string, number> = {};
+
+    function Row({ messageId }: { messageId: string }) {
+      useMessageAuthor(messageId);
+      renderCounts[messageId] = (renderCounts[messageId] ?? 0) + 1;
+      return null;
+    }
+
+    render(
+      <ChatStoreContext.Provider value={store}>
+        <Row messageId="m1" />
+        <Row messageId="m2" />
+      </ChatStoreContext.Provider>,
+    );
+
+    const initialCounts = { ...renderCounts };
+
+    act(() => {
+      store.updateConversation('c1', { title: 'Renamed', unreadCount: 3 });
+    });
+
+    expect(renderCounts).toEqual(initialCounts);
+  });
+
   it('updates existing memoized rows when author parameters change', () => {
     const store = new ChatStore({ initialMessages: messages });
     const authors: Record<string, ReturnType<typeof useMessageAuthor>> = {};

@@ -7,6 +7,10 @@ import { chatSelectors } from '../selectors';
 import type { ChatInternalState } from '../types/chat-state';
 import { useChatStore } from './useChatStore';
 
+// Rows only need participants, so conversation patches like read state or title don't re-render them.
+const selectActiveParticipants = (state: ChatInternalState) =>
+  chatSelectors.activeConversation(state)?.participants;
+
 const selectAuthorParametersVersion = (state: ChatInternalState<unknown>) =>
   state.authorParametersVersion;
 
@@ -14,7 +18,7 @@ export function useMessageAuthor(messageId: string) {
   const store = useChatStore();
   const localeText = useChatLocaleText();
   const message = useStore(store, chatSelectors.message, messageId);
-  const activeConversation = useStore(store, chatSelectors.activeConversation);
+  const participants = useStore(store, selectActiveParticipants);
   // `store.parameters` is not reactive; this version changes when author parameters do.
   const authorParametersVersion = useStore(store, selectAuthorParametersVersion);
 
@@ -41,7 +45,11 @@ export function useMessageAuthor(messageId: string) {
   );
 
   return React.useMemo(
-    () => resolveMessageAuthor(message ?? null, { ...parametersWithLocale, activeConversation }),
-    [message, activeConversation, parametersWithLocale],
+    () =>
+      resolveMessageAuthor(message ?? null, {
+        ...parametersWithLocale,
+        activeConversation: { participants },
+      }),
+    [message, participants, parametersWithLocale],
   );
 }

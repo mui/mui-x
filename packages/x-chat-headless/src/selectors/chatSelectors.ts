@@ -135,7 +135,7 @@ export const chatSelectors = {
 
 // `messageAuthor` has no standalone `select*` alias because it needs trailing
 // `(id, parameters)` args. It is kept for public API compatibility; the internal
-// useMessageAuthor resolves authors from `message` + `activeConversation` instead,
+// useMessageAuthor resolves authors from `message` + active participants instead,
 // since this selector's single-entry cache thrashes across rows.
 export const selectMessageIds = chatSelectors.messageIds;
 export const selectMessagesById = chatSelectors.messagesById;
