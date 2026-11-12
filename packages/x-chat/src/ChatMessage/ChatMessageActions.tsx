@@ -11,6 +11,7 @@ import type {
   ChatMessage,
   ChatRuntimeActions,
   MessageActionsProps,
+  MessageActionsOwnerState,
   MessageActionsSlots,
 } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
@@ -63,50 +64,47 @@ const ChatMessageActionsStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'Actions',
   overridesResolver: (_, styles) => styles.actions,
-})<{ ownerState?: { role?: string; isOwnMessage?: boolean; actionable?: boolean } }>(
-  ({ theme, ownerState }) => ({
-    gridArea: 'actions',
-    display: 'inline-flex',
-    // Grid items default to `justify-self: stretch`, which would blockify the
-    // chip into a full-width bar; `start` keeps it hugging its buttons so it
-    // reads as the small elevated chip anchored under the bubble.
-    justifySelf: 'start',
-    alignItems: 'center',
-    gap: theme.spacing(0.25),
-    // Inside a roving message list, `visibility: hidden` keeps the buttons out of
-    // the tab order until the user drills in with Enter (`data-actionable`).
-    // Elsewhere they stay tabbable but transparent (and ignore the pointer), and
-    // are revealed on hover or while focus is inside the bar.
-    opacity: 0,
-    visibility: ownerState?.actionable === false ? 'hidden' : 'visible',
-    pointerEvents: 'none',
-    transition: theme.transitions.create(['opacity', 'visibility'], {
-      duration: theme.transitions.duration.short,
-    }),
-    '@media (prefers-reduced-motion: reduce)': {
-      transition: 'none',
-    },
-    '.MuiChatMessage-root:hover &, .MuiChatMessage-root[data-actionable="true"] &, &:focus-within':
-      {
-        opacity: 1,
-        visibility: 'visible',
-        pointerEvents: 'auto',
-      },
-    ...(ownerState?.isOwnMessage && {
-      justifySelf: 'end',
-    }),
-    backgroundColor: (theme.vars || theme).palette.background.paper,
-    borderRadius: theme.shape.borderRadius,
-    boxShadow: (theme.vars || theme).shadows[1],
-    padding: theme.spacing(0.25),
-    '& .MuiIconButton-root': {
-      padding: theme.spacing(0.5),
-    },
-    '& .MuiSvgIcon-root': {
-      fontSize: theme.typography.pxToRem(16),
-    },
+})<{ ownerState?: MessageActionsOwnerState }>(({ theme, ownerState }) => ({
+  gridArea: 'actions',
+  display: 'inline-flex',
+  // Grid items default to `justify-self: stretch`, which would blockify the
+  // chip into a full-width bar; `start` keeps it hugging its buttons so it
+  // reads as the small elevated chip anchored under the bubble.
+  justifySelf: 'start',
+  alignItems: 'center',
+  gap: theme.spacing(0.25),
+  // Inside a roving message list, `visibility: hidden` keeps the buttons out of
+  // the tab order until the user drills in with Enter (`data-actionable`).
+  // Elsewhere they stay tabbable but transparent (and ignore the pointer), and
+  // are revealed on hover or while focus is inside the bar.
+  opacity: 0,
+  visibility: ownerState?.actionable === false ? 'hidden' : 'visible',
+  pointerEvents: 'none',
+  transition: theme.transitions.create(['opacity', 'visibility'], {
+    duration: theme.transitions.duration.short,
   }),
-);
+  '@media (prefers-reduced-motion: reduce)': {
+    transition: 'none',
+  },
+  '.MuiChatMessage-root:hover &, .MuiChatMessage-root[data-actionable="true"] &, &:focus-within': {
+    opacity: 1,
+    visibility: 'visible',
+    pointerEvents: 'auto',
+  },
+  ...(ownerState?.isOwnMessage && {
+    justifySelf: 'end',
+  }),
+  backgroundColor: (theme.vars || theme).palette.background.paper,
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: (theme.vars || theme).shadows[1],
+  padding: theme.spacing(0.25),
+  '& .MuiIconButton-root': {
+    padding: theme.spacing(0.5),
+  },
+  '& .MuiSvgIcon-root': {
+    fontSize: theme.typography.pxToRem(16),
+  },
+}));
 
 const ChatMessageActions = React.forwardRef<HTMLDivElement, ChatMessageActionsProps>(
   function ChatMessageActions(inProps, ref) {

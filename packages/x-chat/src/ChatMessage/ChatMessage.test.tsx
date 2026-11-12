@@ -495,13 +495,17 @@ describe('ChatMessage', () => {
       );
 
       const button = document.querySelector('button[data-action="x"]') as HTMLButtonElement;
+      const actions = document.querySelector('.MuiChatMessage-actions') as HTMLElement;
+      expect(getComputedStyle(actions).opacity).toBe('0');
+
       await act(async () => {
         button.focus();
       });
 
       expect(document.activeElement).toBe(button);
-      const actions = document.querySelector('.MuiChatMessage-actions') as HTMLElement;
-      expect(getComputedStyle(actions).visibility).toBe('visible');
+      await waitFor(() => {
+        expect(getComputedStyle(actions).opacity).toBe('1');
+      });
     });
 
     it.skipIf(isJSDOM)('keeps the action buttons unfocusable until Enter drills in', async () => {
@@ -526,7 +530,8 @@ describe('ChatMessage', () => {
       expect(document.activeElement).toBe(article);
 
       fireEvent.keyDown(article, { key: 'Enter' });
-      // The reveal transition makes the bar visible on the next frame.
+      // The `visibility` transition keeps the bar hidden at its first frame, so
+      // the drill-in focus misses it; retry until the button is focusable.
       await waitFor(() => {
         act(() => {
           button.focus();
