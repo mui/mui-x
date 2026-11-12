@@ -310,12 +310,14 @@ ChatBox.propTypes /* remove-proptypes */ = {
   /**
    * Used to determine the avatar URL for a given message author.
    * Falls back to `message.author?.avatarUrl`, then to the matched member's `avatarUrl`.
+   * Keep the reference stable (module scope or `useCallback`), otherwise every message row recomputes its author on each parent render.
    * @default (message) => message.author?.avatarUrl
    */
   getMessageAuthorAvatarUrl: PropTypes.func,
   /**
    * Used to determine the display name for a given message author.
    * Falls back to `message.author?.displayName`, then to the matched member's `displayName`.
+   * Keep the reference stable (module scope or `useCallback`), otherwise every message row recomputes its author on each parent render.
    * @default (message) => message.author?.displayName
    */
   getMessageAuthorDisplayName: PropTypes.func,
@@ -323,6 +325,7 @@ ChatBox.propTypes /* remove-proptypes */ = {
    * Used to determine the author id for a given message.
    * The resolved id is used to match message authors against `currentUser`,
    * `members`, and active conversation participants.
+   * Keep the reference stable (module scope or `useCallback`), otherwise every message row recomputes its author on each parent render.
    * @default (message) => message.author?.id
    */
   getMessageAuthorId: PropTypes.func,

@@ -85,6 +85,38 @@ describe('useMessageAuthor', () => {
     expect(authors.m2?.displayName).toBe('From getter');
   });
 
+  it('updates existing memoized rows when an active conversation participant changes', () => {
+    const store = new ChatStore({
+      initialMessages: [
+        { id: 'm1', role: 'user', author: { id: 'bob' }, parts: [{ type: 'text', text: 'Hi' }] },
+      ],
+      initialConversations: [
+        { id: 'c1', title: 'Chat', participants: [{ id: 'bob', displayName: 'Bob' }] },
+      ],
+      initialActiveConversationId: 'c1',
+    });
+    const authors: Record<string, ReturnType<typeof useMessageAuthor>> = {};
+
+    const Row = React.memo(function Row({ messageId }: { messageId: string }) {
+      authors[messageId] = useMessageAuthor(messageId);
+      return null;
+    });
+
+    render(
+      <ChatStoreContext.Provider value={store}>
+        <Row messageId="m1" />
+      </ChatStoreContext.Provider>,
+    );
+
+    expect(authors.m1?.displayName).toBe('Bob');
+
+    act(() => {
+      store.updateConversation('c1', { participants: [{ id: 'bob', displayName: 'Robert' }] });
+    });
+
+    expect(authors.m1?.displayName).toBe('Robert');
+  });
+
   it('does not re-render rows when author parameters are recreated with equal values', () => {
     const store = new ChatStore({
       initialMessages: messages,
