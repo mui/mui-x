@@ -332,7 +332,9 @@ export function useChatController<Cursor = string>({
         return;
       }
 
-      // A stream started with no conversation keeps running when the parent assigns its new id.
+      // A stream started with no conversation is unscoped and keeps running on the next id change,
+      // since that change is usually the parent assigning the new chat's id. Switching from a new
+      // chat to a different existing conversation mid-stream therefore does not abort it.
       const { isStreaming, streamingConversationId } = store.state;
       if (
         isStreaming &&
