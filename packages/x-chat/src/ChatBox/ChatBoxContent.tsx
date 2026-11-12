@@ -108,19 +108,16 @@ function useContainerWidth(element: HTMLElement | null): number | null {
 const ChatBoxLayout = styled('div', {
   name: 'MuiChatBox',
   slot: 'Layout',
-  overridesResolver: (_, styles) => styles.layout,
 })({});
 
 const ChatBoxConversationsPane = styled('div', {
   name: 'MuiChatBox',
   slot: 'ConversationsPane',
-  overridesResolver: (_, styles) => styles.conversationsPane,
 })({});
 
 const ChatBoxThreadPane = styled('div', {
   name: 'MuiChatBox',
   slot: 'ThreadPane',
-  overridesResolver: (_, styles) => styles.threadPane,
 })({});
 
 const ChatBoxEmptyState = styled('div', {
