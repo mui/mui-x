@@ -2,7 +2,12 @@ import type {
   SchedulerProcessedDate,
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
-import { formatFullDate, formatTime, toPlainDate } from '@mui/x-scheduler-internals/internals';
+import {
+  formatFullDate,
+  formatTime,
+  getMinutesInDay,
+  toPlainDate,
+} from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEventLocaleText } from '../../models/translations';
 import { isOccurrenceMultiDay } from './event-utils';
 
@@ -35,7 +40,7 @@ export function getEventAccessibleName(parameters: GetEventAccessibleNameParamet
   const formatDate = (date: SchedulerProcessedDate) =>
     formatFullDate(locale, toPlainDate(date.timestamp, timezone));
   const formatDateTime = (date: SchedulerProcessedDate) =>
-    `${formatDate(date)} ${formatTime(locale, date.minutesInDay, ampm)}`;
+    `${formatDate(date)} ${formatTime(locale, getMinutesInDay(date.value), ampm)}`;
 
   // A multi-day timed event carries its times inside the date range, since they belong to
   // different days, so it has no separate `when`.
@@ -47,8 +52,8 @@ export function getEventAccessibleName(parameters: GetEventAccessibleNameParamet
       return undefined;
     }
     return localeText.eventAriaLabelTimeRange(
-      formatTime(locale, start.minutesInDay, ampm),
-      formatTime(locale, end.minutesInDay, ampm),
+      formatTime(locale, getMinutesInDay(start.value), ampm),
+      formatTime(locale, getMinutesInDay(end.value), ampm),
     );
   })();
 

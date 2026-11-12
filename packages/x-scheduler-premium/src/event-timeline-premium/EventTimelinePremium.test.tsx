@@ -6,7 +6,7 @@ import {
 } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import { EVENT_TIMELINE_DEFAULT_LOCALE_TEXT } from '@mui/x-scheduler/internals';
-import { toLocalDayNumber } from '@mui/x-scheduler-internals/internals';
+import { getMinutesInDay, toLocalDayNumber } from '@mui/x-scheduler-internals/internals';
 import {
   addDays,
   createDate,
@@ -1274,7 +1274,7 @@ describe('<EventTimelinePremium />', () => {
         const occurrence = onEventEditingStart.mock.lastCall![0];
         expect(occurrence.unstable_internalInfos.displayTimezone).to.equal(timezone);
         // The creation starts at the first instant of the preset, at midnight.
-        expect(occurrence.start.minutesInDay).to.equal(0);
+        expect(getMinutesInDay(occurrence.start.value)).to.equal(0);
       },
     );
   });

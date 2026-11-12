@@ -24,7 +24,7 @@ export function createStartOfPlainDate(
   plainDate: BaseTemporal.PlainDate,
   timezone: TemporalTimezone,
 ): TemporalSupportedObject {
-  return new Date(toEpochMs(plainDate, 0, timezone));
+  return new Date(toEpochMs(plainDate, timezone));
 }
 
 /**
@@ -36,7 +36,7 @@ export function createEndOfPlainDate(
   timezone: TemporalTimezone,
 ): TemporalSupportedObject {
   const nextPlainDate = plainDate.add({ days: 1 });
-  return new Date(toEpochMs(nextPlainDate, 0, timezone) - 1);
+  return new Date(toEpochMs(nextPlainDate, timezone) - 1);
 }
 
 // A string that ends with `Z`, or a date-time that ends with an offset, like

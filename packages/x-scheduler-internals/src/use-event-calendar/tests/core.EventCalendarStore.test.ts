@@ -1,4 +1,4 @@
-import { toMsInDay } from '@mui/x-scheduler-internals/internals';
+import { getMinutesInDay, toMsInDay } from '@mui/x-scheduler-internals/internals';
 import {
   addDays,
   createDate,
@@ -237,8 +237,8 @@ describe('Core - EventCalendarStore', () => {
         store.setEditingOccurrenceTimes({ start, end });
 
         const editing = store.state.editingOccurrence!;
-        expect(editing.occurrence.start.value).toEqualDateTime(start);
-        expect(editing.occurrence.end.value).toEqualDateTime(end);
+        expect(new Date(editing.occurrence.start.timestamp)).toEqualDateTime(start);
+        expect(new Date(editing.occurrence.end.timestamp)).toEqualDateTime(end);
         expect(editing.mode).to.equal('armed');
       });
 
@@ -277,8 +277,8 @@ describe('Core - EventCalendarStore', () => {
           14 * 3_600_000,
         );
         // Read in the display timezone: 09:00 in New York.
-        expect(editing.start.minutesInDay).to.equal(9 * 60);
-        expect(editing.end.minutesInDay).to.equal(11 * 60);
+        expect(getMinutesInDay(editing.start.value)).to.equal(9 * 60);
+        expect(getMinutesInDay(editing.end.value)).to.equal(11 * 60);
       });
 
       it('should keep a bound left out on its stored value in both timezones', () => {

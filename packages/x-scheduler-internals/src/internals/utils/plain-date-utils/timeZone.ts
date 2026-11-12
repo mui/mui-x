@@ -1,7 +1,12 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import { BaseTemporal } from '../base-temporal';
+import type { BaseTemporal } from '../base-temporal';
 import { isoDateToDayNumber, MS_PER_DAY } from './dayNumber';
-import { getDayNumber, plainDateFromDayNumber } from './plainDate';
+import {
+  getDayNumber,
+  getMsInDay,
+  plainDateFromDayNumber,
+  plainTimeFromMsInDay,
+} from './plainDate';
 
 interface TimezoneOffsets {
   format: (epochMs: number) => string;
@@ -12,7 +17,6 @@ interface TimezoneOffsets {
 }
 
 const MAX_CACHED_DAYS_PER_TIMEZONE = 20_000;
-const NS_PER_MS = 1_000_000n;
 const timezoneOffsets = new Map<string, TimezoneOffsets | null>();
 const OFFSET_REGEXP = /^([+-])(\d{2}):?(\d{2})?(?::?(\d{2}))?$/;
 
@@ -49,35 +53,13 @@ function readOffset(format: TimezoneOffsets['format'], epochMs: number): number 
   return offset ? parseOffset(offset) : 0;
 }
 
-let systemTimezoneId: string | null = null;
-
 /**
- * The IANA identifier of a timezone, the timezone of the system for `'default'` and `'system'`.
- * The identifier of the system is read once, as reading it costs tens of microseconds.
+ * The IANA identifier of a timezone, the timezone of the system for `'default'`.
  */
 export function getTimezoneId(timezone: TemporalTimezone): string {
-  if (timezone === 'default' || timezone === 'system') {
-    systemTimezoneId ??= new Intl.DateTimeFormat().resolvedOptions().timeZone;
-    return systemTimezoneId;
-  }
-  return timezone;
-}
-
-/**
- * Forgets the identifier of the timezone of the system, for the tests that change it.
- */
-export function resetSystemTimezoneId() {
-  systemTimezoneId = null;
-}
-
-/**
- * The zoned date-time of an instant in `timezone`.
- */
-export function toZonedDateTime(
-  epochMs: number,
-  timezone: TemporalTimezone,
-): BaseTemporal.ZonedDateTime {
-  return new BaseTemporal.ZonedDateTime(BigInt(epochMs) * NS_PER_MS, getTimezoneId(timezone));
+  return timezone === 'default' || timezone === 'system'
+    ? Intl.DateTimeFormat().resolvedOptions().timeZone
+    : timezone;
 }
 
 function getSystemTimezoneOffsetMs(epochMs: number): number {
@@ -146,6 +128,20 @@ export function toPlainDate(epochMs: number, timezone: TemporalTimezone): BaseTe
 }
 
 /**
+ * The date and wall-clock time of an instant in `timezone`.
+ */
+export function toPlainDateTime(
+  epochMs: number,
+  timezone: TemporalTimezone,
+): BaseTemporal.PlainDateTime {
+  const localMs = toLocalMs(epochMs, timezone);
+  const dayNumber = Math.floor(localMs / MS_PER_DAY);
+  return plainDateFromDayNumber(dayNumber).toPlainDateTime(
+    plainTimeFromMsInDay(localMs - dayNumber * MS_PER_DAY),
+  );
+}
+
+/**
  * The wall-clock time of an instant in `timezone`, in milliseconds since midnight.
  */
 export function toMsInDay(epochMs: number, timezone: TemporalTimezone): number {
@@ -204,14 +200,26 @@ export function localToEpochMs(localMs: number, timezone: TemporalTimezone): num
 }
 
 /**
- * The instant of a date and wall-clock time in `timezone`, resolved like `localToEpochMs()`.
+ * The instant of a date-time in `timezone`, or of the start of a date, resolved like
+ * `localToEpochMs()`.
  */
 export function toEpochMs(
-  date: BaseTemporal.PlainDate,
-  msInDay: number,
+  value: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime,
   timezone: TemporalTimezone,
 ): number {
-  return localToEpochMs(getDayNumber(date) * MS_PER_DAY + msInDay, timezone);
+  if (isPlainDateTime(value)) {
+    return localToEpochMs(
+      getDayNumber(value.toPlainDate()) * MS_PER_DAY + getMsInDay(value),
+      timezone,
+    );
+  }
+  return localToEpochMs(getDayNumber(value) * MS_PER_DAY, timezone);
+}
+
+function isPlainDateTime(
+  value: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime,
+): value is BaseTemporal.PlainDateTime {
+  return 'hour' in value;
 }
 
 /**
@@ -223,7 +231,10 @@ export function moveTimestampToPlainDate(
   plainDate: BaseTemporal.PlainDate,
   timezone: TemporalTimezone,
 ): number {
-  return toEpochMs(plainDate, toMsInDay(epochMs, timezone), timezone);
+  return localToEpochMs(
+    getDayNumber(plainDate) * MS_PER_DAY + toMsInDay(epochMs, timezone),
+    timezone,
+  );
 }
 
 /**

@@ -7,12 +7,12 @@ export {
   getTimezoneId,
   localToEpochMs,
   moveTimestampToPlainDate,
-  resetSystemTimezoneId,
   toEpochMs,
   toLocalDayNumber,
   toLocalMs,
   toMsInDay,
   toPlainDate,
+  toPlainDateTime,
   toWallClockIsoString,
 } from './timeZone';
 export {
@@ -24,9 +24,12 @@ export {
 } from './date';
 export {
   getDayNumber,
+  getMinutesInDay,
+  getMsInDay,
   getPlainDateKey,
   isWeekendPlainDate,
   plainDateFromDayNumber,
+  plainTimeFromMsInDay,
   type PlainDateDuration,
 } from './plainDate';
 export {

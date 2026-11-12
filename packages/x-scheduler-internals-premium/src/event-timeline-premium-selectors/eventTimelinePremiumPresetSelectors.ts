@@ -73,8 +73,8 @@ export const eventTimelinePremiumPresetSelectors = {
       // The config is the axis of the timeline: the first instant of its first date, the last
       // instant before the date after it, and its hour window.
       const axis: TimelineAxis = {
-        start: toEpochMs(startPlainDate, 0, displayTimezone),
-        end: toEpochMs(endPlainDate, 0, displayTimezone) - 1,
+        start: toEpochMs(startPlainDate, displayTimezone),
+        end: toEpochMs(endPlainDate, displayTimezone) - 1,
         timezone: displayTimezone,
         dayStartMinute,
         dayEndMinute,

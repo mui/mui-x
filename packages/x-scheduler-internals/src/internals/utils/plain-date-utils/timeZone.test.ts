@@ -10,6 +10,7 @@ import {
   toEpochMs,
   toLocalMs,
   toMsInDay,
+  toPlainDateTime,
   toPlainDate,
   toWallClockIsoString,
 } from './timeZone';
@@ -21,8 +22,7 @@ function epochMsOf(date: string, time: string, timezone: string) {
   const [hours, minutes] = time.split(':').map(Number);
   return new Date(
     toEpochMs(
-      BaseTemporal.PlainDate.from({ year, month, day }),
-      (hours * 60 + minutes) * 60_000,
+      BaseTemporal.PlainDateTime.from({ year, month, day, hour: hours, minute: minutes }),
       timezone,
     ),
   ).toISOString();
@@ -142,12 +142,10 @@ describe('timeZone', () => {
       expect(epochMsOf('2026-01-01', '00:30', '-00:30')).to.equal('2026-01-01T01:00:00.000Z');
     });
 
-    it('should round-trip with toPlainDate and toMsInDay outside DST transitions', () => {
+    it('should round-trip with toPlainDateTime outside DST transitions', () => {
       const epochMs = Date.UTC(2025, 4, 20, 17, 45, 12, 345);
       for (const timezone of ['default', 'UTC', 'Europe/Paris', 'Asia/Kathmandu', 'Pacific/Apia']) {
-        expect(
-          toEpochMs(toPlainDate(epochMs, timezone), toMsInDay(epochMs, timezone), timezone),
-        ).to.equal(epochMs);
+        expect(toEpochMs(toPlainDateTime(epochMs, timezone), timezone)).to.equal(epochMs);
       }
     });
   });

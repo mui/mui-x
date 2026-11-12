@@ -13,6 +13,7 @@ import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import {
   getDataTimestamp,
+  getMinutesInDay,
   toPlainDate,
   toWallClockIsoString,
 } from '@mui/x-scheduler-internals/internals';
@@ -47,11 +48,11 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       expect(result).to.have.length(5);
       for (let i = 0; i < result.length; i += 1) {
         const occ = result[i];
-        expect(occ.start.key).to.equal(
+        expect(occ.start.value.toPlainDate().toString()).to.equal(
           toPlainDate(addDays(visibleStart, i).getTime(), 'default').toString(),
         );
         expect((occ.end.timestamp - occ.start.timestamp) / 60_000).to.equal(90);
-        expect(occ.key).to.equal(`${event.id}::${occ.start.key}`);
+        expect(occ.key).to.equal(`${event.id}::${occ.start.value.toPlainDate().toString()}`);
       }
     });
 
@@ -182,8 +183,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       expect(result).to.have.length(5);
       for (const occ of result) {
-        expect(occ.start.minutesInDay).to.equal(0);
-        expect(occ.end.minutesInDay).to.equal(1439);
+        expect(getMinutesInDay(occ.start.value)).to.equal(0);
+        expect(getMinutesInDay(occ.end.value)).to.equal(1439);
       }
     });
 
@@ -205,8 +206,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       expect(result).to.have.length(1);
       expect(result[0].start.value.day).to.equal(10);
       expect(result[0].end.value.day).to.equal(12);
-      expect(result[0].start.minutesInDay).to.equal(0);
-      expect(result[0].end.minutesInDay).to.equal(1439);
+      expect(getMinutesInDay(result[0].start.value)).to.equal(0);
+      expect(getMinutesInDay(result[0].end.value)).to.equal(1439);
     });
 
     it('does not generate occurrences earlier than DTSTART within the first week even if byDay spans the week', () => {
@@ -380,7 +381,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       // Expected occurrences in chronological order:
       // SU 2, TU 4, SU 9, TU 11, SU 16
-      const days = result.map((o) => o.start.key);
+      const days = result.map((o) => o.start.value.toPlainDate().toString());
       expect(days).to.deep.equal([
         '2025-03-02',
         '2025-03-04',
@@ -740,7 +741,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       // In data tz (LA): SU Mar2, TU Mar4, SU Mar9, TU Mar11, SU Mar16
       // In display tz (Paris): MO Mar3, WE Mar5, MO Mar10, WE Mar12, MO Mar17
-      const displayDays = result.map((o) => o.start.key);
+      const displayDays = result.map((o) => o.start.value.toPlainDate().toString());
 
       expect(displayDays).to.deep.equal([
         '2025-03-03',

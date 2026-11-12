@@ -120,7 +120,7 @@ export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
    * Exception dates for the event, in its timezone.
    * These dates will be excluded from the recurrence.
    */
-  exDates?: BaseTemporal.ZonedDateTime[];
+  exDates?: BaseTemporal.PlainDateTime[];
 
   /**
    * The event model in the `SchedulerEvent` format.
@@ -406,39 +406,34 @@ export type SchedulerOccurrencePlaceholder =
 
 export interface SchedulerProcessedDate {
   /**
-   * The date and time, in the timezone of the processed date.
+   * The date and wall-clock time, in the timezone of the processed date.
    */
-  value: BaseTemporal.ZonedDateTime;
-  /**
-   * String representation of the date.
-   * It can be used as key in Maps or passed to the React `key` property when looping through days.
-   * It only contains date information, two dates representing the same day but with different time will have the same key.
-   */
-  key: string;
+  value: BaseTemporal.PlainDateTime;
   /**
    * The timestamp of the date.
    */
   timestamp: number;
-  /**
-   * Number of minutes since local midnight (0–1439).
-   *
-   * This value represents a visual position within a fixed 24h timeline grid
-   * and is intentionally independent from real-time duration (e.g. DST shifts).
-   */
-  minutesInDay: number;
 }
 
 /**
  * A day of a view: a cell, a column or a row, starting at the first instant of its date.
- * Its date is `plainDate`, so it has no zoned date-time.
+ * Its date is `plainDate`, so it has no time of day.
  */
-export interface SchedulerProcessedDay extends Omit<SchedulerProcessedDate, 'value'> {
+export interface SchedulerProcessedDay {
   /**
    * The date of the day in the display timezone, which the day list is built in: consumers compare
    * its day number, from `getDayNumber()`, with the day numbers of instants in that timezone, from
    * `toLocalDayNumber()`.
    */
   plainDate: BaseTemporal.PlainDate;
+  /**
+   * The key of `plainDate`, from `getPlainDateKey()`, which keys the maps of the views by day.
+   */
+  key: string;
+  /**
+   * The timestamp of the first instant of the day in the display timezone.
+   */
+  timestamp: number;
 }
 
 /**

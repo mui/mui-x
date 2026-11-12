@@ -54,7 +54,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     focusedCell?.columnIndex === index;
 
   const getPlaceholderFields = ({ timezone }: { timezone: TemporalTimezone }) => {
-    const start = toEpochMs(value, 0, timezone);
+    const start = toEpochMs(value, timezone);
     return {
       surfaceType: 'day-grid' as const,
       start,

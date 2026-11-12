@@ -3,7 +3,7 @@ import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerEvent, SchedulerProcessedEvent } from '../models';
 import { processDate } from '../process-date';
 import { normalizeAllDayBounds } from '../internals/utils/plain-date-utils/date';
-import { toZonedDateTime } from '../internals/utils/plain-date-utils/timeZone';
+import { toPlainDateTime } from '../internals/utils/plain-date-utils/timeZone';
 import type { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
 import { resolveEventDate } from './resolveEventDate';
 
@@ -17,7 +17,7 @@ export function processEvent(
   const startInstant = resolveEventDate(model.start, dataTimezone, model.id);
   const endInstant = resolveEventDate(model.end, dataTimezone, model.id);
   const exDates = model.exDates?.map((exDate) =>
-    toZonedDateTime(resolveEventDate(exDate, dataTimezone, model.id).getTime(), dataTimezone),
+    toPlainDateTime(resolveEventDate(exDate, dataTimezone, model.id).getTime(), dataTimezone),
   );
 
   const displayBounds = normalizeAllDayBounds(

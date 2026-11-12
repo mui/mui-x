@@ -14,9 +14,9 @@ import {
   formatMonthAndDayOfMonth,
   formatWeekday,
   getDataTimestamp,
-  isEventOccurrence,
   getTimezoneId,
-  MS_PER_DAY,
+  isEventOccurrence,
+  plainTimeFromMsInDay,
   toEpochMs,
   toPlainDate,
   toWallClockIsoString,
@@ -158,20 +158,40 @@ function readDateField(raw: string): BaseTemporal.PlainDate | null {
 }
 
 /**
- * Reads a `HH:mm` field as milliseconds since midnight, or returns `null` when it isn't a time.
+ * Reads a `HH:mm` field as a time, or returns `null` when it isn't a time.
  */
-function readTimeField(raw: string): number | null {
+function readTimeField(raw: string): BaseTemporal.PlainTime | null {
   const match = TIME_VALUE_REGEX.exec(raw);
-  return match == null ? null : (Number(match[1]) * 60 + Number(match[2])) * 60_000;
+  return match == null
+    ? null
+    : plainTimeFromMsInDay((Number(match[1]) * 60 + Number(match[2])) * 60_000);
 }
 
 /**
- * Reads a `yyyy-MM-dd` field and a time of day as an instant in `timezone`, or returns `NaN` when
- * the field isn't an existing date, the time is `null` or the timezone is unknown.
+ * Reads a `yyyy-MM-dd` field as the instant in `timezone` of `time` on that date, or of its start
+ * without a time. Returns `NaN` when the field isn't an existing date, the time is `null` or the
+ * timezone is unknown.
  */
-function readDateFieldMs(rawDate: string, msInDay: number | null, timezone: TemporalTimezone) {
+function readDateFieldMs(
+  rawDate: string,
+  timezone: TemporalTimezone,
+  time?: BaseTemporal.PlainTime | null,
+): number {
   const plainDate = readDateField(rawDate);
-  return plainDate == null || msInDay == null ? NaN : toEpochMs(plainDate, msInDay, timezone);
+  if (plainDate == null || time === null) {
+    return NaN;
+  }
+  return toEpochMs(time === undefined ? plainDate : plainDate.toPlainDateTime(time), timezone);
+}
+
+/**
+ * Reads a `yyyy-MM-dd` field as the last instant of that date in `timezone`, or returns `NaN` like
+ * `readDateFieldMs()`. When a DST transition repeats the last hour of the day, it's the later
+ * 23:59:59.999.
+ */
+function readDateFieldEndMs(rawDate: string, timezone: TemporalTimezone): number {
+  const plainDate = readDateField(rawDate);
+  return plainDate == null ? NaN : toEpochMs(plainDate.add({ days: 1 }), timezone) - 1;
 }
 
 /**
@@ -200,11 +220,8 @@ export function computeRange(
 
   if (next.allDay) {
     return {
-      start: next.startDate === '' ? now : readDateFieldMs(next.startDate, 0, displayTimezone),
-      // The last instant before the next day starts: when a DST transition repeats the last hour
-      // of the day, it's the later 23:59:59.999.
-      end:
-        next.endDate === '' ? now : readDateFieldMs(next.endDate, MS_PER_DAY, displayTimezone) - 1,
+      start: next.startDate === '' ? now : readDateFieldMs(next.startDate, displayTimezone),
+      end: next.endDate === '' ? now : readDateFieldEndMs(next.endDate, displayTimezone),
       surfaceType: 'day-grid',
     };
   }
@@ -213,11 +230,11 @@ export function computeRange(
     start:
       next.startDate === '' || next.startTime === ''
         ? now
-        : readDateFieldMs(next.startDate, readTimeField(next.startTime), displayTimezone),
+        : readDateFieldMs(next.startDate, displayTimezone, readTimeField(next.startTime)),
     end:
       next.endDate === '' || next.endTime === ''
         ? now
-        : readDateFieldMs(next.endDate, readTimeField(next.endTime), displayTimezone),
+        : readDateFieldMs(next.endDate, displayTimezone, readTimeField(next.endTime)),
     surfaceType: 'time-grid',
   };
 }
@@ -258,7 +275,7 @@ export function findInvalidRangeField(
   displayTimezone: TemporalTimezone,
 ): 'startDate' | 'startTime' | 'endDate' | 'endTime' | null {
   // A date in an unknown timezone gives no instant, so it doesn't parse either.
-  const parsesAsDate = (raw: string) => Number.isFinite(readDateFieldMs(raw, 0, displayTimezone));
+  const parsesAsDate = (raw: string) => Number.isFinite(readDateFieldMs(raw, displayTimezone));
   const parsesAsTime = (raw: string) => readTimeField(raw) != null;
 
   if (!parsesAsDate(values.startDate)) {

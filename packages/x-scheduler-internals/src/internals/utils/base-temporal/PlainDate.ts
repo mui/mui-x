@@ -25,6 +25,13 @@ import {
   type CalendarImplementation,
 } from './calendar';
 import { mergeDateFields } from './mergeDateFields';
+import {
+  PlainTime,
+  readTime,
+  type BaseTemporal as PlainTimeTypes,
+  type PlainTimeInput,
+} from './PlainTime';
+import { createPlainDateTime, type PlainDateTime } from './PlainDateTime';
 
 export { FIRST_SUPPORTED_DAY, LAST_SUPPORTED_DAY } from './iso';
 export { addIsoMonths as addMonths, checkIsoDate } from './calendar';
@@ -107,6 +114,10 @@ export declare namespace BaseTemporal {
      * Returns the same date in another calendar.
      */
     withCalendar(calendar: string): PlainDate;
+    /**
+     * Returns the date-time at `time` on this date, midnight by default.
+     */
+    toPlainDateTime(time?: PlainTimeTypes.PlainTime | PlainTimeInput): PlainDateTime;
     /**
      * Returns the date as a `YYYY-MM-DD` string, followed by a `[u-ca=…]` annotation outside the
      * ISO calendar.
@@ -514,6 +525,14 @@ export class PlainDate implements BaseTemporal.PlainDate {
     const implementation = getCalendar(calendar);
     checkCalendarRange(implementation, this.dayNumber);
     return createPlainDate(this.dayNumber, implementation.id);
+  }
+
+  public toPlainDateTime(time?: PlainTime | PlainTimeInput): PlainDateTime {
+    // A `PlainTime` already holds valid fields.
+    return createPlainDateTime(
+      this,
+      time instanceof PlainTime ? time : readTime(time ?? { hour: 0 }),
+    );
   }
 
   public toString(): string {

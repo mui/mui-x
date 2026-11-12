@@ -242,7 +242,8 @@ export class PlainDateTime implements BaseTemporal.PlainDateTime {
     return withFields(this, fields, options, 'PlainDateTime.prototype.with()', TIME_FIELDS);
   }
   withPlainTime(time: PlainTimeInput = new PlainTime()): PlainDateTime {
-    return createPlainDateTime(this.date, readTime(time));
+    // A `PlainTime` already holds valid fields.
+    return createPlainDateTime(this.date, time instanceof PlainTime ? time : readTime(time));
   }
   withCalendar(calendar: string): PlainDateTime {
     return createPlainDateTime(this.date.withCalendar(calendar), this);

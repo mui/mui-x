@@ -39,12 +39,14 @@ export function getRecurringEventOccurrencesForVisibleDays(
 
   // Adjust scan range to catch multi-day events starting before visible range
   const durationInDays =
-    toLocalDayNumber(dataEnd, dataTimezone) - getDayNumber(series.startPlainDate) + 1;
+    toLocalDayNumber(dataEnd, dataTimezone) - getDayNumber(series.start.toPlainDate()) + 1;
   const scanFirstDay = toPlainDate(start, dataTimezone).add({ days: 1 - durationInDays });
   const scanLastDay = toPlainDate(end, dataTimezone);
 
+  // Every occurrence starts at the wall-clock time of DTSTART.
+  const startTime = series.start.toPlainTime();
   return series.getOccurrenceDays(scanFirstDay, scanLastDay).map((day) => {
-    const startMs = toEpochMs(day, series.startMsInDay, dataTimezone);
+    const startMs = toEpochMs(day.toPlainDateTime(startTime), dataTimezone);
     const endMs = startMs + durationMs;
 
     // All-day occurrences span the whole day, like the base event in processEvent.

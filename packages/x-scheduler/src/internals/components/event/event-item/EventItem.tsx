@@ -183,10 +183,12 @@ export const EventItem = React.forwardRef(function EventItem(
     localeText,
   });
 
-  // The keys of the processed dates only depend on their day in the display timezone.
+  // The processed dates are read in the display timezone, like the day.
   const { start, end } = occurrence;
-  const startsBeforeDay = start.key !== date.key && start.timestamp < date.timestamp;
-  const endsAfterDay = end.key !== date.key && end.timestamp > date.timestamp;
+  const startsBeforeDay =
+    !start.value.toPlainDate().equals(date.plainDate) && start.timestamp < date.timestamp;
+  const endsAfterDay =
+    !end.value.toPlainDate().equals(date.plainDate) && end.timestamp > date.timestamp;
 
   const content = React.useMemo(() => {
     switch (variant) {

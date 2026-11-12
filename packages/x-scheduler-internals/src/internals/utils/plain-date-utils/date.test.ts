@@ -3,7 +3,8 @@ import { createDate, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { processDate } from '../../../process-date';
 import { createDateFromWallTime, createProcessedDate, isInstantString } from './date';
-import { getTimezoneId, toPlainDate } from './timeZone';
+import { getMinutesInDay } from './plainDate';
+import { toPlainDate } from './timeZone';
 
 /**
  * The date and the minutes of the day of an instant in `timezone`, as the getters of `Date` read
@@ -99,31 +100,18 @@ describe('plain-date-utils/date', () => {
       const epochMs = Date.UTC(2025, 10, 2, 5, 30);
       const reference = { ...readReference(epochMs, timezone), timestamp: epochMs };
 
-      const { value, ...processed } = processDate(new Date(epochMs), timezone);
-      expect(processed).to.deep.equal(reference);
-      // The zoned date-time reads the same date and time as the other fields.
-      expect(value.epochMilliseconds).to.equal(epochMs);
-      // The canonical identifier of `Intl`, like `Asia/Calcutta` for `Asia/Kolkata`.
-      expect(value.timeZoneId).to.equal(
-        new Intl.DateTimeFormat('en-US', { timeZone: getTimezoneId(timezone) }).resolvedOptions()
-          .timeZone,
-      );
+      const { value, timestamp } = processDate(new Date(epochMs), timezone);
+      expect(timestamp).to.equal(epochMs);
       expect(value.toPlainDate().toString()).to.equal(reference.key);
-      expect(value.hour * 60 + value.minute).to.equal(reference.minutesInDay);
-      const created = createProcessedDate(epochMs, timezone);
-      expect({ ...created }).to.deep.equal(processed);
-      expect(created.value.equals(value)).to.equal(true);
+      expect(getMinutesInDay(value)).to.equal(reference.minutesInDay);
+      expect(createProcessedDate(epochMs, timezone)).to.deep.equal({ value, timestamp });
     },
   );
 
   it('should process a date with an offset between -01:00 and 00:00', () => {
     // Africa/Monrovia used -00:44:30 until 1972: the epoch is 23:15:30 on December 31st, 1969.
-    const { value, ...processed } = createProcessedDate(0, 'Africa/Monrovia');
-    expect(processed).to.deep.equal({
-      key: '1969-12-31',
-      timestamp: 0,
-      minutesInDay: 23 * 60 + 15,
-    });
+    const { value } = createProcessedDate(0, 'Africa/Monrovia');
+    expect(value.toString()).to.equal('1969-12-31T23:15:30');
   });
 
   // Browsers cannot change their timezone through process.env.TZ.
@@ -135,10 +123,10 @@ describe('plain-date-utils/date', () => {
       const epochMs = Date.UTC(2025, 10, 2, 5, 30);
       const reference = { ...readReference(epochMs, 'default'), timestamp: epochMs };
 
-      const { value: processedValue, ...processed } = processDate(new Date(epochMs), 'default');
-      expect(processed).to.deep.equal(reference);
-      const { value: createdValue, ...created } = createProcessedDate(epochMs, 'default');
-      expect(created).to.deep.equal(reference);
+      const { value } = processDate(new Date(epochMs), 'default');
+      expect(value.toPlainDate().toString()).to.equal(reference.key);
+      expect(getMinutesInDay(value)).to.equal(reference.minutesInDay);
+      expect(createProcessedDate(epochMs, 'default').value.equals(value)).to.equal(true);
     },
   );
 

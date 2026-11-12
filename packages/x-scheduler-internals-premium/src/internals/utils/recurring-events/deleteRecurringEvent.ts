@@ -4,7 +4,11 @@ import type {
   SchedulerEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
 import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
-import { createStartOfPlainDate, toPlainDate } from '@mui/x-scheduler-internals/internals';
+import {
+  createStartOfPlainDate,
+  toEpochMs,
+  toPlainDate,
+} from '@mui/x-scheduler-internals/internals';
 import { createStartOfPreviousDay } from './internal-utils';
 import { RecurringSeries } from './RecurringSeries';
 
@@ -46,21 +50,16 @@ export function applyRecurringDeleteOnlyThis(
   originalEvent: SchedulerProcessedEvent,
   occurrence: SchedulerEventOccurrence,
 ): UpdateEventsParameters {
-  const occurrenceStart = new Date(occurrence.unstable_internalInfos.dataStart);
+  const { timezone } = originalEvent;
+  const occurrenceDay = toPlainDate(occurrence.unstable_internalInfos.dataStart, timezone);
+  const previousExDates = originalEvent.exDates ?? [];
+  const excludedDays = [...previousExDates.map((exDate) => exDate.toPlainDate()), occurrenceDay];
   const exDates = [
-    ...(originalEvent.exDates ?? []).map((exDate) => new Date(exDate.epochMilliseconds)),
-    createStartOfPlainDate(
-      toPlainDate(occurrenceStart.getTime(), originalEvent.timezone),
-      originalEvent.timezone,
-    ),
+    ...previousExDates.map((exDate) => new Date(toEpochMs(exDate, timezone))),
+    createStartOfPlainDate(occurrenceDay, timezone),
   ];
 
-  if (
-    !RecurringSeries.fromEvent(
-      originalEvent,
-      exDates.map((exDate) => exDate.getTime()),
-    ).hasOccurrence()
-  ) {
+  if (!RecurringSeries.fromEvent(originalEvent, excludedDays).hasOccurrence()) {
     return { deleted: [originalEvent.id] };
   }
 

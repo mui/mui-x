@@ -46,7 +46,7 @@ function createSeries(
   return new RecurringSeries({
     rule,
     ...seriesStart(start, 'UTC'),
-    exDates: exDates?.map((exDate) => createDate(exDate, 'UTC').getTime()),
+    excludedDays: exDates?.map((exDate) => toPlainDate(createDate(exDate, 'UTC').getTime(), 'UTC')),
   });
 }
 
@@ -163,7 +163,7 @@ describe('recurring-events/RecurringSeries', () => {
           rule: { freq: 'DAILY', until: lastInstant },
           start: Date.parse('2026-01-05T09:00:00Z'),
           timezone,
-          exDates,
+          excludedDays: exDates.map((exDate) => toPlainDate(exDate, timezone)),
         });
         return series
           .getOccurrenceDays(
@@ -276,7 +276,7 @@ describe('recurring-events/RecurringSeries', () => {
       const series = new RecurringSeries({
         rule: { freq: 'WEEKLY' },
         ...seriesStart('2025-01-06T09:00:00', 'UTC'),
-        exDates: [createDate('2025-01-06T09:00:00', 'UTC').getTime()],
+        excludedDays: [BaseTemporal.PlainDate.from('2025-01-06')],
       });
       expect(series.hasOccurrenceBefore(BaseTemporal.PlainDate.from('2025-01-13'))).to.equal(false);
       expect(series.hasOccurrenceBefore(BaseTemporal.PlainDate.from('2025-01-14'))).to.equal(true);
@@ -289,7 +289,7 @@ describe('recurring-events/RecurringSeries', () => {
       const series = new RecurringSeries({
         rule: { freq: 'YEARLY', count: 2 },
         ...seriesStart('2024-02-29T09:00:00', 'UTC'),
-        exDates: [createDate('2024-02-29T09:00:00', 'UTC').getTime()],
+        excludedDays: [BaseTemporal.PlainDate.from('2024-02-29')],
       });
       expect(series.hasOccurrence()).to.equal(true);
     });

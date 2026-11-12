@@ -1,9 +1,9 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { MS_PER_DAY, MS_PER_MINUTE } from './plain-date-utils/dayNumber';
 import type { BaseTemporal } from './base-temporal';
+import { getDayNumber } from './plain-date-utils/plainDate';
 import {
   localToEpochMs,
-  toEpochMs,
   toLocalDayNumber,
   toLocalMs,
   toMsInDay,
@@ -59,9 +59,11 @@ export function getPlainDateTimelineAxis(
   timezone: TemporalTimezone,
 ): TimelineAxis {
   const { dayStartMinute, dayEndMinute } = window;
-  const endMs = toEpochMs(plainDate, dayEndMinute * MS_PER_MINUTE, timezone);
+  // The minutes of the window, the end included, can reach 24:00, which isn't a plain time.
+  const dayStartLocalMs = getDayNumber(plainDate) * MS_PER_DAY;
+  const endMs = localToEpochMs(dayStartLocalMs + dayEndMinute * MS_PER_MINUTE, timezone);
   return {
-    start: toEpochMs(plainDate, dayStartMinute * MS_PER_MINUTE, timezone),
+    start: localToEpochMs(dayStartLocalMs + dayStartMinute * MS_PER_MINUTE, timezone),
     end: dayEndMinute === FULL_DAY_MINUTES ? endMs - 1 : endMs,
     timezone,
     dayStartMinute,

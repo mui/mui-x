@@ -8,8 +8,7 @@ import { addDaysOnWallClock } from '@mui/x-scheduler-internals/internals';
  * Whether the occurrence starts and ends on different days of the display timezone.
  */
 export function isOccurrenceMultiDay(occurrence: SchedulerRenderableEventOccurrence) {
-  // The keys of the processed dates only depend on their day in the display timezone.
-  return occurrence.start.key !== occurrence.end.key;
+  return !occurrence.start.value.toPlainDate().equals(occurrence.end.value.toPlainDate());
 }
 
 export function isOccurrenceAllDayOrMultipleDay(occurrence: SchedulerRenderableEventOccurrence) {

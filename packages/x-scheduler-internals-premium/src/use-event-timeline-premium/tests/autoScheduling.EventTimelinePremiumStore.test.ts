@@ -203,8 +203,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       );
 
       const edited = store.state.editingOccurrence!.occurrence;
-      expect(edited.start.value).toEqualDateTime(date('2025-07-03T10:00:00Z'));
-      expect(edited.end.value).toEqualDateTime(date('2025-07-03T11:00:00Z'));
+      expect(new Date(edited.start.timestamp)).toEqualDateTime(date('2025-07-03T10:00:00Z'));
+      expect(new Date(edited.end.timestamp)).toEqualDateTime(date('2025-07-03T11:00:00Z'));
     });
 
     it('should keep a pushed all-day successor all-day and day-aligned once serialized', () => {

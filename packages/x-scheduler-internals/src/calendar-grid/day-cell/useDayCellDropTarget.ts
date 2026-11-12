@@ -35,7 +35,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
       }
 
       // The first instant of the day of the cell in the display timezone.
-      const dayStart = toEpochMs(value, 0, timezone);
+      const dayStart = toEpochMs(value, timezone);
 
       // Move an Standalone Event into the Time Grid
       if (data.source === 'StandaloneEvent') {

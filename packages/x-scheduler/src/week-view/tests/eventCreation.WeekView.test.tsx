@@ -4,6 +4,7 @@ import { act, screen } from '@mui/internal-test-utils';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { WeekView } from '@mui/x-scheduler/week-view';
 import { vi, describe, it, expect } from 'vitest';
+import { getMinutesInDay } from '@mui/x-scheduler-internals/internals';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 import { eventCalendarClasses } from '../../event-calendar';
 import { EventDialogProvider } from '../../internals/components/event-dialog';
@@ -87,7 +88,7 @@ describe('<WeekView /> event creation', () => {
 
       expect(occurrence.unstable_internalInfos.displayTimezone).to.equal(timezone);
       // The creation starts at noon.
-      expect(occurrence.start.minutesInDay).to.equal(12 * 60);
+      expect(getMinutesInDay(occurrence.start.value)).to.equal(12 * 60);
     });
 
     it('should pass a creation in the day grid to `onEventEditingStart` in the display timezone', async () => {
@@ -95,7 +96,7 @@ describe('<WeekView /> event creation', () => {
 
       expect(occurrence.unstable_internalInfos.displayTimezone).to.equal(timezone);
       // The creation ends on the last minute of its day.
-      expect(occurrence.end.minutesInDay).to.equal(24 * 60 - 1);
+      expect(getMinutesInDay(occurrence.end.value)).to.equal(24 * 60 - 1);
     });
   });
 });

@@ -2,7 +2,12 @@ import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { EventBuilder } from 'test/utils/scheduler/event-builder';
 import { utcJuly4AllDayBuilder } from 'test/utils/scheduler/fixtures';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
-import { toMsInDay, toPlainDate, toWallClockIsoString } from '@mui/x-scheduler-internals/internals';
+import {
+  getMinutesInDay,
+  toEpochMs,
+  toMsInDay,
+  toPlainDate,
+} from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
 
 describe('processEvent', () => {
@@ -33,12 +38,9 @@ describe('processEvent', () => {
       // Kiritimati is at UTC+14.
       const processed = processEvent(event, 'Pacific/Kiritimati');
       const { start, end } = processed;
-      expect(start.key).to.equal('2025-01-02');
-      expect(start.minutesInDay).to.equal(0);
-      expect(end.minutesInDay).to.equal(120);
-      // A zoned date-time in the display timezone.
-      expect(start.value.toString()).to.equal('2025-01-02T00:00:00+14:00[Pacific/Kiritimati]');
-      expect(end.value.toString()).to.equal('2025-01-02T02:00:00+14:00[Pacific/Kiritimati]');
+      expect(start.value.toString()).to.equal('2025-01-02T00:00:00');
+      expect(end.value.toString()).to.equal('2025-01-02T02:00:00');
+      expect(start.timestamp).to.equal(Date.parse('2025-01-01T10:00:00Z'));
     });
 
     it('should spread an all-day event over whole days of the display timezone', () => {
@@ -46,8 +48,8 @@ describe('processEvent', () => {
       const processed = processEvent(utcJuly4AllDayBuilder().build(), 'America/New_York');
 
       const { start, end } = processed;
-      expect([start.key, start.minutesInDay]).to.deep.equal(['2025-07-03', 0]);
-      expect([end.key, end.minutesInDay]).to.deep.equal(['2025-07-04', 23 * 60 + 59]);
+      expect(start.value.toString()).to.equal('2025-07-03T00:00:00');
+      expect(end.value.toString()).to.equal('2025-07-04T23:59:59.999');
       expect(
         toPlainDate(processed.unstable_internalInfos.dataStart, processed.timezone).toString(),
       ).to.equal('2025-07-04');
@@ -65,7 +67,7 @@ describe('processEvent', () => {
       expect(
         toPlainDate(processed.unstable_internalInfos.dataEnd, processed.timezone).toString(),
       ).to.equal('+010000-01-01');
-      expect(processed.end.key).to.equal('+010000-01-01');
+      expect(processed.end.value.toPlainDate().toString()).to.equal('+010000-01-01');
     });
 
     it('should read the instants of the exDates in the timezone of the event', () => {
@@ -76,9 +78,7 @@ describe('processEvent', () => {
       const processed = processEvent(event, 'Europe/Paris');
 
       expect(processed.exDates).to.have.length(1);
-      expect(processed.exDates![0].toString()).to.equal(
-        '2025-01-04T19:00:00-05:00[America/New_York]',
-      );
+      expect(processed.exDates![0].toString()).to.equal('2025-01-04T19:00:00');
     });
 
     it('should read rrule.until as an instant when rrule is an object', () => {
@@ -180,7 +180,9 @@ describe('processEvent', () => {
 
       expect(processed.exDates).to.have.length(1);
       // 09:00 NY (UTC-5) = 14:00 UTC
-      expect(processed.exDates![0].epochMilliseconds).to.equal(Date.parse('2025-01-05T14:00:00Z'));
+      expect(toEpochMs(processed.exDates![0], processed.timezone)).to.equal(
+        Date.parse('2025-01-05T14:00:00Z'),
+      );
     });
 
     it('should read the data-timezone bag in the event timezone for instant strings', () => {
@@ -204,9 +206,7 @@ describe('processEvent', () => {
       expect(toMsInDay(processed.unstable_internalInfos.dataEnd, processed.timezone)).to.equal(
         10 * 3_600_000,
       );
-      expect(
-        toWallClockIsoString(processed.exDates![0].epochMilliseconds, processed.timezone),
-      ).to.equal('2025-01-05T09:00:00');
+      expect(processed.exDates![0].toString()).to.equal('2025-01-05T09:00:00');
     });
 
     it('should keep local hour across DST spring-forward for wall-time events', () => {
@@ -227,8 +227,8 @@ describe('processEvent', () => {
       const processedAfter = processEvent(eventAfter, 'America/New_York');
 
       // Both should show 09:00 local
-      expect(processedBefore.start.minutesInDay).to.equal(9 * 60);
-      expect(processedAfter.start.minutesInDay).to.equal(9 * 60);
+      expect(getMinutesInDay(processedBefore.start.value)).to.equal(9 * 60);
+      expect(getMinutesInDay(processedAfter.start.value)).to.equal(9 * 60);
 
       // But different UTC timestamps
       expect(processedBefore.unstable_internalInfos.dataStart).to.equal(

@@ -61,8 +61,8 @@ function getRangeToFetch(state: EventCalendarPremiumState): DateRange | null {
     const range = viewDefinition.fetchRangeSelector(calendarState);
     return toWholeDays(
       {
-        start: toEpochMs(range.start, 0, displayTimezone),
-        end: toEpochMs(range.end, 0, displayTimezone),
+        start: toEpochMs(range.start, displayTimezone),
+        end: toEpochMs(range.end, displayTimezone),
       },
       displayTimezone,
     );

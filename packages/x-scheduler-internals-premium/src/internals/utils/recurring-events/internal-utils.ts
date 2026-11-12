@@ -3,6 +3,7 @@ import {
   getDayNumber,
   getStartOfDayMs,
   MS_PER_DAY,
+  plainTimeFromMsInDay,
   toEpochMs,
   toLocalMs,
   toMsInDay,
@@ -24,7 +25,7 @@ export function createStartOfPreviousDay(
   plainDate: BaseTemporal.PlainDate,
   timezone: TemporalTimezone,
 ): TemporalSupportedObject {
-  return new Date(getStartOfDayMs(toEpochMs(plainDate, 0, timezone) - 1, timezone));
+  return new Date(getStartOfDayMs(toEpochMs(plainDate, timezone) - 1, timezone));
 }
 
 /**
@@ -40,7 +41,7 @@ export function moveEndToPlainDate(
   timezone: TemporalTimezone,
 ): TemporalSupportedObject {
   const msInDay = toMsInDay(end.getTime(), timezone);
-  let endMs = toEpochMs(plainDate, msInDay, timezone);
+  let endMs = toEpochMs(plainDate.toPlainDateTime(plainTimeFromMsInDay(msInDay)), timezone);
   if (endMs < startMs) {
     // The same wall-clock time, in the offset of the start.
     const laterMs = startMs + msInDay - toMsInDay(startMs, timezone);

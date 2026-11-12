@@ -303,8 +303,8 @@ premiumStoreClasses.forEach((storeClass) => {
       const occurrence = schedulerOtherSelectors.editingOccurrence(store.state)!;
       // The occurrence followed the resize onto the freshly-split event: new key, updated times.
       expect(occurrence.key).to.not.equal(armedKey);
-      expect(occurrence.start.value).toEqualDateTime(resizedStart);
-      expect(occurrence.end.value).toEqualDateTime(resizedEnd);
+      expect(new Date(occurrence.start.timestamp)).toEqualDateTime(resizedStart);
+      expect(new Date(occurrence.end.timestamp)).toEqualDateTime(resizedEnd);
     });
 
     it('should keep the data-timezone identity in sync when the armed occurrence is resized', () => {
@@ -593,8 +593,8 @@ premiumStoreClasses.forEach((storeClass) => {
       // A detached one-off keys by the plain event id, without the day of a series occurrence.
       expect(occurrence.key).to.equal(getOccurrenceKey(occurrence.id));
       expect(occurrence.rrule).to.equal(undefined);
-      expect(occurrence.start.value).toEqualDateTime(dayA);
-      expect(occurrence.end.value).toEqualDateTime(addHours(dayA, 1));
+      expect(new Date(occurrence.start.timestamp)).toEqualDateTime(dayA);
+      expect(new Date(occurrence.end.timestamp)).toEqualDateTime(addHours(dayA, 1));
       expect(occurrence.unstable_internalInfos.dataStart).to.equal(dayA.getTime());
       expect(new Date(occurrence!.unstable_internalInfos.dataEnd)).toEqualDateTime(
         addHours(dayA, 1),
