@@ -1,5 +1,7 @@
 import {
-  adapter,
+  addDays,
+  addHours,
+  createDate,
   premiumStoreClasses,
   ResourceBuilder,
   utcJuly4AllDayBuilder,
@@ -39,7 +41,7 @@ premiumStoreClasses.forEach((storeClass) => {
           sourceResourceId: null,
           resourceId: null,
           start: occurrence.displayTimezone.start.timestamp,
-          end: adapter.getTime(adapter.addDays(occurrence.displayTimezone.end.value, 1)),
+          end: addDays(occurrence.displayTimezone.end.value, 1).getTime(),
         },
       );
       store.selectRecurringEventScope('all');
@@ -76,7 +78,7 @@ premiumStoreClasses.forEach((storeClass) => {
           sourceResourceId: null,
           resourceId: null,
           start: occurrence.displayTimezone.start.timestamp,
-          end: adapter.getTime(adapter.addDays(occurrence.displayTimezone.end.value, 1)),
+          end: addDays(occurrence.displayTimezone.end.value, 1).getTime(),
         },
       );
 
@@ -100,7 +102,7 @@ premiumStoreClasses.forEach((storeClass) => {
         onEventsChange,
       });
       const start = occurrence.displayTimezone.start.value;
-      const end = adapter.addHours(start, 1);
+      const end = addHours(start, 1);
 
       applyInternalDragOrResizeOccurrencePlaceholder(
         store as unknown as SchedulerStoreInContext<any, any>,
@@ -112,8 +114,8 @@ premiumStoreClasses.forEach((storeClass) => {
           originalOccurrence: occurrence,
           sourceResourceId: null,
           resourceId: null,
-          start: adapter.getTime(start),
-          end: adapter.getTime(end),
+          start: start.getTime(),
+          end: end.getTime(),
         },
         () => ({ allDay: false }),
       );
@@ -122,11 +124,11 @@ premiumStoreClasses.forEach((storeClass) => {
         (item: SchedulerEvent) => item.id === 'holiday',
       );
       expect(updated.allDay).to.not.equal(true);
-      expect(adapter.date(updated.start, 'UTC')).toEqualDateTime(
-        adapter.date('2025-07-03T04:00:00', 'UTC'),
+      expect(createDate(updated.start, 'UTC')).toEqualDateTime(
+        createDate('2025-07-03T04:00:00', 'UTC'),
       );
-      expect(adapter.date(updated.end, 'UTC')).toEqualDateTime(
-        adapter.date('2025-07-03T05:00:00', 'UTC'),
+      expect(createDate(updated.end, 'UTC')).toEqualDateTime(
+        createDate('2025-07-03T05:00:00', 'UTC'),
       );
     });
   });

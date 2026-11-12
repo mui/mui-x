@@ -1,4 +1,4 @@
-import { adapter } from 'test/utils/scheduler';
+import { createDate } from 'test/utils/scheduler';
 import { vi, describe, it, expect } from 'vitest';
 import { EventCalendarStore } from '../EventCalendarStore';
 import type { EventCalendarState } from '../EventCalendarStore.types';
@@ -78,10 +78,10 @@ describe('View - EventCalendarStore', () => {
       const store = new EventCalendarStore({
         ...DEFAULT_PARAMS,
         defaultView: 'week',
-        visibleDate: adapter.date('2025-06-15', 'default'),
+        visibleDate: createDate('2025-06-15'),
       });
 
-      store.switchToDay(adapter.date('2025-07-01', 'default'), {} as any);
+      store.switchToDay(createDate('2025-07-01'), {} as any);
 
       expect(store.state.view).to.equal('day');
       expect(store.state.visibleDate).toEqualDateTime('2025-06-15');
@@ -91,10 +91,10 @@ describe('View - EventCalendarStore', () => {
       const store = new EventCalendarStore({
         ...DEFAULT_PARAMS,
         view: 'week',
-        defaultVisibleDate: adapter.date('2025-06-15', 'default'),
+        defaultVisibleDate: createDate('2025-06-15'),
       });
 
-      store.switchToDay(adapter.date('2025-07-01', 'default'), {} as any);
+      store.switchToDay(createDate('2025-07-01'), {} as any);
 
       expect(store.state.view).to.equal('week');
       expect(store.state.visibleDate).toEqualDateTime('2025-07-01');
@@ -104,11 +104,11 @@ describe('View - EventCalendarStore', () => {
       const store = new EventCalendarStore({
         ...DEFAULT_PARAMS,
         defaultView: 'week',
-        defaultVisibleDate: adapter.date('2025-06-15', 'default'),
+        defaultVisibleDate: createDate('2025-06-15'),
         onViewChange: (_, eventDetails) => eventDetails.cancel(),
       });
 
-      store.switchToDay(adapter.date('2025-07-01', 'default'), {} as any);
+      store.switchToDay(createDate('2025-07-01'), {} as any);
       expect(store.state.view).to.equal('week');
       expect(store.state.visibleDate).toEqualDateTime('2025-06-15');
     });

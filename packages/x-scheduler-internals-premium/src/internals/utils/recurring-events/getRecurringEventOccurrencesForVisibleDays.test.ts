@@ -1,7 +1,13 @@
-import { adapter, EventBuilder, setSystemTimezone } from 'test/utils/scheduler';
+import {
+  addDays,
+  addMonths,
+  addYears,
+  createDate,
+  EventBuilder,
+  setSystemTimezone,
+} from 'test/utils/scheduler';
 import { beforeEach, describe, it, expect } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
-import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapter-date-fns';
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
@@ -17,7 +23,7 @@ function formatWallClock(date: SchedulerProcessedDate, timezone: TemporalTimezon
 describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
   describe('getRecurringEventOccurrencesForVisibleDays', () => {
     it('generates daily timed occurrences within visible range preserving duration', () => {
-      const visibleStart = adapter.date('2025-01-10T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-01-10T00:00:00Z');
       const event = EventBuilder.new()
         .singleDay('2025-01-10T09:00:00Z', 90)
         .rrule({ freq: 'DAILY', interval: 1 })
@@ -25,28 +31,25 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addDays(visibleStart, 4)),
+        visibleStart.getTime(),
+        addDays(visibleStart, 4).getTime(),
         'default',
       );
       expect(result).to.have.length(5);
       for (let i = 0; i < result.length; i += 1) {
         const occ = result[i];
         expect(occ.displayTimezone.start.key).to.equal(
-          adapter.formatByString(adapter.addDays(visibleStart, i), 'yyyy-MM-dd'),
+          toPlainDate(addDays(visibleStart, i).getTime(), 'default').toString(),
         );
         expect(
-          adapter.differenceInMinutes(
-            occ.displayTimezone.end.value,
-            occ.displayTimezone.start.value,
-          ),
+          (occ.displayTimezone.end.timestamp - occ.displayTimezone.start.timestamp) / 60_000,
         ).to.equal(90);
         expect(occ.key).to.equal(`${event.id}::${occ.displayTimezone.start.key}`);
       }
     });
 
     it('includes last day defined by "until" but excludes the following day', () => {
-      const visibleStart = adapter.date('2025-01-01T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-01-01T00:00:00Z');
       const event = EventBuilder.new()
         .singleDay('2025-01-01T09:00:00Z')
         .rrule({ freq: 'DAILY', interval: 1, until: '2025-01-05T23:59:59Z' })
@@ -54,18 +57,18 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addDays(visibleStart, 9)),
+        visibleStart.getTime(),
+        addDays(visibleStart, 9).getTime(),
         'default',
       );
       // Jan 1..5 inclusive
-      expect(result.map((o) => adapter.getDate(o.displayTimezone.start.value))).to.deep.equal([
+      expect(result.map((o) => o.displayTimezone.start.value.getDate())).to.deep.equal([
         1, 2, 3, 4, 5,
       ]);
     });
 
     it('respects "count" end rule (count=3 gives 3 occurrences)', () => {
-      const visibleStart = adapter.date('2025-01-01T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-01-01T00:00:00Z');
       const event = EventBuilder.new()
         .singleDay('2025-01-01T09:00:00Z')
         .rrule({ freq: 'DAILY', interval: 1, count: 3 })
@@ -73,18 +76,16 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addDays(visibleStart, 6)),
+        visibleStart.getTime(),
+        addDays(visibleStart, 6).getTime(),
         'default',
       );
       expect(result).to.have.length(3);
-      expect(result.map((o) => adapter.getDate(o.displayTimezone.start.value))).to.deep.equal([
-        1, 2, 3,
-      ]);
+      expect(result.map((o) => o.displayTimezone.start.value.getDate())).to.deep.equal([1, 2, 3]);
     });
 
     it('applies weekly interval > 1 (e.g. every 2 weeks)', () => {
-      const visibleStart = adapter.date('2025-01-03T09:00:00Z', 'default'); // Friday
+      const visibleStart = createDate('2025-01-03T09:00:00Z'); // Friday
       const event = EventBuilder.new()
         .singleDay('2025-01-03T09:00:00Z')
         .rrule({ freq: 'WEEKLY', interval: 2 }) // byDay omitted -> defaults to start weekday
@@ -92,17 +93,17 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addDays(visibleStart, 29)),
+        visibleStart.getTime(),
+        addDays(visibleStart, 29).getTime(),
         'default',
       );
       // Expect Fridays at week 0, 2 and 4
-      const dates = result.map((o) => adapter.getDate(o.displayTimezone.start.value));
+      const dates = result.map((o) => o.displayTimezone.start.value.getDate());
       expect(dates).to.deep.equal([3, 17, 31]);
     });
 
     it('generates monthly byMonthDay occurrences only on matching day and within visible range', () => {
-      const visibleStart = adapter.date('2025-01-01T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-01-01T00:00:00Z');
       const event = EventBuilder.new()
         .singleDay('2025-01-01T00:00:00Z')
         .rrule({
@@ -114,16 +115,16 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addDays(visibleStart, 119)),
+        visibleStart.getTime(),
+        addDays(visibleStart, 119).getTime(),
         'default',
       );
-      const daysOfMonth = result.map((o) => adapter.getDate(o.displayTimezone.start.value));
+      const daysOfMonth = result.map((o) => o.displayTimezone.start.value.getDate());
       expect(daysOfMonth).to.deep.equal([10, 10, 10, 10]);
     });
 
     it('generates yearly occurrences with interval', () => {
-      const visibleStart = adapter.date('2025-01-01T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-01-01T00:00:00Z');
       const event = EventBuilder.new()
         .singleDay('2025-07-20T09:00:00Z')
         .rrule({ freq: 'YEARLY', interval: 2 })
@@ -131,17 +132,17 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addYears(visibleStart, 5)),
+        visibleStart.getTime(),
+        addYears(visibleStart, 5).getTime(),
         'default',
       );
-      const years = result.map((o) => adapter.getYear(o.displayTimezone.start.value));
+      const years = result.map((o) => o.displayTimezone.start.value.getFullYear());
       expect(years).to.deep.equal([2025, 2027, 2029]);
     });
 
     it('creates all-day multi-day occurrence spanning into visible range even if start precedes first visible day', () => {
       // Visible: Jan 05-09
-      const visibleStart = adapter.date('2025-01-05T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-01-05T00:00:00Z');
       // All-day multi-day spanning Jan 03-06
       const event = EventBuilder.new()
         .span('2025-01-03T00:00:00Z', '2025-01-06T00:00:00Z', { allDay: true })
@@ -150,17 +151,17 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addDays(visibleStart, 4)),
+        visibleStart.getTime(),
+        addDays(visibleStart, 4).getTime(),
         'default',
       );
       expect(result).to.have.length(1);
-      expect(adapter.getDate(result[0].displayTimezone.start.value)).to.equal(3);
-      expect(adapter.getDate(result[0].displayTimezone.end.value)).to.equal(6);
+      expect(result[0].displayTimezone.start.value.getDate()).to.equal(3);
+      expect(result[0].displayTimezone.end.value.getDate()).to.equal(6);
     });
 
     it('normalizes all-day occurrences to whole days even when authored with sub-day times', () => {
-      const visibleStart = adapter.date('2025-01-10T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-01-10T00:00:00Z');
       // All-day daily event authored with non-midnight times (09:00 -> 18:00).
       const event = EventBuilder.new()
         .span('2025-01-10T09:00:00Z', '2025-01-10T18:00:00Z', { allDay: true })
@@ -169,8 +170,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addDays(visibleStart, 4)),
+        visibleStart.getTime(),
+        addDays(visibleStart, 4).getTime(),
         'default',
       );
 
@@ -182,7 +183,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
     });
 
     it('keeps multi-day all-day occurrences whole-day on both ends when authored with sub-day times', () => {
-      const visibleStart = adapter.date('2025-01-10T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-01-10T00:00:00Z');
       // All-day event spanning Jan 10-12 with non-midnight times.
       const event = EventBuilder.new()
         .span('2025-01-10T09:00:00Z', '2025-01-12T18:00:00Z', { allDay: true })
@@ -191,21 +192,21 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addDays(visibleStart, 4)),
+        visibleStart.getTime(),
+        addDays(visibleStart, 4).getTime(),
         'default',
       );
 
       expect(result).to.have.length(1);
-      expect(adapter.getDate(result[0].displayTimezone.start.value)).to.equal(10);
-      expect(adapter.getDate(result[0].displayTimezone.end.value)).to.equal(12);
+      expect(result[0].displayTimezone.start.value.getDate()).to.equal(10);
+      expect(result[0].displayTimezone.end.value.getDate()).to.equal(12);
       expect(result[0].displayTimezone.start.minutesInDay).to.equal(0);
       expect(result[0].displayTimezone.end.minutesInDay).to.equal(1439);
     });
 
     it('does not generate occurrences earlier than DTSTART within the first week even if byDay spans the week', () => {
       // Take the full week (Mon–Sun) and set DTSTART on Wednesday
-      const visibleStart = adapter.date('2025-01-05T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-01-05T00:00:00Z');
 
       // DTSTART on Wednesday of that same week
       const event = EventBuilder.new()
@@ -215,8 +216,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addDays(visibleStart, 7)),
+        visibleStart.getTime(),
+        addDays(visibleStart, 7).getTime(),
         'default',
       );
       const dows = result.map((o) => getWeekDayCode(o.displayTimezone.start.value, 'default'));
@@ -226,7 +227,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
     });
 
     it('returns empty array when no dates match recurrence in visible window', () => {
-      const visibleStart = adapter.date('2025-02-01T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-02-01T00:00:00Z');
       const event = EventBuilder.new()
         .singleDay('2025-01-10T09:00:00Z')
         .rrule({
@@ -239,8 +240,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addDays(visibleStart, 28)),
+        visibleStart.getTime(),
+        addDays(visibleStart, 28).getTime(),
         'default',
       );
       expect(result).to.have.length(0);
@@ -249,7 +250,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
   describe('daily frequency', () => {
     it('does not generate occurrences before series start', () => {
-      const visibleStart = adapter.date('2025-01-05T00:00:00Z', 'default'); // before event start
+      const visibleStart = createDate('2025-01-05T00:00:00Z'); // before event start
       const event = EventBuilder.new()
         .singleDay('2025-01-10T09:00:00Z')
         .rrule({ freq: 'DAILY', interval: 1 })
@@ -257,17 +258,17 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addDays(visibleStart, 10)),
+        visibleStart.getTime(),
+        addDays(visibleStart, 10).getTime(),
         'default',
       );
       // Should only have occurrences from Jan 10 onwards (6 days: 10,11,12,13,14,15)
       expect(result).to.have.length(6);
-      expect(adapter.getDate(result[0].displayTimezone.start.value)).to.equal(10);
+      expect(result[0].displayTimezone.start.value.getDate()).to.equal(10);
     });
 
     it('respects interval > 1 (every 2 days)', () => {
-      const visibleStart = adapter.date('2025-01-01T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-01-01T00:00:00Z');
       const event = EventBuilder.new()
         .singleDay('2025-01-01T00:00:00Z')
         .rrule({ freq: 'DAILY', interval: 2 })
@@ -275,12 +276,12 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addDays(visibleStart, 6)),
+        visibleStart.getTime(),
+        addDays(visibleStart, 6).getTime(),
         'default',
       );
       // Days: 1, 3, 5, 7 => 4 occurrences
-      expect(result.map((o) => adapter.getDate(o.displayTimezone.start.value))).to.deep.equal([
+      expect(result.map((o) => o.displayTimezone.start.value.getDate())).to.deep.equal([
         1, 3, 5, 7,
       ]);
     });
@@ -293,10 +294,10 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const expand = (start: string, end: string) =>
         getRecurringEventOccurrencesForVisibleDays(
           event,
-          adapter.getTime(adapter.date(start, 'default')),
-          adapter.getTime(adapter.date(end, 'default')),
+          Date.parse(start),
+          Date.parse(end),
           'default',
-        ).map((o) => adapter.getDate(o.displayTimezone.start.value));
+        ).map((o) => o.displayTimezone.start.value.getDate());
 
       expect(expand('2025-01-01T00:00:00Z', '2025-01-31T00:00:00Z')).to.deep.equal([1, 2]);
       expect(expand('2025-01-03T00:00:00Z', '2025-01-05T00:00:00Z')).to.deep.equal([]);
@@ -305,7 +306,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
   describe('weekly frequency', () => {
     it('generates occurrences only on weekdays specified in byDay', () => {
-      const visibleStart = adapter.date('2025-01-06T00:00:00Z', 'default'); // Monday
+      const visibleStart = createDate('2025-01-06T00:00:00Z'); // Monday
       const event = EventBuilder.new()
         .singleDay('2025-01-06T00:00:00Z')
         .rrule({ freq: 'WEEKLY', interval: 1, byDay: ['MO', 'WE', 'FR'] })
@@ -313,8 +314,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addDays(visibleStart, 6)), // Mon-Sun
+        visibleStart.getTime(),
+        addDays(visibleStart, 6).getTime(), // Mon-Sun
         'default',
       );
       const dows = result.map((o) => getWeekDayCode(o.displayTimezone.start.value, 'default'));
@@ -322,7 +323,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
     });
 
     it('does not generate occurrences when weekday is not in byDay', () => {
-      const visibleStart = adapter.date('2025-01-06T00:00:00Z', 'default'); // Monday
+      const visibleStart = createDate('2025-01-06T00:00:00Z'); // Monday
       const event = EventBuilder.new()
         .singleDay('2025-01-06T00:00:00Z')
         .rrule({ freq: 'WEEKLY', interval: 1, byDay: ['TU', 'TH'] }) // Tue, Thu only
@@ -330,8 +331,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addDays(visibleStart, 6)),
+        visibleStart.getTime(),
+        addDays(visibleStart, 6).getTime(),
         'default',
       );
       const dows = result.map((o) => getWeekDayCode(o.displayTimezone.start.value, 'default'));
@@ -340,7 +341,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
     });
 
     it('defaults to DTSTART weekday when byDay is omitted', () => {
-      const visibleStart = adapter.date('2025-01-10T00:00:00Z', 'default'); // Friday
+      const visibleStart = createDate('2025-01-10T00:00:00Z'); // Friday
       const event = EventBuilder.new()
         .singleDay('2025-01-10T00:00:00Z')
         .rrule({ freq: 'WEEKLY', interval: 1 }) // no byDay
@@ -348,8 +349,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addDays(visibleStart, 14)),
+        visibleStart.getTime(),
+        addDays(visibleStart, 14).getTime(),
         'default',
       );
       // Should only generate Fridays: Jan 10, 17, 24
@@ -359,8 +360,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
     it('does not go backwards when BYDAY includes SU + another day with enUS week start and COUNT', () => {
       // DTSTART: Sunday Mar 2, 2025
-      const visibleStart = adapter.date('2025-03-01T00:00:00Z', 'default');
-      const visibleEnd = adapter.addDays(visibleStart, 20);
+      const visibleStart = createDate('2025-03-01T00:00:00Z');
+      const visibleEnd = addDays(visibleStart, 20);
 
       const event = EventBuilder.new()
         .singleDay('2025-03-02T09:00:00Z')
@@ -369,8 +370,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(visibleEnd),
+        visibleStart.getTime(),
+        visibleEnd.getTime(),
         'default',
       );
 
@@ -388,10 +389,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       // And ensure they are strictly increasing (no backwards/duplicates)
       for (let i = 1; i < result.length; i += 1) {
         expect(
-          adapter.isAfter(
-            result[i].displayTimezone.start.value,
-            result[i - 1].displayTimezone.start.value,
-          ),
+          result[i].displayTimezone.start.timestamp > result[i - 1].displayTimezone.start.timestamp,
         ).to.equal(true);
       }
     });
@@ -399,7 +397,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
   describe('monthly frequency - byMonthDay', () => {
     it('respects interval > 1 (every 2 months)', () => {
-      const visibleStart = adapter.date('2025-01-10T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-01-10T00:00:00Z');
       const event = EventBuilder.new()
         .singleDay('2025-01-10T00:00:00Z')
         .rrule({ freq: 'MONTHLY', interval: 2, byMonthDay: [10] })
@@ -407,17 +405,17 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addMonths(visibleStart, 6)),
+        visibleStart.getTime(),
+        addMonths(visibleStart, 6).getTime(),
         'default',
       );
       // Jan, Mar, May, Jul => 4 occurrences
-      const months = result.map((o) => adapter.getMonth(o.displayTimezone.start.value));
+      const months = result.map((o) => o.displayTimezone.start.value.getMonth());
       expect(months).to.deep.equal([0, 2, 4, 6]); // 0-indexed months
     });
 
     it('falls back to DTSTART day-of-month when byMonthDay is omitted', () => {
-      const visibleStart = adapter.date('2025-03-15T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-03-15T00:00:00Z');
       const event = EventBuilder.new()
         .singleDay('2025-03-15T00:00:00Z')
         .rrule({ freq: 'MONTHLY', interval: 1 }) // no byMonthDay
@@ -425,17 +423,17 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addMonths(visibleStart, 3)),
+        visibleStart.getTime(),
+        addMonths(visibleStart, 3).getTime(),
         'default',
       );
       // Should generate on the 15th: Mar, Apr, May, Jun
-      const days = result.map((o) => adapter.getDate(o.displayTimezone.start.value));
+      const days = result.map((o) => o.displayTimezone.start.value.getDate());
       expect(days).to.deep.equal([15, 15, 15, 15]);
     });
 
     it('skips months where the day does not exist (e.g., 31st)', () => {
-      const visibleStart = adapter.date('2025-01-31T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-01-31T00:00:00Z');
       const event = EventBuilder.new()
         .singleDay('2025-01-31T00:00:00Z')
         .rrule({ freq: 'MONTHLY', interval: 1, byMonthDay: [31] })
@@ -443,19 +441,19 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addMonths(visibleStart, 5)),
+        visibleStart.getTime(),
+        addMonths(visibleStart, 5).getTime(),
         'default',
       );
       // Jan(31), Feb(skip), Mar(31), Apr(skip), May(31), Jun(skip)
-      const months = result.map((o) => adapter.getMonth(o.displayTimezone.start.value));
+      const months = result.map((o) => o.displayTimezone.start.value.getMonth());
       expect(months).to.deep.equal([0, 2, 4]); // Jan, Mar, May
     });
   });
 
   describe('monthly frequency - byDay ordinals', () => {
     it('generates the 2nd Tuesday of each month (2TU)', () => {
-      const visibleStart = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-07-01T00:00:00Z');
       const event = EventBuilder.new()
         .singleDay('2025-07-01T00:00:00Z')
         .rrule({ freq: 'MONTHLY', interval: 1, byDay: ['2TU'] })
@@ -463,17 +461,17 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addMonths(visibleStart, 4)), // Jul, Aug, Sep, Oct
+        visibleStart.getTime(),
+        addMonths(visibleStart, 4).getTime(), // Jul, Aug, Sep, Oct
         'default',
       );
       // Jul 8, Aug 12, Sep 9, Oct 14
-      const dates = result.map((o) => adapter.getDate(o.displayTimezone.start.value));
+      const dates = result.map((o) => o.displayTimezone.start.value.getDate());
       expect(dates).to.deep.equal([8, 12, 9, 14]);
     });
 
     it('generates the 2nd last Wednesday of each month (-2WE)', () => {
-      const visibleStart = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-07-01T00:00:00Z');
       const event = EventBuilder.new()
         .singleDay('2025-07-01T00:00:00Z')
         .rrule({ freq: 'MONTHLY', interval: 1, byDay: ['-2WE'] })
@@ -481,19 +479,19 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addMonths(visibleStart, 3)), // Jul, Aug, Sep
+        visibleStart.getTime(),
+        addMonths(visibleStart, 3).getTime(), // Jul, Aug, Sep
         'default',
       );
       // July: Wednesdays are 2,9,16,23,30 → 2nd last is 23
       // Aug: Wednesdays are 6,13,20,27 → 2nd last is 20
       // Sep: Wednesdays are 3,10,17,24 → 2nd last is 17
-      const dates = result.map((o) => adapter.getDate(o.displayTimezone.start.value));
+      const dates = result.map((o) => o.displayTimezone.start.value.getDate());
       expect(dates).to.deep.equal([23, 20, 17]);
     });
 
     it('respects interval > 1 with byDay ordinals (every 2 months)', () => {
-      const visibleStart = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-07-01T00:00:00Z');
       const event = EventBuilder.new()
         .singleDay('2025-07-01T00:00:00Z')
         .rrule({ freq: 'MONTHLY', interval: 2, byDay: ['1FR'] })
@@ -501,18 +499,18 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addMonths(visibleStart, 5)),
+        visibleStart.getTime(),
+        addMonths(visibleStart, 5).getTime(),
         'default',
       );
       // Jul 4, Sep 5, Nov 7 (every 2 months)
-      const dates = result.map((o) => adapter.getDate(o.displayTimezone.start.value));
+      const dates = result.map((o) => o.displayTimezone.start.value.getDate());
       expect(dates).to.deep.equal([4, 5, 7]);
     });
 
     it('does not generate ordinal occurrence that falls before DTSTART within the same month', () => {
       // DTSTART: July 20. 2nd Tuesday in July is July 8 (before DTSTART)
-      const visibleStart = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-07-01T00:00:00Z');
       const event = EventBuilder.new()
         .singleDay('2025-07-20T09:00:00Z')
         .rrule({ freq: 'MONTHLY', interval: 1, byDay: ['2TU'] })
@@ -520,19 +518,19 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addMonths(visibleStart, 3)), // Jul, Aug, Sep
+        visibleStart.getTime(),
+        addMonths(visibleStart, 3).getTime(), // Jul, Aug, Sep
         'default',
       );
       // July 8 is skipped (before DTSTART), Aug 12, Sep 9
-      const dates = result.map((o) => adapter.getDate(o.displayTimezone.start.value));
+      const dates = result.map((o) => o.displayTimezone.start.value.getDate());
       expect(dates).to.deep.equal([12, 9]);
     });
   });
 
   describe('yearly frequency', () => {
     it('generates occurrences only on the same month/day as DTSTART', () => {
-      const visibleStart = adapter.date('2025-07-20T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-07-20T00:00:00Z');
       const event = EventBuilder.new()
         .singleDay('2025-07-20T00:00:00Z')
         .rrule({ freq: 'YEARLY', interval: 1 })
@@ -540,21 +538,21 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addYears(visibleStart, 3)),
+        visibleStart.getTime(),
+        addYears(visibleStart, 3).getTime(),
         'default',
       );
       // Jul 20 each year: 2025, 2026, 2027, 2028
-      const years = result.map((o) => adapter.getYear(o.displayTimezone.start.value));
-      const months = result.map((o) => adapter.getMonth(o.displayTimezone.start.value));
-      const days = result.map((o) => adapter.getDate(o.displayTimezone.start.value));
+      const years = result.map((o) => o.displayTimezone.start.value.getFullYear());
+      const months = result.map((o) => o.displayTimezone.start.value.getMonth());
+      const days = result.map((o) => o.displayTimezone.start.value.getDate());
       expect(years).to.deep.equal([2025, 2026, 2027, 2028]);
       expect(months).to.deep.equal([6, 6, 6, 6]); // July (0-indexed)
       expect(days).to.deep.equal([20, 20, 20, 20]);
     });
 
     it('skips non-leap years for Feb 29 start', () => {
-      const visibleStart = adapter.date('2024-02-29T00:00:00Z', 'default');
+      const visibleStart = createDate('2024-02-29T00:00:00Z');
       const event = EventBuilder.new()
         .singleDay('2024-02-29T00:00:00Z')
         .rrule({ freq: 'YEARLY', interval: 1 })
@@ -562,12 +560,12 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addYears(visibleStart, 8)),
+        visibleStart.getTime(),
+        addYears(visibleStart, 8).getTime(),
         'default',
       );
       // Only leap years: 2024, 2028, 2032
-      const years = result.map((o) => adapter.getYear(o.displayTimezone.start.value));
+      const years = result.map((o) => o.displayTimezone.start.value.getFullYear());
       expect(years).to.deep.equal([2024, 2028, 2032]);
     });
 
@@ -580,18 +578,18 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         .rrule({ freq: 'YEARLY', interval: 1 })
         .toProcessed();
 
-      const visibleStart = adapter.date('2097-01-01T00:00:00Z', 'default');
-      const visibleEnd = adapter.date('2105-01-01T00:00:00Z', 'default');
+      const visibleStart = createDate('2097-01-01T00:00:00Z');
+      const visibleEnd = createDate('2105-01-01T00:00:00Z');
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(visibleEnd),
+        visibleStart.getTime(),
+        visibleEnd.getTime(),
         'default',
       );
 
       // The only Feb 29 in [2097, 2105) is 2104 (leap year)
-      const years = result.map((o) => adapter.getYear(o.displayTimezone.start.value));
+      const years = result.map((o) => o.displayTimezone.start.value.getFullYear());
       expect(years).to.deep.equal([2104]);
     });
 
@@ -610,8 +608,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         const expand = (start: string, end: string) =>
           getRecurringEventOccurrencesForVisibleDays(
             event,
-            adapter.getTime(adapter.date(start, 'America/New_York')),
-            adapter.getTime(adapter.date(end, 'America/New_York')),
+            createDate(start, 'America/New_York').getTime(),
+            createDate(end, 'America/New_York').getTime(),
             'America/New_York',
           ).map((o) => o.dataTimezone.start.key);
 
@@ -635,13 +633,13 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 
-      const visibleStart = adapter.date('2024-01-10T00:00:00Z', 'default');
-      const visibleEnd = adapter.addDays(visibleStart, 3);
+      const visibleStart = createDate('2024-01-10T00:00:00Z');
+      const visibleEnd = addDays(visibleStart, 3);
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(visibleEnd),
+        visibleStart.getTime(),
+        visibleEnd.getTime(),
         'Europe/Madrid',
       );
 
@@ -665,22 +663,20 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 
-      const visibleStart = adapter.date('2025-01-09T00:00:00Z', 'default');
-      const visibleEnd = adapter.addDays(visibleStart, 3);
+      const visibleStart = createDate('2025-01-09T00:00:00Z');
+      const visibleEnd = addDays(visibleStart, 3);
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(visibleEnd),
+        visibleStart.getTime(),
+        visibleEnd.getTime(),
         'Europe/Madrid',
       );
 
       // Only three occurrences, still belonging to Jan 10
       expect(result).to.have.length(3);
       // Check local day in the data timezone (Tokyo)
-      expect(
-        adapter.getDate(adapter.setTimezone(result[0].dataTimezone.start.value, 'Asia/Tokyo')),
-      ).to.equal(10);
+      expect(toPlainDate(result[0].dataTimezone.start.timestamp, 'Asia/Tokyo').day).to.equal(10);
     });
 
     it('preserves multi-day duration when converting occurrences to the display timezone', () => {
@@ -695,27 +691,26 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 
-      const visibleStart = adapter.date('2025-03-01T00:00:00Z', 'default');
-      const visibleEnd = adapter.addDays(visibleStart, 4);
+      const visibleStart = createDate('2025-03-01T00:00:00Z');
+      const visibleEnd = addDays(visibleStart, 4);
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(visibleEnd),
+        visibleStart.getTime(),
+        visibleEnd.getTime(),
         'Europe/Madrid',
       );
 
       result.forEach((occ) => {
         expect(
-          adapter.isWithinRange(occ.displayTimezone.start.value, [visibleStart, visibleEnd]),
+          occ.displayTimezone.start.timestamp >= visibleStart.getTime() &&
+            occ.displayTimezone.start.timestamp <= visibleEnd.getTime(),
         ).to.equal(true);
       });
       // Duration must remain exactly 48h
       result.forEach((occ) => {
-        const hours = adapter.differenceInHours(
-          occ.displayTimezone.end.value,
-          occ.displayTimezone.start.value,
-        );
+        const hours =
+          (occ.displayTimezone.end.timestamp - occ.displayTimezone.start.timestamp) / 3_600_000;
         expect(hours).to.equal(48);
       });
     });
@@ -731,13 +726,13 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         .rrule({ freq: 'WEEKLY', byDay: ['SU', 'TU'], count: 5 })
         .toProcessed();
 
-      const visibleStart = adapter.date('2025-03-01T00:00:00Z', 'default');
-      const visibleEnd = adapter.addDays(visibleStart, 25);
+      const visibleStart = createDate('2025-03-01T00:00:00Z');
+      const visibleEnd = addDays(visibleStart, 25);
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(visibleEnd),
+        visibleStart.getTime(),
+        visibleEnd.getTime(),
         'Europe/Paris',
       );
 
@@ -767,11 +762,11 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         .rrule({ freq: 'WEEKLY', byDay: ['FR'] })
         .toProcessed();
 
-      const visibleStart = adapter.date('2025-07-04T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-07-04T00:00:00Z');
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addDays(visibleStart, 15)),
+        visibleStart.getTime(),
+        addDays(visibleStart, 15).getTime(),
         'default',
       );
 
@@ -790,11 +785,11 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         .rrule({ freq: 'WEEKLY', byDay: ['SU'] })
         .toProcessed();
 
-      const visibleStart = adapter.date('2025-10-26T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-10-26T00:00:00Z');
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addDays(visibleStart, 15)),
+        visibleStart.getTime(),
+        addDays(visibleStart, 15).getTime(),
         'default',
       );
 
@@ -812,11 +807,11 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         .rrule({ freq: 'DAILY', interval: 1, until: '2025-01-05T05:00:00Z' })
         .toProcessed();
 
-      const visibleStart = adapter.date('2025-01-01T00:00:00Z', 'default');
+      const visibleStart = createDate('2025-01-01T00:00:00Z');
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(visibleStart),
-        adapter.getTime(adapter.addDays(visibleStart, 9)),
+        visibleStart.getTime(),
+        addDays(visibleStart, 9).getTime(),
         'default',
       );
 
@@ -840,8 +835,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
     const result = getRecurringEventOccurrencesForVisibleDays(
       event,
-      adapter.getTime(adapter.date('2000-01-01T00:00:00Z', 'default')),
-      adapter.getTime(adapter.date('2060-12-31T00:00:00Z', 'default')),
+      Date.parse('2000-01-01T00:00:00Z'),
+      Date.parse('2060-12-31T00:00:00Z'),
       'UTC',
     );
 
@@ -860,11 +855,11 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         .singleDay(start)
         .rrule({ freq: 'DAILY', count })
         .toProcessed();
-      const rangeStart = adapter.date(visibleStart, 'default');
+      const rangeStart = createDate(visibleStart);
       return getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(rangeStart),
-        adapter.getTime(adapter.addDays(rangeStart, 6)),
+        rangeStart.getTime(),
+        addDays(rangeStart, 6).getTime(),
         'Pacific/Apia',
       ).map((o) => formatWallClock(o.dataTimezone.start, o.dataTimezone.timezone));
     }
@@ -892,8 +887,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const expand = (visibleStart: string) =>
         getRecurringEventOccurrencesForVisibleDays(
           event,
-          adapter.getTime(adapter.date(visibleStart, 'default')),
-          adapter.getTime(adapter.date('1993-08-25T00:00:00Z', 'default')),
+          Date.parse(visibleStart),
+          Date.parse('1993-08-25T00:00:00Z'),
           'Pacific/Kwajalein',
         ).map((o) => o.dataTimezone.start.key);
 
@@ -931,8 +926,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.getTime(adapter.date('2012-01-01T00:00:00', 'Pacific/Apia')),
-        adapter.getTime(adapter.date('2012-01-31T00:00:00', 'Pacific/Apia')),
+        createDate('2012-01-01T00:00:00', 'Pacific/Apia').getTime(),
+        createDate('2012-01-31T00:00:00', 'Pacific/Apia').getTime(),
         'Pacific/Apia',
       );
 
@@ -957,8 +952,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
     const result = getRecurringEventOccurrencesForVisibleDays(
       event,
-      adapter.getTime(adapter.date('2025-03-29T00:00:00Z', 'default')),
-      adapter.getTime(adapter.date('2025-03-31T23:00:00Z', 'default')),
+      Date.parse('2025-03-29T00:00:00Z'),
+      Date.parse('2025-03-31T23:00:00Z'),
       'Europe/Paris',
     );
 
@@ -982,8 +977,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
     const result = getRecurringEventOccurrencesForVisibleDays(
       event,
-      adapter.getTime(adapter.date('2025-12-31T00:00:00Z', 'default')),
-      adapter.getTime(adapter.date('2026-04-30T00:00:00Z', 'default')),
+      Date.parse('2025-12-31T00:00:00Z'),
+      Date.parse('2026-04-30T00:00:00Z'),
       '-00:30',
     );
 
@@ -1015,9 +1010,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       describe.skipIf(!isJSDOM && systemTimezone !== 'UTC')('week days', () => {
         it('should expand BYDAY on the matching days of the data timezone', () => {
-          // A new adapter, as adapters cache data computed in the current system timezone.
-          const systemAdapter = new TemporalAdapterDateFns();
-          const event = EventBuilder.new(systemAdapter)
+          const event = EventBuilder.new()
             .withDataTimezone('America/New_York')
             .singleDay('2025-10-21T09:00:00')
             .rrule({ freq: 'WEEKLY', byDay: ['TU', 'SA'] })
@@ -1025,19 +1018,16 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
           const result = getRecurringEventOccurrencesForVisibleDays(
             event,
-            adapter.getTime(systemAdapter.date('2025-10-20T00:00:00Z', 'default')),
-            adapter.getTime(systemAdapter.date('2025-11-02T00:00:00Z', 'default')),
+            Date.parse('2025-10-20T00:00:00Z'),
+            Date.parse('2025-11-02T00:00:00Z'),
             'America/New_York',
           );
 
           expect(
             result.map((o) =>
-              systemAdapter.formatByString(
-                systemAdapter.setTimezone(o.dataTimezone.start.value, o.dataTimezone.timezone),
-                'EEE yyyy-MM-dd',
-              ),
+              toPlainDate(o.dataTimezone.start.timestamp, o.dataTimezone.timezone).toString(),
             ),
-          ).to.deep.equal(['Tue 2025-10-21', 'Sat 2025-10-25', 'Tue 2025-10-28', 'Sat 2025-11-01']);
+          ).to.deep.equal(['2025-10-21', '2025-10-25', '2025-10-28', '2025-11-01']);
           expect(
             result.map((o) => getWeekDayCode(o.dataTimezone.start.value, o.dataTimezone.timezone)),
           ).to.deep.equal(['TU', 'SA', 'TU', 'SA']);
@@ -1063,11 +1053,11 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
             builder.singleDay(start);
           }
           const event = builder.rrule({ freq: 'DAILY' }).toProcessed();
-          const rangeStart = adapter.date(visibleStart, 'default');
+          const rangeStart = createDate(visibleStart);
           return getRecurringEventOccurrencesForVisibleDays(
             event,
-            adapter.getTime(rangeStart),
-            adapter.getTime(adapter.addDays(rangeStart, visibleDays)),
+            rangeStart.getTime(),
+            addDays(rangeStart, visibleDays).getTime(),
             timezone,
           );
         }
@@ -1216,8 +1206,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
           const result = getRecurringEventOccurrencesForVisibleDays(
             event,
-            adapter.getTime(adapter.date('2026-04-03T12:00:00Z', 'default')),
-            adapter.getTime(adapter.date('2026-04-06T12:00:00Z', 'default')),
+            Date.parse('2026-04-03T12:00:00Z'),
+            Date.parse('2026-04-06T12:00:00Z'),
             'America/Santiago',
           );
 

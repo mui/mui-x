@@ -1,5 +1,5 @@
 import { clearWarningsCache } from '@mui/x-internals/warning';
-import { adapter, DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
+import { createDate, DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
 import type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
@@ -166,7 +166,7 @@ describe('Preset - EventTimelinePremiumStore', () => {
         ...DEFAULT_PARAMS,
         defaultPreset: 'dayAndHour',
         // March 28th at 22:30 in UTC is March 28th at 23:30 in Paris, the day before the DST transition.
-        defaultVisibleDate: adapter.date('2026-03-28T22:30:00', 'UTC'),
+        defaultVisibleDate: createDate('2026-03-28T22:30:00', 'UTC'),
         displayTimezone: 'Europe/Paris',
         onVisibleDateChange,
       });
@@ -179,8 +179,8 @@ describe('Preset - EventTimelinePremiumStore', () => {
       ).to.equal('2026-03-31T22:00:00.000Z');
       // April 1st at 23:30 in Paris.
       const changedVisibleDate = onVisibleDateChange.mock.lastCall?.[0];
-      expect(adapter.getTime(store.state.visibleDate)).to.equal(Date.parse('2026-04-01T21:30:00Z'));
-      expect(adapter.getTime(changedVisibleDate)).to.equal(Date.parse('2026-04-01T21:30:00Z'));
+      expect(store.state.visibleDate.getTime()).to.equal(Date.parse('2026-04-01T21:30:00Z'));
+      expect(changedVisibleDate.getTime()).to.equal(Date.parse('2026-04-01T21:30:00Z'));
 
       store.goToPreviousVisibleDate({} as any);
 

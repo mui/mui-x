@@ -1,4 +1,4 @@
-import { adapter, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
+import { createDate, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
@@ -177,7 +177,7 @@ storeClasses.forEach((storeClass) => {
           const store = new storeClass.Value({ ...BASE_PARAMS });
           store.deleteRecurringEvent({
             eventId: 'event-1',
-            occurrenceStart: adapter.date('2025-07-07T10:00:00', 'default'),
+            occurrenceStart: createDate('2025-07-07T10:00:00'),
           });
           expect(schedulerOtherSelectors.isConfirmationDialogOpen(store.state)).to.equal(true);
         },

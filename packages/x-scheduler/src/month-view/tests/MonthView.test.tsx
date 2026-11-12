@@ -3,14 +3,18 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import type { Theme } from '@mui/material/styles';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
-  adapter,
+  addMonths,
+  createDate,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
+  endOfDay,
   EventBuilder,
   getAllEventsByTitle,
   ResourceBuilder,
   SchedulerStoreRunner,
   setSystemTimezone,
+  startOfDay,
+  startOfMonth,
   withinEventCalendarToolbar,
 } from 'test/utils/scheduler';
 import { act, screen, within, waitFor } from '@mui/internal-test-utils';
@@ -105,7 +109,7 @@ describe('<MonthView />', () => {
     expect(handleViewChange.mock.calls[0][0]).to.equal('day');
     expect(handleVisibleDateChange.mock.calls.length).to.equal(1);
     expect(handleVisibleDateChange.mock.calls[0][0]).toEqualDateTime(
-      adapter.date('2025-05-15T00:00:00Z', 'default'),
+      createDate('2025-05-15T00:00:00Z'),
     );
   });
 
@@ -899,8 +903,8 @@ describe('<MonthView />', () => {
 
     it('should clamp the span of a creation placeholder to each week row', () => {
       // Friday May 9 to Tuesday May 13: two days left in the first week row, three in the next.
-      const start = adapter.startOfDay(adapter.date('2025-05-09T00:00:00Z', 'default'));
-      const end = adapter.endOfDay(adapter.date('2025-05-13T00:00:00Z', 'default'));
+      const start = startOfDay(createDate('2025-05-09T00:00:00Z'));
+      const end = endOfDay(createDate('2025-05-13T00:00:00Z'));
 
       render(
         <EventCalendarProvider events={[]} resources={[]}>
@@ -913,8 +917,8 @@ describe('<MonthView />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'day-grid',
-                start: adapter.getTime(start),
-                end: adapter.getTime(end),
+                start: start.getTime(),
+                end: end.getTime(),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1258,7 +1262,7 @@ describe('<MonthView />', () => {
       // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within toolbar
       await user.click(toolbar.getByRole('button', { name: /previous month/i }));
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
-        adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), -1),
+        addMonths(startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), -1),
       );
     });
 
@@ -1278,7 +1282,7 @@ describe('<MonthView />', () => {
       // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within toolbar
       await user.click(toolbar.getByRole('button', { name: /next month/i }));
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
-        adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), 1),
+        addMonths(startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), 1),
       );
     });
   });
@@ -1552,7 +1556,7 @@ describe('<MonthView />', () => {
     it.skipIf(!isJSDOM)(
       'should fill an event on two days of the display timezone, whatever the timezone of the system',
       () => {
-        // Pacific/Apia skipped December 30th, 2011. On a system there, `adapter.isSameDay()` reads
+        // Pacific/Apia skipped December 30th, 2011. On a system there, the date-fns adapter read
         // December 30th and 31st as the same day in the other timezones.
         setSystemTimezone('Pacific/Apia');
         const event = EventBuilder.new()

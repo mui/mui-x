@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { screen, waitFor } from '@mui/internal-test-utils';
 import {
-  adapter,
+  addDays,
+  createDate,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
+  isSameDay,
 } from 'test/utils/scheduler';
 import { StandaloneAgendaViewPremium } from '@mui/x-scheduler-premium/agenda-view-premium';
 import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
@@ -109,7 +111,7 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
       // Tuesday: the 12-day window ends on a Saturday
       const getEvents = vi.fn(async () => []);
       renderWithDataSource(getEvents, {
-        defaultVisibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'),
+        defaultVisibleDate: createDate('2025-07-01T00:00:00Z'),
         defaultPreferences: { showEmptyDaysInAgenda: false, showWeekends: false },
       });
 
@@ -138,10 +140,8 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
       expect(getSkeletons()).to.have.length(0);
       expect(getEvents.mock.calls).to.have.length(1);
       const [start, end] = getEvents.mock.calls[0];
-      expect(adapter.isSameDay(start, DEFAULT_TESTING_VISIBLE_DATE)).to.equal(true);
-      expect(adapter.isSameDay(end, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 179))).to.equal(
-        true,
-      );
+      expect(isSameDay(start, DEFAULT_TESTING_VISIBLE_DATE)).to.equal(true);
+      expect(isSameDay(end, addDays(DEFAULT_TESTING_VISIBLE_DATE, 179))).to.equal(true);
     });
 
     it('should render an event beyond the first window without navigating', async () => {
@@ -177,7 +177,7 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
               onVisibleDateChange={setVisibleDate}
               defaultPreferences={{ showEmptyDaysInAgenda: false }}
             />
-            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, 12))}>
+            <button type="button" onClick={() => setVisibleDate(addDays(visibleDate, 12))}>
               Next
             </button>
           </React.Fragment>
@@ -197,12 +197,8 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
         expect(getEvents.mock.calls).to.have.length(2);
       });
       const [nextStart, nextEnd] = getEvents.mock.calls[1];
-      expect(
-        adapter.isSameDay(nextStart, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 180)),
-      ).to.equal(true);
-      expect(
-        adapter.isSameDay(nextEnd, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 191)),
-      ).to.equal(true);
+      expect(isSameDay(nextStart, addDays(DEFAULT_TESTING_VISIBLE_DATE, 180))).to.equal(true);
+      expect(isSameDay(nextEnd, addDays(DEFAULT_TESTING_VISIBLE_DATE, 191))).to.equal(true);
 
       await waitFor(() => {
         expect(screen.getByRole('status')).to.have.text('No upcoming events');

@@ -1,5 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { adapter, DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
+import {
+  addHours,
+  createDate,
+  DEFAULT_TESTING_VISIBLE_DATE,
+  ResourceBuilder,
+} from 'test/utils/scheduler';
 import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
@@ -38,9 +43,7 @@ const flushDebounce = () => vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
  * The bounds of the `callIndex`-th call of `getEvents()`, as ISO strings.
  */
 const getFetchedRange = (getEvents: { mock: { calls: unknown[][] } }, callIndex = 0) =>
-  (getEvents.mock.calls[callIndex] as TemporalSupportedObject[]).map((date) =>
-    adapter.toJsDate(date).toISOString(),
-  );
+  (getEvents.mock.calls[callIndex] as TemporalSupportedObject[]).map((date) => date.toISOString());
 
 const DEFAULT_PARAMS = {
   events: [] as TestEvent[],
@@ -84,7 +87,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
       defaultPreset: 'dayAndHour' as const,
       // July 1st at midnight in UTC is June 30th at 20:00 in New York, where the 4 days of the
       // preset start.
-      defaultVisibleDate: adapter.date('2025-07-01T00:00:00', 'UTC'),
+      defaultVisibleDate: createDate('2025-07-01T00:00:00', 'UTC'),
       displayTimezone: 'America/New_York',
     };
     const store = new EventTimelinePremiumStore(params);
@@ -217,7 +220,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
     // `dayAndHour` snaps the range to startOfDay(visibleDate), so moving a few hours within the same day keeps it identical.
-    const sameDayLater = adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 5);
+    const sameDayLater = addHours(DEFAULT_TESTING_VISIBLE_DATE, 5);
     store.goToDate(sameDayLater, noopUIEvent);
 
     await flushEffect();

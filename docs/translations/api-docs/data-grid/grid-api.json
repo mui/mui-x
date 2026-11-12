@@ -56,7 +56,7 @@
       "description": "Returns the index position of a column. By default, only the visible columns are considered.<br />Pass <code>false</code> to <code>useVisibleColumns</code> to consider all columns."
     },
     "getColumnIndexRelativeToVisibleColumns": {
-      "description": "Gets the index of a column relative to the columns that are reachable by scroll."
+      "description": "Returns the index position of a column among all columns, including the hidden ones."
     },
     "getColumnPosition": {
       "description": "Returns the left-position of a column relative to the inner border of the grid."
@@ -173,7 +173,7 @@
       "description": "Sets the focus to the column header at the given <code>field</code>."
     },
     "setColumnIndex": {
-      "description": "Moves a column from its original position to the position given by <code>targetIndexPosition</code>."
+      "description": "Moves a column from its original position to the position given by <code>targetIndexPosition</code>.<br />By default, the position counts all columns, including the hidden ones, like <code>getColumnIndex(field, false)</code>.<br />Pass <code>true</code> to <code>useVisibleColumns</code> to count only the visible columns."
     },
     "setColumnVisibility": {
       "description": "Changes the visibility of the column referred by <code>field</code>."

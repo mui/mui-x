@@ -1,4 +1,4 @@
-import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
+import { addDays, endOfDay, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import type {
   SchedulerEventOccurrence,
   SchedulerProcessedEvent,
@@ -921,8 +921,8 @@ describe('dependencyArrowGeometry', () => {
       // Window 8:00 → 20:00 on a single day: 720 axis minutes, eventsWidth 720 → 1px
       // per axis minute.
       const TRIMMED_AXIS: TimelineAxis = {
-        start: adapter.getTime(collectionStart),
-        end: adapter.getTime(collectionEnd),
+        start: collectionStart.getTime(),
+        end: collectionEnd.getTime(),
         timezone: 'default',
         dayStartMinute: 480,
         dayEndMinute: 1200,
@@ -1005,7 +1005,7 @@ describe('dependencyArrowGeometry', () => {
         // Two-day axis: 21:00–23:00 on the first day falls in the night the window hides.
         const twoDayAxis = {
           ...TRIMMED_AXIS,
-          end: adapter.getTime(adapter.endOfDay(adapter.addDays(collectionStart, 1))),
+          end: endOfDay(addDays(collectionStart, 1)).getTime(),
         };
         const hiddenSource = EventBuilder.new()
           .id('event-hidden')
@@ -1038,11 +1038,11 @@ describe('dependencyArrowGeometry', () => {
         // below the rendered event.
         const twoDayAxis = {
           ...TRIMMED_AXIS,
-          end: adapter.getTime(adapter.endOfDay(adapter.addDays(collectionStart, 1))),
+          end: endOfDay(addDays(collectionStart, 1)).getTime(),
         };
         const getTwoDayOccurrences = (events: SchedulerProcessedEvent[]) =>
           getOccurrencesFromEvents({
-            start: adapter.getTime(collectionStart),
+            start: collectionStart.getTime(),
             end: twoDayAxis.end,
             eventRangeIndex: createEventRangeIndex(events, false),
             displayTimezone: 'default',
