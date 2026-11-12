@@ -33,16 +33,7 @@ export function useMessageAuthor(messageId: string) {
   );
 
   return React.useMemo(
-    () =>
-      resolveMessageAuthor(message ?? null, {
-        currentUser: parametersWithLocale.currentUser,
-        members: parametersWithLocale.members,
-        activeConversation,
-        getMessageAuthorId: parametersWithLocale.getMessageAuthorId,
-        getMessageAuthorDisplayName: parametersWithLocale.getMessageAuthorDisplayName,
-        getMessageAuthorAvatarUrl: parametersWithLocale.getMessageAuthorAvatarUrl,
-        roleDisplayNames: parametersWithLocale.roleDisplayNames,
-      }),
+    () => resolveMessageAuthor(message ?? null, { ...parametersWithLocale, activeConversation }),
     [message, activeConversation, parametersWithLocale],
   );
 }
