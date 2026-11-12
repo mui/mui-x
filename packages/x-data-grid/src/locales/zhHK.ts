@@ -248,6 +248,9 @@ const zhHKGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: '是的',
   booleanCellFalseLabel: '不',
 
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
+
   // Long text cell
   longTextCellExpandLabel: '擴張',
   longTextCellCollapseLabel: '坍塌',

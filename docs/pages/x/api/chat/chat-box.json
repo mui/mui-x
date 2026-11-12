@@ -178,164 +178,211 @@
     {
       "name": "root",
       "description": "The outermost `ChatBox` container element.",
+      "default": "'div'",
       "class": "MuiChatBox-root"
     },
     {
       "name": "layout",
       "description": "Wrapper that arranges the conversations pane and the thread pane.",
+      "default": "'div'",
       "class": "MuiChatBox-layout"
     },
     {
       "name": "conversationsPane",
       "description": "Container for the conversation-list sidebar (or drawer on narrow widths).",
+      "default": "'div'",
       "class": "MuiChatBox-conversationsPane"
     },
     {
       "name": "threadPane",
       "description": "Container for the active thread — the message list plus the composer.",
+      "default": "'div'",
       "class": "MuiChatBox-threadPane"
     },
     {
       "name": "conversationRoot",
       "description": "Styled root of `<ChatConversation>` (wrapper-only); the default header,\nmessage list and composer continue to render inside it.",
+      "default": "'div'",
       "class": null
     },
     {
       "name": "conversationList",
       "description": "The conversation-list sidebar component.",
+      "default": "ChatConversationList",
       "class": null
     },
     {
       "name": "conversationHeader",
       "description": "The header bar rendered above the message list.",
+      "default": "ChatConversationHeader",
       "class": null
     },
     {
       "name": "conversationHeaderInfo",
       "description": "The title + subtitle group inside the header.",
+      "default": "ChatConversationHeaderInfo",
       "class": null
     },
     {
       "name": "conversationTitle",
       "description": "The conversation title element.",
+      "default": "ChatConversationTitle",
       "class": null
     },
     {
       "name": "conversationSubtitle",
       "description": "The conversation subtitle element (participants, status, etc.).",
+      "default": "ChatConversationSubtitle",
       "class": null
     },
     {
       "name": "conversationHeaderActions",
       "description": "The actions area on the trailing side of the header.",
+      "default": "ChatConversationHeaderActions",
       "class": null
     },
     {
       "name": "messageList",
       "description": "Styled scrollable root element of `<ChatMessageList>` (wrapper-only). The\ndefault message rows render inside it, so a plain element such as `'section'`\nwraps the list rather than replacing it.",
-      "class": null
-    },
-    {
-      "name": "messageGroup",
-      "description": "The per-author group wrapper around consecutive messages.",
+      "default": "'div'",
       "class": null
     },
     {
       "name": "dateDivider",
       "description": "The date separator rendered between message groups. Only rendered when\n`features.dateDivider` is enabled. Pass `null` to hide it.",
+      "default": "ChatDateDivider",
       "class": null
     },
     {
       "name": "unreadMarker",
       "description": "The \"new messages\" marker. Only rendered when `features.unreadMarker` is\nenabled. Pass `null` to hide it.",
+      "default": "ChatUnreadMarker",
+      "class": null
+    },
+    {
+      "name": "messageGroup",
+      "description": "The per-author group wrapper around consecutive messages.",
+      "default": "'div'",
       "class": null
     },
     {
       "name": "streamingIndicator",
       "description": "The animated dots shown while an assistant response is in flight: as a\ntrailing row while waiting for the response to start, then inside the\nassistant bubble while it streams. Controlled by\n`features.streamingIndicator` (`'auto'` by default). Pass `null` to hide it.",
+      "default": "ChatStreamingIndicator, wrapped in an assistant row with an avatar while waiting for the response to start",
       "class": null
     },
     {
       "name": "messageRoot",
       "description": "Styled root of `<ChatMessage>` (wrapper-only); the default avatar/content/meta\ntree still renders inside it.",
+      "default": "'div'",
       "class": null
     },
     {
       "name": "messageAvatar",
       "description": "Avatar component. Pass `null` to hide the avatar entirely and drop the\nreserved avatar grid track.",
+      "default": "ChatMessageAvatar",
       "class": null
     },
-    { "name": "messageContent", "description": "The message bubble component.", "class": null },
+    {
+      "name": "messageContent",
+      "description": "The message bubble component.",
+      "default": "ChatMessageContent",
+      "class": null
+    },
     {
       "name": "messageMeta",
       "description": "External meta (compact variant). Pass `null` to hide.",
+      "default": "ChatMessageMeta",
       "class": null
     },
     {
       "name": "messageInlineMeta",
       "description": "Inline meta rendered inside the bubble (default variant). Pass `null` to hide.",
+      "default": "ChatMessageInlineMeta",
       "class": null
     },
     {
       "name": "messageError",
       "description": "Error card shown under the bubble when the message status is `error`.\nPass `null` to hide the error surface entirely (no component is mounted).",
+      "default": "ChatMessageError",
       "class": null
     },
     {
       "name": "messageActions",
       "description": "Actions row component (receives `{ messageId }`). Pass `null` to hide\nactions entirely; omit to render only the declarative `extraActions` from\n`slotProps.messageActions` if provided.",
+      "default": "undefined, which renders only the `extraActions` from `slotProps.messageActions`, if any",
       "class": null
     },
     {
       "name": "messageAuthorName",
       "description": "Author name label rendered by the group wrapper (default variant: above the\nbubble; compact variant: inside the message grid). Pass `null` to hide.",
+      "default": "'div'",
       "class": null
     },
     {
       "name": "composerRoot",
       "description": "Styled root of `<ChatComposer>` (wrapper-only); the default attach/input/send/\ntoolbar render inside it.",
+      "default": "'form'",
       "class": null
     },
-    { "name": "composerInput", "description": "The auto-resizing text input.", "class": null },
+    {
+      "name": "composerInput",
+      "description": "The auto-resizing text input.",
+      "default": "ChatComposerTextArea",
+      "class": null
+    },
     {
       "name": "composerSendButton",
       "description": "Send button. Pass `null` to hide it; the form still submits on Enter.",
+      "default": "ChatComposerSendButton",
       "class": null
     },
     {
       "name": "composerAttachButton",
       "description": "Attach button. Pass `null` to hide just the button while keeping the rest of\nthe attachment pipeline (drag/drop, paste). Use `features.attachments: false`\nto disable attachments entirely.",
+      "default": "ChatComposerAttachButton",
       "class": null
     },
     {
       "name": "composerAttachmentList",
       "description": "The pending-attachment preview list.",
+      "default": "ChatComposerAttachmentList",
       "class": null
     },
     {
       "name": "composerToolbar",
       "description": "The composer toolbar (button row).",
+      "default": "ChatComposerToolbar",
       "class": null
     },
     {
       "name": "composerHelperText",
       "description": "The helper / disclaimer text below the input.",
+      "default": "ChatComposerHelperText",
       "class": null
     },
     {
       "name": "typingIndicator",
       "description": "The animated typing indicator shown while the assistant responds.",
+      "default": "null",
       "class": null
     },
     {
       "name": "scrollToBottom",
       "description": "The floating scroll-to-bottom button.",
+      "default": "ChatScrollToBottomAffordance",
       "class": null
     },
-    { "name": "suggestions", "description": "The prompt-suggestion chips.", "class": null },
+    {
+      "name": "suggestions",
+      "description": "The prompt-suggestion chips.",
+      "default": "ChatSuggestions",
+      "class": null
+    },
     {
       "name": "emptyState",
       "description": "Custom content rendered when the thread has no messages.",
+      "default": "null, which shows the built-in empty state",
       "class": null
     }
   ],

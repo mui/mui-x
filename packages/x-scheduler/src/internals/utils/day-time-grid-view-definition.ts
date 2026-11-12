@@ -1,11 +1,10 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
 import type { EventCalendarViewDefinition } from '@mui/x-scheduler-internals/models';
-import type { EventCalendarState as State } from '@mui/x-scheduler-internals/use-event-calendar';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
 import {
-  addToAdapterDate,
+  addToDate,
   createStartOfPlainDate,
   getPlainDateWeekStart,
 } from '@mui/x-scheduler-internals/internals';
@@ -35,7 +34,6 @@ export function createDayTimeGridViewDefinition(
     return {
       siblingVisibleDateGetter: ({ state, delta }) =>
         createStartOfPlainDate(
-          state.adapter,
           getPlainDateWeekStart(
             schedulerOtherSelectors.visiblePlainDate(state),
             eventCalendarPreferenceSelectors.weekStartsOn(state),
@@ -43,19 +41,17 @@ export function createDayTimeGridViewDefinition(
           state.displayTimezone,
         ),
       visibleDaysSelector: createSelectorMemoized(
-        (state: State) => state.adapter,
         schedulerOtherSelectors.visiblePlainDate,
         schedulerOtherSelectors.displayTimezone,
-        eventCalendarPreferenceSelectors.showWeekends,
+        eventCalendarPreferenceSelectors.hiddenWeekdays,
         eventCalendarPreferenceSelectors.weekStartsOn,
-        (adapter, visiblePlainDate, timezone, showWeekends, weekStartsOn) => {
+        (visiblePlainDate, timezone, hiddenWeekdays, weekStartsOn) => {
           const weekStart = getPlainDateWeekStart(visiblePlainDate, weekStartsOn);
           return getDayListFromPlainDates({
-            adapter,
             firstPlainDate: weekStart,
             lastPlainDate: weekStart.add({ days: DAYS_IN_WEEK - 1 }),
             timezone,
-            excludeWeekends: !showWeekends,
+            excludedWeekdays: hiddenWeekdays,
           });
         },
       ),
@@ -64,16 +60,12 @@ export function createDayTimeGridViewDefinition(
 
   return {
     siblingVisibleDateGetter: ({ state, delta }) =>
-      addToAdapterDate(state.adapter, schedulerOtherSelectors.visibleDate(state), {
-        days: delta * dayCount,
-      }),
+      addToDate(state.visibleDate, { days: delta * dayCount }, state.displayTimezone),
     visibleDaysSelector: createSelectorMemoized(
-      (state: State) => state.adapter,
       schedulerOtherSelectors.visiblePlainDate,
       schedulerOtherSelectors.displayTimezone,
-      (adapter, visiblePlainDate, timezone) =>
+      (visiblePlainDate, timezone) =>
         getDayListFromPlainDates({
-          adapter,
           firstPlainDate: visiblePlainDate,
           lastPlainDate: visiblePlainDate.add({ days: dayCount - 1 }),
           timezone,

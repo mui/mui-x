@@ -18,7 +18,6 @@ import type {
   SchedulerRenderableEventOccurrence,
   TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   schedulerEventSelectors,
@@ -27,7 +26,6 @@ import {
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
-  createAdapterDate,
   getCustomEventProperties,
   getEventResourceIds,
   getOccurrenceDataTimezone,
@@ -109,7 +107,6 @@ const RECURRENCE_FORM_KEYS = new Set(['recurrenceSelection', 'rruleDraft']);
 // Scheduler settings read when the async validation resolves; the submit
 // continuation must not use the render-time closure values.
 interface ResolutionSettings {
-  adapter: Adapter;
   displayTimezone: TemporalTimezone;
   shouldEventRequireResource: boolean;
   showRecurrence: boolean;
@@ -361,7 +358,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // already re-runs against the current rules, so the checks and the
       // serialization read one current snapshot of the scheduler settings too.
       const current: ResolutionSettings = {
-        adapter: store.state.adapter,
         displayTimezone: schedulerOtherSelectors.displayTimezone(store.state),
         shouldEventRequireResource: schedulerOtherSelectors.shouldEventRequireResource(store.state),
         showRecurrence: schedulerOtherSelectors.areRecurringEventsAvailable(store.state),
@@ -465,9 +461,9 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         rruleToSubmit = recurrencePresets[values.recurrenceSelection];
       }
 
-      // The store receives adapter values, labeled with the display timezone the fields are read in.
-      const start = createAdapterDate(current.adapter, range.start, current.displayTimezone);
-      const end = createAdapterDate(current.adapter, range.end, current.displayTimezone);
+      // The store receives the instants of the fields, read in the display timezone.
+      const start = new Date(range.start);
+      const end = new Date(range.end);
       if (isCreation) {
         store.createEvent({ ...metaChanges, start, end, rrule: rruleToSubmit });
       } else if (

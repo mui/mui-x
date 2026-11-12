@@ -21,7 +21,7 @@ import {
   EventCalendarStyledContext,
   useEventCalendarUtilityClasses,
 } from '@mui/x-scheduler/internals';
-import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
+import { useFrozenEventCalendarPremiumFeatures } from './features/useFrozenEventCalendarPremiumFeatures';
 import type { EventCalendarPremiumProps } from './EventCalendarPremium.types';
 
 const packageInfo = {
@@ -48,11 +48,19 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
 
   const {
     parameters,
-    forwardedProps: { className, classes: classesProp, ...forwardedProps },
+    forwardedProps: { className, classes: classesProp, features: featuresProp, ...forwardedProps },
   } = useExtractEventCalendarPremiumParameters<TEvent, TResource, typeof props>(props);
+  const { features, storeFeatures } = useFrozenEventCalendarPremiumFeatures(
+    featuresProp,
+    'EventCalendarPremium',
+  );
+  const storeParameters = React.useMemo(
+    () => ({ ...parameters, storeFeatures }),
+    [parameters, storeFeatures],
+  );
 
   // Use premium store with lazy loading
-  const store = useEventCalendarPremium(parameters);
+  const store = useEventCalendarPremium(storeParameters);
   const classes = useEventCalendarUtilityClasses(classesProp);
 
   const { localeText, apiRef, slots, slotProps, ...other } = forwardedProps;
@@ -87,7 +95,9 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
             <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
               <SchedulerDirectionProvider>
-                <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
+                <EventDialogProvider
+                  optionalRenderers={features.recurringEvents?.optionalRenderers}
+                >
                   <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
                     {watermark}
                   </EventCalendarRoot>
@@ -160,8 +170,8 @@ EventCalendarPremium.propTypes /* remove-proptypes */ = {
   /**
    * The locale of the dates, as a BCP 47 language tag such as `"fr-FR"`, like the locales of
    * `Intl.DateTimeFormat`.
-   * This affects day names, month names, the first day of the week, week numbers, the 12-hour
-   * or 24-hour clock and the other locale-dependent formatting.
+   * This affects day names, month names, the first day of the week, the days of the weekend,
+   * week numbers, the 12-hour or 24-hour clock and the other locale-dependent formatting.
    * @default "en-US"
    */
   dateLocale: PropTypes.string,
@@ -207,13 +217,10 @@ EventCalendarPremium.propTypes /* remove-proptypes */ = {
    *
    * Accepts any valid IANA timezone name
    * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
-   * or keywords understood by the adapter, such as
-   * "default" (use the adapter's default timezone),
-   * "locale" (use the user's current locale timezone),
-   * or "UTC".
+   * "default" or "system" (the timezone of the system), or "UTC".
    *
    * Events keep their original data timezone. The visible range starts on the day of the visible
-   * date in this timezone, and the next and previous navigation return dates in this timezone.
+   * date in this timezone, and the next and previous navigation move the visible date on its days.
    * @default "default"
    */
   displayTimezone: PropTypes.string,
@@ -277,6 +284,12 @@ EventCalendarPremium.propTypes /* remove-proptypes */ = {
    * @default []
    */
   events: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * The optional features of the Event Calendar: `recurringEvents` from `@mui/x-scheduler-premium/recurring-events`.
+   * They are read once when the component mounts, later changes are ignored.
+   * @example { recurringEvents: recurringEventsFeature }
+   */
+  features: PropTypes.object,
   /**
    * Set the locale text of the Event Calendar.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)

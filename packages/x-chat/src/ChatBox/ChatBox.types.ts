@@ -62,13 +62,25 @@ import type { ChatBoxClasses } from './chatBoxClasses';
 
 /** Outer layout singletons. */
 interface ChatBoxLayoutSlots {
-  /** The outermost `ChatBox` container element. */
+  /**
+   * The outermost `ChatBox` container element.
+   * @default 'div'
+   */
   root?: React.ElementType;
-  /** Wrapper that arranges the conversations pane and the thread pane. */
+  /**
+   * Wrapper that arranges the conversations pane and the thread pane.
+   * @default 'div'
+   */
   layout?: React.ElementType;
-  /** Container for the conversation-list sidebar (or drawer on narrow widths). */
+  /**
+   * Container for the conversation-list sidebar (or drawer on narrow widths).
+   * @default 'div'
+   */
   conversationsPane?: React.ElementType;
-  /** Container for the active thread — the message list plus the composer. */
+  /**
+   * Container for the active thread — the message list plus the composer.
+   * @default 'div'
+   */
   threadPane?: React.ElementType;
 }
 
@@ -88,19 +100,38 @@ interface ChatBoxConversationSlots {
   /**
    * Styled root of `<ChatConversation>` (wrapper-only); the default header,
    * message list and composer continue to render inside it.
+   * @default 'div'
    */
   conversationRoot?: React.ElementType;
-  /** The conversation-list sidebar component. */
+  /**
+   * The conversation-list sidebar component.
+   * @default ChatConversationList
+   */
   conversationList?: React.ElementType;
-  /** The header bar rendered above the message list. */
+  /**
+   * The header bar rendered above the message list.
+   * @default ChatConversationHeader
+   */
   conversationHeader?: React.ElementType;
-  /** The title + subtitle group inside the header. */
+  /**
+   * The title + subtitle group inside the header.
+   * @default ChatConversationHeaderInfo
+   */
   conversationHeaderInfo?: React.ElementType;
-  /** The conversation title element. */
+  /**
+   * The conversation title element.
+   * @default ChatConversationTitle
+   */
   conversationTitle?: React.ElementType;
-  /** The conversation subtitle element (participants, status, etc.). */
+  /**
+   * The conversation subtitle element (participants, status, etc.).
+   * @default ChatConversationSubtitle
+   */
   conversationSubtitle?: React.ElementType;
-  /** The actions area on the trailing side of the header. */
+  /**
+   * The actions area on the trailing side of the header.
+   * @default ChatConversationHeaderActions
+   */
   conversationHeaderActions?: React.ElementType;
 }
 
@@ -114,45 +145,66 @@ interface ChatBoxConversationSlotProps {
   conversationHeaderActions?: WithDataAttributes<Partial<ChatConversationHeaderActionsProps>>;
 }
 
-/**
- * Message-list chrome. `messageList` swaps the scrollable root *element* of
- * `<ChatMessageList>` (wrapper-only — the default rows still render inside);
- * `messageGroup` swaps the per-author group wrapper.
- */
-interface ChatBoxMessageListSlots {
+// The message slot subsets use `extends`, not a multi-key `Pick`. A `Pick` lists its keys
+// in TypeScript union order, which can change between `pnpm docs:api` runs.
+export interface ChatBoxMessageGroupSlots extends ChatBoxMessageSlots {
   /**
-   * Styled scrollable root element of `<ChatMessageList>` (wrapper-only). The
-   * default message rows render inside it, so a plain element such as `'section'`
-   * wraps the list rather than replacing it.
+   * The per-author group wrapper around consecutive messages.
+   * @default 'div'
    */
-  messageList?: React.ElementType;
-  /** The per-author group wrapper around consecutive messages. */
   messageGroup?: React.ElementType;
-  /**
-   * The date separator rendered between message groups. Only rendered when
-   * `features.dateDivider` is enabled. Pass `null` to hide it.
-   */
-  dateDivider?: React.ElementType | null;
-  /**
-   * The "new messages" marker. Only rendered when `features.unreadMarker` is
-   * enabled. Pass `null` to hide it.
-   */
-  unreadMarker?: React.ElementType | null;
   /**
    * The animated dots shown while an assistant response is in flight: as a
    * trailing row while waiting for the response to start, then inside the
    * assistant bubble while it streams. Controlled by
    * `features.streamingIndicator` (`'auto'` by default). Pass `null` to hide it.
+   * @default ChatStreamingIndicator, wrapped in an assistant row with an avatar while waiting for the response to start
    */
   streamingIndicator?: React.ElementType | null;
 }
 
-interface ChatBoxMessageListSlotProps {
-  messageList?: WithDataAttributes<Partial<ChatMessageListProps>>;
+export interface ChatBoxMessageRowSlots extends ChatBoxMessageGroupSlots {
+  /**
+   * The date separator rendered between message groups. Only rendered when
+   * `features.dateDivider` is enabled. Pass `null` to hide it.
+   * @default ChatDateDivider
+   */
+  dateDivider?: React.ElementType | null;
+  /**
+   * The "new messages" marker. Only rendered when `features.unreadMarker` is
+   * enabled. Pass `null` to hide it.
+   * @default ChatUnreadMarker
+   */
+  unreadMarker?: React.ElementType | null;
+}
+
+/**
+ * Message-list chrome. `messageList` swaps the scrollable root *element* of
+ * `<ChatMessageList>` (wrapper-only — the default rows still render inside);
+ * `messageGroup` swaps the per-author group wrapper.
+ */
+interface ChatBoxMessageListSlots extends ChatBoxMessageRowSlots {
+  /**
+   * Styled scrollable root element of `<ChatMessageList>` (wrapper-only). The
+   * default message rows render inside it, so a plain element such as `'section'`
+   * wraps the list rather than replacing it.
+   * @default 'div'
+   */
+  messageList?: React.ElementType;
+}
+
+export interface ChatBoxMessageGroupSlotProps extends ChatBoxMessageSlotProps {
   messageGroup?: WithDataAttributes<Partial<ChatMessageGroupProps>>;
+  streamingIndicator?: WithDataAttributes<Partial<ChatStreamingIndicatorProps>>;
+}
+
+export interface ChatBoxMessageRowSlotProps extends ChatBoxMessageGroupSlotProps {
   dateDivider?: WithDataAttributes<Partial<ChatDateDividerProps>>;
   unreadMarker?: WithDataAttributes<Partial<ChatUnreadMarkerProps>>;
-  streamingIndicator?: WithDataAttributes<Partial<ChatStreamingIndicatorProps>>;
+}
+
+interface ChatBoxMessageListSlotProps extends ChatBoxMessageRowSlotProps {
+  messageList?: WithDataAttributes<Partial<ChatMessageListProps>>;
 }
 
 /**
@@ -164,33 +216,47 @@ interface ChatBoxMessageSlots {
   /**
    * Styled root of `<ChatMessage>` (wrapper-only); the default avatar/content/meta
    * tree still renders inside it.
+   * @default 'div'
    */
   messageRoot?: React.ElementType;
   /**
    * Avatar component. Pass `null` to hide the avatar entirely and drop the
    * reserved avatar grid track.
+   * @default ChatMessageAvatar
    */
   messageAvatar?: React.ElementType | null;
-  /** The message bubble component. */
+  /**
+   * The message bubble component.
+   * @default ChatMessageContent
+   */
   messageContent?: React.ElementType;
-  /** External meta (compact variant). Pass `null` to hide. */
+  /**
+   * External meta (compact variant). Pass `null` to hide.
+   * @default ChatMessageMeta
+   */
   messageMeta?: React.ElementType | null;
-  /** Inline meta rendered inside the bubble (default variant). Pass `null` to hide. */
+  /**
+   * Inline meta rendered inside the bubble (default variant). Pass `null` to hide.
+   * @default ChatMessageInlineMeta
+   */
   messageInlineMeta?: React.ElementType | null;
   /**
    * Error card shown under the bubble when the message status is `error`.
    * Pass `null` to hide the error surface entirely (no component is mounted).
+   * @default ChatMessageError
    */
   messageError?: React.ElementType | null;
   /**
    * Actions row component (receives `{ messageId }`). Pass `null` to hide
    * actions entirely; omit to render only the declarative `extraActions` from
    * `slotProps.messageActions` if provided.
+   * @default undefined, which renders only the `extraActions` from `slotProps.messageActions`, if any
    */
   messageActions?: React.ElementType | null;
   /**
    * Author name label rendered by the group wrapper (default variant: above the
    * bubble; compact variant: inside the message grid). Pass `null` to hide.
+   * @default 'div'
    */
   messageAuthorName?: React.ElementType | null;
 }
@@ -227,23 +293,40 @@ interface ChatBoxComposerSlots {
   /**
    * Styled root of `<ChatComposer>` (wrapper-only); the default attach/input/send/
    * toolbar render inside it.
+   * @default 'form'
    */
   composerRoot?: React.ElementType;
-  /** The auto-resizing text input. */
+  /**
+   * The auto-resizing text input.
+   * @default ChatComposerTextArea
+   */
   composerInput?: React.ElementType;
-  /** Send button. Pass `null` to hide it; the form still submits on Enter. */
+  /**
+   * Send button. Pass `null` to hide it; the form still submits on Enter.
+   * @default ChatComposerSendButton
+   */
   composerSendButton?: React.ElementType | null;
   /**
    * Attach button. Pass `null` to hide just the button while keeping the rest of
    * the attachment pipeline (drag/drop, paste). Use `features.attachments: false`
    * to disable attachments entirely.
+   * @default ChatComposerAttachButton
    */
   composerAttachButton?: React.ElementType | null;
-  /** The pending-attachment preview list. */
+  /**
+   * The pending-attachment preview list.
+   * @default ChatComposerAttachmentList
+   */
   composerAttachmentList?: React.ElementType;
-  /** The composer toolbar (button row). */
+  /**
+   * The composer toolbar (button row).
+   * @default ChatComposerToolbar
+   */
   composerToolbar?: React.ElementType;
-  /** The helper / disclaimer text below the input. */
+  /**
+   * The helper / disclaimer text below the input.
+   * @default ChatComposerHelperText
+   */
   composerHelperText?: React.ElementType;
 }
 
@@ -259,13 +342,25 @@ interface ChatBoxComposerSlotProps {
 
 /** Standalone widgets. */
 interface ChatBoxWidgetSlots {
-  /** The animated typing indicator shown while the assistant responds. */
+  /**
+   * The animated typing indicator shown while the assistant responds.
+   * @default null
+   */
   typingIndicator?: React.ElementType;
-  /** The floating scroll-to-bottom button. */
+  /**
+   * The floating scroll-to-bottom button.
+   * @default ChatScrollToBottomAffordance
+   */
   scrollToBottom?: React.ElementType;
-  /** The prompt-suggestion chips. */
+  /**
+   * The prompt-suggestion chips.
+   * @default ChatSuggestions
+   */
   suggestions?: React.ElementType;
-  /** Custom content rendered when the thread has no messages. */
+  /**
+   * Custom content rendered when the thread has no messages.
+   * @default null, which shows the built-in empty state
+   */
   emptyState?: React.ElementType;
 }
 
@@ -281,7 +376,6 @@ export interface ChatBoxSlots
     ChatBoxLayoutSlots,
     ChatBoxConversationSlots,
     ChatBoxMessageListSlots,
-    ChatBoxMessageSlots,
     ChatBoxComposerSlots,
     ChatBoxWidgetSlots {}
 
@@ -290,7 +384,6 @@ export interface ChatBoxSlotProps
     ChatBoxLayoutSlotProps,
     ChatBoxConversationSlotProps,
     ChatBoxMessageListSlotProps,
-    ChatBoxMessageSlotProps,
     ChatBoxComposerSlotProps,
     ChatBoxWidgetSlotProps {}
 

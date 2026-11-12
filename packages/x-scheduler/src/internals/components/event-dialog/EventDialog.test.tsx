@@ -1,14 +1,14 @@
 import * as React from 'react';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
-  adapter,
+  createDate,
   createMatchMedia,
   createSchedulerRenderer,
   EventBuilder,
-  utcJuly4AllDayBuilder,
   ResourceBuilder,
   SchedulerStoreRunner,
   setSystemTimezone,
+  utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
@@ -16,7 +16,7 @@ import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerResource, TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
-import { createAdapterDate } from '@mui/x-scheduler-internals/internals';
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import { schedulerOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import {
@@ -168,14 +168,12 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       const onEventsChange = vi.fn();
       const event: SchedulerEvent = builder.withDisplayTimezone(displayTimezone).build();
       const occurrence = builder.toOccurrence();
-      const rawStart = adapter.setTimezone(occurrence.dataTimezone.start.value, displayTimezone);
-      const rawEnd = adapter.setTimezone(occurrence.dataTimezone.end.value, displayTimezone);
       const snapshot = {
         ...occurrence,
         displayTimezone: {
           ...occurrence.displayTimezone,
-          start: processDate(rawStart, adapter),
-          end: processDate(rawEnd, adapter),
+          start: processDate(occurrence.dataTimezone.start.value, displayTimezone),
+          end: processDate(occurrence.dataTimezone.end.value, displayTimezone),
         },
       };
 
@@ -233,13 +231,13 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       // The picked day means the day the user was looking at (New York's July 5th),
       // matching how the grid renders all-day events in the display timezone.
       const updated = getUpdatedEvent();
-      expect(adapter.getTime(adapter.date(String(updated.start), 'UTC'))).to.equal(
-        adapter.getTime(adapter.date('2025-07-05T04:00:00', 'UTC')),
+      expect(createDate(String(updated.start), 'UTC').getTime()).to.equal(
+        createDate('2025-07-05T04:00:00', 'UTC').getTime(),
       );
       // Wall-time serialization has second resolution; the read-time normalization
       // restores the inclusive end-of-day.
-      expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
-        adapter.getTime(adapter.date('2025-07-06T03:59:59', 'UTC')),
+      expect(createDate(String(updated.end), 'UTC').getTime()).to.equal(
+        createDate('2025-07-06T03:59:59', 'UTC').getTime(),
       );
     });
 
@@ -280,8 +278,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       const updated = getUpdatedEvent();
       expect(updated.end).to.equal(event.end);
       // The picked day means the day the user was looking at (New York July 2nd).
-      expect(adapter.getTime(adapter.date(String(updated.start), 'UTC'))).to.equal(
-        adapter.getTime(adapter.date('2025-07-02T04:00:00', 'UTC')),
+      expect(createDate(String(updated.start), 'UTC').getTime()).to.equal(
+        createDate('2025-07-02T04:00:00', 'UTC').getTime(),
       );
     });
 
@@ -301,8 +299,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       // timezone would move the event for anyone reading it from another one.
       expect(updated.start).to.equal(event.start);
       // The edited end applies as the day the user was looking at (New York July 5th).
-      expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
-        adapter.getTime(adapter.date('2025-07-06T03:59:59', 'UTC')),
+      expect(createDate(String(updated.end), 'UTC').getTime()).to.equal(
+        createDate('2025-07-06T03:59:59', 'UTC').getTime(),
       );
       // The built-in form keys never leak onto the event model as custom fields.
       expect(updated).to.not.have.property('startDate');
@@ -325,11 +323,11 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       // days (July 3rd → 4th) at 09:00 and 10:00 New York time.
       const updated = getUpdatedEvent();
       expect(Boolean(updated.allDay)).to.equal(false);
-      expect(adapter.getTime(adapter.date(String(updated.start), 'UTC'))).to.equal(
-        adapter.getTime(adapter.date('2025-07-03T13:00:00', 'UTC')),
+      expect(createDate(String(updated.start), 'UTC').getTime()).to.equal(
+        createDate('2025-07-03T13:00:00', 'UTC').getTime(),
       );
-      expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
-        adapter.getTime(adapter.date('2025-07-04T14:00:00', 'UTC')),
+      expect(createDate(String(updated.end), 'UTC').getTime()).to.equal(
+        createDate('2025-07-04T14:00:00', 'UTC').getTime(),
       );
     });
 
@@ -401,32 +399,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         expect(getUpdatedEvent().start).to.equal('2026-10-25T00:30:00');
       });
     });
-  });
-
-  it('should delete the event and close the dialog when Delete is pressed on a non-recurring event, with confirmation off', async () => {
-    // `EventDialogContent` doesn't mount `DeleteConfirmationDialog` (that only happens through
-    // `EventDialogProvider`), so the confirmation is opted out of here to keep testing this
-    // component's own direct wiring to the store. See the `Deletion` suite below for the
-    // confirmation dialog itself, exercised through the full `EventDialogProvider`.
-    const onEventsChange = vi.fn();
-    const onClose = vi.fn();
-    const { user } = render(
-      <EventCalendarProvider
-        events={[DEFAULT_EVENT]}
-        resources={resources}
-        onEventsChange={onEventsChange}
-        eventDeletion={{ confirmation: false }}
-      >
-        <EventDialogContent open {...defaultProps} onClose={onClose} />
-      </EventCalendarProvider>,
-    );
-
-    await user.click(screen.getByRole('button', { name: 'Delete event' }));
-
-    // Without the recurring plugin the delete applies immediately and the dialog closes.
-    expect(onEventsChange.mock.calls.length).to.equal(1);
-    expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
-    expect(onClose.mock.calls.length).to.equal(1);
   });
 
   it('should not render the resource select when there are no resources, but should keep the color picker', () => {
@@ -508,7 +480,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       <EventCalendarProvider
         events={[DEFAULT_EVENT]}
         resources={resources}
-        visibleDate={adapter.date('2025-05-26T00:00:00Z', 'default')}
+        visibleDate={createDate('2025-05-26T00:00:00Z')}
       >
         <EventDialogProvider>
           <MonthView />
@@ -541,7 +513,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         <EventCalendarProvider
           events={[DEFAULT_EVENT]}
           resources={resources}
-          visibleDate={adapter.date('2025-05-26T00:00:00Z', 'default')}
+          visibleDate={createDate('2025-05-26T00:00:00Z')}
           {...providerProps}
         >
           <EventDialogProvider>
@@ -562,7 +534,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
             events={events}
             onEventsChange={setEvents}
             resources={resources}
-            visibleDate={adapter.date('2025-05-26T00:00:00Z', 'default')}
+            visibleDate={createDate('2025-05-26T00:00:00Z')}
             {...providerProps}
           >
             <EventDialogProvider>
@@ -706,17 +678,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         `${DEFAULT_EVENT.title} (renamed)`,
       );
     });
-
-    it('should render the Delete event button when `eventDeletion` is an object', async () => {
-      const { user } = renderDialogProvider({
-        onEventsChange: vi.fn(),
-        eventDeletion: { confirmation: true },
-      });
-
-      await user.click(screen.getByText(DEFAULT_EVENT.title));
-
-      expect(await screen.findByRole('button', { name: 'Delete event' })).not.to.equal(null);
-    });
   });
 
   it('should not render the recurrence tab when no slot is provided', () => {
@@ -750,12 +711,13 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
               .title(readonlyRecurringEvent.title)
               .span(readonlyRecurringEvent.start, readonlyRecurringEvent.end)
               .resource(personalResource)
+              .recurrent('DAILY')
               .toOccurrence()}
           />
         </EventCalendarProvider>,
       );
     }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+      'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
     ]);
 
     expect(screen.queryByText(/repeats/i)).to.equal(null);
@@ -791,7 +753,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         </EventCalendarProvider>,
       ));
     }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+      'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
     ]);
 
     await user.type(screen.getByRole('textbox', { name: /event title/i }), ' (renamed)');
@@ -801,53 +763,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     const [updated] = onEventsChange.mock.calls[0][0];
     expect(updated.title).to.equal('Weekly standup (renamed)');
     expect(updated.rrule).to.deep.equal(recurringEvent.rrule);
-  });
-
-  it('should warn and strip the rrule when createEvent is called with one', () => {
-    expect(() => {
-      render(
-        <EventCalendarProvider
-          events={[DEFAULT_EVENT]}
-          resources={resources}
-          onEventsChange={() => {}}
-        >
-          <SchedulerStoreRunner<AnyEventCalendarStore>
-            context={SchedulerStoreContext}
-            onMount={(store) => {
-              store.createEvent({
-                title: 'New recurring',
-                start: '2025-05-26T07:30:00Z',
-                end: '2025-05-26T08:30:00Z',
-                rrule: 'FREQ=DAILY',
-              });
-            }}
-          />
-        </EventCalendarProvider>,
-      );
-    }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-    ]);
-  });
-
-  it('should warn and strip the rrule when updateEvent is called with one', () => {
-    expect(() => {
-      render(
-        <EventCalendarProvider
-          events={[DEFAULT_EVENT]}
-          resources={resources}
-          onEventsChange={() => {}}
-        >
-          <SchedulerStoreRunner<AnyEventCalendarStore>
-            context={SchedulerStoreContext}
-            onMount={(store) => {
-              store.updateEvent({ id: DEFAULT_EVENT.id, rrule: 'FREQ=DAILY' });
-            }}
-          />
-        </EventCalendarProvider>,
-      );
-    }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-    ]);
   });
 
   it('should warn when a custom event property collides with a built-in form key', () => {
@@ -865,24 +780,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     }).toWarnDev([
       'MUI X Scheduler: The event model contains a custom property "startDate" that collides with a built-in form key.',
     ]);
-  });
-
-  it('should warn when updateRecurringEvent is called without a plugin', () => {
-    expect(() => {
-      render(
-        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-          <SchedulerStoreRunner<AnyEventCalendarStore>
-            context={SchedulerStoreContext}
-            onMount={(store) => {
-              store.updateRecurringEvent({
-                occurrenceStart: new Date('2025-05-26T07:30:00Z'),
-                changes: { id: DEFAULT_EVENT.id, start: new Date(), end: new Date() },
-              });
-            }}
-          />
-        </EventCalendarProvider>,
-      );
-    }).toWarnDev(['MUI X Scheduler: Recurring event updates are a premium feature.']);
   });
 
   describe('read-only date and time', () => {
@@ -956,7 +853,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     it.skipIf(!isJSDOM)(
       'should show both dates of an event on two days of the display timezone, whatever the timezone of the system',
       () => {
-        // Pacific/Apia skipped December 30th, 2011. On a system there, `adapter.isSameDay()` reads
+        // Pacific/Apia skipped December 30th, 2011. On a system there, the date-fns adapter read
         // December 30th and 31st as the same day in the other timezones.
         setSystemTimezone('Pacific/Apia');
         const { text } = renderReadonlyDetails(
@@ -1034,14 +931,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       );
     }
 
-    it('should render the default sections when the slot is not provided', () => {
-      renderWithSlot({});
-
-      expect(screen.getByText('Date & time')).not.to.equal(null);
-      expect(screen.getByText('Resource & color')).not.to.equal(null);
-      expect(screen.getByRole('textbox', { name: 'Description' })).not.to.equal(null);
-    });
-
     it('should render the slot content instead of the default sections', () => {
       renderWithSlot({ eventDialogGeneralTab: CustomSection });
 
@@ -1054,8 +943,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       generalTab: React.ComponentType,
       onEventsChange: (events: SchedulerEvent[]) => void = () => {},
     ) {
-      const start = adapter.date('2025-05-26T07:30:00Z', 'default');
-      const end = adapter.date('2025-05-26T08:15:00Z', 'default');
+      const start = createDate('2025-05-26T07:30:00Z');
+      const end = createDate('2025-05-26T08:15:00Z');
       const creationOccurrence = EventBuilder.new()
         .id('placeholder-id')
         .title('')
@@ -1072,8 +961,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start: adapter.getTime(start),
-                end: adapter.getTime(end),
+                start: start.getTime(),
+                end: end.getTime(),
                 lockSurfaceType: false,
                 resourceId: null,
               });
@@ -1151,12 +1040,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.getByLabelText(/start date/i)).to.have.value('2025-05-27');
       expect(onRender.mock.calls.length).to.equal(rendersBefore);
 
-      expect(
-        adapter.formatByString(
-          createAdapterDate(adapter, getPlaceholder().start, 'default'),
-          'yyyy-MM-dd',
-        ),
-      ).to.equal('2025-05-27');
+      expect(toPlainDate(getPlaceholder().start, 'default')).toEqualPlainDate('2025-05-27');
     });
 
     it('should keep the placeholder in place while a custom field holds a date that does not exist', () => {

@@ -253,6 +253,9 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   booleanCellTrueLabel: 'yes',
   booleanCellFalseLabel: 'no',
 
+  // Cell editor text
+  emptyCellLabel: 'Empty',
+
   // Long text cell
   longTextCellExpandLabel: 'Expand',
   longTextCellCollapseLabel: 'Collapse',

@@ -9,7 +9,11 @@ import type {
   EventTimelinePremiumStoreParameters,
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
-import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerEvent,
+  SchedulerEventModelStructure,
+  SchedulerResource,
+} from '@mui/x-scheduler-internals/models';
 import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 import {
   EventEditingStyledContext,
@@ -23,10 +27,10 @@ import { EventTimelinePremiumContent } from '../content';
 import { EventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
 import { recurringEventsFeature } from '../../recurring-events';
-import { dependenciesFeature } from '../content/timeline-dependencies/dependenciesFeature';
+import { dependenciesFeature } from '../../dependencies';
 import { EventTimelinePremiumFeaturesContext } from '../features/EventTimelinePremiumFeaturesContext';
 import { useFrozenEventTimelinePremiumFeatures } from '../features/useFrozenEventTimelinePremiumFeatures';
-import type { EventTimelinePremiumInternalFeatures } from '../features/EventTimelinePremiumFeatures.types';
+import type { EventTimelinePremiumFeatures } from '../features/EventTimelinePremiumFeatures.types';
 
 export { buildDependency, resource1, resource2 };
 
@@ -74,7 +78,7 @@ const sharedStyledContextValue = {
   localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 };
 
-const defaultFeatures: EventTimelinePremiumInternalFeatures = {
+const defaultFeatures: EventTimelinePremiumFeatures = {
   recurringEvents: recurringEventsFeature,
   dependencies: dependenciesFeature,
 };
@@ -90,10 +94,11 @@ interface TestTimelineProps {
   dependencies?: SchedulerDependency[];
   presetConfig?: PresetConfig;
   readOnly?: boolean;
+  eventModelStructure?: SchedulerEventModelStructure<SchedulerEvent>;
   /**
    * @default both features
    */
-  features?: EventTimelinePremiumInternalFeatures;
+  features?: EventTimelinePremiumFeatures;
   /**
    * Merged into the default locale text.
    */
@@ -105,8 +110,8 @@ interface TestTimelineProps {
   onStoreReady: (store: EventTimelinePremiumStore<any, any>) => void;
 }
 
-// `dependencies` is not a public prop yet, so the harness feeds the internal store
-// parameters to the same hook the component uses, and closes the controlled loop
+// The tests need the store, which the component doesn't expose, so the harness feeds the
+// store parameters to the same hook the component uses, and closes the controlled loop
 // (`onEventsChange` / `onDependenciesChange` → new parameter values) like a consumer.
 // Exported for the tests rendering several timelines on one page.
 export function TestTimeline({
@@ -115,6 +120,7 @@ export function TestTimeline({
   dependencies: initialDependencies,
   presetConfig,
   readOnly,
+  eventModelStructure,
   features: featuresProp = defaultFeatures,
   localeText,
   onDependenciesChange,
@@ -151,6 +157,7 @@ export function TestTimeline({
     resources,
     dependencies,
     readOnly,
+    eventModelStructure,
     onEventsChange: setEvents,
     onDependenciesChange: dependenciesEnabled
       ? (value) => {
@@ -193,7 +200,11 @@ interface RenderTimelineParameters {
   dependencies?: SchedulerDependency[];
   presetConfig?: PresetConfig;
   readOnly?: boolean;
-  features?: EventTimelinePremiumInternalFeatures;
+  /**
+   * Pass a module-scope value: the store compares it by reference.
+   */
+  eventModelStructure?: SchedulerEventModelStructure<SchedulerEvent>;
+  features?: EventTimelinePremiumFeatures;
   localeText?: Partial<EventTimelineLocaleText>;
   onDependenciesChange?: (dependencies: SchedulerDependency[]) => void;
   /**
@@ -218,6 +229,7 @@ function TimelineHost({
   dependencies,
   presetConfig,
   readOnly,
+  eventModelStructure,
   features,
   localeText,
   onDependenciesChange,
@@ -249,6 +261,7 @@ function TimelineHost({
             dependencies={dependencies}
             presetConfig={presetConfig}
             readOnly={readOnly}
+            eventModelStructure={eventModelStructure}
             features={features}
             localeText={localeText}
             onDependenciesChange={onDependenciesChange}

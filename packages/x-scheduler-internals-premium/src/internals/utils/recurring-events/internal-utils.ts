@@ -1,14 +1,12 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
-  buildTemporalPlainDate,
-  createAdapterDate,
   getDayNumber,
   getStartOfDayMs,
   MS_PER_DAY,
   toEpochMs,
   toLocalMs,
   toMsInDay,
+  toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import type {
@@ -19,35 +17,29 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 
 /**
- * Creates the adapter value of the first instant of the last day before a plain date that exists
+ * Creates the date of the first instant of the last day before a plain date that exists
  * in `timezone`. A day the timezone skips, like December 30th, 2011 in Pacific/Apia, is passed over.
  */
 export function createStartOfPreviousDay(
-  adapter: Adapter,
   plainDate: BaseTemporal.PlainDate,
   timezone: TemporalTimezone,
 ): TemporalSupportedObject {
-  return createAdapterDate(
-    adapter,
-    getStartOfDayMs(toEpochMs(plainDate, 0, timezone) - 1, timezone),
-    timezone,
-  );
+  return new Date(getStartOfDayMs(toEpochMs(plainDate, 0, timezone) - 1, timezone));
 }
 
 /**
  * Moves the end of an event to `plainDate` on the wall clock of `timezone`, like
- * `moveToPlainDate()`, except that a time a DST transition repeats resolves to its first instant at
- * or after `startMs`, so that the end of an event starting in the second occurrence of a repeated
- * hour doesn't come before its start.
+ * `moveTimestampToPlainDate()`, except that a time a DST transition repeats resolves to its first
+ * instant at or after `startMs`, so that the end of an event starting in the second occurrence of a
+ * repeated hour doesn't come before its start.
  */
 export function moveEndToPlainDate(
-  adapter: Adapter,
   end: TemporalSupportedObject,
   plainDate: BaseTemporal.PlainDate,
   startMs: number,
   timezone: TemporalTimezone,
 ): TemporalSupportedObject {
-  const msInDay = toMsInDay(adapter.getTime(end), timezone);
+  const msInDay = toMsInDay(end.getTime(), timezone);
   let endMs = toEpochMs(plainDate, msInDay, timezone);
   if (endMs < startMs) {
     // The same wall-clock time, in the offset of the start.
@@ -56,7 +48,7 @@ export function moveEndToPlainDate(
       endMs = laterMs;
     }
   }
-  return createAdapterDate(adapter, endMs, timezone);
+  return new Date(endMs);
 }
 
 /**
@@ -89,13 +81,13 @@ export function getPlainDateWeekDayCode(
 }
 
 /**
- * Returns the week day code (MO..SU) for a given date, read in the timezone it is labeled with.
+ * Returns the week day code (MO..SU) for a given date, read in `timezone`.
  */
 export function getWeekDayCode(
-  adapter: Adapter,
   date: TemporalSupportedObject,
+  timezone: TemporalTimezone,
 ): RecurringEventWeekDayCode {
-  return getPlainDateWeekDayCode(buildTemporalPlainDate(adapter, date));
+  return getPlainDateWeekDayCode(toPlainDate(date.getTime(), timezone));
 }
 
 /**

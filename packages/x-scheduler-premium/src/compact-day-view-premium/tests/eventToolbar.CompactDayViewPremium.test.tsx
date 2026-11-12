@@ -1,17 +1,19 @@
-import { screen, fireEvent } from '@mui/internal-test-utils';
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
+import { screen, fireEvent, within } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
 import { clearLicenseStatusCache } from '@mui/x-license/internals';
 import { TEST_LICENSE_KEY_PREMIUM } from 'test/utils/licenseKeys';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import {
-  adapter,
+  createDate,
   createSchedulerRenderer,
-  EventBuilder,
-  utcJuly4AllDayBuilder,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
+  EventBuilder,
+  utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
 import { StandaloneCompactDayViewPremium } from '@mui/x-scheduler-premium/compact-day-view-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 /**
@@ -28,26 +30,34 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
     LicenseInfo.setLicenseKey(TEST_LICENSE_KEY_PREMIUM);
   });
 
-  it('should open the recurring scope dialog when deleting a recurring event from the toolbar', () => {
+  it('should use the plain delete confirmation without the recurring events feature', () => {
+    const onEventsChange = vi.fn();
     const event = EventBuilder.new()
       .id('event-1')
       .title('Daily Standup')
       .recurrent('DAILY')
       .build();
 
-    render(
-      <StandaloneCompactDayViewPremium
-        events={[event]}
-        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        onEventsChange={vi.fn()}
-      />,
-    );
+    expect(() => {
+      render(
+        <StandaloneCompactDayViewPremium
+          events={[event]}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          onEventsChange={onEventsChange}
+        />,
+      );
+    }).toWarnDev('Recurring events are not enabled');
 
     fireEvent.click(screen.getByRole('button', { name: /Daily Standup/i }));
     fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
 
-    // The scope dialog is shown instead of deleting the whole series outright.
-    expect(screen.getByText(/All events/i)).not.to.equal(null);
+    // The plain delete confirmation is shown, not the recurring scope dialog.
+    expect(screen.queryByText(/All events/i)).to.equal(null);
+    const dialog = screen.getByRole('dialog', { name: /delete this event/i });
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Delete event' }));
+
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
   });
 
   it('should delete only the chosen occurrence, keeping the rest of the series', async () => {
@@ -60,6 +70,7 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
 
     const { user } = render(
       <StandaloneCompactDayViewPremium
+        features={{ recurringEvents: recurringEventsFeature }}
         events={[event]}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
         onEventsChange={onEventsChange}
@@ -90,8 +101,9 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
 
     const { user } = render(
       <StandaloneCompactDayViewPremium
+        features={{ recurringEvents: recurringEventsFeature }}
         events={[event]}
-        visibleDate={adapter.date('2025-07-03T00:00:00', 'America/New_York')}
+        visibleDate={createDate('2025-07-03T00:00:00', 'America/New_York')}
         displayTimezone="America/New_York"
         onEventsChange={onEventsChange}
       />,
@@ -106,7 +118,7 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
     const series = updatedEvents.find((item: SchedulerEvent) => item.id === 'event-1')!;
     expect(series.exDates).to.have.length(1);
     expect(
-      adapter.formatByString(adapter.date(String(series.exDates![0]), 'UTC'), 'yyyy-MM-dd'),
-    ).to.equal('2025-07-04');
+      toPlainDate(createDate(String(series.exDates![0]), 'UTC').getTime(), 'UTC'),
+    ).toEqualPlainDate('2025-07-04');
   });
 });

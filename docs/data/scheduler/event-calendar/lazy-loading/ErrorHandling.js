@@ -3,12 +3,15 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import {
   resources,
   defaultVisibleDate,
   getEvents,
   persistEvents,
 } from './fakeServer';
+
+const features = { recurringEvents: recurringEventsFeature };
 
 export default function ErrorHandling() {
   const [failRequests, setFailRequests] = React.useState(false);
@@ -38,6 +41,7 @@ export default function ErrorHandling() {
       />
       <div style={{ height: '700px', width: '100%' }}>
         <EventCalendarPremium
+          features={features}
           dataSource={{ getEvents: fetchData, persistEvents }}
           resources={resources}
           defaultVisibleDate={defaultVisibleDate}

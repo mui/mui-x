@@ -1,4 +1,4 @@
-import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
+import type { TemporalSupportedObject } from './date';
 import type { EventCalendarState } from '../use-event-calendar';
 import type { SchedulerProcessedDay } from './event';
 import type { BaseTemporal } from '../internals/utils/base-temporal';

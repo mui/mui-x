@@ -1,8 +1,8 @@
 import {
-  adapter,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
+  startOfWeek,
 } from 'test/utils/scheduler';
 import { within } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
@@ -56,8 +56,8 @@ describe('<CompactWeekView />', () => {
     const root = getDayTimeGrid();
     const headerCells = within(root).getAllByRole('columnheader');
     // visibleDate is 2025-07-03 (Thursday). startOfWeek (Sunday-start) → June 29.
-    const expectedFirstDay = adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
-    const expectedFirstDayOfMonth = adapter.format(expectedFirstDay, 'dayOfMonth');
+    const expectedFirstDay = startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
+    const expectedFirstDayOfMonth = expectedFirstDay.getDate();
     expect(headerCells[0].getAttribute('aria-label')).to.match(
       new RegExp(`${expectedFirstDayOfMonth}$`),
     );

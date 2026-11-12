@@ -16,30 +16,19 @@ import {
   schedulerRecurringEventsPlugin,
   getWeekDayCode,
 } from '@mui/x-scheduler-internals-premium/internals';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
+import type { TemporalAdapter, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { adapter as defaultAdapter } from './adapters';
+import { addMinutes, createDate, endOfDay, startOfDay } from './dates';
 
 export const DEFAULT_TESTING_VISIBLE_DATE_STR = '2025-07-03T00:00:00Z';
-export const DEFAULT_TESTING_VISIBLE_DATE = defaultAdapter.date(
-  DEFAULT_TESTING_VISIBLE_DATE_STR,
-  'default',
-);
-
-/**
- * Serializes a date as a UTC instant. A date labeled in the event's data timezone
- * stringifies with an offset suffix, which `resolveEventDate` re-reads as wall time.
- */
-function toInstantString(adapter: Adapter, value: Parameters<Adapter['toJsDate']>[0]): string {
-  return adapter.toJsDate(value).toISOString();
-}
+export const DEFAULT_TESTING_VISIBLE_DATE = createDate(DEFAULT_TESTING_VISIBLE_DATE_STR);
 
 /**
  * Minimal event builder for tests.
  *
  * Scope:
  * - Builds a valid SchedulerEvent with string dates (instant or wall-time).
- * - Uses the provided (or default) adapter for date computations.
  * - Can optionally derive a SchedulerEventOccurrence via .toOccurrence().
  */
 export class EventBuilder {
@@ -47,24 +36,24 @@ export class EventBuilder {
 
   protected displayTimezone: TemporalTimezone = 'default';
 
-  protected constructor(protected adapter: Adapter) {
+  protected constructor(protected adapter: TemporalAdapter) {
     const id = crypto.randomUUID();
     const start = DEFAULT_TESTING_VISIBLE_DATE;
-    const end = this.adapter.addMinutes(start, 60);
+    const end = addMinutes(start, 60);
 
     this.event = {
       id,
       title: `Event ${id}`,
-      start: toInstantString(this.adapter, start),
-      end: toInstantString(this.adapter, end),
+      start: start.toISOString(),
+      end: end.toISOString(),
       description: `Event ${id} description`,
     };
   }
 
   /**
-   * Create a new builder with a given adapter (defaults to the shared test adapter).
+   * Create a new builder. The `adapter` is unused: no Scheduler function takes one anymore.
    */
-  static new(adapter: Adapter = defaultAdapter) {
+  static new(adapter: TemporalAdapter = defaultAdapter) {
     return new EventBuilder(adapter);
   }
 
@@ -183,14 +172,14 @@ export class EventBuilder {
 
   /**
    * Create a single-day timed event starting at `start` with the given duration (minutes).
-   * Computes the end from the start using the adapter.
+   * Computes the end from the start.
    */
   singleDay(start: string, durationMinutes = 60) {
     const dataTimezone = this.event.timezone ?? 'default';
-    const startDate = resolveEventDate(start, dataTimezone, this.adapter);
-    const endDate = this.adapter.addMinutes(startDate, durationMinutes);
+    const startDate = resolveEventDate(start, dataTimezone);
+    const endDate = addMinutes(startDate, durationMinutes);
     this.event.start = start;
-    this.event.end = toInstantString(this.adapter, endDate);
+    this.event.end = endDate.toISOString();
     return this;
   }
 
@@ -200,9 +189,9 @@ export class EventBuilder {
    */
   fullDay(date: string) {
     const dataTimezone = this.event.timezone ?? 'default';
-    const d = resolveEventDate(date, dataTimezone, this.adapter);
-    this.event.start = toInstantString(this.adapter, this.adapter.startOfDay(d));
-    this.event.end = toInstantString(this.adapter, this.adapter.endOfDay(d));
+    const d = resolveEventDate(date, dataTimezone);
+    this.event.start = startOfDay(d).toISOString();
+    this.event.end = endOfDay(d).toISOString();
     this.event.allDay = true;
     return this;
   }
@@ -232,16 +221,16 @@ export class EventBuilder {
   recurrent(kind: RecurringEventPresetKey, rrule?: Omit<SchedulerEventRecurrenceRule, 'freq'>) {
     const dataTimezone = this.event.timezone ?? 'default';
     const anchor = this.event.start
-      ? resolveEventDate(this.event.start, dataTimezone, this.adapter)
-      : this.adapter.setTimezone(DEFAULT_TESTING_VISIBLE_DATE, 'default');
+      ? resolveEventDate(this.event.start, dataTimezone)
+      : DEFAULT_TESTING_VISIBLE_DATE;
 
     let base: SchedulerEventRecurrenceRule = { freq: kind, interval: 1 };
 
     if (kind === 'WEEKLY') {
-      const code = getWeekDayCode(this.adapter, anchor);
+      const code = getWeekDayCode(anchor, dataTimezone);
       base = { ...base, byDay: [code] };
     } else if (kind === 'MONTHLY') {
-      const dayOfMonth = this.adapter.getDate(anchor);
+      const dayOfMonth = toPlainDate(anchor.getTime(), dataTimezone).day;
       base = { ...base, byMonthDay: [dayOfMonth] };
     }
 
@@ -267,29 +256,27 @@ export class EventBuilder {
   toOccurrence(occurrenceStartDate?: string): SchedulerEventOccurrence {
     const dataTimezone = this.event.timezone ?? 'default';
     const rawStart = occurrenceStartDate
-      ? resolveEventDate(occurrenceStartDate, dataTimezone, this.adapter)
-      : resolveEventDate(this.event.start, dataTimezone, this.adapter);
+      ? resolveEventDate(occurrenceStartDate, dataTimezone)
+      : resolveEventDate(this.event.start, dataTimezone);
 
     const baseProcessed = processEvent(
       this.event,
       this.displayTimezone,
-      this.adapter,
       schedulerRecurringEventsPlugin,
     );
     const originalDurationMs =
       baseProcessed.dataTimezone.end.timestamp - baseProcessed.dataTimezone.start.timestamp;
-    const rawEnd = this.adapter.addMilliseconds(rawStart, originalDurationMs);
+    const rawEnd = new Date(rawStart.getTime() + originalDurationMs);
 
     const occurrenceModel: SchedulerEvent = {
       ...this.event,
-      start: toInstantString(this.adapter, rawStart),
-      end: toInstantString(this.adapter, rawEnd),
+      start: rawStart.toISOString(),
+      end: rawEnd.toISOString(),
     };
 
     const processed = processEvent(
       occurrenceModel,
       this.displayTimezone,
-      this.adapter,
       schedulerRecurringEventsPlugin,
     );
 
@@ -303,12 +290,7 @@ export class EventBuilder {
    * Derives a processed event from the built event.
    */
   toProcessed() {
-    return processEvent(
-      this.event,
-      this.displayTimezone,
-      this.adapter,
-      schedulerRecurringEventsPlugin,
-    );
+    return processEvent(this.event, this.displayTimezone, schedulerRecurringEventsPlugin);
   }
 
   /**

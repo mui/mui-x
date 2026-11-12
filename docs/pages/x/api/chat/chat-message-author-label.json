@@ -17,6 +17,7 @@
     {
       "name": "authorLabel",
       "description": "The component that renders the author label.",
+      "default": "'span'",
       "class": "MuiChatMessageAuthorLabel-authorLabel"
     }
   ],

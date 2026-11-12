@@ -1,5 +1,12 @@
 import { describe, test } from 'vitest';
-import { adapter, createTimelineAxis } from 'test/utils/scheduler';
+import {
+  addDays,
+  addMinutes,
+  createDate,
+  createTimelineAxis,
+  endOfDay,
+  startOfDay,
+} from 'test/utils/scheduler';
 import { processDate } from '../../process-date';
 import { computeElementPositionInCollection } from './useElementPositionInCollection';
 import { getTimelineAxisDurationMs, timelineAxisOffsetToTimestamp } from './timeline-axis';
@@ -10,22 +17,21 @@ export const benchmarkResult = { value: undefined as unknown };
 
 describe.each(['default', 'America/New_York'] as const)('%s display timezone', (timezone) => {
   // A week of 24 hours per day, like the time grid of the week view.
-  const start = adapter.startOfDay(
-    adapter.setTimezone(adapter.date('2026-03-02T12:00:00Z', 'default'), timezone),
-  );
+  const start = startOfDay(createDate('2026-03-02T12:00:00Z'), timezone);
   const axis = createTimelineAxis({
     start,
-    end: adapter.endOfDay(adapter.addDays(start, 6)),
+    end: endOfDay(addDays(start, 6, timezone), timezone),
     dayStartMinute: 0,
     dayEndMinute: 1440,
+    timezone,
   });
   const durationMs = getTimelineAxisDurationMs(axis);
   // Occurrences of 30 minutes to 5 hours, every 10 minutes across the week.
   const occurrences = Array.from({ length: occurrenceCount }, (_, index) => {
-    const occurrenceStart = adapter.addMinutes(start, index * 10);
+    const occurrenceStart = addMinutes(start, index * 10);
     return {
-      start: processDate(occurrenceStart, adapter),
-      end: processDate(adapter.addMinutes(occurrenceStart, 30 + (index % 10) * 30), adapter),
+      start: processDate(occurrenceStart, 'default'),
+      end: processDate(addMinutes(occurrenceStart, 30 + (index % 10) * 30), 'default'),
     };
   });
 

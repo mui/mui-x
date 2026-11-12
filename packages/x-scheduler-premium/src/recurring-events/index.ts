@@ -1,2 +1,2 @@
 export { recurringEventsFeature } from './recurringEventsFeature';
-export type { EventTimelinePremiumRecurringEventsFeature } from '../event-timeline-premium/features/EventTimelinePremiumFeatures.types';
+export type { SchedulerRecurringEventsFeature } from '../internals/features/SchedulerRecurringEventsFeature.types';

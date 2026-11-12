@@ -28,11 +28,13 @@
     {
       "name": "root",
       "description": "The component that renders the root.",
+      "default": "'div'",
       "class": "MuiChatUnreadMarker-root"
     },
     {
       "name": "label",
       "description": "The component that renders the label.",
+      "default": "'div'; a styled 'span' in `ChatUnreadMarker`",
       "class": "MuiChatUnreadMarker-label"
     }
   ],

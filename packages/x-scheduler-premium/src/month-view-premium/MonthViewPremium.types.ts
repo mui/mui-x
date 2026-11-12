@@ -8,6 +8,7 @@ import type {
 import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
 import type { EventCalendarLocaleText, SchedulerSlotsAndSlotProps } from '@mui/x-scheduler/models';
 import type { MonthViewProps } from '@mui/x-scheduler/month-view';
+import type { EventCalendarPremiumFeatures } from '../event-calendar-premium/features/EventCalendarPremiumFeatures.types';
 
 export interface StandaloneMonthViewPremiumProps<TEvent extends object, TResource extends object>
   extends
@@ -31,6 +32,12 @@ export interface StandaloneMonthViewPremiumProps<TEvent extends object, TResourc
    * in the GitHub repository.
    */
   localeText?: Partial<EventCalendarLocaleText>;
+  /**
+   * The optional features of the view: `recurringEvents` from `@mui/x-scheduler-premium/recurring-events`.
+   * They are read once when the component mounts, later changes are ignored.
+   * @example { recurringEvents: recurringEventsFeature }
+   */
+  features?: EventCalendarPremiumFeatures;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

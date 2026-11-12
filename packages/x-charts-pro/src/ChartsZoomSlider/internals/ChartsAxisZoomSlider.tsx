@@ -41,6 +41,7 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
   const zoomData = store.use(selectorChartAxisZoomData, axisId);
   const zoomOptions = store.use(selectorChartAxisZoomOptionsLookup, axisId);
   const [showTooltip, setShowTooltip] = React.useState(false);
+  const [isFocused, setIsFocused] = React.useState(false);
   const { xAxis } = useXAxes();
   const { yAxis } = useYAxes();
   const previewOption = zoomOptions.slider.preview;
@@ -99,6 +100,14 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
     setShowTooltip(false);
   }, []);
 
+  const handleFocus = React.useCallback(() => {
+    setIsFocused(true);
+  }, []);
+
+  const handleBlur = React.useCallback(() => {
+    setIsFocused(false);
+  }, []);
+
   if (!zoomData) {
     return null;
   }
@@ -124,7 +133,7 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
       axis.position === 'bottom'
         ? drawingArea.top + drawingArea.height + axis.offset + axisSize + ZOOM_SLIDER_MARGIN
         : drawingArea.top - axis.offset - axisSize - sliderSize - ZOOM_SLIDER_MARGIN;
-    reverse = axis.reverse ?? false;
+    reverse = axis.zoom?.reverse ?? false;
     axisPosition = axis.position ?? 'bottom';
     tooltipConditions = axis.zoom?.slider?.showTooltip ?? DEFAULT_ZOOM_SLIDER_SHOW_TOOLTIP;
   } else {
@@ -141,7 +150,7 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
         ? drawingArea.left + drawingArea.width + axis.offset + axisSize + ZOOM_SLIDER_MARGIN
         : drawingArea.left - axis.offset - axisSize - sliderSize - ZOOM_SLIDER_MARGIN;
     y = drawingArea.top;
-    reverse = axis.reverse ?? false;
+    reverse = axis.zoom?.reverse ?? false;
     axisPosition = axis.position ?? 'left';
     tooltipConditions = axis.zoom?.slider?.showTooltip ?? DEFAULT_ZOOM_SLIDER_SHOW_TOOLTIP;
   }
@@ -183,9 +192,12 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
         axisId={axisId}
         axisPosition={axisPosition}
         axisDirection={axisDirection}
+        x={x}
+        y={y}
         reverse={reverse}
         showTooltip={
-          (showTooltip && tooltipConditions !== 'never') || tooltipConditions === 'always'
+          ((showTooltip || isFocused) && tooltipConditions !== 'never') ||
+          tooltipConditions === 'always'
         }
         size={showPreview ? ZOOM_SLIDER_PREVIEW_SIZE : ZOOM_SLIDER_ACTIVE_TRACK_SIZE}
         preview={showPreview}
@@ -193,6 +205,8 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
         onPointerLeave={tooltipConditions === 'hover' ? tooltipOff : undefined}
         onInteractionStart={tooltipConditions === 'hover' ? interactionStart : undefined}
         onInteractionEnd={tooltipConditions === 'hover' ? interactionEnd : undefined}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       />
     </g>
   );

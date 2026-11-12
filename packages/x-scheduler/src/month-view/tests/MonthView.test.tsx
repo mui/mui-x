@@ -3,14 +3,18 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import type { Theme } from '@mui/material/styles';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
-  adapter,
+  addMonths,
+  createDate,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
+  endOfDay,
   EventBuilder,
   getAllEventsByTitle,
   ResourceBuilder,
   SchedulerStoreRunner,
   setSystemTimezone,
+  startOfDay,
+  startOfMonth,
   withinEventCalendarToolbar,
 } from 'test/utils/scheduler';
 import { act, screen, within, waitFor } from '@mui/internal-test-utils';
@@ -105,7 +109,7 @@ describe('<MonthView />', () => {
     expect(handleViewChange.mock.calls[0][0]).to.equal('day');
     expect(handleVisibleDateChange.mock.calls.length).to.equal(1);
     expect(handleVisibleDateChange.mock.calls[0][0]).toEqualDateTime(
-      adapter.date('2025-05-15T00:00:00Z', 'default'),
+      createDate('2025-05-15T00:00:00Z'),
     );
   });
 
@@ -130,6 +134,53 @@ describe('<MonthView />', () => {
       </EventCalendarProvider>,
     );
     expect(screen.getByText(/more/i)).not.to.equal(null);
+  });
+
+  describe('focus when an event is removed', () => {
+    const singleDayEvents = [
+      EventBuilder.new().singleDay('2025-05-01T09:00:00Z').title('Meeting').build(),
+      EventBuilder.new().singleDay('2025-05-15T14:00:00Z').title('Doctor Appointment').build(),
+    ];
+
+    function renderMonthView() {
+      return render(
+        <EventCalendarProvider events={singleDayEvents} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+    }
+
+    it('should move focus to the day cell when the focused event is removed', async () => {
+      const { setProps } = renderMonthView();
+      const eventButton = screen.getByRole('button', { name: /^Meeting,/ });
+      const cell = eventButton.closest<HTMLElement>('[role="gridcell"]')!;
+      await act(async () => {
+        eventButton.focus();
+      });
+
+      setProps({ events: singleDayEvents.slice(1) });
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(cell);
+      });
+    });
+
+    it('should leave focus alone when an event is removed while another one is focused', async () => {
+      const { setProps } = renderMonthView();
+      const otherEvent = screen.getByRole('button', { name: /^Doctor Appointment,/ });
+      await act(async () => {
+        otherEvent.focus();
+      });
+
+      setProps({ events: singleDayEvents.slice(1) });
+
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /^Meeting,/ })).to.equal(null);
+      });
+      expect(document.activeElement).to.equal(otherEvent);
+    });
   });
 
   describe('Event keyboard accessibility in "more events" popover', () => {
@@ -852,8 +903,8 @@ describe('<MonthView />', () => {
 
     it('should clamp the span of a creation placeholder to each week row', () => {
       // Friday May 9 to Tuesday May 13: two days left in the first week row, three in the next.
-      const start = adapter.startOfDay(adapter.date('2025-05-09T00:00:00Z', 'default'));
-      const end = adapter.endOfDay(adapter.date('2025-05-13T00:00:00Z', 'default'));
+      const start = startOfDay(createDate('2025-05-09T00:00:00Z'));
+      const end = endOfDay(createDate('2025-05-13T00:00:00Z'));
 
       render(
         <EventCalendarProvider events={[]} resources={[]}>
@@ -866,8 +917,8 @@ describe('<MonthView />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'day-grid',
-                start: adapter.getTime(start),
-                end: adapter.getTime(end),
+                start: start.getTime(),
+                end: end.getTime(),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -880,6 +931,42 @@ describe('<MonthView />', () => {
         document.querySelectorAll<HTMLElement>('[style*="--grid-column-span"]'),
       ).map((element) => element.style.getPropertyValue('--grid-column-span'));
       expect(spans).to.deep.equal(['2', '3']);
+    });
+
+    it('should span the cells of a creation placeholder in a row without weekends', () => {
+      // Thursday July 10th to Monday July 14th, in the row Wed 9th, Thu 10th, Fri 11th, Mon 14th and Tue 15th.
+      render(
+        <EventCalendarProvider
+          events={[]}
+          resources={[]}
+          displayTimezone="UTC"
+          visibleDate={new Date('2025-07-15T00:00:00Z')}
+          defaultPreferences={{ showWeekends: false, weekStartsOn: 3 }}
+        >
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
+            onMount={(store) =>
+              store.setOccurrencePlaceholder({
+                type: 'creation',
+                surfaceType: 'day-grid',
+                start: Date.parse('2025-07-10T00:00:00Z'),
+                end: Date.parse('2025-07-14T23:59:59.999Z'),
+                lockSurfaceType: false,
+                resourceId: null,
+              })
+            }
+          />
+        </EventCalendarProvider>,
+      );
+
+      // Thursday, Friday and Monday.
+      const spans = Array.from(
+        document.querySelectorAll<HTMLElement>('[style*="--grid-column-span"]'),
+      ).map((element) => element.style.getPropertyValue('--grid-column-span'));
+      expect(spans).to.deep.equal(['3']);
     });
   });
 
@@ -1175,7 +1262,7 @@ describe('<MonthView />', () => {
       // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within toolbar
       await user.click(toolbar.getByRole('button', { name: /previous month/i }));
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
-        adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), -1),
+        addMonths(startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), -1),
       );
     });
 
@@ -1195,7 +1282,7 @@ describe('<MonthView />', () => {
       // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within toolbar
       await user.click(toolbar.getByRole('button', { name: /next month/i }));
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
-        adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), 1),
+        addMonths(startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), 1),
       );
     });
   });
@@ -1306,6 +1393,115 @@ describe('<MonthView />', () => {
     });
   });
 
+  describe('weekend of the date locale', () => {
+    function getDataRows() {
+      return within(screen.getByRole('grid'))
+        .getAllByRole('row')
+        .filter((row) => row.getAttribute('aria-rowindex') !== '1');
+    }
+
+    function getHeaderTexts() {
+      return screen.getAllByRole('columnheader').map((header) => header.textContent);
+    }
+
+    function formatWeekdays(dateLocale: string, dates: string[]) {
+      const formatter = new Intl.DateTimeFormat(dateLocale, { weekday: 'short', timeZone: 'UTC' });
+      return dates.map((date) => formatter.format(new Date(date)));
+    }
+
+    function renderMonthView(dateLocale: string, showWeekends: boolean) {
+      render(
+        <EventCalendarProvider
+          {...standaloneDefaults}
+          dateLocale={dateLocale}
+          defaultPreferences={{ showWeekends }}
+        >
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+    }
+
+    it('should mark Saturday and Sunday as the weekend in the United States', () => {
+      renderMonthView('en-US', true);
+
+      // The weeks start on Sunday.
+      getDataRows().forEach((row) => {
+        const cells = within(row).getAllByRole('gridcell');
+        expect(cells.map((cell) => cell.hasAttribute('data-weekend'))).to.deep.equal([
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+        ]);
+      });
+    });
+
+    it('should mark Friday and Saturday as the weekend in Saudi Arabia', () => {
+      renderMonthView('ar-SA', true);
+
+      // The weeks start on Sunday.
+      getDataRows().forEach((row) => {
+        const cells = within(row).getAllByRole('gridcell');
+        expect(cells.map((cell) => cell.hasAttribute('data-weekend'))).to.deep.equal([
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          true,
+        ]);
+      });
+    });
+
+    it('should hide Friday and Saturday in Saudi Arabia when showWeekends=false', () => {
+      renderMonthView('ar-SA', false);
+
+      expect(screen.getByRole('grid')).to.have.attribute('aria-colcount', '5');
+      getDataRows().forEach((row) => {
+        const cells = within(row).getAllByRole('gridcell');
+        expect(cells.length).to.equal(5);
+        cells.forEach((cell) => expect(cell).not.to.have.attribute('data-weekend'));
+      });
+      // From Sunday, April 27th to Thursday, May 1st, 2025.
+      expect(getHeaderTexts()).to.deep.equal(
+        formatWeekdays('ar-SA', [
+          '2025-04-27',
+          '2025-04-28',
+          '2025-04-29',
+          '2025-04-30',
+          '2025-05-01',
+        ]),
+      );
+    });
+
+    it('should keep 6 days per week when the weekend has one day and showWeekends=false', () => {
+      // Iran: the weeks start on Saturday, and the weekend is Friday only.
+      renderMonthView('fa-IR', false);
+
+      expect(screen.getByRole('grid')).to.have.attribute('aria-colcount', '6');
+      getDataRows().forEach((row) => {
+        expect(within(row).getAllByRole('gridcell').length).to.equal(6);
+      });
+      // From Saturday, April 26th to Thursday, May 1st, 2025.
+      expect(getHeaderTexts()).to.deep.equal(
+        formatWeekdays('fa-IR', [
+          '2025-04-26',
+          '2025-04-27',
+          '2025-04-28',
+          '2025-04-29',
+          '2025-04-30',
+          '2025-05-01',
+        ]),
+      );
+    });
+  });
+
   describe('weekStartsOn preference', () => {
     it('should start each week row on Monday when weekStartsOn=1', () => {
       // May 2025: With weekStartsOn=1 the first week row starts on Monday Apr 28.
@@ -1323,30 +1519,19 @@ describe('<MonthView />', () => {
         .getAllByRole('row')
         .filter((row) => row.getAttribute('aria-rowindex') !== '1');
 
-      // Every row must have exactly 7 gridcells — not 6 (the old getWeekNumber bug).
+      // Every row must have exactly 7 gridcells — not 6 (the old getWeekNumber bug) — and end
+      // on the Saturday and Sunday of the weekend of the United States.
       dataRows.forEach((row) => {
         const cells = within(row).getAllByRole('gridcell');
-        expect(cells.length).to.equal(7);
-      });
-    });
-
-    it('should start each week row on Sunday when weekStartsOn=7', () => {
-      render(
-        <EventCalendarProvider {...standaloneDefaults} defaultPreferences={{ weekStartsOn: 7 }}>
-          <EventDialogProvider>
-            <MonthView />
-          </EventDialogProvider>
-        </EventCalendarProvider>,
-      );
-
-      const grid = screen.getByRole('grid');
-      const dataRows = within(grid)
-        .getAllByRole('row')
-        .filter((row) => row.getAttribute('aria-rowindex') !== '1');
-
-      dataRows.forEach((row) => {
-        const cells = within(row).getAllByRole('gridcell');
-        expect(cells.length).to.equal(7);
+        expect(cells.map((cell) => cell.hasAttribute('data-weekend'))).to.deep.equal([
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          true,
+        ]);
       });
     });
 
@@ -1371,7 +1556,7 @@ describe('<MonthView />', () => {
     it.skipIf(!isJSDOM)(
       'should fill an event on two days of the display timezone, whatever the timezone of the system',
       () => {
-        // Pacific/Apia skipped December 30th, 2011. On a system there, `adapter.isSameDay()` reads
+        // Pacific/Apia skipped December 30th, 2011. On a system there, the date-fns adapter read
         // December 30th and 31st as the same day in the other timezones.
         setSystemTimezone('Pacific/Apia');
         const event = EventBuilder.new()

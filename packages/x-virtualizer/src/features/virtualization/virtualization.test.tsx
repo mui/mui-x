@@ -1,7 +1,8 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
-import { useVirtualizer, LayoutList, type FocusedCell } from '@mui/x-virtualizer';
+import { useVirtualizer, LayoutList } from '@mui/x-virtualizer';
+import type { FocusedCell } from '@mui/x-virtualizer';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 

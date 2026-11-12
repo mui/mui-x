@@ -1,4 +1,4 @@
-import { adapter, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
+import { createDate, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
@@ -11,18 +11,18 @@ storeClasses.forEach((storeClass) => {
   describe(`schedulerOtherSelectors - ${storeClass.name}`, () => {
     describe('isEditedOccurrence', () => {
       it('should return false when no occurrence is active', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         expect(schedulerOtherSelectors.isEditedOccurrence(store.state, 'event-1')).to.equal(false);
       });
 
       it('should return true when the given occurrence key matches the active occurrence', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         store.startEditing(occurrence('event-1'));
         expect(schedulerOtherSelectors.isEditedOccurrence(store.state, 'event-1')).to.equal(true);
       });
 
       it('should return false when a different occurrence is active', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         store.startEditing(occurrence('event-2'));
         expect(schedulerOtherSelectors.isEditedOccurrence(store.state, 'event-1')).to.equal(false);
       });
@@ -32,7 +32,7 @@ storeClasses.forEach((storeClass) => {
         const armedOccurrence = { id: 'standup', key: 'standup::2025-07-07' } as any;
         const siblingKey = 'standup::2025-07-08';
 
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         store.startEditing(armedOccurrence);
 
         expect(
@@ -45,12 +45,12 @@ storeClasses.forEach((storeClass) => {
 
     describe('editingOccurrence', () => {
       it('should return null when nothing is being edited', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
       });
 
       it('should return the edited occurrence', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         const edited = occurrence('event-1');
         store.startEditing(edited);
         expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(edited);
@@ -59,14 +59,14 @@ storeClasses.forEach((storeClass) => {
 
     describe('isEditedOccurrenceArmed', () => {
       it('should return false when nothing is being edited', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         expect(schedulerOtherSelectors.isEditedOccurrenceArmed(store.state, 'event-1')).to.equal(
           false,
         );
       });
 
       it('should return true when the matching occurrence is armed', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         store.startEditing(occurrence('event-1'), 'armed');
         expect(schedulerOtherSelectors.isEditedOccurrenceArmed(store.state, 'event-1')).to.equal(
           true,
@@ -74,7 +74,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should return false when the matching occurrence is being edited in the form', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         store.startEditing(occurrence('event-1'), 'edit');
         expect(schedulerOtherSelectors.isEditedOccurrenceArmed(store.state, 'event-1')).to.equal(
           false,
@@ -82,7 +82,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should return false when a different occurrence is armed', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         store.startEditing(occurrence('event-2'), 'armed');
         expect(schedulerOtherSelectors.isEditedOccurrenceArmed(store.state, 'event-1')).to.equal(
           false,
@@ -92,12 +92,12 @@ storeClasses.forEach((storeClass) => {
 
     describe('editingMode', () => {
       it('should return null when nothing is being edited', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         expect(schedulerOtherSelectors.editingMode(store.state)).to.equal(null);
       });
 
       it('should return the mode the edited occurrence is in', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         store.startEditing(occurrence('event-1'), 'armed');
         expect(schedulerOtherSelectors.editingMode(store.state)).to.equal('armed');
 
@@ -108,14 +108,14 @@ storeClasses.forEach((storeClass) => {
 
     describe('isEditedOccurrenceInEditMode', () => {
       it('should return false when nothing is being edited', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         expect(
           schedulerOtherSelectors.isEditedOccurrenceInEditMode(store.state, 'event-1'),
         ).to.equal(false);
       });
 
       it('should return true when the matching occurrence is being edited in the form', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         store.startEditing(occurrence('event-1'), 'edit');
         expect(
           schedulerOtherSelectors.isEditedOccurrenceInEditMode(store.state, 'event-1'),
@@ -123,7 +123,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should return false when the matching occurrence is only armed', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         store.startEditing(occurrence('event-1'), 'armed');
         expect(
           schedulerOtherSelectors.isEditedOccurrenceInEditMode(store.state, 'event-1'),
@@ -131,7 +131,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should return false when a different occurrence is being edited', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         store.startEditing(occurrence('event-2'), 'edit');
         expect(
           schedulerOtherSelectors.isEditedOccurrenceInEditMode(store.state, 'event-1'),
@@ -141,18 +141,18 @@ storeClasses.forEach((storeClass) => {
 
     describe('isDeleteConfirmationDialogOpen', () => {
       it('should return false when no deletion is pending', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         expect(schedulerOtherSelectors.isDeleteConfirmationDialogOpen(store.state)).to.equal(false);
       });
 
       it('should return true once a deletion has been requested', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         store.requestEventDeletion({ eventId: 'event-1' });
         expect(schedulerOtherSelectors.isDeleteConfirmationDialogOpen(store.state)).to.equal(true);
       });
 
       it('should return false again once the deletion is resolved', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         store.requestEventDeletion({ eventId: 'event-1' });
         store.resolveEventDeletion(false);
         expect(schedulerOtherSelectors.isDeleteConfirmationDialogOpen(store.state)).to.equal(false);
@@ -161,12 +161,12 @@ storeClasses.forEach((storeClass) => {
 
     describe('isConfirmationDialogOpen', () => {
       it('should return false when neither the scope dialog nor the delete confirmation is open', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         expect(schedulerOtherSelectors.isConfirmationDialogOpen(store.state)).to.equal(false);
       });
 
       it('should return true while the delete confirmation dialog is open', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS });
         store.requestEventDeletion({ eventId: 'event-1' });
         expect(schedulerOtherSelectors.isConfirmationDialogOpen(store.state)).to.equal(true);
       });
@@ -174,10 +174,10 @@ storeClasses.forEach((storeClass) => {
       it.skipIf(storeClass.name === 'EventCalendarStore')(
         'should return true while only the recurring scope dialog is open',
         () => {
-          const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+          const store = new storeClass.Value({ ...BASE_PARAMS });
           store.deleteRecurringEvent({
             eventId: 'event-1',
-            occurrenceStart: adapter.date('2025-07-07T10:00:00', 'default'),
+            occurrenceStart: createDate('2025-07-07T10:00:00'),
           });
           expect(schedulerOtherSelectors.isConfirmationDialogOpen(store.state)).to.equal(true);
         },
@@ -186,10 +186,7 @@ storeClasses.forEach((storeClass) => {
 
     describe('shouldEventRequireResource', () => {
       it('should return true when set and resources are configured', () => {
-        const store = new storeClass.Value(
-          { ...BASE_PARAMS, shouldEventRequireResource: true },
-          adapter,
-        );
+        const store = new storeClass.Value({ ...BASE_PARAMS, shouldEventRequireResource: true });
         expect(schedulerOtherSelectors.shouldEventRequireResource(store.state)).to.equal(true);
       });
 
@@ -198,77 +195,16 @@ storeClasses.forEach((storeClass) => {
         // to not compound it by blocking submission with no resource picker to fix it from.
         let result: boolean | undefined;
         expect(() => {
-          const store = new storeClass.Value(
-            { events: [], resources: [], shouldEventRequireResource: true },
-            adapter,
-          );
+          const store = new storeClass.Value({
+            events: [],
+            resources: [],
+            shouldEventRequireResource: true,
+          });
           result = schedulerOtherSelectors.shouldEventRequireResource(store.state);
         }).toWarnDev([
           'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
         ]);
         expect(result).to.equal(false);
-      });
-    });
-
-    describe('visibleDate', () => {
-      it('should return the visibleDate with the default display timezone applied', () => {
-        const visibleDate = adapter.date('2025-07-03T00:00:00Z', 'default');
-        const state = new storeClass.Value({ ...BASE_PARAMS, visibleDate }, adapter).state;
-        const result = schedulerOtherSelectors.visibleDate(state);
-
-        expect(result).toEqualDateTime(visibleDate);
-      });
-
-      it('should apply the configured display timezone to the visibleDate', () => {
-        const visibleDate = adapter.date('2025-07-03T12:00:00Z', 'default');
-        const state = new storeClass.Value(
-          { ...BASE_PARAMS, visibleDate, displayTimezone: 'America/New_York' },
-          adapter,
-        ).state;
-        const result = schedulerOtherSelectors.visibleDate(state);
-
-        // The result should have the timezone applied
-        expect(adapter.getTimezone(result)).to.equal('America/New_York');
-      });
-
-      it('should return same reference when inputs have not changed', () => {
-        const visibleDate = adapter.date('2025-07-03T00:00:00Z', 'default');
-        const state = new storeClass.Value({ ...BASE_PARAMS, visibleDate }, adapter).state;
-        const result1 = schedulerOtherSelectors.visibleDate(state);
-        const result2 = schedulerOtherSelectors.visibleDate(state);
-
-        expect(result1).to.equal(result2);
-      });
-
-      it('should return a new reference when visibleDate changes', () => {
-        const visibleDate = adapter.date('2025-07-03T00:00:00Z', 'default');
-        const store = new storeClass.Value({ ...BASE_PARAMS, visibleDate }, adapter);
-        const result1 = schedulerOtherSelectors.visibleDate(store.state);
-
-        const newVisibleDate = adapter.date('2025-07-04T00:00:00Z', 'default');
-        store.updateStateFromParameters({ ...BASE_PARAMS, visibleDate: newVisibleDate }, adapter);
-        const result2 = schedulerOtherSelectors.visibleDate(store.state);
-
-        expect(result1).to.not.equal(result2);
-        expect(result2).toEqualDateTime(newVisibleDate);
-      });
-
-      it('should return a new reference when display timezone changes', () => {
-        const visibleDate = adapter.date('2025-07-03T12:00:00Z', 'default');
-        const store = new storeClass.Value(
-          { ...BASE_PARAMS, visibleDate, displayTimezone: 'default' },
-          adapter,
-        );
-        const result1 = schedulerOtherSelectors.visibleDate(store.state);
-
-        store.updateStateFromParameters(
-          { ...BASE_PARAMS, visibleDate, displayTimezone: 'America/New_York' },
-          adapter,
-        );
-        const result2 = schedulerOtherSelectors.visibleDate(store.state);
-
-        expect(result1).to.not.equal(result2);
-        expect(adapter.getTimezone(result2)).to.equal('America/New_York');
       });
     });
   });

@@ -1,4 +1,5 @@
-import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type { TemporalSupportedObject } from './date';
 import type {
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
@@ -28,8 +29,7 @@ interface SchedulerProcessedEventBase {
   title: string;
 
   /**
-   * Values prepared for rendering and user interaction.
-   * Always expressed in the display timezone.
+   * Values prepared for rendering and user interaction, read in the display timezone.
    */
   displayTimezone: {
     /**
@@ -47,8 +47,7 @@ interface SchedulerProcessedEventBase {
      * */
     timezone: TemporalTimezone;
     /**
-     * Exception dates projected to the display timezone for UI purposes.
-     * Must be converted back to the dataTimezone representation when persisted.
+     * The instants of the exception dates, the same as in `dataTimezone`.
      */
     exDates?: TemporalSupportedObject[];
   };
@@ -186,15 +185,15 @@ export interface SchedulerEvent {
   /**
    * The start date and time of the event.
    *
-   * Strings ending with `"Z"` are instants (UTC);
-   * strings without `"Z"` are wall-time (interpreted in `event.timezone` or `"default"`).
+   * Strings ending with `"Z"` or an offset are instants;
+   * other strings are wall-time (interpreted in `event.timezone` or `"default"`).
    */
   start: string;
   /**
    * The end date and time of the event.
    *
-   * Strings ending with `"Z"` are instants (UTC);
-   * strings without `"Z"` are wall-time (interpreted in `event.timezone` or `"default"`).
+   * Strings ending with `"Z"` or an offset are instants;
+   * other strings are wall-time (interpreted in `event.timezone` or `"default"`).
    */
   end: string;
   /**
@@ -396,7 +395,8 @@ export type SchedulerOccurrencePlaceholder =
 
 export interface SchedulerProcessedDate {
   /**
-   * The date object.
+   * The instant of the date. Read its date and time in the timezone of the processed date through
+   * `key`, `minutesInDay` and `timestamp`.
    */
   value: TemporalSupportedObject;
   /**

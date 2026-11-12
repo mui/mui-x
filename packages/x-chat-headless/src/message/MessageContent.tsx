@@ -24,10 +24,12 @@ import type { ToolPartExternalProps } from './parts/ToolPart';
 export interface MessageContentSlots {
   /**
    * The component that renders the content.
+   * @default 'div'
    */
   content: React.ElementType;
   /**
    * The component that renders the bubble.
+   * @default 'div'
    */
   bubble: React.ElementType;
 }

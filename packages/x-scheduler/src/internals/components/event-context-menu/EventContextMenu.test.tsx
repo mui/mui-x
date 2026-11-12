@@ -233,7 +233,7 @@ describe('EventContextMenu', () => {
     expect(() => {
       render(<StandaloneDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />);
     }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+      'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
     ]);
 
     fireEvent.contextMenu(getEvent());

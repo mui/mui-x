@@ -80,8 +80,8 @@ StandaloneMonthView.propTypes /* remove-proptypes */ = {
   /**
    * The locale of the dates, as a BCP 47 language tag such as `"fr-FR"`, like the locales of
    * `Intl.DateTimeFormat`.
-   * This affects day names, month names, the first day of the week, week numbers, the 12-hour
-   * or 24-hour clock and the other locale-dependent formatting.
+   * This affects day names, month names, the first day of the week, the days of the weekend,
+   * week numbers, the 12-hour or 24-hour clock and the other locale-dependent formatting.
    * @default "en-US"
    */
   dateLocale: PropTypes.string,
@@ -121,13 +121,10 @@ StandaloneMonthView.propTypes /* remove-proptypes */ = {
    *
    * Accepts any valid IANA timezone name
    * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
-   * or keywords understood by the adapter, such as
-   * "default" (use the adapter's default timezone),
-   * "locale" (use the user's current locale timezone),
-   * or "UTC".
+   * "default" or "system" (the timezone of the system), or "UTC".
    *
    * Events keep their original data timezone. The visible range starts on the day of the visible
-   * date in this timezone, and the next and previous navigation return dates in this timezone.
+   * date in this timezone, and the next and previous navigation move the visible date on its days.
    * @default "default"
    */
   displayTimezone: PropTypes.string,
