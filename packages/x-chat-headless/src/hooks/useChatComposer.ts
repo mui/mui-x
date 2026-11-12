@@ -265,6 +265,11 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
     // Accepted sends add the message synchronously, so check before yielding.
     if (!store.state.messagesById[messageId]) {
       restoreDraft();
+      // URLs created at submit time are never cleaned up by the store, since the message never entered it.
+      for (const url of messageOwnedPreviewUrlsRef.current.get(messageId)?.values() ?? []) {
+        revokeAttachmentPreviewUrl(url);
+      }
+      messageOwnedPreviewUrlsRef.current.delete(messageId);
       await sendPromise;
       return;
     }
