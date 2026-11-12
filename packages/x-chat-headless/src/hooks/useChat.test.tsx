@@ -979,6 +979,64 @@ describe('useChat', () => {
     });
   });
 
+  it('keeps the adopted scope of a stream across a reconnect', async () => {
+    const signals: AbortSignal[] = [];
+    const controlledStream = createControlledStream();
+    let messages: ChatMessage[] = [];
+    const onMessagesChange = (next: ChatMessage[]) => {
+      messages = next;
+    };
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async () => controlledStream.stream),
+      reconnectToStream: vi.fn(async ({ signal }) => {
+        signals.push(signal);
+        return createPendingStream();
+      }),
+      stop: vi.fn(),
+    });
+    const { Wrapper, setProps } = createProviderWrapper({
+      adapter,
+      messages,
+      onMessagesChange,
+      activeConversationId: undefined,
+    });
+    const { result, rerender } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    act(() => {
+      void result.current.sendMessage({ parts: [{ type: 'text', text: 'New chat' }] });
+    });
+
+    await waitFor(() => {
+      expect(result.current.isStreaming).toBe(true);
+    });
+
+    setProps({ adapter, messages, onMessagesChange, activeConversationId: 'c-new' });
+    rerender();
+
+    await waitFor(() => {
+      expect(result.current.activeConversationId).toBe('c-new');
+    });
+
+    // The first stream ends without a terminal chunk, so the run reconnects.
+    await act(async () => {
+      await controlledStream.enqueue({ type: 'start', messageId: 'assistant-new' });
+      await controlledStream.close();
+    });
+    await waitFor(() => {
+      expect(adapter.reconnectToStream).toHaveBeenCalledTimes(1);
+    });
+    expect(result.current.isStreaming).toBe(true);
+
+    setProps({ adapter, messages, onMessagesChange, activeConversationId: 'c-other' });
+    rerender();
+
+    await waitFor(() => {
+      expect(result.current.activeConversationId).toBe('c-other');
+    });
+    expect(signals[0].aborted).toBe(true);
+    expect(adapter.stop).toHaveBeenCalledTimes(1);
+  });
+
   it('does not leak a buffered delta of the aborted stream into the next conversation', async () => {
     const controlledStream = createControlledStream();
     const adapter = createAdapter({
@@ -1027,8 +1085,9 @@ describe('useChat', () => {
     const onMessagesChange = (next: ChatMessage[]) => {
       messages = next;
     };
+    // A stale in-flight status from an earlier run must not make the new run adopt this thread.
     const otherMessages: ChatMessage[] = [
-      { id: 'other-1', conversationId: 'c-other', role: 'user', parts: [] },
+      { id: 'other-1', conversationId: 'c-other', role: 'user', parts: [], status: 'sending' },
     ];
     const adapter = createAdapter({
       sendMessage: vi.fn(async ({ signal }) => {

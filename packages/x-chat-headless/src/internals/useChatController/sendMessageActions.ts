@@ -34,15 +34,28 @@ export interface SendMessageActionsRuntimeRef<Cursor = string> {
   onError?: ChatOnError;
 }
 
+/** The run started by `sendExistingMessage`; the controller rescopes it when it adopts the stream. */
+export interface InFlightRun {
+  userMessageId: string;
+  conversationId: string | undefined;
+}
+
 export function createSendMessageActions<Cursor = string>(params: {
   store: ChatStore<Cursor>;
   storeUnknown: ChatStore<unknown>;
   runtimeRef: React.MutableRefObject<SendMessageActionsRuntimeRef<Cursor>>;
   setRuntimeError: (error: ChatError | null) => void;
   assistantMessageIdByUserMessageIdRef: React.MutableRefObject<Map<string, string>>;
+  inFlightRunRef: React.MutableRefObject<InFlightRun | null>;
 }) {
-  const { store, storeUnknown, runtimeRef, setRuntimeError, assistantMessageIdByUserMessageIdRef } =
-    params;
+  const {
+    store,
+    storeUnknown,
+    runtimeRef,
+    setRuntimeError,
+    assistantMessageIdByUserMessageIdRef,
+    inFlightRunRef,
+  } = params;
 
   // Synchronous flag to guard against double-invocation in React 18 Strict Mode.
   // `store.state.isStreaming` is updated synchronously, but React 18 may re-trigger
@@ -115,7 +128,8 @@ export function createSendMessageActions<Cursor = string>(params: {
     }
 
     try {
-      store.setStreaming(true, conversationId ?? store.state.streamingConversationId);
+      // failStream already cleared streamingConversationId, so read an adopted scope from the run.
+      store.setStreaming(true, conversationId ?? inFlightRunRef.current?.conversationId);
       const reconnectStream = await adapter.reconnectToStream({
         conversationId,
         messageId: result.messageId,
@@ -206,6 +220,8 @@ export function createSendMessageActions<Cursor = string>(params: {
 
     const abortController = new AbortController();
     store.setActiveStreamAbortController(abortController);
+    const run: InFlightRun = { userMessageId: nextMessage.id, conversationId };
+    inFlightRunRef.current = run;
 
     // Unique fallback id for this run; used only when the adapter's `start`
     // chunk carries no `messageId` of its own.
@@ -287,6 +303,9 @@ export function createSendMessageActions<Cursor = string>(params: {
       isSending = false;
       if (store.state.activeStreamAbortController === abortController) {
         store.setActiveStreamAbortController(null);
+      }
+      if (inFlightRunRef.current === run) {
+        inFlightRunRef.current = null;
       }
     }
   }

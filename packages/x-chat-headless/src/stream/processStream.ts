@@ -655,6 +655,9 @@ export async function processStream<Cursor = string>(
     expectedSequence += 1;
 
     while (bufferedChunksBySequence.has(expectedSequence)) {
+      if (aborted) {
+        return;
+      }
       const nextChunk = bufferedChunksBySequence.get(expectedSequence)!;
       bufferedChunksBySequence.delete(expectedSequence);
       // eslint-disable-next-line no-await-in-loop

@@ -23,6 +23,7 @@ import {
 import { createRealtimeActions } from './realtimeActions';
 import { createConversationActions } from './conversationActions';
 import { createSendMessageActions } from './sendMessageActions';
+import type { InFlightRun } from './sendMessageActions';
 import { createTypingActions } from './typingActions';
 import type { ChatFeatures } from '../../ChatProvider';
 
@@ -71,6 +72,7 @@ export function useChatController<Cursor = string>({
     features,
   });
   const assistantMessageIdByUserMessageIdRef = React.useRef(new Map<string, string>());
+  const inFlightRunRef = React.useRef<InFlightRun | null>(null);
   const conversationNavigationRequestIdRef = React.useRef(0);
   const conversationLoadRequestIdRef = React.useRef(0);
   const historyLoadRequestIdRef = React.useRef(0);
@@ -131,6 +133,7 @@ export function useChatController<Cursor = string>({
         runtimeRef,
         setRuntimeError,
         assistantMessageIdByUserMessageIdRef,
+        inFlightRunRef,
       }),
 
     [setRuntimeError, store, storeUnknown],
@@ -336,13 +339,14 @@ export function useChatController<Cursor = string>({
       if (isStreaming && streamingConversationId !== nextActiveConversationId) {
         // An unscoped stream adopts the id the parent assigns to the new chat only when the
         // controlled messages still hold the in-flight run; the parent already holds that thread.
+        const run = inFlightRunRef.current;
         const keepsInFlightRun =
           streamingConversationId == null &&
           store.parameters.messages !== undefined &&
-          Object.values(messagesById).some(
-            (message) => message.status === 'sending' || message.status === 'streaming',
-          );
+          run != null &&
+          messagesById[run.userMessageId] !== undefined;
         if (keepsInFlightRun) {
+          run.conversationId = nextActiveConversationId;
           store.setStreaming(true, nextActiveConversationId);
           return;
         }
