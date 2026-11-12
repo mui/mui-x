@@ -1,10 +1,10 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { warnOnce } from '@mui/x-internals/warning';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerEventId,
   SchedulerEventSide,
   SchedulerProcessedEvent,
+  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import { addDaysOnWallClock, MS_PER_DAY } from '@mui/x-scheduler-internals/internals';
 import type {

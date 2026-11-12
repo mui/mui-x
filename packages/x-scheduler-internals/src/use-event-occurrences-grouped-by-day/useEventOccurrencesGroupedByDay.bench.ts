@@ -1,11 +1,11 @@
 import { describe, test } from 'vitest';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import {
   addMinutes,
   createDate,
   EventBuilder,
   getEventCalendarStateFromParameters,
 } from 'test/utils/scheduler';
+import type { TemporalTimezone } from '../models';
 import { getDayListFromPlainDates } from '../get-day-list';
 import { isWeekendPlainDate } from '../internals/utils/plain-date-utils/plainDate';
 import { getPlainDateWeekStart } from '../internals/utils/date-utils';

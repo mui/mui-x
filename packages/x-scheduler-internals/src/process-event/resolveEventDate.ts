@@ -1,5 +1,4 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { TemporalSupportedObject, SchedulerEventId } from '../models';
+import type { TemporalSupportedObject, SchedulerEventId, TemporalTimezone } from '../models';
 import {
   createDateFromString,
   createDateFromWallTime,

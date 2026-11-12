@@ -1,5 +1,4 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
+import type { SchedulerProcessedDate, TemporalSupportedObject, TemporalTimezone } from '../models';
 import { MS_PER_DAY } from '../internals/utils/plain-date-utils/dayNumber';
 import {
   getPlainDateKey,

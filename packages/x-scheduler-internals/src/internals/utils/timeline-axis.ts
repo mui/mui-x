@@ -1,4 +1,4 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type { TemporalTimezone } from '../../models';
 import { MS_PER_DAY, MS_PER_MINUTE } from './plain-date-utils/dayNumber';
 import type { BaseTemporal } from './base-temporal';
 import {

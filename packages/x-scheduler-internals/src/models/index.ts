@@ -1,4 +1,4 @@
-export type { TemporalSupportedObject } from './date';
+export type { TemporalSupportedObject, TemporalTimezone } from './date';
 export * from './event';
 export * from './resource';
 export * from './view';

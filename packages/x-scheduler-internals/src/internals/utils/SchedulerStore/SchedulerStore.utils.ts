@@ -1,7 +1,6 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { generateId } from '@base-ui/utils/generateId';
 import { warnOnce } from '@mui/x-internals/warning';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   TemporalSupportedObject,
   SchedulerProcessedEvent,
@@ -13,6 +12,7 @@ import type {
   SchedulerEvent,
   SchedulerEventCreationProperties,
   SchedulerEventUpdatedProperties,
+  TemporalTimezone,
 } from '../../../models';
 import { processEvent } from '../../../process-event';
 import type { SchedulerParameters, SchedulerState } from './SchedulerStore.types';

@@ -1,8 +1,8 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
   SchedulerProcessedEvent,
+  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import {
   createProcessedDate,

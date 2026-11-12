@@ -1,8 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { createDate, EventBuilder, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
-import type { SchedulerEventId, SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
-import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type {
+  SchedulerEventId,
+  SchedulerProcessedEvent,
+  TemporalSupportedObject,
+  TemporalTimezone,
+} from '@mui/x-scheduler-internals/models';
 import type { SchedulerDependency } from '../../models';
 import { groupByEventId } from './dependency-utils';
 import { computeAutoSchedulingCascade, getDependencyViolation } from './auto-scheduling';

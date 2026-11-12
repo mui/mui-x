@@ -1,6 +1,9 @@
 import type * as React from 'react';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { TemporalSupportedObject, WeekStartsOn } from '@mui/x-scheduler-internals/models';
+import type {
+  TemporalSupportedObject,
+  WeekStartsOn,
+  TemporalTimezone,
+} from '@mui/x-scheduler-internals/models';
 import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 
 export type EventTimelinePremiumPreset =

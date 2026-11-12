@@ -1,5 +1,4 @@
 import type { BaseUIChangeEventDetails } from '@base-ui/react';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerEventColor,
   SchedulerEventCreationConfig,
@@ -21,6 +20,7 @@ import type {
   SchedulerEventSide,
   SchedulerEventDeletionConfig,
   RecurringEventScope,
+  TemporalTimezone,
 } from '../../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 

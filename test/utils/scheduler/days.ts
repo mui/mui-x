@@ -1,7 +1,7 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerProcessedDay,
   TemporalSupportedObject,
+  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { toPlainDate } from '@mui/x-scheduler-internals/internals';

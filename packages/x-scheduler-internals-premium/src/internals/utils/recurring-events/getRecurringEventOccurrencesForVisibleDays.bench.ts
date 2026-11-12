@@ -1,9 +1,9 @@
 import { describe, test } from 'vitest';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   RecurringEventWeekDayCode,
   SchedulerEventRecurrenceRule,
   SchedulerProcessedEvent,
+  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import { EventBuilder } from 'test/utils/scheduler';
 import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventOccurrencesForVisibleDays';

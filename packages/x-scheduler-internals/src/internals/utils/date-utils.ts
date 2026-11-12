@@ -1,5 +1,9 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { TemporalSupportedObject, SchedulerProcessedEvent, WeekStartsOn } from '../../models';
+import type {
+  TemporalSupportedObject,
+  SchedulerProcessedEvent,
+  WeekStartsOn,
+  TemporalTimezone,
+} from '../../models';
 import type { BaseTemporal } from './base-temporal';
 import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
 import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';

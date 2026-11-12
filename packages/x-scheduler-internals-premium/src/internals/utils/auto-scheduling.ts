@@ -1,5 +1,4 @@
 import { warnOnce } from '@mui/x-internals/warning';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   TemporalSupportedObject,
   SchedulerEvent,
@@ -7,6 +6,7 @@ import type {
   SchedulerEventSide,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
+  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import {
   dateToEventString,

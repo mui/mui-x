@@ -1,4 +1,3 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import {
   addMonthsToDayNumber,
@@ -19,6 +18,7 @@ import type {
   SchedulerProcessedEvent,
   SchedulerProcessedEventRecurrenceRule,
   TemporalSupportedObject,
+  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import {
   NOT_LOCALIZED_WEEK_DAYS_INDEXES,

@@ -1,5 +1,8 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../../models';
+import type {
+  SchedulerProcessedDate,
+  TemporalSupportedObject,
+  TemporalTimezone,
+} from '../../../models';
 import { processDate } from '../../../process-date/processDate';
 import type { BaseTemporal } from '../base-temporal';
 import type { PlainDateDuration } from './plainDate';

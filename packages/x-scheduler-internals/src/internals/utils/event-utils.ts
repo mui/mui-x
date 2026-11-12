@@ -1,4 +1,3 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   TemporalSupportedObject,
   SchedulerProcessedEvent,
@@ -8,6 +7,7 @@ import type {
   SchedulerEventId,
   SchedulerRenderableEventOccurrence,
   SchedulerResourceId,
+  TemporalTimezone,
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
 import { toPlainDate, toLocalDayNumber } from './plain-date-utils/timeZone';

@@ -1,10 +1,10 @@
 'use client';
 import type * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerEventCreationConfig,
   SchedulerOccurrencePlaceholderCreation,
+  TemporalTimezone,
 } from '../../models';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';

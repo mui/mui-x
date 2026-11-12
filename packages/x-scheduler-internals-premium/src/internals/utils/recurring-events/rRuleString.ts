@@ -1,9 +1,9 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   RecurringEventByDayValue,
   RecurringEventFrequency,
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
+  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';

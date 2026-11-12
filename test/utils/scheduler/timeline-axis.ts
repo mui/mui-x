@@ -1,4 +1,4 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type { TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import type { TimelineAxis, TimelineAxisWindow } from '@mui/x-scheduler-internals/internals';
 
 /**

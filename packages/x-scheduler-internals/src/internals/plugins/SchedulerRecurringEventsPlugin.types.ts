@@ -1,4 +1,3 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   TemporalSupportedObject,
   RecurringEventPresetKey,
@@ -8,6 +7,7 @@ import type {
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
   SchedulerProcessedEventRecurrenceRule,
+  TemporalTimezone,
 } from '../../models';
 import type { BaseTemporal } from '../utils/base-temporal';
 import type { UpdateEventsParameters } from '../utils/SchedulerStore/SchedulerStore.types';

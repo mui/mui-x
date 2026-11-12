@@ -1,4 +1,3 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import {
   getDayNumber,
   getStartOfDayMs,
@@ -14,6 +13,7 @@ import type {
   RecurringEventByDayValue,
   TemporalSupportedObject,
   SchedulerProcessedEventRecurrenceRule,
+  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 
 /**
