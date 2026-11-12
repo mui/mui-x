@@ -33,11 +33,13 @@
     {
       "name": "root",
       "description": "The component that renders the root.",
+      "default": "'div'",
       "class": "MuiChatSuggestions-root"
     },
     {
       "name": "item",
       "description": "The component that renders each suggestion.",
+      "default": "'button'",
       "class": "MuiChatSuggestions-item"
     }
   ],

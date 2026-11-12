@@ -1,7 +1,9 @@
 import {
-  adapter,
+  createDate,
+  endOfDay,
   EventBuilder,
   ResourceBuilder,
+  startOfDay,
   utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
@@ -163,8 +165,8 @@ describe('event-utils', () => {
   });
 
   describe('getOccurrencesFromEvents', () => {
-    const start = adapter.date('2024-01-14', 'default');
-    const end = adapter.date('2024-01-18', 'default');
+    const start = createDate('2024-01-14');
+    const end = createDate('2024-01-18');
     const resourceA = ResourceBuilder.new().build();
     const resourceB = ResourceBuilder.new().build();
 
@@ -175,8 +177,8 @@ describe('event-utils', () => {
         .toProcessed();
 
       const result = getOccurrencesFromEvents({
-        start: adapter.getTime(start),
-        end: adapter.getTime(end),
+        start: start.getTime(),
+        end: end.getTime(),
         eventRangeIndex: createEventRangeIndex([event], false),
         visibleResources: { [resourceA.id]: true, [resourceB.id]: false },
         displayTimezone: 'default',
@@ -200,8 +202,8 @@ describe('event-utils', () => {
       const events = [visibleEvent, hiddenEvent];
 
       const result = getOccurrencesFromEvents({
-        start: adapter.getTime(start),
-        end: adapter.getTime(end),
+        start: start.getTime(),
+        end: end.getTime(),
         eventRangeIndex: createEventRangeIndex(events, false),
         visibleResources: { [resourceA.id]: true, [resourceB.id]: false },
         displayTimezone: 'default',
@@ -221,11 +223,11 @@ describe('event-utils', () => {
           .toProcessed(),
         EventBuilder.new().id('last').singleDay('2024-01-15T10:00:00Z').toProcessed(),
       ];
-      const rangeStart = adapter.date('2024-01-15T00:00:00Z', 'default');
+      const rangeStart = createDate('2024-01-15T00:00:00Z');
 
       const result = getOccurrencesFromEvents({
-        start: adapter.getTime(adapter.startOfDay(rangeStart)),
-        end: adapter.getTime(adapter.endOfDay(rangeStart)),
+        start: startOfDay(rangeStart).getTime(),
+        end: endOfDay(rangeStart).getTime(),
         eventRangeIndex: createEventRangeIndex(events, true),
         visibleResources: {},
         displayTimezone: 'default',
@@ -246,8 +248,8 @@ describe('event-utils', () => {
         .toProcessed();
 
       const result = getOccurrencesFromEvents({
-        start: adapter.getTime(start),
-        end: adapter.getTime(end),
+        start: start.getTime(),
+        end: end.getTime(),
         eventRangeIndex: createEventRangeIndex([event], false),
         visibleResources: { [resourceA.id]: false, [resourceB.id]: false },
         displayTimezone: 'default',
@@ -261,8 +263,8 @@ describe('event-utils', () => {
       const event = EventBuilder.new().singleDay('2024-01-15T10:00:00Z').toProcessed();
 
       const result = getOccurrencesFromEvents({
-        start: adapter.getTime(start),
-        end: adapter.getTime(end),
+        start: start.getTime(),
+        end: end.getTime(),
         eventRangeIndex: createEventRangeIndex([event], false),
         visibleResources: { [resourceA.id]: false, [resourceB.id]: false },
         displayTimezone: 'default',
@@ -307,7 +309,7 @@ describe('event-utils', () => {
       // Display bounds normalize to New York July 3rd; the data identity stays July 4th.
       expect(occurrence.displayTimezone.start).to.equal(processed.displayTimezone.start);
       expect(occurrence.dataTimezone.start.timestamp).to.equal(
-        adapter.getTime(adapter.date('2025-07-04T00:00:00', 'UTC')),
+        createDate('2025-07-04T00:00:00', 'UTC').getTime(),
       );
     });
 
@@ -329,7 +331,7 @@ describe('event-utils', () => {
   describe('getRecurringOccurrenceKey', () => {
     it('should key the occurrence on its day in the timezone', () => {
       // July 3rd at 17:00 UTC is July 4th in Tokyo.
-      const value = adapter.date('2025-07-03T17:00:00Z', 'default');
+      const value = createDate('2025-07-03T17:00:00Z');
       expect(getRecurringOccurrenceKey('event', value, 'Asia/Tokyo')).to.equal('event::2025-07-04');
       expect(getRecurringOccurrenceKey('event', value, 'UTC')).to.equal('event::2025-07-03');
     });

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { adapter, DEFAULT_TESTING_VISIBLE_DATE, EventBuilder } from 'test/utils/scheduler';
+import { addDays, DEFAULT_TESTING_VISIBLE_DATE, EventBuilder } from 'test/utils/scheduler';
 import { disposeSymbol } from '@mui/x-internals/disposable';
 import type { SchedulerEvent, SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
 import {
@@ -17,11 +17,11 @@ const buildViewDefinition = (): any => ({
   visibleDaysSelector: (state: any): SchedulerProcessedDate[] => {
     const days: SchedulerProcessedDate[] = [];
     for (let i = 0; i < 7; i += 1) {
-      const value = adapter.addDays(state.visibleDate, i);
+      const value = addDays(state.visibleDate, i);
       days.push({
         value,
-        key: String(adapter.getTime(value)),
-        timestamp: adapter.getTime(value),
+        key: String(value.getTime()),
+        timestamp: value.getTime(),
         minutesInDay: 24 * 60,
       });
     }
@@ -79,7 +79,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
     // A subsequent navigation goes through the debounced path.
-    store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
+    store.goToDate(addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
 
     await flushEffect();
 
@@ -135,7 +135,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
 
     store[disposeSymbol]();
 
-    store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
+    store.goToDate(addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
 
     await flushEffect();
     await flushDebounce();
@@ -172,7 +172,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
     // Navigate away and back: the second navigation hits the cache.
-    store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
+    store.goToDate(addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
     await flushEffect();
     await flushDebounce();
     store.goToDate(DEFAULT_TESTING_VISIBLE_DATE, noopUIEvent);

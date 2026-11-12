@@ -76,8 +76,7 @@ import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
 import { checkDateLocale, DEFAULT_DATE_LOCALE } from '../date-locale';
 import { getStartOfDayMs, toLocalDayNumber } from '../plain-date-utils/timeZone';
-
-const ONE_MINUTE_IN_MS = 60 * 1000;
+import { MS_PER_MINUTE } from '../plain-date-utils/dayNumber';
 
 /**
  * The first instant of today in `timezone`. A day whose midnight a DST transition skips starts at
@@ -270,11 +269,11 @@ export class SchedulerStore<
       ),
     );
 
-    const timeUntilNextMinuteMs = ONE_MINUTE_IN_MS - (Date.now() % ONE_MINUTE_IN_MS);
+    const timeUntilNextMinuteMs = MS_PER_MINUTE - (Date.now() % MS_PER_MINUTE);
 
     this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
       this.set('nowTimestamp', Date.now());
-      this.timeoutManager.startInterval('set-now', ONE_MINUTE_IN_MS, () => {
+      this.timeoutManager.startInterval('set-now', MS_PER_MINUTE, () => {
         this.set('nowTimestamp', Date.now());
       });
     });

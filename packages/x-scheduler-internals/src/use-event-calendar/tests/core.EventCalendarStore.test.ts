@@ -1,7 +1,9 @@
 import {
-  adapter,
+  addDays,
+  createDate,
   EventBuilder,
   ResourceBuilder,
+  startOfDay,
   utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
@@ -62,7 +64,7 @@ describe('Core - EventCalendarStore', () => {
         viewConfig: {},
         viewDefinition: null,
         views: ['day', 'week', 'month', 'agenda'],
-        visibleDate: adapter.startOfDay(adapter.now('default')),
+        visibleDate: startOfDay(new Date()),
         visibleResources: {},
         collapsedResources: {},
         isLoading: false,
@@ -159,8 +161,8 @@ describe('Core - EventCalendarStore', () => {
         const placeholder = {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.getTime(adapter.date('2024-01-15T10:00:00', 'default')),
-          end: adapter.getTime(adapter.date('2024-01-15T10:30:00', 'default')),
+          start: createDate('2024-01-15T10:00:00').getTime(),
+          end: createDate('2024-01-15T10:30:00').getTime(),
         } as any;
         store.setOccurrencePlaceholder(placeholder);
 
@@ -181,8 +183,8 @@ describe('Core - EventCalendarStore', () => {
         const placeholder = {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.getTime(adapter.date('2024-01-15T10:00:00', 'default')),
-          end: adapter.getTime(adapter.date('2024-01-15T10:30:00', 'default')),
+          start: createDate('2024-01-15T10:00:00').getTime(),
+          end: createDate('2024-01-15T10:30:00').getTime(),
         } as any;
         store.setOccurrencePlaceholder(placeholder, nativeEvent);
 
@@ -229,8 +231,8 @@ describe('Core - EventCalendarStore', () => {
           EventBuilder.new().id('event-1').singleDay('2024-01-15T09:00:00').toOccurrence(),
           'armed',
         );
-        const start = adapter.date('2024-01-15T10:00:00', 'default');
-        const end = adapter.date('2024-01-15T11:30:00', 'default');
+        const start = createDate('2024-01-15T10:00:00');
+        const end = createDate('2024-01-15T11:30:00');
 
         store.setEditingOccurrenceTimes({ start, end });
 
@@ -244,8 +246,8 @@ describe('Core - EventCalendarStore', () => {
         const store = new EventCalendarStore(DEFAULT_PARAMS);
 
         store.setEditingOccurrenceTimes({
-          start: adapter.date('2024-01-15T10:00:00', 'default'),
-          end: adapter.date('2024-01-15T11:30:00', 'default'),
+          start: createDate('2024-01-15T10:00:00'),
+          end: createDate('2024-01-15T11:30:00'),
         });
 
         expect(store.state.editingOccurrence).to.equal(null);
@@ -259,17 +261,17 @@ describe('Core - EventCalendarStore', () => {
           .singleDay('2024-01-15T15:00:00Z', 60)
           .toOccurrence();
         store.startEditing(edited, 'armed');
-        const start = adapter.date('2024-01-15T14:00:00Z', 'default');
-        const end = adapter.date('2024-01-15T16:00:00Z', 'default');
+        const start = createDate('2024-01-15T14:00:00Z');
+        const end = createDate('2024-01-15T16:00:00Z');
 
         store.setEditingOccurrenceTimes({ start, end });
 
         const editing = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
-        expect(editing.displayTimezone.start.timestamp).to.equal(adapter.getTime(start));
-        expect(editing.displayTimezone.end.timestamp).to.equal(adapter.getTime(end));
+        expect(editing.displayTimezone.start.timestamp).to.equal(start.getTime());
+        expect(editing.displayTimezone.end.timestamp).to.equal(end.getTime());
         // A rule added from the dialog is built on the data-timezone start.
-        expect(editing.dataTimezone.start.timestamp).to.equal(adapter.getTime(start));
-        expect(editing.dataTimezone.end.timestamp).to.equal(adapter.getTime(end));
+        expect(editing.dataTimezone.start.timestamp).to.equal(start.getTime());
+        expect(editing.dataTimezone.end.timestamp).to.equal(end.getTime());
         // Read in the data timezone: 14:00 UTC.
         expect(editing.dataTimezone.start.minutesInDay).to.equal(14 * 60);
         // Read in the display timezone: 09:00 in New York.
@@ -285,15 +287,15 @@ describe('Core - EventCalendarStore', () => {
           .withDisplayTimezone('America/New_York')
           .toOccurrence();
         store.startEditing(edited, 'armed');
-        const end = adapter.addDays(edited.displayTimezone.end.value, 1);
+        const end = addDays(edited.displayTimezone.end.value, 1);
 
         store.setEditingOccurrenceTimes({ end });
 
         const editing = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
         expect(editing.displayTimezone.start).to.equal(edited.displayTimezone.start);
         expect(editing.dataTimezone.start).to.equal(edited.dataTimezone.start);
-        expect(editing.displayTimezone.end.timestamp).to.equal(adapter.getTime(end));
-        expect(editing.dataTimezone.end.timestamp).to.equal(adapter.getTime(end));
+        expect(editing.displayTimezone.end.timestamp).to.equal(end.getTime());
+        expect(editing.dataTimezone.end.timestamp).to.equal(end.getTime());
       });
     });
 
@@ -304,8 +306,8 @@ describe('Core - EventCalendarStore', () => {
         store.setOccurrencePlaceholder({
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.getTime(adapter.date('2024-01-15T10:00:00', 'default')),
-          end: adapter.getTime(adapter.date('2024-01-15T11:00:00', 'default')),
+          start: createDate('2024-01-15T10:00:00').getTime(),
+          end: createDate('2024-01-15T11:00:00').getTime(),
           resourceId: null,
         });
 

@@ -5,7 +5,14 @@ import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import type { GridRowType } from '@mui/x-scheduler-internals/models';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
-import { adapter, createSchedulerRenderer, processDay } from 'test/utils/scheduler';
+import {
+  addDays,
+  addHours,
+  createDate,
+  createSchedulerRenderer,
+  endOfDay,
+  processDay,
+} from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
 
@@ -16,11 +23,11 @@ import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
 describe('CalendarGrid keyboard navigation', () => {
   const { render } = createSchedulerRenderer();
 
-  const baseDay = adapter.date('2025-05-05T12:00:00', 'default');
-  const days = Array.from({ length: 7 }, (_, i) => adapter.addDays(baseDay, i));
+  const baseDay = createDate('2025-05-05T12:00:00');
+  const days = Array.from({ length: 7 }, (_, i) => addDays(baseDay, i));
 
   // The days of the cells of a row.
-  const toRowDays = (rowDays: ReturnType<typeof adapter.date>[]) =>
+  const toRowDays = (rowDays: Date[]) =>
     rowDays.map((day) => ({ plainDate: toPlainDate(day.getTime(), 'default') }));
 
   function GridWithHeaderAndDayCells({
@@ -36,13 +43,13 @@ describe('CalendarGrid keyboard navigation', () => {
           <CalendarGrid.HeaderRow>
             {days.map((day, i) => (
               <CalendarGrid.HeaderCell key={i} date={processDay(day)} data-testid={`header-${i}`}>
-                {adapter.format(day, 'weekday3Letters')}
+                {day.toLocaleDateString('en-US', { weekday: 'short' })}
               </CalendarGrid.HeaderCell>
             ))}
           </CalendarGrid.HeaderRow>
           <CalendarGrid.DayRow
-            start={adapter.getTime(days[0])}
-            end={adapter.getTime(adapter.endOfDay(days[6]))}
+            start={days[0].getTime()}
+            end={endOfDay(days[6]).getTime()}
             days={toRowDays(days)}
           >
             {days.map((day, i) => (
@@ -174,12 +181,11 @@ describe('CalendarGrid keyboard navigation', () => {
 
   describe('multi-row navigation (month view pattern)', () => {
     function MonthLikeGrid() {
-      const week0Start = adapter.date('2025-05-05T12:00:00', 'default');
-      const week1Start = adapter.addDays(week0Start, 7);
-      const week2Start = adapter.addDays(week0Start, 14);
+      const week0Start = createDate('2025-05-05T12:00:00');
+      const week1Start = addDays(week0Start, 7);
+      const week2Start = addDays(week0Start, 14);
 
-      const makeWeekDays = (start: ReturnType<typeof adapter.date>) =>
-        Array.from({ length: 7 }, (_, i) => adapter.addDays(start, i));
+      const makeWeekDays = (start: Date) => Array.from({ length: 7 }, (_, i) => addDays(start, i));
 
       const week0Days = makeWeekDays(week0Start);
       const week1Days = makeWeekDays(week1Start);
@@ -191,14 +197,14 @@ describe('CalendarGrid keyboard navigation', () => {
             <CalendarGrid.HeaderRow>
               {week0Days.map((day, i) => (
                 <CalendarGrid.HeaderCell key={i} date={processDay(day)} data-testid={`header-${i}`}>
-                  {adapter.format(day, 'weekday3Letters')}
+                  {day.toLocaleDateString('en-US', { weekday: 'short' })}
                 </CalendarGrid.HeaderCell>
               ))}
             </CalendarGrid.HeaderRow>
             <CalendarGrid.DayRow
               rowIndex={0}
-              start={adapter.getTime(week0Days[0])}
-              end={adapter.getTime(adapter.endOfDay(week0Days[6]))}
+              start={week0Days[0].getTime()}
+              end={endOfDay(week0Days[6]).getTime()}
               days={toRowDays(week0Days)}
             >
               {week0Days.map((day, i) => (
@@ -211,8 +217,8 @@ describe('CalendarGrid keyboard navigation', () => {
             </CalendarGrid.DayRow>
             <CalendarGrid.DayRow
               rowIndex={1}
-              start={adapter.getTime(week1Days[0])}
-              end={adapter.getTime(adapter.endOfDay(week1Days[6]))}
+              start={week1Days[0].getTime()}
+              end={endOfDay(week1Days[6]).getTime()}
               days={toRowDays(week1Days)}
             >
               {week1Days.map((day, i) => (
@@ -225,8 +231,8 @@ describe('CalendarGrid keyboard navigation', () => {
             </CalendarGrid.DayRow>
             <CalendarGrid.DayRow
               rowIndex={2}
-              start={adapter.getTime(week2Days[0])}
-              end={adapter.getTime(adapter.endOfDay(week2Days[6]))}
+              start={week2Days[0].getTime()}
+              end={endOfDay(week2Days[6]).getTime()}
               days={toRowDays(week2Days)}
             >
               {week2Days.map((day, i) => (
@@ -356,13 +362,13 @@ describe('CalendarGrid keyboard navigation', () => {
             <CalendarGrid.HeaderRow>
               {days.slice(0, 3).map((day, i) => (
                 <CalendarGrid.HeaderCell key={i} date={processDay(day)} data-testid={`header-${i}`}>
-                  {adapter.format(day, 'weekday3Letters')}
+                  {day.toLocaleDateString('en-US', { weekday: 'short' })}
                 </CalendarGrid.HeaderCell>
               ))}
             </CalendarGrid.HeaderRow>
             <CalendarGrid.DayRow
-              start={adapter.getTime(days[0])}
-              end={adapter.getTime(adapter.endOfDay(days[2]))}
+              start={days[0].getTime()}
+              end={endOfDay(days[2]).getTime()}
               days={toRowDays(days.slice(0, 3))}
             >
               {days.slice(0, 3).map((day, i) => (
@@ -437,15 +443,15 @@ describe('CalendarGrid keyboard navigation', () => {
 
   describe('event tabIndex follows cell focus', () => {
     function GridWithEvents() {
-      const day1 = adapter.date('2025-05-05T12:00:00', 'default');
-      const day2 = adapter.addDays(day1, 1);
+      const day1 = createDate('2025-05-05T12:00:00');
+      const day2 = addDays(day1, 1);
 
       return (
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root rowTypes={['day-grid']} rowsPerType={{}}>
             <CalendarGrid.DayRow
-              start={adapter.getTime(day1)}
-              end={adapter.getTime(adapter.endOfDay(day2))}
+              start={day1.getTime()}
+              end={endOfDay(day2).getTime()}
               days={toRowDays([day1, day2])}
             >
               <CalendarGrid.DayCell
@@ -457,7 +463,7 @@ describe('CalendarGrid keyboard navigation', () => {
                   occurrenceKey="occ-1"
                   dataTimezone={undefined}
                   start={processDate(day1, 'default')}
-                  end={processDate(adapter.addHours(day1, 1), 'default')}
+                  end={processDate(addHours(day1, 1), 'default')}
                   renderDragPreview={() => null}
                   data-testid="event-1"
                 />
@@ -471,7 +477,7 @@ describe('CalendarGrid keyboard navigation', () => {
                   occurrenceKey="occ-2"
                   dataTimezone={undefined}
                   start={processDate(day2, 'default')}
-                  end={processDate(adapter.addHours(day2, 1), 'default')}
+                  end={processDate(addHours(day2, 1), 'default')}
                   renderDragPreview={() => null}
                   data-testid="event-2"
                 />
@@ -504,8 +510,8 @@ describe('CalendarGrid keyboard navigation', () => {
     });
 
     function GridWithTimeEvents() {
-      const day1 = adapter.date('2025-05-05T12:00:00', 'default');
-      const day2 = adapter.addDays(day1, 1);
+      const day1 = createDate('2025-05-05T12:00:00');
+      const day2 = addDays(day1, 1);
 
       return (
         <EventCalendarProvider events={[]}>
@@ -519,8 +525,8 @@ describe('CalendarGrid keyboard navigation', () => {
                   eventId="event-1"
                   occurrenceKey="occ-1"
                   dataTimezone={undefined}
-                  start={processDate(adapter.addHours(day1, 9), 'default')}
-                  end={processDate(adapter.addHours(day1, 10), 'default')}
+                  start={processDate(addHours(day1, 9), 'default')}
+                  end={processDate(addHours(day1, 10), 'default')}
                   renderDragPreview={() => null}
                   data-testid="time-event-1"
                 />
@@ -533,8 +539,8 @@ describe('CalendarGrid keyboard navigation', () => {
                   eventId="event-2"
                   occurrenceKey="occ-2"
                   dataTimezone={undefined}
-                  start={processDate(adapter.addHours(day2, 9), 'default')}
-                  end={processDate(adapter.addHours(day2, 10), 'default')}
+                  start={processDate(addHours(day2, 9), 'default')}
+                  end={processDate(addHours(day2, 10), 'default')}
                   renderDragPreview={() => null}
                   data-testid="time-event-2"
                 />

@@ -1,6 +1,11 @@
 import { describe, test } from 'vitest';
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import { adapter, EventBuilder, getEventCalendarStateFromParameters } from 'test/utils/scheduler';
+import {
+  addMinutes,
+  createDate,
+  EventBuilder,
+  getEventCalendarStateFromParameters,
+} from 'test/utils/scheduler';
 import { getDayListFromPlainDates } from '../get-day-list';
 import { isWeekendPlainDate } from '../internals/utils/plain-date-utils/plainDate';
 import { getPlainDateWeekStart } from '../internals/utils/date-utils';
@@ -13,21 +18,18 @@ import { innerGetEventOccurrencesGroupedByDay } from './useEventOccurrencesGroup
 const eventCount = 1_000;
 
 function createMonthViewScenario(displayTimezone: TemporalTimezone) {
-  const visibleDate = adapter.setTimezone(
-    adapter.date('2026-03-15T10:00:00Z', 'default'),
-    displayTimezone,
-  );
+  const visibleDate = createDate('2026-03-15T10:00:00Z');
   const gridStart = createStartOfPlainDate(
     getPlainDateWeekStart(toPlainDate(visibleDate.getTime(), 'default').with({ day: 1 }), 1),
     displayTimezone,
   );
   // Events of 30 minutes to 30 hours, every 53 minutes across the 6 weeks of the grid.
   const events = Array.from({ length: eventCount }, (_, index) => {
-    const start = adapter.addMinutes(gridStart, index * 53);
-    const end = adapter.addMinutes(start, 30 + (index % 7) * 300);
+    const start = addMinutes(gridStart, index * 53);
+    const end = addMinutes(start, 30 + (index % 7) * 300);
     return EventBuilder.new()
       .id(index)
-      .span(adapter.toJsDate(start).toISOString(), adapter.toJsDate(end).toISOString())
+      .span(start.toISOString(), end.toISOString())
       .withDisplayTimezone(displayTimezone)
       .toProcessed();
   });
@@ -79,10 +81,7 @@ function createAgendaState(displayTimezone: TemporalTimezone) {
   return getEventCalendarStateFromParameters({
     events,
     displayTimezone,
-    visibleDate: adapter.setTimezone(
-      adapter.date('2026-03-02T12:00:00Z', 'default'),
-      displayTimezone,
-    ),
+    visibleDate: createDate('2026-03-02T12:00:00Z'),
     defaultPreferences: { showEmptyDaysInAgenda: false },
   });
 }

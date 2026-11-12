@@ -1,4 +1,10 @@
-import { adapter, EventBuilder, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
+import {
+  createDate,
+  EventBuilder,
+  ResourceBuilder,
+  startOfDay,
+  storeClasses,
+} from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { describe, it, expect, onTestFinished, vi } from 'vitest';
@@ -39,9 +45,9 @@ storeClasses.forEach((storeClass) => {
         const displayTimezone = 'Pacific/Kiritimati';
         const store = new storeClass.Value({ ...DEFAULT_PARAMS, displayTimezone });
 
-        const expectedToday = adapter.startOfDay(adapter.now(displayTimezone));
+        const expectedToday = startOfDay(new Date(), displayTimezone);
 
-        expect(adapter.getTime(store.state.visibleDate)).to.equal(adapter.getTime(expectedToday));
+        expect(store.state.visibleDate.getTime()).to.equal(expectedToday.getTime());
       });
 
       it('should start today at the end of the gap when the display timezone skips midnight', () => {
@@ -56,9 +62,7 @@ storeClasses.forEach((storeClass) => {
           displayTimezone: 'America/Santiago',
         });
 
-        expect(adapter.getTime(store.state.visibleDate)).to.equal(
-          Date.parse('2024-09-08T04:00:00Z'),
-        );
+        expect(store.state.visibleDate.getTime()).to.equal(Date.parse('2024-09-08T04:00:00Z'));
       });
 
       it('should move `nowTimestamp` and the current day every minute', () => {
@@ -108,17 +112,17 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should respect controlled `visibleDate` (updates to new value)', () => {
-        const initial = adapter.date('2025-07-05T00:00:00Z', 'default');
+        const initial = createDate('2025-07-05T00:00:00Z');
         const store = new storeClass.Value({ ...DEFAULT_PARAMS, visibleDate: initial });
 
-        const next = adapter.date('2025-07-10T00:00:00Z', 'default');
+        const next = createDate('2025-07-10T00:00:00Z');
         store.updateStateFromParameters({ ...DEFAULT_PARAMS, visibleDate: next });
 
         expect(store.state.visibleDate).toEqualDateTime(next);
       });
 
       it('should keep initial defaults and warns if default props change after mount', () => {
-        const defaultDate = adapter.date('2025-07-15T00:00:00Z', 'default');
+        const defaultDate = createDate('2025-07-15T00:00:00Z');
 
         const store = new storeClass.Value({ ...DEFAULT_PARAMS, defaultVisibleDate: defaultDate });
 
@@ -126,7 +130,7 @@ storeClasses.forEach((storeClass) => {
           store.updateStateFromParameters({
             ...DEFAULT_PARAMS,
             resources: [{ id: 'r1', title: 'Resource 1' }],
-            defaultVisibleDate: adapter.date('2025-12-30T00:00:00Z', 'default'),
+            defaultVisibleDate: createDate('2025-12-30T00:00:00Z'),
           });
         }).toWarnDev(['MUI X Scheduler: A component is changing the default visibleDate state']);
 
@@ -136,10 +140,10 @@ storeClasses.forEach((storeClass) => {
       it('should keep consistent state when switching from uncontrolled → controlled `visible date` (warns in dev)', () => {
         const store = new storeClass.Value({
           ...DEFAULT_PARAMS,
-          defaultVisibleDate: adapter.date('2025-07-05T00:00:00Z', 'default'),
+          defaultVisibleDate: createDate('2025-07-05T00:00:00Z'),
         });
 
-        const newDate = adapter.date('2025-07-10T00:00:00Z', 'default');
+        const newDate = createDate('2025-07-10T00:00:00Z');
         expect(() => {
           store.updateStateFromParameters({ ...DEFAULT_PARAMS, visibleDate: newDate });
         }).toWarnDev('MUI X Scheduler: A component is changing the uncontrolled visibleDate state');
@@ -148,7 +152,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should warn and keep current value when switching from controlled → uncontrolled `visibleDate`', () => {
-        const visibleDate = adapter.date('2025-07-05T00:00:00Z', 'default');
+        const visibleDate = createDate('2025-07-05T00:00:00Z');
         const store = new storeClass.Value({ ...DEFAULT_PARAMS, visibleDate });
 
         expect(() => {

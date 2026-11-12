@@ -1,37 +1,37 @@
 import { test, describe, expect } from 'vitest';
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { addDays, addHours, createDate, EventBuilder } from 'test/utils/scheduler';
 import {
   createEventRangeIndex,
   EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD,
 } from './event-range-index';
 
 const eventCount = 50_000;
-const firstDay = adapter.date('2020-01-01T00:00:00Z', 'default');
+const firstDay = createDate('2020-01-01T00:00:00Z');
 const events = Array.from({ length: eventCount }, (_, index) => {
-  const start = adapter.addHours(firstDay, index * 4);
+  const start = addHours(firstDay, index * 4);
   return EventBuilder.new()
     .id(index)
-    .span(start.toISOString(), adapter.addHours(start, 1).toISOString())
+    .span(start.toISOString(), addHours(start, 1).toISOString())
     .toProcessed();
 });
-const start = adapter.addHours(firstDay, eventCount * 2);
-const end = adapter.addDays(start, 7);
+const start = addHours(firstDay, eventCount * 2);
+const end = addDays(start, 7);
 const eventRangeIndex = createEventRangeIndex(events, false);
 const shuffledEvents = events.map((_, index) => events[(index * 7_919) % eventCount]);
 const shuffledEventRangeIndex = createEventRangeIndex(shuffledEvents, false);
 const mediumStart = firstDay;
-const mediumBelowThresholdEnd = adapter.addHours(firstDay, eventCount * 4 * 0.2);
-const mediumAboveThresholdEnd = adapter.addHours(firstDay, eventCount * 4 * 0.3);
+const mediumBelowThresholdEnd = addHours(firstDay, eventCount * 4 * 0.2);
+const mediumAboveThresholdEnd = addHours(firstDay, eventCount * 4 * 0.3);
 const broadStart = firstDay;
-const broadEnd = adapter.addHours(firstDay, eventCount * 4);
+const broadEnd = addHours(firstDay, eventCount * 4);
 
 function numericLinearQuery(
   collection: typeof events,
   rangeStart: typeof start,
   rangeEnd: typeof end,
 ) {
-  const rangeStartTimestamp = adapter.getTime(rangeStart);
-  const rangeEndTimestamp = adapter.getTime(rangeEnd);
+  const rangeStartTimestamp = rangeStart.getTime();
+  const rangeEndTimestamp = rangeEnd.getTime();
 
   return collection.filter(
     (event) =>
@@ -60,11 +60,11 @@ describe('event range index', () => {
       }),
 
       bench('indexed narrow query of 50k chronological events', () => {
-        eventRangeIndex.getEventsForRange(adapter.getTime(start), adapter.getTime(end));
+        eventRangeIndex.getEventsForRange(start.getTime(), end.getTime());
       }),
 
       bench('indexed narrow query of 50k shuffled events', () => {
-        shuffledEventRangeIndex.getEventsForRange(adapter.getTime(start), adapter.getTime(end));
+        shuffledEventRangeIndex.getEventsForRange(start.getTime(), end.getTime());
       }),
 
       bench('numeric linear query matching 20% of 50k shuffled events', () => {
@@ -73,8 +73,8 @@ describe('event range index', () => {
 
       bench('indexed query matching 20% of 50k shuffled events', () => {
         shuffledEventRangeIndex.getEventsForRange(
-          adapter.getTime(mediumStart),
-          adapter.getTime(mediumBelowThresholdEnd),
+          mediumStart.getTime(),
+          mediumBelowThresholdEnd.getTime(),
         );
       }),
 
@@ -84,8 +84,8 @@ describe('event range index', () => {
 
       bench('indexed query matching 30% of 50k shuffled events', () => {
         shuffledEventRangeIndex.getEventsForRange(
-          adapter.getTime(mediumStart),
-          adapter.getTime(mediumAboveThresholdEnd),
+          mediumStart.getTime(),
+          mediumAboveThresholdEnd.getTime(),
         );
       }),
 
@@ -94,14 +94,11 @@ describe('event range index', () => {
       }),
 
       bench('indexed broad query of 50k chronological events', () => {
-        eventRangeIndex.getEventsForRange(adapter.getTime(broadStart), adapter.getTime(broadEnd));
+        eventRangeIndex.getEventsForRange(broadStart.getTime(), broadEnd.getTime());
       }),
 
       bench('indexed broad query of 50k shuffled events', () => {
-        shuffledEventRangeIndex.getEventsForRange(
-          adapter.getTime(broadStart),
-          adapter.getTime(broadEnd),
-        );
+        shuffledEventRangeIndex.getEventsForRange(broadStart.getTime(), broadEnd.getTime());
       }),
     );
   });

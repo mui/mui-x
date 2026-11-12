@@ -11,10 +11,12 @@ import { matchesMimeType } from './internals/matchesMimeType';
 export interface ComposerAttachButtonSlots {
   /**
    * The component that renders the attach button.
+   * @default 'button'
    */
   attachButton: React.ElementType;
   /**
    * The component that renders the attach input.
+   * @default 'input'
    */
   attachInput: React.ElementType;
 }

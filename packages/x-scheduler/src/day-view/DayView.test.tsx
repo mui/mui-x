@@ -1,6 +1,6 @@
 import { screen } from '@mui/internal-test-utils';
 import {
-  adapter,
+  addDays,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
@@ -120,7 +120,7 @@ describe('<DayView />', () => {
 
       await user.click(screen.getByRole('button', { name: /previous day/i }));
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
-        adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, -1),
+        addDays(DEFAULT_TESTING_VISIBLE_DATE, -1),
       );
     });
 
@@ -138,7 +138,7 @@ describe('<DayView />', () => {
 
       await user.click(screen.getByRole('button', { name: /next day/i }));
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
-        adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 1),
+        addDays(DEFAULT_TESTING_VISIBLE_DATE, 1),
       );
     });
   });

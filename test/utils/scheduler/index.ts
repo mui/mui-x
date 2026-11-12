@@ -4,6 +4,7 @@ export * from './absorb-observer-frames';
 export * from './createSchedulerRenderer';
 export * from './describeConformance';
 export * from './adapters';
+export * from './dates';
 export * from './StateWatcher';
 export * from './SchedulerStoreRunner';
 export * from './StoreSpy';

@@ -1,4 +1,4 @@
-import { adapter } from 'test/utils/scheduler';
+import { createDate } from 'test/utils/scheduler';
 import { vi, describe, it, expect } from 'vitest';
 import { EventCalendarStore } from '../EventCalendarStore';
 import type { CalendarView } from '../../models';
@@ -11,8 +11,8 @@ describe('Date - EventCalendarStore', () => {
       const onVisibleDateChange = vi.fn();
       const onViewChange = vi.fn();
 
-      const initialDate = adapter.date('2025-08-01T00:00:00Z', 'default');
-      const nextDate = adapter.date('2025-08-02T00:00:00Z', 'default');
+      const initialDate = createDate('2025-08-01T00:00:00Z');
+      const nextDate = createDate('2025-08-02T00:00:00Z');
 
       const store = new EventCalendarStore({
         ...DEFAULT_PARAMS,
@@ -37,8 +37,8 @@ describe('Date - EventCalendarStore', () => {
       const onVisibleDateChange = vi.fn();
       const onViewChange = vi.fn();
 
-      const initialDate = adapter.date('2025-08-01T00:00:00Z', 'default');
-      const nextDate = adapter.date('2025-08-02T00:00:00Z', 'default');
+      const initialDate = createDate('2025-08-01T00:00:00Z');
+      const nextDate = createDate('2025-08-02T00:00:00Z');
 
       const store = new EventCalendarStore({
         ...DEFAULT_PARAMS,
@@ -63,8 +63,8 @@ describe('Date - EventCalendarStore', () => {
       const onVisibleDateChange = vi.fn();
       const onViewChange = vi.fn();
 
-      const currentDate = adapter.date('2025-08-01T00:00:00Z', 'default');
-      const nextDate = adapter.date('2025-08-02T00:00:00Z', 'default');
+      const currentDate = createDate('2025-08-01T00:00:00Z');
+      const nextDate = createDate('2025-08-02T00:00:00Z');
 
       const store = new EventCalendarStore({
         ...DEFAULT_PARAMS,
@@ -86,7 +86,7 @@ describe('Date - EventCalendarStore', () => {
       const onVisibleDateChange = vi.fn();
       const onViewChange = vi.fn();
 
-      const currentDate = adapter.date('2025-08-01T00:00:00Z', 'default');
+      const currentDate = createDate('2025-08-01T00:00:00Z');
 
       const store = new EventCalendarStore({
         ...DEFAULT_PARAMS,
@@ -109,7 +109,7 @@ describe('Date - EventCalendarStore', () => {
       const onVisibleDateChange = vi.fn();
       const onViewChange = vi.fn();
 
-      const sameDate = adapter.date('2025-08-02T00:00:00Z', 'default');
+      const sameDate = createDate('2025-08-02T00:00:00Z');
       const store = new EventCalendarStore({
         ...DEFAULT_PARAMS,
         view: 'day',
@@ -131,7 +131,7 @@ describe('Date - EventCalendarStore', () => {
         ...DEFAULT_PARAMS,
         views: ['week', 'month', 'agenda'] as CalendarView[],
       });
-      const newDate = adapter.date('2025-08-02T00:00:00Z', 'default');
+      const newDate = createDate('2025-08-02T00:00:00Z');
       expect(() => store.switchToDay(newDate, {} as any)).to.throw(
         /is not part of the `views` prop/i,
       );
@@ -141,13 +141,13 @@ describe('Date - EventCalendarStore', () => {
   describe('Method: goToPreviousVisibleDate', () => {
     it('should respect the date returned by setSiblingVisibleDateGetter', () => {
       const onVisibleDateChange = vi.fn();
-      const targetDate = adapter.date('2025-07-03T00:00:00Z', 'default');
+      const targetDate = createDate('2025-07-03T00:00:00Z');
       const siblingVisibleDateGetter = vi.fn((_parameters: { delta: 1 | -1 }) => targetDate);
 
       const store = new EventCalendarStore({
         ...DEFAULT_PARAMS,
         view: 'day',
-        visibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'),
+        visibleDate: createDate('2025-07-01T00:00:00Z'),
         onVisibleDateChange,
       });
 
@@ -164,13 +164,13 @@ describe('Date - EventCalendarStore', () => {
   describe('Method: goToNextVisibleDate', () => {
     it('should respect the date returned by setSiblingVisibleDateGetter', () => {
       const onVisibleDateChange = vi.fn();
-      const targetDate = adapter.date('2025-07-03T00:00:00Z', 'default');
+      const targetDate = createDate('2025-07-03T00:00:00Z');
       const siblingVisibleDateGetter = vi.fn((_parameters: { delta: 1 | -1 }) => targetDate);
 
       const store = new EventCalendarStore({
         ...DEFAULT_PARAMS,
         view: 'day',
-        visibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'),
+        visibleDate: createDate('2025-07-01T00:00:00Z'),
         onVisibleDateChange,
       });
 

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  adapter,
+  addDays,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
   ResourceBuilder,
@@ -36,11 +36,11 @@ const buildViewDefinition = (): any => ({
   siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
   visibleDaysSelector: (state: any): SchedulerProcessedDate[] =>
     Array.from({ length: 7 }, (_, i) => {
-      const value = adapter.addDays(state.visibleDate, i);
+      const value = addDays(state.visibleDate, i);
       return {
         value,
-        key: String(adapter.getTime(value)),
-        timestamp: adapter.getTime(value),
+        key: String(value.getTime()),
+        timestamp: value.getTime(),
         minutesInDay: 24 * 60,
       };
     }),

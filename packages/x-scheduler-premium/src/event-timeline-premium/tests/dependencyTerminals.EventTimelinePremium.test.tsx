@@ -2,7 +2,7 @@ import { act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
   absorbObserverFrames,
-  adapter,
+  createDate,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
@@ -205,7 +205,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       act(() => {
         store.updateEvent({
           id: 'event-overflow',
-          end: adapter.date('2025-07-03T11:00:00Z', 'default'),
+          end: createDate('2025-07-03T11:00:00Z'),
         });
       });
       fireEvent.pointerOver(getEventElement('Overflowing event'));

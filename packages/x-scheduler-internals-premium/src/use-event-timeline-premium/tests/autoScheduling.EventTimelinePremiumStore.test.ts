@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
-  adapter,
+  createDate,
   EventBuilder,
   EventTimelinePremiumStoreWithFeatures,
   ResourceBuilder,
@@ -44,7 +44,7 @@ const DEFAULT_PARAMS = {
   onDependenciesChange: () => {},
 };
 
-const date = (value: string) => adapter.date(value, 'default');
+const date = (value: string) => createDate(value);
 const timestampOf = (value: string | undefined) => new Date(value!).getTime();
 const cascadeNotWritableWarning = (property: 'start' | 'end') =>
   'MUI X Scheduler: A change was not applied because keeping a dependency would move an event whose date could not be written back.\n' +
@@ -69,9 +69,9 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
       const emittedA = newEvents.find((event) => event.id === 'a')!;
       const emittedB = newEvents.find((event) => event.id === 'b')!;
-      expect(timestampOf(emittedA.end)).to.equal(adapter.getTime(date('2025-07-03T12:00:00Z')));
-      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T12:00:00Z')));
-      expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T13:00:00Z')));
+      expect(timestampOf(emittedA.end)).to.equal(date('2025-07-03T12:00:00Z').getTime());
+      expect(timestampOf(emittedB.start)).to.equal(date('2025-07-03T12:00:00Z').getTime());
+      expect(timestampOf(emittedB.end)).to.equal(date('2025-07-03T13:00:00Z').getTime());
     });
 
     it('should clamp a successor dropped before its predecessor within the same emission', () => {
@@ -92,8 +92,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
       const emittedB = newEvents.find((event) => event.id === 'b')!;
       // Clamped to the predecessor's end, keeping the rest of the user's entry.
-      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
-      expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
+      expect(timestampOf(emittedB.start)).to.equal(date('2025-07-03T10:00:00Z').getTime());
+      expect(timestampOf(emittedB.end)).to.equal(date('2025-07-03T11:00:00Z').getTime());
       expect(emittedB.title).to.equal('Moved b');
     });
 
@@ -110,8 +110,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(onEventsChange.mock.calls.length).to.equal(1);
       const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
       const emittedB = newEvents.find((event) => event.id === 'b')!;
-      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:30:00Z')));
-      expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T11:30:00Z')));
+      expect(timestampOf(emittedB.start)).to.equal(date('2025-07-03T10:30:00Z').getTime());
+      expect(timestampOf(emittedB.end)).to.equal(date('2025-07-03T11:30:00Z').getTime());
     });
 
     it('should leave the successor untouched when the predecessor moves earlier', () => {
@@ -130,7 +130,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(onEventsChange.mock.calls.length).to.equal(1);
       const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
       const emittedB = newEvents.find((event) => event.id === 'b')!;
-      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
+      expect(timestampOf(emittedB.start)).to.equal(date('2025-07-03T10:00:00Z').getTime());
     });
 
     it('should report the changes as applied, with the clamped dates', () => {
@@ -149,10 +149,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(result.applied).to.equal(true);
       const { changes } = result as Extract<typeof result, { applied: true }>;
       expect(changes.title).to.equal('Moved b');
-      expect(adapter.getTime(changes.start!)).to.equal(
-        adapter.getTime(date('2025-07-03T10:00:00Z')),
-      );
-      expect(adapter.getTime(changes.end!)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
+      expect(changes.start!.getTime()).to.equal(date('2025-07-03T10:00:00Z').getTime());
+      expect(changes.end!.getTime()).to.equal(date('2025-07-03T11:00:00Z').getTime());
     });
 
     // The cascade appends `b`'s entry to the batch regardless of where either id sits in the
@@ -198,8 +196,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
           originalOccurrence: occurrenceB,
           sourceResourceId: null,
           resourceId: null,
-          start: adapter.getTime(date('2025-07-03T09:30:00Z')),
-          end: adapter.getTime(date('2025-07-03T11:00:00Z')),
+          start: date('2025-07-03T09:30:00Z').getTime(),
+          end: date('2025-07-03T11:00:00Z').getTime(),
         },
       );
 
@@ -290,8 +288,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
       const events: SchedulerEvent[] = onEventsChange.mock.calls[0][0];
       const emittedB = events.find((event) => event.id === 'b')!;
-      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-03-10T04:00:00Z')));
-      expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-03-10T05:00:00Z')));
+      expect(timestampOf(emittedB.start)).to.equal(date('2025-03-10T04:00:00Z').getTime());
+      expect(timestampOf(emittedB.end)).to.equal(date('2025-03-10T05:00:00Z').getTime());
     });
 
     it('should push an all-day successor turned timed when its lag stops rounding down', () => {
@@ -346,8 +344,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const emittedA = events.find((event) => event.id === 'a')!;
       const emittedB = events.find((event) => event.id === 'b')!;
       expect(emittedA).not.to.have.property('timezone');
-      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T14:00:00Z')));
-      expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T15:00:00Z')));
+      expect(timestampOf(emittedB.start)).to.equal(date('2025-07-03T14:00:00Z').getTime());
+      expect(timestampOf(emittedB.end)).to.equal(date('2025-07-03T15:00:00Z').getTime());
     });
   });
 
@@ -552,7 +550,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       });
       expect(onEventsChange.mock.calls.length).to.equal(0);
       expect(store.state.processedEventLookup.get('a')!.dataTimezone.end.timestamp).to.equal(
-        adapter.getTime(date('2025-07-03T10:00:00Z')),
+        date('2025-07-03T10:00:00Z').getTime(),
       );
     });
 
@@ -631,8 +629,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
       const emittedB = newEvents.find((event) => event.id === 'b')!;
       // `b` never moved: the cascade never saw a changed `end` to push it from.
-      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
-      expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
+      expect(timestampOf(emittedB.start)).to.equal(date('2025-07-03T10:00:00Z').getTime());
+      expect(timestampOf(emittedB.end)).to.equal(date('2025-07-03T11:00:00Z').getTime());
     });
 
     // Same ordering as above, but for `checkCreatedDatesWritable`: a "this and following" split
@@ -701,16 +699,14 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
       expect(result.applied).to.equal(true);
       const { changes } = result as Extract<typeof result, { applied: true }>;
-      expect(adapter.getTime(changes.start!)).to.equal(
-        adapter.getTime(date('2025-07-03T10:00:00Z')),
-      );
+      expect(changes.start!.getTime()).to.equal(date('2025-07-03T10:00:00Z').getTime());
       expect('end' in changes).to.equal(false);
 
       expect(onEventsChange.mock.calls.length).to.equal(1);
       const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
       const emittedB = newEvents.find((event) => event.id === 'b')!;
-      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
-      expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
+      expect(timestampOf(emittedB.start)).to.equal(date('2025-07-03T10:00:00Z').getTime());
+      expect(timestampOf(emittedB.end)).to.equal(date('2025-07-03T11:00:00Z').getTime());
     });
 
     // Mirror of the above: the clamp on an end resize keeps `b`'s start, so its contribution
@@ -734,14 +730,14 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
       expect(result.applied).to.equal(true);
       const { changes } = result as Extract<typeof result, { applied: true }>;
-      expect(adapter.getTime(changes.end!)).to.equal(adapter.getTime(date('2025-07-03T12:00:00Z')));
+      expect(changes.end!.getTime()).to.equal(date('2025-07-03T12:00:00Z').getTime());
       expect('start' in changes).to.equal(false);
 
       expect(onEventsChange.mock.calls.length).to.equal(1);
       const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
       const emittedB = newEvents.find((event) => event.id === 'b')!;
-      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
-      expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T12:00:00Z')));
+      expect(timestampOf(emittedB.start)).to.equal(date('2025-07-03T10:00:00Z').getTime());
+      expect(timestampOf(emittedB.end)).to.equal(date('2025-07-03T12:00:00Z').getTime());
     });
 
     // Turning `b` all-day moves its start back to midnight, before `a` ends, and keeps its end
@@ -996,14 +992,10 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         const updatedIds = batch.updated.map((event: SchedulerEvent) => event.id);
         expect(updatedIds).to.have.members(['a', 'b']);
         const persistedA = batch.updated.find((event: SchedulerEvent) => event.id === 'a')!;
-        expect(timestampOf(persistedA.start)).to.equal(
-          adapter.getTime(date('2025-07-03T11:00:00Z')),
-        );
-        expect(timestampOf(persistedA.end)).to.equal(adapter.getTime(date('2025-07-03T12:00:00Z')));
+        expect(timestampOf(persistedA.start)).to.equal(date('2025-07-03T11:00:00Z').getTime());
+        expect(timestampOf(persistedA.end)).to.equal(date('2025-07-03T12:00:00Z').getTime());
         const persistedB = batch.updated.find((event: SchedulerEvent) => event.id === 'b')!;
-        expect(timestampOf(persistedB.start)).to.equal(
-          adapter.getTime(date('2025-07-03T12:00:00Z')),
-        );
+        expect(timestampOf(persistedB.start)).to.equal(date('2025-07-03T12:00:00Z').getTime());
       } finally {
         vi.useRealTimers();
       }
@@ -1032,8 +1024,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const emittedC = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
         (event) => event.id === 'c',
       )!;
-      expect(timestampOf(emittedC.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
-      expect(timestampOf(emittedC.end)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
+      expect(timestampOf(emittedC.start)).to.equal(date('2025-07-03T10:00:00Z').getTime());
+      expect(timestampOf(emittedC.end)).to.equal(date('2025-07-03T11:00:00Z').getTime());
     });
 
     it('should not emit when the push would move a read-only event', () => {
@@ -1079,7 +1071,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const emittedC = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
         (event) => event.id === 'c',
       )!;
-      expect(timestampOf(emittedC.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
+      expect(timestampOf(emittedC.start)).to.equal(date('2025-07-03T10:00:00Z').getTime());
     });
   });
 
@@ -1108,7 +1100,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const emittedB = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
         (event) => event.id === 'b',
       )!;
-      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
+      expect(timestampOf(emittedB.start)).to.equal(date('2025-07-03T10:00:00Z').getTime());
     });
 
     it('should not move the target when a type change on a broken dependency is not stricter', () => {
@@ -1172,8 +1164,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const emittedB = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
         (event) => event.id === 'b',
       )!;
-      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
-      expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
+      expect(timestampOf(emittedB.start)).to.equal(date('2025-07-03T10:00:00Z').getTime());
+      expect(timestampOf(emittedB.end)).to.equal(date('2025-07-03T11:00:00Z').getTime());
     });
 
     it('should push an all-day target when a type change needs more days across a DST change', () => {
@@ -1226,8 +1218,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(onEventsChange.mock.calls.length).to.equal(1);
       const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
       const emittedC = newEvents.find((event) => event.id === 'c')!;
-      expect(timestampOf(emittedC.start)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
-      expect(timestampOf(emittedC.end)).to.equal(adapter.getTime(date('2025-07-03T12:00:00Z')));
+      expect(timestampOf(emittedC.start)).to.equal(date('2025-07-03T11:00:00Z').getTime());
+      expect(timestampOf(emittedC.end)).to.equal(date('2025-07-03T12:00:00Z').getTime());
     });
 
     it('should not emit when the push would move a read-only event', () => {
@@ -1280,8 +1272,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const emittedB = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
         (event) => event.id === 'b',
       )!;
-      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T12:00:00Z')));
-      expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T13:00:00Z')));
+      expect(timestampOf(emittedB.start)).to.equal(date('2025-07-03T12:00:00Z').getTime());
+      expect(timestampOf(emittedB.end)).to.equal(date('2025-07-03T13:00:00Z').getTime());
     });
 
     it('should not move the target when the new lag fits in the slack', () => {
@@ -1322,7 +1314,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const emittedB = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
         (event) => event.id === 'b',
       )!;
-      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T13:00:00Z')));
+      expect(timestampOf(emittedB.start)).to.equal(date('2025-07-03T13:00:00Z').getTime());
     });
 
     it('should not move the target when an already broken lag gets shorter', () => {
@@ -1385,7 +1377,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const emittedB = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
         (event) => event.id === 'b',
       )!;
-      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
+      expect(timestampOf(emittedB.start)).to.equal(date('2025-07-03T10:00:00Z').getTime());
     });
 
     it('should cascade an update made from onEventsChange during a dependency change', () => {
@@ -1415,7 +1407,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const emittedC = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
         (event) => event.id === 'c',
       )!;
-      expect(timestampOf(emittedC.start)).to.equal(adapter.getTime(date('2025-07-03T15:30:00Z')));
+      expect(timestampOf(emittedC.start)).to.equal(date('2025-07-03T15:30:00Z').getTime());
     });
   });
 

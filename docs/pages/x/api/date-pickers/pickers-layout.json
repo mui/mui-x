@@ -33,6 +33,7 @@
     {
       "name": "layout",
       "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+      "default": "PickersLayout",
       "class": null
     },
     {
@@ -44,11 +45,13 @@
     {
       "name": "tabs",
       "description": "Tabs enabling toggling between views.",
+      "default": "DateTimePickerTabs, TimeRangePickerTabs, or DateTimeRangePickerTabs, depending on the Picker. The other Pickers have no tabs.",
       "class": "MuiPickersLayout-tabs"
     },
     {
       "name": "toolbar",
       "description": "Custom component for the toolbar.\nIt is placed above the Picker views.",
+      "default": "DatePickerToolbar, TimePickerToolbar, DateTimePickerToolbar, or their range versions, depending on the Picker.",
       "class": "MuiPickersLayout-toolbar"
     }
   ],

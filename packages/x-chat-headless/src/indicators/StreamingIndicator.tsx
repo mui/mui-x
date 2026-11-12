@@ -12,6 +12,7 @@ import type { StreamingIndicatorOwnerState } from './indicators.types';
 export interface StreamingIndicatorSlots {
   /**
    * The component that renders the root.
+   * @default 'div'
    */
   root: React.ElementType;
 }
