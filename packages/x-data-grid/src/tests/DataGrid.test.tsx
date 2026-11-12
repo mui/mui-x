@@ -56,6 +56,28 @@ describe('<DataGrid />', () => {
     expect(document.querySelector('[aria-label="Grid one"]')).to.equal(mainElement);
   });
 
+  it('should forward data attributes props to the root element', () => {
+    const rootRef = React.createRef<HTMLDivElement>();
+    render(
+      <div style={{ width: 300, height: 500 }}>
+        <DataGrid
+          {...baselineProps}
+          ref={rootRef}
+          columns={[{ field: 'brand' }]}
+          data-testid="grid"
+          data-sentry-component="MyGrid"
+          data-custom-id="prop-1"
+          slotProps={{ root: { 'data-custom-id': 'root-1' } }}
+        />
+      </div>,
+    );
+
+    expect(rootRef.current).to.have.attribute('data-testid', 'grid');
+    expect(rootRef.current).to.have.attribute('data-sentry-component', 'MyGrid');
+    // `slotProps.root` wins on conflicts
+    expect(rootRef.current).to.have.attribute('data-custom-id', 'root-1');
+  });
+
   it('should not fail when row have IDs match Object prototype keys (constructor, hasOwnProperty, etc)', () => {
     const rows = [
       { id: 'a', col1: 'Hello', col2: 'World' },
