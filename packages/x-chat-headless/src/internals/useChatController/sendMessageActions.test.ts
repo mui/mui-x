@@ -996,6 +996,47 @@ describe('createSendMessageActions', () => {
       expect(store.state.messageIds).toEqual(['u1', 'a1', 'u2', 'a2']);
     });
 
+    it('keeps messages prepended or appended while pending in place when regenerating rejects', async () => {
+      const store = new ChatStore({
+        initialMessages: [
+          ...makeThread(),
+          { id: 'u2', role: 'user', status: 'sent', parts: [{ type: 'text', text: 'Again' }] },
+          {
+            id: 'a2',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'Second' }],
+          },
+        ],
+      });
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockImplementation(async () => {
+          store.prependMessages([
+            { id: 'u0', role: 'user', status: 'sent', parts: [{ type: 'text', text: 'Older' }] },
+          ]);
+          store.addMessage({
+            id: 'x',
+            role: 'user',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'Newer' }],
+          });
+          throw new Error('Regen failed');
+        }),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await regenerate('a1');
+
+      expect(store.state.messageIds).toEqual(['u0', 'u1', 'a1', 'u2', 'a2', 'x']);
+    });
+
     it('fires onError on a mid-stream error and keeps partial output (no rollback)', async () => {
       const store = new ChatStore({ initialMessages: makeThread() });
       store.setActiveConversation('c1');
