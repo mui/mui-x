@@ -287,8 +287,10 @@ jobs:
       - run:
           name: Run the benchmarks
           no_output_timeout: 30m
-          # Every chart's file. The run builds and packs both sides itself.
-          command: pnpm test:benchmark charts/ --baseline "$(cat .benchmark-baseline-sha)"
+          # Every chart's benchmarks, in one file. A benchmark's time limit runs from the start of its
+          # file, which this one shares with all the others, hence the longer one. The run builds and
+          # packs both sides itself.
+          command: pnpm test:benchmark combined/ --timeout 10 --baseline "$(cat .benchmark-baseline-sha)"
       - run:
           name: Upload the benchmark report
           # Also after a failed run, so the comment says what happened. A run that fails before

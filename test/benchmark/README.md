@@ -5,7 +5,7 @@ Render benchmarks, run with the `benchmark` CLI from [`@mui/internal-benchmark`]
 ## Run locally
 
 ```bash
-pnpm test:benchmark                                    # everything, against the parent commit
+pnpm test:benchmark combined/                          # every chart, as CI runs them, against the parent commit
 pnpm test:benchmark --baseline master                  # against another revision
 pnpm test:benchmark charts/LineChart charts/Heatmap    # only files whose path contains one of these
 pnpm test:benchmark smoke/                             # the smoke benchmarks
@@ -20,12 +20,13 @@ The run builds the packages itself (`pnpm release:build`), writes `.benchmark/re
 ## Layout
 
 - `src/charts/<Chart>/` holds a chart's benchmarks, named after the folder its source lives in: `scenarios.tsx` defines its cases with `defineScenario()`, which takes `reactBenchmark()`'s arguments, and `<Chart>.bench.tsx` registers them with `registerScenario()`.
+- `src/combined/charts.bench.tsx` imports every chart's file, to run them all in one page; a chart added to `src/charts/` needs its import there.
 - `src/smoke/charts.bench.tsx` registers one case per kind of chart again, sampled 30 rounds and alarming past 10%. A scenario module registers nothing itself, so both files can import it.
 - `package.json` also lists dependencies no file imports: `@mui/material` and `@emotion/styled` are peer dependencies of the charts, and `@playwright/test` of `@mui/internal-benchmark`.
 
 ## In CI
 
-`test_charts_benchmark` runs every chart's file (`charts/`). On master, it runs on every commit and compares it against its parent. On a pull request, it runs only when the charts packages, this folder or the CircleCI config change, and compares against where the branch forked.
+`test_charts_benchmark` runs `src/combined/charts.bench.tsx`, which imports every chart's file: in one page, the benchmarks run warm and settle in far fewer rounds than in their own files. As a benchmark's time limit runs from the start of its file, CI gives them 10 minutes. On master, it runs on every commit and compares it against its parent. On a pull request, it runs only when the charts packages, this folder or the CircleCI config change, and compares against where the branch forked.
 
 The smoke file isn't run in CI; it's a quicker local check. Its cases keep their names, so they read as the same benchmarks as in their chart's file.
 
