@@ -15,7 +15,7 @@ describe('row-height invariant', () => {
   // body2: fontSize 0.875rem (× 16 = 14px), lineHeight 1.43
   // spacing(1.125) = 9px
   // 1.43 * 14 + 9 = 29.02
-  it('the lane min height matches the EventsCell minmax track size', () => {
+  it('should match the lane min height to the EventsCell minmax track size', () => {
     expect(getEventsCellLaneMetrics(theme).laneMinHeight).to.be.closeTo(29.02, 1e-6);
   });
 

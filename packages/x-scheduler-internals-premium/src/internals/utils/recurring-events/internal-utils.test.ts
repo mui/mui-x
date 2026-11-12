@@ -133,9 +133,11 @@ describe('recurring-events/internal-utils', () => {
         });
       });
 
-      it('throws when the entry lacks an ordinal (e.g., plain MO)', () => {
+      it('should throw when the entry lacks an ordinal (for example, plain MO)', () => {
         const plain: SchedulerProcessedEventRecurrenceRule['byDay'] = ['MO'];
-        expect(() => parsesByDayForMonthlyFrequency(plain)).to.throw();
+        expect(() => parsesByDayForMonthlyFrequency(plain)).to.throw(
+          /single element with an ordinal/,
+        );
       });
     });
   });
