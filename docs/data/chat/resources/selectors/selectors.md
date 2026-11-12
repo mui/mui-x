@@ -111,7 +111,8 @@ function ConversationTitle({ id }: { id: string }) {
 `messageCount`, `conversationCount`, and `messageError` return primitives or `null`-able stored values, where reference stability is moot.
 
 `createSelectorMemoized` keeps a single-entry cache per store (`maxSize: 1`), so for the parameterized memoized selectors (`messageAuthor`, `typingUserIds`) reference equality only holds while consecutive calls use the same arguments — alternating IDs across many ad-hoc subscribers thrashes the single-entry cache.
-Each `useStore` subscription still avoids re-renders via its own equality handling; this caveat is about cross-subscriber cache hits, not correctness.
+`useStore` compares results by reference, so subscribing many components to `messageAuthor` with different IDs re-renders all of them on every store update.
+For per-message authors, subscribe to `message` and resolve the author in a `useMemo`, as the built-in message components do.
 
 ## Why normalization matters
 
