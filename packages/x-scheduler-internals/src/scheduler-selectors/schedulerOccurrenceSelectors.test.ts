@@ -163,16 +163,14 @@ describe('schedulerOccurrenceSelectors', () => {
     });
 
     it('should use a half-open range', () => {
-      const start = adapter.getTime(DEFAULT_TESTING_VISIBLE_DATE);
+      const hourMs = 3_600_000;
+      const start = DEFAULT_TESTING_VISIBLE_DATE.getTime();
       const state = getState();
       state.occurrenceHighlight = {
         resourceId: parent.id,
-        range: { start, end: start + 3_600_000 },
+        range: { start, end: start + hourMs },
       };
-      const iso = (hours: number) =>
-        new Date(
-          adapter.getTime(adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, hours)),
-        ).toISOString();
+      const iso = (hours: number) => new Date(start + hours * hourMs).toISOString();
       const endingAtStart = EventBuilder.new()
         .span(iso(-1), iso(0))
         .resource(parent)

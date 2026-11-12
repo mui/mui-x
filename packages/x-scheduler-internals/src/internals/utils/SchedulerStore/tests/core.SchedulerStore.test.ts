@@ -246,7 +246,7 @@ storeClasses.forEach((storeClass) => {
         const store = new storeClass.Value(DEFAULT_PARAMS);
         store.setOccurrenceHighlight(highlight);
 
-        store.goToDate(adapter.date('2025-07-14T00:00:00Z', 'default'), {} as any);
+        store.goToDate(createDate('2025-07-14T00:00:00Z'), {} as any);
 
         expect(store.state.occurrenceHighlight).to.equal(null);
       });
