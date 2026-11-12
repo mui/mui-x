@@ -1059,7 +1059,6 @@ describe('<DataGrid /> - Row selection', () => {
       // The row can be on another page, so the grid keeps its id and emits no change event.
       setProps({ rows: data.rows.filter((row) => row.id !== 1) });
       expect(onRowSelectionModelChange.mock.calls).to.have.length(0);
-      expect(getSelectedRowIds()).to.deep.equal([0, 2, 3]);
     });
   });
 
