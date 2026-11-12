@@ -618,6 +618,8 @@ async function generateChangelog(newVersion, lastVersion, releaseBranch = 'maste
 
     const entry = await generateReleaseEntry({
       config: changelogConfig,
+      org: ORG,
+      repo: REPO,
       octokit: octokit ?? undefined,
       version: newVersion,
       lastRelease: `v${lastVersion}`,
