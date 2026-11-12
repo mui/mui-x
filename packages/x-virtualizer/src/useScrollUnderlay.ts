@@ -17,13 +17,16 @@ import useTimeout from '@mui/utils/useTimeout';
  * Missing items show the underlay; elsewhere the items hide it.
  *
  * Its position depends on the scroll position alone, so it holds up in both directions and through
- * flings too close together for the scroll to stop. The content is rebuilt once the scroll stops.
+ * flings too close together for the scroll to stop. The content is rebuilt once a vertical scroll
+ * stops. Sideways, the content may span only part of the width, such as the items rendered when
+ * it was built, so a sideways scroll rebuilds it right away once the area moves past it, and needs
+ * no rebuild once it stops.
  */
 
 // How far the underlay moves before it jumps back. It rests halfway through, so what a scroll
 // brings into view is at most half of this past the area, which the browser draws in advance.
 const PERIOD_ITEM_COUNT = 4;
-// How long the scroll has to stop before the content is rebuilt.
+// How long a vertical scroll has to stop before the content is rebuilt.
 const REST_DELAY = 150;
 
 export type UnderlayParams = {
@@ -36,7 +39,8 @@ export type UnderlayParams = {
 export type UnderlayContent = {
   /**
    * Elements that scroll sideways with the items, laid out from the top of the first item and
-   * the left edge of the scrolled content.
+   * the left edge of the scrolled content. They can span only part of the width, such as the
+   * rendered items: a sideways scroll that moves the area past them rebuilds them.
    */
   content: Node[];
   /**
@@ -65,7 +69,8 @@ export type UseScrollUnderlayParameters = {
   isRtl?: boolean;
   /**
    * Returns the underlay's content: new elements, not in the page yet, that look like the
-   * items, such as copies of rendered items. Called once the scroll stops.
+   * items, such as copies of rendered items. Called once a vertical scroll stops, and when a
+   * sideways scroll moves the area past the content.
    * @param {UnderlayParams} params How many items the content should cover, and their height.
    * @returns {UnderlayContent | null} The underlay content, or `null` for none, for example while the items don't all have `itemHeight`.
    */
@@ -73,7 +78,7 @@ export type UseScrollUnderlayParameters = {
 };
 
 export type UseScrollUnderlayReturnValue = {
-  /** Rebuilds the underlay once the scroll has stopped, for when the items changed. */
+  /** Rebuilds the underlay once any vertical scroll has stopped, for when the items changed. */
   rebuild: () => void;
 };
 
@@ -85,6 +90,9 @@ type Layer = {
   y: ScrollTimeline;
   x: ScrollTimeline;
   animations: Animation[];
+  // The `scrollLeft` range in which the content spans the area sideways.
+  coveredFrom: number;
+  coveredTo: number;
 };
 
 function createLayer(scroller: HTMLElement, doc: Document): Layer {
@@ -103,6 +111,8 @@ function createLayer(scroller: HTMLElement, doc: Document): Layer {
     y: new ScrollTimeline({ source: scroller, axis: 'block' }),
     x: new ScrollTimeline({ source: scroller, axis: 'inline' }),
     animations: [],
+    coveredFrom: -Infinity,
+    coveredTo: Infinity,
   };
 }
 
@@ -139,6 +149,9 @@ export function useScrollUnderlay(
     }
     layer.animations.forEach((animation) => animation.cancel());
     layer.animations = [];
+    // Without content, there is nothing to rebuild while the scroll goes on.
+    layer.coveredFrom = -Infinity;
+    layer.coveredTo = Infinity;
     // Nothing can move past what is drawn without a vertical scroll.
     const scrollTopMax = scroller.scrollHeight - scroller.clientHeight;
     // The items fill the area wherever a period puts them, from up to a period and an item above.
@@ -177,6 +190,27 @@ export function useScrollUnderlay(
     );
 
     const scrollLeftMax = scroller.scrollWidth - scroller.clientWidth;
+
+    // Where the content spans sideways, measured before the animation below translates it. It sits
+    // untranslated at `scrollLeft` 0, or at the far left in right-to-left content. The range always
+    // includes the current `scrollLeft`, so only a sideways scroll can leave it.
+    const area = layer.element.getBoundingClientRect();
+    const contentRange = ownerDocument(underlay).createRange();
+    contentRange.selectNodeContents(layer.content);
+    const contentBox = contentRange.getBoundingClientRect();
+    if (contentBox.width > 0) {
+      const untranslatedScrollLeft = isRtl ? -scrollLeftMax : 0;
+      const { scrollLeft } = scroller;
+      layer.coveredFrom = Math.min(
+        untranslatedScrollLeft + contentBox.left - area.left,
+        scrollLeft,
+      );
+      layer.coveredTo = Math.max(
+        untranslatedScrollLeft + contentBox.right - area.right,
+        scrollLeft,
+      );
+    }
+
     if (scrollLeftMax > 0) {
       // The box follows the left edge of the scrolled content, which starts a whole scroll
       // range left of the viewport in right-to-left content.
@@ -201,14 +235,26 @@ export function useScrollUnderlay(
     underlay.replaceChildren(layer.element);
 
     const scheduleBuild = () => timeout.start(REST_DELAY, build);
+    let lastScrollTop = scroller.scrollTop;
+    const handleScroll = () => {
+      const { scrollLeft, scrollTop } = scroller;
+      if (scrollLeft < layer.coveredFrom || scrollLeft > layer.coveredTo) {
+        build();
+      }
+      // A sideways scroll leaves the content spanning the area: nothing to rebuild once it stops.
+      if (scrollTop !== lastScrollTop) {
+        lastScrollTop = scrollTop;
+        scheduleBuild();
+      }
+    };
     scheduleBuild();
-    scroller.addEventListener('scroll', scheduleBuild, { passive: true });
+    scroller.addEventListener('scroll', handleScroll, { passive: true });
     const resizeObserver =
       typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(scheduleBuild);
     resizeObserver?.observe(underlay);
     return () => {
       timeout.clear();
-      scroller.removeEventListener('scroll', scheduleBuild);
+      scroller.removeEventListener('scroll', handleScroll);
       resizeObserver?.disconnect();
       layer.animations.forEach((animation) => animation.cancel());
       underlay.replaceChildren();

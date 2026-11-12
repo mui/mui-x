@@ -79,6 +79,22 @@ function createUnderlayContent(): UnderlayContent {
   return { content: [content], pinned: [pinned] };
 }
 
+// Like copies of rendered items: laid out from the left edge of the scrolled content, over the
+// area and 50px past it on either side.
+function createSpanningContent(isRtl: boolean): UnderlayContent {
+  const scroller = screen.getByTestId('scroller');
+  // In right-to-left content, `scrollLeft` goes from 0 down to minus the scroll range.
+  const areaLeft = isRtl
+    ? scroller.scrollWidth - scroller.clientWidth + scroller.scrollLeft
+    : scroller.scrollLeft;
+  const content = document.createElement('div');
+  content.style.position = 'absolute';
+  content.style.left = `${areaLeft - 50}px`;
+  content.style.width = `${VIEWPORT_WIDTH + 100}px`;
+  content.style.height = `${ITEM_HEIGHT}px`;
+  return { content: [content] };
+}
+
 function layer() {
   return screen.getByTestId('underlay').firstElementChild as HTMLElement;
 }
@@ -240,6 +256,59 @@ describe.skipIf(isJSDOM)('useScrollUnderlay', () => {
     scroller.scrollLeft = -50;
     await waitForFrames();
     expect(translation(layer().firstElementChild!).x).to.be.closeTo(-scrollLeftMax + 50, 0.5);
+  });
+
+  it.each([false, true])(
+    'rebuilds right away once a sideways scroll moves the area past the content, isRtl=%s',
+    async (isRtl) => {
+      const getUnderlayContent = vi.fn(() => createSpanningContent(isRtl));
+      await renderAndWaitForBuild(getUnderlayContent, render, { isRtl });
+      const scroller = screen.getByTestId('scroller');
+      const builds = getUnderlayContent.mock.calls.length;
+      const direction = isRtl ? -1 : 1;
+
+      // Not while the content still spans the area.
+      scroller.scrollLeft = 40 * direction;
+      scroller.dispatchEvent(new Event('scroll'));
+      expect(getUnderlayContent.mock.calls.length).to.equal(builds);
+
+      // Right away once the area moves past it, without the scroll stopping.
+      scroller.scrollLeft = 60 * direction;
+      scroller.dispatchEvent(new Event('scroll'));
+      expect(getUnderlayContent.mock.calls.length).to.equal(builds + 1);
+
+      // The new content lines up with the items.
+      await waitForFrames();
+      const area = screen.getByTestId('underlay').getBoundingClientRect();
+      const content = layer().firstElementChild!.firstElementChild!.getBoundingClientRect();
+      expect(content.left).to.be.closeTo(area.left - 50, 0.5);
+
+      // And still spans the area, so nothing is rebuilt once the scroll stops.
+      await act(
+        () =>
+          new Promise<void>((resolve) => {
+            setTimeout(resolve, 250);
+          }),
+      );
+      expect(getUnderlayContent.mock.calls.length).to.equal(builds + 1);
+    },
+  );
+
+  it('does not rebuild while scrolling up and down, even when the content misses part of the area', async () => {
+    const getUnderlayContent = vi.fn(() => {
+      const content = document.createElement('div');
+      content.style.position = 'absolute';
+      content.style.width = `${VIEWPORT_WIDTH / 2}px`;
+      content.style.height = `${ITEM_HEIGHT}px`;
+      return { content: [content] };
+    });
+    await renderAndWaitForBuild(getUnderlayContent, render);
+    const scroller = screen.getByTestId('scroller');
+    const builds = getUnderlayContent.mock.calls.length;
+
+    scroller.scrollTop = 500;
+    scroller.dispatchEvent(new Event('scroll'));
+    expect(getUnderlayContent.mock.calls.length).to.equal(builds);
   });
 
   it('asks for no content when the items do not scroll', async () => {
