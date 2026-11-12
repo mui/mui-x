@@ -9,18 +9,33 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import { formulaFeature } from '@mui/x-data-grid-premium/formula';
-import type { DataGridPremiumProps, GridApi } from '@mui/x-data-grid-premium';
+import type { DataGridPremiumProps, GridApi, GridRowId } from '@mui/x-data-grid-premium';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { parseFormula, toCanonicalFormula } from './engine';
 import { createTestPositionContext } from './engine/testUtils';
-import { buildPickedReferenceText, getPickedReferenceText } from './gridFormulaReferencePicking';
+import {
+  buildPickedReferenceText,
+  createFormulaPickTarget,
+  getPickedReferenceText,
+} from './gridFormulaReferencePicking';
 import type { FormulaPickTarget } from './gridFormulaReferencePicking';
 
-const cell = (rowId: FormulaPickTarget['rowId'], field: string): FormulaPickTarget => ({
+const cell = (rowId: GridRowId, field: string): FormulaPickTarget => ({
   kind: 'cell',
   rowId,
   field,
+});
+
+/**
+ * The range between two cells, as a picking gesture describes it: `[rowId, field]` corners.
+ */
+const range = (start: [GridRowId, string], end: [GridRowId, string]): FormulaPickTarget => ({
+  kind: 'range',
+  startRowId: start[0],
+  startField: start[1],
+  endRowId: end[0],
+  endField: end[1],
 });
 
 describe('buildPickedReferenceText', () => {
@@ -219,6 +234,200 @@ describe('buildPickedReferenceText', () => {
         }),
       ).toEqual('B2');
     });
+  });
+});
+
+describe('buildPickedReferenceText (ranges)', () => {
+  // fields: A=item, B=price, C=quantity, D=total · rows: 1..4 = ids 1..4
+  const fields = ['item', 'price', 'quantity', 'total'];
+  const context = createTestPositionContext([1, 2, 3, 4], fields);
+  const owner = { id: 1, field: 'total' };
+
+  it('writes the A1 range in A1 notation', () => {
+    expect(
+      buildPickedReferenceText(context, owner, range([2, 'price'], [4, 'quantity']), {
+        a1Notation: true,
+      }),
+    ).toEqual('B2:C4');
+  });
+
+  it('writes a canonical RANGE_REF relative to the cell of the formula otherwise', () => {
+    // D1 → B2 is 2 columns to the left and 1 row down; D1 → C4 is 1 column to the left and 3 rows down.
+    expect(buildPickedReferenceText(context, owner, range([2, 'price'], [4, 'quantity']))).toEqual(
+      'RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(1)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(3)))',
+    );
+  });
+
+  it.each([
+    ['up and to the left', range([4, 'quantity'], [2, 'price'])],
+    ['up and to the right', range([4, 'price'], [2, 'quantity'])],
+    ['down and to the left', range([2, 'quantity'], [4, 'price'])],
+  ])('goes from the top-left cell to the bottom-right cell: %s', (_, target) => {
+    expect(buildPickedReferenceText(context, owner, target, { a1Notation: true })).toEqual('B2:C4');
+    expect(buildPickedReferenceText(context, owner, target)).toEqual(
+      buildPickedReferenceText(context, owner, range([2, 'price'], [4, 'quantity'])),
+    );
+  });
+
+  it('writes the same range in both dialects', () => {
+    for (const target of [
+      range([2, 'price'], [4, 'quantity']),
+      range([1, 'item'], [1, 'quantity']),
+      range([3, 'total'], [4, 'total']),
+      range([1, 'price'], [2, 'total']),
+    ]) {
+      const a1 = buildPickedReferenceText(context, owner, target, { a1Notation: true })!;
+      const canonical = buildPickedReferenceText(context, owner, target)!;
+      expect(
+        toCanonicalFormula(a1, { positionContext: context, anchorCell: owner }).source,
+      ).toEqual(canonical);
+      expect(parseFormula(canonical).ast).toMatchObject({ type: 'rangeRef' });
+    }
+  });
+
+  it('writes cells of the row of the formula as a range, not as field names', () => {
+    expect(
+      buildPickedReferenceText(context, owner, range([1, 'price'], [1, 'quantity']), {
+        a1Notation: true,
+      }),
+    ).toEqual('B1:C1');
+    expect(buildPickedReferenceText(context, owner, range([1, 'price'], [1, 'quantity']))).toEqual(
+      'RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(0)))',
+    );
+  });
+
+  it('writes a range that covers the cell of the formula as is', () => {
+    expect(
+      buildPickedReferenceText(context, owner, range([1, 'price'], [2, 'total']), {
+        a1Notation: true,
+      }),
+    ).toEqual('B1:D2');
+  });
+
+  it('writes a range of one cell as that cell', () => {
+    const single = range([2, 'price'], [2, 'price']);
+    expect(buildPickedReferenceText(context, owner, single, { a1Notation: true })).toEqual('B2');
+    expect(buildPickedReferenceText(context, owner, single)).toEqual(
+      'REF(COLUMN("price"), ROW(2))',
+    );
+    expect(buildPickedReferenceText(context, owner, range([1, 'price'], [1, 'price']))).toEqual(
+      'price',
+    );
+    expect(buildPickedReferenceText(context, owner, range([1, 'total'], [1, 'total']))).toEqual(
+      null,
+    );
+  });
+
+  it('uses the view positions of the rows, not their ids', () => {
+    const sorted = createTestPositionContext([30, 10, 20], ['item', 'price']);
+    expect(
+      buildPickedReferenceText(
+        sorted,
+        { id: 30, field: 'price' },
+        range([20, 'item'], [10, 'price']),
+        { a1Notation: true },
+      ),
+    ).toEqual('A2:B3');
+  });
+
+  it('writes plain positions when the formula is in a pinned row', () => {
+    // Row 99 is pinned at the bottom: outside the data band, so nothing is relative to it.
+    const pinned = createTestPositionContext([1, 2, 3, 99], fields, 0, {
+      dataFromIndex: 1,
+      dataToIndex: 3,
+    });
+    const pinnedOwner = { id: 99, field: 'total' };
+    const target = range([2, 'price'], [3, 'quantity']);
+    const canonical = buildPickedReferenceText(pinned, pinnedOwner, target);
+    expect(canonical).toEqual('RANGE_REF(COLUMN_FROM(2), ROW_FROM(2), COLUMN_TO(3), ROW_TO(3))');
+    expect(
+      toCanonicalFormula(
+        buildPickedReferenceText(pinned, pinnedOwner, target, { a1Notation: true })!,
+        { positionContext: pinned, anchorCell: pinnedOwner },
+      ).source,
+    ).toEqual(canonical);
+  });
+
+  it('is relative: no `$` and no fixed axis', () => {
+    const target = range([2, 'price'], [4, 'quantity']);
+    expect(buildPickedReferenceText(context, owner, target, { a1Notation: true })).not.toContain(
+      '$',
+    );
+    expect(buildPickedReferenceText(context, owner, target)).not.toContain('FIXED');
+  });
+
+  it('returns null when a corner cannot be referenced', () => {
+    const pinned = createTestPositionContext([1, 2, 3, 99], fields, 0, {
+      dataFromIndex: 1,
+      dataToIndex: 3,
+    });
+    // A pinned row, a column without a position, a row that is not in the view.
+    expect(buildPickedReferenceText(pinned, owner, range([2, 'price'], [99, 'price']))).toEqual(
+      null,
+    );
+    expect(
+      buildPickedReferenceText(
+        context,
+        owner,
+        range([2, 'price'], [3, GRID_CHECKBOX_SELECTION_FIELD]),
+      ),
+    ).toEqual(null);
+    expect(buildPickedReferenceText(context, owner, range([2, 'price'], [42, 'price']))).toEqual(
+      null,
+    );
+  });
+});
+
+describe('createFormulaPickTarget', () => {
+  const context = createTestPositionContext(
+    [1, 2, 3, 99],
+    ['item', 'price', 'quantity', 'total'],
+    0,
+    { dataFromIndex: 1, dataToIndex: 3 },
+  );
+
+  it('is the cell when the gesture starts and ends on the same cell', () => {
+    expect(
+      createFormulaPickTarget(context, { rowId: 2, field: 'price' }, { rowId: 2, field: 'price' }),
+    ).toEqual(cell(2, 'price'));
+  });
+
+  it('is the range between the two cells, from its top-left to its bottom-right cell', () => {
+    const expected = range([2, 'price'], [3, 'quantity']);
+    expect(
+      createFormulaPickTarget(
+        context,
+        { rowId: 2, field: 'price' },
+        { rowId: 3, field: 'quantity' },
+      ),
+    ).toEqual(expected);
+    expect(
+      createFormulaPickTarget(
+        context,
+        { rowId: 3, field: 'quantity' },
+        { rowId: 2, field: 'price' },
+      ),
+    ).toEqual(expected);
+    expect(
+      createFormulaPickTarget(
+        context,
+        { rowId: 3, field: 'price' },
+        { rowId: 2, field: 'quantity' },
+      ),
+    ).toEqual(expected);
+  });
+
+  it('is null when one of the cells cannot be part of a reference', () => {
+    expect(
+      createFormulaPickTarget(context, { rowId: 2, field: 'price' }, { rowId: 99, field: 'price' }),
+    ).toEqual(null);
+    expect(
+      createFormulaPickTarget(
+        context,
+        { rowId: 2, field: GRID_CHECKBOX_SELECTION_FIELD },
+        { rowId: 3, field: 'price' },
+      ),
+    ).toEqual(null);
   });
 });
 

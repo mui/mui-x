@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { platform } from '@base-ui/utils/platform';
 import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
 import { getCell, microtasks } from 'test/utils/helperFn';
@@ -557,6 +558,48 @@ describe('<DataGridPremium /> - Formula bar', () => {
         expect(privateApi().current.state.formula.activeEdit?.draft).to.equal(
           `=10+${otherRowPrice}`,
         );
+      });
+
+      it('writes the range of a drag into the draft and keeps the focus', async () => {
+        render(<Test formulaReferencePicking formulaA1Notation={a1Notation} />);
+        await microtasks();
+        draftInBar(0, '=SUM(');
+        fireEvent.mouseDown(cellOf(1, 'price'));
+        fireEvent.mouseOver(cellOf(2, 'quantity'));
+        fireEvent.mouseUp(cellOf(2, 'quantity'));
+
+        // The draft is the formula of D1: B2 is 2 columns to its left and 1 row below.
+        const range = a1Notation
+          ? 'B2:C3'
+          : 'RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(1)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(2)))';
+        expect(getBarEditable().textContent).to.equal(`=SUM(${range}`);
+        expect(document.activeElement).to.equal(getBarEditable());
+        expect(apiRef.current!.getCellMode(0, 'total')).to.equal('view');
+        expect(gridFocusCellSelector(privateApi())).to.deep.equal({ id: 0, field: 'total' });
+        expect(pendingRects()).to.have.length(1);
+      });
+
+      it('extends the picked reference with Shift+click and adds one with Ctrl/Cmd+click', async () => {
+        const { user } = render(<Test formulaReferencePicking formulaA1Notation={a1Notation} />);
+        await microtasks();
+        draftInBar(0, '=SUM(');
+        await user.click(cellOf(1, 'price'));
+        const shiftTarget = cellOf(2, 'quantity');
+        fireEvent.mouseDown(shiftTarget, { shiftKey: true });
+        fireEvent.mouseUp(shiftTarget, { shiftKey: true });
+        fireEvent.click(shiftTarget, { shiftKey: true });
+        const appendKey = platform.os.mac ? { metaKey: true } : { ctrlKey: true };
+        const appendTarget = cellOf(0, 'price');
+        fireEvent.mouseDown(appendTarget, appendKey);
+        fireEvent.mouseUp(appendTarget, appendKey);
+        fireEvent.click(appendTarget, appendKey);
+
+        const range = a1Notation
+          ? 'B2:C3'
+          : 'RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(1)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(2)))';
+        expect(getBarEditable().textContent).to.equal(`=SUM(${range}, price`);
+        expect(document.activeElement).to.equal(getBarEditable());
+        expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
       });
 
       it('replaces the reference of the previous click', async () => {

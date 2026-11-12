@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { getFormulaPickAction } from './formulaPick';
-import type { FormulaPendingPick, FormulaPickAction } from './formulaPick';
+import type { FormulaPendingPick, FormulaPickAction, FormulaPickMode } from './formulaPick';
 
 /**
  * Reads a marked editor text: `|` is the caret, `[…]` a selection.
@@ -382,6 +382,171 @@ describe('getFormulaPickAction', () => {
 
     it('plain `7|` click → commits', () => {
       expect(pick('7|', true)).toEqual(NONE);
+    });
+  });
+
+  describe('modifier clicks', () => {
+    const isFieldName = (name: string) => name === 'price' || name === 'qty';
+
+    function pickWith(
+      mode: FormulaPickMode,
+      marked: string,
+      a1Notation: boolean,
+      pending: FormulaPendingPick | null = null,
+    ) {
+      const { text, selection } = parseMarked(marked);
+      return getFormulaPickAction(text, selection, pending, { a1Notation, isFieldName, mode });
+    }
+    const appendAt = (offset: number): FormulaPickAction => ({
+      type: 'append',
+      start: offset,
+      end: offset,
+    });
+    const extend = (start: number, end: number): FormulaPickAction => ({
+      type: 'extend',
+      start,
+      end,
+    });
+
+    describe.each([
+      { dialect: 'A1 notation', a1Notation: true },
+      { dialect: 'canonical', a1Notation: false },
+    ])('$dialect', ({ a1Notation }) => {
+      describe('append (Ctrl/Cmd+click)', () => {
+        it.each([
+          ['=SUM(price|', 10],
+          ['=SUM(pr|ice', 10],
+          ['=SUM(|price', 10],
+          ['=SUM(price|, 2)', 10],
+          ['=SUM(price|)', 10],
+          ['=SUM(2, price|', 13],
+          ['=SUM(1+price|', 12],
+          ['=SUM (price|', 11],
+          ['=IF(qty, SUM(price|', 18],
+          ['=sum(price|', 10],
+        ])('adds an argument after the reference at the caret: `%s`', (marked, offset) => {
+          expect(pickWith('append', marked, a1Notation)).toEqual(appendAt(offset));
+        });
+
+        it('adds an argument after the pending reference', () => {
+          const pending = pendingOf('=SUM([price]');
+          expect(pickWith('append', '=SUM(price|', a1Notation, pending)).toEqual(appendAt(10));
+        });
+
+        it('adds an argument after a pending reference that was itself appended', () => {
+          const pending = pendingOf('=SUM(price, [qty]');
+          expect(pickWith('append', '=SUM(price, qty|', a1Notation, pending)).toEqual(appendAt(15));
+        });
+
+        it.each([
+          ['=|', insertAt(1)],
+          ['=SUM(|', insertAt(5)],
+          ['=SUM(price, |', insertAt(12)],
+          ['=price+|', insertAt(7)],
+          ['=price|', replace(1, 6)],
+          ['=price+qty|', replace(7, 10)],
+          // A group is not an argument list.
+          ['=(price|', replace(2, 7)],
+          ['=SUM((price|', replace(6, 11)],
+          // The call is closed before the reference.
+          ['=SUM(1)+price|', replace(8, 13)],
+          ['=SUM([price]', replace(5, 10)],
+        ])('behaves like a plain click anywhere else: `%s`', (marked, expected) => {
+          expect(pickWith('append', marked, a1Notation)).toEqual(expected);
+          expect(pickWith('replace', marked, a1Notation)).toEqual(expected);
+        });
+
+        it.each(['=5|', '=SUM(5|', '=SUM(pri|', '=SUM("a|', '=SUM(price)|', 'price|'])(
+          'is not a pick where a plain click is not one: `%s`',
+          (marked) => {
+            expect(pickWith('append', marked, a1Notation)).toEqual(NONE);
+          },
+        );
+      });
+
+      describe('extend (Shift+click)', () => {
+        it.each([
+          ['=price|', extend(1, 6)],
+          ['=pr|ice', extend(1, 6)],
+          ['=|price', extend(1, 6)],
+          ['=SUM(price|', extend(5, 10)],
+          ['=SUM(price|)', extend(5, 10)],
+          ['=price+qty|', extend(7, 10)],
+        ])('turns the reference at the caret into a range: `%s`', (marked, expected) => {
+          expect(pickWith('extend', marked, a1Notation)).toEqual(expected);
+        });
+
+        it('turns the pending reference into a range', () => {
+          const pending = pendingOf('=SUM([price]');
+          expect(pickWith('extend', '=SUM(price|', a1Notation, pending)).toEqual(extend(5, 10));
+        });
+
+        it.each([
+          ['=|', insertAt(1)],
+          ['=price+|', insertAt(7)],
+          ['=SUM(|', insertAt(5)],
+          ['=[price]', replace(1, 6)],
+        ])(
+          'behaves like a plain click without a reference at the caret: `%s`',
+          (marked, expected) => {
+            expect(pickWith('extend', marked, a1Notation)).toEqual(expected);
+          },
+        );
+
+        it.each(['=5|', '=price+5|', '=SUM(price)|', '=pri|', '="a|', 'price|'])(
+          'is not a pick where a plain click is not one: `%s`',
+          (marked) => {
+            expect(pickWith('extend', marked, a1Notation)).toEqual(NONE);
+          },
+        );
+      });
+    });
+
+    describe('A1 references', () => {
+      it('appends after a cell reference and after a range', () => {
+        expect(pickWith('append', '=SUM(B2|', true)).toEqual(appendAt(7));
+        expect(pickWith('append', '=SUM(B|2', true)).toEqual(appendAt(7));
+        expect(pickWith('append', '=SUM(B2:C4|', true)).toEqual(appendAt(10));
+        expect(pickWith('append', '=SUM(B2:C4|)', true)).toEqual(appendAt(10));
+      });
+
+      it('replaces a cell reference outside a call', () => {
+        expect(pickWith('append', '=B2|', true)).toEqual(replace(1, 3));
+      });
+
+      it('extends a cell reference and a range', () => {
+        expect(pickWith('extend', '=B2|', true)).toEqual(extend(1, 3));
+        expect(pickWith('extend', '=SUM(B2:C4|)', true)).toEqual(extend(5, 10));
+        expect(pickWith('extend', '=SUM(B2:C4|', true, pendingOf('=SUM([B2:C4]'))).toEqual(
+          extend(5, 10),
+        );
+      });
+    });
+
+    describe('canonical reference forms', () => {
+      const ref = 'REF(COLUMN("price"), ROW(2))';
+
+      it('appends after a reference form, wherever the caret is in it', () => {
+        expect(pickWith('append', `=SUM(${ref}|`, false)).toEqual(appendAt(5 + ref.length));
+        expect(pickWith('append', '=SUM(REF(COLUMN("pr|ice"), ROW(2))', false)).toEqual(
+          appendAt(5 + ref.length),
+        );
+      });
+
+      it('does not append inside a reference form that is still open', () => {
+        // The innermost parenthesis belongs to `REF(`, which takes selectors, not references.
+        expect(pickWith('append', '=REF(price|', false)).toEqual(replace(5, 10));
+        expect(pickWith('append', '=SUM(REF(price|', false)).toEqual(replace(9, 14));
+      });
+
+      it('replaces a reference form outside a call', () => {
+        expect(pickWith('append', `=${ref}|`, false)).toEqual(replace(1, 1 + ref.length));
+      });
+
+      it('extends a reference form', () => {
+        expect(pickWith('extend', `=${ref}|`, false)).toEqual(extend(1, 1 + ref.length));
+        expect(pickWith('extend', `=SUM(${ref}|)`, false)).toEqual(extend(5, 5 + ref.length));
+      });
     });
   });
 });

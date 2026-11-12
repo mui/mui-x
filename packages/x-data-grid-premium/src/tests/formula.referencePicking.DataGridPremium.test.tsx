@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { platform } from '@base-ui/utils/platform';
 import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
 import { microtasks } from 'test/utils/helperFn';
@@ -88,6 +89,37 @@ describe('<DataGridPremium /> - Formulas reference picking', () => {
 
   const isEditing = (id: GridRowId, field = 'total') =>
     apiRef.current!.getCellMode(id, field) === 'edit';
+
+  // The click that adds a reference: Cmd on macOS, Ctrl elsewhere.
+  const APPEND_KEY = platform.os.mac ? { metaKey: true } : { ctrlKey: true };
+  const OTHER_KEY = platform.os.mac ? { ctrlKey: true } : { metaKey: true };
+
+  /**
+   * A click with a modifier key held. The pointer events are dispatched one by one: the
+   * mousedown is the one that picks.
+   */
+  function modifierClick(target: Element, init: MouseEventInit) {
+    fireEvent.mouseDown(target, init);
+    fireEvent.mouseUp(target, init);
+    fireEvent.click(target, init);
+  }
+
+  /**
+   * Presses the button on the first cell and moves the pointer over the others, in order.
+   * The button stays down.
+   */
+  function dragOver(from: Element, ...over: Element[]) {
+    fireEvent.mouseDown(from);
+    over.forEach((target) => fireEvent.mouseOver(target));
+  }
+
+  /**
+   * A whole drag: the button is released over the last cell.
+   */
+  function drag(from: Element, ...over: Element[]) {
+    dragOver(from, ...over);
+    fireEvent.mouseUp(over[over.length - 1] ?? from);
+  }
 
   describe.each([
     {
@@ -292,9 +324,10 @@ describe('<DataGridPremium /> - Formulas reference picking', () => {
     });
 
     it.each([
-      ['Shift', { shiftKey: true }],
-      ['Ctrl', { ctrlKey: true }],
-      ['Meta', { metaKey: true }],
+      ['Alt', { altKey: true }],
+      // Ctrl on macOS (the context menu), the Windows key elsewhere.
+      ['the modifier that does not add a reference', OTHER_KEY],
+      ['Shift and the modifier that adds a reference', { shiftKey: true, ...APPEND_KEY }],
       ['the right button', { button: 2 }],
     ])('does not pick with %s', async (_, init) => {
       const { user } = await render(<Test formulaA1Notation />);
@@ -420,6 +453,510 @@ describe('<DataGridPremium /> - Formulas reference picking', () => {
       });
       expect(cell(11, 'total').textContent).to.equal('20');
       expect(gridFocusCellSelector(apiRef)).to.deep.equal({ id: 11, field: 'note' });
+    });
+  });
+
+  describe('ranges', () => {
+    // The formula is in D1: B2 is 2 columns to its left and 1 row below, C3 is 1 column to
+    // its left and 2 rows below.
+    const CANONICAL_B2_C3 =
+      'RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(1)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(2)))';
+
+    describe.each([
+      { dialect: 'A1 notation', a1Notation: true, b2: 'B2', b2c3: 'B2:C3' },
+      {
+        dialect: 'canonical',
+        a1Notation: false,
+        b2: 'REF(COLUMN("price"), ROW(12))',
+        b2c3: CANONICAL_B2_C3,
+      },
+    ])('$dialect', ({ a1Notation, b2, b2c3 }) => {
+      it('writes the range under a drag, live', async () => {
+        const { user } = await render(<Test formulaA1Notation={a1Notation} />);
+        await editTotal(user, 11, '=SUM(');
+        dragOver(cell(12, 'price'));
+        expect(getEditable()!.textContent).to.equal(`=SUM(${b2}`);
+
+        fireEvent.mouseOver(cell(13, 'quantity'));
+        expect(getEditable()!.textContent).to.equal(`=SUM(${b2c3}`);
+
+        fireEvent.mouseUp(cell(13, 'quantity'));
+        expect(getEditable()!.textContent).to.equal(`=SUM(${b2c3}`);
+        expect(isEditing(11)).to.equal(true);
+        expect(document.activeElement).to.equal(getEditable());
+        expect(gridFocusCellSelector(apiRef)).to.deep.equal({ id: 11, field: 'total' });
+      });
+
+      it('writes one cell again when the pointer comes back to the first cell', async () => {
+        const { user } = await render(<Test formulaA1Notation={a1Notation} />);
+        await editTotal(user, 11, '=SUM(');
+        drag(cell(12, 'price'), cell(13, 'quantity'), cell(12, 'price'));
+
+        expect(getEditable()!.textContent).to.equal(`=SUM(${b2}`);
+      });
+
+      it('turns the picked reference into a range with Shift+click', async () => {
+        const { user } = await render(<Test formulaA1Notation={a1Notation} />);
+        await editTotal(user, 11, '=SUM(');
+        await user.click(cell(12, 'price'));
+        modifierClick(cell(13, 'quantity'), { shiftKey: true });
+
+        expect(getEditable()!.textContent).to.equal(`=SUM(${b2c3}`);
+        expect(isEditing(11)).to.equal(true);
+        expect(gridFocusCellSelector(apiRef)).to.deep.equal({ id: 11, field: 'total' });
+      });
+
+      it('turns a typed reference into a range with Shift+click', async () => {
+        const { user } = await render(<Test formulaA1Notation={a1Notation} />);
+        await editTotal(user, 11, `=${b2}`);
+        modifierClick(cell(13, 'quantity'), { shiftKey: true });
+
+        expect(getEditable()!.textContent).to.equal(`=${b2c3}`);
+      });
+
+      it('starts the range of a field name on its cell in the row of the formula', async () => {
+        const { user } = await render(<Test formulaA1Notation={a1Notation} />);
+        await editTotal(user, 11, '=price');
+        modifierClick(cell(13, 'quantity'), { shiftKey: true });
+
+        expect(getEditable()!.textContent).to.equal(
+          a1Notation
+            ? '=B1:C3'
+            : '=RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(2)))',
+        );
+      });
+
+      it('commits the picked range with Enter', async () => {
+        const { user } = await render(
+          <Test formulaA1Notation={a1Notation} processRowUpdate={(row) => row} />,
+        );
+        await editTotal(user, 11, '=SUM()', 5);
+        drag(cell(12, 'price'), cell(13, 'quantity'));
+        expect(getEditable()!.textContent).to.equal(`=SUM(${b2c3})`);
+        fireEvent.keyDown(getEditable()!, { key: 'Enter' });
+
+        await waitFor(() => {
+          expect(isEditing(11)).to.equal(false);
+        });
+        // 20 + 5 + 30 + 2
+        expect(cell(11, 'total').textContent).to.equal('57');
+        expect(apiRef.current!.getRow(11).total).to.equal(`=SUM(${CANONICAL_B2_C3})`);
+      });
+
+      it('draws the range as the pending reference', async () => {
+        const { user } = await render(<Test formulaA1Notation={a1Notation} />);
+        await editTotal(user, 11, '=SUM(');
+        drag(cell(12, 'price'), cell(13, 'quantity'));
+
+        await waitFor(() => {
+          expect(
+            document.querySelectorAll('.MuiDataGrid-formulaReferenceHighlight--pending'),
+          ).to.have.length(1);
+        });
+        expect(document.querySelectorAll('.MuiDataGrid-formulaReferenceHighlight')).to.have.length(
+          1,
+        );
+      });
+    });
+
+    describe('drag', () => {
+      it('writes the range from its top-left cell, whatever the direction', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=SUM(');
+        dragOver(cell(13, 'quantity'), cell(12, 'price'));
+        expect(getEditable()!.textContent).to.equal('=SUM(B2:C3');
+
+        // The range still starts on the cell of the mousedown.
+        fireEvent.mouseOver(cell(13, 'price'));
+        expect(getEditable()!.textContent).to.equal('=SUM(B3:C3');
+        fireEvent.mouseOver(cell(12, 'note'));
+        expect(getEditable()!.textContent).to.equal('=SUM(C2:E3');
+      });
+
+      it('writes a range outside a function call', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=');
+        drag(cell(12, 'price'), cell(13, 'quantity'));
+
+        expect(getEditable()!.textContent).to.equal('=B2:C3');
+      });
+
+      it('replaces the reference the caret is on', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=SUM(price) + 1', 10);
+        drag(cell(12, 'price'), cell(13, 'price'));
+
+        expect(getEditable()!.textContent).to.equal('=SUM(B2:B3) + 1');
+      });
+
+      it('writes the cell of the row of the formula as a cell once it is in a range', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=');
+        dragOver(cell(11, 'price'));
+        expect(getEditable()!.textContent).to.equal('=price');
+
+        fireEvent.mouseOver(cell(12, 'quantity'));
+        expect(getEditable()!.textContent).to.equal('=B1:C2');
+        fireEvent.mouseOver(cell(11, 'price'));
+        expect(getEditable()!.textContent).to.equal('=price');
+      });
+
+      it('writes a range that covers the cell of the formula', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=SUM(');
+        drag(cell(12, 'price'), cell(11, 'total'));
+
+        expect(getEditable()!.textContent).to.equal('=SUM(B1:D2');
+      });
+
+      it('keeps the last range while the pointer is over a cell that cannot be referenced', async () => {
+        const { user } = await render(
+          <Test
+            formulaA1Notation
+            checkboxSelection
+            pinnedRows={{ bottom: [{ id: 'pinned', item: 'Sum', price: 60, quantity: 10 }] }}
+          />,
+        );
+        await editTotal(user, 11, '=SUM(');
+        dragOver(cell(12, 'price'), cell(13, 'quantity'));
+        fireEvent.mouseOver(cell('pinned', 'quantity'));
+        fireEvent.mouseOver(cell(13, GRID_CHECKBOX_SELECTION_FIELD));
+
+        expect(getEditable()!.textContent).to.equal('=SUM(B2:C3');
+      });
+
+      it('stops following the pointer once the button is released', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=SUM(');
+        drag(cell(12, 'price'), cell(13, 'quantity'));
+        fireEvent.mouseOver(cell(13, 'note'));
+
+        expect(getEditable()!.textContent).to.equal('=SUM(B2:C3');
+      });
+
+      it('replaces the whole range on the next click', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=SUM(');
+        drag(cell(12, 'price'), cell(13, 'quantity'));
+        await user.click(cell(13, 'price'));
+
+        expect(getEditable()!.textContent).to.equal('=SUM(B3');
+      });
+
+      it('keeps the range once something is typed after it', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=SUM(');
+        drag(cell(12, 'price'), cell(13, 'quantity'));
+        typeInEditor('=SUM(B2:C3,');
+        await user.click(cell(13, 'price'));
+
+        expect(getEditable()!.textContent).to.equal('=SUM(B2:C3,B3');
+      });
+
+      it('does not change the cell selection or the row selection', async () => {
+        const onCellSelectionModelChange = vi.fn();
+        const onRowSelectionModelChange = vi.fn();
+        const { user } = await render(
+          <Test
+            formulaA1Notation
+            cellSelection
+            onCellSelectionModelChange={onCellSelectionModelChange}
+            onRowSelectionModelChange={onRowSelectionModelChange}
+          />,
+        );
+        await editTotal(user, 11, '=SUM(');
+        const cellSelectionModel = apiRef.current!.getCellSelectionModel();
+        onCellSelectionModelChange.mockClear();
+        onRowSelectionModelChange.mockClear();
+        drag(cell(12, 'price'), cell(13, 'quantity'));
+        modifierClick(cell(13, 'note'), { shiftKey: true });
+
+        expect(getEditable()!.textContent).to.equal('=SUM(B2:E3');
+        expect(onCellSelectionModelChange.mock.calls).to.have.length(0);
+        expect(onRowSelectionModelChange.mock.calls).to.have.length(0);
+        expect(apiRef.current!.getCellSelectionModel()).to.equal(cellSelectionModel);
+      });
+
+      it('turns off the text selection of the grid while the button is down', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        const root = document.querySelector(`.${gridClasses.root}`)!;
+        const NO_SELECTION_CLASS = gridClasses['root--disableUserSelection'];
+        await editTotal(user, 11, '=SUM(');
+        dragOver(cell(12, 'price'), cell(13, 'quantity'));
+        expect(root.classList.contains(NO_SELECTION_CLASS)).to.equal(true);
+
+        fireEvent.mouseUp(cell(13, 'quantity'));
+        expect(root.classList.contains(NO_SELECTION_CLASS)).to.equal(false);
+      });
+
+      it('turns the text selection back on when the edit ends during a drag', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        const root = document.querySelector(`.${gridClasses.root}`)!;
+        await editTotal(user, 11, '=');
+        dragOver(cell(12, 'price'), cell(13, 'quantity'));
+        fireEvent.keyDown(getEditable()!, { key: 'Escape' });
+
+        await waitFor(() => {
+          expect(isEditing(11)).to.equal(false);
+        });
+        expect(root.classList.contains(gridClasses['root--disableUserSelection'])).to.equal(false);
+        // The pointer is still down: nothing is written anywhere.
+        fireEvent.mouseOver(cell(13, 'note'));
+        expect(apiRef.current!.getRow(11).total).to.equal('=price * quantity');
+      });
+    });
+
+    describe('Shift+click', () => {
+      it('starts the range of a typed range on its first cell', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=SUM(B2:C3)', 10);
+        modifierClick(cell(13, 'note'), { shiftKey: true });
+
+        expect(getEditable()!.textContent).to.equal('=SUM(B2:E3)');
+      });
+
+      it('starts the range of a dragged range on the cell of the mousedown', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=SUM(');
+        // Dragged up: the text reads `B2:C3`, but the range was started on C3.
+        drag(cell(13, 'quantity'), cell(12, 'price'));
+        modifierClick(cell(11, 'price'), { shiftKey: true });
+
+        expect(getEditable()!.textContent).to.equal('=SUM(B1:C3');
+      });
+
+      it('extends the range again on the next Shift+click', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=SUM(');
+        await user.click(cell(12, 'price'));
+        modifierClick(cell(13, 'quantity'), { shiftKey: true });
+        modifierClick(cell(12, 'note'), { shiftKey: true });
+
+        expect(getEditable()!.textContent).to.equal('=SUM(B2:E2');
+      });
+
+      it('writes one cell when the clicked cell is the one the reference points at', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=SUM(B2:C3)', 10);
+        modifierClick(cell(12, 'price'), { shiftKey: true });
+
+        expect(getEditable()!.textContent).to.equal('=SUM(B2)');
+      });
+
+      it('picks the clicked cell when no reference is at the caret', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=B2+');
+        modifierClick(cell(13, 'quantity'), { shiftKey: true });
+
+        expect(getEditable()!.textContent).to.equal('=B2+C3');
+      });
+
+      it('replaces a reference that is not made of cells', async () => {
+        const { user } = await render(<Test />);
+        await editTotal(user, 11, '=SUM(COLUMN_VALUES("price"))', 27);
+        modifierClick(cell(13, 'quantity'), { shiftKey: true });
+
+        expect(getEditable()!.textContent).to.equal('=SUM(REF(COLUMN("quantity"), ROW(13)))');
+      });
+
+      it('ends the edit where a click is not a pick', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=5');
+        modifierClick(cell(12, 'price'), { shiftKey: true });
+
+        await waitFor(() => {
+          expect(isEditing(11)).to.equal(false);
+        });
+      });
+
+      it('does not pick a cell that cannot be referenced', async () => {
+        const { user } = await render(
+          <Test
+            formulaA1Notation
+            pinnedRows={{ bottom: [{ id: 'pinned', item: 'Sum', price: 60, quantity: 10 }] }}
+          />,
+        );
+        await editTotal(user, 11, '=B2');
+        modifierClick(cell('pinned', 'price'), { shiftKey: true });
+
+        await waitFor(() => {
+          expect(isEditing(11)).to.equal(false);
+        });
+      });
+    });
+  });
+
+  describe('adding a reference with Ctrl/Cmd+click', () => {
+    describe.each([
+      { dialect: 'A1 notation', a1Notation: true, b2: 'B2', c3: 'C3', b3: 'B3' },
+      {
+        dialect: 'canonical',
+        a1Notation: false,
+        b2: 'REF(COLUMN("price"), ROW(12))',
+        c3: 'REF(COLUMN("quantity"), ROW(13))',
+        b3: 'REF(COLUMN("price"), ROW(13))',
+      },
+    ])('$dialect', ({ a1Notation, b2, c3, b3 }) => {
+      it('adds the clicked cells one after the other to the function call', async () => {
+        const { user } = await render(<Test formulaA1Notation={a1Notation} />);
+        await editTotal(user, 11, '=SUM(');
+        await user.click(cell(12, 'price'));
+        modifierClick(cell(13, 'quantity'), APPEND_KEY);
+        expect(getEditable()!.textContent).to.equal(`=SUM(${b2}, ${c3}`);
+
+        modifierClick(cell(13, 'price'), APPEND_KEY);
+        expect(getEditable()!.textContent).to.equal(`=SUM(${b2}, ${c3}, ${b3}`);
+        expect(isEditing(11)).to.equal(true);
+        expect(document.activeElement).to.equal(getEditable());
+      });
+
+      it('lets a plain click replace the added reference only', async () => {
+        const { user } = await render(<Test formulaA1Notation={a1Notation} />);
+        await editTotal(user, 11, '=SUM(');
+        await user.click(cell(12, 'price'));
+        modifierClick(cell(13, 'quantity'), APPEND_KEY);
+        await user.click(cell(13, 'price'));
+
+        expect(getEditable()!.textContent).to.equal(`=SUM(${b2}, ${b3}`);
+      });
+
+      it('adds a reference after a typed one', async () => {
+        const { user } = await render(<Test formulaA1Notation={a1Notation} />);
+        await editTotal(user, 11, '=SUM(price)', 10);
+        modifierClick(cell(12, 'price'), APPEND_KEY);
+
+        expect(getEditable()!.textContent).to.equal(`=SUM(price, ${b2})`);
+      });
+
+      it('commits the added references with Enter', async () => {
+        const { user } = await render(
+          <Test formulaA1Notation={a1Notation} processRowUpdate={(row) => row} />,
+        );
+        await editTotal(user, 11, '=SUM()', 5);
+        await user.click(cell(12, 'price'));
+        modifierClick(cell(13, 'quantity'), APPEND_KEY);
+        fireEvent.keyDown(getEditable()!, { key: 'Enter' });
+
+        await waitFor(() => {
+          expect(isEditing(11)).to.equal(false);
+        });
+        // 20 + 2
+        expect(cell(11, 'total').textContent).to.equal('22');
+      });
+    });
+
+    it.each([
+      ['at the start of the formula', '=', '=B2'],
+      ['after an operator', '=C3+', '=C3+B2'],
+      ['at the start of the arguments', '=SUM(', '=SUM(B2'],
+      ['on a reference outside a function call', '=price', '=B2'],
+      ['on a reference inside a group', '=(price', '=(B2'],
+    ])('behaves like a plain click %s', async (_, text, expected) => {
+      const { user } = await render(<Test formulaA1Notation />);
+      await editTotal(user, 11, text);
+      modifierClick(cell(12, 'price'), APPEND_KEY);
+
+      expect(getEditable()!.textContent).to.equal(expected);
+      expect(isEditing(11)).to.equal(true);
+    });
+
+    it('adds a range when the pointer is dragged', async () => {
+      const { user } = await render(<Test formulaA1Notation />);
+      await editTotal(user, 11, '=SUM(');
+      await user.click(cell(12, 'price'));
+      fireEvent.mouseDown(cell(12, 'quantity'), APPEND_KEY);
+      fireEvent.mouseOver(cell(13, 'quantity'));
+      fireEvent.mouseUp(cell(13, 'quantity'));
+
+      expect(getEditable()!.textContent).to.equal('=SUM(B2, C2:C3');
+    });
+
+    it('adds a reference after a range', async () => {
+      const { user } = await render(<Test formulaA1Notation />);
+      await editTotal(user, 11, '=SUM(');
+      drag(cell(12, 'price'), cell(13, 'price'));
+      modifierClick(cell(12, 'note'), APPEND_KEY);
+
+      expect(getEditable()!.textContent).to.equal('=SUM(B2:B3, E2');
+    });
+
+    it('marks the added reference as the pending one', async () => {
+      const { user } = await render(<Test formulaA1Notation />);
+      await editTotal(user, 11, '=SUM(');
+      await user.click(cell(12, 'price'));
+      modifierClick(cell(13, 'quantity'), APPEND_KEY);
+
+      await waitFor(() => {
+        expect(document.querySelectorAll('.MuiDataGrid-formulaReferenceHighlight')).to.have.length(
+          2,
+        );
+      });
+      expect(
+        document.querySelectorAll('.MuiDataGrid-formulaReferenceHighlight--pending'),
+      ).to.have.length(1);
+    });
+
+    it('ends the edit where a click is not a pick', async () => {
+      const { user } = await render(<Test formulaA1Notation />);
+      await editTotal(user, 11, '=SUM(5');
+      modifierClick(cell(12, 'price'), APPEND_KEY);
+
+      await waitFor(() => {
+        expect(isEditing(11)).to.equal(false);
+      });
+    });
+  });
+
+  // The hit area of the fill handle is a corner of the cell: it needs a layout.
+  describe.skipIf(isJSDOM)('fill handle of the cell selection', () => {
+    async function renderWithFillHandle() {
+      const utils = await render(<Test formulaA1Notation cellSelection cellSelectionFillHandle />);
+      await editTotal(utils.user, 11, '=');
+      // The selection ends on B3, which shows the fill handle. The formula is edited in D1.
+      act(() => {
+        apiRef.current!.setCellSelectionModel({ 12: { price: true }, 13: { price: true } });
+      });
+      await waitFor(() => {
+        expect(cell(13, 'price').classList.contains(gridClasses['cell--withFillHandle'])).to.equal(
+          true,
+        );
+      });
+      return utils;
+    }
+
+    it('does not pick the cell when the mousedown is on its fill handle', async () => {
+      await renderWithFillHandle();
+      const target = cell(13, 'price');
+      const rect = target.getBoundingClientRect();
+      const corner = { clientX: rect.right - 3, clientY: rect.bottom - 3 };
+      fireEvent.mouseDown(target, corner);
+
+      expect(getEditable()!.textContent).to.equal('=');
+      expect(
+        document.querySelectorAll('.MuiDataGrid-formulaReferenceHighlight--pending'),
+      ).to.have.length(0);
+      // The fill handle took the mousedown: its drag is what turns the text selection off.
+      expect(
+        document
+          .querySelector(`.${gridClasses.root}`)!
+          .classList.contains(gridClasses['root--disableUserSelection']),
+      ).to.equal(true);
+      // Like any click that is not a pick, it ends the edit.
+      fireEvent.mouseUp(target, corner);
+      await waitFor(() => {
+        expect(isEditing(11)).to.equal(false);
+      });
+    });
+
+    it('picks the cell when the mousedown is anywhere else on it', async () => {
+      await renderWithFillHandle();
+      const target = cell(13, 'price');
+      const rect = target.getBoundingClientRect();
+      const inside = { clientX: rect.left + 5, clientY: rect.top + 5 };
+      fireEvent.mouseDown(target, inside);
+      fireEvent.mouseUp(target, inside);
+
+      expect(getEditable()!.textContent).to.equal('=B3');
     });
   });
 
@@ -752,6 +1289,65 @@ describe('<DataGridPremium /> - Formulas reference picking', () => {
         expect(getEditable()!.textContent).to.equal('=10+C3');
       });
       expect(document.activeElement).to.equal(getEditable());
+    });
+
+    it('writes the range of a drag and keeps the focus in the editor', async () => {
+      const { userEvent } = await import('vitest/browser');
+      const { user } = await render(<Test formulaA1Notation />);
+      await editTotal(user, 11, '=SUM(');
+      const previousActEnvironment = globalThis.IS_REACT_ACT_ENVIRONMENT;
+      globalThis.IS_REACT_ACT_ENVIRONMENT = false;
+      try {
+        await userEvent.dragAndDrop(cell(12, 'price'), cell(13, 'quantity'));
+      } finally {
+        globalThis.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
+      }
+
+      await waitFor(() => {
+        expect(getEditable()!.textContent).to.equal('=SUM(B2:C3');
+      });
+      const editable = getEditable()!;
+      expect(document.activeElement).to.equal(editable);
+      expect(getSelectionOffsets(editable)).to.deep.equal({ start: 10, end: 10 });
+      expect(isEditing(11)).to.equal(true);
+      expect(
+        document
+          .querySelector(`.${gridClasses.root}`)!
+          .classList.contains(gridClasses['root--disableUserSelection']),
+      ).to.equal(false);
+      // The drag selected no text in the grid.
+      expect(document.getSelection()!.isCollapsed).to.equal(true);
+
+      // The range is the pending reference: the next click replaces it.
+      await realClick(cell(13, 'price'));
+      await waitFor(() => {
+        expect(getEditable()!.textContent).to.equal('=SUM(B3');
+      });
+    });
+
+    it('extends the reference with a real Shift+click and keeps the focus in the editor', async () => {
+      const { userEvent } = await import('vitest/browser');
+      const { user } = await render(<Test formulaA1Notation cellSelection />);
+      await editTotal(user, 11, '=SUM(');
+      await realClick(cell(12, 'price'));
+      await waitFor(() => {
+        expect(getEditable()!.textContent).to.equal('=SUM(B2');
+      });
+      const cellSelectionModel = apiRef.current!.getCellSelectionModel();
+      const previousActEnvironment = globalThis.IS_REACT_ACT_ENVIRONMENT;
+      globalThis.IS_REACT_ACT_ENVIRONMENT = false;
+      try {
+        await userEvent.click(cell(13, 'quantity'), { modifiers: ['Shift'] });
+      } finally {
+        globalThis.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
+      }
+
+      await waitFor(() => {
+        expect(getEditable()!.textContent).to.equal('=SUM(B2:C3');
+      });
+      expect(document.activeElement).to.equal(getEditable());
+      expect(isEditing(11)).to.equal(true);
+      expect(apiRef.current!.getCellSelectionModel()).to.equal(cellSelectionModel);
     });
 
     it('moves the focus to the clicked cell when the prop is off', async () => {

@@ -1,3 +1,4 @@
+import { FORMULA_RESERVED_NAMES } from './formulaAst';
 import { getFormulaCompletionContext } from './formulaCompletion';
 import { tokenizeFormula } from './formulaTokenizer';
 import { isFormulaSource } from './formulaTypes';
@@ -28,14 +29,29 @@ export interface FormulaPendingPick {
   text: string;
 }
 
+/**
+ * What the click asks for:
+ *
+ * - `replace`: a plain click.
+ * - `append`: the click adds one more reference to a list of arguments
+ *   (Ctrl/Cmd+click).
+ * - `extend`: the click turns the reference at the caret into a range that
+ *   ends on the clicked cell (Shift+click).
+ */
+export type FormulaPickMode = 'replace' | 'append' | 'extend';
+
 export type FormulaPickAction =
   | {
       /**
        * `insert`: a new reference goes at the caret (`start === end`).
        * `replace`: the reference takes the place of `text.slice(start, end)` —
-       * the pending pick or the selected text.
+       * the pending pick, the reference at the caret or the selected text.
+       * `append`: a new reference goes right after the reference that ends at
+       * `start` (`start === end`), behind an argument separator.
+       * `extend`: the reference `text.slice(start, end)` becomes a range from
+       * its first cell to the clicked cell.
        */
-      type: 'insert' | 'replace';
+      type: 'insert' | 'replace' | 'append' | 'extend';
       start: number;
       end: number;
     }
@@ -61,6 +77,14 @@ export interface FormulaPickActionOptions {
    * @returns {boolean} `true` when the name is a field.
    */
   isFieldName?: (name: string) => boolean;
+  /**
+   * What the click asks for. `append` and `extend` need a reference at the
+   * caret (the pending pick or a complete reference); without one, and for
+   * `append` outside the arguments of a function call, the click is a plain
+   * one.
+   * @default 'replace'
+   */
+  mode?: FormulaPickMode;
 }
 
 const NO_PICK: FormulaPickAction = { type: 'none' };
@@ -141,6 +165,39 @@ function getReferenceSpanAt(
   return null;
 }
 
+const RESERVED_NAMES = new Set(FORMULA_RESERVED_NAMES);
+
+/**
+ * `true` when `offset` (EDITOR coordinates) is directly inside the argument
+ * list of a function call: the innermost parenthesis still open there belongs
+ * to a call (`SUM(`), not to a group (`(`) and not to a reference form
+ * (`REF(`).
+ */
+function isInsideCallArguments(text: string, offset: number, a1Notation: boolean): boolean {
+  const { tokens } = tokenizeFormula(text.slice(1), { a1Notation, tolerant: true });
+  const openCalls: boolean[] = [];
+  for (let index = 0; index < tokens.length; index += 1) {
+    const token = tokens[index];
+    if (token.span.start >= offset - 1) {
+      break;
+    }
+    if (token.type !== 'punctuation') {
+      continue;
+    }
+    if (token.value === '(') {
+      const previous = tokens[index - 1];
+      openCalls.push(
+        previous !== undefined &&
+          previous.type === 'identifier' &&
+          !RESERVED_NAMES.has(previous.value.toUpperCase()),
+      );
+    } else if (token.value === ')') {
+      openCalls.pop();
+    }
+  }
+  return openCalls.length > 0 && openCalls[openCalls.length - 1];
+}
+
 /**
  * `true` when the first token at or after `caret` (EDITOR coordinates) starts
  * an operand: a name, a number, a string, a reference or an opening
@@ -199,6 +256,11 @@ function isReferenceExpectedAt(text: string, caret: number, a1Notation: boolean)
  * 6. Anything else (the caret follows or precedes an operand that is not a
  *    reference, sits inside a string or on a partially typed name) → not a
  *    pick.
+ *
+ * The `append` and `extend` modes change what happens to the reference of
+ * rules 2 and 4: `extend` turns it into a range, and `append` keeps it and
+ * adds a reference after it when it is an argument of a function call. In
+ * every other case they behave like a plain click.
  */
 export function getFormulaPickAction(
   text: string,
@@ -213,25 +275,33 @@ export function getFormulaPickAction(
   const start = Math.max(0, Math.min(selection.start, selection.end, text.length));
   const end = Math.max(0, Math.min(Math.max(selection.start, selection.end), text.length));
 
+  let reference: { start: number; end: number } | null;
   if (pending !== null && isFormulaPendingPickValid(text, { start, end }, pending)) {
-    return { type: 'replace', start: pending.start, end: pending.end };
+    reference = { start: pending.start, end: pending.end };
+  } else {
+    // Offset 0 is before the leading `=`: writing there would stop the text
+    // from being a formula.
+    if (start < 1) {
+      return NO_PICK;
+    }
+
+    if (start !== end) {
+      const textWithoutSelection = text.slice(0, start) + text.slice(end);
+      return isReferenceExpectedAt(textWithoutSelection, start, a1Notation)
+        ? { type: 'replace', start, end }
+        : NO_PICK;
+    }
+
+    reference = getReferenceSpanAt(text, start, a1Notation, options.isFieldName);
   }
 
-  // Offset 0 is before the leading `=`: writing there would stop the text
-  // from being a formula.
-  if (start < 1) {
-    return NO_PICK;
-  }
-
-  if (start !== end) {
-    const textWithoutSelection = text.slice(0, start) + text.slice(end);
-    return isReferenceExpectedAt(textWithoutSelection, start, a1Notation)
-      ? { type: 'replace', start, end }
-      : NO_PICK;
-  }
-
-  const reference = getReferenceSpanAt(text, start, a1Notation, options.isFieldName);
   if (reference !== null) {
+    if (options.mode === 'extend') {
+      return { type: 'extend', start: reference.start, end: reference.end };
+    }
+    if (options.mode === 'append' && isInsideCallArguments(text, reference.start, a1Notation)) {
+      return { type: 'append', start: reference.end, end: reference.end };
+    }
     return { type: 'replace', start: reference.start, end: reference.end };
   }
 

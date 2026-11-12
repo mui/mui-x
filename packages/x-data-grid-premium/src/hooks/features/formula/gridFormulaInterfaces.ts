@@ -127,13 +127,16 @@ export interface GridFormulaReferencePickSession {
   gesture: 'down' | 'up' | null;
   /**
    * The reference written by the last pick, which the next pick replaces, with
-   * the cell whose formula holds it.
+   * the cell whose formula holds it. `anchor` is the cell the reference starts
+   * from: a drag or a Shift+click turns the reference into the range between
+   * the anchor and the cell under the pointer.
    */
   pending: {
     id: GridRowId;
     field: string;
     pick: FormulaPendingPick;
     target: FormulaReferenceTarget;
+    anchor: { field: string; rowId: GridRowId };
   } | null;
 }
 
