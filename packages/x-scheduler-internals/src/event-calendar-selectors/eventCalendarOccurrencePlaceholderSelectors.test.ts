@@ -78,13 +78,44 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
       ).to.equal(state.occurrencePlaceholder);
     });
 
+    it('should render a placeholder from a previous row when it ends before it starts', () => {
+      const reversedState: EventCalendarState = {
+        ...state,
+        occurrencePlaceholder: {
+          type: 'creation',
+          surfaceType: 'day-grid',
+          start: Date.UTC(2024, 0, 17, 18),
+          end: Date.UTC(2024, 0, 8, 9),
+          resourceId: null,
+        },
+      };
+      const firstDay = processDay(new Date(rowStart), 'UTC');
+      expect(
+        eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
+          reversedState,
+          firstDay,
+          rowStart,
+        ),
+      ).to.equal(reversedState.occurrencePlaceholder);
+    });
+
     it('should not render a placeholder from a previous row on the other days of the row', () => {
-      const secondDay = processDay(new Date(Date.UTC(2024, 0, 15)), 'UTC');
+      // Its last day, which only its end falls on.
+      const lastDay = processDay(new Date(Date.UTC(2024, 0, 17)), 'UTC');
+      expect(
+        eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(state, lastDay, rowStart),
+      ).to.equal(null);
+    });
+
+    it('should not render a placeholder on the first day of a row that starts before it', () => {
+      // The first row starts on Sunday, January 7th, before the placeholder started.
+      const previousRowStart = Date.UTC(2024, 0, 7);
+      const firstDay = processDay(new Date(previousRowStart), 'UTC');
       expect(
         eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
           state,
-          secondDay,
-          rowStart,
+          firstDay,
+          previousRowStart,
         ),
       ).to.equal(null);
     });
@@ -235,14 +266,15 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     });
 
     it('should return false when day does not match placeholder.start day', () => {
-      const otherDay = adapter.addDays(day, 1);
+      // The placeholder starts the day before and ends on the day.
+      const previousDay = adapter.addDays(day, -1);
       const state: EventCalendarState = {
         ...DEFAULT_EVENT_CALENDAR_STATE,
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'day-grid',
-          start: adapter.getTime(adapter.startOfDay(otherDay)),
-          end: adapter.getTime(adapter.endOfDay(otherDay)),
+          start: adapter.getTime(adapter.startOfDay(previousDay)),
+          end: adapter.getTime(adapter.endOfDay(day)),
           resourceId: null,
         },
       };
