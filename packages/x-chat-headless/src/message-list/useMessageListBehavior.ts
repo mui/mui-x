@@ -318,9 +318,8 @@ export function useMessageListBehavior(parameters: {
   ]);
 
   React.useLayoutEffect(() => {
-    // Open at the newest message. Scrolling before the first `updateIsAtBottom()`
-    // keeps the latch `true → true`, so `onReachBottom` does not fire on mount.
-    // `instant` ignores a CSS `scroll-behavior: smooth` that would make the scroll async.
+    // Scroll before the first `updateIsAtBottom()` so the latch stays true and `onReachBottom` doesn't fire;
+    // `instant` overrides CSS smooth scrolling so the scroll is synchronous.
     if (!hasMountedRef.current && autoScrollEnabled && itemIdsRef.current.length > 0) {
       scrollToBottom({ behavior: 'instant' });
     } else {

@@ -533,6 +533,10 @@ describe('MessageListRoot', () => {
 
     expect(log.scrollHeight).toBe(240);
     expect(log.scrollTop).toBe(80);
+    // Let the async scroll event from the mount scroll be handled.
+    await new Promise((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(resolve));
+    });
     expect(onReachBottom).toHaveBeenCalledTimes(0);
     expect(screen.getByTestId('message-list-bottom-state')).to.have.text('true');
   });
