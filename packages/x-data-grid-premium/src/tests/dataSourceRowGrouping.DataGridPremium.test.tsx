@@ -10,10 +10,290 @@ import type {
   GridDataSourceGroupNode,
   GridGetRowsResponse,
   GridGroupNode,
+  GridRowId,
 } from '@mui/x-data-grid-premium';
 import { getCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
+
+describe('<DataGridPremium /> - Data source row grouping selection', () => {
+  const { render } = createRenderer();
+  type TestProps = Partial<DataGridPremiumProps> & { activityMode?: 'visible' | 'hidden' };
+
+  async function renderGroupedGrid(props: TestProps = {}) {
+    let apiRef!: RefObject<GridApi | null>;
+    const rowsByPath: Record<string, GridGetRowsResponse['rows']> = {
+      '': [{ id: 'G', name: 'G', childrenCount: 1 }],
+      G: [{ id: 'P', name: 'P', childrenCount: 2 }],
+      'G/P': [
+        { id: 'L1', name: 'First', childrenCount: 0 },
+        { id: 'L2', name: 'Second', childrenCount: 0 },
+      ],
+    };
+    const getRows = vi.fn(async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
+      const rows = rowsByPath[params.groupKeys!.join('/')];
+      return { rows, rowCount: rows.length };
+    });
+    const dataSource: GridDataSource = {
+      getRows,
+      getGroupKey: (row) => row.name,
+      getChildrenCount: (row) => row.childrenCount,
+    };
+    const columns = [{ field: 'name' }, { field: 'company' }, { field: 'department' }];
+    function Test({ activityMode, ...other }: TestProps) {
+      apiRef = useGridApiRef();
+      const grid = (
+        <div style={{ width: 600, height: 500 }}>
+          <DataGridPremium
+            apiRef={apiRef}
+            columns={columns}
+            dataSource={dataSource}
+            dataSourceCache={null}
+            initialState={{ rowGrouping: { model: ['company', 'department'] } }}
+            checkboxSelection
+            keepNonExistentRowsSelected
+            disableVirtualization
+            autoHeight={isJSDOM}
+            {...other}
+          />
+        </div>
+      );
+      return activityMode ? <React.Activity mode={activityMode}>{grid}</React.Activity> : grid;
+    }
+    const view = render(<Test {...props} />);
+    const checkbox = (id: GridRowId) =>
+      within(apiRef.current!.getRowElement(id)!).getByRole('checkbox') as HTMLInputElement;
+    const toggle = async (id: GridRowId) => {
+      await view.user.click(within(apiRef.current!.getRowElement(id)!).getByRole('button'));
+    };
+    await waitFor(() => expect(apiRef.current!.getRowElement('G')).not.to.equal(null));
+    await toggle('G');
+    await waitFor(() => expect(apiRef.current!.getRowElement('P')).not.to.equal(null));
+    await toggle('P');
+    await waitFor(() => expect(apiRef.current!.getRowElement('L2')).not.to.equal(null));
+    return { ...view, apiRef, checkbox, toggle, getRows, rowsByPath };
+  }
+
+  // https://github.com/mui/mui-x/issues/23868
+  it('should keep collapsed groups and their ancestors indeterminate', async () => {
+    const { user, apiRef, checkbox, toggle, getRows } = await renderGroupedGrid();
+    await user.click(checkbox('L1'));
+    expect(checkbox('P')).to.have.attribute('data-indeterminate', 'true');
+    expect(checkbox('G')).to.have.attribute('data-indeterminate', 'true');
+    const selection = apiRef.current!.state.rowSelection;
+    const callsBeforeCollapse = getRows.mock.calls.length;
+
+    await toggle('P');
+    expect(apiRef.current!.getRow('L1')).to.equal(null);
+    expect(checkbox('P')).to.have.attribute('data-indeterminate', 'true');
+    expect(checkbox('G')).to.have.attribute('data-indeterminate', 'true');
+    await toggle('G');
+    expect(checkbox('G')).to.have.attribute('data-indeterminate', 'true');
+    expect(apiRef.current!.state.rowSelection).to.deep.equal(selection);
+    expect(getRows.mock.calls.length).to.equal(callsBeforeCollapse);
+
+    await toggle('G');
+    await waitFor(() => expect(apiRef.current!.getRowElement('P')).not.to.equal(null));
+    expect(checkbox('P')).to.have.attribute('data-indeterminate', 'true');
+    await toggle('P');
+    await waitFor(() => expect(apiRef.current!.getRowElement('L2')).not.to.equal(null));
+    expect(checkbox('L1').checked).to.equal(true);
+    expect(checkbox('L2').checked).to.equal(false);
+    expect(apiRef.current!.state.rowSelection).to.deep.equal(selection);
+  });
+
+  it('should update collapsed groups when the controlled selection changes', async () => {
+    const { setProps, checkbox, toggle } = await renderGroupedGrid({
+      rowSelectionModel: { type: 'include', ids: new Set(['L1']) },
+    });
+    await toggle('P');
+    await toggle('G');
+
+    setProps({ rowSelectionModel: { type: 'include', ids: new Set(['L2']) } });
+    expect(checkbox('G')).to.have.attribute('data-indeterminate', 'true');
+    setProps({ rowSelectionModel: { type: 'include', ids: new Set() } });
+    expect(checkbox('G')).to.have.attribute('data-indeterminate', 'false');
+    expect(checkbox('G').checked).to.equal(false);
+    setProps({ rowSelectionModel: { type: 'include', ids: new Set(['L1']) } });
+    expect(checkbox('G')).to.have.attribute('data-indeterminate', 'true');
+  });
+
+  it('should preserve retained selection when isRowSelectable gets a new reference', async () => {
+    const { user, apiRef, checkbox, toggle, setProps } = await renderGroupedGrid({
+      isRowSelectable: () => true,
+    });
+    await user.click(checkbox('L1'));
+    await toggle('P');
+
+    setProps({ isRowSelectable: () => true });
+
+    expect(checkbox('P')).to.have.attribute('data-indeterminate', 'true');
+    expect(checkbox('G')).to.have.attribute('data-indeterminate', 'true');
+    expect(apiRef.current!.state.rowSelection.ids).to.deep.equal(new Set(['L1']));
+  });
+
+  it.skipIf(!('Activity' in React))(
+    'should preserve retained selection when Activity becomes visible again',
+    async () => {
+      const { user, apiRef, checkbox, toggle, setProps, getRows } = await renderGroupedGrid({
+        activityMode: 'visible',
+      });
+      await user.click(checkbox('L1'));
+      await toggle('P');
+      const callsBeforeHiding = getRows.mock.calls.length;
+
+      await act(async () => setProps({ activityMode: 'hidden' }));
+      await act(async () => setProps({ activityMode: 'visible' }));
+
+      expect(checkbox('P')).to.have.attribute('data-indeterminate', 'true');
+      expect(checkbox('G')).to.have.attribute('data-indeterminate', 'true');
+      expect(apiRef.current!.state.rowSelection.ids).to.deep.equal(new Set(['L1']));
+      expect(getRows.mock.calls.length).to.equal(callsBeforeHiding);
+    },
+  );
+
+  it.each([false, true])(
+    'should preserve retained selection when a refetch resets expansion (already collapsed: %s)',
+    async (alreadyCollapsed) => {
+      const { user, apiRef, checkbox, toggle } = await renderGroupedGrid();
+      await user.click(checkbox('L1'));
+      if (alreadyCollapsed) {
+        await toggle('P');
+      }
+
+      await act(async () =>
+        apiRef.current!.dataSource.fetchRows(undefined, { keepChildrenExpanded: false }),
+      );
+
+      expect(apiRef.current!.getRow('P')).to.equal(null);
+      expect(apiRef.current!.getRow('L1')).to.equal(null);
+      expect(checkbox('G')).to.have.attribute('data-indeterminate', 'true');
+      expect(apiRef.current!.state.rowSelection.ids).to.deep.equal(new Set(['L1']));
+    },
+  );
+
+  it('should propagate selection changes to known descendants of a collapsed group', async () => {
+    const { user, apiRef, checkbox, toggle, getRows } = await renderGroupedGrid();
+    await user.click(checkbox('L1'));
+    await toggle('G');
+    const callsBeforeSelection = getRows.mock.calls.length;
+
+    await user.click(checkbox('G'));
+    expect(checkbox('G').checked).to.equal(true);
+    expect(apiRef.current!.isRowSelected('L1')).to.equal(true);
+    expect(apiRef.current!.isRowSelected('L2')).to.equal(true);
+    await user.click(checkbox('G'));
+    expect(checkbox('G')).to.have.attribute('data-indeterminate', 'false');
+    expect(apiRef.current!.state.rowSelection.ids.size).to.equal(0);
+    expect(getRows.mock.calls.length).to.equal(callsBeforeSelection);
+  });
+
+  it('should not propagate a collapsed group selection when propagation is disabled', async () => {
+    const { user, apiRef, checkbox, toggle } = await renderGroupedGrid({
+      rowSelectionPropagation: { parents: false, descendants: false },
+    });
+    await user.click(checkbox('L1'));
+    await toggle('P');
+    await user.click(checkbox('P'));
+    expect(apiRef.current!.isRowSelected('L2')).to.equal(false);
+    await user.click(checkbox('P'));
+    expect(apiRef.current!.state.rowSelection.ids).to.deep.equal(new Set(['L1']));
+    expect(checkbox('P')).to.have.attribute('data-indeterminate', 'true');
+  });
+
+  it('should discard the child selection on collapse without keepNonExistentRowsSelected', async () => {
+    const { user, apiRef, checkbox, toggle } = await renderGroupedGrid({
+      keepNonExistentRowsSelected: false,
+    });
+    await user.click(checkbox('L1'));
+    await toggle('P');
+    expect(apiRef.current!.state.rowSelection.ids.size).to.equal(0);
+    expect(checkbox('P')).to.have.attribute('data-indeterminate', 'false');
+    expect(checkbox('G')).to.have.attribute('data-indeterminate', 'false');
+  });
+
+  it.each([false, true])(
+    'should preserve an exclude model after collapse (excluded child: %s)',
+    async (excludeChild) => {
+      const { apiRef, checkbox, toggle } = await renderGroupedGrid();
+      act(() => apiRef.current!.setRowSelectionModel({ type: 'exclude', ids: new Set() }));
+      if (excludeChild) {
+        act(() => apiRef.current!.selectRow('L1', false));
+      }
+      const selection = apiRef.current!.state.rowSelection;
+
+      await toggle('P');
+      expect(apiRef.current!.state.rowSelection).to.deep.equal(selection);
+      expect(checkbox('P')).to.have.attribute('data-indeterminate', String(excludeChild));
+      expect(checkbox('G')).to.have.attribute('data-indeterminate', String(excludeChild));
+      await toggle('P');
+      await waitFor(() => expect(apiRef.current!.getRowElement('L2')).not.to.equal(null));
+      expect(apiRef.current!.state.rowSelection.type).to.equal('exclude');
+      expect(checkbox('L1').checked).to.equal(!excludeChild);
+      expect(checkbox('L2').checked).to.equal(true);
+    },
+  );
+
+  it('should not include non-selectable cached rows when selecting a collapsed group', async () => {
+    const { user, apiRef, checkbox, toggle } = await renderGroupedGrid({
+      isRowSelectable: ({ id }) => id !== 'L2',
+    });
+    await toggle('G');
+    await user.click(checkbox('G'));
+    expect(apiRef.current!.isRowSelected('L1')).to.equal(true);
+    expect(apiRef.current!.isRowSelected('L2')).to.equal(false);
+  });
+
+  it('should stop using descendants missing from the next group response', async () => {
+    const { user, apiRef, checkbox, toggle, rowsByPath } = await renderGroupedGrid();
+    await user.click(checkbox('L1'));
+    await toggle('P');
+    rowsByPath['G/P'] = rowsByPath['G/P'].filter((row) => row.id !== 'L1');
+
+    await toggle('P');
+    await waitFor(() => expect(apiRef.current!.getRowElement('L2')).not.to.equal(null));
+    expect(checkbox('P')).to.have.attribute('data-indeterminate', 'false');
+    expect(checkbox('G')).to.have.attribute('data-indeterminate', 'false');
+    expect(apiRef.current!.isRowSelected('L1')).to.equal(true);
+  });
+
+  it('should preserve partial selection on a root refetch and a failed children request', async () => {
+    const onDataSourceError = vi.fn();
+    const { user, apiRef, checkbox, toggle, getRows } = await renderGroupedGrid({
+      onDataSourceError,
+    });
+    await user.click(checkbox('L1'));
+    await toggle('P');
+    await act(async () => apiRef.current!.dataSource.fetchRows());
+    expect(checkbox('P')).to.have.attribute('data-indeterminate', 'true');
+    expect(checkbox('G')).to.have.attribute('data-indeterminate', 'true');
+
+    getRows.mockRejectedValueOnce(new Error('Failed to load children'));
+    await toggle('P');
+    await waitFor(() => expect(onDataSourceError).toHaveBeenCalledTimes(1));
+    expect(checkbox('P')).to.have.attribute('data-indeterminate', 'true');
+    expect(checkbox('G')).to.have.attribute('data-indeterminate', 'true');
+    expect(apiRef.current!.state.rowSelection.ids).to.deep.equal(new Set(['L1']));
+  });
+
+  it.each([
+    { rowGroupingModel: ['department', 'company'] },
+    { filterModel: { items: [{ field: 'name', operator: 'contains', value: 'Second' }] } },
+  ])('should discard cached group membership after query changes: %j', async (newProps) => {
+    const { user, apiRef, checkbox, toggle, setProps, getRows } = await renderGroupedGrid();
+    await user.click(checkbox('L1'));
+    await toggle('P');
+    const callsBeforeChange = getRows.mock.calls.length;
+    setProps(newProps);
+
+    await waitFor(() => {
+      expect(getRows.mock.calls.length).to.be.greaterThan(callsBeforeChange);
+      expect(apiRef.current!.getRowElement('G')).not.to.equal(null);
+    });
+    expect(checkbox('G')).to.have.attribute('data-indeterminate', 'false');
+    expect(apiRef.current!.isRowSelected('L1')).to.equal(true);
+  });
+});
 
 describe('<DataGridPremium /> - Data source row grouping (loading state)', () => {
   const { render } = createRenderer();

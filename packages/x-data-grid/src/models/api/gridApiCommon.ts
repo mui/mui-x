@@ -14,6 +14,7 @@ import type { GridPrintExportApi } from './gridPrintExportApi';
 import type { GridRowApi, GridRowProPrivateApi, GridRowSpanningPrivateApi } from './gridRowApi';
 import type { GridRowsMetaApi, GridRowsMetaPrivateApi } from './gridRowsMetaApi';
 import type { GridRowSelectionApi } from './gridRowSelectionApi';
+import type { GridRowSelectionPrivateApi } from '../../hooks/features/rowSelection/gridRowSelectionRetention';
 import type { GridSortApi } from './gridSortApi';
 import type { GridStateApi, GridStatePrivateApi } from './gridStateApi';
 import type { GridLoggerApi } from './gridLoggerApi';
@@ -96,6 +97,7 @@ export interface GridPrivateOnlyApiCommon<
     GridRowProPrivateApi,
     GridRowSpanningPrivateApi,
     GridParamsPrivateApi,
+    GridRowSelectionPrivateApi,
     GridPivotingPrivateApiCommunity,
     GridInfiniteLoaderPrivateApi {
   virtualizer: Virtualizer;

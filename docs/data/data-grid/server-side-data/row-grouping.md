@@ -117,6 +117,21 @@ The following demo uses `defaultGroupingExpansionDepth={-1}` to expand all group
 
 {{"demo": "ServerSideRowGroupingGroupExpansion.js", "bg": "inline"}}
 
+## Row selection
+
+Enable `keepNonExistentRowsSelected` to keep selected descendants when a group is collapsed.
+Without this prop, collapsing a group removes its child rows from the Grid and clears their selection.
+With it enabled, a partially selected group and its ancestors keep their indeterminate checkboxes, even while the selected descendants are not loaded.
+
+The Grid remembers the parent-child relationships of previously loaded rows for the current query.
+It cannot derive a group's partial-selection state from selected IDs whose rows have never been loaded.
+When a group is fetched again, the Grid updates its known descendants from the response.
+This does not require fetching additional rows.
+For unloaded descendants, the Grid uses the last known result of `isRowSelectable` until the rows are fetched again.
+
+The `rowSelectionPropagation` prop controls whether selecting or deselecting a group also affects its descendants.
+For the behavior of partially loaded groups with `lazyLoading`, see [Row selection propagation](/x/react-data-grid/server-side-data/lazy-loading/#row-selection-propagation).
+
 ## Reorder row grouping rows
 
 :::warning
