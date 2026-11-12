@@ -1,6 +1,6 @@
 import { randomId } from '@mui/x-data-grid-generator';
-import { GridRowModel } from '@mui/x-data-grid-premium';
-import { RowModel } from './types';
+import type { GridRowModel } from '@mui/x-data-grid-premium';
+import type { RowModel } from './types';
 
 export const INITIAL_ROWS: GridRowModel<RowModel>[] = [
   {

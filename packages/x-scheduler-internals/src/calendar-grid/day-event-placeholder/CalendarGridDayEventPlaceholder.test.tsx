@@ -3,13 +3,14 @@ import { adapter, createSchedulerRenderer, describeConformance } from 'test/util
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { describe } from 'vitest';
-import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/adapter';
+import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
 
 describe('<CalendarGrid.DayEventPlaceholder />', () => {
   const { render } = createSchedulerRenderer();
 
-  const eventStart = processDate(adapter.now('default'), adapter);
-  const eventEnd = processDate(adapter.addHours(eventStart.value, 1), adapter);
+  const eventStart = processDate(adapter.now('default'), 'default');
+  const eventEnd = processDate(adapter.addHours(eventStart.value, 1), 'default');
+  const cellDate = toPlainDate(eventStart.value.getTime(), 'default');
 
   describeConformance(
     <CalendarGrid.DayEventPlaceholder start={eventStart} end={eventEnd} />,
@@ -19,10 +20,12 @@ describe('<CalendarGrid.DayEventPlaceholder />', () => {
         return render(
           <EventCalendarProvider events={[]}>
             <CalendarGrid.Root>
-              <CalendarGrid.DayRow start={eventStart.timestamp} end={eventEnd.timestamp}>
-                <CalendarGrid.DayCell value={buildTemporalPlainDate(adapter, eventStart.value)}>
-                  {node}
-                </CalendarGrid.DayCell>
+              <CalendarGrid.DayRow
+                start={eventStart.timestamp}
+                end={eventEnd.timestamp}
+                days={[{ plainDate: cellDate }]}
+              >
+                <CalendarGrid.DayCell value={cellDate}>{node}</CalendarGrid.DayCell>
               </CalendarGrid.DayRow>
             </CalendarGrid.Root>
           </EventCalendarProvider>,

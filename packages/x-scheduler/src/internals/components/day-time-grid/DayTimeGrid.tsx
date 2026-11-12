@@ -26,6 +26,7 @@ import {
   formatTime,
   formatWeekdayMonthAndDayOfMonth,
   formatWeekdayShort,
+  getDayNumber,
   getDisplayedHourRange,
   getEndOfDayMs,
   getInitialScrollTime,
@@ -382,6 +383,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
   const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
+  const weekend = useStore(store, schedulerPreferenceSelectors.weekend);
 
   // Feature hooks
   const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
@@ -402,8 +404,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       // `days[0].timestamp` is the first instant of the first day.
       start: days[0].timestamp,
       end: getEndOfDayMs(lastDay.timestamp, displayTimezone),
-      firstDayNumber: days[0].plainDate.dayNumber,
-      lastDayNumber: lastDay.plainDate.dayNumber,
+      firstDayNumber: getDayNumber(days[0].plainDate),
+      lastDayNumber: getDayNumber(lastDay.plainDate),
     };
   }, [days, displayTimezone]);
 
@@ -445,7 +447,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     applyInitialScroll();
   });
 
-  const lastIsWeekend = isWeekendPlainDate(days[days.length - 1].plainDate);
+  const lastIsWeekend = isWeekendPlainDate(days[days.length - 1].plainDate, weekend);
 
   const renderHeaderContent = (day: SchedulerProcessedDay) => (
     <DayTimeGridHeaderContent className={classes.dayTimeGridHeaderContent}>
@@ -522,6 +524,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           as={CalendarGrid.DayRow}
           start={start}
           end={end}
+          days={days}
           className={classes.dayTimeGridAllDayEventsRow}
         >
           {occurrences.days.map((day, index) => (

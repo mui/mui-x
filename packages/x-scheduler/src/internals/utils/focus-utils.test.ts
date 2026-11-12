@@ -1,6 +1,10 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
-import { captureFocusFallback, resolveFocusFallback } from './focus-utils';
+import {
+  captureFocusFallback,
+  resolveConnectedFocusFallback,
+  resolveFocusFallback,
+} from './focus-utils';
 
 describe('captureFocusFallback / resolveFocusFallback', () => {
   afterEach(() => {
@@ -165,6 +169,44 @@ describe('captureFocusFallback / resolveFocusFallback', () => {
       const snapshot = captureFocusFallback(document.getElementById('tue')!, 'daily', 2)!;
 
       expect(resolveFocusFallback(snapshot, 'all')).to.equal(document.getElementById('other'));
+    });
+  });
+
+  describe('resolveConnectedFocusFallback', () => {
+    it('should skip the rows that left the document since the snapshot', () => {
+      mountAgenda([
+        { id: 'first', eventId: 'event-1' },
+        { id: 'second', eventId: 'event-2' },
+        { id: 'third', eventId: 'event-3' },
+      ]);
+
+      const snapshot = captureFocusFallback(document.getElementById('first')!, 'event-1', 0)!;
+      document.getElementById('second')!.closest('li')!.remove();
+
+      expect(resolveConnectedFocusFallback(snapshot)).to.equal(document.getElementById('third'));
+    });
+
+    it('should keep the surviving occurrences of the same event', () => {
+      mountAgenda([
+        { id: 'mon', eventId: 'daily', timestamp: 1 },
+        { id: 'tue', eventId: 'daily', timestamp: 2 },
+        { id: 'other', eventId: 'other-event', timestamp: 3 },
+      ]);
+
+      const snapshot = captureFocusFallback(document.getElementById('mon')!, 'daily', 1)!;
+      document.getElementById('mon')!.closest('li')!.remove();
+
+      expect(resolveConnectedFocusFallback(snapshot)).to.equal(document.getElementById('tue'));
+    });
+
+    it('should return the owning cell inside a grid', () => {
+      const event = mountEvent(
+        '<div role="grid"><div role="gridcell" id="cell" tabindex="0"><div id="event" tabindex="0"></div></div></div>',
+      );
+
+      const snapshot = captureFocusFallback(event, 'event-1', 0)!;
+
+      expect(resolveConnectedFocusFallback(snapshot)).to.equal(document.getElementById('cell'));
     });
   });
 });

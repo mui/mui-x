@@ -1,5 +1,6 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';

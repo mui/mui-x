@@ -22,7 +22,6 @@ import type {
   SchedulerEventDeletionConfig,
   RecurringEventScope,
 } from '../../../models';
-import type { Adapter } from '../../../use-adapter/useAdapter.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 
 /**
@@ -36,6 +35,7 @@ export type SchedulerUserFacingErrorCode =
   | 'datesNotWritableError'
   | 'eventNotCreatableError'
   | 'dependencyCascadeBlockedError'
+  | 'dependencyDatesNotWritableError'
   | 'dependencyCycleError'
   | 'dependencyDuplicateError'
   | 'dependencyRecurringEventError'
@@ -47,7 +47,7 @@ export type SchedulerUserFacingErrorCode =
  */
 export type SchedulerUserFacingErrorDescriptor =
   | { code: SchedulerUserFacingErrorCode; params?: undefined }
-  | { code: 'readOnlyEventMovedError'; params: { title: string } };
+  | { code: 'readOnlyEventMovedError' | 'unwritableEventMovedError'; params: { title: string } };
 
 export type UserFacingError = SchedulerUserFacingErrorDescriptor & {
   /**
@@ -85,11 +85,6 @@ export interface SchedulerEditingState {
 }
 
 export interface SchedulerState<TEvent extends object = any> {
-  /**
-   * The adapter of the date library.
-   * Not publicly exposed, is only set in state to avoid passing it to the selectors.
-   */
-  adapter: Adapter;
   /**
    * The locale the dates are formatted in.
    */
@@ -217,13 +212,10 @@ export interface SchedulerState<TEvent extends object = any> {
    *
    * Accepts any valid IANA timezone name
    * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
-   * or keywords understood by the adapter, such as
-   * "default" (use the adapter's default timezone),
-   * "locale" (use the user's current locale timezone),
-   * or "UTC".
+   * "default" or "system" (the timezone of the system), or "UTC".
    *
    * Events keep their original data timezone. The visible range starts on the day of the visible
-   * date in this timezone, and the next and previous navigation return dates in this timezone.
+   * date in this timezone, and the next and previous navigation move the visible date on its days.
    */
   displayTimezone: TemporalTimezone;
   /**
@@ -441,21 +433,18 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    *
    * Accepts any valid IANA timezone name
    * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
-   * or keywords understood by the adapter, such as
-   * "default" (use the adapter's default timezone),
-   * "locale" (use the user's current locale timezone),
-   * or "UTC".
+   * "default" or "system" (the timezone of the system), or "UTC".
    *
    * Events keep their original data timezone. The visible range starts on the day of the visible
-   * date in this timezone, and the next and previous navigation return dates in this timezone.
+   * date in this timezone, and the next and previous navigation move the visible date on its days.
    * @default "default"
    */
   displayTimezone?: TemporalTimezone;
   /**
    * The locale of the dates, as a BCP 47 language tag such as `"fr-FR"`, like the locales of
    * `Intl.DateTimeFormat`.
-   * This affects day names, month names, the first day of the week, week numbers, the 12-hour
-   * or 24-hour clock and the other locale-dependent formatting.
+   * This affects day names, month names, the first day of the week, the days of the weekend,
+   * week numbers, the 12-hour or 24-hour clock and the other locale-dependent formatting.
    * @default "en-US"
    */
   dateLocale?: string;
@@ -547,7 +536,6 @@ export interface SchedulerParametersToStateMapper<
   getInitialState: (
     schedulerInitialState: Omit<SchedulerState, 'shouldEventRequireResource'>,
     parameters: Parameters,
-    adapter: Adapter,
   ) => State;
   /**
    * Updates the state based on the new parameters.

@@ -7,7 +7,8 @@ import {
   useGridSelector,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { Theme, styled } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Pagination from '@mui/material/Pagination';
 import PaginationItem from '@mui/material/PaginationItem';
 

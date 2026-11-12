@@ -1,6 +1,6 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import { MS_PER_DAY } from './base-temporal/iso';
-import type { PlainDate } from './base-temporal/PlainDate';
+import { MS_PER_DAY } from './plain-date-utils/dayNumber';
+import type { BaseTemporal } from './base-temporal';
 import {
   localToEpochMs,
   toEpochMs,
@@ -55,7 +55,7 @@ export interface TimelineAxis extends TimelineAxisWindow {
  * runs to the end of the day, otherwise on the exclusive end of the window.
  */
 export function getPlainDateTimelineAxis(
-  plainDate: PlainDate,
+  plainDate: BaseTemporal.PlainDate,
   window: TimelineAxisWindow,
   timezone: TemporalTimezone,
 ): TimelineAxis {
@@ -180,18 +180,6 @@ export function timestampToTimelineAxisOffsetMs(
   // Day numbers, as this runs for every event.
   const dayIndex =
     toLocalDayNumber(timestamp, axis.timezone) - toLocalDayNumber(axis.start, axis.timezone);
-  return getTimelineAxisOffsetMs(axis, dayIndex, msInDay);
-}
-
-/**
- * The axis offset of a wall-clock time on the `dayIndex`-th day of the axis, clamped to the
- * displayed window of that day.
- */
-export function getTimelineAxisOffsetMs(
-  axis: TimelineAxisWindow,
-  dayIndex: number,
-  msInDay: number,
-): number {
   const clampedMsInDay = Math.min(
     Math.max(msInDay, axis.dayStartMinute * MINUTE_MS),
     axis.dayEndMinute * MINUTE_MS,

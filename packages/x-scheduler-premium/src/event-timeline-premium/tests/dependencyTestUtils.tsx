@@ -9,7 +9,12 @@ import type {
   EventTimelinePremiumStoreParameters,
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
-import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerEvent,
+  SchedulerEventModelStructure,
+  SchedulerResource,
+} from '@mui/x-scheduler-internals/models';
+import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 import {
   EventEditingStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
@@ -22,10 +27,10 @@ import { EventTimelinePremiumContent } from '../content';
 import { EventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
 import { recurringEventsFeature } from '../../recurring-events';
-import { dependenciesFeature } from '../content/timeline-dependencies/dependenciesFeature';
+import { dependenciesFeature } from '../../dependencies';
 import { EventTimelinePremiumFeaturesContext } from '../features/EventTimelinePremiumFeaturesContext';
 import { useFrozenEventTimelinePremiumFeatures } from '../features/useFrozenEventTimelinePremiumFeatures';
-import type { EventTimelinePremiumInternalFeatures } from '../features/EventTimelinePremiumFeatures.types';
+import type { EventTimelinePremiumFeatures } from '../features/EventTimelinePremiumFeatures.types';
 
 export { buildDependency, resource1, resource2 };
 
@@ -73,7 +78,7 @@ const sharedStyledContextValue = {
   localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 };
 
-const defaultFeatures: EventTimelinePremiumInternalFeatures = {
+const defaultFeatures: EventTimelinePremiumFeatures = {
   recurringEvents: recurringEventsFeature,
   dependencies: dependenciesFeature,
 };
@@ -89,10 +94,15 @@ interface TestTimelineProps {
   dependencies?: SchedulerDependency[];
   presetConfig?: PresetConfig;
   readOnly?: boolean;
+  eventModelStructure?: SchedulerEventModelStructure<SchedulerEvent>;
   /**
    * @default both features
    */
-  features?: EventTimelinePremiumInternalFeatures;
+  features?: EventTimelinePremiumFeatures;
+  /**
+   * Merged into the default locale text.
+   */
+  localeText?: Partial<EventTimelineLocaleText>;
   /**
    * Observes the dependency changes on top of the controlled loop.
    */
@@ -100,8 +110,8 @@ interface TestTimelineProps {
   onStoreReady: (store: EventTimelinePremiumStore<any, any>) => void;
 }
 
-// `dependencies` is not a public prop yet, so the harness feeds the internal store
-// parameters to the same hook the component uses, and closes the controlled loop
+// The tests need the store, which the component doesn't expose, so the harness feeds the
+// store parameters to the same hook the component uses, and closes the controlled loop
 // (`onEventsChange` / `onDependenciesChange` → new parameter values) like a consumer.
 // Exported for the tests rendering several timelines on one page.
 export function TestTimeline({
@@ -110,7 +120,9 @@ export function TestTimeline({
   dependencies: initialDependencies,
   presetConfig,
   readOnly,
+  eventModelStructure,
   features: featuresProp = defaultFeatures,
+  localeText,
   onDependenciesChange,
   onStoreReady,
 }: TestTimelineProps) {
@@ -129,11 +141,23 @@ export function TestTimeline({
 
   const { features, storeFeatures } = useFrozenEventTimelinePremiumFeatures(featuresProp);
 
+  const [styledContext, sharedStyledContext] = React.useMemo(() => {
+    if (localeText === undefined) {
+      return [styledContextValue, sharedStyledContextValue];
+    }
+    const mergedLocaleText = { ...EVENT_TIMELINE_DEFAULT_LOCALE_TEXT, ...localeText };
+    return [
+      { ...styledContextValue, localeText: mergedLocaleText },
+      { ...sharedStyledContextValue, localeText: mergedLocaleText },
+    ];
+  }, [localeText]);
+
   const parameters: EventTimelinePremiumStoreParameters<SchedulerEvent, SchedulerResource> = {
     events,
     resources,
     dependencies,
     readOnly,
+    eventModelStructure,
     onEventsChange: setEvents,
     onDependenciesChange: dependenciesEnabled
       ? (value) => {
@@ -158,9 +182,9 @@ export function TestTimeline({
   return (
     <SchedulerStoreContext.Provider value={storeContextValue}>
       <EventTimelinePremiumFeaturesContext.Provider value={features}>
-        <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-          <EventEditingStyledContext.Provider value={styledContextValue}>
-            <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
+        <EventTimelinePremiumStyledContext.Provider value={styledContext}>
+          <EventEditingStyledContext.Provider value={styledContext}>
+            <SharedComponentsStyledContext.Provider value={sharedStyledContext}>
               <EventTimelinePremiumContent />
             </SharedComponentsStyledContext.Provider>
           </EventEditingStyledContext.Provider>
@@ -176,7 +200,12 @@ interface RenderTimelineParameters {
   dependencies?: SchedulerDependency[];
   presetConfig?: PresetConfig;
   readOnly?: boolean;
-  features?: EventTimelinePremiumInternalFeatures;
+  /**
+   * Pass a module-scope value: the store compares it by reference.
+   */
+  eventModelStructure?: SchedulerEventModelStructure<SchedulerEvent>;
+  features?: EventTimelinePremiumFeatures;
+  localeText?: Partial<EventTimelineLocaleText>;
   onDependenciesChange?: (dependencies: SchedulerDependency[]) => void;
   /**
    * Sets the theme direction and the `dir` attribute, like a consumer does.
@@ -200,7 +229,9 @@ function TimelineHost({
   dependencies,
   presetConfig,
   readOnly,
+  eventModelStructure,
   features,
+  localeText,
   onDependenciesChange,
   onStoreReady,
   direction = 'ltr',
@@ -230,7 +261,9 @@ function TimelineHost({
             dependencies={dependencies}
             presetConfig={presetConfig}
             readOnly={readOnly}
+            eventModelStructure={eventModelStructure}
             features={features}
+            localeText={localeText}
             onDependenciesChange={onDependenciesChange}
             onStoreReady={onStoreReady}
           />

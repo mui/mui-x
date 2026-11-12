@@ -1,6 +1,16 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "index": { "description": "The index of the row in <code>items</code>." },
+    "items": { "description": "The ids of the messages in the list, in order." },
+    "label": { "description": "The label of the marker." },
+    "messageId": { "description": "The id of the message this row belongs to." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
+  },
   "classDescriptions": {},
-  "slotDescriptions": { "label": "", "root": "" }
+  "slotDescriptions": {
+    "label": "The component that renders the label.",
+    "root": "The component that renders the root."
+  }
 }

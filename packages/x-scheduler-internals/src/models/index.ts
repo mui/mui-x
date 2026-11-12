@@ -1,4 +1,4 @@
-export type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
+export type { TemporalSupportedObject } from './date';
 export * from './event';
 export * from './resource';
 export * from './view';

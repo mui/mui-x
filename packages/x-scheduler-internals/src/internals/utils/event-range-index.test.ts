@@ -8,13 +8,13 @@ import {
 describe('createEventRangeIndex', () => {
   it('should return overlapping events in their original order', () => {
     const events = [
-      EventBuilder.new(adapter).id('later-start').singleDay('2025-01-15T12:00:00Z').toProcessed(),
-      EventBuilder.new(adapter)
+      EventBuilder.new().id('later-start').singleDay('2025-01-15T12:00:00Z').toProcessed(),
+      EventBuilder.new()
         .id('spanning')
         .span('2025-01-01T00:00:00Z', '2025-02-01T00:00:00Z')
         .toProcessed(),
-      EventBuilder.new(adapter).id('earlier-start').singleDay('2025-01-15T09:00:00Z').toProcessed(),
-      EventBuilder.new(adapter).id('outside').singleDay('2025-02-15T09:00:00Z').toProcessed(),
+      EventBuilder.new().id('earlier-start').singleDay('2025-01-15T09:00:00Z').toProcessed(),
+      EventBuilder.new().id('outside').singleDay('2025-02-15T09:00:00Z').toProcessed(),
     ];
     const index = createEventRangeIndex(events, false);
 
@@ -32,16 +32,16 @@ describe('createEventRangeIndex', () => {
 
   it('should include events that end at the range start or start at the range end', () => {
     const events = [
-      EventBuilder.new(adapter)
+      EventBuilder.new()
         .id('ends-at-start')
         .span('2025-01-15T08:00:00Z', '2025-01-15T10:00:00Z')
         .toProcessed(),
-      EventBuilder.new(adapter)
+      EventBuilder.new()
         .id('starts-at-end')
         .span('2025-01-15T12:00:00Z', '2025-01-15T13:00:00Z')
         .toProcessed(),
       ...Array.from({ length: 7 }, (_, id) =>
-        EventBuilder.new(adapter).id(id).singleDay('2025-02-15T09:00:00Z').toProcessed(),
+        EventBuilder.new().id(id).singleDay('2025-02-15T09:00:00Z').toProcessed(),
       ),
     ];
     const index = createEventRangeIndex(events, false);
@@ -55,7 +55,7 @@ describe('createEventRangeIndex', () => {
   });
 
   it('should keep recurring events as candidates outside their original range when expansion is enabled', () => {
-    const recurringEvent = EventBuilder.new(adapter)
+    const recurringEvent = EventBuilder.new()
       .id('recurring')
       .singleDay('2025-01-01T09:00:00Z')
       .rrule({ freq: 'DAILY' })
@@ -83,11 +83,11 @@ describe('createEventRangeIndex', () => {
       const firstDay = adapter.date('2025-02-01T00:00:00Z', 'default');
       const events = Array.from({ length: 40 }, (_, eventIndex) => {
         const eventStart = adapter.addDays(firstDay, (eventIndex * 17) % 40);
-        const event = EventBuilder.new(adapter)
+        const event = EventBuilder.new()
           .id(eventIndex)
           .span(eventStart.toISOString(), eventStart.toISOString())
           .toProcessed();
-        const recurring = EventBuilder.new(adapter)
+        const recurring = EventBuilder.new()
           .id(`recurring-${eventIndex}`)
           .singleDay('2025-01-01T09:00:00Z')
           .rrule({ freq: 'DAILY' })
@@ -122,12 +122,12 @@ describe('createEventRangeIndex', () => {
   );
 
   it('should handle recurring candidate counts above the argument limit', () => {
-    const recurring = EventBuilder.new(adapter)
+    const recurring = EventBuilder.new()
       .singleDay('2025-01-01T09:00:00Z')
       .rrule({ freq: 'DAILY' })
       .toProcessed();
     const events = Array.from({ length: 300_000 }, (_, id) => ({ ...recurring, id }));
-    const outside = EventBuilder.new(adapter)
+    const outside = EventBuilder.new()
       .id('outside')
       .singleDay('2025-01-01T09:00:00Z')
       .toProcessed();
@@ -156,7 +156,7 @@ describe('createEventRangeIndex', () => {
     const firstDay = adapter.date('2025-01-01T00:00:00Z', 'default');
     const events = Array.from({ length: 12 }, (_, id) => {
       const point = adapter.addDays(firstDay, id).toISOString();
-      return EventBuilder.new(adapter).id(id).span(point, point).toProcessed();
+      return EventBuilder.new().id(id).span(point, point).toProcessed();
     });
     const index = createEventRangeIndex(events, false);
 
@@ -176,7 +176,7 @@ describe('createEventRangeIndex', () => {
     const events = Array.from({ length: 200 }, (_, eventIndex) => {
       const eventStart = adapter.addDays(firstDay, eventIndex);
       const eventEnd = adapter.addDays(eventStart, (eventIndex % 20) + 1);
-      return EventBuilder.new(adapter)
+      return EventBuilder.new()
         .id(eventIndex)
         .span(eventStart.toISOString(), eventEnd.toISOString())
         .toProcessed();
@@ -204,7 +204,7 @@ describe('createEventRangeIndex', () => {
     const firstDay = adapter.date('2025-01-01T00:00:00Z', 'default');
     const events = Array.from({ length: 40 }, (_, eventIndex) => {
       const eventStart = adapter.addDays(firstDay, (eventIndex * 17) % 40);
-      return EventBuilder.new(adapter)
+      return EventBuilder.new()
         .id(eventIndex)
         .span(eventStart.toISOString(), adapter.addDays(eventStart, 1).toISOString())
         .toProcessed();
@@ -230,7 +230,7 @@ describe('createEventRangeIndex', () => {
     const firstDay = adapter.date('2025-01-01T00:00:00Z', 'default');
     const events = Array.from({ length: 100 }, (_, eventIndex) => {
       const eventStart = adapter.addDays(firstDay, (eventIndex * 37) % 100);
-      return EventBuilder.new(adapter)
+      return EventBuilder.new()
         .id(eventIndex)
         .span(eventStart.toISOString(), adapter.addDays(eventStart, 1).toISOString())
         .toProcessed();
@@ -252,8 +252,8 @@ describe('createEventRangeIndex', () => {
 
   it('should return a copy in input order when the range overlaps every event', () => {
     const events = [
-      EventBuilder.new(adapter).id('later').singleDay('2025-01-02T09:00:00Z').toProcessed(),
-      EventBuilder.new(adapter).id('earlier').singleDay('2025-01-01T09:00:00Z').toProcessed(),
+      EventBuilder.new().id('later').singleDay('2025-01-02T09:00:00Z').toProcessed(),
+      EventBuilder.new().id('earlier').singleDay('2025-01-01T09:00:00Z').toProcessed(),
     ];
     const index = createEventRangeIndex(events, false);
 
@@ -268,11 +268,11 @@ describe('createEventRangeIndex', () => {
 
   it('should index events before the Unix epoch', () => {
     const events = [
-      EventBuilder.new(adapter)
+      EventBuilder.new()
         .id('before-epoch')
         .span('1960-01-01T00:00:00Z', '1960-01-02T00:00:00Z')
         .toProcessed(),
-      EventBuilder.new(adapter)
+      EventBuilder.new()
         .id('after-epoch')
         .span('2025-01-01T00:00:00Z', '2025-01-02T00:00:00Z')
         .toProcessed(),

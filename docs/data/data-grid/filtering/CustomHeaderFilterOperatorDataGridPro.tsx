@@ -1,11 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Rating, { RatingProps } from '@mui/material/Rating';
-import {
-  DataGridPro,
-  getGridNumericOperators,
-  GridFilterInputValueProps,
-} from '@mui/x-data-grid-pro';
+import type { RatingProps } from '@mui/material/Rating';
+import Rating from '@mui/material/Rating';
+import type { GridFilterInputValueProps } from '@mui/x-data-grid-pro';
+import { DataGridPro, getGridNumericOperators } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
@@ -16,16 +14,7 @@ function RatingInputValue(
     clearButton: React.ReactNode;
   },
 ) {
-  const { item, applyValue, focusElementRef, headerFilterMenu, clearButton } = props;
-
-  const ratingRef: React.Ref<any> = React.useRef(null);
-  React.useImperativeHandle(focusElementRef, () => ({
-    focus: () => {
-      ratingRef.current
-        .querySelector(`input[value="${Number(item.value) || ''}"]`)
-        .focus();
-    },
-  }));
+  const { item, applyValue, headerFilterMenu, clearButton } = props;
 
   const handleFilterChange: RatingProps['onChange'] = (event, newValue) => {
     applyValue({ ...item, value: newValue });
@@ -45,7 +34,6 @@ function RatingInputValue(
         value={Number(item.value)}
         onChange={handleFilterChange}
         precision={0.5}
-        ref={ratingRef}
         sx={{ mr: 0.5 }}
       />
       {headerFilterMenu}

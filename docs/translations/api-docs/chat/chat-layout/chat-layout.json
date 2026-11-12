@@ -1,6 +1,14 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "children": { "description": "The content of the component." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
+  },
   "classDescriptions": {},
-  "slotDescriptions": { "conversationsPane": "", "root": "", "threadPane": "" }
+  "slotDescriptions": {
+    "conversationsPane": "The component that renders the conversations pane.",
+    "root": "The component that renders the root.",
+    "threadPane": "The component that renders the thread pane."
+  }
 }

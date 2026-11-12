@@ -18,7 +18,6 @@ import type {
   SchedulerRenderableEventOccurrence,
   TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   schedulerEventSelectors,
@@ -27,7 +26,6 @@ import {
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
-  createAdapterDate,
   getCustomEventProperties,
   getEventResourceIds,
   getOccurrenceDataTimezone,
@@ -63,42 +61,31 @@ import { eventDialogFormSelectors } from '../event-dialog/form/EventDialogFormSt
 import { usePushPlaceholder } from '../event-dialog/usePushPlaceholder';
 import { focusFirstInvalid } from '../scheduler-form/focusFirstInvalid';
 import { deleteOccurrenceAndRestoreFocus } from '../../utils/focus-utils';
+import {
+  dialogContentBaseStyles,
+  dialogFormBaseStyles,
+  getDialogFormActionsBaseStyles,
+} from '../../constants/dialogStyles';
 import { getUserFacingErrorMessage } from '../../utils/user-facing-error';
 
-export const EventDialogFormActions = styled(DialogActions, {
+const EventDialogFormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
   slot: 'FormActions',
-})(({ theme }) => ({
-  padding: theme.spacing(3),
-  gap: theme.spacing(2),
-}));
+})(({ theme }) => getDialogFormActionsBaseStyles(theme));
 
-export const EventDialogContentRoot = styled(MuiDialogContent, {
+const EventDialogContentRoot = styled(MuiDialogContent, {
   name: 'MuiEventDialog',
   slot: 'DialogContent',
 })({
-  cursor: 'default',
-  userSelect: 'text',
-  padding: 0,
+  ...dialogContentBaseStyles,
   minWidth: 360,
   width: 450,
-  // Shrink to fit the paper (capped at the viewport) so the form doesn't overflow on mobile screens.
-  maxWidth: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  overflow: 'hidden',
-  maxHeight: '100%',
 });
 
-export const EventDialogForm = styled('form', {
+const EventDialogForm = styled('form', {
   name: 'MuiEventDialog',
   slot: 'Form',
-})({
-  display: 'flex',
-  flexDirection: 'column',
-  flex: 1,
-  minHeight: 0,
-});
+})(dialogFormBaseStyles);
 
 const EventDialogTabsContainer = styled('div', {
   name: 'MuiEventDialog',
@@ -120,7 +107,6 @@ const RECURRENCE_FORM_KEYS = new Set(['recurrenceSelection', 'rruleDraft']);
 // Scheduler settings read when the async validation resolves; the submit
 // continuation must not use the render-time closure values.
 interface ResolutionSettings {
-  adapter: Adapter;
   displayTimezone: TemporalTimezone;
   shouldEventRequireResource: boolean;
   showRecurrence: boolean;
@@ -372,7 +358,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // already re-runs against the current rules, so the checks and the
       // serialization read one current snapshot of the scheduler settings too.
       const current: ResolutionSettings = {
-        adapter: store.state.adapter,
         displayTimezone: schedulerOtherSelectors.displayTimezone(store.state),
         shouldEventRequireResource: schedulerOtherSelectors.shouldEventRequireResource(store.state),
         showRecurrence: schedulerOtherSelectors.areRecurringEventsAvailable(store.state),
@@ -476,9 +461,9 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         rruleToSubmit = recurrencePresets[values.recurrenceSelection];
       }
 
-      // The store receives adapter values, labeled with the display timezone the fields are read in.
-      const start = createAdapterDate(current.adapter, range.start, current.displayTimezone);
-      const end = createAdapterDate(current.adapter, range.end, current.displayTimezone);
+      // The store receives the instants of the fields, read in the display timezone.
+      const start = new Date(range.start);
+      const end = new Date(range.end);
       if (isCreation) {
         store.createEvent({ ...metaChanges, start, end, rrule: rruleToSubmit });
       } else if (

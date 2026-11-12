@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { BarChart, BarChartProps, barClasses } from '@mui/x-charts/BarChart';
+import type { BarChartProps } from '@mui/x-charts/BarChart';
+import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';

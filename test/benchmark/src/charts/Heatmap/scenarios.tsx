@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Heatmap, HeatmapValueType } from '@mui/x-charts-pro';
+import type { HeatmapValueType } from '@mui/x-charts-pro';
+import { Heatmap } from '@mui/x-charts-pro';
 import { defineScenario } from '../../utils/scenario';
 
 const dataLength = 100;

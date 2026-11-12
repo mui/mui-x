@@ -5,11 +5,11 @@ import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import IndeterminateCheckBoxOutlinedIcon from '@mui/icons-material/IndeterminateCheckBoxOutlined';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
+import type { TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import {
   TreeItemContent,
   TreeItemLabel,
   TreeItemRoot,
-  TreeItemProps,
   TreeItemGroupTransition,
 } from '@mui/x-tree-view/TreeItem';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';

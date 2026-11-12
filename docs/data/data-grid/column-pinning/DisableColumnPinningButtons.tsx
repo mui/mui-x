@@ -1,4 +1,5 @@
-import { DataGridPro, GridColDef, GridRowsProp } from '@mui/x-data-grid-pro';
+import type { GridColDef, GridRowsProp } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomTraderName,

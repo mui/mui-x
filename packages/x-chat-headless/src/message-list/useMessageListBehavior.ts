@@ -62,6 +62,9 @@ function isScrollableToBottom(root: HTMLElement | null, threshold: number) {
 
 export function useMessageListBehavior(parameters: {
   itemIds: string[];
+  /**
+   * The estimated height of a row in pixels, used until the row is measured.
+   */
   estimatedItemSize: number;
   onReachTop?: () => void;
   onReachBottom?: () => void;

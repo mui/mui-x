@@ -19,6 +19,8 @@ The `dataSource.getEvents(start, end)` method runs whenever the visible date ran
 
 To enable lazy loading, pass a `dataSource` object with a `getEvents` method to the Event Calendar.
 The `getEvents` method receives a date range and should return a promise that resolves with the events for that range.
+The `start` and `end` of the range are instants that bound the visible days of `displayTimezone`.
+Compare them with the instants of your events, or read their days in `displayTimezone`, as the timezone of the browser can put them on other days.
 
 When you provide `dataSource`, you don't need the `events` prop—events are fetched through the data source instead.
 

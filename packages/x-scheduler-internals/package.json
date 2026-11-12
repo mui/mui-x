@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler-internals",
-  "version": "9.0.0-beta.14",
+  "version": "9.0.0-beta.15",
   "author": "MUI Team",
   "description": "The community edition of the MUI X Scheduler internals.",
   "license": "MIT",
@@ -26,8 +26,6 @@
     "./scheduler-selectors": "./src/scheduler-selectors/index.ts",
     "./sort-event-occurrences": "./src/sort-event-occurrences/index.ts",
     "./standalone-event": "./src/standalone-event/index.ts",
-    "./use-adapter": "./src/use-adapter/index.ts",
-    "./use-adapter-context": "./src/use-adapter-context/index.ts",
     "./use-auto-scroll-for-time-grid": "./src/use-auto-scroll-for-time-grid/index.ts",
     "./use-event-calendar": "./src/use-event-calendar/index.ts",
     "./use-event-calendar-store-context": "./src/use-event-calendar-store-context/index.ts",
@@ -72,20 +70,18 @@
     "@babel/runtime": "catalog:",
     "@base-ui/react": "catalog:",
     "@base-ui/utils": "catalog:",
-    "@date-fns/tz": "catalog:",
     "@mui/x-internals": "workspace:*",
-    "date-fns": "catalog:",
-    "prop-types": "catalog:",
-    "use-sync-external-store": "catalog:"
+    "prop-types": "catalog:"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
+    "@date-fns/tz": "catalog:",
     "@mui/internal-test-utils": "catalog:",
     "@types/prop-types": "catalog:",
-    "@types/use-sync-external-store": "catalog:",
+    "date-fns": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"

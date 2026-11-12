@@ -1,9 +1,7 @@
 import * as React from 'react';
+import type { GridRowHeightParams, GridColDef, GridDensity } from '@mui/x-data-grid';
 import {
   DataGrid,
-  GridRowHeightParams,
-  GridColDef,
-  GridDensity,
   Toolbar,
   ToolbarButton,
   useGridApiContext,

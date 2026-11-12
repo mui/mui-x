@@ -1,5 +1,5 @@
 import { LineChart } from '@mui/x-charts/LineChart';
-import { XAxis } from '@mui/x-charts/models';
+import type { XAxis } from '@mui/x-charts/models';
 import {
   dateAxisFormatter,
   percentageFormatter,

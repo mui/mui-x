@@ -1,6 +1,14 @@
 {
   "componentDescription": "",
-  "propDescriptions": { "lines": { "description": "Number of shimmer lines to render." } },
+  "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "lines": { "description": "Number of shimmer lines to render." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    }
+  },
   "classDescriptions": {},
   "slotDescriptions": {
     "line": "Each animated shimmer line element.",

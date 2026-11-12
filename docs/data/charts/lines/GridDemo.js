@@ -1,5 +1,4 @@
 import { LineChart } from '@mui/x-charts/LineChart';
-
 import {
   dateAxisFormatter,
   percentageFormatter,

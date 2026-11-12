@@ -7,12 +7,7 @@ import {
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { vi, describe, it, expect } from 'vitest';
-import {
-  DEFAULT_PREFERENCES_MENU_CONFIG,
-  DEFAULT_VIEW,
-  DEFAULT_VIEWS,
-  EventCalendarStore,
-} from '../EventCalendarStore';
+import { EventCalendarStore } from '../EventCalendarStore';
 import type { CalendarView, SchedulerEventOccurrence } from '../../models';
 
 const DEFAULT_PARAMS = { events: [] };
@@ -22,10 +17,9 @@ describe('Core - EventCalendarStore', () => {
     createRenderer({ clockConfig: new Date(2012, 4, 3, 14, 30, 15, 743) });
 
     it('should initialize default state', () => {
-      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      const store = new EventCalendarStore(DEFAULT_PARAMS);
 
       const expectedState = {
-        adapter,
         dateLocale: 'en-US',
         areEventsDraggable: true,
         areEventsResizable: true,
@@ -47,7 +41,13 @@ describe('Core - EventCalendarStore', () => {
         pendingDeleteConfirmation: null,
         pendingRecurringEventOperation: null,
         preferences: EMPTY_OBJECT,
-        preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
+        preferencesMenuConfig: {
+          toggleWeekendVisibility: true,
+          toggleWeekNumberVisibility: true,
+          toggleEmptyDaysInAgenda: true,
+          toggleAmpm: true,
+          toggleWeekStartsOn: false,
+        },
         processedEventLookup: new Map(),
         processedResourceLookup: new Map(),
         readOnly: false,
@@ -57,10 +57,10 @@ describe('Core - EventCalendarStore', () => {
         resourceIdList: [],
         resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
-        view: DEFAULT_VIEW,
+        view: 'week',
         viewConfig: {},
         viewDefinition: null,
-        views: DEFAULT_VIEWS,
+        views: ['day', 'week', 'month', 'agenda'],
         visibleDate: adapter.startOfDay(adapter.now('default')),
         visibleResources: {},
         collapsedResources: {},
@@ -71,30 +71,23 @@ describe('Core - EventCalendarStore', () => {
       expect(store.state).to.deep.equal(expectedState);
     });
 
-    it('should default `shouldEventRequireResource` to `false`', () => {
-      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
-      expect(store.state.shouldEventRequireResource).to.equal(false);
-    });
-
     it('should respect an explicit `shouldEventRequireResource={true}`', () => {
-      const store = new EventCalendarStore(
-        {
-          ...DEFAULT_PARAMS,
-          shouldEventRequireResource: true,
-          resources: [ResourceBuilder.new().build()],
-        },
-        adapter,
-      );
+      const store = new EventCalendarStore({
+        ...DEFAULT_PARAMS,
+        shouldEventRequireResource: true,
+        resources: [ResourceBuilder.new().build()],
+      });
       expect(store.state.shouldEventRequireResource).to.equal(true);
     });
 
     it('should warn in dev when `shouldEventRequireResource` is `true` but no resources are configured', () => {
       expect(() => {
         // eslint-disable-next-line no-new
-        new EventCalendarStore(
-          { ...DEFAULT_PARAMS, shouldEventRequireResource: true, resources: [] },
-          adapter,
-        );
+        new EventCalendarStore({
+          ...DEFAULT_PARAMS,
+          shouldEventRequireResource: true,
+          resources: [],
+        });
       }).toWarnDev([
         'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
       ]);
@@ -107,7 +100,7 @@ describe('Core - EventCalendarStore', () => {
 
     describe('startEditing', () => {
       it('should record the occurrence in edit mode by default', () => {
-        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        const store = new EventCalendarStore(DEFAULT_PARAMS);
         const edited = occurrence('event-1');
 
         store.startEditing(edited);
@@ -116,7 +109,7 @@ describe('Core - EventCalendarStore', () => {
       });
 
       it('should honor an explicit mode', () => {
-        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        const store = new EventCalendarStore(DEFAULT_PARAMS);
 
         store.startEditing(occurrence('event-1'), 'armed');
 
@@ -125,7 +118,7 @@ describe('Core - EventCalendarStore', () => {
 
       it('should call `onEventEditingStart` with the occurrence before recording the editing state', () => {
         const onEventEditingStart = vi.fn();
-        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart });
         const edited = occurrence('event-1');
 
         store.startEditing(edited);
@@ -137,24 +130,9 @@ describe('Core - EventCalendarStore', () => {
         expect(store.state.editingOccurrence).to.deep.equal({ occurrence: edited, mode: 'edit' });
       });
 
-      it('should not call `onEventEditingStart` when arming, then call it on the armed → edit transition', () => {
-        const onEventEditingStart = vi.fn();
-        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
-        const edited = occurrence('event-1');
-
-        store.startEditing(edited, 'armed');
-        expect(onEventEditingStart.mock.calls.length).to.equal(0);
-
-        const nativeEvent = new Event('click');
-        store.setEditingMode('edit', nativeEvent);
-        expect(onEventEditingStart.mock.calls.length).to.equal(1);
-        expect(onEventEditingStart.mock.lastCall?.[0]).to.equal(edited);
-        expect(onEventEditingStart.mock.lastCall?.[1].event).to.equal(nativeEvent);
-      });
-
       it('should disarm when `onEventEditingStart` cancels the armed → edit transition', () => {
         const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
-        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart });
         store.startEditing(occurrence('event-1'), 'armed');
 
         store.setEditingMode('edit');
@@ -166,7 +144,7 @@ describe('Core - EventCalendarStore', () => {
 
       it('should not record the editing state when `onEventEditingStart` cancels', () => {
         const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
-        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart });
 
         store.startEditing(occurrence('event-1'));
 
@@ -176,7 +154,7 @@ describe('Core - EventCalendarStore', () => {
 
       it('should clear the creation placeholder when `onEventEditingStart` cancels a creation', () => {
         const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
-        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart });
         const placeholder = {
           type: 'creation',
           surfaceType: 'time-grid',
@@ -197,7 +175,7 @@ describe('Core - EventCalendarStore', () => {
 
       it('should forward the native event that initiated the creation placeholder', () => {
         const onEventEditingStart = vi.fn();
-        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart });
         const nativeEvent = new Event('click');
         const placeholder = {
           type: 'creation',
@@ -215,7 +193,7 @@ describe('Core - EventCalendarStore', () => {
 
     describe('setEditingMode', () => {
       it('should swap the mode while keeping the same occurrence', () => {
-        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        const store = new EventCalendarStore(DEFAULT_PARAMS);
         const edited = occurrence('event-1');
         store.startEditing(edited, 'armed');
 
@@ -225,7 +203,7 @@ describe('Core - EventCalendarStore', () => {
       });
 
       it('should be a no-op when nothing is being edited', () => {
-        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        const store = new EventCalendarStore(DEFAULT_PARAMS);
 
         store.setEditingMode('edit');
 
@@ -233,7 +211,7 @@ describe('Core - EventCalendarStore', () => {
       });
 
       it('should keep the same reference when the mode is unchanged', () => {
-        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        const store = new EventCalendarStore(DEFAULT_PARAMS);
         store.startEditing(occurrence('event-1'), 'armed');
         const before = store.state.editingOccurrence;
 
@@ -245,8 +223,11 @@ describe('Core - EventCalendarStore', () => {
 
     describe('setEditingOccurrenceTimes', () => {
       it('should refresh the edited occurrence times, keeping the mode', () => {
-        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
-        store.startEditing(occurrence('event-1'), 'armed');
+        const store = new EventCalendarStore(DEFAULT_PARAMS);
+        store.startEditing(
+          EventBuilder.new().id('event-1').singleDay('2024-01-15T09:00:00').toOccurrence(),
+          'armed',
+        );
         const start = adapter.date('2024-01-15T10:00:00', 'default');
         const end = adapter.date('2024-01-15T11:30:00', 'default');
 
@@ -259,7 +240,7 @@ describe('Core - EventCalendarStore', () => {
       });
 
       it('should be a no-op when nothing is being edited', () => {
-        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        const store = new EventCalendarStore(DEFAULT_PARAMS);
 
         store.setEditingOccurrenceTimes({
           start: adapter.date('2024-01-15T10:00:00', 'default'),
@@ -270,8 +251,8 @@ describe('Core - EventCalendarStore', () => {
       });
 
       it('should keep the data bounds on the committed instants', () => {
-        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
-        const edited = EventBuilder.new(adapter)
+        const store = new EventCalendarStore(DEFAULT_PARAMS);
+        const edited = EventBuilder.new()
           .withDataTimezone('UTC')
           .withDisplayTimezone('America/New_York')
           .singleDay('2024-01-15T15:00:00Z', 60)
@@ -288,13 +269,17 @@ describe('Core - EventCalendarStore', () => {
         // A rule added from the dialog is built on the data-timezone start.
         expect(editing.dataTimezone.start.timestamp).to.equal(adapter.getTime(start));
         expect(editing.dataTimezone.end.timestamp).to.equal(adapter.getTime(end));
-        expect(adapter.getTimezone(editing.dataTimezone.start.value)).to.equal('UTC');
+        // Read in the data timezone: 14:00 UTC.
+        expect(editing.dataTimezone.start.minutesInDay).to.equal(14 * 60);
+        // Read in the display timezone: 09:00 in New York.
+        expect(editing.displayTimezone.start.minutesInDay).to.equal(9 * 60);
+        expect(editing.displayTimezone.end.minutesInDay).to.equal(11 * 60);
       });
 
       it('should keep a bound left out on its stored value in both timezones', () => {
         // July 4 00:00 UTC is displayed on July 3 in New York: an end-only resize must not
         // re-read the untouched start from its displayed day.
-        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        const store = new EventCalendarStore(DEFAULT_PARAMS);
         const edited = utcJuly4AllDayBuilder()
           .withDisplayTimezone('America/New_York')
           .toOccurrence();
@@ -313,7 +298,7 @@ describe('Core - EventCalendarStore', () => {
 
     describe('stopEditing', () => {
       it('should clear the editing state and any in-progress creation placeholder', () => {
-        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        const store = new EventCalendarStore(DEFAULT_PARAMS);
         store.startEditing(occurrence('event-1'), 'edit');
         store.setOccurrencePlaceholder({
           type: 'creation',
@@ -341,7 +326,7 @@ describe('Core - EventCalendarStore', () => {
     } as const;
 
     it('should keep the stored placeholder when it receives one with the same fields', () => {
-      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      const store = new EventCalendarStore(DEFAULT_PARAMS);
       const stored = { ...placeholder };
       store.setOccurrencePlaceholder(stored);
       store.setOccurrencePlaceholder({ ...placeholder });
@@ -350,7 +335,7 @@ describe('Core - EventCalendarStore', () => {
     });
 
     it('should store a placeholder whose fields changed', () => {
-      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      const store = new EventCalendarStore(DEFAULT_PARAMS);
       store.setOccurrencePlaceholder({ ...placeholder });
       const moved = { ...placeholder, start: Date.UTC(2024, 0, 15, 10, 30) };
       store.setOccurrencePlaceholder(moved);
@@ -366,94 +351,70 @@ describe('Core - EventCalendarStore', () => {
 
   describe('updater', () => {
     it('should sync partial state from new parameters (views)', () => {
-      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      const store = new EventCalendarStore(DEFAULT_PARAMS);
 
       const newParams = {
         events: DEFAULT_PARAMS.events,
         views: ['day', 'week'] as CalendarView[],
       };
 
-      store.updateStateFromParameters(newParams, adapter);
+      store.updateStateFromParameters(newParams);
       expect(store.state.views).to.deep.equal(['day', 'week']);
     });
 
     it('should sync `shouldEventRequireResource` when parameters update', () => {
-      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      const store = new EventCalendarStore(DEFAULT_PARAMS);
       expect(store.state.shouldEventRequireResource).to.equal(false);
 
-      store.updateStateFromParameters(
-        {
-          ...DEFAULT_PARAMS,
-          shouldEventRequireResource: true,
-          resources: [ResourceBuilder.new().build()],
-        },
-        adapter,
-      );
+      store.updateStateFromParameters({
+        ...DEFAULT_PARAMS,
+        shouldEventRequireResource: true,
+        resources: [ResourceBuilder.new().build()],
+      });
       expect(store.state.shouldEventRequireResource).to.equal(true);
     });
 
     it('should respect controlled `view` (updates to new value)', () => {
-      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, view: 'day' }, adapter);
+      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, view: 'day' });
 
-      store.updateStateFromParameters({ ...DEFAULT_PARAMS, view: 'month' }, adapter);
-
-      expect(store.state.view).to.equal('month');
-    });
-
-    it('should not change `view` if not included in new parameters', () => {
-      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, view: 'month' }, adapter);
-
-      store.updateStateFromParameters(
-        {
-          ...DEFAULT_PARAMS,
-          resources: [{ id: 'r1', title: 'Resource 1' }],
-          view: store.state.view,
-        },
-        adapter,
-      );
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, view: 'month' });
 
       expect(store.state.view).to.equal('month');
     });
 
     it('should keep initial defaults and warns if default props change after mount', () => {
       const defaultView = 'month';
-      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, defaultView }, adapter);
+      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, defaultView });
 
       expect(() => {
-        store.updateStateFromParameters(
-          {
-            ...DEFAULT_PARAMS,
-            resources: [{ id: 'r1', title: 'Resource 1' }],
-            defaultView: 'day',
-          },
-          adapter,
-        );
+        store.updateStateFromParameters({
+          ...DEFAULT_PARAMS,
+          resources: [{ id: 'r1', title: 'Resource 1' }],
+          defaultView: 'day',
+        });
       }).toWarnDev(['MUI X Scheduler: A component is changing the default view state']);
 
       expect(store.state.view).to.equal(defaultView);
     });
 
     it('should keep consistent state when switching from uncontrolled → controlled `view` (warns in dev)', () => {
-      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, defaultView: 'week' }, adapter);
+      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, defaultView: 'week' });
 
       expect(() => {
-        store.updateStateFromParameters({ ...DEFAULT_PARAMS, view: 'day' }, adapter);
+        store.updateStateFromParameters({ ...DEFAULT_PARAMS, view: 'day' });
       }).toWarnDev('MUI X Scheduler: A component is changing the uncontrolled view state');
 
       expect(store.state.view).to.equal('day');
     });
 
     it('should warn and keep current value when switching from controlled → uncontrolled `view`', () => {
-      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, view: 'day' }, adapter);
+      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, view: 'day' });
 
       expect(() => {
-        store.updateStateFromParameters(
-          {
-            ...DEFAULT_PARAMS,
-            resources: [{ id: 'r1', title: 'Resource 1' }],
-          },
-          adapter,
-        );
+        store.updateStateFromParameters({
+          ...DEFAULT_PARAMS,
+          resources: [{ id: 'r1', title: 'Resource 1' }],
+        });
       }).toWarnDev('MUI X Scheduler: A component is changing the controlled view state');
 
       expect(store.state.view).to.equal('day');

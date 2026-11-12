@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 
 /**
  * Defines the reference as `React.RefObject` for React 19 and up and `React.MutableRefObject` for React 18 and below.

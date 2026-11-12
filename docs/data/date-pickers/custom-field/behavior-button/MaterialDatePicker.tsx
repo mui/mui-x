@@ -2,18 +2,18 @@ import useForkRef from '@mui/utils/useForkRef';
 import Button from '@mui/material/Button';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import {
-  DatePicker,
+import type {
   DatePickerProps,
   DatePickerFieldProps,
 } from '@mui/x-date-pickers/DatePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 import {
   useSplitFieldProps,
   useParsedFormat,
   usePickerContext,
 } from '@mui/x-date-pickers/hooks';
-import { DateFieldProps } from '@mui/x-date-pickers/DateField';
+import type { DateFieldProps } from '@mui/x-date-pickers/DateField';
 
 function ButtonDateField(
   props: DatePickerFieldProps &

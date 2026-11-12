@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
-import { RangeButtonValue } from '@mui/x-charts-pro/ChartsToolbarPro';
+import type { RangeButtonValue } from '@mui/x-charts-pro/ChartsToolbarPro';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';

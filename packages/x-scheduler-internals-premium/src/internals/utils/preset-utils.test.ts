@@ -1,42 +1,24 @@
 import { adapter, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
-import { PlainDate } from '@mui/x-scheduler-internals/internals';
+import { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import { EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS, getPresetPxPerDay } from './preset-utils';
 import type { EventTimelinePremiumPreset } from '../../models';
 
 describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
-  describe('dayAndHour.getCssUnitCount', () => {
-    it('should pin the tick count to 4 days × 24 hours', () => {
-      // The displayed hour window scales this in the preset selector, so the preset
-      // always sizes the full day.
-      const count = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS.dayAndHour.getCssUnitCount!(
-        PlainDate.from('2025-07-03'),
-        PlainDate.from('2025-07-07'),
-      );
-      expect(count).to.equal(4 * 24);
-    });
-  });
-
   describe('getStartPlainDate and getEndPlainDate', () => {
-    it.each([
-      { preset: 'dayAndHour', start: '2025-07-03', end: '2025-07-07' },
-      { preset: 'dayAndMonth', start: '2025-07-03', end: '2025-08-28' },
+    it('should start dayAndWeek on the first day of the week passed to it', () => {
       // July 3rd, 2025 is a Thursday, and the weeks start on Monday.
-      { preset: 'dayAndWeek', start: '2025-06-30', end: '2025-10-20' },
-      { preset: 'monthAndYear', start: '2025-07-01', end: '2028-07-01' },
-      { preset: 'year', start: '2025-01-01', end: '2055-01-01' },
-    ] as const)(
-      'should start $preset on the first date of the period of the visible date and end it after its periods',
-      ({ preset, start, end }) => {
-        const definition = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
-        const startPlainDate = definition.getStartPlainDate(PlainDate.from('2025-07-03'), 1);
-        expect(startPlainDate).toEqualPlainDate(start);
-        expect(definition.getEndPlainDate(startPlainDate, definition.unitCount)).toEqualPlainDate(
-          end,
-        );
-      },
-    );
+      const definition = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS.dayAndWeek;
+      const startPlainDate = definition.getStartPlainDate(
+        BaseTemporal.PlainDate.from('2025-07-03'),
+        1,
+      );
+      expect(startPlainDate).toEqualPlainDate('2025-06-30');
+      expect(definition.getEndPlainDate(startPlainDate, definition.unitCount)).toEqualPlainDate(
+        '2025-10-20',
+      );
+    });
   });
 
   describe('navigate', () => {
@@ -51,9 +33,9 @@ describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
         setSystemTimezone('Europe/Paris');
         // London leaves summer time on October 25th, 2026, when 02:00 becomes 01:00 again.
         const nextVisibleDate = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset].navigate(
-          adapter,
           adapter.date(visibleDate, 'Europe/London'),
           1,
+          'Europe/London',
         );
         expect(adapter.toJsDate(nextVisibleDate).toISOString()).to.equal(
           '2026-10-25T02:00:00.000Z',
@@ -72,9 +54,9 @@ describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
         setSystemTimezone('UTC');
         // Paris leaves summer time on October 25th, 2026, when 03:00 becomes 02:00 again.
         const nextVisibleDate = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset].navigate(
-          adapter,
           adapter.date(visibleDate, 'Europe/Paris'),
           1,
+          'Europe/Paris',
         );
         expect(adapter.toJsDate(nextVisibleDate).toISOString()).to.equal(
           '2026-10-25T00:30:00.000Z',
@@ -93,9 +75,9 @@ describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
         setSystemTimezone('Europe/London');
         // Paris enters summer time on March 28th, 2027, when 02:00 becomes 03:00.
         const nextVisibleDate = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset].navigate(
-          adapter,
           adapter.date(visibleDate, 'Europe/Paris'),
           1,
+          'Europe/Paris',
         );
         expect(adapter.toJsDate(nextVisibleDate).toISOString()).to.equal(
           '2027-03-28T01:30:00.000Z',

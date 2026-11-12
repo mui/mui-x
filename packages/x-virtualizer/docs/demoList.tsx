@@ -1,7 +1,8 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import Box from '@mui/material/Box';
-import { useVirtualizer, Virtualizer, LayoutList } from '@mui/x-virtualizer';
+import type { Virtualizer } from '@mui/x-virtualizer';
+import { useVirtualizer, LayoutList } from '@mui/x-virtualizer';
 
 /* eslint-disable @typescript-eslint/no-use-before-define */
 

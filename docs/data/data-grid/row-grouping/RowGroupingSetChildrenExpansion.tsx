@@ -1,8 +1,8 @@
 import * as React from 'react';
+import type { GridGroupNode } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
   GRID_ROOT_GROUP_ID,
-  GridGroupNode,
   gridRowNodeSelector,
   useGridApiRef,
   useKeepGroupedColumnsHidden,

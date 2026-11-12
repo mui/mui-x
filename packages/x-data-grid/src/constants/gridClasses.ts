@@ -110,6 +110,9 @@ export interface GridClasses {
    * Styles applied to the root element while it is being autosized.
    */
   autosizing: string;
+  /**
+   * Styles applied to the root element if a side panel is open.
+   */
   withSidePanel: string;
   /**
    * Styles applied to the icon of the boolean cell.
@@ -288,7 +291,13 @@ export interface GridClasses {
    * Styles applied to the column header if the column has a filter applied to it.
    */
   'columnHeader--filtered': string;
+  /**
+   * Styles applied to the column header if it is pinned to the left.
+   */
   'columnHeader--pinnedLeft': string;
+  /**
+   * Styles applied to the column header if it is pinned to the right.
+   */
   'columnHeader--pinnedRight': string;
   /**
    * Styles applied to the last column header element.
@@ -617,6 +626,9 @@ export interface GridClasses {
    * Styles applied to the column header filter row.
    */
   headerFilterRow: string;
+  /**
+   * Styles applied to the element that wraps the main content of the grid.
+   */
   mainContent: string; // TODO: come up with a better name
   /**
    * Styles applied to the main container element.
@@ -924,6 +936,9 @@ export interface GridClasses {
    * Styles applied the column header if `showColumnVerticalBorder={true}`.
    */
   'columnHeader--withRightBorder': string;
+  /**
+   * Styles applied to the column header if it has a left border.
+   */
   'columnHeader--withLeftBorder': string;
   /**
    * Styles applied to the root of the grouping column of the tree data.
@@ -999,6 +1014,10 @@ export interface GridClasses {
    * Styles applied to the pivot panel field when sorted.
    */
   'pivotPanelField--sorted': string;
+  /**
+   * Styles applied to the drag preview of a pivot panel field when it's dragged with touch or pen.
+   */
+  'pivotPanelField--dragging': string;
   /**
    * Styles applied to the pivot panel header.
    */
@@ -1394,9 +1413,11 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'virtualScrollerContent',
   'virtualScrollerContent--overflowed',
   'virtualScrollerRenderZone',
+  'pivotPanelBody',
   'pivotPanelAvailableFields',
   'pivotPanelField',
   'pivotPanelField--sorted',
+  'pivotPanelField--dragging',
   'pivotPanelFieldActionContainer',
   'pivotPanelFieldCheckbox',
   'pivotPanelFieldDragIcon',

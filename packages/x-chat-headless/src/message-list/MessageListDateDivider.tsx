@@ -42,14 +42,32 @@ function isSameCalendarDay(left: Date, right: Date) {
 }
 
 export interface MessageListDateDividerSlots {
+  /**
+   * The component that renders the divider.
+   */
   divider: React.ElementType;
+  /**
+   * The component that renders the line.
+   */
   line: React.ElementType;
+  /**
+   * The component that renders the label.
+   */
   label: React.ElementType;
 }
 
 export interface MessageListDateDividerSlotProps {
+  /**
+   * The props used for the divider slot.
+   */
   divider?: SlotComponentProps<'div', {}, MessageListDateDividerOwnerState>;
+  /**
+   * The props used for the line slot.
+   */
   line?: SlotComponentProps<'div', {}, MessageListDateDividerOwnerState>;
+  /**
+   * The props used for the label slot.
+   */
   label?: SlotComponentProps<'div', {}, MessageListDateDividerOwnerState>;
 }
 
@@ -57,9 +75,23 @@ export interface MessageListDateDividerProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   'children'
 > {
+  /**
+   * The id of the message this row belongs to.
+   */
   messageId: string;
+  /**
+   * The index of the row in `items`.
+   */
   index?: number;
+  /**
+   * The ids of the messages in the list, in order.
+   */
   items?: string[];
+  /**
+   * Formats the date displayed in the divider.
+   * @param {Date} date The date of the message.
+   * @returns {React.ReactNode} The formatted date.
+   */
   formatDate?: (date: Date) => React.ReactNode;
   /**
    * Decides whether the divider renders above the message, replacing the
@@ -79,11 +111,22 @@ export interface MessageListDateDividerProps extends Omit<
   shouldShowDivider?: (params: {
     message: ChatMessage;
     previousMessage: ChatMessage | null;
+    /**
+     * The index of the message in the list.
+     */
     index: number;
     date: Date | null;
     previousDate: Date | null;
   }) => boolean;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<MessageListDateDividerSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: MessageListDateDividerSlotProps;
 }
 

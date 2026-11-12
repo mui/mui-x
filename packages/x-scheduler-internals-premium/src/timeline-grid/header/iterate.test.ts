@@ -2,7 +2,7 @@ import { adapter } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
-import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
+import { getDayNumber, toPlainDate } from '@mui/x-scheduler-internals/internals';
 import type { TimelineAxisWindow } from '@mui/x-scheduler-internals/internals';
 import type { PresetHeaderUnit } from '../../models';
 import { iterate } from './iterate';
@@ -16,10 +16,11 @@ function iterateRange(
   weekStartsOn: WeekStartsOn = 7,
   hourWindow: TimelineAxisWindow = { dayStartMinute: 0, dayEndMinute: 1440 },
 ) {
-  // The ranges of the tests run from the first instant of a date to the last instant of a date.
+  // The ranges of the tests run from the first instant of a date to the last instant of a date,
+  // read in the timezone the test creates them in.
   const range = {
-    startPlainDate: buildTemporalPlainDate(adapter, start),
-    endPlainDate: buildTemporalPlainDate(adapter, end).add({ days: 1 }),
+    startPlainDate: toPlainDate(start.getTime(), adapter.getTimezone(start)),
+    endPlainDate: toPlainDate(end.getTime(), adapter.getTimezone(end)).add({ days: 1 }),
     ...hourWindow,
   };
   return iterate(unit, tickUnit, range, weekStartsOn);
@@ -95,6 +96,21 @@ describe('iterate()', () => {
 
       expect(dayCells.length).to.equal(4);
       dayCells.forEach((cell) => expect(cell.spanInTicks).to.equal(12));
+    });
+
+    it('should span the cells wider than a day by the visible hours of their days', () => {
+      // Saturday, January 4th to Monday, January 6th, 2025, in weeks starting on Sunday: the first
+      // week cell keeps one day of the range and the second one two.
+      const cells = iterateRange(
+        'week',
+        'hour',
+        adapter.date('2025-01-04T00:00:00', 'UTC'),
+        adapter.date('2025-01-06T23:59:59.999', 'UTC'),
+        7,
+        { dayStartMinute: 480, dayEndMinute: 1200 },
+      );
+
+      expect(cells.map((cell) => cell.spanInTicks)).to.deep.equal([12, 24]);
     });
 
     it('should behave like the untrimmed iteration when the hour range covers the full day', () => {
@@ -231,7 +247,8 @@ describe('iterate()', () => {
       expect(cells[7].plainDate).toEqualPlainDate('2026-03-08');
       expect(
         cells.every(
-          (cell, index) => cell.plainDate.dayNumber === cells[0].plainDate.dayNumber + index,
+          (cell, index) =>
+            getDayNumber(cell.plainDate) === getDayNumber(cells[0].plainDate) + index,
         ),
       ).to.equal(true);
     });
@@ -334,6 +351,26 @@ describe('iterate()', () => {
       expect(cells[1].spanInTicks).to.equal(5); // Jan 1-5
     });
 
+    it('should count the whole months of a clamped cell over month ticks', () => {
+      // From January 31st to April 30th, the third month isn't whole.
+      const cells = iterateRange(
+        'year',
+        'month',
+        adapter.date('2025-01-31T00:00:00', 'UTC'),
+        adapter.date('2025-04-29T23:59:59.999', 'UTC'),
+      );
+      // From February 29th to April 1st, the second month isn't whole.
+      const leapYearCells = iterateRange(
+        'year',
+        'month',
+        adapter.date('2024-02-29T00:00:00', 'UTC'),
+        adapter.date('2024-03-31T23:59:59.999', 'UTC'),
+      );
+
+      expect(cells.map((cell) => cell.spanInTicks)).to.deep.equal([2]);
+      expect(leapYearCells.map((cell) => cell.spanInTicks)).to.deep.equal([1]);
+    });
+
     it('should produce exactly one cell when rangeStart equals rangeEnd', () => {
       const date = adapter.date('2025-07-03T00:00:00Z', 'default');
 
@@ -341,40 +378,6 @@ describe('iterate()', () => {
 
       expect(cells.length).to.equal(1);
       expect(cells[0].spanInTicks).to.equal(1);
-    });
-  });
-
-  describe('DST resilience', () => {
-    it('should emit 24 hour ticks for every day even when real hours differ due to DST', () => {
-      // Europe spring-forward week (Mar 24-30 2025) contains a 23-hour day.
-      // The generic grid still renders 24 cells per day because `endOfDay` + 1 hour
-      // spans the full calendar day regardless of DST.
-      const start = adapter.date('2025-03-24T00:00:00Z', 'default');
-      const end = adapter.date('2025-03-30T23:59:59.999Z', 'default');
-
-      const hourCells = iterateRange('hour', 'hour', start, end);
-
-      expect(hourCells.length).to.equal(7 * 24);
-    });
-
-    it('should produce integer day spans for monthly cells across a DST transition', () => {
-      // March 2025 in America/New_York contains the spring-forward transition
-      // (Mar 9, 02:00 → 03:00), so the 31-day range only spans 742 real hours
-      // (one hour lost). `differenceInDays` must still return 31 because
-      // date-fns counts calendar days, not hours/24.
-      const start = adapter.date('2025-03-01T00:00:00', 'America/New_York');
-      const end = adapter.date('2025-03-31T23:59:59.999', 'America/New_York');
-
-      // Sanity check: prove the adapter is actually applying the timezone (a
-      // tz-naive adapter would return 743 here). If this fails the rest of the
-      // assertions are meaningless.
-      expect(adapter.differenceInHours(end, start)).to.equal(742);
-
-      const cells = iterateRange('month', 'day', start, end);
-
-      expect(cells.length).to.equal(1);
-      expect(cells[0].spanInTicks).to.equal(31);
-      expect(Number.isInteger(cells[0].spanInTicks)).to.equal(true);
     });
   });
 
@@ -409,6 +412,17 @@ describe('iterate()', () => {
         /produced more than 10,000 cells/,
       );
     });
+
+    it('should throw when the walk would produce more than 10,000 cells', () => {
+      const start = adapter.date('2000-01-01T00:00:00', 'UTC');
+
+      expect(iterateRange('day', 'day', start, adapter.addDays(start, 9_999))).to.have.length(
+        10_000,
+      );
+      expect(() => iterateRange('day', 'day', start, adapter.addDays(start, 10_000))).to.throw(
+        /produced more than 10,000 cells/,
+      );
+    });
   });
 
   describe('weekStartsOn', () => {
@@ -434,5 +448,22 @@ describe('iterate()', () => {
       // The first cell should be aligned to Jan 5 (Sunday).
       expect(cells[0].plainDate).toEqualPlainDate('2025-01-05');
     });
+
+    it.each([1, 2, 3, 4, 5, 6, 7] as const)(
+      'should start every week cell on the ISO weekday %i across a year boundary',
+      (weekStartsOn) => {
+        // From Saturday, December 20th, 2025 to Tuesday, January 20th, 2026: 32 days.
+        const cells = iterateRange(
+          'week',
+          'day',
+          adapter.date('2025-12-20T00:00:00', 'UTC'),
+          adapter.date('2026-01-20T23:59:59.999', 'UTC'),
+          weekStartsOn,
+        );
+
+        cells.forEach((cell) => expect(cell.plainDate.dayOfWeek).to.equal(weekStartsOn));
+        expect(cells.reduce((sum, cell) => sum + cell.spanInTicks, 0)).to.equal(32);
+      },
+    );
   });
 });

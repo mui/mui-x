@@ -1,4 +1,3 @@
-import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapter-date-fns';
 import {
   adapter,
   DEFAULT_EVENT_CALENDAR_STATE,
@@ -10,19 +9,15 @@ import { describe, it, expect } from 'vitest';
 import { eventCalendarOccurrencePlaceholderSelectors } from './eventCalendarOccurrencePlaceholderSelectors';
 import type { EventCalendarState } from '../use-event-calendar';
 import { processDate } from '../process-date';
-import { createProcessedDate } from '../internals/utils/plain-date-utils/adapter';
+import { createProcessedDate } from '../internals/utils/plain-date-utils/date';
 
 // A UTC creation placeholder on December 30th, 2011, on a Pacific/Apia system, which skipped that
-// date: the adapter's `isSameDay()` counts it as the same day as December 31st.
-// The values are built from timestamps, as the adapter also parses the dates of that day wrong.
+// date: read in the timezone of the system, it falls on December 31st.
 // Browsers cannot change their timezone through process.env.TZ.
 function getStateInUTCOnApiaSystem() {
   setSystemTimezone('Pacific/Apia');
-  // A new adapter, as adapters cache data computed in the current system timezone.
-  const systemAdapter = new TemporalAdapterDateFns();
   const state: EventCalendarState = {
     ...DEFAULT_EVENT_CALENDAR_STATE,
-    adapter: systemAdapter,
     displayTimezone: 'UTC',
     occurrencePlaceholder: {
       type: 'creation',
@@ -32,8 +27,8 @@ function getStateInUTCOnApiaSystem() {
       resourceId: null,
     },
   };
-  const december30 = createProcessedDate(systemAdapter, Date.UTC(2011, 11, 30), 'UTC');
-  const december31 = createProcessedDate(systemAdapter, Date.UTC(2011, 11, 31), 'UTC');
+  const december30 = createProcessedDate(Date.UTC(2011, 11, 30), 'UTC');
+  const december31 = createProcessedDate(Date.UTC(2011, 11, 31), 'UTC');
   return { state, december30, december31 };
 }
 
@@ -133,7 +128,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
 
   describe('isCreatingInDayCell', () => {
     const day = adapter.date('2024-01-15', 'default');
-    const processedDay = processDate(day, adapter);
+    const processedDay = processDate(day, 'default');
 
     it('should return false when there is no placeholder', () => {
       const state = DEFAULT_EVENT_CALENDAR_STATE;
@@ -347,20 +342,23 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     });
 
     it('should return false when end == dayStart', () => {
+      // A time grid that starts at 08:00 passes it as the start of the range, so a placeholder of
+      // the same day can end exactly where the range starts.
+      const windowStart = adapter.setHours(dayStart, 8);
       const state: EventCalendarState = {
         ...DEFAULT_EVENT_CALENDAR_STATE,
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.getTime(adapter.addMinutes(dayStart, -60)),
-          end: adapter.getTime(dayStart), // end > dayStart is false
+          start: adapter.getTime(adapter.setHours(dayStart, 7)),
+          end: adapter.getTime(windowStart), // end > dayStart is false
           resourceId: null,
         },
       };
       expect(
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
-          adapter.getTime(dayStart),
+          adapter.getTime(windowStart),
           adapter.getTime(dayEnd),
         ),
       ).to.equal(false);

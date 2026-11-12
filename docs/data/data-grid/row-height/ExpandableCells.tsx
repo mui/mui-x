@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGrid, GridRenderCellParams, GridColDef } from '@mui/x-data-grid';
+import type { GridRenderCellParams, GridColDef } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import Link from '@mui/material/Link';
 import {
   randomInt,

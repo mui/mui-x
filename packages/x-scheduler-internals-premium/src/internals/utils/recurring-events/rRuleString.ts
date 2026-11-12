@@ -1,12 +1,11 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type {
   RecurringEventByDayValue,
   RecurringEventFrequency,
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
-import { createAdapterDate, ZonedDateTime } from '@mui/x-scheduler-internals/internals';
+import { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';
 import {
   NOT_LOCALIZED_WEEK_DAYS_INDEXES,
@@ -29,7 +28,7 @@ function parseUntilUtc(value: string): number | null {
   }
   const [year, month, day, hour, minute, second] = match.slice(1).map(Number);
   try {
-    return ZonedDateTime.from(
+    return BaseTemporal.ZonedDateTime.from(
       { year, month, day, hour, minute, second, timeZone: 'UTC' },
       { overflow: 'reject' },
     ).epochMilliseconds;
@@ -154,7 +153,6 @@ function validateRule(rule: SchedulerProcessedEventRecurrenceRule): void {
  * Its BYMONTHDAY values are validated like the ones of an RRULE string.
  */
 function readRuleObject(
-  adapter: Adapter,
   input: SchedulerEventRecurrenceRule,
   timezone: TemporalTimezone,
 ): SchedulerProcessedEventRecurrenceRule {
@@ -174,7 +172,7 @@ function readRuleObject(
     throwInvalidByMonthDay(input.byMonthDay.join(','));
   }
   if (input.until != null) {
-    rule = { ...rule, until: resolveEventDate(input.until, timezone, adapter) };
+    rule = { ...rule, until: resolveEventDate(input.until, timezone) };
   }
   return rule;
 }
@@ -184,23 +182,15 @@ function readRuleObject(
  * The occurrences of the rules it returns can be computed.
  */
 export function parseRRule(
-  adapter: Adapter,
   input: string | SchedulerEventRecurrenceRule,
   timezone: TemporalTimezone,
 ): SchedulerProcessedEventRecurrenceRule {
-  const rule =
-    typeof input === 'object'
-      ? readRuleObject(adapter, input, timezone)
-      : readRuleString(adapter, input, timezone);
+  const rule = typeof input === 'object' ? readRuleObject(input, timezone) : readRuleString(input);
   validateRule(rule);
   return rule;
 }
 
-function readRuleString(
-  adapter: Adapter,
-  input: string,
-  timezone: TemporalTimezone,
-): SchedulerProcessedEventRecurrenceRule {
+function readRuleString(input: string): SchedulerProcessedEventRecurrenceRule {
   const rruleObject: Record<string, string> = {};
   const parts = input
     .split(';')
@@ -300,16 +290,13 @@ function readRuleString(
       );
     }
 
-    rrule.until = createAdapterDate(adapter, parsed, timezone);
+    rrule.until = new Date(parsed);
   }
 
   return rrule;
 }
 
-export function serializeRRule(
-  adapter: Adapter,
-  rule: SchedulerProcessedEventRecurrenceRule,
-): string {
+export function serializeRRule(rule: SchedulerProcessedEventRecurrenceRule): string {
   const parts: string[] = [];
 
   parts.push(`FREQ=${rule.freq}`);
@@ -337,7 +324,7 @@ export function serializeRRule(
 
   if (rule.until) {
     // RFC 5545 writes UNTIL as a UTC date-time like `20250105T093000Z`.
-    const isoString = new Date(adapter.getTime(rule.until)).toISOString();
+    const isoString = rule.until.toISOString();
     const untilIso = `${isoString.slice(0, 19).replace(/[-:]/g, '')}Z`;
 
     parts.push(`UNTIL=${untilIso}`);
@@ -347,7 +334,6 @@ export function serializeRRule(
 }
 
 export function isSameRRule(
-  adapter: Adapter,
   rruleA: SchedulerProcessedEventRecurrenceRule | undefined,
   rruleB: SchedulerProcessedEventRecurrenceRule | undefined,
 ): boolean {
@@ -357,7 +343,7 @@ export function isSameRRule(
   if (!rruleA || !rruleB) {
     return false;
   }
-  return serializeRRule(adapter, rruleA) === serializeRRule(adapter, rruleB);
+  return serializeRRule(rruleA) === serializeRRule(rruleB);
 }
 
 /**

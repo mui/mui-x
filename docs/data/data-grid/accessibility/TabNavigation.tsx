@@ -5,12 +5,12 @@ import FormLabel from '@mui/material/FormLabel';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
-import {
-  DataGridPro,
+import type {
   DataGridProProps,
   GridColDef,
   GridColumnGroupingModel,
 } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 120 },

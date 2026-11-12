@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { StandaloneMonthView } from '@mui/x-scheduler/month-view';
 
 // Rows 1-2 are full from Jul 8 to Jul 20 (trip + filler), so "X overflow" can

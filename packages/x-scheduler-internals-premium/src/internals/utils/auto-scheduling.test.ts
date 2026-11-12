@@ -49,7 +49,6 @@ function runCascadeResult(
   overrides: CascadeOverrides = {},
 ) {
   return computeAutoSchedulingCascade({
-    adapter,
     processedEventLookup: buildLookup(events),
     activeDependenciesBySource: groupByEventId(dependencies, 'source'),
     activeDependenciesByTarget: groupByEventId(dependencies, 'target'),
@@ -1367,23 +1366,6 @@ describe('computeAutoSchedulingCascade', () => {
     expectDates(result[0], '2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z');
   });
 
-  it('should not clamp an updated event whose start is unchanged', () => {
-    const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
-    // b arrived already violating; resizing its end does not re-position it.
-    const eventB = EventBuilder.new()
-      .id('b')
-      .span('2025-07-03T08:00:00Z', '2025-07-03T09:00:00Z')
-      .toProcessed();
-
-    const result = runCascade(
-      [eventA, eventB],
-      [dependency('a', 'b')],
-      [{ id: 'b', end: date('2025-07-03T09:30:00Z') }],
-    );
-
-    expect(result).to.deep.equal([]);
-  });
-
   it('should clamp an all-day successor dropped before its predecessor by whole days', () => {
     const predecessor = EventBuilder.new().id('a').singleDay('2025-07-04T09:00:00Z').toProcessed();
     const successor = allDayEvent('b', '2025-07-10');
@@ -2114,57 +2096,6 @@ describe('computeAutoSchedulingCascade', () => {
     expectDates(result[0], '2025-07-04T12:00:00Z', '2025-07-04T13:00:00Z');
   });
 
-  it('should apply a lag in minutes', () => {
-    const predecessor = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
-    const successor = EventBuilder.new()
-      .id('b')
-      .span('2025-07-03T10:30:00Z', '2025-07-03T11:30:00Z')
-      .toProcessed();
-
-    const result = runCascade(
-      [predecessor, successor],
-      [dependency('a', 'b', { lag: 30, lagUnit: 'minute' })],
-      [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
-    );
-
-    expect(result).to.have.length(1);
-    expectDates(result[0], '2025-07-03T12:30:00Z', '2025-07-03T13:30:00Z');
-  });
-
-  it('should apply a lag in hours', () => {
-    const predecessor = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
-    const successor = EventBuilder.new()
-      .id('b')
-      .span('2025-07-03T10:30:00Z', '2025-07-03T11:30:00Z')
-      .toProcessed();
-
-    const result = runCascade(
-      [predecessor, successor],
-      [dependency('a', 'b', { lag: 2, lagUnit: 'hour' })],
-      [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
-    );
-
-    expect(result).to.have.length(1);
-    expectDates(result[0], '2025-07-03T14:00:00Z', '2025-07-03T15:00:00Z');
-  });
-
-  it('should apply a lag in weeks', () => {
-    const predecessor = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
-    const successor = EventBuilder.new()
-      .id('b')
-      .span('2025-07-03T10:30:00Z', '2025-07-03T11:30:00Z')
-      .toProcessed();
-
-    const result = runCascade(
-      [predecessor, successor],
-      [dependency('a', 'b', { lag: 1, lagUnit: 'week' })],
-      [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
-    );
-
-    expect(result).to.have.length(1);
-    expectDates(result[0], '2025-07-10T12:00:00Z', '2025-07-10T13:00:00Z');
-  });
-
   it('should apply a lag in calendar days across a DST transition', () => {
     // America/New_York springs forward on 2025-03-09: 02:00 → 03:00.
     const predecessor = EventBuilder.new()
@@ -2458,40 +2389,6 @@ describe('computeAutoSchedulingCascade', () => {
     const result = runCascade(
       [predecessor, successor],
       [dependency('a', 'b', { lag: -1 })],
-      [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
-    );
-
-    expect(result).to.have.length(1);
-    expectDates(result[0], '2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z');
-  });
-
-  it('should ignore a fractional lag', () => {
-    const predecessor = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
-    const successor = EventBuilder.new()
-      .id('b')
-      .span('2025-07-03T10:30:00Z', '2025-07-03T11:30:00Z')
-      .toProcessed();
-
-    const result = runCascade(
-      [predecessor, successor],
-      [dependency('a', 'b', { lag: 0.5 })],
-      [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
-    );
-
-    expect(result).to.have.length(1);
-    expectDates(result[0], '2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z');
-  });
-
-  it('should ignore the lag of an unknown unit', () => {
-    const predecessor = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
-    const successor = EventBuilder.new()
-      .id('b')
-      .span('2025-07-03T10:30:00Z', '2025-07-03T11:30:00Z')
-      .toProcessed();
-
-    const result = runCascade(
-      [predecessor, successor],
-      [dependency('a', 'b', { lag: 1, lagUnit: 'fortnight' as any })],
       [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
     );
 

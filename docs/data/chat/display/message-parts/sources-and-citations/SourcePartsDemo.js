@@ -3,7 +3,6 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { ChatConversation, ChatMessageList } from '@mui/x-chat';
 import { ChatProvider } from '@mui/x-chat/headless';
-
 import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 
 const adapter = createEchoAdapter();

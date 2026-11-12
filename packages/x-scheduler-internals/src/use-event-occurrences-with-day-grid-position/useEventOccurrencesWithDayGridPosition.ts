@@ -7,6 +7,7 @@ import type {
 import type { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { sortEventOccurrences } from '../sort-event-occurrences';
 import { differenceInDays, toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
+import { getDayNumber } from '../internals/utils/plain-date-utils/plainDate';
 
 /**
  * The number of full days an occurrence spans in the display timezone.
@@ -14,6 +15,23 @@ import { differenceInDays, toLocalDayNumber } from '../internals/utils/plain-dat
 function getDayCount(occurrence: SchedulerEventOccurrence) {
   const { start, end, timezone } = occurrence.displayTimezone;
   return differenceInDays(end.timestamp, start.timestamp, timezone);
+}
+
+/**
+ * The number of cells from the `fromIndex`-th day of `days` covering the dates up to `lastDayNumber`.
+ * A row can skip dates (hidden weekends, days a timezone skips), so it counts the cells rather than the dates.
+ * `fromIndex` must be the index of a day of `days`: that day always counts, so the span is at least 1.
+ */
+export function getDayGridCellSpan(
+  days: SchedulerProcessedDay[],
+  fromIndex: number,
+  lastDayNumber: number,
+) {
+  let index = fromIndex;
+  while (index + 1 < days.length && getDayNumber(days[index + 1].plainDate) <= lastDayNumber) {
+    index += 1;
+  }
+  return index - fromIndex + 1;
 }
 
 /**
@@ -25,7 +43,6 @@ export function useEventOccurrencesWithDayGridPosition(
   const { days, occurrencesMap, shouldAddPosition, maxEvents } = parameters;
 
   return React.useMemo(() => {
-    const dayListSize = days.length;
     // The sort below compares the spans of the occurrences on every day they cover.
     const dayCounts = new Map<string, number>();
     const getCachedDayCount = (occurrence: SchedulerEventOccurrence) => {
@@ -128,11 +145,10 @@ export function useEventOccurrencesWithDayGridPosition(
             const { timezone } = occurrence.displayTimezone;
             position = {
               index: smallestAvailableIndex,
-              daySpan: Math.min(
-                toLocalDayNumber(occurrence.displayTimezone.end.timestamp, timezone) -
-                  day.plainDate.dayNumber +
-                  1,
-                dayListSize - dayIndex,
+              daySpan: getDayGridCellSpan(
+                days,
+                dayIndex,
+                toLocalDayNumber(occurrence.displayTimezone.end.timestamp, timezone),
               ),
             };
             activeSegments[occurrence.key] = { position, startDayIndex: dayIndex, hidden: false };
@@ -194,7 +210,7 @@ export namespace useEventOccurrencesWithDayGridPosition {
      */
     index: number;
     /**
-     * The number of days the event should span across.
+     * The number of cells the event should span across.
      */
     daySpan: number;
     /**

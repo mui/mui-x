@@ -14,13 +14,27 @@ export {
   toWallClockIsoString,
 } from './timeZone';
 export {
-  addToAdapterDate,
-  buildTemporalPlainDate,
-  createAdapterDate,
+  addToDate,
   createEndOfPlainDate,
   createProcessedDate,
   createStartOfPlainDate,
-  moveToPlainDate,
   normalizeAllDayBounds,
-} from './adapter';
-export { getPlainDateKey, isWeekendPlainDate, plainDateFromDayNumber } from './plainDate';
+} from './date';
+export {
+  getDayNumber,
+  getPlainDateKey,
+  isWeekendPlainDate,
+  plainDateFromDayNumber,
+  type PlainDateDuration,
+} from './plainDate';
+export {
+  addMonthsToDayNumber,
+  dayNumberToIsoDate,
+  getDaysInIsoMonth,
+  getIsoDayOfWeek,
+  getStartOfMonthDayNumber,
+  getStartOfWeekDayNumber,
+  getStartOfYearDayNumber,
+  LAST_SUPPORTED_DAY,
+  MS_PER_DAY,
+} from './dayNumber';

@@ -10,8 +10,9 @@ import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { FieldSelectedSections } from '@mui/x-date-pickers/models';
-import KeyboardSvg, { SelectedKey } from '../KeyboardSvg';
+import type { FieldSelectedSections } from '@mui/x-date-pickers/models';
+import type { SelectedKey } from '../KeyboardSvg';
+import KeyboardSvg from '../KeyboardSvg';
 
 export default function Keyboard() {
   const [selectedKey, setSelectedKey] = React.useState<SelectedKey | null>(null);

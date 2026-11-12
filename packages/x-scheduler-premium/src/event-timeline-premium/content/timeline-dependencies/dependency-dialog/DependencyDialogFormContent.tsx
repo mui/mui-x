@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import * as ReactDOM from 'react-dom';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
@@ -25,26 +26,22 @@ import {
   getEffectiveDependencyLag,
 } from '@mui/x-scheduler-internals-premium/internals';
 import {
-  EventDialogForm,
-  EventDialogFormActions,
-  EventDialogHeader,
   focusFirstInvalid,
   SchedulerFormStore,
   schedulerFormSelectors,
-  useEventEditingStyledContext,
   useSchedulerFormField,
 } from '@mui/x-scheduler/internals';
+import { useEventTimelinePremiumStyledContext } from '../../../EventTimelinePremiumStyledContext';
 import {
-  DEPENDENCY_DIALOG_TEXT,
-  DEPENDENCY_LAG_UNIT_LABELS,
+  DEPENDENCY_LAG_UNIT_KEYS,
   DEPENDENCY_LAG_UNITS,
-  DEPENDENCY_TYPE_LABELS,
   DEPENDENCY_TYPES,
+  DEPENDENCY_UPDATE_REJECTION_KEYS,
   getAllDayLagNote,
+  getDependencyTypeLabel,
   isSameLag,
+  isValidLagAmount,
   toLagDraft,
-  UPDATE_REJECTION_MESSAGES,
-  validateLagAmount,
 } from './dependencyDialogUtils';
 import type { DependencyFormValues } from './dependencyDialogUtils';
 import {
@@ -53,6 +50,11 @@ import {
   DependencyDialogEndpoints,
 } from './DependencyDialogDetails';
 import type { DependencyDialogViewProps } from './DependencyDialogDetails';
+import {
+  DependencyDialogActions,
+  DependencyDialogForm,
+  DependencyDialogHeader,
+} from './DependencyDialogLayout';
 
 // Same right inset as the Type select, so both arrows line up.
 const DependencyDialogLag = styled(TextField, {
@@ -76,7 +78,7 @@ const DependencyDialogLagUnit = styled(Select, {
 export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
   const { dependency, titleId, dragHandlerRef, onClose } = props;
   const store = useEventTimelinePremiumStoreContext();
-  const { schedulerId, classes, localeText } = useEventEditingStyledContext();
+  const { schedulerId, classes, localeText } = useEventTimelinePremiumStyledContext();
   const isTargetAllDay = useStore(
     store,
     (state) => schedulerEventSelectors.processedEvent(state, dependency.target)?.allDay ?? false,
@@ -98,6 +100,11 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
   const lagUnitField = useSchedulerFormField<DependencyFormValues, SchedulerDependencyLagUnit>(
     formStore,
     'lagUnit',
+  );
+  // Stable: a new validator restarts a pending validation, and an inline `localeText` changes
+  // on every render.
+  const validateLagAmount = useStableCallback((lagAmount: string, values: DependencyFormValues) =>
+    isValidLagAmount(lagAmount, values.lagUnit) ? null : localeText.dependencyInvalidLagError,
   );
   const lagAmountField = useSchedulerFormField<DependencyFormValues, string>(
     formStore,
@@ -124,7 +131,7 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
   const draftLag = getDependencyLag(draft);
   const effectiveLag = getEffectiveDependencyLag(draft, isTargetAllDay);
   const lagHelperText: React.ReactNode =
-    lagAmountField.error ?? getAllDayLagNote(draftLag, effectiveLag);
+    lagAmountField.error ?? getAllDayLagNote(localeText, draftLag, effectiveLag);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -154,13 +161,16 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
         ...(isTypeChanged ? { type: values.type } : null),
         ...(isLagChanged ? { lag: submittedLag?.amount, lagUnit: submittedLag?.unit } : null),
       });
-      if (result.status === 'rejected') {
+      // `featureDisabled` can't happen: the dialog only exists when the dependencies feature is provided.
+      if (result.status === 'rejected' && result.reason !== 'featureDisabled') {
         // On the field that caused it (Type by default), like the event form.
-        const isLagRejected = result.reason === 'cascadeBlocked' && isLagChanged;
+        const isLagRejected =
+          (result.reason === 'cascadeBlocked' || result.reason === 'datesNotWritable') &&
+          isLagChanged;
         ReactDOM.flushSync(() =>
           formStore.setError(
             isLagRejected ? 'lagAmount' : 'type',
-            UPDATE_REJECTION_MESSAGES[result.reason],
+            localeText[DEPENDENCY_UPDATE_REJECTION_KEYS[result.reason]],
           ),
         );
         focusFirstInvalid(form);
@@ -179,28 +189,28 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
   };
 
   return (
-    <EventDialogForm onSubmit={handleSubmit} className={classes.eventDialogForm}>
-      <EventDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
-        <Typography variant="h6" id={titleId} className={classes.eventDialogTitle}>
-          {DEPENDENCY_DIALOG_TEXT.editTitle}
+    <DependencyDialogForm onSubmit={handleSubmit} className={classes.dependencyDialogForm}>
+      <DependencyDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
+        <Typography variant="h6" id={titleId} className={classes.dependencyDialogTitle}>
+          {localeText.dependencyEditTitle}
         </Typography>
-      </EventDialogHeader>
-      <DependencyDialogBody>
-        <DependencyDialogDetails>
+      </DependencyDialogHeader>
+      <DependencyDialogBody className={classes.dependencyDialogBody}>
+        <DependencyDialogDetails className={classes.dependencyDialogDetails}>
           <DependencyDialogEndpoints {...props} />
         </DependencyDialogDetails>
         <FormControl fullWidth size="small" error={typeField.error !== undefined}>
-          <InputLabel id={typeLabelId}>{DEPENDENCY_DIALOG_TEXT.typeLabel}</InputLabel>
+          <InputLabel id={typeLabelId}>{localeText.dependencyTypeLabel}</InputLabel>
           <Select
             labelId={typeLabelId}
-            label={DEPENDENCY_DIALOG_TEXT.typeLabel}
+            label={localeText.dependencyTypeLabel}
             value={typeField.value}
             aria-describedby={typeField.error === undefined ? undefined : typeHelperId}
             onChange={(event) => typeField.setValue(event.target.value as SchedulerDependencyType)}
           >
             {DEPENDENCY_TYPES.map((option) => (
               <MenuItem key={option} value={option}>
-                {DEPENDENCY_TYPE_LABELS[option]}
+                {getDependencyTypeLabel(localeText, option)}
               </MenuItem>
             ))}
           </Select>
@@ -210,9 +220,10 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
         </FormControl>
         <DependencyDialogLag
           id={lagId}
+          className={classes.dependencyDialogLag}
           fullWidth
           size="small"
-          label={DEPENDENCY_DIALOG_TEXT.lagLabel}
+          label={localeText.dependencyLagLabel}
           value={lagAmountField.value}
           placeholder="0"
           error={lagAmountField.error !== undefined}
@@ -227,10 +238,11 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
               endAdornment: (
                 <InputAdornment position="end">
                   <DependencyDialogLagUnit
+                    className={classes.dependencyDialogLagUnit}
                     variant="standard"
                     disableUnderline
                     value={lagUnitField.value}
-                    inputProps={{ 'aria-label': DEPENDENCY_DIALOG_TEXT.lagUnitLabel }}
+                    inputProps={{ 'aria-label': localeText.dependencyLagUnitAriaLabel }}
                     SelectDisplayProps={{
                       'aria-describedby': lagHelperText === null ? undefined : lagHelperId,
                     }}
@@ -247,7 +259,7 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
                   >
                     {DEPENDENCY_LAG_UNITS.map((option) => (
                       <MenuItem key={option} value={option}>
-                        {DEPENDENCY_LAG_UNIT_LABELS[option]}
+                        {localeText[DEPENDENCY_LAG_UNIT_KEYS[option]]}
                       </MenuItem>
                     ))}
                   </DependencyDialogLagUnit>
@@ -257,15 +269,15 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
           }}
         />
       </DependencyDialogBody>
-      <Divider className={classes.eventDialogFormDivider} />
-      <EventDialogFormActions className={classes.eventDialogFormActions}>
+      <Divider className={classes.dependencyDialogDivider} />
+      <DependencyDialogActions className={classes.dependencyDialogActions}>
         <Button color="error" type="button" onClick={handleDelete} disabled={isSubmitting}>
-          {DEPENDENCY_DIALOG_TEXT.delete}
+          {localeText.deleteDependency}
         </Button>
         <Button variant="contained" type="submit" disabled={isSubmitting}>
           {localeText.saveChanges}
         </Button>
-      </EventDialogFormActions>
-    </EventDialogForm>
+      </DependencyDialogActions>
+    </DependencyDialogForm>
   );
 }

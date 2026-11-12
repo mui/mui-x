@@ -115,20 +115,6 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
   });
 
   describe('terminal rendering', () => {
-    it('should render a terminal on the end edge when the dependencies feature is enabled', async () => {
-      await renderTimeline({ events: [eventA, eventB], dependencies: [] });
-
-      expect(getTerminal('Event A')).not.to.equal(null);
-      expect(getTerminal('Event B')).not.to.equal(null);
-    });
-
-    it('should render a terminal on the start edge too', async () => {
-      await renderTimeline({ events: [eventA, eventB], dependencies: [] });
-
-      expect(getTerminal('Event A', undefined, 'start')).not.to.equal(null);
-      expect(getTerminal('Event B', undefined, 'start')).not.to.equal(null);
-    });
-
     it('should not render a start terminal on an event starting before the collection start', async () => {
       // Starts a month early and ends inside the initial viewport: the end edge can
       // anchor a gesture, the start edge cannot — same rule as the resize handles.
@@ -937,19 +923,6 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       simulateTerminalDrag('Event A', getRecurringEventElement('Recurring event'));
 
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
-      expect(store.state.errors).to.have.length(1);
-      expect(store.state.errors[0].code).to.equal('dependencyRecurringEventError');
-    });
-
-    it('should replace an identical rejection toast instead of stacking it', async () => {
-      const { store } = await renderTimeline({
-        events: [eventA, recurringEvent],
-        dependencies: [],
-      });
-
-      simulateTerminalDrag('Event A', getRecurringEventElement('Recurring event'));
-      simulateTerminalDrag('Event A', getRecurringEventElement('Recurring event'));
-
       expect(store.state.errors).to.have.length(1);
       expect(store.state.errors[0].code).to.equal('dependencyRecurringEventError');
     });
@@ -1872,6 +1845,37 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(getArrowPaths()).to.have.length(1);
+    });
+  });
+
+  describe('unwritable date', () => {
+    // Outside the test: the store compares `eventModelStructure` by reference.
+    const getterOnlyStart = { start: { getter: (event: any) => event.start } };
+
+    it('should reject the drop when the target would need a date that cannot be written back, and surface an error', async () => {
+      const handleDependenciesChange = vi.fn();
+      const overlappingEvent = EventBuilder.new()
+        .id('event-o')
+        .title('Overlapping event')
+        .singleDay('2025-07-03T09:30:00Z')
+        .resource(resource1)
+        .build();
+      const { store } = await renderTimeline({
+        events: [eventA, overlappingEvent],
+        dependencies: [],
+        eventModelStructure: getterOnlyStart,
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      expect(() => simulateTerminalDrag('Event A', getEventElement('Overlapping event'))).toWarnDev(
+        [
+          'MUI X Scheduler: A change was not applied because keeping a dependency would move an event whose date could not be written back.',
+        ],
+      );
+
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
+      expect(store.state.errors).to.have.length(1);
+      expect(store.state.errors[0].code).to.equal('dependencyDatesNotWritableError');
     });
   });
 

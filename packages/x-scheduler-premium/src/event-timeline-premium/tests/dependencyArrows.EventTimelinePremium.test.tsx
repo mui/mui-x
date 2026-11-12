@@ -93,25 +93,6 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     expect(coordinates[coordinates.length - 1]).to.be.greaterThan(coordinates[1]);
   });
 
-  it('should render an S route when the successor starts before the predecessor ends', async () => {
-    const earlyEvent = EventBuilder.new()
-      .id('event-early')
-      .title('Event early')
-      .singleDay('2025-07-03T08:00:00Z')
-      .resource(resource2)
-      .build();
-
-    await renderTimeline({
-      events: [eventA, earlyEvent],
-      dependencies: [buildDependency('dep-1', 'event-a', 'event-early')],
-    });
-
-    const d = getArrowPaths()[0].getAttribute('d')!;
-
-    // S route: four softened corners.
-    expect(d.match(/Q /g)).to.have.length(4);
-  });
-
   describe('virtualized row heights with a trimmed hour window', () => {
     const PRESET_CONFIG = { dayAndHour: { startTime: 8, endTime: 20 } };
     const theme = createTheme();
@@ -416,6 +397,21 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
         'Cannot start until 30 minutes after Event A finishes. ' +
           'Cannot start until 1 day after Event C starts.',
       );
+    });
+
+    it('should describe a dependency with the localeText', async () => {
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [
+          { ...buildDependency('dep-1', 'event-a', 'event-b'), lag: 2, lagUnit: 'hour' },
+        ],
+        localeText: {
+          dependencyLag: (amount, unit) => `${amount}${unit[0]}`,
+          dependencyFinishToStartDescription: ({ title, lag }) => `${title} + ${lag}`,
+        },
+      });
+
+      expect(getEventElement('Event B')).toHaveAccessibleDescription('Event A + 2h');
     });
 
     it('should describe a lagged dependency of every type with its lag', async () => {

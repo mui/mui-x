@@ -1,10 +1,10 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
+import type {
   GridColDef,
   GridRowsProp,
   GridFormulaFunctionDefinition,
 } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 import {
   formulaFeature,
   GRID_FORMULA_FUNCTIONS,

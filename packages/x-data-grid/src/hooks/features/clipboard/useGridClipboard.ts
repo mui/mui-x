@@ -97,7 +97,7 @@ export const useGridClipboard = (
         });
       } else {
         const focusedCell = gridFocusCellSelector(apiRef);
-        if (focusedCell) {
+        if (focusedCell && apiRef.current.getRow(focusedCell.id)) {
           const cellParams = apiRef.current.getCellParams(focusedCell.id, focusedCell.field);
           textToCopy = serializeCellValue(cellParams, {
             csvOptions: {

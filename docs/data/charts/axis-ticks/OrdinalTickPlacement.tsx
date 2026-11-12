@@ -1,8 +1,13 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
-import { BarSeriesType, XAxis, YAxis, ZoomOptions } from '@mui/x-charts-pro/models';
-import { TickFrequency } from '@mui/x-charts/models';
+import type {
+  BarSeriesType,
+  XAxis,
+  YAxis,
+  ZoomOptions,
+} from '@mui/x-charts-pro/models';
+import type { TickFrequency } from '@mui/x-charts/models';
 import alphabetStock from '../dataset/GOOGL.json';
 import SelectTimeFrequency from './SelectTimeFrequency';
 

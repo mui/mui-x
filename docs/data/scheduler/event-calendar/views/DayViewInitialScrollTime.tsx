@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SchedulerEvent } from '@mui/x-scheduler/models';
+import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
 import { initialEvents, resources } from '../../datasets/personal-agenda';
 

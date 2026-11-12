@@ -1,11 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
-import {
-  DataGridPremium,
-  GridColDef,
-  DataGridPremiumProps,
-} from '@mui/x-data-grid-premium';
+import type { GridColDef, DataGridPremiumProps } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 
 interface Row {
   id: number;

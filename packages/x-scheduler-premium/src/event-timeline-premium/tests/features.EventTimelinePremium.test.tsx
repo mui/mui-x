@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { act, screen, waitFor } from '@mui/internal-test-utils';
+import { act, screen, waitFor, within } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
+import { dependenciesFeature } from '@mui/x-scheduler-premium/dependencies';
 import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
@@ -16,7 +17,6 @@ import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { vi, describe, it, expect } from 'vitest';
 import {
   buildDependency,
-  createDependencyTimelineRenderer,
   getArrowPaths,
   getEventRow,
   mockAllEventRowBounds,
@@ -54,7 +54,6 @@ describe('EventTimelinePremium - features', () => {
   const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
-  const { renderTimeline } = createDependencyTimelineRenderer(renderSettled);
 
   function Timeline(
     props: Partial<React.ComponentProps<typeof EventTimelinePremium<SchedulerEvent, any>>>,
@@ -72,7 +71,7 @@ describe('EventTimelinePremium - features', () => {
   }
 
   it('should render a recurring event once without the recurring events feature', async () => {
-    await expect(() => renderSettled(<Timeline />)).toWarnDev('with the `recurringEvents` feature');
+    await expect(() => renderSettled(<Timeline />)).toWarnDev('Recurring events are not enabled');
 
     expect(getAllEventsByTitle(dailyEvent.title)).to.have.length(1);
   });
@@ -87,7 +86,7 @@ describe('EventTimelinePremium - features', () => {
     let view!: Awaited<ReturnType<typeof renderSettled>>;
     await expect(async () => {
       view = await renderSettled(<Timeline />);
-    }).toWarnDev('with the `recurringEvents` feature');
+    }).toWarnDev('Recurring events are not enabled');
 
     await view.user.click(getAllEventsByTitle(dailyEvent.title)[0]);
     await waitFor(() => {
@@ -110,7 +109,7 @@ describe('EventTimelinePremium - features', () => {
   it('should move an rrule event as a single event without the recurring events feature', async () => {
     const handleEventsChange = vi.fn();
     await expect(() => renderSettled(<Timeline onEventsChange={handleEventsChange} />)).toWarnDev(
-      'with the `recurringEvents` feature',
+      'Recurring events are not enabled',
     );
 
     mockAllEventRowBounds(AXIS_WIDTH);
@@ -140,7 +139,7 @@ describe('EventTimelinePremium - features', () => {
     let view!: Awaited<ReturnType<typeof renderSettled>>;
     await expect(async () => {
       view = await renderSettled(<Timeline onEventsChange={handleEventsChange} />);
-    }).toWarnDev('with the `recurringEvents` feature');
+    }).toWarnDev('Recurring events are not enabled');
 
     await view.user.click(getAllEventsByTitle(dailyEvent.title)[0]);
     await waitFor(() => {
@@ -169,36 +168,91 @@ describe('EventTimelinePremium - features', () => {
     let setProps!: Awaited<ReturnType<typeof renderSettled>>['setProps'];
     await expect(async () => {
       ({ setProps } = await renderSettled(<Timeline />));
-    }).toWarnDev('with the `recurringEvents` feature');
+    }).toWarnDev('Recurring events are not enabled');
 
     expect(() => {
       setProps({ features: { recurringEvents: recurringEventsFeature } });
-    }).toWarnDev('changed after the first render');
+    }).toWarnDev('The `features` prop of <EventTimelinePremium /> changed after the first render');
 
     expect(getAllEventsByTitle(dailyEvent.title)).to.have.length(1);
   });
-  it('should render the events without arrows or terminals without the dependencies feature', async () => {
-    await expect(() =>
-      renderTimeline({
-        events: [predecessor, successor],
-        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
-        features: { recurringEvents: recurringEventsFeature },
-      }),
-    ).toWarnDev('the dependencies feature is missing');
 
-    expect(getAllEventsByTitle('Event A')).to.have.length(1);
-    expect(getAllEventsByTitle('Event B')).to.have.length(1);
-    expect(getArrowPaths()).to.have.length(0);
-    expect(document.querySelector('[data-dependency-terminal]')).to.equal(null);
-  });
+  describe('public dependencies props', () => {
+    const dependency = buildDependency('dep-1', 'event-a', 'event-b');
 
-  it('should render the arrows and terminals with the dependencies feature', async () => {
-    await renderTimeline({
-      events: [predecessor, successor],
-      dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+    function DependenciesTimeline(props: Partial<React.ComponentProps<typeof Timeline>>) {
+      return (
+        <Timeline
+          resources={[resource1]}
+          events={[predecessor, successor]}
+          features={{ dependencies: dependenciesFeature }}
+          {...props}
+        />
+      );
+    }
+
+    it('should render the arrows and terminals', async () => {
+      await renderSettled(
+        <DependenciesTimeline dependencies={[dependency]} onDependenciesChange={() => {}} />,
+      );
+
+      expect(getArrowPaths()).to.have.length(1);
+      expect(document.querySelector('[data-dependency-terminal]')).not.to.equal(null);
     });
 
-    expect(getArrowPaths()).to.have.length(1);
-    expect(document.querySelector('[data-dependency-terminal]')).not.to.equal(null);
+    it('should call `onDependenciesChange` when a dependency is deleted', async () => {
+      const handleDependenciesChange = vi.fn();
+      const { user } = await renderSettled(
+        <DependenciesTimeline
+          dependencies={[dependency]}
+          onDependenciesChange={handleDependenciesChange}
+        />,
+      );
+
+      await user.dblClick(document.querySelector('[data-dependency-hit="dep-1"]')!);
+      await user.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Delete' }));
+
+      expect(handleDependenciesChange.mock.calls.length).to.equal(1);
+      expect(handleDependenciesChange.mock.calls[0][0]).to.deep.equal([]);
+    });
+
+    it('should render a new `dependencies` value', async () => {
+      const { setProps } = await renderSettled(
+        <DependenciesTimeline dependencies={[dependency]} onDependenciesChange={() => {}} />,
+      );
+
+      expect(getArrowPaths()).to.have.length(1);
+
+      await act(async () => {
+        setProps({ dependencies: [] });
+      });
+
+      expect(getArrowPaths()).to.have.length(0);
+    });
+
+    it('should warn and render no arrows when the dependencies feature is missing', async () => {
+      await expect(() =>
+        renderSettled(
+          <DependenciesTimeline
+            features={{ recurringEvents: recurringEventsFeature }}
+            dependencies={[dependency]}
+            onDependenciesChange={() => {}}
+          />,
+        ),
+      ).toWarnDev('the dependencies feature is missing');
+
+      expect(getAllEventsByTitle('Event A')).to.have.length(1);
+      expect(getAllEventsByTitle('Event B')).to.have.length(1);
+      expect(getArrowPaths()).to.have.length(0);
+      expect(document.querySelector('[data-dependency-terminal]')).to.equal(null);
+    });
+
+    it('should warn when `onDependenciesChange` is passed without `dependencies`', async () => {
+      await expect(() =>
+        renderSettled(<DependenciesTimeline onDependenciesChange={() => {}} />),
+      ).toWarnDev('without a `dependencies` value');
+
+      expect(document.querySelector('[data-dependency-terminal]')).to.equal(null);
+    });
   });
 });

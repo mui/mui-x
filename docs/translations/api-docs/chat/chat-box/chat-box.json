@@ -1,7 +1,18 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "activeConversationId": {
+      "description": "The id of the active conversation. Use with <code>onActiveConversationChange</code> to control it."
+    },
+    "adapter": { "description": "The adapter that connects the chat to your backend." },
+    "children": { "description": "The content of the component." },
     "classes": { "description": "Override or extend the styles applied to the component." },
+    "composerValue": {
+      "description": "The value of the composer. Use with <code>onComposerValueChange</code> to control it."
+    },
+    "conversations": {
+      "description": "The conversations. Use with <code>onConversationsChange</code> to control them."
+    },
     "currentUser": {
       "description": "The local user sending messages. If omitted, derived from <code>members</code> by finding the entry with <code>role === &#39;user&#39;</code>. Also used to enrich message authors when a rendered message resolves to <code>currentUser.id</code>."
     },
@@ -38,9 +49,58 @@
     "layoutModeBreakpoints": {
       "description": "Container-width breakpoints used when <code>layoutMode</code> is not provided."
     },
+    "localeText": { "description": "The props used for the locale text slot." },
     "members": {
       "description": "Known chat participants. Used to derive the local user / assistant user when explicit props are omitted, and to enrich message authors by resolved author id at render time."
     },
+    "messages": {
+      "description": "The messages of the active conversation. Use with <code>onMessagesChange</code> to control them."
+    },
+    "onActiveConversationChange": {
+      "description": "Callback fired when the active conversation changes.",
+      "typeDescriptions": {
+        "conversationId": {
+          "name": "conversationId",
+          "description": "The id of the new active conversation."
+        }
+      }
+    },
+    "onComposerValueChange": {
+      "description": "Callback fired when the composer value changes.",
+      "typeDescriptions": { "value": { "name": "value", "description": "The new composer value." } }
+    },
+    "onConversationsChange": {
+      "description": "Callback fired when the conversations change.",
+      "typeDescriptions": {
+        "conversations": { "name": "conversations", "description": "The new conversations." }
+      }
+    },
+    "onData": {
+      "description": "Callback fired when a data part is received.",
+      "typeDescriptions": { "part": { "name": "part", "description": "The data part." } }
+    },
+    "onError": {
+      "description": "Callback fired when an error occurs.",
+      "typeDescriptions": { "error": { "name": "error", "description": "The error." } }
+    },
+    "onFinish": {
+      "description": "Callback fired when the assistant finishes a response, including when it is aborted, disconnected, or fails.",
+      "typeDescriptions": {
+        "payload": {
+          "name": "payload",
+          "description": "The final message and how the response ended."
+        }
+      }
+    },
+    "onMessagesChange": {
+      "description": "Callback fired when the messages change.",
+      "typeDescriptions": { "messages": { "name": "messages", "description": "The new messages." } }
+    },
+    "onToolCall": {
+      "description": "Callback fired when the assistant calls a tool.",
+      "typeDescriptions": { "payload": { "name": "payload", "description": "The tool call." } }
+    },
+    "partRenderers": { "description": "Custom renderers for message parts, by part type." },
     "roleDisplayNames": {
       "description": "Locale-driven fallback labels for messages without explicit author information."
     },
@@ -59,6 +119,9 @@
     },
     "suggestionsAutoSubmit": {
       "description": "Whether clicking a suggestion automatically submits the message."
+    },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
     "variant": {
       "description": "The visual layout variant of the chat. - <code>&#39;default&#39;</code> – Standard layout with avatars, individual timestamps, and full spacing. - <code>&#39;compact&#39;</code> – Messenger-style layout: no avatars, author + timestamp in group header, tighter spacing."

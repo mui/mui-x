@@ -3,11 +3,11 @@ import { styled } from '@mui/material/styles';
 import { CalendarIcon, ClearIcon } from '@mui/x-date-pickers/icons';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import {
-  DatePicker,
+import type {
   DatePickerFieldProps,
   DatePickerProps,
 } from '@mui/x-date-pickers/DatePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 import { usePickerContext } from '@mui/x-date-pickers/hooks';

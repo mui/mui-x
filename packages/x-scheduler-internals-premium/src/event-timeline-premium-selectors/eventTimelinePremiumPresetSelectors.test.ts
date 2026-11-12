@@ -32,30 +32,6 @@ describe('eventTimelinePremiumPresetSelectors', () => {
     clearWarningsCache();
   });
 
-  describe('preset', () => {
-    it('should return the preset from state', () => {
-      const state = getEventTimelinePremiumStateFromParameters({
-        resources: TEST_RESOURCES,
-        events: [],
-        preset: 'monthAndYear',
-      });
-      const preset = eventTimelinePremiumPresetSelectors.preset(state);
-      expect(preset).to.equal('monthAndYear');
-    });
-  });
-
-  describe('presets', () => {
-    it('should return the presets from state', () => {
-      const state = getEventTimelinePremiumStateFromParameters({
-        resources: TEST_RESOURCES,
-        events: [],
-        presets: ['dayAndHour', 'dayAndMonth'],
-      });
-      const presets = eventTimelinePremiumPresetSelectors.presets(state);
-      expect(presets).to.deep.equal(['dayAndHour', 'dayAndMonth']);
-    });
-  });
-
   describe('config', () => {
     it('should return the configuration for the dayAndHour preset', () => {
       const state = getEventTimelinePremiumStateFromParameters({

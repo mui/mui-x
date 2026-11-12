@@ -11,13 +11,13 @@ import {
   randomTraderName,
   randomId,
 } from '@mui/x-data-grid-generator';
-import {
-  DataGridPro,
+import type {
   DataGridProProps,
   GridColDef,
   GridRowId,
   GridRowParams,
 } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import { DetailPanelWrapper, useDetailPanelCache } from './detailPanelCache';
 
 type Products = Awaited<ReturnType<typeof getProducts>>;

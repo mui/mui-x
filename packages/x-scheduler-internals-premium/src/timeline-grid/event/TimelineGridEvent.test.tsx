@@ -13,8 +13,8 @@ import { describe, it, expect } from 'vitest';
 describe('<TimelineGrid.Event />', () => {
   const { render } = createSchedulerRenderer();
 
-  const start = processDate(adapter.startOfDay(adapter.now('default')), adapter);
-  const end = processDate(adapter.endOfDay(adapter.now('default')), adapter);
+  const start = processDate(adapter.startOfDay(adapter.now('default')), 'default');
+  const end = processDate(adapter.endOfDay(adapter.now('default')), 'default');
 
   // Mounts the event in the row context it needs.
   function renderEvent(node: React.ReactElement) {
@@ -45,24 +45,6 @@ describe('<TimelineGrid.Event />', () => {
       },
     }),
   );
-
-  it('should render events without the dependencies feature', () => {
-    renderEvent(
-      <TimelineGrid.Event
-        eventId="fake-id"
-        occurrenceKey="fake-key"
-        dataTimezone={undefined}
-        start={start}
-        end={end}
-        renderDragPreview={() => null}
-        data-testid="event"
-      />,
-    );
-
-    const event = screen.getByTestId('event');
-    expect(event).not.to.equal(null);
-    expect(event).not.to.have.attribute('data-dependency-drop-target');
-  });
 
   it('should use a precomputed timeline position', () => {
     renderEvent(

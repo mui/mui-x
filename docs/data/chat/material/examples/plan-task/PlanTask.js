@@ -2,7 +2,6 @@
 import * as React from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import { ChatBox } from '@mui/x-chat';
-
 import {
   createChunkStream,
   randomId,

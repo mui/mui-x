@@ -6,15 +6,29 @@ import { useComposerContext } from './internals/ComposerContext';
 import type { ComposerToolbarOwnerState } from './composer.types';
 
 export interface ComposerToolbarSlots {
+  /**
+   * The component that renders the toolbar.
+   */
   toolbar: React.ElementType;
 }
 
 export interface ComposerToolbarSlotProps {
+  /**
+   * The props used for the toolbar slot.
+   */
   toolbar?: SlotComponentProps<'div', {}, ComposerToolbarOwnerState>;
 }
 
 export interface ComposerToolbarProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<ComposerToolbarSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ComposerToolbarSlotProps;
 }
 

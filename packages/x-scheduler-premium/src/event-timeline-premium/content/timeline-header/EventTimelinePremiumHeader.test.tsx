@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen } from '@mui/internal-test-utils';
+import { act, screen } from '@mui/internal-test-utils';
 import {
   EventTimelinePremium,
   eventTimelinePremiumClasses as classes,
@@ -16,7 +16,7 @@ import type {
   EventTimelinePremiumPreset,
   EventTimelinePremiumPresetConfig,
 } from '@mui/x-scheduler-internals-premium/models';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect, onTestFinished } from 'vitest';
 
 type PresetExpectations = {
   preset: EventTimelinePremiumPreset;
@@ -52,6 +52,7 @@ describe('<EventTimelinePremiumHeader />', () => {
     defaultPreferences?: { ampm?: boolean; weekStartsOn?: WeekStartsOn };
     visibleDate?: typeof DEFAULT_TESTING_VISIBLE_DATE;
     displayTimezone?: string;
+    dateLocale?: string;
     presetConfig?: EventTimelinePremiumPresetConfig;
   }) {
     // The grid is virtualized; sizing the host wide enough to fit the largest preset
@@ -68,6 +69,7 @@ describe('<EventTimelinePremiumHeader />', () => {
           presetConfig={options.presetConfig}
           defaultPreferences={options.defaultPreferences}
           displayTimezone={options.displayTimezone}
+          dateLocale={options.dateLocale}
         />
       </div>,
     );
@@ -195,6 +197,22 @@ describe('<EventTimelinePremiumHeader />', () => {
       expect(dayCells[3].dataset.weekend).to.equal(''); // Sun
     });
 
+    it('should mark the weekend of the date locale', async () => {
+      // Saudi Arabia rests on Friday and Saturday.
+      await renderHeader({ preset: 'dayAndHour', dateLocale: 'ar-SA' });
+
+      const dayCells = Array.from(
+        document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="day"]`),
+      );
+      // Visible range: Jul 3 (Thu), Jul 4 (Fri), Jul 5 (Sat), Jul 6 (Sun).
+      expect(dayCells.map((cell) => cell.dataset.weekend)).to.deep.equal([
+        undefined,
+        '',
+        '',
+        undefined,
+      ]);
+    });
+
     it('should not mark a weekday skipped by a transition as a weekend', async () => {
       // Pacific/Apia skipped Friday, December 30th, 2011: its instants are those of Saturday.
       await renderHeader({
@@ -207,6 +225,100 @@ describe('<EventTimelinePremiumHeader />', () => {
         document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="day"]`),
       ).find((cell) => cell.querySelector('time')!.getAttribute('datetime') === '2011-12-30T00:00');
       expect(friday!.dataset.weekend).to.equal(undefined);
+    });
+  });
+
+  describe('current day', () => {
+    function getCurrentCells() {
+      return Array.from(
+        document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[aria-current]`),
+      );
+    }
+
+    function getDateTime(cell: HTMLElement) {
+      return cell.querySelector('time')!.getAttribute('datetime');
+    }
+
+    // Today (2025-07-03) is never the first day cell, so these cover the cells past index 0.
+    it.each([
+      { preset: 'dayAndMonth', visibleDate: '2025-06-01T00:00:00Z' },
+      { preset: 'dayAndHour', visibleDate: '2025-07-01T00:00:00Z' },
+      // The week row starts on Sunday, June 29th, and its first cell contains today too.
+      { preset: 'dayAndWeek', visibleDate: DEFAULT_TESTING_VISIBLE_DATE_STR },
+    ] as const)(
+      'should mark only the day cell of today with data-current and aria-current="date" in `$preset`',
+      async ({ preset, visibleDate }) => {
+        await renderHeader({ preset, visibleDate: adapter.date(visibleDate, 'default') });
+
+        const currentCells = getCurrentCells();
+        expect(currentCells.length).to.equal(1);
+        expect(currentCells[0]).to.have.attribute('aria-current', 'date');
+        expect(currentCells[0].dataset.current).to.equal('');
+        expect(currentCells[0].dataset.unit).to.equal('day');
+        expect(getDateTime(currentCells[0])).to.equal('2025-07-03T00:00');
+        expect(document.querySelectorAll(`.${classes.headerCell}[data-current]`).length).to.equal(
+          1,
+        );
+      },
+    );
+
+    it.each(['monthAndYear', 'year'] as const)(
+      'should not mark any cell in `%s`, which has no day row',
+      async (preset) => {
+        await renderHeader({ preset });
+
+        expect(getCurrentCells().length).to.equal(0);
+      },
+    );
+
+    it('should not mark any cell when today is not in view', async () => {
+      await renderHeader({
+        preset: 'dayAndMonth',
+        visibleDate: adapter.date('2030-01-01T00:00:00Z', 'default'),
+      });
+
+      expect(getCurrentCells().length).to.equal(0);
+    });
+
+    it.each([
+      // It's July 3rd at 22:00 in New York, but July 4th in UTC.
+      { displayTimezone: 'America/New_York', now: '2025-07-04T02:00:00Z', today: '2025-07-03' },
+      // It's July 4th at 05:00 in Tokyo, but July 3rd in UTC.
+      { displayTimezone: 'Asia/Tokyo', now: '2025-07-03T20:00:00Z', today: '2025-07-04' },
+    ])(
+      'should mark the current day of the display timezone $displayTimezone',
+      async ({ displayTimezone, now, today }) => {
+        vi.setSystemTime(new Date(now));
+        await renderHeader({
+          preset: 'dayAndWeek',
+          visibleDate: adapter.date(now, 'default'),
+          displayTimezone,
+        });
+
+        const currentCells = getCurrentCells();
+        expect(currentCells.length).to.equal(1);
+        expect(getDateTime(currentCells[0])).to.equal(`${today}T00:00`);
+      },
+    );
+
+    it('should move the mark to the next day at midnight', async () => {
+      vi.useFakeTimers({ now: new Date('2025-07-03T23:59:30Z') });
+      onTestFinished(() => {
+        vi.useRealTimers();
+      });
+      await renderHeader({ preset: 'dayAndMonth', displayTimezone: 'UTC' });
+
+      let currentCells = getCurrentCells();
+      expect(currentCells.length).to.equal(1);
+      expect(getDateTime(currentCells[0])).to.equal('2025-07-03T00:00');
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(60_000);
+      });
+
+      currentCells = getCurrentCells();
+      expect(currentCells.length).to.equal(1);
+      expect(getDateTime(currentCells[0])).to.equal('2025-07-04T00:00');
     });
   });
 

@@ -353,21 +353,19 @@ describe('<WeekView />', () => {
       const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
 
-      // The current time indicator is rendered once per day column when today is in view
-      // Check that the data-current attribute is on the today column
-      const todayColumn = document.querySelector('[data-current]');
-      expect(todayColumn).not.to.equal(null);
+      // The current time indicator is rendered once per day column when today is in view.
+      expect(
+        document.querySelectorAll(`.${eventCalendarClasses.dayTimeGridCurrentTimeIndicator}`),
+      ).to.have.length(7);
     });
 
     it("doesn't render the current time indicator if today is not in view", () => {
       const visibleDate = adapter.date('2025-05-18T00:00:00Z', 'default');
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
 
-      const indicators = document.querySelectorAll('[data-current-time]');
-      expect(indicators.length).to.equal(0);
-
-      const todayColumn = document.querySelector('[data-current]');
-      expect(todayColumn).to.equal(null);
+      expect(
+        document.querySelectorAll(`.${eventCalendarClasses.dayTimeGridCurrentTimeIndicator}`),
+      ).to.have.length(0);
     });
 
     it('renders the current time indicator in the repeated last hour of a day', () => {
@@ -404,8 +402,9 @@ describe('<WeekView />', () => {
         />,
       );
 
-      const indicators = document.querySelectorAll('[data-current-time]');
-      expect(indicators.length).to.equal(0);
+      expect(
+        document.querySelectorAll(`.${eventCalendarClasses.dayTimeGridCurrentTimeIndicator}`),
+      ).to.have.length(0);
     });
   });
 

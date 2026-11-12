@@ -1,24 +1,17 @@
 import type * as React from 'react';
-import type { SchedulerRecurringEventsPluginInterface } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import type { EventTimelinePremiumDependenciesStoreFeature } from '@mui/x-scheduler-internals-premium/internals';
-import type { EventEditingOptionalRenderers } from '@mui/x-scheduler/internals';
-
-export interface EventTimelinePremiumRecurringEventsFeature {
-  /**
-   * Expands the events with an `rrule` into occurrences.
-   */
-  store: SchedulerRecurringEventsPluginInterface;
-  /**
-   * The recurrence tab and the scope dialog of the event editing surfaces.
-   */
-  optionalRenderers: EventEditingOptionalRenderers;
-}
+import type { SchedulerRecurringEventsFeature } from '../../internals/features/SchedulerRecurringEventsFeature.types';
 
 /**
- * @internal
+ * The value of `dependenciesFeature`.
+ * Its members are internal and can change: pass `dependenciesFeature` as is.
  */
 export interface EventTimelinePremiumDependenciesFeature {
+  /**
+   * Holds the dependencies, keeps the successors after their predecessors, and creates, edits
+   * and deletes the dependencies.
+   */
   store: EventTimelinePremiumDependenciesStoreFeature;
   /**
    * Renders the dependency arrows, dialog, interactions and terminals around the rows.
@@ -34,12 +27,9 @@ export interface EventTimelinePremiumFeatures {
   /**
    * Recurring events support. Import it from `@mui/x-scheduler-premium/recurring-events`.
    */
-  recurringEvents?: EventTimelinePremiumRecurringEventsFeature;
-}
-
-/**
- * @internal
- */
-export interface EventTimelinePremiumInternalFeatures extends EventTimelinePremiumFeatures {
+  recurringEvents?: SchedulerRecurringEventsFeature;
+  /**
+   * Dependencies between events. Import it from `@mui/x-scheduler-premium/dependencies`.
+   */
   dependencies?: EventTimelinePremiumDependenciesFeature;
 }

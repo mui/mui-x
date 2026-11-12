@@ -8,15 +8,13 @@ import type {
   SchedulerRenderableEventOccurrence,
   TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
-  createAdapterDate,
+  BaseTemporal,
   createEndOfPlainDate,
   formatMonthAndDayOfMonth,
   formatWeekday,
   getOccurrenceDataTimezone,
   MS_PER_DAY,
-  PlainDate,
   toEpochMs,
   toPlainDate,
   toWallClockIsoString,
@@ -107,7 +105,7 @@ const WEEKDAYS: SchedulerWeekday[] = [
   'saturday',
 ];
 
-export const getWeekdayToken = (plainDate: PlainDate) => {
+export const getWeekdayToken = (plainDate: BaseTemporal.PlainDate) => {
   // ISO weekdays go from 1 (Monday) to 7 (Sunday).
   return WEEKDAYS[plainDate.dayOfWeek % 7];
 };
@@ -126,7 +124,7 @@ export type RangeFormKey = (typeof RANGE_FORM_KEYS)[number];
  * range in its current mode reads (the all-day branch of `computeRange` ignores
  * the time fields). Toggling `allDay` re-derives both bounds.
  */
-export function getEditedRangeBounds(
+function getEditedRangeBounds(
   dirtyValues: Record<string, unknown>,
   allDay: boolean,
 ): { startEdited: boolean; endEdited: boolean } {
@@ -138,20 +136,20 @@ export function getEditedRangeBounds(
   };
 }
 
-// The documented `yyyy-MM-dd` / `HH:mm` formats. `PlainDate.from()` rejects the dates that don't
-// exist, like 2025-06-31, but also reads calendar annotations, which the fields don't use.
+// The documented `yyyy-MM-dd` / `HH:mm` formats. `BaseTemporal.PlainDate.from()` rejects the dates
+// that don't exist, like 2025-06-31, but also reads calendar annotations, which the fields don't use.
 const DATE_VALUE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_VALUE_REGEX = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
 /**
  * Reads a `yyyy-MM-dd` field, or returns `null` when it isn't an existing date.
  */
-function readDateField(raw: string): PlainDate | null {
+function readDateField(raw: string): BaseTemporal.PlainDate | null {
   if (!DATE_VALUE_REGEX.test(raw)) {
     return null;
   }
   try {
-    return PlainDate.from(raw);
+    return BaseTemporal.PlainDate.from(raw);
   } catch {
     return null;
   }
@@ -234,7 +232,7 @@ export function validateRange(
   allDay: boolean,
   displayTimezone: TemporalTimezone,
 ): null | { field: 'endDate' | 'endTime' } {
-  const dayOrder = PlainDate.compare(
+  const dayOrder = BaseTemporal.PlainDate.compare(
     toPlainDate(start, displayTimezone),
     toPlainDate(end, displayTimezone),
   );
@@ -296,7 +294,7 @@ export function getRangeErrorMessage(
 
 export function getRecurrenceLabel(
   locale: string,
-  startPlainDate: PlainDate,
+  startPlainDate: BaseTemporal.PlainDate,
   recurrenceKey: RecurringEventPresetKey | 'custom' | null,
   localeText: EventEditingLocaleText,
 ): string {
@@ -353,7 +351,7 @@ export function getEventBoundTimestamp(
 export function getEventTimezonePlainDate(
   occurrence: SchedulerRenderableEventOccurrence,
   timestamp: number,
-): PlainDate {
+): BaseTemporal.PlainDate {
   return toPlainDate(timestamp, getEventTimezone(occurrence));
 }
 
@@ -398,19 +396,16 @@ export function getRecurrenceRuleBound(
  * which keeps the rule ending on a date and fails the validation of the Recurrence tab.
  */
 export function getRecurrenceUntil(
-  adapter: Adapter,
   rawDate: string,
   eventTimezone: TemporalTimezone,
 ): TemporalSupportedObject {
   const plainDate = readDateField(rawDate);
-  return plainDate == null
-    ? createAdapterDate(adapter, NaN, eventTimezone)
-    : createEndOfPlainDate(adapter, plainDate, eventTimezone);
+  return plainDate == null ? new Date(NaN) : createEndOfPlainDate(plainDate, eventTimezone);
 }
 
 /**
  * The canonical IANA identifier of a timezone; `default` and `system` resolve to the system
- * timezone, as the adapter does.
+ * timezone.
  */
 function getTimezoneId(timezone: TemporalTimezone): string {
   const id =

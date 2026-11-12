@@ -1,24 +1,16 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Rating, { RatingProps } from '@mui/material/Rating';
-import {
+import type { RatingProps } from '@mui/material/Rating';
+import Rating from '@mui/material/Rating';
+import type {
   GridFilterInputValueProps,
-  DataGrid,
   GridFilterOperator,
 } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function RatingInputValue(props: GridFilterInputValueProps) {
-  const { item, applyValue, focusElementRef } = props;
-
-  const ratingRef: React.Ref<any> = React.useRef(null);
-  React.useImperativeHandle(focusElementRef, () => ({
-    focus: () => {
-      ratingRef.current
-        .querySelector(`input[value="${Number(item.value) || ''}"]`)
-        .focus();
-    },
-  }));
+  const { item, applyValue } = props;
 
   const handleFilterChange: RatingProps['onChange'] = (event, newValue) => {
     applyValue({ ...item, value: newValue });
@@ -39,7 +31,6 @@ function RatingInputValue(props: GridFilterInputValueProps) {
         value={Number(item.value)}
         onChange={handleFilterChange}
         precision={0.5}
-        ref={ratingRef}
       />
     </Box>
   );

@@ -47,7 +47,6 @@ export const eventB = EventBuilder.new()
 
 export function getOccurrences(events: SchedulerProcessedEvent[]) {
   return getOccurrencesFromEvents({
-    adapter,
     start: adapter.getTime(collectionStart),
     end: adapter.getTime(collectionEnd),
     eventRangeIndex: createEventRangeIndex(events, false),

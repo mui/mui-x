@@ -1,22 +1,20 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import type { SchedulerProcessedDay } from '../../models';
 import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
-import { useAdapterContext } from '../../use-adapter-context';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
-import { createProcessedDate } from '../../internals/utils/plain-date-utils/adapter';
+import { createProcessedDate } from '../../internals/utils/plain-date-utils/date';
 import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
+import { getDayGridCellSpan } from '../../use-event-occurrences-with-day-grid-position';
 
 export function useCalendarGridPlaceholderInDay(
-  day: SchedulerProcessedDay,
+  day: useEventOccurrencesWithDayGridPosition.DayData,
   row: useEventOccurrencesWithDayGridPosition.ReturnValue,
   maxEvents?: number,
 ): useEventOccurrencesWithDayGridPosition.EventOccurrencePlaceholderWithPosition | null {
-  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext().axis;
 
@@ -62,8 +60,12 @@ export function useCalendarGridPlaceholderInDay(
 
     // The placeholder can run past the week row: the next rows render their own piece.
     const endInRow = Math.min(rawPlaceholder.end, rowEnd);
-    // The placeholder covers every date up to its end, like the occurrences.
-    const daySpan = toLocalDayNumber(endInRow, displayTimezone) - day.plainDate.dayNumber + 1;
+    // The placeholder covers the cells of every date up to its end, like the occurrences.
+    const daySpan = getDayGridCellSpan(
+      row.days,
+      row.days.indexOf(day),
+      toLocalDayNumber(endInRow, displayTimezone),
+    );
 
     const sharedProperties = {
       key: 'occurrence-placeholder',
@@ -85,7 +87,7 @@ export function useCalendarGridPlaceholderInDay(
             timestamp: day.timestamp,
             minutesInDay: day.minutesInDay,
           },
-          end: createProcessedDate(adapter, endInRow, displayTimezone),
+          end: createProcessedDate(endInRow, displayTimezone),
           timezone: displayTimezone,
         },
         position: {
@@ -100,8 +102,8 @@ export function useCalendarGridPlaceholderInDay(
         ...sharedProperties,
         title: rawPlaceholder.eventData.title ?? '',
         displayTimezone: {
-          start: createProcessedDate(adapter, rawPlaceholder.start, displayTimezone),
-          end: createProcessedDate(adapter, rawPlaceholder.end, displayTimezone),
+          start: createProcessedDate(rawPlaceholder.start, displayTimezone),
+          end: createProcessedDate(rawPlaceholder.end, displayTimezone),
           timezone: displayTimezone,
         },
         position: {
@@ -113,8 +115,8 @@ export function useCalendarGridPlaceholderInDay(
 
     return {
       ...sharedProperties,
-      start: createProcessedDate(adapter, rawPlaceholder.start, displayTimezone),
-      end: createProcessedDate(adapter, rawPlaceholder.end, displayTimezone),
+      start: createProcessedDate(rawPlaceholder.start, displayTimezone),
+      end: createProcessedDate(rawPlaceholder.end, displayTimezone),
       displayTimezone: { ...originalEvent!.displayTimezone },
       position: {
         index: findAvailableIndex(rawPlaceholder.occurrenceKey),
@@ -122,12 +124,12 @@ export function useCalendarGridPlaceholderInDay(
       },
     };
   }, [
-    adapter,
     day,
     displayTimezone,
     originalEvent,
     originalEventId,
     rawPlaceholder,
+    row.days,
     rowEnd,
     findAvailableIndex,
   ]);

@@ -1,5 +1,5 @@
-import { PointerManager } from '../PointerManager';
-import { PointerType } from '../types/Pointers';
+import type { PointerManager } from '../PointerManager';
+import type { PointerType } from '../types/Pointers';
 import type { PressUserGestureOptions } from './PressUserGesture.types';
 
 /**

@@ -17,13 +17,14 @@ import {
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
-  addToAdapterDate,
+  addToDate,
   formatDayOfMonth,
   formatMonthAndYear,
   formatWeekday,
   formatWeekdayMonthAndDayOfMonth,
   formatWeekNumber,
-  getPlainDateWeekStart,
+  getDayNumber,
+  getStartOfWeekDayNumber,
   getWeekNumber,
 } from '@mui/x-scheduler-internals/internals';
 import {
@@ -192,9 +193,7 @@ const AGENDA_VIEW_DEFINITION: EventCalendarViewDefinition = {
     if (dayCount === 'month') {
       return getSiblingMonthStart(state, delta);
     }
-    return addToAdapterDate(state.adapter, schedulerOtherSelectors.visibleDate(state), {
-      days: dayCount * delta,
-    });
+    return addToDate(state.visibleDate, { days: dayCount * delta }, state.displayTimezone);
   },
   visibleDaysSelector: eventCalendarAgendaSelectors.visibleDays,
   fetchRangeSelector: eventCalendarAgendaSelectors.fetchRange,
@@ -238,10 +237,10 @@ export const AgendaView = React.memo(
         let weekNumber = 0;
         let isFirstDayOfWeek = false;
         if (showWeekNumber) {
-          const weekStartDayNumber = getPlainDateWeekStart(
-            date.plainDate,
+          const weekStartDayNumber = getStartOfWeekDayNumber(
+            getDayNumber(date.plainDate),
             weekInfo.firstDay,
-          ).dayNumber;
+          );
           isFirstDayOfWeek = weekStartDayNumber !== previousWeekStartDayNumber;
           if (isFirstDayOfWeek) {
             weekNumber = getWeekNumber(date.plainDate, weekInfo);
@@ -265,7 +264,7 @@ export const AgendaView = React.memo(
           </AgendaViewEmptyState>
         )}
         {daysWithOccurrences.map(({ date, occurrences, isFirstDayOfWeek, weekNumber }) => {
-          const isToday = date.plainDate.dayNumber === nowDayNumber;
+          const isToday = getDayNumber(date.plainDate) === nowDayNumber;
           return (
             <React.Fragment key={date.key}>
               {showWeekNumber && isFirstDayOfWeek && (

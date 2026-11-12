@@ -23,7 +23,7 @@ const dailyEvent = EventBuilder.new()
   .recurrent('DAILY')
   .build();
 
-const FEATURE_WARNING = 'with the `recurringEvents` feature';
+const FEATURE_WARNING = 'Recurring events are not enabled';
 const DEPENDENCIES_FEATURE_WARNING = 'the dependencies feature is missing';
 
 const predecessor = EventBuilder.new()
@@ -55,10 +55,7 @@ describe('Features - EventTimelinePremiumStore', () => {
   it('should render an rrule event once when no recurring feature is provided', () => {
     let store!: EventTimelinePremiumStore<any, any>;
     expect(() => {
-      store = new EventTimelinePremiumStore(
-        { events: [dailyEvent], resources: [resource] },
-        adapter,
-      );
+      store = new EventTimelinePremiumStore({ events: [dailyEvent], resources: [resource] });
     }).toWarnDev(FEATURE_WARNING);
 
     expect(schedulerEventSelectors.isRecurring(store.state, 'daily')).to.equal(false);
@@ -66,14 +63,11 @@ describe('Features - EventTimelinePremiumStore', () => {
   });
 
   it('should expand an rrule event when the recurring feature is provided', () => {
-    const store = new EventTimelinePremiumStore(
-      {
-        events: [dailyEvent],
-        resources: [resource],
-        storeFeatures: { recurringEvents: schedulerRecurringEventsPlugin },
-      },
-      adapter,
-    );
+    const store = new EventTimelinePremiumStore({
+      events: [dailyEvent],
+      resources: [resource],
+      storeFeatures: { recurringEvents: schedulerRecurringEventsPlugin },
+    });
 
     expect(schedulerEventSelectors.isRecurring(store.state, 'daily')).to.equal(true);
     expect(countOccurrences(store)).to.equal(3);
@@ -83,12 +77,12 @@ describe('Features - EventTimelinePremiumStore', () => {
     const parameters = { events: [dailyEvent], resources: [resource] };
     let store!: EventTimelinePremiumStore<any, any>;
     expect(() => {
-      store = new EventTimelinePremiumStore(parameters, adapter);
+      store = new EventTimelinePremiumStore(parameters);
     }).toWarnDev(FEATURE_WARNING);
-    store.updateStateFromParameters(
-      { ...parameters, storeFeatures: { recurringEvents: schedulerRecurringEventsPlugin } },
-      adapter,
-    );
+    store.updateStateFromParameters({
+      ...parameters,
+      storeFeatures: { recurringEvents: schedulerRecurringEventsPlugin },
+    });
 
     expect(countOccurrences(store)).to.equal(1);
   });
@@ -98,15 +92,12 @@ describe('Features - EventTimelinePremiumStore', () => {
       const onDependenciesChange = vi.fn();
       let store!: EventTimelinePremiumStore<any, any>;
       expect(() => {
-        store = new EventTimelinePremiumStore(
-          {
-            events: [predecessor, successor],
-            resources: [resource],
-            dependencies: [dependencyAB],
-            onDependenciesChange,
-          },
-          adapter,
-        );
+        store = new EventTimelinePremiumStore({
+          events: [predecessor, successor],
+          resources: [resource],
+          dependencies: [dependencyAB],
+          onDependenciesChange,
+        });
       }).toWarnDev(DEPENDENCIES_FEATURE_WARNING);
 
       expect(store.state.areDependenciesEnabled).to.equal(false);
@@ -124,17 +115,14 @@ describe('Features - EventTimelinePremiumStore', () => {
 
     it('should enable dependencies with the dependencies feature', () => {
       const onEventsChange = vi.fn();
-      const store = new EventTimelinePremiumStore(
-        {
-          events: [predecessor, successor],
-          resources: [resource],
-          dependencies: [dependencyAB],
-          onDependenciesChange: () => {},
-          onEventsChange,
-          storeFeatures: { dependencies: dependenciesStoreFeature },
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStore({
+        events: [predecessor, successor],
+        resources: [resource],
+        dependencies: [dependencyAB],
+        onDependenciesChange: () => {},
+        onEventsChange,
+        storeFeatures: { dependencies: dependenciesStoreFeature },
+      });
 
       expect(store.state.areDependenciesEnabled).to.equal(true);
 
@@ -161,12 +149,12 @@ describe('Features - EventTimelinePremiumStore', () => {
       };
       let store!: EventTimelinePremiumStore<any, any>;
       expect(() => {
-        store = new EventTimelinePremiumStore(parameters, adapter);
+        store = new EventTimelinePremiumStore(parameters);
       }).toWarnDev(DEPENDENCIES_FEATURE_WARNING);
-      store.updateStateFromParameters(
-        { ...parameters, storeFeatures: { dependencies: dependenciesStoreFeature } },
-        adapter,
-      );
+      store.updateStateFromParameters({
+        ...parameters,
+        storeFeatures: { dependencies: dependenciesStoreFeature },
+      });
 
       expect(store.state.areDependenciesEnabled).to.equal(false);
       expect(store.state.dependencyModelList).to.deep.equal([]);
@@ -176,17 +164,14 @@ describe('Features - EventTimelinePremiumStore', () => {
       const onDependenciesChange = vi.fn();
       let store!: EventTimelinePremiumStore<any, any>;
       expect(() => {
-        store = new EventTimelinePremiumStore(
-          {
-            events: [predecessor, dailyEvent],
-            resources: [resource],
-            dependencies: [],
-            onDependenciesChange,
-            onEventsChange: () => {},
-            storeFeatures: { dependencies: dependenciesStoreFeature },
-          },
-          adapter,
-        );
+        store = new EventTimelinePremiumStore({
+          events: [predecessor, dailyEvent],
+          resources: [resource],
+          dependencies: [],
+          onDependenciesChange,
+          onEventsChange: () => {},
+          storeFeatures: { dependencies: dependenciesStoreFeature },
+        });
       }).toWarnDev(FEATURE_WARNING);
 
       const result = store.addDependency({ source: 'a', target: 'daily', type: 'FinishToStart' });
@@ -216,10 +201,10 @@ describe('Features - EventTimelinePremiumStore', () => {
         dataSource,
         defaultVisibleDate: DEFAULT_TESTING_VISIBLE_DATE,
       };
-      const store = new EventTimelinePremiumStore(parameters, adapter);
+      const store = new EventTimelinePremiumStore(parameters);
 
       await expect(async () => {
-        store.updateStateFromParameters(parameters, adapter);
+        store.updateStateFromParameters(parameters);
         await Promise.resolve();
         await Promise.resolve();
         await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);

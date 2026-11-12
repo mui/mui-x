@@ -1,6 +1,14 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "children": { "description": "The content of the component." },
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    }
+  },
   "classDescriptions": {
     "header": {
       "description": "Styles applied to {{nodeName}}.",
@@ -9,10 +17,6 @@
     "headerActions": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the conversation header actions element"
-    },
-    "headerInfo": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the conversation header info element"
     },
     "root": {
       "description": "Styles applied to {{nodeName}}.",
@@ -26,5 +30,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the conversation title element"
     }
-  }
+  },
+  "slotDescriptions": { "headerInfo": "The component that renders the header info." }
 }

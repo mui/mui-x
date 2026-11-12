@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { DataGrid, GridRowsProp, GridRowSelectionModel } from '@mui/x-data-grid';
-import { GridDemoData, useDemoData, randomInt } from '@mui/x-data-grid-generator';
+import type { GridRowsProp, GridRowSelectionModel } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
+import type { GridDemoData } from '@mui/x-data-grid-generator';
+import { useDemoData, randomInt } from '@mui/x-data-grid-generator';
 
 function loadServerRows(page: number, data: GridDemoData): Promise<any> {
   return new Promise((resolve) => {

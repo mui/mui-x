@@ -10,9 +10,8 @@ import type {
   SchedulerResourceId,
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
-import type { Adapter } from '../../use-adapter/useAdapter.types';
-import { getDateKey } from './plain-date-utils/adapter';
-import { toLocalDayNumber } from './plain-date-utils/timeZone';
+import { toPlainDate, toLocalDayNumber } from './plain-date-utils/timeZone';
+import { getPlainDateKey } from './plain-date-utils/plainDate';
 import type { SchedulerEventRangeIndex } from './event-range-index';
 
 /**
@@ -52,9 +51,12 @@ export function getOccurrenceKey(eventId: SchedulerEventId): string {
 export function getRecurringOccurrenceKey(
   eventId: SchedulerEventId,
   day: TemporalSupportedObject,
-  adapter: Adapter,
+  timezone: TemporalTimezone,
 ): string {
-  return getRecurringOccurrenceKeyFromDateKey(eventId, getDateKey(day, adapter));
+  return getRecurringOccurrenceKeyFromDateKey(
+    eventId,
+    getPlainDateKey(toPlainDate(day.getTime(), timezone)),
+  );
 }
 
 /**
@@ -104,11 +106,13 @@ export function generateOccurrenceFromEvent({
 }
 
 /**
- *  Returns the key of the days an event occurrence should be visible on.
+ * Returns the key of the days an event occurrence should be visible on.
+ * `dayNumbers` are the day numbers of `days`, read once for all the occurrences of the days.
  */
 export function getDaysTheOccurrenceIsVisibleOn(
   event: SchedulerEventOccurrence,
   days: SchedulerProcessedDay[],
+  dayNumbers: readonly number[],
 ) {
   const { start, end, timezone } = event.displayTimezone;
   const startDayNumber = toLocalDayNumber(start.timestamp, timezone);
@@ -116,13 +120,14 @@ export function getDaysTheOccurrenceIsVisibleOn(
 
   const dayKeys: string[] = [];
   for (let index = 0; index < days.length; index += 1) {
+    const dayNumber = dayNumbers[index];
     // If the day is before the event start, skip to the next day
-    if (days[index].plainDate.dayNumber < startDayNumber) {
+    if (dayNumber < startDayNumber) {
       continue;
     }
 
     // If the day is after the event end, break as the days are sorted by start date
-    if (days[index].plainDate.dayNumber > endDayNumber) {
+    if (dayNumber > endDayNumber) {
       break;
     }
     dayKeys.push(days[index].key);
@@ -135,15 +140,8 @@ export function getDaysTheOccurrenceIsVisibleOn(
  * Build eventRangeIndex with expandRecurringEvents set to whether recurringEventsPlugin is non-null.
  */
 export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsParameters) {
-  const {
-    adapter,
-    start,
-    end,
-    eventRangeIndex,
-    visibleResources,
-    displayTimezone,
-    recurringEventsPlugin,
-  } = parameters;
+  const { start, end, eventRangeIndex, visibleResources, displayTimezone, recurringEventsPlugin } =
+    parameters;
   const occurrences: SchedulerEventOccurrence[] = [];
   const eventsInRange = eventRangeIndex.getEventsForRange(start, end);
 
@@ -167,13 +165,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
 
       // TODO: Check how this behave when the occurrence is between start and end but not in the visible days (e.g: hidden week end).
       occurrences.push(
-        ...recurringEventsPlugin.getOccurrencesForVisibleDays(
-          event,
-          start,
-          end,
-          adapter,
-          displayTimezone,
-        ),
+        ...recurringEventsPlugin.getOccurrencesForVisibleDays(event, start, end, displayTimezone),
       );
       continue;
     }
@@ -248,7 +240,6 @@ export function getResourceSelectionMode(
 }
 
 export interface GetOccurrencesFromEventsParameters {
-  adapter: Adapter;
   /**
    * The first instant of the range, as a timestamp.
    */

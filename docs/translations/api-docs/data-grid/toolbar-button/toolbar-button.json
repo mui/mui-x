@@ -1,19 +1,30 @@
 {
   "componentDescription": "A button for performing actions from the toolbar.\nIt renders the `baseIconButton` slot.",
   "propDescriptions": {
+    "color": { "description": "The color of the button." },
     "component": {
       "description": "The component used for the root node. Either a string to use an HTML element or a component."
+    },
+    "disabled": { "description": "If <code>true</code>, the button is disabled." },
+    "edge": {
+      "description": "If given, uses a negative margin to align the button with the edge of its container."
     },
     "href": {
       "description": "The URL to link to. If set, and <code>component</code> is not set, the component renders as an anchor tag."
     },
+    "id": { "description": "The id of the button element." },
+    "label": { "description": "The label of the button." },
     "rel": {
       "description": "The relationship of the linked URL. Set it to <code>noopener noreferrer</code> when <code>target</code> is set to <code>_blank</code> to avoid a security issue."
     },
     "render": { "description": "A function to customize rendering of the component." },
+    "role": { "description": "The ARIA role of the button element." },
+    "size": { "description": "The size of the button." },
+    "tabIndex": { "description": "The <code>tabIndex</code> of the button element." },
     "target": {
       "description": "Where to display the linked URL, as the name for a browsing context."
-    }
+    },
+    "title": { "description": "The title of the button element." }
   },
   "classDescriptions": {}
 }

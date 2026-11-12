@@ -7,11 +7,11 @@ import { useRtl } from '@mui/system/RtlProvider';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
+  schedulerPreferenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
@@ -21,10 +21,11 @@ import {
   formatMonthAndYear,
   formatWeekday,
   formatWeekdayNarrow,
+  getDayNumber,
   getPlainDateWeekStart,
   isWeekendPlainDate,
 } from '@mui/x-scheduler-internals/internals';
-import type { PlainDate } from '@mui/x-scheduler-internals/internals';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerProcessedDay } from '@mui/x-scheduler-internals/models';
 import type { MiniCalendarProps } from './MiniCalendar.types';
 import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
@@ -163,7 +164,6 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
   function MiniCalendar(props, forwardedRef) {
     const { className, ...other } = props;
 
-    const adapter = useAdapterContext();
     const isRtl = useRtl();
     const PreviousIcon = isRtl ? ChevronRightIcon : ChevronLeftIcon;
     const NextIcon = isRtl ? ChevronLeftIcon : ChevronRightIcon;
@@ -174,10 +174,11 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
     const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
     const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
     const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
+    const weekend = useStore(store, schedulerPreferenceSelectors.weekend);
     const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
     // The first day of the displayed month.
-    const [displayedMonth, setDisplayedMonth] = React.useState<PlainDate>(() =>
+    const [displayedMonth, setDisplayedMonth] = React.useState<BaseTemporal.PlainDate>(() =>
       visiblePlainDate.with({ day: 1 }),
     );
 
@@ -192,13 +193,12 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
     const days = React.useMemo(() => {
       const gridStart = getPlainDateWeekStart(displayedMonth, weekStartsOn);
       return getDayListFromPlainDates({
-        adapter,
         firstPlainDate: gridStart,
         // 6 weeks = 42 days, so end is 41 days after start
         lastPlainDate: gridStart.add({ days: 41 }),
         timezone: displayTimezone,
       });
-    }, [adapter, displayedMonth, displayTimezone, weekStartsOn]);
+    }, [displayedMonth, displayTimezone, weekStartsOn]);
 
     // Group days into weeks
     const weeks = React.useMemo(() => {
@@ -260,7 +260,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
               aria-label={formatWeekday(locale, day.plainDate)}
               aria-colindex={dayIndex + 1}
               className={classes.miniCalendarWeekdayCell}
-              data-weekend={isWeekendPlainDate(day.plainDate) || undefined}
+              data-weekend={isWeekendPlainDate(day.plainDate, weekend) || undefined}
             >
               {formatWeekdayNarrow(locale, day.plainDate)}
             </MiniCalendarWeekdayCell>
@@ -276,8 +276,8 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
               className={classes.miniCalendarWeekRow}
             >
               {week.map((day, dayIndex) => {
-                const isToday = day.plainDate.dayNumber === nowDayNumber;
-                const isActive = day.plainDate.dayNumber === visiblePlainDate.dayNumber;
+                const isToday = getDayNumber(day.plainDate) === nowDayNumber;
+                const isActive = day.plainDate.equals(visiblePlainDate);
                 const isOtherMonth =
                   day.plainDate.year !== displayedMonth.year ||
                   day.plainDate.month !== displayedMonth.month;

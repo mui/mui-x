@@ -1,6 +1,7 @@
 import { act, screen } from '@mui/internal-test-utils';
 import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import { createPickerRenderer, adapterToUse, AdapterClassToUse } from 'test/utils/pickers';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
@@ -201,6 +202,103 @@ describe('<YearCalendar />', () => {
 
       expect(year2019).not.to.have.attribute('disabled');
       expect(year2020).to.have.attribute('disabled');
+    });
+  });
+
+  describe('tab stop', () => {
+    const getTabStops = () =>
+      screen
+        .getAllByRole('radio')
+        .filter((year) => year.getAttribute('tabindex') === '0')
+        .map((year) => year.textContent);
+
+    const defaultProps = {
+      referenceDate: adapterToUse.date('2019-06-15'),
+      minDate: adapterToUse.date('2017-01-01'),
+      maxDate: adapterToUse.date('2021-12-31'),
+    };
+
+    it('should fall back to the closest enabled year when the reference year is disabled', async () => {
+      const { user } = render(
+        <YearCalendar
+          {...defaultProps}
+          shouldDisableYear={(year) => adapterToUse.getYear(year) === 2019}
+        />,
+      );
+
+      expect(getTabStops()).to.deep.equal(['2020']);
+
+      await user.tab();
+
+      expect(screen.getByRole('radio', { name: '2020' })).toHaveFocus();
+    });
+
+    it('should move the tab stop when the focusable year gets disabled and restore it when it gets enabled', () => {
+      const { setProps } = render(<YearCalendar {...defaultProps} />);
+
+      expect(getTabStops()).to.deep.equal(['2019']);
+
+      setProps({
+        shouldDisableYear: (year: PickerValidDate) => adapterToUse.getYear(year) >= 2019,
+      });
+      expect(getTabStops()).to.deep.equal(['2018']);
+
+      setProps({ shouldDisableYear: undefined });
+      expect(getTabStops()).to.deep.equal(['2019']);
+    });
+
+    it('should auto focus the closest enabled year when the focusable year is disabled', () => {
+      render(
+        <YearCalendar
+          {...defaultProps}
+          autoFocus
+          shouldDisableYear={(year) => adapterToUse.getYear(year) === 2019}
+        />,
+      );
+
+      expect(screen.getByRole('radio', { name: '2020' })).toHaveFocus();
+    });
+
+    it('should use the same tab stop regardless of the order of the years', () => {
+      render(
+        <YearCalendar
+          {...defaultProps}
+          yearsOrder="desc"
+          shouldDisableYear={(year) => adapterToUse.getYear(year) === 2019}
+        />,
+      );
+
+      expect(getTabStops()).to.deep.equal(['2020']);
+    });
+
+    it('should not have a tab stop when all the years are disabled', () => {
+      render(<YearCalendar {...defaultProps} shouldDisableYear={() => true} />);
+
+      expect(getTabStops()).to.deep.equal([]);
+    });
+
+    it('should not take the focus back after leaving the calendar when the auto focused year gets disabled', () => {
+      const { setProps } = render(
+        <YearCalendar
+          {...defaultProps}
+          autoFocus
+          value={adapterToUse.date('2019-06-15')}
+          shouldDisableYear={(year) => adapterToUse.getYear(year) === 2019}
+        />,
+      );
+
+      const year2020 = screen.getByRole('radio', { name: '2020' });
+      expect(year2020).toHaveFocus();
+
+      act(() => year2020.blur());
+
+      setProps({
+        shouldDisableYear: (year: PickerValidDate) =>
+          [2019, 2020].includes(adapterToUse.getYear(year)),
+      });
+
+      expect(getTabStops()).to.deep.equal(['2018']);
+      expect(document.body).toHaveFocus();
     });
   });
 

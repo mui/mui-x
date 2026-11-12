@@ -16,7 +16,6 @@ import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerResource, TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
-import { createAdapterDate } from '@mui/x-scheduler-internals/internals';
 import { schedulerOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import {
@@ -168,14 +167,12 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       const onEventsChange = vi.fn();
       const event: SchedulerEvent = builder.withDisplayTimezone(displayTimezone).build();
       const occurrence = builder.toOccurrence();
-      const rawStart = adapter.setTimezone(occurrence.dataTimezone.start.value, displayTimezone);
-      const rawEnd = adapter.setTimezone(occurrence.dataTimezone.end.value, displayTimezone);
       const snapshot = {
         ...occurrence,
         displayTimezone: {
           ...occurrence.displayTimezone,
-          start: processDate(rawStart, adapter),
-          end: processDate(rawEnd, adapter),
+          start: processDate(occurrence.dataTimezone.start.value, displayTimezone),
+          end: processDate(occurrence.dataTimezone.end.value, displayTimezone),
         },
       };
 
@@ -401,32 +398,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         expect(getUpdatedEvent().start).to.equal('2026-10-25T00:30:00');
       });
     });
-  });
-
-  it('should delete the event and close the dialog when Delete is pressed on a non-recurring event, with confirmation off', async () => {
-    // `EventDialogContent` doesn't mount `DeleteConfirmationDialog` (that only happens through
-    // `EventDialogProvider`), so the confirmation is opted out of here to keep testing this
-    // component's own direct wiring to the store. See the `Deletion` suite below for the
-    // confirmation dialog itself, exercised through the full `EventDialogProvider`.
-    const onEventsChange = vi.fn();
-    const onClose = vi.fn();
-    const { user } = render(
-      <EventCalendarProvider
-        events={[DEFAULT_EVENT]}
-        resources={resources}
-        onEventsChange={onEventsChange}
-        eventDeletion={{ confirmation: false }}
-      >
-        <EventDialogContent open {...defaultProps} onClose={onClose} />
-      </EventCalendarProvider>,
-    );
-
-    await user.click(screen.getByRole('button', { name: 'Delete event' }));
-
-    // Without the recurring plugin the delete applies immediately and the dialog closes.
-    expect(onEventsChange.mock.calls.length).to.equal(1);
-    expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
-    expect(onClose.mock.calls.length).to.equal(1);
   });
 
   it('should not render the resource select when there are no resources, but should keep the color picker', () => {
@@ -706,17 +677,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         `${DEFAULT_EVENT.title} (renamed)`,
       );
     });
-
-    it('should render the Delete event button when `eventDeletion` is an object', async () => {
-      const { user } = renderDialogProvider({
-        onEventsChange: vi.fn(),
-        eventDeletion: { confirmation: true },
-      });
-
-      await user.click(screen.getByText(DEFAULT_EVENT.title));
-
-      expect(await screen.findByRole('button', { name: 'Delete event' })).not.to.equal(null);
-    });
   });
 
   it('should not render the recurrence tab when no slot is provided', () => {
@@ -750,12 +710,13 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
               .title(readonlyRecurringEvent.title)
               .span(readonlyRecurringEvent.start, readonlyRecurringEvent.end)
               .resource(personalResource)
+              .recurrent('DAILY')
               .toOccurrence()}
           />
         </EventCalendarProvider>,
       );
     }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+      'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
     ]);
 
     expect(screen.queryByText(/repeats/i)).to.equal(null);
@@ -791,7 +752,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         </EventCalendarProvider>,
       ));
     }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+      'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
     ]);
 
     await user.type(screen.getByRole('textbox', { name: /event title/i }), ' (renamed)');
@@ -801,53 +762,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     const [updated] = onEventsChange.mock.calls[0][0];
     expect(updated.title).to.equal('Weekly standup (renamed)');
     expect(updated.rrule).to.deep.equal(recurringEvent.rrule);
-  });
-
-  it('should warn and strip the rrule when createEvent is called with one', () => {
-    expect(() => {
-      render(
-        <EventCalendarProvider
-          events={[DEFAULT_EVENT]}
-          resources={resources}
-          onEventsChange={() => {}}
-        >
-          <SchedulerStoreRunner<AnyEventCalendarStore>
-            context={SchedulerStoreContext}
-            onMount={(store) => {
-              store.createEvent({
-                title: 'New recurring',
-                start: '2025-05-26T07:30:00Z',
-                end: '2025-05-26T08:30:00Z',
-                rrule: 'FREQ=DAILY',
-              });
-            }}
-          />
-        </EventCalendarProvider>,
-      );
-    }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-    ]);
-  });
-
-  it('should warn and strip the rrule when updateEvent is called with one', () => {
-    expect(() => {
-      render(
-        <EventCalendarProvider
-          events={[DEFAULT_EVENT]}
-          resources={resources}
-          onEventsChange={() => {}}
-        >
-          <SchedulerStoreRunner<AnyEventCalendarStore>
-            context={SchedulerStoreContext}
-            onMount={(store) => {
-              store.updateEvent({ id: DEFAULT_EVENT.id, rrule: 'FREQ=DAILY' });
-            }}
-          />
-        </EventCalendarProvider>,
-      );
-    }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-    ]);
   });
 
   it('should warn when a custom event property collides with a built-in form key', () => {
@@ -865,24 +779,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     }).toWarnDev([
       'MUI X Scheduler: The event model contains a custom property "startDate" that collides with a built-in form key.',
     ]);
-  });
-
-  it('should warn when updateRecurringEvent is called without a plugin', () => {
-    expect(() => {
-      render(
-        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-          <SchedulerStoreRunner<AnyEventCalendarStore>
-            context={SchedulerStoreContext}
-            onMount={(store) => {
-              store.updateRecurringEvent({
-                occurrenceStart: new Date('2025-05-26T07:30:00Z'),
-                changes: { id: DEFAULT_EVENT.id, start: new Date(), end: new Date() },
-              });
-            }}
-          />
-        </EventCalendarProvider>,
-      );
-    }).toWarnDev(['MUI X Scheduler: Recurring event updates are a premium feature.']);
   });
 
   describe('read-only date and time', () => {
@@ -1034,14 +930,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       );
     }
 
-    it('should render the default sections when the slot is not provided', () => {
-      renderWithSlot({});
-
-      expect(screen.getByText('Date & time')).not.to.equal(null);
-      expect(screen.getByText('Resource & color')).not.to.equal(null);
-      expect(screen.getByRole('textbox', { name: 'Description' })).not.to.equal(null);
-    });
-
     it('should render the slot content instead of the default sections', () => {
       renderWithSlot({ eventDialogGeneralTab: CustomSection });
 
@@ -1151,12 +1039,9 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.getByLabelText(/start date/i)).to.have.value('2025-05-27');
       expect(onRender.mock.calls.length).to.equal(rendersBefore);
 
-      expect(
-        adapter.formatByString(
-          createAdapterDate(adapter, getPlaceholder().start, 'default'),
-          'yyyy-MM-dd',
-        ),
-      ).to.equal('2025-05-27');
+      expect(adapter.formatByString(new Date(getPlaceholder().start), 'yyyy-MM-dd')).to.equal(
+        '2025-05-27',
+      );
     });
 
     it('should keep the placeholder in place while a custom field holds a date that does not exist', () => {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
@@ -12,12 +12,12 @@ import {
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import { buildTemporalPlainDate, PlainDate } from '@mui/x-scheduler-internals/internals';
+import { BaseTemporal, toPlainDate } from '@mui/x-scheduler-internals/internals';
 
 describe('<CalendarGrid.TimeColumn />', () => {
   const { render } = createSchedulerRenderer();
 
-  const plainDate = buildTemporalPlainDate(adapter, adapter.now('default'));
+  const plainDate = toPlainDate(adapter.now('default').getTime(), 'default');
 
   function TimeColumnWrapper({
     children,
@@ -44,7 +44,7 @@ describe('<CalendarGrid.TimeColumn />', () => {
       render(
         <TimeColumnWrapper displayTimezone={timezone}>
           {/* July 3rd starts at 18:15 UTC on July 2nd in Kathmandu. */}
-          <CalendarGrid.TimeColumn value={PlainDate.from('2025-07-03')} />
+          <CalendarGrid.TimeColumn value={BaseTemporal.PlainDate.from('2025-07-03')} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as any}
             onMount={(s) => {
@@ -83,7 +83,11 @@ describe('<CalendarGrid.TimeColumn />', () => {
       );
 
       const cell = screen.getByRole('gridcell');
-      await user.click(cell);
+      // Focus without clicking, so the Enter keypress is the only creation trigger.
+      act(() => {
+        cell.focus();
+      });
+      expect(store!.state.occurrencePlaceholder).to.equal(null);
       await user.keyboard('{Enter}');
 
       expect(store!.state.occurrencePlaceholder).not.to.equal(null);
