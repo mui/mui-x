@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { isJSDOM } from 'test/utils/skipIf';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from '../ChatBox/ChatBox';
@@ -224,5 +225,28 @@ describe('ChatComposerTextArea', () => {
     const padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
     expect(textbox.getBoundingClientRect().height).to.be.closeTo(2 * lineHeight + padding, 1);
     expect(textbox.scrollHeight).to.be.greaterThan(textbox.clientHeight);
+  });
+
+  it.skipIf(isJSDOM)('lets a theme styleOverrides maxHeight win over the maxRows cap', () => {
+    const theme = createTheme({
+      components: {
+        MuiChatComposer: { styleOverrides: { textArea: { maxHeight: 50 } } },
+      },
+    } as any);
+
+    render(
+      <ThemeProvider theme={theme}>
+        <ChatBox
+          adapter={createAdapter()}
+          variant="compact"
+          slotProps={{ composerInput: { maxRows: 5 } }}
+        >
+          {null}
+        </ChatBox>
+      </ThemeProvider>,
+    );
+
+    const textbox = screen.getByRole('textbox') as HTMLTextAreaElement;
+    expect(getComputedStyle(textbox).maxHeight).to.equal('50px');
   });
 });

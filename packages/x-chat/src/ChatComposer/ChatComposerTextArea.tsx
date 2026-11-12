@@ -13,6 +13,8 @@ import type { ChatComposerClasses } from './chatComposerClasses';
 const useThemeProps = createUseThemeProps('MuiChatComposerTextArea');
 
 const MAX_ROWS_STYLE = { minHeight: 'unset', margin: 'auto 0px', height: '28px' } as const;
+// Theme spacing factor for the text area padding, shared with the `maxRows` height cap.
+const TEXT_AREA_PADDING = 0.5;
 
 export interface ChatComposerTextAreaSlots extends ComposerTextAreaSlots {}
 
@@ -42,7 +44,7 @@ const ChatComposerTextAreaStyled = styled('textarea', {
   resize: 'none',
   border: 'none',
   borderRadius: 0,
-  padding: theme.spacing(0.5),
+  padding: theme.spacing(TEXT_AREA_PADDING),
   fontFamily: theme.typography.fontFamily,
   fontSize: theme.typography.body2.fontSize,
   lineHeight: theme.typography.body2.lineHeight,
@@ -51,7 +53,10 @@ const ChatComposerTextAreaStyled = styled('textarea', {
   outline: 'none',
   boxSizing: 'border-box',
   minHeight: 40,
-  maxHeight: 200,
+  // `maxRows` lines plus the vertical padding. Without `--ChatComposer-maxRows`, this custom
+  // property is invalid and `maxHeight` falls back to 200px.
+  '--ChatComposer-maxRowsHeight': `calc(var(--ChatComposer-maxRows) * 1lh + 2 * ${theme.spacing(TEXT_AREA_PADDING)})`,
+  maxHeight: 'var(--ChatComposer-maxRowsHeight, 200px)',
   overflowY: 'auto',
   scrollbarWidth: 'thin',
   '&:disabled': {
@@ -82,19 +87,10 @@ const ChatComposerTextArea = React.forwardRef<HTMLTextAreaElement, ChatComposerT
           input: mergeSlotProps(
             {
               className: clsx(classes.textArea, className),
-              sx:
-                maxRows != null
-                  ? [
-                      // Cap the auto-grow at `maxRows` lines plus the vertical padding.
-                      (theme: Theme) => ({
-                        maxHeight: `calc(${maxRows} * 1lh + ${theme.spacing(1)})`,
-                      }),
-                      ...(Array.isArray(sx) ? sx : [sx]),
-                    ]
-                  : sx,
+              sx,
               ...(maxRows != null
                 ? {
-                    style: MAX_ROWS_STYLE,
+                    style: { ...MAX_ROWS_STYLE, '--ChatComposer-maxRows': maxRows },
                     rows: 1,
                   }
                 : {}),
