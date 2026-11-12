@@ -26,6 +26,11 @@ dayjs.extend(weekOfYearPlugin);
 dayjs.extend(isBetweenPlugin);
 dayjs.extend(advancedFormatPlugin);
 
+// The precisions `isSame` compares at, each including the ones before it.
+const PRECISION_YEAR = 0;
+const PRECISION_MONTH = 1;
+const PRECISION_DAY = 2;
+
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
   YY: 'year',
@@ -178,15 +183,19 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
 
   private hasTimezonePlugin = () => typeof dayjs.tz !== 'undefined';
 
-  private isSame = (value: Dayjs, comparing: Dayjs, unit: 'year' | 'month' | 'day') => {
+  private isSame = (
+    value: Dayjs,
+    comparing: Dayjs,
+    precision: typeof PRECISION_YEAR | typeof PRECISION_MONTH | typeof PRECISION_DAY,
+  ) => {
     const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value))!;
 
     // Compares the fields that `format('YYYY-MM-DD')` prints, without the cost of formatting, which
     // calendars pay for every day they render. `Object.is` keeps two invalid dates equal.
     return (
       Object.is(value.year(), comparingInValueTimezone.year()) &&
-      (unit === 'year' || Object.is(value.month(), comparingInValueTimezone.month())) &&
-      (unit !== 'day' || Object.is(value.date(), comparingInValueTimezone.date()))
+      (precision < PRECISION_MONTH || Object.is(value.month(), comparingInValueTimezone.month())) &&
+      (precision < PRECISION_DAY || Object.is(value.date(), comparingInValueTimezone.date()))
     );
   };
 
@@ -543,15 +552,15 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public isSameYear = (value: Dayjs, comparing: Dayjs) => {
-    return this.isSame(value, comparing, 'year');
+    return this.isSame(value, comparing, PRECISION_YEAR);
   };
 
   public isSameMonth = (value: Dayjs, comparing: Dayjs) => {
-    return this.isSame(value, comparing, 'month');
+    return this.isSame(value, comparing, PRECISION_MONTH);
   };
 
   public isSameDay = (value: Dayjs, comparing: Dayjs) => {
-    return this.isSame(value, comparing, 'day');
+    return this.isSame(value, comparing, PRECISION_DAY);
   };
 
   public isSameHour = (value: Dayjs, comparing: Dayjs) => {
