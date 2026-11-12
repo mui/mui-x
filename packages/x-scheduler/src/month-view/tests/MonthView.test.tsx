@@ -1556,8 +1556,7 @@ describe('<MonthView />', () => {
     it.skipIf(!isJSDOM)(
       'should fill an event on two days of the display timezone, whatever the timezone of the system',
       () => {
-        // Pacific/Apia skipped December 30th, 2011. On a system there, December 30th and 31st of the
-        // other timezones must stay two days.
+        // Pacific/Apia skipped December 30th, 2011.
         setSystemTimezone('Pacific/Apia');
         const event = EventBuilder.new()
           .title('Trip')
