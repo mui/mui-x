@@ -14,7 +14,7 @@ export default function RangeBarCustomLabels() {
           label: 'Porto, Portugal',
           data: temperatureBerlinPorto.porto,
           barLabel: (item, context) => {
-            if (item.value === null || context.bar.height < 40) {
+            if (item.value === null || context.bar.height < 90) {
               return null;
             }
             return `${(item.value[1] - item.value[0]).toFixed(1)}°C`;

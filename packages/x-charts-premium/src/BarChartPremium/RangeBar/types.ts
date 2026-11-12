@@ -7,6 +7,11 @@ export interface LayoutData {
   y: number;
   width: number;
   height: number;
+  /**
+   * The coordinate of the range start on the value axis.
+   * It is the y-coordinate for vertical layout and the x-coordinate for horizontal layout.
+   */
+  startCoordinate: number;
 }
 
 export interface ProcessedRangeBarSeriesData {
@@ -25,9 +30,4 @@ export interface ProcessedRangeBarData extends LayoutData {
   color: string;
   value: RangeBarValueType | null;
   hidden: boolean;
-  /**
-   * The coordinate of the range start on the value axis.
-   * It is the y-coordinate for vertical layout and the x-coordinate for horizontal layout.
-   */
-  startCoordinate: number;
 }

@@ -67,14 +67,31 @@ function RangeBarLabelItem(props: RangeBarLabelItemProps) {
   const isHighlighted = highlightState === 'highlighted';
   const isFaded = highlightState === 'faded';
 
-  // The bar label positions itself relative to an origin.
-  // With the `outside` placement, the origin is the start of the range so that the label is placed after its end.
-  // With the `center` placement, the origin is the center of the bar, from which range bars grow when animated.
+  // Range bars grow from their center when animated, so the label is anchored to the center of the bar.
+  // With the `outside` placement, the bar label is placed after the edge of the bar that is farther from the
+  // center, which is the end of the range. The label geometry then only covers the half of the bar that contains
+  // the end of the range, so that the label follows the edge of the bar while it grows.
   const isVertical = layout === 'vertical';
   const centerX = x + width / 2;
   const centerY = y + height / 2;
-  const xOrigin = barLabelPlacement === 'outside' && !isVertical ? startCoordinate : centerX;
-  const yOrigin = barLabelPlacement === 'outside' && isVertical ? startCoordinate : centerY;
+  const isOutside = barLabelPlacement === 'outside';
+
+  let labelX = x;
+  let labelY = y;
+  let labelWidth = width;
+  let labelHeight = height;
+
+  if (isOutside) {
+    if (isVertical) {
+      const endsBelowCenter = startCoordinate <= centerY;
+      labelY = endsBelowCenter ? centerY : y;
+      labelHeight = endsBelowCenter ? height / 2 : height;
+    } else {
+      const endsAfterCenter = startCoordinate <= centerX;
+      labelX = endsAfterCenter ? centerX : x;
+      labelWidth = endsAfterCenter ? width / 2 : width;
+    }
+  }
 
   const ownerState = {
     seriesId,
@@ -92,12 +109,12 @@ function RangeBarLabelItem(props: RangeBarLabelItemProps) {
     elementType: Component,
     externalSlotProps: slotProps?.barLabel,
     additionalProps: {
-      xOrigin,
-      yOrigin,
-      x,
-      y,
-      width,
-      height,
+      xOrigin: centerX,
+      yOrigin: centerY,
+      x: labelX,
+      y: labelY,
+      width: labelWidth,
+      height: labelHeight,
       placement: barLabelPlacement,
       className: clsx(barClasses.label, !skipAnimation && barClasses.labelAnimate),
       'data-highlighted': isHighlighted || undefined,

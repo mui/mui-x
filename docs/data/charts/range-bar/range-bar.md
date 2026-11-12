@@ -87,12 +87,17 @@ To customize the position of the label, set a series' `barLabelPlacement` proper
 Labels are not rendered when using the [WebGL renderer](#performance).
 :::
 
+:::info
+When using `outside` placement, if the label doesn't fit in the chart area, it will be clipped.
+To avoid this, you can decrease or increase the axis min/max, respectively, to make enough space for the labels.
+:::
+
 ### Custom labels
 
 To display, change, or hide labels based on conditional logic, provide a function to the `barLabel` property.
 Labels are not displayed if the function returns `null`.
 
-The example below displays the temperature amplitude of each month and hides labels when the bar height is lower than 40px.
+The example below displays the temperature amplitude of each month and hides labels when the bar height is lower than 90px.
 
 {{"demo": "RangeBarCustomLabels.js"}}
 
