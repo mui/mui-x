@@ -38,6 +38,7 @@ export interface SendMessageActionsRuntimeRef<Cursor = string> {
 export interface InFlightRun {
   userMessageId: string;
   conversationId: string | undefined;
+  existingConversationIds: ReadonlySet<string>;
 }
 
 export function createSendMessageActions<Cursor = string>(params: {
@@ -220,7 +221,11 @@ export function createSendMessageActions<Cursor = string>(params: {
 
     const abortController = new AbortController();
     store.setActiveStreamAbortController(abortController);
-    const run: InFlightRun = { userMessageId: nextMessage.id, conversationId };
+    const run: InFlightRun = {
+      userMessageId: nextMessage.id,
+      conversationId,
+      existingConversationIds: new Set(store.state.conversationIds),
+    };
     inFlightRunRef.current = run;
 
     // Unique fallback id for this run; used only when the adapter's `start`

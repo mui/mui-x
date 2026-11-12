@@ -940,7 +940,7 @@ describe('useChat', () => {
     expect(adapter.stop).toHaveBeenCalledTimes(1);
   });
 
-  it('aborts a stream started without a conversation when uncontrolled messages are reset', async () => {
+  it('scopes a stream started without a conversation to the assigned id with uncontrolled messages', async () => {
     const signals: AbortSignal[] = [];
     const adapter = createAdapter({
       sendMessage: vi.fn(async ({ signal }) => {
@@ -969,14 +969,118 @@ describe('useChat', () => {
     await waitFor(() => {
       expect(result.current.activeConversationId).toBe('c-new');
     });
+    expect(signals[0].aborted).toBe(false);
+    expect(adapter.stop).not.toHaveBeenCalled();
+    expect(result.current.isStreaming).toBe(true);
+    expect(result.current.messages.some((message) => message.role === 'user')).toBe(true);
+  });
+
+  it('aborts a stream started without a conversation when uncontrolled messages switch to an existing conversation', async () => {
+    const signals: AbortSignal[] = [];
+    const conversations = [{ id: 'c-existing', title: 'Existing' }];
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async ({ signal }) => {
+        signals.push(signal);
+        return createPendingStream();
+      }),
+      stop: vi.fn(),
+    });
+    const { Wrapper, setProps } = createProviderWrapper({
+      adapter,
+      conversations,
+      activeConversationId: undefined,
+    });
+    const { result, rerender } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    act(() => {
+      void result.current.sendMessage({ parts: [{ type: 'text', text: 'New chat' }] });
+    });
+
+    await waitFor(() => {
+      expect(result.current.isStreaming).toBe(true);
+    });
+
+    setProps({ adapter, conversations, activeConversationId: 'c-existing' });
+    rerender();
+
+    await waitFor(() => {
+      expect(result.current.activeConversationId).toBe('c-existing');
+    });
     expect(signals[0].aborted).toBe(true);
+    expect(adapter.stop).toHaveBeenCalledTimes(1);
 
     await act(async () => {
-      void result.current.sendMessage({ parts: [{ type: 'text', text: 'In c-new' }] });
+      void result.current.sendMessage({ parts: [{ type: 'text', text: 'In c-existing' }] });
     });
     await waitFor(() => {
       expect(adapter.sendMessage).toHaveBeenCalledTimes(2);
     });
+  });
+
+  it('aborts a stream started without a conversation when the parent switches to an existing conversation before swapping messages', async () => {
+    const signals: AbortSignal[] = [];
+    const controlledStream = createControlledStream();
+    const conversations = [{ id: 'c-existing', title: 'Existing' }];
+    let messages: ChatMessage[] = [];
+    const onMessagesChange = (next: ChatMessage[]) => {
+      messages = next;
+    };
+    const existingMessages: ChatMessage[] = [
+      { id: 'existing-1', conversationId: 'c-existing', role: 'user', parts: [] },
+    ];
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async ({ signal }) => {
+        signals.push(signal);
+        return controlledStream.stream;
+      }),
+      stop: vi.fn(),
+    });
+    const { Wrapper, setProps } = createProviderWrapper({
+      adapter,
+      conversations,
+      messages,
+      onMessagesChange,
+      activeConversationId: undefined,
+    });
+    const { result, rerender } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    act(() => {
+      void result.current.sendMessage({ parts: [{ type: 'text', text: 'New chat' }] });
+    });
+
+    await waitFor(() => {
+      expect(result.current.isStreaming).toBe(true);
+    });
+
+    // The id changes first while the messages still hold the new chat's run.
+    setProps({
+      adapter,
+      conversations,
+      messages,
+      onMessagesChange,
+      activeConversationId: 'c-existing',
+    });
+    rerender();
+
+    await waitFor(() => {
+      expect(result.current.activeConversationId).toBe('c-existing');
+    });
+    expect(signals[0].aborted).toBe(true);
+    expect(adapter.stop).toHaveBeenCalledTimes(1);
+
+    messages = existingMessages;
+    setProps({
+      adapter,
+      conversations,
+      messages: existingMessages,
+      onMessagesChange,
+      activeConversationId: 'c-existing',
+    });
+    rerender();
+
+    expect(result.current.isStreaming).toBe(false);
+    expect(result.current.messages.map((message) => message.id)).toEqual(['existing-1']);
+    expect(messages.some((message) => message.role === 'assistant')).toBe(false);
   });
 
   it('keeps the adopted scope of a stream across a reconnect', async () => {

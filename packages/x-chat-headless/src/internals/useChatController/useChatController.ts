@@ -337,15 +337,16 @@ export function useChatController<Cursor = string>({
 
       const { isStreaming, streamingConversationId, messagesById } = store.state;
       if (isStreaming && streamingConversationId !== nextActiveConversationId) {
-        // An unscoped stream adopts the id the parent assigns to the new chat only when the
-        // controlled messages still hold the in-flight run; the parent already holds that thread.
+        // An unscoped stream adopts the id the parent assigns to the new chat: a conversation that
+        // did not exist when the run started, while the messages still hold the run.
         const run = inFlightRunRef.current;
-        const keepsInFlightRun =
+        const adoptsInFlightRun =
           streamingConversationId == null &&
-          store.parameters.messages !== undefined &&
+          nextActiveConversationId != null &&
           run != null &&
+          !run.existingConversationIds.has(nextActiveConversationId) &&
           messagesById[run.userMessageId] !== undefined;
-        if (keepsInFlightRun) {
+        if (adoptsInFlightRun) {
           run.conversationId = nextActiveConversationId;
           store.setStreaming(true, nextActiveConversationId);
           return;
