@@ -235,7 +235,7 @@ jobs:
           name: Run visual regression tests
           command: xvfb-run pnpm test:regressions
       - code-infra/argos-push
-  test_charts_benchmark:
+  test_benchmark:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
@@ -332,7 +332,7 @@ workflows:
           <<: *default-context
       - test_package:
           <<: *default-context
-      - test_charts_benchmark:
+      - test_benchmark:
           <<: *default-context
   e2e-website:
     when:
