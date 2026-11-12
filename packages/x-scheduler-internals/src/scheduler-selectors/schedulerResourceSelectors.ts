@@ -1,5 +1,4 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
-import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import type { SchedulerResource, SchedulerResourceId } from '../models';
 
@@ -140,10 +139,6 @@ export const schedulerResourceSelectors = {
     },
   ),
   childrenIdLookup: (state: State) => state.resourceChildrenIdLookup,
-  // Unmemoized; keep the body returning a stable ref (a Map value or
-  // EMPTY_ARRAY), never a freshly-built array.
-  resourceChildrenIds: (state: State, resourceId: SchedulerResourceId) =>
-    state.resourceChildrenIdLookup.get(resourceId) ?? EMPTY_ARRAY,
   // O(1) read from the memoized lookup; a resource with no entry (a leaf) has no
   // visible children.
   resourceHasVisibleChildren: (state: State, resourceId: SchedulerResourceId) =>
@@ -153,7 +148,6 @@ export const schedulerResourceSelectors = {
   isResourceCollapsed: (state: State, resourceId: SchedulerResourceId) =>
     state.collapsedResources[resourceId] === true,
   collapsedResources: (state: State) => state.collapsedResources,
-  resourceParentIdLookup: resourceParentIdLookupSelector,
   resourceDepthLookup: resourceDepthLookupSelector,
   resourceDepth: (state: State, resourceId: SchedulerResourceId) =>
     resourceDepthLookupSelector(state).get(resourceId) ?? 0,

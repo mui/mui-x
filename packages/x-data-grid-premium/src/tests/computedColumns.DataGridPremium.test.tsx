@@ -2051,8 +2051,7 @@ describe('<DataGridPremium /> - Computed columns', () => {
         // A step that fails warns once, in development.
         const filteringWarning = 'The filtering could not be applied again';
         const sortingWarning = 'The sorting could not be applied again';
-        // A throw inside the hydration of the columns leaves its pipe processing locked: the
-        // column added next would never be hydrated.
+        // The columns keep being hydrated after the type change: the column added next shows up.
         const expectColumnsToBeHydratedAgain = () => {
           act(() => apiRef.current!.setFilterModel({ items: [] }));
           act(() => apiRef.current!.addComputedColumn(half));

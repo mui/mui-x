@@ -4,7 +4,7 @@ import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-se
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
 import {
-  addToAdapterDate,
+  addToDate,
   createStartOfPlainDate,
   getPlainDateWeekStart,
 } from '@mui/x-scheduler-internals/internals';
@@ -60,12 +60,7 @@ export function createDayTimeGridViewDefinition(
 
   return {
     siblingVisibleDateGetter: ({ state, delta }) =>
-      addToAdapterDate(
-        state.adapter,
-        state.visibleDate,
-        { days: delta * dayCount },
-        state.displayTimezone,
-      ),
+      addToDate(state.visibleDate, { days: delta * dayCount }, state.displayTimezone),
     visibleDaysSelector: createSelectorMemoized(
       schedulerOtherSelectors.visiblePlainDate,
       schedulerOtherSelectors.displayTimezone,

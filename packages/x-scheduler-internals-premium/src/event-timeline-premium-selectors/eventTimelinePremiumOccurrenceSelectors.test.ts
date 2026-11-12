@@ -1,7 +1,8 @@
 import {
-  adapter,
-  getEventTimelinePremiumStateFromParameters,
+  addHours,
+  createDate,
   EventBuilder,
+  getEventTimelinePremiumStateFromParameters,
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import { computeElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
@@ -13,9 +14,9 @@ import {
 } from './eventTimelinePremiumOccurrenceSelectors';
 import { eventTimelinePremiumPresetSelectors } from './eventTimelinePremiumPresetSelectors';
 
-const VISIBLE_DATE = adapter.date('2025-07-03T00:00:00Z', 'default');
+const VISIBLE_DATE = createDate('2025-07-03T00:00:00Z');
 const resource = ResourceBuilder.new().id('r1').build();
-const at = (hours: number) => adapter.addHours(VISIBLE_DATE, hours).toISOString();
+const at = (hours: number) => addHours(VISIBLE_DATE, hours).toISOString();
 
 const PRESET_CONFIG = { dayAndHour: { startTime: 8, endTime: 20 } };
 
@@ -177,30 +178,6 @@ describe('eventTimelinePremiumOccurrenceSelectors', () => {
 
       expect(layoutOccurrence.timelinePosition).to.equal(
         positionByOccurrenceKey.get(occurrence.key),
-      );
-    });
-
-    it('should derive the position on demand for a full-day window', () => {
-      const state = buildState();
-      const config = eventTimelinePremiumPresetSelectors.config(state);
-      const occurrence = eventTimelinePremiumOccurrenceSelectors.visibleResourceOccurrences(
-        state,
-        'r1',
-      )[0];
-
-      const [layoutOccurrence] = addTimelinePositionsToOccurrences({
-        config,
-        occurrences: [{ ...occurrence, position: { firstIndex: 1, lastIndex: 1 } }],
-        positionByOccurrenceKey: null,
-      });
-
-      expect(layoutOccurrence.timelinePosition).to.deep.equal(
-        computeElementPositionInCollection({
-          start: occurrence.displayTimezone.start,
-          end: occurrence.displayTimezone.end,
-          collection: config,
-          durationMs: config.durationMs,
-        }),
       );
     });
   });

@@ -2,27 +2,24 @@ import { warnOnce } from '@mui/x-internals/warning';
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerEvent, SchedulerProcessedEvent } from '../models';
 import { processDate } from '../process-date';
-import { normalizeAllDayBounds } from '../internals/utils/plain-date-utils/adapter';
-import type { Adapter } from '../use-adapter';
+import { normalizeAllDayBounds } from '../internals/utils/plain-date-utils/date';
 import type { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
 import { resolveEventDate } from './resolveEventDate';
 
 export function processEvent(
   model: SchedulerEvent,
   displayTimezone: TemporalTimezone,
-  adapter: Adapter,
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
 ): SchedulerProcessedEvent {
   const dataTimezone = model.timezone ?? 'default';
 
-  const startInstant = resolveEventDate(model.start, dataTimezone, adapter, model.id);
-  const endInstant = resolveEventDate(model.end, dataTimezone, adapter, model.id);
+  const startInstant = resolveEventDate(model.start, dataTimezone, model.id);
+  const endInstant = resolveEventDate(model.end, dataTimezone, model.id);
   const resolvedExDates = model.exDates
-    ? model.exDates.map((exDate) => resolveEventDate(exDate, dataTimezone, adapter, model.id))
+    ? model.exDates.map((exDate) => resolveEventDate(exDate, dataTimezone, model.id))
     : undefined;
 
   const displayBounds = normalizeAllDayBounds(
-    adapter,
     startInstant,
     endInstant,
     model.allDay,
@@ -43,7 +40,7 @@ export function processEvent(
 
   const parsedDataRRule =
     recurringEventsPlugin && model.rrule
-      ? recurringEventsPlugin.parseRRule(adapter, model.rrule, dataTimezone)
+      ? recurringEventsPlugin.parseRRule(model.rrule, dataTimezone)
       : undefined;
 
   return {
@@ -51,15 +48,15 @@ export function processEvent(
     title: model.title,
     description: model.description,
     dataTimezone: {
-      start: processDate(startInstant, adapter, dataTimezone),
-      end: processDate(endInstant, adapter, dataTimezone),
+      start: processDate(startInstant, dataTimezone),
+      end: processDate(endInstant, dataTimezone),
       timezone: dataTimezone,
       rrule: parsedDataRRule,
       exDates: resolvedExDates,
     },
     displayTimezone: {
-      start: processDate(displayBounds.start, adapter, displayTimezone),
-      end: processDate(displayBounds.end, adapter, displayTimezone),
+      start: processDate(displayBounds.start, displayTimezone),
+      end: processDate(displayBounds.end, displayTimezone),
       timezone: displayTimezone,
       exDates: resolvedExDates,
     },

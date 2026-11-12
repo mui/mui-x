@@ -1,20 +1,22 @@
 import { describe, test } from 'vitest';
-import { adapter, getEventCalendarStateFromParameters } from 'test/utils/scheduler';
+import {
+  addHours,
+  createDate,
+  getEventCalendarStateFromParameters,
+  startOfMonth,
+  startOfWeek,
+} from 'test/utils/scheduler';
 import { getDayListFromPlainDates } from '../get-day-list';
-import { buildTemporalPlainDate } from '../internals/utils/plain-date-utils/adapter';
+import { toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
 import { eventCalendarOccurrencePlaceholderSelectors } from './eventCalendarOccurrencePlaceholderSelectors';
 
 export const benchmarkResult = { value: undefined as unknown };
 
 describe.each(['default', 'America/New_York'] as const)('%s display timezone', (timezone) => {
   // The 6 weeks of a month view.
-  const visibleDate = adapter.setTimezone(
-    adapter.date('2026-03-15T12:00:00Z', 'default'),
-    timezone,
-  );
-  const firstPlainDate = buildTemporalPlainDate(
-    adapter,
-    adapter.startOfWeek(adapter.startOfMonth(visibleDate)),
+  const visibleDate = createDate('2026-03-15T12:00:00Z');
+  const firstPlainDate = toPlainDate(
+    startOfWeek(startOfMonth(visibleDate, timezone), timezone).getTime(),
     'default',
   );
   const days = getDayListFromPlainDates({
@@ -29,8 +31,8 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
       type: 'internal-drag',
       surfaceType: 'day-grid',
       isHidden: false,
-      start: adapter.getTime(adapter.addHours(days[16].value, 10)),
-      end: adapter.getTime(adapter.addHours(days[18].value, 9)),
+      start: addHours(days[16].value, 10).getTime(),
+      end: addHours(days[18].value, 9).getTime(),
       eventId: 'event',
       occurrenceKey: 'event',
       originalOccurrence: null,

@@ -7,8 +7,7 @@ import {
   timestampToTimelineAxisOffsetMs,
 } from './timeline-axis';
 import type { TimelineAxis } from './timeline-axis';
-
-const MINUTE_MS = 60_000;
+import { MS_PER_MINUTE } from './plain-date-utils/dayNumber';
 
 export function useElementPositionInCollection(
   parameters: useElementPositionInCollection.Parameters,
@@ -35,12 +34,12 @@ export function computeElementPositionInCollection(
   const startOffsetMs = timestampToTimelineAxisOffsetMs(
     axis,
     start.timestamp,
-    start.minutesInDay * MINUTE_MS,
+    start.minutesInDay * MS_PER_MINUTE,
   );
   const endOffsetMs = timestampToTimelineAxisOffsetMs(
     axis,
     end.timestamp,
-    end.minutesInDay * MINUTE_MS,
+    end.minutesInDay * MS_PER_MINUTE,
   );
 
   const totalMs = parameters.durationMs ?? getTimelineAxisDurationMs(axis);
