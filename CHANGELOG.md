@@ -32,6 +32,7 @@ The following team members contributed to this release:
 - [DataGrid] Keep the focused cell when a server-side sort reloads the rows (#24068) @morsycodes
 - [DataGrid] Start editing with the first key of an IME composition (#23910) @michelengelen
 - [DataGrid] Warn when scroll indexes are out of bounds (#23448) @Roman178
+- [DataGrid] Keep pipe processing working after an error (#24120) @Roman178
 - [l10n] Improve Chinese (Taiwan) (zh-TW) locale (#24091) @poplolioi11
 - [l10n] Improve Czech (cs-CZ) locale (#24087) @kojdad-alt
 - [l10n] Improve Indonesian (id-ID) locale (#24143) @insanrizky
@@ -47,6 +48,7 @@ Same changes as in `@mui/x-data-grid@9.18.0`, plus:
 Same changes as in `@mui/x-data-grid-pro@9.18.0`, plus:
 
 - [DataGridPremium] Side panel drag and drop with pointer events (#23976) @noraleonte
+- [DataGridPremium] Add rows when the pasted data goes past the last row (#23881⁠) @michelengelen
 
 ### Date and Time Pickers
 
