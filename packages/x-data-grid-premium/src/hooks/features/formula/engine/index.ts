@@ -136,6 +136,14 @@ export {
   rankFormulaCompletions,
 } from './formulaCompletion';
 
+export type {
+  FormulaPendingPick,
+  FormulaPickAction,
+  FormulaPickActionOptions,
+  FormulaPickSelection,
+} from './formulaPick';
+export { getFormulaPickAction } from './formulaPick';
+
 export type { A1TransformContext, A1TransformResult, ToCanonicalOptions } from './formulaA1';
 export {
   columnIndexToLetters,
