@@ -246,9 +246,9 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Skip pull requests without charts changes
+          name: Skip pull requests without MUI X changes
           # The base branch runs on every commit: changes outside these paths, such as a dependency
-          # bump, can change the charts' performance too.
+          # bump, can change the performance too.
           command: |
             set -e
             BASE="${BASE_BRANCH:-master}"
@@ -260,11 +260,12 @@ jobs:
             # Full history: the baseline below is where the branch forked.
             git fetch --no-tags origin "$BASE"
             CHANGED=$(git diff --name-only "origin/$BASE...HEAD" -- \
-              'packages/x-charts*' \
+              'packages/x-*' \
+              ':!packages/x-codemod' \
               'test/benchmark' \
               '.circleci/config.yml')
             if [ -z "$CHANGED" ]; then
-              echo "No changes to packages/x-charts*, test/benchmark, or CircleCI config; halting job."
+              echo "No changes to packages/x-* (outside x-codemod), test/benchmark, or CircleCI config; halting job."
               circleci-agent step halt
               exit 0
             fi
