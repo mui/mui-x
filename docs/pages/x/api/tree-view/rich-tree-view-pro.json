@@ -217,6 +217,7 @@
     {
       "name": "loading",
       "description": "Component rendered instead of the default loading rows.\nIt renders inside the tree root while the tree is loading, which keeps the\n`role=\"tree\"` and `aria-busy` attributes, and inside a lazily loading item\nwhile its children load.\nCompose it with `TreeItemLoader` to keep the rows semantically correct.",
+      "default": "TreeItemLoader rows.",
       "class": null
     },
     {
@@ -228,16 +229,19 @@
     {
       "name": "collapseIcon",
       "description": "The default icon used to collapse the item.",
+      "default": "TreeViewCollapseIcon",
       "class": null
     },
     {
       "name": "expandIcon",
       "description": "The default icon used to expand the item.",
+      "default": "TreeViewExpandIcon",
       "class": null
     },
     {
       "name": "endIcon",
       "description": "The default icon displayed next to an end item.\nThis is applied to all Tree Items and can be overridden by the TreeItem `icon` slot prop.",
+      "default": "null",
       "class": null
     },
     {

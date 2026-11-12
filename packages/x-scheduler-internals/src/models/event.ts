@@ -1,4 +1,5 @@
-import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type { TemporalSupportedObject } from './date';
 import type {
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
@@ -184,15 +185,15 @@ export interface SchedulerEvent {
   /**
    * The start date and time of the event.
    *
-   * Strings ending with `"Z"` are instants (UTC);
-   * strings without `"Z"` are wall-time (interpreted in `event.timezone` or `"default"`).
+   * Strings ending with `"Z"` or an offset are instants;
+   * other strings are wall-time (interpreted in `event.timezone` or `"default"`).
    */
   start: string;
   /**
    * The end date and time of the event.
    *
-   * Strings ending with `"Z"` are instants (UTC);
-   * strings without `"Z"` are wall-time (interpreted in `event.timezone` or `"default"`).
+   * Strings ending with `"Z"` or an offset are instants;
+   * other strings are wall-time (interpreted in `event.timezone` or `"default"`).
    */
   end: string;
   /**

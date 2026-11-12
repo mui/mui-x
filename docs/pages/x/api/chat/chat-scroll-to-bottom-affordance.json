@@ -30,10 +30,21 @@
     {
       "name": "root",
       "description": "The component that renders the root.",
+      "default": "'button'; a styled IconButton in `ChatScrollToBottomAffordance`",
       "class": "MuiChatScrollToBottomAffordance-root"
     },
-    { "name": "badge", "description": "The component that renders the badge.", "class": null },
-    { "name": "icon", "description": "The component that renders the icon.", "class": null }
+    {
+      "name": "badge",
+      "description": "The component that renders the badge.",
+      "default": "'span'",
+      "class": null
+    },
+    {
+      "name": "icon",
+      "description": "The component that renders the icon.",
+      "default": "null, which renders a text label instead; an arrow icon in `ChatScrollToBottomAffordance`",
+      "class": null
+    }
   ],
   "classes": [],
   "spread": true,

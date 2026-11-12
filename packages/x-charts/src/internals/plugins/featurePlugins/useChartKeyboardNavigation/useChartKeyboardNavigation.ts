@@ -75,6 +75,15 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   const pendingFocusItemRef = React.useRef<FocusedItemIdentifier<ChartSeriesType> | null>(null);
 
   /**
+   * Whether the node belongs to the accessibility proxy, which holds the focus of the chart items.
+   * Other focusable elements composed in the chart, such as the zoom slider handles, own their focus
+   * and their keys.
+   */
+  const isInAccessibilityProxy = useEventCallback(
+    (node: Node | null) => node !== null && !!chartsAccessibilityProxyRef.current?.contains(node),
+  );
+
+  /**
    * Writes the focus state, only switching the highlight and tooltip to keyboard when visible.
    * An `undefined` item leaves the focused item untouched, `null` clears it.
    *
@@ -85,7 +94,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   const updateFocus = useEventCallback(
     (item: FocusedItemIdentifier<ChartSeriesType> | null | undefined, isFocusVisible: boolean) => {
       const keyboardNavigation = store.state.keyboardNavigation;
-      const isFocused = chartsLayerContainerRef.current?.contains(document.activeElement) ?? false;
+      const isFocused = isInAccessibilityProxy(document.activeElement);
       // Only the keyboard hands the highlight and the tooltip over to the focused item. A click
       // moves the focus, but the pointer is still there and they must keep following it.
       const followsFocus = isFocused && isFocusVisible && isKeyboardModalityRef.current;
@@ -123,8 +132,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       const isFocusVisible = options?.visible ?? focusVisibleIntentRef.current;
       focusVisibleIntentRef.current = isFocusVisible;
 
-      const container = chartsLayerContainerRef.current;
-      if (!container?.contains(document.activeElement)) {
+      if (!isInAccessibilityProxy(document.activeElement)) {
         // Focusing fires `focusin` synchronously, which runs `restoreFocus` with the intent above.
         focusAccessibilityProxy(chartsAccessibilityProxyRef.current);
       }
@@ -264,13 +272,13 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     }
 
     function removeFocus(event: FocusEvent) {
-      const root = event.currentTarget as HTMLElement | null;
       const next = event.relatedTarget as Node | null;
 
-      // Avoid removing focus if we know it is moving to another children in the chart.
+      // Avoid removing focus if we know it is moving to another children of the proxy.
       // This avoid extra computation ot remove/add focus at each keyboard pressed when navigating in the chart.
       // A null relatedTarget means focus left to a non-focusable element (clicking outside), so focus is removed.
-      if (root && next !== null && root.contains(next)) {
+      // Moving to another focusable element of the chart, such as a zoom slider handle, removes it too.
+      if (isInAccessibilityProxy(next)) {
         return;
       }
 
@@ -288,7 +296,11 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
 
     // The focus already moved into the chart, so `applyFocus` only reconciles the state with the
     // current intent: its own focusing step is a no-op here.
-    function restoreFocus() {
+    function restoreFocus(event: FocusEvent) {
+      if (!isInAccessibilityProxy(event.target as Node | null)) {
+        return;
+      }
+
       applyFocus(undefined);
     }
 
@@ -312,6 +324,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     function activationHandler(event: KeyboardEvent) {
       // Ignore the auto-repeat while the key is held: a pointer click does not repeat either.
       if (
+        !isInAccessibilityProxy(event.target as Node | null) ||
         event.repeat ||
         !isItemActivationKey(event) ||
         !selectorChartsIsKeyboardActivationEnabled(store.state)
@@ -340,6 +353,11 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     }
 
     function keyboardHandler(event: KeyboardEvent) {
+      // The keys of other focusable elements composed in the chart are theirs, not the items' ones.
+      if (!isInAccessibilityProxy(event.target as Node | null)) {
+        return;
+      }
+
       // Item navigation only uses unmodified keys, except `ControlOrMeta` + `Home`/`End`.
       // Modified ones are left to the browser, and to chart interactions such as keyboard zoom and pan.
       const isCtrlHomeEnd =
@@ -406,6 +424,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     store,
     updateFocus,
     applyFocus,
+    isInAccessibilityProxy,
     params.focusItemOnClick,
   ]);
 

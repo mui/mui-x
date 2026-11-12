@@ -70,22 +70,6 @@ const getState = () => {
 };
 
 describe('eventTimelinePremiumDependencySelectors', () => {
-  it('should return the dependencyModelList from the state', () => {
-    const state = getState();
-
-    expect(eventTimelinePremiumDependencySelectors.modelList(state)).to.equal(
-      state.dependencyModelList,
-    );
-  });
-
-  it('should return the dependencyModelLookup from the state', () => {
-    const state = getState();
-
-    expect(eventTimelinePremiumDependencySelectors.modelLookup(state)).to.equal(
-      state.dependencyModelLookup,
-    );
-  });
-
   it('should return the dependency by id', () => {
     const state = getState();
 

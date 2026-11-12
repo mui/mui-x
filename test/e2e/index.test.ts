@@ -534,6 +534,7 @@ async function initializeEnvironment(
           'div[role="columnheader"][data-field="birthday"] button[aria-label="birthday column menu"]',
         );
         await page.click('"Filter"');
+        await page.getByLabel('Value').focus();
         await page.keyboard.type('08/04/2024', { delay: 10 });
 
         let thrownError: Error | null = null;

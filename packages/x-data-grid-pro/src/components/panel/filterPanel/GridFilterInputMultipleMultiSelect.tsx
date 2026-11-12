@@ -131,6 +131,10 @@ GridFilterInputMultipleMultiSelect.propTypes /* remove-proptypes */ = {
    * @default false
    */
   disableDebounce: PropTypes.bool,
+  /**
+   * A ref allowing to set imperative focus.
+   * @deprecated The grid no longer passes this prop. Header filters focus the input through `inputRef`.
+   */
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,

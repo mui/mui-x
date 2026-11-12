@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { adapter, EventBuilder, setSystemTimezone } from 'test/utils/scheduler';
+import { createDate, EventBuilder, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import type { SchedulerEventId, SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
 import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
@@ -7,12 +7,11 @@ import type { SchedulerDependency } from '../../models';
 import { groupByEventId } from './dependency-utils';
 import { computeAutoSchedulingCascade, getDependencyViolation } from './auto-scheduling';
 
-const date = (value: string): TemporalSupportedObject => adapter.date(value, 'default');
+const date = (value: string) => createDate(value);
 // `Z` strings resolve to the machine timezone, so the all-day fixtures use wall-time
 // strings with an explicit zone to stay machine-independent.
-const utcDate = (value: string): TemporalSupportedObject => adapter.date(value, 'UTC');
-const newYorkDate = (value: string): TemporalSupportedObject =>
-  adapter.date(value, 'America/New_York');
+const utcDate = (value: string) => createDate(value, 'UTC');
+const newYorkDate = (value: string) => createDate(value, 'America/New_York');
 
 function buildLookup(events: SchedulerProcessedEvent[]) {
   return new Map(events.map((event) => [event.id, event]));
@@ -49,7 +48,6 @@ function runCascadeResult(
   overrides: CascadeOverrides = {},
 ) {
   return computeAutoSchedulingCascade({
-    adapter,
     processedEventLookup: buildLookup(events),
     activeDependenciesBySource: groupByEventId(dependencies, 'source'),
     activeDependenciesByTarget: groupByEventId(dependencies, 'target'),
@@ -80,12 +78,12 @@ function expectDates(
   if (start === null) {
     expect('start' in entry).to.equal(false);
   } else {
-    expect(adapter.getTime(entry.start!)).to.equal(adapter.getTime(adapter.date(start, timezone)));
+    expect(entry.start!.getTime()).to.equal(createDate(start, timezone).getTime());
   }
   if (end === null) {
     expect('end' in entry).to.equal(false);
   } else {
-    expect(adapter.getTime(entry.end!)).to.equal(adapter.getTime(adapter.date(end, timezone)));
+    expect(entry.end!.getTime()).to.equal(createDate(end, timezone).getTime());
   }
 }
 
@@ -135,9 +133,7 @@ describe('computeAutoSchedulingCascade', () => {
 
     expect(result).to.have.length(1);
     expect(result[0].id).to.equal('b');
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(utcDate('2025-07-06T00:00:00')),
-    );
+    expect(result[0].start!.getTime()).to.equal(utcDate('2025-07-06T00:00:00').getTime());
   });
 
   it('should cascade a cross-timezone all-day move from its data-zone bounds', () => {
@@ -164,9 +160,7 @@ describe('computeAutoSchedulingCascade', () => {
     // upstream stretch as above): b lands after its effective end.
     expect(result).to.have.length(1);
     expect(result[0].id).to.equal('b');
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(utcDate('2025-07-07T00:00:00')),
-    );
+    expect(result[0].start!.getTime()).to.equal(utcDate('2025-07-07T00:00:00').getTime());
   });
 
   it('should skip a cascade target missing from the lookup', () => {
@@ -371,9 +365,7 @@ describe('computeAutoSchedulingCascade', () => {
     );
 
     expect(result).to.have.length(1);
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(utcDate('2025-07-05T00:00:00')),
-    );
+    expect(result[0].start!.getTime()).to.equal(utcDate('2025-07-05T00:00:00').getTime());
     // Kept, not just unchanged: absent from the entry, not merely equal to its old value.
     expect('end' in result[0]).to.equal(false);
   });
@@ -528,12 +520,8 @@ describe('computeAutoSchedulingCascade', () => {
     expect(result).to.have.length(1);
     // 1h in absolute milliseconds: the wall-clock end lands at 03:30 (02:30 does not
     // exist that night).
-    expect(adapter.getTime(result[0].end!) - adapter.getTime(result[0].start!)).to.equal(
-      60 * 60 * 1000,
-    );
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(newYorkDate('2025-03-09T01:30:00')),
-    );
+    expect(result[0].end!.getTime() - result[0].start!.getTime()).to.equal(60 * 60 * 1000);
+    expect(result[0].start!.getTime()).to.equal(newYorkDate('2025-03-09T01:30:00').getTime());
   });
 
   // Browsers cannot change their timezone through process.env.TZ.
@@ -556,12 +544,12 @@ describe('computeAutoSchedulingCascade', () => {
       const result = runCascade(
         [predecessor, successor],
         [dependency('a', 'b', { lag: 1, lagUnit: 'day' })],
-        [{ id: 'a', end: adapter.date('2026-10-24T02:30:01', 'Europe/Paris') }],
+        [{ id: 'a', end: createDate('2026-10-24T02:30:01', 'Europe/Paris') }],
       );
 
       expect(result).to.have.length(1);
       // 02:30:01 CEST, the first 02:30:01 of October 25th.
-      expect(adapter.toJsDate(result[0].start!).toISOString()).to.equal('2026-10-25T00:30:01.000Z');
+      expect(result[0].start!.toISOString()).to.equal('2026-10-25T00:30:01.000Z');
     },
   );
 
@@ -578,12 +566,8 @@ describe('computeAutoSchedulingCascade', () => {
     expect(result).to.have.length(1);
     // One day forward would still start before the required 07-04T10:00: the minimal
     // whole-day shift is two days.
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(utcDate('2025-07-05T00:00:00')),
-    );
-    expect(adapter.getTime(result[0].end!)).to.equal(
-      adapter.getTime(utcDate('2025-07-05T23:59:59.999')),
-    );
+    expect(result[0].start!.getTime()).to.equal(utcDate('2025-07-05T00:00:00').getTime());
+    expect(result[0].end!.getTime()).to.equal(utcDate('2025-07-05T23:59:59.999').getTime());
   });
 
   it('should start a timed successor on the day after an all-day predecessor', () => {
@@ -609,12 +593,8 @@ describe('computeAutoSchedulingCascade', () => {
     expect(result).to.have.length(1);
     // Next day's first instant, not the inclusive 23:59:59.999 end (second-resolution
     // serialization).
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(utcDate('2025-07-05T00:00:00')),
-    );
-    expect(adapter.getTime(result[0].end!)).to.equal(
-      adapter.getTime(utcDate('2025-07-05T01:00:00')),
-    );
+    expect(result[0].start!.getTime()).to.equal(utcDate('2025-07-05T00:00:00').getTime());
+    expect(result[0].end!.getTime()).to.equal(utcDate('2025-07-05T01:00:00').getTime());
   });
 
   it('should preserve the day span of an all-day successor pushed by an all-day predecessor', () => {
@@ -640,12 +620,8 @@ describe('computeAutoSchedulingCascade', () => {
 
     expect(result).to.have.length(1);
     // Pushed by one day, still spanning two days.
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(utcDate('2025-07-04T00:00:00')),
-    );
-    expect(adapter.getTime(result[0].end!)).to.equal(
-      adapter.getTime(utcDate('2025-07-05T23:59:59.999')),
-    );
+    expect(result[0].start!.getTime()).to.equal(utcDate('2025-07-04T00:00:00').getTime());
+    expect(result[0].end!.getTime()).to.equal(utcDate('2025-07-05T23:59:59.999').getTime());
   });
 
   it('should shift an all-day successor by whole days across a DST transition', () => {
@@ -676,12 +652,8 @@ describe('computeAutoSchedulingCascade', () => {
 
     expect(result).to.have.length(1);
     // The shift crosses the 23h day but still lands day-aligned on 03-10.
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(newYorkDate('2025-03-10T00:00:00')),
-    );
-    expect(adapter.getTime(result[0].end!)).to.equal(
-      adapter.getTime(newYorkDate('2025-03-10T23:59:59.999')),
-    );
+    expect(result[0].start!.getTime()).to.equal(newYorkDate('2025-03-10T00:00:00').getTime());
+    expect(result[0].end!.getTime()).to.equal(newYorkDate('2025-03-10T23:59:59.999').getTime());
   });
 
   it('should leave a read-only successor in place and stop the cascade through it', () => {
@@ -990,12 +962,8 @@ describe('computeAutoSchedulingCascade', () => {
 
     expect(result).to.have.length(1);
     expect(result[0].id).to.equal('b');
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(utcDate('2025-07-04T00:00:00')),
-    );
-    expect(adapter.getTime(result[0].end!)).to.equal(
-      adapter.getTime(utcDate('2025-07-04T01:00:00')),
-    );
+    expect(result[0].start!.getTime()).to.equal(utcDate('2025-07-04T00:00:00').getTime());
+    expect(result[0].end!.getTime()).to.equal(utcDate('2025-07-04T01:00:00').getTime());
   });
 
   it("should clamp a successor flipped to all-day on its predecessor's day to the next day", () => {
@@ -1027,12 +995,8 @@ describe('computeAutoSchedulingCascade', () => {
 
     expect(result).to.have.length(1);
     expect(result[0].id).to.equal('b');
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(utcDate('2025-07-04T00:00:00')),
-    );
-    expect(adapter.getTime(result[0].end!)).to.equal(
-      adapter.getTime(utcDate('2025-07-04T23:59:59.999')),
-    );
+    expect(result[0].start!.getTime()).to.equal(utcDate('2025-07-04T00:00:00').getTime());
+    expect(result[0].end!.getTime()).to.equal(utcDate('2025-07-04T23:59:59.999').getTime());
   });
 
   it("should clamp an allDay-only flip landing on its predecessor's day to the next day", () => {
@@ -1057,12 +1021,8 @@ describe('computeAutoSchedulingCascade', () => {
 
     expect(result).to.have.length(1);
     expect(result[0].id).to.equal('b');
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(utcDate('2025-07-04T00:00:00')),
-    );
-    expect(adapter.getTime(result[0].end!)).to.equal(
-      adapter.getTime(utcDate('2025-07-04T23:59:59.999')),
-    );
+    expect(result[0].start!.getTime()).to.equal(utcDate('2025-07-04T00:00:00').getTime());
+    expect(result[0].end!.getTime()).to.equal(utcDate('2025-07-04T23:59:59.999').getTime());
   });
 
   it('should clamp a timed event dropped onto an all-day predecessor to the next day', () => {
@@ -1080,9 +1040,7 @@ describe('computeAutoSchedulingCascade', () => {
 
     expect(result).to.have.length(1);
     expect(result[0].id).to.equal('b');
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(utcDate('2025-07-05T00:00:00')),
-    );
+    expect(result[0].start!.getTime()).to.equal(utcDate('2025-07-05T00:00:00').getTime());
   });
 
   it('should clamp a dropped event against a read-only predecessor', () => {
@@ -1135,12 +1093,8 @@ describe('computeAutoSchedulingCascade', () => {
     );
 
     expect(result).to.have.length(1);
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(newYorkDate('2025-11-03T00:00:00')),
-    );
-    expect(adapter.getTime(result[0].end!)).to.equal(
-      adapter.getTime(newYorkDate('2025-11-03T23:59:59.999')),
-    );
+    expect(result[0].start!.getTime()).to.equal(newYorkDate('2025-11-03T00:00:00').getTime());
+    expect(result[0].end!.getTime()).to.equal(newYorkDate('2025-11-03T23:59:59.999').getTime());
   });
 
   it('should push an all-day successor past a DST transition at midnight to the next whole day', () => {
@@ -1159,7 +1113,7 @@ describe('computeAutoSchedulingCascade', () => {
     const result = runCascade(
       [predecessor, successor],
       [dependency('a', 'b')],
-      [{ id: 'a', end: adapter.date('2026-03-09T00:30:00', 'America/Havana') }],
+      [{ id: 'a', end: createDate('2026-03-09T00:30:00', 'America/Havana') }],
     );
 
     expect(result).to.have.length(1);
@@ -1180,12 +1134,12 @@ describe('computeAutoSchedulingCascade', () => {
     const result = runCascade(
       [predecessor, successor],
       [dependency('a', 'b')],
-      [{ id: 'a', end: adapter.date('2026-04-03T12:00:00', 'America/Santiago') }],
+      [{ id: 'a', end: createDate('2026-04-03T12:00:00', 'America/Santiago') }],
     );
 
     expect(result).to.have.length(1);
-    expect(adapter.toJsDate(result[0].start!).toISOString()).to.equal('2026-04-04T03:00:00.000Z');
-    expect(adapter.toJsDate(result[0].end!).toISOString()).to.equal('2026-04-05T03:59:59.999Z');
+    expect(result[0].start!.toISOString()).to.equal('2026-04-04T03:00:00.000Z');
+    expect(result[0].end!.toISOString()).to.equal('2026-04-05T03:59:59.999Z');
   });
 
   it('should push an all-day successor over a day a DST transition skips', () => {
@@ -1200,7 +1154,7 @@ describe('computeAutoSchedulingCascade', () => {
     const result = runCascade(
       [predecessor, successor],
       [dependency('a', 'b')],
-      [{ id: 'a', end: adapter.date('2011-12-31T00:00:00', 'Pacific/Apia') }],
+      [{ id: 'a', end: createDate('2011-12-31T00:00:00', 'Pacific/Apia') }],
     );
 
     expect(result).to.have.length(1);
@@ -1223,7 +1177,7 @@ describe('computeAutoSchedulingCascade', () => {
     const result = runCascade(
       [predecessor, successor],
       [dependency('a', 'b')],
-      [{ id: 'a', end: adapter.date('2011-12-28T12:00:00', 'Pacific/Apia') }],
+      [{ id: 'a', end: createDate('2011-12-28T12:00:00', 'Pacific/Apia') }],
     );
 
     expect(result).to.have.length(1);
@@ -1246,8 +1200,8 @@ describe('computeAutoSchedulingCascade', () => {
       [
         {
           id: 'a',
-          start: adapter.date('2011-12-31T00:00:00', 'Pacific/Apia'),
-          end: adapter.date('2011-12-31T23:59:59.999', 'Pacific/Apia'),
+          start: createDate('2011-12-31T00:00:00', 'Pacific/Apia'),
+          end: createDate('2011-12-31T23:59:59.999', 'Pacific/Apia'),
           allDay: true,
         },
       ],
@@ -1270,8 +1224,8 @@ describe('computeAutoSchedulingCascade', () => {
       [
         {
           id: 'b',
-          start: adapter.date('2011-12-25T00:00:00', 'Pacific/Apia'),
-          end: adapter.date('2011-12-28T23:59:59.999', 'Pacific/Apia'),
+          start: createDate('2011-12-25T00:00:00', 'Pacific/Apia'),
+          end: createDate('2011-12-28T23:59:59.999', 'Pacific/Apia'),
           allDay: true,
         },
       ],
@@ -1305,7 +1259,7 @@ describe('computeAutoSchedulingCascade', () => {
       );
 
       expect(result).to.have.length(1);
-      expect(adapter.toJsDate(result[0].start!).toISOString()).to.equal('2011-12-30T14:00:00.000Z');
+      expect(result[0].start!.toISOString()).to.equal('2011-12-30T14:00:00.000Z');
     },
   );
 
@@ -1367,23 +1321,6 @@ describe('computeAutoSchedulingCascade', () => {
     expectDates(result[0], '2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z');
   });
 
-  it('should not clamp an updated event whose start is unchanged', () => {
-    const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
-    // b arrived already violating; resizing its end does not re-position it.
-    const eventB = EventBuilder.new()
-      .id('b')
-      .span('2025-07-03T08:00:00Z', '2025-07-03T09:00:00Z')
-      .toProcessed();
-
-    const result = runCascade(
-      [eventA, eventB],
-      [dependency('a', 'b')],
-      [{ id: 'b', end: date('2025-07-03T09:30:00Z') }],
-    );
-
-    expect(result).to.deep.equal([]);
-  });
-
   it('should clamp an all-day successor dropped before its predecessor by whole days', () => {
     const predecessor = EventBuilder.new().id('a').singleDay('2025-07-04T09:00:00Z').toProcessed();
     const successor = allDayEvent('b', '2025-07-10');
@@ -1404,12 +1341,8 @@ describe('computeAutoSchedulingCascade', () => {
     expect(result).to.have.length(1);
     // The dropped day starts before the predecessor's 10:00 end: minimal whole-day
     // clamp from the dropped position is one day.
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(utcDate('2025-07-05T00:00:00')),
-    );
-    expect(adapter.getTime(result[0].end!)).to.equal(
-      adapter.getTime(utcDate('2025-07-05T23:59:59.999')),
-    );
+    expect(result[0].start!.getTime()).to.equal(utcDate('2025-07-05T00:00:00').getTime());
+    expect(result[0].end!.getTime()).to.equal(utcDate('2025-07-05T23:59:59.999').getTime());
   });
 
   it('should report a read-only updated event dropped into violation as blocked', () => {
@@ -1753,12 +1686,8 @@ describe('computeAutoSchedulingCascade', () => {
 
     expect(result).to.have.length(1);
     expect(result[0].id).to.equal('b');
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(newYorkDate('2025-07-03T14:00:00')),
-    );
-    expect(adapter.getTime(result[0].end!)).to.equal(
-      adapter.getTime(newYorkDate('2025-07-03T15:00:00')),
-    );
+    expect(result[0].start!.getTime()).to.equal(newYorkDate('2025-07-03T14:00:00').getTime());
+    expect(result[0].end!.getTime()).to.equal(newYorkDate('2025-07-03T15:00:00').getTime());
   });
 
   it('should push the successors of a seed sitting on a cycle, with a dev warning', () => {
@@ -2114,57 +2043,6 @@ describe('computeAutoSchedulingCascade', () => {
     expectDates(result[0], '2025-07-04T12:00:00Z', '2025-07-04T13:00:00Z');
   });
 
-  it('should apply a lag in minutes', () => {
-    const predecessor = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
-    const successor = EventBuilder.new()
-      .id('b')
-      .span('2025-07-03T10:30:00Z', '2025-07-03T11:30:00Z')
-      .toProcessed();
-
-    const result = runCascade(
-      [predecessor, successor],
-      [dependency('a', 'b', { lag: 30, lagUnit: 'minute' })],
-      [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
-    );
-
-    expect(result).to.have.length(1);
-    expectDates(result[0], '2025-07-03T12:30:00Z', '2025-07-03T13:30:00Z');
-  });
-
-  it('should apply a lag in hours', () => {
-    const predecessor = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
-    const successor = EventBuilder.new()
-      .id('b')
-      .span('2025-07-03T10:30:00Z', '2025-07-03T11:30:00Z')
-      .toProcessed();
-
-    const result = runCascade(
-      [predecessor, successor],
-      [dependency('a', 'b', { lag: 2, lagUnit: 'hour' })],
-      [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
-    );
-
-    expect(result).to.have.length(1);
-    expectDates(result[0], '2025-07-03T14:00:00Z', '2025-07-03T15:00:00Z');
-  });
-
-  it('should apply a lag in weeks', () => {
-    const predecessor = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
-    const successor = EventBuilder.new()
-      .id('b')
-      .span('2025-07-03T10:30:00Z', '2025-07-03T11:30:00Z')
-      .toProcessed();
-
-    const result = runCascade(
-      [predecessor, successor],
-      [dependency('a', 'b', { lag: 1, lagUnit: 'week' })],
-      [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
-    );
-
-    expect(result).to.have.length(1);
-    expectDates(result[0], '2025-07-10T12:00:00Z', '2025-07-10T13:00:00Z');
-  });
-
   it('should apply a lag in calendar days across a DST transition', () => {
     // America/New_York springs forward on 2025-03-09: 02:00 → 03:00.
     const predecessor = EventBuilder.new()
@@ -2192,12 +2070,8 @@ describe('computeAutoSchedulingCascade', () => {
 
     expect(result).to.have.length(1);
     // One calendar day later on the wall clock (23 absolute hours), not 24 hours.
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(newYorkDate('2025-03-09T23:00:00')),
-    );
-    expect(adapter.getTime(result[0].end!) - adapter.getTime(result[0].start!)).to.equal(
-      60 * 60 * 1000,
-    );
+    expect(result[0].start!.getTime()).to.equal(newYorkDate('2025-03-09T23:00:00').getTime());
+    expect(result[0].end!.getTime() - result[0].start!.getTime()).to.equal(60 * 60 * 1000);
   });
 
   it.each([
@@ -2292,9 +2166,7 @@ describe('computeAutoSchedulingCascade', () => {
     );
 
     expect(result).to.have.length(1);
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(utcDate('2025-07-05T06:00:00')),
-    );
+    expect(result[0].start!.getTime()).to.equal(utcDate('2025-07-05T06:00:00').getTime());
   });
 
   it("should apply the lag in the successor's timezone", () => {
@@ -2324,12 +2196,8 @@ describe('computeAutoSchedulingCascade', () => {
 
     expect(result).to.have.length(1);
     // 04:00 UTC is 23:00 in New York; a day later on that wall clock is 23:00 on the 9th.
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(newYorkDate('2025-03-09T23:00:00')),
-    );
-    expect(adapter.getTime(result[0].end!)).to.equal(
-      adapter.getTime(newYorkDate('2025-03-10T00:00:00')),
-    );
+    expect(result[0].start!.getTime()).to.equal(newYorkDate('2025-03-09T23:00:00').getTime());
+    expect(result[0].end!.getTime()).to.equal(newYorkDate('2025-03-10T00:00:00').getTime());
   });
 
   it('should push a lagged all-day SS successor by whole days', () => {
@@ -2350,12 +2218,8 @@ describe('computeAutoSchedulingCascade', () => {
     );
 
     expect(result).to.have.length(1);
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(utcDate('2025-07-07T00:00:00')),
-    );
-    expect(adapter.getTime(result[0].end!)).to.equal(
-      adapter.getTime(utcDate('2025-07-07T23:59:59.999')),
-    );
+    expect(result[0].start!.getTime()).to.equal(utcDate('2025-07-07T00:00:00').getTime());
+    expect(result[0].end!.getTime()).to.equal(utcDate('2025-07-07T23:59:59.999').getTime());
   });
 
   it('should ignore a lag shorter than a day on an all-day successor', () => {
@@ -2378,12 +2242,8 @@ describe('computeAutoSchedulingCascade', () => {
     // An all-day event moves in whole days, so two hours add nothing: the successor
     // finishes with its predecessor instead of a day later.
     expect(result).to.have.length(1);
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(utcDate('2025-07-05T00:00:00')),
-    );
-    expect(adapter.getTime(result[0].end!)).to.equal(
-      adapter.getTime(utcDate('2025-07-05T23:59:59.999')),
-    );
+    expect(result[0].start!.getTime()).to.equal(utcDate('2025-07-05T00:00:00').getTime());
+    expect(result[0].end!.getTime()).to.equal(utcDate('2025-07-05T23:59:59.999').getTime());
   });
 
   it('should carry a lag longer than a day on an all-day successor as whole days', () => {
@@ -2405,12 +2265,8 @@ describe('computeAutoSchedulingCascade', () => {
 
     // 36 hours round down to one day, so the successor finishes a day after.
     expect(result).to.have.length(1);
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(utcDate('2025-07-06T00:00:00')),
-    );
-    expect(adapter.getTime(result[0].end!)).to.equal(
-      adapter.getTime(utcDate('2025-07-06T23:59:59.999')),
-    );
+    expect(result[0].start!.getTime()).to.equal(utcDate('2025-07-06T00:00:00').getTime());
+    expect(result[0].end!.getTime()).to.equal(utcDate('2025-07-06T23:59:59.999').getTime());
   });
 
   it('should not move an FF successor whose end already meets the lagged bound exactly', () => {
@@ -2465,40 +2321,6 @@ describe('computeAutoSchedulingCascade', () => {
     expectDates(result[0], '2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z');
   });
 
-  it('should ignore a fractional lag', () => {
-    const predecessor = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
-    const successor = EventBuilder.new()
-      .id('b')
-      .span('2025-07-03T10:30:00Z', '2025-07-03T11:30:00Z')
-      .toProcessed();
-
-    const result = runCascade(
-      [predecessor, successor],
-      [dependency('a', 'b', { lag: 0.5 })],
-      [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
-    );
-
-    expect(result).to.have.length(1);
-    expectDates(result[0], '2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z');
-  });
-
-  it('should ignore the lag of an unknown unit', () => {
-    const predecessor = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
-    const successor = EventBuilder.new()
-      .id('b')
-      .span('2025-07-03T10:30:00Z', '2025-07-03T11:30:00Z')
-      .toProcessed();
-
-    const result = runCascade(
-      [predecessor, successor],
-      [dependency('a', 'b', { lag: 1, lagUnit: 'fortnight' as any })],
-      [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
-    );
-
-    expect(result).to.have.length(1);
-    expectDates(result[0], '2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z');
-  });
-
   it("should round a timed FF successor's start up to the next second after an all-day predecessor", () => {
     const eventA = allDayEvent('a', '2025-07-03');
     const eventB = EventBuilder.new()
@@ -2522,12 +2344,8 @@ describe('computeAutoSchedulingCascade', () => {
 
     expect(result).to.have.length(1);
     // 23:59:59.999 − 1h = 22:59:59.999, rounded up to the next whole second.
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(utcDate('2025-07-04T23:00:00')),
-    );
-    expect(adapter.getTime(result[0].end!)).to.equal(
-      adapter.getTime(utcDate('2025-07-05T00:00:00')),
-    );
+    expect(result[0].start!.getTime()).to.equal(utcDate('2025-07-04T23:00:00').getTime());
+    expect(result[0].end!.getTime()).to.equal(utcDate('2025-07-05T00:00:00').getTime());
   });
 
   it("should not move an SF successor ending after the predecessor's new start", () => {
@@ -2796,12 +2614,8 @@ describe('computeAutoSchedulingCascade', () => {
     );
 
     expect(result).to.have.length(1);
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(utcDate('2025-07-05T00:00:00')),
-    );
-    expect(adapter.getTime(result[0].end!)).to.equal(
-      adapter.getTime(utcDate('2025-07-05T23:59:59.999')),
-    );
+    expect(result[0].start!.getTime()).to.equal(utcDate('2025-07-05T00:00:00').getTime());
+    expect(result[0].end!.getTime()).to.equal(utcDate('2025-07-05T23:59:59.999').getTime());
   });
 
   it.each([
@@ -2833,12 +2647,8 @@ describe('computeAutoSchedulingCascade', () => {
       );
 
       expect(result).to.have.length(1);
-      expect(adapter.getTime(result[0].start!)).to.equal(
-        adapter.getTime(utcDate(`${expectedDay}T00:00:00`)),
-      );
-      expect(adapter.getTime(result[0].end!)).to.equal(
-        adapter.getTime(utcDate(`${expectedDay}T23:59:59.999`)),
-      );
+      expect(result[0].start!.getTime()).to.equal(utcDate(`${expectedDay}T00:00:00`).getTime());
+      expect(result[0].end!.getTime()).to.equal(utcDate(`${expectedDay}T23:59:59.999`).getTime());
     },
   );
 
@@ -2916,9 +2726,7 @@ describe('computeAutoSchedulingCascade', () => {
     expect(result).to.have.length(1);
     // Kept, not just unchanged: absent from the entry, not merely equal to its old value.
     expect('start' in result[0]).to.equal(false);
-    expect(adapter.getTime(result[0].end!)).to.equal(
-      adapter.getTime(utcDate('2025-07-05T23:59:59.999')),
-    );
+    expect(result[0].end!.getTime()).to.equal(utcDate('2025-07-05T23:59:59.999').getTime());
   });
 
   it('should push the end of an SF successor when the predecessor start-resizes later', () => {

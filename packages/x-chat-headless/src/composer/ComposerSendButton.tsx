@@ -10,6 +10,7 @@ import type { ComposerSendButtonOwnerState } from './composer.types';
 export interface ComposerSendButtonSlots {
   /**
    * The component that renders the send button.
+   * @default 'button'
    */
   sendButton: React.ElementType;
 }

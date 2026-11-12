@@ -165,7 +165,7 @@ export const useGridColumnReorderPointer = (
       forbiddenIndexes: session.forbiddenIndexes,
     });
     if (targetIndex !== null) {
-      apiRef.current.setColumnIndex(session.field, targetIndex);
+      apiRef.current.setColumnIndex(session.field, targetIndex, false);
     }
     session.previousPosition = position;
   };

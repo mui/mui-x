@@ -1,18 +1,18 @@
-import { adapter } from 'test/utils/scheduler';
+import { createDate, endOfDay } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { computeElementPositionInCollection } from './useElementPositionInCollection';
 import { processDate } from '../../process-date';
 
 describe('computeElementPositionInCollection', () => {
-  const date = (value: string) => adapter.date(value, 'UTC');
-  const processed = (value: string) => processDate(date(value), adapter, 'UTC');
+  const date = (value: string) => createDate(value, 'UTC');
+  const processed = (value: string) => processDate(date(value), 'UTC');
 
   // 4-day collection: Jan 5 → Jan 8, like the `dayAndHour` timeline preset.
   const collectionStart = date('2025-01-05T00:00:00.000Z');
-  const collectionEnd = adapter.endOfDay(date('2025-01-08T00:00:00.000Z'));
+  const collectionEnd = endOfDay(date('2025-01-08T00:00:00.000Z'), 'UTC');
   const fullCollection = {
-    start: adapter.getTime(collectionStart),
-    end: adapter.getTime(collectionEnd),
+    start: collectionStart.getTime(),
+    end: collectionEnd.getTime(),
     timezone: 'UTC',
     dayStartMinute: 0,
     dayEndMinute: 1440,
@@ -200,11 +200,11 @@ describe('computeElementPositionInCollection', () => {
     });
 
     it('should keep the calendar single-day column behavior', () => {
-      const singleDayEnd = adapter.endOfDay(collectionStart);
+      const singleDayEnd = endOfDay(collectionStart, 'UTC');
       const result = computeElementPositionInCollection({
         start: processed('2025-01-05T06:00:00.000Z'),
         end: processed('2025-01-05T10:00:00.000Z'),
-        collection: { ...fullCollection, end: adapter.getTime(singleDayEnd), ...window },
+        collection: { ...fullCollection, end: singleDayEnd.getTime(), ...window },
       });
 
       expect(result.position).to.equal(0);
