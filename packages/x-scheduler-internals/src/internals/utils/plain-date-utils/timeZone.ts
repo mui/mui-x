@@ -150,24 +150,6 @@ export function toMsInDay(epochMs: number, timezone: TemporalTimezone): number {
 }
 
 /**
- * The date and wall-clock time of an instant in `timezone`, as `YYYY-MM-DDTHH:mm:ss`. The
- * milliseconds are dropped, like in the strings of the events.
- */
-export function toWallClockIsoString(epochMs: number, timezone: TemporalTimezone): string {
-  const localMs = toLocalMs(epochMs, timezone);
-  const dayNumber = Math.floor(localMs / MS_PER_DAY);
-  const msInDay = localMs - dayNumber * MS_PER_DAY;
-  const time = [
-    Math.floor(msInDay / 3_600_000),
-    Math.floor(msInDay / 60_000) % 60,
-    Math.floor(msInDay / 1000) % 60,
-  ]
-    .map((part) => String(part).padStart(2, '0'))
-    .join(':');
-  return `${plainDateFromDayNumber(dayNumber).toString()}T${time}`;
-}
-
-/**
  * The instant of a wall-clock time in `timezone`, given in milliseconds since 1970-01-01T00:00 of
  * the wall clock.
  *

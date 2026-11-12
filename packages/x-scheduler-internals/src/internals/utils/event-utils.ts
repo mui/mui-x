@@ -11,8 +11,8 @@ import type {
   SchedulerResourceId,
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
-import { toPlainDate, toLocalDayNumber } from './plain-date-utils/timeZone';
-import { getPlainDateKey } from './plain-date-utils/plainDate';
+import { toPlainDate } from './plain-date-utils/timeZone';
+import { getDayNumber, getPlainDateKey } from './plain-date-utils/plainDate';
 import type { SchedulerEventRangeIndex } from './event-range-index';
 
 /**
@@ -121,10 +121,8 @@ export function getDaysTheOccurrenceIsVisibleOn(
   days: SchedulerProcessedDay[],
   dayNumbers: readonly number[],
 ) {
-  const { start, end } = event;
-  const timezone = event.unstable_internalInfos.displayTimezone;
-  const startDayNumber = toLocalDayNumber(start.timestamp, timezone);
-  const endDayNumber = toLocalDayNumber(end.timestamp, timezone);
+  const startDayNumber = getDayNumber(event.start.value.toPlainDate());
+  const endDayNumber = getDayNumber(event.end.value.toPlainDate());
 
   const dayKeys: string[] = [];
   for (let index = 0; index < days.length; index += 1) {

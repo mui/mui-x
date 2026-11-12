@@ -13,7 +13,6 @@ export {
   toMsInDay,
   toPlainDate,
   toPlainDateTime,
-  toWallClockIsoString,
 } from './timeZone';
 export {
   addToDate,

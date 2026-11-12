@@ -14,7 +14,7 @@ import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
-import { toPlainDate, toWallClockIsoString } from '@mui/x-scheduler-internals/internals';
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { vi, describe, it, expect } from 'vitest';
 import { schedulerEventSelectors, schedulerOtherSelectors } from '../../../../scheduler-selectors';
@@ -553,9 +553,8 @@ premiumStoreClasses.forEach((storeClass) => {
 
         const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
         expect(occurrence.key).to.equal(armed.key);
-        expect(toWallClockIsoString(occurrence.start.timestamp, 'Asia/Tokyo')).to.equal(
-          '2025-07-08T19:00:00',
-        );
+        // The display timezone is Asia/Tokyo.
+        expect(occurrence.start.value.toString()).to.equal('2025-07-08T19:00:00');
       });
     });
 

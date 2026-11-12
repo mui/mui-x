@@ -20,8 +20,6 @@ import {
   formatFullDate,
   isEventOccurrence,
   getPrimaryResourceId,
-  toPlainDate,
-  toWallClockIsoString,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import {
@@ -147,16 +145,13 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
   // Feature hook
   const formatTime = useFormatTime();
   const { start, end } = occurrence;
-  const boundsTimezone = occurrence.unstable_internalInfos.displayTimezone;
   const isMultiDay = isOccurrenceMultiDay(occurrence);
   const formatBound = (date: SchedulerProcessedDate) => {
-    const fullDate = formatFullDate(locale, toPlainDate(date.timestamp, boundsTimezone));
+    const fullDate = formatFullDate(locale, date.value.toPlainDate());
     return occurrence.allDay ? fullDate : `${fullDate}, ${formatTime(date)}`;
   };
   const formatBoundDateTime = (bound: SchedulerProcessedDate) =>
-    occurrence.allDay
-      ? toPlainDate(bound.timestamp, boundsTimezone).toString()
-      : toWallClockIsoString(bound.timestamp, boundsTimezone);
+    occurrence.allDay ? bound.value.toPlainDate().toString() : bound.value.toString();
   const recurrenceTimezoneName = React.useMemo(
     () => getRecurrenceTimezoneName(locale, eventTimezone, displayTimezone),
     [locale, eventTimezone, displayTimezone],

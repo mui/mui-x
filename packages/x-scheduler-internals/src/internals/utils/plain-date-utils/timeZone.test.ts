@@ -12,7 +12,6 @@ import {
   toMsInDay,
   toPlainDateTime,
   toPlainDate,
-  toWallClockIsoString,
 } from './timeZone';
 
 const HOUR = 3_600_000;
@@ -82,25 +81,19 @@ describe('timeZone', () => {
     });
   });
 
-  describe('toWallClockIsoString', () => {
-    it('should write the wall-clock time to the second, in the offset of the instant', () => {
+  describe('toPlainDateTime', () => {
+    it('should read the wall-clock time in the offset of the instant', () => {
       // 01:30:15.999Z is the second 02:30 of the night Paris falls back.
-      expect(toWallClockIsoString(Date.UTC(2026, 9, 25, 1, 30, 15, 999), 'Europe/Paris')).to.equal(
-        '2026-10-25T02:30:15',
-      );
+      expect(
+        toPlainDateTime(Date.UTC(2026, 9, 25, 1, 30, 15, 999), 'Europe/Paris').toString(),
+      ).to.equal('2026-10-25T02:30:15.999');
     });
 
-    it('should write each part of the time with two digits', () => {
-      expect(toWallClockIsoString(Date.UTC(2025, 0, 15, 9, 5, 3), 'UTC')).to.equal(
-        '2025-01-15T09:05:03',
-      );
-    });
-
-    it('should write the wall-clock time in a timezone with a half-hour offset', () => {
+    it('should read the wall-clock time in a timezone with a half-hour offset', () => {
       // Asia/Kolkata is at +05:30, which moves the instant to the next day.
-      expect(toWallClockIsoString(Date.UTC(2025, 0, 15, 18, 45, 10, 500), 'Asia/Kolkata')).to.equal(
-        '2025-01-16T00:15:10',
-      );
+      expect(
+        toPlainDateTime(Date.UTC(2025, 0, 15, 18, 45, 10, 500), 'Asia/Kolkata').toString(),
+      ).to.equal('2025-01-16T00:15:10.5');
     });
   });
 

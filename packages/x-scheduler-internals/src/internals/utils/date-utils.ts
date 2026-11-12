@@ -4,7 +4,7 @@ import type { BaseTemporal } from './base-temporal';
 import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
 import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import type { WeekInfo } from './date-locale';
-import { toWallClockIsoString } from './plain-date-utils/timeZone';
+import { toPlainDateTime } from './plain-date-utils/timeZone';
 import { isInstantString } from './plain-date-utils/date';
 
 /**
@@ -21,7 +21,8 @@ export function dateToEventString(
   if (isInstantString(originalString)) {
     return new Date(date.getTime()).toISOString();
   }
-  return toWallClockIsoString(date.getTime(), dataTimezone);
+  // Like the strings of the events, without milliseconds.
+  return toPlainDateTime(Math.floor(date.getTime() / 1000) * 1000, dataTimezone).toString();
 }
 
 /**

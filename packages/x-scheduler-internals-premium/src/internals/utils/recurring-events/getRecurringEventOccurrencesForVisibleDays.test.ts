@@ -15,14 +15,14 @@ import {
   getDataTimestamp,
   getMinutesInDay,
   toPlainDate,
-  toWallClockIsoString,
+  toPlainDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventOccurrencesForVisibleDays';
 import { getPlainDateWeekDayCode } from './internal-utils';
 
 // The date and the wall-clock time of an instant in `timezone`, as `YYYY-MM-DD HH:mm`.
 function formatWallClock(epochMs: number, timezone: TemporalTimezone): string {
-  return toWallClockIsoString(epochMs, timezone).slice(0, 16).replace('T', ' ');
+  return toPlainDateTime(epochMs, timezone).toString().slice(0, 16).replace('T', ' ');
 }
 
 // The date of the start of an occurrence in the timezone of its event, as `YYYY-MM-DD`.

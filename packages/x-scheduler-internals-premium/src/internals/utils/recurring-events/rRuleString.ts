@@ -5,7 +5,7 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
-import { BaseTemporal } from '@mui/x-scheduler-internals/internals';
+import { BaseTemporal, toEpochMs } from '@mui/x-scheduler-internals/internals';
 import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';
 import {
   NOT_LOCALIZED_WEEK_DAYS_INDEXES,
@@ -28,10 +28,13 @@ function parseUntilUtc(value: string): number | null {
   }
   const [year, month, day, hour, minute, second] = match.slice(1).map(Number);
   try {
-    return BaseTemporal.ZonedDateTime.from(
-      { year, month, day, hour, minute, second, timeZone: 'UTC' },
-      { overflow: 'reject' },
-    ).epochMilliseconds;
+    return toEpochMs(
+      BaseTemporal.PlainDateTime.from(
+        { year, month, day, hour, minute, second },
+        { overflow: 'reject' },
+      ),
+      'UTC',
+    );
   } catch {
     return null;
   }

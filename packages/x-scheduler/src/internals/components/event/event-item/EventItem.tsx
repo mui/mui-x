@@ -11,7 +11,7 @@ import {
 import { Button } from '@base-ui/react/button';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
-import { formatMonthShortAndDayOfMonth, toPlainDate } from '@mui/x-scheduler-internals/internals';
+import { formatMonthShortAndDayOfMonth } from '@mui/x-scheduler-internals/internals';
 import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
 import type { EventItemProps } from './EventItem.types';
 import { useFormatTime } from '../../../hooks/useFormatTime';
@@ -294,12 +294,10 @@ function MultiDayDateLabel(props: {
   const { classes, localeText } = useEventCalendarStyledContext();
 
   if (isOccurrenceMultiDay(occurrence)) {
-    const { end } = occurrence;
-    const timezone = occurrence.unstable_internalInfos.displayTimezone;
     return (
       <EventItemTime className={classes.eventItemTime} as="span">
         {localeText.eventItemMultiDayLabel(
-          formatMonthShortAndDayOfMonth(locale, toPlainDate(end.timestamp, timezone)),
+          formatMonthShortAndDayOfMonth(locale, occurrence.end.value.toPlainDate()),
         )}
       </EventItemTime>
     );

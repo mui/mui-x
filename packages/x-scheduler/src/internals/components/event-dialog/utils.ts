@@ -16,10 +16,8 @@ import {
   getDataTimestamp,
   getTimezoneId,
   isEventOccurrence,
-  plainTimeFromMsInDay,
   toEpochMs,
   toPlainDate,
-  toWallClockIsoString,
 } from '@mui/x-scheduler-internals/internals';
 import type { EventEditingLocaleText, SchedulerWeekday } from '../../../models';
 
@@ -138,10 +136,9 @@ function getEditedRangeBounds(
   };
 }
 
-// The documented `yyyy-MM-dd` / `HH:mm` formats. `BaseTemporal.PlainDate.from()` rejects the dates
-// that don't exist, like 2025-06-31, but also reads calendar annotations, which the fields don't use.
+// The documented `yyyy-MM-dd` format. `BaseTemporal.PlainDate.from()` rejects the dates that don't
+// exist, like 2025-06-31, but also reads calendar annotations, which the fields don't use.
 const DATE_VALUE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
-const TIME_VALUE_REGEX = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
 /**
  * Reads a `yyyy-MM-dd` field, or returns `null` when it isn't an existing date.
@@ -161,10 +158,11 @@ function readDateField(raw: string): BaseTemporal.PlainDate | null {
  * Reads a `HH:mm` field as a time, or returns `null` when it isn't a time.
  */
 function readTimeField(raw: string): BaseTemporal.PlainTime | null {
-  const match = TIME_VALUE_REGEX.exec(raw);
-  return match == null
-    ? null
-    : plainTimeFromMsInDay((Number(match[1]) * 60 + Number(match[2])) * 60_000);
+  try {
+    return BaseTemporal.PlainTime.from(raw);
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -195,14 +193,13 @@ function readDateFieldEndMs(rawDate: string, timezone: TemporalTimezone): number
 }
 
 /**
- * Formats an instant for the `yyyy-MM-dd` and `HH:mm` fields, on the wall clock of `timezone`.
+ * Formats a date-time for the `yyyy-MM-dd` and `HH:mm` fields.
  */
-export function formatDateAndTimeFields(
-  epochMs: number,
-  timezone: TemporalTimezone,
-): { date: string; time: string } {
-  const isoString = toWallClockIsoString(epochMs, timezone);
-  return { date: isoString.slice(0, 10), time: isoString.slice(11, 16) };
+export function formatDateAndTimeFields(value: BaseTemporal.PlainDateTime): {
+  date: string;
+  time: string;
+} {
+  return { date: value.toPlainDate().toString(), time: value.toPlainTime().toString().slice(0, 5) };
 }
 
 /**

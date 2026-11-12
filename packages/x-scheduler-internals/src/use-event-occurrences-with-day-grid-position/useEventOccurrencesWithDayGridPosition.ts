@@ -6,7 +6,7 @@ import type {
 } from '../models';
 import type { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { sortEventOccurrences } from '../sort-event-occurrences';
-import { differenceInDays, toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
+import { differenceInDays } from '../internals/utils/plain-date-utils/timeZone';
 import { getDayNumber } from '../internals/utils/plain-date-utils/plainDate';
 
 /**
@@ -143,13 +143,12 @@ export function useEventOccurrencesWithDayGridPosition(
             // derives the continuation arrow from the event range vs the day.
             // Counts dates rather than full days, as a day whose midnight a DST transition
             // skips starts at 01:00, after the time an occurrence can end on the next day.
-            const timezone = occurrence.unstable_internalInfos.displayTimezone;
             position = {
               index: smallestAvailableIndex,
               daySpan: getDayGridCellSpan(
                 days,
                 dayIndex,
-                toLocalDayNumber(occurrence.end.timestamp, timezone),
+                getDayNumber(occurrence.end.value.toPlainDate()),
               ),
             };
             activeSegments[occurrence.key] = { position, startDayIndex: dayIndex, hidden: false };
