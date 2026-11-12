@@ -128,6 +128,9 @@ export function createSendMessageActions<Cursor = string>(params: {
       return result;
     }
 
+    // Only decides the final result; onFinish runs after so a throwing callback
+    // is not treated as a reconnect failure.
+    let finalResult: ProcessStreamResult;
     try {
       store.setStreaming(true, conversationId);
       const reconnectStream = await adapter.reconnectToStream({
@@ -138,57 +141,53 @@ export function createSendMessageActions<Cursor = string>(params: {
 
       if (!reconnectStream || abortController.signal.aborted) {
         store.setStreaming(false);
-        await emitDeferredFinish(result);
-        return result;
+        finalResult = result;
+      } else {
+        finalResult = await processStream(store, reconnectStream, {
+          ...processOptions,
+          messageId: result.messageId,
+          reconnectFromSequence: result.nextSequence,
+          seenEventIds: result.seenEventIds,
+        });
       }
-
-      const reconnectResult = await processStream(store, reconnectStream, {
-        ...processOptions,
-        messageId: result.messageId,
-        reconnectFromSequence: result.nextSequence,
-        seenEventIds: result.seenEventIds,
-      });
-      await emitDeferredFinish(reconnectResult);
-      return reconnectResult;
     } catch (error) {
       store.setStreaming(false);
 
       if (abortController.signal.aborted) {
-        const cancelledResult: ProcessStreamResult = {
+        finalResult = {
           messageId: result.messageId,
           status: 'cancelled',
           isAbort: true,
           isDisconnect: false,
           isError: false,
         };
-        await emitDeferredFinish(cancelledResult);
-        return cancelledResult;
+      } else {
+        store.setError(
+          createRuntimeError(
+            'STREAM_ERROR',
+            getErrorMessage('Unable to reconnect to the message stream.', error),
+            'stream',
+            true,
+            true,
+            {
+              messageId: result.messageId,
+              conversationId,
+            },
+          ),
+        );
+
+        finalResult = {
+          messageId: result.messageId,
+          status: 'error',
+          isAbort: false,
+          isDisconnect: true,
+          isError: true,
+        };
       }
-
-      store.setError(
-        createRuntimeError(
-          'STREAM_ERROR',
-          getErrorMessage('Unable to reconnect to the message stream.', error),
-          'stream',
-          true,
-          true,
-          {
-            messageId: result.messageId,
-            conversationId,
-          },
-        ),
-      );
-
-      const errorResult: ProcessStreamResult = {
-        messageId: result.messageId,
-        status: 'error',
-        isAbort: false,
-        isDisconnect: true,
-        isError: true,
-      };
-      await emitDeferredFinish(errorResult);
-      return errorResult;
     }
+
+    await emitDeferredFinish(finalResult);
+    return finalResult;
   }
 
   async function sendExistingMessage(

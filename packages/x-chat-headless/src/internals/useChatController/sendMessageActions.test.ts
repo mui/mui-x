@@ -425,6 +425,7 @@ describe('createSendMessageActions', () => {
       const store = new ChatStore();
       store.setActiveConversation('c1');
       const onFinish = vi.fn();
+      const onError = vi.fn();
       const adapter = createAdapter({
         sendMessage: vi.fn().mockResolvedValue(
           createStream([
@@ -449,6 +450,49 @@ describe('createSendMessageActions', () => {
       const { sendMessage } = createSendMessageActions({
         store,
         storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter, onFinish, onError } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await sendMessage(userMessageInput);
+
+      expect(onError).toHaveBeenCalledTimes(1);
+      expect(onFinish).toHaveBeenCalledTimes(1);
+      expect(onFinish.mock.calls[0][0]).toMatchObject({
+        isAbort: false,
+        isDisconnect: true,
+        isError: true,
+        message: { id: 'a1', status: 'error' },
+      });
+    });
+
+    it('does not treat a throwing onFinish as a reconnect failure', async () => {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+      const onFinish = vi.fn().mockRejectedValue(new Error('boom'));
+      const adapter = createAdapter({
+        sendMessage: vi
+          .fn()
+          .mockResolvedValue(
+            createStream([
+              { sequence: 0, eventId: 'e0', chunk: { type: 'start', messageId: 'a1' } },
+            ]),
+          ),
+        reconnectToStream: vi.fn().mockResolvedValue(
+          createStream([
+            {
+              sequence: 1,
+              eventId: 'e1',
+              chunk: { type: 'finish', messageId: 'a1', finishReason: 'stop' },
+            },
+          ]),
+        ),
+      });
+
+      const { sendMessage } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
         runtimeRef: { current: { adapter, onFinish } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
@@ -457,10 +501,7 @@ describe('createSendMessageActions', () => {
       await sendMessage(userMessageInput);
 
       expect(onFinish).toHaveBeenCalledTimes(1);
-      expect(onFinish.mock.calls[0][0]).toMatchObject({
-        isError: true,
-        message: { id: 'a1', status: 'error' },
-      });
+      expect(store.state.error?.message ?? '').not.toContain('Unable to reconnect');
     });
 
     it('sets user message status to "error" when the adapter throws', async () => {
