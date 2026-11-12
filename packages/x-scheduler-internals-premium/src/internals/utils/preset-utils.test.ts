@@ -33,7 +33,6 @@ describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
         setSystemTimezone('Europe/Paris');
         // London leaves summer time on October 25th, 2026, when 02:00 becomes 01:00 again.
         const nextVisibleDate = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset].navigate(
-          adapter,
           adapter.date(visibleDate, 'Europe/London'),
           1,
           'Europe/London',
@@ -55,7 +54,6 @@ describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
         setSystemTimezone('UTC');
         // Paris leaves summer time on October 25th, 2026, when 03:00 becomes 02:00 again.
         const nextVisibleDate = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset].navigate(
-          adapter,
           adapter.date(visibleDate, 'Europe/Paris'),
           1,
           'Europe/Paris',
@@ -77,7 +75,6 @@ describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
         setSystemTimezone('Europe/London');
         // Paris enters summer time on March 28th, 2027, when 02:00 becomes 03:00.
         const nextVisibleDate = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset].navigate(
-          adapter,
           adapter.date(visibleDate, 'Europe/Paris'),
           1,
           'Europe/Paris',

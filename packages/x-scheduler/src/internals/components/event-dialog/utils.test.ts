@@ -1,4 +1,4 @@
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { EventBuilder } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../../constants/defaultLocaleText';
@@ -206,7 +206,7 @@ describe('getResentRangeBounds', () => {
 
 describe('getRecurrenceRuleBound', () => {
   // Friday July 4 00:00 UTC, displayed on Thursday July 3 20:00 in New York.
-  const occurrence = EventBuilder.new(adapter)
+  const occurrence = EventBuilder.new()
     .withDataTimezone('UTC')
     .span('2025-07-04T00:00:00', '2025-07-04T01:00:00')
     .withDisplayTimezone('America/New_York')
@@ -272,7 +272,7 @@ describe('getRecurrenceRuleBound', () => {
   });
 
   it('should anchor a creation draft on the default timezone', () => {
-    const draft = EventBuilder.new(adapter)
+    const draft = EventBuilder.new()
       .id('placeholder-id')
       .span('2025-07-04T00:00:00Z', '2025-07-04T01:00:00Z')
       .withDisplayTimezone('America/New_York')
@@ -286,7 +286,7 @@ describe('getRecurrenceRuleBound', () => {
 
 describe('getEventTimezonePlainDate', () => {
   it('should read the date in the timezone of the event', () => {
-    const occurrence = EventBuilder.new(adapter)
+    const occurrence = EventBuilder.new()
       .withDataTimezone('Asia/Tokyo')
       .span('2025-07-07T00:30:00', '2025-07-07T01:30:00')
       .withDisplayTimezone('UTC')

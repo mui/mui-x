@@ -1,7 +1,7 @@
 import { describe, test } from 'vitest';
 import { adapter, getEventCalendarStateFromParameters } from 'test/utils/scheduler';
 import { getDayListFromPlainDates } from '../get-day-list';
-import { buildTemporalPlainDate } from '../internals/utils/plain-date-utils/adapter';
+import { toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
 import { eventCalendarOccurrencePlaceholderSelectors } from './eventCalendarOccurrencePlaceholderSelectors';
 
 export const benchmarkResult = { value: undefined as unknown };
@@ -12,9 +12,8 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
     adapter.date('2026-03-15T12:00:00Z', 'default'),
     timezone,
   );
-  const firstPlainDate = buildTemporalPlainDate(
-    adapter,
-    adapter.startOfWeek(adapter.startOfMonth(visibleDate)),
+  const firstPlainDate = toPlainDate(
+    adapter.startOfWeek(adapter.startOfMonth(visibleDate)).getTime(),
     'default',
   );
   const days = getDayListFromPlainDates({

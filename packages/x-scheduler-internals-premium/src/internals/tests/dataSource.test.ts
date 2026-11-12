@@ -54,7 +54,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(mockFetchData),
         persistEvents: async () => ({ success: true }),
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
@@ -80,7 +80,7 @@ premiumStoreClasses.forEach((storeClass) => {
         persistEvents: async () => ({ success: true }),
       };
 
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       // First fetch
       const start1 = adapter.date('2025-07-01T00:00:00Z', 'default');
@@ -113,7 +113,7 @@ premiumStoreClasses.forEach((storeClass) => {
         }),
         persistEvents: async () => ({ success: true }),
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       await store.lazyLoading?.queueDataFetchForRange(
         toRange(
@@ -135,10 +135,11 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(store.state.processedEventLookup.get('1')).to.equal(firstProcessedEvent);
       expect(store.state.processedEventLookup.get('2')).not.to.equal(undefined);
 
-      store.updateStateFromParameters(
-        { ...DEFAULT_PARAMS, dataSource, displayTimezone: 'Europe/Paris' },
-        adapter,
-      );
+      store.updateStateFromParameters({
+        ...DEFAULT_PARAMS,
+        dataSource,
+        displayTimezone: 'Europe/Paris',
+      });
       await store.lazyLoading?.queueDataFetchForRange(
         toRange(
           adapter.date('2025-09-01T00:00:00Z', 'default'),
@@ -156,7 +157,7 @@ premiumStoreClasses.forEach((storeClass) => {
         persistEvents: async () => ({ success: true }),
       };
 
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       // Fetch a large range
       const start = adapter.date('2025-09-01T00:00:00Z', 'default');
@@ -183,7 +184,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(async (_start: Date, _end: Date): Promise<TestEvent[]> => []),
         persistEvents: async () => ({ success: true }),
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
       const day = (offset: number) =>
         adapter.addDays(adapter.date('2025-09-01T00:00:00Z', 'default'), offset);
 
@@ -201,7 +202,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(async (_start: Date, _end: Date): Promise<TestEvent[]> => []),
         persistEvents: async () => ({ success: true }),
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
       const day = (offset: number) =>
         adapter.addDays(adapter.date('2025-09-01T00:00:00Z', 'default'), offset);
 
@@ -219,7 +220,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(async (_start: Date, _end: Date): Promise<TestEvent[]> => []),
         persistEvents: async () => ({ success: true }),
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
       const day = (offset: number) =>
         adapter.addDays(adapter.date('2025-09-01T00:00:00Z', 'default'), offset);
 
@@ -238,7 +239,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(async () => []),
         persistEvents: async () => ({ success: true }),
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
       const start = adapter.date('2025-09-01T00:00:00Z', 'default');
       const end = adapter.date('2025-09-10T00:00:00Z', 'default');
 
@@ -260,7 +261,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(mockFetchData),
         persistEvents: persistEventsSpy,
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       const createdId = store.createEvent({
         start: '2025-07-02T09:00:00.000Z',
@@ -291,7 +292,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(mockFetchData),
         persistEvents: persistEventsSpy,
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       // Populate the store via lazy loading (mockFetchData seeds an event with id '1')
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
@@ -323,7 +324,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(mockFetchData),
         persistEvents: vi.fn(async () => ({ success: true })),
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
@@ -352,7 +353,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(mockFetchData),
         persistEvents: persistEventsSpy,
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
@@ -382,7 +383,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(mockFetchData),
         persistEvents: persistEventsSpy,
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       const updatedEvent: TestEvent = {
         id: '1',
@@ -446,7 +447,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(async () => seeded),
         persistEvents: persistEventsSpy,
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
@@ -485,7 +486,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(mockFetchData),
         persistEvents: persistEventsSpy,
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
@@ -563,10 +564,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(async () => [initialEvent]),
         persistEvents: persistEventsSpy,
       };
-      const store = new storeClass.Value(
-        { ...DEFAULT_PARAMS, eventModelStructure, dataSource },
-        adapter,
-      );
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, eventModelStructure, dataSource });
 
       const createdId = store.createEvent({
         start: '2025-07-02T09:00:00.000Z',
@@ -663,10 +661,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(async () => seeded),
         persistEvents: vi.fn(async () => ({ success: true })),
       };
-      const store = new storeClass.Value(
-        { ...DEFAULT_PARAMS, eventModelStructure, dataSource },
-        adapter,
-      );
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, eventModelStructure, dataSource });
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
@@ -696,7 +691,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(mockFetchData),
         persistEvents: vi.fn(mockPersistEvents),
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       // Populate the store via lazy loading
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
@@ -727,7 +722,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(mockFetchData),
         persistEvents: vi.fn(mockPersistEvents),
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
@@ -754,7 +749,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(mockFetchData),
         persistEvents: vi.fn(mockPersistEvents),
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
@@ -776,7 +771,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(async () => [] as TestEvent[]),
         persistEvents: async () => ({ success: true }),
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
@@ -812,7 +807,7 @@ premiumStoreClasses.forEach((storeClass) => {
         persistEvents: async () => ({ success: true }),
       };
 
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       await store.lazyLoading?.queueDataFetchForRange(toRange(startCached, endCached), true);
       expect(store.state.errors).toHaveLength(0);
@@ -837,7 +832,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(() => fetchPromise),
         persistEvents: async () => ({ success: true }),
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
@@ -866,7 +861,7 @@ premiumStoreClasses.forEach((storeClass) => {
           getEvents: vi.fn(mockFetchData),
           persistEvents: async () => ({ success: true }),
         };
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
         const start = adapter.date('2025-07-01T00:00:00Z', 'default');
         const end = adapter.date('2025-07-07T00:00:00Z', 'default');
@@ -890,7 +885,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(mockFetchData),
         persistEvents: vi.fn(() => Promise.reject(rejection)),
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       await expect(async () => {
         store.publishEvent('eventsUpdated', {
@@ -913,7 +908,7 @@ premiumStoreClasses.forEach((storeClass) => {
         }),
         persistEvents: async () => ({ success: true }),
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       const start1 = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end1 = adapter.date('2025-07-07T00:00:00Z', 'default');
@@ -937,7 +932,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: vi.fn(mockFetchData),
         persistEvents: async () => ({ success: true }),
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
@@ -977,7 +972,7 @@ premiumStoreClasses.forEach((storeClass) => {
         }),
         persistEvents: vi.fn(async () => ({ success: true })),
       };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource });
 
       await expect(async () => {
         await store.lazyLoading?.queueDataFetchForRange(toRange(startFailing, endFailing), true);
@@ -1004,10 +999,11 @@ premiumStoreClasses.forEach((storeClass) => {
     // The store and the lazy-loading plugin must agree on what counts as a data source.
     describe('falsy dataSource', () => {
       it('should behave as if no data source was provided', () => {
-        const store = new storeClass.Value(
-          { ...DEFAULT_PARAMS, events: [buildTestEvent('1')], dataSource: false } as any,
-          adapter,
-        );
+        const store = new storeClass.Value({
+          ...DEFAULT_PARAMS,
+          events: [buildTestEvent('1')],
+          dataSource: false,
+        } as any);
 
         expect(store.state.isLoading).to.equal(false);
         expect(store.state.eventIdList).toHaveLength(1);

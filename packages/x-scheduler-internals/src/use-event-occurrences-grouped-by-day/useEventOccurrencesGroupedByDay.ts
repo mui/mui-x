@@ -6,7 +6,6 @@ import {
   getDaysTheOccurrenceIsVisibleOn,
   getOccurrencesFromEvents,
 } from '../internals/utils/event-utils';
-import { useAdapterContext } from '../use-adapter-context';
 import { getEndOfDayMs } from '../internals/utils/plain-date-utils/timeZone';
 import { getDayNumber } from '../internals/utils/plain-date-utils/plainDate';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
@@ -26,7 +25,6 @@ export function useEventOccurrencesGroupedByDay(
   parameters: useEventOccurrencesGroupedByDay.Parameters,
 ): useEventOccurrencesGroupedByDay.ReturnValue {
   const { days } = parameters;
-  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const eventRangeIndex = useStore(store, schedulerEventSelectors.processedEventRangeIndex);
   const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
@@ -36,14 +34,13 @@ export function useEventOccurrencesGroupedByDay(
   return React.useMemo(
     () =>
       innerGetEventOccurrencesGroupedByDay({
-        adapter,
         days,
         eventRangeIndex,
         visibleResources,
         displayTimezone,
         recurringEventsPlugin,
       }),
-    [adapter, days, eventRangeIndex, visibleResources, displayTimezone, recurringEventsPlugin],
+    [days, eventRangeIndex, visibleResources, displayTimezone, recurringEventsPlugin],
   );
 }
 
@@ -67,14 +64,8 @@ export function innerGetEventOccurrencesGroupedByDay(
     days: SchedulerProcessedDay[];
   },
 ): Map<string, SchedulerEventOccurrence[]> {
-  const {
-    adapter,
-    days,
-    eventRangeIndex,
-    visibleResources,
-    displayTimezone,
-    recurringEventsPlugin,
-  } = parameters;
+  const { days, eventRangeIndex, visibleResources, displayTimezone, recurringEventsPlugin } =
+    parameters;
 
   const occurrenceMap = new Map<string, SchedulerEventOccurrence[]>(
     days.map((day) => [day.key, []]),
@@ -85,7 +76,6 @@ export function innerGetEventOccurrencesGroupedByDay(
   }
 
   const occurrences = getOccurrencesFromEvents({
-    adapter,
     // The days start on their first instant.
     start: days[0].timestamp,
     end: getEndOfDayMs(days[days.length - 1].timestamp, displayTimezone),

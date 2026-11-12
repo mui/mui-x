@@ -1,6 +1,5 @@
 import { vi, describe, it, expect } from 'vitest';
 import {
-  adapter,
   EventBuilder,
   EventTimelinePremiumStoreWithFeatures,
   ResourceBuilder,
@@ -42,35 +41,35 @@ const flushDebounce = () => vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
 describe('Dependencies - EventTimelinePremiumStore', () => {
   describe('prop: dependencies', () => {
     it('should initialize the dependencies state from the parameter', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+      });
 
       expect(store.state.dependencyModelList).to.deep.equal([DEP_AB]);
       expect(store.state.dependencyModelLookup.get('dep-1')).to.equal(DEP_AB);
     });
 
     it('should default to an empty collection when the parameter is not provided', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(DEFAULT_PARAMS, adapter);
+      const store = new EventTimelinePremiumStoreWithFeatures(DEFAULT_PARAMS);
 
       expect(store.state.dependencyModelList).to.deep.equal([]);
       expect(store.state.dependencyModelLookup.size).to.equal(0);
     });
 
     it('should update the dependencies state when the parameter changes', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(DEFAULT_PARAMS, adapter);
-      store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [DEP_AB] }, adapter);
+      const store = new EventTimelinePremiumStoreWithFeatures(DEFAULT_PARAMS);
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [DEP_AB] });
 
       expect(store.state.dependencyModelList).to.deep.equal([DEP_AB]);
     });
 
     it('should reset the dependencies state to an empty collection when the parameter is removed', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
-        adapter,
-      );
-      store.updateStateFromParameters(DEFAULT_PARAMS, adapter);
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+      });
+      store.updateStateFromParameters(DEFAULT_PARAMS);
 
       expect(store.state.dependencyModelList).to.deep.equal([]);
       expect(store.state.dependencyModelLookup.size).to.equal(0);
@@ -78,13 +77,10 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should keep the same lookup instance when the parameter reference is unchanged', () => {
       const dependencies = [DEP_AB];
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({ ...DEFAULT_PARAMS, dependencies });
       const initialLookup = store.state.dependencyModelLookup;
 
-      store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies }, adapter);
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies });
 
       expect(store.state.dependencyModelLookup).to.equal(initialLookup);
     });
@@ -93,15 +89,12 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
   describe('method: addDependency', () => {
     it('should emit onDependenciesChange with the new dependency appended', () => {
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          events: [eventA, eventB, eventC],
-          resources: TEST_RESOURCES,
-          dependencies: [DEP_AB],
-          onDependenciesChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        events: [eventA, eventB, eventC],
+        resources: TEST_RESOURCES,
+        dependencies: [DEP_AB],
+        onDependenciesChange,
+      });
 
       const result = store.addDependency({
         source: 'event-b',
@@ -124,15 +117,12 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should generate a distinct id for each added dependency and echo it back to the caller', () => {
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          events: [eventA, eventB, eventC],
-          resources: TEST_RESOURCES,
-          dependencies: [DEP_AB],
-          onDependenciesChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        events: [eventA, eventB, eventC],
+        resources: TEST_RESOURCES,
+        dependencies: [DEP_AB],
+        onDependenciesChange,
+      });
 
       // Two distinct new dependencies, neither duplicating `DEP_AB` (a→b) nor each other.
       const firstResult = store.addDependency({
@@ -165,15 +155,12 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should reject a dependency referencing a recurring event', () => {
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          events: [eventA, recurringEvent],
-          resources: TEST_RESOURCES,
-          dependencies: [],
-          onDependenciesChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        events: [eventA, recurringEvent],
+        resources: TEST_RESOURCES,
+        dependencies: [],
+        onDependenciesChange,
+      });
 
       const result = store.addDependency({
         source: 'event-a',
@@ -190,7 +177,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
 
     it('should reject a dependency referencing an unknown event', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(DEFAULT_PARAMS, adapter);
+      const store = new EventTimelinePremiumStoreWithFeatures(DEFAULT_PARAMS);
 
       const result = store.addDependency({
         source: 'event-a',
@@ -206,10 +193,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         getEvents: vi.fn(async () => []),
         persistEvents: noopPersistEvents,
       };
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { events: [], resources: TEST_RESOURCES, dataSource },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        events: [],
+        resources: TEST_RESOURCES,
+        dataSource,
+      });
 
       const result = store.addDependency({
         source: 'event-a',
@@ -226,10 +214,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should reject a dependency that duplicates an existing one', () => {
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+        onDependenciesChange,
+      });
 
       const result = store.addDependency({
         source: 'event-a',
@@ -247,10 +236,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should accept a dependency of another type between the same events', () => {
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+        onDependenciesChange,
+      });
 
       const result = store.addDependency({
         source: 'event-a',
@@ -264,10 +254,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should reject a self-referencing dependency', () => {
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [], onDependenciesChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [],
+        onDependenciesChange,
+      });
 
       const result = store.addDependency({
         source: 'event-a',
@@ -281,10 +272,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should reject a dependency closing a direct cycle', () => {
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+        onDependenciesChange,
+      });
 
       const result = store.addDependency({
         source: 'event-b',
@@ -298,18 +290,15 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should reject a dependency closing a transitive cycle', () => {
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          events: [eventA, eventB, eventC],
-          resources: TEST_RESOURCES,
-          dependencies: [
-            DEP_AB,
-            { id: 'dep-2', source: 'event-b', target: 'event-c', type: 'FinishToStart' },
-          ],
-          onDependenciesChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        events: [eventA, eventB, eventC],
+        resources: TEST_RESOURCES,
+        dependencies: [
+          DEP_AB,
+          { id: 'dep-2', source: 'event-b', target: 'event-c', type: 'FinishToStart' },
+        ],
+        onDependenciesChange,
+      });
 
       const result = store.addDependency({
         source: 'event-c',
@@ -326,20 +315,17 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       // source: a grouping that retained a single branch per event — whether the first
       // or the last — would admit the cycle.
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          events: [eventA, eventB, eventC, eventD, eventE],
-          resources: TEST_RESOURCES,
-          dependencies: [
-            DEP_AB,
-            { id: 'dep-2', source: 'event-a', target: 'event-c', type: 'FinishToStart' },
-            { id: 'dep-3', source: 'event-c', target: 'event-d', type: 'FinishToStart' },
-            { id: 'dep-4', source: 'event-a', target: 'event-e', type: 'FinishToStart' },
-          ],
-          onDependenciesChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        events: [eventA, eventB, eventC, eventD, eventE],
+        resources: TEST_RESOURCES,
+        dependencies: [
+          DEP_AB,
+          { id: 'dep-2', source: 'event-a', target: 'event-c', type: 'FinishToStart' },
+          { id: 'dep-3', source: 'event-c', target: 'event-d', type: 'FinishToStart' },
+          { id: 'dep-4', source: 'event-a', target: 'event-e', type: 'FinishToStart' },
+        ],
+        onDependenciesChange,
+      });
 
       const result = store.addDependency({
         source: 'event-d',
@@ -355,20 +341,17 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       // Reconvergence is not a cycle: the walk from `event-a` reaches `event-d` through
       // both branches (revisit, not cycle) and must still accept the new edge.
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          events: [eventA, eventB, eventC, eventD, eventE],
-          resources: TEST_RESOURCES,
-          dependencies: [
-            DEP_AB,
-            { id: 'dep-2', source: 'event-a', target: 'event-c', type: 'FinishToStart' },
-            { id: 'dep-3', source: 'event-b', target: 'event-d', type: 'FinishToStart' },
-            { id: 'dep-4', source: 'event-c', target: 'event-d', type: 'FinishToStart' },
-          ],
-          onDependenciesChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        events: [eventA, eventB, eventC, eventD, eventE],
+        resources: TEST_RESOURCES,
+        dependencies: [
+          DEP_AB,
+          { id: 'dep-2', source: 'event-a', target: 'event-c', type: 'FinishToStart' },
+          { id: 'dep-3', source: 'event-b', target: 'event-d', type: 'FinishToStart' },
+          { id: 'dep-4', source: 'event-c', target: 'event-d', type: 'FinishToStart' },
+        ],
+        onDependenciesChange,
+      });
 
       const result = store.addDependency({
         source: 'event-e',
@@ -384,18 +367,15 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       // The `visited` set is what terminates the walk here: the data already contains
       // the cycle b→c→b, and the added edge never reaches it back.
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          events: [eventA, eventB, eventC],
-          resources: TEST_RESOURCES,
-          dependencies: [
-            { id: 'dep-1', source: 'event-b', target: 'event-c', type: 'FinishToStart' },
-            { id: 'dep-2', source: 'event-c', target: 'event-b', type: 'FinishToStart' },
-          ],
-          onDependenciesChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        events: [eventA, eventB, eventC],
+        resources: TEST_RESOURCES,
+        dependencies: [
+          { id: 'dep-1', source: 'event-b', target: 'event-c', type: 'FinishToStart' },
+          { id: 'dep-2', source: 'event-c', target: 'event-b', type: 'FinishToStart' },
+        ],
+        onDependenciesChange,
+      });
 
       let result!: ReturnType<typeof store.addDependency>;
       // The cascade of the added edge enters the cycle too.
@@ -417,17 +397,14 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       // A controlled `dependencies` value can arrive already cyclic. Re-adding an
       // existing pair must report the duplicate (its arrow gets selected), not the cycle.
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          dependencies: [
-            DEP_AB,
-            { id: 'dep-2', source: 'event-b', target: 'event-a', type: 'FinishToStart' },
-          ],
-          onDependenciesChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [
+          DEP_AB,
+          { id: 'dep-2', source: 'event-b', target: 'event-a', type: 'FinishToStart' },
+        ],
+        onDependenciesChange,
+      });
 
       const result = store.addDependency({
         source: 'event-a',
@@ -449,19 +426,16 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       // an add as cyclic either.
       const onDependenciesChange = vi.fn();
       const createStore = () =>
-        new EventTimelinePremiumStoreWithFeatures(
-          {
-            events: [eventA, eventB, eventC, eventD],
-            resources: TEST_RESOURCES,
-            dependencies: [
-              DEP_AB,
-              { id: 'dep-1', source: 'event-c', target: 'event-d', type: 'FinishToStart' },
-            ],
-            onDependenciesChange,
-            onEventsChange: vi.fn(),
-          },
-          adapter,
-        );
+        new EventTimelinePremiumStoreWithFeatures({
+          events: [eventA, eventB, eventC, eventD],
+          resources: TEST_RESOURCES,
+          dependencies: [
+            DEP_AB,
+            { id: 'dep-1', source: 'event-c', target: 'event-d', type: 'FinishToStart' },
+          ],
+          onDependenciesChange,
+          onEventsChange: vi.fn(),
+        });
       let store!: ReturnType<typeof createStore>;
       expect(() => {
         store = createStore();
@@ -483,18 +457,15 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       // endpoint) but becomes live if the endpoint reactivates.
       const onDependenciesChange = vi.fn();
       const createStore = () =>
-        new EventTimelinePremiumStoreWithFeatures(
-          {
-            events: [eventA, eventC, recurringEvent],
-            resources: TEST_RESOURCES,
-            dependencies: [
-              { id: 'dep-1', source: 'event-a', target: 'event-r', type: 'FinishToStart' },
-              { id: 'dep-2', source: 'event-r', target: 'event-c', type: 'FinishToStart' },
-            ],
-            onDependenciesChange,
-          },
-          adapter,
-        );
+        new EventTimelinePremiumStoreWithFeatures({
+          events: [eventA, eventC, recurringEvent],
+          resources: TEST_RESOURCES,
+          dependencies: [
+            { id: 'dep-1', source: 'event-a', target: 'event-r', type: 'FinishToStart' },
+            { id: 'dep-2', source: 'event-r', target: 'event-c', type: 'FinishToStart' },
+          ],
+          onDependenciesChange,
+        });
       let store!: ReturnType<typeof createStore>;
       expect(() => {
         store = createStore();
@@ -532,8 +503,8 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
           ] as SchedulerDependency[],
           onDependenciesChange: () => {},
         };
-        const store = new EventTimelinePremiumStoreWithFeatures(params, adapter);
-        store.updateStateFromParameters(params, adapter);
+        const store = new EventTimelinePremiumStoreWithFeatures(params);
+        store.updateStateFromParameters(params);
 
         await flushEffect();
         await flushDebounce();
@@ -554,10 +525,12 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       // Same known limitation as the duplicate leg below: the guard reads the
       // controlled `dependencyModelList`, which has not round-tripped yet.
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [], onDependenciesChange, onEventsChange: vi.fn() },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [],
+        onDependenciesChange,
+        onEventsChange: vi.fn(),
+      });
 
       const firstResult = store.addDependency({
         source: 'event-a',
@@ -578,10 +551,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       // The duplicate and cycle guards read the controlled `dependencyModelList`, which
       // only updates when the consumer round-trips the prop — same known limitation.
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [], onDependenciesChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [],
+        onDependenciesChange,
+      });
 
       const firstResult = store.addDependency({
         source: 'event-a',
@@ -603,10 +577,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
   describe('method: deleteDependency', () => {
     it('should emit onDependenciesChange without the deleted dependency', () => {
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+        onDependenciesChange,
+      });
 
       store.deleteDependency('dep-1');
 
@@ -616,10 +591,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should not emit onDependenciesChange when the dependency does not exist', () => {
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+        onDependenciesChange,
+      });
 
       // `false` — nothing was deleted: `true` would let the callers pairing the
       // deletion with a side effect (clearing the selection) act on a no-op.
@@ -636,10 +612,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         target: 'event-a',
         type: 'FinishToStart',
       };
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB, DEP_BA], onDependenciesChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB, DEP_BA],
+        onDependenciesChange,
+      });
 
       store.deleteDependency('dep-1');
 
@@ -652,17 +629,14 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       // identity, so deleting it removes all of its entries.
       const onDependenciesChange = vi.fn();
       const createStore = () =>
-        new EventTimelinePremiumStoreWithFeatures(
-          {
-            ...DEFAULT_PARAMS,
-            dependencies: [
-              { id: 'dup', source: 'event-a', target: 'event-b', type: 'FinishToStart' },
-              { id: 'dup', source: 'event-b', target: 'event-a', type: 'FinishToStart' },
-            ],
-            onDependenciesChange,
-          },
-          adapter,
-        );
+        new EventTimelinePremiumStoreWithFeatures({
+          ...DEFAULT_PARAMS,
+          dependencies: [
+            { id: 'dup', source: 'event-a', target: 'event-b', type: 'FinishToStart' },
+            { id: 'dup', source: 'event-b', target: 'event-a', type: 'FinishToStart' },
+          ],
+          onDependenciesChange,
+        });
 
       let store: ReturnType<typeof createStore>;
       expect(() => {
@@ -679,10 +653,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
   describe('method: updateDependency', () => {
     it('should emit onDependenciesChange with the new type', () => {
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+        onDependenciesChange,
+      });
 
       expect(store.updateDependency('dep-1', { type: 'StartToStart' })).to.deep.equal({
         status: 'updated',
@@ -696,10 +671,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should emit onDependenciesChange with the new lag', () => {
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+        onDependenciesChange,
+      });
 
       store.updateDependency('dep-1', { lag: 30, lagUnit: 'minute' });
 
@@ -710,14 +686,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should remove the lag and its unit when passed as undefined', () => {
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          dependencies: [{ ...DEP_AB, lag: 2, lagUnit: 'hour' }],
-          onDependenciesChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [{ ...DEP_AB, lag: 2, lagUnit: 'hour' }],
+        onDependenciesChange,
+      });
 
       store.updateDependency('dep-1', { lag: undefined, lagUnit: undefined });
 
@@ -729,10 +702,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should keep the type when passed as undefined', () => {
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+        onDependenciesChange,
+      });
 
       store.updateDependency('dep-1', { type: undefined, lag: 30, lagUnit: 'minute' });
 
@@ -743,14 +717,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should not reject a lag change on a dependency duplicated in the props', () => {
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          dependencies: [DEP_AB, { ...DEP_AB, id: 'dep-2' }],
-          onDependenciesChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB, { ...DEP_AB, id: 'dep-2' }],
+        onDependenciesChange,
+      });
 
       expect(store.updateDependency('dep-1', { lag: 30, lagUnit: 'minute' }).status).to.equal(
         'updated',
@@ -760,10 +731,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should not emit onDependenciesChange when nothing changes', () => {
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+        onDependenciesChange,
+      });
 
       expect(store.updateDependency('dep-1', { type: 'FinishToStart' }).status).to.equal('updated');
 
@@ -772,10 +744,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should reject an unknown dependency', () => {
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+        onDependenciesChange,
+      });
 
       expect(store.updateDependency('nope', { type: 'StartToStart' })).to.deep.equal({
         status: 'rejected',
@@ -787,10 +760,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     it('should reject a type change duplicating another dependency between the same events', () => {
       const onDependenciesChange = vi.fn();
       const depSS: SchedulerDependency = { ...DEP_AB, id: 'dep-2', type: 'StartToStart' };
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB, depSS], onDependenciesChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB, depSS],
+        onDependenciesChange,
+      });
 
       expect(store.updateDependency('dep-1', { type: 'StartToStart' })).to.deep.equal({
         status: 'rejected',
@@ -807,15 +781,12 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         .readOnly()
         .singleDay('2025-07-03T11:00:00Z')
         .build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [eventA, readOnlyEventB],
-          dependencies: [DEP_AB],
-          onDependenciesChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, readOnlyEventB],
+        dependencies: [DEP_AB],
+        onDependenciesChange,
+      });
 
       expect(store.updateDependency('dep-1', { type: 'StartToStart' })).to.deep.equal({
         status: 'updated',
@@ -825,10 +796,12 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should reject any change when the scheduler is read-only', () => {
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], readOnly: true, onDependenciesChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+        readOnly: true,
+        onDependenciesChange,
+      });
 
       expect(store.updateDependency('dep-1', { type: 'StartToStart' })).to.deep.equal({
         status: 'rejected',
@@ -840,10 +813,10 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
   describe('method: openDependencyEditor', () => {
     it('should open the dependency dialog at the given anchor', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+      });
 
       store.openDependencyEditor('dep-1', { x: 10, y: 20 });
 
@@ -857,10 +830,10 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
 
     it('should stop editing an event, and close when an event starts being edited', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+      });
       const occurrence = EventBuilder.new().id('event-a').toOccurrence();
 
       store.startEditing(occurrence, 'armed');
@@ -872,10 +845,10 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
 
     it('should do nothing for an unknown dependency', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+      });
 
       store.openDependencyEditor('unknown', { x: 0, y: 0 });
 
@@ -886,10 +859,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       const dependency: SchedulerDependency = { ...DEP_AB, target: 'event-r' };
       let store!: EventTimelinePremiumStore<any, any>;
       expect(() => {
-        store = new EventTimelinePremiumStoreWithFeatures(
-          { ...DEFAULT_PARAMS, events: [eventA, recurringEvent], dependencies: [dependency] },
-          adapter,
-        );
+        store = new EventTimelinePremiumStoreWithFeatures({
+          ...DEFAULT_PARAMS,
+          events: [eventA, recurringEvent],
+          dependencies: [dependency],
+        });
       }).toWarnDev([
         'MUI X Scheduler: The dependency "dep-1" references the recurring event "event-r".',
       ]);
@@ -900,10 +874,10 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
 
     it('should keep editing an event when the dependency is unknown', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+      });
       store.startEditing(EventBuilder.new().id('event-a').toOccurrence(), 'armed');
       const editingOccurrence = store.state.editingOccurrence;
 
@@ -914,34 +888,34 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
 
     it('should not open when a dependency unknown at call time is added later', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [],
+      });
 
       store.openDependencyEditor('dep-1', { x: 0, y: 0 });
-      store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [DEP_AB] }, adapter);
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [DEP_AB] });
 
       expect(store.state.dependencyEditor).to.equal(null);
     });
 
     it('should close when the dependency is removed', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+      });
       store.openDependencyEditor('dep-1', { x: 0, y: 0 });
 
-      store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [] }, adapter);
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [] });
 
       expect(store.state.dependencyEditor).to.equal(null);
     });
 
     it('should close when the visible date changes', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+      });
       store.openDependencyEditor('dep-1', { x: 0, y: 0 });
 
       store.goToNextVisibleDate(noopUIEvent);
@@ -950,10 +924,10 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
 
     it('should close when the preset changes', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+      });
       store.openDependencyEditor('dep-1', { x: 0, y: 0 });
 
       store.setPreset('dayAndMonth', new Event('change'));
@@ -963,33 +937,35 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
 
     it('should close when the readOnly parameter changes', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+      });
       store.openDependencyEditor('dep-1', { x: 0, y: 0 });
 
-      store.updateStateFromParameters(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], readOnly: true },
-        adapter,
-      );
+      store.updateStateFromParameters({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+        readOnly: true,
+      });
 
       expect(store.state.readOnly).to.equal(true);
       expect(store.state.dependencyEditor).to.equal(null);
     });
 
     it('should close when an endpoint event is removed', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+      });
       store.openDependencyEditor('dep-1', { x: 0, y: 0 });
 
       expect(() => {
-        store.updateStateFromParameters(
-          { ...DEFAULT_PARAMS, events: [eventA], dependencies: [DEP_AB] },
-          adapter,
-        );
+        store.updateStateFromParameters({
+          ...DEFAULT_PARAMS,
+          events: [eventA],
+          dependencies: [DEP_AB],
+        });
       }).toWarnDev([
         'MUI X Scheduler: The dependency "dep-1" references the unknown event "event-b".',
       ]);
@@ -998,18 +974,19 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
 
     it('should close when an endpoint event becomes recurring', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+      });
       store.openDependencyEditor('dep-1', { x: 0, y: 0 });
 
       const recurringB = EventBuilder.new().id('event-b').recurrent('DAILY').build();
       expect(() => {
-        store.updateStateFromParameters(
-          { ...DEFAULT_PARAMS, events: [eventA, recurringB], dependencies: [DEP_AB] },
-          adapter,
-        );
+        store.updateStateFromParameters({
+          ...DEFAULT_PARAMS,
+          events: [eventA, recurringB],
+          dependencies: [DEP_AB],
+        });
       }).toWarnDev([
         'MUI X Scheduler: The dependency "dep-1" references the recurring event "event-b".',
       ]);
@@ -1018,13 +995,13 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
 
     it('should close when the feature is disabled', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+      });
       store.openDependencyEditor('dep-1', { x: 0, y: 0 });
 
-      store.updateStateFromParameters(DEFAULT_PARAMS, adapter);
+      store.updateStateFromParameters(DEFAULT_PARAMS);
 
       expect(store.state.dependencyEditor).to.equal(null);
     });
@@ -1041,16 +1018,13 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         target: 'event-c',
         type: 'FinishToStart',
       };
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          events: [eventA, eventB, eventC],
-          resources: TEST_RESOURCES,
-          dependencies: [DEP_AB, DEP_BC],
-          onDependenciesChange,
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        events: [eventA, eventB, eventC],
+        resources: TEST_RESOURCES,
+        dependencies: [DEP_AB, DEP_BC],
+        onDependenciesChange,
+        onEventsChange,
+      });
 
       store.deleteEvent('event-a');
 
@@ -1079,16 +1053,13 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         target: 'event-c',
         type: 'FinishToStart',
       };
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          events: [eventA, eventB, eventC],
-          resources: TEST_RESOURCES,
-          dependencies: [DEP_AB, DEP_AC, DEP_BC],
-          onDependenciesChange,
-          onEventsChange: () => {},
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        events: [eventA, eventB, eventC],
+        resources: TEST_RESOURCES,
+        dependencies: [DEP_AB, DEP_AC, DEP_BC],
+        onDependenciesChange,
+        onEventsChange: () => {},
+      });
 
       store.deleteEvent('event-a');
 
@@ -1101,16 +1072,13 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     it('should not emit onDependenciesChange when the deleted event has no dependencies', () => {
       const onDependenciesChange = vi.fn();
       const eventC = EventBuilder.new().id('event-c').build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          events: [eventA, eventB, eventC],
-          resources: TEST_RESOURCES,
-          dependencies: [DEP_AB],
-          onDependenciesChange,
-          onEventsChange: () => {},
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        events: [eventA, eventB, eventC],
+        resources: TEST_RESOURCES,
+        dependencies: [DEP_AB],
+        onDependenciesChange,
+        onEventsChange: () => {},
+      });
 
       store.deleteEvent('event-c');
 
@@ -1119,15 +1087,12 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should remove a dependency when the deleted event is only referenced as its target', () => {
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          dependencies: [DEP_AB],
-          onDependenciesChange,
-          onEventsChange: () => {},
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+        onDependenciesChange,
+        onEventsChange: () => {},
+      });
 
       store.deleteEvent('event-b');
 
@@ -1138,10 +1103,10 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
   describe('method: setDependencyCreation', () => {
     it('should not write to the state when the gesture values did not change', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [],
+      });
       const creation = {
         sourceEventId: 'event-a',
         sourceOccurrenceKey: 'key-a',
@@ -1166,10 +1131,10 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
   describe('method: setSelectedDependencyId', () => {
     it('should not write to the state when the selection did not change', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+      });
       store.setSelectedDependencyId('dep-1');
       const stateBefore = store.state;
 
@@ -1183,10 +1148,10 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
   describe('transient state resets', () => {
     it('should discard the creation gesture and the selection when the feature is disabled', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+      });
       store.setDependencyCreation({
         sourceEventId: 'event-a',
         sourceOccurrenceKey: 'key-a',
@@ -1199,42 +1164,43 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       });
       store.setSelectedDependencyId('dep-1');
 
-      store.updateStateFromParameters(DEFAULT_PARAMS, adapter);
+      store.updateStateFromParameters(DEFAULT_PARAMS);
 
       expect(store.state.dependencyCreation).to.equal(null);
       expect(store.state.selection).to.equal(null);
     });
 
     it('should clear the selection of a removed dependency so a re-added id does not resurrect it', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+      });
       store.setSelectedDependencyId('dep-1');
 
-      store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [] }, adapter);
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [] });
       expect(store.state.selection).to.equal(null);
 
-      store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [DEP_AB] }, adapter);
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [DEP_AB] });
       expect(eventTimelinePremiumDependencySelectors.selectedId(store.state)).to.equal(null);
     });
   });
 
   it('should clear the selection when an endpoint event of the selected dependency becomes recurring', () => {
-    const store = new EventTimelinePremiumStoreWithFeatures(
-      { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
-      adapter,
-    );
+    const store = new EventTimelinePremiumStoreWithFeatures({
+      ...DEFAULT_PARAMS,
+      dependencies: [DEP_AB],
+    });
     store.setSelectedDependencyId('dep-1');
 
     // The dependency deactivates (recurring endpoint) without being removed: the
     // raw selection must clear, or the arrow would come back already selected.
     const recurringB = EventBuilder.new().id('event-b').recurrent('DAILY').build();
     expect(() => {
-      store.updateStateFromParameters(
-        { ...DEFAULT_PARAMS, events: [eventA, recurringB], dependencies: [DEP_AB] },
-        adapter,
-      );
+      store.updateStateFromParameters({
+        ...DEFAULT_PARAMS,
+        events: [eventA, recurringB],
+        dependencies: [DEP_AB],
+      });
     }).toWarnDev([
       'MUI X Scheduler: The dependency "dep-1" references the recurring event "event-b".',
     ]);
@@ -1243,18 +1209,18 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
   });
 
   it('should clear the selection when the type of the selected dependency becomes unknown', () => {
-    const store = new EventTimelinePremiumStoreWithFeatures(
-      { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
-      adapter,
-    );
+    const store = new EventTimelinePremiumStoreWithFeatures({
+      ...DEFAULT_PARAMS,
+      dependencies: [DEP_AB],
+    });
     store.setSelectedDependencyId('dep-1');
 
     // Same id, unsupported type: the arrows drop it, so the selection must go too.
     expect(() => {
-      store.updateStateFromParameters(
-        { ...DEFAULT_PARAMS, dependencies: [{ ...DEP_AB, type: 'FS' as any }] },
-        adapter,
-      );
+      store.updateStateFromParameters({
+        ...DEFAULT_PARAMS,
+        dependencies: [{ ...DEP_AB, type: 'FS' as any }],
+      });
     }).toWarnDev(['MUI X Scheduler: The dependency "dep-1" has the unknown type "FS".']);
 
     expect(store.state.selection).to.equal(null);
@@ -1264,15 +1230,10 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     it('should warn when a dependency from props references an unknown event and there is no dataSource', () => {
       expect(() => {
         // eslint-disable-next-line no-new
-        new EventTimelinePremiumStoreWithFeatures(
-          {
-            ...DEFAULT_PARAMS,
-            dependencies: [
-              { id: 'dep-x', source: 'event-a', target: 'nope', type: 'FinishToStart' },
-            ],
-          },
-          adapter,
-        );
+        new EventTimelinePremiumStoreWithFeatures({
+          ...DEFAULT_PARAMS,
+          dependencies: [{ id: 'dep-x', source: 'event-a', target: 'nope', type: 'FinishToStart' }],
+        });
       }).toWarnDev([
         'MUI X Scheduler: The dependency "dep-x" references the unknown event "nope".',
       ]);
@@ -1286,16 +1247,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
       expect(() => {
         // eslint-disable-next-line no-new
-        new EventTimelinePremiumStoreWithFeatures(
-          {
-            ...DEFAULT_PARAMS,
-            dataSource,
-            dependencies: [
-              { id: 'dep-x', source: 'event-a', target: 'nope', type: 'FinishToStart' },
-            ],
-          },
-          adapter,
-        );
+        new EventTimelinePremiumStoreWithFeatures({
+          ...DEFAULT_PARAMS,
+          dataSource,
+          dependencies: [{ id: 'dep-x', source: 'event-a', target: 'nope', type: 'FinishToStart' }],
+        });
       }).not.toWarnDev();
     });
 
@@ -1311,22 +1267,19 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
           persistEvents: noopPersistEvents,
         };
         const params = { events: [], resources: TEST_RESOURCES, dataSource };
-        const store = new EventTimelinePremiumStoreWithFeatures(params, adapter);
-        store.updateStateFromParameters(params, adapter);
+        const store = new EventTimelinePremiumStoreWithFeatures(params);
+        store.updateStateFromParameters(params);
 
         await flushEffect();
         await flushDebounce();
 
         expect(() => {
-          store.updateStateFromParameters(
-            {
-              ...params,
-              dependencies: [
-                { id: 'dep-r', source: 'event-a', target: 'event-r', type: 'FinishToStart' },
-              ],
-            },
-            adapter,
-          );
+          store.updateStateFromParameters({
+            ...params,
+            dependencies: [
+              { id: 'dep-r', source: 'event-a', target: 'event-r', type: 'FinishToStart' },
+            ],
+          });
         }).toWarnDev([
           'MUI X Scheduler: The dependency "dep-r" references the recurring event "event-r".',
         ]);
@@ -1336,21 +1289,16 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
 
     it('should re-validate the dependencies when the parameter changes after mount', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [DEP_AB],
+      });
 
       expect(() => {
-        store.updateStateFromParameters(
-          {
-            ...DEFAULT_PARAMS,
-            dependencies: [
-              { id: 'dep-x', source: 'event-a', target: 'nope', type: 'FinishToStart' },
-            ],
-          },
-          adapter,
-        );
+        store.updateStateFromParameters({
+          ...DEFAULT_PARAMS,
+          dependencies: [{ id: 'dep-x', source: 'event-a', target: 'nope', type: 'FinishToStart' }],
+        });
       }).toWarnDev([
         'MUI X Scheduler: The dependency "dep-x" references the unknown event "nope".',
       ]);
@@ -1359,26 +1307,23 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     it('should warn when a dependency from props references a recurring event', () => {
       expect(() => {
         // eslint-disable-next-line no-new
-        new EventTimelinePremiumStoreWithFeatures(
-          {
-            events: [eventA, recurringEvent],
-            resources: TEST_RESOURCES,
-            dependencies: [
-              { id: 'dep-r', source: 'event-a', target: 'event-r', type: 'FinishToStart' },
-            ],
-          },
-          adapter,
-        );
+        new EventTimelinePremiumStoreWithFeatures({
+          events: [eventA, recurringEvent],
+          resources: TEST_RESOURCES,
+          dependencies: [
+            { id: 'dep-r', source: 'event-a', target: 'event-r', type: 'FinishToStart' },
+          ],
+        });
       }).toWarnDev([
         'MUI X Scheduler: The dependency "dep-r" references the recurring event "event-r".',
       ]);
     });
 
     it('should warn in dev when dependencies are updated without onDependenciesChange', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies: [] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [],
+      });
 
       expect(() => {
         store.addDependency({ source: 'event-a', target: 'event-b', type: 'FinishToStart' });
@@ -1391,18 +1336,16 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       // The same array instance is passed to both calls so the dependencies slice keeps its
       // reference and only the `processedEventLookup` effect can trigger the re-validation.
       const dependencies = [DEP_AB];
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, dependencies },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({ ...DEFAULT_PARAMS, dependencies });
 
       const recurringEventB = EventBuilder.new().id('event-b').recurrent('DAILY').build();
 
       expect(() => {
-        store.updateStateFromParameters(
-          { ...DEFAULT_PARAMS, events: [eventA, recurringEventB], dependencies },
-          adapter,
-        );
+        store.updateStateFromParameters({
+          ...DEFAULT_PARAMS,
+          events: [eventA, recurringEventB],
+          dependencies,
+        });
       }).toWarnDev([
         'MUI X Scheduler: The dependency "dep-1" references the recurring event "event-b".',
       ]);
@@ -1414,13 +1357,13 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       const events = [eventA, eventB];
       const dependencies = [DEP_AB];
       const params = { events, resources: TEST_RESOURCES, dependencies };
-      const store = new EventTimelinePremiumStoreWithFeatures(params, adapter);
+      const store = new EventTimelinePremiumStoreWithFeatures(params);
 
       const first = eventTimelinePremiumDependencySelectors.activeModelListByTarget(store.state);
 
       // `events`, `resources` and `dependencies` keep the same references; only an
       // unrelated parameter changes.
-      store.updateStateFromParameters({ ...params, readOnly: true }, adapter);
+      store.updateStateFromParameters({ ...params, readOnly: true });
       const second = eventTimelinePremiumDependencySelectors.activeModelListByTarget(store.state);
 
       expect(second).to.equal(first);
@@ -1431,10 +1374,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         target: 'event-a',
         type: 'FinishToStart',
       };
-      store.updateStateFromParameters(
-        { ...params, dependencies: [...dependencies, DEP_BA] },
-        adapter,
-      );
+      store.updateStateFromParameters({ ...params, dependencies: [...dependencies, DEP_BA] });
       const third = eventTimelinePremiumDependencySelectors.activeModelListByTarget(store.state);
 
       expect(third).not.to.equal(second);

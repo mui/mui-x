@@ -18,7 +18,6 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   function testHook(events: SchedulerProcessedEvent[], maxSpan: number) {
     const { result } = renderHook(() => {
       const occurrences = getOccurrencesFromEvents({
-        adapter,
         start: adapter.getTime(collectionStart),
         end: adapter.getTime(collectionEnd),
         eventRangeIndex: createEventRangeIndex(events, false),
@@ -233,7 +232,6 @@ describe('useDayListEventOccurrencesWithPosition', () => {
       const result = testHook(events, 1);
 
       const occurrences = getOccurrencesFromEvents({
-        adapter,
         start: adapter.getTime(collectionStart),
         end: adapter.getTime(collectionEnd),
         eventRangeIndex: createEventRangeIndex(events, false),

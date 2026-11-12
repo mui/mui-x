@@ -1,4 +1,4 @@
-import { adapter, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
+import { ResourceBuilder, storeClasses } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { schedulerPreferenceSelectors } from './schedulerPreferenceSelectors';
 
@@ -8,25 +8,20 @@ storeClasses.forEach((storeClass) => {
   describe('schedulerPreferenceSelectors', () => {
     describe('ampm', () => {
       it('should follow the hour cycle of the date locale when none is set in the state', () => {
-        const state = new storeClass.Value({ ...BASE_PARAMS }, adapter).state;
+        const state = new storeClass.Value({ ...BASE_PARAMS }).state;
         expect(schedulerPreferenceSelectors.ampm(state)).to.equal(true);
-        const frenchState = new storeClass.Value({ ...BASE_PARAMS, dateLocale: 'fr-FR' }, adapter)
-          .state;
+        const frenchState = new storeClass.Value({ ...BASE_PARAMS, dateLocale: 'fr-FR' }).state;
         expect(schedulerPreferenceSelectors.ampm(frenchState)).to.equal(false);
       });
 
       it('should return the custom ampm preference when it is set in the state (false)', () => {
-        const state = new storeClass.Value(
-          { ...BASE_PARAMS, preferences: { ampm: false } },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({ ...BASE_PARAMS, preferences: { ampm: false } }).state;
         const ampm = schedulerPreferenceSelectors.ampm(state);
         expect(ampm).to.equal(false);
       });
 
       it('should return the custom ampm preference when it is set in the state (true)', () => {
-        const state = new storeClass.Value({ ...BASE_PARAMS, preferences: { ampm: true } }, adapter)
-          .state;
+        const state = new storeClass.Value({ ...BASE_PARAMS, preferences: { ampm: true } }).state;
         const ampm = schedulerPreferenceSelectors.ampm(state);
         expect(ampm).to.equal(true);
       });
@@ -34,14 +29,13 @@ storeClasses.forEach((storeClass) => {
 
     describe('weekInfo', () => {
       it('should follow the weeks of the date locale when weekStartsOn is not set', () => {
-        const state = new storeClass.Value({ ...BASE_PARAMS }, adapter).state;
+        const state = new storeClass.Value({ ...BASE_PARAMS }).state;
         expect(schedulerPreferenceSelectors.weekInfo(state)).to.deep.equal({
           firstDay: 7,
           weekend: [6, 7],
           minimalDays: 1,
         });
-        const frenchState = new storeClass.Value({ ...BASE_PARAMS, dateLocale: 'fr-FR' }, adapter)
-          .state;
+        const frenchState = new storeClass.Value({ ...BASE_PARAMS, dateLocale: 'fr-FR' }).state;
         expect(schedulerPreferenceSelectors.weekInfo(frenchState)).to.deep.equal({
           firstDay: 1,
           weekend: [6, 7],
@@ -50,10 +44,8 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should start the weeks on weekStartsOn and keep the first week of the locale', () => {
-        const state = new storeClass.Value(
-          { ...BASE_PARAMS, preferences: { weekStartsOn: 1 } },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({ ...BASE_PARAMS, preferences: { weekStartsOn: 1 } })
+          .state;
         expect(schedulerPreferenceSelectors.weekInfo(state)).to.deep.equal({
           firstDay: 1,
           weekend: [6, 7],
@@ -64,18 +56,18 @@ storeClasses.forEach((storeClass) => {
 
     describe('weekend', () => {
       it('should return the weekend of the date locale', () => {
-        const state = new storeClass.Value({ ...BASE_PARAMS }, adapter).state;
+        const state = new storeClass.Value({ ...BASE_PARAMS }).state;
         expect(schedulerPreferenceSelectors.weekend(state)).to.deep.equal([6, 7]);
-        const saudiState = new storeClass.Value({ ...BASE_PARAMS, dateLocale: 'ar-SA' }, adapter)
-          .state;
+        const saudiState = new storeClass.Value({ ...BASE_PARAMS, dateLocale: 'ar-SA' }).state;
         expect(schedulerPreferenceSelectors.weekend(saudiState)).to.deep.equal([5, 6]);
       });
 
       it('should keep the weekend of the date locale when weekStartsOn is set', () => {
-        const state = new storeClass.Value(
-          { ...BASE_PARAMS, dateLocale: 'ar-SA', preferences: { weekStartsOn: 1 } },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({
+          ...BASE_PARAMS,
+          dateLocale: 'ar-SA',
+          preferences: { weekStartsOn: 1 },
+        }).state;
         expect(schedulerPreferenceSelectors.weekend(state)).to.deep.equal([5, 6]);
       });
     });

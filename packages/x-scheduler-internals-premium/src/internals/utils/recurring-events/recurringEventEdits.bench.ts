@@ -33,11 +33,7 @@ const SERIES: { rule: SchedulerEventRecurrenceRule; start: string; occurrence: s
 ];
 
 const cases = SERIES.map(({ rule, start, occurrence }) => ({
-  event: EventBuilder.new(adapter)
-    .withDataTimezone(TIMEZONE)
-    .singleDay(start)
-    .rrule(rule)
-    .toProcessed(),
+  event: EventBuilder.new().withDataTimezone(TIMEZONE).singleDay(start).rrule(rule).toProcessed(),
   occurrenceStart: adapter.date(occurrence, TIMEZONE),
 }));
 
@@ -51,7 +47,6 @@ describe('recurring event edits', () => {
         for (let i = 0; i < REPEAT; i += 1) {
           for (const { event, occurrenceStart } of cases) {
             updateRecurringEvent(
-              adapter,
               event,
               occurrenceStart,
               { id: event.id, title: 'Renamed' },
@@ -63,14 +58,14 @@ describe('recurring event edits', () => {
       bench('delete only this', () => {
         for (let i = 0; i < REPEAT; i += 1) {
           for (const { event, occurrenceStart } of cases) {
-            deleteRecurringEvent(adapter, event, occurrenceStart, 'only-this');
+            deleteRecurringEvent(event, occurrenceStart, 'only-this');
           }
         }
       }),
       bench('delete this and following', () => {
         for (let i = 0; i < REPEAT; i += 1) {
           for (const { event, occurrenceStart } of cases) {
-            deleteRecurringEvent(adapter, event, occurrenceStart, 'this-and-following');
+            deleteRecurringEvent(event, occurrenceStart, 'this-and-following');
           }
         }
       }),

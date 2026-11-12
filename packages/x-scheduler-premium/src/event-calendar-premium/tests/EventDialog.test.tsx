@@ -59,8 +59,8 @@ function TestEventDialogContent(props: React.ComponentProps<typeof EventDialogCo
  * A test store that behaves like a premium store, enabling recurring event features.
  */
 class PremiumTestStore extends ExtendableEventCalendarStore<any, any> {
-  public constructor(parameters: any, adapterParam: any) {
-    super(parameters, adapterParam, 'EventCalendarPremiumStore', schedulerRecurringEventsPlugin);
+  public constructor(parameters: any) {
+    super(parameters, 'EventCalendarPremiumStore', schedulerRecurringEventsPlugin);
   }
 }
 
@@ -146,7 +146,7 @@ describe('<EventDialogContent open />', () => {
       lockSurfaceType: false,
       resourceId: null,
     };
-    const creationOccurrence = EventBuilder.new(adapter)
+    const creationOccurrence = EventBuilder.new()
       .id('placeholder-id')
       .withDisplayTimezone(displayTimezone)
       .span(start.toISOString(), end.toISOString())
@@ -363,7 +363,7 @@ describe('<EventDialogContent open />', () => {
   });
 
   describe('retargeting the dialog to another occurrence', () => {
-    const weeklyEventBuilder = EventBuilder.new(adapter)
+    const weeklyEventBuilder = EventBuilder.new()
       .title('Weekly sync')
       .singleDay('2025-05-26T09:00:00Z', 30)
       .recurrent('WEEKLY');
@@ -536,7 +536,7 @@ describe('<EventDialogContent open />', () => {
     it('should validate an untouched start on its stored instant in a repeated DST hour', async () => {
       // 06:30Z is the second 01:30 of November 2 in New York; the form re-reads "01:30" as the
       // first one, an hour earlier. Ending at 01:45 must be rejected against the stored start.
-      const builder = EventBuilder.new(adapter)
+      const builder = EventBuilder.new()
         .id('fall-back')
         .title('Fall back')
         .withDataTimezone('UTC')
@@ -609,7 +609,7 @@ describe('<EventDialogContent open />', () => {
     it('should render ReadonlyContent', () => {
       const readOnlyEvent = { ...DEFAULT_EVENT, readOnly: true };
 
-      const readOnlyOccurrence = EventBuilder.new(adapter)
+      const readOnlyOccurrence = EventBuilder.new()
         .id(readOnlyEvent.id)
         .title(readOnlyEvent.title)
         .description(readOnlyEvent.description)
@@ -653,7 +653,7 @@ describe('<EventDialogContent open />', () => {
     });
 
     it('should display recurrence label for recurring events', () => {
-      const recurringEventBuilder = EventBuilder.new(adapter)
+      const recurringEventBuilder = EventBuilder.new()
         .title('Daily Standup')
         .singleDay('2025-05-26T09:00:00Z', 30)
         .recurrent('DAILY')
@@ -711,7 +711,7 @@ describe('<EventDialogContent open />', () => {
     it('should not display recurrence label for non-recurring events', () => {
       const readOnlyEvent = { ...DEFAULT_EVENT, readOnly: true };
 
-      const readOnlyOccurrence = EventBuilder.new(adapter)
+      const readOnlyOccurrence = EventBuilder.new()
         .id(readOnlyEvent.id)
         .title(readOnlyEvent.title)
         .description(readOnlyEvent.description)
@@ -741,7 +741,7 @@ describe('<EventDialogContent open />', () => {
     });
 
     it('should render ReadonlyContent if EventCalendar is read-only', () => {
-      const readOnlyOccurrence = EventBuilder.new(adapter)
+      const readOnlyOccurrence = EventBuilder.new()
         .id(DEFAULT_EVENT.id)
         .title(DEFAULT_EVENT.title)
         .description(DEFAULT_EVENT.description)
@@ -797,7 +797,7 @@ describe('<EventDialogContent open />', () => {
       resource: noColorResource.id,
     };
 
-    const eventWithNoResourceColorOccurrence = EventBuilder.new(adapter)
+    const eventWithNoResourceColorOccurrence = EventBuilder.new()
       .id(eventWithNoResourceColor.id)
       .title(eventWithNoResourceColor.title)
       .description(eventWithNoResourceColor.description)
@@ -841,7 +841,7 @@ describe('<EventDialogContent open />', () => {
       resource: deletedResource.id,
     };
 
-    const eventWithUnknownResourceOccurrence = EventBuilder.new(adapter)
+    const eventWithUnknownResourceOccurrence = EventBuilder.new()
       .id(eventWithUnknownResource.id)
       .title(eventWithUnknownResource.title)
       .description(eventWithUnknownResource.description)
@@ -894,7 +894,7 @@ describe('<EventDialogContent open />', () => {
       resource: undefined,
     };
 
-    const eventWithoutResourceOccurrence = EventBuilder.new(adapter)
+    const eventWithoutResourceOccurrence = EventBuilder.new()
       .id(eventWithoutResource.id)
       .title(eventWithoutResource.title)
       .description(eventWithoutResource.description)
@@ -937,7 +937,7 @@ describe('<EventDialogContent open />', () => {
 
   describe('shouldEventRequireResource', () => {
     const eventWithoutResource: SchedulerEvent = { ...DEFAULT_EVENT, resource: undefined };
-    const eventWithoutResourceOccurrence = EventBuilder.new(adapter)
+    const eventWithoutResourceOccurrence = EventBuilder.new()
       .id(eventWithoutResource.id)
       .title(eventWithoutResource.title)
       .description(eventWithoutResource.description)
@@ -1146,7 +1146,7 @@ describe('<EventDialogContent open />', () => {
       const start = adapter.date('2025-05-26T07:30:00Z', 'default');
       const end = adapter.date('2025-05-26T08:30:00Z', 'default');
 
-      const creationOccurrence = EventBuilder.new(adapter)
+      const creationOccurrence = EventBuilder.new()
         .id('tmp')
         .span(start.toISOString(), end.toISOString())
         .toOccurrence();
@@ -1205,7 +1205,7 @@ describe('<EventDialogContent open />', () => {
         lockSurfaceType: false,
         resourceId: null,
       };
-      const creationOccurrence = EventBuilder.new(adapter)
+      const creationOccurrence = EventBuilder.new()
         .id('placeholder-id')
         .span(start.toISOString(), end.toISOString())
         .title('')
@@ -1369,7 +1369,7 @@ describe('<EventDialogContent open />', () => {
 
     it('should edit an event with an array resource as multi-select even when `canHaveMultipleResources` is false', async () => {
       let updateEventSpy;
-      const occurrence = EventBuilder.new(adapter)
+      const occurrence = EventBuilder.new()
         .id(eventWithArrayResource.id)
         .title(eventWithArrayResource.title)
         .span(eventWithArrayResource.start, eventWithArrayResource.end)
@@ -1415,7 +1415,7 @@ describe('<EventDialogContent open />', () => {
         ...DEFAULT_EVENT,
         resource: [personalResource.id, workResource.id],
       };
-      const multiResourceOccurrence = EventBuilder.new(adapter)
+      const multiResourceOccurrence = EventBuilder.new()
         .id(multiResourceEvent.id)
         .title(multiResourceEvent.title)
         .description(multiResourceEvent.description)
@@ -1492,7 +1492,7 @@ describe('<EventDialogContent open />', () => {
     it('should edit an event with resource: [] as multi-select with nothing selected', async () => {
       let updateEventSpy;
 
-      const occurrence = EventBuilder.new(adapter)
+      const occurrence = EventBuilder.new()
         .id(eventWithEmptyArrayResource.id)
         .title(eventWithEmptyArrayResource.title)
         .span(eventWithEmptyArrayResource.start, eventWithEmptyArrayResource.end)
@@ -1543,7 +1543,7 @@ describe('<EventDialogContent open />', () => {
         id: 'no-resource-event',
         resource: undefined,
       };
-      const occurrence = EventBuilder.new(adapter)
+      const occurrence = EventBuilder.new()
         .id(eventWithoutResource.id)
         .title(eventWithoutResource.title)
         .span(eventWithoutResource.start, eventWithoutResource.end)
@@ -1591,7 +1591,7 @@ describe('<EventDialogContent open />', () => {
       const end = adapter.date('2025-05-26T08:30:00Z', 'default');
       let pushSpy;
 
-      const creationOccurrence = EventBuilder.new(adapter)
+      const creationOccurrence = EventBuilder.new()
         .id('tmp')
         .span(start.toISOString(), end.toISOString())
         .title('')
@@ -1638,7 +1638,7 @@ describe('<EventDialogContent open />', () => {
       const end = adapter.date('2025-05-26T08:30:00Z', 'default');
       const handleSurfaceChange = vi.fn();
 
-      const creationOccurrence = EventBuilder.new(adapter)
+      const creationOccurrence = EventBuilder.new()
         .id('tmp')
         .span(start.toISOString(), end.toISOString())
         .toOccurrence();
@@ -1681,7 +1681,7 @@ describe('<EventDialogContent open />', () => {
       const end = adapter.date('2025-05-26T08:30:00Z', 'default');
       const handleSurfaceChange = vi.fn();
 
-      const creationOccurrence = EventBuilder.new(adapter)
+      const creationOccurrence = EventBuilder.new()
         .id('tmp')
         .span(start.toISOString(), end.toISOString())
         .allDay(true)
@@ -1725,7 +1725,7 @@ describe('<EventDialogContent open />', () => {
       const end = adapter.date('2025-05-26T08:30:00Z', 'default');
       const handleSurfaceChange = vi.fn();
 
-      const creationOccurrence = EventBuilder.new(adapter)
+      const creationOccurrence = EventBuilder.new()
         .id('tmp')
         .span(start.toISOString(), end.toISOString())
         .toOccurrence();
@@ -1767,7 +1767,7 @@ describe('<EventDialogContent open />', () => {
       const end = adapter.date('2025-05-26T08:30:00Z', 'default');
       const handleResourceIdChange = vi.fn();
 
-      const creationOccurrence = EventBuilder.new(adapter)
+      const creationOccurrence = EventBuilder.new()
         .id('tmp')
         .span(start.toISOString(), end.toISOString())
         .toOccurrence();
@@ -1818,7 +1818,7 @@ describe('<EventDialogContent open />', () => {
         resourceId: null,
       };
 
-      const creationOccurrence = EventBuilder.new(adapter)
+      const creationOccurrence = EventBuilder.new()
         .id('placeholder-id')
         .span(start.toISOString(), end.toISOString())
         .title('')
@@ -1888,7 +1888,7 @@ describe('<EventDialogContent open />', () => {
         resourceId: null,
       };
 
-      const creationOccurrence = EventBuilder.new(adapter)
+      const creationOccurrence = EventBuilder.new()
         .id('placeholder-id')
         .span(start.toISOString(), end.toISOString())
         .title('')
@@ -1985,7 +1985,7 @@ describe('<EventDialogContent open />', () => {
         .resource(personalResource)
         .recurrent('DAILY')
         .build();
-      const originalRecurringEventOccurrence = EventBuilder.new(adapter)
+      const originalRecurringEventOccurrence = EventBuilder.new()
         .id(originalRecurringEvent.id)
         .title(originalRecurringEvent.title)
         .description(originalRecurringEvent.description)
@@ -2501,7 +2501,7 @@ describe('<EventDialogContent open />', () => {
         // A DST-observing data timezone: the series starts in EDT (UTC-4) and the
         // targeted occurrence falls after the 2025-11-02 fall-back (EST, UTC-5), so a
         // conversion that cancels out at a fixed offset cannot pass this test.
-        const dstBuilder = EventBuilder.new(adapter)
+        const dstBuilder = EventBuilder.new()
           .title('Weekly sync')
           .withDataTimezone('America/New_York')
           .span('2025-10-31T00:00:00', '2025-10-31T23:59:59.999', { allDay: true })
@@ -2549,7 +2549,7 @@ describe('<EventDialogContent open />', () => {
       });
 
       it('should keep a series in a DST-observing timezone byte-identical on a rename across the transition', async () => {
-        const dstBuilder = EventBuilder.new(adapter)
+        const dstBuilder = EventBuilder.new()
           .title('Weekly sync')
           .withDataTimezone('America/New_York')
           .span('2025-10-31T00:00:00', '2025-10-31T23:59:59.999', { allDay: true })
@@ -2932,14 +2932,14 @@ describe('<EventDialogContent open />', () => {
       });
 
       it('should keep a bound the host moved while the dialog is open', async () => {
-        const builder = EventBuilder.new(adapter)
+        const builder = EventBuilder.new()
           .id('meeting')
           .title('Meeting')
           .withDataTimezone('UTC')
           .span('2025-05-26T10:00:00', '2025-05-26T11:00:00');
         const event = builder.build();
         const occurrence = builder.toOccurrence();
-        const movedEvent = EventBuilder.new(adapter)
+        const movedEvent = EventBuilder.new()
           .id('meeting')
           .title('Meeting')
           .withDataTimezone('UTC')
@@ -2976,7 +2976,7 @@ describe('<EventDialogContent open />', () => {
       });
 
       it('should validate an edited bound against the one the host moved while the dialog is open', async () => {
-        const builder = EventBuilder.new(adapter)
+        const builder = EventBuilder.new()
           .id('meeting')
           .title('Meeting')
           .withDataTimezone('UTC')
@@ -2984,7 +2984,7 @@ describe('<EventDialogContent open />', () => {
           .span('2025-05-26T10:00:00', '2025-05-26T11:00:00');
         const event = builder.build();
         const occurrence = builder.toOccurrence();
-        const shortenedEvent = EventBuilder.new(adapter)
+        const shortenedEvent = EventBuilder.new()
           .id('meeting')
           .title('Meeting')
           .withDataTimezone('UTC')
@@ -3246,7 +3246,7 @@ describe('<EventDialogContent open />', () => {
 
         it("should truncate the series with scope 'this-and-following' on Confirm", async () => {
           const onEventsChange = vi.fn();
-          const laterOccurrence = EventBuilder.new(adapter)
+          const laterOccurrence = EventBuilder.new()
             .id(originalRecurringEvent.id)
             .title(originalRecurringEvent.title)
             .description(originalRecurringEvent.description)
@@ -4174,7 +4174,7 @@ describe('<EventDialogContent open />', () => {
             .recurrent('DAILY')
             .build();
 
-          const recurringOccurrence = EventBuilder.new(adapter)
+          const recurringOccurrence = EventBuilder.new()
             .id(recurringEvent.id)
             .title(recurringEvent.title)
             .span(recurringEvent.start, recurringEvent.end)
@@ -4284,7 +4284,7 @@ describe('<EventDialogContent open />', () => {
         .description('description')
         .singleDay('2025-06-12T14:00:00Z')
         .build();
-      const nonRecurringEventOccurrence = EventBuilder.new(adapter)
+      const nonRecurringEventOccurrence = EventBuilder.new()
         .id(nonRecurringEvent.id)
         .title(nonRecurringEvent.title)
         .description(nonRecurringEvent.description)
@@ -4542,7 +4542,7 @@ describe('<EventDialogContent open />', () => {
 
       it('should anchor a new weekly rule on the resized start when edited from the armed toolbar', async () => {
         // Tuesday 19:00 in New York is Tuesday 23:00 UTC; resized to 21:00 it is Wednesday 01:00 UTC.
-        const builder = EventBuilder.new(adapter)
+        const builder = EventBuilder.new()
           .id('evening-call')
           .title('Evening call')
           .withDataTimezone('UTC')
@@ -4620,7 +4620,7 @@ describe('<EventDialogContent open />', () => {
           .build(),
         customField: 'preserve-me',
       } as SchedulerEvent;
-      const recurringEventWithCustomDataOccurrence = EventBuilder.new(adapter)
+      const recurringEventWithCustomDataOccurrence = EventBuilder.new()
         .id(recurringEventWithCustomData.id)
         .title(recurringEventWithCustomData.title)
         .description(recurringEventWithCustomData.description)
@@ -4637,7 +4637,7 @@ describe('<EventDialogContent open />', () => {
         customField: 'preserve-me',
         untouchedField: 'keep-me',
       } as SchedulerEvent;
-      const nonRecurringEventWithCustomDataOccurrence = EventBuilder.new(adapter)
+      const nonRecurringEventWithCustomDataOccurrence = EventBuilder.new()
         .id(nonRecurringEventWithCustomData.id)
         .title(nonRecurringEventWithCustomData.title)
         .singleDay('2025-06-12T14:00:00Z')
@@ -4675,7 +4675,7 @@ describe('<EventDialogContent open />', () => {
           customField: 'preserve-me',
           untouchedField: 'keep-me',
         } as SchedulerEvent;
-        const recurringEventWithUntouchedDataOccurrence = EventBuilder.new(adapter)
+        const recurringEventWithUntouchedDataOccurrence = EventBuilder.new()
           .id(recurringEventWithUntouchedData.id)
           .title(recurringEventWithUntouchedData.title)
           .description(recurringEventWithUntouchedData.description)
@@ -4925,7 +4925,7 @@ describe('<EventDialogContent open />', () => {
 
     it('should apply built-in classes to readonly dialog elements', () => {
       const readOnlyEvent = { ...DEFAULT_EVENT, readOnly: true };
-      const readOnlyOccurrence = EventBuilder.new(adapter)
+      const readOnlyOccurrence = EventBuilder.new()
         .id(readOnlyEvent.id)
         .title(readOnlyEvent.title)
         .description(readOnlyEvent.description)

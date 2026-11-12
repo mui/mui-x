@@ -4,7 +4,7 @@ import { useEventCalendarStoreContext } from '../../use-event-calendar-store-con
 import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import type { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
-import { createProcessedDate } from '../../internals/utils/plain-date-utils/adapter';
+import { createProcessedDate } from '../../internals/utils/plain-date-utils/date';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
 
 export function useCalendarGridPlaceholderInRange(

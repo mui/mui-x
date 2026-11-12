@@ -392,6 +392,12 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
    */
   clipboardCopyCellDelimiter: PropTypes.string,
   /**
+   * Options for the clipboard paste.
+   */
+  clipboardPasteOptions: PropTypes.shape({
+    createRows: PropTypes.func,
+  }),
+  /**
    * Column region in pixels to render before/after the viewport
    * @default 150
    */

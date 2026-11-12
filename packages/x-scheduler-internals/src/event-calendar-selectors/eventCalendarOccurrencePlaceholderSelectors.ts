@@ -3,7 +3,7 @@ import type { SchedulerProcessedDate } from '../models';
 import { toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
 
 // These selectors run for every cell while dragging, so they compare timestamps and day numbers,
-// which are cheaper than the adapter's comparison methods and than plain dates.
+// which are cheaper than plain dates.
 
 // The placeholder and the bounds of the rows and columns are timestamps read in the display timezone.
 function getDayNumber(state: State, timestamp: number): number {
@@ -24,7 +24,7 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
 
     // A placeholder starting in a previous row also renders from the first day of this one.
     if (dayNumber === getDayNumber(state, rowStart)) {
-      // Inclusive, in either order, like the adapter's `isWithinRange()`.
+      // Inclusive, in either order.
       if (
         Math.min(placeholder.start, placeholder.end) <= rowStart &&
         rowStart <= Math.max(placeholder.start, placeholder.end)

@@ -10,10 +10,11 @@ storeClasses.forEach((storeClass) => {
       it('should set visibleDate to startOfDay(adapter.now("default")) and calls onVisibleDateChange when is uncontrolled', () => {
         const onVisibleDateChange = vi.fn();
         const yesterday = adapter.addDays(adapter.startOfDay(adapter.now('default')), -1);
-        const store = new storeClass.Value(
-          { ...DEFAULT_PARAMS, onVisibleDateChange, defaultVisibleDate: yesterday },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          ...DEFAULT_PARAMS,
+          onVisibleDateChange,
+          defaultVisibleDate: yesterday,
+        });
 
         store.goToToday({} as any);
 
@@ -29,15 +30,12 @@ storeClasses.forEach((storeClass) => {
 
         const yesterday = adapter.addDays(adapter.startOfDay(adapter.now('default')), -1);
 
-        const store = new storeClass.Value(
-          {
-            ...DEFAULT_PARAMS,
-            defaultVisibleDate: yesterday,
-            onVisibleDateChange,
-            displayTimezone,
-          },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          ...DEFAULT_PARAMS,
+          defaultVisibleDate: yesterday,
+          onVisibleDateChange,
+          displayTimezone,
+        });
 
         store.goToToday({} as any);
 
@@ -63,14 +61,11 @@ storeClasses.forEach((storeClass) => {
           setSystemTimezone('America/Havana');
           vi.setSystemTime(new Date('2026-03-08T12:00:00Z'));
           const onVisibleDateChange = vi.fn();
-          const store = new storeClass.Value(
-            {
-              ...DEFAULT_PARAMS,
-              defaultVisibleDate: adapter.date('2026-03-01T12:00:00Z', 'default'),
-              onVisibleDateChange,
-            },
-            adapter,
-          );
+          const store = new storeClass.Value({
+            ...DEFAULT_PARAMS,
+            defaultVisibleDate: adapter.date('2026-03-01T12:00:00Z', 'default'),
+            onVisibleDateChange,
+          });
 
           store.goToToday({} as any);
 
@@ -86,10 +81,11 @@ storeClasses.forEach((storeClass) => {
         const onVisibleDateChange = vi.fn();
         const initialDate = adapter.date('2025-05-26T00:00:00Z', 'default');
         const targetDate = adapter.date('2025-06-15T10:30:00Z', 'default');
-        const store = new storeClass.Value(
-          { ...DEFAULT_PARAMS, onVisibleDateChange, defaultVisibleDate: initialDate },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          ...DEFAULT_PARAMS,
+          onVisibleDateChange,
+          defaultVisibleDate: initialDate,
+        });
 
         store.goToDate(targetDate, {} as any);
 
@@ -102,10 +98,11 @@ storeClasses.forEach((storeClass) => {
         const onVisibleDateChange = vi.fn();
         const controlledDate = adapter.date('2025-07-01T00:00:00Z', 'default');
         const targetDate = adapter.date('2025-08-15T00:00:00Z', 'default');
-        const store = new storeClass.Value(
-          { ...DEFAULT_PARAMS, visibleDate: controlledDate, onVisibleDateChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          ...DEFAULT_PARAMS,
+          visibleDate: controlledDate,
+          onVisibleDateChange,
+        });
 
         store.goToDate(targetDate, {} as any);
 
@@ -117,10 +114,11 @@ storeClasses.forEach((storeClass) => {
       it('should do nothing if already at the target date', () => {
         const onVisibleDateChange = vi.fn();
         const targetDate = adapter.date('2025-05-26T00:00:00Z', 'default');
-        const store = new storeClass.Value(
-          { ...DEFAULT_PARAMS, defaultVisibleDate: targetDate, onVisibleDateChange },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          ...DEFAULT_PARAMS,
+          defaultVisibleDate: targetDate,
+          onVisibleDateChange,
+        });
 
         store.goToDate(targetDate, {} as any);
 

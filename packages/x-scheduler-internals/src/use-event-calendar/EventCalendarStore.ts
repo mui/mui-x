@@ -8,7 +8,6 @@ import type {
   TemporalSupportedObject,
   EventCalendarPreferencesMenuConfig,
 } from '../models';
-import type { Adapter } from '../use-adapter/useAdapter.types';
 import type {
   SchedulerParametersToStateMapper,
   SchedulerInstanceName,
@@ -114,11 +113,10 @@ export class ExtendableEventCalendarStore<
 > extends SchedulerStore<TEvent, TResource, EventCalendarState, Parameters> {
   public constructor(
     parameters: Parameters,
-    adapter: Adapter,
     instanceName: SchedulerInstanceName,
     recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
   ) {
-    super(parameters, adapter, instanceName, mapper, recurringEventsPlugin);
+    super(parameters, instanceName, mapper, recurringEventsPlugin);
 
     // A view change swaps the grid, so the edited occurrence goes stale like it does on a date change.
     this.disposables.defer(this.registerStoreEffect((state) => state.view, this.stopEditing));
@@ -295,7 +293,7 @@ export class EventCalendarStore<
   TEvent extends object,
   TResource extends object,
 > extends ExtendableEventCalendarStore<TEvent, TResource> {
-  public constructor(parameters: EventCalendarParameters<TEvent, TResource>, adapter: Adapter) {
-    super(parameters, adapter, 'EventCalendarStore');
+  public constructor(parameters: EventCalendarParameters<TEvent, TResource>) {
+    super(parameters, 'EventCalendarStore');
   }
 }

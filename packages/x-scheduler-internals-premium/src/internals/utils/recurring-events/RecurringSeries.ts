@@ -20,7 +20,6 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   NOT_LOCALIZED_WEEK_DAYS_INDEXES,
   parsesByDayForMonthlyFrequency,
@@ -339,10 +338,9 @@ export class RecurringSeries {
 
   private readonly skippedDaysByPeriod = new Map<number, Set<number>>();
 
-  constructor(adapter: Adapter, parameters: RecurringSeriesParameters) {
+  constructor(parameters: RecurringSeriesParameters) {
     const { rule, timezone } = parameters;
-    const toDay = (date: TemporalSupportedObject) =>
-      toLocalDayNumber(adapter.getTime(date), timezone);
+    const toDay = (date: TemporalSupportedObject) => toLocalDayNumber(date.getTime(), timezone);
 
     const startDay = toLocalDayNumber(parameters.start, timezone);
 
@@ -361,11 +359,10 @@ export class RecurringSeries {
    * `exDates` replaces the excluded occurrences of the event.
    */
   public static fromEvent(
-    adapter: Adapter,
     event: SchedulerProcessedEvent,
     exDates: readonly TemporalSupportedObject[] | undefined = event.dataTimezone.exDates,
   ): RecurringSeries {
-    return new RecurringSeries(adapter, {
+    return new RecurringSeries({
       rule: event.dataTimezone.rrule!,
       start: event.dataTimezone.start.timestamp,
       timezone: event.dataTimezone.timezone,

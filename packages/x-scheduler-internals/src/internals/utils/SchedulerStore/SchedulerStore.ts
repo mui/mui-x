@@ -52,7 +52,6 @@ import type {
   SchedulerEventListener,
   SchedulerEventParameters,
 } from '../../models/events';
-import type { Adapter } from '../../../use-adapter/useAdapter.types';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
@@ -75,7 +74,6 @@ import {
 } from '../event-utils';
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
-import { createAdapterDate } from '../plain-date-utils/adapter';
 import { checkDateLocale, DEFAULT_DATE_LOCALE } from '../date-locale';
 import { getStartOfDayMs, toLocalDayNumber } from '../plain-date-utils/timeZone';
 
@@ -86,7 +84,7 @@ const ONE_MINUTE_IN_MS = 60 * 1000;
  * the end of the gap.
  */
 function createStartOfToday(nowTimestamp: number, timezone: TemporalTimezone) {
-  return createAdapterDate(getStartOfDayMs(nowTimestamp, timezone));
+  return new Date(getStartOfDayMs(nowTimestamp, timezone));
 }
 
 /**
@@ -212,12 +210,11 @@ export class SchedulerStore<
 
   public constructor(
     parameters: Parameters,
-    adapter: Adapter,
     instanceName: SchedulerInstanceName,
     mapper: SchedulerParametersToStateMapper<State, Parameters>,
     recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
   ) {
-    const stateFromParameters = SchedulerStore.deriveStateFromParameters(parameters, adapter);
+    const stateFromParameters = SchedulerStore.deriveStateFromParameters(parameters);
     const nowTimestamp = Date.now();
 
     const schedulerInitialState: Omit<SchedulerState<TEvent>, 'shouldEventRequireResource'> = {
@@ -227,7 +224,6 @@ export class SchedulerStore<
         : buildEventsState({
             events: parameters.events,
             eventModelStructure: parameters.eventModelStructure,
-            adapter,
             displayTimezone: stateFromParameters.displayTimezone,
             recurringEventsPlugin,
           })),
@@ -254,7 +250,7 @@ export class SchedulerStore<
       pendingDeleteConfirmation: null,
     };
 
-    const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);
+    const initialState = mapper.getInitialState(schedulerInitialState, parameters);
 
     super(initialState);
     this.parameters = parameters;
@@ -287,12 +283,10 @@ export class SchedulerStore<
    */
   private static deriveStateFromParameters<TEvent extends object, TResource extends object>(
     parameters: SchedulerParameters<TEvent, TResource>,
-    adapter: Adapter,
   ) {
     const dateLocale = parameters.dateLocale ?? DEFAULT_DATE_LOCALE;
     checkDateLocale(dateLocale);
     return {
-      adapter,
       dateLocale,
       areEventsDraggable: parameters.areEventsDraggable ?? true,
       areEventsResizable: parameters.areEventsResizable ?? true,
@@ -309,7 +303,7 @@ export class SchedulerStore<
   /**
    * Updates the state of the calendar based on the new parameters provided to the root component.
    */
-  public updateStateFromParameters = (parameters: Parameters, adapter: Adapter) => {
+  public updateStateFromParameters = (parameters: Parameters) => {
     // TODO: Move the lazy loading plugin
     const updateModel: SchedulerModelUpdater<State, Parameters> = (
       mutableNewState,
@@ -351,7 +345,6 @@ export class SchedulerStore<
 
     const newSchedulerState = SchedulerStore.deriveStateFromParameters(
       parameters,
-      adapter,
     ) as Partial<State>;
 
     // Kept out of `deriveStateFromParameters`, which has no previous state to compare against:
@@ -366,7 +359,6 @@ export class SchedulerStore<
       !hasDataSource(parameters) &&
       (parameters.events !== this.parameters.events ||
         parameters.eventModelStructure !== this.parameters.eventModelStructure ||
-        adapter !== this.state.adapter ||
         newSchedulerState.displayTimezone !== this.state.displayTimezone)
     ) {
       Object.assign(
@@ -374,7 +366,6 @@ export class SchedulerStore<
         buildEventsState({
           events: parameters.events,
           eventModelStructure: parameters.eventModelStructure,
-          adapter,
           displayTimezone: newSchedulerState.displayTimezone!,
           previousState: this.state,
         }),
@@ -546,9 +537,8 @@ export class SchedulerStore<
     event?: React.UIEvent | null;
   }) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
-    const { adapter } = this.state;
     const hasChange =
-      adapter.getTime(visibleDate) !== schedulerOtherSelectors.visibleTimestamp(this.state);
+      visibleDate.getTime() !== schedulerOtherSelectors.visibleTimestamp(this.state);
 
     if (hasChange) {
       const eventDetails = createChangeEventDetails('none', event?.nativeEvent);
@@ -721,7 +711,6 @@ export class SchedulerStore<
             originalEventModelLookup.get(eventId),
             changes,
             this.state.eventModelStructure,
-            this.state.adapter,
             processedEvent.modelInBuiltInFormat,
           );
           newEvents.push(newEvent);
@@ -757,7 +746,6 @@ export class SchedulerStore<
       const response = createEventModel(
         source ? { ...getCustomEventProperties(source), ...createdEvent } : createdEvent,
         this.state.eventModelStructure,
-        this.state.adapter,
       );
       newEvents.push(response.model);
       createdEvents.push(response.model);
@@ -1048,7 +1036,7 @@ export class SchedulerStore<
    * @param scope The selected scope, or null if canceled.
    */
   public selectRecurringEventScope = (scope: RecurringEventScope | null) => {
-    const { recurringEventsPlugin, pendingRecurringEventOperation, adapter } = this.state;
+    const { recurringEventsPlugin, pendingRecurringEventOperation } = this.state;
     if (recurringEventsPlugin == null || pendingRecurringEventOperation == null) {
       return;
     }
@@ -1084,12 +1072,7 @@ export class SchedulerStore<
     // with.
     let changes: SchedulerEventUpdatedProperties | null = null;
     if (pendingRecurringEventOperation.kind === 'delete') {
-      updatedEvents = recurringEventsPlugin.deleteRecurringEvent(
-        adapter,
-        original,
-        occurrenceStart,
-        scope,
-      );
+      updatedEvents = recurringEventsPlugin.deleteRecurringEvent(original, occurrenceStart, scope);
     } else {
       changes = pendingRecurringEventOperation.changes;
       // "all" edits the series in place off `changes.start` / `.end` (e.g. realigning `byDay`),
@@ -1107,7 +1090,6 @@ export class SchedulerStore<
         changes = this.removeUnwritableDates(changes);
       }
       updatedEvents = recurringEventsPlugin.updateRecurringEvent(
-        adapter,
         original,
         occurrenceStart,
         changes,
@@ -1208,13 +1190,12 @@ export class SchedulerStore<
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
   ): SchedulerEventId | undefined => {
-    const { adapter } = this.state;
     const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
     const originalModel = original.modelInBuiltInFormat;
     const dataTimezone = originalModel.timezone ?? 'default';
     const duplicatedEvent = extractStandaloneEvent(original, {
-      start: dateToEventString(adapter, start, originalModel.start, dataTimezone),
-      end: dateToEventString(adapter, end, originalModel.end, dataTimezone),
+      start: dateToEventString(start, originalModel.start, dataTimezone),
+      end: dateToEventString(end, originalModel.end, dataTimezone),
     });
     return this.updateEvents({ created: [duplicatedEvent] }).created[0];
   };
@@ -1249,7 +1230,7 @@ export class SchedulerStore<
    * clears either way.
    */
   public pasteEvent = (changes: SchedulerEventPasteProperties): SchedulerEventId | null => {
-    const { adapter, copiedEvent } = this.state;
+    const { copiedEvent } = this.state;
     if (!copiedEvent) {
       return null;
     }
@@ -1260,10 +1241,7 @@ export class SchedulerStore<
     // Narrowed on the property directly (not `isMovingDates`) so TypeScript can see
     // `cleanChanges.start` is defined here.
     if (cleanChanges.start != null) {
-      cleanChanges.end = adapter.addMilliseconds(
-        cleanChanges.start,
-        original.dataTimezone.end.timestamp - original.dataTimezone.start.timestamp,
-      );
+      cleanChanges.end = getOccurrenceEnd({ event: original, occurrenceStart: cleanChanges.start });
     }
 
     const refuse = (reason: string) => {
@@ -1328,7 +1306,6 @@ export class SchedulerStore<
     const stringifiedChanges: Record<string, any> = { ...cleanChanges };
     if (cleanChanges.start != null) {
       stringifiedChanges.start = dateToEventString(
-        adapter,
         cleanChanges.start,
         original.modelInBuiltInFormat.start,
         dataTimezone,
@@ -1336,7 +1313,6 @@ export class SchedulerStore<
     }
     if (stringifiedChanges.end != null) {
       stringifiedChanges.end = dateToEventString(
-        adapter,
         stringifiedChanges.end,
         original.modelInBuiltInFormat.end,
         dataTimezone,
@@ -1543,7 +1519,7 @@ export class SchedulerStore<
   public setEditingOccurrenceTimes = (
     changes: Pick<SchedulerEventUpdatedProperties, 'start' | 'end'>,
   ) => {
-    const { editingOccurrence, adapter } = this.state;
+    const { editingOccurrence } = this.state;
     if (editingOccurrence == null) {
       return;
     }
@@ -1566,11 +1542,11 @@ export class SchedulerStore<
           start:
             start == null
               ? occurrence.displayTimezone.start
-              : processDate(start, adapter, occurrence.displayTimezone.timezone),
+              : processDate(start, occurrence.displayTimezone.timezone),
           end:
             end == null
               ? occurrence.displayTimezone.end
-              : processDate(end, adapter, occurrence.displayTimezone.timezone),
+              : processDate(end, occurrence.displayTimezone.timezone),
         },
         ...(isEventOccurrence(occurrence)
           ? {
@@ -1579,11 +1555,11 @@ export class SchedulerStore<
                 start:
                   start == null
                     ? occurrence.dataTimezone.start
-                    : processDate(start, adapter, occurrence.dataTimezone.timezone),
+                    : processDate(start, occurrence.dataTimezone.timezone),
                 end:
                   end == null
                     ? occurrence.dataTimezone.end
-                    : processDate(end, adapter, occurrence.dataTimezone.timezone),
+                    : processDate(end, occurrence.dataTimezone.timezone),
               },
             }
           : {}),
@@ -1607,20 +1583,18 @@ export class SchedulerStore<
     createdEventId: SchedulerEventId | undefined;
   }) => {
     const { original, occurrenceStart, changes, createdEvent, createdEventId } = parameters;
-    const { adapter } = this.state;
     const dataTimezone = original.dataTimezone.timezone;
     const occurrence = this.state.editingOccurrence?.occurrence;
     // Only the armed occurrence follows its own change, else a sibling drag hijacks the surface.
     if (
       occurrence == null ||
       !isEventOccurrence(occurrence) ||
-      occurrence.key !==
-        getRecurringOccurrenceKey(original.id, occurrenceStart, adapter, dataTimezone)
+      occurrence.key !== getRecurringOccurrenceKey(original.id, occurrenceStart, dataTimezone)
     ) {
       return;
     }
 
-    const occurrenceEnd = getOccurrenceEnd({ adapter, event: original, occurrenceStart });
+    const occurrenceEnd = getOccurrenceEnd({ event: original, occurrenceStart });
     const targetsCreatedEvent = createdEvent != null && createdEventId != null;
     // In place, the pattern decides where a day or rule change lands: only a change that keeps
     // the occurrence on its own data-timezone day can keep the surface armed.
@@ -1631,8 +1605,8 @@ export class SchedulerStore<
     const staysOnItsDay = bounds.every(
       ([changed, current]) =>
         changed == null ||
-        toLocalDayNumber(adapter.getTime(current), dataTimezone) ===
-          toLocalDayNumber(adapter.getTime(changed), dataTimezone),
+        toLocalDayNumber(current.getTime(), dataTimezone) ===
+          toLocalDayNumber(changed.getTime(), dataTimezone),
     );
     const keepsIdentity =
       targetsCreatedEvent ||
@@ -1672,7 +1646,7 @@ export class SchedulerStore<
     dataTimezone: TemporalTimezone;
   }) => {
     const { eventId, start, end, isRecurring, dataStart, dataEnd, dataTimezone } = parameters;
-    const { editingOccurrence, adapter } = this.state;
+    const { editingOccurrence } = this.state;
     if (editingOccurrence == null) {
       return;
     }
@@ -1684,12 +1658,12 @@ export class SchedulerStore<
         id: eventId,
         key: isRecurring
           ? // Key off the data-timezone day, matching occurrence expansion; the display-tz start can differ.
-            getRecurringOccurrenceKey(eventId, dataStart, adapter, dataTimezone)
+            getRecurringOccurrenceKey(eventId, dataStart, dataTimezone)
           : getOccurrenceKey(eventId),
         displayTimezone: {
           ...occurrence.displayTimezone,
-          start: processDate(start, adapter, occurrence.displayTimezone.timezone),
-          end: processDate(end, adapter, occurrence.displayTimezone.timezone),
+          start: processDate(start, occurrence.displayTimezone.timezone),
+          end: processDate(end, occurrence.displayTimezone.timezone),
         },
         // Keep the data-timezone identity in sync too, so a later edit or delete
         // targets the day the occurrence actually lives on.
@@ -1697,8 +1671,8 @@ export class SchedulerStore<
           ? {
               dataTimezone: {
                 ...occurrence.dataTimezone,
-                start: processDate(dataStart, adapter, dataTimezone),
-                end: processDate(dataEnd, adapter, dataTimezone),
+                start: processDate(dataStart, dataTimezone),
+                end: processDate(dataEnd, dataTimezone),
                 // Cleared by a `only-this` detach so the surface reads as non-recurring; otherwise
                 // the rule is the series' and the editor refreshes it from the store when it opens.
                 rrule: isRecurring ? occurrence.dataTimezone.rrule : undefined,

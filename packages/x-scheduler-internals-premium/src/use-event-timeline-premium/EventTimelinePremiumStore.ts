@@ -2,7 +2,6 @@ import type * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { EMPTY_ARRAY, EMPTY_OBJECT } from '@base-ui/utils/empty';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { SchedulerParametersToStateMapper } from '@mui/x-scheduler-internals/internals';
 import {
   getDisplayedHourRange,
@@ -231,13 +230,9 @@ export class EventTimelinePremiumStore<
     EventTimelinePremiumStoreParameters<TEvent, TResource>
   > | null;
 
-  public constructor(
-    parameters: EventTimelinePremiumStoreParameters<TEvent, TResource>,
-    adapter: Adapter,
-  ) {
+  public constructor(parameters: EventTimelinePremiumStoreParameters<TEvent, TResource>) {
     super(
       parameters,
-      adapter,
       'EventTimelinePremiumStore',
       mapper,
       parameters.storeFeatures?.recurringEvents ?? null,
@@ -354,12 +349,12 @@ export class EventTimelinePremiumStore<
   }
 
   private setSiblingVisibleDate = (delta: 1 | -1, event: React.UIEvent) => {
-    const { adapter, preset, displayTimezone, visibleDate } = this.state;
+    const { preset, displayTimezone, visibleDate } = this.state;
     const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
     // Moves the days of the display timezone, the ones the preset config reads. Days added in
     // another timezone can skip a day of the display timezone across a DST transition.
     this.setVisibleDate({
-      visibleDate: navigate(adapter, visibleDate, delta * unitCount, displayTimezone),
+      visibleDate: navigate(visibleDate, delta * unitCount, displayTimezone),
       event,
     });
   };

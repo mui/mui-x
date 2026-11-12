@@ -132,6 +132,53 @@ describe('<MonthView />', () => {
     expect(screen.getByText(/more/i)).not.to.equal(null);
   });
 
+  describe('focus when an event is removed', () => {
+    const singleDayEvents = [
+      EventBuilder.new().singleDay('2025-05-01T09:00:00Z').title('Meeting').build(),
+      EventBuilder.new().singleDay('2025-05-15T14:00:00Z').title('Doctor Appointment').build(),
+    ];
+
+    function renderMonthView() {
+      return render(
+        <EventCalendarProvider events={singleDayEvents} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+    }
+
+    it('should move focus to the day cell when the focused event is removed', async () => {
+      const { setProps } = renderMonthView();
+      const eventButton = screen.getByRole('button', { name: /^Meeting,/ });
+      const cell = eventButton.closest<HTMLElement>('[role="gridcell"]')!;
+      await act(async () => {
+        eventButton.focus();
+      });
+
+      setProps({ events: singleDayEvents.slice(1) });
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(cell);
+      });
+    });
+
+    it('should leave focus alone when an event is removed while another one is focused', async () => {
+      const { setProps } = renderMonthView();
+      const otherEvent = screen.getByRole('button', { name: /^Doctor Appointment,/ });
+      await act(async () => {
+        otherEvent.focus();
+      });
+
+      setProps({ events: singleDayEvents.slice(1) });
+
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /^Meeting,/ })).to.equal(null);
+      });
+      expect(document.activeElement).to.equal(otherEvent);
+    });
+  });
+
   describe('Event keyboard accessibility in "more events" popover', () => {
     async function renderAndOpenPopover({
       theme,
@@ -880,6 +927,42 @@ describe('<MonthView />', () => {
         document.querySelectorAll<HTMLElement>('[style*="--grid-column-span"]'),
       ).map((element) => element.style.getPropertyValue('--grid-column-span'));
       expect(spans).to.deep.equal(['2', '3']);
+    });
+
+    it('should span the cells of a creation placeholder in a row without weekends', () => {
+      // Thursday July 10th to Monday July 14th, in the row Wed 9th, Thu 10th, Fri 11th, Mon 14th and Tue 15th.
+      render(
+        <EventCalendarProvider
+          events={[]}
+          resources={[]}
+          displayTimezone="UTC"
+          visibleDate={new Date('2025-07-15T00:00:00Z')}
+          defaultPreferences={{ showWeekends: false, weekStartsOn: 3 }}
+        >
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
+            onMount={(store) =>
+              store.setOccurrencePlaceholder({
+                type: 'creation',
+                surfaceType: 'day-grid',
+                start: Date.parse('2025-07-10T00:00:00Z'),
+                end: Date.parse('2025-07-14T23:59:59.999Z'),
+                lockSurfaceType: false,
+                resourceId: null,
+              })
+            }
+          />
+        </EventCalendarProvider>,
+      );
+
+      // Thursday, Friday and Monday.
+      const spans = Array.from(
+        document.querySelectorAll<HTMLElement>('[style*="--grid-column-span"]'),
+      ).map((element) => element.style.getPropertyValue('--grid-column-span'));
+      expect(spans).to.deep.equal(['3']);
     });
   });
 

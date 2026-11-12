@@ -63,8 +63,8 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
-    const store = new EventTimelinePremiumStore(params, adapter);
-    store.updateStateFromParameters(params, adapter);
+    const store = new EventTimelinePremiumStore(params);
+    store.updateStateFromParameters(params);
 
     await flushEffect();
     await flushDebounce();
@@ -87,8 +87,8 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
       defaultVisibleDate: adapter.date('2025-07-01T00:00:00', 'UTC'),
       displayTimezone: 'America/New_York',
     };
-    const store = new EventTimelinePremiumStore(params, adapter);
-    store.updateStateFromParameters(params, adapter);
+    const store = new EventTimelinePremiumStore(params);
+    store.updateStateFromParameters(params);
 
     await flushEffect();
     await flushDebounce();
@@ -107,7 +107,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
-    const store = new EventTimelinePremiumStore(params, adapter);
+    const store = new EventTimelinePremiumStore(params);
 
     // Mutate the visible date so the range key would change if the selector were live.
     // With `hasInitialized=false`, the selector must keep returning `null` and the effect
@@ -127,8 +127,8 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
-    const store = new EventTimelinePremiumStore(params, adapter);
-    store.updateStateFromParameters(params, adapter);
+    const store = new EventTimelinePremiumStore(params);
+    store.updateStateFromParameters(params);
 
     await flushEffect();
     await flushDebounce();
@@ -181,8 +181,8 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
       ...DEFAULT_PARAMS,
       defaultPreset: 'dayAndWeek' as const,
     };
-    const store = new EventTimelinePremiumStore({ ...params, dataSource }, adapter);
-    store.updateStateFromParameters({ ...params, dataSource }, adapter);
+    const store = new EventTimelinePremiumStore({ ...params, dataSource });
+    store.updateStateFromParameters({ ...params, dataSource });
     await flushEffect();
     await flushDebounce();
 
@@ -209,8 +209,8 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
-    const store = new EventTimelinePremiumStore(params, adapter);
-    store.updateStateFromParameters(params, adapter);
+    const store = new EventTimelinePremiumStore(params);
+    store.updateStateFromParameters(params);
 
     await flushEffect();
     await flushDebounce();
@@ -232,8 +232,8 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, defaultPreset: 'dayAndHour' as const, dataSource };
-    const store = new EventTimelinePremiumStore(params, adapter);
-    store.updateStateFromParameters(params, adapter);
+    const store = new EventTimelinePremiumStore(params);
+    store.updateStateFromParameters(params);
 
     await flushEffect();
     await flushDebounce();
@@ -253,8 +253,8 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
-    const store = new EventTimelinePremiumStore(params, adapter);
-    store.updateStateFromParameters(params, adapter);
+    const store = new EventTimelinePremiumStore(params);
+    store.updateStateFromParameters(params);
 
     await flushEffect();
     await flushDebounce();
@@ -286,8 +286,8 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
-    const store = new EventTimelinePremiumStore(params, adapter);
-    store.updateStateFromParameters(params, adapter);
+    const store = new EventTimelinePremiumStore(params);
+    store.updateStateFromParameters(params);
 
     await flushEffect();
     await flushDebounce();
@@ -311,8 +311,8 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
-    const store = new EventTimelinePremiumStore(params, adapter);
-    store.updateStateFromParameters(params, adapter);
+    const store = new EventTimelinePremiumStore(params);
+    store.updateStateFromParameters(params);
 
     // Only flush microtasks + a short advance that's well below the debounce window.
     await flushEffect();
@@ -334,8 +334,8 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
-    const store = new EventTimelinePremiumStore(params, adapter);
-    store.updateStateFromParameters(params, adapter);
+    const store = new EventTimelinePremiumStore(params);
+    store.updateStateFromParameters(params);
 
     await expect(async () => {
       await flushEffect();

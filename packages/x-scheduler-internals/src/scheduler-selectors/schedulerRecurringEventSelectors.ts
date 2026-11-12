@@ -28,6 +28,6 @@ export const schedulerRecurringEventSelectors = {
     if (!rruleA || !rruleB) {
       return false;
     }
-    return selectRecurringEventsPlugin(state)?.isSameRRule(state.adapter, rruleA, rruleB) ?? false;
+    return selectRecurringEventsPlugin(state)?.isSameRRule(rruleA, rruleB) ?? false;
   },
 };

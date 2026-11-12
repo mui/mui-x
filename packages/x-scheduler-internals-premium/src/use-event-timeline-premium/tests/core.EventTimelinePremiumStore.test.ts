@@ -14,16 +14,12 @@ describe('Core - EventTimelinePremiumStore', () => {
     createRenderer({ clockConfig: new Date(2012, 4, 3, 14, 30, 15, 743) });
 
     it('should initialize default state', () => {
-      const store = new EventTimelinePremiumStore(
-        {
-          ...DEFAULT_PARAMS,
-          storeFeatures: { recurringEvents: schedulerRecurringEventsPlugin },
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStore({
+        ...DEFAULT_PARAMS,
+        storeFeatures: { recurringEvents: schedulerRecurringEventsPlugin },
+      });
 
       const expectedState = {
-        adapter,
         dateLocale: 'en-US',
         areDependenciesEnabled: false,
         areEventsDraggable: true,
@@ -87,121 +83,118 @@ describe('Core - EventTimelinePremiumStore', () => {
     });
 
     it('should respect an explicit `shouldEventRequireResource={false}`', () => {
-      const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, shouldEventRequireResource: false },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStore({
+        ...DEFAULT_PARAMS,
+        shouldEventRequireResource: false,
+      });
       expect(store.state.shouldEventRequireResource).to.equal(false);
     });
 
     it('should warn in dev when `shouldEventRequireResource` is `true` but no resources are configured', () => {
       expect(() => {
         // eslint-disable-next-line no-new
-        new EventTimelinePremiumStore({ events: [], resources: [] }, adapter);
+        new EventTimelinePremiumStore({ events: [], resources: [] });
       }).toWarnDev([
         'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
       ]);
     });
 
     it('should sync `shouldEventRequireResource` when parameters update', () => {
-      const store = new EventTimelinePremiumStore(DEFAULT_PARAMS, adapter);
+      const store = new EventTimelinePremiumStore(DEFAULT_PARAMS);
       expect(store.state.shouldEventRequireResource).to.equal(true);
 
-      store.updateStateFromParameters(
-        { ...DEFAULT_PARAMS, shouldEventRequireResource: false },
-        adapter,
-      );
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, shouldEventRequireResource: false });
       expect(store.state.shouldEventRequireResource).to.equal(false);
     });
 
     it('should store the `presetConfig` parameter in the state', () => {
       const presetConfig = { dayAndHour: { startTime: 8, endTime: 20 } };
-      const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, presetConfig }, adapter);
+      const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, presetConfig });
 
       expect(store.state.presetConfig).to.equal(presetConfig);
     });
 
     it('should sync `presetConfig` when parameters update', () => {
-      const store = new EventTimelinePremiumStore(DEFAULT_PARAMS, adapter);
+      const store = new EventTimelinePremiumStore(DEFAULT_PARAMS);
       expect(store.state.presetConfig).to.equal(EMPTY_OBJECT);
 
       const presetConfig = { dayAndHour: { startTime: 8, endTime: 20 } };
-      store.updateStateFromParameters({ ...DEFAULT_PARAMS, presetConfig }, adapter);
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, presetConfig });
       expect(store.state.presetConfig).to.equal(presetConfig);
     });
 
     it('should sort the presets array into the canonical zoom order regardless of input order', () => {
-      const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, presets: ['year', 'dayAndHour', 'monthAndYear'] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStore({
+        ...DEFAULT_PARAMS,
+        presets: ['year', 'dayAndHour', 'monthAndYear'],
+      });
 
       expect(store.state.presets).to.deep.equal(['dayAndHour', 'monthAndYear', 'year']);
     });
 
     it('should re-sort the presets array when parameters update', () => {
-      const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, presets: ['dayAndHour', 'dayAndMonth'] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStore({
+        ...DEFAULT_PARAMS,
+        presets: ['dayAndHour', 'dayAndMonth'],
+      });
 
-      store.updateStateFromParameters(
-        { ...DEFAULT_PARAMS, presets: ['year', 'dayAndMonth', 'dayAndHour'] },
-        adapter,
-      );
+      store.updateStateFromParameters({
+        ...DEFAULT_PARAMS,
+        presets: ['year', 'dayAndMonth', 'dayAndHour'],
+      });
 
       expect(store.state.presets).to.deep.equal(['dayAndHour', 'dayAndMonth', 'year']);
     });
 
     it('should dedupe the presets array', () => {
-      const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, presets: ['dayAndMonth', 'dayAndMonth', 'dayAndHour', 'dayAndMonth'] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStore({
+        ...DEFAULT_PARAMS,
+        presets: ['dayAndMonth', 'dayAndMonth', 'dayAndHour', 'dayAndMonth'],
+      });
 
       expect(store.state.presets).to.deep.equal(['dayAndHour', 'dayAndMonth']);
     });
 
     it('should throw when the presets array is empty', () => {
-      expect(
-        () => new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, presets: [] }, adapter),
-      ).to.throw(/empty `presets` prop/i);
+      expect(() => new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, presets: [] })).to.throw(
+        /empty `presets` prop/i,
+      );
     });
 
     it('should throw when the presets array contains unknown values', () => {
       expect(
         () =>
-          new EventTimelinePremiumStore(
-            {
-              ...DEFAULT_PARAMS,
-              presets: ['dayAndHour', 'notAPreset' as any, 'dayAndMonth'],
-            },
-            adapter,
-          ),
+          new EventTimelinePremiumStore({
+            ...DEFAULT_PARAMS,
+            presets: ['dayAndHour', 'notAPreset' as any, 'dayAndMonth'],
+          }),
       ).to.throw(/unknown preset\(s\)/i);
     });
 
     it('should throw at init when the initial preset is not included in the presets array', () => {
       expect(
         () =>
-          new EventTimelinePremiumStore(
-            { ...DEFAULT_PARAMS, preset: 'year', presets: ['dayAndHour', 'dayAndMonth'] },
-            adapter,
-          ),
+          new EventTimelinePremiumStore({
+            ...DEFAULT_PARAMS,
+            preset: 'year',
+            presets: ['dayAndHour', 'dayAndMonth'],
+          }),
       ).to.throw(/is not part of the `presets` prop/i);
     });
 
     it('should throw via the subscribe listener when a later state mutation makes the current preset fall out of the presets array', () => {
-      const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, defaultPreset: 'dayAndMonth', presets: ['dayAndHour', 'dayAndMonth'] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStore({
+        ...DEFAULT_PARAMS,
+        defaultPreset: 'dayAndMonth',
+        presets: ['dayAndHour', 'dayAndMonth'],
+      });
 
       expect(() =>
-        store.updateStateFromParameters(
-          { ...DEFAULT_PARAMS, defaultPreset: 'dayAndMonth', presets: ['dayAndHour'] },
-          adapter,
-        ),
+        store.updateStateFromParameters({
+          ...DEFAULT_PARAMS,
+          defaultPreset: 'dayAndMonth',
+          presets: ['dayAndHour'],
+        }),
       ).to.throw(/is not part of the `presets` prop/i);
 
       // Dispose the store's pending timers; otherwise the `nowTimestamp` interval

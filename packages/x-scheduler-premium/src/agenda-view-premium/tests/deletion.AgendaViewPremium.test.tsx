@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, fireEvent, waitFor, within } from '@mui/internal-test-utils';
+import { act, screen, fireEvent, waitFor, within } from '@mui/internal-test-utils';
 import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
@@ -193,6 +193,41 @@ describe('<EventCalendarPremium /> - Agenda view recurring event deletion (focus
     await waitFor(() => {
       expect(document.activeElement).to.equal(later);
     });
+  });
+
+  it('should not pass focus through an unrelated event when deleting "only this" with the keyboard', async () => {
+    const other = EventBuilder.new()
+      .id('other')
+      .title('Unrelated')
+      .singleDay('2025-07-06T10:00:00Z', 30)
+      .build();
+    const { user } = renderEvents([buildDailySeries(), other]);
+
+    const rows = await screen.findAllByRole('button', { name: /Daily Standup/i });
+    await act(async () => {
+      rows[1].focus();
+    });
+    const focused: Element[] = [];
+    const recordFocus = (event: FocusEvent) => focused.push(event.target as Element);
+    document.addEventListener('focusin', recordFocus);
+
+    try {
+      await user.keyboard(' ');
+      await user.click(await screen.findByRole('menuitem', { name: /delete/i }));
+      const dialog = await screen.findByRole('dialog', { name: /apply this change to/i });
+      await user.click(within(dialog).getByRole('button', { name: /confirm/i }));
+
+      await waitFor(() => {
+        expect(screen.getAllByRole('button', { name: /Daily Standup/i })).to.have.length(2);
+      });
+      const [, later] = screen.getAllByRole('button', { name: /Daily Standup/i });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(later);
+      });
+      expect(focused).not.to.include(screen.getByRole('button', { name: /Unrelated/i }));
+    } finally {
+      document.removeEventListener('focusin', recordFocus);
+    }
   });
 
   // Regression test for https://github.com/mui/mui-x/issues/23883: "this and following" on the

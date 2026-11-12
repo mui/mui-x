@@ -54,10 +54,10 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
   describe('method: updateEvent', () => {
     it('should emit onEventsChange once with the cascaded events included', () => {
       const onEventsChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, onEventsChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        onEventsChange,
+      });
 
       store.updateEvent({
         id: 'a',
@@ -76,10 +76,10 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
     it('should clamp a successor dropped before its predecessor within the same emission', () => {
       const onEventsChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, onEventsChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        onEventsChange,
+      });
 
       store.updateEvent({
         id: 'b',
@@ -99,10 +99,10 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
     it('should cascade on an end-only update', () => {
       const onEventsChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, onEventsChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        onEventsChange,
+      });
 
       // Resize: only the end moves, past the successor's start.
       store.updateEvent({ id: 'a', end: date('2025-07-03T10:30:00Z') });
@@ -116,10 +116,10 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
     it('should leave the successor untouched when the predecessor moves earlier', () => {
       const onEventsChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, onEventsChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        onEventsChange,
+      });
 
       store.updateEvent({
         id: 'a',
@@ -134,10 +134,10 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     });
 
     it('should report the changes as applied, with the clamped dates', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, onEventsChange: () => {} },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        onEventsChange: () => {},
+      });
 
       const result = store.updateEvent({
         id: 'b',
@@ -159,10 +159,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     // `events` prop — `changes` has to stay the caller's own entry, not whichever one the main
     // loop (which walks `events` in its own order) happens to visit first.
     it("should report the caller's own entry first, not whichever id the `events` prop lists first", () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, events: [eventB, eventA], onEventsChange: () => {} },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventB, eventA],
+        onEventsChange: () => {},
+      });
 
       const result = store.updateEvent({
         id: 'a',
@@ -176,10 +177,10 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     });
 
     it('should sync the armed occurrence with the clamped dates after a start resize', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, onEventsChange: () => {} },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        onEventsChange: () => {},
+      });
       const occurrenceB = EventBuilder.new()
         .id('b')
         .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
@@ -217,10 +218,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .id('b')
         .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
         .build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, events: [allDayA, allDayB], onEventsChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [allDayA, allDayB],
+        onEventsChange,
+      });
 
       store.updateEvent({
         id: 'a',
@@ -248,10 +250,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .withDataTimezone('America/New_York')
         .span('2025-07-03T12:00:00', '2025-07-03T13:00:00')
         .build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, events: [predecessor, newYorkB], onEventsChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [predecessor, newYorkB],
+        onEventsChange,
+      });
 
       // 12:00 wall time now reads as UTC, before a's end: clamped to 14:00 UTC.
       store.updateEvent({ id: 'b', timezone: 'UTC' });
@@ -275,15 +278,12 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .withDataTimezone('America/New_York')
         .span('2025-03-10T03:00:00Z', '2025-03-10T04:00:00Z')
         .build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [predecessor, newYorkB],
-          dependencies: [{ ...DEP_AB, lag: 1 }],
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [predecessor, newYorkB],
+        dependencies: [{ ...DEP_AB, lag: 1 }],
+        onEventsChange,
+      });
 
       // A day after 04:00Z is 03:00Z the next day in New York, but 04:00Z in UTC.
       store.updateEvent({ id: 'b', timezone: 'UTC' });
@@ -305,15 +305,12 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .withDataTimezone('UTC')
         .span('2025-07-05T00:00:00', '2025-07-05T23:59:59', { allDay: true })
         .build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [predecessor, allDayB],
-          dependencies: [{ ...DEP_AB, lag: 36, lagUnit: 'hour' }],
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [predecessor, allDayB],
+        dependencies: [{ ...DEP_AB, lag: 36, lagUnit: 'hour' }],
+        onEventsChange,
+      });
 
       // All-day, the 36h lag rounds down to one day; timed, it lands at 06:00 on the 5th.
       store.updateEvent({ id: 'b', allDay: false });
@@ -336,10 +333,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .id('b')
         .span('2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z')
         .build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, events: [parisA, successor], onEventsChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [parisA, successor],
+        onEventsChange,
+      });
 
       // 14:00 Paris = 12:00 UTC; read in the default (UTC) timezone it ends at 14:00 UTC.
       store.updateEvent({ id: 'a', timezone: undefined });
@@ -356,10 +354,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
   describe('read-only veto', () => {
     it('should reject the batch when the cascade would move a read-only event', () => {
       const onEventsChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, events: [eventA, readOnlySuccessor], onEventsChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, readOnlySuccessor],
+        onEventsChange,
+      });
 
       const result = store.updateEvent({
         id: 'a',
@@ -383,15 +382,12 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .id('c')
         .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
         .build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [eventA, readOnlySuccessor, movableSuccessor],
-          dependencies: [DEP_AB, { id: 'dep-2', source: 'a', target: 'c', type: 'FinishToStart' }],
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, readOnlySuccessor, movableSuccessor],
+        dependencies: [DEP_AB, { id: 'dep-2', source: 'a', target: 'c', type: 'FinishToStart' }],
+        onEventsChange,
+      });
 
       const result = store.updateEvent({
         id: 'a',
@@ -417,8 +413,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
           onDependenciesChange: () => {},
           dataSource,
         };
-        const store = new EventTimelinePremiumStoreWithFeatures(params, adapter);
-        store.updateStateFromParameters(params, adapter);
+        const store = new EventTimelinePremiumStoreWithFeatures(params);
+        store.updateStateFromParameters(params);
         await flushEffect();
         await flushDebounce();
 
@@ -440,16 +436,13 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const onEventsChange = vi.fn();
       const onDependenciesChange = vi.fn();
       const orphan = EventBuilder.new().id('d').singleDay('2025-07-04T09:00:00Z').build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [eventA, readOnlySuccessor, orphan],
-          dependencies: [DEP_AB, { id: 'dep-2', source: 'a', target: 'd', type: 'FinishToStart' }],
-          onEventsChange,
-          onDependenciesChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, readOnlySuccessor, orphan],
+        dependencies: [DEP_AB, { id: 'dep-2', source: 'a', target: 'd', type: 'FinishToStart' }],
+        onEventsChange,
+        onDependenciesChange,
+      });
 
       // Only recurring scope changes build such batches today, so the store method is
       // called directly.
@@ -472,17 +465,14 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const onEventsChange = vi.fn();
       const onDependenciesChange = vi.fn();
       const orphan = EventBuilder.new().id('d').singleDay('2025-07-04T09:00:00Z').build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [eventA, eventB, orphan],
-          dependencies: [DEP_AB, { id: 'dep-2', source: 'a', target: 'd', type: 'FinishToStart' }],
-          eventModelStructure: { start: { getter: (event: any) => event.start } },
-          onEventsChange,
-          onDependenciesChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, eventB, orphan],
+        dependencies: [DEP_AB, { id: 'dep-2', source: 'a', target: 'd', type: 'FinishToStart' }],
+        eventModelStructure: { start: { getter: (event: any) => event.start } },
+        onEventsChange,
+        onDependenciesChange,
+      });
 
       // Only recurring scope changes build such batches today, so the store method is
       // called directly.
@@ -509,17 +499,14 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const onEventsChange = vi.fn();
       const onDependenciesChange = vi.fn();
       const orphan = EventBuilder.new().id('d').singleDay('2025-07-04T09:00:00Z').build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [eventA, eventB, orphan],
-          dependencies: [DEP_AB, { id: 'dep-2', source: 'a', target: 'd', type: 'FinishToStart' }],
-          eventModelStructure: { start: { getter: (event: any) => event.start } },
-          onEventsChange,
-          onDependenciesChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, eventB, orphan],
+        dependencies: [DEP_AB, { id: 'dep-2', source: 'a', target: 'd', type: 'FinishToStart' }],
+        eventModelStructure: { start: { getter: (event: any) => event.start } },
+        onEventsChange,
+        onDependenciesChange,
+      });
 
       let result: any;
       expect(() => {
@@ -544,10 +531,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     it('should refuse the whole batch when a cascade would move a successor whose date is not writable', () => {
       const onEventsChange = vi.fn();
       const eventModelStructure = { start: { getter: (event: any) => event.start } };
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, eventModelStructure, onEventsChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        eventModelStructure,
+        onEventsChange,
+      });
 
       // Resizing `a` alone isn't a move (only `end` is submitted) — but the cascade pushes `b`'s
       // whole range forward through the dependency, and that push carries both of `b`'s bounds
@@ -583,10 +571,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     ])("should refuse the caller's own move with the store's error $name", ({ changes }) => {
       const onEventsChange = vi.fn();
       const eventModelStructure = { start: { getter: (event: any) => event.start } };
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, eventModelStructure, onEventsChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        eventModelStructure,
+        onEventsChange,
+      });
 
       let result: ReturnType<typeof store.updateEvent>;
       expect(() => {
@@ -615,10 +604,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     it('should strip a single-side unwritable bound before the plugin runs, instead of refusing an unrelated change', () => {
       const onEventsChange = vi.fn();
       const eventModelStructure = { end: { getter: (event: any) => event.end } };
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, eventModelStructure, onEventsChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        eventModelStructure,
+        onEventsChange,
+      });
 
       let result: ReturnType<typeof store.updateEvent>;
       expect(() => {
@@ -663,19 +653,16 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(() => {
         // Dependencies don't support recurring events (hence the second warning below), but
         // cleanup still reads the raw `dependencyModelList`, so this one is still there to drop.
-        store = new EventTimelinePremiumStoreWithFeatures(
-          {
-            resources: TEST_RESOURCES,
-            events: [recurringEvent, other],
-            dependencies: [
-              { id: 'dep-1', source: 'standup', target: 'other', type: 'FinishToStart' },
-            ],
-            eventModelStructure: { start: { getter: (event: any) => event.start } },
-            onEventsChange,
-            onDependenciesChange,
-          },
-          adapter,
-        );
+        store = new EventTimelinePremiumStoreWithFeatures({
+          resources: TEST_RESOURCES,
+          events: [recurringEvent, other],
+          dependencies: [
+            { id: 'dep-1', source: 'standup', target: 'other', type: 'FinishToStart' },
+          ],
+          eventModelStructure: { start: { getter: (event: any) => event.start } },
+          onEventsChange,
+          onDependenciesChange,
+        });
 
         store.updateRecurringEvent({
           occurrenceStart: date('2025-07-03T09:00:00Z'),
@@ -704,10 +691,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     it('should apply a clamped start resize when the untouched end is not writable', () => {
       const onEventsChange = vi.fn();
       const eventModelStructure = { end: { getter: (event: any) => event.end } };
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, eventModelStructure, onEventsChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        eventModelStructure,
+        onEventsChange,
+      });
 
       const result = store.updateEvent({ id: 'b', start: date('2025-07-03T09:30:00Z') });
 
@@ -734,16 +722,13 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .id('a')
         .span('2025-07-03T09:00:00Z', '2025-07-03T12:00:00Z')
         .build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [longPredecessor, eventB],
-          dependencies: [{ id: 'dep-1', source: 'a', target: 'b', type: 'FinishToFinish' }],
-          eventModelStructure,
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [longPredecessor, eventB],
+        dependencies: [{ id: 'dep-1', source: 'a', target: 'b', type: 'FinishToFinish' }],
+        eventModelStructure,
+        onEventsChange,
+      });
 
       const result = store.updateEvent({ id: 'b', end: date('2025-07-03T11:30:00Z') });
 
@@ -770,10 +755,12 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .id('b')
         .span('2025-07-03T10:00:00Z', '2025-07-05T23:59:59.999Z')
         .build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, events: [eventA, longSuccessor], eventModelStructure, onEventsChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, longSuccessor],
+        eventModelStructure,
+        onEventsChange,
+      });
 
       let result: ReturnType<typeof store.updateEvent>;
       expect(() => {
@@ -798,16 +785,13 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .id('b')
         .span('2025-07-03T00:00:00Z', '2025-07-03T12:00:00Z', { allDay: true })
         .build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [lateEndingPredecessor, allDaySuccessor],
-          dependencies: [{ ...DEP_AB, type: 'FinishToFinish' }],
-          eventModelStructure,
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [lateEndingPredecessor, allDaySuccessor],
+        dependencies: [{ ...DEP_AB, type: 'FinishToFinish' }],
+        eventModelStructure,
+        onEventsChange,
+      });
 
       let result: ReturnType<typeof store.updateEvent>;
       expect(() => {
@@ -823,17 +807,14 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const onEventsChange = vi.fn();
       const onDependenciesChange = vi.fn();
       const overlapping = EventBuilder.new().id('c').singleDay('2025-07-03T09:30:00Z').build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [eventA, overlapping],
-          dependencies: [],
-          eventModelStructure: { start: { getter: (event: any) => event.start } },
-          onDependenciesChange,
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, overlapping],
+        dependencies: [],
+        eventModelStructure: { start: { getter: (event: any) => event.start } },
+        onDependenciesChange,
+        onEventsChange,
+      });
 
       let result: ReturnType<typeof store.addDependency>;
       expect(() => {
@@ -854,17 +835,14 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const onEventsChange = vi.fn();
       const onDependenciesChange = vi.fn();
       const overlapping = EventBuilder.new().id('b').singleDay('2025-07-03T09:30:00Z').build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [eventA, overlapping],
-          dependencies: [{ ...DEP_AB, type: 'StartToStart' }],
-          eventModelStructure: { start: { getter: (event: any) => event.start } },
-          onDependenciesChange,
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, overlapping],
+        dependencies: [{ ...DEP_AB, type: 'StartToStart' }],
+        eventModelStructure: { start: { getter: (event: any) => event.start } },
+        onDependenciesChange,
+        onEventsChange,
+      });
 
       let result: ReturnType<typeof store.updateDependency>;
       expect(() => {
@@ -894,15 +872,12 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     it('should still relax and delete a dependency when a date is not writable', () => {
       const onEventsChange = vi.fn();
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          eventModelStructure: { start: { getter: (event: any) => event.start } },
-          onDependenciesChange,
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        eventModelStructure: { start: { getter: (event: any) => event.start } },
+        onDependenciesChange,
+        onEventsChange,
+      });
 
       expect(() => {
         expect(store.updateDependency('dep-1', { type: 'StartToStart' })).to.deep.equal({
@@ -919,10 +894,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
   describe('method: pasteEvent', () => {
     it('should keep the clipboard when a cut paste is rejected', () => {
       const onEventsChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, events: [eventA, readOnlySuccessor], onEventsChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, readOnlySuccessor],
+        onEventsChange,
+      });
 
       store.cutEvent('a');
       const result = store.pasteEvent({ start: date('2025-07-03T11:00:00Z') });
@@ -938,10 +914,10 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
     it('should return the pasted event when a cut paste cascades into its successor', () => {
       const onEventsChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, onEventsChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        onEventsChange,
+      });
 
       store.cutEvent('a');
       const pastedId = store.pasteEvent({ start: date('2025-07-03T11:00:00Z') });
@@ -961,16 +937,13 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const onEventsChange = vi.fn();
       const onDependenciesChange = vi.fn();
       const orphan = EventBuilder.new().id('d').singleDay('2025-07-04T09:00:00Z').build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [eventA, eventB, orphan],
-          dependencies: [DEP_AB, { id: 'dep-2', source: 'a', target: 'd', type: 'FinishToStart' }],
-          onEventsChange,
-          onDependenciesChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, eventB, orphan],
+        dependencies: [DEP_AB, { id: 'dep-2', source: 'a', target: 'd', type: 'FinishToStart' }],
+        onEventsChange,
+        onDependenciesChange,
+      });
 
       (store as any).updateEvents({
         deleted: ['d'],
@@ -1004,8 +977,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
           onDependenciesChange: () => {},
           dataSource,
         };
-        const store = new EventTimelinePremiumStoreWithFeatures(params, adapter);
-        store.updateStateFromParameters(params, adapter);
+        const store = new EventTimelinePremiumStoreWithFeatures(params);
+        store.updateStateFromParameters(params);
         await flushEffect();
         await flushDebounce();
 
@@ -1042,16 +1015,13 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const onEventsChange = vi.fn();
       const onDependenciesChange = vi.fn();
       const overlapping = EventBuilder.new().id('c').singleDay('2025-07-03T09:30:00Z').build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [eventA, overlapping],
-          dependencies: [],
-          onDependenciesChange,
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, overlapping],
+        dependencies: [],
+        onDependenciesChange,
+        onEventsChange,
+      });
 
       expect(
         store.addDependency({ source: 'a', target: 'c', type: 'FinishToStart' }).status,
@@ -1075,16 +1045,13 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .readOnly()
         .singleDay('2025-07-03T10:30:00Z')
         .build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [eventA, overlapping, readOnlyNext],
-          dependencies: [{ id: 'dep-cd', source: 'c', target: 'd', type: 'FinishToStart' }],
-          onDependenciesChange,
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, overlapping, readOnlyNext],
+        dependencies: [{ id: 'dep-cd', source: 'c', target: 'd', type: 'FinishToStart' }],
+        onDependenciesChange,
+        onEventsChange,
+      });
 
       expect(
         store.addDependency({ source: 'a', target: 'c', type: 'FinishToStart' }),
@@ -1098,16 +1065,13 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const onEventsChange = vi.fn();
       const overlapping = EventBuilder.new().id('c').singleDay('2025-07-03T09:30:00Z').build();
       const later = EventBuilder.new().id('x').singleDay('2025-07-03T12:00:00Z').build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [eventA, overlapping, later],
-          // Already broken: a second engine run would clamp `c` after `x` too.
-          dependencies: [{ id: 'dep-xc', source: 'x', target: 'c', type: 'FinishToStart' }],
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, overlapping, later],
+        // Already broken: a second engine run would clamp `c` after `x` too.
+        dependencies: [{ id: 'dep-xc', source: 'x', target: 'c', type: 'FinishToStart' }],
+        onEventsChange,
+      });
 
       store.addDependency({ source: 'a', target: 'c', type: 'FinishToStart' });
 
@@ -1124,16 +1088,13 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const onEventsChange = vi.fn();
       const onDependenciesChange = vi.fn();
       const overlapping = EventBuilder.new().id('b').singleDay('2025-07-03T09:30:00Z').build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [eventA, overlapping],
-          dependencies: [{ ...DEP_AB, type: 'StartToStart' }],
-          onDependenciesChange,
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, overlapping],
+        dependencies: [{ ...DEP_AB, type: 'StartToStart' }],
+        onDependenciesChange,
+        onEventsChange,
+      });
 
       expect(store.updateDependency('dep-1', { type: 'FinishToStart' })).to.deep.equal({
         status: 'updated',
@@ -1154,15 +1115,12 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const onEventsChange = vi.fn();
       const onDependenciesChange = vi.fn();
       const overlapping = EventBuilder.new().id('b').singleDay('2025-07-03T09:30:00Z').build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [eventA, overlapping],
-          onDependenciesChange,
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, overlapping],
+        onDependenciesChange,
+        onEventsChange,
+      });
 
       expect(store.updateDependency('dep-1', { type: 'StartToStart' })).to.deep.equal({
         status: 'updated',
@@ -1182,15 +1140,12 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .readOnly()
         .singleDay('2025-07-03T09:30:00Z')
         .build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [eventA, readOnlyOverlapping],
-          onDependenciesChange,
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, readOnlyOverlapping],
+        onDependenciesChange,
+        onEventsChange,
+      });
 
       expect(store.updateDependency('dep-1', { type: 'StartToStart' })).to.deep.equal({
         status: 'updated',
@@ -1204,15 +1159,12 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const onEventsChange = vi.fn();
       // Breaks StartToStart by 30 minutes, FinishToStart by 90 minutes.
       const early = EventBuilder.new().id('b').singleDay('2025-07-03T08:30:00Z').build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [eventA, early],
-          dependencies: [{ ...DEP_AB, type: 'StartToStart' }],
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, early],
+        dependencies: [{ ...DEP_AB, type: 'StartToStart' }],
+        onEventsChange,
+      });
 
       store.updateDependency('dep-1', { type: 'FinishToStart' });
 
@@ -1237,15 +1189,12 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .withDataTimezone('America/New_York')
         .span('2025-11-02T00:00:00', '2025-11-02T23:59:59', { allDay: true })
         .build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [newYorkA, allDayB],
-          dependencies: [{ ...DEP_AB, type: 'StartToStart' }],
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [newYorkA, allDayB],
+        dependencies: [{ ...DEP_AB, type: 'StartToStart' }],
+        onEventsChange,
+      });
 
       // StartToStart breaks by 1 day (25h), FinishToFinish by 2 days (24h + 1ms).
       store.updateDependency('dep-1', { type: 'FinishToFinish' });
@@ -1262,18 +1211,15 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const onEventsChange = vi.fn();
       const overlapping = EventBuilder.new().id('b').singleDay('2025-07-03T09:30:00Z').build();
       const successor = EventBuilder.new().id('c').singleDay('2025-07-03T10:30:00Z').build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [eventA, overlapping, successor],
-          dependencies: [
-            { ...DEP_AB, type: 'StartToStart' },
-            { id: 'dep-bc', source: 'b', target: 'c', type: 'FinishToStart' },
-          ],
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, overlapping, successor],
+        dependencies: [
+          { ...DEP_AB, type: 'StartToStart' },
+          { id: 'dep-bc', source: 'b', target: 'c', type: 'FinishToStart' },
+        ],
+        onEventsChange,
+      });
 
       store.updateDependency('dep-1', { type: 'FinishToStart' });
 
@@ -1293,19 +1239,16 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .readOnly()
         .singleDay('2025-07-03T10:30:00Z')
         .build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [eventA, overlapping, readOnlyNext],
-          dependencies: [
-            { ...DEP_AB, type: 'StartToStart' },
-            { id: 'dep-bd', source: 'b', target: 'd', type: 'FinishToStart' },
-          ],
-          onDependenciesChange,
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, overlapping, readOnlyNext],
+        dependencies: [
+          { ...DEP_AB, type: 'StartToStart' },
+          { id: 'dep-bd', source: 'b', target: 'd', type: 'FinishToStart' },
+        ],
+        onDependenciesChange,
+        onEventsChange,
+      });
 
       expect(store.updateDependency('dep-1', { type: 'FinishToStart' })).to.deep.equal({
         status: 'rejected',
@@ -1320,10 +1263,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     it('should push the target when the new lag is broken', () => {
       const onEventsChange = vi.fn();
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, onDependenciesChange, onEventsChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        onDependenciesChange,
+        onEventsChange,
+      });
 
       expect(store.updateDependency('dep-1', { lag: 2, lagUnit: 'hour' })).to.deep.equal({
         status: 'updated',
@@ -1347,10 +1291,12 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .id('b')
         .span('2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z')
         .build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        { ...DEFAULT_PARAMS, events: [eventA, laterB], onDependenciesChange, onEventsChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, laterB],
+        onDependenciesChange,
+        onEventsChange,
+      });
 
       expect(store.updateDependency('dep-1', { lag: 1, lagUnit: 'hour' })).to.deep.equal({
         status: 'updated',
@@ -1364,14 +1310,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
     it('should push the target when an already broken lag gets longer', () => {
       const onEventsChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          dependencies: [{ ...DEP_AB, lag: 1, lagUnit: 'hour' }],
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [{ ...DEP_AB, lag: 1, lagUnit: 'hour' }],
+        onEventsChange,
+      });
 
       store.updateDependency('dep-1', { lag: 3, lagUnit: 'hour' });
 
@@ -1385,15 +1328,12 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     it('should not move the target when an already broken lag gets shorter', () => {
       const onEventsChange = vi.fn();
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          dependencies: [{ ...DEP_AB, lag: 3, lagUnit: 'hour' }],
-          onDependenciesChange,
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        dependencies: [{ ...DEP_AB, lag: 3, lagUnit: 'hour' }],
+        onDependenciesChange,
+        onEventsChange,
+      });
 
       expect(store.updateDependency('dep-1', { lag: 1, lagUnit: 'hour' })).to.deep.equal({
         status: 'updated',
@@ -1408,16 +1348,13 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     it('should accept a shorter lag on an already broken dependency into a read-only event', () => {
       const onEventsChange = vi.fn();
       const onDependenciesChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [eventA, readOnlySuccessor],
-          dependencies: [{ ...DEP_AB, lag: 3, lagUnit: 'hour' }],
-          onDependenciesChange,
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, readOnlySuccessor],
+        dependencies: [{ ...DEP_AB, lag: 3, lagUnit: 'hour' }],
+        onDependenciesChange,
+        onEventsChange,
+      });
 
       expect(store.updateDependency('dep-1', { lag: 1, lagUnit: 'hour' })).to.deep.equal({
         status: 'updated',
@@ -1431,19 +1368,16 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const onEventsChange = vi.fn();
       const overlapping = EventBuilder.new().id('b').singleDay('2025-07-03T09:30:00Z').build();
       const later = EventBuilder.new().id('x').singleDay('2025-07-03T12:00:00Z').build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [eventA, overlapping, later],
-          dependencies: [
-            { ...DEP_AB, type: 'StartToStart' },
-            // Already broken: a second engine run would clamp `b` after `x` too.
-            { id: 'dep-xb', source: 'x', target: 'b', type: 'FinishToStart' },
-          ],
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, overlapping, later],
+        dependencies: [
+          { ...DEP_AB, type: 'StartToStart' },
+          // Already broken: a second engine run would clamp `b` after `x` too.
+          { id: 'dep-xb', source: 'x', target: 'b', type: 'FinishToStart' },
+        ],
+        onEventsChange,
+      });
 
       store.updateDependency('dep-1', { type: 'FinishToStart' });
 
@@ -1458,18 +1392,15 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const onEventsChange = vi.fn();
       const overlapping = EventBuilder.new().id('b').singleDay('2025-07-03T09:30:00Z').build();
       const successor = EventBuilder.new().id('c').singleDay('2025-07-03T14:00:00Z').build();
-      const store = new EventTimelinePremiumStoreWithFeatures(
-        {
-          ...DEFAULT_PARAMS,
-          events: [eventA, overlapping, successor],
-          dependencies: [
-            { ...DEP_AB, type: 'StartToStart' },
-            { id: 'dep-bc', source: 'b', target: 'c', type: 'FinishToStart' },
-          ],
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [eventA, overlapping, successor],
+        dependencies: [
+          { ...DEP_AB, type: 'StartToStart' },
+          { id: 'dep-bc', source: 'b', target: 'c', type: 'FinishToStart' },
+        ],
+        onEventsChange,
+      });
       onEventsChange.mockImplementationOnce(() => {
         store.updateEvent({
           id: 'b',
@@ -1496,16 +1427,13 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       ];
       let store!: EventTimelinePremiumStore<SchedulerEvent, (typeof TEST_RESOURCES)[number]>;
       expect(() => {
-        store = new EventTimelinePremiumStoreWithFeatures(
-          {
-            events: [eventA, recurringEvent],
-            resources: TEST_RESOURCES,
-            dependencies,
-            onDependenciesChange: () => {},
-            onEventsChange,
-          },
-          adapter,
-        );
+        store = new EventTimelinePremiumStoreWithFeatures({
+          events: [eventA, recurringEvent],
+          resources: TEST_RESOURCES,
+          dependencies,
+          onDependenciesChange: () => {},
+          onEventsChange,
+        });
       }).toWarnDev(['MUI X Scheduler: The dependency "dep-r" references the recurring event "r".']);
 
       store.updateEvent({

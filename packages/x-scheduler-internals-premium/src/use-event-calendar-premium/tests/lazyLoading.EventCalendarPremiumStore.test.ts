@@ -93,7 +93,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
 
     // View mounts and registers its config. Mirrors `<View>`'s setViewDefinition call.
     store.setViewDefinition(buildViewDefinition());
@@ -114,16 +114,13 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
         persistEvents: noopPersistEvents,
       };
       // Santiago leaves summer time at the end of April 4th, 2026, when 24:00 becomes 23:00.
-      const store = new EventCalendarPremiumStore(
-        {
-          ...DEFAULT_PARAMS,
-          dataSource,
-          displayTimezone: 'America/Santiago',
-          // Midnight on April 5th, 2026 in Santiago.
-          defaultVisibleDate: adapter.date('2026-04-05T04:00:00Z', 'America/Santiago'),
-        },
-        adapter,
-      );
+      const store = new EventCalendarPremiumStore({
+        ...DEFAULT_PARAMS,
+        dataSource,
+        displayTimezone: 'America/Santiago',
+        // Midnight on April 5th, 2026 in Santiago.
+        defaultVisibleDate: adapter.date('2026-04-05T04:00:00Z', 'America/Santiago'),
+      });
       store.setViewDefinition(buildViewDefinition(1));
 
       await flushEffect();
@@ -142,16 +139,13 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore(
-      {
-        ...DEFAULT_PARAMS,
-        dataSource,
-        displayTimezone: 'America/Santiago',
-        // Midnight on April 4th, 2026 in Santiago, whose last hour occurs twice.
-        defaultVisibleDate: adapter.date('2026-04-04T03:00:00Z', 'default'),
-      },
-      adapter,
-    );
+    const store = new EventCalendarPremiumStore({
+      ...DEFAULT_PARAMS,
+      dataSource,
+      displayTimezone: 'America/Santiago',
+      // Midnight on April 4th, 2026 in Santiago, whose last hour occurs twice.
+      defaultVisibleDate: adapter.date('2026-04-04T03:00:00Z', 'default'),
+    });
     store.setViewDefinition(buildViewDefinition(1));
 
     await flushEffect();
@@ -170,7 +164,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition());
 
     // Only flush microtasks + a short advance well below the debounce window.
@@ -185,7 +179,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
 
     // No setViewDefinition call. visibleDaysSelector returns [] → effect must bail.
     store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
@@ -201,7 +195,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
@@ -220,7 +214,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
@@ -281,7 +275,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       ),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition());
     await flushEffect();
     await flushDebounce();
@@ -320,7 +314,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       ),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition());
     await flushEffect();
     await flushDebounce();
@@ -359,7 +353,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       ),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition());
     await flushEffect();
     await flushDebounce();
@@ -404,16 +398,13 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       defaultVisibleDate: adapter.date('2025-07-01T12:00:00Z', 'default'),
       displayTimezone: 'UTC',
     };
-    const store = new EventCalendarPremiumStore(parameters, adapter);
+    const store = new EventCalendarPremiumStore(parameters);
     store.setViewDefinition(buildViewDefinition());
     await flushEffect();
     await flushDebounce();
 
     // Same calendar days, but different timestamps.
-    store.updateStateFromParameters(
-      { ...parameters, displayTimezone: 'America/New_York' },
-      adapter,
-    );
+    store.updateStateFromParameters({ ...parameters, displayTimezone: 'America/New_York' });
     await flushEffect();
     await flushDebounce();
     expect(dataSource.getEvents.mock.calls.length).to.equal(2);
@@ -437,17 +428,14 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       defaultVisibleDate: adapter.date('2025-07-02T00:00:00Z', 'default'),
       displayTimezone: 'UTC',
     };
-    const store = new EventCalendarPremiumStore(parameters, adapter);
+    const store = new EventCalendarPremiumStore(parameters);
     store.setViewDefinition(buildViewDefinition(1));
     await flushEffect();
     await flushDebounce();
 
     // The view shows July 1st in New York, whose last 4 hours are on July 2nd in UTC, which the
     // cache already holds.
-    store.updateStateFromParameters(
-      { ...parameters, displayTimezone: 'America/New_York' },
-      adapter,
-    );
+    store.updateStateFromParameters({ ...parameters, displayTimezone: 'America/New_York' });
     await flushEffect();
     await flushDebounce();
 
@@ -480,14 +468,11 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       }),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore(
-      {
-        ...DEFAULT_PARAMS,
-        dataSource,
-        defaultVisibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'),
-      },
-      adapter,
-    );
+    const store = new EventCalendarPremiumStore({
+      ...DEFAULT_PARAMS,
+      dataSource,
+      defaultVisibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'),
+    });
     store.setViewDefinition(buildViewDefinition(10));
     await flushEffect();
     await flushDebounce();
@@ -528,14 +513,11 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       ),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore(
-      {
-        ...DEFAULT_PARAMS,
-        dataSource,
-        defaultVisibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'),
-      },
-      adapter,
-    );
+    const store = new EventCalendarPremiumStore({
+      ...DEFAULT_PARAMS,
+      dataSource,
+      defaultVisibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'),
+    });
     const navigate = async (date: string) => {
       store.goToDate(adapter.date(date, 'default'), noopUIEvent);
       await flushEffect();
@@ -602,14 +584,11 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       ),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore(
-      {
-        ...DEFAULT_PARAMS,
-        dataSource,
-        defaultVisibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'),
-      },
-      adapter,
-    );
+    const store = new EventCalendarPremiumStore({
+      ...DEFAULT_PARAMS,
+      dataSource,
+      defaultVisibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'),
+    });
     const navigate = async (date: string) => {
       store.goToDate(adapter.date(date, 'default'), noopUIEvent);
       await flushEffect();
@@ -664,17 +643,14 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       defaultVisibleDate: adapter.date('2025-07-10T12:00:00Z', 'default'),
       displayTimezone: 'UTC',
     };
-    const store = new EventCalendarPremiumStore(parameters, adapter);
+    const store = new EventCalendarPremiumStore(parameters);
     store.setViewDefinition(buildViewDefinition(10));
     await flushEffect();
     await flushDebounce();
 
     // July 5 to 14 in New York: the cached UTC days trim the request partway through July 9.
     await vi.advanceTimersByTimeAsync(60_000);
-    store.updateStateFromParameters(
-      { ...parameters, displayTimezone: 'America/New_York' },
-      adapter,
-    );
+    store.updateStateFromParameters({ ...parameters, displayTimezone: 'America/New_York' });
     store.goToDate(adapter.date('2025-07-05T12:00:00Z', 'default'), noopUIEvent);
     await flushEffect();
     await flushDebounce();
@@ -698,10 +674,11 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     };
     // The day view keeps the time of `visibleDate` in its days
     const morning = adapter.date('2025-07-03T10:00:00Z', 'default');
-    const store = new EventCalendarPremiumStore(
-      { ...DEFAULT_PARAMS, dataSource, defaultVisibleDate: morning },
-      adapter,
-    );
+    const store = new EventCalendarPremiumStore({
+      ...DEFAULT_PARAMS,
+      dataSource,
+      defaultVisibleDate: morning,
+    });
 
     store.setViewDefinition(buildViewDefinition(1));
     await flushEffect();
@@ -724,7 +701,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       ),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition(7));
 
     await flushEffect();
@@ -750,7 +727,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
         getEvents: vi.fn(async () => buildEvents()),
         persistEvents: noopPersistEvents,
       };
-      const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
 
       store.setViewDefinition(buildViewDefinition(0));
 
@@ -767,10 +744,11 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
         ),
         persistEvents: noopPersistEvents,
       };
-      const store = new EventCalendarPremiumStore(
-        { ...DEFAULT_PARAMS, dataSource, defaultPreferences: { showEmptyDaysInAgenda: false } },
-        adapter,
-      );
+      const store = new EventCalendarPremiumStore({
+        ...DEFAULT_PARAMS,
+        dataSource,
+        defaultPreferences: { showEmptyDaysInAgenda: false },
+      });
 
       store.setViewDefinition(agendaViewDefinition);
 
@@ -792,10 +770,11 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
         ),
         persistEvents: noopPersistEvents,
       };
-      const store = new EventCalendarPremiumStore(
-        { ...DEFAULT_PARAMS, dataSource, defaultPreferences: { showEmptyDaysInAgenda: false } },
-        adapter,
-      );
+      const store = new EventCalendarPremiumStore({
+        ...DEFAULT_PARAMS,
+        dataSource,
+        defaultPreferences: { showEmptyDaysInAgenda: false },
+      });
 
       store.setViewDefinition(agendaViewDefinition);
       await flushEffect();
@@ -833,15 +812,12 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
         ),
         persistEvents: noopPersistEvents,
       };
-      const store = new EventCalendarPremiumStore(
-        {
-          ...DEFAULT_PARAMS,
-          dataSource,
-          defaultVisibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'), // Tuesday
-          defaultPreferences: { showEmptyDaysInAgenda: false, showWeekends: false },
-        },
-        adapter,
-      );
+      const store = new EventCalendarPremiumStore({
+        ...DEFAULT_PARAMS,
+        dataSource,
+        defaultVisibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'), // Tuesday
+        defaultPreferences: { showEmptyDaysInAgenda: false, showWeekends: false },
+      });
 
       store.setViewDefinition(agendaViewDefinition);
 

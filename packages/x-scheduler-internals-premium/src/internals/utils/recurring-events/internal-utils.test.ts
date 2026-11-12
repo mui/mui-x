@@ -17,20 +17,20 @@ describe('recurring-events/internal-utils', () => {
   describe('getWeekDayCode', () => {
     it('should return the RFC 5545 code of the weekday', () => {
       const testMonday = adapter.date('2025-10-20T00:00:00Z', 'default'); // Monday
-      expect(getWeekDayCode(adapter, testMonday, 'default')).to.equal('MO');
-      expect(getWeekDayCode(adapter, adapter.addDays(testMonday, 1), 'default')).to.equal('TU');
-      expect(getWeekDayCode(adapter, adapter.addDays(testMonday, 2), 'default')).to.equal('WE');
-      expect(getWeekDayCode(adapter, adapter.addDays(testMonday, 3), 'default')).to.equal('TH');
-      expect(getWeekDayCode(adapter, adapter.addDays(testMonday, 4), 'default')).to.equal('FR');
-      expect(getWeekDayCode(adapter, adapter.addDays(testMonday, 5), 'default')).to.equal('SA');
-      expect(getWeekDayCode(adapter, adapter.addDays(testMonday, 6), 'default')).to.equal('SU');
+      expect(getWeekDayCode(testMonday, 'default')).to.equal('MO');
+      expect(getWeekDayCode(adapter.addDays(testMonday, 1), 'default')).to.equal('TU');
+      expect(getWeekDayCode(adapter.addDays(testMonday, 2), 'default')).to.equal('WE');
+      expect(getWeekDayCode(adapter.addDays(testMonday, 3), 'default')).to.equal('TH');
+      expect(getWeekDayCode(adapter.addDays(testMonday, 4), 'default')).to.equal('FR');
+      expect(getWeekDayCode(adapter.addDays(testMonday, 5), 'default')).to.equal('SA');
+      expect(getWeekDayCode(adapter.addDays(testMonday, 6), 'default')).to.equal('SU');
     });
 
     it('should read the weekday in the timezone', () => {
       // Monday at 03:00 UTC is Sunday at 22:00 in New York.
       const date = adapter.date('2025-10-20T03:00:00Z', 'default');
-      expect(getWeekDayCode(adapter, date, 'UTC')).to.equal('MO');
-      expect(getWeekDayCode(adapter, date, 'America/New_York')).to.equal('SU');
+      expect(getWeekDayCode(date, 'UTC')).to.equal('MO');
+      expect(getWeekDayCode(date, 'America/New_York')).to.equal('SU');
     });
   });
 

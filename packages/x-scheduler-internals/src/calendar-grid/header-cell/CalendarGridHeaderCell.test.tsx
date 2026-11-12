@@ -15,7 +15,7 @@ describe('<CalendarGrid.HeaderCell />', () => {
 
   const day = adapter.now('default');
 
-  describeConformance(<CalendarGrid.HeaderCell date={processDay(day, adapter)} />, () => ({
+  describeConformance(<CalendarGrid.HeaderCell date={processDay(day)} />, () => ({
     refInstanceof: window.HTMLDivElement,
     render(node) {
       return render(
@@ -35,7 +35,7 @@ describe('<CalendarGrid.HeaderCell />', () => {
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
             <CalendarGrid.HeaderRow>
-              <CalendarGrid.HeaderCell date={processDay(day, adapter)}>
+              <CalendarGrid.HeaderCell date={processDay(day)}>
                 <button type="button" onClick={onClick}>
                   Click me
                 </button>
@@ -57,9 +57,7 @@ describe('<CalendarGrid.HeaderCell />', () => {
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
             <CalendarGrid.HeaderRow>
-              <CalendarGrid.HeaderCell date={processDay(day, adapter)}>
-                Monday
-              </CalendarGrid.HeaderCell>
+              <CalendarGrid.HeaderCell date={processDay(day)}>Monday</CalendarGrid.HeaderCell>
             </CalendarGrid.HeaderRow>
           </CalendarGrid.Root>
         </EventCalendarProvider>,

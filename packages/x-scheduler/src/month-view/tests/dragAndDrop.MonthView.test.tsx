@@ -196,6 +196,45 @@ describe('MonthView - Drag and Drop', () => {
     expect(updatedEvents[0].end).to.equal('2025-07-10T09:00:00.000Z');
   });
 
+  it('should span and move an event by the cells of a row without weekends', async () => {
+    const handleEventsChange = vi.fn();
+    // Thursday 10:00 to Monday 09:00, in the row Wed 9th, Thu 10th, Fri 11th, Mon 14th and Tue 15th.
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Trip')
+      .span('2025-07-10T10:00:00Z', '2025-07-14T09:00:00Z')
+      .draggable(true)
+      .build();
+
+    render(
+      <StandaloneMonthView
+        events={[event]}
+        resources={[]}
+        displayTimezone="UTC"
+        defaultPreferences={{ showWeekends: false, weekStartsOn: 3 }}
+        onEventsChange={handleEventsChange}
+      />,
+    );
+
+    // The event covers the cells of Thursday, Friday and Monday.
+    const eventElement = screen.getAllByRole('button', { name: /Trip/i })[0];
+    expect(eventElement.style.getPropertyValue('--grid-column-span')).to.equal('3');
+    mockElementBounds(eventElement, { left: 0, width: 300 });
+
+    // Grab the Monday cell and drop it on Tuesday: the event moves by one day.
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: getMonthViewCell(15),
+        sourceClientX: 210,
+      });
+    });
+
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
+    expect(updatedEvents[0].start).to.equal('2025-07-11T10:00:00.000Z');
+    expect(updatedEvents[0].end).to.equal('2025-07-15T09:00:00.000Z');
+  });
+
   it('should keep the time of day of an event moved across a DST transition', async () => {
     // Europe/Paris springs forward from 02:00 to 03:00 on March 29th, 2026.
     const handleEventsChange = vi.fn();

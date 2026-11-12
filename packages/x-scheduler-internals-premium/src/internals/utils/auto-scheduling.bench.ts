@@ -41,7 +41,6 @@ describe.each([
     lagUnit: 'day',
   }));
   const parameters = {
-    adapter,
     processedEventLookup: new Map(events.map((event) => [event.id, event])),
     activeDependenciesBySource: groupByEventId(dependencies, 'source'),
     activeDependenciesByTarget: groupByEventId(dependencies, 'target'),

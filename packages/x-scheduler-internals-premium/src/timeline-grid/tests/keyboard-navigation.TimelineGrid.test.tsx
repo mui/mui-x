@@ -78,10 +78,9 @@ describe('TimelineGrid keyboard navigation', () => {
                       eventId={`event-${resourceId}`}
                       occurrenceKey={`occ-${resourceId}`}
                       dataTimezone={undefined}
-                      start={processDate(DEFAULT_TESTING_VISIBLE_DATE, adapter, 'default')}
+                      start={processDate(DEFAULT_TESTING_VISIBLE_DATE, 'default')}
                       end={processDate(
                         adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 1),
-                        adapter,
                         'default',
                       )}
                       renderDragPreview={() => null}

@@ -49,7 +49,6 @@ function runCascadeResult(
   overrides: CascadeOverrides = {},
 ) {
   return computeAutoSchedulingCascade({
-    adapter,
     processedEventLookup: buildLookup(events),
     activeDependenciesBySource: groupByEventId(dependencies, 'source'),
     activeDependenciesByTarget: groupByEventId(dependencies, 'target'),
