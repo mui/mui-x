@@ -1037,6 +1037,98 @@ describe('createSendMessageActions', () => {
       expect(store.state.messageIds).toEqual(['u0', 'u1', 'a1', 'u2', 'a2', 'x']);
     });
 
+    it('keeps interleaved system messages in place when regenerating rejects', async () => {
+      const store = new ChatStore({
+        initialMessages: [
+          ...makeThread(),
+          { id: 's1', role: 'system', status: 'sent', parts: [{ type: 'text', text: 'Note' }] },
+          { id: 'a1b', role: 'assistant', status: 'sent', parts: [{ type: 'text', text: 'More' }] },
+          { id: 'u2', role: 'user', status: 'sent', parts: [{ type: 'text', text: 'Again' }] },
+          {
+            id: 'a2',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'Second' }],
+          },
+        ],
+      });
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockRejectedValue(new Error('Regen failed')),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await regenerate('a1');
+
+      expect(store.state.messageIds).toEqual(['u1', 'a1', 's1', 'a1b', 'u2', 'a2']);
+    });
+
+    it('restores a mapped assistant message that is not adjacent to its anchor in place', async () => {
+      const store = new ChatStore({
+        initialMessages: [
+          { id: 'u1', role: 'user', status: 'sent', parts: [{ type: 'text', text: 'Hello' }] },
+          { id: 'u2', role: 'user', status: 'sent', parts: [{ type: 'text', text: 'Again' }] },
+          {
+            id: 'a2',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'Second' }],
+          },
+          { id: 'a1x', role: 'assistant', status: 'sent', parts: [{ type: 'text', text: 'Late' }] },
+        ],
+      });
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockRejectedValue(new Error('Regen failed')),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1x']]) },
+      });
+
+      await regenerate('u1');
+
+      expect(store.state.messageIds).toEqual(['u1', 'u2', 'a2', 'a1x']);
+    });
+
+    it('does not restore the removed run when the thread was replaced while pending', async () => {
+      const store = new ChatStore({ initialMessages: makeThread() });
+      const setRuntimeError = vi.fn();
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockImplementation(async () => {
+          store.setMessages([
+            { id: 'v1', role: 'user', status: 'sent', parts: [{ type: 'text', text: 'Other' }] },
+          ]);
+          throw new Error('Regen failed');
+        }),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError,
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await regenerate('a1');
+
+      expect(store.state.messageIds).toEqual(['v1']);
+      expect(store.state.isStreaming).toBe(false);
+      expect(setRuntimeError).toHaveBeenCalledWith(
+        expect.objectContaining({ code: 'REGENERATE_ERROR' }),
+      );
+    });
+
     it('fires onError on a mid-stream error and keeps partial output (no rollback)', async () => {
       const store = new ChatStore({ initialMessages: makeThread() });
       store.setActiveConversation('c1');
