@@ -46,6 +46,7 @@ describe('createRealtimeActions', () => {
         initialConversations: [conversation1],
         initialActiveConversationId: 'c1',
       });
+      store.setStreaming(true, 'c1');
       const stopStreaming = vi.fn();
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
@@ -56,6 +57,24 @@ describe('createRealtimeActions', () => {
       handleRealtimeEvent({ type: 'conversation-removed', conversationId: 'c1' });
 
       expect(stopStreaming).toHaveBeenCalledTimes(1);
+    });
+
+    it('conversation-removed: does not stop streaming when the active conversation is removed while idle', () => {
+      const store = new ChatStore({
+        initialConversations: [conversation1],
+        initialActiveConversationId: 'c1',
+      });
+      const stopStreaming = vi.fn();
+      const { handleRealtimeEvent } = createRealtimeActions({
+        store: asUnknown(store),
+        stopStreaming,
+        conversationNavigationRequestIdRef: { current: 0 },
+      });
+
+      handleRealtimeEvent({ type: 'conversation-removed', conversationId: 'c1' });
+
+      expect(stopStreaming).not.toHaveBeenCalled();
+      expect(store.state.activeConversationId).toBeUndefined();
     });
 
     it('message-updated: updates existing message in store', () => {

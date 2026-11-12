@@ -40,7 +40,9 @@ export function createRealtimeActions(params: {
 
         if (store.state.activeConversationId === event.conversationId) {
           conversationNavigationRequestIdRef.current += 1;
-          stopStreaming();
+          if (store.state.isStreaming) {
+            stopStreaming();
+          }
           store.setActiveConversation(undefined);
           store.resetMessages();
         }

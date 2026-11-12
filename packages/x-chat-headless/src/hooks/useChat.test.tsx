@@ -881,8 +881,9 @@ describe('useChat', () => {
     });
   });
 
-  it('keeps a stream started without a conversation running when the parent assigns its id', async () => {
+  it('scopes a stream started without a conversation to the id the parent assigns', async () => {
     const signals: AbortSignal[] = [];
+    const controlledStream = createControlledStream();
     let messages: ChatMessage[] = [];
     const onMessagesChange = (next: ChatMessage[]) => {
       messages = next;
@@ -890,7 +891,7 @@ describe('useChat', () => {
     const adapter = createAdapter({
       sendMessage: vi.fn(async ({ signal }) => {
         signals.push(signal);
-        return createPendingStream();
+        return controlledStream.stream;
       }),
       stop: vi.fn(),
     });
@@ -919,6 +920,63 @@ describe('useChat', () => {
     expect(signals[0].aborted).toBe(false);
     expect(adapter.stop).not.toHaveBeenCalled();
     expect(result.current.isStreaming).toBe(true);
+
+    // The first chunk must keep the adopted scope.
+    await act(async () => {
+      await controlledStream.enqueue({ type: 'start', messageId: 'assistant-new' });
+      await controlledStream.enqueue({ type: 'text-delta', id: 'text-1', delta: 'Hi' });
+    });
+    await waitFor(() => {
+      expect(messages.some((message) => message.id === 'assistant-new')).toBe(true);
+    });
+
+    setProps({ adapter, messages, onMessagesChange, activeConversationId: 'c-other' });
+    rerender();
+
+    await waitFor(() => {
+      expect(result.current.activeConversationId).toBe('c-other');
+    });
+    expect(signals[0].aborted).toBe(true);
+    expect(adapter.stop).toHaveBeenCalledTimes(1);
+  });
+
+  it('aborts a stream started without a conversation when uncontrolled messages are reset', async () => {
+    const signals: AbortSignal[] = [];
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async ({ signal }) => {
+        signals.push(signal);
+        return createPendingStream();
+      }),
+      stop: vi.fn(),
+    });
+    const { Wrapper, setProps } = createProviderWrapper({
+      adapter,
+      activeConversationId: undefined,
+    });
+    const { result, rerender } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    act(() => {
+      void result.current.sendMessage({ parts: [{ type: 'text', text: 'New chat' }] });
+    });
+
+    await waitFor(() => {
+      expect(result.current.isStreaming).toBe(true);
+    });
+
+    setProps({ adapter, activeConversationId: 'c-new' });
+    rerender();
+
+    await waitFor(() => {
+      expect(result.current.activeConversationId).toBe('c-new');
+    });
+    expect(signals[0].aborted).toBe(true);
+
+    await act(async () => {
+      void result.current.sendMessage({ parts: [{ type: 'text', text: 'In c-new' }] });
+    });
+    await waitFor(() => {
+      expect(adapter.sendMessage).toHaveBeenCalledTimes(2);
+    });
   });
 
   it('does not leak a buffered delta of the aborted stream into the next conversation', async () => {

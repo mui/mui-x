@@ -201,7 +201,8 @@ export async function processStream<Cursor = string>(
 
     if (!didStartMessage) {
       didStartMessage = true;
-      store.setStreaming(true, options.conversationId);
+      // Keep a scope the controller assigned to an unscoped stream before its first chunk.
+      store.setStreaming(true, options.conversationId ?? store.state.streamingConversationId);
       store.setError(null);
 
       if (targetMessageId) {
@@ -664,11 +665,11 @@ export async function processStream<Cursor = string>(
 
   const abortListener = () => {
     aborted = true;
-    // Flush now, while the target message still exists, so a later flush cannot re-add it after a reset.
-    flushPendingTextLikeDelta();
     void reader.cancel().catch((error) => {
       abortCancelError = error;
     });
+    // Flush now, while the target message still exists, so a later flush cannot re-add it after a reset.
+    flushPendingTextLikeDelta();
   };
 
   options.signal?.addEventListener('abort', abortListener, { once: true });
