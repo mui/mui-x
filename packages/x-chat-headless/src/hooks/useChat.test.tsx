@@ -881,6 +881,87 @@ describe('useChat', () => {
     });
   });
 
+  it('keeps a stream started without a conversation running when the parent assigns its id', async () => {
+    const signals: AbortSignal[] = [];
+    let messages: ChatMessage[] = [];
+    const onMessagesChange = (next: ChatMessage[]) => {
+      messages = next;
+    };
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async ({ signal }) => {
+        signals.push(signal);
+        return createPendingStream();
+      }),
+      stop: vi.fn(),
+    });
+    const { Wrapper, setProps } = createProviderWrapper({
+      adapter,
+      messages,
+      onMessagesChange,
+      activeConversationId: undefined,
+    });
+    const { result, rerender } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    act(() => {
+      void result.current.sendMessage({ parts: [{ type: 'text', text: 'New chat' }] });
+    });
+
+    await waitFor(() => {
+      expect(result.current.isStreaming).toBe(true);
+    });
+
+    setProps({ adapter, messages, onMessagesChange, activeConversationId: 'c-new' });
+    rerender();
+
+    await waitFor(() => {
+      expect(result.current.activeConversationId).toBe('c-new');
+    });
+    expect(signals[0].aborted).toBe(false);
+    expect(adapter.stop).not.toHaveBeenCalled();
+    expect(result.current.isStreaming).toBe(true);
+  });
+
+  it('does not leak a buffered delta of the aborted stream into the next conversation', async () => {
+    const controlledStream = createControlledStream();
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async () => controlledStream.stream),
+    });
+    const { Wrapper, setProps } = createProviderWrapper({
+      adapter,
+      activeConversationId: 'c1',
+      streamFlushInterval: 1000,
+    });
+    const { result, rerender } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    let sendPromise!: Promise<void>;
+    act(() => {
+      sendPromise = result.current.sendMessage({ parts: [{ type: 'text', text: 'In c1' }] });
+    });
+
+    await act(async () => {
+      await controlledStream.enqueue({ type: 'start', messageId: 'assistant-c1' });
+      await controlledStream.enqueue({ type: 'text-delta', id: 'text-1', delta: 'Partial' });
+      // Let the delta reach the buffer; it stays unflushed for the 1000ms interval.
+      await new Promise((resolve) => {
+        setTimeout(resolve, 10);
+      });
+    });
+
+    expect(result.current.messages.some((message) => message.id === 'assistant-c1')).toBe(true);
+
+    setProps({ adapter, activeConversationId: 'c2', streamFlushInterval: 1000 });
+    rerender();
+    await act(async () => {
+      await sendPromise;
+    });
+
+    expect(result.current.activeConversationId).toBe('c2');
+    expect(result.current.isStreaming).toBe(false);
+    expect(result.current.messages.filter((message) => message.conversationId === 'c1')).toEqual(
+      [],
+    );
+  });
+
   it('retries a user message by removing the previous assistant response and resending the original content', async () => {
     let attempt = 0;
     const adapter = createAdapter({

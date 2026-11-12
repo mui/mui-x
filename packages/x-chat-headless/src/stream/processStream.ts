@@ -664,6 +664,8 @@ export async function processStream<Cursor = string>(
 
   const abortListener = () => {
     aborted = true;
+    // Flush now, while the target message still exists, so a later flush cannot re-add it after a reset.
+    flushPendingTextLikeDelta();
     void reader.cancel().catch((error) => {
       abortCancelError = error;
     });

@@ -332,7 +332,15 @@ export function useChatController<Cursor = string>({
         return;
       }
 
-      stopStreaming();
+      // A stream started with no conversation keeps running when the parent assigns its new id.
+      const { isStreaming, streamingConversationId } = store.state;
+      if (
+        isStreaming &&
+        streamingConversationId != null &&
+        streamingConversationId !== nextActiveConversationId
+      ) {
+        stopStreaming();
+      }
       void loadConversationMessages(nextActiveConversationId);
     },
   );
