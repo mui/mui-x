@@ -1,9 +1,9 @@
 import * as React from 'react';
-import {
-  DataGridPro,
+import type {
   GridValidRowModel,
   ReorderValidationContext,
 } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const isValidRowReorder = (context: ReorderValidationContext) => {

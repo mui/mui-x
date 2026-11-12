@@ -1,5 +1,5 @@
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
-import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
+import type { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
 
 const INITIAL_ITEMS: TreeViewDefaultItemModelProperties[] = Array.from(
   { length: 5 },

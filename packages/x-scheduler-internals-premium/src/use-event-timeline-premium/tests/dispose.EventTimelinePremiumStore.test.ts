@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { EventBuilder } from 'test/utils/scheduler';
 import { disposeSymbol } from '@mui/x-internals/disposable';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import {
@@ -31,8 +31,8 @@ describe('Dispose - EventTimelinePremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
-    const store = new EventTimelinePremiumStore(params, adapter);
-    store.updateStateFromParameters(params, adapter);
+    const store = new EventTimelinePremiumStore(params);
+    store.updateStateFromParameters(params);
 
     await flushEffect();
     await flushDebounce();
@@ -55,8 +55,8 @@ describe('Dispose - EventTimelinePremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
-    const store = new EventTimelinePremiumStore(params, adapter);
-    store.updateStateFromParameters(params, adapter);
+    const store = new EventTimelinePremiumStore(params);
+    store.updateStateFromParameters(params);
 
     // Initial fetch is immediate; let it settle.
     await flushEffect();
@@ -82,8 +82,8 @@ describe('Dispose - EventTimelinePremiumStore', () => {
       persistEvents: vi.fn(noopPersistEvents),
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
-    const store = new EventTimelinePremiumStore(params, adapter);
-    store.updateStateFromParameters(params, adapter);
+    const store = new EventTimelinePremiumStore(params);
+    store.updateStateFromParameters(params);
 
     await flushEffect();
     await flushDebounce();
@@ -113,8 +113,8 @@ describe('Dispose - EventTimelinePremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
-    const store = new EventTimelinePremiumStore(params, adapter);
-    store.updateStateFromParameters(params, adapter);
+    const store = new EventTimelinePremiumStore(params);
+    store.updateStateFromParameters(params);
 
     await flushEffect();
     await flushDebounce();
@@ -136,8 +136,8 @@ describe('Dispose - EventTimelinePremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
-    const store = new EventTimelinePremiumStore(params, adapter);
-    store.updateStateFromParameters(params, adapter);
+    const store = new EventTimelinePremiumStore(params);
+    store.updateStateFromParameters(params);
 
     await flushEffect();
     await flushDebounce();
@@ -152,8 +152,8 @@ describe('Dispose - EventTimelinePremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
-    const store = new EventTimelinePremiumStore(params, adapter);
-    store.updateStateFromParameters(params, adapter);
+    const store = new EventTimelinePremiumStore(params);
+    store.updateStateFromParameters(params);
 
     // First fetch hydrates the cache for the initial range.
     await flushEffect();
@@ -173,7 +173,7 @@ describe('Dispose - EventTimelinePremiumStore', () => {
     expect(dataSource.getEvents.mock.calls.length).to.equal(2);
   });
 
-  it('should not pushError when persistEvents rejects after dispose', async () => {
+  it('should not push a user-facing error when persistEvents rejects after dispose', async () => {
     const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     let rejectPersist!: (reason: unknown) => void;
@@ -185,8 +185,8 @@ describe('Dispose - EventTimelinePremiumStore', () => {
       persistEvents: vi.fn(() => persistPromise),
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
-    const store = new EventTimelinePremiumStore(params, adapter);
-    store.updateStateFromParameters(params, adapter);
+    const store = new EventTimelinePremiumStore(params);
+    store.updateStateFromParameters(params);
 
     await flushEffect();
     await flushDebounce();

@@ -7,8 +7,9 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { throttle } from '@mui/x-internals/throttle';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
-import { Store, useStore } from '@base-ui/utils/store';
-import {
+import type { Store } from '@base-ui/utils/store';
+import { useStore } from '@base-ui/utils/store';
+import type {
   ColumnsMetaState,
   ColumnWithWidth,
   DimensionsState,
@@ -16,8 +17,8 @@ import {
   RowId,
   RowEntry,
   RowsMetaState,
-  Size,
 } from '../models';
+import { Size } from '../models';
 import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */

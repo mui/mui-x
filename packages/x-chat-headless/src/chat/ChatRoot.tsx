@@ -12,12 +12,18 @@ import { ChatDensityProvider } from './internals/ChatDensityContext';
 import type { ChatDensity } from './internals/ChatDensityContext';
 
 export interface ChatRootSlots {
+  /**
+   * The component that renders the root.
+   */
   root: React.ElementType;
 }
 
 export interface ChatRootOwnerState {}
 
 export interface ChatRootSlotProps {
+  /**
+   * The props used for the root slot.
+   */
   root?: SlotComponentProps<'div', {}, ChatRootOwnerState>;
 }
 
@@ -25,6 +31,9 @@ export interface ChatRootProps<Cursor = string>
   extends
     ChatProviderProps<Cursor>,
     Omit<React.HTMLAttributes<HTMLDivElement>, 'children' | 'onError'> {
+  /**
+   * The props used for the locale text slot.
+   */
   localeText?: Partial<ChatLocaleText>;
   /**
    * The visual layout variant of the chat.
@@ -42,7 +51,15 @@ export interface ChatRootProps<Cursor = string>
    * - `'comfortable'` – Increased vertical spacing between messages.
    */
   density?: ChatDensity;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<ChatRootSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ChatRootSlotProps;
 }
 

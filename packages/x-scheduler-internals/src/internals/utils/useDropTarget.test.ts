@@ -21,15 +21,12 @@ premiumStoreClasses.forEach((storeClass) => {
       const event = builder.build();
       const occurrence = builder.toOccurrence();
       const onEventsChange = vi.fn();
-      const store = new storeClass.Value(
-        {
-          resources: [ResourceBuilder.new().id('r1').title('Resource 1').build()],
-          events: [event],
-          displayTimezone: 'America/New_York',
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new storeClass.Value({
+        resources: [ResourceBuilder.new().id('r1').title('Resource 1').build()],
+        events: [event],
+        displayTimezone: 'America/New_York',
+        onEventsChange,
+      });
 
       applyInternalDragOrResizeOccurrencePlaceholder(
         store as unknown as SchedulerStoreInContext<any, any>,
@@ -41,8 +38,8 @@ premiumStoreClasses.forEach((storeClass) => {
           originalOccurrence: occurrence,
           sourceResourceId: null,
           resourceId: null,
-          start: occurrence.displayTimezone.start.value,
-          end: adapter.addDays(occurrence.displayTimezone.end.value, 1),
+          start: occurrence.displayTimezone.start.timestamp,
+          end: adapter.getTime(adapter.addDays(occurrence.displayTimezone.end.value, 1)),
         },
       );
       store.selectRecurringEventScope('all');
@@ -60,15 +57,12 @@ premiumStoreClasses.forEach((storeClass) => {
       // occurrence is armed must keep the edited occurrence's start on July 4 in UTC.
       const builder = utcJuly4AllDayBuilder().id('holiday').withDisplayTimezone('America/New_York');
       const occurrence = builder.toOccurrence();
-      const store = new storeClass.Value(
-        {
-          resources: [ResourceBuilder.new().id('r1').title('Resource 1').build()],
-          events: [builder.build()],
-          displayTimezone: 'America/New_York',
-          onEventsChange: vi.fn(),
-        },
-        adapter,
-      );
+      const store = new storeClass.Value({
+        resources: [ResourceBuilder.new().id('r1').title('Resource 1').build()],
+        events: [builder.build()],
+        displayTimezone: 'America/New_York',
+        onEventsChange: vi.fn(),
+      });
       store.startEditing(occurrence, 'armed');
 
       applyInternalDragOrResizeOccurrencePlaceholder(
@@ -81,8 +75,8 @@ premiumStoreClasses.forEach((storeClass) => {
           originalOccurrence: occurrence,
           sourceResourceId: null,
           resourceId: null,
-          start: occurrence.displayTimezone.start.value,
-          end: adapter.addDays(occurrence.displayTimezone.end.value, 1),
+          start: occurrence.displayTimezone.start.timestamp,
+          end: adapter.getTime(adapter.addDays(occurrence.displayTimezone.end.value, 1)),
         },
       );
 
@@ -99,15 +93,12 @@ premiumStoreClasses.forEach((storeClass) => {
       const builder = utcJuly4AllDayBuilder().id('holiday').withDisplayTimezone('America/New_York');
       const occurrence = builder.toOccurrence();
       const onEventsChange = vi.fn();
-      const store = new storeClass.Value(
-        {
-          resources: [ResourceBuilder.new().id('r1').title('Resource 1').build()],
-          events: [builder.build()],
-          displayTimezone: 'America/New_York',
-          onEventsChange,
-        },
-        adapter,
-      );
+      const store = new storeClass.Value({
+        resources: [ResourceBuilder.new().id('r1').title('Resource 1').build()],
+        events: [builder.build()],
+        displayTimezone: 'America/New_York',
+        onEventsChange,
+      });
       const start = occurrence.displayTimezone.start.value;
       const end = adapter.addHours(start, 1);
 
@@ -121,8 +112,8 @@ premiumStoreClasses.forEach((storeClass) => {
           originalOccurrence: occurrence,
           sourceResourceId: null,
           resourceId: null,
-          start,
-          end,
+          start: adapter.getTime(start),
+          end: adapter.getTime(end),
         },
         () => ({ allDay: false }),
       );

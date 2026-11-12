@@ -2,7 +2,9 @@
   "props": {},
   "name": "ComposerTextArea",
   "imports": ["import { ComposerTextArea } from '@mui/x-chat/headless';"],
-  "slots": [{ "name": "input", "description": "", "class": null }],
+  "slots": [
+    { "name": "input", "description": "The component that renders the input.", "class": null }
+  ],
   "classes": [],
   "muiName": "MuiComposerTextArea",
   "filename": "/packages/x-chat-headless/src/composer/ComposerTextArea.tsx",

@@ -2,6 +2,7 @@ import { clearWarningsCache } from '@mui/x-internals/warning';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
 import type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
 const DEFAULT_PARAMS = {
@@ -21,14 +22,11 @@ describe('Preset - EventTimelinePremiumStore', () => {
       // the typo would stay silent until an end user switches to dayAndHour.
       expect(() => {
         // eslint-disable-next-line no-new
-        new EventTimelinePremiumStore(
-          {
-            ...DEFAULT_PARAMS,
-            defaultPreset: 'dayAndMonth',
-            presetConfig: { dayAndHour: { startTime: 9, endTime: 9 } },
-          },
-          adapter,
-        );
+        new EventTimelinePremiumStore({
+          ...DEFAULT_PARAMS,
+          defaultPreset: 'dayAndMonth',
+          presetConfig: { dayAndHour: { startTime: 9, endTime: 9 } },
+        });
       }).toWarnDev(['MUI X Scheduler: `presetConfig.dayAndHour` received an invalid hour range']);
     });
 
@@ -37,30 +35,24 @@ describe('Preset - EventTimelinePremiumStore', () => {
       // narrows `presets`. The Event Calendar accepts `viewConfig` for absent views too.
       expect(() => {
         // eslint-disable-next-line no-new
-        new EventTimelinePremiumStore(
-          {
-            ...DEFAULT_PARAMS,
-            defaultPreset: 'dayAndMonth',
-            presets: ['dayAndMonth', 'year'] as EventTimelinePremiumPreset[],
-            presetConfig: { dayAndHour: { startTime: 8, endTime: 20 } },
-          },
-          adapter,
-        );
+        new EventTimelinePremiumStore({
+          ...DEFAULT_PARAMS,
+          defaultPreset: 'dayAndMonth',
+          presets: ['dayAndMonth', 'year'] as EventTimelinePremiumPreset[],
+          presetConfig: { dayAndHour: { startTime: 8, endTime: 20 } },
+        });
       }).not.toWarnDev();
     });
 
     it('should still validate the hour range of a preset that is not in presets', () => {
       expect(() => {
         // eslint-disable-next-line no-new
-        new EventTimelinePremiumStore(
-          {
-            ...DEFAULT_PARAMS,
-            defaultPreset: 'dayAndMonth',
-            presets: ['dayAndMonth', 'year'] as EventTimelinePremiumPreset[],
-            presetConfig: { dayAndHour: { startTime: 20, endTime: 8 } },
-          },
-          adapter,
-        );
+        new EventTimelinePremiumStore({
+          ...DEFAULT_PARAMS,
+          defaultPreset: 'dayAndMonth',
+          presets: ['dayAndMonth', 'year'] as EventTimelinePremiumPreset[],
+          presetConfig: { dayAndHour: { startTime: 20, endTime: 8 } },
+        });
       }).toWarnDev(['MUI X Scheduler: `presetConfig.dayAndHour` received an invalid hour range']);
     });
 
@@ -68,13 +60,10 @@ describe('Preset - EventTimelinePremiumStore', () => {
       // Only reachable from JavaScript: the type has `dayAndHour` as its single key.
       expect(() => {
         // eslint-disable-next-line no-new
-        new EventTimelinePremiumStore(
-          {
-            ...DEFAULT_PARAMS,
-            presetConfig: { dayAndHours: { startTime: 8, endTime: 20 } } as any,
-          },
-          adapter,
-        );
+        new EventTimelinePremiumStore({
+          ...DEFAULT_PARAMS,
+          presetConfig: { dayAndHours: { startTime: 8, endTime: 20 } } as any,
+        });
       }).toWarnDev(['MUI X Scheduler: `presetConfig.dayAndHours` is not a known preset']);
     });
   });
@@ -82,7 +71,7 @@ describe('Preset - EventTimelinePremiumStore', () => {
   describe('Method: setPreset', () => {
     it('should update preset and call onPresetChange when value changes and is uncontrolled', () => {
       const onPresetChange = vi.fn();
-      const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, onPresetChange }, adapter);
+      const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, onPresetChange });
 
       store.setPreset('dayAndMonth', {} as any);
 
@@ -93,10 +82,11 @@ describe('Preset - EventTimelinePremiumStore', () => {
 
     it('should NOT mutate store but call onPresetChange when is controlled', () => {
       const onPresetChange = vi.fn();
-      const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, preset: 'dayAndWeek', onPresetChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStore({
+        ...DEFAULT_PARAMS,
+        preset: 'dayAndWeek',
+        onPresetChange,
+      });
 
       store.setPreset('dayAndMonth', {} as any);
 
@@ -107,10 +97,11 @@ describe('Preset - EventTimelinePremiumStore', () => {
 
     it('should do nothing if setting the same preset: no state change, no callback', () => {
       const onPresetChange = vi.fn();
-      const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, defaultPreset: 'monthAndYear', onPresetChange },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStore({
+        ...DEFAULT_PARAMS,
+        defaultPreset: 'monthAndYear',
+        onPresetChange,
+      });
 
       store.setPreset('monthAndYear', {} as any);
 
@@ -119,24 +110,18 @@ describe('Preset - EventTimelinePremiumStore', () => {
     });
 
     it('should NOT mutate store when onPresetChange cancels the change', () => {
-      const store = new EventTimelinePremiumStore(
-        {
-          ...DEFAULT_PARAMS,
-          defaultPreset: 'dayAndWeek',
-          onPresetChange: (_, eventDetails) => eventDetails.cancel(),
-        },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStore({
+        ...DEFAULT_PARAMS,
+        defaultPreset: 'dayAndWeek',
+        onPresetChange: (_, eventDetails) => eventDetails.cancel(),
+      });
 
       store.setPreset('dayAndMonth', {} as any);
       expect(store.state.preset).to.equal('dayAndWeek');
     });
 
     it('should warn in dev when controlled without an onPresetChange handler', () => {
-      const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, preset: 'dayAndWeek' },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, preset: 'dayAndWeek' });
 
       expect(() => store.setPreset('dayAndMonth', {} as any)).toWarnDev(
         'MUI X Scheduler: EventTimelinePremium is controlled (received a `preset` prop) but `onPresetChange` is not provided',
@@ -159,10 +144,7 @@ describe('Preset - EventTimelinePremiumStore', () => {
 
     NAVIGATION_CASES.forEach(({ preset, next, previous }) => {
       it(`should advance visibleDate by one span in the ${preset} preset`, () => {
-        const store = new EventTimelinePremiumStore(
-          { ...DEFAULT_PARAMS, defaultPreset: preset },
-          adapter,
-        );
+        const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, defaultPreset: preset });
 
         store.goToNextVisibleDate({} as any);
 
@@ -170,15 +152,41 @@ describe('Preset - EventTimelinePremiumStore', () => {
       });
 
       it(`should rewind visibleDate by one span in the ${preset} preset`, () => {
-        const store = new EventTimelinePremiumStore(
-          { ...DEFAULT_PARAMS, defaultPreset: preset },
-          adapter,
-        );
+        const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, defaultPreset: preset });
 
         store.goToPreviousVisibleDate({} as any);
 
         expect(store.state.visibleDate).toEqualDateTime(previous);
       });
+    });
+
+    it('should move the days of the display timezone across a DST transition', () => {
+      const onVisibleDateChange = vi.fn();
+      const store = new EventTimelinePremiumStore({
+        ...DEFAULT_PARAMS,
+        defaultPreset: 'dayAndHour',
+        // March 28th at 22:30 in UTC is March 28th at 23:30 in Paris, the day before the DST transition.
+        defaultVisibleDate: adapter.date('2026-03-28T22:30:00', 'UTC'),
+        displayTimezone: 'Europe/Paris',
+        onVisibleDateChange,
+      });
+
+      store.goToNextVisibleDate({} as any);
+
+      // The next span starts on April 1st in Paris, the day after the four days of the first one.
+      expect(
+        new Date(eventTimelinePremiumPresetSelectors.config(store.state).start).toISOString(),
+      ).to.equal('2026-03-31T22:00:00.000Z');
+      // April 1st at 23:30 in Paris.
+      const changedVisibleDate = onVisibleDateChange.mock.lastCall?.[0];
+      expect(adapter.getTime(store.state.visibleDate)).to.equal(Date.parse('2026-04-01T21:30:00Z'));
+      expect(adapter.getTime(changedVisibleDate)).to.equal(Date.parse('2026-04-01T21:30:00Z'));
+
+      store.goToPreviousVisibleDate({} as any);
+
+      expect(
+        new Date(eventTimelinePremiumPresetSelectors.config(store.state).start).toISOString(),
+      ).to.equal('2026-03-27T23:00:00.000Z');
     });
   });
 });

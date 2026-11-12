@@ -1,5 +1,5 @@
 import type { ukUA } from '@mui/x-data-grid/locales';
-// @ts-expect-error
+// @ts-expect-error Locales must be imported from the locales entry point, not the package root.
 import { enUS } from '@mui/x-data-grid';
 import type { Expect, Equal } from 'test/utils/typeUtils';
 import type { Localization } from '@mui/x-data-grid/internals';

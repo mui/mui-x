@@ -7,9 +7,14 @@ import {
   GridMenu,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
-import type { GridColDef, GridSlotProps, GridSortDirection } from '@mui/x-data-grid-pro';
+import type { GridColDef, GridSlotProps } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
-import { GridColumnSortButton, NotRendered, vars } from '@mui/x-data-grid-pro/internals';
+import {
+  getNextGridSortDirection,
+  GridColumnSortButton,
+  NotRendered,
+  vars,
+} from '@mui/x-data-grid-pro/internals';
 import useId from '@mui/utils/useId';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import type {
@@ -26,12 +31,18 @@ import type { FieldTransferObject } from './GridPivotPanelBody';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { gridPivotInitialColumnsSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
+import { getPanelFieldPointerDragStyles } from '../../hooks/utils/usePanelFieldPointerDrag';
 
 type GridPivotPanelFieldProps = {
   children: React.ReactNode;
   field: FieldTransferObject['field'];
   onDragStart: (modelKey: FieldTransferObject['modelKey']) => void;
   onDragEnd: () => void;
+  /**
+   * The drop indicator of a touch or pen drag, set by the panel body.
+   * Mouse drags set it from the HTML drag and drop events of the field.
+   */
+  pointerDropPosition: DropPosition;
 } & (
   | { modelKey: 'columns'; modelValue: GridPivotModel['columns'][number] }
   | { modelKey: 'rows'; modelValue: GridPivotModel['rows'][number] }
@@ -64,6 +75,7 @@ const GridPivotPanelFieldRoot = styled('div', {
   slot: 'PivotPanelField',
   overridesResolver: (props, styles) => [
     { [`&.${gridClasses['pivotPanelField--sorted']}`]: styles['pivotPanelField--sorted'] },
+    { [`&.${gridClasses['pivotPanelField--dragging']}`]: styles['pivotPanelField--dragging'] },
     styles.pivotPanelField,
   ],
 })<{ ownerState: OwnerState }>({
@@ -95,6 +107,7 @@ const GridPivotPanelFieldRoot = styled('div', {
   '&:hover': {
     backgroundColor: vars.colors.interactive.hover,
   },
+  ...getPanelFieldPointerDragStyles(gridClasses['pivotPanelField--dragging']),
 });
 
 const GridPivotPanelFieldName = styled('span', {
@@ -237,13 +250,20 @@ function AggregationSelect({
 }
 
 function GridPivotPanelField(props: GridPivotPanelFieldProps) {
-  const { children, field, onDragStart, onDragEnd } = props;
+  const { children, field, onDragStart, onDragEnd, pointerDropPosition } = props;
   const rootProps = useGridRootProps();
   const [dropPosition, setDropPosition] = React.useState<DropPosition>(null);
   const section = props.modelKey;
-  const ownerState = { ...props, classes: rootProps.classes, dropPosition, section };
+  const ownerState = {
+    ...props,
+    classes: rootProps.classes,
+    dropPosition: pointerDropPosition ?? dropPosition,
+    section,
+  };
   const classes = useUtilityClasses(ownerState);
   const apiRef = useGridPrivateApiContext();
+
+  const initialColumns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);
 
   const handleDragStart = React.useCallback(
     (event: React.DragEvent) => {
@@ -306,15 +326,7 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
 
   const handleSort = () => {
     const currentSort = section === 'columns' ? props.modelValue.sort : null;
-    let newValue: GridSortDirection;
-
-    if (currentSort === 'asc') {
-      newValue = 'desc';
-    } else if (currentSort === 'desc') {
-      newValue = undefined;
-    } else {
-      newValue = 'asc';
-    }
+    const newValue = getNextGridSortDirection(rootProps.sortingOrder, currentSort) ?? undefined;
 
     apiRef.current.setPivotModel((prev) => {
       return {
@@ -360,6 +372,7 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
       onDragStart={handleDragStart}
       onDragEnd={onDragEnd}
       draggable="true"
+      data-field={field}
     >
       <GridPivotPanelFieldDragIcon ownerState={ownerState} className={classes.dragIcon}>
         <rootProps.slots.columnReorderIcon fontSize="small" />
@@ -390,6 +403,7 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
         {section === 'columns' && (
           <GridColumnSortButton
             field={field}
+            columnName={initialColumns.get(field)?.headerName ?? field}
             direction={props.modelValue.sort}
             sortingOrder={rootProps.sortingOrder}
             onClick={handleSort}

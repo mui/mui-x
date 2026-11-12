@@ -101,6 +101,11 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 ```
 
+:::warning
+Use Day.js 1.11.22 or later.
+Before this version, the `timezone` plugin can give wrong UTC offsets near the daylight saving time changes of the system timezone, so the pickers can show or return wrong times on those days.
+:::
+
 :::info
 **How to create a date in a specific timezone with Day.js?**
 

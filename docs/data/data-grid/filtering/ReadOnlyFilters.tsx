@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGrid, GridFilterModel } from '@mui/x-data-grid';
+import type { GridFilterModel } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];

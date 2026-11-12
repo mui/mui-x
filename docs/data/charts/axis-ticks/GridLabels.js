@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { LineChart, lineClasses } from '@mui/x-charts/LineChart';
 import { chartsGridClasses } from '@mui/x-charts/ChartsGrid';
-
 import { useDrawingArea, useYAxes, useYAxisTicks } from '@mui/x-charts/hooks';
 import { dataset, valueFormatter } from '../dataset/weather';
 

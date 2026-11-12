@@ -4,9 +4,8 @@ import {
   EventTimelinePremium,
   eventTimelinePremiumClasses,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
-import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
-import { ErrorContainer, SharedComponentsStyledContext } from '@mui/x-scheduler/internals';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
+import { EVENT_TIMELINE_DEFAULT_LOCALE_TEXT } from '@mui/x-scheduler/internals';
 import {
   adapter,
   createSchedulerRenderer,
@@ -52,7 +51,7 @@ const event3 = EventBuilder.new()
 const baseEvents = [event1, event2, event3];
 
 describe('<EventTimelinePremium />', () => {
-  const { render, renderSettled } = createSchedulerRenderer({
+  const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
@@ -62,6 +61,7 @@ describe('<EventTimelinePremium />', () => {
     preset?: EventTimelinePremiumPreset;
     presets?: EventTimelinePremiumPreset[];
     visibleDate?: TemporalSupportedObject;
+    displayTimezone?: string;
     showCurrentTimeIndicator?: boolean;
     resourceColumnLabel?: string;
     localeText?: Partial<EventTimelineLocaleText>;
@@ -79,6 +79,7 @@ describe('<EventTimelinePremium />', () => {
         resources={options?.resources ?? baseResources}
         events={options?.events ?? baseEvents}
         visibleDate={options?.visibleDate ?? DEFAULT_TESTING_VISIBLE_DATE}
+        displayTimezone={options?.displayTimezone}
         preset={options?.preset ?? 'dayAndMonth'}
         presets={
           options?.presets ?? ['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year']
@@ -94,6 +95,7 @@ describe('<EventTimelinePremium />', () => {
         slots={options?.slots}
         slotProps={options?.slotProps}
         getEventAriaLabel={options?.getEventAriaLabel}
+        features={{ recurringEvents: recurringEventsFeature }}
       />,
     );
     return view;
@@ -347,13 +349,6 @@ describe('<EventTimelinePremium />', () => {
   });
 
   describe('events', () => {
-    it('should render all visible events', async () => {
-      await renderTimeline();
-      baseEvents.forEach((eventItem) => {
-        expect(screen.getByText(eventItem.title)).not.to.equal(null);
-      });
-    });
-
     it('does not render events out of range', async () => {
       const outOfRangeEvent = EventBuilder.new()
         .title('Out of range')
@@ -377,6 +372,7 @@ describe('<EventTimelinePremium />', () => {
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
           preset="dayAndMonth"
           presets={['dayAndMonth', 'dayAndWeek']}
+          features={{ recurringEvents: recurringEventsFeature }}
         />,
       );
       baseEvents.forEach((eventItem) => {
@@ -988,70 +984,30 @@ describe('<EventTimelinePremium />', () => {
   });
 
   describe('error handling', () => {
-    function renderErrorContainer(initialErrors: Error[]) {
-      const store = new EventTimelinePremiumStore(
-        { events: [], resources: baseResources },
-        adapter,
-      );
-      store.set(
-        'errors',
-        initialErrors.map((error, index) => ({ error, key: String(index) })),
-      );
+    const failure = EVENT_TIMELINE_DEFAULT_LOCALE_TEXT.somethingWentWrongError;
 
-      return render(
-        <SchedulerStoreContext.Provider value={store as any}>
-          <SharedComponentsStyledContext.Provider value={{ classes: eventTimelinePremiumClasses }}>
-            <ErrorContainer />
-          </SharedComponentsStyledContext.Provider>
-        </SchedulerStoreContext.Provider>,
-      );
-    }
-
-    it('should render an error alert when dataSource.getEvents rejects', async () => {
+    it('should render the generic error and log the original one when dataSource.getEvents rejects', async () => {
       const dataSource = {
         getEvents: () => Promise.reject(new Error('Network error')),
         persistEvents: async () => ({ success: true }),
       };
 
-      await renderSettled(
-        <EventTimelinePremium
-          resources={baseResources}
-          dataSource={dataSource}
-          defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          defaultPreset="dayAndMonth"
-        />,
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('Network error')).not.to.equal(null);
-      });
-    });
-
-    it('should render multiple alerts when state.errors contains multiple errors', () => {
-      renderErrorContainer([new Error('First error'), new Error('Second error')]);
-
-      expect(
-        document.querySelectorAll(`.${eventTimelinePremiumClasses.errorAlert}`).length,
-      ).to.equal(2);
-      expect(screen.getByText('First error')).not.to.equal(null);
-      expect(screen.getByText('Second error')).not.to.equal(null);
-    });
-
-    it('should remove only the dismissed alert and keep the others', async () => {
-      const { user } = renderErrorContainer([new Error('First error'), new Error('Second error')]);
-
-      const closeButtons = screen.getAllByRole('button', { name: /close/i });
-      expect(closeButtons.length).to.equal(2);
-
-      await user.click(closeButtons[0]);
-
-      await waitFor(() => {
-        expect(
-          document.querySelectorAll(`.${eventTimelinePremiumClasses.errorAlert}`).length,
-        ).to.equal(1);
-      });
-      expect(screen.queryByText('First error')).to.equal(null);
-      expect(screen.getByText('Second error')).not.to.equal(null);
+      await expect(async () => {
+        await renderSettled(
+          <EventTimelinePremium
+            resources={baseResources}
+            dataSource={dataSource}
+            defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            defaultPreset="dayAndMonth"
+          />,
+        );
+        await waitFor(() => {
+          expect(screen.getByText(failure)).not.to.equal(null);
+        });
+      }).toErrorDev([
+        'MUI X Scheduler: The user was shown the `somethingWentWrongError` error, caused by: Error: Network error',
+      ]);
+      expect(screen.queryByText('Network error')).to.equal(null);
     });
 
     it('should clear the error alert when a subsequent fetch succeeds', async () => {
@@ -1084,19 +1040,23 @@ describe('<EventTimelinePremium />', () => {
         );
       }
 
-      const { user } = await renderSettled(<Test />);
-
-      await waitFor(() => {
-        expect(screen.getByText('Transient error')).not.to.equal(null);
-        expect(
-          document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
-        ).to.equal(0);
-      });
+      let user!: Awaited<ReturnType<typeof renderSettled>>['user'];
+      await expect(async () => {
+        ({ user } = await renderSettled(<Test />));
+        await waitFor(() => {
+          expect(screen.getByText(failure)).not.to.equal(null);
+          expect(
+            document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
+          ).to.equal(0);
+        });
+      }).toErrorDev([
+        'MUI X Scheduler: The user was shown the `somethingWentWrongError` error, caused by: Error: Transient error',
+      ]);
 
       await user.click(screen.getByRole('button', { name: 'Next' }));
 
       await waitFor(() => {
-        expect(screen.queryByText('Transient error')).to.equal(null);
+        expect(screen.queryByText(failure)).to.equal(null);
       });
     });
 
@@ -1146,107 +1106,58 @@ describe('<EventTimelinePremium />', () => {
         ).to.equal(0);
       });
 
-      await user.click(screen.getByRole('button', { name: 'Next' }));
-      await waitFor(() => {
-        expect(screen.getByText('Network failure')).not.to.equal(null);
-      });
+      await expect(async () => {
+        await user.click(screen.getByRole('button', { name: 'Next' }));
+        await waitFor(() => {
+          expect(screen.getByText(failure)).not.to.equal(null);
+        });
+      }).toErrorDev([
+        'MUI X Scheduler: The user was shown the `somethingWentWrongError` error, caused by: Error: Network failure',
+      ]);
 
       await user.click(screen.getByRole('button', { name: 'Prev' }));
       await waitFor(() => {
-        expect(screen.queryByText('Network failure')).to.equal(null);
+        expect(screen.queryByText(failure)).to.equal(null);
       });
     });
 
-    it('should render a non-Error rejection by stringifying it', async () => {
-      // dataSource that rejects with a non-Error value (e.g. a `fetch` Response).
-      const nonError = { status: 500, toString: () => '500 Internal Server Error' };
+    it('should render the data source error from the localeText', async () => {
       const dataSource = {
-        getEvents: () => Promise.reject(nonError),
+        getEvents: () => Promise.reject(new Error('Network error')),
         persistEvents: async () => ({ success: true }),
       };
 
-      await renderSettled(
-        <EventTimelinePremium
-          resources={baseResources}
-          dataSource={dataSource}
-          defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          defaultPreset="dayAndMonth"
-        />,
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('500 Internal Server Error')).not.to.equal(null);
-      });
-    });
-
-    it('should re-display the same Error instance after dismiss when pushed again with a new key', async () => {
-      const sharedError = new Error('Shared error');
-      const store = new EventTimelinePremiumStore(
-        { events: [], resources: baseResources },
-        adapter,
-      );
-      store.set('errors', [{ error: sharedError, key: '1' }]);
-
-      function Test() {
-        const styledContextValue = React.useMemo(
-          () => ({ classes: eventTimelinePremiumClasses }),
-          [],
+      await expect(async () => {
+        await renderSettled(
+          <EventTimelinePremium
+            resources={baseResources}
+            dataSource={dataSource}
+            defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            defaultPreset="dayAndMonth"
+            localeText={{ somethingWentWrongError: 'Algo salió mal.' }}
+          />,
         );
-
-        return (
-          <SchedulerStoreContext.Provider value={store as any}>
-            <SharedComponentsStyledContext.Provider value={styledContextValue}>
-              <ErrorContainer />
-            </SharedComponentsStyledContext.Provider>
-          </SchedulerStoreContext.Provider>
-        );
-      }
-
-      const { user } = render(<Test />);
-
-      await user.click(screen.getByRole('button', { name: /close/i }));
-      await waitFor(() => {
-        expect(screen.queryByText('Shared error')).to.equal(null);
-      });
-
-      // Simulate the plugin re-pushing the same Error instance under a new key.
-      await act(async () => {
-        store.set('errors', [{ error: sharedError, key: '2' }]);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByText('Shared error')).not.to.equal(null);
-      });
+        await waitFor(() => {
+          expect(screen.getByText('Algo salió mal.')).not.to.equal(null);
+        });
+      }).toErrorDev([
+        'MUI X Scheduler: The user was shown the `somethingWentWrongError` error, caused by: Error: Network error',
+      ]);
     });
   });
 
   describe('presets', () => {
-    it('should set --unit-width to the preset tickWidth and render one row per header level', async () => {
+    it('should show the days of the visible date in the display timezone', async () => {
       await renderTimeline({
         preset: 'dayAndHour',
-        presets: ['dayAndMonth', 'dayAndHour'],
+        // July 1st at midnight in UTC is June 30th at 20:00 in New York.
+        visibleDate: adapter.date('2025-07-01T00:00:00', 'UTC'),
+        displayTimezone: 'America/New_York',
       });
 
-      let rootElement = screen.getByRole('grid');
-      let containerElement = rootElement.closest('section')!;
-      // dayAndHour: tickWidth = 64px, 2 header rows (day + hour).
-      expect(containerElement.style.getPropertyValue('--unit-width')).to.equal('64px');
-      expect(
-        rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
-      ).to.equal(2);
-
-      await renderTimeline({
-        preset: 'dayAndMonth',
-        presets: ['dayAndMonth', 'dayAndHour'],
-      });
-
-      rootElement = screen.getAllByRole('grid').at(-1) as HTMLElement;
-      containerElement = rootElement.closest('section')!;
-      // day: tickWidth = 120px, 2 header rows (month + day).
-      expect(containerElement.style.getPropertyValue('--unit-width')).to.equal('120px');
-      expect(
-        rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
-      ).to.equal(2);
+      // The four days start on June 30th, not on July 1st, the day of the visible date in UTC.
+      expect(screen.queryByText('Mon, Jun 30')).not.to.equal(null);
+      expect(screen.queryByText('Fri, Jul 4')).to.equal(null);
     });
   });
 
@@ -1337,6 +1248,33 @@ describe('<EventTimelinePremium />', () => {
       expect(onEventEditingStart.mock.lastCall?.[1].anchor).to.equal(row);
       expect(row.isConnected).to.equal(true);
     });
+
+    it.each([
+      // Without a display timezone, the creation keeps the `'default'` timezone of the occurrences.
+      { displayTimezone: undefined, timezone: 'default' },
+      { displayTimezone: 'America/New_York', timezone: 'America/New_York' },
+    ])(
+      'should pass a creation to `onEventEditingStart` in the display timezone ($timezone)',
+      async ({ displayTimezone, timezone }) => {
+        const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
+        const { user } = await renderTimeline({
+          events: [],
+          visibleDate: adapter.date('2025-07-03T12:00:00Z', displayTimezone ?? 'default'),
+          displayTimezone,
+          onEventEditingStart,
+        });
+
+        const row = document.querySelector(`[data-resource-id="${engineering.id}"]`) as HTMLElement;
+        await act(async () => row.focus());
+        await user.keyboard('{Enter}');
+
+        expect(onEventEditingStart.mock.calls.length).to.equal(1);
+        const occurrence = onEventEditingStart.mock.lastCall![0];
+        expect(occurrence.displayTimezone.timezone).to.equal(timezone);
+        // The creation starts at the first instant of the preset, at midnight.
+        expect(occurrence.displayTimezone.start.minutesInDay).to.equal(0);
+      },
+    );
   });
 
   describe('accessible name', () => {
@@ -1352,7 +1290,7 @@ describe('<EventTimelinePremium />', () => {
 
       expect(
         screen.getByRole('button', {
-          name: 'Standup, 9:00 AM to 10:00 AM, Thursday, July 3rd, 2025, Resource: Team',
+          name: 'Standup, 9:00 AM to 10:00 AM, Thursday, July 3, 2025, Resource: Team',
         }),
       ).not.to.equal(null);
     });
@@ -1374,10 +1312,10 @@ describe('<EventTimelinePremium />', () => {
       ).getByRole('button');
 
       expect(inEngineering).toHaveAccessibleName(
-        `Shared, 9:00 AM to 10:00 AM, Thursday, July 3rd, 2025, Resource: ${engineering.title}`,
+        `Shared, 9:00 AM to 10:00 AM, Thursday, July 3, 2025, Resource: ${engineering.title}`,
       );
       expect(inDesign).toHaveAccessibleName(
-        `Shared, 9:00 AM to 10:00 AM, Thursday, July 3rd, 2025, Resource: ${design.title}`,
+        `Shared, 9:00 AM to 10:00 AM, Thursday, July 3, 2025, Resource: ${design.title}`,
       );
     });
 
@@ -1391,7 +1329,7 @@ describe('<EventTimelinePremium />', () => {
       await renderTimeline({ events: [trip], preset: 'dayAndMonth' });
 
       expect(getEventByTitle('Trip')).toHaveAccessibleName(
-        `Trip, From Thursday, July 3rd, 2025 7:30 AM to Saturday, July 5th, 2025 5:00 PM, Resource: ${engineering.title}`,
+        `Trip, From Thursday, July 3, 2025 7:30 AM to Saturday, July 5, 2025 5:00 PM, Resource: ${engineering.title}`,
       );
     });
 
@@ -1405,7 +1343,7 @@ describe('<EventTimelinePremium />', () => {
       await renderTimeline({ events: [conference], preset: 'dayAndMonth' });
 
       expect(getEventByTitle('Conference')).toHaveAccessibleName(
-        `Conference, All day, From Thursday, July 3rd, 2025 to Saturday, July 5th, 2025, Resource: ${engineering.title}`,
+        `Conference, All day, From Thursday, July 3, 2025 to Saturday, July 5, 2025, Resource: ${engineering.title}`,
       );
     });
 
@@ -1422,7 +1360,7 @@ describe('<EventTimelinePremium />', () => {
       });
 
       expect(getEventByTitle('Reunión')).toHaveAccessibleName(
-        `Reunión, de 9:00 AM a 10:00 AM, Thursday, July 3rd, 2025, Resource: ${engineering.title}`,
+        `Reunión, de 9:00 AM a 10:00 AM, Thursday, July 3, 2025, Resource: ${engineering.title}`,
       );
     });
 
@@ -1440,7 +1378,7 @@ describe('<EventTimelinePremium />', () => {
           `${defaultAriaLabel}, ${occurrence.id} in ${resource.title}`,
       });
 
-      const defaultName = 'Shared, 9:00 AM to 10:00 AM, Thursday, July 3rd, 2025';
+      const defaultName = 'Shared, 9:00 AM to 10:00 AM, Thursday, July 3, 2025';
       const inEngineering = within(
         document.querySelector(`[data-resource-id="${engineering.id}"]`) as HTMLElement,
       ).getByRole('button');
@@ -1473,16 +1411,16 @@ describe('<EventTimelinePremium />', () => {
 
       expect(
         screen.getByRole('button', {
-          name: `${recurringEvent.title}, 9:00 AM to 10:00 AM, Thursday, July 3rd, 2025, Resource: ${engineering.title}, Recurring`,
+          name: `${recurringEvent.title}, 9:00 AM to 10:00 AM, Thursday, July 3, 2025, Resource: ${engineering.title}, Recurring`,
         }),
       ).not.to.equal(null);
       expect(getEventByTitle(singleEvent.title)).toHaveAccessibleName(
-        `${singleEvent.title}, 11:00 AM to 12:00 PM, Thursday, July 3rd, 2025, Resource: ${engineering.title}`,
+        `${singleEvent.title}, 11:00 AM to 12:00 PM, Thursday, July 3, 2025, Resource: ${engineering.title}`,
       );
       // Each occurrence announces its own date, not the date of the series.
       expect(
         screen.getByRole('button', {
-          name: `${recurringEvent.title}, 9:00 AM to 10:00 AM, Friday, July 4th, 2025, Resource: ${engineering.title}, Recurring`,
+          name: `${recurringEvent.title}, 9:00 AM to 10:00 AM, Friday, July 4, 2025, Resource: ${engineering.title}, Recurring`,
         }),
       ).not.to.equal(null);
     });

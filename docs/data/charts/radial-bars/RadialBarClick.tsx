@@ -4,13 +4,11 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
-import {
-  RadialBarChart,
-  RadialBarSeries,
-} from '@mui/x-charts-premium/RadialBarChart';
+import type { RadialBarSeries } from '@mui/x-charts-premium/RadialBarChart';
+import { RadialBarChart } from '@mui/x-charts-premium/RadialBarChart';
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
-import { ChartsAxisData } from '@mui/x-charts/models';
-import { RadialBarItemIdentifier } from '@mui/x-charts-premium/models';
+import type { ChartsAxisData } from '@mui/x-charts/models';
+import type { RadialBarItemIdentifier } from '@mui/x-charts-premium/models';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 

@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';

@@ -78,6 +78,7 @@
     "itemHeight": {
       "description": "Sets the height in pixel of an item. Set to <code>null</code> to explicitly remove any item height restriction when items have different heights."
     },
+    "items": { "description": "The items to render in the Tree View." },
     "loading": {
       "description": "If <code>true</code>, a loading UI is displayed instead of the tree items."
     },

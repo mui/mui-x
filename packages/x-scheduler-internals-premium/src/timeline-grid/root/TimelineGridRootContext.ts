@@ -16,6 +16,10 @@ export interface TimelineGridRootContext {
    */
   setFocusedCell: (coordinates: TimelineGridCellCoordinates) => void;
   /**
+   * Same as `setFocusedCell`, but scrolls the row into view first.
+   */
+  moveFocusToRow: (coordinates: TimelineGridCellCoordinates) => void;
+  /**
    * Clears the focused cell only if it still matches the given coordinates.
    */
   clearFocusedCellIfMatches: (columnType: TimelineGridColumnType, rowIndex: number) => void;

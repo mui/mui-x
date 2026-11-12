@@ -2,7 +2,6 @@
 import * as React from 'react';
 import Alert from '@mui/material/Alert';
 import { ChatBox } from '@mui/x-chat';
-
 import {
   minimalConversation,
   minimalMessages,

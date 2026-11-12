@@ -1,9 +1,8 @@
 import * as React from 'react';
+import type { GridDataSource, GridGetRowsParams } from '@mui/x-data-grid-pro';
 import {
   DataGridPro,
   useGridApiRef,
-  GridDataSource,
-  GridGetRowsParams,
   GRID_ROOT_GROUP_ID,
   GridGetRowsError,
 } from '@mui/x-data-grid-pro';
@@ -12,7 +11,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
-import Snackbar, { SnackbarProps } from '@mui/material/Snackbar';
+import type { SnackbarProps } from '@mui/material/Snackbar';
+import Snackbar from '@mui/material/Snackbar';
 
 function ErrorSnackbar(props: SnackbarProps & { onRetry: () => void }) {
   const { onRetry, ...other } = props;

@@ -56,6 +56,51 @@ describe('<DataGrid />', () => {
     expect(document.querySelector('[aria-label="Grid one"]')).to.equal(mainElement);
   });
 
+  it('should log an error when unsupported aria attributes are passed as props', () => {
+    expect(() => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid
+            {...baselineProps}
+            columns={[{ field: 'brand' }]}
+            aria-describedby="grid-description"
+          />
+        </div>,
+      );
+    }).toErrorDev('MUI X Data Grid: The `aria-describedby` prop(s) are not forwarded to the DOM.');
+    expect(document.querySelector('[aria-describedby="grid-description"]')).to.equal(null);
+  });
+
+  it('should not log an error for `data-*` props', () => {
+    expect(() => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid
+            {...baselineProps}
+            columns={[{ field: 'brand' }]}
+            data-testid="grid"
+            data-sentry-element="DataGrid"
+          />
+        </div>,
+      );
+    }).not.toErrorDev();
+  });
+
+  it('should not log an error for the supported `aria-label` and `aria-labelledby` props', () => {
+    expect(() => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid
+            {...baselineProps}
+            columns={[{ field: 'brand' }]}
+            aria-label="Brands"
+            aria-labelledby="brands-title"
+          />
+        </div>,
+      );
+    }).not.toErrorDev();
+  });
+
   it('should not fail when row have IDs match Object prototype keys (constructor, hasOwnProperty, etc)', () => {
     const rows = [
       { id: 'a', col1: 'Hello', col2: 'World' },
@@ -95,7 +140,7 @@ describe('<DataGrid />', () => {
                 keyof typeof DATA_GRID_PROPS_DEFAULT_VALUES
               >
             ).reduce((acc, key) => {
-              // @ts-ignore
+              // @ts-expect-error Populate an initially empty object with undefined values for every defaulted prop.
               acc[key] = undefined;
               return acc;
             }, {})}

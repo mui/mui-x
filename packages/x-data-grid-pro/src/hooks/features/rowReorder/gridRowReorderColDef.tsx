@@ -15,7 +15,8 @@ export const GRID_REORDER_COL_DEF: GridColDef = {
   disableExport: true,
   disableReorder: true,
   resizable: false,
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Premium augmentation adds aggregable only when the Premium package is included.
+  // @ts-ignore Premium augmentation adds aggregable only when the Premium package is included.
   aggregable: false,
   chartable: false,
   renderHeader: () => ' ',

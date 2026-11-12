@@ -24,7 +24,8 @@ import '@fontsource/roboto/700.css';
 import { fakeTimers, flushTimers } from './fakeClock';
 import TestViewer from './TestViewer';
 import OverviewWrapper from './overviews/OverviewWrapper';
-import { type Test, testsBySuite } from './testsBySuite';
+import { testsBySuite } from './testsBySuite';
+import type { Test } from './testsBySuite';
 
 LicenseInfo.setLicenseKey(TEST_LICENSE_KEY_PREMIUM);
 

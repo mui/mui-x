@@ -1,6 +1,6 @@
 import { useTheme } from '@mui/material/styles';
 import { LinePlot } from '@mui/x-charts/LineChart';
-import { XAxis } from '@mui/x-charts/models';
+import type { XAxis } from '@mui/x-charts/models';
 import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';

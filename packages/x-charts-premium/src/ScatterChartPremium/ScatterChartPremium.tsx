@@ -73,7 +73,15 @@ export interface ScatterChartPremiumProps
    * @default 'svg-single'
    */
   renderer?: 'svg-single' | 'svg-batch' | 'webgl';
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: ScatterChartPremiumSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ScatterChartPremiumSlotProps;
 }
 
@@ -173,6 +181,9 @@ ScatterChartPremium.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The ref object that exposes the chart API methods.
+   */
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
       exportAsImage: PropTypes.func.isRequired,
@@ -203,6 +214,9 @@ ScatterChartPremium.propTypes /* remove-proptypes */ = {
     preventHighlight: PropTypes.bool,
     preventTooltip: PropTypes.bool,
   }),
+  /**
+   * The content of the component.
+   */
   children: PropTypes.node,
   className: PropTypes.string,
   /**
@@ -499,13 +513,28 @@ ScatterChartPremium.propTypes /* remove-proptypes */ = {
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
    */
   skipAnimation: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The color mode passed to `colors` when it is a function.
+   * Defaults to the mode of the Material UI theme.
+   */
   theme: PropTypes.oneOf(['dark', 'light']),
   /**
    * The title of the chart.

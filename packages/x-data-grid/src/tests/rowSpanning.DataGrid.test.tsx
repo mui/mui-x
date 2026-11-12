@@ -263,7 +263,6 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Row spanning', () => {
     it('should update the row spanning state when the rows are updated', () => {
       const rowSpanValueGetter = vi.fn((value) => value);
       let rowSpanningStateUpdates = 0;
-      let spannedCells = {};
       render(
         <TestDataGrid
           columns={[{ field: 'code', rowSpanValueGetter }]}
@@ -273,6 +272,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Row spanning', () => {
 
       const api = unwrapPrivateAPI(publicApiRef.current!);
       const store = api.virtualizer.store;
+      let spannedCells = store.state.rowSpanning.caches.spannedCells;
       const dispose = store.subscribe((newState) => {
         const newSpannedCells = newState.rowSpanning.caches.spannedCells;
         if (newSpannedCells !== spannedCells) {

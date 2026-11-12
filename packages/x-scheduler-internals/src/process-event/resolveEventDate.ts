@@ -1,27 +1,29 @@
-import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { Adapter } from '../use-adapter';
-import type { SchedulerEventId } from '../models';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type { TemporalSupportedObject, SchedulerEventId } from '../models';
+import {
+  createDateFromString,
+  createDateFromWallTime,
+  isInstantString,
+} from '../internals/utils/plain-date-utils/date';
 
 /**
- * Resolves an event date string to a `TemporalSupportedObject`.
+ * Resolves an event date string to a `TemporalSupportedObject`, the `Date` of its instant.
  *
- * - Strings ending with `"Z"` are treated as instants (UTC).
- * - Strings without `"Z"` are treated as wall-time and interpreted in `dataTimezone`.
- *
- * The result carries the `dataTimezone` label, so day and weekday math runs in the
- * event's timezone for both formats.
+ * - Strings ending with `"Z"` or an offset are treated as instants.
+ * - Other strings are treated as wall-time and interpreted in `dataTimezone`.
+ *   A wall-clock time skipped by a DST transition moves forward by the length of the gap, and a
+ *   repeated one refers to its first instant, whatever the timezone of the system (RFC 5545).
  */
 export function resolveEventDate(
   value: string,
   dataTimezone: TemporalTimezone,
-  adapter: Adapter,
   eventId?: SchedulerEventId,
 ): TemporalSupportedObject {
-  const date = value.endsWith('Z')
-    ? adapter.setTimezone(adapter.date(value, 'default'), dataTimezone)
-    : adapter.date(value, dataTimezone);
+  const date = isInstantString(value)
+    ? new Date(value)
+    : (createDateFromWallTime(value, dataTimezone) ?? createDateFromString(value, dataTimezone));
 
-  if (!adapter.isValid(date)) {
+  if (Number.isNaN(date.getTime())) {
     const eventRef = eventId === undefined ? '' : ` of event "${eventId}"`;
     throw new Error(
       `MUI X Scheduler: The date "${value}"${eventRef} is not a valid date.\n` +

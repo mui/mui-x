@@ -14,12 +14,6 @@ function getKeyDefault(params) {
 }
 
 class Cache {
-  cache;
-
-  cacheKeys;
-
-  getKey;
-
   constructor() {
     this.cache = {};
     this.cacheKeys = new Set();

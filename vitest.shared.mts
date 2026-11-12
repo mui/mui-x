@@ -81,22 +81,14 @@ export default defineConfig({
     },
     browser: {
       provider: playwright({
-        ...(process.env.PLAYWRIGHT_SERVER_WS
-          ? {
-              connectOptions: {
-                wsEndpoint: process.env.PLAYWRIGHT_SERVER_WS,
-              },
-            }
-          : {
-              launchOptions: {
-                args: [
-                  // Enable GPU so WebGL2 is enabled in browser tests
-                  '--enable-gpu',
-                ],
-                // Required for tests which use scrollbars.
-                ignoreDefaultArgs: ['--hide-scrollbars'],
-              },
-            }),
+        launchOptions: {
+          args: [
+            // Enable GPU so WebGL2 is enabled in browser tests
+            '--enable-gpu',
+          ],
+          // Required for tests which use scrollbars.
+          ignoreDefaultArgs: ['--hide-scrollbars'],
+        },
       }),
       viewport: { width: 1280, height: 800 },
       headless: true,
@@ -133,7 +125,8 @@ export default defineConfig({
       testTimeout: 60000,
       // Retry failed tests up to 3 times. This is useful for flaky tests.
       retry: 3,
-      maxWorkers: 2,
+      // Total across all projects. 4 saturates the CPU of the `large.gen2` browser job; 8 runs out of memory.
+      maxWorkers: 4,
     }),
     exclude: ['**/*.spec.{js,ts,tsx}', '**/node_modules/**', '**/dist/**'],
   },

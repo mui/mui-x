@@ -1,19 +1,19 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
-import {
+import type { TextFieldProps } from '@mui/material/TextField';
+import TextField from '@mui/material/TextField';
+import type {
   GridFilterInputValueProps,
-  DataGrid,
   GridFilterModel,
   GridFilterOperator,
-  useGridRootProps,
 } from '@mui/x-data-grid';
+import { DataGrid, useGridRootProps } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import SyncIcon from '@mui/icons-material/Sync';
 
 function InputNumberInterval(props: GridFilterInputValueProps) {
   const rootProps = useGridRootProps();
-  const { item, applyValue, focusElementRef = null } = props;
+  const { item, applyValue } = props;
 
   const filterTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
   const [filterValueState, setFilterValueState] = React.useState<[string, string]>(
@@ -70,7 +70,6 @@ function InputNumberInterval(props: GridFilterInputValueProps) {
         value={Number(filterValueState[0])}
         onChange={handleLowerFilterChange}
         type="number"
-        inputRef={focusElementRef}
         sx={{ mr: 2 }}
       />
       <TextField

@@ -1,6 +1,20 @@
 {
   "componentDescription": "The chart toolbar component for the pro package.",
   "propDescriptions": {
+    "exportMenuItems": {
+      "description": "Extra items rendered at the end of the export menu.",
+      "typeDescriptions": {
+        "params": { "name": "params", "description": "The render params." },
+        "params.onClose": { "name": "params.onClose", "description": "Closes the export menu." },
+        "React.ReactNode": { "name": "React.ReactNode", "description": "The menu items." }
+      }
+    },
+    "imageExportOptions": {
+      "description": "The image export options. Each option adds an entry to the export menu."
+    },
+    "printOptions": {
+      "description": "The options of the print export. Set <code>disableToolbarButton</code> to remove the print entry from the export menu."
+    },
     "rangeButtons": {
       "description": "Configuration for range buttons shown in the toolbar. Each button zooms the chart to a predefined time range from the end of the data."
     },

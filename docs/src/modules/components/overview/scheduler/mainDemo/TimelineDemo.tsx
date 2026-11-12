@@ -1,18 +1,16 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import type { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { useEventTimelinePremiumApiRef } from '@mui/x-scheduler-premium/use-event-timeline-premium-api-ref';
-import { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
-import { SchedulerEvent } from '@mui/x-scheduler/models';
+import type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
+import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { timelineEvents, timelineResources, timelineDefaultVisibleDate } from './data';
-import {
-  CustomThemeName,
-  DemoThemeSelector,
-  SchedulerDemoThemeProvider,
-} from './DemoThemeSelector';
+import type { CustomThemeName } from './DemoThemeSelector';
+import { DemoThemeSelector, SchedulerDemoThemeProvider } from './DemoThemeSelector';
 import LicenseCard from '../LicenseCard';
 
 const presetOptions: { value: EventTimelinePremiumPreset; label: string }[] = [

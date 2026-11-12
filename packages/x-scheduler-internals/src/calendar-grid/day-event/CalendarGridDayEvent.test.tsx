@@ -5,12 +5,13 @@ import { adapter, createSchedulerRenderer, describeConformance } from 'test/util
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import { describe, it, expect } from 'vitest';
+import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
 
 describe('<CalendarGrid.DayEvent />', () => {
   const { render } = createSchedulerRenderer();
 
-  const eventStart = processDate(adapter.now('default'), adapter);
-  const eventEnd = processDate(adapter.addHours(eventStart.value, 1), adapter);
+  const eventStart = processDate(adapter.now('default'), 'default');
+  const eventEnd = processDate(adapter.addHours(eventStart.value, 1), 'default');
 
   type ProviderProps = React.ComponentProps<typeof EventCalendarProvider>;
 
@@ -28,11 +29,16 @@ describe('<CalendarGrid.DayEvent />', () => {
       rowStart = eventStart.value,
       rowEnd = eventEnd.value,
     } = options;
+    const cellDate = toPlainDate(rowStart.getTime(), 'default');
     return render(
       <EventCalendarProvider events={events} resources={resources}>
         <CalendarGrid.Root>
-          <CalendarGrid.DayRow start={rowStart} end={rowEnd}>
-            <CalendarGrid.DayCell value={rowStart}>{node}</CalendarGrid.DayCell>
+          <CalendarGrid.DayRow
+            start={adapter.getTime(rowStart)}
+            end={adapter.getTime(rowEnd)}
+            days={[{ plainDate: cellDate }]}
+          >
+            <CalendarGrid.DayCell value={cellDate}>{node}</CalendarGrid.DayCell>
           </CalendarGrid.DayRow>
         </CalendarGrid.Root>
       </EventCalendarProvider>,
@@ -67,8 +73,8 @@ describe('<CalendarGrid.DayEvent />', () => {
           eventId="fake-id"
           occurrenceKey="fake-key"
           dataTimezone={undefined}
-          start={processDate(adapter.date(start, 'default'), adapter)}
-          end={processDate(adapter.date(end, 'default'), adapter)}
+          start={processDate(adapter.date(start, 'default'), 'default')}
+          end={processDate(adapter.date(end, 'default'), 'default')}
           renderDragPreview={() => null}
           data-testid="event"
         />,

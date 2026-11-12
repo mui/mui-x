@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { DataGrid, GridColumnVisibilityModel } from '@mui/x-data-grid';
+import type { GridColumnVisibilityModel } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 
 export default function VisibleColumnsModelControlled() {
   const { data, loading } = useDemoData({

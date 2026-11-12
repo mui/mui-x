@@ -6,10 +6,10 @@ const formatNumber = buildLocaleFormat('id-ID');
 
 export const idIDGrid: Partial<GridLocaleText> = {
   // Root
-  noRowsLabel: 'Tidak ad abaris',
+  noRowsLabel: 'Tidak ada baris',
   noResultsOverlayLabel: 'Tidak ada hasil yang ditemukan.',
   noColumnsOverlayLabel: 'Tidak ada kolom',
-  noColumnsOverlayManageColumns: 'Kelola columns',
+  noColumnsOverlayManageColumns: 'Kelola kolom',
   emptyPivotOverlayLabel: 'Tambahkan bidang ke baris, kolom, dan nilai untuk membuat tabel pivot',
 
   // Density selector toolbar button text
@@ -50,15 +50,86 @@ export const idIDGrid: Partial<GridLocaleText> = {
   toolbarPivot: 'Pivot',
 
   // Toolbar charts button
-  // toolbarCharts: 'Charts',
+  toolbarCharts: 'Grafik',
 
   // Toolbar AI Assistant button
   toolbarAssistant: 'Asisten AI',
 
   // Formula bar (Premium formulas)
-  // formulaBarLabel: 'Formula bar',
-  // formulaBarInputLabel: 'Formula',
-  // formulaBarAddressLabel: 'Active cell',
+  formulaBarLabel: 'Bilah rumus',
+  formulaBarInputLabel: 'Rumus',
+  formulaBarAddressLabel: 'Sel aktif',
+
+  // Computed columns (Premium)
+  columnMenuAddComputedColumn: 'Tambahkan kolom terhitung',
+  columnMenuEditComputedColumn: 'Edit kolom terhitung',
+  columnMenuViewComputedColumn: 'Lihat kolom terhitung',
+  columnMenuRemoveComputedColumn: 'Hapus kolom terhitung',
+  toolbarComputedColumns: 'Kolom terhitung',
+  computedColumnsPanelTitle: 'Kolom terhitung',
+  computedColumnsPanelCloseButton: 'Tutup panel kolom terhitung',
+  computedColumnsPanelBackButton: 'Kembali ke daftar',
+  computedColumnsPanelEmpty: 'Belum ada kolom terhitung',
+  computedColumnsPanelAddButton: 'Tambahkan kolom terhitung',
+  computedColumnsPanelItemMenuLabel: 'Tindakan kolom terhitung',
+  computedColumnsPanelItemReadOnlyLabel: 'Hanya baca',
+  computedColumnEditorNewTitle: 'Kolom terhitung baru',
+  computedColumnEditorEditTitle: 'Edit kolom terhitung',
+  computedColumnEditorViewTitle: 'Lihat kolom terhitung',
+  computedColumnReadOnlyHint: 'Kolom terhitung ini tidak dapat diedit.',
+  computedColumnNameLabel: 'Nama',
+  computedColumnFieldLabel: 'Bidang',
+  computedColumnFormulaLabel: 'Rumus',
+  computedColumnTypeLabel: 'Tipe hasil',
+  computedColumnTypeNumber: 'Angka',
+  computedColumnTypeString: 'Teks',
+  computedColumnTypeBoolean: 'Boolean',
+  computedColumnTypeDate: 'Tanggal',
+  computedColumnTypeDateTime: 'Tanggal dan waktu',
+  computedColumnFormatLabel: 'Format',
+  computedColumnFormatStyleDecimal: 'Angka',
+  computedColumnFormatStylePercent: 'Persen',
+  computedColumnFormatStyleCurrency: 'Mata uang',
+  computedColumnFormatCurrencyLabel: 'Kode mata uang',
+  computedColumnFormatDecimalsLabel: 'Desimal',
+  computedColumnFormatGroupingLabel: 'Pemisah ribuan',
+  computedColumnPreviewLabel: 'Pratinjau',
+  computedColumnPreviewRow: (rowIndex) => `Baris ${rowIndex}`,
+  computedColumnPreviewNoRows: 'Tidak ada baris untuk dipratinjau',
+  computedColumnReferenceTitle: 'Sisipkan',
+  computedColumnReferenceColumns: 'Kolom',
+  computedColumnReferenceFunctions: 'Fungsi',
+  computedColumnReferenceSearchPlaceholder: 'Cari',
+  computedColumnReferenceNoResults: 'Tidak ada yang cocok',
+  computedColumnApplyButton: 'Terapkan',
+  computedColumnAddButton: 'Tambahkan kolom',
+  computedColumnCancelButton: 'Batal',
+  computedColumnCloseButton: 'Tutup',
+  computedColumnDeleteButton: 'Hapus kolom',
+  computedColumnHeaderLabel: 'Kolom terhitung',
+  computedColumnHeaderInvalidLabel: 'Kolom terhitung dengan rumus yang tidak valid',
+  computedColumnErrorNameRequired: 'Masukkan nama.',
+  computedColumnErrorFieldRequired: 'Masukkan nama bidang.',
+  computedColumnErrorFieldInvalid:
+    'Gunakan huruf, angka, dan garis bawah, diawali dengan huruf atau garis bawah.',
+  computedColumnErrorFieldExists: (field) => `Kolom dengan bidang "${field}" sudah ada.`,
+  computedColumnErrorFieldA1Like:
+    'Nama bidang ini terbaca sebagai alamat sel. Pilih nama yang lebih panjang.',
+  computedColumnErrorFormulaRequired: 'Masukkan rumus.',
+  computedColumnErrorParse: (message) => `Kesalahan rumus: ${message}`,
+  computedColumnErrorUnknownFunction: (name) => `Fungsi ${name} tidak dikenal.`,
+  computedColumnErrorUnsupportedReference:
+    'Kolom terhitung hanya dapat merujuk kolom pada baris yang sama. Gunakan nama bidang saja.',
+  computedColumnErrorUnknownField: (field) => `Kolom "${field}" tidak ada.`,
+  computedColumnErrorSelfReference: 'Kolom terhitung tidak dapat merujuk dirinya sendiri.',
+  computedColumnErrorCycle: (path) => `Referensi melingkar: ${path}.`,
+  computedCellErrorDivByZero:
+    'Pembagian dengan nol di baris ini. Bungkus pembagian dengan IFERROR(…, 0) untuk memberikan nilai cadangan.',
+  computedCellErrorValue: 'Ada nilai di baris ini yang tipenya tidak sesuai untuk operasi ini.',
+  computedCellErrorRef: 'Kolom yang dirujuk tidak ada.',
+  computedCellErrorName: 'Rumus menggunakan fungsi yang tidak dikenal.',
+  computedCellErrorCycle: 'Rumus bergantung pada dirinya sendiri.',
+  computedCellErrorGeneric: 'Rumus tidak dapat dievaluasi untuk baris ini.',
 
   // Columns management text
   columnsManagementSearchTitle: 'Cari',
@@ -142,12 +213,21 @@ export const idIDGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Urutkan menaik',
   columnMenuSortDesc: 'Urutkan menurun',
   columnMenuManagePivot: 'Kelola pivot',
-  // columnMenuManageCharts: 'Manage charts',
+  columnMenuManageCharts: 'Kelola grafik',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} filter aktif`,
   columnHeaderFiltersLabel: 'Tampilkan filter',
   columnHeaderSortIconLabel: 'Urutkan',
+  columnHeaderSortIconAriaLabel: (columnName, direction) => {
+    if (direction === 'asc') {
+      return `Urutkan ${columnName} secara menaik`;
+    }
+    if (direction === 'desc') {
+      return `Urutkan ${columnName} secara menurun`;
+    }
+    return `Hapus pengurutan dari ${columnName}`;
+  },
 
   // Rows selected footer text
   footerRowSelected: (count) => `${count.toLocaleString()} baris dipilih`,
@@ -169,6 +249,9 @@ export const idIDGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ya',
   booleanCellFalseLabel: 'tidak',
+
+  // Cell editor text
+  emptyCellLabel: 'Kosong',
 
   // Long text cell
   longTextCellExpandLabel: 'Perluas',
@@ -228,7 +311,7 @@ export const idIDGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Agregasi',
-  // aggregationFunctionLabelNone: 'none',
+  aggregationFunctionLabelNone: 'tidak ada',
   aggregationFunctionLabelSum: 'jumlah',
   aggregationFunctionLabelAvg: 'rata-rata',
   aggregationFunctionLabelMin: 'min',
@@ -265,30 +348,32 @@ export const idIDGrid: Partial<GridLocaleText> = {
   pivotQuarterColumnHeaderName: '(Kuartal)',
 
   // Charts configuration panel
-  // chartsNoCharts: 'There are no charts available',
-  // chartsChartNotSelected: 'Select a chart type to configure its options',
-  // chartsTabChart: 'Chart',
-  // chartsTabFields: 'Fields',
-  // chartsTabCustomize: 'Customize',
-  // chartsCloseButton: 'Close charts configuration',
-  // chartsSyncButtonLabel: 'Sync chart',
-  // chartsSearchPlaceholder: 'Search fields',
-  // chartsSearchLabel: 'Search fields',
-  // chartsSearchClear: 'Clear search',
-  // chartsNoFields: 'No fields',
-  // chartsFieldBlocked: 'This field cannot be added to any section',
-  // chartsCategories: 'Categories',
-  // chartsSeries: 'Series',
-  // chartsMenuAddToDimensions: (dimensionLabel: string) => `Add to ${dimensionLabel}`,
-  // chartsMenuAddToValues: (valuesLabel: string) => `Add to ${valuesLabel}`,
-  // chartsMenuMoveUp: 'Move up',
-  // chartsMenuMoveDown: 'Move down',
-  // chartsMenuMoveToTop: 'Move to top',
-  // chartsMenuMoveToBottom: 'Move to bottom',
-  // chartsMenuOptions: 'Field options',
-  // chartsMenuRemove: 'Remove',
-  // chartsDragToDimensions: (dimensionLabel: string) => `Drag here to use column as ${dimensionLabel}`,
-  // chartsDragToValues: (valuesLabel: string) => `Drag here to use column as ${valuesLabel}`,
+  chartsNoCharts: 'Tidak ada grafik yang tersedia',
+  chartsChartNotSelected: 'Pilih jenis grafik untuk mengatur opsinya',
+  chartsTabChart: 'Grafik',
+  chartsTabFields: 'Bidang',
+  chartsTabCustomize: 'Sesuaikan',
+  chartsCloseButton: 'Tutup konfigurasi grafik',
+  chartsSyncButtonLabel: 'Sinkronkan grafik',
+  chartsSearchPlaceholder: 'Cari bidang',
+  chartsSearchLabel: 'Cari bidang',
+  chartsSearchClear: 'Hapus pencarian',
+  chartsNoFields: 'Tidak ada bidang',
+  chartsFieldBlocked: 'Bidang ini tidak dapat ditambahkan ke bagian mana pun',
+  chartsCategories: 'Kategori',
+  chartsSeries: 'Seri',
+  chartsMenuAddToDimensions: (dimensionLabel: string) => `Tambahkan ke ${dimensionLabel}`,
+  chartsMenuAddToValues: (valuesLabel: string) => `Tambahkan ke ${valuesLabel}`,
+  chartsMenuMoveUp: 'Pindah ke atas',
+  chartsMenuMoveDown: 'Pindah ke bawah',
+  chartsMenuMoveToTop: 'Pindah ke paling atas',
+  chartsMenuMoveToBottom: 'Pindah ke paling bawah',
+  chartsMenuOptions: 'Opsi bidang',
+  chartsMenuRemove: 'Hapus',
+  chartsDragToDimensions: (dimensionLabel: string) =>
+    `Seret ke sini untuk menggunakan kolom sebagai ${dimensionLabel}`,
+  chartsDragToValues: (valuesLabel: string) =>
+    `Seret ke sini untuk menggunakan kolom sebagai ${valuesLabel}`,
 
   // AI Assistant panel
   aiAssistantPanelTitle: 'Asisten AI',
@@ -319,14 +404,24 @@ export const idIDGrid: Partial<GridLocaleText> = {
     `${column} (${aggregation})`,
   promptChangeAggregationDescription: (column: string, aggregation: string) =>
     `Agregasikan ${column} (${aggregation})`,
-  promptChangeFilterLabel: (column: string, operator: string, value: string) => {
-    if (operator === 'is any of') {
+  promptChangeFilterLabel: (
+    column: string,
+    operator: string,
+    value: string,
+    operatorValue?: string,
+  ) => {
+    if (operatorValue === 'isAnyOf') {
       return `${column} salah satu dari: ${value}`;
     }
     return `${column} ${operator} ${value}`;
   },
-  promptChangeFilterDescription: (column: string, operator: string, value: string) => {
-    if (operator === 'is any of') {
+  promptChangeFilterDescription: (
+    column: string,
+    operator: string,
+    value: string,
+    operatorValue?: string,
+  ) => {
+    if (operatorValue === 'isAnyOf') {
       return `Filter di mana ${column} salah satu dari: ${value}`;
     }
     return `Filter di mana ${column} ${operator} ${value}`;
@@ -342,7 +437,8 @@ export const idIDGrid: Partial<GridLocaleText> = {
   promptChangePivotValuesLabel: (count: number) => `Nilai (${count})`,
   promptChangePivotValuesDescription: (column: string, aggregation: string) =>
     `${column} (${aggregation})`,
-  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
+  promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) =>
+    `Dimensi (${dimensionsCount}), Nilai (${valuesCount})`,
 };
 
 export const idID: Localization = getGridLocalization(idIDGrid);

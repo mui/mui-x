@@ -43,17 +43,35 @@ export type {
 
 // ─── ChatConversation ─────────────────────────────────────────────────────────
 export { ChatConversation } from './ChatConversation/ChatConversation';
-export type { ChatConversationProps } from './ChatConversation/ChatConversation';
+export type {
+  ChatConversationProps,
+  ChatConversationSlots,
+} from './ChatConversation/ChatConversation';
 export { ChatConversationHeader } from './ChatConversation/ChatConversationHeader';
-export type { ChatConversationHeaderProps } from './ChatConversation/ChatConversationHeader';
+export type {
+  ChatConversationHeaderProps,
+  ChatConversationHeaderSlots,
+} from './ChatConversation/ChatConversationHeader';
 export { ChatConversationTitle } from './ChatConversation/ChatConversationTitle';
-export type { ChatConversationTitleProps } from './ChatConversation/ChatConversationTitle';
+export type {
+  ChatConversationTitleProps,
+  ChatConversationTitleSlots,
+} from './ChatConversation/ChatConversationTitle';
 export { ChatConversationSubtitle } from './ChatConversation/ChatConversationSubtitle';
-export type { ChatConversationSubtitleProps } from './ChatConversation/ChatConversationSubtitle';
+export type {
+  ChatConversationSubtitleProps,
+  ChatConversationSubtitleSlots,
+} from './ChatConversation/ChatConversationSubtitle';
 export { ChatConversationHeaderInfo } from './ChatConversation/ChatConversationHeaderInfo';
-export type { ChatConversationHeaderInfoProps } from './ChatConversation/ChatConversationHeaderInfo';
+export type {
+  ChatConversationHeaderInfoProps,
+  ChatConversationHeaderInfoSlots,
+} from './ChatConversation/ChatConversationHeaderInfo';
 export { ChatConversationHeaderActions } from './ChatConversation/ChatConversationHeaderActions';
-export type { ChatConversationHeaderActionsProps } from './ChatConversation/ChatConversationHeaderActions';
+export type {
+  ChatConversationHeaderActionsProps,
+  ChatConversationHeaderActionsSlots,
+} from './ChatConversation/ChatConversationHeaderActions';
 export {
   chatConversationClasses,
   getChatConversationUtilityClass,
@@ -67,18 +85,40 @@ export type {
 export { ChatComposer } from './ChatComposer/ChatComposer';
 export type { ChatComposerProps, ChatComposerFeatures } from './ChatComposer/ChatComposer';
 export { ChatComposerTextArea } from './ChatComposer/ChatComposerTextArea';
-export type { ChatComposerTextAreaProps } from './ChatComposer/ChatComposerTextArea';
+export type {
+  ChatComposerTextAreaProps,
+  ChatComposerTextAreaSlots,
+} from './ChatComposer/ChatComposerTextArea';
 export { ChatComposerSendButton } from './ChatComposer/ChatComposerSendButton';
-export type { ChatComposerSendButtonProps } from './ChatComposer/ChatComposerSendButton';
+export type {
+  ChatComposerSendButtonProps,
+  ChatComposerSendButtonSlots,
+} from './ChatComposer/ChatComposerSendButton';
 export { ChatComposerAttachButton } from './ChatComposer/ChatComposerAttachButton';
-export type { ChatComposerAttachButtonProps } from './ChatComposer/ChatComposerAttachButton';
+export type {
+  ChatComposerAttachButtonProps,
+  ChatComposerAttachButtonSlots,
+} from './ChatComposer/ChatComposerAttachButton';
 export { ChatComposerAttachmentList } from './ChatComposer/ChatComposerAttachmentList';
-export type { ChatComposerAttachmentListProps } from './ChatComposer/ChatComposerAttachmentList';
+export type {
+  ChatComposerAttachmentListProps,
+  ChatComposerAttachmentListSlots,
+} from './ChatComposer/ChatComposerAttachmentList';
 export { ChatComposerToolbar } from './ChatComposer/ChatComposerToolbar';
-export type { ChatComposerToolbarProps } from './ChatComposer/ChatComposerToolbar';
+export type {
+  ChatComposerToolbarProps,
+  ChatComposerToolbarSlots,
+} from './ChatComposer/ChatComposerToolbar';
 export { ChatComposerHelperText } from './ChatComposer/ChatComposerHelperText';
-export type { ChatComposerHelperTextProps } from './ChatComposer/ChatComposerHelperText';
+export type {
+  ChatComposerHelperTextProps,
+  ChatComposerHelperTextSlots,
+} from './ChatComposer/ChatComposerHelperText';
 export { ChatComposerLabel } from './ChatComposer/ChatComposerLabel';
+export type {
+  ChatComposerLabelProps,
+  ChatComposerLabelSlots,
+} from './ChatComposer/ChatComposerLabel';
 export {
   chatComposerClasses,
   getChatComposerUtilityClass,
@@ -87,7 +127,10 @@ export type { ChatComposerClasses, ChatComposerClassKey } from './ChatComposer/c
 
 // ─── ChatConversationList ─────────────────────────────────────────────────────
 export { ChatConversationList } from './ChatConversationList/ChatConversationList';
-export type { ChatConversationListProps } from './ChatConversationList/ChatConversationList';
+export type {
+  ChatConversationListProps,
+  ChatConversationListSlots,
+} from './ChatConversationList/ChatConversationList';
 export {
   chatConversationListClasses,
   getChatConversationListUtilityClass,
@@ -101,31 +144,47 @@ export type {
 export { ChatMessage } from './ChatMessage/ChatMessage';
 export type { ChatMessageProps, ChatMessageActionsResolveContext } from './ChatMessage/ChatMessage';
 export { ChatMessageAvatar } from './ChatMessage/ChatMessageAvatar';
-export type { ChatMessageAvatarProps } from './ChatMessage/ChatMessageAvatar';
+export type {
+  ChatMessageAvatarProps,
+  ChatMessageAvatarSlots,
+} from './ChatMessage/ChatMessageAvatar';
 export { ChatMessageAuthorLabel } from './ChatMessage/ChatMessageAuthorLabel';
-export type { ChatMessageAuthorLabelProps } from './ChatMessage/ChatMessageAuthorLabel';
+export type {
+  ChatMessageAuthorLabelProps,
+  ChatMessageAuthorLabelSlots,
+} from './ChatMessage/ChatMessageAuthorLabel';
 export { ChatMessageContent } from './ChatMessage/ChatMessageContent';
-export type { ChatMessageContentProps } from './ChatMessage/ChatMessageContent';
+export type {
+  ChatMessageContentProps,
+  ChatMessageContentSlots,
+} from './ChatMessage/ChatMessageContent';
 export { ChatMessageMeta } from './ChatMessage/ChatMessageMeta';
-export type { ChatMessageMetaProps } from './ChatMessage/ChatMessageMeta';
+export type { ChatMessageMetaProps, ChatMessageMetaSlots } from './ChatMessage/ChatMessageMeta';
 export { ChatMessageInlineMeta } from './ChatMessage/ChatMessageInlineMeta';
-export type { ChatMessageInlineMetaProps } from './ChatMessage/ChatMessageInlineMeta';
+export type {
+  ChatMessageInlineMetaProps,
+  ChatMessageInlineMetaSlots,
+} from './ChatMessage/ChatMessageInlineMeta';
 export { ChatMessageActions } from './ChatMessage/ChatMessageActions';
 export type {
   ChatMessageActionsProps,
+  ChatMessageActionsSlots,
   ChatMessageExtraAction,
   ChatMessageExtraActionContext,
 } from './ChatMessage/ChatMessageActions';
 export { ChatMessageGroup } from './ChatMessage/ChatMessageGroup';
-export type { ChatMessageGroupProps } from './ChatMessage/ChatMessageGroup';
+export type { ChatMessageGroupProps, ChatMessageGroupSlots } from './ChatMessage/ChatMessageGroup';
 export { ChatDateDivider } from './ChatMessage/ChatDateDivider';
-export type { ChatDateDividerProps } from './ChatMessage/ChatDateDivider';
+export type { ChatDateDividerProps, ChatDateDividerSlots } from './ChatMessage/ChatDateDivider';
 export { chatMessageClasses, getChatMessageUtilityClass } from './ChatMessage/chatMessageClasses';
 export type { ChatMessageClasses, ChatMessageClassKey } from './ChatMessage/chatMessageClasses';
 
 // ─── ChatMessageError ─────────────────────────────────────────────────────────
 export { ChatMessageError } from './ChatMessageError/ChatMessageError';
-export type { ChatMessageErrorProps } from './ChatMessageError/ChatMessageError';
+export type {
+  ChatMessageErrorProps,
+  ChatMessageErrorSlots,
+} from './ChatMessageError/ChatMessageError';
 export {
   chatMessageErrorClasses,
   getChatMessageErrorUtilityClass,
@@ -137,7 +196,7 @@ export type {
 
 // ─── ChatMessageList ──────────────────────────────────────────────────────────
 export { ChatMessageList } from './ChatMessageList/ChatMessageList';
-export type { ChatMessageListProps } from './ChatMessageList/ChatMessageList';
+export type { ChatMessageListProps, ChatMessageListSlots } from './ChatMessageList/ChatMessageList';
 export type { ChatMessageListFeatures } from './ChatMessageList/DefaultMessageItem';
 export {
   chatMessageListClasses,
@@ -150,7 +209,7 @@ export type {
 
 // ─── ChatSuggestions ─────────────────────────────────────────────────────────
 export { ChatSuggestions } from './ChatSuggestions/ChatSuggestions';
-export type { ChatSuggestionsProps } from './ChatSuggestions/ChatSuggestions';
+export type { ChatSuggestionsProps, ChatSuggestionsSlots } from './ChatSuggestions/ChatSuggestions';
 export {
   chatSuggestionsClasses,
   getChatSuggestionsUtilityClass,
@@ -208,7 +267,10 @@ export type {
 
 // ─── ChatIndicators ───────────────────────────────────────────────────────────
 export { ChatStreamingIndicator } from './ChatIndicators/ChatStreamingIndicator';
-export type { ChatStreamingIndicatorProps } from './ChatIndicators/ChatStreamingIndicator';
+export type {
+  ChatStreamingIndicatorProps,
+  ChatStreamingIndicatorSlots,
+} from './ChatIndicators/ChatStreamingIndicator';
 export {
   chatStreamingIndicatorClasses,
   getChatStreamingIndicatorUtilityClass,
@@ -218,11 +280,20 @@ export type {
   ChatStreamingIndicatorClassKey,
 } from './ChatIndicators/chatStreamingIndicatorClasses';
 export { ChatTypingIndicator } from './ChatIndicators/ChatTypingIndicator';
-export type { ChatTypingIndicatorProps } from './ChatIndicators/ChatTypingIndicator';
+export type {
+  ChatTypingIndicatorProps,
+  ChatTypingIndicatorSlots,
+} from './ChatIndicators/ChatTypingIndicator';
 export { ChatUnreadMarker } from './ChatIndicators/ChatUnreadMarker';
-export type { ChatUnreadMarkerProps } from './ChatIndicators/ChatUnreadMarker';
+export type {
+  ChatUnreadMarkerProps,
+  ChatUnreadMarkerSlots,
+} from './ChatIndicators/ChatUnreadMarker';
 export { ChatScrollToBottomAffordance } from './ChatIndicators/ChatScrollToBottomAffordance';
-export type { ChatScrollToBottomAffordanceProps } from './ChatIndicators/ChatScrollToBottomAffordance';
+export type {
+  ChatScrollToBottomAffordanceProps,
+  ChatScrollToBottomAffordanceSlots,
+} from './ChatIndicators/ChatScrollToBottomAffordance';
 export {
   chatTypingIndicatorClasses,
   getChatTypingIndicatorUtilityClass,

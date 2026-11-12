@@ -7,7 +7,6 @@ import Box from '@mui/material/Box';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
-
 import { useIsValidValue, usePickerContext } from '@mui/x-date-pickers/hooks';
 
 const shortcutsItems = [

@@ -2,12 +2,14 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {
-  DataGridPro,
+import type {
   GridColDef,
   GridRowsProp,
   GridRenderCellParams,
   GridRowParams,
+} from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
   useGridSelector,
   useGridApiContext,
   gridDetailPanelExpandedRowsContentCacheSelector,

@@ -116,6 +116,9 @@ ChartsDataProviderPremium.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The ref object that exposes the chart API methods.
+   */
   apiRef: PropTypes.shape({
     current: PropTypes.any,
   }),
@@ -181,6 +184,10 @@ ChartsDataProviderPremium.propTypes /* remove-proptypes */ = {
    * Slots to customize charts' components.
    */
   slots: PropTypes.object,
+  /**
+   * The color mode passed to `colors` when it is a function.
+   * Defaults to the mode of the Material UI theme.
+   */
   theme: PropTypes.oneOf(['dark', 'light']),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.

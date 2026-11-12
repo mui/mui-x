@@ -8,6 +8,7 @@ import {
   EventBuilder,
 } from 'test/utils/scheduler';
 import { StandaloneAgendaViewPremium } from '@mui/x-scheduler-premium/agenda-view-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
@@ -27,6 +28,7 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
   ) {
     return render(
       <StandaloneAgendaViewPremium
+        features={{ recurringEvents: recurringEventsFeature }}
         dataSource={{ getEvents, persistEvents: async () => ({ success: true }) }}
         defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
         {...props}
@@ -89,11 +91,15 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
       const getEvents = vi.fn(async () => {
         throw new Error('Network down');
       });
-      renderWithDataSource(getEvents, hideEmptyDays);
 
-      await waitFor(() => {
-        expect(screen.getByRole('status')).to.have.text('No upcoming events');
-      });
+      await expect(async () => {
+        renderWithDataSource(getEvents, hideEmptyDays);
+        await waitFor(() => {
+          expect(screen.getByRole('status')).to.have.text('No upcoming events');
+        });
+      }).toErrorDev([
+        'MUI X Scheduler: The user was shown the `somethingWentWrongError` error, caused by: Error: Network down',
+      ]);
       expect(getEvents.mock.calls).to.have.length(1);
       expect(getSkeletons()).to.have.length(0);
       expect(getRows()).to.have.length(0);
@@ -165,6 +171,7 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
         return (
           <React.Fragment>
             <StandaloneAgendaViewPremium
+              features={{ recurringEvents: recurringEventsFeature }}
               dataSource={{ getEvents, persistEvents: async () => ({ success: true }) }}
               visibleDate={visibleDate}
               onVisibleDateChange={setVisibleDate}

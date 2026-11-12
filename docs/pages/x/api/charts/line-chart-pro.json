@@ -4,6 +4,12 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
+    "apiRef": {
+      "type": {
+        "name": "shape",
+        "description": "{ current?: { exportAsImage: func, exportAsPrint: func, setAxisZoomData: func, setZoomData: func } }"
+      }
+    },
     "axesGap": { "type": { "name": "number" }, "default": "0" },
     "axisHighlight": {
       "type": {
@@ -22,6 +28,7 @@
         "description": "{ enabled?: bool, preventHighlight?: bool, preventTooltip?: bool }"
       }
     },
+    "children": { "type": { "name": "node" } },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
@@ -149,6 +156,14 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "theme": { "type": { "name": "enum", "description": "'dark'<br>&#124;&nbsp;'light'" } },
     "title": { "type": { "name": "string" } },
     "tooltipAxis": {
       "type": {
@@ -220,19 +235,49 @@
       "default": "ChartsText",
       "class": null
     },
-    { "name": "baseButton", "description": "", "class": null },
-    { "name": "baseDivider", "description": "", "class": null },
-    { "name": "baseIconButton", "description": "", "class": null },
-    { "name": "baseMenuItem", "description": "", "class": null },
-    { "name": "baseMenuList", "description": "", "class": null },
-    { "name": "basePopper", "description": "", "class": null },
+    {
+      "name": "baseButton",
+      "description": "The component used for buttons.",
+      "default": "Button",
+      "class": null
+    },
+    {
+      "name": "baseDivider",
+      "description": "The component used for dividers.",
+      "default": "Divider",
+      "class": null
+    },
+    {
+      "name": "baseIconButton",
+      "description": "The component used for icon buttons.",
+      "default": "IconButton",
+      "class": null
+    },
+    { "name": "baseMenuItem", "description": "The component used for menu items.", "class": null },
+    {
+      "name": "baseMenuList",
+      "description": "The component used for menu lists.",
+      "default": "MenuList",
+      "class": null
+    },
+    { "name": "basePopper", "description": "The component used for poppers.", "class": null },
     {
       "name": "baseToggleButton",
       "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
       "class": null
     },
-    { "name": "baseToggleButtonGroup", "description": "", "class": null },
-    { "name": "baseTooltip", "description": "", "class": null },
+    {
+      "name": "baseToggleButtonGroup",
+      "description": "The component used for toggle button groups.",
+      "default": "ToggleButtonGroup",
+      "class": null
+    },
+    {
+      "name": "baseTooltip",
+      "description": "The component used for tooltips.",
+      "default": "Tooltip",
+      "class": null
+    },
     {
       "name": "exportIcon",
       "description": "Icon displayed on the toolbar's export button.",
@@ -251,14 +296,24 @@
       "default": "LineElementPath",
       "class": null
     },
-    { "name": "lineHighlight", "description": "", "class": null },
+    {
+      "name": "lineHighlight",
+      "description": "The component that renders the line highlight.",
+      "default": "LineHighlightElement",
+      "class": null
+    },
     {
       "name": "loadingOverlay",
       "description": "Overlay component rendered when the chart is in a loading state.",
       "default": "ChartsLoadingOverlay",
       "class": null
     },
-    { "name": "mark", "description": "", "class": null },
+    {
+      "name": "mark",
+      "description": "The component that renders the marks.",
+      "default": "MarkElement",
+      "class": null
+    },
     {
       "name": "noDataOverlay",
       "description": "Overlay component rendered when the chart has no data to display.",

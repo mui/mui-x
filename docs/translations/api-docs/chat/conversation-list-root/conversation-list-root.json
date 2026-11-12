@@ -1,24 +1,26 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
     "variant": {
       "description": "The visual variant of the conversation list. - <code>&#39;default&#39;</code> – shows avatar, title, preview, timestamp, and unread badge. - <code>&#39;compact&#39;</code> – shows only a small unread indicator, the title, and an actions button."
     }
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "item": "",
-    "itemActions": "",
-    "itemAvatar": "",
-    "itemContent": "",
-    "preview": "",
-    "root": "",
-    "scrollbar": "",
-    "scrollbarThumb": "",
-    "scroller": "",
-    "timestamp": "",
-    "title": "",
-    "unreadBadge": "",
-    "viewport": ""
+    "item": "The component that renders the item.",
+    "itemActions": "The component that renders the item actions.",
+    "itemAvatar": "The component that renders the item avatar.",
+    "itemContent": "The component that renders the item content.",
+    "preview": "The component that renders the preview.",
+    "root": "The component that renders the root.",
+    "scrollbar": "The component that renders the scrollbar.",
+    "scrollbarThumb": "The component that renders the scrollbar thumb.",
+    "scroller": "The component that renders the scroller.",
+    "timestamp": "The component that renders the timestamp.",
+    "title": "The component that renders the title.",
+    "unreadBadge": "The component that renders the unread badge.",
+    "viewport": "The component that renders the viewport."
   }
 }

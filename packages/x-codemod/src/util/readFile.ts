@@ -1,4 +1,5 @@
-import fs, { PathOrFileDescriptor } from 'fs';
+import type { PathOrFileDescriptor } from 'fs';
+import fs from 'fs';
 import { EOL } from 'os';
 
 export default function readFile(filePath: PathOrFileDescriptor) {

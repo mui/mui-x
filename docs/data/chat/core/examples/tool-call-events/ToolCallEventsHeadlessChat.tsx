@@ -1,10 +1,6 @@
 import * as React from 'react';
-import {
-  ChatProvider,
-  useChat,
-  type ChatAdapter,
-  type ChatOnToolCallPayload,
-} from '@mui/x-chat/headless';
+import { ChatProvider, useChat } from '@mui/x-chat/headless';
+import type { ChatAdapter, ChatOnToolCallPayload } from '@mui/x-chat/headless';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';

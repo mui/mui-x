@@ -1,6 +1,6 @@
+import type { GridGroupNode } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
-  GridGroupNode,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';

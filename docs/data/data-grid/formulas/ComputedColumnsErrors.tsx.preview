@@ -1,0 +1,14 @@
+<DataGridPremium
+  featureDependencies={{ formula: formulaFeature }}
+  rows={rows}
+  columns={columns}
+  computedColDef={{ width: 160 }}
+  hideFooter
+  initialState={{
+    computedColumns: { model: computedColumns },
+    sorting: { sortModel: [{ field: 'unitPrice', sort: 'desc' }] },
+  }}
+  showToolbar
+  rowSelection={false}
+  disablePivoting
+/>

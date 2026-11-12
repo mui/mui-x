@@ -14,7 +14,8 @@ export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
   resizable: false,
   sortable: false,
   filterable: false,
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Premium augmentation adds aggregable only when the Premium package is included.
+  // @ts-ignore Premium augmentation adds aggregable only when the Premium package is included.
   aggregable: false,
   chartable: false,
   disableColumnMenu: true,

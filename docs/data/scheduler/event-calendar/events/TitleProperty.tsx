@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SchedulerEventModelStructure } from '@mui/x-scheduler/models';
+import type { SchedulerEventModelStructure } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { defaultVisibleDate } from '../../datasets/personal-agenda';
 
@@ -8,23 +8,20 @@ interface CustomEvent {
   start: string;
   end: string;
   name: string;
-  rrule: string;
 }
 
 const initialEvents: CustomEvent[] = [
   {
-    id: 'work-daily-standup',
+    id: 'product-launch',
     start: '2025-07-02T09:00:00',
     end: '2025-07-02T09:30:00',
-    name: 'Daily Standup',
-    rrule: 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR',
+    name: 'Product Launch',
   },
   {
-    id: 'work-retro',
+    id: 'client-meeting',
     start: '2025-07-01T16:00:00',
     end: '2025-07-01T17:00:00',
-    name: 'Team Retrospective',
-    rrule: 'FREQ=WEEKLY;INTERVAL=2;BYDAY=TU',
+    name: 'Client Meeting',
   },
 ];
 

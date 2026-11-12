@@ -131,7 +131,7 @@ describe('eventTimelinePremiumOccurrenceSelectors', () => {
 
       const occurrence = list[0].occurrences[0];
       expect(positions.get(occurrence.key)).to.deep.equal(
-        computeElementPositionInCollection(adapter, {
+        computeElementPositionInCollection({
           start: occurrence.displayTimezone.start,
           end: occurrence.displayTimezone.end,
           collection: config,
@@ -170,7 +170,6 @@ describe('eventTimelinePremiumOccurrenceSelectors', () => {
         eventTimelinePremiumOccurrenceSelectors.visiblePositionByOccurrenceKey(state)!;
 
       const [layoutOccurrence] = addTimelinePositionsToOccurrences({
-        adapter,
         config,
         occurrences: [{ ...occurrence, position: { firstIndex: 1, lastIndex: 1 } }],
         positionByOccurrenceKey,
@@ -178,31 +177,6 @@ describe('eventTimelinePremiumOccurrenceSelectors', () => {
 
       expect(layoutOccurrence.timelinePosition).to.equal(
         positionByOccurrenceKey.get(occurrence.key),
-      );
-    });
-
-    it('should derive the position on demand for a full-day window', () => {
-      const state = buildState();
-      const config = eventTimelinePremiumPresetSelectors.config(state);
-      const occurrence = eventTimelinePremiumOccurrenceSelectors.visibleResourceOccurrences(
-        state,
-        'r1',
-      )[0];
-
-      const [layoutOccurrence] = addTimelinePositionsToOccurrences({
-        adapter,
-        config,
-        occurrences: [{ ...occurrence, position: { firstIndex: 1, lastIndex: 1 } }],
-        positionByOccurrenceKey: null,
-      });
-
-      expect(layoutOccurrence.timelinePosition).to.deep.equal(
-        computeElementPositionInCollection(adapter, {
-          start: occurrence.displayTimezone.start,
-          end: occurrence.displayTimezone.end,
-          collection: config,
-          durationMs: config.durationMs,
-        }),
       );
     });
   });

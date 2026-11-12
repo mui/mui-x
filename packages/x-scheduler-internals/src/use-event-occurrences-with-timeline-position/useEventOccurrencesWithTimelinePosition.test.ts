@@ -18,10 +18,9 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   function testHook(events: SchedulerProcessedEvent[], maxSpan: number) {
     const { result } = renderHook(() => {
       const occurrences = getOccurrencesFromEvents({
-        adapter,
-        start: collectionStart,
-        end: collectionEnd,
-        eventRangeIndex: createEventRangeIndex(events, adapter, false),
+        start: adapter.getTime(collectionStart),
+        end: adapter.getTime(collectionEnd),
+        eventRangeIndex: createEventRangeIndex(events, false),
         displayTimezone: 'default',
         visibleResources: {},
         recurringEventsPlugin: null,
@@ -233,10 +232,9 @@ describe('useDayListEventOccurrencesWithPosition', () => {
       const result = testHook(events, 1);
 
       const occurrences = getOccurrencesFromEvents({
-        adapter,
-        start: collectionStart,
-        end: collectionEnd,
-        eventRangeIndex: createEventRangeIndex(events, adapter, false),
+        start: adapter.getTime(collectionStart),
+        end: adapter.getTime(collectionEnd),
+        eventRangeIndex: createEventRangeIndex(events, false),
         displayTimezone: 'default',
         visibleResources: {},
         recurringEventsPlugin: null,

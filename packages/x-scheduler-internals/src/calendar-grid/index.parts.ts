@@ -17,4 +17,3 @@ export { CalendarGridCurrentTimeIndicator as CurrentTimeIndicator } from './curr
 
 export { useCalendarGridPlaceholderInDay as usePlaceholderInDay } from './use-placeholder-in-day/useCalendarGridPlaceholderInDay';
 export { useCalendarGridPlaceholderInRange as usePlaceholderInRange } from './use-placeholder-in-range/useCalendarGridPlaceholderInRange';
-export { useCalendarGridGetDateFromPositionInColumn as useGetDateFromPositionInColumn } from './use-date-from-position-in-time-column/useCalendarGridDateFromPositionInTimeColumn';

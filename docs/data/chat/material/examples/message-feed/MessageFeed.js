@@ -5,7 +5,6 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { ChatConversation, ChatMessageList } from '@mui/x-chat';
 import { useChat, ChatRoot } from '@mui/x-chat/headless';
-
 import {
   createChunkStream,
   createTextResponseChunks,

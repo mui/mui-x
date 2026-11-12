@@ -1,11 +1,14 @@
 import { adapter, EventBuilder, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, onTestFinished, vi } from 'vitest';
 import {
   schedulerEventSelectors,
+  schedulerNowSelectors,
   schedulerResourceSelectors,
 } from '../../../../scheduler-selectors';
+
+const MS_PER_DAY = 86_400_000;
 
 const DEFAULT_PARAMS = {
   events: [] as SchedulerEvent[],
@@ -20,7 +23,7 @@ storeClasses.forEach((storeClass) => {
         const event2 = EventBuilder.new().build();
         const events = [event1, event2];
 
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS, events }, adapter);
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, events });
 
         expect(schedulerEventSelectors.idList(store.state)).to.deep.equal([event1.id, event2.id]);
         expect(schedulerEventSelectors.processedEvent(store.state, event1.id)!.title).to.equal(
@@ -34,18 +37,53 @@ storeClasses.forEach((storeClass) => {
 
       it('should set visibleDate to today in the display timezone when defaultVisibleDate is not provided', () => {
         const displayTimezone = 'Pacific/Kiritimati';
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS, displayTimezone }, adapter);
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, displayTimezone });
 
         const expectedToday = adapter.startOfDay(adapter.now(displayTimezone));
 
-        expect(store.state.visibleDate).toEqualDateTime(expectedToday);
-        expect(adapter.getTimezone(store.state.visibleDate)).to.equal(displayTimezone);
+        expect(adapter.getTime(store.state.visibleDate)).to.equal(adapter.getTime(expectedToday));
+      });
+
+      it('should start today at the end of the gap when the display timezone skips midnight', () => {
+        vi.useFakeTimers();
+        onTestFinished(() => {
+          vi.useRealTimers();
+        });
+        // Santiago skips from 00:00 to 01:00 on September 8th, 2024.
+        vi.setSystemTime(new Date('2024-09-08T12:00:00Z'));
+        const store = new storeClass.Value({
+          ...DEFAULT_PARAMS,
+          displayTimezone: 'America/Santiago',
+        });
+
+        expect(adapter.getTime(store.state.visibleDate)).to.equal(
+          Date.parse('2024-09-08T04:00:00Z'),
+        );
+      });
+
+      it('should move `nowTimestamp` and the current day every minute', () => {
+        vi.useFakeTimers();
+        onTestFinished(() => {
+          vi.useRealTimers();
+        });
+        vi.setSystemTime(new Date('2025-07-03T23:59:30Z'));
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, displayTimezone: 'UTC' });
+
+        // The first tick lands on the next minute, the following ones a minute apart.
+        vi.advanceTimersByTime(30_000);
+        expect(store.state.nowTimestamp).to.equal(Date.parse('2025-07-04T00:00:00Z'));
+        expect(schedulerNowSelectors.nowDayNumber(store.state)).to.equal(
+          Date.UTC(2025, 6, 4) / MS_PER_DAY,
+        );
+
+        vi.advanceTimersByTime(60_000);
+        expect(store.state.nowTimestamp).to.equal(Date.parse('2025-07-04T00:01:00Z'));
       });
     });
 
     describe('updater', () => {
       it('should sync partial state from new parameters (events/resources/flags/ampm/indicator)', () => {
-        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+        const store = new storeClass.Value(DEFAULT_PARAMS);
         const event = EventBuilder.new().build();
 
         const newParams = {
@@ -59,7 +97,7 @@ storeClasses.forEach((storeClass) => {
           showCurrentTimeIndicator: false,
         };
 
-        store.updateStateFromParameters(newParams, adapter);
+        store.updateStateFromParameters(newParams);
 
         expect(schedulerEventSelectors.idList(store.state)).to.deep.equal([event.id]);
         expect(schedulerResourceSelectors.idList(store.state)).to.deep.equal(['r1', 'r2']);
@@ -71,67 +109,39 @@ storeClasses.forEach((storeClass) => {
 
       it('should respect controlled `visibleDate` (updates to new value)', () => {
         const initial = adapter.date('2025-07-05T00:00:00Z', 'default');
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS, visibleDate: initial }, adapter);
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, visibleDate: initial });
 
         const next = adapter.date('2025-07-10T00:00:00Z', 'default');
-        store.updateStateFromParameters({ ...DEFAULT_PARAMS, visibleDate: next }, adapter);
+        store.updateStateFromParameters({ ...DEFAULT_PARAMS, visibleDate: next });
 
         expect(store.state.visibleDate).toEqualDateTime(next);
-      });
-
-      it('should not change `visibleDate` if not included in new parameters', () => {
-        const initialVisibleDate = adapter.date('2025-07-01T00:00:00Z', 'default');
-        const store = new storeClass.Value(
-          { ...DEFAULT_PARAMS, visibleDate: initialVisibleDate },
-          adapter,
-        );
-
-        store.updateStateFromParameters(
-          {
-            ...DEFAULT_PARAMS,
-            resources: [{ id: 'r1', title: 'Resource 1' }],
-            visibleDate: store.state.visibleDate,
-          },
-          adapter,
-        );
-
-        expect(store.state.visibleDate).toEqualDateTime(initialVisibleDate);
       });
 
       it('should keep initial defaults and warns if default props change after mount', () => {
         const defaultDate = adapter.date('2025-07-15T00:00:00Z', 'default');
 
-        const store = new storeClass.Value(
-          { ...DEFAULT_PARAMS, defaultVisibleDate: defaultDate },
-          adapter,
-        );
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, defaultVisibleDate: defaultDate });
 
         expect(() => {
-          store.updateStateFromParameters(
-            {
-              ...DEFAULT_PARAMS,
-              resources: [{ id: 'r1', title: 'Resource 1' }],
-              defaultVisibleDate: adapter.date('2025-12-30T00:00:00Z', 'default'),
-            },
-            adapter,
-          );
+          store.updateStateFromParameters({
+            ...DEFAULT_PARAMS,
+            resources: [{ id: 'r1', title: 'Resource 1' }],
+            defaultVisibleDate: adapter.date('2025-12-30T00:00:00Z', 'default'),
+          });
         }).toWarnDev(['MUI X Scheduler: A component is changing the default visibleDate state']);
 
         expect(store.state.visibleDate).toEqualDateTime(defaultDate);
       });
 
       it('should keep consistent state when switching from uncontrolled → controlled `visible date` (warns in dev)', () => {
-        const store = new storeClass.Value(
-          {
-            ...DEFAULT_PARAMS,
-            defaultVisibleDate: adapter.date('2025-07-05T00:00:00Z', 'default'),
-          },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          ...DEFAULT_PARAMS,
+          defaultVisibleDate: adapter.date('2025-07-05T00:00:00Z', 'default'),
+        });
 
         const newDate = adapter.date('2025-07-10T00:00:00Z', 'default');
         expect(() => {
-          store.updateStateFromParameters({ ...DEFAULT_PARAMS, visibleDate: newDate }, adapter);
+          store.updateStateFromParameters({ ...DEFAULT_PARAMS, visibleDate: newDate });
         }).toWarnDev('MUI X Scheduler: A component is changing the uncontrolled visibleDate state');
 
         expect(store.state.visibleDate).toEqualDateTime(newDate);
@@ -139,48 +149,49 @@ storeClasses.forEach((storeClass) => {
 
       it('should warn and keep current value when switching from controlled → uncontrolled `visibleDate`', () => {
         const visibleDate = adapter.date('2025-07-05T00:00:00Z', 'default');
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS, visibleDate }, adapter);
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, visibleDate });
 
         expect(() => {
-          store.updateStateFromParameters(
-            {
-              ...DEFAULT_PARAMS,
-              resources: [{ id: 'r1', title: 'Resource 1' }],
-              visibleDate: undefined,
-            },
-            adapter,
-          );
+          store.updateStateFromParameters({
+            ...DEFAULT_PARAMS,
+            resources: [{ id: 'r1', title: 'Resource 1' }],
+            visibleDate: undefined,
+          });
         }).toWarnDev('MUI X Scheduler: A component is changing the controlled visibleDate state');
 
         expect(store.state.visibleDate).toEqualDateTime(visibleDate);
       });
 
-      it('should keep the same `nowUpdatedEveryMinute` reference when a non-timezone parameter changes', () => {
-        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
-        const before = store.state.nowUpdatedEveryMinute;
+      it('should keep the same `nowTimestamp` when a parameter changes', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS);
+        const before = store.state.nowTimestamp;
 
-        store.updateStateFromParameters(
-          { ...DEFAULT_PARAMS, showCurrentTimeIndicator: false },
-          adapter,
-        );
+        store.updateStateFromParameters({
+          ...DEFAULT_PARAMS,
+          displayTimezone: 'America/New_York',
+          showCurrentTimeIndicator: false,
+        });
 
-        expect(store.state.nowUpdatedEveryMinute).to.equal(before);
+        expect(store.state.nowTimestamp).to.equal(before);
       });
 
-      it('should recompute `nowUpdatedEveryMinute` when the display timezone changes', () => {
-        const store = new storeClass.Value(
-          { ...DEFAULT_PARAMS, displayTimezone: 'default' },
-          adapter,
+      it('should read the current day in the new display timezone', () => {
+        vi.useFakeTimers();
+        onTestFinished(() => {
+          vi.useRealTimers();
+        });
+        // Still July 2nd in New York.
+        vi.setSystemTime(new Date('2025-07-03T02:00:00Z'));
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, displayTimezone: 'UTC' });
+        expect(schedulerNowSelectors.nowDayNumber(store.state)).to.equal(
+          Date.UTC(2025, 6, 3) / MS_PER_DAY,
         );
-        const before = store.state.nowUpdatedEveryMinute;
 
-        store.updateStateFromParameters(
-          { ...DEFAULT_PARAMS, displayTimezone: 'America/New_York' },
-          adapter,
+        store.updateStateFromParameters({ ...DEFAULT_PARAMS, displayTimezone: 'America/New_York' });
+
+        expect(schedulerNowSelectors.nowDayNumber(store.state)).to.equal(
+          Date.UTC(2025, 6, 2) / MS_PER_DAY,
         );
-
-        expect(store.state.nowUpdatedEveryMinute).to.not.equal(before);
-        expect(adapter.getTimezone(store.state.nowUpdatedEveryMinute)).to.equal('America/New_York');
       });
     });
 
@@ -191,7 +202,7 @@ storeClasses.forEach((storeClass) => {
       const selectionB = { type: 'b', id: 1 } as never;
 
       it('should keep one selection across types and skip the write when unchanged', () => {
-        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+        const store = new storeClass.Value(DEFAULT_PARAMS);
 
         store.setSelection(selectionA);
         expect(store.state.selection).to.equal(selectionA);
@@ -211,7 +222,7 @@ storeClasses.forEach((storeClass) => {
     });
 
     describe('errors', () => {
-      // Pinned to a minute boundary: the store schedules its `nowUpdatedEveryMinute`
+      // Pinned to a minute boundary: the store schedules its `nowTimestamp`
       // tick for the next one, counted from wherever the clock starts. On the real
       // time a run in the last seconds of a minute lets these tests advance across
       // the boundary and pick up a state write they do not test. Keep the advances
@@ -221,11 +232,14 @@ storeClasses.forEach((storeClass) => {
         clockConfig: new Date(2012, 4, 3, 14, 30, 0, 0),
       });
 
-      it('should stack repeated non-transient errors and keep them until dismissed', () => {
-        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+      const failure = { code: 'somethingWentWrongError' } as const;
+      const rejection = { code: 'eventNotLoadedError' } as const;
 
-        store.pushError(new Error('boom'));
-        const secondKey = store.pushError(new Error('boom'));
+      it('should stack repeated non-transient errors and keep them until dismissed', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS);
+
+        store.pushUserFacingError(failure);
+        const secondKey = store.pushUserFacingError(failure);
 
         expect(store.state.errors).to.have.length(2);
 
@@ -233,43 +247,104 @@ storeClasses.forEach((storeClass) => {
         expect(store.state.errors).to.have.length(1);
       });
 
-      it('should replace a transient error carrying the same message instead of stacking it', () => {
-        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+      it('should dismiss only the error with the given key and keep the order of the others', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS);
 
-        store.pushError(new Error('rejected'), { transient: true });
-        store.pushError(new Error('rejected'), { transient: true });
+        store.pushUserFacingError(failure);
+        const secondKey = store.pushUserFacingError(rejection);
+        store.pushUserFacingError({ code: 'eventChangedWhileConfirmingError' });
+        store.dismissError(secondKey);
+
+        expect(store.state.errors.map((entry) => entry.code)).to.deep.equal([
+          'somethingWentWrongError',
+          'eventChangedWhileConfirmingError',
+        ]);
+      });
+
+      it('should keep every error when dismissing a key that does not exist', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS);
+
+        store.pushUserFacingError(failure);
+        store.pushUserFacingError(rejection);
+        const [first, second] = store.state.errors;
+        store.dismissError('does-not-exist');
+
+        expect(store.state.errors).to.have.length(2);
+        expect(store.state.errors[0]).to.equal(first);
+        expect(store.state.errors[1]).to.equal(second);
+      });
+
+      it('should replace a transient error with the same code instead of stacking it', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS);
+
+        store.pushUserFacingError(rejection, { transient: true });
+        store.pushUserFacingError(rejection, { transient: true });
 
         expect(store.state.errors).to.have.length(1);
       });
 
-      it('should not replace a non-transient error with a transient one carrying the same message', () => {
-        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+      it('should replace a transient error with the same code and equal params', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS);
 
-        store.pushError(new Error('boom'));
-        store.pushError(new Error('boom'), { transient: true });
+        store.pushUserFacingError(
+          { code: 'readOnlyEventMovedError', params: { title: 'A' } },
+          { transient: true },
+        );
+        store.pushUserFacingError(
+          { code: 'readOnlyEventMovedError', params: { title: 'A' } },
+          { transient: true },
+        );
+
+        expect(store.state.errors).to.have.length(1);
+      });
+
+      it('should not replace a transient error with the same code but other params', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS);
+
+        store.pushUserFacingError(
+          { code: 'readOnlyEventMovedError', params: { title: 'A' } },
+          { transient: true },
+        );
+        store.pushUserFacingError(
+          { code: 'readOnlyEventMovedError', params: { title: 'B' } },
+          { transient: true },
+        );
+
+        expect(store.state.errors.map((entry) => entry.params)).to.deep.equal([
+          { title: 'A' },
+          { title: 'B' },
+        ]);
+      });
+
+      it('should not replace a non-transient error with a transient one with the same code', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS);
+
+        store.pushUserFacingError(failure);
+        store.pushUserFacingError(failure, { transient: true });
 
         expect(store.state.errors).to.have.length(2);
       });
 
       it('should auto-dismiss a transient error and leave the non-transient ones alone', () => {
-        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+        const store = new storeClass.Value(DEFAULT_PARAMS);
 
-        store.pushError(new Error('boom'));
-        store.pushError(new Error('rejected'), { transient: true });
+        store.pushUserFacingError(failure);
+        store.pushUserFacingError(rejection, { transient: true });
         expect(store.state.errors).to.have.length(2);
 
         clock.tick(5000);
 
-        expect(store.state.errors).to.have.length(1);
-        expect(store.state.errors[0].error.message).to.equal('boom');
+        expect(store.state.errors.map((entry) => entry.code)).to.deep.equal([
+          'somethingWentWrongError',
+        ]);
       });
 
       it('should refresh the auto-dismiss timer when a transient error is replaced', () => {
-        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+        const store = new storeClass.Value(DEFAULT_PARAMS);
 
-        store.pushError(new Error('rejected'), { transient: true });
+        store.pushUserFacingError(rejection, { transient: true });
         clock.tick(3000);
-        store.pushError(new Error('rejected'), { transient: true });
+        store.pushUserFacingError(rejection, { transient: true });
 
         // 3s after the replacement the original timer would have fired.
         clock.tick(3000);
@@ -280,11 +355,11 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should cancel the auto-dismiss timer when a transient error is dismissed manually', () => {
-        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+        const store = new storeClass.Value(DEFAULT_PARAMS);
 
-        const transientKey = store.pushError(new Error('rejected'), { transient: true });
+        const transientKey = store.pushUserFacingError(rejection, { transient: true });
         store.dismissError(transientKey);
-        const laterKey = store.pushError(new Error('kept'));
+        const laterKey = store.pushUserFacingError(failure);
 
         const stateBefore = store.state;
         clock.tick(5000);
@@ -293,6 +368,26 @@ storeClasses.forEach((storeClass) => {
         expect(store.state.errors[0].key).to.equal(laterKey);
         // The canceled timer must not even produce a state write.
         expect(store.state).to.equal(stateBefore);
+      });
+
+      it('should log the original error to the console without storing it', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS);
+
+        expect(() => {
+          store.pushUserFacingError(failure, { error: new Error('Failed to fetch') });
+        }).toErrorDev(
+          'MUI X Scheduler: The user was shown the `somethingWentWrongError` error, caused by: Error: Failed to fetch',
+        );
+
+        expect(store.state.errors).to.deep.equal([{ code: 'somethingWentWrongError', key: '1' }]);
+      });
+
+      it('should log a rejection without a value', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS);
+
+        expect(() => {
+          store.pushUserFacingError(failure, { error: undefined });
+        }).toErrorDev('MUI X Scheduler: The user was shown the `somethingWentWrongError` error');
       });
     });
   });

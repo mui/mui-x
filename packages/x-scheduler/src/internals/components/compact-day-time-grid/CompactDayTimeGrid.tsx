@@ -43,8 +43,7 @@ const CompactEventToolbarDock = styled('div', {
   slot: 'CompactEventToolbarDock',
 })(({ theme }) => ({
   position: 'absolute',
-  left: 0,
-  right: 0,
+  insetInline: 0,
   bottom: theme.spacing(2),
   display: 'flex',
   justifyContent: 'center',

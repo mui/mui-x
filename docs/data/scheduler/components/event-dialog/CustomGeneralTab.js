@@ -2,7 +2,6 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
-
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   EventDialogDateTimeSection,

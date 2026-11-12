@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGrid, GridRowModel } from '@mui/x-data-grid';
+import type { GridRowModel } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 
 const columns = [{ field: 'id', headerName: 'Id', width: 100 }];
 

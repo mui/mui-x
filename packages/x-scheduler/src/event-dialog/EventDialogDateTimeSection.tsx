@@ -7,7 +7,6 @@ import TextField from '@mui/material/TextField';
 import Switch from '@mui/material/Switch';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventEditingStyledContext } from '../internals/components/event-editing/EventEditingStyledContext';
 import type { EventDialogFormValues } from '../internals/components/event-dialog/utils';
@@ -62,7 +61,6 @@ const AllDayFormControlLabel = styled(FormControlLabel, {
 
 export function EventDialogDateTimeSection() {
   // Context hooks
-  const adapter = useAdapterContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
@@ -77,17 +75,17 @@ export function EventDialogDateTimeSection() {
   const createDateTimeValidator =
     (field: 'startDate' | 'startTime' | 'endDate' | 'endTime') =>
     (value: string, allValues: EventDialogFormValues): string | null => {
-      const invalidField = findInvalidRangeField(adapter, allValues, displayTimezone);
+      const invalidField = findInvalidRangeField(allValues, displayTimezone);
       if (invalidField === field) {
         return getInvalidValueErrorMessage(field, localeText);
       }
-      // While any field is invalid, the ordering verdict would compare against
-      // the computeRange fallback and blame a healthy field.
+      // While any field is invalid, its bound reads as now or `NaN`: the ordering
+      // check would blame a healthy field, or throw.
       if (invalidField !== null || field === 'startDate' || field === 'startTime') {
         return null;
       }
-      const { start, end } = computeRange(adapter, allValues, displayTimezone);
-      if (validateRange(adapter, start, end, allValues.allDay)?.field !== field) {
+      const { start, end } = computeRange(allValues, displayTimezone);
+      if (validateRange(start, end, allValues.allDay, displayTimezone)?.field !== field) {
         return null;
       }
       return getRangeErrorMessage(field, localeText);
@@ -132,7 +130,6 @@ export function EventDialogDateTimeSection() {
             slotProps={{
               inputLabel: { shrink: true },
               input: { readOnly: startDate.readOnly },
-              formHelperText: { role: 'alert' },
             }}
             error={!!startDate.error}
             helperText={startDate.error}
@@ -149,7 +146,6 @@ export function EventDialogDateTimeSection() {
               slotProps={{
                 inputLabel: { shrink: true },
                 input: { readOnly: startTime.readOnly },
-                formHelperText: { role: 'alert' },
               }}
               error={!!startTime.error}
               helperText={startTime.error}
@@ -168,7 +164,6 @@ export function EventDialogDateTimeSection() {
             slotProps={{
               inputLabel: { shrink: true },
               input: { readOnly: endDate.readOnly },
-              formHelperText: { role: 'alert' },
             }}
             error={!!endDate.error}
             helperText={endDate.error}
@@ -185,7 +180,6 @@ export function EventDialogDateTimeSection() {
               slotProps={{
                 inputLabel: { shrink: true },
                 input: { readOnly: endTime.readOnly },
-                formHelperText: { role: 'alert' },
               }}
               error={!!endTime.error}
               helperText={endTime.error}
