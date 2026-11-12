@@ -575,8 +575,26 @@ export const useGridRowSelection = (
       return node.children.some((childId) => isOrHasSelectableDescendant(childId));
     };
 
+    // The grid knows all rows only when filtering, pagination and row loading are client-side.
+    // Only then does a row that is missing from the lookup no longer exist.
+    const hasAllRows =
+      props.dataSource === undefined &&
+      props.filterMode !== 'server' &&
+      props.paginationMode !== 'server';
+
     let hasChanged = false;
     for (const id of currentSelection.ids) {
+      if (!selectionManager.has(id)) {
+        // The ids of an `exclude` model are already unselected.
+        // A row that was removed from the rows drops its stale id.
+        // Rows that are filtered out keep their id, so they stay deselected when they come back.
+        // Use the tree, because auto-generated group rows are never in the lookup.
+        if (hasAllRows && !rowTree[id] && !props.keepNonExistentRowsSelected) {
+          newSelectionModel.ids.delete(id);
+          hasChanged = true;
+        }
+        continue;
+      }
       if (isNonExistent(id)) {
         if (props.keepNonExistentRowsSelected) {
           continue;
@@ -648,6 +666,9 @@ export const useGridRowSelection = (
     props.rowSelectionPropagation?.parents,
     props.keepNonExistentRowsSelected,
     props.filterMode,
+    props.paginationMode,
+    props.dataSource,
+    canHaveMultipleSelection,
     getRowsToBeSelected,
   ]);
 
