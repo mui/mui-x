@@ -156,6 +156,7 @@
       "type": { "name": "object" },
       "default": "GRID_FORMULA_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided"
     },
+    "formulaReferencePicking": { "type": { "name": "bool" }, "default": "false" },
     "getAggregationPosition": {
       "type": { "name": "func" },
       "default": "(groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline')",

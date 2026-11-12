@@ -1,4 +1,5 @@
 import { getFormulaCompletionContext } from './formulaCompletion';
+import { tokenizeFormula } from './formulaTokenizer';
 import { isFormulaSource } from './formulaTypes';
 
 /**
@@ -52,6 +53,14 @@ export interface FormulaPickActionOptions {
    * @default false
    */
   a1Notation?: boolean;
+  /**
+   * Tells whether a bare name of the formula is a reference to a column (the
+   * engine does not know the columns). Without it, a bare name is never
+   * treated as a reference.
+   * @param {string} name The name as written in the formula.
+   * @returns {boolean} `true` when the name is a field.
+   */
+  isFieldName?: (name: string) => boolean;
 }
 
 const NO_PICK: FormulaPickAction = { type: 'none' };
@@ -72,17 +81,101 @@ function isPendingPickValid(
 }
 
 /**
+ * The canonical forms that are a whole reference: a click replaces the call
+ * with its arguments.
+ */
+const REFERENCE_FORMS = new Set(['REF', 'RANGE_REF', 'COLUMN_VALUES', 'FIELD']);
+
+/**
+ * The span (EDITOR coordinates) of the complete reference the caret touches:
+ * the caret is inside it or at one of its ends. A reference is an A1 reference
+ * (`B2`, `B2:C4`), a canonical reference form with its closing parenthesis
+ * (`REF(COLUMN("price"), ROW(2))`) or a field name. `null` when the caret is
+ * not on a reference.
+ */
+function getReferenceSpanAt(
+  text: string,
+  caret: number,
+  a1Notation: boolean,
+  isFieldName: ((name: string) => boolean) | undefined,
+): { start: number; end: number } | null {
+  const { tokens } = tokenizeFormula(text.slice(1), { a1Notation, tolerant: true });
+  const offset = caret - 1;
+  for (let index = 0; index < tokens.length; index += 1) {
+    const token = tokens[index];
+    if (token.span.start > offset) {
+      break;
+    }
+    let end: number | null = null;
+    if (token.type === 'reference') {
+      end = token.span.end;
+    } else if (token.type === 'identifier') {
+      const next = tokens[index + 1];
+      const isCall = next !== undefined && next.type === 'punctuation' && next.value === '(';
+      if (!isCall) {
+        end = isFieldName?.(token.value) ? token.span.end : null;
+      } else if (REFERENCE_FORMS.has(token.value.toUpperCase())) {
+        let depth = 0;
+        for (let closing = index + 1; closing < tokens.length; closing += 1) {
+          const candidate = tokens[closing];
+          if (candidate.type === 'punctuation' && candidate.value === '(') {
+            depth += 1;
+          } else if (candidate.type === 'punctuation' && candidate.value === ')') {
+            depth -= 1;
+            if (depth === 0) {
+              end = candidate.span.end;
+              break;
+            }
+          }
+        }
+      }
+    }
+    if (end !== null && offset <= end) {
+      return { start: token.span.start + 1, end: end + 1 };
+    }
+  }
+  return null;
+}
+
+/**
+ * `true` when the first token at or after `caret` (EDITOR coordinates) starts
+ * an operand: a name, a number, a string, a reference or an opening
+ * parenthesis. A reference written right before it would be glued to it
+ * (`=|B2` → `=C3B2`).
+ */
+function isOperandNext(text: string, caret: number, a1Notation: boolean): boolean {
+  const { tokens } = tokenizeFormula(text.slice(1), { a1Notation, tolerant: true });
+  const next = tokens.find((token) => token.span.start >= caret - 1);
+  if (next === undefined) {
+    return false;
+  }
+  if (next.type === 'punctuation') {
+    return next.value === '(';
+  }
+  return (
+    next.type === 'identifier' ||
+    next.type === 'number' ||
+    next.type === 'string' ||
+    next.type === 'reference'
+  );
+}
+
+/**
  * `true` when a reference can be written at `caret` (EDITOR coordinates): the
  * caret is outside a string literal, in a value position (the start of the
- * expression, or right after an operator, `(`, `,` or the A1 `:`), and neither
- * on a partially typed identifier nor inside a complete reference (`=pri|`
- * and `=B|2` are value positions for the tokenizer, but the user is editing a
- * name or a reference there).
+ * expression, or right after an operator, `(`, `,` or the A1 `:`), neither on
+ * a partially typed identifier nor inside a complete reference (`=pri|` and
+ * `=B|2` are value positions for the tokenizer, but the user is editing a
+ * name or a reference there), and not right before another operand (`=|B2`).
  */
 function isReferenceExpectedAt(text: string, caret: number, a1Notation: boolean): boolean {
   const context = getFormulaCompletionContext(text.slice(1), caret - 1, { a1Notation });
   return (
-    !context.insideString && !context.insideReference && context.expectValue && context.token === ''
+    !context.insideString &&
+    !context.insideReference &&
+    context.expectValue &&
+    context.token === '' &&
+    !isOperandNext(text, caret, a1Notation)
   );
 }
 
@@ -96,9 +189,12 @@ function isReferenceExpectedAt(text: string, caret: number, a1Notation: boolean)
  * 3. Some text is selected → the new reference replaces the selection, when a
  *    reference can be written at the start of the selection once the selected
  *    text is removed.
- * 4. A reference can be written at the caret → it is inserted there.
- * 5. Anything else (the caret follows a complete operand, sits inside a
- *    string, inside a reference or on a partially typed name) → not a pick.
+ * 4. The caret is on a complete reference (inside it or at one of its ends) →
+ *    the new reference replaces it.
+ * 5. A reference can be written at the caret → it is inserted there.
+ * 6. Anything else (the caret follows or precedes an operand that is not a
+ *    reference, sits inside a string or on a partially typed name) → not a
+ *    pick.
  */
 export function getFormulaPickAction(
   text: string,
@@ -128,6 +224,11 @@ export function getFormulaPickAction(
     return isReferenceExpectedAt(textWithoutSelection, start, a1Notation)
       ? { type: 'replace', start, end }
       : NO_PICK;
+  }
+
+  const reference = getReferenceSpanAt(text, start, a1Notation, options.isFieldName);
+  if (reference !== null) {
+    return { type: 'replace', start: reference.start, end: reference.end };
   }
 
   return isReferenceExpectedAt(text, start, a1Notation) ? { type: 'insert', start, end } : NO_PICK;

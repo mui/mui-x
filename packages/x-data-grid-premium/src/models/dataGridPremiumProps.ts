@@ -150,6 +150,14 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    */
   formulaA1Notation: boolean;
   /**
+   * If `true`, clicking a cell while a formula is being edited writes a reference to that cell
+   * into the formula instead of ending the edit, when the caret is where a reference is expected
+   * (after `=`, an operator, `(` or `,`) or on a reference, which is then replaced.
+   * Has no effect when `disableFormulas` is `true` or a `dataSource` is set.
+   * @default false
+   */
+  formulaReferencePicking: boolean;
+  /**
    * If `true`, the suggestion dropdown shown while editing a formula cell is disabled.
    * Has no effect when `disableFormulas` is `true` or a `dataSource` is set.
    * @default false

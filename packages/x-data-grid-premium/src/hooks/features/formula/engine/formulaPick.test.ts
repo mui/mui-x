@@ -90,6 +90,33 @@ describe('getFormulaPickAction', () => {
       });
     });
 
+    describe('is not a pick right before an operand', () => {
+      it.each([
+        '=|price',
+        '=| price',
+        '=|5',
+        '=|"abc"',
+        '=|(price)',
+        '=|SUM(price)',
+        '=SUM(|price)',
+        '=price+|quantity',
+        '=SUM(price,|quantity)',
+      ])('%s', (marked) => {
+        expect(pick(marked, a1Notation)).toEqual(NONE);
+      });
+    });
+
+    describe('inserts right before an operator or a closing token', () => {
+      it.each([
+        ['=|-price', 1],
+        ['=SUM(|)', 5],
+        ['=SUM(|, price)', 5],
+        ['=price+|*2', 7],
+      ])('%s', (marked, offset) => {
+        expect(pick(marked, a1Notation)).toEqual(insertAt(offset));
+      });
+    });
+
     describe('is not a pick on a partially typed name', () => {
       it.each(['=pri|', '=price+qu|', '=SU|', '=SUM(pr|', '=pr|ice'])('%s', (marked) => {
         expect(pick(marked, a1Notation)).toEqual(NONE);
@@ -156,15 +183,23 @@ describe('getFormulaPickAction', () => {
   });
 
   describe('A1 notation only', () => {
-    it.each(['=B2|', '=B2+C45|', '=$B$2|', '=SUM(B4:C4)|', '=SUM(B4:C4|', '=B:B|'])(
-      'is not a pick after a typed reference: %s',
-      (marked) => {
-        expect(pick(marked, true)).toEqual(NONE);
-      },
-    );
+    it.each([
+      ['=B2|', 1, 3],
+      ['=B|2', 1, 3],
+      ['=|B2', 1, 3],
+      ['=B2+C45|', 4, 7],
+      ['=B2|+C45', 1, 3],
+      ['=$B$2|', 1, 5],
+      ['=SUM(B4:C4|', 5, 10],
+      ['=SUM(B4:C|4)', 5, 10],
+      ['=SUM(|B4:C4)', 5, 10],
+      ['=B:B|', 1, 4],
+    ])('replaces the reference the caret is on: %s', (marked, start, end) => {
+      expect(pick(marked, true)).toEqual(replace(start, end));
+    });
 
-    it.each(['=B|2', '=SUM(B4:C|4)', '=B|'])(
-      'is not a pick inside a reference or a column letter: %s',
+    it.each(['=SUM(B4:C4)|', '=B|', '=B2 |', '=B2+5|'])(
+      'is not a pick when the caret is not on a reference: %s',
       (marked) => {
         expect(pick(marked, true)).toEqual(NONE);
       },
@@ -187,9 +222,27 @@ describe('getFormulaPickAction', () => {
   });
 
   describe('canonical only', () => {
-    it('is not a pick after a typed reference', () => {
-      expect(pick('=REF(COLUMN("price"), ROW(2))|', false)).toEqual(NONE);
-      expect(pick('=COLUMN_VALUES("price")|', false)).toEqual(NONE);
+    it.each([
+      ['=REF(COLUMN("price"), ROW(2))|', 1, 29],
+      ['=REF(COLUMN("pri|ce"), ROW(2))', 1, 29],
+      ['=REF(COLUMN("price"), RO|W(2))', 1, 29],
+      ['=|REF(COLUMN("price"), ROW(2))', 1, 29],
+      ['=2*REF(COLUMN("price"), ROW(2))|+1', 3, 31],
+      ['=COLUMN_VALUES("price")|', 1, 23],
+      ['=FIELD("q1")|', 1, 12],
+      ['=SUM(RANGE_REF(COLUMN_FROM("a"), ROW_FROM(1), COLUMN_TO("b"), ROW_TO(2))|)', 5, 72],
+    ])('replaces the reference form the caret is on: %s', (marked, start, end) => {
+      expect(pick(marked, false)).toEqual(replace(start, end));
+    });
+
+    it('is not a pick on a reference form that is not closed', () => {
+      expect(pick('=REF(COLUMN("price"), ROW(2)|', false)).toEqual(NONE);
+      expect(pick('=REF|', false)).toEqual(NONE);
+    });
+
+    it('is not a pick on a function call', () => {
+      expect(pick('=SUM(price)|', false)).toEqual(NONE);
+      expect(pick('=SU|M(price)', false)).toEqual(NONE);
     });
 
     it('inserts after an operator following a reference', () => {
@@ -199,6 +252,39 @@ describe('getFormulaPickAction', () => {
     it('reads an A1-looking name as a partially typed name', () => {
       // In the canonical dialect `B2` is a field name being typed.
       expect(pick('=B2|', false)).toEqual(NONE);
+    });
+  });
+
+  describe.each([
+    { dialect: 'A1 notation', a1Notation: true },
+    { dialect: 'canonical', a1Notation: false },
+  ])('field names, $dialect', ({ a1Notation }) => {
+    const isFieldName = (name: string) => name === 'price' || name === 'quantity';
+    const pickField = (marked: string) => {
+      const { text, selection } = parseMarked(marked);
+      return getFormulaPickAction(text, selection, null, { a1Notation, isFieldName });
+    };
+
+    it.each([
+      ['=price|', 1, 6],
+      ['=pri|ce', 1, 6],
+      ['=|price', 1, 6],
+      ['=price * quantity|', 9, 17],
+      ['=price| * quantity', 1, 6],
+      ['=SUM(price, quantity|)', 12, 20],
+    ])('replaces the field name the caret is on: %s', (marked, start, end) => {
+      expect(pickField(marked)).toEqual(replace(start, end));
+    });
+
+    it.each(['=pri|', '=total|', '=price |', '=PRICE|', '="price|"'])(
+      'is not a pick when the caret is not on a field name: %s',
+      (marked) => {
+        expect(pickField(marked)).toEqual(NONE);
+      },
+    );
+
+    it('is not a pick on a function named like a field', () => {
+      expect(pickField('=price|(1)')).toEqual(NONE);
     });
   });
 
@@ -236,18 +322,16 @@ describe('getFormulaPickAction', () => {
       // `=B2` pending, the user types `+`: the next click inserts.
       const pending = pendingOf('=[B2]');
       expect(pick('=B2+|', true, pending)).toEqual(insertAt(4));
-      // The user types a digit: the reference is complete, the click is not a pick.
-      expect(pick('=B22|', true, pending)).toEqual(NONE);
+      // The user types a digit: the click replaces the reference as typed.
+      expect(pick('=B22|', true, pending)).toEqual(replace(1, 4));
     });
 
     it('is finalized by moving the caret', () => {
       const pending = pendingOf('=SUM([B2])');
       // Caret after the `)`: complete operand.
       expect(pick('=SUM(B2)|', true, pending)).toEqual(NONE);
-      // Caret inside the reference.
-      expect(pick('=SUM(B|2)', true, pending)).toEqual(NONE);
-      // Caret before the reference: a value position, a new insert.
-      expect(pick('=SUM(|B2)', true, pending)).toEqual(insertAt(5));
+      // Caret after the pending field name, moved before the operator typed after it.
+      expect(pick('=price|+1', false, pendingOf('=[price]'))).toEqual(NONE);
     });
 
     it('is finalized by selecting text', () => {
@@ -258,9 +342,9 @@ describe('getFormulaPickAction', () => {
     });
 
     it('ignores a malformed pending span', () => {
-      expect(pick('=B2|', true, { start: 0, end: 3, text: '=B2' })).toEqual(NONE);
-      expect(pick('=B2|', true, { start: 3, end: 3, text: '=B2' })).toEqual(NONE);
-      expect(pick('=B2|', true, { start: 1, end: 9, text: '=B2' })).toEqual(NONE);
+      expect(pick('=5|', true, { start: 0, end: 2, text: '=5' })).toEqual(NONE);
+      expect(pick('=5|', true, { start: 2, end: 2, text: '=5' })).toEqual(NONE);
+      expect(pick('=5|', true, { start: 1, end: 9, text: '=5' })).toEqual(NONE);
     });
 
     it('does not make a non-formula text pickable', () => {
@@ -282,8 +366,8 @@ describe('getFormulaPickAction', () => {
       expect(pick('=B2+C3|', true, pendingOf('=B2+[C3]'))).toEqual(replace(4, 6));
     });
 
-    it('`=B2+C45|` typed, click → commits (D3; AG Grid replaces the reference)', () => {
-      expect(pick('=B2+C45|', true)).toEqual(NONE);
+    it('`=B2+C45|` typed, click → the reference at the caret is replaced', () => {
+      expect(pick('=B2+C45|', true)).toEqual(replace(4, 7));
     });
 
     it('`=5|`, `=SUM(B4:C4)|`, `="abc|` click → commits', () => {

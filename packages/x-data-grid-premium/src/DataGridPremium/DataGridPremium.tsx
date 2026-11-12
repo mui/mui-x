@@ -747,6 +747,14 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
    */
   formulaFunctions: PropTypes.object,
   /**
+   * If `true`, clicking a cell while a formula is being edited writes a reference to that cell
+   * into the formula instead of ending the edit, when the caret is where a reference is expected
+   * (after `=`, an operator, `(` or `,`) or on a reference, which is then replaced.
+   * Has no effect when `disableFormulas` is `true` or a `dataSource` is set.
+   * @default false
+   */
+  formulaReferencePicking: PropTypes.bool,
+  /**
    * Determines the position of an aggregated value.
    * @param {GridGroupNode} groupNode The current group.
    * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group isn't aggregated).

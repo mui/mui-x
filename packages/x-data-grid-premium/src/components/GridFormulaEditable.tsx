@@ -258,6 +258,29 @@ export interface GridFormulaEditableHandle {
    * @param {React.SyntheticEvent} event The originating event (a click on the pane).
    */
   insertText: (text: string, event: React.SyntheticEvent) => void;
+  /**
+   * @returns {string} The text the editable shows.
+   */
+  getText: () => string;
+  /**
+   * @returns {FormulaEditorSelection | null} The live selection in character offsets, or `null` when the editable does not hold it.
+   */
+  getSelection: () => FormulaEditorSelection | null;
+  /**
+   * @returns {boolean} `true` while an IME composition is in flight.
+   */
+  isComposing: () => boolean;
+  /**
+   * Replaces `start..end` of the text with `text` and queues the caret right
+   * after it — the reference picking path. Reports through `onValueChange`
+   * like typing does. Unlike `insertText`, the suggestion popup is not
+   * recomputed: the pointer is on the grid, not in the editor.
+   * @param {number} start The start offset of the replaced range.
+   * @param {number} end The end offset of the replaced range.
+   * @param {string} text The text to write.
+   * @param {React.SyntheticEvent} event The originating event (a mousedown on a cell).
+   */
+  replaceRange: (start: number, end: number, text: string, event: React.SyntheticEvent) => void;
 }
 
 export interface GridFormulaEditableProps {
@@ -813,6 +836,28 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
       [onInteraction, onValueChange, readOnly],
     );
 
+    const replaceRange = React.useCallback(
+      (rangeStart: number, rangeEnd: number, text: string, event: React.SyntheticEvent) => {
+        const root = editableRef.current;
+        if (!root || readOnly) {
+          return;
+        }
+        const source = root.textContent ?? '';
+        const start = Math.max(0, Math.min(source.length, rangeStart));
+        const end = Math.max(start, Math.min(source.length, rangeEnd));
+        engagedRef.current = true;
+        pendingCaretRef.current = start + text.length;
+        lastSelectionRef.current = null;
+        onValueChange(
+          source.slice(0, start) + text + source.slice(end),
+          pendingCaretRef.current,
+          event,
+        );
+        onInteraction?.(pendingCaretRef.current);
+      },
+      [onInteraction, onValueChange, readOnly],
+    );
+
     const handleEditableRef = React.useCallback((node: HTMLDivElement | null) => {
       editableRef.current = node;
       setAnchorEl(node);
@@ -862,8 +907,15 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
         },
         closeSuggestions: () => setOpen(false),
         insertText,
+        getText: () => editableRef.current?.textContent ?? '',
+        getSelection: () => {
+          const root = editableRef.current;
+          return root ? getSelectionOffsets(root) : null;
+        },
+        isComposing: () => composingRef.current,
+        replaceRange,
       }),
-      [insertText],
+      [insertText, replaceRange],
     );
 
     return (

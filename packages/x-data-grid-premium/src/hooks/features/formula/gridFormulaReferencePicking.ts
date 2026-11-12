@@ -7,6 +7,7 @@ import type { FormulaCellRefNode, FormulaPositionContext } from './engine';
 import { toFormulaFieldReference } from './gridFormulaAutocomplete';
 import { gridFormulaA1PositionContextSelector } from './gridFormulaPositionContext';
 import type { FormulaReferenceTarget } from './gridFormulaReferenceHighlights';
+import type { GridFormulaPickEditable } from './gridFormulaInterfaces';
 
 /**
  * What a picking click points at. Shares its shape with the highlight targets,
@@ -111,4 +112,40 @@ export function getPickedReferenceText(
     return null;
   }
   return text;
+}
+
+/**
+ * Registers a formula editable as a destination of picked references, for as
+ * long as its host is mounted.
+ * @param {RefObject<GridPrivateApiPremium>} apiRef The private grid api.
+ * @param {GridFormulaPickEditable} editable The editable to register.
+ * @returns {() => void} The function that removes the registration.
+ */
+export function registerFormulaPickEditable(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  editable: GridFormulaPickEditable,
+): () => void {
+  const { editables } = apiRef.current.caches.formula!.referencePick;
+  editables.add(editable);
+  return () => {
+    editables.delete(editable);
+  };
+}
+
+/**
+ * The registered editable that holds the DOM focus, which is the one a picked
+ * reference is written into.
+ * @param {RefObject<GridPrivateApiPremium>} apiRef The private grid api.
+ * @returns {GridFormulaPickEditable | null} The focused editable, or `null` when none of them has the focus.
+ */
+export function getActiveFormulaPickEditable(
+  apiRef: RefObject<GridPrivateApiPremium>,
+): GridFormulaPickEditable | null {
+  for (const editable of apiRef.current.caches.formula!.referencePick.editables) {
+    const root = editable.getHandle()?.getRoot();
+    if (root && root.ownerDocument.activeElement === root) {
+      return editable;
+    }
+  }
+  return null;
 }
