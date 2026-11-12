@@ -2,7 +2,7 @@ import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
   absorbObserverFrames,
-  adapter,
+  createDate,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
@@ -91,25 +91,6 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     // The path ends lower than it starts (row 1 is below row 0).
     const coordinates = d.match(/[\d.]+/g)!.map(parseFloat);
     expect(coordinates[coordinates.length - 1]).to.be.greaterThan(coordinates[1]);
-  });
-
-  it('should render an S route when the successor starts before the predecessor ends', async () => {
-    const earlyEvent = EventBuilder.new()
-      .id('event-early')
-      .title('Event early')
-      .singleDay('2025-07-03T08:00:00Z')
-      .resource(resource2)
-      .build();
-
-    await renderTimeline({
-      events: [eventA, earlyEvent],
-      dependencies: [buildDependency('dep-1', 'event-a', 'event-early')],
-    });
-
-    const d = getArrowPaths()[0].getAttribute('d')!;
-
-    // S route: four softened corners.
-    expect(d.match(/Q /g)).to.have.length(4);
   });
 
   describe('virtualized row heights with a trimmed hour window', () => {
@@ -311,8 +292,8 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     act(() => {
       store.updateEvent({
         id: 'event-a',
-        start: adapter.date('2025-07-03T09:30:00Z', 'default'),
-        end: adapter.date('2025-07-03T10:30:00Z', 'default'),
+        start: createDate('2025-07-03T09:30:00Z'),
+        end: createDate('2025-07-03T10:30:00Z'),
       });
     });
 

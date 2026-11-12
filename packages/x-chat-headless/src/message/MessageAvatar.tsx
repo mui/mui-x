@@ -8,10 +8,12 @@ import type { MessageAvatarOwnerState } from './message.types';
 export interface MessageAvatarSlots {
   /**
    * The component that renders the avatar.
+   * @default 'div'
    */
   avatar: React.ElementType;
   /**
    * The component that renders the image.
+   * @default 'img'
    */
   image: React.ElementType;
 }

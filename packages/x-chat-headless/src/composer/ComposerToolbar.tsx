@@ -8,6 +8,7 @@ import type { ComposerToolbarOwnerState } from './composer.types';
 export interface ComposerToolbarSlots {
   /**
    * The component that renders the toolbar.
+   * @default 'div'
    */
   toolbar: React.ElementType;
 }

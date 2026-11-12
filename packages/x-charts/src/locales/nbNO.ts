@@ -134,6 +134,20 @@ export const nbNOLocaleText: Partial<ChartsLocaleText> = {
   //   const axisName = axisDirection === 'x' ? 'horizontal axis' : 'vertical axis';
   //   return `Showing ${Math.round(start)}% to ${Math.round(end)}% of the ${axisName}`;
   // },
+  // zoomSliderStartLabel: function zoomSliderStartLabel({
+  //   axisDirection,
+  //   axisLabel
+  // }) {
+  //   const axisName = axisLabel ?? (axisDirection === 'x' ? 'Horizontal axis' : 'Vertical axis');
+  //   return `${axisName} zoom start`;
+  // },
+  // zoomSliderEndLabel: function zoomSliderEndLabel({
+  //   axisDirection,
+  //   axisLabel
+  // }) {
+  //   const axisName = axisLabel ?? (axisDirection === 'x' ? 'Horizontal axis' : 'Vertical axis');
+  //   return `${axisName} zoom end`;
+  // },
   // barDescription: function barDescription({
   //   value,
   //   formattedValue,

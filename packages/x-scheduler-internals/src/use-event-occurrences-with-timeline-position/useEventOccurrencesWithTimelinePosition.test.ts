@@ -1,4 +1,4 @@
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { addMinutes, createDate, endOfDay, EventBuilder } from 'test/utils/scheduler';
 import { renderHook } from '@mui/internal-test-utils';
 import type { SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
 import { getOccurrencesFromEvents } from '@mui/x-scheduler-internals/internals';
@@ -12,15 +12,14 @@ import {
 import { createEventRangeIndex } from '../internals/utils/event-range-index';
 
 describe('useDayListEventOccurrencesWithPosition', () => {
-  const collectionStart = adapter.date('2024-01-15', 'default');
-  const collectionEnd = adapter.endOfDay(adapter.date('2024-01-15', 'default'));
+  const collectionStart = createDate('2024-01-15');
+  const collectionEnd = endOfDay(createDate('2024-01-15'));
 
   function testHook(events: SchedulerProcessedEvent[], maxSpan: number) {
     const { result } = renderHook(() => {
       const occurrences = getOccurrencesFromEvents({
-        adapter,
-        start: adapter.getTime(collectionStart),
-        end: adapter.getTime(collectionEnd),
+        start: collectionStart.getTime(),
+        end: collectionEnd.getTime(),
         eventRangeIndex: createEventRangeIndex(events, false),
         displayTimezone: 'default',
         visibleResources: {},
@@ -233,9 +232,8 @@ describe('useDayListEventOccurrencesWithPosition', () => {
       const result = testHook(events, 1);
 
       const occurrences = getOccurrencesFromEvents({
-        adapter,
-        start: adapter.getTime(collectionStart),
-        end: adapter.getTime(collectionEnd),
+        start: collectionStart.getTime(),
+        end: collectionEnd.getTime(),
         eventRangeIndex: createEventRangeIndex(events, false),
         displayTimezone: 'default',
         visibleResources: {},
@@ -291,7 +289,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
       const occurrences = Array.from({ length: occurrenceCount }, (_, index) => {
         const startMinutes = Math.floor(random() * 12) * 30;
         const durationMinutes = Math.floor(random() * 9) * 15;
-        const start = adapter.addMinutes(collectionStart, startMinutes).toISOString();
+        const start = addMinutes(collectionStart, startMinutes).toISOString();
         return EventBuilder.new()
           .id(`${iteration}-${index}`)
           .singleDay(start, durationMinutes)

@@ -18,6 +18,7 @@
     {
       "name": "header",
       "description": "The component that renders the header.",
+      "default": "'div'; a styled 'header' in `ChatConversationHeader`",
       "class": "MuiChatConversationHeader-header"
     }
   ],

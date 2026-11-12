@@ -199,7 +199,7 @@ export const useGridColumnReorder = (
           forbiddenIndexes: forbiddenIndexes.current,
         });
         if (targetIndex !== null) {
-          apiRef.current.setColumnIndex(dragColField, targetIndex);
+          apiRef.current.setColumnIndex(dragColField, targetIndex, false);
         }
 
         cursorPosition.current = coordinates;

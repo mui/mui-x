@@ -524,6 +524,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           as={CalendarGrid.DayRow}
           start={start}
           end={end}
+          days={days}
           className={classes.dayTimeGridAllDayEventsRow}
         >
           {occurrences.days.map((day, index) => (

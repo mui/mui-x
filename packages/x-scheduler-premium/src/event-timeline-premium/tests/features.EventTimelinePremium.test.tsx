@@ -17,7 +17,6 @@ import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { vi, describe, it, expect } from 'vitest';
 import {
   buildDependency,
-  createDependencyTimelineRenderer,
   getArrowPaths,
   getEventRow,
   mockAllEventRowBounds,
@@ -55,7 +54,6 @@ describe('EventTimelinePremium - features', () => {
   const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
-  const { renderTimeline } = createDependencyTimelineRenderer(renderSettled);
 
   function Timeline(
     props: Partial<React.ComponentProps<typeof EventTimelinePremium<SchedulerEvent, any>>>,
@@ -178,30 +176,6 @@ describe('EventTimelinePremium - features', () => {
 
     expect(getAllEventsByTitle(dailyEvent.title)).to.have.length(1);
   });
-  it('should render the events without arrows or terminals without the dependencies feature', async () => {
-    await expect(() =>
-      renderTimeline({
-        events: [predecessor, successor],
-        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
-        features: { recurringEvents: recurringEventsFeature },
-      }),
-    ).toWarnDev('the dependencies feature is missing');
-
-    expect(getAllEventsByTitle('Event A')).to.have.length(1);
-    expect(getAllEventsByTitle('Event B')).to.have.length(1);
-    expect(getArrowPaths()).to.have.length(0);
-    expect(document.querySelector('[data-dependency-terminal]')).to.equal(null);
-  });
-
-  it('should render the arrows and terminals with the dependencies feature', async () => {
-    await renderTimeline({
-      events: [predecessor, successor],
-      dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
-    });
-
-    expect(getArrowPaths()).to.have.length(1);
-    expect(document.querySelector('[data-dependency-terminal]')).not.to.equal(null);
-  });
 
   describe('public dependencies props', () => {
     const dependency = buildDependency('dep-1', 'event-a', 'event-b');
@@ -267,7 +241,10 @@ describe('EventTimelinePremium - features', () => {
         ),
       ).toWarnDev('the dependencies feature is missing');
 
+      expect(getAllEventsByTitle('Event A')).to.have.length(1);
+      expect(getAllEventsByTitle('Event B')).to.have.length(1);
       expect(getArrowPaths()).to.have.length(0);
+      expect(document.querySelector('[data-dependency-terminal]')).to.equal(null);
     });
 
     it('should warn when `onDependenciesChange` is passed without `dependencies`', async () => {

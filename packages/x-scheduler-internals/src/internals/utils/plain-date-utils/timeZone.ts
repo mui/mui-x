@@ -64,7 +64,7 @@ function getSystemTimezoneOffsetMs(epochMs: number): number {
 
 /**
  * The offset of `timezone` from UTC at an instant, in milliseconds.
- * `'default'` and `'system'` read the timezone of the system, like the adapter.
+ * `'default'` and `'system'` read the timezone of the system.
  */
 function getTimezoneOffsetMs(timezone: TemporalTimezone, epochMs: number): number {
   if (timezone === 'default' || timezone === 'system') {
@@ -255,9 +255,9 @@ export function getEndOfDayMs(epochMs: number, timezone: TemporalTimezone): numb
 }
 
 /**
- * The number of full days from `earlierMs` to `laterMs` on the wall clock of `timezone`, like the
- * adapter's `differenceInDays()`: the days between the two dates, minus one when the time of
- * `laterMs` is before the time of `earlierMs`. Negative when `laterMs` is before `earlierMs`.
+ * The number of full days from `earlierMs` to `laterMs` on the wall clock of `timezone`: the days
+ * between the two dates, minus one when the time of `laterMs` is before the time of `earlierMs`.
+ * Negative when `laterMs` is before `earlierMs`.
  */
 export function differenceInDays(
   laterMs: number,

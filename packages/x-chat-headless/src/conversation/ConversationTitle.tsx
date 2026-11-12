@@ -8,6 +8,7 @@ import type { ConversationTitleOwnerState } from './conversation.types';
 export interface ConversationTitleSlots {
   /**
    * The component that renders the title.
+   * @default 'div'
    */
   title: React.ElementType;
 }

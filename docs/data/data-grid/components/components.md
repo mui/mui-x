@@ -143,6 +143,31 @@ Material UI icons need to be passed like `Icon as any` due to typing issues tha
 
 See the [Overlays](/x/react-data-grid/overlays/) documentation on how to customize the `loadingOverlay`, `noRowsOverlay`, and `noResultsOverlay`.
 
+### Root and main elements
+
+The Data Grid forwards `data-*` props to its root element.
+For example, `<DataGrid data-testid="orders-grid" />` adds the `data-testid` attribute to the outermost element.
+The Data Grid does not forward other unknown props to the DOM.
+
+To add other attributes, such as `aria-*`, use the `root` and `main` slot props:
+
+- `slotProps.root`: the outermost element of the Data Grid. If a `data-*` attribute is also in `slotProps.root`, the value in `slotProps.root` is used.
+- `slotProps.main`: the `.MuiDataGrid-main` element, with `role="grid"` (or `role="treegrid"` with tree data or row grouping). Use it for ARIA attributes that describe the grid.
+
+```tsx
+<DataGrid
+  data-testid="orders-grid"
+  slotProps={{
+    main: { 'aria-describedby': 'orders-grid-description' },
+  }}
+/>
+```
+
+:::info
+The `aria-label` and `aria-labelledby` props are supported directly on the Data Grid.
+They are applied to the `.MuiDataGrid-main` element.
+:::
+
 ## Custom slot props with TypeScript
 
 :::success
