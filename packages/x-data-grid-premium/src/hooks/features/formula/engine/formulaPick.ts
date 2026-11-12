@@ -65,7 +65,11 @@ export interface FormulaPickActionOptions {
 
 const NO_PICK: FormulaPickAction = { type: 'none' };
 
-function isPendingPickValid(
+/**
+ * `true` while the reference of the previous pick can still be replaced: the
+ * text has not changed since the pick and the caret is still at its end.
+ */
+export function isFormulaPendingPickValid(
   text: string,
   selection: FormulaPickSelection,
   pending: FormulaPendingPick,
@@ -209,7 +213,7 @@ export function getFormulaPickAction(
   const start = Math.max(0, Math.min(selection.start, selection.end, text.length));
   const end = Math.max(0, Math.min(Math.max(selection.start, selection.end), text.length));
 
-  if (pending !== null && isPendingPickValid(text, { start, end }, pending)) {
+  if (pending !== null && isFormulaPendingPickValid(text, { start, end }, pending)) {
     return { type: 'replace', start: pending.start, end: pending.end };
   }
 

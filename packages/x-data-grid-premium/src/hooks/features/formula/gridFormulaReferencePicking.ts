@@ -1,12 +1,24 @@
 import type { RefObject } from '@mui/x-internals/types';
-import { GRID_ACTIONS_COLUMN_TYPE, GridCellModes } from '@mui/x-data-grid-pro';
+import { GRID_ACTIONS_COLUMN_TYPE, GridCellModes, gridClasses } from '@mui/x-data-grid-pro';
 import type { GridRowId } from '@mui/x-data-grid-pro';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import { columnIndexToLetters, serializeFormulaAst } from './engine';
-import type { FormulaCellRefNode, FormulaPositionContext } from './engine';
+import {
+  columnIndexToLetters,
+  getFormulaPickAction,
+  isFormulaPendingPickValid,
+  serializeFormulaAst,
+} from './engine';
+import type {
+  FormulaCellRefNode,
+  FormulaPickAction,
+  FormulaPickSelection,
+  FormulaPositionContext,
+} from './engine';
 import { toFormulaFieldReference } from './gridFormulaAutocomplete';
 import { gridFormulaA1PositionContextSelector } from './gridFormulaPositionContext';
 import type { FormulaReferenceTarget } from './gridFormulaReferenceHighlights';
+import { gridFormulaActiveEditSelector } from './gridFormulaSelectors';
 import type { GridFormulaPickEditable } from './gridFormulaInterfaces';
 
 /**
@@ -148,4 +160,119 @@ export function getActiveFormulaPickEditable(
     }
   }
   return null;
+}
+
+/**
+ * `true` when the props turn reference picking on.
+ */
+export function isFormulaReferencePickingEnabled(
+  props: Pick<
+    DataGridPremiumProcessedProps,
+    'formulaReferencePicking' | 'disableFormulas' | 'dataSource'
+  >,
+): boolean {
+  return !!props.formulaReferencePicking && !props.disableFormulas && !props.dataSource;
+}
+
+/**
+ * What a click on a cell does to the formula of `editable`, given the text it
+ * shows and its selection.
+ */
+export function getFormulaPickActionForEditable(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  editable: GridFormulaPickEditable,
+  text: string,
+  selection: FormulaPickSelection,
+): FormulaPickAction {
+  const { ownerCell, a1Notation } = editable;
+  const { pending } = apiRef.current.caches.formula!.referencePick;
+  return getFormulaPickAction(
+    text,
+    selection,
+    pending !== null && pending.id === ownerCell.id && pending.field === ownerCell.field
+      ? pending.pick
+      : null,
+    {
+      a1Notation,
+      // A bare name is a reference when it is the name a click on that column writes.
+      isFieldName: (name) =>
+        apiRef.current.getColumn(name) != null &&
+        toFormulaFieldReference(name, a1Notation) === name,
+    },
+  );
+}
+
+/**
+ * Shows where the picking session stands:
+ *
+ * - the root class that gives the cells their picking cursor, while a click
+ *   on a cell would write a reference;
+ * - the pending reference, whose rectangle the overlay draws solid.
+ * @param {RefObject<GridPrivateApiPremium>} apiRef The private grid api.
+ * @param {boolean} pickable `true` when a click on a cell would write a reference.
+ * @param {FormulaReferenceTarget | null} pendingReference The target of the pending reference.
+ */
+export function applyFormulaPickFeedback(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  pickable: boolean,
+  pendingReference: FormulaReferenceTarget | null,
+): void {
+  // Always re-applied: a render of the root with new classes drops a class set here.
+  apiRef.current.rootElementRef?.current?.classList.toggle(
+    gridClasses['root--formulaReferencePicking'],
+    pickable,
+  );
+
+  const activeEdit = gridFormulaActiveEditSelector(apiRef);
+  if (activeEdit === null || (activeEdit.pendingReference ?? null) === pendingReference) {
+    return;
+  }
+  apiRef.current.setState((state) => {
+    if (state.formula.activeEdit === null) {
+      return state;
+    }
+    return {
+      ...state,
+      formula: {
+        ...state.formula,
+        activeEdit: {
+          ...state.formula.activeEdit,
+          pendingReference: pendingReference ?? undefined,
+        },
+      },
+    };
+  });
+}
+
+/**
+ * Recomputes the picking feedback from the focused editable: its text and its
+ * caret decide whether a click would write a reference, and whether the
+ * reference of the last pick is still pending. Called after every change of
+ * the text or of the caret.
+ * @param {RefObject<GridPrivateApiPremium>} apiRef The private grid api.
+ * @param {boolean} enabled `true` when reference picking is on.
+ */
+export function syncFormulaPickFeedback(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  enabled: boolean,
+): void {
+  const editable = enabled ? getActiveFormulaPickEditable(apiRef) : null;
+  const handle = editable?.getHandle();
+  const selection = handle && !handle.isComposing() ? handle.getSelection() : null;
+  if (!editable || !handle || selection === null) {
+    applyFormulaPickFeedback(apiRef, false, null);
+    return;
+  }
+  const text = handle.getText();
+  const { pending } = apiRef.current.caches.formula!.referencePick;
+  const isPending =
+    pending !== null &&
+    pending.id === editable.ownerCell.id &&
+    pending.field === editable.ownerCell.field &&
+    isFormulaPendingPickValid(text, selection, pending.pick);
+  applyFormulaPickFeedback(
+    apiRef,
+    getFormulaPickActionForEditable(apiRef, editable, text, selection).type !== 'none',
+    isPending ? pending.target : null,
+  );
 }

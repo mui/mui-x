@@ -142,7 +142,7 @@ export type {
   FormulaPickActionOptions,
   FormulaPickSelection,
 } from './formulaPick';
-export { getFormulaPickAction } from './formulaPick';
+export { getFormulaPickAction, isFormulaPendingPickValid } from './formulaPick';
 
 export type { A1TransformContext, A1TransformResult, ToCanonicalOptions } from './formulaA1';
 export {

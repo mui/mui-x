@@ -33,6 +33,10 @@ import {
   setSelectionOffsets,
 } from './formulaEditorCaret';
 import type { FormulaEditorSelection } from './formulaEditorCaret';
+import {
+  isFormulaReferencePickingEnabled,
+  syncFormulaPickFeedback,
+} from '../hooks/features/formula/gridFormulaReferencePicking';
 
 /**
  * The font formula text is rendered in — monospace, so a formula reads as the
@@ -395,6 +399,7 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
     } = props;
     const apiRef = useGridPrivateApiContext();
     const rootProps = useGridRootProps();
+    const referencePicking = isFormulaReferencePickingEnabled(rootProps);
 
     const editableRef = React.useRef<HTMLDivElement | null>(null);
     // The caret to restore on the next rebuild (set by typing/accepting); `null`
@@ -536,7 +541,10 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
         refreshAfterRebuildRef.current = false;
         refresh(getCaretOffset(root));
       }
-    }, [segments, value, refresh, onAfterRebuild]);
+      // The text and the caret are final: typing ends a pending pick, and the
+      // new caret position decides whether a click picks a reference.
+      syncFormulaPickFeedback(apiRef, referencePicking);
+    }, [segments, value, refresh, onAfterRebuild, apiRef, referencePicking]);
 
     // Keep the highlighted option scrolled into view.
     useEnhancedEffect(() => {
@@ -774,6 +782,7 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
         // Any key may have moved the caret.
         const root = editableRef.current;
         onInteraction?.(root ? getCaretOffset(root) : null);
+        syncFormulaPickFeedback(apiRef, referencePicking);
         // A caret move without a value change can still change the suggestion
         // context.
         if (
@@ -785,14 +794,15 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
           refresh();
         }
       },
-      [onInteraction, refresh],
+      [apiRef, onInteraction, referencePicking, refresh],
     );
 
     // A click (or a drag-selection ending inside the editable) places the caret.
     const handleMouseUp = React.useCallback(() => {
       const root = editableRef.current;
       onInteraction?.(root ? getCaretOffset(root) : null);
-    }, [onInteraction]);
+      syncFormulaPickFeedback(apiRef, referencePicking);
+    }, [apiRef, onInteraction, referencePicking]);
 
     // The selection as it stood when focus left the editable — where a
     // click-to-insert lands when the click did blur the editable (keyboard
@@ -805,8 +815,10 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
         lastSelectionRef.current = root ? getSelectionOffsets(root) : null;
         setOpen(false);
         onBlur?.(event);
+        // Without the focus, a click on a cell is not a pick.
+        syncFormulaPickFeedback(apiRef, referencePicking);
       },
-      [onBlur],
+      [apiRef, onBlur, referencePicking],
     );
 
     const insertText = React.useCallback(

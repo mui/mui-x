@@ -89,6 +89,7 @@ import {
 } from './gridComputedColumnsValidation';
 import type { GridComputedColumnsPrivateApi } from '../computedColumns/gridComputedColumnsInterfaces';
 import { useGridFormulaReferencePicking } from './useGridFormulaReferencePicking';
+import { applyFormulaPickFeedback } from './gridFormulaReferencePicking';
 
 export const formulaStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'formulaFunctions' | 'disableFormulas' | 'dataSource'>,
@@ -877,6 +878,7 @@ export const useGridFormula = (
     cache.plainEditDraft = null;
     cache.referencePick.gesture = null;
     cache.referencePick.pending = null;
+    applyFormulaPickFeedback(apiRef, false, null);
     // Turn off reference highlighting (the editor set it on mount; this is the
     // only thing that clears it — the editor unmounting from virtualization
     // must not).
@@ -913,6 +915,7 @@ export const useGridFormula = (
     ) {
       cache.referencePick.gesture = null;
       cache.referencePick.pending = null;
+      applyFormulaPickFeedback(apiRef, false, null);
     }
   }, [apiRef]);
 

@@ -5,6 +5,7 @@ import { microtasks } from 'test/utils/helperFn';
 import {
   DataGridPremium,
   GRID_CHECKBOX_SELECTION_FIELD,
+  gridClasses,
   gridFocusCellSelector,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
@@ -70,6 +71,8 @@ describe('<DataGridPremium /> - Formulas reference picking', () => {
     editable.textContent = text;
     fireEvent.input(editable);
     act(() => setCaretOffset(editable, caret));
+    // Typing ends with the release of the key, which is when the editor reads the caret.
+    fireEvent.keyUp(editable, { key: text.slice(-1) });
   }
 
   /**
@@ -444,6 +447,277 @@ describe('<DataGridPremium /> - Formulas reference picking', () => {
         expect(isEditing(11)).to.equal(false);
       });
       expect(gridFocusCellSelector(otherApiRef!)).to.deep.equal({ id: 12, field: 'price' });
+    });
+  });
+
+  describe('visual feedback', () => {
+    const PICKING_CLASS = gridClasses['root--formulaReferencePicking'];
+    const RECT_CLASS = 'MuiDataGrid-formulaReferenceHighlight';
+    const PENDING_CLASS = 'MuiDataGrid-formulaReferenceHighlight--pending';
+
+    const isPickingClassOn = () =>
+      document.querySelector(`.${gridClasses.root}`)!.classList.contains(PICKING_CLASS);
+    const rects = () => Array.from(document.querySelectorAll<HTMLElement>(`.${RECT_CLASS}`));
+    const pendingRects = () =>
+      Array.from(document.querySelectorAll<HTMLElement>(`.${PENDING_CLASS}`));
+
+    /**
+     * Moves the caret the way an arrow key does.
+     */
+    function moveCaret(offset: number) {
+      const editable = getEditable()!;
+      act(() => setCaretOffset(editable, offset));
+      fireEvent.keyUp(editable, { key: 'ArrowLeft' });
+    }
+
+    describe('pending reference rectangle', () => {
+      it('marks the rectangle of the picked reference until something is typed', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=');
+        expect(rects()).to.have.length(0);
+
+        await user.click(cell(12, 'price'));
+        await waitFor(() => {
+          expect(rects()).to.have.length(1);
+        });
+        expect(pendingRects()).to.have.length(1);
+
+        typeInEditor('=B2+');
+        await waitFor(() => {
+          expect(pendingRects()).to.have.length(0);
+        });
+        expect(rects()).to.have.length(1);
+      });
+
+      it('moves to the reference of the next pick', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=');
+        await user.click(cell(12, 'price'));
+        typeInEditor('=B2+');
+        await user.click(cell(13, 'quantity'));
+
+        await waitFor(() => {
+          expect(rects()).to.have.length(2);
+        });
+        expect(pendingRects()).to.have.length(1);
+        // B2 keeps the first color, the pending C3 has the second one.
+        expect(pendingRects()[0].style.borderColor).to.equal('var(--DataGrid-formulaRefColor-1)');
+      });
+
+      it('draws the rectangle of a canonical formula that does not parse yet', async () => {
+        const { user } = await render(<Test />);
+        await editTotal(user, 11, '=SUM(');
+        await user.click(cell(12, 'price'));
+
+        expect(getEditable()!.textContent).to.equal('=SUM(REF(COLUMN("price"), ROW(12))');
+        await waitFor(() => {
+          expect(pendingRects()).to.have.length(1);
+        });
+        expect(rects()).to.have.length(1);
+        expect(pendingRects()[0].style.borderColor).to.equal('var(--DataGrid-formulaRefColor-0)');
+
+        // Typing ends the pick, and the text still does not parse: no rectangle is left.
+        typeInEditor('=SUM(REF(COLUMN("price"), ROW(12)),');
+        await waitFor(() => {
+          expect(rects()).to.have.length(0);
+        });
+      });
+
+      it('marks a cell of the row of the formula', async () => {
+        const { user } = await render(<Test />);
+        await editTotal(user, 11, '=2*');
+        await user.click(cell(11, 'price'));
+
+        await waitFor(() => {
+          expect(pendingRects()).to.have.length(1);
+        });
+        expect(rects()).to.have.length(1);
+      });
+
+      it('stops being pending when the caret leaves the end of the reference', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=');
+        await user.click(cell(12, 'price'));
+        await waitFor(() => {
+          expect(pendingRects()).to.have.length(1);
+        });
+
+        moveCaret(1);
+        await waitFor(() => {
+          expect(pendingRects()).to.have.length(0);
+        });
+        expect(rects()).to.have.length(1);
+      });
+
+      it('is removed when the edit is cancelled', async () => {
+        const { user } = await render(<Test />);
+        await editTotal(user, 11, '=SUM(');
+        await user.click(cell(12, 'price'));
+        await waitFor(() => {
+          expect(pendingRects()).to.have.length(1);
+        });
+        fireEvent.keyDown(getEditable()!, { key: 'Escape' });
+
+        await waitFor(() => {
+          expect(isEditing(11)).to.equal(false);
+        });
+        expect(rects()).to.have.length(0);
+      });
+
+      it('is not pending for a reference that was typed', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=B2');
+
+        await waitFor(() => {
+          expect(rects()).to.have.length(1);
+        });
+        expect(pendingRects()).to.have.length(0);
+      });
+    });
+
+    describe('root class', () => {
+      it.each([
+        ['=', true],
+        ['=10+', true],
+        ['=SUM(', true],
+        ['=SUM(price, ', true],
+        // The caret is on a reference: a click replaces it.
+        ['=price', true],
+        ['=10', false],
+        ['=SUM(price)', false],
+        ['="a', false],
+        ['=pri', false],
+        ['10', false],
+        ['', false],
+      ])('for `%s`: %s', async (text, expected) => {
+        const { user } = await render(<Test />);
+        await editTotal(user, 11, text);
+
+        expect(isPickingClassOn()).to.equal(expected);
+      });
+
+      it('follows the caret', async () => {
+        const { user } = await render(<Test />);
+        await editTotal(user, 11, '=10+');
+        expect(isPickingClassOn()).to.equal(true);
+
+        moveCaret(3);
+        expect(isPickingClassOn()).to.equal(false);
+
+        moveCaret(4);
+        expect(isPickingClassOn()).to.equal(true);
+      });
+
+      it('stays on after a pick, as the next click replaces the reference', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=');
+        await user.click(cell(12, 'price'));
+
+        expect(getEditable()!.textContent).to.equal('=B2');
+        expect(isPickingClassOn()).to.equal(true);
+      });
+
+      it('is removed when the edit ends', async () => {
+        const { user } = await render(<Test />);
+        await editTotal(user, 11, '=');
+        expect(isPickingClassOn()).to.equal(true);
+        fireEvent.keyDown(getEditable()!, { key: 'Escape' });
+
+        await waitFor(() => {
+          expect(isEditing(11)).to.equal(false);
+        });
+        expect(isPickingClassOn()).to.equal(false);
+      });
+
+      it('is removed when the click ends the edit', async () => {
+        const { user } = await render(<Test />);
+        await editTotal(user, 11, '=');
+        expect(isPickingClassOn()).to.equal(true);
+        typeInEditor('=10');
+        expect(isPickingClassOn()).to.equal(false);
+        await user.click(cell(12, 'price'));
+
+        await waitFor(() => {
+          expect(isEditing(11)).to.equal(false);
+        });
+        expect(isPickingClassOn()).to.equal(false);
+      });
+
+      it('is never set when the prop is off', async () => {
+        const { user } = await render(<Test formulaReferencePicking={false} />);
+        await editTotal(user, 11, '=');
+
+        expect(isPickingClassOn()).to.equal(false);
+      });
+
+      it('is not set while editing a column without formulas', async () => {
+        const { user } = await render(<Test />);
+        await user.dblClick(cell(11, 'note'));
+        await waitFor(() => {
+          expect(isEditing(11, 'note')).to.equal(true);
+        });
+
+        expect(isPickingClassOn()).to.equal(false);
+      });
+    });
+
+    describe.skipIf(isJSDOM)('layout', () => {
+      it('draws the pending rectangle solid, over the picked cell', async () => {
+        const { user } = await render(<Test />);
+        await editTotal(user, 11, '=SUM(');
+        await user.click(cell(12, 'price'));
+        await waitFor(() => {
+          expect(pendingRects()).to.have.length(1);
+        });
+
+        const rect = pendingRects()[0].getBoundingClientRect();
+        const target = cell(12, 'price').getBoundingClientRect();
+        expect(rect.left).to.be.closeTo(target.left, 1);
+        expect(rect.top).to.be.closeTo(target.top, 1);
+        expect(rect.width).to.be.closeTo(target.width, 1);
+        expect(rect.height).to.be.closeTo(target.height, 1);
+        expect(getComputedStyle(pendingRects()[0]).borderTopStyle).to.equal('solid');
+      });
+
+      it('draws the other rectangles dashed', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=B2+');
+        await user.click(cell(13, 'quantity'));
+        await waitFor(() => {
+          expect(rects()).to.have.length(2);
+        });
+
+        expect(
+          rects().map((rect) => [
+            rect.classList.contains(PENDING_CLASS),
+            getComputedStyle(rect).borderTopStyle,
+          ]),
+        ).to.deep.equal([
+          [false, 'dashed'],
+          [true, 'solid'],
+        ]);
+      });
+
+      it('shows the picking cursor on the cells that can be referenced', async () => {
+        const { user } = await render(
+          <Test
+            checkboxSelection
+            pinnedRows={{ bottom: [{ id: 99, item: 'Pinned', price: 1 }] }}
+          />,
+        );
+        await editTotal(user, 11, '=10');
+        expect(getComputedStyle(cell(12, 'price')).cursor).not.to.equal('cell');
+
+        typeInEditor('=10+');
+        expect(getComputedStyle(cell(12, 'price')).cursor).to.equal('cell');
+        expect(getComputedStyle(cell(11, 'price')).cursor).to.equal('cell');
+        // The cell being edited, a utility column, a pinned row.
+        expect(getComputedStyle(cell(11, 'total')).cursor).not.to.equal('cell');
+        expect(getComputedStyle(cell(12, GRID_CHECKBOX_SELECTION_FIELD)).cursor).not.to.equal(
+          'cell',
+        );
+        expect(getComputedStyle(cell(99, 'price')).cursor).not.to.equal('cell');
+      });
     });
   });
 

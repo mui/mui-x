@@ -5,12 +5,14 @@ import { useGridEvent } from '@mui/x-data-grid-pro';
 import type { GridEventListener, GridEvents } from '@mui/x-data-grid-pro';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import { getFormulaPickAction } from './engine';
-import { toFormulaFieldReference } from './gridFormulaAutocomplete';
 import {
+  applyFormulaPickFeedback,
   getActiveFormulaPickEditable,
+  getFormulaPickActionForEditable,
   getPickedReferenceText,
+  isFormulaReferencePickingEnabled,
 } from './gridFormulaReferencePicking';
+import type { FormulaPickTarget } from './gridFormulaReferencePicking';
 
 /**
  * Reference picking: while a formula is edited and the caret is where a
@@ -28,7 +30,7 @@ export const useGridFormulaReferencePicking = (
     'formulaReferencePicking' | 'disableFormulas' | 'dataSource'
   >,
 ) => {
-  const enabled = !!props.formulaReferencePicking && !props.disableFormulas && !props.dataSource;
+  const enabled = isFormulaReferencePickingEnabled(props);
   const removeMouseUpListener = React.useRef<(() => void) | null>(null);
 
   const handleCellMouseDown = React.useCallback<GridEventListener<'cellMouseDown'>>(
@@ -58,30 +60,12 @@ export const useGridFormulaReferencePicking = (
       }
       const { ownerCell, a1Notation } = editable;
       const text = handle.getText();
-      const { pending } = session;
-      const action = getFormulaPickAction(
-        text,
-        selection,
-        pending !== null && pending.id === ownerCell.id && pending.field === ownerCell.field
-          ? pending.pick
-          : null,
-        {
-          a1Notation,
-          // A bare name is a reference when it is the name a click on that column writes.
-          isFieldName: (name) =>
-            apiRef.current.getColumn(name) != null &&
-            toFormulaFieldReference(name, a1Notation) === name,
-        },
-      );
+      const action = getFormulaPickActionForEditable(apiRef, editable, text, selection);
       if (action.type === 'none') {
         return;
       }
-      const reference = getPickedReferenceText(
-        apiRef,
-        ownerCell,
-        { kind: 'cell', field: params.field, rowId: params.id },
-        { a1Notation },
-      );
+      const target: FormulaPickTarget = { kind: 'cell', field: params.field, rowId: params.id };
+      const reference = getPickedReferenceText(apiRef, ownerCell, target, { a1Notation });
       if (reference === null) {
         return;
       }
@@ -113,7 +97,10 @@ export const useGridFormulaReferencePicking = (
           end: action.start + reference.length,
           text: text.slice(0, action.start) + reference + text.slice(action.end),
         },
+        target,
       };
+      // The next click replaces this reference: its rectangle is the solid one.
+      applyFormulaPickFeedback(apiRef, true, target);
     },
     [apiRef, enabled],
   );

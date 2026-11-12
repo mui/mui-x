@@ -9,6 +9,7 @@ import type { FormulaExcelExportLayout, ExcelFormulaCell } from './gridFormulaEx
 import type { GridComputedErrorRowPredicate } from './createComputedColDef';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridFormulaEditableHandle } from '../../../components/GridFormulaEditable';
+import type { FormulaReferenceTarget } from './gridFormulaReferenceHighlights';
 import type {
   GridComputedColumnDefinition,
   GridComputedColumnsModel,
@@ -85,6 +86,12 @@ export interface GridFormulaActiveEdit {
    * highlighting derives from this text instead of the cell's edit state.
    */
   draft?: string;
+  /**
+   * The target of the reference written by the last picking click, while the
+   * next click still replaces it. Its rectangle is drawn solid, also when the
+   * formula text does not parse yet.
+   */
+  pendingReference?: FormulaReferenceTarget;
 }
 
 /**
@@ -122,7 +129,12 @@ export interface GridFormulaReferencePickSession {
    * The reference written by the last pick, which the next pick replaces, with
    * the cell whose formula holds it.
    */
-  pending: { id: GridRowId; field: string; pick: FormulaPendingPick } | null;
+  pending: {
+    id: GridRowId;
+    field: string;
+    pick: FormulaPendingPick;
+    target: FormulaReferenceTarget;
+  } | null;
 }
 
 export interface GridFormulaState {
