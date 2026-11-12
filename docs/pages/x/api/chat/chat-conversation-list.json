@@ -28,58 +28,79 @@
     {
       "name": "root",
       "description": "The component that renders the root.",
+      "default": "'div'",
       "class": "MuiChatConversationList-root"
     },
     {
       "name": "scroller",
       "description": "The component that renders the scroller.",
+      "default": "ScrollRoot (Base UI ScrollArea.Root wrapper); a styled 'div' in `ChatConversationList`",
       "class": "MuiChatConversationList-scroller"
     },
     {
       "name": "viewport",
       "description": "The component that renders the viewport.",
+      "default": "ScrollViewport (Base UI ScrollArea.Viewport wrapper); a styled 'div' in `ChatConversationList`",
       "class": null
     },
     {
       "name": "scrollbar",
       "description": "The component that renders the scrollbar.",
+      "default": "ScrollScrollbar (Base UI ScrollArea.Scrollbar wrapper); `ChatConversationList` renders none",
       "class": null
     },
     {
       "name": "scrollbarThumb",
       "description": "The component that renders the scrollbar thumb.",
+      "default": "ScrollThumb (Base UI ScrollArea.Thumb wrapper); `ChatConversationList` renders none",
       "class": null
     },
     {
       "name": "item",
       "description": "The component that renders the item.",
+      "default": "ConversationListItem; a styled 'div' in `ChatConversationList`",
       "class": "MuiChatConversationList-item"
     },
     {
       "name": "itemAvatar",
       "description": "The component that renders the item avatar.",
+      "default": "ConversationListItemAvatar",
       "class": "MuiChatConversationList-itemAvatar"
     },
     {
       "name": "itemContent",
       "description": "The component that renders the item content.",
+      "default": "ConversationListItemContent",
       "class": "MuiChatConversationList-itemContent"
     },
-    { "name": "title", "description": "The component that renders the title.", "class": null },
-    { "name": "preview", "description": "The component that renders the preview.", "class": null },
+    {
+      "name": "title",
+      "description": "The component that renders the title.",
+      "default": "ConversationListTitle",
+      "class": null
+    },
+    {
+      "name": "preview",
+      "description": "The component that renders the preview.",
+      "default": "ConversationListPreview",
+      "class": null
+    },
     {
       "name": "timestamp",
       "description": "The component that renders the timestamp.",
+      "default": "ConversationListTimestamp",
       "class": null
     },
     {
       "name": "unreadBadge",
       "description": "The component that renders the unread badge.",
+      "default": "ConversationListUnreadBadge",
       "class": null
     },
     {
       "name": "itemActions",
       "description": "The component that renders the item actions.",
+      "default": "ConversationListItemActions",
       "class": "MuiChatConversationList-itemActions"
     }
   ],
