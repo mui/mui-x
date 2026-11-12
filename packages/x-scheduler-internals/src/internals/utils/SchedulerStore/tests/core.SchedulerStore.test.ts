@@ -225,7 +225,7 @@ storeClasses.forEach((storeClass) => {
       const highlight = { resourceId: 'a', range: { start: 1, end: 2 } };
 
       it('should store the highlight and skip the write when the value is equal', () => {
-        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+        const store = new storeClass.Value(DEFAULT_PARAMS);
 
         store.setOccurrenceHighlight(highlight);
         expect(store.state.occurrenceHighlight).to.equal(highlight);
@@ -239,7 +239,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should clear the highlight when the visible date changes', () => {
-        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+        const store = new storeClass.Value(DEFAULT_PARAMS);
         store.setOccurrenceHighlight(highlight);
 
         store.goToDate(adapter.date('2025-07-14T00:00:00Z', 'default'), {} as any);

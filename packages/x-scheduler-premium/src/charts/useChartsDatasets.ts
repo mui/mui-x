@@ -100,7 +100,7 @@ export function useChartsDatasets(metric: EventCalendarPremiumChartsMetric) {
   const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const defaultColor = useStore(store, (state) => state.eventColor);
-  const parentLookup = useStore(store, schedulerResourceSelectors.resourceParentIdLookup);
+  const childrenLookup = useStore(store, (state) => state.resourceChildrenIdLookup);
   const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
   // the month grid has too many days for one column each, so it gets one column per week
   const isByWeek = useStore(store, eventCalendarViewSelectors.view) === 'month';
@@ -187,11 +187,13 @@ export function useChartsDatasets(metric: EventCalendarPremiumChartsMetric) {
     };
 
     // nested resources: the renderer draws one ring per dimension (root inside, resource outside)
+    // the flat list visits a parent before its children, so a child's root is already known
     const rootById = new Map<string, string>();
     resourceList.forEach((resource) => {
       const id = String(resource.id);
-      const parentId = parentLookup.get(id);
-      rootById.set(id, parentId == null ? id : (rootById.get(String(parentId)) ?? id));
+      const rootId = rootById.get(id) ?? id;
+      rootById.set(id, rootId);
+      childrenLookup.get(id)?.forEach((childId) => rootById.set(String(childId), rootId));
     });
     const rootIdOf = (resource: ChartsResourceInfo) => rootById.get(resource.id) ?? resource.id;
     const hasNestedResources = series.some((resource) => rootIdOf(resource) !== resource.id);
@@ -231,7 +233,7 @@ export function useChartsDatasets(metric: EventCalendarPremiumChartsMetric) {
     resourceList,
     visibleResources,
     defaultColor,
-    parentLookup,
+    childrenLookup,
     weekStartsOn,
     isByWeek,
     store,

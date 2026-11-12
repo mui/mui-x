@@ -1004,7 +1004,7 @@ premiumStoreClasses.forEach((storeClass) => {
     });
 
     it('should clear the occurrence highlight when the view changes', () => {
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS });
       store.setOccurrenceHighlight({ resourceId: null });
 
       store.setView('month', {} as any);

@@ -122,7 +122,8 @@ export function ChartsPanel({ renderer: Renderer }: ChartsPanelProps) {
     doc.addEventListener('click', onClickCapture, true);
     return () => doc.removeEventListener('click', onClickCapture, true);
   }, [isHighlighting, clearHighlight]);
-  useDisarmOnEscape({ active: isHighlighting, onDisarm: clearHighlight });
+  // clearing a highlight that is already null is a no-op, so the hook can stay mounted
+  useDisarmOnEscape({ onDisarm: clearHighlight });
 
   const periodLabelLookup = new Map(periods.map((period) => [period.key, period.label]));
   const renderByDay = (
