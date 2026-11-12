@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
+import { isJSDOM } from 'test/utils/skipIf';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from '../ChatBox/ChatBox';
 
@@ -202,5 +203,26 @@ describe('ChatComposerTextArea', () => {
     // eslint-disable-next-line testing-library/no-unnecessary-act
     await act(async () => {});
     expect(sendMessage).toHaveBeenCalledTimes(0);
+  });
+
+  it.skipIf(isJSDOM)('caps the auto-grow height at maxRows lines', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        variant="compact"
+        slotProps={{ composerInput: { maxRows: 2 } }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    const textbox = screen.getByRole('textbox') as HTMLTextAreaElement;
+    fireEvent.change(textbox, { target: { value: Array(8).fill('line').join('\n') } });
+
+    const style = getComputedStyle(textbox);
+    const lineHeight = parseFloat(style.lineHeight);
+    const padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+    expect(textbox.getBoundingClientRect().height).to.be.closeTo(2 * lineHeight + padding, 1);
+    expect(textbox.scrollHeight).to.be.greaterThan(textbox.clientHeight);
   });
 });

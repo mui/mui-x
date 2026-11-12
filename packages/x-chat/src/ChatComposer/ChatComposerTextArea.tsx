@@ -82,7 +82,16 @@ const ChatComposerTextArea = React.forwardRef<HTMLTextAreaElement, ChatComposerT
           input: mergeSlotProps(
             {
               className: clsx(classes.textArea, className),
-              sx,
+              sx:
+                maxRows != null
+                  ? [
+                      // Cap the auto-grow at `maxRows` lines plus the vertical padding.
+                      (theme: Theme) => ({
+                        maxHeight: `calc(${maxRows} * 1lh + ${theme.spacing(1)})`,
+                      }),
+                      ...(Array.isArray(sx) ? sx : [sx]),
+                    ]
+                  : sx,
               ...(maxRows != null
                 ? {
                     style: MAX_ROWS_STYLE,
