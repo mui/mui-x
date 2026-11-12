@@ -1392,7 +1392,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       );
 
       await waitFor(() => {
-        expect(onAggregationLookupChange.mock.calls.length).to.equal(1);
+        expect(onAggregationLookupChange.mock.calls.length).to.be.greaterThan(0);
       });
       const lookup = onAggregationLookupChange.mock.lastCall![0];
       expect(lookup[GRID_ROOT_GROUP_ID].id.value).to.equal(15);
@@ -1408,7 +1408,9 @@ describe('<DataGridPremium /> - Aggregation', () => {
         />,
       );
       await waitFor(() => {
-        expect(onAggregationLookupChange.mock.calls.length).to.equal(1);
+        expect(onAggregationLookupChange.mock.lastCall![0][GRID_ROOT_GROUP_ID].id.value).to.equal(
+          15,
+        );
       });
 
       setProps({
@@ -1418,9 +1420,10 @@ describe('<DataGridPremium /> - Aggregation', () => {
       });
 
       await waitFor(() => {
-        expect(onAggregationLookupChange.mock.calls.length).to.equal(2);
+        expect(onAggregationLookupChange.mock.lastCall![0][GRID_ROOT_GROUP_ID].id.value).to.equal(
+          5,
+        );
       });
-      expect(onAggregationLookupChange.mock.lastCall![0][GRID_ROOT_GROUP_ID].id.value).to.equal(5);
     });
 
     it('should not be called again when the aggregation is re-applied without changing the values', async () => {
@@ -1432,8 +1435,10 @@ describe('<DataGridPremium /> - Aggregation', () => {
         />,
       );
       await waitFor(() => {
-        expect(onAggregationLookupChange.mock.calls.length).to.equal(1);
+        expect(onAggregationLookupChange.mock.calls.length).to.be.greaterThan(0);
       });
+      // React 18 renders the grid twice in strict mode, so the initial number of calls varies.
+      const callsCount = onAggregationLookupChange.mock.calls.length;
 
       const onAggregationLookupSet = vi.fn();
       apiRef.current!.subscribeEvent('aggregationLookupSet', onAggregationLookupSet);
@@ -1449,7 +1454,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         expect(onAggregationLookupSet.mock.calls.length).to.equal(1);
       });
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '15' /* Agg */]);
-      expect(onAggregationLookupChange.mock.calls.length).to.equal(1);
+      expect(onAggregationLookupChange.mock.calls.length).to.equal(callsCount);
     });
 
     it('should be called with an empty lookup when the aggregation is removed', async () => {
@@ -1461,15 +1466,14 @@ describe('<DataGridPremium /> - Aggregation', () => {
         />,
       );
       await waitFor(() => {
-        expect(onAggregationLookupChange.mock.calls.length).to.equal(1);
+        expect(onAggregationLookupChange.mock.calls.length).to.be.greaterThan(0);
       });
 
       setProps({ aggregationModel: {} });
 
       await waitFor(() => {
-        expect(onAggregationLookupChange.mock.calls.length).to.equal(2);
+        expect(onAggregationLookupChange.mock.lastCall![0]).to.deep.equal({});
       });
-      expect(onAggregationLookupChange.mock.lastCall![0]).to.deep.equal({});
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
     });
 
