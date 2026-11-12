@@ -18,9 +18,14 @@ import { scatterChart } from '../charts/ScatterChart/scenarios';
 import { scatterChartPremium } from '../charts/ScatterChartPremium/scenarios';
 import { scatterChartPro } from '../charts/ScatterChartPro/scenarios';
 import { sparkLineChartGrid } from '../charts/SparkLineChart/scenarios';
+import { chatBox } from '../chat/scenarios';
+import { dataGrid, dataGridPremium, dataGridPro } from '../dataGrid/scenarios';
+import { dateCalendar, dateRangeCalendar } from '../datePickers/scenarios';
+import { eventCalendar } from '../scheduler/scenarios';
+import { richTreeView, richTreeViewPro } from '../treeView/scenarios';
 
-// One benchmark per kind of chart, all in one file: the runner loads the file's page once per round
-// and samples each of them there. It's a quicker local check; CI runs every chart's file instead.
+// One benchmark or a few per product of MUI X, one per kind of chart, all in one file: the runner
+// loads the file's page once per round and samples each of them there.
 
 // The smoke benchmarks are there to catch big regressions. A round of the whole file is long, so
 // they get few rounds: they alarm past 10%, which those rounds can settle, rather than the default
@@ -28,8 +33,8 @@ import { sparkLineChartGrid } from '../charts/SparkLineChart/scenarios';
 const SMOKE_OPTIONS = { sampleSize: 30, alarm: { error: 0.1 } };
 
 /**
- * Registers a chart's scenario again, sampled as a smoke benchmark. It keeps its name, so it reads
- * as the same benchmark as in its chart's file, which master runs.
+ * Registers a scenario as a smoke benchmark. A chart's keeps its name, so it reads as the same
+ * benchmark as in its chart's file.
  */
 function smokeBenchmark([name, render, interaction]: Scenario) {
   // Only an interaction is kept: the smoke options replace a scenario's own.
@@ -58,4 +63,14 @@ smokeBenchmark(sankeyChart);
 smokeBenchmark(scatterChart);
 smokeBenchmark(scatterChartPro);
 smokeBenchmark(scatterChartPremium);
+
+smokeBenchmark(dataGrid);
+smokeBenchmark(dataGridPro);
+smokeBenchmark(dataGridPremium);
+smokeBenchmark(dateCalendar);
+smokeBenchmark(dateRangeCalendar);
+smokeBenchmark(richTreeView);
+smokeBenchmark(richTreeViewPro);
+smokeBenchmark(eventCalendar);
+smokeBenchmark(chatBox);
 smokeBenchmark(sparkLineChartGrid);

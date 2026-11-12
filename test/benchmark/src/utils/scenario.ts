@@ -5,7 +5,7 @@ export type Scenario = Parameters<typeof reactBenchmark>;
 
 /**
  * Defines a scenario with `reactBenchmark()`'s arguments, without registering it: its chart's
- * benchmark file registers it, and so does `smoke/charts.bench.tsx` when it is that chart's smoke
+ * benchmark file registers it, and so does `smoke/x.bench.tsx` when it is that chart's smoke
  * case.
  */
 export function defineScenario(...scenario: Scenario): Scenario {
