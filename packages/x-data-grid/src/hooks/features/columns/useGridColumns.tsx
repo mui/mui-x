@@ -244,6 +244,9 @@ export function useGridColumns(
           ].join('\n'),
         );
       }
+      if (useVisibleColumns && getColumnIndex(field) === targetIndexPosition) {
+        return;
+      }
       const oldIndexPosition = getColumnIndex(field, false);
       const updatedColumns = allColumns.filter((columnField) => columnField !== field);
       let targetIndex = targetIndexPosition;
