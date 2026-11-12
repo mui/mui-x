@@ -17,7 +17,7 @@ The run builds the packages itself (`pnpm release:build`), writes `.benchmark/re
 
 ## Layout
 
-- `src/smoke/x.bench.tsx` holds the benchmarks of all of MUI X, in one page: the runner loads a file's page once per round, so they run warm, and settle in far fewer rounds than in a page each. They are there to catch big regressions: 30 rounds each, alarming past 10%.
+- `src/smoke/x.bench.tsx` holds the benchmarks of all of MUI X, in one page: the runner loads a file's page once per round, so they run warm, and settle in far fewer rounds than in a page each. They are there to catch big regressions: 30 rounds each, alarming past 10%.
 - `src/<product>/scenarios.tsx`, and `src/charts/<Chart>/scenarios.tsx` for a chart, named after the folder its source lives in, define the cases with `defineScenario()`, which takes `reactBenchmark()`'s arguments. A scenario module registers nothing itself; the smoke file registers each case with `smokeBenchmark()`.
 - `package.json` also lists dependencies no file imports: `@mui/material` and `@emotion/styled` are peer dependencies of the packages, and `@playwright/test` of `@mui/internal-benchmark`.
 
