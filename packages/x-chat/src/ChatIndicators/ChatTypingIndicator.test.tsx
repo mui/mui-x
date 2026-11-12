@@ -116,8 +116,8 @@ describe('ChatTypingIndicator', () => {
     expect(document.querySelector('.MuiChatTypingIndicator-root')).to.equal(null);
   });
 
-  it.skipIf(isJSDOM)('keeps the message list pinned to the bottom when typing starts', async () => {
-    const { startTyping } = renderChatBox({
+  async function renderScrolledToBottom(props: Partial<React.ComponentProps<typeof ChatBox>> = {}) {
+    const view = renderChatBox({
       style: { height: 400 },
       initialMessages: Array.from({ length: 30 }, (_, index) => ({
         id: `m${index}`,
@@ -125,6 +125,7 @@ describe('ChatTypingIndicator', () => {
         role: 'user' as const,
         parts: [{ type: 'text' as const, text: `Message ${index}` }],
       })),
+      ...props,
     });
     const scroller = document.querySelector<HTMLElement>('[role="log"]')!;
     const getDistanceFromBottom = () =>
@@ -139,6 +140,12 @@ describe('ChatTypingIndicator', () => {
     });
     expect(getDistanceFromBottom()).to.be.at.most(1);
 
+    return { ...view, scroller, getDistanceFromBottom };
+  }
+
+  it.skipIf(isJSDOM)('keeps the message list pinned to the bottom when typing starts', async () => {
+    const { startTyping, getDistanceFromBottom } = await renderScrolledToBottom();
+
     startTyping();
 
     await waitFor(() => {
@@ -147,5 +154,28 @@ describe('ChatTypingIndicator', () => {
     await waitFor(() => {
       expect(getDistanceFromBottom()).to.be.at.most(1);
     });
+  });
+
+  it.skipIf(isJSDOM)('does not re-pin the message list when autoScroll is disabled', async () => {
+    const { startTyping, scroller } = await renderScrolledToBottom({
+      features: { autoScroll: false },
+    });
+    const scrollTop = scroller.scrollTop;
+
+    startTyping();
+
+    await waitFor(() => {
+      expect(document.querySelector('.MuiChatTypingIndicator-root')).not.to.equal(null);
+    });
+    // Let the ResizeObserver callback run before asserting.
+    await act(
+      () =>
+        new Promise<void>((resolve) => {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => resolve());
+          });
+        }),
+    );
+    expect(scroller.scrollTop).to.equal(scrollTop);
   });
 });

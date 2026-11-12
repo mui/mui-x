@@ -99,6 +99,8 @@ export function useMessageListBehavior(parameters: {
   const isMountedRef = React.useRef(true);
   const isStreamingRef = React.useRef(isStreaming);
   isStreamingRef.current = isStreaming;
+  const autoScrollEnabledRef = React.useRef(autoScrollEnabled);
+  autoScrollEnabledRef.current = autoScrollEnabled;
   const [isAtBottom, setIsAtBottom] = React.useState(true);
   const [unseenMessageCount, setUnseenMessageCount] = React.useState(0);
   const isAtBottomRef = React.useRef(true);
@@ -371,7 +373,11 @@ export function useMessageListBehavior(parameters: {
     // event, so re-pin to the bottom here or the newest message ends up clipped.
     let previousHeight = root.clientHeight;
     const observer = new globalThis.ResizeObserver(() => {
-      if (root.clientHeight !== previousHeight && isAtBottomRef.current) {
+      if (
+        autoScrollEnabledRef.current &&
+        root.clientHeight !== previousHeight &&
+        isAtBottomRef.current
+      ) {
         root.scrollTop = root.scrollHeight;
       }
       previousHeight = root.clientHeight;
