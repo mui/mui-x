@@ -20,7 +20,15 @@ export default function ConfiguredCards() {
     React.useState<EventCalendarPremiumChartsMetric>('hours');
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div
+      style={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        gap: 16,
+      }}
+    >
       <ToggleButtonGroup
         exclusive
         size="small"
