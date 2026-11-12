@@ -966,6 +966,36 @@ describe('createSendMessageActions', () => {
       expect(store.state.isStreaming).toBe(false);
     });
 
+    it('restores the removed assistant run at its original position when regenerating a middle turn rejects', async () => {
+      const store = new ChatStore({
+        initialMessages: [
+          ...makeThread(),
+          { id: 'u2', role: 'user', status: 'sent', parts: [{ type: 'text', text: 'Again' }] },
+          {
+            id: 'a2',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'Second' }],
+          },
+        ],
+      });
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockRejectedValue(new Error('Regen failed')),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await regenerate('a1');
+
+      expect(store.state.messageIds).toEqual(['u1', 'a1', 'u2', 'a2']);
+    });
+
     it('fires onError on a mid-stream error and keeps partial output (no rollback)', async () => {
       const store = new ChatStore({ initialMessages: makeThread() });
       store.setActiveConversation('c1');

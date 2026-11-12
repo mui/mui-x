@@ -399,6 +399,7 @@ export function createSendMessageActions<Cursor = string>(params: {
     const removedMessages = assistantMessageIds
       .map((id) => store.state.messagesById[id])
       .filter((message): message is ChatMessage => message != null);
+    const messageIdsBeforeRemoval = store.state.messageIds;
 
     removeAssistantMessageIds(
       storeUnknown,
@@ -454,11 +455,17 @@ export function createSendMessageActions<Cursor = string>(params: {
         return;
       }
 
-      // Pre-stream rejection: restore the snapshot assistant messages (D4) and
-      // surface a REGENERATE_ERROR.
-      for (const removedMessage of removedMessages) {
-        store.addMessage(removedMessage);
-      }
+      // Pre-stream rejection: restore the original order, preserving concurrent
+      // message changes, and surface a REGENERATE_ERROR.
+      const removedMessagesById = new Map(removedMessages.map((message) => [message.id, message]));
+      const originalMessageIds = new Set(messageIdsBeforeRemoval);
+      const orderedMessages = [
+        ...messageIdsBeforeRemoval,
+        ...store.state.messageIds.filter((id) => !originalMessageIds.has(id)),
+      ]
+        .map((id) => store.state.messagesById[id] ?? removedMessagesById.get(id))
+        .filter((message): message is ChatMessage => message != null);
+      store.setMessages(orderedMessages);
 
       store.setStreaming(false);
       setRuntimeError(
