@@ -73,12 +73,21 @@ function getUserLabel(user: ChatLocaleTypingUser) {
   return user.displayName ?? user.id;
 }
 
+// `Date#toLocaleTimeString()` with options builds a new formatter on every call, once per message
+// of a long list; this one is built once, with the same locale and options.
+let timeFormatter: Intl.DateTimeFormat | undefined;
+
+function formatTime(date: Date): string {
+  timeFormatter ??= new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' });
+  return timeFormatter.format(date);
+}
+
 function formatMessageTimestamp(dateTime: string): string {
   const d = new Date(dateTime);
   if (Number.isNaN(d.getTime())) {
     return dateTime;
   }
-  return d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+  return formatTime(d);
 }
 
 function formatConversationTimestamp(dateTime: string): string {
@@ -93,7 +102,7 @@ function formatConversationTimestamp(dateTime: string): string {
   const diffDays = Math.round((today.getTime() - messageDay.getTime()) / 86400000);
 
   if (diffDays === 0) {
-    return d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+    return formatTime(d);
   }
   return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
