@@ -2,14 +2,13 @@ import {
   adapter,
   DEFAULT_EVENT_CALENDAR_STATE,
   EventBuilder,
+  processDay,
   setSystemTimezone,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 import { eventCalendarOccurrencePlaceholderSelectors } from './eventCalendarOccurrencePlaceholderSelectors';
 import type { EventCalendarState } from '../use-event-calendar';
-import { processDate } from '../process-date';
-import { createProcessedDate } from '../internals/utils/plain-date-utils/date';
 
 // A UTC creation placeholder on December 30th, 2011, on a Pacific/Apia system, which skipped that
 // date: read in the timezone of the system, it falls on December 31st.
@@ -27,8 +26,8 @@ function getStateInUTCOnApiaSystem() {
       resourceId: null,
     },
   };
-  const december30 = createProcessedDate(Date.UTC(2011, 11, 30), 'UTC');
-  const december31 = createProcessedDate(Date.UTC(2011, 11, 31), 'UTC');
+  const december30 = processDay(new Date(Date.UTC(2011, 11, 30)), 'UTC');
+  const december31 = processDay(new Date(Date.UTC(2011, 11, 31)), 'UTC');
   return { state, december30, december31 };
 }
 
@@ -56,6 +55,83 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         ).to.equal(null);
       },
     );
+
+    // A placeholder from Monday, January 8th to Wednesday, January 17th, 2024, across two rows.
+    const state: EventCalendarState = {
+      ...DEFAULT_EVENT_CALENDAR_STATE,
+      displayTimezone: 'UTC',
+      occurrencePlaceholder: {
+        type: 'creation',
+        surfaceType: 'day-grid',
+        start: Date.UTC(2024, 0, 8, 9),
+        end: Date.UTC(2024, 0, 17, 18),
+        resourceId: null,
+      },
+    };
+    // The second row starts on Sunday, January 14th.
+    const rowStart = Date.UTC(2024, 0, 14);
+
+    it('should render a placeholder from a previous row on the first day of the row', () => {
+      const firstDay = processDay(new Date(rowStart), 'UTC');
+      expect(
+        eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(state, firstDay, rowStart),
+      ).to.equal(state.occurrencePlaceholder);
+    });
+
+    it('should render a placeholder from a previous row when it ends before it starts', () => {
+      const reversedState: EventCalendarState = {
+        ...state,
+        occurrencePlaceholder: {
+          type: 'creation',
+          surfaceType: 'day-grid',
+          start: Date.UTC(2024, 0, 17, 18),
+          end: Date.UTC(2024, 0, 8, 9),
+          resourceId: null,
+        },
+      };
+      const firstDay = processDay(new Date(rowStart), 'UTC');
+      expect(
+        eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
+          reversedState,
+          firstDay,
+          rowStart,
+        ),
+      ).to.equal(reversedState.occurrencePlaceholder);
+    });
+
+    it('should not render a placeholder from a previous row on the other days of the row', () => {
+      // Its last day, which only its end falls on.
+      const lastDay = processDay(new Date(Date.UTC(2024, 0, 17)), 'UTC');
+      expect(
+        eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(state, lastDay, rowStart),
+      ).to.equal(null);
+    });
+
+    it('should not render a placeholder on the first day of a row that starts before it', () => {
+      // The first row starts on Sunday, January 7th, before the placeholder started.
+      const previousRowStart = Date.UTC(2024, 0, 7);
+      const firstDay = processDay(new Date(previousRowStart), 'UTC');
+      expect(
+        eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
+          state,
+          firstDay,
+          previousRowStart,
+        ),
+      ).to.equal(null);
+    });
+
+    it('should not render a placeholder on the first day of a row that starts after it', () => {
+      // The third row starts on Sunday, January 21st, after the placeholder ended.
+      const nextRowStart = Date.UTC(2024, 0, 21);
+      const firstDay = processDay(new Date(nextRowStart), 'UTC');
+      expect(
+        eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
+          state,
+          firstDay,
+          nextRowStart,
+        ),
+      ).to.equal(null);
+    });
   });
 
   describe('placeholderInTimeRange', () => {
@@ -128,7 +204,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
 
   describe('isCreatingInDayCell', () => {
     const day = adapter.date('2024-01-15', 'default');
-    const processedDay = processDate(day, 'default');
+    const processedDay = processDay(day);
 
     it('should return false when there is no placeholder', () => {
       const state = DEFAULT_EVENT_CALENDAR_STATE;
@@ -190,14 +266,15 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     });
 
     it('should return false when day does not match placeholder.start day', () => {
-      const otherDay = adapter.addDays(day, 1);
+      // The placeholder starts the day before and ends on the day.
+      const previousDay = adapter.addDays(day, -1);
       const state: EventCalendarState = {
         ...DEFAULT_EVENT_CALENDAR_STATE,
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'day-grid',
-          start: adapter.getTime(adapter.startOfDay(otherDay)),
-          end: adapter.getTime(adapter.endOfDay(otherDay)),
+          start: adapter.getTime(adapter.startOfDay(previousDay)),
+          end: adapter.getTime(adapter.endOfDay(day)),
           resourceId: null,
         },
       };
@@ -224,12 +301,14 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     const day = adapter.date('2024-01-15', 'default');
     const dayStart = adapter.startOfDay(day);
     const dayEnd = adapter.endOfDay(day);
+    const plainDate = processDay(day).plainDate;
 
     it('should return false when there is no placeholder', () => {
       const state = DEFAULT_EVENT_CALENDAR_STATE;
       expect(
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
+          plainDate,
           adapter.getTime(dayStart),
           adapter.getTime(dayEnd),
         ),
@@ -250,6 +329,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
       expect(
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
+          plainDate,
           adapter.getTime(dayStart),
           adapter.getTime(dayEnd),
         ),
@@ -274,27 +354,28 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
       expect(
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
+          plainDate,
           adapter.getTime(dayStart),
           adapter.getTime(dayEnd),
         ),
       ).to.equal(false);
     });
 
-    it('should return false when placeholder.start is not the same day as dayStart', () => {
-      const nextDay = adapter.addDays(day, 1);
+    it('should return false when the placeholder overlaps the range but starts the previous day', () => {
       const state: EventCalendarState = {
         ...DEFAULT_EVENT_CALENDAR_STATE,
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.getTime(adapter.setHours(adapter.startOfDay(nextDay), 9)),
-          end: adapter.getTime(adapter.setHours(adapter.startOfDay(nextDay), 10)),
+          start: adapter.getTime(adapter.setHours(adapter.addDays(dayStart, -1), 22)),
+          end: adapter.getTime(adapter.setHours(dayStart, 6)),
           resourceId: null,
         },
       };
       expect(
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
+          plainDate,
           adapter.getTime(dayStart),
           adapter.getTime(dayEnd),
         ),
@@ -315,6 +396,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
       expect(
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
+          plainDate,
           adapter.getTime(dayStart),
           adapter.getTime(dayEnd),
         ),
@@ -335,6 +417,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
       expect(
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
+          plainDate,
           adapter.getTime(dayStart),
           adapter.getTime(dayEnd),
         ),
@@ -358,6 +441,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
       expect(
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
           state,
+          plainDate,
           adapter.getTime(windowStart),
           adapter.getTime(dayEnd),
         ),
