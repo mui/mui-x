@@ -21,13 +21,14 @@ The run builds the packages itself (`pnpm release:build`), writes `.benchmark/re
 
 - `src/charts/<Chart>/` holds a chart's benchmarks, named after the folder its source lives in: `scenarios.tsx` defines its cases with `defineScenario()`, which takes `reactBenchmark()`'s arguments, and `<Chart>.bench.tsx` registers them with `registerScenario()`.
 - `src/smoke/charts.bench.tsx` registers one case per kind of chart again, sampled 30 rounds and alarming past 10%. A scenario module registers nothing itself, so both files can import it.
+- `package.json` also lists dependencies no file imports: `@mui/material` and `@emotion/styled` are peer dependencies of the charts, and `@playwright/test` of `@mui/internal-benchmark`.
 
 ## In CI
 
 `test_charts_benchmark` runs when the charts packages, this folder or the CircleCI config change:
 
 - on master, every chart's file (`charts/`);
-- on a pull request, the smoke file, plus the files of the charts whose source folder it changes: a change in `packages/x-charts*/src/LineChart/` runs `charts/LineChart`, which includes `LineChartPro`. A change to shared code runs the smoke file only.
+- on a pull request, the smoke file, plus the files of the charts whose source folder it changes: a change in `packages/x-charts*/src/LineChart/` runs `charts/LineChart`, which includes `LineChartPro`. A change to shared code runs the smoke file only, except for the WebGL helpers in `src/charts/utils/`, which also run every chart that uses them.
 
 The smoke cases keep their names, so on the dashboard they read as the same benchmarks as in their chart's file.
 

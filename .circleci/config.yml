@@ -256,6 +256,8 @@ jobs:
             if [ "$CIRCLE_BRANCH" = "$BASE" ] || [ "$CIRCLE_BRANCH" = "next" ]; then
               ON_BASE=true
               RANGE="HEAD~1...HEAD"
+              # So that the baseline below is the previous commit, not where this branch forked.
+              BASE="$CIRCLE_BRANCH"
             else
               ON_BASE=false
               # Full history: the baseline below is where the branch forked.
@@ -280,7 +282,13 @@ jobs:
               # A chart's benchmark folder is named after its source folder.
               CHARTS=$(echo "$CHANGED" | sed -n \
                 -e 's#^packages/x-charts[^/]*/src/\([^/]*\)/.*#\1#p' \
-                -e 's#^test/benchmark/src/charts/\([^/]*\)/.*#\1#p' | sort -u)
+                -e 's#^test/benchmark/src/charts/\([^/]*\)/.*#\1#p')
+              # A change to the WebGL helpers runs every chart that uses them.
+              if echo "$CHANGED" | grep -q '^test/benchmark/src/charts/utils/'; then
+                CHARTS="$CHARTS $(grep -l benchWebGLInteraction test/benchmark/src/charts/*/scenarios.tsx \
+                  | sed 's#^test/benchmark/src/charts/\([^/]*\)/.*#\1#')"
+              fi
+              CHARTS=$(echo $CHARTS | tr ' ' '\n' | sort -u)
               for CHART in $CHARTS; do
                 if ls test/benchmark/src/charts/"$CHART"*/*.bench.tsx > /dev/null 2>&1; then
                   FILTERS="$FILTERS charts/$CHART"
@@ -289,13 +297,14 @@ jobs:
             fi
             echo "Benchmark files: $FILTERS"
             echo "$FILTERS" > .benchmark-filters
+            echo "$BASE" > .benchmark-base-branch
       - install-deps
       - run:
           name: Resolve the baseline commit
           # On the base branch, the previous commit; on a pull request, where it forked from it.
           command: |
             set -e
-            BASE_SHA=$(pnpm code-infra baseline --base-branch "${BASE_BRANCH:-master}")
+            BASE_SHA=$(pnpm code-infra baseline --base-branch "$(cat .benchmark-base-branch)")
             echo "Baseline commit: $BASE_SHA"
             echo "$BASE_SHA" > .benchmark-baseline-sha
       - restore_cache:
