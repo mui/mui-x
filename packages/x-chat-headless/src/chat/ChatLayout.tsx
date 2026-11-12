@@ -8,14 +8,17 @@ import type { ChatLayoutPaneKind } from './internals/chatLayoutPaneKind';
 export interface ChatLayoutSlots {
   /**
    * The component that renders the root.
+   * @default 'div'
    */
   root: React.ElementType;
   /**
    * The component that renders the conversations pane.
+   * @default 'div'
    */
   conversationsPane: React.ElementType;
   /**
    * The component that renders the thread pane.
+   * @default 'div'
    */
   threadPane: React.ElementType;
 }

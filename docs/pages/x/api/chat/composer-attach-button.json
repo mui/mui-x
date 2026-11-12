@@ -6,11 +6,13 @@
     {
       "name": "attachButton",
       "description": "The component that renders the attach button.",
+      "default": "'button'",
       "class": null
     },
     {
       "name": "attachInput",
       "description": "The component that renders the attach input.",
+      "default": "'input'",
       "class": null
     }
   ],

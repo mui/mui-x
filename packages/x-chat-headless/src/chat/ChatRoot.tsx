@@ -14,6 +14,7 @@ import type { ChatDensity } from './internals/ChatDensityContext';
 export interface ChatRootSlots {
   /**
    * The component that renders the root.
+   * @default 'div'
    */
   root: React.ElementType;
 }

@@ -6,6 +6,7 @@
     {
       "name": "sendButton",
       "description": "The component that renders the send button.",
+      "default": "'button'",
       "class": null
     }
   ],

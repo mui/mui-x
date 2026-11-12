@@ -13,8 +13,18 @@
     "import { ChatMessageAvatar } from '@mui/x-chat';"
   ],
   "slots": [
-    { "name": "avatar", "description": "The component that renders the avatar.", "class": null },
-    { "name": "image", "description": "The component that renders the image.", "class": null }
+    {
+      "name": "avatar",
+      "description": "The component that renders the avatar.",
+      "default": "'div'",
+      "class": null
+    },
+    {
+      "name": "image",
+      "description": "The component that renders the image.",
+      "default": "'img'",
+      "class": null
+    }
   ],
   "classes": [],
   "muiName": "MuiChatMessageAvatar",

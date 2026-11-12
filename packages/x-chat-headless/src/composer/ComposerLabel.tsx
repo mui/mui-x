@@ -9,6 +9,7 @@ import type { ComposerOwnerState } from './composer.types';
 export interface ComposerLabelSlots {
   /**
    * The component that renders the label.
+   * @default 'label'
    */
   label: React.ElementType;
 }
