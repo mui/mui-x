@@ -53,6 +53,11 @@ import { runIf } from '../../../utils/utils';
 import type { GridRowSelectionModel } from '../../../models/gridRowSelectionModel';
 import { createRowSelectionManager } from '../../../models/gridRowSelectionManager';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
+import {
+  gridRowSelectionRetentionSelector,
+  gridRowSelectionTreeSelector,
+} from './gridRowSelectionRetention';
+import type { GridRowSelectionPrivateApi } from './gridRowSelectionRetention';
 
 const emptyModel = { type: 'include', ids: new Set<GridRowId>() } as const;
 
@@ -61,6 +66,7 @@ export const rowSelectionStateInitializer: GridStateInitializer<
 > = (state, props) => ({
   ...state,
   rowSelection: props.rowSelection ? (props.rowSelectionModel ?? emptyModel) : emptyModel,
+  rowSelectionRetention: new Map(),
 });
 
 /**
@@ -94,7 +100,9 @@ export const useGridRowSelection = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridSelection');
 
-  const isNestedData = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) > 1;
+  const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
+  const retainedRows = useGridSelector(apiRef, gridRowSelectionRetentionSelector);
+  const isNestedData = treeDepth > 1 || retainedRows.size > 0;
 
   const applyAutoSelection =
     props.signature !== GridSignature.DataGrid &&
@@ -160,6 +168,81 @@ export const useGridRowSelection = (
   /*
    * API METHODS
    */
+  const clearRowSelectionRetention = React.useCallback(() => {
+    if (gridRowSelectionRetentionSelector(apiRef).size > 0) {
+      apiRef.current.setState((state) => ({ ...state, rowSelectionRetention: new Map() }));
+    }
+  }, [apiRef]);
+
+  const retainRowSelection = React.useCallback<GridRowSelectionPrivateApi['retainRowSelection']>(
+    (parentId) => {
+      if (!props.dataSource || !props.rowSelection || !props.keepNonExistentRowsSelected) {
+        return;
+      }
+      const tree = gridRowTreeSelector(apiRef);
+      const parent = tree[parentId];
+      if (parent?.type !== 'group' || parent.children.length === 0) {
+        return;
+      }
+      const retained = new Map(gridRowSelectionRetentionSelector(apiRef));
+      const visit = (id: GridRowId) => {
+        const node = tree[id];
+        if (!node || (node.type !== 'group' && node.type !== 'leaf') || node.parent == null) {
+          return;
+        }
+        retained.set(id, {
+          parent: node.parent,
+          type: node.type,
+          isSelectable: apiRef.current.isRowSelectable(id),
+        });
+        if (node.type === 'group') {
+          node.children.forEach(visit);
+        }
+      };
+      parent.children.forEach(visit);
+      apiRef.current.setState((state) => ({ ...state, rowSelectionRetention: retained }));
+    },
+    [apiRef, props.dataSource, props.rowSelection, props.keepNonExistentRowsSelected],
+  );
+
+  const reconcileRowSelectionRetention = React.useCallback<
+    GridRowSelectionPrivateApi['reconcileRowSelectionRetention']
+  >(
+    (parentId, childIds) => {
+      const retained = gridRowSelectionRetentionSelector(apiRef);
+      if (retained.size === 0) {
+        return;
+      }
+      const tree = gridRowSelectionTreeSelector(apiRef);
+      const next = new Map(retained);
+      retained.forEach((row, id) => {
+        let childId = id;
+        let ancestor = row.parent;
+        while (ancestor !== parentId && ancestor !== GRID_ROOT_GROUP_ID) {
+          childId = ancestor;
+          const node = tree[ancestor];
+          if (node?.parent == null) {
+            return;
+          }
+          ancestor = node.parent;
+        }
+        if (ancestor === parentId && !childIds.has(childId)) {
+          next.delete(id);
+        }
+      });
+      if (next.size !== retained.size) {
+        apiRef.current.setState((state) => ({ ...state, rowSelectionRetention: next }));
+      }
+    },
+    [apiRef],
+  );
+
+  useGridApiMethod(
+    apiRef,
+    { retainRowSelection, reconcileRowSelectionRetention, clearRowSelectionRetention },
+    'private',
+  );
+
   const setRowSelectionModel = React.useCallback<GridRowSelectionApi['setRowSelectionModel']>(
     (model, reason) => {
       if (
@@ -220,9 +303,9 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
       }
 
       // If `keepNonExistentRowsSelected` is true, we might run in a case where row selectability is checked for a row that does not exist.
-      // Since that row was previously selected (otherwise it would not be checked at this point), we return true.
+      // For unloaded descendants, use their last known selectability until they are fetched again.
       if (props.keepNonExistentRowsSelected && !apiRef.current.getRow(id)) {
-        return true;
+        return gridRowSelectionRetentionSelector(apiRef).get(id)?.isSelectable ?? true;
       }
 
       if (propIsRowSelectable && !propIsRowSelectable(apiRef.current.getRowParams(id))) {
@@ -245,7 +328,7 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
         return;
       }
 
-      const tree = gridRowTreeSelector(apiRef);
+      const tree = gridRowSelectionTreeSelector(apiRef);
       lastRowToggled.current = isSelected ? id : null;
 
       if (resetSelection) {
@@ -341,7 +424,7 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
         return;
       }
 
-      const tree = gridRowTreeSelector(apiRef);
+      const tree = gridRowSelectionTreeSelector(apiRef);
 
       const selectableIds = new Set<GridRowId>();
 
@@ -459,7 +542,7 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
         type: inputSelectionModel.type,
         ids: new Set(inputSelectionModel.ids),
       };
-      const tree = gridRowTreeSelector(apiRef);
+      const tree = gridRowSelectionTreeSelector(apiRef);
 
       const selectionManager = createRowSelectionManager(propagatedSelectionModel);
 
@@ -560,7 +643,9 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
     previousRowsLookupRef.current = rowsLookup;
     // Read the depth at call time. The event that runs this callback can fire in the same
     // tick as the state update that changes the depth, before the render-scope value updates.
-    const isNested = gridRowMaximumTreeDepthSelector(apiRef) > 1;
+    const isNested =
+      gridRowMaximumTreeDepthSelector(apiRef) > 1 ||
+      gridRowSelectionRetentionSelector(apiRef).size > 0;
 
     const isNonExistent = (id: GridRowId) => {
       if (props.filterMode === 'server') {
@@ -1011,6 +1096,44 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
   /*
    * EFFECTS
    */
+  useGridEvent(apiRef, 'rowsSet', () => {
+    if (gridDataRowIdsSelector(apiRef).length === 0) {
+      clearRowSelectionRetention();
+      return;
+    }
+    const retained = gridRowSelectionRetentionSelector(apiRef);
+    if (retained.size === 0) {
+      return;
+    }
+    const tree = gridRowTreeSelector(apiRef);
+    const next = new Map(retained);
+    retained.forEach((row, id) => {
+      if (tree[id]) {
+        next.delete(id);
+      }
+    });
+    if (next.size !== retained.size) {
+      apiRef.current.setState((state) => ({ ...state, rowSelectionRetention: next }));
+    }
+  });
+
+  const previousDataSource = React.useRef(props.dataSource);
+  React.useEffect(() => {
+    if (
+      previousDataSource.current !== props.dataSource ||
+      !props.keepNonExistentRowsSelected ||
+      !props.rowSelection
+    ) {
+      clearRowSelectionRetention();
+    }
+    previousDataSource.current = props.dataSource;
+  }, [
+    clearRowSelectionRetention,
+    props.dataSource,
+    props.keepNonExistentRowsSelected,
+    props.rowSelection,
+  ]);
+
   React.useEffect(() => {
     syncControlledState();
   }, [apiRef, propRowSelectionModel, props.rowSelection, syncControlledState]);

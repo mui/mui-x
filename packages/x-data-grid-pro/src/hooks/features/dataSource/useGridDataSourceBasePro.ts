@@ -129,6 +129,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       const tree = gridRowTreeSelector(apiRef);
       const rowsLookup = gridRowsLookupSelector(apiRef);
       const fetchedRowIds = new Set(rows.map((row) => gridRowIdSelector(apiRef, row)));
+      apiRef.current.reconcileRowSelectionRetention(groupId, fetchedRowIds);
       const currentGroupRows = getTreeNodeDescendants(tree, groupId, false, true);
       const rowsToDelete: GridRowModelUpdate[] = [];
 
@@ -359,6 +360,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       rowNode.children.forEach(traverse);
 
       if (removedRows.length > 0) {
+        apiRef.current.retainRowSelection(parentId);
         apiRef.current.updateNestedRows(removedRows, (rowNode as GridDataSourceGroupNode).path);
       }
     },
@@ -381,6 +383,14 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       if (response.rowCount !== undefined) {
         apiRef.current.setRowCount(response.rowCount);
       }
+
+      if (keepChildrenExpanded === false) {
+        apiRef.current.retainRowSelection(GRID_ROOT_GROUP_ID);
+      }
+      apiRef.current.reconcileRowSelectionRetention(
+        GRID_ROOT_GROUP_ID,
+        new Set(response.rows.map((row) => gridRowIdSelector(apiRef, row))),
+      );
 
       if (keepChildrenExpanded === false) {
         apiRef.current.setRows(response.rows);
@@ -461,6 +471,17 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     resetDataSourceState,
     removeChildrenRows,
   };
+
+  const previousMode = React.useRef({ lazyLoading: props.lazyLoading, treeData: props.treeData });
+  React.useEffect(() => {
+    if (
+      previousMode.current.lazyLoading !== props.lazyLoading ||
+      previousMode.current.treeData !== props.treeData
+    ) {
+      apiRef.current.clearRowSelectionRetention();
+      previousMode.current = { lazyLoading: props.lazyLoading, treeData: props.treeData };
+    }
+  }, [apiRef, props.lazyLoading, props.treeData]);
 
   React.useEffect(() => {
     if (
