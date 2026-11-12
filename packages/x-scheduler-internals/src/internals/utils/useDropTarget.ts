@@ -301,7 +301,7 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
 
   if (originalOccurrence.dataTimezone.rrule) {
     store.updateRecurringEvent({
-      occurrenceStart: originalOccurrence.dataTimezone.start.value,
+      occurrenceStart: new Date(originalOccurrence.dataTimezone.start.timestamp),
       changes,
     });
     // Editing surface is refreshed (or disarmed) in `selectRecurringEventScope` once the user

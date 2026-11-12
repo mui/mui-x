@@ -172,8 +172,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         ...occurrence,
         displayTimezone: {
           ...occurrence.displayTimezone,
-          start: processDate(occurrence.dataTimezone.start.value, displayTimezone),
-          end: processDate(occurrence.dataTimezone.end.value, displayTimezone),
+          start: processDate(new Date(occurrence.dataTimezone.start.timestamp), displayTimezone),
+          end: processDate(new Date(occurrence.dataTimezone.end.timestamp), displayTimezone),
         },
       };
 

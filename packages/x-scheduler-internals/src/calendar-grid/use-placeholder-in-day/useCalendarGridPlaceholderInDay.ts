@@ -80,13 +80,7 @@ export function useCalendarGridPlaceholderInDay(
         title: '',
         allDay: true,
         displayTimezone: {
-          // The processed day without the occurrences a row day carries.
-          start: {
-            value: day.value,
-            key: day.key,
-            timestamp: day.timestamp,
-            minutesInDay: day.minutesInDay,
-          },
+          start: createProcessedDate(day.timestamp, displayTimezone),
           end: createProcessedDate(endInRow, displayTimezone),
           timezone: displayTimezone,
         },

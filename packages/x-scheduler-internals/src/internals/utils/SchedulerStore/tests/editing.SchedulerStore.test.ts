@@ -246,6 +246,7 @@ premiumStoreClasses.forEach((storeClass) => {
           id: 'standup',
           key: getRecurringOccurrenceKey('standup', occurrenceStart, 'default'),
           displayTimezone: {
+            timezone: 'default',
             start: processDate(occurrenceStart, 'default'),
             end: processDate(addHours(occurrenceStart, 1), 'default'),
           },
@@ -494,7 +495,7 @@ premiumStoreClasses.forEach((storeClass) => {
           ...base,
           key: getRecurringOccurrenceKey(
             'late',
-            base.dataTimezone.start.value,
+            new Date(base.dataTimezone.start.timestamp),
             base.dataTimezone.timezone,
           ),
         };
@@ -509,7 +510,7 @@ premiumStoreClasses.forEach((storeClass) => {
         endInTokyo: string,
       ) {
         store.updateRecurringEvent({
-          occurrenceStart: armed.dataTimezone.start.value,
+          occurrenceStart: new Date(armed.dataTimezone.start.timestamp),
           changes: {
             id: 'late',
             start: createDate(startInTokyo, 'Asia/Tokyo'),
@@ -613,14 +614,14 @@ premiumStoreClasses.forEach((storeClass) => {
         ...base,
         key: getRecurringOccurrenceKey(
           'weekly-tz',
-          base.dataTimezone.start.value,
+          new Date(base.dataTimezone.start.timestamp),
           base.dataTimezone.timezone,
         ),
       };
       store.startEditing(armed, 'armed');
 
       store.updateRecurringEvent({
-        occurrenceStart: armed.dataTimezone.start.value,
+        occurrenceStart: new Date(armed.dataTimezone.start.timestamp),
         changes: { id: 'weekly-tz', title: 'Renamed weekly' },
       });
       store.selectRecurringEventScope('this-and-following');
@@ -632,7 +633,7 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(occurrence.key).to.equal(
         getRecurringOccurrenceKey(
           occurrence.id,
-          armed.dataTimezone.start.value,
+          new Date(armed.dataTimezone.start.timestamp),
           armed.dataTimezone.timezone,
         ),
       );

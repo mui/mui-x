@@ -4575,7 +4575,7 @@ describe('<EventDialogContent open />', () => {
           .withDisplayTimezone('America/New_York');
         const event = builder.build();
         const occurrence = builder.toOccurrence();
-        const resizedEnd = addDays(occurrence.displayTimezone.end.value, 1);
+        const resizedEnd = addDays(new Date(occurrence.displayTimezone.end.timestamp), 1);
         const onEventsChange = vi.fn();
 
         const { user } = renderEditedAfterResize({

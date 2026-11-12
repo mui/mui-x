@@ -360,7 +360,9 @@ export class RecurringSeries {
    */
   public static fromEvent(
     event: SchedulerProcessedEvent,
-    exDates: readonly TemporalSupportedObject[] | undefined = event.dataTimezone.exDates,
+    exDates: readonly TemporalSupportedObject[] | undefined = event.dataTimezone.exDates?.map(
+      (exDate) => new Date(exDate.epochMilliseconds),
+    ),
   ): RecurringSeries {
     return new RecurringSeries({
       rule: event.dataTimezone.rrule!,

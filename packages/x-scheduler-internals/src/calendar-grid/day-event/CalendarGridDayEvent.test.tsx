@@ -17,7 +17,7 @@ describe('<CalendarGrid.DayEvent />', () => {
   const { render } = createSchedulerRenderer();
 
   const eventStart = processDate(new Date(), 'default');
-  const eventEnd = processDate(addHours(eventStart.value, 1), 'default');
+  const eventEnd = processDate(addHours(new Date(eventStart.timestamp), 1), 'default');
 
   type ProviderProps = React.ComponentProps<typeof EventCalendarProvider>;
 
@@ -32,8 +32,8 @@ describe('<CalendarGrid.DayEvent />', () => {
     const {
       events = [],
       resources = [],
-      rowStart = eventStart.value,
-      rowEnd = eventEnd.value,
+      rowStart = new Date(eventStart.timestamp),
+      rowEnd = new Date(eventEnd.timestamp),
     } = options;
     const cellDate = toPlainDate(rowStart.getTime(), 'default');
     return render(

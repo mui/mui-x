@@ -489,7 +489,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         };
 
         await store.updateRecurringEvent({
-          occurrenceStart: occurrence.dataTimezone.start.value,
+          occurrenceStart: new Date(occurrence.dataTimezone.start.timestamp),
           changes,
           onSubmit: onClose,
         });

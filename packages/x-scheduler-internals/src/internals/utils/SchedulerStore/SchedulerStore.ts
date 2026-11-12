@@ -1018,7 +1018,7 @@ export class SchedulerStore<
       liveEvent.dataTimezone.rrule != null;
     if (isRecurring) {
       this.deleteRecurringEvent({
-        occurrenceStart: occurrence.dataTimezone.start.value,
+        occurrenceStart: new Date(occurrence.dataTimezone.start.timestamp),
         eventId: occurrence.id,
         onSubmit: onDelete,
       });
@@ -1618,8 +1618,8 @@ export class SchedulerStore<
     // A bound the submit left out keeps the occurrence's current value, in both timezones.
     this.repointEditingOccurrence({
       eventId: targetsCreatedEvent ? createdEventId : original.id,
-      start: changes.start ?? occurrence.displayTimezone.start.value,
-      end: changes.end ?? occurrence.displayTimezone.end.value,
+      start: changes.start ?? new Date(occurrence.displayTimezone.start.timestamp),
+      end: changes.end ?? new Date(occurrence.displayTimezone.end.timestamp),
       isRecurring: targetsCreatedEvent ? createdEvent.rrule != null : true,
       dataStart: changes.start ?? occurrenceStart,
       dataEnd: changes.end ?? occurrenceEnd,

@@ -60,7 +60,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
       expect(result.updated).to.deep.equal([
         {
           id: eventWithExDate.id,
-          exDates: [...eventWithExDate.dataTimezone.exDates!, startOfDay(occurrenceStart)],
+          exDates: [createDate('2025-01-02T09:00:00Z'), startOfDay(occurrenceStart)],
         },
       ]);
     });
@@ -150,7 +150,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
         .withDisplayTimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY', interval: 1, count: 1 })
         .toProcessed();
-      const occurrenceStart = event.dataTimezone.start.value;
+      const occurrenceStart = new Date(event.dataTimezone.start.timestamp);
 
       const result = applyRecurringDeleteOnlyThis(event, occurrenceStart);
       expect(result).to.deep.equal({ deleted: [event.id] });

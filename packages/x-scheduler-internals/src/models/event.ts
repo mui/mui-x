@@ -47,9 +47,9 @@ interface SchedulerProcessedEventBase {
      * */
     timezone: TemporalTimezone;
     /**
-     * The instants of the exception dates, the same as in `dataTimezone`.
+     * The exception dates, the instants of `dataTimezone.exDates` in the display timezone.
      */
-    exDates?: TemporalSupportedObject[];
+    exDates?: BaseTemporal.ZonedDateTime[];
   };
 
   /**
@@ -110,10 +110,10 @@ export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
      */
     rrule?: SchedulerProcessedEventRecurrenceRule;
     /**
-     * Exception dates for the event.
+     * Exception dates for the event, in the data timezone.
      * These dates will be excluded from the recurrence.
      */
-    exDates?: TemporalSupportedObject[];
+    exDates?: BaseTemporal.ZonedDateTime[];
   };
 
   /**
@@ -395,10 +395,9 @@ export type SchedulerOccurrencePlaceholder =
 
 export interface SchedulerProcessedDate {
   /**
-   * The instant of the date. Read its date and time in the timezone of the processed date through
-   * `key`, `minutesInDay` and `timestamp`.
+   * The date and time, in the timezone of the processed date.
    */
-  value: TemporalSupportedObject;
+  value: BaseTemporal.ZonedDateTime;
   /**
    * String representation of the date.
    * It can be used as key in Maps or passed to the React `key` property when looping through days.
@@ -420,8 +419,9 @@ export interface SchedulerProcessedDate {
 
 /**
  * A day of a view: a cell, a column or a row, starting at the first instant of its date.
+ * Its date is `plainDate`, so it has no zoned date-time.
  */
-export interface SchedulerProcessedDay extends SchedulerProcessedDate {
+export interface SchedulerProcessedDay extends Omit<SchedulerProcessedDate, 'value'> {
   /**
    * The date of the day in the display timezone, which the day list is built in: consumers compare
    * its day number, from `getDayNumber()`, with the day numbers of instants in that timezone, from

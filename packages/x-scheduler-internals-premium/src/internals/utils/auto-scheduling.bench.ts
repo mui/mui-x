@@ -50,8 +50,8 @@ describe.each([
     updated: [
       {
         id: 0,
-        start: addDays(events[0].dataTimezone.start.value, 3),
-        end: addDays(events[0].dataTimezone.end.value, 3),
+        start: addDays(new Date(events[0].dataTimezone.start.timestamp), 3),
+        end: addDays(new Date(events[0].dataTimezone.end.timestamp), 3),
       },
     ],
   };

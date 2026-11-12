@@ -508,7 +508,7 @@ describe('recurring-events/updateRecurringEvent', () => {
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 
-      const occurrenceStart = original.dataTimezone.start.value;
+      const occurrenceStart = new Date(original.dataTimezone.start.timestamp);
 
       // Changes come as instants
       // 00:40 JST → 2025-01-09T15:40:00Z
@@ -559,11 +559,15 @@ describe('recurring-events/updateRecurringEvent', () => {
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 
-      const updated = applyRecurringUpdateAll(original, original.dataTimezone.start.value, {
-        id: original.id,
-        start: createDate('2026-10-25T01:05:00Z'), // the second 02:05
-        end: createDate('2026-10-25T01:20:00Z'), // the second 02:20
-      });
+      const updated = applyRecurringUpdateAll(
+        original,
+        new Date(original.dataTimezone.start.timestamp),
+        {
+          id: original.id,
+          start: createDate('2026-10-25T01:05:00Z'), // the second 02:05
+          end: createDate('2026-10-25T01:20:00Z'), // the second 02:20
+        },
+      );
 
       expect(updated.updated![0].start!.toISOString()).to.equal('2026-10-25T01:05:00.000Z');
       expect(updated.updated![0].end!.toISOString()).to.equal('2026-10-25T01:20:00.000Z');
@@ -666,7 +670,7 @@ describe('recurring-events/updateRecurringEvent', () => {
     });
 
     it('should remove recurrence when changes.rrule is explicitly undefined, even when the day changes', () => {
-      const occurrenceStart = defaultEvent.dataTimezone.start.value;
+      const occurrenceStart = new Date(defaultEvent.dataTimezone.start.timestamp);
       // Moving the series to another day realigns its rule, unless the changes set one.
       const changes: SchedulerEventUpdatedProperties = {
         id: defaultEvent.id,
@@ -738,7 +742,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
     it('should update the start date of the original event when editing the first occurrence (DTSTART)', () => {
       // DTSTART = 2025-01-01
-      const occurrenceStart = defaultEvent.dataTimezone.start.value;
+      const occurrenceStart = new Date(defaultEvent.dataTimezone.start.timestamp);
 
       const changes: SchedulerEventUpdatedProperties = {
         id: defaultEvent.id,
@@ -897,7 +901,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       // OccurrenceStart in display timezone (Madrid) will look like next day,
       // but update must use data timezone
-      const occurrenceStart = original.dataTimezone.start.value;
+      const occurrenceStart = new Date(original.dataTimezone.start.timestamp);
 
       const updated = applyRecurringUpdateOnlyThis(original, occurrenceStart, {
         id: original.id,
@@ -957,7 +961,7 @@ describe('recurring-events/updateRecurringEvent', () => {
           'Europe/Paris',
         );
         const changes: SchedulerEventUpdatedProperties = { id: event.id, title: 'New title' };
-        const occurrenceStart = occurrence.dataTimezone.start.value;
+        const occurrenceStart = new Date(occurrence.dataTimezone.start.timestamp);
 
         for (const { created } of [
           applyRecurringUpdateOnlyThis(event, occurrenceStart, changes),

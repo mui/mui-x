@@ -2,7 +2,7 @@ import type * as React from 'react';
 import type { Button } from '@base-ui/react/button';
 import type {
   SchedulerEventOccurrence,
-  SchedulerProcessedDate,
+  SchedulerProcessedDay,
 } from '@mui/x-scheduler-internals/models';
 
 export interface EventItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onClick'> {
@@ -12,9 +12,9 @@ export interface EventItemProps extends Omit<React.HTMLAttributes<HTMLDivElement
    */
   occurrence: SchedulerEventOccurrence;
   /**
-   * The date the event occurrence is displayed in.
+   * The day the event occurrence is displayed in.
    */
-  date: SchedulerProcessedDate;
+  date: SchedulerProcessedDay;
   /**
    * The event variant.
    * 'regular' does not make the styling distinction between all day events and timed events, expect for the time display.

@@ -286,7 +286,7 @@ describe('Core - EventCalendarStore', () => {
           .withDisplayTimezone('America/New_York')
           .toOccurrence();
         store.startEditing(edited, 'armed');
-        const end = addDays(edited.displayTimezone.end.value, 1);
+        const end = addDays(new Date(edited.displayTimezone.end.timestamp), 1);
 
         store.setEditingOccurrenceTimes({ end });
 

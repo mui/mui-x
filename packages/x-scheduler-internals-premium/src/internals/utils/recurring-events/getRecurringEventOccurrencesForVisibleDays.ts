@@ -45,10 +45,10 @@ export function getRecurringEventOccurrencesForVisibleDays(
   const scanFirstDay = toPlainDate(start, dataTimezone).add({ days: 1 - durationInDays });
   const scanLastDay = toPlainDate(end, dataTimezone);
 
-  // In the data timezone, a display date at the same instant is a copy of the data date.
+  // In the data timezone, a display date at the same instant is the data date.
   const processDisplayDate = (epochMs: number, dataDate: SchedulerProcessedDate) =>
     displayTimezone === dataTimezone && epochMs === dataDate.timestamp
-      ? { ...dataDate }
+      ? dataDate
       : createProcessedDate(epochMs, displayTimezone);
 
   return series.getOccurrenceDays(scanFirstDay, scanLastDay).map((day) => {

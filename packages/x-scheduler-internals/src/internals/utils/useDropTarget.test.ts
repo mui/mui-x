@@ -41,7 +41,7 @@ premiumStoreClasses.forEach((storeClass) => {
           sourceResourceId: null,
           resourceId: null,
           start: occurrence.displayTimezone.start.timestamp,
-          end: addDays(occurrence.displayTimezone.end.value, 1).getTime(),
+          end: addDays(new Date(occurrence.displayTimezone.end.timestamp), 1).getTime(),
         },
       );
       store.selectRecurringEventScope('all');
@@ -78,7 +78,7 @@ premiumStoreClasses.forEach((storeClass) => {
           sourceResourceId: null,
           resourceId: null,
           start: occurrence.displayTimezone.start.timestamp,
-          end: addDays(occurrence.displayTimezone.end.value, 1).getTime(),
+          end: addDays(new Date(occurrence.displayTimezone.end.timestamp), 1).getTime(),
         },
       );
 
@@ -101,7 +101,7 @@ premiumStoreClasses.forEach((storeClass) => {
         displayTimezone: 'America/New_York',
         onEventsChange,
       });
-      const start = occurrence.displayTimezone.start.value;
+      const start = new Date(occurrence.displayTimezone.start.timestamp);
       const end = addHours(start, 1);
 
       applyInternalDragOrResizeOccurrencePlaceholder(

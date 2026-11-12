@@ -4,20 +4,19 @@ import { addHours, createSchedulerRenderer, describeConformance } from 'test/uti
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { describe, it, expect } from 'vitest';
-import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 
 describe('<CalendarGrid.TimeEvent />', () => {
   const { render } = createSchedulerRenderer();
 
   const eventStart = processDate(new Date(), 'default');
-  const eventEnd = processDate(addHours(eventStart.value, 1), 'default');
+  const eventEnd = processDate(addHours(new Date(eventStart.timestamp), 1), 'default');
 
   // Mounts the event in the column context it needs.
   function renderEvent(node: React.ReactElement) {
     return render(
       <EventCalendarProvider events={[]}>
         <CalendarGrid.Root>
-          <CalendarGrid.TimeColumn value={toPlainDate(eventStart.value.getTime(), 'default')}>
+          <CalendarGrid.TimeColumn value={eventStart.value.toPlainDate()}>
             {node}
           </CalendarGrid.TimeColumn>
         </CalendarGrid.Root>

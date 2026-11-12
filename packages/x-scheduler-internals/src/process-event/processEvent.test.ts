@@ -36,9 +36,9 @@ describe('processEvent', () => {
       expect(start.key).to.equal('2025-01-02');
       expect(start.minutesInDay).to.equal(0);
       expect(end.minutesInDay).to.equal(120);
-      expect(start.value.getTime()).to.equal(Date.parse('2025-01-01T10:00:00Z'));
-      // A plain `Date`, not a subclass carrying a timezone.
-      expect(start.value.constructor).to.equal(Date);
+      // A zoned date-time in the display timezone.
+      expect(start.value.toString()).to.equal('2025-01-02T00:00:00+14:00[Pacific/Kiritimati]');
+      expect(end.value.toString()).to.equal('2025-01-02T02:00:00+14:00[Pacific/Kiritimati]');
     });
 
     it('should spread an all-day event over whole days of the display timezone', () => {
@@ -69,8 +69,8 @@ describe('processEvent', () => {
       const processed = processEvent(event, 'America/New_York');
 
       expect(processed.displayTimezone.exDates).to.have.length(1);
-      expect(processed.displayTimezone.exDates![0].getTime()).to.equal(
-        Date.parse('2025-01-05T00:00:00Z'),
+      expect(processed.displayTimezone.exDates![0].toString()).to.equal(
+        '2025-01-04T19:00:00-05:00[America/New_York]',
       );
     });
 
@@ -175,8 +175,8 @@ describe('processEvent', () => {
 
       expect(processed.dataTimezone.exDates).to.have.length(1);
       // 09:00 NY (UTC-5) = 14:00 UTC
-      expect(processed.dataTimezone.exDates![0].getTime()).to.equal(
-        new Date('2025-01-05T14:00:00Z').getTime(),
+      expect(processed.dataTimezone.exDates![0].epochMilliseconds).to.equal(
+        Date.parse('2025-01-05T14:00:00Z'),
       );
     });
 
@@ -199,7 +199,7 @@ describe('processEvent', () => {
       expect(processed.dataTimezone.end.minutesInDay).to.equal(10 * 60);
       expect(
         toWallClockIsoString(
-          processed.dataTimezone.exDates![0].getTime(),
+          processed.dataTimezone.exDates![0].epochMilliseconds,
           processed.dataTimezone.timezone,
         ),
       ).to.equal('2025-01-05T09:00:00');

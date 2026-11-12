@@ -378,8 +378,9 @@ storeClasses.forEach((storeClass) => {
             displayTimezone: 'America/New_York',
             onEventsChange,
           });
-          const dataStart = schedulerEventSelectors.processedEvent(store.state, '1')!.dataTimezone
-            .start.value;
+          const dataStart = new Date(
+            schedulerEventSelectors.processedEvent(store.state, '1')!.dataTimezone.start.timestamp,
+          );
 
           let result: ReturnType<typeof store.updateEvent>;
           expect(() => {
@@ -1081,7 +1082,7 @@ storeClasses.forEach((storeClass) => {
           expect(store.state.pendingRecurringEventOperation).to.deep.include({
             kind: 'delete',
             eventId: event.id,
-            occurrenceStart: occurrence.dataTimezone.start.value,
+            occurrenceStart: new Date(occurrence.dataTimezone.start.timestamp),
           });
 
           store.selectRecurringEventScope('only-this');
@@ -2170,7 +2171,7 @@ premiumStoreClasses.forEach((storeClass) => {
         expect(occurrence.dataTimezone.rrule!.byMonthDay).to.deep.equal([3]);
 
         store.updateRecurringEvent({
-          occurrenceStart: occurrence.dataTimezone.start.value,
+          occurrenceStart: new Date(occurrence.dataTimezone.start.timestamp),
           changes: {
             id: 'report',
             rrule: { ...occurrence.dataTimezone.rrule!, count: 5 },

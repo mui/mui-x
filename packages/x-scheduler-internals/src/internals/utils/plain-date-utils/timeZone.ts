@@ -1,5 +1,5 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { BaseTemporal } from '../base-temporal';
+import { BaseTemporal } from '../base-temporal';
 import { isoDateToDayNumber, MS_PER_DAY } from './dayNumber';
 import { getDayNumber, plainDateFromDayNumber } from './plainDate';
 
@@ -12,6 +12,7 @@ interface TimezoneOffsets {
 }
 
 const MAX_CACHED_DAYS_PER_TIMEZONE = 20_000;
+const NS_PER_MS = BigInt(1_000_000);
 const timezoneOffsets = new Map<string, TimezoneOffsets | null>();
 const OFFSET_REGEXP = /^([+-])(\d{2}):?(\d{2})?(?::?(\d{2}))?$/;
 
@@ -46,6 +47,37 @@ function getTimezoneOffsets(timezone: string): TimezoneOffsets | null {
 function readOffset(format: TimezoneOffsets['format'], epochMs: number): number {
   const offset = format(epochMs).split('GMT')[1];
   return offset ? parseOffset(offset) : 0;
+}
+
+let systemTimezoneId: string | null = null;
+
+/**
+ * The IANA identifier of a timezone, the timezone of the system for `'default'` and `'system'`.
+ * The identifier of the system is read once, as reading it costs tens of microseconds.
+ */
+export function getTimezoneId(timezone: TemporalTimezone): string {
+  if (timezone === 'default' || timezone === 'system') {
+    systemTimezoneId ??= new Intl.DateTimeFormat().resolvedOptions().timeZone;
+    return systemTimezoneId;
+  }
+  return timezone;
+}
+
+/**
+ * Forgets the identifier of the timezone of the system, for the tests that change it.
+ */
+export function resetSystemTimezoneId() {
+  systemTimezoneId = null;
+}
+
+/**
+ * The zoned date-time of an instant in `timezone`.
+ */
+export function toZonedDateTime(
+  epochMs: number,
+  timezone: TemporalTimezone,
+): BaseTemporal.ZonedDateTime {
+  return new BaseTemporal.ZonedDateTime(BigInt(epochMs) * NS_PER_MS, getTimezoneId(timezone));
 }
 
 function getSystemTimezoneOffsetMs(epochMs: number): number {

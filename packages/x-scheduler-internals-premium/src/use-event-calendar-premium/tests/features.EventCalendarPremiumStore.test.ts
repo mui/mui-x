@@ -6,6 +6,7 @@ import {
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import type { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
+import { toZonedDateTime } from '@mui/x-scheduler-internals/internals';
 import {
   schedulerEventSelectors,
   schedulerOccurrenceSelectors,
@@ -38,7 +39,7 @@ const buildViewDefinition = (): any => ({
     Array.from({ length: 7 }, (_, i) => {
       const value = addDays(state.visibleDate, i);
       return {
-        value,
+        value: toZonedDateTime(value.getTime(), 'default'),
         key: String(value.getTime()),
         timestamp: value.getTime(),
         minutesInDay: 24 * 60,

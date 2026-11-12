@@ -3,7 +3,7 @@ import { createDate, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { processDate } from '../../../process-date';
 import { createDateFromWallTime, createProcessedDate, isInstantString } from './date';
-import { toPlainDate } from './timeZone';
+import { getTimezoneId, toPlainDate } from './timeZone';
 
 /**
  * The date and the minutes of the day of an instant in `timezone`, as the getters of `Date` read
@@ -97,17 +97,22 @@ describe('plain-date-utils/date', () => {
     'should process a date in %s like the reference reads it',
     (timezone) => {
       const epochMs = Date.UTC(2025, 10, 2, 5, 30);
-      const value = new Date(epochMs);
-      // A plain `Date`, not a subclass carrying a timezone.
-      expect(value.constructor).to.equal(Date);
-      expect(value.getTime()).to.equal(epochMs);
+      const reference = { ...readReference(epochMs, timezone), timestamp: epochMs };
 
-      const { value: processedValue, ...processed } = processDate(value, timezone);
-      expect(processedValue).to.equal(value);
-      expect(processed).to.deep.equal({ ...readReference(epochMs, timezone), timestamp: epochMs });
-      const { value: createdValue, ...created } = createProcessedDate(epochMs, timezone);
-      expect(createdValue.constructor).to.equal(Date);
-      expect(created).to.deep.equal({ ...readReference(epochMs, timezone), timestamp: epochMs });
+      const { value, ...processed } = processDate(new Date(epochMs), timezone);
+      expect(processed).to.deep.equal(reference);
+      // The zoned date-time reads the same date and time as the other fields.
+      expect(value.epochMilliseconds).to.equal(epochMs);
+      // The canonical identifier of `Intl`, like `Asia/Calcutta` for `Asia/Kolkata`.
+      expect(value.timeZoneId).to.equal(
+        new Intl.DateTimeFormat('en-US', { timeZone: getTimezoneId(timezone) }).resolvedOptions()
+          .timeZone,
+      );
+      expect(value.toPlainDate().toString()).to.equal(reference.key);
+      expect(value.hour * 60 + value.minute).to.equal(reference.minutesInDay);
+      const created = createProcessedDate(epochMs, timezone);
+      expect({ ...created }).to.deep.equal(processed);
+      expect(created.value.equals(value)).to.equal(true);
     },
   );
 

@@ -13,6 +13,7 @@ import type {
   SchedulerProcessedDate,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
+import { toZonedDateTime } from '@mui/x-scheduler-internals/internals';
 import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
 import { EventCalendarPremiumStore } from '../EventCalendarPremiumStore';
@@ -73,7 +74,7 @@ const buildViewDefinition = (dayCount = 7): any => ({
     for (let i = 0; i < dayCount; i += 1) {
       const value = addDays(state.visibleDate, i);
       days.push({
-        value,
+        value: toZonedDateTime(value.getTime(), 'default'),
         key: String(value.getTime()),
         timestamp: value.getTime(),
         minutesInDay: 24 * 60,

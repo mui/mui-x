@@ -47,7 +47,9 @@ export function applyRecurringDeleteOnlyThis(
   occurrenceStart: TemporalSupportedObject,
 ): UpdateEventsParameters {
   const exDates = [
-    ...(originalEvent.dataTimezone.exDates ?? []),
+    ...(originalEvent.dataTimezone.exDates ?? []).map(
+      (exDate) => new Date(exDate.epochMilliseconds),
+    ),
     createStartOfPlainDate(
       toPlainDate(occurrenceStart.getTime(), originalEvent.dataTimezone.timezone),
       originalEvent.dataTimezone.timezone,

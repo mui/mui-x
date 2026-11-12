@@ -26,7 +26,7 @@ describe('createDayTimeGridViewDefinition', () => {
     it('renders a single day starting from the visible date for dayCount=1', () => {
       const days = createDayTimeGridViewDefinition(1).visibleDaysSelector(getState());
       expect(days).to.have.length(1);
-      expect(days[0].value).toEqualDateTime(visibleDate);
+      expect(new Date(days[0].timestamp)).toEqualDateTime(visibleDate);
     });
 
     it('starts the days at midnight when the visible date has a time of day', () => {
@@ -35,7 +35,7 @@ describe('createDayTimeGridViewDefinition', () => {
         visibleDate: createDate('2025-07-03T14:30:00Z'),
       });
       const days = createDayTimeGridViewDefinition(3).visibleDaysSelector(state);
-      expect(days.map((day) => day.value.toISOString())).to.deep.equal([
+      expect(days.map((day) => new Date(day.timestamp).toISOString())).to.deep.equal([
         '2025-07-03T00:00:00.000Z',
         '2025-07-04T00:00:00.000Z',
         '2025-07-05T00:00:00.000Z',
@@ -46,7 +46,7 @@ describe('createDayTimeGridViewDefinition', () => {
       const days = createDayTimeGridViewDefinition(3).visibleDaysSelector(getState());
       expect(days).to.have.length(3);
       days.forEach((day, index) => {
-        expect(day.value).toEqualDateTime(addDays(visibleDate, index));
+        expect(new Date(day.timestamp)).toEqualDateTime(addDays(visibleDate, index));
       });
     });
   });
