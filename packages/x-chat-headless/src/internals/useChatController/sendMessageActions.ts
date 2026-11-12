@@ -98,14 +98,34 @@ export function createSendMessageActions<Cursor = string>(params: {
         return;
       }
 
-      await runtimeRef.current.onFinish({
-        message: getFinishMessage(storeUnknown, result.messageId, conversationId, result.status),
-        messages: getMessages(storeUnknown),
-        isAbort: result.isAbort,
-        isDisconnect: result.isDisconnect,
-        isError: result.isError,
-        finishReason: result.finishReason,
-      });
+      try {
+        await runtimeRef.current.onFinish({
+          message: getFinishMessage(storeUnknown, result.messageId, conversationId, result.status),
+          messages: getMessages(storeUnknown),
+          isAbort: result.isAbort,
+          isDisconnect: result.isDisconnect,
+          isError: result.isError,
+          finishReason: result.finishReason,
+        });
+      } catch (error) {
+        // Mirror processStream's failStream so callers take their stream-error branch.
+        if (store.state.error?.source !== 'stream') {
+          const streamError = createRuntimeError(
+            'STREAM_ERROR',
+            getErrorMessage('The onFinish callback failed.', error),
+            'stream',
+            true,
+            true,
+            { messageId: result.messageId, conversationId },
+          );
+          store.setError(streamError);
+          if (result.messageId && store.state.messagesById[result.messageId]) {
+            store.setMessageError(result.messageId, streamError);
+          }
+        }
+        store.setStreaming(false);
+        throw error;
+      }
     };
 
     let result: ProcessStreamResult;

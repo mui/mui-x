@@ -490,11 +490,13 @@ describe('createSendMessageActions', () => {
         ),
       });
 
+      const onError = vi.fn();
+      const setRuntimeError = vi.fn();
       const { sendMessage } = createSendMessageActions({
         store,
         storeUnknown: asUnknown(store),
-        runtimeRef: { current: { adapter, onFinish } },
-        setRuntimeError: vi.fn(),
+        runtimeRef: { current: { adapter, onFinish, onError } },
+        setRuntimeError,
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
       });
 
@@ -502,6 +504,12 @@ describe('createSendMessageActions', () => {
 
       expect(onFinish).toHaveBeenCalledTimes(1);
       expect(store.state.error?.message ?? '').not.toContain('Unable to reconnect');
+      expect(onError).toHaveBeenCalledTimes(1);
+      expect(onError.mock.calls[0][0]).toMatchObject({ source: 'stream', message: 'boom' });
+      expect(setRuntimeError).not.toHaveBeenCalled();
+      expect(store.state.isStreaming).toBe(false);
+      const userMsg = Object.values(store.state.messagesById).find((m) => m.role === 'user');
+      expect(userMsg!.status).toBe('error');
     });
 
     it('sets user message status to "error" when the adapter throws', async () => {
@@ -862,6 +870,50 @@ describe('createSendMessageActions', () => {
       expect(store.state.messagesById.a1).toBeUndefined();
       expect(store.state.messagesById.a2).toBeUndefined();
       expect(store.state.messagesById.a3).toBeDefined();
+    });
+
+    it('reports a throwing onFinish after a reconnect as a stream error without restoring the removed run', async () => {
+      const store = new ChatStore({ initialMessages: makeThread() });
+      store.setActiveConversation('c1');
+      const onFinish = vi.fn().mockRejectedValue(new Error('boom'));
+      const onError = vi.fn();
+      const setRuntimeError = vi.fn();
+      const adapter = createAdapter({
+        regenerate: vi
+          .fn()
+          .mockResolvedValue(
+            createStream([
+              { sequence: 0, eventId: 'e0', chunk: { type: 'start', messageId: 'a2' } },
+            ]),
+          ),
+        reconnectToStream: vi.fn().mockResolvedValue(
+          createStream([
+            {
+              sequence: 1,
+              eventId: 'e1',
+              chunk: { type: 'finish', messageId: 'a2', finishReason: 'stop' },
+            },
+          ]),
+        ),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter, onFinish, onError } },
+        setRuntimeError,
+        assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
+      });
+
+      await regenerate('a1');
+
+      expect(onFinish).toHaveBeenCalledTimes(1);
+      expect(store.state.messagesById.a1).toBeUndefined();
+      expect(store.state.messagesById.a2).toBeDefined();
+      expect(setRuntimeError).not.toHaveBeenCalled();
+      expect(onError).toHaveBeenCalledTimes(1);
+      expect(onError.mock.calls[0][0]).toMatchObject({ source: 'stream', message: 'boom' });
+      expect(store.state.isStreaming).toBe(false);
     });
 
     it('removes the whole run including a non-mapped sibling when the anchor has a ref mapping', async () => {
