@@ -336,6 +336,9 @@ export function registerFormulaPickEditable(
 ): () => void {
   const { editables } = apiRef.current.caches.formula!.referencePick;
   editables.add(editable);
+  // The host may have focused the editable before registering it (the focus comes from a
+  // layout effect, the registration from an effect): its caret was not looked at yet.
+  syncFormulaPickFeedback(apiRef, isFormulaReferencePickingEnabled(apiRef.current.rootProps));
   return () => {
     editables.delete(editable);
   };

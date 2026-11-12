@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { platform } from '@base-ui/utils/platform';
 import type { RefObject } from '@mui/x-internals/types';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
 import { microtasks } from 'test/utils/helperFn';
 import {
@@ -1259,6 +1260,343 @@ describe('<DataGridPremium /> - Formulas reference picking', () => {
   });
 
   // A real pointer: the browser moves the focus on mousedown unless the grid prevents it.
+  describe('row edit mode', () => {
+    const isRowEditing = (id: GridRowId) => apiRef.current!.getRowMode(id) === 'edit';
+
+    describe.each([
+      {
+        dialect: 'A1 notation',
+        a1Notation: true,
+        otherRowPrice: 'B2',
+        range: 'B2:C3',
+      },
+      {
+        dialect: 'canonical',
+        a1Notation: false,
+        otherRowPrice: 'REF(COLUMN("price"), ROW(12))',
+        range:
+          'RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(1)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(2)))',
+      },
+    ])('$dialect', ({ a1Notation, otherRowPrice, range }) => {
+      it('inserts a reference to a cell of another row and keeps the row in edit mode', async () => {
+        const { user } = await render(<Test editMode="row" formulaA1Notation={a1Notation} />);
+        await editTotal(user, 11, '=');
+        await user.click(cell(12, 'price'));
+
+        expect(getEditable()!.textContent).to.equal(`=${otherRowPrice}`);
+        expect(isRowEditing(11)).to.equal(true);
+        expect(document.activeElement).to.equal(getEditable());
+        expect(gridFocusCellSelector(apiRef)).to.deep.equal({ id: 11, field: 'total' });
+      });
+
+      it('writes the range of a drag, then adds a reference with the modifier click', async () => {
+        const { user } = await render(<Test editMode="row" formulaA1Notation={a1Notation} />);
+        await editTotal(user, 11, '=SUM(');
+        drag(cell(12, 'price'), cell(13, 'quantity'));
+        expect(getEditable()!.textContent).to.equal(`=SUM(${range}`);
+
+        modifierClick(cell(12, 'price'), APPEND_KEY);
+        expect(getEditable()!.textContent).to.equal(`=SUM(${range}, ${otherRowPrice}`);
+        expect(isRowEditing(11)).to.equal(true);
+      });
+
+      it('writes the field name for a cell of the edited row that has no editor', async () => {
+        const { user } = await render(<Test editMode="row" formulaA1Notation={a1Notation} />);
+        await editTotal(user, 11, '=');
+        // The Quantity column is not editable: its cell stays in view mode.
+        await user.click(cell(11, 'quantity'));
+
+        expect(getEditable()!.textContent).to.equal('=quantity');
+        expect(isRowEditing(11)).to.equal(true);
+        expect(gridFocusCellSelector(apiRef)).to.deep.equal({ id: 11, field: 'total' });
+      });
+    });
+
+    it('moves the focus to the editor of a clicked cell of the edited row', async () => {
+      const { user } = await render(<Test editMode="row" formulaA1Notation />);
+      await editTotal(user, 11, '=');
+      // The Price cell of the row holds its own editor: the click goes to it.
+      await user.click(cell(11, 'price'));
+
+      expect(gridFocusCellSelector(apiRef)).to.deep.equal({ id: 11, field: 'price' });
+      expect(isRowEditing(11)).to.equal(true);
+      expect(cell(11, 'price').contains(document.activeElement)).to.equal(true);
+      expect(apiRef.current!.getRowWithUpdatedValues(11, 'total').total).to.equal('=');
+    });
+
+    it('commits the row with the picked reference on Enter', async () => {
+      const { user } = await render(
+        <Test editMode="row" formulaA1Notation processRowUpdate={(row) => row} />,
+      );
+      await editTotal(user, 11, '=');
+      await user.click(cell(12, 'price'));
+      fireEvent.keyDown(getEditable()!, { key: 'Enter' });
+
+      await waitFor(() => {
+        expect(isRowEditing(11)).to.equal(false);
+      });
+      expect(apiRef.current!.getRow(11).total).to.equal('=REF(COLUMN("price"), ROW(12))');
+      expect(cell(11, 'total').textContent).to.equal('20');
+    });
+
+    it('ends the row edit on a click where no reference is expected', async () => {
+      const { user } = await render(<Test editMode="row" formulaA1Notation />);
+      await editTotal(user, 11, '=1+1');
+      await user.click(cell(12, 'price'));
+
+      await waitFor(() => {
+        expect(isRowEditing(11)).to.equal(false);
+      });
+      expect(gridFocusCellSelector(apiRef)).to.deep.equal({ id: 12, field: 'price' });
+    });
+
+    it('does not pick while another editor of the row has the focus', async () => {
+      const { user } = await render(<Test editMode="row" formulaA1Notation />);
+      await user.dblClick(cell(11, 'price'));
+      await waitFor(() => {
+        expect(isRowEditing(11)).to.equal(true);
+      });
+      expect(cell(11, 'price').contains(document.activeElement)).to.equal(true);
+      const formula = apiRef.current!.getRowWithUpdatedValues(11, 'total').total;
+      await user.click(cell(12, 'quantity'));
+
+      await waitFor(() => {
+        expect(isRowEditing(11)).to.equal(false);
+      });
+      expect(apiRef.current!.getRow(11).total).to.equal(formula);
+    });
+
+    it('does not change the row selection or the cell selection', async () => {
+      const onCellSelectionModelChange = vi.fn();
+      const onRowSelectionModelChange = vi.fn();
+      const { user } = await render(
+        <Test
+          editMode="row"
+          formulaA1Notation
+          cellSelection
+          onCellSelectionModelChange={onCellSelectionModelChange}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+      await editTotal(user, 11, '=');
+      onCellSelectionModelChange.mockClear();
+      onRowSelectionModelChange.mockClear();
+      await user.click(cell(12, 'price'));
+
+      expect(getEditable()!.textContent).to.equal('=B2');
+      expect(onCellSelectionModelChange.mock.calls).to.have.length(0);
+      expect(onRowSelectionModelChange.mock.calls).to.have.length(0);
+    });
+  });
+
+  describe('compatibility with other features', () => {
+    const isPickingClassOn = () =>
+      document
+        .querySelector(`.${gridClasses.root}`)!
+        .classList.contains(gridClasses['root--formulaReferencePicking']);
+
+    it.each([
+      ['cell edit mode', {}],
+      ['row edit mode', { editMode: 'row' as const }],
+    ])(
+      'shows the picking class as soon as a formula opens with the caret on a reference, in %s',
+      async (_, props) => {
+        const { user } = await render(<Test {...props} />);
+        await user.dblClick(cell(11, 'total'));
+
+        await waitFor(() => {
+          expect(getEditable()?.textContent).to.equal('=price * quantity');
+        });
+        // Nothing was typed: the caret sits at the end of `quantity`, which a click replaces.
+        await waitFor(() => {
+          expect(isPickingClassOn()).to.equal(true);
+        });
+      },
+    );
+
+    it('picks with `disableRowSelectionOnClick` and without cell selection', async () => {
+      const { user } = await render(<Test formulaA1Notation disableRowSelectionOnClick />);
+      await editTotal(user, 11, '=SUM(');
+      drag(cell(12, 'price'), cell(13, 'quantity'));
+
+      expect(getEditable()!.textContent).to.equal('=SUM(B2:C3');
+      expect(isEditing(11)).to.equal(true);
+      expect(apiRef.current!.getSelectedRows().size).to.equal(0);
+    });
+
+    it('picks a cell of a pinned column, named by its place in the view', async () => {
+      const { user } = await render(
+        <Test formulaA1Notation initialState={{ pinnedColumns: { left: ['quantity'] } }} />,
+      );
+      await editTotal(user, 11, '=');
+      // The pinned Quantity column is the first one of the view: column A.
+      await user.click(cell(12, 'quantity'));
+      expect(getEditable()!.textContent).to.equal('=A2');
+
+      await user.click(cell(13, 'price'));
+      expect(getEditable()!.textContent).to.equal('=C3');
+      expect(isEditing(11)).to.equal(true);
+    });
+
+    it('writes the same canonical reference for a cell of a pinned column', async () => {
+      const { user } = await render(
+        <Test initialState={{ pinnedColumns: { left: ['quantity'], right: ['price'] } }} />,
+      );
+      await editTotal(user, 11, '=');
+      await user.click(cell(12, 'quantity'));
+      expect(getEditable()!.textContent).to.equal('=REF(COLUMN("quantity"), ROW(12))');
+
+      await user.click(cell(13, 'price'));
+      expect(getEditable()!.textContent).to.equal('=REF(COLUMN("price"), ROW(13))');
+    });
+
+    it('counts the top pinned rows in the row number, and does not pick them', async () => {
+      const { user } = await render(
+        <Test
+          formulaA1Notation
+          pinnedRows={{ top: [{ id: 'top', item: 'Top', price: 1, quantity: 1 }] }}
+        />,
+      );
+      await editTotal(user, 11, '=');
+      await user.click(cell(12, 'price'));
+      expect(getEditable()!.textContent).to.equal('=B3');
+
+      await user.click(cell('top', 'price'));
+      await waitFor(() => {
+        expect(isEditing(11)).to.equal(false);
+      });
+    });
+
+    describe('row grouping and aggregation', () => {
+      const groupingProps: Partial<DataGridPremiumProps> = {
+        initialState: {
+          rowGrouping: { model: ['item'] },
+          aggregation: { model: { price: 'sum' } },
+        },
+        defaultGroupingExpansionDepth: -1,
+      };
+      const GROUP_ROW = 'auto-generated-row-item/Banana';
+      const FOOTER_ROW = 'auto-generated-group-footer-root';
+
+      it('picks a row of another group', async () => {
+        const { user } = await render(<Test {...groupingProps} />);
+        await editTotal(user, 11, '=');
+        await user.click(cell(12, 'price'));
+
+        expect(getEditable()!.textContent).to.equal('=REF(COLUMN("price"), ROW(12))');
+        expect(isEditing(11)).to.equal(true);
+      });
+
+      it('writes a range that spans several groups', async () => {
+        const { user } = await render(<Test {...groupingProps} formulaA1Notation />);
+        await editTotal(user, 11, '=SUM(');
+        // The group rows between the two cells are not part of the positions.
+        drag(cell(12, 'price'), cell(GROUP_ROW, 'price'), cell(13, 'quantity'));
+
+        expect(getEditable()!.textContent).to.equal('=SUM(B2:C3');
+      });
+
+      it.each([
+        ['a group row', GROUP_ROW],
+        ['an aggregation footer row', FOOTER_ROW],
+      ])('ends the edit on a click in %s', async (_, id) => {
+        const { user } = await render(<Test {...groupingProps} />);
+        expect(apiRef.current!.getRowNode(id)).not.to.equal(null);
+        await editTotal(user, 11, '=');
+        await user.click(cell(id, 'price'));
+
+        await waitFor(() => {
+          expect(isEditing(11)).to.equal(false);
+        });
+      });
+    });
+
+    describe('right-to-left', () => {
+      const rtlTheme = createTheme({ direction: 'rtl' });
+
+      it('picks a cell, a range and an added reference', async () => {
+        const { user } = await render(
+          <ThemeProvider theme={rtlTheme}>
+            <div dir="rtl">
+              <Test formulaA1Notation />
+            </div>
+          </ThemeProvider>,
+        );
+        await editTotal(user, 11, '=SUM(');
+        await user.click(cell(12, 'price'));
+        expect(getEditable()!.textContent).to.equal('=SUM(B2');
+
+        drag(cell(12, 'price'), cell(13, 'quantity'));
+        expect(getEditable()!.textContent).to.equal('=SUM(B2:C3');
+
+        modifierClick(cell(13, 'price'), APPEND_KEY);
+        expect(getEditable()!.textContent).to.equal('=SUM(B2:C3, B3');
+        expect(document.activeElement).to.equal(getEditable());
+      });
+    });
+
+    describe('column resize', () => {
+      it('keeps the edit and the pending reference while a column is resized', async () => {
+        const { user } = await render(<Test formulaA1Notation />);
+        await editTotal(user, 11, '=SUM(');
+        await user.click(cell(12, 'price'));
+        expect(getEditable()!.textContent).to.equal('=SUM(B2');
+
+        const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+        fireEvent.mouseDown(separator, { clientX: 100 });
+        fireEvent.mouseMove(separator, { clientX: 130, buttons: 1 });
+        fireEvent.mouseUp(separator);
+
+        expect(isEditing(11)).to.equal(true);
+        expect(getEditable()!.textContent).to.equal('=SUM(B2');
+        // The reference is still the pending one: the next click replaces it.
+        await user.click(cell(13, 'quantity'));
+        expect(getEditable()!.textContent).to.equal('=SUM(C3');
+      });
+    });
+
+    // Needs a layout: jsdom renders every row.
+    describe.skipIf(isJSDOM)('virtualization', () => {
+      const manyRows = Array.from({ length: 200 }, (_, index) => ({
+        id: index + 1,
+        item: `Item ${index + 1}`,
+        price: index + 1,
+        quantity: 2,
+        total: '=price * quantity',
+        note: '',
+      }));
+
+      it('picks a cell while the edited row is scrolled out of the view', async () => {
+        const { user } = await render(
+          <Test
+            formulaA1Notation
+            rows={manyRows}
+            disableVirtualization={false}
+            processRowUpdate={(row) => row}
+          />,
+        );
+        await editTotal(user, 1, '=');
+        await act(async () => apiRef.current!.scrollToIndexes({ rowIndex: 150 }));
+        await waitFor(() => {
+          expect(apiRef.current!.getCellElement(150, 'price')).not.to.equal(null);
+        });
+        // The edited row left the render zone, the editor still holds the focus.
+        expect(document.activeElement).to.equal(getEditable());
+        await user.click(cell(150, 'price'));
+
+        expect(getEditable()!.textContent).to.equal('=B150');
+        expect(isEditing(1)).to.equal(true);
+        expect(document.activeElement).to.equal(getEditable());
+
+        fireEvent.keyDown(getEditable()!, { key: 'Enter' });
+        await waitFor(() => {
+          expect(isEditing(1)).to.equal(false);
+        });
+        expect(apiRef.current!.getRow(1).total).to.equal('=REF(COLUMN("price"), ROW(150))');
+      });
+    });
+  });
+
   describe.skipIf(isJSDOM)('real pointer events', () => {
     async function realClick(element: Element) {
       const { userEvent } = await import('vitest/browser');
