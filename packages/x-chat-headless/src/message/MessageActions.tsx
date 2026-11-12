@@ -3,6 +3,7 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import type { SlotComponentProps } from '@mui/utils/types';
 import { useMessageContext } from './internals/MessageContext';
+import { useMessageActionable } from '../message-list/internals/MessageRovingContext';
 import type { MessageActionsOwnerState } from './message.types';
 
 export interface MessageActionsSlots {
@@ -47,7 +48,12 @@ export const MessageActions = React.forwardRef(function MessageActions(
     slotProps,
     ...other
   } = props as MessageActionsProps & { ownerState?: MessageActionsOwnerState };
-  const ownerState = useMessageContext();
+  const messageOwnerState = useMessageContext();
+  const actionable = useMessageActionable();
+  const ownerState = React.useMemo<MessageActionsOwnerState>(
+    () => ({ ...messageOwnerState, actionable }),
+    [messageOwnerState, actionable],
+  );
   void ownerStateProp;
   const Actions = slots?.actions ?? 'div';
   const actionsProps = useSlotProps({
