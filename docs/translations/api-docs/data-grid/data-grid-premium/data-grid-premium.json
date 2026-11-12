@@ -184,7 +184,7 @@
       "description": "Functions available to formulas, keyed by name. The prop replaces the built-in set: spread <code>GRID_FORMULA_FUNCTIONS</code> (imported from <code>@mui/x-data-grid-premium/formula</code>) to extend it. Has no effect unless the formula feature is provided through <code>featureDependencies</code>."
     },
     "formulaReferencePicking": {
-      "description": "If <code>true</code>, clicking a cell while a formula is being edited writes a reference to that cell into the formula instead of ending the edit, when the caret is where a reference is expected (after <code>=</code>, an operator, <code>(</code> or <code>,</code>) or on a reference, which is then replaced. Has no effect when <code>disableFormulas</code> is <code>true</code> or a <code>dataSource</code> is set."
+      "description": "If <code>true</code>, clicking a cell while a formula is being edited writes a reference to that cell into the formula instead of ending the edit, when the caret is where a reference is expected (after <code>=</code>, an operator, <code>(</code> or <code>,</code>) or on a reference, which is then replaced. Dragging over cells, or clicking with the Shift key pressed, writes a range. Clicking with the Ctrl key pressed (Command on macOS) adds the reference as another argument of the function call the caret is in. Has no effect when <code>disableFormulas</code> is <code>true</code> or a <code>dataSource</code> is set."
     },
     "getAggregationPosition": {
       "description": "Determines the position of an aggregated value.",
