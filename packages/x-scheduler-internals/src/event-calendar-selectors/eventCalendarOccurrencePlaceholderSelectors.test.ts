@@ -88,6 +88,19 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         ),
       ).to.equal(null);
     });
+
+    it('should not render a placeholder on the first day of a row that starts after it', () => {
+      // The third row starts on Sunday, January 21st, after the placeholder ended.
+      const nextRowStart = Date.UTC(2024, 0, 21);
+      const firstDay = processDay(new Date(nextRowStart), 'UTC');
+      expect(
+        eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
+          state,
+          firstDay,
+          nextRowStart,
+        ),
+      ).to.equal(null);
+    });
   });
 
   describe('placeholderInTimeRange', () => {
@@ -316,15 +329,14 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
       ).to.equal(false);
     });
 
-    it('should return false when placeholder.start is not the same day as dayStart', () => {
-      const nextDay = adapter.addDays(day, 1);
+    it('should return false when the placeholder overlaps the range but starts the previous day', () => {
       const state: EventCalendarState = {
         ...DEFAULT_EVENT_CALENDAR_STATE,
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.getTime(adapter.setHours(adapter.startOfDay(nextDay), 9)),
-          end: adapter.getTime(adapter.setHours(adapter.startOfDay(nextDay), 10)),
+          start: adapter.getTime(adapter.setHours(adapter.addDays(dayStart, -1), 22)),
+          end: adapter.getTime(adapter.setHours(dayStart, 6)),
           resourceId: null,
         },
       };

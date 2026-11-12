@@ -6,6 +6,11 @@ import { toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
 
 // These selectors run for every cell while dragging, so they compare timestamps and day numbers.
 
+/** Whether the timestamp falls on the plain date in the display timezone. */
+function isOnPlainDate(state: State, timestamp: number, plainDate: BaseTemporal.PlainDate) {
+  return getDayNumber(plainDate) === toLocalDayNumber(timestamp, state.displayTimezone);
+}
+
 export const eventCalendarOccurrencePlaceholderSelectors = {
   placeholderInDayCell: (state: State, day: SchedulerProcessedDay, rowStart: number) => {
     const placeholder = state.occurrencePlaceholder;
@@ -13,8 +18,7 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
       return null;
     }
 
-    const dayNumber = getDayNumber(day.plainDate);
-    if (dayNumber === toLocalDayNumber(placeholder.start, state.displayTimezone)) {
+    if (isOnPlainDate(state, placeholder.start, day.plainDate)) {
       return placeholder;
     }
 
@@ -24,7 +28,7 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
     if (
       Math.min(placeholder.start, placeholder.end) <= rowStart &&
       rowStart <= Math.max(placeholder.start, placeholder.end) &&
-      dayNumber === toLocalDayNumber(rowStart, state.displayTimezone)
+      isOnPlainDate(state, rowStart, day.plainDate)
     ) {
       return placeholder;
     }
@@ -48,9 +52,7 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
     if (placeholder?.surfaceType !== 'day-grid' || placeholder.type !== 'creation') {
       return false;
     }
-    return (
-      getDayNumber(day.plainDate) === toLocalDayNumber(placeholder.start, state.displayTimezone)
-    );
+    return isOnPlainDate(state, placeholder.start, day.plainDate);
   },
   isCreatingInTimeRange: (
     state: State,
@@ -66,7 +68,7 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
     return (
       placeholder.start < dayEnd &&
       placeholder.end > dayStart &&
-      getDayNumber(plainDate) === toLocalDayNumber(placeholder.start, state.displayTimezone)
+      isOnPlainDate(state, placeholder.start, plainDate)
     );
   },
 };
