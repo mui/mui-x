@@ -51,6 +51,8 @@ Unlike the feature, the `charts` prop can change at any time.
 - `cards`: `'byResource'` (the donut) and `'byDay'`, a stacked column chart with one series per resource and one column per visible day (per week in the month view).
 - `metric`: `'count'` (the default) counts the events, `'hours'` sums their hours. All-day events have no hours.
 
+The titles of the cards come from the [locale text](/x/react-scheduler/event-calendar/localization/#locale-text) of the Event Calendar.
+
 ```tsx
 <EventCalendarPremium
   features={features}
@@ -67,14 +69,3 @@ Click a root slice to highlight the events of all its descendants.
 The demo below shows the hours of lectures, labs and practices of a school, per department and per subject.
 
 {{"demo": "NestedResources.js", "bg": "inline"}}
-
-## Localization
-
-The titles of the cards come from the [locale text](/x/react-scheduler/event-calendar/localization/) of the Event Calendar: `chartsEventsPerDay`, `chartsEventsPerWeek`, `chartsHoursPerDay`, `chartsHoursPerWeek` and `chartsShareByResource`, and `labelNoResource` for the events without resource.
-The charts themselves show no text of their own (no legend, no tooltip), so there is nothing to localize on the Charts side.
-
-{{"demo": "LocalizedCharts.js", "bg": "inline"}}
-
-## Standalone views
-
-The cards are only shown in the side panel of the Event Calendar: the standalone views do not accept the feature.
