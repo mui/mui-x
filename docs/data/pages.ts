@@ -802,6 +802,12 @@ const pages: MuiPage[] = [
                 newFeature: true,
               },
               {
+                pathname: '/x/react-charts/scheduler-integration',
+                title: 'Scheduler integration',
+                plan: 'premium',
+                newFeature: true,
+              },
+              {
                 pathname: '/x/react-charts/export',
                 plan: 'pro',
               },

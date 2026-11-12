@@ -1,0 +1,9 @@
+<EventCalendarPremium
+  features={features}
+  charts={{ cards: ['byDay', 'byResource'] }}
+  localeText={localeText}
+  events={events}
+  resources={resources}
+  defaultVisibleDate={defaultVisibleDate}
+  onEventsChange={setEvents}
+/>

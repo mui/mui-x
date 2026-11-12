@@ -66,6 +66,13 @@ Click a root slice to highlight the events of all its descendants.
 
 {{"demo": "NestedResources.js", "bg": "inline"}}
 
+## Localization
+
+The titles of the cards come from the [locale text](/x/react-scheduler/event-calendar/localization/) of the Event Calendar: `chartsEventsPerDay`, `chartsEventsPerWeek`, `chartsHoursPerDay`, `chartsHoursPerWeek` and `chartsShareByResource`, and `labelNoResource` for the events without resource.
+The charts themselves show no text of their own (no legend, no tooltip), so there is nothing to localize on the Charts side.
+
+{{"demo": "LocalizedCharts.js", "bg": "inline"}}
+
 ## Standalone views
 
-The cards are only shown in the side panel of the Event Calendar: the standalone views ignore the feature.
+The cards are only shown in the side panel of the Event Calendar: the standalone views do not accept the feature.
