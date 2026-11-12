@@ -64,6 +64,7 @@ Unlike the feature, the `charts` prop can change at any time.
 
 When the resources are nested, the share by resource card draws two rings: the root resources inside, and the resources the events belong to outside.
 Click a root slice to highlight the events of all its descendants.
+The demo below shows the hours of lectures, labs and practices of a school, per department and per subject.
 
 {{"demo": "NestedResources.js", "bg": "inline"}}
 

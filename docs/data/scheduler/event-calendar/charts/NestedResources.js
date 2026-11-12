@@ -6,7 +6,7 @@ import {
   initialEvents,
   defaultVisibleDate,
   resources,
-} from 'docs/data/scheduler/datasets/software-company';
+} from 'docs/data/scheduler/datasets/school-calendar';
 
 const features = { charts: createChartsFeature({ renderer: ChartsRenderer }) };
 
@@ -17,6 +17,7 @@ export default function NestedResources() {
     <div style={{ height: '760px', width: '100%' }}>
       <EventCalendarPremium
         features={features}
+        charts={{ metric: 'hours' }}
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
