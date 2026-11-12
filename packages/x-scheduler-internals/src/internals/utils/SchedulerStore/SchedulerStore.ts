@@ -263,7 +263,7 @@ export class SchedulerStore<
     this.disposables.defer(
       this.registerStoreEffect(schedulerOtherSelectors.visibleTimestamp, this.stopEditing),
     );
-    // A highlight describes the visible range: left behind by a date change it would dim everything.
+    // A highlight left behind by a date change would dim every event.
     this.disposables.defer(
       this.registerStoreEffect(schedulerOtherSelectors.visibleTimestamp, () =>
         this.setOccurrenceHighlight(null),

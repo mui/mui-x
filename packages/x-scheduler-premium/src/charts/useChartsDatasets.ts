@@ -26,8 +26,7 @@ export const NO_RESOURCE = '__no-resource__';
 const MS_PER_HOUR = 3_600_000;
 
 /**
- * The CSS variable holding the chart color of an event palette, defined on the charts panel
- * for the light and the dark mode.
+ * The CSS variable of the chart color of an event palette, set on the panel for both modes.
  */
 function chartColorVar(colorName: string) {
   return Object.prototype.hasOwnProperty.call(eventColorTokens, colorName)
@@ -102,11 +101,11 @@ export function useChartsDatasets(metric: EventCalendarPremiumChartsMetric) {
   const defaultColor = useStore(store, (state) => state.eventColor);
   const childrenLookup = useStore(store, (state) => state.resourceChildrenIdLookup);
   const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
-  // the month grid has too many days for one column each, so it gets one column per week
+  // one column per week in the month view
   const isByWeek = useStore(store, eventCalendarViewSelectors.view) === 'month';
 
   return React.useMemo(() => {
-    // the flat list is in tree order (parents before their children), which the rings rely on
+    // in tree order, parents first
     const resources: ChartsResourceInfo[] = resourceList
       .filter((resource) => visibleResources[resource.id] !== false)
       .map((resource) => ({
@@ -117,8 +116,7 @@ export function useChartsDatasets(metric: EventCalendarPremiumChartsMetric) {
         ),
       }));
 
-    // the periods of the "by day" card, with the exclusive end of each one in the display
-    // timezone (DST days are not 24 h long)
+    // exclusive end in the display timezone (DST days are not 24 h long)
     const periods: ChartsPeriod[] = [];
     const periodIndexOfDay: number[] = [];
     days.forEach((day) => {
@@ -135,8 +133,7 @@ export function useChartsDatasets(metric: EventCalendarPremiumChartsMetric) {
       periodIndexOfDay.push(periods.length - 1);
     });
 
-    // per period and per resource, and per resource over the visible days
-    // (in count mode, a multi-day occurrence counts once in the share)
+    // in count mode, a multi-day occurrence counts once in the share
     const amountsByPeriod: Record<string, number>[] = periods.map(() => ({}));
     const totals: Record<string, number> = {};
     const countedKeys = new Set<string>();
@@ -174,8 +171,7 @@ export function useChartsDatasets(metric: EventCalendarPremiumChartsMetric) {
         ]
       : resources;
 
-    // the period keys are unique across months (the band scale drops duplicate categories),
-    // the day of month is shown through the axis formatter
+    // the keys stay unique across months (the band scale drops duplicates), the axis shows the labels
     const byDay: { dimensions: Dataset<string>; values: Dataset<number> } = {
       dimensions: [{ id: 'period', label: '', data: periods.map((period) => period.key) }],
       values: series.map((resource) => ({
@@ -186,8 +182,7 @@ export function useChartsDatasets(metric: EventCalendarPremiumChartsMetric) {
       })),
     };
 
-    // nested resources: the renderer draws one ring per dimension (root inside, resource outside)
-    // the flat list visits a parent before its children, so a child's root is already known
+    // the renderer draws one ring per dimension: the roots inside, the resources outside
     const rootById = new Map<string, string>();
     resourceList.forEach((resource) => {
       const id = String(resource.id);
@@ -197,7 +192,7 @@ export function useChartsDatasets(metric: EventCalendarPremiumChartsMetric) {
     });
     const rootIdOf = (resource: ChartsResourceInfo) => rootById.get(resource.id) ?? resource.id;
     const hasNestedResources = series.some((resource) => rootIdOf(resource) !== resource.id);
-    // a hidden root hides its descendants too, so every root of the series is in the series
+    // a hidden root hides its descendants too, so the roots are always in the series
     const roots = series.filter((resource) => rootIdOf(resource) === resource.id);
     const resourceDimension = {
       id: 'resource',

@@ -229,6 +229,24 @@
       "isGlobal": false
     },
     {
+      "key": "chartsCard",
+      "className": "MuiEventCalendar-chartsCard",
+      "description": "Styles applied to the charts card elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "chartsCardTitle",
+      "className": "MuiEventCalendar-chartsCardTitle",
+      "description": "Styles applied to the charts card title elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "chartsPanel",
+      "className": "MuiEventCalendar-chartsPanel",
+      "description": "Styles applied to the charts panel element.",
+      "isGlobal": false
+    },
+    {
       "key": "compactDayTimeGrid",
       "className": "MuiEventCalendar-compactDayTimeGrid",
       "description": "Styles applied to the compact (touch) day time grid root element.",

@@ -166,6 +166,18 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the anchored (desktop) armed-event toolbar wrapper element"
     },
+    "chartsCard": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the charts card elements"
+    },
+    "chartsCardTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the charts card title elements"
+    },
+    "chartsPanel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the charts panel element"
+    },
     "compactDayTimeGrid": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the compact (touch) day time grid root element"

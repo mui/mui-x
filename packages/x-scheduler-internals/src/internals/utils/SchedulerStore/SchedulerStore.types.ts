@@ -85,7 +85,7 @@ export interface SchedulerEditingState {
 }
 
 /**
- * Occurrences to spotlight: those matching every filter are highlighted, the others are dimmed.
+ * The occurrences to highlight; the other ones are dimmed.
  */
 export interface SchedulerOccurrenceHighlight {
   /**

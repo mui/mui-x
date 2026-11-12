@@ -27,12 +27,15 @@ const DEFAULT_CARDS: EventCalendarPremiumChartsCard[] = ['byResource'];
 const DEFAULT_METRIC: EventCalendarPremiumChartsMetric = 'count';
 
 const paletteEntries = Object.entries(eventColorTokens);
-const PanelRoot = styled('div')(({ theme }) => ({
+const ChartsPanelRoot = styled('div', {
+  name: 'MuiEventCalendar',
+  slot: 'ChartsPanel',
+})(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
   width: 246,
-  // the chart colors follow the event palettes in both modes (see `chartColorVar`)
+  // the chart colors of the event palettes, in both modes
   ...Object.fromEntries(
     paletteEntries.map(([name, tokens]) => [`--scheduler-charts-${name}`, tokens.light.main]),
   ),
@@ -44,23 +47,28 @@ const PanelRoot = styled('div')(({ theme }) => ({
   ),
 }));
 
-// Mirrors ResourcesTreeRoot / ResourcesTreeLabel so the cards read as side panel sections.
-const Card = styled('section')(({ theme }) => ({
+// Same spacing as the resources tree.
+const ChartsCard = styled('section', {
+  name: 'MuiEventCalendar',
+  slot: 'ChartsCard',
+})(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   padding: theme.spacing(1),
   boxSizing: 'border-box',
 }));
 
-const CardTitle = styled(Typography)(({ theme }) => ({
+const ChartsCardTitle = styled(Typography, {
+  name: 'MuiEventCalendar',
+  slot: 'ChartsCardTitle',
+})(({ theme }) => ({
   ...theme.typography.subtitle2,
   fontWeight: theme.typography.fontWeightMedium,
   paddingInlineStart: theme.spacing(1.25),
   paddingBottom: theme.spacing(1),
 }));
 
-// The elements a click toggles instead of clearing the highlight.
-// Same class names as `barClasses.element` and `pieClasses.arc` of `@mui/x-charts`.
+// `barClasses.element` and `pieClasses.arc` of `@mui/x-charts`, without importing it.
 const CHART_ITEM_SELECTOR = `.${generateUtilityClass('MuiBarChart', 'element')}, .${generateUtilityClass('MuiPieChart', 'arc')}`;
 
 interface ChartsPanelProps {
@@ -72,11 +80,10 @@ export function ChartsPanel({ renderer: Renderer }: ChartsPanelProps) {
     EventCalendarPremiumChartsContext,
   );
   const store = useEventCalendarStoreContext();
-  const { localeText } = useEventCalendarStyledContext();
+  const { classes, localeText } = useEventCalendarStyledContext();
   const { periods, isByWeek, resources, byDay, byResource, roots, hasNestedResources } =
     useChartsDatasets(metric);
 
-  // Click toggles the highlight.
   const toggleHighlight = (next: SchedulerOccurrenceHighlight) => {
     store.setOccurrenceHighlight(isDeepEqual(store.state.occurrenceHighlight, next) ? null : next);
   };
@@ -84,7 +91,7 @@ export function ChartsPanel({ renderer: Renderer }: ChartsPanelProps) {
     resourceId: resourceId === NO_RESOURCE ? null : resourceId,
   });
 
-  // A pinned highlight must not outlive the panel being visible.
+  // Clear the highlight when the panel closes or unmounts.
   const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
   const clearHighlight = React.useCallback(() => store.setOccurrenceHighlight(null), [store]);
   React.useEffect(() => {
@@ -94,9 +101,8 @@ export function ChartsPanel({ renderer: Renderer }: ChartsPanelProps) {
     return clearHighlight;
   }, [isSidePanelOpen, clearHighlight]);
 
-  // A click anywhere but on a bar or a slice clears the highlight. Inside the calendar grid the
-  // click is also swallowed so that it does not create an event, except on an event, which opens
-  // as usual; everywhere else (resources tree, toolbar, the app) the click keeps its effect.
+  // A click outside the bars and slices clears the highlight. On an empty cell of the grid it is
+  // also swallowed, so it does not create an event.
   const isHighlighting = useStore(store, (state) => state.occurrenceHighlight != null);
   const rootRef = React.useRef<HTMLDivElement>(null);
   React.useEffect(() => {
@@ -122,7 +128,6 @@ export function ChartsPanel({ renderer: Renderer }: ChartsPanelProps) {
     doc.addEventListener('click', onClickCapture, true);
     return () => doc.removeEventListener('click', onClickCapture, true);
   }, [isHighlighting, clearHighlight]);
-  // clearing a highlight that is already null is a no-op, so the hook can stay mounted
   useDisarmOnEscape({ onDisarm: clearHighlight });
 
   const periodLabelLookup = new Map(periods.map((period) => [period.key, period.label]));
@@ -169,8 +174,7 @@ export function ChartsPanel({ renderer: Renderer }: ChartsPanelProps) {
     />
   );
 
-  // One ring per dimension: the roots inside when the resources are nested, the resources outside.
-  // The rows are in tree order, so the items of each ring follow `roots` / `resources`.
+  // The renderer draws one ring per dimension, in row order: the roots inside, the resources outside.
   const ringItems: ChartsResourceInfo[][] = hasNestedResources ? [roots, resources] : [resources];
   const renderByResource = (
     <Renderer
@@ -232,13 +236,15 @@ export function ChartsPanel({ renderer: Renderer }: ChartsPanelProps) {
   };
 
   return (
-    <PanelRoot ref={rootRef}>
+    <ChartsPanelRoot ref={rootRef} className={classes.chartsPanel}>
       {cards.map((cardId) => (
-        <Card key={cardId}>
-          <CardTitle>{cardLookup[cardId].title}</CardTitle>
+        <ChartsCard key={cardId} className={classes.chartsCard}>
+          <ChartsCardTitle className={classes.chartsCardTitle}>
+            {cardLookup[cardId].title}
+          </ChartsCardTitle>
           {cardLookup[cardId].content}
-        </Card>
+        </ChartsCard>
       ))}
-    </PanelRoot>
+    </ChartsPanelRoot>
   );
 }

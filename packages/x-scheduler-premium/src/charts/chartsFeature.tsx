@@ -11,8 +11,7 @@ export type EventCalendarPremiumChartsRendererCallback = (
 ) => React.ReactNode;
 
 /**
- * The shape of the `ChartsRenderer` component of `@mui/x-charts-premium`,
- * the same one the Data Grid receives through `<GridChartsRendererProxy />`.
+ * The `ChartsRenderer` component of `@mui/x-charts-premium`.
  */
 export type EventCalendarPremiumChartsRenderer = React.ComponentType<{
   dimensions: Dataset<string | number | Date | null>;
