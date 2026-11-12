@@ -289,7 +289,7 @@ jobs:
           no_output_timeout: 30m
           # Every chart's benchmarks, in one file, then the smoke file of all of MUI X. The run builds
           # and packs both sides itself.
-          command: pnpm test:benchmark combined/ smoke/ --baseline "$(cat .benchmark-baseline-sha)"
+          command: pnpm test:benchmark charts/ smoke/ --baseline "$(cat .benchmark-baseline-sha)"
       - run:
           name: Upload the benchmark report
           # Also after a failed run, so the comment says what happened. A run that fails before

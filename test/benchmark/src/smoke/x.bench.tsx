@@ -34,7 +34,7 @@ const SMOKE_OPTIONS = { sampleSize: 30, alarm: { error: 0.1 } };
 
 /**
  * Registers a scenario as a smoke benchmark. A chart's keeps its name, so it reads as the same
- * benchmark as in its chart's file.
+ * benchmark as in the charts file.
  */
 function smokeBenchmark([name, render, interaction]: Scenario) {
   // Only an interaction is kept: the smoke options replace a scenario's own.
