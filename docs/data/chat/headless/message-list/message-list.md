@@ -67,6 +67,8 @@ Programmatic scrolls (`scrollToBottom()`, the scroll-to-bottom affordance) and t
 It does not refire while the list stays pinned to the bottom during streaming, and switching conversations never fires it by itself.
 The canonical use case is marking messages as read once the user scrolls to the latest message—see [read receipts](/x/react-chat/multi-conversation/read-receipts/).
 
+When `autoScroll` is enabled, the list opens at the newest message on mount; this initial scroll does not fire `onReachBottom`.
+
 ### Imperative scroll handle
 
 `MessageList.Root` exposes a `scrollToBottom()` handle through `ref`.

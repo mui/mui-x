@@ -25,6 +25,7 @@ Users can still scroll up to read earlier messages without losing their place.
 
 The message list automatically scrolls to the bottom when:
 
+- The list mounts with existing messages (it opens at the newest message; skipped when `autoScroll` is disabled).
 - The user sends a new message (always active, regardless of configuration).
 - New messages arrive from the assistant while the user is near the bottom.
 - Streaming content grows (token-by-token updates).
