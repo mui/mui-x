@@ -31,6 +31,8 @@ const PRECISION_YEAR = 0;
 const PRECISION_MONTH = 1;
 const PRECISION_DAY = 2;
 
+type Precision = typeof PRECISION_YEAR | typeof PRECISION_MONTH | typeof PRECISION_DAY;
+
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
   YY: 'year',
@@ -183,11 +185,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
 
   private hasTimezonePlugin = () => typeof dayjs.tz !== 'undefined';
 
-  private isSame = (
-    value: Dayjs,
-    comparing: Dayjs,
-    precision: typeof PRECISION_YEAR | typeof PRECISION_MONTH | typeof PRECISION_DAY,
-  ) => {
+  private isSame = (value: Dayjs, comparing: Dayjs, precision: Precision) => {
     const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value))!;
 
     // Compares the fields that `format('YYYY-MM-DD')` prints, without the cost of formatting, which
