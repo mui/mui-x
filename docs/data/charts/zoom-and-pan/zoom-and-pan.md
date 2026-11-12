@@ -114,7 +114,7 @@ Screen readers announce them as sliders, with the axis value at the start or the
 |                                           <kbd class="key">End</kbd> | Move the focused handle to the end of the axis                                                          |
 
 On a band or a point axis, the arrow keys move the handle by one category instead of 1% of the axis.
-A handle stops before it makes the visible range smaller than `minSpan`.
+A handle stops before it makes the visible range smaller than `minSpan` or larger than `maxSpan`.
 To pan the whole range, use <kbd class="key">Shift</kbd>+ arrow keys on the chart, as described in [Keyboard zoom and pan](#keyboard-zoom-and-pan).
 
 The accessible names of the handles are customizable with the `zoomSliderStartLabel` and `zoomSliderEndLabel` [localization keys](/x/react-charts/localization/#localize-text).

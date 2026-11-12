@@ -496,6 +496,22 @@ describe.skipIf(isJSDOM)('<ChartsZoomSlider />', () => {
       expect(endThumb).to.have.attribute('aria-valuetext', 'D');
     });
 
+    it('should keep the slider bounds within maxSpan of the other handle', () => {
+      render(
+        <LineChartPro
+          {...lineChartProps}
+          xAxis={[
+            { ...lineChartProps.xAxis![0], zoom: { maxSpan: 50, slider: { enabled: true } } },
+          ]}
+          initialZoom={[{ axisId: 'x', start: 20, end: 60 }]}
+        />,
+        options,
+      );
+
+      expect(getSlider('Horizontal axis zoom start')).to.have.attribute('aria-valuemin', '10');
+      expect(getSlider('Horizontal axis zoom end')).to.have.attribute('aria-valuemax', '70');
+    });
+
     it('should name the sliders after the label of their axis', () => {
       render(
         <LineChartPro

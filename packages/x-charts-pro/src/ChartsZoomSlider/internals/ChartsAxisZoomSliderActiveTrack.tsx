@@ -381,7 +381,10 @@ export function ChartsAxisZoomSliderActiveTrack({
   let endThumbX: number;
   let endThumbY: number;
 
-  const { minStart, maxEnd, minSpan } = selectorChartAxisZoomOptionsLookup(store.state, axisId);
+  const { minStart, maxEnd, minSpan, maxSpan } = selectorChartAxisZoomOptionsLookup(
+    store.state,
+    axisId,
+  );
   const range = maxEnd - minStart;
   const zoomStart = Math.max(minStart, zoomData.start);
   const zoomEnd = Math.min(zoomData.end, maxEnd);
@@ -447,7 +450,7 @@ export function ChartsAxisZoomSliderActiveTrack({
   const startHandle: ZoomSliderHandleControlProps = {
     label: localeText.zoomSliderStartLabel({ axisDirection, axisLabel }),
     orientation,
-    min: minStart,
+    min: Math.min(zoomStart, Math.max(minStart, zoomEnd - maxSpan)),
     max: Math.max(zoomStart, zoomEnd - minSpan),
     now: zoomStart,
     text: tooltipStart,
@@ -461,7 +464,7 @@ export function ChartsAxisZoomSliderActiveTrack({
     label: localeText.zoomSliderEndLabel({ axisDirection, axisLabel }),
     orientation,
     min: Math.min(zoomEnd, zoomStart + minSpan),
-    max: maxEnd,
+    max: Math.max(zoomEnd, Math.min(maxEnd, zoomStart + maxSpan)),
     now: zoomEnd,
     text: tooltipEnd,
     onKeyDown: onEndThumbKeyDown,
@@ -544,7 +547,7 @@ export function ChartsAxisZoomSliderActiveTrack({
           // `display: contents` keeps the wrapper out of the layout of the layer container.
           <div style={{ display: 'contents' }} onFocus={onFocus} onBlur={handleBlur}>
             {handles.map((handle) => (
-              <ZoomSliderHandleControl key={handle.label} {...handle} />
+              <ZoomSliderHandleControl key={handle === startHandle ? 'start' : 'end'} {...handle} />
             ))}
           </div>,
           layerContainer,
