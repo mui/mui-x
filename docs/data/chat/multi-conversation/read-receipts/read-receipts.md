@@ -208,6 +208,7 @@ const activeConversationIdRef = React.useRef<string | undefined>(undefined);
 `onReachBottom` fires once per entry into the bottom zone (the auto-scroll `buffer`, 150 px by default), so `markRead` is not called repeatedly while the user stays at the bottom.
 It does not fire when new messages arrive while the user is already at the bottom, nor when switching conversations.
 Combine it with the `onActiveConversationChange` recipe above to cover conversation activation and conversations that open already scrolled to the bottom.
+The message list opens at the newest message on mount without firing `onReachBottom`, and `onActiveConversationChange` does not fire for the initial conversation, so mark the initially active conversation read on mount (for example, in an effect) if it should count as read.
 The demo at the top of this page implements this pattern.
 
 ## Real-time read events

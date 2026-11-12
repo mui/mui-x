@@ -522,11 +522,18 @@ describe('MessageListRoot', () => {
   });
 
   it.skipIf(isJSDOM)('scrolls to the newest message when mounted with messages', async () => {
-    render(<ControlledMessageList slots={{ messageList: RootWithBottomState }} />);
+    const onReachBottom = vi.fn();
+    render(
+      <ControlledMessageList
+        slots={{ messageList: RootWithBottomState }}
+        onReachBottom={onReachBottom}
+      />,
+    );
     const log = screen.getByRole('log');
 
     expect(log.scrollHeight).toBe(240);
     expect(log.scrollTop).toBe(80);
+    expect(onReachBottom).toHaveBeenCalledTimes(0);
     expect(screen.getByTestId('message-list-bottom-state')).to.have.text('true');
   });
 
