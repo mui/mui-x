@@ -240,9 +240,9 @@ jobs:
     executor:
       name: code-infra/mui-node-browser
       playwright-img-version: v1.65.0-noble
-    # 2 vCPUs starve V8's background compilers, which makes the same code's speed vary from sample to
-    # sample; see the @mui/internal-benchmark README.
-    resource_class: medium+.gen2
+    # Building both sides is most of the setup time, and more logical CPUs leave the browser less to
+    # contend with while sampling. The `benchmark` CLI warns below 3.
+    resource_class: large
     steps:
       - checkout
       - run:
