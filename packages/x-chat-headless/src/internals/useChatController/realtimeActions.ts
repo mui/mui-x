@@ -9,7 +9,7 @@ export function createRealtimeActions(params: {
 }) {
   const { store, conversationNavigationRequestIdRef } = params;
 
-  // Ignore message events for other conversations unless the message is already stored (e.g. controlled messages).
+  // True when the message names a conversation other than the active one.
   function isOtherConversation(conversationId: string | undefined): boolean {
     const activeId = store.state.activeConversationId;
     return conversationId != null && activeId != null && conversationId !== activeId;
@@ -18,6 +18,7 @@ export function createRealtimeActions(params: {
   function handleRealtimeEvent(event: ChatRealtimeEvent): void {
     switch (event.type) {
       case 'message-added':
+        // Messages already stored (e.g. controlled messages) are applied whatever their conversation.
         if (
           !store.state.messagesById[event.message.id] &&
           isOtherConversation(event.message.conversationId)
@@ -27,6 +28,7 @@ export function createRealtimeActions(params: {
         store.addMessage(event.message);
         return;
       case 'message-updated':
+        // Stored messages are always updated; new ones only join the active conversation.
         if (store.state.messagesById[event.message.id]) {
           store.updateMessage(event.message.id, event.message);
         } else if (!isOtherConversation(event.message.conversationId)) {

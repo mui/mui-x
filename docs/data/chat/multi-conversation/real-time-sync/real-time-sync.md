@@ -262,9 +262,7 @@ subscribe({ onEvent }) {
 
 Re-delivering events after a reconnect is safe: `*-added` and `*-updated` events with an already-known `id` update the existing record instead of duplicating it, so backends can replay a window of recent events on reconnect without deduplication on the client.
 
-The thread store only holds the active conversation's messages, so `message-added` and `message-updated` events for a different `message.conversationId` are ignored. They are recovered when the user opens that conversation if the adapter implements `listMessages`; adapters without it should implement `listMessages`, or only stream the active conversation, when they need the full history. Set `message.conversationId` on every message, and use `conversation-updated` (for example, `unreadCount`) to show activity in other threads. Conversation, typing, presence, and read events carry their own ids and are always safe to forward.
-
-Events for a message that is already in the store are always applied, and when no conversation is active, all message events are applied.
+When a conversation is active, `message-added` and `message-updated` events whose `message.conversationId` names a different conversation are ignored, unless the message is already in the store. If the adapter implements `listMessages`, those messages load when the user opens that conversation; otherwise, stream only the active conversation. Set `message.conversationId` on every message, and use `conversation-updated` (for example, `unreadCount`) to show activity in other threads. Conversation, typing, presence, and read events carry their own ids and are always safe to forward.
 
 ## Sending typing indicators
 
