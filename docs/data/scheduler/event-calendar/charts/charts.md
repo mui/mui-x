@@ -39,7 +39,8 @@ Click it again, press <kbd class="key">Esc</kbd>, click anywhere else, or naviga
 
 :::info
 The `features` prop is read once, when the component mounts.
-Define the features outside of the component (or memoize them) and pass the same object on every render.
+To change it, remount the component, for example with a `key`.
+The cards and the metric are not part of the feature: the `charts` prop below can change at any time.
 :::
 
 ## Cards and metric
