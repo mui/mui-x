@@ -834,6 +834,14 @@ async function main() {
     const shouldUseVersionBranch = await selectTargetBranch(majorVersion);
     const releaseBase = `${upstreamRemote}/${shouldUseVersionBranch ? majorVersionBranch(majorVersion) : 'master'}`;
 
+    if (shouldUseVersionBranch) {
+      console.log(`Updating the upstream ${majorVersionBranch(majorVersion)} branch...`);
+      await execa('git', ['fetch', upstreamRemote, majorVersionBranch(majorVersion)]);
+    } else {
+      console.log('Updating the upstream master branch for current major version...');
+      await execa('git', ['fetch', upstreamRemote, 'master']);
+    }
+
     const latestTag = await findLatestTaggedVersion({
       cwd: process.cwd(),
       ref: releaseBase,
@@ -883,15 +891,6 @@ async function main() {
       prereleaseNumber,
     );
     console.log(`New version: ${newVersion}`);
-
-    // Determine which branch to update based on the selected major version
-    if (shouldUseVersionBranch) {
-      console.log(`Updating the upstream ${majorVersionBranch(majorVersion)} branch...`);
-      await execa('git', ['fetch', upstreamRemote, majorVersionBranch(majorVersion)]);
-    } else {
-      console.log('Updating the upstream master branch for current major version...');
-      await execa('git', ['fetch', upstreamRemote, 'master']);
-    }
 
     // Create a new branch with the new version
     const branchName = `release/v${newVersion}-${new Date().toISOString().slice(0, 10)}`;
