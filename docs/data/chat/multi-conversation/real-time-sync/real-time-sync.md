@@ -70,8 +70,6 @@ The `onEvent` callback receives `ChatRealtimeEvent` objects — a discriminated 
 | `message-updated` | `{ message }`                    | Merges the payload into the existing message, or adds it if missing |
 | `message-removed` | `{ messageId, conversationId? }` | Removes the message from the store                                  |
 
-When a conversation is active, `message-added` and `message-updated` events whose `message.conversationId` is set to a different conversation are ignored, unless the message is already in the store.
-
 ### Typing events
 
 | Event type | Payload                                | Store effect                                |
@@ -264,7 +262,7 @@ subscribe({ onEvent }) {
 
 Re-delivering events after a reconnect is safe: `*-added` and `*-updated` events with an already-known `id` update the existing record instead of duplicating it, so backends can replay a window of recent events on reconnect without deduplication on the client.
 
-The thread store only holds the active conversation's messages. `message-added` and `message-updated` events whose `message.conversationId` is set and differs from the active conversation are ignored, not buffered, so they don't appear when the user later opens that conversation. When no conversation is active, these events are applied. If your backend streams events for many conversations over one connection, set `message.conversationId` on every message and use `conversation-updated` (for example, to update `unreadCount`) to surface activity in other threads. Conversation, typing, presence, and read events carry their own ids and are always safe to forward.
+The thread store only holds the active conversation's messages. `message-added` and `message-updated` events whose `message.conversationId` is set and differs from the active conversation are ignored, unless the message is already in the store, and are not kept on the client. When the user opens that conversation, its messages load through history loading (`listMessages`). When no conversation is active, these events are applied. If your backend streams events for many conversations over one connection, set `message.conversationId` on every message and use `conversation-updated` (for example, to update `unreadCount`) to surface activity in other threads. Conversation, typing, presence, and read events carry their own ids and are always safe to forward.
 
 ## Sending typing indicators
 

@@ -137,6 +137,18 @@ describe('createRealtimeActions', () => {
         expect(store.state.messagesById.m1).toMatchObject(updatedMessage);
       });
 
+      it('message-added: updates a message already in the store from another conversation', () => {
+        const { store, handleRealtimeEvent } = setup([{ ...baseMessage, conversationId: 'c2' }]);
+
+        handleRealtimeEvent({
+          type: 'message-added',
+          message: { ...updatedMessage, conversationId: 'c2' },
+        });
+
+        expect(store.state.messagesById.m1).toMatchObject(updatedMessage);
+        expect(store.state.messageIds).toEqual(['m1']);
+      });
+
       it('message-added: adds messages with a conversation id when no conversation is active', () => {
         const store = new ChatStore({ initialConversations: [conversation1, conversation2] });
         const { handleRealtimeEvent } = createRealtimeActions({

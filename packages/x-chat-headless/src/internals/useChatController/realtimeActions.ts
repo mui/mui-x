@@ -18,7 +18,10 @@ export function createRealtimeActions(params: {
   function handleRealtimeEvent(event: ChatRealtimeEvent): void {
     switch (event.type) {
       case 'message-added':
-        if (isOtherConversation(event.message.conversationId)) {
+        if (
+          !store.state.messagesById[event.message.id] &&
+          isOtherConversation(event.message.conversationId)
+        ) {
           return;
         }
         store.addMessage(event.message);
