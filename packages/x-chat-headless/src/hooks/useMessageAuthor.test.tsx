@@ -84,4 +84,46 @@ describe('useMessageAuthor', () => {
     expect(authors.m1?.displayName).toBe('From getter');
     expect(authors.m2?.displayName).toBe('From getter');
   });
+
+  it('does not re-render rows when author parameters are recreated with equal values', () => {
+    const store = new ChatStore({
+      initialMessages: messages,
+      members: [{ id: 'alice', displayName: 'Alice' }],
+      currentUser: { id: 'alice', displayName: 'Alice' },
+      roleDisplayNames: { assistant: 'Bot' },
+    });
+    const renderCounts: Record<string, number> = {};
+    const authors: Record<string, unknown[]> = {};
+
+    function Row({ messageId }: { messageId: string }) {
+      const author = useMessageAuthor(messageId);
+      renderCounts[messageId] = (renderCounts[messageId] ?? 0) + 1;
+      (authors[messageId] ??= []).push(author);
+      return null;
+    }
+
+    render(
+      <ChatStoreContext.Provider value={store}>
+        <Row messageId="m1" />
+        <Row messageId="m2" />
+      </ChatStoreContext.Provider>,
+    );
+
+    const initialCounts = { ...renderCounts };
+    const initialVersion = store.state.authorParametersVersion;
+
+    act(() => {
+      store.updateStateFromParameters({
+        ...store.parameters,
+        members: [{ id: 'alice', displayName: 'Alice' }],
+        currentUser: { id: 'alice', displayName: 'Alice' },
+        roleDisplayNames: { assistant: 'Bot' },
+      });
+    });
+
+    expect(store.state.authorParametersVersion).toBe(initialVersion);
+    expect(renderCounts).toEqual(initialCounts);
+    expect(authors.m1.every((author) => author === authors.m1[0])).toBe(true);
+    expect(authors.m2.every((author) => author === authors.m2[0])).toBe(true);
+  });
 });

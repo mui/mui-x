@@ -32,7 +32,7 @@ export function useMessageAuthor(messageId: string) {
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
-      store.parameters,
+      store,
       authorParametersVersion,
       localeText.messageAuthorUserLabel,
       localeText.messageAuthorAssistantLabel,

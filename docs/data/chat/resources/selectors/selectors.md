@@ -111,7 +111,7 @@ function ConversationTitle({ id }: { id: string }) {
 
 `createSelectorMemoized` keeps a single-entry cache per store (`maxSize: 1`), so for the parameterized memoized selectors (`messageAuthor`, `typingUserIds`) reference equality only holds while consecutive calls use the same arguments — alternating IDs across many ad-hoc subscribers thrashes the single-entry cache.
 `useStore` compares results by reference, so subscribing many components to `messageAuthor` with different IDs re-renders all of them on every store update.
-For per-message author data, subscribe to `message` (and `activeConversation` if you need participants) and derive the fields you need in a `useMemo`.
+When you need author data per row, read `message.author` with `useMessage(id)` and look up conversation participants directly instead of subscribing to `messageAuthor`.
 
 ## Why normalization matters
 
