@@ -187,7 +187,7 @@ function StickyGrid(props: StickyGridProps) {
     layout,
     dimensions: {
       rowHeight: ROW_HEIGHT,
-      topPinnedHeight: HEADER_HEIGHT,
+      headerHeight: HEADER_HEIGHT,
       scrollbarSize: props.scrollbarSize,
     },
     virtualization: { layoutMode: 'sticky' },

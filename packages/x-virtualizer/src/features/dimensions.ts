@@ -31,8 +31,8 @@ const OSCILLATION_FLIP_WINDOW_MS = 100;
 
 export type DimensionsParams = {
   rowHeight: number;
-  topPinnedHeight?: number;
-  bottomPinnedHeight?: number;
+  headerHeight?: number;
+  footerHeight?: number;
   autoHeight?: boolean;
   minimalContentHeight?: number | string;
   scrollbarSize?: number;
@@ -50,6 +50,8 @@ const EMPTY_DIMENSIONS: DimensionsState = {
   scrollbarSize: 0,
   rowWidth: 0,
   rowHeight: 0,
+  leftPinnedWidth: 0,
+  rightPinnedWidth: 0,
   topContainerHeight: 0,
   bottomContainerHeight: 0,
   autoHeight: false,
@@ -101,7 +103,7 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
     getRowHeight,
     dimensions: dimensionsParams,
   } = params;
-  const { rowHeight, autoHeight, minimalContentHeight, topPinnedHeight, bottomPinnedHeight } =
+  const { rowHeight, autoHeight, minimalContentHeight, headerHeight, footerHeight } =
     dimensionsParams;
 
   // Calculate the initial content height and row positions so the
@@ -125,8 +127,8 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
   // `updateDimensions`. The pinned rows' measured height is still 0 in `rowsMeta`
   // below (pinned rows are measured later), so each container height is just its static
   // pinned size.
-  const topContainerHeight = topPinnedHeight;
-  const bottomContainerHeight = bottomPinnedHeight;
+  const topContainerHeight = headerHeight;
+  const bottomContainerHeight = footerHeight;
 
   const columnsMeta = computeColumnsMeta(columns, pinnedColumns);
 
@@ -135,6 +137,8 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
     ...dimensionsParams,
     autoHeight,
     minimalContentHeight,
+    leftPinnedWidth: columnsMeta.leftPinnedWidth,
+    rightPinnedWidth: columnsMeta.rightPinnedWidth,
     topContainerHeight,
     bottomContainerHeight,
     contentSize: {
@@ -146,8 +150,8 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
   const rowsMeta = {
     currentPageTotalHeight,
     positions,
-    pinnedTopTotalHeight: 0,
-    pinnedBottomTotalHeight: 0,
+    topPinnedHeight: 0,
+    bottomPinnedHeight: 0,
   };
 
   const rowHeights = new Map();
@@ -171,26 +175,26 @@ function computeColumnsMeta(
 
   const positions: number[] = [];
   let totalWidth = 0;
-  let pinnedLeftTotalWidth = 0;
-  let pinnedRightTotalWidth = 0;
+  let leftPinnedWidth = 0;
+  let rightPinnedWidth = 0;
 
   for (let i = 0; i < columns.length; i += 1) {
     const width = columns[i].computedWidth;
     positions.push(totalWidth);
     totalWidth += width;
     if (i < pinnedLeftCount) {
-      pinnedLeftTotalWidth += width;
+      leftPinnedWidth += width;
     }
     if (i >= firstPinnedRightIndex) {
-      pinnedRightTotalWidth += width;
+      rightPinnedWidth += width;
     }
   }
 
   return {
     positions,
     totalWidth: roundToDecimalPlaces(totalWidth, 1),
-    pinnedLeftTotalWidth,
-    pinnedRightTotalWidth,
+    leftPinnedWidth,
+    rightPinnedWidth,
   };
 }
 
@@ -236,7 +240,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
 
   const {
     layout,
-    dimensions: { rowHeight, topPinnedHeight, bottomPinnedHeight },
+    dimensions: { rowHeight, headerHeight, footerHeight },
     onResize,
   } = params;
 
@@ -252,7 +256,8 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
       const containerNode = layout.refs.container.current;
       const rootSize = selectors.rootSize(store.state);
       const rowsMeta = selectors.rowsMeta(store.state);
-      const columnsTotalWidth = selectors.columnsMeta(store.state).totalWidth;
+      const columnsMeta = selectors.columnsMeta(store.state);
+      const columnsTotalWidth = columnsMeta.totalWidth;
 
       // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
       // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
@@ -270,8 +275,8 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
         params.dimensions.scrollbarSize,
       );
 
-      const topContainerHeight = topPinnedHeight + rowsMeta.pinnedTopTotalHeight;
-      const bottomContainerHeight = bottomPinnedHeight + rowsMeta.pinnedBottomTotalHeight;
+      const topContainerHeight = headerHeight + rowsMeta.topPinnedHeight;
+      const bottomContainerHeight = footerHeight + rowsMeta.bottomPinnedHeight;
 
       const contentSize = {
         width: columnsTotalWidth,
@@ -332,15 +337,15 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
           const osc = scrollYOscillation.current;
           const heightsChanged =
             rowsMeta.currentPageTotalHeight !== osc.heights.content ||
-            rowsMeta.pinnedTopTotalHeight !== osc.heights.pinnedTop ||
-            rowsMeta.pinnedBottomTotalHeight !== osc.heights.pinnedBottom;
+            rowsMeta.topPinnedHeight !== osc.heights.pinnedTop ||
+            rowsMeta.bottomPinnedHeight !== osc.heights.pinnedBottom;
 
           if (heightsChanged) {
             osc.counter = 0;
             osc.heights = {
               content: rowsMeta.currentPageTotalHeight,
-              pinnedTop: rowsMeta.pinnedTopTotalHeight,
-              pinnedBottom: rowsMeta.pinnedBottomTotalHeight,
+              pinnedTop: rowsMeta.topPinnedHeight,
+              pinnedBottom: rowsMeta.bottomPinnedHeight,
             };
           }
 
@@ -402,6 +407,8 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
         scrollbarSize,
         rowWidth,
         rowHeight,
+        leftPinnedWidth: columnsMeta.leftPinnedWidth,
+        rightPinnedWidth: columnsMeta.rightPinnedWidth,
         topContainerHeight,
         bottomContainerHeight,
         autoHeight: params.dimensions.autoHeight,
@@ -435,8 +442,8 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
       params.disableVerticalScroll,
       onResize,
       rowHeight,
-      topPinnedHeight,
-      bottomPinnedHeight,
+      headerHeight,
+      footerHeight,
     ],
   );
 
@@ -599,13 +606,13 @@ function useRowsMeta(
   const hydrateRowsMeta = React.useCallback(() => {
     hasRowWithAutoHeight.current = false;
 
-    const pinnedTopTotalHeight =
+    const topPinnedHeight =
       pinnedRows?.top.reduce((acc, row) => {
         const entry = processHeightEntry(row);
         return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
       }, 0) ?? 0;
 
-    const pinnedBottomTotalHeight =
+    const bottomPinnedHeight =
       pinnedRows?.bottom.reduce((acc, row) => {
         const entry = processHeightEntry(row);
         return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
@@ -627,15 +634,15 @@ function useRowsMeta(
     }
 
     const didHeightsChange =
-      pinnedTopTotalHeight !== store.state.rowsMeta.pinnedTopTotalHeight ||
-      pinnedBottomTotalHeight !== store.state.rowsMeta.pinnedBottomTotalHeight ||
+      topPinnedHeight !== store.state.rowsMeta.topPinnedHeight ||
+      bottomPinnedHeight !== store.state.rowsMeta.bottomPinnedHeight ||
       currentPageTotalHeight !== store.state.rowsMeta.currentPageTotalHeight;
 
     const rowsMeta = {
       currentPageTotalHeight,
       positions,
-      pinnedTopTotalHeight,
-      pinnedBottomTotalHeight,
+      topPinnedHeight,
+      bottomPinnedHeight,
     };
 
     store.set('rowsMeta', rowsMeta);
@@ -758,19 +765,24 @@ function useColumnsMeta(
 
     const didWidthsChange =
       columnsMeta.totalWidth !== prevColumnsMeta.totalWidth ||
-      columnsMeta.pinnedLeftTotalWidth !== prevColumnsMeta.pinnedLeftTotalWidth ||
-      columnsMeta.pinnedRightTotalWidth !== prevColumnsMeta.pinnedRightTotalWidth;
+      columnsMeta.leftPinnedWidth !== prevColumnsMeta.leftPinnedWidth ||
+      columnsMeta.rightPinnedWidth !== prevColumnsMeta.rightPinnedWidth;
 
     // New columns often keep their widths and order, for example when only a label changes.
     if (!didWidthsChange && isDeepEqual(prevColumnsMeta.positions, columnsMeta.positions)) {
       return;
     }
 
-    // The dimensions derive from the total width. When they change, write the meta without
-    // notifying and let `updateDimensions` publish it with them, so that the listeners run once
-    // and never see the new columns with the previous dimensions.
+    // The dimensions derive from the total and pinned widths. When they change, write the meta
+    // without notifying and let `updateDimensions` publish it with them, so that the listeners run
+    // once and never see the new columns with the previous dimensions.
     const { dimensions } = store.state;
-    if (dimensions.isReady && columnsMeta.totalWidth !== dimensions.contentSize.width) {
+    if (
+      dimensions.isReady &&
+      (columnsMeta.totalWidth !== dimensions.contentSize.width ||
+        columnsMeta.leftPinnedWidth !== dimensions.leftPinnedWidth ||
+        columnsMeta.rightPinnedWidth !== dimensions.rightPinnedWidth)
+    ) {
       store.state = { ...store.state, columnsMeta };
       updateDimensions();
       return;

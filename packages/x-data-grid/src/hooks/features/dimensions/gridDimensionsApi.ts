@@ -6,14 +6,6 @@ export interface GridDimensions extends DimensionsState {
    */
   columnsTotalWidth: number;
   /**
-   * Size of left pinned columns.
-   */
-  leftPinnedWidth: number;
-  /**
-   * Size of right pinned columns.
-   */
-  rightPinnedWidth: number;
-  /**
    * Height of one column header.
    */
   headerHeight: number;

@@ -48,6 +48,14 @@ export interface DimensionsState {
    */
   rowHeight: number;
   /**
+   * Width of the pinned left columns.
+   */
+  leftPinnedWidth: number;
+  /**
+   * Width of the pinned right columns.
+   */
+  rightPinnedWidth: number;
+  /**
    * Size of the top container.
    */
   topContainerHeight: number;
@@ -80,11 +88,11 @@ export interface RowsMetaState {
   /**
    * The total height of the pinned top rows.
    */
-  pinnedTopTotalHeight: number;
+  topPinnedHeight: number;
   /**
    * The total height of the pinned bottom rows.
    */
-  pinnedBottomTotalHeight: number;
+  bottomPinnedHeight: number;
 }
 
 /**
@@ -102,11 +110,11 @@ export interface ColumnsMetaState {
   /**
    * The total width of the pinned left columns.
    */
-  pinnedLeftTotalWidth: number;
+  leftPinnedWidth: number;
   /**
    * The total width of the pinned right columns.
    */
-  pinnedRightTotalWidth: number;
+  rightPinnedWidth: number;
 }
 
 export interface RowSpacing {

@@ -978,8 +978,8 @@ function inputsSelector(
     autoHeight: dimensions.autoHeight,
     rowBufferPx: params.virtualization.rowBufferPx,
     columnBufferPx: params.virtualization.columnBufferPx,
-    leftPinnedWidth: columnsMeta.pinnedLeftTotalWidth,
-    rightPinnedWidth: columnsMeta.pinnedRightTotalWidth,
+    leftPinnedWidth: columnsMeta.leftPinnedWidth,
+    rightPinnedWidth: columnsMeta.rightPinnedWidth,
     columnsTotalWidth: columnsMeta.totalWidth,
     viewportInnerWidth: dimensions.viewportInnerSize.width,
     viewportInnerHeight: dimensions.viewportInnerSize.height,
@@ -1510,14 +1510,12 @@ function isLowOnRenderedBuffer(
   const pinnedLeftCount = params.pinnedColumns?.left.length ?? 0;
   const pinnedRightCount = params.pinnedColumns?.right.length ?? 0;
 
-  const visibleLeft = Math.abs(scrollPosition.left) + columnsMeta.pinnedLeftTotalWidth;
+  const visibleLeft = Math.abs(scrollPosition.left) + columnsMeta.leftPinnedWidth;
   // In controlled mode, the pinned-right section overlays the horizontal window.
   const visibleRight =
     visibleLeft +
     dimensions.viewportInnerSize.width -
-    (store.state.virtualization.layoutMode === 'controlled'
-      ? columnsMeta.pinnedRightTotalWidth
-      : 0);
+    (store.state.virtualization.layoutMode === 'controlled' ? columnsMeta.rightPinnedWidth : 0);
   const renderedLeft = columnsMeta.positions[context.firstColumnIndex] ?? 0;
   const renderedRight = columnsMeta.positions[context.lastColumnIndex] ?? columnsMeta.totalWidth;
 

@@ -29,8 +29,10 @@ export const rowsMetaStateInitializer: GridStateInitializer = (state, props, api
     rowsMeta: {
       currentPageTotalHeight: rowCount * baseRowHeight,
       positions: Array.from({ length: rowCount }, (_, i) => i * baseRowHeight),
-      pinnedTopTotalHeight: 0,
-      pinnedBottomTotalHeight: 0,
+      topPinnedHeight: 0,
+      bottomPinnedHeight: 0,
+      pinnedTopRowsTotalHeight: 0,
+      pinnedBottomRowsTotalHeight: 0,
     },
   };
 };

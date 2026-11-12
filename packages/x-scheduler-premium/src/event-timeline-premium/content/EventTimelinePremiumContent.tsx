@@ -670,7 +670,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     eventTimelinePremiumOccurrenceSelectors.visibleGroupedByResourceList,
   );
 
-  // Measure header height for the virtualizer's topPinnedHeight
+  // Measure header height for the virtualizer's headerHeight
   const headerHeight = useElementSize(headerRowRef, 'height');
 
   // Measure the container so the title column can be capped at half its width.
@@ -772,7 +772,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     layout,
     dimensions: {
       rowHeight: defaultRowHeight,
-      topPinnedHeight: headerHeight,
+      headerHeight,
     },
     virtualization: { layoutMode: 'controlled', isRtl },
     rows,

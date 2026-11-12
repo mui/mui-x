@@ -119,7 +119,7 @@ export type ParamsWithDefaults = RequiredFields<
 > & {
   dimensions: RequiredFields<
     VirtualizerParams['dimensions'],
-    'topPinnedHeight' | 'bottomPinnedHeight' | 'autoHeight'
+    'headerHeight' | 'footerHeight' | 'autoHeight'
   >;
   virtualization: RequiredFields<
     VirtualizerParams['virtualization'],

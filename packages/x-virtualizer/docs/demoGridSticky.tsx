@@ -271,7 +271,7 @@ function Grid() {
     layout,
     dimensions: {
       rowHeight: ROW_HEIGHT,
-      topPinnedHeight: HEADER_HEIGHT,
+      headerHeight: HEADER_HEIGHT,
     },
     virtualization: { layoutMode: 'sticky' },
 

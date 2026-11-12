@@ -42,6 +42,7 @@ import { useGridOverlays } from '../features/overlays/useGridOverlays';
 import { useGridRootProps } from '../utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../utils/useGridPrivateApiContext';
 import { useGridRowsMeta } from '../features/rows/useGridRowsMeta';
+import type { GridRowsMetaState } from '../features/rows/gridRowsMetaState';
 import { eslintUseValue } from '../../utils/utils';
 
 /** Translates virtualizer state to grid state */
@@ -49,8 +50,6 @@ const addGridDimensionsCreator = () =>
   lruMemoize(
     (
       dimensions: Dimensions.State['dimensions'],
-      leftPinnedWidth: number,
-      rightPinnedWidth: number,
       headerHeight: number,
       groupHeaderHeight: number,
       headerFilterHeight: number,
@@ -59,14 +58,23 @@ const addGridDimensionsCreator = () =>
       return {
         ...dimensions,
         columnsTotalWidth: dimensions.contentSize.width,
-        leftPinnedWidth,
-        rightPinnedWidth,
         headerHeight,
         groupHeaderHeight,
         headerFilterHeight,
         headersTotalHeight,
       };
     },
+    { maxSize: 1 },
+  );
+
+/** Adds the deprecated rows meta names to the virtualizer rows meta */
+const addGridRowsMetaCreator = () =>
+  lruMemoize(
+    (rowsMeta: Dimensions.State['rowsMeta']): GridRowsMetaState => ({
+      ...rowsMeta,
+      pinnedTopRowsTotalHeight: rowsMeta.topPinnedHeight,
+      pinnedBottomRowsTotalHeight: rowsMeta.bottomPinnedHeight,
+    }),
     { maxSize: 1 },
   );
 
@@ -135,9 +143,8 @@ export function useGridVirtualizer() {
 
   const dimensionsParams = {
     rowHeight,
-    headerHeight,
-    topPinnedHeight: headersTotalHeight,
-    bottomPinnedHeight: 0,
+    headerHeight: headersTotalHeight,
+    footerHeight: 0,
     autoHeight,
     minimalContentHeight,
     scrollbarSize: rootProps.scrollbarSize,
@@ -155,6 +162,8 @@ export function useGridVirtualizer() {
     dataRowCount,
   );
   const { getRowHeight, getEstimatedRowHeight, getRowSpacing } = rootProps;
+
+  const addGridRowsMeta = useLazyRef(addGridRowsMetaCreator).current;
   // </ROWS_META>
 
   const RowSlot = rootProps.slots.row;
@@ -335,50 +344,37 @@ export function useGridVirtualizer() {
   useOnFirstRender(() => {
     apiRef.current.store.state.dimensions = addGridDimensions(
       virtualizerStore.state.dimensions,
-      virtualizerStore.state.columnsMeta.pinnedLeftTotalWidth,
-      virtualizerStore.state.columnsMeta.pinnedRightTotalWidth,
       headerHeight,
       groupHeaderHeight,
       headerFilterHeight,
       headersTotalHeight,
     );
-    apiRef.current.store.state.rowsMeta = virtualizerStore.state.rowsMeta;
+    apiRef.current.store.state.rowsMeta = addGridRowsMeta(virtualizerStore.state.rowsMeta);
     apiRef.current.store.state.virtualization = virtualizerStore.state.virtualization;
   });
 
-  const syncGridDimensions = () => {
-    const { dimensions, columnsMeta } = virtualizer.store.state;
+  useStoreEffect(virtualizer.store, Dimensions.selectors.dimensions, (_, dimensions) => {
     if (!dimensions.isReady) {
-      return;
-    }
-    const gridDimensions = addGridDimensions(
-      dimensions,
-      columnsMeta.pinnedLeftTotalWidth,
-      columnsMeta.pinnedRightTotalWidth,
-      headerHeight,
-      groupHeaderHeight,
-      headerFilterHeight,
-      headersTotalHeight,
-    );
-    // Moving columns changes the columns meta, but not the grid dimensions.
-    if (gridDimensions === apiRef.current.state.dimensions) {
       return;
     }
     apiRef.current.setState((gridState) => ({
       ...gridState,
-      dimensions: gridDimensions,
+      dimensions: addGridDimensions(
+        dimensions,
+        headerHeight,
+        groupHeaderHeight,
+        headerFilterHeight,
+        headersTotalHeight,
+      ),
     }));
-  };
-
-  useStoreEffect(virtualizer.store, Dimensions.selectors.dimensions, syncGridDimensions);
-  // Pinning a column can change the pinned widths without changing the dimensions.
-  useStoreEffect(virtualizer.store, Dimensions.selectors.columnsMeta, syncGridDimensions);
+  });
 
   useStoreEffect(virtualizer.store, Dimensions.selectors.rowsMeta, (_, rowsMeta) => {
-    if (rowsMeta !== apiRef.current.state.rowsMeta) {
+    const gridRowsMeta = addGridRowsMeta(rowsMeta);
+    if (gridRowsMeta !== apiRef.current.state.rowsMeta) {
       apiRef.current.setState((gridState) => ({
         ...gridState,
-        rowsMeta,
+        rowsMeta: gridRowsMeta,
       }));
     }
   });

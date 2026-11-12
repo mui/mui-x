@@ -547,20 +547,19 @@ const horizontalGeometry = createSelectorMemoized(
     const {
       positions: columnPositions,
       totalWidth,
-      pinnedLeftTotalWidth,
-      pinnedRightTotalWidth,
+      leftPinnedWidth,
+      rightPinnedWidth,
     } = columnsMeta;
     const { viewportInnerSize } = dimensions;
     const firstPosition = columnPositions[renderContext.firstColumnIndex] ?? 0;
     // `lastColumnIndex` is exclusive: past the last column, the window extends to the
     // pinned-right section (or the content end when there is none).
     const lastPosition =
-      columnPositions[renderContext.lastColumnIndex] ?? totalWidth - pinnedRightTotalWidth;
+      columnPositions[renderContext.lastColumnIndex] ?? totalWidth - rightPinnedWidth;
     // Pinned cells are in the row flow, so they count toward the rendered width and
     // the offset starts at the pinned-left cells.
-    const renderedWidth =
-      pinnedLeftTotalWidth + (lastPosition - firstPosition) + pinnedRightTotalWidth;
-    const offsetLeft = firstPosition - pinnedLeftTotalWidth;
+    const renderedWidth = leftPinnedWidth + (lastPosition - firstPosition) + rightPinnedWidth;
+    const offsetLeft = firstPosition - leftPinnedWidth;
     const verticalScrollbarLane = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
     // Clamped to 0: if the rendered window is smaller than the viewport (few
     // columns), sticky positioning must stay inert.

@@ -6,8 +6,8 @@ export const DEFAULT_PARAMS = {
 
   dimensions: {
     autoHeight: false,
-    topPinnedHeight: 0,
-    bottomPinnedHeight: 0,
+    headerHeight: 0,
+    footerHeight: 0,
   },
 
   virtualization: {
