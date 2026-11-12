@@ -89,7 +89,7 @@ import {
 } from './gridComputedColumnsValidation';
 import type { GridComputedColumnsPrivateApi } from '../computedColumns/gridComputedColumnsInterfaces';
 import { useGridFormulaReferencePicking } from './useGridFormulaReferencePicking';
-import { applyFormulaPickFeedback } from './gridFormulaReferencePicking';
+import { clearFormulaPickSession } from './gridFormulaReferencePicking';
 
 export const formulaStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'formulaFunctions' | 'disableFormulas' | 'dataSource'>,
@@ -876,9 +876,7 @@ export const useGridFormula = (
     // every path that never publishes `cellEditStop`.
     cache.editorSession = null;
     cache.plainEditDraft = null;
-    cache.referencePick.gesture = null;
-    cache.referencePick.pending = null;
-    applyFormulaPickFeedback(apiRef, false, null);
+    clearFormulaPickSession(apiRef);
     // Turn off reference highlighting (the editor set it on mount; this is the
     // only thing that clears it — the editor unmounting from virtualization
     // must not).
@@ -909,13 +907,21 @@ export const useGridFormula = (
       cache.plainEditDraft = null;
     }
     const { pending } = cache.referencePick;
+    // A reference picked into a draft of the formula bar belongs to a cell in
+    // view mode: the bar ends that session itself, with its draft.
+    const activeEdit = gridFormulaActiveEditSelector(apiRef);
+    const isBarDraft =
+      pending !== null &&
+      activeEdit !== null &&
+      activeEdit.draft !== undefined &&
+      activeEdit.id === pending.id &&
+      activeEdit.field === pending.field;
     if (
       pending !== null &&
+      !isBarDraft &&
       apiRef.current.getCellMode(pending.id, pending.field) !== GridCellModes.Edit
     ) {
-      cache.referencePick.gesture = null;
-      cache.referencePick.pending = null;
-      applyFormulaPickFeedback(apiRef, false, null);
+      clearFormulaPickSession(apiRef);
     }
   }, [apiRef]);
 

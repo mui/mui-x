@@ -100,9 +100,9 @@ export interface GridFormulaActiveEdit {
  */
 export interface GridFormulaPickEditable {
   /**
-   * The surface hosting the editable.
+   * The surface hosting the editable: the editor of the cell, or the formula bar.
    */
-  kind: 'cell';
+  kind: 'cell' | 'bar';
   /**
    * @returns {GridFormulaEditableHandle | null} The imperative handle of the editable, or `null` when it is not mounted.
    */

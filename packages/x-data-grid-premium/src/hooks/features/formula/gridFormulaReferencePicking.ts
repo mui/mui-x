@@ -245,6 +245,19 @@ export function applyFormulaPickFeedback(
 }
 
 /**
+ * Ends the picking session: the gesture and the pending reference are
+ * forgotten, and the feedback is removed. Called when the edit, or the draft of
+ * the formula bar, that the session belongs to ends.
+ * @param {RefObject<GridPrivateApiPremium>} apiRef The private grid api.
+ */
+export function clearFormulaPickSession(apiRef: RefObject<GridPrivateApiPremium>): void {
+  const session = apiRef.current.caches.formula!.referencePick;
+  session.gesture = null;
+  session.pending = null;
+  applyFormulaPickFeedback(apiRef, false, null);
+}
+
+/**
  * Recomputes the picking feedback from the focused editable: its text and its
  * caret decide whether a click would write a reference, and whether the
  * reference of the last pick is still pending. Called after every change of
