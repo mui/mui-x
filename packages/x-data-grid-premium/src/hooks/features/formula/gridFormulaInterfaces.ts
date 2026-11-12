@@ -100,15 +100,19 @@ export interface GridFormulaActiveEdit {
  */
 export interface GridFormulaPickEditable {
   /**
-   * The surface hosting the editable: the editor of the cell, or the formula bar.
+   * The surface hosting the editable: the editor of the cell, the formula bar,
+   * or the editor of the computed columns panel. The formula of the panel is
+   * the one of a whole column: a pick writes the name of the clicked column,
+   * whatever the row, and never a range.
    */
-  kind: 'cell' | 'bar';
+  kind: 'cell' | 'bar' | 'panel';
   /**
    * @returns {GridFormulaEditableHandle | null} The imperative handle of the editable, or `null` when it is not mounted.
    */
   getHandle: () => GridFormulaEditableHandle | null;
   /**
-   * The cell the edited formula belongs to.
+   * The cell the edited formula belongs to. For the panel: the cell of the
+   * edited column in the preview row.
    */
   ownerCell: { id: GridRowId; field: string };
   /**

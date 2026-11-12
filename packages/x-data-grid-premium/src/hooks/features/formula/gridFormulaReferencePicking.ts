@@ -262,6 +262,38 @@ export function getPickedReferenceText(
 }
 
 /**
+ * What a click on `cell` writes into the formula of `editable`, with the target
+ * its rectangle is drawn on, or `null` when the cell cannot be picked.
+ *
+ * The formula of the computed columns panel belongs to a whole column, so it
+ * only reads its own row: the pick is the name of the clicked column, whatever
+ * the row, and it is shown on the preview row. The column cannot pick itself.
+ */
+export function getFormulaPickOfCell(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  editable: GridFormulaPickEditable,
+  cell: FormulaPickCell,
+): { reference: string; target: FormulaPickTarget } | null {
+  const { ownerCell, a1Notation } = editable;
+  if (editable.kind !== 'panel') {
+    const target: FormulaPickTarget = { kind: 'cell', ...cell };
+    const reference = getPickedReferenceText(apiRef, ownerCell, target, { a1Notation });
+    return reference === null ? null : { reference, target };
+  }
+  // The clicked cell must be one a formula can reference, outside the edited column.
+  if (
+    cell.field === ownerCell.field ||
+    getPickedReferenceText(apiRef, ownerCell, { kind: 'cell', ...cell }) === null
+  ) {
+    return null;
+  }
+  return {
+    reference: toFormulaFieldReference(cell.field, a1Notation),
+    target: { kind: 'cell', field: cell.field, rowId: ownerCell.id },
+  };
+}
+
+/**
  * The cell a range starts from when the reference `text.slice(start, end)` of
  * the formula is extended: the cell itself for a reference to one cell (a
  * field name is the cell of that column in the row of the formula), the first
@@ -367,13 +399,18 @@ export function getFormulaPickActionForEditable(
   mode: FormulaPickMode = 'replace',
 ): FormulaPickAction {
   const { a1Notation } = editable;
+  if (editable.kind === 'panel' && text.trim() === '') {
+    // A cleared formula of the panel takes the reference, behind a new `=`.
+    return { type: 'replace', start: 0, end: text.length };
+  }
   return getFormulaPickAction(
     text,
     selection,
     getFormulaPendingPickOf(apiRef, editable)?.pick ?? null,
     {
       a1Notation,
-      mode,
+      // The panel builds no range: Shift+click is a plain click there.
+      mode: editable.kind === 'panel' && mode === 'extend' ? 'replace' : mode,
       // A bare name is a reference when it is the name a click on that column writes.
       isFieldName: (name) =>
         apiRef.current.getColumn(name) != null &&

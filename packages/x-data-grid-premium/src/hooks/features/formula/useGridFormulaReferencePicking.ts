@@ -19,6 +19,7 @@ import {
   getFormulaPendingPickOf,
   getFormulaPickActionForEditable,
   getFormulaPickAnchor,
+  getFormulaPickOfCell,
   getPickedReferenceText,
   isFormulaReferencePickingEnabled,
 } from './gridFormulaReferencePicking';
@@ -35,6 +36,8 @@ import type { FormulaPickCell, FormulaPickTarget } from './gridFormulaReferenceP
  *   clicked cell.
  * - Cmd+click (macOS) or Ctrl+click (elsewhere) adds the reference after the
  *   one at the caret, as one more argument of the function call.
+ * - In the editor of the computed columns panel, every pick writes the name of
+ *   the clicked column: a drag and a Shift+click are plain clicks there.
  *
  * Must be called before the other listeners of `cellMouseDown`, `cellClick`,
  * `rowClick` and `cellDoubleClick` are registered: a picking click skips them
@@ -134,11 +137,11 @@ export const useGridFormulaReferencePicking = (
         return;
       }
       const cell: FormulaPickCell = { field: params.field, rowId: params.id };
-      let target: FormulaPickTarget = { kind: 'cell', ...cell };
-      let reference = getPickedReferenceText(apiRef, ownerCell, target, { a1Notation });
-      if (reference === null) {
+      const pick = getFormulaPickOfCell(apiRef, editable, cell);
+      if (pick === null) {
         return;
       }
+      let { reference, target } = pick;
 
       let anchor = cell;
       if (action.type === 'extend') {
@@ -195,17 +198,13 @@ export const useGridFormulaReferencePicking = (
         root?.classList.remove(gridClasses['root--disableUserSelection']);
       };
 
+      let prefix = action.type === 'append' ? FORMULA_ARGUMENT_SEPARATOR : '';
+      if (text.trim() === '') {
+        // Only the panel picks into a cleared formula, which gets its `=` back.
+        prefix = '=';
+      }
       handle.closeSuggestions();
-      writePick(
-        editable,
-        text,
-        action,
-        action.type === 'append' ? FORMULA_ARGUMENT_SEPARATOR : '',
-        reference,
-        target,
-        anchor,
-        event,
-      );
+      writePick(editable, text, action, prefix, reference, target, anchor, event);
     },
     [apiRef, enabled, writePick],
   );
@@ -223,6 +222,10 @@ export const useGridFormulaReferencePicking = (
       const pending = editable ? getFormulaPendingPickOf(apiRef, editable) : null;
       // The text is the one the pick left: nothing was typed since, and the editor shows it.
       if (!editable || !handle || pending === null || handle.getText() !== pending.pick.text) {
+        return;
+      }
+      // The panel builds no range: its pick stays the column of the mousedown.
+      if (editable.kind === 'panel') {
         return;
       }
       if (apiRef.current.getColumn(params.field)?.type === GRID_ACTIONS_COLUMN_TYPE) {
