@@ -98,35 +98,14 @@ export function createSendMessageActions<Cursor = string>(params: {
         return;
       }
 
-      try {
-        await runtimeRef.current.onFinish({
-          message: getFinishMessage(storeUnknown, result.messageId, conversationId, result.status),
-          messages: getMessages(storeUnknown),
-          isAbort: result.isAbort,
-          isDisconnect: result.isDisconnect,
-          isError: result.isError,
-          finishReason: result.finishReason,
-        });
-      } catch (error) {
-        // A cancelled run stays silent, matching the non-deferred abort path.
-        // Otherwise record a stream error so callers take their stream-error branch.
-        if (!abortController.signal.aborted && store.state.error?.source !== 'stream') {
-          const streamError = createRuntimeError(
-            'STREAM_ERROR',
-            getErrorMessage('The onFinish callback failed.', error),
-            'stream',
-            true,
-            true,
-            { messageId: result.messageId, conversationId },
-          );
-          store.setError(streamError);
-          if (result.messageId && store.state.messagesById[result.messageId]) {
-            store.setMessageError(result.messageId, streamError);
-          }
-        }
-        store.setStreaming(false);
-        throw error;
-      }
+      await runtimeRef.current.onFinish({
+        message: getFinishMessage(storeUnknown, result.messageId, conversationId, result.status),
+        messages: getMessages(storeUnknown),
+        isAbort: result.isAbort,
+        isDisconnect: result.isDisconnect,
+        isError: result.isError,
+        finishReason: result.finishReason,
+      });
     };
 
     let result: ProcessStreamResult;
