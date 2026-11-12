@@ -78,18 +78,26 @@ const ChatMessageActionsStyled = styled('div', {
   // Elsewhere they stay tabbable but transparent (and ignore the pointer), and
   // are revealed on hover or while focus is inside the bar.
   opacity: 0,
-  visibility: ownerState?.actionable === false ? 'hidden' : 'visible',
-  pointerEvents: 'none',
+  ...(ownerState?.actionable === false
+    ? { visibility: 'hidden' }
+    : { visibility: 'visible', pointerEvents: 'none' }),
   transition: theme.transitions.create(['opacity', 'visibility'], {
     duration: theme.transitions.duration.short,
   }),
-  '@media (prefers-reduced-motion: reduce)': {
-    transition: 'none',
-  },
   '.MuiChatMessage-root:hover &, .MuiChatMessage-root[data-actionable="true"] &, &:focus-within': {
     opacity: 1,
     visibility: 'visible',
     pointerEvents: 'auto',
+    // Visibility flips at once on reveal so Enter can focus the buttons in the
+    // same frame; the base rule still fades out before hiding.
+    transition: theme.transitions.create('opacity', {
+      duration: theme.transitions.duration.short,
+    }),
+  },
+  '@media (prefers-reduced-motion: reduce)': {
+    transition: 'none',
+    '.MuiChatMessage-root:hover &, .MuiChatMessage-root[data-actionable="true"] &, &:focus-within':
+      { transition: 'none' },
   },
   ...(ownerState?.isOwnMessage && {
     justifySelf: 'end',

@@ -126,7 +126,6 @@ export default function ChatMessageActionsPlayground() {
                   '& .MuiChatMessage-actions': {
                     opacity: 1,
                     visibility: 'visible',
-                    pointerEvents: 'auto',
                   },
                 }),
                 ...wrapperSx,

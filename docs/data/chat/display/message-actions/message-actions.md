@@ -42,8 +42,7 @@ The action bar is hidden by default and becomes visible when:
 
 Inside a message list with roving focus (the default), the hidden bar also uses `visibility: hidden`, so the action buttons stay out of the tab order until the user drills into the message — tabbing through the chat never stops on an invisible control.
 Without roving focus (`enableRovingFocus={false}` or a standalone `ChatMessage`), the buttons keep their natural tab order: tabbing onto one reveals the bar through `:focus-within`.
-In both cases the hidden bar ignores the pointer until the row is hovered.
-The hidden state is `opacity: 0; pointer-events: none`, plus `visibility: hidden` inside a roving list, so a custom override that reveals the bar should also set `pointer-events: auto`.
+In that mode the hidden bar also sets `pointer-events: none`, so the transparent buttons ignore the pointer until the row is hovered; a custom override that reveals the bar there should also set `pointer-events: auto`.
 The reveal uses a short opacity transition; when the user prefers reduced motion, the transition is disabled.
 
 ```css
@@ -53,7 +52,7 @@ The reveal uses a short opacity transition; when the user prefers reduced motion
 .MuiChatMessage-actions:focus-within {
   opacity: 1;
   visibility: visible;
-  pointer-events: auto;
+  pointer-events: auto; /* only needed without roving focus */
 }
 ```
 

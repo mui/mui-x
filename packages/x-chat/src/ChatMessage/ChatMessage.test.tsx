@@ -530,12 +530,7 @@ describe('ChatMessage', () => {
       expect(document.activeElement).toBe(article);
 
       fireEvent.keyDown(article, { key: 'Enter' });
-      // The `visibility` transition keeps the bar hidden at its first frame, so
-      // the drill-in focus misses it; retry until the button is focusable.
       await waitFor(() => {
-        act(() => {
-          button.focus();
-        });
         expect(document.activeElement).toBe(button);
       });
     });
