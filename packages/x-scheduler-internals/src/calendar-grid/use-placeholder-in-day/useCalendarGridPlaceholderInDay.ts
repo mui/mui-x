@@ -6,7 +6,7 @@ import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowConte
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
-import { createProcessedDate } from '../../internals/utils/plain-date-utils/adapter';
+import { createProcessedDate } from '../../internals/utils/plain-date-utils/date';
 import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
 import { getDayGridCellSpan } from '../../use-event-occurrences-with-day-grid-position';
 

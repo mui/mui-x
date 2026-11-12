@@ -16,7 +16,6 @@ import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerResource, TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
-import { createAdapterDate } from '@mui/x-scheduler-internals/internals';
 import { schedulerOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import {
@@ -172,8 +171,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         ...occurrence,
         displayTimezone: {
           ...occurrence.displayTimezone,
-          start: processDate(occurrence.dataTimezone.start.value, adapter, displayTimezone),
-          end: processDate(occurrence.dataTimezone.end.value, adapter, displayTimezone),
+          start: processDate(occurrence.dataTimezone.start.value, displayTimezone),
+          end: processDate(occurrence.dataTimezone.end.value, displayTimezone),
         },
       };
 
@@ -1151,9 +1150,9 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.getByLabelText(/start date/i)).to.have.value('2025-05-27');
       expect(onRender.mock.calls.length).to.equal(rendersBefore);
 
-      expect(
-        adapter.formatByString(createAdapterDate(getPlaceholder().start), 'yyyy-MM-dd'),
-      ).to.equal('2025-05-27');
+      expect(adapter.formatByString(new Date(getPlaceholder().start), 'yyyy-MM-dd')).to.equal(
+        '2025-05-27',
+      );
     });
 
     it('should keep the placeholder in place while a custom field holds a date that does not exist', () => {

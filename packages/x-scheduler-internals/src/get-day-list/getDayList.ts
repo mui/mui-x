@@ -1,7 +1,7 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDay } from '../models';
 import type { BaseTemporal } from '../internals/utils/base-temporal';
-import { createProcessedDate } from '../internals/utils/plain-date-utils/adapter';
+import { createProcessedDate } from '../internals/utils/plain-date-utils/date';
 import { getSkippedDays, toEpochMs } from '../internals/utils/plain-date-utils/timeZone';
 import {
   getDayNumber,

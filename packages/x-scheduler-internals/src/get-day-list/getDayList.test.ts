@@ -30,7 +30,7 @@ describe('getDayListFromPlainDates', () => {
       timezone: 'default',
     });
 
-    const expectedDays = [processDay(adapter.startOfDay(DEFAULT_TESTING_VISIBLE_DATE), adapter)];
+    const expectedDays = [processDay(adapter.startOfDay(DEFAULT_TESTING_VISIBLE_DATE))];
 
     expect(days).to.deep.equal(expectedDays);
   });
@@ -43,9 +43,7 @@ describe('getDayListFromPlainDates', () => {
     });
 
     const start = adapter.startOfDay(DEFAULT_TESTING_VISIBLE_DATE);
-    const expectedDays = Array.from({ length: 4 }, (_, i) =>
-      processDay(adapter.addDays(start, i), adapter),
-    );
+    const expectedDays = Array.from({ length: 4 }, (_, i) => processDay(adapter.addDays(start, i)));
 
     expect(days).to.deep.equal(expectedDays);
   });
@@ -64,7 +62,7 @@ describe('getDayListFromPlainDates', () => {
       // From Monday to Friday.
       const monday = adapter.addDays(adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE), 1);
       const expectedDays = Array.from({ length: 5 }, (_, i) =>
-        processDay(adapter.addDays(monday, i), adapter),
+        processDay(adapter.addDays(monday, i)),
       );
 
       expect(days).to.deep.equal(expectedDays);

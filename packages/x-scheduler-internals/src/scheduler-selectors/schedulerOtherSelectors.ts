@@ -2,7 +2,7 @@ import { createSelectorMemoized } from '@base-ui/utils/store';
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
 
-const visibleTimestamp = (state: State) => state.adapter.getTime(state.visibleDate);
+const visibleTimestamp = (state: State) => state.visibleDate.getTime();
 
 // Warning: Only add selectors here that do not belong to any specific feature.
 export const schedulerOtherSelectors = {

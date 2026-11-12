@@ -12,12 +12,12 @@ import {
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import { BaseTemporal, buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
+import { BaseTemporal, toPlainDate } from '@mui/x-scheduler-internals/internals';
 
 describe('<CalendarGrid.TimeColumn />', () => {
   const { render } = createSchedulerRenderer();
 
-  const plainDate = buildTemporalPlainDate(adapter, adapter.now('default'), 'default');
+  const plainDate = toPlainDate(adapter.now('default').getTime(), 'default');
 
   function TimeColumnWrapper({
     children,

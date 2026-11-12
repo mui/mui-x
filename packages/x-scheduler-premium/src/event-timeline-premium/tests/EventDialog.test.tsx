@@ -93,10 +93,12 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
     const start = adapter.date('2025-07-03T09:00:00Z', 'default');
     const end = adapter.date('2025-07-03T09:30:00Z', 'default');
 
-    const store = new EventTimelinePremiumStoreWithFeatures(
-      { events: [], resources, eventCreation, onEventsChange: () => {} },
-      adapter,
-    );
+    const store = new EventTimelinePremiumStoreWithFeatures({
+      events: [],
+      resources,
+      eventCreation,
+      onEventsChange: () => {},
+    });
     store.setOccurrencePlaceholder({
       type: 'creation',
       surfaceType: 'timeline',
@@ -106,7 +108,7 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
       resourceId: rowResource.id,
     });
 
-    const creationOccurrence = EventBuilder.new(adapter)
+    const creationOccurrence = EventBuilder.new()
       .id('placeholder-id')
       .span(start.toISOString(), end.toISOString())
       .title('')
@@ -222,16 +224,13 @@ describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
     const onEventsChange = vi.fn();
     const onClose = vi.fn();
 
-    const store = new EventTimelinePremiumStoreWithFeatures(
-      {
-        events: [predecessor, readOnlySuccessor],
-        resources,
-        dependencies: [dependency],
-        onDependenciesChange: () => {},
-        onEventsChange,
-      },
-      adapter,
-    );
+    const store = new EventTimelinePremiumStoreWithFeatures({
+      events: [predecessor, readOnlySuccessor],
+      resources,
+      dependencies: [dependency],
+      onDependenciesChange: () => {},
+      onEventsChange,
+    });
 
     const editedOccurrence: SchedulerEventOccurrence = {
       ...store.state.processedEventLookup.get(predecessor.id)!,

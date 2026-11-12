@@ -1,5 +1,4 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
-import type { EventCalendarState as State } from '../use-event-calendar';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
@@ -62,7 +61,6 @@ const horizonEndPlainDate = createSelectorMemoized(
 );
 
 const visibleDays = createSelectorMemoized(
-  (state: State) => state.adapter,
   eventCalendarViewSelectors.agendaDayCount,
   baseRange,
   baseVisibleDays,
@@ -74,7 +72,6 @@ const visibleDays = createSelectorMemoized(
   schedulerResourceSelectors.visibleMap,
   schedulerOtherSelectors.recurringEventsPlugin,
   (
-    adapter,
     dayCount,
     range,
     baseDays,
@@ -99,7 +96,6 @@ const visibleDays = createSelectorMemoized(
 
     // Compute occurrences for the current accumulated range
     let occurrenceMap = innerGetEventOccurrencesGroupedByDay({
-      adapter,
       days: accumulatedDays,
       eventRangeIndex,
       visibleResources,
@@ -139,7 +135,6 @@ const visibleDays = createSelectorMemoized(
       accumulatedDays = accumulatedDays.concat(more);
 
       occurrenceMap = innerGetEventOccurrencesGroupedByDay({
-        adapter,
         days: accumulatedDays,
         eventRangeIndex,
         visibleResources,
