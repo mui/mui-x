@@ -8,6 +8,7 @@ We'd like to extend a big thank you to the 17 contributors who made this release
 
 - 🔗 Event dependencies are now public in the Event Timeline
 - 👆 Drag and drop in the pivot and charts panels of the Data Grid Premium on touch and pen devices
+- 📋 Pasting past the last row of the Data Grid Premium can add rows
 - 📅 The Scheduler reads the weekend days from the locale
 - ⚠️ Recurring events are now opt-in in the Event Calendar, which saves about 10 kB (gzip) when unused
 - 🌍 Improve Chinese (Taiwan) (zh-TW), Czech (cs-CZ), and Indonesian (id-ID) locales
@@ -29,10 +30,12 @@ The following team members contributed to this release:
 - [DataGrid] Fix pinned cells jumping when the fill handle is shown (#24097) @Amko94
 - [DataGrid] Fix the paste from the IME hidden editor (#24146) @LukasTy
 - [DataGrid] Fix unexpected `onBlur` when using `ctrl+v` (#24100) @noraleonte
+- [DataGrid] Focus the first filter field instead of the value input (#24049) @JCQuintas
+- [DataGrid] Keep pipe processing working after an error (#24120) @Roman178
 - [DataGrid] Keep the focused cell when a server-side sort reloads the rows (#24068) @morsycodes
+- [DataGrid] Log an error when unsupported `aria-*` props are ignored (#23863) @michelengelen
 - [DataGrid] Start editing with the first key of an IME composition (#23910) @michelengelen
 - [DataGrid] Warn when scroll indexes are out of bounds (#23448) @Roman178
-- [DataGrid] Keep pipe processing working after an error (#24120) @Roman178
 - [l10n] Improve Chinese (Taiwan) (zh-TW) locale (#24091) @poplolioi11
 - [l10n] Improve Czech (cs-CZ) locale (#24087) @kojdad-alt
 - [l10n] Improve Indonesian (id-ID) locale (#24143) @insanrizky
@@ -41,14 +44,15 @@ The following team members contributed to this release:
 
 Same changes as in `@mui/x-data-grid@9.18.0`, plus:
 
+- [DataGridPro] Add `useVisibleColumns` to `setColumnIndex()` (#24140) @JCQuintas
 - [DataGridPro] Follow the data source order when re-fetching grouped rows (#23638) @Anexus5919
 
 #### `@mui/x-data-grid-premium@9.18.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-data-grid-pro@9.18.0`, plus:
 
+- [DataGridPremium] Add rows when the pasted data goes past the last row (#23881) @michelengelen
 - [DataGridPremium] Side panel drag and drop with pointer events (#23976) @noraleonte
-- [DataGridPremium] Add rows when the pasted data goes past the last row (#23881⁠) @michelengelen
 
 ### Date and Time Pickers
 
@@ -72,10 +76,13 @@ Internal changes.
 Same changes as in `@mui/x-charts@9.18.0`, plus:
 
 - [charts-pro] Fix the zoom slider direction on ordinal y-axes (#24105) @officialasishkumar
+- [charts-pro] Make the zoom slider operable with the keyboard (#24139) @officialasishkumar
 
 #### `@mui/x-charts-premium@9.18.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-charts-pro@9.18.0`.
+Same changes as in `@mui/x-charts-pro@9.18.0`, plus:
+
+- [charts-premium] Draw one ring per dimension in the pie chart of `ChartsRenderer` (#24145) @rita-codes
 
 ### Tree View
 
@@ -113,13 +120,23 @@ Same changes as in `@mui/x-tree-view@9.18.0`.
 
 - The weekend days come from the `dateLocale`. Calendars whose locale has a weekend other than Saturday and Sunday (for example `he-IL`, `ar-*`, `fa-IR`, or `en-IN`) mark different days with `data-weekend`, and `showWeekends: false` hides those days instead.
 
+- The Scheduler no longer uses a date adapter to read the event strings:
+  - A date-time string with an offset, like `"2025-01-01T09:00:00+02:00"`, is read as an instant, like a string ending with `Z`, and an edit saves it as a UTC string ending with `Z`.
+  - A string without `T` is no longer read as a date only: `"2025-01-01 09:00:00"` keeps its time. A string in another format, like `"2025/01/01"`, is read at its wall-clock time in the data timezone.
+
 #### `@mui/x-scheduler@9.0.0-beta.16`
 
 - [scheduler] Add a recurring events stress test experiment (#24018) @flaviendelangle
+- [scheduler] Build the dates of the tests without the date adapter (#24135) @flaviendelangle
 - [scheduler] Create plain Date objects and read them in explicit timezones (#24029) @flaviendelangle
+- [scheduler] Fix day grid event span and drag mapping with hidden weekend days (#24103) @mustafajw07
 - [scheduler] Mark today with `aria-current="date"` in Event Timeline headers (#24061) @mustafajw07
+- [scheduler] Move focus out of an event removed while focused (#24088) @mustafajw07
+- [scheduler] Read and create the dates without the date adapter (#24134) @flaviendelangle
+- [scheduler] Read the day numbers of the placeholder cells from their plain dates (#24138) @flaviendelangle
 - [scheduler] Read the weekend days from the locale (#24121) @rita-codes
 - [scheduler] Refuse the batch when the auto-scheduling cascade clamps an unwritable date (#24002) @mustafajw07
+- [scheduler] Remove duplicated tests and fix the ones that could not fail (#24133) @flaviendelangle
 - [scheduler] Step through the recurring series on day numbers (#24064) @flaviendelangle
 - [scheduler] Walk the Timeline header on day numbers (#24128) @flaviendelangle
 
