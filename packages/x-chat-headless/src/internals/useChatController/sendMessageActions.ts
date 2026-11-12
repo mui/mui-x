@@ -115,7 +115,7 @@ export function createSendMessageActions<Cursor = string>(params: {
     }
 
     try {
-      store.setStreaming(true, conversationId);
+      store.setStreaming(true, conversationId ?? store.state.streamingConversationId);
       const reconnectStream = await adapter.reconnectToStream({
         conversationId,
         messageId: result.messageId,

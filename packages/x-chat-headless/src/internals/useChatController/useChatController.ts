@@ -332,14 +332,21 @@ export function useChatController<Cursor = string>({
         return;
       }
 
-      const { isStreaming, streamingConversationId } = store.state;
+      const { isStreaming, streamingConversationId, messagesById } = store.state;
       if (isStreaming && streamingConversationId !== nextActiveConversationId) {
-        // Unscoped streams adopt the id the parent assigns to the new chat, unless a reset follows.
-        if (streamingConversationId == null && store.parameters.messages !== undefined) {
+        // An unscoped stream adopts the id the parent assigns to the new chat only when the
+        // controlled messages still hold the in-flight run; the parent already holds that thread.
+        const keepsInFlightRun =
+          streamingConversationId == null &&
+          store.parameters.messages !== undefined &&
+          Object.values(messagesById).some(
+            (message) => message.status === 'sending' || message.status === 'streaming',
+          );
+        if (keepsInFlightRun) {
           store.setStreaming(true, nextActiveConversationId);
-        } else {
-          stopStreaming();
+          return;
         }
+        stopStreaming();
       }
       void loadConversationMessages(nextActiveConversationId);
     },

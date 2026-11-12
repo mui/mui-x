@@ -668,7 +668,8 @@ export async function processStream<Cursor = string>(
     void reader.cancel().catch((error) => {
       abortCancelError = error;
     });
-    // Flush now, while the target message still exists, so a later flush cannot re-add it after a reset.
+    // Flush now so a later flush cannot re-add the message after a reset. With controlled messages
+    // already swapped out, the re-added message is dropped by the controlled-model resync.
     flushPendingTextLikeDelta();
   };
 
