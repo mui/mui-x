@@ -363,7 +363,8 @@ Row selection propagation has some limitations:
 
 - If `props.disableMultipleRowSelection` is set to `true`, then row selection propagation won't apply.
 
-- Row selection propagation is a client-side feature and does not support [server-side data](/x/react-data-grid/server-side-data/).
+- With server-side data, the Grid can only derive parent selection from the descendants it knows about.
+  See [Server-side row selection](/x/react-data-grid/server-side-data/row-grouping/#row-selection) and [selection propagation with lazy loading](/x/react-data-grid/server-side-data/lazy-loading/#row-selection-propagation) for details.
 
 - If you're using the state setter method `apiRef.current.setRowSelectionModel()`, you must explicitly compute the selection model with the rows that have propagation changes applied using `apiRef.current.getPropagatedRowSelectionModel()` and pass it as shown below:
 
@@ -378,8 +379,8 @@ Row selection propagation has some limitations:
 
   See [the `apiRef` section below](/x/react-data-grid/row-selection/#apiref) for the signatures of these methods.
 
-- If you're using the `keepNonExistentRowsSelected` prop, then row selection propagation will not automatically apply to the rows being added that were part of the selection model but didn't exist in the previous rows.
-  Consider opening a [GitHub issue](https://github.com/mui/mui-x/issues/new?template=2.feature.yml) if you need this behavior.
+- The `keepNonExistentRowsSelected` prop preserves selected IDs, but it does not provide parent-child relationships for rows that have never been loaded.
+  Keeping such an ID selected does not automatically select its parent.
 
 :::
 

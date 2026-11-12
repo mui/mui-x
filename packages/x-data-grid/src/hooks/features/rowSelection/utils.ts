@@ -6,7 +6,7 @@ import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
 import { gridRowSelectionManagerSelector } from './gridRowSelectionSelector';
 import { gridRowsLookupSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { createSelector } from '../../../utils/createSelector';
-import type { GridGroupNode, GridRowId, GridRowTreeConfig } from '../../../models/gridRows';
+import type { GridRowId } from '../../../models/gridRows';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type {
   GridPrivateApiCommunity,
@@ -17,6 +17,12 @@ import type { RowSelectionManager } from '../../../models/gridRowSelectionManage
 import type { GridRowParams } from '../../../models/params/gridRowParams';
 import { gridColumnDefinitionsSelector } from '../columns';
 import { gridRowSelectableSelector } from '../../core/gridPropsSelectors';
+import {
+  gridRetainedRowSelectionLookupSelector,
+  gridRowSelectionRetentionSelector,
+  gridRowSelectionTreeSelector,
+} from './gridRowSelectionRetention';
+import type { GridRowSelectionTree } from './gridRowSelectionRetention';
 
 export const ROW_SELECTION_PROPAGATION_DEFAULT: GridRowSelectionPropagation = {
   parents: true,
@@ -30,12 +36,33 @@ function getGridRowGroupSelectableDescendants(
   const rowTree = gridRowTreeSelector(apiRef);
   const sortedRowIds = gridSortedRowIdsSelector(apiRef);
   const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
-  const groupNode = rowTree[groupId];
-  if (!groupNode || groupNode.type !== 'group') {
-    return [];
+  const descendants: GridRowId[] = [];
+
+  if (gridRowSelectionRetentionSelector(apiRef).size > 0) {
+    const selectionTree = gridRowSelectionTreeSelector(apiRef);
+    const visit = (id: GridRowId) => {
+      if (filteredRowsLookup[id] === false) {
+        return;
+      }
+      if (apiRef.current.isRowSelectable(id)) {
+        descendants.push(id);
+      }
+      const node = selectionTree[id];
+      if (node?.type === 'group') {
+        node.children.forEach(visit);
+      }
+    };
+    const selectionGroup = selectionTree[groupId];
+    if (selectionGroup?.type === 'group') {
+      selectionGroup.children.forEach(visit);
+    }
+    return descendants;
   }
 
-  const descendants: GridRowId[] = [];
+  const groupNode = rowTree[groupId];
+  if (!groupNode || groupNode.type !== 'group') {
+    return descendants;
+  }
 
   const startIndex = sortedRowIds.findIndex((id) => id === groupId) + 1;
   for (
@@ -58,6 +85,7 @@ export const checkboxPropsSelector = createSelector(
   gridRowSelectionManagerSelector,
   gridRowsLookupSelector,
   gridRowSelectableSelector,
+  gridRetainedRowSelectionLookupSelector,
   (
     columns,
     rowTree,
@@ -65,6 +93,7 @@ export const checkboxPropsSelector = createSelector(
     rowSelectionManager,
     rowsLookup,
     isRowSelectable,
+    retainedSelection,
     {
       groupId,
       autoSelectParents,
@@ -94,8 +123,8 @@ export const checkboxPropsSelector = createSelector(
       };
     }
 
-    let hasSelectedDescendant = false;
-    let hasUnSelectedDescendant = false;
+    let hasSelectedDescendant = retainedSelection.get(groupId)?.selected ?? false;
+    let hasUnSelectedDescendant = retainedSelection.get(groupId)?.unselected ?? false;
 
     const traverseDescendants = (itemToTraverseId: GridRowId) => {
       if (
@@ -159,13 +188,13 @@ export function isMultipleRowSelectionEnabled(
   return !props.disableMultipleRowSelection;
 }
 
-const getRowNodeParents = (tree: GridRowTreeConfig, id: GridRowId) => {
+const getRowNodeParents = (tree: GridRowSelectionTree, id: GridRowId) => {
   const parents: GridRowId[] = [];
 
   let parent: GridRowId | null = id;
 
   while (parent != null && parent !== GRID_ROOT_GROUP_ID) {
-    const node = tree[parent] as GridGroupNode;
+    const node: GridRowSelectionTree[GridRowId] = tree[parent];
     if (!node) {
       return parents;
     }
@@ -176,7 +205,7 @@ const getRowNodeParents = (tree: GridRowTreeConfig, id: GridRowId) => {
 };
 
 const getFilteredRowNodeSiblings = (
-  tree: GridRowTreeConfig,
+  tree: GridRowSelectionTree,
   filteredRows: Record<GridRowId, boolean>,
   id: GridRowId,
 ) => {
@@ -190,14 +219,17 @@ const getFilteredRowNodeSiblings = (
     return [];
   }
 
-  const parentNode = tree[parent] as GridGroupNode;
+  const parentNode = tree[parent];
+  if (parentNode?.type !== 'group') {
+    return [];
+  }
 
   return parentNode.children.filter((childId) => childId !== id && filteredRows[childId] !== false);
 };
 
 export const findRowsToSelect = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  tree: GridRowTreeConfig,
+  tree: GridRowSelectionTree,
   selectedRow: GridRowId,
   autoSelectDescendants: boolean,
   autoSelectParents: boolean,
@@ -258,7 +290,7 @@ export const findRowsToSelect = (
       });
 
       if (siblings.length === 0 || allSelectableSiblingsSelected) {
-        const rowNode = tree[rowId] as GridGroupNode;
+        const rowNode = tree[rowId];
         const parent = rowNode?.parent;
         if (
           parent != null &&
@@ -282,7 +314,7 @@ export const findRowsToSelect = (
 
 export const findRowsToDeselect = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  tree: GridRowTreeConfig,
+  tree: GridRowSelectionTree,
   deselectedRow: GridRowId,
   autoSelectDescendants: boolean,
   autoSelectParents: boolean,
