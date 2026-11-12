@@ -670,33 +670,6 @@ export default defineConfig(
   ],
 
   {
-    // The Scheduler reads its dates with BaseTemporal and the timezone helpers of `plain-date-utils`.
-    // A separate rule from `no-restricted-imports`, whose options per package it would replace.
-    files: [
-      `packages/x-scheduler{,-*}/**/*${EXTENSION_TS}`,
-      `test/utils/scheduler/**/*${EXTENSION_TS}`,
-    ],
-    rules: {
-      '@typescript-eslint/no-restricted-imports': [
-        'error',
-        {
-          patterns: [
-            {
-              group: [
-                '@base-ui/react/internals/temporal*',
-                'date-fns',
-                'date-fns/*',
-                '@date-fns/*',
-              ],
-              message:
-                'The Scheduler has no date adapter: use `BaseTemporal` and the helpers of `plain-date-utils`.',
-            },
-          ],
-        },
-      ],
-    },
-  },
-  {
     // TODO: typescript namespaces found to be harmful. Refactor to different patterns. More info: https://github.com/mui/mui-x/pull/19071
     files: [
       `packages/x-scheduler/src/**/*${EXTENSION_TS}`,
