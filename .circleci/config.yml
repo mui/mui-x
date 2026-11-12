@@ -246,20 +246,15 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Choose the benchmarks
-          # On the base branch, every chart's benchmark file; on a pull request, the smoke file and the
-          # files of the charts it changes, Pro and Premium variants included. Without charts changes,
-          # the job stops here.
+          name: Skip when no charts changes
           command: |
             set -e
             BASE="${BASE_BRANCH:-master}"
             if [ "$CIRCLE_BRANCH" = "$BASE" ] || [ "$CIRCLE_BRANCH" = "next" ]; then
-              ON_BASE=true
               RANGE="HEAD~1...HEAD"
               # So that the baseline below is the previous commit, not where this branch forked.
               BASE="$CIRCLE_BRANCH"
             else
-              ON_BASE=false
               # Full history: the baseline below is where the branch forked.
               git fetch --no-tags origin "$BASE"
               RANGE="origin/$BASE...HEAD"
@@ -273,30 +268,8 @@ jobs:
               circleci-agent step halt
               exit 0
             fi
-            echo "Relevant changes:"
+            echo "Relevant changes; running benchmarks:"
             echo "$CHANGED"
-            if [ "$ON_BASE" = true ]; then
-              FILTERS="charts/"
-            else
-              FILTERS="smoke/"
-              # A chart's benchmark folder is named after its source folder.
-              CHARTS=$(echo "$CHANGED" | sed -n \
-                -e 's#^packages/x-charts[^/]*/src/\([^/]*\)/.*#\1#p' \
-                -e 's#^test/benchmark/src/charts/\([^/]*\)/.*#\1#p')
-              # A change to the WebGL helpers runs every chart that uses them.
-              if echo "$CHANGED" | grep -q '^test/benchmark/src/charts/utils/'; then
-                CHARTS="$CHARTS $(grep -l benchWebGLInteraction test/benchmark/src/charts/*/scenarios.tsx \
-                  | sed 's#^test/benchmark/src/charts/\([^/]*\)/.*#\1#')"
-              fi
-              CHARTS=$(echo $CHARTS | tr ' ' '\n' | sort -u)
-              for CHART in $CHARTS; do
-                if ls test/benchmark/src/charts/"$CHART"*/*.bench.tsx > /dev/null 2>&1; then
-                  FILTERS="$FILTERS charts/$CHART"
-                fi
-              done
-            fi
-            echo "Benchmark files: $FILTERS"
-            echo "$FILTERS" > .benchmark-filters
             echo "$BASE" > .benchmark-base-branch
       - install-deps
       - run:
@@ -314,8 +287,8 @@ jobs:
       - run:
           name: Run the benchmarks
           no_output_timeout: 30m
-          # The files chosen above, by path. The run builds and packs both sides itself.
-          command: pnpm test:benchmark $(cat .benchmark-filters) --baseline "$(cat .benchmark-baseline-sha)"
+          # Every chart's file. The run builds and packs both sides itself.
+          command: pnpm test:benchmark charts/ --baseline "$(cat .benchmark-baseline-sha)"
       - run:
           name: Upload the benchmark report
           # Also after a failed run, so the comment says what happened.

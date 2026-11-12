@@ -25,12 +25,9 @@ The run builds the packages itself (`pnpm release:build`), writes `.benchmark/re
 
 ## In CI
 
-`test_charts_benchmark` runs when the charts packages, this folder or the CircleCI config change:
+`test_charts_benchmark` runs every chart's file (`charts/`) when the charts packages, this folder or the CircleCI config change. On master, it compares each commit against its parent; on a pull request, against where the branch forked.
 
-- on master, every chart's file (`charts/`);
-- on a pull request, the smoke file, plus the files of the charts whose source folder it changes: a change in `packages/x-charts*/src/LineChart/` runs `charts/LineChart`, which includes `LineChartPro`. A change to shared code runs the smoke file only, except for the WebGL helpers in `src/charts/utils/`, which also run every chart that uses them.
-
-The smoke cases keep their names, so on the dashboard they read as the same benchmarks as in their chart's file.
+The smoke file isn't run in CI; it's a quicker local check. Its cases keep their names, so they read as the same benchmarks as in their chart's file.
 
 ## Add a benchmark
 

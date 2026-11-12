@@ -20,8 +20,7 @@ import { scatterChartPro } from '../charts/ScatterChartPro/scenarios';
 import { sparkLineChartGrid } from '../charts/SparkLineChart/scenarios';
 
 // One benchmark per kind of chart, all in one file: the runner loads the file's page once per round
-// and samples each of them there. A pull request runs this file, and the files of the charts it
-// changes; master runs every chart's file instead.
+// and samples each of them there. It's a quicker local check; CI runs every chart's file instead.
 
 // The smoke benchmarks are there to catch big regressions. A round of the whole file is long, so
 // they get few rounds: they alarm past 10%, which those rounds can settle, rather than the default
