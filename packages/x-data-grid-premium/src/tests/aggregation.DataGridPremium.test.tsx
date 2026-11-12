@@ -11,6 +11,7 @@ import { fireUserEvent } from 'test/utils/fireUserEvent';
 import {
   DataGridPremium,
   GRID_AGGREGATION_FUNCTIONS,
+  GRID_ROOT_GROUP_ID,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import type {
@@ -1377,6 +1378,118 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       const tagsValues = getColumnValues(1);
       expect(tagsValues[tagsValues.length - 1]).to.equal('3');
+    });
+  });
+
+  describe('prop: onAggregationLookupChange', () => {
+    it('should be called with the aggregation lookup once the aggregation is applied', async () => {
+      const onAggregationLookupChange = vi.fn();
+      await render(
+        <Test
+          initialState={{ aggregation: { model: { id: 'sum' } } }}
+          onAggregationLookupChange={onAggregationLookupChange}
+        />,
+      );
+
+      await waitFor(() => {
+        expect(onAggregationLookupChange.mock.calls.length).to.equal(1);
+      });
+      const lookup = onAggregationLookupChange.mock.lastCall![0];
+      expect(lookup[GRID_ROOT_GROUP_ID].id.value).to.equal(15);
+      expect(lookup).to.deep.equal(apiRef.current!.state.aggregation.lookup);
+    });
+
+    it('should be called with the new aggregation lookup when the aggregated values change', async () => {
+      const onAggregationLookupChange = vi.fn();
+      const { setProps } = await render(
+        <Test
+          initialState={{ aggregation: { model: { id: 'sum' } } }}
+          onAggregationLookupChange={onAggregationLookupChange}
+        />,
+      );
+      await waitFor(() => {
+        expect(onAggregationLookupChange.mock.calls.length).to.equal(1);
+      });
+
+      setProps({
+        filterModel: {
+          items: [{ field: 'category1', operator: 'contains', value: 'Cat B' }],
+        },
+      });
+
+      await waitFor(() => {
+        expect(onAggregationLookupChange.mock.calls.length).to.equal(2);
+      });
+      expect(onAggregationLookupChange.mock.lastCall![0][GRID_ROOT_GROUP_ID].id.value).to.equal(5);
+    });
+
+    it('should not be called again when the aggregation is re-applied without changing the values', async () => {
+      const onAggregationLookupChange = vi.fn();
+      const { setProps } = await render(
+        <Test
+          initialState={{ aggregation: { model: { id: 'sum' } } }}
+          onAggregationLookupChange={onAggregationLookupChange}
+        />,
+      );
+      await waitFor(() => {
+        expect(onAggregationLookupChange.mock.calls.length).to.equal(1);
+      });
+
+      const onAggregationLookupSet = vi.fn();
+      apiRef.current!.subscribeEvent('aggregationLookupSet', onAggregationLookupSet);
+
+      // Every row passes the filter, so the aggregated values stay the same.
+      setProps({
+        filterModel: {
+          items: [{ field: 'category1', operator: 'contains', value: 'Cat' }],
+        },
+      });
+
+      await waitFor(() => {
+        expect(onAggregationLookupSet.mock.calls.length).to.equal(1);
+      });
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '15' /* Agg */]);
+      expect(onAggregationLookupChange.mock.calls.length).to.equal(1);
+    });
+
+    it('should be called with an empty lookup when the aggregation is removed', async () => {
+      const onAggregationLookupChange = vi.fn();
+      const { setProps } = await render(
+        <Test
+          aggregationModel={{ id: 'sum' }}
+          onAggregationLookupChange={onAggregationLookupChange}
+        />,
+      );
+      await waitFor(() => {
+        expect(onAggregationLookupChange.mock.calls.length).to.equal(1);
+      });
+
+      setProps({ aggregationModel: {} });
+
+      await waitFor(() => {
+        expect(onAggregationLookupChange.mock.calls.length).to.equal(2);
+      });
+      expect(onAggregationLookupChange.mock.lastCall![0]).to.deep.equal({});
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
+    });
+
+    it('should not be called when there is nothing to aggregate', async () => {
+      const onAggregationLookupChange = vi.fn();
+      const { setProps } = await render(
+        <Test onAggregationLookupChange={onAggregationLookupChange} />,
+      );
+
+      setProps({
+        filterModel: {
+          items: [{ field: 'category1', operator: 'contains', value: 'Cat B' }],
+        },
+      });
+
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['5']);
+      });
+      await microtasks();
+      expect(onAggregationLookupChange.mock.calls.length).to.equal(0);
     });
   });
 

@@ -302,6 +302,26 @@ In the example below, all the aggregation functions are rendered with the rating
 
 {{"demo": "AggregationRenderCell.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Reading the aggregated values
+
+Use the `onAggregationLookupChange()` prop to read the aggregated values outside of the Data Grid, for example to display them in a chart or in a summary.
+The callback is called with the aggregation lookup each time the aggregated values are updated, and with an empty lookup when the aggregation is removed.
+
+The lookup is indexed by row ID and then by field.
+The values of the top-level footer are stored under the `GRID_ROOT_GROUP_ID` key, and the values of each group under the ID of its grouping row:
+
+```tsx
+const handleAggregationLookupChange = (lookup: GridAggregationLookup) => {
+  const totalGross = lookup[GRID_ROOT_GROUP_ID]?.gross?.value;
+};
+```
+
+You can also subscribe to the `aggregationLookupChange` [event](/x/react-data-grid/events/) or read the current lookup at any time with the `gridAggregationLookupSelector()` selector.
+
+In the demo below, the total gross shown above the Data Grid is read from the aggregation lookup and follows the filters:
+
+{{"demo": "AggregationLookupChange.js", "bg": "inline"}}
+
 ## Selectors
 
 {{"component": "modules/components/SelectorsDocs.js", "category": "Aggregation"}}

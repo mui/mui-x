@@ -433,6 +433,17 @@
         "activeChartId": { "name": "activeChartId", "description": "The new active chart id." }
       }
     },
+    "onAggregationLookupChange": {
+      "description": "Callback fired when the aggregated values are updated.",
+      "typeDescriptions": {
+        "lookup": {
+          "name": "lookup",
+          "description": "The aggregated values, indexed by row id and field."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
+      }
+    },
     "onAggregationModelChange": {
       "description": "Callback fired when the row grouping model changes.",
       "typeDescriptions": {
