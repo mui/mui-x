@@ -1,16 +1,16 @@
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
-import { adapter, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
+import { addHours, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { describe } from 'vitest';
-import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/adapter';
+import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
 
 describe('<CalendarGrid.DayEventPlaceholder />', () => {
   const { render } = createSchedulerRenderer();
 
-  const eventStart = processDate(adapter.now('default'), adapter, 'default');
-  const eventEnd = processDate(adapter.addHours(eventStart.value, 1), adapter, 'default');
-  const cellDate = buildTemporalPlainDate(adapter, eventStart.value, 'default');
+  const eventStart = processDate(new Date(), 'default');
+  const eventEnd = processDate(addHours(eventStart.value, 1), 'default');
+  const cellDate = toPlainDate(eventStart.value.getTime(), 'default');
 
   describeConformance(
     <CalendarGrid.DayEventPlaceholder start={eventStart} end={eventEnd} />,

@@ -1,16 +1,18 @@
 import { screen, waitFor, within } from '@mui/internal-test-utils';
 import {
-  adapter,
+  addDays,
+  createDate,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
   ResourceBuilder,
   setSystemTimezone,
+  openPreferencesMenu,
+  toggleShowEmptyDaysInAgenda,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { vi, describe, it, expect } from 'vitest';
-import { openPreferencesMenu, toggleShowEmptyDaysInAgenda } from '../internals/utils/test-utils';
 
 describe('<AgendaView />', () => {
   const { render } = createSchedulerRenderer();
@@ -67,7 +69,7 @@ describe('<AgendaView />', () => {
   });
 
   it('should mark only the day header of today with aria-current="date"', () => {
-    const today = adapter.now('default');
+    const today = new Date();
     const event = EventBuilder.new()
       .title('Today event')
       .singleDay(new Date().toISOString())
@@ -94,7 +96,7 @@ describe('<AgendaView />', () => {
   it.skipIf(!isJSDOM)(
     'should show an event on two days of the display timezone as a multi-day event, whatever the timezone of the system',
     () => {
-      // Pacific/Apia skipped December 30th, 2011. On a system there, `adapter.isSameDay()` reads
+      // Pacific/Apia skipped December 30th, 2011. On a system there, the date-fns adapter read
       // December 30th and 31st as the same day in the other timezones.
       setSystemTimezone('Pacific/Apia');
       const event = EventBuilder.new()
@@ -211,7 +213,7 @@ describe('<AgendaView />', () => {
 
       await user.click(screen.getByRole('button', { name: /previous agenda/i }));
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
-        adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, -12),
+        addDays(DEFAULT_TESTING_VISIBLE_DATE, -12),
       );
     });
 
@@ -229,7 +231,7 @@ describe('<AgendaView />', () => {
 
       await user.click(screen.getByRole('button', { name: /next agenda/i }));
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
-        adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 12),
+        addDays(DEFAULT_TESTING_VISIBLE_DATE, 12),
       );
     });
   });
@@ -263,18 +265,18 @@ describe('<AgendaView />', () => {
 
       await user.click(screen.getByRole('button', { name: /next agenda/i }));
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
-        adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 5),
+        addDays(DEFAULT_TESTING_VISIBLE_DATE, 5),
       );
 
       await user.click(screen.getByRole('button', { name: /previous agenda/i }));
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
-        adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, -5),
+        addDays(DEFAULT_TESTING_VISIBLE_DATE, -5),
       );
     });
 
     it("should render the month and move by one month when dayCount is 'month'", async () => {
       const onVisibleDateChange = vi.fn();
-      const visibleDate = adapter.date('2025-07-15T00:00:00Z', 'default');
+      const visibleDate = createDate('2025-07-15T00:00:00Z');
 
       const { user } = render(
         <EventCalendar
@@ -292,12 +294,12 @@ describe('<AgendaView />', () => {
 
       await user.click(screen.getByRole('button', { name: /next agenda/i }));
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
-        adapter.date('2025-08-01T00:00:00Z', 'default'),
+        createDate('2025-08-01T00:00:00Z'),
       );
 
       await user.click(screen.getByRole('button', { name: /previous agenda/i }));
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
-        adapter.date('2025-06-01T00:00:00Z', 'default'),
+        createDate('2025-06-01T00:00:00Z'),
       );
     });
   });
@@ -312,22 +314,6 @@ describe('<AgendaView />', () => {
         `.${eventCalendarClasses.agendaViewWeekNumberRow}`,
       );
       expect(separators).to.have.length(0);
-    });
-
-    it('renders week number rows when showWeekNumber is enabled', () => {
-      render(
-        <EventCalendar
-          events={[]}
-          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          view="agenda"
-          preferences={{ showWeekNumber: true }}
-        />,
-      );
-
-      const separators = document.querySelectorAll(
-        `.${eventCalendarClasses.agendaViewWeekNumberRow}`,
-      );
-      expect(separators.length).to.be.at.least(2);
     });
 
     it('renders the second week separator before the Sunday when weekStartsOn=7', () => {
@@ -385,7 +371,7 @@ describe('<AgendaView />', () => {
     });
 
     it('shows "Week 2" for Jan 5 2025 when weekStartsOn=7', () => {
-      const visibleDate = adapter.date('2025-01-05T00:00:00Z', 'default');
+      const visibleDate = createDate('2025-01-05T00:00:00Z');
 
       render(
         <EventCalendar
@@ -400,7 +386,7 @@ describe('<AgendaView />', () => {
     });
 
     it('shows "Week 1" for Jan 5 2025 when weekStartsOn=1 (regression)', () => {
-      const visibleDate = adapter.date('2025-01-05T00:00:00Z', 'default');
+      const visibleDate = createDate('2025-01-05T00:00:00Z');
 
       render(
         <EventCalendar

@@ -10,7 +10,6 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import {
   BaseTemporal,
-  createAdapterDate,
   createEndOfPlainDate,
   formatMonthAndDayOfMonth,
   formatWeekday,
@@ -125,7 +124,7 @@ export type RangeFormKey = (typeof RANGE_FORM_KEYS)[number];
  * range in its current mode reads (the all-day branch of `computeRange` ignores
  * the time fields). Toggling `allDay` re-derives both bounds.
  */
-export function getEditedRangeBounds(
+function getEditedRangeBounds(
   dirtyValues: Record<string, unknown>,
   allDay: boolean,
 ): { startEdited: boolean; endEdited: boolean } {
@@ -401,14 +400,12 @@ export function getRecurrenceUntil(
   eventTimezone: TemporalTimezone,
 ): TemporalSupportedObject {
   const plainDate = readDateField(rawDate);
-  return plainDate == null
-    ? createAdapterDate(NaN)
-    : createEndOfPlainDate(plainDate, eventTimezone);
+  return plainDate == null ? new Date(NaN) : createEndOfPlainDate(plainDate, eventTimezone);
 }
 
 /**
  * The canonical IANA identifier of a timezone; `default` and `system` resolve to the system
- * timezone, as the adapter does.
+ * timezone.
  */
 function getTimezoneId(timezone: TemporalTimezone): string {
   const id =

@@ -1982,31 +1982,25 @@ importers:
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@date-fns/tz':
-        specifier: 'catalog:'
-        version: 1.5.0
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
-      date-fns:
-        specifier: 'catalog:'
-        version: 4.4.0
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
-      use-sync-external-store:
-        specifier: 'catalog:'
-        version: 1.7.0(react@19.3.1)
     devDependencies:
+      '@date-fns/tz':
+        specifier: 'catalog:'
+        version: 1.5.0
       '@mui/internal-test-utils':
         specifier: 'catalog:'
         version: 2.1.1-canary.5(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@playwright/test@1.65.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(@vitest/utils@5.1.0)(chai@6.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vite@8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.0)
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
-      '@types/use-sync-external-store':
+      date-fns:
         specifier: 'catalog:'
-        version: 1.7.0
+        version: 4.4.0
       react:
         specifier: 'catalog:'
         version: 19.3.1

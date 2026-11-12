@@ -7,7 +7,6 @@ import {
   dependenciesStoreFeature,
   schedulerRecurringEventsPlugin,
 } from '@mui/x-scheduler-internals-premium/internals';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 
 /**
  * Calendar store that receives the recurring events feature.
@@ -16,14 +15,8 @@ export class EventCalendarPremiumStoreWithFeatures<
   TEvent extends object,
   TResource extends object,
 > extends EventCalendarPremiumStore<TEvent, TResource> {
-  public constructor(
-    parameters: EventCalendarPremiumStoreParameters<TEvent, TResource>,
-    adapter: Adapter,
-  ) {
-    super(
-      { storeFeatures: { recurringEvents: schedulerRecurringEventsPlugin }, ...parameters },
-      adapter,
-    );
+  public constructor(parameters: EventCalendarPremiumStoreParameters<TEvent, TResource>) {
+    super({ storeFeatures: { recurringEvents: schedulerRecurringEventsPlugin }, ...parameters });
   }
 }
 
@@ -34,20 +27,14 @@ export class EventTimelinePremiumStoreWithFeatures<
   TEvent extends object,
   TResource extends object,
 > extends EventTimelinePremiumStore<TEvent, TResource> {
-  public constructor(
-    parameters: EventTimelinePremiumStoreParameters<TEvent, TResource>,
-    adapter: Adapter,
-  ) {
-    super(
-      {
-        storeFeatures: {
-          recurringEvents: schedulerRecurringEventsPlugin,
-          dependencies: dependenciesStoreFeature,
-        },
-        ...parameters,
+  public constructor(parameters: EventTimelinePremiumStoreParameters<TEvent, TResource>) {
+    super({
+      storeFeatures: {
+        recurringEvents: schedulerRecurringEventsPlugin,
+        dependencies: dependenciesStoreFeature,
       },
-      adapter,
-    );
+      ...parameters,
+    });
   }
 }
 

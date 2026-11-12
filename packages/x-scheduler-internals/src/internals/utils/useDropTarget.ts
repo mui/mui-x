@@ -23,7 +23,6 @@ import {
   schedulerOtherSelectors,
 } from '../../scheduler-selectors';
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
-import { createAdapterDate } from './plain-date-utils/adapter';
 import type { StandaloneEvent } from '../../standalone-event';
 import { getPrimaryResourceId } from './event-utils';
 
@@ -252,10 +251,10 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
     additionalChanges.allDay !== (originalOccurrence.allDay ?? false);
   const changes: SchedulerEventUpdatedProperties = { id: eventId };
   if (allDayToggled || originalOccurrence.displayTimezone.start.timestamp !== start) {
-    changes.start = createAdapterDate(start);
+    changes.start = new Date(start);
   }
   if (allDayToggled || originalOccurrence.displayTimezone.end.timestamp !== end) {
-    changes.end = createAdapterDate(end);
+    changes.end = new Date(end);
   }
 
   // If `undefined`, we want to set the event resource to `undefined` (no resource).
@@ -331,8 +330,8 @@ function applyExternalDragOccurrencePlaceholder(
   addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>,
 ) {
   const event = {
-    start: createAdapterDate(placeholder.start),
-    end: createAdapterDate(placeholder.end),
+    start: new Date(placeholder.start),
+    end: new Date(placeholder.end),
     ...placeholder.eventData,
   };
 

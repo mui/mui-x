@@ -39,32 +39,39 @@ export interface MessageListRootHandle {
 export interface MessageListRootSlots {
   /**
    * The component that renders the message list.
+   * @default ScrollRoot (Base UI ScrollArea.Root wrapper); a styled 'div' in `ChatMessageList`
    */
   messageList: React.ElementType;
   /**
    * The component that renders the message list scroller.
+   * @default ScrollViewport (Base UI ScrollArea.Viewport wrapper), or 'div' when `slots.messageList` is set; a styled 'div' in `ChatMessageList`
    */
   messageListScroller: React.ElementType;
   /**
    * The component that renders the message list content.
+   * @default 'div'
    */
   messageListContent: React.ElementType;
   /**
    * The component that renders the message list overlay.
+   * @default 'div'
    */
   messageListOverlay: React.ElementType;
   /**
    * The component that renders the message list scrollbar.
+   * @default ScrollScrollbar (Base UI ScrollArea.Scrollbar wrapper); not rendered when `slots.messageList` is set, as in `ChatMessageList`
    */
   messageListScrollbar: React.ElementType;
   /**
    * The component that renders the message list scrollbar thumb.
+   * @default ScrollThumb (Base UI ScrollArea.Thumb wrapper); not rendered when `slots.messageList` is set, as in `ChatMessageList`
    */
   messageListScrollbarThumb: React.ElementType;
   /**
    * The visually-hidden `role="status"` element announcing streaming
    * transitions ("Assistant is responding" / "Response complete") to screen
    * readers. Pass `null`-rendering component to silence the announcements.
+   * @default 'div'
    */
   messageListStatus: React.ElementType;
 }

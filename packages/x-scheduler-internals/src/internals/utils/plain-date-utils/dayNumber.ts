@@ -1,4 +1,9 @@
 /**
+ * The number of milliseconds of a minute.
+ */
+export const MS_PER_MINUTE = 60_000;
+
+/**
  * The number of milliseconds of a day without a DST transition.
  */
 export const MS_PER_DAY = 86_400_000;

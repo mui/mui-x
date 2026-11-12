@@ -1,36 +1,36 @@
 import type { EventCalendarState as State } from '../use-event-calendar';
-import type { SchedulerProcessedDate } from '../models';
+import type { SchedulerProcessedDay } from '../models';
+import type { BaseTemporal } from '../internals/utils/base-temporal';
+import { getDayNumber } from '../internals/utils/plain-date-utils/plainDate';
 import { toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
 
-// These selectors run for every cell while dragging, so they compare timestamps and day numbers,
-// which are cheaper than the adapter's comparison methods and than plain dates.
+// These selectors run for every cell while dragging, so they compare timestamps and day numbers.
 
-// The placeholder and the bounds of the rows and columns are timestamps read in the display timezone.
-function getDayNumber(state: State, timestamp: number): number {
-  return toLocalDayNumber(timestamp, state.displayTimezone);
+/** Whether the timestamp falls on the plain date in the display timezone. */
+function isOnPlainDate(state: State, timestamp: number, plainDate: BaseTemporal.PlainDate) {
+  return getDayNumber(plainDate) === toLocalDayNumber(timestamp, state.displayTimezone);
 }
 
 export const eventCalendarOccurrencePlaceholderSelectors = {
-  placeholderInDayCell: (state: State, day: SchedulerProcessedDate, rowStart: number) => {
+  placeholderInDayCell: (state: State, day: SchedulerProcessedDay, rowStart: number) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder === null || placeholder.surfaceType !== 'day-grid' || placeholder.isHidden) {
       return null;
     }
 
-    const dayNumber = getDayNumber(state, day.timestamp);
-    if (dayNumber === getDayNumber(state, placeholder.start)) {
+    if (isOnPlainDate(state, placeholder.start, day.plainDate)) {
       return placeholder;
     }
 
-    // A placeholder starting in a previous row also renders from the first day of this one.
-    if (dayNumber === getDayNumber(state, rowStart)) {
-      // Inclusive, in either order, like the adapter's `isWithinRange()`.
-      if (
-        Math.min(placeholder.start, placeholder.end) <= rowStart &&
-        rowStart <= Math.max(placeholder.start, placeholder.end)
-      ) {
-        return placeholder;
-      }
+    // A placeholder starting in a previous row also renders from the first day of this one, when the
+    // row starts within it (inclusive, in either order). The range is checked first, as it rules out
+    // most cells.
+    if (
+      Math.min(placeholder.start, placeholder.end) <= rowStart &&
+      rowStart <= Math.max(placeholder.start, placeholder.end) &&
+      isOnPlainDate(state, rowStart, day.plainDate)
+    ) {
+      return placeholder;
     }
 
     return null;
@@ -47,26 +47,28 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
 
     return placeholder;
   },
-  isCreatingInDayCell: (state: State, day: SchedulerProcessedDate) => {
+  isCreatingInDayCell: (state: State, day: SchedulerProcessedDay) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder?.surfaceType !== 'day-grid' || placeholder.type !== 'creation') {
       return false;
     }
-    return getDayNumber(state, day.timestamp) === getDayNumber(state, placeholder.start);
+    return isOnPlainDate(state, placeholder.start, day.plainDate);
   },
-  isCreatingInTimeRange: (state: State, dayStart: number, dayEnd: number) => {
+  isCreatingInTimeRange: (
+    state: State,
+    plainDate: BaseTemporal.PlainDate,
+    dayStart: number,
+    dayEnd: number,
+  ) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder?.surfaceType !== 'time-grid' || placeholder.type !== 'creation') {
       return false;
     }
 
-    if (getDayNumber(state, placeholder.start) !== getDayNumber(state, dayStart)) {
-      return false;
-    }
-
-    const startsBeforeEnd = placeholder.start < dayEnd;
-    const endsAfterStart = placeholder.end > dayStart;
-
-    return startsBeforeEnd && endsAfterStart;
+    return (
+      placeholder.start < dayEnd &&
+      placeholder.end > dayStart &&
+      isOnPlainDate(state, placeholder.start, plainDate)
+    );
   },
 };

@@ -1,28 +1,27 @@
-import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
-import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
-import type { Adapter } from '../../use-adapter/useAdapter.types';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type { TemporalSupportedObject, SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import type { BaseTemporal } from './base-temporal';
 import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
 import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import type { WeekInfo } from './date-locale';
 import { toWallClockIsoString } from './plain-date-utils/timeZone';
+import { isInstantString } from './plain-date-utils/date';
 
 /**
  * Converts a `TemporalSupportedObject` back to a string, respecting the
- * original date format: instant strings (ending with `Z`) stay as UTC ISO
- * strings, while wall-time strings (no `Z`) are formatted in the event's
- * data timezone without the `Z` suffix.
+ * original date format: instant strings (ending with `Z` or an offset) become UTC ISO
+ * strings, while wall-time strings are formatted in the event's data timezone
+ * without the `Z` suffix.
  */
 export function dateToEventString(
-  adapter: Adapter,
   date: TemporalSupportedObject,
   originalString: string,
   dataTimezone: TemporalTimezone,
 ): string {
-  if (originalString.endsWith('Z')) {
-    return new Date(adapter.getTime(date)).toISOString();
+  if (isInstantString(originalString)) {
+    return new Date(date.getTime()).toISOString();
   }
-  return toWallClockIsoString(adapter.getTime(date), dataTimezone);
+  return toWallClockIsoString(date.getTime(), dataTimezone);
 }
 
 /**
@@ -32,14 +31,12 @@ export function dateToEventString(
 export function getOccurrenceEnd({
   event,
   occurrenceStart,
-  adapter,
 }: {
   event: SchedulerProcessedEvent;
   occurrenceStart: TemporalSupportedObject;
-  adapter: Adapter;
 }): TemporalSupportedObject {
   const durationMs = event.dataTimezone.end.timestamp - event.dataTimezone.start.timestamp;
-  return adapter.addMilliseconds(occurrenceStart, durationMs);
+  return new Date(occurrenceStart.getTime() + durationMs);
 }
 
 function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {

@@ -213,12 +213,12 @@ function warnViewNotApplied(step: ViewStep, error: unknown) {
 /**
  * Applies the filtering or the sorting again, and returns whether it was applied. It runs inside
  * the hydration of the columns when a hydration published `columnsChange`, where a throw would
- * leave the pipe processing of the grid locked. After a type change, the core can fail to filter
- * or sort with a model made for the previous type: an operator that is gone (`>` on a `string`
- * column), values of the previous type (`isAnyOf` with numbers), or a `computedColDef` comparator
- * or operator written for one type. The core throws before it sets the state, so nothing changes:
- * the view keeps its rows and order, and the error comes at the next filtering or sorting, like
- * after the type change of a regular column. A step that fails logs a warning in development.
+ * skip the other listeners of the event and reach the caller. After a type change, the core can
+ * fail to filter or sort with a model made for the previous type: an operator that is gone (`>` on
+ * a `string` column), values of the previous type (`isAnyOf` with numbers), or a `computedColDef`
+ * comparator or operator written for one type. The core throws before it sets the state, so nothing
+ * changes: the view keeps its rows and order, and the error comes at the next filtering or sorting,
+ * like after the type change of a regular column. A step that fails logs a warning in development.
  * A regroup (`catchViewFailure`) fails when the filtering or the sorting of the rebuilt tree does,
  * or the tree creation, or another listener of its `rowsSet`: both are then applied again. Until
  * the next filtering that succeeds, the group rows can show stale or missing counts, and until the

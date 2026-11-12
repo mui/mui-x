@@ -465,6 +465,22 @@ export interface ChartsLocaleText {
     end: number;
   }) => string;
   /**
+   * The accessible name of the zoom slider handle that moves the start of the visible range.
+   * @param {object} params - The parameters for the label getter.
+   * @param {'x'|'y'} params.axisDirection - The direction of the zoomed axis.
+   * @param {string} [params.axisLabel] - The label of the zoomed axis, to tell the sliders of several axes apart.
+   * @returns {string} The localized accessible name of the handle.
+   */
+  zoomSliderStartLabel: (params: { axisDirection: 'x' | 'y'; axisLabel?: string }) => string;
+  /**
+   * The accessible name of the zoom slider handle that moves the end of the visible range.
+   * @param {object} params - The parameters for the label getter.
+   * @param {'x'|'y'} params.axisDirection - The direction of the zoomed axis.
+   * @param {string} [params.axisLabel] - The label of the zoomed axis, to tell the sliders of several axes apart.
+   * @returns {string} The localized accessible name of the handle.
+   */
+  zoomSliderEndLabel: (params: { axisDirection: 'x' | 'y'; axisLabel?: string }) => string;
+  /**
    * The description of a bar series item for accessibility purpose.
    * @param {object} params - The parameters for the description getter.
    * @param {number|null} params.value - The value of the bar item.

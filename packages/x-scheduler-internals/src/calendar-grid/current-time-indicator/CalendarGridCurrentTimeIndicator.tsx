@@ -8,7 +8,7 @@ import { useElementPositionInCollection } from '../../internals/utils/useElement
 import { CalendarGridCurrentTimeIndicatorCssVars } from './CalendarGridCurrentTimeIndicatorCssVars';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { schedulerNowSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
-import { createProcessedDate } from '../../internals/utils/plain-date-utils/adapter';
+import { createProcessedDate } from '../../internals/utils/plain-date-utils/date';
 import { moveTimestampToPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
 
 export const CalendarGridCurrentTimeIndicator = React.forwardRef(
