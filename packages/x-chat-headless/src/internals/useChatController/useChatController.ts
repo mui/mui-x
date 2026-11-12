@@ -224,9 +224,10 @@ export function useChatController<Cursor = string>({
     () =>
       createRealtimeActions({
         store: storeUnknown,
+        stopStreaming,
         conversationNavigationRequestIdRef,
       }),
-    [storeUnknown, conversationNavigationRequestIdRef],
+    [storeUnknown, stopStreaming, conversationNavigationRequestIdRef],
   );
 
   const {
@@ -331,6 +332,7 @@ export function useChatController<Cursor = string>({
         return;
       }
 
+      stopStreaming();
       void loadConversationMessages(nextActiveConversationId);
     },
   );

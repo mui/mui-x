@@ -840,6 +840,47 @@ describe('useChat', () => {
     expect(result.current.messages.map((message) => message.id)).toEqual(['c2-message']);
   });
 
+  it('aborts active streaming when the controlled activeConversationId changes', async () => {
+    const signals: AbortSignal[] = [];
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async ({ signal }) => {
+        signals.push(signal);
+        return createPendingStream();
+      }),
+      stop: vi.fn(),
+    });
+    const { Wrapper, setProps } = createProviderWrapper({
+      adapter,
+      activeConversationId: 'c1',
+    });
+    const { result, rerender } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    act(() => {
+      void result.current.sendMessage({ parts: [{ type: 'text', text: 'While streaming' }] });
+    });
+
+    await waitFor(() => {
+      expect(result.current.isStreaming).toBe(true);
+    });
+
+    setProps({ adapter, activeConversationId: 'c2' });
+    rerender();
+
+    await waitFor(() => {
+      expect(result.current.activeConversationId).toBe('c2');
+    });
+    expect(signals[0].aborted).toBe(true);
+    expect(adapter.stop).toHaveBeenCalledTimes(1);
+
+    // The new conversation accepts sends again.
+    await act(async () => {
+      void result.current.sendMessage({ parts: [{ type: 'text', text: 'In c2' }] });
+    });
+    await waitFor(() => {
+      expect(adapter.sendMessage).toHaveBeenCalledTimes(2);
+    });
+  });
+
   it('retries a user message by removing the previous assistant response and resending the original content', async () => {
     let attempt = 0;
     const adapter = createAdapter({

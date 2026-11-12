@@ -31,6 +31,7 @@ describe('createRealtimeActions', () => {
       const store = new ChatStore();
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
+        stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -40,10 +41,28 @@ describe('createRealtimeActions', () => {
       expect(store.state.messagesById.m1).toEqual(baseMessage);
     });
 
+    it('conversation-removed: stops streaming when the active conversation is removed', () => {
+      const store = new ChatStore({
+        initialConversations: [conversation1],
+        initialActiveConversationId: 'c1',
+      });
+      const stopStreaming = vi.fn();
+      const { handleRealtimeEvent } = createRealtimeActions({
+        store: asUnknown(store),
+        stopStreaming,
+        conversationNavigationRequestIdRef: { current: 0 },
+      });
+
+      handleRealtimeEvent({ type: 'conversation-removed', conversationId: 'c1' });
+
+      expect(stopStreaming).toHaveBeenCalledTimes(1);
+    });
+
     it('message-updated: updates existing message in store', () => {
       const store = new ChatStore({ initialMessages: [baseMessage] });
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
+        stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -57,6 +76,7 @@ describe('createRealtimeActions', () => {
       const store = new ChatStore();
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
+        stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -69,6 +89,7 @@ describe('createRealtimeActions', () => {
       const store = new ChatStore({ initialMessages: [baseMessage] });
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
+        stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -82,6 +103,7 @@ describe('createRealtimeActions', () => {
       const store = new ChatStore();
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
+        stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -95,6 +117,7 @@ describe('createRealtimeActions', () => {
       const store = new ChatStore({ initialConversations: [conversation1] });
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
+        stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -110,6 +133,7 @@ describe('createRealtimeActions', () => {
       const store = new ChatStore();
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
+        stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -122,6 +146,7 @@ describe('createRealtimeActions', () => {
       const store = new ChatStore({ initialConversations: [conversation1, conversation2] });
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
+        stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -140,6 +165,7 @@ describe('createRealtimeActions', () => {
 
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
+        stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -156,6 +182,7 @@ describe('createRealtimeActions', () => {
 
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
+        stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef,
       });
 
@@ -168,15 +195,18 @@ describe('createRealtimeActions', () => {
       const store = new ChatStore({ initialConversations: [conversation1, conversation2] });
       store.setActiveConversation('c2');
       const conversationNavigationRequestIdRef = { current: 0 };
+      const stopStreaming = vi.fn();
 
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
+        stopStreaming,
         conversationNavigationRequestIdRef,
       });
 
       handleRealtimeEvent({ type: 'conversation-removed', conversationId: 'c1' });
 
       expect(conversationNavigationRequestIdRef.current).toBe(0);
+      expect(stopStreaming).not.toHaveBeenCalled();
     });
 
     it('presence: updates participant isOnline status via applyPresenceUpdate', () => {
@@ -189,6 +219,7 @@ describe('createRealtimeActions', () => {
 
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
+        stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -208,6 +239,7 @@ describe('createRealtimeActions', () => {
 
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
+        stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -223,6 +255,7 @@ describe('createRealtimeActions', () => {
 
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
+        stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
@@ -273,6 +306,7 @@ describe('createRealtimeActions', () => {
       });
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
+        stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef,
       });
 
@@ -315,6 +349,7 @@ describe('createRealtimeActions', () => {
 
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),
+        stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
       });
 
