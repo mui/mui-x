@@ -90,11 +90,12 @@ const idIDDialog: SchedulerDialogTranslations = {
     `Berulang setiap minggu pada hari ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'bulan',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Tanggal ${dayNumber}`,
-  recurrenceMonthlyLastWeekAriaLabel: ({ weekdayName }) => `${weekdayName} terakhir dalam bulan`,
+  recurrenceMonthlyLastWeekAriaLabel: ({ weekdayName }) =>
+    `Hari ${weekdayName} terakhir dalam bulan`,
   recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `${weekdayName} terakhir`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Berulang setiap bulan pada tanggal ${dayNumber}`,
   recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekdayName }) =>
-    `${weekdayName} ke-${ord} dalam bulan`,
+    `Hari ${weekdayName} ke-${ord} dalam bulan`,
   recurrenceMonthlyWeekNumberLabel: ({ ord, weekdayName }) => `${weekdayName} ke-${ord}`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'Pada',
   recurrenceYearlyFrequencyLabel: 'tahun',
@@ -122,7 +123,7 @@ const idIDDialog: SchedulerDialogTranslations = {
   // Errors
   somethingWentWrongError: 'Terjadi kesalahan. Coba lagi.',
   eventNotLoadedError:
-    'Acara ini masih disimpan, sehingga perubahan tidak diterapkan. Coba lagi setelah tersimpan.',
+    'Acara ini sedang disimpan, sehingga perubahan tidak diterapkan. Coba lagi setelah tersimpan.',
   eventChangedWhileConfirmingError:
     'Acara ini berubah saat konfirmasi penghapusan terbuka, sehingga penghapusan tidak diterapkan. Coba hapus lagi.',
   datesNotWritableError: 'Tanggal ini tidak dapat diubah, sehingga perubahan tidak diterapkan.',
@@ -181,8 +182,8 @@ const idIDCalendar: SchedulerCalendarTranslations = {
   openMenu: 'Buka menu',
 
   // Preferences menu
-  amPm12h: '12 jam (1:00 PM)',
-  hour24h: '24 jam (13:00)',
+  amPm12h: '12 jam (1.00 PM)',
+  hour24h: '24 jam (13.00)',
   preferencesMenu: 'Preferensi',
   showWeekends: 'Tampilkan akhir pekan',
   showEmptyDaysInAgenda: 'Tampilkan hari kosong',
