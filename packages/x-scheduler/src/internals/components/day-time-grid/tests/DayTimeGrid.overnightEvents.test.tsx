@@ -233,16 +233,16 @@ describe('<DayTimeGrid /> - events crossing midnight', () => {
   // Browsers cannot change their timezone through process.env.TZ.
   it.skipIf(!isJSDOM).each([
     {
-      // Pacific/Apia skipped December 30th, 2011: on a system there, adding days with the getters of
-      // `Date` moves the dates of the other timezones by two days around it.
+      // Pacific/Apia skipped December 30th, 2011: on a system there, adding days with the date-fns
+      // adapter moved the dates of the other timezones by two days around it.
       systemTimezone: 'Pacific/Apia',
       displayTimezone: 'America/New_York',
       start: '2011-12-29T13:00:00Z',
       end: '2011-12-30T13:00:00Z',
     },
     {
-      // America/Santiago repeats the last hour of April 4th, 2026: on some systems, adding
-      // days with the getters of `Date` resolves 23:00 to its second occurrence, an hour after the end.
+      // America/Santiago repeats the last hour of April 4th, 2026: on some systems, adding days
+      // with the date-fns adapter resolved 23:00 to its second occurrence, an hour after the end.
       systemTimezone: 'America/New_York',
       displayTimezone: 'America/Santiago',
       start: '2026-04-04T02:00:00Z',

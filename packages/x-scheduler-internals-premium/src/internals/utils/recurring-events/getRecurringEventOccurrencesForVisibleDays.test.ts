@@ -294,8 +294,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const expand = (start: string, end: string) =>
         getRecurringEventOccurrencesForVisibleDays(
           event,
-          createDate(start).getTime(),
-          createDate(end).getTime(),
+          Date.parse(start),
+          Date.parse(end),
           'default',
         ).map((o) => o.displayTimezone.start.value.getDate());
 
@@ -887,7 +887,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const expand = (visibleStart: string) =>
         getRecurringEventOccurrencesForVisibleDays(
           event,
-          createDate(visibleStart).getTime(),
+          Date.parse(visibleStart),
           Date.parse('1993-08-25T00:00:00Z'),
           'Pacific/Kwajalein',
         ).map((o) => o.dataTimezone.start.key);

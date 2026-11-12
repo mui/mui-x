@@ -6,6 +6,7 @@ import {
 } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import { EVENT_TIMELINE_DEFAULT_LOCALE_TEXT } from '@mui/x-scheduler/internals';
+import { toLocalDayNumber } from '@mui/x-scheduler-internals/internals';
 import {
   addDays,
   createDate,
@@ -497,9 +498,9 @@ describe('<EventTimelinePremium />', () => {
     it('should render events correctly in the dayAndWeek preset', async () => {
       const totalWidth = 64 * 7 * 16; // 64px * 7 days * 16 weeks
       const weekStart = startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
-      const weekDayNumber = Math.floor(
-        (Date.parse(baseEvents[0].start) - weekStart.getTime()) / (24 * 60 * 60 * 1000),
-      );
+      const weekDayNumber =
+        toLocalDayNumber(Date.parse(baseEvents[0].start), 'default') -
+        toLocalDayNumber(weekStart.getTime(), 'default');
       const dayBoundaries = { start: weekDayNumber * 64, end: (weekDayNumber + 1) * 64 };
 
       await renderTimeline({ preset: 'dayAndWeek' });

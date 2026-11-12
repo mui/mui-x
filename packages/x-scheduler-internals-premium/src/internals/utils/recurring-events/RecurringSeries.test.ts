@@ -6,7 +6,7 @@ import type {
   TemporalSupportedObject,
   TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
-import { toPlainDate } from '@mui/x-scheduler-internals/internals';
+import { BaseTemporal, toPlainDate } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
 import { RecurringSeries } from './RecurringSeries';
 
@@ -18,7 +18,8 @@ function seriesStart(start: string, timezone: TemporalTimezone) {
 }
 
 /**
- * The number of occurrences of a series with `count` occurrences that remain after `date`, included.
+ * The number of occurrences, out of `count`, that a series starting at `start` has after the day of
+ * `date`. Both are wall-clock times in `timezone`.
  */
 function countRemaining(
   rule: SchedulerProcessedEventRecurrenceRule,
@@ -161,14 +162,14 @@ describe('recurring-events/RecurringSeries', () => {
       const getLastDays = (timezone: TemporalTimezone, exDates: TemporalSupportedObject[]) => {
         const series = new RecurringSeries({
           rule: { freq: 'DAILY', until: lastInstant },
-          start: createDate('2026-01-05T09:00:00Z').getTime(),
+          start: Date.parse('2026-01-05T09:00:00Z'),
           timezone,
           exDates,
         });
         return series
           .getOccurrenceDays(
-            toPlainDate(createDate('9999-12-31T00:00:00', 'UTC').getTime(), 'UTC'),
-            toPlainDate(createDate('+010000-01-02T00:00:00', 'UTC').getTime(), 'UTC'),
+            BaseTemporal.PlainDate.from('9999-12-31'),
+            BaseTemporal.PlainDate.from('+010000-01-02'),
           )
           .map((day) => day.toString());
       };
@@ -278,9 +279,8 @@ describe('recurring-events/RecurringSeries', () => {
         ...seriesStart('2025-01-06T09:00:00', 'UTC'),
         exDates: [createDate('2025-01-06T09:00:00', 'UTC')],
       });
-      const day = (date: string) => toPlainDate(createDate(date, 'UTC').getTime(), 'UTC');
-      expect(series.hasOccurrenceBefore(day('2025-01-13T00:00:00'))).to.equal(false);
-      expect(series.hasOccurrenceBefore(day('2025-01-14T00:00:00'))).to.equal(true);
+      expect(series.hasOccurrenceBefore(BaseTemporal.PlainDate.from('2025-01-13'))).to.equal(false);
+      expect(series.hasOccurrenceBefore(BaseTemporal.PlainDate.from('2025-01-14'))).to.equal(true);
     });
   });
 
@@ -377,11 +377,7 @@ describe('recurring-events/RecurringSeries', () => {
         { freq: 'DAILY', until: createDate('2025-01-05T09:00:00', 'UTC') },
         '2025-01-01T09:00:00',
       );
-      expect(
-        series.countOccurrencesBefore(
-          toPlainDate(createDate('2025-01-10T00:00:00', 'UTC').getTime(), 'UTC'),
-        ),
-      ).to.equal(5);
+      expect(series.countOccurrencesBefore(BaseTemporal.PlainDate.from('2025-01-10'))).to.equal(5);
     });
   });
 

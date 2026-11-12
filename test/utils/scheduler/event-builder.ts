@@ -29,7 +29,6 @@ export const DEFAULT_TESTING_VISIBLE_DATE = createDate(DEFAULT_TESTING_VISIBLE_D
  *
  * Scope:
  * - Builds a valid SchedulerEvent with string dates (instant or wall-time).
- * - Passes the provided (or default) adapter to the Scheduler functions that take one.
  * - Can optionally derive a SchedulerEventOccurrence via .toOccurrence().
  */
 export class EventBuilder {
@@ -52,7 +51,7 @@ export class EventBuilder {
   }
 
   /**
-   * Create a new builder with a given adapter (defaults to the shared test adapter).
+   * Create a new builder. The `adapter` is unused: no Scheduler function takes one anymore.
    */
   static new(adapter: TemporalAdapter = defaultAdapter) {
     return new EventBuilder(adapter);

@@ -853,8 +853,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     it.skipIf(!isJSDOM)(
       'should show both dates of an event on two days of the display timezone, whatever the timezone of the system',
       () => {
-        // Pacific/Apia skipped December 30th, 2011. On a system there, the getters of `Date`
-        // read December 30th and 31st as the same day in the other timezones.
+        // Pacific/Apia skipped December 30th, 2011. On a system there, the date-fns adapter read
+        // December 30th and 31st as the same day in the other timezones.
         setSystemTimezone('Pacific/Apia');
         const { text } = renderReadonlyDetails(
           EventBuilder.new().span('2011-12-30T15:00:00Z', '2011-12-31T15:00:00Z'),

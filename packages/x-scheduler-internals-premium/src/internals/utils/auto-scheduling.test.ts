@@ -7,12 +7,11 @@ import type { SchedulerDependency } from '../../models';
 import { groupByEventId } from './dependency-utils';
 import { computeAutoSchedulingCascade, getDependencyViolation } from './auto-scheduling';
 
-const date = (value: string): TemporalSupportedObject => createDate(value);
+const date = (value: string) => createDate(value);
 // `Z` strings resolve to the machine timezone, so the all-day fixtures use wall-time
 // strings with an explicit zone to stay machine-independent.
-const utcDate = (value: string): TemporalSupportedObject => createDate(value, 'UTC');
-const newYorkDate = (value: string): TemporalSupportedObject =>
-  createDate(value, 'America/New_York');
+const utcDate = (value: string) => createDate(value, 'UTC');
+const newYorkDate = (value: string) => createDate(value, 'America/New_York');
 
 function buildLookup(events: SchedulerProcessedEvent[]) {
   return new Map(events.map((event) => [event.id, event]));

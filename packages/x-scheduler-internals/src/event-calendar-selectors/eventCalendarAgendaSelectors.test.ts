@@ -22,8 +22,8 @@ describe('eventCalendarEventSelectors', () => {
       const days = eventCalendarAgendaSelectors.baseVisibleDays(state);
 
       expect(days).to.have.length(9);
-      expect(days[0]).to.deep.equal(processDay(createDate('2025-07-01Z')));
-      expect(days[days.length - 1]).to.deep.equal(processDay(createDate('2025-07-11Z')));
+      expect(days[0]).to.deep.equal(processDay(createDate('2025-07-01')));
+      expect(days[days.length - 1]).to.deep.equal(processDay(createDate('2025-07-11')));
     });
 
     it('should skip the weekend of the date locale when weekends are hidden', () => {
@@ -96,18 +96,18 @@ describe('eventCalendarEventSelectors', () => {
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(visibleDays).to.deep.equal([
-        processDay(createDate('2025-01-01Z')),
-        processDay(createDate('2025-01-03Z')),
-        processDay(createDate('2025-01-05Z')),
-        processDay(createDate('2025-01-08Z')),
-        processDay(createDate('2025-01-09Z')),
-        processDay(createDate('2025-01-10Z')),
-        processDay(createDate('2025-01-11Z')),
-        processDay(createDate('2025-01-13Z')),
-        processDay(createDate('2025-01-14Z')),
-        processDay(createDate('2025-01-16Z')),
-        processDay(createDate('2025-01-18Z')),
-        processDay(createDate('2025-01-20Z')),
+        processDay(createDate('2025-01-01')),
+        processDay(createDate('2025-01-03')),
+        processDay(createDate('2025-01-05')),
+        processDay(createDate('2025-01-08')),
+        processDay(createDate('2025-01-09')),
+        processDay(createDate('2025-01-10')),
+        processDay(createDate('2025-01-11')),
+        processDay(createDate('2025-01-13')),
+        processDay(createDate('2025-01-14')),
+        processDay(createDate('2025-01-16')),
+        processDay(createDate('2025-01-18')),
+        processDay(createDate('2025-01-20')),
       ]);
     });
 
@@ -182,18 +182,18 @@ describe('eventCalendarEventSelectors', () => {
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(visibleDays).to.deep.equal([
-        processDay(createDate('2025-10-03Z')),
-        processDay(createDate('2025-10-06Z')),
-        processDay(createDate('2025-10-07Z')),
-        processDay(createDate('2025-10-08Z')),
-        processDay(createDate('2025-10-09Z')),
-        processDay(createDate('2025-10-10Z')),
-        processDay(createDate('2025-10-13Z')),
-        processDay(createDate('2025-10-14Z')),
-        processDay(createDate('2025-10-15Z')),
-        processDay(createDate('2025-10-16Z')),
-        processDay(createDate('2025-10-17Z')),
-        processDay(createDate('2025-10-20Z')),
+        processDay(createDate('2025-10-03')),
+        processDay(createDate('2025-10-06')),
+        processDay(createDate('2025-10-07')),
+        processDay(createDate('2025-10-08')),
+        processDay(createDate('2025-10-09')),
+        processDay(createDate('2025-10-10')),
+        processDay(createDate('2025-10-13')),
+        processDay(createDate('2025-10-14')),
+        processDay(createDate('2025-10-15')),
+        processDay(createDate('2025-10-16')),
+        processDay(createDate('2025-10-17')),
+        processDay(createDate('2025-10-20')),
       ]);
     });
 
@@ -257,7 +257,7 @@ describe('eventCalendarEventSelectors', () => {
 
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
-      expect(visibleDays).to.deep.equal([processDay(createDate('2025-07-17Z'))]);
+      expect(visibleDays).to.deep.equal([processDay(createDate('2025-07-17'))]);
     });
 
     it('should find an event on the last day of the horizon when showEmptyDaysInAgenda=false', () => {
@@ -272,7 +272,7 @@ describe('eventCalendarEventSelectors', () => {
 
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
-      expect(visibleDays).to.deep.equal([processDay(createDate('2024-06-28Z'))]);
+      expect(visibleDays).to.deep.equal([processDay(createDate('2024-06-28'))]);
     });
 
     it('should not list a day twice when a scanned chunk ends on a skipped day', () => {
@@ -409,8 +409,8 @@ describe('eventCalendarEventSelectors', () => {
       const days = eventCalendarAgendaSelectors.baseVisibleDays(state);
 
       expect(days).to.have.length(5);
-      expect(days[0]).to.deep.equal(processDay(createDate('2025-07-01Z')));
-      expect(days[4]).to.deep.equal(processDay(createDate('2025-07-05Z')));
+      expect(days[0]).to.deep.equal(processDay(createDate('2025-07-01')));
+      expect(days[4]).to.deep.equal(processDay(createDate('2025-07-05')));
     });
 
     it("should return the whole month of the visible date when dayCount is 'month'", () => {
@@ -424,8 +424,8 @@ describe('eventCalendarEventSelectors', () => {
       const days = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(days).to.have.length(31);
-      expect(days[0]).to.deep.equal(processDay(createDate('2025-07-01Z')));
-      expect(days[30]).to.deep.equal(processDay(createDate('2025-07-31Z')));
+      expect(days[0]).to.deep.equal(processDay(createDate('2025-07-01')));
+      expect(days[30]).to.deep.equal(processDay(createDate('2025-07-31')));
     });
 
     it("should only keep the days of the month that have events when hiding the empty days in 'month' mode", () => {
@@ -443,8 +443,8 @@ describe('eventCalendarEventSelectors', () => {
       const days = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(days.map((day) => day.key)).to.deep.equal([
-        processDay(createDate('2025-07-03Z')).key,
-        processDay(createDate('2025-07-20Z')).key,
+        processDay(createDate('2025-07-03')).key,
+        processDay(createDate('2025-07-20')).key,
       ]);
 
       const fetchRange = eventCalendarAgendaSelectors.fetchRange(state);
@@ -505,11 +505,11 @@ describe('eventCalendarEventSelectors', () => {
       const days = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(days.map((day) => day.key)).to.deep.equal([
-        processDay(createDate('2025-07-02Z')).key,
-        processDay(createDate('2025-07-08Z')).key,
-        processDay(createDate('2025-07-10Z')).key,
-        processDay(createDate('2025-07-15Z')).key,
-        processDay(createDate('2025-07-20Z')).key,
+        processDay(createDate('2025-07-02')).key,
+        processDay(createDate('2025-07-08')).key,
+        processDay(createDate('2025-07-10')).key,
+        processDay(createDate('2025-07-15')).key,
+        processDay(createDate('2025-07-20')).key,
       ]);
     });
 

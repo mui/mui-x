@@ -713,9 +713,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
 
     const [start, end] = dataSource.getEvents.mock.calls[0];
     expect(start).toEqualDateTime(startOfDay(DEFAULT_TESTING_VISIBLE_DATE));
-    expect(end.getTime() === endOfDay(addDays(DEFAULT_TESTING_VISIBLE_DATE, 6)).getTime()).to.equal(
-      true,
-    );
+    expect(end).toEqualDateTime(endOfDay(addDays(DEFAULT_TESTING_VISIBLE_DATE, 6)));
   });
 
   describe('view without visible days', () => {

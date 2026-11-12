@@ -9,7 +9,7 @@ describe('computeElementPositionInCollection', () => {
 
   // 4-day collection: Jan 5 → Jan 8, like the `dayAndHour` timeline preset.
   const collectionStart = date('2025-01-05T00:00:00.000Z');
-  const collectionEnd = endOfDay(date('2025-01-08T00:00:00.000Z'));
+  const collectionEnd = endOfDay(date('2025-01-08T00:00:00.000Z'), 'UTC');
   const fullCollection = {
     start: collectionStart.getTime(),
     end: collectionEnd.getTime(),
@@ -200,7 +200,7 @@ describe('computeElementPositionInCollection', () => {
     });
 
     it('should keep the calendar single-day column behavior', () => {
-      const singleDayEnd = endOfDay(collectionStart);
+      const singleDayEnd = endOfDay(collectionStart, 'UTC');
       const result = computeElementPositionInCollection({
         start: processed('2025-01-05T06:00:00.000Z'),
         end: processed('2025-01-05T10:00:00.000Z'),
