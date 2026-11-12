@@ -11,7 +11,6 @@ import type {
   ChatMessage,
   ChatRuntimeActions,
   MessageActionsProps,
-  MessageActionsOwnerState,
   MessageActionsSlots,
 } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
@@ -64,7 +63,7 @@ const ChatMessageActionsStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'Actions',
   overridesResolver: (_, styles) => styles.actions,
-})<{ ownerState?: MessageActionsOwnerState }>(({ theme, ownerState }) => ({
+})<{ ownerState?: { role?: string; isOwnMessage?: boolean } }>(({ theme, ownerState }) => ({
   gridArea: 'actions',
   display: 'inline-flex',
   // Grid items default to `justify-self: stretch`, which would blockify the
@@ -78,9 +77,12 @@ const ChatMessageActionsStyled = styled('div', {
   // Elsewhere they stay tabbable but transparent (and ignore the pointer), and
   // are revealed on hover or while focus is inside the bar.
   opacity: 0,
-  ...(ownerState?.actionable === false
-    ? { visibility: 'hidden' }
-    : { visibility: 'visible', pointerEvents: 'none' }),
+  visibility: 'visible',
+  pointerEvents: 'none',
+  // Roving rows always carry a tabindex; `:where()` keeps this below the reveal rule.
+  '.MuiChatMessage-root:where([tabindex]:not([data-actionable="true"])) &': {
+    visibility: 'hidden',
+  },
   transition: theme.transitions.create(['opacity', 'visibility'], {
     duration: theme.transitions.duration.short,
   }),

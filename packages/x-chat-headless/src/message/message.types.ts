@@ -45,13 +45,7 @@ export interface MessageContentOwnerState extends MessageOwnerState {}
 
 export interface MessageMetaOwnerState extends MessageOwnerState {}
 
-export interface MessageActionsOwnerState extends MessageOwnerState {
-  /**
-   * Whether the action buttons belong in the tab order: `true` outside a roving
-   * message list, or once the user drills into the message with Enter.
-   */
-  actionable: boolean;
-}
+export interface MessageActionsOwnerState extends MessageOwnerState {}
 
 export interface MessageErrorOwnerState extends MessageOwnerState {
   /**
