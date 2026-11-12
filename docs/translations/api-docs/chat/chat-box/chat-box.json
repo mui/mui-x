@@ -162,7 +162,7 @@
     "streamingIndicator": "The animated dots shown while an assistant response is in flight: as a trailing row while waiting for the response to start, then inside the assistant bubble while it streams. Controlled by <code>features.streamingIndicator</code> (<code>&#39;auto&#39;</code> by default). Pass <code>null</code> to hide it.",
     "suggestions": "The prompt-suggestion chips.",
     "threadPane": "Container for the active thread — the message list plus the composer.",
-    "typingIndicator": "The typing indicator rendered between the message list and the composer. The default renders nothing while no one is typing in the active conversation; a custom component is always rendered, so read <code>useChatStatus().typingUserIds</code> to hide it.",
+    "typingIndicator": "The typing indicator rendered between the message list and the composer. The default renders nothing while no one is typing in the active conversation; a custom component is always rendered, so read <code>useChatStatus().typingUserIds</code> to hide it. Pass <code>null</code> to hide it.",
     "unreadMarker": "The &quot;new messages&quot; marker. Only rendered when <code>features.unreadMarker</code> is enabled. Pass <code>null</code> to hide it."
   }
 }

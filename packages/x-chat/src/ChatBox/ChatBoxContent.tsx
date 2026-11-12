@@ -811,6 +811,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
     [slots.conversationList],
   );
   const SuggestionsComponent = (slots.suggestions ?? ChatSuggestions) as typeof ChatSuggestions;
+  const showTypingIndicator = slots.typingIndicator !== null;
   const TypingIndicatorComponent = (slots.typingIndicator ??
     ChatTypingIndicator) as typeof ChatTypingIndicator;
 
@@ -1062,7 +1063,9 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
               </ChatBoxCustomEmptyStateOverlay>
             )}
           </ChatBoxMessageListWrapper>
-          <TypingIndicatorComponent {...(slotProps.typingIndicator ?? {})} />
+          {showTypingIndicator && (
+            <TypingIndicatorComponent {...(slotProps.typingIndicator ?? {})} />
+          )}
           {showAboveComposerSuggestions && (
             <AboveComposerSuggestions
               SuggestionsComponent={SuggestionsComponent}

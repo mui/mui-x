@@ -363,7 +363,7 @@
     },
     {
       "name": "typingIndicator",
-      "description": "The typing indicator rendered between the message list and the composer.\nThe default renders nothing while no one is typing in the active conversation;\na custom component is always rendered, so read `useChatStatus().typingUserIds` to hide it.",
+      "description": "The typing indicator rendered between the message list and the composer.\nThe default renders nothing while no one is typing in the active conversation;\na custom component is always rendered, so read `useChatStatus().typingUserIds` to hide it.\nPass `null` to hide it.",
       "default": "ChatTypingIndicator",
       "class": null
     },

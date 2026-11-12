@@ -70,17 +70,19 @@ export const TypingIndicator = React.forwardRef(function TypingIndicator(
         : (conversations.find((candidate) => candidate.id === activeConversationId) ?? null),
     [activeConversationId, conversations],
   );
-  const messageAuthors = React.useMemo(
-    () =>
-      messages.reduce<ChatUser[]>((authors, message) => {
-        if (message.author && !authors.some((author) => author.id === message.author!.id)) {
-          authors.push(message.author);
-        }
+  const messageAuthors = React.useMemo(() => {
+    if (typingUserIds.length === 0) {
+      return [];
+    }
 
-        return authors;
-      }, []),
-    [messages],
-  );
+    return messages.reduce<ChatUser[]>((authors, message) => {
+      if (message.author && !authors.some((author) => author.id === message.author!.id)) {
+        authors.push(message.author);
+      }
+
+      return authors;
+    }, []);
+  }, [messages, typingUserIds]);
   const users = React.useMemo(
     () =>
       typingUserIds.map((userId) =>

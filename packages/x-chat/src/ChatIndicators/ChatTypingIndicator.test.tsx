@@ -89,4 +89,10 @@ describe('ChatTypingIndicator', () => {
       expect(screen.getByTestId('custom-typing-indicator')).to.have.text('custom dots');
     });
   });
+
+  it('hides the typing indicator when the typingIndicator slot is null', () => {
+    renderWithTypingUser({ slots: { typingIndicator: null } });
+
+    expect(document.querySelector('.MuiChatTypingIndicator-root')).to.equal(null);
+  });
 });
