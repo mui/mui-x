@@ -178,10 +178,16 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
 
   private hasTimezonePlugin = () => typeof dayjs.tz !== 'undefined';
 
-  private isSame = (value: Dayjs, comparing: Dayjs, comparisonTemplate: string) => {
+  private isSame = (value: Dayjs, comparing: Dayjs, unit: 'year' | 'month' | 'day') => {
     const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value))!;
 
-    return value.format(comparisonTemplate) === comparingInValueTimezone.format(comparisonTemplate);
+    // Compares the fields that `format('YYYY-MM-DD')` prints, without the cost of formatting, which
+    // calendars pay for every day they render. `Object.is` keeps two invalid dates equal.
+    return (
+      Object.is(value.year(), comparingInValueTimezone.year()) &&
+      (unit === 'year' || Object.is(value.month(), comparingInValueTimezone.month())) &&
+      (unit !== 'day' || Object.is(value.date(), comparingInValueTimezone.date()))
+    );
   };
 
   /**
@@ -537,15 +543,15 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public isSameYear = (value: Dayjs, comparing: Dayjs) => {
-    return this.isSame(value, comparing, 'YYYY');
+    return this.isSame(value, comparing, 'year');
   };
 
   public isSameMonth = (value: Dayjs, comparing: Dayjs) => {
-    return this.isSame(value, comparing, 'YYYY-MM');
+    return this.isSame(value, comparing, 'month');
   };
 
   public isSameDay = (value: Dayjs, comparing: Dayjs) => {
-    return this.isSame(value, comparing, 'YYYY-MM-DD');
+    return this.isSame(value, comparing, 'day');
   };
 
   public isSameHour = (value: Dayjs, comparing: Dayjs) => {
