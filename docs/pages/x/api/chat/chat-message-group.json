@@ -79,7 +79,7 @@
     {
       "name": "messageActions",
       "description": "Actions row component (receives `{ messageId }`). Pass `null` to hide\nactions entirely; omit to render only the declarative `extraActions` from\n`slotProps.messageActions` if provided.",
-      "default": "undefined, which renders only the `extraActions` from `slotProps.messageActions`, if any",
+      "default": "An actions row with only the `extraActions` from `slotProps.messageActions`, if any.",
       "class": null
     },
     {

@@ -310,7 +310,7 @@
     {
       "name": "messageActions",
       "description": "Actions row component (receives `{ messageId }`). Pass `null` to hide\nactions entirely; omit to render only the declarative `extraActions` from\n`slotProps.messageActions` if provided.",
-      "default": "undefined, which renders only the `extraActions` from `slotProps.messageActions`, if any",
+      "default": "An actions row with only the `extraActions` from `slotProps.messageActions`, if any.",
       "class": null
     },
     {
@@ -382,7 +382,7 @@
     {
       "name": "emptyState",
       "description": "Custom content rendered when the thread has no messages.",
-      "default": "null, which shows the built-in empty state",
+      "default": "The built-in empty state, or the suggestions when there are some.",
       "class": null
     }
   ],
