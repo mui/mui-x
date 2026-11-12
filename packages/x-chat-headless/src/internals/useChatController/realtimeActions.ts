@@ -11,7 +11,8 @@ export function createRealtimeActions(params: {
 
   // The store only holds the active conversation's messages.
   function isOtherConversation(conversationId: string | undefined): boolean {
-    return conversationId != null && conversationId !== store.state.activeConversationId;
+    const activeId = store.state.activeConversationId;
+    return conversationId != null && activeId != null && conversationId !== activeId;
   }
 
   function handleRealtimeEvent(event: ChatRealtimeEvent): void {
@@ -23,19 +24,13 @@ export function createRealtimeActions(params: {
         store.addMessage(event.message);
         return;
       case 'message-updated':
-        if (isOtherConversation(event.message.conversationId)) {
-          return;
-        }
         if (store.state.messagesById[event.message.id]) {
           store.updateMessage(event.message.id, event.message);
-        } else {
+        } else if (!isOtherConversation(event.message.conversationId)) {
           store.addMessage(event.message);
         }
         return;
       case 'message-removed':
-        if (isOtherConversation(event.conversationId)) {
-          return;
-        }
         store.removeMessage(event.messageId);
         return;
       case 'conversation-added':
