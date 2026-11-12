@@ -512,6 +512,45 @@ describe('createSendMessageActions', () => {
       expect(userMsg!.status).toBe('error');
     });
 
+    it('does not record an error when onFinish throws after the run is cancelled', async () => {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+      const onFinish = vi.fn().mockRejectedValue(new Error('boom'));
+      const adapter = createAdapter({
+        sendMessage: vi.fn().mockResolvedValue(
+          new ReadableStream({
+            start(controller) {
+              controller.enqueue({ type: 'start', messageId: 'a1' });
+            },
+          }),
+        ),
+        reconnectToStream: vi.fn(),
+      });
+
+      const onError = vi.fn();
+      const setRuntimeError = vi.fn();
+      const { sendMessage } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter, onFinish, onError } },
+        setRuntimeError,
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      const sendPromise = sendMessage(userMessageInput);
+      await vi.waitFor(() => expect(store.state.messagesById.a1).toBeDefined());
+      store.state.activeStreamAbortController?.abort();
+      await sendPromise;
+
+      expect(onFinish).toHaveBeenCalledTimes(1);
+      expect(onFinish.mock.calls[0][0]).toMatchObject({ isAbort: true });
+      expect(store.state.error).toBe(null);
+      expect(store.state.messagesById.a1.status).toBe('cancelled');
+      expect(onError).not.toHaveBeenCalled();
+      expect(setRuntimeError).not.toHaveBeenCalled();
+      expect(store.state.isStreaming).toBe(false);
+    });
+
     it('sets user message status to "error" when the adapter throws', async () => {
       const store = new ChatStore();
       store.setActiveConversation('c1');

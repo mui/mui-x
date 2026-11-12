@@ -108,8 +108,9 @@ export function createSendMessageActions<Cursor = string>(params: {
           finishReason: result.finishReason,
         });
       } catch (error) {
-        // Mirror processStream's failStream so callers take their stream-error branch.
-        if (store.state.error?.source !== 'stream') {
+        // A cancelled run stays silent, matching the non-deferred abort path.
+        // Otherwise record a stream error so callers take their stream-error branch.
+        if (!abortController.signal.aborted && store.state.error?.source !== 'stream') {
           const streamError = createRuntimeError(
             'STREAM_ERROR',
             getErrorMessage('The onFinish callback failed.', error),
