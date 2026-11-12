@@ -246,20 +246,20 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Skip when no charts changes
+          name: Skip pull requests without charts changes
+          # The base branch runs on every commit: changes outside these paths, such as a dependency
+          # bump, can change the charts' performance too.
           command: |
             set -e
             BASE="${BASE_BRANCH:-master}"
             if [ "$CIRCLE_BRANCH" = "$BASE" ] || [ "$CIRCLE_BRANCH" = "next" ]; then
-              RANGE="HEAD~1...HEAD"
               # So that the baseline below is the previous commit, not where this branch forked.
-              BASE="$CIRCLE_BRANCH"
-            else
-              # Full history: the baseline below is where the branch forked.
-              git fetch --no-tags origin "$BASE"
-              RANGE="origin/$BASE...HEAD"
+              echo "$CIRCLE_BRANCH" > .benchmark-base-branch
+              exit 0
             fi
-            CHANGED=$(git diff --name-only "$RANGE" -- \
+            # Full history: the baseline below is where the branch forked.
+            git fetch --no-tags origin "$BASE"
+            CHANGED=$(git diff --name-only "origin/$BASE...HEAD" -- \
               'packages/x-charts*' \
               'test/benchmark' \
               '.circleci/config.yml')
@@ -291,9 +291,19 @@ jobs:
           command: pnpm test:benchmark charts/ --baseline "$(cat .benchmark-baseline-sha)"
       - run:
           name: Upload the benchmark report
-          # Also after a failed run, so the comment says what happened.
+          # Also after a failed run, so the comment says what happened. A run that fails before
+          # sampling, while building or packing, writes no report.
           when: always
-          command: pnpm test:benchmark upload
+          command: |
+            if [ ! -f test/benchmark/.benchmark/results/report.json ]; then
+              echo "No benchmark report; the run failed before sampling. See the step above."
+              exit 0
+            fi
+            pnpm test:benchmark upload
+      - run:
+          name: Keep only the baseline in the cache
+          # The working tree's tarballs are packed apart from the baseline's, and no later run uses them.
+          command: rm -rf test/benchmark/.benchmark/packed/current
       - save_cache:
           name: Save the packed-baseline cache
           key: benchmark-packed-v1-{{ checksum ".benchmark-baseline-sha" }}

@@ -25,7 +25,7 @@ The run builds the packages itself (`pnpm release:build`), writes `.benchmark/re
 
 ## In CI
 
-`test_charts_benchmark` runs every chart's file (`charts/`) when the charts packages, this folder or the CircleCI config change. On master, it compares each commit against its parent; on a pull request, against where the branch forked.
+`test_charts_benchmark` runs every chart's file (`charts/`). On master, it runs on every commit and compares it against its parent. On a pull request, it runs only when the charts packages, this folder or the CircleCI config change, and compares against where the branch forked.
 
 The smoke file isn't run in CI; it's a quicker local check. Its cases keep their names, so they read as the same benchmarks as in their chart's file.
 
