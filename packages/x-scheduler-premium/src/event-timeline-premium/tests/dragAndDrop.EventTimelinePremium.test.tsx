@@ -1,18 +1,19 @@
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import * as React from 'react';
 import { screen, within, act, fireEvent } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import { StandaloneEvent } from '@mui/x-scheduler-internals/standalone-event';
 import {
-  adapter,
+  createDate,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
+  getResizeHandle,
+  mockElementBounds,
   ResourceBuilder,
   simulateDragAndDrop,
-  mockElementBounds,
-  getResizeHandle,
   utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
@@ -295,8 +296,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
     expect(series.exDates).to.have.length(1);
     expect(
-      adapter.formatByString(adapter.date(String(series.exDates[0]), 'UTC'), 'yyyy-MM-dd'),
-    ).to.equal('2025-07-04');
+      toPlainDate(createDate(String(series.exDates[0]), 'UTC').getTime(), 'UTC'),
+    ).toEqualPlainDate('2025-07-04');
 
     // The dragged occurrence detaches as a one-off keeping its all-day span. The landing
     // day depends on the pointer-to-axis math, so it is pinned in the month view instead,
@@ -350,8 +351,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
     expect(series.exDates).to.have.length(1);
     expect(
-      adapter.formatByString(adapter.date(String(series.exDates[0]), 'UTC'), 'yyyy-MM-dd'),
-    ).to.equal('2025-07-04');
+      toPlainDate(createDate(String(series.exDates[0]), 'UTC').getTime(), 'UTC'),
+    ).toEqualPlainDate('2025-07-04');
 
     // Dragging a secondary appearance detaches the occurrence without dropping the
     // resources it belongs to: the key does not identify which row it was dragged from.
@@ -376,7 +377,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         resources={resources}
         events={[event]}
         displayTimezone="Europe/Paris"
-        visibleDate={adapter.date('2026-10-25T12:00:00', 'Europe/Paris')}
+        visibleDate={createDate('2026-10-25T12:00:00', 'Europe/Paris')}
         preset="dayAndHour"
         presets={['dayAndHour']}
         onEventsChange={handleEventsChange}

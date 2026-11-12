@@ -5,7 +5,6 @@ import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
-  adapter,
   createSchedulerRenderer,
   describeConformance,
   mockElementBounds,
@@ -17,7 +16,7 @@ import { BaseTemporal, toPlainDate } from '@mui/x-scheduler-internals/internals'
 describe('<CalendarGrid.TimeColumn />', () => {
   const { render } = createSchedulerRenderer();
 
-  const plainDate = toPlainDate(adapter.now('default').getTime(), 'default');
+  const plainDate = toPlainDate(Date.now(), 'default');
 
   function TimeColumnWrapper({
     children,

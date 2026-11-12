@@ -1,4 +1,4 @@
-import { adapter } from 'test/utils/scheduler';
+import { createDate } from 'test/utils/scheduler';
 import type {
   RecurringEventByDayValue,
   SchedulerEventRecurrenceRule,
@@ -60,7 +60,7 @@ describe('recurring-events/rRuleString', () => {
         'America/New_York',
       );
 
-      expect(adapter.getTime(fromString.until!)).to.equal(adapter.getTime(fromObject.until!));
+      expect(fromString.until!.getTime()).to.equal(fromObject.until!.getTime());
     });
 
     describe('with a host timezone that observes daylight saving time', () => {
@@ -81,7 +81,7 @@ describe('recurring-events/rRuleString', () => {
             'America/Sao_Paulo',
           );
 
-          expect(adapter.getTime(fromString.until!)).to.equal(adapter.getTime(fromObject.until!));
+          expect(fromString.until!.getTime()).to.equal(fromObject.until!.getTime());
         },
       );
     });
@@ -119,7 +119,7 @@ describe('recurring-events/rRuleString', () => {
 
     it('should read a UNTIL in a year below 100 as that year', () => {
       const result = parseRRule('FREQ=DAILY;UNTIL=00990315T000000Z', 'default');
-      expect(adapter.getYear(result.until!)).to.equal(99);
+      expect(result.until!.getFullYear()).to.equal(99);
     });
 
     it('should throw when UNTIL is a date that does not exist', () => {
@@ -344,14 +344,14 @@ describe('recurring-events/rRuleString', () => {
     });
 
     it('should serialize the minutes and seconds of UNTIL', () => {
-      const until = adapter.date('2025-03-15T13:45:30Z', 'default');
+      const until = createDate('2025-03-15T13:45:30Z');
       const rule = { freq: 'DAILY' as const, until };
       const result = serializeRRule(rule);
       expect(result).to.equal('FREQ=DAILY;UNTIL=20250315T134530Z');
     });
 
     it('should combine multiple properties correctly', () => {
-      const until = adapter.date('2025-03-15T00:00:00Z', 'default');
+      const until = createDate('2025-03-15T00:00:00Z');
       const rule = {
         freq: 'WEEKLY' as const,
         interval: 2,

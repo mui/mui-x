@@ -6,11 +6,12 @@ import type { GridRowType, TemporalSupportedObject } from '@mui/x-scheduler-inte
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
-  adapter,
   createSchedulerRenderer,
   describeConformance,
+  endOfDay,
   SchedulerStoreRunner,
   setSystemTimezone,
+  startOfDay,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
@@ -19,7 +20,7 @@ import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
 describe('<CalendarGrid.DayCell />', () => {
   const { render } = createSchedulerRenderer();
 
-  const day = adapter.now('default');
+  const day = new Date();
 
   function DayCellWrapper({
     children,
@@ -35,8 +36,8 @@ describe('<CalendarGrid.DayCell />', () => {
       <EventCalendarProvider events={[]} {...providerProps}>
         <CalendarGrid.Root rowTypes={rowTypes} rowsPerType={rowsPerType}>
           <CalendarGrid.DayRow
-            start={adapter.getTime(adapter.startOfDay(day))}
-            end={adapter.getTime(adapter.endOfDay(day))}
+            start={startOfDay(day).getTime()}
+            end={endOfDay(day).getTime()}
             days={[{ plainDate: toPlainDate(day.getTime(), 'default') }]}
           >
             {children}
@@ -97,8 +98,8 @@ describe('<CalendarGrid.DayCell />', () => {
         <EventCalendarProvider events={[]} displayTimezone="America/Santiago">
           <CalendarGrid.Root>
             <CalendarGrid.DayRow
-              start={adapter.getTime(value)}
-              end={adapter.getTime(value)}
+              start={value.getTime()}
+              end={value.getTime()}
               days={[{ plainDate: cellDate }]}
             >
               <CalendarGrid.DayCell value={cellDate} />

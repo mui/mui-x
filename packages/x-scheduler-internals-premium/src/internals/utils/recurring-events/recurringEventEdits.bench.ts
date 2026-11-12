@@ -1,6 +1,6 @@
 import { describe, test } from 'vitest';
 import type { SchedulerEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { createDate, EventBuilder } from 'test/utils/scheduler';
 import { updateRecurringEvent } from './updateRecurringEvent';
 import { deleteRecurringEvent } from './deleteRecurringEvent';
 
@@ -34,7 +34,7 @@ const SERIES: { rule: SchedulerEventRecurrenceRule; start: string; occurrence: s
 
 const cases = SERIES.map(({ rule, start, occurrence }) => ({
   event: EventBuilder.new().withDataTimezone(TIMEZONE).singleDay(start).rrule(rule).toProcessed(),
-  occurrenceStart: adapter.date(occurrence, TIMEZONE),
+  occurrenceStart: createDate(occurrence, TIMEZONE),
 }));
 
 // The edits run fast, so repeat them to measure more than the timer resolution.

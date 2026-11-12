@@ -2,6 +2,7 @@ import * as React from 'react';
 import { act, screen, fireEvent, waitFor, within } from '@mui/internal-test-utils';
 import {
   adapter,
+  createDate,
   createMatchMedia,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
@@ -127,8 +128,8 @@ describe('EventContextMenu - recurring events (Premium)', () => {
     // The display bounds of this occurrence normalize to New York July 3rd; the
     // exception must land on the event's own July 4th.
     expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
-    expect(adapter.getTime(deleteRecurringEventSpy!.mock.lastCall![0].occurrenceStart)).to.equal(
-      adapter.getTime(adapter.date('2025-07-04T00:00:00', 'UTC')),
+    expect(deleteRecurringEventSpy!.mock.lastCall![0].occurrenceStart.getTime()).to.equal(
+      createDate('2025-07-04T00:00:00', 'UTC').getTime(),
     );
     // The recurring branch defers to the scope dialog instead of deleting right away.
     expect(screen.getByText(/Apply this change to:/i)).not.to.equal(null);

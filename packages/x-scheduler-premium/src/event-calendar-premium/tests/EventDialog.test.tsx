@@ -1,16 +1,20 @@
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import * as React from 'react';
 import { isJSDOM } from 'test/utils/skipIf';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
-  adapter,
+  addDays,
+  createDate,
   createSchedulerRenderer,
+  endOfDay,
   EventBuilder,
-  utcJuly4AllDayBuilder,
   ResourceBuilder,
   SchedulerStoreRunner,
   setSystemTimezone,
+  startOfDay,
   StateWatcher,
   StoreSpy,
+  utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
 import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import type {
@@ -136,13 +140,13 @@ describe('<EventDialogContent open />', () => {
   // event is created in the default timezone, UTC in the tests.
   function renderNewYorkCreationDialog() {
     const displayTimezone = 'America/New_York';
-    const start = adapter.date('2025-07-04T00:00:00Z', 'default');
-    const end = adapter.date('2025-07-04T01:00:00Z', 'default');
+    const start = createDate('2025-07-04T00:00:00Z');
+    const end = createDate('2025-07-04T01:00:00Z');
     const placeholder: SchedulerOccurrencePlaceholderCreation = {
       type: 'creation',
       surfaceType: 'time-grid' as const,
-      start: adapter.getTime(start),
-      end: adapter.getTime(end),
+      start: start.getTime(),
+      end: end.getTime(),
       lockSurfaceType: false,
       resourceId: null,
     };
@@ -454,8 +458,8 @@ describe('<EventDialogContent open />', () => {
       id: DEFAULT_EVENT.id,
       title: 'Running test',
       description: DEFAULT_EVENT.description,
-      start: adapter.startOfDay(adapter.date(DEFAULT_EVENT.start, 'default')).toISOString(),
-      end: adapter.endOfDay(adapter.date(DEFAULT_EVENT.end, 'default')).toISOString(),
+      start: startOfDay(createDate(DEFAULT_EVENT.start)).toISOString(),
+      end: endOfDay(createDate(DEFAULT_EVENT.end)).toISOString(),
       allDay: true,
       rrule: { freq: 'DAILY', interval: 1 },
       // DEFAULT_EVENT's resource is a plain string (single-resource mode), so picking Work
@@ -1143,8 +1147,8 @@ describe('<EventDialogContent open />', () => {
 
     it('should block submit on a Calendar creation placeholder when `shouldEventRequireResource={true}` and no resource is selected', async () => {
       const onEventsChange = vi.fn();
-      const start = adapter.date('2025-05-26T07:30:00Z', 'default');
-      const end = adapter.date('2025-05-26T08:30:00Z', 'default');
+      const start = createDate('2025-05-26T07:30:00Z');
+      const end = createDate('2025-05-26T08:30:00Z');
 
       const creationOccurrence = EventBuilder.new()
         .id('tmp')
@@ -1165,8 +1169,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start: adapter.getTime(start),
-                end: adapter.getTime(end),
+                start: start.getTime(),
+                end: end.getTime(),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1195,13 +1199,13 @@ describe('<EventDialogContent open />', () => {
       .build();
 
     function creationSetup() {
-      const start = adapter.date('2025-06-10T09:00:00Z', 'default');
-      const end = adapter.date('2025-06-10T09:30:00Z', 'default');
+      const start = createDate('2025-06-10T09:00:00Z');
+      const end = createDate('2025-06-10T09:30:00Z');
       const placeholder: SchedulerOccurrencePlaceholderCreation = {
         type: 'creation',
         surfaceType: 'time-grid' as const,
-        start: adapter.getTime(start),
-        end: adapter.getTime(end),
+        start: start.getTime(),
+        end: end.getTime(),
         lockSurfaceType: false,
         resourceId: null,
       };
@@ -1587,8 +1591,8 @@ describe('<EventDialogContent open />', () => {
 
   describe('Event creation', () => {
     it('should not push the placeholder when a field that does not affect it is edited', async () => {
-      const start = adapter.date('2025-05-26T07:30:00Z', 'default');
-      const end = adapter.date('2025-05-26T08:30:00Z', 'default');
+      const start = createDate('2025-05-26T07:30:00Z');
+      const end = createDate('2025-05-26T08:30:00Z');
       let pushSpy;
 
       const creationOccurrence = EventBuilder.new()
@@ -1606,8 +1610,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start: adapter.getTime(start),
-                end: adapter.getTime(end),
+                start: start.getTime(),
+                end: end.getTime(),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1634,8 +1638,8 @@ describe('<EventDialogContent open />', () => {
     });
 
     it('should change surface of the placeholder to day-grid when all-day is changed to true', async () => {
-      const start = adapter.date('2025-05-26T07:30:00Z', 'default');
-      const end = adapter.date('2025-05-26T08:30:00Z', 'default');
+      const start = createDate('2025-05-26T07:30:00Z');
+      const end = createDate('2025-05-26T08:30:00Z');
       const handleSurfaceChange = vi.fn();
 
       const creationOccurrence = EventBuilder.new()
@@ -1651,8 +1655,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start: adapter.getTime(start),
-                end: adapter.getTime(end),
+                start: start.getTime(),
+                end: end.getTime(),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1677,8 +1681,8 @@ describe('<EventDialogContent open />', () => {
     });
 
     it('should change surface of the placeholder to time-grid when all-day is changed to false', async () => {
-      const start = adapter.date('2025-05-26T07:30:00Z', 'default');
-      const end = adapter.date('2025-05-26T08:30:00Z', 'default');
+      const start = createDate('2025-05-26T07:30:00Z');
+      const end = createDate('2025-05-26T08:30:00Z');
       const handleSurfaceChange = vi.fn();
 
       const creationOccurrence = EventBuilder.new()
@@ -1695,8 +1699,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'day-grid',
-                start: adapter.getTime(start),
-                end: adapter.getTime(end),
+                start: start.getTime(),
+                end: end.getTime(),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1721,8 +1725,8 @@ describe('<EventDialogContent open />', () => {
     });
 
     it('should not change surfaceType when all day changed to true and lockSurfaceType=true', async () => {
-      const start = adapter.date('2025-05-26T07:30:00Z', 'default');
-      const end = adapter.date('2025-05-26T08:30:00Z', 'default');
+      const start = createDate('2025-05-26T07:30:00Z');
+      const end = createDate('2025-05-26T08:30:00Z');
       const handleSurfaceChange = vi.fn();
 
       const creationOccurrence = EventBuilder.new()
@@ -1738,8 +1742,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start: adapter.getTime(start),
-                end: adapter.getTime(end),
+                start: start.getTime(),
+                end: end.getTime(),
                 lockSurfaceType: true,
                 resourceId: null,
               })
@@ -1763,8 +1767,8 @@ describe('<EventDialogContent open />', () => {
     });
 
     it('should write the selected resource into the creation placeholder', async () => {
-      const start = adapter.date('2025-05-26T07:30:00Z', 'default');
-      const end = adapter.date('2025-05-26T08:30:00Z', 'default');
+      const start = createDate('2025-05-26T07:30:00Z');
+      const end = createDate('2025-05-26T08:30:00Z');
       const handleResourceIdChange = vi.fn();
 
       const creationOccurrence = EventBuilder.new()
@@ -1780,8 +1784,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start: adapter.getTime(start),
-                end: adapter.getTime(end),
+                start: start.getTime(),
+                end: end.getTime(),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1807,13 +1811,13 @@ describe('<EventDialogContent open />', () => {
     });
 
     it('should call createEvent with metaChanges + computed start/end on Submit', async () => {
-      const start = adapter.date('2025-06-10T09:00:00Z', 'default');
-      const end = adapter.date('2025-06-10T09:30:00Z', 'default');
+      const start = createDate('2025-06-10T09:00:00Z');
+      const end = createDate('2025-06-10T09:30:00Z');
       const placeholder: SchedulerOccurrencePlaceholderCreation = {
         type: 'creation',
         surfaceType: 'time-grid' as const,
-        start: adapter.getTime(start),
-        end: adapter.getTime(end),
+        start: start.getTime(),
+        end: end.getTime(),
         lockSurfaceType: false,
         resourceId: null,
       };
@@ -1876,14 +1880,14 @@ describe('<EventDialogContent open />', () => {
     it('should interpret form date/time in the displayTimezone when creating an event', async () => {
       const displayTimezone = 'Pacific/Kiritimati';
 
-      const start = adapter.date('2025-06-10T09:00:00Z', 'default');
-      const end = adapter.date('2025-06-10T09:30:00Z', 'default');
+      const start = createDate('2025-06-10T09:00:00Z');
+      const end = createDate('2025-06-10T09:30:00Z');
 
       const placeholder: SchedulerOccurrencePlaceholderCreation = {
         type: 'creation',
         surfaceType: 'time-grid' as const,
-        start: adapter.getTime(start),
-        end: adapter.getTime(end),
+        start: start.getTime(),
+        end: end.getTime(),
         lockSurfaceType: false,
         resourceId: null,
       };
@@ -1939,11 +1943,11 @@ describe('<EventDialogContent open />', () => {
 
       // Form inputs are wall-time values.
       // They must be interpreted in displayTimezone, not in 'default'.
-      const expectedStart = adapter.date('2025-06-10T09:00:00', displayTimezone);
-      const expectedEnd = adapter.date('2025-06-10T10:00:00', displayTimezone);
+      const expectedStart = createDate('2025-06-10T09:00:00', displayTimezone);
+      const expectedEnd = createDate('2025-06-10T10:00:00', displayTimezone);
 
-      expect(adapter.getTime(payload.start)).to.equal(adapter.getTime(expectedStart));
-      expect(adapter.getTime(payload.end)).to.equal(adapter.getTime(expectedEnd));
+      expect(payload.start.getTime()).to.equal(expectedStart.getTime());
+      expect(payload.end.getTime()).to.equal(expectedEnd.getTime());
     });
 
     it("should anchor a weekly rule on the created event's own weekday from another timezone", async () => {
@@ -2111,12 +2115,8 @@ describe('<EventDialogContent open />', () => {
         expect(openPayload.changes.title).to.equal('Daily standup');
         expect(openPayload.changes.description).to.equal('sync');
         expect(openPayload.changes.allDay).to.equal(false);
-        expect(openPayload.changes.start).to.toEqualDateTime(
-          adapter.date('2025-06-11T10:05:00', 'default'),
-        );
-        expect(openPayload.changes.end).to.toEqualDateTime(
-          adapter.date('2025-06-11T10:35:00', 'default'),
-        );
+        expect(openPayload.changes.start).to.toEqualDateTime(createDate('2025-06-11T10:05:00'));
+        expect(openPayload.changes.end).to.toEqualDateTime(createDate('2025-06-11T10:35:00'));
         expect(openPayload.changes).to.not.have.property('rrule');
 
         expect(selectRecurringEventScopeSpy?.mock.calls.length).to.equal(1);
@@ -2208,15 +2208,15 @@ describe('<EventDialogContent open />', () => {
         const series = newEvents.find((event) => event.id === weeklyEvent.id)!;
         expect(series.exDates).to.have.length(1);
         expect(
-          adapter.formatByString(adapter.date(String(series.exDates![0]), 'UTC'), 'yyyy-MM-dd'),
-        ).to.equal('2025-07-04');
+          toPlainDate(createDate(String(series.exDates![0]), 'UTC').getTime(), 'UTC'),
+        ).toEqualPlainDate('2025-07-04');
 
         const detached = newEvents.find((event) => event.id !== weeklyEvent.id)!;
         expect(detached.title).to.equal('Weekly sync renamed');
         expect(detached.rrule).to.equal(undefined);
         expect(
-          adapter.formatByString(adapter.date(String(detached.start), 'UTC'), 'yyyy-MM-dd'),
-        ).to.equal('2025-07-04');
+          toPlainDate(createDate(String(detached.start), 'UTC').getTime(), 'UTC'),
+        ).toEqualPlainDate('2025-07-04');
       });
 
       it("should move the whole series to the edited day as displayed with scope 'all'", async () => {
@@ -2258,16 +2258,14 @@ describe('<EventDialogContent open />', () => {
         const updated = onEventsChange.mock.lastCall?.[0].find(
           (event: SchedulerEvent) => event.id === weeklyEvent.id,
         )!;
-        const updatedStartInNewYork = adapter.setTimezone(
-          adapter.date(String(updated.start), 'UTC'),
-          'America/New_York',
+        const updatedStartInNewYork = createDate(String(updated.start), 'UTC');
+        expect(toPlainDate(updatedStartInNewYork.getTime(), 'America/New_York')).toEqualPlainDate(
+          '2025-07-04',
         );
-        expect(adapter.formatByString(updatedStartInNewYork, 'yyyy-MM-dd')).to.equal('2025-07-04');
-        const updatedEndInNewYork = adapter.setTimezone(
-          adapter.date(String(updated.end), 'UTC'),
-          'America/New_York',
+        const updatedEndInNewYork = createDate(String(updated.end), 'UTC');
+        expect(toPlainDate(updatedEndInNewYork.getTime(), 'America/New_York')).toEqualPlainDate(
+          '2025-07-05',
         );
-        expect(adapter.formatByString(updatedEndInNewYork, 'yyyy-MM-dd')).to.equal('2025-07-05');
         // The start's data-timezone day is unchanged, so the BYDAY stays put.
         expect(updated.rrule).to.deep.equal(weeklyEvent.rrule);
       });
@@ -2320,11 +2318,10 @@ describe('<EventDialogContent open />', () => {
         // The picked Tokyo July 5th is still UTC July 4th — a Friday: the day did not
         // move in the data timezone, so the BYDAY stays FR (not the display day's SA).
         expect(updated.rrule).to.deep.equal(tokyoEvent.rrule);
-        const updatedStartInTokyo = adapter.setTimezone(
-          adapter.date(String(updated.start), 'UTC'),
-          'Asia/Tokyo',
+        const updatedStartInTokyo = createDate(String(updated.start), 'UTC');
+        expect(toPlainDate(updatedStartInTokyo.getTime(), 'Asia/Tokyo')).toEqualPlainDate(
+          '2025-07-05',
         );
-        expect(adapter.formatByString(updatedStartInTokyo, 'yyyy-MM-dd')).to.equal('2025-07-05');
       });
 
       it("should keep the untouched end byte-identical when only the start date is edited with scope 'all'", async () => {
@@ -2404,11 +2401,10 @@ describe('<EventDialogContent open />', () => {
         expect(updated.start).to.equal(weeklyEvent.start);
         expect(updated.rrule).to.deep.equal(weeklyEvent.rrule);
         // The edited end applies as the day the user was looking at.
-        const updatedEndInNewYork = adapter.setTimezone(
-          adapter.date(String(updated.end), 'UTC'),
-          'America/New_York',
+        const updatedEndInNewYork = createDate(String(updated.end), 'UTC');
+        expect(toPlainDate(updatedEndInNewYork.getTime(), 'America/New_York')).toEqualPlainDate(
+          '2025-07-05',
         );
-        expect(adapter.formatByString(updatedEndInNewYork, 'yyyy-MM-dd')).to.equal('2025-07-05');
       });
 
       it('should delete the occurrence of its own day when deleted from another timezone', async () => {
@@ -2446,8 +2442,8 @@ describe('<EventDialogContent open />', () => {
         // display bounds normalize to in New York.
         expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
         const payload = deleteRecurringEventSpy.mock.lastCall[0];
-        expect(adapter.getTime(payload.occurrenceStart)).to.equal(
-          adapter.getTime(adapter.date('2025-07-04T00:00:00', 'UTC')),
+        expect(payload.occurrenceStart.getTime()).to.equal(
+          createDate('2025-07-04T00:00:00', 'UTC').getTime(),
         );
       });
 
@@ -2483,18 +2479,15 @@ describe('<EventDialogContent open />', () => {
         const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall?.[0];
         const series = newEvents.find((event) => event.id === weeklyEvent.id)!;
         expect(
-          adapter.formatByString(
-            adapter.date(String((series.rrule as any).until), 'UTC'),
-            'yyyy-MM-dd',
-          ),
-        ).to.equal('2025-07-10');
+          toPlainDate(createDate(String((series.rrule as any).until), 'UTC').getTime(), 'UTC'),
+        ).toEqualPlainDate('2025-07-10');
 
         const split = newEvents.find((event) => event.id !== weeklyEvent.id)!;
         expect(split.title).to.equal('Weekly sync renamed');
         expect(split.rrule).to.not.equal(undefined);
         expect(
-          adapter.formatByString(adapter.date(String(split.start), 'UTC'), 'yyyy-MM-dd'),
-        ).to.equal('2025-07-11');
+          toPlainDate(createDate(String(split.start), 'UTC').getTime(), 'UTC'),
+        ).toEqualPlainDate('2025-07-11');
       });
 
       it('should identify an occurrence across a DST transition by its data-timezone start', async () => {
@@ -2543,8 +2536,8 @@ describe('<EventDialogContent open />', () => {
         // 00:00Z nor the pre-transition offset's 04:00Z.
         expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
         const payload = deleteRecurringEventSpy!.mock.lastCall![0];
-        expect(adapter.getTime(payload.occurrenceStart)).to.equal(
-          adapter.getTime(adapter.date('2025-11-07T00:00:00', 'America/New_York')),
+        expect(payload.occurrenceStart.getTime()).to.equal(
+          createDate('2025-11-07T00:00:00', 'America/New_York').getTime(),
         );
       });
 
@@ -2668,7 +2661,7 @@ describe('<EventDialogContent open />', () => {
             .withDataTimezone('Pacific/Apia')
             .span('2011-12-28T09:00:00', '2011-12-28T09:30:00'),
           'Pacific/Apia',
-          { visibleDate: adapter.date('2011-12-28T12:00:00', 'Pacific/Apia') },
+          { visibleDate: createDate('2011-12-28T12:00:00', 'Pacific/Apia') },
         );
 
         await user.click(screen.getByRole('tab', { name: /recurrence/i }));
@@ -2855,8 +2848,8 @@ describe('<EventDialogContent open />', () => {
         const updated = onEventsChange.mock.lastCall?.[0].find(
           (event: SchedulerEvent) => event.id === lateCallEvent.id,
         )!;
-        expect(adapter.date(updated.start, 'UTC')).toEqualDateTime(
-          adapter.date('2025-07-03T14:00:00', 'UTC'),
+        expect(createDate(updated.start, 'UTC')).toEqualDateTime(
+          createDate('2025-07-03T14:00:00', 'UTC'),
         );
         // Built on the new start, not the Friday the stored one fell on.
         expect(updated.rrule).to.deep.include({ freq: 'WEEKLY', byDay: ['TH'] });
@@ -2878,7 +2871,7 @@ describe('<EventDialogContent open />', () => {
           },
         };
         let store: AnyEventCalendarStore;
-        const resizedEnd = adapter.date('2025-05-26T16:00:00', 'UTC');
+        const resizedEnd = createDate('2025-05-26T16:00:00', 'UTC');
         // The snapshot after the resize, as the store hands it to the dialog.
         const resizedOccurrence = EventBuilder.new()
           .id(event.id)
@@ -2928,7 +2921,7 @@ describe('<EventDialogContent open />', () => {
         const renamed = persistCalls[1].updated[0];
         expect(renamed.title).to.equal('Renamed');
         // Without the end, the write would carry the stale 11:00 and undo the resize.
-        expect(adapter.date(renamed.end, 'UTC')).toEqualDateTime(resizedEnd);
+        expect(createDate(renamed.end, 'UTC')).toEqualDateTime(resizedEnd);
       });
 
       it('should keep a bound the host moved while the dialog is open', async () => {
@@ -4549,8 +4542,8 @@ describe('<EventDialogContent open />', () => {
           .withDisplayTimezone('America/New_York')
           .singleDay('2025-07-08T23:00:00Z', 60);
         const event = builder.build();
-        const resizedStart = adapter.date('2025-07-08T21:00:00', 'America/New_York');
-        const resizedEnd = adapter.date('2025-07-08T22:00:00', 'America/New_York');
+        const resizedStart = createDate('2025-07-08T21:00:00', 'America/New_York');
+        const resizedEnd = createDate('2025-07-08T22:00:00', 'America/New_York');
         const onEventsChange = vi.fn();
 
         const { user } = renderEditedAfterResize({
@@ -4582,7 +4575,7 @@ describe('<EventDialogContent open />', () => {
           .withDisplayTimezone('America/New_York');
         const event = builder.build();
         const occurrence = builder.toOccurrence();
-        const resizedEnd = adapter.addDays(occurrence.displayTimezone.end.value, 1);
+        const resizedEnd = addDays(occurrence.displayTimezone.end.value, 1);
         const onEventsChange = vi.fn();
 
         const { user } = renderEditedAfterResize({

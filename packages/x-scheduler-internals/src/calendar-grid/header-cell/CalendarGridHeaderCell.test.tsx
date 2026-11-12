@@ -1,19 +1,14 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
-import {
-  adapter,
-  createSchedulerRenderer,
-  describeConformance,
-  processDay,
-} from 'test/utils/scheduler';
+import { createSchedulerRenderer, describeConformance, processDay } from 'test/utils/scheduler';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import { vi, describe, it, expect } from 'vitest';
 
 describe('<CalendarGrid.HeaderCell />', () => {
   const { render } = createSchedulerRenderer();
 
-  const day = adapter.now('default');
+  const day = new Date();
 
   describeConformance(<CalendarGrid.HeaderCell date={processDay(day)} />, () => ({
     refInstanceof: window.HTMLDivElement,

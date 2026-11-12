@@ -2,7 +2,7 @@ import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
   absorbObserverFrames,
-  adapter,
+  createDate,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
@@ -292,8 +292,8 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     act(() => {
       store.updateEvent({
         id: 'event-a',
-        start: adapter.date('2025-07-03T09:30:00Z', 'default'),
-        end: adapter.date('2025-07-03T10:30:00Z', 'default'),
+        start: createDate('2025-07-03T09:30:00Z'),
+        end: createDate('2025-07-03T10:30:00Z'),
       });
     });
 

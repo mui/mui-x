@@ -6,8 +6,10 @@ import {
 } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import { EVENT_TIMELINE_DEFAULT_LOCALE_TEXT } from '@mui/x-scheduler/internals';
+import { toLocalDayNumber } from '@mui/x-scheduler-internals/internals';
 import {
-  adapter,
+  addDays,
+  createDate,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -15,6 +17,7 @@ import {
   getAllEventsByTitle,
   getEventByTitle,
   ResourceBuilder,
+  startOfWeek,
 } from 'test/utils/scheduler';
 import type {
   SchedulerEvent,
@@ -494,11 +497,10 @@ describe('<EventTimelinePremium />', () => {
 
     it('should render events correctly in the dayAndWeek preset', async () => {
       const totalWidth = 64 * 7 * 16; // 64px * 7 days * 16 weeks
-      const startOfWeek = adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
-      const weekDayNumber = adapter.differenceInDays(
-        adapter.date(baseEvents[0].start, 'default'),
-        startOfWeek,
-      );
+      const weekStart = startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
+      const weekDayNumber =
+        toLocalDayNumber(Date.parse(baseEvents[0].start), 'default') -
+        toLocalDayNumber(weekStart.getTime(), 'default');
       const dayBoundaries = { start: weekDayNumber * 64, end: (weekDayNumber + 1) * 64 };
 
       await renderTimeline({ preset: 'dayAndWeek' });
@@ -830,7 +832,7 @@ describe('<EventTimelinePremium />', () => {
     });
 
     it('should not render the indicator when today is not in view', async () => {
-      const visibleDate = adapter.date('2030-01-01T00:00:00Z', 'default');
+      const visibleDate = createDate('2030-01-01T00:00:00Z');
       await renderTimeline({ visibleDate });
 
       const indicators = document.querySelectorAll(
@@ -917,7 +919,7 @@ describe('<EventTimelinePremium />', () => {
               visibleDate={visibleDate}
               defaultPreset="dayAndMonth"
             />
-            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, 56))}>
+            <button type="button" onClick={() => setVisibleDate(addDays(visibleDate, 56))}>
               Next
             </button>
           </React.Fragment>
@@ -1033,7 +1035,7 @@ describe('<EventTimelinePremium />', () => {
               visibleDate={visibleDate}
               defaultPreset="dayAndMonth"
             />
-            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, 56))}>
+            <button type="button" onClick={() => setVisibleDate(addDays(visibleDate, 56))}>
               Next
             </button>
           </React.Fragment>
@@ -1087,10 +1089,10 @@ describe('<EventTimelinePremium />', () => {
               visibleDate={visibleDate}
               defaultPreset="dayAndMonth"
             />
-            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, 56))}>
+            <button type="button" onClick={() => setVisibleDate(addDays(visibleDate, 56))}>
               Next
             </button>
-            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, -56))}>
+            <button type="button" onClick={() => setVisibleDate(addDays(visibleDate, -56))}>
               Prev
             </button>
           </React.Fragment>
@@ -1151,7 +1153,7 @@ describe('<EventTimelinePremium />', () => {
       await renderTimeline({
         preset: 'dayAndHour',
         // July 1st at midnight in UTC is June 30th at 20:00 in New York.
-        visibleDate: adapter.date('2025-07-01T00:00:00', 'UTC'),
+        visibleDate: createDate('2025-07-01T00:00:00', 'UTC'),
         displayTimezone: 'America/New_York',
       });
 
@@ -1259,7 +1261,7 @@ describe('<EventTimelinePremium />', () => {
         const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
         const { user } = await renderTimeline({
           events: [],
-          visibleDate: adapter.date('2025-07-03T12:00:00Z', displayTimezone ?? 'default'),
+          visibleDate: createDate('2025-07-03T12:00:00Z'),
           displayTimezone,
           onEventEditingStart,
         });

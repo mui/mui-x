@@ -1,4 +1,11 @@
-import { adapter, ResourceBuilder, setSystemTimezone, storeClasses } from 'test/utils/scheduler';
+import {
+  addDays,
+  createDate,
+  ResourceBuilder,
+  setSystemTimezone,
+  startOfDay,
+  storeClasses,
+} from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect, onTestFinished } from 'vitest';
 
@@ -7,9 +14,9 @@ const DEFAULT_PARAMS = { events: [], resources: [ResourceBuilder.new().build()] 
 storeClasses.forEach((storeClass) => {
   describe(`Date - ${storeClass.name}`, () => {
     describe('Method: goToToday', () => {
-      it('should set visibleDate to startOfDay(adapter.now("default")) and calls onVisibleDateChange when is uncontrolled', () => {
+      it('should set visibleDate to startOfDay(new Date()) and calls onVisibleDateChange when is uncontrolled', () => {
         const onVisibleDateChange = vi.fn();
-        const yesterday = adapter.addDays(adapter.startOfDay(adapter.now('default')), -1);
+        const yesterday = addDays(startOfDay(new Date()), -1);
         const store = new storeClass.Value({
           ...DEFAULT_PARAMS,
           onVisibleDateChange,
@@ -18,7 +25,7 @@ storeClasses.forEach((storeClass) => {
 
         store.goToToday({} as any);
 
-        const expected = adapter.startOfDay(adapter.now('default'));
+        const expected = startOfDay(new Date());
         expect(store.state.visibleDate).toEqualDateTime(expected);
         expect(onVisibleDateChange.mock.calls.length).to.equal(1);
         expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(expected);
@@ -28,7 +35,7 @@ storeClasses.forEach((storeClass) => {
         const onVisibleDateChange = vi.fn();
         const displayTimezone = 'Pacific/Kiritimati';
 
-        const yesterday = adapter.addDays(adapter.startOfDay(adapter.now('default')), -1);
+        const yesterday = addDays(startOfDay(new Date()), -1);
 
         const store = new storeClass.Value({
           ...DEFAULT_PARAMS,
@@ -39,14 +46,12 @@ storeClasses.forEach((storeClass) => {
 
         store.goToToday({} as any);
 
-        const expected = adapter.startOfDay(adapter.now(displayTimezone));
+        const expected = startOfDay(new Date(), displayTimezone);
 
-        expect(adapter.getTime(store.state.visibleDate)).to.equal(adapter.getTime(expected));
+        expect(store.state.visibleDate.getTime()).to.equal(expected.getTime());
         expect(store.state.displayTimezone).to.equal(displayTimezone);
         expect(onVisibleDateChange.mock.calls.length).to.equal(1);
-        expect(adapter.getTime(onVisibleDateChange.mock.lastCall?.[0])).to.equal(
-          adapter.getTime(expected),
-        );
+        expect(onVisibleDateChange.mock.lastCall![0].getTime()).to.equal(expected.getTime());
       });
 
       // Browsers cannot change their timezone through process.env.TZ.
@@ -63,13 +68,13 @@ storeClasses.forEach((storeClass) => {
           const onVisibleDateChange = vi.fn();
           const store = new storeClass.Value({
             ...DEFAULT_PARAMS,
-            defaultVisibleDate: adapter.date('2026-03-01T12:00:00Z', 'default'),
+            defaultVisibleDate: createDate('2026-03-01T12:00:00Z'),
             onVisibleDateChange,
           });
 
           store.goToToday({} as any);
 
-          expect(adapter.getTime(onVisibleDateChange.mock.lastCall?.[0])).to.equal(
+          expect(onVisibleDateChange.mock.lastCall![0].getTime()).to.equal(
             Date.parse('2026-03-08T05:00:00Z'),
           );
         },
@@ -79,8 +84,8 @@ storeClasses.forEach((storeClass) => {
     describe('Method: goToDate', () => {
       it('should set visibleDate to the provided date and call onVisibleDateChange when uncontrolled', () => {
         const onVisibleDateChange = vi.fn();
-        const initialDate = adapter.date('2025-05-26T00:00:00Z', 'default');
-        const targetDate = adapter.date('2025-06-15T10:30:00Z', 'default');
+        const initialDate = createDate('2025-05-26T00:00:00Z');
+        const targetDate = createDate('2025-06-15T10:30:00Z');
         const store = new storeClass.Value({
           ...DEFAULT_PARAMS,
           onVisibleDateChange,
@@ -96,8 +101,8 @@ storeClasses.forEach((storeClass) => {
 
       it('should not change state but call onVisibleDateChange when controlled', () => {
         const onVisibleDateChange = vi.fn();
-        const controlledDate = adapter.date('2025-07-01T00:00:00Z', 'default');
-        const targetDate = adapter.date('2025-08-15T00:00:00Z', 'default');
+        const controlledDate = createDate('2025-07-01T00:00:00Z');
+        const targetDate = createDate('2025-08-15T00:00:00Z');
         const store = new storeClass.Value({
           ...DEFAULT_PARAMS,
           visibleDate: controlledDate,
@@ -113,7 +118,7 @@ storeClasses.forEach((storeClass) => {
 
       it('should do nothing if already at the target date', () => {
         const onVisibleDateChange = vi.fn();
-        const targetDate = adapter.date('2025-05-26T00:00:00Z', 'default');
+        const targetDate = createDate('2025-05-26T00:00:00Z');
         const store = new storeClass.Value({
           ...DEFAULT_PARAMS,
           defaultVisibleDate: targetDate,

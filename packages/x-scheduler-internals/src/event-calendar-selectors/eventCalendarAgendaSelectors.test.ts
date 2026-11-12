@@ -1,5 +1,5 @@
 import {
-  adapter,
+  createDate,
   EventBuilder,
   getEventCalendarStateFromParameters,
   processDay,
@@ -15,24 +15,22 @@ describe('eventCalendarEventSelectors', () => {
     it('should return AGENDA_VIEW_DAYS_AMOUNT days from the visible date, skipping weekends when hidden', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
-        visibleDate: adapter.date('2025-07-01', 'default'), // Tuesday
+        visibleDate: createDate('2025-07-01'), // Tuesday
         defaultPreferences: { showWeekends: false },
       });
 
       const days = eventCalendarAgendaSelectors.baseVisibleDays(state);
 
       expect(days).to.have.length(9);
-      expect(days[0]).to.deep.equal(processDay(adapter.date('2025-07-01Z', 'default')));
-      expect(days[days.length - 1]).to.deep.equal(
-        processDay(adapter.date('2025-07-11Z', 'default')),
-      );
+      expect(days[0]).to.deep.equal(processDay(createDate('2025-07-01')));
+      expect(days[days.length - 1]).to.deep.equal(processDay(createDate('2025-07-11')));
     });
 
     it('should skip the weekend of the date locale when weekends are hidden', () => {
       // Saudi Arabia rests on Friday and Saturday.
       const state = getEventCalendarStateFromParameters({
         events: [],
-        visibleDate: adapter.date('2025-07-01', 'default'), // Tuesday
+        visibleDate: createDate('2025-07-01'), // Tuesday
         dateLocale: 'ar-SA',
         defaultPreferences: { showWeekends: false },
       });
@@ -56,7 +54,7 @@ describe('eventCalendarEventSelectors', () => {
     it('should return exactly AGENDA_VIEW_DAYS_AMOUNT days and fills occurrences with [] when there are no events and showEmptyDaysInAgenda=true', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
-        visibleDate: adapter.date('2024-01-01', 'default'),
+        visibleDate: createDate('2024-01-01'),
         defaultPreferences: {
           showWeekends: true,
           showEmptyDaysInAgenda: true,
@@ -88,7 +86,7 @@ describe('eventCalendarEventSelectors', () => {
 
       const state = getEventCalendarStateFromParameters({
         events,
-        visibleDate: adapter.date('2025-01-01', 'default'),
+        visibleDate: createDate('2025-01-01'),
         defaultPreferences: {
           showWeekends: true,
           showEmptyDaysInAgenda: false,
@@ -98,18 +96,18 @@ describe('eventCalendarEventSelectors', () => {
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(visibleDays).to.deep.equal([
-        processDay(adapter.date('2025-01-01Z', 'default')),
-        processDay(adapter.date('2025-01-03Z', 'default')),
-        processDay(adapter.date('2025-01-05Z', 'default')),
-        processDay(adapter.date('2025-01-08Z', 'default')),
-        processDay(adapter.date('2025-01-09Z', 'default')),
-        processDay(adapter.date('2025-01-10Z', 'default')),
-        processDay(adapter.date('2025-01-11Z', 'default')),
-        processDay(adapter.date('2025-01-13Z', 'default')),
-        processDay(adapter.date('2025-01-14Z', 'default')),
-        processDay(adapter.date('2025-01-16Z', 'default')),
-        processDay(adapter.date('2025-01-18Z', 'default')),
-        processDay(adapter.date('2025-01-20Z', 'default')),
+        processDay(createDate('2025-01-01')),
+        processDay(createDate('2025-01-03')),
+        processDay(createDate('2025-01-05')),
+        processDay(createDate('2025-01-08')),
+        processDay(createDate('2025-01-09')),
+        processDay(createDate('2025-01-10')),
+        processDay(createDate('2025-01-11')),
+        processDay(createDate('2025-01-13')),
+        processDay(createDate('2025-01-14')),
+        processDay(createDate('2025-01-16')),
+        processDay(createDate('2025-01-18')),
+        processDay(createDate('2025-01-20')),
       ]);
     });
 
@@ -124,7 +122,7 @@ describe('eventCalendarEventSelectors', () => {
       // Saudi Arabia rests on Friday and Saturday.
       const state = getEventCalendarStateFromParameters({
         events,
-        visibleDate: adapter.date('2025-10-03', 'default'), // Friday
+        visibleDate: createDate('2025-10-03'), // Friday
         dateLocale: 'ar-SA',
         defaultPreferences: {
           showWeekends: false,
@@ -174,7 +172,7 @@ describe('eventCalendarEventSelectors', () => {
 
       const state = getEventCalendarStateFromParameters({
         events,
-        visibleDate: adapter.date('2025-10-03', 'default'), // Friday
+        visibleDate: createDate('2025-10-03'), // Friday
         defaultPreferences: {
           showWeekends: false,
           showEmptyDaysInAgenda: false,
@@ -184,25 +182,25 @@ describe('eventCalendarEventSelectors', () => {
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(visibleDays).to.deep.equal([
-        processDay(adapter.date('2025-10-03Z', 'default')),
-        processDay(adapter.date('2025-10-06Z', 'default')),
-        processDay(adapter.date('2025-10-07Z', 'default')),
-        processDay(adapter.date('2025-10-08Z', 'default')),
-        processDay(adapter.date('2025-10-09Z', 'default')),
-        processDay(adapter.date('2025-10-10Z', 'default')),
-        processDay(adapter.date('2025-10-13Z', 'default')),
-        processDay(adapter.date('2025-10-14Z', 'default')),
-        processDay(adapter.date('2025-10-15Z', 'default')),
-        processDay(adapter.date('2025-10-16Z', 'default')),
-        processDay(adapter.date('2025-10-17Z', 'default')),
-        processDay(adapter.date('2025-10-20Z', 'default')),
+        processDay(createDate('2025-10-03')),
+        processDay(createDate('2025-10-06')),
+        processDay(createDate('2025-10-07')),
+        processDay(createDate('2025-10-08')),
+        processDay(createDate('2025-10-09')),
+        processDay(createDate('2025-10-10')),
+        processDay(createDate('2025-10-13')),
+        processDay(createDate('2025-10-14')),
+        processDay(createDate('2025-10-15')),
+        processDay(createDate('2025-10-16')),
+        processDay(createDate('2025-10-17')),
+        processDay(createDate('2025-10-20')),
       ]);
     });
 
     it('should return an empty list when no day in the horizon has events and showEmptyDaysInAgenda=false', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
-        visibleDate: adapter.date('2024-01-01', 'default'),
+        visibleDate: createDate('2024-01-01'),
         defaultPreferences: {
           showWeekends: true,
           showEmptyDaysInAgenda: false,
@@ -217,7 +215,7 @@ describe('eventCalendarEventSelectors', () => {
     it('should return an empty list when all the events are before the visible date and showEmptyDaysInAgenda=false', () => {
       const state = getEventCalendarStateFromParameters({
         events: [EventBuilder.new().fullDay('2023-12-01Z').build()],
-        visibleDate: adapter.date('2024-01-01', 'default'),
+        visibleDate: createDate('2024-01-01'),
         defaultPreferences: {
           showWeekends: true,
           showEmptyDaysInAgenda: false,
@@ -233,7 +231,7 @@ describe('eventCalendarEventSelectors', () => {
       const state: EventCalendarState = {
         ...getEventCalendarStateFromParameters({
           events: [],
-          visibleDate: adapter.date('2024-01-01', 'default'),
+          visibleDate: createDate('2024-01-01'),
           defaultPreferences: {
             showWeekends: true,
             showEmptyDaysInAgenda: false,
@@ -250,7 +248,7 @@ describe('eventCalendarEventSelectors', () => {
     it('should scan the days right after the base window when the visible date is a weekend day and weekends are hidden', () => {
       const state = getEventCalendarStateFromParameters({
         events: [EventBuilder.new().fullDay('2025-07-17Z').build()], // Thursday, visible date + 12 days
-        visibleDate: adapter.date('2025-07-05', 'default'), // Saturday
+        visibleDate: createDate('2025-07-05'), // Saturday
         defaultPreferences: {
           showWeekends: false,
           showEmptyDaysInAgenda: false,
@@ -259,13 +257,13 @@ describe('eventCalendarEventSelectors', () => {
 
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
-      expect(visibleDays).to.deep.equal([processDay(adapter.date('2025-07-17Z', 'default'))]);
+      expect(visibleDays).to.deep.equal([processDay(createDate('2025-07-17'))]);
     });
 
     it('should find an event on the last day of the horizon when showEmptyDaysInAgenda=false', () => {
       const state = getEventCalendarStateFromParameters({
         events: [EventBuilder.new().fullDay('2024-06-28Z').build()], // 2024-01-01 + 179 days
-        visibleDate: adapter.date('2024-01-01', 'default'),
+        visibleDate: createDate('2024-01-01'),
         defaultPreferences: {
           showWeekends: true,
           showEmptyDaysInAgenda: false,
@@ -274,14 +272,14 @@ describe('eventCalendarEventSelectors', () => {
 
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
-      expect(visibleDays).to.deep.equal([processDay(adapter.date('2024-06-28Z', 'default'))]);
+      expect(visibleDays).to.deep.equal([processDay(createDate('2024-06-28'))]);
     });
 
     it('should not list a day twice when a scanned chunk ends on a skipped day', () => {
       // Pacific/Apia skipped December 30th, 2011, the last day of the second chunk.
       const state = getEventCalendarStateFromParameters({
         events: [EventBuilder.new().singleDay('2011-12-31T00:00:00Z').build()],
-        visibleDate: adapter.date('2011-12-07T12:00:00', 'Pacific/Apia'),
+        visibleDate: createDate('2011-12-07T12:00:00', 'Pacific/Apia'),
         displayTimezone: 'Pacific/Apia',
         defaultPreferences: {
           showWeekends: true,
@@ -297,7 +295,7 @@ describe('eventCalendarEventSelectors', () => {
     it('should not find an event past the horizon when showEmptyDaysInAgenda=false', () => {
       const state = getEventCalendarStateFromParameters({
         events: [EventBuilder.new().fullDay('2024-06-29Z').build()], // 2024-01-01 + 180 days
-        visibleDate: adapter.date('2024-01-01', 'default'),
+        visibleDate: createDate('2024-01-01'),
         defaultPreferences: {
           showWeekends: true,
           showEmptyDaysInAgenda: false,
@@ -312,7 +310,7 @@ describe('eventCalendarEventSelectors', () => {
       const build = (eventDate: string) =>
         getEventCalendarStateFromParameters({
           events: [EventBuilder.new().fullDay(eventDate).build()],
-          visibleDate: adapter.date('2025-07-05', 'default'), // Saturday
+          visibleDate: createDate('2025-07-05'), // Saturday
           defaultPreferences: {
             showWeekends: false,
             showEmptyDaysInAgenda: false,
@@ -329,7 +327,7 @@ describe('eventCalendarEventSelectors', () => {
     it('should end on the last weekday of the base days when weekends are hidden and showEmptyDaysInAgenda=true', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
-        visibleDate: adapter.date('2025-07-01', 'default'), // Tuesday, the 12-day window ends on a Saturday
+        visibleDate: createDate('2025-07-01'), // Tuesday, the 12-day window ends on a Saturday
         defaultPreferences: {
           showWeekends: false,
           showEmptyDaysInAgenda: true,
@@ -344,7 +342,7 @@ describe('eventCalendarEventSelectors', () => {
     it('should span the base days when showEmptyDaysInAgenda=true', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
-        visibleDate: adapter.date('2024-01-01', 'default'),
+        visibleDate: createDate('2024-01-01'),
         defaultPreferences: {
           showWeekends: true,
           showEmptyDaysInAgenda: true,
@@ -360,7 +358,7 @@ describe('eventCalendarEventSelectors', () => {
     it('should span the whole horizon when showEmptyDaysInAgenda=false', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
-        visibleDate: adapter.date('2024-01-01', 'default'),
+        visibleDate: createDate('2024-01-01'),
         defaultPreferences: {
           showWeekends: true,
           showEmptyDaysInAgenda: false,
@@ -375,7 +373,7 @@ describe('eventCalendarEventSelectors', () => {
 
     it('should not depend on the events or the loading state when showEmptyDaysInAgenda=false', () => {
       const parameters = {
-        visibleDate: adapter.date('2024-01-01', 'default'),
+        visibleDate: createDate('2024-01-01'),
         defaultPreferences: {
           showWeekends: true,
           showEmptyDaysInAgenda: false,
@@ -403,7 +401,7 @@ describe('eventCalendarEventSelectors', () => {
     it('should return dayCount days from the visible date', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
-        visibleDate: adapter.date('2025-07-01', 'default'),
+        visibleDate: createDate('2025-07-01'),
         viewConfig: { agenda: { dayCount: 5 } },
         defaultPreferences: { showWeekends: true },
       });
@@ -411,14 +409,14 @@ describe('eventCalendarEventSelectors', () => {
       const days = eventCalendarAgendaSelectors.baseVisibleDays(state);
 
       expect(days).to.have.length(5);
-      expect(days[0]).to.deep.equal(processDay(adapter.date('2025-07-01Z', 'default')));
-      expect(days[4]).to.deep.equal(processDay(adapter.date('2025-07-05Z', 'default')));
+      expect(days[0]).to.deep.equal(processDay(createDate('2025-07-01')));
+      expect(days[4]).to.deep.equal(processDay(createDate('2025-07-05')));
     });
 
     it("should return the whole month of the visible date when dayCount is 'month'", () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
-        visibleDate: adapter.date('2025-07-15', 'default'),
+        visibleDate: createDate('2025-07-15'),
         viewConfig: { agenda: { dayCount: 'month' } },
         defaultPreferences: { showWeekends: true, showEmptyDaysInAgenda: true },
       });
@@ -426,8 +424,8 @@ describe('eventCalendarEventSelectors', () => {
       const days = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(days).to.have.length(31);
-      expect(days[0]).to.deep.equal(processDay(adapter.date('2025-07-01Z', 'default')));
-      expect(days[30]).to.deep.equal(processDay(adapter.date('2025-07-31Z', 'default')));
+      expect(days[0]).to.deep.equal(processDay(createDate('2025-07-01')));
+      expect(days[30]).to.deep.equal(processDay(createDate('2025-07-31')));
     });
 
     it("should only keep the days of the month that have events when hiding the empty days in 'month' mode", () => {
@@ -437,7 +435,7 @@ describe('eventCalendarEventSelectors', () => {
           EventBuilder.new().fullDay('2025-07-20Z').build(),
           EventBuilder.new().fullDay('2025-08-02Z').build(),
         ],
-        visibleDate: adapter.date('2025-07-15', 'default'),
+        visibleDate: createDate('2025-07-15'),
         viewConfig: { agenda: { dayCount: 'month' } },
         defaultPreferences: { showWeekends: true, showEmptyDaysInAgenda: false },
       });
@@ -445,8 +443,8 @@ describe('eventCalendarEventSelectors', () => {
       const days = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(days.map((day) => day.key)).to.deep.equal([
-        processDay(adapter.date('2025-07-03Z', 'default')).key,
-        processDay(adapter.date('2025-07-20Z', 'default')).key,
+        processDay(createDate('2025-07-03')).key,
+        processDay(createDate('2025-07-20')).key,
       ]);
 
       const fetchRange = eventCalendarAgendaSelectors.fetchRange(state);
@@ -476,7 +474,7 @@ describe('eventCalendarEventSelectors', () => {
         events: [...occupiedDays, '2025-08-02Z'].map((day) =>
           EventBuilder.new().fullDay(day).build(),
         ),
-        visibleDate: adapter.date('2025-07-15', 'default'),
+        visibleDate: createDate('2025-07-15'),
         viewConfig: { agenda: { dayCount: 'month' } },
         defaultPreferences: { showWeekends: true, showEmptyDaysInAgenda: false },
       });
@@ -484,7 +482,7 @@ describe('eventCalendarEventSelectors', () => {
       const days = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(days.map((day) => day.key)).to.deep.equal(
-        occupiedDays.map((day) => processDay(adapter.date(day, 'default')).key),
+        occupiedDays.map((day) => processDay(createDate(day)).key),
       );
     });
 
@@ -499,7 +497,7 @@ describe('eventCalendarEventSelectors', () => {
           EventBuilder.new().fullDay('2025-07-25Z').build(),
           EventBuilder.new().fullDay('2025-07-28Z').build(),
         ],
-        visibleDate: adapter.date('2025-07-01', 'default'),
+        visibleDate: createDate('2025-07-01'),
         viewConfig: { agenda: { dayCount: 5 } },
         defaultPreferences: { showWeekends: true, showEmptyDaysInAgenda: false },
       });
@@ -507,18 +505,18 @@ describe('eventCalendarEventSelectors', () => {
       const days = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(days.map((day) => day.key)).to.deep.equal([
-        processDay(adapter.date('2025-07-02Z', 'default')).key,
-        processDay(adapter.date('2025-07-08Z', 'default')).key,
-        processDay(adapter.date('2025-07-10Z', 'default')).key,
-        processDay(adapter.date('2025-07-15Z', 'default')).key,
-        processDay(adapter.date('2025-07-20Z', 'default')).key,
+        processDay(createDate('2025-07-02')).key,
+        processDay(createDate('2025-07-08')).key,
+        processDay(createDate('2025-07-10')).key,
+        processDay(createDate('2025-07-15')).key,
+        processDay(createDate('2025-07-20')).key,
       ]);
     });
 
     it('should not throw when a short dayCount only covers hidden weekend days', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
-        visibleDate: adapter.date('2025-07-05', 'default'), // Saturday
+        visibleDate: createDate('2025-07-05'), // Saturday
         viewConfig: { agenda: { dayCount: 2 } },
         defaultPreferences: { showWeekends: false, showEmptyDaysInAgenda: true },
       });
@@ -530,7 +528,7 @@ describe('eventCalendarEventSelectors', () => {
     });
 
     it('should fetch at least the displayed days when dayCount exceeds the scan horizon', () => {
-      const visibleDate = adapter.date('2025-01-01', 'default');
+      const visibleDate = createDate('2025-01-01');
       const state = getEventCalendarStateFromParameters({
         events: [],
         visibleDate,
