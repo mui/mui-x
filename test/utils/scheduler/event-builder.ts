@@ -32,7 +32,7 @@ export const DEFAULT_TESTING_VISIBLE_DATE = createDate(DEFAULT_TESTING_VISIBLE_D
 export class EventBuilder {
   declare protected event: SchedulerEvent;
 
-  protected displayTimezone: string = 'default';
+  protected displayTimezone = 'default';
 
   protected constructor() {
     const id = crypto.randomUUID();

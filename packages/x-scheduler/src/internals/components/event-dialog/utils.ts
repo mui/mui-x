@@ -399,8 +399,7 @@ export function getRecurrenceUntil(rawDate: string, eventTimezone: string): Date
 }
 
 /**
- * The canonical IANA identifier of a timezone; `default` and `system` resolve to the system
- * timezone.
+ * The canonical IANA identifier of a timezone; `default` resolves to the system timezone.
  */
 function getTimezoneId(timezone: string): string {
   const id = timezone === 'default' ? Intl.DateTimeFormat().resolvedOptions().timeZone : timezone;

@@ -148,9 +148,9 @@ export function getProcessedEventFromModel<TEvent extends object>(
 
 /**
  * Updates an event model based on the provided changes and model structure.
- * Converts the `Date` objects to strings
- * before applying them to the user's model, because `SchedulerEvent` date
- * fields are strings. Respects the original string format (instant vs wall-time).
+ * Converts the `Date` objects to strings before applying them to the user's model, because
+ * `SchedulerEvent` date fields are strings. Respects the original string format (instant vs
+ * wall-time).
  */
 export function getUpdatedEventModelFromChanges<TEvent extends object>(
   oldModel: TEvent,

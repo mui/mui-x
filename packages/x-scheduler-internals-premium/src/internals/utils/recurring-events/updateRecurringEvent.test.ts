@@ -45,8 +45,8 @@ describe('recurring-events/updateRecurringEvent', () => {
     const call = (
       originalRule: SchedulerProcessedEventRecurrenceRule,
       changes: Partial<SchedulerEventUpdatedProperties> = {},
-      originalSeriesStart: Date = seriesStart,
-      split: Date = splitStart,
+      originalSeriesStart = seriesStart,
+      split = splitStart,
     ) =>
       decideSplitRRule(
         {

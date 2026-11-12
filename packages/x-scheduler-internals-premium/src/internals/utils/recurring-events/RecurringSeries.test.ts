@@ -24,7 +24,7 @@ function countRemaining(
   start: string,
   date: string,
   count: number,
-  timezone: string = 'UTC',
+  timezone = 'UTC',
 ) {
   const series = new RecurringSeries({
     rule: { ...rule, count },

@@ -26,7 +26,7 @@ function dependency(
   return { id: `dep-${dependencyCount}`, source, target, type: 'FinishToStart', ...overrides };
 }
 
-function allDayEvent(id: SchedulerEventId, day: string, timezone: string = 'UTC') {
+function allDayEvent(id: SchedulerEventId, day: string, timezone = 'UTC') {
   return EventBuilder.new()
     .id(id)
     .withDataTimezone(timezone)
@@ -72,7 +72,7 @@ function expectDates(
   entry: { start?: Date; end?: Date },
   start: string | null,
   end: string | null,
-  timezone: string = 'default',
+  timezone = 'default',
 ) {
   if (start === null) {
     expect('start' in entry).to.equal(false);

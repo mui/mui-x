@@ -7,10 +7,9 @@ import { toWallClockIsoString } from './plain-date-utils/timeZone';
 import { isInstantString } from './plain-date-utils/date';
 
 /**
- * Converts a `Date` back to a string, respecting the
- * original date format: instant strings (ending with `Z` or an offset) become UTC ISO
- * strings, while wall-time strings are formatted in the event's data timezone
- * without the `Z` suffix.
+ * Converts a `Date` back to a string, respecting the original date format: instant strings
+ * (ending with `Z` or an offset) become UTC ISO strings, while wall-time strings are formatted
+ * in the event's data timezone without the `Z` suffix.
  */
 export function dateToEventString(
   date: Date,
