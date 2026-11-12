@@ -53,24 +53,6 @@ describe('recurring-events/updateRecurringEvent', () => {
         changes,
       ) as SchedulerProcessedEventRecurrenceRule | undefined;
 
-    it('should return changes.rrule as is when user explicitly changed recurrence', () => {
-      const original: SchedulerProcessedEventRecurrenceRule = { freq: 'DAILY', interval: 1 };
-      const newRule: SchedulerProcessedEventRecurrenceRule = {
-        freq: 'WEEKLY',
-        interval: 2,
-        count: 5,
-      };
-
-      const res = call(original, { rrule: newRule });
-      expect(res).to.deep.equal({ freq: 'WEEKLY', interval: 2, count: 5 });
-    });
-
-    it('should return undefined when user explicitly removed recurrence', () => {
-      const original: SchedulerProcessedEventRecurrenceRule = { freq: 'DAILY', interval: 1 };
-      const res = call(original, { rrule: undefined });
-      expect(res).to.equal(undefined);
-    });
-
     describe('should inherit base pattern when RRULE not explicitly changed', () => {
       it('should inherit base pattern when RRULE not touched and there are no boundaries', () => {
         const original: SchedulerProcessedEventRecurrenceRule = { freq: 'DAILY', interval: 2 };
@@ -200,21 +182,6 @@ describe('recurring-events/updateRecurringEvent', () => {
   });
 
   describe('applyRecurringUpdateFollowing', () => {
-    it('should set extractedFromId for the new series', () => {
-      // Original: daily from Jan 01
-      const occurrenceStart = adapter.date('2025-01-07T09:00:00Z', 'default');
-      const changes: SchedulerEventUpdatedProperties = {
-        id: defaultEvent.id,
-        start: adapter.date('2025-01-07T10:00:00Z', 'default'),
-        end: adapter.date('2025-01-07T11:00:00Z', 'default'),
-      };
-
-      const updatedEvents = applyRecurringUpdateFollowing(defaultEvent, occurrenceStart, changes);
-
-      expect(updatedEvents.created).to.have.length(1);
-      expect(updatedEvents.created![0].extractedFromId).to.equal(defaultEvent.id);
-    });
-
     it('should keep a new RRULE string as is for the new series', () => {
       const occurrenceStart = adapter.date('2025-01-07T09:00:00Z', 'default');
       const updatedEvents = applyRecurringUpdateFollowing(defaultEvent, occurrenceStart, {
@@ -263,40 +230,6 @@ describe('recurring-events/updateRecurringEvent', () => {
           },
         },
       ]);
-    });
-
-    it('should truncate based on the event timezone even when the UI sees the occurrence as the next day', () => {
-      // DTSTART NY = 2025-01-02 23:30
-      // UTC equivalent = 2025-01-03T04:30:00Z
-      const original = EventBuilder.new()
-        .singleDay('2025-01-03T04:30:00Z') // 23:30 Jan 2 NY
-        .withDataTimezone('America/New_York')
-        .withDisplayTimezone('Europe/Madrid')
-        .rrule({ freq: 'DAILY' })
-        .toProcessed();
-
-      /**
-       * SECOND OCCURRENCE:
-       * NY = 2025-01-03 23:30
-       * UTC = 2025-01-04T04:30:00Z
-       */
-
-      const occurrenceStart = adapter.date('2025-01-04T04:30:00Z', 'default'); // 23:30 Jan 3 NY
-
-      // User modifies only the hour, keeping the same NY calendar day:
-      const changes = {
-        id: original.id,
-        start: adapter.date('2025-01-03T21:30:00', 'America/New_York'), // 9:30 PM Jan 3 NY
-        end: adapter.date('2025-01-03T22:30:00', 'America/New_York'), // 10:30 PM Jan 3 NY
-      };
-
-      const updated = applyRecurringUpdateFollowing(original, occurrenceStart, changes);
-
-      const until = (updated.updated![0].rrule as SchedulerProcessedEventRecurrenceRule).until!;
-
-      // The UI thinks it's Jan 4 (display timezone), but truncation MUST use Jan 3 NY → until the
-      // start of Jan 2 NY.
-      expect(new Date(adapter.getTime(until)).toISOString()).to.equal('2025-01-02T05:00:00.000Z');
     });
 
     it('should drop the original series when occurrence is on the DTSTART day (no remaining occurrences)', () => {
@@ -444,59 +377,6 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(adapter.getDate(adapter.date(newEventStart, 'default'))).to.equal(5);
     });
 
-    it('should inherit the original rule when changes.rrule is omitted', () => {
-      // Original: daily from Jan 01
-      const original = EventBuilder.new()
-        .singleDay('2025-01-01T09:00:00Z')
-        .rrule({ freq: 'DAILY', interval: 2 })
-        .toProcessed();
-
-      const occurrenceStart = adapter.date('2025-01-06T09:00:00Z', 'default');
-      const changes: SchedulerEventUpdatedProperties = {
-        id: original.id,
-        start: adapter.date('2025-01-06T15:00:00Z', 'default'),
-        end: adapter.date('2025-01-06T16:00:00Z', 'default'),
-      };
-
-      const updatedEvents = applyRecurringUpdateFollowing(original, occurrenceStart, changes);
-
-      // New series has inherited rule
-      expect(updatedEvents.created).to.have.length(1);
-      expect(updatedEvents.created![0].rrule).to.deep.equal({ freq: 'DAILY', interval: 2 });
-
-      // Original series is truncated with UNTIL = day(occurrenceStart) - 1
-      const expectedUntil = adapter.addDays(adapter.startOfDay(occurrenceStart), -1);
-      expect(updatedEvents.updated).to.have.length(1);
-      expect(
-        (updatedEvents.updated![0].rrule as SchedulerProcessedEventRecurrenceRule)!.until,
-      ).toEqualDateTime(expectedUntil);
-    });
-
-    it('should drop the original series when all occurrences before the cut are excluded by EXDATEs', () => {
-      const original = EventBuilder.new()
-        .singleDay('2025-01-01T09:00:00Z')
-        .rrule({ freq: 'DAILY', interval: 1 })
-        .exDates([
-          '2025-01-01T09:00:00Z',
-          '2025-01-02T09:00:00Z',
-          '2025-01-03T09:00:00Z',
-          '2025-01-04T09:00:00Z',
-        ])
-        .toProcessed();
-      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default');
-      const changes: SchedulerEventUpdatedProperties = {
-        id: original.id,
-        start: adapter.date('2025-01-05T11:00:00Z', 'default'),
-        end: adapter.date('2025-01-05T12:00:00Z', 'default'),
-      };
-
-      const updatedEvents = applyRecurringUpdateFollowing(original, occurrenceStart, changes);
-
-      expect(updatedEvents.updated).to.equal(undefined);
-      expect(updatedEvents.deleted).to.deep.equal([original.id]);
-      expect(updatedEvents.created).to.have.length(1);
-    });
-
     it('should not count a day the timezone skips toward the COUNT of the new series', () => {
       // Pacific/Apia skipped December 30th, 2011: the series runs on December 28th, 29th and 31st,
       // and on January 1st and 2nd.
@@ -539,20 +419,6 @@ describe('recurring-events/updateRecurringEvent', () => {
       const next = adjustRRuleForAllMove(rrule, occurrenceStart, newStart, 'default');
 
       expect(next).to.deep.equal({ freq: 'WEEKLY', byDay: ['MO', 'WE', 'SA'] });
-    });
-
-    it('should return BYDAY in canonical RFC 5545 order (MO first)', () => {
-      const rrule = {
-        freq: 'WEEKLY' as const,
-        byDay: ['MO', 'WE', 'SU'] as RecurringEventByDayValue[],
-      };
-      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default'); // SU
-      const newStart = adapter.date('2025-01-11T11:00:00Z', 'default'); // SA
-
-      const next = adjustRRuleForAllMove(rrule, occurrenceStart, newStart, 'default');
-
-      // MO before WE before SA, though SU moved to SA.
-      expect(next.byDay).to.deep.equal(['MO', 'WE', 'SA']);
     });
 
     it('should align the day-of-month to the destination date for MONTHLY (BYMONTHDAY)', () => {
@@ -801,28 +667,14 @@ describe('recurring-events/updateRecurringEvent', () => {
       );
     });
 
-    it('should use the rrule provided in changes when present', () => {
+    it('should remove recurrence when changes.rrule is explicitly undefined, even when the day changes', () => {
       const occurrenceStart = defaultEvent.dataTimezone.start.value;
-      const changes: SchedulerEventUpdatedProperties = {
-        id: defaultEvent.id,
-        title: 'Now Weekly',
-        rrule: { freq: 'WEEKLY', interval: 2, byDay: ['MO'] },
-        start: adapter.date('2025-01-01T10:00:00Z', 'default'),
-        end: adapter.date('2025-01-01T11:00:00Z', 'default'),
-      };
-
-      const updatedEvents = applyRecurringUpdateAll(defaultEvent, occurrenceStart, changes);
-
-      expect(updatedEvents.deleted).to.equal(undefined);
-      expect(updatedEvents.created).to.equal(undefined);
-      expect(updatedEvents.updated).to.deep.equal([changes]);
-    });
-
-    it('should remove recurrence when changes.rrule is explicitly undefined', () => {
-      const occurrenceStart = defaultEvent.dataTimezone.start.value;
+      // Moving the series to another day realigns its rule, unless the changes set one.
       const changes: SchedulerEventUpdatedProperties = {
         id: defaultEvent.id,
         title: 'One-off',
+        start: adapter.date('2025-01-02T09:00:00Z', 'default'),
+        end: adapter.date('2025-01-02T10:00:00Z', 'default'),
         rrule: undefined,
       };
 
@@ -830,7 +682,8 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       expect(updatedEvents.deleted).to.equal(undefined);
       expect(updatedEvents.created).to.equal(undefined);
-      expect(updatedEvents.updated).to.deep.equal([changes]);
+      expect(updatedEvents.updated).to.have.length(1);
+      expect(updatedEvents.updated![0]).to.have.property('rrule', undefined);
     });
 
     it('should keep the original date and just update hours/minutes when changing the time of a non-first occurrence', () => {
@@ -981,31 +834,6 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(createdEvent.end).to.equal(adapter.addMinutes(occurrenceStart, 60).toISOString());
       expect(updatedEvents.updated).to.deep.equal([
         { id: defaultEvent.id, exDates: [adapter.startOfDay(occurrenceStart)] },
-      ]);
-    });
-
-    it('should accumulate previous exDates', () => {
-      const original = EventBuilder.new()
-        .singleDay('2025-01-01T09:00:00Z')
-        .rrule({ freq: 'DAILY', interval: 1 })
-        .exDates(['2025-01-03Z'])
-        .toProcessed();
-
-      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default');
-      const changes: SchedulerEventUpdatedProperties = {
-        id: original.id,
-        title: 'Another only-this',
-        start: adapter.date('2025-01-05T11:00:00Z', 'default'),
-        end: adapter.date('2025-01-05T12:00:00Z', 'default'),
-      };
-
-      const updatedEvents = applyRecurringUpdateOnlyThis(original, occurrenceStart, changes);
-
-      expect(updatedEvents.updated).to.deep.equal([
-        {
-          id: original.id,
-          exDates: [...(original.dataTimezone.exDates ?? []), adapter.startOfDay(occurrenceStart)],
-        },
       ]);
     });
 

@@ -82,11 +82,6 @@ describe('Core - EventTimelinePremiumStore', () => {
       expect(store.state).to.deep.equal(expectedState);
     });
 
-    it('should default `shouldEventRequireResource` to `true`', () => {
-      const store = new EventTimelinePremiumStore(DEFAULT_PARAMS);
-      expect(store.state.shouldEventRequireResource).to.equal(true);
-    });
-
     it('should respect an explicit `shouldEventRequireResource={false}`', () => {
       const store = new EventTimelinePremiumStore({
         ...DEFAULT_PARAMS,

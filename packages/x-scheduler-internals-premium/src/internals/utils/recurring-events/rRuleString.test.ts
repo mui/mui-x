@@ -53,11 +53,6 @@ describe('recurring-events/rRuleString', () => {
       });
     });
 
-    it('should parse UNTIL correctly', () => {
-      const result = parseRRule('FREQ=DAILY;UNTIL=20250315T000000Z', 'default');
-      expect(adapter.isValid(result.until!)).to.equal(true);
-    });
-
     it('should read a UNTIL ending in Z as a UTC instant, like the object input', () => {
       const fromString = parseRRule('FREQ=DAILY;UNTIL=20250315T000000Z', 'America/New_York');
       const fromObject = parseRRule(
@@ -348,13 +343,6 @@ describe('recurring-events/rRuleString', () => {
       expect(result).to.equal('FREQ=DAILY;COUNT=5');
     });
 
-    it('should serialize UNTIL in RFC5545 UTC format', () => {
-      const until = adapter.date('2025-03-15T00:00:00', 'default');
-      const rule = { freq: 'DAILY' as const, until };
-      const result = serializeRRule(rule);
-      expect(result).to.equal('FREQ=DAILY;UNTIL=20250315T000000Z', 'default');
-    });
-
     it('should serialize the minutes and seconds of UNTIL', () => {
       const until = adapter.date('2025-03-15T13:45:30Z', 'default');
       const rule = { freq: 'DAILY' as const, until };
@@ -372,10 +360,7 @@ describe('recurring-events/rRuleString', () => {
       };
 
       const result = serializeRRule(rule);
-      expect(result).to.equal(
-        'FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,FR;UNTIL=20250315T000000Z',
-        'default',
-      );
+      expect(result).to.equal('FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,FR;UNTIL=20250315T000000Z');
     });
 
     it('should handle empty BYDAY, BYMONTHDAY AND BYMONTHgracefully', () => {
@@ -414,14 +399,6 @@ describe('recurring-events/rRuleString', () => {
       const rule = { freq: 'YEARLY' as const, byMonthDay: [28, 5, 15], byMonth: [12, 1, 6] };
       const result = serializeRRule(rule);
       expect(result).to.equal('FREQ=YEARLY;BYMONTHDAY=5,15,28;BYMONTH=1,6,12');
-    });
-
-    it('should normalize equivalent RRULE strings with different BYDAY order', () => {
-      const inputA = 'FREQ=WEEKLY;BYDAY=MO,WE,FR';
-      const inputB = 'FREQ=WEEKLY;BYDAY=FR,MO,WE';
-      const parsedA = parseRRule(inputA, 'default');
-      const parsedB = parseRRule(inputB, 'default');
-      expect(serializeRRule(parsedA)).to.equal(serializeRRule(parsedB));
     });
 
     it('should round-trip correctly (parseRRuleString - serializeRRule)', () => {

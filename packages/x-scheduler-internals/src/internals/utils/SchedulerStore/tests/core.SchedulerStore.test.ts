@@ -117,19 +117,6 @@ storeClasses.forEach((storeClass) => {
         expect(store.state.visibleDate).toEqualDateTime(next);
       });
 
-      it('should not change `visibleDate` if not included in new parameters', () => {
-        const initialVisibleDate = adapter.date('2025-07-01T00:00:00Z', 'default');
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS, visibleDate: initialVisibleDate });
-
-        store.updateStateFromParameters({
-          ...DEFAULT_PARAMS,
-          resources: [{ id: 'r1', title: 'Resource 1' }],
-          visibleDate: store.state.visibleDate,
-        });
-
-        expect(store.state.visibleDate).toEqualDateTime(initialVisibleDate);
-      });
-
       it('should keep initial defaults and warns if default props change after mount', () => {
         const defaultDate = adapter.date('2025-07-15T00:00:00Z', 'default');
 
@@ -258,6 +245,33 @@ storeClasses.forEach((storeClass) => {
 
         store.dismissError(secondKey);
         expect(store.state.errors).to.have.length(1);
+      });
+
+      it('should dismiss only the error with the given key and keep the order of the others', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS);
+
+        store.pushUserFacingError(failure);
+        const secondKey = store.pushUserFacingError(rejection);
+        store.pushUserFacingError({ code: 'eventChangedWhileConfirmingError' });
+        store.dismissError(secondKey);
+
+        expect(store.state.errors.map((entry) => entry.code)).to.deep.equal([
+          'somethingWentWrongError',
+          'eventChangedWhileConfirmingError',
+        ]);
+      });
+
+      it('should keep every error when dismissing a key that does not exist', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS);
+
+        store.pushUserFacingError(failure);
+        store.pushUserFacingError(rejection);
+        const [first, second] = store.state.errors;
+        store.dismissError('does-not-exist');
+
+        expect(store.state.errors).to.have.length(2);
+        expect(store.state.errors[0]).to.equal(first);
+        expect(store.state.errors[1]).to.equal(second);
       });
 
       it('should replace a transient error with the same code instead of stacking it', () => {

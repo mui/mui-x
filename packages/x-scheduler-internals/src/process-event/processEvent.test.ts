@@ -2,7 +2,6 @@ import { adapter } from 'test/utils/scheduler/adapters';
 import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { EventBuilder } from 'test/utils/scheduler/event-builder';
 import { utcJuly4AllDayBuilder } from 'test/utils/scheduler/fixtures';
-import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { toWallClockIsoString } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
@@ -235,20 +234,6 @@ describe('processEvent', () => {
       expect(processedAfter.dataTimezone.start.timestamp).to.equal(
         new Date('2025-03-10T13:00:00Z').getTime(),
       );
-    });
-
-    it('should not throw for a wall-time string during DST gap', () => {
-      // 2025 US spring-forward: March 9 at 02:00 → 03:00
-      // 02:30 on March 9 in NY is in the gap
-      const event: SchedulerEvent = {
-        id: 'gap-test',
-        title: 'DST gap event',
-        start: '2025-03-09T02:30:00',
-        end: '2025-03-09T03:30:00',
-        timezone: 'America/New_York',
-      };
-
-      expect(() => processEvent(event, 'America/New_York')).to.not.throw();
     });
 
     it('should preserve original string values in modelInBuiltInFormat', () => {

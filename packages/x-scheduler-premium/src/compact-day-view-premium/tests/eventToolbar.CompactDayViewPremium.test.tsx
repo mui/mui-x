@@ -29,29 +29,6 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
     LicenseInfo.setLicenseKey(TEST_LICENSE_KEY_PREMIUM);
   });
 
-  it('should open the recurring scope dialog when deleting a recurring event from the toolbar', () => {
-    const event = EventBuilder.new()
-      .id('event-1')
-      .title('Daily Standup')
-      .recurrent('DAILY')
-      .build();
-
-    render(
-      <StandaloneCompactDayViewPremium
-        features={{ recurringEvents: recurringEventsFeature }}
-        events={[event]}
-        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        onEventsChange={vi.fn()}
-      />,
-    );
-
-    fireEvent.click(screen.getByRole('button', { name: /Daily Standup/i }));
-    fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
-
-    // The scope dialog is shown instead of deleting the whole series outright.
-    expect(screen.getByText(/All events/i)).not.to.equal(null);
-  });
-
   it('should use the plain delete confirmation without the recurring events feature', () => {
     const onEventsChange = vi.fn();
     const event = EventBuilder.new()

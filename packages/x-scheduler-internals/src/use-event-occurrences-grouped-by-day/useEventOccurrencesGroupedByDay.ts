@@ -56,8 +56,8 @@ export namespace useEventOccurrencesGroupedByDay {
 }
 
 /**
- * Do not use directly, use the `useEventOccurrencesGroupedByDay` hook instead.
- * This is only exported for testing purposes.
+ * Do not use directly in a component, use the `useEventOccurrencesGroupedByDay` hook instead.
+ * Selectors that group the occurrences outside of React call it directly.
  */
 export function innerGetEventOccurrencesGroupedByDay(
   parameters: Omit<GetOccurrencesFromEventsParameters, 'start' | 'end'> & {

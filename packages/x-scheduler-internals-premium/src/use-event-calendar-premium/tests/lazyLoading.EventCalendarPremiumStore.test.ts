@@ -290,10 +290,10 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     await flushEffect();
     expect(store.state.eventIdList).to.include('b');
 
-    // A resolves late → must NOT drop B's data.
+    // A resolves late → must NOT drop B's data, nor add its own.
     resolveA(eventsA);
     await flushEffect();
-    expect(store.state.eventIdList).to.include('b');
+    expect(store.state.eventIdList).to.deep.equal(['b']);
   });
 
   it('should keep loading when a stale fetch resolves while the latest one is pending', async () => {

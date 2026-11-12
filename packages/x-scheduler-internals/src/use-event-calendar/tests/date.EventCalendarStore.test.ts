@@ -82,29 +82,6 @@ describe('Date - EventCalendarStore', () => {
       expect(onViewChange.mock.calls.length).to.equal(0);
     });
 
-    it('should update date and calls only onVisibleDateChange when is partially controlled (view controlled, visibleDate uncontrolled)', () => {
-      const onVisibleDateChange = vi.fn();
-      const onViewChange = vi.fn();
-
-      const currentDate = adapter.date('2025-08-01T00:00:00Z', 'default');
-      const nextDate = adapter.date('2025-08-02T00:00:00Z', 'default');
-
-      const store = new EventCalendarStore({
-        ...DEFAULT_PARAMS,
-        view: 'day',
-        defaultVisibleDate: currentDate,
-        onVisibleDateChange,
-        onViewChange,
-      });
-
-      store.switchToDay(nextDate, {} as any);
-
-      expect(store.state.view).to.equal('day');
-      expect(store.state.visibleDate).toEqualDateTime(nextDate);
-      expect(onVisibleDateChange.mock.calls.length).to.equal(1);
-      expect(onViewChange.mock.calls.length).to.equal(0);
-    });
-
     it('should update view and calls only onViewChange when is partially controlled (view uncontrolled, visibleDate controlled)', () => {
       const onVisibleDateChange = vi.fn();
       const onViewChange = vi.fn();
@@ -123,7 +100,7 @@ describe('Date - EventCalendarStore', () => {
 
       expect(store.state.view).to.equal('day');
       expect(store.state.visibleDate).toEqualDateTime(currentDate);
-      expect(onVisibleDateChange.mock.calls.length).not.to.equal(1);
+      expect(onVisibleDateChange.mock.calls.length).to.equal(0);
       expect(onViewChange.mock.calls.length).to.equal(1);
       expect(onViewChange.mock.lastCall?.[0]).to.equal('day');
     });

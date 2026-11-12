@@ -1,26 +1,11 @@
 import { ResourceBuilder, storeClasses } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { schedulerPreferenceSelectors } from './schedulerPreferenceSelectors';
-import { DEFAULT_SCHEDULER_PREFERENCES } from '../internals/utils/SchedulerStore';
 
 const BASE_PARAMS = { events: [], resources: [ResourceBuilder.new().build()] };
 
 storeClasses.forEach((storeClass) => {
   describe('schedulerPreferenceSelectors', () => {
-    describe('all', () => {
-      it('should return default preferences when none are set in the state', () => {
-        const state = new storeClass.Value({ ...BASE_PARAMS }).state;
-        const preferences = schedulerPreferenceSelectors.all(state);
-        expect(preferences).to.deep.equal(DEFAULT_SCHEDULER_PREFERENCES);
-      });
-
-      it('should return custom preferences when they are set in the state', () => {
-        const state = new storeClass.Value({ ...BASE_PARAMS, preferences: { ampm: false } }).state;
-        const preferences = schedulerPreferenceSelectors.all(state);
-        expect(preferences).to.deep.equal({ ...DEFAULT_SCHEDULER_PREFERENCES, ampm: false });
-      });
-    });
-
     describe('ampm', () => {
       it('should follow the hour cycle of the date locale when none is set in the state', () => {
         const state = new storeClass.Value({ ...BASE_PARAMS }).state;

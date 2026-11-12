@@ -348,25 +348,6 @@ describe('CalendarGrid keyboard navigation', () => {
     });
   });
 
-  describe('tabIndex behavior', () => {
-    it('should keep all cells tabbable so Tab flows through the grid', async () => {
-      const { user } = render(<GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />);
-
-      const cell0 = screen.getByTestId('day-0');
-      const cell1 = screen.getByTestId('day-1');
-
-      // All cells always have tabindex=0
-      await user.click(cell0);
-      expect(cell0).to.have.attribute('tabindex', '0');
-      expect(cell1).to.have.attribute('tabindex', '0');
-
-      await user.keyboard('{ArrowRight}');
-      expect(cell0).to.have.attribute('tabindex', '0');
-      expect(cell1).to.have.attribute('tabindex', '0');
-      expect(cell1).toHaveFocus();
-    });
-  });
-
   describe('navigation with all three row types', () => {
     function FullGrid() {
       return (

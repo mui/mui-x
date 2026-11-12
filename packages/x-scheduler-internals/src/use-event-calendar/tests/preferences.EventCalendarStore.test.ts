@@ -65,15 +65,6 @@ describe('Preferences - EventCalendarStore', () => {
       });
     });
 
-    it('should merge a partial: showWeekNumber=true keeps showWeekends=true', () => {
-      const store = new EventCalendarStore(DEFAULT_PARAMS);
-      store.setPreferences({ showWeekNumber: true }, {} as any);
-
-      expect(store.state.preferences).to.deep.equal({
-        showWeekNumber: true,
-      });
-    });
-
     it('should update multiple preferences in a single call', () => {
       const store = new EventCalendarStore(DEFAULT_PARAMS);
       store.setPreferences({ showWeekends: false, showWeekNumber: true }, {} as any);

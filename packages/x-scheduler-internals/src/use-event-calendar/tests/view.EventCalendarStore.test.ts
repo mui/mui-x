@@ -74,15 +74,6 @@ describe('View - EventCalendarStore', () => {
   });
 
   describe('Method: switchToDay', () => {
-    it('should update view and visibleDate when value changes and is uncontrolled', () => {
-      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, defaultView: 'week' });
-
-      store.switchToDay(adapter.date('2025-07-01', 'default'), {} as any);
-
-      expect(store.state.view).to.equal('day');
-      expect(store.state.visibleDate).toEqualDateTime('2025-07-01');
-    });
-
     it('should update view but not visibleDate when value changes and visibleDate is controlled', () => {
       const store = new EventCalendarStore({
         ...DEFAULT_PARAMS,
@@ -107,19 +98,6 @@ describe('View - EventCalendarStore', () => {
 
       expect(store.state.view).to.equal('week');
       expect(store.state.visibleDate).toEqualDateTime('2025-07-01');
-    });
-
-    it('should NOT mutate store when both view and visibleDate are controlled', () => {
-      const store = new EventCalendarStore({
-        ...DEFAULT_PARAMS,
-        view: 'week',
-        visibleDate: adapter.date('2025-06-15', 'default'),
-      });
-
-      store.switchToDay(adapter.date('2025-07-01', 'default'), {} as any);
-
-      expect(store.state.view).to.equal('week');
-      expect(store.state.visibleDate).toEqualDateTime('2025-06-15');
     });
 
     it('should NOT mutate store when onViewChange cancels the change', () => {

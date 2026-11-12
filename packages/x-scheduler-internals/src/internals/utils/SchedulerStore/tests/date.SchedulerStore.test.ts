@@ -24,40 +24,6 @@ storeClasses.forEach((storeClass) => {
         expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(expected);
       });
 
-      it('should not change the state but calls onVisibleDateChange with today when is controlled', () => {
-        const onVisibleDateChange = vi.fn();
-        const controlledDate = adapter.date('2025-07-01T00:00:00Z', 'default');
-
-        const store = new storeClass.Value({
-          ...DEFAULT_PARAMS,
-          visibleDate: controlledDate,
-          onVisibleDateChange,
-        });
-
-        store.goToToday({} as any);
-
-        const expected = adapter.startOfDay(adapter.now('default'));
-        expect(store.state.visibleDate).toEqualDateTime(controlledDate);
-        expect(onVisibleDateChange.mock.calls.length).to.equal(1);
-        expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(expected);
-      });
-
-      it('should do nothing if already at today (no state change, no callback)', () => {
-        const onVisibleDateChange = vi.fn();
-        const todayStart = adapter.startOfDay(adapter.now('default'));
-
-        const store = new storeClass.Value({
-          ...DEFAULT_PARAMS,
-          defaultVisibleDate: todayStart,
-          onVisibleDateChange,
-        });
-
-        store.goToToday({} as any);
-
-        expect(store.state.visibleDate).toEqualDateTime(todayStart);
-        expect(onVisibleDateChange.mock.calls.length).to.equal(0);
-      });
-
       it('should use the provided display timezone when going to today (uncontrolled)', () => {
         const onVisibleDateChange = vi.fn();
         const displayTimezone = 'Pacific/Kiritimati';

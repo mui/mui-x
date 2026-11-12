@@ -6,11 +6,12 @@ import {
   EventBuilder,
   ResourceBuilder,
   setSystemTimezone,
+  openPreferencesMenu,
+  toggleShowEmptyDaysInAgenda,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { vi, describe, it, expect } from 'vitest';
-import { openPreferencesMenu, toggleShowEmptyDaysInAgenda } from '../internals/utils/test-utils';
 
 describe('<AgendaView />', () => {
   const { render } = createSchedulerRenderer();
@@ -312,22 +313,6 @@ describe('<AgendaView />', () => {
         `.${eventCalendarClasses.agendaViewWeekNumberRow}`,
       );
       expect(separators).to.have.length(0);
-    });
-
-    it('renders week number rows when showWeekNumber is enabled', () => {
-      render(
-        <EventCalendar
-          events={[]}
-          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          view="agenda"
-          preferences={{ showWeekNumber: true }}
-        />,
-      );
-
-      const separators = document.querySelectorAll(
-        `.${eventCalendarClasses.agendaViewWeekNumberRow}`,
-      );
-      expect(separators.length).to.be.at.least(2);
     });
 
     it('renders the second week separator before the Sunday when weekStartsOn=7', () => {

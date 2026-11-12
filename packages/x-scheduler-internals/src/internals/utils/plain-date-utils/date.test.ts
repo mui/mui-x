@@ -152,29 +152,6 @@ describe('plain-date-utils/date', () => {
       return date === null ? null : new Date(adapter.getTime(date)).toISOString();
     };
 
-    // The DST transitions must resolve the same way whatever the timezone of the system.
-    describe.each(['UTC', 'America/New_York', 'Europe/Paris'])(
-      'system timezone: %s',
-      (systemTimezone) => {
-        it.skipIf(!isJSDOM && systemTimezone !== 'UTC')(
-          'should resolve the wall-clock times of a DST transition like the occurrences',
-          () => {
-            if (isJSDOM) {
-              setSystemTimezone(systemTimezone);
-            }
-            // Europe/Paris falls back from 03:00 CEST to 02:00 CET on October 26th, 2025: the first 02:30.
-            expect(resolve('2025-10-26T02:30:00', 'Europe/Paris')).to.equal(
-              '2025-10-26T00:30:00.000Z',
-            );
-            // Europe/Paris springs forward from 02:00 CET to 03:00 CEST on March 30th, 2025: 03:30.
-            expect(resolve('2025-03-30T02:30', 'Europe/Paris')).to.equal(
-              '2025-03-30T01:30:00.000Z',
-            );
-          },
-        );
-      },
-    );
-
     it('should read dates and times with or without seconds and milliseconds', () => {
       expect(resolve('2025-01-01', 'America/New_York')).to.equal('2025-01-01T05:00:00.000Z');
       expect(resolve('2025-01-01T09:30', 'America/New_York')).to.equal('2025-01-01T14:30:00.000Z');

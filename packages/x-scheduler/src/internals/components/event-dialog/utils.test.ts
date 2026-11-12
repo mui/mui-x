@@ -4,7 +4,6 @@ import { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../../constants/defaultLocaleText';
 import {
   findInvalidRangeField,
-  getEditedRangeBounds,
   getEventTimezonePlainDate,
   getRecurrenceLabel,
   getRecurrenceRuleBound,
@@ -77,54 +76,6 @@ describe('findInvalidRangeField', () => {
   });
 });
 
-describe('getEditedRangeBounds', () => {
-  it('should report no edited bound when no range key is dirty', () => {
-    expect(getEditedRangeBounds({ title: 'Renamed' }, false)).to.deep.equal({
-      startEdited: false,
-      endEdited: false,
-    });
-  });
-
-  it('should report only the bound whose date was edited', () => {
-    expect(getEditedRangeBounds({ endDate: '2025-07-05' }, false)).to.deep.equal({
-      startEdited: false,
-      endEdited: true,
-    });
-    expect(getEditedRangeBounds({ startDate: '2025-07-01' }, true)).to.deep.equal({
-      startEdited: true,
-      endEdited: false,
-    });
-  });
-
-  it('should count a time edit only when the range is not all-day', () => {
-    expect(getEditedRangeBounds({ startTime: '09:00' }, false)).to.deep.equal({
-      startEdited: true,
-      endEdited: false,
-    });
-    expect(getEditedRangeBounds({ endTime: '10:00' }, false)).to.deep.equal({
-      startEdited: false,
-      endEdited: true,
-    });
-    // A time left over from toggling all-day off and back on is orphaned: the
-    // submitted all-day range never reads it.
-    expect(getEditedRangeBounds({ startTime: '09:00' }, true)).to.deep.equal({
-      startEdited: false,
-      endEdited: false,
-    });
-    expect(getEditedRangeBounds({ endTime: '10:00' }, true)).to.deep.equal({
-      startEdited: false,
-      endEdited: false,
-    });
-  });
-
-  it('should mark both bounds edited when the all-day mode itself changed', () => {
-    expect(getEditedRangeBounds({ allDay: false }, false)).to.deep.equal({
-      startEdited: true,
-      endEdited: true,
-    });
-  });
-});
-
 describe('getRecurrenceLabel', () => {
   it('should write the yearly date in the order of the locale', () => {
     const startPlainDate = BaseTemporal.PlainDate.from('2025-07-03');
@@ -192,10 +143,49 @@ describe('getWeekdayToken', () => {
 });
 
 describe('getResentRangeBounds', () => {
-  it('should resend only the edited bound', () => {
-    expect(getResentRangeBounds({ startDate: '2025-07-02' }, false, false)).to.deep.equal({
+  it('should resend no bound when no range key is dirty', () => {
+    expect(getResentRangeBounds({ title: 'Renamed' }, false, false)).to.deep.equal({
+      startResent: false,
+      endResent: false,
+    });
+  });
+
+  it('should resend only the bound whose date was edited', () => {
+    expect(getResentRangeBounds({ endDate: '2025-07-05' }, false, false)).to.deep.equal({
+      startResent: false,
+      endResent: true,
+    });
+    expect(getResentRangeBounds({ startDate: '2025-07-01' }, true, false)).to.deep.equal({
       startResent: true,
       endResent: false,
+    });
+  });
+
+  it('should count a time edit only when the range is not all-day', () => {
+    expect(getResentRangeBounds({ startTime: '09:00' }, false, false)).to.deep.equal({
+      startResent: true,
+      endResent: false,
+    });
+    expect(getResentRangeBounds({ endTime: '10:00' }, false, false)).to.deep.equal({
+      startResent: false,
+      endResent: true,
+    });
+    // A time left over from toggling all-day off and back on is orphaned: the
+    // submitted all-day range never reads it.
+    expect(getResentRangeBounds({ startTime: '09:00' }, true, false)).to.deep.equal({
+      startResent: false,
+      endResent: false,
+    });
+    expect(getResentRangeBounds({ endTime: '10:00' }, true, false)).to.deep.equal({
+      startResent: false,
+      endResent: false,
+    });
+  });
+
+  it('should resend both bounds when the all-day mode itself changed', () => {
+    expect(getResentRangeBounds({ allDay: false }, false, false)).to.deep.equal({
+      startResent: true,
+      endResent: true,
     });
   });
 

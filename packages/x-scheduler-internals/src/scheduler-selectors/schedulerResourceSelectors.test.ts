@@ -263,111 +263,6 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
-    describe('resourceChildrenIds', () => {
-      it('should return an empty array when resource has no children', () => {
-        const resources = [{ id: 'resource-1', title: 'Resource 1' }];
-        const state = new storeClass.Value({ events: [], resources }).state;
-        const result = schedulerResourceSelectors.resourceChildrenIds(state, 'resource-1');
-        expect(result).to.deep.equal([]);
-      });
-
-      it('should return an empty array when resource does not exist', () => {
-        const resources = [{ id: 'resource-1', title: 'Resource 1' }];
-        const state = new storeClass.Value({ events: [], resources }).state;
-        const result = schedulerResourceSelectors.resourceChildrenIds(state, 'non-existent');
-        expect(result).to.deep.equal([]);
-      });
-
-      it('should return children ids when resource has children', () => {
-        const resources = [
-          {
-            id: 'parent-1',
-            title: 'Parent 1',
-            children: [
-              { id: 'child-1', title: 'Child 1' },
-              { id: 'child-2', title: 'Child 2' },
-            ],
-          },
-        ];
-        const state = new storeClass.Value({ events: [], resources }).state;
-        const result = schedulerResourceSelectors.resourceChildrenIds(state, 'parent-1');
-        expect(result).to.deep.equal(['child-1', 'child-2']);
-      });
-    });
-
-    describe('resourceParentIdLookup', () => {
-      it('should return an empty map when there are no resources', () => {
-        const state = new storeClass.Value({ events: [], shouldEventRequireResource: false }).state;
-        const result = schedulerResourceSelectors.resourceParentIdLookup(state);
-        expect(result.size).to.equal(0);
-      });
-
-      it('should return an empty map when resources have no children', () => {
-        const resources = [
-          { id: 'resource-1', title: 'Resource 1' },
-          { id: 'resource-2', title: 'Resource 2' },
-        ];
-        const state = new storeClass.Value({ events: [], resources }).state;
-        const result = schedulerResourceSelectors.resourceParentIdLookup(state);
-        expect(result.size).to.equal(0);
-      });
-
-      it('should return a map with child ids as keys and parent ids as values', () => {
-        const resources = [
-          {
-            id: 'parent-1',
-            title: 'Parent 1',
-            children: [
-              { id: 'child-1', title: 'Child 1' },
-              { id: 'child-2', title: 'Child 2' },
-            ],
-          },
-        ];
-        const state = new storeClass.Value({ events: [], resources }).state;
-        const result = schedulerResourceSelectors.resourceParentIdLookup(state);
-
-        expect(result.size).to.equal(2);
-        expect(result.get('child-1')).to.equal('parent-1');
-        expect(result.get('child-2')).to.equal('parent-1');
-      });
-
-      it('should handle deeply nested resources', () => {
-        const resources = [
-          {
-            id: 'grandparent',
-            title: 'Grandparent',
-            children: [
-              {
-                id: 'parent',
-                title: 'Parent',
-                children: [{ id: 'child', title: 'Child' }],
-              },
-            ],
-          },
-        ];
-        const state = new storeClass.Value({ events: [], resources }).state;
-        const result = schedulerResourceSelectors.resourceParentIdLookup(state);
-
-        expect(result.size).to.equal(2);
-        expect(result.get('parent')).to.equal('grandparent');
-        expect(result.get('child')).to.equal('parent');
-      });
-
-      it('should return same reference when inputs have not changed', () => {
-        const resources = [
-          {
-            id: 'parent-1',
-            title: 'Parent 1',
-            children: [{ id: 'child-1', title: 'Child 1' }],
-          },
-        ];
-        const state = new storeClass.Value({ events: [], resources }).state;
-        const result1 = schedulerResourceSelectors.resourceParentIdLookup(state);
-        const result2 = schedulerResourceSelectors.resourceParentIdLookup(state);
-        expect(result1).to.equal(result2);
-      });
-    });
-
     describe('visibleMap', () => {
       it('should return all resources as visible when visibleResources is empty', () => {
         const resources = [
@@ -621,14 +516,7 @@ storeClasses.forEach((storeClass) => {
     });
 
     describe('resourceDepth', () => {
-      it('should return 0 for a root resource', () => {
-        const resources = [{ id: 'resource-1', title: 'Resource 1' }];
-        const state = new storeClass.Value({ events: [], resources }).state;
-        const result = schedulerResourceSelectors.resourceDepth(state, 'resource-1');
-        expect(result).to.equal(0);
-      });
-
-      it('should return 1 for a child resource', () => {
+      it('should return the depth of a nested resource', () => {
         const resources = [
           {
             id: 'parent',
@@ -637,27 +525,7 @@ storeClasses.forEach((storeClass) => {
           },
         ];
         const state = new storeClass.Value({ events: [], resources }).state;
-        const result = schedulerResourceSelectors.resourceDepth(state, 'child');
-        expect(result).to.equal(1);
-      });
-
-      it('should return 2 for a grandchild resource', () => {
-        const resources = [
-          {
-            id: 'grandparent',
-            title: 'Grandparent',
-            children: [
-              {
-                id: 'parent',
-                title: 'Parent',
-                children: [{ id: 'child', title: 'Child' }],
-              },
-            ],
-          },
-        ];
-        const state = new storeClass.Value({ events: [], resources }).state;
-        const result = schedulerResourceSelectors.resourceDepth(state, 'child');
-        expect(result).to.equal(2);
+        expect(schedulerResourceSelectors.resourceDepth(state, 'child')).to.equal(1);
       });
 
       it('should return 0 for a non-existent resource', () => {

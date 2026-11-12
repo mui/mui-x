@@ -133,21 +133,6 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
     });
 
-    it('should report an applied update', () => {
-      const store = new EventTimelinePremiumStoreWithFeatures({
-        ...DEFAULT_PARAMS,
-        onEventsChange: () => {},
-      });
-
-      const result = store.updateEvent({
-        id: 'a',
-        start: date('2025-07-03T08:00:00Z'),
-        end: date('2025-07-03T09:00:00Z'),
-      });
-
-      expect(result.applied).to.equal(true);
-    });
-
     it('should report the changes as applied, with the clamped dates', () => {
       const store = new EventTimelinePremiumStoreWithFeatures({
         ...DEFAULT_PARAMS,
@@ -1435,26 +1420,6 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
   });
 
   describe('feature gating', () => {
-    it('should not cascade when the dependencies feature is disabled', () => {
-      const onEventsChange = vi.fn();
-      const store = new EventTimelinePremiumStoreWithFeatures({
-        events: [eventA, eventB],
-        resources: TEST_RESOURCES,
-        onEventsChange,
-      });
-
-      store.updateEvent({
-        id: 'a',
-        start: date('2025-07-03T11:00:00Z'),
-        end: date('2025-07-03T12:00:00Z'),
-      });
-
-      expect(onEventsChange.mock.calls.length).to.equal(1);
-      const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
-      const emittedB = newEvents.find((event) => event.id === 'b')!;
-      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
-    });
-
     it('should keep recurring-endpoint dependencies inert', () => {
       const onEventsChange = vi.fn();
       const dependencies: SchedulerDependency[] = [

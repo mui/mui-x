@@ -1515,30 +1515,19 @@ describe('<MonthView />', () => {
         .getAllByRole('row')
         .filter((row) => row.getAttribute('aria-rowindex') !== '1');
 
-      // Every row must have exactly 7 gridcells — not 6 (the old getWeekNumber bug).
+      // Every row must have exactly 7 gridcells — not 6 (the old getWeekNumber bug) — and end
+      // on the Saturday and Sunday of the weekend of the United States.
       dataRows.forEach((row) => {
         const cells = within(row).getAllByRole('gridcell');
-        expect(cells.length).to.equal(7);
-      });
-    });
-
-    it('should start each week row on Sunday when weekStartsOn=7', () => {
-      render(
-        <EventCalendarProvider {...standaloneDefaults} defaultPreferences={{ weekStartsOn: 7 }}>
-          <EventDialogProvider>
-            <MonthView />
-          </EventDialogProvider>
-        </EventCalendarProvider>,
-      );
-
-      const grid = screen.getByRole('grid');
-      const dataRows = within(grid)
-        .getAllByRole('row')
-        .filter((row) => row.getAttribute('aria-rowindex') !== '1');
-
-      dataRows.forEach((row) => {
-        const cells = within(row).getAllByRole('gridcell');
-        expect(cells.length).to.equal(7);
+        expect(cells.map((cell) => cell.hasAttribute('data-weekend'))).to.deep.equal([
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          true,
+        ]);
       });
     });
 

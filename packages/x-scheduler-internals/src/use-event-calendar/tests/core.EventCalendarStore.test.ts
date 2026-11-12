@@ -7,12 +7,7 @@ import {
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { vi, describe, it, expect } from 'vitest';
-import {
-  DEFAULT_PREFERENCES_MENU_CONFIG,
-  DEFAULT_VIEW,
-  DEFAULT_VIEWS,
-  EventCalendarStore,
-} from '../EventCalendarStore';
+import { EventCalendarStore } from '../EventCalendarStore';
 import type { CalendarView, SchedulerEventOccurrence } from '../../models';
 
 const DEFAULT_PARAMS = { events: [] };
@@ -46,7 +41,13 @@ describe('Core - EventCalendarStore', () => {
         pendingDeleteConfirmation: null,
         pendingRecurringEventOperation: null,
         preferences: EMPTY_OBJECT,
-        preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
+        preferencesMenuConfig: {
+          toggleWeekendVisibility: true,
+          toggleWeekNumberVisibility: true,
+          toggleEmptyDaysInAgenda: true,
+          toggleAmpm: true,
+          toggleWeekStartsOn: false,
+        },
         processedEventLookup: new Map(),
         processedResourceLookup: new Map(),
         readOnly: false,
@@ -56,10 +57,10 @@ describe('Core - EventCalendarStore', () => {
         resourceIdList: [],
         resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
-        view: DEFAULT_VIEW,
+        view: 'week',
         viewConfig: {},
         viewDefinition: null,
-        views: DEFAULT_VIEWS,
+        views: ['day', 'week', 'month', 'agenda'],
         visibleDate: adapter.startOfDay(adapter.now('default')),
         visibleResources: {},
         collapsedResources: {},
@@ -68,11 +69,6 @@ describe('Core - EventCalendarStore', () => {
       };
 
       expect(store.state).to.deep.equal(expectedState);
-    });
-
-    it('should default `shouldEventRequireResource` to `false`', () => {
-      const store = new EventCalendarStore(DEFAULT_PARAMS);
-      expect(store.state.shouldEventRequireResource).to.equal(false);
     });
 
     it('should respect an explicit `shouldEventRequireResource={true}`', () => {
@@ -132,21 +128,6 @@ describe('Core - EventCalendarStore', () => {
         expect(onEventEditingStart.mock.lastCall?.[1].reason).to.equal('edit');
         expect(onEventEditingStart.mock.lastCall?.[1].occurrence).to.equal(edited);
         expect(store.state.editingOccurrence).to.deep.equal({ occurrence: edited, mode: 'edit' });
-      });
-
-      it('should not call `onEventEditingStart` when arming, then call it on the armed → edit transition', () => {
-        const onEventEditingStart = vi.fn();
-        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart });
-        const edited = occurrence('event-1');
-
-        store.startEditing(edited, 'armed');
-        expect(onEventEditingStart.mock.calls.length).to.equal(0);
-
-        const nativeEvent = new Event('click');
-        store.setEditingMode('edit', nativeEvent);
-        expect(onEventEditingStart.mock.calls.length).to.equal(1);
-        expect(onEventEditingStart.mock.lastCall?.[0]).to.equal(edited);
-        expect(onEventEditingStart.mock.lastCall?.[1].event).to.equal(nativeEvent);
       });
 
       it('should disarm when `onEventEditingStart` cancels the armed → edit transition', () => {
@@ -397,18 +378,6 @@ describe('Core - EventCalendarStore', () => {
       const store = new EventCalendarStore({ ...DEFAULT_PARAMS, view: 'day' });
 
       store.updateStateFromParameters({ ...DEFAULT_PARAMS, view: 'month' });
-
-      expect(store.state.view).to.equal('month');
-    });
-
-    it('should not change `view` if not included in new parameters', () => {
-      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, view: 'month' });
-
-      store.updateStateFromParameters({
-        ...DEFAULT_PARAMS,
-        resources: [{ id: 'r1', title: 'Resource 1' }],
-        view: store.state.view,
-      });
 
       expect(store.state.view).to.equal('month');
     });

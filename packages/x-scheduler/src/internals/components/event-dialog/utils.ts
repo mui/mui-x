@@ -124,7 +124,7 @@ export type RangeFormKey = (typeof RANGE_FORM_KEYS)[number];
  * range in its current mode reads (the all-day branch of `computeRange` ignores
  * the time fields). Toggling `allDay` re-derives both bounds.
  */
-export function getEditedRangeBounds(
+function getEditedRangeBounds(
   dirtyValues: Record<string, unknown>,
   allDay: boolean,
 ): { startEdited: boolean; endEdited: boolean } {
