@@ -97,6 +97,7 @@ export function useMessageListBehavior(parameters: {
   const topLoadInFlightRef = React.useRef(false);
   const resizeFrameRef = React.useRef(0);
   const isMountedRef = React.useRef(true);
+  const hasMountedRef = React.useRef(false);
   const isStreamingRef = React.useRef(isStreaming);
   isStreamingRef.current = isStreaming;
   const [isAtBottom, setIsAtBottom] = React.useState(true);
@@ -317,9 +318,16 @@ export function useMessageListBehavior(parameters: {
   ]);
 
   React.useLayoutEffect(() => {
-    updateIsAtBottom();
-    anchorRef.current = captureAnchor(itemIdsRef.current);
-  }, [captureAnchor, updateIsAtBottom]);
+    // Open at the newest message. Scrolling before the first `updateIsAtBottom()`
+    // keeps the latch `true → true`, so `onReachBottom` does not fire on mount.
+    if (!hasMountedRef.current && autoScrollEnabled && itemIdsRef.current.length > 0) {
+      scrollToBottom();
+    } else {
+      updateIsAtBottom();
+      anchorRef.current = captureAnchor(itemIdsRef.current);
+    }
+    hasMountedRef.current = true;
+  }, [autoScrollEnabled, captureAnchor, scrollToBottom, updateIsAtBottom]);
 
   React.useLayoutEffect(() => {
     const previousItemIds = previousItemIdsRef.current;

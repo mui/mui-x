@@ -521,6 +521,23 @@ describe('MessageListRoot', () => {
     expect(onReachTop).toHaveBeenCalledTimes(2);
   });
 
+  it.skipIf(isJSDOM)('scrolls to the newest message when mounted with messages', async () => {
+    render(<ControlledMessageList slots={{ messageList: RootWithBottomState }} />);
+    const log = screen.getByRole('log');
+
+    expect(log.scrollHeight).toBe(240);
+    expect(log.scrollTop).toBe(80);
+    expect(screen.getByTestId('message-list-bottom-state')).to.have.text('true');
+  });
+
+  it.skipIf(isJSDOM)('does not scroll on mount when autoScroll is disabled', async () => {
+    render(<ControlledMessageList autoScroll={false} />);
+    const log = screen.getByRole('log');
+
+    expect(log.scrollHeight).toBe(240);
+    expect(log.scrollTop).toBe(0);
+  });
+
   it.skipIf(isJSDOM)('preserves the viewport anchor when history is prepended', async () => {
     render(<ControlledMessageList />);
     const log = screen.getByRole('log');
@@ -929,7 +946,9 @@ describe('MessageListRoot', () => {
           expect(log.scrollHeight).toBeGreaterThan(160);
         });
 
-        // Enter the bottom zone once (single legitimate fire).
+        // The list mounts pinned; leave and re-enter the bottom zone once (single legitimate fire).
+        log.scrollTop = 0;
+        fireEvent.scroll(log);
         log.scrollTop = log.scrollHeight;
         fireEvent.scroll(log);
 
