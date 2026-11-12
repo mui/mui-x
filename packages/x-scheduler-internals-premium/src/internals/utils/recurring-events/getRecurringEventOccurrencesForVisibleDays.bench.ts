@@ -3,7 +3,6 @@ import type {
   RecurringEventWeekDayCode,
   SchedulerEventRecurrenceRule,
   SchedulerProcessedEvent,
-  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import { EventBuilder } from 'test/utils/scheduler';
 import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventOccurrencesForVisibleDays';
@@ -26,8 +25,8 @@ const RULES: SchedulerEventRecurrenceRule[] = [
  * every frequency, with COUNT/UNTIL rules, exception dates and all-day series.
  */
 function createRecurringEvents(
-  dataTimezone: TemporalTimezone,
-  displayTimezone: TemporalTimezone,
+  dataTimezone: string,
+  displayTimezone: string,
 ): SchedulerProcessedEvent[] {
   return Array.from({ length: 200 }, (_, index) => {
     const day = String((index % 28) + 1).padStart(2, '0');
@@ -63,7 +62,7 @@ const RANGES = {
 function expandAll(
   events: SchedulerProcessedEvent[],
   [start, end]: readonly [string, string],
-  displayTimezone: TemporalTimezone,
+  displayTimezone: string,
 ) {
   const rangeStart = Date.parse(start);
   const rangeEnd = Date.parse(end);

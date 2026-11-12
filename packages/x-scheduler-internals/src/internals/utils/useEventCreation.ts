@@ -4,7 +4,6 @@ import { useStore } from '@base-ui/utils/store';
 import type {
   SchedulerEventCreationConfig,
   SchedulerOccurrencePlaceholderCreation,
-  TemporalTimezone,
 } from '../../models';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
@@ -15,7 +14,7 @@ interface GetCreationPlaceholderParams {
   /**
    * The display timezone, in which the dates of the placeholder are read.
    */
-  timezone: TemporalTimezone;
+  timezone: string;
 }
 
 export type CreationPlaceholderFields = Omit<SchedulerOccurrencePlaceholderCreation, 'type'>;

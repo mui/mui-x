@@ -1,8 +1,4 @@
-import type {
-  SchedulerProcessedDate,
-  TemporalSupportedObject,
-  TemporalTimezone,
-} from '../../../models';
+import type { SchedulerProcessedDate } from '../../../models';
 import { processDate } from '../../../process-date/processDate';
 import type { BaseTemporal } from '../base-temporal';
 import type { PlainDateDuration } from './plainDate';
@@ -24,10 +20,7 @@ import {
  * `toPlainDate()`. A day whose midnight a DST transition skips starts at the end of the
  * gap.
  */
-export function createStartOfPlainDate(
-  plainDate: BaseTemporal.PlainDate,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject {
+export function createStartOfPlainDate(plainDate: BaseTemporal.PlainDate, timezone: string): Date {
   return new Date(toEpochMs(plainDate, 0, timezone));
 }
 
@@ -35,10 +28,7 @@ export function createStartOfPlainDate(
  * Creates the date of the last instant of a plain date in `timezone`, just before the next
  * day starts. When a DST transition repeats the last hour of the day, it's the later 23:59:59.999.
  */
-export function createEndOfPlainDate(
-  plainDate: BaseTemporal.PlainDate,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject {
+export function createEndOfPlainDate(plainDate: BaseTemporal.PlainDate, timezone: string): Date {
   const nextPlainDate = plainDate.add({ days: 1 });
   return new Date(toEpochMs(nextPlainDate, 0, timezone) - 1);
 }
@@ -64,10 +54,7 @@ const ISO_DATE_REGEXP = /^\d{4}(?:-\d{2}){0,2}(?:(T)|$)/i;
  * as the occurrences of recurring events do.
  * Returns `null` for other formats and for unknown timezones.
  */
-export function createDateFromWallTime(
-  value: string,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject | null {
+export function createDateFromWallTime(value: string, timezone: string): Date | null {
   const match = ISO_DATE_REGEXP.exec(value);
   if (match === null) {
     return null;
@@ -75,7 +62,7 @@ export function createDateFromWallTime(
   const hasTime = match[1] !== undefined;
   // `Date.parse()` reads an ISO date-time on the wall clock of the system, and resolves the times a
   // DST transition skips or repeats like `localToEpochMs()`, about 3 times faster.
-  if (hasTime && (timezone === 'default' || timezone === 'system')) {
+  if (hasTime && timezone === 'default') {
     return new Date(value);
   }
   // Read as UTC, the fields of the string are its wall-clock time, whatever the timezone of the
@@ -90,10 +77,7 @@ export function createDateFromWallTime(
  * `Date.parse()` reads it in the timezone of the system, and its wall-clock time there is then read
  * in `timezone`.
  */
-export function createDateFromString(
-  value: string,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject {
+export function createDateFromString(value: string, timezone: string): Date {
   const epochMs = Date.parse(value);
   return new Date(
     Number.isNaN(epochMs) ? NaN : localToEpochMs(toLocalMs(epochMs, 'default'), timezone),
@@ -106,11 +90,11 @@ export function createDateFromString(
  * hour, like the occurrences of recurring events, whatever the timezone of the system.
  */
 export function normalizeAllDayBounds(
-  start: TemporalSupportedObject,
-  end: TemporalSupportedObject,
+  start: Date,
+  end: Date,
   allDay: boolean | undefined,
-  timezone: TemporalTimezone,
-): { start: TemporalSupportedObject; end: TemporalSupportedObject } {
+  timezone: string,
+): { start: Date; end: Date } {
   if (!allDay) {
     return { start, end };
   }
@@ -123,10 +107,7 @@ export function normalizeAllDayBounds(
 /**
  * Returns the processed date of an instant in `timezone`.
  */
-export function createProcessedDate(
-  epochMs: number,
-  timezone: TemporalTimezone,
-): SchedulerProcessedDate {
+export function createProcessedDate(epochMs: number, timezone: string): SchedulerProcessedDate {
   return processDate(new Date(epochMs), timezone);
 }
 
@@ -135,11 +116,7 @@ export function createProcessedDate(
  * `timezone`. A time that a DST transition skips moves forward by the length of the gap, and a
  * repeated one resolves to its first instant, like `toEpochMs()`.
  */
-export function addToDate(
-  date: TemporalSupportedObject,
-  duration: PlainDateDuration,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject {
+export function addToDate(date: Date, duration: PlainDateDuration, timezone: string): Date {
   const epochMs = date.getTime();
   return new Date(
     moveTimestampToPlainDate(epochMs, toPlainDate(epochMs, timezone).add(duration), timezone),

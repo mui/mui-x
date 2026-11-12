@@ -146,7 +146,7 @@ StandaloneMonthViewPremium.propTypes /* remove-proptypes */ = {
    *
    * Accepts any valid IANA timezone name
    * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
-   * "default" or "system" (the timezone of the system), or "UTC".
+   * "default" (the timezone of the system), or "UTC".
    *
    * Events keep their original data timezone. The visible range starts on the day of the visible
    * date in this timezone, and the next and previous navigation move the visible date on its days.

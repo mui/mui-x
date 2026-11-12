@@ -1,9 +1,5 @@
 import type * as React from 'react';
-import type {
-  TemporalSupportedObject,
-  WeekStartsOn,
-  TemporalTimezone,
-} from '@mui/x-scheduler-internals/models';
+import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 
 export type EventTimelinePremiumPreset =
@@ -142,11 +138,7 @@ export interface PresetDefinition {
    * `timezone`. Called by `goToNextVisibleDate` / `goToPreviousVisibleDate` with
    * `amount = ±unitCount`.
    */
-  navigate: (
-    date: TemporalSupportedObject,
-    amount: number,
-    timezone: TemporalTimezone,
-  ) => TemporalSupportedObject;
+  navigate: (date: Date, amount: number, timezone: string) => Date;
 }
 
 /**

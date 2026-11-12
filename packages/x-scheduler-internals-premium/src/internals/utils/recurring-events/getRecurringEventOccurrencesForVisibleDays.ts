@@ -2,7 +2,6 @@ import type {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
   SchedulerProcessedEvent,
-  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import {
   createProcessedDate,
@@ -28,7 +27,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
   event: SchedulerProcessedEvent,
   start: number,
   end: number,
-  displayTimezone: TemporalTimezone,
+  displayTimezone: string,
 ): SchedulerEventOccurrence[] {
   // Important:
   // Occurrences are always computed in dataTimezone to avoid DST issues

@@ -3,7 +3,6 @@ import type {
   RecurringEventFrequency,
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
-  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';
@@ -154,7 +153,7 @@ function validateRule(rule: SchedulerProcessedEventRecurrenceRule): void {
  */
 function readRuleObject(
   input: SchedulerEventRecurrenceRule,
-  timezone: TemporalTimezone,
+  timezone: string,
 ): SchedulerProcessedEventRecurrenceRule {
   // The typed object API validates `freq` as-is; unlike the RRULE string below, it is not normalized.
   validateFreq(input.freq);
@@ -183,7 +182,7 @@ function readRuleObject(
  */
 export function parseRRule(
   input: string | SchedulerEventRecurrenceRule,
-  timezone: TemporalTimezone,
+  timezone: string,
 ): SchedulerProcessedEventRecurrenceRule {
   const rule = typeof input === 'object' ? readRuleObject(input, timezone) : readRuleString(input);
   validateRule(rule);

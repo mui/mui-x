@@ -17,8 +17,6 @@ import type {
   RecurringEventWeekDayCode,
   SchedulerProcessedEvent,
   SchedulerProcessedEventRecurrenceRule,
-  TemporalSupportedObject,
-  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import {
   NOT_LOCALIZED_WEEK_DAYS_INDEXES,
@@ -299,11 +297,11 @@ export interface RecurringSeriesParameters {
   /**
    * The timezone of the series.
    */
-  timezone: TemporalTimezone;
+  timezone: string;
   /**
    * The excluded occurrences (EXDATE), read in the timezone of the series.
    */
-  exDates?: readonly TemporalSupportedObject[];
+  exDates?: readonly Date[];
 }
 
 /**
@@ -315,7 +313,7 @@ export interface RecurringSeriesParameters {
  * December 30th, 2011 in Pacific/Apia, has no occurrence and doesn't count toward COUNT.
  */
 export class RecurringSeries {
-  declare public readonly timezone: TemporalTimezone;
+  declare public readonly timezone: string;
 
   /**
    * The date of the first occurrence (DTSTART).
@@ -340,7 +338,7 @@ export class RecurringSeries {
 
   constructor(parameters: RecurringSeriesParameters) {
     const { rule, timezone } = parameters;
-    const toDay = (date: TemporalSupportedObject) => toLocalDayNumber(date.getTime(), timezone);
+    const toDay = (date: Date) => toLocalDayNumber(date.getTime(), timezone);
 
     const startDay = toLocalDayNumber(parameters.start, timezone);
 
@@ -360,7 +358,7 @@ export class RecurringSeries {
    */
   public static fromEvent(
     event: SchedulerProcessedEvent,
-    exDates: readonly TemporalSupportedObject[] | undefined = event.dataTimezone.exDates,
+    exDates: readonly Date[] | undefined = event.dataTimezone.exDates,
   ): RecurringSeries {
     return new RecurringSeries({
       rule: event.dataTimezone.rrule!,

@@ -1,4 +1,3 @@
-import type { TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import {
   addToDate,
   createStartOfPlainDate,
@@ -27,7 +26,7 @@ const INSTANT_REGEXP = /(?:Z|T.*[+-]\d{2}:?\d{2})$/i;
  * moves forward by the length of the gap, and a repeated one resolves to its first instant.
  * Throws for a string that isn't a date.
  */
-export function createDate(value: string, timezone: TemporalTimezone = 'default'): Date {
+export function createDate(value: string, timezone: string = 'default'): Date {
   let epochMs: number;
   if (INSTANT_REGEXP.test(value)) {
     epochMs = Date.parse(value);
@@ -57,40 +56,40 @@ export function addHours(date: Date, amount: number): Date {
 
 // The calendar arithmetic keeps the time of day on the wall clock of `timezone`, like the Scheduler.
 
-export function addDays(date: Date, amount: number, timezone: TemporalTimezone = 'default') {
+export function addDays(date: Date, amount: number, timezone: string = 'default') {
   return addToDate(date, { days: amount }, timezone);
 }
 
-export function addWeeks(date: Date, amount: number, timezone: TemporalTimezone = 'default') {
+export function addWeeks(date: Date, amount: number, timezone: string = 'default') {
   return addToDate(date, { weeks: amount }, timezone);
 }
 
-export function addMonths(date: Date, amount: number, timezone: TemporalTimezone = 'default') {
+export function addMonths(date: Date, amount: number, timezone: string = 'default') {
   return addToDate(date, { months: amount }, timezone);
 }
 
-export function addYears(date: Date, amount: number, timezone: TemporalTimezone = 'default') {
+export function addYears(date: Date, amount: number, timezone: string = 'default') {
   return addToDate(date, { years: amount }, timezone);
 }
 
 /**
  * The first instant of the day of `date` in `timezone`.
  */
-export function startOfDay(date: Date, timezone: TemporalTimezone = 'default'): Date {
+export function startOfDay(date: Date, timezone: string = 'default'): Date {
   return new Date(getStartOfDayMs(date.getTime(), timezone));
 }
 
 /**
  * The last instant of the day of `date` in `timezone`.
  */
-export function endOfDay(date: Date, timezone: TemporalTimezone = 'default'): Date {
+export function endOfDay(date: Date, timezone: string = 'default'): Date {
   return new Date(getEndOfDayMs(date.getTime(), timezone));
 }
 
 /**
  * The first instant of the week of `date` in `timezone`, with weeks starting on Sunday.
  */
-export function startOfWeek(date: Date, timezone: TemporalTimezone = 'default'): Date {
+export function startOfWeek(date: Date, timezone: string = 'default'): Date {
   const plainDate = toPlainDate(date.getTime(), timezone);
   return createStartOfPlainDate(getPlainDateWeekStart(plainDate, 7), timezone);
 }
@@ -98,7 +97,7 @@ export function startOfWeek(date: Date, timezone: TemporalTimezone = 'default'):
 /**
  * The first instant of the month of `date` in `timezone`.
  */
-export function startOfMonth(date: Date, timezone: TemporalTimezone = 'default'): Date {
+export function startOfMonth(date: Date, timezone: string = 'default'): Date {
   const plainDate = toPlainDate(date.getTime(), timezone);
   return createStartOfPlainDate(plainDate.with({ day: 1 }), timezone);
 }
@@ -106,10 +105,6 @@ export function startOfMonth(date: Date, timezone: TemporalTimezone = 'default')
 /**
  * Whether two dates are on the same day in `timezone`.
  */
-export function isSameDay(
-  date: Date,
-  other: Date,
-  timezone: TemporalTimezone = 'default',
-): boolean {
+export function isSameDay(date: Date, other: Date, timezone: string = 'default'): boolean {
   return toLocalDayNumber(date.getTime(), timezone) === toLocalDayNumber(other.getTime(), timezone);
 }

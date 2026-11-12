@@ -11,9 +11,7 @@ import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import type {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
-  TemporalSupportedObject,
   SchedulerProcessedEventRecurrenceRule,
-  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 
 /**
@@ -22,8 +20,8 @@ import type {
  */
 export function createStartOfPreviousDay(
   plainDate: BaseTemporal.PlainDate,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject {
+  timezone: string,
+): Date {
   return new Date(getStartOfDayMs(toEpochMs(plainDate, 0, timezone) - 1, timezone));
 }
 
@@ -34,11 +32,11 @@ export function createStartOfPreviousDay(
  * repeated hour doesn't come before its start.
  */
 export function moveEndToPlainDate(
-  end: TemporalSupportedObject,
+  end: Date,
   plainDate: BaseTemporal.PlainDate,
   startMs: number,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject {
+  timezone: string,
+): Date {
   const msInDay = toMsInDay(end.getTime(), timezone);
   let endMs = toEpochMs(plainDate, msInDay, timezone);
   if (endMs < startMs) {
@@ -83,10 +81,7 @@ export function getPlainDateWeekDayCode(
 /**
  * Returns the week day code (MO..SU) for a given date, read in `timezone`.
  */
-export function getWeekDayCode(
-  date: TemporalSupportedObject,
-  timezone: TemporalTimezone,
-): RecurringEventWeekDayCode {
+export function getWeekDayCode(date: Date, timezone: string): RecurringEventWeekDayCode {
   return getPlainDateWeekDayCode(toPlainDate(date.getTime(), timezone));
 }
 

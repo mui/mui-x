@@ -1,4 +1,3 @@
-import type { TemporalTimezone } from '../../models';
 import { MS_PER_DAY, MS_PER_MINUTE } from './plain-date-utils/dayNumber';
 import type { BaseTemporal } from './base-temporal';
 import {
@@ -45,7 +44,7 @@ export interface TimelineAxis extends TimelineAxisWindow {
   /**
    * The timezone the days and the wall-clock times of the axis are read in.
    */
-  timezone: TemporalTimezone;
+  timezone: string;
 }
 
 /**
@@ -56,7 +55,7 @@ export interface TimelineAxis extends TimelineAxisWindow {
 export function getPlainDateTimelineAxis(
   plainDate: BaseTemporal.PlainDate,
   window: TimelineAxisWindow,
-  timezone: TemporalTimezone,
+  timezone: string,
 ): TimelineAxis {
   const { dayStartMinute, dayEndMinute } = window;
   const endMs = toEpochMs(plainDate, dayEndMinute * MS_PER_MINUTE, timezone);
@@ -149,11 +148,7 @@ export function timelineAxisOffsetToTimestamp(axis: TimelineAxis, offsetMs: numb
  * while an element starting in the second occurrence renders over both, so this reads the times
  * over that element in the second occurrence. Other instants are returned unchanged.
  */
-export function resolveRepeatedTimeFrom(
-  epochMs: number,
-  fromMs: number,
-  timezone: TemporalTimezone,
-): number {
+export function resolveRepeatedTimeFrom(epochMs: number, fromMs: number, timezone: string): number {
   if (epochMs >= fromMs) {
     return epochMs;
   }

@@ -1,4 +1,4 @@
-import type { SchedulerProcessedDay, TemporalTimezone } from '../models';
+import type { SchedulerProcessedDay } from '../models';
 import type { BaseTemporal } from '../internals/utils/base-temporal';
 import { createProcessedDate } from '../internals/utils/plain-date-utils/date';
 import { getSkippedDays, toEpochMs } from '../internals/utils/plain-date-utils/timeZone';
@@ -13,7 +13,7 @@ import {
 export function getDayListFromPlainDates(parameters: {
   firstPlainDate: BaseTemporal.PlainDate;
   lastPlainDate: BaseTemporal.PlainDate;
-  timezone: TemporalTimezone;
+  timezone: string;
   /**
    * The ISO weekdays to leave out, like the weekend of the locale.
    */

@@ -4,7 +4,6 @@ import type {
   SchedulerEventId,
   SchedulerEventSide,
   SchedulerProcessedEvent,
-  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import { addDaysOnWallClock, MS_PER_DAY } from '@mui/x-scheduler-internals/internals';
 import type {
@@ -57,7 +56,7 @@ const MAX_EPOCH_MS = 8.64e15 - 2 * MS_PER_DAY;
  * `NaN` past the range of `Date`, where `Intl` throws instead of giving the offsets of an IANA
  * timezone.
  */
-function addDaysInDateRange(epochMs: number, dayCount: number, timezone: TemporalTimezone) {
+function addDaysInDateRange(epochMs: number, dayCount: number, timezone: string) {
   return Math.abs(epochMs + dayCount * MS_PER_DAY) > MAX_EPOCH_MS
     ? NaN
     : addDaysOnWallClock(epochMs, dayCount, timezone);
@@ -66,7 +65,7 @@ function addDaysInDateRange(epochMs: number, dayCount: number, timezone: Tempora
 // Minutes and hours are elapsed time. Days and weeks keep the time of day on the wall clock.
 const DEPENDENCY_LAG_ADDERS: Record<
   SchedulerDependencyLagUnit,
-  (epochMs: number, amount: number, timezone: TemporalTimezone) => number
+  (epochMs: number, amount: number, timezone: string) => number
 > = {
   minute: (epochMs, amount) => epochMs + amount * 60_000,
   hour: (epochMs, amount) => epochMs + amount * 3_600_000,
@@ -154,7 +153,7 @@ export function getEffectiveDependencyLag(
 export function addDependencyLag(
   epochMs: number,
   lag: SchedulerResolvedDependencyLag | null,
-  timezone: TemporalTimezone,
+  timezone: string,
 ): number {
   if (lag === null) {
     return epochMs;

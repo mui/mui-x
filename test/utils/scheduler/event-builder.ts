@@ -2,7 +2,6 @@ import type {
   RecurringEventPresetKey,
   SchedulerEventRecurrenceRule,
   SchedulerResource,
-  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import type {
   SchedulerEvent,
@@ -33,7 +32,7 @@ export const DEFAULT_TESTING_VISIBLE_DATE = createDate(DEFAULT_TESTING_VISIBLE_D
 export class EventBuilder {
   declare protected event: SchedulerEvent;
 
-  protected displayTimezone: TemporalTimezone = 'default';
+  protected displayTimezone: string = 'default';
 
   protected constructor() {
     const id = crypto.randomUUID();
@@ -121,13 +120,13 @@ export class EventBuilder {
   }
 
   /** Set the data timezone. */
-  withDataTimezone(timezone: TemporalTimezone) {
+  withDataTimezone(timezone: string) {
     this.event.timezone = timezone;
     return this;
   }
 
   /** Set the display timezone for processed events. */
-  withDisplayTimezone(timezone: TemporalTimezone) {
+  withDisplayTimezone(timezone: string) {
     this.displayTimezone = timezone;
     return this;
   }

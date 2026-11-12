@@ -1,9 +1,4 @@
-import type {
-  TemporalSupportedObject,
-  SchedulerProcessedEvent,
-  WeekStartsOn,
-  TemporalTimezone,
-} from '../../models';
+import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import type { BaseTemporal } from './base-temporal';
 import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
 import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
@@ -12,15 +7,15 @@ import { toWallClockIsoString } from './plain-date-utils/timeZone';
 import { isInstantString } from './plain-date-utils/date';
 
 /**
- * Converts a `TemporalSupportedObject` back to a string, respecting the
+ * Converts a `Date` back to a string, respecting the
  * original date format: instant strings (ending with `Z` or an offset) become UTC ISO
  * strings, while wall-time strings are formatted in the event's data timezone
  * without the `Z` suffix.
  */
 export function dateToEventString(
-  date: TemporalSupportedObject,
+  date: Date,
   originalString: string,
-  dataTimezone: TemporalTimezone,
+  dataTimezone: string,
 ): string {
   if (isInstantString(originalString)) {
     return new Date(date.getTime()).toISOString();
@@ -37,8 +32,8 @@ export function getOccurrenceEnd({
   occurrenceStart,
 }: {
   event: SchedulerProcessedEvent;
-  occurrenceStart: TemporalSupportedObject;
-}): TemporalSupportedObject {
+  occurrenceStart: Date;
+}): Date {
   const durationMs = event.dataTimezone.end.timestamp - event.dataTimezone.start.timestamp;
   return new Date(occurrenceStart.getTime() + durationMs);
 }

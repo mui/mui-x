@@ -13,7 +13,7 @@ import {
 import { isJSDOM } from 'test/utils/skipIf';
 import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
-import type { SchedulerResource, TemporalTimezone } from '@mui/x-scheduler-internals/models';
+import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { toPlainDate } from '@mui/x-scheduler-internals/internals';
@@ -95,7 +95,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   });
 
   describe('events viewed from another display timezone', () => {
-    function renderEditDialog(builder: EventBuilder, displayTimezone: TemporalTimezone) {
+    function renderEditDialog(builder: EventBuilder, displayTimezone: string) {
       const onEventsChange = vi.fn();
       const event: SchedulerEvent = builder.withDisplayTimezone(displayTimezone).build();
 
@@ -783,7 +783,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   });
 
   describe('read-only date and time', () => {
-    function renderReadonlyDetails(builder: EventBuilder, displayTimezone?: TemporalTimezone) {
+    function renderReadonlyDetails(builder: EventBuilder, displayTimezone?: string) {
       if (displayTimezone) {
         builder.withDisplayTimezone(displayTimezone);
       }

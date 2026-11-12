@@ -1,4 +1,3 @@
-import type { TemporalSupportedObject, TemporalTimezone } from './date';
 import type {
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
@@ -42,11 +41,11 @@ interface SchedulerProcessedEventBase {
     /**
      * The timezone of the event dates.
      * */
-    timezone: TemporalTimezone;
+    timezone: string;
     /**
      * The instants of the exception dates, the same as in `dataTimezone`.
      */
-    exDates?: TemporalSupportedObject[];
+    exDates?: Date[];
   };
 
   /**
@@ -99,7 +98,7 @@ export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
     /**
      * The timezone of the event dates.
      * */
-    timezone: TemporalTimezone;
+    timezone: string;
     /**
      * The recurrence rule for the event, expressed in the event's timezone (RFC 5545 evaluates
      * it as local time in the DTSTART timezone). The event dialog reads and writes it there.
@@ -110,7 +109,7 @@ export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
      * Exception dates for the event.
      * These dates will be excluded from the recurrence.
      */
-    exDates?: TemporalSupportedObject[];
+    exDates?: Date[];
   };
 
   /**
@@ -194,9 +193,11 @@ export interface SchedulerEvent {
    */
   end: string;
   /**
-   * The timezone of the event dates.
+   * The timezone of the event dates: an IANA timezone name (for example "America/New_York"),
+   * "UTC", or "default" (the timezone of the system).
+   * @default "default"
    */
-  timezone?: TemporalTimezone;
+  timezone?: string;
   /**
    * The id(s) of the resource(s) this event is associated with.
    * @default null
@@ -395,7 +396,7 @@ export interface SchedulerProcessedDate {
    * The instant of the date. Read its date and time in the timezone of the processed date through
    * `key`, `minutesInDay` and `timestamp`.
    */
-  value: TemporalSupportedObject;
+  value: Date;
   /**
    * String representation of the date.
    * It can be used as key in Maps or passed to the React `key` property when looping through days.
@@ -437,9 +438,9 @@ export type SchedulerEventUpdatedProperties = Omit<
   'start' | 'end' | 'exDates' | 'rrule'
 > & {
   id: SchedulerEventId;
-  start?: TemporalSupportedObject;
-  end?: TemporalSupportedObject;
-  exDates?: TemporalSupportedObject[];
+  start?: Date;
+  end?: Date;
+  exDates?: Date[];
   rrule?: SchedulerProcessedEventRecurrenceRule | string;
 };
 
@@ -451,9 +452,9 @@ export type SchedulerEventCreationProperties = Omit<
   SchedulerEvent,
   'id' | 'start' | 'end' | 'exDates' | 'rrule'
 > & {
-  start: string | TemporalSupportedObject;
-  end: string | TemporalSupportedObject;
-  exDates?: (string | TemporalSupportedObject)[];
+  start: string | Date;
+  end: string | Date;
+  exDates?: (string | Date)[];
   rrule?: SchedulerEventRecurrenceRule | SchedulerProcessedEventRecurrenceRule | string;
 };
 
@@ -461,7 +462,7 @@ export type SchedulerEventCreationProperties = Omit<
  * Properties to pass to the methods that paste an event.
  */
 export type SchedulerEventPasteProperties = Partial<
-  Pick<SchedulerEvent, 'resource' | 'allDay'> & { start: TemporalSupportedObject }
+  Pick<SchedulerEvent, 'resource' | 'allDay'> & { start: Date }
 >;
 
 // TODO: Consider splitting the interface in two, one for the Event Calendar and one for the Event Timeline Premium.
