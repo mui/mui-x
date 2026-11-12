@@ -8,6 +8,7 @@ import {
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
+import type { SchedulerResource } from '../models';
 import { processDate } from '../process-date';
 import { schedulerOccurrenceSelectors } from './schedulerOccurrenceSelectors';
 
@@ -87,6 +88,111 @@ describe('schedulerOccurrenceSelectors', () => {
       const end = processDate(createDate('2025-07-03T11:00:00Z'), 'default');
 
       expect(schedulerOccurrenceSelectors.isEnded(state, end)).to.equal(true);
+    });
+  });
+
+  describe('highlightState', () => {
+    const child = ResourceBuilder.new().build();
+    const parent = ResourceBuilder.new().children([child]).build();
+    const other = ResourceBuilder.new().build();
+    const getState = (visibleResources?: Record<string, boolean>) =>
+      getEventTimelinePremiumStateFromParameters({
+        events: [],
+        resources: [parent, other],
+        visibleResources,
+      });
+    const occurrenceOf = (resource: SchedulerResource | null) => {
+      const builder = EventBuilder.new().singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR);
+      return (resource ? builder.resource(resource) : builder).toOccurrence();
+    };
+    const highlightState = schedulerOccurrenceSelectors.highlightState;
+
+    it('should return none when nothing is highlighted', () => {
+      const state = getState();
+      expect(highlightState(state, occurrenceOf(parent))).to.equal('none');
+      expect(highlightState(state, occurrenceOf(null))).to.equal('none');
+    });
+
+    it('should highlight only the occurrences without resource when resourceId is null', () => {
+      const state = getState();
+      state.occurrenceHighlight = { resourceId: null };
+      expect(highlightState(state, occurrenceOf(null))).to.equal('highlighted');
+      expect(highlightState(state, occurrenceOf(parent))).to.equal('dimmed');
+    });
+
+    it('should match the descendants only when includeDescendants is set', () => {
+      const state = getState();
+      state.occurrenceHighlight = { resourceId: parent.id };
+      expect(highlightState(state, occurrenceOf(parent))).to.equal('highlighted');
+      expect(highlightState(state, occurrenceOf(child))).to.equal('dimmed');
+
+      state.occurrenceHighlight = { resourceId: parent.id, includeDescendants: true };
+      expect(highlightState(state, occurrenceOf(child))).to.equal('highlighted');
+      expect(highlightState(state, occurrenceOf(other))).to.equal('dimmed');
+      // an ancestor is not a descendant
+      state.occurrenceHighlight = { resourceId: child.id, includeDescendants: true };
+      expect(highlightState(state, occurrenceOf(parent))).to.equal('dimmed');
+    });
+
+    it('should attribute a multi-resource occurrence to its first visible resource', () => {
+      const occurrence = EventBuilder.new()
+        .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+        .resources([other, child])
+        .toOccurrence();
+
+      const state = getState();
+      state.occurrenceHighlight = { resourceId: child.id };
+      expect(highlightState(state, occurrence)).to.equal('dimmed');
+      state.occurrenceHighlight = { resourceId: other.id };
+      expect(highlightState(state, occurrence)).to.equal('highlighted');
+
+      const stateWithOtherHidden = getState({ [other.id]: false });
+      stateWithOtherHidden.occurrenceHighlight = { resourceId: child.id };
+      expect(highlightState(stateWithOtherHidden, occurrence)).to.equal('highlighted');
+    });
+
+    it('should treat an undeclared resource as no resource', () => {
+      const occurrence = EventBuilder.new()
+        .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+        .resource({ id: 'ghost', title: 'Ghost' })
+        .toOccurrence();
+
+      const state = getState();
+      state.occurrenceHighlight = { resourceId: null };
+      expect(highlightState(state, occurrence)).to.equal('highlighted');
+    });
+
+    it('should use a half-open range', () => {
+      const hourMs = 3_600_000;
+      const start = DEFAULT_TESTING_VISIBLE_DATE.getTime();
+      const state = getState();
+      state.occurrenceHighlight = {
+        resourceId: parent.id,
+        range: { start, end: start + hourMs },
+      };
+      const iso = (hours: number) => new Date(start + hours * hourMs).toISOString();
+      const endingAtStart = EventBuilder.new()
+        .span(iso(-1), iso(0))
+        .resource(parent)
+        .toOccurrence();
+      const startingAtEnd = EventBuilder.new().span(iso(1), iso(2)).resource(parent).toOccurrence();
+
+      expect(highlightState(state, endingAtStart)).to.equal('dimmed');
+      expect(highlightState(state, startingAtEnd)).to.equal('dimmed');
+      expect(highlightState(state, occurrenceOf(parent))).to.equal('highlighted');
+    });
+
+    it('should leave the all-day occurrences out when timedOnly is set', () => {
+      const allDay = EventBuilder.new()
+        .fullDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+        .resource(parent)
+        .toOccurrence();
+
+      const state = getState();
+      state.occurrenceHighlight = { resourceId: parent.id };
+      expect(highlightState(state, allDay)).to.equal('highlighted');
+      state.occurrenceHighlight = { resourceId: parent.id, timedOnly: true };
+      expect(highlightState(state, allDay)).to.equal('dimmed');
     });
   });
 

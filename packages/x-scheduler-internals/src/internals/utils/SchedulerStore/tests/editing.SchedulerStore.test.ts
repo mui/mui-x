@@ -1004,5 +1004,14 @@ premiumStoreClasses.forEach((storeClass) => {
 
       expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
     });
+
+    it('should clear the occurrence highlight when the view changes', () => {
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS });
+      store.setOccurrenceHighlight({ resourceId: null });
+
+      store.setView('month', {} as any);
+
+      expect(store.state.occurrenceHighlight).to.equal(null);
+    });
   });
 });

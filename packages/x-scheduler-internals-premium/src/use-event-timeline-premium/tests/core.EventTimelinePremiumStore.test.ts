@@ -28,6 +28,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         canDropEventsToTheOutside: false,
         copiedEvent: null,
         selection: null,
+        occurrenceHighlight: null,
         dependencyCreation: null,
         dependencyEditor: null,
         dependenciesFeature: null,

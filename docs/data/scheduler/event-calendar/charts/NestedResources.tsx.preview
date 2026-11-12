@@ -1,0 +1,8 @@
+<EventCalendarPremium
+  features={features}
+  charts={{ metric: 'hours' }}
+  events={events}
+  resources={resources}
+  defaultVisibleDate={defaultVisibleDate}
+  onEventsChange={setEvents}
+/>

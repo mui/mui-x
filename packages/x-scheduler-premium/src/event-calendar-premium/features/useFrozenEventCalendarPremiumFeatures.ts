@@ -1,10 +1,10 @@
 'use client';
 import type { EventCalendarPremiumStoreFeatures } from '@mui/x-scheduler-internals-premium/internals';
 import { useFrozenFeatures } from '../../internals/features/useFrozenFeatures';
-import type { EventCalendarPremiumFeatures } from './EventCalendarPremiumFeatures.types';
+import type { StandaloneViewPremiumFeatures } from './EventCalendarPremiumFeatures.types';
 
 function deriveStoreFeatures(
-  features: EventCalendarPremiumFeatures,
+  features: StandaloneViewPremiumFeatures,
 ): EventCalendarPremiumStoreFeatures {
   return { recurringEvents: features.recurringEvents?.store };
 }
@@ -12,9 +12,8 @@ function deriveStoreFeatures(
 /**
  * Reads the features of the Event Calendar and its standalone views once, on mount.
  */
-export function useFrozenEventCalendarPremiumFeatures(
-  features: EventCalendarPremiumFeatures | undefined,
-  componentName: string,
-) {
+export function useFrozenEventCalendarPremiumFeatures<
+  TFeatures extends StandaloneViewPremiumFeatures,
+>(features: TFeatures | undefined, componentName: string) {
   return useFrozenFeatures(features, componentName, deriveStoreFeatures);
 }

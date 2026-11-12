@@ -35,6 +35,11 @@ import { useEventCalendarStyledContext } from './EventCalendarStyledContext';
 
 export interface EventCalendarRootProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
+   * Content rendered under the resources tree of the side panel, and of the compact drawer.
+   * Used by the charts feature of the premium package.
+   */
+  sidePanelExtra?: React.ReactNode;
+  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
@@ -147,13 +152,15 @@ const EventCalendarContent = styled('section', {
  */
 export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarRootProps>(
   function EventCalendarRoot(props, forwardedRef) {
-    const { children, className, ...other } = props;
+    const { children, className, sidePanelExtra, ...other } = props;
 
     const store = useEventCalendarStoreContext();
     const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
 
     const view = useStore(store, eventCalendarViewSelectors.view);
     const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
+    // the resources tree renders nothing without resources, and neither should its divider
+    const hasResources = useStore(store, (state) => state.processedResourceLookup.size > 0);
 
     // The compact drawer keeps its own state (default closed) rather than reusing
     // `isSidePanelOpen` (default open), so it never covers the calendar on load.
@@ -221,10 +228,21 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
             orientation="horizontal"
             className={classes.sidePanelCollapse}
           >
-            <EventCalendarSidePanel className={classes.sidePanel}>
+            <EventCalendarSidePanel
+              className={classes.sidePanel}
+              sx={
+                sidePanelExtra ? { overflowY: 'auto', '& > section': { flexShrink: 0 } } : undefined
+              }
+            >
               <MiniCalendar />
               <Divider className={classes.sidePanelDivider} />
               <ResourcesTree />
+              {sidePanelExtra ? (
+                <React.Fragment>
+                  {hasResources ? <Divider className={classes.sidePanelDivider} /> : null}
+                  {sidePanelExtra}
+                </React.Fragment>
+              ) : null}
             </EventCalendarSidePanel>
           </EventCalendarSidePanelCollapse>
 
@@ -243,6 +261,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
           open={isCompactDrawerOpen}
           onClose={() => setIsCompactDrawerOpen(false)}
           container={rootRef}
+          sidePanelExtra={sidePanelExtra}
         />
         <ErrorContainer />
         {children}

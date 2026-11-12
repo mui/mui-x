@@ -85,6 +85,53 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
 );
 
 export const schedulerOccurrenceSelectors = {
+  /**
+   * The resource an occurrence is attributed to: the first of its resources that is declared
+   * and visible, `null` when there is none.
+   */
+  attributedResourceId: (
+    state: State,
+    occurrence: Pick<SchedulerEventOccurrence, 'resource'>,
+  ): string | null => {
+    const visibleMap = schedulerResourceSelectors.visibleMap(state);
+    return (
+      getEventResourceIds(occurrence.resource).find(
+        (id) => state.processedResourceLookup.has(id) && visibleMap[id] !== false,
+      ) ?? null
+    );
+  },
+  /**
+   * Whether the occurrence is highlighted or dimmed by `state.occurrenceHighlight`,
+   * `'none'` when nothing is highlighted.
+   */
+  highlightState: (
+    state: State,
+    occurrence: Pick<SchedulerEventOccurrence, 'resource' | 'displayTimezone' | 'allDay'>,
+  ): 'none' | 'highlighted' | 'dimmed' => {
+    const highlight = state.occurrenceHighlight;
+    if (highlight == null) {
+      return 'none';
+    }
+    const attributedId = schedulerOccurrenceSelectors.attributedResourceId(state, occurrence);
+    let matchesResource: boolean;
+    if (highlight.resourceId === null || attributedId === null) {
+      matchesResource = attributedId === highlight.resourceId;
+    } else if (highlight.includeDescendants) {
+      matchesResource = schedulerResourceSelectors.isResourceOrDescendant(
+        state,
+        attributedId,
+        highlight.resourceId,
+      );
+    } else {
+      matchesResource = attributedId === highlight.resourceId;
+    }
+    const matchesRange =
+      highlight.range == null ||
+      (occurrence.displayTimezone.start.timestamp < highlight.range.end &&
+        occurrence.displayTimezone.end.timestamp > highlight.range.start);
+    const matchesKind = !highlight.timedOnly || !occurrence.allDay;
+    return matchesResource && matchesRange && matchesKind ? 'highlighted' : 'dimmed';
+  },
   isStarted: (state: State, start: SchedulerProcessedDate) => start.timestamp <= state.nowTimestamp,
   isEnded: (state: State, end: SchedulerProcessedDate) => end.timestamp < state.nowTimestamp,
   groupedByResourceList: occurrencesGroupedByResourceListSelector,

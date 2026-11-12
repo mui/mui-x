@@ -10,7 +10,10 @@ import type {
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
-import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOccurrenceSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
@@ -20,7 +23,7 @@ import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
 import type { PaletteName } from '../../../utils/tokens';
-import { getPaletteVariants } from '../../../utils/tokens';
+import { getPaletteVariants, highlightStyles } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
 import { getArrowEdgeStyles, getArrowFocusVisibleStyles } from '../arrowClips';
@@ -51,6 +54,7 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
   slot: 'DayGridEvent',
 })<{ 'data-variant'?: 'filled' | 'invisible' | 'compact' | 'placeholder'; palette?: PaletteName }>(
   ({ theme }) => ({
+    ...highlightStyles,
     ...(DayGridEventBaseStyles(theme) as any),
     '&:focus-visible': {
       outline: '2px solid var(--event-surface-accent)',
@@ -289,6 +293,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
 
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
+  const highlightState = useStore(store, schedulerOccurrenceSelectors.highlightState, occurrence);
 
   // Feature hooks
   const formatTime = useFormatTime();
@@ -377,6 +382,10 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     ref: forwardedRef,
     'data-variant': variant,
     'data-palette': color,
+    'data-highlight':
+      highlightState === 'none' || variant === 'placeholder' || variant === 'invisible'
+        ? undefined
+        : highlightState,
     style: {
       '--grid-row': occurrence.position.index,
       '--grid-column-span': occurrence.position.daySpan,

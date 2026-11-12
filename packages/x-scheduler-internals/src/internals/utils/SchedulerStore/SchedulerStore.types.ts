@@ -84,6 +84,31 @@ export interface SchedulerEditingState {
   modelBounds?: { start: number; end: number };
 }
 
+/**
+ * The occurrences to highlight; the other ones are dimmed.
+ */
+export interface SchedulerOccurrenceHighlight {
+  /**
+   * The resource the occurrences are attributed to (their first visible resource),
+   * `null` for occurrences without a visible resource.
+   */
+  resourceId: SchedulerResourceId | null;
+  /**
+   * Whether the occurrences attributed to a descendant of `resourceId` match too.
+   * @default false
+   */
+  includeDescendants?: boolean;
+  /**
+   * Half-open time range `[start, end)` as timestamps, `undefined` for any time.
+   */
+  range?: { start: number; end: number };
+  /**
+   * Whether all-day occurrences are left out.
+   * @default false
+   */
+  timedOnly?: boolean;
+}
+
 export interface SchedulerState<TEvent extends object = any> {
   /**
    * The locale the dates are formatted in.
@@ -233,6 +258,10 @@ export interface SchedulerState<TEvent extends object = any> {
    * See `SchedulerSelectionTypeLookup` for how features register their type.
    */
   selection: SchedulerSelection | null;
+  /**
+   * The occurrence highlight, or `null` when nothing is highlighted.
+   */
+  occurrenceHighlight: SchedulerOccurrenceHighlight | null;
   /**
    * Whether the store is currently loading events from the data source.
    */

@@ -10,6 +10,7 @@ import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import {
   schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
+  schedulerOccurrenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
@@ -18,7 +19,7 @@ import type { TimeGridEventProps } from './TimeGridEvent.types';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import type { PaletteName } from '../../../utils/tokens';
-import { getPaletteVariants } from '../../../utils/tokens';
+import { getPaletteVariants, highlightStyles } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
 import { useTimeGridEvent } from './useTimeGridEvent';
@@ -172,6 +173,7 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   name: 'MuiEventCalendar',
   slot: 'TimeGridEventRoot',
 })<{ palette?: PaletteName }>(({ theme }) => ({
+  ...highlightStyles,
   ...getTimeGridEventRootStyles(theme),
   padding: theme.spacing(0.5, 1, 0.5, 1),
   // Shrink vertical padding on shorter events so the text isn't squeezed out.
@@ -546,6 +548,7 @@ const TimeGridEventRegular = React.forwardRef(function TimeGridEventRegular(
   // outline; inert on a mouse. Editing = the surface is open for it (either mode), for the selected look.
   const isArmed = useStore(store, schedulerOtherSelectors.isEditedOccurrenceArmed, occurrence.key);
   const isEditing = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
+  const highlightState = useStore(store, schedulerOccurrenceSelectors.highlightState, occurrence);
 
   return (
     <TimeGridEventRoot
@@ -557,6 +560,7 @@ const TimeGridEventRegular = React.forwardRef(function TimeGridEventRegular(
       aria-label={accessibleName}
       data-armed={isArmed || undefined}
       data-editing={isEditing || undefined}
+      data-highlight={highlightState === 'none' ? undefined : highlightState}
       {...rootDataAttributes}
       {...rootPositionProps}
       ref={forwardedRef}

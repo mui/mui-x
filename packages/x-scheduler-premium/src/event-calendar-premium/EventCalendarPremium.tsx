@@ -21,7 +21,9 @@ import {
   EventCalendarStyledContext,
   useEventCalendarUtilityClasses,
 } from '@mui/x-scheduler/internals';
+import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { useFrozenEventCalendarPremiumFeatures } from './features/useFrozenEventCalendarPremiumFeatures';
+import { EventCalendarPremiumChartsContext } from './charts/EventCalendarPremiumChartsContext';
 import type { EventCalendarPremiumProps } from './EventCalendarPremium.types';
 
 const packageInfo = {
@@ -48,12 +50,19 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
 
   const {
     parameters,
-    forwardedProps: { className, classes: classesProp, features: featuresProp, ...forwardedProps },
+    forwardedProps: {
+      className,
+      classes: classesProp,
+      features: featuresProp,
+      charts: chartsOptions = EMPTY_OBJECT,
+      ...forwardedProps
+    },
   } = useExtractEventCalendarPremiumParameters<TEvent, TResource, typeof props>(props);
   const { features, storeFeatures } = useFrozenEventCalendarPremiumFeatures(
     featuresProp,
     'EventCalendarPremium',
   );
+  const ChartsPanel = features.charts?.Panel;
   const storeParameters = React.useMemo(
     () => ({ ...parameters, storeFeatures }),
     [parameters, storeFeatures],
@@ -98,9 +107,16 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
                 <EventDialogProvider
                   optionalRenderers={features.recurringEvents?.optionalRenderers}
                 >
-                  <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
-                    {watermark}
-                  </EventCalendarRoot>
+                  <EventCalendarPremiumChartsContext.Provider value={chartsOptions}>
+                    <EventCalendarRoot
+                      className={className}
+                      {...other}
+                      ref={forwardedRef}
+                      sidePanelExtra={ChartsPanel ? <ChartsPanel /> : undefined}
+                    >
+                      {watermark}
+                    </EventCalendarRoot>
+                  </EventCalendarPremiumChartsContext.Provider>
                 </EventDialogProvider>
               </SchedulerDirectionProvider>
             </SchedulerSlotsProvider>
@@ -151,6 +167,13 @@ EventCalendarPremium.propTypes /* remove-proptypes */ = {
    * @default false
    */
   canDropEventsToTheOutside: PropTypes.bool,
+  /**
+   * The cards of the charts feature (`features.charts`) and what they measure.
+   */
+  charts: PropTypes.shape({
+    cards: PropTypes.arrayOf(PropTypes.oneOf(['byDay', 'byResource']).isRequired),
+    metric: PropTypes.oneOf(['count', 'hours']),
+  }),
   /**
    * Override or extend the styles applied to the component.
    */
@@ -285,7 +308,8 @@ EventCalendarPremium.propTypes /* remove-proptypes */ = {
    */
   events: PropTypes.arrayOf(PropTypes.object),
   /**
-   * The optional features of the Event Calendar: `recurringEvents` from `@mui/x-scheduler-premium/recurring-events`.
+   * The optional features of the Event Calendar: `recurringEvents` from `@mui/x-scheduler-premium/recurring-events`,
+   * `charts` from `@mui/x-scheduler-premium/charts`.
    * They are read once when the component mounts, later changes are ignored.
    * @example { recurringEvents: recurringEventsFeature }
    */
