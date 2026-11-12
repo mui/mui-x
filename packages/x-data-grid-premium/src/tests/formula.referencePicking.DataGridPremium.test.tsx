@@ -15,7 +15,10 @@ import { formulaFeature } from '@mui/x-data-grid-premium/formula';
 import type { DataGridPremiumProps, GridApi, GridRowId } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
+import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { getSelectionOffsets, setCaretOffset } from '../components/formulaEditorCaret';
+import { getActiveFormulaPickEditable } from '../hooks/features/formula/gridFormulaReferencePicking';
+import type { GridPrivateApiPremium } from '../models/gridApiPremium';
 
 // Row ids differ from the row positions, so an A1 row number (`B2`) and a
 // canonical row id (`ROW(12)`) cannot be mistaken for each other.
@@ -213,6 +216,76 @@ describe('<DataGridPremium /> - Formulas reference picking', () => {
       expect(cell(11, 'total').textContent).to.equal('20');
       expect(apiRef.current!.getRow(11).total).to.equal('=REF(COLUMN("price"), ROW(12))');
     });
+  });
+
+  describe('end of a range being typed (A1 notation)', () => {
+    it('writes the address of a cell of the row of the formula after the range operator', async () => {
+      const { user } = await render(<Test formulaA1Notation />);
+      await editTotal(user, 11, '=SUM(B2:');
+      await user.click(cell(11, 'quantity'));
+
+      // `=SUM(B2:quantity` would not be a range.
+      expect(getEditable()!.textContent).to.equal('=SUM(B2:C1');
+      expect(isEditing(11)).to.equal(true);
+    });
+
+    it('keeps writing an address when the next click replaces that reference', async () => {
+      const { user } = await render(<Test formulaA1Notation />);
+      await editTotal(user, 11, '=SUM(B2: ');
+      await user.click(cell(11, 'quantity'));
+      await user.click(cell(11, 'price'));
+
+      expect(getEditable()!.textContent).to.equal('=SUM(B2: B1');
+    });
+
+    it('keeps the address when a drag comes back to the first cell', async () => {
+      const { user } = await render(<Test formulaA1Notation />);
+      await editTotal(user, 11, '=SUM(B2:');
+      drag(cell(11, 'quantity'), cell(12, 'quantity'), cell(11, 'quantity'));
+
+      expect(getEditable()!.textContent).to.equal('=SUM(B2:C1');
+    });
+
+    it('still writes the field name where no range is being typed', async () => {
+      const { user } = await render(<Test formulaA1Notation />);
+      await editTotal(user, 11, '=SUM(B2:C3, ');
+      await user.click(cell(11, 'quantity'));
+
+      expect(getEditable()!.textContent).to.equal('=SUM(B2:C3, quantity');
+    });
+  });
+
+  describe('shadow DOM', () => {
+    // Only the lookup of the focused editor is covered: reading the caret of an editor inside a
+    // shadow root is a limitation of the formula editor itself.
+    // jsdom only: the styles of the grid are injected in the document head, so in a browser the
+    // grid has no layout inside the shadow root of this test.
+    it.skipIf(!isJSDOM)(
+      'finds the focused formula editor when the grid is rendered in a shadow root',
+      async () => {
+        const host = document.createElement('div');
+        document.body.appendChild(host);
+        const container = document.createElement('div');
+        host.attachShadow({ mode: 'open' }).appendChild(container);
+        try {
+          await render(<Test />, { container });
+          fireEvent.doubleClick(cell(11, 'total'));
+          const editable = await waitFor(() => {
+            const element = container.querySelector<HTMLElement>('[contenteditable]');
+            expect(element).not.to.equal(null);
+            return element!;
+          });
+          // The focused element of the document is the host of the shadow root.
+          expect(document.activeElement).to.equal(host);
+
+          const privateApi = unwrapPrivateAPI<GridPrivateApiPremium, GridApi>(apiRef.current!);
+          const active = getActiveFormulaPickEditable({ current: privateApi });
+          expect(active?.getHandle()?.getRoot()).to.equal(editable);
+        } finally {
+          host.remove();
+        }
+      },
+    );
   });
 
   describe('caret on a reference', () => {

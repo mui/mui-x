@@ -838,6 +838,11 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
       // formula now belongs to another cell (the preview row or the field changed).
       if (getFormulaPendingPickOf(apiRef, editable) !== null) {
         session.pending = null;
+        // The click of that pick was handled: a later click without a mousedown (keyboard,
+        // programmatic) must not be taken for it.
+        if (session.gesture === 'up') {
+          session.gesture = null;
+        }
       }
       syncFormulaPickFeedback(apiRef, referencePicking);
     };

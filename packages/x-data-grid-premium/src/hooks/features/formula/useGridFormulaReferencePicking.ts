@@ -21,6 +21,7 @@ import {
   getFormulaPickAnchor,
   getFormulaPickOfCell,
   getPickedReferenceText,
+  isFormulaPickAfterRangeOperator,
   isFormulaReferencePickingEnabled,
 } from './gridFormulaReferencePicking';
 import type { FormulaPickCell, FormulaPickTarget } from './gridFormulaReferencePicking';
@@ -137,7 +138,9 @@ export const useGridFormulaReferencePicking = (
         return;
       }
       const cell: FormulaPickCell = { field: params.field, rowId: params.id };
-      const pick = getFormulaPickOfCell(apiRef, editable, cell);
+      // The end of a range being typed (`=SUM(B1:`) is a cell address, also in the formula's row.
+      const sameRowAddress = isFormulaPickAfterRangeOperator(text, action.start);
+      const pick = getFormulaPickOfCell(apiRef, editable, cell, { sameRowAddress });
       if (pick === null) {
         return;
       }
@@ -243,7 +246,10 @@ export const useGridFormulaReferencePicking = (
       ) {
         return;
       }
-      const reference = getPickedReferenceText(apiRef, ownerCell, target, { a1Notation });
+      const reference = getPickedReferenceText(apiRef, ownerCell, target, {
+        a1Notation,
+        sameRowAddress: isFormulaPickAfterRangeOperator(pending.pick.text, pending.pick.start),
+      });
       if (reference === null) {
         return;
       }

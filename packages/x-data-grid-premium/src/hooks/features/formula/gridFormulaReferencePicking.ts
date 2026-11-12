@@ -1,6 +1,7 @@
 import type { RefObject } from '@mui/x-internals/types';
 import { GRID_ACTIONS_COLUMN_TYPE, GridCellModes, gridClasses } from '@mui/x-data-grid-pro';
 import type { GridRowId } from '@mui/x-data-grid-pro';
+import { getActiveElement } from '@mui/x-data-grid-pro/internals';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
@@ -49,6 +50,24 @@ export interface PickedReferenceTextOptions {
    * @default false
    */
   a1Notation?: boolean;
+  /**
+   * If `true`, a cell in the row of the formula is written as its A1 address (`B2`) instead of
+   * its field name. It is what the end of a range being typed (`=SUM(B1:`) needs.
+   * Only read with `a1Notation`.
+   * @default false
+   */
+  sameRowAddress?: boolean;
+}
+
+/**
+ * `true` when a reference written at `start` continues a range: the text before it ends with
+ * the range operator (`=SUM(B1:`), which only takes a cell address.
+ * @param {string} text The editor text.
+ * @param {number} start The offset the reference is written at.
+ * @returns {boolean} Whether the reference is the end of a range.
+ */
+export function isFormulaPickAfterRangeOperator(text: string, start: number): boolean {
+  return /:\s*$/.test(text.slice(0, start));
 }
 
 interface FormulaPickRectangle {
@@ -130,6 +149,7 @@ function buildPickedCellText(
   ownerCell: { id: GridRowId; field: string },
   target: FormulaPickCell,
   a1Notation: boolean,
+  sameRowAddress: boolean = false,
 ): string | null {
   // Row ids compare under string coercion, like the position context and the
   // grid's row lookup.
@@ -143,7 +163,7 @@ function buildPickedCellText(
     return null;
   }
 
-  if (isOwnerRow) {
+  if (isOwnerRow && !(a1Notation && sameRowAddress)) {
     return toFormulaFieldReference(target.field, a1Notation);
   }
 
@@ -190,7 +210,13 @@ export function buildPickedReferenceText(
 ): string | null {
   const a1Notation = options.a1Notation === true;
   if (target.kind === 'cell') {
-    return buildPickedCellText(positionContext, ownerCell, target, a1Notation);
+    return buildPickedCellText(
+      positionContext,
+      ownerCell,
+      target,
+      a1Notation,
+      options.sameRowAddress,
+    );
   }
 
   const rectangle = getPickRectangle(
@@ -207,6 +233,7 @@ export function buildPickedReferenceText(
       ownerCell,
       { field: target.startField, rowId: target.startRowId },
       a1Notation,
+      options.sameRowAddress,
     );
   }
 
@@ -273,11 +300,15 @@ export function getFormulaPickOfCell(
   apiRef: RefObject<GridPrivateApiPremium>,
   editable: GridFormulaPickEditable,
   cell: FormulaPickCell,
+  options: Pick<PickedReferenceTextOptions, 'sameRowAddress'> = {},
 ): { reference: string; target: FormulaPickTarget } | null {
   const { ownerCell, a1Notation } = editable;
   if (editable.kind !== 'panel') {
     const target: FormulaPickTarget = { kind: 'cell', ...cell };
-    const reference = getPickedReferenceText(apiRef, ownerCell, target, { a1Notation });
+    const reference = getPickedReferenceText(apiRef, ownerCell, target, {
+      a1Notation,
+      sameRowAddress: options.sameRowAddress,
+    });
     return reference === null ? null : { reference, target };
   }
   // The clicked cell must be one a formula can reference, outside the edited column.
@@ -355,7 +386,8 @@ export function getActiveFormulaPickEditable(
 ): GridFormulaPickEditable | null {
   for (const editable of apiRef.current.caches.formula!.referencePick.editables) {
     const root = editable.getHandle()?.getRoot();
-    if (root && root.ownerDocument.activeElement === root) {
+    // The focused element of the document is the host when the grid is in a shadow root.
+    if (root && getActiveElement(root.ownerDocument) === root) {
       return editable;
     }
   }

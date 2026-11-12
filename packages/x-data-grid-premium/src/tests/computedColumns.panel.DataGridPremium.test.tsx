@@ -3301,6 +3301,20 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         clickCell(cellOf(1, 'price'));
         expect(getFocusedCell()).to.deep.equal({ id: 1, field: 'price' });
       });
+
+      it('does not skip a click without a mousedown after the editor closes', async () => {
+        await setup();
+        typeAt('=');
+        clickCell(cellOf(1, 'price'));
+        expect(getPrivateApi().caches.formula!.referencePick.gesture).to.equal('up');
+
+        fireEvent.click(getButton('Cancel'));
+        await microtasks();
+        expect(getPrivateApi().caches.formula!.referencePick.gesture).to.equal(null);
+        // A click from the keyboard or from code has no mousedown to reset the gesture.
+        fireEvent.click(cellOf(2, 'price'));
+        expect(apiRef.current!.isRowSelected(2)).to.equal(true);
+      });
     });
 
     describe('gates', () => {
