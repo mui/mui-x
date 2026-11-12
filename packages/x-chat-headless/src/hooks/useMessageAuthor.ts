@@ -4,13 +4,19 @@ import { useStore } from '@base-ui/utils/store';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { resolveMessageAuthor } from '../internals/messageAuthor';
 import { chatSelectors } from '../selectors';
+import type { ChatInternalState } from '../types/chat-state';
 import { useChatStore } from './useChatStore';
+
+const selectAuthorParametersVersion = (state: ChatInternalState<unknown>) =>
+  state.authorParametersVersion;
 
 export function useMessageAuthor(messageId: string) {
   const store = useChatStore();
   const localeText = useChatLocaleText();
   const message = useStore(store, chatSelectors.message, messageId);
   const activeConversation = useStore(store, chatSelectors.activeConversation);
+  // `store.parameters` is not reactive; this version changes when author parameters do.
+  const authorParametersVersion = useStore(store, selectAuthorParametersVersion);
 
   // Inject locale-driven role display names into the resolver parameters so the
   // fallback when no author signal is available reflects the active locale.
@@ -24,8 +30,10 @@ export function useMessageAuthor(messageId: string) {
         ...store.parameters.roleDisplayNames,
       },
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       store.parameters,
+      authorParametersVersion,
       localeText.messageAuthorUserLabel,
       localeText.messageAuthorAssistantLabel,
       localeText.messageAuthorSystemLabel,

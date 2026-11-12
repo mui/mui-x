@@ -10,6 +10,16 @@ import type {
 import type { ChatError } from '../types/chat-error';
 import type { ChatHistoryStatus, ChatInternalState } from '../types/chat-state';
 
+// Parameters read by `useMessageAuthor` from `store.parameters` rather than from state.
+const AUTHOR_PARAMETER_KEYS = [
+  'currentUser',
+  'members',
+  'roleDisplayNames',
+  'getMessageAuthorId',
+  'getMessageAuthorDisplayName',
+  'getMessageAuthorAvatarUrl',
+] as const satisfies ReadonlyArray<keyof ChatStoreParameters>;
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface ChatStoreParameters<Cursor = string> extends ChatMessageAuthorGetterProps {
   /**
@@ -270,6 +280,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       composerIsComposing: false,
       composerAttachments: [],
       error: null,
+      authorParametersVersion: 0,
     });
 
     this.parameters = parameters;
@@ -319,6 +330,10 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     ) {
       newState.composerValue = parameters.composerValue;
       this.dirtyControlledModels.delete('composerValue');
+    }
+
+    if (AUTHOR_PARAMETER_KEYS.some((key) => parameters[key] !== this.parameters[key])) {
+      newState.authorParametersVersion = this.state.authorParametersVersion + 1;
     }
 
     this.parameters = parameters;

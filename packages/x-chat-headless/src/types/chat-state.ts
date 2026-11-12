@@ -44,4 +44,6 @@ export interface ChatInternalState<Cursor = string> {
   composerIsComposing: boolean;
   composerAttachments: ChatDraftAttachment[];
   error: ChatError | null;
+  /** Bumped when author-related parameters change so author consumers recompute. */
+  authorParametersVersion: number;
 }

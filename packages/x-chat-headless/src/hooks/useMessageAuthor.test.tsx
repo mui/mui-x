@@ -46,4 +46,42 @@ describe('useMessageAuthor', () => {
     expect(authors.m1.every((author) => author === authors.m1[0])).toBe(true);
     expect(authors.m2.every((author) => author === authors.m2[0])).toBe(true);
   });
+
+  it('updates existing memoized rows when author parameters change', () => {
+    const store = new ChatStore({ initialMessages: messages });
+    const authors: Record<string, ReturnType<typeof useMessageAuthor>> = {};
+
+    const Row = React.memo(function Row({ messageId }: { messageId: string }) {
+      authors[messageId] = useMessageAuthor(messageId);
+      return null;
+    });
+
+    render(
+      <ChatStoreContext.Provider value={store}>
+        <Row messageId="m1" />
+        <Row messageId="m2" />
+      </ChatStoreContext.Provider>,
+    );
+
+    expect(authors.m1?.displayName).not.toBe('Alice');
+
+    act(() => {
+      store.updateStateFromParameters({
+        ...store.parameters,
+        currentUser: { id: 'alice', displayName: 'Alice' },
+      });
+    });
+
+    expect(authors.m1?.displayName).toBe('Alice');
+
+    act(() => {
+      store.updateStateFromParameters({
+        ...store.parameters,
+        getMessageAuthorDisplayName: () => 'From getter',
+      });
+    });
+
+    expect(authors.m1?.displayName).toBe('From getter');
+    expect(authors.m2?.displayName).toBe('From getter');
+  });
 });
