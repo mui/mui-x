@@ -18,19 +18,7 @@ export * from './TimeoutManager';
 export * from './date-locale';
 export * from './date-utils';
 export * from './plain-date-utils';
-export { BaseTemporal } from './base-temporal';
-export type {
-  PlainDateFields,
-  PlainDateFromOptions,
-  PlainDateWithFields,
-  PlainDateTimeFields,
-  PlainDateTimeInput,
-  PlainDateTimeWithFields,
-  PlainTimeFields,
-  PlainTimeInput,
-  ZonedDateTimeFields,
-  ZonedDateTimeOptions,
-} from './base-temporal';
+export * from './base-temporal';
 export * from './extractStandaloneEvent';
 export * from './useInitializeApiRef';
 export * from './useEventCreation';

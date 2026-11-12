@@ -14,6 +14,7 @@ import {
   formatMonthAndDayOfMonth,
   formatWeekday,
   getOccurrenceDataTimezone,
+  getTimezoneId,
   MS_PER_DAY,
   toEpochMs,
   toPlainDate,
@@ -407,11 +408,8 @@ export function getRecurrenceUntil(
  * The canonical IANA identifier of a timezone; `default` and `system` resolve to the system
  * timezone.
  */
-function getTimezoneId(timezone: TemporalTimezone): string {
-  const id =
-    timezone === 'default' || timezone === 'system'
-      ? Intl.DateTimeFormat().resolvedOptions().timeZone
-      : timezone;
+function getCanonicalTimezoneId(timezone: TemporalTimezone): string {
+  const id = getTimezoneId(timezone);
   try {
     return new Intl.DateTimeFormat(undefined, { timeZone: id }).resolvedOptions().timeZone;
   } catch {
@@ -447,8 +445,8 @@ export function getRecurrenceTimezoneName(
   eventTimezone: TemporalTimezone,
   displayTimezone: TemporalTimezone,
 ): string | null {
-  const eventTimezoneId = getTimezoneId(eventTimezone);
-  return eventTimezoneId === getTimezoneId(displayTimezone)
+  const eventTimezoneId = getCanonicalTimezoneId(eventTimezone);
+  return eventTimezoneId === getCanonicalTimezoneId(displayTimezone)
     ? null
     : getTimezoneDisplayName(locale, eventTimezoneId);
 }

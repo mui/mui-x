@@ -301,9 +301,9 @@ export interface RecurringSeriesParameters {
    */
   timezone: TemporalTimezone;
   /**
-   * The excluded occurrences (EXDATE), read in the timezone of the series.
+   * The instants of the excluded occurrences (EXDATE), read in the timezone of the series.
    */
-  exDates?: readonly TemporalSupportedObject[];
+  exDates?: readonly number[];
 }
 
 /**
@@ -351,7 +351,9 @@ export class RecurringSeries {
     // A fractional COUNT is rounded up.
     this.count = Math.ceil(rule.count ?? Infinity);
     this.untilDay = rule.until ? toDay(rule.until) : Infinity;
-    this.excludedDays = new Set(parameters.exDates?.map(toDay));
+    this.excludedDays = new Set(
+      parameters.exDates?.map((exDate) => toLocalDayNumber(exDate, timezone)),
+    );
   }
 
   /**
@@ -360,8 +362,8 @@ export class RecurringSeries {
    */
   public static fromEvent(
     event: SchedulerProcessedEvent,
-    exDates: readonly TemporalSupportedObject[] | undefined = event.dataTimezone.exDates?.map(
-      (exDate) => new Date(exDate.epochMilliseconds),
+    exDates: readonly number[] | undefined = event.dataTimezone.exDates?.map(
+      (exDate) => exDate.epochMilliseconds,
     ),
   ): RecurringSeries {
     return new RecurringSeries({

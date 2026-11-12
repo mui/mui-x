@@ -12,7 +12,7 @@ interface TimezoneOffsets {
 }
 
 const MAX_CACHED_DAYS_PER_TIMEZONE = 20_000;
-const NS_PER_MS = BigInt(1_000_000);
+const NS_PER_MS = 1_000_000n;
 const timezoneOffsets = new Map<string, TimezoneOffsets | null>();
 const OFFSET_REGEXP = /^([+-])(\d{2}):?(\d{2})?(?::?(\d{2}))?$/;
 

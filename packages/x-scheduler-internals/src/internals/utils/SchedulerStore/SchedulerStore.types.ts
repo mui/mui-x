@@ -465,7 +465,8 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
 export type UpdateRecurringEventParameters = {
   /**
    * The start date of the occurrence affected by the update before the update is applied.
-   * Must be the occurrence's data-timezone start (`occurrence.dataTimezone.start.value`),
+   * Must be the occurrence's data-timezone start
+   * (`new Date(occurrence.dataTimezone.start.timestamp)`),
    * the identity the occurrence expansion keys on.
    */
   occurrenceStart: TemporalSupportedObject;
@@ -485,7 +486,8 @@ export type UpdateRecurringEventParameters = {
 export type DeleteRecurringEventParameters = {
   /**
    * The start date of the occurrence affected by the deletion.
-   * Must be the occurrence's data-timezone start (`occurrence.dataTimezone.start.value`),
+   * Must be the occurrence's data-timezone start
+   * (`new Date(occurrence.dataTimezone.start.timestamp)`),
    * the identity the occurrence expansion keys on.
    */
   occurrenceStart: TemporalSupportedObject;

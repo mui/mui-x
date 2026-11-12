@@ -3,7 +3,6 @@ import type {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
   SchedulerProcessedEventRecurrenceRule,
-  TemporalSupportedObject,
   TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import { BaseTemporal, toPlainDate } from '@mui/x-scheduler-internals/internals';
@@ -47,7 +46,7 @@ function createSeries(
   return new RecurringSeries({
     rule,
     ...seriesStart(start, 'UTC'),
-    exDates: exDates?.map((exDate) => createDate(exDate, 'UTC')),
+    exDates: exDates?.map((exDate) => createDate(exDate, 'UTC').getTime()),
   });
 }
 
@@ -159,7 +158,7 @@ describe('recurring-events/RecurringSeries', () => {
     it('should read them in a timezone east of UTC', () => {
       // December 31st, 9999, a common "no end date", is already January 1st, 10000 in Tokyo.
       const lastInstant = createDate('9999-12-31T23:59:59Z');
-      const getLastDays = (timezone: TemporalTimezone, exDates: TemporalSupportedObject[]) => {
+      const getLastDays = (timezone: TemporalTimezone, exDates: number[]) => {
         const series = new RecurringSeries({
           rule: { freq: 'DAILY', until: lastInstant },
           start: Date.parse('2026-01-05T09:00:00Z'),
@@ -175,7 +174,7 @@ describe('recurring-events/RecurringSeries', () => {
       };
 
       expect(getLastDays('Asia/Tokyo', [])).to.deep.equal(['9999-12-31', '+010000-01-01']);
-      expect(getLastDays('Asia/Tokyo', [lastInstant])).to.deep.equal(['9999-12-31']);
+      expect(getLastDays('Asia/Tokyo', [lastInstant.getTime()])).to.deep.equal(['9999-12-31']);
       expect(getLastDays('UTC', [])).to.deep.equal(['9999-12-31']);
     });
   });
@@ -277,7 +276,7 @@ describe('recurring-events/RecurringSeries', () => {
       const series = new RecurringSeries({
         rule: { freq: 'WEEKLY' },
         ...seriesStart('2025-01-06T09:00:00', 'UTC'),
-        exDates: [createDate('2025-01-06T09:00:00', 'UTC')],
+        exDates: [createDate('2025-01-06T09:00:00', 'UTC').getTime()],
       });
       expect(series.hasOccurrenceBefore(BaseTemporal.PlainDate.from('2025-01-13'))).to.equal(false);
       expect(series.hasOccurrenceBefore(BaseTemporal.PlainDate.from('2025-01-14'))).to.equal(true);
@@ -290,7 +289,7 @@ describe('recurring-events/RecurringSeries', () => {
       const series = new RecurringSeries({
         rule: { freq: 'YEARLY', count: 2 },
         ...seriesStart('2024-02-29T09:00:00', 'UTC'),
-        exDates: [createDate('2024-02-29T09:00:00', 'UTC')],
+        exDates: [createDate('2024-02-29T09:00:00', 'UTC').getTime()],
       });
       expect(series.hasOccurrence()).to.equal(true);
     });

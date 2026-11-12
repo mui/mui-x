@@ -1,6 +1,5 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../../models';
-import { processDate } from '../../../process-date/processDate';
+import type { TemporalSupportedObject } from '../../../models';
 import type { BaseTemporal } from '../base-temporal';
 import type { PlainDateDuration } from './plainDate';
 import {
@@ -117,15 +116,7 @@ export function normalizeAllDayBounds(
   };
 }
 
-/**
- * Returns the processed date of an instant in `timezone`.
- */
-export function createProcessedDate(
-  epochMs: number,
-  timezone: TemporalTimezone,
-): SchedulerProcessedDate {
-  return processDate(new Date(epochMs), timezone);
-}
+export { createProcessedDate } from '../../../process-date/processDate';
 
 /**
  * Moves a date by a duration of the calendar, keeping its time of day on the wall clock of

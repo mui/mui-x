@@ -56,7 +56,12 @@ export function applyRecurringDeleteOnlyThis(
     ),
   ];
 
-  if (!RecurringSeries.fromEvent(originalEvent, exDates).hasOccurrence()) {
+  if (
+    !RecurringSeries.fromEvent(
+      originalEvent,
+      exDates.map((exDate) => exDate.getTime()),
+    ).hasOccurrence()
+  ) {
     return { deleted: [originalEvent.id] };
   }
 

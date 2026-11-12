@@ -2,7 +2,6 @@ import * as React from 'react';
 import type { Theme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import { teal } from '@mui/material/colors';
-import { differenceInMinutes } from 'date-fns/differenceInMinutes';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
@@ -120,7 +119,7 @@ export default function ExternalDragAndDrop() {
 
         setPlaceholder({
           ...eventData,
-          duration: differenceInMinutes(end.value, start.value),
+          duration: (end.timestamp - start.timestamp) / 60_000,
         });
       },
       onDragLeave: () => {

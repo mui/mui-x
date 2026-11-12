@@ -19,6 +19,13 @@ export function processEvent(
   const resolvedExDates = model.exDates
     ? model.exDates.map((exDate) => resolveEventDate(exDate, dataTimezone, model.id))
     : undefined;
+  const dataExDates = resolvedExDates?.map((exDate) =>
+    toZonedDateTime(exDate.getTime(), dataTimezone),
+  );
+  const displayExDates =
+    displayTimezone === dataTimezone
+      ? dataExDates
+      : resolvedExDates?.map((exDate) => toZonedDateTime(exDate.getTime(), displayTimezone));
 
   const displayBounds = normalizeAllDayBounds(
     startInstant,
@@ -53,13 +60,13 @@ export function processEvent(
       end: processDate(endInstant, dataTimezone),
       timezone: dataTimezone,
       rrule: parsedDataRRule,
-      exDates: resolvedExDates?.map((exDate) => toZonedDateTime(exDate.getTime(), dataTimezone)),
+      exDates: dataExDates,
     },
     displayTimezone: {
       start: processDate(displayBounds.start, displayTimezone),
       end: processDate(displayBounds.end, displayTimezone),
       timezone: displayTimezone,
-      exDates: resolvedExDates?.map((exDate) => toZonedDateTime(exDate.getTime(), displayTimezone)),
+      exDates: displayExDates,
     },
     resource: model.resource,
     allDay: model.allDay ?? false,

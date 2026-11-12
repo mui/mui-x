@@ -34,14 +34,12 @@ class ProcessedDate implements SchedulerProcessedDate {
 }
 
 /**
- * Creates the processed date of a date, read in `timezone` from the offsets of the timezone instead
- * of the getters of the date.
+ * Returns the processed date of an instant in `timezone`, read from the offsets of the timezone.
  */
-export function processDate(
-  date: TemporalSupportedObject,
+export function createProcessedDate(
+  epochMs: number,
   timezone: TemporalTimezone,
 ): SchedulerProcessedDate {
-  const epochMs = date.getTime();
   // The wall clock is read once, as this runs for each occurrence of the visible range.
   const localMs = toLocalMs(epochMs, timezone);
   const dayNumber = Math.floor(localMs / MS_PER_DAY);
@@ -51,4 +49,15 @@ export function processDate(
     Math.floor((localMs - dayNumber * MS_PER_DAY) / 60_000),
     timezone,
   );
+}
+
+/**
+ * Creates the processed date of a date, read in `timezone` from the offsets of the timezone instead
+ * of the getters of the date.
+ */
+export function processDate(
+  date: TemporalSupportedObject,
+  timezone: TemporalTimezone,
+): SchedulerProcessedDate {
+  return createProcessedDate(date.getTime(), timezone);
 }

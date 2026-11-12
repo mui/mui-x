@@ -14,7 +14,6 @@ export {
   toMsInDay,
   toPlainDate,
   toWallClockIsoString,
-  toZonedDateTime,
 } from './timeZone';
 export {
   addToDate,
