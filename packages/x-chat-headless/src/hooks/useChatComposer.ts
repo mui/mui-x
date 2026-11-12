@@ -234,23 +234,7 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
     }
     store.clearComposer();
 
-    await actions.sendMessage({
-      id: messageId,
-      parts,
-      attachments: [...nextAttachments],
-      author: store.currentUser,
-    });
-
-    // If the send errored, restore the draft so the user can retry —
-    // but only when the composer is still empty (the user hasn't started
-    // typing a new message while the send was in flight).
-    const messageStatus = store.state.messagesById[messageId]?.status;
-
-    if (
-      messageStatus === 'error' &&
-      store.state.composerValue === '' &&
-      store.state.composerAttachments.length === 0
-    ) {
+    const restoreDraft = () => {
       // Reclaim ownership of the transferred URLs back to the composer so
       // they're cleaned up via the composer-attachment lifecycle if the user
       // eventually removes them.
@@ -269,6 +253,35 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
       if (previouslyTransferred?.size === 0) {
         messageOwnedPreviewUrlsRef.current.delete(messageId);
       }
+    };
+
+    const sendPromise = actions.sendMessage({
+      id: messageId,
+      parts,
+      attachments: [...nextAttachments],
+      author: store.currentUser,
+    });
+
+    // Accepted sends add the message synchronously, so check before yielding.
+    if (!store.state.messagesById[messageId]) {
+      restoreDraft();
+      await sendPromise;
+      return;
+    }
+
+    await sendPromise;
+
+    // If the send errored, restore the draft so the user can retry —
+    // but only when the composer is still empty (the user hasn't started
+    // typing a new message while the send was in flight).
+    const messageStatus = store.state.messagesById[messageId]?.status;
+
+    if (
+      messageStatus === 'error' &&
+      store.state.composerValue === '' &&
+      store.state.composerAttachments.length === 0
+    ) {
+      restoreDraft();
     }
   }, [actions, store]);
 

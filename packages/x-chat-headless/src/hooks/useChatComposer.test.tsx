@@ -305,6 +305,62 @@ describe('useChatComposer', () => {
     expect(result.current.attachments[0].file).toBe(attachmentFile);
   });
 
+  it('keeps the draft when submitted while an async onFinish is still running', async () => {
+    let resolveOnFinish!: () => void;
+    const onFinish = vi.fn(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveOnFinish = resolve;
+        }),
+    );
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async () =>
+        createStream([
+          { type: 'start', messageId: 'a1' },
+          { type: 'text-start', id: 't1' },
+          { type: 'text-delta', id: 't1', delta: 'Reply' },
+          { type: 'text-end', id: 't1' },
+          { type: 'finish', messageId: 'a1' },
+        ]),
+      ),
+    });
+    const { Wrapper } = createProviderWrapper({
+      adapter,
+      onFinish,
+      initialActiveConversationId: 'c1',
+    });
+    const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
+
+    act(() => {
+      result.current.setValue('First');
+    });
+
+    let firstSubmit!: Promise<void>;
+    act(() => {
+      firstSubmit = result.current.submit();
+    });
+
+    await waitFor(() => {
+      expect(onFinish).toHaveBeenCalledTimes(1);
+    });
+
+    act(() => {
+      result.current.setValue('Second');
+    });
+
+    await act(async () => {
+      await result.current.submit();
+    });
+
+    expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
+    expect(result.current.value).toBe('Second');
+
+    await act(async () => {
+      resolveOnFinish();
+      await firstSubmit;
+    });
+  });
+
   it('does not submit empty drafts', async () => {
     const adapter = createAdapter({
       sendMessage: vi.fn(async () => createStream()),
