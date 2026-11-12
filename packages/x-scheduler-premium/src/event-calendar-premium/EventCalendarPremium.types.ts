@@ -11,7 +11,10 @@ import type { EventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import type { EventCalendarPremiumFeatures } from './features/EventCalendarPremiumFeatures.types';
 import type { EventCalendarPremiumChartsOptions } from './charts/EventCalendarPremiumChartsContext';
 
-export type { EventCalendarPremiumFeatures } from './features/EventCalendarPremiumFeatures.types';
+export type {
+  EventCalendarPremiumFeatures,
+  StandaloneViewPremiumFeatures,
+} from './features/EventCalendarPremiumFeatures.types';
 export type {
   EventCalendarPremiumChartsOptions,
   EventCalendarPremiumChartsCard,

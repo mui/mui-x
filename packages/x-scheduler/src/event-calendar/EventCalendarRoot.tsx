@@ -35,7 +35,8 @@ import { useEventCalendarStyledContext } from './EventCalendarStyledContext';
 
 export interface EventCalendarRootProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
-   * SPIKE: extra content rendered at the bottom of the side panel (charts feature).
+   * Content rendered under the resources tree of the side panel, and of the compact drawer.
+   * Used by the charts feature of the premium package.
    */
   sidePanelExtra?: React.ReactNode;
   /**

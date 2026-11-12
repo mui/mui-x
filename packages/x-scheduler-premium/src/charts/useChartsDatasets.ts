@@ -18,7 +18,7 @@ import {
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { getEndOfDayMs, getPlainDateWeekStart } from '@mui/x-scheduler-internals/internals';
-import { eventColorTokens } from '@mui/x-scheduler/internals';
+import { eventColorTokens, useEventCalendarStyledContext } from '@mui/x-scheduler/internals';
 import type { EventCalendarPremiumChartsMetric } from '../event-calendar-premium/charts/EventCalendarPremiumChartsContext';
 
 const EMPTY_DAYS: SchedulerProcessedDay[] = [];
@@ -90,6 +90,7 @@ export interface ChartsPeriod {
  */
 export function useChartsDatasets(metric: EventCalendarPremiumChartsMetric) {
   const store = useEventCalendarStoreContext();
+  const { localeText } = useEventCalendarStyledContext();
   const days = useStore(
     store,
     (state) => state.viewDefinition?.visibleDaysSelector(state) ?? EMPTY_DAYS,
@@ -165,7 +166,11 @@ export function useChartsDatasets(metric: EventCalendarPremiumChartsMetric) {
     const series = hasNoResource
       ? [
           ...resources,
-          { id: NO_RESOURCE, label: 'No resource', color: chartColorVar(defaultColor) },
+          {
+            id: NO_RESOURCE,
+            label: localeText.labelNoResource,
+            color: chartColorVar(defaultColor),
+          },
         ]
       : resources;
 
@@ -231,6 +236,7 @@ export function useChartsDatasets(metric: EventCalendarPremiumChartsMetric) {
     isByWeek,
     store,
     metric,
+    localeText.labelNoResource,
   ]);
 }
 

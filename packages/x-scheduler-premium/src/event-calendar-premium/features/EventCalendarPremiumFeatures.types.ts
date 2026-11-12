@@ -1,13 +1,16 @@
 import type * as React from 'react';
 import type { SchedulerRecurringEventsFeature } from '../../internals/features/SchedulerRecurringEventsFeature.types';
 
-export interface EventCalendarPremiumFeatures {
+export interface StandaloneViewPremiumFeatures {
   /**
    * Recurring events support. Import it from `@mui/x-scheduler-premium/recurring-events`.
    */
   recurringEvents?: SchedulerRecurringEventsFeature;
+}
+
+export interface EventCalendarPremiumFeatures extends StandaloneViewPremiumFeatures {
   /**
-   * Charts panel. Import it from `@mui/x-scheduler-premium/charts`.
+   * Charts in the side panel. Create it with `createChartsFeature` from `@mui/x-scheduler-premium/charts`.
    */
   charts?: EventCalendarPremiumChartsFeature;
 }

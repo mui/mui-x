@@ -7,7 +7,11 @@ import { useStore } from '@base-ui/utils/store';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { eventColorTokens, useDisarmOnEscape } from '@mui/x-scheduler/internals';
+import {
+  eventColorTokens,
+  useDisarmOnEscape,
+  useEventCalendarStyledContext,
+} from '@mui/x-scheduler/internals';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import type { SchedulerOccurrenceHighlight } from '@mui/x-scheduler-internals/internals';
 import type {
@@ -68,6 +72,7 @@ export function ChartsPanel({ renderer: Renderer }: ChartsPanelProps) {
     EventCalendarPremiumChartsContext,
   );
   const store = useEventCalendarStoreContext();
+  const { localeText } = useEventCalendarStyledContext();
   const { periods, isByWeek, resources, byDay, byResource, roots, hasNestedResources } =
     useChartsDatasets(metric);
 
@@ -213,13 +218,16 @@ export function ChartsPanel({ renderer: Renderer }: ChartsPanelProps) {
     />
   );
 
-  const byDayTitle = `${metric === 'hours' ? 'Hours' : 'Events'} per ${isByWeek ? 'week' : 'day'}`;
+  const byDayTitles = {
+    hours: isByWeek ? localeText.chartsHoursPerWeek : localeText.chartsHoursPerDay,
+    count: isByWeek ? localeText.chartsEventsPerWeek : localeText.chartsEventsPerDay,
+  };
   const cardLookup: Record<
     EventCalendarPremiumChartsCard,
     { title: string; content: React.ReactNode }
   > = {
-    byDay: { title: byDayTitle, content: renderByDay },
-    byResource: { title: 'Share by resource', content: renderByResource },
+    byDay: { title: byDayTitles[metric], content: renderByDay },
+    byResource: { title: localeText.chartsShareByResource, content: renderByResource },
   };
 
   return (

@@ -32,6 +32,7 @@
   { "name": "StandaloneDayViewPremiumProps", "kind": "Interface" },
   { "name": "StandaloneMonthViewPremium", "kind": "Variable" },
   { "name": "StandaloneMonthViewPremiumProps", "kind": "Interface" },
+  { "name": "StandaloneViewPremiumFeatures", "kind": "Interface" },
   { "name": "StandaloneWeekViewPremium", "kind": "Variable" },
   { "name": "StandaloneWeekViewPremiumProps", "kind": "Interface" },
   { "name": "TimelineEventContentProps", "kind": "Interface" },
