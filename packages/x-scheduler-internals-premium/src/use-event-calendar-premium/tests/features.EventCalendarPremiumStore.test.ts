@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  adapter,
+  addDays,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
   ResourceBuilder,
@@ -36,11 +36,11 @@ const buildViewDefinition = (): any => ({
   siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
   visibleDaysSelector: (state: any): SchedulerProcessedDate[] =>
     Array.from({ length: 7 }, (_, i) => {
-      const value = adapter.addDays(state.visibleDate, i);
+      const value = addDays(state.visibleDate, i);
       return {
         value,
-        key: String(adapter.getTime(value)),
-        timestamp: adapter.getTime(value),
+        key: String(value.getTime()),
+        timestamp: value.getTime(),
         minutesInDay: 24 * 60,
       };
     }),
@@ -55,10 +55,7 @@ describe('Features - EventCalendarPremiumStore', () => {
   it('should render an rrule event once when no recurring feature is provided', () => {
     let store!: EventCalendarPremiumStore<any, any>;
     expect(() => {
-      store = new EventCalendarPremiumStore(
-        { events: [dailyEvent], resources: [resource] },
-        adapter,
-      );
+      store = new EventCalendarPremiumStore({ events: [dailyEvent], resources: [resource] });
     }).toWarnDev(FEATURE_WARNING);
 
     expect(schedulerEventSelectors.isRecurring(store.state, 'daily')).to.equal(false);
@@ -66,14 +63,11 @@ describe('Features - EventCalendarPremiumStore', () => {
   });
 
   it('should expand an rrule event when the recurring feature is provided', () => {
-    const store = new EventCalendarPremiumStore(
-      {
-        events: [dailyEvent],
-        resources: [resource],
-        storeFeatures: { recurringEvents: schedulerRecurringEventsPlugin },
-      },
-      adapter,
-    );
+    const store = new EventCalendarPremiumStore({
+      events: [dailyEvent],
+      resources: [resource],
+      storeFeatures: { recurringEvents: schedulerRecurringEventsPlugin },
+    });
 
     expect(schedulerEventSelectors.isRecurring(store.state, 'daily')).to.equal(true);
     expect(countOccurrences(store)).to.equal(3);
@@ -83,12 +77,12 @@ describe('Features - EventCalendarPremiumStore', () => {
     const parameters = { events: [dailyEvent], resources: [resource] };
     let store!: EventCalendarPremiumStore<any, any>;
     expect(() => {
-      store = new EventCalendarPremiumStore(parameters, adapter);
+      store = new EventCalendarPremiumStore(parameters);
     }).toWarnDev(FEATURE_WARNING);
-    store.updateStateFromParameters(
-      { ...parameters, storeFeatures: { recurringEvents: schedulerRecurringEventsPlugin } },
-      adapter,
-    );
+    store.updateStateFromParameters({
+      ...parameters,
+      storeFeatures: { recurringEvents: schedulerRecurringEventsPlugin },
+    });
 
     expect(countOccurrences(store)).to.equal(1);
   });
@@ -113,7 +107,7 @@ describe('Features - EventCalendarPremiumStore', () => {
         dataSource,
         defaultVisibleDate: DEFAULT_TESTING_VISIBLE_DATE,
       };
-      const store = new EventCalendarPremiumStore(parameters, adapter);
+      const store = new EventCalendarPremiumStore(parameters);
 
       await expect(async () => {
         // The first fetch fires when a view registers its definition.

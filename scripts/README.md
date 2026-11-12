@@ -14,13 +14,13 @@ A typical release goes like this:
 > You can now use the new automated release preparation script by running `pnpm release:prepare`. This script automates steps 1-5 below by:
 >
 > - Asking for the major version to update (v8.x, v7.x, v6.x, etc.)
+> - Asking whether to release from upstream/vX.x (when that branch exists) or upstream/master, then using that branch both as the base of the release branch and to find the previous release tag
 > - Determining the new version based on the selected major version:
 >   - For non-latest major versions: patch/minor/custom
 >   - For latest major version: patch/minor/major/custom and prerelease options:
 >     - Start alpha prerelease (if no prerelease exists)
 >     - Increase alpha version or start beta (if alpha exists)
 >     - Increase beta version or go to major (if beta exists)
-> - Creating a new branch from upstream/master (for latest major) or upstream/vX.x (for older versions)
 > - Updating the root package.json and all product package versions
 > - Generating and formatting the changelog
 > - Creating a PR with all changes and a complete checklist

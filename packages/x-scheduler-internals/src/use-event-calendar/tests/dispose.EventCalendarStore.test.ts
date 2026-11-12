@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { disposeSymbol } from '@mui/x-internals/disposable';
-import { adapter } from 'test/utils/scheduler';
 import { EventCalendarStore } from '../EventCalendarStore';
 
 const DEFAULT_PARAMS = { events: [] };
@@ -17,7 +16,7 @@ describe('Dispose - EventCalendarStore', () => {
   });
 
   it('should stop the per-minute timer after dispose', async () => {
-    const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+    const store = new EventCalendarStore(DEFAULT_PARAMS);
     const initialNow = store.state.nowTimestamp;
 
     store[disposeSymbol]();
@@ -28,7 +27,7 @@ describe('Dispose - EventCalendarStore', () => {
   });
 
   it('should remove user-registered event listeners after dispose', async () => {
-    const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+    const store = new EventCalendarStore(DEFAULT_PARAMS);
     const handler = vi.fn();
     store.subscribeEvent('eventsUpdated', handler);
 

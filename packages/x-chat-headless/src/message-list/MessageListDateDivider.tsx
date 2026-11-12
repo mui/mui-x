@@ -44,14 +44,17 @@ function isSameCalendarDay(left: Date, right: Date) {
 export interface MessageListDateDividerSlots {
   /**
    * The component that renders the divider.
+   * @default 'div'
    */
   divider: React.ElementType;
   /**
    * The component that renders the line.
+   * @default 'div'
    */
   line: React.ElementType;
   /**
    * The component that renders the label.
+   * @default 'div'
    */
   label: React.ElementType;
 }

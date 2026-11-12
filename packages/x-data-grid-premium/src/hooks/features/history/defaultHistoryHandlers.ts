@@ -1,15 +1,14 @@
 import type { RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import {
-  gridVisibleRowsSelector,
-  gridVisibleColumnFieldsSelector,
-  gridColumnFieldsSelector,
-} from '@mui/x-data-grid-pro';
+import { gridVisibleRowsSelector, gridVisibleColumnFieldsSelector } from '@mui/x-data-grid-pro';
 import { asReplaceUpdates, getRowIndexRelativeToAllRows } from '@mui/x-data-grid-pro/internals';
 import type {
   GridCellEditStopParams,
   GridRowEditStopParams,
   GridEvents,
+  GridRowId,
+  GridRowModelReplace,
+  GridRowModelUpdate,
   GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import type { GridApiPremium } from '../../../models/gridApiPremium';
@@ -281,28 +280,85 @@ export const createRowEditHistoryHandler = (
 };
 
 /**
+ * Focuses the first cell that is different between the two versions of a row.
+ */
+const focusFirstChangedCell = (
+  apiRef: RefObject<GridApiPremium>,
+  rowId: GridRowId,
+  currentRow: GridValidRowModel,
+  restoredRow: GridValidRowModel,
+) => {
+  // `scrollToIndexes()` expects the index of a visible column
+  const columnOrder = gridVisibleColumnFieldsSelector(apiRef);
+  if (columnOrder.length === 0) {
+    return;
+  }
+
+  let differentFieldIndex = columnOrder.length - 1;
+  // Find the first field that is different to set the focus on
+  for (let i = 0; i < columnOrder.length; i += 1) {
+    const field = columnOrder[i];
+    if (!isDeepEqual(currentRow[field], restoredRow[field])) {
+      differentFieldIndex = i;
+      break;
+    }
+  }
+
+  requestAnimationFrame(() => {
+    // The row can be on another page, for example when the paste added rows
+    if (!gridVisibleRowsSelector(apiRef).rowIdToIndexMap.has(rowId)) {
+      return;
+    }
+    apiRef.current.setCellFocus(rowId, columnOrder[differentFieldIndex]);
+    apiRef.current.scrollToIndexes({
+      rowIndex: getRowIndexRelativeToAllRows(apiRef, rowId),
+      colIndex: differentFieldIndex,
+    });
+  });
+};
+
+/**
  * Create the default handler for clipboardPasteEnd events.
  */
 export const createClipboardPasteHistoryHandler = (
   apiRef: RefObject<GridApiPremium>,
 ): GridHistoryEventHandler<GridClipboardPasteHistoryData> => {
   return {
-    store: (params: GridClipboardPasteHistoryData) => params,
+    store: (params: GridClipboardPasteHistoryData) => {
+      const { newRows, createdRows = new Map() } = params;
+      // A paste that changed nothing has no undo step
+      if (newRows.size === 0 && createdRows.size === 0) {
+        return null;
+      }
+
+      // Keep only the rows that the paste changed.
+      // Undo must not restore the rows that `processRowUpdate()` rejected.
+      const oldRows = new Map<GridRowId, GridValidRowModel>();
+      newRows.forEach((_, rowId) => {
+        if (params.oldRows.has(rowId)) {
+          oldRows.set(rowId, params.oldRows.get(rowId)!);
+        }
+      });
+      return { oldRows, newRows, createdRows };
+    },
     validate: (data: GridClipboardPasteHistoryData, direction: 'undo' | 'redo') => {
-      const { oldRows, newRows } = data;
+      const { oldRows, newRows, createdRows = new Map() } = data;
       const updatedRowIds = Array.from(newRows.keys());
 
-      // Check if any rows were updated
-      if (updatedRowIds.length === 0) {
+      // Check if any rows were updated or created
+      if (updatedRowIds.length === 0 && createdRows.size === 0) {
         return false;
       }
 
       // Check if all affected rows are still visible and have expected values
+      // `rowIdToIndexMap` only has the rows of the current page
       const { rowIdToIndexMap } = gridVisibleRowsSelector(apiRef);
+      // The created rows can move the updated rows to another page, for example when they sort first
+      const checkVisibility = createdRows.size === 0;
 
       for (let i = 0; i < updatedRowIds.length; i += 1) {
         const rowId = updatedRowIds[i];
-        if (!rowIdToIndexMap.has(rowId)) {
+        if (checkVisibility && !rowIdToIndexMap.has(rowId)) {
           return false;
         }
 
@@ -321,94 +377,74 @@ export const createClipboardPasteHistoryHandler = (
         }
       }
 
+      // The sorting, the filtering, or the pagination can move the created rows out of view.
+      // Only check that they did not change.
+      for (const [rowId, createdRow] of createdRows) {
+        const row = apiRef.current.getRow(rowId);
+        if (direction === 'redo') {
+          // A redo adds the row again, so its id must not be in use
+          if (row) {
+            return false;
+          }
+        } else {
+          if (!row) {
+            return false;
+          }
+          // Also check the fields that were added later, because undo removes the whole row
+          const fields = new Set([...Object.keys(createdRow), ...Object.keys(row)]);
+          for (const field of fields) {
+            if (!isDeepEqual(row[field], createdRow[field])) {
+              return false;
+            }
+          }
+        }
+      }
+
       return true;
     },
 
     undo: async (data: GridClipboardPasteHistoryData) => {
-      const { oldRows, newRows } = data;
-      const oldRowsValues = Array.from(oldRows.values());
+      const { oldRows, newRows, createdRows } = data;
 
-      const visibleColumns = apiRef.current.getVisibleColumns();
+      // Restore all rows to their original state, and remove the created rows
+      const updates: Array<GridRowModelUpdate | GridRowModelReplace> = asReplaceUpdates(
+        Array.from(oldRows.values()),
+      );
+      createdRows?.forEach((row) => {
+        // The whole row is given, so that `getRowId()` can find the id
+        updates.push({ ...row, _action: 'delete' });
+      });
+      if (updates.length > 0) {
+        apiRef.current.updateRows(updates);
+      }
 
       // Focus the first affected cell
-      if (oldRowsValues.length > 0 && visibleColumns.length > 0) {
-        const columnOrder = gridColumnFieldsSelector(apiRef);
-
-        // Since we undo, oldRowData is the new data that will be set and newRowData is the current row
-        const firstOldRow = Array.from(newRows.values())[0];
-        const [firstNewRowId, firstNewRow] = Array.from(oldRows.entries())[0];
-
-        let differentFieldIndex = columnOrder.length - 1;
-        // Find the first field that is different to set the focus on
-        for (let i = 0; i < columnOrder.length; i += 1) {
-          const field = columnOrder[i];
-          if (!isDeepEqual(firstOldRow[field], firstNewRow[field])) {
-            differentFieldIndex = i;
-            break;
-          }
-        }
-
-        // Restore all rows to their original state.
-        // Replace instead of merge: keeps row identity and `#private` state, and removes fields the paste added.
-        apiRef.current.updateRows(asReplaceUpdates(oldRowsValues));
-
-        if (differentFieldIndex >= 0) {
-          requestAnimationFrame(() => {
-            const focusField = columnOrder[differentFieldIndex];
-            const colIndex = apiRef.current.getColumnIndex(focusField);
-            apiRef.current.setCellFocus(firstNewRowId, focusField);
-            apiRef.current.scrollToIndexes({
-              rowIndex: getRowIndexRelativeToAllRows(apiRef, firstNewRowId),
-              // `differentFieldIndex` is an index into all columns, so a hidden column
-              // before it would make it point past the visible columns. Resolve it to a
-              // visible index and skip the horizontal scroll when the column is hidden.
-              colIndex: colIndex === -1 ? undefined : colIndex,
-            });
-          });
-        }
+      const [rowId, newRow] = Array.from(newRows.entries())[0] ?? [];
+      const oldRow = rowId === undefined ? undefined : oldRows.get(rowId);
+      if (newRow && oldRow) {
+        focusFirstChangedCell(apiRef, rowId!, newRow, oldRow);
       }
     },
 
     redo: async (data: GridClipboardPasteHistoryData) => {
-      const { oldRows, newRows } = data;
-      const newRowsValues = Array.from(newRows.values());
+      const { oldRows, newRows, createdRows } = data;
 
-      const visibleColumns = apiRef.current.getVisibleColumns();
+      // Restore all rows to the pasted state, and add the created rows again
+      const updates: Array<GridRowModelUpdate | GridRowModelReplace> = asReplaceUpdates(
+        Array.from(newRows.values()),
+      );
+      createdRows?.forEach((row) => {
+        updates.push(row);
+      });
+      if (updates.length > 0) {
+        apiRef.current.updateRows(updates);
+      }
 
       // Focus the first affected cell
-      if (newRowsValues.length > 0 && visibleColumns.length > 0) {
-        const columnOrder = gridColumnFieldsSelector(apiRef);
-
-        const firstOldRow = Array.from(oldRows.values())[0];
-        const [firstNewRowId, firstNewRow] = Array.from(newRows.entries())[0];
-
-        let differentFieldIndex = columnOrder.length - 1;
-        // Find the first field that is different to set the focus on
-        for (let i = 0; i < columnOrder.length; i += 1) {
-          const field = columnOrder[i];
-          if (!isDeepEqual(firstOldRow[field], firstNewRow[field])) {
-            differentFieldIndex = i;
-            break;
-          }
-        }
-
-        // Restore all rows to the pasted state
-        apiRef.current.updateRows(asReplaceUpdates(newRowsValues));
-
-        if (differentFieldIndex >= 0) {
-          requestAnimationFrame(() => {
-            const focusField = columnOrder[differentFieldIndex];
-            const colIndex = apiRef.current.getColumnIndex(focusField);
-            apiRef.current.setCellFocus(firstNewRowId, focusField);
-            apiRef.current.scrollToIndexes({
-              rowIndex: getRowIndexRelativeToAllRows(apiRef, firstNewRowId),
-              // `differentFieldIndex` is an index into all columns, so a hidden column
-              // before it would make it point past the visible columns. Resolve it to a
-              // visible index and skip the horizontal scroll when the column is hidden.
-              colIndex: colIndex === -1 ? undefined : colIndex,
-            });
-          });
-        }
+      const [rowId, newRow] = Array.from(newRows.entries())[0] ?? [];
+      const oldRow = rowId === undefined ? undefined : oldRows.get(rowId);
+      if (newRow && oldRow) {
+        focusFirstChangedCell(apiRef, rowId!, oldRow, newRow);
       }
     },
   };

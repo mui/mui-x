@@ -1,4 +1,4 @@
-import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
+import type { TemporalSupportedObject } from './date';
 
 export type RecurringEventFrequency = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
 /**

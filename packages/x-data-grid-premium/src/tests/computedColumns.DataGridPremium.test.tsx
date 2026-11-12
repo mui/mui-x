@@ -2059,8 +2059,7 @@ describe('<DataGridPremium /> - Computed columns', () => {
             operator,
             value,
           }));
-        // A throw inside the hydration of the columns leaves its pipe processing locked: the
-        // column added next would never be hydrated.
+        // The columns keep being hydrated after the type change: the column added next shows up.
         const expectColumnsToBeHydratedAgain = () => {
           act(() => apiRef.current!.setFilterModel({ items: [] }));
           act(() => apiRef.current!.addComputedColumn(half));
@@ -3489,9 +3488,9 @@ describe('<DataGridPremium /> - Computed columns', () => {
             expect(getColumnValuesOf('item')).to.deep.equal(['Banana']);
           });
 
-          // Known residual (#24008): the regroup of the row grouping, the first listener of the
-          // event, filters the rebuilt tree before the parent can pass the reset back, and throws
-          // out of the hydration. The pipe processing then stays locked until #24008 is fixed.
+          // Known residual: the regroup of the row grouping, the first listener of the event,
+          // filters the rebuilt tree before the parent can pass the reset back, and throws out
+          // of the hydration.
           it('should throw when the grid is grouped by the changed column before the parent passes the reset back', async () => {
             await render(
               <ControlledFilterTest

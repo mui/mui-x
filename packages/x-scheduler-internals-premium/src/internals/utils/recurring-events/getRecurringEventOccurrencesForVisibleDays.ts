@@ -4,7 +4,6 @@ import type {
   SchedulerProcessedDate,
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   createProcessedDate,
   getDayNumber,
@@ -23,19 +22,18 @@ import { RecurringSeries } from './RecurringSeries';
  * `start` to the timestamp `end`, both included.
  *
  * The series finds the days of the occurrences in the data timezone, and each day is translated
- * back to adapter values.
+ * back to dates.
  */
 export function getRecurringEventOccurrencesForVisibleDays(
   event: SchedulerProcessedEvent,
   start: number,
   end: number,
-  adapter: Adapter,
   displayTimezone: TemporalTimezone,
 ): SchedulerEventOccurrence[] {
   // Important:
   // Occurrences are always computed in dataTimezone to avoid DST issues
   // DisplayTimezone is applied only for presentation purposes
-  const series = RecurringSeries.fromEvent(adapter, event);
+  const series = RecurringSeries.fromEvent(event);
   const dataTimezone = series.timezone;
   const durationMs = event.dataTimezone.end.timestamp - event.dataTimezone.start.timestamp;
 

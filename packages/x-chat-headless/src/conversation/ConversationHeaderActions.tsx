@@ -8,6 +8,7 @@ import type { ConversationHeaderActionsOwnerState } from './conversation.types';
 export interface ConversationHeaderActionsSlots {
   /**
    * The component that renders the actions.
+   * @default 'div'
    */
   actions: React.ElementType;
 }

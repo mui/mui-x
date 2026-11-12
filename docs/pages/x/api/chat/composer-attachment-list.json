@@ -6,6 +6,7 @@
     {
       "name": "attachmentList",
       "description": "The component that renders the attachment list.",
+      "default": "'div'",
       "class": null
     }
   ],

@@ -22,7 +22,12 @@
     "import { ChatComposerTextArea } from '@mui/x-chat';"
   ],
   "slots": [
-    { "name": "input", "description": "The component that renders the input.", "class": null }
+    {
+      "name": "input",
+      "description": "The component that renders the input.",
+      "default": "'textarea'",
+      "class": null
+    }
   ],
   "classes": [
     {

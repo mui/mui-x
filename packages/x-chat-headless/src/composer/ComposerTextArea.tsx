@@ -11,6 +11,7 @@ import type { ComposerTextAreaOwnerState } from './composer.types';
 export interface ComposerTextAreaSlots {
   /**
    * The component that renders the input.
+   * @default 'textarea'
    */
   input: React.ElementType;
 }

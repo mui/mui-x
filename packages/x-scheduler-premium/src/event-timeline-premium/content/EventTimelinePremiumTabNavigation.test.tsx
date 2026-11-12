@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { act, screen, waitFor, within } from '@mui/internal-test-utils';
-import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+import {
+  EventTimelinePremium,
+  eventTimelinePremiumClasses,
+} from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
@@ -283,15 +286,17 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
     await waitFor(() => {
       expect(getEvent('evt-d6-h20')).not.to.equal(null);
     });
+    const lastEvent = getEvent('evt-d6-h20')!;
+    const eventsCell = lastEvent.closest(`.${eventTimelinePremiumClasses.eventsCell}`)!;
     act(() => {
-      getEvent('evt-d6-h20')!.focus();
+      lastEvent.focus();
     });
 
     // Tab past the last event in the row: the interceptor returns false at the
     // boundary, so the browser default fires. The next focusable element after
     // the events cell is outside the events row (or outside the grid entirely).
     await user.keyboard('{Tab}');
-    expect(document.activeElement).to.not.equal(getEvent('evt-d6-h20'));
+    expect(eventsCell.contains(document.activeElement)).to.equal(false);
   });
 
   describe('with a trimmed hour window', () => {

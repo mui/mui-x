@@ -6,6 +6,7 @@
     {
       "name": "root",
       "description": "The root element of the per-message error primitive.\nRendered with `role=\"alert\"` so screen readers announce the error.",
+      "default": "'div'; a styled error card with a retry button in `ChatMessageError`",
       "class": null
     }
   ],
