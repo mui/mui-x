@@ -4,6 +4,8 @@ import { describe, expect, it } from 'vitest';
 import type { ChatAdapter, ChatRealtimeEvent } from '@mui/x-chat-headless';
 import { ChatBox } from '../ChatBox/ChatBox';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 const { render } = createRenderer();
 
 function createAdapter(overrides: Partial<ChatAdapter> = {}): ChatAdapter {
@@ -43,7 +45,7 @@ describe('ChatTypingIndicator', () => {
     expect(document.querySelector('.MuiChatBox-root')).not.toBe(null);
   });
 
-  function renderWithTypingUser(props: Partial<React.ComponentProps<typeof ChatBox>> = {}) {
+  function renderChatBox(props: Partial<React.ComponentProps<typeof ChatBox>> = {}) {
     let onEvent: ((event: ChatRealtimeEvent) => void) | undefined;
     const adapter = createAdapter({
       subscribe({ onEvent: nextOnEvent }) {
@@ -51,7 +53,7 @@ describe('ChatTypingIndicator', () => {
         return () => {};
       },
     });
-    render(
+    const view = render(
       <ChatBox
         adapter={adapter}
         initialActiveConversationId="c1"
@@ -59,9 +61,19 @@ describe('ChatTypingIndicator', () => {
         {...props}
       />,
     );
-    act(() => {
-      onEvent?.({ type: 'typing', conversationId: 'c1', userId: 'u1', isTyping: true });
-    });
+    const startTyping = () => {
+      expect(onEvent).not.to.equal(undefined);
+      act(() => {
+        onEvent!({ type: 'typing', conversationId: 'c1', userId: 'u1', isTyping: true });
+      });
+    };
+    return { ...view, startTyping };
+  }
+
+  function renderWithTypingUser(props: Partial<React.ComponentProps<typeof ChatBox>> = {}) {
+    const view = renderChatBox(props);
+    view.startTyping();
+    return view;
   }
 
   it('renders the typing indicator inside ChatBox while a member is typing', async () => {
@@ -90,9 +102,50 @@ describe('ChatTypingIndicator', () => {
     });
   });
 
-  it('hides the typing indicator when the typingIndicator slot is null', () => {
-    renderWithTypingUser({ slots: { typingIndicator: null } });
+  it('hides the typing indicator when the typingIndicator slot is null', async () => {
+    const view = renderWithTypingUser();
+
+    await waitFor(() => {
+      expect(document.querySelector('.MuiChatTypingIndicator-root')).to.have.text(
+        'Alice is typing',
+      );
+    });
+
+    view.setProps({ slots: { typingIndicator: null } });
 
     expect(document.querySelector('.MuiChatTypingIndicator-root')).to.equal(null);
+  });
+
+  it.skipIf(isJSDOM)('keeps the message list pinned to the bottom when typing starts', async () => {
+    const { startTyping } = renderChatBox({
+      style: { height: 400 },
+      initialMessages: Array.from({ length: 30 }, (_, index) => ({
+        id: `m${index}`,
+        conversationId: 'c1',
+        role: 'user' as const,
+        parts: [{ type: 'text' as const, text: `Message ${index}` }],
+      })),
+    });
+    const scroller = document.querySelector<HTMLElement>('[role="log"]')!;
+    const getDistanceFromBottom = () =>
+      scroller.scrollHeight - scroller.clientHeight - scroller.scrollTop;
+
+    await waitFor(() => {
+      expect(scroller.scrollHeight).to.be.greaterThan(scroller.clientHeight);
+    });
+    act(() => {
+      scroller.scrollTop = scroller.scrollHeight;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    expect(getDistanceFromBottom()).to.be.at.most(1);
+
+    startTyping();
+
+    await waitFor(() => {
+      expect(document.querySelector('.MuiChatTypingIndicator-root')).not.to.equal(null);
+    });
+    await waitFor(() => {
+      expect(getDistanceFromBottom()).to.be.at.most(1);
+    });
   });
 });
