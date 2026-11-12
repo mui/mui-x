@@ -832,20 +832,16 @@ async function main() {
 
     // Pick the base before looking up the previous tag, so both come from the same history.
     const shouldUseVersionBranch = await selectTargetBranch(majorVersion);
-    const releaseBase = `${upstreamRemote}/${shouldUseVersionBranch ? majorVersionBranch(majorVersion) : 'master'}`;
-
-    if (shouldUseVersionBranch) {
-      console.log(`Updating the upstream ${majorVersionBranch(majorVersion)} branch...`);
-      await execa('git', ['fetch', upstreamRemote, majorVersionBranch(majorVersion)]);
-    } else {
-      console.log('Updating the upstream master branch for current major version...');
-      await execa('git', ['fetch', upstreamRemote, 'master']);
-    }
+    const releaseBranch = shouldUseVersionBranch ? majorVersionBranch(majorVersion) : 'master';
+    const releaseBase = `${upstreamRemote}/${releaseBranch}`;
+    console.log(`Fetching release base ${releaseBase}...`);
+    await execa('git', ['fetch', '--tags', '--force', upstreamRemote, releaseBranch]);
 
     const latestTag = await findLatestTaggedVersion({
       cwd: process.cwd(),
       ref: releaseBase,
       match: `v${majorVersion}.*`,
+      fetchAll: false,
     });
     const previousVersion = latestTag.startsWith('v') ? latestTag.slice(1) : latestTag;
     console.log(`Latest tag for major version ${majorVersion}: ${previousVersion}`);
