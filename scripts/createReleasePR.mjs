@@ -33,7 +33,11 @@ import { hideBin } from 'yargs/helpers';
 import fs from 'fs/promises';
 import path from 'path';
 import { input, select, confirm } from '@inquirer/prompts';
-import { getChangelogUtils } from './changelogUtils.mjs';
+import {
+  generateChangelog as generateReleaseEntry,
+  findLatestTaggedVersion,
+} from '@mui/internal-code-infra/changelog';
+import changelogConfig from './changelog.config.mjs';
 import pck from '../package.json' with { type: 'json' };
 
 const packageVersion = pck.version;
@@ -599,13 +603,12 @@ async function updatePackageJson(newVersion) {
 
 /**
  * Generate the changelog
- * @param {function} generator - The changelog generator function
  * @param {string} newVersion - The new version
  * @param {string} lastVersion - The last version to compare against
  * @param {string} [releaseBranch='master'] - The branch to compare against (default is 'master')
  * @returns {Promise<string>} The changelog content
  */
-async function generateChangelog(generator, newVersion, lastVersion, releaseBranch = 'master') {
+async function generateChangelog(newVersion, lastVersion, releaseBranch = 'master') {
   try {
     console.log('Generating changelog...');
 
@@ -613,13 +616,14 @@ async function generateChangelog(generator, newVersion, lastVersion, releaseBran
     console.log(`New version: ${newVersion}`);
     console.log(`Last version: ${lastVersion}`);
 
-    return await generator({
-      octokit,
-      nextVersion: newVersion,
+    const entry = await generateReleaseEntry({
+      config: changelogConfig,
+      octokit: octokit ?? undefined,
+      version: newVersion,
       lastRelease: `v${lastVersion}`,
       release: releaseBranch,
-      returnEntry: true,
     });
+    return entry.markdown;
   } catch (error) {
     console.error('Error generating changelog:', error);
     process.exit(1);
@@ -796,9 +800,6 @@ async function main() {
       authStrategy: persistentAuthStrategy,
     });
 
-    const { findLatestTaggedVersionForMajor, generateChangelog: generator } =
-      getChangelogUtils(octokit);
-
     // Find the upstream remote
     const upstreamRemote = await findMuiXRemote();
     console.log(`Found upstream remote: ${upstreamRemote}`);
@@ -833,7 +834,11 @@ async function main() {
     const shouldUseVersionBranch = await selectTargetBranch(majorVersion);
     const releaseBase = `${upstreamRemote}/${shouldUseVersionBranch ? majorVersionBranch(majorVersion) : 'master'}`;
 
-    const latestTag = await findLatestTaggedVersionForMajor(majorVersion, releaseBase);
+    const latestTag = await findLatestTaggedVersion({
+      cwd: process.cwd(),
+      ref: releaseBase,
+      match: `v${majorVersion}.*`,
+    });
     const previousVersion = latestTag.startsWith('v') ? latestTag.slice(1) : latestTag;
     console.log(`Latest tag for major version ${majorVersion}: ${previousVersion}`);
 
@@ -932,7 +937,6 @@ async function main() {
 
     // Generate the changelog
     const changelogContent = await generateChangelog(
-      generator,
       newVersion,
       previousVersion,
       shouldUseVersionBranch ? majorVersionBranch(majorVersion) : 'master',
