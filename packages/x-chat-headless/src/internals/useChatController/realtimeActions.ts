@@ -9,7 +9,7 @@ export function createRealtimeActions(params: {
 }) {
   const { store, conversationNavigationRequestIdRef } = params;
 
-  // The store only holds the active conversation's messages.
+  // Ignore message events for other conversations unless the message is already stored (e.g. controlled messages).
   function isOtherConversation(conversationId: string | undefined): boolean {
     const activeId = store.state.activeConversationId;
     return conversationId != null && activeId != null && conversationId !== activeId;
