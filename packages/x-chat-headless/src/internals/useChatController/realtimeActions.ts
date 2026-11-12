@@ -9,12 +9,23 @@ export function createRealtimeActions(params: {
 }) {
   const { store, conversationNavigationRequestIdRef } = params;
 
+  // The store only holds the active conversation's messages.
+  function isOtherConversation(conversationId: string | undefined): boolean {
+    return conversationId != null && conversationId !== store.state.activeConversationId;
+  }
+
   function handleRealtimeEvent(event: ChatRealtimeEvent): void {
     switch (event.type) {
       case 'message-added':
+        if (isOtherConversation(event.message.conversationId)) {
+          return;
+        }
         store.addMessage(event.message);
         return;
       case 'message-updated':
+        if (isOtherConversation(event.message.conversationId)) {
+          return;
+        }
         if (store.state.messagesById[event.message.id]) {
           store.updateMessage(event.message.id, event.message);
         } else {
@@ -22,6 +33,9 @@ export function createRealtimeActions(params: {
         }
         return;
       case 'message-removed':
+        if (isOtherConversation(event.conversationId)) {
+          return;
+        }
         store.removeMessage(event.messageId);
         return;
       case 'conversation-added':

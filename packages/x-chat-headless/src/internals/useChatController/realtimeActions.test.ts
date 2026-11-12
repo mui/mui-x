@@ -78,6 +78,63 @@ describe('createRealtimeActions', () => {
       expect(store.state.messagesById.m1).toBeUndefined();
     });
 
+    describe('conversation scoping', () => {
+      function setup(initialMessages: ChatMessage[] = []) {
+        const store = new ChatStore({
+          initialConversations: [conversation1, conversation2],
+          initialActiveConversationId: 'c1',
+          initialMessages,
+        });
+        const { handleRealtimeEvent } = createRealtimeActions({
+          store: asUnknown(store),
+          conversationNavigationRequestIdRef: { current: 0 },
+        });
+        return { store, handleRealtimeEvent };
+      }
+
+      it('message-added: ignores messages from another conversation', () => {
+        const { store, handleRealtimeEvent } = setup();
+
+        handleRealtimeEvent({
+          type: 'message-added',
+          message: { ...baseMessage, conversationId: 'c2' },
+        });
+
+        expect(store.state.messageIds).toEqual([]);
+      });
+
+      it('message-added: adds messages from the active conversation or without a conversation', () => {
+        const { store, handleRealtimeEvent } = setup();
+
+        handleRealtimeEvent({
+          type: 'message-added',
+          message: { ...baseMessage, conversationId: 'c1' },
+        });
+        handleRealtimeEvent({ type: 'message-added', message: { ...baseMessage, id: 'm2' } });
+
+        expect(store.state.messageIds).toEqual(['m1', 'm2']);
+      });
+
+      it('message-updated: ignores messages from another conversation', () => {
+        const { store, handleRealtimeEvent } = setup();
+
+        handleRealtimeEvent({
+          type: 'message-updated',
+          message: { ...updatedMessage, conversationId: 'c2' },
+        });
+
+        expect(store.state.messageIds).toEqual([]);
+      });
+
+      it('message-removed: ignores removals scoped to another conversation', () => {
+        const { store, handleRealtimeEvent } = setup([{ ...baseMessage, conversationId: 'c1' }]);
+
+        handleRealtimeEvent({ type: 'message-removed', messageId: 'm1', conversationId: 'c2' });
+
+        expect(store.state.messageIds).toEqual(['m1']);
+      });
+    });
+
     it('conversation-added: adds conversation to store', () => {
       const store = new ChatStore();
       const { handleRealtimeEvent } = createRealtimeActions({
