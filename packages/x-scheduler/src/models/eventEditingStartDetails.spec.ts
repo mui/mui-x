@@ -20,6 +20,6 @@ export function narrowEventDetails(details: SchedulerEventEditingStartEventDetai
     const draft: SchedulerEventOccurrencePlaceholder = details.occurrence;
     // @ts-expect-error the creation draft carries no persisted event model
     details.occurrence.modelInBuiltInFormat;
-    draft.displayTimezone.start;
+    draft.start;
   }
 }

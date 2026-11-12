@@ -1,7 +1,6 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerEventOccurrence,
-  SchedulerProcessedDate,
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
 import {
@@ -35,21 +34,14 @@ export function getRecurringEventOccurrencesForVisibleDays(
   // DisplayTimezone is applied only for presentation purposes
   const series = RecurringSeries.fromEvent(event);
   const dataTimezone = series.timezone;
-  const durationMs = event.dataTimezone.end.timestamp - event.dataTimezone.start.timestamp;
+  const { dataStart, dataEnd } = event.unstable_internalInfos;
+  const durationMs = dataEnd - dataStart;
 
   // Adjust scan range to catch multi-day events starting before visible range
   const durationInDays =
-    toLocalDayNumber(event.dataTimezone.end.timestamp, dataTimezone) -
-    getDayNumber(series.startPlainDate) +
-    1;
+    toLocalDayNumber(dataEnd, dataTimezone) - getDayNumber(series.startPlainDate) + 1;
   const scanFirstDay = toPlainDate(start, dataTimezone).add({ days: 1 - durationInDays });
   const scanLastDay = toPlainDate(end, dataTimezone);
-
-  // In the data timezone, a display date at the same instant is the data date.
-  const processDisplayDate = (epochMs: number, dataDate: SchedulerProcessedDate) =>
-    displayTimezone === dataTimezone && epochMs === dataDate.timestamp
-      ? dataDate
-      : createProcessedDate(epochMs, displayTimezone);
 
   return series.getOccurrenceDays(scanFirstDay, scanLastDay).map((day) => {
     const startMs = toEpochMs(day, series.startMsInDay, dataTimezone);
@@ -59,23 +51,12 @@ export function getRecurringEventOccurrencesForVisibleDays(
     const displayStartMs = event.allDay ? getStartOfDayMs(startMs, displayTimezone) : startMs;
     const displayEndMs = event.allDay ? getEndOfDayMs(endMs, displayTimezone) : endMs;
 
-    const dataStart = createProcessedDate(startMs, dataTimezone);
-    const dataEnd = createProcessedDate(endMs, dataTimezone);
     return {
       ...event,
       key: getRecurringOccurrenceKeyFromDateKey(event.id, getPlainDateKey(day)),
-      dataTimezone: {
-        ...event.dataTimezone,
-        start: dataStart,
-        end: dataEnd,
-        timezone: dataTimezone,
-      },
-      displayTimezone: {
-        ...event.displayTimezone,
-        start: processDisplayDate(displayStartMs, dataStart),
-        end: processDisplayDate(displayEndMs, dataEnd),
-        timezone: event.displayTimezone.timezone,
-      },
+      start: createProcessedDate(displayStartMs, displayTimezone),
+      end: createProcessedDate(displayEndMs, displayTimezone),
+      unstable_internalInfos: { displayTimezone, dataStart: startMs, dataEnd: endMs },
     };
   });
 }

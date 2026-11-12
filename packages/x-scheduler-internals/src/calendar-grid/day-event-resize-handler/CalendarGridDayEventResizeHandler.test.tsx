@@ -25,7 +25,7 @@ describe('<CalendarGrid.DayEventResizeHandler />', () => {
                 <CalendarGrid.DayEvent
                   eventId="fake-id"
                   occurrenceKey="fake-key"
-                  dataTimezone={undefined}
+                  internalInfos={undefined}
                   start={eventStart}
                   end={eventEnd}
                   renderDragPreview={() => null}

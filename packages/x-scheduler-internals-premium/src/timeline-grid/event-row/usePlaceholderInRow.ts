@@ -64,11 +64,9 @@ export function usePlaceholderInRow(
       key: 'occurrence-placeholder',
       title: originalEvent ? originalEvent.title : '',
       resource: rawPlaceholder.resourceId ?? originalEvent?.resource,
-      displayTimezone: {
-        start: startProcessed,
-        end: endProcessed,
-        timezone: displayTimezone,
-      },
+      start: startProcessed,
+      end: endProcessed,
+      unstable_internalInfos: { displayTimezone },
     };
 
     if (rawPlaceholder.type === 'creation') {

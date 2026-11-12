@@ -13,7 +13,8 @@ import {
   createEndOfPlainDate,
   formatMonthAndDayOfMonth,
   formatWeekday,
-  getOccurrenceDataTimezone,
+  getDataTimestamp,
+  isEventOccurrence,
   getTimezoneId,
   MS_PER_DAY,
   toEpochMs,
@@ -331,7 +332,7 @@ export function getRecurrenceLabel(
  * A creation draft has no event yet: it is created in the `default` timezone.
  */
 export function getEventTimezone(occurrence: SchedulerRenderableEventOccurrence): TemporalTimezone {
-  return getOccurrenceDataTimezone(occurrence)?.timezone ?? 'default';
+  return isEventOccurrence(occurrence) ? occurrence.timezone : 'default';
 }
 
 /**
@@ -342,8 +343,9 @@ export function getEventBoundTimestamp(
   occurrence: SchedulerRenderableEventOccurrence,
   bound: 'start' | 'end',
 ): number {
-  return (getOccurrenceDataTimezone(occurrence)?.[bound] ?? occurrence.displayTimezone[bound])
-    .timestamp;
+  return isEventOccurrence(occurrence)
+    ? getDataTimestamp(occurrence, bound)
+    : occurrence[bound].timestamp;
 }
 
 /**

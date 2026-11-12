@@ -16,16 +16,9 @@ export function processEvent(
 
   const startInstant = resolveEventDate(model.start, dataTimezone, model.id);
   const endInstant = resolveEventDate(model.end, dataTimezone, model.id);
-  const resolvedExDates = model.exDates
-    ? model.exDates.map((exDate) => resolveEventDate(exDate, dataTimezone, model.id))
-    : undefined;
-  const dataExDates = resolvedExDates?.map((exDate) =>
-    toZonedDateTime(exDate.getTime(), dataTimezone),
+  const exDates = model.exDates?.map((exDate) =>
+    toZonedDateTime(resolveEventDate(exDate, dataTimezone, model.id).getTime(), dataTimezone),
   );
-  const displayExDates =
-    displayTimezone === dataTimezone
-      ? dataExDates
-      : resolvedExDates?.map((exDate) => toZonedDateTime(exDate.getTime(), displayTimezone));
 
   const displayBounds = normalizeAllDayBounds(
     startInstant,
@@ -55,19 +48,11 @@ export function processEvent(
     id: model.id,
     title: model.title,
     description: model.description,
-    dataTimezone: {
-      start: processDate(startInstant, dataTimezone),
-      end: processDate(endInstant, dataTimezone),
-      timezone: dataTimezone,
-      rrule: parsedDataRRule,
-      exDates: dataExDates,
-    },
-    displayTimezone: {
-      start: processDate(displayBounds.start, displayTimezone),
-      end: processDate(displayBounds.end, displayTimezone),
-      timezone: displayTimezone,
-      exDates: displayExDates,
-    },
+    start: processDate(displayBounds.start, displayTimezone),
+    end: processDate(displayBounds.end, displayTimezone),
+    timezone: dataTimezone,
+    rrule: parsedDataRRule,
+    exDates,
     resource: model.resource,
     allDay: model.allDay ?? false,
     readOnly: model.readOnly ?? false,
@@ -77,5 +62,10 @@ export function processEvent(
     draggable: model.draggable,
     resizable: model.resizable,
     className: model.className,
+    unstable_internalInfos: {
+      displayTimezone,
+      dataStart: startInstant.getTime(),
+      dataEnd: endInstant.getTime(),
+    },
   };
 }

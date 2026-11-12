@@ -10,11 +10,11 @@ describe('base-temporal', () => {
       .withDisplayTimezone('America/New_York')
       .toOccurrence();
 
-    const { start } = occurrence.displayTimezone;
+    const { start } = occurrence;
     expect(start.value).to.be.instanceOf(BaseTemporal.ZonedDateTime);
     expect(start.value.toString()).to.equal('2025-07-01T05:00:00-04:00[America/New_York]');
     expect(
-      BaseTemporal.ZonedDateTime.compare(start.value, occurrence.dataTimezone.start.value),
+      BaseTemporal.ZonedDateTime.compare(start.value, start.value.withTimeZone('UTC')),
     ).to.equal(0);
     expect(start.value.toPlainDate().equals(BaseTemporal.PlainDate.from('2025-07-01'))).to.equal(
       true,

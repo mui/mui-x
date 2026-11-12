@@ -932,7 +932,7 @@ export class SchedulerStore<
     calendarEvent: SchedulerEventUpdatedProperties,
   ): SchedulerUpdateEventResult => {
     const original = schedulerEventSelectors.processedEventRequired(this.state, calendarEvent.id);
-    if (this.state.recurringEventsPlugin != null && original.dataTimezone.rrule) {
+    if (this.state.recurringEventsPlugin != null && original.rrule) {
       throw new Error(
         'MUI X Scheduler: This event is recurring and cannot be updated with updateEvent(). ' +
           'Recurring events require special handling to manage series and exceptions. ' +
@@ -1015,13 +1015,9 @@ export class SchedulerStore<
     const isRecurring =
       this.state.recurringEventsPlugin != null &&
       isEventOccurrence(occurrence) &&
-      liveEvent.dataTimezone.rrule != null;
+      liveEvent.rrule != null;
     if (isRecurring) {
-      this.deleteRecurringEvent({
-        occurrenceStart: new Date(occurrence.dataTimezone.start.timestamp),
-        eventId: occurrence.id,
-        onSubmit: onDelete,
-      });
+      this.deleteRecurringEvent({ occurrence, onSubmit: onDelete });
       return;
     }
 
@@ -1045,11 +1041,11 @@ export class SchedulerStore<
       return;
     }
 
-    const { occurrenceStart, onSubmit } = pendingRecurringEventOperation;
+    const { occurrence, onSubmit } = pendingRecurringEventOperation;
     const eventId =
       pendingRecurringEventOperation.kind === 'update'
         ? pendingRecurringEventOperation.changes.id
-        : pendingRecurringEventOperation.eventId;
+        : occurrence.id;
     // The event can leave the store between the dialog opening and the confirmation (a fetch
     // replacing the loaded range, a split still being persisted).
     const original = schedulerEventSelectors.processedEvent(this.state, eventId);
@@ -1057,7 +1053,7 @@ export class SchedulerStore<
       this.pushUserFacingError(EVENT_NOT_LOADED_ERROR, { transient: true });
       return;
     }
-    if (!original.dataTimezone.rrule) {
+    if (!original.rrule) {
       throw new Error(
         'MUI X Scheduler: The event targeted by the recurring scope dialog is not recurring. ' +
           'Recurring scope changes require an event with a recurrence rule. ' +
@@ -1071,7 +1067,7 @@ export class SchedulerStore<
     // with.
     let changes: SchedulerEventUpdatedProperties | null = null;
     if (pendingRecurringEventOperation.kind === 'delete') {
-      updatedEvents = recurringEventsPlugin.deleteRecurringEvent(original, occurrenceStart, scope);
+      updatedEvents = recurringEventsPlugin.deleteRecurringEvent(original, occurrence, scope);
     } else {
       changes = pendingRecurringEventOperation.changes;
       // "all" edits the series in place off `changes.start` / `.end` (e.g. realigning `byDay`),
@@ -1090,7 +1086,7 @@ export class SchedulerStore<
       }
       updatedEvents = recurringEventsPlugin.updateRecurringEvent(
         original,
-        occurrenceStart,
+        occurrence,
         changes,
         scope,
       );
@@ -1105,7 +1101,7 @@ export class SchedulerStore<
     if (changes != null) {
       this.reconcileEditingOccurrence({
         original,
-        occurrenceStart,
+        changedOccurrence: occurrence,
         changes,
         createdEvent: updatedEvents.created?.[0],
         createdEventId: createdIds[0],
@@ -1499,10 +1495,7 @@ export class SchedulerStore<
     let { occurrence } = editingOccurrence;
     const liveEvent = schedulerEventSelectors.processedEvent(this.state, occurrence.id);
     if (mode === 'edit' && liveEvent != null && isEventOccurrence(occurrence)) {
-      occurrence = {
-        ...occurrence,
-        dataTimezone: { ...occurrence.dataTimezone, rrule: liveEvent.dataTimezone.rrule },
-      };
+      occurrence = { ...occurrence, rrule: liveEvent.rrule };
     }
     this.set('editingOccurrence', { ...editingOccurrence, occurrence, mode });
   };
@@ -1525,44 +1518,31 @@ export class SchedulerStore<
     const { occurrence } = editingOccurrence;
     const { start, end } = changes;
     const liveEvent = schedulerEventSelectors.processedEvent(this.state, occurrence.id);
+    const { displayTimezone } = occurrence.unstable_internalInfos;
+    const bounds = {
+      start: start == null ? occurrence.start : processDate(start, displayTimezone),
+      end: end == null ? occurrence.end : processDate(end, displayTimezone),
+    };
     this.set('editingOccurrence', {
       ...editingOccurrence,
       modelBounds:
         liveEvent == null
           ? undefined
           : {
-              start: liveEvent.dataTimezone.start.timestamp,
-              end: liveEvent.dataTimezone.end.timestamp,
+              start: liveEvent.unstable_internalInfos.dataStart,
+              end: liveEvent.unstable_internalInfos.dataEnd,
             },
-      occurrence: {
-        ...occurrence,
-        displayTimezone: {
-          ...occurrence.displayTimezone,
-          start:
-            start == null
-              ? occurrence.displayTimezone.start
-              : processDate(start, occurrence.displayTimezone.timezone),
-          end:
-            end == null
-              ? occurrence.displayTimezone.end
-              : processDate(end, occurrence.displayTimezone.timezone),
-        },
-        ...(isEventOccurrence(occurrence)
-          ? {
-              dataTimezone: {
-                ...occurrence.dataTimezone,
-                start:
-                  start == null
-                    ? occurrence.dataTimezone.start
-                    : processDate(start, occurrence.dataTimezone.timezone),
-                end:
-                  end == null
-                    ? occurrence.dataTimezone.end
-                    : processDate(end, occurrence.dataTimezone.timezone),
-              },
-            }
-          : {}),
-      },
+      occurrence: isEventOccurrence(occurrence)
+        ? {
+            ...occurrence,
+            ...bounds,
+            unstable_internalInfos: {
+              ...occurrence.unstable_internalInfos,
+              dataStart: start?.getTime() ?? occurrence.unstable_internalInfos.dataStart,
+              dataEnd: end?.getTime() ?? occurrence.unstable_internalInfos.dataEnd,
+            },
+          }
+        : { ...occurrence, ...bounds },
     });
   };
 
@@ -1574,15 +1554,16 @@ export class SchedulerStore<
    */
   private reconcileEditingOccurrence = (parameters: {
     original: SchedulerProcessedEvent;
-    /** The changed occurrence's start, in the data timezone. */
-    occurrenceStart: TemporalSupportedObject;
+    /** The changed occurrence. */
+    changedOccurrence: SchedulerEventOccurrence;
     /** The submitted changes. */
     changes: SchedulerEventUpdatedProperties;
     createdEvent: SchedulerEventCreationProperties | undefined;
     createdEventId: SchedulerEventId | undefined;
   }) => {
-    const { original, occurrenceStart, changes, createdEvent, createdEventId } = parameters;
-    const dataTimezone = original.dataTimezone.timezone;
+    const { original, changedOccurrence, changes, createdEvent, createdEventId } = parameters;
+    const dataTimezone = original.timezone;
+    const occurrenceStart = new Date(changedOccurrence.unstable_internalInfos.dataStart);
     const occurrence = this.state.editingOccurrence?.occurrence;
     // Only the armed occurrence follows its own change, else a sibling drag hijacks the surface.
     if (
@@ -1618,8 +1599,8 @@ export class SchedulerStore<
     // A bound the submit left out keeps the occurrence's current value, in both timezones.
     this.repointEditingOccurrence({
       eventId: targetsCreatedEvent ? createdEventId : original.id,
-      start: changes.start ?? new Date(occurrence.displayTimezone.start.timestamp),
-      end: changes.end ?? new Date(occurrence.displayTimezone.end.timestamp),
+      start: changes.start ?? new Date(occurrence.start.timestamp),
+      end: changes.end ?? new Date(occurrence.end.timestamp),
       isRecurring: targetsCreatedEvent ? createdEvent.rrule != null : true,
       dataStart: changes.start ?? occurrenceStart,
       dataEnd: changes.end ?? occurrenceEnd,
@@ -1650,35 +1631,34 @@ export class SchedulerStore<
       return;
     }
     const { occurrence } = editingOccurrence;
+    const { displayTimezone } = occurrence.unstable_internalInfos;
+    const repointed = {
+      id: eventId,
+      key: isRecurring
+        ? // Key off the data-timezone day, matching occurrence expansion; the display-tz start can differ.
+          getRecurringOccurrenceKey(eventId, dataStart, dataTimezone)
+        : getOccurrenceKey(eventId),
+      start: processDate(start, displayTimezone),
+      end: processDate(end, displayTimezone),
+    };
     this.set('editingOccurrence', {
       ...editingOccurrence,
-      occurrence: {
-        ...occurrence,
-        id: eventId,
-        key: isRecurring
-          ? // Key off the data-timezone day, matching occurrence expansion; the display-tz start can differ.
-            getRecurringOccurrenceKey(eventId, dataStart, dataTimezone)
-          : getOccurrenceKey(eventId),
-        displayTimezone: {
-          ...occurrence.displayTimezone,
-          start: processDate(start, occurrence.displayTimezone.timezone),
-          end: processDate(end, occurrence.displayTimezone.timezone),
-        },
-        // Keep the data-timezone identity in sync too, so a later edit or delete
-        // targets the day the occurrence actually lives on.
-        ...(isEventOccurrence(occurrence)
-          ? {
-              dataTimezone: {
-                ...occurrence.dataTimezone,
-                start: processDate(dataStart, dataTimezone),
-                end: processDate(dataEnd, dataTimezone),
-                // Cleared by a `only-this` detach so the surface reads as non-recurring; otherwise
-                // the rule is the series' and the editor refreshes it from the store when it opens.
-                rrule: isRecurring ? occurrence.dataTimezone.rrule : undefined,
-              },
-            }
-          : {}),
-      },
+      // Keep the data-timezone identity in sync too, so a later edit or delete
+      // targets the day the occurrence actually lives on.
+      occurrence: isEventOccurrence(occurrence)
+        ? {
+            ...occurrence,
+            ...repointed,
+            // Cleared by a `only-this` detach so the surface reads as non-recurring; otherwise
+            // the rule is the series' and the editor refreshes it from the store when it opens.
+            rrule: isRecurring ? occurrence.rrule : undefined,
+            unstable_internalInfos: {
+              ...occurrence.unstable_internalInfos,
+              dataStart: dataStart.getTime(),
+              dataEnd: dataEnd.getTime(),
+            },
+          }
+        : { ...occurrence, ...repointed },
     });
   };
 

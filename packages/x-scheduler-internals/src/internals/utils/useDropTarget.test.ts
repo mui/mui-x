@@ -40,8 +40,8 @@ premiumStoreClasses.forEach((storeClass) => {
           originalOccurrence: occurrence,
           sourceResourceId: null,
           resourceId: null,
-          start: occurrence.displayTimezone.start.timestamp,
-          end: addDays(new Date(occurrence.displayTimezone.end.timestamp), 1).getTime(),
+          start: occurrence.start.timestamp,
+          end: addDays(new Date(occurrence.end.timestamp), 1).getTime(),
         },
       );
       store.selectRecurringEventScope('all');
@@ -77,15 +77,19 @@ premiumStoreClasses.forEach((storeClass) => {
           originalOccurrence: occurrence,
           sourceResourceId: null,
           resourceId: null,
-          start: occurrence.displayTimezone.start.timestamp,
-          end: addDays(new Date(occurrence.displayTimezone.end.timestamp), 1).getTime(),
+          start: occurrence.start.timestamp,
+          end: addDays(new Date(occurrence.end.timestamp), 1).getTime(),
         },
       );
 
       const edited = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
-      expect(edited.dataTimezone.start).to.equal(occurrence.dataTimezone.start);
-      expect(edited.displayTimezone.start).to.equal(occurrence.displayTimezone.start);
-      expect(edited.dataTimezone.end.timestamp).to.not.equal(occurrence.dataTimezone.end.timestamp);
+      expect(edited.unstable_internalInfos.dataStart).to.equal(
+        occurrence.unstable_internalInfos.dataStart,
+      );
+      expect(edited.start).to.equal(occurrence.start);
+      expect(edited.unstable_internalInfos.dataEnd).to.not.equal(
+        occurrence.unstable_internalInfos.dataEnd,
+      );
     });
 
     it('should resend both bounds when the drop toggles all-day off', () => {
@@ -101,7 +105,7 @@ premiumStoreClasses.forEach((storeClass) => {
         displayTimezone: 'America/New_York',
         onEventsChange,
       });
-      const start = new Date(occurrence.displayTimezone.start.timestamp);
+      const start = new Date(occurrence.start.timestamp);
       const end = addHours(start, 1);
 
       applyInternalDragOrResizeOccurrencePlaceholder(

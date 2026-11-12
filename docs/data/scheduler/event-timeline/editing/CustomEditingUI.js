@@ -30,8 +30,8 @@ export default function CustomEditingUI() {
         {
           id: `custom-${Date.now()}`,
           title,
-          start: new Date(occurrence.displayTimezone.start.timestamp).toISOString(),
-          end: new Date(occurrence.displayTimezone.end.timestamp).toISOString(),
+          start: new Date(occurrence.start.timestamp).toISOString(),
+          end: new Date(occurrence.end.timestamp).toISOString(),
           allDay: occurrence.allDay,
           resource: occurrence.resource,
         },

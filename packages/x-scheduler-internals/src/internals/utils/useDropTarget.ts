@@ -250,10 +250,10 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
     additionalChanges.allDay != null &&
     additionalChanges.allDay !== (originalOccurrence.allDay ?? false);
   const changes: SchedulerEventUpdatedProperties = { id: eventId };
-  if (allDayToggled || originalOccurrence.displayTimezone.start.timestamp !== start) {
+  if (allDayToggled || originalOccurrence.start.timestamp !== start) {
     changes.start = new Date(start);
   }
-  if (allDayToggled || originalOccurrence.displayTimezone.end.timestamp !== end) {
+  if (allDayToggled || originalOccurrence.end.timestamp !== end) {
     changes.end = new Date(end);
   }
 
@@ -299,9 +299,9 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
     return;
   }
 
-  if (originalOccurrence.dataTimezone.rrule) {
+  if (originalOccurrence.rrule) {
     store.updateRecurringEvent({
-      occurrenceStart: new Date(originalOccurrence.dataTimezone.start.timestamp),
+      occurrence: originalOccurrence,
       changes,
     });
     // Editing surface is refreshed (or disarmed) in `selectRecurringEventScope` once the user

@@ -285,7 +285,7 @@ export function classifyDependencyEvent(
   if (processedEvent == null) {
     return 'unknownEvent';
   }
-  if (processedEvent.dataTimezone.rrule != null) {
+  if (processedEvent.rrule != null) {
     return 'recurringEvent';
   }
   return 'ok';

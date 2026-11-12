@@ -1,6 +1,7 @@
 import {
   addDays,
   createDate,
+  createOccurrence,
   EventBuilder,
   setSystemTimezone,
   startOfDay,
@@ -23,14 +24,22 @@ describe('recurring-events/deleteRecurringEvent', () => {
   describe('deleteRecurringEvent', () => {
     it("should delete the whole event for scope 'all'", () => {
       const occurrenceStart = createDate('2025-01-05T09:00:00Z');
-      const result = deleteRecurringEvent(defaultEvent, occurrenceStart, 'all');
+      const result = deleteRecurringEvent(
+        defaultEvent,
+        createOccurrence(defaultEvent, occurrenceStart),
+        'all',
+      );
       expect(result).to.deep.equal({ deleted: [defaultEvent.id] });
     });
 
     it('should throw for an unsupported scope', () => {
       const occurrenceStart = createDate('2025-01-05T09:00:00Z');
       expect(() => {
-        deleteRecurringEvent(defaultEvent, occurrenceStart, 'bogus' as any);
+        deleteRecurringEvent(
+          defaultEvent,
+          createOccurrence(defaultEvent, occurrenceStart),
+          'bogus' as any,
+        );
       }).to.throw(/not supported for recurring events/);
     });
   });
@@ -38,7 +47,10 @@ describe('recurring-events/deleteRecurringEvent', () => {
   describe('applyRecurringDeleteOnlyThis', () => {
     it('should add an EXDATE for the occurrence and keep the series', () => {
       const occurrenceStart = createDate('2025-01-05T09:00:00Z');
-      const result = applyRecurringDeleteOnlyThis(defaultEvent, occurrenceStart);
+      const result = applyRecurringDeleteOnlyThis(
+        defaultEvent,
+        createOccurrence(defaultEvent, occurrenceStart),
+      );
 
       expect(result.deleted).to.equal(undefined);
       expect(result.created).to.equal(undefined);
@@ -55,7 +67,10 @@ describe('recurring-events/deleteRecurringEvent', () => {
         .toProcessed();
       const occurrenceStart = createDate('2025-01-05T09:00:00Z');
 
-      const result = applyRecurringDeleteOnlyThis(eventWithExDate, occurrenceStart);
+      const result = applyRecurringDeleteOnlyThis(
+        eventWithExDate,
+        createOccurrence(eventWithExDate, occurrenceStart),
+      );
 
       expect(result.updated).to.deep.equal([
         {
@@ -79,7 +94,10 @@ describe('recurring-events/deleteRecurringEvent', () => {
           .toProcessed();
         const occurrenceStart = createDate('2026-04-05T09:00:00', 'America/Santiago');
 
-        const result = applyRecurringDeleteOnlyThis(event, occurrenceStart);
+        const result = applyRecurringDeleteOnlyThis(
+          event,
+          createOccurrence(event, occurrenceStart),
+        );
         const exDates = result.updated![0].exDates!;
 
         expect(exDates[0].toISOString()).to.equal('2026-04-05T04:00:00.000Z'); // midnight, April 5th
@@ -99,7 +117,10 @@ describe('recurring-events/deleteRecurringEvent', () => {
           .toProcessed();
         const occurrenceStart = createDate('2011-12-30T14:00:00Z');
 
-        const result = applyRecurringDeleteOnlyThis(event, occurrenceStart);
+        const result = applyRecurringDeleteOnlyThis(
+          event,
+          createOccurrence(event, occurrenceStart),
+        );
         const exDates = result.updated![0].exDates!;
 
         expect(exDates[0].toISOString()).to.equal('2011-12-30T05:00:00.000Z'); // midnight, December 30th
@@ -113,7 +134,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
         .toProcessed();
       const occurrenceStart = createDate('2025-01-01T09:00:00Z');
 
-      const result = applyRecurringDeleteOnlyThis(event, occurrenceStart);
+      const result = applyRecurringDeleteOnlyThis(event, createOccurrence(event, occurrenceStart));
       expect(result).to.deep.equal({ deleted: [event.id] });
     });
 
@@ -125,7 +146,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
         .toProcessed();
       const occurrenceStart = createDate('2025-01-03T09:00:00Z');
 
-      const result = applyRecurringDeleteOnlyThis(event, occurrenceStart);
+      const result = applyRecurringDeleteOnlyThis(event, createOccurrence(event, occurrenceStart));
       expect(result).to.deep.equal({ deleted: [event.id] });
     });
 
@@ -136,7 +157,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
         .toProcessed();
       const occurrenceStart = createDate('2025-01-02T09:00:00Z');
 
-      const result = applyRecurringDeleteOnlyThis(event, occurrenceStart);
+      const result = applyRecurringDeleteOnlyThis(event, createOccurrence(event, occurrenceStart));
       expect(result.deleted).to.equal(undefined);
       expect(result.updated).to.deep.equal([
         { id: event.id, exDates: [startOfDay(occurrenceStart)] },
@@ -150,9 +171,9 @@ describe('recurring-events/deleteRecurringEvent', () => {
         .withDisplayTimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY', interval: 1, count: 1 })
         .toProcessed();
-      const occurrenceStart = new Date(event.dataTimezone.start.timestamp);
+      const occurrenceStart = new Date(event.unstable_internalInfos.dataStart);
 
-      const result = applyRecurringDeleteOnlyThis(event, occurrenceStart);
+      const result = applyRecurringDeleteOnlyThis(event, createOccurrence(event, occurrenceStart));
       expect(result).to.deep.equal({ deleted: [event.id] });
     });
   });
@@ -160,7 +181,10 @@ describe('recurring-events/deleteRecurringEvent', () => {
   describe('applyRecurringDeleteFollowing', () => {
     it('should truncate the series to end the day before the occurrence', () => {
       const occurrenceStart = createDate('2025-01-05T09:00:00Z');
-      const result = applyRecurringDeleteFollowing(defaultEvent, occurrenceStart);
+      const result = applyRecurringDeleteFollowing(
+        defaultEvent,
+        createOccurrence(defaultEvent, occurrenceStart),
+      );
 
       expect(result.deleted).to.equal(undefined);
       expect(result.created).to.equal(undefined);
@@ -168,7 +192,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
         {
           id: defaultEvent.id,
           rrule: {
-            ...defaultEvent.dataTimezone.rrule,
+            ...defaultEvent.rrule,
             until: addDays(startOfDay(occurrenceStart), -1),
           },
         },
@@ -177,7 +201,10 @@ describe('recurring-events/deleteRecurringEvent', () => {
 
     it('should drop the whole series when the occurrence is on the DTSTART day', () => {
       const occurrenceStart = createDate('2025-01-01T09:00:00Z');
-      const result = applyRecurringDeleteFollowing(defaultEvent, occurrenceStart);
+      const result = applyRecurringDeleteFollowing(
+        defaultEvent,
+        createOccurrence(defaultEvent, occurrenceStart),
+      );
       expect(result).to.deep.equal({ deleted: [defaultEvent.id] });
     });
 
@@ -194,7 +221,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
         .toProcessed();
       const occurrenceStart = createDate('2025-01-05T09:00:00Z');
 
-      const result = applyRecurringDeleteFollowing(event, occurrenceStart);
+      const result = applyRecurringDeleteFollowing(event, createOccurrence(event, occurrenceStart));
       expect(result).to.deep.equal({ deleted: [event.id] });
     });
 
@@ -205,7 +232,10 @@ describe('recurring-events/deleteRecurringEvent', () => {
         .toProcessed();
       const occurrenceStart = createDate('2025-01-05T09:00:00Z');
 
-      const result = applyRecurringDeleteFollowing(countedEvent, occurrenceStart);
+      const result = applyRecurringDeleteFollowing(
+        countedEvent,
+        createOccurrence(countedEvent, occurrenceStart),
+      );
       const rule = result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule;
 
       expect(rule.count).to.equal(undefined);
@@ -224,7 +254,10 @@ describe('recurring-events/deleteRecurringEvent', () => {
       // 23:30 on January 3rd in New York, January 4th in UTC and Madrid.
       const occurrenceStart = createDate('2025-01-04T04:30:00Z');
 
-      const result = applyRecurringDeleteFollowing(original, occurrenceStart);
+      const result = applyRecurringDeleteFollowing(
+        original,
+        createOccurrence(original, occurrenceStart),
+      );
       const until = (result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule).until!;
 
       // The start of January 2nd in New York.
@@ -240,7 +273,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
         .toProcessed();
       const occurrenceStart = createDate('2011-12-31T09:00:00', 'Pacific/Apia');
 
-      const result = applyRecurringDeleteFollowing(event, occurrenceStart);
+      const result = applyRecurringDeleteFollowing(event, createOccurrence(event, occurrenceStart));
       const until = (result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule).until!;
 
       expect(until.toISOString()).to.equal('2011-12-29T10:00:00.000Z'); // midnight, December 29th
@@ -261,7 +294,10 @@ describe('recurring-events/deleteRecurringEvent', () => {
           .toProcessed();
         const occurrenceStart = createDate(occurrence, 'Europe/Paris');
 
-        const result = applyRecurringDeleteFollowing(event, occurrenceStart);
+        const result = applyRecurringDeleteFollowing(
+          event,
+          createOccurrence(event, occurrenceStart),
+        );
         const rule = result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule;
 
         expect(rule.until!.toISOString()).to.equal(until); // midnight
@@ -277,7 +313,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
         .toProcessed();
       const occurrenceStart = createDate('2026-03-08T09:00:00', 'America/Havana');
 
-      const result = applyRecurringDeleteFollowing(event, occurrenceStart);
+      const result = applyRecurringDeleteFollowing(event, createOccurrence(event, occurrenceStart));
       const rule = result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule;
 
       expect(rule.until!.toISOString()).to.equal('2026-03-07T05:00:00.000Z'); // midnight, March 7th

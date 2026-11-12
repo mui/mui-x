@@ -115,10 +115,7 @@ export default function ExternalDragAndDrop() {
           return;
         }
 
-        const {
-          displayTimezone: { start, end },
-          ...eventData
-        } = data.originalOccurrence;
+        const { start, end, ...eventData } = data.originalOccurrence;
 
         setPlaceholder({
           ...eventData,

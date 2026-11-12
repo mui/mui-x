@@ -664,9 +664,7 @@ describe('EventCalendar', () => {
       expect(onEventEditingStart.mock.lastCall?.[1].event.type).to.equal('click');
       const draft = onEventEditingStart.mock.lastCall?.[1].occurrence;
       expect(draft.allDay).to.equal(true);
-      expect(draft.displayTimezone.start.timestamp).to.be.lessThan(
-        draft.displayTimezone.end.timestamp,
-      );
+      expect(draft.start.timestamp).to.be.lessThan(draft.end.timestamp);
       expect(onEventEditingStart.mock.lastCall?.[1].trigger).to.equal(
         withinMonthView().getAllByRole('gridcell')[10],
       );

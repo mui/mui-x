@@ -101,8 +101,8 @@ function resolveDates(
 }
 
 function resolveProcessedEventDates(processedEvent: SchedulerProcessedEvent): ResolvedDates {
-  const { start, end, timezone } = processedEvent.dataTimezone;
-  return resolveDates(start.timestamp, end.timestamp, timezone, processedEvent.allDay ?? false);
+  const { dataStart, dataEnd } = processedEvent.unstable_internalInfos;
+  return resolveDates(dataStart, dataEnd, processedEvent.timezone, processedEvent.allDay ?? false);
 }
 
 // The range of `Date`.
@@ -309,8 +309,12 @@ export function computeAutoSchedulingCascade(
       return resolveEventDate(nextString, nextTimezone, entry.id).getTime();
     };
     const dates = resolveDates(
-      resolveEntryTimestamp(entry.start, model.start, processedEvent.dataTimezone.start.timestamp),
-      resolveEntryTimestamp(entry.end, model.end, processedEvent.dataTimezone.end.timestamp),
+      resolveEntryTimestamp(
+        entry.start,
+        model.start,
+        processedEvent.unstable_internalInfos.dataStart,
+      ),
+      resolveEntryTimestamp(entry.end, model.end, processedEvent.unstable_internalInfos.dataEnd),
       nextTimezone,
       allDay,
     );

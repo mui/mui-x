@@ -35,7 +35,7 @@ export function getOccurrenceEnd({
   event: SchedulerProcessedEvent;
   occurrenceStart: TemporalSupportedObject;
 }): TemporalSupportedObject {
-  const durationMs = event.dataTimezone.end.timestamp - event.dataTimezone.start.timestamp;
+  const durationMs = event.unstable_internalInfos.dataEnd - event.unstable_internalInfos.dataStart;
   return new Date(occurrenceStart.getTime() + durationMs);
 }
 

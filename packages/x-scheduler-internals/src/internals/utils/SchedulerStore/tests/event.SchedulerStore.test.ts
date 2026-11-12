@@ -1,6 +1,8 @@
 import {
   addDays,
   createDate,
+  createOccurrence,
+  createStoreOccurrence,
   EventBuilder,
   premiumStoreClasses,
   ResourceBuilder,
@@ -130,12 +132,10 @@ storeClasses.forEach((storeClass) => {
         expect(event).to.deep.contain({
           id: '1',
           title: 'Event 1',
-          displayTimezone: {
-            start: processDate(createDate('2025-07-01T09:00:00.000Z'), 'default'),
-            end: processDate(createDate('2025-07-01T10:00:00.000Z'), 'default'),
-            timezone: 'default',
-            exDates: undefined,
-          },
+          start: processDate(createDate('2025-07-01T09:00:00.000Z'), 'default'),
+          end: processDate(createDate('2025-07-01T10:00:00.000Z'), 'default'),
+          timezone: 'default',
+          exDates: undefined,
           allDay: false,
         });
       });
@@ -379,7 +379,8 @@ storeClasses.forEach((storeClass) => {
             onEventsChange,
           });
           const dataStart = new Date(
-            schedulerEventSelectors.processedEvent(store.state, '1')!.dataTimezone.start.timestamp,
+            schedulerEventSelectors.processedEvent(store.state, '1')!.unstable_internalInfos
+              .dataStart,
           );
 
           let result: ReturnType<typeof store.updateEvent>;
@@ -1081,8 +1082,7 @@ storeClasses.forEach((storeClass) => {
           expect(onEventsChange.mock.calls.length).to.equal(0);
           expect(store.state.pendingRecurringEventOperation).to.deep.include({
             kind: 'delete',
-            eventId: event.id,
-            occurrenceStart: new Date(occurrence.dataTimezone.start.timestamp),
+            occurrence,
           });
 
           store.selectRecurringEventScope('only-this');
@@ -1155,8 +1155,7 @@ storeClasses.forEach((storeClass) => {
             onEventsChange,
           });
           store.deleteRecurringEvent({
-            eventId: 'gone',
-            occurrenceStart: createDate('2025-05-26T10:00:00'),
+            occurrence: EventBuilder.new().id('gone').toOccurrence(),
             onSubmit,
           });
           expect(store.state.pendingRecurringEventOperation).to.not.equal(null);
@@ -2121,7 +2120,7 @@ storeClasses.forEach((storeClass) => {
 
           expect(() => {
             store.updateRecurringEvent({
-              occurrenceStart: createDate(event.start as string),
+              occurrence: createStoreOccurrence(store, event.id, createDate(event.start as string)),
               changes: { id: event.id, title: 'updated' },
             });
           }).toWarnDev([
@@ -2168,13 +2167,16 @@ premiumStoreClasses.forEach((storeClass) => {
           onEventsChange,
         });
         const occurrence = schedulerEventSelectors.processedEventRequired(store.state, 'report');
-        expect(occurrence.dataTimezone.rrule!.byMonthDay).to.deep.equal([3]);
+        expect(occurrence.rrule!.byMonthDay).to.deep.equal([3]);
 
         store.updateRecurringEvent({
-          occurrenceStart: new Date(occurrence.dataTimezone.start.timestamp),
+          occurrence: createOccurrence(
+            occurrence,
+            new Date(occurrence.unstable_internalInfos.dataStart),
+          ),
           changes: {
             id: 'report',
-            rrule: { ...occurrence.dataTimezone.rrule!, count: 5 },
+            rrule: { ...occurrence.rrule!, count: 5 },
           },
         });
         store.selectRecurringEventScope('all');
@@ -2210,7 +2212,11 @@ premiumStoreClasses.forEach((storeClass) => {
           });
 
           store.updateRecurringEvent({
-            occurrenceStart: createDate('2025-07-20T00:00:00', 'UTC'),
+            occurrence: createStoreOccurrence(
+              store,
+              'report',
+              createDate('2025-07-20T00:00:00', 'UTC'),
+            ),
             changes: {
               id: 'report',
               rrule: { freq: 'MONTHLY', interval: 1, byMonthDay: [20] },

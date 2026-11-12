@@ -2,6 +2,7 @@ import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   TemporalSupportedObject,
   SchedulerProcessedEvent,
+  SchedulerProcessedEventInternalInfos,
   SchedulerProcessedDate,
   SchedulerProcessedDay,
   SchedulerEventOccurrence,
@@ -16,22 +17,31 @@ import type { SchedulerEventRangeIndex } from './event-range-index';
 
 /**
  * Whether the occurrence is a persisted event occurrence, as opposed to a
- * placeholder (creation draft, drag preview) that has no `dataTimezone`.
+ * placeholder (creation draft, drag preview) that has no data instants.
  */
 export function isEventOccurrence(
   occurrence: SchedulerRenderableEventOccurrence,
 ): occurrence is SchedulerEventOccurrence {
-  return 'dataTimezone' in occurrence;
+  return 'dataStart' in occurrence.unstable_internalInfos;
 }
 
 /**
- * The occurrence in the data timezone, the identity recurring drag updates target;
- * placeholders have none.
+ * The internal values of an occurrence, with its instants in the data timezone, the identity
+ * recurring drag updates target; placeholders have none.
  */
-export function getOccurrenceDataTimezone(
+export function getOccurrenceInternalInfos(
   occurrence: SchedulerRenderableEventOccurrence,
-): SchedulerEventOccurrence['dataTimezone'] | undefined {
-  return isEventOccurrence(occurrence) ? occurrence.dataTimezone : undefined;
+): SchedulerProcessedEventInternalInfos | undefined {
+  return isEventOccurrence(occurrence) ? occurrence.unstable_internalInfos : undefined;
+}
+
+/**
+ * The timestamp of a bound of an event or occurrence, in its data timezone.
+ */
+export function getDataTimestamp(event: SchedulerProcessedEvent, bound: 'start' | 'end'): number {
+  return bound === 'start'
+    ? event.unstable_internalInfos.dataStart
+    : event.unstable_internalInfos.dataEnd;
 }
 
 /**
@@ -75,7 +85,7 @@ export function generateOccurrenceFromEvent({
   occurrenceKey,
   start,
   end,
-  dataTimezone,
+  internalInfos,
 }: {
   event: SchedulerProcessedEvent;
   eventId: SchedulerEventId;
@@ -83,24 +93,21 @@ export function generateOccurrenceFromEvent({
   start: SchedulerProcessedDate;
   end: SchedulerProcessedDate;
   /**
-   * The occurrence in the data timezone; only its bounds are read. Defaults to the display
-   * `start`/`end`, a fallback only placeholder occurrences may rely on.
+   * The internal values of the occurrence, with its instants in the data timezone. Defaults to the
+   * display `start`/`end`, a fallback only placeholder occurrences may rely on.
    */
-  dataTimezone?: SchedulerEventOccurrence['dataTimezone'];
+  internalInfos?: SchedulerProcessedEventInternalInfos;
 }): SchedulerEventOccurrence {
   return {
     ...event,
     id: eventId,
     key: occurrenceKey,
-    displayTimezone: {
-      ...event?.displayTimezone,
-      start,
-      end,
-    },
-    dataTimezone: {
-      ...event?.dataTimezone,
-      start: dataTimezone?.start ?? start,
-      end: dataTimezone?.end ?? end,
+    start,
+    end,
+    unstable_internalInfos: internalInfos ?? {
+      displayTimezone: event.unstable_internalInfos.displayTimezone,
+      dataStart: start.timestamp,
+      dataEnd: end.timestamp,
     },
   };
 }
@@ -114,7 +121,8 @@ export function getDaysTheOccurrenceIsVisibleOn(
   days: SchedulerProcessedDay[],
   dayNumbers: readonly number[],
 ) {
-  const { start, end, timezone } = event.displayTimezone;
+  const { start, end } = event;
+  const timezone = event.unstable_internalInfos.displayTimezone;
   const startDayNumber = toLocalDayNumber(start.timestamp, timezone);
   const endDayNumber = toLocalDayNumber(end.timestamp, timezone);
 
@@ -155,7 +163,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
     }
 
     // STEP 2: Recurrent event processing, if it is recurrent expand it for the visible days
-    if (event.dataTimezone.rrule) {
+    if (event.rrule) {
       // Without the premium recurring-events plugin attached, recurring events
       // are not expanded into occurrences — they are treated as single non-recurring events.
       if (recurringEventsPlugin == null) {

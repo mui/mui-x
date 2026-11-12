@@ -39,7 +39,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     // Internal props
     start,
     end,
-    dataTimezone,
+    internalInfos,
     eventId,
     occurrenceKey,
     renderDragPreview,
@@ -102,7 +102,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     occurrenceKey,
     start,
     end,
-    dataTimezone,
+    internalInfos,
   });
 
   const getSharedDragData: CalendarGridDayEventContext['getSharedDragData'] = useStableCallback(
@@ -189,7 +189,7 @@ export namespace CalendarGridDayEvent {
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
       useDraggableEvent.PublicParameters,
-      Pick<useOriginalOccurrence.Parameters, 'dataTimezone'> {}
+      Pick<useOriginalOccurrence.Parameters, 'internalInfos'> {}
 
   export interface SharedDragData {
     eventId: SchedulerEventId;

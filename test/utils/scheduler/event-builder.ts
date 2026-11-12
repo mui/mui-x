@@ -10,13 +10,20 @@ import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
   SchedulerEventSide,
+  SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models/event';
 import { processEvent, resolveEventDate } from '@mui/x-scheduler-internals/process-event';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import type { SchedulerState } from '@mui/x-scheduler-internals/internals';
 import {
   schedulerRecurringEventsPlugin,
   getWeekDayCode,
 } from '@mui/x-scheduler-internals-premium/internals';
-import { toPlainDate } from '@mui/x-scheduler-internals/internals';
+import {
+  createProcessedDate,
+  getRecurringOccurrenceKey,
+  toPlainDate,
+} from '@mui/x-scheduler-internals/internals';
 import type { TemporalAdapter, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { adapter as defaultAdapter } from './adapters';
 import { addMinutes, createDate, endOfDay, startOfDay } from './dates';
@@ -265,7 +272,7 @@ export class EventBuilder {
       schedulerRecurringEventsPlugin,
     );
     const originalDurationMs =
-      baseProcessed.dataTimezone.end.timestamp - baseProcessed.dataTimezone.start.timestamp;
+      baseProcessed.unstable_internalInfos.dataEnd - baseProcessed.unstable_internalInfos.dataStart;
     const rawEnd = new Date(rawStart.getTime() + originalDurationMs);
 
     const occurrenceModel: SchedulerEvent = {
@@ -300,4 +307,38 @@ export class EventBuilder {
     const { id, ...rest } = this.event;
     return rest;
   }
+}
+
+/**
+ * The occurrence of a processed event that starts at `occurrenceStart`, read in the timezone of
+ * the event, with the duration of the event.
+ */
+export function createOccurrence(
+  event: SchedulerProcessedEvent,
+  occurrenceStart: Date,
+): SchedulerEventOccurrence {
+  const { dataStart, dataEnd, displayTimezone } = event.unstable_internalInfos;
+  const startMs = occurrenceStart.getTime();
+  const endMs = startMs + dataEnd - dataStart;
+  return {
+    ...event,
+    key: getRecurringOccurrenceKey(event.id, occurrenceStart, event.timezone),
+    start: createProcessedDate(startMs, displayTimezone),
+    end: createProcessedDate(endMs, displayTimezone),
+    unstable_internalInfos: { displayTimezone, dataStart: startMs, dataEnd: endMs },
+  };
+}
+
+/**
+ * The occurrence of an event of a store that starts at `occurrenceStart`.
+ */
+export function createStoreOccurrence(
+  store: { state: SchedulerState },
+  eventId: SchedulerEventId,
+  occurrenceStart: Date,
+): SchedulerEventOccurrence {
+  return createOccurrence(
+    schedulerEventSelectors.processedEvent(store.state, eventId)!,
+    occurrenceStart,
+  );
 }

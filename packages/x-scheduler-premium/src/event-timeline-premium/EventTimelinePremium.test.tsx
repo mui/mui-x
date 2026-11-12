@@ -1272,9 +1272,9 @@ describe('<EventTimelinePremium />', () => {
 
         expect(onEventEditingStart.mock.calls.length).to.equal(1);
         const occurrence = onEventEditingStart.mock.lastCall![0];
-        expect(occurrence.displayTimezone.timezone).to.equal(timezone);
+        expect(occurrence.unstable_internalInfos.displayTimezone).to.equal(timezone);
         // The creation starts at the first instant of the preset, at midnight.
-        expect(occurrence.displayTimezone.start.minutesInDay).to.equal(0);
+        expect(occurrence.start.minutesInDay).to.equal(0);
       },
     );
   });

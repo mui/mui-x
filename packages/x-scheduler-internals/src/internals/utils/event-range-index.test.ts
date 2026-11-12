@@ -97,14 +97,10 @@ describe('createEventRangeIndex', () => {
       const start = addDays(firstDay, 5);
       const end = addDays(start, matchCount - 1);
       const rangeMatches = events.filter(
-        (event) =>
-          event.displayTimezone.start.timestamp <= end.getTime() &&
-          event.displayTimezone.end.timestamp >= start.getTime(),
+        (event) => event.start.timestamp <= end.getTime() && event.end.timestamp >= start.getTime(),
       );
       expect(rangeMatches).to.have.length(matchCount);
-      const expected = events.filter(
-        (event) => event.dataTimezone.rrule || rangeMatches.includes(event),
-      );
+      const expected = events.filter((event) => event.rrule || rangeMatches.includes(event));
 
       expect(
         createEventRangeIndex(events, true).getEventsForRange(start.getTime(), end.getTime()),
@@ -180,8 +176,8 @@ describe('createEventRangeIndex', () => {
         const rangeEnd = addDays(rangeStart, width);
         const expected = events.filter(
           (event) =>
-            event.displayTimezone.start.timestamp <= rangeEnd.getTime() &&
-            event.displayTimezone.end.timestamp >= rangeStart.getTime(),
+            event.start.timestamp <= rangeEnd.getTime() &&
+            event.end.timestamp >= rangeStart.getTime(),
         );
 
         expect(index.getEventsForRange(rangeStart.getTime(), rangeEnd.getTime())).to.deep.equal(
@@ -205,8 +201,7 @@ describe('createEventRangeIndex', () => {
     const rangeEnd = addDays(firstDay, 30);
     const expected = events.filter(
       (event) =>
-        event.displayTimezone.start.timestamp <= rangeEnd.getTime() &&
-        event.displayTimezone.end.timestamp >= rangeStart.getTime(),
+        event.start.timestamp <= rangeEnd.getTime() && event.end.timestamp >= rangeStart.getTime(),
     );
 
     expect(expected.length).to.be.greaterThan(
@@ -231,8 +226,7 @@ describe('createEventRangeIndex', () => {
     const rangeEnd = addDays(firstDay, 45);
     const expected = events.filter(
       (event) =>
-        event.displayTimezone.start.timestamp <= rangeEnd.getTime() &&
-        event.displayTimezone.end.timestamp >= rangeStart.getTime(),
+        event.start.timestamp <= rangeEnd.getTime() && event.end.timestamp >= rangeStart.getTime(),
     );
 
     expect(expected.length).to.be.lessThan(events.length * EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD);

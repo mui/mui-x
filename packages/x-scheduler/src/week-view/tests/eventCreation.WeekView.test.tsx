@@ -85,17 +85,17 @@ describe('<WeekView /> event creation', () => {
     it('should pass a creation in the time grid to `onEventEditingStart` in the display timezone', async () => {
       const occurrence = await createWithKeyboard(eventCalendarClasses.dayTimeGridColumn);
 
-      expect(occurrence.displayTimezone.timezone).to.equal(timezone);
+      expect(occurrence.unstable_internalInfos.displayTimezone).to.equal(timezone);
       // The creation starts at noon.
-      expect(occurrence.displayTimezone.start.minutesInDay).to.equal(12 * 60);
+      expect(occurrence.start.minutesInDay).to.equal(12 * 60);
     });
 
     it('should pass a creation in the day grid to `onEventEditingStart` in the display timezone', async () => {
       const occurrence = await createWithKeyboard(eventCalendarClasses.dayTimeGridAllDayEventsCell);
 
-      expect(occurrence.displayTimezone.timezone).to.equal(timezone);
+      expect(occurrence.unstable_internalInfos.displayTimezone).to.equal(timezone);
       // The creation ends on the last minute of its day.
-      expect(occurrence.displayTimezone.end.minutesInDay).to.equal(24 * 60 - 1);
+      expect(occurrence.end.minutesInDay).to.equal(24 * 60 - 1);
     });
   });
 });

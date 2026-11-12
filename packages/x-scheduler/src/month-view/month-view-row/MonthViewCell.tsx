@@ -267,7 +267,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
             }
 
             // `day.timestamp` is the first instant of the day.
-            const startsBeforeThisDay = occurrence.displayTimezone.start.timestamp < day.timestamp;
+            const startsBeforeThisDay = occurrence.start.timestamp < day.timestamp;
 
             return (
               <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>

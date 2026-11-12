@@ -29,28 +29,16 @@ interface SchedulerProcessedEventBase {
   title: string;
 
   /**
-   * Values prepared for rendering and user interaction, read in the display timezone.
+   * The start date and time of the event, as rendered in the display timezone.
+   * For all day events, this value is normalized to the start of the day in the display timezone.
    */
-  displayTimezone: {
-    /**
-     * The start date and time of the event.
-     * For all day events, this value is normalized to the start of the day in the display timezone.
-     */
-    start: SchedulerProcessedDate;
-    /**
-     * The end date and time of the event.
-     * For all day events, this value is normalized to the end of the day in the display timezone.
-     */
-    end: SchedulerProcessedDate;
-    /**
-     * The timezone of the event dates.
-     * */
-    timezone: TemporalTimezone;
-    /**
-     * The exception dates, the instants of `dataTimezone.exDates` in the display timezone.
-     */
-    exDates?: BaseTemporal.ZonedDateTime[];
-  };
+  start: SchedulerProcessedDate;
+
+  /**
+   * The end date and time of the event, as rendered in the display timezone.
+   * For all day events, this value is normalized to the end of the day in the display timezone.
+   */
+  end: SchedulerProcessedDate;
 
   /**
    * Whether the event is an all-day event.
@@ -67,6 +55,37 @@ interface SchedulerProcessedEventBase {
    * A custom class name to apply to the event element.
    */
   className?: string;
+
+  /**
+   * Values the Scheduler computes for its internal work. They can change in any version.
+   */
+  unstable_internalInfos: SchedulerProcessedEventDraftInternalInfos;
+}
+
+/**
+ * Values the Scheduler computes for its internal work on drafts. They can change in any version.
+ */
+export interface SchedulerProcessedEventDraftInternalInfos {
+  /**
+   * The display timezone that `start` and `end` were read in.
+   */
+  displayTimezone: TemporalTimezone;
+}
+
+/**
+ * Values the Scheduler computes for its internal work. They can change in any version.
+ */
+export interface SchedulerProcessedEventInternalInfos extends SchedulerProcessedEventDraftInternalInfos {
+  /**
+   * The timestamp of the start of the event, read in its timezone.
+   * It only differs from `start.timestamp` for all-day events.
+   */
+  dataStart: number;
+  /**
+   * The timestamp of the end of the event, read in its timezone.
+   * It only differs from `end.timestamp` for all-day events.
+   */
+  dataEnd: number;
 }
 
 /**
@@ -75,8 +94,8 @@ interface SchedulerProcessedEventBase {
  * This represents a real event that exists in the calendar and is fully
  * normalized by the store for rendering and interactions.
  *
- * - Uses `displayTimezone` values for UI rendering.
- * - Uses `dataTimezone` values for canonical logic (comparisons, recurrence expansion, etc.).
+ * - `start` and `end` are read in the display timezone, for rendering.
+ * - `timezone`, `rrule` and `exDates` are the event's own data, read in its timezone.
  * - Always includes `modelInBuiltInFormat` (unlike drafts/placeholders).
  */
 export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
@@ -86,35 +105,22 @@ export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
   description?: string;
 
   /**
-   * Canonical data used for logic (recurrence expansion, comparisons, etc.)
-   * Always expressed in the event data timezone.
+   * The timezone of the event, which its recurrence rule and exception dates are read in.
    */
+  timezone: TemporalTimezone;
 
-  dataTimezone: {
-    /**
-     * The start date and time of the event.
-     */
-    start: SchedulerProcessedDate;
-    /**
-     * The end date and time of the event.
-     */
-    end: SchedulerProcessedDate;
-    /**
-     * The timezone of the event dates.
-     * */
-    timezone: TemporalTimezone;
-    /**
-     * The recurrence rule for the event, expressed in the event's timezone (RFC 5545 evaluates
-     * it as local time in the DTSTART timezone). The event dialog reads and writes it there.
-     * If not defined, the event will have only one occurrence.
-     */
-    rrule?: SchedulerProcessedEventRecurrenceRule;
-    /**
-     * Exception dates for the event, in the data timezone.
-     * These dates will be excluded from the recurrence.
-     */
-    exDates?: BaseTemporal.ZonedDateTime[];
-  };
+  /**
+   * The recurrence rule for the event, expressed in the event's timezone (RFC 5545 evaluates
+   * it as local time in the DTSTART timezone). The event dialog reads and writes it there.
+   * If not defined, the event will have only one occurrence.
+   */
+  rrule?: SchedulerProcessedEventRecurrenceRule;
+
+  /**
+   * Exception dates for the event, in its timezone.
+   * These dates will be excluded from the recurrence.
+   */
+  exDates?: BaseTemporal.ZonedDateTime[];
 
   /**
    * The event model in the `SchedulerEvent` format.
@@ -157,6 +163,11 @@ export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
    * If not defined, the event is resizable if the `areEventsResizable` property is enabled.
    */
   resizable?: boolean | SchedulerEventSide;
+
+  /**
+   * Values the Scheduler computes for its internal work. They can change in any version.
+   */
+  unstable_internalInfos: SchedulerProcessedEventInternalInfos;
 }
 
 /**
@@ -164,7 +175,7 @@ export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
  *
  * This represents transient data such as placeholders and drag/resize previews.
  * It shares the same base shape as processed events for rendering, but it is not
- * a persisted calendar event and does not include canonical data (`dataTimezone`)
+ * a persisted calendar event and does not include the event's own data (`timezone`, `rrule`)
  * nor a `modelInBuiltInFormat`.
  */
 export interface SchedulerProcessedEventDraft extends SchedulerProcessedEventBase {}

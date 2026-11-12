@@ -31,7 +31,7 @@ describe('<TimelineGrid.EventResizeHandler />', () => {
                   <TimelineGrid.Event
                     eventId="fake-id"
                     occurrenceKey="fake-key"
-                    dataTimezone={undefined}
+                    internalInfos={undefined}
                     start={start}
                     end={end}
                     renderDragPreview={() => null}
@@ -65,7 +65,7 @@ describe('<TimelineGrid.EventResizeHandler />', () => {
                   <TimelineGrid.Event
                     eventId="fake-id"
                     occurrenceKey="fake-key"
-                    dataTimezone={undefined}
+                    internalInfos={undefined}
                     start={processDate(eventStart, 'default')}
                     end={processDate(eventEnd, 'default')}
                     renderDragPreview={() => null}

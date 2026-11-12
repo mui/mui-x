@@ -205,8 +205,8 @@ export function createDependencyAnchorResolver(
     // so the hours the window hides at the start of the first day and the end of the
     // last day also come before or after what is on screen.
     const position = computeElementPositionInCollection({
-      start: event.displayTimezone.start,
-      end: event.displayTimezone.end,
+      start: event.start,
+      end: event.end,
       collection: axis,
       durationMs,
     });
@@ -267,8 +267,8 @@ export function createDependencyAnchorResolver(
     let position = positionCache.get(occurrence.key);
     if (position == null) {
       position = computeElementPositionInCollection({
-        start: occurrence.displayTimezone.start,
-        end: occurrence.displayTimezone.end,
+        start: occurrence.start,
+        end: occurrence.end,
         collection: axis,
         durationMs,
       });

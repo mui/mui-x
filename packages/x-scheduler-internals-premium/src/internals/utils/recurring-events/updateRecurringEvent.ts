@@ -9,6 +9,7 @@ import type {
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
+  SchedulerEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
 import type { BaseTemporal, UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
 import {
@@ -34,21 +35,21 @@ import { RecurringSeries } from './RecurringSeries';
 
 export function updateRecurringEvent(
   originalEvent: SchedulerProcessedEvent,
-  occurrenceStart: TemporalSupportedObject,
+  occurrence: SchedulerEventOccurrence,
   changes: SchedulerEventUpdatedProperties,
   scope: RecurringEventScope,
 ) {
   switch (scope) {
     case 'this-and-following': {
-      return applyRecurringUpdateFollowing(originalEvent, occurrenceStart, changes);
+      return applyRecurringUpdateFollowing(originalEvent, occurrence, changes);
     }
 
     case 'all': {
-      return applyRecurringUpdateAll(originalEvent, occurrenceStart, changes);
+      return applyRecurringUpdateAll(originalEvent, occurrence, changes);
     }
 
     case 'only-this': {
-      return applyRecurringUpdateOnlyThis(originalEvent, occurrenceStart, changes);
+      return applyRecurringUpdateOnlyThis(originalEvent, occurrence, changes);
     }
 
     default: {
@@ -70,9 +71,10 @@ export function updateRecurringEvent(
  */
 export function applyRecurringUpdateFollowing(
   originalEvent: SchedulerProcessedEvent,
-  occurrenceStart: TemporalSupportedObject,
+  occurrence: SchedulerEventOccurrence,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
+  const occurrenceStart = new Date(occurrence.unstable_internalInfos.dataStart);
   const newStart = changes.start ?? occurrenceStart;
 
   // 1) New event: apply changes, decide RRULE for the new series
@@ -123,7 +125,7 @@ export function applyRecurringUpdateFollowing(
   // 2) Old series: truncated to end the day before the edited occurrence, like a deletion.
   return {
     created: [newEvent],
-    ...applyRecurringDeleteFollowing(originalEvent, occurrenceStart),
+    ...applyRecurringDeleteFollowing(originalEvent, occurrence),
   };
 }
 
@@ -141,13 +143,14 @@ export function applyRecurringUpdateFollowing(
  */
 export function applyRecurringUpdateAll(
   originalEvent: SchedulerProcessedEvent,
-  occurrenceStart: TemporalSupportedObject,
+  occurrence: SchedulerEventOccurrence,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
+  const occurrenceStart = new Date(occurrence.unstable_internalInfos.dataStart);
   const eventUpdatedProperties: SchedulerEventUpdatedProperties = { ...changes };
 
   // 1) Detect if caller changed the date part of start or end (vs only time)
-  const dataTimezone = originalEvent.dataTimezone.timezone;
+  const dataTimezone = originalEvent.timezone;
   const occurrenceEnd = getOccurrenceEnd({ occurrenceStart, event: originalEvent });
   const occurrencePlainDate = toPlainDate(occurrenceStart.getTime(), dataTimezone);
   const touchedStartDate =
@@ -160,8 +163,8 @@ export function applyRecurringUpdateAll(
     );
 
   // 2) Is the edited occurrence the first of the series (DTSTART)?
-  const seriesStart = originalEvent.dataTimezone.start;
-  const seriesStartPlainDate = toPlainDate(seriesStart.timestamp, dataTimezone);
+  const seriesStartMs = originalEvent.unstable_internalInfos.dataStart;
+  const seriesStartPlainDate = toPlainDate(seriesStartMs, dataTimezone);
   const editedIsDtstart = occurrencePlainDate.equals(seriesStartPlainDate);
 
   // 3) Decide new start/end: editing the first occurrence keeps the instants of the changes, which
@@ -170,7 +173,7 @@ export function applyRecurringUpdateAll(
   // for the end, to its first instant at or after the start. Only the bounds in `changes` are
   // written, so that the other one keeps its instant.
   if (!editedIsDtstart) {
-    let startMs = seriesStart.timestamp;
+    let startMs = seriesStartMs;
     if (changes.start != null) {
       startMs = moveTimestampToPlainDate(
         changes.start.getTime(),
@@ -182,7 +185,7 @@ export function applyRecurringUpdateAll(
     if (changes.end != null) {
       eventUpdatedProperties.end = moveEndToPlainDate(
         changes.end,
-        toPlainDate(originalEvent.dataTimezone.end.timestamp, dataTimezone),
+        toPlainDate(originalEvent.unstable_internalInfos.dataEnd, dataTimezone),
         startMs,
         dataTimezone,
       );
@@ -192,14 +195,10 @@ export function applyRecurringUpdateAll(
   // 4) RRULE adjustment: only if day changed, the event is recurring, and the user did not
   // provide an explicit rrule (same hasOwnProperty guard used in decideSplitRRule).
   const hasExplicitRRule = Object.prototype.hasOwnProperty.call(changes, 'rrule');
-  if (
-    (touchedStartDate || touchedEndDate) &&
-    originalEvent.dataTimezone.rrule &&
-    !hasExplicitRRule
-  ) {
+  if ((touchedStartDate || touchedEndDate) && originalEvent.rrule && !hasExplicitRRule) {
     const newOccurrenceStart = changes.start ?? occurrenceStart;
     eventUpdatedProperties.rrule = adjustRRuleForAllMove(
-      originalEvent.dataTimezone.rrule,
+      originalEvent.rrule,
       occurrenceStart,
       newOccurrenceStart,
       dataTimezone,
@@ -221,9 +220,10 @@ export function applyRecurringUpdateAll(
  */
 export function applyRecurringUpdateOnlyThis(
   originalEvent: SchedulerProcessedEvent,
-  occurrenceStart: TemporalSupportedObject,
+  occurrence: SchedulerEventOccurrence,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
+  const occurrenceStart = new Date(occurrence.unstable_internalInfos.dataStart);
   const originalModel = originalEvent.modelInBuiltInFormat;
   const dataTimezone = originalModel.timezone ?? 'default';
   const stringifiedChanges: Partial<SchedulerEventCreationProperties> = { ...changes };
@@ -237,7 +237,7 @@ export function applyRecurringUpdateOnlyThis(
   // The original series excludes the occurrence, like a deletion.
   return {
     created: [extractStandaloneEvent(originalEvent, stringifiedChanges)],
-    ...applyRecurringDeleteOnlyThis(originalEvent, occurrenceStart),
+    ...applyRecurringDeleteOnlyThis(originalEvent, occurrence),
   };
 }
 
@@ -314,8 +314,8 @@ export function decideSplitRRule(
   splitStart: TemporalSupportedObject,
   changes: Partial<SchedulerEventUpdatedProperties>,
 ): SchedulerProcessedEventRecurrenceRule | string | undefined {
-  const originalRule = originalEvent.dataTimezone.rrule!;
-  const dataTimezone = originalEvent.dataTimezone.timezone;
+  const originalRule = originalEvent.rrule!;
+  const dataTimezone = originalEvent.timezone;
   // Detect whether user touched rrule at all
   const hasRRuleProp = Object.prototype.hasOwnProperty.call(changes, 'rrule');
   const changesRRule = changes.rrule;

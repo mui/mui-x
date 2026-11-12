@@ -61,7 +61,7 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
     ) => {
       // Read while the anchor is still mounted.
       const occurrenceTimestamp = isEventOccurrence(occurrence)
-        ? occurrence.dataTimezone.start.timestamp
+        ? occurrence.unstable_internalInfos.dataStart
         : 0;
       const snapshot = captureFocusFallback(anchorEl, occurrence.id, occurrenceTimestamp);
       setState({

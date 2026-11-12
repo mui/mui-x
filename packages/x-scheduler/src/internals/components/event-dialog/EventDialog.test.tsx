@@ -170,11 +170,9 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       const occurrence = builder.toOccurrence();
       const snapshot = {
         ...occurrence,
-        displayTimezone: {
-          ...occurrence.displayTimezone,
-          start: processDate(new Date(occurrence.dataTimezone.start.timestamp), displayTimezone),
-          end: processDate(new Date(occurrence.dataTimezone.end.timestamp), displayTimezone),
-        },
+        start: processDate(new Date(occurrence.unstable_internalInfos.dataStart), displayTimezone),
+        end: processDate(new Date(occurrence.unstable_internalInfos.dataEnd), displayTimezone),
+        unstable_internalInfos: { ...occurrence.unstable_internalInfos, displayTimezone },
       };
 
       const { user } = render(

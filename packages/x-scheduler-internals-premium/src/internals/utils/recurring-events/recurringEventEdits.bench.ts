@@ -1,6 +1,6 @@
 import { describe, test } from 'vitest';
 import type { SchedulerEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
-import { createDate, EventBuilder } from 'test/utils/scheduler';
+import { createDate, createOccurrence, EventBuilder } from 'test/utils/scheduler';
 import { updateRecurringEvent } from './updateRecurringEvent';
 import { deleteRecurringEvent } from './deleteRecurringEvent';
 
@@ -48,7 +48,7 @@ describe('recurring event edits', () => {
           for (const { event, occurrenceStart } of cases) {
             updateRecurringEvent(
               event,
-              occurrenceStart,
+              createOccurrence(event, occurrenceStart),
               { id: event.id, title: 'Renamed' },
               'this-and-following',
             );
@@ -58,14 +58,18 @@ describe('recurring event edits', () => {
       bench('delete only this', () => {
         for (let i = 0; i < REPEAT; i += 1) {
           for (const { event, occurrenceStart } of cases) {
-            deleteRecurringEvent(event, occurrenceStart, 'only-this');
+            deleteRecurringEvent(event, createOccurrence(event, occurrenceStart), 'only-this');
           }
         }
       }),
       bench('delete this and following', () => {
         for (let i = 0; i < REPEAT; i += 1) {
           for (const { event, occurrenceStart } of cases) {
-            deleteRecurringEvent(event, occurrenceStart, 'this-and-following');
+            deleteRecurringEvent(
+              event,
+              createOccurrence(event, occurrenceStart),
+              'this-and-following',
+            );
           }
         }
       }),

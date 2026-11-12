@@ -32,8 +32,8 @@ const filterVisibleOccurrences = (axis: TimelineAxis, occurrences: SchedulerEven
   occurrences.filter(
     (occurrence) =>
       computeElementPositionInCollection({
-        start: occurrence.displayTimezone.start,
-        end: occurrence.displayTimezone.end,
+        start: occurrence.start,
+        end: occurrence.end,
         collection: axis,
       }).duration > 0,
   );

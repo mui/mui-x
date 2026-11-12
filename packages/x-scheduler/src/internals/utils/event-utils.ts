@@ -9,7 +9,7 @@ import { addDaysOnWallClock } from '@mui/x-scheduler-internals/internals';
  */
 export function isOccurrenceMultiDay(occurrence: SchedulerRenderableEventOccurrence) {
   // The keys of the processed dates only depend on their day in the display timezone.
-  return occurrence.displayTimezone.start.key !== occurrence.displayTimezone.end.key;
+  return occurrence.start.key !== occurrence.end.key;
 }
 
 export function isOccurrenceAllDayOrMultipleDay(occurrence: SchedulerRenderableEventOccurrence) {
@@ -28,7 +28,8 @@ export function isOccurrenceInDayGrid(
     case 'shorter-than-one-day':
     default: {
       // All-day, or lasts at least a day on the wall clock of the display timezone.
-      const { start, end, timezone } = occurrence.displayTimezone;
+      const { start, end } = occurrence;
+      const timezone = occurrence.unstable_internalInfos.displayTimezone;
       return (
         !!occurrence.allDay || end.timestamp >= addDaysOnWallClock(start.timestamp, 1, timezone)
       );

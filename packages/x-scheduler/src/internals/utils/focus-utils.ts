@@ -147,7 +147,7 @@ export function resolveConnectedFocusFallback(snapshot: FocusFallbackSnapshot): 
 
 /** The start `captureFocusFallback` identifies an occurrence's rows by. */
 export function getOccurrenceTimestamp(occurrence: SchedulerRenderableEventOccurrence): number {
-  return isEventOccurrence(occurrence) ? occurrence.dataTimezone.start.timestamp : 0;
+  return isEventOccurrence(occurrence) ? occurrence.unstable_internalInfos.dataStart : 0;
 }
 
 /**

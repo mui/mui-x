@@ -2,7 +2,7 @@ import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { EventBuilder } from 'test/utils/scheduler/event-builder';
 import { utcJuly4AllDayBuilder } from 'test/utils/scheduler/fixtures';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
-import { toWallClockIsoString } from '@mui/x-scheduler-internals/internals';
+import { toMsInDay, toPlainDate, toWallClockIsoString } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
 
 describe('processEvent', () => {
@@ -22,8 +22,8 @@ describe('processEvent', () => {
 
     const processed = processEvent(event, 'Europe/Paris');
 
-    expect(processed.dataTimezone.timezone).to.equal('default');
-    expect(processed.displayTimezone.timezone).to.equal('Europe/Paris');
+    expect(processed.timezone).to.equal('default');
+    expect(processed.unstable_internalInfos.displayTimezone).to.equal('Europe/Paris');
   });
 
   describe('displayTimezone', () => {
@@ -32,7 +32,7 @@ describe('processEvent', () => {
 
       // Kiritimati is at UTC+14.
       const processed = processEvent(event, 'Pacific/Kiritimati');
-      const { start, end } = processed.displayTimezone;
+      const { start, end } = processed;
       expect(start.key).to.equal('2025-01-02');
       expect(start.minutesInDay).to.equal(0);
       expect(end.minutesInDay).to.equal(120);
@@ -45,10 +45,12 @@ describe('processEvent', () => {
       // July 4th in UTC runs from 20:00 on July 3rd to 19:59 on July 4th in New York.
       const processed = processEvent(utcJuly4AllDayBuilder().build(), 'America/New_York');
 
-      const { start, end } = processed.displayTimezone;
+      const { start, end } = processed;
       expect([start.key, start.minutesInDay]).to.deep.equal(['2025-07-03', 0]);
       expect([end.key, end.minutesInDay]).to.deep.equal(['2025-07-04', 23 * 60 + 59]);
-      expect(processed.dataTimezone.start.key).to.equal('2025-07-04');
+      expect(
+        toPlainDate(processed.unstable_internalInfos.dataStart, processed.timezone).toString(),
+      ).to.equal('2025-07-04');
     });
 
     it('should read an end after 9999 in a timezone east of UTC', () => {
@@ -60,16 +62,21 @@ describe('processEvent', () => {
 
       const processed = processEvent(event, 'Asia/Tokyo');
 
-      expect(processed.dataTimezone.end.key).to.equal('+010000-01-01');
-      expect(processed.displayTimezone.end.key).to.equal('+010000-01-01');
+      expect(
+        toPlainDate(processed.unstable_internalInfos.dataEnd, processed.timezone).toString(),
+      ).to.equal('+010000-01-01');
+      expect(processed.end.key).to.equal('+010000-01-01');
     });
 
-    it('should keep the instants of the exDates', () => {
-      const event = EventBuilder.new().exDates(['2025-01-05T00:00:00Z']).build();
-      const processed = processEvent(event, 'America/New_York');
+    it('should read the instants of the exDates in the timezone of the event', () => {
+      const event = EventBuilder.new()
+        .withDataTimezone('America/New_York')
+        .exDates(['2025-01-05T00:00:00Z'])
+        .build();
+      const processed = processEvent(event, 'Europe/Paris');
 
-      expect(processed.displayTimezone.exDates).to.have.length(1);
-      expect(processed.displayTimezone.exDates![0].toString()).to.equal(
+      expect(processed.exDates).to.have.length(1);
+      expect(processed.exDates![0].toString()).to.equal(
         '2025-01-04T19:00:00-05:00[America/New_York]',
       );
     });
@@ -86,9 +93,7 @@ describe('processEvent', () => {
 
       const processed = processEvent(event, 'Asia/Tokyo', schedulerRecurringEventsPlugin);
 
-      expect(processed.dataTimezone.rrule!.until!.getTime()).to.equal(
-        Date.parse('2025-01-10T23:59:00Z'),
-      );
+      expect(processed.rrule!.until!.getTime()).to.equal(Date.parse('2025-01-10T23:59:00Z'));
     });
 
     it('should parse an rrule string and read its UNTIL as an instant', () => {
@@ -103,9 +108,7 @@ describe('processEvent', () => {
         schedulerRecurringEventsPlugin,
       );
 
-      expect(processed.dataTimezone.rrule!.until!.getTime()).to.equal(
-        Date.parse('2025-01-10T23:00:00Z'),
-      );
+      expect(processed.rrule!.until!.getTime()).to.equal(Date.parse('2025-01-10T23:00:00Z'));
     });
   });
   describe('dataTimezone', () => {
@@ -117,7 +120,7 @@ describe('processEvent', () => {
 
       const processed = processEvent(event, 'Pacific/Kiritimati');
 
-      expect(processed.dataTimezone.timezone).to.equal('America/New_York');
+      expect(processed.timezone).to.equal('America/New_York');
     });
   });
 
@@ -131,10 +134,12 @@ describe('processEvent', () => {
 
       const processed = processEvent(event, 'America/New_York');
 
-      expect(processed.dataTimezone.start.timestamp).to.equal(
+      expect(processed.unstable_internalInfos.dataStart).to.equal(
         new Date('2025-01-01T14:00:00Z').getTime(),
       );
-      expect(processed.dataTimezone.start.minutesInDay).to.equal(9 * 60);
+      expect(toMsInDay(processed.unstable_internalInfos.dataStart, processed.timezone)).to.equal(
+        9 * 3_600_000,
+      );
     });
 
     it('should produce different UTC instants for same wall-time string in different timezones', () => {
@@ -152,13 +157,13 @@ describe('processEvent', () => {
       const processedTokyo = processEvent(eventTokyo, 'UTC');
 
       // 09:00 NY (UTC-5) = 14:00 UTC vs 09:00 Tokyo (UTC+9) = 00:00 UTC
-      expect(processedNY.dataTimezone.start.timestamp).to.not.equal(
-        processedTokyo.dataTimezone.start.timestamp,
+      expect(processedNY.unstable_internalInfos.dataStart).to.not.equal(
+        processedTokyo.unstable_internalInfos.dataStart,
       );
-      expect(processedNY.dataTimezone.start.timestamp).to.equal(
+      expect(processedNY.unstable_internalInfos.dataStart).to.equal(
         new Date('2025-01-01T14:00:00Z').getTime(),
       );
-      expect(processedTokyo.dataTimezone.start.timestamp).to.equal(
+      expect(processedTokyo.unstable_internalInfos.dataStart).to.equal(
         new Date('2025-01-01T00:00:00Z').getTime(),
       );
     });
@@ -173,11 +178,9 @@ describe('processEvent', () => {
 
       const processed = processEvent(event, 'Europe/Paris', schedulerRecurringEventsPlugin);
 
-      expect(processed.dataTimezone.exDates).to.have.length(1);
+      expect(processed.exDates).to.have.length(1);
       // 09:00 NY (UTC-5) = 14:00 UTC
-      expect(processed.dataTimezone.exDates![0].epochMilliseconds).to.equal(
-        Date.parse('2025-01-05T14:00:00Z'),
-      );
+      expect(processed.exDates![0].epochMilliseconds).to.equal(Date.parse('2025-01-05T14:00:00Z'));
     });
 
     it('should read the data-timezone bag in the event timezone for instant strings', () => {
@@ -191,17 +194,18 @@ describe('processEvent', () => {
       const processed = processEvent(event, 'Europe/Paris', schedulerRecurringEventsPlugin);
 
       // Same instants; day and hour reads answer in the event's timezone.
-      expect(processed.dataTimezone.start.timestamp).to.equal(
+      expect(processed.unstable_internalInfos.dataStart).to.equal(
         new Date('2025-01-01T14:00:00Z').getTime(),
       );
       // 14:00 UTC = 09:00 in New York (UTC-5)
-      expect(processed.dataTimezone.start.minutesInDay).to.equal(9 * 60);
-      expect(processed.dataTimezone.end.minutesInDay).to.equal(10 * 60);
+      expect(toMsInDay(processed.unstable_internalInfos.dataStart, processed.timezone)).to.equal(
+        9 * 3_600_000,
+      );
+      expect(toMsInDay(processed.unstable_internalInfos.dataEnd, processed.timezone)).to.equal(
+        10 * 3_600_000,
+      );
       expect(
-        toWallClockIsoString(
-          processed.dataTimezone.exDates![0].epochMilliseconds,
-          processed.dataTimezone.timezone,
-        ),
+        toWallClockIsoString(processed.exDates![0].epochMilliseconds, processed.timezone),
       ).to.equal('2025-01-05T09:00:00');
     });
 
@@ -223,14 +227,14 @@ describe('processEvent', () => {
       const processedAfter = processEvent(eventAfter, 'America/New_York');
 
       // Both should show 09:00 local
-      expect(processedBefore.displayTimezone.start.minutesInDay).to.equal(9 * 60);
-      expect(processedAfter.displayTimezone.start.minutesInDay).to.equal(9 * 60);
+      expect(processedBefore.start.minutesInDay).to.equal(9 * 60);
+      expect(processedAfter.start.minutesInDay).to.equal(9 * 60);
 
       // But different UTC timestamps
-      expect(processedBefore.dataTimezone.start.timestamp).to.equal(
+      expect(processedBefore.unstable_internalInfos.dataStart).to.equal(
         new Date('2025-01-01T14:00:00Z').getTime(),
       );
-      expect(processedAfter.dataTimezone.start.timestamp).to.equal(
+      expect(processedAfter.unstable_internalInfos.dataStart).to.equal(
         new Date('2025-03-10T13:00:00Z').getTime(),
       );
     });
@@ -259,7 +263,7 @@ describe('processEvent', () => {
         'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
       ]);
 
-      expect(processed.dataTimezone.rrule).to.equal(undefined);
+      expect(processed.rrule).to.equal(undefined);
     });
   });
 });

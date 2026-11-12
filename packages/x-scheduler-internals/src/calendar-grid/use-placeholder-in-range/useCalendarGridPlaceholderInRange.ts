@@ -35,11 +35,9 @@ export function useCalendarGridPlaceholderInRange(
       key: 'occurrence-placeholder',
       id: originalEventId ?? 'occurrence-placeholder',
       title: originalEvent ? originalEvent.title : '',
-      displayTimezone: {
-        start: createProcessedDate(rawPlaceholder.start, displayTimezone),
-        end: createProcessedDate(rawPlaceholder.end, displayTimezone),
-        timezone: displayTimezone,
-      },
+      start: createProcessedDate(rawPlaceholder.start, displayTimezone),
+      end: createProcessedDate(rawPlaceholder.end, displayTimezone),
+      unstable_internalInfos: { displayTimezone },
     };
 
     if (rawPlaceholder.type === 'creation') {

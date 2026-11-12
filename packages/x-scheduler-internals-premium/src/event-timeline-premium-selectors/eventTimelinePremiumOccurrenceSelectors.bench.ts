@@ -66,8 +66,8 @@ describe('event timeline resource layout', () => {
           const positionedOccurrences = addLanePositionsToOccurrences(occurrences);
           for (const occurrence of positionedOccurrences) {
             const parameters = {
-              start: occurrence.displayTimezone.start,
-              end: occurrence.displayTimezone.end,
+              start: occurrence.start,
+              end: occurrence.end,
               collection: config,
               durationMs,
             };

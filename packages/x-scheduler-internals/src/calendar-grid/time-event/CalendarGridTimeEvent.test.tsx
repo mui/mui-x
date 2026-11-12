@@ -28,7 +28,7 @@ describe('<CalendarGrid.TimeEvent />', () => {
     <CalendarGrid.TimeEvent
       eventId="fake-id"
       occurrenceKey="fake-key"
-      dataTimezone={undefined}
+      internalInfos={undefined}
       start={eventStart}
       end={eventEnd}
       renderDragPreview={() => null}
@@ -46,7 +46,7 @@ describe('<CalendarGrid.TimeEvent />', () => {
       <CalendarGrid.TimeEvent
         eventId="fake-id"
         occurrenceKey="fake-key"
-        dataTimezone={undefined}
+        internalInfos={undefined}
         start={eventStart}
         end={eventEnd}
         elementPosition={{
@@ -75,7 +75,7 @@ describe('<CalendarGrid.TimeEvent />', () => {
       <CalendarGrid.TimeEvent
         eventId="fake-id"
         occurrenceKey="fake-key"
-        dataTimezone={undefined}
+        internalInfos={undefined}
         start={eventStart}
         end={eventEnd}
         renderDragPreview={() => null}

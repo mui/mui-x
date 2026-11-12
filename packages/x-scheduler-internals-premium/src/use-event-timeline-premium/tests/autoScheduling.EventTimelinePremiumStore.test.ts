@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
   createDate,
+  createStoreOccurrence,
   EventBuilder,
   EventTimelinePremiumStoreWithFeatures,
   ResourceBuilder,
@@ -201,7 +202,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         },
       );
 
-      const edited = store.state.editingOccurrence!.occurrence.displayTimezone;
+      const edited = store.state.editingOccurrence!.occurrence;
       expect(edited.start.value).toEqualDateTime(date('2025-07-03T10:00:00Z'));
       expect(edited.end.value).toEqualDateTime(date('2025-07-03T11:00:00Z'));
     });
@@ -549,7 +550,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         rejection: { code: 'unwritableEventMovedError', params: { title: eventB.title } },
       });
       expect(onEventsChange.mock.calls.length).to.equal(0);
-      expect(store.state.processedEventLookup.get('a')!.dataTimezone.end.timestamp).to.equal(
+      expect(store.state.processedEventLookup.get('a')!.unstable_internalInfos.dataEnd).to.equal(
         date('2025-07-03T10:00:00Z').getTime(),
       );
     });
@@ -663,7 +664,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         });
 
         store.updateRecurringEvent({
-          occurrenceStart: date('2025-07-03T09:00:00Z'),
+          occurrence: createStoreOccurrence(store, 'standup', date('2025-07-03T09:00:00Z')),
           changes: {
             id: 'standup',
             start: date('2025-07-03T09:30:00Z'),

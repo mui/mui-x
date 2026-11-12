@@ -10,7 +10,7 @@ import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premi
 import { describe, it, expect } from 'vitest';
 import {
   generateOccurrenceFromEvent,
-  getOccurrenceDataTimezone,
+  getOccurrenceInternalInfos,
   getDaysTheOccurrenceIsVisibleOn,
   getEventResourceIds,
   getOccurrencesFromEvents,
@@ -275,24 +275,30 @@ describe('event-utils', () => {
     });
   });
 
-  describe('getOccurrenceDataTimezone', () => {
+  describe('getOccurrenceInternalInfos', () => {
     it('should return the dataTimezone of an event occurrence', () => {
       const occurrence = utcJuly4AllDayBuilder()
         .withDisplayTimezone('America/New_York')
         .toOccurrence();
 
-      expect(getOccurrenceDataTimezone(occurrence)).to.equal(occurrence.dataTimezone);
+      expect(getOccurrenceInternalInfos(occurrence)).to.equal(occurrence.unstable_internalInfos);
     });
 
     it('should return undefined for a placeholder occurrence', () => {
-      const { dataTimezone, ...placeholder } = EventBuilder.new().toOccurrence();
+      const occurrence = EventBuilder.new().toOccurrence();
+      const placeholder = {
+        ...occurrence,
+        unstable_internalInfos: {
+          displayTimezone: occurrence.unstable_internalInfos.displayTimezone,
+        },
+      };
 
-      expect(getOccurrenceDataTimezone(placeholder as any)).to.equal(undefined);
+      expect(getOccurrenceInternalInfos(placeholder)).to.equal(undefined);
     });
   });
 
   describe('generateOccurrenceFromEvent', () => {
-    it('should carry the dataTimezone next to the display segment bounds', () => {
+    it('should carry the data instants next to the display segment bounds', () => {
       const processed = utcJuly4AllDayBuilder()
         .withDisplayTimezone('America/New_York')
         .toProcessed();
@@ -301,30 +307,30 @@ describe('event-utils', () => {
         event: processed,
         eventId: processed.id,
         occurrenceKey: 'key',
-        start: processed.displayTimezone.start,
-        end: processed.displayTimezone.end,
-        dataTimezone: processed.dataTimezone,
+        start: processed.start,
+        end: processed.end,
+        internalInfos: processed.unstable_internalInfos,
       });
 
       // Display bounds normalize to New York July 3rd; the data identity stays July 4th.
-      expect(occurrence.displayTimezone.start).to.equal(processed.displayTimezone.start);
-      expect(occurrence.dataTimezone.start.timestamp).to.equal(
+      expect(occurrence.start).to.equal(processed.start);
+      expect(occurrence.unstable_internalInfos.dataStart).to.equal(
         createDate('2025-07-04T00:00:00', 'UTC').getTime(),
       );
     });
 
-    it('should default the dataTimezone bounds to the display bounds when not provided', () => {
+    it('should default the data instants to the display bounds when not provided', () => {
       const processed = EventBuilder.new().singleDay('2025-07-04T09:00:00Z', 30).toProcessed();
 
       const occurrence = generateOccurrenceFromEvent({
         event: processed,
         eventId: processed.id,
         occurrenceKey: 'key',
-        start: processed.displayTimezone.start,
-        end: processed.displayTimezone.end,
+        start: processed.start,
+        end: processed.end,
       });
 
-      expect(occurrence.dataTimezone.start).to.equal(processed.displayTimezone.start);
+      expect(occurrence.unstable_internalInfos.dataStart).to.equal(processed.start.timestamp);
     });
   });
 

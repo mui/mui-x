@@ -13,7 +13,8 @@ import { getDayNumber } from '../internals/utils/plain-date-utils/plainDate';
  * The number of full days an occurrence spans in the display timezone.
  */
 function getDayCount(occurrence: SchedulerEventOccurrence) {
-  const { start, end, timezone } = occurrence.displayTimezone;
+  const { start, end } = occurrence;
+  const timezone = occurrence.unstable_internalInfos.displayTimezone;
   return differenceInDays(end.timestamp, start.timestamp, timezone);
 }
 
@@ -142,13 +143,13 @@ export function useEventOccurrencesWithDayGridPosition(
             // derives the continuation arrow from the event range vs the day.
             // Counts dates rather than full days, as a day whose midnight a DST transition
             // skips starts at 01:00, after the time an occurrence can end on the next day.
-            const { timezone } = occurrence.displayTimezone;
+            const timezone = occurrence.unstable_internalInfos.displayTimezone;
             position = {
               index: smallestAvailableIndex,
               daySpan: getDayGridCellSpan(
                 days,
                 dayIndex,
-                toLocalDayNumber(occurrence.displayTimezone.end.timestamp, timezone),
+                toLocalDayNumber(occurrence.end.timestamp, timezone),
               ),
             };
             activeSegments[occurrence.key] = { position, startDayIndex: dayIndex, hidden: false };

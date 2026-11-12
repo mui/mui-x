@@ -128,9 +128,9 @@ describe('EventContextMenu - recurring events (Premium)', () => {
     // The display bounds of this occurrence normalize to New York July 3rd; the
     // exception must land on the event's own July 4th.
     expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
-    expect(deleteRecurringEventSpy!.mock.lastCall![0].occurrenceStart.getTime()).to.equal(
-      createDate('2025-07-04T00:00:00', 'UTC').getTime(),
-    );
+    expect(
+      deleteRecurringEventSpy!.mock.lastCall![0].occurrence.unstable_internalInfos.dataStart,
+    ).to.equal(createDate('2025-07-04T00:00:00', 'UTC').getTime());
     // The recurring branch defers to the scope dialog instead of deleting right away.
     expect(screen.getByText(/Apply this change to:/i)).not.to.equal(null);
   });

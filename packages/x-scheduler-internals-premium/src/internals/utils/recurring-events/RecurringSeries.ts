@@ -362,14 +362,14 @@ export class RecurringSeries {
    */
   public static fromEvent(
     event: SchedulerProcessedEvent,
-    exDates: readonly number[] | undefined = event.dataTimezone.exDates?.map(
+    exDates: readonly number[] | undefined = event.exDates?.map(
       (exDate) => exDate.epochMilliseconds,
     ),
   ): RecurringSeries {
     return new RecurringSeries({
-      rule: event.dataTimezone.rrule!,
-      start: event.dataTimezone.start.timestamp,
-      timezone: event.dataTimezone.timezone,
+      rule: event.rrule!,
+      start: event.unstable_internalInfos.dataStart,
+      timezone: event.timezone,
       exDates,
     });
   }

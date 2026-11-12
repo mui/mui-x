@@ -28,7 +28,8 @@ export interface GetEventAccessibleNameParameters {
  */
 export function getEventAccessibleName(parameters: GetEventAccessibleNameParameters): string {
   const { occurrence, locale, ampm, localeText, isRecurring, resourceName } = parameters;
-  const { start, end, timezone } = occurrence.displayTimezone;
+  const { start, end } = occurrence;
+  const timezone = occurrence.unstable_internalInfos.displayTimezone;
   const isMultiDay = isOccurrenceMultiDay(occurrence);
 
   const formatDate = (date: SchedulerProcessedDate) =>

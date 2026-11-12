@@ -221,7 +221,7 @@ describe('getRecurrenceRuleBound', () => {
 
   it("should return the occurrence's own bound when it is not resent", () => {
     const start = getRecurrenceRuleBound(occurrence, seeded, false, 'America/New_York', 'start');
-    expect(start).to.equal(occurrence.dataTimezone.start.timestamp);
+    expect(start).to.equal(occurrence.unstable_internalInfos.dataStart);
   });
 
   it('should return the edited bound when it is resent', () => {
@@ -256,7 +256,7 @@ describe('getRecurrenceRuleBound', () => {
       'America/New_York',
       'start',
     );
-    expect(start).to.equal(occurrence.dataTimezone.start.timestamp);
+    expect(start).to.equal(occurrence.unstable_internalInfos.dataStart);
   });
 
   it('should return the end of an edited all-day range', () => {
@@ -277,7 +277,10 @@ describe('getRecurrenceRuleBound', () => {
       .span('2025-07-04T00:00:00Z', '2025-07-04T01:00:00Z')
       .withDisplayTimezone('America/New_York')
       .toOccurrence();
-    const { dataTimezone, ...placeholder } = draft;
+    const placeholder = {
+      ...draft,
+      unstable_internalInfos: { displayTimezone: draft.unstable_internalInfos.displayTimezone },
+    };
     const start = getRecurrenceRuleBound(placeholder, seeded, false, 'America/New_York', 'start');
     // The tests run in UTC, the default timezone: still Friday July 4.
     expect(getEventTimezonePlainDate(placeholder, start)).toEqualPlainDate('2025-07-04');

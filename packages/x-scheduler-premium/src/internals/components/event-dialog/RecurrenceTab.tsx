@@ -229,7 +229,8 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const eventTimezone = getEventTimezone(occurrence);
   const rangeValues = useStore(formStore, eventDialogFormSelectors.rangeValues);
   const ruleBounds = React.useMemo(() => {
-    const displayTimezoneMoved = displayTimezone !== occurrence.displayTimezone.timezone;
+    const displayTimezoneMoved =
+      displayTimezone !== occurrence.unstable_internalInfos.displayTimezone;
     const { startResent, endResent } = getResentRangeBounds(
       formStore.getDirtyValues(),
       rangeValues.allDay,

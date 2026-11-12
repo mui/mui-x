@@ -2442,7 +2442,7 @@ describe('<EventDialogContent open />', () => {
         // display bounds normalize to in New York.
         expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
         const payload = deleteRecurringEventSpy.mock.lastCall[0];
-        expect(payload.occurrenceStart.getTime()).to.equal(
+        expect(payload.occurrence.unstable_internalInfos.dataStart).to.equal(
           createDate('2025-07-04T00:00:00', 'UTC').getTime(),
         );
       });
@@ -2536,7 +2536,7 @@ describe('<EventDialogContent open />', () => {
         // 00:00Z nor the pre-transition offset's 04:00Z.
         expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
         const payload = deleteRecurringEventSpy!.mock.lastCall![0];
-        expect(payload.occurrenceStart.getTime()).to.equal(
+        expect(payload.occurrence.unstable_internalInfos.dataStart).to.equal(
           createDate('2025-11-07T00:00:00', 'America/New_York').getTime(),
         );
       });
@@ -4575,7 +4575,7 @@ describe('<EventDialogContent open />', () => {
           .withDisplayTimezone('America/New_York');
         const event = builder.build();
         const occurrence = builder.toOccurrence();
-        const resizedEnd = addDays(new Date(occurrence.displayTimezone.end.timestamp), 1);
+        const resizedEnd = addDays(new Date(occurrence.end.timestamp), 1);
         const onEventsChange = vi.fn();
 
         const { user } = renderEditedAfterResize({

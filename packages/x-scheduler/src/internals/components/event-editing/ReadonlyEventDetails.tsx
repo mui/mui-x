@@ -18,7 +18,7 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
   formatFullDate,
-  getOccurrenceDataTimezone,
+  isEventOccurrence,
   getPrimaryResourceId,
   toPlainDate,
   toWallClockIsoString,
@@ -138,7 +138,7 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
   const defaultRecurrenceKey = useStore(
     store,
     schedulerRecurringEventSelectors.defaultPresetKey,
-    getOccurrenceDataTimezone(occurrence)?.rrule,
+    isEventOccurrence(occurrence) ? occurrence.rrule : undefined,
     startPlainDate,
   );
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
@@ -146,7 +146,8 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
 
   // Feature hook
   const formatTime = useFormatTime();
-  const { start, end, timezone: boundsTimezone } = occurrence.displayTimezone;
+  const { start, end } = occurrence;
+  const boundsTimezone = occurrence.unstable_internalInfos.displayTimezone;
   const isMultiDay = isOccurrenceMultiDay(occurrence);
   const formatBound = (date: SchedulerProcessedDate) => {
     const fullDate = formatFullDate(locale, toPlainDate(date.timestamp, boundsTimezone));

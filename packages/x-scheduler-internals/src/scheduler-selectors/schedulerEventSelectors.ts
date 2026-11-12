@@ -268,8 +268,7 @@ export const schedulerEventSelectors = {
     });
   },
   isRecurring: (state: State, eventId: SchedulerEventId) =>
-    state.recurringEventsPlugin != null &&
-    Boolean(processedEventSelector(state, eventId)?.dataTimezone.rrule),
+    state.recurringEventsPlugin != null && Boolean(processedEventSelector(state, eventId)?.rrule),
 };
 
 function getIsResizableFromProperty(

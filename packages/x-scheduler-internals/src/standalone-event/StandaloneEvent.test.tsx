@@ -6,7 +6,7 @@ describe('<StandaloneEvent />', () => {
   const { render } = createSchedulerRenderer();
 
   describeConformance(
-    <StandaloneEvent data={EventBuilder.new().toProcessed()} renderDragPreview={() => null} />,
+    <StandaloneEvent data={EventBuilder.new().build()} renderDragPreview={() => null} />,
     () => ({
       refInstanceof: window.HTMLDivElement,
       render,
