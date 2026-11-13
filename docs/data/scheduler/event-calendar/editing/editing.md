@@ -131,8 +131,8 @@ Call `eventDetails.cancel()` to keep the built-in dialog closed and open your ow
 />
 ```
 
-The proposed dates use the [occurrence date format](/x/react-scheduler/timezone/#reading-occurrence-dates), with an exclusive end for all-day occurrences: an all-day occurrence ends at the start of the day after its last day.
-To store it in an event model, which ends on the last day, use `occurrence.end.timestamp - 1`.
+The proposed dates use the [occurrence date format](/x/react-scheduler/timezone/#reading-occurrence-dates).
+To store an all-day occurrence in an event model, write its dates back as `YYYY-MM-DD` strings: `occurrence.start.plainDateTime.toPlainDate().toString()`, and the same for `end`, which is already the day after the last day.
 
 In the demo below, both clicking an event and clicking an empty cell open a custom dialog instead of the built-in one:
 

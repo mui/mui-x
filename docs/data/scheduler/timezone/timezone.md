@@ -101,7 +101,8 @@ Each bound contains:
 
 For all-day occurrences, `end` is exclusive: an occurrence covering July 1 ends at the start of July 2 in the display timezone.
 Its last day is the day before the date of `end`: `occurrence.end.plainDateTime.toPlainDate().add({ days: -1 })`.
-The event models still end an all-day event on its last day: to write an all-day occurrence back to a model, use `occurrence.end.timestamp - 1`.
+The event models use the same exclusive end, as `YYYY-MM-DD` dates: to write an all-day occurrence back to a model, use `occurrence.start.plainDateTime.toPlainDate().toString()` and `occurrence.end.plainDateTime.toPlainDate().toString()`.
+All-day events are not affected by `displayTimezone` nor by their `timezone`: they cover the same dates everywhere.
 The date and time fields have no UTC offset; use `timestamp` to distinguish the two instances of an hour repeated by a daylight saving transition.
 
 Import `BaseTemporal` to read and compare these values:

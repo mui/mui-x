@@ -33,19 +33,42 @@ Use the [`eventModelStructure`](#store-data-in-custom-properties) property to sw
 
 ### All day
 
-Use the `allDay` property to define an event as all-day:
+Use the `allDay` property to define an event as all-day.
+An all-day event has no time and no timezone: it covers whole days, the same ones wherever it is displayed.
+Its `start` and `end` are `YYYY-MM-DD` dates, and `end` is exclusive: the day after the last day.
 
 ```ts
 const event = {
   // ...other properties
+  start: '2025-07-04',
+  end: '2025-07-05', // July 4th only
   allDay: true,
 };
 ```
 
 {{"demo": "AllDay.js", "bg": "inline", "defaultCodeOpen": false}}
 
-The `end` of an all-day event can be any time on its last day.
-The occurrences the Scheduler provides end at the start of the next day instead: see [Reading occurrence dates](/x/react-scheduler/timezone/#reading-occurrence-dates).
+The occurrences the Scheduler provides end at the start of the day after the last day too: see [Reading occurrence dates](/x/react-scheduler/timezone/#reading-occurrence-dates).
+The `exDates` of a recurring all-day event are dates as well, and the `timezone` property of an all-day event is ignored.
+
+The Scheduler throws when an all-day event does not follow this format:
+
+- a `start` or `end` that is not a `YYYY-MM-DD` date, a date-time like `2025-07-04T00:00:00` included;
+- an `end` on or before the `start`, which covers no day;
+- an exception date of an all-day series that is not a `YYYY-MM-DD` date.
+
+To migrate an all-day event that ended on its last day, keep the date of its `start` and set its `end` to the day after the date of its previous `end`:
+
+```ts
+// Before: July 4th and 5th, ending on the last day
+const event = {
+  start: '2025-07-04T00:00:00',
+  end: '2025-07-05T23:59:59',
+  allDay: true,
+};
+// After: the same two days, ending the day after the last day
+const event = { start: '2025-07-04', end: '2025-07-06', allDay: true };
+```
 
 In the day and week views, all-day events are rendered in the day grid above the time grid.
 See the `timeGridEvents` option of the [Week view](/x/react-scheduler/event-calendar/views/#week-view) to choose where timed events that cross midnight are rendered.

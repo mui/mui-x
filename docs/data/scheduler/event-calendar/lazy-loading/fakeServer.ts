@@ -94,8 +94,8 @@ const RECURRING_EVENTS: SchedulerEvent[] = [
   {
     id: 'rec-birthday',
     title: `${birthdayName}'s Birthday`,
-    start: '2025-03-14T00:00:00',
-    end: '2025-03-14T01:00:00',
+    start: '2025-03-14',
+    end: '2025-03-15',
     resource: 'birthdays',
     allDay: true,
     readOnly: true,
