@@ -2,17 +2,153 @@ import {
   addDays,
   addHours,
   createDate,
+  EventBuilder,
   premiumStoreClasses,
   ResourceBuilder,
   utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
 import type { SchedulerEvent, SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import type { SchedulerStoreInContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { describe, it, expect, vi } from 'vitest';
-import { applyInternalDragOrResizeOccurrencePlaceholder } from './useDropTarget';
+import {
+  applyExternalDragOccurrencePlaceholder,
+  applyInternalDragOrResizeOccurrencePlaceholder,
+} from './useDropTarget';
 
 premiumStoreClasses.forEach((storeClass) => {
   describe(`applyInternalDragOrResizeOccurrencePlaceholder - ${storeClass.name}`, () => {
+    it('should snap a timeline drop of an all-day occurrence to whole days', () => {
+      const builder = utcJuly4AllDayBuilder().id('holiday').withDisplayTimezone('UTC');
+      const occurrence = builder.toOccurrence();
+      const onEventsChange = vi.fn();
+      const store = new storeClass.Value({
+        resources: [ResourceBuilder.new().id('r1').title('Resource 1').build()],
+        events: [builder.build()],
+        displayTimezone: 'UTC',
+        onEventsChange,
+      });
+
+      // Dragged by a day and a half: the day under the start, with the day count of the event.
+      applyInternalDragOrResizeOccurrencePlaceholder(
+        store as unknown as SchedulerStoreInContext<any, any>,
+        {
+          type: 'internal-drag',
+          surfaceType: 'timeline',
+          eventId: 'holiday',
+          occurrenceKey: occurrence.key,
+          originalOccurrence: occurrence,
+          sourceResourceId: null,
+          resourceId: null,
+          start: createDate('2025-07-05T12:00:00Z').getTime(),
+          end: createDate('2025-07-06T12:00:00Z').getTime(),
+        },
+      );
+
+      const updated = onEventsChange.mock.lastCall![0].find(
+        (item: SchedulerEvent) => item.id === 'holiday',
+      );
+      expect(updated.start).to.equal('2025-07-05');
+      expect(updated.end).to.equal('2025-07-06');
+    });
+
+    it('should keep one day when an all-day occurrence is resized into its own day on the timeline', () => {
+      const builder = utcJuly4AllDayBuilder().id('holiday').withDisplayTimezone('UTC');
+      const occurrence = builder.toOccurrence();
+      const onEventsChange = vi.fn();
+      const store = new storeClass.Value({
+        resources: [ResourceBuilder.new().id('r1').title('Resource 1').build()],
+        events: [builder.build()],
+        displayTimezone: 'UTC',
+        onEventsChange,
+      });
+
+      applyInternalDragOrResizeOccurrencePlaceholder(
+        store as unknown as SchedulerStoreInContext<any, any>,
+        {
+          type: 'internal-resize',
+          surfaceType: 'timeline',
+          eventId: 'holiday',
+          occurrenceKey: occurrence.key,
+          originalOccurrence: occurrence,
+          sourceResourceId: null,
+          resourceId: null,
+          start: occurrence.start.timestamp,
+          end: createDate('2025-07-04T15:00:00Z').getTime(),
+        },
+      );
+
+      // The end snaps to the start of the next day, the bound the occurrence already has.
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should make a timed event dropped on the day grid a one-day all-day event', () => {
+      // Monday 22:00 to Tuesday 02:00, dropped on Wednesday July 9th.
+      const builder = EventBuilder.new()
+        .id('late')
+        .span('2025-07-07T22:00:00Z', '2025-07-08T02:00:00Z')
+        .withDisplayTimezone('UTC');
+      const occurrence = builder.toOccurrence();
+      const onEventsChange = vi.fn();
+      const store = new storeClass.Value({
+        resources: [ResourceBuilder.new().id('r1').title('Resource 1').build()],
+        events: [builder.build()],
+        displayTimezone: 'UTC',
+        onEventsChange,
+      });
+
+      applyInternalDragOrResizeOccurrencePlaceholder(
+        store as unknown as SchedulerStoreInContext<any, any>,
+        {
+          type: 'internal-drag',
+          surfaceType: 'day-grid',
+          eventId: 'late',
+          occurrenceKey: occurrence.key,
+          originalOccurrence: occurrence,
+          sourceResourceId: null,
+          resourceId: null,
+          start: createDate('2025-07-09T22:00:00Z').getTime(),
+          end: createDate('2025-07-10T02:00:00Z').getTime(),
+        },
+        () => ({ allDay: true }),
+      );
+
+      const updated = onEventsChange.mock.lastCall![0].find(
+        (item: SchedulerEvent) => item.id === 'late',
+      );
+      expect(updated.allDay).to.equal(true);
+      expect(updated.start).to.equal('2025-07-09');
+      expect(updated.end).to.equal('2025-07-10');
+      expect(() => processEvent(updated, 'UTC')).not.to.throw();
+    });
+
+    it('should give an external all-day drop at least one day on the day grid', () => {
+      const onEventsChange = vi.fn();
+      const store = new storeClass.Value({
+        resources: [ResourceBuilder.new().id('r1').title('Resource 1').build()],
+        events: [],
+        displayTimezone: 'UTC',
+        onEventsChange,
+      });
+
+      applyExternalDragOccurrencePlaceholder(
+        store as unknown as SchedulerStoreInContext<any, any>,
+        {
+          type: 'external-drag',
+          surfaceType: 'day-grid',
+          resourceId: null,
+          start: createDate('2025-07-09T00:00:00Z').getTime(),
+          end: createDate('2025-07-09T01:00:00Z').getTime(),
+          eventData: { id: 'dropped', title: 'Dropped', allDay: true, duration: 60 },
+        },
+      );
+
+      const created: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+      expect(created.allDay).to.equal(true);
+      expect(created.start).to.equal('2025-07-09');
+      expect(created.end).to.equal('2025-07-10');
+    });
+
     it('should keep the untouched start of a recurring all-day occurrence resized from another timezone', () => {
       // An all-day weekly series on Fridays displayed in New York: extending only the end with
       // scope 'all' must not read the start as a day move.

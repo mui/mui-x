@@ -19,7 +19,6 @@ export {
   createProcessedDate,
   createStartOfPlainDate,
   isDateOnlyString,
-  normalizeAllDayBounds,
   snapAllDayBounds,
 } from './date';
 export {

@@ -43,7 +43,7 @@ import type {
   RequestEventDeletionParameters,
 } from './SchedulerStore.types';
 import { createProcessedDate } from '../../../process-date/processDate';
-import { normalizeAllDayBounds } from '../plain-date-utils/date';
+import { snapAllDayBounds } from '../plain-date-utils/date';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 import type { SchedulerSchedulingPluginInterface } from '../../plugins/SchedulerSchedulingPlugin.types';
 import type {
@@ -76,7 +76,6 @@ import {
   getRecurringOccurrenceKey,
   isEventOccurrence,
   getPrimaryResourceId,
-  getOccurrenceModelEnd,
 } from '../event-utils';
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
@@ -1573,12 +1572,11 @@ export class SchedulerStore<
     const { start, end } = changes;
     const allDay = changes.allDay ?? occurrence.allDay;
     const liveEvent = schedulerEventSelectors.processedEvent(this.state, occurrence.id);
-    const displayBounds = normalizeAllDayBounds(
-      start?.getTime() ?? occurrence.start.timestamp,
-      end?.getTime() ?? getOccurrenceModelEnd(occurrence),
-      allDay,
-      displayTimezone,
-    );
+    const rawStart = start?.getTime() ?? occurrence.start.timestamp;
+    const rawEnd = end?.getTime() ?? occurrence.end.timestamp;
+    const displayBounds = allDay
+      ? snapAllDayBounds(rawStart, rawEnd, displayTimezone)
+      : { start: rawStart, end: rawEnd };
     const bounds = {
       start:
         start == null
@@ -1650,12 +1648,11 @@ export class SchedulerStore<
 
     // A bound the submit left out keeps the occurrence's current value.
     const allDay = changes.allDay ?? occurrence.allDay;
-    const displayBounds = normalizeAllDayBounds(
-      changedStart ?? occurrence.start.timestamp,
-      changedEnd ?? getOccurrenceModelEnd(occurrence),
-      allDay,
-      displayTimezone,
-    );
+    const rawStart = changedStart ?? occurrence.start.timestamp;
+    const rawEnd = changedEnd ?? occurrence.end.timestamp;
+    const displayBounds = allDay
+      ? snapAllDayBounds(rawStart, rawEnd, displayTimezone)
+      : { start: rawStart, end: rawEnd };
     this.repointEditingOccurrence({
       eventId: targetsCreatedEvent ? createdEventId : original.id,
       start: changedStart == null ? occurrence.start.timestamp : displayBounds.start,

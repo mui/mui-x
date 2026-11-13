@@ -21,10 +21,7 @@ import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayCellContext } from '../day-cell/CalendarGridDayCellContext';
 import { useOriginalOccurrence } from '../../internals/utils/useOriginalOccurrence';
-import {
-  getOccurrenceLastDayNumber,
-  getOccurrenceModelEnd,
-} from '../../internals/utils/event-utils';
+import { getOccurrenceLastDayNumber } from '../../internals/utils/event-utils';
 
 const overflowStateAttributesMapping = {
   startingBeforeEdge: (value: boolean) => (value ? { 'data-starting-before-edge': '' } : null),
@@ -115,7 +112,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
         occurrenceKey,
         originalOccurrence,
         start: start.timestamp,
-        end: getOccurrenceModelEnd(originalOccurrence),
+        end: originalOccurrence.end.timestamp,
       };
     },
   );

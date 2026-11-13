@@ -24,16 +24,6 @@ export function getOccurrenceLastDayNumber(
 }
 
 /**
- * The end of an occurrence as the event models write it: an all-day event model ends on the last
- * instant of its last day, where its occurrence's exclusive end is the first instant after it.
- */
-export function getOccurrenceModelEnd(
-  occurrence: Pick<SchedulerRenderableEventOccurrence, 'allDay' | 'end'>,
-): number {
-  return occurrence.end.timestamp - (occurrence.allDay ? 1 : 0);
-}
-
-/**
  * Whether the occurrence is a persisted event occurrence, as opposed to a
  * placeholder (creation draft, drag preview) that has no event model.
  */

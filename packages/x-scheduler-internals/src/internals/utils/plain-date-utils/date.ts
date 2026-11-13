@@ -1,7 +1,6 @@
 import type { BaseTemporal } from '../base-temporal';
 import type { PlainDateDuration } from './plainDate';
 import {
-  getEndOfDayMs,
   getStartOfDayMs,
   localToEpochMs,
   moveTimestampToPlainDate,
@@ -94,22 +93,6 @@ export function snapAllDayBounds(
     snappedEnd = toEpochMs(toPlainDate(snappedStart, timezone).add({ days: 1 }), timezone);
   }
   return { start: snappedStart, end: snappedEnd };
-}
-
-/**
- * Snaps an all-day event's bounds to span their whole days in `timezone`; non-all-day bounds are
- * returned unchanged. The end is exclusive: the first instant after the last day.
- */
-export function normalizeAllDayBounds(
-  start: number,
-  end: number,
-  allDay: boolean | undefined,
-  timezone: string,
-): { start: number; end: number } {
-  if (!allDay) {
-    return { start, end };
-  }
-  return { start: getStartOfDayMs(start, timezone), end: getEndOfDayMs(end, timezone) + 1 };
 }
 
 export { createProcessedDate } from '../../../process-date/processDate';

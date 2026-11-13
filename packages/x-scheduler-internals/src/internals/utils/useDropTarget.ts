@@ -3,6 +3,7 @@ import * as React from 'react';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
 import type {
   SchedulerEvent,
+  SchedulerEventOccurrence,
   SchedulerOccurrencePlaceholder,
   SchedulerOccurrencePlaceholderExternalDrag,
   SchedulerOccurrencePlaceholderInternalDragOrResize,
@@ -23,7 +24,34 @@ import {
 } from '../../scheduler-selectors';
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
 import type { StandaloneEvent } from '../../standalone-event';
-import { getPrimaryResourceId, getOccurrenceModelEnd } from './event-utils';
+import { getPrimaryResourceId } from './event-utils';
+import { getAllDayDayCount } from './date-utils';
+import { snapAllDayBounds } from './plain-date-utils/date';
+import { addDaysOnWallClock, getStartOfDayMs } from './plain-date-utils/timeZone';
+
+/**
+ * The bounds of a drop as whole days of the display timezone when its result is all-day: a move
+ * keeps the day count of its source (one day for a timed one) from the day under its start, a
+ * resize or a creation snaps its bounds. The bounds of a timed result are unchanged.
+ */
+function snapDropBounds(
+  type: SchedulerOccurrencePlaceholder['type'],
+  allDay: boolean,
+  start: number,
+  end: number,
+  timezone: string,
+  source?: Pick<SchedulerEventOccurrence, 'allDay' | 'modelInBuiltInFormat'>,
+): { start: number; end: number } {
+  if (!allDay) {
+    return { start, end };
+  }
+  if (type === 'internal-drag' && source != null) {
+    const dayStart = getStartOfDayMs(start, timezone);
+    const dayCount = source.allDay ? getAllDayDayCount(source) : 1;
+    return { start: dayStart, end: addDaysOnWallClock(dayStart, dayCount, timezone) };
+  }
+  return snapAllDayBounds(start, end, timezone);
+}
 
 // Not every drag source exposes `sourceResourceId` (only rows that know which
 // resource they represent, e.g. the Event Timeline Premium, can report it) —
@@ -59,12 +87,22 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         data.source === 'CalendarGridTimeEventResizeHandler'
           ? 'internal-resize'
           : 'internal-drag';
+      const allDay =
+        addPropertiesToDroppedEvent?.().allDay ?? data.originalOccurrence.allDay ?? false;
+      const { start, end } = snapDropBounds(
+        type,
+        allDay,
+        newStart,
+        newEnd,
+        schedulerOtherSelectors.displayTimezone(store.state),
+        data.originalOccurrence,
+      );
 
       return {
         type,
         surfaceType,
-        start: newStart,
-        end: newEnd,
+        start,
+        end,
         eventId: data.eventId,
         occurrenceKey: data.occurrenceKey,
         originalOccurrence: data.originalOccurrence,
@@ -82,12 +120,21 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         return undefined;
       }
 
+      const allDay = addPropertiesToDroppedEvent?.().allDay ?? data.eventData.allDay ?? false;
+      const bounds = snapDropBounds(
+        'external-drag',
+        allDay,
+        start,
+        // TODO: Improve the start and end time of a non all-day event dropped in the Month View.
+        start + (data.eventData.duration ?? eventCreationConfig.duration) * 60_000,
+        schedulerOtherSelectors.displayTimezone(store.state),
+      );
+
       return {
         type: 'external-drag',
         surfaceType,
-        start,
-        // TODO: Improve the start and end time of a non all-day event dropped in the Month View.
-        end: start + (data.eventData.duration ?? eventCreationConfig.duration) * 60_000,
+        start: bounds.start,
+        end: bounds.end,
         eventData: data.eventData,
         onEventDrop: data.onEventDrop,
         resourceId:
@@ -235,24 +282,28 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
   // TODO: Try to do a single state update.
   store.setOccurrencePlaceholder(null);
 
-  const { eventId, start, end, originalOccurrence } = placeholder;
+  const { eventId, originalOccurrence } = placeholder;
 
   const additionalChanges = addPropertiesToDroppedEvent?.() ?? {};
+  const allDay = additionalChanges.allDay ?? originalOccurrence.allDay ?? false;
+  const { start, end } = snapDropBounds(
+    placeholder.type,
+    allDay,
+    placeholder.start,
+    placeholder.end,
+    schedulerOtherSelectors.displayTimezone(store.state),
+    originalOccurrence,
+  );
 
-  // Only the bounds the drop moved, as displayed. An untouched bound keeps its stored value:
-  // re-read from its display value it can be another day in the event's timezone (an all-day
-  // occurrence is displayed on whole display days), which a recurring update would take for
-  // a day move and realign the rule on. A drop that toggles all-day resends both: the stored
-  // bounds belong to the other representation (the displayed start of an all-day occurrence
-  // can equal the drop start while the stored one is later).
-  const allDayToggled =
-    additionalChanges.allDay != null &&
-    additionalChanges.allDay !== (originalOccurrence.allDay ?? false);
+  // Only the bounds the drop moved, as displayed: an untouched bound keeps its stored value. A
+  // drop that toggles all-day resends both, since the stored bounds belong to the other
+  // representation.
+  const allDayToggled = allDay !== (originalOccurrence.allDay ?? false);
   const changes: SchedulerEventUpdatedProperties = { id: eventId };
   if (allDayToggled || originalOccurrence.start.timestamp !== start) {
     changes.start = new Date(start);
   }
-  if (allDayToggled || getOccurrenceModelEnd(originalOccurrence) !== end) {
+  if (allDayToggled || originalOccurrence.end.timestamp !== end) {
     changes.end = new Date(end);
   }
 
@@ -324,14 +375,26 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
   }
 }
 
-function applyExternalDragOccurrencePlaceholder(
+/**
+ * Creates the event an external drag dropped in the Scheduler.
+ */
+export function applyExternalDragOccurrencePlaceholder(
   store: SchedulerStoreInContext<any, any>,
   placeholder: SchedulerOccurrencePlaceholderExternalDrag,
   addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>,
 ) {
+  const additionalProperties = addPropertiesToDroppedEvent?.() ?? {};
+  const allDay = additionalProperties.allDay ?? placeholder.eventData.allDay ?? false;
+  const { start, end } = snapDropBounds(
+    'external-drag',
+    allDay,
+    placeholder.start,
+    placeholder.end,
+    schedulerOtherSelectors.displayTimezone(store.state),
+  );
   const event = {
-    start: new Date(placeholder.start),
-    end: new Date(placeholder.end),
+    start: new Date(start),
+    end: new Date(end),
     ...placeholder.eventData,
   };
 
@@ -341,9 +404,7 @@ function applyExternalDragOccurrencePlaceholder(
     event.resource = placeholder.resourceId;
   }
 
-  if (addPropertiesToDroppedEvent) {
-    Object.assign(event, addPropertiesToDroppedEvent());
-  }
+  Object.assign(event, additionalProperties);
 
   store.setOccurrencePlaceholder(null);
   store.createEvent(event);

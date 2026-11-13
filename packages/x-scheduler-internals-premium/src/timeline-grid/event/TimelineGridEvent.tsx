@@ -14,7 +14,6 @@ import {
   useDraggableEvent,
   useOriginalOccurrence,
   computeElementPositionInCollection,
-  getOccurrenceModelEnd,
   timestampToTimelineAxisOffsetMs,
 } from '@mui/x-scheduler-internals/internals';
 import type { useElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
@@ -105,7 +104,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
         occurrenceKey,
         originalOccurrence,
         start: start.timestamp,
-        end: getOccurrenceModelEnd(originalOccurrence),
+        end: originalOccurrence.end.timestamp,
         initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
         sourceResourceId: rowResourceId,
       };

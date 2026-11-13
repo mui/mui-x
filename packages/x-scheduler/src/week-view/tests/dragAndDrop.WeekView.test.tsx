@@ -118,8 +118,9 @@ describe('WeekView - Drag and Drop', () => {
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
     expect(updatedEvents[0].allDay).to.equal(true);
-    // The event should have moved to the next day
-    expect(updatedEvents[0].start).to.equal('2025-07-04T10:00:00.000Z');
+    // The event becomes a one-day all-day event on the drop day.
+    expect(updatedEvents[0].start).to.equal('2025-07-04');
+    expect(updatedEvents[0].end).to.equal('2025-07-05');
   });
 
   it('should move a time event to a different time on the same day', async () => {
@@ -354,7 +355,7 @@ describe('WeekView - Drag and Drop', () => {
     const parts = screen.getAllByRole('button', { name: /Night shift/i });
     expect(parts).to.have.length(2);
 
-    // The July 4 part is dropped on July 5: the event moves by one day.
+    // The July 4 part is dropped on July 5: the event becomes a one-day all-day event there.
     await act(async () => {
       simulateDragAndDrop({ source: parts[1], target: getDayGridCell(5) });
     });
@@ -362,8 +363,8 @@ describe('WeekView - Drag and Drop', () => {
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
     expect(updatedEvents[0].allDay).to.equal(true);
-    expect(updatedEvents[0].start).to.equal('2025-07-04T22:00:00.000Z');
-    expect(updatedEvents[0].end).to.equal('2025-07-05T06:00:00.000Z');
+    expect(updatedEvents[0].start).to.equal('2025-07-05');
+    expect(updatedEvents[0].end).to.equal('2025-07-06');
   });
 
   it('should resize the end of the part of a time event crossing midnight on its end day', async () => {

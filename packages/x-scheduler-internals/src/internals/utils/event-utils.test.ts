@@ -15,7 +15,6 @@ import {
   getDaysTheOccurrenceIsVisibleOn,
   getEventResourceIds,
   getOccurrenceLastDayNumber,
-  getOccurrenceModelEnd,
   getOccurrencesFromEvents,
   getPrimaryResourceId,
   getRecurringOccurrenceKey,
@@ -141,7 +140,6 @@ describe('event-utils', () => {
           });
 
           expect(occurrence.end.plainDateTime.toString()).to.equal(end);
-          expect(getOccurrenceModelEnd(occurrence)).to.equal(occurrence.end.timestamp - 1);
           expect(getOccurrenceLastDayNumber(occurrence)).to.equal(
             getDayNumber(BaseTemporal.PlainDate.from(lastDay)),
           );
@@ -158,7 +156,6 @@ describe('event-utils', () => {
         .span('2026-03-28T22:00:00', '2026-03-29T00:00:00')
         .toOccurrence();
 
-      expect(getOccurrenceModelEnd(occurrence)).to.equal(occurrence.end.timestamp);
       // A timed occurrence ending at midnight covers the start of the next day.
       expect(getOccurrenceLastDayNumber(occurrence)).to.equal(
         getDayNumber(BaseTemporal.PlainDate.from('2026-03-29')),
