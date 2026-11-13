@@ -137,6 +137,7 @@ const createSection = ({
     sectionConfig.contentType,
     sectionConfig.type,
     token,
+    localizedDigits,
   );
 
   const hasLeadingZerosInInput = shouldRespectLeadingZeros
