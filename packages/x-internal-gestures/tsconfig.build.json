@@ -9,5 +9,11 @@
     "rootDir": "./src"
   },
   "include": ["src/**/*.ts*"],
-  "exclude": ["**/*.test.ts*", "**/*.spec.ts*", "**/__screenshots__/**", "**/mocks/**"]
+  "exclude": [
+    "**/*.test.ts*",
+    "**/*.spec.ts*",
+    "**/__screenshots__/**",
+    "**/mocks/**",
+    "src/matchers/**"
+  ]
 }
