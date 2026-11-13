@@ -423,12 +423,12 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       ]);
     });
 
-    it('applies a type change of a column filtered with an operator the new type does not have', async () => {
+    it('resets the filter items of a column whose new type does not have their operator', async () => {
       await render(
         <Test
           initialState={{
             computedColumns: { model: [total] },
-            filter: { filterModel: { items: [{ field: 'total', operator: '>', value: 0 }] } },
+            filter: { filterModel: { items: [{ field: 'total', operator: '>', value: 7 }] } },
           }}
         />,
       );
@@ -436,12 +436,19 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
 
       typeFormula('=item & "!"');
       selectOption('Result type', 'Text');
-      expect(() => fireEvent.click(getButton('Apply'))).toWarnDev(
-        'The filtering could not be applied again',
-      );
+      expect(() => fireEvent.click(getButton('Apply'))).not.toWarnDev();
       await microtasks();
 
       expect(getModel()).to.deep.equal([{ ...total, formula: '=item & "!"', type: 'string' }]);
+      const [item] = apiRef.current!.state.filter.filterModel.items;
+      expect([item.field, item.operator, item.value]).to.deep.equal([
+        'total',
+        'contains',
+        undefined,
+      ]);
+      // The value-less item filters nothing, and the next filtering doesn't throw.
+      expect(() => act(() => apiRef.current!.updateRows([{ id: 0, price: 3 }]))).not.to.throw();
+      expect(getCell(0, 3).textContent).to.equal('Apple!');
       // The columns are still hydrated: the update did not throw inside the hydration.
       act(() => apiRef.current!.setFilterModel({ items: [] }));
       act(() => apiRef.current!.addComputedColumn(define('half', '=price / 2')));
@@ -463,9 +470,7 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
 
       typeFormula('=item & "!"');
       selectOption('Result type', 'Text');
-      expect(() => fireEvent.click(getButton('Apply'))).toWarnDev(
-        'The filtering could not be applied again',
-      );
+      expect(() => fireEvent.click(getButton('Apply'))).not.toWarnDev();
       await microtasks();
 
       expect(getModel()).to.deep.equal([

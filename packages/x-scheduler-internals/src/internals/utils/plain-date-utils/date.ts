@@ -1,5 +1,3 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { TemporalSupportedObject } from '../../../models';
 import type { BaseTemporal } from '../base-temporal';
 import type { PlainDateDuration } from './plainDate';
 import {
@@ -20,10 +18,7 @@ import {
  * `toPlainDate()`. A day whose midnight a DST transition skips starts at the end of the
  * gap.
  */
-export function createStartOfPlainDate(
-  plainDate: BaseTemporal.PlainDate,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject {
+export function createStartOfPlainDate(plainDate: BaseTemporal.PlainDate, timezone: string): Date {
   return new Date(toEpochMs(plainDate, timezone));
 }
 
@@ -31,10 +26,7 @@ export function createStartOfPlainDate(
  * Creates the date of the last instant of a plain date in `timezone`, just before the next
  * day starts. When a DST transition repeats the last hour of the day, it's the later 23:59:59.999.
  */
-export function createEndOfPlainDate(
-  plainDate: BaseTemporal.PlainDate,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject {
+export function createEndOfPlainDate(plainDate: BaseTemporal.PlainDate, timezone: string): Date {
   const nextPlainDate = plainDate.add({ days: 1 });
   return new Date(toEpochMs(nextPlainDate, timezone) - 1);
 }
@@ -60,7 +52,7 @@ const ISO_DATE_REGEXP = /^\d{4}(?:-\d{2}){0,2}(?:(T)|$)/i;
  * as the occurrences of recurring events do.
  * Returns `null` for other formats and for unknown timezones.
  */
-export function parseWallTimeString(value: string, timezone: TemporalTimezone): number | null {
+export function parseWallTimeString(value: string, timezone: string): number | null {
   const match = ISO_DATE_REGEXP.exec(value);
   if (match === null) {
     return null;
@@ -68,7 +60,7 @@ export function parseWallTimeString(value: string, timezone: TemporalTimezone): 
   const hasTime = match[1] !== undefined;
   // `Date.parse()` reads an ISO date-time on the wall clock of the system, and resolves the times a
   // DST transition skips or repeats like `localToEpochMs()`, about 3 times faster.
-  if (hasTime && (timezone === 'default' || timezone === 'system')) {
+  if (hasTime && timezone === 'default') {
     return Date.parse(value);
   }
   // Read as UTC, the fields of the string are its wall-clock time, whatever the timezone of the
@@ -83,7 +75,7 @@ export function parseWallTimeString(value: string, timezone: TemporalTimezone): 
  * `Date.parse()` reads it in the timezone of the system, and its wall-clock time there is then read
  * in `timezone`.
  */
-export function parseNonIsoString(value: string, timezone: TemporalTimezone): number {
+export function parseNonIsoString(value: string, timezone: string): number {
   const epochMs = Date.parse(value);
   return Number.isNaN(epochMs) ? NaN : localToEpochMs(toLocalMs(epochMs, 'default'), timezone);
 }
@@ -96,7 +88,7 @@ export function normalizeAllDayBounds(
   start: number,
   end: number,
   allDay: boolean | undefined,
-  timezone: TemporalTimezone,
+  timezone: string,
 ): { start: number; end: number } {
   if (!allDay) {
     return { start, end };
@@ -111,11 +103,7 @@ export { createProcessedDate } from '../../../process-date/processDate';
  * `timezone`. A time that a DST transition skips moves forward by the length of the gap, and a
  * repeated one resolves to its first instant, like `toEpochMs()`.
  */
-export function addToDate(
-  date: TemporalSupportedObject,
-  duration: PlainDateDuration,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject {
+export function addToDate(date: Date, duration: PlainDateDuration, timezone: string): Date {
   const epochMs = date.getTime();
   return new Date(
     moveTimestampToPlainDate(epochMs, toPlainDate(epochMs, timezone).add(duration), timezone),

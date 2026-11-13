@@ -15,8 +15,6 @@ import type {
   SchedulerEventId,
   SchedulerOccurrencePlaceholder,
   SchedulerResourceId,
-  TemporalSupportedObject,
-  TemporalTimezone,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
   RecurringEventScope,
@@ -84,7 +82,7 @@ import { MS_PER_MINUTE } from '../plain-date-utils/dayNumber';
  * The first instant of today in `timezone`. A day whose midnight a DST transition skips starts at
  * the end of the gap.
  */
-function createStartOfToday(nowTimestamp: number, timezone: TemporalTimezone) {
+function createStartOfToday(nowTimestamp: number, timezone: string) {
   return new Date(getStartOfDayMs(nowTimestamp, timezone));
 }
 
@@ -287,6 +285,14 @@ export class SchedulerStore<
   ) {
     const dateLocale = parameters.dateLocale ?? DEFAULT_DATE_LOCALE;
     checkDateLocale(dateLocale);
+    const displayTimezone = parameters.displayTimezone ?? 'default';
+    if (displayTimezone === 'system') {
+      throw new Error(
+        'MUI X Scheduler: The `displayTimezone` "system" is not a supported timezone. ' +
+          'The "system" alias of the timezone of the system was removed, so the dates cannot be read in it. ' +
+          'Pass `displayTimezone="default"` instead.',
+      );
+    }
     return {
       dateLocale,
       areEventsDraggable: parameters.areEventsDraggable ?? true,
@@ -297,7 +303,7 @@ export class SchedulerStore<
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
       eventCreation: parameters.eventCreation ?? true,
-      displayTimezone: parameters.displayTimezone ?? 'default',
+      displayTimezone,
     };
   }
 
@@ -534,7 +540,7 @@ export class SchedulerStore<
     visibleDate,
     event,
   }: {
-    visibleDate: TemporalSupportedObject;
+    visibleDate: Date;
     event?: React.UIEvent | null;
   }) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
@@ -808,7 +814,7 @@ export class SchedulerStore<
   /**
    * Goes to a specific date without changing the view.
    */
-  public goToDate = (visibleDate: TemporalSupportedObject, event: React.UIEvent) => {
+  public goToDate = (visibleDate: Date, event: React.UIEvent) => {
     this.setVisibleDate({ visibleDate, event });
   };
 
@@ -1184,8 +1190,8 @@ export class SchedulerStore<
    */
   public duplicateEventOccurrence = (
     eventId: SchedulerEventId,
-    start: TemporalSupportedObject,
-    end: TemporalSupportedObject,
+    start: Date,
+    end: Date,
   ): SchedulerEventId | undefined => {
     const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
     const originalModel = original.modelInBuiltInFormat;
@@ -1643,7 +1649,7 @@ export class SchedulerStore<
     /** The timestamps of the occurrence bounds read in the data timezone — the identity the key derives from. */
     dataStart: number;
     dataEnd: number;
-    dataTimezone: TemporalTimezone;
+    dataTimezone: string;
   }) => {
     const { eventId, start, end, isRecurring, dataStart, dataEnd, dataTimezone } = parameters;
     const { editingOccurrence } = this.state;

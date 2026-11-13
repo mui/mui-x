@@ -5,7 +5,6 @@ import type {
   RecurringEventPresetKey,
   SchedulerProcessedEventRecurrenceRule,
   SchedulerRenderableEventOccurrence,
-  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import {
   BaseTemporal,
@@ -173,7 +172,7 @@ function readTimeField(raw: string): BaseTemporal.PlainTime | null {
  */
 function readDateFieldMs(
   rawDate: string,
-  timezone: TemporalTimezone,
+  timezone: string,
   time?: BaseTemporal.PlainTime | null,
 ): number {
   const plainDate = readDateField(rawDate);
@@ -188,7 +187,7 @@ function readDateFieldMs(
  * `readDateFieldMs()`. When a DST transition repeats the last hour of the day, it's the later
  * 23:59:59.999.
  */
-function readDateFieldEndMs(rawDate: string, timezone: TemporalTimezone): number {
+function readDateFieldEndMs(rawDate: string, timezone: string): number {
   const plainDate = readDateField(rawDate);
   return plainDate == null ? NaN : toEpochMs(plainDate.add({ days: 1 }), timezone) - 1;
 }
@@ -212,7 +211,7 @@ export function formatDateAndTimeFields(value: BaseTemporal.PlainDateTime): {
  */
 export function computeRange(
   next: Pick<EventDialogFormValues, RangeFormKey>,
-  displayTimezone: TemporalTimezone,
+  displayTimezone: string,
 ): { start: number; end: number; surfaceType: 'day-grid' | 'time-grid' } {
   const now = Date.now();
 
@@ -247,7 +246,7 @@ export function validateRange(
   start: number,
   end: number,
   allDay: boolean,
-  displayTimezone: TemporalTimezone,
+  displayTimezone: string,
 ): null | { field: 'endDate' | 'endTime' } {
   const dayOrder = BaseTemporal.PlainDate.compare(
     toPlainDate(start, displayTimezone),
@@ -270,7 +269,7 @@ export function validateRange(
  */
 export function findInvalidRangeField(
   values: Pick<EventDialogFormValues, RangeFormKey>,
-  displayTimezone: TemporalTimezone,
+  displayTimezone: string,
 ): 'startDate' | 'startTime' | 'endDate' | 'endTime' | null {
   // A date in an unknown timezone gives no instant, so it doesn't parse either.
   const parsesAsDate = (raw: string) => Number.isFinite(readDateFieldMs(raw, displayTimezone));
@@ -346,7 +345,7 @@ export function getRecurrenceLabel(
  * The timezone the occurrence's event is stored in, the one its recurrence rule is expressed in.
  * A creation draft has no event yet: it is created in the `default` timezone.
  */
-export function getEventTimezone(occurrence: SchedulerRenderableEventOccurrence): TemporalTimezone {
+export function getEventTimezone(occurrence: SchedulerRenderableEventOccurrence): string {
   return isEventOccurrence(occurrence) ? occurrence.timezone : 'default';
 }
 
@@ -399,7 +398,7 @@ export function getRecurrenceRuleBound(
   occurrence: SchedulerRenderableEventOccurrence,
   values: Pick<EventDialogFormValues, RangeFormKey>,
   resent: boolean,
-  displayTimezone: TemporalTimezone,
+  displayTimezone: string,
   bound: 'start' | 'end',
 ): number {
   if (!resent || findInvalidRangeField(values, displayTimezone) != null) {
@@ -409,10 +408,9 @@ export function getRecurrenceRuleBound(
 }
 
 /**
- * The canonical IANA identifier of a timezone; `default` and `system` resolve to the system
- * timezone.
+ * The canonical IANA identifier of a timezone; `default` resolves to the system timezone.
  */
-function getCanonicalTimezoneId(timezone: TemporalTimezone): string {
+function getCanonicalTimezoneId(timezone: string): string {
   const id = getTimezoneId(timezone);
   try {
     return new Intl.DateTimeFormat(undefined, { timeZone: id }).resolvedOptions().timeZone;
@@ -446,8 +444,8 @@ function getTimezoneDisplayName(locale: string, timezoneId: string): string {
  */
 export function getRecurrenceTimezoneName(
   locale: string,
-  eventTimezone: TemporalTimezone,
-  displayTimezone: TemporalTimezone,
+  eventTimezone: string,
+  displayTimezone: string,
 ): string | null {
   const eventTimezoneId = getCanonicalTimezoneId(eventTimezone);
   return eventTimezoneId === getCanonicalTimezoneId(displayTimezone)

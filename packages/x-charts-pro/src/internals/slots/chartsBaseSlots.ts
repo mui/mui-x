@@ -23,6 +23,7 @@ export interface ChartsBaseSlotsPro extends ChartsBaseSlots {
   baseDivider: React.ComponentType<ChartBaseDividerProps & BaseDividerPropsOverrides>;
   /**
    * The component used for menu items.
+   * @default MenuItem
    */
   baseMenuItem: React.ComponentType<ChartBaseMenuItemProps & BaseMenuItemPropsOverrides>;
   /**
@@ -32,6 +33,7 @@ export interface ChartsBaseSlotsPro extends ChartsBaseSlots {
   baseMenuList: React.ComponentType<ChartBaseMenuListProps & BaseMenuListPropsOverrides>;
   /**
    * The component used for poppers.
+   * @default Popper
    */
   basePopper: React.ComponentType<ChartBasePopperProps & BasePopperPropsOverrides>;
   /**

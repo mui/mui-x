@@ -1,5 +1,4 @@
 import { DisposableStack, disposeSymbol } from '@mui/x-internals/disposable';
-import type { TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import type {
   SchedulerState,
   SchedulerParameters,
@@ -341,7 +340,7 @@ export class SchedulerLazyLoadingPlugin<
  * Extends a range to the whole days it touches in `timezone`, which is the coverage the cache
  * records.
  */
-export function toWholeDays(range: DateRange, timezone: TemporalTimezone): DateRange {
+export function toWholeDays(range: DateRange, timezone: string): DateRange {
   return {
     start: getStartOfDayMs(range.start, timezone),
     end: getEndOfDayMs(range.end, timezone),

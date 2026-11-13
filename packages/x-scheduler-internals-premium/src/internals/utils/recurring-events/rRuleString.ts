@@ -1,4 +1,3 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   RecurringEventByDayValue,
   RecurringEventFrequency,
@@ -30,7 +29,7 @@ const UNTIL_REGEX = /^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})Z)?$/;
  */
 function parseUntil(
   value: string,
-  timezone: TemporalTimezone,
+  timezone: string,
   allDay: boolean,
 ): BaseTemporal.PlainDate | BaseTemporal.PlainDateTime | null {
   const match = UNTIL_REGEX.exec(value);
@@ -174,7 +173,7 @@ function validateRule(rule: SchedulerProcessedEventRecurrenceRule): void {
  */
 function readRuleObject(
   input: SchedulerEventRecurrenceRule,
-  timezone: TemporalTimezone,
+  timezone: string,
   allDay: boolean,
 ): SchedulerProcessedEventRecurrenceRule {
   // The typed object API validates `freq` as-is; unlike the RRULE string below, it is not normalized.
@@ -210,7 +209,7 @@ function readRuleObject(
  */
 export function parseRRule(
   input: string | SchedulerEventRecurrenceRule,
-  timezone: TemporalTimezone,
+  timezone: string,
   allDay: boolean = false,
 ): SchedulerProcessedEventRecurrenceRule {
   const rule =
@@ -223,7 +222,7 @@ export function parseRRule(
 
 function readRuleString(
   input: string,
-  timezone: TemporalTimezone,
+  timezone: string,
   allDay: boolean,
 ): SchedulerProcessedEventRecurrenceRule {
   const rruleObject: Record<string, string> = {};
@@ -332,7 +331,7 @@ function readRuleString(
 
 export function serializeRRule(
   rule: SchedulerProcessedEventRecurrenceRule,
-  timezone: TemporalTimezone = 'default',
+  timezone: string = 'default',
 ): string {
   const parts: string[] = [];
 

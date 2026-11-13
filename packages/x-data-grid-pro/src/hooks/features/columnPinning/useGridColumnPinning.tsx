@@ -200,10 +200,30 @@ export const useGridColumnPinning = (
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
+  const { onPinnedColumnsChange } = props;
+
+  // `setState` calls `onPinnedColumnsChange` before `hydrateColumns` moves the pinned columns in
+  // `orderedFields`. `setPinnedColumns` defers the call, so the callback sees the new column order.
+  const isSettingPinnedColumns = React.useRef(false);
+  const deferredPinnedColumnsChange = React.useRef<(() => void) | null>(null);
+
+  const handlePinnedColumnsChange = React.useCallback<
+    NonNullable<DataGridProProcessedProps['onPinnedColumnsChange']>
+  >(
+    (model, details) => {
+      if (isSettingPinnedColumns.current) {
+        deferredPinnedColumnsChange.current = () => onPinnedColumnsChange?.(model, details);
+        return;
+      }
+      onPinnedColumnsChange?.(model, details);
+    },
+    [onPinnedColumnsChange],
+  );
+
   apiRef.current.registerControlState({
     stateId: 'pinnedColumns',
     propModel: props.pinnedColumns,
-    propOnChange: props.onPinnedColumnsChange,
+    propOnChange: handlePinnedColumnsChange,
     stateSelector: gridPinnedColumnsSelector,
     changeEvent: 'pinnedColumnsChange',
   });
@@ -245,8 +265,18 @@ export const useGridColumnPinning = (
 
   const setPinnedColumns = React.useCallback<GridColumnPinningApi['setPinnedColumns']>(
     (newPinnedColumns) => {
-      setState(apiRef, newPinnedColumns);
-      apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
+      let deferredChange: (() => void) | null = null;
+      isSettingPinnedColumns.current = true;
+      try {
+        setState(apiRef, newPinnedColumns);
+        apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
+      } finally {
+        isSettingPinnedColumns.current = false;
+        deferredChange = deferredPinnedColumnsChange.current;
+        deferredPinnedColumnsChange.current = null;
+      }
+
+      deferredChange?.();
     },
     [apiRef],
   );

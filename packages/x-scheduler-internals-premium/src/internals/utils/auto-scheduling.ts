@@ -1,7 +1,5 @@
 import { warnOnce } from '@mui/x-internals/warning';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
-  TemporalSupportedObject,
   SchedulerEvent,
   SchedulerEventId,
   SchedulerEventSide,
@@ -63,7 +61,7 @@ export interface ComputeAutoSchedulingCascadeParameters {
 interface ResolvedDates {
   start: number;
   end: number;
-  timezone: TemporalTimezone;
+  timezone: string;
   allDay: boolean;
 }
 
@@ -86,7 +84,7 @@ export interface AutoSchedulingCascadeResult {
 function resolveDates(
   start: number,
   end: number,
-  timezone: TemporalTimezone,
+  timezone: string,
   allDay: boolean,
 ): ResolvedDates {
   if (!allDay) {
@@ -136,11 +134,7 @@ function getDependencyBound(
  * transition skips starts at the end of the gap. Both edges of a day the timezone skips, like
  * December 30th, 2011 in Pacific/Apia, are on the next day.
  */
-function getAllDayEdgeMs(
-  dayNumber: number,
-  side: SchedulerEventSide,
-  timezone: TemporalTimezone,
-): number {
+function getAllDayEdgeMs(dayNumber: number, side: SchedulerEventSide, timezone: string): number {
   if (side === 'start') {
     return localToEpochMs(dayNumber * MS_PER_DAY, timezone);
   }
@@ -156,7 +150,7 @@ function minimalDayShift(
   edgeDay: number,
   side: SchedulerEventSide,
   bound: number,
-  timezone: TemporalTimezone,
+  timezone: string,
 ): number {
   let dayCount = Math.max(0, toLocalDayNumber(bound, timezone) - edgeDay - 1);
   while (getAllDayEdgeMs(edgeDay + dayCount, side, timezone) < bound) {
@@ -256,7 +250,7 @@ export function computeAutoSchedulingCascade(
   // store's serialization in the old timezone.
   const timezoneChanges = new Map<
     SchedulerEventId,
-    { model: SchedulerEvent; dataTimezone: TemporalTimezone; nextTimezone: TemporalTimezone }
+    { model: SchedulerEvent; dataTimezone: string; nextTimezone: string }
   >();
 
   // Whole-entry last-wins per id, mirroring the store's fold.
@@ -297,7 +291,7 @@ export function computeAutoSchedulingCascade(
     // Mirrors the store: entries are serialized in the data timezone
     // (`timestampToEventString`) and the model is then read in the (new) timezone.
     const resolveEntryTimestamp = (
-      value: TemporalSupportedObject | undefined,
+      value: Date | undefined,
       modelString: string,
       currentTimestamp: number,
     ) => {

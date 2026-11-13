@@ -4,7 +4,6 @@ import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useCompositeListItem } from '@base-ui/react/internals/composite';
 import { useDirection } from '@base-ui/react/direction-provider';
-import type { TemporalTimezone } from '../../models';
 import { getEndOfDayMs, toEpochMs } from '../../internals/utils/plain-date-utils/timeZone';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
@@ -53,7 +52,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     focusedCell?.rowIndex === rowIndex &&
     focusedCell?.columnIndex === index;
 
-  const getPlaceholderFields = ({ timezone }: { timezone: TemporalTimezone }) => {
+  const getPlaceholderFields = ({ timezone }: { timezone: string }) => {
     const start = toEpochMs(value, timezone);
     return {
       surfaceType: 'day-grid' as const,

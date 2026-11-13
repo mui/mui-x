@@ -1,4 +1,3 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerEventId } from '../models';
 import {
   isInstantString,
@@ -16,7 +15,7 @@ import {
  */
 export function resolveEventTimestamp(
   value: string,
-  dataTimezone: TemporalTimezone,
+  dataTimezone: string,
   eventId?: SchedulerEventId,
 ): number {
   const epochMs = isInstantString(value)

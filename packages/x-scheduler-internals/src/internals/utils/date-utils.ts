@@ -1,4 +1,3 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerEvent, SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import { BaseTemporal } from './base-temporal';
 import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
@@ -15,7 +14,7 @@ import { isInstantString } from './plain-date-utils/date';
 export function timestampToEventString(
   epochMs: number,
   originalString: string,
-  dataTimezone: TemporalTimezone,
+  dataTimezone: string,
 ): string {
   if (isInstantString(originalString)) {
     return new Date(epochMs).toISOString();
@@ -28,7 +27,7 @@ export function timestampToEventString(
 // in the hour a DST transition repeats. Spreading a rule keeps the cutoff, and its instant.
 const UNTIL_INSTANTS = new WeakMap<
   BaseTemporal.PlainDateTime,
-  { epochMs: number; timezone: TemporalTimezone }
+  { epochMs: number; timezone: string }
 >();
 
 /**
@@ -36,7 +35,7 @@ const UNTIL_INSTANTS = new WeakMap<
  */
 export function createUntilFromTimestamp(
   epochMs: number,
-  timezone: TemporalTimezone,
+  timezone: string,
 ): BaseTemporal.PlainDateTime {
   const until = toPlainDateTime(epochMs, timezone);
   UNTIL_INSTANTS.set(until, { epochMs, timezone });
@@ -48,10 +47,7 @@ export function createUntilFromTimestamp(
  * `createUntilFromTimestamp()`, or else its wall-clock time resolved like `toEpochMs()`.
  * Newly selected end-of-day values use the last instant of the day, like the date picker.
  */
-export function getUntilTimestamp(
-  until: BaseTemporal.PlainDateTime,
-  timezone: TemporalTimezone,
-): number {
+export function getUntilTimestamp(until: BaseTemporal.PlainDateTime, timezone: string): number {
   const instant = UNTIL_INSTANTS.get(until);
   if (instant?.timezone === timezone) {
     return instant.epochMs;
@@ -89,7 +85,7 @@ export function isSameUntil(
 export function untilToEventString(
   until: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime,
   originalString: string,
-  dataTimezone: TemporalTimezone,
+  dataTimezone: string,
 ): string {
   const isDateOnly = /^[+-]?\d{4,6}-\d{2}-\d{2}$/.test(originalString);
   if (until instanceof BaseTemporal.PlainDate) {

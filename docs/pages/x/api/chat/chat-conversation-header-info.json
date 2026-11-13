@@ -25,6 +25,7 @@
     {
       "name": "headerInfo",
       "description": "The component that renders the header info.",
+      "default": "'div'",
       "class": "MuiChatConversationHeaderInfo-headerInfo"
     }
   ],

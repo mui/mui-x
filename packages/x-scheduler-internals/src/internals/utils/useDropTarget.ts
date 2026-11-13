@@ -9,7 +9,6 @@ import type {
   EventSurfaceType,
   SchedulerEventUpdatedProperties,
   SchedulerResourceId,
-  TemporalTimezone,
 } from '../../models';
 import type {
   EventDropData,
@@ -221,7 +220,7 @@ export namespace useDropTarget {
     /**
      * The display timezone, in which the dates of the drop are read.
      */
-    timezone: TemporalTimezone;
+    timezone: string;
   }) => SchedulerOccurrencePlaceholder | undefined;
 }
 

@@ -8,6 +8,7 @@ import type { ConversationSubtitleOwnerState } from './conversation.types';
 export interface ConversationSubtitleSlots {
   /**
    * The component that renders the subtitle.
+   * @default 'div'; a styled 'p' in `ChatConversationSubtitle`
    */
   subtitle: React.ElementType;
 }

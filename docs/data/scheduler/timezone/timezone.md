@@ -130,11 +130,11 @@ Exception dates belong to the series and are available as strings on `occurrence
 
 Both the `displayTimezone` prop and the event's `timezone` field accept the following values:
 
-|                  Timezone | Description                                                                                                                                                |
-| ------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|                   `"UTC"` | Will use the [Coordinated Universal Time](https://en.wikipedia.org/wiki/Coordinated_Universal_Time)                                                        |
-| `"default"` or `"system"` | Will use the system's local timezone                                                                                                                       |
-|       IANA standard zones | Any [IANA](https://www.iana.org/time-zones) timezone, for example `"Europe/Paris"` or `"America/New_York"`. [Full list](https://timezonedb.com/time-zones) |
+|            Timezone | Description                                                                                                                                                |
+| ------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|             `"UTC"` | Will use the [Coordinated Universal Time](https://en.wikipedia.org/wiki/Coordinated_Universal_Time)                                                        |
+|         `"default"` | Will use the system's local timezone                                                                                                                       |
+| IANA standard zones | Any [IANA](https://www.iana.org/time-zones) timezone, for example `"Europe/Paris"` or `"America/New_York"`. [Full list](https://timezonedb.com/time-zones) |
 
 ## Creating an event
 

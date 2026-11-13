@@ -3,7 +3,6 @@ import type {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
   SchedulerProcessedEventRecurrenceRule,
-  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import { BaseTemporal, toPlainDate } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
@@ -12,7 +11,7 @@ import { RecurringSeries } from './RecurringSeries';
 /**
  * The DTSTART parameters of a series starting at `start`, a wall-clock time in `timezone`.
  */
-function seriesStart(start: string, timezone: TemporalTimezone) {
+function seriesStart(start: string, timezone: string) {
   return { start: createDate(start, timezone).getTime(), timezone };
 }
 
@@ -25,7 +24,7 @@ function countRemaining(
   start: string,
   date: string,
   count: number,
-  timezone: TemporalTimezone = 'UTC',
+  timezone = 'UTC',
 ) {
   const series = new RecurringSeries({
     rule: { ...rule, count },
@@ -158,7 +157,7 @@ describe('recurring-events/RecurringSeries', () => {
     it('should read them in a timezone east of UTC', () => {
       // December 31st, 9999, a common "no end date", is already January 1st, 10000 in Tokyo.
       const lastInstant = Date.parse('9999-12-31T23:59:59Z');
-      const getLastDays = (timezone: TemporalTimezone, exDates: number[]) => {
+      const getLastDays = (timezone: string, exDates: number[]) => {
         const series = new RecurringSeries({
           rule: { freq: 'DAILY', until: toPlainDate(lastInstant, timezone) },
           start: Date.parse('2026-01-05T09:00:00Z'),

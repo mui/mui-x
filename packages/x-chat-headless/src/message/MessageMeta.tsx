@@ -11,18 +11,22 @@ import type { MessageMetaOwnerState } from './message.types';
 export interface MessageMetaSlots {
   /**
    * The component that renders the meta.
+   * @default 'div'; a styled 'span' in `ChatMessageInlineMeta`
    */
   meta: React.ElementType;
   /**
    * The component that renders the timestamp.
+   * @default 'span'
    */
   timestamp: React.ElementType;
   /**
    * The component that renders the status.
+   * @default 'span'
    */
   status: React.ElementType;
   /**
    * The component that renders the edited.
+   * @default 'span'
    */
   edited: React.ElementType;
   /**
@@ -32,9 +36,15 @@ export interface MessageMetaSlots {
    * @default ProgressRoot (Base UI Progress.Root wrapper)
    */
   streamingProgress: React.ElementType;
-  /** The track element wrapping the streaming progress indicator. */
+  /**
+   * The track element wrapping the streaming progress indicator.
+   * @default ProgressTrack (Base UI Progress.Track wrapper)
+   */
   streamingProgressTrack: React.ElementType;
-  /** The animated indicator bar inside the streaming progress track. */
+  /**
+   * The animated indicator bar inside the streaming progress track.
+   * @default ProgressIndicator (Base UI Progress.Indicator wrapper)
+   */
   streamingProgressIndicator: React.ElementType;
 }
 

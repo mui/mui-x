@@ -1,4 +1,3 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import {
   BaseTemporal,
   addMonthsToDayNumber,
@@ -299,7 +298,7 @@ export interface RecurringSeriesParameters {
   /**
    * The timezone of the series.
    */
-  timezone: TemporalTimezone;
+  timezone: string;
   /**
    * The days of the excluded occurrences (EXDATE), in the timezone of the series.
    */
@@ -315,7 +314,7 @@ export interface RecurringSeriesParameters {
  * December 30th, 2011 in Pacific/Apia, has no occurrence and doesn't count toward COUNT.
  */
 export class RecurringSeries {
-  declare public readonly timezone: TemporalTimezone;
+  declare public readonly timezone: string;
 
   /**
    * The date and wall-clock time of the first occurrence (DTSTART).

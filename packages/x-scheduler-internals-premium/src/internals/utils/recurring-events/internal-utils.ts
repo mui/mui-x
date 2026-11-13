@@ -1,4 +1,3 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import {
   getDayNumber,
   localToEpochMs,
@@ -24,7 +23,7 @@ export function moveEndToPlainDate(
   endMs: number,
   plainDate: BaseTemporal.PlainDate,
   startMs: number,
-  timezone: TemporalTimezone,
+  timezone: string,
 ): number {
   const msInDay = toMsInDay(endMs, timezone);
   const localMs = getDayNumber(plainDate) * MS_PER_DAY + msInDay;
@@ -71,10 +70,7 @@ export function getPlainDateWeekDayCode(
 /**
  * Returns the week day code (MO..SU) for a given date, read in `timezone`.
  */
-export function getWeekDayCode(
-  epochMs: number,
-  timezone: TemporalTimezone,
-): RecurringEventWeekDayCode {
+export function getWeekDayCode(epochMs: number, timezone: string): RecurringEventWeekDayCode {
   return getPlainDateWeekDayCode(toPlainDate(epochMs, timezone));
 }
 

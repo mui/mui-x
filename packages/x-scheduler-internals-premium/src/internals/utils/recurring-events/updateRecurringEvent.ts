@@ -1,4 +1,3 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   RecurringEventByDayValue,
   SchedulerProcessedEventRecurrenceRule,
@@ -263,7 +262,7 @@ export function adjustRRuleForAllMove(
   rrule: SchedulerProcessedEventRecurrenceRule,
   occurrenceStart: number,
   newStart: number,
-  timezone: TemporalTimezone,
+  timezone: string,
 ): SchedulerProcessedEventRecurrenceRule {
   const nextRRule: SchedulerProcessedEventRecurrenceRule = { ...rrule };
 
@@ -386,7 +385,7 @@ export function realignWeeklyByDay(
   weekDayCodes: RecurringEventWeekDayCode[],
   oldRefDay: number,
   newStart: number,
-  timezone: TemporalTimezone,
+  timezone: string,
 ): RecurringEventWeekDayCode[] {
   const oldCode = getWeekDayCode(oldRefDay, timezone);
   const newCode = getWeekDayCode(newStart, timezone);

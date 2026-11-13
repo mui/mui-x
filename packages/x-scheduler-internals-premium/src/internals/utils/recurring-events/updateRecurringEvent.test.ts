@@ -14,7 +14,6 @@ import type {
   RecurringEventByDayValue,
   SchedulerEventRecurrenceRule,
   SchedulerProcessedEventRecurrenceRule,
-  TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import { describe, it, expect } from 'vitest';
 import { schedulerRecurringEventsPlugin } from '../../plugins/schedulerRecurringEventsPlugin';
@@ -46,8 +45,8 @@ describe('recurring-events/updateRecurringEvent', () => {
     const call = (
       originalRule: SchedulerProcessedEventRecurrenceRule,
       changes: Partial<SchedulerEventUpdatedProperties> = {},
-      originalSeriesStart: TemporalSupportedObject = seriesStart,
-      split: TemporalSupportedObject = splitStart,
+      originalSeriesStart = seriesStart,
+      split = splitStart,
     ) =>
       decideSplitRRule(
         {

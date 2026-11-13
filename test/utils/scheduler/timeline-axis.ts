@@ -1,11 +1,10 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { TimelineAxis, TimelineAxisWindow } from '@mui/x-scheduler-internals/internals';
 
 /**
  * The axis of a range of dates, read in `timezone`.
  */
 export function createTimelineAxis(
-  range: TimelineAxisWindow & { start: Date; end: Date; timezone: TemporalTimezone },
+  range: TimelineAxisWindow & { start: Date; end: Date; timezone: string },
 ): TimelineAxis {
   return {
     start: range.start.getTime(),

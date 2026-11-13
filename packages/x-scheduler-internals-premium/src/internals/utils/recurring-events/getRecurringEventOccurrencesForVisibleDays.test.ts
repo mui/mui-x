@@ -8,7 +8,6 @@ import {
 } from 'test/utils/scheduler';
 import { beforeEach, describe, it, expect } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
 import {
@@ -21,7 +20,7 @@ import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventO
 import { getPlainDateWeekDayCode } from './internal-utils';
 
 // The date and the wall-clock time of an instant in `timezone`, as `YYYY-MM-DD HH:mm`.
-function formatWallClock(epochMs: number, timezone: TemporalTimezone): string {
+function formatWallClock(epochMs: number, timezone: string): string {
   return toPlainDateTime(epochMs, timezone).toString().slice(0, 16).replace('T', ' ');
 }
 

@@ -1,5 +1,4 @@
 import { warnOnce } from '@mui/x-internals/warning';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerEvent, SchedulerProcessedEvent } from '../models';
 import { createProcessedDate } from '../process-date/processDate';
 import { normalizeAllDayBounds } from '../internals/utils/plain-date-utils/date';
@@ -9,10 +8,17 @@ import { resolveEventTimestamp } from './resolveEventTimestamp';
 
 export function processEvent(
   model: SchedulerEvent,
-  displayTimezone: TemporalTimezone,
+  displayTimezone: string,
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
 ): SchedulerProcessedEvent {
   const dataTimezone = model.timezone ?? 'default';
+  if (dataTimezone === 'system') {
+    throw new Error(
+      `MUI X Scheduler: The timezone "system" of the event "${model.id}" is not a supported timezone. ` +
+        'The "system" alias of the timezone of the system was removed, so the dates of the event cannot be read in it. ' +
+        'Set its `timezone` to "default" instead.',
+    );
+  }
 
   const dataStart = resolveEventTimestamp(model.start, dataTimezone, model.id);
   const dataEnd = resolveEventTimestamp(model.end, dataTimezone, model.id);
