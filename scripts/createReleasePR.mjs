@@ -33,7 +33,11 @@ import { hideBin } from 'yargs/helpers';
 import fs from 'fs/promises';
 import path from 'path';
 import { input, select, confirm } from '@inquirer/prompts';
-import { getChangelogUtils } from './changelogUtils.mjs';
+import {
+  generateChangelog as generateReleaseEntry,
+  findLatestTaggedVersion,
+} from '@mui/internal-code-infra/changelog';
+import changelogConfig from './changelog.config.mjs';
 import pck from '../package.json' with { type: 'json' };
 
 const packageVersion = pck.version;
@@ -599,13 +603,12 @@ async function updatePackageJson(newVersion) {
 
 /**
  * Generate the changelog
- * @param {function} generator - The changelog generator function
  * @param {string} newVersion - The new version
  * @param {string} lastVersion - The last version to compare against
  * @param {string} [releaseBranch='master'] - The branch to compare against (default is 'master')
  * @returns {Promise<string>} The changelog content
  */
-async function generateChangelog(generator, newVersion, lastVersion, releaseBranch = 'master') {
+async function generateChangelog(newVersion, lastVersion, releaseBranch = 'master') {
   try {
     console.log('Generating changelog...');
 
@@ -613,13 +616,16 @@ async function generateChangelog(generator, newVersion, lastVersion, releaseBran
     console.log(`New version: ${newVersion}`);
     console.log(`Last version: ${lastVersion}`);
 
-    return await generator({
-      octokit,
-      nextVersion: newVersion,
+    const entry = await generateReleaseEntry({
+      config: changelogConfig,
+      org: ORG,
+      repo: REPO,
+      octokit: octokit ?? undefined,
+      version: newVersion,
       lastRelease: `v${lastVersion}`,
       release: releaseBranch,
-      returnEntry: true,
     });
+    return entry.markdown;
   } catch (error) {
     console.error('Error generating changelog:', error);
     process.exit(1);
@@ -796,9 +802,6 @@ async function main() {
       authStrategy: persistentAuthStrategy,
     });
 
-    const { findLatestTaggedVersionForMajor, generateChangelog: generator } =
-      getChangelogUtils(octokit);
-
     // Find the upstream remote
     const upstreamRemote = await findMuiXRemote();
     console.log(`Found upstream remote: ${upstreamRemote}`);
@@ -831,9 +834,17 @@ async function main() {
 
     // Pick the base before looking up the previous tag, so both come from the same history.
     const shouldUseVersionBranch = await selectTargetBranch(majorVersion);
-    const releaseBase = `${upstreamRemote}/${shouldUseVersionBranch ? majorVersionBranch(majorVersion) : 'master'}`;
+    const releaseBranch = shouldUseVersionBranch ? majorVersionBranch(majorVersion) : 'master';
+    const releaseBase = `${upstreamRemote}/${releaseBranch}`;
+    console.log(`Fetching release base ${releaseBase}...`);
+    await execa('git', ['fetch', '--tags', '--force', upstreamRemote, releaseBranch]);
 
-    const latestTag = await findLatestTaggedVersionForMajor(majorVersion, releaseBase);
+    const latestTag = await findLatestTaggedVersion({
+      cwd: process.cwd(),
+      ref: releaseBase,
+      match: `v${majorVersion}.*`,
+      fetchAll: false,
+    });
     const previousVersion = latestTag.startsWith('v') ? latestTag.slice(1) : latestTag;
     console.log(`Latest tag for major version ${majorVersion}: ${previousVersion}`);
 
@@ -879,15 +890,6 @@ async function main() {
     );
     console.log(`New version: ${newVersion}`);
 
-    // Determine which branch to update based on the selected major version
-    if (shouldUseVersionBranch) {
-      console.log(`Updating the upstream ${majorVersionBranch(majorVersion)} branch...`);
-      await execa('git', ['fetch', upstreamRemote, majorVersionBranch(majorVersion)]);
-    } else {
-      console.log('Updating the upstream master branch for current major version...');
-      await execa('git', ['fetch', upstreamRemote, 'master']);
-    }
-
     // Create a new branch with the new version
     const branchName = `release/v${newVersion}-${new Date().toISOString().slice(0, 10)}`;
     console.log(`Creating new branch: ${branchName}`);
@@ -932,7 +934,6 @@ async function main() {
 
     // Generate the changelog
     const changelogContent = await generateChangelog(
-      generator,
       newVersion,
       previousVersion,
       shouldUseVersionBranch ? majorVersionBranch(majorVersion) : 'master',
