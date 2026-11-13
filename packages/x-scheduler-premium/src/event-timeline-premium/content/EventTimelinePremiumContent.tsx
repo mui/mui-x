@@ -670,7 +670,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     eventTimelinePremiumOccurrenceSelectors.visibleGroupedByResourceList,
   );
 
-  // Measure header height for the virtualizer's topPinnedHeight
+  // Measure header height for the virtualizer's headerHeight
   const headerHeight = useElementSize(headerRowRef, 'height');
 
   // Measure the container so the title column can be capped at half its width.
@@ -729,7 +729,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
 
   // Build virtualizer column model: one pinned title column + one column per tick.
   const { tickCount, tickWidth } = config;
-  const columnsTotalWidth = titleColumnWidth + tickCount * tickWidth;
 
   // Row heights mirror the CSS. The cell stretches to fit overlapping events
   // (`--lane-count` lanes), so we need the per-resource lane count.
@@ -773,9 +772,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     layout,
     dimensions: {
       rowHeight: defaultRowHeight,
-      topPinnedHeight: headerHeight,
-      columnsTotalWidth,
-      leftPinnedWidth: titleColumnWidth,
+      headerHeight,
     },
     virtualization: { layoutMode: 'controlled', isRtl },
     rows,
