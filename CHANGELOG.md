@@ -5,6 +5,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.29.6
+
+_Nov 13, 2026_
+
+We'd like to extend a big thank you to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- ♿️ Accessibility improvements
+
+Special thanks go out to these community members for their valuable contributions:
+@b84330808, @dasjideepak
+
+The following team members contributed to this release:
+@JCQuintas, @LukasTy
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.29.6`
+
+- [DataGrid] Focus the first filter field instead of the value input (#24153) @JCQuintas
+- [DataGrid] Show the column header icons on keyboard focus (#23959) @dasjideepak
+
+#### `@mui/x-data-grid-pro@8.29.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.29.6`.
+
+#### `@mui/x-data-grid-premium@8.29.6` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.29.6`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.29.6`
+
+- [pickers] Only scroll the Digital Clock when its active item changes (#23949) @b84330808
+
+#### `@mui/x-date-pickers-pro@8.29.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.29.6`.
+
+### Core
+
+- [code-infra] Default the v8.x publish dist-tag to `latest-v8` (#23933) @LukasTy
+
 ## 8.29.5
 
 _Oct 16, 2026_
