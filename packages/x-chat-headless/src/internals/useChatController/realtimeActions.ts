@@ -5,9 +5,10 @@ import { applyPresenceUpdate, applyReadUpdate } from './useChatControllerHelpers
 
 export function createRealtimeActions(params: {
   store: ChatStore<unknown>;
+  stopStreaming: () => void;
   conversationNavigationRequestIdRef: React.MutableRefObject<number>;
 }) {
-  const { store, conversationNavigationRequestIdRef } = params;
+  const { store, stopStreaming, conversationNavigationRequestIdRef } = params;
 
   function handleRealtimeEvent(event: ChatRealtimeEvent): void {
     switch (event.type) {
@@ -39,6 +40,9 @@ export function createRealtimeActions(params: {
 
         if (store.state.activeConversationId === event.conversationId) {
           conversationNavigationRequestIdRef.current += 1;
+          if (store.state.isStreaming) {
+            stopStreaming();
+          }
           store.setActiveConversation(undefined);
           store.resetMessages();
         }

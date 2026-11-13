@@ -555,6 +555,34 @@ describe('processStream', () => {
     ]);
   });
 
+  it('does not replay buffered sequences after an abort during an awaited chunk', async () => {
+    const store = new ChatStore();
+    const controller = new AbortController();
+    const onData = vi.fn(() => controller.abort());
+
+    const result = await processStream(
+      store,
+      createStream([
+        { sequence: 0, chunk: { type: 'start', messageId: 'a1' } },
+        {
+          sequence: 2,
+          chunk: { type: 'data-weather', id: 'data-2', data: { city: 'Brno', temperatureC: 9 } },
+        },
+        {
+          sequence: 1,
+          chunk: { type: 'data-weather', id: 'data-1', data: { city: 'Prague', temperatureC: 12 } },
+        },
+      ]),
+      { onData, signal: controller.signal },
+    );
+
+    expect(result.isAbort).toBe(true);
+    expect(onData).toHaveBeenCalledTimes(1);
+    expect(
+      store.state.messagesById.a1.parts.map((part) => (part as ChatDataMessagePart).id),
+    ).toEqual(['data-1']);
+  });
+
   it('reports disconnects when the stream closes without a terminal chunk', async () => {
     const store = new ChatStore();
     const onFinish = vi.fn();
