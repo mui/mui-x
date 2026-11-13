@@ -182,13 +182,12 @@ function readDateFieldMs(
 }
 
 /**
- * Reads a `yyyy-MM-dd` field as the last instant of that date in `timezone`, or returns `NaN` like
- * `readDateFieldMs()`. When a DST transition repeats the last hour of the day, it's the later
- * 23:59:59.999.
+ * Reads a `yyyy-MM-dd` field as the first instant of the day after that date in `timezone`, the
+ * exclusive end of an all-day range, or returns `NaN` like `readDateFieldMs()`.
  */
-function readDateFieldEndMs(rawDate: string, timezone: string): number {
+function readDateFieldExclusiveEndMs(rawDate: string, timezone: string): number {
   const plainDate = readDateField(rawDate);
-  return plainDate == null ? NaN : toEpochMs(plainDate.add({ days: 1 }), timezone) - 1;
+  return plainDate == null ? NaN : toEpochMs(plainDate.add({ days: 1 }), timezone);
 }
 
 /**
@@ -203,10 +202,10 @@ export function formatDateAndTimeFields(value: BaseTemporal.PlainDateTime): {
 
 /**
  * The instants of the range the fields describe, read in the display timezone. An all-day range
- * goes from the first instant of its first day to the last instant of its last day. A time field
- * that a DST transition skips moves forward by the length of the gap, and one it repeats resolves
- * to its first instant, whatever the timezone of the system. An empty field reads as now, and a
- * field that doesn't parse as `NaN`.
+ * goes from the first instant of its first day to the first instant of the day after its last
+ * day. A time field that a DST transition skips moves forward by the length of the gap, and one it
+ * repeats resolves to its first instant, whatever the timezone of the system. An empty field reads
+ * as now, and a field that doesn't parse as `NaN`.
  */
 export function computeRange(
   next: Pick<EventDialogFormValues, RangeFormKey>,
@@ -217,7 +216,7 @@ export function computeRange(
   if (next.allDay) {
     return {
       start: next.startDate === '' ? now : readDateFieldMs(next.startDate, displayTimezone),
-      end: next.endDate === '' ? now : readDateFieldEndMs(next.endDate, displayTimezone),
+      end: next.endDate === '' ? now : readDateFieldExclusiveEndMs(next.endDate, displayTimezone),
       surfaceType: 'day-grid',
     };
   }
@@ -236,10 +235,10 @@ export function computeRange(
 }
 
 /**
- * Checks the order of the bounds of a range: the end day can't be before the start day, and on the
- * same day, the end of a timed range must be after its start. The days are read in
- * `displayTimezone`, the one the fields are read in. `start` and `end` must be finite: check the
- * fields with `findInvalidRangeField()` first.
+ * Checks the order of the bounds of a range: the exclusive end of an all-day range must be after
+ * its start, the end day of a timed range can't be before its start day, and on the same day its
+ * end must be after its start. The days are read in `displayTimezone`, the one the fields are read
+ * in. `start` and `end` must be finite: check the fields with `findInvalidRangeField()` first.
  */
 export function validateRange(
   start: number,
@@ -247,6 +246,9 @@ export function validateRange(
   allDay: boolean,
   displayTimezone: string,
 ): null | { field: 'endDate' | 'endTime' } {
+  if (allDay) {
+    return end <= start ? { field: 'endDate' } : null;
+  }
   const dayOrder = BaseTemporal.PlainDate.compare(
     toPlainDate(start, displayTimezone),
     toPlainDate(end, displayTimezone),
@@ -256,7 +258,7 @@ export function validateRange(
     return { field: 'endDate' };
   }
   // end <= start → hour error
-  if (dayOrder === 0 && !allDay && end <= start) {
+  if (dayOrder === 0 && end <= start) {
     return { field: 'endTime' };
   }
   return null;

@@ -27,7 +27,6 @@ import {
 import {
   getCustomEventProperties,
   getEventResourceIds,
-  getOccurrenceModelEnd,
   getResourceSelectionMode,
   toPlainDateTime,
   isBuiltInEventProperty,
@@ -149,9 +148,11 @@ export function FormContent(props: FormContentProps) {
   // Built once: the provider ignores later values anyway.
   const initialValues = useRefWithInit((): EventDialogFormValues => {
     const startFields = formatDateAndTimeFields(occurrence.start.plainDateTime);
-    // Like the event models, the form ends an all-day event on the last instant of its last day.
+    // The form shows the last day of an all-day event, the day before its exclusive end.
     const endFields = formatDateAndTimeFields(
-      toPlainDateTime(getOccurrenceModelEnd(occurrence), initialDisplayTimezone),
+      occurrence.allDay
+        ? toPlainDateTime(occurrence.end.timestamp - 1, initialDisplayTimezone)
+        : occurrence.end.plainDateTime,
     );
 
     // The rule is read and written in the event's timezone, not the display one.
@@ -421,7 +422,7 @@ function FormContentInner(
       // moved since the snapshot; the recurring update defaults it to the occurrence's own.
       const untouchedBound = (bound: 'start' | 'end') => {
         const source = liveEvent != null && liveEvent.rrule == null ? liveEvent : occurrence;
-        return bound === 'start' ? source.start.timestamp : getOccurrenceModelEnd(source);
+        return source[bound].timestamp;
       };
       const submittedStart = submitStart ? range.start : untouchedBound('start');
       const submittedEnd = submitEnd ? range.end : untouchedBound('end');

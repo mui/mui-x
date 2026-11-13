@@ -6,12 +6,10 @@ import {
   addDays,
   createDate,
   createSchedulerRenderer,
-  endOfDay,
   EventBuilder,
   ResourceBuilder,
   SchedulerStoreRunner,
   setSystemTimezone,
-  startOfDay,
   StateWatcher,
   StoreSpy,
   utcJuly4AllDayBuilder,
@@ -457,8 +455,9 @@ describe('<EventDialogContent open />', () => {
       id: DEFAULT_EVENT.id,
       title: 'Running test',
       description: DEFAULT_EVENT.description,
-      start: startOfDay(createDate(DEFAULT_EVENT.start)).toISOString(),
-      end: endOfDay(createDate(DEFAULT_EVENT.end)).toISOString(),
+      // An all-day event is a span of dates with an exclusive end.
+      start: '2025-05-26',
+      end: '2025-05-27',
       allDay: true,
       rrule: { freq: 'DAILY', interval: 1 },
       // DEFAULT_EVENT's resource is a plain string (single-resource mode), so picking Work
@@ -2416,7 +2415,7 @@ describe('<EventDialogContent open />', () => {
           </EventCalendarProvider>,
         );
 
-        // The dialog shows the series on New York July 3rd → 4th; extend only the end.
+        // The dialog shows the series on July 4th; extend only the end to July 5th.
         const endDateInput = screen.getByLabelText(/end date/i);
         await user.clear(endDateInput);
         await user.type(endDateInput, '2025-07-05');
@@ -2429,15 +2428,11 @@ describe('<EventDialogContent open />', () => {
         const updated = onEventsChange.mock.lastCall?.[0].find(
           (event: SchedulerEvent) => event.id === weeklyEvent.id,
         )!;
-        // The untouched start must not enter the pattern math: no DTSTART move,
-        // no BYDAY realign onto the displayed Thursday.
+        // The untouched start must not enter the pattern math: no DTSTART move, no BYDAY realign.
         expect(updated.start).to.equal(weeklyEvent.start);
         expect(updated.rrule).to.deep.equal(weeklyEvent.rrule);
-        // The edited end applies as the day the user was looking at.
-        const updatedEndInNewYork = createDate(String(updated.end), 'UTC');
-        expect(toPlainDate(updatedEndInNewYork.getTime(), 'America/New_York')).toEqualPlainDate(
-          '2025-07-05',
-        );
+        // The edited end applies as the day the user was looking at, stored as the day after it.
+        expect(updated.end).to.equal('2025-07-06');
       });
 
       it('should delete the occurrence of its displayed day when deleted from another timezone', async () => {
@@ -2655,8 +2650,8 @@ describe('<EventDialogContent open />', () => {
         // The range was validated as a pair in New York, so the untouched start follows the
         // edited end instead of keeping its UTC instant next to a New York end.
         const payload = updateRecurringEventSpy!.mock.lastCall![0];
-        expect(payload.changes.start).toEqualDateTime('2025-07-04T04:00:00.000Z'); // 00:00 EDT
-        expect(payload.changes.end).toEqualDateTime('2025-07-06T03:59:59.999Z'); // 23:59:59.999 EDT
+        expect(payload.changes.start).toEqualDateTime('2025-07-04T04:00:00.000Z'); // July 4th 00:00 EDT
+        expect(payload.changes.end).toEqualDateTime('2025-07-06T04:00:00.000Z'); // July 6th 00:00 EDT
       });
 
       it('should build a preset on the stored start when only the display timezone moved', async () => {
