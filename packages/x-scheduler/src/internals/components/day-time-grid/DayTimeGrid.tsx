@@ -35,7 +35,7 @@ import {
 import clsx from 'clsx';
 import type { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridColumn } from './TimeGridColumn';
-import { DayGridCell } from './DayGridCell';
+import { DayGridCell, EVENT_HEIGHT } from './DayGridCell';
 import { useEventEditingContext } from '../event-editing';
 import { useDisarmOnOutsidePointer } from '../armed-occurrence';
 import { isOccurrenceInDayGrid } from '../../utils/event-utils';
@@ -54,6 +54,8 @@ const DayTimeGridContainer = styled(CalendarGrid.Root, {
 })(({ theme }) => ({
   '--fixed-cell-width': 'var(--EventCalendar-size-fixedCellWidth)',
   '--hour-height': `${HOUR_HEIGHT}px`,
+  // Number of all-day event rows displayed before the all-day area starts to scroll.
+  '--all-day-max-visible-events': 6,
   width: '100%',
   height: '100%',
   display: 'flex',
@@ -72,6 +74,11 @@ const DayTimeGridRoot = styled('div', {
   flexDirection: 'column',
   flex: 1,
   overflowY: 'auto',
+  // Reserves the gutter that the all-day row's scrollbar takes when only that row overflows,
+  // so the time grid columns stay aligned with the all-day cells.
+  '&[data-has-scroll]': {
+    scrollbarGutter: 'stable',
+  },
 });
 
 const DayTimeGridHeader = styled(CalendarGrid.HeaderRow, {
@@ -97,7 +104,8 @@ const DayTimeGridAllDayEventsGrid = styled('div', {
     overflowY: 'scroll',
     scrollbarGutter: 'stable',
     height: '100%',
-    gridColumn: '-1',
+    // Fill the last track, which the all-day row spans, so the row's own scrollbar lands in this gutter.
+    gridArea: '1 / -2',
     /* Make scrollbar invisible by setting transparent colors */
     scrollbarColor: 'transparent transparent',
     background: 'transparent',
@@ -133,6 +141,12 @@ const DayTimeGridAllDayEventsRow = styled(CalendarGrid.DayRow, {
   gridRow: 1,
   width: '100%',
   height: '100%',
+  // The visible events end exactly at a multiple of `EVENT_HEIGHT`; the extra spacing is one
+  // gap plus the top of the next event, which peeks out to hint that the area scrolls.
+  maxHeight: `calc(var(--all-day-max-visible-events) * ${EVENT_HEIGHT}px + ${theme.spacing(1)})`,
+  overflow: 'hidden auto',
+  // Keeps the focus ring of an event scrolled into view inside the visible area.
+  scrollPaddingBlock: theme.spacing(0.5),
   '& > *': {
     borderInlineStart: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
@@ -363,6 +377,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   // Ref hooks
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const allDayHeaderWrapperRef = React.useRef<HTMLDivElement>(null);
+  const allDayRowRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLElement | null>(null);
   const scrollRootRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
@@ -417,13 +432,18 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     if (!body || !allDayHeader) {
       return;
     }
-    setHasScroll(body.scrollHeight > body.clientHeight);
+    const allDayRow = allDayRowRef.current;
+    // The all-day row's scrollbar needs the gutter as well, even when the time grid fits.
+    setHasScroll(
+      body.scrollHeight > body.clientHeight ||
+        (allDayRow != null && allDayRow.scrollHeight > allDayRow.clientHeight),
+    );
   }, []);
 
   useIsoLayoutEffect(updateHasScroll, [occurrencesMap, updateHasScroll]);
 
   // Applied once, the first time the grid can scroll (earlier, `scrollTop` would clamp to 0).
-  // Navigating to another period keeps the user's scroll position.
+  // Navigating to another period keeps the time grid's scroll position.
   const isInitialScrollAppliedRef = React.useRef(false);
   const applyInitialScroll = useStableCallback(() => {
     const scrollRoot = scrollRootRef.current;
@@ -522,6 +542,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
         </DayTimeGridAllDayEventsHeaderCell>
         <DayTimeGridAllDayEventsRow
           as={CalendarGrid.DayRow}
+          // Unlike the time grid, the all-day scroll position means nothing in another period.
+          key={start}
+          ref={allDayRowRef}
           start={start}
           end={end}
           days={days}
@@ -534,7 +557,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
         <div className={classes.dayTimeGridScrollablePlaceholder} />
       </DayTimeGridAllDayEventsGrid>
 
-      <DayTimeGridRoot className={classes.dayTimeGrid} ref={scrollRootRef}>
+      <DayTimeGridRoot
+        className={classes.dayTimeGrid}
+        ref={scrollRootRef}
+        data-has-scroll={hasScroll || undefined}
+      >
         <DayTimeGridBody className={classes.dayTimeGridBody} ref={bodyRef}>
           <DayTimeGridScrollableContent
             className={classes.dayTimeGridScrollableContent}
