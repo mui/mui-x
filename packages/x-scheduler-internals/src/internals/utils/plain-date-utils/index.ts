@@ -20,6 +20,7 @@ export {
   createStartOfPlainDate,
   isDateOnlyString,
   normalizeAllDayBounds,
+  snapAllDayBounds,
 } from './date';
 export {
   getDayNumber,

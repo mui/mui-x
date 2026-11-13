@@ -10,7 +10,9 @@ import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premi
 import { describe, it, expect } from 'vitest';
 import {
   generateOccurrenceFromEvent,
+  getDayTimezone,
   getOccurrenceInternalInfos,
+  getOccurrencePlainDate,
   getDaysTheOccurrenceIsVisibleOn,
   getEventResourceIds,
   getOccurrenceLastDayNumber,
@@ -451,6 +453,30 @@ describe('event-utils', () => {
         'event::2025-07-04',
       );
       expect(getRecurringOccurrenceKey('event', timestamp, 'UTC')).to.equal('event::2025-07-03');
+    });
+  });
+
+  describe('getDayTimezone', () => {
+    it('should run the days of an all-day event in the display timezone and of a timed one in its own', () => {
+      expect(getDayTimezone({ allDay: true, timezone: 'UTC' }, 'Asia/Tokyo')).to.equal(
+        'Asia/Tokyo',
+      );
+      expect(getDayTimezone({ allDay: false, timezone: 'UTC' }, 'Asia/Tokyo')).to.equal('UTC');
+    });
+  });
+
+  describe('getOccurrencePlainDate', () => {
+    it('should read the day of an all-day occurrence in the display timezone and of a timed one in its own', () => {
+      const allDay = utcJuly4AllDayBuilder().withDisplayTimezone('Asia/Tokyo').toOccurrence();
+      expect(getOccurrencePlainDate(allDay, 'Asia/Tokyo')).toEqualPlainDate('2025-07-04');
+
+      // July 4th at 22:00 in New York is July 5th in Tokyo.
+      const timed = EventBuilder.new()
+        .withDataTimezone('America/New_York')
+        .singleDay('2025-07-04T22:00:00', 60)
+        .withDisplayTimezone('Asia/Tokyo')
+        .toOccurrence();
+      expect(getOccurrencePlainDate(timed, 'Asia/Tokyo')).toEqualPlainDate('2025-07-04');
     });
   });
 });

@@ -9,6 +9,7 @@ import type {
   SchedulerResourceId,
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
+import type { BaseTemporal } from './base-temporal';
 import { toLocalDayNumber, toPlainDate } from './plain-date-utils/timeZone';
 import { getDayNumber, getPlainDateKey } from './plain-date-utils/plainDate';
 import type { SchedulerEventRangeIndex } from './event-range-index';
@@ -65,6 +66,27 @@ export function getDataTimestamp(event: SchedulerProcessedEvent, bound: 'start' 
   return bound === 'start'
     ? event.unstable_internalInfos.dataStart
     : event.unstable_internalInfos.dataEnd;
+}
+
+/**
+ * The timezone the day math of an event runs in: the display timezone for an all-day event, whose
+ * days are the displayed ones, and its own timezone for a timed event.
+ */
+export function getDayTimezone(
+  event: Pick<SchedulerProcessedEvent, 'allDay' | 'timezone'>,
+  displayTimezone: string,
+): string {
+  return event.allDay ? displayTimezone : event.timezone;
+}
+
+/**
+ * The day of an occurrence, which its recurring key and the recurring edits are based on.
+ */
+export function getOccurrencePlainDate(
+  occurrence: Pick<SchedulerProcessedEvent, 'allDay' | 'start' | 'timezone'>,
+  displayTimezone: string,
+): BaseTemporal.PlainDate {
+  return toPlainDate(occurrence.start.timestamp, getDayTimezone(occurrence, displayTimezone));
 }
 
 /**

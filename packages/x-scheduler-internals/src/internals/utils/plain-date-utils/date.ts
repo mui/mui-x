@@ -79,6 +79,24 @@ export function parseNonIsoString(value: string, timezone: string): number {
 }
 
 /**
+ * Snaps the bounds of an all-day event to whole days in `timezone`: the start to the first instant
+ * of its day, the end to the first instant of the day after its last instant, at least one day
+ * after the start.
+ */
+export function snapAllDayBounds(
+  start: number,
+  end: number,
+  timezone: string,
+): { start: number; end: number } {
+  const snappedStart = getStartOfDayMs(start, timezone);
+  let snappedEnd = toEpochMs(toPlainDate(end - 1, timezone).add({ days: 1 }), timezone);
+  if (snappedEnd <= snappedStart) {
+    snappedEnd = toEpochMs(toPlainDate(snappedStart, timezone).add({ days: 1 }), timezone);
+  }
+  return { start: snappedStart, end: snappedEnd };
+}
+
+/**
  * Snaps an all-day event's bounds to span their whole days in `timezone`; non-all-day bounds are
  * returned unchanged. The end is exclusive: the first instant after the last day.
  */

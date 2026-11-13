@@ -3,7 +3,12 @@ import { BaseTemporal } from './base-temporal';
 import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
 import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import type { WeekInfo } from './date-locale';
-import { toEpochMs, toPlainDateTime } from './plain-date-utils/timeZone';
+import {
+  addDaysOnWallClock,
+  toEpochMs,
+  toPlainDate,
+  toPlainDateTime,
+} from './plain-date-utils/timeZone';
 import { isDateOnlyString, isInstantString } from './plain-date-utils/date';
 
 /**
@@ -67,19 +72,42 @@ export function getUntilReferenceString(event: SchedulerEvent): string {
 }
 
 /**
- * Gets the timestamp of the end of an event occurrence from the timestamp of its start.
- * For now, the occurrence always has the same duration as the original event, even when the DST applies between its start and the end.
+ * Writes a bound of an all-day event: the date of its instant in `timezone`.
+ */
+export function allDayBoundToEventString(epochMs: number, timezone: string): string {
+  return toPlainDate(epochMs, timezone).toString();
+}
+
+/**
+ * The number of days an all-day event covers, from the dates of its model.
+ */
+export function getAllDayDayCount(
+  event: Pick<SchedulerProcessedEvent, 'modelInBuiltInFormat'>,
+): number {
+  const model = event.modelInBuiltInFormat;
+  return (
+    getDayNumber(BaseTemporal.PlainDate.from(model.end)) -
+    getDayNumber(BaseTemporal.PlainDate.from(model.start))
+  );
+}
+
+/**
+ * The end of an occurrence from its start: an all-day occurrence lasts the days of its event on
+ * the wall clock of the display timezone, a timed one the duration of its event.
  */
 export function getOccurrenceEnd({
   event,
   occurrenceStart,
+  displayTimezone,
 }: {
   event: SchedulerProcessedEvent;
   occurrenceStart: number;
+  displayTimezone: string;
 }): number {
-  return (
-    occurrenceStart + event.unstable_internalInfos.dataEnd - event.unstable_internalInfos.dataStart
-  );
+  if (event.allDay) {
+    return addDaysOnWallClock(occurrenceStart, getAllDayDayCount(event), displayTimezone);
+  }
+  return occurrenceStart + event.end.timestamp - event.start.timestamp;
 }
 
 function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {

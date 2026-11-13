@@ -1,7 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { createDate, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
-import { createProcessedDate, isInstantString, parseWallTimeString } from './date';
+import {
+  createProcessedDate,
+  isInstantString,
+  parseWallTimeString,
+  snapAllDayBounds,
+} from './date';
 import { getMinutesInDay } from './plainDate';
 import { toPlainDate } from './timeZone';
 
@@ -180,6 +185,42 @@ describe('plain-date-utils/date', () => {
       expect(resolve('2025-01-01 09:00', 'UTC')).to.equal(null);
       expect(resolve('20250101', 'UTC')).to.equal(null);
       expect(resolve('2025-01-01T09:00', 'Not/A_Timezone')).to.equal(null);
+    });
+  });
+
+  describe('snapAllDayBounds', () => {
+    const read = (bounds: { start: number; end: number }) => [
+      new Date(bounds.start).toISOString(),
+      new Date(bounds.end).toISOString(),
+    ];
+
+    it('should keep day-aligned exclusive bounds', () => {
+      const start = Date.UTC(2025, 6, 4);
+      const end = Date.UTC(2025, 6, 6);
+      expect(snapAllDayBounds(start, end, 'UTC')).to.deep.equal({ start, end });
+    });
+
+    it('should floor the start and ceil the end to the next day', () => {
+      expect(
+        read(snapAllDayBounds(Date.UTC(2025, 6, 4, 10, 30), Date.UTC(2025, 6, 5, 18), 'UTC')),
+      ).to.deep.equal(['2025-07-04T00:00:00.000Z', '2025-07-06T00:00:00.000Z']);
+    });
+
+    it('should give one day to an end on or before the start', () => {
+      const start = Date.UTC(2025, 6, 4, 10);
+      const oneDay = ['2025-07-04T00:00:00.000Z', '2025-07-05T00:00:00.000Z'];
+      expect(read(snapAllDayBounds(start, Date.UTC(2025, 6, 4, 9), 'UTC'))).to.deep.equal(oneDay);
+      expect(read(snapAllDayBounds(start, Date.UTC(2025, 6, 3, 12), 'UTC'))).to.deep.equal(oneDay);
+    });
+
+    it('should keep one day across a 23-hour day', () => {
+      // Europe/Paris springs forward from 02:00 CET to 03:00 CEST on March 29th, 2026.
+      const start = Date.UTC(2026, 2, 28, 23); // March 29th 00:00 CET
+      const end = Date.UTC(2026, 2, 29, 21); // March 29th 23:00 CEST
+      expect(read(snapAllDayBounds(start, end, 'Europe/Paris'))).to.deep.equal([
+        '2026-03-28T23:00:00.000Z',
+        '2026-03-29T22:00:00.000Z', // March 30th 00:00 CEST
+      ]);
     });
   });
 });

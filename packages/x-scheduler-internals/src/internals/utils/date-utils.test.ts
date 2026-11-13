@@ -1,57 +1,54 @@
 import { describe, it, expect } from 'vitest';
-import { createDate } from 'test/utils/scheduler';
+import { EventBuilder } from 'test/utils/scheduler';
 import { BaseTemporal } from './base-temporal';
 import {
+  allDayBoundToEventString,
+  getAllDayDayCount,
+  getOccurrenceEnd,
   getPlainDateWeekStart,
   getUntilReferenceString,
   getWeekNumber,
   untilToEventString,
 } from './date-utils';
-import { normalizeAllDayBounds } from './plain-date-utils/date';
-import { toPlainDateTime } from './plain-date-utils/timeZone';
+import { toEpochMs } from './plain-date-utils/timeZone';
 
 const wednesdayPlainDate = BaseTemporal.PlainDate.from('2025-01-08');
 
 describe('date-utils', () => {
-  describe('normalizeAllDayBounds', () => {
-    const start = createDate('2025-01-08T09:00:00').getTime();
-    const end = createDate('2025-01-08T18:00:00').getTime();
-    const read = (bounds: { start: number; end: number }) => [
-      toPlainDateTime(bounds.start, 'default').toString(),
-      toPlainDateTime(bounds.end, 'default').toString(),
-    ];
-
-    it('returns the bounds unchanged when allDay is false', () => {
-      expect(normalizeAllDayBounds(start, end, false, 'default')).to.deep.equal({ start, end });
-    });
-
-    it('returns the bounds unchanged when allDay is undefined', () => {
-      expect(normalizeAllDayBounds(start, end, undefined, 'default')).to.deep.equal({ start, end });
-    });
-
-    it('snaps an all-day event to the whole day', () => {
-      expect(read(normalizeAllDayBounds(start, end, true, 'default'))).to.deep.equal([
-        '2025-01-08T00:00:00',
-        '2025-01-09T00:00:00',
-      ]);
-    });
-
-    it('preserves the span when flattening a multi-day all-day event', () => {
-      const multiDayEnd = createDate('2025-01-10T18:00:00').getTime();
-      expect(read(normalizeAllDayBounds(start, multiDayEnd, true, 'default'))).to.deep.equal([
-        '2025-01-08T00:00:00',
-        '2025-01-11T00:00:00',
-      ]);
+  describe('allDayBoundToEventString', () => {
+    it('should write an all-day bound as its date in the timezone', () => {
+      expect(allDayBoundToEventString(Date.UTC(2025, 6, 4), 'Asia/Tokyo')).to.equal('2025-07-04');
+      expect(allDayBoundToEventString(Date.UTC(2025, 6, 4), 'America/New_York')).to.equal(
+        '2025-07-03',
+      );
     });
   });
 
-  describe('normalizeAllDayBounds across DST transitions', () => {
-    it('should end at the next midnight when a DST transition repeats the last hour', () => {
-      // America/Santiago falls back from 00:00 -03:00 to 23:00 -04:00 on April 6th, 2024.
-      const day = createDate('2024-04-06T12:00:00', 'America/Santiago').getTime();
-      const result = normalizeAllDayBounds(day, day, true, 'America/Santiago');
-      expect(new Date(result.start).toISOString()).to.equal('2024-04-06T03:00:00.000Z');
-      expect(new Date(result.end).toISOString()).to.equal('2024-04-07T04:00:00.000Z');
+  describe('getAllDayDayCount', () => {
+    it('should count the days of an all-day model', () => {
+      const model = EventBuilder.new().span('2025-07-04', '2025-07-07', { allDay: true }).build();
+      expect(getAllDayDayCount({ modelInBuiltInFormat: model })).to.equal(3);
+    });
+  });
+
+  describe('getOccurrenceEnd', () => {
+    it('should end an all-day occurrence after its day count on the wall clock', () => {
+      // Europe/Paris springs forward on March 29th, 2026: two days from March 28th last 47 hours.
+      const event = EventBuilder.new()
+        .span('2026-03-28', '2026-03-30', { allDay: true })
+        .withDisplayTimezone('Europe/Paris')
+        .toProcessed();
+      const occurrenceStart = toEpochMs(BaseTemporal.PlainDate.from('2026-03-28'), 'Europe/Paris');
+      const end = getOccurrenceEnd({ event, occurrenceStart, displayTimezone: 'Europe/Paris' });
+      expect(new Date(end).toISOString()).to.equal('2026-03-29T22:00:00.000Z'); // March 30th 00:00
+    });
+
+    it('should keep the duration of a timed occurrence', () => {
+      const event = EventBuilder.new().singleDay('2025-07-04T09:00:00Z', 90).toProcessed();
+      const occurrenceStart = Date.UTC(2025, 6, 11, 9);
+      expect(getOccurrenceEnd({ event, occurrenceStart, displayTimezone: 'UTC' })).to.equal(
+        Date.UTC(2025, 6, 11, 10, 30),
+      );
     });
   });
 
