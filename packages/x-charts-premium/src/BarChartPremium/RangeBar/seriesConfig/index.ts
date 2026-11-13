@@ -1,5 +1,6 @@
 import {
   cartesianSeriesTypes,
+  composableCartesianSeriesTypes,
   identifierSerializerSeriesIdDataIndex,
   identifierCleanerSeriesIdDataIndex,
   createIsHighlighted,
@@ -37,4 +38,5 @@ export const rangeBarSeriesConfig: ChartSeriesTypeConfig<'rangeBar'> = {
 };
 
 cartesianSeriesTypes.addType('rangeBar');
+composableCartesianSeriesTypes.add('rangeBar');
 seriesPreviewPlotMap.set('rangeBar', RangeBarPreviewPlot);

@@ -35,7 +35,7 @@ const getEsmIndex = (pkg) => `// \`x-charts-vendor/${pkg.name}\` (ESM)
 export * from "${pkg.name}";
 `;
 
-const getEsmDefaultExport = (pkg) => `export { default } from "${pkg.name}";
+const getDefaultExport = (pkg) => `export { default } from "${pkg.name}";
 `;
 
 const getCjsIndex = (pkg, hasSrc) => `// \`x-charts-vendor/${pkg.name}\` (CommonJS)
@@ -154,13 +154,14 @@ const main = async () => {
 
     // Generate ESM index
     const esmContent =
-      getEsmIndex(pkg) + (DEFAULT_EXPORT_PKGS.has(pkgName) ? getEsmDefaultExport(pkg) : '');
+      getEsmIndex(pkg) + (DEFAULT_EXPORT_PKGS.has(pkgName) ? getDefaultExport(pkg) : '');
 
     // Generate CJS index
     const cjsContent = getCjsIndex(pkg, hasSrc);
 
     // Generate type definitions
-    const typeContent = getTypeDefinitionFile(pkg);
+    const typeContent =
+      getTypeDefinitionFile(pkg) + (DEFAULT_EXPORT_PKGS.has(pkgName) ? getDefaultExport(pkg) : '');
 
     // Write files directly to build directory
     await Promise.all([

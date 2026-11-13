@@ -5,6 +5,7 @@ import type {
   ScaleName,
   AxisId,
   ChartsAxisData,
+  ChartsAxisProps,
   YAxis,
   XAxis,
   DefaultedXAxis,
@@ -19,7 +20,6 @@ import type {
   ZoomSliderShowTooltip,
 } from './zoom.types';
 import type { UseChartInteractionSignature } from '../useChartInteraction';
-import type { ChartsAxisProps } from '../../../../ChartsAxis';
 import type { UseChartBrushSignature } from '../useChartBrush';
 import type { SamplingState } from './sampling.types';
 import type { ChartsActivationEvent } from '../../../../models/events';
