@@ -27,11 +27,7 @@ function dependency(
 }
 
 function allDayEvent(id: SchedulerEventId, day: string, timezone = 'UTC') {
-  return EventBuilder.new()
-    .id(id)
-    .withDataTimezone(timezone)
-    .span(`${day}T00:00:00`, `${day}T23:59:59.999`, { allDay: true })
-    .toProcessed();
+  return EventBuilder.new().id(id).withDataTimezone(timezone).fullDay(day).toProcessed();
 }
 
 interface CascadeOverrides {
@@ -347,7 +343,7 @@ describe('computeAutoSchedulingCascade', () => {
     const successor = EventBuilder.new()
       .id('b')
       .withDataTimezone('UTC')
-      .span('2025-07-10T00:00:00', '2025-07-12T23:59:59.999', { allDay: true })
+      .span('2025-07-10', '2025-07-13', { allDay: true })
       .toProcessed();
 
     const result = runCascade(
@@ -601,7 +597,7 @@ describe('computeAutoSchedulingCascade', () => {
     const successor = EventBuilder.new()
       .id('b')
       .withDataTimezone('UTC')
-      .span('2025-07-03T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
+      .span('2025-07-03', '2025-07-05', { allDay: true })
       .toProcessed();
 
     const result = runCascade(
@@ -628,12 +624,12 @@ describe('computeAutoSchedulingCascade', () => {
     const predecessor = EventBuilder.new()
       .id('a')
       .withDataTimezone('America/New_York')
-      .span('2025-03-08T00:00:00', '2025-03-08T23:59:59.999', { allDay: true })
+      .span('2025-03-08', '2025-03-09', { allDay: true })
       .toProcessed();
     const successor = EventBuilder.new()
       .id('b')
       .withDataTimezone('America/New_York')
-      .span('2025-03-08T00:00:00', '2025-03-08T23:59:59.999', { allDay: true })
+      .span('2025-03-08', '2025-03-09', { allDay: true })
       .toProcessed();
 
     const result = runCascade(
@@ -1070,12 +1066,12 @@ describe('computeAutoSchedulingCascade', () => {
     const predecessor = EventBuilder.new()
       .id('a')
       .withDataTimezone('America/New_York')
-      .span('2025-11-01T00:00:00', '2025-11-01T23:59:59.999', { allDay: true })
+      .span('2025-11-01', '2025-11-02', { allDay: true })
       .toProcessed();
     const successor = EventBuilder.new()
       .id('b')
       .withDataTimezone('America/New_York')
-      .span('2025-11-02T00:00:00', '2025-11-02T23:59:59.999', { allDay: true })
+      .span('2025-11-02', '2025-11-03', { allDay: true })
       .toProcessed();
 
     const result = runCascade(
@@ -1106,7 +1102,7 @@ describe('computeAutoSchedulingCascade', () => {
     const successor = EventBuilder.new()
       .id('b')
       .withDataTimezone('America/Havana')
-      .span('2026-03-08T01:00:00', '2026-03-08T23:59:59.999', { allDay: true })
+      .span('2026-03-08', '2026-03-09', { allDay: true })
       .toProcessed();
 
     const result = runCascade(
@@ -1170,7 +1166,7 @@ describe('computeAutoSchedulingCascade', () => {
     const successor = EventBuilder.new()
       .id('b')
       .withDataTimezone('Pacific/Apia')
-      .span('2011-12-28T00:00:00', '2011-12-29T23:59:59.999', { allDay: true })
+      .span('2011-12-28', '2011-12-30', { allDay: true })
       .toProcessed();
 
     const result = runCascade(
@@ -1190,7 +1186,7 @@ describe('computeAutoSchedulingCascade', () => {
     const successor = EventBuilder.new()
       .id('b')
       .withDataTimezone('Pacific/Apia')
-      .span('2011-12-27T00:00:00', '2011-12-29T23:59:59.999', { allDay: true })
+      .span('2011-12-27', '2011-12-30', { allDay: true })
       .toProcessed();
 
     const result = runCascade(
@@ -2713,7 +2709,7 @@ describe('computeAutoSchedulingCascade', () => {
     const eventB = EventBuilder.new()
       .id('b')
       .withDataTimezone('UTC')
-      .span('2025-07-03T00:00:00', '2025-07-06T23:59:59.999', { allDay: true })
+      .span('2025-07-03', '2025-07-07', { allDay: true })
       .toProcessed();
 
     const result = runCascade(

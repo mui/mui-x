@@ -212,11 +212,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const onEventsChange = vi.fn();
       const allDayA = EventBuilder.new()
         .id('a')
-        .span('2025-07-03T00:00:00', '2025-07-03T23:59:59.999', { allDay: true })
+        .span('2025-07-03', '2025-07-04', { allDay: true })
         .build();
       const allDayB = EventBuilder.new()
         .id('b')
-        .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
+        .span('2025-07-04', '2025-07-05', { allDay: true })
         .build();
       const store = new EventTimelinePremiumStoreWithFeatures({
         ...DEFAULT_PARAMS,
@@ -303,7 +303,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const allDayB = EventBuilder.new()
         .id('b')
         .withDataTimezone('UTC')
-        .span('2025-07-05T00:00:00', '2025-07-05T23:59:59', { allDay: true })
+        .span('2025-07-05', '2025-07-06', { allDay: true })
         .build();
       const store = new EventTimelinePremiumStoreWithFeatures({
         ...DEFAULT_PARAMS,
@@ -551,7 +551,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         rejection: { code: 'unwritableEventMovedError', params: { title: eventB.title } },
       });
       expect(onEventsChange.mock.calls.length).to.equal(0);
-      expect(store.state.processedEventLookup.get('a')!.unstable_internalInfos.dataEnd).to.equal(
+      expect(store.state.processedEventLookup.get('a')!.end.timestamp).to.equal(
         date('2025-07-03T10:00:00Z').getTime(),
       );
     });
@@ -781,7 +781,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         .build();
       const allDaySuccessor = EventBuilder.new()
         .id('b')
-        .span('2025-07-03T00:00:00Z', '2025-07-03T12:00:00Z', { allDay: true })
+        .span('2025-07-03', '2025-07-04', { allDay: true })
         .build();
       const store = new EventTimelinePremiumStoreWithFeatures({
         ...DEFAULT_PARAMS,
@@ -1181,7 +1181,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const allDayB = EventBuilder.new()
         .id('b')
         .withDataTimezone('America/New_York')
-        .span('2025-11-02T00:00:00', '2025-11-02T23:59:59', { allDay: true })
+        .span('2025-11-02', '2025-11-03', { allDay: true })
         .build();
       const store = new EventTimelinePremiumStoreWithFeatures({
         ...DEFAULT_PARAMS,
