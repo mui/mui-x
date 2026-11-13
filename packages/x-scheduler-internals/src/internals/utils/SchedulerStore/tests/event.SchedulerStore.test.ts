@@ -378,17 +378,16 @@ storeClasses.forEach((storeClass) => {
             displayTimezone: 'America/New_York',
             onEventsChange,
           });
-          const dataStart = new Date(
-            schedulerEventSelectors.processedEvent(store.state, '1')!.unstable_internalInfos
-              .dataStart,
+          const start = new Date(
+            schedulerEventSelectors.processedEvent(store.state, '1')!.start.timestamp,
           );
 
           let result: ReturnType<typeof store.updateEvent>;
           expect(() => {
             result = store.updateEvent({
               id: '1',
-              start: dataStart,
-              end: addDays(dataStart, 2),
+              start,
+              end: addDays(start, 2),
             });
           }).toWarnDev([
             `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,

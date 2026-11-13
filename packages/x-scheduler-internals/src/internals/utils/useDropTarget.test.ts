@@ -10,13 +10,12 @@ import type { SchedulerEvent, SchedulerEventOccurrence } from '@mui/x-scheduler-
 import type { SchedulerStoreInContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { describe, it, expect, vi } from 'vitest';
 import { applyInternalDragOrResizeOccurrencePlaceholder } from './useDropTarget';
-import { getOccurrenceModelEnd } from './event-utils';
 
 premiumStoreClasses.forEach((storeClass) => {
   describe(`applyInternalDragOrResizeOccurrencePlaceholder - ${storeClass.name}`, () => {
     it('should keep the untouched start of a recurring all-day occurrence resized from another timezone', () => {
-      // A UTC weekly series on Fridays, displayed on Thursday July 3 in New York: extending
-      // only the end with scope 'all' must not read the displayed start as a day move.
+      // An all-day weekly series on Fridays displayed in New York: extending only the end with
+      // scope 'all' must not read the start as a day move.
       const builder = utcJuly4AllDayBuilder()
         .id('holiday')
         .recurrent('WEEKLY')
@@ -42,8 +41,8 @@ premiumStoreClasses.forEach((storeClass) => {
           sourceResourceId: null,
           resourceId: null,
           start: occurrence.start.timestamp,
-          // One more day, from the last instant of its last day.
-          end: addDays(new Date(getOccurrenceModelEnd(occurrence)), 1).getTime(),
+          // One more day.
+          end: addDays(new Date(occurrence.end.timestamp), 1).getTime(),
         },
       );
       store.selectRecurringEventScope('all');
@@ -53,12 +52,12 @@ premiumStoreClasses.forEach((storeClass) => {
       );
       expect(updated.start).to.equal(event.start);
       expect(updated.rrule).to.deep.equal(event.rrule);
-      expect(updated.end).to.equal('2025-07-06T03:59:59'); // July 5, 23:59:59 in New York
+      expect(updated.end).to.equal('2025-07-06');
     });
 
     it('should keep the untouched start of an edited all-day occurrence resized from another timezone', () => {
-      // A UTC all-day event displayed on July 3 in New York: extending only the end while the
-      // occurrence is armed must keep the edited occurrence's start on July 4 in UTC.
+      // An all-day event on July 4th displayed in New York: extending only the end while the
+      // occurrence is armed must keep the edited occurrence's start on July 4th.
       const builder = utcJuly4AllDayBuilder().id('holiday').withDisplayTimezone('America/New_York');
       const occurrence = builder.toOccurrence();
       const store = new storeClass.Value({
@@ -80,25 +79,20 @@ premiumStoreClasses.forEach((storeClass) => {
           sourceResourceId: null,
           resourceId: null,
           start: occurrence.start.timestamp,
-          // One more day, from the last instant of its last day.
-          end: addDays(new Date(getOccurrenceModelEnd(occurrence)), 1).getTime(),
+          // One more day.
+          end: addDays(new Date(occurrence.end.timestamp), 1).getTime(),
         },
       );
 
       const edited = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
-      expect(edited.unstable_internalInfos.dataStart).to.equal(
-        occurrence.unstable_internalInfos.dataStart,
-      );
       expect(edited.start).to.equal(occurrence.start);
-      expect(new Date(edited.unstable_internalInfos.dataEnd).toISOString()).to.equal(
-        '2025-07-06T03:59:59.999Z',
-      );
+      // July 6th 00:00 in New York.
+      expect(new Date(edited.end.timestamp).toISOString()).to.equal('2025-07-06T04:00:00.000Z');
     });
 
     it('should resend both bounds when the drop toggles all-day off', () => {
-      // A UTC all-day event displayed from July 3 00:00 in New York, dropped on the time grid at
-      // that same instant: the displayed start is unchanged but the stored one (20:00 that
-      // evening) would end up after the new end.
+      // An all-day event on July 4th displayed in New York, dropped on the time grid at its first
+      // instant: both bounds are written as instants.
       const builder = utcJuly4AllDayBuilder().id('holiday').withDisplayTimezone('America/New_York');
       const occurrence = builder.toOccurrence();
       const onEventsChange = vi.fn();
@@ -131,11 +125,12 @@ premiumStoreClasses.forEach((storeClass) => {
         (item: SchedulerEvent) => item.id === 'holiday',
       );
       expect(updated.allDay).to.not.equal(true);
+      // July 4th 00:00 in New York.
       expect(createDate(updated.start, 'UTC')).toEqualDateTime(
-        createDate('2025-07-03T04:00:00', 'UTC'),
+        createDate('2025-07-04T04:00:00', 'UTC'),
       );
       expect(createDate(updated.end, 'UTC')).toEqualDateTime(
-        createDate('2025-07-03T05:00:00', 'UTC'),
+        createDate('2025-07-04T05:00:00', 'UTC'),
       );
     });
 

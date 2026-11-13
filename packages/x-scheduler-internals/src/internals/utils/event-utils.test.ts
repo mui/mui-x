@@ -11,7 +11,6 @@ import { describe, it, expect } from 'vitest';
 import {
   generateOccurrenceFromEvent,
   getDayTimezone,
-  getOccurrenceInternalInfos,
   getOccurrencePlainDate,
   getDaysTheOccurrenceIsVisibleOn,
   getEventResourceIds,
@@ -21,6 +20,7 @@ import {
   getPrimaryResourceId,
   getRecurringOccurrenceKey,
   getResourceSelectionMode,
+  isEventOccurrence,
 } from './event-utils';
 import { getDayListFromPlainDates } from '../../get-day-list';
 import { BaseTemporal } from './base-temporal';
@@ -40,8 +40,7 @@ describe('event-utils', () => {
 
     it('should return all days when event spans multiple days', () => {
       const event = EventBuilder.new()
-        .span('2024-01-15T10:00:00Z', '2024-01-17T14:00:00Z')
-        .allDay(true)
+        .span('2024-01-15', '2024-01-18', { allDay: true })
         .toOccurrence();
 
       const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
@@ -50,8 +49,7 @@ describe('event-utils', () => {
 
     it('should return empty array when event is completely outside visible range', () => {
       const event = EventBuilder.new()
-        .span('2024-01-10T10:00:00Z', '2024-01-12T14:00:00Z')
-        .allDay(true)
+        .span('2024-01-10', '2024-01-13', { allDay: true })
         .toOccurrence();
 
       const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
@@ -60,8 +58,7 @@ describe('event-utils', () => {
 
     it('should return empty array when event is after visible range', () => {
       const event = EventBuilder.new()
-        .span('2024-01-20T10:00:00Z', '2024-01-22T14:00:00Z')
-        .allDay(true)
+        .span('2024-01-20', '2024-01-23', { allDay: true })
         .toOccurrence();
 
       const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
@@ -70,8 +67,7 @@ describe('event-utils', () => {
 
     it('should handle event that partially overlaps with visible range at the beginning', () => {
       const event = EventBuilder.new()
-        .span('2024-01-13T10:00:00Z', '2024-01-16T14:00:00Z')
-        .allDay(true)
+        .span('2024-01-13', '2024-01-17', { allDay: true })
         .toOccurrence();
 
       const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
@@ -80,8 +76,7 @@ describe('event-utils', () => {
 
     it('should handle event that partially overlaps with visible range at the end', () => {
       const event = EventBuilder.new()
-        .span('2024-01-16T10:00:00Z', '2024-01-19T14:00:00Z')
-        .allDay(true)
+        .span('2024-01-16', '2024-01-20', { allDay: true })
         .toOccurrence();
 
       const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
@@ -94,31 +89,37 @@ describe('event-utils', () => {
       // Europe/Paris springs forward on March 29th, 2026: a 23-hour day.
       {
         timezone: 'Europe/Paris',
-        day: '2026-03-28',
-        end: '2026-03-30T00:00:00',
+        start: '2026-03-28',
+        end: '2026-03-30',
+        displayedEnd: '2026-03-30T00:00:00',
+        lastDay: '2026-03-29',
         days: ['2026-03-28', '2026-03-29'],
       },
       // America/Santiago repeats 23:00-23:59 on April 4th, 2026: a 25-hour day.
       {
         timezone: 'America/Santiago',
-        day: '2026-04-04',
-        end: '2026-04-05T00:00:00',
+        start: '2026-04-03',
+        end: '2026-04-05',
+        displayedEnd: '2026-04-05T00:00:00',
+        lastDay: '2026-04-04',
         days: ['2026-04-03', '2026-04-04'],
       },
-      // Pacific/Apia skipped December 30th, 2011.
+      // Pacific/Apia skipped December 30th, 2011: the end lands on the next existing day, the
+      // last day it names has no cell, and the occurrence renders on the days that exist.
       {
         timezone: 'Pacific/Apia',
-        day: '2011-12-29',
-        end: '2011-12-31T00:00:00',
+        start: '2011-12-28',
+        end: '2011-12-30',
+        displayedEnd: '2011-12-31T00:00:00',
+        lastDay: '2011-12-30',
         days: ['2011-12-28', '2011-12-29'],
       },
     ])(
-      'should end a UTC all-day occurrence displayed in $timezone after its last displayed day',
-      ({ timezone, day, end, days: expectedDays }) => {
+      'should end a two-day all-day occurrence displayed in $timezone after its last displayed day',
+      ({ timezone, start: day, end: endDay, displayedEnd: end, lastDay, days: expectedDays }) => {
         const event = EventBuilder.new()
-          .withDataTimezone('UTC')
           .withDisplayTimezone(timezone)
-          .span(`${day}T00:00:00`, `${day}T23:59:59`, { allDay: true })
+          .span(day, endDay, { allDay: true })
           .rrule({ freq: 'DAILY', count: 1 })
           .toProcessed();
         const firstPlainDate = BaseTemporal.PlainDate.from(day).add({ days: -3 });
@@ -142,7 +143,7 @@ describe('event-utils', () => {
           expect(occurrence.end.plainDateTime.toString()).to.equal(end);
           expect(getOccurrenceModelEnd(occurrence)).to.equal(occurrence.end.timestamp - 1);
           expect(getOccurrenceLastDayNumber(occurrence)).to.equal(
-            getDayNumber(BaseTemporal.PlainDate.from(expectedDays[1])),
+            getDayNumber(BaseTemporal.PlainDate.from(lastDay)),
           );
           expect(getDaysTheOccurrenceIsVisibleOn(occurrence, days, dayNumbers)).to.deep.equal(
             expectedDays,
@@ -384,33 +385,22 @@ describe('event-utils', () => {
     });
   });
 
-  describe('getOccurrenceInternalInfos', () => {
-    it('should return the dataTimezone of an event occurrence', () => {
-      const occurrence = utcJuly4AllDayBuilder()
-        .withDisplayTimezone('America/New_York')
-        .toOccurrence();
-
-      expect(getOccurrenceInternalInfos(occurrence)).to.equal(occurrence.unstable_internalInfos);
-    });
-
-    it('should return undefined for a placeholder occurrence', () => {
+  describe('isEventOccurrence', () => {
+    it('should tell an event occurrence from a placeholder', () => {
       const occurrence = EventBuilder.new().toOccurrence();
-      const placeholder = {
-        ...occurrence,
-        unstable_internalInfos: {
-          displayTimezone: occurrence.unstable_internalInfos.displayTimezone,
-        },
-      };
+      const { modelInBuiltInFormat, timezone, rrule, ...placeholder } = occurrence;
 
-      expect(getOccurrenceInternalInfos(placeholder)).to.equal(undefined);
+      expect(isEventOccurrence(occurrence)).to.equal(true);
+      expect(isEventOccurrence(placeholder)).to.equal(false);
     });
   });
 
   describe('generateOccurrenceFromEvent', () => {
-    it('should carry the data instants next to the display segment bounds', () => {
+    it('should copy the event onto the segment bounds without its exception dates', () => {
       const processed = utcJuly4AllDayBuilder()
         .withDisplayTimezone('America/New_York')
-        .exDates(['2025-07-05T00:00:00Z'])
+        .exDates(['2025-07-05'])
+        .rrule({ freq: 'DAILY' })
         .toProcessed();
 
       const occurrence = generateOccurrenceFromEvent({
@@ -419,29 +409,12 @@ describe('event-utils', () => {
         occurrenceKey: 'key',
         start: processed.start,
         end: processed.end,
-        internalInfos: processed.unstable_internalInfos,
       });
 
-      // Display bounds normalize to New York July 3rd; the data identity stays July 4th.
+      expect(occurrence.key).to.equal('key');
       expect(occurrence.start).to.equal(processed.start);
-      expect(occurrence.unstable_internalInfos.dataStart).to.equal(
-        createDate('2025-07-04T00:00:00', 'UTC').getTime(),
-      );
+      expect(occurrence.end).to.equal(processed.end);
       expect((occurrence as { exDates?: unknown }).exDates).to.equal(undefined);
-    });
-
-    it('should default the data instants to the display bounds when not provided', () => {
-      const processed = EventBuilder.new().singleDay('2025-07-04T09:00:00Z', 30).toProcessed();
-
-      const occurrence = generateOccurrenceFromEvent({
-        event: processed,
-        eventId: processed.id,
-        occurrenceKey: 'key',
-        start: processed.start,
-        end: processed.end,
-      });
-
-      expect(occurrence.unstable_internalInfos.dataStart).to.equal(processed.start.timestamp);
     });
   });
 
