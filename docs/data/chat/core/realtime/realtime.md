@@ -60,6 +60,8 @@ The `onEvent` callback receives `ChatRealtimeEvent` objects, grouped into the fo
 | `message-updated` | `{ message }`                    | Replaces the message record        |
 | `message-removed` | `{ messageId, conversationId? }` | Removes the message from the store |
 
+When a conversation is active, `message-added` and `message-updated` events whose `message.conversationId` is set to a different conversation are ignored, unless the message is already in the store.
+
 ### Typing events
 
 | Event type | Payload                                | Store effect                                |
