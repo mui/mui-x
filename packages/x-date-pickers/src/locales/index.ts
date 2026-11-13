@@ -15,6 +15,7 @@ export * from './frFR';
 export * from './heIL';
 export * from './hrHR';
 export * from './huHU';
+export * from './idID';
 export * from './isIS';
 export * from './itIT';
 export * from './jaJP';

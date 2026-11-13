@@ -1,6 +1,6 @@
 import type { RefObject } from '@mui/x-internals/types';
 import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
-import { getCell, includeRowSelection } from 'test/utils/helperFn';
+import { getCell, excludeRowSelection, includeRowSelection } from 'test/utils/helperFn';
 import {
   DataGridPremium,
   gridRowSelectionIdsSelector,
@@ -322,6 +322,44 @@ describe('<DataGridPremium /> - Row selection', () => {
           );
         },
       );
+    });
+  });
+
+  describe('prop: rowSelectionModel', () => {
+    // Context: https://github.com/mui/mui-x/issues/23960
+    it('should keep the id of a filtered auto-generated group row in an `exclude` model', () => {
+      const onRowSelectionModelChange = vi.fn();
+      const groupId = 'auto-generated-row-category1/Cat B';
+
+      function Test(props: Partial<DataGridPremiumProps>) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              {...baselineProps}
+              checkboxSelection
+              initialState={{ rowGrouping: { model: ['category1'] } }}
+              rowSelectionPropagation={{ descendants: false, parents: false }}
+              rowSelectionModel={excludeRowSelection([groupId])}
+              onRowSelectionModelChange={onRowSelectionModelChange}
+              {...props}
+            />
+          </div>
+        );
+      }
+
+      const { setProps } = render(<Test />);
+
+      act(() => {
+        setProps({
+          filterModel: { items: [{ field: 'category1', operator: 'equals', value: 'Cat A' }] },
+        });
+      });
+      expect(onRowSelectionModelChange.mock.calls).to.have.length(0);
+
+      act(() => {
+        setProps({ filterModel: { items: [] } });
+      });
+      expect(onRowSelectionModelChange.mock.calls).to.have.length(0);
     });
   });
 });

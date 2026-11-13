@@ -71,19 +71,28 @@ describe('<DataGrid />', () => {
     expect(document.querySelector('[aria-describedby="grid-description"]')).to.equal(null);
   });
 
-  it('should not log an error for `data-*` props', () => {
+  it('should forward `data-*` props to the root element without logging an error', () => {
+    const rootRef = React.createRef<HTMLDivElement>();
     expect(() => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid
             {...baselineProps}
+            ref={rootRef}
             columns={[{ field: 'brand' }]}
             data-testid="grid"
-            data-sentry-element="DataGrid"
+            data-sentry-component="MyGrid"
+            data-custom-id="prop-1"
+            slotProps={{ root: { 'data-custom-id': 'root-1' } }}
           />
         </div>,
       );
     }).not.toErrorDev();
+
+    expect(rootRef.current).to.have.attribute('data-testid', 'grid');
+    expect(rootRef.current).to.have.attribute('data-sentry-component', 'MyGrid');
+    // `slotProps.root` wins on conflicts
+    expect(rootRef.current).to.have.attribute('data-custom-id', 'root-1');
   });
 
   it('should not log an error for the supported `aria-label` and `aria-labelledby` props', () => {
