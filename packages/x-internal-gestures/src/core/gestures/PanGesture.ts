@@ -127,15 +127,15 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
     lastDeltas: null,
   };
 
-  declare protected readonly isSinglePhase: false;
+  declare public readonly isSinglePhase: false;
 
-  declare protected readonly eventType: PanEvent;
+  declare public readonly eventType: PanEvent;
 
   declare protected readonly optionsType: PanGestureOptions<GestureName>;
 
-  declare protected readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
+  declare public readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
-  declare protected readonly mutableStateType: Omit<
+  declare public readonly mutableStateType: Omit<
     Partial<typeof this.state>,
     | 'startPointers'
     | 'startCentroid'

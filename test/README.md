@@ -72,6 +72,19 @@ pnpm test:browser BarChart
 
 This will run only the test that has `it.only` in it and will ignore all other tests in the file.
 
+## Charts consumer declarations
+
+These checks compile isolated consumers against the built Charts packages with `skipLibCheck: false`.
+Each fixture has its own TypeScript program so that Premium and optional module augmentations cannot mask errors in other consumers.
+
+```bash
+pnpm --filter '@mui/x-charts-premium...' build
+pnpm test:types:charts
+```
+
+CI runs all six fixtures through ESM and CommonJS exports with the native TypeScript 7 compiler, plus a Community ESM smoke check with TypeScript 6.
+For the full compatibility matrix with both compilers, run `pnpm test:types:charts --full`.
+
 ## Regression tests
 
 These tests parse the documentation demo examples and run them in a browser environment to ensure that the visual output matches the expected output.

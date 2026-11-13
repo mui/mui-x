@@ -230,8 +230,11 @@ export function useAxesTooltip<
           let value: any;
           let formattedValue: any;
 
-          if (seriesType === 'ohlc' && Array.isArray(rawValue)) {
-            const [open, high, low, close] = rawValue as [number, number, number, number];
+          // OHLC series are registered by the Premium package, so `'ohlc'` is not a community series type.
+          const seriesTypeName: string = seriesType;
+
+          if (seriesTypeName === 'ohlc' && Array.isArray(rawValue)) {
+            const [open, high, low, close] = rawValue;
             const formatter = seriesToAdd.valueFormatter as any;
             value = { open, high, low, close };
             formattedValue = {

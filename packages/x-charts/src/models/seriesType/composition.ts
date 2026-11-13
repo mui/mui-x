@@ -1,22 +1,20 @@
-import type { ChartSeriesType, ChartsSeriesConfig } from './config';
+import type { ChartSeriesType } from './config';
 
 export type ComposableCartesianChartSeriesType =
   | 'bar'
   | 'line'
   | 'scatter'
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Range bar is added by Premium augmentation, absent in the community build.
-  // @ts-ignore Range bar is added by Premium augmentation, absent in the community build.
-  | (ChartsSeriesConfig['rangeBar'] extends undefined ? never : 'rangeBar')
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- OHLC is added by Premium augmentation, absent in the community build.
-  // @ts-ignore OHLC is added by Premium augmentation, absent in the community build.
-  | (ChartsSeriesConfig['ohlc'] extends undefined ? never : 'ohlc');
+  // Range bar and OHLC series only exist when the Premium package augments `ChartsSeriesConfig`.
+  | Extract<ChartSeriesType, 'rangeBar' | 'ohlc'>;
 
+/**
+ * The cartesian series types that can be composed in the same chart.
+ * Packages adding composable series types (for example range bar and OHLC in Premium) register them in this set.
+ */
 export const composableCartesianSeriesTypes: Set<ComposableCartesianChartSeriesType> = new Set([
   'bar',
   'line',
   'scatter',
-  'rangeBar',
-  'ohlc',
 ] as const);
 
 // Idem for radial series
