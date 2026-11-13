@@ -17,7 +17,7 @@ This is useful when you have multiple axes and want to style them differently.
 
 In the example below, the revenue axis label is styled with a teal color and the profit axis label with a blue color to match their respective series.
 
-{{"demo": "AxisIdStyling.js"}}
+{{"component": "file://./demos/axis-id-styling/index.ts"}}
 
 ## Styling grouped axes
 
@@ -27,14 +27,14 @@ You can customize the tick size for each [grouped axis](/x/react-charts/axis/#gr
 The `tickSize` also affects the tick label position.
 Each item in the array corresponds to a group defined in the `getValue()` function.
 
-{{"demo": "GroupedAxesTickSize.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grouped-axes-tick-size/index.ts", "collapseToEmpty": true}}
 
 ### Selecting groups
 
 To target a specific group, use the `data-group-index` attribute as a selector.
 The example below has a yellow tick color for the last group and blue text for the first group.
 
-{{"demo": "GroupedAxesStyling.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grouped-axes-styling/index.ts", "collapseToEmpty": true}}
 
 ## Fixing tick label overflow issues
 
@@ -45,13 +45,13 @@ In the demo below, the size of the x- and y-axes is modified to increase the spa
 The first and last tick labels may bleed into the margin, and if that margin is not enough to display the label, it might be clipped.
 To avoid this, you can use the `margin` prop to increase the space between the chart and the edge of the container.
 
-{{"demo": "MarginAndLabelPosition.js"}}
+{{"component": "file://./demos/margin-and-label-position/index.ts"}}
 
 ## Passing props
 
 The demo below illustrates all of the props available to customize axis rendering:
 
-{{"demo": "AxisCustomization.js", "hideToolbar": true, "bg": "playground"}}
+{{"component": "file://./demos/axis-customization/index.ts", "hideToolbar": true, "bg": "playground"}}
 
 ## Text customization
 
@@ -60,7 +60,7 @@ To customize the text elements (tick labels and axis labels), use the `tickLabel
 When not set, the default values for the `textAnchor` and `dominantBaseline` properties depend on the value of the `angle` property.
 You can test how these values behave and relate to one another in the demo below:
 
-{{"demo": "AxisTextCustomization.js", "hideToolbar": true, "bg": "playground"}}
+{{"component": "file://./demos/axis-text-customization/index.ts", "hideToolbar": true, "bg": "playground"}}
 
 ## Adding tick label icons
 
@@ -68,7 +68,7 @@ A `foreignObject` element can be used to render non-SVG elements inside SVGs. Yo
 
 Bear in mind that using `foreignObject` might prevent charts from being [exported](/x/react-charts/export/).
 
-{{"demo": "TickLabelImage.js"}}
+{{"component": "file://./demos/tick-label-image/index.ts"}}
 
 ## Custom axis rendering
 
@@ -77,4 +77,4 @@ For more information about how to create custom axes, refer to the [composition 
 
 The same technique can move the tick labels inside the plot, as shown in [Labels on the grid](/x/react-charts/axis-ticks/#labels-on-the-grid).
 
-{{"demo": "CustomAxisTicks.js"}}
+{{"component": "file://./demos/custom-axis-ticks/index.ts"}}

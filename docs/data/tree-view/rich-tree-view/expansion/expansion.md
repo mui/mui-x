@@ -16,7 +16,7 @@ Use the `expandedItems` prop to control the expanded items.
 
 You can use the `onExpandedItemsChange` prop to listen to changes to the expanded items and update the prop accordingly.
 
-{{"demo": "ControlledExpansion.js"}}
+{{"component": "file://./demos/controlled-expansion/index.ts"}}
 
 :::info
 
@@ -30,13 +30,13 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 
 Use the `onItemExpansionToggle` prop to react to an item expansion change:
 
-{{"demo": "TrackItemExpansionToggle.js"}}
+{{"component": "file://./demos/track-item-expansion-toggle/index.ts"}}
 
 ## Limit expansion to icon container
 
 You can use the `expansionTrigger` prop to decide if the expansion interaction should be triggered by clicking on the icon container instead of the whole `TreeItem` content.
 
-{{"demo": "IconExpansionTreeView.js"}}
+{{"component": "file://./demos/icon-expansion-tree-view/index.ts"}}
 
 ## Imperative API
 
@@ -74,7 +74,7 @@ apiRef.current.setItemExpansion({
 });
 ```
 
-{{"demo": "ApiMethodSetItemExpansion.js"}}
+{{"component": "file://./demos/api-method-set-item-expansion/index.ts"}}
 
 ### Check if an item is expanded
 
@@ -87,4 +87,4 @@ apiRef.current.isItemExpanded(
 );
 ```
 
-{{"demo": "ApiMethodIsItemExpanded.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/api-method-is-item-expanded/index.ts", "collapseToEmpty": true}}

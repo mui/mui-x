@@ -34,7 +34,7 @@ Toggling layout can be achieved by changing `orientation` prop value between `'p
 
 Here is a demonstration with the 3 main blocks outlined with color borders.
 
-{{"demo": "LayoutBlocks.js", "hideToolbar": true, "bg": "inline"}}
+{{"component": "file://./demos/layout-blocks/index.ts", "hideToolbar": true, "bg": "inline"}}
 
 ## Layout structure
 
@@ -66,7 +66,7 @@ If you are using custom components, you should pay attention to `className`.
 To make CSS selectors work, you can either propagate `className` to the root element like in the demo, or use your own CSS class.
 :::
 
-{{"demo": "MovingActions.js"}}
+{{"component": "file://./demos/moving-actions/index.ts"}}
 
 ## DOM customization
 
@@ -112,4 +112,4 @@ This slot can also be used to add additional information in the layout.
 Here is the complete example with a fix for the tabulation order and an external element added to the layout.
 Notice the use of `pickersLayoutClasses`, `PickersLayoutRoot`, and `PickersLayoutContentWrapper` to avoid rewriting the default CSS.
 
-{{"demo": "AddComponent.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/add-component/index.ts", "collapseToEmpty": true}}

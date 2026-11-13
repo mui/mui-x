@@ -14,7 +14,7 @@ githubLabel: 'scope: chat'
 - **Copy button**—clicking copies the raw code string to the clipboard and shows a check mark for 2 seconds.
 - **Custom highlighter**—the standalone section below the chat shows the `highlighter` prop with a minimal Python keyword colorizer (no library required).
 
-{{"demo": "CodeBlock.js", "bg": "inline"}}
+{{"component": "file://./demos/code-block/index.ts", "bg": "inline"}}
 
 ## Using `ChatCodeBlock` as a standalone component
 

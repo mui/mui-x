@@ -15,7 +15,7 @@ Bar and line charts support stacking.
 To stack series together, pass them a `stack` attribute.
 Series with the same `stack` value are stacked together.
 
-{{"demo": "BasicStacking.js"}}
+{{"component": "file://./demos/basic-stacking/index.ts"}}
 
 ## Stacking strategy
 
@@ -47,7 +47,7 @@ When turned on:
 - Series B has one negative value
 - Series C and D have only negative values
 
-{{"demo": "StackOffsetDemo.js"}}
+{{"component": "file://./demos/stack-offset-demo/index.ts"}}
 
 ### Stack order
 
@@ -69,7 +69,7 @@ Otherwise, you can order them based on different properties of their values as d
 
 To demonstrate stack order, the example below shows statistics about means of transportation used for commuting to work relative to the distance between home and office for commuters.
 
-{{"demo": "StackOrderDemo.js"}}
+{{"component": "file://./demos/stack-order-demo/index.ts"}}
 
 With the `'appearance'` order, **walking** is first since its maximal percentage is for **0-1km**, and **common transportation** is last because its maximum value is at the **>50km** distance.
 

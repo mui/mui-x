@@ -9,7 +9,7 @@ You can have columns with multiline text and edit them by creating a custom edit
 In the demo below, the **Bio** column is composed of multiple lines.
 To persist the changes, use <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> (or <kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">Enter</kbd></kbd> on macOS).
 
-{{"demo": "MultilineEditing.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/multiline-editing/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Autocomplete editing
 
@@ -24,7 +24,7 @@ The component integrates with the Data Grid's state management through the editi
 - Use `apiRef.current.setEditCellValue()` to update the cell value when the user makes a selection
 - Call `apiRef.current.stopCellEditMode()` to exit edit mode after a value is selected
 
-{{"demo": "AutocompleteEditing.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/autocomplete-editing/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Conditional validation
 
@@ -37,7 +37,7 @@ Once at least one field has the `error` attribute set to a truthy value, the row
 
 The following demo requires a value for the **Payment method** column only if the **Is paid?** column is checked:
 
-{{"demo": "ConditionalValidationGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/conditional-validation-grid/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Linked fields
 
@@ -89,7 +89,7 @@ The demo below combines the steps shown above.
 You can experiment with it by changing the value of any cell in the **Type** column.
 The **Account** column is automatically updated with the correct options.
 
-{{"demo": "LinkedFieldsRowEditing.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/linked-fields-row-editing/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::warning
 The call to `apiRef.current.setEditCellValue()` returns a promise that must be awaited.
@@ -111,7 +111,7 @@ A similar behavior can be reproduced with cell editing.
 Instead of `apiRef.current.setEditCellValue()`, the `rows` prop must be updated or `apiRef.current.updateRows()` be used.
 Note that the `onCellEditStart` and `onCellEditStop` props also need to be used to revert the value of the cell changed, in case the user cancels the edit.
 
-{{"demo": "LinkedFieldsCellEditing.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/linked-fields-cell-editing/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Single click editing
 
@@ -119,7 +119,7 @@ By default, one of the ways to [enter the edit mode](/x/react-data-grid/editing/
 Using the [controlled mode](/x/react-data-grid/editing/#controlled-model) and listening to click events, you can also enter the edit mode with just a single click.
 The following demo implements this behavior.
 
-{{"demo": "SingleClickEditing.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/single-click-editing/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Bulk editing
 
@@ -129,10 +129,10 @@ You can utilize this callback to batch edits locally and then choose to either p
 The demo below stores edited and deleted rows in the `unsavedChangesRef`.
 These changes are saved or discarded when the user clicks the **Save** or **Discard** buttons respectively.
 
-{{"demo": "BulkEditing.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/bulk-editing/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### With commercial features [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 When using [Data Grid Premium](/x/react-data-grid/#premium-version), bulk editing applies to row updates from [Clipboard paste](/x/react-data-grid/clipboard/#clipboard-paste) automatically, since [Clipboard paste uses Editing API for persistence](/x/react-data-grid/clipboard/#persisting-pasted-data):
 
-{{"demo": "BulkEditingPremiumNoSnap.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/bulk-editing-premium-no-snap/index.ts", "bg": "inline", "collapseToEmpty": true}}

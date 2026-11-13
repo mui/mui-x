@@ -58,7 +58,7 @@ If you are building a custom layout without `ChatBox`, wrap the tree in `<ChatPr
 
 The following demo shows hooks reading chat state from within a `ChatBox` child:
 
-{{"demo": "../context/ChatBoxWithHooks.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://../context/demos/chat-box-with-hooks/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## State hooks
 
@@ -133,7 +133,7 @@ const {
 } = useChatStatus();
 ```
 
-{{"demo": "StatusFooter.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/status-footer/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 Prefer `useChatStatus()` over `useChat()` whenever you only need streaming or error state.
 The component does not re-render when a new message is sent—only when the status fields themselves change.
@@ -147,7 +147,7 @@ Use it to render a sidebar or drawer that shows all threads.
 const conversations: ChatConversation[] = useConversations();
 ```
 
-{{"demo": "ConversationSidebar.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/conversation-sidebar/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### `useConversation()`
 
@@ -189,7 +189,7 @@ const message: ChatMessage | null = useMessage(id);
 
 The demo below shows the recommended pattern for efficient thread rendering:
 
-{{"demo": "EfficientThread.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/efficient-thread/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 This pattern scales to threads with hundreds of messages because no re-renders propagate up the tree.
 
@@ -219,7 +219,7 @@ The hook handles several details automatically:
 - **IME safety** — `submit` is a no-op during an active IME composition session (relevant for East Asian input methods).
 - **Double-send prevention** — `submit` is blocked when `isSubmitting` is `true`.
 
-{{"demo": "CustomComposer.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/custom-composer/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Config hooks
 

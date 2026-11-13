@@ -18,11 +18,11 @@ components: EventCalendar, EventCalendarPremium, StandaloneAgendaView, Standalon
 
 The `week` view lets users manage events for an entire week.
 
-{{"demo": "BasicWeekView.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/basic-week-view/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 Use the `viewConfig` prop to limit the hours displayed in the time grid with `startTime` and `endTime`:
 
-{{"demo": "WeekViewStartEndTime.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/week-view-start-end-time/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::warning
 `startTime` and `endTime` must be whole hours (integers between `0` and `24`) with `startTime` lower than `endTime`. Minute-level precision isn't supported yet. An invalid range falls back to the full day and logs a warning in development.
@@ -32,7 +32,7 @@ By default, the time grid scrolls to 7 AM when it mounts (or to `startTime` when
 Use `initialScrollTime` to scroll to a different hour.
 Navigating to another week keeps the current scroll position; switching to another view and back scrolls again.
 
-{{"demo": "WeekViewInitialScrollTime.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/week-view-initial-scroll-time/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::warning
 `initialScrollTime` must be a displayed hour (`startTime` to `endTime - 1`). An invalid value falls back to the default and logs a warning in development.
@@ -44,17 +44,17 @@ The other events, including all-day events, are rendered in the day grid above i
 - `'shorter-than-one-day'` (default): timed events shorter than one day, split across the days they cover.
 - `'same-day-only'`: timed events that start and end on the same day.
 
-{{"demo": "WeekViewTimeGridEvents.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/week-view-time-grid-events/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Day view
 
 The `day` view lets users manage events for a single day.
 
-{{"demo": "BasicDayView.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/basic-day-view/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 The `viewConfig` prop also limits the hours displayed in the day view with `startTime` and `endTime`:
 
-{{"demo": "DayViewStartEndTime.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/day-view-start-end-time/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::warning
 `startTime` and `endTime` must be whole hours (integers between `0` and `24`) with `startTime` lower than `endTime`. Minute-level precision isn't supported yet. An invalid range falls back to the full day and logs a warning in development.
@@ -64,7 +64,7 @@ By default, the time grid scrolls to 7 AM when it mounts (or to `startTime` when
 Use `initialScrollTime` to scroll to a different hour.
 Navigating to another day keeps the current scroll position; switching to another view and back scrolls again.
 
-{{"demo": "DayViewInitialScrollTime.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/day-view-initial-scroll-time/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::warning
 `initialScrollTime` must be a displayed hour (`startTime` to `endTime - 1`). An invalid value falls back to the default and logs a warning in development.
@@ -72,24 +72,24 @@ Navigating to another day keeps the current scroll position; switching to anothe
 
 The `timeGridEvents` option also sets which timed events are rendered in the time grid of the day view:
 
-{{"demo": "DayViewTimeGridEvents.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/day-view-time-grid-events/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Month view
 
 The `month` view lets users manage events for an entire month.
 
-{{"demo": "BasicMonthView.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/basic-month-view/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Agenda view
 
 The `agenda` view lets users manage events in a list layout.
 
-{{"demo": "BasicAgendaView.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/basic-agenda-view/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 The agenda displays 12 days at a time by default, and the navigation moves by the same amount.
 Use the `viewConfig` prop to change it with `dayCount`, either to another number of days or to `'month'` to display the month of the visible date and navigate one month at a time:
 
-{{"demo": "AgendaViewDayCount.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/agenda-view-day-count/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 When the empty days are hidden, the `'month'` mode only lists the days of that month that have events, instead of continuing into the next month.
 
@@ -119,7 +119,7 @@ Use the `views` prop to define which views can be accessed in the Event Calendar
 <EventCalendar views={['week', 'month']} />
 ```
 
-{{"demo": "RemoveViews.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/remove-views/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Default view
 
@@ -129,7 +129,7 @@ Use the `defaultView` prop to initialize the view:
 <EventCalendar defaultView="agenda" />
 ```
 
-{{"demo": "DefaultView.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/default-view/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::success
 You can also control the view using the `view` and `onViewChange` props:

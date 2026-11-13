@@ -21,7 +21,7 @@ This is the base color used to render its components.
 <LineChart series={[{ ..., color: '#fdb462'}]} />
 ```
 
-{{"demo": "BasicColor.js"}}
+{{"component": "file://./demos/basic-color/index.ts"}}
 
 ### Built-in color palettes
 
@@ -31,7 +31,7 @@ If a series doesn't have a `color` prop, the chart assigns a color based on the 
 You can set a custom color palette using the `colors` prop on chart components (or `ChartsContainer` when composing a custom component).
 You can pass an array of colors, or a callback whose input is the theme's mode (`'dark'` or `'light'`) and returns the array of colors.
 
-{{"demo": "MuiColorTemplate.js"}}
+{{"component": "file://./demos/mui-color-template/index.ts"}}
 
 ### Custom color palettes
 
@@ -39,7 +39,7 @@ You can generate custom color palettes using [d3-scale-chromatic](https://observ
 
 The example below shows the d3 Categorical color palette.
 
-{{"demo": "ColorTemplate.js"}}
+{{"component": "file://./demos/color-template/index.ts"}}
 
 ### Value-based colors
 
@@ -113,19 +113,19 @@ The callback function receives a `{ value, dataIndex }` object and should return
 
 In components where a series-level color is required (for example, the legend), the `color` prop is used instead.
 
-{{"demo": "ColorCallback.js"}}
+{{"component": "file://./demos/color-callback/index.ts"}}
 
 ## Overlay
 
 Charts have built-in overlays for loading and "no data" states that appear when the `loading` prop is `true` and when there is no data to display, respectively.
 
-{{"demo": "Overlay.js"}}
+{{"component": "file://./demos/overlay/index.ts"}}
 
 ### Axis display
 
 You can provide axis data to display axes while loading the data.
 
-{{"demo": "OverlayWithAxis.js"}}
+{{"component": "file://./demos/overlay-with-axis/index.ts"}}
 
 ### Custom overlay
 
@@ -142,7 +142,7 @@ To modify the default overlay message or translate it, use the `noData` or `load
 
 For more advanced customization, use the `loadingOverlay` and `noDataOverlay` slots as shown in the demo below.
 
-{{"demo": "CustomOverlay.js"}}
+{{"component": "file://./demos/custom-overlay/index.ts"}}
 
 ## Styling
 
@@ -169,13 +169,13 @@ You can update it using the `xAxis` and `yAxis` configuration:
 Axes only take up space on the side where they are positioned.
 If an axis is not displayed (`position: 'none'`), it does not take up any space, regardless of its size.
 
-{{"demo": "Margin.js", "hideToolbar": true, "bg": "playground"}}
+{{"component": "file://./demos/margin/index.ts", "hideToolbar": true, "bg": "playground"}}
 
 ### CSS
 
 Charts use SVG for rendering, so you can customize them using the `sx` prop and target any subcomponents using their class names.
 
-{{"demo": "SxStyling.js"}}
+{{"component": "file://./demos/sx-styling/index.ts"}}
 
 ### Text customization
 
@@ -201,7 +201,7 @@ Visual attributes such as `fill` don't affect measurement and can be set either 
 
 The demo below applies a custom font style to both axes and rotates the x-axis tick labels.
 
-{{"demo": "TextStyling.js"}}
+{{"component": "file://./demos/text-styling/index.ts"}}
 
 ### Drawing area background
 
@@ -210,7 +210,7 @@ This is only possible when [composing custom charts](/x/react-charts/composition
 
 The demo below defines a basic `Background` component that adds a light gray background.
 
-{{"demo": "BackgroundStyling.js"}}
+{{"component": "file://./demos/background-styling/index.ts"}}
 
 ### Gradients and patterns
 
@@ -219,4 +219,4 @@ You can use gradients and patterns to fill charts by passing gradient or pattern
 Gradients or patterns defined this way are only usable for SVG.
 A direct definition like `color: "url(#Pattern)"` causes undefined colors in HTML elements.
 
-{{"demo": "GradientTooltip.js"}}
+{{"component": "file://./demos/gradient-tooltip/index.ts"}}

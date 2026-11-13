@@ -19,7 +19,7 @@ To enable drag-and-drop row reordering, pass the `rowReordering` prop to the Dat
 
 This generates a new column for drag indicators at the start of each row:
 
-{{"demo": "RowOrderingGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/row-ordering-grid/index.ts", "bg": "inline"}}
 
 ## Row reordering events
 
@@ -103,7 +103,7 @@ const isRowReorderable = (params: IsRowReorderableParams) => {
 
 The demo below shows how to disable reordering of specific rows based on the row model.
 
-{{"demo": "RowReorderingDisabled.js", "bg": "inline"}}
+{{"component": "file://./demos/row-reordering-disabled/index.ts", "bg": "inline"}}
 
 ## Disable specific reorder operations
 
@@ -115,7 +115,7 @@ It is called with a `ReorderValidationContext` object so that specific reorder o
 
 The demo below prohibits reordering leaf rows under the same parent and only allows cross-parent operations.
 
-{{"demo": "RowReorderingValidation.js", "bg": "inline"}}
+{{"component": "file://./demos/row-reordering-validation/index.ts", "bg": "inline"}}
 
 :::warning
 The row reorder feature has an internal validation ruleset to ensure that only the supported use cases are allowed.

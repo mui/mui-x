@@ -29,7 +29,7 @@ Use the **Pivot** switch at the top of the panel to toggle pivoting off and on.
 You can drag and drop existing columns in the **Rows**, **Columns**, and **Values** dropdown menus to change how the data is pivoted.
 On touch screens, press and hold a field to start dragging it.
 
-{{"demo": "GridPivotingQuickStart.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-pivoting-quick-start/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Pivot model
 
@@ -66,7 +66,7 @@ You can initialize the pivot model, toggle pivot panel visibility, and toggle th
 />
 ```
 
-{{"demo": "GridPivotingInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-pivoting-initial-state/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Controlled pivoting
 
@@ -82,7 +82,7 @@ For fully controlled pivoting state, you can use the following props:
   - `pivotPanelOpen`: Controls whether the pivot panel is open.
   - `onPivotPanelOpenChange`: Callback fired when the pivot panel is opened or closed.
 
-{{"demo": "GridPivotingControlled.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-pivoting-controlled/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Using fields in the pivot model multiple times
 
@@ -108,7 +108,7 @@ const columns: GridColDef[] = [{ field: 'id', pivotable: false }];
 <DataGridPremium columns={columns} />;
 ```
 
-{{"demo": "GridNonPivotableColumns.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-non-pivotable-columns/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Derived columns in pivot mode
 
@@ -124,7 +124,7 @@ But in a real-world dataset, each sales record would typically have a precise **
 
 The **Transaction Date** column is represented by additional columns in pivot mode: **Transaction Date (Year)** and **Transaction Date (Quarter)**:
 
-{{"demo": "GridPivotingFinancial.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-pivoting-financial/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Custom derived columns
 
@@ -135,7 +135,7 @@ This prop is called for each original column and returns an array of derived col
 To sort the derived columns by a value different than the column header name—for instance, to display months of the year—define both `valueGetter()` and `valueFormatter()` for the derived column.
 :::
 
-{{"demo": "GridGetPivotDerivedColumns.js", "bg": "inline", "defaultCodeOpen": true}}
+{{"component": "file://./demos/grid-get-pivot-derived-columns/index.ts", "bg": "inline", "initialExpanded": true}}
 
 ## Sticky column groups
 
@@ -160,13 +160,13 @@ You can use the `sx` prop to apply the necessary styles:
 />
 ```
 
-{{"demo": "GridPivotingMovies.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-pivoting-movies/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Advanced demo
 
 The following demo showcases pivoting on a larger Commodities dataset with over 30 different columns to choose for pivoting parameters.
 
-{{"demo": "GridPivotingCommodities.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-pivoting-commodities/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## API
 

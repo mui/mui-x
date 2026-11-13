@@ -16,7 +16,7 @@ When an index is out of bounds, the Data Grid logs a warning in development and 
 
 The following demo explores the usage of this API:
 
-{{"demo": "ScrollPlayground.js", "bg": "inline"}}
+{{"component": "file://./demos/scroll-playground/index.ts", "bg": "inline"}}
 
 ## Scroll restoration
 
@@ -24,7 +24,7 @@ You can restore scroll to a previous position by defining `initialState.scroll` 
 
 The following demo explores the usage of scroll restoration:
 
-{{"demo": "ScrollRestoration.js", "bg": "inline"}}
+{{"component": "file://./demos/scroll-restoration/index.ts", "bg": "inline"}}
 
 ## apiRef
 
@@ -36,7 +36,7 @@ See [API object](/x/react-data-grid/api-object/) for more details.
 This API should only be used as a last resort when the Data Grid's built-in props aren't sufficient for your specific use case.
 :::
 
-{{"demo": "ScrollApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "file://./demos/scroll-api-no-snap/index.ts", "bg": "inline", "hideToolbar": true}}
 
 ## API
 

@@ -118,7 +118,7 @@ The runtime drives history loading in these steps:
 4. User scrolls to the top—runtime automatically calls `listMessages({ conversationId, cursor: nextCursor, direction: 'backward' })`.
 5. Adapter returns the next page. If `hasMore: false`, no further automatic loads are triggered.
 
-{{"demo": "HistoryPaginationDemo.js", "bg": "inline"}}
+{{"component": "file://./demos/history-pagination-demo/index.ts", "bg": "inline"}}
 
 ## History loading indicator
 

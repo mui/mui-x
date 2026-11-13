@@ -1,10 +1,10 @@
-import SimpleBarChart from 'docs/data/charts/bar-demo/SimpleBarChart';
-import StackedBarChart from 'docs/data/charts/bar-demo/StackedBarChart';
-import MixedBarChart from 'docs/data/charts/bar-demo/MixedBarChart';
-import PositiveAndNegativeBarChart from 'docs/data/charts/bar-demo/PositiveAndNegativeBarChart';
-import BarChartStackedBySign from 'docs/data/charts/bar-demo/BarChartStackedBySign';
-import BiaxialBarChart from 'docs/data/charts/bar-demo/BiaxialBarChart';
-import PopulationPyramidBarChart from 'docs/data/charts/bar-demo/PopulationPyramidBarChart';
+import SimpleBarChart from 'docs/data/charts/bar-demo/demos/simple-bar-chart/SimpleBarChart';
+import StackedBarChart from 'docs/data/charts/bar-demo/demos/stacked-bar-chart/StackedBarChart';
+import MixedBarChart from 'docs/data/charts/bar-demo/demos/mixed-bar-chart/MixedBarChart';
+import PositiveAndNegativeBarChart from 'docs/data/charts/bar-demo/demos/positive-and-negative-bar-chart/PositiveAndNegativeBarChart';
+import BarChartStackedBySign from 'docs/data/charts/bar-demo/demos/bar-chart-stacked-by-sign/BarChartStackedBySign';
+import BiaxialBarChart from 'docs/data/charts/bar-demo/demos/biaxial-bar-chart/BiaxialBarChart';
+import PopulationPyramidBarChart from 'docs/data/charts/bar-demo/demos/population-pyramid-bar-chart/PopulationPyramidBarChart';
 import { ChartThumbnailCard, ChartThumbnailGridWrapper } from './ChartExampleThumbnailGrid';
 
 const chartData = [

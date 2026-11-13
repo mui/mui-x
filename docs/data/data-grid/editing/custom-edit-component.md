@@ -49,7 +49,7 @@ function CustomEditComponent(props: GridRenderEditCellParams) {
 
 The following demo implements a custom edit component, based on the [`Rating`](https://mui.com/material-ui/react-rating/) component from `@mui/material`, for the **Rating** column.
 
-{{"demo": "CustomEditComponent.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/custom-edit-component/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## With debounce
 
@@ -116,7 +116,7 @@ const handleChange = async (event: SelectChangeEvent) => {
 
 The following demo implements an edit component with auto-stop, based on a native [`Select`](/material-ui/react-select/) component for the **Role** column.
 
-{{"demo": "AutoStopEditComponent.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/auto-stop-edit-component/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::warning
 Avoid using edit components with auto-stop in columns that use long-running `preProcessEditCellProps()` because the UI will freeze while waiting for `apiRef.current.setEditCellValue()`.

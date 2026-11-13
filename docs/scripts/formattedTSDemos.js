@@ -58,6 +58,13 @@ async function getFiles(root, excludeRoot = false) {
         const stat = await fs.promises.stat(filePath);
 
         if (stat.isDirectory()) {
+          // Docs-infra generates JavaScript and focused source for these demos.
+          if (
+            fs.existsSync(path.join(filePath, 'index.ts')) &&
+            fs.existsSync(path.join(filePath, 'client.ts'))
+          ) {
+            return;
+          }
           files.push(...(await getFiles(filePath)));
         } else if (
           stat.isFile() &&
@@ -87,11 +94,8 @@ const TranspileResult = {
 };
 
 const previewOverride = {
-  'docs/data/charts/axis/GroupedAxes.tsx': { maxLines: 30 },
   'docs/data/charts/axis/GroupedAxesStyling.tsx': { maxLines: 30 },
   'docs/data/charts/axis/GroupedAxesTickSize.tsx': { maxLines: 30 },
-  'docs/data/charts/axis/GroupedYAxes.tsx': { maxLines: 30 },
-  'docs/data/charts/sankey/SankeyDetailedDataStructure.tsx': { maxLines: 30 },
 };
 
 async function transpileFile(tsxPath, ignoreCache = false) {

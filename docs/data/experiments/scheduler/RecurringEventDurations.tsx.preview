@@ -1,9 +1,0 @@
-<EventCalendarPremium
-  features={features}
-  events={events}
-  resources={resources}
-  defaultVisibleDate={defaultVisibleDate}
-  viewConfig={{ week: { initialScrollTime: 0 } }}
-  onEventsChange={setEvents}
-  defaultPreferences={{ isSidePanelOpen: false }}
-/>

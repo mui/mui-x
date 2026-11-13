@@ -96,7 +96,7 @@ This includes issues introduced by external sources, like browser upgrades or ch
 
 ### Supported versions
 
-{{"demo": "SupportedVersions.js", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}
+{{"component": "file://./demos/supported-versions/index.ts", "bg": "inline", "hideToolbar": true, "collapseToEmpty": true}}
 
 ## Community
 

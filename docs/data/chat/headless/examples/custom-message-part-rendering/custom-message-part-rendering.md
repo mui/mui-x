@@ -15,7 +15,7 @@ Replace only the part types that need branded or domain-specific rendering, and 
 
 The demo below uses `Message.Content` with `getDefaultMessagePartRenderer()` to override the `reasoning` part while preserving the default renderers for everything else:
 
-{{"demo": "CustomMessagePartRendering.js"}}
+{{"component": "file://./demos/custom-message-part-rendering/index.ts"}}
 
 ## Overriding a part renderer
 

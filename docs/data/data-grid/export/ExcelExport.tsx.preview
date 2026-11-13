@@ -1,1 +1,0 @@
-<DataGridPremium rows={rows} columns={columns} showToolbar />

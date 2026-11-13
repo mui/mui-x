@@ -35,13 +35,13 @@ function CustomComponent() {
 
 The example below shows `useDataset()` used to display dataset statistics above a chart:
 
-{{"demo": "UseDataset.js"}}
+{{"component": "file://./demos/use-dataset/index.ts"}}
 
 ## Advanced example
 
 The example below shows how to use the dataset to create a custom data table that stays in sync with the chart:
 
-{{"demo": "UseDatasetAdvanced.js"}}
+{{"component": "file://./demos/use-dataset-advanced/index.ts"}}
 
 ## Return value
 

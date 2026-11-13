@@ -1,5 +1,0 @@
-<BarChartPro
-  height={300}
-  xAxis={[{ data: data.map((v, i) => i), zoom: true }]}
-  series={series}
-/>

@@ -20,7 +20,7 @@ Use it for metrics like progress, capacity, or levels (for example, battery, sto
 
 The demo below shows basic gauge configurations.
 
-{{"demo": "BasicGauges.js"}}
+{{"component": "file://./demos/basic-gauges/index.ts"}}
 
 ## Basics
 
@@ -28,7 +28,7 @@ Pass the current value with the `value` prop.
 By default, the scale runs from 0 through 100.
 Use `valueMin` and `valueMax` to set a different range.
 
-{{"demo": "GaugeValueRange.js"}}
+{{"component": "file://./demos/gauge-value-range/index.ts"}}
 
 ## Arc configuration
 
@@ -38,7 +38,7 @@ Use these props to change the arc shape:
 - `innerRadius` and `outerRadius`: arc radii, as a pixel value or a percentage string (such as `'50%'`)
 - `cornerRadius`: corner rounding, as a pixel value or percentage string
 
-{{"demo": "ArcPlayground.js", "bg": "playground", "hideToolbar": true}}
+{{"component": "file://./demos/arc-playground/index.ts", "bg": "playground", "hideToolbar": true}}
 
 :::success
 The arc is positioned to use as much of the drawing area as possible.
@@ -55,7 +55,7 @@ The formatter receives an object with `value`, `valueMin`, and `valueMax`.
 
 Use the `gaugeClasses.valueText` class to change the text layout.
 
-{{"demo": "TextPlayground.js", "bg": "playground", "hideToolbar": true}}
+{{"component": "file://./demos/text-playground/index.ts", "bg": "playground", "hideToolbar": true}}
 
 ## Arc design
 
@@ -63,7 +63,7 @@ Use the `gaugeClasses` export for class names that target different parts of the
 
 See [Gauge—Classes](/x/api/charts/gauge/#classes) for the full list.
 
-{{"demo": "ArcDesign.js"}}
+{{"component": "file://./demos/arc-design/index.ts"}}
 
 ## Adding elements
 
@@ -111,7 +111,7 @@ It returns:
 - Arc geometry: `startAngle`, `endAngle`, `outerRadius`, `innerRadius`, `cornerRadius`, `cx`, `cy`
 - Computed: `maxRadius` (largest radius that fits the drawing area) and `valueAngle` (angle for the current value)
 
-{{"demo": "CompositionExample.js"}}
+{{"component": "file://./demos/composition-example/index.ts"}}
 
 ## Accessibility
 

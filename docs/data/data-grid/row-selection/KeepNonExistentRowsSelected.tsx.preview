@@ -1,7 +1,0 @@
-<DataGrid
-  {...data}
-  checkboxSelection
-  disableRowSelectionOnClick
-  keepNonExistentRowsSelected
-  showToolbar
-/>

@@ -16,7 +16,7 @@ These are useful whenever you need to give end users additional information abou
 A common example of this pattern is found in many email clients—users can click on an email from the master list to see its contents (details) as well as actions they can take such as replying, forwarding, and deleting.
 To expand a row, click on the **+** icon or press <kbd class="key">Space</kbd> when focused on a cell in the detail toggle column:
 
-{{"demo": "MasterDetailEmailExample.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/master-detail-email-example/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Implementing master-detail row panels
 
@@ -57,7 +57,7 @@ The `getDetailPanelContent` and `getDetailPanelHeight` props are called with a [
 
 The demo below shows master-detail panels with heights derived from their contents:
 
-{{"demo": "DetailPanelAutoHeight.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/detail-panel-auto-height/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::warning
 Always memoize the function provided to `getDetailPanelContent` and `getDetailPanelHeight`.
@@ -82,7 +82,7 @@ To initialize the Data Grid with specific row panels expanded, use the `initialS
 <DataGridPro initialState={{ detailPanel: { expandedRowIds: new Set([1, 2, 3]) } }}>
 ```
 
-{{"demo": "ControlMasterDetail.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/control-master-detail/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Lazy-loading detail panel content
 
@@ -91,7 +91,7 @@ You don't need to provide the content for detail panels upfront—instead, you c
 In the following example, the `<DetailPanelContent />` component fetches data on mount.
 This component is used by the `getDetailPanelContent` prop to render the detail panel content.
 
-{{"demo": "LazyLoadingDetailPanel.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/lazy-loading-detail-panel/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::warning
 Lazy loading panels with auto height can lead to scrolling issues.
@@ -107,14 +107,14 @@ As an alternative to the built-in [row editing feature](/x/react-data-grid/editi
 
 The demo below shows how to implement this behavior using [react-hook-form](https://react-hook-form.com/), but other form libraries are also supported.
 
-{{"demo": "FormDetailPanel.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/form-detail-panel/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Conditional detail panels
 
 If only some rows have a detail panel, return `null` (or `undefined`) from `getDetailPanelContent` for the rows that don't.
 The default toggle button already disables itself when there's no content for the row, so no custom toggle column is needed just to hide it:
 
-{{"demo": "DetailPanelConditional.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/detail-panel-conditional/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Customizing the detail panel toggle
 
@@ -160,7 +160,7 @@ If you'd rather set up the toggle with basic options preconfigured, you can spre
 
 You can also use this approach to change the location of the toggle column, as shown in the demo below:
 
-{{"demo": "CustomizeDetailPanelToggle.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/customize-detail-panel-toggle/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::info
 As with any other cell renderer, the `value` prop is also available, and it corresponds to the state of the row: it's set to `true` when expanded and `false` when collapsed.
@@ -201,7 +201,7 @@ And to prevent the panel from scrolling, set `position: sticky` and `left: 0`.
 
 The following demo shows how to accomplish this—notice that the toggle column is pinned so it remains visible when the user scrolls horizontally:
 
-{{"demo": "FullWidthDetailPanel.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/full-width-detail-panel/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Master-detail row panel recipes
 
@@ -222,7 +222,7 @@ See [API object](/x/react-data-grid/api-object/) for more details.
 This API should only be used as a last resort when the Data Grid's built-in props aren't sufficient for your specific use case.
 :::
 
-{{"demo": "DetailPanelApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "file://./demos/detail-panel-api-no-snap/index.ts", "bg": "inline", "hideToolbar": true}}
 
 ## API
 

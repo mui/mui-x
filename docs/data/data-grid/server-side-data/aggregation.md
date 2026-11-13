@@ -15,7 +15,7 @@ For aggregation on the client side, see [Aggregation (client side)](/x/react-dat
 
 The demo below shows how to use the methods and patterns described in this document to implement server-side aggregation.
 
-{{"demo": "ServerSideDataGridAggregation.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-data-grid-aggregation/index.ts", "bg": "inline"}}
 
 :::info
 The Data Source mock server (`useMockServer()`) mocks the built-in aggregation functions listed in [Aggregation (client-side)—Built-in functions](/x/react-data-grid/aggregation/#built-in-functions).
@@ -95,14 +95,14 @@ const dataSource = {
 
 The demo below shows to how implement server-side aggregation with [server-side lazy loading](/x/react-data-grid/server-side-data/lazy-loading/).
 
-{{"demo": "ServerSideDataGridAggregationLazyLoading.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-data-grid-aggregation-lazy-loading/index.ts", "bg": "inline"}}
 
 ## Usage with row grouping
 
 Server-side aggregation works with row grouping similarly to how it's described in [Aggregation (client-side)—usage with row grouping](/x/react-data-grid/aggregation/#usage-with-row-grouping).
 The aggregated values are acquired from the parent rows using the `getAggregatedValue()` method.
 
-{{"demo": "ServerSideDataGridAggregationRowGrouping.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-data-grid-aggregation-row-grouping/index.ts", "bg": "inline"}}
 
 ## Usage with pivoting
 
@@ -110,14 +110,14 @@ When using server-side aggregation with pivoting, only the pivot model is needed
 The aggregation model can be omitted since it's driven by the pivot value fields.
 The aggregated values are acquired from the parent rows using the `getAggregatedValue()` method.
 
-{{"demo": "ServerSideDataGridAggregationPivoting.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-data-grid-aggregation-pivoting/index.ts", "bg": "inline"}}
 
 ## Usage with tree data
 
 Server-side aggregation can be used with tree data similarly to how it's described in [Aggregation (client-side)—usage with tree data](/x/react-data-grid/aggregation/#usage-with-tree-data).
 The aggregated values are acquired from the parent rows using the `getAggregatedValue()` method.
 
-{{"demo": "ServerSideDataGridAggregationTreeData.js", "bg": "inline"}}
+{{"component": "file://./demos/server-side-data-grid-aggregation-tree-data/index.ts", "bg": "inline"}}
 
 ## API
 

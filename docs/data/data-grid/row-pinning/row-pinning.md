@@ -31,7 +31,7 @@ The data format for pinned rows is the same as for the `rows` prop (see [Feeding
 
 Pinned rows data should also meet [Row identifier](/x/react-data-grid/row-definition/#row-identifier) requirements.
 
-{{"demo": "RowPinning.js", "bg": "inline"}}
+{{"component": "file://./demos/row-pinning/index.ts", "bg": "inline"}}
 
 :::warning
 As with the `rows` prop, `pinnedRows` should keep the same reference between two renders.
@@ -44,20 +44,20 @@ You can control which rows are pinned by making dynamic changes to `pinnedRows`.
 
 The demo below uses the `actions` column type to provide buttons that let the user pin a row to the top or bottom of the Grid.
 
-{{"demo": "RowPinningWithActions.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-pinning-with-actions/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Pinned rows appearance
 
 By default, the pinned rows sections are separated from non-pinned rows with a border and a shadow that appears when there is scroll.
 You can change the appearance by setting the [`pinnedRowsSectionSeparator`](/x/api/data-grid/data-grid-pro/#data-grid-pro-prop-pinnedRowsSectionSeparator) prop to `'border'` or `'border-and-shadow'`.
 
-{{"demo": "RowPinningSectionSeparator.js", "bg": "inline"}}
+{{"component": "file://./demos/row-pinning-section-separator/index.ts", "bg": "inline"}}
 
 ## Usage with other features
 
 Pinned rows are not affected by sorting, filtering, or pagination—they remain pinned regardless of how these features are applied.
 
-{{"demo": "RowPinningWithPagination.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-pinning-with-pagination/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 Pinned rows do not support the following features:
 

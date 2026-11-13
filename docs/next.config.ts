@@ -30,6 +30,19 @@ declare global {
   }
 }
 
+// Match the collapsed snippet length used by the legacy demo previews.
+const DEMO_FOCUS_MAX_LINES = 16;
+const demoHighlighterOptions = {
+  deferPrecompute: true,
+  emphasisOptions: {
+    emitFrameIndent: true,
+    focusFramesMaxSize: DEMO_FOCUS_MAX_LINES,
+    oversizedFocus: 'hide',
+  },
+  requireClient: '@mui/internal-core-docs/utils/createDemoClient',
+  transformTypescriptToJavascript: true,
+};
+
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 const currentDirectory = url.fileURLToPath(new URL('.', import.meta.url));
@@ -111,14 +124,10 @@ export default withDeploymentConfig({
   reactStrictMode: true,
   experimental: {
     esmExternals: undefined,
-    // Run each webpack compilation in a separate, disposable worker process so
-    // its memory is released before static generation instead of accumulating
-    // in the long-lived build process. This is off by default whenever a custom
-    // `webpack` config is present (Next resolves the `undefined` default to
-    // `false` when `config.webpack` is set), so it must be enabled explicitly.
-    // Cuts peak docs-build RSS from ~10 GB to ~4 GB, keeping it well under the
-    // Netlify build container limit that the static export was hitting.
+    // Dispose compiler memory before static generation.
     webpackBuildWorker: true,
+    // Avoid duplicate source buffers when compiling all docs demos.
+    webpackMemoryOptimizations: true,
     // The TS7 side-by-side alias (@typescript/typescript6) ships no `tsc` bin,
     // which the Next.js >= 16.3 CLI checker requires. Use the TS6 JS API instead.
     useTypeScriptCli: false,
@@ -127,6 +136,8 @@ export default withDeploymentConfig({
     tsconfigPath: './tsconfig.json',
   },
   transpilePackages: [
+    // DocSearch's CJS autocomplete dependency needs bundler interop for SSR.
+    '@docsearch/react',
     // This is needed because the package has next.js imports like `next/script` that need to be transpiled.
     '@mui/internal-core-docs',
   ],
@@ -163,6 +174,17 @@ export default withDeploymentConfig({
           as: '*.js',
         },
       ],
+      './**/demos/*/index.ts': {
+        loaders: [
+          {
+            loader: '@mui/internal-docs-infra/pipeline/loadPrecomputedCodeHighlighter',
+            options: demoHighlighterOptions,
+          },
+        ],
+      },
+      './**/demos/*/client.ts': {
+        loaders: ['@mui/internal-docs-infra/pipeline/loadPrecomputedCodeHighlighterClient'],
+      },
       // Token replacement that webpack does via `string-replace-loader`.
       // `{ not: 'foreign' }` keeps it off node_modules; the tokens only live in
       // first-party source (`docs/` and `packages/*/src`).
@@ -183,6 +205,11 @@ export default withDeploymentConfig({
     },
   },
   webpack: (config, options) => {
+    // Keep compiler caches out of CI build memory.
+    if (process.env.CI === 'true' && !options.dev) {
+      config.cache = false;
+    }
+
     const plugins = config.plugins.slice();
 
     if (process.env.DOCS_STATS_ENABLED) {
@@ -223,6 +250,23 @@ export default withDeploymentConfig({
                   },
                 ],
               },
+            ],
+          },
+          {
+            test: /[/\\]demos[/\\][^/\\]+[/\\]index\.ts$/,
+            use: [
+              options.defaultLoaders.babel,
+              {
+                loader: '@mui/internal-docs-infra/pipeline/loadPrecomputedCodeHighlighter',
+                options: demoHighlighterOptions,
+              },
+            ],
+          },
+          {
+            test: /[/\\]demos[/\\][^/\\]+[/\\]client\.ts$/,
+            use: [
+              options.defaultLoaders.babel,
+              '@mui/internal-docs-infra/pipeline/loadPrecomputedCodeHighlighterClient',
             ],
           },
           {

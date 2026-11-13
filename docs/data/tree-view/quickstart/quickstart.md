@@ -72,7 +72,7 @@ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 `SimpleTreeView` receives its items as JSX children.
 This is the recommended version for hardcoded items.
 
-{{"demo": "BasicSimpleTreeView.js"}}
+{{"component": "file://./demos/basic-simple-tree-view/index.ts"}}
 
 ### Rich Tree View
 
@@ -83,7 +83,7 @@ import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 `RichTreeView` receives its items dynamically from an external data source.
 This is the recommended version for larger trees, as well as those that require more advanced features like editing.
 
-{{"demo": "BasicRichTreeView.js"}}
+{{"component": "file://./demos/basic-rich-tree-view/index.ts"}}
 
 ### Rich Tree View Pro [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
@@ -94,7 +94,7 @@ import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 `RichTreeViewPro` receives its items dynamically from an external data source.
 This is the commercial version of the `RichTreeView` component that adds advanced features like virtualization or lazy-loading.
 
-{{"demo": "BasicRichTreeViewPro.js"}}
+{{"component": "file://./demos/basic-rich-tree-view-pro/index.ts"}}
 
 :::warning
 You must set [intrinsic dimensions](/x/react-tree-view/rich-tree-view/virtualization/#layout) on the `RichTreeViewPro`'s parent container.

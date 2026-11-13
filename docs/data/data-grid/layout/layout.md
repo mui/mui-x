@@ -30,13 +30,13 @@ Without setting the minimum and maximum height, the Data Grid takes as much spac
 Consider setting `maxHeight` on the flex parent container, otherwise row virtualization will not be able to improve performance by limiting the number of elements rendered in the DOM.
 :::
 
-{{"demo": "FlexGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/flex-grid/index.ts", "bg": "inline"}}
 
 ### Minimum and maximum height
 
 In the demo below, the Data Grid is placed inside a flex container with a minimum height of `200px` and a maximum height of `400px` and adapts its height when the number of rows changes.
 
-{{"demo": "MinMaxHeightGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/min-max-height-grid/index.ts", "bg": "inline"}}
 
 ## Percentage dimensions
 
@@ -48,7 +48,7 @@ If the parent has no size, the percentage will be zero.
 
 You can predefine dimensions for the parent of the Data Grid.
 
-{{"demo": "FixedSizeGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/fixed-size-grid/index.ts", "bg": "inline"}}
 
 ## Height prop
 
@@ -58,7 +58,7 @@ Percentage values require a parent element with an explicit height.
 For content-based sizing, use a [flex parent container](#flex-parent-container) instead of values such as `'auto'`, `'min-content'`, `'max-content'`, or `'fit-content'`, which this prop does not support.
 To change the height, update the prop instead of `sx` or `style`, because the prop also sets the minimum and maximum height.
 
-{{"demo": "HeightGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/height-grid/index.ts", "bg": "inline"}}
 
 :::warning
 The `height` prop cannot be used together with [`autoHeight`](/x/react-data-grid/layout/#auto-height).
@@ -73,7 +73,7 @@ take the height of two rows by default.
 
 To customize the overlay height, use the `--DataGrid-overlayHeight` CSS variable.
 
-{{"demo": "GridOverlayHeight.js", "bg": "inline"}}
+{{"component": "file://./demos/grid-overlay-height/index.ts", "bg": "inline"}}
 
 ## Auto height
 
@@ -93,7 +93,7 @@ When not to use:
 The `autoHeight` prop enables the Data Grid to adjust its size based on its content.
 This means that the Data Grid's height will be determined by the number of rows, ensuring that all rows will be visible to the user simultaneously.
 
-{{"demo": "AutoHeightGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/auto-height-grid/index.ts", "bg": "inline"}}
 
 ## API
 

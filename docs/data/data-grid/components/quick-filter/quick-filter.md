@@ -17,7 +17,7 @@ You can use the Quick Filter and [Toolbar](/x/react-data-grid/components/toolbar
 
 The demo below shows how to compose the various Quick Filter parts to look and behave like the built-in toolbar quick filter.
 
-{{"demo": "GridQuickFilter.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-quick-filter/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Anatomy
 
@@ -69,19 +69,19 @@ Below are some ways the Quick Filter component can be used.
 
 The quick filter is uncontrolled by default and can be toggled via the trigger. The `defaultExpanded` prop can be used to set the default expanded state.
 
-{{"demo": "GridUncontrolledQuickFilter.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-uncontrolled-quick-filter/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Expand quick filter via keyboard
 
 The demo below shows how to control the quick filter state using the `expanded` and `onExpandedChange` props to support expanding the quick filter via keyboard. You can try it by clicking on any cell to ensure the data grid has focus, and then pressing <kbd class="key">Cmd</kbd> (or <kbd class="key">Ctrl</kbd> on Windows)+<kbd class="key">P</kbd>.
 
-{{"demo": "GridControlledQuickFilter.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-controlled-quick-filter/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Persistent quick filter
 
 The demo below shows how to display a persistent quick filter by passing the `expanded` prop to the `<QuickFilter />` component.
 
-{{"demo": "GridPersistentQuickFilter.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-persistent-quick-filter/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Accessibility
 

@@ -1,8 +1,0 @@
-<LineChart
-  {...params}
-  sx={{
-    [`& .${chartsTooltipClasses.root} .${chartsTooltipClasses.valueCell}`]: {
-      color: 'red',
-    },
-  }}
-/>

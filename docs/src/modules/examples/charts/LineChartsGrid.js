@@ -1,11 +1,11 @@
-import SimpleLineChart from 'docs/data/charts/line-demo/SimpleLineChart';
-import DashedLineChart from 'docs/data/charts/line-demo/DashedLineChart';
-import BiaxialLineChart from 'docs/data/charts/line-demo/BiaxialLineChart';
-import LineChartWithReferenceLines from 'docs/data/charts/line-demo/LineChartWithReferenceLines';
-import LineChartConnectNulls from 'docs/data/charts/line-demo/LineChartConnectNulls';
-import LineWithUncertaintyArea from 'docs/data/charts/line-demo/LineWithUncertaintyArea';
-import CustomLineMarks from 'docs/data/charts/line-demo/CustomLineMarks';
-import Combining from 'docs/data/charts/quickstart/Combining';
+import SimpleLineChart from 'docs/data/charts/line-demo/demos/simple-line-chart/SimpleLineChart';
+import DashedLineChart from 'docs/data/charts/line-demo/demos/dashed-line-chart/DashedLineChart';
+import BiaxialLineChart from 'docs/data/charts/line-demo/demos/biaxial-line-chart/BiaxialLineChart';
+import LineChartWithReferenceLines from 'docs/data/charts/line-demo/demos/line-chart-with-reference-lines/LineChartWithReferenceLines';
+import LineChartConnectNulls from 'docs/data/charts/line-demo/demos/line-chart-connect-nulls/LineChartConnectNulls';
+import LineWithUncertaintyArea from 'docs/data/charts/line-demo/demos/line-with-uncertainty-area/LineWithUncertaintyArea';
+import CustomLineMarks from 'docs/data/charts/line-demo/demos/custom-line-marks/CustomLineMarks';
+import Combining from 'docs/data/charts/quickstart/demos/combining/Combining';
 import { ChartThumbnailCard, ChartThumbnailGridWrapper } from './ChartExampleThumbnailGrid';
 
 const chartData = [

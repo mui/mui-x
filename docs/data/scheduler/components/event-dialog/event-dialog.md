@@ -29,7 +29,7 @@ Render the built-in sections you want to keep — anything you leave out is gone
 The demo below inserts a custom "Priority" section between the built-in sections.
 The custom field is bound through `useEventDialogFormField()`: once the user edits it, the value is part of the draft and is saved with the event.
 
-{{"demo": "CustomGeneralTab.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/custom-general-tab/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::warning
 Define the slot component at **module scope**, never inline in a render.
@@ -120,13 +120,13 @@ It is constant for the lifetime of the editing session and throws when called ou
 
 The demo below adds a "Meeting link" section: its validator lets an empty value through, but blocks the save when a provided value does not start with `http://` or `https://`.
 
-{{"demo": "CustomValidation.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/custom-validation/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Reordering and omitting sections
 
 Render the built-in sections in any order and leave out the ones you do not need:
 
-{{"demo": "ReorderAndOmitSections.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/reorder-and-omit-sections/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Omitting the resource section with a required resource
 

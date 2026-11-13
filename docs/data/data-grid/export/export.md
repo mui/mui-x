@@ -8,7 +8,7 @@
 
 To display the default export options, pass the `showToolbar` prop, as shown in the demo below.
 
-{{"demo": "ExportDefaultToolbar.js", "bg": "inline"}}
+{{"component": "file://./demos/export-default-toolbar/index.ts", "bg": "inline"}}
 
 ### Custom toolbar
 
@@ -44,7 +44,7 @@ Each export option has its own API page:
 You can remove an export option from the toolbar by setting the `disableToolbarButton` property to `true` in its options object.
 In the following example, the print export is disabled.
 
-{{"demo": "RemovePrintExport.js", "bg": "inline"}}
+{{"component": "file://./demos/remove-print-export/index.ts", "bg": "inline"}}
 
 ## Exported columns
 
@@ -87,11 +87,11 @@ The grid exports a few [selectors](/x/react-data-grid/state/#access-the-state) t
 | `gridExpandedSortedRowIdsSelector`             | The rows after applying the sorting rules, the filtering rules, and without the collapsed rows.                                                                                                                            |
 | `gridPaginatedVisibleSortedGridRowIdsSelector` | The rows after applying the sorting rules, the filtering rules, without the collapsed rows and only for the current page (**Note**: If the pagination is disabled, it will still take the value of `page` and `pageSize`). |
 
-{{"demo": "CsvGetRowsToExport.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/csv-get-rows-to-export/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 When using [Row grouping](/x/react-data-grid/row-grouping/), it can be useful to remove the groups from the CSV export.
 
-{{"demo": "CsvGetRowsToExportRowGrouping.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/csv-get-rows-to-export-row-grouping/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## CSV export
 
@@ -278,7 +278,7 @@ For more options to customize the print export, please visit the [`printOptions`
 You can add custom export formats the Data Grid by creating a custom toolbar and export menu.
 The demo below shows how to add a custom JSON export option.
 
-{{"demo": "CustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/custom-export/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Excel export [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
@@ -289,7 +289,7 @@ Columns with types `'boolean'`, `'number'`, `'singleSelect'`, `'date'`, and `'da
 
 The excel export option will appear in the default toolbar export menu by passing the `showToolbar` prop to `<DataGridPremium />`, as shown in the demo below.
 
-{{"demo": "ExcelExport.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/excel-export/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 The export option can be added to custom toolbars using the [Export Excel component](/x/react-data-grid/components/export/#export-excel).
 
@@ -391,7 +391,7 @@ To customize the rows after the Data Grid content, you should use `exceljsPostPr
 
 In the following demo, both methods are used to set a custom header and a custom footer.
 
-{{"demo": "ExcelCustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/excel-custom-export/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Using a web worker
 
@@ -475,7 +475,7 @@ Since the main thread is not locked while the data is exported, it is important 
 You can pass a callback to the `onExcelExportStateChange` prop and display a message or loader.
 The following demo contains an example using a [Snackbar](/material-ui/react-snackbar/):
 
-{{"demo": "ExcelExportWithWebWorker.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/excel-export-with-web-worker/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::info
 When opening the demo above in CodeSandbox or StackBlitz you need to manually create the `worker.ts` script.
@@ -536,7 +536,7 @@ After the export completes, restore the rows to their original state.
 
 The following example demonstrates how to export data as CSV from a server-side data source.
 
-{{"demo": "ExportServerSideData.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/export-server-side-data/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::info
 The exported data includes any filters and sorting that users have applied.
@@ -556,15 +556,15 @@ This API should only be used as a last resort when the Data Grid's built-in prop
 
 ### CSV
 
-{{"demo": "CsvExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "file://./demos/csv-export-api-no-snap/index.ts", "bg": "inline", "hideToolbar": true}}
 
 ### Print
 
-{{"demo": "PrintExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "file://./demos/print-export-api-no-snap/index.ts", "bg": "inline", "hideToolbar": true}}
 
 ### Excel [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-{{"demo": "ExcelExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "file://./demos/excel-export-api-no-snap/index.ts", "bg": "inline", "hideToolbar": true}}
 
 ## API
 
