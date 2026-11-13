@@ -1,4 +1,4 @@
-import { getOccurrenceModelEnd, toPlainDate } from '@mui/x-scheduler-internals/internals';
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import * as React from 'react';
 import { isJSDOM } from 'test/utils/skipIf';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
@@ -1686,8 +1686,7 @@ describe('<EventDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new()
         .id('tmp')
-        .span(start.toISOString(), end.toISOString())
-        .allDay(true)
+        .span('2025-05-26', '2025-05-27', { allDay: true })
         .toOccurrence();
 
       const { user } = render(
@@ -2239,10 +2238,10 @@ describe('<EventDialogContent open />', () => {
           </EventCalendarProvider>,
         );
 
-        // The dialog shows the series on New York July 3rd → 4th; move it one day later.
+        // The dialog shows the series on July 4th; move it one day later.
         const startDateInput = screen.getByLabelText(/start date/i);
         await user.clear(startDateInput);
-        await user.type(startDateInput, '2025-07-04');
+        await user.type(startDateInput, '2025-07-05');
         const endDateInput = screen.getByLabelText(/end date/i);
         await user.clear(endDateInput);
         await user.type(endDateInput, '2025-07-05');
@@ -2252,21 +2251,15 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByText(/All events/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        // The picked days mean the days the user was looking at: the series start
-        // lands on New York July 4th.
+        // The picked day is the day the user was looking at: the series moves to July 5th,
+        // written as dates with an exclusive end.
         const updated = onEventsChange.mock.lastCall?.[0].find(
           (event: SchedulerEvent) => event.id === weeklyEvent.id,
         )!;
-        const updatedStartInNewYork = createDate(String(updated.start), 'UTC');
-        expect(toPlainDate(updatedStartInNewYork.getTime(), 'America/New_York')).toEqualPlainDate(
-          '2025-07-04',
-        );
-        const updatedEndInNewYork = createDate(String(updated.end), 'UTC');
-        expect(toPlainDate(updatedEndInNewYork.getTime(), 'America/New_York')).toEqualPlainDate(
-          '2025-07-05',
-        );
-        // The start's data-timezone day is unchanged, so the BYDAY stays put.
-        expect(updated.rrule).to.deep.equal(weeklyEvent.rrule);
+        expect(updated.start).to.equal('2025-07-05');
+        expect(updated.end).to.equal('2025-07-06');
+        // The series moved from a Friday to a Saturday.
+        expect(updated.rrule).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['SA'] });
       });
 
       it.each([
@@ -2280,7 +2273,7 @@ describe('<EventDialogContent open />', () => {
             .withDataTimezone('UTC')
             .span(
               allDay ? '2025-07-01' : '2025-07-01T09:00:00',
-              allDay ? '2025-07-01' : '2025-07-01T10:00:00',
+              allDay ? '2025-07-02' : '2025-07-01T10:00:00',
               { allDay },
             )
             .rrule({ freq: 'DAILY', until });
@@ -2315,11 +2308,10 @@ describe('<EventDialogContent open />', () => {
         },
       );
 
-      it('should anchor the BYDAY to the data-timezone day when moved as displayed from a timezone ahead of UTC', async () => {
+      it('should anchor the BYDAY to the displayed day when moved from a timezone ahead of UTC', async () => {
         const onEventsChange = vi.fn();
-        // Tokyo is ahead of UTC: the displayed day maps to the previous UTC day, so a
-        // BYDAY computed from the display day would hop weekdays (New York, being
-        // behind, shares the calendar day and cannot catch that).
+        // Tokyo is ahead of UTC: the days of an all-day series are the displayed ones, whatever
+        // the timezone of the event.
         const tokyoBuilder = utcJuly4AllDayBuilder()
           .title('Weekly sync')
           .recurrent('WEEKLY')
@@ -2344,13 +2336,13 @@ describe('<EventDialogContent open />', () => {
           </EventCalendarProvider>,
         );
 
-        // The dialog shows the series on Tokyo July 4th → 5th; move it one day later.
+        // The dialog shows the series on July 4th; move it one day later.
         const startDateInput = screen.getByLabelText(/start date/i);
         await user.clear(startDateInput);
         await user.type(startDateInput, '2025-07-05');
         const endDateInput = screen.getByLabelText(/end date/i);
         await user.clear(endDateInput);
-        await user.type(endDateInput, '2025-07-06');
+        await user.type(endDateInput, '2025-07-05');
         await user.click(screen.getByRole('button', { name: /save/i }));
 
         await screen.findByText(/Apply this change to:/i);
@@ -2360,13 +2352,9 @@ describe('<EventDialogContent open />', () => {
         const updated = onEventsChange.mock.lastCall?.[0].find(
           (event: SchedulerEvent) => event.id === tokyoEvent.id,
         )!;
-        // The picked Tokyo July 5th is still UTC July 4th — a Friday: the day did not
-        // move in the data timezone, so the BYDAY stays FR (not the display day's SA).
-        expect(updated.rrule).to.deep.equal(tokyoEvent.rrule);
-        const updatedStartInTokyo = createDate(String(updated.start), 'UTC');
-        expect(toPlainDate(updatedStartInTokyo.getTime(), 'Asia/Tokyo')).toEqualPlainDate(
-          '2025-07-05',
-        );
+        // The picked July 5th is a Saturday: the BYDAY follows it.
+        expect(updated.rrule).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['SA'] });
+        expect(updated.start).to.equal('2025-07-05');
       });
 
       it("should keep the untouched end byte-identical when only the start date is edited with scope 'all'", async () => {
@@ -2452,7 +2440,7 @@ describe('<EventDialogContent open />', () => {
         );
       });
 
-      it('should delete the occurrence of its own day when deleted from another timezone', async () => {
+      it('should delete the occurrence of its displayed day when deleted from another timezone', async () => {
         let deleteRecurringEventSpy;
 
         const { user } = render(
@@ -2483,12 +2471,11 @@ describe('<EventDialogContent open />', () => {
 
         await user.click(screen.getByRole('button', { name: /delete/i }));
 
-        // The occurrence is identified by its data-timezone start, not by the day its
-        // display bounds normalize to in New York.
+        // An all-day occurrence is identified by the day it is displayed on: July 4th in New York.
         expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
         const payload = deleteRecurringEventSpy.mock.lastCall[0];
-        expect(payload.occurrence.unstable_internalInfos.dataStart).to.equal(
-          createDate('2025-07-04T00:00:00', 'UTC').getTime(),
+        expect(payload.occurrence.start.timestamp).to.equal(
+          createDate('2025-07-04T00:00:00', 'America/New_York').getTime(),
         );
       });
 
@@ -2505,7 +2492,7 @@ describe('<EventDialogContent open />', () => {
             <TestEventDialogContent
               open
               {...defaultProps}
-              occurrence={weeklyBuilder.toOccurrence('2025-07-11T00:00:00Z')}
+              occurrence={weeklyBuilder.toOccurrence('2025-07-11')}
             />
 
             <RecurringScopeDialog />
@@ -2518,9 +2505,8 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByText(/This and following events/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        // The split boundary derives from the occurrence's own July 11th, not the
-        // July 10th its display bounds normalize to in New York: the original series
-        // truncates the day before, and the split series starts on the 11th.
+        // The split boundary derives from the displayed day of the occurrence, July 11th: the
+        // original series truncates the day before, and the split series starts on the 11th.
         const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall?.[0];
         const series = newEvents.find((event) => event.id === weeklyEvent.id)!;
         expect(
@@ -2535,14 +2521,14 @@ describe('<EventDialogContent open />', () => {
         ).toEqualPlainDate('2025-07-11');
       });
 
-      it('should identify an occurrence across a DST transition by its data-timezone start', async () => {
-        // A DST-observing data timezone: the series starts in EDT (UTC-4) and the
-        // targeted occurrence falls after the 2025-11-02 fall-back (EST, UTC-5), so a
-        // conversion that cancels out at a fixed offset cannot pass this test.
+      it('should identify an occurrence across a DST transition of its timezone by its displayed day', async () => {
+        // A DST-observing event timezone: the series starts in EDT (UTC-4) and the targeted
+        // occurrence falls after the 2025-11-02 fall-back (EST, UTC-5). All-day events ignore
+        // their timezone: the occurrence is the displayed day.
         const dstBuilder = EventBuilder.new()
           .title('Weekly sync')
           .withDataTimezone('America/New_York')
-          .span('2025-10-31T00:00:00', '2025-10-31T23:59:59.999', { allDay: true })
+          .span('2025-10-31', '2025-11-01', { allDay: true })
           .recurrent('WEEKLY')
           .withDisplayTimezone('UTC');
         const dstEvent = dstBuilder.build();
@@ -2568,7 +2554,7 @@ describe('<EventDialogContent open />', () => {
             <TestEventDialogContent
               open
               {...defaultProps}
-              occurrence={dstBuilder.toOccurrence('2025-11-07T05:00:00Z')}
+              occurrence={dstBuilder.toOccurrence('2025-11-07')}
             />
 
             <RecurringScopeDialog />
@@ -2577,12 +2563,11 @@ describe('<EventDialogContent open />', () => {
 
         await user.click(screen.getByRole('button', { name: /delete/i }));
 
-        // November 7th midnight in New York is 05:00Z (EST), not the display day's
-        // 00:00Z nor the pre-transition offset's 04:00Z.
+        // November 7th in UTC, the display timezone, whatever the New York offset.
         expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
         const payload = deleteRecurringEventSpy!.mock.lastCall![0];
-        expect(payload.occurrence.unstable_internalInfos.dataStart).to.equal(
-          createDate('2025-11-07T00:00:00', 'America/New_York').getTime(),
+        expect(payload.occurrence.start.timestamp).to.equal(
+          createDate('2025-11-07T00:00:00', 'UTC').getTime(),
         );
       });
 
@@ -2590,7 +2575,7 @@ describe('<EventDialogContent open />', () => {
         const dstBuilder = EventBuilder.new()
           .title('Weekly sync')
           .withDataTimezone('America/New_York')
-          .span('2025-10-31T00:00:00', '2025-10-31T23:59:59.999', { allDay: true })
+          .span('2025-10-31', '2025-11-01', { allDay: true })
           .recurrent('WEEKLY')
           .withDisplayTimezone('UTC');
         const dstEvent = dstBuilder.build();
@@ -3648,8 +3633,9 @@ describe('<EventDialogContent open />', () => {
           expect(dateInput.value).to.equal('2025-07-06');
           await user.click(screen.getByRole('button', { name: /save/i }));
 
+          // Written as a date, like the start of the all-day series.
           const updated = onEventsChange.mock.calls[0][0][0];
-          expect(updated.rrule?.until).to.equal('2025-07-06T23:59:59');
+          expect(updated.rrule?.until).to.equal('2025-07-06');
         });
 
         describe('on a day whose last hour a DST transition repeats', () => {
@@ -4613,15 +4599,15 @@ describe('<EventDialogContent open />', () => {
       });
 
       it('should anchor a new weekly rule on the untouched start after an end-only resize from another timezone', async () => {
-        // Friday July 4 00:00 UTC is displayed on Thursday July 3 in New York: extending only
-        // the end must keep the rule on the stored Friday.
+        // Friday July 4th displayed in New York: extending only the end must keep the rule on the
+        // stored Friday.
         const builder = utcJuly4AllDayBuilder()
           .title('Holiday')
           .withDisplayTimezone('America/New_York');
         const event = builder.build();
         const occurrence = builder.toOccurrence();
-        // One more day, from the last instant of its last day.
-        const resizedEnd = addDays(new Date(getOccurrenceModelEnd(occurrence)), 1);
+        // One more day.
+        const resizedEnd = addDays(new Date(occurrence.end.timestamp), 1);
         const onEventsChange = vi.fn();
 
         const { user } = renderEditedAfterResize({

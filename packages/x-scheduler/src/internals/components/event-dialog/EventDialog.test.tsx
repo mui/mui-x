@@ -144,7 +144,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         EventBuilder.new()
           .title('Conference')
           .withDataTimezone('UTC')
-          .span('2025-07-04T00:00:00', '2025-07-05T23:59:59.999', { allDay: true }),
+          .span('2025-07-04', '2025-07-06', { allDay: true }),
         'Asia/Tokyo',
       );
 
@@ -164,15 +164,16 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       const builder = EventBuilder.new()
         .title('Offsite')
         .withDataTimezone('UTC')
-        .span('2025-07-04T01:15:00', '2025-07-04T02:15:00', { allDay: true });
+        .span('2025-07-04', '2025-07-05', { allDay: true });
       const onEventsChange = vi.fn();
       const event: SchedulerEvent = builder.withDisplayTimezone(displayTimezone).build();
       const occurrence = builder.toOccurrence();
+      // The drop landed at 10:15 in Tokyo.
+      const dropInstant = occurrence.start.timestamp + (10 * 60 + 15) * 60_000;
       const snapshot = {
         ...occurrence,
-        start: createProcessedDate(occurrence.unstable_internalInfos.dataStart, displayTimezone),
-        end: createProcessedDate(occurrence.unstable_internalInfos.dataEnd, displayTimezone),
-        unstable_internalInfos: { ...occurrence.unstable_internalInfos, displayTimezone },
+        start: createProcessedDate(dropInstant, displayTimezone),
+        end: createProcessedDate(occurrence.end.timestamp, displayTimezone),
       };
 
       const { user } = render(
@@ -317,12 +318,12 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       await user.type(endTimeInput, '10:00');
       await user.click(screen.getByRole('button', { name: 'Save' }));
 
-      // The typed times mean the times the user was looking at: the seeded New York
-      // days (July 3rd → 4th) at 09:00 and 10:00 New York time.
+      // The typed times mean the times the user was looking at: the seeded New York day
+      // (July 4th) at 09:00 and 10:00 New York time.
       const updated = getUpdatedEvent();
       expect(Boolean(updated.allDay)).to.equal(false);
       expect(createDate(String(updated.start), 'UTC').getTime()).to.equal(
-        createDate('2025-07-03T13:00:00', 'UTC').getTime(),
+        createDate('2025-07-04T13:00:00', 'UTC').getTime(),
       );
       expect(createDate(String(updated.end), 'UTC').getTime()).to.equal(
         createDate('2025-07-04T14:00:00', 'UTC').getTime(),
@@ -349,7 +350,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         const { user, getUpdatedEvent } = renderEditDialog(
           EventBuilder.new()
             .withDataTimezone('UTC')
-            .span('2026-04-02T12:00:00', '2026-04-03T12:00:00', { allDay: true }),
+            .span('2026-04-02', '2026-04-04', { allDay: true }),
           'America/Santiago',
         );
 
@@ -366,7 +367,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
           const { user, getUpdatedEvent } = renderEditDialog(
             EventBuilder.new()
               .withDataTimezone('UTC')
-              .span('2026-04-02T12:00:00', '2026-04-03T12:00:00', { allDay: true }),
+              .span('2026-04-02', '2026-04-04', { allDay: true }),
             'America/Santiago',
           );
 
@@ -875,7 +876,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
     it('should show the date of a single-day all-day event', () => {
       const { text, times } = renderReadonlyDetails(
-        EventBuilder.new().span('2025-05-26T00:00:00Z', '2025-05-26T23:59:59Z', { allDay: true }),
+        EventBuilder.new().span('2025-05-26', '2025-05-27', { allDay: true }),
       );
 
       expect(text).to.equal('Monday, May 26, 2025, All Day');
@@ -884,7 +885,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
     it('should show the date range of a multi-day all-day event', () => {
       const { text, times } = renderReadonlyDetails(
-        EventBuilder.new().span('2025-05-03T00:00:00Z', '2025-05-05T23:59:59Z', { allDay: true }),
+        EventBuilder.new().span('2025-05-03', '2025-05-06', { allDay: true }),
       );
 
       expect(text).to.equal('Saturday, May 3, 2025 - Monday, May 5, 2025, All Day');
@@ -1497,7 +1498,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       const onEventsChange = vi.fn();
       const builder = EventBuilder.new()
         .title('Trip')
-        .span('2025-05-26T00:00:00Z', '2025-05-27T23:59:59Z', { allDay: true });
+        .span('2025-05-26', '2025-05-28', { allDay: true });
       const allDayEvent = builder.build();
 
       function CustomStartDateField() {

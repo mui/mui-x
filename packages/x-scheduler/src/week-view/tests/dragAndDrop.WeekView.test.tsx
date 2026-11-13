@@ -693,7 +693,8 @@ describe('WeekView - Drag and Drop', () => {
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
     expect(updatedEvents[0].allDay).to.equal(true);
-    expect(updatedEvents[0].start).to.equal('2025-07-04T00:00:00.000Z');
+    expect(updatedEvents[0].start).to.equal('2025-07-04');
+    expect(updatedEvents[0].end).to.equal('2025-07-05');
   });
 
   it('should move an all-day event to the time grid on the same day', async () => {
@@ -766,7 +767,8 @@ describe('WeekView - Drag and Drop', () => {
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
     expect(updatedEvents[0].allDay).to.not.equal(true);
-    expect(updatedEvents[0].start).to.equal('2025-07-04T14:00:00.000Z');
+    // A timed event written after a date-only start keeps the wall-time format.
+    expect(updatedEvents[0].start).to.equal('2025-07-04T14:00:00');
   });
 
   it('should resize a time event end to a later time', async () => {
@@ -849,7 +851,7 @@ describe('WeekView - Drag and Drop', () => {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Multi Day Event')
-      .span('2025-07-03T00:00:00Z', '2025-07-04T23:59:59Z', { allDay: true })
+      .span('2025-07-03', '2025-07-05', { allDay: true })
       .resizable(true)
       .build();
 
@@ -870,8 +872,8 @@ describe('WeekView - Drag and Drop', () => {
 
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
-    expect(updatedEvents[0].start).to.equal('2025-07-03T00:00:00Z');
-    expect(updatedEvents[0].end).to.equal('2025-07-05T23:59:59.999Z');
+    expect(updatedEvents[0].start).to.equal('2025-07-03');
+    expect(updatedEvents[0].end).to.equal('2025-07-06');
   });
 
   it('should resize an all-day event start to a different day', async () => {
@@ -879,7 +881,7 @@ describe('WeekView - Drag and Drop', () => {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Multi Day Event')
-      .span('2025-07-02T00:00:00Z', '2025-07-04T23:59:59Z', { allDay: true })
+      .span('2025-07-02', '2025-07-05', { allDay: true })
       .resizable(true)
       .build();
 
@@ -900,7 +902,7 @@ describe('WeekView - Drag and Drop', () => {
 
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
-    expect(updatedEvents[0].start).to.equal('2025-07-01T00:00:00.000Z');
-    expect(updatedEvents[0].end).to.equal('2025-07-04T23:59:59Z');
+    expect(updatedEvents[0].start).to.equal('2025-07-01');
+    expect(updatedEvents[0].end).to.equal('2025-07-05');
   });
 });

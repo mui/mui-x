@@ -38,7 +38,8 @@ describe('MonthView - Drag and Drop', () => {
 
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
-    expect(updatedEvents[0].start).to.equal('2025-07-05T00:00:00.000Z');
+    expect(updatedEvents[0].start).to.equal('2025-07-05');
+    expect(updatedEvents[0].end).to.equal('2025-07-06');
   });
 
   it('should resize a multi-day event end to a later day', async () => {
@@ -46,7 +47,7 @@ describe('MonthView - Drag and Drop', () => {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Multi Day Conference')
-      .span('2025-07-03T00:00:00Z', '2025-07-05T23:59:59Z', { allDay: true })
+      .span('2025-07-03', '2025-07-06', { allDay: true })
       .resizable(true)
       .build();
 
@@ -65,8 +66,8 @@ describe('MonthView - Drag and Drop', () => {
 
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
-    expect(updatedEvents[0].start).to.equal('2025-07-03T00:00:00Z');
-    expect(updatedEvents[0].end).to.equal('2025-07-07T23:59:59.999Z');
+    expect(updatedEvents[0].start).to.equal('2025-07-03');
+    expect(updatedEvents[0].end).to.equal('2025-07-08');
   });
 
   it('should resize a multi-day event start to an earlier day', async () => {
@@ -74,7 +75,7 @@ describe('MonthView - Drag and Drop', () => {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Multi Day Conference')
-      .span('2025-07-03T00:00:00Z', '2025-07-05T23:59:59Z', { allDay: true })
+      .span('2025-07-03', '2025-07-06', { allDay: true })
       .resizable(true)
       .build();
 
@@ -93,8 +94,8 @@ describe('MonthView - Drag and Drop', () => {
 
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
-    expect(updatedEvents[0].start).to.equal('2025-07-02T00:00:00.000Z');
-    expect(updatedEvents[0].end).to.equal('2025-07-05T23:59:59Z');
+    expect(updatedEvents[0].start).to.equal('2025-07-02');
+    expect(updatedEvents[0].end).to.equal('2025-07-06');
   });
 
   it('should resize an event start onto the day of its end at the start of that day', async () => {

@@ -973,23 +973,23 @@ describe('<MonthView />', () => {
   describe('All day events', () => {
     const allDayEvents = [
       EventBuilder.new()
-        .span('2025-05-05T00:00:00Z', '2025-05-07T23:59:59Z', { allDay: true })
+        .span('2025-05-05', '2025-05-08', { allDay: true })
         .title('Multi-day Conference')
         .build(),
       EventBuilder.new()
-        .span('2025-04-28T00:00:00Z', '2025-05-06T23:59:59Z', { allDay: true }) // Previos week - Current week
+        .span('2025-04-28', '2025-05-07', { allDay: true }) // Previos week - Current week
         .title('Long Event')
         .build(),
       EventBuilder.new()
-        .span('2025-05-12T00:00:00Z', '2025-05-14T23:59:59Z', { allDay: true })
+        .span('2025-05-12', '2025-05-15', { allDay: true })
         .title('Grid Row Test')
         .build(),
       EventBuilder.new()
-        .span('2025-05-08T00:00:00Z', '2025-05-10T23:59:59Z', { allDay: true })
+        .span('2025-05-08', '2025-05-11', { allDay: true })
         .title('Three Day Event')
         .build(),
       EventBuilder.new()
-        .span('2025-05-19T00:00:00Z', '2025-05-27T23:59:59Z', { allDay: true })
+        .span('2025-05-19', '2025-05-28', { allDay: true })
         .title('Multiple week event')
         .build(),
     ];
@@ -1034,7 +1034,7 @@ describe('<MonthView />', () => {
     it('should render all-day events correctly with main event in start date cell', () => {
       render(
         <EventCalendarProvider
-          events={[EventBuilder.new().span('2025-05-04Z', '2025-05-07Z', { allDay: true }).build()]}
+          events={[EventBuilder.new().span('2025-05-04', '2025-05-08', { allDay: true }).build()]}
           resources={[]}
         >
           <EventDialogProvider>
@@ -1109,15 +1109,15 @@ describe('<MonthView />', () => {
     it('should handle multiple overlapping all-day events with different grid rows', () => {
       const overlappingEvents = [
         EventBuilder.new()
-          .span('2025-05-12T00:00:00Z', '2025-05-14T23:59:59Z', { allDay: true })
+          .span('2025-05-12', '2025-05-15', { allDay: true })
           .title('Event 1')
           .build(),
         EventBuilder.new()
-          .span('2025-05-13T00:00:00Z', '2025-05-15T23:59:59Z', { allDay: true })
+          .span('2025-05-13', '2025-05-16', { allDay: true })
           .title('Event 2')
           .build(),
         EventBuilder.new()
-          .span('2025-05-16T00:00:00Z', '2025-05-17T23:59:59Z', { allDay: true })
+          .span('2025-05-16', '2025-05-18', { allDay: true })
           .title('Event 3')
           .build(),
       ];
