@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import * as materialStyles from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
@@ -70,6 +71,13 @@ const DefaultYearButton = styled('button', {
       (theme.vars || theme).palette.action.focusOpacity,
     ),
   },
+  ...(theme.focusVisible && {
+    '&:focus-visible': {
+      backgroundColor: 'transparent',
+      ...materialStyles.private_applyInsetFocusVisible?.(1),
+      ...theme.focusVisible,
+    },
+  }),
   '&:hover': {
     backgroundColor: theme.alpha(
       (theme.vars || theme).palette.action.active,
@@ -89,6 +97,11 @@ const DefaultYearButton = styled('button', {
     '&:focus, &:hover': {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
+    ...(theme.focusVisible && {
+      '&:focus-visible': materialStyles.private_applyChildrenFocusVisible?.(
+        `0 0 0 4px ${(theme.vars || theme).palette.primary.contrastText}`,
+      ),
+    }),
   },
 }));
 
