@@ -273,6 +273,7 @@ export const doesSectionFormatHaveLeadingZeros = (
   contentType: FieldSectionContentType,
   sectionType: FieldSectionType,
   format: string,
+  localizedDigits: string[],
 ) => {
   if (contentType !== 'digit') {
     return false;
@@ -287,7 +288,7 @@ export const doesSectionFormatHaveLeadingZeros = (
       if (adapter.lib === 'dayjs' && format === 'YY') {
         return true;
       }
-      return adapter.formatByString(adapter.setYear(now, 1), format).startsWith('0');
+      return adapter.formatByString(adapter.setYear(now, 1), format).startsWith(localizedDigits[0]);
     }
 
     case 'month': {

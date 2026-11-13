@@ -191,6 +191,17 @@ export class AdapterLuxon implements MuiPickersAdapter<string> {
       return null;
     }
 
+    // Luxon formats with the numbering system resolved from the locale (e.g. Arabic-Indic digits for `ar-EG`),
+    // but only parses Latin digits unless the numbering system is passed explicitly.
+    const { numberingSystem } = DateTime.now().setLocale(this.locale).resolvedLocaleOptions();
+    const localizedDate = DateTime.fromFormat(value, formatString, {
+      locale: this.locale,
+      numberingSystem,
+    });
+    if (localizedDate.isValid) {
+      return localizedDate;
+    }
+
     return DateTime.fromFormat(value, formatString, { locale: this.locale });
   };
 
