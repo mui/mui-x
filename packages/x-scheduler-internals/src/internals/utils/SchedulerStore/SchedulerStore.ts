@@ -283,6 +283,14 @@ export class SchedulerStore<
   ) {
     const dateLocale = parameters.dateLocale ?? DEFAULT_DATE_LOCALE;
     checkDateLocale(dateLocale);
+    const displayTimezone = parameters.displayTimezone ?? 'default';
+    if (displayTimezone === 'system') {
+      throw new Error(
+        'MUI X Scheduler: The `displayTimezone` "system" is not a supported timezone. ' +
+          'The "system" alias of the timezone of the system was removed, so the dates cannot be read in it. ' +
+          'Pass `displayTimezone="default"` instead.',
+      );
+    }
     return {
       dateLocale,
       areEventsDraggable: parameters.areEventsDraggable ?? true,
@@ -293,7 +301,7 @@ export class SchedulerStore<
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
       eventCreation: parameters.eventCreation ?? true,
-      displayTimezone: parameters.displayTimezone ?? 'default',
+      displayTimezone,
     };
   }
 

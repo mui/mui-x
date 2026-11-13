@@ -193,8 +193,11 @@ export interface SchedulerEvent {
    */
   end: string;
   /**
-   * The timezone of the event dates: an IANA timezone name (for example "America/New_York"),
-   * "UTC", or "default" (the timezone of the system).
+   * The timezone of the event dates.
+   *
+   * Accepts any valid IANA timezone name
+   * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
+   * "default" (the timezone of the system), or "UTC".
    * @default "default"
    */
   timezone?: string;

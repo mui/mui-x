@@ -11,6 +11,13 @@ export function processEvent(
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
 ): SchedulerProcessedEvent {
   const dataTimezone = model.timezone ?? 'default';
+  if (dataTimezone === 'system') {
+    throw new Error(
+      `MUI X Scheduler: The timezone "system" of the event "${model.id}" is not a supported timezone. ` +
+        'The "system" alias of the timezone of the system was removed, so the dates of the event cannot be read in it. ' +
+        'Set its `timezone` to "default" instead.',
+    );
+  }
 
   const startInstant = resolveEventDate(model.start, dataTimezone, model.id);
   const endInstant = resolveEventDate(model.end, dataTimezone, model.id);
