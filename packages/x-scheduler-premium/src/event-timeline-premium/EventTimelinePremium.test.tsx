@@ -19,11 +19,7 @@ import {
   ResourceBuilder,
   startOfWeek,
 } from 'test/utils/scheduler';
-import type {
-  SchedulerEvent,
-  SchedulerResource,
-  TemporalSupportedObject,
-} from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-internals/models';
 import type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 import type {
@@ -63,7 +59,7 @@ describe('<EventTimelinePremium />', () => {
     events?: SchedulerEvent[];
     preset?: EventTimelinePremiumPreset;
     presets?: EventTimelinePremiumPreset[];
-    visibleDate?: TemporalSupportedObject;
+    visibleDate?: Date;
     displayTimezone?: string;
     showCurrentTimeIndicator?: boolean;
     resourceColumnLabel?: string;

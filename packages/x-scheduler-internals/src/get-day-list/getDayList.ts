@@ -1,4 +1,3 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDay } from '../models';
 import type { BaseTemporal } from '../internals/utils/base-temporal';
 import { createProcessedDate } from '../internals/utils/plain-date-utils/date';
@@ -14,7 +13,7 @@ import {
 export function getDayListFromPlainDates(parameters: {
   firstPlainDate: BaseTemporal.PlainDate;
   lastPlainDate: BaseTemporal.PlainDate;
-  timezone: TemporalTimezone;
+  timezone: string;
   /**
    * The ISO weekdays to leave out, like the weekend of the locale.
    */

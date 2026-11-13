@@ -119,6 +119,21 @@ describe('processEvent', () => {
 
       expect(processed.dataTimezone.timezone).to.equal('America/New_York');
     });
+
+    it.each(['2025-01-01T10:00:00Z', '2025-01-01T10:00:00'])(
+      'should throw when the timezone is the removed "system" alias, for the date %s',
+      (start) => {
+        const event = EventBuilder.new()
+          .id('event-1')
+          .withDataTimezone('system')
+          .span(start, '2025-01-01T12:00:00Z')
+          .build();
+
+        expect(() => processEvent(event, 'UTC')).to.throw(
+          'MUI X Scheduler: The timezone "system" of the event "event-1" is not a supported timezone.',
+        );
+      },
+    );
   });
 
   describe('string date resolution', () => {

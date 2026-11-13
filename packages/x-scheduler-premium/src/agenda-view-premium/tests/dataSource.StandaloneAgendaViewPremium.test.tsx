@@ -13,7 +13,6 @@ import { StandaloneAgendaViewPremium } from '@mui/x-scheduler-premium/agenda-vie
 import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
-import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import { describe, it, expect, vi } from 'vitest';
 
 describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
@@ -22,10 +21,7 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
   const pendingGetEvents = () => new Promise<SchedulerEvent[]>(() => {});
 
   function renderWithDataSource(
-    getEvents: (
-      start: TemporalSupportedObject,
-      end: TemporalSupportedObject,
-    ) => Promise<SchedulerEvent[]>,
+    getEvents: (start: Date, end: Date) => Promise<SchedulerEvent[]>,
     props: Partial<React.ComponentProps<typeof StandaloneAgendaViewPremium>> = {},
   ) {
     return render(
@@ -128,9 +124,7 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
         .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
         .recurrent('WEEKLY')
         .build();
-      const getEvents = vi.fn(
-        async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [weekly],
-      );
+      const getEvents = vi.fn(async (_start: Date, _end: Date) => [weekly]);
 
       renderWithDataSource(getEvents, hideEmptyDays);
 
@@ -162,9 +156,7 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
     });
 
     it('should only fetch the days past the cached horizon when navigating forward', async () => {
-      const getEvents = vi.fn(
-        async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [],
-      );
+      const getEvents = vi.fn(async (_start: Date, _end: Date) => []);
 
       function Test() {
         const [visibleDate, setVisibleDate] = React.useState(DEFAULT_TESTING_VISIBLE_DATE);

@@ -1,5 +1,4 @@
 import { describe, test } from 'vitest';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import {
   addMinutes,
   createDate,
@@ -17,7 +16,7 @@ import { innerGetEventOccurrencesGroupedByDay } from './useEventOccurrencesGroup
 
 const eventCount = 1_000;
 
-function createMonthViewScenario(displayTimezone: TemporalTimezone) {
+function createMonthViewScenario(displayTimezone: string) {
   const visibleDate = createDate('2026-03-15T10:00:00Z');
   const gridStart = createStartOfPlainDate(
     getPlainDateWeekStart(toPlainDate(visibleDate.getTime(), 'default').with({ day: 1 }), 1),
@@ -66,7 +65,7 @@ function runMonthView(scenario: ReturnType<typeof createMonthViewScenario>) {
   return weekendCount + occurrencesByDay.size;
 }
 
-function createAgendaState(displayTimezone: TemporalTimezone) {
+function createAgendaState(displayTimezone: string) {
   // One event every 9 days: filling 12 days with events scans about 108 days.
   const firstDay = Date.UTC(2026, 2, 2, 10);
   const events = Array.from({ length: 30 }, (_, index) =>

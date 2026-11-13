@@ -1,4 +1,3 @@
-import type { TemporalSupportedObject } from './date';
 import type { EventCalendarState } from '../use-event-calendar';
 import type { SchedulerProcessedDay } from './event';
 import type { BaseTemporal } from '../internals/utils/base-temporal';
@@ -15,9 +14,7 @@ export type EventCalendarTimeGridEvents = 'shorter-than-one-day' | 'same-day-onl
  * This is used to determine how the components outside of the view should behave based on the current view.
  */
 export interface EventCalendarViewDefinition {
-  siblingVisibleDateGetter: (
-    parameters: SiblingVisibleDateGetterParameters,
-  ) => TemporalSupportedObject;
+  siblingVisibleDateGetter: (parameters: SiblingVisibleDateGetterParameters) => Date;
   visibleDaysSelector: (state: EventCalendarState) => SchedulerProcessedDay[];
   /**
    * The range to fetch from the data source.

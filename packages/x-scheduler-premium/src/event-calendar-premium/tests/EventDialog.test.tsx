@@ -21,7 +21,6 @@ import type {
   SchedulerResource,
   SchedulerEventOccurrence,
   SchedulerOccurrencePlaceholderCreation,
-  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import { useStore } from '@base-ui/utils/store';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
@@ -102,7 +101,7 @@ describe('<EventDialogContent open />', () => {
   // An event opened from a calendar displayed in another timezone.
   function renderCrossTimezoneDialog(
     builder: EventBuilder,
-    displayTimezone: TemporalTimezone,
+    displayTimezone: string,
     providerProps?: Partial<React.ComponentProps<typeof EventCalendarProvider>>,
   ) {
     const onEventsChange = vi.fn();

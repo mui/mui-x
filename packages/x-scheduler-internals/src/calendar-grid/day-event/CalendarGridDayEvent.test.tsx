@@ -9,7 +9,6 @@ import {
   endOfDay,
 } from 'test/utils/scheduler';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
-import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import { describe, it, expect } from 'vitest';
 import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
 
@@ -25,8 +24,8 @@ describe('<CalendarGrid.DayEvent />', () => {
   function renderEvent(
     node: React.ReactElement,
     options: Partial<Pick<ProviderProps, 'events' | 'resources'>> & {
-      rowStart?: TemporalSupportedObject;
-      rowEnd?: TemporalSupportedObject;
+      rowStart?: Date;
+      rowEnd?: Date;
     } = {},
   ) {
     const {
