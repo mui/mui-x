@@ -4787,6 +4787,45 @@ describe('<DataGridPremium /> - Computed columns', () => {
         expect(apiRef.current!.history.canUndo()).to.equal(false);
       });
 
+      describe('undo of a removal made while pivoting is active', () => {
+        const removeWhilePivoting = async () => {
+          await render(
+            <Test initialState={{ computedColumns: { model: [total] } }} pivotModel={pivotModel} />,
+          );
+          await act(async () => apiRef.current!.setColumnIndex('total', 1));
+          await act(async () => apiRef.current!.setColumnWidth('total', 180));
+          await activatePivot();
+          await act(async () => apiRef.current!.removeComputedColumn('total', { undoable: true }));
+          expect(apiRef.current!.history.canUndo()).to.equal(true);
+        };
+
+        it('should restore the column where it was before pivoting when undone after pivoting', async () => {
+          await removeWhilePivoting();
+          await act(async () => apiRef.current!.setPivotActive(false));
+          expect(getFields()).to.deep.equal(['item', 'price', 'quantity']);
+
+          await act(async () => {
+            await apiRef.current!.history.undo();
+          });
+          expect(getModelFields()).to.deep.equal(['total']);
+          expect(getFields()).to.deep.equal(['item', 'total', 'price', 'quantity']);
+          expect(getColumn('total').width).to.equal(180);
+        });
+
+        it('should restore the column where it was before pivoting when undone while pivoting', async () => {
+          await removeWhilePivoting();
+          await act(async () => {
+            await apiRef.current!.history.undo();
+          });
+          expect(getModelFields()).to.deep.equal(['total']);
+          expect(getFields()).not.to.include('total');
+
+          await act(async () => apiRef.current!.setPivotActive(false));
+          expect(getFields()).to.deep.equal(['item', 'total', 'price', 'quantity']);
+          expect(getColumn('total').width).to.equal(180);
+        });
+      });
+
       it('should not send the previous model back to a controlled parent', async () => {
         const onComputedColumnsChange = vi.fn();
         function Controlled() {
