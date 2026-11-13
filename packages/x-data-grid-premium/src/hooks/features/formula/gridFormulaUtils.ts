@@ -48,6 +48,7 @@ export function createComputedColumnsRuntimeCache(): GridComputedColumnsRuntimeC
     model: null,
     computedColDef: undefined,
     hydratedColDefs: new Map(),
+    typeChangedFields: new Set(),
   };
 }
 
@@ -71,6 +72,8 @@ export function createFormulaInternalCache(
     positionContextFields: null,
     positionContextVersion: 0,
     suppressRegroupTrigger: false,
+    pendingFilterItemsReset: null,
+    typeChangeReset: null,
     trackedValues: new Map(),
     lastRowIdToModelLookup: null,
     formulaFields: [],
