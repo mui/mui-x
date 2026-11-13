@@ -13,7 +13,7 @@ import {
 import { isJSDOM } from 'test/utils/skipIf';
 import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
-import type { SchedulerResource, TemporalTimezone } from '@mui/x-scheduler-internals/models';
+import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { toPlainDate } from '@mui/x-scheduler-internals/internals';
@@ -95,7 +95,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   });
 
   describe('events viewed from another display timezone', () => {
-    function renderEditDialog(builder: EventBuilder, displayTimezone: TemporalTimezone) {
+    function renderEditDialog(builder: EventBuilder, displayTimezone: string) {
       const onEventsChange = vi.fn();
       const event: SchedulerEvent = builder.withDisplayTimezone(displayTimezone).build();
 
@@ -783,7 +783,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   });
 
   describe('read-only date and time', () => {
-    function renderReadonlyDetails(builder: EventBuilder, displayTimezone?: TemporalTimezone) {
+    function renderReadonlyDetails(builder: EventBuilder, displayTimezone?: string) {
       if (displayTimezone) {
         builder.withDisplayTimezone(displayTimezone);
       }
@@ -853,8 +853,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     it.skipIf(!isJSDOM)(
       'should show both dates of an event on two days of the display timezone, whatever the timezone of the system',
       () => {
-        // Pacific/Apia skipped December 30th, 2011. On a system there, the date-fns adapter read
-        // December 30th and 31st as the same day in the other timezones.
+        // Pacific/Apia skipped December 30th, 2011.
         setSystemTimezone('Pacific/Apia');
         const { text } = renderReadonlyDetails(
           EventBuilder.new().span('2011-12-30T15:00:00Z', '2011-12-31T15:00:00Z'),

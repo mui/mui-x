@@ -16,7 +16,6 @@ import type {
   RecurringEventFrequency,
   SchedulerProcessedEventRecurrenceRule,
   SchedulerRenderableEventOccurrence,
-  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
@@ -107,7 +106,7 @@ const RECURRENCE_FORM_KEYS = new Set(['recurrenceSelection', 'rruleDraft']);
 // Scheduler settings read when the async validation resolves; the submit
 // continuation must not use the render-time closure values.
 interface ResolutionSettings {
-  displayTimezone: TemporalTimezone;
+  displayTimezone: string;
   shouldEventRequireResource: boolean;
   showRecurrence: boolean;
 }

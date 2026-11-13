@@ -1,6 +1,4 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
-  TemporalSupportedObject,
   SchedulerProcessedEvent,
   SchedulerProcessedDate,
   SchedulerProcessedDay,
@@ -50,8 +48,8 @@ export function getOccurrenceKey(eventId: SchedulerEventId): string {
  */
 export function getRecurringOccurrenceKey(
   eventId: SchedulerEventId,
-  day: TemporalSupportedObject,
-  timezone: TemporalTimezone,
+  day: Date,
+  timezone: string,
 ): string {
   return getRecurringOccurrenceKeyFromDateKey(
     eventId,
@@ -250,6 +248,6 @@ export interface GetOccurrencesFromEventsParameters {
   end: number;
   eventRangeIndex: SchedulerEventRangeIndex;
   visibleResources: Record<string, boolean>;
-  displayTimezone: TemporalTimezone;
+  displayTimezone: string;
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
 }

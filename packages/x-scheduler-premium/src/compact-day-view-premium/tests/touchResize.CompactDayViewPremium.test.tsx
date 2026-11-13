@@ -5,7 +5,6 @@ import { LicenseInfo } from '@mui/x-license';
 import { clearLicenseStatusCache } from '@mui/x-license/internals';
 import { TEST_LICENSE_KEY_PREMIUM } from 'test/utils/licenseKeys';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
-import type { TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import {
   clientYForTime,
   createDate,
@@ -52,7 +51,7 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
   }: {
     initialEvent: SchedulerEvent;
     onChange: (events: SchedulerEvent[]) => void;
-    displayTimezone?: TemporalTimezone;
+    displayTimezone?: string;
   }) {
     const [events, setEvents] = React.useState<SchedulerEvent[]>([initialEvent]);
     return (
@@ -72,7 +71,7 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
   function renderResizableRecurringEvent({
     start = '2025-07-03T10:00:00Z',
     displayTimezone,
-  }: { start?: string; displayTimezone?: TemporalTimezone } = {}) {
+  }: { start?: string; displayTimezone?: string } = {}) {
     const onEventsChange = vi.fn();
     const event = EventBuilder.new()
       .id('event-1')
