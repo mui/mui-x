@@ -1,5 +1,168 @@
 # Changelog
 
+## 9.18.0
+
+_Nov 13, 2026_
+
+We'd like to extend a big thank you to the 19 contributors who made this release possible. Here are some highlights ✨:
+
+- 🔗 Event dependencies are now public in the Event Timeline
+- 👆 Drag and drop in the pivot and charts panels of the Data Grid Premium on touch and pen devices
+- 📋 Pasting past the last row of the Data Grid Premium can add rows
+- 📅 The Scheduler reads the weekend days from the locale
+- ⚠️ Recurring events are now opt-in in the Event Calendar, which saves about 10 kB (gzip) when unused
+- 🌍 Improve Chinese (Taiwan) (zh-TW), Czech (cs-CZ), and Indonesian (id-ID) locales
+- 🐞 Bugfixes
+
+Special thanks go out to these community members for their valuable contributions:
+@Amko94, @Anexus5919, @costajohnt, @insanrizky, @kojdad-alt, @morsycodes, @mustafajw07, @officialasishkumar, @poplolioi11, @Roman178
+
+The following team members contributed to this release:
+@arminmeh, @flaviendelangle, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.18.0`
+
+- [DataGrid] Export `gridNilComparator` util (#24101) @noraleonte
+- [DataGrid] Fix `startsWith` filter operator not matching values containing a line break (#24109) @costajohnt
+- [DataGrid] Fix missing quick filter trigger and control classes (#23945) @JCQuintas
+- [DataGrid] Fix pinned cells jumping when the fill handle is shown (#24097) @Amko94
+- [DataGrid] Fix the paste from the IME hidden editor (#24146) @LukasTy
+- [DataGrid] Fix unexpected `onBlur` when using `ctrl+v` (#24100) @noraleonte
+- [DataGrid] Focus the first filter field instead of the value input (#24049) @JCQuintas
+- [DataGrid] Keep pipe processing working after an error (#24120) @Roman178
+- [DataGrid] Keep the focused cell when a server-side sort reloads the rows (#24068) @morsycodes
+- [DataGrid] Forward data-* props to the root element (#24162⁠) @michelengelen
+- [DataGrid] Remove stale ids from an exclude selection model (#23897) @michelengelen
+- [DataGrid] Log an error when unsupported `aria-*` props are ignored (#23863) @michelengelen
+- [DataGrid] Start editing with the first key of an IME composition (#23910) @michelengelen
+- [DataGrid] Warn when scroll indexes are out of bounds (#23448) @Roman178
+- [l10n] Improve Chinese (Taiwan) (zh-TW) locale (#24091) @poplolioi11
+- [l10n] Improve Czech (cs-CZ) locale (#24087) @kojdad-alt
+- [l10n] Improve Indonesian (id-ID) locale (#24143) @insanrizky
+
+#### `@mui/x-data-grid-pro@9.18.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.18.0`, plus:
+
+- [DataGridPro] Add `useVisibleColumns` to `setColumnIndex()` (#24140) @JCQuintas
+- [DataGridPro] Follow the data source order when re-fetching grouped rows (#23638) @Anexus5919
+
+#### `@mui/x-data-grid-premium@9.18.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.18.0`, plus:
+
+- [DataGridPremium] Add rows when the pasted data goes past the last row (#23881) @michelengelen
+- [DataGridPremium] Side panel drag and drop with pointer events (#23976) @noraleonte
+- [DataGridPremium] Fit the filter and the sort to a computed column's new type (#24144) @MBilalShafi
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.18.0`
+
+- [l10n] Add Indonesian (id-ID) locale (#24187) @insanrizky
+- [l10n] Improve Czech (cs-CZ) locale (#24087) @kojdad-alt
+- [pickers] Keep `MonthCalendar` and `YearCalendar` reachable when the focusable item is disabled (#24104) @officialasishkumar
+
+#### `@mui/x-date-pickers-pro@9.18.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.18.0`.
+
+### Charts
+
+#### `@mui/x-charts@9.18.0`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@9.18.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.18.0`, plus:
+
+- [charts-pro] Fix the zoom slider direction on ordinal y-axes (#24105) @officialasishkumar
+- [charts-pro] Make the zoom slider operable with the keyboard (#24139) @officialasishkumar
+
+#### `@mui/x-charts-premium@9.18.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.18.0`, plus:
+
+- [charts-premium] Draw one ring per dimension in the pie chart of `ChartsRenderer` (#24145) @rita-codes
+
+### Tree View
+
+#### `@mui/x-tree-view@9.18.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.18.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.18.0`.
+
+### Scheduler
+
+#### Breaking changes
+
+- Recurring events are now opt-in in `EventCalendarPremium` and in the premium standalone views, like in `EventTimelinePremium`. Without the feature, each event with an `rrule` renders once and a dev warning explains how to enable it:
+
+  ```diff
+  +import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
+
+  -<EventCalendarPremium events={events} />
+  +<EventCalendarPremium events={events} features={{ recurringEvents: recurringEventsFeature }} />
+  ```
+
+- The `EventTimelinePremiumRecurringEventsFeature` type exported from `@mui/x-scheduler-premium/recurring-events` has been renamed `SchedulerRecurringEventsFeature`, since it now feeds both the Event Calendar and the Event Timeline.
+
+- The `value` of the processed dates of the occurrences (`onEventEditingStart`, `getEventAriaLabel`, the `timelineEventContent` slot and `useEventDialogOccurrence()`), the date passed to `onVisibleDateChange`, and the `start` and `end` passed to `dataSource.getEvents()` are plain `Date` objects that no longer carry the display timezone. The instants don't change. Read the date and time in the display timezone through `key`, `minutesInDay` and `timestamp`:
+
+  ```diff
+  -const hour = occurrence.displayTimezone.start.value.getHours();
+  +const hour = Math.floor(occurrence.displayTimezone.start.minutesInDay / 60);
+  ```
+
+- The offsets between -01:00 and 00:00, used by a few timezones before the 1970s (like Africa/Monrovia until 1972), are now read as negative, which fixes the events of those years being about an hour off.
+
+- The weekend days come from the `dateLocale`. Calendars whose locale has a weekend other than Saturday and Sunday (for example `he-IL`, `ar-*`, `fa-IR`, or `en-IN`) mark different days with `data-weekend`, and `showWeekends: false` hides those days instead.
+
+- The Scheduler no longer uses a date adapter to read the event strings:
+  - A date-time string with an offset, like `"2025-01-01T09:00:00+02:00"`, is read as an instant, like a string ending with `Z`, and an edit saves it as a UTC string ending with `Z`.
+  - A string without `T` is no longer read as a date only: `"2025-01-01 09:00:00"` keeps its time. A string in another format, like `"2025/01/01"`, is read at its wall-clock time in the data timezone.
+
+#### `@mui/x-scheduler@9.0.0-beta.16`
+
+- [l10n] Improve Indonesian (id-ID) locale (#24154) @insanrizky
+- [scheduler] Add a recurring events stress test experiment (#24018) @flaviendelangle
+- [scheduler] Build the dates of the tests without the date adapter (#24135) @flaviendelangle
+- [scheduler] Create plain Date objects and read them in explicit timezones (#24029) @flaviendelangle
+- [scheduler] Fix day grid event span and drag mapping with hidden weekend days (#24103) @mustafajw07
+- [scheduler] Mark today with `aria-current="date"` in Event Timeline headers (#24061) @mustafajw07
+- [scheduler] Move focus out of an event removed while focused (#24088) @mustafajw07
+- [scheduler] Read and create the dates without the date adapter (#24134) @flaviendelangle
+- [scheduler] Read the day numbers of the placeholder cells from their plain dates (#24138) @flaviendelangle
+- [scheduler] Read the weekend days from the locale (#24121) @rita-codes
+- [scheduler] Refuse the batch when the auto-scheduling cascade clamps an unwritable date (#24002) @mustafajw07
+- [scheduler] Remove duplicated tests and fix the ones that could not fail (#24133) @flaviendelangle
+- [scheduler] Step through the recurring series on day numbers (#24064) @flaviendelangle
+- [scheduler] Walk the Timeline header on day numbers (#24128) @flaviendelangle
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.16` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.16`, plus:
+
+- [scheduler-premium] Make recurring events opt-in in the Event Calendar (#24089) @rita-codes
+- [scheduler-premium] Make the Event Timeline dependencies public (#24039) @rita-codes
+
+### Core
+
+- [code-infra] Mark the publish dist-tag default with #npm-tag-reference (#23935) @LukasTy
+- [code-infra] Use the consistentTypeImports option (#24136) @Janpot
+- [infra] Fix release script (#24150) @noraleonte
+
+### Miscellaneous
+
+- [chat] Make the order of the message slots deterministic in the API docs (#24083) @github-actions[bot]
+- [virtualizer] Remove the sticky frame delay (#24056) @arminmeh
+
 ## 9.17.0
 
 _Oct 30, 2026_
@@ -11,7 +174,7 @@ We'd like to extend a big thank you to the 20 contributors who made this release
   https://github.com/user-attachments/assets/a96a8366-41df-4fe8-8e25-e517c914b372
 
 - 👆 Data Grid column reordering on touch and pen devices
-- ↔️  Right-to-left (RTL) support in the Event Calendar and the Event Timeline
+- ↔️ Right-to-left (RTL) support in the Event Calendar and the Event Timeline
 - 🕒 Fix recurring events, drag and drop, and the time axis of the Scheduler across DST transitions
 - ⚠️ Recurring events and dependencies are now opt-in in the Event Timeline
 - 🌍 The Scheduler formats dates with `Intl`: `dateLocale` takes a locale string like `"fr-FR"`
@@ -332,7 +495,6 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.14`, plus:
 - [scheduler-premium] Include the community models and theme augmentation in the Premium package (#23813) @rita-codes
 - [scheduler-premium] Dependencies - Edit the type and lag from the arrow, cascade on create and edit (#23726) @rita-codes
 - [scheduler-premium] Fix agenda focus skipping surviving occurrences after deleting a recurring event (#23903) @mustafajw07
-
 
 ### Chat
 
