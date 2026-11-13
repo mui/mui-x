@@ -51,7 +51,6 @@ import {
   buildFormulaPositionSnapshotFromState,
 } from './gridFormulaPositionContext';
 import type {
-  GridFilterItemsReset,
   GridFormulaActiveEdit,
   GridFormulaLookup,
   GridFormulaPrivateApi,
@@ -258,13 +257,13 @@ function tryToApplyView(step: ViewStep, apply: () => void) {
  * reset that runs before that, in a later event (a second type change), starts from the model
  * the pending reset sent, so that the last model the parent gets holds every reset. Without
  * `onFilterModelChange`, the parent can't pass the model back: the grid warns in development.
- * Returns `null` when no item changed.
+ * Returns whether the reset is pending.
  */
 function resetFilterItemsOfFields(
   apiRef: RefObject<GridPrivateApiPremium>,
   fields: Set<string>,
   hasFilterModelChangeHandler: boolean,
-): GridFilterItemsReset | null {
+): boolean {
   const cache = apiRef.current.caches.formula!;
   const stateModel = gridFilterModelSelector(apiRef);
   // `handleFilterModelChange` drops the pending reset when the state changes: this guards a
@@ -290,7 +289,7 @@ function resetFilterItemsOfFields(
     return { ...item, operator, value: undefined };
   });
   if (resetFields.size === 0) {
-    return null;
+    return false;
   }
   const resetModel = { ...filterModel, items };
   // `setFilterModel` applies the filtering itself: an unrelated item that fails must not
@@ -307,14 +306,13 @@ function resetFilterItemsOfFields(
         ].join('\n'),
       );
     }
-    return 'pending';
+    return true;
   }
   cache.pendingFilterItemsReset = null;
   if (failure) {
     warnViewNotApplied('filtering', failure.error);
-    return 'failed';
   }
-  return 'applied';
+  return false;
 }
 
 /**
@@ -532,13 +530,10 @@ export const useGridFormula = (
    * the computed values (`computedColumnsChanged`), they are re-applied when
    * their model reads a changed value. Once: the events they publish refresh
    * the position-dependent formulas without reporting a computed change. The
-   * filtering is skipped when the reset of the filter items after a type
-   * change already applied it with the new values and the rebuilt grouping
-   * columns (`filterItemsReset: 'reapplied'`: `handleTypeChangedColumns`
-   * builds them before it resets), and when a controlled parent
-   * has not passed the reset items back yet (`'pending'`): the state still
-   * holds the items that don't fit the new type, and the model of the parent
-   * is filtered when it arrives. A
+   * filtering is skipped when a controlled parent has not passed back the
+   * filter items reset after a type change (`filterItemsResetPending`): the
+   * state still holds the items that don't fit the new type, and the model of
+   * the parent is filtered when it arrives. A
    * filtering or a sorting the core can't apply leaves the view as it was,
    * and a failed regroup is finished with both (`tryToApplyView`), except the
    * regroup of the `rowsSet` pass, which throws to the caller of the rows update.
@@ -551,7 +546,7 @@ export const useGridFormula = (
         rowSpanning: boolean;
         computedColumnsChanged?: boolean;
         insideRowsSet?: boolean;
-        filterItemsReset?: 'reapplied' | 'pending';
+        filterItemsResetPending?: boolean;
       },
     ) => {
       // The values of the computed columns changed as a whole (formula, referenced
@@ -599,10 +594,7 @@ export const useGridFormula = (
       }
       // A regroup that failed while the reset is pending is not reported: it most likely failed
       // at the filtering of the rebuilt tree, on the items that don't fit.
-      if (
-        options.filterItemsReset === 'pending' ||
-        (options.filterItemsReset === 'reapplied' && !regroupFailed)
-      ) {
+      if (options.filterItemsResetPending) {
         viewRefresh = { ...viewRefresh, refilter: false };
       }
       const { refilter, resort } = viewRefresh;
@@ -936,7 +928,7 @@ export const useGridFormula = (
     cache.typeChangeReset = {
       // After the sync, which builds a new columns state.
       orderedFields: gridColumnFieldsSelector(apiRef),
-      filterItemsReset: resetFilterItemsOfFields(
+      pending: resetFilterItemsOfFields(
         apiRef,
         addGroupingColumnsOfSources(computedFields),
         props.onFilterModelChange !== undefined,
@@ -1013,24 +1005,12 @@ export const useGridFormula = (
       // extra hydration finds the signature bookkeeping above done, so it takes the cheap branch.
       // After a type change, `handleTypeChangedColumns` already synced them: nothing to do.
       syncGroupingColumns();
-      const fieldsReset = typeChangeReset?.filterItemsReset ?? null;
-      let filterItemsReset: 'reapplied' | 'pending' | undefined;
-      if (fieldsReset === 'pending') {
-        filterItemsReset = 'pending';
-      } else if (
-        // The reset ran before the pass: the cells the pass changed were not evaluated yet when
-        // it applied the filtering.
-        fieldsReset === 'applied' &&
-        (changedCells === null || changedCells.length === 0)
-      ) {
-        filterItemsReset = 'reapplied';
-      }
       // Row spanning resets on `columnsChange` after this handler.
       triggerDependentFeatures(changedCells, {
         aggregation: true,
         rowSpanning: false,
         computedColumnsChanged,
-        filterItemsReset,
+        filterItemsResetPending: typeChangeReset?.pending === true,
       });
     }
   }, [

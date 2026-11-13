@@ -232,17 +232,6 @@ export interface GridComputedColumnsRuntimeCache {
   typeChangedFields: Set<string>;
 }
 
-/**
- * How the filter model with the filter items fitted to the new type of a computed column was
- * applied:
- * - `applied`: the model is set and the rows are filtered with it.
- * - `failed`: the model is set, but its filtering failed (warned in development).
- * - `pending`: the filter model is controlled. The parent got the model through
- *   `onFilterModelChange`, but the state keeps the previous items until the parent passes it
- *   back, after the event. The model the parent passes is filtered when it arrives.
- */
-export type GridFilterItemsReset = 'applied' | 'failed' | 'pending';
-
 export interface GridFormulaInternalCache {
   /**
    * Interning parser: identical sources share one parse result.
@@ -335,10 +324,11 @@ export interface GridFormulaInternalCache {
      */
     orderedFields: readonly string[];
     /**
-     * The reset of the filter items of the computed columns whose type changed and of the row
-     * grouping columns that read them, or `null` when no item changed.
+     * The filter model is controlled and the reset changed an item: the parent got the model
+     * through `onFilterModelChange`, but the state keeps the previous items until the parent
+     * passes it back, after the event. The model the parent passes is filtered when it arrives.
      */
-    filterItemsReset: GridFilterItemsReset | null;
+    pending: boolean;
   } | null;
   /**
    * Last value resolved for each raw (non-formula) dependency cell,
