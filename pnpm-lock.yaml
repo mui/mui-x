@@ -188,7 +188,7 @@ catalogs:
       version: 8.0.7
     '@babel/runtime':
       specifier: ^7.29.7 || ^8.0.0
-      version: 8.0.7
+      version: 8.1.0
     '@babel/traverse':
       specifier: ^8.1.0
       version: 8.1.0
@@ -922,7 +922,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@modelcontextprotocol/sdk':
         specifier: ^1.32.2
         version: 1.32.2(supports-color@11.0.0)(zod@4.6.7)
@@ -948,7 +948,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       eventsource-parser:
         specifier: ^4.1.3
         version: 4.1.3
@@ -974,7 +974,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -1042,7 +1042,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -1111,7 +1111,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -1177,7 +1177,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@types/d3-array':
         specifier: ^3.2.2
         version: 3.2.2
@@ -1275,7 +1275,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -1334,7 +1334,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@base-ui/react':
         specifier: 'catalog:'
         version: 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -1372,7 +1372,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       jscodeshift:
         specifier: 'catalog:'
         version: 17.4.0(supports-color@11.0.0)
@@ -1401,7 +1401,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -1466,7 +1466,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
@@ -1525,7 +1525,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -1596,7 +1596,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -1658,7 +1658,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
@@ -1744,7 +1744,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
@@ -1824,7 +1824,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -1840,7 +1840,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -1866,7 +1866,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.5.0(@types/react@19.3.0)(react@19.3.1)
@@ -1895,7 +1895,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@base-ui/react':
         specifier: 'catalog:'
         version: 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -1969,7 +1969,7 @@ importers:
         version: 3.2.1
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@base-ui/react':
         specifier: 'catalog:'
         version: 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -2007,7 +2007,7 @@ importers:
         version: 4.0.0
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@base-ui/react':
         specifier: 'catalog:'
         version: 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -2048,7 +2048,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@base-ui/react':
         specifier: 'catalog:'
         version: 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -2122,7 +2122,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@fingerprintjs/fingerprintjs':
         specifier: ^3.4.2
         version: 3.4.2
@@ -2148,7 +2148,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -2198,7 +2198,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -2254,7 +2254,7 @@ importers:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -2286,7 +2286,7 @@ importers:
     devDependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@base-ui/react':
         specifier: 'catalog:'
         version: 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -2399,6 +2399,75 @@ importers:
         specifier: ^4.4.0
         version: 4.4.0
 
+  test/benchmark:
+    devDependencies:
+      '@emotion/react':
+        specifier: 'catalog:'
+        version: 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
+      '@emotion/styled':
+        specifier: 'catalog:'
+        version: 11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
+      '@mui/internal-benchmark':
+        specifier: 0.1.1-canary.14
+        version: 0.1.1-canary.14(@playwright/test@1.65.0)(@vitest/browser-playwright@5.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vite@8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.0)
+      '@mui/material':
+        specifier: 'catalog:'
+        version: 9.5.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@mui/x-charts':
+        specifier: workspace:^
+        version: link:../../packages/x-charts/build
+      '@mui/x-charts-premium':
+        specifier: workspace:^
+        version: link:../../packages/x-charts-premium/build
+      '@mui/x-charts-pro':
+        specifier: workspace:^
+        version: link:../../packages/x-charts-pro/build
+      '@mui/x-chat':
+        specifier: workspace:^
+        version: link:../../packages/x-chat/build
+      '@mui/x-data-grid':
+        specifier: workspace:^
+        version: link:../../packages/x-data-grid/build
+      '@mui/x-data-grid-premium':
+        specifier: workspace:^
+        version: link:../../packages/x-data-grid-premium/build
+      '@mui/x-data-grid-pro':
+        specifier: workspace:^
+        version: link:../../packages/x-data-grid-pro/build
+      '@mui/x-date-pickers':
+        specifier: workspace:^
+        version: link:../../packages/x-date-pickers/build
+      '@mui/x-date-pickers-pro':
+        specifier: workspace:^
+        version: link:../../packages/x-date-pickers-pro/build
+      '@mui/x-license':
+        specifier: workspace:^
+        version: link:../../packages/x-license/build
+      '@mui/x-scheduler':
+        specifier: workspace:^
+        version: link:../../packages/x-scheduler/build
+      '@mui/x-tree-view':
+        specifier: workspace:^
+        version: link:../../packages/x-tree-view/build
+      '@mui/x-tree-view-pro':
+        specifier: workspace:^
+        version: link:../../packages/x-tree-view-pro/build
+      '@playwright/test':
+        specifier: 'catalog:'
+        version: 1.65.0
+      dayjs:
+        specifier: 'catalog:'
+        version: 1.11.23
+      react:
+        specifier: 'catalog:'
+        version: 19.3.1
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.3.1(react@19.3.1)
+      vite:
+        specifier: 'catalog:'
+        version: 8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
+
   test/bundle-size:
     dependencies:
       '@mui/x-charts':
@@ -2448,7 +2517,7 @@ importers:
     devDependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@mui/x-charts':
         specifier: workspace:^
         version: link:../../packages/x-charts/build
@@ -2513,47 +2582,11 @@ importers:
         specifier: 'catalog:'
         version: 4.23.15
 
-  test/performance-charts:
-    devDependencies:
-      '@emotion/react':
-        specifier: 'catalog:'
-        version: 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
-      '@mui/internal-benchmark':
-        specifier: 0.1.1-canary.13
-        version: 0.1.1-canary.13(@playwright/test@1.65.0)(@vitest/browser-playwright@5.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vite@8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.0)
-      '@mui/x-charts':
-        specifier: workspace:^
-        version: link:../../packages/x-charts/build
-      '@mui/x-charts-premium':
-        specifier: workspace:^
-        version: link:../../packages/x-charts-premium/build
-      '@mui/x-charts-pro':
-        specifier: workspace:^
-        version: link:../../packages/x-charts-pro/build
-      '@vitejs/plugin-react':
-        specifier: 'catalog:'
-        version: 6.2.1(babel-plugin-react-compiler@1.0.0)(vite@8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
-      '@vitest/browser-playwright':
-        specifier: 'catalog:'
-        version: 5.1.0(playwright@1.65.0)(vite@8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.0)
-      react:
-        specifier: 'catalog:'
-        version: 19.3.1
-      react-dom:
-        specifier: 'catalog:'
-        version: 19.3.1(react@19.3.1)
-      vite:
-        specifier: 'catalog:'
-        version: 8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
-      vitest:
-        specifier: 'catalog:'
-        version: 5.1.0(@opentelemetry/api@1.10.0)(@types/node@22.20.5)(@vitest/browser-playwright@5.1.0)(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(jsdom@31.0.0)(vite@8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
-
   test/regressions:
     devDependencies:
       '@babel/runtime':
         specifier: 'catalog:'
-        version: 8.0.7
+        version: 8.1.0
       '@fontsource/roboto':
         specifier: 5.3.0
         version: 5.3.0
@@ -3503,8 +3536,8 @@ packages:
     resolution: {integrity: sha512-NpugTzbKgGrNe45Ui32cN8vCFFMxVtP/9rtfwv0nP5FRDAjvYBxJcLVpYA9mr1jxP6cnIT7x9LUzuDTbWYYNRA==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/runtime@8.0.7':
-    resolution: {integrity: sha512-k0hagDDq/6w4v+0Sp4wFvIz/yswH5O7Va6aRTnD7N62Tnborp4X+YB+H3XUcWVSR4aE47WPEXiIIZchBs0GmYg==}
+  '@babel/runtime@8.1.0':
+    resolution: {integrity: sha512-MQye/pU7gzXerMzlhScFNH1u4Je6rR8cqJWSgAfD+rIwbbtwG8tVDegoI7sWfcXkfVRW09G7vk2vjxGIuKFfwg==}
 
   '@babel/template@7.29.7':
     resolution: {integrity: sha512-puq+Gf35oI24FeN11LkoUQFqv9uwNeWpxXZi/Ji3rRIoKAzKnxRaZ+Gkj0vKS9ZCiTESfng1N9LyOyXvo+m+Gg==}
@@ -4541,8 +4574,8 @@ packages:
     peerDependencies:
       '@babel/core': ^8.0.0
 
-  '@mui/internal-benchmark@0.1.1-canary.13':
-    resolution: {integrity: sha512-F7j8N8hUoCwBQ+UUr8SfbvD09NqV3Hr1aTauOUmuiSsS/Ylzo+ff5Ib8Dc8tIuH953cKECx4PjE5Nxvs46YnWw==}
+  '@mui/internal-benchmark@0.1.1-canary.14':
+    resolution: {integrity: sha512-Ea6lfH8qi0L5QmtGuLxrN9TCDQt26O95KTDTnxeJ7e3AyIjdFTYbeEy7crFxZWWx3Z53x/kLEiwu3sFmIpnbSA==}
     hasBin: true
     peerDependencies:
       '@playwright/test': '>=1.50.0'
@@ -12562,7 +12595,7 @@ snapshots:
 
   '@babel/runtime@7.29.10': {}
 
-  '@babel/runtime@8.0.7': {}
+  '@babel/runtime@8.1.0': {}
 
   '@babel/template@7.29.7':
     dependencies:
@@ -12610,7 +12643,7 @@ snapshots:
 
   '@base-ui/react@1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@babel/runtime': 8.0.7
+      '@babel/runtime': 8.1.0
       '@base-ui/utils': 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@floating-ui/react-dom': 2.1.9(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@floating-ui/utils': 0.2.12
@@ -12624,7 +12657,7 @@ snapshots:
 
   '@base-ui/utils@0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@babel/runtime': 8.0.7
+      '@babel/runtime': 8.1.0
       '@floating-ui/utils': 0.2.12
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
@@ -13436,7 +13469,7 @@ snapshots:
 
   '@mui/icons-material@9.5.0(@mui/material@9.5.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@types/react@19.3.0)(react@19.3.1)':
     dependencies:
-      '@babel/runtime': 8.0.7
+      '@babel/runtime': 8.1.0
       '@mui/material': 9.5.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       react: 19.3.1
     optionalDependencies:
@@ -13489,9 +13522,9 @@ snapshots:
       '@babel/core': 8.1.0
       resolve: 1.22.14
 
-  '@mui/internal-benchmark@0.1.1-canary.13(@playwright/test@1.65.0)(@vitest/browser-playwright@5.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vite@8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.0)':
+  '@mui/internal-benchmark@0.1.1-canary.14(@playwright/test@1.65.0)(@vitest/browser-playwright@5.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vite@8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.0)':
     dependencies:
-      '@babel/runtime': 8.0.7
+      '@babel/runtime': 8.1.0
       '@playwright/test': 1.65.0
       '@pnpm/find-workspace-dir': 1000.1.5
       '@vitejs/plugin-react': 6.2.1(babel-plugin-react-compiler@1.0.0)(vite@8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
@@ -13665,7 +13698,7 @@ snapshots:
 
   '@mui/internal-core-docs@10.0.0-canary.0(20a01f2445bf3d0d6db1affd86a4d620)':
     dependencies:
-      '@babel/runtime': 8.0.7
+      '@babel/runtime': 8.1.0
       '@base-ui/react': 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@docsearch/react': 5.2.0(@algolia/client-search@5.59.0)(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(search-insights@2.17.3)
       '@emotion/cache': 11.14.0
@@ -13700,7 +13733,7 @@ snapshots:
 
   '@mui/internal-docs-infra@0.13.1-canary.29(@types/react@19.3.0)(next@16.4.5(@babel/core@8.1.0)(@opentelemetry/api@1.10.0)(@playwright/test@1.65.0)(@types/node@22.20.5)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(prettier@3.9.10)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@11.0.0)':
     dependencies:
-      '@babel/runtime': 8.0.7
+      '@babel/runtime': 8.1.0
       '@csstools/postcss-light-dark-function': 3.0.7(postcss@8.5.32)
       '@csstools/postcss-relative-color-syntax': 4.0.15(postcss@8.5.32)
       '@csstools/postcss-stepped-value-functions': 5.0.9(postcss@8.5.32)
@@ -13758,7 +13791,7 @@ snapshots:
 
   '@mui/internal-markdown@4.0.1-canary.0':
     dependencies:
-      '@babel/runtime': 8.0.7
+      '@babel/runtime': 8.1.0
       es-toolkit: 1.53.2
       marked: 18.1.2
       prismjs: 1.30.0
@@ -13787,7 +13820,7 @@ snapshots:
 
   '@mui/internal-test-utils@2.1.1-canary.5(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@playwright/test@1.65.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(@vitest/utils@5.1.0)(chai@6.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vite@8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.0)':
     dependencies:
-      '@babel/runtime': 8.0.7
+      '@babel/runtime': 8.1.0
       '@playwright/test': 1.65.0
       '@testing-library/dom': 10.4.2
       '@testing-library/react': 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -13815,12 +13848,12 @@ snapshots:
 
   '@mui/internal-typescript-api-extractor@0.1.1-canary.1(@typescript/typescript6@6.0.2)':
     dependencies:
-      '@babel/runtime': 8.0.7
+      '@babel/runtime': 8.1.0
       typescript: '@typescript/typescript6@6.0.2'
 
   '@mui/material-nextjs@9.5.0(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/server@11.11.0)(@types/react@19.3.0)(next@16.4.5(@babel/core@8.1.0)(@opentelemetry/api@1.10.0)(@playwright/test@1.65.0)(@types/node@22.20.5)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@babel/runtime': 8.0.7
+      '@babel/runtime': 8.1.0
       '@emotion/react': 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
       next: 16.4.5(@babel/core@8.1.0)(@opentelemetry/api@1.10.0)(@playwright/test@1.65.0)(@types/node@22.20.5)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       react: 19.3.1
@@ -13831,7 +13864,7 @@ snapshots:
 
   '@mui/material@9.5.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@babel/runtime': 8.0.7
+      '@babel/runtime': 8.1.0
       '@mui/core-downloads-tracker': 9.5.0
       '@mui/system': 9.5.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)
       '@mui/types': 9.5.0(@types/react@19.3.0)
@@ -13852,7 +13885,7 @@ snapshots:
 
   '@mui/private-theming@9.5.0(@types/react@19.3.0)(react@19.3.1)':
     dependencies:
-      '@babel/runtime': 8.0.7
+      '@babel/runtime': 8.1.0
       '@mui/utils': 9.5.0(@types/react@19.3.0)(react@19.3.1)
       prop-types: 15.8.1
       react: 19.3.1
@@ -13861,7 +13894,7 @@ snapshots:
 
   '@mui/styled-engine@9.5.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(react@19.3.1)':
     dependencies:
-      '@babel/runtime': 8.0.7
+      '@babel/runtime': 8.1.0
       '@emotion/cache': 11.14.0
       '@emotion/serialize': 1.3.3
       '@emotion/sheet': 1.4.0
@@ -13874,13 +13907,13 @@ snapshots:
 
   '@mui/stylis-plugin-rtl@9.5.0(stylis@4.4.0)':
     dependencies:
-      '@babel/runtime': 8.0.7
+      '@babel/runtime': 8.1.0
       cssjanus: 2.3.1
       stylis: 4.4.0
 
   '@mui/system@9.5.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)':
     dependencies:
-      '@babel/runtime': 8.0.7
+      '@babel/runtime': 8.1.0
       '@mui/private-theming': 9.5.0(@types/react@19.3.0)(react@19.3.1)
       '@mui/styled-engine': 9.5.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(react@19.3.1)
       '@mui/types': 9.5.0(@types/react@19.3.0)
@@ -13906,7 +13939,7 @@ snapshots:
 
   '@mui/types@9.5.0(@types/react@19.3.0)':
     dependencies:
-      '@babel/runtime': 8.0.7
+      '@babel/runtime': 8.1.0
     optionalDependencies:
       '@types/react': 19.3.0
 
@@ -13936,7 +13969,7 @@ snapshots:
 
   '@mui/utils@9.5.0(@types/react@19.3.0)(react@19.3.1)':
     dependencies:
-      '@babel/runtime': 8.0.7
+      '@babel/runtime': 8.1.0
       '@mui/types': 9.5.0(@types/react@19.3.0)
       '@types/prop-types': 15.7.15
       clsx: 2.1.1

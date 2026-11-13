@@ -1,0 +1,33 @@
+{
+  "name": "@mui-x-internal/benchmark",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "benchmark": "benchmark"
+  },
+  "devDependencies": {
+    "@emotion/react": "catalog:",
+    "@emotion/styled": "catalog:",
+    "@mui/internal-benchmark": "0.1.1-canary.14",
+    "@mui/material": "catalog:",
+    "@mui/x-charts": "workspace:^",
+    "@mui/x-charts-premium": "workspace:^",
+    "@mui/x-charts-pro": "workspace:^",
+    "@mui/x-chat": "workspace:^",
+    "@mui/x-data-grid": "workspace:^",
+    "@mui/x-data-grid-premium": "workspace:^",
+    "@mui/x-data-grid-pro": "workspace:^",
+    "@mui/x-date-pickers": "workspace:^",
+    "@mui/x-date-pickers-pro": "workspace:^",
+    "@mui/x-license": "workspace:^",
+    "@mui/x-scheduler": "workspace:^",
+    "@mui/x-tree-view": "workspace:^",
+    "@mui/x-tree-view-pro": "workspace:^",
+    "@playwright/test": "catalog:",
+    "dayjs": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "vite": "catalog:"
+  }
+}

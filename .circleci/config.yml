@@ -235,43 +235,81 @@ jobs:
           name: Run visual regression tests
           command: xvfb-run pnpm test:regressions
       - code-infra/argos-push
-  test_charts_benchmark:
+  test_benchmark:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
       playwright-img-version: v1.65.0-noble
-    resource_class: medium
+    # Building both sides is most of the setup time, and more logical CPUs leave the browser less to
+    # contend with while sampling. The `benchmark` CLI warns below 3.
+    resource_class: large
     steps:
       - checkout
       - run:
-          name: Skip when no charts changes
+          name: Skip pull requests without MUI X changes
+          # The base branch runs on every commit: changes outside these paths, such as a dependency
+          # bump, can change the performance too.
           command: |
-            if [ "$CIRCLE_BRANCH" = "master" ] || [ "$CIRCLE_BRANCH" = "next" ]; then
-              echo "On $CIRCLE_BRANCH; running benchmarks."
-              exit 0
-            fi
+            set -e
             BASE="${BASE_BRANCH:-master}"
-            git fetch --no-tags --depth=50 origin "$BASE"
-            CHANGED=$(git diff --name-only "origin/$BASE...HEAD" -- \
-              'packages/x-charts*' \
-              'test/performance-charts' \
-              '.circleci/config.yml')
-            if [ -n "$CHANGED" ]; then
-              echo "Relevant changes detected; running benchmarks:"
-              echo "$CHANGED"
+            if [ "$CIRCLE_BRANCH" = "$BASE" ] || [ "$CIRCLE_BRANCH" = "next" ]; then
+              # So that the baseline below is the previous commit, not where this branch forked.
+              echo "$CIRCLE_BRANCH" > .benchmark-base-branch
               exit 0
             fi
-            echo "No changes to packages/x-charts*, test/performance-charts, or CircleCI config; halting job."
-            circleci-agent step halt
+            # Full history: the baseline below is where the branch forked.
+            git fetch --no-tags origin "$BASE"
+            CHANGED=$(git diff --name-only "origin/$BASE...HEAD" -- \
+              'packages/x-*' \
+              ':!packages/x-codemod' \
+              'test/benchmark' \
+              '.circleci/config.yml')
+            if [ -z "$CHANGED" ]; then
+              echo "No changes to packages/x-* (outside x-codemod), test/benchmark, or CircleCI config; halting job."
+              circleci-agent step halt
+              exit 0
+            fi
+            echo "Relevant changes; running benchmarks:"
+            echo "$CHANGED"
+            echo "$BASE" > .benchmark-base-branch
       - install-deps
       - run:
-          name: Build charts packages
-          command: pnpm --filter "@mui/x-charts-premium..." build
+          name: Resolve the baseline commit
+          # On the base branch, the previous commit; on a pull request, where it forked from it.
+          command: |
+            set -e
+            BASE_SHA=$(pnpm code-infra baseline --base-branch "$(cat .benchmark-base-branch)")
+            echo "Baseline commit: $BASE_SHA"
+            echo "$BASE_SHA" > .benchmark-baseline-sha
+      - restore_cache:
+          name: Restore the packed-baseline cache
+          keys:
+            - benchmark-packed-v1-{{ checksum ".benchmark-baseline-sha" }}
       - run:
-          name: Run charts benchmarks
-          environment:
-            BENCHMARK_UPLOAD: 'true'
-          command: pnpm test:charts-benchmark
+          name: Run the benchmarks
+          no_output_timeout: 30m
+          # The smoke benchmarks of all of MUI X. The run builds and packs both sides itself.
+          command: pnpm test:benchmark smoke/ --baseline "$(cat .benchmark-baseline-sha)"
+      - run:
+          name: Upload the benchmark report
+          # Also after a failed run, so the comment says what happened. A run that fails before
+          # sampling, while building or packing, writes no report.
+          when: always
+          command: |
+            if [ ! -f test/benchmark/.benchmark/results/report.json ]; then
+              echo "No benchmark report; the run failed before sampling. See the step above."
+              exit 0
+            fi
+            pnpm test:benchmark upload
+      - run:
+          name: Keep only the baseline in the cache
+          # The working tree's tarballs are packed apart from the baseline's, and no later run uses them.
+          command: rm -rf test/benchmark/.benchmark/packed/current
+      - save_cache:
+          name: Save the packed-baseline cache
+          key: benchmark-packed-v1-{{ checksum ".benchmark-baseline-sha" }}
+          paths:
+            - test/benchmark/.benchmark/packed
 
 workflows:
   pipeline:
@@ -294,7 +332,7 @@ workflows:
           <<: *default-context
       - test_package:
           <<: *default-context
-      - test_charts_benchmark:
+      - test_benchmark:
           <<: *default-context
   e2e-website:
     when:
