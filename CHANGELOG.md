@@ -47,6 +47,7 @@ The following team members contributed to this release:
 Same changes as in `@mui/x-data-grid@9.18.0`, plus:
 
 - [DataGridPro] Add `useVisibleColumns` to `setColumnIndex()` (#24140) @JCQuintas
+- [DataGridPro] Call `onPinnedColumnsChange` after the column order is updated (#24065) @michelengelen
 - [DataGridPro] Follow the data source order when re-fetching grouped rows (#23638) @Anexus5919
 
 #### `@mui/x-data-grid-premium@9.18.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
