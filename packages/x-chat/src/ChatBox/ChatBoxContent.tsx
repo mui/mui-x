@@ -103,6 +103,23 @@ function useContainerWidth(element: HTMLElement | null): number | null {
   return width;
 }
 
+// Default layout slots: styled so theme `styleOverrides` and `slotProps.*.sx` apply.
+// Sizing stays in the inline styles set below so custom slots keep it too.
+const ChatBoxLayout = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'Layout',
+})({});
+
+const ChatBoxConversationsPane = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'ConversationsPane',
+})({});
+
+const ChatBoxThreadPane = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'ThreadPane',
+})({});
+
 const ChatBoxEmptyState = styled('div', {
   name: 'MuiChatBox',
   slot: 'EmptyState',
@@ -902,9 +919,9 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   );
   const chatLayoutSlots = React.useMemo(
     () => ({
-      root: slots.layout,
-      conversationsPane: slots.conversationsPane,
-      threadPane: slots.threadPane,
+      root: slots.layout ?? ChatBoxLayout,
+      conversationsPane: slots.conversationsPane ?? ChatBoxConversationsPane,
+      threadPane: slots.threadPane ?? ChatBoxThreadPane,
     }),
     [slots.conversationsPane, slots.layout, slots.threadPane],
   );
