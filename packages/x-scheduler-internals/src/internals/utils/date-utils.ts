@@ -4,7 +4,7 @@ import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/
 import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import type { WeekInfo } from './date-locale';
 import { toEpochMs, toPlainDateTime } from './plain-date-utils/timeZone';
-import { isInstantString } from './plain-date-utils/date';
+import { isDateOnlyString, isInstantString } from './plain-date-utils/date';
 
 /**
  * Converts an instant back to an event date string, respecting the format of `originalString`:
@@ -23,99 +23,39 @@ export function timestampToEventString(
   return toPlainDateTime(Math.floor(epochMs / 1000) * 1000, dataTimezone).toString();
 }
 
-// The instants of the timed cutoffs read from one, which their wall-clock time can't tell apart
-// in the hour a DST transition repeats. Spreading a rule keeps the cutoff, and its instant.
-const UNTIL_INSTANTS = new WeakMap<
-  BaseTemporal.PlainDateTime,
-  { epochMs: number; timezone: string }
->();
-
 /**
- * The timed recurrence cutoff of an instant in `timezone`, which remembers the instant.
- */
-export function createUntilFromTimestamp(
-  epochMs: number,
-  timezone: string,
-): BaseTemporal.PlainDateTime {
-  const until = toPlainDateTime(epochMs, timezone);
-  UNTIL_INSTANTS.set(until, { epochMs, timezone });
-  return until;
-}
-
-/**
- * The instant of a timed recurrence cutoff in `timezone`: the one it was created from with
- * `createUntilFromTimestamp()`, or else its wall-clock time resolved like `toEpochMs()`.
- * Newly selected end-of-day values use the last instant of the day, like the date picker.
- */
-export function getUntilTimestamp(until: BaseTemporal.PlainDateTime, timezone: string): number {
-  const instant = UNTIL_INSTANTS.get(until);
-  if (instant?.timezone === timezone) {
-    return instant.epochMs;
-  }
-  return until.toPlainTime().toString() === '23:59:59.999'
-    ? toEpochMs(until.toPlainDate().add({ days: 1 }), timezone) - 1
-    : toEpochMs(until, timezone);
-}
-
-/**
- * Whether two recurrence cutoffs end the series at the same time. Timed cutoffs compare their
- * instants in the timezone they were read in, so the two instances of a repeated hour differ.
- */
-export function isSameUntil(
-  untilA: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime | undefined,
-  untilB: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime | undefined,
-): boolean {
-  if (
-    !(untilA instanceof BaseTemporal.PlainDateTime) ||
-    !(untilB instanceof BaseTemporal.PlainDateTime)
-  ) {
-    return untilA?.constructor === untilB?.constructor && untilA?.toString() === untilB?.toString();
-  }
-  const timezone = (UNTIL_INSTANTS.get(untilA) ?? UNTIL_INSTANTS.get(untilB))?.timezone;
-  return timezone === undefined
-    ? untilA.toString() === untilB.toString()
-    : getUntilTimestamp(untilA, timezone) === getUntilTimestamp(untilB, timezone);
-}
-
-/**
- * Writes an inclusive recurrence cutoff in the format of `originalString`.
- * Date-only strings stay date-only, unless a timed cutoff falls after midnight. An all-day cutoff in a date-time format uses the end of its day.
- * A timed cutoff whose instant its wall-clock time can't give back is written as an instant.
+ * Writes the `until` of a processed rule in the format of `originalString`, like
+ * `timestampToEventString()`. A plain date covers its whole day: it stays date-only after a
+ * date-only string, and is written as the last instant of its day otherwise. A plain date-time is
+ * written as its instant.
  */
 export function untilToEventString(
   until: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime,
   originalString: string,
   dataTimezone: string,
 ): string {
-  const isDateOnly = /^[+-]?\d{4,6}-\d{2}-\d{2}$/.test(originalString);
-  if (until instanceof BaseTemporal.PlainDate) {
-    return isDateOnly
-      ? until.toString()
-      : timestampToEventString(
-          toEpochMs(until.add({ days: 1 }), dataTimezone) - 1,
-          originalString,
-          dataTimezone,
-        );
+  if (until instanceof BaseTemporal.PlainDateTime) {
+    return timestampToEventString(toEpochMs(until, dataTimezone), originalString, dataTimezone);
   }
-  // A cutoff read from the event keeps its instant. The date picker writes the end of the chosen
-  // day: keep the later instant when the timezone repeats its last hour, rather than the first.
-  const wallClockTimestamp = toEpochMs(until, dataTimezone);
-  const timestamp = getUntilTimestamp(until, dataTimezone);
-  // Wall-clock strings are read back like `toEpochMs()`.
-  if (isInstantString(originalString) || timestamp !== wallClockTimestamp) {
-    return new Date(timestamp).toISOString();
+  if (isDateOnlyString(originalString)) {
+    return until.toString();
   }
-  // A timed cutoff in the middle of a day needs its time, or it would move back to midnight.
-  return isDateOnly && until.toPlainTime().toString() === '00:00:00'
-    ? until.toPlainDate().toString()
-    : until.toString();
+  return timestampToEventString(
+    toEpochMs(until.add({ days: 1 }), dataTimezone) - 1,
+    originalString,
+    dataTimezone,
+  );
 }
 
-/** The original UNTIL string whose date-only, wall-time or instant format edits preserve. */
+/**
+ * The string whose format the `until` written to an event follows: its current `until`, including
+ * the UNTIL of an RRULE string, or else its start.
+ */
 export function getUntilReferenceString(event: SchedulerEvent): string {
   if (typeof event.rrule === 'object') {
     return event.rrule.until ?? event.start;
   }
+  // The date form of UNTIL, like `20250110`, or its UTC date-time form, like `20250110T090000Z`.
   const match = event.rrule?.match(
     /(?:^|;)\s*UNTIL\s*=\s*(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})Z)?\s*(?:;|$)/i,
   );

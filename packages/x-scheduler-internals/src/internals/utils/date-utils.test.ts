@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { createDate } from 'test/utils/scheduler';
 import { BaseTemporal } from './base-temporal';
 import {
-  createUntilFromTimestamp,
   getPlainDateWeekStart,
+  getUntilReferenceString,
   getWeekNumber,
   untilToEventString,
 } from './date-utils';
@@ -60,59 +60,54 @@ describe('date-utils', () => {
       ['2025-01-01', '2025-01-12'],
       ['2025-01-01T09:00:00', '2025-01-12T23:59:59'],
       ['2025-01-01T08:00:00Z', '2025-01-12T22:59:59.999Z'],
-    ])('should preserve the format of an all-day UNTIL after %s', (original, expected) => {
+    ])('should write a plain date covering its whole day after %s', (original, expected) => {
       expect(
         untilToEventString(BaseTemporal.PlainDate.from('2025-01-12'), original, 'Europe/Paris'),
       ).to.equal(expected);
     });
 
-    it('should preserve the exact time and precision of a timed UNTIL', () => {
-      const until = BaseTemporal.PlainDateTime.from('2025-01-12T09:15:30.123');
-      expect(untilToEventString(until, '2025-01-01T09:00:00', 'Europe/Paris')).to.equal(
-        '2025-01-12T09:15:30.123',
-      );
-      expect(untilToEventString(until, '2025-01-01T08:00:00Z', 'Europe/Paris')).to.equal(
-        '2025-01-12T08:15:30.123Z',
-      );
+    it.each([
+      ['2025-01-01', '2025-01-12T09:15:30'],
+      ['2025-01-01T09:00:00', '2025-01-12T09:15:30'],
+      ['2025-01-01T08:00:00Z', '2025-01-12T08:15:30.000Z'],
+    ])('should write a plain date-time with its time after %s', (original, expected) => {
+      expect(
+        untilToEventString(
+          BaseTemporal.PlainDateTime.from('2025-01-12T09:15:30'),
+          original,
+          'Europe/Paris',
+        ),
+      ).to.equal(expected);
     });
 
-    it('should keep the time of a timed UNTIL after a date-only UNTIL', () => {
+    it('should end a plain date on the later 23:59:59.999 when a DST transition repeats its last hour', () => {
+      // America/Santiago falls back from 00:00 -03:00 to 23:00 -04:00 on April 6th, 2024.
       expect(
         untilToEventString(
-          BaseTemporal.PlainDateTime.from('2025-01-04T23:59:59.999'),
-          '2025-01-10',
-          'UTC',
-        ),
-      ).to.equal('2025-01-04T23:59:59.999');
-      expect(
-        untilToEventString(
-          BaseTemporal.PlainDateTime.from('2025-01-04T00:00'),
-          '2025-01-10',
-          'UTC',
-        ),
-      ).to.equal('2025-01-04');
-    });
-
-    it('should save the later end of a day whose last hour repeats', () => {
-      expect(
-        untilToEventString(
-          BaseTemporal.PlainDateTime.from('2024-04-06T23:59:59.999'),
+          BaseTemporal.PlainDate.from('2024-04-06'),
           '2024-04-01T09:00:00Z',
           'America/Santiago',
         ),
       ).to.equal('2024-04-07T03:59:59.999Z');
     });
+  });
+
+  describe('getUntilReferenceString', () => {
+    const event = {
+      id: 'event',
+      title: 'Event',
+      start: '2025-01-01T09:00:00',
+      end: '2025-01-01T10:00:00',
+    };
 
     it.each([
-      // Santiago repeats 23:00-23:59 on April 6th, 2024: the first end of the day.
-      ['2024-04-07T02:59:59.999Z', 'America/Santiago', '2024-04-01T09:00:00Z'],
-      // Paris repeats 02:00-02:59 on October 26th, 2025: the second 02:30.
-      ['2025-10-26T01:30:00.000Z', 'Europe/Paris', '2025-10-01T09:00:00'],
-      // Havana repeats 00:00-00:59 on November 2nd, 2025: the second midnight.
-      ['2025-11-02T05:00:00.000Z', 'America/Havana', '2025-10-01'],
-    ])('should keep the instant %s of a timed UNTIL read in %s', (iso, timezone, original) => {
-      const until = createUntilFromTimestamp(Date.parse(iso), timezone);
-      expect(untilToEventString(until, original, timezone)).to.equal(iso);
+      [{ freq: 'DAILY' as const, until: '2025-01-10T08:00:00Z' }, '2025-01-10T08:00:00Z'],
+      [{ freq: 'DAILY' as const }, '2025-01-01T09:00:00'],
+      ['FREQ=DAILY;UNTIL=20250110', '2025-01-10'],
+      ['FREQ=DAILY;UNTIL=20250110T080000Z;INTERVAL=2', '2025-01-10T08:00:00Z'],
+      ['FREQ=DAILY;COUNT=3', '2025-01-01T09:00:00'],
+    ])('should read the format of the UNTIL of %j', (rrule, expected) => {
+      expect(getUntilReferenceString({ ...event, rrule })).to.equal(expected);
     });
   });
 

@@ -26,7 +26,7 @@ interface SchedulerProcessedEventBase {
 
   /**
    * The start date and time of the event, as rendered in the display timezone.
-   * For all day events, this value is normalized to the start of the day in the display timezone.
+   * For all-day events, this value is normalized to the start of the day in the display timezone.
    */
   start: SchedulerProcessedDate;
 
@@ -221,7 +221,7 @@ export interface SchedulerEvent {
   /**
    * The recurrence rule for the event.
    * It can be provided either as a string (RFC5545 RRULE format)
-   * or as a SchedulerProcessedEventRecurrenceRule object.
+   * or as a SchedulerEventRecurrenceRule object.
    * If not defined, the event will have only one occurrence.
    */
   rrule?: SchedulerEventRecurrenceRule | string;
@@ -408,11 +408,11 @@ export type SchedulerOccurrencePlaceholder =
 
 export interface SchedulerProcessedDate {
   /**
-   * The date and wall-clock time, in the timezone of the processed date.
+   * The date and wall-clock time, in the display timezone.
    */
   value: BaseTemporal.PlainDateTime;
   /**
-   * The timestamp of the date.
+   * The instant, in milliseconds since the Unix epoch, like `Date.getTime()`.
    */
   timestamp: number;
 }

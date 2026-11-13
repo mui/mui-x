@@ -44,6 +44,9 @@ const event = {
 
 {{"demo": "AllDay.js", "bg": "inline", "defaultCodeOpen": false}}
 
+The `end` of an all-day event can be any time on its last day.
+The occurrences the Scheduler provides end at the start of the next day instead: see [Reading occurrence dates](/x/react-scheduler/timezone/#reading-occurrence-dates).
+
 ### Timezone
 
 Use the `timezone` property to specify the timezone for an event's dates:

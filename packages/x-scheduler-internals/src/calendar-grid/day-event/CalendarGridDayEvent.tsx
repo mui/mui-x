@@ -14,7 +14,6 @@ import { plainDateFromDayNumber } from '../../internals/utils/plain-date-utils/p
 import type { SchedulerEventId, SchedulerEventOccurrence, SchedulerResourceId } from '../../models';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import {
-  schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
 } from '../../scheduler-selectors';
@@ -22,6 +21,10 @@ import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayCellContext } from '../day-cell/CalendarGridDayCellContext';
 import { useOriginalOccurrence } from '../../internals/utils/useOriginalOccurrence';
+import {
+  getOccurrenceLastDayNumber,
+  getOccurrenceModelEnd,
+} from '../../internals/utils/event-utils';
 
 const overflowStateAttributesMapping = {
   startingBeforeEdge: (value: boolean) => (value ? { 'data-starting-before-edge': '' } : null),
@@ -68,7 +71,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const hasPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.isDefined);
 
   // Feature hooks
-  const getDraggedDay = useStableCallback((input: { clientX: number }) => {
+  const getDraggedDay = (input: { clientX: number }, occurrence: SchedulerEventOccurrence) => {
     const displayTimezone = schedulerOtherSelectors.displayTimezone(store.state);
     const startDay = toLocalDayNumber(start.timestamp, displayTimezone);
     if (!ref.current) {
@@ -78,11 +81,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     // The dates of the event in the row.
     const firstDay = Math.max(startDay, toLocalDayNumber(rowStart, displayTimezone));
     const lastDay = Math.min(
-      toLocalDayNumber(
-        end.timestamp -
-          (schedulerEventSelectors.processedEvent(store.state, eventId)?.allDay ? 1 : 0),
-        displayTimezone,
-      ),
+      getOccurrenceLastDayNumber(occurrence),
       toLocalDayNumber(rowEnd, displayTimezone),
     );
     const elementPosition = ref.current.getBoundingClientRect();
@@ -100,7 +99,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
       cellDays.length - 1,
     );
     return plainDateFromDayNumber(cellDays[cellIndex]);
-  });
+  };
 
   const getOriginalOccurrence = useOriginalOccurrence({
     eventId,
@@ -118,16 +117,19 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
         occurrenceKey,
         originalOccurrence,
         start: start.timestamp,
-        end: end.timestamp - (originalOccurrence.allDay ? 1 : 0),
+        end: getOccurrenceModelEnd(originalOccurrence),
       };
     },
   );
 
-  const getDragData = useStableCallback((input) => ({
-    ...getSharedDragData(input),
-    source: 'CalendarGridDayEvent',
-    draggedDay: getDraggedDay(input),
-  }));
+  const getDragData = useStableCallback((input) => {
+    const sharedDragData = getSharedDragData(input);
+    return {
+      ...sharedDragData,
+      source: 'CalendarGridDayEvent',
+      draggedDay: getDraggedDay(input, sharedDragData.originalOccurrence),
+    };
+  });
 
   const elementPosition = useElementPositionInCollection({ start, end, collection: rowAxis });
 

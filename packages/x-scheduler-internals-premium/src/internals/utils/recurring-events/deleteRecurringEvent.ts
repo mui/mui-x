@@ -4,12 +4,8 @@ import type {
   SchedulerEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
 import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
-import {
-  createUntilFromTimestamp,
-  createStartOfPlainDate,
-  toEpochMs,
-  toPlainDate,
-} from '@mui/x-scheduler-internals/internals';
+import { createStartOfPlainDate, toPlainDate } from '@mui/x-scheduler-internals/internals';
+import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
 import { RecurringSeries } from './RecurringSeries';
 
 export function deleteRecurringEvent(
@@ -54,8 +50,12 @@ export function applyRecurringDeleteOnlyThis(
   const occurrenceDay = toPlainDate(occurrence.unstable_internalInfos.dataStart, timezone);
   const previousExDates = originalEvent.exDates ?? [];
   const excludedDays = [...previousExDates.map((exDate) => exDate.toPlainDate()), occurrenceDay];
+  // The exceptions already stored keep their instant, which their wall-clock time can't tell
+  // apart in the hour a DST transition repeats.
   const exDates = [
-    ...previousExDates.map((exDate) => new Date(toEpochMs(exDate, timezone))),
+    ...(originalEvent.modelInBuiltInFormat.exDates ?? []).map(
+      (exDate) => new Date(resolveEventTimestamp(exDate, timezone)),
+    ),
     createStartOfPlainDate(occurrenceDay, timezone),
   ];
 
@@ -87,18 +87,12 @@ export function applyRecurringDeleteFollowing(
   }
 
   const { count, until, ...baseRule } = originalEvent.rrule!;
-  const lastInstantBefore = toEpochMs(occurrencePlainDate, originalEvent.timezone) - 1;
   return {
     updated: [
       {
         id: originalEvent.id,
-        rrule: {
-          ...baseRule,
-          // The day before may be one the timezone skips, so read the last instant before.
-          until: originalEvent.allDay
-            ? toPlainDate(lastInstantBefore, originalEvent.timezone)
-            : createUntilFromTimestamp(lastInstantBefore, originalEvent.timezone),
-        },
+        // The series keeps the whole day before the edited occurrence.
+        rrule: { ...baseRule, until: occurrencePlainDate.add({ days: -1 }) },
       },
     ],
   };

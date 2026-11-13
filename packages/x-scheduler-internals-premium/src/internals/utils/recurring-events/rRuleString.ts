@@ -6,11 +6,10 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import {
   BaseTemporal,
-  createUntilFromTimestamp,
-  getUntilTimestamp,
-  isSameUntil,
+  isDateOnlyString,
   toEpochMs,
   toPlainDate,
+  toPlainDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
 import {
@@ -24,8 +23,10 @@ import {
 const UNTIL_REGEX = /^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})Z)?$/;
 
 /**
- * Reads `UNTIL` as a date for all-day events and a date-time for timed events. Returns `null` for a malformed
- * value or a date or time that does not exist, like February 31st.
+ * Reads `UNTIL`. The date form covers its whole day. The UTC date-time form is the exact cutoff of
+ * a timed series, read on the wall clock of `timezone`; for an all-day series, only its date in
+ * `timezone` counts. Returns `null` for a malformed value or a date or time that does not exist,
+ * like February 31st.
  */
 function parseUntil(
   value: string,
@@ -39,21 +40,25 @@ function parseUntil(
   const [year, month, day, hour, minute, second] = match.slice(1).map(Number);
   try {
     if (match[4] === undefined) {
-      const date = BaseTemporal.PlainDate.from({ year, month, day }, { overflow: 'reject' });
-      return allDay ? date : date.toPlainDateTime();
+      return BaseTemporal.PlainDate.from({ year, month, day }, { overflow: 'reject' });
     }
     // The trailing `Z` makes the value a UTC instant (RFC 5545).
     const utcDateTime = BaseTemporal.PlainDateTime.from(
       { year, month, day, hour, minute, second },
       { overflow: 'reject' },
     );
-    const timestamp = toEpochMs(utcDateTime, 'UTC');
-    return allDay
-      ? toPlainDate(timestamp, timezone)
-      : createUntilFromTimestamp(timestamp, timezone);
+    return readUntilTimestamp(toEpochMs(utcDateTime, 'UTC'), timezone, allDay);
   } catch {
     return null;
   }
+}
+
+function readUntilTimestamp(
+  epochMs: number,
+  timezone: string,
+  allDay: boolean,
+): BaseTemporal.PlainDate | BaseTemporal.PlainDateTime {
+  return allDay ? toPlainDate(epochMs, timezone) : toPlainDateTime(epochMs, timezone);
 }
 
 const SUPPORTED_RRULE_KEYS = new Set([
@@ -192,12 +197,14 @@ function readRuleObject(
     throwInvalidByMonthDay(input.byMonthDay.join(','));
   }
   if (input.until != null) {
+    // Read first, to throw a clear error for an invalid date.
     const timestamp = resolveEventTimestamp(input.until, timezone);
     rule = {
       ...rule,
-      until: allDay
-        ? toPlainDate(timestamp, timezone)
-        : createUntilFromTimestamp(timestamp, timezone),
+      // A date-only string covers its whole day, even one whose midnight the timezone skips.
+      until: isDateOnlyString(input.until)
+        ? BaseTemporal.PlainDate.from(input.until)
+        : readUntilTimestamp(timestamp, timezone, allDay),
     };
   }
   return rule;
@@ -329,9 +336,13 @@ function readRuleString(
   return rrule;
 }
 
+/**
+ * Writes a rule as an RRULE string. A timed `until` is a wall-clock time in `timezone`, written in
+ * the UTC date-time form of RFC 5545.
+ */
 export function serializeRRule(
   rule: SchedulerProcessedEventRecurrenceRule,
-  timezone: string = 'default',
+  timezone: string,
 ): string {
   const parts: string[] = [];
 
@@ -358,14 +369,11 @@ export function serializeRRule(
     parts.push(`COUNT=${rule.count}`);
   }
 
-  if (rule.until) {
-    const until =
-      rule.until instanceof BaseTemporal.PlainDateTime
-        ? new Date(getUntilTimestamp(rule.until, timezone))
-            .toISOString()
-            .replace(/[-:]|\.\d{3}/g, '')
-        : rule.until.toString().replace(/-/g, '');
-    parts.push(`UNTIL=${until}`);
+  if (rule.until instanceof BaseTemporal.PlainDateTime) {
+    const isoString = new Date(toEpochMs(rule.until, timezone)).toISOString();
+    parts.push(`UNTIL=${isoString.slice(0, 19).replace(/[-:]/g, '')}Z`);
+  } else if (rule.until) {
+    parts.push(`UNTIL=${rule.until.toString().replace(/-/g, '')}`);
   }
 
   return parts.join(';');
@@ -381,11 +389,9 @@ export function isSameRRule(
   if (!rruleA || !rruleB) {
     return false;
   }
-  return (
-    isSameUntil(rruleA.until, rruleB.until) &&
-    serializeRRule({ ...rruleA, until: undefined }) ===
-      serializeRRule({ ...rruleB, until: undefined })
-  );
+  // The `until` of both rules are on the same wall clock: reading them in UTC compares their
+  // wall-clock times.
+  return serializeRRule(rruleA, 'UTC') === serializeRRule(rruleB, 'UTC');
 }
 
 /**

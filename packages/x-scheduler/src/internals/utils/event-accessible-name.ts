@@ -2,11 +2,13 @@ import type {
   SchedulerProcessedDate,
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import {
-  getOccurrenceInclusiveEnd,
   formatFullDate,
   formatTime,
   getMinutesInDay,
+  getOccurrenceLastDayNumber,
+  plainDateFromDayNumber,
 } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEventLocaleText } from '../../models/translations';
 import { isOccurrenceMultiDay } from './event-utils';
@@ -33,14 +35,12 @@ export interface GetEventAccessibleNameParameters {
  */
 export function getEventAccessibleName(parameters: GetEventAccessibleNameParameters): string {
   const { occurrence, locale, ampm, localeText, isRecurring, resourceName } = parameters;
-  const { start } = occurrence;
-  const end = getOccurrenceInclusiveEnd(occurrence);
+  const { start, end } = occurrence;
   const isMultiDay = isOccurrenceMultiDay(occurrence);
 
-  const formatDate = (date: SchedulerProcessedDate) =>
-    formatFullDate(locale, date.value.toPlainDate());
+  const formatDate = (date: BaseTemporal.PlainDate) => formatFullDate(locale, date);
   const formatDateTime = (date: SchedulerProcessedDate) =>
-    `${formatDate(date)} ${formatTime(locale, getMinutesInDay(date.value), ampm)}`;
+    `${formatDate(date.value.toPlainDate())} ${formatTime(locale, getMinutesInDay(date.value), ampm)}`;
 
   // A multi-day timed event carries its times inside the date range, since they belong to
   // different days, so it has no separate `when`.
@@ -57,10 +57,18 @@ export function getEventAccessibleName(parameters: GetEventAccessibleNameParamet
     );
   })();
 
-  const formatBound = occurrence.allDay ? formatDate : formatDateTime;
-  const date = isMultiDay
-    ? localeText.eventAriaLabelDateRange(formatBound(start), formatBound(end))
-    : formatDate(start);
+  let date: string;
+  if (!isMultiDay) {
+    date = formatDate(start.value.toPlainDate());
+  } else if (occurrence.allDay) {
+    // The end of an all-day occurrence is the start of the day after its last day.
+    date = localeText.eventAriaLabelDateRange(
+      formatDate(start.value.toPlainDate()),
+      formatDate(plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence))),
+    );
+  } else {
+    date = localeText.eventAriaLabelDateRange(formatDateTime(start), formatDateTime(end));
+  }
 
   return localeText.eventAriaLabel({
     title: occurrence.title,

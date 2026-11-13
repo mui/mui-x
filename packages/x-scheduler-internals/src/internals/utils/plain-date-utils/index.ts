@@ -16,9 +16,9 @@ export {
 } from './timeZone';
 export {
   addToDate,
-  createEndOfPlainDate,
   createProcessedDate,
   createStartOfPlainDate,
+  isDateOnlyString,
   normalizeAllDayBounds,
 } from './date';
 export {

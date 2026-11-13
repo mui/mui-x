@@ -16,6 +16,8 @@ export interface SchedulerRecurringEventsPluginInterface {
    * Parses a recurrence rule into a canonical `SchedulerProcessedEventRecurrenceRule`
    * expressed in the given timezone. String inputs are validated against RFC5545; object
    * inputs are trusted and normalized.
+   * A date-time `until` is the exact cutoff of a timed series (`allDay` false, the default), and
+   * only its date counts for an all-day one.
    */
   parseRRule(
     input: string | SchedulerEventRecurrenceRule,

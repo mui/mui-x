@@ -70,7 +70,7 @@ import {
   getRecurringOccurrenceKey,
   isEventOccurrence,
   getPrimaryResourceId,
-  getOccurrenceInclusiveEnd,
+  getOccurrenceModelEnd,
 } from '../event-utils';
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
@@ -1519,7 +1519,7 @@ export class SchedulerStore<
    * display days). No-op when nothing is being edited.
    */
   public setEditingOccurrenceTimes = (
-    changes: Pick<SchedulerEventUpdatedProperties, 'start' | 'end'>,
+    changes: Pick<SchedulerEventUpdatedProperties, 'start' | 'end' | 'allDay'>,
   ) => {
     const { editingOccurrence } = this.state;
     if (editingOccurrence == null) {
@@ -1527,12 +1527,13 @@ export class SchedulerStore<
     }
     const { occurrence } = editingOccurrence;
     const { start, end } = changes;
+    const allDay = changes.allDay ?? occurrence.allDay;
     const liveEvent = schedulerEventSelectors.processedEvent(this.state, occurrence.id);
     const { displayTimezone } = occurrence.unstable_internalInfos;
     const displayBounds = normalizeAllDayBounds(
       start?.getTime() ?? occurrence.start.timestamp,
-      end?.getTime() ?? getOccurrenceInclusiveEnd(occurrence).timestamp,
-      occurrence.allDay,
+      end?.getTime() ?? getOccurrenceModelEnd(occurrence),
+      allDay,
       displayTimezone,
     );
     const bounds = {
@@ -1555,13 +1556,14 @@ export class SchedulerStore<
         ? {
             ...occurrence,
             ...bounds,
+            allDay,
             unstable_internalInfos: {
               ...occurrence.unstable_internalInfos,
               dataStart: start?.getTime() ?? occurrence.unstable_internalInfos.dataStart,
               dataEnd: end?.getTime() ?? occurrence.unstable_internalInfos.dataEnd,
             },
           }
-        : { ...occurrence, ...bounds },
+        : { ...occurrence, ...bounds, allDay },
     });
   };
 
@@ -1617,16 +1619,18 @@ export class SchedulerStore<
     }
 
     // A bound the submit left out keeps the occurrence's current value, in both timezones.
+    const allDay = changes.allDay ?? occurrence.allDay;
     const displayBounds = normalizeAllDayBounds(
       changedStart ?? occurrence.start.timestamp,
-      changedEnd ?? getOccurrenceInclusiveEnd(occurrence).timestamp,
-      changes.allDay ?? occurrence.allDay,
+      changedEnd ?? getOccurrenceModelEnd(occurrence),
+      allDay,
       occurrence.unstable_internalInfos.displayTimezone,
     );
     this.repointEditingOccurrence({
       eventId: targetsCreatedEvent ? createdEventId : original.id,
       start: changedStart == null ? occurrence.start.timestamp : displayBounds.start,
       end: changedEnd == null ? occurrence.end.timestamp : displayBounds.end,
+      allDay,
       isRecurring: targetsCreatedEvent ? createdEvent.rrule != null : true,
       dataStart: changedStart ?? occurrenceStart,
       dataEnd: changedEnd ?? occurrenceEnd,
@@ -1645,13 +1649,15 @@ export class SchedulerStore<
     /** The timestamps of the occurrence bounds, read in the display timezone. */
     start: number;
     end: number;
+    allDay: boolean | undefined;
     isRecurring: boolean;
     /** The timestamps of the occurrence bounds read in the data timezone — the identity the key derives from. */
     dataStart: number;
     dataEnd: number;
     dataTimezone: string;
   }) => {
-    const { eventId, start, end, isRecurring, dataStart, dataEnd, dataTimezone } = parameters;
+    const { eventId, start, end, allDay, isRecurring, dataStart, dataEnd, dataTimezone } =
+      parameters;
     const { editingOccurrence } = this.state;
     if (editingOccurrence == null) {
       return;
@@ -1666,6 +1672,7 @@ export class SchedulerStore<
         : getOccurrenceKey(eventId),
       start: createProcessedDate(start, displayTimezone),
       end: createProcessedDate(end, displayTimezone),
+      allDay,
     };
     this.set('editingOccurrence', {
       ...editingOccurrence,

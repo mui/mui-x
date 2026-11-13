@@ -8,16 +8,17 @@ import type { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-g
 import { sortEventOccurrences } from '../sort-event-occurrences';
 import { differenceInDays } from '../internals/utils/plain-date-utils/timeZone';
 import { getDayNumber } from '../internals/utils/plain-date-utils/plainDate';
-import { getOccurrenceInclusiveEnd } from '../internals/utils/event-utils';
+import { getOccurrenceLastDayNumber, getOccurrenceModelEnd } from '../internals/utils/event-utils';
 
 /**
  * The number of full days an occurrence spans in the display timezone.
  */
 function getDayCount(occurrence: SchedulerEventOccurrence) {
-  const { start } = occurrence;
-  const end = getOccurrenceInclusiveEnd(occurrence);
-  const timezone = occurrence.unstable_internalInfos.displayTimezone;
-  return differenceInDays(end.timestamp, start.timestamp, timezone);
+  return differenceInDays(
+    getOccurrenceModelEnd(occurrence),
+    occurrence.start.timestamp,
+    occurrence.unstable_internalInfos.displayTimezone,
+  );
 }
 
 /**
@@ -147,11 +148,7 @@ export function useEventOccurrencesWithDayGridPosition(
             // skips starts at 01:00, after the time an occurrence can end on the next day.
             position = {
               index: smallestAvailableIndex,
-              daySpan: getDayGridCellSpan(
-                days,
-                dayIndex,
-                getDayNumber(getOccurrenceInclusiveEnd(occurrence).value.toPlainDate()),
-              ),
+              daySpan: getDayGridCellSpan(days, dayIndex, getOccurrenceLastDayNumber(occurrence)),
             };
             activeSegments[occurrence.key] = { position, startDayIndex: dayIndex, hidden: false };
           } else {

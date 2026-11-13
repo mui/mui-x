@@ -229,7 +229,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const { until, ...truncatedRule } = rrule as SchedulerProcessedEventRecurrenceRule;
       expect(id).to.equal(defaultEvent.id);
       expect(truncatedRule).to.deep.equal(defaultEvent.rrule);
-      expect(until!.toString()).to.equal('2025-01-04T23:59:59.999');
+      expect(until).toEqualPlainDate('2025-01-04');
       expect(updatedEvents.created).to.deep.equal([
         {
           ...withoutId(defaultEvent.modelInBuiltInFormat),

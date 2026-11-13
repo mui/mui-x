@@ -10,9 +10,11 @@ import {
   getStartOfWeekDayNumber,
   LAST_SUPPORTED_DAY,
   plainDateFromDayNumber,
-  toPlainDateTime,
+  getMsInDay,
+  localToEpochMs,
+  MS_PER_DAY,
   toEpochMs,
-  getUntilTimestamp,
+  toPlainDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import type {
   RecurringEventWeekDayCode,
@@ -340,15 +342,17 @@ export class RecurringSeries {
     // A fractional COUNT is rounded up.
     this.count = Math.ceil(rule.count ?? Infinity);
     if (rule.until instanceof BaseTemporal.PlainDateTime) {
-      const untilDate = rule.until.toPlainDate();
-      const occurrenceStart = toEpochMs(
-        untilDate.toPlainDateTime(this.start.toPlainTime()),
+      // A timed UNTIL is the last instant an occurrence can start at (RFC 5545): the day of
+      // UNTIL is excluded when its occurrence would start after it.
+      const untilDay = getDayNumber(rule.until.toPlainDate());
+      const occurrenceStartOnUntilDay = localToEpochMs(
+        untilDay * MS_PER_DAY + getMsInDay(this.start),
         timezone,
       );
       this.untilDay =
-        getDayNumber(untilDate) -
-        (occurrenceStart > getUntilTimestamp(rule.until, timezone) ? 1 : 0);
+        untilDay - (occurrenceStartOnUntilDay > toEpochMs(rule.until, timezone) ? 1 : 0);
     } else {
+      // A plain date UNTIL covers its whole day.
       this.untilDay = rule.until ? getDayNumber(rule.until) : Infinity;
     }
     this.excludedDays = new Set(parameters.excludedDays?.map(getDayNumber));

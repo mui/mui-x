@@ -82,29 +82,30 @@ describe('processEvent', () => {
       expect(processed.exDates![0].toString()).to.equal('2025-01-04T19:00:00');
     });
 
-    it.each([true, false])(
-      'should choose the UNTIL type from allDay=%s for either input format',
-      (allDay) => {
-        for (const rrule of [
-          { freq: 'DAILY' as const, until: '2025-01-11' },
-          'FREQ=DAILY;UNTIL=20250111',
-        ]) {
-          const event = EventBuilder.new()
-            .withDataTimezone('America/New_York')
-            .allDay(allDay)
-            .build();
-          const processed = processEvent(
-            { ...event, rrule },
-            'Asia/Tokyo',
-            schedulerRecurringEventsPlugin,
-          );
-          expect(processed.rrule!.until).to.be.instanceOf(
-            allDay ? BaseTemporal.PlainDate : BaseTemporal.PlainDateTime,
-          );
-          expect(processed.rrule!.until!.toString()).to.equal(
-            allDay ? '2025-01-11' : '2025-01-11T00:00:00',
-          );
-        }
+    it.each([
+      [true, { freq: 'DAILY' as const, until: '2025-01-11' }, '2025-01-11'],
+      [true, 'FREQ=DAILY;UNTIL=20250111', '2025-01-11'],
+      [true, 'FREQ=DAILY;UNTIL=20250111T150000Z', '2025-01-11'],
+      [false, { freq: 'DAILY' as const, until: '2025-01-11' }, '2025-01-11'],
+      [false, 'FREQ=DAILY;UNTIL=20250111', '2025-01-11'],
+      [false, 'FREQ=DAILY;UNTIL=20250111T150000Z', '2025-01-11T10:00:00'],
+    ])(
+      'should read the UNTIL of a series with allDay=%s from %j in the timezone of the event',
+      (allDay, rrule, expected) => {
+        const event = EventBuilder.new()
+          .withDataTimezone('America/New_York')
+          .allDay(allDay)
+          .build();
+        const processed = processEvent(
+          { ...event, rrule },
+          'Asia/Tokyo',
+          schedulerRecurringEventsPlugin,
+        );
+        // A plain date covers its whole day; a plain date-time is the exact cutoff of a timed series.
+        expect(processed.rrule!.until).to.be.instanceOf(
+          expected.includes('T') ? BaseTemporal.PlainDateTime : BaseTemporal.PlainDate,
+        );
+        expect(processed.rrule!.until!.toString()).to.equal(expected);
       },
     );
 

@@ -22,15 +22,6 @@ export function createStartOfPlainDate(plainDate: BaseTemporal.PlainDate, timezo
   return new Date(toEpochMs(plainDate, timezone));
 }
 
-/**
- * Creates the date of the last instant of a plain date in `timezone`, just before the next
- * day starts. When a DST transition repeats the last hour of the day, it's the later 23:59:59.999.
- */
-export function createEndOfPlainDate(plainDate: BaseTemporal.PlainDate, timezone: string): Date {
-  const nextPlainDate = plainDate.add({ days: 1 });
-  return new Date(toEpochMs(nextPlainDate, timezone) - 1);
-}
-
 // A string that ends with `Z`, or a date-time that ends with an offset, like
 // `2025-01-01T09:00:00+02:00`. `Date.parse()` also reads a lowercase `t` or `z`.
 const INSTANT_REGEXP = /(?:Z|T.*[+-]\d{2}:?\d{2})$/i;
@@ -45,6 +36,13 @@ export function isInstantString(value: string): boolean {
 
 // An ISO date (`YYYY`, `YYYY-MM` or `YYYY-MM-DD`), alone or followed by a time.
 const ISO_DATE_REGEXP = /^\d{4}(?:-\d{2}){0,2}(?:(T)|$)/i;
+
+/**
+ * Whether an event date string is an ISO date without a time, like `2025-07-10`.
+ */
+export function isDateOnlyString(value: string): boolean {
+  return /^\d{4}-\d{2}-\d{2}$/.test(value);
+}
 
 /**
  * The instant of an ISO date or date-time without an offset, read as a wall-clock time in

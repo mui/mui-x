@@ -107,15 +107,15 @@ export default function ExternalDragAndDrop() {
           return;
         }
 
-        // The processed recurrence rule is not in the event model format.
-        const { start, end, rrule, ...eventData } = data.originalOccurrence;
-
-        // The end of an all-day occurrence is exclusive: the start of the next day.
-        const endTimestamp = eventData.allDay ? end.timestamp - 1 : end.timestamp;
+        // The event model, without its dates: the placeholder carries a duration instead.
+        const occurrence = data.originalOccurrence;
+        const { start, end, ...eventData } = occurrence.modelInBuiltInFormat;
 
         setPlaceholder({
           ...eventData,
-          duration: (endTimestamp - start.timestamp) / 60_000,
+          duration: Math.round(
+            (occurrence.end.timestamp - occurrence.start.timestamp) / 60_000,
+          ),
         });
       },
       onDragLeave: () => {

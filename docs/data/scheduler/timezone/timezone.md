@@ -100,6 +100,8 @@ Each bound contains:
 - `timestamp`: the instant as milliseconds since the Unix epoch.
 
 For all-day occurrences, `end` is exclusive: an occurrence covering July 1 ends at the start of July 2 in the display timezone.
+Its last day is the day before the date of `end`: `occurrence.end.value.toPlainDate().add({ days: -1 })`.
+The event models still end an all-day event on its last day: to write an all-day occurrence back to a model, use `occurrence.end.timestamp - 1`.
 The date and time fields have no UTC offset; use `timestamp` to distinguish the two instances of an hour repeated by a daylight saving transition.
 
 Import `BaseTemporal` to read and compare these values:
@@ -114,16 +116,29 @@ BaseTemporal.PlainDateTime.compare(occurrence.start.value, occurrence.end.value)
 
 The same namespace is available from `@mui/x-scheduler-premium/base-temporal`.
 It provides a subset of Temporal for reading and comparing dates.
-For formatting or date-time arithmetic, use `timestamp` with `Date` or your date library:
+To format a date as the Scheduler displays it, format its fields, which are already in `displayTimezone`.
+Reading them in UTC keeps the timezone of the browser out:
 
 ```ts
-const start = new Date(occurrence.start.timestamp);
+const { value } = occurrence.start;
+const label = new Intl.DateTimeFormat('en-US', {
+  dateStyle: 'medium',
+  timeStyle: 'short',
+  timeZone: 'UTC',
+}).format(
+  Date.UTC(value.year, value.month - 1, value.day, value.hour, value.minute),
+);
+```
+
+Use `timestamp` for instants and durations:
+
+```ts
 const durationMinutes =
   (occurrence.end.timestamp - occurrence.start.timestamp) / 60_000;
 ```
 
 The occurrence's `timezone` and `rrule` describe the original event in its own timezone.
-The rule's `until` is a `BaseTemporal.PlainDate` for all-day events and a `BaseTemporal.PlainDateTime` for timed events.
+The rule's `until` is in the timezone of the event: a `BaseTemporal.PlainDate` includes its whole day, and a `BaseTemporal.PlainDateTime`, used for timed events only, is the latest start of an occurrence.
 Exception dates belong to the series and are available as strings on `occurrence.modelInBuiltInFormat.exDates` for persisted occurrences.
 
 ## Supported timezones

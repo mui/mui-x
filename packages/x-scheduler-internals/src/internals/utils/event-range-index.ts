@@ -1,4 +1,5 @@
 import type { SchedulerProcessedEvent } from '../../models';
+import { getOccurrenceModelEnd } from './event-utils';
 
 export const EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD = 0.25;
 
@@ -110,7 +111,7 @@ export function createEventRangeIndex(
       event,
       index,
       event.start.timestamp,
-      event.end.timestamp - (event.allDay ? 1 : 0),
+      getOccurrenceModelEnd(event),
     ];
 
     if (expandRecurringEvents && event.rrule) {
@@ -147,7 +148,7 @@ export function createEventRangeIndex(
           (event) =>
             (expandRecurringEvents && Boolean(event.rrule)) ||
             (event.start.timestamp <= endTimestamp &&
-              event.end.timestamp - (event.allDay ? 1 : 0) >= startTimestamp),
+              getOccurrenceModelEnd(event) >= startTimestamp),
         );
       }
 

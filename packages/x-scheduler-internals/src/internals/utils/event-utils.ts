@@ -9,24 +9,33 @@ import type {
   SchedulerResourceId,
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
-import { toPlainDate } from './plain-date-utils/timeZone';
+import { toLocalDayNumber, toPlainDate } from './plain-date-utils/timeZone';
 import { getDayNumber, getPlainDateKey } from './plain-date-utils/plainDate';
 import type { SchedulerEventRangeIndex } from './event-range-index';
-import { createProcessedDate } from '../../process-date';
 
 /**
- * The inclusive end for date labels and the existing event-model editing APIs.
- * All-day occurrence ends are exclusive; timed occurrence ends are unchanged.
+ * The day number of the last day an occurrence covers in the display timezone. The end of an
+ * all-day occurrence is exclusive: the first instant of the day after its last day.
  */
-export function getOccurrenceInclusiveEnd(
+export function getOccurrenceLastDayNumber(
   occurrence: Pick<SchedulerRenderableEventOccurrence, 'allDay' | 'end' | 'unstable_internalInfos'>,
-): SchedulerProcessedDate {
+): number {
   return occurrence.allDay
-    ? createProcessedDate(
+    ? toLocalDayNumber(
         occurrence.end.timestamp - 1,
         occurrence.unstable_internalInfos.displayTimezone,
       )
-    : occurrence.end;
+    : getDayNumber(occurrence.end.value.toPlainDate());
+}
+
+/**
+ * The end of an occurrence as the event models write it: an all-day event model ends on the last
+ * instant of its last day, where its occurrence's exclusive end is the first instant after it.
+ */
+export function getOccurrenceModelEnd(
+  occurrence: Pick<SchedulerRenderableEventOccurrence, 'allDay' | 'end'>,
+): number {
+  return occurrence.end.timestamp - (occurrence.allDay ? 1 : 0);
 }
 
 /**
@@ -112,9 +121,11 @@ export function generateOccurrenceFromEvent({
    */
   internalInfos?: SchedulerProcessedEventInternalInfos;
 }): SchedulerEventOccurrence {
-  const { exDates: unusedExDates, ...occurrenceProperties } = event;
-  return {
-    ...occurrenceProperties,
+  // `exDates` is cleared rather than left out with a rest destructuring, which is about 8 times
+  // slower.
+  const occurrence = {
+    ...event,
+    exDates: undefined,
     id: eventId,
     key: occurrenceKey,
     start,
@@ -125,6 +136,7 @@ export function generateOccurrenceFromEvent({
       dataEnd: end.timestamp,
     },
   };
+  return occurrence;
 }
 
 /**
@@ -137,7 +149,7 @@ export function getDaysTheOccurrenceIsVisibleOn(
   dayNumbers: readonly number[],
 ) {
   const startDayNumber = getDayNumber(event.start.value.toPlainDate());
-  const endDayNumber = getDayNumber(getOccurrenceInclusiveEnd(event).value.toPlainDate());
+  const endDayNumber = getOccurrenceLastDayNumber(event);
 
   const dayKeys: string[] = [];
   for (let index = 0; index < days.length; index += 1) {
@@ -185,8 +197,10 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
     }
 
     // Without the recurring-events plugin, recurring events are treated as single events.
-    const { exDates: unusedExDates, ...occurrenceProperties } = event;
-    occurrences.push({ ...occurrenceProperties, key: getOccurrenceKey(event.id) });
+    // `exDates` is cleared rather than left out with a rest destructuring, which is about 8 times
+    // slower.
+    const occurrence = { ...event, exDates: undefined, key: getOccurrenceKey(event.id) };
+    occurrences.push(occurrence);
   }
 
   return occurrences;

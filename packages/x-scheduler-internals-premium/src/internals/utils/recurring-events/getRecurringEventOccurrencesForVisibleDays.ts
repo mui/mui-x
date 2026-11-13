@@ -8,8 +8,10 @@ import {
   getEndOfDayMs,
   getPlainDateKey,
   getRecurringOccurrenceKeyFromDateKey,
+  getMsInDay,
   getStartOfDayMs,
-  toEpochMs,
+  localToEpochMs,
+  MS_PER_DAY,
   toLocalDayNumber,
   toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
@@ -43,10 +45,12 @@ export function getRecurringEventOccurrencesForVisibleDays(
   const scanLastDay = toPlainDate(end, dataTimezone);
 
   // Every occurrence starts at the wall-clock time of DTSTART.
-  const startTime = series.start.toPlainTime();
-  const { exDates: unusedExDates, ...occurrenceProperties } = event;
+  const startMsInDay = getMsInDay(series.start);
+  // `exDates` is cleared rather than left out with a rest destructuring, which is about 8 times
+  // slower.
+  const occurrenceProperties = { ...event, exDates: undefined };
   return series.getOccurrenceDays(scanFirstDay, scanLastDay).map((day) => {
-    const startMs = toEpochMs(day.toPlainDateTime(startTime), dataTimezone);
+    const startMs = localToEpochMs(getDayNumber(day) * MS_PER_DAY + startMsInDay, dataTimezone);
     const endMs = startMs + durationMs;
 
     // All-day occurrences span the whole day, like the base event in processEvent.

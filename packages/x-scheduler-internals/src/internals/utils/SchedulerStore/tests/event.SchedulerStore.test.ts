@@ -2111,7 +2111,8 @@ storeClasses.forEach((storeClass) => {
         'should warn and ignore the update without the recurring events plugin',
         () => {
           const onEventsChange = vi.fn();
-          const event = EventBuilder.new().build();
+          const builder = EventBuilder.new();
+          const event = builder.build();
           const store = new storeClass.Value({
             resources: TEST_RESOURCES,
             events: [event],
@@ -2120,7 +2121,7 @@ storeClasses.forEach((storeClass) => {
 
           expect(() => {
             store.updateRecurringEvent({
-              occurrence: createStoreOccurrence(store, event.id, createDate(event.start as string)),
+              occurrence: builder.toOccurrence(),
               changes: { id: event.id, title: 'updated' },
             });
           }).toWarnDev([
@@ -2170,10 +2171,8 @@ premiumStoreClasses.forEach((storeClass) => {
         expect(occurrence.rrule!.byMonthDay).to.deep.equal([3]);
 
         store.updateRecurringEvent({
-          occurrence: createOccurrence(
-            occurrence,
-            new Date(occurrence.unstable_internalInfos.dataStart),
-          ),
+          // The occurrence of August 3rd: the series starts on July 4th, which isn't a 3rd.
+          occurrence: createOccurrence(occurrence, new Date('2025-08-03T00:00:00Z')),
           changes: {
             id: 'report',
             rrule: { ...occurrence.rrule!, count: 5 },

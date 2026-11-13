@@ -10,6 +10,7 @@ import type { SchedulerEvent, SchedulerEventOccurrence } from '@mui/x-scheduler-
 import type { SchedulerStoreInContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { describe, it, expect, vi } from 'vitest';
 import { applyInternalDragOrResizeOccurrencePlaceholder } from './useDropTarget';
+import { getOccurrenceModelEnd } from './event-utils';
 
 premiumStoreClasses.forEach((storeClass) => {
   describe(`applyInternalDragOrResizeOccurrencePlaceholder - ${storeClass.name}`, () => {
@@ -41,7 +42,8 @@ premiumStoreClasses.forEach((storeClass) => {
           sourceResourceId: null,
           resourceId: null,
           start: occurrence.start.timestamp,
-          end: addDays(new Date(occurrence.end.timestamp), 1).getTime(),
+          // One more day, from the last instant of its last day.
+          end: addDays(new Date(getOccurrenceModelEnd(occurrence)), 1).getTime(),
         },
       );
       store.selectRecurringEventScope('all');
@@ -51,7 +53,7 @@ premiumStoreClasses.forEach((storeClass) => {
       );
       expect(updated.start).to.equal(event.start);
       expect(updated.rrule).to.deep.equal(event.rrule);
-      expect(updated.end).to.not.equal(event.end);
+      expect(updated.end).to.equal('2025-07-06T03:59:59'); // July 5, 23:59:59 in New York
     });
 
     it('should keep the untouched start of an edited all-day occurrence resized from another timezone', () => {
@@ -78,7 +80,8 @@ premiumStoreClasses.forEach((storeClass) => {
           sourceResourceId: null,
           resourceId: null,
           start: occurrence.start.timestamp,
-          end: addDays(new Date(occurrence.end.timestamp), 1).getTime(),
+          // One more day, from the last instant of its last day.
+          end: addDays(new Date(getOccurrenceModelEnd(occurrence)), 1).getTime(),
         },
       );
 
@@ -87,8 +90,8 @@ premiumStoreClasses.forEach((storeClass) => {
         occurrence.unstable_internalInfos.dataStart,
       );
       expect(edited.start).to.equal(occurrence.start);
-      expect(edited.unstable_internalInfos.dataEnd).to.not.equal(
-        occurrence.unstable_internalInfos.dataEnd,
+      expect(new Date(edited.unstable_internalInfos.dataEnd).toISOString()).to.equal(
+        '2025-07-06T03:59:59.999Z',
       );
     });
 
@@ -134,6 +137,41 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(createDate(updated.end, 'UTC')).toEqualDateTime(
         createDate('2025-07-03T05:00:00', 'UTC'),
       );
+    });
+
+    it('should make the armed occurrence timed when it is dropped into the time grid', () => {
+      const builder = utcJuly4AllDayBuilder().id('holiday').withDisplayTimezone('UTC');
+      const occurrence = builder.toOccurrence();
+      const store = new storeClass.Value({
+        resources: [ResourceBuilder.new().id('r1').title('Resource 1').build()],
+        events: [builder.build()],
+        displayTimezone: 'UTC',
+        onEventsChange: vi.fn(),
+      });
+      store.startEditing(occurrence, 'armed');
+      const start = createDate('2025-07-04T10:00:00Z');
+
+      applyInternalDragOrResizeOccurrencePlaceholder(
+        store as unknown as SchedulerStoreInContext<any, any>,
+        {
+          type: 'internal-drag',
+          surfaceType: 'time-grid',
+          eventId: 'holiday',
+          occurrenceKey: occurrence.key,
+          originalOccurrence: occurrence,
+          sourceResourceId: null,
+          resourceId: null,
+          start: start.getTime(),
+          end: addHours(start, 1).getTime(),
+        },
+        () => ({ allDay: false }),
+      );
+
+      // The form opened from the armed toolbar reads these: the dropped times, not whole days.
+      const edited = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
+      expect(edited.allDay).to.equal(false);
+      expect(edited.start.value.toString()).to.equal('2025-07-04T10:00:00');
+      expect(edited.end.value.toString()).to.equal('2025-07-04T11:00:00');
     });
   });
 });

@@ -17,10 +17,11 @@ import {
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
-  getOccurrenceInclusiveEnd,
   formatFullDate,
-  isEventOccurrence,
+  getOccurrenceLastDayNumber,
   getPrimaryResourceId,
+  isEventOccurrence,
+  plainDateFromDayNumber,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import {
@@ -145,15 +146,16 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
 
   // Feature hook
   const formatTime = useFormatTime();
-  const { start } = occurrence;
-  const end = getOccurrenceInclusiveEnd(occurrence);
+  const { start, end } = occurrence;
+  // The end of an all-day occurrence is the start of the day after its last day.
+  const endDay = plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence));
   const isMultiDay = isOccurrenceMultiDay(occurrence);
-  const formatBound = (date: SchedulerProcessedDate) => {
-    const fullDate = formatFullDate(locale, date.value.toPlainDate());
-    return occurrence.allDay ? fullDate : `${fullDate}, ${formatTime(date)}`;
+  const formatBound = (bound: SchedulerProcessedDate, day = bound.value.toPlainDate()) => {
+    const fullDate = formatFullDate(locale, day);
+    return occurrence.allDay ? fullDate : `${fullDate}, ${formatTime(bound)}`;
   };
-  const formatBoundDateTime = (bound: SchedulerProcessedDate) =>
-    occurrence.allDay ? bound.value.toPlainDate().toString() : bound.value.toString();
+  const formatBoundDateTime = (bound: SchedulerProcessedDate, day = bound.value.toPlainDate()) =>
+    occurrence.allDay ? day.toString() : bound.value.toString();
   const recurrenceTimezoneName = React.useMemo(
     () => getRecurrenceTimezoneName(locale, eventTimezone, displayTimezone),
     [locale, eventTimezone, displayTimezone],
@@ -190,8 +192,8 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
           {(isMultiDay || !occurrence.allDay) && (
             <React.Fragment>
               {' - '}
-              <time dateTime={formatBoundDateTime(end)}>
-                {isMultiDay ? formatBound(end) : formatTime(end)}
+              <time dateTime={formatBoundDateTime(end, endDay)}>
+                {isMultiDay ? formatBound(end, endDay) : formatTime(end)}
               </time>
             </React.Fragment>
           )}

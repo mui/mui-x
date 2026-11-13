@@ -12,7 +12,9 @@ import { Button } from '@base-ui/react/button';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import {
-  getOccurrenceInclusiveEnd,
+  getDayNumber,
+  getOccurrenceLastDayNumber,
+  plainDateFromDayNumber,
   formatMonthShortAndDayOfMonth,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
@@ -188,11 +190,9 @@ export const EventItem = React.forwardRef(function EventItem(
 
   // The processed dates are read in the display timezone, like the day.
   const { start } = occurrence;
-  const end = getOccurrenceInclusiveEnd(occurrence);
   const startsBeforeDay =
     !start.value.toPlainDate().equals(date.plainDate) && start.timestamp < date.timestamp;
-  const endsAfterDay =
-    !end.value.toPlainDate().equals(date.plainDate) && end.timestamp > date.timestamp;
+  const endsAfterDay = getOccurrenceLastDayNumber(occurrence) > getDayNumber(date.plainDate);
 
   const content = React.useMemo(() => {
     switch (variant) {
@@ -303,7 +303,7 @@ function MultiDayDateLabel(props: {
         {localeText.eventItemMultiDayLabel(
           formatMonthShortAndDayOfMonth(
             locale,
-            getOccurrenceInclusiveEnd(occurrence).value.toPlainDate(),
+            plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence)),
           ),
         )}
       </EventItemTime>

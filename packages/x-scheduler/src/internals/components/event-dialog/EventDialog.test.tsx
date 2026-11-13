@@ -1493,6 +1493,43 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       });
     });
 
+    it('should block the submit of a start after the untouched end of an all-day event when the slot omits the date and time section', async () => {
+      const onEventsChange = vi.fn();
+      const builder = EventBuilder.new()
+        .title('Trip')
+        .span('2025-05-26T00:00:00Z', '2025-05-27T23:59:59Z', { allDay: true });
+      const allDayEvent = builder.build();
+
+      function CustomStartDateField() {
+        const field = useEventDialogFormField('startDate');
+        return (
+          <input
+            aria-label="Start date"
+            value={field.value}
+            onChange={(event) => field.setValue(event.target.value)}
+          />
+        );
+      }
+
+      await expect(async () => {
+        const { user } = renderWithSlot(
+          { eventDialogGeneralTab: CustomStartDateField },
+          { events: [allDayEvent], onEventsChange },
+          builder.toOccurrence(),
+        );
+
+        // The untouched end is the last day, May 27, not the start of May 28.
+        const input = screen.getByRole('textbox', { name: 'Start date' });
+        await user.clear(input);
+        await user.type(input, '2025-05-28');
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+      }).toWarnDev([
+        'MUI X Scheduler: The date range is invalid but no field of the event dialog validates the "endDate" field.',
+      ]);
+
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
     async function submitInvertedRange(user: ReturnType<typeof render>['user']) {
       const endDateInput = screen.getByLabelText(/end date/i);
       await user.clear(endDateInput);

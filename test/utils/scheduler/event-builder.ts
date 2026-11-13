@@ -15,12 +15,7 @@ import type {
 import { processEvent, resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerState } from '@mui/x-scheduler-internals/internals';
-import {
-  normalizeAllDayBounds,
-  createProcessedDate,
-  getRecurringOccurrenceKey,
-  toPlainDate,
-} from '@mui/x-scheduler-internals/internals';
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import {
   schedulerRecurringEventsPlugin,
   getWeekDayCode,
@@ -306,25 +301,28 @@ export class EventBuilder {
 }
 
 /**
- * The occurrence of a processed event that starts at `occurrenceStart`, read in the timezone of
- * the event, with the duration of the event.
+ * The occurrence of a recurring processed event that starts at `occurrenceStart`, as the
+ * recurring-events plugin expands it.
  */
 export function createOccurrence(
   event: SchedulerProcessedEvent,
   occurrenceStart: Date,
 ): SchedulerEventOccurrence {
-  const { dataStart, dataEnd, displayTimezone } = event.unstable_internalInfos;
   const startMs = occurrenceStart.getTime();
-  const endMs = startMs + dataEnd - dataStart;
-  const { exDates: unusedExDates, ...occurrenceProperties } = event;
-  const displayBounds = normalizeAllDayBounds(startMs, endMs, event.allDay, displayTimezone);
-  return {
-    ...occurrenceProperties,
-    key: getRecurringOccurrenceKey(event.id, startMs, event.timezone),
-    start: createProcessedDate(displayBounds.start, displayTimezone),
-    end: createProcessedDate(displayBounds.end, displayTimezone),
-    unstable_internalInfos: { displayTimezone, dataStart: startMs, dataEnd: endMs },
-  };
+  const occurrence = schedulerRecurringEventsPlugin
+    .getOccurrencesForVisibleDays(
+      event,
+      startMs,
+      startMs,
+      event.unstable_internalInfos.displayTimezone,
+    )
+    .find((item) => item.unstable_internalInfos.dataStart === startMs);
+  if (occurrence == null) {
+    throw new Error(
+      `No occurrence of the event "${event.id}" starts at ${occurrenceStart.toISOString()}.`,
+    );
+  }
+  return occurrence;
 }
 
 /**

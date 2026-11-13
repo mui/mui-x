@@ -384,6 +384,28 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(new Date(occurrence!.unstable_internalInfos.dataEnd)).toEqualDateTime(extendedEnd);
     });
 
+    it("should make the armed occurrence all-day on a same-day scope 'all' change to all-day", () => {
+      const store = createStore();
+      armOccurrence(store, dayB);
+
+      store.updateRecurringEvent({
+        occurrence: createStoreOccurrence(store, 'standup', dayB),
+        changes: {
+          id: 'standup',
+          allDay: true,
+          start: createDate('2025-07-08T00:00:00Z'),
+          end: createDate('2025-07-08T23:59:59.999Z'),
+        },
+      });
+      store.selectRecurringEventScope('all');
+
+      // The form opened from the armed toolbar reads these: one whole day, ending exclusively.
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      expect(occurrence.allDay).to.equal(true);
+      expect(occurrence.start.value.toString()).to.equal('2025-07-08T00:00:00');
+      expect(occurrence.end.value.toString()).to.equal('2025-07-09T00:00:00');
+    });
+
     it("should disarm when an end-only scope 'all' change pushes the armed occurrence past its day", () => {
       const store = createStore();
       armOccurrence(store, dayB);
