@@ -1,6 +1,7 @@
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, it, expect, vi } from 'vitest';
 import { barClasses } from '@mui/x-charts/BarChart';
+import type { BarLabelProps } from '@mui/x-charts/BarChart';
 import { BarChartPremium } from '@mui/x-charts-premium/BarChartPremium';
 import { ChartsContainerPremium } from '@mui/x-charts-premium/ChartsContainerPremium';
 import { rangeBarClasses } from './useUtilityClasses';
@@ -15,6 +16,25 @@ function getBarRect(container: HTMLElement, index: number) {
     y: Number(bar.getAttribute('y')),
     width: Number(bar.getAttribute('width')),
     height: Number(bar.getAttribute('height')),
+  };
+}
+
+function GeometryLabel(props: BarLabelProps) {
+  const { x, y, width, height, children } = props;
+  return (
+    <text data-x={x} data-y={y} data-width={width} data-height={height}>
+      {children}
+    </text>
+  );
+}
+
+function getLabelGeometry(container: HTMLElement, index: number) {
+  const label = container.querySelectorAll('text[data-x]')[index];
+  return {
+    x: Number(label.getAttribute('data-x')),
+    y: Number(label.getAttribute('data-y')),
+    width: Number(label.getAttribute('data-width')),
+    height: Number(label.getAttribute('data-height')),
   };
 }
 
@@ -191,6 +211,75 @@ describe('RangeBarPlot - labels', () => {
     const decreasingLabel = screen.getByText('6 – 2');
     expect(Number(decreasingLabel.getAttribute('x'))).to.equal(decreasingBar.x - LABEL_OFFSET);
     expect(decreasingLabel.getAttribute('text-anchor')).to.equal('end');
+  });
+
+  it('should pass the half of the bar that contains the end to a custom `barLabel` slot with `outside` placement', () => {
+    const { container } = render(
+      <BarChartPremium
+        {...config}
+        series={[
+          {
+            type: 'rangeBar',
+            barLabel: 'value',
+            barLabelPlacement: 'outside',
+            data: [
+              [2, 6],
+              [6, 2],
+            ],
+          },
+        ]}
+        slots={{ barLabel: GeometryLabel }}
+      />,
+    );
+
+    const increasingBar = getBarRect(container, 0);
+    expect(getLabelGeometry(container, 0)).to.deep.equal({
+      ...increasingBar,
+      height: increasingBar.height / 2,
+    });
+
+    const decreasingBar = getBarRect(container, 1);
+    expect(getLabelGeometry(container, 1)).to.deep.equal({
+      ...decreasingBar,
+      y: decreasingBar.y + decreasingBar.height / 2,
+      height: decreasingBar.height / 2,
+    });
+  });
+
+  it('should pass the half of the bar that contains the end to a custom `barLabel` slot with `outside` placement for horizontal layout', () => {
+    const { container } = render(
+      <BarChartPremium
+        {...config}
+        xAxis={[{ min: 0, max: 10 }]}
+        yAxis={[{ scaleType: 'band', data: ['A', 'B'] }]}
+        series={[
+          {
+            type: 'rangeBar',
+            layout: 'horizontal',
+            barLabel: 'value',
+            barLabelPlacement: 'outside',
+            data: [
+              [2, 6],
+              [6, 2],
+            ],
+          },
+        ]}
+        slots={{ barLabel: GeometryLabel }}
+      />,
+    );
+
+    const increasingBar = getBarRect(container, 0);
+    expect(getLabelGeometry(container, 0)).to.deep.equal({
+      ...increasingBar,
+      x: increasingBar.x + increasingBar.width / 2,
+      width: increasingBar.width / 2,
+    });
+
+    const decreasingBar = getBarRect(container, 1);
+    expect(getLabelGeometry(container, 1)).to.deep.equal({
+      ...decreasingBar,
+      width: decreasingBar.width / 2,
+    });
   });
 
   it('should highlight and fade labels based on the range bar highlight state', () => {

@@ -90,9 +90,7 @@ Labels are not rendered when using the [WebGL renderer](#performance).
 :::info
 When using `outside` placement, if the label doesn't fit in the chart area, it will be clipped.
 To avoid this, you can decrease or increase the axis min/max, respectively, to make enough space for the labels.
-:::
 
-:::info
 With the `outside` placement, a custom `barLabel` slot receives the `x`, `y`, `width` and `height` of the half of the bar that contains the end of the range, not of the whole bar.
 This keeps the label on the edge of the bar while it animates.
 :::

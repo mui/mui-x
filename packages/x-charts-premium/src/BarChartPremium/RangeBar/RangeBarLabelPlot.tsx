@@ -67,29 +67,24 @@ function RangeBarLabelItem(props: RangeBarLabelItemProps) {
   const isHighlighted = highlightState === 'highlighted';
   const isFaded = highlightState === 'faded';
 
-  // Range bars grow from their center when animated, so the label is anchored to the center of the bar.
-  // With the `outside` placement, the bar label is placed after the edge of the bar that is farther from the
-  // center, which is the end of the range. The label geometry then only covers the half of the bar that contains
-  // the end of the range, so that the label follows the edge of the bar while it grows.
+  // Range bars grow from their center, so it is the label origin.
+  // `outside` labels get the half of the bar that contains the end of the range, to follow its edge.
   const isVertical = layout === 'vertical';
   const centerX = x + width / 2;
   const centerY = y + height / 2;
-  const isOutside = barLabelPlacement === 'outside';
 
   let labelX = x;
   let labelY = y;
   let labelWidth = width;
   let labelHeight = height;
 
-  if (isOutside) {
+  if (barLabelPlacement === 'outside') {
     if (isVertical) {
-      const endsBelowCenter = startCoordinate <= centerY;
-      labelY = endsBelowCenter ? centerY : y;
-      labelHeight = endsBelowCenter ? height / 2 : height;
+      labelY = startCoordinate <= centerY ? centerY : y;
+      labelHeight = height / 2;
     } else {
-      const endsAfterCenter = startCoordinate <= centerX;
-      labelX = endsAfterCenter ? centerX : x;
-      labelWidth = endsAfterCenter ? width / 2 : width;
+      labelX = startCoordinate <= centerX ? centerX : x;
+      labelWidth = width / 2;
     }
   }
 

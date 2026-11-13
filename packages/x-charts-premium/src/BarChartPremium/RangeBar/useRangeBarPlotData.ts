@@ -78,13 +78,11 @@ export function useRangeBarPlotData(
         continue;
       }
 
-      const value = currentSeriesData[dataIndex];
-
       const result = {
         seriesId,
         dataIndex,
         color: colorGetter(dataIndex),
-        value,
+        value: currentSeriesData[dataIndex],
         hidden: series[seriesId].hidden,
         ...dimensions,
       };
