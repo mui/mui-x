@@ -399,6 +399,7 @@ export function createSendMessageActions<Cursor = string>(params: {
     const removedMessages = assistantMessageIds
       .map((id) => store.state.messagesById[id])
       .filter((message): message is ChatMessage => message != null);
+    const originalMessageIds = store.state.messageIds;
 
     removeAssistantMessageIds(
       storeUnknown,
@@ -454,11 +455,30 @@ export function createSendMessageActions<Cursor = string>(params: {
         return;
       }
 
-      // Pre-stream rejection: restore the snapshot assistant messages (D4) and
-      // surface a REGENERATE_ERROR.
-      for (const removedMessage of removedMessages) {
-        store.addMessage(removedMessage);
-      }
+      // Pre-stream rejection: restore each removed message right after its original
+      // predecessor, so messages added meanwhile keep their places.
+      const nextIds = [...store.state.messageIds];
+      const presentIds = new Set(nextIds);
+      const removedById = new Map(removedMessages.map((message) => [message.id, message]));
+      originalMessageIds.forEach((id, index) => {
+        if (!removedById.has(id) || store.state.messagesById[id]) {
+          return;
+        }
+        let predecessorIndex = index - 1;
+        while (predecessorIndex >= 0 && !presentIds.has(originalMessageIds[predecessorIndex])) {
+          predecessorIndex -= 1;
+        }
+        if (predecessorIndex < 0) {
+          return;
+        }
+        nextIds.splice(nextIds.indexOf(originalMessageIds[predecessorIndex]) + 1, 0, id);
+        presentIds.add(id);
+      });
+      store.setMessages(
+        nextIds
+          .map((id) => store.state.messagesById[id] ?? removedById.get(id))
+          .filter((message): message is ChatMessage => message != null),
+      );
 
       store.setStreaming(false);
       setRuntimeError(
