@@ -8,6 +8,8 @@ import { fileURLToPath } from 'node:url';
 const require = createRequire(import.meta.url);
 const testDirectory = dirname(fileURLToPath(import.meta.url));
 const root = join(testDirectory, '../..');
+const full = process.argv.includes('--full');
+const fixtures = ['community', 'pro', 'premium', 'keyboard', 'rangeBarOnClick', 'gestures'];
 // Keep access to the installed React types, but give consumers their own package resolution.
 const consumer = await mkdtemp(join(root, 'node_modules/.charts-declarations-'));
 const staged = new Set();
@@ -48,7 +50,10 @@ async function stagePackage(name) {
 try {
   await stagePackage('@mui/x-charts-premium');
   await cp(join(testDirectory, 'fixtures'), join(consumer, 'src'), { recursive: true });
-  for (const compiler of ['typescript', '@typescript/native']) {
+  for (const compiler of ['@typescript/native', 'typescript']) {
+    // Run every consumer/export combination with the native compiler in CI. Keep one TS 6
+    // Community check for compatibility; --full also runs the slower compiler's full matrix.
+    const checkAllFixtures = compiler === '@typescript/native' || full;
     const compilerManifestPath = require.resolve(`${compiler}/package.json`);
     const compilerManifest = JSON.parse(await readFile(compilerManifestPath, 'utf8'));
     const executable = join(
@@ -58,21 +63,14 @@ try {
     const compilerVersion = spawnSync(process.execPath, [executable, '--version'], {
       encoding: 'utf8',
     }).stdout.trim();
-    for (const mode of ['esm', 'commonjs']) {
+    for (const mode of checkAllFixtures ? ['esm', 'commonjs'] : ['esm']) {
       await writeFile(
         join(consumer, 'package.json'),
         JSON.stringify({ private: true, type: mode === 'esm' ? 'module' : 'commonjs' }),
       );
       // Each fixture is a separate program: importing Premium or an opt-in augmentation must
       // not mask invalid Community declarations or silently widen the default callback types.
-      for (const fixture of [
-        'community',
-        'pro',
-        'premium',
-        'keyboard',
-        'rangeBarOnClick',
-        'gestures',
-      ]) {
+      for (const fixture of checkAllFixtures ? fixtures : ['community']) {
         await writeFile(
           join(consumer, 'tsconfig.json'),
           JSON.stringify({
