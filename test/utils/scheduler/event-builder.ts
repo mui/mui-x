@@ -20,7 +20,7 @@ import {
   schedulerRecurringEventsPlugin,
   getWeekDayCode,
 } from '@mui/x-scheduler-internals-premium/internals';
-import { addMinutes, createDate, endOfDay, startOfDay } from './dates';
+import { addMinutes, createDate } from './dates';
 
 export const DEFAULT_TESTING_VISIBLE_DATE_STR = '2025-07-03T00:00:00Z';
 export const DEFAULT_TESTING_VISIBLE_DATE = createDate(DEFAULT_TESTING_VISIBLE_DATE_STR);

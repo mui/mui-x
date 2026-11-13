@@ -240,7 +240,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     const bound = (name: 'start' | 'end', resent: boolean) =>
       getRecurrenceRuleBound(occurrence, rangeValues, resent, displayTimezone, name);
     return { start: bound('start', startResent), end: bound('end', endResent) };
-  }, [occurrence, formStore, rangeValues, displayTimezone]);
+  }, [occurrence, formStore, rangeValues, displayTimezone, initialDisplayTimezone]);
   const ruleStart = ruleBounds.start;
   const ruleStartPlainDate = React.useMemo(
     () => getEventTimezonePlainDate(occurrence, ruleStart),

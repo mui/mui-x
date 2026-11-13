@@ -953,7 +953,7 @@ describe('<MonthView />', () => {
                 type: 'creation',
                 surfaceType: 'day-grid',
                 start: Date.parse('2025-07-10T00:00:00Z'),
-                end: Date.parse('2025-07-14T23:59:59.999Z'),
+                end: Date.parse('2025-07-15T00:00:00Z'),
                 lockSurfaceType: false,
                 resourceId: null,
               })
