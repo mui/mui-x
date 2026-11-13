@@ -52,6 +52,7 @@ describe('getUpdatedEventModelFromChanges', () => {
       changes,
       undefined,
       oldModel as SchedulerEvent,
+      'default',
     );
     expect(Object.getOwnPropertyDescriptor(updated, '__proto__')?.value).to.deep.equal({
       marker: true,
@@ -73,6 +74,7 @@ describe('getUpdatedEventModelFromChanges', () => {
       { id: '1', start: new Date('2025-10-26T02:45:00+01:00') },
       undefined,
       oldModel as SchedulerEvent,
+      'default',
     );
     expect(updated.start).to.equal('2025-10-26T01:45:00.000Z');
   });

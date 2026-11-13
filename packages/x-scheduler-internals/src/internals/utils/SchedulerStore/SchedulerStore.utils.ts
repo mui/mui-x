@@ -12,10 +12,16 @@ import type {
   SchedulerEventCreationProperties,
   SchedulerEventUpdatedProperties,
 } from '../../../models';
-import { processEvent } from '../../../process-event';
+import { processEvent, resolveEventTimestamp } from '../../../process-event';
 import type { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
-import { timestampToEventString, untilToEventString, getUntilReferenceString } from '../date-utils';
+import {
+  allDayBoundToEventString,
+  timestampToEventString,
+  untilToEventString,
+  getUntilReferenceString,
+} from '../date-utils';
+import { toPlainDate } from '../plain-date-utils/timeZone';
 import { schedulerEventSelectors } from '../../../scheduler-selectors/schedulerEventSelectors';
 
 /**
@@ -149,40 +155,63 @@ export function getProcessedEventFromModel<TEvent extends object>(
 /**
  * Updates an event model based on the provided changes and model structure.
  * Converts the `Date` objects to strings before applying them to the user's model, because
- * `SchedulerEvent` date fields are strings. Respects the original string format (instant vs
- * wall-time).
+ * `SchedulerEvent` date fields are strings. The dates of an all-day event are the days of its
+ * instants in the display timezone; the dates of a timed event respect the original string format
+ * (instant vs wall-time).
  */
 export function getUpdatedEventModelFromChanges<TEvent extends object>(
   oldModel: TEvent,
   changes: SchedulerEventUpdatedProperties,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
   originalBuiltInModel: SchedulerEvent,
+  displayTimezone: string,
 ): TEvent {
   const dataTimezone = originalBuiltInModel.timezone ?? 'default';
+  const allDay = changes.allDay ?? originalBuiltInModel.allDay ?? false;
   const stringified: Record<string, any> = { ...changes };
-  if (changes.start != null) {
-    stringified.start = timestampToEventString(
-      changes.start.getTime(),
-      originalBuiltInModel.start,
-      dataTimezone,
-    );
-  }
-  if (changes.end != null) {
-    stringified.end = timestampToEventString(
-      changes.end.getTime(),
-      originalBuiltInModel.end,
-      dataTimezone,
-    );
-  }
-  if (changes.exDates != null) {
-    // A new exDate matches the format of start.
-    stringified.exDates = changes.exDates.map((d, i) =>
-      timestampToEventString(
-        d.getTime(),
-        originalBuiltInModel.exDates?.[i] ?? originalBuiltInModel.start,
+  if (allDay) {
+    if (changes.start != null) {
+      stringified.start = allDayBoundToEventString(changes.start.getTime(), displayTimezone);
+    }
+    if (changes.end != null) {
+      stringified.end = allDayBoundToEventString(changes.end.getTime(), displayTimezone);
+    }
+    if (changes.exDates != null) {
+      stringified.exDates = changes.exDates.map((d) =>
+        allDayBoundToEventString(d.getTime(), displayTimezone),
+      );
+    } else if (!originalBuiltInModel.allDay && originalBuiltInModel.exDates != null) {
+      // A timed series made all-day keeps its exceptions on the days of their instants in its
+      // timezone.
+      stringified.exDates = originalBuiltInModel.exDates.map((exDate) =>
+        toPlainDate(resolveEventTimestamp(exDate, dataTimezone), dataTimezone).toString(),
+      );
+    }
+  } else {
+    if (changes.start != null) {
+      stringified.start = timestampToEventString(
+        changes.start.getTime(),
+        originalBuiltInModel.start,
         dataTimezone,
-      ),
-    );
+      );
+    }
+    if (changes.end != null) {
+      stringified.end = timestampToEventString(
+        changes.end.getTime(),
+        originalBuiltInModel.end,
+        dataTimezone,
+      );
+    }
+    if (changes.exDates != null) {
+      // A new exDate matches the format of start.
+      stringified.exDates = changes.exDates.map((d, i) =>
+        timestampToEventString(
+          d.getTime(),
+          originalBuiltInModel.exDates?.[i] ?? originalBuiltInModel.start,
+          dataTimezone,
+        ),
+      );
+    }
   }
   if (changes.rrule != null && typeof changes.rrule === 'object' && changes.rrule.until != null) {
     stringified.rrule = {
@@ -204,15 +233,23 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
 
 /**
  * Creates an event model from the creation properties using the provided model structure.
+ * The dates of an all-day event are the days of its instants in the display timezone.
  */
 export function createEventModel<TEvent extends object>(
   event: SchedulerEventCreationProperties,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
+  displayTimezone: string,
 ) {
   const id = generateId('event');
 
-  const formatNewDate = (value: string | Date): string =>
-    typeof value === 'string' ? value : value.toISOString();
+  const formatNewDate = (value: string | Date): string => {
+    if (typeof value === 'string') {
+      return value;
+    }
+    return event.allDay
+      ? allDayBoundToEventString(value.getTime(), displayTimezone)
+      : value.toISOString();
+  };
   const start = formatNewDate(event.start);
 
   // Internal callers (e.g. FormContent) may pass a processed rule, whose `until` is a plain date or date-time.

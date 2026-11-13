@@ -64,7 +64,12 @@ import {
   getCustomEventProperties,
   getUpdatedEventModelFromChanges,
 } from './SchedulerStore.utils';
-import { getOccurrenceEnd, timestampToEventString } from '../date-utils';
+import {
+  allDayBoundToEventString,
+  getAllDayDayCount,
+  getOccurrenceEnd,
+  timestampToEventString,
+} from '../date-utils';
 import {
   getDayTimezone,
   getOccurrenceKey,
@@ -76,7 +81,11 @@ import {
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
 import { checkDateLocale, DEFAULT_DATE_LOCALE } from '../date-locale';
-import { getStartOfDayMs, toLocalDayNumber } from '../plain-date-utils/timeZone';
+import {
+  addDaysOnWallClock,
+  getStartOfDayMs,
+  toLocalDayNumber,
+} from '../plain-date-utils/timeZone';
 import { MS_PER_MINUTE } from '../plain-date-utils/dayNumber';
 
 /**
@@ -720,6 +729,7 @@ export class SchedulerStore<
             changes,
             this.state.eventModelStructure,
             processedEvent.modelInBuiltInFormat,
+            this.state.displayTimezone,
           );
           newEvents.push(newEvent);
           updatedEvents.push(newEvent);
@@ -754,6 +764,7 @@ export class SchedulerStore<
       const response = createEventModel(
         source ? { ...getCustomEventProperties(source), ...createdEvent } : createdEvent,
         this.state.eventModelStructure,
+        this.state.displayTimezone,
       );
       newEvents.push(response.model);
       createdEvents.push(response.model);
@@ -1203,10 +1214,19 @@ export class SchedulerStore<
     const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
     const originalModel = original.modelInBuiltInFormat;
     const dataTimezone = originalModel.timezone ?? 'default';
-    const duplicatedEvent = extractStandaloneEvent(original, {
-      start: timestampToEventString(start.getTime(), originalModel.start, dataTimezone),
-      end: timestampToEventString(end.getTime(), originalModel.end, dataTimezone),
-    });
+    const { displayTimezone } = this.state;
+    const duplicatedEvent = extractStandaloneEvent(
+      original,
+      original.allDay
+        ? {
+            start: allDayBoundToEventString(start.getTime(), displayTimezone),
+            end: allDayBoundToEventString(end.getTime(), displayTimezone),
+          }
+        : {
+            start: timestampToEventString(start.getTime(), originalModel.start, dataTimezone),
+            end: timestampToEventString(end.getTime(), originalModel.end, dataTimezone),
+          },
+    );
     return this.updateEvents({ created: [duplicatedEvent] }).created[0];
   };
 
@@ -1246,19 +1266,31 @@ export class SchedulerStore<
     }
 
     const original = schedulerEventSelectors.processedEventRequired(this.state, copiedEvent.id);
+    const { displayTimezone } = this.state;
     const cleanChanges: Partial<SchedulerEventUpdatedProperties> = { ...changes };
-    const isMovingDates = cleanChanges.start != null;
-    // Narrowed on the property directly (not `isMovingDates`) so TypeScript can see
-    // `cleanChanges.start` is defined here.
-    if (cleanChanges.start != null) {
+    const allDay = cleanChanges.allDay ?? original.allDay ?? false;
+    if (allDay && (cleanChanges.start != null || !original.allDay)) {
+      // An all-day paste covers the days of an all-day source, or one day for a timed one, from
+      // the pasted day or from the source's own day.
+      const start = cleanChanges.start?.getTime() ?? original.start.timestamp;
+      cleanChanges.start = new Date(start);
+      cleanChanges.end = new Date(
+        addDaysOnWallClock(
+          start,
+          original.allDay ? getAllDayDayCount(original) : 1,
+          displayTimezone,
+        ),
+      );
+    } else if (cleanChanges.start != null) {
       cleanChanges.end = new Date(
         getOccurrenceEnd({
           event: original,
           occurrenceStart: cleanChanges.start.getTime(),
-          displayTimezone: this.state.displayTimezone,
+          displayTimezone,
         }),
       );
     }
+    const isMovingDates = cleanChanges.start != null;
 
     const refuse = (reason: string) => {
       if (process.env.NODE_ENV !== 'production') {
@@ -1321,18 +1353,22 @@ export class SchedulerStore<
     const dataTimezone = original.modelInBuiltInFormat.timezone ?? 'default';
     const stringifiedChanges: Record<string, any> = { ...cleanChanges };
     if (cleanChanges.start != null) {
-      stringifiedChanges.start = timestampToEventString(
-        cleanChanges.start.getTime(),
-        original.modelInBuiltInFormat.start,
-        dataTimezone,
-      );
+      stringifiedChanges.start = allDay
+        ? allDayBoundToEventString(cleanChanges.start.getTime(), displayTimezone)
+        : timestampToEventString(
+            cleanChanges.start.getTime(),
+            original.modelInBuiltInFormat.start,
+            dataTimezone,
+          );
     }
     if (cleanChanges.end != null) {
-      stringifiedChanges.end = timestampToEventString(
-        cleanChanges.end.getTime(),
-        original.modelInBuiltInFormat.end,
-        dataTimezone,
-      );
+      stringifiedChanges.end = allDay
+        ? allDayBoundToEventString(cleanChanges.end.getTime(), displayTimezone)
+        : timestampToEventString(
+            cleanChanges.end.getTime(),
+            original.modelInBuiltInFormat.end,
+            dataTimezone,
+          );
     }
     const createdEvent: SchedulerEventCreationProperties = {
       ...copiedEventWithoutId,
