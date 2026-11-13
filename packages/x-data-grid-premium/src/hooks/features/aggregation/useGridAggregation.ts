@@ -350,7 +350,14 @@ export const useGridAggregation = (
     }
   }, [apiRef, props.aggregationModel]);
 
+  // On mount, the rows' first hydration has already applied the aggregation, through
+  // `filteredRowsSet`: this only applies it again when the aggregation's callbacks change.
+  const isFirstRender = React.useRef(true);
   React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     if (props.getAggregationPosition !== undefined) {
       deferredApplyAggregation();
     }
