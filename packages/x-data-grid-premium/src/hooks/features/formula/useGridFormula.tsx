@@ -61,6 +61,7 @@ import {
   gridFormulaLookupSelector,
 } from './gridFormulaSelectors';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
+import { getGroupingColumnSource } from '../rowGrouping/createGroupingColDef';
 import {
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   getColDefOverrides,
@@ -370,10 +371,9 @@ function getGroupingLeafFields(
 }
 
 /**
- * The field of the column that gives its filter operators to each row grouping column, resolved
- * like `createGroupingColDef` resolves it: the `mainGroupingCriteria` when the column groups by
- * it, else the `leafField` when it is a column, else the criterion of the column (the first one
- * in the `single` mode).
+ * The field of the column that gives its filter operators to each row grouping column (see
+ * `getGroupingColumnSource`): one grouping column for all the criteria in the `single` mode,
+ * one per criterion in the `multiple` mode.
  */
 function getGroupingColumnSources(
   groupingColDef: DataGridPremiumProcessedProps['groupingColDef'],
@@ -382,26 +382,21 @@ function getGroupingColumnSources(
   lookup: ReturnType<typeof gridColumnLookupSelector>,
 ): Map<string, string> {
   const sources = new Map<string, string>();
-  const resolve = (
-    override: GridGroupingColDefOverride | null | undefined,
-    criteria: string[],
-  ): string => {
-    if (override?.mainGroupingCriteria && criteria.includes(override.mainGroupingCriteria)) {
-      return override.mainGroupingCriteria;
-    }
-    if (override?.leafField && lookup[override.leafField]) {
-      return override.leafField;
-    }
-    return criteria[0];
-  };
   if (rowGroupingColumnMode === 'single') {
     const override = getColDefOverrides(groupingColDef, groupedFields, RowGroupingStrategy.Default);
-    sources.set(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, resolve(override, groupedFields));
+    sources.set(
+      GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+      getGroupingColumnSource(override, groupedFields, lookup).field,
+    );
   } else if (rowGroupingColumnMode === 'multiple') {
     for (const criterion of groupedFields) {
       sources.set(
         getRowGroupingFieldFromGroupingCriteria(criterion),
-        resolve(getColDefOverrides(groupingColDef, [criterion]), [criterion]),
+        getGroupingColumnSource(
+          getColDefOverrides(groupingColDef, [criterion]),
+          [criterion],
+          lookup,
+        ).field,
       );
     }
   }

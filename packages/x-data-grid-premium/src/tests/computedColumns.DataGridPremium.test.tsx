@@ -3269,6 +3269,77 @@ describe('<DataGridPremium /> - Computed columns', () => {
             ]);
             expect(getLeafValuesOf('item')).to.deep.equal(['Banana']);
           });
+
+          describe('with a `mainGroupingCriteria`', () => {
+            const datedRows = [
+              { id: 0, item: 'Apple', price: 2, category: 'Fruit', day: new Date(2024, 0, 1) },
+              { id: 1, item: 'Leek', price: 4, category: 'Vegetable', day: new Date(2024, 0, 2) },
+            ];
+            const datedColumns = [
+              ...fruitColumns,
+              { field: 'category' },
+              { field: 'day', type: 'date' as const },
+            ];
+            const dayGroupingField = '__row_group_by_columns_group_day__';
+            const afterNewYear = { operator: 'after', value: new Date(2024, 0, 1) };
+
+            // The grouping column filters with the operators of the `mainGroupingCriteria`, not
+            // with the ones of the leaf field.
+            it('should keep the filter items of the grouping column that only renders the changed field in its leaves', async () => {
+              await render(
+                <Test
+                  rows={datedRows}
+                  columns={datedColumns}
+                  groupingColDef={{ leafField: 'double', mainGroupingCriteria: 'day' }}
+                  initialState={{
+                    computedColumns: { model: [double] },
+                    rowGrouping: { model: ['category', 'day'] },
+                    filter: {
+                      filterModel: {
+                        items: [
+                          { field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, ...afterNewYear },
+                        ],
+                      },
+                    },
+                  }}
+                />,
+              );
+              act(() => apiRef.current!.updateComputedColumn('double', toText));
+              expect(getFilterItems()).to.deep.equal([
+                { field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, ...afterNewYear },
+              ]);
+            });
+
+            // In the `multiple` mode, each grouping column only looks for the
+            // `mainGroupingCriteria` in its own criterion.
+            it('should only reset the filter items of the grouping columns of the other criteria in the `multiple` mode', async () => {
+              await render(
+                <Test
+                  rows={datedRows}
+                  columns={datedColumns}
+                  rowGroupingColumnMode="multiple"
+                  groupingColDef={{ leafField: 'double', mainGroupingCriteria: 'day' }}
+                  initialState={{
+                    computedColumns: { model: [double] },
+                    rowGrouping: { model: ['category', 'day'] },
+                    filter: {
+                      filterModel: {
+                        items: [
+                          { id: 0, field: categoryGroupingField, operator: '>', value: 2 },
+                          { id: 1, field: dayGroupingField, ...afterNewYear },
+                        ],
+                      },
+                    },
+                  }}
+                />,
+              );
+              act(() => apiRef.current!.updateComputedColumn('double', toText));
+              expect(getFilterItems()).to.deep.equal([
+                { field: categoryGroupingField, operator: 'contains', value: undefined },
+                { field: dayGroupingField, ...afterNewYear },
+              ]);
+            });
+          });
         });
 
         describe('with a controlled filter model', () => {
