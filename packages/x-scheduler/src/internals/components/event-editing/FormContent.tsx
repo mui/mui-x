@@ -456,7 +456,9 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       if (recurrencePresets == null || values.recurrenceSelection === null) {
         rruleToSubmit = undefined;
       } else if (values.recurrenceSelection === 'custom') {
-        rruleToSubmit = values.rruleDraft;
+        // The validation of the Recurrence tab rejects a `null` until, which ends on a date that
+        // isn't set.
+        rruleToSubmit = values.rruleDraft as SchedulerProcessedEventRecurrenceRule;
       } else {
         rruleToSubmit = recurrencePresets[values.recurrenceSelection];
       }

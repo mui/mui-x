@@ -9,7 +9,6 @@ import {
   toEpochMs,
   toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
-import { createStartOfPreviousDay } from './internal-utils';
 import { RecurringSeries } from './RecurringSeries';
 
 export function deleteRecurringEvent(
@@ -78,15 +77,21 @@ export function applyRecurringDeleteFollowing(
   originalEvent: SchedulerProcessedEvent,
   occurrence: SchedulerEventOccurrence,
 ): UpdateEventsParameters {
-  const occurrenceStart = new Date(occurrence.unstable_internalInfos.dataStart);
-  const occurrencePlainDate = toPlainDate(occurrenceStart.getTime(), originalEvent.timezone);
+  const occurrencePlainDate = toPlainDate(
+    occurrence.unstable_internalInfos.dataStart,
+    originalEvent.timezone,
+  );
   if (!RecurringSeries.fromEvent(originalEvent).hasOccurrenceBefore(occurrencePlainDate)) {
     return { deleted: [originalEvent.id] };
   }
 
-  const untilDate = createStartOfPreviousDay(occurrencePlainDate, originalEvent.timezone);
   const { count, until, ...baseRule } = originalEvent.rrule!;
   return {
-    updated: [{ id: originalEvent.id, rrule: { ...baseRule, until: untilDate } }],
+    updated: [
+      {
+        id: originalEvent.id,
+        rrule: { ...baseRule, until: occurrencePlainDate.add({ days: -1 }) },
+      },
+    ],
   };
 }

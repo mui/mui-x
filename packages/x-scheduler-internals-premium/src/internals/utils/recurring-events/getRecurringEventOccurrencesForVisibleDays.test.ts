@@ -10,7 +10,7 @@ import { beforeEach, describe, it, expect } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
 import {
   getDataTimestamp,
   getMinutesInDay,
@@ -953,7 +953,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
     for (const occurrence of result) {
       for (const bound of ['start', 'end'] as const) {
         const display = occurrence[bound];
-        expect(display).to.deep.equal(processDate(new Date(display.timestamp), 'Europe/Paris'));
+        expect(display).to.deep.equal(createProcessedDate(display.timestamp, 'Europe/Paris'));
         expect(display.timestamp).to.equal(getDataTimestamp(occurrence, bound));
       }
     }

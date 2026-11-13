@@ -237,8 +237,8 @@ describe('Core - EventCalendarStore', () => {
         store.setEditingOccurrenceTimes({ start, end });
 
         const editing = store.state.editingOccurrence!;
-        expect(new Date(editing.occurrence.start.timestamp)).toEqualDateTime(start);
-        expect(new Date(editing.occurrence.end.timestamp)).toEqualDateTime(end);
+        expect(editing.occurrence.start.value.toString()).to.equal('2024-01-15T10:00:00');
+        expect(editing.occurrence.end.value.toString()).to.equal('2024-01-15T11:30:00');
         expect(editing.mode).to.equal('armed');
       });
 

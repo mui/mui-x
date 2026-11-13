@@ -203,8 +203,9 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       );
 
       const edited = store.state.editingOccurrence!.occurrence;
-      expect(new Date(edited.start.timestamp)).toEqualDateTime(date('2025-07-03T10:00:00Z'));
-      expect(new Date(edited.end.timestamp)).toEqualDateTime(date('2025-07-03T11:00:00Z'));
+      // The display timezone is UTC.
+      expect(edited.start.value.toString()).to.equal('2025-07-03T10:00:00');
+      expect(edited.end.value.toString()).to.equal('2025-07-03T11:00:00');
     });
 
     it('should keep a pushed all-day successor all-day and day-aligned once serialized', () => {

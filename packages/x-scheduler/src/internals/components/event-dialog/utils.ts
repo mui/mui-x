@@ -4,13 +4,11 @@ import type {
   SchedulerResourceId,
   RecurringEventPresetKey,
   SchedulerProcessedEventRecurrenceRule,
-  TemporalSupportedObject,
   SchedulerRenderableEventOccurrence,
   TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import {
   BaseTemporal,
-  createEndOfPlainDate,
   formatMonthAndDayOfMonth,
   formatWeekday,
   getDataTimestamp,
@@ -58,8 +56,11 @@ export interface EventDialogBuiltInFormValues {
   recurrenceSelection: RecurringEventPresetKey | null | 'custom';
   /**
    * Managed by the Recurrence tab; treat as read-only from custom sections.
+   * Its `until` is `null` when the recurrence ends on a date, but the date field doesn't hold one.
    */
-  rruleDraft: SchedulerProcessedEventRecurrenceRule;
+  rruleDraft: Omit<SchedulerProcessedEventRecurrenceRule, 'until'> & {
+    until?: BaseTemporal.PlainDate | null;
+  };
 }
 
 /**
@@ -143,7 +144,7 @@ const DATE_VALUE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 /**
  * Reads a `yyyy-MM-dd` field, or returns `null` when it isn't an existing date.
  */
-function readDateField(raw: string): BaseTemporal.PlainDate | null {
+export function readDateField(raw: string): BaseTemporal.PlainDate | null {
   if (!DATE_VALUE_REGEX.test(raw)) {
     return null;
   }
@@ -408,19 +409,6 @@ export function getRecurrenceRuleBound(
 }
 
 /**
- * The `until` of a recurrence rule whose last day is the date of a `yyyy-MM-dd` field: the last
- * instant of that day in the event's timezone. A field that isn't a date gives an invalid date,
- * which keeps the rule ending on a date and fails the validation of the Recurrence tab.
- */
-export function getRecurrenceUntil(
-  rawDate: string,
-  eventTimezone: TemporalTimezone,
-): TemporalSupportedObject {
-  const plainDate = readDateField(rawDate);
-  return plainDate == null ? new Date(NaN) : createEndOfPlainDate(plainDate, eventTimezone);
-}
-
-/**
  * The canonical IANA identifier of a timezone; `default` and `system` resolve to the system
  * timezone.
  */
@@ -469,12 +457,13 @@ export function getRecurrenceTimezoneName(
 
 export function getEndsSelectionFromRRule(rrule?: {
   count?: number | null;
-  until?: TemporalSupportedObject | null;
+  until?: BaseTemporal.PlainDate | null;
 }): EndsSelection {
   if (!rrule) {
     return 'never';
   }
-  if (rrule.until) {
+  // A `null` until ends on a date that isn't set yet.
+  if (rrule.until !== undefined) {
     return 'until';
   }
   if (rrule.count && rrule.count > 0) {

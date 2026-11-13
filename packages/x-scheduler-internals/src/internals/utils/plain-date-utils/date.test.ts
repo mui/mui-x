@@ -1,8 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { createDate, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
-import { processDate } from '../../../process-date';
-import { createDateFromWallTime, createProcessedDate, isInstantString } from './date';
+import { createProcessedDate, isInstantString, parseWallTimeString } from './date';
 import { getMinutesInDay } from './plainDate';
 import { toPlainDate } from './timeZone';
 
@@ -100,7 +99,7 @@ describe('plain-date-utils/date', () => {
       const epochMs = Date.UTC(2025, 10, 2, 5, 30);
       const reference = { ...readReference(epochMs, timezone), timestamp: epochMs };
 
-      const { value, timestamp } = processDate(new Date(epochMs), timezone);
+      const { value, timestamp } = createProcessedDate(epochMs, timezone);
       expect(timestamp).to.equal(epochMs);
       expect(value.toPlainDate().toString()).to.equal(reference.key);
       expect(getMinutesInDay(value)).to.equal(reference.minutesInDay);
@@ -123,7 +122,7 @@ describe('plain-date-utils/date', () => {
       const epochMs = Date.UTC(2025, 10, 2, 5, 30);
       const reference = { ...readReference(epochMs, 'default'), timestamp: epochMs };
 
-      const { value } = processDate(new Date(epochMs), 'default');
+      const { value } = createProcessedDate(epochMs, 'default');
       expect(value.toPlainDate().toString()).to.equal(reference.key);
       expect(getMinutesInDay(value)).to.equal(reference.minutesInDay);
       expect(createProcessedDate(epochMs, 'default').value.equals(value)).to.equal(true);
@@ -150,10 +149,10 @@ describe('plain-date-utils/date', () => {
     );
   });
 
-  describe('createDateFromWallTime', () => {
+  describe('parseWallTimeString', () => {
     const resolve = (value: string, timezone: string) => {
-      const date = createDateFromWallTime(value, timezone);
-      return date === null ? null : date.toISOString();
+      const epochMs = parseWallTimeString(value, timezone);
+      return epochMs === null ? null : new Date(epochMs).toISOString();
     };
 
     it('should read dates and times with or without seconds and milliseconds', () => {

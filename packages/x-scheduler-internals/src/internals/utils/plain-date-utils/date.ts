@@ -55,15 +55,12 @@ export function isInstantString(value: string): boolean {
 const ISO_DATE_REGEXP = /^\d{4}(?:-\d{2}){0,2}(?:(T)|$)/i;
 
 /**
- * Creates the date of an ISO date or date-time without an offset, read as a wall-clock time in
+ * The instant of an ISO date or date-time without an offset, read as a wall-clock time in
  * `timezone`. The times a DST transition skips or repeats resolve like `localToEpochMs()`,
  * as the occurrences of recurring events do.
  * Returns `null` for other formats and for unknown timezones.
  */
-export function createDateFromWallTime(
-  value: string,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject | null {
+export function parseWallTimeString(value: string, timezone: TemporalTimezone): number | null {
   const match = ISO_DATE_REGEXP.exec(value);
   if (match === null) {
     return null;
@@ -72,28 +69,23 @@ export function createDateFromWallTime(
   // `Date.parse()` reads an ISO date-time on the wall clock of the system, and resolves the times a
   // DST transition skips or repeats like `localToEpochMs()`, about 3 times faster.
   if (hasTime && (timezone === 'default' || timezone === 'system')) {
-    return new Date(value);
+    return Date.parse(value);
   }
   // Read as UTC, the fields of the string are its wall-clock time, whatever the timezone of the
   // system. `Date.parse()` already reads an ISO date as UTC.
   const wallClockMs = Date.parse(hasTime ? `${value}Z` : value);
   const epochMs = Number.isNaN(wallClockMs) ? NaN : localToEpochMs(wallClockMs, timezone);
-  return Number.isNaN(epochMs) ? null : new Date(epochMs);
+  return Number.isNaN(epochMs) ? null : epochMs;
 }
 
 /**
- * Creates the date of a string in a format other than ISO 8601, like `2025/01/01 09:00`.
+ * The instant of a string in a format other than ISO 8601, like `2025/01/01 09:00`, or `NaN`.
  * `Date.parse()` reads it in the timezone of the system, and its wall-clock time there is then read
  * in `timezone`.
  */
-export function createDateFromString(
-  value: string,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject {
+export function parseNonIsoString(value: string, timezone: TemporalTimezone): number {
   const epochMs = Date.parse(value);
-  return new Date(
-    Number.isNaN(epochMs) ? NaN : localToEpochMs(toLocalMs(epochMs, 'default'), timezone),
-  );
+  return Number.isNaN(epochMs) ? NaN : localToEpochMs(toLocalMs(epochMs, 'default'), timezone);
 }
 
 /**
@@ -102,18 +94,15 @@ export function createDateFromString(
  * hour, like the occurrences of recurring events, whatever the timezone of the system.
  */
 export function normalizeAllDayBounds(
-  start: TemporalSupportedObject,
-  end: TemporalSupportedObject,
+  start: number,
+  end: number,
   allDay: boolean | undefined,
   timezone: TemporalTimezone,
-): { start: TemporalSupportedObject; end: TemporalSupportedObject } {
+): { start: number; end: number } {
   if (!allDay) {
     return { start, end };
   }
-  return {
-    start: new Date(getStartOfDayMs(start.getTime(), timezone)),
-    end: new Date(getEndOfDayMs(end.getTime(), timezone)),
-  };
+  return { start: getStartOfDayMs(start, timezone), end: getEndOfDayMs(end, timezone) };
 }
 
 export { createProcessedDate } from '../../../process-date/processDate';

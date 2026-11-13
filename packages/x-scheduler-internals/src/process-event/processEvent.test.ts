@@ -81,34 +81,35 @@ describe('processEvent', () => {
       expect(processed.exDates![0].toString()).to.equal('2025-01-04T19:00:00');
     });
 
-    it('should read rrule.until as an instant when rrule is an object', () => {
-      // The rule is expressed in the timezone the series expands in, not the display one.
+    it('should read rrule.until as its day in the timezone of the event when rrule is an object', () => {
+      // The rule is expressed in the timezone the series expands in, not the display one: this
+      // instant is January 10th in New York, but January 11th in UTC and in Tokyo.
       const event = EventBuilder.new()
         .withDataTimezone('America/New_York')
         .rrule({
           freq: 'DAILY',
-          until: '2025-01-10T23:59:00Z',
+          until: '2025-01-11T03:00:00Z',
         })
         .build();
 
       const processed = processEvent(event, 'Asia/Tokyo', schedulerRecurringEventsPlugin);
 
-      expect(processed.rrule!.until!.getTime()).to.equal(Date.parse('2025-01-10T23:59:00Z'));
+      expect(processed.rrule!.until!.toString()).to.equal('2025-01-10');
     });
 
-    it('should parse an rrule string and read its UNTIL as an instant', () => {
+    it('should parse an rrule string and read its UNTIL as its day in the timezone of the event', () => {
       const event = EventBuilder.new().withDataTimezone('America/New_York').build();
 
       const processed = processEvent(
         {
           ...event,
-          rrule: 'FREQ=DAILY;UNTIL=20250110T230000Z',
+          rrule: 'FREQ=DAILY;UNTIL=20250111T030000Z',
         },
         'Pacific/Kiritimati',
         schedulerRecurringEventsPlugin,
       );
 
-      expect(processed.rrule!.until!.getTime()).to.equal(Date.parse('2025-01-10T23:00:00Z'));
+      expect(processed.rrule!.until!.toString()).to.equal('2025-01-10');
     });
   });
   describe('dataTimezone', () => {

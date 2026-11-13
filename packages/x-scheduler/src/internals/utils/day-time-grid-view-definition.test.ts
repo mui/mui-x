@@ -7,6 +7,7 @@ import {
 import { isJSDOM } from 'test/utils/skipIf';
 import type { EventCalendarPreferences } from '@mui/x-scheduler-internals/models';
 import { describe, it, expect } from 'vitest';
+import { toPlainDateTime } from '@mui/x-scheduler-internals/internals';
 import { createDayTimeGridViewDefinition } from './day-time-grid-view-definition';
 
 describe('createDayTimeGridViewDefinition', () => {
@@ -25,8 +26,7 @@ describe('createDayTimeGridViewDefinition', () => {
   describe('contiguous day counts', () => {
     it('renders a single day starting from the visible date for dayCount=1', () => {
       const days = createDayTimeGridViewDefinition(1).visibleDaysSelector(getState());
-      expect(days).to.have.length(1);
-      expect(new Date(days[0].timestamp)).toEqualDateTime(visibleDate);
+      expect(days.map((day) => day.plainDate.toString())).to.deep.equal(['2025-07-03']);
     });
 
     it('starts the days at midnight when the visible date has a time of day', () => {
@@ -35,19 +35,18 @@ describe('createDayTimeGridViewDefinition', () => {
         visibleDate: createDate('2025-07-03T14:30:00Z'),
       });
       const days = createDayTimeGridViewDefinition(3).visibleDaysSelector(state);
-      expect(days.map((day) => new Date(day.timestamp).toISOString())).to.deep.equal([
-        '2025-07-03T00:00:00.000Z',
-        '2025-07-04T00:00:00.000Z',
-        '2025-07-05T00:00:00.000Z',
-      ]);
+      expect(days.map((day) => toPlainDateTime(day.timestamp, 'default').toString())).to.deep.equal(
+        ['2025-07-03T00:00:00', '2025-07-04T00:00:00', '2025-07-05T00:00:00'],
+      );
     });
 
     it('renders 3 consecutive days starting from the visible date for dayCount=3', () => {
       const days = createDayTimeGridViewDefinition(3).visibleDaysSelector(getState());
-      expect(days).to.have.length(3);
-      days.forEach((day, index) => {
-        expect(new Date(day.timestamp)).toEqualDateTime(addDays(visibleDate, index));
-      });
+      expect(days.map((day) => day.plainDate.toString())).to.deep.equal([
+        '2025-07-03',
+        '2025-07-04',
+        '2025-07-05',
+      ]);
     });
   });
 

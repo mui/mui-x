@@ -18,7 +18,7 @@ import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { vi, describe, it, expect } from 'vitest';
 import { schedulerEventSelectors, schedulerOtherSelectors } from '../../../../scheduler-selectors';
-import { processDate } from '../../../../process-date';
+import { createProcessedDate } from '../../../../process-date';
 import { getOccurrenceKey, getRecurringOccurrenceKey } from '../../event-utils';
 
 const DEFAULT_PARAMS = {
@@ -36,8 +36,8 @@ const DATES_NOT_WRITABLE_REASON =
 
 // A minimal edited occurrence of a recurring series (only the fields `repointEditingOccurrence` reads).
 function armRecurringOccurrence(store: any) {
-  const start = processDate(createDate('2025-07-07T09:00:00Z'), 'default');
-  const end = processDate(createDate('2025-07-07T10:00:00Z'), 'default');
+  const start = createProcessedDate(Date.parse('2025-07-07T09:00:00Z'), 'default');
+  const end = createProcessedDate(Date.parse('2025-07-07T10:00:00Z'), 'default');
   const editedOccurrence = {
     id: 'standup',
     key: 'standup::2025-07-07',
@@ -111,8 +111,8 @@ storeClasses.forEach((storeClass) => {
         return {
           id: 'standup',
           key: 'standup::2025-07-07',
-          start: processDate(createDate('2025-07-07T09:00:00Z'), 'default'),
-          end: processDate(createDate('2025-07-07T10:00:00Z'), 'default'),
+          start: createProcessedDate(Date.parse('2025-07-07T09:00:00Z'), 'default'),
+          end: createProcessedDate(Date.parse('2025-07-07T10:00:00Z'), 'default'),
           unstable_internalInfos: { displayTimezone: 'default' },
         } as any;
       }
@@ -162,8 +162,8 @@ storeClasses.forEach((storeClass) => {
         return {
           id: 'standup',
           key: 'standup::2025-07-07',
-          start: processDate(createDate('2025-07-07T09:00:00Z'), 'default'),
-          end: processDate(createDate('2025-07-07T10:00:00Z'), 'default'),
+          start: createProcessedDate(Date.parse('2025-07-07T09:00:00Z'), 'default'),
+          end: createProcessedDate(Date.parse('2025-07-07T10:00:00Z'), 'default'),
           unstable_internalInfos: { displayTimezone: 'default' },
         } as any;
       }
@@ -250,9 +250,9 @@ premiumStoreClasses.forEach((storeClass) => {
       store.startEditing(
         {
           id: 'standup',
-          key: getRecurringOccurrenceKey('standup', occurrenceStart, 'default'),
-          start: processDate(occurrenceStart, 'default'),
-          end: processDate(addHours(occurrenceStart, 1), 'default'),
+          key: getRecurringOccurrenceKey('standup', occurrenceStart.getTime(), 'default'),
+          start: createProcessedDate(occurrenceStart.getTime(), 'default'),
+          end: createProcessedDate(addHours(occurrenceStart, 1).getTime(), 'default'),
           timezone: 'default',
           rrule: RRULE,
           unstable_internalInfos: {
@@ -267,7 +267,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
     it('should keep the armed occurrence when a different occurrence is resized', () => {
       const store = createStore();
-      const armedKey = getRecurringOccurrenceKey('standup', dayA, 'default');
+      const armedKey = getRecurringOccurrenceKey('standup', dayA.getTime(), 'default');
       armOccurrence(store, dayA);
 
       // Resize occurrence B (the 8th), then confirm the scope.
@@ -288,7 +288,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
     it('should re-point when the armed occurrence itself is resized', () => {
       const store = createStore();
-      const armedKey = getRecurringOccurrenceKey('standup', dayA, 'default');
+      const armedKey = getRecurringOccurrenceKey('standup', dayA.getTime(), 'default');
       armOccurrence(store, dayA);
 
       const resizedStart = addMinutes(dayA, 30);
@@ -303,8 +303,9 @@ premiumStoreClasses.forEach((storeClass) => {
       const occurrence = schedulerOtherSelectors.editingOccurrence(store.state)!;
       // The occurrence followed the resize onto the freshly-split event: new key, updated times.
       expect(occurrence.key).to.not.equal(armedKey);
-      expect(new Date(occurrence.start.timestamp)).toEqualDateTime(resizedStart);
-      expect(new Date(occurrence.end.timestamp)).toEqualDateTime(resizedEnd);
+      // The display timezone is UTC.
+      expect(occurrence.start.value.toString()).to.equal('2025-07-07T09:30:00');
+      expect(occurrence.end.value.toString()).to.equal('2025-07-07T10:30:00');
     });
 
     it('should keep the data-timezone identity in sync when the armed occurrence is resized', () => {
@@ -346,7 +347,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
     it("should keep the armed occurrence on a same-day scope 'all' time change", () => {
       const store = createStore();
-      const armedKey = getRecurringOccurrenceKey('standup', dayB, 'default');
+      const armedKey = getRecurringOccurrenceKey('standup', dayB.getTime(), 'default');
       armOccurrence(store, dayB);
 
       const movedStart = addHours(dayB, 1);
@@ -365,7 +366,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
     it("should keep the armed occurrence on an end-only same-day scope 'all' change", () => {
       const store = createStore();
-      const armedKey = getRecurringOccurrenceKey('standup', dayB, 'default');
+      const armedKey = getRecurringOccurrenceKey('standup', dayB.getTime(), 'default');
       armOccurrence(store, dayB);
 
       // A resize handle or the dialog can submit a single bound; the untouched start
@@ -499,7 +500,7 @@ premiumStoreClasses.forEach((storeClass) => {
           ...base,
           key: getRecurringOccurrenceKey(
             'late',
-            new Date(base.unstable_internalInfos.dataStart),
+            base.unstable_internalInfos.dataStart,
             base.timezone,
           ),
         };
@@ -575,7 +576,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
     it('should re-point a rename-only scope change onto the detached event', () => {
       const store = createStore();
-      const armedKey = getRecurringOccurrenceKey('standup', dayA, 'default');
+      const armedKey = getRecurringOccurrenceKey('standup', dayA.getTime(), 'default');
       armOccurrence(store, dayA);
 
       // A rename carries no start/end in the changes.
@@ -592,8 +593,9 @@ premiumStoreClasses.forEach((storeClass) => {
       // A detached one-off keys by the plain event id, without the day of a series occurrence.
       expect(occurrence.key).to.equal(getOccurrenceKey(occurrence.id));
       expect(occurrence.rrule).to.equal(undefined);
-      expect(new Date(occurrence.start.timestamp)).toEqualDateTime(dayA);
-      expect(new Date(occurrence.end.timestamp)).toEqualDateTime(addHours(dayA, 1));
+      // The display timezone is UTC.
+      expect(occurrence.start.value.toString()).to.equal('2025-07-07T09:00:00');
+      expect(occurrence.end.value.toString()).to.equal('2025-07-07T10:00:00');
       expect(occurrence.unstable_internalInfos.dataStart).to.equal(dayA.getTime());
       expect(new Date(occurrence!.unstable_internalInfos.dataEnd)).toEqualDateTime(
         addHours(dayA, 1),
@@ -619,7 +621,7 @@ premiumStoreClasses.forEach((storeClass) => {
         ...base,
         key: getRecurringOccurrenceKey(
           'weekly-tz',
-          new Date(base.unstable_internalInfos.dataStart),
+          base.unstable_internalInfos.dataStart,
           base.timezone,
         ),
       };
@@ -638,7 +640,7 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(occurrence.key).to.equal(
         getRecurringOccurrenceKey(
           occurrence.id,
-          new Date(armed.unstable_internalInfos.dataStart),
+          armed.unstable_internalInfos.dataStart,
           armed.timezone,
         ),
       );
@@ -818,7 +820,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
         it('should keep the armed occurrence on its day when its unwritable start is "moved"', () => {
           const store = createControlledStore([weeklyStandupEvent], readOnlyStartStructure);
-          const armedKey = getRecurringOccurrenceKey('standup', secondMonday, 'default');
+          const armedKey = getRecurringOccurrenceKey('standup', secondMonday.getTime(), 'default');
           armOccurrence(store, secondMonday);
 
           expect(() => {

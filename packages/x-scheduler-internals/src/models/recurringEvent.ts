@@ -1,4 +1,4 @@
-import type { TemporalSupportedObject } from './date';
+import type { BaseTemporal } from '../internals/utils/base-temporal';
 
 export type RecurringEventFrequency = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
 /**
@@ -74,11 +74,11 @@ export interface SchedulerProcessedEventRecurrenceRule {
    */
   byMonth?: number[];
   /**
-   * A date time value that bounds the recurrence rule in an inclusive manner.
+   * The last day of the recurrence, included, in the timezone of the event.
    * Must not be specified when the count property is set.
    * Corresponds to the UNTIL property of the string-based RRULE.
    */
-  until?: TemporalSupportedObject;
+  until?: BaseTemporal.PlainDate;
   /**
    * The number of occurrences at which to range-bound the recurrence.
    * Must not be specified when the until property is set.
@@ -95,6 +95,7 @@ export type SchedulerEventRecurrenceRule = Omit<SchedulerProcessedEventRecurrenc
   /**
    * A date time value that bounds the recurrence rule in an inclusive manner.
    * Same string semantics as `SchedulerEvent.start` / `end`.
+   * The recurrence runs until the end of its day, in the timezone of the event.
    */
   until?: string;
 };

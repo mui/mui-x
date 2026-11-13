@@ -337,9 +337,11 @@ describe('event-utils', () => {
   describe('getRecurringOccurrenceKey', () => {
     it('should key the occurrence on its day in the timezone', () => {
       // July 3rd at 17:00 UTC is July 4th in Tokyo.
-      const value = createDate('2025-07-03T17:00:00Z');
-      expect(getRecurringOccurrenceKey('event', value, 'Asia/Tokyo')).to.equal('event::2025-07-04');
-      expect(getRecurringOccurrenceKey('event', value, 'UTC')).to.equal('event::2025-07-03');
+      const timestamp = Date.parse('2025-07-03T17:00:00Z');
+      expect(getRecurringOccurrenceKey('event', timestamp, 'Asia/Tokyo')).to.equal(
+        'event::2025-07-04',
+      );
+      expect(getRecurringOccurrenceKey('event', timestamp, 'UTC')).to.equal('event::2025-07-03');
     });
   });
 });

@@ -1,11 +1,9 @@
-import { toPlainDate } from '@mui/x-scheduler-internals/internals';
+import { BaseTemporal, toPlainDate } from '@mui/x-scheduler-internals/internals';
 import {
-  addDays,
   addMinutes,
   createDate,
   createOccurrence,
   EventBuilder,
-  isSameDay,
   setSystemTimezone,
   startOfDay,
 } from 'test/utils/scheduler';
@@ -58,7 +56,7 @@ describe('recurring-events/updateRecurringEvent', () => {
             dataStart: originalSeriesStart.getTime(),
           },
         },
-        split,
+        split.getTime(),
         changes,
       ) as SchedulerProcessedEventRecurrenceRule | undefined;
 
@@ -91,14 +89,14 @@ describe('recurring-events/updateRecurringEvent', () => {
           .exDates(['2025-01-02Z'])
           .toProcessed();
 
-        const res = decideSplitRRule(event, createDate('2025-01-04T09:00:00Z'), {
+        const res = decideSplitRRule(event, Date.parse('2025-01-04T09:00:00Z'), {
           title: 'New Event Title',
         });
         expect(res).to.deep.equal({ freq: 'DAILY', count: 2 });
       });
 
       it('should keep the original UNTIL when inheriting (untouched RRULE)', () => {
-        const originalUntil = createDate('2025-01-20T23:59:59Z');
+        const originalUntil = BaseTemporal.PlainDate.from('2025-01-20');
         const original: SchedulerProcessedEventRecurrenceRule = {
           freq: 'DAILY',
           interval: 1,
@@ -106,7 +104,6 @@ describe('recurring-events/updateRecurringEvent', () => {
         };
 
         const res = call(original, { title: 'New Event Title' })!;
-        expect(isSameDay(res.until!, originalUntil)).to.equal(true);
         expect(res).to.deep.equal({ freq: 'DAILY', interval: 1, until: originalUntil });
       });
 
@@ -226,15 +223,12 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       // Original remains but with truncated rule, new series appended, other event unchanged
       expect(updatedEvents.deleted).to.equal(undefined);
-      expect(updatedEvents.updated).to.deep.equal([
-        {
-          id: defaultEvent.id,
-          rrule: {
-            ...defaultEvent.rrule,
-            until: addDays(startOfDay(occurrenceStart), -1),
-          },
-        },
-      ]);
+      expect(updatedEvents.updated).to.have.length(1);
+      const { id, rrule } = updatedEvents.updated![0];
+      const { until, ...truncatedRule } = rrule as SchedulerProcessedEventRecurrenceRule;
+      expect(id).to.equal(defaultEvent.id);
+      expect(truncatedRule).to.deep.equal(defaultEvent.rrule);
+      expect(until).toEqualPlainDate('2025-01-04');
       expect(updatedEvents.created).to.deep.equal([
         {
           ...withoutId(defaultEvent.modelInBuiltInFormat),
@@ -386,8 +380,9 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(createdEvent.start).to.equal('2025-01-05T10:00:00.000Z');
       expect(createdEvent.end).to.equal('2025-01-05T11:00:00.000Z');
       expect(createdEvent.exDates).to.deep.equal(['2025-01-08T10:00:00.000Z']);
+      // The end of the last day of the series in Paris.
       expect((createdEvent.rrule as SchedulerEventRecurrenceRule).until).to.equal(
-        '2025-01-10T08:00:00.000Z',
+        '2025-01-10T22:59:59.999Z',
       );
     });
 
@@ -444,7 +439,12 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = createDate('2025-01-05T09:00:00Z'); // Sunday
       const newStart = createDate('2025-01-11T11:00:00Z'); // Saturday
 
-      const next = adjustRRuleForAllMove(rrule, occurrenceStart, newStart, 'default');
+      const next = adjustRRuleForAllMove(
+        rrule,
+        occurrenceStart.getTime(),
+        newStart.getTime(),
+        'default',
+      );
 
       expect(next).to.deep.equal({ freq: 'WEEKLY', byDay: ['SA'] });
     });
@@ -457,7 +457,12 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = createDate('2025-01-05T09:00:00Z'); // SU
       const newStart = createDate('2025-01-11T11:00:00Z'); // SA
 
-      const next = adjustRRuleForAllMove(rrule, occurrenceStart, newStart, 'default');
+      const next = adjustRRuleForAllMove(
+        rrule,
+        occurrenceStart.getTime(),
+        newStart.getTime(),
+        'default',
+      );
 
       expect(next).to.deep.equal({ freq: 'WEEKLY', byDay: ['MO', 'WE', 'SA'] });
     });
@@ -467,7 +472,12 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = createDate('2025-01-05T09:00:00Z');
       const newStart = createDate('2025-01-12T11:00:00Z');
 
-      const next = adjustRRuleForAllMove(rrule, occurrenceStart, newStart, 'default');
+      const next = adjustRRuleForAllMove(
+        rrule,
+        occurrenceStart.getTime(),
+        newStart.getTime(),
+        'default',
+      );
 
       expect(next).to.deep.equal({ freq: 'MONTHLY', byMonthDay: [12] });
     });
@@ -478,7 +488,12 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = createDate('2025-01-14T09:00:00Z'); // second Tuesday
       const newStart = createDate('2025-01-18T11:00:00Z'); // third Saturday
 
-      const next = adjustRRuleForAllMove(rrule, occurrenceStart, newStart, 'default');
+      const next = adjustRRuleForAllMove(
+        rrule,
+        occurrenceStart.getTime(),
+        newStart.getTime(),
+        'default',
+      );
 
       expect(next).to.deep.equal({ freq: 'MONTHLY', byDay: ['3SA'] });
     });
@@ -489,7 +504,12 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = createDate('2025-01-06T03:00:00Z');
       const newStart = createDate('2025-01-11T03:00:00Z');
 
-      const next = adjustRRuleForAllMove(rrule, occurrenceStart, newStart, 'America/New_York');
+      const next = adjustRRuleForAllMove(
+        rrule,
+        occurrenceStart.getTime(),
+        newStart.getTime(),
+        'America/New_York',
+      );
 
       expect(next).to.deep.equal({ freq: 'WEEKLY', byDay: ['FR'] });
     });
@@ -500,7 +520,12 @@ describe('recurring-events/updateRecurringEvent', () => {
       // January 12th at 03:00 UTC is January 11th at 22:00 in New York.
       const newStart = createDate('2025-01-12T03:00:00Z');
 
-      const next = adjustRRuleForAllMove(rrule, occurrenceStart, newStart, 'America/New_York');
+      const next = adjustRRuleForAllMove(
+        rrule,
+        occurrenceStart.getTime(),
+        newStart.getTime(),
+        'America/New_York',
+      );
 
       expect(next).to.deep.equal({ freq: 'MONTHLY', byMonthDay: [11] });
     });
@@ -510,7 +535,12 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = createDate('2025-01-05T09:00:00Z');
       const newStart = createDate('2025-01-12T11:00:00Z');
 
-      const next = adjustRRuleForAllMove(rrule, occurrenceStart, newStart, 'default');
+      const next = adjustRRuleForAllMove(
+        rrule,
+        occurrenceStart.getTime(),
+        newStart.getTime(),
+        'default',
+      );
 
       expect(next).to.deep.equal(rrule);
     });

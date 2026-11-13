@@ -157,10 +157,10 @@ describe('recurring-events/RecurringSeries', () => {
   describe('UNTIL and exDates after 9999', () => {
     it('should read them in a timezone east of UTC', () => {
       // December 31st, 9999, a common "no end date", is already January 1st, 10000 in Tokyo.
-      const lastInstant = createDate('9999-12-31T23:59:59Z');
+      const lastInstant = Date.parse('9999-12-31T23:59:59Z');
       const getLastDays = (timezone: TemporalTimezone, exDates: number[]) => {
         const series = new RecurringSeries({
-          rule: { freq: 'DAILY', until: lastInstant },
+          rule: { freq: 'DAILY', until: toPlainDate(lastInstant, timezone) },
           start: Date.parse('2026-01-05T09:00:00Z'),
           timezone,
           excludedDays: exDates.map((exDate) => toPlainDate(exDate, timezone)),
@@ -174,7 +174,7 @@ describe('recurring-events/RecurringSeries', () => {
       };
 
       expect(getLastDays('Asia/Tokyo', [])).to.deep.equal(['9999-12-31', '+010000-01-01']);
-      expect(getLastDays('Asia/Tokyo', [lastInstant.getTime()])).to.deep.equal(['9999-12-31']);
+      expect(getLastDays('Asia/Tokyo', [lastInstant])).to.deep.equal(['9999-12-31']);
       expect(getLastDays('UTC', [])).to.deep.equal(['9999-12-31']);
     });
   });
@@ -301,7 +301,7 @@ describe('recurring-events/RecurringSeries', () => {
       ).to.equal(false);
       expect(
         createSeries(
-          { freq: 'DAILY', until: createDate('2025-01-02T09:00:00', 'UTC') },
+          { freq: 'DAILY', until: BaseTemporal.PlainDate.from('2025-01-02') },
           '2025-01-01T09:00:00',
           exDates,
         ).hasOccurrence(),
@@ -373,7 +373,7 @@ describe('recurring-events/RecurringSeries', () => {
 
     it('should not count the days after UNTIL', () => {
       const series = createSeries(
-        { freq: 'DAILY', until: createDate('2025-01-05T09:00:00', 'UTC') },
+        { freq: 'DAILY', until: BaseTemporal.PlainDate.from('2025-01-05') },
         '2025-01-01T09:00:00',
       );
       expect(series.countOccurrencesBefore(BaseTemporal.PlainDate.from('2025-01-10'))).to.equal(5);

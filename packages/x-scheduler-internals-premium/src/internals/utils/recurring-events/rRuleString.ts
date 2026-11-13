@@ -5,8 +5,8 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
-import { BaseTemporal, toEpochMs } from '@mui/x-scheduler-internals/internals';
-import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';
+import { BaseTemporal, toEpochMs, toPlainDate } from '@mui/x-scheduler-internals/internals';
+import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
 import {
   NOT_LOCALIZED_WEEK_DAYS_INDEXES,
   parsesByDayForMonthlyFrequency,
@@ -14,27 +14,29 @@ import {
   tokenizeByDay,
 } from './internal-utils';
 
-// `yyyyMMddTHHmmssZ`, the UTC date-time form of `UNTIL`.
-const UNTIL_UTC_REGEX = /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/;
+// `yyyyMMdd`, the date form of `UNTIL`, or `yyyyMMddTHHmmssZ`, its UTC date-time form.
+const UNTIL_REGEX = /^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})Z)?$/;
 
 /**
- * Reads a UTC `UNTIL` as an instant. Returns `null` for a malformed value or a date-time that does
- * not exist, like February 31st.
+ * Reads `UNTIL` as the last day of the recurrence in `timezone`. Returns `null` for a malformed
+ * value or a date or time that does not exist, like February 31st.
  */
-function parseUntilUtc(value: string): number | null {
-  const match = UNTIL_UTC_REGEX.exec(value);
+function parseUntil(value: string, timezone: TemporalTimezone): BaseTemporal.PlainDate | null {
+  const match = UNTIL_REGEX.exec(value);
   if (!match) {
     return null;
   }
   const [year, month, day, hour, minute, second] = match.slice(1).map(Number);
   try {
-    return toEpochMs(
-      BaseTemporal.PlainDateTime.from(
-        { year, month, day, hour, minute, second },
-        { overflow: 'reject' },
-      ),
-      'UTC',
+    if (match[4] === undefined) {
+      return BaseTemporal.PlainDate.from({ year, month, day }, { overflow: 'reject' });
+    }
+    // The trailing `Z` makes the value a UTC instant (RFC 5545).
+    const utcDateTime = BaseTemporal.PlainDateTime.from(
+      { year, month, day, hour, minute, second },
+      { overflow: 'reject' },
     );
+    return toPlainDate(toEpochMs(utcDateTime, 'UTC'), timezone);
   } catch {
     return null;
   }
@@ -175,7 +177,7 @@ function readRuleObject(
     throwInvalidByMonthDay(input.byMonthDay.join(','));
   }
   if (input.until != null) {
-    rule = { ...rule, until: resolveEventDate(input.until, timezone) };
+    rule = { ...rule, until: toPlainDate(resolveEventTimestamp(input.until, timezone), timezone) };
   }
   return rule;
 }
@@ -188,12 +190,16 @@ export function parseRRule(
   input: string | SchedulerEventRecurrenceRule,
   timezone: TemporalTimezone,
 ): SchedulerProcessedEventRecurrenceRule {
-  const rule = typeof input === 'object' ? readRuleObject(input, timezone) : readRuleString(input);
+  const rule =
+    typeof input === 'object' ? readRuleObject(input, timezone) : readRuleString(input, timezone);
   validateRule(rule);
   return rule;
 }
 
-function readRuleString(input: string): SchedulerProcessedEventRecurrenceRule {
+function readRuleString(
+  input: string,
+  timezone: TemporalTimezone,
+): SchedulerProcessedEventRecurrenceRule {
   const rruleObject: Record<string, string> = {};
   const parts = input
     .split(';')
@@ -282,18 +288,17 @@ function readRuleString(input: string): SchedulerProcessedEventRecurrenceRule {
   }
 
   if (rruleObject.UNTIL) {
-    // The trailing `Z` makes the value a UTC instant (RFC 5545).
-    const parsed = parseUntilUtc(rruleObject.UNTIL);
+    const until = parseUntil(rruleObject.UNTIL, timezone);
 
-    if (parsed === null) {
+    if (until === null) {
       throw new Error(
         `MUI X Scheduler: Invalid UNTIL date "${rruleObject.UNTIL}". ` +
-          'The UNTIL value must be a valid date in ISO format. ' +
-          'Provide a valid date string.',
+          'The recurrence rule cannot tell when the series ends. ' +
+          'Use a date like 20250315 or a UTC date-time like 20250315T093000Z.',
       );
     }
 
-    rrule.until = new Date(parsed);
+    rrule.until = until;
   }
 
   return rrule;
@@ -326,11 +331,8 @@ export function serializeRRule(rule: SchedulerProcessedEventRecurrenceRule): str
   }
 
   if (rule.until) {
-    // RFC 5545 writes UNTIL as a UTC date-time like `20250105T093000Z`.
-    const isoString = rule.until.toISOString();
-    const untilIso = `${isoString.slice(0, 19).replace(/[-:]/g, '')}Z`;
-
-    parts.push(`UNTIL=${untilIso}`);
+    // The date form of RFC 5545, like `20250105`.
+    parts.push(`UNTIL=${rule.until.toString().replace(/-/g, '')}`);
   }
 
   return parts.join(';');

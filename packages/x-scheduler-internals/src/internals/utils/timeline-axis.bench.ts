@@ -7,7 +7,7 @@ import {
   endOfDay,
   startOfDay,
 } from 'test/utils/scheduler';
-import { processDate } from '../../process-date';
+import { createProcessedDate } from '../../process-date';
 import { computeElementPositionInCollection } from './useElementPositionInCollection';
 import { getTimelineAxisDurationMs, timelineAxisOffsetToTimestamp } from './timeline-axis';
 
@@ -30,8 +30,11 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
   const occurrences = Array.from({ length: occurrenceCount }, (_, index) => {
     const occurrenceStart = addMinutes(start, index * 10);
     return {
-      start: processDate(occurrenceStart, 'default'),
-      end: processDate(addMinutes(occurrenceStart, 30 + (index % 10) * 30), 'default'),
+      start: createProcessedDate(occurrenceStart.getTime(), 'default'),
+      end: createProcessedDate(
+        addMinutes(occurrenceStart, 30 + (index % 10) * 30).getTime(),
+        'default',
+      ),
     };
   });
 

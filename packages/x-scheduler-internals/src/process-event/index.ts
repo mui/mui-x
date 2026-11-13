@@ -1,2 +1,2 @@
 export * from './processEvent';
-export * from './resolveEventDate';
+export * from './resolveEventTimestamp';

@@ -1,32 +1,45 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { TemporalSupportedObject, SchedulerProcessedEvent, WeekStartsOn } from '../../models';
+import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import type { BaseTemporal } from './base-temporal';
 import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
 import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import type { WeekInfo } from './date-locale';
-import { toPlainDateTime } from './plain-date-utils/timeZone';
+import { toEpochMs, toPlainDateTime } from './plain-date-utils/timeZone';
 import { isInstantString } from './plain-date-utils/date';
 
 /**
- * Converts a `TemporalSupportedObject` back to a string, respecting the
- * original date format: instant strings (ending with `Z` or an offset) become UTC ISO
- * strings, while wall-time strings are formatted in the event's data timezone
- * without the `Z` suffix.
+ * Converts an instant back to an event date string, respecting the format of `originalString`:
+ * after an instant string (ending with `Z` or an offset), a UTC ISO string, and after a wall-time
+ * string, the wall-clock time in the event's data timezone, without the `Z` suffix.
  */
-export function dateToEventString(
-  date: TemporalSupportedObject,
+export function timestampToEventString(
+  epochMs: number,
   originalString: string,
   dataTimezone: TemporalTimezone,
 ): string {
   if (isInstantString(originalString)) {
-    return new Date(date.getTime()).toISOString();
+    return new Date(epochMs).toISOString();
   }
   // Like the strings of the events, without milliseconds.
-  return toPlainDateTime(Math.floor(date.getTime() / 1000) * 1000, dataTimezone).toString();
+  return toPlainDateTime(Math.floor(epochMs / 1000) * 1000, dataTimezone).toString();
 }
 
 /**
- * Gets the end date of an event occurrence based on its start date.
+ * Converts the last day of a recurrence rule to the `until` of an event model: the last instant of
+ * that day in the event's data timezone, in the format of `originalString` like
+ * `timestampToEventString()`.
+ */
+export function untilToEventString(
+  until: BaseTemporal.PlainDate,
+  originalString: string,
+  dataTimezone: TemporalTimezone,
+): string {
+  const endOfDayMs = toEpochMs(until.add({ days: 1 }), dataTimezone) - 1;
+  return timestampToEventString(endOfDayMs, originalString, dataTimezone);
+}
+
+/**
+ * Gets the timestamp of the end of an event occurrence from the timestamp of its start.
  * For now, the occurrence always has the same duration as the original event, even when the DST applies between its start and the end.
  */
 export function getOccurrenceEnd({
@@ -34,10 +47,11 @@ export function getOccurrenceEnd({
   occurrenceStart,
 }: {
   event: SchedulerProcessedEvent;
-  occurrenceStart: TemporalSupportedObject;
-}): TemporalSupportedObject {
-  const durationMs = event.unstable_internalInfos.dataEnd - event.unstable_internalInfos.dataStart;
-  return new Date(occurrenceStart.getTime() + durationMs);
+  occurrenceStart: number;
+}): number {
+  return (
+    occurrenceStart + event.unstable_internalInfos.dataEnd - event.unstable_internalInfos.dataStart
+  );
 }
 
 function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {

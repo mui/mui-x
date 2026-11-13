@@ -11,14 +11,12 @@ import {
   getStartOfWeekDayNumber,
   LAST_SUPPORTED_DAY,
   plainDateFromDayNumber,
-  toLocalDayNumber,
   toPlainDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import type {
   RecurringEventWeekDayCode,
   SchedulerProcessedEvent,
   SchedulerProcessedEventRecurrenceRule,
-  TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import {
   NOT_LOCALIZED_WEEK_DAYS_INDEXES,
@@ -335,14 +333,12 @@ export class RecurringSeries {
 
   constructor(parameters: RecurringSeriesParameters) {
     const { rule, timezone } = parameters;
-    const toDay = (date: TemporalSupportedObject) => toLocalDayNumber(date.getTime(), timezone);
-
     this.timezone = timezone;
     this.start = toPlainDateTime(parameters.start, timezone);
     this.ruleDays = new RuleDays(rule, getDayNumber(this.start.toPlainDate()));
     // A fractional COUNT is rounded up.
     this.count = Math.ceil(rule.count ?? Infinity);
-    this.untilDay = rule.until ? toDay(rule.until) : Infinity;
+    this.untilDay = rule.until ? getDayNumber(rule.until) : Infinity;
     this.excludedDays = new Set(parameters.excludedDays?.map(getDayNumber));
   }
 

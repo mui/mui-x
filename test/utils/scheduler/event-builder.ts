@@ -12,7 +12,7 @@ import type {
   SchedulerEventSide,
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models/event';
-import { processEvent, resolveEventDate } from '@mui/x-scheduler-internals/process-event';
+import { processEvent, resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerState } from '@mui/x-scheduler-internals/internals';
 import {
@@ -183,7 +183,7 @@ export class EventBuilder {
    */
   singleDay(start: string, durationMinutes = 60) {
     const dataTimezone = this.event.timezone ?? 'default';
-    const startDate = resolveEventDate(start, dataTimezone);
+    const startDate = new Date(resolveEventTimestamp(start, dataTimezone));
     const endDate = addMinutes(startDate, durationMinutes);
     this.event.start = start;
     this.event.end = endDate.toISOString();
@@ -196,7 +196,7 @@ export class EventBuilder {
    */
   fullDay(date: string) {
     const dataTimezone = this.event.timezone ?? 'default';
-    const d = resolveEventDate(date, dataTimezone);
+    const d = new Date(resolveEventTimestamp(date, dataTimezone));
     this.event.start = startOfDay(d).toISOString();
     this.event.end = endOfDay(d).toISOString();
     this.event.allDay = true;
@@ -228,8 +228,8 @@ export class EventBuilder {
   recurrent(kind: RecurringEventPresetKey, rrule?: Omit<SchedulerEventRecurrenceRule, 'freq'>) {
     const dataTimezone = this.event.timezone ?? 'default';
     const anchor = this.event.start
-      ? resolveEventDate(this.event.start, dataTimezone)
-      : DEFAULT_TESTING_VISIBLE_DATE;
+      ? resolveEventTimestamp(this.event.start, dataTimezone)
+      : DEFAULT_TESTING_VISIBLE_DATE.getTime();
 
     let base: SchedulerEventRecurrenceRule = { freq: kind, interval: 1 };
 
@@ -237,7 +237,7 @@ export class EventBuilder {
       const code = getWeekDayCode(anchor, dataTimezone);
       base = { ...base, byDay: [code] };
     } else if (kind === 'MONTHLY') {
-      const dayOfMonth = toPlainDate(anchor.getTime(), dataTimezone).day;
+      const dayOfMonth = toPlainDate(anchor, dataTimezone).day;
       base = { ...base, byMonthDay: [dayOfMonth] };
     }
 
@@ -262,9 +262,7 @@ export class EventBuilder {
    */
   toOccurrence(occurrenceStartDate?: string): SchedulerEventOccurrence {
     const dataTimezone = this.event.timezone ?? 'default';
-    const rawStart = occurrenceStartDate
-      ? resolveEventDate(occurrenceStartDate, dataTimezone)
-      : resolveEventDate(this.event.start, dataTimezone);
+    const rawStart = resolveEventTimestamp(occurrenceStartDate ?? this.event.start, dataTimezone);
 
     const baseProcessed = processEvent(
       this.event,
@@ -273,12 +271,10 @@ export class EventBuilder {
     );
     const originalDurationMs =
       baseProcessed.unstable_internalInfos.dataEnd - baseProcessed.unstable_internalInfos.dataStart;
-    const rawEnd = new Date(rawStart.getTime() + originalDurationMs);
-
     const occurrenceModel: SchedulerEvent = {
       ...this.event,
-      start: rawStart.toISOString(),
-      end: rawEnd.toISOString(),
+      start: new Date(rawStart).toISOString(),
+      end: new Date(rawStart + originalDurationMs).toISOString(),
     };
 
     const processed = processEvent(
@@ -322,7 +318,7 @@ export function createOccurrence(
   const endMs = startMs + dataEnd - dataStart;
   return {
     ...event,
-    key: getRecurringOccurrenceKey(event.id, occurrenceStart, event.timezone),
+    key: getRecurringOccurrenceKey(event.id, startMs, event.timezone),
     start: createProcessedDate(startMs, displayTimezone),
     end: createProcessedDate(endMs, displayTimezone),
     unstable_internalInfos: { displayTimezone, dataStart: startMs, dataEnd: endMs },

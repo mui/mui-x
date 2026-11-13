@@ -111,9 +111,9 @@ describe('<StandaloneMonthView /> - RTL', () => {
 
   describe.each([
     // The pointer is on the inline-end day (July 3) in LTR and on the inline-start day (July 1) in RTL.
-    ['ltr', 8],
-    ['rtl', 10],
-  ] as const)('drag and drop in %s', (direction, expectedStartDay) => {
+    ['ltr', { start: '2025-07-08T00:00:00.000Z', end: '2025-07-10T23:59:59.999Z' }],
+    ['rtl', { start: '2025-07-10T00:00:00.000Z', end: '2025-07-12T23:59:59.999Z' }],
+  ] as const)('drag and drop in %s', (direction, expected) => {
     it('should move a multi-day event by the distance from the grabbed day', async () => {
       const handleEventsChange = vi.fn();
       const event = EventBuilder.new()
@@ -144,8 +144,8 @@ describe('<StandaloneMonthView /> - RTL', () => {
 
       expect(handleEventsChange.mock.calls.length).to.equal(1);
       const updatedEvents = handleEventsChange.mock.calls[0][0];
-      expect(new Date(updatedEvents[0].start).getUTCDate()).to.equal(expectedStartDay);
-      expect(new Date(updatedEvents[0].end).getUTCDate()).to.equal(expectedStartDay + 2);
+      expect(updatedEvents[0].start).to.equal(expected.start);
+      expect(updatedEvents[0].end).to.equal(expected.end);
     });
   });
 

@@ -1,5 +1,4 @@
 import {
-  addDays,
   createDate,
   createOccurrence,
   EventBuilder,
@@ -8,12 +7,14 @@ import {
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import type { SchedulerProcessedEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
+import { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
 import {
   deleteRecurringEvent,
   applyRecurringDeleteFollowing,
   applyRecurringDeleteOnlyThis,
 } from './deleteRecurringEvent';
+import { RecurringSeries } from './RecurringSeries';
 
 describe('recurring-events/deleteRecurringEvent', () => {
   const defaultEvent = EventBuilder.new()
@@ -188,15 +189,12 @@ describe('recurring-events/deleteRecurringEvent', () => {
 
       expect(result.deleted).to.equal(undefined);
       expect(result.created).to.equal(undefined);
-      expect(result.updated).to.deep.equal([
-        {
-          id: defaultEvent.id,
-          rrule: {
-            ...defaultEvent.rrule,
-            until: addDays(startOfDay(occurrenceStart), -1),
-          },
-        },
-      ]);
+      expect(result.updated).to.have.length(1);
+      const { id, rrule } = result.updated![0];
+      const { until, ...rule } = rrule as SchedulerProcessedEventRecurrenceRule;
+      expect(id).to.equal(defaultEvent.id);
+      expect(rule).to.deep.equal(defaultEvent.rrule);
+      expect(until).toEqualPlainDate('2025-01-04');
     });
 
     it('should drop the whole series when the occurrence is on the DTSTART day', () => {
@@ -227,10 +225,10 @@ describe('recurring-events/deleteRecurringEvent', () => {
 
     it('should drop COUNT/UNTIL from the truncated rule', () => {
       const countedEvent = EventBuilder.new()
-        .singleDay('2025-01-01T09:00:00Z')
+        .singleDay('2025-01-01T09:00:00')
         .rrule({ freq: 'DAILY', interval: 1, count: 10 })
         .toProcessed();
-      const occurrenceStart = createDate('2025-01-05T09:00:00Z');
+      const occurrenceStart = createDate('2025-01-05T09:00:00');
 
       const result = applyRecurringDeleteFollowing(
         countedEvent,
@@ -240,7 +238,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
 
       expect(rule.count).to.equal(undefined);
       expect(rule.freq).to.equal('DAILY');
-      expect(rule.until).to.toEqualDateTime(addDays(startOfDay(occurrenceStart), -1));
+      expect(rule.until).toEqualPlainDate('2025-01-04');
     });
 
     it('should truncate based on the event timezone', () => {
@@ -260,11 +258,10 @@ describe('recurring-events/deleteRecurringEvent', () => {
       );
       const until = (result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule).until!;
 
-      // The start of January 2nd in New York.
-      expect(until.toISOString()).to.equal('2025-01-02T05:00:00.000Z');
+      expect(until).toEqualPlainDate('2025-01-02');
     });
 
-    it('should truncate the series to the last day that exists before the occurrence', () => {
+    it('should truncate the series to the day before the occurrence, even when the timezone skips it', () => {
       // Pacific/Apia skipped December 30th, 2011.
       const event = EventBuilder.new()
         .withDataTimezone('Pacific/Apia')
@@ -274,49 +271,21 @@ describe('recurring-events/deleteRecurringEvent', () => {
       const occurrenceStart = createDate('2011-12-31T09:00:00', 'Pacific/Apia');
 
       const result = applyRecurringDeleteFollowing(event, createOccurrence(event, occurrenceStart));
-      const until = (result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule).until!;
-
-      expect(until.toISOString()).to.equal('2011-12-29T10:00:00.000Z'); // midnight, December 29th
-    });
-
-    it.each([
-      // Europe/Paris springs forward from 02:00 to 03:00 on March 29th, 2026.
-      { length: 23, occurrence: '2026-03-30T09:00:00', until: '2026-03-28T23:00:00.000Z' },
-      // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026.
-      { length: 25, occurrence: '2026-10-26T09:00:00', until: '2026-10-24T22:00:00.000Z' },
-    ])(
-      'should truncate the series to the start of the day before the occurrence when that day lasts $length hours',
-      ({ occurrence, until }) => {
-        const event = EventBuilder.new()
-          .withDataTimezone('Europe/Paris')
-          .singleDay('2026-03-01T09:00:00')
-          .rrule({ freq: 'DAILY' })
-          .toProcessed();
-        const occurrenceStart = createDate(occurrence, 'Europe/Paris');
-
-        const result = applyRecurringDeleteFollowing(
-          event,
-          createOccurrence(event, occurrenceStart),
-        );
-        const rule = result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule;
-
-        expect(rule.until!.toISOString()).to.equal(until); // midnight
-      },
-    );
-
-    it('should truncate the series to the midnight of the day before a DST transition at midnight', () => {
-      // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
-      const event = EventBuilder.new()
-        .withDataTimezone('America/Havana')
-        .singleDay('2026-03-01T09:00:00')
-        .rrule({ freq: 'DAILY' })
-        .toProcessed();
-      const occurrenceStart = createDate('2026-03-08T09:00:00', 'America/Havana');
-
-      const result = applyRecurringDeleteFollowing(event, createOccurrence(event, occurrenceStart));
       const rule = result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule;
 
-      expect(rule.until!.toISOString()).to.equal('2026-03-07T05:00:00.000Z'); // midnight, March 7th
+      expect(rule.until).toEqualPlainDate('2011-12-30');
+      expect(
+        new RecurringSeries({
+          rule,
+          start: event.unstable_internalInfos.dataStart,
+          timezone: 'Pacific/Apia',
+        })
+          .getOccurrenceDays(
+            BaseTemporal.PlainDate.from('2011-12-27'),
+            BaseTemporal.PlainDate.from('2012-01-02'),
+          )
+          .map((day) => day.toString()),
+      ).to.deep.equal(['2011-12-28', '2011-12-29']);
     });
   });
 });

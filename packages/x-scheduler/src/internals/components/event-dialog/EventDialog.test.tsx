@@ -15,7 +15,7 @@ import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-util
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerResource, TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
 import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import { schedulerOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
@@ -170,8 +170,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       const occurrence = builder.toOccurrence();
       const snapshot = {
         ...occurrence,
-        start: processDate(new Date(occurrence.unstable_internalInfos.dataStart), displayTimezone),
-        end: processDate(new Date(occurrence.unstable_internalInfos.dataEnd), displayTimezone),
+        start: createProcessedDate(occurrence.unstable_internalInfos.dataStart, displayTimezone),
+        end: createProcessedDate(occurrence.unstable_internalInfos.dataEnd, displayTimezone),
         unstable_internalInfos: { ...occurrence.unstable_internalInfos, displayTimezone },
       };
 
@@ -1992,10 +1992,10 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
         const updated = onEventsChange.mock.calls[0][0][0];
-        expect(new Date(updated.start).toISOString()).to.equal('2025-05-26T11:45:00.000Z');
+        expect(updated.start).to.equal('2025-05-26T11:45:00.000Z');
         // The untouched end was validated as a New York time too: persisting its stored
         // 08:15Z would invert the range, so it follows the start into the new timezone.
-        expect(new Date(updated.end).toISOString()).to.equal('2025-05-26T12:15:00.000Z');
+        expect(updated.end).to.equal('2025-05-26T12:15:00.000Z');
       });
 
       it('should keep an untouched range byte-identical when the display timezone changes while the async validation is pending', async () => {

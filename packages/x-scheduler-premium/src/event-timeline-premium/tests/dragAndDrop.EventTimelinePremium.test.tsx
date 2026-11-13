@@ -402,8 +402,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
-    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2026-10-25T09:00:00.000Z'); // 10:00 CET
-    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2026-10-25T10:00:00.000Z'); // 11:00 CET
+    expect(updatedEvents[0].start).to.equal('2026-10-25T09:00:00.000Z'); // 10:00 CET
+    expect(updatedEvents[0].end).to.equal('2026-10-25T10:00:00.000Z'); // 11:00 CET
   });
 
   describe('trimmed hour window (presetConfig)', () => {
@@ -466,10 +466,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
       expect(handleEventsChange.mock.calls.length).to.equal(1);
       const updatedEvents = handleEventsChange.mock.calls[0][0];
-      expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(18);
-      const newEnd = new Date(updatedEvents[0].end);
-      expect(newEnd.getUTCDate()).to.equal(4);
-      expect(newEnd.getUTCHours()).to.equal(11);
+      expect(updatedEvents[0].start).to.equal('2025-07-03T18:00:00Z');
+      expect(updatedEvents[0].end).to.equal('2025-07-04T11:00:00.000Z');
     });
 
     it('should shift a window-clipped start by the dragged amount instead of snapping it to the window edge', async () => {
@@ -502,8 +500,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
       expect(handleEventsChange.mock.calls.length).to.equal(1);
       const updatedEvents = handleEventsChange.mock.calls[0][0];
-      expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(8);
-      expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(19);
+      expect(updatedEvents[0].start).to.equal('2025-07-03T08:00:00.000Z');
+      expect(updatedEvents[0].end).to.equal('2025-07-03T19:00:00.000Z');
     });
 
     it('should not emit a change when the drag of a window-clipped event returns to its origin', async () => {
@@ -565,12 +563,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
       expect(handleEventsChange.mock.calls.length).to.equal(1);
       const updatedEvents = handleEventsChange.mock.calls[0][0];
-      const newStart = new Date(updatedEvents[0].start);
-      expect(newStart.getUTCDate()).to.equal(3);
-      expect(newStart.getUTCHours()).to.equal(19);
-      const newEnd = new Date(updatedEvents[0].end);
-      expect(newEnd.getUTCDate()).to.equal(4);
-      expect(newEnd.getUTCHours()).to.equal(11);
+      expect(updatedEvents[0].start).to.equal('2025-07-03T19:00:00.000Z');
+      expect(updatedEvents[0].end).to.equal('2025-07-04T11:00:00.000Z');
     });
 
     it('should move an event starting before the collection without shifting it by the hidden hours', async () => {
@@ -601,12 +595,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
       expect(handleEventsChange.mock.calls.length).to.equal(1);
       const updatedEvents = handleEventsChange.mock.calls[0][0];
-      const newStart = new Date(updatedEvents[0].start);
-      expect(newStart.getUTCDate()).to.equal(2);
-      expect(newStart.getUTCHours()).to.equal(11);
-      const newEnd = new Date(updatedEvents[0].end);
-      expect(newEnd.getUTCDate()).to.equal(3);
-      expect(newEnd.getUTCHours()).to.equal(13);
+      expect(updatedEvents[0].start).to.equal('2025-07-02T11:00:00.000Z');
+      expect(updatedEvents[0].end).to.equal('2025-07-03T13:00:00.000Z');
     });
 
     it('should resize the start of an event through the axis instead of real milliseconds', async () => {
@@ -642,12 +632,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
       expect(handleEventsChange.mock.calls.length).to.equal(1);
       const updatedEvents = handleEventsChange.mock.calls[0][0];
-      const newStart = new Date(updatedEvents[0].start);
-      expect(newStart.getUTCDate()).to.equal(3);
-      expect(newStart.getUTCHours()).to.equal(17);
-      const newEnd = new Date(updatedEvents[0].end);
-      expect(newEnd.getUTCDate()).to.equal(4);
-      expect(newEnd.getUTCHours()).to.equal(10);
+      expect(updatedEvents[0].start).to.equal('2025-07-03T17:00:00.000Z');
+      expect(updatedEvents[0].end).to.equal('2025-07-04T10:00:00Z');
     });
 
     it('should not offer a resize handle on a bound hidden by the hour window', async () => {
@@ -710,10 +696,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       expect(handleEventsChange.mock.calls.length).to.equal(1);
       const updatedEvents = handleEventsChange.mock.calls[0][0];
       expect(updatedEvents.length).to.equal(1);
-      const newStart = new Date(updatedEvents[0].start);
-      expect(newStart.getUTCDate()).to.equal(4);
-      expect(newStart.getUTCHours()).to.equal(10);
-      expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(11);
+      expect(updatedEvents[0].start).to.equal('2025-07-04T10:00:00.000Z');
+      expect(updatedEvents[0].end).to.equal('2025-07-04T11:00:00.000Z');
     });
 
     it('should keep a drop on the exact right edge of the axis inside the collection', async () => {
@@ -755,10 +739,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
       expect(handleEventsChange.mock.calls.length).to.equal(1);
       const updatedEvents = handleEventsChange.mock.calls[0][0];
-      const newStart = new Date(updatedEvents[0].start);
-      expect(newStart.getUTCDate()).to.equal(6);
-      expect(newStart.getUTCHours()).to.equal(19);
-      expect(newStart.getUTCMinutes()).to.equal(45);
+      expect(updatedEvents[0].start).to.equal('2025-07-06T19:45:00.000Z');
     });
 
     it('should keep a drop past the left edge of the axis inside the collection', async () => {
@@ -800,10 +781,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
       expect(handleEventsChange.mock.calls.length).to.equal(1);
       const updatedEvents = handleEventsChange.mock.calls[0][0];
-      const newStart = new Date(updatedEvents[0].start);
-      expect(newStart.getUTCDate()).to.equal(3);
-      expect(newStart.getUTCHours()).to.equal(8);
-      expect(newStart.getUTCMinutes()).to.equal(0);
+      expect(updatedEvents[0].start).to.equal('2025-07-03T08:00:00.000Z');
     });
   });
 });
