@@ -48,6 +48,7 @@ function PickersActionBarComponent(props: PickersActionBarProps) {
     cancelValueChanges,
     goToNextStep,
     hasNextStep,
+    disabled,
   } = usePickerContext();
 
   if (actions == null || actions.length === 0) {
@@ -58,35 +59,45 @@ function PickersActionBarComponent(props: PickersActionBarProps) {
     switch (actionType) {
       case 'clear':
         return (
-          <Button data-testid="clear-action-button" onClick={clearValue} key={actionType}>
+          <Button
+            data-testid="clear-action-button"
+            disabled={disabled}
+            onClick={clearValue}
+            key={actionType}
+          >
             {translations.clearButtonLabel}
           </Button>
         );
 
       case 'cancel':
         return (
-          <Button onClick={cancelValueChanges} key={actionType}>
+          <Button disabled={disabled} onClick={cancelValueChanges} key={actionType}>
             {translations.cancelButtonLabel}
           </Button>
         );
 
       case 'accept':
         return (
-          <Button onClick={acceptValueChanges} key={actionType}>
+          <Button disabled={disabled} onClick={acceptValueChanges} key={actionType}>
             {translations.okButtonLabel}
           </Button>
         );
 
       case 'today':
         return (
-          <Button data-testid="today-action-button" onClick={setValueToToday} key={actionType}>
+          <Button
+            data-testid="today-action-button"
+            disabled={disabled}
+            onClick={setValueToToday}
+            key={actionType}
+          >
             {translations.todayButtonLabel}
           </Button>
         );
 
       case 'next':
         return (
-          <Button onClick={goToNextStep} key={actionType}>
+          <Button disabled={disabled} onClick={goToNextStep} key={actionType}>
             {translations.nextStepButtonLabel}
           </Button>
         );
@@ -94,13 +105,13 @@ function PickersActionBarComponent(props: PickersActionBarProps) {
       case 'nextOrAccept':
         if (hasNextStep) {
           return (
-            <Button onClick={goToNextStep} key={actionType}>
+            <Button disabled={disabled} onClick={goToNextStep} key={actionType}>
               {translations.nextStepButtonLabel}
             </Button>
           );
         }
         return (
-          <Button onClick={acceptValueChanges} key={actionType}>
+          <Button disabled={disabled} onClick={acceptValueChanges} key={actionType}>
             {translations.okButtonLabel}
           </Button>
         );
