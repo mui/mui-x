@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { platform } from '@base-ui/utils/platform';
 import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, act, screen, waitFor, within } from '@mui/internal-test-utils';
 import { getCell, getColumnHeadersTextContent, microtasks } from 'test/utils/helperFn';
@@ -3125,6 +3126,282 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         body.scrollTop = 0;
         // Real layout: the browser fires the scroll event, then popper.js shows the list again.
         expect(await screen.findByRole('option', { name: /price/ })).not.to.equal(null);
+      },
+    );
+  });
+
+  describe('reference picking', () => {
+    const getRoot = () => document.querySelector<HTMLElement>(`.${gridClasses.root}`)!;
+    const isPicking = () =>
+      getRoot().classList.contains(gridClasses['root--formulaReferencePicking']);
+    const cellOf = (id: number, field: string) => apiRef.current!.getCellElement(id, field)!;
+    const getFocusedCell = () => apiRef.current!.state.focus.cell;
+    const getPendingPick = () => getPrivateApi().caches.formula!.referencePick.pending;
+    const getPendingReference = () => apiRef.current!.state.formula.activeEdit?.pendingReference;
+    // The click that adds a reference: Cmd on macOS, Ctrl elsewhere.
+    const APPEND_KEY = platform.os.mac ? { metaKey: true } : { ctrlKey: true };
+
+    // The pointer events of a click, one by one: the mousedown is the one that picks.
+    const clickCell = (target: Element, init?: MouseEventInit) => {
+      fireEvent.mouseDown(target, init);
+      fireEvent.mouseUp(target, init);
+      fireEvent.click(target, init);
+    };
+
+    // Sets the text of the formula, which has the focus, and puts the caret at `caret`.
+    const typeAt = (text: string, caret = text.length) => {
+      const editable = getFormulaEditable();
+      typeFormula(text);
+      act(() => setCaretOffset(editable, caret));
+      // Typing ends with the release of the key, which is when the editable reads the caret.
+      fireEvent.keyUp(editable, { key: text.slice(-1) });
+    };
+
+    function PickingTest(props: Partial<DataGridPremiumProps>) {
+      return (
+        <Test
+          formulaReferencePicking
+          initialState={{ computedColumns: { model: [total] } }}
+          {...props}
+        />
+      );
+    }
+
+    describe.each([
+      { dialect: 'A1 notation', a1Notation: true },
+      { dialect: 'canonical', a1Notation: false },
+    ])('$dialect', ({ a1Notation }) => {
+      beforeEach(() => {
+        fakePreviewTimers();
+      });
+
+      const setup = async (props: Partial<DataGridPremiumProps> = {}) => {
+        await render(<PickingTest formulaA1Notation={a1Notation} {...props} />);
+        // The formula of a stored column takes the focus when its editor opens.
+        await openEditor('total');
+        expect(document.activeElement).to.equal(getFormulaEditable());
+      };
+
+      it('writes the name of the clicked column, whatever the row', async () => {
+        await setup();
+        typeAt('=price * ');
+        expect(isPicking()).to.equal(true);
+
+        clickCell(cellOf(2, 'quantity'));
+        expect(getFormulaEditable().textContent).to.equal('=price * quantity');
+        // The click did nothing else: no focus move, no selection, and the preview row stays.
+        expect(document.activeElement).to.equal(getFormulaEditable());
+        expect(getFocusedCell()).to.equal(null);
+        expect(apiRef.current!.getSelectedRows().size).to.equal(0);
+        expect(getPreviewRowLabel()).to.include('Row 1');
+        expect(getPanel()).not.to.equal(null);
+      });
+
+      it('shows the pending reference on the preview row', async () => {
+        await setup();
+        typeAt('=price * ');
+        clickCell(cellOf(2, 'quantity'));
+        expect(getPendingReference()).to.deep.equal({ kind: 'cell', field: 'quantity', rowId: 0 });
+        expect(isPicking()).to.equal(true);
+      });
+
+      it('replaces the pending reference with the next click, until something is typed', async () => {
+        await setup();
+        typeAt('=');
+        clickCell(cellOf(1, 'price'));
+        expect(getFormulaEditable().textContent).to.equal('=price');
+        clickCell(cellOf(0, 'quantity'));
+        expect(getFormulaEditable().textContent).to.equal('=quantity');
+
+        // No reference fits after a number: the click moves the focus of the grid, as before.
+        typeAt('=quantity + 1');
+        expect(isPicking()).to.equal(false);
+        clickCell(cellOf(1, 'price'));
+        expect(getFormulaEditable().textContent).to.equal('=quantity + 1');
+        expect(getFocusedCell()).to.deep.equal({ id: 1, field: 'price' });
+        expect(getPanel()).not.to.equal(null);
+      });
+
+      it('replaces the reference at the caret', async () => {
+        await setup();
+        typeAt('=price * quantity', 3);
+        clickCell(cellOf(1, 'item'));
+        expect(getFormulaEditable().textContent).to.equal('=item * quantity');
+      });
+
+      it('adds a reference with Ctrl/Cmd+click inside a function call only', async () => {
+        await setup();
+        typeAt('=SUM(');
+        clickCell(cellOf(1, 'price'));
+        clickCell(cellOf(2, 'quantity'), APPEND_KEY);
+        expect(getFormulaEditable().textContent).to.equal('=SUM(price, quantity');
+        // The added reference is the pending one.
+        clickCell(cellOf(2, 'item'));
+        expect(getFormulaEditable().textContent).to.equal('=SUM(price, item');
+
+        typeAt('=');
+        clickCell(cellOf(1, 'price'));
+        clickCell(cellOf(2, 'quantity'), APPEND_KEY);
+        expect(getFormulaEditable().textContent).to.equal('=quantity');
+      });
+
+      it('builds no range: Shift+click and a drag are plain picks', async () => {
+        await setup();
+        typeAt('=');
+        clickCell(cellOf(0, 'price'));
+        clickCell(cellOf(2, 'quantity'), { shiftKey: true });
+        expect(getFormulaEditable().textContent).to.equal('=quantity');
+
+        typeAt('=');
+        fireEvent.mouseDown(cellOf(0, 'price'));
+        fireEvent.mouseOver(cellOf(2, 'quantity'));
+        expect(getFormulaEditable().textContent).to.equal('=price');
+        fireEvent.mouseUp(cellOf(2, 'quantity'));
+        expect(getFormulaEditable().textContent).to.equal('=price');
+        expect(getFocusedCell()).to.equal(null);
+      });
+
+      it('gives a cleared formula its "=" back', async () => {
+        await setup();
+        typeAt('');
+        expect(isPicking()).to.equal(true);
+        clickCell(cellOf(1, 'price'));
+        expect(getFormulaEditable().textContent).to.equal('=price');
+        clickCell(cellOf(1, 'quantity'));
+        expect(getFormulaEditable().textContent).to.equal('=quantity');
+      });
+
+      it('does not pick a utility column or the edited column', async () => {
+        await setup({ checkboxSelection: true });
+        typeAt('=');
+        clickCell(cellOf(1, '__check__'));
+        expect(getFormulaEditable().textContent).to.equal('=');
+
+        typeAt('=');
+        clickCell(cellOf(1, 'total'));
+        expect(getFormulaEditable().textContent).to.equal('=');
+        expect(getFocusedCell()).to.deep.equal({ id: 1, field: 'total' });
+      });
+
+      it('applies the picked formula', async () => {
+        await setup();
+        typeAt('=quantity + ');
+        clickCell(cellOf(2, 'price'));
+        fireEvent.click(getButton('Apply'));
+        await microtasks();
+        expect(getModel()[0].formula).to.equal('=quantity + price');
+      });
+
+      it('ends the session when the editor closes', async () => {
+        await setup();
+        typeAt('=');
+        clickCell(cellOf(1, 'price'));
+        expect(getPendingPick()).not.to.equal(null);
+
+        fireEvent.click(getButton('Cancel'));
+        await microtasks();
+        expect(getPendingPick()).to.equal(null);
+        expect(isPicking()).to.equal(false);
+        // The next click is a regular one.
+        clickCell(cellOf(1, 'price'));
+        expect(getFocusedCell()).to.deep.equal({ id: 1, field: 'price' });
+      });
+
+      it('does not skip a click without a mousedown after the editor closes', async () => {
+        await setup();
+        typeAt('=');
+        clickCell(cellOf(1, 'price'));
+        expect(getPrivateApi().caches.formula!.referencePick.gesture).to.equal('up');
+
+        fireEvent.click(getButton('Cancel'));
+        await microtasks();
+        expect(getPrivateApi().caches.formula!.referencePick.gesture).to.equal(null);
+        // A click from the keyboard or from code has no mousedown to reset the gesture.
+        fireEvent.click(cellOf(2, 'price'));
+        expect(apiRef.current!.isRowSelected(2)).to.equal(true);
+      });
+    });
+
+    describe('gates', () => {
+      beforeEach(() => {
+        fakePreviewTimers();
+      });
+
+      it('escapes a field that reads as a cell address in A1 notation', async () => {
+        await render(
+          <PickingTest
+            formulaA1Notation
+            columns={[...baselineProps.columns, { field: 'q1', type: 'number' }]}
+          />,
+        );
+        await openEditor('total');
+        typeAt('=');
+        clickCell(cellOf(1, 'q1'));
+        expect(getFormulaEditable().textContent).to.equal('=FIELD("q1")');
+      });
+
+      it('picks into the formula of a new column once it has the focus', async () => {
+        await render(<PickingTest />);
+        await openEditor(null);
+        // The name of a new column has the focus: the click is a regular one.
+        clickCell(cellOf(1, 'price'));
+        expect(getFormulaEditable().textContent).to.equal('=');
+        expect(getFocusedCell()).to.deep.equal({ id: 1, field: 'price' });
+
+        act(() => getFormulaEditable().focus());
+        typeAt('=');
+        clickCell(cellOf(2, 'quantity'));
+        expect(getFormulaEditable().textContent).to.equal('=quantity');
+        // A stored computed column is a column like the others.
+        typeAt('=quantity + ');
+        clickCell(cellOf(2, 'total'));
+        expect(getFormulaEditable().textContent).to.equal('=quantity + total');
+      });
+
+      it('does not pick without the prop', async () => {
+        await render(<PickingTest formulaReferencePicking={false} />);
+        await openEditor('total');
+        typeAt('=');
+        expect(isPicking()).to.equal(false);
+        clickCell(cellOf(1, 'price'));
+        expect(getFormulaEditable().textContent).to.equal('=');
+        expect(getFocusedCell()).to.deep.equal({ id: 1, field: 'price' });
+      });
+
+      it('does not pick into a read-only editor', async () => {
+        const locked = define('total', '=price * quantity', {
+          headerName: 'Total',
+          editable: false,
+        });
+        await render(<PickingTest initialState={{ computedColumns: { model: [locked] } }} />);
+        await openEditor('total');
+        expect(isPicking()).to.equal(false);
+        clickCell(cellOf(1, 'price'));
+        expect(getFormulaEditable().textContent).to.equal('=price * quantity');
+        expect(getFocusedCell()).to.deep.equal({ id: 1, field: 'price' });
+      });
+    });
+
+    // A real pointer: the browser moves the focus on mousedown unless the grid prevents it.
+    it.skipIf(isJSDOM)(
+      'keeps the DOM focus and the caret in the formula after a pick',
+      async () => {
+        const { userEvent } = await import('vitest/browser');
+        await render(<PickingTest />);
+        await openEditor('total');
+        typeAt('=price * ');
+        const previousActEnvironment = globalThis.IS_REACT_ACT_ENVIRONMENT;
+        globalThis.IS_REACT_ACT_ENVIRONMENT = false;
+        try {
+          await userEvent.click(cellOf(2, 'quantity'));
+        } finally {
+          globalThis.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
+        }
+        await waitFor(() => {
+          expect(getFormulaEditable().textContent).to.equal('=price * quantity');
+        });
+        expect(document.activeElement).to.equal(getFormulaEditable());
+        expect(getFocusedCell()).to.equal(null);
       },
     );
   });

@@ -143,6 +143,26 @@ export function getFormulaReferenceColorVar(colorIndex: number): string {
   return `var(${FORMULA_REFERENCE_COLOR_VAR_PREFIX}${colorIndex % FORMULA_REFERENCE_PALETTE_SIZE})`;
 }
 
+/**
+ * The identity of a target: two references to the same target share it, and
+ * with it their color and their rectangle. `null` for an unresolved target.
+ */
+export function getFormulaReferenceTargetKey(target: FormulaReferenceTarget): string | null {
+  switch (target.kind) {
+    case 'cell':
+      return createFormulaCellKey(target.rowId, target.field);
+    case 'range':
+      return `range ${createFormulaCellKey(target.startRowId, target.startField)} ${createFormulaCellKey(
+        target.endRowId,
+        target.endField,
+      )}`;
+    case 'wholeColumn':
+      return `col ${target.field}`;
+    default:
+      return null;
+  }
+}
+
 const UNRESOLVED: { target: FormulaReferenceTarget; targetKey: string | null } = {
   target: { kind: 'unresolved' },
   targetKey: null,
@@ -157,10 +177,8 @@ function resolveCellTarget(
   if (String(rowId) === String(ownerCell.id) && field === ownerCell.field) {
     return UNRESOLVED;
   }
-  return {
-    target: { kind: 'cell', field, rowId },
-    targetKey: createFormulaCellKey(rowId, field),
-  };
+  const target: FormulaReferenceTarget = { kind: 'cell', field, rowId };
+  return { target, targetKey: getFormulaReferenceTargetKey(target) };
 }
 
 /**
@@ -233,19 +251,21 @@ function resolveFormulaReferenceTarget(
       ) {
         return UNRESOLVED;
       }
-      return {
-        target: { kind: 'range', startField, endField, startRowId, endRowId },
-        targetKey: `range ${createFormulaCellKey(startRowId, startField)} ${createFormulaCellKey(
-          endRowId,
-          endField,
-        )}`,
+      const target: FormulaReferenceTarget = {
+        kind: 'range',
+        startField,
+        endField,
+        startRowId,
+        endRowId,
       };
+      return { target, targetKey: getFormulaReferenceTargetKey(target) };
     }
     case 'columnValues': {
       if (positionContext.getPositionOfField(node.field) === undefined) {
         return UNRESOLVED;
       }
-      return { target: { kind: 'wholeColumn', field: node.field }, targetKey: `col ${node.field}` };
+      const target: FormulaReferenceTarget = { kind: 'wholeColumn', field: node.field };
+      return { target, targetKey: getFormulaReferenceTargetKey(target) };
     }
     default:
       return UNRESOLVED;

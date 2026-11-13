@@ -907,6 +907,12 @@ export const GridRootStyles = styled('div', {
         zIndex: 50,
       },
     },
+    // The cells a click can reference while a formula is edited. Pinned rows are outside
+    // the render zone, and the utility columns (`__check__`, …) cannot be referenced.
+    [`&.${c['root--formulaReferencePicking']} .${c.virtualScrollerRenderZone} .${c.cell}:not(.${c['cell--editing']}, [data-field^="__"])`]:
+      {
+        cursor: 'cell',
+      },
     [`& .${c['cell--fillPreview']}`]: {
       // Paint the tint as an image layer on top of the cell's own background color,
       // so opaque backgrounds (pinned cells) stay opaque.

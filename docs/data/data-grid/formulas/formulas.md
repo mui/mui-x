@@ -144,6 +144,71 @@ Click any **Amount** cell in the demo below and edit its formula from the bar, o
 
 To place the bar in a custom toolbar—or anywhere else in the page through a portal—compose the exported component; see the [Formula Bar component](/x/react-data-grid/components/formula-bar/) page.
 
+### Reference picking
+
+By default, clicking another cell while a formula is being edited ends the edit, like for any other cell.
+Pass the `formulaReferencePicking` prop to let users point at cells instead of typing their references: a click on a cell writes its reference into the formula, and the editor keeps the focus.
+
+```tsx
+<DataGridPremium
+  featureDependencies={{ formula: formulaFeature }}
+  formulaReferencePicking
+/>
+```
+
+In the demo below, select the empty **Q1 total** cell of the **Operations** row, type `=`, click the **January** cell of that row, type `+`, and continue with the two other months.
+Then select the empty **February** cell of the **All departments** row, type `=SUM(`, drag over the four cells above it, type `)`, and press <kbd class="key">Enter</kbd>.
+
+{{"demo": "FormulaReferencePicking.js", "bg": "inline", "defaultCodeOpen": false}}
+
+A click writes a reference only where the formula can take one—anywhere else, it ends the edit as usual:
+
+- **Where a reference is expected**—after the `=`, an operator, an opening parenthesis, or a comma—the reference is inserted at the caret: with `=B2+`, a click on C3 gives `=B2+C3`.
+- **On a reference**—the caret inside it or at one of its ends—the click replaces that reference: with the caret at the end of `=price * qty`, a click on C3 gives `=price * C3`. After typing a reference, commit with <kbd class="key">Enter</kbd> or <kbd class="key">Tab</kbd> instead of clicking another cell.
+- The reference a click wrote is replaced by the next click, until you type something. Its cell is outlined with a solid rectangle instead of a dashed one.
+- **Anywhere else**—after a number, a string, a closing parenthesis, or a name that is not a column, as in `=B2+5`, `=SUM(B2:C4)`, or `=pri`—the click ends the edit and moves the focus. The same goes for an edit whose text does not start with `=`.
+
+The following gestures are supported:
+
+| Gesture                                                                                                   | Result                                                                                                   | Example                         |
+| :-------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------- | :------------------------------ |
+| Click                                                                                                     | Writes the reference of the cell                                                                         | `=SUM(` becomes `=SUM(B2`       |
+| Drag                                                                                                      | Writes the range between the first and the last cell, updated while dragging                             | `=SUM(` becomes `=SUM(B2:C4`    |
+| <kbd><kbd class="key">Shift</kbd>+click</kbd>                                                             | Turns the reference at the caret into a range that ends at the clicked cell                              | `=SUM(B2` becomes `=SUM(B2:C6`  |
+| <kbd><kbd class="key">Ctrl</kbd>+click</kbd> (<kbd><kbd class="key">⌘ Command</kbd>+click</kbd> on macOS) | Adds the reference as another argument when the reference at the caret is an argument of a function call | `=SUM(B2` becomes `=SUM(B2, C3` |
+
+Outside the arguments of a function call, <kbd><kbd class="key">Ctrl</kbd>+click</kbd> behaves like a click, and so does <kbd><kbd class="key">Shift</kbd>+click</kbd> when there is no reference at the caret.
+A range is also written outside a function call (`=B2:C4`), which is an error until it is wrapped in a function such as `SUM`.
+<kbd class="key">Enter</kbd> and <kbd class="key">Tab</kbd> commit the edit and <kbd class="key">Escape</kbd> cancels it, as usual.
+
+The text that a pick writes depends on the clicked cell and on the syntax of the editor:
+
+- A cell in the **row of the formula** is written as its field name (`price`), like a [same-row reference](/x/react-data-grid/formula-syntax/#values-and-same-row-references) typed by hand.
+- A cell in **another row** is written as a cell reference: `B2` with `formulaA1Notation`, `REF(COLUMN("price"), ROW(2))` otherwise.
+- A **range** is written as `B2:C4` with `formulaA1Notation`, and as the matching `RANGE_REF()` otherwise.
+- Picked references are relative. To make one absolute in the A1 syntax, type the `$` by hand.
+
+Picking works the same way from every formula editor:
+
+- The **cell editor**, in cell and row edit modes. In row edit mode, a click on another editor of the row moves the focus to it.
+- The **[formula bar](#formula-bar)**, for a draft as well as for a mirrored edit.
+- The formula field of the **[computed columns](/x/react-data-grid/computed-columns/) panel**, where a click on any cell of a column writes its field name—a computed column only references its own row, so no range is written.
+
+Some cells cannot be picked, and a click on them keeps its regular behavior: the cells of pinned rows, group rows, and aggregation rows, the cells of the checkbox, actions, detail toggle, reorder, and row number columns, a cell in edit mode, and the edited cell itself.
+A click on a column header ends the edit too.
+Clicks with the right button or with the <kbd class="key">Alt</kbd> key pressed are never picks.
+
+A pick does not change the focus, the row selection, or the cell selection, and it does not need the `cellSelection` prop.
+The `onCellClick` and `onRowClick` props are still called for a click that picks a reference.
+
+While the caret is where a click would pick a reference, the grid root has the `MuiDataGrid-root--formulaReferencePicking` class and its cells show the `cell` cursor.
+
+- The cursor is set with CSS, so it also shows on a few cells that cannot be picked, such as the cells of group rows and of an actions column.
+- A drag does not scroll the grid when the pointer reaches its edges—use the mouse wheel during the drag.
+- An existing cell selection stays visible under the reference rectangles.
+- On touch devices, a tap picks a cell, but a range cannot be picked by dragging.
+- There is no keyboard equivalent: the arrow keys move the caret in the formula.
+
 ## Copying, pasting, and filling
 
 Clipboard copy places the **evaluated value** on the clipboard, not the formula.

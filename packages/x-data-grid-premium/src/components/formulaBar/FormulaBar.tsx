@@ -33,6 +33,10 @@ import {
 } from '../../hooks/features/formula/gridFormulaBarElements';
 import type { GridFormulaResult } from '../../hooks/features/formula/gridFormulaInterfaces';
 import {
+  clearFormulaPickSession,
+  registerFormulaPickEditable,
+} from '../../hooks/features/formula/gridFormulaReferencePicking';
+import {
   getPlainEditDraftText,
   getPlainEditParserInput,
   parsePlainEditValue,
@@ -224,6 +228,22 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
     apiRef.current.isCellEditable(apiRef.current.getCellParams(cell.id, cell.field));
   const readOnly = !isEditable || (isMirror && rootProps.editMode === 'row');
 
+  // Picked references (a click on a cell while the bar has the focus) are written
+  // into the bar: into its draft, or into the cell edit it mirrors. Only a
+  // formula column can hold them, and a read-only bar takes no text.
+  const canReceivePicks = cell !== null && allowFormulas && !readOnly;
+  React.useEffect(() => {
+    if (!canReceivePicks || cell === null) {
+      return undefined;
+    }
+    return registerFormulaPickEditable(apiRef, {
+      kind: 'bar',
+      getHandle: () => coreRef.current,
+      ownerCell: cell,
+      a1Notation: a1Enabled,
+    });
+  }, [apiRef, canReceivePicks, cell, a1Enabled]);
+
   // ----- Draft lifecycle helpers -----
 
   const clearPreview = React.useCallback(() => {
@@ -277,11 +297,17 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
     // The ref clears synchronously: the commit flow triggers `cellFocusIn` and
     // `blur` in the same tick, and their dirty checks must not see the old
     // draft (a stale ref would double-commit).
+    const hadDraft = draftRef.current !== null;
     draftRef.current = null;
     setDraft(null);
     draftSeedRef.current = '';
     clearPreview();
     coreRef.current?.setEngaged(false);
+    // A reference picked into the draft ends with it. A mirrored cell edit keeps
+    // its picking session: it ends with the edit.
+    if (hadDraft) {
+      clearFormulaPickSession(apiRef);
+    }
     const current = gridFormulaActiveEditSelector(apiRef);
     if (current !== null && current.draft !== undefined) {
       apiRef.current.setFormulaActiveEdit!(null);

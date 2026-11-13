@@ -33,6 +33,10 @@ import {
   setSelectionOffsets,
 } from './formulaEditorCaret';
 import type { FormulaEditorSelection } from './formulaEditorCaret';
+import {
+  isFormulaReferencePickingEnabled,
+  syncFormulaPickFeedback,
+} from '../hooks/features/formula/gridFormulaReferencePicking';
 
 /**
  * The font formula text is rendered in — monospace, so a formula reads as the
@@ -258,6 +262,29 @@ export interface GridFormulaEditableHandle {
    * @param {React.SyntheticEvent} event The originating event (a click on the pane).
    */
   insertText: (text: string, event: React.SyntheticEvent) => void;
+  /**
+   * @returns {string} The text the editable shows.
+   */
+  getText: () => string;
+  /**
+   * @returns {FormulaEditorSelection | null} The live selection in character offsets, or `null` when the editable does not hold it.
+   */
+  getSelection: () => FormulaEditorSelection | null;
+  /**
+   * @returns {boolean} `true` while an IME composition is in flight.
+   */
+  isComposing: () => boolean;
+  /**
+   * Replaces `start..end` of the text with `text` and queues the caret right
+   * after it — the reference picking path. Reports through `onValueChange`
+   * like typing does. Unlike `insertText`, the suggestion popup is not
+   * recomputed: the pointer is on the grid, not in the editor.
+   * @param {number} start The start offset of the replaced range.
+   * @param {number} end The end offset of the replaced range.
+   * @param {string} text The text to write.
+   * @param {React.SyntheticEvent} event The originating event (a mousedown on a cell).
+   */
+  replaceRange: (start: number, end: number, text: string, event: React.SyntheticEvent) => void;
 }
 
 export interface GridFormulaEditableProps {
@@ -372,6 +399,7 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
     } = props;
     const apiRef = useGridPrivateApiContext();
     const rootProps = useGridRootProps();
+    const referencePicking = isFormulaReferencePickingEnabled(rootProps);
 
     const editableRef = React.useRef<HTMLDivElement | null>(null);
     // The caret to restore on the next rebuild (set by typing/accepting); `null`
@@ -513,7 +541,10 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
         refreshAfterRebuildRef.current = false;
         refresh(getCaretOffset(root));
       }
-    }, [segments, value, refresh, onAfterRebuild]);
+      // The text and the caret are final: typing ends a pending pick, and the
+      // new caret position decides whether a click picks a reference.
+      syncFormulaPickFeedback(apiRef, referencePicking);
+    }, [segments, value, refresh, onAfterRebuild, apiRef, referencePicking]);
 
     // Keep the highlighted option scrolled into view.
     useEnhancedEffect(() => {
@@ -751,6 +782,7 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
         // Any key may have moved the caret.
         const root = editableRef.current;
         onInteraction?.(root ? getCaretOffset(root) : null);
+        syncFormulaPickFeedback(apiRef, referencePicking);
         // A caret move without a value change can still change the suggestion
         // context.
         if (
@@ -762,14 +794,15 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
           refresh();
         }
       },
-      [onInteraction, refresh],
+      [apiRef, onInteraction, referencePicking, refresh],
     );
 
     // A click (or a drag-selection ending inside the editable) places the caret.
     const handleMouseUp = React.useCallback(() => {
       const root = editableRef.current;
       onInteraction?.(root ? getCaretOffset(root) : null);
-    }, [onInteraction]);
+      syncFormulaPickFeedback(apiRef, referencePicking);
+    }, [apiRef, onInteraction, referencePicking]);
 
     // The selection as it stood when focus left the editable — where a
     // click-to-insert lands when the click did blur the editable (keyboard
@@ -782,8 +815,10 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
         lastSelectionRef.current = root ? getSelectionOffsets(root) : null;
         setOpen(false);
         onBlur?.(event);
+        // Without the focus, a click on a cell is not a pick.
+        syncFormulaPickFeedback(apiRef, referencePicking);
       },
-      [onBlur],
+      [apiRef, onBlur, referencePicking],
     );
 
     const insertText = React.useCallback(
@@ -808,6 +843,28 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
         // signature help right after `NAME(`.
         refreshAfterRebuildRef.current = true;
         onValueChange(nextValue, pendingCaretRef.current, event);
+        onInteraction?.(pendingCaretRef.current);
+      },
+      [onInteraction, onValueChange, readOnly],
+    );
+
+    const replaceRange = React.useCallback(
+      (rangeStart: number, rangeEnd: number, text: string, event: React.SyntheticEvent) => {
+        const root = editableRef.current;
+        if (!root || readOnly) {
+          return;
+        }
+        const source = root.textContent ?? '';
+        const start = Math.max(0, Math.min(source.length, rangeStart));
+        const end = Math.max(start, Math.min(source.length, rangeEnd));
+        engagedRef.current = true;
+        pendingCaretRef.current = start + text.length;
+        lastSelectionRef.current = null;
+        onValueChange(
+          source.slice(0, start) + text + source.slice(end),
+          pendingCaretRef.current,
+          event,
+        );
         onInteraction?.(pendingCaretRef.current);
       },
       [onInteraction, onValueChange, readOnly],
@@ -862,8 +919,15 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
         },
         closeSuggestions: () => setOpen(false),
         insertText,
+        getText: () => editableRef.current?.textContent ?? '',
+        getSelection: () => {
+          const root = editableRef.current;
+          return root ? getSelectionOffsets(root) : null;
+        },
+        isComposing: () => composingRef.current,
+        replaceRange,
       }),
-      [insertText],
+      [insertText, replaceRange],
     );
 
     return (

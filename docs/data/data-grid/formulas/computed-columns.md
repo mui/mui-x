@@ -64,6 +64,7 @@ The editor asks for a name, a field, a formula, a result type, and—for numbers
 The field is derived from the name until you edit it and cannot be changed once the column exists.
 While you type the formula, the referenced cells of the preview row are outlined in the grid and the result is previewed below the formula, formatted like the cells, including errors.
 The **Insert** pane under the formula lists the columns and the functions you can reference; click one to insert it at the caret.
+With the [`formulaReferencePicking`](/x/react-data-grid/formulas/#reference-picking) prop, clicking a cell of the grid while the formula has the focus also writes the field of its column at the caret.
 The column is created or updated when you click **Add column** or **Apply**, or press <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> (<kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">Enter</kbd></kbd> on macOS).
 <kbd class="key">Escape</kbd> discards the draft.
 

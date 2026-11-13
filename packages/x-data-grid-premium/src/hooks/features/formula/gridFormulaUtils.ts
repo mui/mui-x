@@ -85,6 +85,7 @@ export function createFormulaInternalCache(
     plainEditDraft: null,
     editorSession: null,
     focusSafeElements: new Set(),
+    referencePick: { editables: new Set(), gesture: null, pending: null },
   };
 }
 

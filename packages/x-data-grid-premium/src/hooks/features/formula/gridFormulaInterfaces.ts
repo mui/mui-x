@@ -9,6 +9,8 @@ import type { GridStateColDef } from '@mui/x-data-grid/internals';
 import type { FormulaExcelExportLayout, ExcelFormulaCell } from './gridFormulaExcelExport';
 import type { GridComputedErrorRowPredicate } from './createComputedColDef';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { GridFormulaEditableHandle } from '../../../components/GridFormulaEditable';
+import type { FormulaReferenceTarget } from './gridFormulaReferenceHighlights';
 import type {
   GridComputedColumnDefinition,
   GridComputedColumnsModel,
@@ -25,6 +27,7 @@ import type {
   FormulaFunctionRegistry,
   FormulaParseResult,
   FormulaParser,
+  FormulaPendingPick,
   FormulaPositionContext,
   FormulaResult,
   FormulaValidationIssue,
@@ -84,6 +87,62 @@ export interface GridFormulaActiveEdit {
    * highlighting derives from this text instead of the cell's edit state.
    */
   draft?: string;
+  /**
+   * The target of the reference written by the last picking click, while the
+   * next click still replaces it. Its rectangle is drawn solid, also when the
+   * formula text does not parse yet.
+   */
+  pendingReference?: FormulaReferenceTarget;
+}
+
+/**
+ * A formula editable that can receive picked references, registered by its
+ * host while it is mounted.
+ */
+export interface GridFormulaPickEditable {
+  /**
+   * The surface hosting the editable: the editor of the cell, the formula bar,
+   * or the editor of the computed columns panel. The formula of the panel is
+   * the one of a whole column: a pick writes the name of the clicked column,
+   * whatever the row, and never a range.
+   */
+  kind: 'cell' | 'bar' | 'panel';
+  /**
+   * @returns {GridFormulaEditableHandle | null} The imperative handle of the editable, or `null` when it is not mounted.
+   */
+  getHandle: () => GridFormulaEditableHandle | null;
+  /**
+   * The cell the edited formula belongs to. For the panel: the cell of the
+   * edited column in the preview row.
+   */
+  ownerCell: { id: GridRowId; field: string };
+  /**
+   * `true` when the editable shows the A1 dialect.
+   */
+  a1Notation: boolean;
+}
+
+export interface GridFormulaReferencePickSession {
+  editables: Set<GridFormulaPickEditable>;
+  /**
+   * The pointer gesture of the last cell mousedown, when it picked a
+   * reference: `'down'` until the button is released, then `'up'` until the
+   * next cell mousedown or the end of the edit. `null` otherwise.
+   */
+  gesture: 'down' | 'up' | null;
+  /**
+   * The reference written by the last pick, which the next pick replaces, with
+   * the cell whose formula holds it. `anchor` is the cell the reference starts
+   * from: a drag or a Shift+click turns the reference into the range between
+   * the anchor and the cell under the pointer.
+   */
+  pending: {
+    id: GridRowId;
+    field: string;
+    pick: FormulaPendingPick;
+    target: FormulaReferenceTarget;
+    anchor: { field: string; rowId: GridRowId };
+  } | null;
 }
 
 export interface GridFormulaState {
@@ -383,6 +442,11 @@ export interface GridFormulaInternalCache {
    * registration follows the element lifecycle.
    */
   focusSafeElements: Set<Element>;
+  /**
+   * The reference picking session: clicking a cell while a formula is edited
+   * writes a reference to that cell into the formula.
+   */
+  referencePick: GridFormulaReferencePickSession;
   /**
    * The text currently typed in a formula editing surface (the cell editor or
    * the bar's edit-mode mirror) together with the edit-state value it parsed

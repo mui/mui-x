@@ -1,11 +1,13 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { platform } from '@base-ui/utils/platform';
 import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
 import { getCell, microtasks } from 'test/utils/helperFn';
 import {
   DataGridPremium,
   Toolbar,
+  gridClasses,
   gridFocusCellSelector,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
@@ -15,7 +17,7 @@ import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
 import type { GridPrivateApiPremium } from '../models/gridApiPremium';
-import { setCaretOffset } from '../components/formulaEditorCaret';
+import { getSelectionOffsets, setCaretOffset } from '../components/formulaEditorCaret';
 
 const baselineProps: DataGridPremiumProps = {
   autoHeight: isJSDOM,
@@ -479,6 +481,533 @@ describe('<DataGridPremium /> - Formula bar', () => {
       await microtasks();
       expect(apiRef.current!.getCellMode(0, 'total')).to.equal('edit');
       expect(gridFocusCellSelector(privateApi())).to.deep.equal({ id: 0, field: 'total' });
+    });
+  });
+
+  describe('reference picking', () => {
+    const PICKING_CLASS = gridClasses['root--formulaReferencePicking'];
+    const RECT_CLASS = 'MuiDataGrid-formulaReferenceHighlight';
+    const PENDING_CLASS = 'MuiDataGrid-formulaReferenceHighlight--pending';
+
+    const isPickingClassOn = () =>
+      document.querySelector(`.${gridClasses.root}`)!.classList.contains(PICKING_CLASS);
+    const rects = () => document.querySelectorAll(`.${RECT_CLASS}`);
+    const pendingRects = () => document.querySelectorAll(`.${PENDING_CLASS}`);
+    // By field: the A1 notation adds a row number column, which shifts the column indexes.
+    const cellOf = (id: number, field: string) => apiRef.current!.getCellElement(id, field)!;
+    const getCellEditable = () =>
+      document.querySelector<HTMLElement>('.MuiDataGrid-formulaEditorSurface [contenteditable]');
+
+    /**
+     * Sets the text of the focused bar and puts the caret at `caret` (the end by default).
+     */
+    function typeInFocusedBar(text: string, caret = text.length) {
+      typeInBar(text);
+      const editable = getBarEditable();
+      act(() => setCaretOffset(editable, caret));
+      // Typing ends with the release of the key, which is when the editable reads the caret.
+      fireEvent.keyUp(editable, { key: text.slice(-1) });
+    }
+
+    /**
+     * Focuses the Total cell of the row, then the bar, and replaces the text of the bar.
+     */
+    function draftInBar(id: number, text: string, caret?: number) {
+      focusCell(id, 'total');
+      clickIntoBar();
+      typeInFocusedBar(text, caret);
+    }
+
+    /**
+     * Starts editing the Total cell of the row, moves the focus to the bar and
+     * replaces the text of the bar.
+     */
+    async function mirrorInBar(id: number, text: string, caret?: number) {
+      focusCell(id, 'total');
+      act(() => {
+        apiRef.current!.startCellEditMode({ id, field: 'total' });
+      });
+      await waitFor(() => {
+        expect(getCellEditable()).not.to.equal(null);
+      });
+      clickIntoBar();
+      typeInFocusedBar(text, caret);
+    }
+
+    describe.each([
+      { dialect: 'A1 notation', a1Notation: true, otherRowPrice: 'B2', otherRowQuantity: 'C3' },
+      {
+        dialect: 'canonical',
+        a1Notation: false,
+        otherRowPrice: 'REF(COLUMN("price"), ROW(1))',
+        otherRowQuantity: 'REF(COLUMN("quantity"), ROW(2))',
+      },
+    ])('draft, $dialect', ({ a1Notation, otherRowPrice, otherRowQuantity }) => {
+      it('writes a reference to the clicked cell into the draft and keeps the focus', async () => {
+        const { user } = render(<Test formulaReferencePicking formulaA1Notation={a1Notation} />);
+        await microtasks();
+        draftInBar(0, '=10+');
+        await user.click(cellOf(1, 'price'));
+
+        expect(getBarEditable().textContent).to.equal(`=10+${otherRowPrice}`);
+        expect(document.activeElement).to.equal(getBarEditable());
+        // Nothing is committed, and the grid focus stays on the cell of the draft.
+        expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
+        expect(apiRef.current!.getCellMode(0, 'total')).to.equal('view');
+        expect(gridFocusCellSelector(privateApi())).to.deep.equal({ id: 0, field: 'total' });
+        expect(privateApi().current.state.formula.activeEdit?.draft).to.equal(
+          `=10+${otherRowPrice}`,
+        );
+      });
+
+      it('writes the range of a drag into the draft and keeps the focus', async () => {
+        render(<Test formulaReferencePicking formulaA1Notation={a1Notation} />);
+        await microtasks();
+        draftInBar(0, '=SUM(');
+        fireEvent.mouseDown(cellOf(1, 'price'));
+        fireEvent.mouseOver(cellOf(2, 'quantity'));
+        fireEvent.mouseUp(cellOf(2, 'quantity'));
+
+        // The draft is the formula of D1: B2 is 2 columns to its left and 1 row below.
+        const range = a1Notation
+          ? 'B2:C3'
+          : 'RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(1)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(2)))';
+        expect(getBarEditable().textContent).to.equal(`=SUM(${range}`);
+        expect(document.activeElement).to.equal(getBarEditable());
+        expect(apiRef.current!.getCellMode(0, 'total')).to.equal('view');
+        expect(gridFocusCellSelector(privateApi())).to.deep.equal({ id: 0, field: 'total' });
+        expect(pendingRects()).to.have.length(1);
+      });
+
+      it('extends the picked reference with Shift+click and adds one with Ctrl/Cmd+click', async () => {
+        const { user } = render(<Test formulaReferencePicking formulaA1Notation={a1Notation} />);
+        await microtasks();
+        draftInBar(0, '=SUM(');
+        await user.click(cellOf(1, 'price'));
+        const shiftTarget = cellOf(2, 'quantity');
+        fireEvent.mouseDown(shiftTarget, { shiftKey: true });
+        fireEvent.mouseUp(shiftTarget, { shiftKey: true });
+        fireEvent.click(shiftTarget, { shiftKey: true });
+        const appendKey = platform.os.mac ? { metaKey: true } : { ctrlKey: true };
+        const appendTarget = cellOf(0, 'price');
+        fireEvent.mouseDown(appendTarget, appendKey);
+        fireEvent.mouseUp(appendTarget, appendKey);
+        fireEvent.click(appendTarget, appendKey);
+
+        const range = a1Notation
+          ? 'B2:C3'
+          : 'RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(1)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(2)))';
+        expect(getBarEditable().textContent).to.equal(`=SUM(${range}, price`);
+        expect(document.activeElement).to.equal(getBarEditable());
+        expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
+      });
+
+      it('replaces the reference of the previous click', async () => {
+        const { user } = render(<Test formulaReferencePicking formulaA1Notation={a1Notation} />);
+        await microtasks();
+        draftInBar(0, '=SUM(');
+        await user.click(cellOf(1, 'price'));
+        await user.click(cellOf(2, 'quantity'));
+
+        expect(getBarEditable().textContent).to.equal(`=SUM(${otherRowQuantity}`);
+        expect(document.activeElement).to.equal(getBarEditable());
+      });
+
+      it('writes the field name for a cell of the row of the formula', async () => {
+        const { user } = render(<Test formulaReferencePicking formulaA1Notation={a1Notation} />);
+        await microtasks();
+        draftInBar(0, '=2*');
+        await user.click(cellOf(0, 'price'));
+
+        expect(getBarEditable().textContent).to.equal('=2*price');
+      });
+
+      it('replaces the reference the caret is on', async () => {
+        const { user } = render(<Test formulaReferencePicking formulaA1Notation={a1Notation} />);
+        await microtasks();
+        // The bar shows `=price * quantity`, the caret is at its end, no draft yet.
+        focusCell(0, 'total');
+        clickIntoBar();
+        fireEvent.keyUp(getBarEditable(), { key: 'End' });
+        await user.click(cellOf(2, 'quantity'));
+
+        expect(getBarEditable().textContent).to.equal(`=price * ${otherRowQuantity}`);
+        expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
+      });
+
+      it('commits the picked reference with Enter', async () => {
+        const { user } = render(<Test formulaReferencePicking formulaA1Notation={a1Notation} />);
+        await microtasks();
+        draftInBar(0, '=');
+        await user.click(cellOf(1, 'price'));
+        fireEvent.keyDown(getBarEditable(), { key: 'Enter' });
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRow(0).total).to.equal('=REF(COLUMN("price"), ROW(1))');
+        });
+        expect(cellOf(0, 'total').textContent).to.equal('1');
+        expect(gridFocusCellSelector(privateApi())).to.deep.equal({ id: 1, field: 'total' });
+      });
+
+      it('discards the picked reference with Escape', async () => {
+        const { user } = render(<Test formulaReferencePicking formulaA1Notation={a1Notation} />);
+        await microtasks();
+        draftInBar(0, '=');
+        await user.click(cellOf(1, 'price'));
+        fireEvent.keyDown(getBarEditable(), { key: 'Escape' });
+
+        expect(getBarEditable().textContent).to.equal('=price * quantity');
+        expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
+        expect(privateApi().current.caches.formula!.referencePick.pending).to.equal(null);
+      });
+    });
+
+    describe('draft, clicks that are not picks', () => {
+      it('commits the draft when the caret is not where a reference fits', async () => {
+        const { user } = render(<Test formulaReferencePicking />);
+        await microtasks();
+        draftInBar(0, '=1+1');
+        await user.click(cellOf(1, 'price'));
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRow(0).total).to.equal('=1+1');
+        });
+        expect(gridFocusCellSelector(privateApi())).to.deep.equal({ id: 1, field: 'price' });
+        expect(getBarEditable().textContent).to.equal('1');
+      });
+
+      it('commits the draft when the prop is off', async () => {
+        const { user } = render(<Test />);
+        await microtasks();
+        draftInBar(0, '=10+');
+        expect(isPickingClassOn()).to.equal(false);
+        await user.click(cellOf(1, 'price'));
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRow(0).total).to.equal('=10+');
+        });
+        expect(gridFocusCellSelector(privateApi())).to.deep.equal({ id: 1, field: 'price' });
+      });
+
+      it('commits the draft of a column without formulas', async () => {
+        const { user } = render(<Test formulaReferencePicking />);
+        await microtasks();
+        focusCell(0, 'price');
+        clickIntoBar();
+        typeInFocusedBar('7');
+        expect(isPickingClassOn()).to.equal(false);
+        await user.click(cellOf(1, 'quantity'));
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRow(0).price).to.equal(7);
+        });
+        expect(gridFocusCellSelector(privateApi())).to.deep.equal({ id: 1, field: 'quantity' });
+      });
+
+      it('moves the focus when the bar is read-only', async () => {
+        const { user } = render(<Test formulaReferencePicking isCellEditable={() => false} />);
+        await microtasks();
+        focusCell(0, 'total');
+        // A read-only bar takes the focus in jsdom only; a browser leaves it where it is.
+        clickIntoBar();
+        expect(isPickingClassOn()).to.equal(false);
+        await user.click(cellOf(1, 'price'));
+
+        expect(gridFocusCellSelector(privateApi())).to.deep.equal({ id: 1, field: 'price' });
+        expect(getBarEditable().textContent).to.equal('1');
+        expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
+      });
+
+      it('commits the draft on a click on the cell of the draft', async () => {
+        const { user } = render(<Test formulaReferencePicking />);
+        await microtasks();
+        draftInBar(0, '=10+');
+        await user.click(cellOf(0, 'total'));
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRow(0).total).to.equal('=10+');
+        });
+      });
+    });
+
+    describe('draft, grid state', () => {
+      it('does not change the row selection or start an edit', async () => {
+        const onRowSelectionModelChange = vi.fn();
+        const onCellEditStart = vi.fn();
+        const { user } = render(
+          <Test
+            formulaReferencePicking
+            onRowSelectionModelChange={onRowSelectionModelChange}
+            onCellEditStart={onCellEditStart}
+          />,
+        );
+        await microtasks();
+        draftInBar(0, '=');
+        await user.dblClick(cellOf(1, 'price'));
+
+        expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+        expect(onCellEditStart.mock.calls.length).to.equal(0);
+        expect(apiRef.current!.getCellMode(1, 'price')).to.equal('view');
+        expect(document.activeElement).to.equal(getBarEditable());
+      });
+
+      it('starts over with the next draft', async () => {
+        const { user } = render(<Test formulaReferencePicking formulaA1Notation />);
+        await microtasks();
+        draftInBar(0, '=');
+        await user.click(cellOf(1, 'price'));
+        fireEvent.keyDown(getBarEditable(), { key: 'Escape' });
+
+        // The same text again: the reference of the discarded draft is not pending any more.
+        draftInBar(0, '=B2');
+        await waitFor(() => {
+          expect(rects()).to.have.length(1);
+        });
+        expect(pendingRects()).to.have.length(0);
+      });
+    });
+
+    describe('draft, visual feedback', () => {
+      it('marks the picked reference until something is typed', async () => {
+        const { user } = render(<Test formulaReferencePicking />);
+        await microtasks();
+        draftInBar(0, '=SUM(');
+        expect(isPickingClassOn()).to.equal(true);
+        expect(rects()).to.have.length(0);
+
+        // The canonical text does not parse yet: the rectangle comes from the pick.
+        await user.click(cellOf(1, 'price'));
+        await waitFor(() => {
+          expect(pendingRects()).to.have.length(1);
+        });
+        expect(rects()).to.have.length(1);
+        expect(isPickingClassOn()).to.equal(true);
+
+        typeInFocusedBar('=SUM(REF(COLUMN("price"), ROW(1)))');
+        await waitFor(() => {
+          expect(pendingRects()).to.have.length(0);
+        });
+        expect(rects()).to.have.length(1);
+        expect(isPickingClassOn()).to.equal(false);
+      });
+
+      it('is removed when the draft is discarded', async () => {
+        const { user } = render(<Test formulaReferencePicking />);
+        await microtasks();
+        draftInBar(0, '=SUM(');
+        await user.click(cellOf(1, 'price'));
+        await waitFor(() => {
+          expect(pendingRects()).to.have.length(1);
+        });
+        fireEvent.keyDown(getBarEditable(), { key: 'Escape' });
+
+        await waitFor(() => {
+          expect(rects()).to.have.length(0);
+        });
+        expect(isPickingClassOn()).to.equal(false);
+      });
+
+      it('is removed when the draft is committed', async () => {
+        const { user } = render(<Test formulaReferencePicking />);
+        await microtasks();
+        draftInBar(0, '=');
+        await user.click(cellOf(1, 'price'));
+        await waitFor(() => {
+          expect(pendingRects()).to.have.length(1);
+        });
+        fireEvent.keyDown(getBarEditable(), { key: 'Enter' });
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRow(0).total).to.equal('=REF(COLUMN("price"), ROW(1))');
+        });
+        expect(rects()).to.have.length(0);
+        expect(isPickingClassOn()).to.equal(false);
+      });
+    });
+
+    describe.each([
+      { dialect: 'A1 notation', a1Notation: true, otherRowPrice: 'B2', otherRowQuantity: 'C3' },
+      {
+        dialect: 'canonical',
+        a1Notation: false,
+        otherRowPrice: 'REF(COLUMN("price"), ROW(1))',
+        otherRowQuantity: 'REF(COLUMN("quantity"), ROW(2))',
+      },
+    ])('mirror, $dialect', ({ a1Notation, otherRowPrice, otherRowQuantity }) => {
+      it('writes the reference into the cell edit and keeps it open', async () => {
+        const { user } = render(<Test formulaReferencePicking formulaA1Notation={a1Notation} />);
+        await microtasks();
+        await mirrorInBar(0, '=10+');
+        await user.click(cellOf(1, 'price'));
+
+        expect(getBarEditable().textContent).to.equal(`=10+${otherRowPrice}`);
+        expect(privateApi().current.state.editRows[0]?.total?.value).to.equal(
+          `=10+${otherRowPrice}`,
+        );
+        await waitFor(() => {
+          expect(getCellEditable()!.textContent).to.equal(`=10+${otherRowPrice}`);
+        });
+        expect(apiRef.current!.getCellMode(0, 'total')).to.equal('edit');
+        expect(document.activeElement).to.equal(getBarEditable());
+        expect(gridFocusCellSelector(privateApi())).to.deep.equal({ id: 0, field: 'total' });
+      });
+
+      it('replaces the reference of the previous click', async () => {
+        const { user } = render(<Test formulaReferencePicking formulaA1Notation={a1Notation} />);
+        await microtasks();
+        await mirrorInBar(0, '=');
+        await user.click(cellOf(1, 'price'));
+        await user.click(cellOf(2, 'quantity'));
+
+        expect(getBarEditable().textContent).to.equal(`=${otherRowQuantity}`);
+        expect(apiRef.current!.getCellMode(0, 'total')).to.equal('edit');
+      });
+
+      it('commits the picked reference with Enter', async () => {
+        const { user } = render(<Test formulaReferencePicking formulaA1Notation={a1Notation} />);
+        await microtasks();
+        await mirrorInBar(0, '=');
+        await user.click(cellOf(1, 'price'));
+        fireEvent.keyDown(getBarEditable(), { key: 'Enter' });
+
+        await waitFor(() => {
+          expect(apiRef.current!.getCellMode(0, 'total')).to.equal('view');
+        });
+        expect(apiRef.current!.getRow(0).total).to.equal('=REF(COLUMN("price"), ROW(1))');
+      });
+    });
+
+    describe('mirror', () => {
+      it('marks the picked reference, and clears it when the edit is cancelled', async () => {
+        const { user } = render(<Test formulaReferencePicking />);
+        await microtasks();
+        await mirrorInBar(0, '=SUM(');
+        expect(isPickingClassOn()).to.equal(true);
+        await user.click(cellOf(1, 'price'));
+        await waitFor(() => {
+          expect(pendingRects()).to.have.length(1);
+        });
+
+        fireEvent.keyDown(getBarEditable(), { key: 'Escape' });
+        await waitFor(() => {
+          expect(apiRef.current!.getCellMode(0, 'total')).to.equal('view');
+        });
+        expect(rects()).to.have.length(0);
+        expect(isPickingClassOn()).to.equal(false);
+        expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
+      });
+
+      it('ends the edit when the caret is not where a reference fits', async () => {
+        const { user } = render(<Test formulaReferencePicking />);
+        await microtasks();
+        await mirrorInBar(0, '=1+1');
+        await user.click(cellOf(1, 'price'));
+
+        await waitFor(() => {
+          expect(apiRef.current!.getCellMode(0, 'total')).to.equal('view');
+        });
+        expect(apiRef.current!.getRow(0).total).to.equal('=1+1');
+        expect(gridFocusCellSelector(privateApi())).to.deep.equal({ id: 1, field: 'price' });
+      });
+
+      it('ends the edit when the prop is off', async () => {
+        const { user } = render(<Test />);
+        await microtasks();
+        await mirrorInBar(0, '=10+');
+        await user.click(cellOf(1, 'price'));
+
+        await waitFor(() => {
+          expect(apiRef.current!.getCellMode(0, 'total')).to.equal('view');
+        });
+        expect(gridFocusCellSelector(privateApi())).to.deep.equal({ id: 1, field: 'price' });
+      });
+
+      it('is not a destination of picked references while read-only in row edit mode', async () => {
+        render(<Test formulaReferencePicking editMode="row" />);
+        await microtasks();
+        const barIsRegistered = () =>
+          Array.from(privateApi().current.caches.formula!.referencePick.editables).some(
+            (editable) => editable.kind === 'bar',
+          );
+        focusCell(0, 'total');
+        expect(barIsRegistered()).to.equal(true);
+
+        act(() => {
+          apiRef.current!.startRowEditMode({ id: 0, fieldToFocus: 'total' });
+        });
+        await waitFor(() => {
+          expect(getCellEditable()).not.to.equal(null);
+        });
+        expect(getBarEditable().getAttribute('aria-readonly')).to.equal('true');
+        expect(barIsRegistered()).to.equal(false);
+      });
+    });
+
+    // A real pointer: the browser moves the focus on mousedown unless the grid prevents it.
+    describe.skipIf(isJSDOM)('real pointer events', () => {
+      async function realClick(element: Element) {
+        const { userEvent } = await import('vitest/browser');
+        const previousActEnvironment = globalThis.IS_REACT_ACT_ENVIRONMENT;
+        globalThis.IS_REACT_ACT_ENVIRONMENT = false;
+        try {
+          await userEvent.click(element);
+        } finally {
+          globalThis.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
+        }
+      }
+
+      it('keeps the DOM focus and the caret in the bar after a pick into a draft', async () => {
+        render(<Test formulaReferencePicking formulaA1Notation />);
+        await microtasks();
+        draftInBar(0, '=10+');
+        await realClick(cellOf(1, 'price'));
+
+        await waitFor(() => {
+          expect(getBarEditable().textContent).to.equal('=10+B2');
+        });
+        expect(document.activeElement).to.equal(getBarEditable());
+        expect(getSelectionOffsets(getBarEditable())).to.deep.equal({ start: 6, end: 6 });
+        expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
+
+        await realClick(cellOf(2, 'quantity'));
+        await waitFor(() => {
+          expect(getBarEditable().textContent).to.equal('=10+C3');
+        });
+        expect(document.activeElement).to.equal(getBarEditable());
+        expect(gridFocusCellSelector(privateApi())).to.deep.equal({ id: 0, field: 'total' });
+      });
+
+      it('keeps the cell edit open after a pick from the bar', async () => {
+        render(<Test formulaReferencePicking formulaA1Notation />);
+        await microtasks();
+        await mirrorInBar(0, '=10+');
+        await realClick(cellOf(1, 'price'));
+
+        await waitFor(() => {
+          expect(getBarEditable().textContent).to.equal('=10+B2');
+        });
+        expect(document.activeElement).to.equal(getBarEditable());
+        expect(apiRef.current!.getCellMode(0, 'total')).to.equal('edit');
+        expect(getCellEditable()!.textContent).to.equal('=10+B2');
+      });
+
+      it('draws the pending rectangle over the picked cell', async () => {
+        render(<Test formulaReferencePicking />);
+        await microtasks();
+        draftInBar(0, '=SUM(');
+        await realClick(cellOf(1, 'price'));
+        await waitFor(() => {
+          expect(pendingRects()).to.have.length(1);
+        });
+
+        const rect = pendingRects()[0].getBoundingClientRect();
+        const target = cellOf(1, 'price').getBoundingClientRect();
+        expect(rect.left).to.be.closeTo(target.left, 1);
+        expect(rect.top).to.be.closeTo(target.top, 1);
+        expect(rect.width).to.be.closeTo(target.width, 1);
+        expect(rect.height).to.be.closeTo(target.height, 1);
+        expect(getComputedStyle(pendingRects()[0]).borderTopStyle).to.equal('solid');
+      });
     });
   });
 

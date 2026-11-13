@@ -33,6 +33,12 @@ import { getFormulaExpression, isFormulaSource } from '../../hooks/features/form
 import type { FormulaSourceSpan } from '../../hooks/features/formula/engine';
 import { previewFormulaResult } from '../../hooks/features/formula/gridFormulaPreview';
 import { gridFormulaActiveEditSelector } from '../../hooks/features/formula/gridFormulaSelectors';
+import {
+  getFormulaPendingPickOf,
+  isFormulaReferencePickingEnabled,
+  registerFormulaPickEditable,
+  syncFormulaPickFeedback,
+} from '../../hooks/features/formula/gridFormulaReferencePicking';
 import { coerceComputedResult } from '../../hooks/features/formula/gridComputedColumnsRuntime';
 import {
   applyComputedColDefOverrides,
@@ -41,6 +47,7 @@ import {
 } from '../../hooks/features/formula/createComputedColDef';
 import type {
   GridFormulaActiveEdit,
+  GridFormulaPickEditable,
   GridFormulaResult,
 } from '../../hooks/features/formula/gridFormulaInterfaces';
 import { GridFormulaEditable, isComposingKeyEvent } from '../GridFormulaEditable';
@@ -487,6 +494,7 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
   const [storedDefinition, setStoredDefinition] = React.useState(session.definition);
   const isEditing = storedDefinition !== null;
   const a1Notation = Boolean(rootProps.formulaA1Notation);
+  const referencePicking = isFormulaReferencePickingEnabled(rootProps);
 
   const [draft, setDraft] = React.useState<EditorDraft>(() => createDraft(storedDefinition));
   // The derived field stops following the name once the user edits it.
@@ -800,7 +808,45 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
       field: ownerField,
       draft: draft.formula,
     });
-  }, [apiRef, activeEdit, previewRowId, ownerField, draft.formula]);
+    // The entry was replaced: the pending reference of a pick goes back on it.
+    syncFormulaPickFeedback(apiRef, referencePicking);
+  }, [apiRef, activeEdit, previewRowId, ownerField, draft.formula, referencePicking]);
+
+  // ----- Reference picking -----
+
+  // Picked references (a click on a cell while the formula has the focus) are written into
+  // the formula, as the name of the clicked column. A read-only formula takes no text.
+  const pickOwnerCell = React.useMemo(
+    () => (previewRowId === null ? null : { id: previewRowId, field: ownerField }),
+    [previewRowId, ownerField],
+  );
+  React.useEffect(() => {
+    if (readOnly || pickOwnerCell === null) {
+      return undefined;
+    }
+    const editable: GridFormulaPickEditable = {
+      kind: 'panel',
+      getHandle: () => editableRef.current,
+      ownerCell: pickOwnerCell,
+      a1Notation,
+    };
+    const session = apiRef.current.caches.formula!.referencePick;
+    const unregister = registerFormulaPickEditable(apiRef, editable);
+    return () => {
+      unregister();
+      // The session of this formula ends with it: the editor closed, was locked, or its
+      // formula now belongs to another cell (the preview row or the field changed).
+      if (getFormulaPendingPickOf(apiRef, editable) !== null) {
+        session.pending = null;
+        // The click of that pick was handled: a later click without a mousedown (keyboard,
+        // programmatic) must not be taken for it.
+        if (session.gesture === 'up') {
+          session.gesture = null;
+        }
+      }
+      syncFormulaPickFeedback(apiRef, referencePicking);
+    };
+  }, [apiRef, readOnly, pickOwnerCell, a1Notation, referencePicking]);
 
   React.useEffect(() => {
     const api = apiRef.current;
@@ -1114,7 +1160,7 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
             <GridFormulaEditable
               ref={editableRef}
               value={draft.formula}
-              ownerCell={previewRowId === null ? null : { id: previewRowId, field: ownerField }}
+              ownerCell={pickOwnerCell}
               a1Notation={a1Notation}
               suggestionsEnabled={!rootProps.disableFormulaAutocomplete && !readOnly}
               readOnly={readOnly}

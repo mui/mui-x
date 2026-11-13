@@ -96,6 +96,8 @@ import {
   validateComputedColumnDefinition,
 } from './gridComputedColumnsValidation';
 import type { GridComputedColumnsPrivateApi } from '../computedColumns/gridComputedColumnsInterfaces';
+import { useGridFormulaReferencePicking } from './useGridFormulaReferencePicking';
+import { clearFormulaPickSession } from './gridFormulaReferencePicking';
 
 export const formulaStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'formulaFunctions' | 'disableFormulas' | 'dataSource'>,
@@ -411,6 +413,7 @@ export const useGridFormula = (
     | 'formulaFunctions'
     | 'dataSource'
     | 'formulaA1Notation'
+    | 'formulaReferencePicking'
     | 'disableComputedColumns'
     | 'computedColDef'
     | 'filterMode'
@@ -1104,6 +1107,7 @@ export const useGridFormula = (
     // every path that never publishes `cellEditStop`.
     cache.editorSession = null;
     cache.plainEditDraft = null;
+    clearFormulaPickSession(apiRef);
     // Turn off reference highlighting (the editor set it on mount; this is the
     // only thing that clears it — the editor unmounting from virtualization
     // must not).
@@ -1133,6 +1137,23 @@ export const useGridFormula = (
     ) {
       cache.plainEditDraft = null;
     }
+    const { pending } = cache.referencePick;
+    // A reference picked into a draft of the formula bar belongs to a cell in
+    // view mode: the bar ends that session itself, with its draft.
+    const activeEdit = gridFormulaActiveEditSelector(apiRef);
+    const isBarDraft =
+      pending !== null &&
+      activeEdit !== null &&
+      activeEdit.draft !== undefined &&
+      activeEdit.id === pending.id &&
+      activeEdit.field === pending.field;
+    if (
+      pending !== null &&
+      !isBarDraft &&
+      apiRef.current.getCellMode(pending.id, pending.field) !== GridCellModes.Edit
+    ) {
+      clearFormulaPickSession(apiRef);
+    }
   }, [apiRef]);
 
   // Arm the A1 paste origin: the first cell of the batch sets it, the rest
@@ -1154,6 +1175,12 @@ export const useGridFormula = (
   // the edit mid-typing.
   const canUpdateFocus = React.useCallback<GridPipeProcessor<'canUpdateFocus'>>(
     (initialValue, { event }) => {
+      // The button of a reference picking click is still down: the mousedown was
+      // skipped by the focus listener, so this mouseup comes without a clicked cell
+      // and would clear the cell focus, which ends the edit.
+      if (apiRef.current.caches.formula!.referencePick.gesture === 'down') {
+        return false;
+      }
       const target = event.target as Element | null;
       if (target === null || typeof target.closest !== 'function') {
         return initialValue;
@@ -1229,6 +1256,9 @@ export const useGridFormula = (
     [computedColumnsEnabled],
   );
   useGridRegisterPipeProcessor(apiRef, 'sidebar', addComputedColumnsPanel);
+
+  // Before the listeners below: a picking double-click must not open the computed column editor.
+  useGridFormulaReferencePicking(apiRef, props);
 
   useGridEvent(apiRef, 'rowsSet', handleRowsSet);
   useGridEvent(apiRef, 'sortedRowsSet', handleSortedRowsSet);

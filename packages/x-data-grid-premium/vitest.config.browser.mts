@@ -27,6 +27,7 @@ export default mergeConfig(
         '**/hooks/features/formula/createFormulaEvaluation.test.ts',
         '**/hooks/features/formula/gridFormulaAutocomplete.test.tsx',
         '**/hooks/features/formula/gridFormulaPreview.test.tsx',
+        '**/hooks/features/formula/gridFormulaReferencePicking.test.tsx',
         '**/hooks/features/formula/gridComputedColumnsRuntime.test.ts',
         '**/hooks/features/formula/gridComputedColumnsValidation.test.ts',
         '**/hooks/features/computedColumns/deriveComputedColumnField.test.ts',

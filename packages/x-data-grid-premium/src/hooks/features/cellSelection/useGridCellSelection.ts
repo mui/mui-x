@@ -62,6 +62,29 @@ const AUTO_SCROLL_SENSITIVITY = 50; // The distance from the edge to start scrol
 const AUTO_SCROLL_SPEED = 20; // The speed to scroll once the mouse enters the sensitivity area
 const FILL_HANDLE_HIT_AREA = 16; // px — size of the interactive hit area for the fill handle
 
+/**
+ * `true` when the pointer is on the fill handle of the cell: the cell shows
+ * the handle (`::after` pseudo-element) and the pointer is near its inline-end
+ * bottom corner, within the hit area.
+ */
+export function isPointerOnFillHandle(
+  cellElement: Element | null,
+  event: { clientX: number; clientY: number },
+  isRtl: boolean,
+): boolean {
+  if (!cellElement || !cellElement.classList.contains(gridClasses['cell--withFillHandle'])) {
+    return false;
+  }
+  const rect = cellElement.getBoundingClientRect();
+  return (
+    (isRtl
+      ? event.clientX <= rect.left + FILL_HANDLE_HIT_AREA
+      : event.clientX >= rect.right - FILL_HANDLE_HIT_AREA) &&
+    event.clientY >= rect.bottom - FILL_HANDLE_HIT_AREA &&
+    event.clientY >= rect.top // Ensure the pointer is within the cell bounds
+  );
+}
+
 function getSelectedOrFocusedCells(
   apiRef: RefObject<GridPrivateApiPremium>,
 ): GridCellCoordinates[] {
@@ -907,25 +930,7 @@ export const useGridCellSelection = (
         return;
       }
       const cellElement = apiRef.current.getCellElement(params.id, params.field);
-      if (!cellElement || !cellElement.classList.contains(gridClasses['cell--withFillHandle'])) {
-        return;
-      }
-
-      const rect = cellElement.getBoundingClientRect();
-      const clickX = event.clientX;
-      const clickY = event.clientY;
-
-      const isRtl = apiRef.current.state.isRtl;
-
-      // Check if click is near the inline-end bottom corner (within hit area)
-      const isNearHandle =
-        (isRtl
-          ? clickX <= rect.left + FILL_HANDLE_HIT_AREA
-          : clickX >= rect.right - FILL_HANDLE_HIT_AREA) &&
-        clickY >= rect.bottom - FILL_HANDLE_HIT_AREA &&
-        clickY >= rect.top; // Ensure click is within cell bounds
-
-      if (!isNearHandle) {
+      if (!isPointerOnFillHandle(cellElement, event, apiRef.current.state.isRtl)) {
         return;
       }
 

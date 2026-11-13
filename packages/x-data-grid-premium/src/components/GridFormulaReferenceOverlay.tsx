@@ -20,6 +20,7 @@ import { gridFormulaActiveEditSelector } from '../hooks/features/formula/gridFor
 import {
   getFormulaReferenceColorVar,
   getFormulaReferencePaletteStyles,
+  getFormulaReferenceTargetKey,
   useGridFormulaReferenceModel,
 } from '../hooks/features/formula/gridFormulaReferenceHighlights';
 import type {
@@ -52,12 +53,18 @@ const GridFormulaReferenceOverlayRoot = styled('div')(({ theme }) => ({
   '@media (forced-colors: active)': { display: 'none' },
 }));
 
+const PENDING_RECT_CLASS = 'MuiDataGrid-formulaReferenceHighlight--pending';
+
 const GridFormulaReferenceOverlayRect = styled('div')({
   position: 'absolute',
   top: 0,
   left: 0,
   boxSizing: 'border-box',
   border: '1px dashed',
+  // The reference the next picking click replaces.
+  [`&.${PENDING_RECT_CLASS}`]: {
+    borderStyle: 'solid',
+  },
 });
 
 const selectFirstRenderedRowTop = (
@@ -73,6 +80,10 @@ interface OverlayRect {
   width: number;
   height: number;
   colorIndex: number;
+  /**
+   * The rectangle of the reference written by the last picking click.
+   */
+  pending: boolean;
 }
 
 interface ColumnSpan {
@@ -90,6 +101,11 @@ interface RowSpan {
  * one rect per distinct target (a cell referenced twice → one rectangle).
  * Pinned-column targets and references off the current page are skipped (no rect)
  * — graceful degradation matching the documented limitations.
+ *
+ * `pendingTarget` is the reference written by the last picking click. It is
+ * flagged on the rectangle of its reference, and gets a rectangle of its own
+ * when the references do not hold it: a half-typed formula that does not parse
+ * yields no reference at all.
  */
 function computeOverlayRects(
   apiRef: RefObject<GridPrivateApiPremium>,
@@ -99,6 +115,7 @@ function computeOverlayRects(
   topOffset: number,
   pinnedFields: Set<string>,
   widthOverride: { field: string; width: number } | null,
+  pendingTarget: FormulaReferenceTarget | null,
 ): OverlayRect[] {
   const columnSpan = (field: string): ColumnSpan | null => {
     if (pinnedFields.has(field)) {
@@ -137,7 +154,7 @@ function computeOverlayRects(
 
   const toRect = (
     target: FormulaReferenceTarget,
-  ): Omit<OverlayRect, 'key' | 'colorIndex'> | null => {
+  ): Pick<OverlayRect, 'left' | 'top' | 'width' | 'height'> | null => {
     if (target.kind === 'cell') {
       const column = columnSpan(target.field);
       const row = rowSpan(target.rowId);
@@ -178,8 +195,10 @@ function computeOverlayRects(
     return null;
   };
 
+  const pendingKey = pendingTarget === null ? null : getFormulaReferenceTargetKey(pendingTarget);
   const rects: OverlayRect[] = [];
   const seen = new Set<string>();
+  let colorCount = 0;
   for (const reference of references) {
     if (
       reference.colorIndex === null ||
@@ -189,9 +208,22 @@ function computeOverlayRects(
       continue;
     }
     seen.add(reference.targetKey);
+    colorCount += 1;
     const rect = toRect(reference.target);
     if (rect !== null) {
-      rects.push({ key: reference.targetKey, colorIndex: reference.colorIndex, ...rect });
+      rects.push({
+        key: reference.targetKey,
+        colorIndex: reference.colorIndex,
+        pending: reference.targetKey === pendingKey,
+        ...rect,
+      });
+    }
+  }
+  if (pendingTarget !== null && pendingKey !== null && !seen.has(pendingKey)) {
+    const rect = toRect(pendingTarget);
+    if (rect !== null) {
+      // The color the reference gets once the formula parses: the next free one.
+      rects.push({ key: pendingKey, colorIndex: colorCount, pending: true, ...rect });
     }
   }
   return rects;
@@ -261,6 +293,8 @@ function GridFormulaReferenceOverlay() {
   // positions over the imperative styles until the next mousemove.
   const liveResizeWidthRef = React.useRef<number | null>(null);
 
+  const pendingReference = activeEdit?.pendingReference ?? null;
+
   const computeRects = React.useCallback(() => {
     if (activeEdit === null || isControlledLayout) {
       return [];
@@ -286,10 +320,12 @@ function GridFormulaReferenceOverlay() {
       -firstRenderedRowTop,
       pinnedFields,
       liveResize ? { field: session.field, width: liveWidth } : null,
+      pendingReference,
     );
   }, [
     apiRef,
     activeEdit,
+    pendingReference,
     isControlledLayout,
     model.references,
     columnPositions,
@@ -365,7 +401,11 @@ function GridFormulaReferenceOverlay() {
               rectElementsRef.current.set(rect.key, node);
             }
           }}
-          className="MuiDataGrid-formulaReferenceHighlight"
+          className={
+            rect.pending
+              ? `MuiDataGrid-formulaReferenceHighlight ${PENDING_RECT_CLASS}`
+              : 'MuiDataGrid-formulaReferenceHighlight'
+          }
           style={{
             transform: `translate3d(${rect.left}px, ${rect.top}px, 0)`,
             width: rect.width,

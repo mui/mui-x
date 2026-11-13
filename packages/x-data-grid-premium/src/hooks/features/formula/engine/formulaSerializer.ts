@@ -6,6 +6,12 @@ import type {
   FormulaRowSelector,
 } from './formulaAst';
 
+/**
+ * What separates two arguments of a call in serialized formula text. The
+ * tokenizer only needs the comma; the space is the serializer's formatting.
+ */
+export const FORMULA_ARGUMENT_SEPARATOR = ', ';
+
 const BARE_FIELD_REGEX = /^[A-Za-z_][A-Za-z0-9_]*$/;
 
 function serializeString(value: string): string {
@@ -103,7 +109,7 @@ function serializeNode(node: FormulaAstNode): string {
       return `${left} ${node.operator} ${right}`;
     }
     case 'functionCall':
-      return `${node.name}(${node.args.map(serializeNode).join(', ')})`;
+      return `${node.name}(${node.args.map(serializeNode).join(FORMULA_ARGUMENT_SEPARATOR)})`;
     default:
       return '';
   }
