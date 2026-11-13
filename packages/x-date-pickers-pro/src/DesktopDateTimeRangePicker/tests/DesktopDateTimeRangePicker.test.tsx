@@ -1,4 +1,4 @@
-import { screen } from '@mui/internal-test-utils';
+import { screen, waitFor } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -8,6 +8,8 @@ import {
 } from 'test/utils/pickers';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { DesktopDateTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopDateTimeRangePicker';
+import { SingleInputDateTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputDateTimeRangeField';
+import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
 
 describe('<DesktopDateTimeRangePicker />', () => {
   const { render } = createPickerRenderer();
@@ -120,6 +122,28 @@ describe('<DesktopDateTimeRangePicker />', () => {
       await user.click(screen.getByRole('gridcell', { name: '2' }));
       expect(screen.getByRole('option', { name: '2 hours', selected: true })).not.to.equal(null);
       expect(screen.getByRole('option', { name: '20 minutes', selected: true })).not.to.equal(null);
+    });
+  });
+
+  describe.each([
+    { fieldType: 'single-input', field: SingleInputDateTimeRangeField },
+    { fieldType: 'multi-input', field: MultiInputDateTimeRangeField },
+  ] as const)('field view absent from the format ($fieldType field)', ({ fieldType, field }) => {
+    it('should focus the first section of the field when going to the view', async () => {
+      const { user } = render(
+        <DesktopDateTimeRangePicker
+          format={adapterToUse.formats.keyboardDate}
+          viewRenderers={{ hours: null, minutes: null }}
+          slots={{ field }}
+        />,
+      );
+
+      await openPicker(user, { type: 'date-time-range', initialFocus: 'start', fieldType });
+      await user.click(screen.getByRole('gridcell', { name: '11' }));
+
+      await waitFor(() => {
+        expect(screen.getAllByRole('spinbutton', { name: 'Month' })[0]).toHaveFocus();
+      });
     });
   });
 
