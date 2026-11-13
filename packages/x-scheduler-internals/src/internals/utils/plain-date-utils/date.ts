@@ -1,5 +1,3 @@
-import type { SchedulerProcessedDate } from '../../../models';
-import { processDate } from '../../../process-date/processDate';
 import type { BaseTemporal } from '../base-temporal';
 import type { PlainDateDuration } from './plainDate';
 import {
@@ -21,16 +19,7 @@ import {
  * gap.
  */
 export function createStartOfPlainDate(plainDate: BaseTemporal.PlainDate, timezone: string): Date {
-  return new Date(toEpochMs(plainDate, 0, timezone));
-}
-
-/**
- * Creates the date of the last instant of a plain date in `timezone`, just before the next
- * day starts. When a DST transition repeats the last hour of the day, it's the later 23:59:59.999.
- */
-export function createEndOfPlainDate(plainDate: BaseTemporal.PlainDate, timezone: string): Date {
-  const nextPlainDate = plainDate.add({ days: 1 });
-  return new Date(toEpochMs(nextPlainDate, 0, timezone) - 1);
+  return new Date(toEpochMs(plainDate, timezone));
 }
 
 // A string that ends with `Z`, or a date-time that ends with an offset, like
@@ -49,12 +38,19 @@ export function isInstantString(value: string): boolean {
 const ISO_DATE_REGEXP = /^\d{4}(?:-\d{2}){0,2}(?:(T)|$)/i;
 
 /**
- * Creates the date of an ISO date or date-time without an offset, read as a wall-clock time in
+ * Whether an event date string is an ISO date without a time, like `2025-07-10`.
+ */
+export function isDateOnlyString(value: string): boolean {
+  return /^\d{4}-\d{2}-\d{2}$/.test(value);
+}
+
+/**
+ * The instant of an ISO date or date-time without an offset, read as a wall-clock time in
  * `timezone`. The times a DST transition skips or repeats resolve like `localToEpochMs()`,
  * as the occurrences of recurring events do.
  * Returns `null` for other formats and for unknown timezones.
  */
-export function createDateFromWallTime(value: string, timezone: string): Date | null {
+export function parseWallTimeString(value: string, timezone: string): number | null {
   const match = ISO_DATE_REGEXP.exec(value);
   if (match === null) {
     return null;
@@ -63,53 +59,42 @@ export function createDateFromWallTime(value: string, timezone: string): Date | 
   // `Date.parse()` reads an ISO date-time on the wall clock of the system, and resolves the times a
   // DST transition skips or repeats like `localToEpochMs()`, about 3 times faster.
   if (hasTime && timezone === 'default') {
-    return new Date(value);
+    return Date.parse(value);
   }
   // Read as UTC, the fields of the string are its wall-clock time, whatever the timezone of the
   // system. `Date.parse()` already reads an ISO date as UTC.
   const wallClockMs = Date.parse(hasTime ? `${value}Z` : value);
   const epochMs = Number.isNaN(wallClockMs) ? NaN : localToEpochMs(wallClockMs, timezone);
-  return Number.isNaN(epochMs) ? null : new Date(epochMs);
+  return Number.isNaN(epochMs) ? null : epochMs;
 }
 
 /**
- * Creates the date of a string in a format other than ISO 8601, like `2025/01/01 09:00`.
+ * The instant of a string in a format other than ISO 8601, like `2025/01/01 09:00`, or `NaN`.
  * `Date.parse()` reads it in the timezone of the system, and its wall-clock time there is then read
  * in `timezone`.
  */
-export function createDateFromString(value: string, timezone: string): Date {
+export function parseNonIsoString(value: string, timezone: string): number {
   const epochMs = Date.parse(value);
-  return new Date(
-    Number.isNaN(epochMs) ? NaN : localToEpochMs(toLocalMs(epochMs, 'default'), timezone),
-  );
+  return Number.isNaN(epochMs) ? NaN : localToEpochMs(toLocalMs(epochMs, 'default'), timezone);
 }
 
 /**
  * Snaps an all-day event's bounds to span their whole days in `timezone`; non-all-day bounds are
- * returned unchanged. The day ends on the later 23:59:59.999 when a DST transition repeats its last
- * hour, like the occurrences of recurring events, whatever the timezone of the system.
+ * returned unchanged. The end is exclusive: the first instant after the last day.
  */
 export function normalizeAllDayBounds(
-  start: Date,
-  end: Date,
+  start: number,
+  end: number,
   allDay: boolean | undefined,
   timezone: string,
-): { start: Date; end: Date } {
+): { start: number; end: number } {
   if (!allDay) {
     return { start, end };
   }
-  return {
-    start: new Date(getStartOfDayMs(start.getTime(), timezone)),
-    end: new Date(getEndOfDayMs(end.getTime(), timezone)),
-  };
+  return { start: getStartOfDayMs(start, timezone), end: getEndOfDayMs(end, timezone) + 1 };
 }
 
-/**
- * Returns the processed date of an instant in `timezone`.
- */
-export function createProcessedDate(epochMs: number, timezone: string): SchedulerProcessedDate {
-  return processDate(new Date(epochMs), timezone);
-}
+export { createProcessedDate } from '../../../process-date/processDate';
 
 /**
  * Moves a date by a duration of the calendar, keeping its time of day on the wall clock of

@@ -1,5 +1,6 @@
 import type {
   SchedulerProcessedEvent,
+  SchedulerProcessedEventInternalInfos,
   SchedulerProcessedDate,
   SchedulerProcessedDay,
   SchedulerEventOccurrence,
@@ -8,28 +9,62 @@ import type {
   SchedulerResourceId,
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
-import { toPlainDate, toLocalDayNumber } from './plain-date-utils/timeZone';
-import { getPlainDateKey } from './plain-date-utils/plainDate';
+import { toLocalDayNumber, toPlainDate } from './plain-date-utils/timeZone';
+import { getDayNumber, getPlainDateKey } from './plain-date-utils/plainDate';
 import type { SchedulerEventRangeIndex } from './event-range-index';
 
 /**
+ * The day number of the last day an occurrence covers in the display timezone. The end of an
+ * all-day occurrence is exclusive: the first instant of the day after its last day.
+ */
+export function getOccurrenceLastDayNumber(
+  occurrence: Pick<SchedulerRenderableEventOccurrence, 'allDay' | 'end' | 'unstable_internalInfos'>,
+): number {
+  return occurrence.allDay
+    ? toLocalDayNumber(
+        occurrence.end.timestamp - 1,
+        occurrence.unstable_internalInfos.displayTimezone,
+      )
+    : getDayNumber(occurrence.end.plainDateTime.toPlainDate());
+}
+
+/**
+ * The end of an occurrence as the event models write it: an all-day event model ends on the last
+ * instant of its last day, where its occurrence's exclusive end is the first instant after it.
+ */
+export function getOccurrenceModelEnd(
+  occurrence: Pick<SchedulerRenderableEventOccurrence, 'allDay' | 'end'>,
+): number {
+  return occurrence.end.timestamp - (occurrence.allDay ? 1 : 0);
+}
+
+/**
  * Whether the occurrence is a persisted event occurrence, as opposed to a
- * placeholder (creation draft, drag preview) that has no `dataTimezone`.
+ * placeholder (creation draft, drag preview) that has no data instants.
  */
 export function isEventOccurrence(
   occurrence: SchedulerRenderableEventOccurrence,
 ): occurrence is SchedulerEventOccurrence {
-  return 'dataTimezone' in occurrence;
+  return 'dataStart' in occurrence.unstable_internalInfos;
 }
 
 /**
- * The occurrence in the data timezone, the identity recurring drag updates target;
- * placeholders have none.
+ * The internal values of an occurrence, with its instants in the data timezone, the identity
+ * recurring drag updates target; placeholders have none.
  */
-export function getOccurrenceDataTimezone(
+export function getOccurrenceInternalInfos(
   occurrence: SchedulerRenderableEventOccurrence,
-): SchedulerEventOccurrence['dataTimezone'] | undefined {
-  return isEventOccurrence(occurrence) ? occurrence.dataTimezone : undefined;
+): SchedulerProcessedEventInternalInfos | undefined {
+  return isEventOccurrence(occurrence) ? occurrence.unstable_internalInfos : undefined;
+}
+
+/**
+ * The timestamp of a bound of an event or occurrence, in its data timezone.
+ */
+export function getDataTimestamp(event: SchedulerProcessedEvent, bound: 'start' | 'end'): number {
+  return bound === 'start'
+    ? event.unstable_internalInfos.dataStart
+    : event.unstable_internalInfos.dataEnd;
 }
 
 /**
@@ -48,12 +83,12 @@ export function getOccurrenceKey(eventId: SchedulerEventId): string {
  */
 export function getRecurringOccurrenceKey(
   eventId: SchedulerEventId,
-  day: Date,
+  timestamp: number,
   timezone: string,
 ): string {
   return getRecurringOccurrenceKeyFromDateKey(
     eventId,
-    getPlainDateKey(toPlainDate(day.getTime(), timezone)),
+    getPlainDateKey(toPlainDate(timestamp, timezone)),
   );
 }
 
@@ -73,7 +108,7 @@ export function generateOccurrenceFromEvent({
   occurrenceKey,
   start,
   end,
-  dataTimezone,
+  internalInfos,
 }: {
   event: SchedulerProcessedEvent;
   eventId: SchedulerEventId;
@@ -81,26 +116,27 @@ export function generateOccurrenceFromEvent({
   start: SchedulerProcessedDate;
   end: SchedulerProcessedDate;
   /**
-   * The occurrence in the data timezone; only its bounds are read. Defaults to the display
-   * `start`/`end`, a fallback only placeholder occurrences may rely on.
+   * The internal values of the occurrence, with its instants in the data timezone. Defaults to the
+   * display `start`/`end`, a fallback only placeholder occurrences may rely on.
    */
-  dataTimezone?: SchedulerEventOccurrence['dataTimezone'];
+  internalInfos?: SchedulerProcessedEventInternalInfos;
 }): SchedulerEventOccurrence {
-  return {
+  // `exDates` is cleared rather than left out with a rest destructuring, which is about 8 times
+  // slower.
+  const occurrence = {
     ...event,
+    exDates: undefined,
     id: eventId,
     key: occurrenceKey,
-    displayTimezone: {
-      ...event?.displayTimezone,
-      start,
-      end,
-    },
-    dataTimezone: {
-      ...event?.dataTimezone,
-      start: dataTimezone?.start ?? start,
-      end: dataTimezone?.end ?? end,
+    start,
+    end,
+    unstable_internalInfos: internalInfos ?? {
+      displayTimezone: event.unstable_internalInfos.displayTimezone,
+      dataStart: start.timestamp,
+      dataEnd: end.timestamp,
     },
   };
+  return occurrence;
 }
 
 /**
@@ -112,9 +148,8 @@ export function getDaysTheOccurrenceIsVisibleOn(
   days: SchedulerProcessedDay[],
   dayNumbers: readonly number[],
 ) {
-  const { start, end, timezone } = event.displayTimezone;
-  const startDayNumber = toLocalDayNumber(start.timestamp, timezone);
-  const endDayNumber = toLocalDayNumber(end.timestamp, timezone);
+  const startDayNumber = getDayNumber(event.start.plainDateTime.toPlainDate());
+  const endDayNumber = getOccurrenceLastDayNumber(event);
 
   const dayKeys: string[] = [];
   for (let index = 0; index < days.length; index += 1) {
@@ -153,14 +188,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
     }
 
     // STEP 2: Recurrent event processing, if it is recurrent expand it for the visible days
-    if (event.dataTimezone.rrule) {
-      // Without the premium recurring-events plugin attached, recurring events
-      // are not expanded into occurrences — they are treated as single non-recurring events.
-      if (recurringEventsPlugin == null) {
-        occurrences.push({ ...event, key: getOccurrenceKey(event.id) });
-        continue;
-      }
-
+    if (event.rrule && recurringEventsPlugin != null) {
       // TODO: Check how this behave when the occurrence is between start and end but not in the visible days (e.g: hidden week end).
       occurrences.push(
         ...recurringEventsPlugin.getOccurrencesForVisibleDays(event, start, end, displayTimezone),
@@ -168,7 +196,11 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
       continue;
     }
 
-    occurrences.push({ ...event, key: getOccurrenceKey(event.id) });
+    // Without the recurring-events plugin, recurring events are treated as single events.
+    // `exDates` is cleared rather than left out with a rest destructuring, which is about 8 times
+    // slower.
+    const occurrence = { ...event, exDates: undefined, key: getOccurrenceKey(event.id) };
+    occurrences.push(occurrence);
   }
 
   return occurrences;

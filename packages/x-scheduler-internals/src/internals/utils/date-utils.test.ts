@@ -1,54 +1,113 @@
 import { describe, it, expect } from 'vitest';
 import { createDate } from 'test/utils/scheduler';
 import { BaseTemporal } from './base-temporal';
-import { getPlainDateWeekStart, getWeekNumber } from './date-utils';
+import {
+  getPlainDateWeekStart,
+  getUntilReferenceString,
+  getWeekNumber,
+  untilToEventString,
+} from './date-utils';
 import { normalizeAllDayBounds } from './plain-date-utils/date';
+import { toPlainDateTime } from './plain-date-utils/timeZone';
 
 const wednesdayPlainDate = BaseTemporal.PlainDate.from('2025-01-08');
 
 describe('date-utils', () => {
   describe('normalizeAllDayBounds', () => {
-    const start = createDate('2025-01-08T09:00:00.000Z');
-    const end = createDate('2025-01-08T18:00:00.000Z');
+    const start = createDate('2025-01-08T09:00:00').getTime();
+    const end = createDate('2025-01-08T18:00:00').getTime();
+    const read = (bounds: { start: number; end: number }) => [
+      toPlainDateTime(bounds.start, 'default').toString(),
+      toPlainDateTime(bounds.end, 'default').toString(),
+    ];
 
     it('returns the bounds unchanged when allDay is false', () => {
-      const result = normalizeAllDayBounds(start, end, false, 'default');
-      expect(result.start.getHours()).to.equal(9);
-      expect(result.end.getHours()).to.equal(18);
+      expect(normalizeAllDayBounds(start, end, false, 'default')).to.deep.equal({ start, end });
     });
 
     it('returns the bounds unchanged when allDay is undefined', () => {
-      const result = normalizeAllDayBounds(start, end, undefined, 'default');
-      expect(result.start.getHours()).to.equal(9);
-      expect(result.end.getHours()).to.equal(18);
+      expect(normalizeAllDayBounds(start, end, undefined, 'default')).to.deep.equal({ start, end });
     });
 
     it('snaps an all-day event to the whole day', () => {
-      const result = normalizeAllDayBounds(start, end, true, 'default');
-      expect(result.start.getHours()).to.equal(0);
-      expect(result.start.getMinutes()).to.equal(0);
-      expect(result.end.getHours()).to.equal(23);
-      expect(result.end.getMinutes()).to.equal(59);
-      expect(result.end.getSeconds()).to.equal(59);
+      expect(read(normalizeAllDayBounds(start, end, true, 'default'))).to.deep.equal([
+        '2025-01-08T00:00:00',
+        '2025-01-09T00:00:00',
+      ]);
     });
 
     it('preserves the span when flattening a multi-day all-day event', () => {
-      const multiDayEnd = createDate('2025-01-10T18:00:00.000Z');
-      const result = normalizeAllDayBounds(start, multiDayEnd, true, 'default');
-      expect(result.start.getDate()).to.equal(8);
-      expect(result.start.getHours()).to.equal(0);
-      expect(result.end.getDate()).to.equal(10);
-      expect(result.end.getHours()).to.equal(23);
+      const multiDayEnd = createDate('2025-01-10T18:00:00').getTime();
+      expect(read(normalizeAllDayBounds(start, multiDayEnd, true, 'default'))).to.deep.equal([
+        '2025-01-08T00:00:00',
+        '2025-01-11T00:00:00',
+      ]);
     });
   });
 
   describe('normalizeAllDayBounds across DST transitions', () => {
-    it('should end the day on the later 23:59:59.999 when a DST transition repeats its last hour', () => {
+    it('should end at the next midnight when a DST transition repeats the last hour', () => {
       // America/Santiago falls back from 00:00 -03:00 to 23:00 -04:00 on April 6th, 2024.
-      const day = createDate('2024-04-06T12:00:00', 'America/Santiago');
+      const day = createDate('2024-04-06T12:00:00', 'America/Santiago').getTime();
       const result = normalizeAllDayBounds(day, day, true, 'America/Santiago');
-      expect(result.start.toISOString()).to.equal('2024-04-06T03:00:00.000Z');
-      expect(result.end.toISOString()).to.equal('2024-04-07T03:59:59.999Z');
+      expect(new Date(result.start).toISOString()).to.equal('2024-04-06T03:00:00.000Z');
+      expect(new Date(result.end).toISOString()).to.equal('2024-04-07T04:00:00.000Z');
+    });
+  });
+
+  describe('untilToEventString', () => {
+    it.each([
+      ['2025-01-01', '2025-01-12'],
+      ['2025-01-01T09:00:00', '2025-01-12T23:59:59'],
+      ['2025-01-01T08:00:00Z', '2025-01-12T22:59:59.999Z'],
+    ])('should write a plain date covering its whole day after %s', (original, expected) => {
+      expect(
+        untilToEventString(BaseTemporal.PlainDate.from('2025-01-12'), original, 'Europe/Paris'),
+      ).to.equal(expected);
+    });
+
+    it.each([
+      ['2025-01-01', '2025-01-12T09:15:30'],
+      ['2025-01-01T09:00:00', '2025-01-12T09:15:30'],
+      ['2025-01-01T08:00:00Z', '2025-01-12T08:15:30.000Z'],
+    ])('should write a plain date-time with its time after %s', (original, expected) => {
+      expect(
+        untilToEventString(
+          BaseTemporal.PlainDateTime.from('2025-01-12T09:15:30'),
+          original,
+          'Europe/Paris',
+        ),
+      ).to.equal(expected);
+    });
+
+    it('should end a plain date on the later 23:59:59.999 when a DST transition repeats its last hour', () => {
+      // America/Santiago falls back from 00:00 -03:00 to 23:00 -04:00 on April 6th, 2024.
+      expect(
+        untilToEventString(
+          BaseTemporal.PlainDate.from('2024-04-06'),
+          '2024-04-01T09:00:00Z',
+          'America/Santiago',
+        ),
+      ).to.equal('2024-04-07T03:59:59.999Z');
+    });
+  });
+
+  describe('getUntilReferenceString', () => {
+    const event = {
+      id: 'event',
+      title: 'Event',
+      start: '2025-01-01T09:00:00',
+      end: '2025-01-01T10:00:00',
+    };
+
+    it.each([
+      [{ freq: 'DAILY' as const, until: '2025-01-10T08:00:00Z' }, '2025-01-10T08:00:00Z'],
+      [{ freq: 'DAILY' as const }, '2025-01-01T09:00:00'],
+      ['FREQ=DAILY;UNTIL=20250110', '2025-01-10'],
+      ['FREQ=DAILY;UNTIL=20250110T080000Z;INTERVAL=2', '2025-01-10T08:00:00Z'],
+      ['FREQ=DAILY;COUNT=3', '2025-01-01T09:00:00'],
+    ])('should read the format of the UNTIL of %j', (rrule, expected) => {
+      expect(getUntilReferenceString({ ...event, rrule })).to.equal(expected);
     });
   });
 

@@ -1,3 +1,5 @@
+import type { BaseTemporal } from '../internals/utils/base-temporal';
+
 export type RecurringEventFrequency = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
 /**
  * The preset recurrence options available in the UI.
@@ -72,11 +74,13 @@ export interface SchedulerProcessedEventRecurrenceRule {
    */
   byMonth?: number[];
   /**
-   * A date time value that bounds the recurrence rule in an inclusive manner.
+   * The inclusive end of the recurrence, in the timezone of the event.
+   * A plain date includes its whole day. A plain date-time, used for timed events only, is the
+   * latest start of an occurrence.
    * Must not be specified when the count property is set.
    * Corresponds to the UNTIL property of the string-based RRULE.
    */
-  until?: Date;
+  until?: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime;
   /**
    * The number of occurrences at which to range-bound the recurrence.
    * Must not be specified when the until property is set.
@@ -91,8 +95,11 @@ export interface SchedulerProcessedEventRecurrenceRule {
  */
 export type SchedulerEventRecurrenceRule = Omit<SchedulerProcessedEventRecurrenceRule, 'until'> & {
   /**
-   * A date time value that bounds the recurrence rule in an inclusive manner.
+   * The inclusive end of the recurrence.
    * Same string semantics as `SchedulerEvent.start` / `end`.
+   * A date without a time, like "2025-07-10", includes its whole day.
+   * For timed events, a date-time is the latest start of an occurrence.
+   * For all-day events, only its date in the timezone of the event is used.
    */
   until?: string;
 };

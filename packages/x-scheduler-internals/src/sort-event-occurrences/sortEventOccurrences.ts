@@ -8,8 +8,6 @@ export function sortEventOccurrences(
   occurrences: readonly SchedulerEventOccurrence[],
 ): SchedulerEventOccurrence[] {
   return occurrences.toSorted(
-    (a, b) =>
-      a.displayTimezone.start.timestamp - b.displayTimezone.start.timestamp ||
-      b.displayTimezone.end.timestamp - a.displayTimezone.end.timestamp,
+    (a, b) => a.start.timestamp - b.start.timestamp || b.end.timestamp - a.end.timestamp,
   );
 }

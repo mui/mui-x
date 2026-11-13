@@ -1,9 +1,8 @@
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
-import { addHours, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
+import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
 import { describe } from 'vitest';
-import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
 
 describe('<CalendarGrid.DayEventResizeHandler />', () => {
   const { render } = createSchedulerRenderer();
@@ -11,9 +10,9 @@ describe('<CalendarGrid.DayEventResizeHandler />', () => {
   describeConformance(<CalendarGrid.DayEventResizeHandler side="start" />, () => ({
     refInstanceof: window.HTMLDivElement,
     render(node) {
-      const eventStart = processDate(new Date(), 'default');
-      const eventEnd = processDate(addHours(eventStart.value, 1), 'default');
-      const cellDate = toPlainDate(eventStart.value.getTime(), 'default');
+      const eventStart = createProcessedDate(Date.now(), 'default');
+      const eventEnd = createProcessedDate(eventStart.timestamp + 3_600_000, 'default');
+      const cellDate = eventStart.plainDateTime.toPlainDate();
       return render(
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
@@ -26,7 +25,7 @@ describe('<CalendarGrid.DayEventResizeHandler />', () => {
                 <CalendarGrid.DayEvent
                   eventId="fake-id"
                   occurrenceKey="fake-key"
-                  dataTimezone={undefined}
+                  internalInfos={undefined}
                   start={eventStart}
                   end={eventEnd}
                   renderDragPreview={() => null}

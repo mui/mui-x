@@ -4,6 +4,7 @@ export {
   getEndOfDayMs,
   getSkippedDays,
   getStartOfDayMs,
+  getTimezoneId,
   localToEpochMs,
   moveTimestampToPlainDate,
   toEpochMs,
@@ -11,20 +12,23 @@ export {
   toLocalMs,
   toMsInDay,
   toPlainDate,
-  toWallClockIsoString,
+  toPlainDateTime,
 } from './timeZone';
 export {
   addToDate,
-  createEndOfPlainDate,
   createProcessedDate,
   createStartOfPlainDate,
+  isDateOnlyString,
   normalizeAllDayBounds,
 } from './date';
 export {
   getDayNumber,
+  getMinutesInDay,
+  getMsInDay,
   getPlainDateKey,
   isWeekendPlainDate,
   plainDateFromDayNumber,
+  plainTimeFromMsInDay,
   type PlainDateDuration,
 } from './plainDate';
 export {

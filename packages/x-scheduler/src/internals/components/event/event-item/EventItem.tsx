@@ -11,7 +11,12 @@ import {
 import { Button } from '@base-ui/react/button';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
-import { formatMonthShortAndDayOfMonth, toPlainDate } from '@mui/x-scheduler-internals/internals';
+import {
+  getDayNumber,
+  getOccurrenceLastDayNumber,
+  plainDateFromDayNumber,
+  formatMonthShortAndDayOfMonth,
+} from '@mui/x-scheduler-internals/internals';
 import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
 import type { EventItemProps } from './EventItem.types';
 import { useFormatTime } from '../../../hooks/useFormatTime';
@@ -183,10 +188,11 @@ export const EventItem = React.forwardRef(function EventItem(
     localeText,
   });
 
-  // The keys of the processed dates only depend on their day in the display timezone.
-  const { start, end } = occurrence.displayTimezone;
-  const startsBeforeDay = start.key !== date.key && start.timestamp < date.timestamp;
-  const endsAfterDay = end.key !== date.key && end.timestamp > date.timestamp;
+  // The processed dates are read in the display timezone, like the day.
+  const { start } = occurrence;
+  const startsBeforeDay =
+    !start.plainDateTime.toPlainDate().equals(date.plainDate) && start.timestamp < date.timestamp;
+  const endsAfterDay = getOccurrenceLastDayNumber(occurrence) > getDayNumber(date.plainDate);
 
   const content = React.useMemo(() => {
     switch (variant) {
@@ -200,7 +206,7 @@ export const EventItem = React.forwardRef(function EventItem(
             >
               <EventItemCardContent className={classes.eventItemCardContent}>
                 <EventItemTime className={classes.eventItemTime} data-compact>
-                  <span>{formatTime(occurrence.displayTimezone.start)}</span>
+                  <span>{formatTime(occurrence.start)}</span>
                 </EventItemTime>
                 <EventItemTitle className={classes.eventItemTitle}>
                   {occurrence.title}
@@ -258,7 +264,7 @@ export const EventItem = React.forwardRef(function EventItem(
           // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
           data-event-id={occurrence.id}
           // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
-          data-occurrence-timestamp={occurrence.dataTimezone.start.timestamp}
+          data-occurrence-timestamp={occurrence.unstable_internalInfos.dataStart}
           aria-label={accessibleName}
           {...(startsBeforeDay ? { 'data-starting-before-edge': '' } : {})}
           {...(endsAfterDay ? { 'data-ending-after-edge': '' } : {})}
@@ -292,11 +298,13 @@ function MultiDayDateLabel(props: {
   const { classes, localeText } = useEventCalendarStyledContext();
 
   if (isOccurrenceMultiDay(occurrence)) {
-    const { end, timezone } = occurrence.displayTimezone;
     return (
       <EventItemTime className={classes.eventItemTime} as="span">
         {localeText.eventItemMultiDayLabel(
-          formatMonthShortAndDayOfMonth(locale, toPlainDate(end.timestamp, timezone)),
+          formatMonthShortAndDayOfMonth(
+            locale,
+            plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence)),
+          ),
         )}
       </EventItemTime>
     );
@@ -310,8 +318,8 @@ function MultiDayDateLabel(props: {
   }
   return (
     <EventItemTime className={classes.eventItemTime}>
-      <span>{formatTime(occurrence.displayTimezone.start)}</span>
-      <span> - {formatTime(occurrence.displayTimezone.end)}</span>
+      <span>{formatTime(occurrence.start)}</span>
+      <span> - {formatTime(occurrence.end)}</span>
     </EventItemTime>
   );
 }

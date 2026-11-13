@@ -1,28 +1,28 @@
 import type { SchedulerEventId } from '../models';
 import {
-  createDateFromString,
-  createDateFromWallTime,
   isInstantString,
+  parseNonIsoString,
+  parseWallTimeString,
 } from '../internals/utils/plain-date-utils/date';
 
 /**
- * Resolves an event date string to the `Date` of its instant.
+ * Resolves an event date string to the timestamp of its instant.
  *
  * - Strings ending with `"Z"` or an offset are treated as instants.
  * - Other strings are treated as wall-time and interpreted in `dataTimezone`.
  *   A wall-clock time skipped by a DST transition moves forward by the length of the gap, and a
  *   repeated one refers to its first instant, whatever the timezone of the system (RFC 5545).
  */
-export function resolveEventDate(
+export function resolveEventTimestamp(
   value: string,
   dataTimezone: string,
   eventId?: SchedulerEventId,
-): Date {
-  const date = isInstantString(value)
-    ? new Date(value)
-    : (createDateFromWallTime(value, dataTimezone) ?? createDateFromString(value, dataTimezone));
+): number {
+  const epochMs = isInstantString(value)
+    ? Date.parse(value)
+    : (parseWallTimeString(value, dataTimezone) ?? parseNonIsoString(value, dataTimezone));
 
-  if (Number.isNaN(date.getTime())) {
+  if (Number.isNaN(epochMs)) {
     const eventRef = eventId === undefined ? '' : ` of event "${eventId}"`;
     throw new Error(
       `MUI X Scheduler: The date "${value}"${eventRef} is not a valid date.\n` +
@@ -31,5 +31,5 @@ export function resolveEventDate(
     );
   }
 
-  return date;
+  return epochMs;
 }

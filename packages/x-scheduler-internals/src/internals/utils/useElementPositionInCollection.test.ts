@@ -1,11 +1,11 @@
 import { createDate, endOfDay } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { computeElementPositionInCollection } from './useElementPositionInCollection';
-import { processDate } from '../../process-date';
+import { createProcessedDate } from '../../process-date';
 
 describe('computeElementPositionInCollection', () => {
   const date = (value: string) => createDate(value, 'UTC');
-  const processed = (value: string) => processDate(date(value), 'UTC');
+  const processed = (value: string) => createProcessedDate(date(value).getTime(), 'UTC');
 
   // 4-day collection: Jan 5 → Jan 8, like the `dayAndHour` timeline preset.
   const collectionStart = date('2025-01-05T00:00:00.000Z');

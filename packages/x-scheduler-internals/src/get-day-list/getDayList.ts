@@ -1,9 +1,9 @@
 import type { SchedulerProcessedDay } from '../models';
 import type { BaseTemporal } from '../internals/utils/base-temporal';
-import { createProcessedDate } from '../internals/utils/plain-date-utils/date';
 import { getSkippedDays, toEpochMs } from '../internals/utils/plain-date-utils/timeZone';
 import {
   getDayNumber,
+  getPlainDateKey,
   plainDateFromDayNumber,
 } from '../internals/utils/plain-date-utils/plainDate';
 
@@ -29,8 +29,9 @@ export function getDayListFromPlainDates(parameters: {
     const plainDate = plainDateFromDayNumber(dayNumber);
     if (!skippedDays.has(dayNumber) && !excludedWeekdays?.includes(plainDate.dayOfWeek)) {
       days.push({
-        ...createProcessedDate(toEpochMs(plainDate, 0, timezone), timezone),
         plainDate,
+        key: getPlainDateKey(plainDate),
+        timestamp: toEpochMs(plainDate, timezone),
       });
     }
   }

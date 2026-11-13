@@ -25,7 +25,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     // Internal props
     start,
     end,
-    dataTimezone,
+    internalInfos,
     eventId,
     occurrenceKey,
     renderDragPreview,
@@ -54,7 +54,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     occurrenceKey,
     start,
     end,
-    dataTimezone,
+    internalInfos,
   });
 
   const getSharedDragData: CalendarGridTimeEventContext['getSharedDragData'] = useStableCallback(
@@ -147,7 +147,7 @@ export namespace CalendarGridTimeEvent {
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
       useDraggableEvent.PublicParameters,
-      Pick<useOriginalOccurrence.Parameters, 'dataTimezone'> {
+      Pick<useOriginalOccurrence.Parameters, 'internalInfos'> {
     /**
      * Whether the event behaves like a button: `role="button"` and a roving `tabIndex`.
      * Set it to `false` for an inert preview (creation / resize placeholder) that

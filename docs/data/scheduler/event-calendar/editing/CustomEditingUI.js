@@ -49,8 +49,11 @@ export default function CustomEditingUI() {
         {
           id: `custom-${Date.now()}`,
           title,
-          start: new Date(occurrence.displayTimezone.start.timestamp).toISOString(),
-          end: new Date(occurrence.displayTimezone.end.timestamp).toISOString(),
+          start: new Date(occurrence.start.timestamp).toISOString(),
+          // An all-day occurrence ends at the start of the next day, its model on its last day.
+          end: new Date(
+            occurrence.end.timestamp - (occurrence.allDay ? 1 : 0),
+          ).toISOString(),
           allDay: occurrence.allDay,
         },
       ]);

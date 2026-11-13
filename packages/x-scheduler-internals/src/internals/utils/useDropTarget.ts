@@ -23,7 +23,7 @@ import {
 } from '../../scheduler-selectors';
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
 import type { StandaloneEvent } from '../../standalone-event';
-import { getPrimaryResourceId } from './event-utils';
+import { getPrimaryResourceId, getOccurrenceModelEnd } from './event-utils';
 
 // Not every drag source exposes `sourceResourceId` (only rows that know which
 // resource they represent, e.g. the Event Timeline Premium, can report it) —
@@ -249,10 +249,10 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
     additionalChanges.allDay != null &&
     additionalChanges.allDay !== (originalOccurrence.allDay ?? false);
   const changes: SchedulerEventUpdatedProperties = { id: eventId };
-  if (allDayToggled || originalOccurrence.displayTimezone.start.timestamp !== start) {
+  if (allDayToggled || originalOccurrence.start.timestamp !== start) {
     changes.start = new Date(start);
   }
-  if (allDayToggled || originalOccurrence.displayTimezone.end.timestamp !== end) {
+  if (allDayToggled || getOccurrenceModelEnd(originalOccurrence) !== end) {
     changes.end = new Date(end);
   }
 
@@ -298,9 +298,9 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
     return;
   }
 
-  if (originalOccurrence.dataTimezone.rrule) {
+  if (originalOccurrence.rrule) {
     store.updateRecurringEvent({
-      occurrenceStart: originalOccurrence.dataTimezone.start.value,
+      occurrence: originalOccurrence,
       changes,
     });
     // Editing surface is refreshed (or disarmed) in `selectRecurringEventScope` once the user
@@ -319,7 +319,8 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
   // the scheduling plugin can clamp the drop.
   // Only the committed bounds: an untouched one keeps its stored value on the occurrence.
   if (schedulerOtherSelectors.isEditedOccurrence(store.state, placeholder.occurrenceKey)) {
-    store.setEditingOccurrenceTimes({ start: result.changes.start, end: result.changes.end });
+    const { start, end, allDay } = result.changes;
+    store.setEditingOccurrenceTimes({ start, end, allDay });
   }
 }
 

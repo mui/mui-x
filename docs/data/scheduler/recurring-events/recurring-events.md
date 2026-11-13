@@ -163,14 +163,20 @@ Use either the `COUNT` or the `UNTIL` property if you want to put an end boundar
   ```
 
 - Use the `UNTIL` property if you want your event to stop at a given date.
-  The date must be in UTC and formatted as `YYYYMMDDTHHmmssZ` (no dashes or colons):
+  Use `YYYYMMDD` for a date, or `YYYYMMDDTHHmmssZ` for a UTC date-time (no dashes or colons):
 
   ```ts
-  // Until December 31, 2025 at 23:59:59 UTC (inclusive)
-  rrule: 'FREQ=WEEKLY;BYDAY=TU;UNTIL=20251231T235959Z';
+  // Until December 31, 2025, included
+  rrule: 'FREQ=WEEKLY;BYDAY=TU;UNTIL=20251231';
+
+  // Until December 31, 2025 at 09:00 UTC (inclusive)
+  rrule: 'FREQ=WEEKLY;BYDAY=TU;UNTIL=20251231T090000Z';
   ```
 
   :::success
-  The `UNTIL` property is inclusive.
-  This means that if it matches the date of an event occurrence, this occurrence will be included.
+  The `UNTIL` property is inclusive, and is read in the timezone of the event.
+  A date includes its whole day.
+  For timed events, a UTC date-time is the exact cutoff: an occurrence starting at that instant is included, and one starting later is excluded.
+  For all-day events, only the date of a UTC date-time in the timezone of the event is used: `UNTIL=20251231T235959Z` ends an all-day series in `Asia/Tokyo` on January 1, 2026.
+  The event dialog offers a date picker: the chosen day is the last day of the series.
   :::

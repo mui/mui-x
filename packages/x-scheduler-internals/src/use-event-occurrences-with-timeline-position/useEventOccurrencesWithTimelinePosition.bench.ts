@@ -27,10 +27,8 @@ function createOccurrences(
     return {
       id: index,
       key: String(index),
-      displayTimezone: {
-        start: { timestamp: start },
-        end: { timestamp: end },
-      },
-    } as SchedulerEventOccurrence;
+      start: { timestamp: start },
+      end: { timestamp: end },
+    } as unknown as SchedulerEventOccurrence;
   });
 }

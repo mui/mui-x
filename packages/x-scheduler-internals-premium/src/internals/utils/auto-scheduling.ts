@@ -7,14 +7,14 @@ import type {
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
 import {
-  dateToEventString,
+  timestampToEventString,
   getEndOfDayMs,
   getStartOfDayMs,
   localToEpochMs,
   MS_PER_DAY,
   toLocalDayNumber,
 } from '@mui/x-scheduler-internals/internals';
-import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';
+import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
 import type { SchedulerDependency } from '../../models';
 import {
   addDependencyLag,
@@ -99,8 +99,8 @@ function resolveDates(
 }
 
 function resolveProcessedEventDates(processedEvent: SchedulerProcessedEvent): ResolvedDates {
-  const { start, end, timezone } = processedEvent.dataTimezone;
-  return resolveDates(start.timestamp, end.timestamp, timezone, processedEvent.allDay ?? false);
+  const { dataStart, dataEnd } = processedEvent.unstable_internalInfos;
+  return resolveDates(dataStart, dataEnd, processedEvent.timezone, processedEvent.allDay ?? false);
 }
 
 // The range of `Date`.
@@ -289,7 +289,7 @@ export function computeAutoSchedulingCascade(
     }
     const allDay = entry.allDay ?? processedEvent.allDay ?? false;
     // Mirrors the store: entries are serialized in the data timezone
-    // (`dateToEventString`) and the model is then read in the (new) timezone.
+    // (`timestampToEventString`) and the model is then read in the (new) timezone.
     const resolveEntryTimestamp = (
       value: Date | undefined,
       modelString: string,
@@ -299,12 +299,18 @@ export function computeAutoSchedulingCascade(
         return value == null ? currentTimestamp : value.getTime();
       }
       const nextString =
-        value == null ? modelString : dateToEventString(value, modelString, dataTimezone);
-      return resolveEventDate(nextString, nextTimezone, entry.id).getTime();
+        value == null
+          ? modelString
+          : timestampToEventString(value.getTime(), modelString, dataTimezone);
+      return resolveEventTimestamp(nextString, nextTimezone, entry.id);
     };
     const dates = resolveDates(
-      resolveEntryTimestamp(entry.start, model.start, processedEvent.dataTimezone.start.timestamp),
-      resolveEntryTimestamp(entry.end, model.end, processedEvent.dataTimezone.end.timestamp),
+      resolveEntryTimestamp(
+        entry.start,
+        model.start,
+        processedEvent.unstable_internalInfos.dataStart,
+      ),
+      resolveEntryTimestamp(entry.end, model.end, processedEvent.unstable_internalInfos.dataEnd),
       nextTimezone,
       allDay,
     );
@@ -443,16 +449,20 @@ export function computeAutoSchedulingCascade(
   // entry in the old timezone and the model is then read in the new one, so the entry
   // carries the instant whose old-zone wall time is the intended new-zone wall time.
   function toEntryDates(eventId: SchedulerEventId, dates: ResolvedDates) {
-    const start = new Date(dates.start);
-    const end = new Date(dates.end);
     const timezoneChange = timezoneChanges.get(eventId);
     if (timezoneChange === undefined) {
-      return { start, end };
+      return { start: new Date(dates.start), end: new Date(dates.end) };
     }
     const { model, dataTimezone, nextTimezone } = timezoneChange;
-    const encode = (value: Date, modelString: string) =>
-      resolveEventDate(dateToEventString(value, modelString, nextTimezone), dataTimezone, eventId);
-    return { start: encode(start, model.start), end: encode(end, model.end) };
+    const encode = (epochMs: number, modelString: string) =>
+      new Date(
+        resolveEventTimestamp(
+          timestampToEventString(epochMs, modelString, nextTimezone),
+          dataTimezone,
+          eventId,
+        ),
+      );
+    return { start: encode(dates.start, model.start), end: encode(dates.end, model.end) };
   }
 
   function resolveCurrentDates(eventId: SchedulerEventId): ResolvedDates | null {

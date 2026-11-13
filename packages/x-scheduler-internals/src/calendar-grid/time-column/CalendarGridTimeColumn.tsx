@@ -87,7 +87,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
   });
 
   const triggerKeyboardCreation = useKeyboardEventCreation(({ creationConfig, timezone }) => {
-    const noon = toEpochMs(value, 12 * 60 * 60_000, timezone);
+    const noon = toEpochMs(value.toPlainDateTime({ hour: 12 }), timezone);
     // Keep the default creation anchor inside the visible window when the view limits its hour range.
     const anchor = noon < start || noon >= end ? start : noon;
     return {

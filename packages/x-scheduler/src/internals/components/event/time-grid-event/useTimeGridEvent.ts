@@ -33,8 +33,8 @@ export interface UseTimeGridEventReturnValue {
    * the event inside the time-grid column. Spread on the styled wrapper.
    */
   rootPositionProps: {
-    start: TimeGridEventProps['occurrence']['displayTimezone']['start'];
-    end: TimeGridEventProps['occurrence']['displayTimezone']['end'];
+    start: TimeGridEventProps['occurrence']['start'];
+    end: TimeGridEventProps['occurrence']['end'];
     elementPosition: useElementPositionInCollection.ReturnValue;
     style: React.CSSProperties;
   };
@@ -62,8 +62,8 @@ export function useTimeGridEvent(
 
   // Measured on the rendered part, clipped at midnight and by the visible hours.
   const elementPosition = useElementPositionInCollection({
-    start: occurrence.displayTimezone.start,
-    end: occurrence.displayTimezone.end,
+    start: occurrence.start,
+    end: occurrence.end,
     collection: column,
   });
   const durationMinutes = Math.round(
@@ -86,8 +86,8 @@ export function useTimeGridEvent(
 
   const rootPositionProps = React.useMemo(
     () => ({
-      start: occurrence.displayTimezone.start,
-      end: occurrence.displayTimezone.end,
+      start: occurrence.start,
+      end: occurrence.end,
       elementPosition,
       style: {
         '--first-index': occurrence.position.firstIndex,
@@ -95,8 +95,8 @@ export function useTimeGridEvent(
       } as React.CSSProperties,
     }),
     [
-      occurrence.displayTimezone.start,
-      occurrence.displayTimezone.end,
+      occurrence.start,
+      occurrence.end,
       elementPosition,
       occurrence.position.firstIndex,
       occurrence.position.lastIndex,

@@ -21,7 +21,6 @@ import type {
   RecurringEventByDayValue,
   RecurringEventWeekDayCode,
   SchedulerRenderableEventOccurrence,
-  SchedulerProcessedEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
@@ -31,9 +30,9 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getMonthlyReference, getWeeklyDays } from '@mui/x-scheduler-internals-premium/internals';
 import {
+  BaseTemporal,
   formatWeekday,
   formatWeekdayShort,
-  getEndOfDayMs,
   toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import type { EndsSelection } from '@mui/x-scheduler/internals';
@@ -50,13 +49,14 @@ import {
   getEventTimezonePlainDate,
   getRecurrenceRuleBound,
   getRecurrenceTimezoneName,
-  getRecurrenceUntil,
+  readDateField,
   eventDialogFormSelectors,
 } from '@mui/x-scheduler/internals';
 import {
   EventDialogSectionHeaderTitle,
   useEventDialogFormField,
 } from '@mui/x-scheduler/event-dialog';
+import type { EventDialogFormValues } from '@mui/x-scheduler/event-dialog';
 
 const RecurrenceSelectorContainer = styled('div', {
   name: 'MuiEventDialog',
@@ -207,12 +207,10 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const { value: recurrenceSelection, readOnly: rruleReadOnly } =
     useEventDialogFormField('recurrenceSelection');
   const { value: rruleDraft, error: rruleDraftError } = useEventDialogFormField('rruleDraft', {
-    // Clearing the "Ends until" date stores an invalid date to keep the mode on
-    // `until`; the submit must not serialize it.
+    // Clearing the "Ends until" date stores a `null` until to keep the mode on `until`; the submit
+    // must not serialize it.
     validate: (value, allValues) =>
-      allValues.recurrenceSelection === 'custom' &&
-      value.until != null &&
-      Number.isNaN(value.until.getTime())
+      allValues.recurrenceSelection === 'custom' && value.until === null
         ? localeText.invalidDateError
         : null,
   });
@@ -229,7 +227,8 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const eventTimezone = getEventTimezone(occurrence);
   const rangeValues = useStore(formStore, eventDialogFormSelectors.rangeValues);
   const ruleBounds = React.useMemo(() => {
-    const displayTimezoneMoved = displayTimezone !== occurrence.displayTimezone.timezone;
+    const displayTimezoneMoved =
+      displayTimezone !== occurrence.unstable_internalInfos.displayTimezone;
     const { startResent, endResent } = getResentRangeBounds(
       formStore.getDirtyValues(),
       rangeValues.allDay,
@@ -296,7 +295,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     formStore.setValues({ recurrenceSelection: newSelection, rruleDraft: newDraft });
   };
 
-  const updateCustomDraft = (patch: Partial<SchedulerProcessedEventRecurrenceRule>) => {
+  const updateCustomDraft = (patch: Partial<EventDialogFormValues['rruleDraft']>) => {
     formStore.setValues((prev) => ({
       recurrenceSelection: 'custom',
       rruleDraft: { ...prev.rruleDraft, ...patch },
@@ -324,9 +323,8 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const handleEndsChange = (endsSelection: EndsSelection) => {
     switch (endsSelection) {
       case 'until': {
-        // The end of the event's last day, in its own timezone.
-        const until = new Date(getEndOfDayMs(ruleBounds.end, eventTimezone));
-        updateCustomDraft({ until, count: undefined });
+        // The event's last day, in its own timezone.
+        updateCustomDraft({ until: toPlainDate(ruleBounds.end, eventTimezone), count: undefined });
         break;
       }
       case 'after': {
@@ -351,8 +349,9 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   const handleChangeUntil = (event: React.ChangeEvent<HTMLInputElement>) => {
     const untilValue = event.currentTarget.value;
-    // The chosen day is the last one the series runs on, in the event's timezone.
-    updateCustomDraft({ until: getRecurrenceUntil(untilValue, eventTimezone) });
+    // The chosen day is the last one the series runs on, in the event's timezone. A field that
+    // isn't a date keeps the rule ending on a date and fails the validation.
+    updateCustomDraft({ until: readDateField(untilValue) });
   };
 
   const handleChangeWeeklyDays = (dayCode: RecurringEventWeekDayCode) => {
@@ -669,10 +668,11 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
               <TextField
                 type="date"
                 value={
-                  customEndsValue === 'until' &&
-                  rruleDraft.until != null &&
-                  !Number.isNaN(rruleDraft.until.getTime())
-                    ? toPlainDate(rruleDraft.until.getTime(), eventTimezone).toString()
+                  customEndsValue === 'until' && rruleDraft.until != null
+                    ? (rruleDraft.until instanceof BaseTemporal.PlainDateTime
+                        ? rruleDraft.until.toPlainDate()
+                        : rruleDraft.until
+                      ).toString()
                     : ''
                 }
                 onChange={handleChangeUntil}

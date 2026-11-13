@@ -53,9 +53,9 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
                       key={occurrence.key}
                       eventId={occurrence.id}
                       occurrenceKey={occurrence.key}
-                      dataTimezone={occurrence.dataTimezone}
-                      start={occurrence.displayTimezone.start}
-                      end={occurrence.displayTimezone.end}
+                      internalInfos={occurrence.unstable_internalInfos}
+                      start={occurrence.start}
+                      end={occurrence.end}
                       elementPosition={occurrence.timelinePosition}
                       renderDragPreview={() => null}
                       data-testid={`event-${occurrence.id}`}
@@ -72,8 +72,8 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
                   ))}
                   {placeholder != null && (
                     <TimelineGrid.EventPlaceholder
-                      start={placeholder.displayTimezone.start}
-                      end={placeholder.displayTimezone.end}
+                      start={placeholder.start}
+                      end={placeholder.end}
                       data-testid="placeholder"
                     />
                   )}

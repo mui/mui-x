@@ -36,7 +36,7 @@ export function readTime(
     const match = ISO_TIME_REGEXP.exec(item);
     if (match == null) {
       throw new Error(
-        'Base UI Plus: The time string has an unsupported format. ' +
+        'MUI X Scheduler: The time string has an unsupported format. ' +
           'Its clock fields cannot be read. Use HH:mm or HH:mm:ss with up to nine fractional digits.',
       );
     }
@@ -57,7 +57,7 @@ export function readTime(
       !TIME_FIELDS.some((key) => item[key] !== undefined)
     ) {
       throw new TypeError(
-        'Base UI Plus: The time has no clock fields. ' +
+        'MUI X Scheduler: The time has no clock fields. ' +
           "A clock time cannot be created. Pass a string such as '09:30' or an object such as { hour: 9, minute: 30 }.",
       );
     }
@@ -71,7 +71,7 @@ export function readTime(
       value = Math.max(0, Math.min(value, maximum));
     } else if (value < 0 || value > maximum) {
       throw new Error(
-        `Base UI Plus: The ${field} of the time is out of range. ` +
+        `MUI X Scheduler: The ${field} of the time is out of range. ` +
           `The clock time cannot be created. Pass an integer between 0 and ${maximum}.`,
       );
     }

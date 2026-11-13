@@ -82,10 +82,8 @@ const INTERNALS_INDEX_RESTRICTED_ZONES = [
   message: `Use a more specific import instead. E.g. import { MyInternal } from '../internals/MyInternal';`,
 }));
 
-// The copy of BaseTemporal from the Base UI version, and the internals its `ZonedDateTime` imports.
+// The copy of BaseTemporal from the Base UI version.
 const BASE_TEMPORAL_COPY = 'packages/x-scheduler-internals/src/internals/utils/base-temporal';
-const BASE_TEMPORAL_COPY_INTERNALS =
-  'packages/x-scheduler-internals/src/internals/utils/internals/temporal-utils';
 
 // The Scheduler only uses the public API of the BaseTemporal copy: the exports of its index. Its
 // other modules are internals of the library.
@@ -96,12 +94,6 @@ const BASE_TEMPORAL_COPY_RESTRICTED_ZONES = [
     except: ['./index.ts'],
     message:
       'Import `BaseTemporal` from the index of the copy, and the day number helpers from `plain-date-utils`.',
-  },
-  {
-    target: ['./packages', './test'],
-    from: `./${BASE_TEMPORAL_COPY_INTERNALS}`,
-    message:
-      'These are internals of the BaseTemporal copy. Use `BaseTemporal.ZonedDateTime` from the index of the copy instead.',
   },
 ];
 
@@ -316,12 +308,10 @@ export default defineConfig(
     },
   },
   {
-    // A copy of BaseTemporal from the Base UI version, which keeps its code style. Change the Base UI
-    // version first, then copy it again.
-    files: [
-      `${BASE_TEMPORAL_COPY}/*${EXTENSION_TS}`,
-      `${BASE_TEMPORAL_COPY_INTERNALS}/*${EXTENSION_TS}`,
-    ],
+    // A copy of BaseTemporal from the Base UI version, which keeps its code style. It leaves out
+    // `ZonedDateTime` and prefixes its errors with "MUI X Scheduler". Change the Base UI version
+    // first, then copy it again.
+    files: [`${BASE_TEMPORAL_COPY}/*${EXTENSION_TS}`],
     rules: {
       'import/consistent-type-specifier-style': 'off',
       // The copy imports its own modules, so it keeps only the zones of the internals index.

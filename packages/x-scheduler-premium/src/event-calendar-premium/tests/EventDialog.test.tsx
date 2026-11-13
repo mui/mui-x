@@ -1,4 +1,4 @@
-import { toPlainDate } from '@mui/x-scheduler-internals/internals';
+import { getOccurrenceModelEnd, toPlainDate } from '@mui/x-scheduler-internals/internals';
 import * as React from 'react';
 import { isJSDOM } from 'test/utils/skipIf';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
@@ -2269,6 +2269,52 @@ describe('<EventDialogContent open />', () => {
         expect(updated.rrule).to.deep.equal(weeklyEvent.rrule);
       });
 
+      it.each([
+        { allDay: false, until: '2025-07-10T08:00:00' },
+        { allDay: true, until: '2025-07-10' },
+      ])(
+        "should keep the UNTIL of a series when toggling all-day from allDay=$allDay with scope 'all'",
+        async ({ allDay, until }) => {
+          const onEventsChange = vi.fn();
+          const builder = EventBuilder.new()
+            .withDataTimezone('UTC')
+            .span(
+              allDay ? '2025-07-01' : '2025-07-01T09:00:00',
+              allDay ? '2025-07-01' : '2025-07-01T10:00:00',
+              { allDay },
+            )
+            .rrule({ freq: 'DAILY', until });
+          const event = builder.build();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[event]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+              displayTimezone="UTC"
+              onEventsChange={onEventsChange}
+            >
+              <TestEventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+              <RecurringScopeDialog />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('switch', { name: /all day/i }));
+          await user.click(screen.getByRole('button', { name: /save/i }));
+          await screen.findByText(/Apply this change to:/i);
+          await user.click(screen.getByText(/All events/i));
+          await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+          // The stored UNTIL is read again with the new all-day flag: a timed cutoff becomes its
+          // day, and a day stays the whole day.
+          const updated = onEventsChange.mock.lastCall?.[0].find(
+            (item: SchedulerEvent) => item.id === event.id,
+          )!;
+          expect(Boolean(updated.allDay)).to.equal(!allDay);
+          expect(updated.rrule).to.deep.equal(event.rrule);
+        },
+      );
+
       it('should anchor the BYDAY to the data-timezone day when moved as displayed from a timezone ahead of UTC', async () => {
         const onEventsChange = vi.fn();
         // Tokyo is ahead of UTC: the displayed day maps to the previous UTC day, so a
@@ -2441,7 +2487,7 @@ describe('<EventDialogContent open />', () => {
         // display bounds normalize to in New York.
         expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
         const payload = deleteRecurringEventSpy.mock.lastCall[0];
-        expect(payload.occurrenceStart.getTime()).to.equal(
+        expect(payload.occurrence.unstable_internalInfos.dataStart).to.equal(
           createDate('2025-07-04T00:00:00', 'UTC').getTime(),
         );
       });
@@ -2535,7 +2581,7 @@ describe('<EventDialogContent open />', () => {
         // 00:00Z nor the pre-transition offset's 04:00Z.
         expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
         const payload = deleteRecurringEventSpy!.mock.lastCall![0];
-        expect(payload.occurrenceStart.getTime()).to.equal(
+        expect(payload.occurrence.unstable_internalInfos.dataStart).to.equal(
           createDate('2025-11-07T00:00:00', 'America/New_York').getTime(),
         );
       });
@@ -4574,7 +4620,8 @@ describe('<EventDialogContent open />', () => {
           .withDisplayTimezone('America/New_York');
         const event = builder.build();
         const occurrence = builder.toOccurrence();
-        const resizedEnd = addDays(occurrence.displayTimezone.end.value, 1);
+        // One more day, from the last instant of its last day.
+        const resizedEnd = addDays(new Date(getOccurrenceModelEnd(occurrence)), 1);
         const onEventsChange = vi.fn();
 
         const { user } = renderEditedAfterResize({

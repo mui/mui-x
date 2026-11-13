@@ -12,6 +12,8 @@ export function narrowEventDetails(details: SchedulerEventEditingStartEventDetai
   if (details.reason === 'edit') {
     const occurrence: SchedulerEventOccurrence = details.occurrence;
     occurrence.modelInBuiltInFormat.id;
+    // @ts-expect-error exception dates belong to the event, not the occurrence
+    occurrence.exDates;
   } else if (details.reason === 'view') {
     const occurrence: SchedulerEventOccurrence = details.occurrence;
     occurrence.modelInBuiltInFormat.id;
@@ -20,6 +22,6 @@ export function narrowEventDetails(details: SchedulerEventEditingStartEventDetai
     const draft: SchedulerEventOccurrencePlaceholder = details.occurrence;
     // @ts-expect-error the creation draft carries no persisted event model
     details.occurrence.modelInBuiltInFormat;
-    draft.displayTimezone.start;
+    draft.start;
   }
 }

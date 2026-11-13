@@ -15,7 +15,7 @@ import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-util
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
 import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import { schedulerOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
@@ -170,11 +170,9 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       const occurrence = builder.toOccurrence();
       const snapshot = {
         ...occurrence,
-        displayTimezone: {
-          ...occurrence.displayTimezone,
-          start: processDate(occurrence.dataTimezone.start.value, displayTimezone),
-          end: processDate(occurrence.dataTimezone.end.value, displayTimezone),
-        },
+        start: createProcessedDate(occurrence.unstable_internalInfos.dataStart, displayTimezone),
+        end: createProcessedDate(occurrence.unstable_internalInfos.dataEnd, displayTimezone),
+        unstable_internalInfos: { ...occurrence.unstable_internalInfos, displayTimezone },
       };
 
       const { user } = render(
@@ -1495,6 +1493,43 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       });
     });
 
+    it('should block the submit of a start after the untouched end of an all-day event when the slot omits the date and time section', async () => {
+      const onEventsChange = vi.fn();
+      const builder = EventBuilder.new()
+        .title('Trip')
+        .span('2025-05-26T00:00:00Z', '2025-05-27T23:59:59Z', { allDay: true });
+      const allDayEvent = builder.build();
+
+      function CustomStartDateField() {
+        const field = useEventDialogFormField('startDate');
+        return (
+          <input
+            aria-label="Start date"
+            value={field.value}
+            onChange={(event) => field.setValue(event.target.value)}
+          />
+        );
+      }
+
+      await expect(async () => {
+        const { user } = renderWithSlot(
+          { eventDialogGeneralTab: CustomStartDateField },
+          { events: [allDayEvent], onEventsChange },
+          builder.toOccurrence(),
+        );
+
+        // The untouched end is the last day, May 27, not the start of May 28.
+        const input = screen.getByRole('textbox', { name: 'Start date' });
+        await user.clear(input);
+        await user.type(input, '2025-05-28');
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+      }).toWarnDev([
+        'MUI X Scheduler: The date range is invalid but no field of the event dialog validates the "endDate" field.',
+      ]);
+
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
     async function submitInvertedRange(user: ReturnType<typeof render>['user']) {
       const endDateInput = screen.getByLabelText(/end date/i);
       await user.clear(endDateInput);
@@ -1993,10 +2028,10 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
         const updated = onEventsChange.mock.calls[0][0][0];
-        expect(new Date(updated.start).toISOString()).to.equal('2025-05-26T11:45:00.000Z');
+        expect(updated.start).to.equal('2025-05-26T11:45:00.000Z');
         // The untouched end was validated as a New York time too: persisting its stored
         // 08:15Z would invert the range, so it follows the start into the new timezone.
-        expect(new Date(updated.end).toISOString()).to.equal('2025-05-26T12:15:00.000Z');
+        expect(updated.end).to.equal('2025-05-26T12:15:00.000Z');
       });
 
       it('should keep an untouched range byte-identical when the display timezone changes while the async validation is pending', async () => {

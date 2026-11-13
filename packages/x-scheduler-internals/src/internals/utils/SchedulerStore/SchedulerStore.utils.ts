@@ -15,7 +15,7 @@ import type {
 import { processEvent } from '../../../process-event';
 import type { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
-import { dateToEventString } from '../date-utils';
+import { timestampToEventString, untilToEventString, getUntilReferenceString } from '../date-utils';
 import { schedulerEventSelectors } from '../../../scheduler-selectors/schedulerEventSelectors';
 
 /**
@@ -161,28 +161,37 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
   const dataTimezone = originalBuiltInModel.timezone ?? 'default';
   const stringified: Record<string, any> = { ...changes };
   if (changes.start != null) {
-    stringified.start = dateToEventString(changes.start, originalBuiltInModel.start, dataTimezone);
+    stringified.start = timestampToEventString(
+      changes.start.getTime(),
+      originalBuiltInModel.start,
+      dataTimezone,
+    );
   }
   if (changes.end != null) {
-    stringified.end = dateToEventString(changes.end, originalBuiltInModel.end, dataTimezone);
+    stringified.end = timestampToEventString(
+      changes.end.getTime(),
+      originalBuiltInModel.end,
+      dataTimezone,
+    );
   }
   if (changes.exDates != null) {
-    stringified.exDates = changes.exDates.map((d, i) => {
-      const originalExDate = originalBuiltInModel.exDates?.[i];
-      if (originalExDate) {
-        return dateToEventString(d, originalExDate, dataTimezone);
-      }
-      // New exDate — match the format of start
-      return dateToEventString(d, originalBuiltInModel.start, dataTimezone);
-    });
+    // A new exDate matches the format of start.
+    stringified.exDates = changes.exDates.map((d, i) =>
+      timestampToEventString(
+        d.getTime(),
+        originalBuiltInModel.exDates?.[i] ?? originalBuiltInModel.start,
+        dataTimezone,
+      ),
+    );
   }
   if (changes.rrule != null && typeof changes.rrule === 'object' && changes.rrule.until != null) {
-    const originalRRule = originalBuiltInModel.rrule;
-    const originalUntilString = typeof originalRRule === 'object' ? originalRRule.until : undefined;
-    const referenceString = originalUntilString ?? originalBuiltInModel.start;
     stringified.rrule = {
       ...changes.rrule,
-      until: dateToEventString(changes.rrule.until, referenceString, dataTimezone),
+      until: untilToEventString(
+        changes.rrule.until,
+        getUntilReferenceString(originalBuiltInModel),
+        dataTimezone,
+      ),
     };
   }
 
@@ -202,26 +211,27 @@ export function createEventModel<TEvent extends object>(
 ) {
   const id = generateId('event');
 
-  const formatNewDate = (value: string | Date): string => {
-    if (typeof value === 'string') {
-      return value;
-    }
-    return new Date(value.getTime()).toISOString();
-  };
+  const formatNewDate = (value: string | Date): string =>
+    typeof value === 'string' ? value : value.toISOString();
+  const start = formatNewDate(event.start);
 
-  // Internal callers (e.g. FormContent) may pass rrule.until as a Date.
-  // Convert it to a string so the built-in model stays in SchedulerEvent format.
+  // Internal callers (e.g. FormContent) may pass a processed rule, whose `until` is a plain date or date-time.
+  // Convert it to a string in the format of `start`, so the built-in model stays in SchedulerEvent
+  // format.
   const rrule: SchedulerEvent['rrule'] =
     typeof event.rrule === 'object' &&
     event.rrule.until != null &&
     typeof event.rrule.until !== 'string'
-      ? { ...event.rrule, until: formatNewDate(event.rrule.until) }
+      ? {
+          ...event.rrule,
+          until: untilToEventString(event.rrule.until, start, event.timezone ?? 'default'),
+        }
       : (event.rrule as SchedulerEvent['rrule']);
 
   const builtInEvent: SchedulerEvent = {
     ...event,
     id,
-    start: formatNewDate(event.start),
+    start,
     end: formatNewDate(event.end),
     exDates: event.exDates?.map(formatNewDate),
     rrule,
