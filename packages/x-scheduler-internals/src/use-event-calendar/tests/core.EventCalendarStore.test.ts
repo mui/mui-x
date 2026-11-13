@@ -289,7 +289,7 @@ describe('Core - EventCalendarStore', () => {
           .withDisplayTimezone('America/New_York')
           .toOccurrence();
         store.startEditing(edited, 'armed');
-        const end = addDays(new Date(edited.end.timestamp), 1);
+        const end = addDays(new Date(edited.end.timestamp - 1), 1);
 
         store.setEditingOccurrenceTimes({ end });
 
@@ -298,7 +298,7 @@ describe('Core - EventCalendarStore', () => {
         expect(editing.unstable_internalInfos.dataStart).to.equal(
           edited.unstable_internalInfos.dataStart,
         );
-        expect(editing.end.timestamp).to.equal(end.getTime());
+        expect(editing.end.timestamp).to.equal(end.getTime() + 1);
         expect(editing.unstable_internalInfos.dataEnd).to.equal(end.getTime());
       });
     });

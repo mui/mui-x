@@ -95,8 +95,11 @@ describe('<WeekView /> event creation', () => {
       const occurrence = await createWithKeyboard(eventCalendarClasses.dayTimeGridAllDayEventsCell);
 
       expect(occurrence.unstable_internalInfos.displayTimezone).to.equal(timezone);
-      // The creation ends on the last minute of its day.
-      expect(getMinutesInDay(occurrence.end.value)).to.equal(24 * 60 - 1);
+      // The all-day creation ends at the start of the next day.
+      expect(getMinutesInDay(occurrence.end.value)).to.equal(0);
+      expect(occurrence.end.value.toPlainDate().toString()).to.equal(
+        occurrence.start.value.toPlainDate().add({ days: 1 }).toString(),
+      );
     });
   });
 });

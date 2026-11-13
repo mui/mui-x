@@ -100,12 +100,13 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
         0,
       );
       const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });
+      const originalOccurrence = getOriginalOccurrence();
       return {
         eventId,
         occurrenceKey,
-        originalOccurrence: getOriginalOccurrence(),
+        originalOccurrence,
         start: start.timestamp,
-        end: end.timestamp,
+        end: end.timestamp - (originalOccurrence.allDay ? 1 : 0),
         initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
         sourceResourceId: rowResourceId,
       };

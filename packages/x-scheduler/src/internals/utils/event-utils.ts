@@ -2,13 +2,18 @@ import type {
   EventCalendarTimeGridEvents,
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
-import { addDaysOnWallClock } from '@mui/x-scheduler-internals/internals';
+import {
+  addDaysOnWallClock,
+  getOccurrenceInclusiveEnd,
+} from '@mui/x-scheduler-internals/internals';
 
 /**
  * Whether the occurrence starts and ends on different days of the display timezone.
  */
 export function isOccurrenceMultiDay(occurrence: SchedulerRenderableEventOccurrence) {
-  return !occurrence.start.value.toPlainDate().equals(occurrence.end.value.toPlainDate());
+  return !occurrence.start.value
+    .toPlainDate()
+    .equals(getOccurrenceInclusiveEnd(occurrence).value.toPlainDate());
 }
 
 export function isOccurrenceAllDayOrMultipleDay(occurrence: SchedulerRenderableEventOccurrence) {

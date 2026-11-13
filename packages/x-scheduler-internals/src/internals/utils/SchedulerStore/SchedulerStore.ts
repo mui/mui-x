@@ -45,6 +45,7 @@ import type {
   RequestEventDeletionParameters,
 } from './SchedulerStore.types';
 import { createProcessedDate } from '../../../process-date/processDate';
+import { normalizeAllDayBounds } from '../plain-date-utils/date';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 import type { SchedulerSchedulingPluginInterface } from '../../plugins/SchedulerSchedulingPlugin.types';
 import type {
@@ -71,6 +72,7 @@ import {
   getRecurringOccurrenceKey,
   isEventOccurrence,
   getPrimaryResourceId,
+  getOccurrenceInclusiveEnd,
 } from '../event-utils';
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
@@ -1521,10 +1523,18 @@ export class SchedulerStore<
     const { start, end } = changes;
     const liveEvent = schedulerEventSelectors.processedEvent(this.state, occurrence.id);
     const { displayTimezone } = occurrence.unstable_internalInfos;
+    const displayBounds = normalizeAllDayBounds(
+      start?.getTime() ?? occurrence.start.timestamp,
+      end?.getTime() ?? getOccurrenceInclusiveEnd(occurrence).timestamp,
+      occurrence.allDay,
+      displayTimezone,
+    );
     const bounds = {
       start:
-        start == null ? occurrence.start : createProcessedDate(start.getTime(), displayTimezone),
-      end: end == null ? occurrence.end : createProcessedDate(end.getTime(), displayTimezone),
+        start == null
+          ? occurrence.start
+          : createProcessedDate(displayBounds.start, displayTimezone),
+      end: end == null ? occurrence.end : createProcessedDate(displayBounds.end, displayTimezone),
     };
     this.set('editingOccurrence', {
       ...editingOccurrence,
@@ -1601,10 +1611,16 @@ export class SchedulerStore<
     }
 
     // A bound the submit left out keeps the occurrence's current value, in both timezones.
+    const displayBounds = normalizeAllDayBounds(
+      changedStart ?? occurrence.start.timestamp,
+      changedEnd ?? getOccurrenceInclusiveEnd(occurrence).timestamp,
+      changes.allDay ?? occurrence.allDay,
+      occurrence.unstable_internalInfos.displayTimezone,
+    );
     this.repointEditingOccurrence({
       eventId: targetsCreatedEvent ? createdEventId : original.id,
-      start: changedStart ?? occurrence.start.timestamp,
-      end: changedEnd ?? occurrence.end.timestamp,
+      start: changedStart == null ? occurrence.start.timestamp : displayBounds.start,
+      end: changedEnd == null ? occurrence.end.timestamp : displayBounds.end,
       isRecurring: targetsCreatedEvent ? createdEvent.rrule != null : true,
       dataStart: changedStart ?? occurrenceStart,
       dataEnd: changedEnd ?? occurrenceEnd,

@@ -36,7 +36,8 @@ interface SchedulerProcessedEventBase {
 
   /**
    * The end date and time of the event, as rendered in the display timezone.
-   * For all day events, this value is normalized to the end of the day in the display timezone.
+   * For all-day events, this value is exclusive: the start of the day after the last day,
+   * in the display timezone.
    */
   end: SchedulerProcessedDate;
 
@@ -272,7 +273,7 @@ export interface SchedulerEvent {
 /**
  *  A concrete occurrence derived from a `SchedulerEvent` (recurring or single).
  */
-export interface SchedulerEventOccurrence extends SchedulerProcessedEvent {
+export interface SchedulerEventOccurrence extends Omit<SchedulerProcessedEvent, 'exDates'> {
   /**
    * Unique key that can be passed to the React `key` property when looping through events.
    */

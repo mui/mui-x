@@ -5,7 +5,14 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
-import { BaseTemporal, toEpochMs, toPlainDate } from '@mui/x-scheduler-internals/internals';
+import {
+  BaseTemporal,
+  createUntilFromTimestamp,
+  getUntilTimestamp,
+  isSameUntil,
+  toEpochMs,
+  toPlainDate,
+} from '@mui/x-scheduler-internals/internals';
 import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
 import {
   NOT_LOCALIZED_WEEK_DAYS_INDEXES,
@@ -18,10 +25,14 @@ import {
 const UNTIL_REGEX = /^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})Z)?$/;
 
 /**
- * Reads `UNTIL` as the last day of the recurrence in `timezone`. Returns `null` for a malformed
+ * Reads `UNTIL` as a date for all-day events and a date-time for timed events. Returns `null` for a malformed
  * value or a date or time that does not exist, like February 31st.
  */
-function parseUntil(value: string, timezone: TemporalTimezone): BaseTemporal.PlainDate | null {
+function parseUntil(
+  value: string,
+  timezone: TemporalTimezone,
+  allDay: boolean,
+): BaseTemporal.PlainDate | BaseTemporal.PlainDateTime | null {
   const match = UNTIL_REGEX.exec(value);
   if (!match) {
     return null;
@@ -29,14 +40,18 @@ function parseUntil(value: string, timezone: TemporalTimezone): BaseTemporal.Pla
   const [year, month, day, hour, minute, second] = match.slice(1).map(Number);
   try {
     if (match[4] === undefined) {
-      return BaseTemporal.PlainDate.from({ year, month, day }, { overflow: 'reject' });
+      const date = BaseTemporal.PlainDate.from({ year, month, day }, { overflow: 'reject' });
+      return allDay ? date : date.toPlainDateTime();
     }
     // The trailing `Z` makes the value a UTC instant (RFC 5545).
     const utcDateTime = BaseTemporal.PlainDateTime.from(
       { year, month, day, hour, minute, second },
       { overflow: 'reject' },
     );
-    return toPlainDate(toEpochMs(utcDateTime, 'UTC'), timezone);
+    const timestamp = toEpochMs(utcDateTime, 'UTC');
+    return allDay
+      ? toPlainDate(timestamp, timezone)
+      : createUntilFromTimestamp(timestamp, timezone);
   } catch {
     return null;
   }
@@ -160,6 +175,7 @@ function validateRule(rule: SchedulerProcessedEventRecurrenceRule): void {
 function readRuleObject(
   input: SchedulerEventRecurrenceRule,
   timezone: TemporalTimezone,
+  allDay: boolean,
 ): SchedulerProcessedEventRecurrenceRule {
   // The typed object API validates `freq` as-is; unlike the RRULE string below, it is not normalized.
   validateFreq(input.freq);
@@ -177,7 +193,13 @@ function readRuleObject(
     throwInvalidByMonthDay(input.byMonthDay.join(','));
   }
   if (input.until != null) {
-    rule = { ...rule, until: toPlainDate(resolveEventTimestamp(input.until, timezone), timezone) };
+    const timestamp = resolveEventTimestamp(input.until, timezone);
+    rule = {
+      ...rule,
+      until: allDay
+        ? toPlainDate(timestamp, timezone)
+        : createUntilFromTimestamp(timestamp, timezone),
+    };
   }
   return rule;
 }
@@ -189,9 +211,12 @@ function readRuleObject(
 export function parseRRule(
   input: string | SchedulerEventRecurrenceRule,
   timezone: TemporalTimezone,
+  allDay: boolean = false,
 ): SchedulerProcessedEventRecurrenceRule {
   const rule =
-    typeof input === 'object' ? readRuleObject(input, timezone) : readRuleString(input, timezone);
+    typeof input === 'object'
+      ? readRuleObject(input, timezone, allDay)
+      : readRuleString(input, timezone, allDay);
   validateRule(rule);
   return rule;
 }
@@ -199,6 +224,7 @@ export function parseRRule(
 function readRuleString(
   input: string,
   timezone: TemporalTimezone,
+  allDay: boolean,
 ): SchedulerProcessedEventRecurrenceRule {
   const rruleObject: Record<string, string> = {};
   const parts = input
@@ -288,7 +314,7 @@ function readRuleString(
   }
 
   if (rruleObject.UNTIL) {
-    const until = parseUntil(rruleObject.UNTIL, timezone);
+    const until = parseUntil(rruleObject.UNTIL, timezone, allDay);
 
     if (until === null) {
       throw new Error(
@@ -304,7 +330,10 @@ function readRuleString(
   return rrule;
 }
 
-export function serializeRRule(rule: SchedulerProcessedEventRecurrenceRule): string {
+export function serializeRRule(
+  rule: SchedulerProcessedEventRecurrenceRule,
+  timezone: TemporalTimezone = 'default',
+): string {
   const parts: string[] = [];
 
   parts.push(`FREQ=${rule.freq}`);
@@ -331,8 +360,13 @@ export function serializeRRule(rule: SchedulerProcessedEventRecurrenceRule): str
   }
 
   if (rule.until) {
-    // The date form of RFC 5545, like `20250105`.
-    parts.push(`UNTIL=${rule.until.toString().replace(/-/g, '')}`);
+    const until =
+      rule.until instanceof BaseTemporal.PlainDateTime
+        ? new Date(getUntilTimestamp(rule.until, timezone))
+            .toISOString()
+            .replace(/[-:]|\.\d{3}/g, '')
+        : rule.until.toString().replace(/-/g, '');
+    parts.push(`UNTIL=${until}`);
   }
 
   return parts.join(';');
@@ -348,7 +382,11 @@ export function isSameRRule(
   if (!rruleA || !rruleB) {
     return false;
   }
-  return serializeRRule(rruleA) === serializeRRule(rruleB);
+  return (
+    isSameUntil(rruleA.until, rruleB.until) &&
+    serializeRRule({ ...rruleA, until: undefined }) ===
+      serializeRRule({ ...rruleB, until: undefined })
+  );
 }
 
 /**

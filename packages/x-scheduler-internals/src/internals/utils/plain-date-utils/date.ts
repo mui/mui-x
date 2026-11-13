@@ -90,8 +90,7 @@ export function parseNonIsoString(value: string, timezone: TemporalTimezone): nu
 
 /**
  * Snaps an all-day event's bounds to span their whole days in `timezone`; non-all-day bounds are
- * returned unchanged. The day ends on the later 23:59:59.999 when a DST transition repeats its last
- * hour, like the occurrences of recurring events, whatever the timezone of the system.
+ * returned unchanged. The end is exclusive: the first instant after the last day.
  */
 export function normalizeAllDayBounds(
   start: number,
@@ -102,7 +101,7 @@ export function normalizeAllDayBounds(
   if (!allDay) {
     return { start, end };
   }
-  return { start: getStartOfDayMs(start, timezone), end: getEndOfDayMs(end, timezone) };
+  return { start: getStartOfDayMs(start, timezone), end: getEndOfDayMs(end, timezone) + 1 };
 }
 
 export { createProcessedDate } from '../../../process-date/processDate';

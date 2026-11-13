@@ -14,6 +14,7 @@ import { plainDateFromDayNumber } from '../../internals/utils/plain-date-utils/p
 import type { SchedulerEventId, SchedulerEventOccurrence, SchedulerResourceId } from '../../models';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import {
+  schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
 } from '../../scheduler-selectors';
@@ -77,7 +78,11 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     // The dates of the event in the row.
     const firstDay = Math.max(startDay, toLocalDayNumber(rowStart, displayTimezone));
     const lastDay = Math.min(
-      toLocalDayNumber(end.timestamp, displayTimezone),
+      toLocalDayNumber(
+        end.timestamp -
+          (schedulerEventSelectors.processedEvent(store.state, eventId)?.allDay ? 1 : 0),
+        displayTimezone,
+      ),
       toLocalDayNumber(rowEnd, displayTimezone),
     );
     const elementPosition = ref.current.getBoundingClientRect();
@@ -106,13 +111,16 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   });
 
   const getSharedDragData: CalendarGridDayEventContext['getSharedDragData'] = useStableCallback(
-    () => ({
-      eventId,
-      occurrenceKey,
-      originalOccurrence: getOriginalOccurrence(),
-      start: start.timestamp,
-      end: end.timestamp,
-    }),
+    () => {
+      const originalOccurrence = getOriginalOccurrence();
+      return {
+        eventId,
+        occurrenceKey,
+        originalOccurrence,
+        start: start.timestamp,
+        end: end.timestamp - (originalOccurrence.allDay ? 1 : 0),
+      };
+    },
   );
 
   const getDragData = useStableCallback((input) => ({

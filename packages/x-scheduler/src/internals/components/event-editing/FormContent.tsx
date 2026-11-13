@@ -26,8 +26,10 @@ import {
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
+  BaseTemporal,
   getCustomEventProperties,
   getEventResourceIds,
+  getOccurrenceInclusiveEnd,
   getDataTimestamp,
   getResourceSelectionMode,
   isBuiltInEventProperty,
@@ -144,7 +146,7 @@ export function FormContent(props: FormContentProps) {
   // Built once: the provider ignores later values anyway.
   const initialValues = useRefWithInit((): EventDialogFormValues => {
     const startFields = formatDateAndTimeFields(occurrence.start.value);
-    const endFields = formatDateAndTimeFields(occurrence.end.value);
+    const endFields = formatDateAndTimeFields(getOccurrenceInclusiveEnd(occurrence).value);
 
     // The rule is read and written in the event's timezone, not the display one.
     const base = isEventOccurrence(occurrence) ? occurrence.rrule : undefined;
@@ -461,6 +463,16 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         rruleToSubmit = values.rruleDraft as SchedulerProcessedEventRecurrenceRule;
       } else {
         rruleToSubmit = recurrencePresets[values.recurrenceSelection];
+      }
+
+      if (rruleToSubmit?.until != null) {
+        let until = rruleToSubmit.until;
+        if (values.allDay && until instanceof BaseTemporal.PlainDateTime) {
+          until = until.toPlainDate();
+        } else if (!values.allDay && until instanceof BaseTemporal.PlainDate) {
+          until = until.toPlainDateTime(BaseTemporal.PlainTime.from('23:59:59.999'));
+        }
+        rruleToSubmit = { ...rruleToSubmit, until };
       }
 
       // The store receives the instants of the fields, read in the display timezone.

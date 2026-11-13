@@ -2,7 +2,12 @@ import type {
   SchedulerProcessedDate,
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
-import { formatFullDate, formatTime, getMinutesInDay } from '@mui/x-scheduler-internals/internals';
+import {
+  getOccurrenceInclusiveEnd,
+  formatFullDate,
+  formatTime,
+  getMinutesInDay,
+} from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEventLocaleText } from '../../models/translations';
 import { isOccurrenceMultiDay } from './event-utils';
 
@@ -28,7 +33,8 @@ export interface GetEventAccessibleNameParameters {
  */
 export function getEventAccessibleName(parameters: GetEventAccessibleNameParameters): string {
   const { occurrence, locale, ampm, localeText, isRecurring, resourceName } = parameters;
-  const { start, end } = occurrence;
+  const { start } = occurrence;
+  const end = getOccurrenceInclusiveEnd(occurrence);
   const isMultiDay = isOccurrenceMultiDay(occurrence);
 
   const formatDate = (date: SchedulerProcessedDate) =>

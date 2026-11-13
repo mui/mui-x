@@ -8,12 +8,14 @@ import type { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-g
 import { sortEventOccurrences } from '../sort-event-occurrences';
 import { differenceInDays } from '../internals/utils/plain-date-utils/timeZone';
 import { getDayNumber } from '../internals/utils/plain-date-utils/plainDate';
+import { getOccurrenceInclusiveEnd } from '../internals/utils/event-utils';
 
 /**
  * The number of full days an occurrence spans in the display timezone.
  */
 function getDayCount(occurrence: SchedulerEventOccurrence) {
-  const { start, end } = occurrence;
+  const { start } = occurrence;
+  const end = getOccurrenceInclusiveEnd(occurrence);
   const timezone = occurrence.unstable_internalInfos.displayTimezone;
   return differenceInDays(end.timestamp, start.timestamp, timezone);
 }
@@ -148,7 +150,7 @@ export function useEventOccurrencesWithDayGridPosition(
               daySpan: getDayGridCellSpan(
                 days,
                 dayIndex,
-                getDayNumber(occurrence.end.value.toPlainDate()),
+                getDayNumber(getOccurrenceInclusiveEnd(occurrence).value.toPlainDate()),
               ),
             };
             activeSegments[occurrence.key] = { position, startDayIndex: dayIndex, hidden: false };

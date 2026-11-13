@@ -17,7 +17,7 @@ import type {
 import { processEvent } from '../../../process-event';
 import type { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
-import { timestampToEventString, untilToEventString } from '../date-utils';
+import { timestampToEventString, untilToEventString, getUntilReferenceString } from '../date-utils';
 import { schedulerEventSelectors } from '../../../scheduler-selectors/schedulerEventSelectors';
 
 /**
@@ -187,12 +187,13 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
     );
   }
   if (changes.rrule != null && typeof changes.rrule === 'object' && changes.rrule.until != null) {
-    const originalRRule = originalBuiltInModel.rrule;
-    const originalUntilString = typeof originalRRule === 'object' ? originalRRule.until : undefined;
-    const referenceString = originalUntilString ?? originalBuiltInModel.start;
     stringified.rrule = {
       ...changes.rrule,
-      until: untilToEventString(changes.rrule.until, referenceString, dataTimezone),
+      until: untilToEventString(
+        changes.rrule.until,
+        getUntilReferenceString(originalBuiltInModel),
+        dataTimezone,
+      ),
     };
   }
 

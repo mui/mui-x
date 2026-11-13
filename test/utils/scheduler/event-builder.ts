@@ -16,14 +16,15 @@ import { processEvent, resolveEventTimestamp } from '@mui/x-scheduler-internals/
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerState } from '@mui/x-scheduler-internals/internals';
 import {
-  schedulerRecurringEventsPlugin,
-  getWeekDayCode,
-} from '@mui/x-scheduler-internals-premium/internals';
-import {
+  normalizeAllDayBounds,
   createProcessedDate,
   getRecurringOccurrenceKey,
   toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
+import {
+  schedulerRecurringEventsPlugin,
+  getWeekDayCode,
+} from '@mui/x-scheduler-internals-premium/internals';
 import type { TemporalAdapter, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { adapter as defaultAdapter } from './adapters';
 import { addMinutes, createDate, endOfDay, startOfDay } from './dates';
@@ -283,8 +284,9 @@ export class EventBuilder {
       schedulerRecurringEventsPlugin,
     );
 
+    const { exDates: unusedExDates, ...occurrenceProperties } = processed;
     return {
-      ...processed,
+      ...occurrenceProperties,
       key: crypto.randomUUID(),
     };
   }
@@ -316,11 +318,13 @@ export function createOccurrence(
   const { dataStart, dataEnd, displayTimezone } = event.unstable_internalInfos;
   const startMs = occurrenceStart.getTime();
   const endMs = startMs + dataEnd - dataStart;
+  const { exDates: unusedExDates, ...occurrenceProperties } = event;
+  const displayBounds = normalizeAllDayBounds(startMs, endMs, event.allDay, displayTimezone);
   return {
-    ...event,
+    ...occurrenceProperties,
     key: getRecurringOccurrenceKey(event.id, startMs, event.timezone),
-    start: createProcessedDate(startMs, displayTimezone),
-    end: createProcessedDate(endMs, displayTimezone),
+    start: createProcessedDate(displayBounds.start, displayTimezone),
+    end: createProcessedDate(displayBounds.end, displayTimezone),
     unstable_internalInfos: { displayTimezone, dataStart: startMs, dataEnd: endMs },
   };
 }

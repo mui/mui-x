@@ -106,7 +106,12 @@ export function createEventRangeIndex(
   let earliestRangeEnd = Infinity;
 
   events.forEach((event, index) => {
-    const entry: EventRangeEntry = [event, index, event.start.timestamp, event.end.timestamp];
+    const entry: EventRangeEntry = [
+      event,
+      index,
+      event.start.timestamp,
+      event.end.timestamp - (event.allDay ? 1 : 0),
+    ];
 
     if (expandRecurringEvents && event.rrule) {
       recurringEntries.push(entry);
@@ -141,7 +146,8 @@ export function createEventRangeIndex(
         return events.filter(
           (event) =>
             (expandRecurringEvents && Boolean(event.rrule)) ||
-            (event.start.timestamp <= endTimestamp && event.end.timestamp >= startTimestamp),
+            (event.start.timestamp <= endTimestamp &&
+              event.end.timestamp - (event.allDay ? 1 : 0) >= startTimestamp),
         );
       }
 

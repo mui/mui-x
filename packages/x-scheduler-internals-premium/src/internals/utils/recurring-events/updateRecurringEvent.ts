@@ -18,6 +18,7 @@ import {
   timestampToEventString,
   toPlainDate,
   untilToEventString,
+  getUntilReferenceString,
 } from '@mui/x-scheduler-internals/internals';
 import {
   getPlainDateWeekDayCode,
@@ -106,7 +107,11 @@ export function applyRecurringUpdateFollowing(
     if (newRRule.until != null) {
       newEventRRule = {
         ...newRRule,
-        until: untilToEventString(newRRule.until, originalModel.start, dataTimezone),
+        until: untilToEventString(
+          newRRule.until,
+          getUntilReferenceString(originalModel),
+          dataTimezone,
+        ),
       };
     } else {
       const { until: unusedUntil, ...rest } = newRRule;

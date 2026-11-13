@@ -24,7 +24,7 @@ import {
 } from '../../scheduler-selectors';
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
 import type { StandaloneEvent } from '../../standalone-event';
-import { getPrimaryResourceId } from './event-utils';
+import { getPrimaryResourceId, getOccurrenceInclusiveEnd } from './event-utils';
 
 // Not every drag source exposes `sourceResourceId` (only rows that know which
 // resource they represent, e.g. the Event Timeline Premium, can report it) —
@@ -253,7 +253,7 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
   if (allDayToggled || originalOccurrence.start.timestamp !== start) {
     changes.start = new Date(start);
   }
-  if (allDayToggled || originalOccurrence.end.timestamp !== end) {
+  if (allDayToggled || getOccurrenceInclusiveEnd(originalOccurrence).timestamp !== end) {
     changes.end = new Date(end);
   }
 

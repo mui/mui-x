@@ -45,16 +45,17 @@ export function getRecurringEventOccurrencesForVisibleDays(
 
   // Every occurrence starts at the wall-clock time of DTSTART.
   const startTime = series.start.toPlainTime();
+  const { exDates: unusedExDates, ...occurrenceProperties } = event;
   return series.getOccurrenceDays(scanFirstDay, scanLastDay).map((day) => {
     const startMs = toEpochMs(day.toPlainDateTime(startTime), dataTimezone);
     const endMs = startMs + durationMs;
 
     // All-day occurrences span the whole day, like the base event in processEvent.
     const displayStartMs = event.allDay ? getStartOfDayMs(startMs, displayTimezone) : startMs;
-    const displayEndMs = event.allDay ? getEndOfDayMs(endMs, displayTimezone) : endMs;
+    const displayEndMs = event.allDay ? getEndOfDayMs(endMs, displayTimezone) + 1 : endMs;
 
     return {
-      ...event,
+      ...occurrenceProperties,
       key: getRecurringOccurrenceKeyFromDateKey(event.id, getPlainDateKey(day)),
       start: createProcessedDate(displayStartMs, displayTimezone),
       end: createProcessedDate(displayEndMs, displayTimezone),

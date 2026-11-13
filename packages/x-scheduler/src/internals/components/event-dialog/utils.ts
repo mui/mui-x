@@ -59,7 +59,7 @@ export interface EventDialogBuiltInFormValues {
    * Its `until` is `null` when the recurrence ends on a date, but the date field doesn't hold one.
    */
   rruleDraft: Omit<SchedulerProcessedEventRecurrenceRule, 'until'> & {
-    until?: BaseTemporal.PlainDate | null;
+    until?: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime | null;
   };
 }
 
@@ -457,7 +457,7 @@ export function getRecurrenceTimezoneName(
 
 export function getEndsSelectionFromRRule(rrule?: {
   count?: number | null;
-  until?: BaseTemporal.PlainDate | null;
+  until?: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime | null;
 }): EndsSelection {
   if (!rrule) {
     return 'never';

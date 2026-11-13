@@ -21,6 +21,7 @@ export interface SchedulerRecurringEventsPluginInterface {
   parseRRule(
     input: string | SchedulerEventRecurrenceRule,
     timezone: TemporalTimezone,
+    allDay?: boolean,
   ): SchedulerProcessedEventRecurrenceRule;
 
   /**

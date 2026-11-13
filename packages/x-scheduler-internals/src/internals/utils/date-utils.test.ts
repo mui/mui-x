@@ -1,7 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { createDate } from 'test/utils/scheduler';
 import { BaseTemporal } from './base-temporal';
-import { getPlainDateWeekStart, getWeekNumber, untilToEventString } from './date-utils';
+import {
+  createUntilFromTimestamp,
+  getPlainDateWeekStart,
+  getWeekNumber,
+  untilToEventString,
+} from './date-utils';
 import { normalizeAllDayBounds } from './plain-date-utils/date';
 import { toPlainDateTime } from './plain-date-utils/timeZone';
 
@@ -27,7 +32,7 @@ describe('date-utils', () => {
     it('snaps an all-day event to the whole day', () => {
       expect(read(normalizeAllDayBounds(start, end, true, 'default'))).to.deep.equal([
         '2025-01-08T00:00:00',
-        '2025-01-08T23:59:59.999',
+        '2025-01-09T00:00:00',
       ]);
     });
 
@@ -35,45 +40,79 @@ describe('date-utils', () => {
       const multiDayEnd = createDate('2025-01-10T18:00:00').getTime();
       expect(read(normalizeAllDayBounds(start, multiDayEnd, true, 'default'))).to.deep.equal([
         '2025-01-08T00:00:00',
-        '2025-01-10T23:59:59.999',
+        '2025-01-11T00:00:00',
       ]);
     });
   });
 
   describe('normalizeAllDayBounds across DST transitions', () => {
-    it('should end the day on the later 23:59:59.999 when a DST transition repeats its last hour', () => {
+    it('should end at the next midnight when a DST transition repeats the last hour', () => {
       // America/Santiago falls back from 00:00 -03:00 to 23:00 -04:00 on April 6th, 2024.
       const day = createDate('2024-04-06T12:00:00', 'America/Santiago').getTime();
       const result = normalizeAllDayBounds(day, day, true, 'America/Santiago');
       expect(new Date(result.start).toISOString()).to.equal('2024-04-06T03:00:00.000Z');
-      expect(new Date(result.end).toISOString()).to.equal('2024-04-07T03:59:59.999Z');
+      expect(new Date(result.end).toISOString()).to.equal('2024-04-07T04:00:00.000Z');
     });
   });
 
   describe('untilToEventString', () => {
-    const until = BaseTemporal.PlainDate.from('2025-01-12');
+    it.each([
+      ['2025-01-01', '2025-01-12'],
+      ['2025-01-01T09:00:00', '2025-01-12T23:59:59'],
+      ['2025-01-01T08:00:00Z', '2025-01-12T22:59:59.999Z'],
+    ])('should preserve the format of an all-day UNTIL after %s', (original, expected) => {
+      expect(
+        untilToEventString(BaseTemporal.PlainDate.from('2025-01-12'), original, 'Europe/Paris'),
+      ).to.equal(expected);
+    });
 
-    it('should write the end of the day on the wall clock after a wall-time string', () => {
+    it('should preserve the exact time and precision of a timed UNTIL', () => {
+      const until = BaseTemporal.PlainDateTime.from('2025-01-12T09:15:30.123');
       expect(untilToEventString(until, '2025-01-01T09:00:00', 'Europe/Paris')).to.equal(
-        '2025-01-12T23:59:59',
+        '2025-01-12T09:15:30.123',
       );
-    });
-
-    it('should write the last instant of the day after an instant string', () => {
       expect(untilToEventString(until, '2025-01-01T08:00:00Z', 'Europe/Paris')).to.equal(
-        '2025-01-12T22:59:59.999Z',
+        '2025-01-12T08:15:30.123Z',
       );
     });
 
-    it('should end the day on the later 23:59:59.999 when a DST transition repeats its last hour', () => {
-      // America/Santiago falls back from 00:00 -03:00 to 23:00 -04:00 on April 6th, 2024.
+    it('should keep the time of a timed UNTIL after a date-only UNTIL', () => {
       expect(
         untilToEventString(
-          BaseTemporal.PlainDate.from('2024-04-06'),
+          BaseTemporal.PlainDateTime.from('2025-01-04T23:59:59.999'),
+          '2025-01-10',
+          'UTC',
+        ),
+      ).to.equal('2025-01-04T23:59:59.999');
+      expect(
+        untilToEventString(
+          BaseTemporal.PlainDateTime.from('2025-01-04T00:00'),
+          '2025-01-10',
+          'UTC',
+        ),
+      ).to.equal('2025-01-04');
+    });
+
+    it('should save the later end of a day whose last hour repeats', () => {
+      expect(
+        untilToEventString(
+          BaseTemporal.PlainDateTime.from('2024-04-06T23:59:59.999'),
           '2024-04-01T09:00:00Z',
           'America/Santiago',
         ),
       ).to.equal('2024-04-07T03:59:59.999Z');
+    });
+
+    it.each([
+      // Santiago repeats 23:00-23:59 on April 6th, 2024: the first end of the day.
+      ['2024-04-07T02:59:59.999Z', 'America/Santiago', '2024-04-01T09:00:00Z'],
+      // Paris repeats 02:00-02:59 on October 26th, 2025: the second 02:30.
+      ['2025-10-26T01:30:00.000Z', 'Europe/Paris', '2025-10-01T09:00:00'],
+      // Havana repeats 00:00-00:59 on November 2nd, 2025: the second midnight.
+      ['2025-11-02T05:00:00.000Z', 'America/Havana', '2025-10-01'],
+    ])('should keep the instant %s of a timed UNTIL read in %s', (iso, timezone, original) => {
+      const until = createUntilFromTimestamp(Date.parse(iso), timezone);
+      expect(untilToEventString(until, original, timezone)).to.equal(iso);
     });
   });
 

@@ -74,11 +74,12 @@ export interface SchedulerProcessedEventRecurrenceRule {
    */
   byMonth?: number[];
   /**
-   * The last day of the recurrence, included, in the timezone of the event.
+   * The inclusive end of the recurrence, in the timezone of the event.
+   * A plain date for all-day events, or an exact plain date-time for timed events.
    * Must not be specified when the count property is set.
    * Corresponds to the UNTIL property of the string-based RRULE.
    */
-  until?: BaseTemporal.PlainDate;
+  until?: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime;
   /**
    * The number of occurrences at which to range-bound the recurrence.
    * Must not be specified when the until property is set.
@@ -95,7 +96,7 @@ export type SchedulerEventRecurrenceRule = Omit<SchedulerProcessedEventRecurrenc
   /**
    * A date time value that bounds the recurrence rule in an inclusive manner.
    * Same string semantics as `SchedulerEvent.start` / `end`.
-   * The recurrence runs until the end of its day, in the timezone of the event.
+   * For all-day events only the date is used. Timed events also use the time.
    */
   until?: string;
 };

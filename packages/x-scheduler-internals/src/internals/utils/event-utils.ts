@@ -13,6 +13,22 @@ import type { SchedulerRecurringEventsPluginInterface } from '../plugins/Schedul
 import { toPlainDate } from './plain-date-utils/timeZone';
 import { getDayNumber, getPlainDateKey } from './plain-date-utils/plainDate';
 import type { SchedulerEventRangeIndex } from './event-range-index';
+import { createProcessedDate } from '../../process-date';
+
+/**
+ * The inclusive end for date labels and the existing event-model editing APIs.
+ * All-day occurrence ends are exclusive; timed occurrence ends are unchanged.
+ */
+export function getOccurrenceInclusiveEnd(
+  occurrence: Pick<SchedulerRenderableEventOccurrence, 'allDay' | 'end' | 'unstable_internalInfos'>,
+): SchedulerProcessedDate {
+  return occurrence.allDay
+    ? createProcessedDate(
+        occurrence.end.timestamp - 1,
+        occurrence.unstable_internalInfos.displayTimezone,
+      )
+    : occurrence.end;
+}
 
 /**
  * Whether the occurrence is a persisted event occurrence, as opposed to a
@@ -97,8 +113,9 @@ export function generateOccurrenceFromEvent({
    */
   internalInfos?: SchedulerProcessedEventInternalInfos;
 }): SchedulerEventOccurrence {
+  const { exDates: unusedExDates, ...occurrenceProperties } = event;
   return {
-    ...event,
+    ...occurrenceProperties,
     id: eventId,
     key: occurrenceKey,
     start,
@@ -121,7 +138,7 @@ export function getDaysTheOccurrenceIsVisibleOn(
   dayNumbers: readonly number[],
 ) {
   const startDayNumber = getDayNumber(event.start.value.toPlainDate());
-  const endDayNumber = getDayNumber(event.end.value.toPlainDate());
+  const endDayNumber = getDayNumber(getOccurrenceInclusiveEnd(event).value.toPlainDate());
 
   const dayKeys: string[] = [];
   for (let index = 0; index < days.length; index += 1) {
@@ -160,14 +177,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
     }
 
     // STEP 2: Recurrent event processing, if it is recurrent expand it for the visible days
-    if (event.rrule) {
-      // Without the premium recurring-events plugin attached, recurring events
-      // are not expanded into occurrences — they are treated as single non-recurring events.
-      if (recurringEventsPlugin == null) {
-        occurrences.push({ ...event, key: getOccurrenceKey(event.id) });
-        continue;
-      }
-
+    if (event.rrule && recurringEventsPlugin != null) {
       // TODO: Check how this behave when the occurrence is between start and end but not in the visible days (e.g: hidden week end).
       occurrences.push(
         ...recurringEventsPlugin.getOccurrencesForVisibleDays(event, start, end, displayTimezone),
@@ -175,7 +185,9 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
       continue;
     }
 
-    occurrences.push({ ...event, key: getOccurrenceKey(event.id) });
+    // Without the recurring-events plugin, recurring events are treated as single events.
+    const { exDates: unusedExDates, ...occurrenceProperties } = event;
+    occurrences.push({ ...occurrenceProperties, key: getOccurrenceKey(event.id) });
   }
 
   return occurrences;

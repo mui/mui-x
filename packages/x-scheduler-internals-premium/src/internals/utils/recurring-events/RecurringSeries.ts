@@ -1,6 +1,6 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import {
+  BaseTemporal,
   addMonthsToDayNumber,
   dayNumberToIsoDate,
   getDayNumber,
@@ -12,6 +12,8 @@ import {
   LAST_SUPPORTED_DAY,
   plainDateFromDayNumber,
   toPlainDateTime,
+  toEpochMs,
+  getUntilTimestamp,
 } from '@mui/x-scheduler-internals/internals';
 import type {
   RecurringEventWeekDayCode,
@@ -338,7 +340,18 @@ export class RecurringSeries {
     this.ruleDays = new RuleDays(rule, getDayNumber(this.start.toPlainDate()));
     // A fractional COUNT is rounded up.
     this.count = Math.ceil(rule.count ?? Infinity);
-    this.untilDay = rule.until ? getDayNumber(rule.until) : Infinity;
+    if (rule.until instanceof BaseTemporal.PlainDateTime) {
+      const untilDate = rule.until.toPlainDate();
+      const occurrenceStart = toEpochMs(
+        untilDate.toPlainDateTime(this.start.toPlainTime()),
+        timezone,
+      );
+      this.untilDay =
+        getDayNumber(untilDate) -
+        (occurrenceStart > getUntilTimestamp(rule.until, timezone) ? 1 : 0);
+    } else {
+      this.untilDay = rule.until ? getDayNumber(rule.until) : Infinity;
+    }
     this.excludedDays = new Set(parameters.excludedDays?.map(getDayNumber));
   }
 

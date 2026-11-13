@@ -36,7 +36,7 @@ export function processEvent(
 
   const parsedDataRRule =
     recurringEventsPlugin && model.rrule
-      ? recurringEventsPlugin.parseRRule(model.rrule, dataTimezone)
+      ? recurringEventsPlugin.parseRRule(model.rrule, dataTimezone, model.allDay)
       : undefined;
 
   return {

@@ -1,4 +1,5 @@
 import { BaseTemporal, toPlainDate } from '@mui/x-scheduler-internals/internals';
+import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import {
   addMinutes,
   createDate,
@@ -16,6 +17,7 @@ import type {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import { describe, it, expect } from 'vitest';
+import { schedulerRecurringEventsPlugin } from '../../plugins/schedulerRecurringEventsPlugin';
 import {
   adjustRRuleForAllMove,
   applyRecurringUpdateAll,
@@ -228,7 +230,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const { until, ...truncatedRule } = rrule as SchedulerProcessedEventRecurrenceRule;
       expect(id).to.equal(defaultEvent.id);
       expect(truncatedRule).to.deep.equal(defaultEvent.rrule);
-      expect(until).toEqualPlainDate('2025-01-04');
+      expect(until!.toString()).to.equal('2025-01-04T23:59:59.999');
       expect(updatedEvents.created).to.deep.equal([
         {
           ...withoutId(defaultEvent.modelInBuiltInFormat),
@@ -357,6 +359,26 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(createdEvent.end).not.to.include('Z');
     });
 
+    it.each([{ freq: 'DAILY' as const, until: '2025-01-10' }, 'FREQ=DAILY;UNTIL=20250110'])(
+      'should preserve a date-only UNTIL when splitting an all-day series (%j)',
+      (rrule) => {
+        const event = EventBuilder.new().singleDay('2025-01-01T09:00:00').allDay(true).build();
+        const original = processEvent(
+          { ...event, rrule },
+          'default',
+          schedulerRecurringEventsPlugin,
+        );
+        const result = applyRecurringUpdateFollowing(
+          original,
+          createOccurrence(original, createDate('2025-01-05T09:00:00')),
+          { id: event.id, title: 'Updated' },
+        );
+        expect((result.created![0].rrule as SchedulerEventRecurrenceRule).until).to.equal(
+          '2025-01-10',
+        );
+      },
+    );
+
     it('should write the dates of a series with offsets as instants', () => {
       const offsetEvent = EventBuilder.new()
         .span('2025-01-01T09:00:00+01:00', '2025-01-01T10:00:00+01:00')
@@ -380,9 +402,9 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(createdEvent.start).to.equal('2025-01-05T10:00:00.000Z');
       expect(createdEvent.end).to.equal('2025-01-05T11:00:00.000Z');
       expect(createdEvent.exDates).to.deep.equal(['2025-01-08T10:00:00.000Z']);
-      // The end of the last day of the series in Paris.
+      // The exact cutoff in Paris is preserved as a UTC instant.
       expect((createdEvent.rrule as SchedulerEventRecurrenceRule).until).to.equal(
-        '2025-01-10T22:59:59.999Z',
+        '2025-01-10T08:00:00.000Z',
       );
     });
 

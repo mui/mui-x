@@ -170,6 +170,35 @@ describe('event-utils', () => {
     const resourceA = ResourceBuilder.new().build();
     const resourceB = ResourceBuilder.new().build();
 
+    it.each(['single', 'recurring', 'recurring-disabled'] as const)(
+      'should keep exception dates on the event rather than its occurrences (%s)',
+      (mode) => {
+        const event = EventBuilder.new()
+          .singleDay('2024-01-15T10:00:00Z')
+          .rrule(mode === 'single' ? undefined : { freq: 'DAILY' })
+          .exDates(['2024-01-16T10:00:00Z'])
+          .toProcessed();
+
+        const result = getOccurrencesFromEvents({
+          start: createDate('2024-01-15T00:00:00Z').getTime(),
+          end: createDate('2024-01-17T23:59:59Z').getTime(),
+          eventRangeIndex: createEventRangeIndex([event], mode === 'recurring'),
+          visibleResources: {},
+          displayTimezone: 'default',
+          recurringEventsPlugin: mode === 'recurring' ? schedulerRecurringEventsPlugin : null,
+        });
+
+        expect(result.map((occurrence) => occurrence.start.value.day)).to.deep.equal(
+          mode === 'recurring' ? [15, 17] : [15],
+        );
+        for (const occurrence of result) {
+          expect(occurrence).not.toHaveProperty('exDates');
+          expect(occurrence.modelInBuiltInFormat.exDates).to.deep.equal(['2024-01-16T10:00:00Z']);
+        }
+        expect(event.exDates).toHaveLength(1);
+      },
+    );
+
     it('should include an event assigned to multiple resources when at least one is visible', () => {
       const event = EventBuilder.new()
         .resources([resourceA, resourceB])
@@ -301,6 +330,7 @@ describe('event-utils', () => {
     it('should carry the data instants next to the display segment bounds', () => {
       const processed = utcJuly4AllDayBuilder()
         .withDisplayTimezone('America/New_York')
+        .exDates(['2025-07-05T00:00:00Z'])
         .toProcessed();
 
       const occurrence = generateOccurrenceFromEvent({
@@ -317,6 +347,7 @@ describe('event-utils', () => {
       expect(occurrence.unstable_internalInfos.dataStart).to.equal(
         createDate('2025-07-04T00:00:00', 'UTC').getTime(),
       );
+      expect(occurrence).not.toHaveProperty('exDates');
     });
 
     it('should default the data instants to the display bounds when not provided', () => {

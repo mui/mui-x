@@ -91,6 +91,41 @@ Read its day in `displayTimezone`, as the timezone of the browser can put it on 
 
 {{"demo": "TimezoneInstantBased.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Reading occurrence dates
+
+Callbacks such as `onEventEditingStart` and hooks such as `useEventDialogOccurrence()` provide an occurrence with resolved `start` and `end` values.
+Each bound contains:
+
+- `value`: a `BaseTemporal.PlainDateTime` with the date and wall-clock time in `displayTimezone`.
+- `timestamp`: the instant as milliseconds since the Unix epoch.
+
+For all-day occurrences, `end` is exclusive: an occurrence covering July 1 ends at the start of July 2 in the display timezone.
+The date and time fields have no UTC offset; use `timestamp` to distinguish the two instances of an hour repeated by a daylight saving transition.
+
+Import `BaseTemporal` to read and compare these values:
+
+```ts
+import { BaseTemporal } from '@mui/x-scheduler/base-temporal';
+
+const firstDay = BaseTemporal.PlainDate.from('2025-07-01');
+occurrence.start.value.toPlainDate().equals(firstDay);
+BaseTemporal.PlainDateTime.compare(occurrence.start.value, occurrence.end.value);
+```
+
+The same namespace is available from `@mui/x-scheduler-premium/base-temporal`.
+It provides a subset of Temporal for reading and comparing dates.
+For formatting or date-time arithmetic, use `timestamp` with `Date` or your date library:
+
+```ts
+const start = new Date(occurrence.start.timestamp);
+const durationMinutes =
+  (occurrence.end.timestamp - occurrence.start.timestamp) / 60_000;
+```
+
+The occurrence's `timezone` and `rrule` describe the original event in its own timezone.
+The rule's `until` is a `BaseTemporal.PlainDate` for all-day events and a `BaseTemporal.PlainDateTime` for timed events.
+Exception dates belong to the series and are available as strings on `occurrence.modelInBuiltInFormat.exDates` for persisted occurrences.
+
 ## Supported timezones
 
 Both the `displayTimezone` prop and the event's `timezone` field accept the following values:

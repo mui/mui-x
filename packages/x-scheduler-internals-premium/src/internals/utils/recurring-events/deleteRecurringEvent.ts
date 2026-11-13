@@ -5,6 +5,7 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
 import {
+  createUntilFromTimestamp,
   createStartOfPlainDate,
   toEpochMs,
   toPlainDate,
@@ -86,11 +87,18 @@ export function applyRecurringDeleteFollowing(
   }
 
   const { count, until, ...baseRule } = originalEvent.rrule!;
+  const lastInstantBefore = toEpochMs(occurrencePlainDate, originalEvent.timezone) - 1;
   return {
     updated: [
       {
         id: originalEvent.id,
-        rrule: { ...baseRule, until: occurrencePlainDate.add({ days: -1 }) },
+        rrule: {
+          ...baseRule,
+          // The day before may be one the timezone skips, so read the last instant before.
+          until: originalEvent.allDay
+            ? toPlainDate(lastInstantBefore, originalEvent.timezone)
+            : createUntilFromTimestamp(lastInstantBefore, originalEvent.timezone),
+        },
       },
     ],
   };

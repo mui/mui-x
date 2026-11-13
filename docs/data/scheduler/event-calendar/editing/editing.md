@@ -120,13 +120,18 @@ Call `eventDetails.cancel()` to keep the built-in dialog closed and open your ow
     eventDetails.cancel();
     if (eventDetails.reason === 'creation') {
       // Creation drafts have a synthetic `id` — use the proposed dates instead.
-      openYourCreationUI(eventDetails.occurrence.displayTimezone);
+      openYourCreationUI({
+        start: eventDetails.occurrence.start,
+        end: eventDetails.occurrence.end,
+      });
     } else {
       openYourEditingUI(eventDetails.occurrence.id);
     }
   }}
 />
 ```
+
+The proposed dates use the [occurrence date format](/x/react-scheduler/timezone/#reading-occurrence-dates), with an exclusive end for all-day occurrences.
 
 In the demo below, both clicking an event and clicking an empty cell open a custom dialog instead of the built-in one:
 

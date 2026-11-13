@@ -30,6 +30,7 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getMonthlyReference, getWeeklyDays } from '@mui/x-scheduler-internals-premium/internals';
 import {
+  BaseTemporal,
   formatWeekday,
   formatWeekdayShort,
   toPlainDate,
@@ -301,6 +302,11 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     }));
   };
 
+  const getUntilForDay = (day: BaseTemporal.PlainDate | null) =>
+    day == null || rangeValues.allDay
+      ? day
+      : day.toPlainDateTime(BaseTemporal.PlainTime.from('23:59:59.999'));
+
   const handleChangeInterval = (event: React.ChangeEvent<HTMLInputElement>) => {
     const intervalValue = Number(event.currentTarget.value || 1);
     updateCustomDraft({ interval: intervalValue });
@@ -323,7 +329,10 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     switch (endsSelection) {
       case 'until': {
         // The event's last day, in its own timezone.
-        updateCustomDraft({ until: toPlainDate(ruleBounds.end, eventTimezone), count: undefined });
+        updateCustomDraft({
+          until: getUntilForDay(toPlainDate(ruleBounds.end, eventTimezone)),
+          count: undefined,
+        });
         break;
       }
       case 'after': {
@@ -350,7 +359,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     const untilValue = event.currentTarget.value;
     // The chosen day is the last one the series runs on, in the event's timezone. A field that
     // isn't a date keeps the rule ending on a date and fails the validation.
-    updateCustomDraft({ until: readDateField(untilValue) });
+    updateCustomDraft({ until: getUntilForDay(readDateField(untilValue)) });
   };
 
   const handleChangeWeeklyDays = (dayCode: RecurringEventWeekDayCode) => {
@@ -668,7 +677,10 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                 type="date"
                 value={
                   customEndsValue === 'until' && rruleDraft.until != null
-                    ? rruleDraft.until.toString()
+                    ? (rruleDraft.until instanceof BaseTemporal.PlainDateTime
+                        ? rruleDraft.until.toPlainDate()
+                        : rruleDraft.until
+                      ).toString()
                     : ''
                 }
                 onChange={handleChangeUntil}

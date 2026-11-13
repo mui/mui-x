@@ -9,6 +9,7 @@ import {
   toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
+import { BaseTemporal } from '../internals/utils/base-temporal';
 
 describe('processEvent', () => {
   it('should keep event timezone in modelInBuiltInFormat', () => {
@@ -49,7 +50,7 @@ describe('processEvent', () => {
 
       const { start, end } = processed;
       expect(start.value.toString()).to.equal('2025-07-03T00:00:00');
-      expect(end.value.toString()).to.equal('2025-07-04T23:59:59.999');
+      expect(end.value.toString()).to.equal('2025-07-05T00:00:00');
       expect(
         toPlainDate(processed.unstable_internalInfos.dataStart, processed.timezone).toString(),
       ).to.equal('2025-07-04');
@@ -81,11 +82,38 @@ describe('processEvent', () => {
       expect(processed.exDates![0].toString()).to.equal('2025-01-04T19:00:00');
     });
 
+    it.each([true, false])(
+      'should choose the UNTIL type from allDay=%s for either input format',
+      (allDay) => {
+        for (const rrule of [
+          { freq: 'DAILY' as const, until: '2025-01-11' },
+          'FREQ=DAILY;UNTIL=20250111',
+        ]) {
+          const event = EventBuilder.new()
+            .withDataTimezone('America/New_York')
+            .allDay(allDay)
+            .build();
+          const processed = processEvent(
+            { ...event, rrule },
+            'Asia/Tokyo',
+            schedulerRecurringEventsPlugin,
+          );
+          expect(processed.rrule!.until).to.be.instanceOf(
+            allDay ? BaseTemporal.PlainDate : BaseTemporal.PlainDateTime,
+          );
+          expect(processed.rrule!.until!.toString()).to.equal(
+            allDay ? '2025-01-11' : '2025-01-11T00:00:00',
+          );
+        }
+      },
+    );
+
     it('should read rrule.until as its day in the timezone of the event when rrule is an object', () => {
       // The rule is expressed in the timezone the series expands in, not the display one: this
       // instant is January 10th in New York, but January 11th in UTC and in Tokyo.
       const event = EventBuilder.new()
         .withDataTimezone('America/New_York')
+        .allDay(true)
         .rrule({
           freq: 'DAILY',
           until: '2025-01-11T03:00:00Z',
@@ -98,7 +126,7 @@ describe('processEvent', () => {
     });
 
     it('should parse an rrule string and read its UNTIL as its day in the timezone of the event', () => {
-      const event = EventBuilder.new().withDataTimezone('America/New_York').build();
+      const event = EventBuilder.new().withDataTimezone('America/New_York').allDay(true).build();
 
       const processed = processEvent(
         {

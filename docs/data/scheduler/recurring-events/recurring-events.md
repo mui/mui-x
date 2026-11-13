@@ -163,7 +163,7 @@ Use either the `COUNT` or the `UNTIL` property if you want to put an end boundar
   ```
 
 - Use the `UNTIL` property if you want your event to stop at a given date.
-  The date must be in UTC and formatted as `YYYYMMDDTHHmmssZ` (no dashes or colons):
+  Use `YYYYMMDD` for a date, or `YYYYMMDDTHHmmssZ` for a UTC date-time (no dashes or colons):
 
   ```ts
   // Until December 31, 2025 at 23:59:59 UTC (inclusive)
@@ -172,5 +172,7 @@ Use either the `COUNT` or the `UNTIL` property if you want to put an end boundar
 
   :::success
   The `UNTIL` property is inclusive.
-  This means that if it matches the date of an event occurrence, this occurrence will be included.
+  For all-day events, its date is the last included day.
+  For timed events, its date and time are the exact cutoff: an occurrence starting at that instant is included, and one starting later is excluded.
+  The event dialog offers a date picker and saves a newly chosen timed cutoff as the end of that day.
   :::

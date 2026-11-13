@@ -163,7 +163,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       );
       expect(result).to.have.length(1);
       expect(result[0].start.value.day).to.equal(3);
-      expect(result[0].end.value.day).to.equal(6);
+      expect(result[0].end.value.day).to.equal(7);
     });
 
     it('normalizes all-day occurrences to whole days even when authored with sub-day times', () => {
@@ -184,7 +184,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       expect(result).to.have.length(5);
       for (const occ of result) {
         expect(getMinutesInDay(occ.start.value)).to.equal(0);
-        expect(getMinutesInDay(occ.end.value)).to.equal(1439);
+        expect(getMinutesInDay(occ.end.value)).to.equal(0);
       }
     });
 
@@ -205,9 +205,9 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       expect(result).to.have.length(1);
       expect(result[0].start.value.day).to.equal(10);
-      expect(result[0].end.value.day).to.equal(12);
+      expect(result[0].end.value.day).to.equal(13);
       expect(getMinutesInDay(result[0].start.value)).to.equal(0);
-      expect(getMinutesInDay(result[0].end.value)).to.equal(1439);
+      expect(getMinutesInDay(result[0].end.value)).to.equal(0);
     });
 
     it('does not generate occurrences earlier than DTSTART within the first week even if byDay spans the week', () => {
@@ -796,30 +796,38 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       expect(result.map(getDataKey)).to.deep.equal(['2025-10-26', '2025-11-09']);
     });
 
-    it('should include the last day of an instant-string UNTIL on its data-timezone day', () => {
-      // Jan 5th 05:00Z is Jan 5th 00:00 in New York: the series runs through Jan 5th.
-      const event = EventBuilder.new()
-        .withDataTimezone('America/New_York')
-        .singleDay('2025-01-01T14:00:00Z')
-        .rrule({ freq: 'DAILY', interval: 1, until: '2025-01-05T05:00:00Z' })
-        .toProcessed();
+    it.each([
+      { allDay: true, until: '2025-01-05T05:00:00Z', includesLastDay: true },
+      { allDay: false, until: '2025-01-05T05:00:00Z', includesLastDay: false },
+      { allDay: false, until: '2025-01-05T14:00:00Z', includesLastDay: true },
+    ])(
+      'should respect the UNTIL cutoff $until for allDay=$allDay',
+      ({ allDay, until, includesLastDay }) => {
+        // Jan 5th 05:00Z is midnight in New York, before the timed occurrence at 09:00.
+        const event = EventBuilder.new()
+          .withDataTimezone('America/New_York')
+          .allDay(allDay)
+          .singleDay('2025-01-01T14:00:00Z')
+          .rrule({ freq: 'DAILY', interval: 1, until })
+          .toProcessed();
 
-      const visibleStart = createDate('2025-01-01T00:00:00Z');
-      const result = getRecurringEventOccurrencesForVisibleDays(
-        event,
-        visibleStart.getTime(),
-        addDays(visibleStart, 9).getTime(),
-        'default',
-      );
+        const visibleStart = createDate('2025-01-01T00:00:00Z');
+        const result = getRecurringEventOccurrencesForVisibleDays(
+          event,
+          visibleStart.getTime(),
+          addDays(visibleStart, 9).getTime(),
+          'default',
+        );
 
-      expect(result.map(getDataKey)).to.deep.equal([
-        '2025-01-01',
-        '2025-01-02',
-        '2025-01-03',
-        '2025-01-04',
-        '2025-01-05',
-      ]);
-    });
+        expect(result.map(getDataKey)).to.deep.equal([
+          '2025-01-01',
+          '2025-01-02',
+          '2025-01-03',
+          '2025-01-04',
+          ...(includesLastDay ? ['2025-01-05'] : []),
+        ]);
+      },
+    );
   });
 
   it('should keep expanding a monthly rule whose next matching month is decades away', () => {
@@ -1141,7 +1149,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
           ).to.deep.equal(['2026-04-04T13:30:00.000Z', '2026-04-05T14:30:00.000Z']);
         });
 
-        it('should end an all-day occurrence on the last instant of a day whose last hour is repeated in Santiago', () => {
+        it('should end an all-day occurrence after the day whose last hour is repeated in Santiago', () => {
           // America/Santiago falls back from 00:00 to 23:00 on the night of April 6th, 2024.
           const result = expandDaily(
             '2024-04-01T00:00:00',
@@ -1152,7 +1160,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
           );
 
           expect(new Date(result[0].end.timestamp).toISOString()).to.equal(
-            '2024-04-07T03:59:59.999Z', // 23:59:59.999 -04:00
+            '2024-04-07T04:00:00.000Z', // The next midnight, after the repeated hour.
           );
         });
 
@@ -1213,7 +1221,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
           ).to.deep.equal(['2026-04-05 09:00']);
         });
 
-        it('should end an all-day occurrence on the last instant of a day whose last hour is repeated', () => {
+        it('should end an all-day occurrence after the day whose last hour is repeated', () => {
           // Asia/Beirut falls back from 00:00 to 23:00 on the night of October 26th, 2024.
           const result = expandDaily(
             '2024-10-01T00:00:00',
@@ -1224,7 +1232,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
           );
 
           expect(new Date(result[0].end.timestamp).toISOString()).to.equal(
-            '2024-10-26T21:59:59.999Z', // 23:59:59.999 +02:00
+            '2024-10-26T22:00:00.000Z', // The next midnight, after the repeated hour.
           );
         });
       });

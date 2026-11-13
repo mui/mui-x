@@ -17,6 +17,7 @@ import {
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
+  getOccurrenceInclusiveEnd,
   formatFullDate,
   isEventOccurrence,
   getPrimaryResourceId,
@@ -144,7 +145,8 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
 
   // Feature hook
   const formatTime = useFormatTime();
-  const { start, end } = occurrence;
+  const { start } = occurrence;
+  const end = getOccurrenceInclusiveEnd(occurrence);
   const isMultiDay = isOccurrenceMultiDay(occurrence);
   const formatBound = (date: SchedulerProcessedDate) => {
     const fullDate = formatFullDate(locale, date.value.toPlainDate());

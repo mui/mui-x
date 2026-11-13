@@ -3558,7 +3558,7 @@ describe('<EventDialogContent open />', () => {
           await user.click(screen.getByRole('button', { name: /save/i }));
 
           const updated = onEventsChange.mock.calls[0][0][0];
-          expect(updated.rrule?.until).to.equal('2025-05-26T23:59:59');
+          expect(updated.rrule?.until).to.equal('2025-05-26T23:59:59.999');
         });
 
         it('should pre-fill "Until" with the edited end day in the event timezone', async () => {
@@ -3581,7 +3581,7 @@ describe('<EventDialogContent open />', () => {
           await user.click(screen.getByRole('button', { name: /save/i }));
 
           const updated = onEventsChange.mock.calls[0][0][0];
-          expect(updated.rrule?.until).to.equal('2025-06-02T23:59:59');
+          expect(updated.rrule?.until).to.equal('2025-06-02T23:59:59.999');
         });
 
         it('should pre-fill "Until" with the day the edited all-day end lands on in the event timezone', async () => {
@@ -3701,7 +3701,7 @@ describe('<EventDialogContent open />', () => {
 
           // The end of July 20 in New York, serialized as wall time in the event's timezone.
           const updated = onEventsChange.mock.calls[0][0][0];
-          expect(updated.rrule?.until).to.equal('2025-07-20T23:59:59');
+          expect(updated.rrule?.until).to.equal('2025-07-20T23:59:59.999');
         });
 
         it('should block saving a custom recurrence with Ends: until and no date', async () => {

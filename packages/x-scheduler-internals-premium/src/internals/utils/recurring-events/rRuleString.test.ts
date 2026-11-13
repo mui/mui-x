@@ -4,8 +4,9 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import { afterEach, describe, it, expect, vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
-import { BaseTemporal } from '@mui/x-scheduler-internals/internals';
-import { parseRRule, serializeRRule } from './rRuleString';
+import { BaseTemporal, toEpochMs } from '@mui/x-scheduler-internals/internals';
+import { isSameRRule, parseRRule, serializeRRule } from './rRuleString';
+import { RecurringSeries } from './RecurringSeries';
 
 describe('recurring-events/rRuleString', () => {
   describe('parseRRuleString', () => {
@@ -16,7 +17,7 @@ describe('recurring-events/rRuleString', () => {
     });
 
     it('should resolve string until from object input', () => {
-      const result = parseRRule({ freq: 'DAILY', until: '2025-03-15T00:00:00Z' }, 'UTC');
+      const result = parseRRule({ freq: 'DAILY', until: '2025-03-15T00:00:00Z' }, 'UTC', true);
       expect(result.freq).to.equal('DAILY');
       expect(result.until).toEqualPlainDate('2025-03-15');
     });
@@ -53,10 +54,11 @@ describe('recurring-events/rRuleString', () => {
     });
 
     it('should read a UNTIL ending in Z as a UTC instant, like the object input', () => {
-      const fromString = parseRRule('FREQ=DAILY;UNTIL=20250315T000000Z', 'America/New_York');
+      const fromString = parseRRule('FREQ=DAILY;UNTIL=20250315T000000Z', 'America/New_York', true);
       const fromObject = parseRRule(
         { freq: 'DAILY', until: '2025-03-15T00:00:00Z' },
         'America/New_York',
+        true,
       );
 
       // The day of the instant in the timezone of the event.
@@ -64,8 +66,65 @@ describe('recurring-events/rRuleString', () => {
       expect(fromObject.until).toEqualPlainDate('2025-03-14');
     });
 
+    it.each([
+      // 02:30 CEST, before the 02:45 CEST occurrence of October 26th.
+      ['20251026T003000Z', ['2025-10-25']],
+      // 02:30 CET, after it.
+      ['20251026T013000Z', ['2025-10-25', '2025-10-26']],
+    ])('should keep the instant of UNTIL=%s in the hour Paris repeats', (until, expected) => {
+      // Europe/Paris falls back from 03:00 CEST to 02:00 CET on October 26th, 2025.
+      const rule = parseRRule(`FREQ=DAILY;UNTIL=${until}`, 'Europe/Paris');
+      const series = new RecurringSeries({
+        rule: { ...rule },
+        start: toEpochMs(BaseTemporal.PlainDateTime.from('2025-10-25T02:45'), 'Europe/Paris'),
+        timezone: 'Europe/Paris',
+      });
+
+      expect(rule.until!.toString()).to.equal('2025-10-26T02:30:00');
+      expect(
+        series
+          .getOccurrenceDays(
+            BaseTemporal.PlainDate.from('2025-10-24'),
+            BaseTemporal.PlainDate.from('2025-10-28'),
+          )
+          .map((day) => day.toString()),
+      ).to.deep.equal(expected);
+      expect(serializeRRule({ ...rule }, 'Europe/Paris')).to.equal(`FREQ=DAILY;UNTIL=${until}`);
+    });
+
+    it.each([
+      {
+        timezone: 'Europe/Paris',
+        firstInstant: '2025-10-26T00:30:00Z',
+        secondInstant: '2025-10-26T01:30:00Z',
+        pickedTime: '2025-10-26T02:30',
+        matchesFirst: true,
+      },
+      {
+        timezone: 'America/Santiago',
+        firstInstant: '2024-04-07T02:59:59.999Z',
+        secondInstant: '2024-04-07T03:59:59.999Z',
+        pickedTime: '2024-04-06T23:59:59.999',
+        matchesFirst: false,
+      },
+    ])(
+      'should compare repeated-hour cutoffs consistently with saving in $timezone',
+      ({ timezone, firstInstant, secondInstant, pickedTime, matchesFirst }) => {
+        const parse = (until: string) => parseRRule({ freq: 'DAILY', until }, timezone, false);
+        const first = parse(firstInstant);
+        const second = parse(secondInstant);
+
+        expect(isSameRRule(first, second)).to.equal(false);
+        expect(isSameRRule(second, { ...second })).to.equal(true);
+        // New wall-clock values use the first instance; selecting the end of a day uses its last instant.
+        const picked = BaseTemporal.PlainDateTime.from(pickedTime);
+        expect(isSameRRule(first, { ...first, until: picked })).to.equal(matchesFirst);
+        expect(isSameRRule(second, { ...second, until: picked })).to.equal(!matchesFirst);
+      },
+    );
+
     it('should read a UNTIL date as that day', () => {
-      const result = parseRRule('FREQ=DAILY;UNTIL=20250315', 'America/New_York');
+      const result = parseRRule('FREQ=DAILY;UNTIL=20250315', 'America/New_York', true);
       expect(result.until).toEqualPlainDate('2025-03-15');
     });
 
@@ -81,10 +140,15 @@ describe('recurring-events/rRuleString', () => {
           // 02:30 on March 9th 2025 does not exist in New York (clocks jump from 02:00 to 03:00).
           vi.stubEnv('TZ', 'America/New_York');
 
-          const fromString = parseRRule('FREQ=DAILY;UNTIL=20250309T023000Z', 'America/Sao_Paulo');
+          const fromString = parseRRule(
+            'FREQ=DAILY;UNTIL=20250309T023000Z',
+            'America/Sao_Paulo',
+            true,
+          );
           const fromObject = parseRRule(
             { freq: 'DAILY', until: '2025-03-09T02:30:00Z' },
             'America/Sao_Paulo',
+            true,
           );
 
           expect(fromString.until).toEqualPlainDate('2025-03-08');
@@ -409,10 +473,13 @@ describe('recurring-events/rRuleString', () => {
       expect(result).to.equal('FREQ=YEARLY;BYMONTHDAY=5,15,28;BYMONTH=1,6,12');
     });
 
-    it('should round-trip correctly (parseRRuleString - serializeRRule)', () => {
-      const input = 'FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,FR;UNTIL=20250315';
-      const parsed = parseRRule(input, 'default');
-      const serialized = serializeRRule(parsed);
+    it.each([
+      { allDay: true, until: '20250315' },
+      { allDay: false, until: '20250315T093000Z' },
+    ])('should round-trip UNTIL=$until for allDay=$allDay', ({ allDay, until }) => {
+      const input = `FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,FR;UNTIL=${until}`;
+      const parsed = parseRRule(input, 'America/New_York', allDay);
+      const serialized = serializeRRule(parsed, 'America/New_York');
       expect(serialized).to.equal(input);
     });
 

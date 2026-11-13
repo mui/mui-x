@@ -11,7 +11,10 @@ import {
 import { Button } from '@base-ui/react/button';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
-import { formatMonthShortAndDayOfMonth } from '@mui/x-scheduler-internals/internals';
+import {
+  getOccurrenceInclusiveEnd,
+  formatMonthShortAndDayOfMonth,
+} from '@mui/x-scheduler-internals/internals';
 import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
 import type { EventItemProps } from './EventItem.types';
 import { useFormatTime } from '../../../hooks/useFormatTime';
@@ -184,7 +187,8 @@ export const EventItem = React.forwardRef(function EventItem(
   });
 
   // The processed dates are read in the display timezone, like the day.
-  const { start, end } = occurrence;
+  const { start } = occurrence;
+  const end = getOccurrenceInclusiveEnd(occurrence);
   const startsBeforeDay =
     !start.value.toPlainDate().equals(date.plainDate) && start.timestamp < date.timestamp;
   const endsAfterDay =
@@ -297,7 +301,10 @@ function MultiDayDateLabel(props: {
     return (
       <EventItemTime className={classes.eventItemTime} as="span">
         {localeText.eventItemMultiDayLabel(
-          formatMonthShortAndDayOfMonth(locale, occurrence.end.value.toPlainDate()),
+          formatMonthShortAndDayOfMonth(
+            locale,
+            getOccurrenceInclusiveEnd(occurrence).value.toPlainDate(),
+          ),
         )}
       </EventItemTime>
     );

@@ -194,7 +194,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
       const { until, ...rule } = rrule as SchedulerProcessedEventRecurrenceRule;
       expect(id).to.equal(defaultEvent.id);
       expect(rule).to.deep.equal(defaultEvent.rrule);
-      expect(until).toEqualPlainDate('2025-01-04');
+      expect(until!.toString()).to.equal('2025-01-04T23:59:59.999');
     });
 
     it('should drop the whole series when the occurrence is on the DTSTART day', () => {
@@ -238,7 +238,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
 
       expect(rule.count).to.equal(undefined);
       expect(rule.freq).to.equal('DAILY');
-      expect(rule.until).toEqualPlainDate('2025-01-04');
+      expect(rule.until!.toString()).to.equal('2025-01-04T23:59:59.999');
     });
 
     it('should truncate based on the event timezone', () => {
@@ -258,7 +258,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
       );
       const until = (result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule).until!;
 
-      expect(until).toEqualPlainDate('2025-01-02');
+      expect(until!.toString()).to.equal('2025-01-02T23:59:59.999');
     });
 
     it('should truncate the series to the day before the occurrence, even when the timezone skips it', () => {
@@ -273,7 +273,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
       const result = applyRecurringDeleteFollowing(event, createOccurrence(event, occurrenceStart));
       const rule = result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule;
 
-      expect(rule.until).toEqualPlainDate('2011-12-30');
+      expect(rule.until!.toString()).to.equal('2011-12-29T23:59:59.999');
       expect(
         new RecurringSeries({
           rule,
@@ -286,6 +286,21 @@ describe('recurring-events/deleteRecurringEvent', () => {
           )
           .map((day) => day.toString()),
       ).to.deep.equal(['2011-12-28', '2011-12-29']);
+    });
+
+    it('should truncate an all-day series to the day before the occurrence, even when the timezone skips it', () => {
+      // Pacific/Apia skipped December 30th, 2011.
+      const event = EventBuilder.new()
+        .withDataTimezone('Pacific/Apia')
+        .span('2011-12-28', '2011-12-28', { allDay: true })
+        .rrule({ freq: 'DAILY' })
+        .toProcessed();
+      const occurrenceStart = createDate('2011-12-31T00:00:00', 'Pacific/Apia');
+
+      const result = applyRecurringDeleteFollowing(event, createOccurrence(event, occurrenceStart));
+      const rule = result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule;
+
+      expect(rule.until).toEqualPlainDate('2011-12-29');
     });
   });
 });
