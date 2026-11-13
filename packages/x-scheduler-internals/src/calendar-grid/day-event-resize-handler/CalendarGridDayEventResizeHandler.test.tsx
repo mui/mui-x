@@ -12,7 +12,7 @@ describe('<CalendarGrid.DayEventResizeHandler />', () => {
     render(node) {
       const eventStart = createProcessedDate(Date.now(), 'default');
       const eventEnd = createProcessedDate(eventStart.timestamp + 3_600_000, 'default');
-      const cellDate = eventStart.value.toPlainDate();
+      const cellDate = eventStart.plainDateTime.toPlainDate();
       return render(
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>

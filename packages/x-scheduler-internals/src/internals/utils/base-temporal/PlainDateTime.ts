@@ -204,7 +204,7 @@ export class PlainDateTime implements BaseTemporal.PlainDateTime {
       const match = /^((?:\d{4}|[+-]\d{6})-\d{2}-\d{2})T(.+)$/.exec(annotated.text);
       if (match == null) {
         throw new Error(
-          'Base UI Plus: The date-time string has an unsupported format. ' +
+          'MUI X Scheduler: The date-time string has an unsupported format. ' +
             "Its date and time cannot be read. Use YYYY-MM-DDTHH:mm, such as '2024-05-24T09:30', without an offset or timezone, optionally followed by a calendar annotation such as '[u-ca=hebrew]'.",
         );
       }

@@ -25,7 +25,7 @@ export function getOccurrenceLastDayNumber(
         occurrence.end.timestamp - 1,
         occurrence.unstable_internalInfos.displayTimezone,
       )
-    : getDayNumber(occurrence.end.value.toPlainDate());
+    : getDayNumber(occurrence.end.plainDateTime.toPlainDate());
 }
 
 /**
@@ -148,7 +148,7 @@ export function getDaysTheOccurrenceIsVisibleOn(
   days: SchedulerProcessedDay[],
   dayNumbers: readonly number[],
 ) {
-  const startDayNumber = getDayNumber(event.start.value.toPlainDate());
+  const startDayNumber = getDayNumber(event.start.plainDateTime.toPlainDate());
   const endDayNumber = getOccurrenceLastDayNumber(event);
 
   const dayKeys: string[] = [];

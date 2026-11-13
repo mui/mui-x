@@ -150,12 +150,14 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
   // The end of an all-day occurrence is the start of the day after its last day.
   const endDay = plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence));
   const isMultiDay = isOccurrenceMultiDay(occurrence);
-  const formatBound = (bound: SchedulerProcessedDate, day = bound.value.toPlainDate()) => {
+  const formatBound = (bound: SchedulerProcessedDate, day = bound.plainDateTime.toPlainDate()) => {
     const fullDate = formatFullDate(locale, day);
     return occurrence.allDay ? fullDate : `${fullDate}, ${formatTime(bound)}`;
   };
-  const formatBoundDateTime = (bound: SchedulerProcessedDate, day = bound.value.toPlainDate()) =>
-    occurrence.allDay ? day.toString() : bound.value.toString();
+  const formatBoundDateTime = (
+    bound: SchedulerProcessedDate,
+    day = bound.plainDateTime.toPlainDate(),
+  ) => (occurrence.allDay ? day.toString() : bound.plainDateTime.toString());
   const recurrenceTimezoneName = React.useMemo(
     () => getRecurrenceTimezoneName(locale, eventTimezone, displayTimezone),
     [locale, eventTimezone, displayTimezone],

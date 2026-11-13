@@ -17,7 +17,7 @@ export function useFormatTime() {
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
   return React.useCallback(
-    (date: SchedulerProcessedDate) => formatTime(locale, getMinutesInDay(date.value), ampm),
+    (date: SchedulerProcessedDate) => formatTime(locale, getMinutesInDay(date.plainDateTime), ampm),
     [locale, ampm],
   );
 }

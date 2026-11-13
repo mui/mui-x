@@ -410,7 +410,7 @@ export interface SchedulerProcessedDate {
   /**
    * The date and wall-clock time, in the display timezone.
    */
-  value: BaseTemporal.PlainDateTime;
+  plainDateTime: BaseTemporal.PlainDateTime;
   /**
    * The instant, in milliseconds since the Unix epoch, like `Date.getTime()`.
    */

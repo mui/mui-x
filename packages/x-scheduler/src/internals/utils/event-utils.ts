@@ -13,7 +13,8 @@ import {
  */
 export function isOccurrenceMultiDay(occurrence: SchedulerRenderableEventOccurrence) {
   return (
-    getDayNumber(occurrence.start.value.toPlainDate()) !== getOccurrenceLastDayNumber(occurrence)
+    getDayNumber(occurrence.start.plainDateTime.toPlainDate()) !==
+    getOccurrenceLastDayNumber(occurrence)
   );
 }
 

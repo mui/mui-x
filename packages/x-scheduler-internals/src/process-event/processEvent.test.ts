@@ -39,8 +39,8 @@ describe('processEvent', () => {
       // Kiritimati is at UTC+14.
       const processed = processEvent(event, 'Pacific/Kiritimati');
       const { start, end } = processed;
-      expect(start.value.toString()).to.equal('2025-01-02T00:00:00');
-      expect(end.value.toString()).to.equal('2025-01-02T02:00:00');
+      expect(start.plainDateTime.toString()).to.equal('2025-01-02T00:00:00');
+      expect(end.plainDateTime.toString()).to.equal('2025-01-02T02:00:00');
       expect(start.timestamp).to.equal(Date.parse('2025-01-01T10:00:00Z'));
     });
 
@@ -49,8 +49,8 @@ describe('processEvent', () => {
       const processed = processEvent(utcJuly4AllDayBuilder().build(), 'America/New_York');
 
       const { start, end } = processed;
-      expect(start.value.toString()).to.equal('2025-07-03T00:00:00');
-      expect(end.value.toString()).to.equal('2025-07-05T00:00:00');
+      expect(start.plainDateTime.toString()).to.equal('2025-07-03T00:00:00');
+      expect(end.plainDateTime.toString()).to.equal('2025-07-05T00:00:00');
       expect(
         toPlainDate(processed.unstable_internalInfos.dataStart, processed.timezone).toString(),
       ).to.equal('2025-07-04');
@@ -68,7 +68,7 @@ describe('processEvent', () => {
       expect(
         toPlainDate(processed.unstable_internalInfos.dataEnd, processed.timezone).toString(),
       ).to.equal('+010000-01-01');
-      expect(processed.end.value.toPlainDate().toString()).to.equal('+010000-01-01');
+      expect(processed.end.plainDateTime.toPlainDate().toString()).to.equal('+010000-01-01');
     });
 
     it('should read the instants of the exDates in the timezone of the event', () => {
@@ -272,8 +272,8 @@ describe('processEvent', () => {
       const processedAfter = processEvent(eventAfter, 'America/New_York');
 
       // Both should show 09:00 local
-      expect(getMinutesInDay(processedBefore.start.value)).to.equal(9 * 60);
-      expect(getMinutesInDay(processedAfter.start.value)).to.equal(9 * 60);
+      expect(getMinutesInDay(processedBefore.start.plainDateTime)).to.equal(9 * 60);
+      expect(getMinutesInDay(processedAfter.start.plainDateTime)).to.equal(9 * 60);
 
       // But different UTC timestamps
       expect(processedBefore.unstable_internalInfos.dataStart).to.equal(

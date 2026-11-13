@@ -1270,7 +1270,7 @@ describe('<EventTimelinePremium />', () => {
         const occurrence = onEventEditingStart.mock.lastCall![0];
         expect(occurrence.unstable_internalInfos.displayTimezone).to.equal(timezone);
         // The creation starts at the first instant of the preset, at midnight.
-        expect(getMinutesInDay(occurrence.start.value)).to.equal(0);
+        expect(getMinutesInDay(occurrence.start.plainDateTime)).to.equal(0);
       },
     );
   });

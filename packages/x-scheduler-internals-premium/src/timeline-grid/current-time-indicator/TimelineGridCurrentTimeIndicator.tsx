@@ -52,7 +52,7 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
     const isOutOfRange =
       nowTimestamp < config.start ||
       nowTimestamp > config.end ||
-      isStartMinuteOutsideAxisWindow(config, getMinutesInDay(processedNow.value));
+      isStartMinuteOutsideAxisWindow(config, getMinutesInDay(processedNow.plainDateTime));
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef],

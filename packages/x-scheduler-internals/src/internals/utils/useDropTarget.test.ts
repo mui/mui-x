@@ -170,8 +170,8 @@ premiumStoreClasses.forEach((storeClass) => {
       // The form opened from the armed toolbar reads these: the dropped times, not whole days.
       const edited = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
       expect(edited.allDay).to.equal(false);
-      expect(edited.start.value.toString()).to.equal('2025-07-04T10:00:00');
-      expect(edited.end.value.toString()).to.equal('2025-07-04T11:00:00');
+      expect(edited.start.plainDateTime.toString()).to.equal('2025-07-04T10:00:00');
+      expect(edited.end.plainDateTime.toString()).to.equal('2025-07-04T11:00:00');
     });
   });
 });

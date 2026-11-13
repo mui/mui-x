@@ -13,11 +13,6 @@ import {
   type BaseTemporal as PlainDateTimeTypes,
   type PlainDateTimeConstructor,
 } from './PlainDateTime';
-import {
-  ZonedDateTime as ZonedDateTimeValue,
-  type BaseTemporal as ZonedDateTimeTypes,
-  type ZonedDateTimeConstructor,
-} from './ZonedDateTime';
 
 /**
  * A date without a time or timezone, in the ISO calendar or another calendar system.
@@ -34,8 +29,3 @@ export const PlainTime: PlainTimeConstructor = PlainTimeValue;
  */
 export type PlainDateTime = PlainDateTimeTypes.PlainDateTime;
 export const PlainDateTime: PlainDateTimeConstructor = PlainDateTimeValue;
-/**
- * A date and time in a specific timezone, in the ISO calendar or another calendar system.
- */
-export type ZonedDateTime = ZonedDateTimeTypes.ZonedDateTime;
-export const ZonedDateTime: ZonedDateTimeConstructor = ZonedDateTimeValue;

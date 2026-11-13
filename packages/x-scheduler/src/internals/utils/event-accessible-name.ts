@@ -40,7 +40,7 @@ export function getEventAccessibleName(parameters: GetEventAccessibleNameParamet
 
   const formatDate = (date: BaseTemporal.PlainDate) => formatFullDate(locale, date);
   const formatDateTime = (date: SchedulerProcessedDate) =>
-    `${formatDate(date.value.toPlainDate())} ${formatTime(locale, getMinutesInDay(date.value), ampm)}`;
+    `${formatDate(date.plainDateTime.toPlainDate())} ${formatTime(locale, getMinutesInDay(date.plainDateTime), ampm)}`;
 
   // A multi-day timed event carries its times inside the date range, since they belong to
   // different days, so it has no separate `when`.
@@ -52,18 +52,18 @@ export function getEventAccessibleName(parameters: GetEventAccessibleNameParamet
       return undefined;
     }
     return localeText.eventAriaLabelTimeRange(
-      formatTime(locale, getMinutesInDay(start.value), ampm),
-      formatTime(locale, getMinutesInDay(end.value), ampm),
+      formatTime(locale, getMinutesInDay(start.plainDateTime), ampm),
+      formatTime(locale, getMinutesInDay(end.plainDateTime), ampm),
     );
   })();
 
   let date: string;
   if (!isMultiDay) {
-    date = formatDate(start.value.toPlainDate());
+    date = formatDate(start.plainDateTime.toPlainDate());
   } else if (occurrence.allDay) {
     // The end of an all-day occurrence is the start of the day after its last day.
     date = localeText.eventAriaLabelDateRange(
-      formatDate(start.value.toPlainDate()),
+      formatDate(start.plainDateTime.toPlainDate()),
       formatDate(plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence))),
     );
   } else {

@@ -144,7 +144,7 @@ export function FormContent(props: FormContentProps) {
 
   // Built once: the provider ignores later values anyway.
   const initialValues = useRefWithInit((): EventDialogFormValues => {
-    const startFields = formatDateAndTimeFields(occurrence.start.value);
+    const startFields = formatDateAndTimeFields(occurrence.start.plainDateTime);
     // Like the event models, the form ends an all-day event on the last instant of its last day.
     const endFields = formatDateAndTimeFields(
       toPlainDateTime(

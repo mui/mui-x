@@ -88,7 +88,7 @@ describe('<WeekView /> event creation', () => {
 
       expect(occurrence.unstable_internalInfos.displayTimezone).to.equal(timezone);
       // The creation starts at noon.
-      expect(getMinutesInDay(occurrence.start.value)).to.equal(12 * 60);
+      expect(getMinutesInDay(occurrence.start.plainDateTime)).to.equal(12 * 60);
     });
 
     it('should pass a creation in the day grid to `onEventEditingStart` in the display timezone', async () => {
@@ -96,9 +96,9 @@ describe('<WeekView /> event creation', () => {
 
       expect(occurrence.unstable_internalInfos.displayTimezone).to.equal(timezone);
       // The all-day creation ends at the start of the next day.
-      expect(getMinutesInDay(occurrence.end.value)).to.equal(0);
-      expect(occurrence.end.value.toPlainDate().toString()).to.equal(
-        occurrence.start.value.toPlainDate().add({ days: 1 }).toString(),
+      expect(getMinutesInDay(occurrence.end.plainDateTime)).to.equal(0);
+      expect(occurrence.end.plainDateTime.toPlainDate().toString()).to.equal(
+        occurrence.start.plainDateTime.toPlainDate().add({ days: 1 }).toString(),
       );
     });
   });

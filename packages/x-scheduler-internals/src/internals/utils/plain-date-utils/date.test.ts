@@ -99,18 +99,18 @@ describe('plain-date-utils/date', () => {
       const epochMs = Date.UTC(2025, 10, 2, 5, 30);
       const reference = { ...readReference(epochMs, timezone), timestamp: epochMs };
 
-      const { value, timestamp } = createProcessedDate(epochMs, timezone);
+      const { plainDateTime, timestamp } = createProcessedDate(epochMs, timezone);
       expect(timestamp).to.equal(epochMs);
-      expect(value.toPlainDate().toString()).to.equal(reference.key);
-      expect(getMinutesInDay(value)).to.equal(reference.minutesInDay);
-      expect(createProcessedDate(epochMs, timezone)).to.deep.equal({ value, timestamp });
+      expect(plainDateTime.toPlainDate().toString()).to.equal(reference.key);
+      expect(getMinutesInDay(plainDateTime)).to.equal(reference.minutesInDay);
+      expect(createProcessedDate(epochMs, timezone)).to.deep.equal({ plainDateTime, timestamp });
     },
   );
 
   it('should process a date with an offset between -01:00 and 00:00', () => {
     // Africa/Monrovia used -00:44:30 until 1972: the epoch is 23:15:30 on December 31st, 1969.
-    const { value } = createProcessedDate(0, 'Africa/Monrovia');
-    expect(value.toString()).to.equal('1969-12-31T23:15:30');
+    const { plainDateTime } = createProcessedDate(0, 'Africa/Monrovia');
+    expect(plainDateTime.toString()).to.equal('1969-12-31T23:15:30');
   });
 
   // Browsers cannot change their timezone through process.env.TZ.
@@ -122,10 +122,12 @@ describe('plain-date-utils/date', () => {
       const epochMs = Date.UTC(2025, 10, 2, 5, 30);
       const reference = { ...readReference(epochMs, 'default'), timestamp: epochMs };
 
-      const { value } = createProcessedDate(epochMs, 'default');
-      expect(value.toPlainDate().toString()).to.equal(reference.key);
-      expect(getMinutesInDay(value)).to.equal(reference.minutesInDay);
-      expect(createProcessedDate(epochMs, 'default').value.equals(value)).to.equal(true);
+      const { plainDateTime } = createProcessedDate(epochMs, 'default');
+      expect(plainDateTime.toPlainDate().toString()).to.equal(reference.key);
+      expect(getMinutesInDay(plainDateTime)).to.equal(reference.minutesInDay);
+      expect(createProcessedDate(epochMs, 'default').plainDateTime.equals(plainDateTime)).to.equal(
+        true,
+      );
     },
   );
 

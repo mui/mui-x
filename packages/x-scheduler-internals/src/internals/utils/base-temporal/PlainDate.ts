@@ -254,7 +254,7 @@ const MAX_YEARS = 600_000;
 function readDuration(duration: PlainDateDuration): Required<PlainDateDuration> {
   if (typeof duration !== 'object' || duration === null) {
     throw new TypeError(
-      `Base UI Plus: \`BaseTemporal.PlainDate.prototype.add()\` received ${String(duration)}, which isn't a duration. ` +
+      `MUI X Scheduler: \`BaseTemporal.PlainDate.prototype.add()\` received ${String(duration)}, which isn't a duration. ` +
         "`add()` can't read years, months, weeks or days from it. " +
         'Pass an object such as `{ months: 1, days: 2 }`. Duration strings such as `"P1M"` are not supported.',
     );
@@ -269,7 +269,7 @@ function readDuration(duration: PlainDateDuration): Required<PlainDateDuration> 
       const number = +(value as number);
       if (!Number.isInteger(number)) {
         throw new Error(
-          `Base UI Plus: \`BaseTemporal.PlainDate.prototype.add()\` received ${String(value)} as the ${unit} of a duration, which isn't an integer. ` +
+          `MUI X Scheduler: \`BaseTemporal.PlainDate.prototype.add()\` received ${String(value)} as the ${unit} of a duration, which isn't an integer. ` +
             'A duration moves a date by whole units. ' +
             'Pass integers, such as `{ months: 1 }`.',
         );
@@ -284,14 +284,14 @@ function readDuration(duration: PlainDateDuration): Required<PlainDateDuration> 
   }
   if (!hasUnit) {
     throw new TypeError(
-      'Base UI Plus: `BaseTemporal.PlainDate.prototype.add()` received a duration without years, months, weeks or days. ' +
+      'MUI X Scheduler: `BaseTemporal.PlainDate.prototype.add()` received a duration without years, months, weeks or days. ' +
         "`add()` can't tell how far to move the date. " +
         'Pass at least one of these units, such as `{ days: 1 }`.',
     );
   }
   if (hasTimeUnit) {
     throw new Error(
-      'Base UI Plus: `BaseTemporal.PlainDate.prototype.add()` received a duration with time units. ' +
+      'MUI X Scheduler: `BaseTemporal.PlainDate.prototype.add()` received a duration with time units. ' +
         "A date has no time, and `add()` doesn't turn time units into days. " +
         'Pass whole days instead, such as `{ days: 2 }` for 48 hours.',
     );
@@ -299,7 +299,7 @@ function readDuration(duration: PlainDateDuration): Required<PlainDateDuration> 
   const { days, months, weeks, years } = units;
   if (Math.min(days, months, weeks, years) < 0 && Math.max(days, months, weeks, years) > 0) {
     throw new Error(
-      'Base UI Plus: `BaseTemporal.PlainDate.prototype.add()` received a duration with positive and negative units. ' +
+      'MUI X Scheduler: `BaseTemporal.PlainDate.prototype.add()` received a duration with positive and negative units. ' +
         'A duration moves a date in a single direction. ' +
         'Pass units with the same sign, or call `add()` once per direction.',
     );
@@ -328,7 +328,7 @@ function addYearsAndMonths(
   const monthOfCode = getMonthOfCode(calendar, year, monthCode, overflow);
   if (monthOfCode === undefined) {
     throw new Error(
-      `Base UI Plus: \`BaseTemporal.PlainDate.prototype.add()\` moved a date of the month ${date.monthCode} to the year ${year}, which doesn't have this month. ` +
+      `MUI X Scheduler: \`BaseTemporal.PlainDate.prototype.add()\` moved a date of the month ${date.monthCode} to the year ${year}, which doesn't have this month. ` +
         "The `overflow: 'reject'` option forbids moving the date to another month. " +
         "Pass `overflow: 'constrain'` to use the month that replaces it.",
     );
@@ -349,7 +349,7 @@ function addYearsAndMonths(
   const daysInMonth = calendar.getDaysInMonth(year, month);
   if (fields.day > daysInMonth && overflow === 'reject') {
     throw new Error(
-      `Base UI Plus: \`BaseTemporal.PlainDate.prototype.add()\` moved the day ${date.day} to a month of ${daysInMonth} days. ` +
+      `MUI X Scheduler: \`BaseTemporal.PlainDate.prototype.add()\` moved the day ${date.day} to a month of ${daysInMonth} days. ` +
         "The `overflow: 'reject'` option forbids moving the date to the last day of the month. " +
         "Pass `overflow: 'constrain'` to use the last day of the month.",
     );
@@ -575,7 +575,7 @@ export function getDayNumber(day: PlainDateFields): number {
     ![day.year, day.month, day.day].every(Number.isInteger)
   ) {
     throw new TypeError(
-      `Base UI Plus: A calendar received ${String(day)} where it expects a \`PlainDate\`. ` +
+      `MUI X Scheduler: A calendar received ${String(day)} where it expects a \`PlainDate\`. ` +
         "The calendar reads the year, the month and the day of each date, so it can't use this one. " +
         'Create dates with `BaseTemporal.PlainDate.from()`. A Server Component sends a `PlainDate` to the client as its string: pass that string to `from()` in a Client Component.',
     );
@@ -609,7 +609,7 @@ export function readDate(
     const day = Number(match?.[3]);
     if (match == null || !isValidIsoDate(year, month, day)) {
       throw new Error(
-        `Base UI Plus: \`BaseTemporal.PlainDate.from()\` received ${JSON.stringify(item)}, which isn't an existing date in the \`YYYY-MM-DD\` or \`±YYYYYY-MM-DD\` format. ` +
+        `MUI X Scheduler: \`BaseTemporal.PlainDate.from()\` received ${JSON.stringify(item)}, which isn't an existing date in the \`YYYY-MM-DD\` or \`±YYYYYY-MM-DD\` format. ` +
           'Other ISO 8601 forms, such as times, offsets or time zone annotations, are not supported. ' +
           "Pass a date such as `'2024-05-24'`, optionally followed by a calendar annotation such as `'[u-ca=hebrew]'`.",
       );
@@ -621,7 +621,7 @@ export function readDate(
   }
   if (typeof item !== 'object' || item === null) {
     throw new TypeError(
-      `Base UI Plus: \`BaseTemporal.PlainDate.from()\` received ${String(item)}, which isn't a date. ` +
+      `MUI X Scheduler: \`BaseTemporal.PlainDate.from()\` received ${String(item)}, which isn't a date. ` +
         "`from()` can't read a year, a month and a day from it. " +
         "Pass a `PlainDate`, an object such as `{ year: 2024, month: 5, day: 24 }`, or a string such as `'2024-05-24'`.",
     );

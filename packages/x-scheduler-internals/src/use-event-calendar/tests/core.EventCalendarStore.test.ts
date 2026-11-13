@@ -243,8 +243,8 @@ describe('Core - EventCalendarStore', () => {
         store.setEditingOccurrenceTimes({ start, end });
 
         const editing = store.state.editingOccurrence!;
-        expect(editing.occurrence.start.value.toString()).to.equal('2024-01-15T10:00:00');
-        expect(editing.occurrence.end.value.toString()).to.equal('2024-01-15T11:30:00');
+        expect(editing.occurrence.start.plainDateTime.toString()).to.equal('2024-01-15T10:00:00');
+        expect(editing.occurrence.end.plainDateTime.toString()).to.equal('2024-01-15T11:30:00');
         expect(editing.mode).to.equal('armed');
       });
 
@@ -283,8 +283,8 @@ describe('Core - EventCalendarStore', () => {
           14 * 3_600_000,
         );
         // Read in the display timezone: 09:00 in New York.
-        expect(getMinutesInDay(editing.start.value)).to.equal(9 * 60);
-        expect(getMinutesInDay(editing.end.value)).to.equal(11 * 60);
+        expect(getMinutesInDay(editing.start.plainDateTime)).to.equal(9 * 60);
+        expect(getMinutesInDay(editing.end.plainDateTime)).to.equal(11 * 60);
       });
 
       it('should keep a bound left out on its stored value in both timezones', () => {

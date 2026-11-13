@@ -304,8 +304,8 @@ premiumStoreClasses.forEach((storeClass) => {
       // The occurrence followed the resize onto the freshly-split event: new key, updated times.
       expect(occurrence.key).to.not.equal(armedKey);
       // The display timezone is UTC.
-      expect(occurrence.start.value.toString()).to.equal('2025-07-07T09:30:00');
-      expect(occurrence.end.value.toString()).to.equal('2025-07-07T10:30:00');
+      expect(occurrence.start.plainDateTime.toString()).to.equal('2025-07-07T09:30:00');
+      expect(occurrence.end.plainDateTime.toString()).to.equal('2025-07-07T10:30:00');
     });
 
     it('should keep the data-timezone identity in sync when the armed occurrence is resized', () => {
@@ -402,8 +402,8 @@ premiumStoreClasses.forEach((storeClass) => {
       // The form opened from the armed toolbar reads these: one whole day, ending exclusively.
       const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
       expect(occurrence.allDay).to.equal(true);
-      expect(occurrence.start.value.toString()).to.equal('2025-07-08T00:00:00');
-      expect(occurrence.end.value.toString()).to.equal('2025-07-09T00:00:00');
+      expect(occurrence.start.plainDateTime.toString()).to.equal('2025-07-08T00:00:00');
+      expect(occurrence.end.plainDateTime.toString()).to.equal('2025-07-09T00:00:00');
     });
 
     it("should disarm when an end-only scope 'all' change pushes the armed occurrence past its day", () => {
@@ -577,7 +577,7 @@ premiumStoreClasses.forEach((storeClass) => {
         const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
         expect(occurrence.key).to.equal(armed.key);
         // The display timezone is Asia/Tokyo.
-        expect(occurrence.start.value.toString()).to.equal('2025-07-08T19:00:00');
+        expect(occurrence.start.plainDateTime.toString()).to.equal('2025-07-08T19:00:00');
       });
     });
 
@@ -616,8 +616,8 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(occurrence.key).to.equal(getOccurrenceKey(occurrence.id));
       expect(occurrence.rrule).to.equal(undefined);
       // The display timezone is UTC.
-      expect(occurrence.start.value.toString()).to.equal('2025-07-07T09:00:00');
-      expect(occurrence.end.value.toString()).to.equal('2025-07-07T10:00:00');
+      expect(occurrence.start.plainDateTime.toString()).to.equal('2025-07-07T09:00:00');
+      expect(occurrence.end.plainDateTime.toString()).to.equal('2025-07-07T10:00:00');
       expect(occurrence.unstable_internalInfos.dataStart).to.equal(dayA.getTime());
       expect(new Date(occurrence!.unstable_internalInfos.dataEnd)).toEqualDateTime(
         addHours(dayA, 1),

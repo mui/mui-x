@@ -47,11 +47,13 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       expect(result).to.have.length(5);
       for (let i = 0; i < result.length; i += 1) {
         const occ = result[i];
-        expect(occ.start.value.toPlainDate().toString()).to.equal(
+        expect(occ.start.plainDateTime.toPlainDate().toString()).to.equal(
           toPlainDate(addDays(visibleStart, i).getTime(), 'default').toString(),
         );
         expect((occ.end.timestamp - occ.start.timestamp) / 60_000).to.equal(90);
-        expect(occ.key).to.equal(`${event.id}::${occ.start.value.toPlainDate().toString()}`);
+        expect(occ.key).to.equal(
+          `${event.id}::${occ.start.plainDateTime.toPlainDate().toString()}`,
+        );
       }
     });
 
@@ -69,7 +71,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Jan 1..5 inclusive
-      expect(result.map((o) => o.start.value.day)).to.deep.equal([1, 2, 3, 4, 5]);
+      expect(result.map((o) => o.start.plainDateTime.day)).to.deep.equal([1, 2, 3, 4, 5]);
     });
 
     it('respects "count" end rule (count=3 gives 3 occurrences)', () => {
@@ -86,7 +88,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       expect(result).to.have.length(3);
-      expect(result.map((o) => o.start.value.day)).to.deep.equal([1, 2, 3]);
+      expect(result.map((o) => o.start.plainDateTime.day)).to.deep.equal([1, 2, 3]);
     });
 
     it('applies weekly interval > 1 (e.g. every 2 weeks)', () => {
@@ -103,7 +105,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Expect Fridays at week 0, 2 and 4
-      const dates = result.map((o) => o.start.value.day);
+      const dates = result.map((o) => o.start.plainDateTime.day);
       expect(dates).to.deep.equal([3, 17, 31]);
     });
 
@@ -124,7 +126,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         addDays(visibleStart, 119).getTime(),
         'default',
       );
-      const daysOfMonth = result.map((o) => o.start.value.day);
+      const daysOfMonth = result.map((o) => o.start.plainDateTime.day);
       expect(daysOfMonth).to.deep.equal([10, 10, 10, 10]);
     });
 
@@ -141,7 +143,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         addYears(visibleStart, 5).getTime(),
         'default',
       );
-      const years = result.map((o) => o.start.value.year);
+      const years = result.map((o) => o.start.plainDateTime.year);
       expect(years).to.deep.equal([2025, 2027, 2029]);
     });
 
@@ -161,8 +163,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       expect(result).to.have.length(1);
-      expect(result[0].start.value.day).to.equal(3);
-      expect(result[0].end.value.day).to.equal(7);
+      expect(result[0].start.plainDateTime.day).to.equal(3);
+      expect(result[0].end.plainDateTime.day).to.equal(7);
     });
 
     it('normalizes all-day occurrences to whole days even when authored with sub-day times', () => {
@@ -182,8 +184,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       expect(result).to.have.length(5);
       for (const occ of result) {
-        expect(getMinutesInDay(occ.start.value)).to.equal(0);
-        expect(getMinutesInDay(occ.end.value)).to.equal(0);
+        expect(getMinutesInDay(occ.start.plainDateTime)).to.equal(0);
+        expect(getMinutesInDay(occ.end.plainDateTime)).to.equal(0);
       }
     });
 
@@ -203,10 +205,10 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       );
 
       expect(result).to.have.length(1);
-      expect(result[0].start.value.day).to.equal(10);
-      expect(result[0].end.value.day).to.equal(13);
-      expect(getMinutesInDay(result[0].start.value)).to.equal(0);
-      expect(getMinutesInDay(result[0].end.value)).to.equal(0);
+      expect(result[0].start.plainDateTime.day).to.equal(10);
+      expect(result[0].end.plainDateTime.day).to.equal(13);
+      expect(getMinutesInDay(result[0].start.plainDateTime)).to.equal(0);
+      expect(getMinutesInDay(result[0].end.plainDateTime)).to.equal(0);
     });
 
     it('does not generate occurrences earlier than DTSTART within the first week even if byDay spans the week', () => {
@@ -225,7 +227,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         addDays(visibleStart, 7).getTime(),
         'default',
       );
-      const dows = result.map((o) => getPlainDateWeekDayCode(o.start.value.toPlainDate()));
+      const dows = result.map((o) => getPlainDateWeekDayCode(o.start.plainDateTime.toPlainDate()));
 
       // Only WE, TH, FR in the first week
       expect(dows).to.deep.equal(['WE', 'TH', 'FR']);
@@ -269,7 +271,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       );
       // Should only have occurrences from Jan 10 onwards (6 days: 10,11,12,13,14,15)
       expect(result).to.have.length(6);
-      expect(result[0].start.value.day).to.equal(10);
+      expect(result[0].start.plainDateTime.day).to.equal(10);
     });
 
     it('respects interval > 1 (every 2 days)', () => {
@@ -286,7 +288,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Days: 1, 3, 5, 7 => 4 occurrences
-      expect(result.map((o) => o.start.value.day)).to.deep.equal([1, 3, 5, 7]);
+      expect(result.map((o) => o.start.plainDateTime.day)).to.deep.equal([1, 3, 5, 7]);
     });
 
     it('should round a fractional COUNT up', () => {
@@ -300,7 +302,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
           Date.parse(start),
           Date.parse(end),
           'default',
-        ).map((o) => o.start.value.day);
+        ).map((o) => o.start.plainDateTime.day);
 
       expect(expand('2025-01-01T00:00:00Z', '2025-01-31T00:00:00Z')).to.deep.equal([1, 2]);
       expect(expand('2025-01-03T00:00:00Z', '2025-01-05T00:00:00Z')).to.deep.equal([]);
@@ -321,7 +323,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         addDays(visibleStart, 6).getTime(), // Mon-Sun
         'default',
       );
-      const dows = result.map((o) => getPlainDateWeekDayCode(o.start.value.toPlainDate()));
+      const dows = result.map((o) => getPlainDateWeekDayCode(o.start.plainDateTime.toPlainDate()));
       expect(dows).to.deep.equal(['MO', 'WE', 'FR']);
     });
 
@@ -338,7 +340,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         addDays(visibleStart, 6).getTime(),
         'default',
       );
-      const dows = result.map((o) => getPlainDateWeekDayCode(o.start.value.toPlainDate()));
+      const dows = result.map((o) => getPlainDateWeekDayCode(o.start.plainDateTime.toPlainDate()));
       // Monday is DTSTART but not in byDay, so Tue(7) and Thu(9) are generated
       expect(dows).to.deep.equal(['TU', 'TH']);
     });
@@ -357,7 +359,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Should only generate Fridays: Jan 10, 17, 24
-      const dows = result.map((o) => getPlainDateWeekDayCode(o.start.value.toPlainDate()));
+      const dows = result.map((o) => getPlainDateWeekDayCode(o.start.plainDateTime.toPlainDate()));
       expect(dows).to.deep.equal(['FR', 'FR', 'FR']);
     });
 
@@ -380,7 +382,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       // Expected occurrences in chronological order:
       // SU 2, TU 4, SU 9, TU 11, SU 16
-      const days = result.map((o) => o.start.value.toPlainDate().toString());
+      const days = result.map((o) => o.start.plainDateTime.toPlainDate().toString());
       expect(days).to.deep.equal([
         '2025-03-02',
         '2025-03-04',
@@ -411,7 +413,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Jan, Mar, May, Jul => 4 occurrences
-      const months = result.map((o) => o.start.value.month);
+      const months = result.map((o) => o.start.plainDateTime.month);
       expect(months).to.deep.equal([1, 3, 5, 7]);
     });
 
@@ -429,7 +431,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Should generate on the 15th: Mar, Apr, May, Jun
-      const days = result.map((o) => o.start.value.day);
+      const days = result.map((o) => o.start.plainDateTime.day);
       expect(days).to.deep.equal([15, 15, 15, 15]);
     });
 
@@ -447,7 +449,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Jan(31), Feb(skip), Mar(31), Apr(skip), May(31), Jun(skip)
-      const months = result.map((o) => o.start.value.month);
+      const months = result.map((o) => o.start.plainDateTime.month);
       expect(months).to.deep.equal([1, 3, 5]); // Jan, Mar, May
     });
   });
@@ -467,7 +469,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Jul 8, Aug 12, Sep 9, Oct 14
-      const dates = result.map((o) => o.start.value.day);
+      const dates = result.map((o) => o.start.plainDateTime.day);
       expect(dates).to.deep.equal([8, 12, 9, 14]);
     });
 
@@ -487,7 +489,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       // July: Wednesdays are 2,9,16,23,30 → 2nd last is 23
       // Aug: Wednesdays are 6,13,20,27 → 2nd last is 20
       // Sep: Wednesdays are 3,10,17,24 → 2nd last is 17
-      const dates = result.map((o) => o.start.value.day);
+      const dates = result.map((o) => o.start.plainDateTime.day);
       expect(dates).to.deep.equal([23, 20, 17]);
     });
 
@@ -505,7 +507,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Jul 4, Sep 5, Nov 7 (every 2 months)
-      const dates = result.map((o) => o.start.value.day);
+      const dates = result.map((o) => o.start.plainDateTime.day);
       expect(dates).to.deep.equal([4, 5, 7]);
     });
 
@@ -524,7 +526,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // July 8 is skipped (before DTSTART), Aug 12, Sep 9
-      const dates = result.map((o) => o.start.value.day);
+      const dates = result.map((o) => o.start.plainDateTime.day);
       expect(dates).to.deep.equal([12, 9]);
     });
   });
@@ -544,9 +546,9 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Jul 20 each year: 2025, 2026, 2027, 2028
-      const years = result.map((o) => o.start.value.year);
-      const months = result.map((o) => o.start.value.month);
-      const days = result.map((o) => o.start.value.day);
+      const years = result.map((o) => o.start.plainDateTime.year);
+      const months = result.map((o) => o.start.plainDateTime.month);
+      const days = result.map((o) => o.start.plainDateTime.day);
       expect(years).to.deep.equal([2025, 2026, 2027, 2028]);
       expect(months).to.deep.equal([7, 7, 7, 7]); // July
       expect(days).to.deep.equal([20, 20, 20, 20]);
@@ -566,7 +568,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Only leap years: 2024, 2028, 2032
-      const years = result.map((o) => o.start.value.year);
+      const years = result.map((o) => o.start.plainDateTime.year);
       expect(years).to.deep.equal([2024, 2028, 2032]);
     });
 
@@ -590,7 +592,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       );
 
       // The only Feb 29 in [2097, 2105) is 2104 (leap year)
-      const years = result.map((o) => o.start.value.year);
+      const years = result.map((o) => o.start.plainDateTime.year);
       expect(years).to.deep.equal([2104]);
     });
 
@@ -740,7 +742,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       // In data tz (LA): SU Mar2, TU Mar4, SU Mar9, TU Mar11, SU Mar16
       // In display tz (Paris): MO Mar3, WE Mar5, MO Mar10, WE Mar12, MO Mar17
-      const displayDays = result.map((o) => o.start.value.toPlainDate().toString());
+      const displayDays = result.map((o) => o.start.plainDateTime.toPlainDate().toString());
 
       expect(displayDays).to.deep.equal([
         '2025-03-03',

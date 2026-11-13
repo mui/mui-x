@@ -137,7 +137,7 @@ describe('event-utils', () => {
             recurringEventsPlugin,
           });
 
-          expect(occurrence.end.value.toString()).to.equal(end);
+          expect(occurrence.end.plainDateTime.toString()).to.equal(end);
           expect(getOccurrenceModelEnd(occurrence)).to.equal(occurrence.end.timestamp - 1);
           expect(getOccurrenceLastDayNumber(occurrence)).to.equal(
             getDayNumber(BaseTemporal.PlainDate.from(expectedDays[1])),
@@ -266,7 +266,7 @@ describe('event-utils', () => {
           recurringEventsPlugin: mode === 'recurring' ? schedulerRecurringEventsPlugin : null,
         });
 
-        expect(result.map((occurrence) => occurrence.start.value.day)).to.deep.equal(
+        expect(result.map((occurrence) => occurrence.start.plainDateTime.day)).to.deep.equal(
           mode === 'recurring' ? [15, 17] : [15],
         );
         for (const occurrence of result) {
