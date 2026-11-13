@@ -1,5 +1,4 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import { MS_PER_DAY } from './plain-date-utils/dayNumber';
+import { MS_PER_DAY, MS_PER_MINUTE } from './plain-date-utils/dayNumber';
 import type { BaseTemporal } from './base-temporal';
 import {
   localToEpochMs,
@@ -9,7 +8,6 @@ import {
   toMsInDay,
 } from './plain-date-utils/timeZone';
 
-const MINUTE_MS = 60_000;
 export const FULL_DAY_MINUTES = 24 * 60;
 
 /**
@@ -46,7 +44,7 @@ export interface TimelineAxis extends TimelineAxisWindow {
   /**
    * The timezone the days and the wall-clock times of the axis are read in.
    */
-  timezone: TemporalTimezone;
+  timezone: string;
 }
 
 /**
@@ -57,12 +55,12 @@ export interface TimelineAxis extends TimelineAxisWindow {
 export function getPlainDateTimelineAxis(
   plainDate: BaseTemporal.PlainDate,
   window: TimelineAxisWindow,
-  timezone: TemporalTimezone,
+  timezone: string,
 ): TimelineAxis {
   const { dayStartMinute, dayEndMinute } = window;
-  const endMs = toEpochMs(plainDate, dayEndMinute * MINUTE_MS, timezone);
+  const endMs = toEpochMs(plainDate, dayEndMinute * MS_PER_MINUTE, timezone);
   return {
-    start: toEpochMs(plainDate, dayStartMinute * MINUTE_MS, timezone),
+    start: toEpochMs(plainDate, dayStartMinute * MS_PER_MINUTE, timezone),
     end: dayEndMinute === FULL_DAY_MINUTES ? endMs - 1 : endMs,
     timezone,
     dayStartMinute,
@@ -106,7 +104,7 @@ export function isEndMinuteOutsideAxisWindow(
  * whose tick count is pinned per day and does not stretch on DST transitions.
  */
 export function getTimelineAxisDayMs(axis: TimelineAxisWindow): number {
-  return Math.max(1, axis.dayEndMinute - axis.dayStartMinute) * MINUTE_MS;
+  return Math.max(1, axis.dayEndMinute - axis.dayStartMinute) * MS_PER_MINUTE;
 }
 
 /**
@@ -137,7 +135,7 @@ export function timelineAxisOffsetToTimestamp(axis: TimelineAxis, offsetMs: numb
   }
   const dayMs = getTimelineAxisDayMs(axis);
   const dayIndex = Math.floor(offsetMs / dayMs);
-  const msInDay = axis.dayStartMinute * MINUTE_MS + (offsetMs - dayIndex * dayMs);
+  const msInDay = axis.dayStartMinute * MS_PER_MINUTE + (offsetMs - dayIndex * dayMs);
   // Day numbers, as this runs on every pointer move.
   const dayNumber = toLocalDayNumber(axis.start, axis.timezone) + dayIndex;
   return localToEpochMs(dayNumber * MS_PER_DAY + msInDay, axis.timezone);
@@ -150,11 +148,7 @@ export function timelineAxisOffsetToTimestamp(axis: TimelineAxis, offsetMs: numb
  * while an element starting in the second occurrence renders over both, so this reads the times
  * over that element in the second occurrence. Other instants are returned unchanged.
  */
-export function resolveRepeatedTimeFrom(
-  epochMs: number,
-  fromMs: number,
-  timezone: TemporalTimezone,
-): number {
+export function resolveRepeatedTimeFrom(epochMs: number, fromMs: number, timezone: string): number {
   if (epochMs >= fromMs) {
     return epochMs;
   }
@@ -180,21 +174,7 @@ export function timestampToTimelineAxisOffsetMs(
   // Day numbers, as this runs for every event.
   const dayIndex =
     toLocalDayNumber(timestamp, axis.timezone) - toLocalDayNumber(axis.start, axis.timezone);
-  return getTimelineAxisOffsetMs(axis, dayIndex, msInDay);
-}
-
-/**
- * The axis offset of a wall-clock time on the `dayIndex`-th day of the axis, clamped to the
- * displayed window of that day.
- */
-export function getTimelineAxisOffsetMs(
-  axis: TimelineAxisWindow,
-  dayIndex: number,
-  msInDay: number,
-): number {
-  const clampedMsInDay = Math.min(
-    Math.max(msInDay, axis.dayStartMinute * MINUTE_MS),
-    axis.dayEndMinute * MINUTE_MS,
-  );
-  return dayIndex * getTimelineAxisDayMs(axis) + (clampedMsInDay - axis.dayStartMinute * MINUTE_MS);
+  const dayStartMs = axis.dayStartMinute * MS_PER_MINUTE;
+  const clampedMsInDay = Math.min(Math.max(msInDay, dayStartMs), axis.dayEndMinute * MS_PER_MINUTE);
+  return dayIndex * getTimelineAxisDayMs(axis) + (clampedMsInDay - dayStartMs);
 }

@@ -5,7 +5,7 @@ import {
   eventTimelinePremiumClasses as classes,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
-  adapter,
+  createDate,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -52,6 +52,7 @@ describe('<EventTimelinePremiumHeader />', () => {
     defaultPreferences?: { ampm?: boolean; weekStartsOn?: WeekStartsOn };
     visibleDate?: typeof DEFAULT_TESTING_VISIBLE_DATE;
     displayTimezone?: string;
+    dateLocale?: string;
     presetConfig?: EventTimelinePremiumPresetConfig;
   }) {
     // The grid is virtualized; sizing the host wide enough to fit the largest preset
@@ -68,6 +69,7 @@ describe('<EventTimelinePremiumHeader />', () => {
           presetConfig={options.presetConfig}
           defaultPreferences={options.defaultPreferences}
           displayTimezone={options.displayTimezone}
+          dateLocale={options.dateLocale}
         />
       </div>,
     );
@@ -195,11 +197,27 @@ describe('<EventTimelinePremiumHeader />', () => {
       expect(dayCells[3].dataset.weekend).to.equal(''); // Sun
     });
 
+    it('should mark the weekend of the date locale', async () => {
+      // Saudi Arabia rests on Friday and Saturday.
+      await renderHeader({ preset: 'dayAndHour', dateLocale: 'ar-SA' });
+
+      const dayCells = Array.from(
+        document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="day"]`),
+      );
+      // Visible range: Jul 3 (Thu), Jul 4 (Fri), Jul 5 (Sat), Jul 6 (Sun).
+      expect(dayCells.map((cell) => cell.dataset.weekend)).to.deep.equal([
+        undefined,
+        '',
+        '',
+        undefined,
+      ]);
+    });
+
     it('should not mark a weekday skipped by a transition as a weekend', async () => {
       // Pacific/Apia skipped Friday, December 30th, 2011: its instants are those of Saturday.
       await renderHeader({
         preset: 'dayAndWeek',
-        visibleDate: adapter.date('2011-12-28T00:00:00', 'Pacific/Apia'),
+        visibleDate: createDate('2011-12-28T00:00:00', 'Pacific/Apia'),
         displayTimezone: 'Pacific/Apia',
       });
 
@@ -230,7 +248,7 @@ describe('<EventTimelinePremiumHeader />', () => {
     ] as const)(
       'should mark only the day cell of today with data-current and aria-current="date" in `$preset`',
       async ({ preset, visibleDate }) => {
-        await renderHeader({ preset, visibleDate: adapter.date(visibleDate, 'default') });
+        await renderHeader({ preset, visibleDate: createDate(visibleDate) });
 
         const currentCells = getCurrentCells();
         expect(currentCells.length).to.equal(1);
@@ -256,7 +274,7 @@ describe('<EventTimelinePremiumHeader />', () => {
     it('should not mark any cell when today is not in view', async () => {
       await renderHeader({
         preset: 'dayAndMonth',
-        visibleDate: adapter.date('2030-01-01T00:00:00Z', 'default'),
+        visibleDate: createDate('2030-01-01T00:00:00Z'),
       });
 
       expect(getCurrentCells().length).to.equal(0);
@@ -273,7 +291,7 @@ describe('<EventTimelinePremiumHeader />', () => {
         vi.setSystemTime(new Date(now));
         await renderHeader({
           preset: 'dayAndWeek',
-          visibleDate: adapter.date(now, 'default'),
+          visibleDate: createDate(now),
           displayTimezone,
         });
 
@@ -310,7 +328,7 @@ describe('<EventTimelinePremiumHeader />', () => {
       // Saturday.
       await renderHeader({
         preset: 'dayAndWeek',
-        visibleDate: adapter.date('2011-12-28T00:00:00', 'Pacific/Apia'),
+        visibleDate: createDate('2011-12-28T00:00:00', 'Pacific/Apia'),
         displayTimezone: 'Pacific/Apia',
         defaultPreferences: { weekStartsOn: 6 },
       });
@@ -367,8 +385,8 @@ describe('<EventTimelinePremiumHeader />', () => {
     // Mar 8 2026 in America/New_York skips the 02:00 wall-clock hour; Nov 2 2025 repeats
     // the 01:00 one. The hour row is a wall-clock grid, so both days show the same columns
     // as any other day, matching the Event Calendar's time axis.
-    const springForward = adapter.date('2026-03-08T00:00:00', 'America/New_York');
-    const fallBack = adapter.date('2025-11-02T00:00:00', 'America/New_York');
+    const springForward = createDate('2026-03-08T00:00:00', 'America/New_York');
+    const fallBack = createDate('2025-11-02T00:00:00', 'America/New_York');
 
     function getHourLabels(dayIndex: number, hoursPerDay: number) {
       const cells = Array.from(
@@ -457,7 +475,7 @@ describe('<EventTimelinePremiumHeader />', () => {
 
   describe('date skipped by a transition', () => {
     // Pacific/Apia skipped Friday, December 30th, 2011: its instants are those of Saturday.
-    const visibleDate = adapter.date('2011-12-29T00:00:00', 'Pacific/Apia');
+    const visibleDate = createDate('2011-12-29T00:00:00', 'Pacific/Apia');
 
     function getDayLabels() {
       return Array.from(

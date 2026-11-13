@@ -22,7 +22,12 @@
     "import { ChatConversationHeaderActions } from '@mui/x-chat';"
   ],
   "slots": [
-    { "name": "actions", "description": "The component that renders the actions.", "class": null }
+    {
+      "name": "actions",
+      "description": "The component that renders the actions.",
+      "default": "'div'",
+      "class": null
+    }
   ],
   "classes": [
     {

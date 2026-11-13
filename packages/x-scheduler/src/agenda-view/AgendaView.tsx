@@ -17,7 +17,7 @@ import {
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
-  addToAdapterDate,
+  addToDate,
   formatDayOfMonth,
   formatMonthAndYear,
   formatWeekday,
@@ -193,9 +193,7 @@ const AGENDA_VIEW_DEFINITION: EventCalendarViewDefinition = {
     if (dayCount === 'month') {
       return getSiblingMonthStart(state, delta);
     }
-    return addToAdapterDate(state.adapter, schedulerOtherSelectors.visibleDate(state), {
-      days: dayCount * delta,
-    });
+    return addToDate(state.visibleDate, { days: dayCount * delta }, state.displayTimezone);
   },
   visibleDaysSelector: eventCalendarAgendaSelectors.visibleDays,
   fetchRangeSelector: eventCalendarAgendaSelectors.fetchRange,

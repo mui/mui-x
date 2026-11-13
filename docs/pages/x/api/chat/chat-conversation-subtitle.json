@@ -24,6 +24,7 @@
     {
       "name": "subtitle",
       "description": "The component that renders the subtitle.",
+      "default": "'div'; a styled 'p' in `ChatConversationSubtitle`",
       "class": "MuiChatConversationSubtitle-subtitle"
     }
   ],

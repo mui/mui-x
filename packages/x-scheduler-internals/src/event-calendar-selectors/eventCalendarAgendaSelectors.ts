@@ -1,5 +1,4 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
-import type { EventCalendarState as State } from '../use-event-calendar';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
@@ -30,17 +29,15 @@ const baseRange = createSelectorMemoized(
 );
 
 const baseVisibleDays = createSelectorMemoized(
-  (state: State) => state.adapter,
   baseRange,
   schedulerOtherSelectors.displayTimezone,
-  eventCalendarPreferenceSelectors.showWeekends,
-  (adapter, range, displayTimezone, showWeekends) =>
+  eventCalendarPreferenceSelectors.hiddenWeekdays,
+  (range, displayTimezone, hiddenWeekdays) =>
     getDayListFromPlainDates({
-      adapter,
       firstPlainDate: range.start,
       lastPlainDate: range.end,
       timezone: displayTimezone,
-      excludeWeekends: !showWeekends,
+      excludedWeekdays: hiddenWeekdays,
     }),
 );
 
@@ -64,25 +61,23 @@ const horizonEndPlainDate = createSelectorMemoized(
 );
 
 const visibleDays = createSelectorMemoized(
-  (state: State) => state.adapter,
   eventCalendarViewSelectors.agendaDayCount,
   baseRange,
   baseVisibleDays,
   horizonEndPlainDate,
   schedulerOtherSelectors.displayTimezone,
-  eventCalendarPreferenceSelectors.showWeekends,
+  eventCalendarPreferenceSelectors.hiddenWeekdays,
   eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
   schedulerEventSelectors.processedEventRangeIndex,
   schedulerResourceSelectors.visibleMap,
   schedulerOtherSelectors.recurringEventsPlugin,
   (
-    adapter,
     dayCount,
     range,
     baseDays,
     horizonPlainDate,
     displayTimezone,
-    showWeekends,
+    hiddenWeekdays,
     showEmptyDaysInAgenda,
     eventRangeIndex,
     visibleResources,
@@ -101,7 +96,6 @@ const visibleDays = createSelectorMemoized(
 
     // Compute occurrences for the current accumulated range
     let occurrenceMap = innerGetEventOccurrencesGroupedByDay({
-      adapter,
       days: accumulatedDays,
       eventRangeIndex,
       visibleResources,
@@ -132,17 +126,15 @@ const visibleDays = createSelectorMemoized(
           : horizonPlainDate;
 
       const more = getDayListFromPlainDates({
-        adapter,
         firstPlainDate: nextStartPlainDate,
         lastPlainDate: scannedUntilPlainDate,
         timezone: displayTimezone,
-        excludeWeekends: !showWeekends,
+        excludedWeekdays: hiddenWeekdays,
       });
 
       accumulatedDays = accumulatedDays.concat(more);
 
       occurrenceMap = innerGetEventOccurrencesGroupedByDay({
-        adapter,
         days: accumulatedDays,
         eventRangeIndex,
         visibleResources,

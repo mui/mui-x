@@ -592,6 +592,13 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
       return node.children.some((childId) => isOrHasSelectableDescendant(childId));
     };
 
+    // The grid knows all rows only when filtering, pagination and row loading are client-side.
+    // Only then does a row that is missing from the lookup no longer exist.
+    const hasAllRows =
+      props.dataSource === undefined &&
+      props.filterMode !== 'server' &&
+      props.paginationMode !== 'server';
+
     let hasChanged = false;
 
     // Rows can load after their parent was selected (server-side lazy loading).
@@ -635,6 +642,17 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
     }
 
     for (const id of currentSelection.ids) {
+      if (!selectionManager.has(id)) {
+        // The ids of an `exclude` model are already unselected.
+        // A row that was removed from the rows drops its stale id.
+        // Rows that are filtered out keep their id, so they stay deselected when they come back.
+        // Use the tree, because auto-generated group rows are never in the lookup.
+        if (hasAllRows && !rowTree[id] && !props.keepNonExistentRowsSelected) {
+          newSelectionModel.ids.delete(id);
+          hasChanged = true;
+        }
+        continue;
+      }
       if (isNonExistent(id)) {
         if (props.keepNonExistentRowsSelected) {
           continue;
@@ -721,6 +739,7 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
     props.rowSelectionPropagation?.descendants,
     props.keepNonExistentRowsSelected,
     props.filterMode,
+    props.paginationMode,
     props.dataSource,
     canHaveMultipleSelection,
     getRowsToBeSelected,

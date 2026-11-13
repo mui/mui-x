@@ -1,10 +1,10 @@
 import { describe, test } from 'vitest';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
+  RecurringEventWeekDayCode,
   SchedulerEventRecurrenceRule,
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { EventBuilder } from 'test/utils/scheduler';
 import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventOccurrencesForVisibleDays';
 
 const RULES: SchedulerEventRecurrenceRule[] = [
@@ -25,13 +25,13 @@ const RULES: SchedulerEventRecurrenceRule[] = [
  * every frequency, with COUNT/UNTIL rules, exception dates and all-day series.
  */
 function createRecurringEvents(
-  dataTimezone: TemporalTimezone,
-  displayTimezone: TemporalTimezone,
+  dataTimezone: string,
+  displayTimezone: string,
 ): SchedulerProcessedEvent[] {
   return Array.from({ length: 200 }, (_, index) => {
     const day = String((index % 28) + 1).padStart(2, '0');
     const hour = String(7 + (index % 11)).padStart(2, '0');
-    const builder = EventBuilder.new(adapter)
+    const builder = EventBuilder.new()
       .id(index)
       .withDataTimezone(dataTimezone)
       .withDisplayTimezone(displayTimezone);
@@ -62,17 +62,16 @@ const RANGES = {
 function expandAll(
   events: SchedulerProcessedEvent[],
   [start, end]: readonly [string, string],
-  displayTimezone: TemporalTimezone,
+  displayTimezone: string,
 ) {
-  const rangeStart = adapter.getTime(adapter.date(start, 'default'));
-  const rangeEnd = adapter.getTime(adapter.date(end, 'default'));
+  const rangeStart = Date.parse(start);
+  const rangeEnd = Date.parse(end);
   let count = 0;
   for (const event of events) {
     count += getRecurringEventOccurrencesForVisibleDays(
       event,
       rangeStart,
       rangeEnd,
-      adapter,
       displayTimezone,
     ).length;
   }
@@ -119,9 +118,10 @@ describe('recurring event expansion', () => {
   );
 
   test('long-running series with COUNT', { timeout: 0 }, async ({ bench }) => {
-    // COUNT is enforced by replaying the series from DTSTART up to the visible range.
+    // COUNT includes the occurrences from DTSTART to the visible range: the daily and weekly series
+    // count them, the monthly one steps through them.
     const events = (['DAILY', 'WEEKLY', 'MONTHLY'] as const).map((freq) =>
-      EventBuilder.new(adapter)
+      EventBuilder.new()
         .withDataTimezone('America/New_York')
         .singleDay('2016-01-04T09:00:00')
         .rrule({ freq, byDay: freq === 'WEEKLY' ? ['MO', 'TH'] : undefined, count: 5000 })
@@ -134,6 +134,42 @@ describe('recurring event expansion', () => {
       }),
       bench('month view, 10 years after DTSTART', () => {
         expandAll(events, RANGES.month, 'default');
+      }),
+      BENCH_OPTIONS,
+    );
+  });
+
+  test('weekly series with COUNT since 1970', { timeout: 0 }, async ({ bench }) => {
+    // Each series has about 8,800 days before the visible range, and the first two fall on different
+    // days of the week. A plain date for each of these days would need more than the Scheduler
+    // caches, and would empty the cache on every expansion.
+    const BY_DAYS: RecurringEventWeekDayCode[][] = [
+      ['MO', 'WE', 'FR'],
+      ['TU', 'TH', 'SA'],
+      ['MO', 'TU', 'TH'],
+      ['WE', 'FR', 'SU'],
+    ];
+    const createSeries = (length: number) =>
+      Array.from({ length }, (_, index) =>
+        EventBuilder.new()
+          .id(index)
+          .singleDay('1970-01-05T09:00:00')
+          .rrule({ freq: 'WEEKLY', byDay: BY_DAYS[index], count: 20_000 })
+          .toProcessed(),
+      );
+    const oneSeries = createSeries(1);
+    const twoSeries = createSeries(2);
+    const fourSeries = createSeries(4);
+
+    await bench.compare(
+      bench('1 series, month view', () => {
+        expandAll(oneSeries, RANGES.month, 'default');
+      }),
+      bench('2 series, month view', () => {
+        expandAll(twoSeries, RANGES.month, 'default');
+      }),
+      bench('4 series, month view', () => {
+        expandAll(fourSeries, RANGES.month, 'default');
       }),
       BENCH_OPTIONS,
     );

@@ -1,28 +1,25 @@
-import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
-import type { Adapter } from '../../use-adapter/useAdapter.types';
 import type { BaseTemporal } from './base-temporal';
 import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
 import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import type { WeekInfo } from './date-locale';
 import { toWallClockIsoString } from './plain-date-utils/timeZone';
+import { isInstantString } from './plain-date-utils/date';
 
 /**
- * Converts a `TemporalSupportedObject` back to a string, respecting the
- * original date format: instant strings (ending with `Z`) stay as UTC ISO
- * strings, while wall-time strings (no `Z`) are formatted in the event's
- * data timezone without the `Z` suffix.
+ * Converts a `Date` back to a string, respecting the original date format: instant strings
+ * (ending with `Z` or an offset) become UTC ISO strings, while wall-time strings are formatted
+ * in the event's data timezone without the `Z` suffix.
  */
 export function dateToEventString(
-  adapter: Adapter,
-  date: TemporalSupportedObject,
+  date: Date,
   originalString: string,
-  dataTimezone: TemporalTimezone,
+  dataTimezone: string,
 ): string {
-  if (originalString.endsWith('Z')) {
-    return adapter.toJsDate(date).toISOString();
+  if (isInstantString(originalString)) {
+    return new Date(date.getTime()).toISOString();
   }
-  return toWallClockIsoString(adapter.getTime(date), dataTimezone);
+  return toWallClockIsoString(date.getTime(), dataTimezone);
 }
 
 /**
@@ -32,14 +29,12 @@ export function dateToEventString(
 export function getOccurrenceEnd({
   event,
   occurrenceStart,
-  adapter,
 }: {
   event: SchedulerProcessedEvent;
-  occurrenceStart: TemporalSupportedObject;
-  adapter: Adapter;
-}): TemporalSupportedObject {
+  occurrenceStart: Date;
+}): Date {
   const durationMs = event.dataTimezone.end.timestamp - event.dataTimezone.start.timestamp;
-  return adapter.addMilliseconds(occurrenceStart, durationMs);
+  return new Date(occurrenceStart.getTime() + durationMs);
 }
 
 function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {
@@ -76,7 +71,10 @@ export function getPlainDateWeekStart(
  * The first week of a year is the first one with at least `weekInfo.minimalDays` days in that
  * year. With weeks starting on Monday and 4 minimal days, the result is the ISO 8601 week number.
  */
-export function getWeekNumber(plainDate: BaseTemporal.PlainDate, weekInfo: WeekInfo): number {
+export function getWeekNumber(
+  plainDate: BaseTemporal.PlainDate,
+  weekInfo: Pick<WeekInfo, 'firstDay' | 'minimalDays'>,
+): number {
   const { firstDay: weekStartsOn, minimalDays } = weekInfo;
   const weekStartPlainDate = getPlainDateWeekStart(plainDate, weekStartsOn);
   // A week belongs to the year of its last `minimalDays` days, and the first week of a year holds

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-chat",
-  "version": "9.0.0-alpha.21",
+  "version": "9.0.0-alpha.22",
   "author": "MUI Team",
   "description": "The community edition of the MUI X Chat components.",
   "license": "MIT",
@@ -52,7 +52,7 @@
     "@mui/x-chat-headless": "workspace:*",
     "@mui/x-internals": "workspace:*",
     "clsx": "catalog:",
-    "markdown-to-jsx": "^9.10.3",
+    "markdown-to-jsx": "^9.10.6",
     "prop-types": "catalog:",
     "remend": "^1.4.0"
   },

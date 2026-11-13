@@ -589,6 +589,7 @@
     {
       "name": "toolbar",
       "description": "Toolbar component rendered in the grid header.",
+      "default": "GridToolbar",
       "class": "MuiDataGrid-toolbar"
     },
     {
@@ -2085,6 +2086,12 @@
       "key": "pivotPanelField",
       "className": "MuiDataGrid-pivotPanelField",
       "description": "Styles applied to the pivot panel field.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelField--dragging",
+      "className": "MuiDataGrid-pivotPanelField--dragging",
+      "description": "Styles applied to the drag preview of a pivot panel field when it's dragged with touch or pen.",
       "isGlobal": false
     },
     {

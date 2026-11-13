@@ -11,7 +11,6 @@ import { getOccurrencesFromEvents, getEventResourceIds } from '../internals/util
 import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
 const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
-  (state: State) => state.adapter,
   schedulerEventSelectors.processedEventRangeIndex,
   schedulerResourceSelectors.visibleMap,
   (state: State) => state.collapsedResources,
@@ -21,7 +20,6 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
   (state: State) => state.recurringEventsPlugin,
 
   (
-    adapter,
     eventRangeIndex,
     visibleResources,
     collapsedResources,
@@ -35,7 +33,6 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
     const occurrencesGroupedByResource = new Map<string, SchedulerEventOccurrence[]>();
 
     const occurrences = getOccurrencesFromEvents({
-      adapter,
       start,
       end,
       eventRangeIndex,

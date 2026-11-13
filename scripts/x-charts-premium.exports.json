@@ -639,6 +639,7 @@
   { "name": "rangeBarClasses", "kind": "Variable" },
   { "name": "RangeBarClasses", "kind": "Interface" },
   { "name": "RangeBarClassKey", "kind": "TypeAlias" },
+  { "name": "RangeBarItem", "kind": "TypeAlias" },
   { "name": "RangeBarItemIdentifier", "kind": "TypeAlias" },
   { "name": "RangeBarPlot", "kind": "Function" },
   { "name": "RangeBarPlotProps", "kind": "Interface" },

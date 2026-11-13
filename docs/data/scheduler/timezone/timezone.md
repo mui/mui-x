@@ -15,16 +15,16 @@ githubLabel: 'scope: scheduler'
 
 The Event Calendar and Event Timeline accept event dates (`start` and `end`) as strings and support two semantics depending on the format:
 
-- **Instant strings** end with `"Z"` and represent a fixed moment in UTC, for example `"2024-01-10T13:00:00Z"`.
-- **Wall-time strings** have no `"Z"` suffix and represent a local date/time that is interpreted in the event's `timezone`, for example `"2024-01-10T09:00:00"`.
+- **Instant strings** end with `"Z"` or an offset and represent a fixed moment, for example `"2024-01-10T13:00:00Z"` or `"2024-01-10T14:00:00+01:00"`.
+- **Wall-time strings** have no `"Z"` suffix or offset and represent a local date/time that is interpreted in the event's `timezone`, for example `"2024-01-10T09:00:00"`.
 
 All events are rendered in the timezone defined by the `displayTimezone` prop.
 
 ## Event date values
 
-### Instant strings (with `Z`)
+### Instant strings (with `Z` or an offset)
 
-A string ending with `"Z"` represents a fixed moment in time.
+A string ending with `"Z"` or an offset, like `"+01:00"`, represents a fixed moment in time.
 
 ```ts
 const event = {
@@ -40,9 +40,9 @@ This event is displayed as:
 - `14:00` in `Europe/Paris` (UTC+1)
 - `08:00` in `America/New_York` (UTC−5)
 
-### Wall-time strings (without `Z`)
+### Wall-time strings (without `Z` or an offset)
 
-A string without a `"Z"` suffix represents a local time.
+A string without a `"Z"` suffix or an offset represents a local time.
 It is interpreted in `event.timezone` (or `"default"` if no timezone is set).
 
 ```ts
@@ -67,11 +67,11 @@ The `timezone` field on an event determines:
 1. **How wall-time strings are interpreted**: a start of `"2024-01-10T09:00:00"` with `timezone: "America/New_York"` means 09:00 in New York (14:00 UTC in winter, 13:00 UTC in summer).
 2. **How recurring event rules are evaluated**: a daily event at 09:00 in `Europe/Paris` stays at 09:00 local time even across DST boundaries.
 
-For instant strings (ending with `"Z"`), the `timezone` field does not affect how the start/end are resolved—they are already absolute points in time.
+For instant strings (ending with `"Z"` or an offset), the `timezone` field does not affect how the start/end are resolved—they are already absolute points in time.
 However, it is still used for recurring event calculations.
 
 :::success
-If no `timezone` is set, the component uses the default timezone of your date library.
+If no `timezone` is set, the component uses the timezone of the system.
 :::
 
 ## Rendering behavior
@@ -79,7 +79,8 @@ If no `timezone` is set, the component uses the default timezone of your date li
 The `displayTimezone` prop controls how all events are rendered in the UI.
 
 Changing `displayTimezone` does not modify the event data or change when an event occurs.
-The visible date is read in `displayTimezone` too: the visible range starts on the day of `visibleDate` in that timezone, and the next and previous buttons pass a date in that timezone to `onVisibleDateChange`.
+The visible date is read in `displayTimezone` too: the visible range starts on the day of `visibleDate` in that timezone, and the next and previous buttons pass `onVisibleDateChange` an instant on the new day in that timezone.
+Read its day in `displayTimezone`, as the timezone of the browser can put it on another day.
 
 ```tsx
 <EventCalendar
@@ -97,8 +98,7 @@ Both the `displayTimezone` prop and the event's `timezone` field accept the foll
 |            Timezone | Description                                                                                                                                                |
 | ------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------- |
 |             `"UTC"` | Will use the [Coordinated Universal Time](https://en.wikipedia.org/wiki/Coordinated_Universal_Time)                                                        |
-|         `"default"` | Will use the default timezone of the date library                                                                                                          |
-|          `"system"` | Will use the system's local timezone                                                                                                                       |
+|         `"default"` | Will use the system's local timezone                                                                                                                       |
 | IANA standard zones | Any [IANA](https://www.iana.org/time-zones) timezone, for example `"Europe/Paris"` or `"America/New_York"`. [Full list](https://timezonedb.com/time-zones) |
 
 ## Creating an event

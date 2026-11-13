@@ -4,14 +4,10 @@ import type {
   SchedulerResourceId,
   RecurringEventPresetKey,
   SchedulerProcessedEventRecurrenceRule,
-  TemporalSupportedObject,
   SchedulerRenderableEventOccurrence,
-  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   BaseTemporal,
-  createAdapterDate,
   createEndOfPlainDate,
   formatMonthAndDayOfMonth,
   formatWeekday,
@@ -126,7 +122,7 @@ export type RangeFormKey = (typeof RANGE_FORM_KEYS)[number];
  * range in its current mode reads (the all-day branch of `computeRange` ignores
  * the time fields). Toggling `allDay` re-derives both bounds.
  */
-export function getEditedRangeBounds(
+function getEditedRangeBounds(
   dirtyValues: Record<string, unknown>,
   allDay: boolean,
 ): { startEdited: boolean; endEdited: boolean } {
@@ -169,7 +165,7 @@ function readTimeField(raw: string): number | null {
  * Reads a `yyyy-MM-dd` field and a time of day as an instant in `timezone`, or returns `NaN` when
  * the field isn't an existing date, the time is `null` or the timezone is unknown.
  */
-function readDateFieldMs(rawDate: string, msInDay: number | null, timezone: TemporalTimezone) {
+function readDateFieldMs(rawDate: string, msInDay: number | null, timezone: string) {
   const plainDate = readDateField(rawDate);
   return plainDate == null || msInDay == null ? NaN : toEpochMs(plainDate, msInDay, timezone);
 }
@@ -179,7 +175,7 @@ function readDateFieldMs(rawDate: string, msInDay: number | null, timezone: Temp
  */
 export function formatDateAndTimeFields(
   epochMs: number,
-  timezone: TemporalTimezone,
+  timezone: string,
 ): { date: string; time: string } {
   const isoString = toWallClockIsoString(epochMs, timezone);
   return { date: isoString.slice(0, 10), time: isoString.slice(11, 16) };
@@ -194,7 +190,7 @@ export function formatDateAndTimeFields(
  */
 export function computeRange(
   next: Pick<EventDialogFormValues, RangeFormKey>,
-  displayTimezone: TemporalTimezone,
+  displayTimezone: string,
 ): { start: number; end: number; surfaceType: 'day-grid' | 'time-grid' } {
   const now = Date.now();
 
@@ -232,7 +228,7 @@ export function validateRange(
   start: number,
   end: number,
   allDay: boolean,
-  displayTimezone: TemporalTimezone,
+  displayTimezone: string,
 ): null | { field: 'endDate' | 'endTime' } {
   const dayOrder = BaseTemporal.PlainDate.compare(
     toPlainDate(start, displayTimezone),
@@ -255,7 +251,7 @@ export function validateRange(
  */
 export function findInvalidRangeField(
   values: Pick<EventDialogFormValues, RangeFormKey>,
-  displayTimezone: TemporalTimezone,
+  displayTimezone: string,
 ): 'startDate' | 'startTime' | 'endDate' | 'endTime' | null {
   // A date in an unknown timezone gives no instant, so it doesn't parse either.
   const parsesAsDate = (raw: string) => Number.isFinite(readDateFieldMs(raw, 0, displayTimezone));
@@ -331,7 +327,7 @@ export function getRecurrenceLabel(
  * The timezone the occurrence's event is stored in, the one its recurrence rule is expressed in.
  * A creation draft has no event yet: it is created in the `default` timezone.
  */
-export function getEventTimezone(occurrence: SchedulerRenderableEventOccurrence): TemporalTimezone {
+export function getEventTimezone(occurrence: SchedulerRenderableEventOccurrence): string {
   return getOccurrenceDataTimezone(occurrence)?.timezone ?? 'default';
 }
 
@@ -383,7 +379,7 @@ export function getRecurrenceRuleBound(
   occurrence: SchedulerRenderableEventOccurrence,
   values: Pick<EventDialogFormValues, RangeFormKey>,
   resent: boolean,
-  displayTimezone: TemporalTimezone,
+  displayTimezone: string,
   bound: 'start' | 'end',
 ): number {
   if (!resent || findInvalidRangeField(values, displayTimezone) != null) {
@@ -397,26 +393,16 @@ export function getRecurrenceRuleBound(
  * instant of that day in the event's timezone. A field that isn't a date gives an invalid date,
  * which keeps the rule ending on a date and fails the validation of the Recurrence tab.
  */
-export function getRecurrenceUntil(
-  adapter: Adapter,
-  rawDate: string,
-  eventTimezone: TemporalTimezone,
-): TemporalSupportedObject {
+export function getRecurrenceUntil(rawDate: string, eventTimezone: string): Date {
   const plainDate = readDateField(rawDate);
-  return plainDate == null
-    ? createAdapterDate(adapter, NaN, eventTimezone)
-    : createEndOfPlainDate(adapter, plainDate, eventTimezone);
+  return plainDate == null ? new Date(NaN) : createEndOfPlainDate(plainDate, eventTimezone);
 }
 
 /**
- * The canonical IANA identifier of a timezone; `default` and `system` resolve to the system
- * timezone, as the adapter does.
+ * The canonical IANA identifier of a timezone; `default` resolves to the system timezone.
  */
-function getTimezoneId(timezone: TemporalTimezone): string {
-  const id =
-    timezone === 'default' || timezone === 'system'
-      ? Intl.DateTimeFormat().resolvedOptions().timeZone
-      : timezone;
+function getTimezoneId(timezone: string): string {
+  const id = timezone === 'default' ? Intl.DateTimeFormat().resolvedOptions().timeZone : timezone;
   try {
     return new Intl.DateTimeFormat(undefined, { timeZone: id }).resolvedOptions().timeZone;
   } catch {
@@ -449,8 +435,8 @@ function getTimezoneDisplayName(locale: string, timezoneId: string): string {
  */
 export function getRecurrenceTimezoneName(
   locale: string,
-  eventTimezone: TemporalTimezone,
-  displayTimezone: TemporalTimezone,
+  eventTimezone: string,
+  displayTimezone: string,
 ): string | null {
   const eventTimezoneId = getTimezoneId(eventTimezone);
   return eventTimezoneId === getTimezoneId(displayTimezone)
@@ -460,7 +446,7 @@ export function getRecurrenceTimezoneName(
 
 export function getEndsSelectionFromRRule(rrule?: {
   count?: number | null;
-  until?: TemporalSupportedObject | null;
+  until?: Date | null;
 }): EndsSelection {
   if (!rrule) {
     return 'never';

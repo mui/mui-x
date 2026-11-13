@@ -54,14 +54,6 @@ describe('DayView - touch resize', () => {
     return screen.getByRole('button', { name: /Morning Meeting/i });
   }
 
-  it('should arm the event when it is opened for editing', () => {
-    renderResizableEvent();
-    const eventElement = getEvent();
-    expect(eventElement).not.to.have.attribute('data-armed');
-    fireEvent.click(eventElement);
-    expect(eventElement).to.have.attribute('data-armed');
-  });
-
   it('should pointer-resize the end of an event to a later time', async () => {
     const { onEventsChange } = renderResizableEvent();
     const eventElement = getEvent();

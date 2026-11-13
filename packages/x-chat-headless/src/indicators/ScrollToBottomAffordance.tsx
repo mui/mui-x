@@ -11,14 +11,17 @@ import type { ScrollToBottomAffordanceOwnerState } from './indicators.types';
 export interface ScrollToBottomAffordanceSlots {
   /**
    * The component that renders the root.
+   * @default 'button'; a styled IconButton in `ChatScrollToBottomAffordance`
    */
   root: React.ElementType;
   /**
    * The component that renders the badge.
+   * @default 'span'
    */
   badge: React.ElementType;
   /**
    * The component that renders the icon.
+   * @default A text label; an arrow icon in `ChatScrollToBottomAffordance`.
    */
   icon?: React.ElementType;
 }

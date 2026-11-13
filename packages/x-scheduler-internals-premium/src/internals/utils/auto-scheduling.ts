@@ -1,5 +1,4 @@
 import { warnOnce } from '@mui/x-internals/warning';
-import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerEvent,
   SchedulerEventId,
@@ -8,7 +7,6 @@ import type {
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
 import {
-  createAdapterDate,
   dateToEventString,
   getEndOfDayMs,
   getStartOfDayMs,
@@ -17,7 +15,6 @@ import {
   toLocalDayNumber,
 } from '@mui/x-scheduler-internals/internals';
 import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { SchedulerDependency } from '../../models';
 import {
   addDependencyLag,
@@ -27,7 +24,6 @@ import {
 } from './dependency-utils';
 
 export interface ComputeAutoSchedulingCascadeParameters {
-  adapter: Adapter;
   /**
    * The processed events currently in the store, keyed by id.
    */
@@ -65,7 +61,7 @@ export interface ComputeAutoSchedulingCascadeParameters {
 interface ResolvedDates {
   start: number;
   end: number;
-  timezone: TemporalTimezone;
+  timezone: string;
   allDay: boolean;
 }
 
@@ -88,7 +84,7 @@ export interface AutoSchedulingCascadeResult {
 function resolveDates(
   start: number,
   end: number,
-  timezone: TemporalTimezone,
+  timezone: string,
   allDay: boolean,
 ): ResolvedDates {
   if (!allDay) {
@@ -136,14 +132,9 @@ function getDependencyBound(
  * The `side` of an all-day event on the day `dayNumber`: the first instant of the day for its
  * start, or the last instant before the next day for its end. A day whose midnight a DST
  * transition skips starts at the end of the gap. Both edges of a day the timezone skips, like
- * December 30th, 2011 in Pacific/Apia, are on the next day, as with the `addDays()` of the
- * adapter.
+ * December 30th, 2011 in Pacific/Apia, are on the next day.
  */
-function getAllDayEdgeMs(
-  dayNumber: number,
-  side: SchedulerEventSide,
-  timezone: TemporalTimezone,
-): number {
+function getAllDayEdgeMs(dayNumber: number, side: SchedulerEventSide, timezone: string): number {
   if (side === 'start') {
     return localToEpochMs(dayNumber * MS_PER_DAY, timezone);
   }
@@ -159,7 +150,7 @@ function minimalDayShift(
   edgeDay: number,
   side: SchedulerEventSide,
   bound: number,
-  timezone: TemporalTimezone,
+  timezone: string,
 ): number {
   let dayCount = Math.max(0, toLocalDayNumber(bound, timezone) - edgeDay - 1);
   while (getAllDayEdgeMs(edgeDay + dayCount, side, timezone) < bound) {
@@ -230,7 +221,6 @@ export function computeAutoSchedulingCascade(
   parameters: ComputeAutoSchedulingCascadeParameters,
 ): AutoSchedulingCascadeResult {
   const {
-    adapter,
     processedEventLookup,
     activeDependenciesBySource,
     activeDependenciesByTarget,
@@ -260,7 +250,7 @@ export function computeAutoSchedulingCascade(
   // store's serialization in the old timezone.
   const timezoneChanges = new Map<
     SchedulerEventId,
-    { model: SchedulerEvent; dataTimezone: TemporalTimezone; nextTimezone: TemporalTimezone }
+    { model: SchedulerEvent; dataTimezone: string; nextTimezone: string }
   >();
 
   // Whole-entry last-wins per id, mirroring the store's fold.
@@ -301,16 +291,16 @@ export function computeAutoSchedulingCascade(
     // Mirrors the store: entries are serialized in the data timezone
     // (`dateToEventString`) and the model is then read in the (new) timezone.
     const resolveEntryTimestamp = (
-      value: TemporalSupportedObject | undefined,
+      value: Date | undefined,
       modelString: string,
       currentTimestamp: number,
     ) => {
       if (nextTimezone === dataTimezone) {
-        return value == null ? currentTimestamp : adapter.getTime(value);
+        return value == null ? currentTimestamp : value.getTime();
       }
       const nextString =
-        value == null ? modelString : dateToEventString(adapter, value, modelString, dataTimezone);
-      return adapter.getTime(resolveEventDate(nextString, nextTimezone, adapter, entry.id));
+        value == null ? modelString : dateToEventString(value, modelString, dataTimezone);
+      return resolveEventDate(nextString, nextTimezone, entry.id).getTime();
     };
     const dates = resolveDates(
       resolveEntryTimestamp(entry.start, model.start, processedEvent.dataTimezone.start.timestamp),
@@ -453,20 +443,15 @@ export function computeAutoSchedulingCascade(
   // entry in the old timezone and the model is then read in the new one, so the entry
   // carries the instant whose old-zone wall time is the intended new-zone wall time.
   function toEntryDates(eventId: SchedulerEventId, dates: ResolvedDates) {
-    const start = createAdapterDate(adapter, dates.start, dates.timezone);
-    const end = createAdapterDate(adapter, dates.end, dates.timezone);
+    const start = new Date(dates.start);
+    const end = new Date(dates.end);
     const timezoneChange = timezoneChanges.get(eventId);
     if (timezoneChange === undefined) {
       return { start, end };
     }
     const { model, dataTimezone, nextTimezone } = timezoneChange;
-    const encode = (value: TemporalSupportedObject, modelString: string) =>
-      resolveEventDate(
-        dateToEventString(adapter, value, modelString, nextTimezone),
-        dataTimezone,
-        adapter,
-        eventId,
-      );
+    const encode = (value: Date, modelString: string) =>
+      resolveEventDate(dateToEventString(value, modelString, nextTimezone), dataTimezone, eventId);
     return { start: encode(start, model.start), end: encode(end, model.end) };
   }
 

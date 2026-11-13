@@ -8,7 +8,6 @@ import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-ca
  */
 export function getSiblingMonthStart(state: EventCalendarState, delta: number) {
   return createStartOfPlainDate(
-    state.adapter,
     schedulerOtherSelectors.visiblePlainDate(state).with({ day: 1 }).add({ months: delta }),
     state.displayTimezone,
   );

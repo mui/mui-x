@@ -1,5 +1,3 @@
-import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
-
 export type RecurringEventFrequency = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
 /**
  * The preset recurrence options available in the UI.
@@ -78,7 +76,7 @@ export interface SchedulerProcessedEventRecurrenceRule {
    * Must not be specified when the count property is set.
    * Corresponds to the UNTIL property of the string-based RRULE.
    */
-  until?: TemporalSupportedObject;
+  until?: Date;
   /**
    * The number of occurrences at which to range-bound the recurrence.
    * Must not be specified when the until property is set.

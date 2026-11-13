@@ -24,6 +24,7 @@
     {
       "name": "toolbar",
       "description": "The component that renders the toolbar.",
+      "default": "'div'",
       "class": "MuiChatComposerToolbar-toolbar"
     }
   ],

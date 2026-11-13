@@ -53,6 +53,9 @@
     "checkboxSelectionVisibleOnly": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
+    "clipboardPasteOptions": {
+      "type": { "name": "shape", "description": "{ createRows?: func }" }
+    },
     "columnBufferPx": { "type": { "name": "number" }, "default": "150" },
     "columnFilterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "columnGroupHeaderHeight": { "type": { "name": "number" } },
@@ -982,6 +985,7 @@
     {
       "name": "toolbar",
       "description": "Toolbar component rendered in the grid header.",
+      "default": "GridToolbar",
       "class": "MuiDataGridPremium-toolbar"
     },
     {
@@ -2754,6 +2758,12 @@
       "key": "pivotPanelField",
       "className": "MuiDataGridPremium-pivotPanelField",
       "description": "Styles applied to the pivot panel field.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelField--dragging",
+      "className": "MuiDataGridPremium-pivotPanelField--dragging",
+      "description": "Styles applied to the drag preview of a pivot panel field when it's dragged with touch or pen.",
       "isGlobal": false
     },
     {
