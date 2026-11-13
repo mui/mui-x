@@ -123,23 +123,23 @@ allowBuilds:
 
 overrides:
   '@mui/internal-docs-infra': 0.13.1-canary.33
-  # Other docs previews: material-ui #49464; public runtime: #48842.
-  # Hold the public runtime until MUI X supports material-ui #49612.
-  '@mui/core-downloads-tracker': https://pkg.pr.new/mui/material-ui/@mui/core-downloads-tracker@40645cf
-  '@mui/icons-material': https://pkg.pr.new/mui/material-ui/@mui/icons-material@40645cf
+  # Match upstream runtime; preview manifests pin public peers to 10 alpha.
+  '@mui/core-downloads-tracker': 9.5.0
+  '@mui/icons-material': 9.5.0
+  '@mui/material': 9.5.0
+  '@mui/material-nextjs': 9.5.0
+  '@mui/private-theming': 9.5.0
+  '@mui/styled-engine': 9.5.0
+  '@mui/stylis-plugin-rtl': 9.5.0
+  '@mui/system': 9.5.0
+  '@mui/types': 9.5.0
+  '@mui/utils': 9.5.0
+  # Docs previews: material-ui #49464.
   '@mui/internal-api-docs-builder': https://pkg.pr.new/mui/material-ui/@mui/internal-api-docs-builder@080b0262e3
-  '@mui/internal-core-docs': https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@928c755a4dc39d2d42bb5ef375b23f5a5e5241ac
+  '@mui/internal-core-docs': https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@dbeff8284986d0009355fb43c7795bd74092ac5b
   '@mui/internal-docs-utils': https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@080b0262e3
   '@mui/internal-markdown': https://pkg.pr.new/mui/material-ui/@mui/internal-markdown@080b0262e3
   '@mui/internal-scripts': https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@080b0262e3
-  '@mui/material': https://pkg.pr.new/mui/material-ui/@mui/material@40645cf
-  '@mui/material-nextjs': https://pkg.pr.new/mui/material-ui/@mui/material-nextjs@40645cf
-  '@mui/private-theming': https://pkg.pr.new/mui/material-ui/@mui/private-theming@40645cf
-  '@mui/styled-engine': https://pkg.pr.new/mui/material-ui/@mui/styled-engine@40645cf
-  '@mui/stylis-plugin-rtl': https://pkg.pr.new/mui/material-ui/@mui/stylis-plugin-rtl@40645cf
-  '@mui/system': https://pkg.pr.new/mui/material-ui/@mui/system@40645cf
-  '@mui/types': https://pkg.pr.new/mui/material-ui/@mui/types@40645cf
-  '@mui/utils': https://pkg.pr.new/mui/material-ui/@mui/utils@40645cf
 
   # Pin the version otherwise emotion uses its own version resulting in docs build error
   # @TODO: Debug a fix separately and remove the override
