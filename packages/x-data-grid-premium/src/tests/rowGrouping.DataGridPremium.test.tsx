@@ -20,6 +20,7 @@ import {
 import type {
   DataGridPremiumProps,
   GridApi,
+  GridColDef,
   GridGroupNode,
   GridRowsProp,
   GridSortDirection,
@@ -46,6 +47,29 @@ const unbalancedRows: GridRowsProp = [
   { id: 3, category1: 'Cat B' },
   { id: 4, category1: null },
   { id: 5, category1: null },
+];
+
+// Neither alphabetical nor the reverse, to tell the `getSortComparator` apart from the `sortComparator`
+const FRUIT_ORDER = ['Cherry', 'Apple', 'Banana'];
+const compareFruits = (value1: string, value2: string) =>
+  FRUIT_ORDER.indexOf(value1) - FRUIT_ORDER.indexOf(value2);
+
+const fruitRows: GridRowsProp = [
+  { id: 0, fruit: 'Apple', origin: 'Spain' },
+  { id: 1, fruit: 'Banana', origin: 'Spain' },
+  { id: 2, fruit: 'Cherry', origin: 'France' },
+  { id: 3, fruit: 'Apple', origin: 'France' },
+];
+
+const fruitColumns: GridColDef[] = [
+  {
+    field: 'fruit',
+    getSortComparator: (sortDirection) =>
+      sortDirection === 'desc'
+        ? (value1: string, value2: string) => -compareFruits(value1, value2)
+        : compareFruits,
+  },
+  { field: 'origin' },
 ];
 
 const baselineProps: BaselineProps = {
@@ -905,30 +929,76 @@ describe('<DataGridPremium /> - Row grouping', () => {
         ).to.deep.equal([2021, 2020, 2019]);
       });
 
-      it('should sort the leaves with the `sortComparator` of the leaf column', async () => {
-        // Reversed, to tell it apart from the `sortComparator` of the type
-        const getSortComparator = vi.fn(() => (value1: number, value2: number) => value2 - value1);
+      it('should sort the groups with the `getSortComparator` of the column', async () => {
         render(
           <Test
-            columns={[{ field: 'id', type: 'number', getSortComparator }, { field: 'category1' }]}
-            initialState={{ rowGrouping: { model: ['category1'] } }}
+            rows={fruitRows}
+            columns={fruitColumns}
+            initialState={{
+              rowGrouping: { model: ['fruit'] },
+              sorting: { sortModel: [{ field: '__row_group_by_columns_group__', sort: 'asc' }] },
+            }}
+          />,
+        );
+        await microtasks();
+
+        expect(getColumnValues(0)).to.deep.equal(['Cherry (1)', 'Apple (2)', 'Banana (1)']);
+
+        await act(() =>
+          apiRef.current!.setSortModel([{ field: '__row_group_by_columns_group__', sort: 'desc' }]),
+        );
+
+        expect(getColumnValues(0)).to.deep.equal(['Banana (1)', 'Apple (2)', 'Cherry (1)']);
+      });
+
+      it('should sort the groups of each grouping criteria with the `getSortComparator` of its column', async () => {
+        render(
+          <Test
+            rows={fruitRows}
+            columns={fruitColumns}
+            initialState={{ rowGrouping: { model: ['origin', 'fruit'] } }}
             sortModel={[{ field: '__row_group_by_columns_group__', sort: 'asc' }]}
             defaultGroupingExpansionDepth={-1}
-            groupingColDef={{ leafField: 'id' }}
           />,
         );
         await microtasks();
 
         expect(getColumnValues(0)).to.deep.equal([
-          'Cat A (3)',
-          '0',
-          '1',
-          '2',
-          'Cat B (2)',
-          '3',
-          '4',
+          'France (2)',
+          'Cherry (1)',
+          '',
+          'Apple (1)',
+          '',
+          'Spain (2)',
+          'Apple (1)',
+          '',
+          'Banana (1)',
+          '',
         ]);
-        expect(getSortComparator.mock.calls.length).to.equal(0);
+      });
+
+      it('should sort the leaves with the `getSortComparator` of the leaf column', async () => {
+        render(
+          <Test
+            rows={fruitRows}
+            columns={fruitColumns}
+            initialState={{ rowGrouping: { model: ['origin'] } }}
+            sortModel={[{ field: '__row_group_by_columns_group__', sort: 'asc' }]}
+            defaultGroupingExpansionDepth={-1}
+            groupingColDef={{ leafField: 'fruit' }}
+          />,
+        );
+        await microtasks();
+
+        // Only the leaves are sorted, the groups keep their order
+        expect(getColumnValues(0)).to.deep.equal([
+          'Spain (2)',
+          'Apple',
+          'Banana',
+          'France (2)',
+          'Cherry',
+          'Apple',
+        ]);
       });
     });
 
@@ -992,6 +1062,85 @@ describe('<DataGridPremium /> - Row grouping', () => {
           'Cat B (2)',
           '4',
           '3',
+        ]);
+      });
+
+      it('should sort the groups with the `getSortComparator` of the column', async () => {
+        render(
+          <Test
+            rows={fruitRows}
+            columns={fruitColumns}
+            initialState={{ rowGrouping: { model: ['fruit'] } }}
+            rowGroupingColumnMode="multiple"
+            sortModel={[{ field: '__row_group_by_columns_group_fruit__', sort: 'asc' }]}
+          />,
+        );
+        await microtasks();
+
+        expect(getColumnValues(0)).to.deep.equal(['Cherry (1)', 'Apple (2)', 'Banana (1)']);
+      });
+
+      it('should not compare the groups of the other grouping criteria with the `sortComparator` of their column', async () => {
+        render(
+          <Test
+            rows={[
+              { id: 1, company: 'Acme', director: 'Zoe' },
+              { id: 2, company: 'Acme', director: 'Adam' },
+              { id: 3, company: 'Globex', director: 'Mia' },
+              { id: 4, company: 'Globex', director: 'Bob' },
+            ]}
+            columns={[
+              {
+                field: 'company',
+                sortComparator: (value1: string, value2: string) => value1.localeCompare(value2),
+              },
+              {
+                field: 'director',
+                sortComparator: (value1: string, value2: string) => value1.localeCompare(value2),
+              },
+            ]}
+            initialState={{
+              rowGrouping: { model: ['company', 'director'] },
+              sorting: {
+                sortModel: [{ field: '__row_group_by_columns_group_director__', sort: 'asc' }],
+              },
+            }}
+            rowGroupingColumnMode="multiple"
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+        await microtasks();
+
+        expect(getColumnValues(1)).to.deep.equal([
+          '',
+          'Adam (1)',
+          '',
+          'Zoe (1)',
+          '',
+          '',
+          'Bob (1)',
+          '',
+          'Mia (1)',
+          '',
+        ]);
+
+        await act(() =>
+          apiRef.current!.setSortModel([
+            { field: '__row_group_by_columns_group_company__', sort: 'desc' },
+          ]),
+        );
+
+        expect(getColumnValues(0)).to.deep.equal([
+          'Globex (2)',
+          '',
+          '',
+          '',
+          '',
+          'Acme (2)',
+          '',
+          '',
+          '',
+          '',
         ]);
       });
 
