@@ -207,6 +207,31 @@ describe('recurring-events/deleteRecurringEvent', () => {
       ]);
     });
 
+    it('should exclude the displayed day of an all-day occurrence and keep the existing exception days', () => {
+      // A daily all-day series displayed in New York, with July 5th already excluded.
+      const event = EventBuilder.new()
+        .id('trip')
+        .span('2025-07-04', '2025-07-05', { allDay: true })
+        .rrule({ freq: 'DAILY' })
+        .exDates(['2025-07-05'])
+        .withDisplayTimezone('America/New_York')
+        .toProcessed();
+      const newYork = (date: string) => createDate(`${date}T00:00:00`, 'America/New_York');
+
+      const result = applyRecurringDeleteOnlyThis(
+        event,
+        createOccurrence(event, newYork('2025-07-10'), 'America/New_York'),
+        'America/New_York',
+      );
+
+      // The first instants of the excluded days in the display timezone, which the store writes
+      // as those days.
+      expect(result.updated![0].exDates!.map((exDate) => exDate.getTime())).to.deep.equal([
+        newYork('2025-07-05').getTime(),
+        newYork('2025-07-10').getTime(),
+      ]);
+    });
+
     it('should drop the series in the event timezone when removing the only occurrence near a DST change', () => {
       const event = EventBuilder.new()
         .singleDay('2025-03-09T12:00:00Z')

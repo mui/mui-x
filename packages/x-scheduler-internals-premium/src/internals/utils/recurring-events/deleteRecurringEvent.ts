@@ -7,6 +7,7 @@ import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internal
 import {
   createStartOfPlainDate,
   getOccurrencePlainDate,
+  toEpochMs,
 } from '@mui/x-scheduler-internals/internals';
 import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
 import { RecurringSeries } from './RecurringSeries';
@@ -54,14 +55,20 @@ export function applyRecurringDeleteOnlyThis(
   const occurrenceDay = getOccurrencePlainDate(occurrence, displayTimezone);
   const previousExDates = originalEvent.exDates ?? [];
   const excludedDays = [...previousExDates.map((exDate) => exDate.toPlainDate()), occurrenceDay];
-  // The exceptions already stored keep their instant, which their wall-clock time can't tell
-  // apart in the hour a DST transition repeats.
-  const exDates = [
-    ...(originalEvent.modelInBuiltInFormat.exDates ?? []).map(
-      (exDate) => new Date(resolveEventTimestamp(exDate, timezone)),
-    ),
-    createStartOfPlainDate(occurrenceDay, timezone),
-  ];
+  // The exceptions of an all-day series are days: the first instants of those days in the display
+  // timezone, which the store writes back as dates. The exceptions of a timed series keep their
+  // instant, which their wall-clock time can't tell apart in the hour a DST transition repeats.
+  const exDates = originalEvent.allDay
+    ? [
+        ...previousExDates.map((exDate) => new Date(toEpochMs(exDate, displayTimezone))),
+        new Date(occurrence.start.timestamp),
+      ]
+    : [
+        ...(originalEvent.modelInBuiltInFormat.exDates ?? []).map(
+          (exDate) => new Date(resolveEventTimestamp(exDate, timezone)),
+        ),
+        createStartOfPlainDate(occurrenceDay, timezone),
+      ];
 
   if (!RecurringSeries.fromEvent(originalEvent, displayTimezone, excludedDays).hasOccurrence()) {
     return { deleted: [originalEvent.id] };

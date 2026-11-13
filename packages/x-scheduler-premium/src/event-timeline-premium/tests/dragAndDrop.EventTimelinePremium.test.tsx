@@ -1,4 +1,3 @@
-import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import * as React from 'react';
 import { screen, within, act, fireEvent } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
@@ -253,7 +252,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
   it('should exclude the dragged occurrence of its own day when moved from another timezone', async () => {
     const handleEventsChange = vi.fn();
-    // A UTC all-day weekly series whose display bounds normalize to New York July 3rd.
+    // A UTC all-day weekly series displayed in New York: an all-day event is the same date in
+    // every timezone.
     const event = utcJuly4AllDayBuilder()
       .title('Weekly sync')
       .recurrent('WEEKLY')
@@ -291,13 +291,10 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     await user.click(await screen.findByText(/Only this event/i));
     await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-    // The exception lands on the occurrence's own July 4th, not the displayed July 3rd.
+    // The exception is the occurrence's own day, as a date.
     const updatedEvents = handleEventsChange.mock.lastCall?.[0];
     const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
-    expect(series.exDates).to.have.length(1);
-    expect(
-      toPlainDate(createDate(String(series.exDates[0]), 'UTC').getTime(), 'UTC'),
-    ).toEqualPlainDate('2025-07-04');
+    expect(series.exDates).to.deep.equal(['2025-07-04']);
 
     // The dragged occurrence detaches as a one-off keeping its all-day span. The landing
     // day depends on the pointer-to-axis math, so it is pinned in the month view instead,
@@ -349,10 +346,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
     const updatedEvents = handleEventsChange.mock.lastCall?.[0];
     const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
-    expect(series.exDates).to.have.length(1);
-    expect(
-      toPlainDate(createDate(String(series.exDates[0]), 'UTC').getTime(), 'UTC'),
-    ).toEqualPlainDate('2025-07-04');
+    expect(series.exDates).to.deep.equal(['2025-07-04']);
 
     // Dragging a secondary appearance detaches the occurrence without dropping the
     // resources it belongs to: the key does not identify which row it was dragged from.

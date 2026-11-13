@@ -1626,17 +1626,26 @@ export class SchedulerStore<
     const occurrenceEnd = getOccurrenceEnd({ event: original, occurrenceStart, displayTimezone });
     const targetsCreatedEvent = createdEvent != null && createdEventId != null;
     // In place, the pattern decides where a day or rule change lands: only a change that keeps
-    // the occurrence on its own day can keep the surface armed.
+    // the occurrence on its own day can keep the surface armed. The days are read in the timezone
+    // of each representation, and the exclusive end of an all-day one ends on the day before.
+    const allDay = changes.allDay ?? occurrence.allDay;
+    const nextDayTimezone = getDayTimezone(
+      { allDay, timezone: original.timezone },
+      displayTimezone,
+    );
     const changedStart = changes.start?.getTime();
     const changedEnd = changes.end?.getTime();
     const bounds: [number | undefined, number][] = [
       [changedStart, occurrenceStart],
-      [changedEnd, occurrenceEnd],
+      [
+        changedEnd === undefined ? undefined : changedEnd - (allDay ? 1 : 0),
+        occurrenceEnd - (original.allDay ? 1 : 0),
+      ],
     ];
     const staysOnItsDay = bounds.every(
       ([changed, current]) =>
         changed === undefined ||
-        toLocalDayNumber(current, dayTimezone) === toLocalDayNumber(changed, dayTimezone),
+        toLocalDayNumber(current, dayTimezone) === toLocalDayNumber(changed, nextDayTimezone),
     );
     const keepsIdentity =
       targetsCreatedEvent ||
@@ -1647,7 +1656,6 @@ export class SchedulerStore<
     }
 
     // A bound the submit left out keeps the occurrence's current value.
-    const allDay = changes.allDay ?? occurrence.allDay;
     const rawStart = changedStart ?? occurrence.start.timestamp;
     const rawEnd = changedEnd ?? occurrence.end.timestamp;
     const displayBounds = allDay
