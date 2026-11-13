@@ -30,6 +30,76 @@ const serverOptions = { minDelay: 0, maxDelay: 0, verbose: false };
 
 const SUPPORTS_ACTIVITY = 'Activity' in React;
 
+describe('<DataGridPro /> - Data source tree data selection', () => {
+  const { render } = createRenderer();
+
+  it('should keep collapsed tree data groups and their ancestors indeterminate', async () => {
+    let apiRef!: RefObject<GridApi | null>;
+    const rowsByPath: Record<string, GridGetRowsResponse['rows']> = {
+      '': [{ id: 'G', name: 'G', childrenCount: 1 }],
+      G: [{ id: 'P', name: 'P', childrenCount: 2 }],
+      'G/P': [
+        { id: 'L1', name: 'First', childrenCount: 0 },
+        { id: 'L2', name: 'Second', childrenCount: 0 },
+      ],
+    };
+    const dataSource: GridDataSource = {
+      getRows: async (params) => {
+        const rows = rowsByPath[params.groupKeys!.join('/')];
+        return { rows, rowCount: rows.length };
+      },
+      getGroupKey: (row) => row.name,
+      getChildrenCount: (row) => row.childrenCount,
+    };
+    function Test() {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 600, height: 500 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            columns={[{ field: 'name' }]}
+            dataSource={dataSource}
+            dataSourceCache={null}
+            treeData
+            checkboxSelection
+            keepNonExistentRowsSelected
+            disableVirtualization
+            autoHeight={isJSDOM}
+          />
+        </div>
+      );
+    }
+    const { user } = render(<Test />);
+    const checkbox = (id: GridRowId) =>
+      within(apiRef.current!.getRowElement(id)!).getByRole('checkbox') as HTMLInputElement;
+    const toggle = async (id: GridRowId) => {
+      await user.click(within(apiRef.current!.getRowElement(id)!).getByRole('button'));
+    };
+    await waitFor(() => expect(apiRef.current!.getRowElement('G')).not.to.equal(null));
+    await toggle('G');
+    await waitFor(() => expect(apiRef.current!.getRowElement('P')).not.to.equal(null));
+    await toggle('P');
+    await waitFor(() => expect(apiRef.current!.getRowElement('L2')).not.to.equal(null));
+    await user.click(checkbox('L1'));
+    expect(checkbox('P')).to.have.attribute('data-indeterminate', 'true');
+    expect(checkbox('G')).to.have.attribute('data-indeterminate', 'true');
+
+    await toggle('P');
+    expect(checkbox('P')).to.have.attribute('data-indeterminate', 'true');
+    expect(checkbox('G')).to.have.attribute('data-indeterminate', 'true');
+    await toggle('G');
+    expect(checkbox('G')).to.have.attribute('data-indeterminate', 'true');
+    expect(apiRef.current!.state.rowSelection.ids).to.deep.equal(new Set(['L1']));
+
+    await toggle('G');
+    await waitFor(() => expect(apiRef.current!.getRowElement('P')).not.to.equal(null));
+    await toggle('P');
+    await waitFor(() => expect(apiRef.current!.getRowElement('L2')).not.to.equal(null));
+    expect(checkbox('L1').checked).to.equal(true);
+    expect(checkbox('L2').checked).to.equal(false);
+  });
+});
+
 // Needs layout
 describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   const { render } = createRenderer();

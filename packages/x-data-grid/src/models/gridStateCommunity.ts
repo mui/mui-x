@@ -24,6 +24,7 @@ import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState
 import type { GridEditingState } from './gridEditRowModel';
 import type { GridHeaderFilteringState } from './gridHeaderFilteringModel';
 import type { GridRowSelectionModel } from './gridRowSelectionModel';
+import type { GridRowSelectionRetention } from '../hooks/features/rowSelection/gridRowSelectionRetention';
 import type { GridVisibleRowsLookupState } from '../hooks/features/filter/gridFilterState';
 import type { GridColumnResizeState } from '../hooks/features/columnResize';
 import type { GridRowSpanningState } from '../hooks/features/rows/useGridRowSpanning';
@@ -60,6 +61,7 @@ export interface GridStateCommunity {
   focus: GridFocusState;
   tabIndex: GridTabIndexState;
   rowSelection: GridRowSelectionModel;
+  rowSelectionRetention: GridRowSelectionRetention;
   filter: GridFilterState;
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;
