@@ -714,7 +714,7 @@ DataGridProRaw.propTypes /* remove-proptypes */ = {
   /**
    * Callback fired when the cell turns to edit mode.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
-   * @param {MuiEvent<React.KeyboardEvent | React.MouseEvent>} event The event that caused this prop to be called.
+   * @param {MuiEvent<React.KeyboardEvent | React.MouseEvent | React.CompositionEvent | React.ChangeEvent>} event The event that caused this prop to be called.
    */
   onCellEditStart: PropTypes.func,
   /**
@@ -928,7 +928,7 @@ DataGridProRaw.propTypes /* remove-proptypes */ = {
   /**
    * Callback fired when the row turns to edit mode.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @param {MuiEvent<React.KeyboardEvent | React.MouseEvent>} event The event that caused this prop to be called.
+   * @param {MuiEvent<React.KeyboardEvent | React.MouseEvent | React.CompositionEvent | React.ChangeEvent>} event The event that caused this prop to be called.
    */
   onRowEditStart: PropTypes.func,
   /**
