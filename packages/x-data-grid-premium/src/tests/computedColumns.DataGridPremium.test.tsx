@@ -3519,6 +3519,13 @@ describe('<DataGridPremium /> - Computed columns', () => {
             expect(getFilterItems()).to.deep.equal([
               { field: 'double', operator: 'contains', value: '4' },
             ]);
+            // The throw did not leave the grid locked: the column added next is hydrated and the
+            // rows still update.
+            act(() => apiRef.current!.addComputedColumn(half));
+            expect(getFields()).to.include('half');
+            expect(() =>
+              act(() => apiRef.current!.updateRows([{ id: 0, price: 5 }])),
+            ).not.to.throw();
           });
         });
       });

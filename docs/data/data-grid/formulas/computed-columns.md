@@ -104,7 +104,7 @@ The **result type** becomes the [column type](/x/react-data-grid/column-definiti
 The formula result is checked against it: a `number`, `boolean`, `date`, or `dateTime` column whose formula returns a value of another type shows `#VALUE!`, while a `string` column converts any result to text.
 In the editor, the result type of a new column follows the preview until you pick one yourself.
 
-When the result type changes, the filter items of the column—and of a grouping column that reads it through `leafField`—are reset like in the filter panel: the operator is kept if the new type has it, otherwise the first one is used, and the value is cleared.
+When the result type changes, the filter items of the column—and of a grouping column that groups by it or reads it through `leafField`—are reset like in the filter panel: the operator is kept if the new type has it, otherwise the first one is used, and the value is cleared.
 The sorting is applied again with the new type.
 
 With a controlled `filterModel`, the reset model goes through `onFilterModelChange`.
