@@ -264,7 +264,7 @@ export const EventItem = React.forwardRef(function EventItem(
           // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
           data-event-id={occurrence.id}
           // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
-          data-occurrence-timestamp={occurrence.unstable_internalInfos.dataStart}
+          data-occurrence-timestamp={occurrence.start.timestamp}
           aria-label={accessibleName}
           {...(startsBeforeDay ? { 'data-starting-before-edge': '' } : {})}
           {...(endsAfterDay ? { 'data-ending-after-edge': '' } : {})}

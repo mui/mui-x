@@ -97,7 +97,6 @@ export function useCalendarGridPlaceholderInDay(
         allDay: true,
         start: createProcessedDate(day.timestamp, displayTimezone),
         end: createProcessedDate(creationBounds.end, displayTimezone),
-        unstable_internalInfos: { displayTimezone },
         position: {
           index: findAvailableIndex(),
           daySpan,
@@ -111,7 +110,6 @@ export function useCalendarGridPlaceholderInDay(
         title: rawPlaceholder.eventData.title ?? '',
         start: createProcessedDate(bounds.start, displayTimezone),
         end: createProcessedDate(bounds.end, displayTimezone),
-        unstable_internalInfos: { displayTimezone },
         position: {
           index: findAvailableIndex(),
           daySpan,
@@ -123,7 +121,6 @@ export function useCalendarGridPlaceholderInDay(
       ...sharedProperties,
       start: createProcessedDate(bounds.start, displayTimezone),
       end: createProcessedDate(bounds.end, displayTimezone),
-      unstable_internalInfos: { displayTimezone },
       position: {
         index: findAvailableIndex(rawPlaceholder.occurrenceKey),
         daySpan,

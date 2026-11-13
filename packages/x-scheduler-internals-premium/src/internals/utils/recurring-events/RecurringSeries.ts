@@ -3,6 +3,7 @@ import {
   addMonthsToDayNumber,
   dayNumberToIsoDate,
   getDayNumber,
+  getDayTimezone,
   getDaysInIsoMonth,
   getIsoDayOfWeek,
   getSkippedDays,
@@ -359,19 +360,21 @@ export class RecurringSeries {
   }
 
   /**
-   * Returns the series of a processed event, in its data timezone.
+   * Returns the series of a processed event: in its timezone for a timed event, and in the
+   * display timezone for an all-day one, whose days are the displayed ones.
    * `excludedDays` replaces the days of the excluded occurrences of the event.
    */
   public static fromEvent(
     event: SchedulerProcessedEvent,
+    displayTimezone: string,
     excludedDays: readonly BaseTemporal.PlainDate[] | undefined = event.exDates?.map((exDate) =>
       exDate.toPlainDate(),
     ),
   ): RecurringSeries {
     return new RecurringSeries({
       rule: event.rrule!,
-      start: event.unstable_internalInfos.dataStart,
-      timezone: event.timezone,
+      start: event.start.timestamp,
+      timezone: getDayTimezone(event, displayTimezone),
       excludedDays,
     });
   }

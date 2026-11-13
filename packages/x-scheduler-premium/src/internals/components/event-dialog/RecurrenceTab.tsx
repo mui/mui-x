@@ -187,10 +187,14 @@ const SmallNumberField = styled(TextField, {
 interface RecurrenceTabProps {
   occurrence: SchedulerRenderableEventOccurrence;
   tabValue: string;
+  /**
+   * The display timezone the occurrence was read in when the editing session started.
+   */
+  initialDisplayTimezone: string;
 }
 
 export function RecurrenceTab(props: RecurrenceTabProps) {
-  const { occurrence, tabValue } = props;
+  const { occurrence, tabValue, initialDisplayTimezone } = props;
 
   // Context hooks
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
@@ -227,8 +231,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const eventTimezone = getEventTimezone(occurrence);
   const rangeValues = useStore(formStore, eventDialogFormSelectors.rangeValues);
   const ruleBounds = React.useMemo(() => {
-    const displayTimezoneMoved =
-      displayTimezone !== occurrence.unstable_internalInfos.displayTimezone;
+    const displayTimezoneMoved = displayTimezone !== initialDisplayTimezone;
     const { startResent, endResent } = getResentRangeBounds(
       formStore.getDirtyValues(),
       rangeValues.allDay,

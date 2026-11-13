@@ -1,6 +1,5 @@
 import type {
   SchedulerProcessedEvent,
-  SchedulerProcessedEventInternalInfos,
   SchedulerProcessedDate,
   SchedulerProcessedDay,
   SchedulerEventOccurrence,
@@ -10,7 +9,7 @@ import type {
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
 import type { BaseTemporal } from './base-temporal';
-import { toLocalDayNumber, toPlainDate } from './plain-date-utils/timeZone';
+import { toPlainDate } from './plain-date-utils/timeZone';
 import { getDayNumber, getPlainDateKey } from './plain-date-utils/plainDate';
 import type { SchedulerEventRangeIndex } from './event-range-index';
 
@@ -19,14 +18,9 @@ import type { SchedulerEventRangeIndex } from './event-range-index';
  * all-day occurrence is exclusive: the first instant of the day after its last day.
  */
 export function getOccurrenceLastDayNumber(
-  occurrence: Pick<SchedulerRenderableEventOccurrence, 'allDay' | 'end' | 'unstable_internalInfos'>,
+  occurrence: Pick<SchedulerRenderableEventOccurrence, 'allDay' | 'end'>,
 ): number {
-  return occurrence.allDay
-    ? toLocalDayNumber(
-        occurrence.end.timestamp - 1,
-        occurrence.unstable_internalInfos.displayTimezone,
-      )
-    : getDayNumber(occurrence.end.plainDateTime.toPlainDate());
+  return getDayNumber(occurrence.end.plainDateTime.toPlainDate()) - (occurrence.allDay ? 1 : 0);
 }
 
 /**
@@ -41,31 +35,12 @@ export function getOccurrenceModelEnd(
 
 /**
  * Whether the occurrence is a persisted event occurrence, as opposed to a
- * placeholder (creation draft, drag preview) that has no data instants.
+ * placeholder (creation draft, drag preview) that has no event model.
  */
 export function isEventOccurrence(
   occurrence: SchedulerRenderableEventOccurrence,
 ): occurrence is SchedulerEventOccurrence {
-  return 'dataStart' in occurrence.unstable_internalInfos;
-}
-
-/**
- * The internal values of an occurrence, with its instants in the data timezone, the identity
- * recurring drag updates target; placeholders have none.
- */
-export function getOccurrenceInternalInfos(
-  occurrence: SchedulerRenderableEventOccurrence,
-): SchedulerProcessedEventInternalInfos | undefined {
-  return isEventOccurrence(occurrence) ? occurrence.unstable_internalInfos : undefined;
-}
-
-/**
- * The timestamp of a bound of an event or occurrence, in its data timezone.
- */
-export function getDataTimestamp(event: SchedulerProcessedEvent, bound: 'start' | 'end'): number {
-  return bound === 'start'
-    ? event.unstable_internalInfos.dataStart
-    : event.unstable_internalInfos.dataEnd;
+  return 'modelInBuiltInFormat' in occurrence;
 }
 
 /**
@@ -130,18 +105,12 @@ export function generateOccurrenceFromEvent({
   occurrenceKey,
   start,
   end,
-  internalInfos,
 }: {
   event: SchedulerProcessedEvent;
   eventId: SchedulerEventId;
   occurrenceKey: string;
   start: SchedulerProcessedDate;
   end: SchedulerProcessedDate;
-  /**
-   * The internal values of the occurrence, with its instants in the data timezone. Defaults to the
-   * display `start`/`end`, a fallback only placeholder occurrences may rely on.
-   */
-  internalInfos?: SchedulerProcessedEventInternalInfos;
 }): SchedulerEventOccurrence {
   // `exDates` is cleared rather than left out with a rest destructuring, which is about 8 times
   // slower.
@@ -152,11 +121,6 @@ export function generateOccurrenceFromEvent({
     key: occurrenceKey,
     start,
     end,
-    unstable_internalInfos: internalInfos ?? {
-      displayTimezone: event.unstable_internalInfos.displayTimezone,
-      dataStart: start.timestamp,
-      dataEnd: end.timestamp,
-    },
   };
   return occurrence;
 }

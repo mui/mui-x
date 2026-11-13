@@ -46,6 +46,7 @@ export interface SchedulerRecurringEventsPluginInterface {
     occurrence: SchedulerEventOccurrence,
     changes: SchedulerEventUpdatedProperties,
     scope: RecurringEventScope,
+    displayTimezone: string,
   ): UpdateEventsParameters;
 
   /**
@@ -56,6 +57,7 @@ export interface SchedulerRecurringEventsPluginInterface {
     originalEvent: SchedulerProcessedEvent,
     occurrence: SchedulerEventOccurrence,
     scope: RecurringEventScope,
+    displayTimezone: string,
   ): UpdateEventsParameters;
 
   /**

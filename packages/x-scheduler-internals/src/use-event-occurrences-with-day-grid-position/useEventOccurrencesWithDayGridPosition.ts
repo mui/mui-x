@@ -6,18 +6,23 @@ import type {
 } from '../models';
 import type { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { sortEventOccurrences } from '../sort-event-occurrences';
-import { differenceInDays } from '../internals/utils/plain-date-utils/timeZone';
-import { getDayNumber } from '../internals/utils/plain-date-utils/plainDate';
-import { getOccurrenceLastDayNumber, getOccurrenceModelEnd } from '../internals/utils/event-utils';
+import { getDayNumber, getMsInDay } from '../internals/utils/plain-date-utils/plainDate';
+import { getOccurrenceLastDayNumber } from '../internals/utils/event-utils';
 
 /**
  * The number of full days an occurrence spans in the display timezone.
  */
 function getDayCount(occurrence: SchedulerEventOccurrence) {
-  return differenceInDays(
-    getOccurrenceModelEnd(occurrence),
-    occurrence.start.timestamp,
-    occurrence.unstable_internalInfos.displayTimezone,
+  const { start, end } = occurrence;
+  const startDayNumber = getDayNumber(start.plainDateTime.toPlainDate());
+  if (occurrence.allDay) {
+    return getOccurrenceLastDayNumber(occurrence) - startDayNumber;
+  }
+  // A timed occurrence that ends earlier in the day than it starts spans one day less than its dates.
+  return (
+    getDayNumber(end.plainDateTime.toPlainDate()) -
+    startDayNumber -
+    (getMsInDay(end.plainDateTime) < getMsInDay(start.plainDateTime) ? 1 : 0)
   );
 }
 

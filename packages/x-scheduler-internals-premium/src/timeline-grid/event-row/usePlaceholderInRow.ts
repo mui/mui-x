@@ -78,7 +78,6 @@ export function usePlaceholderInRow(
       resource: rawPlaceholder.resourceId ?? originalEvent?.resource,
       start: startProcessed,
       end: endProcessed,
-      unstable_internalInfos: { displayTimezone },
     };
 
     if (rawPlaceholder.type === 'creation') {

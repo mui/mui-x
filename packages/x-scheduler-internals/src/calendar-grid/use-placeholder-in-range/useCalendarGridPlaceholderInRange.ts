@@ -37,7 +37,6 @@ export function useCalendarGridPlaceholderInRange(
       title: originalEvent ? originalEvent.title : '',
       start: createProcessedDate(rawPlaceholder.start, displayTimezone),
       end: createProcessedDate(rawPlaceholder.end, displayTimezone),
-      unstable_internalInfos: { displayTimezone },
     };
 
     if (rawPlaceholder.type === 'creation') {

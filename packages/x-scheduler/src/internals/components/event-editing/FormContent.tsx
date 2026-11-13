@@ -27,7 +27,6 @@ import {
 import {
   getCustomEventProperties,
   getEventResourceIds,
-  getDataTimestamp,
   getOccurrenceModelEnd,
   getResourceSelectionMode,
   toPlainDateTime,
@@ -142,15 +141,17 @@ export function FormContent(props: FormContentProps) {
     ),
   ).current;
 
+  // The display timezone the occurrence was read in, captured once per editing session.
+  const initialDisplayTimezone = useRefWithInit(() =>
+    schedulerOtherSelectors.displayTimezone(store.state),
+  ).current;
+
   // Built once: the provider ignores later values anyway.
   const initialValues = useRefWithInit((): EventDialogFormValues => {
     const startFields = formatDateAndTimeFields(occurrence.start.plainDateTime);
     // Like the event models, the form ends an all-day event on the last instant of its last day.
     const endFields = formatDateAndTimeFields(
-      toPlainDateTime(
-        getOccurrenceModelEnd(occurrence),
-        occurrence.unstable_internalInfos.displayTimezone,
-      ),
+      toPlainDateTime(getOccurrenceModelEnd(occurrence), initialDisplayTimezone),
     );
 
     // The rule is read and written in the event's timezone, not the display one.
@@ -214,13 +215,15 @@ export function FormContent(props: FormContentProps) {
       resourceSelectionMode={resourceSelectionMode}
       onValuesChange={pushPlaceholder}
     >
-      <FormContentInner {...props} />
+      <FormContentInner {...props} initialDisplayTimezone={initialDisplayTimezone} />
     </EventDialogFormProvider>
   );
 }
 
-function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
-  const { onClose, dragHandlerRef, isDraggable, anchor } = props;
+function FormContentInner(
+  props: Omit<FormContentProps, 'occurrence'> & { initialDisplayTimezone: string },
+) {
+  const { onClose, dragHandlerRef, isDraggable, anchor, initialDisplayTimezone } = props;
 
   // Context hooks
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
@@ -387,8 +390,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // it untouched can move the event: the same day re-read in another timezone
       // is a different day. Only the keys the submitted range reads count — a time
       // left over from toggling all-day off and back on must not re-arm the resend.
-      const displayTimezoneMoved =
-        current.displayTimezone !== occurrence.unstable_internalInfos.displayTimezone;
+      const displayTimezoneMoved = current.displayTimezone !== initialDisplayTimezone;
       const { startResent, endResent } = getResentRangeBounds(
         dirtyValues,
         values.allDay,
@@ -396,8 +398,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       );
       // With a `dataSource`, a resize updates the snapshot before the stored model: resend a
       // bound that differs while the model still holds what it did at the resize, or the update
-      // rebuilds it from the stale model. A bound the host moved since is kept. Compared as data
-      // instants, since the display bounds of an all-day event are normalized to whole days.
+      // rebuilds it from the stale model. A bound the host moved since is kept.
       const liveEvent = schedulerEventSelectors.processedEvent(store.state, occurrence.id);
       const modelBounds = schedulerOtherSelectors.editingModelBounds(store.state, occurrence.key);
       const boundPending = (bound: 'start' | 'end') =>
@@ -405,8 +406,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         liveEvent.rrule == null &&
         !displayTimezoneMoved &&
         isEventOccurrence(occurrence) &&
-        modelBounds?.[bound] === getDataTimestamp(liveEvent, bound) &&
-        getDataTimestamp(occurrence, bound) !== getDataTimestamp(liveEvent, bound);
+        modelBounds?.[bound] === liveEvent[bound].timestamp &&
+        occurrence[bound].timestamp !== liveEvent[bound].timestamp;
       // Read directly instead of subscribing: the placeholder changes on every
       // creation keystroke and would re-render the whole dialog.
       const rawPlaceholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
@@ -595,7 +596,11 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         )}
         <GeneralTab value={hasTabs ? tabValue : 'general'} hasTabs={hasTabs} />
         {showRecurrence && RecurrenceTabRenderer && (
-          <RecurrenceTabRenderer occurrence={occurrence} tabValue={tabValue} />
+          <RecurrenceTabRenderer
+            occurrence={occurrence}
+            tabValue={tabValue}
+            initialDisplayTimezone={initialDisplayTimezone}
+          />
         )}
         <Divider className={classes.eventDialogFormDivider} />
         <FormActionButtons onDelete={handleDelete} />

@@ -3,9 +3,10 @@ import type {
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
 import {
-  addDaysOnWallClock,
   getDayNumber,
+  getMsInDay,
   getOccurrenceLastDayNumber,
+  MS_PER_DAY,
 } from '@mui/x-scheduler-internals/internals';
 
 /**
@@ -35,10 +36,13 @@ export function isOccurrenceInDayGrid(
     default: {
       // All-day, or lasts at least a day on the wall clock of the display timezone.
       const { start, end } = occurrence;
-      const timezone = occurrence.unstable_internalInfos.displayTimezone;
-      return (
-        !!occurrence.allDay || end.timestamp >= addDaysOnWallClock(start.timestamp, 1, timezone)
-      );
+      const wallClockDurationMs =
+        (getDayNumber(end.plainDateTime.toPlainDate()) -
+          getDayNumber(start.plainDateTime.toPlainDate())) *
+          MS_PER_DAY +
+        getMsInDay(end.plainDateTime) -
+        getMsInDay(start.plainDateTime);
+      return !!occurrence.allDay || wallClockDurationMs >= MS_PER_DAY;
     }
   }
 }

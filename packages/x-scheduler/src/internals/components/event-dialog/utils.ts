@@ -10,7 +10,6 @@ import {
   BaseTemporal,
   formatMonthAndDayOfMonth,
   formatWeekday,
-  getDataTimestamp,
   getTimezoneId,
   isEventOccurrence,
   toEpochMs,
@@ -350,16 +349,13 @@ export function getEventTimezone(occurrence: SchedulerRenderableEventOccurrence)
 }
 
 /**
- * The timestamp of a bound of the occurrence's event. All-day display bounds are aligned on the
- * days of the display timezone, so the bound stored in the event's timezone comes first.
+ * The timestamp of a bound of the occurrence.
  */
 export function getEventBoundTimestamp(
   occurrence: SchedulerRenderableEventOccurrence,
   bound: 'start' | 'end',
 ): number {
-  return isEventOccurrence(occurrence)
-    ? getDataTimestamp(occurrence, bound)
-    : occurrence[bound].timestamp;
+  return occurrence[bound].timestamp;
 }
 
 /**
