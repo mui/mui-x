@@ -46,6 +46,7 @@ describe.each([
     activeDependenciesByTarget: groupByEventId(dependencies, 'target'),
     isEventReadOnly: () => false,
     deleted: new Set<number>(),
+    displayTimezone: 'default',
     // Moving the first task 3 days later pushes the whole chain.
     updated: [
       {

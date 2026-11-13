@@ -8,10 +8,9 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import {
   timestampToEventString,
-  getEndOfDayMs,
-  getStartOfDayMs,
   localToEpochMs,
   MS_PER_DAY,
+  snapAllDayBounds,
   toLocalDayNumber,
 } from '@mui/x-scheduler-internals/internals';
 import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
@@ -52,11 +51,16 @@ export interface ComputeAutoSchedulingCascadeParameters {
    * predecessor moved.
    */
   enforcedDependencies?: readonly SchedulerDependency[];
+  /**
+   * The timezone the days of the all-day events are read in.
+   */
+  displayTimezone: string;
 }
 
 /**
  * The dates of an event as the engine works on them: instants, with the timezone its days and
- * its wall-clock times are read in.
+ * its wall-clock times are read in. The end of an all-day event is its last instant, where its
+ * occurrences end exclusively.
  */
 interface ResolvedDates {
   start: number;
@@ -78,8 +82,7 @@ export interface AutoSchedulingCascadeResult {
 }
 
 /**
- * The dates of an event from its instants. An all-day event spans whole days, like
- * `normalizeAllDayBounds()`.
+ * The dates of an event from its instants. An all-day event spans whole days of `timezone`.
  */
 function resolveDates(
   start: number,
@@ -90,21 +93,29 @@ function resolveDates(
   if (!allDay) {
     return { start, end, timezone, allDay };
   }
-  return {
-    start: getStartOfDayMs(start, timezone),
-    end: getEndOfDayMs(end, timezone),
-    timezone,
-    allDay,
-  };
+  const bounds = snapAllDayBounds(start, end, timezone);
+  return { start: bounds.start, end: bounds.end - 1, timezone, allDay };
 }
 
-function resolveProcessedEventDates(processedEvent: SchedulerProcessedEvent): ResolvedDates {
-  return resolveDates(
-    processedEvent.start.timestamp,
-    processedEvent.end.timestamp,
-    processedEvent.timezone,
-    processedEvent.allDay ?? false,
-  );
+function resolveProcessedEventDates(
+  processedEvent: SchedulerProcessedEvent,
+  displayTimezone: string,
+): ResolvedDates {
+  if (processedEvent.allDay) {
+    // Whole days of the display timezone, ending exclusively.
+    return {
+      start: processedEvent.start.timestamp,
+      end: processedEvent.end.timestamp - 1,
+      timezone: displayTimezone,
+      allDay: true,
+    };
+  }
+  return {
+    start: processedEvent.start.timestamp,
+    end: processedEvent.end.timestamp,
+    timezone: processedEvent.timezone,
+    allDay: false,
+  };
 }
 
 // The range of `Date`.
@@ -171,6 +182,7 @@ function minimalDayShift(
 export function getDependencyViolation(
   processedEventLookup: Map<SchedulerEventId, SchedulerProcessedEvent>,
   dependency: SchedulerDependency,
+  displayTimezone: string,
 ): number {
   // The engine never constrains an event by itself.
   if (
@@ -179,10 +191,13 @@ export function getDependencyViolation(
   ) {
     return 0;
   }
-  const targetDates = resolveProcessedEventDates(processedEventLookup.get(dependency.target)!);
+  const targetDates = resolveProcessedEventDates(
+    processedEventLookup.get(dependency.target)!,
+    displayTimezone,
+  );
   const bound = getDependencyBound(
     dependency,
-    resolveProcessedEventDates(processedEventLookup.get(dependency.source)!),
+    resolveProcessedEventDates(processedEventLookup.get(dependency.source)!, displayTimezone),
     targetDates,
   );
   if (bound === null) {
@@ -231,6 +246,7 @@ export function computeAutoSchedulingCascade(
     isEventReadOnly,
     deleted,
     enforcedDependencies = [],
+    displayTimezone,
   } = parameters;
 
   const newDates = new Map<SchedulerEventId, ResolvedDates>();
@@ -280,26 +296,23 @@ export function computeAutoSchedulingCascade(
     const dataTimezone = model.timezone ?? 'default';
     // An explicit `undefined` clears the property in the store (back to 'default').
     const nextTimezone = 'timezone' in entry ? (entry.timezone ?? 'default') : dataTimezone;
-    if (
-      entry.start == null &&
-      entry.end == null &&
-      entry.allDay == null &&
-      nextTimezone === dataTimezone
-    ) {
+    const allDay = entry.allDay ?? processedEvent.allDay ?? false;
+    // The days of an all-day event do not depend on its timezone.
+    const changesTimezone = nextTimezone !== dataTimezone && !allDay;
+    if (entry.start == null && entry.end == null && entry.allDay == null && !changesTimezone) {
       continue;
     }
-    if (nextTimezone !== dataTimezone) {
+    if (changesTimezone) {
       timezoneChanges.set(entry.id, { model, dataTimezone, nextTimezone });
     }
-    const allDay = entry.allDay ?? processedEvent.allDay ?? false;
-    // Mirrors the store: entries are serialized in the data timezone
+    // Mirrors the store: the entries of a timed event are serialized in the data timezone
     // (`timestampToEventString`) and the model is then read in the (new) timezone.
     const resolveEntryTimestamp = (
       value: Date | undefined,
       modelString: string,
       currentTimestamp: number,
     ) => {
-      if (nextTimezone === dataTimezone) {
+      if (!changesTimezone) {
         return value == null ? currentTimestamp : value.getTime();
       }
       const nextString =
@@ -311,7 +324,7 @@ export function computeAutoSchedulingCascade(
     const dates = resolveDates(
       resolveEntryTimestamp(entry.start, model.start, processedEvent.start.timestamp),
       resolveEntryTimestamp(entry.end, model.end, processedEvent.end.timestamp),
-      nextTimezone,
+      allDay ? displayTimezone : nextTimezone,
       allDay,
     );
     const { start: startTimestamp, end: endTimestamp } = dates;
@@ -449,6 +462,10 @@ export function computeAutoSchedulingCascade(
   // entry in the old timezone and the model is then read in the new one, so the entry
   // carries the instant whose old-zone wall time is the intended new-zone wall time.
   function toEntryDates(eventId: SchedulerEventId, dates: ResolvedDates) {
+    if (dates.allDay) {
+      // The exclusive end of the occurrences, which the store writes as a date.
+      return { start: new Date(dates.start), end: new Date(dates.end + 1) };
+    }
     const timezoneChange = timezoneChanges.get(eventId);
     if (timezoneChange === undefined) {
       return { start: new Date(dates.start), end: new Date(dates.end) };
@@ -469,7 +486,10 @@ export function computeAutoSchedulingCascade(
     let dates = currentDatesById.get(eventId);
     if (dates === undefined) {
       const processedEvent = processedEventLookup.get(eventId);
-      dates = processedEvent === undefined ? null : resolveProcessedEventDates(processedEvent);
+      dates =
+        processedEvent === undefined
+          ? null
+          : resolveProcessedEventDates(processedEvent, displayTimezone);
       currentDatesById.set(eventId, dates);
     }
     return dates;
