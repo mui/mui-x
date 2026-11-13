@@ -2,9 +2,9 @@
 
 ## 9.18.0
 
-_Nov 12, 2026_
+_Nov 13, 2026_
 
-We'd like to extend a big thank you to the 17 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 19 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔗 Event dependencies are now public in the Event Timeline
 - 👆 Drag and drop in the pivot and charts panels of the Data Grid Premium on touch and pen devices
@@ -18,7 +18,7 @@ Special thanks go out to these community members for their valuable contribution
 @Amko94, @Anexus5919, @costajohnt, @insanrizky, @kojdad-alt, @morsycodes, @mustafajw07, @officialasishkumar, @poplolioi11, @Roman178
 
 The following team members contributed to this release:
-@flaviendelangle, @Janpot, @JCQuintas, @LukasTy, @michelengelen, @noraleonte, @rita-codes
+@arminmeh, @flaviendelangle, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes
 
 ### Data Grid
 
@@ -33,6 +33,8 @@ The following team members contributed to this release:
 - [DataGrid] Focus the first filter field instead of the value input (#24049) @JCQuintas
 - [DataGrid] Keep pipe processing working after an error (#24120) @Roman178
 - [DataGrid] Keep the focused cell when a server-side sort reloads the rows (#24068) @morsycodes
+- [DataGrid] Forward data-* props to the root element (#24162⁠) @michelengelen
+- [DataGrid] Remove stale ids from an exclude selection model (#23897) @michelengelen
 - [DataGrid] Log an error when unsupported `aria-*` props are ignored (#23863) @michelengelen
 - [DataGrid] Start editing with the first key of an IME composition (#23910) @michelengelen
 - [DataGrid] Warn when scroll indexes are out of bounds (#23448) @Roman178
@@ -53,11 +55,13 @@ Same changes as in `@mui/x-data-grid-pro@9.18.0`, plus:
 
 - [DataGridPremium] Add rows when the pasted data goes past the last row (#23881) @michelengelen
 - [DataGridPremium] Side panel drag and drop with pointer events (#23976) @noraleonte
+- [DataGridPremium] Fit the filter and the sort to a computed column's new type (#24144) @MBilalShafi
 
 ### Date and Time Pickers
 
 #### `@mui/x-date-pickers@9.18.0`
 
+- [l10n] Add Indonesian (id-ID) locale (#24187) @insanrizky
 - [l10n] Improve Czech (cs-CZ) locale (#24087) @kojdad-alt
 - [pickers] Keep `MonthCalendar` and `YearCalendar` reachable when the focusable item is disabled (#24104) @officialasishkumar
 
@@ -126,6 +130,7 @@ Same changes as in `@mui/x-tree-view@9.18.0`.
 
 #### `@mui/x-scheduler@9.0.0-beta.16`
 
+- [l10n] Improve Indonesian (id-ID) locale (#24154) @insanrizky
 - [scheduler] Add a recurring events stress test experiment (#24018) @flaviendelangle
 - [scheduler] Build the dates of the tests without the date adapter (#24135) @flaviendelangle
 - [scheduler] Create plain Date objects and read them in explicit timezones (#24029) @flaviendelangle
@@ -156,6 +161,7 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.16`, plus:
 ### Miscellaneous
 
 - [chat] Make the order of the message slots deterministic in the API docs (#24083) @github-actions[bot]
+- [virtualizer] Remove the sticky frame delay (#24056) @arminmeh
 
 ## 9.17.0
 
