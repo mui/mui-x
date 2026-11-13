@@ -7,6 +7,99 @@ import type { GridColumnsState } from './gridColumnsInterfaces';
 
 describe('gridColumnsUtils', () => {
   describe('createColumnsState', () => {
+    it('should preserve existing properties when updating a column without changing its type', () => {
+      const renderCell = () => null;
+      const mockState: { columns: GridColumnsState } = {
+        columns: {
+          orderedFields: [],
+          lookup: {},
+          columnVisibilityModel: {},
+          initialColumnVisibilityModel: {},
+        },
+      };
+      const mockApiRef = {
+        current: {
+          state: mockState,
+          unstable_applyPipeProcessors: (_name: string, state: any) => state,
+        },
+      } as React.RefObject<GridApiCommunity>;
+
+      mockState.columns = createColumnsState({
+        apiRef: mockApiRef,
+        columnsToUpsert: [
+          {
+            field: 'city',
+            type: 'string',
+            flex: 1,
+            editable: true,
+            align: 'center',
+            sortable: false,
+            minWidth: 120,
+            headerName: 'City',
+            renderCell,
+          },
+          { field: 'newCity', type: 'string' },
+        ],
+        initialState: undefined,
+        keepOnlyColumnsToUpsert: true,
+      });
+
+      expect(mockState.columns.lookup.newCity).toMatchObject({
+        type: 'string',
+        editable: false,
+        align: 'left',
+        sortable: true,
+        minWidth: 50,
+      });
+
+      const partiallyUpdatedState = createColumnsState({
+        apiRef: mockApiRef,
+        columnsToUpsert: [{ field: 'city', width: 150 }],
+        initialState: undefined,
+        keepOnlyColumnsToUpsert: false,
+      });
+
+      expect(partiallyUpdatedState.lookup.city).toMatchObject({
+        editable: true,
+        headerName: 'City',
+        renderCell,
+        width: 150,
+      });
+      expect(partiallyUpdatedState.lookup.city).not.toHaveProperty('flex');
+
+      mockState.columns = partiallyUpdatedState;
+      const explicitlySameTypeState = createColumnsState({
+        apiRef: mockApiRef,
+        columnsToUpsert: [{ field: 'city', type: 'string', width: 160 }],
+        initialState: undefined,
+        keepOnlyColumnsToUpsert: false,
+      });
+
+      expect(explicitlySameTypeState.lookup.city).toMatchObject({
+        type: 'string',
+        editable: true,
+        align: 'center',
+        sortable: false,
+        minWidth: 120,
+        width: 160,
+      });
+      expect(explicitlySameTypeState.lookup.city).not.toHaveProperty('flex');
+
+      mockState.columns = explicitlySameTypeState;
+      const typeChangedState = createColumnsState({
+        apiRef: mockApiRef,
+        columnsToUpsert: [{ field: 'city', type: 'number' }],
+        initialState: undefined,
+        keepOnlyColumnsToUpsert: false,
+      });
+
+      expect(typeChangedState.lookup.city).toMatchObject({
+        type: 'number',
+        align: 'right',
+        editable: false,
+      });
+    });
+
     it('should sync columns state when column props are removed', () => {
       const fn = () => null;
 
