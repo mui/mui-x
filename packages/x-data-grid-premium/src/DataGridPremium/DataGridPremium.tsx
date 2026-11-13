@@ -885,6 +885,7 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
     PropTypes.oneOf([
       'activeChartIdChange',
       'activeStrategyProcessorChange',
+      'aggregationLookupChange',
       'aggregationLookupSet',
       'aggregationModelChange',
       'aiAssistantActiveConversationIndexChange',
@@ -1149,6 +1150,13 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
    * @param {string} activeChartId The new active chart id.
    */
   onActiveChartIdChange: PropTypes.func,
+  /**
+   * Callback fired when the aggregated values are updated.
+   * @param {GridAggregationLookup} lookup The aggregated values, indexed by row id and field.
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onAggregationLookupChange: PropTypes.func,
   /**
    * Callback fired when the row grouping model changes.
    * @param {GridAggregationModel} model The aggregated columns.
