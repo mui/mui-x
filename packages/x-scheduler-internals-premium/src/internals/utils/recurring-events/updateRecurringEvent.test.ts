@@ -1,4 +1,4 @@
-import { BaseTemporal, toPlainDate } from '@mui/x-scheduler-internals/internals';
+import { BaseTemporal, toEpochMs, toPlainDate } from '@mui/x-scheduler-internals/internals';
 import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
 import {
@@ -1196,6 +1196,30 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       expect(result.updated![0].start!.getTime()).to.equal(tokyo('2025-07-06').getTime());
       expect(result.updated![0].end!.getTime()).to.equal(tokyo('2025-07-07').getTime());
+    });
+
+    it("should resize an all-day series starting on a day without midnight by whole days on a scope 'all' change", () => {
+      // America/Havana springs forward at midnight on March 9th, 2025: that day starts at 01:00.
+      const havana = (date: string) =>
+        toEpochMs(BaseTemporal.PlainDate.from(date), 'America/Havana');
+      const event = EventBuilder.new()
+        .id('trip')
+        .span('2025-03-09', '2025-03-10', { allDay: true })
+        .rrule({ freq: 'DAILY' })
+        .withDisplayTimezone('America/Havana')
+        .toProcessed();
+
+      // The occurrence of March 12th extended to two days.
+      const result = applyRecurringUpdateAll(
+        event,
+        createOccurrence(event, new Date(havana('2025-03-12')), 'America/Havana'),
+        { id: 'trip', end: new Date(havana('2025-03-14')) },
+        'America/Havana',
+      );
+
+      // The series keeps its first day and ends at the start of March 11th.
+      expect(result.updated![0]).not.to.have.property('start');
+      expect(result.updated![0].end!.getTime()).to.equal(havana('2025-03-11'));
     });
 
     it("should keep the dates of an all-day series on a scope 'all' change of a later occurrence", () => {

@@ -3,12 +3,7 @@ import { BaseTemporal } from './base-temporal';
 import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
 import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import type { WeekInfo } from './date-locale';
-import {
-  addDaysOnWallClock,
-  toEpochMs,
-  toPlainDate,
-  toPlainDateTime,
-} from './plain-date-utils/timeZone';
+import { toEpochMs, toPlainDate, toPlainDateTime } from './plain-date-utils/timeZone';
 import { isDateOnlyString, isInstantString } from './plain-date-utils/date';
 
 /**
@@ -92,8 +87,17 @@ export function getAllDayDayCount(
 }
 
 /**
- * The end of an occurrence from its start: an all-day occurrence lasts the days of its event on
- * the wall clock of the display timezone, a timed one the duration of its event.
+ * The first instant, in `timezone`, of the day `days` after the day of `timestamp`: how the bounds
+ * of an all-day event move. A day whose midnight a DST transition skips starts later than 00:00,
+ * which adding days on the wall clock would carry over.
+ */
+export function addDaysToDayStart(timestamp: number, days: number, timezone: string): number {
+  return toEpochMs(toPlainDate(timestamp, timezone).add({ days }), timezone);
+}
+
+/**
+ * The end of an occurrence from its start: an all-day occurrence ends at the start of the day
+ * after its last day in the display timezone, a timed one keeps the duration of its event.
  */
 export function getOccurrenceEnd({
   event,
@@ -105,7 +109,7 @@ export function getOccurrenceEnd({
   displayTimezone: string;
 }): number {
   if (event.allDay) {
-    return addDaysOnWallClock(occurrenceStart, getAllDayDayCount(event), displayTimezone);
+    return addDaysToDayStart(occurrenceStart, getAllDayDayCount(event), displayTimezone);
   }
   return occurrenceStart + event.end.timestamp - event.start.timestamp;
 }

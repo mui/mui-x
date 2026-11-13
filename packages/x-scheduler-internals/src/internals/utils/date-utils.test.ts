@@ -43,6 +43,20 @@ describe('date-utils', () => {
       expect(new Date(end).toISOString()).to.equal('2026-03-29T22:00:00.000Z'); // March 30th 00:00
     });
 
+    it('should end an all-day occurrence starting on a day without midnight at the start of the next day', () => {
+      // America/Havana springs forward at midnight on March 9th, 2025: that day starts at 01:00.
+      const event = EventBuilder.new()
+        .span('2025-03-09', '2025-03-10', { allDay: true })
+        .withDisplayTimezone('America/Havana')
+        .toProcessed();
+      const occurrenceStart = toEpochMs(
+        BaseTemporal.PlainDate.from('2025-03-09'),
+        'America/Havana',
+      );
+      const end = getOccurrenceEnd({ event, occurrenceStart, displayTimezone: 'America/Havana' });
+      expect(end).to.equal(toEpochMs(BaseTemporal.PlainDate.from('2025-03-10'), 'America/Havana'));
+    });
+
     it('should keep the duration of a timed occurrence', () => {
       const event = EventBuilder.new().singleDay('2025-07-04T09:00:00Z', 90).toProcessed();
       const occurrenceStart = Date.UTC(2025, 6, 11, 9);

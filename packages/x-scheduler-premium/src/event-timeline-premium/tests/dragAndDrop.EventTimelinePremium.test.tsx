@@ -630,6 +630,93 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       expect(updatedEvents[0].end).to.equal('2025-07-04T10:00:00Z');
     });
 
+    // Whole days: four days of 1440 axis minutes, mocked at 5760px so 1px = 1 axis minute.
+    const WHOLE_DAYS_AXIS_WIDTH = 5760;
+
+    async function renderWholeDaysTimeline(
+      event: ReturnType<typeof EventBuilder.prototype.build>,
+      spyFn: any,
+    ) {
+      const view = await renderSettled(
+        <EventTimelinePremium
+          resources={resources}
+          events={[event]}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          preset="dayAndHour"
+          presets={['dayAndHour']}
+          presetConfig={{ dayAndHour: { startTime: 0, endTime: 24 } }}
+          onEventsChange={spyFn}
+        />,
+      );
+      mockAllEventRowBounds(WHOLE_DAYS_AXIS_WIDTH);
+      return view;
+    }
+
+    // The rendered bounds of an all-day event of `dayCount` days, and the axis pixels of a
+    // minute. The events start on the visible date: the browser only renders the first days.
+    function mockAllDayEventBounds(title: string, dayCount: number) {
+      const { element, left } = mockEventBoundsFromRender(WHOLE_DAYS_AXIS_WIDTH, title);
+      const width =
+        (parseFloat(element.style.getPropertyValue('--width')) / 100) * WHOLE_DAYS_AXIS_WIDTH;
+      return { element, left, right: left + width, pxPerMinute: width / (dayCount * 1440) };
+    }
+
+    it('should resize the end of an all-day event to the next whole day', async () => {
+      const handleEventsChange = vi.fn();
+      const event = EventBuilder.new()
+        .title('Holiday')
+        .span('2025-07-03', '2025-07-04', { allDay: true })
+        .resource(engineering)
+        .resizable(true)
+        .build();
+
+      await renderWholeDaysTimeline(event, handleEventsChange);
+      const { element, right, pxPerMinute } = mockAllDayEventBounds('Holiday', 1);
+
+      // Half a day to the right: the end snaps to the start of July 5th.
+      await act(async () => {
+        simulateDragAndDrop({
+          source: getResizeHandle(element, 'end'),
+          target: getEventRow(engineering.id),
+          sourceClientX: right,
+          targetClientX: right + 720 * pxPerMinute,
+        });
+      });
+
+      expect(handleEventsChange.mock.calls.length).to.equal(1);
+      const updatedEvents = handleEventsChange.mock.calls[0][0];
+      expect(updatedEvents[0].start).to.equal('2025-07-03');
+      expect(updatedEvents[0].end).to.equal('2025-07-05');
+    });
+
+    it('should resize the start of an all-day event to a whole day and keep its end', async () => {
+      const handleEventsChange = vi.fn();
+      const event = EventBuilder.new()
+        .title('Holiday')
+        .span('2025-07-03', '2025-07-05', { allDay: true })
+        .resource(engineering)
+        .resizable(true)
+        .build();
+
+      await renderWholeDaysTimeline(event, handleEventsChange);
+      const { element, left, pxPerMinute } = mockAllDayEventBounds('Holiday', 2);
+
+      // A day and a half to the right: the start snaps to July 4th, the end stays.
+      await act(async () => {
+        simulateDragAndDrop({
+          source: getResizeHandle(element, 'start'),
+          target: getEventRow(engineering.id),
+          sourceClientX: left,
+          targetClientX: left + 2160 * pxPerMinute,
+        });
+      });
+
+      expect(handleEventsChange.mock.calls.length).to.equal(1);
+      const updatedEvents = handleEventsChange.mock.calls[0][0];
+      expect(updatedEvents[0].start).to.equal('2025-07-04');
+      expect(updatedEvents[0].end).to.equal('2025-07-05');
+    });
+
     it('should not offer a resize handle on a bound hidden by the hour window', async () => {
       const handleEventsChange = vi.fn();
       const event = EventBuilder.new()

@@ -65,6 +65,7 @@ import {
   getUpdatedEventModelFromChanges,
 } from './SchedulerStore.utils';
 import {
+  addDaysToDayStart,
   allDayBoundToEventString,
   getAllDayDayCount,
   getOccurrenceEnd,
@@ -80,11 +81,7 @@ import {
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
 import { checkDateLocale, DEFAULT_DATE_LOCALE } from '../date-locale';
-import {
-  addDaysOnWallClock,
-  getStartOfDayMs,
-  toLocalDayNumber,
-} from '../plain-date-utils/timeZone';
+import { getStartOfDayMs, toLocalDayNumber } from '../plain-date-utils/timeZone';
 import { MS_PER_MINUTE } from '../plain-date-utils/dayNumber';
 
 /**
@@ -1274,7 +1271,7 @@ export class SchedulerStore<
       const start = cleanChanges.start?.getTime() ?? original.start.timestamp;
       cleanChanges.start = new Date(start);
       cleanChanges.end = new Date(
-        addDaysOnWallClock(
+        addDaysToDayStart(
           start,
           original.allDay ? getAllDayDayCount(original) : 1,
           displayTimezone,

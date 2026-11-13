@@ -25,9 +25,9 @@ import {
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
 import type { StandaloneEvent } from '../../standalone-event';
 import { getPrimaryResourceId } from './event-utils';
-import { getAllDayDayCount } from './date-utils';
+import { addDaysToDayStart, getAllDayDayCount } from './date-utils';
 import { snapAllDayBounds } from './plain-date-utils/date';
-import { addDaysOnWallClock, getStartOfDayMs } from './plain-date-utils/timeZone';
+import { getStartOfDayMs } from './plain-date-utils/timeZone';
 
 /**
  * The bounds of a drop as whole days of the display timezone when its result is all-day: a move
@@ -48,7 +48,7 @@ function snapDropBounds(
   if (type === 'internal-drag' && source != null) {
     const dayStart = getStartOfDayMs(start, timezone);
     const dayCount = source.allDay ? getAllDayDayCount(source) : 1;
-    return { start: dayStart, end: addDaysOnWallClock(dayStart, dayCount, timezone) };
+    return { start: dayStart, end: addDaysToDayStart(dayStart, dayCount, timezone) };
   }
   return snapAllDayBounds(start, end, timezone);
 }
@@ -82,11 +82,8 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
       return undefined;
     }
     const getDataFromInside: useDropTarget.GetDataFromInside = (data, newStart, newEnd) => {
-      const type =
-        data.source === 'CalendarGridDayEventResizeHandler' ||
-        data.source === 'CalendarGridTimeEventResizeHandler'
-          ? 'internal-resize'
-          : 'internal-drag';
+      // The source of every resize handler, on every surface, ends with `ResizeHandler`.
+      const type = data.source.endsWith('ResizeHandler') ? 'internal-resize' : 'internal-drag';
       const allDay =
         addPropertiesToDroppedEvent?.().allDay ?? data.originalOccurrence.allDay ?? false;
       const { start, end } = snapDropBounds(

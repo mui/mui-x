@@ -3,6 +3,7 @@ import {
   addHours,
   createDate,
   EventBuilder,
+  EventTimelinePremiumStoreWithFeatures,
   premiumStoreClasses,
   ResourceBuilder,
   utcJuly4AllDayBuilder,
@@ -15,6 +16,53 @@ import {
   applyExternalDragOccurrencePlaceholder,
   applyInternalDragOrResizeOccurrencePlaceholder,
 } from './useDropTarget';
+
+describe('applyInternalDragOrResizeOccurrencePlaceholder - all-day days without midnight', () => {
+  it('should drop an all-day predecessor on a day without midnight without pushing its successor', () => {
+    // America/Havana springs forward at midnight on March 9th, 2025: that day starts at 01:00.
+    // Dropped there, a one-day event still ends at the start of March 10th, so a successor on
+    // March 10th keeps its day.
+    const onEventsChange = vi.fn();
+    const predecessor = EventBuilder.new()
+      .id('a')
+      .span('2025-03-07', '2025-03-08', { allDay: true })
+      .withDisplayTimezone('America/Havana');
+    const store = new EventTimelinePremiumStoreWithFeatures({
+      resources: [ResourceBuilder.new().id('r1').title('Resource 1').build()],
+      events: [
+        predecessor.build(),
+        EventBuilder.new().id('b').span('2025-03-10', '2025-03-11', { allDay: true }).build(),
+      ],
+      dependencies: [{ id: 'dep', source: 'a', target: 'b', type: 'FinishToStart' }],
+      displayTimezone: 'America/Havana',
+      onEventsChange,
+      onDependenciesChange: () => {},
+    });
+    const occurrence = predecessor.toOccurrence();
+
+    applyInternalDragOrResizeOccurrencePlaceholder(
+      store as unknown as SchedulerStoreInContext<any, any>,
+      {
+        type: 'internal-drag',
+        surfaceType: 'timeline',
+        eventId: 'a',
+        occurrenceKey: occurrence.key,
+        originalOccurrence: occurrence,
+        sourceResourceId: null,
+        resourceId: null,
+        start: createDate('2025-03-09T12:00:00', 'America/Havana').getTime(),
+        end: createDate('2025-03-10T12:00:00', 'America/Havana').getTime(),
+      },
+    );
+
+    const events: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+    const movedA = events.find((item) => item.id === 'a')!;
+    const successorB = events.find((item) => item.id === 'b')!;
+    expect(movedA.start).to.equal('2025-03-09');
+    expect(movedA.end).to.equal('2025-03-10');
+    expect(successorB.start).to.equal('2025-03-10');
+  });
+});
 
 premiumStoreClasses.forEach((storeClass) => {
   describe(`applyInternalDragOrResizeOccurrencePlaceholder - ${storeClass.name}`, () => {

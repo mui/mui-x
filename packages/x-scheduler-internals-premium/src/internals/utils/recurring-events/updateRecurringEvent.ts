@@ -11,7 +11,7 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import type { BaseTemporal, UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
 import {
-  addDaysOnWallClock,
+  addDaysToDayStart,
   allDayBoundToEventString,
   extractStandaloneEvent,
   getAllDayDayCount,
@@ -239,7 +239,7 @@ export function applyRecurringUpdateAll(
           const startMs = toEpochMs(seriesStartPlainDate, displayTimezone);
           eventUpdatedProperties.start = new Date(startMs);
           eventUpdatedProperties.end = new Date(
-            addDaysOnWallClock(startMs, dayCount, displayTimezone),
+            addDaysToDayStart(startMs, dayCount, displayTimezone),
           );
         } else {
           // The times of the edited occurrence on the first day of the series.
@@ -269,7 +269,7 @@ export function applyRecurringUpdateAll(
           toLocalDayNumber(bounds.start, displayTimezone);
         if (dayCount !== getAllDayDayCount(originalEvent)) {
           eventUpdatedProperties.end = new Date(
-            addDaysOnWallClock(seriesStartMs, dayCount, displayTimezone),
+            addDaysToDayStart(seriesStartMs, dayCount, displayTimezone),
           );
         }
       }
