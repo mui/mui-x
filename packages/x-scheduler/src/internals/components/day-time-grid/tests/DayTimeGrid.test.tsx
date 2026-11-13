@@ -7,6 +7,7 @@ import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-cale
 import { describe, it, expect } from 'vitest';
 import { EventCalendarProvider } from '../../EventCalendarProvider';
 import { EventDialogProvider } from '../../event-dialog';
+import { ResponsiveTypographyContainer } from '../../ResponsiveTypographyContainer';
 
 // `hasScroll` is derived from real layout (scrollHeight vs clientHeight), which jsdom does not implement.
 describe.skipIf(isJSDOM)('<DayTimeGrid /> scroll gutter', () => {
@@ -21,11 +22,14 @@ describe.skipIf(isJSDOM)('<DayTimeGrid /> scroll gutter', () => {
     // regardless of how tall the header renders.
     render(
       <div data-testid="host" style={{ height: 'fit-content' }}>
-        <EventCalendarProvider events={[]} resources={[]}>
-          <EventDialogProvider>
-            <WeekView />
-          </EventDialogProvider>
-        </EventCalendarProvider>
+        {/* Provides the size tokens of the grid columns, as `StandaloneWeekView` does. */}
+        <ResponsiveTypographyContainer>
+          <EventCalendarProvider events={[]} resources={[]}>
+            <EventDialogProvider>
+              <WeekView />
+            </EventDialogProvider>
+          </EventCalendarProvider>
+        </ResponsiveTypographyContainer>
       </div>,
     );
 
@@ -48,12 +52,18 @@ describe.skipIf(isJSDOM)('<DayTimeGrid /> scroll gutter', () => {
 describe.skipIf(isJSDOM)('<DayTimeGrid /> all-day events overflow', () => {
   const { renderSettled } = createSchedulerRenderer({ clockConfig: new Date('2025-05-04') });
 
-  const createAllDayEvents = (day: string) =>
-    Array.from({ length: 12 }, (_, index) =>
+  const createAllDayEvents = (day: string, count = 12) =>
+    Array.from({ length: count }, (_, index) =>
       EventBuilder.new().title(`All day ${index}`).fullDay(day).build(),
     );
 
-  async function setupOverflowingWeek() {
+  function getRow() {
+    return document.querySelector<HTMLElement>(
+      `.${eventCalendarClasses.dayTimeGridAllDayEventsRow}`,
+    )!;
+  }
+
+  async function renderWithClassicScrollbars(calendar: React.ReactElement) {
     const { user } = await renderSettled(
       <div style={{ height: 800 }}>
         {/* Classic scrollbars take layout width, unlike the overlay ones of some platforms. */}
@@ -62,19 +72,25 @@ describe.skipIf(isJSDOM)('<DayTimeGrid /> all-day events overflow', () => {
             '* { scrollbar-color: auto !important; } *::-webkit-scrollbar { width: 15px; height: 15px; }'
           }
         </style>
-        <EventCalendar
-          events={[
-            ...createAllDayEvents('2025-05-06T00:00:00Z'),
-            ...createAllDayEvents('2025-05-13T00:00:00Z'),
-          ]}
-          view="week"
-        />
+        {calendar}
       </div>,
     );
+    return { user, row: getRow() };
+  }
 
-    const row = document.querySelector<HTMLElement>(
-      `.${eventCalendarClasses.dayTimeGridAllDayEventsRow}`,
-    )!;
+  async function setupOverflowingWeek(
+    viewConfig?: React.ComponentProps<typeof EventCalendar>['viewConfig'],
+  ) {
+    const { row, user } = await renderWithClassicScrollbars(
+      <EventCalendar
+        events={[
+          ...createAllDayEvents('2025-05-06T00:00:00Z'),
+          ...createAllDayEvents('2025-05-13T00:00:00Z'),
+        ]}
+        view="week"
+        viewConfig={viewConfig}
+      />,
+    );
     await waitFor(() => {
       expect(row.scrollHeight).to.be.greaterThan(row.clientHeight);
     });
@@ -85,6 +101,26 @@ describe.skipIf(isJSDOM)('<DayTimeGrid /> all-day events overflow', () => {
     const rect = element.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
     return rect.top >= containerRect.top && rect.bottom <= containerRect.bottom;
+  }
+
+  function expectAlignedWithTimeGrid(row: HTMLElement) {
+    const columns = document.querySelectorAll(`.${eventCalendarClasses.dayTimeGridColumn}`);
+    const allDayCells = row.querySelectorAll(
+      `.${eventCalendarClasses.dayTimeGridAllDayEventsCell}`,
+    );
+
+    expect(allDayCells.length).to.equal(columns.length);
+    allDayCells.forEach((cell, index) => {
+      const cellRect = cell.getBoundingClientRect();
+      const columnRect = columns[index].getBoundingClientRect();
+      expect(Math.abs(cellRect.left - columnRect.left)).to.be.lessThan(1);
+      expect(Math.abs(cellRect.right - columnRect.right)).to.be.lessThan(1);
+    });
+
+    // The scrollbar of the row sits in the gutter instead of covering the last day.
+    const rowRect = row.getBoundingClientRect();
+    const lastCellRect = allDayCells[allDayCells.length - 1].getBoundingClientRect();
+    expect(lastCellRect.right).to.be.at.most(rowRect.left + row.clientLeft + row.clientWidth + 0.5);
   }
 
   it('should show 6 all-day events and scroll to the others', async () => {
@@ -104,33 +140,51 @@ describe.skipIf(isJSDOM)('<DayTimeGrid /> all-day events overflow', () => {
     expect(isFullyVisibleIn(events[events.length - 1], row)).to.equal(true);
   });
 
-  it('should keep the all-day cells aligned with the time grid columns when the row scrolls', async () => {
-    const { row } = await setupOverflowingWeek();
-    const columns = document.querySelectorAll(`.${eventCalendarClasses.dayTimeGridColumn}`);
-    const allDayCells = row.querySelectorAll(
-      `.${eventCalendarClasses.dayTimeGridAllDayEventsCell}`,
+  it('should not scroll the all-day events when there are 6 of them', async () => {
+    const { row } = await renderWithClassicScrollbars(
+      <EventCalendar events={createAllDayEvents('2025-05-06T00:00:00Z', 6)} view="week" />,
     );
-
-    expect(allDayCells.length).to.equal(columns.length);
-    allDayCells.forEach((cell, index) => {
-      const cellRect = cell.getBoundingClientRect();
-      const columnRect = columns[index].getBoundingClientRect();
-      expect(Math.abs(cellRect.left - columnRect.left)).to.be.lessThan(1);
-      expect(Math.abs(cellRect.right - columnRect.right)).to.be.lessThan(1);
+    await waitFor(() => {
+      expect(within(row).getAllByRole('button', { name: /All day/ })).to.have.length(6);
     });
 
-    // The scrollbar of the row sits in the gutter instead of covering the last day.
-    const rowRect = row.getBoundingClientRect();
-    const lastCellRect = allDayCells[allDayCells.length - 1].getBoundingClientRect();
-    expect(lastCellRect.right).to.be.at.most(rowRect.left + row.clientLeft + row.clientWidth + 0.5);
+    expect(row.scrollHeight).to.equal(row.clientHeight);
+    expect(row.offsetWidth - row.clientWidth).to.equal(0);
+  });
+
+  it('should keep the all-day cells aligned with the time grid columns when the row overflows', async () => {
+    const { row } = await setupOverflowingWeek();
+    expectAlignedWithTimeGrid(row);
+  });
+
+  it('should keep the all-day cells aligned when the row overflows but the time grid does not', async () => {
+    const { row } = await setupOverflowingWeek({ week: { startTime: 8, endTime: 12 } });
+    const scrollRoot = document.querySelector<HTMLElement>(`.${eventCalendarClasses.dayTimeGrid}`)!;
+    expect(scrollRoot.scrollHeight).to.be.at.most(scrollRoot.clientHeight);
+
+    expectAlignedWithTimeGrid(row);
+  });
+
+  it('should keep the all-day cell aligned with the time grid column in the day view', async () => {
+    const { row } = await renderWithClassicScrollbars(
+      <EventCalendar events={createAllDayEvents('2025-05-04T00:00:00Z')} view="day" />,
+    );
+    await waitFor(() => {
+      expect(row.scrollHeight).to.be.greaterThan(row.clientHeight);
+    });
+
+    expectAlignedWithTimeGrid(row);
   });
 
   it('should scroll the all-day events back to the top when navigating to another period', async () => {
     const { row, user } = await setupOverflowingWeek();
     row.scrollTop = row.scrollHeight;
+    expect(row.scrollTop).to.be.greaterThan(0);
 
     await user.click(screen.getByRole('button', { name: /next week/i }));
 
-    expect(row.scrollTop).to.equal(0);
+    const nextRow = getRow();
+    expect(nextRow.scrollHeight).to.be.greaterThan(nextRow.clientHeight);
+    expect(nextRow.scrollTop).to.equal(0);
   });
 });
