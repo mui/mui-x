@@ -17,6 +17,7 @@ import { useUtilityClasses } from './useUtilityClasses';
 import { useRangeBarPlotData } from './useRangeBarPlotData';
 import { AnimatedRangeBarElement } from './AnimatedRangeBarElement';
 import { RangeBarWebGLPlot } from './RangeBarWebGLPlot';
+import { RangeBarLabelPlot } from './RangeBarLabelPlot';
 import type { RangeBarItemIdentifier } from '../../models';
 
 export type RangeBarPlotRenderer = 'svg-single' | 'webgl';
@@ -154,6 +155,16 @@ function RangeBarSvgPlot(props: Omit<RangeBarPlotProps, 'renderer'>): React.JSX.
           </g>
         );
       })}
+      {completedData.map((processedSeries) => (
+        <RangeBarLabelPlot
+          key={processedSeries.seriesId}
+          className={classes.seriesLabels}
+          processedSeries={processedSeries}
+          skipAnimation={skipAnimation ?? false}
+          slots={props.slots}
+          slotProps={props.slotProps}
+        />
+      ))}
     </RangeBarPlotRoot>
   );
 }

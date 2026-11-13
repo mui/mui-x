@@ -40,6 +40,8 @@
     }
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiRangeBarPlot",
   "filename": "/packages/x-charts-premium/src/BarChartPremium/RangeBar/RangeBarPlot.tsx",
   "inheritance": null,
