@@ -162,7 +162,6 @@ function evaluateDraftFormula(
  * @param {string} formula The draft formula, including the leading `=`.
  * @param {object} options The options.
  * @param {string} options.ignoreField The field of the stored definition the draft replaces.
- * @param {boolean} options.a1Notation Whether the draft is written in the A1 dialect.
  * @returns {GridFormulaResult | null} The would-be result, or `null` without the formula feature.
  */
 export function previewComputedColumnResult(
@@ -170,7 +169,7 @@ export function previewComputedColumnResult(
   rowId: GridRowId,
   field: string,
   formula: string,
-  options: { ignoreField?: string; a1Notation: boolean },
+  options: { ignoreField?: string } = {},
 ): GridFormulaResult | null {
   const cache = apiRef.current.caches.formula;
   if (cache === undefined) {
@@ -180,7 +179,7 @@ export function previewComputedColumnResult(
     apiRef,
     cache,
     gridColumnLookupSelector(apiRef),
-    options.a1Notation,
+    false,
     { intern: false },
   );
   // The result of every row when the draft is invalid, as for a stored definition.
@@ -196,12 +195,14 @@ export function previewComputedColumnResult(
     id: rowId,
     field: field === '' ? DRAFT_COMPUTED_FIELD : field,
   };
-  const parsed = parseDraftFormula(apiRef, currentCell, formula, options.a1Notation);
+  // Computed column formulas are read as written, without the A1 conversion.
+  const parsed = parseDraftFormula(apiRef, currentCell, formula, false);
   if ('error' in parsed) {
     return parsed.error;
   }
   if (
     field !== '' &&
+    !scope.columnFields.has(field) &&
     isDraftCellCyclic(
       apiRef,
       { field, fieldRefs: extractFormulaDependencies(parsed.ast).fieldRefs },

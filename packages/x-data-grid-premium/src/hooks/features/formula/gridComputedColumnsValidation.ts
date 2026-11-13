@@ -61,8 +61,7 @@ export interface GridComputedColumnValidationScope {
    */
   computedDependencies: ReadonlyMap<string, ReadonlySet<string>>;
   /**
-   * Finds a cycle the definition closes through formula cells.
-   * Only set to validate a new formula: the cells of a stored column are `#CYCLE!` row by row.
+   * Finds a cycle the definition closes through formula cells and the stored one does not.
    * @param {string} field The field of the definition.
    * @param {ReadonlySet<string>} fieldRefs The fields its formula reads.
    * @returns {string[] | null} The fields of the cycle, or `null`.
@@ -315,7 +314,7 @@ export function getComputedColumnVerdict(
     });
     if (path !== null) {
       addFormulaIssue(createCycleIssue(path), '#CYCLE!');
-    } else {
+    } else if (bringsField) {
       // Not static: only the rows of the formula cells on the cycle are `#CYCLE!`.
       const cellPath = scope.findCellCycle?.(field, dependencies.fieldRefs) ?? null;
       if (cellPath !== null) {

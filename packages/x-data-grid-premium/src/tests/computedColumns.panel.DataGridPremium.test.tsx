@@ -2404,17 +2404,85 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       expect(getPreviewText()).to.equal('4');
     });
 
-    it('does not block an edit that keeps a formula already on a cell formula cycle', async () => {
+    it('does not block an edit that keeps a cycle the cells already show', async () => {
       await render(
         <Test
           {...cycleProps}
-          initialState={{ computedColumns: { model: [define('total', '=qty + 1')] } }}
+          initialState={{ computedColumns: { model: [define('total', '=qty + 1 ')] } }}
         />,
       );
       await openEditor('total', { sampleRowId: 2 });
       typeName('Renamed');
       expect(getValidationMessages()).to.deep.equal([]);
       expect(getButton('Apply')).to.have.property('disabled', false);
+
+      typeFormula('=qty * price');
+      expect(getValidationMessages()).to.deep.equal([]);
+      expect(getButton('Apply')).to.have.property('disabled', false);
+    });
+
+    it('follows the cell formulas edited while the editor is open', async () => {
+      await render(
+        <Test
+          {...cycleProps}
+          rows={[
+            { id: 1, price: 10, qty: 4 },
+            { id: 2, price: 5, qty: 3 },
+          ]}
+        />,
+      );
+      await openEditor('total', { sampleRowId: 1 });
+      typeFormula('=qty + 1');
+      expect(getButton('Apply')).to.have.property('disabled', false);
+
+      await act(async () => apiRef.current!.updateRows([{ id: 1, qty: '=total' }]));
+      await microtasks();
+      expect(getValidationMessages()).to.deep.equal(['Circular reference: total → qty → total.']);
+      expect(getButton('Apply')).to.have.property('disabled', true);
+      await advancePreview();
+      expect(getPreviewText()).to.equal('#CYCLE!');
+
+      await act(async () => apiRef.current!.updateRows([{ id: 1, qty: '=price * 2' }]));
+      await microtasks();
+      expect(getValidationMessages()).to.deep.equal([]);
+      expect(getButton('Apply')).to.have.property('disabled', false);
+    });
+
+    it('reports no cell cycle for a field a data column already uses', async () => {
+      await render(
+        <Test
+          columns={[
+            { field: 'price', type: 'number' },
+            { field: 'qty', type: 'number', allowFormulas: true },
+            { field: 'other', type: 'number', allowFormulas: true },
+          ]}
+          rows={[{ id: 1, price: 10, qty: 3, other: '=qty' }]}
+        />,
+      );
+      await openEditor(null, { sampleRowId: 1 });
+      typeName('Copy');
+      fireEvent.change(getFieldInput(), { target: { value: 'qty' } });
+      typeFormula('=other');
+      await advancePreview();
+      expect(getValidationMessages()).to.deep.equal([
+        'A column with the field "qty" already exists.',
+      ]);
+      expect(getPreviewText()).to.equal('3');
+    });
+
+    it('previews a field that reads as a cell address as written in A1 notation', async () => {
+      await render(
+        <Test
+          formulaA1Notation
+          columns={[{ field: 'q1', type: 'number' }]}
+          rows={[{ id: 0, q1: 3 }]}
+        />,
+      );
+      await openEditor(null, { sampleRowId: 0 });
+      typeName('Next');
+      typeFormula('=q1 * 2');
+      await advancePreview();
+      expect(getPreviewText()).to.equal('6');
     });
   });
 

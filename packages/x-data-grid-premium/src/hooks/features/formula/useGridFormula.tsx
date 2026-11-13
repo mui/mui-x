@@ -612,15 +612,18 @@ export const useGridFormula = (
         // The editor validates every keystroke: a draft is not interned.
         { intern: false },
       );
-      // A cycle the cell data closes on an unchanged formula is the one the cells already show.
-      const storedFormula =
+      const storedRefs =
         options?.ignoreField === undefined
           ? undefined
-          : cache.computedColumns.records.get(options.ignoreField)?.definition.formula;
-      if (definition.formula !== storedFormula) {
-        scope.findCellCycle = (field, fieldRefs) =>
-          findComputedColumnCellCycle(apiRef, field, fieldRefs);
-      }
+          : cache.computedColumns.records.get(options.ignoreField)?.dependencies;
+      scope.findCellCycle = (field, fieldRefs) => {
+        const cycle = findComputedColumnCellCycle(apiRef, field, fieldRefs);
+        if (cycle === null || storedRefs === undefined) {
+          return cycle;
+        }
+        // The cells already show a cycle the stored formula closes too.
+        return findComputedColumnCellCycle(apiRef, field, storedRefs) === null ? cycle : null;
+      };
       return validateComputedColumnDefinition(definition, scope, options);
     },
     [apiRef, a1NotationActive],
