@@ -369,7 +369,7 @@ overrides:
   '@mui/core-downloads-tracker': https://pkg.pr.new/mui/material-ui/@mui/core-downloads-tracker@40645cf
   '@mui/icons-material': https://pkg.pr.new/mui/material-ui/@mui/icons-material@40645cf
   '@mui/internal-api-docs-builder': https://pkg.pr.new/mui/material-ui/@mui/internal-api-docs-builder@080b0262e3
-  '@mui/internal-core-docs': https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@725715bf0da8c7ca0c8b92a8db098a27f5a0eb59
+  '@mui/internal-core-docs': https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@928c755a4dc39d2d42bb5ef375b23f5a5e5241ac
   '@mui/internal-docs-utils': https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@080b0262e3
   '@mui/internal-markdown': https://pkg.pr.new/mui/material-ui/@mui/internal-markdown@080b0262e3
   '@mui/internal-scripts': https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@080b0262e3
@@ -434,8 +434,8 @@ importers:
         specifier: 0.1.1-canary.29
         version: 0.1.1-canary.29(@next/eslint-plugin-next@16.4.5(eslint@10.14.0(jiti@2.7.0)(supports-color@11.0.0)))(@octokit/core@7.0.8)(@types/node@22.20.5)(@typescript-eslint/eslint-plugin@8.72.1(@typescript-eslint/parser@8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript/typescript6@6.0.2)(eslint@10.14.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript-eslint/parser@8.72.1(@typescript/typescript6@6.0.2)(eslint@10.14.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript/typescript6@6.0.2)(eslint-import-resolver-node@0.3.10(supports-color@11.0.0))(eslint@10.14.0(jiti@2.7.0)(supports-color@11.0.0))(postcss@8.5.32)(prettier@3.9.10)(stylelint@18.0.0)(supports-color@11.0.0)(vitest@5.1.0)
       '@mui/internal-core-docs':
-        specifier: https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@725715bf0da8c7ca0c8b92a8db098a27f5a0eb59
-        version: https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@725715bf0da8c7ca0c8b92a8db098a27f5a0eb59(bbbd0b2183709e0924796016f16148ec)
+        specifier: https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@928c755a4dc39d2d42bb5ef375b23f5a5e5241ac
+        version: https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@928c755a4dc39d2d42bb5ef375b23f5a5e5241ac(bbbd0b2183709e0924796016f16148ec)
       '@mui/internal-docs-infra':
         specifier: 0.13.1-canary.33
         version: 0.13.1-canary.33(@types/react@19.3.0)(next@16.4.5(@babel/core@8.1.0)(@opentelemetry/api@1.10.0)(@playwright/test@1.65.0)(@types/node@22.20.5)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(prettier@3.9.10)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@11.0.0)
@@ -668,8 +668,8 @@ importers:
         specifier: https://pkg.pr.new/mui/material-ui/@mui/icons-material@40645cf
         version: https://pkg.pr.new/mui/material-ui/@mui/icons-material@40645cf(@mui/material@https://pkg.pr.new/mui/material-ui/@mui/material@40645cf(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@types/react@19.3.0)(react@19.3.1)
       '@mui/internal-core-docs':
-        specifier: https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@725715bf0da8c7ca0c8b92a8db098a27f5a0eb59
-        version: https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@725715bf0da8c7ca0c8b92a8db098a27f5a0eb59(bbbd0b2183709e0924796016f16148ec)
+        specifier: https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@928c755a4dc39d2d42bb5ef375b23f5a5e5241ac
+        version: https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@928c755a4dc39d2d42bb5ef375b23f5a5e5241ac(bbbd0b2183709e0924796016f16148ec)
       '@mui/internal-docs-infra':
         specifier: 0.13.1-canary.33
         version: 0.13.1-canary.33(@types/react@19.3.0)(next@16.4.5(@babel/core@8.1.0)(@opentelemetry/api@1.10.0)(@playwright/test@1.65.0)(@types/node@22.20.5)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(prettier@3.9.10)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@11.0.0)
@@ -1980,31 +1980,25 @@ importers:
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.5.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@date-fns/tz':
-        specifier: 'catalog:'
-        version: 1.5.0
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
-      date-fns:
-        specifier: 'catalog:'
-        version: 4.4.0
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
-      use-sync-external-store:
-        specifier: 'catalog:'
-        version: 1.7.0(react@19.3.1)
     devDependencies:
+      '@date-fns/tz':
+        specifier: 'catalog:'
+        version: 1.5.0
       '@mui/internal-test-utils':
         specifier: 'catalog:'
         version: 2.1.1-canary.5(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@playwright/test@1.65.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(@vitest/utils@5.1.0)(chai@6.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vite@8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.0)
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
-      '@types/use-sync-external-store':
+      date-fns:
         specifier: 'catalog:'
-        version: 1.7.0
+        version: 4.4.0
       react:
         specifier: 'catalog:'
         version: 19.3.1
@@ -4602,8 +4596,8 @@ packages:
       typescript:
         optional: true
 
-  '@mui/internal-core-docs@https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@725715bf0da8c7ca0c8b92a8db098a27f5a0eb59':
-    resolution: {integrity: sha512-5YDTuGpGyE2pmsHJ1VJFxBH/06IagsoxsnO1tFzt3+ifdwcazUgrApRVuGzPZ1hKR+dqYQwnEpgvp02UyimM+Q==, tarball: https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@725715bf0da8c7ca0c8b92a8db098a27f5a0eb59}
+  '@mui/internal-core-docs@https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@928c755a4dc39d2d42bb5ef375b23f5a5e5241ac':
+    resolution: {integrity: sha512-tuKjNiKksoC9JddPFgxCh0yBySCxE8EFrlW8sCEz9gs4KANulroIpJuSQG6NjQGDjljfbvak311KXiQ3Q9N8ag==, tarball: https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@928c755a4dc39d2d42bb5ef375b23f5a5e5241ac}
     version: 10.0.0-alpha.0
     engines: {node: '>=22.23.4'}
     peerDependencies:
@@ -13673,7 +13667,7 @@ snapshots:
       - ts-declaration-location
       - vitest
 
-  '@mui/internal-core-docs@https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@725715bf0da8c7ca0c8b92a8db098a27f5a0eb59(bbbd0b2183709e0924796016f16148ec)':
+  '@mui/internal-core-docs@https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@928c755a4dc39d2d42bb5ef375b23f5a5e5241ac(bbbd0b2183709e0924796016f16148ec)':
     dependencies:
       '@babel/runtime': 8.1.0
       '@base-ui/react': 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)

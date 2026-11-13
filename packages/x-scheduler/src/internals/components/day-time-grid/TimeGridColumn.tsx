@@ -147,7 +147,8 @@ function ColumnInteractiveLayer({
 }) {
   // Context hooks
   const store = useEventCalendarStoreContext();
-  const { start, end } = useCalendarGridTimeColumnContext().axis;
+  const { plainDate, axis } = useCalendarGridTimeColumnContext();
+  const { start, end } = axis;
   const { startEditing } = useEventEditingContext();
   const { classes } = useEventCalendarStyledContext();
 
@@ -158,6 +159,7 @@ function ColumnInteractiveLayer({
   const isCreatingAnEvent = useStore(
     store,
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange,
+    plainDate,
     start,
     end,
   );

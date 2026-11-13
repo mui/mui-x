@@ -5,7 +5,7 @@ import type {
   SchedulerEventRecurrenceRule,
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { EventBuilder } from 'test/utils/scheduler';
 import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventOccurrencesForVisibleDays';
 
 const RULES: SchedulerEventRecurrenceRule[] = [
@@ -32,7 +32,7 @@ function createRecurringEvents(
   return Array.from({ length: 200 }, (_, index) => {
     const day = String((index % 28) + 1).padStart(2, '0');
     const hour = String(7 + (index % 11)).padStart(2, '0');
-    const builder = EventBuilder.new(adapter)
+    const builder = EventBuilder.new()
       .id(index)
       .withDataTimezone(dataTimezone)
       .withDisplayTimezone(displayTimezone);
@@ -65,15 +65,14 @@ function expandAll(
   [start, end]: readonly [string, string],
   displayTimezone: TemporalTimezone,
 ) {
-  const rangeStart = adapter.getTime(adapter.date(start, 'default'));
-  const rangeEnd = adapter.getTime(adapter.date(end, 'default'));
+  const rangeStart = Date.parse(start);
+  const rangeEnd = Date.parse(end);
   let count = 0;
   for (const event of events) {
     count += getRecurringEventOccurrencesForVisibleDays(
       event,
       rangeStart,
       rangeEnd,
-      adapter,
       displayTimezone,
     ).length;
   }
@@ -123,7 +122,7 @@ describe('recurring event expansion', () => {
     // COUNT includes the occurrences from DTSTART to the visible range: the daily and weekly series
     // count them, the monthly one steps through them.
     const events = (['DAILY', 'WEEKLY', 'MONTHLY'] as const).map((freq) =>
-      EventBuilder.new(adapter)
+      EventBuilder.new()
         .withDataTimezone('America/New_York')
         .singleDay('2016-01-04T09:00:00')
         .rrule({ freq, byDay: freq === 'WEEKLY' ? ['MO', 'TH'] : undefined, count: 5000 })
@@ -153,7 +152,7 @@ describe('recurring event expansion', () => {
     ];
     const createSeries = (length: number) =>
       Array.from({ length }, (_, index) =>
-        EventBuilder.new(adapter)
+        EventBuilder.new()
           .id(index)
           .singleDay('1970-01-05T09:00:00')
           .rrule({ freq: 'WEEKLY', byDay: BY_DAYS[index], count: 20_000 })

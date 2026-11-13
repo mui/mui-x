@@ -9,6 +9,7 @@ import type { ConversationListItemOwnerState } from './conversationList.types';
 export interface ConversationListItemSlots {
   /**
    * The component that renders the root.
+   * @default 'div'
    */
   root: React.ElementType;
 }

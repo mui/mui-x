@@ -1,4 +1,4 @@
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { EventBuilder } from 'test/utils/scheduler';
 import { renderHook } from '@mui/internal-test-utils';
 import { describe, it, expect } from 'vitest';
 import {
@@ -26,7 +26,6 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   ) {
     const { result } = renderHook(() => {
       const occurrencesMap = innerGetEventOccurrencesGroupedByDay({
-        adapter,
         days: dayList,
         eventRangeIndex: createEventRangeIndex(events, false),
         visibleResources: {},

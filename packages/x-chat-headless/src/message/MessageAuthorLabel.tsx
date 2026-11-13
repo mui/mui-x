@@ -8,6 +8,7 @@ import type { MessageAuthorLabelOwnerState } from './message.types';
 export interface MessageAuthorLabelSlots {
   /**
    * The component that renders the author label.
+   * @default 'span'
    */
   authorLabel: React.ElementType;
 }

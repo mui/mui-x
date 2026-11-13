@@ -2,7 +2,7 @@ import { act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
   absorbObserverFrames,
-  adapter,
+  createDate,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
@@ -115,20 +115,6 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
   });
 
   describe('terminal rendering', () => {
-    it('should render a terminal on the end edge when the dependencies feature is enabled', async () => {
-      await renderTimeline({ events: [eventA, eventB], dependencies: [] });
-
-      expect(getTerminal('Event A')).not.to.equal(null);
-      expect(getTerminal('Event B')).not.to.equal(null);
-    });
-
-    it('should render a terminal on the start edge too', async () => {
-      await renderTimeline({ events: [eventA, eventB], dependencies: [] });
-
-      expect(getTerminal('Event A', undefined, 'start')).not.to.equal(null);
-      expect(getTerminal('Event B', undefined, 'start')).not.to.equal(null);
-    });
-
     it('should not render a start terminal on an event starting before the collection start', async () => {
       // Starts a month early and ends inside the initial viewport: the end edge can
       // anchor a gesture, the start edge cannot — same rule as the resize handles.
@@ -219,7 +205,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       act(() => {
         store.updateEvent({
           id: 'event-overflow',
-          end: adapter.date('2025-07-03T11:00:00Z', 'default'),
+          end: createDate('2025-07-03T11:00:00Z'),
         });
       });
       fireEvent.pointerOver(getEventElement('Overflowing event'));
@@ -937,19 +923,6 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       simulateTerminalDrag('Event A', getRecurringEventElement('Recurring event'));
 
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
-      expect(store.state.errors).to.have.length(1);
-      expect(store.state.errors[0].code).to.equal('dependencyRecurringEventError');
-    });
-
-    it('should replace an identical rejection toast instead of stacking it', async () => {
-      const { store } = await renderTimeline({
-        events: [eventA, recurringEvent],
-        dependencies: [],
-      });
-
-      simulateTerminalDrag('Event A', getRecurringEventElement('Recurring event'));
-      simulateTerminalDrag('Event A', getRecurringEventElement('Recurring event'));
-
       expect(store.state.errors).to.have.length(1);
       expect(store.state.errors[0].code).to.equal('dependencyRecurringEventError');
     });

@@ -747,8 +747,8 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     });
     const heightAtRest = rect('outer-window').height;
 
-    // From rest each measured scroll reverses direction, so it commits immediately
-    // (direction changes are never frame-deferred) and the height is stable to read.
+    // From rest each measured scroll reverses direction, so it commits immediately and
+    // the height is stable to read.
     act(() => {
       scroller.scrollTop = 150 * ROW_HEIGHT;
       scroller.dispatchEvent(new Event('scroll'));
@@ -799,15 +799,12 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     });
     expect(getWindowRowIds()).to.deep.equal(idsAfterDirectionChange);
 
-    // Past the rendered buffer: the context must advance. On a fast scroll the advance
-    // is deferred a few frames, so wait for it to land.
+    // Past the rendered buffer: the context must advance.
     act(() => {
       scroller.scrollTop = 30 * ROW_HEIGHT;
       scroller.dispatchEvent(new Event('scroll'));
     });
-    await waitFor(() => {
-      expect(getWindowRowIds()).to.include(30);
-    });
+    expect(getWindowRowIds()).to.include(30);
     expect(getWindowRowIds()).not.to.deep.equal(idsAfterDirectionChange);
   });
 
@@ -870,11 +867,6 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     await act(async () => {
       scroller.scrollTop = nextFirstRow * ROW_HEIGHT;
       scroller.dispatchEvent(new Event('scroll'));
-    });
-    // On a fast scroll the advance is deferred a few frames, so wait for the rendered
-    // set to actually change rather than for a row the leading buffer already holds.
-    await waitFor(() => {
-      expect([...localOffsets().keys()]).to.not.deep.equal(beforeKeys);
     });
     const after = localOffsets();
 
@@ -975,12 +967,8 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
         scroller.scrollTop = top;
         scroller.dispatchEvent(new Event('scroll'));
       });
-      // A fast scroll defers the advance a few frames; wait for it to land so the pad
-      // reflects the new context before measuring.
-      // eslint-disable-next-line no-await-in-loop
-      await waitFor(() => {
-        expect(getWindowRowIds()).to.include(Math.floor(top / ROW_HEIGHT));
-      });
+      // The context advanced, so the pad reflects it.
+      expect(getWindowRowIds()).to.include(Math.floor(top / ROW_HEIGHT));
       maxPad = Math.max(maxPad, padTop());
     }
 

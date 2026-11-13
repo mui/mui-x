@@ -128,7 +128,7 @@ overrides:
   '@mui/core-downloads-tracker': https://pkg.pr.new/mui/material-ui/@mui/core-downloads-tracker@40645cf
   '@mui/icons-material': https://pkg.pr.new/mui/material-ui/@mui/icons-material@40645cf
   '@mui/internal-api-docs-builder': https://pkg.pr.new/mui/material-ui/@mui/internal-api-docs-builder@080b0262e3
-  '@mui/internal-core-docs': https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@725715bf0da8c7ca0c8b92a8db098a27f5a0eb59
+  '@mui/internal-core-docs': https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@928c755a4dc39d2d42bb5ef375b23f5a5e5241ac
   '@mui/internal-docs-utils': https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@080b0262e3
   '@mui/internal-markdown': https://pkg.pr.new/mui/material-ui/@mui/internal-markdown@080b0262e3
   '@mui/internal-scripts': https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@080b0262e3

@@ -13,7 +13,7 @@ import type { Theme } from '@mui/material/styles';
 //
 // `em` in the grid track resolves against the EventsCell's font-size, which
 // inherits `theme.typography.body2.fontSize` from the `EventTimelinePremium` root.
-export function getEventsCellLaneMinHeight(theme: Theme): number {
+function getEventsCellLaneMinHeight(theme: Theme): number {
   const fontSize = getBody2FontSizeInPx(theme) ?? 14;
   const lineHeight = Number(theme.typography.body2.lineHeight) || 1.43;
   const extra = parseFloat(theme.spacing(1.125)) || 9;

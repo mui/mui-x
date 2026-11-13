@@ -33,6 +33,9 @@ The demo below uses modified version of the `useColumnsState()` from the previou
 
 The default rendered cell of the `longText` column type uses `GridLongTextCell` component to show the popup with the full text content when the expand button is clicked. To customize the popup content, use the `renderContent` prop of the `GridLongTextCell` component.
 
+The `value` prop also accepts a React node, so the cell can show rich content such as a link, while `renderContent` controls what the popup shows.
+In that case the expand button label no longer includes the value, so pass `slotProps.expandButton['aria-label']` to describe the cell content.
+
 The example below demonstrates two customizations:
 
 - **Character count**: Shows character count below the text

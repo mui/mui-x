@@ -104,6 +104,13 @@ The **result type** becomes the [column type](/x/react-data-grid/column-definiti
 The formula result is checked against it: a `number`, `boolean`, `date`, or `dateTime` column whose formula returns a value of another type shows `#VALUE!`, while a `string` column converts any result to text.
 In the editor, the result type of a new column follows the preview until you pick one yourself.
 
+When the result type changes, the filter items of the column—and of a grouping column that groups by it or reads it through `leafField`—are reset like in the filter panel: the operator is kept if the new type has it, otherwise the first one is used, and the value is cleared.
+The sorting is applied again with the new type.
+
+With a controlled `filterModel`, the reset model goes through `onFilterModelChange`.
+To change a type from code, change only the computed column, not the filter model in the same update.
+Don't remove a filtered column in that update either: the last model passed to `onFilterModelChange` would keep the previous items.
+
 The optional **number format** is an [`Intl.NumberFormatOptions`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#options) object applied by the column's `valueFormatter`.
 The editor manages the `style`, `currency`, `minimumFractionDigits`, `maximumFractionDigits`, and `useGrouping` options; any other option you set in code is kept.
 
@@ -336,6 +343,7 @@ Every feature reads the evaluated value of a computed cell through the column de
 When computed columns are available, the [undo and redo](/x/react-data-grid/undo-redo/) feature tracks the `computedColumnsChange` event out of the box, even if the grid has no editable column.
 Every change made from the panel, the column menu, or the cells—adding, editing, or removing a column—is one step.
 Undoing a removal restores the column with its previous position, width, and visibility.
+Undoing a removal or a type change doesn't restore the column's filter items.
 
 Changes made from code—the `apiRef` methods, `apiRef.current.restoreState()`, or a new value of the controlled `computedColumns` prop—are not steps, the same way `updateRows()` is not a step for cell edits.
 They drop the undo and redo steps that no longer match the model.

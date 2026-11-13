@@ -220,33 +220,57 @@ export function useGridColumns(
     [apiRef],
   );
 
+  // TODO v10: remove, deprecated in favor of `getColumnIndex(field, false)`.
   const getColumnIndexRelativeToVisibleColumns = React.useCallback<
     GridColumnApi['getColumnIndexRelativeToVisibleColumns']
-  >(
-    (field) => {
-      const allColumns = gridColumnFieldsSelector(apiRef);
-      return allColumns.findIndex((col) => col === field);
-    },
-    [apiRef],
-  );
+  >((field) => getColumnIndex(field, false), [getColumnIndex]);
 
+  // TODO v10: default `useVisibleColumns` to `true`.
   const setColumnIndex = React.useCallback<GridColumnReorderApi['setColumnIndex']>(
-    (field, targetIndexPosition) => {
+    (field, targetIndexPosition, useVisibleColumns) => {
       const column = apiRef.current.getColumn(field);
       if (!column) {
         return;
       }
       const allColumns = gridColumnFieldsSelector(apiRef);
-      const oldIndexPosition = getColumnIndexRelativeToVisibleColumns(field);
-      if (oldIndexPosition === targetIndexPosition) {
+      const visibilityModel = gridColumnVisibilityModelSelector(apiRef);
+      const isVisible = (columnField: string) => visibilityModel[columnField] !== false;
+      if (useVisibleColumns === undefined && !allColumns.every(isVisible)) {
+        warnOnce(
+          [
+            'MUI X: The default value of `useVisibleColumns` in `setColumnIndex()` will change from `false` to `true` in v10.',
+            'With hidden columns, the target index then counts only the visible columns.',
+            'Pass `useVisibleColumns` explicitly to silence this warning: `false` keeps the current behavior.',
+          ].join('\n'),
+        );
+      }
+      if (useVisibleColumns && getColumnIndex(field) === targetIndexPosition) {
+        return;
+      }
+      const oldIndexPosition = getColumnIndex(field, false);
+      const updatedColumns = allColumns.filter((columnField) => columnField !== field);
+      let targetIndex = targetIndexPosition;
+      if (useVisibleColumns) {
+        // Before the visible column at the target index, or after the last one.
+        const otherVisibleColumns = updatedColumns.filter(isVisible);
+        const anchor = otherVisibleColumns[targetIndexPosition];
+        const lastVisibleColumn = otherVisibleColumns[otherVisibleColumns.length - 1];
+        if (anchor !== undefined) {
+          targetIndex = updatedColumns.indexOf(anchor);
+        } else {
+          targetIndex =
+            lastVisibleColumn === undefined
+              ? updatedColumns.length
+              : updatedColumns.indexOf(lastVisibleColumn) + 1;
+        }
+      }
+      if (oldIndexPosition === targetIndex) {
         return;
       }
 
-      logger.debug(`Moving column ${field} to index ${targetIndexPosition}`);
+      logger.debug(`Moving column ${field} to index ${targetIndex}`);
 
-      const updatedColumns = [...allColumns];
-      const fieldRemoved = updatedColumns.splice(oldIndexPosition, 1)[0];
-      updatedColumns.splice(targetIndexPosition, 0, fieldRemoved);
+      updatedColumns.splice(targetIndex, 0, field);
       setGridColumnsState({
         ...gridColumnsStateSelector(apiRef),
         orderedFields: updatedColumns,
@@ -254,12 +278,12 @@ export function useGridColumns(
 
       const params: GridColumnOrderChangeParams = {
         column,
-        targetIndex: apiRef.current.getColumnIndexRelativeToVisibleColumns(field),
+        targetIndex: apiRef.current.getColumnIndex(field, false),
         oldIndex: oldIndexPosition,
       };
       apiRef.current.publishEvent('columnIndexChange', params);
     },
-    [apiRef, logger, setGridColumnsState, getColumnIndexRelativeToVisibleColumns],
+    [apiRef, logger, setGridColumnsState, getColumnIndex],
   );
 
   const setColumnWidth = React.useCallback<GridColumnApi['setColumnWidth']>(
