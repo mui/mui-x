@@ -253,6 +253,8 @@ const heILCalendar: SchedulerCalendarTranslations = {
 const heILTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'שם המשאב',
+  // timelineResourceExpand: 'Expand resource',
+  // timelineResourceCollapse: 'Collapse resource',
 
   // Dependency dialog
   // dependencyEditTitle: 'Edit dependency',

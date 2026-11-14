@@ -121,7 +121,7 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
       // same first-click-dismisses behavior the event dialog gets from its backdrop.
       // A press outside the timeline only deselects: its click belongs to whatever
       // the user pressed (the backdrop analogy stops at the timeline's edge).
-      const timelineGrid = elementRef.current?.closest('[role="grid"]');
+      const timelineGrid = elementRef.current?.closest('[role="grid"], [role="treegrid"]');
       if (!isNode(target) || !timelineGrid?.contains(target)) {
         return;
       }

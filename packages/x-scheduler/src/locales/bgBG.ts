@@ -183,6 +183,8 @@ const bgBGCalendar: SchedulerCalendarTranslations = {
 const bgBGTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
+  // timelineResourceExpand: 'Expand resource',
+  // timelineResourceCollapse: 'Collapse resource',
   // Dependency dialog
   // dependencyEditTitle: 'Edit dependency',
   // dependencyDetailsTitle: 'Dependency details',

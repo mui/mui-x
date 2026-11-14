@@ -304,6 +304,8 @@ export interface SchedulerDependencyDescriptionParams {
 export interface EventTimelineLocaleText extends EventEditingLocaleText, SchedulerEventLocaleText {
   // Timeline title sub grid
   timelineResourceTitleHeader: string;
+  timelineResourceExpand: string;
+  timelineResourceCollapse: string;
 
   // Dependency dialog
   dependencyEditTitle: string;

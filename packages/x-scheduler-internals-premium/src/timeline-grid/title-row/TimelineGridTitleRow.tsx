@@ -26,6 +26,7 @@ export const TimelineGridTitleRow = React.forwardRef(function TimelineGridTitleR
     props: [
       elementProps,
       {
+        role: 'rowheader',
         tabIndex: 0,
         onKeyDown: handleKeyDown,
         onFocus: handleFocus,
