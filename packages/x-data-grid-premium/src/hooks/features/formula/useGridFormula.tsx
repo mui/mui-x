@@ -95,6 +95,7 @@ import {
   createComputedColumnValidationScope,
   validateComputedColumnDefinition,
 } from './gridComputedColumnsValidation';
+import { findComputedColumnCellCycle } from './gridFormulaDraftCycles';
 import type { GridComputedColumnsPrivateApi } from '../computedColumns/gridComputedColumnsInterfaces';
 
 export const formulaStateInitializer: GridStateInitializer<
@@ -731,19 +732,30 @@ export const useGridFormula = (
   const validateComputedColumnDefinitionMethod = React.useCallback<
     GridComputedColumnsPrivateApi['validateComputedColumnDefinition']
   >(
-    (definition, options) =>
-      validateComputedColumnDefinition(
-        definition,
-        createComputedColumnValidationScope(
-          apiRef,
-          apiRef.current.caches.formula!,
-          gridColumnLookupSelector(apiRef),
-          a1NotationActive,
-          // The editor validates every keystroke: a draft is not interned.
-          { intern: false },
-        ),
-        options,
-      ),
+    (definition, options) => {
+      const cache = apiRef.current.caches.formula!;
+      const scope = createComputedColumnValidationScope(
+        apiRef,
+        cache,
+        gridColumnLookupSelector(apiRef),
+        a1NotationActive,
+        // The editor validates every keystroke: a draft is not interned.
+        { intern: false },
+      );
+      const storedRefs =
+        options?.ignoreField === undefined
+          ? undefined
+          : cache.computedColumns.records.get(options.ignoreField)?.dependencies;
+      scope.findCellCycle = (field, fieldRefs) => {
+        const cycle = findComputedColumnCellCycle(apiRef, field, fieldRefs);
+        if (cycle === null || storedRefs === undefined) {
+          return cycle;
+        }
+        // The cells already show a cycle the stored formula closes too.
+        return findComputedColumnCellCycle(apiRef, field, storedRefs) === null ? cycle : null;
+      };
+      return validateComputedColumnDefinition(definition, scope, options);
+    },
     [apiRef, a1NotationActive],
   );
 

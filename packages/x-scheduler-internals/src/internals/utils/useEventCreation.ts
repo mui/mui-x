@@ -1,7 +1,6 @@
 'use client';
 import type * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerEventCreationConfig,
   SchedulerOccurrencePlaceholderCreation,
@@ -15,7 +14,7 @@ interface GetCreationPlaceholderParams {
   /**
    * The display timezone, in which the dates of the placeholder are read.
    */
-  timezone: TemporalTimezone;
+  timezone: string;
 }
 
 export type CreationPlaceholderFields = Omit<SchedulerOccurrencePlaceholderCreation, 'type'>;

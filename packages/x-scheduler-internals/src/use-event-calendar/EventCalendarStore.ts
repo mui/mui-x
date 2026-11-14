@@ -5,7 +5,6 @@ import type {
   EventCalendarPreferences,
   CalendarView,
   EventCalendarViewDefinition,
-  TemporalSupportedObject,
   EventCalendarPreferencesMenuConfig,
 } from '../models';
 import type {
@@ -145,11 +144,7 @@ export class ExtendableEventCalendarStore<
     }
   }
 
-  private setVisibleDateAndView = (
-    visibleDate: TemporalSupportedObject,
-    view: CalendarView,
-    event: React.UIEvent,
-  ) => {
+  private setVisibleDateAndView = (visibleDate: Date, view: CalendarView, event: React.UIEvent) => {
     const {
       visibleDate: visibleDateProp,
       view: viewProp,
@@ -238,7 +233,7 @@ export class ExtendableEventCalendarStore<
   /**
    * Goes to a specific day and set the view to 'day'.
    */
-  public switchToDay = (visibleDate: TemporalSupportedObject, event: React.UIEvent) => {
+  public switchToDay = (visibleDate: Date, event: React.UIEvent) => {
     this.setVisibleDateAndView(visibleDate, 'day', event);
   };
 

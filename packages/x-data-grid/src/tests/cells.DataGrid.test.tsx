@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
-import { DataGrid, renderLongTextCell, useGridApiRef } from '@mui/x-data-grid';
+import { DataGrid, GridLongTextCell, renderLongTextCell, useGridApiRef } from '@mui/x-data-grid';
 import type { GridApi, GridValueFormatter } from '@mui/x-data-grid';
 import type { RefObject } from '@mui/x-internals/types';
 import { getCell, openLongTextEditPopup, openLongTextViewPopup } from 'test/utils/helperFn';
@@ -325,6 +325,57 @@ describe('<DataGrid /> - Cells', () => {
       const expandButton = cell.querySelector('button[aria-haspopup="dialog"]');
       expect(expandButton).not.to.equal(null);
       expect(expandButton).to.have.attribute('aria-expanded', 'false');
+      expect(expandButton).to.have.attribute(
+        'aria-label',
+        'This is a long text with multiple lines, Expand',
+      );
+    });
+
+    // https://github.com/mui/mui-x/issues/24009
+    it('should support a React node as value', async () => {
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...longTextBaselineProps}
+            columns={[
+              {
+                field: 'bio',
+                type: 'longText',
+                renderCell: (params) => (
+                  <GridLongTextCell
+                    {...params}
+                    value={<a href="/bio">{params.value}</a>}
+                    renderContent={() => <span data-testid="popup-content">Full bio</span>}
+                  />
+                ),
+              },
+            ]}
+          />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      expect(cell.querySelector('a')).to.have.text('This is a long text with multiple lines');
+      expect(cell.querySelector('button[aria-haspopup="dialog"]')).to.have.attribute(
+        'aria-label',
+        'Expand',
+      );
+
+      await openLongTextViewPopup(cell, user, 'spacebar');
+      expect(screen.getByTestId('popup-content')).not.to.equal(null);
+    });
+
+    it('should not include an empty value in the expand button label', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...longTextBaselineProps} rows={[{ id: 0, bio: null }]} />
+        </div>,
+      );
+
+      expect(getCell(0, 0).querySelector('button[aria-haspopup="dialog"]')).to.have.attribute(
+        'aria-label',
+        'Expand',
+      );
     });
 
     describe('popup', () => {

@@ -1,6 +1,6 @@
 'use client';
 import { useStore } from '@base-ui/utils/store';
-import type { SchedulerEventCreationConfig, TemporalTimezone } from '../../models';
+import type { SchedulerEventCreationConfig } from '../../models';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import type { CreationPlaceholderFields } from './useEventCreation';
@@ -10,7 +10,7 @@ interface GetKeyboardCreationPlaceholderParams {
   /**
    * The display timezone, in which the dates of the placeholder are read.
    */
-  timezone: TemporalTimezone;
+  timezone: string;
 }
 
 /**

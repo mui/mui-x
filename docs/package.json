@@ -18,7 +18,6 @@
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "catalog:",
     "@babel/core": "catalog:",
-    "@date-fns/tz": "catalog:",
     "@docsearch/react": "^5.2.0",
     "@emotion/cache": "catalog:",
     "@emotion/react": "catalog:",

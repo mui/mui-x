@@ -1,5 +1,4 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { TemporalSupportedObject, SchedulerEventId } from '../models';
+import type { SchedulerEventId } from '../models';
 import {
   createDateFromString,
   createDateFromWallTime,
@@ -7,7 +6,7 @@ import {
 } from '../internals/utils/plain-date-utils/date';
 
 /**
- * Resolves an event date string to a `TemporalSupportedObject`, the `Date` of its instant.
+ * Resolves an event date string to the `Date` of its instant.
  *
  * - Strings ending with `"Z"` or an offset are treated as instants.
  * - Other strings are treated as wall-time and interpreted in `dataTimezone`.
@@ -16,9 +15,9 @@ import {
  */
 export function resolveEventDate(
   value: string,
-  dataTimezone: TemporalTimezone,
+  dataTimezone: string,
   eventId?: SchedulerEventId,
-): TemporalSupportedObject {
+): Date {
   const date = isInstantString(value)
     ? new Date(value)
     : (createDateFromWallTime(value, dataTimezone) ?? createDateFromString(value, dataTimezone));

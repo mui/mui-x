@@ -41,7 +41,7 @@ import type {
 
 const EMPTY_RESULT: GridFormulaResult = { type: 'value', value: null };
 
-const CYCLE_RESULT: GridFormulaResult = {
+export const CYCLE_RESULT: GridFormulaResult = {
   type: 'error',
   code: '#CYCLE!',
   message: 'The formula is part of a circular reference.',

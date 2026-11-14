@@ -1,9 +1,7 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { generateId } from '@base-ui/utils/generateId';
 import { warnOnce } from '@mui/x-internals/warning';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
-  TemporalSupportedObject,
   SchedulerProcessedEvent,
   SchedulerEventId,
   SchedulerResource,
@@ -131,7 +129,7 @@ const RESOURCE_PROPERTIES = Object.keys(RESOURCE_PROPERTIES_LOOKUP) as (keyof Sc
 export function getProcessedEventFromModel<TEvent extends object>(
   model: TEvent,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
-  displayTimezone: TemporalTimezone,
+  displayTimezone: string,
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
 ): SchedulerProcessedEvent {
   // 1. Convert the model to a default event model
@@ -150,9 +148,9 @@ export function getProcessedEventFromModel<TEvent extends object>(
 
 /**
  * Updates an event model based on the provided changes and model structure.
- * Converts internal date objects (`TemporalSupportedObject`) to strings
- * before applying them to the user's model, because `SchedulerEvent` date
- * fields are strings. Respects the original string format (instant vs wall-time).
+ * Converts the `Date` objects to strings before applying them to the user's model, because
+ * `SchedulerEvent` date fields are strings. Respects the original string format (instant vs
+ * wall-time).
  */
 export function getUpdatedEventModelFromChanges<TEvent extends object>(
   oldModel: TEvent,
@@ -204,14 +202,14 @@ export function createEventModel<TEvent extends object>(
 ) {
   const id = generateId('event');
 
-  const formatNewDate = (value: string | TemporalSupportedObject): string => {
+  const formatNewDate = (value: string | Date): string => {
     if (typeof value === 'string') {
       return value;
     }
     return new Date(value.getTime()).toISOString();
   };
 
-  // Internal callers (e.g. FormContent) may pass rrule.until as a TemporalSupportedObject.
+  // Internal callers (e.g. FormContent) may pass rrule.until as a Date.
   // Convert it to a string so the built-in model stays in SchedulerEvent format.
   const rrule: SchedulerEvent['rrule'] =
     typeof event.rrule === 'object' &&
@@ -329,7 +327,7 @@ ${JSON.stringify(event)}`,
 }
 
 type ProcessedEventLookupContext = [
-  displayTimezone: TemporalTimezone,
+  displayTimezone: string,
   eventModelStructure: SchedulerEventModelStructure<any> | undefined,
   processedEventByModel: WeakMap<object, SchedulerProcessedEvent>,
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null,
@@ -344,7 +342,7 @@ type BuildEventsStateParameters<TEvent extends object, TResource extends object>
   SchedulerParameters<TEvent, TResource>,
   'events' | 'eventModelStructure'
 > & {
-  displayTimezone: TemporalTimezone;
+  displayTimezone: string;
 } & (
     | {
         recurringEventsPlugin?: SchedulerRecurringEventsPluginInterface | null;

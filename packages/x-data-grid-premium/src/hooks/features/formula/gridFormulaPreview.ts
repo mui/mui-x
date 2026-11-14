@@ -5,7 +5,6 @@ import type { RefObject } from '@mui/x-internals/types';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
   bindFormulaDependencies,
-  createFormulaCellKey,
   createFormulaError,
   evaluateFormula,
   extractFormulaDependencies,
@@ -16,11 +15,26 @@ import {
   toCanonicalFormula,
   unescapeLiteralSource,
 } from './engine';
-import type { FormulaCellRef, FormulaScalar } from './engine';
+import type {
+  FormulaAstNode,
+  FormulaCellRef,
+  FormulaPositionContext,
+  FormulaScalar,
+} from './engine';
 import type { GridFormulaResult } from './gridFormulaInterfaces';
 import { gridFormulaLookupSelector } from './gridFormulaSelectors';
 import { gridFormulaA1PositionContextSelector } from './gridFormulaPositionContext';
-import { resolveComputedCellValue } from './gridComputedColumnsRuntime';
+import { CYCLE_RESULT, resolveComputedCellValue } from './gridComputedColumnsRuntime';
+import {
+  createComputedColumnValidationScope,
+  getComputedColumnVerdict,
+} from './gridComputedColumnsValidation';
+import { isDraftCellCyclic } from './gridFormulaDraftCycles';
+
+/**
+ * The owner field of a computed column draft that has no field yet.
+ */
+export const DRAFT_COMPUTED_FIELD = '__computed_draft__';
 
 /**
  * Evaluates a DRAFT formula source against the current grid data without
@@ -49,9 +63,36 @@ export function previewFormulaResult(
   if (!isFormulaSource(source)) {
     return null;
   }
+  const currentCell: FormulaCellRef = { id: cell.id, field: cell.field };
+  const parsed = parseDraftFormula(apiRef, currentCell, source, options.a1Notation);
+  if ('error' in parsed) {
+    return parsed.error;
+  }
+  // The committed values predate the draft: a cycle it closes, directly or
+  // through other formula cells, is only found in the graph.
+  const dependencies = bindFormulaDependencies(
+    currentCell,
+    extractFormulaDependencies(parsed.ast),
+    parsed.positionContext,
+  );
+  if (isDraftCellCyclic(apiRef, { cell: currentCell, dependencies }, currentCell)) {
+    return CYCLE_RESULT;
+  }
+  return evaluateDraftFormula(apiRef, currentCell, parsed.ast, parsed.positionContext);
+}
+
+type GridFormulaDraftParse =
+  { ast: FormulaAstNode; positionContext: FormulaPositionContext } | { error: GridFormulaResult };
+
+function parseDraftFormula(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  cell: FormulaCellRef,
+  source: string,
+  a1Notation: boolean,
+): GridFormulaDraftParse {
   const positionContext = gridFormulaA1PositionContextSelector(apiRef);
   let expression = getFormulaExpression(source);
-  if (options.a1Notation) {
+  if (a1Notation) {
     // The commit-time conversion, without a fill offset. Canonical text carries
     // no bare A1 tokens and passes through unchanged (the same idempotency the
     // paste path relies on).
@@ -65,46 +106,27 @@ export function previewFormulaResult(
   const parse = parseFormula(expression);
   if (parse.ast === null) {
     return {
-      type: 'error',
-      code: '#ERROR!',
-      message: parse.error?.message ?? 'The formula could not be parsed.',
+      error: {
+        type: 'error',
+        code: '#ERROR!',
+        message: parse.error?.message ?? 'The formula could not be parsed.',
+      },
     };
   }
+  return { ast: parse.ast, positionContext };
+}
 
-  // Committing this draft would make the cell a formula cell, so a dependency
-  // on itself — directly, or through a range/whole-column that covers it — is
-  // the cycle the graph layer would report after the commit. The evaluator
-  // alone would miss it: it materializes ranges cell by cell and would read the
-  // cell's COMMITTED value, previewing a plausible-but-wrong number. Ranges
-  // only cover rows with a position, so a filtered-out own row is no cycle.
-  const staticDependencies = extractFormulaDependencies(parse.ast);
-  const currentCell: FormulaCellRef = { id: cell.id, field: cell.field };
-  const bound = bindFormulaDependencies(currentCell, staticDependencies, positionContext);
-  const ownKey = createFormulaCellKey(cell.id, cell.field);
-  const ownPosition = positionContext.getPositionOfRowId(cell.id);
-  const selfReferences =
-    bound.cells.has(ownKey) ||
-    (ownPosition !== undefined &&
-      (bound.wholeColumns.some((column) => column.field === cell.field) ||
-        bound.columnIntervals.some(
-          (interval) =>
-            interval.field === cell.field &&
-            ownPosition >= interval.fromIndex &&
-            ownPosition <= interval.toIndex,
-        )));
-  if (selfReferences) {
-    return {
-      type: 'error',
-      code: '#CYCLE!',
-      message: 'The formula is part of a circular reference.',
-    };
-  }
-
+function evaluateDraftFormula(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  cell: FormulaCellRef,
+  ast: FormulaAstNode,
+  positionContext: FormulaPositionContext,
+): GridFormulaResult {
   const lookup = gridFormulaLookupSelector(apiRef);
   const rowsLookup = gridRowsLookupSelector(apiRef);
   const columnsLookup = gridColumnLookupSelector(apiRef);
-  return evaluateFormula(parse.ast, {
-    currentCell,
+  return evaluateFormula(ast, {
+    currentCell: cell,
     getCellValue: (ref) => {
       const committed = lookup[String(ref.id)]?.[ref.field];
       if (committed !== undefined) {
@@ -130,4 +152,64 @@ export function previewFormulaResult(
     position: positionContext,
     functions: apiRef.current.caches.formula!.registry,
   });
+}
+
+/**
+ * Evaluates a computed column DRAFT for one row, as the cell would once the draft is applied.
+ * @param {RefObject<GridPrivateApiPremium>} apiRef The private grid api.
+ * @param {GridRowId} rowId The row to evaluate.
+ * @param {string} field The field of the draft, `''` when it has none yet.
+ * @param {string} formula The draft formula, including the leading `=`.
+ * @param {object} options The options.
+ * @param {string} options.ignoreField The field of the stored definition the draft replaces.
+ * @returns {GridFormulaResult | null} The would-be result, or `null` without the formula feature.
+ */
+export function previewComputedColumnResult(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  rowId: GridRowId,
+  field: string,
+  formula: string,
+  options: { ignoreField?: string } = {},
+): GridFormulaResult | null {
+  const cache = apiRef.current.caches.formula;
+  if (cache === undefined) {
+    return null;
+  }
+  const scope = createComputedColumnValidationScope(
+    apiRef,
+    cache,
+    gridColumnLookupSelector(apiRef),
+    false,
+    { intern: false },
+  );
+  // The result of every row when the draft is invalid, as for a stored definition.
+  const { staticResult } = getComputedColumnVerdict(
+    { field, headerName: field, formula, type: 'string' },
+    scope,
+    { ignoreField: options.ignoreField },
+  );
+  if (staticResult !== null) {
+    return staticResult;
+  }
+  const currentCell: FormulaCellRef = {
+    id: rowId,
+    field: field === '' ? DRAFT_COMPUTED_FIELD : field,
+  };
+  // Computed column formulas are read as written, without the A1 conversion.
+  const parsed = parseDraftFormula(apiRef, currentCell, formula, false);
+  if ('error' in parsed) {
+    return parsed.error;
+  }
+  if (
+    field !== '' &&
+    !scope.columnFields.has(field) &&
+    isDraftCellCyclic(
+      apiRef,
+      { field, fieldRefs: extractFormulaDependencies(parsed.ast).fieldRefs },
+      currentCell,
+    )
+  ) {
+    return CYCLE_RESULT;
+  }
+  return evaluateDraftFormula(apiRef, currentCell, parsed.ast, parsed.positionContext);
 }

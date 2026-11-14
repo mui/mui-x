@@ -60,6 +60,13 @@ export interface GridComputedColumnValidationScope {
    * including the ones no column holds yet, which a definition may bring.
    */
   computedDependencies: ReadonlyMap<string, ReadonlySet<string>>;
+  /**
+   * Finds a cycle the definition closes through formula cells and the stored one does not.
+   * @param {string} field The field of the definition.
+   * @param {ReadonlySet<string>} fieldRefs The fields its formula reads.
+   * @returns {string[] | null} The fields of the cycle, or `null`.
+   */
+  findCellCycle?: (field: string, fieldRefs: ReadonlySet<string>) => string[] | null;
 }
 
 export interface GridComputedColumnVerdict {
@@ -123,13 +130,13 @@ export function createComputedColumnValidationScope(
  * The path of the cycle going through `field`, starting and ending with it,
  * or `null` when the field is only downstream of a cycle.
  */
-function findCyclePath(
-  field: string,
-  cyclic: ReadonlySet<string>,
-  graph: ReadonlyMap<string, ReadonlySet<string>>,
-): string[] | null {
-  const visited = new Set<string>();
-  const stack: { node: string; path: string[] }[] = [{ node: field, path: [field] }];
+export function findCyclePath<K extends string>(
+  field: K,
+  cyclic: ReadonlySet<K>,
+  graph: ReadonlyMap<K, ReadonlySet<K>>,
+): K[] | null {
+  const visited = new Set<K>();
+  const stack: { node: K; path: K[] }[] = [{ node: field, path: [field] }];
   while (stack.length > 0) {
     const { node, path } = stack.pop()!;
     const dependencies = graph.get(node);
@@ -298,17 +305,21 @@ export function getComputedColumnVerdict(
     graph.set(field, computedDependencies);
     const { cyclic } = orderForRecompute(new Set(graph.keys()), (key) => graph.get(key));
     const path = cyclic.has(field) ? findCyclePath(field, cyclic, graph) : null;
+    const createCycleIssue = (fields: string[]): GridComputedColumnValidationIssue => ({
+      code: 'cycle',
+      message: getLocaleText('computedColumnErrorCycle')(
+        fields.join(COMPUTED_COLUMN_CYCLE_PATH_SEPARATOR),
+      ),
+      path: fields,
+    });
     if (path !== null) {
-      addFormulaIssue(
-        {
-          code: 'cycle',
-          message: getLocaleText('computedColumnErrorCycle')(
-            path.join(COMPUTED_COLUMN_CYCLE_PATH_SEPARATOR),
-          ),
-          path,
-        },
-        '#CYCLE!',
-      );
+      addFormulaIssue(createCycleIssue(path), '#CYCLE!');
+    } else if (bringsField) {
+      // Not static: only the rows of the formula cells on the cycle are `#CYCLE!`.
+      const cellPath = scope.findCellCycle?.(field, dependencies.fieldRefs) ?? null;
+      if (cellPath !== null) {
+        issues.push(createCycleIssue(cellPath));
+      }
     }
   }
 

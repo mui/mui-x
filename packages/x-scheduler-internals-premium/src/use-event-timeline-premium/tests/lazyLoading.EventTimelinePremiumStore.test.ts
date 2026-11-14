@@ -5,7 +5,6 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE,
   ResourceBuilder,
 } from 'test/utils/scheduler';
-import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
@@ -43,7 +42,7 @@ const flushDebounce = () => vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
  * The bounds of the `callIndex`-th call of `getEvents()`, as ISO strings.
  */
 const getFetchedRange = (getEvents: { mock: { calls: unknown[][] } }, callIndex = 0) =>
-  (getEvents.mock.calls[callIndex] as TemporalSupportedObject[]).map((date) => date.toISOString());
+  (getEvents.mock.calls[callIndex] as Date[]).map((date) => date.toISOString());
 
 const DEFAULT_PARAMS = {
   events: [] as TestEvent[],

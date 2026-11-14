@@ -283,6 +283,7 @@ Columns are evaluated in dependency order, whatever the order of the definitions
 
 A column that references itself, directly or through other computed columns, is invalid: it shows a `#CYCLE!` error in every cell, and the editor reports the circular path.
 A cycle that goes through a cell formula shows `#CYCLE!` in the cells on it and in the cells that read them, with no error badge in the header, since the cycle depends on the data of the row.
+When a new formula closes such a cycle, the editor and `validateComputedColumn()` report it too, and **Apply** stays disabled.
 Every reference counts, even in a branch of `IF` that is not taken.
 Removing a column that others depend on makes those columns invalid too (`#REF!`) until their formula is updated or the column is added back.
 

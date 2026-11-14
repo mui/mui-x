@@ -61,7 +61,7 @@ export function useRangeBarPlotData(
 
     const colorGetter = getColor(series[seriesId], xAxes[xAxisId], yAxes[yAxisId]);
 
-    const { data: currentSeriesData, layout } = series[seriesId];
+    const { data: currentSeriesData, layout, barLabel, barLabelPlacement } = series[seriesId];
 
     const seriesDataPoints: ProcessedRangeBarData[] = [];
 
@@ -94,6 +94,8 @@ export function useRangeBarPlotData(
       seriesId,
       data: seriesDataPoints,
       layout,
+      barLabel,
+      barLabelPlacement,
       xOrigin,
       yOrigin,
     };
