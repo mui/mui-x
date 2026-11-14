@@ -170,9 +170,9 @@ If a stream closes without a terminal chunk (`finish` or `abort`), the runtime:
 
 1. Records a recoverable stream error.
 2. Sets the message status to `'error'`.
-3. Calls `onFinish` with `isDisconnect: true`.
-4. If `reconnectToStream()` is implemented on the adapter, makes one attempt to resume the stream.
-5. Calls `onError` only when the disconnect remains unrecovered.
+3. If `reconnectToStream()` is implemented on the adapter, makes one attempt to resume the stream, then calls `onFinish` once with the final outcome. `isDisconnect` is `true` only when the disconnect remains unrecovered.
+4. If `reconnectToStream()` is not implemented on the adapter, calls `onFinish` with `isDisconnect: true` right away.
+5. In both cases, calls `onError` only when the disconnect remains unrecovered.
 
 See [Reconnecting to streams](/x/react-chat/behavior/streaming/#reconnecting-to-streams) for details.
 
