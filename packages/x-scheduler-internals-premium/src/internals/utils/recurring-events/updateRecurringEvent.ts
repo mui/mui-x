@@ -1,4 +1,3 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   RecurringEventByDayValue,
   SchedulerProcessedEventRecurrenceRule,
@@ -8,7 +7,6 @@ import type {
   SchedulerEventRecurrenceRule,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
-  TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import type { BaseTemporal, UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
 import {
@@ -34,7 +32,7 @@ import { RecurringSeries } from './RecurringSeries';
 
 export function updateRecurringEvent(
   originalEvent: SchedulerProcessedEvent,
-  occurrenceStart: TemporalSupportedObject,
+  occurrenceStart: Date,
   changes: SchedulerEventUpdatedProperties,
   scope: RecurringEventScope,
 ) {
@@ -70,7 +68,7 @@ export function updateRecurringEvent(
  */
 export function applyRecurringUpdateFollowing(
   originalEvent: SchedulerProcessedEvent,
-  occurrenceStart: TemporalSupportedObject,
+  occurrenceStart: Date,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
   const newStart = changes.start ?? occurrenceStart;
@@ -141,7 +139,7 @@ export function applyRecurringUpdateFollowing(
  */
 export function applyRecurringUpdateAll(
   originalEvent: SchedulerProcessedEvent,
-  occurrenceStart: TemporalSupportedObject,
+  occurrenceStart: Date,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
   const eventUpdatedProperties: SchedulerEventUpdatedProperties = { ...changes };
@@ -221,7 +219,7 @@ export function applyRecurringUpdateAll(
  */
 export function applyRecurringUpdateOnlyThis(
   originalEvent: SchedulerProcessedEvent,
-  occurrenceStart: TemporalSupportedObject,
+  occurrenceStart: Date,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
   const originalModel = originalEvent.modelInBuiltInFormat;
@@ -254,9 +252,9 @@ export function applyRecurringUpdateOnlyThis(
  */
 export function adjustRRuleForAllMove(
   rrule: SchedulerProcessedEventRecurrenceRule,
-  occurrenceStart: TemporalSupportedObject,
-  newStart: TemporalSupportedObject,
-  timezone: TemporalTimezone,
+  occurrenceStart: Date,
+  newStart: Date,
+  timezone: string,
 ): SchedulerProcessedEventRecurrenceRule {
   const nextRRule: SchedulerProcessedEventRecurrenceRule = { ...rrule };
 
@@ -311,7 +309,7 @@ function realignMonthlyRule(
  */
 export function decideSplitRRule(
   originalEvent: SchedulerProcessedEvent,
-  splitStart: TemporalSupportedObject,
+  splitStart: Date,
   changes: Partial<SchedulerEventUpdatedProperties>,
 ): SchedulerProcessedEventRecurrenceRule | string | undefined {
   const originalRule = originalEvent.dataTimezone.rrule!;
@@ -377,9 +375,9 @@ export function decideSplitRRule(
  */
 export function realignWeeklyByDay(
   weekDayCodes: RecurringEventWeekDayCode[],
-  oldRefDay: TemporalSupportedObject,
-  newStart: TemporalSupportedObject,
-  timezone: TemporalTimezone,
+  oldRefDay: Date,
+  newStart: Date,
+  timezone: string,
 ): RecurringEventWeekDayCode[] {
   const oldCode = getWeekDayCode(oldRefDay, timezone);
   const newCode = getWeekDayCode(newStart, timezone);

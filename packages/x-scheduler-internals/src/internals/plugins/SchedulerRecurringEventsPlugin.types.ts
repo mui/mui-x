@@ -1,6 +1,4 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
-  TemporalSupportedObject,
   RecurringEventPresetKey,
   RecurringEventScope,
   SchedulerEventOccurrence,
@@ -21,7 +19,7 @@ export interface SchedulerRecurringEventsPluginInterface {
    */
   parseRRule(
     input: string | SchedulerEventRecurrenceRule,
-    timezone: TemporalTimezone,
+    timezone: string,
   ): SchedulerProcessedEventRecurrenceRule;
 
   /**
@@ -33,7 +31,7 @@ export interface SchedulerRecurringEventsPluginInterface {
     event: SchedulerProcessedEvent,
     start: number,
     end: number,
-    displayTimezone: TemporalTimezone,
+    displayTimezone: string,
   ): SchedulerEventOccurrence[];
 
   /**
@@ -42,7 +40,7 @@ export interface SchedulerRecurringEventsPluginInterface {
    */
   updateRecurringEvent(
     originalEvent: SchedulerProcessedEvent,
-    occurrenceStart: TemporalSupportedObject,
+    occurrenceStart: Date,
     changes: SchedulerEventUpdatedProperties,
     scope: RecurringEventScope,
   ): UpdateEventsParameters;
@@ -53,7 +51,7 @@ export interface SchedulerRecurringEventsPluginInterface {
    */
   deleteRecurringEvent(
     originalEvent: SchedulerProcessedEvent,
-    occurrenceStart: TemporalSupportedObject,
+    occurrenceStart: Date,
     scope: RecurringEventScope,
   ): UpdateEventsParameters;
 

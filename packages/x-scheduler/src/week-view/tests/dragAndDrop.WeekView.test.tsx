@@ -297,8 +297,7 @@ describe('WeekView - Drag and Drop', () => {
   it.skipIf(!isJSDOM)(
     'should read whether a time event crosses midnight in the display timezone, whatever the timezone of the system',
     async () => {
-      // Pacific/Apia skips December 30th, 2011, which made the date-fns adapter read the two
-      // dates of this event as the same day on an Apia system.
+      // Pacific/Apia skipped December 30th, 2011.
       setSystemTimezone('Pacific/Apia');
       const handleEventsChange = vi.fn();
       const event = EventBuilder.new()

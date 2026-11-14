@@ -1,4 +1,3 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
@@ -28,7 +27,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
   event: SchedulerProcessedEvent,
   start: number,
   end: number,
-  displayTimezone: TemporalTimezone,
+  displayTimezone: string,
 ): SchedulerEventOccurrence[] {
   // Important:
   // Occurrences are always computed in dataTimezone to avoid DST issues

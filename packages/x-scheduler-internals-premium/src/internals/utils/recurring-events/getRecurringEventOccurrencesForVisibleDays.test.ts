@@ -8,7 +8,6 @@ import {
 } from 'test/utils/scheduler';
 import { beforeEach, describe, it, expect } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { toPlainDate, toWallClockIsoString } from '@mui/x-scheduler-internals/internals';
@@ -16,7 +15,7 @@ import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventO
 import { getWeekDayCode } from './internal-utils';
 
 // The date and the wall-clock time of a processed date in `timezone`, as `YYYY-MM-DD HH:mm`.
-function formatWallClock(date: SchedulerProcessedDate, timezone: TemporalTimezone): string {
+function formatWallClock(date: SchedulerProcessedDate, timezone: string): string {
   return toWallClockIsoString(date.timestamp, timezone).slice(0, 16).replace('T', ' ');
 }
 

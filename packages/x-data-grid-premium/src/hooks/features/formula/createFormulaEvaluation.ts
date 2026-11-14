@@ -413,7 +413,7 @@ function warnOnLargeRangeDependencies(
  */
 const staticDependenciesCache = new WeakMap<FormulaAstNode, FormulaStaticDependencies>();
 
-function getStaticDependencies(ast: FormulaAstNode): FormulaStaticDependencies {
+export function getStaticDependencies(ast: FormulaAstNode): FormulaStaticDependencies {
   let dependencies = staticDependenciesCache.get(ast);
   if (dependencies === undefined) {
     dependencies = extractFormulaDependencies(ast);

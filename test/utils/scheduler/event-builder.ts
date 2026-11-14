@@ -17,8 +17,6 @@ import {
   getWeekDayCode,
 } from '@mui/x-scheduler-internals-premium/internals';
 import { toPlainDate } from '@mui/x-scheduler-internals/internals';
-import type { TemporalAdapter, TemporalTimezone } from '@base-ui/react/internals/temporal';
-import { adapter as defaultAdapter } from './adapters';
 import { addMinutes, createDate, endOfDay, startOfDay } from './dates';
 
 export const DEFAULT_TESTING_VISIBLE_DATE_STR = '2025-07-03T00:00:00Z';
@@ -34,9 +32,9 @@ export const DEFAULT_TESTING_VISIBLE_DATE = createDate(DEFAULT_TESTING_VISIBLE_D
 export class EventBuilder {
   declare protected event: SchedulerEvent;
 
-  protected displayTimezone: TemporalTimezone = 'default';
+  protected displayTimezone = 'default';
 
-  protected constructor(protected adapter: TemporalAdapter) {
+  protected constructor() {
     const id = crypto.randomUUID();
     const start = DEFAULT_TESTING_VISIBLE_DATE;
     const end = addMinutes(start, 60);
@@ -51,10 +49,10 @@ export class EventBuilder {
   }
 
   /**
-   * Create a new builder. The `adapter` is unused: no Scheduler function takes one anymore.
+   * Create a new builder.
    */
-  static new(adapter: TemporalAdapter = defaultAdapter) {
-    return new EventBuilder(adapter);
+  static new() {
+    return new EventBuilder();
   }
 
   // ─────────────────────────────────────────────
@@ -122,13 +120,13 @@ export class EventBuilder {
   }
 
   /** Set the data timezone. */
-  withDataTimezone(timezone: TemporalTimezone) {
+  withDataTimezone(timezone: string) {
     this.event.timezone = timezone;
     return this;
   }
 
   /** Set the display timezone for processed events. */
-  withDisplayTimezone(timezone: TemporalTimezone) {
+  withDisplayTimezone(timezone: string) {
     this.displayTimezone = timezone;
     return this;
   }

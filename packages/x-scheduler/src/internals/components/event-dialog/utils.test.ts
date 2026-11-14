@@ -128,8 +128,7 @@ describe('getRecurrenceTimezoneName', () => {
     expect(getRecurrenceTimezoneName('en-US', 'Etc/UTC', 'UTC')).to.equal(null);
   });
 
-  it('should resolve the timezone keywords to the system timezone', () => {
-    expect(getRecurrenceTimezoneName('en-US', 'default', 'system')).to.equal(null);
+  it('should resolve the default timezone to the system timezone', () => {
     expect(getRecurrenceTimezoneName('en-US', 'default', systemTimezone)).to.equal(null);
     expect(getRecurrenceTimezoneName('en-US', 'default', 'Pacific/Kiritimati')).to.not.equal(null);
   });

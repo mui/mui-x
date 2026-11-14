@@ -18,6 +18,12 @@ describe('Core - EventCalendarStore', () => {
   describe('create', () => {
     createRenderer({ clockConfig: new Date(2012, 4, 3, 14, 30, 15, 743) });
 
+    it('should throw when the display timezone is the removed "system" alias', () => {
+      expect(
+        () => new EventCalendarStore({ ...DEFAULT_PARAMS, displayTimezone: 'system' }),
+      ).to.throw('MUI X Scheduler: The `displayTimezone` "system" is not a supported timezone.');
+    });
+
     it('should initialize default state', () => {
       const store = new EventCalendarStore(DEFAULT_PARAMS);
 

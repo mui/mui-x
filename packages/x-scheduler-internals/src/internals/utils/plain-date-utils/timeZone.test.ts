@@ -46,7 +46,7 @@ describe('timeZone', () => {
       setSystemTimezone('Australia/Lord_Howe');
       // +11:00 in DST, +10:30 otherwise.
       expect(getOffsetMs('default', Date.UTC(2025, 0, 15))).to.equal(11 * HOUR);
-      expect(getOffsetMs('system', Date.UTC(2025, 6, 15))).to.equal(10.5 * HOUR);
+      expect(getOffsetMs('default', Date.UTC(2025, 6, 15))).to.equal(10.5 * HOUR);
     });
   });
 
@@ -64,7 +64,7 @@ describe('timeZone', () => {
         // Years 0 to 99 aren't remapped to the 1900s.
         const year99 = new Date(1890, 0, 1);
         year99.setFullYear(99);
-        expect(toPlainDate(year99.getTime(), 'system').toString()).to.equal('0099-01-01');
+        expect(toPlainDate(year99.getTime(), 'default').toString()).to.equal('0099-01-01');
       },
     );
 
