@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { resolveMessageAuthor } from '../internals/messageAuthor';
+import type { ResolveMessageAuthorParameters } from '../internals/messageAuthor';
 import { chatSelectors } from '../selectors';
 import type { ChatInternalState } from '../types/chat-state';
 import { useChatStore } from './useChatStore';
@@ -22,18 +23,32 @@ export function useMessageAuthor(messageId: string) {
   // `store.parameters` is not reactive; this version changes when author parameters do.
   const authorParametersVersion = useStore(store, selectAuthorParametersVersion);
 
-  // Inject locale-driven role display names into the resolver parameters so the
-  // fallback when no author signal is available reflects the active locale.
-  const parametersWithLocale = React.useMemo(
-    () => ({
-      ...store.parameters,
-      roleDisplayNames: {
-        user: localeText.messageAuthorUserLabel,
-        assistant: localeText.messageAuthorAssistantLabel,
-        system: localeText.messageAuthorSystemLabel,
-        ...store.parameters.roleDisplayNames,
-      },
-    }),
+  // Pick only the author fields: spreading `store.parameters` would retain the
+  // controlled `messages` array of the render that last built this memo.
+  const authorParameters = React.useMemo<ResolveMessageAuthorParameters>(
+    () => {
+      const {
+        currentUser,
+        members,
+        getMessageAuthorId,
+        getMessageAuthorDisplayName,
+        getMessageAuthorAvatarUrl,
+        roleDisplayNames,
+      } = store.parameters;
+      return {
+        currentUser,
+        members,
+        getMessageAuthorId,
+        getMessageAuthorDisplayName,
+        getMessageAuthorAvatarUrl,
+        roleDisplayNames: {
+          user: localeText.messageAuthorUserLabel,
+          assistant: localeText.messageAuthorAssistantLabel,
+          system: localeText.messageAuthorSystemLabel,
+          ...roleDisplayNames,
+        },
+      };
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       store,
@@ -47,9 +62,9 @@ export function useMessageAuthor(messageId: string) {
   return React.useMemo(
     () =>
       resolveMessageAuthor(message ?? null, {
-        ...parametersWithLocale,
+        ...authorParameters,
         activeConversation: { participants },
       }),
-    [message, participants, parametersWithLocale],
+    [message, participants, authorParameters],
   );
 }
