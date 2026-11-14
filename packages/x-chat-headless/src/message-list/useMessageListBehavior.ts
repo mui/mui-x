@@ -373,19 +373,19 @@ export function useMessageListBehavior(parameters: {
     // event, so re-pin to the bottom here or the newest message ends up clipped.
     let previousHeight = root.clientHeight;
     const observer = new globalThis.ResizeObserver(() => {
-      if (
-        autoScrollEnabledRef.current &&
-        root.clientHeight !== previousHeight &&
-        isAtBottomRef.current
-      ) {
-        root.scrollTop = root.scrollHeight;
+      if (root.clientHeight !== previousHeight) {
+        if (autoScrollEnabledRef.current && isAtBottomRef.current) {
+          root.scrollTop = root.scrollHeight;
+        }
+        // The anchor offset is measured from the viewport bottom, so a resize invalidates it.
+        anchorRef.current = captureAnchor(itemIdsRef.current);
       }
       previousHeight = root.clientHeight;
     });
     observer.observe(root);
 
     return () => observer.disconnect();
-  }, []);
+  }, [captureAnchor]);
 
   React.useEffect(() => {
     // Restore on (re)mount so the resize-driven auto-scroll keeps working after
