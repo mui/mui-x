@@ -77,11 +77,13 @@ const ChatMessageActionsStyled = styled('div', {
   // Elsewhere they stay tabbable but transparent (and ignore the pointer), and
   // are revealed on hover or while focus is inside the bar.
   opacity: 0,
-  visibility: 'visible',
+  // Roving rows always carry a tabindex. Setting only a variable there lets an action-level
+  // `sx`/styleOverrides `visibility` win (the cast: csstype has no `var()` type).
+  visibility:
+    'var(--MuiChatMessage-actionsVisibility, visible)' as React.CSSProperties['visibility'],
   pointerEvents: 'none',
-  // Roving rows always carry a tabindex; `:where()` keeps this below the reveal rule.
-  '.MuiChatMessage-root:where([tabindex]:not([data-actionable="true"])) &': {
-    visibility: 'hidden',
+  '.MuiChatMessage-root[tabindex]:not([data-actionable="true"]) &': {
+    '--MuiChatMessage-actionsVisibility': 'hidden',
   },
   transition: theme.transitions.create(['opacity', 'visibility'], {
     duration: theme.transitions.duration.short,

@@ -539,5 +539,28 @@ describe('ChatMessage', () => {
         expect(document.activeElement).toBe(button);
       });
     });
+
+    it.skipIf(isJSDOM)('lets an sx override keep the bar visible in a roving list', () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialMessages={actionMessages}
+          slotProps={{
+            messageActions: {
+              ...actionSlotProps.messageActions,
+              sx: { opacity: 1, visibility: 'visible', pointerEvents: 'auto' },
+            },
+          }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      const actions = document.querySelector('.MuiChatMessage-actions') as HTMLElement;
+      const style = getComputedStyle(actions);
+      expect(style.opacity).toBe('1');
+      expect(style.visibility).toBe('visible');
+      expect(style.pointerEvents).toBe('auto');
+    });
   });
 });
