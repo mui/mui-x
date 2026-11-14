@@ -83,6 +83,7 @@ export const idIDLocaleText: Partial<ChartsLocaleText> = {
   chartConfigurationPieTooltipTrigger: 'Pemicu',
   chartConfigurationPieLegendPosition: 'Posisi',
   chartConfigurationPieLegendDirection: 'Arah',
+
   // Common option labels
   chartConfigurationOptionNone: 'Tidak ada',
   chartConfigurationOptionValue: 'Nilai',
