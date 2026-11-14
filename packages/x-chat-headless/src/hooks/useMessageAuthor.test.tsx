@@ -22,7 +22,10 @@ describe('useMessageAuthor', () => {
     function Row({ messageId }: { messageId: string }) {
       const author = useMessageAuthor(messageId);
       renderCounts[messageId] = (renderCounts[messageId] ?? 0) + 1;
-      (authors[messageId] ??= []).push(author);
+      // Record committed values: React 18 StrictMode recomputes memos on the discarded double render.
+      React.useEffect(() => {
+        (authors[messageId] ??= []).push(author);
+      }, [author, messageId]);
       return null;
     }
 
@@ -162,7 +165,10 @@ describe('useMessageAuthor', () => {
     function Row({ messageId }: { messageId: string }) {
       const author = useMessageAuthor(messageId);
       renderCounts[messageId] = (renderCounts[messageId] ?? 0) + 1;
-      (authors[messageId] ??= []).push(author);
+      // Record committed values: React 18 StrictMode recomputes memos on the discarded double render.
+      React.useEffect(() => {
+        (authors[messageId] ??= []).push(author);
+      }, [author, messageId]);
       return null;
     }
 
