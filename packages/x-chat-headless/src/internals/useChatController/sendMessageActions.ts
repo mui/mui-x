@@ -430,6 +430,7 @@ export function createSendMessageActions<Cursor = string>(params: {
     // Fresh fallback id: the prior assistant run was just removed above, so a
     // regenerated reply with no adapter-supplied id targets a new message.
     const fallbackMessageId = createLocalId();
+    let didReceiveStream = false;
 
     try {
       const stream = await adapter.regenerate({
@@ -439,6 +440,7 @@ export function createSendMessageActions<Cursor = string>(params: {
         messages: getMessages(storeUnknown),
         signal: abortController.signal,
       });
+      didReceiveStream = true;
 
       const result = await processStreamWithReconnect(
         stream,
@@ -468,10 +470,12 @@ export function createSendMessageActions<Cursor = string>(params: {
         return;
       }
 
-      // Pre-stream rejection: restore the snapshot assistant messages (D4) and
-      // surface a REGENERATE_ERROR.
-      for (const removedMessage of removedMessages) {
-        store.addMessage(removedMessage);
+      // Restore the snapshot assistant messages (D4) only on a pre-stream rejection.
+      // A later failure (e.g. a throwing onFinish) must not overwrite the new reply.
+      if (!didReceiveStream) {
+        for (const removedMessage of removedMessages) {
+          store.addMessage(removedMessage);
+        }
       }
 
       store.setStreaming(false);

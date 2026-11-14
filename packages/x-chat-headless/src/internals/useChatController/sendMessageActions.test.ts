@@ -1102,6 +1102,66 @@ describe('createSendMessageActions', () => {
       expect(store.state.isStreaming).toBe(false);
     });
 
+    it.each([
+      ['after a reconnect', true],
+      ['without reconnect support', false],
+    ])(
+      'keeps the completed reply when onFinish throws %s (no rollback)',
+      async (_label, withReconnect) => {
+        const store = new ChatStore({ initialMessages: makeThread() });
+        store.setActiveConversation('c1');
+        const onFinish = vi.fn().mockRejectedValue(new Error('boom'));
+        const setRuntimeError = vi.fn();
+        const adapter = withReconnect
+          ? createAdapter({
+              regenerate: vi
+                .fn()
+                .mockResolvedValue(
+                  createStream([
+                    { sequence: 0, eventId: 'e0', chunk: { type: 'start', messageId: 'a2' } },
+                  ]),
+                ),
+              reconnectToStream: vi.fn().mockResolvedValue(
+                createStream([
+                  {
+                    sequence: 1,
+                    eventId: 'e1',
+                    chunk: { type: 'finish', messageId: 'a2', finishReason: 'stop' },
+                  },
+                ]),
+              ),
+            })
+          : createAdapter({
+              regenerate: vi.fn().mockResolvedValue(
+                createStream([
+                  { type: 'start', messageId: 'a2' },
+                  { type: 'finish', messageId: 'a2', finishReason: 'stop' },
+                ]),
+              ),
+            });
+
+        const { regenerate } = createSendMessageActions({
+          store,
+          storeUnknown: asUnknown(store),
+          runtimeRef: { current: { adapter, onFinish } },
+          setRuntimeError,
+          assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
+        });
+
+        await regenerate('a1');
+
+        expect(onFinish).toHaveBeenCalledTimes(1);
+        expect(store.state.messagesById.a1).toBeUndefined();
+        expect(store.state.messagesById.a2.status).toBe('sent');
+        expect(setRuntimeError).toHaveBeenCalledTimes(1);
+        expect(setRuntimeError.mock.calls[0][0]).toMatchObject({
+          code: 'REGENERATE_ERROR',
+          message: 'boom',
+        });
+        expect(store.state.isStreaming).toBe(false);
+      },
+    );
+
     it('fires onError on a mid-stream error and keeps partial output (no rollback)', async () => {
       const store = new ChatStore({ initialMessages: makeThread() });
       store.setActiveConversation('c1');
