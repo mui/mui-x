@@ -33,6 +33,7 @@ import { ChatMessageList } from '../ChatMessageList/ChatMessageList';
 import type { ChatMessageListProps } from '../ChatMessageList/ChatMessageList';
 import { DefaultMessageItem } from '../ChatMessageList/DefaultMessageItem';
 import { ChatScrollToBottomAffordance } from '../ChatIndicators/ChatScrollToBottomAffordance';
+import { ChatTypingIndicator } from '../ChatIndicators/ChatTypingIndicator';
 import { ChatSuggestions } from '../ChatSuggestions/ChatSuggestions';
 import type { ChatSuggestionsProps } from '../ChatSuggestions/ChatSuggestions';
 import type {
@@ -810,6 +811,9 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
     [slots.conversationList],
   );
   const SuggestionsComponent = (slots.suggestions ?? ChatSuggestions) as typeof ChatSuggestions;
+  const showTypingIndicator = slots.typingIndicator !== null;
+  const TypingIndicatorComponent = (slots.typingIndicator ??
+    ChatTypingIndicator) as typeof ChatTypingIndicator;
 
   // The row feature flags, normalized to an identity-stable object so
   // an inline `features={{ ... }}` on ChatBox doesn't churn the memoized rows.
@@ -1059,6 +1063,9 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
               </ChatBoxCustomEmptyStateOverlay>
             )}
           </ChatBoxMessageListWrapper>
+          {showTypingIndicator && (
+            <TypingIndicatorComponent {...(slotProps.typingIndicator ?? {})} />
+          )}
           {showAboveComposerSuggestions && (
             <AboveComposerSuggestions
               SuggestionsComponent={SuggestionsComponent}

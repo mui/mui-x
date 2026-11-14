@@ -363,8 +363,8 @@
     },
     {
       "name": "typingIndicator",
-      "description": "The animated typing indicator shown while the assistant responds.",
-      "default": "null",
+      "description": "The typing indicator rendered between the message list and the composer.\nThe default renders nothing while no one is typing in the active conversation;\na custom component is always rendered, so read `useChatStatus().typingUserIds` to hide it.\nPass `null` to hide it.",
+      "default": "ChatTypingIndicator",
       "class": null
     },
     {

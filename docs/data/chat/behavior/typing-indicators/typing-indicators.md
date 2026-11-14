@@ -221,20 +221,12 @@ Display strings should come from `ownerState.label` (already rendered as `childr
 
 ## Using with Chat Box
 
-`ChatBox` does **not** render a typing indicator by default.
-The `slots.typingIndicator` / `slotProps.typingIndicator` entries exist on the ChatBox slot types, but there is currently no built-in render site for the widget.
+`ChatBox` renders `ChatTypingIndicator` between the message list and the composer by default.
+It renders nothing while no one is typing in the active conversation.
 
-`ChatBox` renders its `children` inside the chat provider tree, so a typing indicator placed there can read the live typing state:
-
-```tsx
-import { ChatBox, ChatTypingIndicator } from '@mui/x-chat';
-
-<ChatBox adapter={adapter}>
-  <ChatTypingIndicator />
-</ChatBox>;
-```
-
-Children render after the built-in layout, so position the indicator with your own styling — or use the standalone `ChatRoot` composition from the [Using the indicator standalone](#using-the-indicator-standalone) section for full placement control.
+Use `slots.typingIndicator` to replace the widget and `slotProps.typingIndicator` to pass props to it.
+Pass `slots={{ typingIndicator: null }}` to hide it.
+If you previously rendered `<ChatTypingIndicator />` as a `ChatBox` child, remove it, or pass `slots={{ typingIndicator: null }}` to keep your own placement.
 
 Inbound display needs the adapter's `subscribe()` emitting `typing` events.
 The outbound auto-signal is opt-in and off by default via `features.typingSignal` (see [Sending typing state](#sending-typing-state)).

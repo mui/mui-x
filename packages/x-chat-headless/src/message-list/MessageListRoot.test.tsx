@@ -539,6 +539,39 @@ describe('MessageListRoot', () => {
     });
   });
 
+  it.skipIf(isJSDOM)(
+    'preserves the viewport anchor when history is prepended after the viewport shrinks',
+    async () => {
+      render(<ControlledMessageList />);
+      const log = screen.getByRole('log');
+
+      await waitFor(() => {
+        expect(log.scrollHeight).toBeGreaterThan(160);
+      });
+
+      const nextFrame = () =>
+        new Promise((resolve) => {
+          requestAnimationFrame(() => requestAnimationFrame(resolve));
+        });
+
+      // Scrolled up: 240px of content in a 160px viewport, 40px away from the bottom.
+      log.scrollTop = 40;
+      fireEvent.scroll(log);
+      // Let the native scroll event flush so it can't re-capture the anchor after the resize.
+      await nextFrame();
+
+      // Simulates a widget (e.g. the typing indicator) mounting below the list.
+      log.style.height = '120px';
+      await nextFrame();
+
+      fireEvent.click(screen.getByRole('button', { name: 'prepend' }));
+
+      await waitFor(() => {
+        expect(log.scrollTop).toBe(120);
+      });
+    },
+  );
+
   it.skipIf(isJSDOM)('auto-scrolls on append when already near the bottom', async () => {
     render(<ControlledMessageList />);
     const log = screen.getByRole('log');
