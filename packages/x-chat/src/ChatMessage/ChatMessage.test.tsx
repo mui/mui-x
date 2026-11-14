@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer } from '@mui/internal-test-utils';
+import { act, createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import { ChatRoot, ChatVariantProvider } from '@mui/x-chat-headless';
@@ -468,5 +468,99 @@ describe('ChatMessage', () => {
     );
     expect(paths).toHaveLength(2);
     expect(new Set(paths).size).toBe(2);
+  });
+
+  describe('actions bar keyboard access', () => {
+    const actionMessages = [
+      {
+        id: 'a1',
+        role: 'assistant' as const,
+        status: 'sent' as const,
+        parts: [{ type: 'text' as const, text: 'A' }],
+      },
+    ];
+    const actionSlotProps = {
+      messageActions: { extraActions: [{ id: 'x', label: 'X', onClick: () => {} }] },
+    };
+
+    it.skipIf(isJSDOM)('lets the action buttons receive focus without roving focus', async () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialMessages={actionMessages}
+          slotProps={{ ...actionSlotProps, messageList: { enableRovingFocus: false } }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      const button = document.querySelector('button[data-action="x"]') as HTMLButtonElement;
+      const actions = document.querySelector('.MuiChatMessage-actions') as HTMLElement;
+      expect(getComputedStyle(actions).opacity).toBe('0');
+
+      await act(async () => {
+        button.focus();
+      });
+
+      expect(document.activeElement).toBe(button);
+      await waitFor(() => {
+        expect(getComputedStyle(actions).opacity).toBe('1');
+      });
+    });
+
+    it.skipIf(isJSDOM)('keeps the action buttons unfocusable until Enter drills in', async () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialMessages={actionMessages}
+          slotProps={actionSlotProps}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      const article = document.querySelector('[role="article"]') as HTMLElement;
+      const button = document.querySelector('button[data-action="x"]') as HTMLButtonElement;
+      act(() => {
+        article.focus();
+      });
+      act(() => {
+        button.focus();
+      });
+      expect(document.activeElement).toBe(article);
+
+      fireEvent.keyDown(article, { key: 'Enter' });
+      // The `visibility` transition keeps the bar hidden at its first frame, so
+      // the drill-in focus misses it; retry until the button is focusable.
+      await waitFor(() => {
+        act(() => {
+          button.focus();
+        });
+        expect(document.activeElement).toBe(button);
+      });
+    });
+
+    it.skipIf(isJSDOM)('lets an sx override keep the bar visible in a roving list', () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialMessages={actionMessages}
+          slotProps={{
+            messageActions: {
+              ...actionSlotProps.messageActions,
+              sx: { opacity: 1, visibility: 'visible', pointerEvents: 'auto' },
+            },
+          }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      const actions = document.querySelector('.MuiChatMessage-actions') as HTMLElement;
+      const style = getComputedStyle(actions);
+      expect(style.opacity).toBe('1');
+      expect(style.visibility).toBe('visible');
+      expect(style.pointerEvents).toBe('auto');
+    });
   });
 });
