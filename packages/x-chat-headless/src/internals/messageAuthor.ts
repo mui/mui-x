@@ -36,7 +36,7 @@ function getRoleDisplayName(
 export interface ResolveMessageAuthorParameters extends ChatMessageAuthorGetterProps {
   currentUser?: ChatUser;
   members?: ChatUser[];
-  activeConversation?: ChatConversation;
+  activeConversation?: Pick<ChatConversation, 'participants'>;
   /**
    * Optional locale-driven labels used as the last resort when no other author
    * signal resolves a displayName. `useMessageAuthor` populates this from

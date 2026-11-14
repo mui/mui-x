@@ -98,9 +98,8 @@ For selectors that take an argument, pass a selector function:
 function ConversationTitle({ id }: { id: string }) {
   const store = useChatStore();
   const conversation = useStore(store, chatSelectors.conversation, id);
-  const author = useStore(store, chatSelectors.messageAuthor, id, store.parameters);
 
-  return <span>{conversation?.title ?? author?.displayName ?? 'Untitled'}</span>;
+  return <span>{conversation?.title ?? 'Untitled'}</span>;
 }
 ```
 
@@ -111,7 +110,9 @@ function ConversationTitle({ id }: { id: string }) {
 `messageCount`, `conversationCount`, and `messageError` return primitives or `null`-able stored values, where reference stability is moot.
 
 `createSelectorMemoized` keeps a single-entry cache per store (`maxSize: 1`), so for the parameterized memoized selectors (`messageAuthor`, `typingUserIds`) reference equality only holds while consecutive calls use the same arguments — alternating IDs across many ad-hoc subscribers thrashes the single-entry cache.
-Each `useStore` subscription still avoids re-renders via its own equality handling; this caveat is about cross-subscriber cache hits, not correctness.
+`useStore` compares results by reference, so subscribing many components to `messageAuthor` with different IDs re-renders all of them on every store update.
+For per-row author data, prefer the built-in message components.
+If you read `message.author` with `useMessage(id)` directly, note that it does not apply `currentUser`, `members`, the `getMessageAuthor*` getters, or role display-name fallbacks.
 
 ## Why normalization matters
 

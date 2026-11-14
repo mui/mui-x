@@ -10,6 +10,46 @@ import type {
 import type { ChatError } from '../types/chat-error';
 import type { ChatHistoryStatus, ChatInternalState } from '../types/chat-state';
 
+// Compares only the user fields the author resolver reads, so inline props don't bump the version.
+function isSameAuthorUser(a: ChatUser | undefined, b: ChatUser | undefined) {
+  return (
+    a === b ||
+    (a != null &&
+      b != null &&
+      a.id === b.id &&
+      a.displayName === b.displayName &&
+      a.avatarUrl === b.avatarUrl)
+  );
+}
+
+function haveAuthorParametersChanged<Cursor>(
+  prev: ChatStoreParameters<Cursor>,
+  next: ChatStoreParameters<Cursor>,
+) {
+  if (
+    prev.getMessageAuthorId !== next.getMessageAuthorId ||
+    prev.getMessageAuthorDisplayName !== next.getMessageAuthorDisplayName ||
+    prev.getMessageAuthorAvatarUrl !== next.getMessageAuthorAvatarUrl ||
+    !isSameAuthorUser(prev.currentUser, next.currentUser)
+  ) {
+    return true;
+  }
+  if (
+    prev.members !== next.members &&
+    (prev.members?.length !== next.members?.length ||
+      prev.members?.some((member, index) => !isSameAuthorUser(member, next.members?.[index])))
+  ) {
+    return true;
+  }
+  if (prev.roleDisplayNames === next.roleDisplayNames) {
+    return false;
+  }
+  const prevNames = prev.roleDisplayNames ?? {};
+  const nextNames = next.roleDisplayNames ?? {};
+  const keys = new Set([...Object.keys(prevNames), ...Object.keys(nextNames)]) as Set<ChatRole>;
+  return [...keys].some((key) => prevNames[key] !== nextNames[key]);
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface ChatStoreParameters<Cursor = string> extends ChatMessageAuthorGetterProps {
   /**
@@ -270,6 +310,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       composerIsComposing: false,
       composerAttachments: [],
       error: null,
+      authorParametersVersion: 0,
     });
 
     this.parameters = parameters;
@@ -319,6 +360,10 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     ) {
       newState.composerValue = parameters.composerValue;
       this.dirtyControlledModels.delete('composerValue');
+    }
+
+    if (haveAuthorParametersChanged(this.parameters, parameters)) {
+      newState.authorParametersVersion = this.state.authorParametersVersion + 1;
     }
 
     this.parameters = parameters;

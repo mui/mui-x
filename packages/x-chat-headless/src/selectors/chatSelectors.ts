@@ -133,9 +133,10 @@ export const chatSelectors = {
   ),
 } as const;
 
-// `messageAuthor` intentionally has no standalone `select*` alias: it requires
-// trailing `(id, parameters: ChatStoreParameters)` args and is consumed via the
-// internal useMessageAuthor plumbing rather than ad-hoc useStore calls.
+// `messageAuthor` has no standalone `select*` alias because it needs trailing
+// `(id, parameters)` args. It is kept for public API compatibility; the internal
+// useMessageAuthor resolves authors from `message` + active participants instead,
+// since this selector's single-entry cache thrashes across rows.
 export const selectMessageIds = chatSelectors.messageIds;
 export const selectMessagesById = chatSelectors.messagesById;
 export const selectConversationIds = chatSelectors.conversationIds;

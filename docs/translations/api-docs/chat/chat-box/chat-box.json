@@ -23,13 +23,13 @@
       "description": "Feature flags to enable or disable built-in ChatBox behaviours."
     },
     "getMessageAuthorAvatarUrl": {
-      "description": "Used to determine the avatar URL for a given message author. Falls back to <code>message.author?.avatarUrl</code>, then to the matched member&#39;s <code>avatarUrl</code>."
+      "description": "Used to determine the avatar URL for a given message author. Falls back to <code>message.author?.avatarUrl</code>, then to the matched member&#39;s <code>avatarUrl</code>. Keep the reference stable (module scope or <code>useCallback</code>), otherwise every message row recomputes its author on each parent render."
     },
     "getMessageAuthorDisplayName": {
-      "description": "Used to determine the display name for a given message author. Falls back to <code>message.author?.displayName</code>, then to the matched member&#39;s <code>displayName</code>."
+      "description": "Used to determine the display name for a given message author. Falls back to <code>message.author?.displayName</code>, then to the matched member&#39;s <code>displayName</code>. Keep the reference stable (module scope or <code>useCallback</code>), otherwise every message row recomputes its author on each parent render."
     },
     "getMessageAuthorId": {
-      "description": "Used to determine the author id for a given message. The resolved id is used to match message authors against <code>currentUser</code>, <code>members</code>, and active conversation participants."
+      "description": "Used to determine the author id for a given message. The resolved id is used to match message authors against <code>currentUser</code>, <code>members</code>, and active conversation participants. Keep the reference stable (module scope or <code>useCallback</code>), otherwise every message row recomputes its author on each parent render."
     },
     "initialActiveConversationId": {
       "description": "The initial active conversation ID when uncontrolled. Ignored after initialization and when <code>activeConversationId</code> is provided."
