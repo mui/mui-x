@@ -1166,6 +1166,15 @@ export const useGridFormula = (
     ) {
       clearFormulaPickSession(apiRef);
     }
+    // The baseline of an edit that picked nothing ends with the edit too: the next edit
+    // of the same cell must record its own.
+    const { baseline } = cache.referencePick;
+    if (
+      baseline !== null &&
+      apiRef.current.getCellMode(baseline.id, baseline.field) !== GridCellModes.Edit
+    ) {
+      cache.referencePick.baseline = null;
+    }
   }, [apiRef]);
 
   // Arm the A1 paste origin: the first cell of the batch sets it, the rest

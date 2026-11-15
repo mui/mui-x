@@ -120,6 +120,14 @@ export interface GridFormulaPickEditable {
    * `true` when the editable shows the A1 dialect.
    */
   a1Notation: boolean;
+  /**
+   * The text the edit of the formula started with, for a host that keeps it
+   * itself: the draft of the formula bar and the editor of the panel. Without
+   * it, or when it returns `undefined`, the baseline of the session is used
+   * (the edit of a cell, also when the formula bar mirrors it).
+   * @returns {string | undefined} The text the edit started with.
+   */
+  getBaseline?: () => string | undefined;
 }
 
 export interface GridFormulaReferencePickSession {
@@ -143,6 +151,12 @@ export interface GridFormulaReferencePickSession {
     target: FormulaReferenceTarget;
     anchor: { field: string; rowId: GridRowId };
   } | null;
+  /**
+   * The text the edit of that cell started with: a plain click only replaces
+   * a reference written since. Recorded when the editor of the cell first
+   * mounts, kept when virtualization remounts it, dropped when the edit ends.
+   */
+  baseline: { id: GridRowId; field: string; text: string } | null;
 }
 
 export interface GridFormulaState {

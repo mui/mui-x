@@ -232,6 +232,16 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
   // into the bar: into its draft, or into the cell edit it mirrors. Only a
   // formula column can hold them, and a read-only bar takes no text.
   const canReceivePicks = cell !== null && allowFormulas && !readOnly;
+  // What a plain click compares the text with (it only replaces a reference written in
+  // this edit): the text the draft started from, which is the displayed value while there
+  // is no draft. A mirrored cell edit has the baseline of that edit, kept by the session.
+  const pickBaselineRef = React.useRef<() => string | undefined>(() => undefined);
+  pickBaselineRef.current = () => {
+    if (isMirror) {
+      return undefined;
+    }
+    return draftRef.current === null ? displayValue : draftSeedRef.current;
+  };
   React.useEffect(() => {
     if (!canReceivePicks || cell === null) {
       return undefined;
@@ -241,6 +251,7 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
       getHandle: () => coreRef.current,
       ownerCell: cell,
       a1Notation: a1Enabled,
+      getBaseline: () => pickBaselineRef.current(),
     });
   }, [apiRef, canReceivePicks, cell, a1Enabled]);
 

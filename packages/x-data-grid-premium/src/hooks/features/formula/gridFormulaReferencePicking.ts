@@ -365,8 +365,24 @@ export function registerFormulaPickEditable(
   apiRef: RefObject<GridPrivateApiPremium>,
   editable: GridFormulaPickEditable,
 ): () => void {
-  const { editables } = apiRef.current.caches.formula!.referencePick;
+  const session = apiRef.current.caches.formula!.referencePick;
+  const { editables } = session;
   editables.add(editable);
+  if (editable.kind === 'cell') {
+    // The editor of a cell registers when it mounts: the first mount of an edit records
+    // the text the edit starts with. A remount (virtualization) finds the baseline of
+    // its cell and keeps it.
+    const handle = editable.getHandle();
+    const { baseline } = session;
+    if (
+      handle !== null &&
+      (baseline === null ||
+        baseline.id !== editable.ownerCell.id ||
+        baseline.field !== editable.ownerCell.field)
+    ) {
+      session.baseline = { ...editable.ownerCell, text: handle.getText() };
+    }
+  }
   // The host may have focused the editable before registering it (the focus comes from a
   // layout effect, the registration from an effect): its caret was not looked at yet.
   syncFormulaPickFeedback(apiRef, isFormulaReferencePickingEnabled(apiRef.current.rootProps));
@@ -423,6 +439,28 @@ export function getFormulaPendingPickOf(
 }
 
 /**
+ * The text the edit of the formula of `editable` started with: the one its host
+ * keeps, or the one of the session when it belongs to the same cell. `null`
+ * when it is not known, in which case every reference counts as written in
+ * this edit.
+ */
+export function getFormulaPickBaselineOf(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  editable: GridFormulaPickEditable,
+): string | null {
+  const own = editable.getBaseline?.();
+  if (own !== undefined) {
+    return own;
+  }
+  const { baseline } = apiRef.current.caches.formula!.referencePick;
+  return baseline !== null &&
+    baseline.id === editable.ownerCell.id &&
+    baseline.field === editable.ownerCell.field
+    ? baseline.text
+    : null;
+}
+
+/**
  * What a click on a cell does to the formula of `editable`, given the text it
  * shows and its selection.
  */
@@ -444,6 +482,8 @@ export function getFormulaPickActionForEditable(
     getFormulaPendingPickOf(apiRef, editable)?.pick ?? null,
     {
       a1Notation,
+      // A plain click leaves a reference alone when it was in the formula before the edit.
+      baseline: getFormulaPickBaselineOf(apiRef, editable),
       // The panel builds no range: Shift+click is a plain click there.
       mode: editable.kind === 'panel' && mode === 'extend' ? 'replace' : mode,
       // A bare name is a reference when it is the name a click on that column writes.
@@ -497,8 +537,8 @@ export function applyFormulaPickFeedback(
 }
 
 /**
- * Ends the picking session: the gesture and the pending reference are
- * forgotten, and the feedback is removed. Called when the edit, or the draft of
+ * Ends the picking session: the gesture, the pending reference and the
+ * baseline are forgotten, and the feedback is removed. Called when the edit, or the draft of
  * the formula bar, that the session belongs to ends.
  * @param {RefObject<GridPrivateApiPremium>} apiRef The private grid api.
  */
@@ -512,6 +552,7 @@ export function clearFormulaPickSession(apiRef: RefObject<GridPrivateApiPremium>
   }
   session.gesture = null;
   session.pending = null;
+  session.baseline = null;
   applyFormulaPickFeedback(apiRef, false, null);
 }
 

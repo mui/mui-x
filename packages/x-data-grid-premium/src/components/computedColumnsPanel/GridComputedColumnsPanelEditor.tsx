@@ -500,6 +500,9 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
   const referencePicking = isFormulaReferencePickingEnabled(rootProps);
 
   const [draft, setDraft] = React.useState<EditorDraft>(() => createDraft(storedDefinition));
+  // The formula the editor opened with: a click on a cell only replaces a reference
+  // written since (reference picking).
+  const pickBaselineRef = React.useRef(draft.formula);
   // The derived field stops following the name once the user edits it.
   const [fieldTouched, setFieldTouched] = React.useState(isEditing);
   // The result type stops following the preview once the user picks one.
@@ -534,7 +537,9 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
       return;
     }
     setStoredDefinition(liveDefinition);
-    setDraft(createDraft(liveDefinition));
+    const nextDraft = createDraft(liveDefinition);
+    setDraft(nextDraft);
+    pickBaselineRef.current = nextDraft.formula;
     setDirty(false);
     // Only a lock moves the focus, and only when the editor had it: the focus is left
     // alone when a locked definition changes or the user is elsewhere.
@@ -839,6 +844,9 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
       getHandle: () => editableRef.current,
       ownerCell: pickOwnerCell,
       a1Notation,
+      // Kept by the editor, not by the cell: the preview row and the field can change
+      // under the same formula.
+      getBaseline: () => pickBaselineRef.current,
     };
     const session = apiRef.current.caches.formula!.referencePick;
     const unregister = registerFormulaPickEditable(apiRef, editable);
