@@ -3400,11 +3400,19 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         expect(getPanel()).not.to.equal(null);
       });
 
-      it('replaces the reference at the caret', async () => {
+      it('replaces the reference at the caret only when it was written in this edit', async () => {
         await setup();
-        typeAt('=price * quantity', 3);
+        // The editor opened with `=price * quantity`.
+        typeAt('=price * quantity + price');
         clickCell(cellOf(1, 'item'));
-        expect(getFormulaEditable().textContent).to.equal('=item * quantity');
+        expect(getFormulaEditable().textContent).to.equal('=price * quantity + item');
+
+        // The caret on the first `price`: the click moves the focus of the grid, as before.
+        typeAt('=price * quantity + item', 3);
+        expect(isPicking()).to.equal(false);
+        clickCell(cellOf(1, 'item'));
+        expect(getFormulaEditable().textContent).to.equal('=price * quantity + item');
+        expect(getFocusedCell()).to.deep.equal({ id: 1, field: 'item' });
       });
 
       it('adds a reference with Ctrl/Cmd+click inside a function call only', async () => {

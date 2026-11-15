@@ -16,7 +16,11 @@ import type { DataGridPremiumProps, GridApi, GridRowId } from '@mui/x-data-grid-
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
-import { getSelectionOffsets, setCaretOffset } from '../components/formulaEditorCaret';
+import {
+  getSelectionOffsets,
+  setCaretOffset,
+  setSelectionOffsets,
+} from '../components/formulaEditorCaret';
 import { getActiveFormulaPickEditable } from '../hooks/features/formula/gridFormulaReferencePicking';
 import type { GridPrivateApiPremium } from '../models/gridApiPremium';
 
@@ -290,9 +294,10 @@ describe('<DataGridPremium /> - Formulas reference picking', () => {
 
   describe('caret on a reference', () => {
     it.each([
-      ['at the end of a field name', '=price * quantity', undefined, '=price * C3'],
-      ['inside a field name', '=price * quantity', 3, '=C3 * quantity'],
-      ['at the start of a field name', '=price * quantity', 1, '=C3 * quantity'],
+      // Not the stored formula: a reference is only replaced when it was written in this edit.
+      ['at the end of a field name', '=quantity * price', undefined, '=quantity * C3'],
+      ['inside a field name', '=quantity * price', 3, '=C3 * price'],
+      ['at the start of a field name', '=quantity * price', 1, '=C3 * price'],
       ['at the end of a cell reference', '=SUM(B1, 2)', 7, '=SUM(C3, 2)'],
       ['inside a range', '=SUM(B1:C2)', 8, '=SUM(C3)'],
     ])('replaces the reference with the caret %s', async (_, text, caret, expected) => {
@@ -312,18 +317,87 @@ describe('<DataGridPremium /> - Formulas reference picking', () => {
       expect(getEditable()!.textContent).to.equal('=2*REF(COLUMN("quantity"), ROW(13))');
     });
 
-    it('replaces the reference of a formula that was just opened', async () => {
-      const { user } = await render(<Test formulaA1Notation />);
-      await user.dblClick(cell(11, 'total'));
+    /**
+     * Starts editing the Total cell of the row with its stored formula, the caret at its end.
+     */
+    async function openTotal(user: User, id: GridRowId) {
+      await user.dblClick(cell(id, 'total'));
       await waitFor(() => {
         expect(getEditable()?.textContent).to.equal('=price * quantity');
       });
+    }
+
+    it('ends the edit and keeps the formula of a cell that was just opened', async () => {
+      const { user } = await render(<Test formulaA1Notation />);
+      await openTotal(user, 11);
       await user.click(cell(13, 'quantity'));
 
-      expect(getEditable()!.textContent).to.equal('=price * C3');
-      // The written reference is the pending one: the next click replaces it.
+      await waitFor(() => {
+        expect(isEditing(11)).to.equal(false);
+      });
+      expect(apiRef.current!.getRow(11).total).to.equal('=price * quantity');
+      expect(gridFocusCellSelector(apiRef)).to.deep.equal({ id: 13, field: 'quantity' });
+    });
+
+    it('replaces a reference typed after opening a formula, not one that was already there', async () => {
+      const { user } = await render(<Test formulaA1Notation />);
+      await openTotal(user, 11);
+      typeInEditor('=price * quantity+B2');
+      await user.click(cell(13, 'quantity'));
+      expect(getEditable()!.textContent).to.equal('=price * quantity+C3');
+
+      // The caret on `price`, which the edit did not write.
+      typeInEditor('=price * quantity+C3', 3);
       await user.click(cell(12, 'price'));
-      expect(getEditable()!.textContent).to.equal('=price * B2');
+      await waitFor(() => {
+        expect(isEditing(11)).to.equal(false);
+      });
+      expect(apiRef.current!.getRow(11).total).to.equal(
+        '=price * quantity+REF(COLUMN("quantity"), ROW(13))',
+      );
+    });
+
+    it('extends with Shift+click and replaces a selection in a formula that was just opened', async () => {
+      const { user } = await render(<Test formulaA1Notation />);
+      await openTotal(user, 11);
+      modifierClick(cell(13, 'quantity'), { shiftKey: true });
+      expect(getEditable()!.textContent).to.equal('=price * C1:C3');
+
+      // `price` selected.
+      act(() => setSelectionOffsets(getEditable()!, { start: 1, end: 6 }));
+      await user.click(cell(12, 'price'));
+      expect(getEditable()!.textContent).to.equal('=B2 * C1:C3');
+    });
+
+    it.each([
+      ['Escape', () => fireEvent.keyDown(getEditable()!, { key: 'Escape' })],
+      [
+        'a programmatic stop',
+        () => {
+          act(() => {
+            apiRef.current!.stopCellEditMode({ id: 11, field: 'total', ignoreModifications: true });
+          });
+        },
+      ],
+    ])('starts over with the next edit of the cell, after %s', async (_, stop) => {
+      const { user } = await render(<Test formulaA1Notation />);
+      // An edit that starts with an empty text: all of it is written in this edit.
+      await user.click(cell(11, 'total'));
+      await user.keyboard('{Delete}');
+      await waitFor(() => {
+        expect(getEditable()).not.to.equal(null);
+      });
+      stop();
+      await waitFor(() => {
+        expect(isEditing(11)).to.equal(false);
+      });
+
+      await openTotal(user, 11);
+      await user.click(cell(13, 'quantity'));
+      await waitFor(() => {
+        expect(isEditing(11)).to.equal(false);
+      });
+      expect(apiRef.current!.getRow(11).total).to.equal('=price * quantity');
     });
 
     it('replaces the picked reference after its text was changed by typing', async () => {
@@ -1472,20 +1546,43 @@ describe('<DataGridPremium /> - Formulas reference picking', () => {
       ['cell edit mode', {}],
       ['row edit mode', { editMode: 'row' as const }],
     ])(
-      'shows the picking class as soon as a formula opens with the caret on a reference, in %s',
+      'shows the picking class as soon as a formula opens with the caret where a reference is expected, in %s',
       async (_, props) => {
-        const { user } = await render(<Test {...props} />);
+        const { user } = await render(
+          <Test
+            {...props}
+            rows={[
+              { id: 11, item: 'Apple', price: 10, quantity: 3, total: '=price *', note: 'a' },
+              ...baselineProps.rows!.slice(1),
+            ]}
+          />,
+        );
         await user.dblClick(cell(11, 'total'));
 
         await waitFor(() => {
-          expect(getEditable()?.textContent).to.equal('=price * quantity');
+          expect(getEditable()?.textContent).to.equal('=price *');
         });
-        // Nothing was typed: the caret sits at the end of `quantity`, which a click replaces.
+        // Nothing was typed: the caret sits after the operator, where a click inserts.
         await waitFor(() => {
           expect(isPickingClassOn()).to.equal(true);
         });
       },
     );
+
+    it('does not show the picking class on a reference that was already in the formula', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(cell(11, 'total'));
+
+      await waitFor(() => {
+        expect(getEditable()?.textContent).to.equal('=price * quantity');
+      });
+      expect(isPickingClassOn()).to.equal(false);
+      // The caret is on that reference once something is typed in it.
+      typeInEditor('=price * quantit');
+      expect(isPickingClassOn()).to.equal(false);
+      typeInEditor('=price * item');
+      expect(isPickingClassOn()).to.equal(true);
+    });
 
     it('picks with `disableRowSelectionOnClick` and without cell selection', async () => {
       const { user } = await render(<Test formulaA1Notation disableRowSelectionOnClick />);

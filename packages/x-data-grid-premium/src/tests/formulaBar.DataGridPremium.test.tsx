@@ -622,16 +622,13 @@ describe('<DataGridPremium /> - Formula bar', () => {
         expect(getBarEditable().textContent).to.equal('=2*price');
       });
 
-      it('replaces the reference the caret is on', async () => {
+      it('replaces the reference the caret is on when the draft wrote it', async () => {
         const { user } = render(<Test formulaReferencePicking formulaA1Notation={a1Notation} />);
         await microtasks();
-        // The bar shows `=price * quantity`, the caret is at its end, no draft yet.
-        focusCell(0, 'total');
-        clickIntoBar();
-        fireEvent.keyUp(getBarEditable(), { key: 'End' });
+        draftInBar(0, '=price * quantity + price');
         await user.click(cellOf(2, 'quantity'));
 
-        expect(getBarEditable().textContent).to.equal(`=price * ${otherRowQuantity}`);
+        expect(getBarEditable().textContent).to.equal(`=price * quantity + ${otherRowQuantity}`);
         expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
       });
 
@@ -674,6 +671,20 @@ describe('<DataGridPremium /> - Formula bar', () => {
         });
         expect(gridFocusCellSelector(privateApi())).to.deep.equal({ id: 1, field: 'price' });
         expect(getBarEditable().textContent).to.equal('1');
+      });
+
+      it('moves the focus when the caret is on a reference that was already in the formula', async () => {
+        const { user } = render(<Test formulaReferencePicking formulaA1Notation />);
+        await microtasks();
+        // The bar shows `=price * quantity`, the caret is at its end, no draft yet.
+        focusCell(0, 'total');
+        clickIntoBar();
+        fireEvent.keyUp(getBarEditable(), { key: 'End' });
+        expect(isPickingClassOn()).to.equal(false);
+        await user.click(cellOf(2, 'quantity'));
+
+        expect(gridFocusCellSelector(privateApi())).to.deep.equal({ id: 2, field: 'quantity' });
+        expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
       });
 
       it('commits the draft when the prop is off', async () => {
@@ -908,6 +919,27 @@ describe('<DataGridPremium /> - Formula bar', () => {
         });
         expect(apiRef.current!.getRow(0).total).to.equal('=1+1');
         expect(gridFocusCellSelector(privateApi())).to.deep.equal({ id: 1, field: 'price' });
+      });
+
+      it('ends the edit when the caret is on a reference that was already in the formula', async () => {
+        const { user } = render(<Test formulaReferencePicking formulaA1Notation />);
+        await microtasks();
+        // The cell edit shows `=price * quantity`; the bar mirrors it, the caret at its end.
+        focusCell(0, 'total');
+        act(() => {
+          apiRef.current!.startCellEditMode({ id: 0, field: 'total' });
+        });
+        await waitFor(() => {
+          expect(getCellEditable()?.textContent).to.equal('=price * quantity');
+        });
+        clickIntoBar();
+        fireEvent.keyUp(getBarEditable(), { key: 'End' });
+        await user.click(cellOf(2, 'quantity'));
+
+        await waitFor(() => {
+          expect(apiRef.current!.getCellMode(0, 'total')).to.equal('view');
+        });
+        expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
       });
 
       it('ends the edit when the prop is off', async () => {

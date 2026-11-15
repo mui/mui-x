@@ -164,7 +164,8 @@ Then select the empty **February** cell of the **All departments** row, type `=S
 A click writes a reference only where the formula can take one—anywhere else, it ends the edit as usual:
 
 - **Where a reference is expected**—after the `=`, an operator, an opening parenthesis, or a comma—the reference is inserted at the caret: with `=B2+`, a click on C3 gives `=B2+C3`.
-- **On a reference**—the caret inside it or at one of its ends—the click replaces that reference: with the caret at the end of `=price * qty`, a click on C3 gives `=price * C3`. After typing a reference, commit with <kbd class="key">Enter</kbd> or <kbd class="key">Tab</kbd> instead of clicking another cell.
+- **On a reference written in this edit**—the caret inside it or at one of its ends—the click replaces that reference: after typing `=price * qty`, a click on C3 gives `=price * C3`. To keep a typed reference, commit with <kbd class="key">Enter</kbd> or <kbd class="key">Tab</kbd> instead of clicking another cell.
+- **On a reference that was already in the formula**—when you open `=price * qty` and click another cell—the click ends the edit and the formula is unchanged. To replace that reference, select it first, then click the cell.
 - The reference a click wrote is replaced by the next click, until you type something. Its cell is outlined with a solid rectangle instead of a dashed one.
 - **Anywhere else**—after a number, a string, a closing parenthesis, or a name that is not a column, as in `=B2+5`, `=SUM(B2:C4)`, or `=pri`—the click ends the edit and moves the focus. The same goes for an edit whose text does not start with `=`.
 
