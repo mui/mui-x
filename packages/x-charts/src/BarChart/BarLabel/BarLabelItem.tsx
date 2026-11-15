@@ -3,13 +3,17 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import PropTypes from 'prop-types';
 import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useUtilityClasses } from '../barClasses';
-import type { BarLabelOwnerState, BarItem, BarLabelContext } from './BarLabel.types';
-import { getBarLabel } from './getBarLabel';
+import type { BarLabelOwnerState } from './BarLabel.types';
 import { BarLabel } from './BarLabel';
 import type { BarLabelProps } from './BarLabel';
 import { useItemHighlightState } from '../../hooks/useItemHighlightState';
-import type { BarValueType } from '../../models';
+import type { ChartSeriesType } from '../../models/seriesType/config';
 import type { BarLabelPropsOverrides } from '../../models/chartsSlotsComponentsProps';
+
+/**
+ * The series types whose bars can render a label: `'bar'`, and `'rangeBar'` when it is registered.
+ */
+type BarLabelSeriesType = Extract<ChartSeriesType, 'bar' | 'rangeBar'>;
 
 export interface BarLabelSlots {
   /**
@@ -23,10 +27,7 @@ export interface BarLabelSlotProps {
   barLabel?: SlotComponentPropsFromProps<BarLabelProps, BarLabelPropsOverrides, BarLabelOwnerState>;
 }
 
-export type BarLabelItemProps<V extends BarValueType | null> = Omit<
-  BarLabelOwnerState,
-  'isFaded' | 'isHighlighted'
-> &
+export type BarLabelItemProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'> &
   Pick<BarLabelProps, 'style'> & {
     /**
      * The props used for each component slot.
@@ -67,21 +68,20 @@ export type BarLabelItemProps<V extends BarValueType | null> = Omit<
      */
     layout: 'vertical' | 'horizontal';
     /**
-     * The value of the data point.
+     * The type of the series the bar belongs to.
+     * It is used to get the highlight state of the label.
+     * @default 'bar'
      */
-    value: V;
+    seriesType?: BarLabelSeriesType;
     /**
      * If true, no animations should be applied.
      */
     skipAnimation: boolean;
     /**
-     * If provided, the function will be used to format the label of the bar.
-     * It can be set to 'value' to display the current value.
-     * @param {BarItem} item The item to format.
-     * @param {BarLabelContext} context data about the bar.
-     * @returns {string} The formatted label.
+     * The text of the label, formatted from the `barLabel` property of the series.
+     * Nothing is rendered if it is empty.
      */
-    barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
+    label: string | null | undefined;
     /**
      * The placement of the bar label.
      * It controls whether the label is rendered in the center or outside the bar.
@@ -95,15 +95,14 @@ export type BarLabelItemProps<V extends BarValueType | null> = Omit<
 /**
  * @ignore - internal component.
  */
-function BarLabelItem<V extends BarValueType | null = BarValueType | null>(
-  props: BarLabelItemProps<V>,
-) {
+function BarLabelItem(props: BarLabelItemProps) {
   const {
     seriesId,
+    seriesType = 'bar',
     classes: innerClasses,
     color,
     dataIndex,
-    barLabel,
+    label,
     slots,
     slotProps,
     xOrigin,
@@ -112,7 +111,6 @@ function BarLabelItem<V extends BarValueType | null = BarValueType | null>(
     y,
     width,
     height,
-    value,
     skipAnimation,
     layout,
     barLabelPlacement,
@@ -120,7 +118,7 @@ function BarLabelItem<V extends BarValueType | null = BarValueType | null>(
     ...other
   } = props;
   const highlightState = useItemHighlightState({
-    type: 'bar',
+    type: seriesType,
     seriesId,
     dataIndex,
   });
@@ -160,26 +158,13 @@ function BarLabelItem<V extends BarValueType | null = BarValueType | null>(
     ownerState,
   });
 
-  if (!barLabel) {
-    return null;
-  }
-
-  const formattedLabelText = getBarLabel({
-    barLabel,
-    value,
-    dataIndex,
-    seriesId,
-    height,
-    width,
-  });
-
-  if (!formattedLabelText) {
+  if (!label) {
     return null;
   }
 
   return (
     <Component {...barLabelProps} {...barLabelOwnerState} hidden={hidden}>
-      {formattedLabelText}
+      {label}
     </Component>
   );
 }
@@ -189,14 +174,6 @@ BarLabelItem.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * If provided, the function will be used to format the label of the bar.
-   * It can be set to 'value' to display the current value.
-   * @param {BarItem} item The item to format.
-   * @param {BarLabelContext} context data about the bar.
-   * @returns {string} The formatted label.
-   */
-  barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
   classes: PropTypes.object,
   color: PropTypes.string.isRequired,
   dataIndex: PropTypes.number.isRequired,
@@ -204,7 +181,18 @@ BarLabelItem.propTypes = {
    * The height of the bar.
    */
   height: PropTypes.number.isRequired,
+  /**
+   * The text of the label, formatted from the `barLabel` property of the series.
+   * Nothing is rendered if it is empty.
+   */
+  label: PropTypes.string,
   seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * The type of the series the bar belongs to.
+   * It is used to get the highlight state of the label.
+   * @default 'bar'
+   */
+  seriesType: PropTypes.oneOf(['bar', 'rangeBar']),
   /**
    * The props used for each component slot.
    * @default {}
@@ -215,10 +203,6 @@ BarLabelItem.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * The value of the data point.
-   */
-  value: PropTypes.number,
   /**
    * The width of the bar.
    */

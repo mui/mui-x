@@ -1,12 +1,8 @@
 'use client';
 import * as React from 'react';
-import clsx from 'clsx';
-import useSlotProps from '@mui/utils/useSlotProps';
-import { BarLabel, barClasses } from '@mui/x-charts/BarChart';
+import { BarLabelItem } from '@mui/x-charts/internals';
 import type { BarLabelSlotProps, BarLabelSlots } from '@mui/x-charts/BarChart';
-import { useItemHighlightState } from '@mui/x-charts/hooks';
-import type { RangeBarSeriesType } from '../../models';
-import type { ProcessedRangeBarData, ProcessedRangeBarSeriesData } from './types';
+import type { ProcessedRangeBarSeriesData } from './types';
 import { getRangeBarLabel } from './getRangeBarLabel';
 
 interface RangeBarLabelPlotProps {
@@ -25,7 +21,9 @@ interface RangeBarLabelPlotProps {
  */
 export function RangeBarLabelPlot(props: RangeBarLabelPlotProps) {
   const { processedSeries, className, skipAnimation, slots, slotProps } = props;
-  const { seriesId, data, layout, barLabel, barLabelPlacement } = processedSeries;
+  const { seriesId, data, barLabel } = processedSeries;
+  const layout = processedSeries.layout ?? 'vertical';
+  const barLabelPlacement = processedSeries.barLabelPlacement ?? 'center';
 
   if (!barLabel) {
     return null;
@@ -33,107 +31,51 @@ export function RangeBarLabelPlot(props: RangeBarLabelPlotProps) {
 
   return (
     <g className={className} data-series={seriesId}>
-      {data.map((item) => (
-        <RangeBarLabelItem
-          key={item.dataIndex}
-          item={item}
-          layout={layout ?? 'vertical'}
-          barLabel={barLabel}
-          barLabelPlacement={barLabelPlacement ?? 'center'}
-          skipAnimation={skipAnimation}
-          slots={slots}
-          slotProps={slotProps}
-        />
-      ))}
+      {data.map(({ dataIndex, color, value, x, y, width, height, hidden, startCoordinate }) => {
+        // Range bars grow from their center, so it is the label origin.
+        // `outside` labels get the half of the bar that contains the end of the range, to follow its edge.
+        const centerX = x + width / 2;
+        const centerY = y + height / 2;
+
+        let labelX = x;
+        let labelY = y;
+        let labelWidth = width;
+        let labelHeight = height;
+
+        if (barLabelPlacement === 'outside') {
+          if (layout === 'vertical') {
+            labelY = startCoordinate <= centerY ? centerY : y;
+            labelHeight = height / 2;
+          } else {
+            labelX = startCoordinate <= centerX ? centerX : x;
+            labelWidth = width / 2;
+          }
+        }
+
+        return (
+          <BarLabelItem
+            key={dataIndex}
+            seriesId={seriesId}
+            seriesType="rangeBar"
+            dataIndex={dataIndex}
+            color={color}
+            xOrigin={centerX}
+            yOrigin={centerY}
+            x={labelX}
+            y={labelY}
+            width={labelWidth}
+            height={labelHeight}
+            skipAnimation={skipAnimation}
+            layout={layout}
+            hidden={hidden}
+            slots={slots}
+            slotProps={slotProps}
+            // `barLabel` gets the size of the whole bar, even when the slot only gets half of it.
+            label={getRangeBarLabel({ barLabel, value, dataIndex, seriesId, height, width })}
+            barLabelPlacement={barLabelPlacement}
+          />
+        );
+      })}
     </g>
-  );
-}
-
-interface RangeBarLabelItemProps {
-  item: ProcessedRangeBarData;
-  layout: 'vertical' | 'horizontal';
-  barLabel: NonNullable<RangeBarSeriesType['barLabel']>;
-  barLabelPlacement: NonNullable<RangeBarSeriesType['barLabelPlacement']>;
-  skipAnimation: boolean;
-  slots?: BarLabelSlots;
-  slotProps?: BarLabelSlotProps;
-}
-
-function RangeBarLabelItem(props: RangeBarLabelItemProps) {
-  const { item, layout, barLabel, barLabelPlacement, skipAnimation, slots, slotProps } = props;
-  const { seriesId, dataIndex, color, value, x, y, width, height, hidden, startCoordinate } = item;
-
-  const highlightState = useItemHighlightState({ type: 'rangeBar', seriesId, dataIndex });
-  const isHighlighted = highlightState === 'highlighted';
-  const isFaded = highlightState === 'faded';
-
-  // Range bars grow from their center, so it is the label origin.
-  // `outside` labels get the half of the bar that contains the end of the range, to follow its edge.
-  const isVertical = layout === 'vertical';
-  const centerX = x + width / 2;
-  const centerY = y + height / 2;
-
-  let labelX = x;
-  let labelY = y;
-  let labelWidth = width;
-  let labelHeight = height;
-
-  if (barLabelPlacement === 'outside') {
-    if (isVertical) {
-      labelY = startCoordinate <= centerY ? centerY : y;
-      labelHeight = height / 2;
-    } else {
-      labelX = startCoordinate <= centerX ? centerX : x;
-      labelWidth = width / 2;
-    }
-  }
-
-  const ownerState = {
-    seriesId,
-    dataIndex,
-    color,
-    isFaded,
-    isHighlighted,
-    skipAnimation,
-    layout,
-  };
-
-  const Component = slots?.barLabel ?? BarLabel;
-
-  const { ownerState: barLabelOwnerState, ...barLabelProps } = useSlotProps({
-    elementType: Component,
-    externalSlotProps: slotProps?.barLabel,
-    additionalProps: {
-      xOrigin: centerX,
-      yOrigin: centerY,
-      x: labelX,
-      y: labelY,
-      width: labelWidth,
-      height: labelHeight,
-      placement: barLabelPlacement,
-      className: clsx(barClasses.label, !skipAnimation && barClasses.labelAnimate),
-      'data-highlighted': isHighlighted || undefined,
-      'data-faded': isFaded || undefined,
-    },
-    ownerState,
-  });
-
-  const formattedLabelText = getRangeBarLabel({
-    barLabel,
-    value,
-    dataIndex,
-    seriesId,
-    height,
-    width,
-  });
-
-  if (!formattedLabelText) {
-    return null;
-  }
-
-  return (
-    <Component {...barLabelProps} {...barLabelOwnerState} hidden={hidden}>
-      {formattedLabelText}
-    </Component>
   );
 }

@@ -4,6 +4,7 @@ import { BarLabelItem } from './BarLabelItem';
 import type { SeriesId } from '../../models/seriesType/common';
 import type { BarSeriesType, BarValueType } from '../../models/seriesType/bar';
 import type { BarLabelFunction } from './BarLabel.types';
+import { getBarLabel } from './getBarLabel';
 
 interface BarLabelPlotProps {
   processedSeries: ProcessedBarLabelSeriesData;
@@ -52,9 +53,9 @@ export interface ProcessedBarLabelData extends AnimationData {
  */
 function BarLabelPlot(props: BarLabelPlotProps) {
   const { processedSeries, className, skipAnimation, ...other } = props;
-  const { seriesId, data, layout, xOrigin, yOrigin } = processedSeries;
+  const { seriesId, data, layout, xOrigin, yOrigin, barLabel } = processedSeries;
 
-  if (!processedSeries.barLabel) {
+  if (!barLabel) {
     return null;
   }
 
@@ -65,7 +66,6 @@ function BarLabelPlot(props: BarLabelPlotProps) {
           key={dataIndex}
           seriesId={seriesId}
           dataIndex={dataIndex}
-          value={value}
           color={color}
           xOrigin={xOrigin}
           yOrigin={yOrigin}
@@ -77,7 +77,7 @@ function BarLabelPlot(props: BarLabelPlotProps) {
           layout={layout ?? 'vertical'}
           hidden={hidden}
           {...other}
-          barLabel={processedSeries.barLabel}
+          label={getBarLabel({ barLabel, value, dataIndex, seriesId, height, width })}
           barLabelPlacement={processedSeries.barLabelPlacement || 'center'}
         />
       ))}
