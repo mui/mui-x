@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getFormulaPickAction } from './formulaPick';
+import { getFormulaEditedSpan, getFormulaPickAction } from './formulaPick';
 import type { FormulaPendingPick, FormulaPickAction, FormulaPickMode } from './formulaPick';
 
 /**
@@ -382,6 +382,100 @@ describe('getFormulaPickAction', () => {
 
     it('plain `7|` click → commits', () => {
       expect(pick('7|', true)).toEqual(NONE);
+    });
+  });
+
+  describe('baseline', () => {
+    const isFieldName = (name: string) => name === 'price' || name === 'qty';
+
+    function pickFrom(
+      baseline: string,
+      marked: string,
+      a1Notation: boolean,
+      mode?: FormulaPickMode,
+      pending: FormulaPendingPick | null = null,
+    ) {
+      const { text, selection } = parseMarked(marked);
+      return getFormulaPickAction(text, selection, pending, {
+        a1Notation,
+        isFieldName,
+        mode,
+        baseline,
+      });
+    }
+
+    it.each(['=B2+C2|', '=B2+C|2', '=B2+|C2', '=B2|+C2'])(
+      'is not a pick on a reference of a formula that was just opened: `%s`',
+      (marked) => {
+        expect(pickFrom('=B2+C2', marked, true)).toEqual(NONE);
+      },
+    );
+
+    it('replaces a reference that was typed in this edit', () => {
+      expect(pickFrom('=B2+C2', '=B2+C2+C4|', true)).toEqual(replace(7, 9));
+      // The editor opened with the typed character.
+      expect(pickFrom('=', '=B2|', true)).toEqual(replace(1, 3));
+    });
+
+    it('replaces a reference that was changed in this edit', () => {
+      expect(pickFrom('=B2+C2', '=B2+C3|', true)).toEqual(replace(4, 6));
+      expect(pickFrom('=B2+C25', '=B2+C2|', true)).toEqual(replace(4, 6));
+    });
+
+    it('is not a pick on a reference outside the changed part', () => {
+      expect(pickFrom('=B2+C2', '=B|2+C2+C4', true)).toEqual(NONE);
+      expect(pickFrom('=B2+C2', '=B2+C2|+C4', true)).toEqual(NONE);
+    });
+
+    it('still inserts where a reference is expected', () => {
+      expect(pickFrom('=B2+C2', '=B2+|', true)).toEqual(insertAt(4));
+      expect(pickFrom('=B2+C2', '=B2+C2+|', true)).toEqual(insertAt(7));
+    });
+
+    it('applies to field names', () => {
+      expect(pickFrom('=price * qty', '=price * qty|', false)).toEqual(NONE);
+      expect(pickFrom('=price * qty', '=price * qty + price|', false)).toEqual(replace(15, 20));
+    });
+
+    it('applies to canonical reference forms', () => {
+      const ref = 'REF(COLUMN("price"), ROW(2))';
+      expect(pickFrom(`=${ref}`, `=${ref}|`, false)).toEqual(NONE);
+      expect(pickFrom('=', `=${ref}|`, false)).toEqual(replace(1, 1 + ref.length));
+    });
+
+    it('does not apply to Shift+click, Ctrl/Cmd+click in a call, a selection and the pending pick', () => {
+      expect(pickFrom('=SUM(B2)', '=SUM(B2|)', true, 'extend')).toEqual({
+        type: 'extend',
+        start: 5,
+        end: 7,
+      });
+      expect(pickFrom('=SUM(B2)', '=SUM(B2|)', true, 'append')).toEqual({
+        type: 'append',
+        start: 7,
+        end: 7,
+      });
+      expect(pickFrom('=B2+C2', '=B2+[C2]', true)).toEqual(replace(4, 6));
+      expect(pickFrom('=B2+C2', '=B2+C2|', true, 'replace', pendingOf('=B2+[C2]'))).toEqual(
+        replace(4, 6),
+      );
+    });
+
+    it('applies to a Ctrl/Cmd+click that has nothing to append to', () => {
+      expect(pickFrom('=B2+C2', '=B2+C2|', true, 'append')).toEqual(NONE);
+    });
+  });
+
+  describe('getFormulaEditedSpan', () => {
+    it.each([
+      ['=B2+C2', '=B2+C2', null],
+      ['=B2', '=B2+C4', { start: 3, end: 6 }],
+      ['=B2', '=A1+B2', { start: 1, end: 4 }],
+      ['=B2+C2', '=B2+C3', { start: 5, end: 6 }],
+      ['=B2+C25', '=B2+C2', { start: 6, end: 6 }],
+      ['=A1+A1', '=A1+A1+A1', { start: 6, end: 9 }],
+      ['', '=B2', { start: 0, end: 3 }],
+    ])('`%s` → `%s`', (baseline, text, expected) => {
+      expect(getFormulaEditedSpan(baseline, text)).toEqual(expected);
     });
   });
 

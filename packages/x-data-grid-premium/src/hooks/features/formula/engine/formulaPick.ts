@@ -85,6 +85,14 @@ export interface FormulaPickActionOptions {
    * @default 'replace'
    */
   mode?: FormulaPickMode;
+  /**
+   * The text the editor showed when the edit started. With it, a plain click
+   * only replaces the reference at the caret when that reference was written
+   * in this edit (it overlaps the part of the text that changed since, see
+   * `getFormulaEditedSpan`): a reference that was already in the formula is
+   * left alone. Without it, every reference at the caret can be replaced.
+   */
+  baseline?: string | null;
 }
 
 const NO_PICK: FormulaPickAction = { type: 'none' };
@@ -163,6 +171,59 @@ function getReferenceSpanAt(
     }
   }
   return null;
+}
+
+/**
+ * The part of `text` that differs from `baseline`, in EDITOR coordinates of
+ * `text`: what is left once the prefix and the suffix the two texts share are
+ * removed. `null` when the texts are equal. When text was only removed, the
+ * span is empty (`start === end`) and sits where the text was removed.
+ *
+ * The span is one block: with changes at two places, everything between them
+ * counts as changed.
+ */
+export function getFormulaEditedSpan(
+  baseline: string,
+  text: string,
+): { start: number; end: number } | null {
+  if (baseline === text) {
+    return null;
+  }
+  const shortest = Math.min(baseline.length, text.length);
+  let prefix = 0;
+  while (prefix < shortest && baseline[prefix] === text[prefix]) {
+    prefix += 1;
+  }
+  // The suffix must not overlap the prefix in either text (`=A1+A1` → `=A1+A1+A1`).
+  let suffix = 0;
+  while (
+    suffix < shortest - prefix &&
+    baseline[baseline.length - 1 - suffix] === text[text.length - 1 - suffix]
+  ) {
+    suffix += 1;
+  }
+  return { start: prefix, end: text.length - suffix };
+}
+
+/**
+ * `true` when the reference was written in this edit: it overlaps the part of
+ * the text that changed since `baseline`. When text was only removed, the
+ * reference counts when the removal is inside it or at one of its ends, which
+ * also covers text removed right next to it (`=B2+C2+5` → `=B2+C2`).
+ */
+function isReferenceFromThisEdit(
+  reference: { start: number; end: number },
+  baseline: string,
+  text: string,
+): boolean {
+  const edited = getFormulaEditedSpan(baseline, text);
+  if (edited === null) {
+    return false;
+  }
+  if (edited.start === edited.end) {
+    return reference.start <= edited.start && edited.start <= reference.end;
+  }
+  return edited.start < reference.end && edited.end > reference.start;
 }
 
 const RESERVED_NAMES = new Set(FORMULA_RESERVED_NAMES);
@@ -250,8 +311,11 @@ function isReferenceExpectedAt(text: string, caret: number, a1Notation: boolean)
  * 3. Some text is selected → the new reference replaces the selection, when a
  *    reference can be written at the start of the selection once the selected
  *    text is removed.
- * 4. The caret is on a complete reference (inside it or at one of its ends) →
- *    the new reference replaces it.
+ * 4. The caret is on a complete reference (inside it or at one of its ends)
+ *    that was written in this edit → the new reference replaces it. A
+ *    reference that was already in the text when the edit started (see the
+ *    `baseline` option) is left alone → not a pick. Without a baseline, every
+ *    reference counts as written in this edit.
  * 5. A reference can be written at the caret → it is inserted there.
  * 6. Anything else (the caret follows or precedes an operand that is not a
  *    reference, sits inside a string or on a partially typed name) → not a
@@ -259,8 +323,9 @@ function isReferenceExpectedAt(text: string, caret: number, a1Notation: boolean)
  *
  * The `append` and `extend` modes change what happens to the reference of
  * rules 2 and 4: `extend` turns it into a range, and `append` keeps it and
- * adds a reference after it when it is an argument of a function call. In
- * every other case they behave like a plain click.
+ * adds a reference after it when it is an argument of a function call. Both
+ * are explicit requests, so they also work on a reference that was already in
+ * the text. In every other case they behave like a plain click.
  */
 export function getFormulaPickAction(
   text: string,
@@ -276,6 +341,8 @@ export function getFormulaPickAction(
   const end = Math.max(0, Math.min(Math.max(selection.start, selection.end), text.length));
 
   let reference: { start: number; end: number } | null;
+  // The pending pick is always a reference of this edit.
+  let isFromThisEdit = true;
   if (pending !== null && isFormulaPendingPickValid(text, { start, end }, pending)) {
     reference = { start: pending.start, end: pending.end };
   } else {
@@ -293,6 +360,10 @@ export function getFormulaPickAction(
     }
 
     reference = getReferenceSpanAt(text, start, a1Notation, options.isFieldName);
+    isFromThisEdit =
+      reference === null ||
+      options.baseline == null ||
+      isReferenceFromThisEdit(reference, options.baseline, text);
   }
 
   if (reference !== null) {
@@ -302,7 +373,11 @@ export function getFormulaPickAction(
     if (options.mode === 'append' && isInsideCallArguments(text, reference.start, a1Notation)) {
       return { type: 'append', start: reference.end, end: reference.end };
     }
-    return { type: 'replace', start: reference.start, end: reference.end };
+    // A reference is never expected where the caret touches one, so there is
+    // nothing to insert either.
+    return isFromThisEdit
+      ? { type: 'replace', start: reference.start, end: reference.end }
+      : NO_PICK;
   }
 
   return isReferenceExpectedAt(text, start, a1Notation) ? { type: 'insert', start, end } : NO_PICK;
