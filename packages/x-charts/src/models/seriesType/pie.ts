@@ -157,6 +157,9 @@ export interface DefaultizedPieSeriesType extends DefaultizedProps<
   PieSeriesType,
   CommonDefaultizedProps
 > {
+  /**
+   * The data of the series, with the default values applied.
+   */
   data: DefaultizedPieValueType[];
 }
 

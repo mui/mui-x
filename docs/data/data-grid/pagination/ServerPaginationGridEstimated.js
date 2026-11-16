@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
-
 import { createFakeServer } from '@mui/x-data-grid-generator';
 
 const SERVER_OPTIONS = {

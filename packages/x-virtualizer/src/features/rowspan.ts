@@ -1,8 +1,8 @@
-import { Store } from '@base-ui/utils/store';
+import type { Store } from '@base-ui/utils/store';
 import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 import type { RowRange } from '../models';
 import type { RowSpanningState, RowSpanningCaches } from '../models/rowspan';
-import { Virtualization } from './virtualization';
+import type { Virtualization } from './virtualization';
 
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
 

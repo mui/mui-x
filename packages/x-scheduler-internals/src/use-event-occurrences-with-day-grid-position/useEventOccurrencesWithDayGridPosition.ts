@@ -2,11 +2,41 @@ import * as React from 'react';
 import type {
   SchedulerEventOccurrence,
   SchedulerEventOccurrencePlaceholder,
-  SchedulerProcessedDate,
+  SchedulerProcessedDay,
 } from '../models';
 import type { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
-import { useAdapterContext } from '../use-adapter-context';
 import { sortEventOccurrences } from '../sort-event-occurrences';
+import { differenceInDays } from '../internals/utils/plain-date-utils/timeZone';
+import { getDayNumber } from '../internals/utils/plain-date-utils/plainDate';
+import { getOccurrenceLastDayNumber, getOccurrenceModelEnd } from '../internals/utils/event-utils';
+
+/**
+ * The number of full days an occurrence spans in the display timezone.
+ */
+function getDayCount(occurrence: SchedulerEventOccurrence) {
+  return differenceInDays(
+    getOccurrenceModelEnd(occurrence),
+    occurrence.start.timestamp,
+    occurrence.unstable_internalInfos.displayTimezone,
+  );
+}
+
+/**
+ * The number of cells from the `fromIndex`-th day of `days` covering the dates up to `lastDayNumber`.
+ * A row can skip dates (hidden weekends, days a timezone skips), so it counts the cells rather than the dates.
+ * `fromIndex` must be the index of a day of `days`: that day always counts, so the span is at least 1.
+ */
+export function getDayGridCellSpan(
+  days: SchedulerProcessedDay[],
+  fromIndex: number,
+  lastDayNumber: number,
+) {
+  let index = fromIndex;
+  while (index + 1 < days.length && getDayNumber(days[index + 1].plainDate) <= lastDayNumber) {
+    index += 1;
+  }
+  return index - fromIndex + 1;
+}
 
 /**
  * Places event occurrences for a list of days, where if an event is rendered in a day, it fills the entire day cell (no notion of time).
@@ -15,10 +45,18 @@ export function useEventOccurrencesWithDayGridPosition(
   parameters: useEventOccurrencesWithDayGridPosition.Parameters,
 ): useEventOccurrencesWithDayGridPosition.ReturnValue {
   const { days, occurrencesMap, shouldAddPosition, maxEvents } = parameters;
-  const adapter = useAdapterContext();
 
   return React.useMemo(() => {
-    const dayListSize = days.length;
+    // The sort below compares the spans of the occurrences on every day they cover.
+    const dayCounts = new Map<string, number>();
+    const getCachedDayCount = (occurrence: SchedulerEventOccurrence) => {
+      let dayCount = dayCounts.get(occurrence.key);
+      if (dayCount === undefined) {
+        dayCount = getDayCount(occurrence);
+        dayCounts.set(occurrence.key, dayCount);
+      }
+      return dayCount;
+    };
     const usedIndexesByDay: Set<number>[] = [];
     const activeSegments: {
       [occurrenceKey: string]: {
@@ -58,15 +96,7 @@ export function useEventOccurrencesWithDayGridPosition(
               if (aIsActive !== bIsActive) {
                 return aIsActive - bIsActive;
               }
-              const aSpan = adapter.differenceInDays(
-                a.displayTimezone.end.value,
-                a.displayTimezone.start.value,
-              );
-              const bSpan = adapter.differenceInDays(
-                b.displayTimezone.end.value,
-                b.displayTimezone.start.value,
-              );
-              return bSpan - aSpan;
+              return getCachedDayCount(b) - getCachedDayCount(a);
             });
 
       // 3. Assign position to each occurrence
@@ -114,12 +144,11 @@ export function useEventOccurrencesWithDayGridPosition(
           if (smallestAvailableIndex <= effectiveMax) {
             // Visible: first appearance or resurfacing into a freed row. The renderer
             // derives the continuation arrow from the event range vs the day.
+            // Counts dates rather than full days, as a day whose midnight a DST transition
+            // skips starts at 01:00, after the time an occurrence can end on the next day.
             position = {
               index: smallestAvailableIndex,
-              daySpan: Math.min(
-                adapter.differenceInDays(occurrence.displayTimezone.end.value, day.value) + 1,
-                dayListSize - dayIndex,
-              ),
+              daySpan: getDayGridCellSpan(days, dayIndex, getOccurrenceLastDayNumber(occurrence)),
             };
             activeSegments[occurrence.key] = { position, startDayIndex: dayIndex, hidden: false };
           } else {
@@ -147,7 +176,7 @@ export function useEventOccurrencesWithDayGridPosition(
       days: processedDays,
       maxIndex: usedIndexesFlat.length === 0 ? 1 : Math.max(...usedIndexesFlat),
     };
-  }, [adapter, days, maxEvents, occurrencesMap, shouldAddPosition]);
+  }, [days, maxEvents, occurrencesMap, shouldAddPosition]);
 }
 
 export namespace useEventOccurrencesWithDayGridPosition {
@@ -155,7 +184,7 @@ export namespace useEventOccurrencesWithDayGridPosition {
     /**
      * The days to add the occurrences to.
      */
-    days: SchedulerProcessedDate[];
+    days: SchedulerProcessedDay[];
     /**
      * The occurrences Map as returned by `useEventOccurrences()`.
      * It should contain the occurrences for each requested day but can also contain occurrences for other days.
@@ -180,7 +209,7 @@ export namespace useEventOccurrencesWithDayGridPosition {
      */
     index: number;
     /**
-     * The number of days the event should span across.
+     * The number of cells the event should span across.
      */
     daySpan: number;
     /**
@@ -201,7 +230,7 @@ export namespace useEventOccurrencesWithDayGridPosition {
   export type EventRenderableOccurrenceWithPosition =
     EventOccurrenceWithPosition | EventOccurrencePlaceholderWithPosition;
 
-  export interface DayData extends SchedulerProcessedDate {
+  export interface DayData extends SchedulerProcessedDay {
     /**
      * Occurrences that have been augmented with position information.
      */

@@ -104,10 +104,26 @@ PickersRangeCalendarHeader.propTypes /* remove-proptypes */ = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
+  /**
+   * The first visible month.
+   */
   currentMonth: PropTypes.object.isRequired,
+  /**
+   * If `true`, the view cannot be switched.
+   * The switch button is hidden and a click on the label does nothing.
+   */
   disabled: PropTypes.bool,
+  /**
+   * If `true`, disable values after the current date.
+   */
   disableFuture: PropTypes.bool,
+  /**
+   * If `true`, disable values before the current date.
+   */
   disablePast: PropTypes.bool,
   /**
    * Format used to display the date.
@@ -119,7 +135,13 @@ PickersRangeCalendarHeader.propTypes /* remove-proptypes */ = {
    * It is used to establish an `aria-labelledby` relationship with the calendar `grid` element.
    */
   labelId: PropTypes.string,
+  /**
+   * Maximal selectable date.
+   */
   maxDate: PropTypes.object.isRequired,
+  /**
+   * Minimal selectable date.
+   */
   minDate: PropTypes.object.isRequired,
   /**
    * Month used for this header.
@@ -129,8 +151,19 @@ PickersRangeCalendarHeader.propTypes /* remove-proptypes */ = {
    * Index of the month used for this header.
    */
   monthIndex: PropTypes.number.isRequired,
+  /**
+   * Callback fired when the displayed month changes.
+   * @param {PickerValidDate} date The new displayed month.
+   */
   onMonthChange: PropTypes.func.isRequired,
+  /**
+   * Callback fired when the view changes.
+   * @param {DateView} view The new view.
+   */
   onViewChange: PropTypes.func,
+  /**
+   * If `true`, disable heavy animations.
+   */
   reduceAnimations: PropTypes.bool.isRequired,
   /**
    * The props used for each component slot.
@@ -150,8 +183,17 @@ PickersRangeCalendarHeader.propTypes /* remove-proptypes */ = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The timezone used to compare dates.
+   */
   timezone: PropTypes.string.isRequired,
+  /**
+   * The visible view.
+   */
   view: PropTypes.oneOf(['day', 'month', 'year']).isRequired,
+  /**
+   * Available views.
+   */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired).isRequired,
 } as any;
 

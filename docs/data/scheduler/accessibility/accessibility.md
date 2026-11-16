@@ -33,11 +33,11 @@ The Scheduler uses WAI-ARIA grid and tree roles to expose its structure to assis
 
 The day-time grid is exposed as a `role="grid"` with three logical rows:
 
-|     Row | `aria-rowindex` | Content                                                                                                                                                                                             |
-| ------: | :-------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|  Header | `1`             | Day column headers — `role="columnheader"` with an `aria-label` containing the full weekday name and date (for example, `"Monday 26"`)                                                              |
-| All-day | `2`             | All-day event cells — `role="gridcell"` with `aria-labelledby` pointing to the column header. The visible "All day" label is `aria-hidden="true"` and referenced via `aria-labelledby` on each cell |
-|   Timed | `3`             | Per-column time cells                                                                                                                                                                               |
+|     Row | `aria-rowindex` | Content                                                                                                                                                                                                                                  |
+| ------: | :-------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|  Header | `1`             | Day column headers — `role="columnheader"` with an `aria-label` containing the full weekday name and date (for example, `"Monday 26"`)                                                                                                   |
+| All-day | `2`             | All-day event cells — `role="gridcell"` with `aria-labelledby` pointing to the column header. The row label (the `dayGridLabel` locale text) is visually hidden, `aria-hidden="true"`, and referenced via `aria-labelledby` on each cell |
+|   Timed | `3`             | Per-column time cells                                                                                                                                                                                                                    |
 
 The grid also exposes `aria-colcount` for the number of visible days and `aria-colindex` on every cell.
 Today's column header carries `aria-current="date"`.
@@ -69,7 +69,7 @@ Weekday column headers carry a `role="columnheader"` with an `aria-label` contai
 
 ### Events
 
-Each event element has `role="button"` and an `aria-label` that announces its title, when it happens, its day, its resource, and whether it recurs, for example `"Running, 7:30 AM to 8:30 AM, Monday, May 26th, 2025, Resource: Sport, Recurring"`.
+Each event element has `role="button"` and an `aria-label` that announces its title, when it happens, its day, its resource, and whether it recurs, for example `"Running, 7:30 AM to 8:30 AM, Monday, May 26, 2025, Resource: Sport, Recurring"`.
 The parts come from [locale text](#localization-of-aria-labels) keys, composed by `eventAriaLabel`.
 On the Event Timeline, the announced resource is the one of the row the event is rendered in, and `getEventAriaLabel` can replace the name, for example to include details rendered through the `timelineEventContent` slot.
 
@@ -77,6 +77,9 @@ The previews rendered while creating, dragging or resizing an event, and the pla
 The resource color indicator inside an event is decorative (`aria-hidden="true"`).
 
 Recurring event icons are `aria-hidden="true"` as they are decorative.
+
+On the Event Timeline, dependency arrows are hidden from assistive technologies.
+Instead, each successor describes the dependencies it waits on, for example "Cannot start until Design finishes.", through `aria-describedby`.
 
 ### Agenda view
 
@@ -113,6 +116,8 @@ The Week, Day, and Month views implement a `role="grid"` with full arrow key nav
 **Week and Day views** expose three logical rows: the header row (day names), the all-day row, and the timed-events row. Arrow keys move across all three rows.
 
 **Month view** exposes the header row and one day-grid row per week. Arrow keys move between the header and each week row, and between individual weeks.
+
+In right-to-left layouts, <kbd class="key">Arrow Left</kbd> and <kbd class="key">Arrow Right</kbd> are swapped, so the focus follows the visual direction.
 
 |                               Keys | Description                                                                                                                                                                                                                |
 | ---------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -167,16 +172,17 @@ The dialog is labeled by its event title via `aria-labelledby`.
 
 When a month cell has more events than can be displayed, a **"X more"** button opens a popover listing all events for that day.
 
-- The popover header shows the full formatted date (for example, `"Monday, May 26"`).
+- The popover header shows the formatted date (for example, `"Mon, May 26"`).
 - Each event inside the popover has the same `aria-label` as in the grid (see [Events](#events)).
 - Event items have `role="button"` with `tabIndex="0"`, and can be activated with <kbd class="key">Enter</kbd>. On a mouse/trackpad, <kbd class="key">Space</kbd> opens the [event context menu](#event-context-menu) instead of activating the event directly.
 - Editing an event from the popover closes the popover with it. When focus would otherwise be lost, it returns to the **"X more"** button that opened it, or to the day cell if editing left the day with too few events for that button to be displayed. Focus that already moved outside the popover is preserved.
-- Deleting an event from the popover's context menu does not close the popover.
+- The popover's list follows the day's events, and stays open while the day still has more events than the cell can display. When the focused event, or the one whose context menu is open, is removed (for example, deleted from that menu), focus moves to the next event in the list, or to the previous one if it was the last. Once every event fits in the cell, the **"X more"** button is no longer displayed, so the popover closes and focus moves to the day cell.
 
 ## View switcher
 
 The view switcher button exposes `aria-haspopup="true"`, `aria-expanded`, and `aria-controls`.
 Inside the menu, each view uses `role="menuitemradio"` with `aria-checked`, so the current view is announced as checked.
+When the calendar is narrow, the side panel drawer lists the views with the same semantics.
 
 ## Preferences menu
 
@@ -193,6 +199,8 @@ Right-clicking an event, or pressing <kbd class="key">Space</kbd> while it is fo
 - The menu exposes `role="menu"` (via MUI's `Menu`) with a localized `aria-label` (default: `"Event actions"`).
 - **Edit** opens the event dialog directly, the same as clicking the event on a mouse/trackpad.
 - **Delete** opens a confirmation dialog before removing the event, unless `eventDeletion={{ confirmation: false }}` is set. For a recurring event it opens the recurring scope confirmation dialog instead, the same as the Delete action in the event dialog and the armed-event toolbar.
+- After **Delete** removes the event, focus moves as described for the [delete confirmation dialog](#editable-dialog). In the More Events popover, it moves to the next event instead (see [More Events popover](#more-events-popover)).
+- If the event is removed while the menu is open, for example by an update of the `events` prop, the menu closes and focus moves the same way as after **Delete**.
 - For a read-only event, **Edit** is replaced by **Show details** — it opens the same read-only view a click would, and **Delete** is omitted, matching every other surface's mutation gate (the dialog swaps to its read-only content, and the armed toolbar never appears for one).
 
 The menu is suppressed on a coarse pointer (touch): activating an event there arms its toolbar instead of opening the dialog directly — which already exposes Edit and Delete — so right-click and <kbd class="key">Space</kbd> fall through to that same behavior rather than opening a redundant menu. This check is on pointer type alone; it doesn't depend on which view or layout is rendering the event.
@@ -245,6 +253,7 @@ The following keys are specifically relevant to accessibility:
   nextTimeSpan: (timeSpan) => `Next ${timeSpan}`,
   openSidePanel: 'Open side panel',
   closeSidePanel: 'Close side panel',
+  viewSwitcherAriaLabel: 'Views',
 }
 ```
 
@@ -255,6 +264,10 @@ See the [Event Calendar localization page](/x/react-scheduler/event-calendar/loc
 ### No arrow key navigation in the mini calendar
 
 The mini calendar in the side panel exposes `role="grid"` and a roving `tabIndex` on the active date, but arrow key navigation between day cells is not implemented. Clicking a date or using the previous/next month buttons are the only supported interaction methods.
+
+### No keyboard interactions for Event Timeline dependencies
+
+Dependencies can't be created, selected, or edited with the keyboard.
 
 ## API
 

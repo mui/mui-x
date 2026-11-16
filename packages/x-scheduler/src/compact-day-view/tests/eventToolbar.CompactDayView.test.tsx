@@ -258,6 +258,15 @@ describe('CompactDayView - event toolbar', () => {
     expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
   });
 
+  it('should not render the docked toolbar Delete button when `eventDeletion` is `false`', () => {
+    renderEvent(vi.fn(), { eventDeletion: false });
+
+    fireEvent.click(getEvent());
+
+    expect(screen.getByRole('button', { name: 'Edit event' })).not.to.equal(null);
+    expect(screen.queryByRole('button', { name: 'Delete event' })).to.equal(null);
+  });
+
   // The docked toolbar's own Delete is one entry point; the drawer's editing form has its own
   // Delete event button too, reached by tapping Edit first.
   describe('Deletion (drawer form)', () => {
@@ -318,6 +327,15 @@ describe('CompactDayView - event toolbar', () => {
       expect(onEventsChange.mock.calls[0][0]).to.have.length(0);
       expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
       expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
+    });
+
+    it('should not render the form Delete event button when `eventDeletion` is `false`', () => {
+      renderEvent(vi.fn(), { eventDeletion: false });
+      openForm();
+
+      expect(screen.getByRole('textbox', { name: /Event title/i })).not.to.equal(null);
+      expect(screen.getByRole('button', { name: 'Save' })).not.to.equal(null);
+      expect(screen.queryByRole('button', { name: 'Delete event' })).to.equal(null);
     });
 
     it('should return focus to the form Delete event button after Cancel', async () => {

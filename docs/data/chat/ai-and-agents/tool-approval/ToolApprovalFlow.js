@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-
 import { demoUsers } from 'docs/data/chat/core/examples/shared/demoData';
 import { createChunkStream } from 'docs/data/chat/core/examples/shared/demoUtils';
 

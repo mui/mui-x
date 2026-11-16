@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import { useMessageContext } from '../../message/internals/MessageContext';
 import type { UseRovingFocusReturn } from '../../internals/useRovingFocus';
 
@@ -47,12 +48,12 @@ export function useMessageRovingItem(messageId: string): {
   actionable: boolean;
 } {
   const context = React.useContext(MessageRovingContext);
-  const focused = React.useSyncExternalStore(
+  const focused = useSyncExternalStore(
     context?.subscribe ?? noopSubscribe,
     () => (context == null ? false : context.getState().focusedId === messageId),
     () => (context == null ? false : context.getState().focusedId === messageId),
   );
-  const actionable = React.useSyncExternalStore(
+  const actionable = useSyncExternalStore(
     context?.subscribe ?? noopSubscribe,
     () => (context == null ? false : context.getState().actionableId === messageId),
     () => false,
@@ -77,7 +78,7 @@ export function useMessageRovingItem(messageId: string): {
 export function useMessageActionable(): boolean {
   const context = React.useContext(MessageRovingContext);
   const { messageId } = useMessageContext();
-  const actionable = React.useSyncExternalStore(
+  const actionable = useSyncExternalStore(
     context?.subscribe ?? noopSubscribe,
     () => (context == null ? true : context.getState().actionableId === messageId),
     () => context == null,

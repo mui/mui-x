@@ -21,8 +21,8 @@ const EventSkeletonRoot = styled(Skeleton, {
   const variantStyles: Record<EventSkeletonVariant, CSSObject> = {
     'time-column': {
       position: 'absolute',
-      left: 0,
-      right: 12,
+      insetInlineStart: 0,
+      insetInlineEnd: 12,
       top: 0,
       height: '100%',
       borderRadius: 0,

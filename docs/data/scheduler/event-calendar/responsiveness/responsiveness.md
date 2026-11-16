@@ -30,7 +30,7 @@ Current tokens:
 | `--EventCalendar-fontSize-eventTitle`      | Event title on every event card                         |
 | `--EventCalendar-fontSize-dayNumber`       | Day-number circle in the week/day views                 |
 | `--EventCalendar-fontSize-agendaDayNumber` | Day-number cell in the agenda view                      |
-| `--EventCalendar-fontSize-timeText`        | Time axis, time on event cards, "all day" label         |
+| `--EventCalendar-fontSize-timeText`        | Time axis, time on event cards                          |
 | `--EventCalendar-size-fixedCellWidth`      | Width of the fixed left column hosting time-axis labels |
 
 Current breakpoints:

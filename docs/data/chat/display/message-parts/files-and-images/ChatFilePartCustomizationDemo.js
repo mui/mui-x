@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import { ChatConversation, ChatMessageList } from '@mui/x-chat';
 import { ChatProvider } from '@mui/x-chat/headless';
-
 import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 
 const adapter = createEchoAdapter();

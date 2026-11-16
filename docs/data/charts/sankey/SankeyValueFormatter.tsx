@@ -1,7 +1,5 @@
-import {
-  SankeyChart,
-  type SankeyValueFormatterContext,
-} from '@mui/x-charts-pro/SankeyChart';
+import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';
+import type { SankeyValueFormatterContext } from '@mui/x-charts-pro/SankeyChart';
 
 const data = {
   nodes: [

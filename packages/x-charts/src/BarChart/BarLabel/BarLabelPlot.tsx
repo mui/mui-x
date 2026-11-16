@@ -8,22 +8,40 @@ import type { BarLabelFunction } from './BarLabel.types';
 interface BarLabelPlotProps {
   processedSeries: ProcessedBarLabelSeriesData;
   className: string;
+  /**
+   * If `true`, animations are skipped.
+   */
   skipAnimation?: boolean;
 }
 
 export interface ProcessedBarLabelSeriesData {
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: SeriesId;
   data: ProcessedBarLabelData[];
   barLabel?: 'value' | BarLabelFunction;
   barLabelPlacement?: BarSeriesType['barLabelPlacement'];
+  /**
+   * The orientation of the bar.
+   */
   layout?: 'vertical' | 'horizontal';
   xOrigin: number;
   yOrigin: number;
 }
 
 export interface ProcessedBarLabelData extends AnimationData {
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: SeriesId;
+  /**
+   * The index of the data point in the series.
+   */
   dataIndex: number;
+  /**
+   * The color of the element.
+   */
   color: string;
   value: BarValueType | null;
   hidden: boolean;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { adapter, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
+import { createDate, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { screen } from '@mui/internal-test-utils';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
@@ -35,7 +35,7 @@ describe('<EventItem />', () => {
       <EventCalendarProvider
         events={[startsBeforeEvent, endsAfterEvent, ...crowdingEvents]}
         resources={[]}
-        visibleDate={adapter.date('2025-05-06T00:00:00Z', 'default')}
+        visibleDate={createDate('2025-05-06T00:00:00Z')}
       >
         <EventDialogProvider>
           <MonthView />

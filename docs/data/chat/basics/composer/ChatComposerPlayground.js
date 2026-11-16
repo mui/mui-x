@@ -11,7 +11,6 @@ import {
   ChatComposerTextArea,
   ChatComposerToolbar,
 } from '@mui/x-chat';
-
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
 import {
   ScopedChat,

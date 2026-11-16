@@ -1,0 +1,12 @@
+<EventTimelinePremium
+  events={events}
+  onEventsChange={setEvents}
+  resources={resources}
+  features={features}
+  dependencies={dependencies}
+  onDependenciesChange={setDependencies}
+  defaultVisibleDate={new Date('2025-07-03T00:00:00')}
+  defaultPreset="dayAndHour"
+  // Working hours only, so every arrow fits the initial viewport.
+  presetConfig={{ dayAndHour: { startTime: 8, endTime: 18 } }}
+/>

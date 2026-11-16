@@ -1,9 +1,9 @@
-import * as React from 'react';
+import type * as React from 'react';
 import createDescribe from '@mui/internal-test-utils/createDescribe';
 import { afterAll } from 'vitest';
 import { testDayViewRangeValidation } from './testDayViewRangeValidation';
 import { testTextFieldRangeValidation } from './testTextFieldRangeValidation';
-import { DescribeRangeValidationInputOptions } from './describeRangeValidation.types';
+import type { DescribeRangeValidationInputOptions } from './describeRangeValidation.types';
 import { testTextFieldKeyboardRangeValidation } from './testTextFieldKeyboardRangeValidation';
 
 const TEST_SUITES = [

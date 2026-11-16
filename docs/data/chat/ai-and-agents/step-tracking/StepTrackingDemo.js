@@ -3,7 +3,6 @@ import * as React from 'react';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { ChatBox } from '@mui/x-chat';
-
 import { createChunkStream } from 'docs/data/chat/core/examples/shared/demoUtils';
 
 // --- Step delimiter renderer -------------------------------------------------

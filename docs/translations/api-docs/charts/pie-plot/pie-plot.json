@@ -17,5 +17,8 @@
     "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {},
-  "slotDescriptions": { "pieArc": "", "pieArcLabel": "" }
+  "slotDescriptions": {
+    "pieArc": "The component that renders the pie arcs.",
+    "pieArcLabel": "The component that renders the pie arc labels."
+  }
 }

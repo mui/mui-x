@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGrid, GridPaginationMeta, useGridApiRef } from '@mui/x-data-grid';
+import type { GridPaginationMeta } from '@mui/x-data-grid';
+import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
 import { createFakeServer } from '@mui/x-data-grid-generator';
 
 const SERVER_OPTIONS = {

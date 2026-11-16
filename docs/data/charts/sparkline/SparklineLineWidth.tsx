@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
-import { SparkLineChart, SparkLineChartProps } from '@mui/x-charts/SparkLineChart';
+import type { SparkLineChartProps } from '@mui/x-charts/SparkLineChart';
+import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Slider from '@mui/material/Slider';

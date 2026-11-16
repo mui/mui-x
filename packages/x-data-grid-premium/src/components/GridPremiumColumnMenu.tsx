@@ -12,6 +12,7 @@ import { isGroupingColumn } from '../hooks/features/rowGrouping';
 import { GridColumnMenuRowGroupItem } from './columnMenu/menuItems/GridColumnMenuRowGroupItem';
 import { GridColumnMenuRowUngroupItem } from './columnMenu/menuItems/GridColumnMenuRowUngroupItem';
 import { GridColumnMenuManagePanelItem } from './columnMenu/menuItems/GridColumnMenuManagePanelItem';
+import { GridColumnMenuComputedColumnItem } from './columnMenu/menuItems/GridColumnMenuComputedColumnItem';
 
 export function GridColumnMenuGroupingItem(props: GridColumnMenuItemProps) {
   const { colDef } = props;
@@ -25,6 +26,7 @@ export function GridColumnMenuGroupingItem(props: GridColumnMenuItemProps) {
 export const GRID_COLUMN_MENU_SLOTS_PREMIUM = {
   ...GRID_COLUMN_MENU_SLOTS,
   columnMenuAggregationItem: GridColumnMenuAggregationItem,
+  columnMenuComputedColumnItem: GridColumnMenuComputedColumnItem,
   columnMenuGroupingItem: GridColumnMenuGroupingItem,
   columnMenuManagePanelItem: GridColumnMenuManagePanelItem,
 };
@@ -32,6 +34,7 @@ export const GRID_COLUMN_MENU_SLOTS_PREMIUM = {
 export const GRID_COLUMN_MENU_SLOT_PROPS_PREMIUM = {
   ...GRID_COLUMN_MENU_SLOT_PROPS,
   columnMenuAggregationItem: { displayOrder: 23 },
+  columnMenuComputedColumnItem: { displayOrder: 24 },
   columnMenuGroupingItem: { displayOrder: 27 },
   columnMenuManagePanelItem: { displayOrder: 28 },
 };

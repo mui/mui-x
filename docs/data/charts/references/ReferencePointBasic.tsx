@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { LineChart, LineChartProps } from '@mui/x-charts/LineChart';
+import type { LineChartProps } from '@mui/x-charts/LineChart';
+import { LineChart } from '@mui/x-charts/LineChart';
 import { useXScale, useYScale } from '@mui/x-charts/hooks';
 import type { ScaleLinear, ScalePoint } from '@mui/x-charts-vendor/d3-scale';
 

@@ -1,5 +1,7 @@
 {
   "props": {
+    "disabled": { "type": { "name": "bool" } },
+    "id": { "type": { "name": "string" } },
     "onExport": {
       "type": { "name": "func" },
       "signature": {
@@ -14,7 +16,14 @@
         "description": "{ escapeFormulas?: bool, fileName?: string, includeFormattedValues?: bool, includeHeaders?: bool, includeHiddenSeries?: bool }"
       }
     },
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
+    "size": {
+      "type": {
+        "name": "enum",
+        "description": "'large'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'small'"
+      }
+    },
+    "tabIndex": { "type": { "name": "number" } }
   },
   "name": "ChartsToolbarExcelExportTrigger",
   "imports": [

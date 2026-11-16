@@ -1,12 +1,11 @@
 import * as React from 'react';
+import type { GridDensityOption, GridDensity } from '@mui/x-data-grid-premium';
 import {
   GridViewStreamIcon,
   useGridApiContext,
   useGridSelector,
-  GridDensityOption,
   gridDensitySelector,
   GridCheckIcon,
-  GridDensity,
   GridViewHeadlineIcon,
   GridTableRowsIcon,
   ToolbarButton,
@@ -17,7 +16,8 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Typography from '@mui/material/Typography';
-import { Drawer, DrawerHeader, DrawerProps } from './Drawer';
+import type { DrawerProps } from './Drawer';
+import { Drawer, DrawerHeader } from './Drawer';
 
 const DENSITY_ICONS = {
   compact: GridViewHeadlineIcon,

@@ -8,6 +8,13 @@
         "returned": "React.ReactNode"
       }
     },
+    "imageExportOptions": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ copyStyles?: bool, fileName?: string, nonce?: string, onBeforeExport?: func, onStylesheetError?: func, pixelRatio?: number, quality?: number, type: string }&gt;"
+      }
+    },
+    "printOptions": { "type": { "name": "object" } },
     "rangeButtons": {
       "type": {
         "name": "arrayOf",
@@ -32,6 +39,8 @@
     }
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiChartsToolbarPro",
   "filename": "/packages/x-charts-pro/src/ChartsToolbarPro/ChartsToolbarPro.tsx",
   "inheritance": null,

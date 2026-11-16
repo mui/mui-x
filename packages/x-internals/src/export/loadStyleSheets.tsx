@@ -30,13 +30,14 @@ export interface LoadStyleSheetsOptions {
  * @returns an array of promises that resolve to `false` when `onStylesheetError` cancels the export and to `true` otherwise, and reject when `onStylesheetError` throws or rejects
  * @param document Document to load stylesheets into
  * @param root Document or ShadowRoot to load stylesheets from
- * @param options Options to apply while copying the stylesheets
+ * @param options Options to apply while copying the stylesheets. A string is the `nonce`, as `@mui/x-*` 9.14.0 and earlier pass it.
  */
 export function loadStyleSheets(
   document: Document,
   root: Document | ShadowRoot,
-  options: LoadStyleSheetsOptions = {},
+  options: LoadStyleSheetsOptions | string = {},
 ) {
+  // TODO v10: remove the string form, which `@mui/x-*` 9.14.0 and earlier pass.
   const {
     nonce,
     onStylesheetError: handleStylesheetError = (element, reason) =>
@@ -45,7 +46,7 @@ export function loadStyleSheets(
           ? `MUI X: The Content Security Policy blocked the stylesheet "${element.getAttribute('href')}" in the export document. The export continues without it, so the result may be missing styles.\nSet the \`nonce\` export option to the nonce used by your Content Security Policy, or pass \`onStylesheetError\` to the export to handle this yourself.`
           : `MUI X: The stylesheet "${element.getAttribute('href')}", or a stylesheet it imports, failed to load in the export document. The export continues, so the result may be missing some styles.\nPass \`onStylesheetError\` to the export to handle this yourself.`,
       ),
-  } = options;
+  }: LoadStyleSheetsOptions = typeof options === 'string' ? { nonce: options } : options;
   const stylesheetLoadPromises: Promise<boolean>[] = [];
 
   /* Browsers fire `securitypolicyviolation` on the document, before the stylesheet's `error` event. */

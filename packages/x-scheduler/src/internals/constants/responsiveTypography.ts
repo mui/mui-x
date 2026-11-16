@@ -56,7 +56,7 @@ export const responsiveTypographyTokens: CSSObject = {
   '--EventCalendar-fontSize-agendaDayNumber-md': '1.2rem',
   '--EventCalendar-fontSize-agendaDayNumber-lg': '1.5rem',
 
-  // Time labels — time-axis ticks, event-card times, and the "all day" label.
+  // Time labels: time-axis ticks and event-card times.
   '--EventCalendar-fontSize-timeText-sm': '0.6rem',
   '--EventCalendar-fontSize-timeText-md': '0.7rem',
   '--EventCalendar-fontSize-timeText-lg': '0.75rem',
@@ -77,7 +77,7 @@ export const responsiveTypographyTokens: CSSObject = {
 };
 
 export const responsiveTokens: CSSObject = {
-  // Width of the fixed left column in week/day views (all-day label + time axis).
+  // Width of the fixed left column in week/day views (time axis).
   '--EventCalendar-size-fixedCellWidth': '68px',
   // Typography tokens
   ...responsiveTypographyTokens,

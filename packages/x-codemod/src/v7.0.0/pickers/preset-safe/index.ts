@@ -3,7 +3,7 @@ import transformRenameDefaultCalendarMonthToReferenceDate from '../rename-defaul
 import transformRenameDayPickerClasses from '../rename-day-picker-classes';
 import transformRenameSlotsTypes from '../rename-slots-types';
 
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   file.source = transformRenameComponentsToSlots(file, api, options);

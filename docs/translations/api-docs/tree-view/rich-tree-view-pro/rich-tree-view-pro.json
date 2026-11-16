@@ -116,6 +116,7 @@
     "itemHeight": {
       "description": "Sets the height in pixel of an item. Set to <code>null</code> to explicitly remove any item height restriction when items have different heights (not compatible with virtualization)."
     },
+    "items": { "description": "The items to render in the Tree View." },
     "itemsReordering": {
       "description": "If <code>true</code>, the reordering of items is enabled."
     },

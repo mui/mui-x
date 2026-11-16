@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
+import type { Dayjs } from 'dayjs';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import CheckIcon from '@mui/icons-material/Check';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';

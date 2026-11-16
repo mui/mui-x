@@ -1,10 +1,20 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "formatDate": { "description": "Formats the date displayed in the divider." },
+    "index": { "description": "The index of the row in <code>items</code>." },
+    "items": { "description": "The ids of the messages in the list, in order." },
+    "messageId": { "description": "The id of the message this row belongs to." },
     "shouldShowDivider": {
       "description": "Decides whether the divider renders above the message, replacing the built-in rule when provided. <code>date</code>/<code>previousDate</code> are the parsed <code>createdAt</code> values (<code>null</code> when missing or invalid); <code>previousMessage</code> is <code>null</code> for the first message in the list."
-    }
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {},
-  "slotDescriptions": { "divider": "", "label": "", "line": "" }
+  "slotDescriptions": {
+    "divider": "The component that renders the divider.",
+    "label": "The component that renders the label.",
+    "line": "The component that renders the line."
+  }
 }

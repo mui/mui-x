@@ -8,14 +8,23 @@ import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPrem
 import { wrapColumnWithFormula, unwrapColumnFromFormula } from './wrapColumnWithFormula';
 import { GRID_FORMULA_ROW_NUMBER_FIELD } from './gridFormulaPositionContext';
 import { GRID_FORMULA_ROW_NUMBER_COL_DEF } from './gridFormulaRowNumberColDef';
+import { useGridComputedColumnsPreProcessors } from './useGridComputedColumnsPreProcessors';
 
 export const useGridFormulaPreProcessors = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
-    'disableFormulas' | 'dataSource' | 'formulaA1Notation'
+    | 'disableFormulas'
+    | 'disableComputedColumns'
+    | 'dataSource'
+    | 'formulaA1Notation'
+    | 'formulaFunctions'
+    | 'computedColDef'
   >,
 ) => {
+  // First: the computed columns must exist before the processors below go through the columns.
+  useGridComputedColumnsPreProcessors(apiRef, props);
+
   const updateFormulaColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
       const formulasEnabled = !props.disableFormulas && !props.dataSource;

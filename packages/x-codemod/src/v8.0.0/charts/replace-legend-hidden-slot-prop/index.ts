@@ -1,5 +1,5 @@
-import { JSXAttribute, JSXExpressionContainer, ObjectExpression } from 'jscodeshift';
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JSXAttribute, JSXExpressionContainer, ObjectExpression } from 'jscodeshift';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 /**
  * @param {import('jscodeshift').FileInfo} file

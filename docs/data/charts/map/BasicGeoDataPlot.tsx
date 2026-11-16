@@ -6,7 +6,7 @@ import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium }
 import { GeoDataPlot, MapShapePlot } from '@mui/x-charts-premium/Map';
 import { ChartsTooltip } from '@mui/x-charts-premium/ChartsTooltip';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
+import type { ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
 import { ChartsLegend } from '@mui/x-charts-premium/ChartsLegend';
 import { countryData, EU_COUNTRIES } from '../dataset/countryData';
 

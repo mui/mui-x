@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-import { adapter } from 'test/utils/scheduler';
 import type { SchedulerDependency } from '../../models';
 import {
   addDependencyLag,
@@ -159,15 +158,13 @@ describe('dependency-utils', () => {
   });
 
   describe('addDependencyLag', () => {
-    const date = adapter.date('2025-07-03T09:00:00', 'UTC');
-    const expectShifted = (lag: Parameters<typeof addDependencyLag>[2], expected: string) => {
-      expect(adapter.getTime(addDependencyLag(adapter, date, lag))).to.equal(
-        adapter.getTime(adapter.date(expected, 'UTC')),
-      );
+    const timestamp = Date.UTC(2025, 6, 3, 9);
+    const expectShifted = (lag: Parameters<typeof addDependencyLag>[1], expected: string) => {
+      expect(addDependencyLag(timestamp, lag, 'UTC')).to.equal(Date.parse(`${expected}Z`));
     };
 
     it('should return the same date for no lag', () => {
-      expect(addDependencyLag(adapter, date, null)).to.equal(date);
+      expect(addDependencyLag(timestamp, null, 'UTC')).to.equal(timestamp);
     });
 
     it('should add minutes', () => {
@@ -184,6 +181,17 @@ describe('dependency-utils', () => {
 
     it('should add weeks', () => {
       expectShifted({ amount: 1, unit: 'week' }, '2025-07-10T09:00:00');
+    });
+
+    it('should return NaN for a lag in days or weeks past the range of Date', () => {
+      for (const timezone of ['UTC', 'America/New_York']) {
+        expect(
+          addDependencyLag(timestamp, { amount: 100_000_000, unit: 'day' }, timezone),
+        ).toBeNaN();
+        expect(
+          addDependencyLag(timestamp, { amount: 20_000_000, unit: 'week' }, timezone),
+        ).toBeNaN();
+      }
     });
   });
 });

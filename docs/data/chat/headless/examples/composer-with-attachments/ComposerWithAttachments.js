@@ -8,7 +8,6 @@ import {
   MessageList,
   useChatComposer,
 } from '@mui/x-chat/headless';
-
 import {
   createTextResponseChunks,
   createChunkStream,

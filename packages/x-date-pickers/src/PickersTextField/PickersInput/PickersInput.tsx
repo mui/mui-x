@@ -193,6 +193,9 @@ PickersInput.propTypes /* remove-proptypes */ = {
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   /**
    * If true, the whole element is editable.
@@ -239,15 +242,39 @@ PickersInput.propTypes /* remove-proptypes */ = {
    * Name attribute of the `input` element.
    */
   name: PropTypes.string,
+  /**
+   * @ignore
+   */
   onChange: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onClick: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onInput: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onKeyDown: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onMouseDown: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onPaste: PropTypes.func.isRequired,
   ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
+  /**
+   * If `true`, the component is read-only.
+   */
   readOnly: PropTypes.bool,
   renderSuffix: PropTypes.func,
+  /**
+   * @ignore
+   */
   sectionListRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({
@@ -282,6 +309,9 @@ PickersInput.propTypes /* remove-proptypes */ = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The value of the hidden `input` element.
+   */
   value: PropTypes.string.isRequired,
 } as any;
 

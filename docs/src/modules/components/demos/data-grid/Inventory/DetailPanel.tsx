@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import type { GridColDef } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import { styled } from '@mui/material/styles';
-import { Product } from './data/products';
+import type { Product } from './data/products';
 import { getColorValue } from './utils/colors';
 import { detailPanelDataGridStyles } from './styles';
 

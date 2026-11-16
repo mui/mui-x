@@ -287,6 +287,14 @@ For more detail, see https://mui.com/x/react-data-grid/row-updates/.`,
 };
 
 /**
+ * Wraps rows into `{ _action: 'replace', row }` updates, so they are stored as-is instead of merged.
+ * @param {GridRowModel[]} rows The rows to store.
+ * @returns {GridRowModelReplace[]} The replace updates.
+ */
+export const asReplaceUpdates = (rows: GridRowModel[]): GridRowModelReplace[] =>
+  rows.map((row) => ({ _action: 'replace', row }));
+
+/**
  * Merges a partial update into the existing row.
  * Prototype-preservation rules:
  *   1. If partialRow is a class instance (non-plain object), use its prototype — the
@@ -357,11 +365,13 @@ export const updateCacheWithNewRows = ({
   getRowId,
   updates,
   groupKeys,
+  replaceChildrenOf,
 }: {
   previousCache: GridRowsInternalCache;
   getRowId: DataGridProcessedProps['getRowId'];
   updates: Array<GridRowModelUpdate | GridRowModelReplace>;
   groupKeys?: string[];
+  replaceChildrenOf?: GridRowId;
 }): GridRowsInternalCache => {
   if (previousCache.updates.type === 'full') {
     throw new Error(
@@ -413,6 +423,18 @@ export const updateCacheWithNewRows = ({
     }
   });
 
+  let childrenOrder = previousCache.updates.childrenOrder;
+  if (replaceChildrenOf !== undefined) {
+    const ids: GridRowId[] = [];
+    uniqueUpdates.forEach((row, id) => {
+      // eslint-disable-next-line no-underscore-dangle
+      if (row._action !== 'delete') {
+        ids.push(id);
+      }
+    });
+    childrenOrder = { parentId: replaceChildrenOf, ids };
+  }
+
   const partialUpdates: GridRowsPartialUpdates = {
     type: 'partial',
     actions: {
@@ -422,6 +444,7 @@ export const updateCacheWithNewRows = ({
     },
     idToActionLookup: { ...previousCache.updates.idToActionLookup },
     groupKeys,
+    childrenOrder,
   };
   const dataRowIdToModelLookup = { ...previousCache.dataRowIdToModelLookup };
 

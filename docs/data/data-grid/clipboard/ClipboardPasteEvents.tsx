@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGridPremium, DataGridPremiumProps } from '@mui/x-data-grid-premium';
+import type { DataGridPremiumProps } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';

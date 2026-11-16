@@ -36,7 +36,13 @@ export interface ChartsWrapperProps extends React.HTMLAttributes<HTMLDivElement>
    * @default `false` if the `height` prop is set. And `true` otherwise.
    */
   extendVertically?: boolean;
+  /**
+   * The content of the component.
+   */
   children: React.ReactNode;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
 }
 
@@ -233,6 +239,9 @@ ChartsWrapper.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The content of the component.
+   */
   children: PropTypes.node,
   /**
    * If `true`, the chart wrapper set `height: 100%`.
@@ -257,6 +266,9 @@ ChartsWrapper.propTypes /* remove-proptypes */ = {
     horizontal: PropTypes.oneOf(['center', 'end', 'start']),
     vertical: PropTypes.oneOf(['bottom', 'middle', 'top']),
   }),
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Gesture } from '../../core';
-import { MatcherState } from '../Matcher.types';
+import type { MatcherState } from '../Matcher.types';
 import { toBeClonable } from './toBeClonable';
 import { toUpdateOptions } from './toUpdateOptions';
 import { toUpdateState } from './toUpdateState';

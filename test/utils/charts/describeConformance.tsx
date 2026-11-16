@@ -1,9 +1,7 @@
-import * as React from 'react';
+import type * as React from 'react';
 import { afterAll } from 'vitest';
+import type { ConformanceOptions, MuiRenderResult, RenderOptions } from '@mui/internal-test-utils';
 import {
-  ConformanceOptions,
-  MuiRenderResult,
-  RenderOptions,
   act,
   createDescribe,
   describeRef,

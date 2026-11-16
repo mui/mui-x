@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { TimeView } from '@mui/x-date-pickers/models';
+import type { TimeView } from '@mui/x-date-pickers/models';
 import { adapterToUse, getFieldInputRoot } from 'test/utils/pickers';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { DescribeValidationTestSuite } from './describeValidation.types';
+import type { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
   const { componentFamily, render, withDate, withTime } = getOptions();

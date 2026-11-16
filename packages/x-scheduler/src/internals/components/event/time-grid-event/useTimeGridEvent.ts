@@ -6,6 +6,10 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import {
+  useCalendarGridTimeColumnContext,
+  useElementPositionInCollection,
+} from '@mui/x-scheduler-internals/internals';
 import type { PaletteName } from '../../../utils/tokens';
 import type { TimeGridEventProps } from './TimeGridEvent.types';
 
@@ -29,8 +33,9 @@ export interface UseTimeGridEventReturnValue {
    * the event inside the time-grid column. Spread on the styled wrapper.
    */
   rootPositionProps: {
-    start: TimeGridEventProps['occurrence']['displayTimezone']['start'];
-    end: TimeGridEventProps['occurrence']['displayTimezone']['end'];
+    start: TimeGridEventProps['occurrence']['start'];
+    end: TimeGridEventProps['occurrence']['end'];
+    elementPosition: useElementPositionInCollection.ReturnValue;
     style: React.CSSProperties;
   };
 }
@@ -39,6 +44,7 @@ export function useTimeGridEvent(
   occurrence: TimeGridEventProps['occurrence'],
 ): UseTimeGridEventReturnValue {
   const store = useEventCalendarStoreContext();
+  const { axis: column } = useCalendarGridTimeColumnContext();
 
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
@@ -54,9 +60,15 @@ export function useTimeGridEvent(
     useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'end') && !isEditedInForm;
   const palette = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
 
-  const durationMs =
-    occurrence.displayTimezone.end.timestamp - occurrence.displayTimezone.start.timestamp;
-  const durationMinutes = durationMs / 60000;
+  // Measured on the rendered part, clipped at midnight and by the visible hours.
+  const elementPosition = useElementPositionInCollection({
+    start: occurrence.start,
+    end: occurrence.end,
+    collection: column,
+  });
+  const durationMinutes = Math.round(
+    elementPosition.duration * (column.dayEndMinute - column.dayStartMinute),
+  );
   const isUnderHour = durationMinutes < 60;
   // Inclusive on purpose: an exactly-15-minute event gets the tightest (zero-padding) tier. See the
   // `duration thresholds` boundary tests in `DayView.test.tsx`.
@@ -74,16 +86,18 @@ export function useTimeGridEvent(
 
   const rootPositionProps = React.useMemo(
     () => ({
-      start: occurrence.displayTimezone.start,
-      end: occurrence.displayTimezone.end,
+      start: occurrence.start,
+      end: occurrence.end,
+      elementPosition,
       style: {
         '--first-index': occurrence.position.firstIndex,
         '--last-index': occurrence.position.lastIndex,
       } as React.CSSProperties,
     }),
     [
-      occurrence.displayTimezone.start,
-      occurrence.displayTimezone.end,
+      occurrence.start,
+      occurrence.end,
+      elementPosition,
       occurrence.position.firstIndex,
       occurrence.position.lastIndex,
     ],

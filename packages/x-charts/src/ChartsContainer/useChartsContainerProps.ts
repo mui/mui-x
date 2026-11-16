@@ -13,6 +13,9 @@ export type UseChartsContainerPropsReturnValue<
 > = {
   chartsDataProviderProps: ChartsDataProviderProps<SeriesType, TSignatures>;
   chartsSurfaceProps: ChartsSurfaceProps;
+  /**
+   * The content of the component.
+   */
   children: React.ReactNode;
 };
 

@@ -18,6 +18,7 @@ import { useMaterialCSSVariables } from '../material/variables';
 import type { GridConfiguration } from '../models/configuration/gridConfiguration';
 import type { GridApiCommunity, GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
 import { useGridApiInitialization } from '../hooks/core/useGridApiInitialization';
+import { pickDataAttributes } from '../utils/utils';
 
 export type { GridSlotsComponent as GridSlots } from '../models';
 
@@ -55,6 +56,7 @@ const DataGridRaw = function DataGrid<R extends GridValidRowModel>(
         className={props.className}
         style={props.style}
         sx={props.sx}
+        {...pickDataAttributes(props)}
         {...props.slotProps?.root}
         ref={ref}
       />
@@ -221,6 +223,10 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
    * Inherits the `columnHeaderHeight` value if not set.
    */
   columnGroupHeaderHeight: PropTypes.number,
+  /**
+   * The column groups of the header.
+   * @see See {@link https://mui.com/x/react-data-grid/column-groups/ column grouping docs} for more details.
+   */
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
    * Sets the height in pixel of the column headers in the Data Grid.
@@ -347,6 +353,7 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    imeFastEdit: PropTypes.bool,
     virtualizerLayoutMode: PropTypes.oneOf(['controlled', 'uncontrolled']),
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
@@ -659,14 +666,16 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
    */
   onFilterModelChange: PropTypes.func,
   /**
-   * Callback fired when the menu is closed.
+   * Callback fired when a grid menu is closed.
+   * This includes the column menu, the actions cell menu, and the toolbar menus.
    * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onMenuClose: PropTypes.func,
   /**
-   * Callback fired when the menu is opened.
+   * Callback fired when a grid menu is opened.
+   * This includes the column menu, the actions cell menu, and the toolbar menus.
    * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -780,6 +789,10 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
       }),
     ]).isRequired,
   ),
+  /**
+   * Pagination is always enabled in the Data Grid.
+   * Use the Data Grid Pro to disable it.
+   */
   pagination: PropTypes.oneOf([true]),
   /**
    * The extra information about the pagination state of the Data Grid.

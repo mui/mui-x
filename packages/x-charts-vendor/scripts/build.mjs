@@ -8,11 +8,13 @@
  * get the library in our `node_modules` and appropriately build it.
  */
 import fs from 'fs/promises';
+import { createRequire } from 'module';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { rimraf } from 'rimraf';
 import { execa } from 'execa';
+import { getVendorEntry } from './getVendorEntry.cjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,11 +40,11 @@ export * from "${pkg.name}";
 const getEsmDefaultExport = (pkg) => `export { default } from "${pkg.name}";
 `;
 
-const getCjsIndex = (pkg, hasSrc) => `// \`x-charts-vendor/${pkg.name}\` (CommonJS)
+const getCjsIndex = (pkg) => `// \`x-charts-vendor/${pkg.name}\` (CommonJS)
 // See upstream license: ${pkg.repository.url.replace(/\.git$/, '')}/blob/main/LICENSE
 //
 // Our CommonJS package relies on transpiled vendor files in \`lib-vendor/${pkg.name}\`
-module.exports = require("./lib-vendor/${pkg.name}/${hasSrc ? 'src/' : ''}index.js");
+module.exports = require("./lib-vendor/${getVendorEntry(pkg.name).output}");
 `;
 
 const getTypeDefinitionFile = (pkg) => `// \`x-charts-vendor/${pkg.name}\` (TypeScript)
@@ -141,23 +143,12 @@ const main = async () => {
     const pkg = await fs.readFile(pkgPath).then((buf) => JSON.parse(buf.toString()));
     const libVendorPath = path.join(VendorBasePath, pkgName);
 
-    // Check if the vendor package has a src directory
-    let hasSrc = false;
-    await fs
-      .readdir(path.join(libVendorPath, 'src'))
-      .then(() => {
-        hasSrc = true;
-      })
-      .catch(() => {
-        hasSrc = false;
-      });
-
     // Generate ESM index
     const esmContent =
       getEsmIndex(pkg) + (DEFAULT_EXPORT_PKGS.has(pkgName) ? getEsmDefaultExport(pkg) : '');
 
     // Generate CJS index
-    const cjsContent = getCjsIndex(pkg, hasSrc);
+    const cjsContent = getCjsIndex(pkg);
 
     // Generate type definitions
     const typeContent = getTypeDefinitionFile(pkg);
@@ -206,6 +197,16 @@ const main = async () => {
   // Copy README.md to build directory
   log('Copying README.md to build directory.');
   await fs.copyFile(path.resolve(__dirname, '../README.md'), path.join(BUILD_DIR, 'README.md'));
+
+  // Load each CommonJS entry, so that a broken vendor build fails here instead of in user code.
+  log('Checking CommonJS entries.');
+  const require = createRequire(import.meta.url);
+  for (const pkgName of vendorPkgNames) {
+    const entryPath = path.join(BUILD_DIR, `${pkgName}.js`);
+    if (Object.keys(require(entryPath)).length === 0) {
+      throw new Error(`The CommonJS entry ${entryPath} has no exports.`);
+    }
+  }
 };
 
 main()

@@ -14,7 +14,6 @@ import {
   ChatConversationSubtitle,
   ChatConversationTitle,
 } from '@mui/x-chat';
-
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
 import { ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
 import {

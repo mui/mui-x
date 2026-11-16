@@ -1,8 +1,5 @@
-import {
-  LineChart,
-  type AnimatedLineProps,
-  type MarkElementProps,
-} from '@mui/x-charts/LineChart';
+import { LineChart } from '@mui/x-charts/LineChart';
+import type { AnimatedLineProps, MarkElementProps } from '@mui/x-charts/LineChart';
 import * as React from 'react';
 import { motion } from 'motion/react';
 import Stack from '@mui/material/Stack';

@@ -30,6 +30,9 @@ export interface ChartsItemTooltipContentProps {
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<ChartsTooltipClasses>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
 }
 
@@ -249,6 +252,9 @@ ChartsItemTooltipContent.propTypes /* remove-proptypes */ = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

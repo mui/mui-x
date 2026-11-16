@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGridPremium, GridColDef, GridRowsProp } from '@mui/x-data-grid-premium';
+import type { GridColDef, GridRowsProp } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { formulaFeature } from '@mui/x-data-grid-premium/formula';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {

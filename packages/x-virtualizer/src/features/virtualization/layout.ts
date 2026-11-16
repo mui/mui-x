@@ -3,10 +3,12 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { platform } from '@base-ui/utils/platform';
-import { Store, createSelectorMemoized } from '@base-ui/utils/store';
+import type { Store } from '@base-ui/utils/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import type { ColumnWithWidth } from '../../models';
 import { Dimensions } from '../../features/dimensions';
-import { Virtualization, type VirtualizationLayoutParams } from './virtualization';
+import { Virtualization } from './virtualization';
+import type { VirtualizationLayoutParams } from './virtualization';
 import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';
 import useRefCallback from '../../utils/useRefCallback';
 
@@ -327,8 +329,10 @@ export class LayoutList extends Layout<ListElements> {
 function padTopFor(offsetTop: number, anchorTop: number) {
   // Clamped: row positions can change without a context update (e.g. a row-height
   // change), and a negative padding would be dropped while the counter-translation kept
-  // applying, displacing the rows. At zero the box is unanchored until the next update.
-  return Math.max(0, offsetTop - anchorTop);
+  // applying, displacing the rows. At least 1, so the rows' layer has unpainted area at the top
+  // of the scroll as it does elsewhere: one painted edge to edge can count as opaque, which
+  // would hide a `useScrollUnderlay` underlay and keep the browser from drawing it.
+  return Math.max(1, offsetTop - anchorTop);
 }
 
 /**

@@ -518,6 +518,102 @@ describe('ChatBox', () => {
       );
       expect(screen.queryByTestId('custom-attach')).toBe(null);
     });
+
+    describe('attachment config', () => {
+      function selectTextFile() {
+        const input = screen.getByLabelText('Upload file');
+        fireEvent.change(input, {
+          target: { files: [new File(['x'], 'a.txt', { type: 'text/plain' })] },
+        });
+        return input;
+      }
+
+      it('applies features.attachments to the composer', () => {
+        const onAttachmentReject = vi.fn();
+        render(
+          <ChatBox
+            adapter={createAdapter()}
+            features={{
+              attachments: { acceptedMimeTypes: ['application/pdf'], onAttachmentReject },
+            }}
+          />,
+        );
+        expect(selectTextFile()).to.have.attribute('accept', 'application/pdf');
+        expect(onAttachmentReject).toHaveBeenCalledWith([
+          expect.objectContaining({ reason: 'mime-type' }),
+        ]);
+      });
+
+      it('prefers features.attachments over the MuiChatComposer theme default', () => {
+        const onAttachmentReject = vi.fn();
+        const theme = createTheme({
+          components: {
+            MuiChatComposer: {
+              defaultProps: { features: { attachments: { acceptedMimeTypes: ['image/png'] } } },
+            },
+          },
+        });
+        render(
+          <ThemeProvider theme={theme}>
+            <ChatBox
+              adapter={createAdapter()}
+              features={{
+                attachments: { acceptedMimeTypes: ['application/pdf'], onAttachmentReject },
+              }}
+            />
+          </ThemeProvider>,
+        );
+        expect(selectTextFile()).to.have.attribute('accept', 'application/pdf');
+        expect(onAttachmentReject).toHaveBeenCalledWith([
+          expect.objectContaining({ reason: 'mime-type' }),
+        ]);
+      });
+
+      it('keeps the MuiChatComposer theme default without an attachment config', () => {
+        const onAttachmentReject = vi.fn();
+        const theme = createTheme({
+          components: {
+            MuiChatComposer: {
+              defaultProps: {
+                features: {
+                  attachments: { acceptedMimeTypes: ['application/pdf'], onAttachmentReject },
+                },
+              },
+            },
+          },
+        });
+        render(
+          <ThemeProvider theme={theme}>
+            <ChatBox adapter={createAdapter()} features={{ helperText: false }} />
+          </ThemeProvider>,
+        );
+        expect(selectTextFile()).to.have.attribute('accept', 'application/pdf');
+        expect(onAttachmentReject).toHaveBeenCalledWith([
+          expect.objectContaining({ reason: 'mime-type' }),
+        ]);
+      });
+
+      it('prefers slotProps.composerRoot.features over features.attachments', () => {
+        const onAttachmentReject = vi.fn();
+        render(
+          <ChatBox
+            adapter={createAdapter()}
+            features={{ attachments: { acceptedMimeTypes: ['image/png'] } }}
+            slotProps={{
+              composerRoot: {
+                features: {
+                  attachments: { acceptedMimeTypes: ['application/pdf'], onAttachmentReject },
+                },
+              },
+            }}
+          />,
+        );
+        expect(selectTextFile()).to.have.attribute('accept', 'application/pdf');
+        expect(onAttachmentReject).toHaveBeenCalledWith([
+          expect.objectContaining({ reason: 'mime-type' }),
+        ]);
+      });
+    });
   });
 
   describe('flat slots (context distribution)', () => {

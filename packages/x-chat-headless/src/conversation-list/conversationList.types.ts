@@ -10,9 +10,21 @@ export interface ConversationListRootOwnerState {
 }
 
 export interface ConversationListItemOwnerState {
+  /**
+   * The conversation the item renders.
+   */
   conversation: ChatConversation;
+  /**
+   * If `true`, the conversation is selected.
+   */
   selected: boolean;
+  /**
+   * If `true`, the conversation has unread messages.
+   */
   unread: boolean;
+  /**
+   * If `true`, the item has keyboard focus.
+   */
   focused: boolean;
   variant?: ConversationListVariant;
 }

@@ -13,7 +13,7 @@ import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-ca
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import { getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
+import { getOccurrenceInternalInfos } from '@mui/x-scheduler-internals/internals';
 import type { DayGridEventProps } from './DayGridEvent.types';
 import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
 import { EventDragPreview } from '../../../components/event-drag-preview';
@@ -23,13 +23,7 @@ import type { PaletteName } from '../../../utils/tokens';
 import { getPaletteVariants } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
-import {
-  ARROW_DEPTH,
-  LEFT_ARROW_CLIP,
-  RIGHT_ARROW_CLIP,
-  BOTH_ARROWS_CLIP,
-  getArrowFocusVisibleStyles,
-} from '../arrowClips';
+import { getArrowEdgeStyles, getArrowFocusVisibleStyles } from '../arrowClips';
 
 const DayGridEventBaseStyles = (theme: any) => ({
   containerType: 'inline-size',
@@ -77,21 +71,7 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
       [`& .${eventCalendarClasses.dayGridEventRecurringIcon}`]: {
         color: 'var(--event-on-surface-bold)',
       },
-      '&[data-starting-before-edge]': {
-        borderTopLeftRadius: 0,
-        borderBottomLeftRadius: 0,
-        clipPath: LEFT_ARROW_CLIP,
-        paddingLeft: ARROW_DEPTH + 8,
-      },
-      '&[data-ending-after-edge]': {
-        borderTopRightRadius: 0,
-        borderBottomRightRadius: 0,
-        clipPath: RIGHT_ARROW_CLIP,
-        paddingRight: ARROW_DEPTH + 8,
-      },
-      '&[data-starting-before-edge][data-ending-after-edge]': {
-        clipPath: BOTH_ARROWS_CLIP,
-      },
+      ...getArrowEdgeStyles(theme, 8),
       ...getArrowFocusVisibleStyles((theme.shape.borderRadius as number) * 0.75),
     },
     '&[data-variant="invisible"]': {
@@ -210,10 +190,10 @@ const DayGridEventResizeHandler = styled(CalendarGrid.DayEventResizeHandler, {
     opacity: 1,
   },
   '&[data-start]': {
-    left: 0,
+    insetInlineStart: 0,
   },
   '&[data-end]': {
-    right: 0,
+    insetInlineEnd: 0,
   },
 });
 
@@ -287,7 +267,7 @@ const isResizableSelector = (
 
   // In month view, only multi-day and all-day events can be resized
   if (view === 'month') {
-    return isOccurrenceAllDayOrMultipleDay(occurrence, state.adapter);
+    return isOccurrenceAllDayOrMultipleDay(occurrence);
   }
 
   return true;
@@ -356,8 +336,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
                 style={{ '--number-of-lines': 1 } as React.CSSProperties}
               >
                 <DayGridEventTime className={classes.dayGridEventTime}>
-                  <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
-                  <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
+                  <span>{formatTime(occurrence.start)}</span>
+                  <span> - {formatTime(occurrence.end)}</span>
                 </DayGridEventTime>
                 <DayGridEventTitle className={classes.dayGridEventTitle} as="span">
                   {occurrence.title}
@@ -384,16 +364,16 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   }, [
     variant,
     occurrence.title,
-    occurrence.displayTimezone.start.value,
-    occurrence.displayTimezone.end.value,
+    occurrence.start,
+    occurrence.end,
     isRecurring,
     formatTime,
     classes,
   ]);
 
   const sharedProps = {
-    start: occurrence.displayTimezone.start,
-    end: occurrence.displayTimezone.end,
+    start: occurrence.start,
+    end: occurrence.end,
     ref: forwardedRef,
     'data-variant': variant,
     'data-palette': color,
@@ -422,7 +402,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     <DayGridEventRoot
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
-      dataTimezone={getOccurrenceDataTimezone(occurrence)}
+      internalInfos={getOccurrenceInternalInfos(occurrence)}
       isDraggable={isDraggable}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-hidden={variant === 'invisible'}

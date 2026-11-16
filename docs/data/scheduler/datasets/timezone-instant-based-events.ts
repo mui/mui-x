@@ -1,7 +1,7 @@
 // Timezone Events Dataset Instant-Based
 // Non-realistic set focused on edge cases of timezone handling.
 
-import { SchedulerResource } from '@mui/x-scheduler/models';
+import type { SchedulerResource } from '@mui/x-scheduler/models';
 
 export const resources: SchedulerResource[] = [
   { id: 'ny', title: 'New York', eventColor: 'purple' },

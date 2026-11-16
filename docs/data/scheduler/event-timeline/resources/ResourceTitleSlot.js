@@ -1,9 +1,7 @@
 import * as React from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import Link from '@mui/material/Link';
-
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-
 import { defaultVisibleDate } from '../../datasets/company-roadmap';
 
 const resourceDetails = {

@@ -1,5 +1,5 @@
 import type { JSXIdentifier, Identifier } from 'jscodeshift';
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 const componentNames = ['DataGrid', 'DataGridPro', 'DataGridPremium'];
 const attrName = 'rowSelectionModel';

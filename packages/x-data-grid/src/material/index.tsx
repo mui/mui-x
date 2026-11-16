@@ -602,6 +602,8 @@ const BasePopper = forwardRef<any, P['basePopper']>(function BasePopper(props, r
     target,
     transition,
     placement,
+    // Destructured so MUI Popper's default `role="tooltip"` is not applied unless explicitly requested
+    role,
     material,
     ...other
   } = props;
@@ -673,6 +675,7 @@ const BasePopper = forwardRef<any, P['basePopper']>(function BasePopper(props, r
       transition={transition}
       placement={placement}
       modifiers={modifiers}
+      role={role}
       {...other}
       {...material}
       ref={ref}

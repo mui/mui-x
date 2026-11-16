@@ -1,10 +1,9 @@
 import * as React from 'react';
+import type { GridDataSource, GridGetRowsResponse } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
-  GridDataSource,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
-  GridGetRowsResponse,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';

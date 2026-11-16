@@ -6,11 +6,15 @@ import type {
   SchedulerOccurrencePlaceholderCreation,
 } from '../../models';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
-import { schedulerEventSelectors } from '../../scheduler-selectors';
+import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 
 interface GetCreationPlaceholderParams {
   event: React.MouseEvent<HTMLDivElement>;
   creationConfig: SchedulerEventCreationConfig;
+  /**
+   * The display timezone, in which the dates of the placeholder are read.
+   */
+  timezone: string;
 }
 
 export type CreationPlaceholderFields = Omit<SchedulerOccurrencePlaceholderCreation, 'type'>;
@@ -34,7 +38,11 @@ export function useEventCreation(
     store.setOccurrencePlaceholder(
       {
         type: 'creation',
-        ...getCreationPlaceholder({ event, creationConfig }),
+        ...getCreationPlaceholder({
+          event,
+          creationConfig,
+          timezone: schedulerOtherSelectors.displayTimezone(store.state),
+        }),
       },
       event.nativeEvent,
     );

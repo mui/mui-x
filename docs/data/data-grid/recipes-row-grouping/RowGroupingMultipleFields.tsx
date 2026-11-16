@@ -1,11 +1,12 @@
 import Box from '@mui/material/Box';
+import type { GridColDef } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
-  GridColDef,
   useKeepGroupedColumnsHidden,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
-import Chip, { ChipProps } from '@mui/material/Chip';
+import type { ChipProps } from '@mui/material/Chip';
+import Chip from '@mui/material/Chip';
 
 const SEPARATOR = '___MULTI_COL___';
 

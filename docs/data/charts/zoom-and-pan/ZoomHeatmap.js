@@ -1,7 +1,6 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
-
 import { useTheme } from '@mui/system';
 import { ChartsTooltipContainer, useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 import data from '../dataset/muiXCommits2024.json';

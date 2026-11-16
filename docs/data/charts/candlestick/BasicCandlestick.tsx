@@ -1,5 +1,5 @@
 import { CandlestickChart as CandlestickChart } from '@mui/x-charts-premium/CandlestickChart';
-import { OHLCValueType } from '@mui/x-charts-premium/models';
+import type { OHLCValueType } from '@mui/x-charts-premium/models';
 import sp500 from '../dataset/sp500-intraday.json';
 
 const xData = sp500.map((entry) => new Date(Date.parse(entry.date)));

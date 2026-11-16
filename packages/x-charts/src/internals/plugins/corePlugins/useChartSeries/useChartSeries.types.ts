@@ -36,6 +36,10 @@ export interface UseChartSeriesParameters<SeriesType extends ChartSeriesType = C
    * @default rainbowSurgePalette
    */
   colors?: ChartsColorPalette;
+  /**
+   * The color mode passed to `colors` when it is a function.
+   * Defaults to the mode of the Material UI theme.
+   */
   theme?: 'light' | 'dark';
 }
 
