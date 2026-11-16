@@ -10,7 +10,7 @@ D3 has released most of its libraries as ESM-only. This means that consumers in 
 
 To help provide an easy path to folks still using CommonJS in their Node.js applications that consume @mui/x-charts, we now provide this package to vendor in various d3-related packages.
 
-Node.js 20.19+ and 22.12+ can `require()` ES modules, but Jest only can on Node.js 24.9+ with `--experimental-vm-modules`, so CommonJS users still need this package.
+Node.js 20.19+ and 22.12+ can `require()` ESM, but Jest only can on Node.js 24.9+ with `--experimental-vm-modules`, so CommonJS users still need this package.
 
 ## Main difference with victory-vendor
 
