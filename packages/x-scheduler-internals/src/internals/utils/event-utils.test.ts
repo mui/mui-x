@@ -23,6 +23,7 @@ import {
 import { getDayListFromPlainDates } from '../../get-day-list';
 import { BaseTemporal } from './base-temporal';
 import { getDayNumber } from './plain-date-utils/plainDate';
+import { toEpochMs } from './plain-date-utils/timeZone';
 import { createEventRangeIndex } from './event-range-index';
 
 describe('event-utils', () => {
@@ -32,7 +33,7 @@ describe('event-utils', () => {
       lastPlainDate: BaseTemporal.PlainDate.from('2024-01-18'),
       timezone: 'default',
     });
-    const dayNumbers = days.map((day) => getDayNumber(day.plainDate));
+    const dayNumbers = days.map((day) => getDayNumber(day));
 
     const dayKeys = ['2024-01-14', '2024-01-15', '2024-01-16', '2024-01-17', '2024-01-18'];
 
@@ -125,12 +126,12 @@ describe('event-utils', () => {
           lastPlainDate: firstPlainDate.add({ days: 6 }),
           timezone,
         });
-        const dayNumbers = days.map((item) => getDayNumber(item.plainDate));
+        const dayNumbers = days.map((item) => getDayNumber(item));
 
         for (const recurringEventsPlugin of [null, schedulerRecurringEventsPlugin]) {
           const [occurrence] = getOccurrencesFromEvents({
-            start: days[0].timestamp,
-            end: days[days.length - 1].timestamp,
+            start: toEpochMs(days[0], timezone),
+            end: toEpochMs(days[days.length - 1], timezone),
             eventRangeIndex: createEventRangeIndex([event], recurringEventsPlugin != null),
             visibleResources: {},
             displayTimezone: timezone,

@@ -72,7 +72,7 @@ export function DayGridCell(props: DayGridCellProps) {
   const isCreatingAnEvent = useStore(
     store,
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
-    day,
+    day.plainDate,
   );
   const placeholder = CalendarGrid.usePlaceholderInDay(day, row);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);

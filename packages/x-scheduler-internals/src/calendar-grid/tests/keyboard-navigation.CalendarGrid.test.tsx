@@ -11,7 +11,6 @@ import {
   createDate,
   createSchedulerRenderer,
   endOfDay,
-  processDay,
 } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
@@ -28,7 +27,7 @@ describe('CalendarGrid keyboard navigation', () => {
 
   // The days of the cells of a row.
   const toRowDays = (rowDays: Date[]) =>
-    rowDays.map((day) => ({ plainDate: toPlainDate(day.getTime(), 'default') }));
+    rowDays.map((day) => toPlainDate(day.getTime(), 'default'));
 
   function GridWithHeaderAndDayCells({
     rowTypes,
@@ -42,7 +41,11 @@ describe('CalendarGrid keyboard navigation', () => {
         <CalendarGrid.Root rowTypes={rowTypes} rowsPerType={rowsPerType}>
           <CalendarGrid.HeaderRow>
             {days.map((day, i) => (
-              <CalendarGrid.HeaderCell key={i} date={processDay(day)} data-testid={`header-${i}`}>
+              <CalendarGrid.HeaderCell
+                key={i}
+                date={toPlainDate(day.getTime(), 'default')}
+                data-testid={`header-${i}`}
+              >
                 {day.toLocaleDateString('en-US', { weekday: 'short' })}
               </CalendarGrid.HeaderCell>
             ))}
@@ -196,7 +199,11 @@ describe('CalendarGrid keyboard navigation', () => {
           <CalendarGrid.Root rowTypes={['header', 'day-grid']} rowsPerType={{ 'day-grid': 3 }}>
             <CalendarGrid.HeaderRow>
               {week0Days.map((day, i) => (
-                <CalendarGrid.HeaderCell key={i} date={processDay(day)} data-testid={`header-${i}`}>
+                <CalendarGrid.HeaderCell
+                  key={i}
+                  date={toPlainDate(day.getTime(), 'default')}
+                  data-testid={`header-${i}`}
+                >
                   {day.toLocaleDateString('en-US', { weekday: 'short' })}
                 </CalendarGrid.HeaderCell>
               ))}
@@ -361,7 +368,11 @@ describe('CalendarGrid keyboard navigation', () => {
           <CalendarGrid.Root rowTypes={['header', 'day-grid', 'time-grid']} rowsPerType={{}}>
             <CalendarGrid.HeaderRow>
               {days.slice(0, 3).map((day, i) => (
-                <CalendarGrid.HeaderCell key={i} date={processDay(day)} data-testid={`header-${i}`}>
+                <CalendarGrid.HeaderCell
+                  key={i}
+                  date={toPlainDate(day.getTime(), 'default')}
+                  data-testid={`header-${i}`}
+                >
                   {day.toLocaleDateString('en-US', { weekday: 'short' })}
                 </CalendarGrid.HeaderCell>
               ))}

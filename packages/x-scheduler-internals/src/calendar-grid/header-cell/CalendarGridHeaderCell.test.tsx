@@ -1,27 +1,31 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
-import { createSchedulerRenderer, describeConformance, processDay } from 'test/utils/scheduler';
+import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import { vi, describe, it, expect } from 'vitest';
+import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
 
 describe('<CalendarGrid.HeaderCell />', () => {
   const { render } = createSchedulerRenderer();
 
   const day = new Date();
 
-  describeConformance(<CalendarGrid.HeaderCell date={processDay(day)} />, () => ({
-    refInstanceof: window.HTMLDivElement,
-    render(node) {
-      return render(
-        <EventCalendarProvider events={[]}>
-          <CalendarGrid.Root>
-            <CalendarGrid.HeaderRow>{node}</CalendarGrid.HeaderRow>
-          </CalendarGrid.Root>
-        </EventCalendarProvider>,
-      );
-    },
-  }));
+  describeConformance(
+    <CalendarGrid.HeaderCell date={toPlainDate(day.getTime(), 'default')} />,
+    () => ({
+      refInstanceof: window.HTMLDivElement,
+      render(node) {
+        return render(
+          <EventCalendarProvider events={[]}>
+            <CalendarGrid.Root>
+              <CalendarGrid.HeaderRow>{node}</CalendarGrid.HeaderRow>
+            </CalendarGrid.Root>
+          </EventCalendarProvider>,
+        );
+      },
+    }),
+  );
 
   describe('keyboard interactions', () => {
     it('should delegate Enter keypress to the child button', async () => {
@@ -30,7 +34,7 @@ describe('<CalendarGrid.HeaderCell />', () => {
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
             <CalendarGrid.HeaderRow>
-              <CalendarGrid.HeaderCell date={processDay(day)}>
+              <CalendarGrid.HeaderCell date={toPlainDate(day.getTime(), 'default')}>
                 <button type="button" onClick={onClick}>
                   Click me
                 </button>
@@ -52,7 +56,9 @@ describe('<CalendarGrid.HeaderCell />', () => {
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
             <CalendarGrid.HeaderRow>
-              <CalendarGrid.HeaderCell date={processDay(day)}>Monday</CalendarGrid.HeaderCell>
+              <CalendarGrid.HeaderCell date={toPlainDate(day.getTime(), 'default')}>
+                Monday
+              </CalendarGrid.HeaderCell>
             </CalendarGrid.HeaderRow>
           </CalendarGrid.Root>
         </EventCalendarProvider>,

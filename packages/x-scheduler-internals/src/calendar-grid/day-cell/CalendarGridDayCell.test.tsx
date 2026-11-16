@@ -38,7 +38,7 @@ describe('<CalendarGrid.DayCell />', () => {
           <CalendarGrid.DayRow
             start={startOfDay(day).getTime()}
             end={endOfDay(day).getTime()}
-            days={[{ plainDate: toPlainDate(day.getTime(), 'default') }]}
+            days={[toPlainDate(day.getTime(), 'default')]}
           >
             {children}
           </CalendarGrid.DayRow>
@@ -97,11 +97,7 @@ describe('<CalendarGrid.DayCell />', () => {
       const { user } = render(
         <EventCalendarProvider events={[]} displayTimezone="America/Santiago">
           <CalendarGrid.Root>
-            <CalendarGrid.DayRow
-              start={value.getTime()}
-              end={value.getTime()}
-              days={[{ plainDate: cellDate }]}
-            >
+            <CalendarGrid.DayRow start={value.getTime()} end={value.getTime()} days={[cellDate]}>
               <CalendarGrid.DayCell value={cellDate} />
             </CalendarGrid.DayRow>
           </CalendarGrid.Root>

@@ -6,7 +6,8 @@ import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useCompositeListItem } from '@base-ui/react/internals/composite';
 import { useDirection } from '@base-ui/react/direction-provider';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import type { SchedulerProcessedDay } from '../../models';
+import type { BaseTemporal } from '../../internals/utils/base-temporal';
+import { getDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
 import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
 import { useCalendarGridCellsRefsContext } from '../../internals/utils/CalendarGridCellsRefsContext';
@@ -17,9 +18,9 @@ import type { EventCalendarState } from '../../use-event-calendar';
 
 const selectorIsCurrentDate = (
   state: EventCalendarState,
-  timestamp: number,
+  dayNumber: number,
   skipDataCurrent: boolean | undefined,
-) => !skipDataCurrent && schedulerNowSelectors.isCurrentDay(state, timestamp);
+) => !skipDataCurrent && schedulerNowSelectors.nowDayNumber(state) === dayNumber;
 
 export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHeaderCell(
   componentProps: CalendarGridHeaderCell.Props,
@@ -46,7 +47,7 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
     rowsPerType,
   } = useCalendarGridRootContext();
   const isRtl = useDirection() === 'rtl';
-  const isCurrentDay = useStore(store, selectorIsCurrentDate, date.timestamp, skipDataCurrent);
+  const isCurrentDay = useStore(store, selectorIsCurrentDate, getDayNumber(date), skipDataCurrent);
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
   const { ref: listItemRef, index } = useCompositeListItem();
@@ -114,7 +115,7 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
         role: 'columnheader',
         id,
         // The `aria-label` of the caller wins, so the weekday is only formatted without one.
-        'aria-label': elementProps['aria-label'] ?? formatWeekday(locale, date.plainDate),
+        'aria-label': elementProps['aria-label'] ?? formatWeekday(locale, date),
         'aria-colindex': index + 1,
         'aria-current': isCurrentDay ? 'date' : undefined,
       },
@@ -137,7 +138,7 @@ export namespace CalendarGridHeaderCell {
      * The date of the events rendered in the same column as this header cell.
      * Its weekday is the `aria-label` of the cell, unless the `aria-label` prop is set.
      */
-    date: SchedulerProcessedDay;
+    date: BaseTemporal.PlainDate;
     /**
      * Whether to skip adding the `data-current` and `aria-current` attributes to the root element when the header cell represents the current day.
      * This can be useful when the cells in the column are not representing a single day (e.g. in the month view).

@@ -189,10 +189,9 @@ export const EventItem = React.forwardRef(function EventItem(
   });
 
   // The processed dates are read in the display timezone, like the day.
-  const { start } = occurrence;
-  const startsBeforeDay =
-    !start.plainDateTime.toPlainDate().equals(date.plainDate) && start.timestamp < date.timestamp;
-  const endsAfterDay = getOccurrenceLastDayNumber(occurrence) > getDayNumber(date.plainDate);
+  const dayNumber = getDayNumber(date);
+  const startsBeforeDay = getDayNumber(occurrence.start.plainDateTime.toPlainDate()) < dayNumber;
+  const endsAfterDay = getOccurrenceLastDayNumber(occurrence) > dayNumber;
 
   const content = React.useMemo(() => {
     switch (variant) {

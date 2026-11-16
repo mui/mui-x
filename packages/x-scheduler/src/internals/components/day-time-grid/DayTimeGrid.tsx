@@ -10,10 +10,7 @@ import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import type {
-  SchedulerEventOccurrence,
-  SchedulerProcessedDay,
-} from '@mui/x-scheduler-internals/models';
+import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
@@ -22,6 +19,7 @@ import {
   schedulerPreferenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
+  createStartOfPlainDate,
   formatDayOfMonth,
   formatTime,
   formatWeekdayMonthAndDayOfMonth,
@@ -31,7 +29,9 @@ import {
   getEndOfDayMs,
   getInitialScrollTime,
   isWeekendPlainDate,
+  toEpochMs,
 } from '@mui/x-scheduler-internals/internals';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import clsx from 'clsx';
 import type { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridColumn } from './TimeGridColumn';
@@ -401,11 +401,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const { start, end, firstDayNumber, lastDayNumber } = React.useMemo(() => {
     const lastDay = days[days.length - 1];
     return {
-      // `days[0].timestamp` is the first instant of the first day.
-      start: days[0].timestamp,
-      end: getEndOfDayMs(lastDay.timestamp, displayTimezone),
-      firstDayNumber: getDayNumber(days[0].plainDate),
-      lastDayNumber: getDayNumber(lastDay.plainDate),
+      start: toEpochMs(days[0], displayTimezone),
+      end: getEndOfDayMs(toEpochMs(lastDay, displayTimezone), displayTimezone),
+      firstDayNumber: getDayNumber(days[0]),
+      lastDayNumber: getDayNumber(lastDay),
     };
   }, [days, displayTimezone]);
 
@@ -447,15 +446,15 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     applyInitialScroll();
   });
 
-  const lastIsWeekend = isWeekendPlainDate(days[days.length - 1].plainDate, weekend);
+  const lastIsWeekend = isWeekendPlainDate(days[days.length - 1], weekend);
 
-  const renderHeaderContent = (day: SchedulerProcessedDay) => (
+  const renderHeaderContent = (day: BaseTemporal.PlainDate) => (
     <DayTimeGridHeaderContent className={classes.dayTimeGridHeaderContent}>
       <DayTimeGridHeaderDayName className={classes.dayTimeGridHeaderDayName}>
-        {formatWeekdayShort(locale, day.plainDate)}
+        {formatWeekdayShort(locale, day)}
       </DayTimeGridHeaderDayName>
       <DayTimeGridHeaderDayNumber className={classes.dayTimeGridHeaderDayNumber}>
-        {formatDayOfMonth(locale, day.plainDate)}
+        {formatDayOfMonth(locale, day)}
       </DayTimeGridHeaderDayNumber>
     </DayTimeGridHeaderContent>
   );
@@ -480,10 +479,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
         />
         {days.map((day, index) => (
           <DayTimeGridHeaderCell
-            key={day.key}
+            key={day.toString()}
             className={classes.dayTimeGridHeaderCell}
             date={day}
-            aria-label={formatWeekdayMonthAndDayOfMonth(locale, day.plainDate)}
+            aria-label={formatWeekdayMonthAndDayOfMonth(locale, day)}
             aria-colindex={index + 1}
             data-has-scroll={(index === days.length - 1 && hasScroll) || undefined}
           >
@@ -491,7 +490,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
               <DayTimeGridHeaderButton
                 className={classes.dayTimeGridHeaderButton}
                 type="button"
-                onClick={(event) => store.switchToDay(new Date(day.timestamp), event)}
+                onClick={(event) =>
+                  store.switchToDay(createStartOfPlainDate(day, displayTimezone), event)
+                }
                 tabIndex={-1}
               >
                 {renderHeaderContent(day)}
@@ -528,7 +529,12 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           className={classes.dayTimeGridAllDayEventsRow}
         >
           {occurrences.days.map((day, index) => (
-            <DayGridCell key={day.key} day={day} row={occurrences} colIndex={index + 1} />
+            <DayGridCell
+              key={day.plainDate.toString()}
+              day={day}
+              row={occurrences}
+              colIndex={index + 1}
+            />
           ))}
         </DayTimeGridAllDayEventsRow>
         <div className={classes.dayTimeGridScrollablePlaceholder} />
@@ -566,7 +572,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             >
               {occurrences.days.map((day, index) => (
                 <TimeGridColumn
-                  key={day.key}
+                  key={day.plainDate.toString()}
                   day={day}
                   index={index}
                   colIndex={index + 1}

@@ -2,13 +2,13 @@ import type {
   SchedulerProcessedEvent,
   SchedulerProcessedEventInternalInfos,
   SchedulerProcessedDate,
-  SchedulerProcessedDay,
   SchedulerEventOccurrence,
   SchedulerEventId,
   SchedulerRenderableEventOccurrence,
   SchedulerResourceId,
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
+import type { BaseTemporal } from './base-temporal';
 import { toLocalDayNumber, toPlainDate } from './plain-date-utils/timeZone';
 import { getDayNumber, getPlainDateKey } from './plain-date-utils/plainDate';
 import type { SchedulerEventRangeIndex } from './event-range-index';
@@ -140,12 +140,12 @@ export function generateOccurrenceFromEvent({
 }
 
 /**
- * Returns the key of the days an event occurrence should be visible on.
+ * Returns the keys, from `getPlainDateKey()`, of the days an event occurrence should be visible on.
  * `dayNumbers` are the day numbers of `days`, read once for all the occurrences of the days.
  */
 export function getDaysTheOccurrenceIsVisibleOn(
   event: SchedulerEventOccurrence,
-  days: SchedulerProcessedDay[],
+  days: readonly BaseTemporal.PlainDate[],
   dayNumbers: readonly number[],
 ) {
   const startDayNumber = getDayNumber(event.start.plainDateTime.toPlainDate());
@@ -163,7 +163,7 @@ export function getDaysTheOccurrenceIsVisibleOn(
     if (dayNumber > endDayNumber) {
       break;
     }
-    dayKeys.push(days[index].key);
+    dayKeys.push(getPlainDateKey(days[index]));
   }
   return dayKeys;
 }

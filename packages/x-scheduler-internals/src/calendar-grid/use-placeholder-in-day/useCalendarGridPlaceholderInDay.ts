@@ -10,7 +10,7 @@ import {
   createProcessedDate,
   normalizeAllDayBounds,
 } from '../../internals/utils/plain-date-utils/date';
-import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
+import { toEpochMs, toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
 import { getDayGridCellSpan } from '../../use-event-occurrences-with-day-grid-position';
 
 export function useCalendarGridPlaceholderInDay(
@@ -24,7 +24,7 @@ export function useCalendarGridPlaceholderInDay(
   const findAvailableIndex = React.useCallback(
     (excludeKey?: string): number => {
       let positionIndex = 1;
-      const targetDay = row.days.find((rowDay) => rowDay.key === day.key);
+      const targetDay = row.days.find((rowDay) => rowDay.plainDate.equals(day.plainDate));
       if (targetDay) {
         const usedIndexes = new Set(
           targetDay.withPosition
@@ -46,7 +46,7 @@ export function useCalendarGridPlaceholderInDay(
   const rawPlaceholder = useStore(
     store,
     eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell,
-    day,
+    day.plainDate,
     rowStart,
   );
 
@@ -76,7 +76,7 @@ export function useCalendarGridPlaceholderInDay(
     );
     // The placeholder covers the cells of every date up to its end, like the occurrences.
     const daySpan = getDayGridCellSpan(
-      row.days,
+      row.days.map((rowDay) => rowDay.plainDate),
       row.days.indexOf(day),
       toLocalDayNumber(endInRow, displayTimezone),
     );
@@ -90,12 +90,17 @@ export function useCalendarGridPlaceholderInDay(
 
     // Creation mode
     if (rawPlaceholder.type === 'creation') {
-      const creationBounds = normalizeAllDayBounds(day.timestamp, endInRow, true, displayTimezone);
+      const creationBounds = normalizeAllDayBounds(
+        toEpochMs(day.plainDate, displayTimezone),
+        endInRow,
+        true,
+        displayTimezone,
+      );
       return {
         ...sharedProperties,
         title: '',
         allDay: true,
-        start: createProcessedDate(day.timestamp, displayTimezone),
+        start: createProcessedDate(creationBounds.start, displayTimezone),
         end: createProcessedDate(creationBounds.end, displayTimezone),
         unstable_internalInfos: { displayTimezone },
         position: {

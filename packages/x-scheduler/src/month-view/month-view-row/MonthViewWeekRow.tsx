@@ -11,6 +11,7 @@ import {
   formatWeekNumber,
   getEndOfDayMs,
   getWeekNumber,
+  toEpochMs,
 } from '@mui/x-scheduler-internals/internals';
 import type { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
 import { MonthViewCell } from './MonthViewCell';
@@ -52,12 +53,11 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
   const occurrences = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap, maxEvents });
-  const weekNumber = getWeekNumber(days[0].plainDate, weekInfo);
+  const weekNumber = getWeekNumber(days[0], weekInfo);
 
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
-  // `days[0].timestamp` is the first instant of the first day.
-  const start = days[0].timestamp;
-  const end = getEndOfDayMs(days[days.length - 1].timestamp, displayTimezone);
+  const start = toEpochMs(days[0], displayTimezone);
+  const end = getEndOfDayMs(toEpochMs(days[days.length - 1], displayTimezone), displayTimezone);
 
   const weekNumberId = showWeekNumber
     ? `${schedulerId}-MonthViewWeekNumber-${weekNumber}`
@@ -85,7 +85,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
       {occurrences.days.map((day, dayIdx) => (
         <MonthViewCell
           ref={dayIdx === 0 ? firstDayRef : undefined}
-          key={day.key}
+          key={day.plainDate.toString()}
           day={day}
           maxEvents={maxEvents}
           row={occurrences}

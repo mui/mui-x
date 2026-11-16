@@ -1,7 +1,6 @@
 import {
   addDays,
   DEFAULT_TESTING_VISIBLE_DATE,
-  processDay,
   setSystemTimezone,
   startOfDay,
   startOfWeek,
@@ -9,7 +8,7 @@ import {
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 import { getDayListFromPlainDates } from './getDayList';
-import { toMsInDay } from '../internals/utils/plain-date-utils/timeZone';
+import { toEpochMs, toMsInDay, toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
 import { BaseTemporal } from '../internals/utils/base-temporal';
 
 describe('getDayListFromPlainDates', () => {
@@ -33,7 +32,9 @@ describe('getDayListFromPlainDates', () => {
       timezone: 'default',
     });
 
-    const expectedDays = [processDay(startOfDay(DEFAULT_TESTING_VISIBLE_DATE))];
+    const expectedDays = [
+      toPlainDate(startOfDay(DEFAULT_TESTING_VISIBLE_DATE).getTime(), 'default'),
+    ];
 
     expect(days).to.deep.equal(expectedDays);
   });
@@ -46,7 +47,9 @@ describe('getDayListFromPlainDates', () => {
     });
 
     const start = startOfDay(DEFAULT_TESTING_VISIBLE_DATE);
-    const expectedDays = Array.from({ length: 4 }, (_, i) => processDay(addDays(start, i)));
+    const expectedDays = Array.from({ length: 4 }, (_, i) =>
+      toPlainDate(addDays(start, i).getTime(), 'default'),
+    );
 
     expect(days).to.deep.equal(expectedDays);
   });
@@ -64,7 +67,9 @@ describe('getDayListFromPlainDates', () => {
 
       // From Monday to Friday.
       const monday = addDays(startOfWeek(DEFAULT_TESTING_VISIBLE_DATE), 1);
-      const expectedDays = Array.from({ length: 5 }, (_, i) => processDay(addDays(monday, i)));
+      const expectedDays = Array.from({ length: 5 }, (_, i) =>
+        toPlainDate(addDays(monday, i).getTime(), 'default'),
+      );
 
       expect(days).to.deep.equal(expectedDays);
     });
@@ -72,7 +77,7 @@ describe('getDayListFromPlainDates', () => {
     it('should leave out a weekend on Friday and Saturday', () => {
       const days = getDayListFromPlainDates({ ...week, excludedWeekdays: [5, 6] });
 
-      expect(days.map((day) => day.key)).to.deep.equal([
+      expect(days.map((day) => day.toString())).to.deep.equal([
         '2025-06-29',
         '2025-06-30',
         '2025-07-01',
@@ -84,7 +89,7 @@ describe('getDayListFromPlainDates', () => {
     it('should leave out a weekend of one day', () => {
       const days = getDayListFromPlainDates({ ...week, excludedWeekdays: [5] });
 
-      expect(days.map((day) => day.key)).to.deep.equal([
+      expect(days.map((day) => day.toString())).to.deep.equal([
         '2025-06-29',
         '2025-06-30',
         '2025-07-01',
@@ -108,7 +113,7 @@ describe('getDayListFromPlainDates', () => {
       lastPlainDate: BaseTemporal.PlainDate.from('2011-12-31'),
       timezone: 'Pacific/Apia',
     });
-    expect(days.map((day) => day.key)).to.deep.equal(['2011-12-29', '2011-12-31']);
+    expect(days.map((day) => day.toString())).to.deep.equal(['2011-12-29', '2011-12-31']);
   });
 
   it('should start the days after a DST transition at midnight at midnight', () => {
@@ -119,16 +124,16 @@ describe('getDayListFromPlainDates', () => {
       lastPlainDate: firstPlainDate.add({ days: 3 }),
       timezone: 'America/Havana',
     });
-    expect(days.map((day) => day.key)).to.deep.equal([
+    expect(days.map((day) => day.toString())).to.deep.equal([
       '2026-03-07',
       '2026-03-08',
       '2026-03-09',
       '2026-03-10',
     ]);
     // March 8th has no midnight, so it starts at 01:00.
-    expect(days.map((day) => toMsInDay(day.timestamp, 'America/Havana'))).to.deep.equal([
-      0, 3_600_000, 0, 0,
-    ]);
+    expect(
+      days.map((day) => toMsInDay(toEpochMs(day, 'America/Havana'), 'America/Havana')),
+    ).to.deep.equal([0, 3_600_000, 0, 0]);
   });
 
   // Browsers cannot change their timezone through process.env.TZ.
@@ -143,7 +148,9 @@ describe('getDayListFromPlainDates', () => {
       timezone: 'America/Santiago',
     });
     expect(days).to.have.length(35);
-    expect(new Set(days.map((day) => day.key)).size).to.equal(35);
-    expect(days.every((day) => toMsInDay(day.timestamp, 'America/Santiago') === 0)).to.equal(true);
+    expect(new Set(days.map((day) => day.toString())).size).to.equal(35);
+    expect(
+      days.every((day) => toMsInDay(toEpochMs(day, 'America/Santiago'), 'America/Santiago') === 0),
+    ).to.equal(true);
   });
 });

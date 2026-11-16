@@ -1,12 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  addDays,
-  DEFAULT_TESTING_VISIBLE_DATE,
-  EventBuilder,
-  processDay,
-  ResourceBuilder,
-} from 'test/utils/scheduler';
-import type { SchedulerProcessedDay } from '@mui/x-scheduler-internals/models';
+import { DEFAULT_TESTING_VISIBLE_DATE, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import {
   schedulerEventSelectors,
   schedulerOccurrenceSelectors,
@@ -35,8 +30,10 @@ const rangeEnd = Date.parse('2025-07-03T23:59:59Z');
 // A 7-day window starting at the visible date, the minimum the lazy loading plugin needs.
 const buildViewDefinition = (): any => ({
   siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
-  visibleDaysSelector: (state: any): SchedulerProcessedDay[] =>
-    Array.from({ length: 7 }, (_, i) => processDay(addDays(state.visibleDate, i))),
+  visibleDaysSelector: (state: any): BaseTemporal.PlainDate[] =>
+    Array.from({ length: 7 }, (_, i) =>
+      toPlainDate(state.visibleDate.getTime(), state.displayTimezone).add({ days: i }),
+    ),
 });
 
 const countOccurrences = (store: EventCalendarPremiumStore<any, any>) =>

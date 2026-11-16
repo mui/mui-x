@@ -418,27 +418,6 @@ export interface SchedulerProcessedDate {
 }
 
 /**
- * A day of a view: a cell, a column or a row, starting at the first instant of its date.
- * Its date is `plainDate`, so it has no time of day.
- */
-export interface SchedulerProcessedDay {
-  /**
-   * The date of the day in the display timezone, which the day list is built in: consumers compare
-   * its day number, from `getDayNumber()`, with the day numbers of instants in that timezone, from
-   * `toLocalDayNumber()`.
-   */
-  plainDate: BaseTemporal.PlainDate;
-  /**
-   * The key of `plainDate`, from `getPlainDateKey()`, which keys the maps of the views by day.
-   */
-  key: string;
-  /**
-   * The timestamp of the first instant of the day in the display timezone.
-   */
-  timestamp: number;
-}
-
-/**
  * Properties to pass to the methods that update an event (recurring or not).
  * The `id`, `start` and `end` properties are required in order to identify the event to update and the new dates.
  * All other properties are optional and can be skipped if not modified.

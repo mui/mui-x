@@ -73,7 +73,10 @@ function getRangeToFetch(state: EventCalendarPremiumState): DateRange | null {
     return null;
   }
   return toWholeDays(
-    { start: days[0].timestamp, end: days[days.length - 1].timestamp },
+    {
+      start: toEpochMs(days[0], displayTimezone),
+      end: toEpochMs(days[days.length - 1], displayTimezone),
+    },
     displayTimezone,
   );
 }
