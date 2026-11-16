@@ -59,6 +59,17 @@ describe('getDefaultTimedFields', () => {
       ),
     ).to.deep.equal({ startTime: '23:00', endTime: '00:30', endDate: '2025-07-06' });
   });
+
+  it('should leave the end date as given when the start date is empty', () => {
+    expect(
+      getDefaultTimedFields(
+        { startDate: '', endDate: '' },
+        Date.UTC(2025, 6, 4, 22, 10),
+        90,
+        'UTC',
+      ),
+    ).to.deep.equal({ startTime: '23:00', endTime: '00:30', endDate: '' });
+  });
 });
 
 describe('computeRange', () => {

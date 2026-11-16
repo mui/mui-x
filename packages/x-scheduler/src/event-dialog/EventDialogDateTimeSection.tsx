@@ -114,18 +114,20 @@ export function EventDialogDateTimeSection() {
 
   const handleAllDayChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     formStore.clearErrors(RANGE_ERROR_KEYS);
-    allDay.setValue(event.target.checked);
-    if (!event.target.checked && !hasTimedValuesRef.current) {
-      hasTimedValuesRef.current = true;
-      formStore.setValues(
-        getDefaultTimedFields(
-          formStore.state.values,
-          Date.now(),
-          schedulerEventSelectors.defaultEventDuration(store.state),
-          displayTimezone,
-        ),
-      );
+    if (event.target.checked || hasTimedValuesRef.current) {
+      allDay.setValue(event.target.checked);
+      return;
     }
+    hasTimedValuesRef.current = true;
+    formStore.setValues({
+      allDay: false,
+      ...getDefaultTimedFields(
+        formStore.state.values,
+        Date.now(),
+        schedulerEventSelectors.defaultEventDuration(store.state),
+        displayTimezone,
+      ),
+    });
   };
 
   const createHandleChangeDateOrTimeField =

@@ -352,8 +352,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
 
     describe('toggling all-day', () => {
-      const fieldValue = (label: RegExp) =>
-        (screen.getByLabelText(label) as HTMLInputElement).value;
       const runningInNewYork = () =>
         EventBuilder.new()
           .title('Running')
@@ -374,10 +372,10 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
         await user.click(screen.getByRole('switch', { name: /all day/i }));
 
-        expect(fieldValue(/start time/i)).to.equal('07:00');
-        expect(fieldValue(/end time/i)).to.equal('07:30');
-        expect(fieldValue(/start date/i)).to.equal('2025-07-04');
-        expect(fieldValue(/end date/i)).to.equal('2025-07-04');
+        expect(screen.getByLabelText(/start time/i)).to.have.value('07:00');
+        expect(screen.getByLabelText(/end time/i)).to.have.value('07:30');
+        expect(screen.getByLabelText(/start date/i)).to.have.value('2025-07-04');
+        expect(screen.getByLabelText(/end date/i)).to.have.value('2025-07-04');
         await user.click(screen.getByRole('button', { name: 'Save' }));
 
         const updated = getUpdatedEvent();
@@ -420,8 +418,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         await user.click(allDaySwitch);
         await user.click(allDaySwitch);
 
-        expect(fieldValue(/start time/i)).to.equal('07:30');
-        expect(fieldValue(/end time/i)).to.equal('08:15');
+        expect(screen.getByLabelText(/start time/i)).to.have.value('07:30');
+        expect(screen.getByLabelText(/end time/i)).to.have.value('08:15');
         await user.click(screen.getByRole('button', { name: 'Save' }));
 
         const updated = getUpdatedEvent();
@@ -451,12 +449,13 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         const allDaySwitch = screen.getByRole('switch', { name: /all day/i });
         await user.click(allDaySwitch);
         const startTimeInput = screen.getByLabelText(/start time/i);
+        expect(startTimeInput).to.have.value('11:00');
         await user.clear(startTimeInput);
         await user.type(startTimeInput, '15:00');
         await user.click(allDaySwitch);
         await user.click(allDaySwitch);
 
-        expect(fieldValue(/start time/i)).to.equal('15:00');
+        expect(screen.getByLabelText(/start time/i)).to.have.value('15:00');
       });
     });
 

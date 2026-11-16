@@ -909,22 +909,20 @@ describe('<MonthView />', () => {
           </EventDialogProvider>
         </EventCalendarProvider>,
       );
-      const fieldValue = (label: RegExp) =>
-        (screen.getByLabelText(label) as HTMLInputElement).value;
 
       await user.click(screen.getAllByRole('gridcell')[10]);
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.to.equal(null);
       });
-      const clickedDay = fieldValue(/start date/i);
+      const clickedDay = (screen.getByLabelText(/start date/i) as HTMLInputElement).value;
 
       await user.click(screen.getByRole('switch', { name: /all day/i }));
 
       // The clock of the file is 2025-05-01 00:00, already on the hour.
-      expect(fieldValue(/start time/i)).to.equal('00:00');
-      expect(fieldValue(/end time/i)).to.equal('00:30');
-      expect(fieldValue(/start date/i)).to.equal(clickedDay);
-      expect(fieldValue(/end date/i)).to.equal(clickedDay);
+      expect(screen.getByLabelText(/start time/i)).to.have.value('00:00');
+      expect(screen.getByLabelText(/end time/i)).to.have.value('00:30');
+      expect(screen.getByLabelText(/start date/i)).to.have.value(clickedDay);
+      expect(screen.getByLabelText(/end date/i)).to.have.value(clickedDay);
     });
 
     it('should clamp the span of a creation placeholder to each week row', () => {
