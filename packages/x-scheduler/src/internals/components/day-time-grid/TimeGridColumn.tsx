@@ -101,9 +101,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   const visibleOccurrences = React.useMemo(
     () =>
       day.withoutPosition.filter(
-        (occurrence) =>
-          occurrence.displayTimezone.end.timestamp > start &&
-          occurrence.displayTimezone.start.timestamp < end,
+        (occurrence) => occurrence.end.timestamp > start && occurrence.start.timestamp < end,
       ),
     [day.withoutPosition, start, end],
   );

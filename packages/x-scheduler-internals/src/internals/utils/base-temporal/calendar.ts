@@ -157,7 +157,7 @@ export function getOrdinalMonthCodes(count: 12 | 13): readonly string[] {
  */
 export function throwFieldsError(apiName: string, problem: string): never {
   throw new Error(
-    `Base UI Plus: \`BaseTemporal.${apiName}\` received date fields that ${problem}. ` +
+    `MUI X Scheduler: \`BaseTemporal.${apiName}\` received date fields that ${problem}. ` +
       "The fields don't name a single date of the calendar. " +
       'Pass a year (or an era and a year of era), a month (or a month code) and a day that exist in the calendar.',
   );
@@ -219,7 +219,7 @@ export function readCalendarFields(
   }
   if (missing !== undefined) {
     throw new TypeError(
-      `Base UI Plus: \`BaseTemporal.${apiName}\` received an object without ${missing}. ` +
+      `MUI X Scheduler: \`BaseTemporal.${apiName}\` received an object without ${missing}. ` +
         "A date can't be built without its year, month and day. " +
         'Pass an object such as `{ year: 2024, month: 5, day: 24 }`, with an era and a year of era together in place of the year if needed.',
     );
@@ -233,7 +233,7 @@ export function readCalendarFields(
 export function checkIsoDate(year: number, month: number, day: number) {
   if (!isValidIsoDate(year, month, day)) {
     throw new Error(
-      `Base UI Plus: \`PlainDate\` received the year ${year}, the month ${month} and the day ${day}, which don't name a supported date. ` +
+      `MUI X Scheduler: \`PlainDate\` received the year ${year}, the month ${month} and the day ${day}, which don't name a supported date. ` +
         'The month must be from 1 to 12, the day must exist in the month, and the date must be from -271821-04-20 to +275760-09-13, the days of `Date`. ' +
         'Pass a valid date, or create it with `BaseTemporal.PlainDate.from()` and an object to move a month or a day above its range to the closest valid value.',
     );
@@ -373,7 +373,7 @@ export function getCalendar(id: unknown): CalendarImplementation {
   }
   if (typeof id !== 'string') {
     throw new TypeError(
-      `Base UI Plus: A temporal value received ${String(id)} as its calendar, which isn't a string. ` +
+      `MUI X Scheduler: A temporal value received ${String(id)} as its calendar, which isn't a string. ` +
         'Calendars are identified by their name. ' +
         "Pass a calendar identifier such as `'iso8601'`, `'gregory'` or `'hebrew'`.",
     );
@@ -390,15 +390,15 @@ export function getCalendar(id: unknown): CalendarImplementation {
   }
   if (!CALENDAR_IDS.has(canonicalId)) {
     throw new Error(
-      `Base UI Plus: The "${id}" calendar isn't supported. ` +
-        'Base UI Plus has no arithmetic for it, so it cannot create or display its dates. ' +
-        'Use `iso8601`, `gregory`, or one of the calendars listed in the documentation.',
+      `MUI X Scheduler: The "${id}" calendar isn't supported. ` +
+        'The Scheduler has no arithmetic for it, so it cannot create or display its dates. ' +
+        'Use the `iso8601` or `gregory` calendar.',
     );
   }
   throw new Error(
-    `Base UI Plus: The "${canonicalId}" calendar isn't registered. ` +
-      "Only the ISO and Gregorian calendars are built in, so other calendars stay out of the bundles that don't use them. " +
-      `Pass \`${canonicalId.replace(/-([a-z])/g, (_, letter: string) => letter.toUpperCase())}Calendar\` to \`registerCalendar()\`, both from \`@base-ui/plus/calendar-systems\`, before creating or displaying its dates.`,
+    `MUI X Scheduler: The "${canonicalId}" calendar isn't supported yet. ` +
+      'The Scheduler only implements the ISO and Gregorian calendars, so it cannot create or display its dates. ' +
+      'Use the `iso8601` or `gregory` calendar.',
   );
 }
 
@@ -423,17 +423,17 @@ function checkCalendarRegistration(calendar: CalendarSystem) {
     !CALENDAR_IDS.has(implementation.id!)
   ) {
     throw new TypeError(
-      `Base UI Plus: \`registerCalendar()\` received ${String(calendar)}, which isn't a calendar of \`@base-ui/plus/calendar-systems\`. ` +
-        'Base UI Plus only registers the calendars it implements. ' +
-        "Pass a calendar such as `hebrewCalendar` from `'@base-ui/plus/calendar-systems'`.",
+      `MUI X Scheduler: \`registerCalendar()\` received ${String(calendar)}, which isn't a calendar implementation. ` +
+        'Only the implementations of the supported calendars can be registered. ' +
+        'Pass one of these implementations.',
     );
   }
   const registered = registry.get(calendar.id);
   if (registered != null && registered !== calendar) {
     throw new Error(
-      `Base UI Plus: \`registerCalendar()\` received a second implementation of the "${calendar.id}" calendar. ` +
+      `MUI X Scheduler: \`registerCalendar()\` received a second implementation of the "${calendar.id}" calendar. ` +
         'Two implementations could give different dates for the same values, so the first registration stays. ' +
-        'Make sure a single copy of `@base-ui/plus` is installed, and register each calendar once.',
+        'Make sure a single copy of `@mui/x-scheduler-internals` is installed, and register each calendar once.',
     );
   }
 }
@@ -473,8 +473,8 @@ export function checkCalendarRange(calendar: CalendarImplementation, dayNumber: 
     const first = fromDayNumber(calendar.firstDay);
     const last = fromDayNumber(calendar.lastDay);
     throw new Error(
-      `Base UI Plus: A date of the "${calendar.id}" calendar is outside the days it supports, from the ISO date ${first.year}-${first.month}-${first.day} to ${last.year}-${last.month}-${last.day}. ` +
-        "Outside these days, `Intl.DateTimeFormat` doesn't label dates as Base UI Plus computes them, or `Date` can't represent them. " +
+      `MUI X Scheduler: A date of the "${calendar.id}" calendar is outside the days it supports, from the ISO date ${first.year}-${first.month}-${first.day} to ${last.year}-${last.month}-${last.day}. ` +
+        "Outside these days, `Intl.DateTimeFormat` doesn't label dates as the Scheduler computes them, or `Date` can't represent them. " +
         'Use a date inside the range.',
     );
   }
