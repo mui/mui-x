@@ -6,6 +6,7 @@ import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowConte
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
+import { getLastInstant } from '../../internals/utils/event-utils';
 import { createProcessedDate, snapAllDayBounds } from '../../internals/utils/plain-date-utils/date';
 import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
 import { getDayGridCellSpan } from '../../use-event-occurrences-with-day-grid-position';
@@ -58,14 +59,15 @@ export function useCalendarGridPlaceholderInDay(
       return null;
     }
 
+    // An internal drag or resize carries the all-day-ness of its destination, which can differ
+    // from the original occurrence's.
     const allDay =
       rawPlaceholder.type === 'creation' ||
       (rawPlaceholder.type === 'external-drag'
         ? rawPlaceholder.eventData.allDay
-        : originalEvent?.allDay);
-    // The placeholder can run past the week row: the next rows render their own piece. The end
-    // of an all-day placeholder is exclusive: its last instant is just before it.
-    const lastInstantInRow = Math.min(allDay ? rawPlaceholder.end - 1 : rawPlaceholder.end, rowEnd);
+        : rawPlaceholder.allDay);
+    // The placeholder can run past the week row: the next rows render their own piece.
+    const lastInstantInRow = Math.min(getLastInstant(rawPlaceholder.end, allDay), rowEnd);
     // The placeholder covers the cells of every date up to its end, like the occurrences.
     const daySpan = getDayGridCellSpan(
       row.days,

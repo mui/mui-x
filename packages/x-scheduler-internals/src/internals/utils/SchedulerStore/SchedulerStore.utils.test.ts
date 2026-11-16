@@ -82,7 +82,7 @@ describe('getUpdatedEventModelFromChanges', () => {
 
   it('should write the displayed days of a timed event made all-day without bounds', () => {
     // 23:00 in New York on July 4th is 12:00 in Tokyo on July 5th.
-    const oldModel = {
+    const oldModel: SchedulerEvent = {
       id: '1',
       title: 'Meeting',
       start: '2025-07-04T23:00:00',
@@ -102,7 +102,7 @@ describe('getUpdatedEventModelFromChanges', () => {
   });
 
   it('should move the exceptions of a timed series made all-day to their displayed days', () => {
-    const oldModel = {
+    const oldModel: SchedulerEvent = {
       id: '1',
       title: 'Standup',
       start: '2025-07-04T23:00:00',

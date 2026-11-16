@@ -67,6 +67,7 @@ import {
 import { addDaysToDayStart, getAllDayDayCount, getOccurrenceEnd } from '../date-utils';
 import {
   getDayTimezone,
+  getLastInstant,
   getOccurrenceKey,
   getRecurringOccurrenceKey,
   isEventOccurrence,
@@ -1604,8 +1605,8 @@ export class SchedulerStore<
     const bounds: [number | undefined, number][] = [
       [changedStart, occurrenceStart],
       [
-        changedEnd === undefined ? undefined : changedEnd - (allDay ? 1 : 0),
-        occurrenceEnd - (original.allDay ? 1 : 0),
+        changedEnd === undefined ? undefined : getLastInstant(changedEnd, allDay),
+        getLastInstant(occurrenceEnd, original.allDay),
       ],
     ];
     const staysOnItsDay = bounds.every(

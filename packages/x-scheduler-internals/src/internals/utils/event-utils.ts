@@ -14,8 +14,15 @@ import { getDayNumber, getPlainDateKey } from './plain-date-utils/plainDate';
 import type { SchedulerEventRangeIndex } from './event-range-index';
 
 /**
- * The day number of the last day an occurrence covers in the display timezone. The end of an
- * all-day occurrence is exclusive: the first instant of the day after its last day.
+ * The last instant an event covers: its end for a timed event, and the instant before its end for
+ * an all-day one, whose end is exclusive (the first instant of the day after its last day).
+ */
+export function getLastInstant(end: number, allDay: boolean | undefined): number {
+  return allDay ? end - 1 : end;
+}
+
+/**
+ * The day number of the last day an occurrence covers in the display timezone.
  */
 export function getOccurrenceLastDayNumber(
   occurrence: Pick<SchedulerRenderableEventOccurrence, 'allDay' | 'end'>,
@@ -24,7 +31,7 @@ export function getOccurrenceLastDayNumber(
   if (occurrence.allDay) {
     // The day of the last instant, not the day before the end's date: when the timezone skips the
     // day after the last day, the end lands a day later.
-    return toLocalDayNumber(occurrence.end.timestamp - 1, displayTimezone);
+    return toLocalDayNumber(getLastInstant(occurrence.end.timestamp, true), displayTimezone);
   }
   return getDayNumber(occurrence.end.plainDateTime.toPlainDate());
 }

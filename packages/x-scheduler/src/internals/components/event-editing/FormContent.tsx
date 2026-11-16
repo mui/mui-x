@@ -27,6 +27,7 @@ import {
 import {
   getCustomEventProperties,
   getEventResourceIds,
+  getLastInstant,
   getResourceSelectionMode,
   toPlainDateTime,
   isBuiltInEventProperty,
@@ -151,7 +152,7 @@ export function FormContent(props: FormContentProps) {
     // The form shows the last day of an all-day event, the day before its exclusive end.
     const endFields = formatDateAndTimeFields(
       occurrence.allDay
-        ? toPlainDateTime(occurrence.end.timestamp - 1, initialDisplayTimezone)
+        ? toPlainDateTime(getLastInstant(occurrence.end.timestamp, true), initialDisplayTimezone)
         : occurrence.end.plainDateTime,
     );
 

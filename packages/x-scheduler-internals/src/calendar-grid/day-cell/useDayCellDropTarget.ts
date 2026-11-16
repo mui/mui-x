@@ -5,6 +5,7 @@ import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import type { SchedulerEvent } from '../../models';
 import type { BaseTemporal } from '../../internals/utils/base-temporal';
 import { getDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
+import { getLastInstant } from '../../internals/utils/event-utils';
 import {
   addDaysOnWallClock,
   getEndOfDayMs,
@@ -64,9 +65,8 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
       if (data.source === 'CalendarGridDayEventResizeHandler') {
         const { allDay } = data.originalOccurrence;
         if (data.side === 'start') {
-          // The end of an all-day occurrence is exclusive: its last day is the day before.
           const order =
-            getDayNumber(value) - toLocalDayNumber(allDay ? data.end - 1 : data.end, timezone);
+            getDayNumber(value) - toLocalDayNumber(getLastInstant(data.end, allDay), timezone);
           if (order > 0) {
             return undefined;
           }

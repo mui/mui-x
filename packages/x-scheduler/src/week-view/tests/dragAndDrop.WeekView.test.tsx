@@ -1,4 +1,4 @@
-import { screen, act } from '@mui/internal-test-utils';
+import { screen, act, fireEvent } from '@mui/internal-test-utils';
 import {
   createSchedulerRenderer,
   EventBuilder,
@@ -121,6 +121,40 @@ describe('WeekView - Drag and Drop', () => {
     // The event becomes a one-day all-day event on the drop day.
     expect(updatedEvents[0].start).to.equal('2025-07-04');
     expect(updatedEvents[0].end).to.equal('2025-07-05');
+  });
+
+  it('should preview a time event held over the day grid on the day of the cell only', async () => {
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Morning Meeting')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .draggable(true)
+      .build();
+
+    render(<StandaloneWeekView events={[event]} resources={[]} onEventsChange={vi.fn()} />);
+
+    mockAllTimeGridColumnBounds();
+
+    const eventElement = screen.getByRole('button', { name: /Morning Meeting/i });
+    const dayGridCell = getDayGridCell(2); // July 2
+
+    await act(async () => {
+      simulateDragAndDrop({ source: eventElement, target: dayGridCell, hold: true });
+      // pragmatic-drag-and-drop delivers `onDrag` on the next animation frame.
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
+
+    try {
+      // The only element positioned in the day grid is the placeholder.
+      const placeholder = document.querySelector<HTMLElement>('[style*="--grid-column-span"]');
+      expect(placeholder).not.to.equal(null);
+      expect(placeholder!.style.getPropertyValue('--grid-column-span')).to.equal('1');
+    } finally {
+      // Finish the held drag even when an assertion fails, so it does not leak into the next test.
+      fireEvent.dragEnd(eventElement);
+    }
   });
 
   it('should move a time event to a different time on the same day', async () => {

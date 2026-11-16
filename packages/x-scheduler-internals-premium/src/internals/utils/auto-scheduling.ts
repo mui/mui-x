@@ -7,6 +7,7 @@ import type {
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
 import {
+  getLastInstant,
   timestampToEventString,
   localToEpochMs,
   MS_PER_DAY,
@@ -94,7 +95,7 @@ function resolveDates(
     return { start, end, timezone, allDay };
   }
   const bounds = snapAllDayBounds(start, end, timezone);
-  return { start: bounds.start, end: bounds.end - 1, timezone, allDay };
+  return { start: bounds.start, end: getLastInstant(bounds.end, true), timezone, allDay };
 }
 
 function resolveProcessedEventDates(
@@ -102,10 +103,11 @@ function resolveProcessedEventDates(
   displayTimezone: string,
 ): ResolvedDates {
   if (processedEvent.allDay) {
-    // Whole days of the display timezone, ending exclusively.
+    // Whole days of the display timezone; the engine's end is the last instant of the last day,
+    // one millisecond before the exclusive end of the occurrence.
     return {
       start: processedEvent.start.timestamp,
-      end: processedEvent.end.timestamp - 1,
+      end: getLastInstant(processedEvent.end.timestamp, true),
       timezone: displayTimezone,
       allDay: true,
     };

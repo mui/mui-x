@@ -1,11 +1,11 @@
 import type { SchedulerProcessedEvent } from '../../models';
+import { getLastInstant } from './event-utils';
 
 /**
- * The last instant of an event: the index works on inclusive instants, and the end of an all-day
- * event is exclusive.
+ * The last instant of an event: the index works on inclusive instants.
  */
-function getLastInstant(event: SchedulerProcessedEvent): number {
-  return event.end.timestamp - (event.allDay ? 1 : 0);
+function getEventLastInstant(event: SchedulerProcessedEvent): number {
+  return getLastInstant(event.end.timestamp, event.allDay);
 }
 
 export const EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD = 0.25;
@@ -114,7 +114,12 @@ export function createEventRangeIndex(
   let earliestRangeEnd = Infinity;
 
   events.forEach((event, index) => {
-    const entry: EventRangeEntry = [event, index, event.start.timestamp, getLastInstant(event)];
+    const entry: EventRangeEntry = [
+      event,
+      index,
+      event.start.timestamp,
+      getEventLastInstant(event),
+    ];
 
     if (expandRecurringEvents && event.rrule) {
       recurringEntries.push(entry);
@@ -149,7 +154,7 @@ export function createEventRangeIndex(
         return events.filter(
           (event) =>
             (expandRecurringEvents && Boolean(event.rrule)) ||
-            (event.start.timestamp <= endTimestamp && getLastInstant(event) >= startTimestamp),
+            (event.start.timestamp <= endTimestamp && getEventLastInstant(event) >= startTimestamp),
         );
       }
 

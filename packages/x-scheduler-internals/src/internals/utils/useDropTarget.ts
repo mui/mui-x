@@ -100,6 +100,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         surfaceType,
         start,
         end,
+        allDay,
         eventId: data.eventId,
         occurrenceKey: data.occurrenceKey,
         originalOccurrence: data.originalOccurrence,
