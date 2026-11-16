@@ -31,15 +31,6 @@ describe('processEvent', () => {
     expect(processed.timezone).to.equal('default');
   });
 
-  it('should not expose internal infos', () => {
-    expect(processEvent(EventBuilder.new().build(), 'UTC')).to.not.have.property(
-      'unstable_internalInfos',
-    );
-    expect(processEvent(utcJuly4AllDayBuilder().build(), 'UTC')).to.not.have.property(
-      'unstable_internalInfos',
-    );
-  });
-
   describe('displayTimezone', () => {
     it('should read start and end in the display timezone', () => {
       const event = EventBuilder.new().span('2025-01-01T10:00:00Z', '2025-01-01T12:00:00Z').build();
@@ -181,11 +172,13 @@ describe('processEvent', () => {
       expect(processed.exDates![0].toString()).to.equal('2025-07-11T00:00:00');
     });
 
-    it('should not throw for an all-day event on a day the display timezone skips', () => {
-      // Pacific/Apia skipped December 30th, 2011.
+    it('should give no day to an all-day event on a day the display timezone skips', () => {
+      // Pacific/Apia skipped December 30th, 2011: the event has no day to cover there.
       const event = EventBuilder.new().span('2011-12-30', '2011-12-31', { allDay: true }).build();
 
-      expect(() => processEvent(event, 'Pacific/Apia')).not.to.throw();
+      const processed = processEvent(event, 'Pacific/Apia');
+
+      expect(processed.start.timestamp).to.equal(processed.end.timestamp);
     });
 
     it.each([

@@ -2206,6 +2206,43 @@ storeClasses.forEach((storeClass) => {
         expect(created.end).to.equal('2025-07-05');
       });
 
+      it('should refuse an all-day Date that is not the first instant of a day', () => {
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          displayTimezone: 'America/New_York',
+          onEventsChange: vi.fn(),
+        });
+
+        // `new Date('YYYY-MM-DD')` is midnight in UTC: 20:00 of the previous day in New York.
+        expect(() =>
+          store.createEvent({
+            title: 'Trip',
+            allDay: true,
+            start: new Date('2025-07-04'),
+            end: new Date('2025-07-06'),
+          }),
+        ).to.throw(/first instant of a day/);
+      });
+
+      it('should refuse the inclusive end of the last day of an all-day event', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-06', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+
+        expect(() =>
+          store.updateEvent({ id: 'trip', end: createDate('2025-07-05T23:59:59.999Z') }),
+        ).to.throw(/first instant of a day/);
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+      });
+
       it('should paste an all-day event on the pasted day with its day count', () => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new()
@@ -2220,6 +2257,27 @@ storeClasses.forEach((storeClass) => {
         store.copyEvent('trip');
 
         store.pasteEvent({ start: createDate('2025-07-20T00:00:00') });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.start).to.equal('2025-07-20');
+        expect(pasted.end).to.equal('2025-07-23');
+      });
+
+      it('should paste an all-day event on the pasted day of the display timezone', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+        store.copyEvent('trip');
+
+        store.pasteEvent({ start: createDate('2025-07-20T00:00:00', 'Asia/Tokyo') });
 
         const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
         expect(pasted.start).to.equal('2025-07-20');

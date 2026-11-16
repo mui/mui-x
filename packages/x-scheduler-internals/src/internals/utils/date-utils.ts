@@ -3,7 +3,12 @@ import { BaseTemporal } from './base-temporal';
 import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
 import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import type { WeekInfo } from './date-locale';
-import { toEpochMs, toPlainDate, toPlainDateTime } from './plain-date-utils/timeZone';
+import {
+  getStartOfDayMs,
+  toEpochMs,
+  toPlainDate,
+  toPlainDateTime,
+} from './plain-date-utils/timeZone';
 import { isDateOnlyString, isInstantString } from './plain-date-utils/date';
 
 /**
@@ -67,9 +72,18 @@ export function getUntilReferenceString(event: SchedulerEvent): string {
 }
 
 /**
- * Writes a bound of an all-day event: the date of its instant in `timezone`.
+ * Writes a bound of an all-day event: the date of its instant, which must be the first instant of
+ * a day in `timezone`.
  */
 export function allDayBoundToEventString(epochMs: number, timezone: string): string {
+  if (epochMs !== getStartOfDayMs(epochMs, timezone)) {
+    throw new Error(
+      `MUI X Scheduler: The date ${new Date(epochMs).toISOString()} of the all-day event is not the first instant of a day in the display timezone "${timezone}". ` +
+        'The dates of an all-day event are whole days, so an instant inside a day cannot be written as one of them. ' +
+        'Pass a "YYYY-MM-DD" string, or the Date of 00:00 of the day in the display timezone (of the day after the last day for the end). ' +
+        'See https://mui.com/x/react-scheduler/event-calendar/events/#all-day.',
+    );
+  }
   return toPlainDate(epochMs, timezone).toString();
 }
 

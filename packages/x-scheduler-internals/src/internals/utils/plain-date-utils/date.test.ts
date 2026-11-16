@@ -222,5 +222,25 @@ describe('plain-date-utils/date', () => {
         '2026-03-29T22:00:00.000Z', // March 30th 00:00 CEST
       ]);
     });
+
+    it('should end at the next midnight when a DST transition repeats the last hour', () => {
+      // America/Santiago falls back from 00:00 -03:00 to 23:00 -04:00 on April 6th, 2024.
+      const start = Date.UTC(2024, 3, 6, 3); // April 6th 00:00 -03:00
+      const end = Date.UTC(2024, 3, 6, 15); // April 6th 12:00 -03:00
+      expect(read(snapAllDayBounds(start, end, 'America/Santiago'))).to.deep.equal([
+        '2024-04-06T03:00:00.000Z',
+        '2024-04-07T04:00:00.000Z', // April 7th 00:00 -04:00
+      ]);
+    });
+
+    it('should start at the first instant of a day without midnight', () => {
+      // America/Havana springs forward at midnight on March 9th, 2025: that day starts at 01:00.
+      const start = Date.UTC(2025, 2, 9, 16); // March 9th 12:00 -04:00
+      const end = Date.UTC(2025, 2, 9, 17); // March 9th 13:00 -04:00
+      expect(read(snapAllDayBounds(start, end, 'America/Havana'))).to.deep.equal([
+        '2025-03-09T05:00:00.000Z', // March 9th 01:00 -04:00
+        '2025-03-10T04:00:00.000Z', // March 10th 00:00 -04:00
+      ]);
+    });
   });
 });

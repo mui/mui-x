@@ -1257,7 +1257,8 @@ export class SchedulerStore<
     if (allDay && (cleanChanges.start != null || !original.allDay)) {
       // An all-day paste covers the days of an all-day source, or one day for a timed one, from
       // the pasted day or from the source's own day.
-      const start = cleanChanges.start?.getTime() ?? original.start.timestamp;
+      const start =
+        cleanChanges.start?.getTime() ?? getStartOfDayMs(original.start.timestamp, displayTimezone);
       cleanChanges.start = new Date(start);
       cleanChanges.end = new Date(
         addDaysToDayStart(

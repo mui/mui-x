@@ -794,6 +794,26 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       expect(result.map(getDataKey)).to.deep.equal(['2025-07-04', '2025-07-18']);
     });
 
+    it('should exclude a date from the displayed days of an all-day series', () => {
+      // A daily series of two days displayed in Tokyo, with July 10th excluded: only the
+      // occurrence of July 9th reaches July 10th.
+      const event = EventBuilder.new()
+        .span('2025-07-04', '2025-07-06', { allDay: true })
+        .exDates(['2025-07-10'])
+        .rrule({ freq: 'DAILY' })
+        .withDisplayTimezone('Asia/Tokyo')
+        .toProcessed();
+
+      const result = getRecurringEventOccurrencesForVisibleDays(
+        event,
+        startOfDate('2025-07-10', 'Asia/Tokyo'),
+        startOfDate('2025-07-11', 'Asia/Tokyo') - 1,
+        'Asia/Tokyo',
+      );
+
+      expect(result.map(getDisplayKey)).to.deep.equal(['2025-07-09']);
+    });
+
     it('should exclude an instant-string exDate across the DST fall-back on its data-timezone day', () => {
       // Nov 3rd 04:30Z is Nov 2nd 23:30 in New York — EST, after the fall-back.
       const event = EventBuilder.new()

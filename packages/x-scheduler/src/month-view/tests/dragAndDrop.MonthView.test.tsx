@@ -98,6 +98,68 @@ describe('MonthView - Drag and Drop', () => {
     expect(updatedEvents[0].end).to.equal('2025-07-06');
   });
 
+  describe('resizing an all-day event onto its own days', () => {
+    // July 2nd to 4th.
+    function renderAllDayConference() {
+      const handleEventsChange = vi.fn();
+      const event = EventBuilder.new()
+        .id('event-1')
+        .title('Multi Day Conference')
+        .span('2025-07-02', '2025-07-05', { allDay: true })
+        .resizable(true)
+        .build();
+      render(
+        <StandaloneMonthView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
+      );
+      const eventElement = screen.getByRole('button', { name: /Multi Day Conference/i });
+      mockElementBounds(eventElement, { left: 0, width: 100 });
+      return { handleEventsChange, eventElement };
+    }
+
+    it('should resize the start onto the last day', async () => {
+      const { handleEventsChange, eventElement } = renderAllDayConference();
+
+      await act(async () => {
+        simulateDragAndDrop({
+          source: getResizeHandle(eventElement, 'start'),
+          target: getMonthViewCell(4),
+        });
+      });
+
+      const updatedEvents = handleEventsChange.mock.calls[0][0];
+      expect(updatedEvents[0].start).to.equal('2025-07-04');
+      expect(updatedEvents[0].end).to.equal('2025-07-05');
+    });
+
+    it('should not resize the start past the last day', async () => {
+      const { handleEventsChange, eventElement } = renderAllDayConference();
+
+      await act(async () => {
+        simulateDragAndDrop({
+          source: getResizeHandle(eventElement, 'start'),
+          target: getMonthViewCell(5),
+        });
+      });
+
+      expect(handleEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should resize the end onto the first day', async () => {
+      const { handleEventsChange, eventElement } = renderAllDayConference();
+
+      await act(async () => {
+        simulateDragAndDrop({
+          source: getResizeHandle(eventElement, 'end'),
+          target: getMonthViewCell(2),
+        });
+      });
+
+      const updatedEvents = handleEventsChange.mock.calls[0][0];
+      expect(updatedEvents[0].start).to.equal('2025-07-02');
+      expect(updatedEvents[0].end).to.equal('2025-07-03');
+    });
+  });
+
   it('should resize an event start onto the day of its end at the start of that day', async () => {
     const handleEventsChange = vi.fn();
     const event = EventBuilder.new()

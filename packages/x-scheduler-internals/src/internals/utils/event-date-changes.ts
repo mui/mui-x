@@ -2,6 +2,7 @@ import type { SchedulerEvent, SchedulerEventUpdatedProperties } from '../../mode
 import { resolveEventTimestamp } from '../../process-event/resolveEventTimestamp';
 import { allDayBoundToEventString, timestampToEventString } from './date-utils';
 import { snapAllDayBounds } from './plain-date-utils/date';
+import { toPlainDate } from './plain-date-utils/timeZone';
 
 export interface EventDateChangeStrings {
   start?: string;
@@ -72,7 +73,7 @@ export function stringifyEventDateChanges(
     );
   } else if (becomesAllDay && model.exDates != null) {
     result.exDates = model.exDates.map((exDate) =>
-      allDayBoundToEventString(resolveEventTimestamp(exDate, dataTimezone), displayTimezone),
+      toPlainDate(resolveEventTimestamp(exDate, dataTimezone), displayTimezone).toString(),
     );
   }
   return result;

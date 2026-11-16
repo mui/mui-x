@@ -16,10 +16,25 @@ const wednesdayPlainDate = BaseTemporal.PlainDate.from('2025-01-08');
 
 describe('date-utils', () => {
   describe('allDayBoundToEventString', () => {
-    it('should write an all-day bound as its date in the timezone', () => {
-      expect(allDayBoundToEventString(Date.UTC(2025, 6, 4), 'Asia/Tokyo')).to.equal('2025-07-04');
-      expect(allDayBoundToEventString(Date.UTC(2025, 6, 4), 'America/New_York')).to.equal(
-        '2025-07-03',
+    it('should write the first instant of a day as its date in the timezone', () => {
+      expect(
+        allDayBoundToEventString(
+          toEpochMs(BaseTemporal.PlainDate.from('2025-07-04'), 'Asia/Tokyo'),
+          'Asia/Tokyo',
+        ),
+      ).to.equal('2025-07-04');
+      expect(
+        allDayBoundToEventString(
+          toEpochMs(BaseTemporal.PlainDate.from('2025-07-04'), 'America/New_York'),
+          'America/New_York',
+        ),
+      ).to.equal('2025-07-04');
+    });
+
+    it('should refuse an instant inside a day', () => {
+      // Midnight in UTC is 20:00 of the previous day in New York.
+      expect(() => allDayBoundToEventString(Date.UTC(2025, 6, 4), 'America/New_York')).to.throw(
+        /first instant of a day/,
       );
     });
   });
