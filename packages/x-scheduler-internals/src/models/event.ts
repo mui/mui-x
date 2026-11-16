@@ -61,7 +61,8 @@ interface SchedulerProcessedEventBase {
  * normalized by the store for rendering and interactions.
  *
  * - `start` and `end` are read in the display timezone, for rendering.
- * - `timezone`, `rrule` and `exDates` are the event's own data, read in its timezone.
+ * - `timezone`, `rrule` and `exDates` are the event's own data, read in its timezone for a timed
+ *   event and on the displayed days for an all-day one.
  * - Always includes `modelInBuiltInFormat` (unlike drafts/placeholders).
  */
 export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
@@ -72,7 +73,7 @@ export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
 
   /**
    * The timezone of the event, which its recurrence rule and exception dates are read in.
-   * Ignored for all-day events.
+   * Ignored for all-day events, except for a date-time `until` of their rule.
    */
   timezone: string;
 
@@ -84,7 +85,7 @@ export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
   rrule?: SchedulerProcessedEventRecurrenceRule;
 
   /**
-   * Exception dates for the event, in its timezone.
+   * Exception dates for the event: in its timezone for a timed event, days for an all-day one.
    * These dates will be excluded from the recurrence.
    */
   exDates?: BaseTemporal.PlainDateTime[];
@@ -178,7 +179,8 @@ export interface SchedulerEvent {
    * Accepts any valid IANA timezone name
    * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
    * "default" (the timezone of the system), or "UTC".
-   * Ignored for all-day events, which cover the same days in every timezone.
+   * Ignored for all-day events, which cover the same days in every timezone, except for a
+   * date-time `until` of their recurrence rule.
    * @default "default"
    */
   timezone?: string;
@@ -455,6 +457,10 @@ export type SchedulerEventCreationProperties = Omit<
    * in the display timezone.
    */
   end: string | Date;
+  /**
+   * For an all-day event, `YYYY-MM-DD` dates or the first instants of its days in the display
+   * timezone.
+   */
   exDates?: (string | Date)[];
   rrule?: SchedulerEventRecurrenceRule | SchedulerProcessedEventRecurrenceRule | string;
 };

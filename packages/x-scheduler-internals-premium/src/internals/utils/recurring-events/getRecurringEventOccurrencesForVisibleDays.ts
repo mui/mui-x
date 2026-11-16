@@ -52,9 +52,8 @@ export function getRecurringEventOccurrencesForVisibleDays(
     }));
   }
 
-  // Important:
-  // Occurrences are always computed in dataTimezone to avoid DST issues
-  // DisplayTimezone is applied only for presentation purposes
+  // The occurrences of a timed event are computed in its timezone to avoid DST issues; the display
+  // timezone only presents them.
   const dataTimezone = series.timezone;
   const durationMs = event.end.timestamp - event.start.timestamp;
 
