@@ -11,6 +11,7 @@ import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
 import { vi, describe, it, expect, onTestFinished } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
+import { setupPrintFont } from 'test/utils/printFont';
 
 describe('<DataGridPro /> - Print export', () => {
   const { render } = createRenderer();
@@ -250,6 +251,81 @@ describe('<DataGridPro /> - Print export', () => {
       expect(printLayouts[0]).to.deep.equal(printLayouts[1]);
     });
   });
+
+  it.skipIf(isJSDOM).each(['loaded', 'error'] as const)(
+    'waits for a delayed font to settle as %s before finishing the print export',
+    async (fontStatus) => {
+      const font = await setupPrintFont();
+      const onColumnVisibilityModelChange = vi.fn();
+      render(
+        <Test
+          initialState={{ columns: { columnVisibilityModel: { currencyPair: true, id: false } } }}
+          onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+        />,
+      );
+
+      let printWindow: HTMLIFrameElement | undefined;
+      let fontStatuses: FontFaceLoadStatus[] | undefined;
+      const appendChild = document.body.appendChild.bind(document.body);
+      const appendChildSpy = vi.spyOn(document.body, 'appendChild').mockImplementation((child) => {
+        if (child instanceof HTMLIFrameElement) {
+          printWindow = child;
+        }
+        return appendChild(child);
+      });
+      const removeChild = document.body.removeChild.bind(document.body);
+      // Test mode skips print() and removes the iframe when the export pipeline finishes.
+      const removeChildSpy = vi.spyOn(document.body, 'removeChild').mockImplementation((child) => {
+        if (child === printWindow) {
+          fontStatuses = Array.from(printWindow.contentDocument!.fonts, (face) => face.status);
+        }
+        return removeChild(child);
+      });
+      onTestFinished(() => {
+        appendChildSpy.mockRestore();
+        removeChildSpy.mockRestore();
+      });
+
+      let exportPromise!: Promise<void>;
+      let exportFinished = false;
+      act(() => {
+        exportPromise = apiRef.current!.exportDataAsPrint({
+          copyStyles: false,
+          pageStyle: font.css,
+          fields: ['id'],
+        });
+        exportPromise.then(() => {
+          exportFinished = true;
+        });
+      });
+
+      try {
+        await act(async () => {
+          await expect.poll(() => printWindow?.contentDocument?.fonts.status).to.equal('loading');
+          expect(exportFinished).to.equal(false);
+          expect(printWindow!.isConnected).to.equal(true);
+          expect(onColumnVisibilityModelChange).toHaveBeenCalledTimes(1);
+
+          await font.resolve(fontStatus);
+          await exportPromise;
+        });
+
+        expect(fontStatuses).to.deep.equal([fontStatus]);
+        expect(exportFinished).to.equal(true);
+        expect(printWindow!.isConnected).to.equal(false);
+        expect(onColumnVisibilityModelChange).toHaveBeenCalledTimes(2);
+        expect(onColumnVisibilityModelChange.mock.calls[1][0]).to.deep.equal({
+          currencyPair: true,
+          id: false,
+        });
+      } finally {
+        await act(async () => {
+          await font.resolve('error');
+          await exportPromise;
+        });
+      }
+    },
+  );
 
   describe('stylesheets that fail to load', () => {
     function addMissingStylesheet() {
