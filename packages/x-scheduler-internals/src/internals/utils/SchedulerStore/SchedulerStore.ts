@@ -1267,6 +1267,14 @@ export class SchedulerStore<
           displayTimezone,
         ),
       );
+    } else if (!allDay && original.allDay) {
+      // An all-day source pasted as timed starts at the pasted instant, or at the first instant of
+      // its own day, and lasts the default event duration.
+      const start = cleanChanges.start?.getTime() ?? original.start.timestamp;
+      cleanChanges.start = new Date(start);
+      cleanChanges.end = new Date(
+        start + schedulerEventSelectors.defaultEventDuration(this.state) * 60_000,
+      );
     } else if (cleanChanges.start != null) {
       cleanChanges.end = new Date(
         getOccurrenceEnd({
