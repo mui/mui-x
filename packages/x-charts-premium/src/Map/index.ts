@@ -1,3 +1,5 @@
+import '../typeOverloads';
+
 export type {
   GeoProjectionInput,
   D3NamedProjection,

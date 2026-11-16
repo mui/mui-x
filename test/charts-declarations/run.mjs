@@ -9,7 +9,7 @@ const require = createRequire(import.meta.url);
 const testDirectory = dirname(fileURLToPath(import.meta.url));
 const root = join(testDirectory, '../..');
 const full = process.argv.includes('--full');
-const fixtures = ['community', 'pro', 'premium', 'keyboard', 'rangeBarOnClick', 'gestures'];
+const fixtures = ['community', 'pro', 'premium', 'map', 'keyboard', 'rangeBarOnClick', 'gestures'];
 // Keep access to the installed React types, but give consumers their own package resolution.
 const consumer = await mkdtemp(join(root, 'node_modules/.charts-declarations-'));
 const staged = new Set();

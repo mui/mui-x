@@ -82,7 +82,7 @@ pnpm --filter '@mui/x-charts-premium...' build
 pnpm test:types:charts
 ```
 
-CI runs all six fixtures through ESM and CommonJS exports with the native TypeScript 7 compiler, plus a Community ESM smoke check with TypeScript 6.
+CI runs all fixtures through ESM and CommonJS exports with the native TypeScript 7 compiler, plus a Community ESM smoke check with TypeScript 6.
 For the full compatibility matrix with both compilers, run `pnpm test:types:charts --full`.
 
 ## Regression tests

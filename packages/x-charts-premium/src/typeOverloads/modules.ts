@@ -1,3 +1,5 @@
+// The Premium models re-export the Pro models, which need the Pro series augmentation.
+import '@mui/x-charts-pro/typeOverloads';
 import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
 import type {
   CommonHighlightScope,
