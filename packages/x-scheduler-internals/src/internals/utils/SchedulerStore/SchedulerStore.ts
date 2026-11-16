@@ -64,13 +64,7 @@ import {
   getCustomEventProperties,
   getUpdatedEventModelFromChanges,
 } from './SchedulerStore.utils';
-import {
-  addDaysToDayStart,
-  allDayBoundToEventString,
-  getAllDayDayCount,
-  getOccurrenceEnd,
-  timestampToEventString,
-} from '../date-utils';
+import { addDaysToDayStart, getAllDayDayCount, getOccurrenceEnd } from '../date-utils';
 import {
   getDayTimezone,
   getOccurrenceKey,
@@ -79,6 +73,7 @@ import {
   getPrimaryResourceId,
 } from '../event-utils';
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
+import { stringifyEventDateChanges } from '../event-date-changes';
 import { TimeoutManager } from '../TimeoutManager';
 import { checkDateLocale, DEFAULT_DATE_LOCALE } from '../date-locale';
 import { getStartOfDayMs, toLocalDayNumber } from '../plain-date-utils/timeZone';
@@ -1208,20 +1203,13 @@ export class SchedulerStore<
     end: Date,
   ): SchedulerEventId | undefined => {
     const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
-    const originalModel = original.modelInBuiltInFormat;
-    const dataTimezone = originalModel.timezone ?? 'default';
-    const { displayTimezone } = this.state;
     const duplicatedEvent = extractStandaloneEvent(
       original,
-      original.allDay
-        ? {
-            start: allDayBoundToEventString(start.getTime(), displayTimezone),
-            end: allDayBoundToEventString(end.getTime(), displayTimezone),
-          }
-        : {
-            start: timestampToEventString(start.getTime(), originalModel.start, dataTimezone),
-            end: timestampToEventString(end.getTime(), originalModel.end, dataTimezone),
-          },
+      stringifyEventDateChanges(
+        { start, end },
+        original.modelInBuiltInFormat,
+        this.state.displayTimezone,
+      ),
     );
     return this.updateEvents({ created: [duplicatedEvent] }).created[0];
   };
@@ -1346,29 +1334,10 @@ export class SchedulerStore<
     }
 
     const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat;
-    const dataTimezone = original.modelInBuiltInFormat.timezone ?? 'default';
-    const stringifiedChanges: Record<string, any> = { ...cleanChanges };
-    if (cleanChanges.start != null) {
-      stringifiedChanges.start = allDay
-        ? allDayBoundToEventString(cleanChanges.start.getTime(), displayTimezone)
-        : timestampToEventString(
-            cleanChanges.start.getTime(),
-            original.modelInBuiltInFormat.start,
-            dataTimezone,
-          );
-    }
-    if (cleanChanges.end != null) {
-      stringifiedChanges.end = allDay
-        ? allDayBoundToEventString(cleanChanges.end.getTime(), displayTimezone)
-        : timestampToEventString(
-            cleanChanges.end.getTime(),
-            original.modelInBuiltInFormat.end,
-            dataTimezone,
-          );
-    }
     const createdEvent: SchedulerEventCreationProperties = {
       ...copiedEventWithoutId,
-      ...stringifiedChanges,
+      ...cleanChanges,
+      ...stringifyEventDateChanges(cleanChanges, original.modelInBuiltInFormat, displayTimezone),
       extractedFromId: id,
     };
     return this.updateEvents({ created: [createdEvent] }).created[0];

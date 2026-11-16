@@ -2305,6 +2305,35 @@ storeClasses.forEach((storeClass) => {
 // plugin, so the community store is not expected to honor it.
 premiumStoreClasses.forEach((storeClass) => {
   describe(`Event - ${storeClass.name}`, () => {
+    describe('Method: pasteEvent', () => {
+      it('should paste a copy of a timed series as an all-day series with its exceptions as dates', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('standup')
+          .withDataTimezone('UTC')
+          .singleDay('2025-07-04T09:00:00Z')
+          .rrule({ freq: 'DAILY' })
+          .exDates(['2025-07-05T09:00:00Z'])
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'UTC',
+          onEventsChange,
+        });
+        store.copyEvent('standup');
+
+        store.pasteEvent({ allDay: true });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.allDay).to.equal(true);
+        expect(pasted.start).to.equal('2025-07-04');
+        expect(pasted.end).to.equal('2025-07-05');
+        expect(pasted.exDates).to.deep.equal(['2025-07-05']);
+        expect(() => processEvent(pasted, 'UTC', schedulerRecurringEventsPlugin)).not.to.throw();
+      });
+    });
+
     describe('Method: updateRecurringEvent', () => {
       it('should rewrite the exception dates when an update makes a series all-day', () => {
         const onEventsChange = vi.fn();

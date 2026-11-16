@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { createDate } from 'test/utils/scheduler';
 import type { SchedulerEvent, SchedulerEventUpdatedProperties } from '../../../models';
 import { getCustomEventProperties, getUpdatedEventModelFromChanges } from './SchedulerStore.utils';
 
@@ -77,5 +78,52 @@ describe('getUpdatedEventModelFromChanges', () => {
       'default',
     );
     expect(updated.start).to.equal('2025-10-26T01:45:00.000Z');
+  });
+
+  it('should write the displayed days of a timed event made all-day without bounds', () => {
+    // 23:00 in New York on July 4th is 12:00 in Tokyo on July 5th.
+    const oldModel = {
+      id: '1',
+      title: 'Meeting',
+      start: '2025-07-04T23:00:00',
+      end: '2025-07-05T00:00:00',
+      timezone: 'America/New_York',
+    };
+    const updated = getUpdatedEventModelFromChanges(
+      oldModel,
+      { id: '1', allDay: true },
+      undefined,
+      oldModel as SchedulerEvent,
+      'Asia/Tokyo',
+    );
+    expect(updated.allDay).to.equal(true);
+    expect(updated.start).to.equal('2025-07-05');
+    expect(updated.end).to.equal('2025-07-06');
+  });
+
+  it('should move the exceptions of a timed series made all-day to their displayed days', () => {
+    const oldModel = {
+      id: '1',
+      title: 'Standup',
+      start: '2025-07-04T23:00:00',
+      end: '2025-07-05T00:00:00',
+      timezone: 'America/New_York',
+      rrule: { freq: 'DAILY' as const },
+      exDates: ['2025-07-06T23:00:00'],
+    };
+    const updated = getUpdatedEventModelFromChanges(
+      oldModel,
+      {
+        id: '1',
+        allDay: true,
+        start: createDate('2025-07-05T00:00:00', 'Asia/Tokyo'),
+        end: createDate('2025-07-06T00:00:00', 'Asia/Tokyo'),
+      },
+      undefined,
+      oldModel as SchedulerEvent,
+      'Asia/Tokyo',
+    );
+    // The excluded July 6th at 23:00 in New York is July 7th in Tokyo.
+    expect(updated.exDates).to.deep.equal(['2025-07-07']);
   });
 });

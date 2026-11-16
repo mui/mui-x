@@ -12,16 +12,15 @@ import type {
   SchedulerEventCreationProperties,
   SchedulerEventUpdatedProperties,
 } from '../../../models';
-import { processEvent, resolveEventTimestamp } from '../../../process-event';
+import { processEvent } from '../../../process-event';
 import type { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 import {
   allDayBoundToEventString,
-  timestampToEventString,
   untilToEventString,
   getUntilReferenceString,
 } from '../date-utils';
-import { toPlainDate } from '../plain-date-utils/timeZone';
+import { stringifyEventDateChanges } from '../event-date-changes';
 import { schedulerEventSelectors } from '../../../scheduler-selectors/schedulerEventSelectors';
 
 /**
@@ -167,52 +166,10 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
   displayTimezone: string,
 ): TEvent {
   const dataTimezone = originalBuiltInModel.timezone ?? 'default';
-  const allDay = changes.allDay ?? originalBuiltInModel.allDay ?? false;
-  const stringified: Record<string, any> = { ...changes };
-  if (allDay) {
-    if (changes.start != null) {
-      stringified.start = allDayBoundToEventString(changes.start.getTime(), displayTimezone);
-    }
-    if (changes.end != null) {
-      stringified.end = allDayBoundToEventString(changes.end.getTime(), displayTimezone);
-    }
-    if (changes.exDates != null) {
-      stringified.exDates = changes.exDates.map((d) =>
-        allDayBoundToEventString(d.getTime(), displayTimezone),
-      );
-    } else if (!originalBuiltInModel.allDay && originalBuiltInModel.exDates != null) {
-      // A timed series made all-day keeps its exceptions on the days of their instants in its
-      // timezone.
-      stringified.exDates = originalBuiltInModel.exDates.map((exDate) =>
-        toPlainDate(resolveEventTimestamp(exDate, dataTimezone), dataTimezone).toString(),
-      );
-    }
-  } else {
-    if (changes.start != null) {
-      stringified.start = timestampToEventString(
-        changes.start.getTime(),
-        originalBuiltInModel.start,
-        dataTimezone,
-      );
-    }
-    if (changes.end != null) {
-      stringified.end = timestampToEventString(
-        changes.end.getTime(),
-        originalBuiltInModel.end,
-        dataTimezone,
-      );
-    }
-    if (changes.exDates != null) {
-      // A new exDate matches the format of start.
-      stringified.exDates = changes.exDates.map((d, i) =>
-        timestampToEventString(
-          d.getTime(),
-          originalBuiltInModel.exDates?.[i] ?? originalBuiltInModel.start,
-          dataTimezone,
-        ),
-      );
-    }
-  }
+  const stringified: Record<string, any> = {
+    ...changes,
+    ...stringifyEventDateChanges(changes, originalBuiltInModel, displayTimezone),
+  };
   if (changes.rrule != null && typeof changes.rrule === 'object' && changes.rrule.until != null) {
     stringified.rrule = {
       ...changes.rrule,
