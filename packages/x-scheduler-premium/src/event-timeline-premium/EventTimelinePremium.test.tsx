@@ -6,7 +6,7 @@ import {
 } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import { EVENT_TIMELINE_DEFAULT_LOCALE_TEXT } from '@mui/x-scheduler/internals';
-import { toLocalDayNumber } from '@mui/x-scheduler-internals/internals';
+import { getMinutesInDay, toLocalDayNumber } from '@mui/x-scheduler-internals/internals';
 import {
   addDays,
   createDate,
@@ -19,11 +19,7 @@ import {
   ResourceBuilder,
   startOfWeek,
 } from 'test/utils/scheduler';
-import type {
-  SchedulerEvent,
-  SchedulerResource,
-  TemporalSupportedObject,
-} from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-internals/models';
 import type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 import type {
@@ -63,7 +59,7 @@ describe('<EventTimelinePremium />', () => {
     events?: SchedulerEvent[];
     preset?: EventTimelinePremiumPreset;
     presets?: EventTimelinePremiumPreset[];
-    visibleDate?: TemporalSupportedObject;
+    visibleDate?: Date;
     displayTimezone?: string;
     showCurrentTimeIndicator?: boolean;
     resourceColumnLabel?: string;
@@ -1272,9 +1268,9 @@ describe('<EventTimelinePremium />', () => {
 
         expect(onEventEditingStart.mock.calls.length).to.equal(1);
         const occurrence = onEventEditingStart.mock.lastCall![0];
-        expect(occurrence.displayTimezone.timezone).to.equal(timezone);
+        expect(occurrence.unstable_internalInfos.displayTimezone).to.equal(timezone);
         // The creation starts at the first instant of the preset, at midnight.
-        expect(occurrence.displayTimezone.start.minutesInDay).to.equal(0);
+        expect(getMinutesInDay(occurrence.start.plainDateTime)).to.equal(0);
       },
     );
   });

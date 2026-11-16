@@ -72,8 +72,8 @@ describe('CompactThreeDayView - touch resize & arming', () => {
     expect(onEventsChange.mock.calls.length).to.equal(1);
     const updated = onEventsChange.mock.calls[0][0];
     expect(updated[0].id).to.equal('event-1');
-    expect(new Date(updated[0].start).getUTCHours()).to.equal(10);
-    expect(new Date(updated[0].end).getUTCHours()).to.equal(16);
+    expect(updated[0].start).to.equal('2025-07-03T10:00:00Z');
+    expect(updated[0].end).to.equal('2025-07-03T16:00:00.000Z');
   });
 
   it('should disarm the current event when another event in a different column is tapped', () => {

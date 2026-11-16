@@ -41,8 +41,7 @@ function chartColorVar(colorName: string) {
 function isInDay(occurrence: SchedulerEventOccurrence, dayStart: number, dayEnd: number): boolean {
   return (
     occurrence.allDay ||
-    (occurrence.displayTimezone.end.timestamp > dayStart &&
-      occurrence.displayTimezone.start.timestamp < dayEnd)
+    (occurrence.end.timestamp > dayStart && occurrence.start.timestamp < dayEnd)
   );
 }
 
@@ -57,8 +56,8 @@ function hoursInDay(
   if (occurrence.allDay) {
     return 0;
   }
-  const start = Math.max(occurrence.displayTimezone.start.timestamp, dayStart);
-  const end = Math.min(occurrence.displayTimezone.end.timestamp, dayEnd);
+  const start = Math.max(occurrence.start.timestamp, dayStart);
+  const end = Math.min(occurrence.end.timestamp, dayEnd);
   return Math.max(0, end - start) / MS_PER_HOUR;
 }
 

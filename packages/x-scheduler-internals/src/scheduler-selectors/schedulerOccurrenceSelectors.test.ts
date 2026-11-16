@@ -1,6 +1,5 @@
 import {
   addDays,
-  createDate,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
@@ -9,7 +8,7 @@ import {
 } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import type { SchedulerResource } from '../models';
-import { processDate } from '../process-date';
+import { createProcessedDate } from '../process-date';
 import { schedulerOccurrenceSelectors } from './schedulerOccurrenceSelectors';
 
 const TEST_RESOURCES = [ResourceBuilder.new().build()];
@@ -23,7 +22,7 @@ describe('schedulerOccurrenceSelectors', () => {
       });
       state.nowTimestamp = Date.parse('2025-07-03T08:00:00Z');
 
-      const start = processDate(createDate('2025-07-03T10:00:00Z'), 'default');
+      const start = createProcessedDate(Date.parse('2025-07-03T10:00:00Z'), 'default');
 
       expect(schedulerOccurrenceSelectors.isStarted(state, start)).to.equal(false);
     });
@@ -35,7 +34,7 @@ describe('schedulerOccurrenceSelectors', () => {
       });
       state.nowTimestamp = Date.parse('2025-07-03T10:00:00Z');
 
-      const start = processDate(createDate('2025-07-03T10:00:00Z'), 'default');
+      const start = createProcessedDate(Date.parse('2025-07-03T10:00:00Z'), 'default');
 
       expect(schedulerOccurrenceSelectors.isStarted(state, start)).to.equal(true);
     });
@@ -47,7 +46,7 @@ describe('schedulerOccurrenceSelectors', () => {
       });
       state.nowTimestamp = Date.parse('2025-07-03T10:30:00Z');
 
-      const start = processDate(createDate('2025-07-03T10:00:00Z'), 'default');
+      const start = createProcessedDate(Date.parse('2025-07-03T10:00:00Z'), 'default');
 
       expect(schedulerOccurrenceSelectors.isStarted(state, start)).to.equal(true);
     });
@@ -61,7 +60,7 @@ describe('schedulerOccurrenceSelectors', () => {
       });
       state.nowTimestamp = Date.parse('2025-07-03T10:30:00Z');
 
-      const end = processDate(createDate('2025-07-03T11:00:00Z'), 'default');
+      const end = createProcessedDate(Date.parse('2025-07-03T11:00:00Z'), 'default');
 
       expect(schedulerOccurrenceSelectors.isEnded(state, end)).to.equal(false);
     });
@@ -73,7 +72,7 @@ describe('schedulerOccurrenceSelectors', () => {
       });
       state.nowTimestamp = Date.parse('2025-07-03T11:00:00Z');
 
-      const end = processDate(createDate('2025-07-03T11:00:00Z'), 'default');
+      const end = createProcessedDate(Date.parse('2025-07-03T11:00:00Z'), 'default');
 
       expect(schedulerOccurrenceSelectors.isEnded(state, end)).to.equal(false);
     });
@@ -85,7 +84,7 @@ describe('schedulerOccurrenceSelectors', () => {
       });
       state.nowTimestamp = Date.parse('2025-07-03T12:00:00Z');
 
-      const end = processDate(createDate('2025-07-03T11:00:00Z'), 'default');
+      const end = createProcessedDate(Date.parse('2025-07-03T11:00:00Z'), 'default');
 
       expect(schedulerOccurrenceSelectors.isEnded(state, end)).to.equal(true);
     });

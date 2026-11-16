@@ -3,6 +3,7 @@ import type {
   GridValidRowModel,
   GridColDef,
   GridCellCoordinates,
+  GridFilterModel,
 } from '@mui/x-data-grid-pro';
 import type { GridStateColDef } from '@mui/x-data-grid/internals';
 import type { FormulaExcelExportLayout, ExcelFormulaCell } from './gridFormulaExcelExport';
@@ -223,6 +224,12 @@ export interface GridComputedColumnsRuntimeCache {
    * grouped computed field one pass behind — a changed identity requests the second pass.
    */
   hydratedColDefs: Map<string, GridColDef>;
+  /**
+   * The computed fields whose record was rebuilt with another `type` since the last
+   * `columnsChange`. The filter items made for the previous type are fitted to the new one
+   * when the columns state that holds the rebuilt record is published.
+   */
+  typeChangedFields: Set<string>;
 }
 
 export interface GridFormulaInternalCache {
@@ -295,6 +302,34 @@ export interface GridFormulaInternalCache {
    * cascades into another formula pass, which must not fire it again.
    */
   suppressRegroupTrigger: boolean;
+  /**
+   * The model the last reset of the filter items sent to a controlled parent, while the state
+   * still holds `stateModel`, the model it was sent for. A reset in a later event, before the
+   * parent passed the model back, starts from it: the last model the parent gets must hold every
+   * reset. Dropped at the next `filterModelChange` (the state changed, even back to an earlier
+   * model object), and when the state model is no longer `stateModel`.
+   */
+  pendingFilterItemsReset: { stateModel: GridFilterModel; filterModel: GridFilterModel } | null;
+  /**
+   * Left by the reset of the filter items after a type change (the priority `columnsChange`
+   * listener) for the formula `columnsChange` listener of the same event, which consumes it.
+   * In the cache rather than a ref, so a second subscription of the listeners (React 18
+   * StrictMode) reads the same value.
+   */
+  typeChangeReset: {
+    /**
+     * The `orderedFields` of the columns state the reset ran for, once the grouping columns are
+     * synced. Matched by identity, so another `columnsChange` can't read it, even when a
+     * listener threw before the one that consumes it.
+     */
+    orderedFields: readonly string[];
+    /**
+     * The filter model is controlled and the reset changed an item: the parent got the model
+     * through `onFilterModelChange`, but the state keeps the previous items until the parent
+     * passes it back, after the event. The model the parent passes is filtered when it arrives.
+     */
+    pending: boolean;
+  } | null;
   /**
    * Last value resolved for each raw (non-formula) dependency cell,
    * keyed by stringified row id then field. Compared on row change to decide

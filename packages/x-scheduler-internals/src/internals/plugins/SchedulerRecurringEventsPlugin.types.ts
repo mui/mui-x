@@ -1,6 +1,4 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
-  TemporalSupportedObject,
   RecurringEventPresetKey,
   RecurringEventScope,
   SchedulerEventOccurrence,
@@ -18,10 +16,13 @@ export interface SchedulerRecurringEventsPluginInterface {
    * Parses a recurrence rule into a canonical `SchedulerProcessedEventRecurrenceRule`
    * expressed in the given timezone. String inputs are validated against RFC5545; object
    * inputs are trusted and normalized.
+   * A date-time `until` is the exact cutoff of a timed series (`allDay` false, the default), and
+   * only its date counts for an all-day one.
    */
   parseRRule(
     input: string | SchedulerEventRecurrenceRule,
-    timezone: TemporalTimezone,
+    timezone: string,
+    allDay?: boolean,
   ): SchedulerProcessedEventRecurrenceRule;
 
   /**
@@ -33,7 +34,7 @@ export interface SchedulerRecurringEventsPluginInterface {
     event: SchedulerProcessedEvent,
     start: number,
     end: number,
-    displayTimezone: TemporalTimezone,
+    displayTimezone: string,
   ): SchedulerEventOccurrence[];
 
   /**
@@ -42,7 +43,7 @@ export interface SchedulerRecurringEventsPluginInterface {
    */
   updateRecurringEvent(
     originalEvent: SchedulerProcessedEvent,
-    occurrenceStart: TemporalSupportedObject,
+    occurrence: SchedulerEventOccurrence,
     changes: SchedulerEventUpdatedProperties,
     scope: RecurringEventScope,
   ): UpdateEventsParameters;
@@ -53,7 +54,7 @@ export interface SchedulerRecurringEventsPluginInterface {
    */
   deleteRecurringEvent(
     originalEvent: SchedulerProcessedEvent,
-    occurrenceStart: TemporalSupportedObject,
+    occurrence: SchedulerEventOccurrence,
     scope: RecurringEventScope,
   ): UpdateEventsParameters;
 

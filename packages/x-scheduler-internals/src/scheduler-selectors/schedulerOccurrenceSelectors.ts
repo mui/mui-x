@@ -106,7 +106,7 @@ export const schedulerOccurrenceSelectors = {
    */
   highlightState: (
     state: State,
-    occurrence: Pick<SchedulerEventOccurrence, 'resource' | 'displayTimezone' | 'allDay'>,
+    occurrence: Pick<SchedulerEventOccurrence, 'resource' | 'start' | 'end' | 'allDay'>,
   ): 'none' | 'highlighted' | 'dimmed' => {
     const highlight = state.occurrenceHighlight;
     if (highlight == null) {
@@ -127,8 +127,8 @@ export const schedulerOccurrenceSelectors = {
     }
     const matchesRange =
       highlight.range == null ||
-      (occurrence.displayTimezone.start.timestamp < highlight.range.end &&
-        occurrence.displayTimezone.end.timestamp > highlight.range.start);
+      (occurrence.start.timestamp < highlight.range.end &&
+        occurrence.end.timestamp > highlight.range.start);
     const matchesKind = !highlight.timedOnly || !occurrence.allDay;
     return matchesResource && matchesRange && matchesKind ? 'highlighted' : 'dimmed';
   },

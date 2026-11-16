@@ -145,17 +145,19 @@ See the [Overlays](/x/react-data-grid/overlays/) documentation on how to customi
 
 ### Root and main elements
 
-The Data Grid does not forward unknown props to the DOM.
-For example, `<DataGrid data-testid="grid" />` doesn't add the `data-testid` attribute.
-To add attributes such as `data-*` or `aria-*`, use the `root` and `main` slot props:
+The Data Grid forwards `data-*` props to its root element.
+For example, `<DataGrid data-testid="orders-grid" />` adds the `data-testid` attribute to the outermost element.
+The Data Grid does not forward other unknown props to the DOM.
 
-- `slotProps.root`: the outermost element of the Data Grid. Use it for test selectors.
+To add other attributes, such as `aria-*`, use the `root` and `main` slot props:
+
+- `slotProps.root`: the outermost element of the Data Grid. If a `data-*` attribute is also in `slotProps.root`, the value in `slotProps.root` is used.
 - `slotProps.main`: the `.MuiDataGrid-main` element, with `role="grid"` (or `role="treegrid"` with tree data or row grouping). Use it for ARIA attributes that describe the grid.
 
 ```tsx
 <DataGrid
+  data-testid="orders-grid"
   slotProps={{
-    root: { 'data-testid': 'orders-grid' },
     main: { 'aria-describedby': 'orders-grid-description' },
   }}
 />

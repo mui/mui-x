@@ -1,9 +1,7 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import {
   getDayNumber,
-  getStartOfDayMs,
+  localToEpochMs,
   MS_PER_DAY,
-  toEpochMs,
   toLocalMs,
   toMsInDay,
   toPlainDate,
@@ -12,20 +10,8 @@ import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import type {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
-  TemporalSupportedObject,
   SchedulerProcessedEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
-
-/**
- * Creates the date of the first instant of the last day before a plain date that exists
- * in `timezone`. A day the timezone skips, like December 30th, 2011 in Pacific/Apia, is passed over.
- */
-export function createStartOfPreviousDay(
-  plainDate: BaseTemporal.PlainDate,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject {
-  return new Date(getStartOfDayMs(toEpochMs(plainDate, 0, timezone) - 1, timezone));
-}
 
 /**
  * Moves the end of an event to `plainDate` on the wall clock of `timezone`, like
@@ -34,21 +20,22 @@ export function createStartOfPreviousDay(
  * repeated hour doesn't come before its start.
  */
 export function moveEndToPlainDate(
-  end: TemporalSupportedObject,
+  endMs: number,
   plainDate: BaseTemporal.PlainDate,
   startMs: number,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject {
-  const msInDay = toMsInDay(end.getTime(), timezone);
-  let endMs = toEpochMs(plainDate, msInDay, timezone);
-  if (endMs < startMs) {
+  timezone: string,
+): number {
+  const msInDay = toMsInDay(endMs, timezone);
+  const localMs = getDayNumber(plainDate) * MS_PER_DAY + msInDay;
+  const movedEndMs = localToEpochMs(localMs, timezone);
+  if (movedEndMs < startMs) {
     // The same wall-clock time, in the offset of the start.
     const laterMs = startMs + msInDay - toMsInDay(startMs, timezone);
-    if (toLocalMs(laterMs, timezone) === getDayNumber(plainDate) * MS_PER_DAY + msInDay) {
-      endMs = laterMs;
+    if (toLocalMs(laterMs, timezone) === localMs) {
+      return laterMs;
     }
   }
-  return new Date(endMs);
+  return movedEndMs;
 }
 
 /**
@@ -83,11 +70,8 @@ export function getPlainDateWeekDayCode(
 /**
  * Returns the week day code (MO..SU) for a given date, read in `timezone`.
  */
-export function getWeekDayCode(
-  date: TemporalSupportedObject,
-  timezone: TemporalTimezone,
-): RecurringEventWeekDayCode {
-  return getPlainDateWeekDayCode(toPlainDate(date.getTime(), timezone));
+export function getWeekDayCode(epochMs: number, timezone: string): RecurringEventWeekDayCode {
+  return getPlainDateWeekDayCode(toPlainDate(epochMs, timezone));
 }
 
 /**

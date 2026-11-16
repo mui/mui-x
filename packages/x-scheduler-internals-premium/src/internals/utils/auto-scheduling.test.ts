@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { createDate, EventBuilder, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import type { SchedulerEventId, SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
-import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerDependency } from '../../models';
 import { groupByEventId } from './dependency-utils';
 import { computeAutoSchedulingCascade, getDependencyViolation } from './auto-scheduling';
@@ -27,7 +26,7 @@ function dependency(
   return { id: `dep-${dependencyCount}`, source, target, type: 'FinishToStart', ...overrides };
 }
 
-function allDayEvent(id: SchedulerEventId, day: string, timezone: TemporalTimezone = 'UTC') {
+function allDayEvent(id: SchedulerEventId, day: string, timezone = 'UTC') {
   return EventBuilder.new()
     .id(id)
     .withDataTimezone(timezone)
@@ -70,10 +69,10 @@ function runCascade(
 // `null` asserts the bound is absent from the entry altogether — the edge a resize-style
 // clamp kept, which the cascade must not report alongside the edge that actually moved.
 function expectDates(
-  entry: { start?: TemporalSupportedObject; end?: TemporalSupportedObject },
+  entry: { start?: Date; end?: Date },
   start: string | null,
   end: string | null,
-  timezone: TemporalTimezone = 'default',
+  timezone = 'default',
 ) {
   if (start === null) {
     expect('start' in entry).to.equal(false);

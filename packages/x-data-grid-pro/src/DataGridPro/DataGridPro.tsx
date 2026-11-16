@@ -9,6 +9,7 @@ import {
   useGridApiInitialization,
   useGridParamsOverridableMethods,
   useIsCellEditable,
+  pickDataAttributes,
 } from '@mui/x-data-grid/internals';
 import type { GridConfiguration } from '@mui/x-data-grid/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
@@ -71,6 +72,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
         className={props.className}
         style={props.style}
         sx={props.sx}
+        {...pickDataAttributes(props)}
         {...props.slotProps?.root}
         ref={ref}
       >

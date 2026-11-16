@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { act, screen, fireEvent, waitFor, within } from '@mui/internal-test-utils';
 import {
-  adapter,
   createDate,
   createMatchMedia,
   createSchedulerRenderer,
@@ -128,9 +127,9 @@ describe('EventContextMenu - recurring events (Premium)', () => {
     // The display bounds of this occurrence normalize to New York July 3rd; the
     // exception must land on the event's own July 4th.
     expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
-    expect(deleteRecurringEventSpy!.mock.lastCall![0].occurrenceStart.getTime()).to.equal(
-      createDate('2025-07-04T00:00:00', 'UTC').getTime(),
-    );
+    expect(
+      deleteRecurringEventSpy!.mock.lastCall![0].occurrence.unstable_internalInfos.dataStart,
+    ).to.equal(createDate('2025-07-04T00:00:00', 'UTC').getTime());
     // The recurring branch defers to the scope dialog instead of deleting right away.
     expect(screen.getByText(/Apply this change to:/i)).not.to.equal(null);
   });
@@ -204,7 +203,7 @@ describe('EventContextMenu - recurring events (Premium)', () => {
     }
 
     it('should move focus to the day cell once the scope dialog deletes the event in the month view', async () => {
-      const weeklyEvent = EventBuilder.new(adapter)
+      const weeklyEvent = EventBuilder.new()
         .title('Weekly sync')
         .singleDay('2025-07-03T09:00:00Z', 30)
         .recurrent('WEEKLY')
@@ -223,12 +222,12 @@ describe('EventContextMenu - recurring events (Premium)', () => {
 
     it('should move focus to the next event of the "+N more" popover once the scope dialog deletes the event', async () => {
       const otherEvents = [8, 10, 11, 12, 13].map((hour) =>
-        EventBuilder.new(adapter)
+        EventBuilder.new()
           .title(`Event ${hour}`)
           .singleDay(`2025-07-03T${String(hour).padStart(2, '0')}:00:00Z`, 30)
           .build(),
       );
-      const weeklyEvent = EventBuilder.new(adapter)
+      const weeklyEvent = EventBuilder.new()
         .title('Weekly sync')
         .singleDay('2025-07-03T09:00:00Z', 30)
         .recurrent('WEEKLY')
