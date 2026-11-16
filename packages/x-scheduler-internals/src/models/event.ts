@@ -334,8 +334,7 @@ export interface SchedulerOccurrencePlaceholderInternalDragOrResize extends Sche
    */
   type: 'internal-drag' | 'internal-resize';
   /**
-   * Whether the occurrence is all-day where it is dragged or resized to, which can differ from the
-   * original occurrence when the surface changes it.
+   * Whether the occurrence is all-day where it is dropped.
    */
   allDay: boolean;
   /**

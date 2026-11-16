@@ -31,8 +31,8 @@ import { getStartOfDayMs, toLocalDayNumber } from './plain-date-utils/timeZone';
 
 /**
  * The bounds of a drop as whole days of the display timezone when its result is all-day: a move
- * keeps the day count of its source (one day for a timed one) from the day under its start, a
- * resize or a creation snaps its bounds. The bounds of a timed result are unchanged.
+ * keeps the days of its source from the day under its start, a resize or a creation snaps its
+ * bounds. The bounds of a timed result are unchanged.
  */
 function snapDropBounds(
   type: SchedulerOccurrencePlaceholder['type'],

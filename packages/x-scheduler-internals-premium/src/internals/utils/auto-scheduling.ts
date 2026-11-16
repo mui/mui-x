@@ -103,8 +103,7 @@ function resolveProcessedEventDates(
   displayTimezone: string,
 ): ResolvedDates {
   if (processedEvent.allDay) {
-    // Whole days of the display timezone; the engine's end is the last instant of the last day,
-    // one millisecond before the exclusive end of the occurrence.
+    // Whole days of the display timezone, ending on the last instant of the last day.
     return {
       start: processedEvent.start.timestamp,
       end: getLastInstant(processedEvent.end.timestamp, true),

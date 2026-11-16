@@ -13,11 +13,8 @@ export interface EventDateChangeStrings {
 /**
  * Writes the date changes of an event as the strings of its model: the days of an all-day event
  * in the display timezone, the instants of a timed event in the format of its stored strings.
- * `bounds` are the instants to write when the changes give none (the edited occurrence's, for a
- * recurring edit); otherwise a bound the changes don't give is left out.
- * A timed event made all-day lives on its displayed days: the bounds it doesn't get are its
- * current instants snapped to whole days, and its exception dates move to the displayed days of
- * their instants.
+ * `bounds` are the instants written when the changes give none. A timed event made all-day gets
+ * whole displayed days, and its exception dates move to their displayed days.
  */
 export function stringifyEventDateChanges(
   changes: Pick<SchedulerEventUpdatedProperties, 'allDay' | 'start' | 'end' | 'exDates'>,

@@ -59,8 +59,7 @@ export function useCalendarGridPlaceholderInDay(
       return null;
     }
 
-    // An internal drag or resize carries the all-day-ness of its destination, which can differ
-    // from the original occurrence's.
+    // The destination of a drag can change whether the occurrence is all-day.
     const allDay =
       rawPlaceholder.type === 'creation' ||
       (rawPlaceholder.type === 'external-drag'

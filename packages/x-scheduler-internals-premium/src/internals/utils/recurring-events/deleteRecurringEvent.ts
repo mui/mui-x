@@ -55,9 +55,8 @@ export function applyRecurringDeleteOnlyThis(
   const occurrenceDay = getOccurrencePlainDate(occurrence);
   const previousExDates = originalEvent.exDates ?? [];
   const excludedDays = [...previousExDates.map((exDate) => exDate.toPlainDate()), occurrenceDay];
-  // The exceptions of an all-day series are days: the first instants of those days in the display
-  // timezone, which the store writes back as dates. The exceptions of a timed series keep their
-  // instant, which their wall-clock time can't tell apart in the hour a DST transition repeats.
+  // The exceptions of an all-day series are days, which the store writes back as dates; a timed
+  // series keeps the instants of its exceptions.
   const exDates = originalEvent.allDay
     ? [
         ...previousExDates.map((exDate) => new Date(toEpochMs(exDate, displayTimezone))),

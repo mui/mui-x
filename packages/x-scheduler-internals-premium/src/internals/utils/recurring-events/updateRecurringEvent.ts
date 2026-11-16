@@ -198,10 +198,8 @@ export function applyRecurringUpdateAll(
 
   // 3) Decide new start/end: editing the first occurrence keeps the instants of the changes, which
   // can move DTSTART to another date. Otherwise, the series keeps its first day and takes the
-  // representation of the edited occurrence: its times (where a time a DST transition repeats
-  // resolves to its first instant, or for the end, to its first instant at or after the start),
-  // or its day count. Only the bounds in `changes` are written, so that the other one keeps its
-  // instant.
+  // representation of the edited occurrence: its times or its day count. Only the bounds in
+  // `changes` are written.
   if (!editedIsDtstart) {
     if (allDay !== originalAllDay) {
       // The bounds of the edited occurrence in its new representation: the ones given, or its own.
@@ -270,8 +268,7 @@ export function applyRecurringUpdateAll(
   if (originalEvent.rrule && !hasExplicitRRule) {
     let rrule = originalEvent.rrule;
     if (allDay !== originalAllDay) {
-      // The series changes the timezone its days are read in: its days follow the edited
-      // occurrence's day into the new one.
+      // The series changes the timezone its days are read in.
       rrule = shiftRRuleDays(rrule, occurrencePlainDate, nextOccurrencePlainDate);
     }
     if (touchedStartDate || touchedEndDate) {
@@ -474,8 +471,7 @@ export function decideSplitRRule(
   // Case C — user did not touch RRULE → inherit pattern and recompute boundaries
   let realignedRule: SchedulerProcessedEventRecurrenceRule = { ...originalRule };
 
-  // The day of the edited occurrence in the new representation: a series that changes the
-  // timezone its days are read in re-expresses them there.
+  // A series that changes the timezone its days are read in re-expresses its rule there.
   const nextSplitPlainDate = toPlainDate(splitStart, nextDayTimezone);
   if (nextDayTimezone !== dayTimezone) {
     realignedRule = shiftRRuleDays(

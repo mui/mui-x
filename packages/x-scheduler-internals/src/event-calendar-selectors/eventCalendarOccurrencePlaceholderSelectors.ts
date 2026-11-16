@@ -23,9 +23,8 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
     }
 
     // A placeholder starting in a previous row also renders from the first day of this one, when the
-    // row starts within it, in either order. The end of a day-grid placeholder is exclusive: a row
-    // starting on it is after the placeholder. The range is checked first, as it rules out most
-    // cells.
+    // row starts within it, in either order (the end is exclusive). The range is checked first, as
+    // it rules out most cells.
     if (
       Math.min(placeholder.start, placeholder.end) <= rowStart &&
       rowStart < Math.max(placeholder.start, placeholder.end) &&

@@ -29,8 +29,7 @@ export function getOccurrenceLastDayNumber(
   displayTimezone: string,
 ): number {
   if (occurrence.allDay) {
-    // The day of the last instant, not the day before the end's date: when the timezone skips the
-    // day after the last day, the end lands a day later.
+    // When the timezone skips the day after the last day, the end lands a day later.
     return toLocalDayNumber(getLastInstant(occurrence.end.timestamp, true), displayTimezone);
   }
   return getDayNumber(occurrence.end.plainDateTime.toPlainDate());

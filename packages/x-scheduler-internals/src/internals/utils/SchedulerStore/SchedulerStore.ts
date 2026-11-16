@@ -1594,8 +1594,7 @@ export class SchedulerStore<
     const occurrenceEnd = getOccurrenceEnd({ event: original, occurrenceStart, displayTimezone });
     const targetsCreatedEvent = createdEvent != null && createdEventId != null;
     // In place, the pattern decides where a day or rule change lands: only a change that keeps
-    // the occurrence on its own day can keep the surface armed. The days are read in the timezone
-    // of each representation, and the exclusive end of an all-day one ends on the day before.
+    // the occurrence on its own day can keep the surface armed.
     const allDay = changes.allDay ?? occurrence.allDay;
     const nextDayTimezone = getDayTimezone(
       { allDay, timezone: original.timezone },

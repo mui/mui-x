@@ -101,9 +101,7 @@ export function getAllDayDayCount(
 }
 
 /**
- * The first instant, in `timezone`, of the day `days` after the day of `timestamp`: how the bounds
- * of an all-day event move. A day whose midnight a DST transition skips starts later than 00:00,
- * which adding days on the wall clock would carry over.
+ * The first instant, in `timezone`, of the day `days` after the day of `timestamp`.
  */
 export function addDaysToDayStart(timestamp: number, days: number, timezone: string): number {
   return toEpochMs(toPlainDate(timestamp, timezone).add({ days }), timezone);
