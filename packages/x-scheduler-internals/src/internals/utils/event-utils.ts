@@ -9,12 +9,8 @@ import type {
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
 import type { BaseTemporal } from './base-temporal';
 import { toLocalDayNumber, toPlainDate } from './plain-date-utils/timeZone';
-import { getPlainDateKey } from './plain-date-utils/plainDate';
+import { getDayNumber, getPlainDateKey } from './plain-date-utils/plainDate';
 import type { SchedulerEventRangeIndex } from './event-range-index';
-
-// The day numbers of the occurrences are read from their instants: the views read them for every
-// occurrence, and the dates of zoned date-times are new objects, which `getDayNumber()` hasn't
-// cached yet.
 
 /**
  * The day number of the first day an occurrence covers in the display timezone.
@@ -22,8 +18,7 @@ import type { SchedulerEventRangeIndex } from './event-range-index';
 export function getOccurrenceFirstDayNumber(
   occurrence: Pick<SchedulerRenderableEventOccurrence, 'start'>,
 ): number {
-  const { start } = occurrence;
-  return toLocalDayNumber(start.epochMilliseconds, start.timeZoneId);
+  return getDayNumber(occurrence.start.toPlainDate());
 }
 
 /**
@@ -33,7 +28,10 @@ export function getOccurrenceFirstDayNumber(
 export function getOccurrenceLastDayNumber(
   occurrence: Pick<SchedulerRenderableEventOccurrence, 'allDay' | 'end'>,
 ): number {
-  return toLocalDayNumber(getOccurrenceModelEnd(occurrence), occurrence.end.timeZoneId);
+  const { end } = occurrence;
+  return occurrence.allDay
+    ? toLocalDayNumber(end.epochMilliseconds - 1, end.timeZoneId)
+    : getDayNumber(end.toPlainDate());
 }
 
 /**
