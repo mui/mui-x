@@ -49,8 +49,7 @@ const ColumnsPanelTrigger = forwardRef<HTMLButtonElement, ColumnsPanelTriggerPro
   function ColumnsPanelTrigger(props, ref) {
     const { render, className, onClick, onPointerUp, ...other } = props;
     const rootProps = useGridRootProps();
-    const buttonId = useId();
-    const panelId = useId();
+    const buttonId = useId(other.id);
     const apiRef = useGridApiContext();
     const panelState = useGridSelector(apiRef, gridPreferencePanelStateSelector);
     const open =
@@ -64,7 +63,7 @@ const ColumnsPanelTrigger = forwardRef<HTMLButtonElement, ColumnsPanelTriggerPro
       if (open) {
         apiRef.current.hidePreferences();
       } else {
-        apiRef.current.showPreferences(GridPreferencePanelsValue.columns, panelId, buttonId);
+        apiRef.current.showPreferences(GridPreferencePanelsValue.columns, undefined, buttonId);
       }
       onClick?.(event);
     };
@@ -84,7 +83,7 @@ const ColumnsPanelTrigger = forwardRef<HTMLButtonElement, ColumnsPanelTriggerPro
         id: buttonId,
         'aria-haspopup': 'dialog',
         'aria-expanded': open ? 'true' : undefined,
-        'aria-controls': open ? panelId : undefined,
+        'aria-controls': open ? panelState.panelId : undefined,
         className: resolvedClassName,
         ...other,
         onPointerUp: handlePointerUp,

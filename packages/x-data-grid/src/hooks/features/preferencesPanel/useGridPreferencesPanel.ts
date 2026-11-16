@@ -10,12 +10,26 @@ import { gridPreferencePanelStateSelector } from './gridPreferencePanelSelector'
 import type { GridPreferencesPanelApi } from '../../../models/api/gridPreferencesPanelApi';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 
+const getDefaultPreferencePanelId = (apiRef: RefObject<GridPrivateApiCommunity>) =>
+  `mui-x-preference-panel-${apiRef.current.instanceId.id}`;
+
 export const preferencePanelStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'initialState'>
-> = (state, props) => ({
-  ...state,
-  preferencePanel: props.initialState?.preferencePanel ?? { open: false },
-});
+  Pick<DataGridProcessedProps, 'initialState'>,
+  GridPrivateApiCommunity
+> = (state, props, apiRef) => {
+  const initialPreferencePanel = props.initialState?.preferencePanel;
+  return {
+    ...state,
+    preferencePanel: initialPreferencePanel
+      ? {
+          ...initialPreferencePanel,
+          ...(initialPreferencePanel.open && {
+            panelId: initialPreferencePanel.panelId ?? getDefaultPreferencePanelId(apiRef),
+          }),
+        }
+      : { open: false },
+  };
+};
 
 /**
  * TODO: Add a single `setPreferencePanel` method to avoid multiple `setState`
@@ -47,16 +61,26 @@ export const useGridPreferencesPanel = (
   const showPreferences = React.useCallback<GridPreferencesPanelApi['showPreferences']>(
     (newValue, panelId, labelId) => {
       logger.debug('Opening Preferences Panel');
-      apiRef.current.setState((state) => ({
-        ...state,
-        preferencePanel: {
-          ...state.preferencePanel,
-          open: true,
-          openedPanelValue: newValue,
-          panelId,
-          labelId,
-        },
-      }));
+      apiRef.current.setState((state) => {
+        // Re-opening the same panel from an entry point without ids (column menu, overlay, API)
+        // preserves the ids already bound to it so `aria-controls` and `aria-labelledby` stay valid.
+        const keepIds =
+          state.preferencePanel.open && state.preferencePanel.openedPanelValue === newValue;
+        return {
+          ...state,
+          preferencePanel: {
+            ...state.preferencePanel,
+            open: true,
+            openedPanelValue: newValue,
+            panelId:
+              panelId ??
+              (keepIds && state.preferencePanel.panelId
+                ? state.preferencePanel.panelId
+                : getDefaultPreferencePanelId(apiRef)),
+            labelId: labelId ?? (keepIds ? state.preferencePanel.labelId : undefined),
+          },
+        };
+      });
       apiRef.current.publishEvent('preferencePanelOpen', {
         openedPanelValue: newValue,
       });
@@ -94,7 +118,13 @@ export const useGridPreferencesPanel = (
 
       return {
         ...prevState,
-        preferencePanel: preferencePanelToExport,
+        preferencePanel: preferencePanelToExport.open
+          ? {
+              ...preferencePanelToExport,
+              panelId: undefined,
+              labelId: undefined,
+            }
+          : preferencePanelToExport,
       };
     },
     [apiRef, props.initialState?.preferencePanel],
@@ -104,10 +134,25 @@ export const useGridPreferencesPanel = (
     (params, context) => {
       const preferencePanel = context.stateToRestore.preferencePanel;
       if (preferencePanel != null) {
-        apiRef.current.setState((state) => ({
-          ...state,
-          preferencePanel,
-        }));
+        apiRef.current.setState((state) => {
+          const keepIds =
+            preferencePanel.open &&
+            state.preferencePanel.open &&
+            preferencePanel.openedPanelValue !== undefined &&
+            preferencePanel.openedPanelValue === state.preferencePanel.openedPanelValue;
+          return {
+            ...state,
+            preferencePanel: preferencePanel.open
+              ? {
+                  ...preferencePanel,
+                  panelId:
+                    (keepIds ? state.preferencePanel.panelId : preferencePanel.panelId) ??
+                    getDefaultPreferencePanelId(apiRef),
+                  labelId: keepIds ? state.preferencePanel.labelId : preferencePanel.labelId,
+                }
+              : preferencePanel,
+          };
+        });
       }
 
       return params;

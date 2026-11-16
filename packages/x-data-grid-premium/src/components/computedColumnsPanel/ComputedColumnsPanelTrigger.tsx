@@ -53,11 +53,9 @@ const ComputedColumnsPanelTrigger = forwardRef<HTMLButtonElement, ComputedColumn
   function ComputedColumnsPanelTrigger(props, ref) {
     const { render, className, onClick, ...other } = props;
     const rootProps = useGridRootProps();
-    const buttonId = useId();
+    const buttonId = useId(other.id);
     const apiRef = useGridPrivateApiContext();
     const open = useGridSelector(apiRef, gridComputedColumnsPanelOpenSelector);
-    // The id of the open panel, whatever opened it: left out rather than dangling when
-    // the panel was opened without one.
     const panelId = useGridSelector(apiRef, gridComputedColumnsPanelIdSelector);
     const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
     const state = { open };
@@ -75,14 +73,9 @@ const ComputedColumnsPanelTrigger = forwardRef<HTMLButtonElement, ComputedColumn
       if (open) {
         apiRef.current.hideComputedColumnEditor();
       } else {
-        // No editor request: the panel opens on the list, with the id the other entry
-        // points of the feature give it. The trigger's id is the sidebar's label and the
-        // element focused again when the panel closes.
-        apiRef.current.showSidebar(
-          GridSidebarValue.ComputedColumns,
-          apiRef.current.caches.computedColumns.panelId,
-          buttonId,
-        );
+        // No editor request: the panel opens on the list. The trigger's id is the sidebar's
+        // label and the element focused again when the panel closes.
+        apiRef.current.showSidebar(GridSidebarValue.ComputedColumns, undefined, buttonId);
       }
       onClick?.(event);
     };

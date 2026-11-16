@@ -8,7 +8,10 @@ import { useGridSelector } from '@mui/x-data-grid-pro';
 import type { GridSlotProps } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridChartsIntegrationContext } from '../../hooks/utils/useGridChartIntegration';
 import { gridChartsPanelOpenSelector } from '../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
+import { GridSidebarValue } from '../../hooks/features/sidebar';
+import { gridSidebarPanelIdSelector } from '../../hooks/features/sidebar/gridSidebarSelector';
 
 export interface ChartsPanelState {
   /**
@@ -44,15 +47,20 @@ const ChartsPanelTrigger = forwardRef<HTMLButtonElement, ChartsPanelTriggerProps
   function ChartsPanelTrigger(props, ref) {
     const { render, className, onClick, onPointerUp, ...other } = props;
     const rootProps = useGridRootProps();
-    const buttonId = useId();
-    const panelId = useId();
+    const buttonId = useId(other.id);
     const apiRef = useGridApiContext();
     const open = useGridSelector(apiRef, gridChartsPanelOpenSelector);
+    const panelId = useGridSelector(apiRef, gridSidebarPanelIdSelector, GridSidebarValue.Charts);
+    const chartsContext = useGridChartsIntegrationContext(true);
     const state = { open };
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      apiRef.current.setChartsPanelOpen(!open);
+      if (open) {
+        apiRef.current.hideSidebar();
+      } else if (rootProps.chartsIntegration && chartsContext) {
+        apiRef.current.showSidebar(GridSidebarValue.Charts, undefined, buttonId);
+      }
       onClick?.(event);
     };
 
@@ -62,9 +70,8 @@ const ChartsPanelTrigger = forwardRef<HTMLButtonElement, ChartsPanelTriggerProps
       {
         ...rootProps.slotProps?.baseButton,
         id: buttonId,
-        // TODO: Hook up the panel/trigger IDs to the charts configuration panel
         'aria-expanded': open ? 'true' : undefined,
-        'aria-controls': open ? panelId : undefined,
+        'aria-controls': panelId,
         onClick: handleClick,
         className: resolvedClassName,
         ...other,

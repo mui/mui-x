@@ -4,6 +4,7 @@ import {
   GridChartsIntegrationContextProvider,
   GridChartsRendererProxy,
   DataGridPremium,
+  gridClasses,
   useGridApiRef,
   useGridChartsIntegrationContext,
   GridChartsPanel,
@@ -903,6 +904,56 @@ describe('<DataGridPremium /> - Charts Integration', () => {
 
       expect(integrationContext!.chartStateLookup.test.configuration.isTrue).to.equal(true);
       expect(integrationContext!.chartStateLookup.test.configuration.text).to.equal('Updated');
+    });
+
+    it('should keep ChartsPanelTrigger aria-controls valid across API and menu entry points', async () => {
+      const expectControlsSidebar = () => {
+        const trigger = screen.getByRole('button', { name: 'Charts' });
+        const sidebar = document.querySelector<HTMLElement>(`.${gridClasses.sidebar}`)!;
+        expect(trigger.getAttribute('aria-expanded')).to.equal('true');
+        expect(sidebar.id).not.to.equal('');
+        expect(trigger.getAttribute('aria-controls')).to.equal(sidebar.id);
+        expect(document.getElementById(sidebar.id)).to.equal(sidebar);
+        return { trigger, sidebar };
+      };
+
+      const { user } = render(<Test />);
+
+      const triggerButton = screen.getByRole('button', { name: 'Charts' });
+      await user.click(triggerButton);
+      const { sidebar } = expectControlsSidebar();
+      expect(sidebar.getAttribute('aria-labelledby')).to.equal(triggerButton.id);
+
+      await user.click(triggerButton);
+      expect(triggerButton.getAttribute('aria-controls')).to.equal(null);
+      act(() => apiRef.current!.setChartsPanelOpen(true));
+      expectControlsSidebar();
+
+      act(() => apiRef.current!.hideSidebar());
+      act(() => apiRef.current!.showSidebar(GridSidebarValue.Charts));
+      expectControlsSidebar();
+
+      act(() => apiRef.current!.hideSidebar());
+      await user.click(screen.getByLabelText('id column menu'));
+      await user.click(screen.getByRole('menuitem', { name: 'Manage charts' }));
+      expectControlsSidebar();
+    });
+
+    it('should keep ChartsPanelTrigger aria-controls valid when opened via initialState', () => {
+      render(
+        <Test
+          initialState={{
+            ...baseInitialState,
+            sidebar: { open: true, value: GridSidebarValue.Charts },
+          }}
+        />,
+      );
+      const trigger = screen.getByRole('button', { name: 'Charts' });
+      const sidebar = document.querySelector<HTMLElement>(`.${gridClasses.sidebar}`)!;
+      expect(trigger.getAttribute('aria-expanded')).to.equal('true');
+      expect(sidebar.id).not.to.equal('');
+      expect(trigger.getAttribute('aria-controls')).to.equal(sidebar.id);
+      expect(document.getElementById(sidebar.id)).to.equal(sidebar);
     });
   });
 });

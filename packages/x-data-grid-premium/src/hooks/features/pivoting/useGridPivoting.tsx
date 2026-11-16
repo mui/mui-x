@@ -40,6 +40,7 @@ import {
 import { getInitialColumns, getPivotForcedProps, createPivotPropsFromRows } from './utils';
 import { getAvailableAggregationFunctions } from '../aggregation/gridAggregationUtils';
 import { GridSidebarValue } from '../sidebar';
+import { getDefaultSidebarId } from '../sidebar/useGridSidebar';
 
 const emptyPivotModel: GridPivotModel = { rows: [], columns: [], values: [] };
 
@@ -85,6 +86,7 @@ export const pivotingStateInitializer: GridStateInitializer<
     ? {
         open,
         value: GridSidebarValue.Pivot,
+        sidebarId: state.sidebar?.sidebarId ?? getDefaultSidebarId(apiRef),
       }
     : {};
 
