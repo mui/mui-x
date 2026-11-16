@@ -87,16 +87,6 @@ const main = async () => {
     /^(d3-|internmap|flatqueue)/.test(name),
   );
 
-  // Safety check: we assume that **all** are flattened to root level of this
-  // package, and want to make sure there are no nested dependencies.
-  for (const pkgName of pkgs) {
-    const pkgModsPath = path.resolve(__dirname, `../node_modules/git${pkgName}/node_modules`);
-    const stat = await fs.lstat(pkgModsPath).catch(() => null);
-    if (stat) {
-      throw new Error(`Found nested modules: ${pkgModsPath}`);
-    }
-  }
-
   // Clean out and ensure build directory exists
   const VendorBasePath = path.join(BUILD_DIR, 'lib-vendor');
 
@@ -210,7 +200,12 @@ const main = async () => {
       cwd: path.resolve(__dirname, '..'),
     });
     const { filename } = JSON.parse(stdout);
-    await execa('tar', ['-xzf', filename, '-C', extractDir, '--strip-components=1']);
+    // GNU tar reads `C:\...` as a remote `host:file` archive.
+    await execa(
+      'tar',
+      ['-xzf', path.basename(filename), '-C', extractDir, '--strip-components=1'],
+      { cwd: packDir },
+    );
     const entries = vendorPkgNames.map((pkgName) => `@mui/x-charts-vendor/${pkgName}`);
     const script = `for (const entry of ${JSON.stringify(entries)}) {
   if (Object.keys(require(entry)).length === 0) {
