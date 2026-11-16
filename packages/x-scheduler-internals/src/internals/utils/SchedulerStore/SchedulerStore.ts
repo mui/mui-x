@@ -64,7 +64,7 @@ import {
   getCustomEventProperties,
   getUpdatedEventModelFromChanges,
 } from './SchedulerStore.utils';
-import { getOccurrenceEnd, timestampToEventString } from '../date-utils';
+import { getOccurrenceEnd, toEventDateStrings } from '../date-utils';
 import {
   getOccurrenceKey,
   getRecurringOccurrenceKey,
@@ -1190,16 +1190,14 @@ export class SchedulerStore<
    */
   public duplicateEventOccurrence = (
     eventId: SchedulerEventId,
-    start: Date,
-    end: Date,
+    start: number,
+    end: number,
   ): SchedulerEventId | undefined => {
     const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
-    const originalModel = original.modelInBuiltInFormat;
-    const dataTimezone = originalModel.timezone ?? 'default';
-    const duplicatedEvent = extractStandaloneEvent(original, {
-      start: timestampToEventString(start.getTime(), originalModel.start, dataTimezone),
-      end: timestampToEventString(end.getTime(), originalModel.end, dataTimezone),
-    });
+    const duplicatedEvent = extractStandaloneEvent(
+      original,
+      toEventDateStrings({ start, end }, original.modelInBuiltInFormat),
+    );
     return this.updateEvents({ created: [duplicatedEvent] }).created[0];
   };
 
@@ -1244,9 +1242,7 @@ export class SchedulerStore<
     // Narrowed on the property directly (not `isMovingDates`) so TypeScript can see
     // `cleanChanges.start` is defined here.
     if (cleanChanges.start != null) {
-      cleanChanges.end = new Date(
-        getOccurrenceEnd({ event: original, occurrenceStart: cleanChanges.start.getTime() }),
-      );
+      cleanChanges.end = getOccurrenceEnd({ event: original, occurrenceStart: cleanChanges.start });
     }
 
     const refuse = (reason: string) => {
@@ -1307,25 +1303,9 @@ export class SchedulerStore<
     }
 
     const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat;
-    const dataTimezone = original.modelInBuiltInFormat.timezone ?? 'default';
-    const stringifiedChanges: Record<string, any> = { ...cleanChanges };
-    if (cleanChanges.start != null) {
-      stringifiedChanges.start = timestampToEventString(
-        cleanChanges.start.getTime(),
-        original.modelInBuiltInFormat.start,
-        dataTimezone,
-      );
-    }
-    if (cleanChanges.end != null) {
-      stringifiedChanges.end = timestampToEventString(
-        cleanChanges.end.getTime(),
-        original.modelInBuiltInFormat.end,
-        dataTimezone,
-      );
-    }
     const createdEvent: SchedulerEventCreationProperties = {
       ...copiedEventWithoutId,
-      ...stringifiedChanges,
+      ...toEventDateStrings(cleanChanges, original.modelInBuiltInFormat),
       extractedFromId: id,
     };
     return this.updateEvents({ created: [createdEvent] }).created[0];
@@ -1531,8 +1511,8 @@ export class SchedulerStore<
     const liveEvent = schedulerEventSelectors.processedEvent(this.state, occurrence.id);
     const { displayTimezone } = occurrence.unstable_internalInfos;
     const displayBounds = normalizeAllDayBounds(
-      start?.getTime() ?? occurrence.start.timestamp,
-      end?.getTime() ?? getOccurrenceModelEnd(occurrence),
+      start ?? occurrence.start.timestamp,
+      end ?? getOccurrenceModelEnd(occurrence),
       allDay,
       displayTimezone,
     );
@@ -1559,8 +1539,8 @@ export class SchedulerStore<
             allDay,
             unstable_internalInfos: {
               ...occurrence.unstable_internalInfos,
-              dataStart: start?.getTime() ?? occurrence.unstable_internalInfos.dataStart,
-              dataEnd: end?.getTime() ?? occurrence.unstable_internalInfos.dataEnd,
+              dataStart: start ?? occurrence.unstable_internalInfos.dataStart,
+              dataEnd: end ?? occurrence.unstable_internalInfos.dataEnd,
             },
           }
         : { ...occurrence, ...bounds, allDay },
@@ -1599,8 +1579,7 @@ export class SchedulerStore<
     const targetsCreatedEvent = createdEvent != null && createdEventId != null;
     // In place, the pattern decides where a day or rule change lands: only a change that keeps
     // the occurrence on its own data-timezone day can keep the surface armed.
-    const changedStart = changes.start?.getTime();
-    const changedEnd = changes.end?.getTime();
+    const { start: changedStart, end: changedEnd } = changes;
     const bounds: [number | undefined, number][] = [
       [changedStart, occurrenceStart],
       [changedEnd, occurrenceEnd],

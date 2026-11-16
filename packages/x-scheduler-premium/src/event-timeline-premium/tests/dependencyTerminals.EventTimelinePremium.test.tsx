@@ -205,7 +205,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       act(() => {
         store.updateEvent({
           id: 'event-overflow',
-          end: createDate('2025-07-03T11:00:00Z'),
+          end: createDate('2025-07-03T11:00:00Z').getTime(),
         });
       });
       fireEvent.pointerOver(getEventElement('Overflowing event'));

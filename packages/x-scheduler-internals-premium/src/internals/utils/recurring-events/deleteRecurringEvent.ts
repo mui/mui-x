@@ -4,7 +4,7 @@ import type {
   SchedulerEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
 import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
-import { createStartOfPlainDate, toPlainDate } from '@mui/x-scheduler-internals/internals';
+import { toEpochMs, toPlainDate } from '@mui/x-scheduler-internals/internals';
 import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
 import { RecurringSeries } from './RecurringSeries';
 
@@ -53,10 +53,10 @@ export function applyRecurringDeleteOnlyThis(
   // The exceptions already stored keep their instant, which their wall-clock time can't tell
   // apart in the hour a DST transition repeats.
   const exDates = [
-    ...(originalEvent.modelInBuiltInFormat.exDates ?? []).map(
-      (exDate) => new Date(resolveEventTimestamp(exDate, timezone)),
+    ...(originalEvent.modelInBuiltInFormat.exDates ?? []).map((exDate) =>
+      resolveEventTimestamp(exDate, timezone),
     ),
-    createStartOfPlainDate(occurrenceDay, timezone),
+    toEpochMs(occurrenceDay, timezone),
   ];
 
   if (!RecurringSeries.fromEvent(originalEvent, excludedDays).hasOccurrence()) {

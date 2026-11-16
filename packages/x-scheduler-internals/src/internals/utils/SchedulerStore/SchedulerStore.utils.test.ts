@@ -70,7 +70,7 @@ describe('getUpdatedEventModelFromChanges', () => {
     };
     const updated = getUpdatedEventModelFromChanges(
       oldModel,
-      { id: '1', start: new Date('2025-10-26T02:45:00+01:00') },
+      { id: '1', start: new Date('2025-10-26T02:45:00+01:00').getTime() },
       undefined,
       oldModel as SchedulerEvent,
     );

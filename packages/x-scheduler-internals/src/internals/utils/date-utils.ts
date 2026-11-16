@@ -1,4 +1,10 @@
-import type { SchedulerEvent, SchedulerProcessedEvent, WeekStartsOn } from '../../models';
+import type {
+  SchedulerEvent,
+  SchedulerEventRecurrenceRule,
+  SchedulerProcessedEvent,
+  SchedulerProcessedEventRecurrenceRule,
+  WeekStartsOn,
+} from '../../models';
 import { BaseTemporal } from './base-temporal';
 import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
 import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
@@ -64,6 +70,76 @@ export function getUntilReferenceString(event: SchedulerEvent): string {
   }
   const date = `${match[1]}-${match[2]}-${match[3]}`;
   return match[4] === undefined ? date : `${date}T${match[4]}:${match[5]}:${match[6]}Z`;
+}
+
+type EventDateKey = 'start' | 'end' | 'exDates' | 'rrule';
+
+/**
+ * The dates of an event edit: instants in milliseconds since the Unix epoch, or event strings.
+ */
+interface EventDateInputs {
+  start?: string | number;
+  end?: string | number;
+  exDates?: (string | number)[];
+  rrule?: SchedulerEventRecurrenceRule | SchedulerProcessedEventRecurrenceRule | string;
+  timezone?: string;
+}
+
+/**
+ * `TChanges` with its dates written as event strings.
+ */
+type WithEventDateStrings<TChanges> = {
+  [K in keyof TChanges]: K extends EventDateKey ? SchedulerEvent[K] : TChanges[K];
+};
+
+/**
+ * Writes the dates of an event edit as event strings, in a copy of `changes`.
+ * An instant takes the format of the matching string of `referenceModel`, the event it is written
+ * to or derived from, in the timezone of that event: `start`, `end`, and for an exception the one
+ * at the same index, or else `start`. A processed `until` takes the format
+ * `getUntilReferenceString()` returns. Without `referenceModel`, for a new event, an instant is
+ * written as an ISO instant, and `until` takes the format of the written `start`, in the timezone
+ * of `changes`. Strings are kept as they are.
+ */
+export function toEventDateStrings<TChanges extends EventDateInputs>(
+  changes: TChanges,
+  referenceModel: SchedulerEvent | null,
+): WithEventDateStrings<TChanges> {
+  const dataTimezone =
+    (referenceModel == null ? changes.timezone : referenceModel.timezone) ?? 'default';
+  const toEventString = (value: string | number, referenceString: string | undefined) => {
+    if (typeof value === 'string') {
+      return value;
+    }
+    return referenceString == null
+      ? new Date(value).toISOString()
+      : timestampToEventString(value, referenceString, dataTimezone);
+  };
+
+  const result: EventDateInputs = { ...changes };
+  if (changes.start != null) {
+    result.start = toEventString(changes.start, referenceModel?.start);
+  }
+  if (changes.end != null) {
+    result.end = toEventString(changes.end, referenceModel?.end);
+  }
+  if (changes.exDates != null) {
+    result.exDates = changes.exDates.map((exDate, index) =>
+      toEventString(exDate, referenceModel?.exDates?.[index] ?? referenceModel?.start),
+    );
+  }
+  const { rrule } = changes;
+  if (typeof rrule === 'object' && rrule.until != null && typeof rrule.until !== 'string') {
+    result.rrule = {
+      ...rrule,
+      until: untilToEventString(
+        rrule.until,
+        referenceModel == null ? (result.start as string) : getUntilReferenceString(referenceModel),
+        dataTimezone,
+      ),
+    };
+  }
+  return result as WithEventDateStrings<TChanges>;
 }
 
 /**

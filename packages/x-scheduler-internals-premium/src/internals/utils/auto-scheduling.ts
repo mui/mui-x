@@ -291,17 +291,15 @@ export function computeAutoSchedulingCascade(
     // Mirrors the store: entries are serialized in the data timezone
     // (`timestampToEventString`) and the model is then read in the (new) timezone.
     const resolveEntryTimestamp = (
-      value: Date | undefined,
+      value: number | undefined,
       modelString: string,
       currentTimestamp: number,
     ) => {
       if (nextTimezone === dataTimezone) {
-        return value == null ? currentTimestamp : value.getTime();
+        return value ?? currentTimestamp;
       }
       const nextString =
-        value == null
-          ? modelString
-          : timestampToEventString(value.getTime(), modelString, dataTimezone);
+        value == null ? modelString : timestampToEventString(value, modelString, dataTimezone);
       return resolveEventTimestamp(nextString, nextTimezone, entry.id);
     };
     const dates = resolveDates(
@@ -451,16 +449,14 @@ export function computeAutoSchedulingCascade(
   function toEntryDates(eventId: SchedulerEventId, dates: ResolvedDates) {
     const timezoneChange = timezoneChanges.get(eventId);
     if (timezoneChange === undefined) {
-      return { start: new Date(dates.start), end: new Date(dates.end) };
+      return dates;
     }
     const { model, dataTimezone, nextTimezone } = timezoneChange;
     const encode = (epochMs: number, modelString: string) =>
-      new Date(
-        resolveEventTimestamp(
-          timestampToEventString(epochMs, modelString, nextTimezone),
-          dataTimezone,
-          eventId,
-        ),
+      resolveEventTimestamp(
+        timestampToEventString(epochMs, modelString, nextTimezone),
+        dataTimezone,
+        eventId,
       );
     return { start: encode(dates.start, model.start), end: encode(dates.end, model.end) };
   }

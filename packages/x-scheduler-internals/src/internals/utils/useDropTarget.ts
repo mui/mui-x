@@ -250,10 +250,10 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
     additionalChanges.allDay !== (originalOccurrence.allDay ?? false);
   const changes: SchedulerEventUpdatedProperties = { id: eventId };
   if (allDayToggled || originalOccurrence.start.timestamp !== start) {
-    changes.start = new Date(start);
+    changes.start = start;
   }
   if (allDayToggled || getOccurrenceModelEnd(originalOccurrence) !== end) {
-    changes.end = new Date(end);
+    changes.end = end;
   }
 
   // If `undefined`, we want to set the event resource to `undefined` (no resource).
@@ -330,8 +330,8 @@ function applyExternalDragOccurrencePlaceholder(
   addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>,
 ) {
   const event = {
-    start: new Date(placeholder.start),
-    end: new Date(placeholder.end),
+    start: placeholder.start,
+    end: placeholder.end,
     ...placeholder.eventData,
   };
 

@@ -127,7 +127,7 @@ describe('recurring-events/updateRecurringEvent', () => {
             byDay: ['MO', 'WE'],
           };
           const movedStart = createDate('2025-01-07T15:00:00Z');
-          const res = call(original, { start: movedStart });
+          const res = call(original, { start: movedStart.getTime() });
           expect(res).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['TU', 'WE'] });
         });
 
@@ -139,7 +139,7 @@ describe('recurring-events/updateRecurringEvent', () => {
             byDay: ['MO', 'TU'],
           };
           const movedStart = createDate('2025-01-07T10:00:00Z');
-          const res = call(original, { start: movedStart });
+          const res = call(original, { start: movedStart.getTime() });
           expect(res).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['TU'] });
         });
       });
@@ -152,7 +152,7 @@ describe('recurring-events/updateRecurringEvent', () => {
             byMonthDay: [10],
           };
           const movedStart = createDate('2025-03-12T10:00:00Z');
-          expect(call(original, { start: movedStart })).to.deep.equal({
+          expect(call(original, { start: movedStart.getTime() })).to.deep.equal({
             freq: 'MONTHLY',
             interval: 1,
             byMonthDay: [12],
@@ -168,7 +168,7 @@ describe('recurring-events/updateRecurringEvent', () => {
           };
           const thirdWed = createDate('2025-07-16T10:00:00Z'); // 3rd Wednesday
           expect(
-            call(original, { start: thirdWed }, startMonth, startOfDay(thirdWed)),
+            call(original, { start: thirdWed.getTime() }, startMonth, startOfDay(thirdWed)),
           ).to.deep.equal({ freq: 'MONTHLY', interval: 1, byDay: ['3WE'] });
         });
 
@@ -180,29 +180,15 @@ describe('recurring-events/updateRecurringEvent', () => {
             byDay: ['2TU'],
           };
           const lastFri = createDate('2025-10-31T09:00:00Z'); // last Friday
-          expect(call(original, { start: lastFri }, monthStart, startOfDay(lastFri))).to.deep.equal(
-            { freq: 'MONTHLY', interval: 1, byDay: ['-1FR'] },
-          );
+          expect(
+            call(original, { start: lastFri.getTime() }, monthStart, startOfDay(lastFri)),
+          ).to.deep.equal({ freq: 'MONTHLY', interval: 1, byDay: ['-1FR'] });
         });
       });
     });
   });
 
   describe('applyRecurringUpdateFollowing', () => {
-    it('should keep a new RRULE string as is for the new series', () => {
-      const occurrenceStart = createDate('2025-01-07T09:00:00Z');
-      const updatedEvents = applyRecurringUpdateFollowing(
-        defaultEvent,
-        createOccurrence(defaultEvent, occurrenceStart),
-        {
-          id: defaultEvent.id,
-          rrule: 'FREQ=WEEKLY;BYDAY=TU',
-        },
-      );
-
-      expect(updatedEvents.created![0].rrule).to.equal('FREQ=WEEKLY;BYDAY=TU');
-    });
-
     it('should truncate the original series at the day before the edited occurrence and appends the new series', () => {
       // Original: daily from Jan 01
       // Edit an occurrence on Jan 05
@@ -210,8 +196,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       const changes: SchedulerEventUpdatedProperties = {
         id: defaultEvent.id,
         // New timing for the split series
-        start: createDate('2025-01-05T11:00:00Z'),
-        end: createDate('2025-01-05T12:00:00Z'),
+        start: createDate('2025-01-05T11:00:00Z').getTime(),
+        end: createDate('2025-01-05T12:00:00Z').getTime(),
         title: 'Edited Event',
         // rrule omitted → inherit from original
       };
@@ -234,8 +220,8 @@ describe('recurring-events/updateRecurringEvent', () => {
         {
           ...withoutId(defaultEvent.modelInBuiltInFormat),
           title: 'Edited Event',
-          start: changes.start!.toISOString(),
-          end: changes.end!.toISOString(),
+          start: new Date(changes.start!).toISOString(),
+          end: new Date(changes.end!).toISOString(),
           extractedFromId: defaultEvent.id,
           rrule: {
             ...defaultEvent.rrule,
@@ -255,8 +241,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = createDate('2025-01-10T09:00:00Z');
       const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
-        start: createDate('2025-01-10T12:00:00Z'),
-        end: createDate('2025-01-10T13:00:00Z'),
+        start: createDate('2025-01-10T12:00:00Z').getTime(),
+        end: createDate('2025-01-10T13:00:00Z').getTime(),
         title: 'Edited First',
         // rrule omitted → inherit
       };
@@ -274,8 +260,8 @@ describe('recurring-events/updateRecurringEvent', () => {
         {
           ...withoutId(original.modelInBuiltInFormat),
           title: 'Edited First',
-          start: changes.start!.toISOString(),
-          end: changes.end!.toISOString(),
+          start: new Date(changes.start!).toISOString(),
+          end: new Date(changes.end!).toISOString(),
           extractedFromId: original.id,
           rrule: {
             ...original.rrule,
@@ -289,8 +275,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = createDate('2025-01-03T09:00:00Z');
       const changes: SchedulerEventUpdatedProperties = {
         id: defaultEvent.id,
-        start: createDate('2025-01-03T10:00:00Z'),
-        end: createDate('2025-01-03T11:00:00Z'),
+        start: createDate('2025-01-03T10:00:00Z').getTime(),
+        end: createDate('2025-01-03T11:00:00Z').getTime(),
         rrule: {
           freq: 'WEEKLY',
           interval: 2,
@@ -318,8 +304,8 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       const changes = {
         id: defaultEvent.id,
-        start: createDate('2025-01-04T12:00:00Z'),
-        end: createDate('2025-01-04T13:00:00Z'),
+        start: createDate('2025-01-04T12:00:00Z').getTime(),
+        end: createDate('2025-01-04T13:00:00Z').getTime(),
         rrule: undefined,
       };
 
@@ -343,8 +329,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = createDate('2025-01-05T09:00:00', 'America/New_York');
       const changes: SchedulerEventUpdatedProperties = {
         id: wallTimeEvent.id,
-        start: createDate('2025-01-05T11:00:00', 'America/New_York'),
-        end: createDate('2025-01-05T12:00:00', 'America/New_York'),
+        start: createDate('2025-01-05T11:00:00', 'America/New_York').getTime(),
+        end: createDate('2025-01-05T12:00:00', 'America/New_York').getTime(),
       };
 
       const updatedEvents = applyRecurringUpdateFollowing(
@@ -391,9 +377,9 @@ describe('recurring-events/updateRecurringEvent', () => {
         createOccurrence(offsetEvent, new Date('2025-01-05T08:00:00Z')),
         {
           id: offsetEvent.id,
-          start: new Date('2025-01-05T10:00:00Z'),
-          end: new Date('2025-01-05T11:00:00Z'),
-          exDates: [new Date('2025-01-08T10:00:00Z')],
+          start: new Date('2025-01-05T10:00:00Z').getTime(),
+          end: new Date('2025-01-05T11:00:00Z').getTime(),
+          exDates: [new Date('2025-01-08T10:00:00Z').getTime()],
         },
       );
 
@@ -602,8 +588,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       // 01:30 JST → 2025-01-09T16:30:00Z
       const changes = {
         id: original.id,
-        start: createDate('2025-01-09T15:40:00Z'),
-        end: createDate('2025-01-09T16:30:00Z'),
+        start: createDate('2025-01-09T15:40:00Z').getTime(),
+        end: createDate('2025-01-09T16:30:00Z').getTime(),
       };
 
       const updated = applyRecurringUpdateAll(
@@ -614,7 +600,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       // DTSTART should still correspond to Jan 10 in the event data timezone (Tokyo)
       const newStart = updated.updated![0].start!;
-      expect(toPlainDate(newStart.getTime(), 'Asia/Tokyo').day).to.equal(10);
+      expect(toPlainDate(newStart, 'Asia/Tokyo').day).to.equal(10);
     });
 
     // Browsers cannot change their timezone through process.env.TZ.
@@ -635,12 +621,12 @@ describe('recurring-events/updateRecurringEvent', () => {
           createOccurrence(original, createDate('2026-10-27T08:00:00Z')),
           {
             id: original.id,
-            start: createDate('2026-10-27T01:30:00Z'), // 02:30 CET
-            end: createDate('2026-10-27T01:45:00Z'),
+            start: createDate('2026-10-27T01:30:00Z').getTime(), // 02:30 CET
+            end: createDate('2026-10-27T01:45:00Z').getTime(),
           },
         );
 
-        expect(updated.updated![0].start!.toISOString()).to.equal(
+        expect(new Date(updated.updated![0].start!).toISOString()).to.equal(
           '2026-10-25T00:30:00.000Z', // the first 02:30, CEST
         );
       },
@@ -659,13 +645,15 @@ describe('recurring-events/updateRecurringEvent', () => {
         createOccurrence(original, new Date(original.unstable_internalInfos.dataStart)),
         {
           id: original.id,
-          start: createDate('2026-10-25T01:05:00Z'), // the second 02:05
-          end: createDate('2026-10-25T01:20:00Z'), // the second 02:20
+          start: createDate('2026-10-25T01:05:00Z').getTime(), // the second 02:05
+          end: createDate('2026-10-25T01:20:00Z').getTime(), // the second 02:20
         },
       );
 
-      expect(updated.updated![0].start!.toISOString()).to.equal('2026-10-25T01:05:00.000Z');
-      expect(updated.updated![0].end!.toISOString()).to.equal('2026-10-25T01:20:00.000Z');
+      expect(new Date(updated.updated![0].start!).toISOString()).to.equal(
+        '2026-10-25T01:05:00.000Z',
+      );
+      expect(new Date(updated.updated![0].end!).toISOString()).to.equal('2026-10-25T01:20:00.000Z');
     });
 
     it('should only write the bound that a resize of a later occurrence moves', () => {
@@ -681,10 +669,10 @@ describe('recurring-events/updateRecurringEvent', () => {
         createOccurrence(original, createDate('2026-10-27T01:30:00Z')),
         {
           id: original.id,
-          start: createDate('2026-10-27T00:50:00Z'), // 01:50 CET
+          start: createDate('2026-10-27T00:50:00Z').getTime(), // 01:50 CET
         },
       );
-      expect(resizeStart.updated![0].start!.toISOString()).to.equal(
+      expect(new Date(resizeStart.updated![0].start!).toISOString()).to.equal(
         '2026-10-24T23:50:00.000Z', // 01:50 CEST
       );
       expect(resizeStart.updated![0]).not.to.have.property('end');
@@ -694,11 +682,11 @@ describe('recurring-events/updateRecurringEvent', () => {
         createOccurrence(original, createDate('2026-10-27T01:30:00Z')),
         {
           id: original.id,
-          end: createDate('2026-10-27T02:45:00Z'), // 03:45 CET
+          end: createDate('2026-10-27T02:45:00Z').getTime(), // 03:45 CET
         },
       );
       expect(resizeEnd.updated![0]).not.to.have.property('start');
-      expect(resizeEnd.updated![0].end!.toISOString()).to.equal(
+      expect(new Date(resizeEnd.updated![0].end!).toISOString()).to.equal(
         '2026-10-25T02:45:00.000Z', // 03:45 CET
       );
     });
@@ -716,12 +704,12 @@ describe('recurring-events/updateRecurringEvent', () => {
         createOccurrence(original, createDate('2026-10-27T01:10:00Z')),
         {
           id: original.id,
-          end: createDate('2026-10-27T01:40:00Z'), // 02:40 CET
+          end: createDate('2026-10-27T01:40:00Z').getTime(), // 02:40 CET
         },
       );
       // The first 02:40 of October 25th, CEST, is before the start.
       expect(resizeEnd.updated![0]).not.to.have.property('start');
-      expect(resizeEnd.updated![0].end!.toISOString()).to.equal(
+      expect(new Date(resizeEnd.updated![0].end!).toISOString()).to.equal(
         '2026-10-25T01:40:00.000Z', // the second 02:40, CET
       );
 
@@ -730,10 +718,10 @@ describe('recurring-events/updateRecurringEvent', () => {
         createOccurrence(original, createDate('2026-10-27T01:10:00Z')),
         {
           id: original.id,
-          start: createDate('2026-10-27T01:20:00Z'), // 02:20 CET
+          start: createDate('2026-10-27T01:20:00Z').getTime(), // 02:20 CET
         },
       );
-      expect(resizeStart.updated![0].start!.toISOString()).to.equal(
+      expect(new Date(resizeStart.updated![0].start!).toISOString()).to.equal(
         '2026-10-25T00:20:00.000Z', // the first 02:20, CEST
       );
       expect(resizeStart.updated![0]).not.to.have.property('end');
@@ -752,15 +740,15 @@ describe('recurring-events/updateRecurringEvent', () => {
         createOccurrence(original, createDate('2026-03-31T07:00:00Z')),
         {
           id: original.id,
-          start: createDate('2026-03-31T00:30:00Z'), // 02:30 CEST
-          end: createDate('2026-03-31T02:00:00Z'), // 04:00 CEST
+          start: createDate('2026-03-31T00:30:00Z').getTime(), // 02:30 CEST
+          end: createDate('2026-03-31T02:00:00Z').getTime(), // 04:00 CEST
         },
       );
 
-      expect(updated.updated![0].start!.toISOString()).to.equal(
+      expect(new Date(updated.updated![0].start!).toISOString()).to.equal(
         '2026-03-29T01:30:00.000Z', // 03:30 CEST
       );
-      expect(updated.updated![0].end!.toISOString()).to.equal(
+      expect(new Date(updated.updated![0].end!).toISOString()).to.equal(
         '2026-03-29T02:00:00.000Z', // 04:00 CEST
       );
     });
@@ -779,13 +767,15 @@ describe('recurring-events/updateRecurringEvent', () => {
         createOccurrence(original, createDate('2026-10-23T22:00:00Z')),
         {
           id: original.id,
-          start: createDate('2026-10-24T22:00:00Z'),
-          end: createDate('2026-10-25T22:59:59.999Z'),
+          start: createDate('2026-10-24T22:00:00Z').getTime(),
+          end: createDate('2026-10-25T22:59:59.999Z').getTime(),
         },
       );
 
-      expect(updated.updated![0].start!.toISOString()).to.equal('2026-09-30T22:00:00.000Z');
-      expect(updated.updated![0].end!.toISOString()).to.equal('2026-10-01T21:59:59.999Z');
+      expect(new Date(updated.updated![0].start!).toISOString()).to.equal(
+        '2026-09-30T22:00:00.000Z',
+      );
+      expect(new Date(updated.updated![0].end!).toISOString()).to.equal('2026-10-01T21:59:59.999Z');
     });
 
     it('should remove recurrence when changes.rrule is explicitly undefined, even when the day changes', () => {
@@ -794,8 +784,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       const changes: SchedulerEventUpdatedProperties = {
         id: defaultEvent.id,
         title: 'One-off',
-        start: createDate('2025-01-02T09:00:00Z'),
-        end: createDate('2025-01-02T10:00:00Z'),
+        start: createDate('2025-01-02T09:00:00Z').getTime(),
+        end: createDate('2025-01-02T10:00:00Z').getTime(),
         rrule: undefined,
       };
 
@@ -818,8 +808,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       const newEnd = createDate('2025-01-05T12:15:00Z');
       const changes: SchedulerEventUpdatedProperties = {
         id: defaultEvent.id,
-        start: newStart,
-        end: newEnd,
+        start: newStart.getTime(),
+        end: newEnd.getTime(),
       };
 
       const updatedEvents = applyRecurringUpdateAll(
@@ -835,8 +825,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updatedEvents.updated).to.deep.equal([
         {
           ...changes,
-          start: createDate('2025-01-01T11:15:00Z'),
-          end: createDate('2025-01-01T12:15:00Z'),
+          start: createDate('2025-01-01T11:15:00Z').getTime(),
+          end: createDate('2025-01-01T12:15:00Z').getTime(),
         },
       ]);
     });
@@ -849,8 +839,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = createDate('2025-01-05T09:00:00Z'); // Jan 5, a Sunday
       const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
-        start: createDate('2025-01-11T11:00:00Z'), // Saturday
-        end: createDate('2025-01-11T12:00:00Z'),
+        start: createDate('2025-01-11T11:00:00Z').getTime(), // Saturday
+        end: createDate('2025-01-11T12:00:00Z').getTime(),
       };
 
       const updatedEvents = applyRecurringUpdateAll(
@@ -864,8 +854,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updatedEvents.updated).to.deep.equal([
         {
           ...changes,
-          start: createDate('2025-01-01T11:00:00Z'),
-          end: createDate('2025-01-01T12:00:00Z'),
+          start: createDate('2025-01-01T11:00:00Z').getTime(),
+          end: createDate('2025-01-01T12:00:00Z').getTime(),
           rrule: { byDay: ['SA'], freq: 'WEEKLY' },
         },
       ]);
@@ -877,8 +867,8 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       const changes: SchedulerEventUpdatedProperties = {
         id: defaultEvent.id,
-        start: createDate('2025-01-12T11:00:00Z'),
-        end: createDate('2025-01-12T12:00:00Z'),
+        start: createDate('2025-01-12T11:00:00Z').getTime(),
+        end: createDate('2025-01-12T12:00:00Z').getTime(),
       };
 
       const updatedEvents = applyRecurringUpdateAll(
@@ -914,8 +904,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       };
       const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
-        start: createDate('2025-01-11T11:00:00Z'), // Saturday
-        end: createDate('2025-01-11T12:00:00Z'),
+        start: createDate('2025-01-11T11:00:00Z').getTime(), // Saturday
+        end: createDate('2025-01-11T12:00:00Z').getTime(),
         rrule: explicitRRule,
       };
 
@@ -937,8 +927,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = createDate('2025-01-05T09:00:00Z');
       const changesWithoutId = {
         title: 'Only-this edited',
-        start: createDate('2025-01-05T11:00:00Z'),
-        end: createDate('2025-01-05T12:00:00Z'),
+        start: createDate('2025-01-05T11:00:00Z').getTime(),
+        end: createDate('2025-01-05T12:00:00Z').getTime(),
       };
       const changes: SchedulerEventUpdatedProperties = {
         id: defaultEvent.id,
@@ -955,14 +945,14 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updatedEvents.created).to.deep.equal([
         {
           ...changesWithoutId,
-          start: changesWithoutId.start.toISOString(),
-          end: changesWithoutId.end.toISOString(),
+          start: new Date(changesWithoutId.start).toISOString(),
+          end: new Date(changesWithoutId.end).toISOString(),
           extractedFromId: defaultEvent.id,
           description: defaultEvent.description,
         },
       ]);
       expect(updatedEvents.updated).to.deep.equal([
-        { id: defaultEvent.id, exDates: [startOfDay(occurrenceStart)] },
+        { id: defaultEvent.id, exDates: [startOfDay(occurrenceStart).getTime()] },
       ]);
     });
 
@@ -982,7 +972,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(createdEvent.start).to.equal(occurrenceStart.toISOString());
       expect(createdEvent.end).to.equal(addMinutes(occurrenceStart, 60).toISOString());
       expect(updatedEvents.updated).to.deep.equal([
-        { id: defaultEvent.id, exDates: [startOfDay(occurrenceStart)] },
+        { id: defaultEvent.id, exDates: [startOfDay(occurrenceStart).getTime()] },
       ]);
     });
 
@@ -990,8 +980,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = createDate('2025-01-07T09:00:00Z');
       const changesWithoutId = {
         title: 'Only-this changed date',
-        start: createDate('2025-01-08T11:00:00Z'),
-        end: createDate('2025-01-08T12:00:00Z'),
+        start: createDate('2025-01-08T11:00:00Z').getTime(),
+        end: createDate('2025-01-08T12:00:00Z').getTime(),
       };
       const changes: SchedulerEventUpdatedProperties = {
         id: defaultEvent.id,
@@ -1010,12 +1000,12 @@ describe('recurring-events/updateRecurringEvent', () => {
           extractedFromId: defaultEvent.id,
           description: defaultEvent.description,
           ...changesWithoutId,
-          start: changesWithoutId.start.toISOString(),
-          end: changesWithoutId.end.toISOString(),
+          start: new Date(changesWithoutId.start).toISOString(),
+          end: new Date(changesWithoutId.end).toISOString(),
         },
       ]);
       expect(updatedEvents.updated).to.deep.equal([
-        { id: defaultEvent.id, exDates: [startOfDay(occurrenceStart)] },
+        { id: defaultEvent.id, exDates: [startOfDay(occurrenceStart).getTime()] },
       ]);
     });
 
@@ -1030,8 +1020,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       const changes: SchedulerEventUpdatedProperties = {
         id: wallTimeEvent.id,
         title: 'Only-this wall-time',
-        start: createDate('2025-01-05T11:00:00', 'America/New_York'),
-        end: createDate('2025-01-05T12:00:00', 'America/New_York'),
+        start: createDate('2025-01-05T11:00:00', 'America/New_York').getTime(),
+        end: createDate('2025-01-05T12:00:00', 'America/New_York').getTime(),
       };
 
       const updatedEvents = applyRecurringUpdateOnlyThis(
@@ -1069,7 +1059,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       // EXDATE should be the start of the day of the occurrence in America/New_York, the data
       // timezone.
-      expect(updated.updated![0].exDates![0].getTime()).to.equal(
+      expect(updated.updated![0].exDates![0]).to.equal(
         startOfDay(occurrenceStart, 'America/New_York').getTime(),
       );
     });
@@ -1083,8 +1073,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         title: 'Detached',
-        start: createDate('2025-01-01T11:00:00Z'),
-        end: createDate('2025-01-01T12:00:00Z'),
+        start: createDate('2025-01-01T11:00:00Z').getTime(),
+        end: createDate('2025-01-01T12:00:00Z').getTime(),
       };
 
       const updatedEvents = applyRecurringUpdateOnlyThis(

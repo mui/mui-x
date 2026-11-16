@@ -52,8 +52,8 @@ export interface CalendarDateFieldsInput {
 /**
  * The arithmetic of a calendar system. Years are arithmetic years: they keep counting below 1
  * instead of switching era. Months are ordinal: the first month of the year is 1.
- * The operations at the end come from `defineCalendar()` in `@base-ui/plus/calendar-systems`, so the
- * bundles that only use the ISO calendar don't include their general form.
+ * The operations at the end come from `defineCalendar()` in the calendar systems of the Base UI
+ * version, so the bundles that only use the ISO calendar don't include their general form.
  */
 export interface CalendarImplementation extends CalendarSystem {
   /**
@@ -342,7 +342,7 @@ const registry = new Map<string, CalendarImplementation>([
 ]);
 
 /**
- * The calendars `@base-ui/plus/calendar-systems` exports.
+ * The calendars the Base UI version implements in its calendar systems.
  */
 const CALENDAR_IDS = new Set(
   'buddhist japanese roc persian indian hebrew coptic ethiopic ethioaa islamic-civil islamic-tbla islamic-umalqura'.split(
