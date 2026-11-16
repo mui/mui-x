@@ -1,8 +1,7 @@
 import type {
   SchedulerEvent,
-  SchedulerEventRecurrenceRule,
+  SchedulerEventCreationProperties,
   SchedulerProcessedEvent,
-  SchedulerProcessedEventRecurrenceRule,
   WeekStartsOn,
 } from '../../models';
 import { BaseTemporal } from './base-temporal';
@@ -77,13 +76,7 @@ type EventDateKey = 'start' | 'end' | 'exDates' | 'rrule';
 /**
  * The dates of an event edit: instants in milliseconds since the Unix epoch, or event strings.
  */
-interface EventDateInputs {
-  start?: string | number;
-  end?: string | number;
-  exDates?: (string | number)[];
-  rrule?: SchedulerEventRecurrenceRule | SchedulerProcessedEventRecurrenceRule | string;
-  timezone?: string;
-}
+type EventDateInputs = Partial<Pick<SchedulerEventCreationProperties, EventDateKey | 'timezone'>>;
 
 /**
  * `TChanges` with its dates written as event strings.
@@ -91,6 +84,19 @@ interface EventDateInputs {
 type WithEventDateStrings<TChanges> = {
   [K in keyof TChanges]: K extends EventDateKey ? SchedulerEvent[K] : TChanges[K];
 };
+
+function toEventString(
+  value: string | number,
+  referenceString: string | undefined,
+  dataTimezone: string,
+) {
+  if (typeof value === 'string') {
+    return value;
+  }
+  return referenceString == null
+    ? new Date(value).toISOString()
+    : timestampToEventString(value, referenceString, dataTimezone);
+}
 
 /**
  * Writes the dates of an event edit as event strings, in a copy of `changes`.
@@ -107,25 +113,20 @@ export function toEventDateStrings<TChanges extends EventDateInputs>(
 ): WithEventDateStrings<TChanges> {
   const dataTimezone =
     (referenceModel == null ? changes.timezone : referenceModel.timezone) ?? 'default';
-  const toEventString = (value: string | number, referenceString: string | undefined) => {
-    if (typeof value === 'string') {
-      return value;
-    }
-    return referenceString == null
-      ? new Date(value).toISOString()
-      : timestampToEventString(value, referenceString, dataTimezone);
-  };
-
   const result: EventDateInputs = { ...changes };
   if (changes.start != null) {
-    result.start = toEventString(changes.start, referenceModel?.start);
+    result.start = toEventString(changes.start, referenceModel?.start, dataTimezone);
   }
   if (changes.end != null) {
-    result.end = toEventString(changes.end, referenceModel?.end);
+    result.end = toEventString(changes.end, referenceModel?.end, dataTimezone);
   }
   if (changes.exDates != null) {
     result.exDates = changes.exDates.map((exDate, index) =>
-      toEventString(exDate, referenceModel?.exDates?.[index] ?? referenceModel?.start),
+      toEventString(
+        exDate,
+        referenceModel?.exDates?.[index] ?? referenceModel?.start,
+        dataTimezone,
+      ),
     );
   }
   const { rrule } = changes;

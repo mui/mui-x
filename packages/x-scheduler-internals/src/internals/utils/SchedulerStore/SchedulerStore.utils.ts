@@ -176,6 +176,7 @@ export function createEventModel<TEvent extends object>(
   // Internal callers (e.g. FormContent) may pass instants, and a processed rule whose `until` is a
   // plain date or date-time, so the built-in model is brought back to the SchedulerEvent format.
   const { exDates, rrule, ...rest } = toEventDateStrings(event, null);
+  // `exDates` and `rrule` stay set when `undefined`, so their setters run on every new event.
   const builtInEvent: SchedulerEvent = { ...rest, id, exDates, rrule };
 
   const model = createOrUpdateEventModelFromBuiltInEventModel<TEvent, true>(

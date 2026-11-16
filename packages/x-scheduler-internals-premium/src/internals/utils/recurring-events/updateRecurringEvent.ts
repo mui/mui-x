@@ -189,14 +189,16 @@ export function applyRecurringUpdateOnlyThis(
 ): UpdateEventsParameters {
   const occurrenceStart = occurrence.unstable_internalInfos.dataStart;
   // default start/end to the edited occurrence so the detached event keeps its own day, not DTSTART
-  const detachedEventChanges = toEventDateStrings(
-    {
-      ...changes,
-      start: changes.start ?? occurrenceStart,
-      end: changes.end ?? getOccurrenceEnd({ event: originalEvent, occurrenceStart }),
-    },
-    originalEvent.modelInBuiltInFormat,
-  );
+  const detachedEventChanges = {
+    ...changes,
+    ...toEventDateStrings(
+      {
+        start: changes.start ?? occurrenceStart,
+        end: changes.end ?? getOccurrenceEnd({ event: originalEvent, occurrenceStart }),
+      },
+      originalEvent.modelInBuiltInFormat,
+    ),
+  };
 
   // The original series excludes the occurrence, like a deletion.
   return {
