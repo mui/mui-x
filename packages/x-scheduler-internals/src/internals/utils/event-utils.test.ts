@@ -42,7 +42,7 @@ describe('event-utils', () => {
         .span('2024-01-15', '2024-01-18', { allDay: true })
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers, 'default');
       expect(result).toEqual([dayKeys[1], dayKeys[2], dayKeys[3]]);
     });
 
@@ -51,7 +51,7 @@ describe('event-utils', () => {
         .span('2024-01-10', '2024-01-13', { allDay: true })
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers, 'default');
       expect(result).toHaveLength(0);
     });
 
@@ -60,7 +60,7 @@ describe('event-utils', () => {
         .span('2024-01-20', '2024-01-23', { allDay: true })
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers, 'default');
       expect(result).toHaveLength(0);
     });
 
@@ -69,7 +69,7 @@ describe('event-utils', () => {
         .span('2024-01-13', '2024-01-17', { allDay: true })
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers, 'default');
       expect(result).toEqual([dayKeys[0], dayKeys[1], dayKeys[2]]);
     });
 
@@ -78,7 +78,7 @@ describe('event-utils', () => {
         .span('2024-01-16', '2024-01-20', { allDay: true })
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers, 'default');
       expect(result).toEqual([dayKeys[2], dayKeys[3], dayKeys[4]]);
     });
   });
@@ -103,14 +103,14 @@ describe('event-utils', () => {
         lastDay: '2026-04-04',
         days: ['2026-04-03', '2026-04-04'],
       },
-      // Pacific/Apia skipped December 30th, 2011: the end lands on the next existing day, the
-      // last day it names has no cell, and the occurrence renders on the days that exist.
+      // Pacific/Apia skipped December 30th, 2011: the end lands on the next existing day, and the
+      // last day is still the day before the skipped one.
       {
         timezone: 'Pacific/Apia',
         start: '2011-12-28',
         end: '2011-12-30',
         displayedEnd: '2011-12-31T00:00:00',
-        lastDay: '2011-12-30',
+        lastDay: '2011-12-29',
         days: ['2011-12-28', '2011-12-29'],
       },
     ])(
@@ -140,12 +140,12 @@ describe('event-utils', () => {
           });
 
           expect(occurrence.end.plainDateTime.toString()).to.equal(end);
-          expect(getOccurrenceLastDayNumber(occurrence)).to.equal(
+          expect(getOccurrenceLastDayNumber(occurrence, timezone)).to.equal(
             getDayNumber(BaseTemporal.PlainDate.from(lastDay)),
           );
-          expect(getDaysTheOccurrenceIsVisibleOn(occurrence, days, dayNumbers)).to.deep.equal(
-            expectedDays,
-          );
+          expect(
+            getDaysTheOccurrenceIsVisibleOn(occurrence, days, dayNumbers, timezone),
+          ).to.deep.equal(expectedDays);
         }
       },
     );
@@ -157,7 +157,7 @@ describe('event-utils', () => {
         .toOccurrence();
 
       // A timed occurrence ending at midnight covers the start of the next day.
-      expect(getOccurrenceLastDayNumber(occurrence)).to.equal(
+      expect(getOccurrenceLastDayNumber(occurrence, 'UTC')).to.equal(
         getDayNumber(BaseTemporal.PlainDate.from('2026-03-29')),
       );
     });

@@ -176,6 +176,7 @@ export const EventItem = React.forwardRef(function EventItem(
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
   const isEditing = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
   // Selector hooks
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
@@ -192,7 +193,8 @@ export const EventItem = React.forwardRef(function EventItem(
   const { start } = occurrence;
   const startsBeforeDay =
     !start.plainDateTime.toPlainDate().equals(date.plainDate) && start.timestamp < date.timestamp;
-  const endsAfterDay = getOccurrenceLastDayNumber(occurrence) > getDayNumber(date.plainDate);
+  const endsAfterDay =
+    getOccurrenceLastDayNumber(occurrence, displayTimezone) > getDayNumber(date.plainDate);
 
   const content = React.useMemo(() => {
     switch (variant) {
@@ -295,15 +297,16 @@ function MultiDayDateLabel(props: {
 
   const store = useEventCalendarStoreContext();
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const { classes, localeText } = useEventCalendarStyledContext();
 
-  if (isOccurrenceMultiDay(occurrence)) {
+  if (isOccurrenceMultiDay(occurrence, displayTimezone)) {
     return (
       <EventItemTime className={classes.eventItemTime} as="span">
         {localeText.eventItemMultiDayLabel(
           formatMonthShortAndDayOfMonth(
             locale,
-            plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence)),
+            plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence, displayTimezone)),
           ),
         )}
       </EventItemTime>

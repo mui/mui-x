@@ -23,6 +23,7 @@ function getName(
     localeText,
     isRecurring: false,
     resourceName: null,
+    displayTimezone: 'default',
     ...overrides,
   });
 }

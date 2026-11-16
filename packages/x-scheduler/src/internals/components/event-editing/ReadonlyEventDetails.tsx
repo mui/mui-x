@@ -148,8 +148,8 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
   const formatTime = useFormatTime();
   const { start, end } = occurrence;
   // The end of an all-day occurrence is the start of the day after its last day.
-  const endDay = plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence));
-  const isMultiDay = isOccurrenceMultiDay(occurrence);
+  const endDay = plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence, displayTimezone));
+  const isMultiDay = isOccurrenceMultiDay(occurrence, displayTimezone);
   const formatBound = (bound: SchedulerProcessedDate, day = bound.plainDateTime.toPlainDate()) => {
     const fullDate = formatFullDate(locale, day);
     return occurrence.allDay ? fullDate : `${fullDate}, ${formatTime(bound)}`;

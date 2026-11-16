@@ -9,7 +9,7 @@ import type {
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
 import type { BaseTemporal } from './base-temporal';
-import { toPlainDate } from './plain-date-utils/timeZone';
+import { toLocalDayNumber, toPlainDate } from './plain-date-utils/timeZone';
 import { getDayNumber, getPlainDateKey } from './plain-date-utils/plainDate';
 import type { SchedulerEventRangeIndex } from './event-range-index';
 
@@ -19,8 +19,14 @@ import type { SchedulerEventRangeIndex } from './event-range-index';
  */
 export function getOccurrenceLastDayNumber(
   occurrence: Pick<SchedulerRenderableEventOccurrence, 'allDay' | 'end'>,
+  displayTimezone: string,
 ): number {
-  return getDayNumber(occurrence.end.plainDateTime.toPlainDate()) - (occurrence.allDay ? 1 : 0);
+  if (occurrence.allDay) {
+    // The day of the last instant, not the day before the end's date: when the timezone skips the
+    // day after the last day, the end lands a day later.
+    return toLocalDayNumber(occurrence.end.timestamp - 1, displayTimezone);
+  }
+  return getDayNumber(occurrence.end.plainDateTime.toPlainDate());
 }
 
 /**
@@ -123,9 +129,10 @@ export function getDaysTheOccurrenceIsVisibleOn(
   event: SchedulerEventOccurrence,
   days: SchedulerProcessedDay[],
   dayNumbers: readonly number[],
+  displayTimezone: string,
 ) {
   const startDayNumber = getDayNumber(event.start.plainDateTime.toPlainDate());
-  const endDayNumber = getOccurrenceLastDayNumber(event);
+  const endDayNumber = getOccurrenceLastDayNumber(event, displayTimezone);
 
   const dayKeys: string[] = [];
   for (let index = 0; index < days.length; index += 1) {

@@ -77,7 +77,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     // The dates of the event in the row.
     const firstDay = Math.max(startDay, toLocalDayNumber(rowStart, displayTimezone));
     const lastDay = Math.min(
-      getOccurrenceLastDayNumber(occurrence),
+      getOccurrenceLastDayNumber(occurrence, displayTimezone),
       toLocalDayNumber(rowEnd, displayTimezone),
     );
     const elementPosition = ref.current.getBoundingClientRect();
