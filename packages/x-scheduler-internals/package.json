@@ -14,6 +14,7 @@
   },
   "exports": {
     "./build-is-valid-drop-target": "./src/build-is-valid-drop-target/index.ts",
+    "./base-temporal": "./src/base-temporal/index.ts",
     "./internals": "./src/internals/index.ts",
     "./calendar-grid": "./src/calendar-grid/index.ts",
     "./constants": "./src/constants/index.ts",

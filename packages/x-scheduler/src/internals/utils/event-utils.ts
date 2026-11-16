@@ -2,14 +2,20 @@ import type {
   EventCalendarTimeGridEvents,
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
-import { addDaysOnWallClock } from '@mui/x-scheduler-internals/internals';
+import {
+  addDaysOnWallClock,
+  getDayNumber,
+  getOccurrenceLastDayNumber,
+} from '@mui/x-scheduler-internals/internals';
 
 /**
  * Whether the occurrence starts and ends on different days of the display timezone.
  */
 export function isOccurrenceMultiDay(occurrence: SchedulerRenderableEventOccurrence) {
-  // The keys of the processed dates only depend on their day in the display timezone.
-  return occurrence.displayTimezone.start.key !== occurrence.displayTimezone.end.key;
+  return (
+    getDayNumber(occurrence.start.plainDateTime.toPlainDate()) !==
+    getOccurrenceLastDayNumber(occurrence)
+  );
 }
 
 export function isOccurrenceAllDayOrMultipleDay(occurrence: SchedulerRenderableEventOccurrence) {
@@ -28,7 +34,8 @@ export function isOccurrenceInDayGrid(
     case 'shorter-than-one-day':
     default: {
       // All-day, or lasts at least a day on the wall clock of the display timezone.
-      const { start, end, timezone } = occurrence.displayTimezone;
+      const { start, end } = occurrence;
+      const timezone = occurrence.unstable_internalInfos.displayTimezone;
       return (
         !!occurrence.allDay || end.timestamp >= addDaysOnWallClock(start.timestamp, 1, timezone)
       );
