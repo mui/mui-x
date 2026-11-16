@@ -6,11 +6,12 @@ import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowConte
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
+import { normalizeAllDayBounds } from '../../internals/utils/plain-date-utils/date';
 import {
-  createProcessedDate,
-  normalizeAllDayBounds,
-} from '../../internals/utils/plain-date-utils/date';
-import { toEpochMs, toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
+  toEpochMs,
+  toLocalDayNumber,
+  toZonedDateTime,
+} from '../../internals/utils/plain-date-utils/timeZone';
 import { getDayGridCellSpan } from '../../use-event-occurrences-with-day-grid-position';
 
 export function useCalendarGridPlaceholderInDay(
@@ -96,9 +97,8 @@ export function useCalendarGridPlaceholderInDay(
         ...sharedProperties,
         title: '',
         allDay: true,
-        start: createProcessedDate(creationBounds.start, displayTimezone),
-        end: createProcessedDate(creationBounds.end, displayTimezone),
-        unstable_internalInfos: { displayTimezone },
+        start: toZonedDateTime(creationBounds.start, displayTimezone),
+        end: toZonedDateTime(creationBounds.end, displayTimezone),
         position: {
           index: findAvailableIndex(),
           daySpan,
@@ -110,9 +110,8 @@ export function useCalendarGridPlaceholderInDay(
       return {
         ...sharedProperties,
         title: rawPlaceholder.eventData.title ?? '',
-        start: createProcessedDate(bounds.start, displayTimezone),
-        end: createProcessedDate(bounds.end, displayTimezone),
-        unstable_internalInfos: { displayTimezone },
+        start: toZonedDateTime(bounds.start, displayTimezone),
+        end: toZonedDateTime(bounds.end, displayTimezone),
         position: {
           index: findAvailableIndex(),
           daySpan,
@@ -122,9 +121,8 @@ export function useCalendarGridPlaceholderInDay(
 
     return {
       ...sharedProperties,
-      start: createProcessedDate(bounds.start, displayTimezone),
-      end: createProcessedDate(bounds.end, displayTimezone),
-      unstable_internalInfos: { displayTimezone },
+      start: toZonedDateTime(bounds.start, displayTimezone),
+      end: toZonedDateTime(bounds.end, displayTimezone),
       position: {
         index: findAvailableIndex(rawPlaceholder.occurrenceKey),
         daySpan,

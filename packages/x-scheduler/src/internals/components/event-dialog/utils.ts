@@ -359,7 +359,7 @@ export function getEventBoundTimestamp(
 ): number {
   return isEventOccurrence(occurrence)
     ? getDataTimestamp(occurrence, bound)
-    : occurrence[bound].timestamp;
+    : occurrence[bound].epochMilliseconds;
 }
 
 /**

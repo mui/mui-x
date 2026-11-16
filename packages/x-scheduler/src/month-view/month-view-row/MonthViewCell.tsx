@@ -275,8 +275,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               );
             }
 
-            const startsBeforeThisDay =
-              getDayNumber(occurrence.start.plainDateTime.toPlainDate()) < dayNumber;
+            const startsBeforeThisDay = getDayNumber(occurrence.start.toPlainDate()) < dayNumber;
 
             return (
               <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>

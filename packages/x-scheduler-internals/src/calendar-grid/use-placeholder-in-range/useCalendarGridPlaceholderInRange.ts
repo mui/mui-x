@@ -4,7 +4,7 @@ import { useEventCalendarStoreContext } from '../../use-event-calendar-store-con
 import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import type { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
-import { createProcessedDate } from '../../internals/utils/plain-date-utils/date';
+import { toZonedDateTime } from '../../internals/utils/plain-date-utils/timeZone';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
 
 export function useCalendarGridPlaceholderInRange(
@@ -35,9 +35,8 @@ export function useCalendarGridPlaceholderInRange(
       key: 'occurrence-placeholder',
       id: originalEventId ?? 'occurrence-placeholder',
       title: originalEvent ? originalEvent.title : '',
-      start: createProcessedDate(rawPlaceholder.start, displayTimezone),
-      end: createProcessedDate(rawPlaceholder.end, displayTimezone),
-      unstable_internalInfos: { displayTimezone },
+      start: toZonedDateTime(rawPlaceholder.start, displayTimezone),
+      end: toZonedDateTime(rawPlaceholder.end, displayTimezone),
     };
 
     if (rawPlaceholder.type === 'creation') {

@@ -25,17 +25,17 @@ interface SchedulerProcessedEventBase {
   title: string;
 
   /**
-   * The start date and time of the event, as rendered in the display timezone.
+   * The start of the event, in the display timezone.
    * For all-day events, this value is normalized to the start of the day in the display timezone.
    */
-  start: SchedulerProcessedDate;
+  start: BaseTemporal.ZonedDateTime;
 
   /**
-   * The end date and time of the event, as rendered in the display timezone.
+   * The end of the event, in the display timezone.
    * For all-day events, this value is exclusive: the start of the day after the last day,
    * in the display timezone.
    */
-  end: SchedulerProcessedDate;
+  end: BaseTemporal.ZonedDateTime;
 
   /**
    * Whether the event is an all-day event.
@@ -52,35 +52,20 @@ interface SchedulerProcessedEventBase {
    * A custom class name to apply to the event element.
    */
   className?: string;
-
-  /**
-   * Values the Scheduler computes for its internal work. They can change in any version.
-   */
-  unstable_internalInfos: SchedulerProcessedEventDraftInternalInfos;
-}
-
-/**
- * Values the Scheduler computes for its internal work on drafts. They can change in any version.
- */
-export interface SchedulerProcessedEventDraftInternalInfos {
-  /**
-   * The display timezone that `start` and `end` were read in.
-   */
-  displayTimezone: string;
 }
 
 /**
  * Values the Scheduler computes for its internal work. They can change in any version.
  */
-export interface SchedulerProcessedEventInternalInfos extends SchedulerProcessedEventDraftInternalInfos {
+export interface SchedulerProcessedEventInternalInfos {
   /**
    * The timestamp of the start of the event, read in its timezone.
-   * It only differs from `start.timestamp` for all-day events.
+   * It only differs from `start.epochMilliseconds` for all-day events.
    */
   dataStart: number;
   /**
    * The timestamp of the end of the event, read in its timezone.
-   * It only differs from `end.timestamp` for all-day events.
+   * It only differs from `end.epochMilliseconds` for all-day events.
    */
   dataEnd: number;
 }
@@ -405,17 +390,6 @@ export type SchedulerOccurrencePlaceholder =
   | SchedulerOccurrencePlaceholderCreation
   | SchedulerOccurrencePlaceholderInternalDragOrResize
   | SchedulerOccurrencePlaceholderExternalDrag;
-
-export interface SchedulerProcessedDate {
-  /**
-   * The date and wall-clock time, in the display timezone.
-   */
-  plainDateTime: BaseTemporal.PlainDateTime;
-  /**
-   * The instant, in milliseconds since the Unix epoch, like `Date.getTime()`.
-   */
-  timestamp: number;
-}
 
 /**
  * Properties to pass to the methods that update an event (recurring or not).

@@ -139,8 +139,8 @@ describe('event-utils', () => {
             recurringEventsPlugin,
           });
 
-          expect(occurrence.end.plainDateTime.toString()).to.equal(end);
-          expect(getOccurrenceModelEnd(occurrence)).to.equal(occurrence.end.timestamp - 1);
+          expect(occurrence.end.toPlainDateTime().toString()).to.equal(end);
+          expect(getOccurrenceModelEnd(occurrence)).to.equal(occurrence.end.epochMilliseconds - 1);
           expect(getOccurrenceLastDayNumber(occurrence)).to.equal(
             getDayNumber(BaseTemporal.PlainDate.from(expectedDays[1])),
           );
@@ -157,7 +157,7 @@ describe('event-utils', () => {
         .span('2026-03-28T22:00:00', '2026-03-29T00:00:00')
         .toOccurrence();
 
-      expect(getOccurrenceModelEnd(occurrence)).to.equal(occurrence.end.timestamp);
+      expect(getOccurrenceModelEnd(occurrence)).to.equal(occurrence.end.epochMilliseconds);
       // A timed occurrence ending at midnight covers the start of the next day.
       expect(getOccurrenceLastDayNumber(occurrence)).to.equal(
         getDayNumber(BaseTemporal.PlainDate.from('2026-03-29')),
@@ -268,7 +268,7 @@ describe('event-utils', () => {
           recurringEventsPlugin: mode === 'recurring' ? schedulerRecurringEventsPlugin : null,
         });
 
-        expect(result.map((occurrence) => occurrence.start.plainDateTime.day)).to.deep.equal(
+        expect(result.map((occurrence) => occurrence.start.toPlainDateTime().day)).to.deep.equal(
           mode === 'recurring' ? [15, 17] : [15],
         );
         for (const occurrence of result) {
@@ -394,13 +394,8 @@ describe('event-utils', () => {
     });
 
     it('should return undefined for a placeholder occurrence', () => {
-      const occurrence = EventBuilder.new().toOccurrence();
-      const placeholder = {
-        ...occurrence,
-        unstable_internalInfos: {
-          displayTimezone: occurrence.unstable_internalInfos.displayTimezone,
-        },
-      };
+      const { unstable_internalInfos: internalInfos, ...placeholder } =
+        EventBuilder.new().toOccurrence();
 
       expect(getOccurrenceInternalInfos(placeholder)).to.equal(undefined);
     });
@@ -441,7 +436,9 @@ describe('event-utils', () => {
         end: processed.end,
       });
 
-      expect(occurrence.unstable_internalInfos.dataStart).to.equal(processed.start.timestamp);
+      expect(occurrence.unstable_internalInfos.dataStart).to.equal(
+        processed.start.epochMilliseconds,
+      );
     });
   });
 

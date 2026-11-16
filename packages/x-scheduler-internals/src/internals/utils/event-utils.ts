@@ -1,13 +1,13 @@
 import type {
   SchedulerProcessedEvent,
   SchedulerProcessedEventInternalInfos,
-  SchedulerProcessedDate,
   SchedulerEventOccurrence,
   SchedulerEventId,
   SchedulerRenderableEventOccurrence,
   SchedulerResourceId,
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
+import type { BaseTemporal } from './base-temporal';
 import { toLocalDayNumber, toPlainDate } from './plain-date-utils/timeZone';
 import { getDayNumber, getPlainDateKey } from './plain-date-utils/plainDate';
 import type { SchedulerEventRangeIndex } from './event-range-index';
@@ -17,14 +17,12 @@ import type { SchedulerEventRangeIndex } from './event-range-index';
  * all-day occurrence is exclusive: the first instant of the day after its last day.
  */
 export function getOccurrenceLastDayNumber(
-  occurrence: Pick<SchedulerRenderableEventOccurrence, 'allDay' | 'end' | 'unstable_internalInfos'>,
+  occurrence: Pick<SchedulerRenderableEventOccurrence, 'allDay' | 'end'>,
 ): number {
+  const { end } = occurrence;
   return occurrence.allDay
-    ? toLocalDayNumber(
-        occurrence.end.timestamp - 1,
-        occurrence.unstable_internalInfos.displayTimezone,
-      )
-    : getDayNumber(occurrence.end.plainDateTime.toPlainDate());
+    ? toLocalDayNumber(end.epochMilliseconds - 1, end.timeZoneId)
+    : getDayNumber(end.toPlainDate());
 }
 
 /**
@@ -34,7 +32,7 @@ export function getOccurrenceLastDayNumber(
 export function getOccurrenceModelEnd(
   occurrence: Pick<SchedulerRenderableEventOccurrence, 'allDay' | 'end'>,
 ): number {
-  return occurrence.end.timestamp - (occurrence.allDay ? 1 : 0);
+  return occurrence.end.epochMilliseconds - (occurrence.allDay ? 1 : 0);
 }
 
 /**
@@ -44,7 +42,7 @@ export function getOccurrenceModelEnd(
 export function isEventOccurrence(
   occurrence: SchedulerRenderableEventOccurrence,
 ): occurrence is SchedulerEventOccurrence {
-  return 'dataStart' in occurrence.unstable_internalInfos;
+  return 'unstable_internalInfos' in occurrence;
 }
 
 /**
@@ -112,8 +110,8 @@ export function generateOccurrenceFromEvent({
   event: SchedulerProcessedEvent;
   eventId: SchedulerEventId;
   occurrenceKey: string;
-  start: SchedulerProcessedDate;
-  end: SchedulerProcessedDate;
+  start: BaseTemporal.ZonedDateTime;
+  end: BaseTemporal.ZonedDateTime;
   /**
    * The internal values of the occurrence, with its instants in the data timezone. Defaults to the
    * display `start`/`end`, a fallback only placeholder occurrences may rely on.
@@ -130,9 +128,8 @@ export function generateOccurrenceFromEvent({
     start,
     end,
     unstable_internalInfos: internalInfos ?? {
-      displayTimezone: event.unstable_internalInfos.displayTimezone,
-      dataStart: start.timestamp,
-      dataEnd: end.timestamp,
+      dataStart: start.epochMilliseconds,
+      dataEnd: end.epochMilliseconds,
     },
   };
   return occurrence;
@@ -148,7 +145,7 @@ export function getDaysTheOccurrenceIsVisibleOn(
   dayNumbers: readonly number[],
   dayKeys: readonly string[],
 ) {
-  const startDayNumber = getDayNumber(event.start.plainDateTime.toPlainDate());
+  const startDayNumber = getDayNumber(event.start.toPlainDate());
   const endDayNumber = getOccurrenceLastDayNumber(event);
 
   const visibleDayKeys: string[] = [];

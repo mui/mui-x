@@ -249,7 +249,7 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
     additionalChanges.allDay != null &&
     additionalChanges.allDay !== (originalOccurrence.allDay ?? false);
   const changes: SchedulerEventUpdatedProperties = { id: eventId };
-  if (allDayToggled || originalOccurrence.start.timestamp !== start) {
+  if (allDayToggled || originalOccurrence.start.epochMilliseconds !== start) {
     changes.start = new Date(start);
   }
   if (allDayToggled || getOccurrenceModelEnd(originalOccurrence) !== end) {

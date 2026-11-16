@@ -1,5 +1,4 @@
 import * as React from 'react';
-import type { SchedulerProcessedDate } from '../../models';
 import {
   getTimelineAxisDurationMs,
   isStartMinuteOutsideAxisWindow,
@@ -9,6 +8,7 @@ import {
 import type { TimelineAxis } from './timeline-axis';
 import { MS_PER_MINUTE } from './plain-date-utils/dayNumber';
 import { getMinutesInDay } from './plain-date-utils/plainDate';
+import type { BaseTemporal } from './base-temporal';
 
 export function useElementPositionInCollection(
   parameters: useElementPositionInCollection.Parameters,
@@ -34,13 +34,13 @@ export function computeElementPositionInCollection(
   // midnight-wrap correction is needed for `end >= start` inputs.
   const startOffsetMs = timestampToTimelineAxisOffsetMs(
     axis,
-    start.timestamp,
-    getMinutesInDay(start.plainDateTime) * MS_PER_MINUTE,
+    start.epochMilliseconds,
+    getMinutesInDay(start) * MS_PER_MINUTE,
   );
   const endOffsetMs = timestampToTimelineAxisOffsetMs(
     axis,
-    end.timestamp,
-    getMinutesInDay(end.plainDateTime) * MS_PER_MINUTE,
+    end.epochMilliseconds,
+    getMinutesInDay(end) * MS_PER_MINUTE,
   );
 
   const totalMs = parameters.durationMs ?? getTimelineAxisDurationMs(axis);
@@ -52,9 +52,9 @@ export function computeElementPositionInCollection(
 
   // A bound clamped in either direction means part of the element is hidden.
   const startingBeforeEdge =
-    startOffsetMs < 0 || isStartMinuteOutsideAxisWindow(axis, getMinutesInDay(start.plainDateTime));
+    startOffsetMs < 0 || isStartMinuteOutsideAxisWindow(axis, getMinutesInDay(start));
   const endingAfterEdge =
-    endOffsetMs > totalMs || isEndMinuteOutsideAxisWindow(axis, getMinutesInDay(end.plainDateTime));
+    endOffsetMs > totalMs || isEndMinuteOutsideAxisWindow(axis, getMinutesInDay(end));
 
   return {
     position: clampedStartMs / totalMs,
@@ -69,11 +69,11 @@ export namespace useElementPositionInCollection {
     /**
      * The start of the element, processed in the timezone of the collection.
      */
-    start: SchedulerProcessedDate;
+    start: BaseTemporal.ZonedDateTime;
     /**
      * The end of the element, processed in the timezone of the collection.
      */
-    end: SchedulerProcessedDate;
+    end: BaseTemporal.ZonedDateTime;
     /**
      * The axis the element is positioned in: the axis of a CalendarGrid time column or day row, or
      * the `axis` of the timeline's preset config.

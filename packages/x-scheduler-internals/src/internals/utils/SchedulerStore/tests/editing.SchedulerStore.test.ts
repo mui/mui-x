@@ -18,7 +18,7 @@ import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { vi, describe, it, expect } from 'vitest';
 import { schedulerEventSelectors, schedulerOtherSelectors } from '../../../../scheduler-selectors';
-import { createProcessedDate } from '../../../../process-date';
+import { toZonedDateTime } from '../../../../internals/utils/plain-date-utils/timeZone';
 import { getOccurrenceKey, getRecurringOccurrenceKey } from '../../event-utils';
 
 const DEFAULT_PARAMS = {
@@ -36,8 +36,8 @@ const DATES_NOT_WRITABLE_REASON =
 
 // A minimal edited occurrence of a recurring series (only the fields `repointEditingOccurrence` reads).
 function armRecurringOccurrence(store: any) {
-  const start = createProcessedDate(Date.parse('2025-07-07T09:00:00Z'), 'default');
-  const end = createProcessedDate(Date.parse('2025-07-07T10:00:00Z'), 'default');
+  const start = toZonedDateTime(Date.parse('2025-07-07T09:00:00Z'), 'default');
+  const end = toZonedDateTime(Date.parse('2025-07-07T10:00:00Z'), 'default');
   const editedOccurrence = {
     id: 'standup',
     key: 'standup::2025-07-07',
@@ -49,8 +49,8 @@ function armRecurringOccurrence(store: any) {
     // data-timezone identity branch these tests are about.
     unstable_internalInfos: {
       displayTimezone: 'default',
-      dataStart: start.timestamp,
-      dataEnd: end.timestamp,
+      dataStart: start.epochMilliseconds,
+      dataEnd: end.epochMilliseconds,
     },
   } as any;
   store.startEditing(editedOccurrence, 'armed');
@@ -111,9 +111,8 @@ storeClasses.forEach((storeClass) => {
         return {
           id: 'standup',
           key: 'standup::2025-07-07',
-          start: createProcessedDate(Date.parse('2025-07-07T09:00:00Z'), 'default'),
-          end: createProcessedDate(Date.parse('2025-07-07T10:00:00Z'), 'default'),
-          unstable_internalInfos: { displayTimezone: 'default' },
+          start: toZonedDateTime(Date.parse('2025-07-07T09:00:00Z'), 'default'),
+          end: toZonedDateTime(Date.parse('2025-07-07T10:00:00Z'), 'default'),
         } as any;
       }
 
@@ -162,9 +161,8 @@ storeClasses.forEach((storeClass) => {
         return {
           id: 'standup',
           key: 'standup::2025-07-07',
-          start: createProcessedDate(Date.parse('2025-07-07T09:00:00Z'), 'default'),
-          end: createProcessedDate(Date.parse('2025-07-07T10:00:00Z'), 'default'),
-          unstable_internalInfos: { displayTimezone: 'default' },
+          start: toZonedDateTime(Date.parse('2025-07-07T09:00:00Z'), 'default'),
+          end: toZonedDateTime(Date.parse('2025-07-07T10:00:00Z'), 'default'),
         } as any;
       }
 
@@ -251,8 +249,8 @@ premiumStoreClasses.forEach((storeClass) => {
         {
           id: 'standup',
           key: getRecurringOccurrenceKey('standup', occurrenceStart.getTime(), 'default'),
-          start: createProcessedDate(occurrenceStart.getTime(), 'default'),
-          end: createProcessedDate(addHours(occurrenceStart, 1).getTime(), 'default'),
+          start: toZonedDateTime(occurrenceStart.getTime(), 'default'),
+          end: toZonedDateTime(addHours(occurrenceStart, 1).getTime(), 'default'),
           timezone: 'default',
           rrule: RRULE,
           unstable_internalInfos: {
@@ -304,8 +302,8 @@ premiumStoreClasses.forEach((storeClass) => {
       // The occurrence followed the resize onto the freshly-split event: new key, updated times.
       expect(occurrence.key).to.not.equal(armedKey);
       // The display timezone is UTC.
-      expect(occurrence.start.plainDateTime.toString()).to.equal('2025-07-07T09:30:00');
-      expect(occurrence.end.plainDateTime.toString()).to.equal('2025-07-07T10:30:00');
+      expect(occurrence.start.toPlainDateTime().toString()).to.equal('2025-07-07T09:30:00');
+      expect(occurrence.end.toPlainDateTime().toString()).to.equal('2025-07-07T10:30:00');
     });
 
     it('should keep the data-timezone identity in sync when the armed occurrence is resized', () => {
@@ -402,8 +400,8 @@ premiumStoreClasses.forEach((storeClass) => {
       // The form opened from the armed toolbar reads these: one whole day, ending exclusively.
       const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
       expect(occurrence.allDay).to.equal(true);
-      expect(occurrence.start.plainDateTime.toString()).to.equal('2025-07-08T00:00:00');
-      expect(occurrence.end.plainDateTime.toString()).to.equal('2025-07-09T00:00:00');
+      expect(occurrence.start.toPlainDateTime().toString()).to.equal('2025-07-08T00:00:00');
+      expect(occurrence.end.toPlainDateTime().toString()).to.equal('2025-07-09T00:00:00');
     });
 
     it("should disarm when an end-only scope 'all' change pushes the armed occurrence past its day", () => {
@@ -577,7 +575,7 @@ premiumStoreClasses.forEach((storeClass) => {
         const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
         expect(occurrence.key).to.equal(armed.key);
         // The display timezone is Asia/Tokyo.
-        expect(occurrence.start.plainDateTime.toString()).to.equal('2025-07-08T19:00:00');
+        expect(occurrence.start.toPlainDateTime().toString()).to.equal('2025-07-08T19:00:00');
       });
     });
 
@@ -616,8 +614,8 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(occurrence.key).to.equal(getOccurrenceKey(occurrence.id));
       expect(occurrence.rrule).to.equal(undefined);
       // The display timezone is UTC.
-      expect(occurrence.start.plainDateTime.toString()).to.equal('2025-07-07T09:00:00');
-      expect(occurrence.end.plainDateTime.toString()).to.equal('2025-07-07T10:00:00');
+      expect(occurrence.start.toPlainDateTime().toString()).to.equal('2025-07-07T09:00:00');
+      expect(occurrence.end.toPlainDateTime().toString()).to.equal('2025-07-07T10:00:00');
       expect(occurrence.unstable_internalInfos.dataStart).to.equal(dayA.getTime());
       expect(new Date(occurrence!.unstable_internalInfos.dataEnd)).toEqualDateTime(
         addHours(dayA, 1),

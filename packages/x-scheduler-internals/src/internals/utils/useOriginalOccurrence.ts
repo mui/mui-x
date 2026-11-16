@@ -5,10 +5,10 @@ import { schedulerEventSelectors } from '../../scheduler-selectors';
 import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
-  SchedulerProcessedDate,
   SchedulerProcessedEventInternalInfos,
 } from '../../models';
 import { generateOccurrenceFromEvent } from './event-utils';
+import type { BaseTemporal } from './base-temporal';
 
 /**
  * Returns a lazy builder for the occurrence a drag or resize session starts from,
@@ -38,8 +38,8 @@ export namespace useOriginalOccurrence {
     eventId: SchedulerEventId;
     occurrenceKey: string;
     /** The rendered display bounds of the occurrence (or segment). */
-    start: SchedulerProcessedDate;
-    end: SchedulerProcessedDate;
+    start: BaseTemporal.ZonedDateTime;
+    end: BaseTemporal.ZonedDateTime;
     /**
      * The internal values of the occurrence, with its instants in the data timezone, which identify
      * a recurring occurrence. `undefined` for placeholders.

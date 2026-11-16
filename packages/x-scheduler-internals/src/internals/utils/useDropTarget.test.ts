@@ -41,7 +41,7 @@ premiumStoreClasses.forEach((storeClass) => {
           originalOccurrence: occurrence,
           sourceResourceId: null,
           resourceId: null,
-          start: occurrence.start.timestamp,
+          start: occurrence.start.epochMilliseconds,
           // One more day, from the last instant of its last day.
           end: addDays(new Date(getOccurrenceModelEnd(occurrence)), 1).getTime(),
         },
@@ -79,7 +79,7 @@ premiumStoreClasses.forEach((storeClass) => {
           originalOccurrence: occurrence,
           sourceResourceId: null,
           resourceId: null,
-          start: occurrence.start.timestamp,
+          start: occurrence.start.epochMilliseconds,
           // One more day, from the last instant of its last day.
           end: addDays(new Date(getOccurrenceModelEnd(occurrence)), 1).getTime(),
         },
@@ -108,7 +108,7 @@ premiumStoreClasses.forEach((storeClass) => {
         displayTimezone: 'America/New_York',
         onEventsChange,
       });
-      const start = new Date(occurrence.start.timestamp);
+      const start = new Date(occurrence.start.epochMilliseconds);
       const end = addHours(start, 1);
 
       applyInternalDragOrResizeOccurrencePlaceholder(
@@ -170,8 +170,8 @@ premiumStoreClasses.forEach((storeClass) => {
       // The form opened from the armed toolbar reads these: the dropped times, not whole days.
       const edited = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
       expect(edited.allDay).to.equal(false);
-      expect(edited.start.plainDateTime.toString()).to.equal('2025-07-04T10:00:00');
-      expect(edited.end.plainDateTime.toString()).to.equal('2025-07-04T11:00:00');
+      expect(edited.start.toPlainDateTime().toString()).to.equal('2025-07-04T10:00:00');
+      expect(edited.end.toPlainDateTime().toString()).to.equal('2025-07-04T11:00:00');
     });
   });
 });

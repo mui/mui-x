@@ -73,7 +73,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   // Feature hooks
   const getDraggedDay = (input: { clientX: number }, occurrence: SchedulerEventOccurrence) => {
     const displayTimezone = schedulerOtherSelectors.displayTimezone(store.state);
-    const startDay = toLocalDayNumber(start.timestamp, displayTimezone);
+    const startDay = toLocalDayNumber(start.epochMilliseconds, displayTimezone);
     if (!ref.current) {
       return plainDateFromDayNumber(startDay);
     }
@@ -116,7 +116,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
         eventId,
         occurrenceKey,
         originalOccurrence,
-        start: start.timestamp,
+        start: start.epochMilliseconds,
         end: getOccurrenceModelEnd(originalOccurrence),
       };
     },

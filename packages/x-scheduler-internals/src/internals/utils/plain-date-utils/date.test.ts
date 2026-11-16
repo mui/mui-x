@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { createDate, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
-import { createProcessedDate, isInstantString, parseWallTimeString } from './date';
+import { isInstantString, parseWallTimeString } from './date';
 import { getMinutesInDay } from './plainDate';
-import { toPlainDate } from './timeZone';
+import { getTimezoneId, toPlainDate, toZonedDateTime } from './timeZone';
 
 /**
  * The date and the minutes of the day of an instant in `timezone`, as the getters of `Date` read
@@ -94,40 +94,40 @@ describe('plain-date-utils/date', () => {
   );
 
   it.each(['default', 'UTC', 'America/New_York', 'Asia/Kolkata'])(
-    'should process a date in %s like the reference reads it',
+    'should read an instant in %s like the reference reads it',
     (timezone) => {
       const epochMs = Date.UTC(2025, 10, 2, 5, 30);
-      const reference = { ...readReference(epochMs, timezone), timestamp: epochMs };
+      const reference = readReference(epochMs, timezone);
 
-      const { plainDateTime, timestamp } = createProcessedDate(epochMs, timezone);
-      expect(timestamp).to.equal(epochMs);
-      expect(plainDateTime.toPlainDate().toString()).to.equal(reference.key);
-      expect(getMinutesInDay(plainDateTime)).to.equal(reference.minutesInDay);
-      expect(createProcessedDate(epochMs, timezone)).to.deep.equal({ plainDateTime, timestamp });
+      const value = toZonedDateTime(epochMs, timezone);
+      expect(value.epochMilliseconds).to.equal(epochMs);
+      expect(value.timeZoneId).to.equal(getTimezoneId(timezone));
+      expect(value.toPlainDate().toString()).to.equal(reference.key);
+      expect(getMinutesInDay(value)).to.equal(reference.minutesInDay);
     },
   );
 
-  it('should process a date with an offset between -01:00 and 00:00', () => {
+  it('should read an instant with an offset between -01:00 and 00:00', () => {
     // Africa/Monrovia used -00:44:30 until 1972: the epoch is 23:15:30 on December 31st, 1969.
-    const { plainDateTime } = createProcessedDate(0, 'Africa/Monrovia');
-    expect(plainDateTime.toString()).to.equal('1969-12-31T23:15:30');
+    const value = toZonedDateTime(0, 'Africa/Monrovia');
+    expect(value.toPlainDateTime().toString()).to.equal('1969-12-31T23:15:30');
+    expect(value.offset).to.equal('-00:44:30');
   });
 
   // Browsers cannot change their timezone through process.env.TZ.
   it.skipIf(!isJSDOM).each(['America/New_York', 'Australia/Lord_Howe', 'Asia/Kolkata'])(
-    'should process a date like the getters of Date read it in the system timezone %s',
+    'should read an instant like the getters of Date read it in the system timezone %s',
     (systemTimezone) => {
       setSystemTimezone(systemTimezone);
       // 01:30 in New York, on the day it falls back, and 16:30 in Lord Howe.
       const epochMs = Date.UTC(2025, 10, 2, 5, 30);
-      const reference = { ...readReference(epochMs, 'default'), timestamp: epochMs };
+      const reference = readReference(epochMs, 'default');
 
-      const { plainDateTime } = createProcessedDate(epochMs, 'default');
-      expect(plainDateTime.toPlainDate().toString()).to.equal(reference.key);
-      expect(getMinutesInDay(plainDateTime)).to.equal(reference.minutesInDay);
-      expect(createProcessedDate(epochMs, 'default').plainDateTime.equals(plainDateTime)).to.equal(
-        true,
-      );
+      const value = toZonedDateTime(epochMs, 'default');
+      // ICU names some timezones by an older alias, like `Asia/Calcutta` for `Asia/Kolkata`.
+      expect(value.timeZoneId).to.equal(Intl.DateTimeFormat().resolvedOptions().timeZone);
+      expect(value.toPlainDate().toString()).to.equal(reference.key);
+      expect(getMinutesInDay(value)).to.equal(reference.minutesInDay);
     },
   );
 

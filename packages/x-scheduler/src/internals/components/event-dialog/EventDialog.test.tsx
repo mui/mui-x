@@ -15,8 +15,7 @@ import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-util
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
-import { toPlainDate } from '@mui/x-scheduler-internals/internals';
+import { toPlainDate, toZonedDateTime } from '@mui/x-scheduler-internals/internals';
 import { schedulerOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import {
@@ -170,8 +169,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       const occurrence = builder.toOccurrence();
       const snapshot = {
         ...occurrence,
-        start: createProcessedDate(occurrence.unstable_internalInfos.dataStart, displayTimezone),
-        end: createProcessedDate(occurrence.unstable_internalInfos.dataEnd, displayTimezone),
+        start: toZonedDateTime(occurrence.unstable_internalInfos.dataStart, displayTimezone),
+        end: toZonedDateTime(occurrence.unstable_internalInfos.dataEnd, displayTimezone),
         unstable_internalInfos: { ...occurrence.unstable_internalInfos, displayTimezone },
       };
 

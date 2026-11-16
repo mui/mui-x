@@ -1,4 +1,4 @@
-import type { BaseTemporal } from '../base-temporal';
+import { BaseTemporal } from '../base-temporal';
 import { isoDateToDayNumber, MS_PER_DAY } from './dayNumber';
 import {
   getDayNumber,
@@ -122,6 +122,20 @@ export function toLocalMs(epochMs: number, timezone: string): number {
  */
 export function toPlainDate(epochMs: number, timezone: string): BaseTemporal.PlainDate {
   return plainDateFromDayNumber(toLocalDayNumber(epochMs, timezone));
+}
+
+const NANOSECONDS_PER_MILLISECOND = 1_000_000n;
+
+/**
+ * The zoned date-time of an instant in `timezone`.
+ * `'default'` reads the identifier of the timezone of the system with `Intl`, which takes tens of
+ * microseconds: the stores hold their display timezone by its identifier, read once.
+ */
+export function toZonedDateTime(epochMs: number, timezone: string): BaseTemporal.ZonedDateTime {
+  return new BaseTemporal.ZonedDateTime(
+    BigInt(epochMs) * NANOSECONDS_PER_MILLISECOND,
+    getTimezoneId(timezone),
+  );
 }
 
 /**

@@ -13,8 +13,8 @@ import { getOccurrenceLastDayNumber, getOccurrenceModelEnd } from '../internals/
 function getDayCount(occurrence: SchedulerEventOccurrence) {
   return differenceInDays(
     getOccurrenceModelEnd(occurrence),
-    occurrence.start.timestamp,
-    occurrence.unstable_internalInfos.displayTimezone,
+    occurrence.start.epochMilliseconds,
+    occurrence.start.timeZoneId,
   );
 }
 

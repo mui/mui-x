@@ -5,6 +5,7 @@ import type {
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
 import { EventBuilder } from 'test/utils/scheduler';
+import { getTimezoneId } from '@mui/x-scheduler-internals/internals';
 import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventOccurrencesForVisibleDays';
 
 const RULES: SchedulerEventRecurrenceRule[] = [
@@ -50,6 +51,9 @@ function createRecurringEvents(
   });
 }
 
+// The timezone of the system, as the store holds it: by its identifier.
+const SYSTEM_TIMEZONE = getTimezoneId('default');
+
 // Expanding the year range takes seconds per run before the plain-date migration, so cap the samples.
 const BENCH_OPTIONS = { time: 0, iterations: 10, warmupTime: 0, warmupIterations: 1 };
 
@@ -84,13 +88,13 @@ describe('recurring event expansion', () => {
 
     await bench.compare(
       bench('week view', () => {
-        expandAll(events, RANGES.week, 'default');
+        expandAll(events, RANGES.week, SYSTEM_TIMEZONE);
       }),
       bench('month view', () => {
-        expandAll(events, RANGES.month, 'default');
+        expandAll(events, RANGES.month, SYSTEM_TIMEZONE);
       }),
       bench('year timeline', () => {
-        expandAll(events, RANGES.year, 'default');
+        expandAll(events, RANGES.year, SYSTEM_TIMEZONE);
       }),
       BENCH_OPTIONS,
     );
@@ -130,10 +134,10 @@ describe('recurring event expansion', () => {
 
     await bench.compare(
       bench('week view, 10 years after DTSTART', () => {
-        expandAll(events, RANGES.week, 'default');
+        expandAll(events, RANGES.week, SYSTEM_TIMEZONE);
       }),
       bench('month view, 10 years after DTSTART', () => {
-        expandAll(events, RANGES.month, 'default');
+        expandAll(events, RANGES.month, SYSTEM_TIMEZONE);
       }),
       BENCH_OPTIONS,
     );
@@ -163,13 +167,13 @@ describe('recurring event expansion', () => {
 
     await bench.compare(
       bench('1 series, month view', () => {
-        expandAll(oneSeries, RANGES.month, 'default');
+        expandAll(oneSeries, RANGES.month, SYSTEM_TIMEZONE);
       }),
       bench('2 series, month view', () => {
-        expandAll(twoSeries, RANGES.month, 'default');
+        expandAll(twoSeries, RANGES.month, SYSTEM_TIMEZONE);
       }),
       bench('4 series, month view', () => {
-        expandAll(fourSeries, RANGES.month, 'default');
+        expandAll(fourSeries, RANGES.month, SYSTEM_TIMEZONE);
       }),
       BENCH_OPTIONS,
     );

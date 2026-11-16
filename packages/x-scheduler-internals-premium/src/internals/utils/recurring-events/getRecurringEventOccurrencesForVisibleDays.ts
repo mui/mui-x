@@ -3,7 +3,6 @@ import type {
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
 import {
-  createProcessedDate,
   getDayNumber,
   getEndOfDayMs,
   getPlainDateKey,
@@ -14,6 +13,7 @@ import {
   MS_PER_DAY,
   toLocalDayNumber,
   toPlainDate,
+  toZonedDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import { RecurringSeries } from './RecurringSeries';
 
@@ -60,9 +60,9 @@ export function getRecurringEventOccurrencesForVisibleDays(
     return {
       ...occurrenceProperties,
       key: getRecurringOccurrenceKeyFromDateKey(event.id, getPlainDateKey(day)),
-      start: createProcessedDate(displayStartMs, displayTimezone),
-      end: createProcessedDate(displayEndMs, displayTimezone),
-      unstable_internalInfos: { displayTimezone, dataStart: startMs, dataEnd: endMs },
+      start: toZonedDateTime(displayStartMs, displayTimezone),
+      end: toZonedDateTime(displayEndMs, displayTimezone),
+      unstable_internalInfos: { dataStart: startMs, dataEnd: endMs },
     };
   });
 }

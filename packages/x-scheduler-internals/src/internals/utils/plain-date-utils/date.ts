@@ -94,8 +94,6 @@ export function normalizeAllDayBounds(
   return { start: getStartOfDayMs(start, timezone), end: getEndOfDayMs(end, timezone) + 1 };
 }
 
-export { createProcessedDate } from '../../../process-date/processDate';
-
 /**
  * Moves a date by a duration of the calendar, keeping its time of day on the wall clock of
  * `timezone`. A time that a DST transition skips moves forward by the length of the gap, and a

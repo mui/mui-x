@@ -144,13 +144,10 @@ export function FormContent(props: FormContentProps) {
 
   // Built once: the provider ignores later values anyway.
   const initialValues = useRefWithInit((): EventDialogFormValues => {
-    const startFields = formatDateAndTimeFields(occurrence.start.plainDateTime);
+    const startFields = formatDateAndTimeFields(occurrence.start.toPlainDateTime());
     // Like the event models, the form ends an all-day event on the last instant of its last day.
     const endFields = formatDateAndTimeFields(
-      toPlainDateTime(
-        getOccurrenceModelEnd(occurrence),
-        occurrence.unstable_internalInfos.displayTimezone,
-      ),
+      toPlainDateTime(getOccurrenceModelEnd(occurrence), occurrence.end.timeZoneId),
     );
 
     // The rule is read and written in the event's timezone, not the display one.
@@ -387,8 +384,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // it untouched can move the event: the same day re-read in another timezone
       // is a different day. Only the keys the submitted range reads count — a time
       // left over from toggling all-day off and back on must not re-arm the resend.
-      const displayTimezoneMoved =
-        current.displayTimezone !== occurrence.unstable_internalInfos.displayTimezone;
+      const displayTimezoneMoved = current.displayTimezone !== occurrence.start.timeZoneId;
       const { startResent, endResent } = getResentRangeBounds(
         dirtyValues,
         values.allDay,
@@ -420,7 +416,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // moved since the snapshot; the recurring update defaults it to the occurrence's own.
       const untouchedBound = (bound: 'start' | 'end') => {
         const source = liveEvent != null && liveEvent.rrule == null ? liveEvent : occurrence;
-        return bound === 'start' ? source.start.timestamp : getOccurrenceModelEnd(source);
+        return bound === 'start' ? source.start.epochMilliseconds : getOccurrenceModelEnd(source);
       };
       const submittedStart = submitStart ? range.start : untouchedBound('start');
       const submittedEnd = submitEnd ? range.end : untouchedBound('end');

@@ -14,7 +14,7 @@ import type {
   SchedulerEventId,
   SchedulerEventModelStructure,
 } from '@mui/x-scheduler-internals/models';
-import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
+import { toZonedDateTime } from '@mui/x-scheduler-internals/internals';
 import { vi, describe, it, expect } from 'vitest';
 import { schedulerEventSelectors } from '../../../../scheduler-selectors';
 
@@ -132,8 +132,8 @@ storeClasses.forEach((storeClass) => {
         expect(event).to.deep.contain({
           id: '1',
           title: 'Event 1',
-          start: createProcessedDate(Date.parse('2025-07-01T09:00:00.000Z'), 'default'),
-          end: createProcessedDate(Date.parse('2025-07-01T10:00:00.000Z'), 'default'),
+          start: toZonedDateTime(Date.parse('2025-07-01T09:00:00.000Z'), 'default'),
+          end: toZonedDateTime(Date.parse('2025-07-01T10:00:00.000Z'), 'default'),
           timezone: 'default',
           exDates: undefined,
           allDay: false,

@@ -110,7 +110,7 @@ export function createEventRangeIndex(
     const entry: EventRangeEntry = [
       event,
       index,
-      event.start.timestamp,
+      event.start.epochMilliseconds,
       getOccurrenceModelEnd(event),
     ];
 
@@ -147,7 +147,7 @@ export function createEventRangeIndex(
         return events.filter(
           (event) =>
             (expandRecurringEvents && Boolean(event.rrule)) ||
-            (event.start.timestamp <= endTimestamp &&
+            (event.start.epochMilliseconds <= endTimestamp &&
               getOccurrenceModelEnd(event) >= startTimestamp),
         );
       }

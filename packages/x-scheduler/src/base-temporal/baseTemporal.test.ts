@@ -11,12 +11,12 @@ describe('base-temporal', () => {
       .toOccurrence();
 
     const { start, end } = occurrence;
-    expect(start.plainDateTime).to.be.instanceOf(BaseTemporal.PlainDateTime);
+    expect(start.toPlainDateTime()).to.be.instanceOf(BaseTemporal.PlainDateTime);
     // Read in the display timezone.
-    expect(start.plainDateTime.toString()).to.equal('2025-07-01T05:00:00');
-    expect(BaseTemporal.PlainDateTime.compare(start.plainDateTime, end.plainDateTime)).to.equal(-1);
+    expect(start.toPlainDateTime().toString()).to.equal('2025-07-01T05:00:00');
     expect(
-      start.plainDateTime.toPlainDate().equals(BaseTemporal.PlainDate.from('2025-07-01')),
-    ).to.equal(true);
+      BaseTemporal.PlainDateTime.compare(start.toPlainDateTime(), end.toPlainDateTime()),
+    ).to.equal(-1);
+    expect(start.toPlainDate().equals(BaseTemporal.PlainDate.from('2025-07-01'))).to.equal(true);
   });
 });

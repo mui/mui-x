@@ -4,7 +4,7 @@ import { DirectionProvider } from '@base-ui/react/direction-provider';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { EventTimelinePremiumProvider } from '@mui/x-scheduler-internals-premium/event-timeline-premium-provider';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
+import { toZonedDateTime } from '@mui/x-scheduler-internals/internals';
 import type {
   TimelineGridColumnType,
   TimelineGridCellCoordinates,
@@ -78,8 +78,8 @@ describe('TimelineGrid keyboard navigation', () => {
                       eventId={`event-${resourceId}`}
                       occurrenceKey={`occ-${resourceId}`}
                       internalInfos={undefined}
-                      start={createProcessedDate(DEFAULT_TESTING_VISIBLE_DATE.getTime(), 'default')}
-                      end={createProcessedDate(
+                      start={toZonedDateTime(DEFAULT_TESTING_VISIBLE_DATE.getTime(), 'default')}
+                      end={toZonedDateTime(
                         addHours(DEFAULT_TESTING_VISIBLE_DATE, 1).getTime(),
                         'default',
                       )}

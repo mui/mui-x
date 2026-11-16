@@ -276,10 +276,7 @@ describe('getRecurrenceRuleBound', () => {
       .span('2025-07-04T00:00:00Z', '2025-07-04T01:00:00Z')
       .withDisplayTimezone('America/New_York')
       .toOccurrence();
-    const placeholder = {
-      ...draft,
-      unstable_internalInfos: { displayTimezone: draft.unstable_internalInfos.displayTimezone },
-    };
+    const { unstable_internalInfos: draftInternalInfos, ...placeholder } = draft;
     const start = getRecurrenceRuleBound(placeholder, seeded, false, 'America/New_York', 'start');
     // The tests run in UTC, the default timezone: still Friday July 4.
     expect(getEventTimezonePlainDate(placeholder, start)).toEqualPlainDate('2025-07-04');

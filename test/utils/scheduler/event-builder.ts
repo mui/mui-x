@@ -310,12 +310,7 @@ export function createOccurrence(
 ): SchedulerEventOccurrence {
   const startMs = occurrenceStart.getTime();
   const occurrence = schedulerRecurringEventsPlugin
-    .getOccurrencesForVisibleDays(
-      event,
-      startMs,
-      startMs,
-      event.unstable_internalInfos.displayTimezone,
-    )
+    .getOccurrencesForVisibleDays(event, startMs, startMs, event.start.timeZoneId)
     .find((item) => item.unstable_internalInfos.dataStart === startMs);
   if (occurrence == null) {
     throw new Error(

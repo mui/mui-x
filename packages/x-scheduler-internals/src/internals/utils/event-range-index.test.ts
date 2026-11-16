@@ -97,7 +97,9 @@ describe('createEventRangeIndex', () => {
       const start = addDays(firstDay, 5);
       const end = addDays(start, matchCount - 1);
       const rangeMatches = events.filter(
-        (event) => event.start.timestamp <= end.getTime() && event.end.timestamp >= start.getTime(),
+        (event) =>
+          event.start.epochMilliseconds <= end.getTime() &&
+          event.end.epochMilliseconds >= start.getTime(),
       );
       expect(rangeMatches).to.have.length(matchCount);
       const expected = events.filter((event) => event.rrule || rangeMatches.includes(event));
@@ -176,8 +178,8 @@ describe('createEventRangeIndex', () => {
         const rangeEnd = addDays(rangeStart, width);
         const expected = events.filter(
           (event) =>
-            event.start.timestamp <= rangeEnd.getTime() &&
-            event.end.timestamp >= rangeStart.getTime(),
+            event.start.epochMilliseconds <= rangeEnd.getTime() &&
+            event.end.epochMilliseconds >= rangeStart.getTime(),
         );
 
         expect(index.getEventsForRange(rangeStart.getTime(), rangeEnd.getTime())).to.deep.equal(
@@ -201,7 +203,8 @@ describe('createEventRangeIndex', () => {
     const rangeEnd = addDays(firstDay, 30);
     const expected = events.filter(
       (event) =>
-        event.start.timestamp <= rangeEnd.getTime() && event.end.timestamp >= rangeStart.getTime(),
+        event.start.epochMilliseconds <= rangeEnd.getTime() &&
+        event.end.epochMilliseconds >= rangeStart.getTime(),
     );
 
     expect(expected.length).to.be.greaterThan(
@@ -226,7 +229,8 @@ describe('createEventRangeIndex', () => {
     const rangeEnd = addDays(firstDay, 45);
     const expected = events.filter(
       (event) =>
-        event.start.timestamp <= rangeEnd.getTime() && event.end.timestamp >= rangeStart.getTime(),
+        event.start.epochMilliseconds <= rangeEnd.getTime() &&
+        event.end.epochMilliseconds >= rangeStart.getTime(),
     );
 
     expect(expected.length).to.be.lessThan(events.length * EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD);

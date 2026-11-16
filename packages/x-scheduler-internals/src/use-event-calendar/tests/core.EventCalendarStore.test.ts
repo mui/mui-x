@@ -1,4 +1,4 @@
-import { getMinutesInDay, toMsInDay } from '@mui/x-scheduler-internals/internals';
+import { getMinutesInDay, getTimezoneId, toMsInDay } from '@mui/x-scheduler-internals/internals';
 import {
   addDays,
   createDate,
@@ -43,7 +43,8 @@ describe('Core - EventCalendarStore', () => {
         eventModelList: [],
         eventModelLookup: new Map(),
         eventModelStructure: undefined,
-        displayTimezone: 'default',
+        // The timezone of the system, by its identifier.
+        displayTimezone: getTimezoneId('default'),
         editingOccurrence: null,
         nowTimestamp: Date.now(),
         occurrencePlaceholder: null,
@@ -243,8 +244,10 @@ describe('Core - EventCalendarStore', () => {
         store.setEditingOccurrenceTimes({ start, end });
 
         const editing = store.state.editingOccurrence!;
-        expect(editing.occurrence.start.plainDateTime.toString()).to.equal('2024-01-15T10:00:00');
-        expect(editing.occurrence.end.plainDateTime.toString()).to.equal('2024-01-15T11:30:00');
+        expect(editing.occurrence.start.toPlainDateTime().toString()).to.equal(
+          '2024-01-15T10:00:00',
+        );
+        expect(editing.occurrence.end.toPlainDateTime().toString()).to.equal('2024-01-15T11:30:00');
         expect(editing.mode).to.equal('armed');
       });
 
@@ -273,8 +276,8 @@ describe('Core - EventCalendarStore', () => {
         store.setEditingOccurrenceTimes({ start, end });
 
         const editing = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
-        expect(editing.start.timestamp).to.equal(start.getTime());
-        expect(editing.end.timestamp).to.equal(end.getTime());
+        expect(editing.start.epochMilliseconds).to.equal(start.getTime());
+        expect(editing.end.epochMilliseconds).to.equal(end.getTime());
         // A rule added from the dialog is built on the data-timezone start.
         expect(editing.unstable_internalInfos.dataStart).to.equal(start.getTime());
         expect(editing.unstable_internalInfos.dataEnd).to.equal(end.getTime());
@@ -283,8 +286,8 @@ describe('Core - EventCalendarStore', () => {
           14 * 3_600_000,
         );
         // Read in the display timezone: 09:00 in New York.
-        expect(getMinutesInDay(editing.start.plainDateTime)).to.equal(9 * 60);
-        expect(getMinutesInDay(editing.end.plainDateTime)).to.equal(11 * 60);
+        expect(getMinutesInDay(editing.start)).to.equal(9 * 60);
+        expect(getMinutesInDay(editing.end)).to.equal(11 * 60);
       });
 
       it('should keep a bound left out on its stored value in both timezones', () => {
@@ -295,7 +298,7 @@ describe('Core - EventCalendarStore', () => {
           .withDisplayTimezone('America/New_York')
           .toOccurrence();
         store.startEditing(edited, 'armed');
-        const end = addDays(new Date(edited.end.timestamp - 1), 1);
+        const end = addDays(new Date(edited.end.epochMilliseconds - 1), 1);
 
         store.setEditingOccurrenceTimes({ end });
 
@@ -304,7 +307,7 @@ describe('Core - EventCalendarStore', () => {
         expect(editing.unstable_internalInfos.dataStart).to.equal(
           edited.unstable_internalInfos.dataStart,
         );
-        expect(editing.end.timestamp).to.equal(end.getTime() + 1);
+        expect(editing.end.epochMilliseconds).to.equal(end.getTime() + 1);
         expect(editing.unstable_internalInfos.dataEnd).to.equal(end.getTime());
       });
     });

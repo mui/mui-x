@@ -6,9 +6,9 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
   computeElementPositionInCollection,
-  createProcessedDate,
   isInternalDragOrResizePlaceholder,
   normalizeAllDayBounds,
+  toZonedDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -54,8 +54,8 @@ export function usePlaceholderInRow(
       allDay,
       displayTimezone,
     );
-    const startProcessed = createProcessedDate(bounds.start, displayTimezone);
-    const endProcessed = createProcessedDate(bounds.end, displayTimezone);
+    const startProcessed = toZonedDateTime(bounds.start, displayTimezone);
+    const endProcessed = toZonedDateTime(bounds.end, displayTimezone);
 
     // A placeholder that occupies no space (fully inside the hidden hours while editing
     // the dates in the event dialog, or shorter than the minute the axis is drawn with)
@@ -78,7 +78,6 @@ export function usePlaceholderInRow(
       resource: rawPlaceholder.resourceId ?? originalEvent?.resource,
       start: startProcessed,
       end: endProcessed,
-      unstable_internalInfos: { displayTimezone },
     };
 
     if (rawPlaceholder.type === 'creation') {

@@ -14,14 +14,9 @@ export {
   toMsInDay,
   toPlainDate,
   toPlainDateTime,
+  toZonedDateTime,
 } from './timeZone';
-export {
-  addToDate,
-  createProcessedDate,
-  createStartOfPlainDate,
-  isDateOnlyString,
-  normalizeAllDayBounds,
-} from './date';
+export { addToDate, createStartOfPlainDate, isDateOnlyString, normalizeAllDayBounds } from './date';
 export {
   getDayNumber,
   getMinutesInDay,

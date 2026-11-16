@@ -7,7 +7,7 @@ import {
   endOfDay,
   startOfDay,
 } from 'test/utils/scheduler';
-import { createProcessedDate } from '../../process-date';
+import { toZonedDateTime } from '../../internals/utils/plain-date-utils/timeZone';
 import { computeElementPositionInCollection } from './useElementPositionInCollection';
 import { getTimelineAxisDurationMs, timelineAxisOffsetToTimestamp } from './timeline-axis';
 
@@ -30,8 +30,8 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
   const occurrences = Array.from({ length: occurrenceCount }, (_, index) => {
     const occurrenceStart = addMinutes(start, index * 10);
     return {
-      start: createProcessedDate(occurrenceStart.getTime(), 'default'),
-      end: createProcessedDate(
+      start: toZonedDateTime(occurrenceStart.getTime(), 'default'),
+      end: toZonedDateTime(
         addMinutes(occurrenceStart, 30 + (index % 10) * 30).getTime(),
         'default',
       ),

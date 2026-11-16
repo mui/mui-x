@@ -5,10 +5,7 @@ import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import type {
-  SchedulerProcessedDate,
-  SchedulerRenderableEventOccurrence,
-} from '@mui/x-scheduler-internals/models';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   schedulerEventSelectors,
@@ -23,6 +20,7 @@ import {
   isEventOccurrence,
   plainDateFromDayNumber,
 } from '@mui/x-scheduler-internals/internals';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import {
   getEventTimezone,
@@ -150,14 +148,12 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
   // The end of an all-day occurrence is the start of the day after its last day.
   const endDay = plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence));
   const isMultiDay = isOccurrenceMultiDay(occurrence);
-  const formatBound = (bound: SchedulerProcessedDate, day = bound.plainDateTime.toPlainDate()) => {
+  const formatBound = (bound: BaseTemporal.ZonedDateTime, day = bound.toPlainDate()) => {
     const fullDate = formatFullDate(locale, day);
     return occurrence.allDay ? fullDate : `${fullDate}, ${formatTime(bound)}`;
   };
-  const formatBoundDateTime = (
-    bound: SchedulerProcessedDate,
-    day = bound.plainDateTime.toPlainDate(),
-  ) => (occurrence.allDay ? day.toString() : bound.plainDateTime.toString());
+  const formatBoundDateTime = (bound: BaseTemporal.ZonedDateTime, day = bound.toPlainDate()) =>
+    occurrence.allDay ? day.toString() : bound.toPlainDateTime().toString();
   const recurrenceTimezoneName = React.useMemo(
     () => getRecurrenceTimezoneName(locale, eventTimezone, displayTimezone),
     [locale, eventTimezone, displayTimezone],

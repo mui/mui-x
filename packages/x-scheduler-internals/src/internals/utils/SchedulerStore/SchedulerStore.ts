@@ -42,7 +42,6 @@ import type {
   SchedulerEventEditingStartEventDetails,
   RequestEventDeletionParameters,
 } from './SchedulerStore.types';
-import { createProcessedDate } from '../../../process-date/processDate';
 import { normalizeAllDayBounds } from '../plain-date-utils/date';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 import type { SchedulerSchedulingPluginInterface } from '../../plugins/SchedulerSchedulingPlugin.types';
@@ -75,7 +74,7 @@ import {
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
 import { checkDateLocale, DEFAULT_DATE_LOCALE } from '../date-locale';
-import { getStartOfDayMs, toLocalDayNumber } from '../plain-date-utils/timeZone';
+import { getStartOfDayMs, toLocalDayNumber, toZonedDateTime } from '../plain-date-utils/timeZone';
 import { MS_PER_MINUTE } from '../plain-date-utils/dayNumber';
 
 /**
@@ -282,17 +281,29 @@ export class SchedulerStore<
    */
   private static deriveStateFromParameters<TEvent extends object, TResource extends object>(
     parameters: SchedulerParameters<TEvent, TResource>,
+    previous?: {
+      parameters: SchedulerParameters<TEvent, TResource>;
+      displayTimezone: string;
+    },
   ) {
     const dateLocale = parameters.dateLocale ?? DEFAULT_DATE_LOCALE;
     checkDateLocale(dateLocale);
-    const displayTimezone = parameters.displayTimezone ?? 'default';
-    if (displayTimezone === 'system') {
+    const displayTimezoneParameter = parameters.displayTimezone ?? 'default';
+    if (displayTimezoneParameter === 'system') {
       throw new Error(
         'MUI X Scheduler: The `displayTimezone` "system" is not a supported timezone. ' +
           'The "system" alias of the timezone of the system was removed, so the dates cannot be read in it. ' +
           'Pass `displayTimezone="default"` instead.',
       );
     }
+    // The identifier of the timezone, as the zoned date-times of the occurrences spell it: `default`
+    // becomes the timezone of the system. `Intl` reads it in tens of microseconds, so it's only
+    // read again when the parameter changes.
+    const displayTimezone =
+      previous !== undefined &&
+      (previous.parameters.displayTimezone ?? 'default') === displayTimezoneParameter
+        ? previous.displayTimezone
+        : toZonedDateTime(0, displayTimezoneParameter).timeZoneId;
     return {
       dateLocale,
       areEventsDraggable: parameters.areEventsDraggable ?? true,
@@ -350,9 +361,10 @@ export class SchedulerStore<
       }
     };
 
-    const newSchedulerState = SchedulerStore.deriveStateFromParameters(
-      parameters,
-    ) as Partial<State>;
+    const newSchedulerState = SchedulerStore.deriveStateFromParameters(parameters, {
+      parameters: this.parameters,
+      displayTimezone: this.state.displayTimezone,
+    }) as Partial<State>;
 
     // Kept out of `deriveStateFromParameters`, which has no previous state to compare against:
     // a fresh object on every call would make `update()` treat an unchanged `confirmation` as a
@@ -1529,19 +1541,17 @@ export class SchedulerStore<
     const { start, end } = changes;
     const allDay = changes.allDay ?? occurrence.allDay;
     const liveEvent = schedulerEventSelectors.processedEvent(this.state, occurrence.id);
-    const { displayTimezone } = occurrence.unstable_internalInfos;
+    const displayTimezone = occurrence.start.timeZoneId;
     const displayBounds = normalizeAllDayBounds(
-      start?.getTime() ?? occurrence.start.timestamp,
+      start?.getTime() ?? occurrence.start.epochMilliseconds,
       end?.getTime() ?? getOccurrenceModelEnd(occurrence),
       allDay,
       displayTimezone,
     );
     const bounds = {
       start:
-        start == null
-          ? occurrence.start
-          : createProcessedDate(displayBounds.start, displayTimezone),
-      end: end == null ? occurrence.end : createProcessedDate(displayBounds.end, displayTimezone),
+        start == null ? occurrence.start : toZonedDateTime(displayBounds.start, displayTimezone),
+      end: end == null ? occurrence.end : toZonedDateTime(displayBounds.end, displayTimezone),
     };
     this.set('editingOccurrence', {
       ...editingOccurrence,
@@ -1621,15 +1631,15 @@ export class SchedulerStore<
     // A bound the submit left out keeps the occurrence's current value, in both timezones.
     const allDay = changes.allDay ?? occurrence.allDay;
     const displayBounds = normalizeAllDayBounds(
-      changedStart ?? occurrence.start.timestamp,
+      changedStart ?? occurrence.start.epochMilliseconds,
       changedEnd ?? getOccurrenceModelEnd(occurrence),
       allDay,
-      occurrence.unstable_internalInfos.displayTimezone,
+      occurrence.start.timeZoneId,
     );
     this.repointEditingOccurrence({
       eventId: targetsCreatedEvent ? createdEventId : original.id,
-      start: changedStart == null ? occurrence.start.timestamp : displayBounds.start,
-      end: changedEnd == null ? occurrence.end.timestamp : displayBounds.end,
+      start: changedStart == null ? occurrence.start.epochMilliseconds : displayBounds.start,
+      end: changedEnd == null ? occurrence.end.epochMilliseconds : displayBounds.end,
       allDay,
       isRecurring: targetsCreatedEvent ? createdEvent.rrule != null : true,
       dataStart: changedStart ?? occurrenceStart,
@@ -1663,15 +1673,15 @@ export class SchedulerStore<
       return;
     }
     const { occurrence } = editingOccurrence;
-    const { displayTimezone } = occurrence.unstable_internalInfos;
+    const displayTimezone = occurrence.start.timeZoneId;
     const repointed = {
       id: eventId,
       key: isRecurring
         ? // Key off the data-timezone day, matching occurrence expansion; the display-tz start can differ.
           getRecurringOccurrenceKey(eventId, dataStart, dataTimezone)
         : getOccurrenceKey(eventId),
-      start: createProcessedDate(start, displayTimezone),
-      end: createProcessedDate(end, displayTimezone),
+      start: toZonedDateTime(start, displayTimezone),
+      end: toZonedDateTime(end, displayTimezone),
       allDay,
     };
     this.set('editingOccurrence', {

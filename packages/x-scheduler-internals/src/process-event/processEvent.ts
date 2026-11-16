@@ -1,8 +1,7 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import type { SchedulerEvent, SchedulerProcessedEvent } from '../models';
-import { createProcessedDate } from '../process-date/processDate';
 import { normalizeAllDayBounds } from '../internals/utils/plain-date-utils/date';
-import { toPlainDateTime } from '../internals/utils/plain-date-utils/timeZone';
+import { toPlainDateTime, toZonedDateTime } from '../internals/utils/plain-date-utils/timeZone';
 import type { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
 import { resolveEventTimestamp } from './resolveEventTimestamp';
 
@@ -49,8 +48,8 @@ export function processEvent(
     id: model.id,
     title: model.title,
     description: model.description,
-    start: createProcessedDate(displayBounds.start, displayTimezone),
-    end: createProcessedDate(displayBounds.end, displayTimezone),
+    start: toZonedDateTime(displayBounds.start, displayTimezone),
+    end: toZonedDateTime(displayBounds.end, displayTimezone),
     timezone: dataTimezone,
     rrule: parsedDataRRule,
     exDates,
@@ -63,6 +62,6 @@ export function processEvent(
     draggable: model.draggable,
     resizable: model.resizable,
     className: model.className,
-    unstable_internalInfos: { displayTimezone, dataStart, dataEnd },
+    unstable_internalInfos: { dataStart, dataEnd },
   };
 }
