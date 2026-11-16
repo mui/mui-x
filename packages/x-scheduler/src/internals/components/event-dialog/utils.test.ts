@@ -5,6 +5,7 @@ import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../../constants/defaultLocal
 import {
   computeRange,
   findInvalidRangeField,
+  getDefaultTimedFields,
   getRulePlainDate,
   getRecurrenceLabel,
   getRecurrenceRuleBound,
@@ -13,6 +14,52 @@ import {
   getWeekdayToken,
   validateRange,
 } from './utils';
+
+describe('getDefaultTimedFields', () => {
+  const sameDay = { startDate: '2025-07-04', endDate: '2025-07-04' };
+
+  it('should start at the next hour of the display clock and last the duration', () => {
+    // 10:20 UTC is 06:20 in New York.
+    expect(
+      getDefaultTimedFields(sameDay, Date.UTC(2025, 6, 4, 10, 20), 30, 'America/New_York'),
+    ).to.deep.equal({ startTime: '07:00', endTime: '07:30', endDate: '2025-07-04' });
+  });
+
+  it('should keep a time on the hour', () => {
+    expect(getDefaultTimedFields(sameDay, Date.UTC(2025, 6, 4, 10), 30, 'UTC')).to.deep.equal({
+      startTime: '10:00',
+      endTime: '10:30',
+      endDate: '2025-07-04',
+    });
+  });
+
+  it('should wrap the last hour of the day to midnight of the kept start date', () => {
+    expect(getDefaultTimedFields(sameDay, Date.UTC(2025, 6, 4, 23, 40), 30, 'UTC')).to.deep.equal({
+      startTime: '00:00',
+      endTime: '00:30',
+      endDate: '2025-07-04',
+    });
+  });
+
+  it('should move the end date to the next day when the end crosses midnight on a one-day event', () => {
+    expect(getDefaultTimedFields(sameDay, Date.UTC(2025, 6, 4, 22, 10), 90, 'UTC')).to.deep.equal({
+      startTime: '23:00',
+      endTime: '00:30',
+      endDate: '2025-07-05',
+    });
+  });
+
+  it('should keep the end date of a multi-day event when the end crosses midnight', () => {
+    expect(
+      getDefaultTimedFields(
+        { startDate: '2025-07-04', endDate: '2025-07-06' },
+        Date.UTC(2025, 6, 4, 22, 10),
+        90,
+        'UTC',
+      ),
+    ).to.deep.equal({ startTime: '23:00', endTime: '00:30', endDate: '2025-07-06' });
+  });
+});
 
 describe('computeRange', () => {
   it('should read an all-day range with an exclusive end', () => {
