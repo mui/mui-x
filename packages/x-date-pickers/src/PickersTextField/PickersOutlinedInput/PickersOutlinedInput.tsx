@@ -26,8 +26,15 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
   name: 'MuiPickersOutlinedInput',
   slot: 'Root',
 })<{ ownerState: PickerTextFieldOwnerState }>(({ theme }) => {
-  const borderColor =
+  let borderColor =
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
+  if (theme.vars) {
+    // `theme.alpha` (Material UI v7.3+) also works with `cssVariables.nativeColor`,
+    // where the `*Channel` tokens are not generated.
+    borderColor = theme.alpha
+      ? theme.alpha(theme.vars.palette.common.onBackground, 0.23)
+      : `rgba(${theme.vars.palette.common.onBackgroundChannel} / 0.23)`;
+  }
   return {
     padding: '0 14px',
     borderRadius: (theme.vars || theme).shape.borderRadius,
@@ -37,9 +44,7 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
     // Reset on touch devices, it doesn't add specificity
     '@media (hover: none)': {
       [`&:hover .${pickersOutlinedInputClasses.notchedOutline}`]: {
-        borderColor: theme.vars
-          ? `rgba(${theme.vars.palette.common.onBackgroundChannel} / 0.23)`
-          : borderColor,
+        borderColor,
       },
     },
     [`&.${pickersOutlinedInputClasses.focused} .${pickersOutlinedInputClasses.notchedOutline}`]: {
