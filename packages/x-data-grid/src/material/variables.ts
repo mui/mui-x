@@ -35,9 +35,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
       ? colorMixIfSupported(`color-mix(in srgb, ${paperColor} 90%, #fff)`, paperColor)
       : paperColor;
 
-  const selectedColor = t.vars
-    ? `rgb(${t.vars.palette.primary.mainChannel})`
-    : t.palette.primary.main;
+  const selectedColor = (t.vars || t).palette.primary.main;
 
   const radius = getRadius(t);
 
