@@ -48,7 +48,6 @@ function armRecurringOccurrence(store: any) {
     // Present on every real occurrence: without the data instants, the repoint skips the
     // data-timezone identity branch these tests are about.
     unstable_internalInfos: {
-      displayTimezone: 'default',
       dataStart: start.epochMilliseconds,
       dataEnd: end.epochMilliseconds,
     },
@@ -254,7 +253,6 @@ premiumStoreClasses.forEach((storeClass) => {
           timezone: 'default',
           rrule: RRULE,
           unstable_internalInfos: {
-            displayTimezone: 'default',
             dataStart: occurrenceStart.getTime(),
             dataEnd: addHours(occurrenceStart, 1).getTime(),
           },

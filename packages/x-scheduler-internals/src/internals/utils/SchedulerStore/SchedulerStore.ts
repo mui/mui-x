@@ -132,6 +132,29 @@ function getEventDeletionState(
   return previous && previous.confirmation === confirmation ? previous : { confirmation };
 }
 
+/**
+ * The display timezone of the state: the identifier of the timezone, as the zoned date-times of the
+ * occurrences spell it, where `default` becomes the timezone of the system. `Intl` reads it in tens
+ * of microseconds, so `previous` is kept while the parameter doesn't change.
+ */
+function getDisplayTimezoneState(
+  parameter: string | undefined,
+  previous?: { parameter: string | undefined; displayTimezone: string },
+): string {
+  const displayTimezone = parameter ?? 'default';
+  if (previous !== undefined && (previous.parameter ?? 'default') === displayTimezone) {
+    return previous.displayTimezone;
+  }
+  if (displayTimezone === 'system') {
+    throw new Error(
+      'MUI X Scheduler: The `displayTimezone` "system" is not a supported timezone. ' +
+        'The "system" alias of the timezone of the system was removed, so the dates cannot be read in it. ' +
+        'Pass `displayTimezone="default"` instead.',
+    );
+  }
+  return toZonedDateTime(0, displayTimezone).timeZoneId;
+}
+
 function toUpdateEventResult(result: {
   updatedEntries: SchedulerEventUpdatedProperties[];
   rejection: SchedulerUserFacingErrorDescriptor | null;
@@ -213,16 +236,18 @@ export class SchedulerStore<
     recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
   ) {
     const stateFromParameters = SchedulerStore.deriveStateFromParameters(parameters);
+    const displayTimezone = getDisplayTimezoneState(parameters.displayTimezone);
     const nowTimestamp = Date.now();
 
     const schedulerInitialState: Omit<SchedulerState<TEvent>, 'shouldEventRequireResource'> = {
       ...stateFromParameters,
+      displayTimezone,
       ...(hasDataSource(parameters)
         ? { ...MOCK_EVENT_STATE, eventModelStructure: parameters.eventModelStructure ?? {} }
         : buildEventsState({
             events: parameters.events,
             eventModelStructure: parameters.eventModelStructure,
-            displayTimezone: stateFromParameters.displayTimezone,
+            displayTimezone,
             recurringEventsPlugin,
           })),
       ...buildResourcesState(parameters),
@@ -240,7 +265,7 @@ export class SchedulerStore<
       visibleDate:
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
-        createStartOfToday(nowTimestamp, stateFromParameters.displayTimezone),
+        createStartOfToday(nowTimestamp, displayTimezone),
       errors: [],
       isLoading: hasDataSource(parameters),
       recurringEventsPlugin,
@@ -281,29 +306,9 @@ export class SchedulerStore<
    */
   private static deriveStateFromParameters<TEvent extends object, TResource extends object>(
     parameters: SchedulerParameters<TEvent, TResource>,
-    previous?: {
-      parameters: SchedulerParameters<TEvent, TResource>;
-      displayTimezone: string;
-    },
   ) {
     const dateLocale = parameters.dateLocale ?? DEFAULT_DATE_LOCALE;
     checkDateLocale(dateLocale);
-    const displayTimezoneParameter = parameters.displayTimezone ?? 'default';
-    if (displayTimezoneParameter === 'system') {
-      throw new Error(
-        'MUI X Scheduler: The `displayTimezone` "system" is not a supported timezone. ' +
-          'The "system" alias of the timezone of the system was removed, so the dates cannot be read in it. ' +
-          'Pass `displayTimezone="default"` instead.',
-      );
-    }
-    // The identifier of the timezone, as the zoned date-times of the occurrences spell it: `default`
-    // becomes the timezone of the system. `Intl` reads it in tens of microseconds, so it's only
-    // read again when the parameter changes.
-    const displayTimezone =
-      previous !== undefined &&
-      (previous.parameters.displayTimezone ?? 'default') === displayTimezoneParameter
-        ? previous.displayTimezone
-        : toZonedDateTime(0, displayTimezoneParameter).timeZoneId;
     return {
       dateLocale,
       areEventsDraggable: parameters.areEventsDraggable ?? true,
@@ -314,7 +319,6 @@ export class SchedulerStore<
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
       eventCreation: parameters.eventCreation ?? true,
-      displayTimezone,
     };
   }
 
@@ -361,18 +365,21 @@ export class SchedulerStore<
       }
     };
 
-    const newSchedulerState = SchedulerStore.deriveStateFromParameters(parameters, {
-      parameters: this.parameters,
-      displayTimezone: this.state.displayTimezone,
-    }) as Partial<State>;
+    const newSchedulerState = SchedulerStore.deriveStateFromParameters(
+      parameters,
+    ) as Partial<State>;
 
     // Kept out of `deriveStateFromParameters`, which has no previous state to compare against:
     // a fresh object on every call would make `update()` treat an unchanged `confirmation` as a
-    // change and notify every subscriber.
+    // change and notify every subscriber, and `Intl` would read the system timezone again.
     newSchedulerState.eventDeletion = getEventDeletionState(
       parameters.eventDeletion,
       this.state.eventDeletion,
     );
+    newSchedulerState.displayTimezone = getDisplayTimezoneState(parameters.displayTimezone, {
+      parameter: this.parameters.displayTimezone,
+      displayTimezone: this.state.displayTimezone,
+    });
 
     if (
       !hasDataSource(parameters) &&

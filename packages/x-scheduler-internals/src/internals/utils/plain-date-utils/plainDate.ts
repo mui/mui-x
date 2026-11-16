@@ -69,7 +69,7 @@ const MAX_CACHED_KEYS = 10_000;
 const plainDateKeys = new Map<number, string>();
 
 /**
- * The key of `plainDate` that the processed dates and the occurrences use: its ISO date, such as
+ * The key of `plainDate` that the days and the occurrences use: its ISO date, such as
  * `2026-03-07`, whatever the locale.
  * Cached per day, since a lookup is faster than building the string. The cache ignores the
  * calendar, as all the plain dates of the Scheduler share one, the ISO calendar for now.
@@ -119,7 +119,7 @@ type WallClockTime =
   BaseTemporal.PlainTime | BaseTemporal.PlainDateTime | BaseTemporal.ZonedDateTime;
 
 /**
- * The wall-clock time of a time or date-time, in milliseconds since midnight. The microseconds and
+ * The wall-clock time of a time, a date-time or a zoned date-time, in milliseconds since midnight. The microseconds and
  * nanoseconds are dropped.
  */
 export function getMsInDay(time: WallClockTime): number {
@@ -127,7 +127,7 @@ export function getMsInDay(time: WallClockTime): number {
 }
 
 /**
- * The number of minutes since midnight of a time or date-time.
+ * The number of minutes since midnight of a time, a date-time or a zoned date-time.
  */
 export function getMinutesInDay(time: WallClockTime): number {
   return time.hour * 60 + time.minute;

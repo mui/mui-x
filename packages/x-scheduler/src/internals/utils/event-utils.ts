@@ -4,7 +4,7 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import {
   addDaysOnWallClock,
-  getDayNumber,
+  getOccurrenceFirstDayNumber,
   getOccurrenceLastDayNumber,
 } from '@mui/x-scheduler-internals/internals';
 
@@ -12,7 +12,7 @@ import {
  * Whether the occurrence starts and ends on different days of the display timezone.
  */
 export function isOccurrenceMultiDay(occurrence: SchedulerRenderableEventOccurrence) {
-  return getDayNumber(occurrence.start.toPlainDate()) !== getOccurrenceLastDayNumber(occurrence);
+  return getOccurrenceFirstDayNumber(occurrence) !== getOccurrenceLastDayNumber(occurrence);
 }
 
 export function isOccurrenceAllDayOrMultipleDay(occurrence: SchedulerRenderableEventOccurrence) {

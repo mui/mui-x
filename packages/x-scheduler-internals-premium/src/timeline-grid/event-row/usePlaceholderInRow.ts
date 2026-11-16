@@ -54,16 +54,16 @@ export function usePlaceholderInRow(
       allDay,
       displayTimezone,
     );
-    const startProcessed = toZonedDateTime(bounds.start, displayTimezone);
-    const endProcessed = toZonedDateTime(bounds.end, displayTimezone);
+    const start = toZonedDateTime(bounds.start, displayTimezone);
+    const end = toZonedDateTime(bounds.end, displayTimezone);
 
     // A placeholder that occupies no space (fully inside the hidden hours while editing
     // the dates in the event dialog, or shorter than the minute the axis is drawn with)
     // would render as a zero-width sliver pinned to the day seam. Measured on the
     // rendered geometry, like the occurrence selector does.
     const renderedPosition = computeElementPositionInCollection({
-      start: startProcessed,
-      end: endProcessed,
+      start,
+      end,
       collection: config,
       durationMs: config.durationMs,
     });
@@ -76,8 +76,8 @@ export function usePlaceholderInRow(
       title: originalEvent ? originalEvent.title : '',
       allDay,
       resource: rawPlaceholder.resourceId ?? originalEvent?.resource,
-      start: startProcessed,
-      end: endProcessed,
+      start,
+      end,
     };
 
     if (rawPlaceholder.type === 'creation') {

@@ -102,6 +102,8 @@ export function createEventRangeIndex(
   events: SchedulerProcessedEvent[],
   expandRecurringEvents: boolean,
 ): SchedulerEventRangeIndex {
+  // The entries of every event, in the input order, for the queries that scan them all.
+  const entries: EventRangeEntry[] = [];
   const recurringEntries: EventRangeEntry[] = [];
   const rangeEntries: EventRangeEntry[] = [];
   let earliestRangeEnd = Infinity;
@@ -113,6 +115,7 @@ export function createEventRangeIndex(
       event.start.epochMilliseconds,
       getOccurrenceModelEnd(event),
     ];
+    entries.push(entry);
 
     if (expandRecurringEvents && event.rrule) {
       recurringEntries.push(entry);
@@ -144,12 +147,17 @@ export function createEventRangeIndex(
         matches,
       );
       if (matches.length > rangeEntries.length * EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD) {
-        return events.filter(
-          (event) =>
-            (expandRecurringEvents && Boolean(event.rrule)) ||
-            (event.start.epochMilliseconds <= endTimestamp &&
-              getOccurrenceModelEnd(event) >= startTimestamp),
-        );
+        // Reads the bounds the entries hold rather than the dates of the events.
+        const scanned: SchedulerProcessedEvent[] = [];
+        for (const entry of entries) {
+          if (
+            (expandRecurringEvents && Boolean(entry[0].rrule)) ||
+            (entry[2] <= endTimestamp && entry[3] >= startTimestamp)
+          ) {
+            scanned.push(entry[0]);
+          }
+        }
+        return scanned;
       }
 
       const allMatches = matches.concat(recurringEntries);

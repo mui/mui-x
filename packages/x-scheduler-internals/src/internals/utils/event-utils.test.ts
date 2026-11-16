@@ -268,7 +268,7 @@ describe('event-utils', () => {
           recurringEventsPlugin: mode === 'recurring' ? schedulerRecurringEventsPlugin : null,
         });
 
-        expect(result.map((occurrence) => occurrence.start.toPlainDateTime().day)).to.deep.equal(
+        expect(result.map((occurrence) => occurrence.start.day)).to.deep.equal(
           mode === 'recurring' ? [15, 17] : [15],
         );
         for (const occurrence of result) {

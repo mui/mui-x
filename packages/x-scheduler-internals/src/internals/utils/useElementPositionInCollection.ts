@@ -29,18 +29,20 @@ export function computeElementPositionInCollection(
 ): useElementPositionInCollection.ReturnValue {
   const { start, end, collection: axis } = parameters;
 
-  // The processed bounds already carry their wall-clock time of day. The offsets are
+  // The zoned bounds already carry their wall-clock time of day. The offsets are
   // monotonic in the date (day index × day size + a clamped in-day term), so no
   // midnight-wrap correction is needed for `end >= start` inputs.
+  const startMinutes = getMinutesInDay(start);
+  const endMinutes = getMinutesInDay(end);
   const startOffsetMs = timestampToTimelineAxisOffsetMs(
     axis,
     start.epochMilliseconds,
-    getMinutesInDay(start) * MS_PER_MINUTE,
+    startMinutes * MS_PER_MINUTE,
   );
   const endOffsetMs = timestampToTimelineAxisOffsetMs(
     axis,
     end.epochMilliseconds,
-    getMinutesInDay(end) * MS_PER_MINUTE,
+    endMinutes * MS_PER_MINUTE,
   );
 
   const totalMs = parameters.durationMs ?? getTimelineAxisDurationMs(axis);
@@ -52,9 +54,8 @@ export function computeElementPositionInCollection(
 
   // A bound clamped in either direction means part of the element is hidden.
   const startingBeforeEdge =
-    startOffsetMs < 0 || isStartMinuteOutsideAxisWindow(axis, getMinutesInDay(start));
-  const endingAfterEdge =
-    endOffsetMs > totalMs || isEndMinuteOutsideAxisWindow(axis, getMinutesInDay(end));
+    startOffsetMs < 0 || isStartMinuteOutsideAxisWindow(axis, startMinutes);
+  const endingAfterEdge = endOffsetMs > totalMs || isEndMinuteOutsideAxisWindow(axis, endMinutes);
 
   return {
     position: clampedStartMs / totalMs,
@@ -67,11 +68,11 @@ export function computeElementPositionInCollection(
 export namespace useElementPositionInCollection {
   export interface Parameters {
     /**
-     * The start of the element, processed in the timezone of the collection.
+     * The start of the element, in the timezone of the collection.
      */
     start: BaseTemporal.ZonedDateTime;
     /**
-     * The end of the element, processed in the timezone of the collection.
+     * The end of the element, in the timezone of the collection.
      */
     end: BaseTemporal.ZonedDateTime;
     /**

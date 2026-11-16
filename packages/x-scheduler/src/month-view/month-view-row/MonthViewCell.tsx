@@ -9,6 +9,7 @@ import {
   formatDayOfMonth,
   formatMonthShortAndDayOfMonth,
   getDayNumber,
+  getOccurrenceFirstDayNumber,
   isWeekendPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
@@ -275,7 +276,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               );
             }
 
-            const startsBeforeThisDay = getDayNumber(occurrence.start.toPlainDate()) < dayNumber;
+            const startsBeforeThisDay = getOccurrenceFirstDayNumber(occurrence) < dayNumber;
 
             return (
               <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>

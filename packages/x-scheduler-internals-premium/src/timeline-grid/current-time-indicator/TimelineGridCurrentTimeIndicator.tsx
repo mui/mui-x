@@ -36,15 +36,15 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
     const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
     const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
-    const processedNow = React.useMemo(
+    const now = React.useMemo(
       () => toZonedDateTime(nowTimestamp, displayTimezone),
       [nowTimestamp, displayTimezone],
     );
 
     const { position } = useElementPositionInCollection({
       // Only the position is read, which depends on the start alone.
-      start: processedNow,
-      end: processedNow,
+      start: now,
+      end: now,
       collection: config,
       durationMs: config.durationMs,
     });
@@ -52,7 +52,7 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
     const isOutOfRange =
       nowTimestamp < config.start ||
       nowTimestamp > config.end ||
-      isStartMinuteOutsideAxisWindow(config, getMinutesInDay(processedNow));
+      isStartMinuteOutsideAxisWindow(config, getMinutesInDay(now));
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef],

@@ -171,7 +171,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         ...occurrence,
         start: toZonedDateTime(occurrence.unstable_internalInfos.dataStart, displayTimezone),
         end: toZonedDateTime(occurrence.unstable_internalInfos.dataEnd, displayTimezone),
-        unstable_internalInfos: { ...occurrence.unstable_internalInfos, displayTimezone },
       };
 
       const { user } = render(

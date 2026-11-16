@@ -69,7 +69,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Jan 1..5 inclusive
-      expect(result.map((o) => o.start.toPlainDateTime().day)).to.deep.equal([1, 2, 3, 4, 5]);
+      expect(result.map((o) => o.start.day)).to.deep.equal([1, 2, 3, 4, 5]);
     });
 
     it('respects "count" end rule (count=3 gives 3 occurrences)', () => {
@@ -86,7 +86,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       expect(result).to.have.length(3);
-      expect(result.map((o) => o.start.toPlainDateTime().day)).to.deep.equal([1, 2, 3]);
+      expect(result.map((o) => o.start.day)).to.deep.equal([1, 2, 3]);
     });
 
     it('applies weekly interval > 1 (e.g. every 2 weeks)', () => {
@@ -103,7 +103,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Expect Fridays at week 0, 2 and 4
-      const dates = result.map((o) => o.start.toPlainDateTime().day);
+      const dates = result.map((o) => o.start.day);
       expect(dates).to.deep.equal([3, 17, 31]);
     });
 
@@ -124,7 +124,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         addDays(visibleStart, 119).getTime(),
         'default',
       );
-      const daysOfMonth = result.map((o) => o.start.toPlainDateTime().day);
+      const daysOfMonth = result.map((o) => o.start.day);
       expect(daysOfMonth).to.deep.equal([10, 10, 10, 10]);
     });
 
@@ -141,7 +141,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         addYears(visibleStart, 5).getTime(),
         'default',
       );
-      const years = result.map((o) => o.start.toPlainDateTime().year);
+      const years = result.map((o) => o.start.year);
       expect(years).to.deep.equal([2025, 2027, 2029]);
     });
 
@@ -161,8 +161,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       expect(result).to.have.length(1);
-      expect(result[0].start.toPlainDateTime().day).to.equal(3);
-      expect(result[0].end.toPlainDateTime().day).to.equal(7);
+      expect(result[0].start.day).to.equal(3);
+      expect(result[0].end.day).to.equal(7);
     });
 
     it('normalizes all-day occurrences to whole days even when authored with sub-day times', () => {
@@ -203,8 +203,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       );
 
       expect(result).to.have.length(1);
-      expect(result[0].start.toPlainDateTime().day).to.equal(10);
-      expect(result[0].end.toPlainDateTime().day).to.equal(13);
+      expect(result[0].start.day).to.equal(10);
+      expect(result[0].end.day).to.equal(13);
       expect(getMinutesInDay(result[0].start)).to.equal(0);
       expect(getMinutesInDay(result[0].end)).to.equal(0);
     });
@@ -269,7 +269,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       );
       // Should only have occurrences from Jan 10 onwards (6 days: 10,11,12,13,14,15)
       expect(result).to.have.length(6);
-      expect(result[0].start.toPlainDateTime().day).to.equal(10);
+      expect(result[0].start.day).to.equal(10);
     });
 
     it('respects interval > 1 (every 2 days)', () => {
@@ -286,7 +286,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Days: 1, 3, 5, 7 => 4 occurrences
-      expect(result.map((o) => o.start.toPlainDateTime().day)).to.deep.equal([1, 3, 5, 7]);
+      expect(result.map((o) => o.start.day)).to.deep.equal([1, 3, 5, 7]);
     });
 
     it('should round a fractional COUNT up', () => {
@@ -300,7 +300,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
           Date.parse(start),
           Date.parse(end),
           'default',
-        ).map((o) => o.start.toPlainDateTime().day);
+        ).map((o) => o.start.day);
 
       expect(expand('2025-01-01T00:00:00Z', '2025-01-31T00:00:00Z')).to.deep.equal([1, 2]);
       expect(expand('2025-01-03T00:00:00Z', '2025-01-05T00:00:00Z')).to.deep.equal([]);
@@ -413,7 +413,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Jan, Mar, May, Jul => 4 occurrences
-      const months = result.map((o) => o.start.toPlainDateTime().month);
+      const months = result.map((o) => o.start.month);
       expect(months).to.deep.equal([1, 3, 5, 7]);
     });
 
@@ -431,7 +431,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Should generate on the 15th: Mar, Apr, May, Jun
-      const days = result.map((o) => o.start.toPlainDateTime().day);
+      const days = result.map((o) => o.start.day);
       expect(days).to.deep.equal([15, 15, 15, 15]);
     });
 
@@ -449,7 +449,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Jan(31), Feb(skip), Mar(31), Apr(skip), May(31), Jun(skip)
-      const months = result.map((o) => o.start.toPlainDateTime().month);
+      const months = result.map((o) => o.start.month);
       expect(months).to.deep.equal([1, 3, 5]); // Jan, Mar, May
     });
   });
@@ -469,7 +469,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Jul 8, Aug 12, Sep 9, Oct 14
-      const dates = result.map((o) => o.start.toPlainDateTime().day);
+      const dates = result.map((o) => o.start.day);
       expect(dates).to.deep.equal([8, 12, 9, 14]);
     });
 
@@ -489,7 +489,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       // July: Wednesdays are 2,9,16,23,30 → 2nd last is 23
       // Aug: Wednesdays are 6,13,20,27 → 2nd last is 20
       // Sep: Wednesdays are 3,10,17,24 → 2nd last is 17
-      const dates = result.map((o) => o.start.toPlainDateTime().day);
+      const dates = result.map((o) => o.start.day);
       expect(dates).to.deep.equal([23, 20, 17]);
     });
 
@@ -507,7 +507,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Jul 4, Sep 5, Nov 7 (every 2 months)
-      const dates = result.map((o) => o.start.toPlainDateTime().day);
+      const dates = result.map((o) => o.start.day);
       expect(dates).to.deep.equal([4, 5, 7]);
     });
 
@@ -526,7 +526,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // July 8 is skipped (before DTSTART), Aug 12, Sep 9
-      const dates = result.map((o) => o.start.toPlainDateTime().day);
+      const dates = result.map((o) => o.start.day);
       expect(dates).to.deep.equal([12, 9]);
     });
   });
@@ -546,9 +546,9 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Jul 20 each year: 2025, 2026, 2027, 2028
-      const years = result.map((o) => o.start.toPlainDateTime().year);
-      const months = result.map((o) => o.start.toPlainDateTime().month);
-      const days = result.map((o) => o.start.toPlainDateTime().day);
+      const years = result.map((o) => o.start.year);
+      const months = result.map((o) => o.start.month);
+      const days = result.map((o) => o.start.day);
       expect(years).to.deep.equal([2025, 2026, 2027, 2028]);
       expect(months).to.deep.equal([7, 7, 7, 7]); // July
       expect(days).to.deep.equal([20, 20, 20, 20]);
@@ -568,7 +568,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Only leap years: 2024, 2028, 2032
-      const years = result.map((o) => o.start.toPlainDateTime().year);
+      const years = result.map((o) => o.start.year);
       expect(years).to.deep.equal([2024, 2028, 2032]);
     });
 
@@ -592,7 +592,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       );
 
       // The only Feb 29 in [2097, 2105) is 2104 (leap year)
-      const years = result.map((o) => o.start.toPlainDateTime().year);
+      const years = result.map((o) => o.start.year);
       expect(years).to.deep.equal([2104]);
     });
 

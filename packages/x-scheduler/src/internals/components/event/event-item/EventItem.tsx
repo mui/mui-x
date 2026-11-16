@@ -12,10 +12,11 @@ import { Button } from '@base-ui/react/button';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import {
+  formatMonthShortAndDayOfMonth,
   getDayNumber,
+  getOccurrenceFirstDayNumber,
   getOccurrenceLastDayNumber,
   plainDateFromDayNumber,
-  formatMonthShortAndDayOfMonth,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
 import type { EventItemProps } from './EventItem.types';
@@ -188,9 +189,9 @@ export const EventItem = React.forwardRef(function EventItem(
     localeText,
   });
 
-  // The processed dates are read in the display timezone, like the day.
+  // The bounds of the occurrence are read in the display timezone, like the day.
   const dayNumber = getDayNumber(date);
-  const startsBeforeDay = getDayNumber(occurrence.start.toPlainDate()) < dayNumber;
+  const startsBeforeDay = getOccurrenceFirstDayNumber(occurrence) < dayNumber;
   const endsAfterDay = getOccurrenceLastDayNumber(occurrence) > dayNumber;
 
   const content = React.useMemo(() => {

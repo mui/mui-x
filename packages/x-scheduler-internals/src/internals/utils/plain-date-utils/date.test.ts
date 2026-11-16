@@ -8,7 +8,7 @@ import { getTimezoneId, toPlainDate, toZonedDateTime } from './timeZone';
 /**
  * The date and the minutes of the day of an instant in `timezone`, as the getters of `Date` read
  * them for the timezone of the system and `Intl.DateTimeFormat` for the others: the reference the
- * plain dates and the processed dates are checked against.
+ * plain dates and the zoned date-times are checked against.
  */
 function readReference(epochMs: number, timezone: string) {
   const date = new Date(epochMs);
