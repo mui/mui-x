@@ -43,9 +43,9 @@ describe('<EventTimelinePremium /> auto-scheduling', () => {
     });
 
     const originalPredecessorStart =
-      store.state.processedEventLookup.get('event-a')!.dataTimezone.start.timestamp;
+      store.state.processedEventLookup.get('event-a')!.unstable_internalInfos.dataStart;
     const originalSuccessorStart =
-      store.state.processedEventLookup.get('event-b')!.dataTimezone.start.timestamp;
+      store.state.processedEventLookup.get('event-b')!.unstable_internalInfos.dataStart;
 
     mockAllEventRowBounds();
     const eventElement = screen.getByText('Event A');
@@ -63,12 +63,14 @@ describe('<EventTimelinePremium /> auto-scheduling', () => {
     // The drop landed past the successor: it now starts at the predecessor's new end.
     const movedPredecessor = store.state.processedEventLookup.get('event-a')!;
     const movedSuccessor = store.state.processedEventLookup.get('event-b')!;
-    expect(movedPredecessor.dataTimezone.start.timestamp).to.be.greaterThan(
+    expect(movedPredecessor.unstable_internalInfos.dataStart).to.be.greaterThan(
       originalPredecessorStart,
     );
-    expect(movedPredecessor.dataTimezone.end.timestamp).to.be.greaterThan(originalSuccessorStart);
-    expect(movedSuccessor.dataTimezone.start.timestamp).to.equal(
-      movedPredecessor.dataTimezone.end.timestamp,
+    expect(movedPredecessor.unstable_internalInfos.dataEnd).to.be.greaterThan(
+      originalSuccessorStart,
+    );
+    expect(movedSuccessor.unstable_internalInfos.dataStart).to.equal(
+      movedPredecessor.unstable_internalInfos.dataEnd,
     );
     expect(store.state.errors).to.have.length(0);
   });
@@ -87,9 +89,9 @@ describe('<EventTimelinePremium /> auto-scheduling', () => {
     });
 
     const originalPredecessorStart =
-      store.state.processedEventLookup.get('event-a')!.dataTimezone.start.timestamp;
+      store.state.processedEventLookup.get('event-a')!.unstable_internalInfos.dataStart;
     const originalSuccessorStart =
-      store.state.processedEventLookup.get('event-b')!.dataTimezone.start.timestamp;
+      store.state.processedEventLookup.get('event-b')!.unstable_internalInfos.dataStart;
 
     mockAllEventRowBounds();
     const eventElement = screen.getByText('Event A');
@@ -105,12 +107,12 @@ describe('<EventTimelinePremium /> auto-scheduling', () => {
     });
 
     // Vetoed: neither event moves and the toast names the blocking event.
-    expect(store.state.processedEventLookup.get('event-a')!.dataTimezone.start.timestamp).to.equal(
-      originalPredecessorStart,
-    );
-    expect(store.state.processedEventLookup.get('event-b')!.dataTimezone.start.timestamp).to.equal(
-      originalSuccessorStart,
-    );
+    expect(
+      store.state.processedEventLookup.get('event-a')!.unstable_internalInfos.dataStart,
+    ).to.equal(originalPredecessorStart);
+    expect(
+      store.state.processedEventLookup.get('event-b')!.unstable_internalInfos.dataStart,
+    ).to.equal(originalSuccessorStart);
     expect(store.state.errors).to.have.length(1);
     expect(store.state.errors[0]).to.deep.include({
       code: 'readOnlyEventMovedError',

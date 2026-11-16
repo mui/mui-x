@@ -10,7 +10,7 @@ export {
   getResentRangeBounds,
   getRecurrenceRuleBound,
   getRecurrenceTimezoneName,
-  getRecurrenceUntil,
+  readDateField,
 } from './utils';
 export { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPanel';
 export { useEventDialogFormContext } from './form/EventDialogFormContext';

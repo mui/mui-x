@@ -86,3 +86,43 @@ export function getPlainDateKey(plainDate: BaseTemporal.PlainDate): string {
   }
   return key;
 }
+
+const MAX_CACHED_PLAIN_TIMES = 10_000;
+
+const plainTimeLookup = new Map<number, BaseTemporal.PlainTime>();
+
+/**
+ * The plain time of a wall-clock time, in milliseconds since midnight.
+ * Returns the same instance for a time until the cache is emptied: most times are whole minutes.
+ */
+export function plainTimeFromMsInDay(msInDay: number): BaseTemporal.PlainTime {
+  let plainTime = plainTimeLookup.get(msInDay);
+  if (plainTime === undefined) {
+    if (plainTimeLookup.size >= MAX_CACHED_PLAIN_TIMES) {
+      plainTimeLookup.clear();
+    }
+    plainTime = new BaseTemporal.PlainTime(
+      Math.floor(msInDay / 3_600_000),
+      Math.floor(msInDay / 60_000) % 60,
+      Math.floor(msInDay / 1000) % 60,
+      msInDay % 1000,
+    );
+    plainTimeLookup.set(msInDay, plainTime);
+  }
+  return plainTime;
+}
+
+/**
+ * The wall-clock time of a time or date-time, in milliseconds since midnight. The microseconds and
+ * nanoseconds are dropped.
+ */
+export function getMsInDay(time: BaseTemporal.PlainTime | BaseTemporal.PlainDateTime): number {
+  return ((time.hour * 60 + time.minute) * 60 + time.second) * 1000 + time.millisecond;
+}
+
+/**
+ * The number of minutes since midnight of a time or date-time.
+ */
+export function getMinutesInDay(time: BaseTemporal.PlainTime | BaseTemporal.PlainDateTime): number {
+  return time.hour * 60 + time.minute;
+}
