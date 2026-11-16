@@ -538,7 +538,8 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
   /**
    * The row ids to show the detail panel.
    */
-  detailPanelExpandedRowIds: PropTypes /* @typescript-to-proptypes-ignore */.instanceOf(Set),
+  detailPanelExpandedRowIds: PropTypes /* @typescript-to-proptypes-ignore */
+    .instanceOf(Set),
   /**
    * If `true`, aggregation is disabled.
    * @default false
@@ -1723,10 +1724,11 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
   /**
    * Sets the row selection model of the Data Grid.
    */
-  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */.shape({
-    ids: PropTypes.instanceOf(Set).isRequired,
-    type: PropTypes.oneOf(['exclude', 'include']).isRequired,
-  }),
+  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */
+    .shape({
+      ids: PropTypes.instanceOf(Set).isRequired,
+      type: PropTypes.oneOf(['exclude', 'include']).isRequired,
+    }),
   /**
    * When `rowSelectionPropagation.descendants` is set to `true`.
    * - Selecting a parent selects all its filtered descendants automatically.
