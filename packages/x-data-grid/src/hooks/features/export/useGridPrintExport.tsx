@@ -249,6 +249,11 @@ export const useGridPrintExport = (
         return false;
       }
 
+      // `print()` does not wait for web fonts, so it can use a fallback font.
+      // A layout starts the font loads (jsdom has no `fonts`).
+      printDoc.body.getBoundingClientRect();
+      await printDoc.fonts?.ready;
+
       // Trigger print
       if (process.env.NODE_ENV !== 'test' && !DEBUG_MODE) {
         printWindow.contentWindow!.print();

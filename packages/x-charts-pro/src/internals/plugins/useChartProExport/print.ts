@@ -53,6 +53,11 @@ export function printChart(
 
         await onBeforeExport(printWindow);
 
+        // `print()` does not wait for web fonts, so it can use a fallback font.
+        // A layout starts the font loads (jsdom has no `fonts`).
+        printDoc.body.getBoundingClientRect();
+        await printDoc.fonts?.ready;
+
         printWindow.contentWindow!.print();
       })().then(resolve, reject);
     };
