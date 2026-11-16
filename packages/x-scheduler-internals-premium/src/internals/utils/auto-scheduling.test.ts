@@ -6,7 +6,7 @@ import type {
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
-import { toEditedEpochMs } from '@mui/x-scheduler-internals/internals';
+import { resolveEditedBounds } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerDependency } from '../../models';
 import { groupByEventId } from './dependency-utils';
 import { computeAutoSchedulingCascade, getDependencyViolation } from './auto-scheduling';
@@ -79,15 +79,18 @@ function runCascadeResult(
   return {
     ...result,
     updated: result.updated.map(({ start, end, ...entry }): InstantEntry => {
-      const { timezone, unstable_internalInfos: infos } = processedEventLookup.get(entry.id)!;
-      const startMs =
-        start === undefined ? infos.dataStart : toEditedEpochMs(start, timezone, infos.dataStart);
+      const processedEvent = processedEventLookup.get(entry.id)!;
+      const { dataStart, dataEnd } = processedEvent.unstable_internalInfos;
+      const bounds = resolveEditedBounds(
+        { start, end },
+        { start: dataStart, end: dataEnd },
+        processedEvent.timezone,
+        entry.allDay ?? processedEvent.allDay,
+      );
       return {
         ...entry,
-        ...(start === undefined ? {} : { start: new Date(startMs) }),
-        ...(end === undefined
-          ? {}
-          : { end: new Date(toEditedEpochMs(end, timezone, infos.dataEnd, startMs)) }),
+        ...(bounds.start === undefined ? {} : { start: new Date(bounds.start) }),
+        ...(bounds.end === undefined ? {} : { end: new Date(bounds.end) }),
       };
     }),
   };

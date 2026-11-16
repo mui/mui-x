@@ -47,11 +47,10 @@ export function applyRecurringDeleteOnlyThis(
 ): UpdateEventsParameters {
   const { timezone } = originalEvent;
   const occurrenceDay = toPlainDate(occurrence.unstable_internalInfos.dataStart, timezone);
-  const previousExDates = originalEvent.exDates ?? [];
-  const excludedDays = [...previousExDates.map((exDate) => exDate.toPlainDate()), occurrenceDay];
   // The store keeps the strings of the exceptions it already has, and so their instant, which
   // their wall-clock time can't tell apart in the hour a DST transition repeats.
-  const exDates = [...previousExDates, occurrenceDay.toPlainDateTime()];
+  const exDates = [...(originalEvent.exDates ?? []), occurrenceDay.toPlainDateTime()];
+  const excludedDays = exDates.map((exDate) => exDate.toPlainDate());
 
   if (!RecurringSeries.fromEvent(originalEvent, excludedDays).hasOccurrence()) {
     return { deleted: [originalEvent.id] };

@@ -64,7 +64,7 @@ import {
   getCustomEventProperties,
   getUpdatedEventModelFromChanges,
 } from './SchedulerStore.utils';
-import { getOccurrenceEnd, toEventDateStrings } from '../date-utils';
+import { getOccurrenceEnd, resolveEditedBounds, toEventDateStrings } from '../date-utils';
 import {
   getOccurrenceKey,
   getRecurringOccurrenceKey,
@@ -78,7 +78,6 @@ import { checkDateLocale, DEFAULT_DATE_LOCALE } from '../date-locale';
 import {
   getStartOfDayMs,
   toEditedEpochMs,
-  toEpochMs,
   toLocalDayNumber,
   toPlainDateTime,
 } from '../plain-date-utils/timeZone';
@@ -1248,12 +1247,15 @@ export class SchedulerStore<
     const isMovingDates = cleanChanges.start != null;
     // Narrowed on the property directly (not `isMovingDates`) so TypeScript can see
     // `cleanChanges.start` is defined here.
+    // The pasted bounds keep the instants they resolve to, which their wall-clock time can't tell
+    // apart in the hour a DST transition repeats.
+    let pastedBounds: { start: number; end: number } | undefined;
     if (cleanChanges.start != null) {
-      const occurrenceStart = toEpochMs(cleanChanges.start, original.timezone);
-      cleanChanges.end = toPlainDateTime(
-        getOccurrenceEnd({ event: original, occurrenceStart }),
-        original.timezone,
-      );
+      const { timezone, unstable_internalInfos: infos } = original;
+      const start = toEditedEpochMs(cleanChanges.start, timezone, infos.dataStart);
+      const end = getOccurrenceEnd({ event: original, occurrenceStart: start });
+      cleanChanges.end = toPlainDateTime(end, timezone);
+      pastedBounds = { start, end };
     }
 
     const refuse = (reason: string) => {
@@ -1316,7 +1318,7 @@ export class SchedulerStore<
     const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat;
     const createdEvent: SchedulerEventCreationProperties = {
       ...copiedEventWithoutId,
-      ...toEventDateStrings(cleanChanges, original),
+      ...toEventDateStrings(cleanChanges, original, pastedBounds),
       extractedFromId: id,
     };
     return this.updateEvents({ created: [createdEvent] }).created[0];
@@ -1528,12 +1530,12 @@ export class SchedulerStore<
           occurrence.timezone,
         ]
       : [occurrence.start.timestamp, getOccurrenceModelEnd(occurrence), displayTimezone];
-    const start =
-      changes.start == null ? undefined : toEditedEpochMs(changes.start, timezone, currentStart);
-    const end =
-      changes.end == null
-        ? undefined
-        : toEditedEpochMs(changes.end, timezone, currentEnd, start ?? currentStart);
+    const { start, end } = resolveEditedBounds(
+      changes,
+      { start: currentStart, end: currentEnd },
+      timezone,
+      allDay,
+    );
     const displayBounds = normalizeAllDayBounds(
       start ?? occurrence.start.timestamp,
       end ?? getOccurrenceModelEnd(occurrence),
@@ -1563,8 +1565,8 @@ export class SchedulerStore<
             allDay,
             unstable_internalInfos: {
               ...occurrence.unstable_internalInfos,
-              dataStart: start ?? occurrence.unstable_internalInfos.dataStart,
-              dataEnd: end ?? occurrence.unstable_internalInfos.dataEnd,
+              dataStart: start ?? currentStart,
+              dataEnd: end ?? currentEnd,
             },
           }
         : { ...occurrence, ...bounds, allDay },
@@ -1603,19 +1605,12 @@ export class SchedulerStore<
     const targetsCreatedEvent = createdEvent != null && createdEventId != null;
     // In place, the pattern decides where a day or rule change lands: only a change that keeps
     // the occurrence on its own data-timezone day can keep the surface armed.
-    const changedStart =
-      changes.start == null
-        ? undefined
-        : toEditedEpochMs(changes.start, dataTimezone, occurrenceStart);
-    const changedEnd =
-      changes.end == null
-        ? undefined
-        : toEditedEpochMs(
-            changes.end,
-            dataTimezone,
-            occurrenceEnd,
-            changedStart ?? occurrenceStart,
-          );
+    const { start: changedStart, end: changedEnd } = resolveEditedBounds(
+      changes,
+      { start: occurrenceStart, end: occurrenceEnd },
+      dataTimezone,
+      changes.allDay ?? occurrence.allDay,
+    );
     const bounds: [number | undefined, number][] = [
       [changedStart, occurrenceStart],
       [changedEnd, occurrenceEnd],

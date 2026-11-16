@@ -472,10 +472,14 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       }
 
       // The fields are read in the display timezone. A new event takes their instants, and an
-      // update their wall-clock time in the event's timezone.
+      // update the wall-clock time of the bounds it resends, in the event's timezone.
       const eventTimezone = getEventTimezone(occurrence);
-      const start = toPlainDateTime(range.start, eventTimezone);
-      const end = toPlainDateTime(range.end, eventTimezone);
+      const resentBounds: Pick<SchedulerEventUpdatedProperties, 'start' | 'end'> = isCreation
+        ? {}
+        : {
+            ...(submitStart ? { start: toPlainDateTime(range.start, eventTimezone) } : {}),
+            ...(submitEnd ? { end: toPlainDateTime(range.end, eventTimezone) } : {}),
+          };
       if (isCreation) {
         store.createEvent({
           ...metaChanges,
@@ -496,8 +500,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         const changes: SchedulerEventUpdatedProperties = {
           ...metaChanges,
           id: occurrence.id,
-          ...(submitStart ? { start } : {}),
-          ...(submitEnd ? { end } : {}),
+          ...resentBounds,
           ...(recurrenceModified ? { rrule: rruleToSubmit } : {}),
         };
 
@@ -513,8 +516,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         const result = store.updateEvent({
           ...metaChanges,
           id: occurrence.id,
-          ...(submitStart ? { start } : {}),
-          ...(submitEnd ? { end } : {}),
+          ...resentBounds,
           // Without the Recurrence tab, the event keeps its `rrule` untouched.
           ...(current.showRecurrence ? { rrule: rruleToSubmit } : {}),
         });

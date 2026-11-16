@@ -6,14 +6,14 @@ import type {
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
-import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import {
   timestampToEventString,
   getEndOfDayMs,
   getStartOfDayMs,
   localToEpochMs,
   MS_PER_DAY,
-  toEditedEpochMs,
+  resolveEditedBounds,
+  toEventDateStrings,
   toLocalDayNumber,
   toPlainDateTime,
 } from '@mui/x-scheduler-internals/internals';
@@ -291,31 +291,29 @@ export function computeAutoSchedulingCascade(
       timezoneChanges.set(entry.id, { model, dataTimezone, nextTimezone });
     }
     const allDay = entry.allDay ?? processedEvent.allDay ?? false;
-    // Mirrors the store: entries are resolved and serialized in the data timezone
-    // (`toEventDateStrings`) and the model is then read in the (new) timezone.
-    const { dataStart, dataEnd } = processedEvent.unstable_internalInfos;
-    const entryStart =
-      entry.start == null ? dataStart : toEditedEpochMs(entry.start, dataTimezone, dataStart);
-    const entryEnd =
-      entry.end == null ? dataEnd : toEditedEpochMs(entry.end, dataTimezone, dataEnd, entryStart);
-    const resolveEntryTimestamp = (
-      value: BaseTemporal.PlainDateTime | undefined,
-      epochMs: number,
-      modelString: string,
-    ) => {
-      if (nextTimezone === dataTimezone) {
-        return epochMs;
-      }
-      const nextString =
-        value == null ? modelString : timestampToEventString(epochMs, modelString, dataTimezone);
-      return resolveEventTimestamp(nextString, nextTimezone, entry.id);
-    };
-    const dates = resolveDates(
-      resolveEntryTimestamp(entry.start, entryStart, model.start),
-      resolveEntryTimestamp(entry.end, entryEnd, model.end),
-      nextTimezone,
-      allDay,
-    );
+    // Mirrors the store: entries are resolved in the data timezone, and on a timezone change,
+    // serialized there (`toEventDateStrings`) and read in the new one.
+    let entryStart: number;
+    let entryEnd: number;
+    if (nextTimezone === dataTimezone) {
+      const { dataStart, dataEnd } = processedEvent.unstable_internalInfos;
+      const bounds = resolveEditedBounds(
+        entry,
+        { start: dataStart, end: dataEnd },
+        dataTimezone,
+        allDay,
+      );
+      entryStart = bounds.start ?? dataStart;
+      entryEnd = bounds.end ?? dataEnd;
+    } else {
+      const written = toEventDateStrings(
+        { start: entry.start, end: entry.end, allDay },
+        processedEvent,
+      );
+      entryStart = resolveEventTimestamp(written.start ?? model.start, nextTimezone, entry.id);
+      entryEnd = resolveEventTimestamp(written.end ?? model.end, nextTimezone, entry.id);
+    }
+    const dates = resolveDates(entryStart, entryEnd, nextTimezone, allDay);
     const { start: startTimestamp, end: endTimestamp } = dates;
     newDates.set(entry.id, dates);
 
@@ -411,11 +409,10 @@ export function computeAutoSchedulingCascade(
       const endChanged = shifted.end !== base.end;
       newDates.set(eventId, shifted);
       if (startChanged || endChanged) {
-        const dates = toEntryDates(eventId, shifted);
         cascaded.push({
           id: eventId,
-          ...(startChanged ? { start: dates.start } : {}),
-          ...(endChanged ? { end: dates.end } : {}),
+          ...(startChanged ? { start: toEntryDate(eventId, shifted.start, 'start') } : {}),
+          ...(endChanged ? { end: toEntryDate(eventId, shifted.end, 'end') } : {}),
         });
       }
     }
@@ -447,30 +444,24 @@ export function computeAutoSchedulingCascade(
 
   return { updated: cascaded, blocked };
 
-  // The entries carry the dates on the wall clock of the event's data timezone. Inverse of
-  // `resolveEntryTimestamp` for a seed changing timezone: the store serializes the entry in the
-  // old timezone and the model is then read in the new one, so the entry carries the date whose
-  // old-zone instant has the intended new-zone wall time.
-  function toEntryDates(eventId: SchedulerEventId, dates: ResolvedDates) {
+  // The entries carry the dates on the wall clock of the event's data timezone. Inverse of the
+  // timezone-change branch above for a seed changing timezone: the store serializes the entry in
+  // the old timezone and the model is then read in the new one, so the entry carries the date
+  // whose old-zone instant has the intended new-zone wall time.
+  function toEntryDate(eventId: SchedulerEventId, epochMs: number, bound: 'start' | 'end') {
     const timezoneChange = timezoneChanges.get(eventId);
     if (timezoneChange === undefined) {
-      const { timezone } = processedEventLookup.get(eventId)!;
-      return {
-        start: toPlainDateTime(dates.start, timezone),
-        end: toPlainDateTime(dates.end, timezone),
-      };
+      return toPlainDateTime(epochMs, processedEventLookup.get(eventId)!.timezone);
     }
     const { model, dataTimezone, nextTimezone } = timezoneChange;
-    const encode = (epochMs: number, modelString: string) =>
-      toPlainDateTime(
-        resolveEventTimestamp(
-          timestampToEventString(epochMs, modelString, nextTimezone),
-          dataTimezone,
-          eventId,
-        ),
+    return toPlainDateTime(
+      resolveEventTimestamp(
+        timestampToEventString(epochMs, model[bound], nextTimezone),
         dataTimezone,
-      );
-    return { start: encode(dates.start, model.start), end: encode(dates.end, model.end) };
+        eventId,
+      ),
+      dataTimezone,
+    );
   }
 
   function resolveCurrentDates(eventId: SchedulerEventId): ResolvedDates | null {

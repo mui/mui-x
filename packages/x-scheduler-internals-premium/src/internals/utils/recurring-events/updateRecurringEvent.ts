@@ -76,14 +76,10 @@ export function applyRecurringUpdateFollowing(
   // 1) New event: apply changes, decide RRULE for the new series.
   // When start/end are not explicitly changed, the new series must start at the occurrence
   // date (not at DTSTART), otherwise the split series and the truncated original would overlap.
-  const newEventChanges = toEventDateStrings(
-    {
-      ...changes,
-      ...getOccurrenceBoundsByDefault(originalEvent, occurrenceStart, changes),
-      rrule: decideSplitRRule(originalEvent, occurrenceStart, changes),
-    },
-    originalEvent,
-  );
+  const newEventChanges = toOccurrenceDateStrings(originalEvent, occurrenceStart, {
+    ...changes,
+    rrule: decideSplitRRule(originalEvent, occurrenceStart, changes),
+  });
 
   // The store gives the new series its own id when it creates it.
   const { id: unusedId, ...newEvent } = {
@@ -130,8 +126,10 @@ export function applyRecurringUpdateAll(
     !changes.end.toPlainDate().equals(toPlainDate(occurrenceEnd, dataTimezone));
 
   // 2) Is the edited occurrence the first of the series (DTSTART)?
-  const seriesStartMs = originalEvent.unstable_internalInfos.dataStart;
-  const seriesStartPlainDate = toPlainDate(seriesStartMs, dataTimezone);
+  const seriesStartPlainDate = toPlainDate(
+    originalEvent.unstable_internalInfos.dataStart,
+    dataTimezone,
+  );
   const editedIsDtstart = occurrencePlainDate.equals(seriesStartPlainDate);
 
   // 3) Decide new start/end: editing the first occurrence keeps the dates of the changes, which
@@ -186,10 +184,7 @@ export function applyRecurringUpdateOnlyThis(
 ): UpdateEventsParameters {
   const occurrenceStart = occurrence.unstable_internalInfos.dataStart;
   // default start/end to the edited occurrence so the detached event keeps its own day, not DTSTART
-  const detachedEventChanges = toEventDateStrings(
-    { ...changes, ...getOccurrenceBoundsByDefault(originalEvent, occurrenceStart, changes) },
-    originalEvent,
-  );
+  const detachedEventChanges = toOccurrenceDateStrings(originalEvent, occurrenceStart, changes);
 
   // The original series excludes the occurrence, like a deletion.
   return {
@@ -199,21 +194,28 @@ export function applyRecurringUpdateOnlyThis(
 }
 
 /**
- * The bounds of `changes`, or else the ones of the occurrence starting at `occurrenceStart`, on the
- * wall clock of the event's timezone.
+ * Writes the dates of an event derived from the occurrence starting at `occurrenceStart`: the
+ * bounds of `changes`, or else the ones of the occurrence, which keep its instants.
  */
-function getOccurrenceBoundsByDefault(
+function toOccurrenceDateStrings(
   originalEvent: SchedulerProcessedEvent,
   occurrenceStart: number,
   changes: SchedulerEventUpdatedProperties,
 ) {
   const { timezone } = originalEvent;
-  return {
-    start: changes.start ?? toPlainDateTime(occurrenceStart, timezone),
-    end:
-      changes.end ??
-      toPlainDateTime(getOccurrenceEnd({ event: originalEvent, occurrenceStart }), timezone),
+  const occurrence = {
+    start: occurrenceStart,
+    end: getOccurrenceEnd({ event: originalEvent, occurrenceStart }),
   };
+  return toEventDateStrings(
+    {
+      ...changes,
+      start: changes.start ?? toPlainDateTime(occurrence.start, timezone),
+      end: changes.end ?? toPlainDateTime(occurrence.end, timezone),
+    },
+    originalEvent,
+    occurrence,
+  );
 }
 
 /**

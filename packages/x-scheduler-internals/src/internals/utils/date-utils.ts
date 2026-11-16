@@ -5,8 +5,12 @@ import type {
   WeekStartsOn,
 } from '../../models';
 import { BaseTemporal } from './base-temporal';
-import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
-import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
+import {
+  getStartOfWeekDayNumber,
+  isoDateToDayNumber,
+  MS_PER_DAY,
+} from './plain-date-utils/dayNumber';
+import { getDayNumber, getMsInDay, plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import type { WeekInfo } from './date-locale';
 import { toEditedEpochMs, toEpochMs, toPlainDateTime } from './plain-date-utils/timeZone';
 import { isDateOnlyString, isInstantString } from './plain-date-utils/date';
@@ -81,16 +85,52 @@ type WithEventDateStrings<TChanges> = {
 };
 
 /**
+ * The instants of the bounds of an event, in milliseconds since the Unix epoch.
+ */
+interface EventBounds {
+  start: number;
+  end: number;
+}
+
+/**
+ * Resolves the dates of an edit to instants with `toEditedEpochMs()`: each one keeps the instant
+ * of `current` when it reads the same, and the end resolves at or after the start. The inclusive
+ * end of an all-day event, at 23:59:59.999, resolves to the last instant of its day, like
+ * `getEndOfDayMs()`. A date missing from `changes` stays `undefined`.
+ */
+export function resolveEditedBounds(
+  changes: Partial<Pick<SchedulerEventUpdatedProperties, 'start' | 'end'>>,
+  current: EventBounds,
+  timezone: string,
+  allDay: boolean | undefined,
+): Partial<EventBounds> {
+  const start =
+    changes.start == null ? undefined : toEditedEpochMs(changes.start, timezone, current.start);
+  if (changes.end == null) {
+    return { start };
+  }
+  const end =
+    allDay && getMsInDay(changes.end) === MS_PER_DAY - 1
+      ? toEpochMs(changes.end.toPlainDate().add({ days: 1 }), timezone) - 1
+      : toEditedEpochMs(changes.end, timezone, current.end, start ?? current.start);
+  return { start, end };
+}
+
+/**
  * Writes the dates of an edit of `event`, or of an event derived from it, as event strings in the
- * format of its own, in a copy of `changes`. A date that reads the same as the one the event has
- * keeps its string, so an unchanged date keeps its format and its instant: `start`, `end`, and for
- * an exception the one at the same index. The others resolve like `toEditedEpochMs()`, the end at
- * or after the start, and a new exception takes the format of `start`. A processed `until` takes the
- * format `getUntilReferenceString()` returns.
+ * format of its own, in a copy of `changes`. The dates resolve with `resolveEditedBounds()` against
+ * `current`, the bounds of `event` by default, or of the edited occurrence. A date that resolves to
+ * the instant `event` has keeps its string, so an unchanged date keeps its format: `start`, `end`,
+ * and for an exception the one at the same index. A new exception takes the format of `start`. A
+ * processed `until` takes the format `getUntilReferenceString()` returns.
  */
 export function toEventDateStrings<
-  TChanges extends Partial<Pick<SchedulerEventUpdatedProperties, EventDateKey>>,
->(changes: TChanges, event: SchedulerProcessedEvent): WithEventDateStrings<TChanges> {
+  TChanges extends Partial<Pick<SchedulerEventUpdatedProperties, EventDateKey | 'allDay'>>,
+>(
+  changes: TChanges,
+  event: SchedulerProcessedEvent,
+  current?: EventBounds,
+): WithEventDateStrings<TChanges> {
   const model = event.modelInBuiltInFormat;
   const { timezone } = event;
   const { dataStart, dataEnd } = event.unstable_internalInfos;
@@ -98,15 +138,21 @@ export function toEventDateStrings<
     ...(changes as Partial<Pick<SchedulerEvent, EventDateKey>>),
   };
 
-  let startMs = dataStart;
-  if (changes.start != null) {
-    startMs = toEditedEpochMs(changes.start, timezone, dataStart);
+  const bounds = resolveEditedBounds(
+    changes,
+    current ?? { start: dataStart, end: dataEnd },
+    timezone,
+    changes.allDay ?? event.allDay,
+  );
+  if (bounds.start !== undefined) {
     result.start =
-      startMs === dataStart ? model.start : timestampToEventString(startMs, model.start, timezone);
+      bounds.start === dataStart
+        ? model.start
+        : timestampToEventString(bounds.start, model.start, timezone);
   }
-  if (changes.end != null) {
-    const endMs = toEditedEpochMs(changes.end, timezone, dataEnd, startMs);
-    result.end = endMs === dataEnd ? model.end : timestampToEventString(endMs, model.end, timezone);
+  if (bounds.end !== undefined) {
+    result.end =
+      bounds.end === dataEnd ? model.end : timestampToEventString(bounds.end, model.end, timezone);
   }
   if (changes.exDates != null) {
     result.exDates = changes.exDates.map((exDate, index) =>
