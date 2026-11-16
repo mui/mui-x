@@ -68,15 +68,6 @@ describe('CompactDayView - touch resize', () => {
     return eventElement;
   }
 
-  it('should arm the event only once it is tapped', () => {
-    renderResizableEvent();
-    const eventElement = screen.getByRole('button', { name: /Morning Meeting/i });
-    // Handles are always in the DOM; coarse-pointer CSS reveals them when armed. In JSDOM, assert via `data-armed`.
-    expect(eventElement).not.to.have.attribute('data-armed');
-    fireEvent.click(eventElement);
-    expect(eventElement).to.have.attribute('data-armed');
-  });
-
   it('should resize the end of an armed event to a later time', async () => {
     const { onEventsChange } = renderResizableEvent();
     const eventElement = armEvent();

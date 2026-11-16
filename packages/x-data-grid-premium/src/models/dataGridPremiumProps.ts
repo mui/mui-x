@@ -51,6 +51,7 @@ import type {
   GridComputedColumnsModel,
 } from '../hooks/features/computedColumns/gridComputedColumnsInterfaces';
 import type { GridPremiumFeatureDependencies } from './gridFeatureDependencies';
+import type { GridClipboardPasteOptions } from './gridClipboardPasteOptions';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
@@ -331,6 +332,10 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
    * Callback fired when the clipboard paste operation ends.
    */
   onClipboardPasteEnd?: GridEventListener<'clipboardPasteEnd', GridApiPremium>;
+  /**
+   * Options for the clipboard paste.
+   */
+  clipboardPasteOptions?: GridClipboardPasteOptions<R>;
   /**
    * Unstable features, breaking changes might be introduced.
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.

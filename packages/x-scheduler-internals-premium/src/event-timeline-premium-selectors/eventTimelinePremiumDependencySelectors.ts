@@ -71,8 +71,6 @@ const selectedIdSelector = (state: State) => {
 const creationSelector = (state: State) => state.dependencyCreation;
 
 export const eventTimelinePremiumDependencySelectors = {
-  modelList: (state: State) => state.dependencyModelList,
-  modelLookup: (state: State) => state.dependencyModelLookup,
   model: (state: State, dependencyId: SchedulerDependencyId) =>
     state.dependencyModelLookup.get(dependencyId) ?? null,
   /**

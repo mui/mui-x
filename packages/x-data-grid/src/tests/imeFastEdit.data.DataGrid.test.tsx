@@ -230,7 +230,7 @@ describe('<DataGrid /> - IME fast edit with data loading and updates', () => {
     });
 
     it.each([{ imeFastEdit: true }, { imeFastEdit: false }])(
-      'drops the hidden editor when a server-side sort replaces the rows (imeFastEdit: $imeFastEdit)',
+      'keeps the focus on the same cell position when a server-side sort replaces the rows (imeFastEdit: $imeFastEdit)',
       async ({ imeFastEdit }) => {
         const { user } = render(<TestDataSource experimentalFeatures={{ imeFastEdit }} />);
         await waitForRows(5);
@@ -244,20 +244,21 @@ describe('<DataGrid /> - IME fast edit with data loading and updates', () => {
         });
         await waitForRows(5);
 
-        // The rows are replaced while loading, so the focus state is cleared with or without the flag.
         await waitFor(() => {
-          expect(gridFocusCellSelector(apiRef)).to.equal(null);
+          const focused = gridFocusCellSelector(apiRef);
+          expect(focused?.field).to.equal('commodity');
+          const cell = apiRef.current!.getCellElement(focused!.id, focused!.field);
+          expect(cell?.contains(document.activeElement)).to.equal(true);
         });
-        expect(getEditorWrappers()).to.have.length(0);
-        expect(document.activeElement).to.equal(document.body);
-
-        const cell = await focusCell(user, 1, 1);
+        const focused = gridFocusCellSelector(apiRef)!;
+        const cell = apiRef.current!.getCellElement(focused.id, focused.field)!;
         expectFocusedCell(cell, imeFastEdit);
+        expect(getEditorWrappers()).to.have.length(imeFastEdit ? 1 : 0);
       },
     );
 
     it.each([{ imeFastEdit: true }, { imeFastEdit: false }])(
-      'drops the hidden editor when a server-side page change removes the focused row (imeFastEdit: $imeFastEdit)',
+      'moves the focus to the same row index when a server-side page change removes the focused row (imeFastEdit: $imeFastEdit)',
       async ({ imeFastEdit }) => {
         const { user } = render(<TestDataSource experimentalFeatures={{ imeFastEdit }} />);
         await waitForRows(5);
@@ -271,9 +272,10 @@ describe('<DataGrid /> - IME fast edit with data loading and updates', () => {
         });
         await waitForRows(5);
 
-        // The focused row is not on the page, so no cell has an editor.
-        expect(getEditorWrappers()).to.have.length(0);
-        expect(describeFocus()).to.equal('body');
+        await waitFor(() => {
+          expect(describeFocus()).to.equal(imeFastEdit ? 'input 1,1' : 'cell 1,1');
+        });
+        expect(getEditorWrappers()).to.have.length(imeFastEdit ? 1 : 0);
 
         // A click on the new page gives the focus to the hidden editor again.
         const cell = await focusCell(user, 2, 1);

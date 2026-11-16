@@ -8,9 +8,7 @@ import type {
   SchedulerOccurrencePlaceholderInternalDragOrResize,
   EventSurfaceType,
   SchedulerEventUpdatedProperties,
-  TemporalSupportedObject,
   SchedulerResourceId,
-  TemporalTimezone,
 } from '../../models';
 import type {
   EventDropData,
@@ -24,7 +22,6 @@ import {
   schedulerOtherSelectors,
 } from '../../scheduler-selectors';
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
-import { createAdapterDate } from './plain-date-utils/adapter';
 import type { StandaloneEvent } from '../../standalone-event';
 import { getPrimaryResourceId } from './event-utils';
 
@@ -223,7 +220,7 @@ export namespace useDropTarget {
     /**
      * The display timezone, in which the dates of the drop are read.
      */
-    timezone: TemporalTimezone;
+    timezone: string;
   }) => SchedulerOccurrencePlaceholder | undefined;
 }
 
@@ -240,8 +237,6 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
 
   const { eventId, start, end, originalOccurrence } = placeholder;
 
-  const { adapter, displayTimezone } = store.state;
-
   const additionalChanges = addPropertiesToDroppedEvent?.() ?? {};
 
   // Only the bounds the drop moved, as displayed. An untouched bound keeps its stored value:
@@ -255,10 +250,10 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
     additionalChanges.allDay !== (originalOccurrence.allDay ?? false);
   const changes: SchedulerEventUpdatedProperties = { id: eventId };
   if (allDayToggled || originalOccurrence.displayTimezone.start.timestamp !== start) {
-    changes.start = createAdapterDate(adapter, start, displayTimezone);
+    changes.start = new Date(start);
   }
   if (allDayToggled || originalOccurrence.displayTimezone.end.timestamp !== end) {
-    changes.end = createAdapterDate(adapter, end, displayTimezone);
+    changes.end = new Date(end);
   }
 
   // If `undefined`, we want to set the event resource to `undefined` (no resource).
@@ -321,15 +316,10 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
   }
 
   // Sync the editing surface (if this occurrence is being edited) with the committed times:
-  // the scheduling plugin can clamp the drop, and its dates come in the data timezone.
+  // the scheduling plugin can clamp the drop.
   // Only the committed bounds: an untouched one keeps its stored value on the occurrence.
   if (schedulerOtherSelectors.isEditedOccurrence(store.state, placeholder.occurrenceKey)) {
-    const toDisplayTimezone = (date: TemporalSupportedObject | undefined) =>
-      date == null ? undefined : adapter.setTimezone(date, displayTimezone);
-    store.setEditingOccurrenceTimes({
-      start: toDisplayTimezone(result.changes.start),
-      end: toDisplayTimezone(result.changes.end),
-    });
+    store.setEditingOccurrenceTimes({ start: result.changes.start, end: result.changes.end });
   }
 }
 
@@ -338,10 +328,9 @@ function applyExternalDragOccurrencePlaceholder(
   placeholder: SchedulerOccurrencePlaceholderExternalDrag,
   addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>,
 ) {
-  const { adapter, displayTimezone } = store.state;
   const event = {
-    start: createAdapterDate(adapter, placeholder.start, displayTimezone),
-    end: createAdapterDate(adapter, placeholder.end, displayTimezone),
+    start: new Date(placeholder.start),
+    end: new Date(placeholder.end),
     ...placeholder.eventData,
   };
 

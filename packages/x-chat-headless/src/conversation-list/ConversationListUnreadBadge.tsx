@@ -8,6 +8,7 @@ import type { ConversationListUnreadBadgeOwnerState } from './conversationList.t
 export interface ConversationListUnreadBadgeSlots {
   /**
    * The component that renders the root.
+   * @default 'span'
    */
   root: React.ElementType;
 }

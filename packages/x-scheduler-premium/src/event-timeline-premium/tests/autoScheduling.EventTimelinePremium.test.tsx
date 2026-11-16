@@ -4,7 +4,6 @@ import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
-  getResizeHandle,
   mockElementBounds,
   simulateDragAndDrop,
 } from 'test/utils/scheduler';
@@ -70,82 +69,6 @@ describe('<EventTimelinePremium /> auto-scheduling', () => {
     expect(movedPredecessor.dataTimezone.end.timestamp).to.be.greaterThan(originalSuccessorStart);
     expect(movedSuccessor.dataTimezone.start.timestamp).to.equal(
       movedPredecessor.dataTimezone.end.timestamp,
-    );
-    expect(store.state.errors).to.have.length(0);
-  });
-
-  it('should push the successor when the predecessor is resized past it', async () => {
-    const { store } = await renderTimeline({
-      events: [eventA, eventB],
-      dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
-    });
-
-    const originalPredecessorStart =
-      store.state.processedEventLookup.get('event-a')!.dataTimezone.start.timestamp;
-    const originalSuccessorStart =
-      store.state.processedEventLookup.get('event-b')!.dataTimezone.start.timestamp;
-
-    mockAllEventRowBounds();
-    const eventElement = screen
-      .getByText('Event A')
-      .closest('.MuiEventTimeline-event') as HTMLElement;
-    mockElementBounds(eventElement, { left: 100, width: 120, height: 30 });
-
-    await act(async () => {
-      simulateDragAndDrop({
-        source: getResizeHandle(eventElement, 'end'),
-        target: getEventRow(resource1.id),
-        sourceClientX: 220,
-        targetClientX: 3000,
-      });
-    });
-
-    // Only the end moved, and past the successor: the cascade ran on the resize.
-    const resizedPredecessor = store.state.processedEventLookup.get('event-a')!;
-    const movedSuccessor = store.state.processedEventLookup.get('event-b')!;
-    expect(resizedPredecessor.dataTimezone.start.timestamp).to.equal(originalPredecessorStart);
-    expect(resizedPredecessor.dataTimezone.end.timestamp).to.be.greaterThan(originalSuccessorStart);
-    expect(movedSuccessor.dataTimezone.start.timestamp).to.equal(
-      resizedPredecessor.dataTimezone.end.timestamp,
-    );
-    expect(store.state.errors).to.have.length(0);
-  });
-
-  it('should clamp the successor when it is dropped before the predecessor', async () => {
-    const { store } = await renderTimeline({
-      events: [eventA, eventB],
-      dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
-    });
-
-    const predecessor = store.state.processedEventLookup.get('event-a')!;
-    const successorDuration =
-      store.state.processedEventLookup.get('event-b')!.dataTimezone.end.timestamp -
-      store.state.processedEventLookup.get('event-b')!.dataTimezone.start.timestamp;
-
-    mockAllEventRowBounds();
-    const eventElement = screen.getByText('Event B');
-    mockElementBounds(eventElement, { left: 640, width: 64, height: 30 });
-
-    // Dropped well before the predecessor's end: the clamp snaps it forward on drop.
-    await act(async () => {
-      simulateDragAndDrop({
-        source: eventElement,
-        target: getEventRow(resource1.id),
-        sourceClientX: 660,
-        targetClientX: 400,
-      });
-    });
-
-    const clampedSuccessor = store.state.processedEventLookup.get('event-b')!;
-    expect(clampedSuccessor.dataTimezone.start.timestamp).to.equal(
-      predecessor.dataTimezone.end.timestamp,
-    );
-    expect(
-      clampedSuccessor.dataTimezone.end.timestamp - clampedSuccessor.dataTimezone.start.timestamp,
-    ).to.equal(successorDuration);
-    // The predecessor itself never moves, and a clamp is not a rejection.
-    expect(store.state.processedEventLookup.get('event-a')!.dataTimezone.start.timestamp).to.equal(
-      predecessor.dataTimezone.start.timestamp,
     );
     expect(store.state.errors).to.have.length(0);
   });

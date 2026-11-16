@@ -56,13 +56,13 @@ export function getDayNumber(plainDate: BaseTemporal.PlainDate): number {
 }
 
 /**
- * Checks if the given plain date is a weekend (Saturday or Sunday).
+ * Checks if the given plain date is on one of the ISO weekdays of `weekend`.
  */
-export function isWeekendPlainDate(plainDate: BaseTemporal.PlainDate): boolean {
-  // TODO: Read the weekend days of the locale from `Intl.Locale.prototype.getWeekInfo()`
-  // (https://github.com/mui/mui-x/issues/23985).
-  // ISO weekdays 6 and 7 are Saturday and Sunday.
-  return plainDate.dayOfWeek >= 6;
+export function isWeekendPlainDate(
+  plainDate: BaseTemporal.PlainDate,
+  weekend: readonly number[],
+): boolean {
+  return weekend.includes(plainDate.dayOfWeek);
 }
 
 const MAX_CACHED_KEYS = 10_000;

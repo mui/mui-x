@@ -12,7 +12,10 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-eve
 import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerOtherSelectors,
+  schedulerPreferenceSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { EventSkeleton } from '../event-skeleton';
 import { useEventEditingContext } from '../event-editing';
 import { EventContextMenuTrigger } from '../event-context-menu';
@@ -82,6 +85,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   const store = useEventCalendarStoreContext();
   const { classes } = useEventCalendarStyledContext();
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
+  const weekend = useStore(store, schedulerPreferenceSelectors.weekend);
   const dayStartMinute = startTime * 60;
   const dayEndMinute = endTime * 60;
   // The bounds of the column, which builds them the same way.
@@ -117,7 +121,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       dayEndMinute={dayEndMinute}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       aria-colindex={colIndex}
-      data-weekend={isWeekendPlainDate(day.plainDate) || undefined}
+      data-weekend={isWeekendPlainDate(day.plainDate, weekend) || undefined}
       style={{ '--columns-count': maxIndex } as React.CSSProperties}
     >
       <ColumnInteractiveLayer
@@ -143,7 +147,8 @@ function ColumnInteractiveLayer({
 }) {
   // Context hooks
   const store = useEventCalendarStoreContext();
-  const { start, end } = useCalendarGridTimeColumnContext().axis;
+  const { plainDate, axis } = useCalendarGridTimeColumnContext();
+  const { start, end } = axis;
   const { startEditing } = useEventEditingContext();
   const { classes } = useEventCalendarStyledContext();
 
@@ -154,6 +159,7 @@ function ColumnInteractiveLayer({
   const isCreatingAnEvent = useStore(
     store,
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange,
+    plainDate,
     start,
     end,
   );

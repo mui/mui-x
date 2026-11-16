@@ -8,6 +8,7 @@ import type { ComposerHelperTextOwnerState } from './composer.types';
 export interface ComposerHelperTextSlots {
   /**
    * The component that renders the helper text.
+   * @default 'div'; a styled 'p' in `ChatComposerHelperText`
    */
   helperText: React.ElementType;
 }

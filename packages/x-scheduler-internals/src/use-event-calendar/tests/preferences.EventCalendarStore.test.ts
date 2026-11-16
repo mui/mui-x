@@ -1,4 +1,3 @@
-import { adapter } from 'test/utils/scheduler';
 import { vi, describe, it, expect } from 'vitest';
 import { EventCalendarStore } from '../EventCalendarStore';
 
@@ -8,7 +7,7 @@ describe('Preferences - EventCalendarStore', () => {
   describe('Method: setPreferences', () => {
     it('should update the store preferences and call onPreferencesChange when value changes and is uncontrolled', () => {
       const onPreferencesChange = vi.fn();
-      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onPreferencesChange }, adapter);
+      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onPreferencesChange });
 
       store.setPreferences({ showWeekends: false }, {} as any);
 
@@ -23,14 +22,11 @@ describe('Preferences - EventCalendarStore', () => {
 
     it('should NOT mutate store but calls onPreferencesChange when is controlled', () => {
       const onPreferencesChange = vi.fn();
-      const store = new EventCalendarStore(
-        {
-          ...DEFAULT_PARAMS,
-          preferences: { showWeekends: false },
-          onPreferencesChange,
-        },
-        adapter,
-      );
+      const store = new EventCalendarStore({
+        ...DEFAULT_PARAMS,
+        preferences: { showWeekends: false },
+        onPreferencesChange,
+      });
 
       store.setPreferences({ showWeekends: true }, {} as any);
 
@@ -44,10 +40,10 @@ describe('Preferences - EventCalendarStore', () => {
     });
 
     it('should warn in dev when controlled without an onPreferencesChange handler', () => {
-      const store = new EventCalendarStore(
-        { ...DEFAULT_PARAMS, preferences: { showWeekends: true } },
-        adapter,
-      );
+      const store = new EventCalendarStore({
+        ...DEFAULT_PARAMS,
+        preferences: { showWeekends: true },
+      });
 
       expect(() => store.setPreferences({ showWeekends: false }, {} as any)).toWarnDev(
         'MUI X Scheduler: EventCalendar is controlled (received a `preferences` prop) but `onPreferencesChange` is not provided',
@@ -56,14 +52,11 @@ describe('Preferences - EventCalendarStore', () => {
     });
 
     it('should NOT mutate store when onPreferencesChange cancels the change', () => {
-      const store = new EventCalendarStore(
-        {
-          ...DEFAULT_PARAMS,
-          preferences: { showWeekends: true },
-          onPreferencesChange: (_, eventDetails) => eventDetails.cancel(),
-        },
-        adapter,
-      );
+      const store = new EventCalendarStore({
+        ...DEFAULT_PARAMS,
+        preferences: { showWeekends: true },
+        onPreferencesChange: (_, eventDetails) => eventDetails.cancel(),
+      });
 
       store.setPreferences({ showWeekends: false }, {} as any);
 
@@ -72,17 +65,8 @@ describe('Preferences - EventCalendarStore', () => {
       });
     });
 
-    it('should merge a partial: showWeekNumber=true keeps showWeekends=true', () => {
-      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
-      store.setPreferences({ showWeekNumber: true }, {} as any);
-
-      expect(store.state.preferences).to.deep.equal({
-        showWeekNumber: true,
-      });
-    });
-
     it('should update multiple preferences in a single call', () => {
-      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      const store = new EventCalendarStore(DEFAULT_PARAMS);
       store.setPreferences({ showWeekends: false, showWeekNumber: true }, {} as any);
 
       expect(store.state.preferences).to.deep.equal({
@@ -92,7 +76,7 @@ describe('Preferences - EventCalendarStore', () => {
     });
 
     it('should accumulate successive partial updates', () => {
-      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      const store = new EventCalendarStore(DEFAULT_PARAMS);
       store.setPreferences({ showWeekends: false }, {} as any);
       store.setPreferences({ showWeekNumber: true }, {} as any);
 

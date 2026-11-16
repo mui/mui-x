@@ -323,7 +323,9 @@ describe('<EventTimelinePremium /> - RTL', () => {
       const { event, onEventsChange } = await renderMeeting();
 
       // Grab 10 minutes into the event and drop at axis minute 850: the event starts at
-      // axis minute 840 = one visible day (720) + 120 → July 4, 10:00.
+      // axis minute 840 = one visible day (720) + 120 → July 4, 10:00. A real-milliseconds
+      // mapping would land on July 3, 14:00 instead. The LTR run is the only drop across the
+      // day seam of the trimmed axis, so keep it when changing this suite.
       await act(async () => {
         simulateDragAndDrop({
           source: event,

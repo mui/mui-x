@@ -1,6 +1,31 @@
 import { adapterToUse } from 'test/utils/pickers';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { findClosestEnabledDate } from './date-utils';
+import { findClosestEnabledDate, findClosestEnabledNumber } from './date-utils';
+
+describe('findClosestEnabledNumber', () => {
+  it('should return the target when it is enabled', () => {
+    expect(findClosestEnabledNumber(3, [1, 3, 4])).to.equal(3);
+  });
+
+  it('should return the closest enabled number on either side of the target', () => {
+    expect(findClosestEnabledNumber(3, [0, 5])).to.equal(5);
+    expect(findClosestEnabledNumber(3, [2, 7])).to.equal(2);
+  });
+
+  it('should return the later number when two are equally close, regardless of their order', () => {
+    expect(findClosestEnabledNumber(3, [1, 5])).to.equal(5);
+    expect(findClosestEnabledNumber(3, [5, 1])).to.equal(5);
+  });
+
+  it('should handle a target of 0 and a first enabled number of 0', () => {
+    expect(findClosestEnabledNumber(0, [0, 1])).to.equal(0);
+    expect(findClosestEnabledNumber(1, [0])).to.equal(0);
+  });
+
+  it('should return null when no number is enabled', () => {
+    expect(findClosestEnabledNumber(3, [])).to.equal(null);
+  });
+});
 
 describe('findClosestEnabledDate', () => {
   const day18thText = adapterToUse.format(adapterToUse.date('2018-08-18'), 'dayOfMonth');

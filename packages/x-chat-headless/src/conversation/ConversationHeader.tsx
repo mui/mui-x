@@ -8,6 +8,7 @@ import type { ConversationHeaderOwnerState } from './conversation.types';
 export interface ConversationHeaderSlots {
   /**
    * The component that renders the header.
+   * @default 'div'; a styled 'header' in `ChatConversationHeader`
    */
   header: React.ElementType;
 }

@@ -8,10 +8,12 @@ import type { ConversationListItemAvatarOwnerState } from './conversationList.ty
 export interface ConversationListItemAvatarSlots {
   /**
    * The component that renders the root.
+   * @default 'div'
    */
   root: React.ElementType;
   /**
    * The component that renders the image.
+   * @default 'img'
    */
   image: React.ElementType;
 }

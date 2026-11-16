@@ -19,6 +19,8 @@ The `dataSource.getEvents(start, end)` method is called whenever the visible dat
 
 To enable lazy loading, pass a `dataSource` object with a `getEvents` method to the Event Timeline.
 The `getEvents` method receives a date range and should return a promise that resolves with the events for that range.
+The `start` and `end` of the range are instants that bound the visible days of `displayTimezone`.
+Compare them with the instants of your events, or read their days in `displayTimezone`, as the timezone of the browser can put them on other days.
 
 When `dataSource` is provided, the `events` prop is not needed because all events are fetched through the data source.
 

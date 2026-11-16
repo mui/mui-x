@@ -3,8 +3,18 @@
   "name": "MessageAvatar",
   "imports": ["import { MessageAvatar } from '@mui/x-chat/headless';"],
   "slots": [
-    { "name": "avatar", "description": "The component that renders the avatar.", "class": null },
-    { "name": "image", "description": "The component that renders the image.", "class": null }
+    {
+      "name": "avatar",
+      "description": "The component that renders the avatar.",
+      "default": "'div'",
+      "class": null
+    },
+    {
+      "name": "image",
+      "description": "The component that renders the image.",
+      "default": "'img'",
+      "class": null
+    }
   ],
   "classes": [],
   "muiName": "MuiMessageAvatar",

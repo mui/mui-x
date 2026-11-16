@@ -14,6 +14,7 @@ import type { ComposerRootOwnerState } from './composer.types';
 export interface ComposerRootSlots {
   /**
    * The component that renders the root.
+   * @default 'form'
    */
   root: React.ElementType;
 }

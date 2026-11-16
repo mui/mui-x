@@ -23,6 +23,7 @@ function resolveTypingUser(
 export interface TypingIndicatorSlots {
   /**
    * The component that renders the root.
+   * @default 'div'
    */
   root: React.ElementType;
 }

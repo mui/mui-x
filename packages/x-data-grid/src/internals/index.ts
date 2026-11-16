@@ -179,7 +179,11 @@ export {
 } from '../hooks/features/listView/useGridListView';
 
 export { useTimeout } from '../hooks/utils/useTimeout';
-export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
+export {
+  useGridVisibleRows,
+  getVisibleRows,
+  getRowIndexRelativeToAllRows,
+} from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 export { usePinnedScrollOffset } from '../hooks/utils/usePinnedScrollOffset';
@@ -232,6 +236,7 @@ export {
   getGridCellElement,
   getGridRowElement,
   isEventTargetInPortal,
+  isEventTargetTextEntryElement,
 } from '../utils/domUtils';
 export {
   isNavigationKey,

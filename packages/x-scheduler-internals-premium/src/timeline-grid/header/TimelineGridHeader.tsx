@@ -36,6 +36,7 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
   const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
   const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
+  const weekend = useStore(store, schedulerPreferenceSelectors.weekend);
   const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
 
   // The header re-renders on every horizontal scroll (it subscribes to the
@@ -98,7 +99,9 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
               data-unit={level.unit}
               data-index={cell.index}
               data-unit-leaf={level.unit === timeResolution ? '' : undefined}
-              data-weekend={isDayLevel && isWeekendPlainDate(cell.plainDate) ? '' : undefined}
+              data-weekend={
+                isDayLevel && isWeekendPlainDate(cell.plainDate, weekend) ? '' : undefined
+              }
               data-current={isCurrentDay ? '' : undefined}
               aria-current={isCurrentDay ? 'date' : undefined}
               style={{ '--span': cell.spanInTicks } as React.CSSProperties}

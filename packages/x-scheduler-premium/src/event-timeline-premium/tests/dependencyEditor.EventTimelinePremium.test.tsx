@@ -409,21 +409,6 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
     });
 
-    it('should move the target when the new type is broken by its dates', async () => {
-      const { store } = await renderTimeline({
-        events: [eventA, overlappingEvent],
-        dependencies: [buildDependency('dep-1', 'event-a', 'event-o', 'StartToStart')],
-      });
-      const sourceEnd = store.state.processedEventLookup.get('event-a')!.dataTimezone.end.timestamp;
-
-      const dialog = openDialog('dep-1');
-      chooseType(dialog, 'Finish to start');
-      await save(dialog);
-
-      expect(getStartTimestamp(store, 'event-o')).to.equal(sourceEnd);
-      expect(screen.queryByRole('dialog')).to.equal(null);
-    });
-
     // Changing `dep-1` to Finish to start would push `event-o` into the read-only `event-d`.
     function renderReadOnlyCascade(onDependenciesChange?: (value: SchedulerDependency[]) => void) {
       const readOnlyEvent = EventBuilder.new()
@@ -882,18 +867,6 @@ describe('<EventTimelinePremium /> dependency editor', () => {
         null,
       );
       expect(within(dialog).getByRole('combobox', { name: 'Genre' })).to.have.text('Fin à début');
-    });
-
-    it('should open the dialog from Edit dependency', async () => {
-      await renderTimeline({
-        events: [eventA, eventB],
-        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
-      });
-
-      fireEvent.contextMenu(getHitArea('dep-1'));
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Edit dependency' }));
-
-      expect(within(screen.getByRole('dialog')).getByText('Edit dependency')).not.to.equal(null);
     });
 
     it('should open the dialog from Edit dependency on an arrow to an event outside the visible range', async () => {

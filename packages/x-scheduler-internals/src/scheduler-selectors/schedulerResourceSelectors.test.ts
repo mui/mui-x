@@ -1,4 +1,4 @@
-import { adapter, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
+import { ResourceBuilder, storeClasses } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
 
@@ -6,10 +6,7 @@ storeClasses.forEach((storeClass) => {
   describe(`schedulerResourceSelectors - ${storeClass.name}`, () => {
     describe('processedResourceFlatList', () => {
       it('should return an empty array when there are no resources', () => {
-        const state = new storeClass.Value(
-          { events: [], shouldEventRequireResource: false },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({ events: [], shouldEventRequireResource: false }).state;
         const result = schedulerResourceSelectors.processedResourceFlatList(state);
         expect(result).to.deep.equal([]);
       });
@@ -19,7 +16,7 @@ storeClasses.forEach((storeClass) => {
           { id: 'resource-1', title: 'Resource 1' },
           { id: 'resource-2', title: 'Resource 2' },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.processedResourceFlatList(state);
 
         expect(result).to.have.length(2);
@@ -39,7 +36,7 @@ storeClasses.forEach((storeClass) => {
           },
           { id: 'resource-2', title: 'Resource 2' },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.processedResourceFlatList(state);
 
         expect(result).to.have.length(4);
@@ -63,7 +60,7 @@ storeClasses.forEach((storeClass) => {
             ],
           },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.processedResourceFlatList(state);
 
         expect(result).to.have.length(3);
@@ -85,7 +82,7 @@ storeClasses.forEach((storeClass) => {
             children: [{ id: 'child-2a', title: 'Child 2a' }],
           },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.processedResourceFlatList(state);
 
         expect(result).to.have.length(4);
@@ -103,7 +100,7 @@ storeClasses.forEach((storeClass) => {
             children: [{ id: 'child-1', title: 'Child 1' }],
           },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result1 = schedulerResourceSelectors.processedResourceFlatList(state);
         const result2 = schedulerResourceSelectors.processedResourceFlatList(state);
 
@@ -114,21 +111,21 @@ storeClasses.forEach((storeClass) => {
     describe('processedResource', () => {
       it('should return null when resourceId is null', () => {
         const resources = [{ id: 'resource-1', title: 'Resource 1' }];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.processedResource(state, null);
         expect(result).to.equal(null);
       });
 
       it('should return null when resourceId is undefined', () => {
         const resources = [{ id: 'resource-1', title: 'Resource 1' }];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.processedResource(state, undefined);
         expect(result).to.equal(null);
       });
 
       it('should return null when resourceId does not exist', () => {
         const resources = [{ id: 'resource-1', title: 'Resource 1' }];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.processedResource(state, 'non-existent');
         expect(result).to.equal(null);
       });
@@ -138,7 +135,7 @@ storeClasses.forEach((storeClass) => {
           { id: 'resource-1', title: 'Resource 1' },
           { id: 'resource-2', title: 'Resource 2' },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.processedResource(state, 'resource-2');
         expect(result).to.deep.contain({ id: 'resource-2', title: 'Resource 2' });
       });
@@ -151,7 +148,7 @@ storeClasses.forEach((storeClass) => {
             children: [{ id: 'child-1', title: 'Child 1' }],
           },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.processedResource(state, 'child-1');
         expect(result).to.deep.contain({ id: 'child-1', title: 'Child 1' });
       });
@@ -159,10 +156,7 @@ storeClasses.forEach((storeClass) => {
 
     describe('processedResourceList', () => {
       it('should return an empty array when there are no resources', () => {
-        const state = new storeClass.Value(
-          { events: [], shouldEventRequireResource: false },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({ events: [], shouldEventRequireResource: false }).state;
         const result = schedulerResourceSelectors.processedResourceList(state);
         expect(result).to.deep.equal([]);
       });
@@ -176,7 +170,7 @@ storeClasses.forEach((storeClass) => {
           },
           { id: 'resource-2', title: 'Resource 2' },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.processedResourceList(state);
 
         expect(result).to.have.length(2);
@@ -186,7 +180,7 @@ storeClasses.forEach((storeClass) => {
 
       it('should return same reference when inputs have not changed', () => {
         const resources = [{ id: 'resource-1', title: 'Resource 1' }];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result1 = schedulerResourceSelectors.processedResourceList(state);
         const result2 = schedulerResourceSelectors.processedResourceList(state);
         expect(result1).to.equal(result2);
@@ -195,10 +189,7 @@ storeClasses.forEach((storeClass) => {
 
     describe('processedResourceChildrenLookup', () => {
       it('should return an empty map when there are no resources', () => {
-        const state = new storeClass.Value(
-          { events: [], shouldEventRequireResource: false },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({ events: [], shouldEventRequireResource: false }).state;
         const result = schedulerResourceSelectors.processedResourceChildrenLookup(state);
         expect(result.size).to.equal(0);
       });
@@ -208,7 +199,7 @@ storeClasses.forEach((storeClass) => {
           { id: 'resource-1', title: 'Resource 1' },
           { id: 'resource-2', title: 'Resource 2' },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.processedResourceChildrenLookup(state);
         expect(result.size).to.equal(0);
       });
@@ -224,7 +215,7 @@ storeClasses.forEach((storeClass) => {
             ],
           },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.processedResourceChildrenLookup(state);
 
         expect(result.size).to.equal(1);
@@ -249,7 +240,7 @@ storeClasses.forEach((storeClass) => {
             ],
           },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.processedResourceChildrenLookup(state);
 
         expect(result.size).to.equal(2);
@@ -265,117 +256,9 @@ storeClasses.forEach((storeClass) => {
             children: [{ id: 'child-1', title: 'Child 1' }],
           },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result1 = schedulerResourceSelectors.processedResourceChildrenLookup(state);
         const result2 = schedulerResourceSelectors.processedResourceChildrenLookup(state);
-        expect(result1).to.equal(result2);
-      });
-    });
-
-    describe('resourceChildrenIds', () => {
-      it('should return an empty array when resource has no children', () => {
-        const resources = [{ id: 'resource-1', title: 'Resource 1' }];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
-        const result = schedulerResourceSelectors.resourceChildrenIds(state, 'resource-1');
-        expect(result).to.deep.equal([]);
-      });
-
-      it('should return an empty array when resource does not exist', () => {
-        const resources = [{ id: 'resource-1', title: 'Resource 1' }];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
-        const result = schedulerResourceSelectors.resourceChildrenIds(state, 'non-existent');
-        expect(result).to.deep.equal([]);
-      });
-
-      it('should return children ids when resource has children', () => {
-        const resources = [
-          {
-            id: 'parent-1',
-            title: 'Parent 1',
-            children: [
-              { id: 'child-1', title: 'Child 1' },
-              { id: 'child-2', title: 'Child 2' },
-            ],
-          },
-        ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
-        const result = schedulerResourceSelectors.resourceChildrenIds(state, 'parent-1');
-        expect(result).to.deep.equal(['child-1', 'child-2']);
-      });
-    });
-
-    describe('resourceParentIdLookup', () => {
-      it('should return an empty map when there are no resources', () => {
-        const state = new storeClass.Value(
-          { events: [], shouldEventRequireResource: false },
-          adapter,
-        ).state;
-        const result = schedulerResourceSelectors.resourceParentIdLookup(state);
-        expect(result.size).to.equal(0);
-      });
-
-      it('should return an empty map when resources have no children', () => {
-        const resources = [
-          { id: 'resource-1', title: 'Resource 1' },
-          { id: 'resource-2', title: 'Resource 2' },
-        ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
-        const result = schedulerResourceSelectors.resourceParentIdLookup(state);
-        expect(result.size).to.equal(0);
-      });
-
-      it('should return a map with child ids as keys and parent ids as values', () => {
-        const resources = [
-          {
-            id: 'parent-1',
-            title: 'Parent 1',
-            children: [
-              { id: 'child-1', title: 'Child 1' },
-              { id: 'child-2', title: 'Child 2' },
-            ],
-          },
-        ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
-        const result = schedulerResourceSelectors.resourceParentIdLookup(state);
-
-        expect(result.size).to.equal(2);
-        expect(result.get('child-1')).to.equal('parent-1');
-        expect(result.get('child-2')).to.equal('parent-1');
-      });
-
-      it('should handle deeply nested resources', () => {
-        const resources = [
-          {
-            id: 'grandparent',
-            title: 'Grandparent',
-            children: [
-              {
-                id: 'parent',
-                title: 'Parent',
-                children: [{ id: 'child', title: 'Child' }],
-              },
-            ],
-          },
-        ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
-        const result = schedulerResourceSelectors.resourceParentIdLookup(state);
-
-        expect(result.size).to.equal(2);
-        expect(result.get('parent')).to.equal('grandparent');
-        expect(result.get('child')).to.equal('parent');
-      });
-
-      it('should return same reference when inputs have not changed', () => {
-        const resources = [
-          {
-            id: 'parent-1',
-            title: 'Parent 1',
-            children: [{ id: 'child-1', title: 'Child 1' }],
-          },
-        ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
-        const result1 = schedulerResourceSelectors.resourceParentIdLookup(state);
-        const result2 = schedulerResourceSelectors.resourceParentIdLookup(state);
         expect(result1).to.equal(result2);
       });
     });
@@ -386,7 +269,7 @@ storeClasses.forEach((storeClass) => {
           { id: 'resource-1', title: 'Resource 1' },
           { id: 'resource-2', title: 'Resource 2' },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.visibleMap(state);
         expect(result['resource-1']).to.not.equal(false);
         expect(result['resource-2']).to.not.equal(false);
@@ -397,10 +280,11 @@ storeClasses.forEach((storeClass) => {
           { id: 'resource-1', title: 'Resource 1' },
           { id: 'resource-2', title: 'Resource 2' },
         ];
-        const state = new storeClass.Value(
-          { events: [], resources, defaultVisibleResources: { 'resource-1': false } },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({
+          events: [],
+          resources,
+          defaultVisibleResources: { 'resource-1': false },
+        }).state;
         const result = schedulerResourceSelectors.visibleMap(state);
         expect(result['resource-1']).to.equal(false);
         expect(result['resource-2']).to.not.equal(false);
@@ -417,10 +301,11 @@ storeClasses.forEach((storeClass) => {
             ],
           },
         ];
-        const state = new storeClass.Value(
-          { events: [], resources, defaultVisibleResources: { 'parent-1': false } },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({
+          events: [],
+          resources,
+          defaultVisibleResources: { 'parent-1': false },
+        }).state;
         const result = schedulerResourceSelectors.visibleMap(state);
         expect(result['parent-1']).to.equal(false);
         expect(result['child-1']).to.equal(false);
@@ -441,10 +326,11 @@ storeClasses.forEach((storeClass) => {
             ],
           },
         ];
-        const state = new storeClass.Value(
-          { events: [], resources, defaultVisibleResources: { grandparent: false } },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({
+          events: [],
+          resources,
+          defaultVisibleResources: { grandparent: false },
+        }).state;
         const result = schedulerResourceSelectors.visibleMap(state);
         expect(result.grandparent).to.equal(false);
         expect(result.parent).to.equal(false);
@@ -462,10 +348,11 @@ storeClasses.forEach((storeClass) => {
             ],
           },
         ];
-        const state = new storeClass.Value(
-          { events: [], resources, defaultVisibleResources: { 'child-1': false } },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({
+          events: [],
+          resources,
+          defaultVisibleResources: { 'child-1': false },
+        }).state;
         const result = schedulerResourceSelectors.visibleMap(state);
         expect(result.parent).to.not.equal(false);
         expect(result['child-1']).to.equal(false);
@@ -480,14 +367,11 @@ storeClasses.forEach((storeClass) => {
             children: [{ id: 'child', title: 'Child' }],
           },
         ];
-        const state = new storeClass.Value(
-          {
-            events: [],
-            resources,
-            defaultVisibleResources: { parent: false, child: true },
-          },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({
+          events: [],
+          resources,
+          defaultVisibleResources: { parent: false, child: true },
+        }).state;
         const result = schedulerResourceSelectors.visibleMap(state);
         expect(result.parent).to.equal(false);
         expect(result.child).to.equal(false);
@@ -512,10 +396,11 @@ storeClasses.forEach((storeClass) => {
             ],
           },
         ];
-        const state = new storeClass.Value(
-          { events: [], resources, defaultVisibleResources: { 'parent-a': false } },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({
+          events: [],
+          resources,
+          defaultVisibleResources: { 'parent-a': false },
+        }).state;
         const result = schedulerResourceSelectors.visibleMap(state);
         expect(result.grandparent).to.not.equal(false);
         expect(result['parent-a']).to.equal(false);
@@ -532,10 +417,11 @@ storeClasses.forEach((storeClass) => {
             children: [{ id: 'child', title: 'Child' }],
           },
         ];
-        const state = new storeClass.Value(
-          { events: [], resources, defaultVisibleResources: { parent: false } },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({
+          events: [],
+          resources,
+          defaultVisibleResources: { parent: false },
+        }).state;
         const result1 = schedulerResourceSelectors.visibleMap(state);
         const result2 = schedulerResourceSelectors.visibleMap(state);
         expect(result1).to.equal(result2);
@@ -546,10 +432,11 @@ storeClasses.forEach((storeClass) => {
           { id: 'resource-1', title: 'Resource 1' },
           { id: 'resource-2', title: 'Resource 2' },
         ];
-        const state = new storeClass.Value(
-          { events: [], resources, defaultVisibleResources: { 'resource-1': false } },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({
+          events: [],
+          resources,
+          defaultVisibleResources: { 'resource-1': false },
+        }).state;
         const result = schedulerResourceSelectors.visibleMap(state);
         // Fast path should return the raw state.visibleResources reference
         expect(result).to.equal(state.visibleResources);
@@ -558,10 +445,7 @@ storeClasses.forEach((storeClass) => {
 
     describe('resourceDepthLookup', () => {
       it('should return an empty map when there are no resources', () => {
-        const state = new storeClass.Value(
-          { events: [], shouldEventRequireResource: false },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({ events: [], shouldEventRequireResource: false }).state;
         const result = schedulerResourceSelectors.resourceDepthLookup(state);
         expect(result.size).to.equal(0);
       });
@@ -571,7 +455,7 @@ storeClasses.forEach((storeClass) => {
           { id: 'resource-1', title: 'Resource 1' },
           { id: 'resource-2', title: 'Resource 2' },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.resourceDepthLookup(state);
         expect(result.get('resource-1')).to.equal(0);
         expect(result.get('resource-2')).to.equal(0);
@@ -588,7 +472,7 @@ storeClasses.forEach((storeClass) => {
             ],
           },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.resourceDepthLookup(state);
         expect(result.get('parent-1')).to.equal(0);
         expect(result.get('child-1')).to.equal(1);
@@ -609,7 +493,7 @@ storeClasses.forEach((storeClass) => {
             ],
           },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.resourceDepthLookup(state);
         expect(result.get('grandparent')).to.equal(0);
         expect(result.get('parent')).to.equal(1);
@@ -624,7 +508,7 @@ storeClasses.forEach((storeClass) => {
             children: [{ id: 'child-1', title: 'Child 1' }],
           },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result1 = schedulerResourceSelectors.resourceDepthLookup(state);
         const result2 = schedulerResourceSelectors.resourceDepthLookup(state);
         expect(result1).to.equal(result2);
@@ -632,14 +516,7 @@ storeClasses.forEach((storeClass) => {
     });
 
     describe('resourceDepth', () => {
-      it('should return 0 for a root resource', () => {
-        const resources = [{ id: 'resource-1', title: 'Resource 1' }];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
-        const result = schedulerResourceSelectors.resourceDepth(state, 'resource-1');
-        expect(result).to.equal(0);
-      });
-
-      it('should return 1 for a child resource', () => {
+      it('should return the depth of a nested resource', () => {
         const resources = [
           {
             id: 'parent',
@@ -647,33 +524,13 @@ storeClasses.forEach((storeClass) => {
             children: [{ id: 'child', title: 'Child' }],
           },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
-        const result = schedulerResourceSelectors.resourceDepth(state, 'child');
-        expect(result).to.equal(1);
-      });
-
-      it('should return 2 for a grandchild resource', () => {
-        const resources = [
-          {
-            id: 'grandparent',
-            title: 'Grandparent',
-            children: [
-              {
-                id: 'parent',
-                title: 'Parent',
-                children: [{ id: 'child', title: 'Child' }],
-              },
-            ],
-          },
-        ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
-        const result = schedulerResourceSelectors.resourceDepth(state, 'child');
-        expect(result).to.equal(2);
+        const state = new storeClass.Value({ events: [], resources }).state;
+        expect(schedulerResourceSelectors.resourceDepth(state, 'child')).to.equal(1);
       });
 
       it('should return 0 for a non-existent resource', () => {
         const resources = [{ id: 'resource-1', title: 'Resource 1' }];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.resourceDepth(state, 'non-existent');
         expect(result).to.equal(0);
       });
@@ -682,35 +539,35 @@ storeClasses.forEach((storeClass) => {
     describe('defaultEventColor', () => {
       it('should return state eventColor when resourceId is null', () => {
         const resources = [{ id: 'resource-1', title: 'Resource 1', eventColor: 'red' }];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.defaultEventColor(state, null);
         expect(result).to.equal(state.eventColor);
       });
 
       it('should return state eventColor when resourceId is undefined', () => {
         const resources = [{ id: 'resource-1', title: 'Resource 1', eventColor: 'red' }];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.defaultEventColor(state, undefined);
         expect(result).to.equal(state.eventColor);
       });
 
       it('should return state eventColor when resource has no eventColor', () => {
         const resources = [{ id: 'resource-1', title: 'Resource 1' }];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.defaultEventColor(state, 'resource-1');
         expect(result).to.equal(state.eventColor);
       });
 
       it('should return resource eventColor when resource has eventColor', () => {
         const resources = [{ id: 'resource-1', title: 'Resource 1', eventColor: 'purple' }];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.defaultEventColor(state, 'resource-1');
         expect(result).to.equal('purple');
       });
 
       it('should return state eventColor when resourceId does not exist', () => {
         const resources = [{ id: 'resource-1', title: 'Resource 1', eventColor: 'red' }];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.defaultEventColor(state, 'non-existent');
         expect(result).to.equal(state.eventColor);
       });
@@ -724,7 +581,7 @@ storeClasses.forEach((storeClass) => {
             children: [{ id: 'child-resource', title: 'Child Resource' }],
           },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.defaultEventColor(state, 'child-resource');
         expect(result).to.equal('purple');
       });
@@ -744,7 +601,7 @@ storeClasses.forEach((storeClass) => {
             ],
           },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.defaultEventColor(state, 'child-resource');
         expect(result).to.equal('blue');
       });
@@ -764,7 +621,7 @@ storeClasses.forEach((storeClass) => {
             ],
           },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.defaultEventColor(state, 'grandchild-resource');
         expect(result).to.equal('purple');
       });
@@ -785,7 +642,7 @@ storeClasses.forEach((storeClass) => {
             ],
           },
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         const result = schedulerResourceSelectors.defaultEventColor(state, 'grandchild-resource');
         expect(result).to.equal('blue');
       });
@@ -793,10 +650,7 @@ storeClasses.forEach((storeClass) => {
 
     describe('isResourceReadOnly', () => {
       it('should return false by default', () => {
-        const state = new storeClass.Value(
-          { events: [], shouldEventRequireResource: false },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({ events: [], shouldEventRequireResource: false }).state;
         expect(schedulerResourceSelectors.isResourceReadOnly(state, 'does-not-exist')).to.equal(
           false,
         );
@@ -804,7 +658,7 @@ storeClasses.forEach((storeClass) => {
 
       it('should return true when the resource has areEventsReadOnly set', () => {
         const resource = ResourceBuilder.new().areEventsReadOnly().build();
-        const state = new storeClass.Value({ events: [], resources: [resource] }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources: [resource] }).state;
         expect(schedulerResourceSelectors.isResourceReadOnly(state, resource.id)).to.equal(true);
       });
 
@@ -814,18 +668,18 @@ storeClasses.forEach((storeClass) => {
           .areEventsReadOnly()
           .children([childResource])
           .build();
-        const state = new storeClass.Value({ events: [], resources: [parentResource] }, adapter)
-          .state;
+        const state = new storeClass.Value({ events: [], resources: [parentResource] }).state;
         expect(schedulerResourceSelectors.isResourceReadOnly(state, childResource.id)).to.equal(
           true,
         );
       });
 
       it('should fall back to the scheduler readOnly when there is no resource', () => {
-        const state = new storeClass.Value(
-          { events: [], readOnly: true, shouldEventRequireResource: false },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({
+          events: [],
+          readOnly: true,
+          shouldEventRequireResource: false,
+        }).state;
         expect(schedulerResourceSelectors.isResourceReadOnly(state, undefined)).to.equal(true);
       });
     });
@@ -838,45 +692,43 @@ storeClasses.forEach((storeClass) => {
       const resources = [parent, leaf];
 
       it('should return true when a resource has at least one visible child', () => {
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         expect(schedulerResourceSelectors.resourceHasVisibleChildren(state, parent.id)).to.equal(
           true,
         );
       });
 
       it('should return true when only some children are hidden', () => {
-        const state = new storeClass.Value(
-          { events: [], resources, defaultVisibleResources: { [child1.id]: false } },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({
+          events: [],
+          resources,
+          defaultVisibleResources: { [child1.id]: false },
+        }).state;
         expect(schedulerResourceSelectors.resourceHasVisibleChildren(state, parent.id)).to.equal(
           true,
         );
       });
 
       it('should return false when all children are hidden', () => {
-        const state = new storeClass.Value(
-          {
-            events: [],
-            resources,
-            defaultVisibleResources: { [child1.id]: false, [child2.id]: false },
-          },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({
+          events: [],
+          resources,
+          defaultVisibleResources: { [child1.id]: false, [child2.id]: false },
+        }).state;
         expect(schedulerResourceSelectors.resourceHasVisibleChildren(state, parent.id)).to.equal(
           false,
         );
       });
 
       it('should return false for a leaf resource', () => {
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         expect(schedulerResourceSelectors.resourceHasVisibleChildren(state, leaf.id)).to.equal(
           false,
         );
       });
 
       it('should return false for an unknown resource id', () => {
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         expect(
           schedulerResourceSelectors.resourceHasVisibleChildren(state, 'non-existent'),
         ).to.equal(false);
@@ -887,7 +739,7 @@ storeClasses.forEach((storeClass) => {
       it('should return true when at least one resource has children', () => {
         const child = ResourceBuilder.new().title('Child').build();
         const parent = ResourceBuilder.new().title('Parent').children([child]).build();
-        const state = new storeClass.Value({ events: [], resources: [parent] }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources: [parent] }).state;
         expect(schedulerResourceSelectors.hasNestedResources(state)).to.equal(true);
       });
 
@@ -896,7 +748,7 @@ storeClasses.forEach((storeClass) => {
           ResourceBuilder.new().title('A').build(),
           ResourceBuilder.new().title('B').build(),
         ];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         expect(schedulerResourceSelectors.hasNestedResources(state)).to.equal(false);
       });
     });
@@ -906,23 +758,25 @@ storeClasses.forEach((storeClass) => {
       const resources = [parent];
 
       it('should return false by default', () => {
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const state = new storeClass.Value({ events: [], resources }).state;
         expect(schedulerResourceSelectors.isResourceCollapsed(state, parent.id)).to.equal(false);
       });
 
       it('should return true when registered as collapsed', () => {
-        const state = new storeClass.Value(
-          { events: [], resources, defaultCollapsedResources: { [parent.id]: true } },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({
+          events: [],
+          resources,
+          defaultCollapsedResources: { [parent.id]: true },
+        }).state;
         expect(schedulerResourceSelectors.isResourceCollapsed(state, parent.id)).to.equal(true);
       });
 
       it('should return false when explicitly registered as expanded', () => {
-        const state = new storeClass.Value(
-          { events: [], resources, defaultCollapsedResources: { [parent.id]: false } },
-          adapter,
-        ).state;
+        const state = new storeClass.Value({
+          events: [],
+          resources,
+          defaultCollapsedResources: { [parent.id]: false },
+        }).state;
         expect(schedulerResourceSelectors.isResourceCollapsed(state, parent.id)).to.equal(false);
       });
     });

@@ -90,9 +90,12 @@ describe('useComponentRenderer', () => {
         render={<div style={{ backgroundColor: 'blue', outline: 'blue solid 1px' }} />}
       />,
     );
-    expect(screen.getByTestId('rendered-element')).to.have.attribute(
-      'style',
-      'color: blue; outline: blue solid 1px; background-color: blue;',
-    );
+    expect(screen.getByTestId('rendered-element')).toHaveInlineStyle({
+      color: 'blue',
+      backgroundColor: 'blue',
+      outlineColor: 'blue',
+      outlineStyle: 'solid',
+      outlineWidth: '1px',
+    });
   });
 });

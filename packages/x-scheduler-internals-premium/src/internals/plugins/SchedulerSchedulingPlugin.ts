@@ -165,7 +165,6 @@ export class SchedulerSchedulingPlugin<
     let cascaded: SchedulerEventUpdatedProperties[] = [];
     if (updated && updated.length > 0 && this.store.state.dependencyModelList.length > 0) {
       const result = computeAutoSchedulingCascade({
-        adapter: this.store.state.adapter,
         processedEventLookup: this.store.state.processedEventLookup,
         activeDependenciesBySource: eventTimelinePremiumDependencySelectors.activeModelListBySource(
           this.store.state,
@@ -342,13 +341,12 @@ export class SchedulerSchedulingPlugin<
     nextList: SchedulerDependency[],
     enforced: SchedulerDependency | null,
   ): SchedulerDependencyCascadeRejection | null {
-    const { adapter, processedEventLookup } = this.store.state;
+    const { processedEventLookup } = this.store.state;
     const activeDependencies = getActiveDependencies(
       buildDependenciesState(nextList).dependencyModelLookup,
       processedEventLookup,
     );
     const result = computeAutoSchedulingCascade({
-      adapter,
       processedEventLookup,
       activeDependenciesBySource: groupByEventId(activeDependencies, 'source'),
       activeDependenciesByTarget: groupByEventId(activeDependencies, 'target'),

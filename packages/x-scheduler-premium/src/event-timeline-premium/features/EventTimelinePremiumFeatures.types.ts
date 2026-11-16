@@ -1,19 +1,7 @@
 import type * as React from 'react';
-import type { SchedulerRecurringEventsPluginInterface } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import type { EventTimelinePremiumDependenciesStoreFeature } from '@mui/x-scheduler-internals-premium/internals';
-import type { EventEditingOptionalRenderers } from '@mui/x-scheduler/internals';
-
-export interface EventTimelinePremiumRecurringEventsFeature {
-  /**
-   * Expands the events with an `rrule` into occurrences.
-   */
-  store: SchedulerRecurringEventsPluginInterface;
-  /**
-   * The recurrence tab and the scope dialog of the event editing surfaces.
-   */
-  optionalRenderers: EventEditingOptionalRenderers;
-}
+import type { SchedulerRecurringEventsFeature } from '../../internals/features/SchedulerRecurringEventsFeature.types';
 
 /**
  * The value of `dependenciesFeature`.
@@ -39,7 +27,7 @@ export interface EventTimelinePremiumFeatures {
   /**
    * Recurring events support. Import it from `@mui/x-scheduler-premium/recurring-events`.
    */
-  recurringEvents?: EventTimelinePremiumRecurringEventsFeature;
+  recurringEvents?: SchedulerRecurringEventsFeature;
   /**
    * Dependencies between events. Import it from `@mui/x-scheduler-premium/dependencies`.
    */

@@ -8,6 +8,7 @@ import type { MessageActionsOwnerState } from './message.types';
 export interface MessageActionsSlots {
   /**
    * The component that renders the actions.
+   * @default 'div'
    */
   actions: React.ElementType;
 }

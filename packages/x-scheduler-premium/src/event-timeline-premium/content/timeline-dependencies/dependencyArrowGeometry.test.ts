@@ -1,4 +1,4 @@
-import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
+import { addDays, endOfDay, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import type {
   SchedulerEventOccurrence,
   SchedulerProcessedEvent,
@@ -57,6 +57,7 @@ describe('dependencyArrowGeometry', () => {
       expect(arrows[0].maxXFraction).to.equal(780 / EVENTS_WIDTH);
       expect(arrows[0].minRowIndex).to.equal(0);
       expect(arrows[0].maxRowIndex).to.equal(0);
+      expect(arrows[0].targetEdge).to.equal('start');
     });
 
     it('should build the path and the hit-area lazily', () => {
@@ -72,18 +73,6 @@ describe('dependencyArrowGeometry', () => {
 
       expect(Object.getOwnPropertyDescriptor(arrows[0], 'd')!.get).to.be.a('function');
       expect(Object.getOwnPropertyDescriptor(arrows[0], 'hitD')!.get).to.be.a('function');
-    });
-
-    it('should expose the start edge as the target edge of a FinishToStart arrow', () => {
-      const arrows = computeDependencyArrows(
-        buildResolver({
-          resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventB]) }],
-          rowPositions: [0],
-        }),
-        [buildDependency('dep-1', 'event-a', 'event-b')],
-      );
-
-      expect(arrows[0].targetEdge).to.equal('start');
     });
 
     it('should connect the end edges of both events for a FinishToFinish dependency', () => {
@@ -932,8 +921,8 @@ describe('dependencyArrowGeometry', () => {
       // Window 8:00 → 20:00 on a single day: 720 axis minutes, eventsWidth 720 → 1px
       // per axis minute.
       const TRIMMED_AXIS: TimelineAxis = {
-        start: adapter.getTime(collectionStart),
-        end: adapter.getTime(collectionEnd),
+        start: collectionStart.getTime(),
+        end: collectionEnd.getTime(),
         timezone: 'default',
         dayStartMinute: 480,
         dayEndMinute: 1200,
@@ -1016,7 +1005,7 @@ describe('dependencyArrowGeometry', () => {
         // Two-day axis: 21:00–23:00 on the first day falls in the night the window hides.
         const twoDayAxis = {
           ...TRIMMED_AXIS,
-          end: adapter.getTime(adapter.endOfDay(adapter.addDays(collectionStart, 1))),
+          end: endOfDay(addDays(collectionStart, 1)).getTime(),
         };
         const hiddenSource = EventBuilder.new()
           .id('event-hidden')
@@ -1049,12 +1038,11 @@ describe('dependencyArrowGeometry', () => {
         // below the rendered event.
         const twoDayAxis = {
           ...TRIMMED_AXIS,
-          end: adapter.getTime(adapter.endOfDay(adapter.addDays(collectionStart, 1))),
+          end: endOfDay(addDays(collectionStart, 1)).getTime(),
         };
         const getTwoDayOccurrences = (events: SchedulerProcessedEvent[]) =>
           getOccurrencesFromEvents({
-            adapter,
-            start: adapter.getTime(collectionStart),
+            start: collectionStart.getTime(),
             end: twoDayAxis.end,
             eventRangeIndex: createEventRangeIndex(events, false),
             displayTimezone: 'default',

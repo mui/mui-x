@@ -68,6 +68,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "default": "[]"
     },
+    "features": { "type": { "name": "object" } },
     "localeText": { "type": { "name": "object" } },
     "onCollapsedResourcesChange": { "type": { "name": "func" } },
     "onEventEditingStart": { "type": { "name": "func" } },

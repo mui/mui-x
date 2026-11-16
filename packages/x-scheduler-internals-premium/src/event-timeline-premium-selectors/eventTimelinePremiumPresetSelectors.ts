@@ -18,8 +18,6 @@ import {
 } from '../internals/utils/preset-utils';
 
 export const eventTimelinePremiumPresetSelectors = {
-  preset: (state: State) => state.preset,
-  presets: (state: State) => state.presets,
   config: createSelectorMemoized(
     // Read in the display timezone, like the visible date of the Event Calendar views.
     schedulerOtherSelectors.visiblePlainDate,

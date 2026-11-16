@@ -1,4 +1,4 @@
-import { adapter } from 'test/utils/scheduler';
+import { createDate } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import type { SchedulerEventSide } from '../../models';
 import { clampResizedEventEdge, isResizeHandlerEnabled } from './resize-utils';
@@ -39,7 +39,7 @@ describe('isResizeHandlerEnabled', () => {
 });
 
 describe('clampResizedEventEdge', () => {
-  const toTimestamp = (value: string) => adapter.getTime(adapter.date(value, 'default'));
+  const toTimestamp = (value: string) => createDate(value).getTime();
   const start = toTimestamp('2024-01-15T10:00:00');
   const end = toTimestamp('2024-01-15T11:00:00');
   const precisionMinute = 15;

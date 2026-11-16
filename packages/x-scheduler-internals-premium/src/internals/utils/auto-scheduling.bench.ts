@@ -1,5 +1,5 @@
 import { describe, test } from 'vitest';
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { addDays, EventBuilder } from 'test/utils/scheduler';
 import type { SchedulerDependency } from '../../models';
 import { groupByEventId } from './dependency-utils';
 import { computeAutoSchedulingCascade } from './auto-scheduling';
@@ -41,7 +41,6 @@ describe.each([
     lagUnit: 'day',
   }));
   const parameters = {
-    adapter,
     processedEventLookup: new Map(events.map((event) => [event.id, event])),
     activeDependenciesBySource: groupByEventId(dependencies, 'source'),
     activeDependenciesByTarget: groupByEventId(dependencies, 'target'),
@@ -51,8 +50,8 @@ describe.each([
     updated: [
       {
         id: 0,
-        start: adapter.addDays(events[0].dataTimezone.start.value, 3),
-        end: adapter.addDays(events[0].dataTimezone.end.value, 3),
+        start: addDays(events[0].dataTimezone.start.value, 3),
+        end: addDays(events[0].dataTimezone.end.value, 3),
       },
     ],
   };

@@ -1,14 +1,13 @@
-import type {
-  SchedulerProcessedDay,
-  TemporalSupportedObject,
-} from '@mui/x-scheduler-internals/models';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import type { SchedulerProcessedDay } from '@mui/x-scheduler-internals/models';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
-import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 
 /**
- * The day of a view starting at `date`, as the day lists build it.
+ * The day of a view starting at `date`, as the day lists build it in `timezone`.
  */
-export function processDay(date: TemporalSupportedObject, adapter: Adapter): SchedulerProcessedDay {
-  return { ...processDate(date, adapter), plainDate: buildTemporalPlainDate(adapter, date) };
+export function processDay(date: Date, timezone = 'default'): SchedulerProcessedDay {
+  return {
+    ...processDate(date, timezone),
+    plainDate: toPlainDate(date.getTime(), timezone),
+  };
 }

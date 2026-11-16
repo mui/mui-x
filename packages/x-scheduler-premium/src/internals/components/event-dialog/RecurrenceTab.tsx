@@ -24,7 +24,6 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   schedulerOtherSelectors,
   schedulerPreferenceSelectors,
@@ -32,11 +31,10 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getMonthlyReference, getWeeklyDays } from '@mui/x-scheduler-internals-premium/internals';
 import {
-  buildTemporalPlainDate,
-  createAdapterDate,
   formatWeekday,
   formatWeekdayShort,
   getEndOfDayMs,
+  toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import type { EndsSelection } from '@mui/x-scheduler/internals';
 import {
@@ -195,7 +193,6 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const { occurrence, tabValue } = props;
 
   // Context hooks
-  const adapter = useAdapterContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
@@ -215,7 +212,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     validate: (value, allValues) =>
       allValues.recurrenceSelection === 'custom' &&
       value.until != null &&
-      !adapter.isValid(value.until)
+      Number.isNaN(value.until.getTime())
         ? localeText.invalidDateError
         : null,
   });
@@ -328,11 +325,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     switch (endsSelection) {
       case 'until': {
         // The end of the event's last day, in its own timezone.
-        const until = createAdapterDate(
-          adapter,
-          getEndOfDayMs(ruleBounds.end, eventTimezone),
-          eventTimezone,
-        );
+        const until = new Date(getEndOfDayMs(ruleBounds.end, eventTimezone));
         updateCustomDraft({ until, count: undefined });
         break;
       }
@@ -359,7 +352,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const handleChangeUntil = (event: React.ChangeEvent<HTMLInputElement>) => {
     const untilValue = event.currentTarget.value;
     // The chosen day is the last one the series runs on, in the event's timezone.
-    updateCustomDraft({ until: getRecurrenceUntil(adapter, untilValue, eventTimezone) });
+    updateCustomDraft({ until: getRecurrenceUntil(untilValue, eventTimezone) });
   };
 
   const handleChangeWeeklyDays = (dayCode: RecurringEventWeekDayCode) => {
@@ -676,8 +669,10 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
               <TextField
                 type="date"
                 value={
-                  customEndsValue === 'until' && adapter.isValid(rruleDraft.until ?? null)
-                    ? buildTemporalPlainDate(adapter, rruleDraft.until!).toString()
+                  customEndsValue === 'until' &&
+                  rruleDraft.until != null &&
+                  !Number.isNaN(rruleDraft.until.getTime())
+                    ? toPlainDate(rruleDraft.until.getTime(), eventTimezone).toString()
                     : ''
                 }
                 onChange={handleChangeUntil}

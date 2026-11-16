@@ -78,12 +78,30 @@ describe('getPlainDateKey', () => {
 });
 
 describe('isWeekendPlainDate', () => {
-  it('should return false for a weekday', () => {
-    expect(isWeekendPlainDate(BaseTemporal.PlainDate.from('2025-01-08'))).to.equal(false); // Wednesday
+  const wednesday = BaseTemporal.PlainDate.from('2025-01-08');
+  const friday = BaseTemporal.PlainDate.from('2025-01-10');
+  const saturday = BaseTemporal.PlainDate.from('2025-01-11');
+  const sunday = BaseTemporal.PlainDate.from('2025-01-12');
+
+  it('should return false for a day outside the weekend', () => {
+    expect(isWeekendPlainDate(wednesday, [6, 7])).to.equal(false);
+    expect(isWeekendPlainDate(friday, [6, 7])).to.equal(false);
   });
 
-  it('should return true for Saturday and Sunday', () => {
-    expect(isWeekendPlainDate(BaseTemporal.PlainDate.from('2025-01-11'))).to.equal(true);
-    expect(isWeekendPlainDate(BaseTemporal.PlainDate.from('2025-01-12'))).to.equal(true);
+  it('should return true for the days of the weekend', () => {
+    expect(isWeekendPlainDate(saturday, [6, 7])).to.equal(true);
+    expect(isWeekendPlainDate(sunday, [6, 7])).to.equal(true);
+  });
+
+  it('should follow a weekend on Friday and Saturday', () => {
+    expect(isWeekendPlainDate(friday, [5, 6])).to.equal(true);
+    expect(isWeekendPlainDate(saturday, [5, 6])).to.equal(true);
+    expect(isWeekendPlainDate(sunday, [5, 6])).to.equal(false);
+  });
+
+  it('should follow a weekend of one day', () => {
+    expect(isWeekendPlainDate(friday, [5])).to.equal(true);
+    expect(isWeekendPlainDate(saturday, [5])).to.equal(false);
+    expect(isWeekendPlainDate(sunday, [5])).to.equal(false);
   });
 });

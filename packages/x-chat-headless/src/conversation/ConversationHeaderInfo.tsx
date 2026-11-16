@@ -8,6 +8,7 @@ import type { ConversationHeaderInfoOwnerState } from './conversation.types';
 export interface ConversationHeaderInfoSlots {
   /**
    * The component that renders the header info.
+   * @default 'div'
    */
   headerInfo: React.ElementType;
 }

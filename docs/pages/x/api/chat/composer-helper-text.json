@@ -6,6 +6,7 @@
     {
       "name": "helperText",
       "description": "The component that renders the helper text.",
+      "default": "'div'; a styled 'p' in `ChatComposerHelperText`",
       "class": null
     }
   ],

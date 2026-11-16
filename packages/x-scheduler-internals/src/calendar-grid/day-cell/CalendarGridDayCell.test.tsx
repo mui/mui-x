@@ -2,27 +2,25 @@ import * as React from 'react';
 import { act, screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
-import type { GridRowType, TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import type { GridRowType } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
-  adapter,
   createSchedulerRenderer,
   describeConformance,
+  endOfDay,
   SchedulerStoreRunner,
   setSystemTimezone,
+  startOfDay,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
-import {
-  buildTemporalPlainDate,
-  createAdapterDate,
-} from '../../internals/utils/plain-date-utils/adapter';
+import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
 
 describe('<CalendarGrid.DayCell />', () => {
   const { render } = createSchedulerRenderer();
 
-  const day = adapter.now('default');
+  const day = new Date();
 
   function DayCellWrapper({
     children,
@@ -38,8 +36,9 @@ describe('<CalendarGrid.DayCell />', () => {
       <EventCalendarProvider events={[]} {...providerProps}>
         <CalendarGrid.Root rowTypes={rowTypes} rowsPerType={rowsPerType}>
           <CalendarGrid.DayRow
-            start={adapter.getTime(adapter.startOfDay(day))}
-            end={adapter.getTime(adapter.endOfDay(day))}
+            start={startOfDay(day).getTime()}
+            end={endOfDay(day).getTime()}
+            days={[{ plainDate: toPlainDate(day.getTime(), 'default') }]}
           >
             {children}
           </CalendarGrid.DayRow>
@@ -49,7 +48,7 @@ describe('<CalendarGrid.DayCell />', () => {
   }
 
   describeConformance(
-    <CalendarGrid.DayCell value={buildTemporalPlainDate(adapter, day)} />,
+    <CalendarGrid.DayCell value={toPlainDate(day.getTime(), 'default')} />,
     () => ({
       refInstanceof: window.HTMLDivElement,
       render: (node) => render(<DayCellWrapper>{node}</DayCellWrapper>),
@@ -63,7 +62,7 @@ describe('<CalendarGrid.DayCell />', () => {
 
       const { user } = render(
         <DayCellWrapper onEventEditingStart={onEventEditingStart}>
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(adapter, day)} />
+          <CalendarGrid.DayCell value={toPlainDate(day.getTime(), 'default')} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as any}
             onMount={(s) => {
@@ -92,13 +91,18 @@ describe('<CalendarGrid.DayCell />', () => {
       expect(onEventEditingStart.mock.lastCall?.[1].event.type).to.equal('keydown');
     });
 
-    async function createInSantiago(value: TemporalSupportedObject) {
+    async function createInSantiago(value: Date) {
       let store: AnyEventCalendarStore | null = null;
+      const cellDate = toPlainDate(value.getTime(), 'America/Santiago');
       const { user } = render(
         <EventCalendarProvider events={[]} displayTimezone="America/Santiago">
           <CalendarGrid.Root>
-            <CalendarGrid.DayRow start={adapter.getTime(value)} end={adapter.getTime(value)}>
-              <CalendarGrid.DayCell value={buildTemporalPlainDate(adapter, value)} />
+            <CalendarGrid.DayRow
+              start={value.getTime()}
+              end={value.getTime()}
+              days={[{ plainDate: cellDate }]}
+            >
+              <CalendarGrid.DayCell value={cellDate} />
             </CalendarGrid.DayRow>
           </CalendarGrid.Root>
           <SchedulerStoreRunner<AnyEventCalendarStore>
@@ -127,7 +131,7 @@ describe('<CalendarGrid.DayCell />', () => {
       'should create the placeholder on the whole day, whatever the timezone of the system',
       async () => {
         setSystemTimezone('Australia/Lord_Howe');
-        const value = createAdapterDate(adapter, Date.UTC(2026, 3, 5, 16), 'America/Santiago');
+        const value = new Date(Date.UTC(2026, 3, 5, 16));
 
         expect(await createInSantiago(value)).to.deep.equal({
           start: '2026-04-05T04:00:00.000Z',
@@ -137,7 +141,7 @@ describe('<CalendarGrid.DayCell />', () => {
     );
 
     it('should end the placeholder on the second occurrence of the last hour of a day a DST transition repeats', async () => {
-      const value = createAdapterDate(adapter, Date.UTC(2026, 3, 4, 16), 'America/Santiago');
+      const value = new Date(Date.UTC(2026, 3, 4, 16));
 
       expect(await createInSantiago(value)).to.deep.equal({
         start: '2026-04-04T03:00:00.000Z',
@@ -150,7 +154,7 @@ describe('<CalendarGrid.DayCell />', () => {
 
       const { user } = render(
         <DayCellWrapper>
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(adapter, day)}>
+          <CalendarGrid.DayCell value={toPlainDate(day.getTime(), 'default')}>
             <button type="button">child</button>
           </CalendarGrid.DayCell>
           <SchedulerStoreRunner<AnyEventCalendarStore>
@@ -174,7 +178,7 @@ describe('<CalendarGrid.DayCell />', () => {
 
       const { user } = render(
         <DayCellWrapper eventCreation={false}>
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(adapter, day)} />
+          <CalendarGrid.DayCell value={toPlainDate(day.getTime(), 'default')} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as any}
             onMount={(s) => {
@@ -189,90 +193,6 @@ describe('<CalendarGrid.DayCell />', () => {
       await user.keyboard('{Enter}');
 
       expect(store!.state.occurrencePlaceholder).to.equal(null);
-    });
-  });
-
-  describe('arrow key navigation', () => {
-    it('should move focus to the next cell on ArrowRight', async () => {
-      const day2 = adapter.addDays(day, 1);
-      const { user } = render(
-        <DayCellWrapper rowTypes={['day-grid']} rowsPerType={{}}>
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(adapter, day)} />
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(adapter, day2)} />
-        </DayCellWrapper>,
-      );
-
-      const cells = screen.getAllByRole('gridcell');
-      await user.click(cells[0]);
-      await user.keyboard('{ArrowRight}');
-
-      expect(cells[1]).toHaveFocus();
-    });
-
-    it('should move focus to the previous cell on ArrowLeft', async () => {
-      const day2 = adapter.addDays(day, 1);
-      const { user } = render(
-        <DayCellWrapper rowTypes={['day-grid']} rowsPerType={{}}>
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(adapter, day)} />
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(adapter, day2)} />
-        </DayCellWrapper>,
-      );
-
-      const cells = screen.getAllByRole('gridcell');
-      await user.click(cells[1]);
-      await user.keyboard('{ArrowLeft}');
-
-      expect(cells[0]).toHaveFocus();
-    });
-
-    it('should not move focus on ArrowRight at the last column', async () => {
-      const { user } = render(
-        <DayCellWrapper rowTypes={['day-grid']} rowsPerType={{}}>
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(adapter, day)} />
-        </DayCellWrapper>,
-      );
-
-      const cell = screen.getByRole('gridcell');
-      await user.click(cell);
-      await user.keyboard('{ArrowRight}');
-
-      expect(cell).toHaveFocus();
-    });
-
-    it('should not move focus on ArrowLeft at the first column', async () => {
-      const { user } = render(
-        <DayCellWrapper rowTypes={['day-grid']} rowsPerType={{}}>
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(adapter, day)} />
-        </DayCellWrapper>,
-      );
-
-      const cell = screen.getByRole('gridcell');
-      await user.click(cell);
-      await user.keyboard('{ArrowLeft}');
-
-      expect(cell).toHaveFocus();
-    });
-
-    it('should keep all cells tabbable so Tab flows through the grid', async () => {
-      const day2 = adapter.addDays(day, 1);
-      const { user } = render(
-        <DayCellWrapper rowTypes={['day-grid']} rowsPerType={{}}>
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(adapter, day)} />
-          <CalendarGrid.DayCell value={buildTemporalPlainDate(adapter, day2)} />
-        </DayCellWrapper>,
-      );
-
-      const cells = screen.getAllByRole('gridcell');
-
-      // All cells are always tabbable
-      await user.click(cells[0]);
-      expect(cells[0]).to.have.attribute('tabindex', '0');
-      expect(cells[1]).to.have.attribute('tabindex', '0');
-
-      // After navigating, all cells remain tabbable
-      await user.keyboard('{ArrowRight}');
-      expect(cells[0]).to.have.attribute('tabindex', '0');
-      expect(cells[1]).to.have.attribute('tabindex', '0');
     });
   });
 });

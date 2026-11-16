@@ -748,6 +748,7 @@
     {
       "name": "toolbar",
       "description": "Toolbar component rendered in the grid header.",
+      "default": "GridToolbar",
       "class": "MuiDataGridPro-toolbar"
     },
     {

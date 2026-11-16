@@ -1,4 +1,3 @@
-import { adapter } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import type { SchedulerEvent, SchedulerEventUpdatedProperties } from '../../../models';
 import { getCustomEventProperties, getUpdatedEventModelFromChanges } from './SchedulerStore.utils';
@@ -52,12 +51,29 @@ describe('getUpdatedEventModelFromChanges', () => {
       oldModel,
       changes,
       undefined,
-      adapter,
       oldModel as SchedulerEvent,
     );
     expect(Object.getOwnPropertyDescriptor(updated, '__proto__')?.value).to.deep.equal({
       marker: true,
     });
     expect(Object.getPrototypeOf(updated)).to.equal(Object.prototype);
+  });
+
+  it('should keep the instant of a date with an offset in a repeated hour', () => {
+    // 02:30+01:00 is the second 02:30 of the DST transition in Paris.
+    const oldModel = {
+      id: '1',
+      title: 'Meeting',
+      start: '2025-10-26T02:30:00+01:00',
+      end: '2025-10-26T03:30:00+01:00',
+      timezone: 'Europe/Paris',
+    };
+    const updated = getUpdatedEventModelFromChanges(
+      oldModel,
+      { id: '1', start: new Date('2025-10-26T02:45:00+01:00') },
+      undefined,
+      oldModel as SchedulerEvent,
+    );
+    expect(updated.start).to.equal('2025-10-26T01:45:00.000Z');
   });
 });

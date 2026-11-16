@@ -63,6 +63,7 @@ export const GridRootStyles = styled('div', {
     shouldShowBorderTopRightRadiusSelector,
   );
 
+  const fillPreviewTint = `color-mix(in srgb, ${vars.colors.interactive.focus} 8%, transparent)`;
   const baseBackground = vars.colors.background.base;
   const headerBackground = vars.header.background.base;
   const pinnedBackground = vars.cell.background.pinned;
@@ -890,6 +891,10 @@ export const GridRootStyles = styled('div', {
     /* Fill handle styles */
     [`& .${c['cell--withFillHandle']}`]: {
       position: 'relative',
+      // Pinned cells must stay sticky, otherwise their `left`/`right` offset displaces them
+      [`&.${c['cell--pinnedLeft']}, &.${c['cell--pinnedRight']}`]: {
+        position: 'sticky',
+      },
       '&::after': {
         content: '""',
         position: 'absolute',
@@ -903,7 +908,9 @@ export const GridRootStyles = styled('div', {
       },
     },
     [`& .${c['cell--fillPreview']}`]: {
-      backgroundColor: `color-mix(in srgb, ${vars.colors.interactive.focus} 8%, transparent)`,
+      // Paint the tint as an image layer on top of the cell's own background color,
+      // so opaque backgrounds (pinned cells) stay opaque.
+      backgroundImage: `linear-gradient(${fillPreviewTint}, ${fillPreviewTint})`,
     },
     [`& .${c['cell--fillPreviewTop']}`]: {
       borderTop: `1px dashed ${vars.colors.interactive.focus}`,

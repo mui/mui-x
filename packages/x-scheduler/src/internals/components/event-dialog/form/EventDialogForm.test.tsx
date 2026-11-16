@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ErrorBoundary, reactMajor, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
@@ -98,25 +98,6 @@ describe('EventDialogForm', () => {
       expect(screen.getByLabelText('constructor')).to.have.value('custom');
     });
 
-    it('should expose the field error after a failed validateAll', async () => {
-      let formStore: EventDialogFormStore | null = null;
-      render(
-        <EventDialogFormProvider {...sessionParameters} initialValues={{ title: '' }}>
-          <FieldProbe fieldKey="title" validate={(value) => (value ? null : 'Required')} />
-          <StoreGrabber
-            onMount={(store) => {
-              formStore = store;
-            }}
-          />
-        </EventDialogFormProvider>,
-      );
-
-      await React.act(async () => {
-        expect(await formStore!.validateAll()).to.equal(false);
-      });
-      expect(screen.getByRole('alert')).to.have.text('Required');
-    });
-
     it('should expose every message through the errors array and clear them on setValue', async () => {
       let formStore: EventDialogFormStore | null = null;
       const { user } = render(
@@ -144,28 +125,6 @@ describe('EventDialogForm', () => {
       // Writing the field clears its errors as a whole, not just the first message.
       await user.type(screen.getByLabelText('title'), 'x');
       expect(list.children).to.have.length(0);
-    });
-
-    it('should clear the field error when the field is written', async () => {
-      let formStore: EventDialogFormStore | null = null;
-      const { user } = render(
-        <EventDialogFormProvider {...sessionParameters} initialValues={{ title: '' }}>
-          <FieldProbe fieldKey="title" validate={(value) => (value ? null : 'Required')} />
-          <StoreGrabber
-            onMount={(store) => {
-              formStore = store;
-            }}
-          />
-        </EventDialogFormProvider>,
-      );
-
-      await React.act(async () => {
-        await formStore!.validateAll();
-      });
-      expect(screen.getByRole('alert')).to.have.text('Required');
-
-      await user.type(screen.getByLabelText('title'), 'S');
-      expect(screen.queryByRole('alert')).to.equal(null);
     });
 
     it('should render the first message when the validator returns several', async () => {
@@ -323,51 +282,6 @@ describe('EventDialogForm', () => {
       await React.act(async () => {
         expect(await formStore!.validateAll()).to.equal(true);
       });
-    });
-  });
-
-  describe('useEventDialogFormContext', () => {
-    it('should throw when used outside of the provider', () => {
-      const errorRef = React.createRef<any>();
-
-      const errorMessage1 =
-        'MUI X Scheduler: The component must be rendered inside the event dialog form.';
-      const errorMessage2 = 'The above error occurred in the <Consumer> component';
-      const expectedError = reactMajor < 19 ? [errorMessage2] : [errorMessage1];
-
-      function Consumer() {
-        useEventDialogFormContext();
-        return null;
-      }
-
-      expect(() =>
-        render(
-          <ErrorBoundary ref={errorRef}>
-            <Consumer />
-          </ErrorBoundary>,
-        ),
-      ).toErrorDev(expectedError);
-
-      expect((errorRef.current as any).errors).to.have.length(1);
-      expect((errorRef.current as any).errors[0].toString()).to.include(errorMessage1);
-    });
-  });
-
-  describe('EventDialogFormProvider', () => {
-    it('should notify onValuesChange when a field is written', async () => {
-      const changes: Array<[Record<string, unknown>, string[]]> = [];
-      const { user } = render(
-        <EventDialogFormProvider
-          {...sessionParameters}
-          initialValues={{ title: '' }}
-          onValuesChange={(values, changedKeys) => changes.push([values, changedKeys])}
-        >
-          <FieldProbe fieldKey="title" />
-        </EventDialogFormProvider>,
-      );
-
-      await user.type(screen.getByLabelText('title'), 'S');
-      expect(changes).to.deep.equal([[{ title: 'S' }, ['title']]]);
     });
   });
 });

@@ -26,6 +26,7 @@ const EMPTY_SERIES_IDS: readonly SeriesId[] = [];
 export interface ScatterPlotSlots extends ScatterSlots {
   /**
    * The component that renders the scatter markers.
+   * @default Scatter, BatchScatter with the `svg-batch` renderer, or ScatterAsync with progressive rendering.
    */
   scatter?: React.JSXElementConstructor<ScatterProps & ScatterPropsOverrides>;
 }

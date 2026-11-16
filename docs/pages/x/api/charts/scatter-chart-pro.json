@@ -251,17 +251,28 @@
       "default": "IconButton",
       "class": null
     },
-    { "name": "baseMenuItem", "description": "The component used for menu items.", "class": null },
+    {
+      "name": "baseMenuItem",
+      "description": "The component used for menu items.",
+      "default": "MenuItem",
+      "class": null
+    },
     {
       "name": "baseMenuList",
       "description": "The component used for menu lists.",
       "default": "MenuList",
       "class": null
     },
-    { "name": "basePopper", "description": "The component used for poppers.", "class": null },
+    {
+      "name": "basePopper",
+      "description": "The component used for poppers.",
+      "default": "Popper",
+      "class": null
+    },
     {
       "name": "baseToggleButton",
-      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
+      "description": "The component used for toggle buttons.\nNote: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
+      "default": "ToggleButton",
       "class": null
     },
     {
@@ -309,6 +320,7 @@
     {
       "name": "scatter",
       "description": "The component that renders the scatter markers.",
+      "default": "Scatter, BatchScatter with the `svg-batch` renderer, or ScatterAsync with progressive rendering.",
       "class": null
     },
     {

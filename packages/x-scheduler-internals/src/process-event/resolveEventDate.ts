@@ -1,35 +1,28 @@
-import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { Adapter } from '../use-adapter';
 import type { SchedulerEventId } from '../models';
-import { createAdapterDateFromWallTime } from '../internals/utils/plain-date-utils/adapter';
+import {
+  createDateFromString,
+  createDateFromWallTime,
+  isInstantString,
+} from '../internals/utils/plain-date-utils/date';
 
 /**
- * Resolves an event date string to a `TemporalSupportedObject`.
+ * Resolves an event date string to the `Date` of its instant.
  *
- * - Strings ending with `"Z"` are treated as instants (UTC).
- * - Strings without `"Z"` are treated as wall-time and interpreted in `dataTimezone`.
+ * - Strings ending with `"Z"` or an offset are treated as instants.
+ * - Other strings are treated as wall-time and interpreted in `dataTimezone`.
  *   A wall-clock time skipped by a DST transition moves forward by the length of the gap, and a
  *   repeated one refers to its first instant, whatever the timezone of the system (RFC 5545).
- *
- * The result carries the `dataTimezone` label, so day and weekday math runs in the
- * event's timezone for both formats.
  */
 export function resolveEventDate(
   value: string,
-  dataTimezone: TemporalTimezone,
-  adapter: Adapter,
+  dataTimezone: string,
   eventId?: SchedulerEventId,
-): TemporalSupportedObject {
-  let date: TemporalSupportedObject | null = null;
-  if (value.endsWith('Z')) {
-    date = adapter.setTimezone(adapter.date(value, 'default'), dataTimezone);
-  } else if (dataTimezone !== 'default' && dataTimezone !== 'system') {
-    date = createAdapterDateFromWallTime(adapter, value, dataTimezone);
-  }
-  // `Date` already resolves the wall-clock times of the system timezone like RFC 5545.
-  date ??= adapter.date(value, dataTimezone);
+): Date {
+  const date = isInstantString(value)
+    ? new Date(value)
+    : (createDateFromWallTime(value, dataTimezone) ?? createDateFromString(value, dataTimezone));
 
-  if (!adapter.isValid(date)) {
+  if (Number.isNaN(date.getTime())) {
     const eventRef = eventId === undefined ? '' : ` of event "${eventId}"`;
     throw new Error(
       `MUI X Scheduler: The date "${value}"${eventRef} is not a valid date.\n` +

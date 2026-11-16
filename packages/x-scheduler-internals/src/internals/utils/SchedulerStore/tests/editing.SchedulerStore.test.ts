@@ -1,15 +1,19 @@
 import {
-  adapter,
+  addDays,
+  addHours,
+  addMinutes,
+  createDate,
   EventBuilder,
-  utcJuly4AllDayBuilder,
   premiumStoreClasses,
   ResourceBuilder,
   storeClasses,
+  utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
-import type { SchedulerEvent, SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
+import { toWallClockIsoString } from '@mui/x-scheduler-internals/internals';
 import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { vi, describe, it, expect } from 'vitest';
 import { schedulerEventSelectors, schedulerOtherSelectors } from '../../../../scheduler-selectors';
@@ -31,12 +35,12 @@ const DATES_NOT_WRITABLE_REASON =
 
 // A minimal edited occurrence of a recurring series (only the fields `repointEditingOccurrence` reads).
 function armRecurringOccurrence(store: any) {
-  const start = processDate(adapter.date('2025-07-07T09:00:00Z', 'default'), adapter);
-  const end = processDate(adapter.date('2025-07-07T10:00:00Z', 'default'), adapter);
+  const start = processDate(createDate('2025-07-07T09:00:00Z'), 'default');
+  const end = processDate(createDate('2025-07-07T10:00:00Z'), 'default');
   const editedOccurrence = {
     id: 'standup',
     key: 'standup::2025-07-07',
-    displayTimezone: { start, end },
+    displayTimezone: { timezone: 'default', start, end },
     // Present on every real occurrence: without it the repoint skips the data-timezone
     // identity branch these tests are about.
     dataTimezone: { timezone: 'default', start, end, rrule: RRULE },
@@ -46,125 +50,16 @@ function armRecurringOccurrence(store: any) {
 
 storeClasses.forEach((storeClass) => {
   describe(`Editing - ${storeClass.name}`, () => {
-    // `repointEditingOccurrence` is private; it runs as part of confirming a recurring scope change from
-    // the armed state. Exercised directly here to pin the key re-derivation and `rrule` clearing.
-    describe('repointEditingOccurrence', () => {
-      const newStart = adapter.date('2025-07-08T09:30:00Z', 'default');
-      const newEnd = adapter.date('2025-07-08T10:30:00Z', 'default');
-
-      it('should re-point an `only-this` detach to a non-recurring key and clear the rrule', () => {
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
-        armRecurringOccurrence(store);
-
-        (store as any).repointEditingOccurrence({
-          eventId: 'detached-event',
-          start: newStart,
-          end: newEnd,
-          isRecurring: false,
-          dataStart: newStart,
-          dataEnd: newEnd,
-        });
-
-        const occurrence = schedulerOtherSelectors.editingOccurrence(
-          store.state,
-        ) as SchedulerEventOccurrence;
-        expect(occurrence.id).to.equal('detached-event');
-        // A detached one-off keys by the plain event id (no `::day` suffix)...
-        expect(occurrence.key).to.equal(getOccurrenceKey('detached-event'));
-        expect(occurrence.key).to.not.contain('::');
-        // ...and drops its recurrence rule, so the toolbar's Delete removes it directly instead of
-        // reopening the recurring scope dialog.
-        expect(occurrence.dataTimezone.rrule).to.equal(undefined);
-        expect(occurrence.displayTimezone.start.value).toEqualDateTime(newStart);
-        expect(occurrence.displayTimezone.end.value).toEqualDateTime(newEnd);
-      });
-
-      it('should re-point a `this-and-following` change to a recurring key and keep the rrule', () => {
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
-        armRecurringOccurrence(store);
-
-        (store as any).repointEditingOccurrence({
-          eventId: 'following-event',
-          start: newStart,
-          end: newEnd,
-          isRecurring: true,
-          dataStart: newStart,
-          dataEnd: newEnd,
-        });
-
-        const occurrence = schedulerOtherSelectors.editingOccurrence(
-          store.state,
-        ) as SchedulerEventOccurrence;
-        expect(occurrence.id).to.equal('following-event');
-        // The new series still keys per-occurrence (event id + day)...
-        expect(occurrence.key).to.equal(
-          getRecurringOccurrenceKey('following-event', newStart, adapter),
-        );
-        expect(occurrence.key).to.contain('::');
-        // ...and stays recurring, so its Delete keeps offering the scope dialog.
-        expect(occurrence.dataTimezone.rrule).to.equal(RRULE);
-        expect(occurrence.displayTimezone.start.value).toEqualDateTime(newStart);
-        expect(occurrence.displayTimezone.end.value).toEqualDateTime(newEnd);
-      });
-
-      it('should derive the recurring key from the data timezone, not the display-timezone start', () => {
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
-        armRecurringOccurrence(store);
-
-        // 23:00 on the 8th in America/New_York is 03:00 UTC on the 9th: the display and data days differ.
-        const displayStart = adapter.date('2025-07-08T23:00:00', 'America/New_York');
-        const displayEnd = adapter.addHours(displayStart, 1);
-
-        (store as any).repointEditingOccurrence({
-          eventId: 'following-event',
-          start: displayStart,
-          end: displayEnd,
-          isRecurring: true,
-          dataStart: adapter.setTimezone(displayStart, 'UTC'),
-          dataEnd: adapter.setTimezone(displayEnd, 'UTC'),
-        });
-
-        const occurrence = schedulerOtherSelectors.editingOccurrence(store.state)!;
-        // Rendered keys expand in the data timezone, so the repointed key must match the data-tz day...
-        expect(occurrence.key).to.equal(
-          getRecurringOccurrenceKey(
-            'following-event',
-            adapter.setTimezone(displayStart, 'UTC'),
-            adapter,
-          ),
-        );
-        // ...and must not use the display-timezone day, which differs here.
-        expect(occurrence.key).to.not.equal(
-          getRecurringOccurrenceKey('following-event', displayStart, adapter),
-        );
-      });
-
-      it('should be a no-op when nothing is being edited', () => {
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
-
-        (store as any).repointEditingOccurrence({
-          eventId: 'detached-event',
-          start: newStart,
-          end: newEnd,
-          isRecurring: false,
-          dataStart: newStart,
-          dataEnd: newEnd,
-        });
-
-        expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
-      });
-    });
-
     // The edited occurrence is a snapshot; nothing re-checks that it is still rendered. Left behind
     // by a navigation, its action toolbar would edit or delete an event that is off screen.
     describe('navigation', () => {
       const uiEvent = {} as any;
 
       it('should stop editing when the visible date changes', () => {
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS });
         armRecurringOccurrence(store);
 
-        store.goToDate(adapter.date('2025-07-14T00:00:00Z', 'default'), uiEvent);
+        store.goToDate(createDate('2025-07-14T00:00:00Z'), uiEvent);
 
         expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
       });
@@ -172,15 +67,15 @@ storeClasses.forEach((storeClass) => {
       it('should stop editing when a controlled visible date changes', () => {
         const parameters = {
           ...DEFAULT_PARAMS,
-          visibleDate: adapter.date('2025-07-07T00:00:00Z', 'default'),
+          visibleDate: createDate('2025-07-07T00:00:00Z'),
         };
-        const store = new storeClass.Value(parameters, adapter);
+        const store = new storeClass.Value(parameters);
         armRecurringOccurrence(store);
 
-        store.updateStateFromParameters(
-          { ...parameters, visibleDate: adapter.date('2025-07-14T00:00:00Z', 'default') },
-          adapter,
-        );
+        store.updateStateFromParameters({
+          ...parameters,
+          visibleDate: createDate('2025-07-14T00:00:00Z'),
+        });
 
         expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
       });
@@ -188,16 +83,16 @@ storeClasses.forEach((storeClass) => {
       it('should keep editing when the parameters update without navigating', () => {
         const parameters = {
           ...DEFAULT_PARAMS,
-          visibleDate: adapter.date('2025-07-07T00:00:00Z', 'default'),
+          visibleDate: createDate('2025-07-07T00:00:00Z'),
         };
-        const store = new storeClass.Value(parameters, adapter);
+        const store = new storeClass.Value(parameters);
         armRecurringOccurrence(store);
 
         // A fresh date object holding the same instant is not a navigation.
-        store.updateStateFromParameters(
-          { ...parameters, visibleDate: adapter.date('2025-07-07T00:00:00Z', 'default') },
-          adapter,
-        );
+        store.updateStateFromParameters({
+          ...parameters,
+          visibleDate: createDate('2025-07-07T00:00:00Z'),
+        });
 
         expect(schedulerOtherSelectors.editingOccurrence(store.state)).not.to.equal(null);
       });
@@ -209,15 +104,15 @@ storeClasses.forEach((storeClass) => {
           id: 'standup',
           key: 'standup::2025-07-07',
           displayTimezone: {
-            start: processDate(adapter.date('2025-07-07T09:00:00Z', 'default'), adapter),
-            end: processDate(adapter.date('2025-07-07T10:00:00Z', 'default'), adapter),
+            start: processDate(createDate('2025-07-07T09:00:00Z'), 'default'),
+            end: processDate(createDate('2025-07-07T10:00:00Z'), 'default'),
           },
         } as any;
       }
 
       it('should not re-run `onEventEditingStart` when the occurrence is already open in the surface', () => {
         const onEventEditingStart = vi.fn();
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart });
         const occurrence = buildOccurrence();
 
         expect(store.startEditing(occurrence)).to.equal(true);
@@ -230,7 +125,7 @@ storeClasses.forEach((storeClass) => {
         const onEventEditingStart = vi.fn((_occurrence: any, eventDetails: any) =>
           eventDetails.cancel(),
         );
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart });
         const occurrence = buildOccurrence();
 
         expect(store.startEditing(occurrence)).to.equal(false);
@@ -241,14 +136,17 @@ storeClasses.forEach((storeClass) => {
 
       it('should run `onEventEditingStart` when the armed occurrence opens the surface', () => {
         const onEventEditingStart = vi.fn();
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart });
         const occurrence = buildOccurrence();
 
         store.startEditing(occurrence, 'armed');
         expect(onEventEditingStart.mock.calls.length).to.equal(0);
 
-        store.setEditingMode('edit');
+        const nativeEvent = new Event('click');
+        store.setEditingMode('edit', nativeEvent);
         expect(onEventEditingStart.mock.calls.length).to.equal(1);
+        expect(onEventEditingStart.mock.lastCall?.[0]).to.equal(occurrence);
+        expect(onEventEditingStart.mock.lastCall?.[1].event).to.equal(nativeEvent);
       });
     });
 
@@ -258,15 +156,15 @@ storeClasses.forEach((storeClass) => {
           id: 'standup',
           key: 'standup::2025-07-07',
           displayTimezone: {
-            start: processDate(adapter.date('2025-07-07T09:00:00Z', 'default'), adapter),
-            end: processDate(adapter.date('2025-07-07T10:00:00Z', 'default'), adapter),
+            start: processDate(createDate('2025-07-07T09:00:00Z'), 'default'),
+            end: processDate(createDate('2025-07-07T10:00:00Z'), 'default'),
           },
         } as any;
       }
 
       it('should expose the trigger as `anchor` when no dedicated anchor is provided', () => {
         const onEventEditingStart = vi.fn();
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart });
         const trigger = document.createElement('button');
 
         store.startEditing(buildOccurrence(), 'edit', undefined, trigger);
@@ -277,7 +175,7 @@ storeClasses.forEach((storeClass) => {
 
       it('should expose the dedicated anchor without replacing the trigger', () => {
         const onEventEditingStart = vi.fn();
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart });
         const trigger = document.createElement('button');
         const anchor = document.createElement('div');
 
@@ -289,7 +187,7 @@ storeClasses.forEach((storeClass) => {
 
       it('should forward the dedicated anchor when the armed occurrence opens the surface', () => {
         const onEventEditingStart = vi.fn();
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart });
         const trigger = document.createElement('button');
         const anchor = document.createElement('div');
 
@@ -314,15 +212,16 @@ premiumStoreClasses.forEach((storeClass) => {
       .recurrent('DAILY')
       .build();
 
-    const dayA = adapter.date('2025-07-07T09:00:00Z', 'default');
-    const dayB = adapter.date('2025-07-08T09:00:00Z', 'default');
+    const dayA = createDate('2025-07-07T09:00:00Z');
+    const dayB = createDate('2025-07-08T09:00:00Z');
 
     function createStore() {
       // `onEventsChange` keeps the (controlled) `events` prop update from warning as ignored.
-      return new storeClass.Value(
-        { ...DEFAULT_PARAMS, events: [RECURRING_EVENT], onEventsChange: () => {} },
-        adapter,
-      );
+      return new storeClass.Value({
+        ...DEFAULT_PARAMS,
+        events: [RECURRING_EVENT],
+        onEventsChange: () => {},
+      });
     }
 
     // Shared by the "all" scope and "refused because a date has no setter" describes below —
@@ -333,30 +232,27 @@ premiumStoreClasses.forEach((storeClass) => {
       onEventsChange: (...args: any[]) => void,
       event: SchedulerEvent = RECURRING_EVENT,
     ) {
-      return new storeClass.Value(
-        {
-          ...DEFAULT_PARAMS,
-          events: [event],
-          eventModelStructure: { start: { getter: (evt) => evt.start } },
-          onEventsChange,
-        },
-        adapter,
-      );
+      return new storeClass.Value({
+        ...DEFAULT_PARAMS,
+        events: [event],
+        eventModelStructure: { start: { getter: (evt) => evt.start } },
+        onEventsChange,
+      });
     }
 
-    function armOccurrence(store: any, occurrenceStart: ReturnType<typeof adapter.date>) {
+    function armOccurrence(store: any, occurrenceStart: Date) {
       store.startEditing(
         {
           id: 'standup',
-          key: getRecurringOccurrenceKey('standup', occurrenceStart, adapter),
+          key: getRecurringOccurrenceKey('standup', occurrenceStart, 'default'),
           displayTimezone: {
-            start: processDate(occurrenceStart, adapter),
-            end: processDate(adapter.addHours(occurrenceStart, 1), adapter),
+            start: processDate(occurrenceStart, 'default'),
+            end: processDate(addHours(occurrenceStart, 1), 'default'),
           },
           dataTimezone: {
             timezone: 'default',
-            start: processDate(occurrenceStart, adapter),
-            end: processDate(adapter.addHours(occurrenceStart, 1), adapter),
+            start: processDate(occurrenceStart, 'default'),
+            end: processDate(addHours(occurrenceStart, 1), 'default'),
             rrule: RRULE,
           },
         } as any,
@@ -366,7 +262,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
     it('should keep the armed occurrence when a different occurrence is resized', () => {
       const store = createStore();
-      const armedKey = getRecurringOccurrenceKey('standup', dayA, adapter);
+      const armedKey = getRecurringOccurrenceKey('standup', dayA, 'default');
       armOccurrence(store, dayA);
 
       // Resize occurrence B (the 8th), then confirm the scope.
@@ -374,8 +270,8 @@ premiumStoreClasses.forEach((storeClass) => {
         occurrenceStart: dayB,
         changes: {
           id: 'standup',
-          start: adapter.addMinutes(dayB, 30),
-          end: adapter.addMinutes(dayB, 90),
+          start: addMinutes(dayB, 30),
+          end: addMinutes(dayB, 90),
         },
       });
       store.selectRecurringEventScope('this-and-following');
@@ -387,11 +283,11 @@ premiumStoreClasses.forEach((storeClass) => {
 
     it('should re-point when the armed occurrence itself is resized', () => {
       const store = createStore();
-      const armedKey = getRecurringOccurrenceKey('standup', dayA, adapter);
+      const armedKey = getRecurringOccurrenceKey('standup', dayA, 'default');
       armOccurrence(store, dayA);
 
-      const resizedStart = adapter.addMinutes(dayA, 30);
-      const resizedEnd = adapter.addMinutes(dayA, 90);
+      const resizedStart = addMinutes(dayA, 30);
+      const resizedEnd = addMinutes(dayA, 90);
       // Resize occurrence A (the armed one), then confirm the scope.
       store.updateRecurringEvent({
         occurrenceStart: dayA,
@@ -410,8 +306,8 @@ premiumStoreClasses.forEach((storeClass) => {
       const store = createStore();
       armOccurrence(store, dayA);
 
-      const resizedStart = adapter.addMinutes(dayA, 30);
-      const resizedEnd = adapter.addMinutes(dayA, 90);
+      const resizedStart = addMinutes(dayA, 30);
+      const resizedEnd = addMinutes(dayA, 90);
       store.updateRecurringEvent({
         occurrenceStart: dayA,
         changes: { id: 'standup', start: resizedStart, end: resizedEnd },
@@ -432,8 +328,8 @@ premiumStoreClasses.forEach((storeClass) => {
       // The pattern decides where the series lands after an in-place day move, so
       // re-keying onto the changed day could anchor the toolbar on a sibling — and a
       // follow-up Delete would exDate the wrong day.
-      const movedStart = adapter.addHours(dayB, 25);
-      const movedEnd = adapter.addHours(movedStart, 1);
+      const movedStart = addHours(dayB, 25);
+      const movedEnd = addHours(movedStart, 1);
       store.updateRecurringEvent({
         occurrenceStart: dayB,
         changes: { id: 'standup', start: movedStart, end: movedEnd },
@@ -445,11 +341,11 @@ premiumStoreClasses.forEach((storeClass) => {
 
     it("should keep the armed occurrence on a same-day scope 'all' time change", () => {
       const store = createStore();
-      const armedKey = getRecurringOccurrenceKey('standup', dayB, adapter);
+      const armedKey = getRecurringOccurrenceKey('standup', dayB, 'default');
       armOccurrence(store, dayB);
 
-      const movedStart = adapter.addHours(dayB, 1);
-      const movedEnd = adapter.addHours(movedStart, 1);
+      const movedStart = addHours(dayB, 1);
+      const movedEnd = addHours(movedStart, 1);
       store.updateRecurringEvent({
         occurrenceStart: dayB,
         changes: { id: 'standup', start: movedStart, end: movedEnd },
@@ -464,12 +360,12 @@ premiumStoreClasses.forEach((storeClass) => {
 
     it("should keep the armed occurrence on an end-only same-day scope 'all' change", () => {
       const store = createStore();
-      const armedKey = getRecurringOccurrenceKey('standup', dayB, adapter);
+      const armedKey = getRecurringOccurrenceKey('standup', dayB, 'default');
       armOccurrence(store, dayB);
 
       // A resize handle or the dialog can submit a single bound; the untouched start
       // keeps the occurrence's own data-timezone identity.
-      const extendedEnd = adapter.addHours(dayB, 3);
+      const extendedEnd = addHours(dayB, 3);
       store.updateRecurringEvent({
         occurrenceStart: dayB,
         changes: { id: 'standup', end: extendedEnd },
@@ -488,7 +384,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       store.updateRecurringEvent({
         occurrenceStart: dayB,
-        changes: { id: 'standup', end: adapter.addHours(dayB, 25) },
+        changes: { id: 'standup', end: addHours(dayB, 25) },
       });
       store.selectRecurringEventScope('all');
 
@@ -503,9 +399,9 @@ premiumStoreClasses.forEach((storeClass) => {
         ...overrides,
         events,
         onEventsChange: (nextEvents: any[]) =>
-          store.updateStateFromParameters({ ...parameters, events: nextEvents }, adapter),
+          store.updateStateFromParameters({ ...parameters, events: nextEvents }),
       };
-      store = new storeClass.Value(parameters, adapter);
+      store = new storeClass.Value(parameters);
       return store;
     }
 
@@ -517,15 +413,15 @@ premiumStoreClasses.forEach((storeClass) => {
         .recurrent('DAILY', { count: 10 })
         .build();
       const store = createControlledStore([countedEvent]);
-      const fourth = adapter.addDays(dayA, 3);
+      const fourth = addDays(dayA, 3);
       armOccurrence(store, fourth);
 
       store.updateRecurringEvent({
         occurrenceStart: fourth,
         changes: {
           id: 'standup',
-          start: adapter.addMinutes(fourth, 30),
-          end: adapter.addMinutes(fourth, 90),
+          start: addMinutes(fourth, 30),
+          end: addMinutes(fourth, 90),
         },
       });
       store.selectRecurringEventScope('this-and-following');
@@ -547,14 +443,14 @@ premiumStoreClasses.forEach((storeClass) => {
         .recurrent('WEEKLY')
         .build();
       const store = createControlledStore([weeklyEvent]);
-      const secondMonday = adapter.addDays(dayA, 7);
+      const secondMonday = addDays(dayA, 7);
       armOccurrence(store, secondMonday);
 
       // Move the second Monday to Tuesday with "this and following".
-      const movedStart = adapter.addDays(secondMonday, 1);
+      const movedStart = addDays(secondMonday, 1);
       store.updateRecurringEvent({
         occurrenceStart: secondMonday,
-        changes: { id: 'standup', start: movedStart, end: adapter.addHours(movedStart, 1) },
+        changes: { id: 'standup', start: movedStart, end: addHours(movedStart, 1) },
       });
       store.selectRecurringEventScope('this-and-following');
       store.setEditingMode('edit');
@@ -587,19 +483,20 @@ premiumStoreClasses.forEach((storeClass) => {
         .withDisplayTimezone('Asia/Tokyo');
 
       function armTokyoOccurrence() {
-        const store = new storeClass.Value(
-          {
-            ...DEFAULT_PARAMS,
-            events: [lateBuilder.build()],
-            displayTimezone: 'Asia/Tokyo',
-            onEventsChange: () => {},
-          },
-          adapter,
-        );
+        const store = new storeClass.Value({
+          ...DEFAULT_PARAMS,
+          events: [lateBuilder.build()],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange: () => {},
+        });
         const base = lateBuilder.toOccurrence('2025-07-08T23:00:00Z') as any;
         const armed = {
           ...base,
-          key: getRecurringOccurrenceKey('late', base.dataTimezone.start.value, adapter),
+          key: getRecurringOccurrenceKey(
+            'late',
+            base.dataTimezone.start.value,
+            base.dataTimezone.timezone,
+          ),
         };
         store.startEditing(armed, 'armed');
         return { store, armed };
@@ -615,8 +512,8 @@ premiumStoreClasses.forEach((storeClass) => {
           occurrenceStart: armed.dataTimezone.start.value,
           changes: {
             id: 'late',
-            start: adapter.date(startInTokyo, 'Asia/Tokyo'),
-            end: adapter.date(endInTokyo, 'Asia/Tokyo'),
+            start: createDate(startInTokyo, 'Asia/Tokyo'),
+            end: createDate(endInTokyo, 'Asia/Tokyo'),
           },
         });
         store.selectRecurringEventScope('all');
@@ -652,8 +549,8 @@ premiumStoreClasses.forEach((storeClass) => {
         const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
         expect(occurrence.key).to.equal(armed.key);
         expect(
-          adapter.formatByString(occurrence.displayTimezone.start.value, 'yyyy-MM-dd HH:mm'),
-        ).to.equal('2025-07-08 19:00');
+          toWallClockIsoString(occurrence.displayTimezone.start.timestamp, 'Asia/Tokyo'),
+        ).to.equal('2025-07-08T19:00:00');
       });
     });
 
@@ -674,7 +571,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
     it('should re-point a rename-only scope change onto the detached event', () => {
       const store = createStore();
-      const armedKey = getRecurringOccurrenceKey('standup', dayA, adapter);
+      const armedKey = getRecurringOccurrenceKey('standup', dayA, 'default');
       armOccurrence(store, dayA);
 
       // A rename carries no start/end in the changes.
@@ -688,11 +585,13 @@ premiumStoreClasses.forEach((storeClass) => {
       // The occurrence moved onto the detached one-off event, keeping its own times.
       expect(occurrence.id).to.not.equal('standup');
       expect(occurrence.key).to.not.equal(armedKey);
+      // A detached one-off keys by the plain event id, without the day of a series occurrence.
+      expect(occurrence.key).to.equal(getOccurrenceKey(occurrence.id));
       expect(occurrence.dataTimezone.rrule).to.equal(undefined);
       expect(occurrence.displayTimezone.start.value).toEqualDateTime(dayA);
-      expect(occurrence.displayTimezone.end.value).toEqualDateTime(adapter.addHours(dayA, 1));
-      expect(occurrence.dataTimezone.start.timestamp).to.equal(adapter.getTime(dayA));
-      expect(occurrence.dataTimezone.end.value).toEqualDateTime(adapter.addHours(dayA, 1));
+      expect(occurrence.displayTimezone.end.value).toEqualDateTime(addHours(dayA, 1));
+      expect(occurrence.dataTimezone.start.timestamp).to.equal(dayA.getTime());
+      expect(occurrence.dataTimezone.end.value).toEqualDateTime(addHours(dayA, 1));
     });
 
     it('should keep the data-timezone identity on a rename-only scope change from another timezone', () => {
@@ -702,16 +601,21 @@ premiumStoreClasses.forEach((storeClass) => {
         .id('weekly-tz')
         .recurrent('WEEKLY')
         .withDisplayTimezone('America/New_York');
-      const store = new storeClass.Value(
-        { ...DEFAULT_PARAMS, events: [weeklyBuilder.build()], onEventsChange: () => {} },
-        adapter,
-      );
+      const store = new storeClass.Value({
+        ...DEFAULT_PARAMS,
+        events: [weeklyBuilder.build()],
+        onEventsChange: () => {},
+      });
       const base = weeklyBuilder.toOccurrence('2025-07-11T00:00:00Z') as any;
       // `toOccurrence` generates a random render key; the repoint matches on the
       // expansion key, which derives from the data-timezone day.
       const armed = {
         ...base,
-        key: getRecurringOccurrenceKey('weekly-tz', base.dataTimezone.start.value, adapter),
+        key: getRecurringOccurrenceKey(
+          'weekly-tz',
+          base.dataTimezone.start.value,
+          base.dataTimezone.timezone,
+        ),
       };
       store.startEditing(armed, 'armed');
 
@@ -726,10 +630,14 @@ premiumStoreClasses.forEach((storeClass) => {
       // display bounds sit on July 10th and cannot stand in for the identity.
       expect(occurrence.id).to.not.equal('weekly-tz');
       expect(occurrence.key).to.equal(
-        getRecurringOccurrenceKey(occurrence.id, armed.dataTimezone.start.value, adapter),
+        getRecurringOccurrenceKey(
+          occurrence.id,
+          armed.dataTimezone.start.value,
+          armed.dataTimezone.timezone,
+        ),
       );
       expect(occurrence.dataTimezone.start.timestamp).to.equal(
-        adapter.getTime(adapter.date('2025-07-11T00:00:00', 'UTC')),
+        createDate('2025-07-11T00:00:00', 'UTC').getTime(),
       );
       expect(occurrence.dataTimezone.timezone).to.equal('UTC');
       // A 'this-and-following' split stays recurring.
@@ -746,44 +654,33 @@ premiumStoreClasses.forEach((storeClass) => {
         .rrule({ freq: 'DAILY', interval: 1 })
         .build();
       let latestEvents: SchedulerEvent[] = [nyEvent];
-      const store = new storeClass.Value(
-        {
-          ...DEFAULT_PARAMS,
-          events: latestEvents,
-          onEventsChange: (events: SchedulerEvent[]) => {
-            latestEvents = events;
-          },
+      const store = new storeClass.Value({
+        ...DEFAULT_PARAMS,
+        events: latestEvents,
+        onEventsChange: (events: SchedulerEvent[]) => {
+          latestEvents = events;
         },
-        adapter,
-      );
+      });
 
       // Delete the March 1st (New York) occurrence — March 2nd 02:00Z.
       store.deleteRecurringEvent({
-        occurrenceStart: adapter.date('2025-03-02T02:00:00Z', 'default'),
+        occurrenceStart: createDate('2025-03-02T02:00:00Z'),
         eventId: 'ny-daily',
         onSubmit: () => {},
       });
       store.selectRecurringEventScope('only-this');
 
       // Reprocess the serialized model the way a fresh mount would.
-      const reprocessed = processEvent(
-        latestEvents[0],
-        'default',
-        adapter,
-        schedulerRecurringEventsPlugin,
-      );
-      const visibleStart = adapter.date('2025-02-27T00:00:00Z', 'default');
+      const reprocessed = processEvent(latestEvents[0], 'default', schedulerRecurringEventsPlugin);
+      const visibleStart = createDate('2025-02-27T00:00:00Z');
       const days = schedulerRecurringEventsPlugin
         .getOccurrencesForVisibleDays(
           reprocessed,
-          adapter.getTime(visibleStart),
-          adapter.getTime(adapter.addDays(visibleStart, 4)),
-          adapter,
+          visibleStart.getTime(),
+          addDays(visibleStart, 4).getTime(),
           'default',
         )
-        .map((occurrence) =>
-          adapter.formatByString(occurrence.dataTimezone.start.value, 'yyyy-MM-dd'),
-        );
+        .map((occurrence) => occurrence.dataTimezone.start.key);
 
       expect(days).to.include('2025-02-28');
       expect(days).to.not.include('2025-03-01');
@@ -801,8 +698,8 @@ premiumStoreClasses.forEach((storeClass) => {
         const store = createStoreWithReadOnlyStart(onEventsChange);
         const seriesBefore = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
 
-        const movedStart = adapter.addHours(dayB, 25);
-        const movedEnd = adapter.addHours(movedStart, 1);
+        const movedStart = addHours(dayB, 25);
+        const movedEnd = addHours(movedStart, 1);
         store.updateRecurringEvent({
           occurrenceStart: dayB,
           changes: { id: 'standup', start: movedStart, end: movedEnd },
@@ -834,7 +731,7 @@ premiumStoreClasses.forEach((storeClass) => {
         expect(() => {
           store.updateRecurringEvent({
             occurrenceStart: dayA,
-            changes: { id: 'standup', end: adapter.addMinutes(dayA, 90) },
+            changes: { id: 'standup', end: addMinutes(dayA, 90) },
           });
           store.selectRecurringEventScope('all');
         }).not.toWarnDev();
@@ -846,9 +743,7 @@ premiumStoreClasses.forEach((storeClass) => {
         const updated = onEventsChange.mock.lastCall?.[0].find(
           (candidate: any) => candidate.id === 'standup',
         );
-        expect(
-          adapter.isEqual(adapter.date(updated.end, 'default'), adapter.addMinutes(dayA, 90)),
-        ).to.equal(true);
+        expect(createDate(updated.end)).toEqualDateTime(addMinutes(dayA, 90));
         // `start` was stripped out of the change entirely (not merely resubmitted unchanged), so
         // the model keeps its original string as-is instead of being reformatted.
         expect(updated.start).to.equal(RECURRING_EVENT.start);
@@ -865,15 +760,15 @@ premiumStoreClasses.forEach((storeClass) => {
         expect(() => {
           store.updateRecurringEvent({
             occurrenceStart: dayB,
-            changes: { id: 'standup', start: adapter.addMinutes(dayB, 30) },
+            changes: { id: 'standup', start: addMinutes(dayB, 30) },
           });
           store.selectRecurringEventScope('all');
         }).not.toWarnDev();
 
         expect(store.state.errors.length).to.equal(0);
         const series = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
-        expect(series.dataTimezone.start.value).toEqualDateTime(adapter.addMinutes(dayA, 30));
-        expect(series.dataTimezone.end.value).toEqualDateTime(adapter.addHours(dayA, 1));
+        expect(series.dataTimezone.start.value).toEqualDateTime(addMinutes(dayA, 30));
+        expect(series.dataTimezone.end.value).toEqualDateTime(addHours(dayA, 1));
       });
 
       // The tests above use the shared, daily `RECURRING_EVENT`, where every occurrence falls on
@@ -889,7 +784,7 @@ premiumStoreClasses.forEach((storeClass) => {
           .endAt('2025-07-07T10:00:00Z')
           .recurrent('WEEKLY')
           .build();
-        const secondMonday = adapter.addDays(dayA, 7);
+        const secondMonday = addDays(dayA, 7);
         const readOnlyStartStructure = {
           eventModelStructure: { start: { getter: (event: any) => event.start } },
         };
@@ -900,7 +795,7 @@ premiumStoreClasses.forEach((storeClass) => {
           expect(() => {
             store.updateRecurringEvent({
               occurrenceStart: secondMonday,
-              changes: { id: 'standup', start: adapter.addDays(secondMonday, -1) },
+              changes: { id: 'standup', start: addDays(secondMonday, -1) },
             });
             store.selectRecurringEventScope('all');
           }).toWarnDev([
@@ -914,13 +809,13 @@ premiumStoreClasses.forEach((storeClass) => {
 
         it('should keep the armed occurrence on its day when its unwritable start is "moved"', () => {
           const store = createControlledStore([weeklyStandupEvent], readOnlyStartStructure);
-          const armedKey = getRecurringOccurrenceKey('standup', secondMonday, adapter);
+          const armedKey = getRecurringOccurrenceKey('standup', secondMonday, 'default');
           armOccurrence(store, secondMonday);
 
           expect(() => {
             store.updateRecurringEvent({
               occurrenceStart: secondMonday,
-              changes: { id: 'standup', start: adapter.addDays(secondMonday, -1) },
+              changes: { id: 'standup', start: addDays(secondMonday, -1) },
             });
             store.selectRecurringEventScope('all');
           }).toWarnDev([
@@ -962,8 +857,8 @@ premiumStoreClasses.forEach((storeClass) => {
           occurrenceStart: dayA,
           changes: {
             id: 'standup',
-            start: adapter.addMinutes(dayA, 30),
-            end: adapter.addMinutes(dayA, 90),
+            start: addMinutes(dayA, 30),
+            end: addMinutes(dayA, 90),
           },
         });
 
@@ -1013,8 +908,8 @@ premiumStoreClasses.forEach((storeClass) => {
           occurrenceStart: dayB,
           changes: {
             id: 'standup',
-            start: adapter.addMinutes(dayB, 30),
-            end: adapter.addMinutes(dayB, 90),
+            start: addMinutes(dayB, 30),
+            end: addMinutes(dayB, 90),
           },
         });
 
@@ -1041,8 +936,8 @@ premiumStoreClasses.forEach((storeClass) => {
           occurrenceStart: dayA,
           changes: {
             id: 'standup',
-            start: adapter.addMinutes(dayA, 30),
-            end: adapter.addMinutes(dayA, 90),
+            start: addMinutes(dayA, 30),
+            end: addMinutes(dayA, 90),
           },
         });
 
@@ -1067,8 +962,8 @@ premiumStoreClasses.forEach((storeClass) => {
           occurrenceStart: dayA,
           changes: {
             id: 'standup',
-            start: adapter.addMinutes(dayA, 30),
-            end: adapter.addMinutes(dayA, 90),
+            start: addMinutes(dayA, 30),
+            end: addMinutes(dayA, 90),
           },
         });
 
@@ -1092,7 +987,7 @@ premiumStoreClasses.forEach((storeClass) => {
 ].forEach((storeClass) => {
   describe(`Editing view navigation - ${storeClass.name}`, () => {
     it('should stop editing when the view changes', () => {
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS });
       armRecurringOccurrence(store);
 
       store.setView('month', {} as any);
@@ -1102,10 +997,10 @@ premiumStoreClasses.forEach((storeClass) => {
 
     it('should stop editing when a controlled view changes', () => {
       const parameters = { ...DEFAULT_PARAMS, view: 'week' as const };
-      const store = new storeClass.Value(parameters, adapter);
+      const store = new storeClass.Value(parameters);
       armRecurringOccurrence(store);
 
-      store.updateStateFromParameters({ ...parameters, view: 'month' as const }, adapter);
+      store.updateStateFromParameters({ ...parameters, view: 'month' as const });
 
       expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
     });

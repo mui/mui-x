@@ -182,6 +182,7 @@ export default defineConfig(
     enableReactCompiler: isAnyReactCompilerPluginEnabled,
     materialUi: true,
     markdown: true,
+    consistentTypeImports: true,
   }),
   // eslint-plugin-mdx loads `.remarkrc.mjs` itself, but ESLint doesn't know
   // that file is a config dependency, so `--cache` doesn't invalidate when
@@ -315,23 +316,6 @@ export default defineConfig(
     },
   },
   {
-    files: [
-      `packages/**/*${EXTENSION_TS}`,
-      `docs/**/*${EXTENSION_TS}`,
-      `scripts/**/*${EXTENSION_TS}`,
-      `test/**/*${EXTENSION_TS}`,
-    ],
-    rules: {
-      '@typescript-eslint/consistent-type-imports': [
-        'error',
-        {
-          fixStyle: 'separate-type-imports',
-        },
-      ],
-      'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
-    },
-  },
-  {
     // A copy of BaseTemporal from the Base UI version, which keeps its code style. Change the Base UI
     // version first, then copy it again.
     files: [
@@ -372,6 +356,9 @@ export default defineConfig(
       parserOptions: {
         tsconfigRootDir: dirname,
         projectService: true,
+        // TODO: Remove when https://github.com/typescript-eslint/typescript-eslint/issues/13109 is fixed.
+        // Single-run Programs of typescript-eslint >=8.72.1 double the heap and OOM in CI.
+        disallowAutomaticSingleRunInference: true,
       },
     },
   },
@@ -437,6 +424,7 @@ export default defineConfig(
       parserOptions: {
         tsconfigRootDir: dirname,
         projectService: true,
+        disallowAutomaticSingleRunInference: true,
       },
     },
     rules: {

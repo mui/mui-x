@@ -16,6 +16,7 @@ import {
   useGridApiInitialization,
   getRowValue,
   GridMultiSelectMeasurer,
+  pickDataAttributes,
 } from '@mui/x-data-grid-pro/internals';
 import type { PropValidator, GridConfiguration } from '@mui/x-data-grid-pro/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
@@ -145,6 +146,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
         className={props.className}
         style={props.style}
         sx={props.sx}
+        {...pickDataAttributes(props)}
         {...props.slotProps?.root}
         ref={ref}
         sidePanel={sidePanel}
@@ -391,6 +393,12 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
    * @default '\t'
    */
   clipboardCopyCellDelimiter: PropTypes.string,
+  /**
+   * Options for the clipboard paste.
+   */
+  clipboardPasteOptions: PropTypes.shape({
+    createRows: PropTypes.func,
+  }),
   /**
    * Column region in pixels to render before/after the viewport
    * @default 150
