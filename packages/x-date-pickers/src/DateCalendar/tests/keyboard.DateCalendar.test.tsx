@@ -182,6 +182,25 @@ describe('<DateCalendar /> keyboard interactions', () => {
         expect(document.activeElement).toHaveAccessibleName('20');
       });
 
+      it('should move the tab stop back to the selected day when it is enabled again', async () => {
+        const { user, setProps } = render(
+          <DateCalendar defaultValue={adapterToUse.date('2020-01-20')} />,
+        );
+
+        setProps({
+          shouldDisableDate: (date: PickerValidDate) =>
+            adapterToUse.isSameDay(date, adapterToUse.date('2020-01-20')),
+        });
+        expect(screen.getByRole('gridcell', { name: '21' })).to.have.attribute('tabindex', '0');
+
+        setProps({ shouldDisableDate: () => false });
+
+        await act(async () => screen.getByRole('button', { name: 'Next month' }).focus());
+        await user.keyboard('{Tab}');
+
+        expect(document.activeElement).toHaveAccessibleName('20');
+      });
+
       it('should call `onMonthChange` once when `onMonthChange` disables the day that gets focus', async () => {
         const onMonthChange = vi.fn();
         function CalendarWithAvailability() {

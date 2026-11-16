@@ -38,16 +38,9 @@ const createCalendarStateReducer =
     action:
       | ReducerAction<'finishMonthSwitchingAnimation'>
       | ReducerAction<'setVisibleDate', SetVisibleDatePayload>
-      | ReducerAction<'setFocusedDay', { focusedDay: PickerValidDate | null }>
       | ReducerAction<'changeMonthTimezone', { newTimezone: string }>,
   ): CalendarState => {
     switch (action.type) {
-      case 'setFocusedDay':
-        return {
-          ...state,
-          focusedDay: action.focusedDay,
-        };
-
       case 'setVisibleDate':
         return {
           ...state,
@@ -168,6 +161,11 @@ export const useCalendarState = (
   // A day cell can focus itself before `setVisibleDate` sees the new `calendarState`.
   // This ref stops that focus from firing `onMonthChange` and `onYearChange` a second time.
   const focusedDayRef = React.useRef(calendarState.focusedDay);
+  // `setVisibleDate` reads the month from this ref for the same reason.
+  const currentMonthRef = React.useRef(calendarState.currentMonth);
+  useEnhancedEffect(() => {
+    currentMonthRef.current = calendarState.currentMonth;
+  }, [calendarState.currentMonth]);
 
   const isDateDisabled = useIsDateDisabled({
     shouldDisableDate,
@@ -178,7 +176,7 @@ export const useCalendarState = (
     timezone,
   });
 
-  const findClosestEnabledDateInMonth = useEventCallback((date: PickerValidDate) => {
+  const findClosestEnabledDateInMonth = (date: PickerValidDate) => {
     const startOfMonth = adapter.startOfMonth(date);
     const endOfMonth = adapter.endOfMonth(date);
     return findClosestEnabledDate({
@@ -191,7 +189,7 @@ export const useCalendarState = (
       isDateDisabled,
       timezone,
     });
-  });
+  };
 
   // Ensure that `calendarState.currentMonth` timezone is updated when `referenceDate` (or timezone changes)
   // https://github.com/mui/mui-x/issues/10804
@@ -211,16 +209,15 @@ export const useCalendarState = (
       return;
     }
 
+    const prevMonth = currentMonthRef.current;
     const skipAnimation = reason === 'cell-interaction';
     let month: PickerValidDate;
     let focusedDay: PickerValidDate | null;
     if (reason === 'cell-interaction') {
-      month = getCurrentMonthFromVisibleDate(target, calendarState.currentMonth);
+      month = getCurrentMonthFromVisibleDate(target, prevMonth);
       focusedDay = target;
     } else {
-      month = adapter.isSameMonth(target, calendarState.currentMonth)
-        ? calendarState.currentMonth
-        : adapter.startOfMonth(target);
+      month = adapter.isSameMonth(target, prevMonth) ? prevMonth : adapter.startOfMonth(target);
       focusedDay = target;
 
       // If the date is disabled, we try to find a non-disabled date inside the same month.
@@ -229,8 +226,8 @@ export const useCalendarState = (
       }
     }
 
-    const hasChangedMonth = !adapter.isSameMonth(calendarState.currentMonth, month);
-    const hasChangedYear = !adapter.isSameYear(calendarState.currentMonth, month);
+    const hasChangedMonth = !adapter.isSameMonth(prevMonth, month);
+    const hasChangedYear = !adapter.isSameYear(prevMonth, month);
     if (hasChangedMonth) {
       onMonthChange?.(month);
     }
@@ -238,6 +235,7 @@ export const useCalendarState = (
       onYearChange?.(adapter.startOfYear(month));
     }
 
+    currentMonthRef.current = month;
     focusedDayRef.current =
       calendarState.focusedDay != null &&
       focusedDay != null &&
@@ -248,7 +246,7 @@ export const useCalendarState = (
     dispatch({
       type: 'setVisibleDate',
       month,
-      direction: adapter.isAfterDay(month, calendarState.currentMonth) ? 'left' : 'right',
+      direction: adapter.isAfterDay(month, prevMonth) ? 'left' : 'right',
       focusedDay: focusedDayRef.current,
       skipAnimation,
     });
@@ -259,24 +257,16 @@ export const useCalendarState = (
   }, []);
 
   // A disabled or missing `focusedDay` leaves the day grid without a tab stop.
-  // While the whole month is disabled, keep the stored day so it comes back once days are enabled.
-  useEnhancedEffect(() => {
-    const tabStop = calendarState.focusedDay ?? calendarState.currentMonth;
-    const focusedDay = isDateDisabled(tabStop) ? findClosestEnabledDateInMonth(tabStop) : tabStop;
-    if (focusedDay != null && focusedDay !== calendarState.focusedDay) {
-      focusedDayRef.current = focusedDay;
-      dispatch({ type: 'setFocusedDay', focusedDay });
-    }
-  }, [
-    calendarState.focusedDay,
-    calendarState.currentMonth,
-    isDateDisabled,
-    findClosestEnabledDateInMonth,
-  ]);
+  // The stored day is kept, so the tab stop goes back to it once it is enabled again.
+  const tabStop = calendarState.focusedDay ?? calendarState.currentMonth;
+  const focusedDay = isDateDisabled(tabStop)
+    ? (findClosestEnabledDateInMonth(tabStop) ?? calendarState.focusedDay)
+    : tabStop;
 
   return {
     referenceDate,
-    calendarState,
+    calendarState:
+      focusedDay === calendarState.focusedDay ? calendarState : { ...calendarState, focusedDay },
     setVisibleDate,
     isDateDisabled,
     onMonthSwitchingAnimationEnd,
