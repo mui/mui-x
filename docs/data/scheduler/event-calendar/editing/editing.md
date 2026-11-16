@@ -84,6 +84,9 @@ The dialog has two tabs:
 - **Recurrence**: frequency, interval, days of the week, and end condition.
   Only available with the Premium package (`@mui/x-scheduler-premium`), when the [`recurringEvents` feature](/x/react-scheduler/recurring-events/) is enabled.
 
+Ticking **All day** keeps the dates and drops the times.
+Unticking it brings the times back: the ones the event had in this editing session, or, for an event that was already all-day, the next hour on the display clock lasting the default event duration (`eventCreation.duration`), on the same dates.
+
 Click any event in the demo below to open the dialog.
 From there you can edit the event details or delete it.
 

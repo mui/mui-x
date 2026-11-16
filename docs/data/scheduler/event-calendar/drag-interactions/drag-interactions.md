@@ -150,6 +150,11 @@ function App() {
 }
 ```
 
+## Between the all-day row and the time grid
+
+Dropping a timed event on the all-day row makes it a one-day all-day event on that day.
+Dropping an all-day event on the time grid makes it a timed event starting at the dropped slot and lasting the default event duration (`eventCreation.duration`, 30 minutes by default), whatever the number of days it covered.
+
 ## External drag and drop
 
 Use the `canDragEventsFromTheOutside` and `canDropEventsToTheOutside` props to drag events between the Event Calendar and external containers.
