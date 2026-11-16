@@ -1,5 +1,6 @@
 import {
   FIRST_SUPPORTED_DAY,
+  formatIsoDate,
   fromDayNumber,
   getDaysInMonth,
   isValidIsoDate,
@@ -9,8 +10,7 @@ import {
 } from './iso';
 
 /**
- * A calendar system that `registerCalendar()` adds, such as `hebrewCalendar`. Its arithmetic is
- * internal.
+ * A calendar system that `registerCalendar()` adds, such as `hebrewCalendar`.
  */
 export interface CalendarSystem {
   /**
@@ -176,13 +176,11 @@ function readPositiveInteger(value: unknown, field: 'month' | 'day', apiName: st
 }
 
 /**
- * Date fields converted by `readCalendarFields()`. Either `year` or `era` and `eraYear` are set,
- * and either `month` or `monthCode`.
+ * Date fields converted by `readCalendarFields()`, with the year an era and a year of era name.
+ * Either `month` or `monthCode` is set.
  */
 export interface CalendarFieldsRead {
-  era: string | undefined;
-  eraYear: number | undefined;
-  year: number | undefined;
+  year: number;
   month: number | undefined;
   monthCode: string | undefined;
   day: number;
@@ -192,15 +190,17 @@ export interface CalendarFieldsRead {
  * Converts date fields like Temporal, in its order: numbers are truncated, and a month or a day
  * below 1 throws. Then throws a `TypeError` for a missing field: a year, or an era and a year of
  * era together, a month or a month code, and a day. A calendar without eras ignores their fields.
+ * Last, resolves an era and a year of era to a year, and throws when the calendar doesn't have
+ * them or when they don't name `year`.
  */
 export function readCalendarFields(
-  calendar: Pick<CalendarImplementation, 'getYearFromEra'>,
+  calendar: Pick<CalendarImplementation, 'id' | 'getYearFromEra'>,
   item: CalendarDateFieldsInput,
   apiName: string,
 ): CalendarFieldsRead {
   const hasEras = calendar.getYearFromEra != null;
   const day = readPositiveInteger(item.day, 'day', apiName);
-  const era = hasEras && item.era !== undefined ? String(item.era).toLowerCase() : undefined;
+  const era = hasEras && item.era !== undefined ? String(item.era) : undefined;
   const eraYear = hasEras ? readOptionalInteger(item.eraYear, 'eraYear') : undefined;
   const month = readPositiveInteger(item.month, 'month', apiName);
   const monthCode = item.monthCode === undefined ? undefined : String(item.monthCode);
@@ -224,7 +224,17 @@ export function readCalendarFields(
         'Pass an object such as `{ year: 2024, month: 5, day: 24 }`, with an era and a year of era together in place of the year if needed.',
     );
   }
-  return { era, eraYear, year, month, monthCode, day: day! };
+  let resolvedYear = year;
+  if (era !== undefined) {
+    resolvedYear = calendar.getYearFromEra!(era, eraYear!);
+    if (resolvedYear === undefined || (year !== undefined && year !== resolvedYear)) {
+      throwFieldsError(
+        apiName,
+        `have an era and a year of era the "${calendar.id}" calendar can't use`,
+      );
+    }
+  }
+  return { year: resolvedYear!, month, monthCode, day: day! };
 }
 
 /**
@@ -255,19 +265,26 @@ export function addIsoMonths(dayNumber: number, months: number): number {
   );
 }
 
-const getGregorianEra = (year: number) =>
+/**
+ * The Gregorian era of a year, `ce` or `bce`.
+ */
+export const getGregorianEra = (year: number) =>
   year > 0 ? { era: 'ce', eraYear: year } : { era: 'bce', eraYear: 1 - year };
+
+/**
+ * The year of a Gregorian year of era, or `undefined` for another era.
+ */
+export function getGregorianYearFromEra(era: string, eraYear: number) {
+  if (era === 'ce' || era === 'ad') {
+    return eraYear;
+  }
+  return era === 'bce' || era === 'bc' ? 1 - eraYear : undefined;
+}
 
 /**
  * The ISO calendar, or the Gregorian calendar, which adds the `ce` and `bce` eras.
  */
 function createIsoCalendar(id: string, hasEras: boolean): CalendarImplementation {
-  const getYearFromEra = (era: string, eraYear: number) => {
-    if (era === 'ce' || era === 'ad') {
-      return eraYear;
-    }
-    return era === 'bce' || era === 'bc' ? 1 - eraYear : undefined;
-  };
   return {
     id,
     firstDay: FIRST_SUPPORTED_DAY,
@@ -279,7 +296,7 @@ function createIsoCalendar(id: string, hasEras: boolean): CalendarImplementation
     getDaysInMonth,
     eras: hasEras ? ['bce', 'ce'] : undefined,
     getEra: hasEras ? getGregorianEra : undefined,
-    getYearFromEra: hasEras ? getYearFromEra : undefined,
+    getYearFromEra: hasEras ? getGregorianYearFromEra : undefined,
     getDate: (dayNumber) => {
       const date = fromDayNumber(dayNumber);
       const era = hasEras ? getGregorianEra(date.year) : undefined;
@@ -305,17 +322,7 @@ export function resolveIsoFields(
   apiName: string,
 ): number {
   const fields = readCalendarFields(calendar, item, apiName);
-  let year = fields.year;
-  if (fields.era !== undefined) {
-    const yearFromEra = calendar.getYearFromEra!(fields.era, fields.eraYear!);
-    if (yearFromEra === undefined || (year !== undefined && year !== yearFromEra)) {
-      throwFieldsError(
-        apiName,
-        `have an era and a year of era the "${calendar.id}" calendar can't use`,
-      );
-    }
-    year = yearFromEra;
-  }
+  const year = fields.year;
   const codeMonth =
     fields.monthCode === undefined ? undefined : MONTH_CODES.indexOf(fields.monthCode) + 1;
   if (
@@ -328,10 +335,10 @@ export function resolveIsoFields(
   let day = fields.day;
   if (overflow === 'constrain') {
     month = Math.min(month, 12);
-    day = Math.min(day, getDaysInMonth(year!, month));
+    day = Math.min(day, getDaysInMonth(year, month));
   }
-  checkIsoDate(year!, month, day);
-  return toDayNumber(year!, month, day);
+  checkIsoDate(year, month, day);
+  return toDayNumber(year, month, day);
 }
 
 const ISO_CALENDAR = /* @__PURE__ */ createIsoCalendar(ISO_CALENDAR_ID, false);
@@ -361,6 +368,13 @@ const CALENDAR_ALIASES: Record<string, string> = {
 export function canonicalizeCalendarId(id: string) {
   const lowerCase = id.toLowerCase();
   return CALENDAR_ALIASES[lowerCase] ?? lowerCase;
+}
+
+/**
+ * Whether a canonical identifier names a calendar that BaseTemporal implements, registered or not.
+ */
+export function isCalendarSupported(canonicalId: string): boolean {
+  return registry.has(canonicalId) || CALENDAR_IDS.has(canonicalId);
 }
 
 /**
@@ -403,8 +417,9 @@ export function getCalendar(id: unknown): CalendarImplementation {
 }
 
 /**
- * Makes calendars available to every `BaseTemporal` value and component of this copy of the
- * package. Registering the same calendar again does nothing.
+ * Makes calendars available to every `BaseTemporal` value and component.
+ * Registering the same calendar again does nothing.
+ * @param calendars The calendars to register, such as `hebrewCalendar`.
  */
 export function registerCalendar(...calendars: CalendarSystem[]): void {
   // Checks every calendar before registering any, so a rejected call registers none.
@@ -470,10 +485,8 @@ export function getMonthOfCode(
  */
 export function checkCalendarRange(calendar: CalendarImplementation, dayNumber: number) {
   if (dayNumber < calendar.firstDay || dayNumber > calendar.lastDay) {
-    const first = fromDayNumber(calendar.firstDay);
-    const last = fromDayNumber(calendar.lastDay);
     throw new Error(
-      `MUI X Scheduler: A date of the "${calendar.id}" calendar is outside the days it supports, from the ISO date ${first.year}-${first.month}-${first.day} to ${last.year}-${last.month}-${last.day}. ` +
+      `MUI X Scheduler: A date of the "${calendar.id}" calendar is outside the days it supports, from the ISO date ${formatIsoDate(calendar.firstDay)} to ${formatIsoDate(calendar.lastDay)}. ` +
         "Outside these days, `Intl.DateTimeFormat` doesn't label dates as the Scheduler computes them, or `Date` can't represent them. " +
         'Use a date inside the range.',
     );
