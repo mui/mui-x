@@ -260,7 +260,10 @@ describe('Core - EventCalendarStore', () => {
       });
 
       it('should keep the bounds on the committed instants', () => {
-        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, displayTimezone: 'America/New_York' });
+        const store = new EventCalendarStore({
+          ...DEFAULT_PARAMS,
+          displayTimezone: 'America/New_York',
+        });
         const edited = EventBuilder.new()
           .withDataTimezone('UTC')
           .withDisplayTimezone('America/New_York')
@@ -285,7 +288,10 @@ describe('Core - EventCalendarStore', () => {
       it('should keep a bound left out on its stored value', () => {
         // An all-day event on July 4th displayed in New York: an end-only resize keeps the
         // untouched start.
-        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, displayTimezone: 'America/New_York' });
+        const store = new EventCalendarStore({
+          ...DEFAULT_PARAMS,
+          displayTimezone: 'America/New_York',
+        });
         const edited = utcJuly4AllDayBuilder()
           .withDisplayTimezone('America/New_York')
           .toOccurrence();

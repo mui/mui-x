@@ -496,11 +496,7 @@ premiumStoreClasses.forEach((storeClass) => {
         const base = lateBuilder.toOccurrence('2025-07-08T23:00:00Z') as any;
         const armed = {
           ...base,
-          key: getRecurringOccurrenceKey(
-            'late',
-            base.start.timestamp,
-            base.timezone,
-          ),
+          key: getRecurringOccurrenceKey('late', base.start.timestamp, base.timezone),
         };
         store.startEditing(armed, 'armed');
         return { store, armed };
@@ -595,9 +591,7 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(occurrence.start.plainDateTime.toString()).to.equal('2025-07-07T09:00:00');
       expect(occurrence.end.plainDateTime.toString()).to.equal('2025-07-07T10:00:00');
       expect(occurrence.start.timestamp).to.equal(dayA.getTime());
-      expect(new Date(occurrence!.end.timestamp)).toEqualDateTime(
-        addHours(dayA, 1),
-      );
+      expect(new Date(occurrence!.end.timestamp)).toEqualDateTime(addHours(dayA, 1));
     });
 
     it('should re-point a rename-only scope change of an all-day series onto the split series from another timezone', () => {
@@ -710,9 +704,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
         expect(onEventsChange.mock.calls.length).to.equal(0);
         const seriesAfter = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
-        expect(seriesAfter.start.timestamp).to.equal(
-          seriesBefore.start.timestamp,
-        );
+        expect(seriesAfter.start.timestamp).to.equal(seriesBefore.start.timestamp);
         expect(seriesAfter.rrule).to.deep.equal(seriesBefore.rrule);
         // No surface of its own for this rejection either — pushed as a toast.
         expect(store.state.errors.length).to.equal(1);
@@ -764,9 +756,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
         expect(store.state.errors.length).to.equal(0);
         const series = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
-        expect(new Date(series.start.timestamp)).toEqualDateTime(
-          addMinutes(dayA, 30),
-        );
+        expect(new Date(series.start.timestamp)).toEqualDateTime(addMinutes(dayA, 30));
         expect(new Date(series.end.timestamp)).toEqualDateTime(addHours(dayA, 1));
       });
 
@@ -824,9 +814,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
           const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
           expect(occurrence?.key).to.equal(armedKey);
-          expect(new Date(occurrence!.start.timestamp)).toEqualDateTime(
-            secondMonday,
-          );
+          expect(new Date(occurrence!.start.timestamp)).toEqualDateTime(secondMonday);
         });
       });
     });
