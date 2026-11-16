@@ -1,9 +1,14 @@
-import type { SchedulerEvent, SchedulerProcessedEvent, WeekStartsOn } from '../../models';
+import type {
+  SchedulerEvent,
+  SchedulerEventUpdatedProperties,
+  SchedulerProcessedEvent,
+  WeekStartsOn,
+} from '../../models';
 import { BaseTemporal } from './base-temporal';
 import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
 import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import type { WeekInfo } from './date-locale';
-import { toEpochMs, toPlainDateTime } from './plain-date-utils/timeZone';
+import { toEditedEpochMs, toEpochMs, toPlainDateTime } from './plain-date-utils/timeZone';
 import { isDateOnlyString, isInstantString } from './plain-date-utils/date';
 
 /**
@@ -64,6 +69,64 @@ export function getUntilReferenceString(event: SchedulerEvent): string {
   }
   const date = `${match[1]}-${match[2]}-${match[3]}`;
   return match[4] === undefined ? date : `${date}T${match[4]}:${match[5]}:${match[6]}Z`;
+}
+
+type EventDateKey = 'start' | 'end' | 'exDates' | 'rrule';
+
+/**
+ * `TChanges` with its dates written as event strings.
+ */
+type WithEventDateStrings<TChanges> = {
+  [K in keyof TChanges]: K extends EventDateKey ? SchedulerEvent[K] : TChanges[K];
+};
+
+/**
+ * Writes the dates of an edit of `event`, or of an event derived from it, as event strings in the
+ * format of its own, in a copy of `changes`. A date that reads the same as the one the event has
+ * keeps its string, so an unchanged date keeps its format and its instant: `start`, `end`, and for
+ * an exception the one at the same index. The others resolve like `toEditedEpochMs()`, the end at
+ * or after the start, and a new exception takes the format of `start`. A processed `until` takes the
+ * format `getUntilReferenceString()` returns.
+ */
+export function toEventDateStrings<
+  TChanges extends Partial<Pick<SchedulerEventUpdatedProperties, EventDateKey>>,
+>(changes: TChanges, event: SchedulerProcessedEvent): WithEventDateStrings<TChanges> {
+  const model = event.modelInBuiltInFormat;
+  const { timezone } = event;
+  const { dataStart, dataEnd } = event.unstable_internalInfos;
+  const result: Partial<Pick<SchedulerEvent, EventDateKey>> = {
+    ...(changes as Partial<Pick<SchedulerEvent, EventDateKey>>),
+  };
+
+  let startMs = dataStart;
+  if (changes.start != null) {
+    startMs = toEditedEpochMs(changes.start, timezone, dataStart);
+    result.start =
+      startMs === dataStart ? model.start : timestampToEventString(startMs, model.start, timezone);
+  }
+  if (changes.end != null) {
+    const endMs = toEditedEpochMs(changes.end, timezone, dataEnd, startMs);
+    result.end = endMs === dataEnd ? model.end : timestampToEventString(endMs, model.end, timezone);
+  }
+  if (changes.exDates != null) {
+    result.exDates = changes.exDates.map((exDate, index) =>
+      event.exDates?.[index]?.equals(exDate)
+        ? model.exDates![index]
+        : timestampToEventString(
+            toEpochMs(exDate, timezone),
+            model.exDates?.[index] ?? model.start,
+            timezone,
+          ),
+    );
+  }
+  const { rrule } = changes;
+  if (rrule?.until != null) {
+    result.rrule = {
+      ...rrule,
+      until: untilToEventString(rrule.until, getUntilReferenceString(model), timezone),
+    };
+  }
+  return result as WithEventDateStrings<TChanges>;
 }
 
 /**

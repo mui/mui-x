@@ -4,8 +4,7 @@ import type {
   SchedulerEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
 import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
-import { createStartOfPlainDate, toPlainDate } from '@mui/x-scheduler-internals/internals';
-import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import { RecurringSeries } from './RecurringSeries';
 
 export function deleteRecurringEvent(
@@ -50,14 +49,9 @@ export function applyRecurringDeleteOnlyThis(
   const occurrenceDay = toPlainDate(occurrence.unstable_internalInfos.dataStart, timezone);
   const previousExDates = originalEvent.exDates ?? [];
   const excludedDays = [...previousExDates.map((exDate) => exDate.toPlainDate()), occurrenceDay];
-  // The exceptions already stored keep their instant, which their wall-clock time can't tell
-  // apart in the hour a DST transition repeats.
-  const exDates = [
-    ...(originalEvent.modelInBuiltInFormat.exDates ?? []).map(
-      (exDate) => new Date(resolveEventTimestamp(exDate, timezone)),
-    ),
-    createStartOfPlainDate(occurrenceDay, timezone),
-  ];
+  // The store keeps the strings of the exceptions it already has, and so their instant, which
+  // their wall-clock time can't tell apart in the hour a DST transition repeats.
+  const exDates = [...previousExDates, occurrenceDay.toPlainDateTime()];
 
   if (!RecurringSeries.fromEvent(originalEvent, excludedDays).hasOccurrence()) {
     return { deleted: [originalEvent.id] };

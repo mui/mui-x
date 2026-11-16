@@ -8,6 +8,7 @@ import {
   ResourceBuilder,
   storeClasses,
   utcJuly4AllDayBuilder,
+  toWallClock,
 } from 'test/utils/scheduler';
 import type {
   SchedulerEvent,
@@ -162,8 +163,8 @@ storeClasses.forEach((storeClass) => {
         store.updateEvent({
           id: '1',
           title: 'Event 1 updated',
-          start: createDate('2025-07-01T09:30:00.000Z'),
-          end: createDate('2025-07-01T10:30:00.000Z'),
+          start: toWallClock(createDate('2025-07-01T09:30:00.000Z')),
+          end: toWallClock(createDate('2025-07-01T10:30:00.000Z')),
           allDay: true,
         });
 
@@ -193,8 +194,8 @@ storeClasses.forEach((storeClass) => {
         });
         const createdId = store.createEvent({
           title: 'Event 1',
-          start: createDate('2025-07-01T09:00:00.000Z'),
-          end: createDate('2025-07-01T10:00:00.000Z'),
+          start: createDate('2025-07-01T09:00:00.000Z').toISOString(),
+          end: createDate('2025-07-01T10:00:00.000Z').toISOString(),
           allDay: false,
         });
 
@@ -233,7 +234,11 @@ storeClasses.forEach((storeClass) => {
 
         const start = createDate('2025-07-01T11:00:00.000Z');
         const end = createDate('2025-07-01T12:00:00.000Z');
-        const duplicatedId = store.duplicateEventOccurrence('1', start, end);
+        const duplicatedId = store.duplicateEventOccurrence(
+          '1',
+          toWallClock(start),
+          toWallClock(end),
+        );
 
         const duplicated = onEventsChange.mock.lastCall?.[0].find(
           (event) => event.myId === duplicatedId,
@@ -272,8 +277,8 @@ storeClasses.forEach((storeClass) => {
             result = store.updateEvent({
               id: '1',
               title: 'Event 1 updated',
-              start: createDate('2025-07-02T09:00:00.000Z'),
-              end: createDate('2025-07-02T10:00:00.000Z'),
+              start: toWallClock(createDate('2025-07-02T09:00:00.000Z')),
+              end: toWallClock(createDate('2025-07-02T10:00:00.000Z')),
             });
           }).toWarnDev([
             `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
@@ -304,8 +309,8 @@ storeClasses.forEach((storeClass) => {
           expect(() => {
             store.updateEvent({
               id: '1',
-              start: createDate('2025-07-02T09:00:00.000Z'),
-              end: createDate('2025-07-02T10:00:00.000Z'),
+              start: toWallClock(createDate('2025-07-02T09:00:00.000Z')),
+              end: toWallClock(createDate('2025-07-02T10:00:00.000Z')),
             });
           }).toWarnDev([
             `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
@@ -315,8 +320,8 @@ storeClasses.forEach((storeClass) => {
           expect(() => {
             store.updateEvent({
               id: '2',
-              start: createDate('2025-07-02T09:00:00.000Z'),
-              end: createDate('2025-07-02T10:00:00.000Z'),
+              start: toWallClock(createDate('2025-07-02T09:00:00.000Z')),
+              end: toWallClock(createDate('2025-07-02T10:00:00.000Z')),
             });
           }).not.toWarnDev();
         });
@@ -332,7 +337,7 @@ storeClasses.forEach((storeClass) => {
             result = store.updateEvent({
               id: '1',
               title: 'Event 1 updated',
-              start: createDate('2025-07-02T09:00:00.000Z'),
+              start: toWallClock(createDate('2025-07-02T09:00:00.000Z')),
             });
           }).toWarnDev([`${START_WARNING}\n${START_NOT_WRITABLE_REASON}`]);
 
@@ -358,7 +363,7 @@ storeClasses.forEach((storeClass) => {
           expect(() => {
             store.updateEvent({
               id: '1',
-              end: createDate('2025-07-01T11:00:00.000Z'),
+              end: toWallClock(createDate('2025-07-01T11:00:00.000Z')),
             });
           }).not.toWarnDev();
 
@@ -387,8 +392,8 @@ storeClasses.forEach((storeClass) => {
           expect(() => {
             result = store.updateEvent({
               id: '1',
-              start: dataStart,
-              end: addDays(dataStart, 2),
+              start: toWallClock(dataStart),
+              end: toWallClock(addDays(dataStart, 2)),
             });
           }).toWarnDev([
             `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
@@ -409,8 +414,8 @@ storeClasses.forEach((storeClass) => {
           expect(() => {
             result = store.updateEvent({
               id: '1',
-              start: createDate('2025-07-02T09:00:00.000Z'),
-              end: createDate('2025-07-02T10:00:00.000Z'),
+              start: toWallClock(createDate('2025-07-02T09:00:00.000Z')),
+              end: toWallClock(createDate('2025-07-02T10:00:00.000Z')),
             });
           }).toWarnDev([
             `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_END}`,
@@ -431,7 +436,7 @@ storeClasses.forEach((storeClass) => {
             store.updateEvent({
               id: '1',
               title: 'Event 1 updated',
-              end: createDate('2025-07-02T10:00:00.000Z'),
+              end: toWallClock(createDate('2025-07-02T10:00:00.000Z')),
             });
           }).toWarnDev([
             "MUI X Scheduler: An event's `end` date was not updated.\n" +
@@ -452,8 +457,8 @@ storeClasses.forEach((storeClass) => {
             result = store.updateEvent({
               id: '1',
               title: 'Event 1 updated',
-              start: createDate('2025-07-02T09:00:00.000Z'),
-              end: createDate('2025-07-02T11:00:00.000Z'),
+              start: toWallClock(createDate('2025-07-02T09:00:00.000Z')),
+              end: toWallClock(createDate('2025-07-02T11:00:00.000Z')),
             });
           }).toWarnDev([
             `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_BOTH}`,
@@ -473,7 +478,7 @@ storeClasses.forEach((storeClass) => {
           expect(() => {
             result = store.updateEvent({
               id: '1',
-              start: createDate('2025-07-02T09:00:00.000Z'),
+              start: toWallClock(createDate('2025-07-02T09:00:00.000Z')),
             });
           }).toWarnDev([`${START_WARNING}\n${START_NOT_WRITABLE_REASON}`]);
 
@@ -498,8 +503,8 @@ storeClasses.forEach((storeClass) => {
             result = store.updateEvent({
               id: '1',
               title: 'Event 1 updated',
-              start: createDate('2025-07-01T09:00:00.000Z'),
-              end: createDate('2025-07-01T10:00:00.000Z'),
+              start: toWallClock(createDate('2025-07-01T09:00:00.000Z')),
+              end: toWallClock(createDate('2025-07-01T10:00:00.000Z')),
             });
           }).toWarnDev([
             `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
@@ -515,9 +520,9 @@ storeClasses.forEach((storeClass) => {
           store.cutEvent('1');
 
           expect(() => {
-            expect(store.pasteEvent({ start: createDate('2025-07-02T09:00:00.000Z') })).to.equal(
-              null,
-            );
+            expect(
+              store.pasteEvent({ start: toWallClock(createDate('2025-07-02T09:00:00.000Z')) }),
+            ).to.equal(null);
           }).toWarnDev([`${PASTE_WARNING}\n${DATES_NOT_WRITABLE_REASON_START}`]);
 
           expect(onEventsChange.mock.calls.length).to.equal(0);
@@ -546,9 +551,9 @@ storeClasses.forEach((storeClass) => {
           store.copyEvent('1');
 
           expect(() => {
-            expect(store.pasteEvent({ start: createDate('2025-07-02T09:00:00.000Z') })).to.equal(
-              null,
-            );
+            expect(
+              store.pasteEvent({ start: toWallClock(createDate('2025-07-02T09:00:00.000Z')) }),
+            ).to.equal(null);
           }).toWarnDev([`${PASTE_WARNING}\n${DATES_NOT_WRITABLE_REASON_START}`]);
 
           expect(onEventsChange.mock.calls.length).to.equal(0);
@@ -576,8 +581,8 @@ storeClasses.forEach((storeClass) => {
           expect(() => {
             createdId = store.createEvent({
               title: 'New event',
-              start: createDate('2025-07-01T09:00:00.000Z'),
-              end: createDate('2025-07-01T10:00:00.000Z'),
+              start: createDate('2025-07-01T09:00:00.000Z').toISOString(),
+              end: createDate('2025-07-01T10:00:00.000Z').toISOString(),
             });
           }).toWarnDev([
             `MUI X Scheduler: An event was not created because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
@@ -596,8 +601,8 @@ storeClasses.forEach((storeClass) => {
           expect(() => {
             duplicatedId = store.duplicateEventOccurrence(
               '1',
-              createDate('2025-07-01T11:00:00.000Z'),
-              createDate('2025-07-01T12:00:00.000Z'),
+              toWallClock(createDate('2025-07-01T11:00:00.000Z')),
+              toWallClock(createDate('2025-07-01T12:00:00.000Z')),
             );
           }).toWarnDev([
             `MUI X Scheduler: An event was not created because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
@@ -835,8 +840,8 @@ storeClasses.forEach((storeClass) => {
           title: 'Event 2 updated',
           description: 'Event 2 description',
           allDay: false,
-          start: createDate('2025-07-01T11:30:00Z'),
-          end: createDate('2025-07-01T12:30:00Z'),
+          start: toWallClock(createDate('2025-07-01T11:30:00Z')),
+          end: toWallClock(createDate('2025-07-01T12:30:00Z')),
         });
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
@@ -877,8 +882,8 @@ storeClasses.forEach((storeClass) => {
         store.updateEvent({
           id: event.id,
           title: 'Updated title',
-          start: newStart,
-          end: newEnd,
+          start: toWallClock(newStart, dataTimezone),
+          end: toWallClock(newEnd, dataTimezone),
         });
 
         const updated = onEventsChange.mock.lastCall?.[0][0];
@@ -972,7 +977,7 @@ storeClasses.forEach((storeClass) => {
           });
 
           expect(() => {
-            store.updateEvent({ id: event.id, title: 'updated', rrule: 'FREQ=DAILY' });
+            store.updateEvent({ id: event.id, title: 'updated', rrule: { freq: 'DAILY' } });
           }).toWarnDev([
             'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
           ]);
@@ -1549,7 +1554,11 @@ storeClasses.forEach((storeClass) => {
 
         const start = createDate('2025-07-01T09:00:00Z');
         const end = createDate('2025-07-01T10:00:00Z');
-        const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
+        const duplicatedId = store.duplicateEventOccurrence(
+          event.id,
+          toWallClock(start),
+          toWallClock(end),
+        );
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
         expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
@@ -1578,7 +1587,11 @@ storeClasses.forEach((storeClass) => {
 
           const start = createDate('2025-07-01T09:00:00Z');
           const end = createDate('2025-07-01T10:00:00Z');
-          const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
+          const duplicatedId = store.duplicateEventOccurrence(
+            event.id,
+            toWallClock(start),
+            toWallClock(end),
+          );
 
           const originalEventWithoutRecurrence = { ...event };
           delete originalEventWithoutRecurrence.rrule;
@@ -1613,7 +1626,11 @@ storeClasses.forEach((storeClass) => {
 
         const start = createDate('2025-07-01T09:00:00Z');
         const end = createDate('2025-07-01T10:00:00Z');
-        const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
+        const duplicatedId = store.duplicateEventOccurrence(
+          event.id,
+          toWallClock(start),
+          toWallClock(end),
+        );
 
         const duplicated = onEventsChange.mock.lastCall?.[0].find(
           (event) => event.id === duplicatedId,
@@ -1627,7 +1644,7 @@ storeClasses.forEach((storeClass) => {
         const event = EventBuilder.new().build();
         const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] });
         const oldState = store.state;
-        store.pasteEvent({ start: createDate('2025-07-01T09:00:00Z') });
+        store.pasteEvent({ start: toWallClock(createDate('2025-07-01T09:00:00Z')) });
         expect(store.state).to.deep.equal(oldState);
       });
 
@@ -1643,7 +1660,7 @@ storeClasses.forEach((storeClass) => {
         store.copyEvent(event.id);
 
         const createdEventId = store.pasteEvent({
-          start: createDate('2025-07-01T09:00:00Z'),
+          start: toWallClock(createDate('2025-07-01T09:00:00Z')),
         });
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
@@ -1674,7 +1691,7 @@ storeClasses.forEach((storeClass) => {
         store.copyEvent(event.id);
 
         const createdEventId = store.pasteEvent({
-          start: createDate('2025-07-01T09:00:00Z'),
+          start: toWallClock(createDate('2025-07-01T09:00:00Z')),
         });
 
         const pasted = onEventsChange.mock.lastCall?.[0].find(
@@ -1751,7 +1768,7 @@ storeClasses.forEach((storeClass) => {
         store.cutEvent(event.id);
 
         const createdEventId = store.pasteEvent({
-          start: createDate('2025-07-01T09:00:00Z'),
+          start: toWallClock(createDate('2025-07-01T09:00:00Z')),
         });
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
@@ -1828,13 +1845,13 @@ storeClasses.forEach((storeClass) => {
         });
         store.cutEvent(event.id);
 
-        store.pasteEvent({ start: createDate('2025-07-01T09:00:00Z') });
+        store.pasteEvent({ start: toWallClock(createDate('2025-07-01T09:00:00Z')) });
 
         expect(store.state.copiedEvent).to.equal(null);
         expect(onEventsChange.mock.calls.length).to.equal(1);
 
         const result = store.pasteEvent({
-          start: createDate('2025-07-02T09:00:00Z'),
+          start: toWallClock(createDate('2025-07-02T09:00:00Z')),
         });
 
         expect(result).to.equal(null);
@@ -1853,10 +1870,10 @@ storeClasses.forEach((storeClass) => {
         store.copyEvent(event.id);
 
         const firstPastedId = store.pasteEvent({
-          start: createDate('2025-07-01T09:00:00Z'),
+          start: toWallClock(createDate('2025-07-01T09:00:00Z')),
         });
         const secondPastedId = store.pasteEvent({
-          start: createDate('2025-07-02T09:00:00Z'),
+          start: toWallClock(createDate('2025-07-02T09:00:00Z')),
         });
 
         expect(store.state.copiedEvent).to.deep.equal({ id: event.id, action: 'copy' });
@@ -1894,8 +1911,8 @@ storeClasses.forEach((storeClass) => {
           expect(() => {
             store.updateEvent({
               id: '1',
-              start: createDate('2025-07-02T09:00:00.000Z'),
-              end: createDate('2025-07-02T10:00:00.000Z'),
+              start: toWallClock(createDate('2025-07-02T09:00:00.000Z')),
+              end: toWallClock(createDate('2025-07-02T10:00:00.000Z')),
             });
           }).not.toWarnDev();
 
@@ -1911,9 +1928,9 @@ storeClasses.forEach((storeClass) => {
           store.cutEvent('1');
 
           expect(() => {
-            expect(store.pasteEvent({ start: createDate('2025-07-02T09:00:00.000Z') })).to.equal(
-              null,
-            );
+            expect(
+              store.pasteEvent({ start: toWallClock(createDate('2025-07-02T09:00:00.000Z')) }),
+            ).to.equal(null);
           }).toWarnDev([
             `MUI X Scheduler: The event with id="1" was not pasted.\n${READ_ONLY_EVENT_REASON}`,
           ]);
@@ -1941,7 +1958,7 @@ storeClasses.forEach((storeClass) => {
           store.copyEvent('1');
 
           expect(() => {
-            store.pasteEvent({ start: createDate('2025-07-02T09:00:00.000Z') });
+            store.pasteEvent({ start: toWallClock(createDate('2025-07-02T09:00:00.000Z')) });
           }).not.toWarnDev();
 
           expect(onEventsChange.mock.calls.length).to.equal(1);

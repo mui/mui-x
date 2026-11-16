@@ -24,6 +24,7 @@ import {
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
 import type { StandaloneEvent } from '../../standalone-event';
 import { getPrimaryResourceId, getOccurrenceModelEnd } from './event-utils';
+import { toPlainDateTime } from './plain-date-utils/timeZone';
 
 // Not every drag source exposes `sourceResourceId` (only rows that know which
 // resource they represent, e.g. the Event Timeline Premium, can report it) —
@@ -248,12 +249,13 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
   const allDayToggled =
     additionalChanges.allDay != null &&
     additionalChanges.allDay !== (originalOccurrence.allDay ?? false);
+  // The store takes the dates on the wall clock of the event's timezone.
   const changes: SchedulerEventUpdatedProperties = { id: eventId };
   if (allDayToggled || originalOccurrence.start.timestamp !== start) {
-    changes.start = new Date(start);
+    changes.start = toPlainDateTime(start, originalOccurrence.timezone);
   }
   if (allDayToggled || getOccurrenceModelEnd(originalOccurrence) !== end) {
-    changes.end = new Date(end);
+    changes.end = toPlainDateTime(end, originalOccurrence.timezone);
   }
 
   // If `undefined`, we want to set the event resource to `undefined` (no resource).
@@ -330,8 +332,8 @@ function applyExternalDragOccurrencePlaceholder(
   addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>,
 ) {
   const event = {
-    start: new Date(placeholder.start),
-    end: new Date(placeholder.end),
+    start: new Date(placeholder.start).toISOString(),
+    end: new Date(placeholder.end).toISOString(),
     ...placeholder.eventData,
   };
 

@@ -48,6 +48,7 @@ import {
   BUILT_IN_FORM_KEYS,
   getResentRangeBounds,
   getEventBoundTimestamp,
+  getEventTimezone,
   getEventTimezonePlainDate,
   getRecurrenceRuleBound,
 } from '../event-dialog/utils';
@@ -470,11 +471,18 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         rruleToSubmit = recurrencePresets[values.recurrenceSelection];
       }
 
-      // The store receives the instants of the fields, read in the display timezone.
-      const start = new Date(range.start);
-      const end = new Date(range.end);
+      // The fields are read in the display timezone. A new event takes their instants, and an
+      // update their wall-clock time in the event's timezone.
+      const eventTimezone = getEventTimezone(occurrence);
+      const start = toPlainDateTime(range.start, eventTimezone);
+      const end = toPlainDateTime(range.end, eventTimezone);
       if (isCreation) {
-        store.createEvent({ ...metaChanges, start, end, rrule: rruleToSubmit });
+        store.createEvent({
+          ...metaChanges,
+          start: new Date(range.start).toISOString(),
+          end: new Date(range.end).toISOString(),
+          rrule: rruleToSubmit,
+        });
       } else if (current.showRecurrence && isEventOccurrence(occurrence) && occurrence.rrule) {
         const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
           store.state,

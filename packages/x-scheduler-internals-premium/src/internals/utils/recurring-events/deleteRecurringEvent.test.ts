@@ -4,12 +4,14 @@ import {
   EventBuilder,
   setSystemTimezone,
   startOfDay,
+  toWallClock,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import type { SchedulerProcessedEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
 import {
   BaseTemporal,
   getUntilReferenceString,
+  toEventDateStrings,
   untilToEventString,
 } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
@@ -61,7 +63,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
       expect(result.deleted).to.equal(undefined);
       expect(result.created).to.equal(undefined);
       expect(result.updated).to.deep.equal([
-        { id: defaultEvent.id, exDates: [startOfDay(occurrenceStart)] },
+        { id: defaultEvent.id, exDates: [toWallClock(startOfDay(occurrenceStart))] },
       ]);
     });
 
@@ -81,12 +83,15 @@ describe('recurring-events/deleteRecurringEvent', () => {
       expect(result.updated).to.deep.equal([
         {
           id: eventWithExDate.id,
-          exDates: [createDate('2025-01-02T09:00:00Z'), startOfDay(occurrenceStart)],
+          exDates: [
+            toWallClock(createDate('2025-01-02T09:00:00Z')),
+            toWallClock(startOfDay(occurrenceStart)),
+          ],
         },
       ]);
     });
 
-    it('should keep the instant of an existing EXDATE in the hour a DST transition repeats', () => {
+    it('should keep the string of an existing EXDATE in the hour a DST transition repeats', () => {
       // Europe/Paris falls back from 03:00 CEST to 02:00 CET on October 26th, 2025.
       const event = EventBuilder.new()
         .withDataTimezone('Europe/Paris')
@@ -98,7 +103,10 @@ describe('recurring-events/deleteRecurringEvent', () => {
 
       const result = applyRecurringDeleteOnlyThis(event, createOccurrence(event, occurrenceStart));
 
-      expect(result.updated![0].exDates![0].toISOString()).to.equal('2025-10-26T01:30:00.000Z');
+      // The store keeps the string, which the wall-clock time can't tell apart from the first 02:30.
+      expect(toEventDateStrings(result.updated![0], event).exDates![0]).to.equal(
+        '2025-10-26T01:30:00Z',
+      );
     });
 
     // Browsers cannot change their timezone through process.env.TZ.
@@ -121,7 +129,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
         );
         const exDates = result.updated![0].exDates!;
 
-        expect(exDates[0].toISOString()).to.equal('2026-04-05T04:00:00.000Z'); // midnight, April 5th
+        expect(exDates[0].toString()).to.equal('2026-04-05T00:00:00');
       },
     );
 
@@ -144,7 +152,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
         );
         const exDates = result.updated![0].exDates!;
 
-        expect(exDates[0].toISOString()).to.equal('2011-12-30T05:00:00.000Z'); // midnight, December 30th
+        expect(exDates[0].toString()).to.equal('2011-12-30T00:00:00');
       },
     );
 
@@ -181,7 +189,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
       const result = applyRecurringDeleteOnlyThis(event, createOccurrence(event, occurrenceStart));
       expect(result.deleted).to.equal(undefined);
       expect(result.updated).to.deep.equal([
-        { id: event.id, exDates: [startOfDay(occurrenceStart)] },
+        { id: event.id, exDates: [toWallClock(startOfDay(occurrenceStart))] },
       ]);
     });
 

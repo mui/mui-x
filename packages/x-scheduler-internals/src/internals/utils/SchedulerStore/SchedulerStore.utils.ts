@@ -15,7 +15,7 @@ import type {
 import { processEvent } from '../../../process-event';
 import type { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
-import { timestampToEventString, untilToEventString, getUntilReferenceString } from '../date-utils';
+import { toEventDateStrings, untilToEventString } from '../date-utils';
 import { schedulerEventSelectors } from '../../../scheduler-selectors/schedulerEventSelectors';
 
 /**
@@ -148,56 +148,19 @@ export function getProcessedEventFromModel<TEvent extends object>(
 
 /**
  * Updates an event model based on the provided changes and model structure.
- * Converts the `Date` objects to strings before applying them to the user's model, because
- * `SchedulerEvent` date fields are strings. Respects the original string format (instant vs
+ * Writes the dates of `changes` as strings before applying them to the user's model, because
+ * `SchedulerEvent` date fields are strings, in the format of the original strings (instant vs
  * wall-time).
  */
 export function getUpdatedEventModelFromChanges<TEvent extends object>(
   oldModel: TEvent,
   changes: SchedulerEventUpdatedProperties,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
-  originalBuiltInModel: SchedulerEvent,
+  originalEvent: SchedulerProcessedEvent,
 ): TEvent {
-  const dataTimezone = originalBuiltInModel.timezone ?? 'default';
-  const stringified: Record<string, any> = { ...changes };
-  if (changes.start != null) {
-    stringified.start = timestampToEventString(
-      changes.start.getTime(),
-      originalBuiltInModel.start,
-      dataTimezone,
-    );
-  }
-  if (changes.end != null) {
-    stringified.end = timestampToEventString(
-      changes.end.getTime(),
-      originalBuiltInModel.end,
-      dataTimezone,
-    );
-  }
-  if (changes.exDates != null) {
-    // A new exDate matches the format of start.
-    stringified.exDates = changes.exDates.map((d, i) =>
-      timestampToEventString(
-        d.getTime(),
-        originalBuiltInModel.exDates?.[i] ?? originalBuiltInModel.start,
-        dataTimezone,
-      ),
-    );
-  }
-  if (changes.rrule != null && typeof changes.rrule === 'object' && changes.rrule.until != null) {
-    stringified.rrule = {
-      ...changes.rrule,
-      until: untilToEventString(
-        changes.rrule.until,
-        getUntilReferenceString(originalBuiltInModel),
-        dataTimezone,
-      ),
-    };
-  }
-
   return createOrUpdateEventModelFromBuiltInEventModel<TEvent, false>(
     oldModel,
-    stringified as SchedulerEventUpdatedProperties,
+    toEventDateStrings(changes, originalEvent),
     eventModelStructure,
   );
 }
@@ -211,10 +174,6 @@ export function createEventModel<TEvent extends object>(
 ) {
   const id = generateId('event');
 
-  const formatNewDate = (value: string | Date): string =>
-    typeof value === 'string' ? value : value.toISOString();
-  const start = formatNewDate(event.start);
-
   // Internal callers (e.g. FormContent) may pass a processed rule, whose `until` is a plain date or date-time.
   // Convert it to a string in the format of `start`, so the built-in model stays in SchedulerEvent
   // format.
@@ -224,18 +183,12 @@ export function createEventModel<TEvent extends object>(
     typeof event.rrule.until !== 'string'
       ? {
           ...event.rrule,
-          until: untilToEventString(event.rrule.until, start, event.timezone ?? 'default'),
+          until: untilToEventString(event.rrule.until, event.start, event.timezone ?? 'default'),
         }
       : (event.rrule as SchedulerEvent['rrule']);
 
-  const builtInEvent: SchedulerEvent = {
-    ...event,
-    id,
-    start,
-    end: formatNewDate(event.end),
-    exDates: event.exDates?.map(formatNewDate),
-    rrule,
-  };
+  // `exDates` and `rrule` stay set when `undefined`, so their setters run on every new event.
+  const builtInEvent: SchedulerEvent = { ...event, id, exDates: event.exDates, rrule };
 
   const model = createOrUpdateEventModelFromBuiltInEventModel<TEvent, true>(
     null,
@@ -251,7 +204,7 @@ function createOrUpdateEventModelFromBuiltInEventModel<
   TIsCreating extends boolean,
 >(
   oldModel: TIsCreating extends true ? null : TEvent,
-  changes: TIsCreating extends true ? SchedulerEvent : SchedulerEventUpdatedProperties,
+  changes: TIsCreating extends true ? SchedulerEvent : Partial<SchedulerEvent>,
   eventModelStructure: SchedulerEventModelStructure<any> | undefined,
 ) {
   let eventModel = oldModel == null ? {} : { ...oldModel };

@@ -7,6 +7,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
   ResourceBuilder,
+  toWallClock,
 } from 'test/utils/scheduler';
 import { createTheme } from '@mui/material/styles';
 import { describe, it, expect } from 'vitest';
@@ -292,8 +293,8 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     act(() => {
       store.updateEvent({
         id: 'event-a',
-        start: createDate('2025-07-03T09:30:00Z'),
-        end: createDate('2025-07-03T10:30:00Z'),
+        start: toWallClock(createDate('2025-07-03T09:30:00Z')),
+        end: toWallClock(createDate('2025-07-03T10:30:00Z')),
       });
     });
 

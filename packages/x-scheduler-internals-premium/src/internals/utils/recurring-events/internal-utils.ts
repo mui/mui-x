@@ -1,42 +1,10 @@
-import {
-  getDayNumber,
-  localToEpochMs,
-  MS_PER_DAY,
-  toLocalMs,
-  toMsInDay,
-  toPlainDate,
-} from '@mui/x-scheduler-internals/internals';
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import type {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
   SchedulerProcessedEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
-
-/**
- * Moves the end of an event to `plainDate` on the wall clock of `timezone`, like
- * `moveTimestampToPlainDate()`, except that a time a DST transition repeats resolves to its first
- * instant at or after `startMs`, so that the end of an event starting in the second occurrence of a
- * repeated hour doesn't come before its start.
- */
-export function moveEndToPlainDate(
-  endMs: number,
-  plainDate: BaseTemporal.PlainDate,
-  startMs: number,
-  timezone: string,
-): number {
-  const msInDay = toMsInDay(endMs, timezone);
-  const localMs = getDayNumber(plainDate) * MS_PER_DAY + msInDay;
-  const movedEndMs = localToEpochMs(localMs, timezone);
-  if (movedEndMs < startMs) {
-    // The same wall-clock time, in the offset of the start.
-    const laterMs = startMs + msInDay - toMsInDay(startMs, timezone);
-    if (toLocalMs(laterMs, timezone) === localMs) {
-      return laterMs;
-    }
-  }
-  return movedEndMs;
-}
 
 /**
  * The week day codes for all 7 days of the week, from Monday, like ISO days of the week.

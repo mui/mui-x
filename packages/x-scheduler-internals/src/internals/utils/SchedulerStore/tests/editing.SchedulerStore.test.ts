@@ -9,6 +9,7 @@ import {
   ResourceBuilder,
   storeClasses,
   utcJuly4AllDayBuilder,
+  toWallClock,
 } from 'test/utils/scheduler';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
@@ -275,8 +276,8 @@ premiumStoreClasses.forEach((storeClass) => {
         occurrence: createStoreOccurrence(store, 'standup', dayB),
         changes: {
           id: 'standup',
-          start: addMinutes(dayB, 30),
-          end: addMinutes(dayB, 90),
+          start: toWallClock(addMinutes(dayB, 30)),
+          end: toWallClock(addMinutes(dayB, 90)),
         },
       });
       store.selectRecurringEventScope('this-and-following');
@@ -296,7 +297,7 @@ premiumStoreClasses.forEach((storeClass) => {
       // Resize occurrence A (the armed one), then confirm the scope.
       store.updateRecurringEvent({
         occurrence: createStoreOccurrence(store, 'standup', dayA),
-        changes: { id: 'standup', start: resizedStart, end: resizedEnd },
+        changes: { id: 'standup', start: toWallClock(resizedStart), end: toWallClock(resizedEnd) },
       });
       store.selectRecurringEventScope('this-and-following');
 
@@ -316,7 +317,7 @@ premiumStoreClasses.forEach((storeClass) => {
       const resizedEnd = addMinutes(dayA, 90);
       store.updateRecurringEvent({
         occurrence: createStoreOccurrence(store, 'standup', dayA),
-        changes: { id: 'standup', start: resizedStart, end: resizedEnd },
+        changes: { id: 'standup', start: toWallClock(resizedStart), end: toWallClock(resizedEnd) },
       });
       store.selectRecurringEventScope('this-and-following');
 
@@ -338,7 +339,7 @@ premiumStoreClasses.forEach((storeClass) => {
       const movedEnd = addHours(movedStart, 1);
       store.updateRecurringEvent({
         occurrence: createStoreOccurrence(store, 'standup', dayB),
-        changes: { id: 'standup', start: movedStart, end: movedEnd },
+        changes: { id: 'standup', start: toWallClock(movedStart), end: toWallClock(movedEnd) },
       });
       store.selectRecurringEventScope('all');
 
@@ -354,7 +355,7 @@ premiumStoreClasses.forEach((storeClass) => {
       const movedEnd = addHours(movedStart, 1);
       store.updateRecurringEvent({
         occurrence: createStoreOccurrence(store, 'standup', dayB),
-        changes: { id: 'standup', start: movedStart, end: movedEnd },
+        changes: { id: 'standup', start: toWallClock(movedStart), end: toWallClock(movedEnd) },
       });
       store.selectRecurringEventScope('all');
 
@@ -374,7 +375,7 @@ premiumStoreClasses.forEach((storeClass) => {
       const extendedEnd = addHours(dayB, 3);
       store.updateRecurringEvent({
         occurrence: createStoreOccurrence(store, 'standup', dayB),
-        changes: { id: 'standup', end: extendedEnd },
+        changes: { id: 'standup', end: toWallClock(extendedEnd) },
       });
       store.selectRecurringEventScope('all');
 
@@ -393,8 +394,8 @@ premiumStoreClasses.forEach((storeClass) => {
         changes: {
           id: 'standup',
           allDay: true,
-          start: createDate('2025-07-08T00:00:00Z'),
-          end: createDate('2025-07-08T23:59:59.999Z'),
+          start: toWallClock(createDate('2025-07-08T00:00:00Z')),
+          end: toWallClock(createDate('2025-07-08T23:59:59.999Z')),
         },
       });
       store.selectRecurringEventScope('all');
@@ -412,7 +413,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       store.updateRecurringEvent({
         occurrence: createStoreOccurrence(store, 'standup', dayB),
-        changes: { id: 'standup', end: addHours(dayB, 25) },
+        changes: { id: 'standup', end: toWallClock(addHours(dayB, 25)) },
       });
       store.selectRecurringEventScope('all');
 
@@ -448,8 +449,8 @@ premiumStoreClasses.forEach((storeClass) => {
         occurrence: createStoreOccurrence(store, 'standup', fourth),
         changes: {
           id: 'standup',
-          start: addMinutes(fourth, 30),
-          end: addMinutes(fourth, 90),
+          start: toWallClock(addMinutes(fourth, 30)),
+          end: toWallClock(addMinutes(fourth, 90)),
         },
       });
       store.selectRecurringEventScope('this-and-following');
@@ -478,7 +479,11 @@ premiumStoreClasses.forEach((storeClass) => {
       const movedStart = addDays(secondMonday, 1);
       store.updateRecurringEvent({
         occurrence: createStoreOccurrence(store, 'standup', secondMonday),
-        changes: { id: 'standup', start: movedStart, end: addHours(movedStart, 1) },
+        changes: {
+          id: 'standup',
+          start: toWallClock(movedStart),
+          end: toWallClock(addHours(movedStart, 1)),
+        },
       });
       store.selectRecurringEventScope('this-and-following');
       store.setEditingMode('edit');
@@ -540,8 +545,8 @@ premiumStoreClasses.forEach((storeClass) => {
           occurrence: armed,
           changes: {
             id: 'late',
-            start: createDate(startInTokyo, 'Asia/Tokyo'),
-            end: createDate(endInTokyo, 'Asia/Tokyo'),
+            start: toWallClock(createDate(startInTokyo, 'Asia/Tokyo'), 'UTC'),
+            end: toWallClock(createDate(endInTokyo, 'Asia/Tokyo'), 'UTC'),
           },
         });
         store.selectRecurringEventScope('all');
@@ -733,7 +738,7 @@ premiumStoreClasses.forEach((storeClass) => {
         const movedEnd = addHours(movedStart, 1);
         store.updateRecurringEvent({
           occurrence: createStoreOccurrence(store, 'standup', dayB),
-          changes: { id: 'standup', start: movedStart, end: movedEnd },
+          changes: { id: 'standup', start: toWallClock(movedStart), end: toWallClock(movedEnd) },
         });
 
         expect(() => {
@@ -762,7 +767,7 @@ premiumStoreClasses.forEach((storeClass) => {
         expect(() => {
           store.updateRecurringEvent({
             occurrence: createStoreOccurrence(store, 'standup', dayA),
-            changes: { id: 'standup', end: addMinutes(dayA, 90) },
+            changes: { id: 'standup', end: toWallClock(addMinutes(dayA, 90)) },
           });
           store.selectRecurringEventScope('all');
         }).not.toWarnDev();
@@ -791,7 +796,7 @@ premiumStoreClasses.forEach((storeClass) => {
         expect(() => {
           store.updateRecurringEvent({
             occurrence: createStoreOccurrence(store, 'standup', dayB),
-            changes: { id: 'standup', start: addMinutes(dayB, 30) },
+            changes: { id: 'standup', start: toWallClock(addMinutes(dayB, 30)) },
           });
           store.selectRecurringEventScope('all');
         }).not.toWarnDev();
@@ -828,7 +833,7 @@ premiumStoreClasses.forEach((storeClass) => {
           expect(() => {
             store.updateRecurringEvent({
               occurrence: createStoreOccurrence(store, 'standup', secondMonday),
-              changes: { id: 'standup', start: addDays(secondMonday, -1) },
+              changes: { id: 'standup', start: toWallClock(addDays(secondMonday, -1)) },
             });
             store.selectRecurringEventScope('all');
           }).toWarnDev([
@@ -848,7 +853,7 @@ premiumStoreClasses.forEach((storeClass) => {
           expect(() => {
             store.updateRecurringEvent({
               occurrence: createStoreOccurrence(store, 'standup', secondMonday),
-              changes: { id: 'standup', start: addDays(secondMonday, -1) },
+              changes: { id: 'standup', start: toWallClock(addDays(secondMonday, -1)) },
             });
             store.selectRecurringEventScope('all');
           }).toWarnDev([
@@ -892,8 +897,8 @@ premiumStoreClasses.forEach((storeClass) => {
           occurrence: createStoreOccurrence(store, 'standup', dayA),
           changes: {
             id: 'standup',
-            start: addMinutes(dayA, 30),
-            end: addMinutes(dayA, 90),
+            start: toWallClock(addMinutes(dayA, 30)),
+            end: toWallClock(addMinutes(dayA, 90)),
           },
         });
 
@@ -943,8 +948,8 @@ premiumStoreClasses.forEach((storeClass) => {
           occurrence: createStoreOccurrence(store, 'standup', dayB),
           changes: {
             id: 'standup',
-            start: addMinutes(dayB, 30),
-            end: addMinutes(dayB, 90),
+            start: toWallClock(addMinutes(dayB, 30)),
+            end: toWallClock(addMinutes(dayB, 90)),
           },
         });
 
@@ -971,8 +976,8 @@ premiumStoreClasses.forEach((storeClass) => {
           occurrence: createStoreOccurrence(store, 'standup', dayA),
           changes: {
             id: 'standup',
-            start: addMinutes(dayA, 30),
-            end: addMinutes(dayA, 90),
+            start: toWallClock(addMinutes(dayA, 30)),
+            end: toWallClock(addMinutes(dayA, 90)),
           },
         });
 
@@ -997,8 +1002,8 @@ premiumStoreClasses.forEach((storeClass) => {
           occurrence: createStoreOccurrence(store, 'standup', dayA),
           changes: {
             id: 'standup',
-            start: addMinutes(dayA, 30),
-            end: addMinutes(dayA, 90),
+            start: toWallClock(addMinutes(dayA, 30)),
+            end: toWallClock(addMinutes(dayA, 90)),
           },
         });
 
