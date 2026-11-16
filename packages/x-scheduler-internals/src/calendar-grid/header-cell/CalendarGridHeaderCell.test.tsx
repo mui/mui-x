@@ -9,23 +9,20 @@ import { toPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
 describe('<CalendarGrid.HeaderCell />', () => {
   const { render } = createSchedulerRenderer();
 
-  const day = new Date();
+  const day = toPlainDate(Date.now(), 'default');
 
-  describeConformance(
-    <CalendarGrid.HeaderCell date={toPlainDate(day.getTime(), 'default')} />,
-    () => ({
-      refInstanceof: window.HTMLDivElement,
-      render(node) {
-        return render(
-          <EventCalendarProvider events={[]}>
-            <CalendarGrid.Root>
-              <CalendarGrid.HeaderRow>{node}</CalendarGrid.HeaderRow>
-            </CalendarGrid.Root>
-          </EventCalendarProvider>,
-        );
-      },
-    }),
-  );
+  describeConformance(<CalendarGrid.HeaderCell date={day} />, () => ({
+    refInstanceof: window.HTMLDivElement,
+    render(node) {
+      return render(
+        <EventCalendarProvider events={[]}>
+          <CalendarGrid.Root>
+            <CalendarGrid.HeaderRow>{node}</CalendarGrid.HeaderRow>
+          </CalendarGrid.Root>
+        </EventCalendarProvider>,
+      );
+    },
+  }));
 
   describe('keyboard interactions', () => {
     it('should delegate Enter keypress to the child button', async () => {
@@ -34,7 +31,7 @@ describe('<CalendarGrid.HeaderCell />', () => {
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
             <CalendarGrid.HeaderRow>
-              <CalendarGrid.HeaderCell date={toPlainDate(day.getTime(), 'default')}>
+              <CalendarGrid.HeaderCell date={day}>
                 <button type="button" onClick={onClick}>
                   Click me
                 </button>
@@ -56,9 +53,7 @@ describe('<CalendarGrid.HeaderCell />', () => {
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
             <CalendarGrid.HeaderRow>
-              <CalendarGrid.HeaderCell date={toPlainDate(day.getTime(), 'default')}>
-                Monday
-              </CalendarGrid.HeaderCell>
+              <CalendarGrid.HeaderCell date={day}>Monday</CalendarGrid.HeaderCell>
             </CalendarGrid.HeaderRow>
           </CalendarGrid.Root>
         </EventCalendarProvider>,

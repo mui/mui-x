@@ -8,8 +8,8 @@ import {
   setSystemTimezone,
   startOfDay,
 } from 'test/utils/scheduler';
-import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { isJSDOM } from 'test/utils/skipIf';
 import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
@@ -64,7 +64,7 @@ const buildViewDefinition = (dayCount = 7): any => ({
   siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
   visibleDaysSelector: (state: any): BaseTemporal.PlainDate[] =>
     Array.from({ length: dayCount }, (_, i) =>
-      toPlainDate(state.visibleDate.getTime(), state.displayTimezone).add({ days: i }),
+      schedulerOtherSelectors.visiblePlainDate(state).add({ days: i }),
     ),
 });
 

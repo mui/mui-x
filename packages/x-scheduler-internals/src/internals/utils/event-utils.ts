@@ -8,7 +8,6 @@ import type {
   SchedulerResourceId,
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
-import type { BaseTemporal } from './base-temporal';
 import { toLocalDayNumber, toPlainDate } from './plain-date-utils/timeZone';
 import { getDayNumber, getPlainDateKey } from './plain-date-utils/plainDate';
 import type { SchedulerEventRangeIndex } from './event-range-index';
@@ -140,19 +139,20 @@ export function generateOccurrenceFromEvent({
 }
 
 /**
- * Returns the keys, from `getPlainDateKey()`, of the days an event occurrence should be visible on.
- * `dayNumbers` are the day numbers of `days`, read once for all the occurrences of the days.
+ * Returns the keys of the days an event occurrence should be visible on.
+ * `dayNumbers` and `dayKeys` are the day numbers and the keys, from `getPlainDateKey()`, of the
+ * days, in their order, read once for all the occurrences of the days.
  */
 export function getDaysTheOccurrenceIsVisibleOn(
   event: SchedulerEventOccurrence,
-  days: readonly BaseTemporal.PlainDate[],
   dayNumbers: readonly number[],
+  dayKeys: readonly string[],
 ) {
   const startDayNumber = getDayNumber(event.start.plainDateTime.toPlainDate());
   const endDayNumber = getOccurrenceLastDayNumber(event);
 
-  const dayKeys: string[] = [];
-  for (let index = 0; index < days.length; index += 1) {
+  const visibleDayKeys: string[] = [];
+  for (let index = 0; index < dayNumbers.length; index += 1) {
     const dayNumber = dayNumbers[index];
     // If the day is before the event start, skip to the next day
     if (dayNumber < startDayNumber) {
@@ -163,9 +163,9 @@ export function getDaysTheOccurrenceIsVisibleOn(
     if (dayNumber > endDayNumber) {
       break;
     }
-    dayKeys.push(getPlainDateKey(days[index]));
+    visibleDayKeys.push(dayKeys[index]);
   }
-  return dayKeys;
+  return visibleDayKeys;
 }
 
 /**

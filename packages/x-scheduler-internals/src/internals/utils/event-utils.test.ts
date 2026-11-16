@@ -43,7 +43,7 @@ describe('event-utils', () => {
         .allDay(true)
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, dayNumbers, dayKeys);
       expect(result).toEqual([dayKeys[1], dayKeys[2], dayKeys[3]]);
     });
 
@@ -53,7 +53,7 @@ describe('event-utils', () => {
         .allDay(true)
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, dayNumbers, dayKeys);
       expect(result).toHaveLength(0);
     });
 
@@ -63,7 +63,7 @@ describe('event-utils', () => {
         .allDay(true)
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, dayNumbers, dayKeys);
       expect(result).toHaveLength(0);
     });
 
@@ -73,7 +73,7 @@ describe('event-utils', () => {
         .allDay(true)
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, dayNumbers, dayKeys);
       expect(result).toEqual([dayKeys[0], dayKeys[1], dayKeys[2]]);
     });
 
@@ -83,7 +83,7 @@ describe('event-utils', () => {
         .allDay(true)
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, dayNumbers, dayKeys);
       expect(result).toEqual([dayKeys[2], dayKeys[3], dayKeys[4]]);
     });
   });
@@ -127,6 +127,7 @@ describe('event-utils', () => {
           timezone,
         });
         const dayNumbers = days.map((item) => getDayNumber(item));
+        const dayKeys = days.map((item) => item.toString());
 
         for (const recurringEventsPlugin of [null, schedulerRecurringEventsPlugin]) {
           const [occurrence] = getOccurrencesFromEvents({
@@ -143,7 +144,7 @@ describe('event-utils', () => {
           expect(getOccurrenceLastDayNumber(occurrence)).to.equal(
             getDayNumber(BaseTemporal.PlainDate.from(expectedDays[1])),
           );
-          expect(getDaysTheOccurrenceIsVisibleOn(occurrence, days, dayNumbers)).to.deep.equal(
+          expect(getDaysTheOccurrenceIsVisibleOn(occurrence, dayNumbers, dayKeys)).to.deep.equal(
             expectedDays,
           );
         }

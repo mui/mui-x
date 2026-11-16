@@ -19,17 +19,18 @@ function getDayCount(occurrence: SchedulerEventOccurrence) {
 }
 
 /**
- * The number of cells from the `fromIndex`-th day of `days` covering the dates up to `lastDayNumber`.
+ * The number of cells from the `fromIndex`-th day of a row covering the dates up to `lastDayNumber`.
+ * `dayNumbers` are the day numbers of the cells of the row, in their order.
  * A row can skip dates (hidden weekends, days a timezone skips), so it counts the cells rather than the dates.
- * `fromIndex` must be the index of a day of `days`: that day always counts, so the span is at least 1.
+ * `fromIndex` must be the index of a cell: that day always counts, so the span is at least 1.
  */
 export function getDayGridCellSpan(
-  days: readonly BaseTemporal.PlainDate[],
+  dayNumbers: readonly number[],
   fromIndex: number,
   lastDayNumber: number,
 ) {
   let index = fromIndex;
-  while (index + 1 < days.length && getDayNumber(days[index + 1]) <= lastDayNumber) {
+  while (index + 1 < dayNumbers.length && dayNumbers[index + 1] <= lastDayNumber) {
     index += 1;
   }
   return index - fromIndex + 1;
@@ -63,6 +64,7 @@ export function useEventOccurrencesWithDayGridPosition(
       };
     } = {};
 
+    const dayNumbers = days.map((day) => getDayNumber(day));
     const processedDays = days.map((day, dayIndex) => {
       const usedIndexes = new Set<number>();
       usedIndexesByDay.push(usedIndexes);
@@ -145,7 +147,11 @@ export function useEventOccurrencesWithDayGridPosition(
             // skips starts at 01:00, after the time an occurrence can end on the next day.
             position = {
               index: smallestAvailableIndex,
-              daySpan: getDayGridCellSpan(days, dayIndex, getOccurrenceLastDayNumber(occurrence)),
+              daySpan: getDayGridCellSpan(
+                dayNumbers,
+                dayIndex,
+                getOccurrenceLastDayNumber(occurrence),
+              ),
             };
             activeSegments[occurrence.key] = { position, startDayIndex: dayIndex, hidden: false };
           } else {

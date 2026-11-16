@@ -14,13 +14,6 @@ import { useCalendarGridCellsRefsContext } from '../../internals/utils/CalendarG
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { schedulerNowSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import { formatWeekday } from '../../internals/utils/date-locale';
-import type { EventCalendarState } from '../../use-event-calendar';
-
-const selectorIsCurrentDate = (
-  state: EventCalendarState,
-  dayNumber: number,
-  skipDataCurrent: boolean | undefined,
-) => !skipDataCurrent && schedulerNowSelectors.nowDayNumber(state) === dayNumber;
 
 export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHeaderCell(
   componentProps: CalendarGridHeaderCell.Props,
@@ -47,7 +40,8 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
     rowsPerType,
   } = useCalendarGridRootContext();
   const isRtl = useDirection() === 'rtl';
-  const isCurrentDay = useStore(store, selectorIsCurrentDate, getDayNumber(date), skipDataCurrent);
+  const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
+  const isCurrentDay = !skipDataCurrent && nowDayNumber === getDayNumber(date);
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
   const { ref: listItemRef, index } = useCompositeListItem();

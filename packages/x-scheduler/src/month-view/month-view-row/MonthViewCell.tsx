@@ -191,7 +191,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   );
   const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
-  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const placeholder = CalendarGrid.usePlaceholderInDay(day, row, maxEvents);
 
   // Ref hooks
@@ -251,7 +250,13 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           type="button"
           className={classes.monthViewCellNumberButton}
           onClick={(event) =>
-            store.switchToDay(createStartOfPlainDate(day.plainDate, displayTimezone), event)
+            store.switchToDay(
+              createStartOfPlainDate(
+                day.plainDate,
+                schedulerOtherSelectors.displayTimezone(store.state),
+              ),
+              event,
+            )
           }
           tabIndex={-1}
         >

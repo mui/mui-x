@@ -1,14 +1,8 @@
-import {
-  addDays,
-  DEFAULT_TESTING_VISIBLE_DATE,
-  setSystemTimezone,
-  startOfDay,
-  startOfWeek,
-} from 'test/utils/scheduler';
+import { setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 import { getDayListFromPlainDates } from './getDayList';
-import { toEpochMs, toMsInDay, toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
+import { toEpochMs, toMsInDay } from '../internals/utils/plain-date-utils/timeZone';
 import { BaseTemporal } from '../internals/utils/base-temporal';
 
 describe('getDayListFromPlainDates', () => {
@@ -32,11 +26,7 @@ describe('getDayListFromPlainDates', () => {
       timezone: 'default',
     });
 
-    const expectedDays = [
-      toPlainDate(startOfDay(DEFAULT_TESTING_VISIBLE_DATE).getTime(), 'default'),
-    ];
-
-    expect(days).to.deep.equal(expectedDays);
+    expect(days).to.deep.equal([plainDate]);
   });
 
   it('should return consecutive days', () => {
@@ -46,12 +36,12 @@ describe('getDayListFromPlainDates', () => {
       timezone: 'default',
     });
 
-    const start = startOfDay(DEFAULT_TESTING_VISIBLE_DATE);
-    const expectedDays = Array.from({ length: 4 }, (_, i) =>
-      toPlainDate(addDays(start, i).getTime(), 'default'),
-    );
-
-    expect(days).to.deep.equal(expectedDays);
+    expect(days.map((day) => day.toString())).to.deep.equal([
+      '2025-07-03',
+      '2025-07-04',
+      '2025-07-05',
+      '2025-07-06',
+    ]);
   });
 
   describe('excludedWeekdays', () => {
@@ -65,13 +55,13 @@ describe('getDayListFromPlainDates', () => {
     it('should leave out Saturday and Sunday', () => {
       const days = getDayListFromPlainDates({ ...week, excludedWeekdays: [6, 7] });
 
-      // From Monday to Friday.
-      const monday = addDays(startOfWeek(DEFAULT_TESTING_VISIBLE_DATE), 1);
-      const expectedDays = Array.from({ length: 5 }, (_, i) =>
-        toPlainDate(addDays(monday, i).getTime(), 'default'),
-      );
-
-      expect(days).to.deep.equal(expectedDays);
+      expect(days.map((day) => day.toString())).to.deep.equal([
+        '2025-06-30',
+        '2025-07-01',
+        '2025-07-02',
+        '2025-07-03',
+        '2025-07-04',
+      ]);
     });
 
     it('should leave out a weekend on Friday and Saturday', () => {

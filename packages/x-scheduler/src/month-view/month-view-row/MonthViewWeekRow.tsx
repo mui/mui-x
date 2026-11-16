@@ -7,12 +7,7 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-eve
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import {
-  formatWeekNumber,
-  getEndOfDayMs,
-  getWeekNumber,
-  toEpochMs,
-} from '@mui/x-scheduler-internals/internals';
+import { formatWeekNumber, getWeekNumber, toEpochMs } from '@mui/x-scheduler-internals/internals';
 import type { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
 import { MonthViewCell } from './MonthViewCell';
 import { useEventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
@@ -56,8 +51,14 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const weekNumber = getWeekNumber(days[0], weekInfo);
 
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
-  const start = toEpochMs(days[0], displayTimezone);
-  const end = getEndOfDayMs(toEpochMs(days[days.length - 1], displayTimezone), displayTimezone);
+  const { start, end } = React.useMemo(
+    () => ({
+      start: toEpochMs(days[0], displayTimezone),
+      // The last instant before the day after the last day.
+      end: toEpochMs(days[days.length - 1].add({ days: 1 }), displayTimezone) - 1,
+    }),
+    [days, displayTimezone],
+  );
 
   const weekNumberId = showWeekNumber
     ? `${schedulerId}-MonthViewWeekNumber-${weekNumber}`

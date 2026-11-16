@@ -26,7 +26,6 @@ import {
   formatWeekdayShort,
   getDayNumber,
   getDisplayedHourRange,
-  getEndOfDayMs,
   getInitialScrollTime,
   isWeekendPlainDate,
   toEpochMs,
@@ -402,7 +401,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     const lastDay = days[days.length - 1];
     return {
       start: toEpochMs(days[0], displayTimezone),
-      end: getEndOfDayMs(toEpochMs(lastDay, displayTimezone), displayTimezone),
+      // The last instant before the day after the last day.
+      end: toEpochMs(lastDay.add({ days: 1 }), displayTimezone) - 1,
       firstDayNumber: getDayNumber(days[0]),
       lastDayNumber: getDayNumber(lastDay),
     };

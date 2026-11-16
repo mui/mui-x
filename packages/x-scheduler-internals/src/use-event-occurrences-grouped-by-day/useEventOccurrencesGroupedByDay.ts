@@ -7,7 +7,7 @@ import {
   getDaysTheOccurrenceIsVisibleOn,
   getOccurrencesFromEvents,
 } from '../internals/utils/event-utils';
-import { getEndOfDayMs, toEpochMs } from '../internals/utils/plain-date-utils/timeZone';
+import { toEpochMs } from '../internals/utils/plain-date-utils/timeZone';
 import { getDayNumber, getPlainDateKey } from '../internals/utils/plain-date-utils/plainDate';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
 import {
@@ -68,8 +68,9 @@ export function innerGetEventOccurrencesGroupedByDay(
   const { days, eventRangeIndex, visibleResources, displayTimezone, recurringEventsPlugin } =
     parameters;
 
+  const dayKeys = days.map((day) => getPlainDateKey(day));
   const occurrenceMap = new Map<string, SchedulerEventOccurrence[]>(
-    days.map((day) => [getPlainDateKey(day), []]),
+    dayKeys.map((dayKey) => [dayKey, []]),
   );
 
   if (days.length === 0) {
@@ -78,7 +79,8 @@ export function innerGetEventOccurrencesGroupedByDay(
 
   const occurrences = getOccurrencesFromEvents({
     start: toEpochMs(days[0], displayTimezone),
-    end: getEndOfDayMs(toEpochMs(days[days.length - 1], displayTimezone), displayTimezone),
+    // The last instant before the day after the last day.
+    end: toEpochMs(days[days.length - 1].add({ days: 1 }), displayTimezone) - 1,
     eventRangeIndex,
     visibleResources,
     displayTimezone,
@@ -87,7 +89,7 @@ export function innerGetEventOccurrencesGroupedByDay(
 
   const dayNumbers = days.map((day) => getDayNumber(day));
   for (const occurrence of occurrences) {
-    const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, days, dayNumbers);
+    const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, dayNumbers, dayKeys);
     for (const dayKey of eventDays) {
       occurrenceMap.get(dayKey)!.push(occurrence);
     }

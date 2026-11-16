@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { addDays, DEFAULT_TESTING_VISIBLE_DATE, EventBuilder } from 'test/utils/scheduler';
-import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { disposeSymbol } from '@mui/x-internals/disposable';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import {
@@ -18,7 +18,7 @@ const buildViewDefinition = (): any => ({
   siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
   visibleDaysSelector: (state: any): BaseTemporal.PlainDate[] =>
     Array.from({ length: 7 }, (_, i) =>
-      toPlainDate(state.visibleDate.getTime(), state.displayTimezone).add({ days: i }),
+      schedulerOtherSelectors.visiblePlainDate(state).add({ days: i }),
     ),
 });
 
