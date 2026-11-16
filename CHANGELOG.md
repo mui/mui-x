@@ -1,6 +1,6 @@
 # Changelog
 
-## 9.18.1
+## 9.19.0
 
 _Nov 16, 2026_
 
@@ -16,37 +16,37 @@ The following team members contributed to this release:
 
 ### Data Grid
 
-#### `@mui/x-data-grid@9.18.1`
+#### `@mui/x-data-grid@9.19.0`
 
 - [DataGrid] Support React node values in `GridLongTextCell` (#24152) @JCQuintas
 
-#### `@mui/x-data-grid-pro@9.18.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@9.19.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@9.18.1`.
+Same changes as in `@mui/x-data-grid@9.19.0`.
 
-#### `@mui/x-data-grid-premium@9.18.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@9.19.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@9.18.1`, plus:
+Same changes as in `@mui/x-data-grid-pro@9.19.0`, plus:
 
 - [DataGridPremium] Preview the applied result in the computed column editor (#24141) @JCQuintas
 
 ### Charts
 
-#### `@mui/x-charts@9.18.1`
+#### `@mui/x-charts@9.19.0`
 
 - [charts] Fix `@mui/x-charts-vendor` CommonJS entries after the D3 bump (#24218) @LukasTy
 
-#### `@mui/x-charts-pro@9.18.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@9.19.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@9.18.1`.
+Same changes as in `@mui/x-charts@9.19.0`.
 
-#### `@mui/x-charts-premium@9.18.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-charts-premium@9.19.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-charts-pro@9.18.1`, plus:
+Same changes as in `@mui/x-charts-pro@9.19.0`, plus:
 
 - [charts-premium] Support `barLabel` and `barLabelPlacement` on range bar series (#24147) @officialasishkumar
 
-#### `@mui/x-charts-vendor@9.18.1`
+#### `@mui/x-charts-vendor@9.19.0`
 
 - [charts] Fix `@mui/x-charts-vendor` CommonJS entries after the D3 bump (#24218) @LukasTy
 
