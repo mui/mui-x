@@ -8,7 +8,6 @@
  * get the library in our `node_modules` and appropriately build it.
  */
 import fs from 'fs/promises';
-import { createRequire } from 'module';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -198,14 +197,32 @@ const main = async () => {
   log('Copying README.md to build directory.');
   await fs.copyFile(path.resolve(__dirname, '../README.md'), path.join(BUILD_DIR, 'README.md'));
 
-  // Load each CommonJS entry, so that a broken vendor build fails here instead of in user code.
-  log('Checking CommonJS entries.');
-  const require = createRequire(import.meta.url);
-  for (const pkgName of vendorPkgNames) {
-    const entryPath = path.join(BUILD_DIR, `${pkgName}.js`);
-    if (Object.keys(require(entryPath)).length === 0) {
-      throw new Error(`The CommonJS entry ${entryPath} has no exports.`);
-    }
+  // Pack the package like the publish does, and require each CommonJS entry of the tarball in a
+  // Node process that cannot `require()` ES modules, like Jest. A broken build or packing fails
+  // here instead of in user code.
+  log('Checking the packed CommonJS entries.');
+  const packDir = path.resolve(__dirname, '../.pack-check');
+  const extractDir = path.join(packDir, 'node_modules/@mui/x-charts-vendor');
+  await rimraf(packDir);
+  await fs.mkdir(extractDir, { recursive: true });
+  try {
+    const { stdout } = await execa('pnpm', ['pack', '--pack-destination', packDir, '--json'], {
+      cwd: path.resolve(__dirname, '..'),
+    });
+    const { filename } = JSON.parse(stdout);
+    await execa('tar', ['-xzf', filename, '-C', extractDir, '--strip-components=1']);
+    const entries = vendorPkgNames.map((pkgName) => `@mui/x-charts-vendor/${pkgName}`);
+    const script = `for (const entry of ${JSON.stringify(entries)}) {
+  if (Object.keys(require(entry)).length === 0) {
+    throw new Error('The CommonJS entry ' + entry + ' has no exports.');
+  }
+}`;
+    await execa(process.execPath, ['--no-experimental-require-module', '-e', script], {
+      cwd: packDir,
+      stdio: 'inherit',
+    });
+  } finally {
+    await rimraf(packDir);
   }
 };
 
