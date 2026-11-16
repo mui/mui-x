@@ -45,7 +45,7 @@ function createSeries(
   return new RecurringSeries({
     rule,
     ...seriesStart(start, 'UTC'),
-    exDates: exDates?.map((exDate) => createDate(exDate, 'UTC')),
+    excludedDays: exDates?.map((exDate) => toPlainDate(createDate(exDate, 'UTC').getTime(), 'UTC')),
   });
 }
 
@@ -156,13 +156,13 @@ describe('recurring-events/RecurringSeries', () => {
   describe('UNTIL and exDates after 9999', () => {
     it('should read them in a timezone east of UTC', () => {
       // December 31st, 9999, a common "no end date", is already January 1st, 10000 in Tokyo.
-      const lastInstant = createDate('9999-12-31T23:59:59Z');
-      const getLastDays = (timezone: string, exDates: Date[]) => {
+      const lastInstant = Date.parse('9999-12-31T23:59:59Z');
+      const getLastDays = (timezone: string, exDates: number[]) => {
         const series = new RecurringSeries({
-          rule: { freq: 'DAILY', until: lastInstant },
+          rule: { freq: 'DAILY', until: toPlainDate(lastInstant, timezone) },
           start: Date.parse('2026-01-05T09:00:00Z'),
           timezone,
-          exDates,
+          excludedDays: exDates.map((exDate) => toPlainDate(exDate, timezone)),
         });
         return series
           .getOccurrenceDays(
@@ -275,7 +275,7 @@ describe('recurring-events/RecurringSeries', () => {
       const series = new RecurringSeries({
         rule: { freq: 'WEEKLY' },
         ...seriesStart('2025-01-06T09:00:00', 'UTC'),
-        exDates: [createDate('2025-01-06T09:00:00', 'UTC')],
+        excludedDays: [BaseTemporal.PlainDate.from('2025-01-06')],
       });
       expect(series.hasOccurrenceBefore(BaseTemporal.PlainDate.from('2025-01-13'))).to.equal(false);
       expect(series.hasOccurrenceBefore(BaseTemporal.PlainDate.from('2025-01-14'))).to.equal(true);
@@ -288,7 +288,7 @@ describe('recurring-events/RecurringSeries', () => {
       const series = new RecurringSeries({
         rule: { freq: 'YEARLY', count: 2 },
         ...seriesStart('2024-02-29T09:00:00', 'UTC'),
-        exDates: [createDate('2024-02-29T09:00:00', 'UTC')],
+        excludedDays: [BaseTemporal.PlainDate.from('2024-02-29')],
       });
       expect(series.hasOccurrence()).to.equal(true);
     });
@@ -300,7 +300,7 @@ describe('recurring-events/RecurringSeries', () => {
       ).to.equal(false);
       expect(
         createSeries(
-          { freq: 'DAILY', until: createDate('2025-01-02T09:00:00', 'UTC') },
+          { freq: 'DAILY', until: BaseTemporal.PlainDate.from('2025-01-02') },
           '2025-01-01T09:00:00',
           exDates,
         ).hasOccurrence(),
@@ -372,7 +372,7 @@ describe('recurring-events/RecurringSeries', () => {
 
     it('should not count the days after UNTIL', () => {
       const series = createSeries(
-        { freq: 'DAILY', until: createDate('2025-01-05T09:00:00', 'UTC') },
+        { freq: 'DAILY', until: BaseTemporal.PlainDate.from('2025-01-05') },
         '2025-01-01T09:00:00',
       );
       expect(series.countOccurrencesBefore(BaseTemporal.PlainDate.from('2025-01-10'))).to.equal(5);

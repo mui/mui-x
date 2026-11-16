@@ -5,11 +5,12 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE,
   endOfDay,
   isSameDay,
+  processDay,
   setSystemTimezone,
   startOfDay,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
-import type { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
+import type { SchedulerProcessedDay } from '@mui/x-scheduler-internals/models';
 import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
 import { EventCalendarPremiumStore } from '../EventCalendarPremiumStore';
@@ -58,23 +59,11 @@ const DEFAULT_PARAMS = {
 };
 
 // Build a minimal `visibleDaysSelector` returning a `dayCount`-day window starting at the
-// store's current `visibleDate` in the display timezone. The plugin only reads `timestamp`; `value`, `key`
-// and `minutesInDay` are filled in to satisfy `SchedulerProcessedDate`.
+// store's current `visibleDate` in the display timezone. The plugin only reads `timestamp`.
 const buildViewDefinition = (dayCount = 7): any => ({
   siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
-  visibleDaysSelector: (state: any): SchedulerProcessedDate[] => {
-    const days: SchedulerProcessedDate[] = [];
-    for (let i = 0; i < dayCount; i += 1) {
-      const value = addDays(state.visibleDate, i);
-      days.push({
-        value,
-        key: String(value.getTime()),
-        timestamp: value.getTime(),
-        minutesInDay: 24 * 60,
-      });
-    }
-    return days;
-  },
+  visibleDaysSelector: (state: any): SchedulerProcessedDay[] =>
+    Array.from({ length: dayCount }, (_, i) => processDay(addDays(state.visibleDate, i))),
 });
 
 describe('Lazy loading - EventCalendarPremiumStore', () => {

@@ -6,6 +6,7 @@ import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
+  SchedulerProcessedEventInternalInfos,
 } from '../../models';
 import { generateOccurrenceFromEvent } from './event-utils';
 
@@ -16,12 +17,19 @@ import { generateOccurrenceFromEvent } from './event-utils';
 export function useOriginalOccurrence(
   parameters: useOriginalOccurrence.Parameters,
 ): () => SchedulerEventOccurrence {
-  const { eventId, occurrenceKey, start, end, dataTimezone } = parameters;
+  const { eventId, occurrenceKey, start, end, internalInfos } = parameters;
   const store = useSchedulerStoreContext();
 
   return useStableCallback(() => {
     const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
-    return generateOccurrenceFromEvent({ event, eventId, occurrenceKey, start, end, dataTimezone });
+    return generateOccurrenceFromEvent({
+      event,
+      eventId,
+      occurrenceKey,
+      start,
+      end,
+      internalInfos,
+    });
   });
 }
 
@@ -33,9 +41,9 @@ export namespace useOriginalOccurrence {
     start: SchedulerProcessedDate;
     end: SchedulerProcessedDate;
     /**
-     * The occurrence bounds in the data timezone, which identify a recurring occurrence.
-     * `undefined` for placeholders.
+     * The internal values of the occurrence, with its instants in the data timezone, which identify
+     * a recurring occurrence. `undefined` for placeholders.
      */
-    dataTimezone: SchedulerEventOccurrence['dataTimezone'] | undefined;
+    internalInfos: SchedulerProcessedEventInternalInfos | undefined;
   }
 }

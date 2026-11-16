@@ -4,7 +4,7 @@ import { DirectionProvider } from '@base-ui/react/direction-provider';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import type { GridRowType } from '@mui/x-scheduler-internals/models';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
 import {
   addDays,
   addHours,
@@ -461,9 +461,9 @@ describe('CalendarGrid keyboard navigation', () => {
                 <CalendarGrid.DayEvent
                   eventId="event-1"
                   occurrenceKey="occ-1"
-                  dataTimezone={undefined}
-                  start={processDate(day1, 'default')}
-                  end={processDate(addHours(day1, 1), 'default')}
+                  internalInfos={undefined}
+                  start={createProcessedDate(day1.getTime(), 'default')}
+                  end={createProcessedDate(addHours(day1, 1).getTime(), 'default')}
                   renderDragPreview={() => null}
                   data-testid="event-1"
                 />
@@ -475,9 +475,9 @@ describe('CalendarGrid keyboard navigation', () => {
                 <CalendarGrid.DayEvent
                   eventId="event-2"
                   occurrenceKey="occ-2"
-                  dataTimezone={undefined}
-                  start={processDate(day2, 'default')}
-                  end={processDate(addHours(day2, 1), 'default')}
+                  internalInfos={undefined}
+                  start={createProcessedDate(day2.getTime(), 'default')}
+                  end={createProcessedDate(addHours(day2, 1).getTime(), 'default')}
                   renderDragPreview={() => null}
                   data-testid="event-2"
                 />
@@ -524,9 +524,9 @@ describe('CalendarGrid keyboard navigation', () => {
                 <CalendarGrid.TimeEvent
                   eventId="event-1"
                   occurrenceKey="occ-1"
-                  dataTimezone={undefined}
-                  start={processDate(addHours(day1, 9), 'default')}
-                  end={processDate(addHours(day1, 10), 'default')}
+                  internalInfos={undefined}
+                  start={createProcessedDate(addHours(day1, 9).getTime(), 'default')}
+                  end={createProcessedDate(addHours(day1, 10).getTime(), 'default')}
                   renderDragPreview={() => null}
                   data-testid="time-event-1"
                 />
@@ -538,9 +538,9 @@ describe('CalendarGrid keyboard navigation', () => {
                 <CalendarGrid.TimeEvent
                   eventId="event-2"
                   occurrenceKey="occ-2"
-                  dataTimezone={undefined}
-                  start={processDate(addHours(day2, 9), 'default')}
-                  end={processDate(addHours(day2, 10), 'default')}
+                  internalInfos={undefined}
+                  start={createProcessedDate(addHours(day2, 9).getTime(), 'default')}
+                  end={createProcessedDate(addHours(day2, 10).getTime(), 'default')}
                   renderDragPreview={() => null}
                   data-testid="time-event-2"
                 />

@@ -9,6 +9,7 @@ import {
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 import { getDayListFromPlainDates } from './getDayList';
+import { toMsInDay } from '../internals/utils/plain-date-utils/timeZone';
 import { BaseTemporal } from '../internals/utils/base-temporal';
 
 describe('getDayListFromPlainDates', () => {
@@ -125,7 +126,9 @@ describe('getDayListFromPlainDates', () => {
       '2026-03-10',
     ]);
     // March 8th has no midnight, so it starts at 01:00.
-    expect(days.map((day) => day.minutesInDay)).to.deep.equal([0, 60, 0, 0]);
+    expect(days.map((day) => toMsInDay(day.timestamp, 'America/Havana'))).to.deep.equal([
+      0, 3_600_000, 0, 0,
+    ]);
   });
 
   // Browsers cannot change their timezone through process.env.TZ.
@@ -141,6 +144,6 @@ describe('getDayListFromPlainDates', () => {
     });
     expect(days).to.have.length(35);
     expect(new Set(days.map((day) => day.key)).size).to.equal(35);
-    expect(days.every((day) => day.minutesInDay === 0)).to.equal(true);
+    expect(days.every((day) => toMsInDay(day.timestamp, 'America/Santiago') === 0)).to.equal(true);
   });
 });
