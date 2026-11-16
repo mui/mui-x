@@ -133,8 +133,49 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(onEventsChange.mock.calls.length).to.equal(0);
     });
 
+    it('should keep the days of a timed event spanning days when it is dragged on the day grid', () => {
+      // Tuesday 09:00 to Thursday 17:00, rendered in the day grid, dragged one day later.
+      const builder = EventBuilder.new()
+        .id('offsite')
+        .span('2025-07-01T09:00:00Z', '2025-07-03T17:00:00Z')
+        .withDisplayTimezone('UTC');
+      const occurrence = builder.toOccurrence();
+      const onEventsChange = vi.fn();
+      const store = new storeClass.Value({
+        resources: [ResourceBuilder.new().id('r1').title('Resource 1').build()],
+        events: [builder.build()],
+        displayTimezone: 'UTC',
+        onEventsChange,
+      });
+
+      applyInternalDragOrResizeOccurrencePlaceholder(
+        store as unknown as SchedulerStoreInContext<any, any>,
+        {
+          type: 'internal-drag',
+          surfaceType: 'day-grid',
+          eventId: 'offsite',
+          occurrenceKey: occurrence.key,
+          originalOccurrence: occurrence,
+          allDay: true,
+          sourceResourceId: null,
+          resourceId: null,
+          start: createDate('2025-07-02T09:00:00Z').getTime(),
+          end: createDate('2025-07-04T17:00:00Z').getTime(),
+        },
+        () => ({ allDay: true }),
+      );
+
+      const updated = onEventsChange.mock.lastCall![0].find(
+        (item: SchedulerEvent) => item.id === 'offsite',
+      );
+      expect(updated.allDay).to.equal(true);
+      expect(updated.start).to.equal('2025-07-02');
+      expect(updated.end).to.equal('2025-07-05');
+    });
+
     it('should make a timed event dropped on the day grid a one-day all-day event', () => {
-      // Monday 22:00 to Tuesday 02:00, dropped on Wednesday July 9th.
+      // Monday 22:00 to Tuesday 02:00, dropped on Wednesday July 9th: the day cell hands the drop
+      // the day it covers.
       const builder = EventBuilder.new()
         .id('late')
         .span('2025-07-07T22:00:00Z', '2025-07-08T02:00:00Z')
@@ -159,8 +200,8 @@ premiumStoreClasses.forEach((storeClass) => {
           allDay: occurrence.allDay ?? false,
           sourceResourceId: null,
           resourceId: null,
-          start: createDate('2025-07-09T22:00:00Z').getTime(),
-          end: createDate('2025-07-10T02:00:00Z').getTime(),
+          start: createDate('2025-07-09T00:00:00Z').getTime(),
+          end: createDate('2025-07-10T00:00:00Z').getTime(),
         },
         () => ({ allDay: true }),
       );

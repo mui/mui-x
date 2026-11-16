@@ -9,7 +9,7 @@ import type {
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
 import type { BaseTemporal } from './base-temporal';
-import { toLocalDayNumber, toPlainDate } from './plain-date-utils/timeZone';
+import { toEpochMs, toLocalDayNumber, toPlainDate } from './plain-date-utils/timeZone';
 import { getDayNumber, getPlainDateKey } from './plain-date-utils/plainDate';
 import type { SchedulerEventRangeIndex } from './event-range-index';
 
@@ -58,13 +58,30 @@ export function getDayTimezone(
 }
 
 /**
- * The day of an occurrence, which its recurring key and the recurring edits are based on.
+ * The day of an occurrence, which its recurring key and the recurring edits are based on: the day
+ * an all-day occurrence was read on, and the day of a timed one in its timezone.
  */
 export function getOccurrencePlainDate(
   occurrence: Pick<SchedulerProcessedEvent, 'allDay' | 'start' | 'timezone'>,
-  displayTimezone: string,
 ): BaseTemporal.PlainDate {
-  return toPlainDate(occurrence.start.timestamp, getDayTimezone(occurrence, displayTimezone));
+  if (occurrence.allDay) {
+    return occurrence.start.plainDateTime.toPlainDate();
+  }
+  return toPlainDate(occurrence.start.timestamp, occurrence.timezone);
+}
+
+/**
+ * The first instant of an occurrence in the display timezone. An all-day occurrence keeps its day
+ * when the display timezone changes after it was read.
+ */
+export function getOccurrenceStart(
+  occurrence: Pick<SchedulerProcessedEvent, 'allDay' | 'start'>,
+  displayTimezone: string,
+): number {
+  if (occurrence.allDay) {
+    return toEpochMs(occurrence.start.plainDateTime.toPlainDate(), displayTimezone);
+  }
+  return occurrence.start.timestamp;
 }
 
 /**

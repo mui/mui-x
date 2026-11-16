@@ -1184,6 +1184,25 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(result.updated![0].exDates![0].getTime()).to.equal(tokyo('2025-07-10').getTime());
     });
 
+    it('should keep the day of an all-day occurrence read before the display timezone changed', () => {
+      const event = buildDailySeries();
+      const occurrence = createOccurrence(event, tokyo('2025-07-10'), 'Asia/Tokyo');
+
+      // The display timezone moved to New York while the occurrence was being edited.
+      const result = applyRecurringUpdateOnlyThis(
+        event,
+        occurrence,
+        { id: 'trip', title: 'Detached' },
+        'America/New_York',
+      );
+
+      expect(result.created![0].start).to.equal('2025-07-10');
+      expect(result.created![0].end).to.equal('2025-07-11');
+      expect(result.updated![0].exDates![0].getTime()).to.equal(
+        createDate('2025-07-10T00:00:00', 'America/New_York').getTime(),
+      );
+    });
+
     it("should move an all-day series as a whole on a scope 'all' day change of its first occurrence", () => {
       const event = buildDailySeries();
 

@@ -18,6 +18,7 @@ import {
   getDayTimezone,
   getOccurrenceEnd,
   getOccurrencePlainDate,
+  getOccurrenceStart,
   moveTimestampToPlainDate,
   snapAllDayBounds,
   stringifyEventDateChanges,
@@ -84,7 +85,7 @@ export function applyRecurringUpdateFollowing(
   changes: SchedulerEventUpdatedProperties,
   displayTimezone: string,
 ): UpdateEventsParameters {
-  const occurrenceStart = occurrence.start.timestamp;
+  const occurrenceStart = getOccurrenceStart(occurrence, displayTimezone);
 
   // 1) New event: apply changes, decide RRULE for the new series
   const newRRule = decideSplitRRule(originalEvent, occurrenceStart, changes, displayTimezone);
@@ -160,7 +161,7 @@ export function applyRecurringUpdateAll(
   changes: SchedulerEventUpdatedProperties,
   displayTimezone: string,
 ): UpdateEventsParameters {
-  const occurrenceStart = occurrence.start.timestamp;
+  const occurrenceStart = getOccurrenceStart(occurrence, displayTimezone);
   const eventUpdatedProperties: SchedulerEventUpdatedProperties = { ...changes };
 
   // 1) Detect if caller changed the date part of start or end (vs only time)
@@ -177,7 +178,7 @@ export function applyRecurringUpdateAll(
     event: originalEvent,
     displayTimezone,
   });
-  const occurrencePlainDate = getOccurrencePlainDate(occurrence, displayTimezone);
+  const occurrencePlainDate = getOccurrencePlainDate(occurrence);
   // The day of the edited occurrence read in the new representation: changing the representation
   // alone moves no day.
   const nextOccurrencePlainDate = toPlainDate(occurrenceStart, nextDayTimezone);
@@ -310,7 +311,7 @@ export function applyRecurringUpdateOnlyThis(
   changes: SchedulerEventUpdatedProperties,
   displayTimezone: string,
 ): UpdateEventsParameters {
-  const occurrenceStart = occurrence.start.timestamp;
+  const occurrenceStart = getOccurrenceStart(occurrence, displayTimezone);
   // default start/end to the edited occurrence so the detached event keeps its own day, not DTSTART
   const occurrenceEnd = getOccurrenceEnd({
     event: originalEvent,

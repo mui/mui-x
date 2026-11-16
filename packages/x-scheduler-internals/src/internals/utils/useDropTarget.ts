@@ -27,7 +27,7 @@ import type { StandaloneEvent } from '../../standalone-event';
 import { getPrimaryResourceId } from './event-utils';
 import { addDaysToDayStart, getAllDayDayCount } from './date-utils';
 import { snapAllDayBounds } from './plain-date-utils/date';
-import { getStartOfDayMs } from './plain-date-utils/timeZone';
+import { getStartOfDayMs, toLocalDayNumber } from './plain-date-utils/timeZone';
 
 /**
  * The bounds of a drop as whole days of the display timezone when its result is all-day: a move
@@ -46,8 +46,12 @@ function snapDropBounds(
     return { start, end };
   }
   if (type === 'internal-drag' && source != null) {
+    // A move keeps the days of its source: the day count of an all-day one, the days the dragged
+    // bounds cover otherwise.
     const dayStart = getStartOfDayMs(start, timezone);
-    const dayCount = source.allDay ? getAllDayDayCount(source) : 1;
+    const dayCount = source.allDay
+      ? getAllDayDayCount(source)
+      : toLocalDayNumber(end - 1, timezone) - toLocalDayNumber(start, timezone) + 1;
     return { start: dayStart, end: addDaysToDayStart(dayStart, dayCount, timezone) };
   }
   return snapAllDayBounds(start, end, timezone);

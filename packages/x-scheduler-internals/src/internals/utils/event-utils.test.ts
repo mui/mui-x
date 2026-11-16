@@ -436,9 +436,9 @@ describe('event-utils', () => {
   });
 
   describe('getOccurrencePlainDate', () => {
-    it('should read the day of an all-day occurrence in the display timezone and of a timed one in its own', () => {
+    it('should read the day of an all-day occurrence as displayed and of a timed one in its own timezone', () => {
       const allDay = utcJuly4AllDayBuilder().withDisplayTimezone('Asia/Tokyo').toOccurrence();
-      expect(getOccurrencePlainDate(allDay, 'Asia/Tokyo')).toEqualPlainDate('2025-07-04');
+      expect(getOccurrencePlainDate(allDay)).toEqualPlainDate('2025-07-04');
 
       // July 4th at 22:00 in New York is July 5th in Tokyo.
       const timed = EventBuilder.new()
@@ -446,7 +446,7 @@ describe('event-utils', () => {
         .singleDay('2025-07-04T22:00:00', 60)
         .withDisplayTimezone('Asia/Tokyo')
         .toOccurrence();
-      expect(getOccurrencePlainDate(timed, 'Asia/Tokyo')).toEqualPlainDate('2025-07-04');
+      expect(getOccurrencePlainDate(timed)).toEqualPlainDate('2025-07-04');
     });
   });
 });
