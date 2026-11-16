@@ -91,6 +91,57 @@ Read its day in `displayTimezone`, as the timezone of the browser can put it on 
 
 {{"demo": "TimezoneInstantBased.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Reading occurrence dates
+
+Callbacks such as `onEventEditingStart` and hooks such as `useEventDialogOccurrence()` provide an occurrence with resolved `start` and `end` values.
+Each bound contains:
+
+- `plainDateTime`: a `BaseTemporal.PlainDateTime` with the date and wall-clock time in `displayTimezone`.
+- `timestamp`: the instant as milliseconds since the Unix epoch.
+
+For all-day occurrences, `end` is exclusive: an occurrence covering July 1 ends at the start of July 2 in the display timezone.
+Its last day is the day before the date of `end`: `occurrence.end.plainDateTime.toPlainDate().add({ days: -1 })`.
+The event models still end an all-day event on its last day: to write an all-day occurrence back to a model, use `occurrence.end.timestamp - 1`.
+The date and time fields have no UTC offset; use `timestamp` to distinguish the two instances of an hour repeated by a daylight saving transition.
+
+Import `BaseTemporal` to read and compare these values:
+
+```ts
+import { BaseTemporal } from '@mui/x-scheduler/base-temporal';
+
+const firstDay = BaseTemporal.PlainDate.from('2025-07-01');
+occurrence.start.plainDateTime.toPlainDate().equals(firstDay);
+BaseTemporal.PlainDateTime.compare(
+  occurrence.start.plainDateTime,
+  occurrence.end.plainDateTime,
+);
+```
+
+The same namespace is available from `@mui/x-scheduler-premium/base-temporal`.
+It provides a subset of Temporal for reading and comparing dates.
+To format a date as the Scheduler displays it, format its fields, which are already in `displayTimezone`.
+Reading them in UTC keeps the timezone of the browser out:
+
+```ts
+const { plainDateTime: date } = occurrence.start;
+const label = new Intl.DateTimeFormat('en-US', {
+  dateStyle: 'medium',
+  timeStyle: 'short',
+  timeZone: 'UTC',
+}).format(Date.UTC(date.year, date.month - 1, date.day, date.hour, date.minute));
+```
+
+Use `timestamp` for instants and durations:
+
+```ts
+const durationMinutes =
+  (occurrence.end.timestamp - occurrence.start.timestamp) / 60_000;
+```
+
+The occurrence's `timezone` and `rrule` describe the original event in its own timezone.
+The rule's `until` is in the timezone of the event: a `BaseTemporal.PlainDate` includes its whole day, and a `BaseTemporal.PlainDateTime`, used for timed events only, is the latest start of an occurrence.
+Exception dates belong to the series and are available as strings on `occurrence.modelInBuiltInFormat.exDates` for persisted occurrences.
+
 ## Supported timezones
 
 Both the `displayTimezone` prop and the event's `timezone` field accept the following values:

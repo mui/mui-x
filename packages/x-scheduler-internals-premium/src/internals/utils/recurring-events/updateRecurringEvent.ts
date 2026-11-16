@@ -7,14 +7,17 @@ import type {
   SchedulerEventRecurrenceRule,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
+  SchedulerEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
 import type { BaseTemporal, UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
 import {
   extractStandaloneEvent,
-  dateToEventString,
   getOccurrenceEnd,
   moveTimestampToPlainDate,
+  timestampToEventString,
   toPlainDate,
+  untilToEventString,
+  getUntilReferenceString,
 } from '@mui/x-scheduler-internals/internals';
 import {
   getPlainDateWeekDayCode,
@@ -32,21 +35,21 @@ import { RecurringSeries } from './RecurringSeries';
 
 export function updateRecurringEvent(
   originalEvent: SchedulerProcessedEvent,
-  occurrenceStart: Date,
+  occurrence: SchedulerEventOccurrence,
   changes: SchedulerEventUpdatedProperties,
   scope: RecurringEventScope,
 ) {
   switch (scope) {
     case 'this-and-following': {
-      return applyRecurringUpdateFollowing(originalEvent, occurrenceStart, changes);
+      return applyRecurringUpdateFollowing(originalEvent, occurrence, changes);
     }
 
     case 'all': {
-      return applyRecurringUpdateAll(originalEvent, occurrenceStart, changes);
+      return applyRecurringUpdateAll(originalEvent, occurrence, changes);
     }
 
     case 'only-this': {
-      return applyRecurringUpdateOnlyThis(originalEvent, occurrenceStart, changes);
+      return applyRecurringUpdateOnlyThis(originalEvent, occurrence, changes);
     }
 
     default: {
@@ -68,10 +71,11 @@ export function updateRecurringEvent(
  */
 export function applyRecurringUpdateFollowing(
   originalEvent: SchedulerProcessedEvent,
-  occurrenceStart: Date,
+  occurrence: SchedulerEventOccurrence,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
-  const newStart = changes.start ?? occurrenceStart;
+  const occurrenceStart = occurrence.unstable_internalInfos.dataStart;
+  const newStart = changes.start?.getTime() ?? occurrenceStart;
 
   // 1) New event: apply changes, decide RRULE for the new series
   const newRRule = decideSplitRRule(originalEvent, occurrenceStart, changes);
@@ -81,18 +85,18 @@ export function applyRecurringUpdateFollowing(
   const stringified: Record<string, any> = { ...changes };
   // When start/end are not explicitly changed, the new series must start at the occurrence
   // date (not at DTSTART), otherwise the split series and the truncated original would overlap.
-  stringified.start = dateToEventString(newStart, originalModel.start, dataTimezone);
+  stringified.start = timestampToEventString(newStart, originalModel.start, dataTimezone);
   const occurrenceEnd = getOccurrenceEnd({ event: originalEvent, occurrenceStart });
-  const effectiveEnd = changes.end ?? occurrenceEnd;
-  stringified.end = dateToEventString(effectiveEnd, originalModel.end, dataTimezone);
+  const effectiveEnd = changes.end?.getTime() ?? occurrenceEnd;
+  stringified.end = timestampToEventString(effectiveEnd, originalModel.end, dataTimezone);
   if (changes.exDates != null) {
-    stringified.exDates = changes.exDates.map((d, i) => {
-      const originalExDate = originalModel.exDates?.[i];
-      if (originalExDate) {
-        return dateToEventString(d, originalExDate, dataTimezone);
-      }
-      return dateToEventString(d, originalModel.start, dataTimezone);
-    });
+    stringified.exDates = changes.exDates.map((d, i) =>
+      timestampToEventString(
+        d.getTime(),
+        originalModel.exDates?.[i] ?? originalModel.start,
+        dataTimezone,
+      ),
+    );
   }
 
   let newEventRRule: SchedulerEventRecurrenceRule | string | undefined;
@@ -102,7 +106,11 @@ export function applyRecurringUpdateFollowing(
     if (newRRule.until != null) {
       newEventRRule = {
         ...newRRule,
-        until: dateToEventString(newRRule.until, originalModel.start, dataTimezone),
+        until: untilToEventString(
+          newRRule.until,
+          getUntilReferenceString(originalModel),
+          dataTimezone,
+        ),
       };
     } else {
       const { until: unusedUntil, ...rest } = newRRule;
@@ -121,7 +129,7 @@ export function applyRecurringUpdateFollowing(
   // 2) Old series: truncated to end the day before the edited occurrence, like a deletion.
   return {
     created: [newEvent],
-    ...applyRecurringDeleteFollowing(originalEvent, occurrenceStart),
+    ...applyRecurringDeleteFollowing(originalEvent, occurrence),
   };
 }
 
@@ -139,27 +147,28 @@ export function applyRecurringUpdateFollowing(
  */
 export function applyRecurringUpdateAll(
   originalEvent: SchedulerProcessedEvent,
-  occurrenceStart: Date,
+  occurrence: SchedulerEventOccurrence,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
+  const occurrenceStart = occurrence.unstable_internalInfos.dataStart;
   const eventUpdatedProperties: SchedulerEventUpdatedProperties = { ...changes };
 
   // 1) Detect if caller changed the date part of start or end (vs only time)
-  const dataTimezone = originalEvent.dataTimezone.timezone;
+  const dataTimezone = originalEvent.timezone;
   const occurrenceEnd = getOccurrenceEnd({ occurrenceStart, event: originalEvent });
-  const occurrencePlainDate = toPlainDate(occurrenceStart.getTime(), dataTimezone);
+  const occurrencePlainDate = toPlainDate(occurrenceStart, dataTimezone);
   const touchedStartDate =
     changes.start != null &&
     !toPlainDate(changes.start.getTime(), dataTimezone).equals(occurrencePlainDate);
   const touchedEndDate =
     changes.end != null &&
     !toPlainDate(changes.end.getTime(), dataTimezone).equals(
-      toPlainDate(occurrenceEnd.getTime(), dataTimezone),
+      toPlainDate(occurrenceEnd, dataTimezone),
     );
 
   // 2) Is the edited occurrence the first of the series (DTSTART)?
-  const seriesStart = originalEvent.dataTimezone.start;
-  const seriesStartPlainDate = toPlainDate(seriesStart.timestamp, dataTimezone);
+  const seriesStartMs = originalEvent.unstable_internalInfos.dataStart;
+  const seriesStartPlainDate = toPlainDate(seriesStartMs, dataTimezone);
   const editedIsDtstart = occurrencePlainDate.equals(seriesStartPlainDate);
 
   // 3) Decide new start/end: editing the first occurrence keeps the instants of the changes, which
@@ -168,7 +177,7 @@ export function applyRecurringUpdateAll(
   // for the end, to its first instant at or after the start. Only the bounds in `changes` are
   // written, so that the other one keeps its instant.
   if (!editedIsDtstart) {
-    let startMs = seriesStart.timestamp;
+    let startMs = seriesStartMs;
     if (changes.start != null) {
       startMs = moveTimestampToPlainDate(
         changes.start.getTime(),
@@ -178,11 +187,13 @@ export function applyRecurringUpdateAll(
       eventUpdatedProperties.start = new Date(startMs);
     }
     if (changes.end != null) {
-      eventUpdatedProperties.end = moveEndToPlainDate(
-        changes.end,
-        toPlainDate(originalEvent.dataTimezone.end.timestamp, dataTimezone),
-        startMs,
-        dataTimezone,
+      eventUpdatedProperties.end = new Date(
+        moveEndToPlainDate(
+          changes.end.getTime(),
+          toPlainDate(originalEvent.unstable_internalInfos.dataEnd, dataTimezone),
+          startMs,
+          dataTimezone,
+        ),
       );
     }
   }
@@ -190,14 +201,10 @@ export function applyRecurringUpdateAll(
   // 4) RRULE adjustment: only if day changed, the event is recurring, and the user did not
   // provide an explicit rrule (same hasOwnProperty guard used in decideSplitRRule).
   const hasExplicitRRule = Object.prototype.hasOwnProperty.call(changes, 'rrule');
-  if (
-    (touchedStartDate || touchedEndDate) &&
-    originalEvent.dataTimezone.rrule &&
-    !hasExplicitRRule
-  ) {
-    const newOccurrenceStart = changes.start ?? occurrenceStart;
+  if ((touchedStartDate || touchedEndDate) && originalEvent.rrule && !hasExplicitRRule) {
+    const newOccurrenceStart = changes.start?.getTime() ?? occurrenceStart;
     eventUpdatedProperties.rrule = adjustRRuleForAllMove(
-      originalEvent.dataTimezone.rrule,
+      originalEvent.rrule,
       occurrenceStart,
       newOccurrenceStart,
       dataTimezone,
@@ -219,23 +226,24 @@ export function applyRecurringUpdateAll(
  */
 export function applyRecurringUpdateOnlyThis(
   originalEvent: SchedulerProcessedEvent,
-  occurrenceStart: Date,
+  occurrence: SchedulerEventOccurrence,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
+  const occurrenceStart = occurrence.unstable_internalInfos.dataStart;
   const originalModel = originalEvent.modelInBuiltInFormat;
   const dataTimezone = originalModel.timezone ?? 'default';
   const stringifiedChanges: Partial<SchedulerEventCreationProperties> = { ...changes };
   // default start/end to the edited occurrence so the detached event keeps its own day, not DTSTART
-  const newStart = changes.start ?? occurrenceStart;
-  stringifiedChanges.start = dateToEventString(newStart, originalModel.start, dataTimezone);
+  const newStart = changes.start?.getTime() ?? occurrenceStart;
+  stringifiedChanges.start = timestampToEventString(newStart, originalModel.start, dataTimezone);
   const occurrenceEnd = getOccurrenceEnd({ event: originalEvent, occurrenceStart });
-  const newEnd = changes.end ?? occurrenceEnd;
-  stringifiedChanges.end = dateToEventString(newEnd, originalModel.end, dataTimezone);
+  const newEnd = changes.end?.getTime() ?? occurrenceEnd;
+  stringifiedChanges.end = timestampToEventString(newEnd, originalModel.end, dataTimezone);
 
   // The original series excludes the occurrence, like a deletion.
   return {
     created: [extractStandaloneEvent(originalEvent, stringifiedChanges)],
-    ...applyRecurringDeleteOnlyThis(originalEvent, occurrenceStart),
+    ...applyRecurringDeleteOnlyThis(originalEvent, occurrence),
   };
 }
 
@@ -252,8 +260,8 @@ export function applyRecurringUpdateOnlyThis(
  */
 export function adjustRRuleForAllMove(
   rrule: SchedulerProcessedEventRecurrenceRule,
-  occurrenceStart: Date,
-  newStart: Date,
+  occurrenceStart: number,
+  newStart: number,
   timezone: string,
 ): SchedulerProcessedEventRecurrenceRule {
   const nextRRule: SchedulerProcessedEventRecurrenceRule = { ...rrule };
@@ -264,7 +272,7 @@ export function adjustRRuleForAllMove(
     ];
     nextRRule.byDay = realignWeeklyByDay(normalized, occurrenceStart, newStart, timezone);
   } else if (rrule.freq === 'MONTHLY') {
-    return realignMonthlyRule(rrule, toPlainDate(newStart.getTime(), timezone));
+    return realignMonthlyRule(rrule, toPlainDate(newStart, timezone));
   }
 
   return nextRRule;
@@ -309,11 +317,11 @@ function realignMonthlyRule(
  */
 export function decideSplitRRule(
   originalEvent: SchedulerProcessedEvent,
-  splitStart: Date,
+  splitStart: number,
   changes: Partial<SchedulerEventUpdatedProperties>,
 ): SchedulerProcessedEventRecurrenceRule | string | undefined {
-  const originalRule = originalEvent.dataTimezone.rrule!;
-  const dataTimezone = originalEvent.dataTimezone.timezone;
+  const originalRule = originalEvent.rrule!;
+  const dataTimezone = originalEvent.timezone;
   // Detect whether user touched rrule at all
   const hasRRuleProp = Object.prototype.hasOwnProperty.call(changes, 'rrule');
   const changesRRule = changes.rrule;
@@ -336,7 +344,7 @@ export function decideSplitRRule(
     realignedRule.byDay = realignWeeklyByDay(
       originalRule.byDay as RecurringEventWeekDayCode[],
       splitStart,
-      changes.start,
+      changes.start.getTime(),
       dataTimezone,
     );
   }
@@ -352,7 +360,7 @@ export function decideSplitRRule(
   if (originalRule.count) {
     // The excluded occurrences still count toward COUNT.
     const series = RecurringSeries.fromEvent(originalEvent);
-    const splitPlainDate = toPlainDate(splitStart.getTime(), dataTimezone);
+    const splitPlainDate = toPlainDate(splitStart, dataTimezone);
     const remaining = originalRule.count - series.countOccurrencesBefore(splitPlainDate);
     // If no occurrences remain, the split segment is non-recurring.
     if (remaining <= 0) {
@@ -375,8 +383,8 @@ export function decideSplitRRule(
  */
 export function realignWeeklyByDay(
   weekDayCodes: RecurringEventWeekDayCode[],
-  oldRefDay: Date,
-  newStart: Date,
+  oldRefDay: number,
+  newStart: number,
   timezone: string,
 ): RecurringEventWeekDayCode[] {
   const oldCode = getWeekDayCode(oldRefDay, timezone);

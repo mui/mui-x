@@ -7,7 +7,7 @@ import {
 import { eventCalendarPreferenceSelectors } from './eventCalendarPreferenceSelectors';
 import { eventCalendarViewSelectors } from './eventCalendarViewSelectors';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
-import type { EventCalendarFetchRange, SchedulerProcessedDate } from '../models';
+import type { EventCalendarFetchRange, SchedulerProcessedDay } from '../models';
 import { AGENDA_MAX_HORIZON_DAYS, AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import { getDayListFromPlainDates } from '../get-day-list';
 import { BaseTemporal } from '../internals/utils/base-temporal';
@@ -103,8 +103,7 @@ const visibleDays = createSelectorMemoized(
       recurringEventsPlugin,
     });
 
-    const hasEvents = (day: SchedulerProcessedDate) =>
-      (occurrenceMap.get(day.key)?.length ?? 0) > 0;
+    const hasEvents = (day: SchedulerProcessedDay) => (occurrenceMap.get(day.key)?.length ?? 0) > 0;
 
     let daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);
 

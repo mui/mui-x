@@ -133,8 +133,8 @@ describe('eventTimelinePremiumOccurrenceSelectors', () => {
       const occurrence = list[0].occurrences[0];
       expect(positions.get(occurrence.key)).to.deep.equal(
         computeElementPositionInCollection({
-          start: occurrence.displayTimezone.start,
-          end: occurrence.displayTimezone.end,
+          start: occurrence.start,
+          end: occurrence.end,
           collection: config,
         }),
       );

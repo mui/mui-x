@@ -38,7 +38,7 @@ describe('MonthView - Drag and Drop', () => {
 
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
-    expect(new Date(updatedEvents[0].start).getUTCDate()).to.equal(5);
+    expect(updatedEvents[0].start).to.equal('2025-07-05T00:00:00.000Z');
   });
 
   it('should resize a multi-day event end to a later day', async () => {
@@ -65,8 +65,8 @@ describe('MonthView - Drag and Drop', () => {
 
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
-    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2025-07-03T00:00:00.000Z');
-    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2025-07-07T23:59:59.999Z');
+    expect(updatedEvents[0].start).to.equal('2025-07-03T00:00:00Z');
+    expect(updatedEvents[0].end).to.equal('2025-07-07T23:59:59.999Z');
   });
 
   it('should resize a multi-day event start to an earlier day', async () => {
@@ -93,8 +93,8 @@ describe('MonthView - Drag and Drop', () => {
 
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
-    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2025-07-02T00:00:00.000Z');
-    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2025-07-05T23:59:59.000Z');
+    expect(updatedEvents[0].start).to.equal('2025-07-02T00:00:00.000Z');
+    expect(updatedEvents[0].end).to.equal('2025-07-05T23:59:59Z');
   });
 
   it('should resize an event start onto the day of its end at the start of that day', async () => {
