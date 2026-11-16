@@ -351,6 +351,115 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       );
     });
 
+    describe('toggling all-day', () => {
+      const fieldValue = (label: RegExp) =>
+        (screen.getByLabelText(label) as HTMLInputElement).value;
+      const runningInNewYork = () =>
+        EventBuilder.new()
+          .title('Running')
+          .withDataTimezone('America/New_York')
+          .span('2025-05-26T07:30:00', '2025-05-26T08:15:00');
+
+      afterEach(() => {
+        vi.useRealTimers();
+      });
+
+      it('should fill the times of an all-day event made timed with the next display hour and the default duration', async () => {
+        // 06:20 in New York.
+        vi.setSystemTime(new Date('2025-07-04T10:20:00Z'));
+        const { user, getUpdatedEvent } = renderEditDialog(
+          EventBuilder.new().title('Trip').span('2025-07-04', '2025-07-05', { allDay: true }),
+          'America/New_York',
+        );
+
+        await user.click(screen.getByRole('switch', { name: /all day/i }));
+
+        expect(fieldValue(/start time/i)).to.equal('07:00');
+        expect(fieldValue(/end time/i)).to.equal('07:30');
+        expect(fieldValue(/start date/i)).to.equal('2025-07-04');
+        expect(fieldValue(/end date/i)).to.equal('2025-07-04');
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+
+        const updated = getUpdatedEvent();
+        expect(Boolean(updated.allDay)).to.equal(false);
+        // 07:00 New York is 11:00 UTC.
+        expect(createDate(String(updated.start), 'UTC').getTime()).to.equal(
+          createDate('2025-07-04T11:00:00', 'UTC').getTime(),
+        );
+        expect(createDate(String(updated.end), 'UTC').getTime()).to.equal(
+          createDate('2025-07-04T11:30:00', 'UTC').getTime(),
+        );
+      });
+
+      it('should keep both dates of a multi-day all-day event made timed', async () => {
+        vi.setSystemTime(new Date('2025-07-04T10:20:00Z'));
+        const { user, getUpdatedEvent } = renderEditDialog(
+          EventBuilder.new().title('Trip').span('2025-07-04', '2025-07-06', { allDay: true }),
+          'UTC',
+        );
+
+        await user.click(screen.getByRole('switch', { name: /all day/i }));
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+
+        const updated = getUpdatedEvent();
+        expect(createDate(String(updated.start), 'UTC').getTime()).to.equal(
+          createDate('2025-07-04T11:00:00', 'UTC').getTime(),
+        );
+        expect(createDate(String(updated.end), 'UTC').getTime()).to.equal(
+          createDate('2025-07-05T11:30:00', 'UTC').getTime(),
+        );
+      });
+
+      it('should restore the times of a timed event made all-day and timed again', async () => {
+        const { user, event, getUpdatedEvent } = renderEditDialog(
+          runningInNewYork(),
+          'America/New_York',
+        );
+
+        const allDaySwitch = screen.getByRole('switch', { name: /all day/i });
+        await user.click(allDaySwitch);
+        await user.click(allDaySwitch);
+
+        expect(fieldValue(/start time/i)).to.equal('07:30');
+        expect(fieldValue(/end time/i)).to.equal('08:15');
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+
+        const updated = getUpdatedEvent();
+        expect(updated.start).to.equal(event.start);
+        expect(updated.end).to.equal(event.end);
+      });
+
+      it('should save a timed event made all-day on its dates', async () => {
+        const { user, getUpdatedEvent } = renderEditDialog(runningInNewYork(), 'America/New_York');
+
+        await user.click(screen.getByRole('switch', { name: /all day/i }));
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+
+        const updated = getUpdatedEvent();
+        expect(updated.allDay).to.equal(true);
+        expect(updated.start).to.equal('2025-05-26');
+        expect(updated.end).to.equal('2025-05-27');
+      });
+
+      it('should fill the default times only once in a session', async () => {
+        vi.setSystemTime(new Date('2025-07-04T10:20:00Z'));
+        const { user } = renderEditDialog(
+          EventBuilder.new().title('Trip').span('2025-07-04', '2025-07-05', { allDay: true }),
+          'UTC',
+        );
+
+        const allDaySwitch = screen.getByRole('switch', { name: /all day/i });
+        await user.click(allDaySwitch);
+        const startTimeInput = screen.getByLabelText(/start time/i);
+        await user.clear(startTimeInput);
+        await user.type(startTimeInput, '15:00');
+        await user.click(allDaySwitch);
+        await user.click(allDaySwitch);
+
+        expect(fieldValue(/start time/i)).to.equal('15:00');
+      });
+    });
+
     describe('across DST transitions', () => {
       async function editAndSave(
         user: ReturnType<typeof renderEditDialog>['user'],

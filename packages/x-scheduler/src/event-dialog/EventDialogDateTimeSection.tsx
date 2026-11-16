@@ -7,12 +7,16 @@ import TextField from '@mui/material/TextField';
 import Switch from '@mui/material/Switch';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventEditingStyledContext } from '../internals/components/event-editing/EventEditingStyledContext';
 import type { EventDialogFormValues } from '../internals/components/event-dialog/utils';
 import {
   computeRange,
   findInvalidRangeField,
+  getDefaultTimedFields,
   getInvalidValueErrorMessage,
   getRangeErrorMessage,
   validateRange,
@@ -105,6 +109,25 @@ export function EventDialogDateTimeSection() {
   });
   const allDay = useEventDialogFormField('allDay');
 
+  // An event opened as all-day has no times to come back to: the first untick fills them.
+  const hasTimedValuesRef = React.useRef(!formStore.occurrence.allDay);
+
+  const handleAllDayChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    formStore.clearErrors(RANGE_ERROR_KEYS);
+    allDay.setValue(event.target.checked);
+    if (!event.target.checked && !hasTimedValuesRef.current) {
+      hasTimedValuesRef.current = true;
+      formStore.setValues(
+        getDefaultTimedFields(
+          formStore.state.values,
+          Date.now(),
+          schedulerEventSelectors.defaultEventDuration(store.state),
+          displayTimezone,
+        ),
+      );
+    }
+  };
+
   const createHandleChangeDateOrTimeField =
     (field: { setValue: (value: string) => void }) =>
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -192,10 +215,7 @@ export function EventDialogDateTimeSection() {
             <Switch
               id={`${schedulerId}-enable-all-day-switch-${sectionId}`}
               checked={allDay.value}
-              onChange={(event) => {
-                formStore.clearErrors(RANGE_ERROR_KEYS);
-                allDay.setValue(event.target.checked);
-              }}
+              onChange={handleAllDayChange}
               disabled={allDay.readOnly}
             />
           }

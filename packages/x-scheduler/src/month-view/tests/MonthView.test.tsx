@@ -901,6 +901,32 @@ describe('<MonthView />', () => {
       expect(screen.queryByRole('dialog')).not.to.equal(null);
     });
 
+    it('should fill the times of a creation started on the grid when all-day is unticked', async () => {
+      const { user } = render(
+        <EventCalendarProvider events={[]} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+      const fieldValue = (label: RegExp) =>
+        (screen.getByLabelText(label) as HTMLInputElement).value;
+
+      await user.click(screen.getAllByRole('gridcell')[10]);
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      const clickedDay = fieldValue(/start date/i);
+
+      await user.click(screen.getByRole('switch', { name: /all day/i }));
+
+      // The clock of the file is 2025-05-01 00:00, already on the hour.
+      expect(fieldValue(/start time/i)).to.equal('00:00');
+      expect(fieldValue(/end time/i)).to.equal('00:30');
+      expect(fieldValue(/start date/i)).to.equal(clickedDay);
+      expect(fieldValue(/end date/i)).to.equal(clickedDay);
+    });
+
     it('should clamp the span of a creation placeholder to each week row', () => {
       // Friday May 9 to Tuesday May 13: two days left in the first week row, three in the next.
       const start = startOfDay(createDate('2025-05-09T00:00:00Z'));
