@@ -34,7 +34,11 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
   const light = theme.palette.mode === 'light';
   let bottomLineColor = light ? 'rgba(0, 0, 0, 0.42)' : 'rgba(255, 255, 255, 0.7)';
   if (theme.vars) {
-    bottomLineColor = `rgba(${theme.vars.palette.common.onBackgroundChannel} / ${theme.vars.opacity.inputUnderline})`;
+    // `theme.alpha` (Material UI v7.3+) also works with `cssVariables.nativeColor`,
+    // where the `*Channel` tokens are not generated.
+    bottomLineColor = theme.alpha
+      ? theme.alpha(theme.vars.palette.common.onBackground, theme.vars.opacity.inputUnderline)
+      : `rgba(${theme.vars.palette.common.onBackgroundChannel} / ${theme.vars.opacity.inputUnderline})`;
   }
   return {
     'label + &': {

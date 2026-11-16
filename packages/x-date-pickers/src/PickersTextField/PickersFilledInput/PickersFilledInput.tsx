@@ -37,7 +37,14 @@ const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'disableUnderline',
 })<{ ownerState: PickerFilledInputOwnerState }>(({ theme }) => {
   const light = theme.palette.mode === 'light';
-  const bottomLineColor = light ? 'rgba(0, 0, 0, 0.42)' : 'rgba(255, 255, 255, 0.7)';
+  let bottomLineColor = light ? 'rgba(0, 0, 0, 0.42)' : 'rgba(255, 255, 255, 0.7)';
+  if (theme.vars) {
+    // `theme.alpha` (Material UI v7.3+) also works with `cssVariables.nativeColor`,
+    // where the `*Channel` tokens are not generated.
+    bottomLineColor = theme.alpha
+      ? theme.alpha(theme.vars.palette.common.onBackground, theme.vars.opacity.inputUnderline)
+      : `rgba(${theme.vars.palette.common.onBackgroundChannel} / ${theme.vars.opacity.inputUnderline})`;
+  }
   const backgroundColor = light ? 'rgba(0, 0, 0, 0.06)' : 'rgba(255, 255, 255, 0.09)';
   const hoverBackground = light ? 'rgba(0, 0, 0, 0.09)' : 'rgba(255, 255, 255, 0.13)';
   const disabledBackground = light ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.12)';
@@ -104,11 +111,7 @@ const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
             },
           },
           '&::before': {
-            borderBottom: `1px solid ${
-              theme.vars
-                ? `rgba(${theme.vars.palette.common.onBackgroundChannel} / ${theme.vars.opacity.inputUnderline})`
-                : bottomLineColor
-            }`,
+            borderBottom: `1px solid ${bottomLineColor}`,
             left: 0,
             bottom: 0,
             // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242

@@ -14,8 +14,15 @@ const OutlineRoot = styled('fieldset', {
   name: 'MuiPickersOutlinedInput',
   slot: 'NotchedOutline',
 })<{ ownerState: PickerTextFieldOwnerState }>(({ theme }) => {
-  const borderColor =
+  let borderColor =
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
+  if (theme.vars) {
+    // `theme.alpha` (Material UI v7.3+) also works with `cssVariables.nativeColor`,
+    // where the `*Channel` tokens are not generated.
+    borderColor = theme.alpha
+      ? theme.alpha(theme.vars.palette.common.onBackground, 0.23)
+      : `rgba(${theme.vars.palette.common.onBackgroundChannel} / 0.23)`;
+  }
   return {
     textAlign: 'left',
     position: 'absolute',
@@ -31,9 +38,7 @@ const OutlineRoot = styled('fieldset', {
     borderWidth: 1,
     overflow: 'hidden',
     minWidth: '0%',
-    borderColor: theme.vars
-      ? `rgba(${theme.vars.palette.common.onBackgroundChannel} / 0.23)`
-      : borderColor,
+    borderColor,
   };
 });
 
