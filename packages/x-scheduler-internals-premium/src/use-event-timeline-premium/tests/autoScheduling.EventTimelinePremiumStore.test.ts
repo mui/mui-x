@@ -191,6 +191,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         store as unknown as SchedulerStoreInContext<any, any>,
         {
           type: 'internal-resize',
+          allDay: false,
           surfaceType: 'timeline',
           eventId: 'b',
           occurrenceKey: occurrenceB.key,

@@ -469,6 +469,24 @@ describe('<EventDialogContent open />', () => {
     expect(updated).to.deep.equal(expectedUpdatedEvent);
   }, 10_000);
 
+  it('should build the recurrence preset of an all-day event on its displayed day', async () => {
+    // An all-day Monday stored with a New York timezone, displayed in Paris: its day is the same
+    // everywhere.
+    const builder = EventBuilder.new()
+      .title('Holiday')
+      .withDataTimezone('America/New_York')
+      .span('2025-07-07', '2025-07-08', { allDay: true });
+    const { user, onEventsChange } = renderCrossTimezoneDialog(builder, 'Europe/Paris');
+
+    await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+    await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+    await user.click(await screen.findByRole('option', { name: /repeats weekly/i }));
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    const updated = onEventsChange.mock.calls[0][0][0];
+    expect(updated.rrule).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['MO'] });
+  });
+
   it('should clear the color when clicking the active color toggle', async () => {
     const onEventsChange = vi.fn();
     const { user } = render(
@@ -681,8 +699,10 @@ describe('<EventDialogContent open />', () => {
 
     it("should name the event's timezone next to the recurrence label when it is not the display one", () => {
       // A UTC series displayed in New York: the label describes the rule in UTC.
-      const recurringEventBuilder = utcJuly4AllDayBuilder()
-        .title('Holiday')
+      const recurringEventBuilder = EventBuilder.new()
+        .title('Standup')
+        .withDataTimezone('UTC')
+        .singleDay('2025-07-04T09:00:00Z', 30)
         .recurrent('WEEKLY')
         .readOnly(true)
         .withDisplayTimezone('America/New_York');
@@ -708,6 +728,35 @@ describe('<EventDialogContent open />', () => {
       expect(dialog.getByText(/repeats weekly on friday/i).textContent).to.equal(
         'Repeats weekly on Friday (UTC)',
       );
+    });
+
+    it('should describe the rule of an all-day series on its displayed days without a timezone', () => {
+      // An all-day series is the same dates everywhere: its rule has no timezone to name.
+      const recurringEventBuilder = utcJuly4AllDayBuilder()
+        .title('Holiday')
+        .recurrent('WEEKLY')
+        .readOnly(true)
+        .withDisplayTimezone('Asia/Tokyo');
+
+      render(
+        <EventCalendarProvider
+          events={[recurringEventBuilder.build()]}
+          resources={resources}
+          storeClass={PremiumTestStore}
+          displayTimezone="Asia/Tokyo"
+        >
+          <TestEventDialogContent
+            open
+            {...defaultProps}
+            occurrence={recurringEventBuilder.toOccurrence()}
+          />
+        </EventCalendarProvider>,
+      );
+
+      const dialogs = screen.getAllByRole('dialog');
+      const dialog = within(dialogs[dialogs.length - 1]);
+
+      expect(dialog.getByText(/repeats weekly/i).textContent).to.equal('Repeats weekly on Friday');
     });
 
     it('should not display recurrence label for non-recurring events', () => {
@@ -3412,6 +3461,31 @@ describe('<EventDialogContent open />', () => {
           );
         });
 
+        it('should default the "Until" date of an all-day event to its last day', async () => {
+          const builder = EventBuilder.new()
+            .title('Holiday')
+            .span('2025-07-04', '2025-07-05', { allDay: true });
+          const { user } = render(
+            <EventCalendarProvider
+              events={[builder.build()]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom repeat rule/i }));
+
+          const endsFieldset = screen.getByRole('group', { name: /ends/i });
+          await user.click(within(endsFieldset).getByText('Until'));
+
+          const untilDate = endsFieldset.querySelector('input[type="date"]') as HTMLInputElement;
+          expect(untilDate.value).to.equal('2025-07-04');
+        });
+
         it('should submit custom recurrence with Ends: after', async () => {
           const onEventsChange = vi.fn();
 
@@ -3609,8 +3683,8 @@ describe('<EventDialogContent open />', () => {
           expect(updated.rrule?.until).to.equal('2025-06-02T23:59:59');
         });
 
-        it('should pre-fill "Until" with the day the edited all-day end lands on in the event timezone', async () => {
-          // The end of July 5 in New York is July 6 03:59 UTC, so the UTC series ends on July 6.
+        it('should pre-fill "Until" with the last day of the edited all-day event', async () => {
+          // An all-day event is the same dates in every timezone: the series ends on July 5.
           const { user, onEventsChange } = renderCrossTimezoneDialog(
             utcJuly4AllDayBuilder().title('Holiday'),
             'America/New_York',
@@ -3625,12 +3699,12 @@ describe('<EventDialogContent open />', () => {
           await user.click(within(endsFieldset).getByRole('radio', { name: /until/i }));
 
           const dateInput = endsFieldset.querySelector('input[type="date"]') as HTMLInputElement;
-          expect(dateInput.value).to.equal('2025-07-06');
+          expect(dateInput.value).to.equal('2025-07-05');
           await user.click(screen.getByRole('button', { name: /save/i }));
 
           // Written as a date, like the start of the all-day series.
           const updated = onEventsChange.mock.calls[0][0][0];
-          expect(updated.rrule?.until).to.equal('2025-07-06');
+          expect(updated.rrule?.until).to.equal('2025-07-05');
         });
 
         describe('on a day whose last hour a DST transition repeats', () => {
@@ -4360,8 +4434,10 @@ describe('<EventDialogContent open />', () => {
 
       it("should describe the rule in the event's timezone and name it when it is not the display one", async () => {
         // Friday July 4 00:00 UTC shows on Thursday July 3 in New York.
-        const builder = utcJuly4AllDayBuilder()
-          .title('Holiday')
+        const builder = EventBuilder.new()
+          .title('Standup')
+          .withDataTimezone('UTC')
+          .singleDay('2025-07-04T00:00:00Z', 60)
           .withDisplayTimezone('America/New_York');
 
         const { user } = render(
@@ -4377,6 +4453,30 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByRole('tab', { name: /recurrence/i }));
 
         expect(screen.getByText('Timezone: UTC')).not.to.equal(null);
+        await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+        expect(
+          await screen.findByRole('option', { name: 'Repeats weekly on Friday' }),
+        ).not.to.equal(null);
+        expect(screen.getByRole('option', { name: 'Repeats monthly on day 4' })).not.to.equal(null);
+      });
+
+      it('should describe the rule of an all-day event on its displayed day without naming a timezone', async () => {
+        // An all-day Friday July 4 stored in UTC is Friday July 4 in Tokyo too.
+        const builder = utcJuly4AllDayBuilder().title('Holiday').withDisplayTimezone('Asia/Tokyo');
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[builder.build()]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="Asia/Tokyo"
+          >
+            <TestEventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+          </EventCalendarProvider>,
+        );
+        await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+
+        expect(screen.queryByText(/^Timezone:/)).to.equal(null);
         await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
         expect(
           await screen.findByRole('option', { name: 'Repeats weekly on Friday' }),

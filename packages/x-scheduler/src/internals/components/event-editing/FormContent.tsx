@@ -46,8 +46,7 @@ import {
   hasProp,
   BUILT_IN_FORM_KEYS,
   getResentRangeBounds,
-  getEventBoundTimestamp,
-  getEventTimezonePlainDate,
+  getRulePlainDate,
   getRecurrenceRuleBound,
 } from '../event-dialog/utils';
 import EventDialogHeader from '../event-dialog/EventDialogHeader';
@@ -197,7 +196,12 @@ export function FormContent(props: FormContentProps) {
       recurrenceSelection: schedulerRecurringEventSelectors.defaultPresetKey(
         store.state,
         base,
-        getEventTimezonePlainDate(occurrence, getEventBoundTimestamp(occurrence, 'start')),
+        getRulePlainDate(
+          occurrence,
+          occurrence.start.timestamp,
+          !!occurrence.allDay,
+          initialDisplayTimezone,
+        ),
       ),
       rruleDraft: {
         freq: (base?.freq ?? 'WEEKLY') as RecurringEventFrequency,
@@ -459,7 +463,7 @@ function FormContentInner(
       const recurrencePresets = current.showRecurrence
         ? schedulerRecurringEventSelectors.presets(
             store.state,
-            getEventTimezonePlainDate(occurrence, ruleStart),
+            getRulePlainDate(occurrence, ruleStart, values.allDay, current.displayTimezone),
           )
         : null;
       let rruleToSubmit: SchedulerProcessedEventRecurrenceRule | undefined;

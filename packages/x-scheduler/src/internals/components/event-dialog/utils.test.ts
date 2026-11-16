@@ -5,7 +5,7 @@ import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../../constants/defaultLocal
 import {
   computeRange,
   findInvalidRangeField,
-  getEventTimezonePlainDate,
+  getRulePlainDate,
   getRecurrenceLabel,
   getRecurrenceRuleBound,
   getRecurrenceTimezoneName,
@@ -308,12 +308,14 @@ describe('getRecurrenceRuleBound', () => {
     const { modelInBuiltInFormat, timezone, rrule, ...placeholder } = draft;
     const start = getRecurrenceRuleBound(placeholder, seeded, false, 'America/New_York', 'start');
     // The tests run in UTC, the default timezone: still Friday July 4.
-    expect(getEventTimezonePlainDate(placeholder, start)).toEqualPlainDate('2025-07-04');
+    expect(getRulePlainDate(placeholder, start, false, 'America/New_York')).toEqualPlainDate(
+      '2025-07-04',
+    );
   });
 });
 
-describe('getEventTimezonePlainDate', () => {
-  it('should read the date in the timezone of the event', () => {
+describe('getRulePlainDate', () => {
+  it('should read the date of a timed event in its timezone', () => {
     const occurrence = EventBuilder.new()
       .withDataTimezone('Asia/Tokyo')
       .span('2025-07-07T00:30:00', '2025-07-07T01:30:00')
@@ -321,7 +323,19 @@ describe('getEventTimezonePlainDate', () => {
       .toOccurrence();
     // 15:30 UTC on July 6th is 00:30 on July 7th in Tokyo.
     expect(
-      getEventTimezonePlainDate(occurrence, Date.parse('2025-07-06T15:30:00Z')),
+      getRulePlainDate(occurrence, Date.parse('2025-07-06T15:30:00Z'), false, 'UTC'),
+    ).toEqualPlainDate('2025-07-07');
+  });
+
+  it('should read the date of an all-day event in the display timezone', () => {
+    const occurrence = EventBuilder.new()
+      .withDataTimezone('America/New_York')
+      .span('2025-07-07', '2025-07-08', { allDay: true })
+      .withDisplayTimezone('Europe/Paris')
+      .toOccurrence();
+    // The first instant of July 7th in Paris is still July 6th in New York.
+    expect(
+      getRulePlainDate(occurrence, occurrence.start.timestamp, true, 'Europe/Paris'),
     ).toEqualPlainDate('2025-07-07');
   });
 });

@@ -343,31 +343,31 @@ export function getRecurrenceLabel(
 }
 
 /**
- * The timezone the occurrence's event is stored in, the one its recurrence rule is expressed in.
+ * The timezone the recurrence rule of the occurrence is expressed in: the display timezone for an
+ * all-day event, whose days are the displayed dates, and the timezone of the event otherwise.
  * A creation draft has no event yet: it is created in the `default` timezone.
  */
-export function getEventTimezone(occurrence: SchedulerRenderableEventOccurrence): string {
+export function getRuleTimezone(
+  occurrence: SchedulerRenderableEventOccurrence,
+  allDay: boolean,
+  displayTimezone: string,
+): string {
+  if (allDay) {
+    return displayTimezone;
+  }
   return isEventOccurrence(occurrence) ? occurrence.timezone : 'default';
 }
 
 /**
- * The timestamp of a bound of the occurrence.
+ * The date of an instant in the timezone the recurrence rule of the occurrence is expressed in.
  */
-export function getEventBoundTimestamp(
-  occurrence: SchedulerRenderableEventOccurrence,
-  bound: 'start' | 'end',
-): number {
-  return occurrence[bound].timestamp;
-}
-
-/**
- * The date of an instant in the event's timezone, the one its recurrence rule is expressed in.
- */
-export function getEventTimezonePlainDate(
+export function getRulePlainDate(
   occurrence: SchedulerRenderableEventOccurrence,
   timestamp: number,
+  allDay: boolean,
+  displayTimezone: string,
 ): BaseTemporal.PlainDate {
-  return toPlainDate(timestamp, getEventTimezone(occurrence));
+  return toPlainDate(timestamp, getRuleTimezone(occurrence, allDay, displayTimezone));
 }
 
 /**
@@ -390,7 +390,7 @@ export function getResentRangeBounds(
 /**
  * The timestamp of a bound of the range the event ends up with: the submitted one when the save
  * resends it, the occurrence's own otherwise (also while an edited date does not parse). The
- * recurrence rule is built on these bounds, read in the event's timezone.
+ * recurrence rule is built on these bounds.
  */
 export function getRecurrenceRuleBound(
   occurrence: SchedulerRenderableEventOccurrence,
@@ -400,7 +400,7 @@ export function getRecurrenceRuleBound(
   bound: 'start' | 'end',
 ): number {
   if (!resent || findInvalidRangeField(values, displayTimezone) != null) {
-    return getEventBoundTimestamp(occurrence, bound);
+    return occurrence[bound].timestamp;
   }
   return computeRange(values, displayTimezone)[bound];
 }
