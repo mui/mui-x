@@ -156,6 +156,7 @@
       "type": { "name": "object" },
       "default": "GRID_FORMULA_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided"
     },
+    "formulaReferencePicking": { "type": { "name": "bool" }, "default": "false" },
     "getAggregationPosition": {
       "type": { "name": "func" },
       "default": "(groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline')",
@@ -2956,6 +2957,12 @@
       "key": "root--disableUserSelection",
       "className": "MuiDataGridPremium-root--disableUserSelection",
       "description": "Styles applied to the root element when user selection is disabled.",
+      "isGlobal": false
+    },
+    {
+      "key": "root--formulaReferencePicking",
+      "className": "MuiDataGridPremium-root--formulaReferencePicking",
+      "description": "Styles applied to the root element while a click on a cell writes a reference into the formula being edited (Premium formulas).",
       "isGlobal": false
     },
     {

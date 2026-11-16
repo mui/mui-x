@@ -50,6 +50,7 @@ function PortaledFormulaBar() {
 ```
 
 Editing behavior is unaffected by the placement: interacting with the bar never closes a cell edit it mirrors, and committing from the bar returns the focus to the grid.
+With the [`formulaReferencePicking`](/x/react-data-grid/formulas/#reference-picking) prop, clicking a cell of the grid while typing a formula in the bar writes a reference to that cell instead of committing the draft.
 
 ## Accessibility
 
