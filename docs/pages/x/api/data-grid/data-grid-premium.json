@@ -40,7 +40,13 @@
     },
     "cellModesModel": { "type": { "name": "object" } },
     "cellSelection": { "type": { "name": "bool" }, "default": "false" },
-    "cellSelectionFillHandle": { "type": { "name": "bool" }, "default": "false" },
+    "cellSelectionFillHandle": {
+      "type": {
+        "name": "union",
+        "description": "{ direction?: 'any'<br>&#124;&nbsp;'horizontal'<br>&#124;&nbsp;'orthogonal'<br>&#124;&nbsp;'vertical' }<br>&#124;&nbsp;bool"
+      },
+      "default": "false"
+    },
     "cellSelectionModel": { "type": { "name": "object" } },
     "chartsIntegration": { "type": { "name": "bool" }, "default": "false" },
     "checkboxColDef": {
