@@ -80,8 +80,8 @@ describe('getUpdatedEventModelFromChanges', () => {
     expect(updated.start).to.equal('2025-10-26T01:45:00.000Z');
   });
 
-  it('should write the displayed days of a timed event made all-day without bounds', () => {
-    // 23:00 in New York on July 4th is 12:00 in Tokyo on July 5th.
+  it('should keep the days of its timezone for a timed event made all-day without bounds', () => {
+    // 23:00 in New York on July 4th is 12:00 in Tokyo on July 5th: the event stays on July 4th.
     const oldModel: SchedulerEvent = {
       id: '1',
       title: 'Meeting',
@@ -97,11 +97,58 @@ describe('getUpdatedEventModelFromChanges', () => {
       'Asia/Tokyo',
     );
     expect(updated.allDay).to.equal(true);
+    expect(updated.start).to.equal('2025-07-04');
+    expect(updated.end).to.equal('2025-07-05');
+  });
+
+  it('should keep the timezone given with the changes of an all-day event made timed', () => {
+    const oldModel: SchedulerEvent = {
+      id: '1',
+      title: 'Trip',
+      start: '2025-07-04',
+      end: '2025-07-05',
+      allDay: true,
+      timezone: 'America/New_York',
+    };
+    const updated = getUpdatedEventModelFromChanges(
+      oldModel,
+      {
+        id: '1',
+        allDay: false,
+        timezone: 'Europe/Paris',
+        start: createDate('2025-07-04T09:00:00', 'Asia/Tokyo'),
+        end: createDate('2025-07-04T10:00:00', 'Asia/Tokyo'),
+      },
+      undefined,
+      oldModel as SchedulerEvent,
+      'Asia/Tokyo',
+    );
+    // The wall times are written in the display timezone and read in the given one.
+    expect(updated.timezone).to.equal('Europe/Paris');
+    expect(updated.start).to.equal('2025-07-04T09:00:00');
+  });
+
+  it('should snap the missing bound of a timed event made all-day with only its start', () => {
+    // 23:00 in New York on July 4th is 12:00 in Tokyo on July 5th.
+    const oldModel: SchedulerEvent = {
+      id: '1',
+      title: 'Meeting',
+      start: '2025-07-04T23:00:00',
+      end: '2025-07-04T23:30:00',
+      timezone: 'America/New_York',
+    };
+    const updated = getUpdatedEventModelFromChanges(
+      oldModel,
+      { id: '1', allDay: true, start: createDate('2025-07-05T00:00:00', 'Asia/Tokyo') },
+      undefined,
+      oldModel as SchedulerEvent,
+      'Asia/Tokyo',
+    );
     expect(updated.start).to.equal('2025-07-05');
     expect(updated.end).to.equal('2025-07-06');
   });
 
-  it('should move the exceptions of a timed series made all-day to their displayed days', () => {
+  it('should keep the days of the exceptions of a timed series made all-day in its timezone', () => {
     const oldModel: SchedulerEvent = {
       id: '1',
       title: 'Standup',
@@ -113,17 +160,12 @@ describe('getUpdatedEventModelFromChanges', () => {
     };
     const updated = getUpdatedEventModelFromChanges(
       oldModel,
-      {
-        id: '1',
-        allDay: true,
-        start: createDate('2025-07-05T00:00:00', 'Asia/Tokyo'),
-        end: createDate('2025-07-06T00:00:00', 'Asia/Tokyo'),
-      },
+      { id: '1', allDay: true },
       undefined,
       oldModel as SchedulerEvent,
       'Asia/Tokyo',
     );
-    // The excluded July 6th at 23:00 in New York is July 7th in Tokyo.
-    expect(updated.exDates).to.deep.equal(['2025-07-07']);
+    // The excluded July 6th at 23:00 in New York (July 7th in Tokyo) stays July 6th.
+    expect(updated.exDates).to.deep.equal(['2025-07-06']);
   });
 });

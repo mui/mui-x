@@ -487,6 +487,33 @@ describe('<EventDialogContent open />', () => {
     expect(updated.rrule).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['MO'] });
   });
 
+  it('should build the recurrence preset of an all-day event made timed in the display timezone', async () => {
+    // An all-day Friday stored with a New York timezone, made timed from Tokyo: it moves to Tokyo,
+    // where 09:00 on Friday is still Thursday in New York.
+    const builder = EventBuilder.new()
+      .title('Holiday')
+      .withDataTimezone('America/New_York')
+      .span('2025-07-04', '2025-07-05', { allDay: true });
+    const { user, onEventsChange } = renderCrossTimezoneDialog(builder, 'Asia/Tokyo');
+
+    await user.click(screen.getByRole('switch', { name: /all day/i }));
+    const startTimeInput = screen.getByLabelText(/start time/i);
+    await user.clear(startTimeInput);
+    await user.type(startTimeInput, '09:00');
+    const endTimeInput = screen.getByLabelText(/end time/i);
+    await user.clear(endTimeInput);
+    await user.type(endTimeInput, '10:00');
+    await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+    await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+    await user.click(await screen.findByRole('option', { name: /repeats weekly/i }));
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    const updated = onEventsChange.mock.calls[0][0][0];
+    expect(updated.timezone).to.equal('Asia/Tokyo');
+    expect(updated.start).to.equal('2025-07-04T09:00:00');
+    expect(updated.rrule).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['FR'] });
+  });
+
   it('should clear the color when clicking the active color toggle', async () => {
     const onEventsChange = vi.fn();
     const { user } = render(

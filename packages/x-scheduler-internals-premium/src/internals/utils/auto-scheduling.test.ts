@@ -158,6 +158,74 @@ describe('computeAutoSchedulingCascade', () => {
     expect(result[0].start!.getTime()).to.equal(newYorkDate('2025-07-06T00:00:00').getTime());
   });
 
+  it('should count the lag of an all-day event made timed in the display timezone', () => {
+    // A day after noon on March 8th is noon on March 9th in New York (DST starts that day),
+    // but 13:00 when counted in UTC.
+    const predecessor = EventBuilder.new()
+      .id('a')
+      .withDataTimezone('America/New_York')
+      .span('2025-03-08T12:00:00', '2025-03-08T13:00:00')
+      .withDisplayTimezone('America/New_York')
+      .toProcessed();
+    const successor = EventBuilder.new()
+      .id('b')
+      .withDataTimezone('UTC')
+      .span('2025-03-09', '2025-03-10', { allDay: true })
+      .withDisplayTimezone('America/New_York')
+      .toProcessed();
+
+    const result = runCascadeResult(
+      [predecessor, successor],
+      [dependency('a', 'b', { type: 'StartToStart', lag: 1, lagUnit: 'day' })],
+      [
+        {
+          id: 'b',
+          allDay: false,
+          start: newYorkDate('2025-03-09T11:00:00'),
+          end: newYorkDate('2025-03-09T11:30:00'),
+        },
+      ],
+      { displayTimezone: 'America/New_York' },
+    );
+
+    expect(result.updated).to.have.length(1);
+    expect(result.updated[0].start!.getTime()).to.equal(
+      newYorkDate('2025-03-09T12:00:00').getTime(),
+    );
+  });
+
+  it('should read an all-day event made timed in the timezone its entry gives', () => {
+    // The store writes the wall times of the entry in the display timezone (UTC) and reads them in
+    // Paris: 09:00–10:00 becomes 08:00–09:00 UTC, which ends before the successor starts.
+    const predecessor = EventBuilder.new()
+      .id('a')
+      .withDataTimezone('UTC')
+      .span('2025-03-08', '2025-03-09', { allDay: true })
+      .withDisplayTimezone('UTC')
+      .toProcessed();
+    const successor = EventBuilder.new()
+      .id('b')
+      .span('2025-03-09T09:30:00Z', '2025-03-09T10:30:00Z')
+      .toProcessed();
+
+    const result = runCascade(
+      [predecessor, successor],
+      [dependency('a', 'b')],
+      [
+        {
+          id: 'a',
+          allDay: false,
+          timezone: 'Europe/Paris',
+          start: utcDate('2025-03-09T09:00:00'),
+          end: utcDate('2025-03-09T10:00:00'),
+        },
+      ],
+      { displayTimezone: 'UTC' },
+    );
+
+    expect(result.filter((entry) => entry.id === 'b')).to.deep.equal([]);
+  });
+
   it('should skip a cascade target missing from the lookup', () => {
     const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
     const eventB = EventBuilder.new()

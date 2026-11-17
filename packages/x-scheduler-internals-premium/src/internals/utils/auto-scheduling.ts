@@ -294,10 +294,13 @@ export function computeAutoSchedulingCascade(
       continue;
     }
     const model = processedEvent.modelInBuiltInFormat;
-    const dataTimezone = model.timezone ?? 'default';
+    const allDay = entry.allDay ?? processedEvent.allDay ?? false;
+    // Like the store, an all-day event made timed is written in the display timezone, where it
+    // moves unless the entry gives its own timezone.
+    const becomesTimed = !!processedEvent.allDay && !allDay;
+    const dataTimezone = becomesTimed ? displayTimezone : (model.timezone ?? 'default');
     // An explicit `undefined` clears the property in the store (back to 'default').
     const nextTimezone = 'timezone' in entry ? (entry.timezone ?? 'default') : dataTimezone;
-    const allDay = entry.allDay ?? processedEvent.allDay ?? false;
     // The days of an all-day event do not depend on its timezone.
     const changesTimezone = nextTimezone !== dataTimezone && !allDay;
     if (entry.start == null && entry.end == null && entry.allDay == null && !changesTimezone) {

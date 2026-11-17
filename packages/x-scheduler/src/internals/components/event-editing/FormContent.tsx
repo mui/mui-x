@@ -27,9 +27,7 @@ import {
 import {
   getCustomEventProperties,
   getEventResourceIds,
-  getLastInstant,
   getResourceSelectionMode,
-  toPlainDateTime,
   isBuiltInEventProperty,
   isEventOccurrence,
 } from '@mui/x-scheduler-internals/internals';
@@ -148,10 +146,11 @@ export function FormContent(props: FormContentProps) {
   // Built once: the provider ignores later values anyway.
   const initialValues = useRefWithInit((): EventDialogFormValues => {
     const startFields = formatDateAndTimeFields(occurrence.start.plainDateTime);
-    // The form shows the last day of an all-day event, the day before its exclusive end.
+    // The form shows the last day of an all-day event, the day before its exclusive end. Read on
+    // the dates of the occurrence: the display timezone may have moved since it was read.
     const endFields = formatDateAndTimeFields(
       occurrence.allDay
-        ? toPlainDateTime(getLastInstant(occurrence.end.timestamp, true), initialDisplayTimezone)
+        ? occurrence.end.plainDateTime.toPlainDate().add({ days: -1 }).toPlainDateTime('23:59')
         : occurrence.end.plainDateTime,
     );
 
@@ -196,12 +195,9 @@ export function FormContent(props: FormContentProps) {
       recurrenceSelection: schedulerRecurringEventSelectors.defaultPresetKey(
         store.state,
         base,
-        getRulePlainDate(
-          occurrence,
-          occurrence.start.timestamp,
-          !!occurrence.allDay,
-          initialDisplayTimezone,
-        ),
+        occurrence.allDay
+          ? occurrence.start.plainDateTime.toPlainDate()
+          : getRulePlainDate(occurrence, occurrence.start.timestamp, false, initialDisplayTimezone),
       ),
       rruleDraft: {
         freq: (base?.freq ?? 'WEEKLY') as RecurringEventFrequency,

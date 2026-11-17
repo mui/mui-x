@@ -78,22 +78,36 @@ import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { stringifyEventDateChanges } from '../event-date-changes';
 import { TimeoutManager } from '../TimeoutManager';
 import { checkDateLocale, DEFAULT_DATE_LOCALE } from '../date-locale';
-import { getStartOfDayMs, toLocalDayNumber } from '../plain-date-utils/timeZone';
+import {
+  getStartOfDayMs,
+  toEpochMs,
+  toLocalDayNumber,
+  toPlainDate,
+} from '../plain-date-utils/timeZone';
 import { MS_PER_MINUTE } from '../plain-date-utils/dayNumber';
 
 /**
  * The bounds of an edited occurrence after a change: the changed ones, or its own when the change
- * leaves one out, snapped to whole days when it is all-day.
+ * leaves one out, snapped to whole days when it is all-day. A timed occurrence made all-day without
+ * bounds keeps the days of `dayTimezone`, its timezone.
  */
 function getEditedBounds(
   changedStart: number | undefined,
   changedEnd: number | undefined,
-  occurrence: Pick<SchedulerEventOccurrence, 'start' | 'end'>,
+  occurrence: Pick<SchedulerEventOccurrence, 'start' | 'end' | 'allDay'>,
   allDay: boolean | undefined,
+  dayTimezone: string,
   displayTimezone: string,
 ): { start: number; end: number } {
-  const start = changedStart ?? occurrence.start.timestamp;
-  const end = changedEnd ?? occurrence.end.timestamp;
+  let start = occurrence.start.timestamp;
+  let end = occurrence.end.timestamp;
+  if (allDay && !occurrence.allDay && changedStart === undefined && changedEnd === undefined) {
+    const ownDays = snapAllDayBounds(start, end, dayTimezone);
+    start = toEpochMs(toPlainDate(ownDays.start, dayTimezone), displayTimezone);
+    end = toEpochMs(toPlainDate(ownDays.end, dayTimezone), displayTimezone);
+  }
+  start = changedStart ?? start;
+  end = changedEnd ?? end;
   return allDay ? snapAllDayBounds(start, end, displayTimezone) : { start, end };
 }
 
@@ -1273,9 +1287,12 @@ export class SchedulerStore<
     const allDay = cleanChanges.allDay ?? original.allDay ?? false;
     if (allDay && (cleanChanges.start != null || !original.allDay)) {
       // An all-day paste covers the days of an all-day source, or one day for a timed one, from
-      // the pasted day or from the source's own day.
+      // the pasted day or from the source's own day, in its timezone for a timed source.
       const start =
-        cleanChanges.start?.getTime() ?? getStartOfDayMs(original.start.timestamp, displayTimezone);
+        cleanChanges.start?.getTime() ??
+        (original.allDay
+          ? getStartOfDayMs(original.start.timestamp, displayTimezone)
+          : toEpochMs(toPlainDate(original.start.timestamp, original.timezone), displayTimezone));
       cleanChanges.start = new Date(start);
       cleanChanges.end = new Date(
         addDaysToDayStart(
@@ -1288,14 +1305,6 @@ export class SchedulerStore<
       // A timed paste keeps the duration of the source, all-day or not.
       cleanChanges.end = new Date(
         cleanChanges.start.getTime() + original.end.timestamp - original.start.timestamp,
-      );
-    }
-    const { recurringEventsPlugin } = this.state;
-    if (allDay && !original.allDay && original.rrule != null && recurringEventsPlugin != null) {
-      // A timed series made all-day keeps its occurrences on their displayed days.
-      Object.assign(
-        cleanChanges,
-        recurringEventsPlugin.getRecurringAllDayChanges(original, displayTimezone),
       );
     }
     const isMovingDates = cleanChanges.start != null;
@@ -1567,14 +1576,19 @@ export class SchedulerStore<
       end?.getTime(),
       occurrence,
       allDay,
+      isEventOccurrence(occurrence) ? occurrence.timezone : 'default',
       displayTimezone,
     );
+    const becomesAllDay = allDay && !occurrence.allDay;
     const bounds = {
       start:
-        start == null
+        start == null && !becomesAllDay
           ? occurrence.start
           : createProcessedDate(displayBounds.start, displayTimezone),
-      end: end == null ? occurrence.end : createProcessedDate(displayBounds.end, displayTimezone),
+      end:
+        end == null && !becomesAllDay
+          ? occurrence.end
+          : createProcessedDate(displayBounds.end, displayTimezone),
     };
     this.set('editingOccurrence', {
       ...editingOccurrence,
@@ -1648,12 +1662,15 @@ export class SchedulerStore<
       changedEnd,
       occurrence,
       allDay,
+      dayTimezone,
       displayTimezone,
     );
+    const becomesAllDay = allDay && !occurrence.allDay;
     this.repointEditingOccurrence({
       eventId: targetsCreatedEvent ? createdEventId : original.id,
-      start: changedStart == null ? occurrence.start.timestamp : displayBounds.start,
-      end: changedEnd == null ? occurrence.end.timestamp : displayBounds.end,
+      start:
+        changedStart == null && !becomesAllDay ? occurrence.start.timestamp : displayBounds.start,
+      end: changedEnd == null && !becomesAllDay ? occurrence.end.timestamp : displayBounds.end,
       allDay,
       isRecurring: targetsCreatedEvent ? createdEvent.rrule != null : true,
     });
@@ -1679,7 +1696,11 @@ export class SchedulerStore<
       return;
     }
     const { occurrence } = editingOccurrence;
-    const timezone = isEventOccurrence(occurrence) ? occurrence.timezone : 'default';
+    let timezone = isEventOccurrence(occurrence) ? occurrence.timezone : 'default';
+    if (occurrence.allDay && !allDay) {
+      // An all-day event made timed moves to the display timezone.
+      timezone = displayTimezone;
+    }
     const repointed = {
       id: eventId,
       key: isRecurring
@@ -1700,6 +1721,7 @@ export class SchedulerStore<
         ? {
             ...occurrence,
             ...repointed,
+            timezone,
             // Cleared by a `only-this` detach so the surface reads as non-recurring; otherwise
             // the rule is the series' and the editor refreshes it from the store when it opens.
             rrule: isRecurring ? occurrence.rrule : undefined,

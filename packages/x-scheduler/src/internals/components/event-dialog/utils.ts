@@ -344,7 +344,8 @@ export function getRecurrenceLabel(
 
 /**
  * The timezone the recurrence rule of the occurrence is expressed in: the display timezone for an
- * all-day event, whose days are the displayed dates, and the timezone of the event otherwise.
+ * all-day event, whose days are the displayed dates, and for an all-day event made timed, which
+ * moves to it. The timezone of the event otherwise.
  * A creation draft has no event yet: it is created in the `default` timezone.
  */
 export function getRuleTimezone(
@@ -352,10 +353,10 @@ export function getRuleTimezone(
   allDay: boolean,
   displayTimezone: string,
 ): string {
-  if (allDay) {
-    return displayTimezone;
+  if (!isEventOccurrence(occurrence)) {
+    return allDay ? displayTimezone : 'default';
   }
-  return isEventOccurrence(occurrence) ? occurrence.timezone : 'default';
+  return allDay || occurrence.allDay ? displayTimezone : occurrence.timezone;
 }
 
 /**

@@ -13,7 +13,6 @@ import type {
   SchedulerEvent,
   SchedulerEventId,
   SchedulerEventModelStructure,
-  SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
 import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
 import { processEvent } from '@mui/x-scheduler-internals/process-event';
@@ -2436,14 +2435,14 @@ premiumStoreClasses.forEach((storeClass) => {
         expect(() => processEvent(pasted, 'UTC', schedulerRecurringEventsPlugin)).not.to.throw();
       });
 
-      it('should paste a timed series as an all-day series on its displayed weekdays', () => {
+      it('should paste a timed series as an all-day series on the days of its timezone', () => {
         const onEventsChange = vi.fn();
-        // Fridays at 20:00 in New York are Saturdays in Tokyo.
+        // Fridays at 20:00 in New York are Saturdays in Tokyo: the series stays on Fridays.
         const event = EventBuilder.new()
           .id('standup')
           .withDataTimezone('America/New_York')
           .singleDay('2025-07-04T20:00:00')
-          .rrule({ freq: 'WEEKLY', byDay: ['FR'] })
+          .rrule({ freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-25T20:00:00' })
           .exDates(['2025-07-11T20:00:00'])
           .build();
         const store = new storeClass.Value({
@@ -2457,10 +2456,11 @@ premiumStoreClasses.forEach((storeClass) => {
         store.pasteEvent({ allDay: true });
 
         const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
-        expect(pasted.start).to.equal('2025-07-05');
-        expect(pasted.end).to.equal('2025-07-06');
-        expect((pasted.rrule as SchedulerEventRecurrenceRule).byDay).to.deep.equal(['SA']);
-        expect(pasted.exDates).to.deep.equal(['2025-07-12']);
+        expect(pasted.start).to.equal('2025-07-04');
+        expect(pasted.end).to.equal('2025-07-05');
+        // The stored until is read as its day in the event timezone, July 25th.
+        expect(pasted.rrule).to.deep.equal(event.rrule);
+        expect(pasted.exDates).to.deep.equal(['2025-07-11']);
       });
     });
 
@@ -2498,6 +2498,44 @@ premiumStoreClasses.forEach((storeClass) => {
         expect(updated.end).to.equal('2025-07-05');
         expect(updated.exDates).to.deep.equal(['2025-07-11']);
         expect(() => processEvent(updated, 'UTC', schedulerRecurringEventsPlugin)).not.to.throw();
+      });
+
+      it('should make a series all-day on the days of its timezone when no day is given', () => {
+        const onEventsChange = vi.fn();
+        // Fridays at 20:00 in New York, until July 18th, are Saturdays in Tokyo.
+        const event = EventBuilder.new()
+          .id('standup')
+          .withDataTimezone('America/New_York')
+          .singleDay('2025-07-04T20:00:00')
+          .rrule({ freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-18T20:00:00' })
+          .exDates(['2025-07-11T20:00:00'])
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+
+        store.updateRecurringEvent({
+          occurrence: createStoreOccurrence(
+            store,
+            'standup',
+            createDate('2025-07-18T20:00:00', 'America/New_York'),
+          ),
+          changes: { id: 'standup', allDay: true },
+        });
+        store.selectRecurringEventScope('all');
+
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated.start).to.equal('2025-07-04');
+        expect(updated.end).to.equal('2025-07-05');
+        // The rule is untouched: its until is read as its day in the event timezone, July 18th.
+        expect(updated.rrule).to.deep.equal(event.rrule);
+        expect(updated.exDates).to.deep.equal(['2025-07-11']);
+        expect(() =>
+          processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
+        ).not.to.throw();
       });
 
       it('should keep the stored BYMONTHDAY when only the count changes from another timezone', () => {

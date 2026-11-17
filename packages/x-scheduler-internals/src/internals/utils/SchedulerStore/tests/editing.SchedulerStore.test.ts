@@ -382,6 +382,51 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(occurrence.end.plainDateTime.toString()).to.equal('2025-07-09T00:00:00');
     });
 
+    it("should key the armed occurrence in the display timezone on a scope 'all' change to timed", () => {
+      // Fridays all-day, stored with a New York timezone and displayed in Tokyo: made timed, the
+      // series moves to Tokyo.
+      const store = new storeClass.Value({
+        ...DEFAULT_PARAMS,
+        events: [
+          EventBuilder.new()
+            .id('gym')
+            .withDataTimezone('America/New_York')
+            .span('2025-07-04', '2025-07-05', { allDay: true })
+            .rrule({ freq: 'WEEKLY', byDay: ['FR'] })
+            .build(),
+        ],
+        displayTimezone: 'Asia/Tokyo',
+        onEventsChange: () => {},
+      });
+      const armed = createStoreOccurrence(
+        store,
+        'gym',
+        createDate('2025-07-11T00:00:00', 'Asia/Tokyo'),
+      );
+      store.startEditing(armed, 'armed');
+
+      store.updateRecurringEvent({
+        occurrence: armed,
+        changes: {
+          id: 'gym',
+          allDay: false,
+          start: createDate('2025-07-11T09:00:00', 'Asia/Tokyo'),
+          end: createDate('2025-07-11T10:00:00', 'Asia/Tokyo'),
+        },
+      });
+      store.selectRecurringEventScope('all');
+
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      // The series runs on Tokyo Fridays at 09:00: the occurrence is keyed on that day there.
+      expect(occurrence.key).to.equal(
+        getRecurringOccurrenceKey(
+          'gym',
+          createDate('2025-07-11T09:00:00', 'Asia/Tokyo').getTime(),
+          'Asia/Tokyo',
+        ),
+      );
+    });
+
     it("should disarm when an end-only scope 'all' change pushes the armed occurrence past its day", () => {
       const store = createStore();
       armOccurrence(store, dayB);

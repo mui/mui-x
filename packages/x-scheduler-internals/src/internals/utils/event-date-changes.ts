@@ -15,13 +15,16 @@ export interface EventDateChangeStrings {
 /**
  * Writes the date changes of an event as the strings of its model: the days of an all-day event
  * in the display timezone, the instants of a timed event in the format of its stored strings.
- * `bounds` are the instants written when the changes give none. A timed event made all-day gets
- * whole displayed days, and its exception dates move to their displayed days. An all-day event made
+ * `bounds` are the instants written when the changes give none. A timed event made all-day without
+ * bounds gets the whole days of its timezone, and so do its exception dates. An all-day event made
  * timed moves to the display timezone, from 00:00 of its days when the changes give no bounds, and
  * excludes its occurrences at its new time.
  */
 export function stringifyEventDateChanges(
-  changes: Pick<SchedulerEventUpdatedProperties, 'allDay' | 'start' | 'end' | 'exDates'>,
+  changes: Pick<
+    SchedulerEventUpdatedProperties,
+    'allDay' | 'start' | 'end' | 'exDates' | 'timezone'
+  >,
   model: SchedulerEvent,
   displayTimezone: string,
   bounds?: { start: number; end: number },
@@ -36,7 +39,8 @@ export function stringifyEventDateChanges(
     const becomesTimed = model.allDay === true;
     const timezone = becomesTimed ? displayTimezone : dataTimezone;
     if (becomesTimed) {
-      if (timezone !== dataTimezone) {
+      // A timezone given with the changes applies on top, like any timezone change.
+      if (timezone !== dataTimezone && !Object.prototype.hasOwnProperty.call(changes, 'timezone')) {
         result.timezone = timezone;
       }
       start ??= toEpochMs(BaseTemporal.PlainDate.from(model.start), timezone);
@@ -67,38 +71,36 @@ export function stringifyEventDateChanges(
   }
 
   const becomesAllDay = !model.allDay;
-  if (becomesAllDay && (changes.start == null || changes.end == null)) {
-    const snapped = snapAllDayBounds(
-      bounds?.start ?? resolveEventTimestamp(model.start, dataTimezone),
-      bounds?.end ?? resolveEventTimestamp(model.end, dataTimezone),
-      displayTimezone,
-    );
-    start = changes.start?.getTime() ?? snapped.start;
-    end = changes.end?.getTime() ?? snapped.end;
-  }
-  if (start != null) {
-    result.start = allDayBoundToEventString(start, displayTimezone);
-  }
-  if (end != null) {
-    result.end = allDayBoundToEventString(end, displayTimezone);
+  const ownStart = bounds?.start ?? resolveEventTimestamp(model.start, dataTimezone);
+  const ownEnd = bounds?.end ?? resolveEventTimestamp(model.end, dataTimezone);
+  if (becomesAllDay && changes.start == null && changes.end == null) {
+    // Without a day given, a timed event made all-day keeps the days of its own timezone, like
+    // its rule.
+    const snapped = snapAllDayBounds(ownStart, ownEnd, dataTimezone);
+    result.start = toPlainDate(snapped.start, dataTimezone).toString();
+    result.end = toPlainDate(snapped.end, dataTimezone).toString();
+  } else {
+    if (becomesAllDay && (changes.start == null || changes.end == null)) {
+      // With one bound given, the other is snapped to the displayed days like it.
+      const snapped = snapAllDayBounds(ownStart, ownEnd, displayTimezone);
+      start = changes.start?.getTime() ?? snapped.start;
+      end = changes.end?.getTime() ?? snapped.end;
+    }
+    if (start != null) {
+      result.start = allDayBoundToEventString(start, displayTimezone);
+    }
+    if (end != null) {
+      result.end = allDayBoundToEventString(end, displayTimezone);
+    }
   }
   if (changes.exDates != null) {
     result.exDates = changes.exDates.map((exDate) =>
       allDayBoundToEventString(exDate.getTime(), displayTimezone),
     );
   } else if (becomesAllDay && model.exDates != null) {
-    // An exception date marks the day of an occurrence in the event timezone: its occurrence is
-    // displayed on the day of the series time on that day.
-    const seriesStart = resolveEventTimestamp(model.start, dataTimezone);
+    // An exception date keeps its day in the event timezone.
     result.exDates = model.exDates.map((exDate) =>
-      toPlainDate(
-        moveTimestampToPlainDate(
-          seriesStart,
-          toPlainDate(resolveEventTimestamp(exDate, dataTimezone), dataTimezone),
-          dataTimezone,
-        ),
-        displayTimezone,
-      ).toString(),
+      toPlainDate(resolveEventTimestamp(exDate, dataTimezone), dataTimezone).toString(),
     );
   }
   return result;
