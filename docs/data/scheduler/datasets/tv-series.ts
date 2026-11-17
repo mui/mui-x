@@ -2,7 +2,7 @@
 // Completed TV series grouped by network, spanning 1972 (M*A*S*H) to 2025 (Stranger Things)
 // Resources are the TV networks, events are individual shows from premiere to finale
 
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 
 export const defaultVisibleDate = new Date('2005-01-01T00:00:00');
 

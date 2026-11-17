@@ -1,12 +1,13 @@
 import { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
-import { Gesture } from './Gesture';
+import type { Gesture } from './Gesture';
 import { KeyboardManager } from './KeyboardManager';
-import { PointerManager, PointerManagerOptions } from './PointerManager';
-import { GestureElement } from './types/GestureElement';
-import { MergeUnions } from './types/MergeUnions';
-import { OmitNever } from './types/OmitNever';
-import { Simplify } from './types/Simplify';
-import { TargetElement } from './types/TargetElement';
+import type { PointerManagerOptions } from './PointerManager';
+import { PointerManager } from './PointerManager';
+import type { GestureElement } from './types/GestureElement';
+import type { MergeUnions } from './types/MergeUnions';
+import type { OmitNever } from './types/OmitNever';
+import type { Simplify } from './types/Simplify';
+import type { TargetElement } from './types/TargetElement';
 
 /**
  * Configuration options for initializing the GestureManager
@@ -69,13 +70,11 @@ export class GestureManager<
   GestureUnion extends Gesture<GestureName> = Gestures[][number],
   GestureNameUnion extends string = GestureUnion extends Gesture<infer N> ? N : never,
   GestureNameUnionComplete extends string = GestureUnion extends Gesture<string>
-    ? // @ts-expect-error, this makes the types work.
-      GestureUnion['isSinglePhase'] extends true
+    ? GestureUnion['isSinglePhase'] extends true
       ? GestureUnion extends Gesture<infer N>
         ? N
         : never
-      : // @ts-expect-error, this makes the types work.
-        GestureUnion['isSinglePhase'] extends false
+      : GestureUnion['isSinglePhase'] extends false
         ? GestureUnion extends Gesture<infer N>
           ? `${N}Start` | N | `${N}End` | `${N}Cancel`
           : never
@@ -84,8 +83,7 @@ export class GestureManager<
   GestureNameToGestureMap extends Record<string, GestureUnion> = MergeUnions<
     | {
         [K in GestureNameUnion]: GestureUnion extends Gesture<string>
-          ? // @ts-expect-error, this makes the types work.
-            GestureUnion['isSinglePhase'] extends true
+          ? GestureUnion['isSinglePhase'] extends true
             ? GestureUnion extends Gesture<K>
               ? GestureUnion
               : never
@@ -94,8 +92,7 @@ export class GestureManager<
       }
     | {
         [K in GestureNameUnionComplete]: GestureUnion extends Gesture<string>
-          ? // @ts-expect-error, this makes the types work.
-            GestureUnion['isSinglePhase'] extends false
+          ? GestureUnion['isSinglePhase'] extends false
             ? K extends `${infer N}${'Start' | 'End' | 'Cancel'}`
               ? GestureUnion extends Gesture<N>
                 ? GestureUnion
@@ -109,13 +106,8 @@ export class GestureManager<
   >,
   GestureNameToEventMap = Simplify<{
     [K in keyof GestureNameToGestureMap]: Simplify<
-      Omit<
-        // @ts-expect-error, this makes the types work.
-        GestureNameToGestureMap[K]['eventType'],
-        'detail'
-      > & {
+      Omit<GestureNameToGestureMap[K]['eventType'], 'detail'> & {
         detail: Simplify<
-          // @ts-expect-error, this makes the types work.
           Omit<GestureNameToGestureMap[K]['eventType']['detail'], 'activeGestures'> & {
             activeGestures: Record<GestureNameUnion, boolean>;
           }
@@ -124,12 +116,10 @@ export class GestureManager<
     >;
   }>,
   GestureNameToOptionsMap = {
-    // @ts-expect-error, this makes the types work.
     [K in keyof GestureNameToGestureMap]: GestureNameToGestureMap[K]['mutableOptionsType'];
   },
   GestureNameToStateMap = Simplify<
     OmitNever<{
-      // @ts-expect-error, this makes the types work.
       [K in keyof GestureNameToGestureMap]: GestureNameToGestureMap[K]['mutableStateType'];
     }>
   >,

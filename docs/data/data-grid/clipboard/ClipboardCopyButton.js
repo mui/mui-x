@@ -6,7 +6,6 @@ import {
   gridSortedRowIdsSelector,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
-
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';

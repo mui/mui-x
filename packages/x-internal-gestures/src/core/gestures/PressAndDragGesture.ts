@@ -16,12 +16,14 @@
  */
 
 import type { ActiveGesturesRegistry } from '../ActiveGesturesRegistry';
-import { GestureState } from '../Gesture';
+import type { GestureState } from '../Gesture';
 import type { KeyboardManager } from '../KeyboardManager';
-import { PointerGesture, type PointerGestureOptions } from '../PointerGesture';
-import { type PointerManager } from '../PointerManager';
+import { PointerGesture } from '../PointerGesture';
+import type { PointerGestureOptions } from '../PointerGesture';
+import type { PointerManager } from '../PointerManager';
 import { createEventName, preventDefault } from '../utils';
-import { PanGesture, type PanEvent, type PanGestureEventData } from './PanGesture';
+import { PanGesture } from './PanGesture';
+import type { PanEvent, PanGestureEventData } from './PanGesture';
 import { PressGesture } from './PressGesture';
 
 /**
@@ -106,15 +108,15 @@ export class PressAndDragGesture<GestureName extends string> extends PointerGest
     dragTimeoutId: null,
   };
 
-  declare protected readonly isSinglePhase: false;
+  declare public readonly isSinglePhase: false;
 
-  declare protected readonly eventType: PressAndDragEvent;
+  declare public readonly eventType: PressAndDragEvent;
 
   declare protected readonly optionsType: PressAndDragGestureOptions<GestureName>;
 
-  declare protected readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
+  declare public readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
-  declare protected readonly mutableStateType: Omit<
+  declare public readonly mutableStateType: Omit<
     Partial<typeof this.state>,
     'phase' | 'dragTimeoutId'
   >;

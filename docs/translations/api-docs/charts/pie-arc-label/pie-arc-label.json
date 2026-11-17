@@ -1,6 +1,24 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "arcLabelRadius": {
+      "description": "The radius between circle center and the arc label in px."
+    },
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "color": { "description": "The color of the element." },
+    "cornerRadius": {
+      "description": "The radius applied to arc corners (similar to border radius)."
+    },
+    "endAngle": { "description": "The end angle (deg)." },
+    "formattedArcLabel": { "description": "The text of the arc label." },
+    "hidden": { "description": "If <code>true</code>, the element is hidden." },
+    "isFaded": { "description": "If <code>true</code>, the element is faded." },
+    "isHighlighted": { "description": "If <code>true</code>, the element is highlighted." },
+    "paddingAngle": { "description": "The padding angle (deg) between two arcs." },
+    "seriesId": { "description": "The id of the series the element belongs to." },
+    "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
+    "startAngle": { "description": "The start angle (deg)." }
+  },
   "classDescriptions": {
     "animate": { "description": "Styles applied when animation is not skipped." },
     "arc": {

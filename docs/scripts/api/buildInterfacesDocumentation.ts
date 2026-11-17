@@ -1,8 +1,10 @@
-import { Symbol, JSDocTagInfo, Type, InterfaceDeclaration, isPropertySignature } from 'typescript';
+import type { Symbol, JSDocTagInfo, Type, InterfaceDeclaration } from 'typescript';
+import { isPropertySignature } from 'typescript';
 import { EOL } from 'os';
 import { kebabCase } from 'es-toolkit/string';
 import path from 'path';
 import { renderMarkdown } from '@mui/internal-markdown';
+import type { DocumentedInterfaces } from './utils';
 import {
   getSymbolDescription,
   getSymbolJSDocTags,
@@ -10,10 +12,9 @@ import {
   stringifySymbol,
   writePrettifiedFile,
   resolveExportSpecifier,
-  DocumentedInterfaces,
   escapeCell,
 } from './utils';
-import {
+import type {
   XTypeScriptProjects,
   XTypeScriptProject,
   XProjectNames,

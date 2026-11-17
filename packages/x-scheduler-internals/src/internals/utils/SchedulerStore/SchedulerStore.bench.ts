@@ -1,5 +1,4 @@
 import { describe, test } from 'vitest';
-import { adapter } from 'test/utils/scheduler';
 import type { SchedulerEvent } from '../../../models';
 import { buildEventsState } from './SchedulerStore.utils';
 
@@ -12,7 +11,7 @@ const events: SchedulerEvent[] = Array.from({ length: EVENT_COUNT }, (_, index) 
   end: '2025-07-01T10:00:00.000Z',
 }));
 const initialState = {
-  ...buildEventsState({ events, adapter, displayTimezone }),
+  ...buildEventsState({ events, displayTimezone }),
   recurringEventsPlugin: null,
 };
 const eventsWithOneChange = [...events];
@@ -25,12 +24,14 @@ describe('buildEventsState', () => {
   test('event state rebuild', { timeout: 0 }, async ({ bench }) => {
     await bench.compare(
       bench('10,000 new events', () => {
-        buildEventsState({ events, adapter, displayTimezone });
+        buildEventsState({ events, displayTimezone });
+      }),
+      bench('10,000 new events displayed in Paris', () => {
+        buildEventsState({ events, displayTimezone: 'Europe/Paris' });
       }),
       bench('one changed event among 10,000', () => {
         buildEventsState({
           events: eventsWithOneChange,
-          adapter,
           displayTimezone,
           previousState: initialState,
         });

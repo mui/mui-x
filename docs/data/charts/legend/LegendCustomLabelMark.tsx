@@ -1,5 +1,5 @@
 import { BarChart } from '@mui/x-charts/BarChart';
-import { ChartsLabelCustomMarkProps } from '@mui/x-charts/ChartsLabel';
+import type { ChartsLabelCustomMarkProps } from '@mui/x-charts/ChartsLabel';
 
 function HTMLCircle({ className, color }: ChartsLabelCustomMarkProps) {
   return (

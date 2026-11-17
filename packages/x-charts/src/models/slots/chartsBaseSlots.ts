@@ -13,15 +13,29 @@ import type {
 } from '../chartsSlotsComponentsProps';
 
 export interface ChartsBaseSlots {
+  /**
+   * The component used for buttons.
+   * @default Button
+   */
   baseButton: React.ComponentType<ChartBaseButtonProps & BaseButtonPropsOverrides>;
+  /**
+   * The component used for icon buttons.
+   * @default IconButton
+   */
   baseIconButton: React.ComponentType<ChartBaseIconButtonProps & BaseIconButtonPropsOverrides>;
   /**
+   * The component used for toggle buttons.
    * Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:
    * `ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.
+   * @default ToggleButton
    */
   baseToggleButton: React.ComponentType<
     ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides
   >;
+  /**
+   * The component used for toggle button groups.
+   * @default ToggleButtonGroup
+   */
   baseToggleButtonGroup: React.ComponentType<
     ChartBaseToggleButtonGroupProps & BaseToggleButtonGroupPropsOverrides
   >;

@@ -5,6 +5,7 @@ export type {
   EventCalendarPreferences,
   EventCalendarViewConfig,
   EventCalendarTimeGridViewConfig,
+  EventCalendarAgendaViewConfig,
   EventCalendarTimeGridEvents,
   SchedulerEvent,
   SchedulerResource,
@@ -16,6 +17,7 @@ export type {
   SchedulerOccurrencePlaceholderExternalDragData,
   SchedulerEventOccurrence,
   SchedulerEventOccurrencePlaceholder,
+  SchedulerProcessedDate,
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
 export type {

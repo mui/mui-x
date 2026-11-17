@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { defaultVisibleDate } from '../../datasets/company-roadmap';
 

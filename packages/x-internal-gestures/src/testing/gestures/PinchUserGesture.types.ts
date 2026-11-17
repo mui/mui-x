@@ -1,4 +1,4 @@
-import { Pointers } from '../types/Pointers';
+import type { Pointers } from '../types/Pointers';
 
 export type PinchUserGestureOptions = {
   /**

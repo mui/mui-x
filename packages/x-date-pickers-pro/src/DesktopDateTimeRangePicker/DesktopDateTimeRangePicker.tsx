@@ -212,6 +212,9 @@ DesktopDateTimeRangePicker.propTypes /* remove-proptypes */ = {
    * @default 1
    */
   calendars: PropTypes.oneOf([1, 2, 3]),
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   /**
    * If `true`, the Picker will close after submitting the full date.

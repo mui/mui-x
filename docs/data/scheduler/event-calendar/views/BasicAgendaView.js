@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { StandaloneAgendaView } from '@mui/x-scheduler/agenda-view';
 import {
   initialEvents,

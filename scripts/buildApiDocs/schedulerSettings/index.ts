@@ -1,12 +1,12 @@
 import path from 'path';
 import fs from 'fs';
 import { LANGUAGES } from '@mui/internal-core-docs/constants';
-import {
+import type {
   ProjectSettings,
   ComponentReactApi,
   HookReactApi,
-  findApiPages,
 } from '@mui/internal-api-docs-builder';
+import { findApiPages } from '@mui/internal-api-docs-builder';
 import { isGlobalState } from '@mui/utils/generateUtilityClass';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
 import generateSchedulerClassName from './generateSchedulerClassName';
@@ -125,7 +125,9 @@ export default schedulerApiPages;
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-header/EventTimelinePremiumHeader.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/EventTimelinePremiumDependencyArrows.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/EventTimelinePremiumDependencyContextMenu.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/EventTimelinePremiumDependencyLayer.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/dependency-dialog/DependencyDialogFormContent.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/dependency-dialog/DependencyDialogLayout.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/dependency-dialog/DependencyDialogDetails.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/dependency-dialog/DependencyDialogReadonlyContent.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/dependency-dialog/EventTimelinePremiumDependencyDialog.tsx',

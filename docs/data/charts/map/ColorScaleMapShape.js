@@ -15,7 +15,6 @@ import {
   ContinuousColorLegend,
   PiecewiseColorLegend,
 } from '@mui/x-charts-premium/ChartsLegend';
-
 import { internetUsageByCountry } from '../dataset/internetUsageByCountry';
 import { withCountryCodeAsName, countryData } from '../dataset/countryData';
 

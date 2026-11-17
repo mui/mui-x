@@ -10,6 +10,11 @@ export { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridPro
  */
 export { useGridColumnHeadersPro } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 export { useGridAriaAttributesPro } from '../hooks/utils/useGridAriaAttributes';
+export {
+  useGridPointerDragRouting,
+  isElementInGrid,
+  isPointerDownOnHandleControl,
+} from '../hooks/utils/useGridPointerDragRouting';
 export { useGridRowAriaAttributesPro } from '../hooks/features/rows/useGridRowAriaAttributes';
 
 export {
@@ -21,6 +26,7 @@ export {
   useGridColumnReorder,
   columnReorderStateInitializer,
 } from '../hooks/features/columnReorder/useGridColumnReorder';
+export { useGridColumnReorderPointer } from '../hooks/features/columnReorder/useGridColumnReorderPointer';
 export { useGridDataSourceTreeDataPreProcessors } from '../hooks/features/serverSideTreeData/useGridDataSourceTreeDataPreProcessors';
 export {
   useGridDetailPanel,

@@ -11,17 +11,32 @@ export interface MessageErrorSlots {
   /**
    * The root element of the per-message error primitive.
    * Rendered with `role="alert"` so screen readers announce the error.
+   * @default 'div'; a styled error card with a retry button in `ChatMessageError`
    */
   root: React.ElementType;
 }
 
 export interface MessageErrorSlotProps {
+  /**
+   * The props used for the root slot.
+   */
   root?: SlotComponentProps<'div', {}, MessageErrorOwnerState>;
 }
 
 export interface MessageErrorProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<MessageErrorSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: MessageErrorSlotProps;
+  /**
+   * The content of the component.
+   */
   children?: React.ReactNode;
 }
 

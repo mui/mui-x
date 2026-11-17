@@ -1,4 +1,5 @@
-import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
+import type { GridRowsProp, GridColDef } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 
 const rows: GridRowsProp = [
   { id: 1, name: 'Data Grid', description: 'the Community version' },

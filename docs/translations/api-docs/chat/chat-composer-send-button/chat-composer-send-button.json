@@ -1,6 +1,13 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    }
+  },
   "classDescriptions": {
     "attachButton": {
       "description": "Styles applied to {{nodeName}}.",
@@ -27,10 +34,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the input root element"
     },
-    "sendButton": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the send button element"
-    },
     "textArea": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the textarea element"
@@ -44,5 +47,6 @@
       "nodeName": "the root element",
       "conditions": "variant=&quot;compact&quot;"
     }
-  }
+  },
+  "slotDescriptions": { "sendButton": "The component that renders the send button." }
 }

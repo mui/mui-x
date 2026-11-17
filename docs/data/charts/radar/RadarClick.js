@@ -6,7 +6,6 @@ import IconButton from '@mui/material/IconButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
-
 import { RadarChart } from '@mui/x-charts/RadarChart';
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 

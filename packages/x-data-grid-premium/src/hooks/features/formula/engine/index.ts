@@ -71,7 +71,7 @@ export { tokenizeFormula } from './formulaTokenizer';
 export type { FormulaParseError, FormulaParseResult, FormulaParser } from './formulaParser';
 export { parseFormula, createFormulaParser } from './formulaParser';
 
-export { serializeFormulaAst } from './formulaSerializer';
+export { FORMULA_ARGUMENT_SEPARATOR, serializeFormulaAst } from './formulaSerializer';
 
 export { offsetFormulaReferences } from './formulaOffset';
 
@@ -118,7 +118,7 @@ export type { FormulaEvaluationContext } from './formulaEvaluator';
 export { evaluateFormula } from './formulaEvaluator';
 
 export type { ValidateFormulaExpressionOptions } from './formulaValidation';
-export { validateFormulaExpression } from './formulaValidation';
+export { collectFunctionCallIssues, validateFormulaExpression } from './formulaValidation';
 
 export type { FormulaRecomputeOrder } from './formulaGraph';
 export { collectAffectedCells, orderForRecompute } from './formulaGraph';
@@ -136,10 +136,21 @@ export {
   rankFormulaCompletions,
 } from './formulaCompletion';
 
+export type {
+  FormulaPendingPick,
+  FormulaPickAction,
+  FormulaPickActionOptions,
+  FormulaPickMode,
+  FormulaPickSelection,
+} from './formulaPick';
+export { getFormulaPickAction, isFormulaPendingPickValid } from './formulaPick';
+
 export type { A1TransformContext, A1TransformResult, ToCanonicalOptions } from './formulaA1';
 export {
+  buildRangeRefNode,
   columnIndexToLetters,
   columnLettersToIndex,
+  getRangeFreezeAnchor,
   isA1AmbiguousFieldName,
   toCanonicalFormula,
   toDisplayFormula,

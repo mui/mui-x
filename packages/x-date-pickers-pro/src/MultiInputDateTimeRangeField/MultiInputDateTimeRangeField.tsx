@@ -58,6 +58,9 @@ MultiInputDateTimeRangeField.propTypes /* remove-proptypes */ = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   component: PropTypes.elementType,
   /**

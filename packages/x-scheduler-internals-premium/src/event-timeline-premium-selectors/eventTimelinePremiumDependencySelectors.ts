@@ -71,8 +71,6 @@ const selectedIdSelector = (state: State) => {
 const creationSelector = (state: State) => state.dependencyCreation;
 
 export const eventTimelinePremiumDependencySelectors = {
-  modelList: (state: State) => state.dependencyModelList,
-  modelLookup: (state: State) => state.dependencyModelLookup,
   model: (state: State, dependencyId: SchedulerDependencyId) =>
     state.dependencyModelLookup.get(dependencyId) ?? null,
   /**
@@ -97,7 +95,7 @@ export const eventTimelinePremiumDependencySelectors = {
   ): readonly SchedulerDependencySourceDescription[] =>
     activeSourcesByTargetSelector(state).get(eventId) ?? EMPTY_ARRAY,
   /**
-   * Whether the dependencies feature is enabled (internal parameters provided).
+   * Whether the store received the dependencies feature and the `dependencies` parameter.
    */
   enabled: (state: State) => state.areDependenciesEnabled,
   /**

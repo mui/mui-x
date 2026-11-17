@@ -1,4 +1,4 @@
-import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
+import type { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
 
 export const MUI_X_PRODUCTS: TreeViewDefaultItemModelProperties[] = [
   {

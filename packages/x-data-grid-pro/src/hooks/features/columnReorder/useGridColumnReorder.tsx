@@ -27,7 +27,7 @@ import type { ColumnReorderForbiddenIndexes } from './columnReorderUtils';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
-const useUtilityClasses = (ownerState: OwnerState) => {
+export const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
@@ -199,7 +199,7 @@ export const useGridColumnReorder = (
           forbiddenIndexes: forbiddenIndexes.current,
         });
         if (targetIndex !== null) {
-          apiRef.current.setColumnIndex(dragColField, targetIndex);
+          apiRef.current.setColumnIndex(dragColField, targetIndex, false);
         }
 
         cursorPosition.current = coordinates;

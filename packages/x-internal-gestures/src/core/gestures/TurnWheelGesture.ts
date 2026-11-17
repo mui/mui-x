@@ -8,11 +8,12 @@
  * wheel gestures are always considered "ongoing" since they are discrete events.
  */
 
-import { ActiveGesturesRegistry } from '../ActiveGesturesRegistry';
-import { Gesture, GestureEventData, GestureOptions, GestureState } from '../Gesture';
+import type { ActiveGesturesRegistry } from '../ActiveGesturesRegistry';
+import type { GestureEventData, GestureOptions, GestureState } from '../Gesture';
+import { Gesture } from '../Gesture';
 import type { KeyboardManager } from '../KeyboardManager';
-import { PointerData, PointerManager } from '../PointerManager';
-import { TargetElement } from '../types/TargetElement';
+import type { PointerData, PointerManager } from '../PointerManager';
+import type { TargetElement } from '../types/TargetElement';
 import { calculateCentroid, createEventName } from '../utils';
 
 /**
@@ -140,18 +141,18 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
     totalDeltaZ: 0,
   };
 
-  declare protected readonly isSinglePhase: true;
+  declare public readonly isSinglePhase: true;
 
-  declare protected readonly eventType: TurnWheelEvent;
+  declare public readonly eventType: TurnWheelEvent;
 
   declare protected readonly optionsType: TurnWheelGestureOptions<GestureName>;
 
-  declare protected readonly mutableOptionsType: Omit<
+  declare public readonly mutableOptionsType: Omit<
     typeof this.optionsType,
     'name' | 'pointerMode' | 'pointerOptions' | 'passive'
   >;
 
-  declare protected readonly mutableStateType: Partial<typeof this.state>;
+  declare public readonly mutableStateType: Partial<typeof this.state>;
 
   /**
    * Scaling factor for delta values

@@ -1,4 +1,4 @@
-import { TelemetryEventContext } from '../types';
+import type { TelemetryEventContext } from '../types';
 
 const noop = () => null;
 

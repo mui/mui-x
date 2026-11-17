@@ -76,6 +76,7 @@ export default defineConfig({
     },
   ],
   test: {
+    globalSetup: ['./globalSetup.ts'],
     testTimeout: 20000,
     hookTimeout: 20000,
     maxConcurrency: 4,

@@ -2,7 +2,8 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { DataGrid, GridSlotsComponentsProps } from '@mui/x-data-grid';
+import type { GridSlotsComponentsProps } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 
 type FooterStatus = 'connected' | 'disconnected';

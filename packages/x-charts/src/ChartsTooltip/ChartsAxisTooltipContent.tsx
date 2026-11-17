@@ -25,6 +25,9 @@ export interface ChartsAxisTooltipContentProps {
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<ChartsTooltipClasses>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
   /**
    * The sort in which series items are displayed in the tooltip.
@@ -143,18 +146,27 @@ DefaultContent.propTypes /* remove-proptypes */ = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  item: PropTypes /* @typescript-to-proptypes-ignore */.shape({
-    color: PropTypes.string.isRequired,
-    formattedLabel: PropTypes.string,
-    formattedValue: PropTypes.string.isRequired,
-    markShape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye']),
-    markType: PropTypes.oneOfType([
-      PropTypes.oneOf(['circle', 'line', 'line+mark', 'square']),
-      PropTypes.func,
-    ]),
-    seriesId: PropTypes.string.isRequired,
-    value: PropTypes.any,
-  }).isRequired,
+  item: PropTypes /* @typescript-to-proptypes-ignore */
+    .shape({
+      color: PropTypes.string.isRequired,
+      formattedLabel: PropTypes.string,
+      formattedValue: PropTypes.string.isRequired,
+      markShape: PropTypes.oneOf([
+        'circle',
+        'cross',
+        'diamond',
+        'square',
+        'star',
+        'triangle',
+        'wye',
+      ]),
+      markType: PropTypes.oneOfType([
+        PropTypes.oneOf(['circle', 'line', 'line+mark', 'square']),
+        PropTypes.func,
+      ]),
+      seriesId: PropTypes.string.isRequired,
+      value: PropTypes.any,
+    }).isRequired,
 } as any;
 
 ChartsAxisTooltipContent.propTypes /* remove-proptypes */ = {
@@ -172,6 +184,9 @@ ChartsAxisTooltipContent.propTypes /* remove-proptypes */ = {
    * @default 'none'
    */
   sort: PropTypes.oneOf(['asc', 'desc', 'none']),
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

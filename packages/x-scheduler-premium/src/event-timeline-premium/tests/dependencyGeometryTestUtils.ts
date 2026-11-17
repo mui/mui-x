@@ -1,4 +1,4 @@
-import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
+import { createDate, endOfDay, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import type { SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
 import {
   createEventRangeIndex,
@@ -16,11 +16,12 @@ import { createDependencyAnchorResolver } from '../content/timeline-dependencies
 // the declaration build (which excludes that folder) never follows its `test/utils`
 // import outside the package.
 
-export const collectionStart = adapter.date('2024-01-15', 'default');
-export const collectionEnd = adapter.endOfDay(collectionStart);
+export const collectionStart = createDate('2024-01-15');
+export const collectionEnd = endOfDay(collectionStart);
 export const fullDayAxis: TimelineAxis = {
-  start: collectionStart,
-  end: collectionEnd,
+  start: collectionStart.getTime(),
+  end: collectionEnd.getTime(),
+  timezone: 'default',
   dayStartMinute: 0,
   dayEndMinute: 1440,
 };
@@ -46,10 +47,9 @@ export const eventB = EventBuilder.new()
 
 export function getOccurrences(events: SchedulerProcessedEvent[]) {
   return getOccurrencesFromEvents({
-    adapter,
-    start: collectionStart,
-    end: collectionEnd,
-    eventRangeIndex: createEventRangeIndex(events, adapter, false),
+    start: collectionStart.getTime(),
+    end: collectionEnd.getTime(),
+    eventRangeIndex: createEventRangeIndex(events, false),
     displayTimezone: 'default',
     visibleResources: {},
     recurringEventsPlugin: null,
@@ -81,11 +81,10 @@ export function buildResolver(parameters: {
   processedEventLookup?: ResolverParameters['processedEventLookup'];
 }) {
   return createDependencyAnchorResolver({
-    adapter,
     resources: parameters.resources,
     getRowPosition: (rowIndex) => parameters.rowPositions[rowIndex],
     axis: parameters.axis ?? fullDayAxis,
-    durationMs: getTimelineAxisDurationMs(adapter, parameters.axis ?? fullDayAxis),
+    durationMs: getTimelineAxisDurationMs(parameters.axis ?? fullDayAxis),
     positionByOccurrenceKey: parameters.positionByOccurrenceKey,
     eventsWidth: parameters.eventsWidth ?? EVENTS_WIDTH,
     laneMetrics,

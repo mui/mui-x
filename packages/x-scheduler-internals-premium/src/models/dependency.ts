@@ -17,8 +17,8 @@ declare module '@mui/x-scheduler-internals/models' {
 }
 
 /**
- * The PDM dependency types: which edge of the predecessor constrains which edge of
- * the successor.
+ * The dependency types: which edge of the predecessor constrains which edge of the
+ * successor.
  */
 export type SchedulerDependencyType =
   'FinishToStart' | 'StartToStart' | 'FinishToFinish' | 'StartToFinish';
@@ -46,11 +46,11 @@ export interface SchedulerDependency {
    */
   id: SchedulerDependencyId;
   /**
-   * The id of the event at the source end of the dependency.
+   * The id of the predecessor event.
    */
   source: SchedulerEventId;
   /**
-   * The id of the event at the target end of the dependency.
+   * The id of the successor event.
    */
   target: SchedulerEventId;
   /**
@@ -58,8 +58,10 @@ export interface SchedulerDependency {
    */
   type: SchedulerDependencyType;
   /**
-   * The calendar time the successor waits after the constraining edge of the
-   * predecessor, as a whole number of `lagUnit`, applied in the successor's timezone.
+   * The time the successor waits after the constraining edge of the predecessor, as a
+   * whole number of `lagUnit`.
+   * Days and weeks keep the time of day in the successor's timezone.
+   * Minutes and hours count elapsed time.
    * For an all-day successor, the lag is rounded down to whole days, so a lag shorter
    * than a day is ignored.
    * An invalid lag is ignored with a warning.
@@ -130,16 +132,19 @@ export type SchedulerDependencyEventRejectionReason = 'recurringEvent' | 'unknow
 export type SchedulerDependencyRejectionReason =
   | SchedulerDependencyEventRejectionReason
   | 'readOnly'
+  | 'featureDisabled'
   | 'duplicateDependency'
   | 'cyclicDependency'
-  | 'cascadeBlocked';
+  | 'cascadeBlocked'
+  | 'datesNotWritable';
 
 /**
- * Restoring the created or stricter dependency would move the read-only `eventId`.
+ * Restoring the created or stricter dependency would move `eventId`, which is read-only
+ * (`cascadeBlocked`) or has a date `eventModelStructure` can't write back (`datesNotWritable`).
  */
-export type SchedulerDependencyCascadeBlockedRejection = {
+export type SchedulerDependencyCascadeRejection = {
   status: 'rejected';
-  reason: 'cascadeBlocked';
+  reason: 'cascadeBlocked' | 'datesNotWritable';
   eventId: SchedulerEventId;
 };
 
@@ -153,7 +158,8 @@ export type SchedulerAddDependencyResult =
   | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId }
   | { status: 'rejected'; reason: 'cyclicDependency' }
   | { status: 'rejected'; reason: 'readOnly' }
-  | SchedulerDependencyCascadeBlockedRejection;
+  | { status: 'rejected'; reason: 'featureDisabled' }
+  | SchedulerDependencyCascadeRejection;
 
 /**
  * Properties to change on an existing dependency with `updateDependency()`.
@@ -167,8 +173,9 @@ export type SchedulerUpdateDependencyResult =
   | { status: 'updated' }
   | { status: 'rejected'; reason: 'unknownDependency' }
   | { status: 'rejected'; reason: 'readOnly' }
+  | { status: 'rejected'; reason: 'featureDisabled' }
   | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId }
-  | SchedulerDependencyCascadeBlockedRejection;
+  | SchedulerDependencyCascadeRejection;
 
 /**
  * The dependency open in the dependency dialog, and where the dialog is anchored.
@@ -208,9 +215,10 @@ export interface SchedulerDependenciesState {
  */
 export interface SchedulerDependenciesParameters {
   /**
-   * The dependencies between events. Providing a value — even an empty array —
-   * enables the dependencies feature (terminals, arrows, selection); omitting it
-   * disables the feature entirely.
+   * The dependencies between events.
+   * Requires `dependenciesFeature` from `@mui/x-scheduler-premium/dependencies`.
+   * With it, any value, even an empty array, enables the dependencies.
+   * Pass `onDependenciesChange` to keep the changes users make.
    */
   dependencies?: readonly SchedulerDependency[];
   /**

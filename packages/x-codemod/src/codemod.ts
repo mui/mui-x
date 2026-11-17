@@ -2,7 +2,8 @@
 
 import { promises as fs } from 'fs';
 import path from 'path';
-import yargs, { ArgumentsCamelCase, CommandModule } from 'yargs';
+import type { ArgumentsCamelCase, CommandModule } from 'yargs';
+import yargs from 'yargs';
 import { run as jscodeshiftRun } from 'jscodeshift/src/Runner';
 
 interface Flags {

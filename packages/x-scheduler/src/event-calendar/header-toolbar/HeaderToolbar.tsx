@@ -3,6 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import MenuOpen from '@mui/icons-material/MenuOpen';
@@ -10,14 +11,17 @@ import Menu from '@mui/icons-material/Menu';
 import Today from '@mui/icons-material/Today';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
   eventCalendarPreferenceSelectors,
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { getWeekNumber } from '@mui/x-scheduler-internals/internals';
+import {
+  formatMonthAndYear,
+  formatWeekNumber,
+  getWeekNumber,
+} from '@mui/x-scheduler-internals/internals';
 import type { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
 import { PreferencesMenu } from './preferences-menu';
@@ -99,19 +103,22 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   // Context hooks
   const store = useEventCalendarStoreContext();
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
-  const adapter = useAdapterContext();
+  const isRtl = useRtl();
+  const PreviousIcon = isRtl ? ChevronRight : ChevronLeft;
+  const NextIcon = isRtl ? ChevronLeft : ChevronRight;
 
   // Selector hooks
   const views = useStore(store, eventCalendarViewSelectors.views);
   const view = useStore(store, eventCalendarViewSelectors.view);
-  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  const visiblePlainDate = useStore(store, schedulerOtherSelectors.visiblePlainDate);
   const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
-  const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
+  const weekInfo = useStore(store, eventCalendarPreferenceSelectors.weekInfo);
+  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
   const { onCompactMenuClick, className, ...other } = props;
 
-  const weekNumber = getWeekNumber(adapter, visibleDate, weekStartsOn);
+  const weekNumber = getWeekNumber(visiblePlainDate, weekInfo);
   const showViewSwitcher = views.length > 1;
   const showWeekLabel = showWeekNumber && (view === 'week' || view === 'day');
 
@@ -143,18 +150,22 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
             store.setPreferences({ isSidePanelOpen: !isSidePanelOpen }, event.nativeEvent)
           }
         >
-          {isSidePanelOpen ? <MenuOpen /> : <Menu />}
+          {isSidePanelOpen ? (
+            // Mirrored in RTL so the arrow points toward the side panel, on the inline start.
+            <MenuOpen sx={isRtl ? { transform: 'scaleX(-1)' } : undefined} />
+          ) : (
+            <Menu />
+          )}
         </IconButton>
         <HeaderToolbarLabel
           data-expanded-only
           aria-live="polite"
           className={classes.headerToolbarLabel}
         >
-          {adapter.format(visibleDate, 'monthFullLetter')}{' '}
-          {adapter.format(visibleDate, 'yearPadded')}
+          {formatMonthAndYear(locale, visiblePlainDate)}
           {showWeekLabel && (
             <HeaderToolbarWeekNumber className={classes.headerToolbarWeekNumber}>
-              {`${localeText.week} ${weekNumber}`}
+              {`${localeText.week} ${formatWeekNumber(locale, weekNumber)}`}
             </HeaderToolbarWeekNumber>
           )}
         </HeaderToolbarLabel>
@@ -169,14 +180,14 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
             onClick={store.goToPreviousVisibleDate}
             aria-label={localeText.previousTimeSpan(view)}
           >
-            <ChevronLeft />
+            <PreviousIcon />
           </IconButton>
           <IconButton
             className={classes.headerToolbarNextButton}
             onClick={store.goToNextVisibleDate}
             aria-label={localeText.nextTimeSpan(view)}
           >
-            <ChevronRight />
+            <NextIcon />
           </IconButton>
         </HeaderToolbarDateNavigator>
         {/* Compact: today as an icon button replacing the expanded text button. */}

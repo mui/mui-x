@@ -22,6 +22,29 @@ export const mergeDateAndTime = (
   return mergedDate;
 };
 
+/**
+ * Finds the enabled month or year number closest to `target`.
+ * When two numbers are equally close, the later one wins, like in `findClosestEnabledDate`.
+ */
+export const findClosestEnabledNumber = (
+  target: number,
+  enabledNumbers: number[],
+): number | null => {
+  let closest: number | null = null;
+  let closestDistance = Infinity;
+
+  for (const number of enabledNumbers) {
+    const distance = Math.abs(number - target);
+
+    if (distance < closestDistance || (distance === closestDistance && number > target)) {
+      closest = number;
+      closestDistance = distance;
+    }
+  }
+
+  return closest;
+};
+
 interface FindClosestDateParams {
   date: PickerValidDate;
   disableFuture?: boolean;

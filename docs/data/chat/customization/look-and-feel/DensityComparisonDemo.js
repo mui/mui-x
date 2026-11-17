@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { ChatBox } from '@mui/x-chat';
-
 import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   demoUsers,

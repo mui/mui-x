@@ -12,6 +12,9 @@ interface ChartsRadiusGridProps {
   startAngle: number;
   endAngle: number;
   isFullCircle: boolean;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: Partial<ChartsRadialGridClasses>;
 }
 

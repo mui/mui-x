@@ -132,6 +132,7 @@ export {
   getRowValue,
   isReplaceUpdate,
   getReplaceRow,
+  asReplaceUpdates,
   warnIfReplaceLosesPrototype,
 } from '../hooks/features/rows/gridRowsUtils';
 export {
@@ -156,6 +157,7 @@ export type { GridRowReorderState } from '../hooks/features/rowReorder/gridRowRe
 export { useGridRowSelectionPreProcessors } from '../hooks/features/rowSelection/useGridRowSelectionPreProcessors';
 export { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
 export type { GridSortingModelApplier } from '../hooks/features/sorting/gridSortingState';
+export { getNextGridSortDirection } from '../hooks/features/sorting/gridSortingUtils';
 export { gridSortedRowIndexLookupSelector } from '../hooks/features/sorting/gridSortingSelector';
 export { useGridScroll } from '../hooks/features/scroll/useGridScroll';
 export { useGridEvents } from '../hooks/features/events/useGridEvents';
@@ -178,7 +180,11 @@ export {
 } from '../hooks/features/listView/useGridListView';
 
 export { useTimeout } from '../hooks/utils/useTimeout';
-export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
+export {
+  useGridVisibleRows,
+  getVisibleRows,
+  getRowIndexRelativeToAllRows,
+} from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 export { usePinnedScrollOffset } from '../hooks/utils/usePinnedScrollOffset';
@@ -187,8 +193,9 @@ export {
   createDragPreview,
   getEdgeScrollDelta,
   getVisibleViewportBounds,
+  hasReachedAutoScrollDistance,
 } from '../hooks/utils/pointerDragUtils';
-export type { DragPreview } from '../hooks/utils/pointerDragUtils';
+export type { DragPreview, VisibleViewportBounds } from '../hooks/utils/pointerDragUtils';
 export type {
   PointerDragPosition,
   UsePointerDragOptions,
@@ -230,6 +237,7 @@ export {
   getGridCellElement,
   getGridRowElement,
   isEventTargetInPortal,
+  isEventTargetTextEntryElement,
 } from '../utils/domUtils';
 export {
   isNavigationKey,

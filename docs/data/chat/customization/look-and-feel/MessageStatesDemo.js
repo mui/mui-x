@@ -10,7 +10,6 @@ import {
   ChatMessageGroup,
 } from '@mui/x-chat';
 import { ChatProvider, useChatStore } from '@mui/x-chat/headless';
-
 import {
   demoUsers,
   createTextMessage,

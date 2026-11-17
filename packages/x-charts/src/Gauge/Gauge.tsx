@@ -13,7 +13,13 @@ import { GaugeValueText } from './GaugeValueText';
 import type { GaugeValueTextProps } from './GaugeValueText';
 
 export interface GaugeProps extends GaugeContainerProps, Pick<GaugeValueTextProps, 'text'> {
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<GaugeClasses>;
+  /**
+   * The content of the component.
+   */
   children?: React.ReactNode;
 }
 
@@ -44,7 +50,13 @@ Gauge.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The content of the component.
+   */
   children: PropTypes.node,
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
@@ -123,11 +135,18 @@ Gauge.propTypes /* remove-proptypes */ = {
    * @default 0
    */
   startAngle: PropTypes.number,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The text displayed in the gauge.
+   * A function receives the gauge value and its limits, and returns the text.
+   */
   text: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   /**
    * The title of the chart.

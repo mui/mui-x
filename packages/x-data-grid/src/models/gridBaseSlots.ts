@@ -132,14 +132,41 @@ export type BadgeProps = CommonProps & {
 
 export type ButtonProps = CommonProps & {
   ref?: Ref<HTMLButtonElement>;
+  /**
+   * The content of the button.
+   */
   children?: React.ReactNode;
+  /**
+   * If `true`, the button is disabled.
+   */
   disabled?: boolean;
+  /**
+   * The id of the button element.
+   */
   id?: string;
+  /**
+   * The ARIA role of the button element.
+   */
   role?: string;
+  /**
+   * The size of the button.
+   */
   size?: 'small' | 'medium' | 'large';
+  /**
+   * Element placed before the children.
+   */
   startIcon?: React.ReactNode;
+  /**
+   * The `tabIndex` of the button element.
+   */
   tabIndex?: number;
+  /**
+   * The title of the button element.
+   */
   title?: string;
+  /**
+   * @ignore
+   */
   touchRippleRef?: any; // FIXME(v8:romgrk): find a way to remove
 };
 
@@ -176,8 +203,17 @@ export type ChipProps = CommonProps & {
 };
 
 export type IconButtonProps = Omit<ButtonProps, 'startIcon'> & {
+  /**
+   * The label of the button.
+   */
   label?: string;
+  /**
+   * The color of the button.
+   */
   color?: 'default' | 'inherit' | 'primary';
+  /**
+   * If given, uses a negative margin to align the button with the edge of its container.
+   */
   edge?: 'start' | 'end' | false;
 } & LinkableComponentProps;
 
@@ -386,29 +422,86 @@ export type TabsProps = Omit<CommonProps, 'onChange'> & {
 };
 
 export type TextFieldProps = CommonProps & {
+  /**
+   * The ARIA role of the root element.
+   */
   role?: string;
+  /**
+   * The `autocomplete` attribute of the input element.
+   */
   autoComplete?: string;
+  /**
+   * The color of the text field.
+   */
   color?: 'primary' | 'error';
+  /**
+   * If `true`, the text field is disabled.
+   */
   disabled?: boolean;
+  /**
+   * If `true`, the text field is displayed in an error state.
+   */
   error?: boolean;
+  /**
+   * If `true`, the text field takes up the full width of its container.
+   */
   fullWidth?: boolean;
+  /**
+   * The helper text displayed below the input.
+   */
   helperText?: string | null;
+  /**
+   * The id of the input element.
+   */
   id?: string;
+  /**
+   * A ref to the input element.
+   */
   inputRef?: React.Ref<HTMLInputElement>;
+  /**
+   * The label of the text field.
+   */
   label?: React.ReactNode;
+  /**
+   * Callback fired when the value changes.
+   */
   onChange?: React.ChangeEventHandler;
+  /**
+   * The short hint displayed in the input before the user enters a value.
+   */
   placeholder?: string;
+  /**
+   * The size of the text field.
+   */
   size?: 'small' | 'medium';
+  /**
+   * The props used for each slot inside.
+   */
   slotProps?: {
     input?: Omit<Partial<InputProps>, 'slotProps'>;
     inputLabel?: {};
     htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
   };
+  /**
+   * The `tabIndex` of the input element.
+   */
   tabIndex?: number;
+  /**
+   * The type of the input element.
+   */
   type?: React.HTMLInputTypeAttribute;
+  /**
+   * The value of the input element.
+   */
   value?: string;
   ref?: Ref<HTMLInputElement>;
+  /**
+   * If `true`, a `textarea` element is rendered instead of an `input`.
+   */
   multiline?: boolean;
+  /**
+   * If `true`, the input element is focused during the first mount.
+   */
   autoFocus?: boolean;
 };
 

@@ -5,6 +5,9 @@ export interface ComposerOwnerState {
   hasValue: boolean;
   isStreaming: boolean;
   attachmentCount: number;
+  /**
+   * If `true`, the composer is disabled.
+   */
   disabled: boolean;
 }
 

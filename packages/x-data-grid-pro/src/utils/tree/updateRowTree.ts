@@ -1,7 +1,11 @@
 import { GRID_ROOT_GROUP_ID } from '@mui/x-data-grid';
 import type { GridGroupNode, GridRowId, GridRowTreeConfig } from '@mui/x-data-grid';
 import { getTreeNodeDescendants } from '@mui/x-data-grid/internals';
-import type { GridRowTreeCreationValue, GridTreeDepths } from '@mui/x-data-grid/internals';
+import type {
+  GridRowsPartialUpdates,
+  GridRowTreeCreationValue,
+  GridTreeDepths,
+} from '@mui/x-data-grid/internals';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import type { GridTreePathDuplicateHandler, RowTreeBuilderNode } from './models';
 import { insertDataRowInTree } from './insertDataRowInTree';
@@ -24,7 +28,38 @@ interface UpdateRowTreeParams {
   onDuplicatePath?: GridTreePathDuplicateHandler;
   previousGroupsToFetch?: GridRowId[];
   maxDepth?: number;
+  childrenOrder?: GridRowsPartialUpdates['childrenOrder'];
 }
+
+/**
+ * Reorders the children of a group, which otherwise keep the index they were inserted at.
+ */
+const applyChildrenOrder = (
+  tree: GridRowTreeConfig,
+  childrenOrder: NonNullable<UpdateRowTreeParams['childrenOrder']>,
+) => {
+  const { parentId, ids } = childrenOrder;
+  const parentNode = tree[parentId];
+  if (parentNode?.type !== 'group') {
+    return;
+  }
+
+  const orderedChildren = ids.filter((id) => tree[id]?.parent === parentId);
+  if (orderedChildren.length === 0) {
+    return;
+  }
+
+  const orderedChildrenLookup = new Set(orderedChildren);
+  // Children the update did not mention go last, in their current order.
+  const children = orderedChildren.concat(
+    parentNode.children.filter((id) => !orderedChildrenLookup.has(id)),
+  );
+  if (children.every((id, index) => id === parentNode.children[index])) {
+    return;
+  }
+
+  tree[parentId] = { ...parentNode, children };
+};
 
 export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationValue => {
   const tree = { ...params.previousTree };
@@ -89,6 +124,10 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
         maxDepth: params.maxDepth,
       });
     }
+  }
+
+  if (params.childrenOrder) {
+    applyChildrenOrder(tree, params.childrenOrder);
   }
 
   // TODO rows v6: Avoid walking the whole tree, we should be able to generate the new list only using slices.

@@ -13,9 +13,9 @@ describe('useDisarmOnEscape', () => {
     return event;
   }
 
-  it('should disarm when Escape is pressed while active', () => {
+  it('should disarm when Escape is pressed', () => {
     const onDisarm = vi.fn();
-    renderUseDisarm({ active: true, onDisarm });
+    renderUseDisarm({ onDisarm });
 
     pressKey('Escape');
 
@@ -24,25 +24,16 @@ describe('useDisarmOnEscape', () => {
 
   it('should ignore keys other than Escape', () => {
     const onDisarm = vi.fn();
-    renderUseDisarm({ active: true, onDisarm });
+    renderUseDisarm({ onDisarm });
 
     pressKey('Enter');
 
     expect(onDisarm.mock.calls.length).to.equal(0);
   });
 
-  it('should do nothing while inactive', () => {
-    const onDisarm = vi.fn();
-    renderUseDisarm({ active: false, onDisarm });
-
-    pressKey('Escape');
-
-    expect(onDisarm.mock.calls.length).to.equal(0);
-  });
-
   it('should skip an Escape already consumed by an inner handler (e.g. an open dialog closing)', () => {
     const onDisarm = vi.fn();
-    renderUseDisarm({ active: true, onDisarm });
+    renderUseDisarm({ onDisarm });
 
     // A handler higher up the tree already called preventDefault on this Escape.
     const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
@@ -52,11 +43,11 @@ describe('useDisarmOnEscape', () => {
     expect(onDisarm.mock.calls.length).to.equal(0);
   });
 
-  it('should remove the listener when active becomes false', () => {
+  it('should stop listening once unmounted', () => {
     const onDisarm = vi.fn();
-    const { rerender } = renderUseDisarm({ active: true, onDisarm });
+    const { unmount } = renderUseDisarm({ onDisarm });
 
-    rerender({ active: false, onDisarm });
+    unmount();
     pressKey('Escape');
 
     expect(onDisarm.mock.calls.length).to.equal(0);

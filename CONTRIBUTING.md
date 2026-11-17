@@ -14,3 +14,11 @@ There are, however, a few differences:
 - The local documentation site opens on a different port: 3001 instead of 3000.
 - You would need to sign a contributor license agreement (CLA) if the PR changes code located in the following folders: `x-data-grid-pro`, `x-data-grid-premium`, `x-date-pickers-pro`
 - Testing see [/test/README.md](test/README.md) for details.
+
+## Experiments
+
+Run `pnpm docs:dev` and open <http://localhost:3001/x/experiments/>.
+
+Add pages to `docs/pages/x/experiments/<product>/` and demo components to `docs/data/experiments/<product>/`.
+The app adds the sidebar automatically.
+Restart the docs server after adding or renaming a page to update the sidebar.

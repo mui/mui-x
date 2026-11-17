@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { useMovieData } from '@mui/x-data-grid-generator';
-import { DataGridPremium, GridColDef } from '@mui/x-data-grid-premium';
+import type { GridColDef } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 import GradeIcon from '@mui/icons-material/Grade';
 
 const ratingColDef: GridColDef = {

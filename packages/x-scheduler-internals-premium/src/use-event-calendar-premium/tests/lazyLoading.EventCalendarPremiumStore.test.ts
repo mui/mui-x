@@ -1,11 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { adapter, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
-import type {
-  SchedulerProcessedDate,
-  TemporalSupportedObject,
-} from '@mui/x-scheduler-internals/models';
+import {
+  addDays,
+  createDate,
+  DEFAULT_TESTING_VISIBLE_DATE,
+  endOfDay,
+  isSameDay,
+  processDay,
+  setSystemTimezone,
+  startOfDay,
+} from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
+import type { SchedulerProcessedDay } from '@mui/x-scheduler-internals/models';
 import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
 import { EventCalendarPremiumStore } from '../EventCalendarPremiumStore';
 
@@ -38,13 +44,14 @@ const flushDebounce = () => vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
 
 const CACHE_TTL_MS = 300_000;
 
-const isEventInRange = (
-  event: TestEvent,
-  start: TemporalSupportedObject,
-  end: TemporalSupportedObject,
-) =>
-  Date.parse(event.start) <= adapter.getTime(end) &&
-  Date.parse(event.end) >= adapter.getTime(start);
+const isEventInRange = (event: TestEvent, start: Date, end: Date) =>
+  Date.parse(event.start) <= end.getTime() && Date.parse(event.end) >= start.getTime();
+
+/**
+ * The bounds of the `callIndex`-th call of `getEvents()`, as ISO strings.
+ */
+const getFetchedRange = (getEvents: { mock: { calls: unknown[][] } }, callIndex = 0) =>
+  (getEvents.mock.calls[callIndex] as Date[]).map((date) => date.toISOString());
 
 const DEFAULT_PARAMS = {
   events: [] as TestEvent[],
@@ -52,23 +59,11 @@ const DEFAULT_PARAMS = {
 };
 
 // Build a minimal `visibleDaysSelector` returning a `dayCount`-day window starting at the
-// store's current `visibleDate` in the display timezone. The plugin only reads `value` and `key`; `timestamp`
-// and `minutesInDay` are filled in to satisfy `SchedulerProcessedDate`.
+// store's current `visibleDate` in the display timezone. The plugin only reads `timestamp`.
 const buildViewDefinition = (dayCount = 7): any => ({
   siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
-  visibleDaysSelector: (state: any): SchedulerProcessedDate[] => {
-    const days: SchedulerProcessedDate[] = [];
-    for (let i = 0; i < dayCount; i += 1) {
-      const value = adapter.addDays(schedulerOtherSelectors.visibleDate(state), i);
-      days.push({
-        value,
-        key: String(adapter.getTime(value)),
-        timestamp: adapter.getTime(value),
-        minutesInDay: 24 * 60,
-      });
-    }
-    return days;
-  },
+  visibleDaysSelector: (state: any): SchedulerProcessedDay[] =>
+    Array.from({ length: dayCount }, (_, i) => processDay(addDays(state.visibleDate, i))),
 });
 
 describe('Lazy loading - EventCalendarPremiumStore', () => {
@@ -85,7 +80,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
 
     // View mounts and registers its config. Mirrors `<View>`'s setViewDefinition call.
     store.setViewDefinition(buildViewDefinition());
@@ -97,12 +92,66 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     expect(store.state.eventIdList).to.have.length(1);
   });
 
+  it.skipIf(!isJSDOM)(
+    'should fetch the days of the view in the display timezone, whatever the timezone of the system',
+    async () => {
+      setSystemTimezone('Australia/Lord_Howe');
+      const dataSource = {
+        getEvents: vi.fn(async () => buildEvents()),
+        persistEvents: noopPersistEvents,
+      };
+      // Santiago leaves summer time at the end of April 4th, 2026, when 24:00 becomes 23:00.
+      const store = new EventCalendarPremiumStore({
+        ...DEFAULT_PARAMS,
+        dataSource,
+        displayTimezone: 'America/Santiago',
+        // Midnight on April 5th, 2026 in Santiago.
+        defaultVisibleDate: createDate('2026-04-05T04:00:00Z'),
+      });
+      store.setViewDefinition(buildViewDefinition(1));
+
+      await flushEffect();
+      await flushDebounce();
+
+      expect(dataSource.getEvents.mock.calls.length).to.equal(1);
+      expect(getFetchedRange(dataSource.getEvents)).to.deep.equal([
+        '2026-04-05T04:00:00.000Z',
+        '2026-04-06T03:59:59.999Z',
+      ]);
+    },
+  );
+
+  it('should fetch the hour a DST transition repeats at the end of the last day of the view', async () => {
+    const dataSource = {
+      getEvents: vi.fn(async () => buildEvents()),
+      persistEvents: noopPersistEvents,
+    };
+    const store = new EventCalendarPremiumStore({
+      ...DEFAULT_PARAMS,
+      dataSource,
+      displayTimezone: 'America/Santiago',
+      // Midnight on April 4th, 2026 in Santiago, whose last hour occurs twice.
+      defaultVisibleDate: createDate('2026-04-04T03:00:00Z'),
+    });
+    store.setViewDefinition(buildViewDefinition(1));
+
+    await flushEffect();
+    await flushDebounce();
+
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
+    // The range ends on the second 23:59:59.999, after the repeated hour.
+    expect(getFetchedRange(dataSource.getEvents)).to.deep.equal([
+      '2026-04-04T03:00:00.000Z',
+      '2026-04-05T03:59:59.999Z',
+    ]);
+  });
+
   it('should fire the initial fetch without waiting for the debounce window', async () => {
     const dataSource = {
       getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition());
 
     // Only flush microtasks + a short advance well below the debounce window.
@@ -117,10 +166,10 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
 
     // No setViewDefinition call. visibleDaysSelector returns [] → effect must bail.
-    store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
+    store.goToDate(addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
 
     await flushEffect();
     await flushDebounce();
@@ -133,14 +182,14 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
     await flushDebounce();
     expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
-    store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
+    store.goToDate(addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
     await flushEffect();
     await flushDebounce();
 
@@ -152,7 +201,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
@@ -162,8 +211,8 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     // Two synchronous navigations within the same tick. Without coalescing, the
     // effect schedules two microtasks producing a wasted fetch for the
     // intermediate range.
-    store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
-    store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 60), noopUIEvent);
+    store.goToDate(addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
+    store.goToDate(addDays(DEFAULT_TESTING_VISIBLE_DATE, 60), noopUIEvent);
 
     await flushEffect();
     await flushDebounce();
@@ -172,7 +221,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
 
     // Third navigation AFTER the microtask drained. Catches regressions where
     // `isFetchScheduled` isn't reset and the lazy loader freezes after the first batch.
-    store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 90), noopUIEvent);
+    store.goToDate(addDays(DEFAULT_TESTING_VISIBLE_DATE, 90), noopUIEvent);
     await flushEffect();
     await flushDebounce();
 
@@ -213,13 +262,13 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       ),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition());
     await flushEffect();
     await flushDebounce();
 
     // Navigate to B before A resolves.
-    store.goToDate(adapter.date('2025-09-15T00:00:00Z', 'default'), noopUIEvent);
+    store.goToDate(createDate('2025-09-15T00:00:00Z'), noopUIEvent);
     await flushEffect();
     await flushDebounce();
     expect(dataSource.getEvents.mock.calls.length).to.equal(2);
@@ -228,10 +277,10 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     await flushEffect();
     expect(store.state.eventIdList).to.include('b');
 
-    // A resolves late → must NOT drop B's data.
+    // A resolves late → must NOT drop B's data, nor add its own.
     resolveA(eventsA);
     await flushEffect();
-    expect(store.state.eventIdList).to.include('b');
+    expect(store.state.eventIdList).to.deep.equal(['b']);
   });
 
   it('should keep loading when a stale fetch resolves while the latest one is pending', async () => {
@@ -252,13 +301,13 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       ),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition());
     await flushEffect();
     await flushDebounce();
 
     // Navigate to B before A resolves.
-    store.goToDate(adapter.date('2025-09-15T00:00:00Z', 'default'), noopUIEvent);
+    store.goToDate(createDate('2025-09-15T00:00:00Z'), noopUIEvent);
     await flushEffect();
     await flushDebounce();
     expect(dataSource.getEvents.mock.calls.length).to.equal(2);
@@ -291,13 +340,13 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       ),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition());
     await flushEffect();
     await flushDebounce();
 
     // Navigate to B before A rejects.
-    store.goToDate(adapter.date('2025-09-15T00:00:00Z', 'default'), noopUIEvent);
+    store.goToDate(createDate('2025-09-15T00:00:00Z'), noopUIEvent);
     await flushEffect();
     await flushDebounce();
     expect(dataSource.getEvents.mock.calls.length).to.equal(2);
@@ -333,19 +382,16 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     const parameters = {
       ...DEFAULT_PARAMS,
       dataSource,
-      defaultVisibleDate: adapter.date('2025-07-01T12:00:00Z', 'default'),
+      defaultVisibleDate: createDate('2025-07-01T12:00:00Z'),
       displayTimezone: 'UTC',
     };
-    const store = new EventCalendarPremiumStore(parameters, adapter);
+    const store = new EventCalendarPremiumStore(parameters);
     store.setViewDefinition(buildViewDefinition());
     await flushEffect();
     await flushDebounce();
 
     // Same calendar days, but different timestamps.
-    store.updateStateFromParameters(
-      { ...parameters, displayTimezone: 'America/New_York' },
-      adapter,
-    );
+    store.updateStateFromParameters({ ...parameters, displayTimezone: 'America/New_York' });
     await flushEffect();
     await flushDebounce();
     expect(dataSource.getEvents.mock.calls.length).to.equal(2);
@@ -358,6 +404,35 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     expect(store.state.eventIdList).to.have.length(1);
   });
 
+  it('should fetch whole days of the display timezone when the cache holds the days of the previous one', async () => {
+    const dataSource = {
+      getEvents: vi.fn(async () => buildEvents()),
+      persistEvents: noopPersistEvents,
+    };
+    const parameters = {
+      ...DEFAULT_PARAMS,
+      dataSource,
+      defaultVisibleDate: createDate('2025-07-02T00:00:00Z'),
+      displayTimezone: 'UTC',
+    };
+    const store = new EventCalendarPremiumStore(parameters);
+    store.setViewDefinition(buildViewDefinition(1));
+    await flushEffect();
+    await flushDebounce();
+
+    // The view shows July 1st in New York, whose last 4 hours are on July 2nd in UTC, which the
+    // cache already holds.
+    store.updateStateFromParameters({ ...parameters, displayTimezone: 'America/New_York' });
+    await flushEffect();
+    await flushDebounce();
+
+    expect(dataSource.getEvents.mock.calls.length).to.equal(2);
+    expect(getFetchedRange(dataSource.getEvents, 1)).to.deep.equal([
+      '2025-07-01T04:00:00.000Z',
+      '2025-07-02T03:59:59.999Z',
+    ]);
+  });
+
   it('should refetch the cached part of the range when it expires while a trimmed fetch is pending', async () => {
     const event: TestEvent = {
       id: 'cached',
@@ -368,7 +443,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     let resolvePending: () => void = () => {};
     let callIndex = 0;
     const dataSource = {
-      getEvents: vi.fn((start: TemporalSupportedObject, end: TemporalSupportedObject) => {
+      getEvents: vi.fn((start: Date, end: Date) => {
         callIndex += 1;
         const events = isEventInRange(event, start, end) ? [event] : [];
         if (callIndex !== 2) {
@@ -380,14 +455,11 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       }),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore(
-      {
-        ...DEFAULT_PARAMS,
-        dataSource,
-        defaultVisibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'),
-      },
-      adapter,
-    );
+    const store = new EventCalendarPremiumStore({
+      ...DEFAULT_PARAMS,
+      dataSource,
+      defaultVisibleDate: createDate('2025-07-01T00:00:00Z'),
+    });
     store.setViewDefinition(buildViewDefinition(10));
     await flushEffect();
     await flushDebounce();
@@ -395,7 +467,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
 
     // Navigate just before the cache expires: only the days after July 10 are requested.
     await vi.advanceTimersByTimeAsync(CACHE_TTL_MS - 1_000);
-    store.goToDate(adapter.date('2025-07-05T00:00:00Z', 'default'), noopUIEvent);
+    store.goToDate(createDate('2025-07-05T00:00:00Z'), noopUIEvent);
     await flushEffect();
     await flushDebounce();
     expect(dataSource.getEvents.mock.calls).to.have.length(2);
@@ -421,23 +493,20 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     const pending: Array<() => void> = [];
     const dataSource = {
       getEvents: vi.fn(
-        (start: TemporalSupportedObject, end: TemporalSupportedObject) =>
+        (start: Date, end: Date) =>
           new Promise<TestEvent[]>((resolve) => {
             pending.push(() => resolve(isEventInRange(event, start, end) ? [event] : []));
           }),
       ),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore(
-      {
-        ...DEFAULT_PARAMS,
-        dataSource,
-        defaultVisibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'),
-      },
-      adapter,
-    );
+    const store = new EventCalendarPremiumStore({
+      ...DEFAULT_PARAMS,
+      dataSource,
+      defaultVisibleDate: createDate('2025-07-01T00:00:00Z'),
+    });
     const navigate = async (date: string) => {
-      store.goToDate(adapter.date(date, 'default'), noopUIEvent);
+      store.goToDate(createDate(date), noopUIEvent);
       await flushEffect();
       await flushDebounce();
     };
@@ -495,23 +564,20 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     const pending: Array<() => void> = [];
     const dataSource = {
       getEvents: vi.fn(
-        (start: TemporalSupportedObject, end: TemporalSupportedObject) =>
+        (start: Date, end: Date) =>
           new Promise<TestEvent[]>((resolve) => {
             pending.push(() => resolve(isEventInRange(event, start, end) ? [event] : []));
           }),
       ),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore(
-      {
-        ...DEFAULT_PARAMS,
-        dataSource,
-        defaultVisibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'),
-      },
-      adapter,
-    );
+    const store = new EventCalendarPremiumStore({
+      ...DEFAULT_PARAMS,
+      dataSource,
+      defaultVisibleDate: createDate('2025-07-01T00:00:00Z'),
+    });
     const navigate = async (date: string) => {
-      store.goToDate(adapter.date(date, 'default'), noopUIEvent);
+      store.goToDate(createDate(date), noopUIEvent);
       await flushEffect();
       await flushDebounce();
     };
@@ -553,7 +619,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       title: 'Late event',
     };
     const dataSource = {
-      getEvents: vi.fn(async (start: TemporalSupportedObject, end: TemporalSupportedObject) =>
+      getEvents: vi.fn(async (start: Date, end: Date) =>
         isEventInRange(event, start, end) ? [event] : [],
       ),
       persistEvents: noopPersistEvents,
@@ -561,27 +627,24 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     const parameters = {
       ...DEFAULT_PARAMS,
       dataSource,
-      defaultVisibleDate: adapter.date('2025-07-10T12:00:00Z', 'default'),
+      defaultVisibleDate: createDate('2025-07-10T12:00:00Z'),
       displayTimezone: 'UTC',
     };
-    const store = new EventCalendarPremiumStore(parameters, adapter);
+    const store = new EventCalendarPremiumStore(parameters);
     store.setViewDefinition(buildViewDefinition(10));
     await flushEffect();
     await flushDebounce();
 
     // July 5 to 14 in New York: the cached UTC days trim the request partway through July 9.
     await vi.advanceTimersByTimeAsync(60_000);
-    store.updateStateFromParameters(
-      { ...parameters, displayTimezone: 'America/New_York' },
-      adapter,
-    );
-    store.goToDate(adapter.date('2025-07-05T12:00:00Z', 'default'), noopUIEvent);
+    store.updateStateFromParameters({ ...parameters, displayTimezone: 'America/New_York' });
+    store.goToDate(createDate('2025-07-05T12:00:00Z'), noopUIEvent);
     await flushEffect();
     await flushDebounce();
 
     // The UTC days expire, the New York ones are still cached.
     await vi.advanceTimersByTimeAsync(CACHE_TTL_MS - 30_000);
-    store.goToDate(adapter.date('2025-07-09T12:00:00Z', 'default'), noopUIEvent);
+    store.goToDate(createDate('2025-07-09T12:00:00Z'), noopUIEvent);
     await flushEffect();
     await flushDebounce();
 
@@ -591,26 +654,25 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
 
   it('should not fetch again when the visible date moves within the same day', async () => {
     const dataSource = {
-      getEvents: vi.fn(
-        async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [],
-      ),
+      getEvents: vi.fn(async (_start: Date, _end: Date) => []),
       persistEvents: noopPersistEvents,
     };
     // The day view keeps the time of `visibleDate` in its days
-    const morning = adapter.date('2025-07-03T10:00:00Z', 'default');
-    const store = new EventCalendarPremiumStore(
-      { ...DEFAULT_PARAMS, dataSource, defaultVisibleDate: morning },
-      adapter,
-    );
+    const morning = createDate('2025-07-03T10:00:00Z');
+    const store = new EventCalendarPremiumStore({
+      ...DEFAULT_PARAMS,
+      dataSource,
+      defaultVisibleDate: morning,
+    });
 
     store.setViewDefinition(buildViewDefinition(1));
     await flushEffect();
     await flushDebounce();
     expect(dataSource.getEvents.mock.calls).to.have.length(1);
     const [start] = dataSource.getEvents.mock.calls[0];
-    expect(adapter.isEqual(start, adapter.startOfDay(morning))).to.equal(true);
+    expect(start).toEqualDateTime(startOfDay(morning));
 
-    store.goToDate(adapter.startOfDay(morning), noopUIEvent);
+    store.goToDate(startOfDay(morning), noopUIEvent);
     await flushEffect();
     await flushDebounce();
 
@@ -619,22 +681,18 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
 
   it('should request the range until the end of the last visible day', async () => {
     const dataSource = {
-      getEvents: vi.fn(
-        async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [],
-      ),
+      getEvents: vi.fn(async (_start: Date, _end: Date) => []),
       persistEvents: noopPersistEvents,
     };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
     store.setViewDefinition(buildViewDefinition(7));
 
     await flushEffect();
     await flushDebounce();
 
     const [start, end] = dataSource.getEvents.mock.calls[0];
-    expect(adapter.isEqual(start, adapter.startOfDay(DEFAULT_TESTING_VISIBLE_DATE))).to.equal(true);
-    expect(
-      adapter.isEqual(end, adapter.endOfDay(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 6))),
-    ).to.equal(true);
+    expect(start).toEqualDateTime(startOfDay(DEFAULT_TESTING_VISIBLE_DATE));
+    expect(end).toEqualDateTime(endOfDay(addDays(DEFAULT_TESTING_VISIBLE_DATE, 6)));
   });
 
   describe('view without visible days', () => {
@@ -650,7 +708,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
         getEvents: vi.fn(async () => buildEvents()),
         persistEvents: noopPersistEvents,
       };
-      const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource });
 
       store.setViewDefinition(buildViewDefinition(0));
 
@@ -662,15 +720,14 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
 
     it('should fetch the whole horizon when the agenda hides the empty days', async () => {
       const dataSource = {
-        getEvents: vi.fn(
-          async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [],
-        ),
+        getEvents: vi.fn(async (_start: Date, _end: Date) => []),
         persistEvents: noopPersistEvents,
       };
-      const store = new EventCalendarPremiumStore(
-        { ...DEFAULT_PARAMS, dataSource, defaultPreferences: { showEmptyDaysInAgenda: false } },
-        adapter,
-      );
+      const store = new EventCalendarPremiumStore({
+        ...DEFAULT_PARAMS,
+        dataSource,
+        defaultPreferences: { showEmptyDaysInAgenda: false },
+      });
 
       store.setViewDefinition(agendaViewDefinition);
 
@@ -679,43 +736,33 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
 
       expect(dataSource.getEvents.mock.calls).to.have.length(1);
       const [start, end] = dataSource.getEvents.mock.calls[0];
-      expect(adapter.isSameDay(start, DEFAULT_TESTING_VISIBLE_DATE)).to.equal(true);
-      expect(adapter.isSameDay(end, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 179))).to.equal(
-        true,
-      );
+      expect(isSameDay(start, DEFAULT_TESTING_VISIBLE_DATE)).to.equal(true);
+      expect(isSameDay(end, addDays(DEFAULT_TESTING_VISIBLE_DATE, 179))).to.equal(true);
     });
 
     it('should only fetch the uncovered part of the horizon after navigating', async () => {
       const dataSource = {
-        getEvents: vi.fn(
-          async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [],
-        ),
+        getEvents: vi.fn(async (_start: Date, _end: Date) => []),
         persistEvents: noopPersistEvents,
       };
-      const store = new EventCalendarPremiumStore(
-        { ...DEFAULT_PARAMS, dataSource, defaultPreferences: { showEmptyDaysInAgenda: false } },
-        adapter,
-      );
+      const store = new EventCalendarPremiumStore({
+        ...DEFAULT_PARAMS,
+        dataSource,
+        defaultPreferences: { showEmptyDaysInAgenda: false },
+      });
 
       store.setViewDefinition(agendaViewDefinition);
       await flushEffect();
       await flushDebounce();
 
-      store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 12), noopUIEvent);
+      store.goToDate(addDays(DEFAULT_TESTING_VISIBLE_DATE, 12), noopUIEvent);
       await flushEffect();
       await flushDebounce();
 
       expect(dataSource.getEvents.mock.calls).to.have.length(2);
       const [start, end] = dataSource.getEvents.mock.calls[1];
-      expect(
-        adapter.isEqual(
-          start,
-          adapter.startOfDay(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 180)),
-        ),
-      ).to.equal(true);
-      expect(
-        adapter.isEqual(end, adapter.endOfDay(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 191))),
-      ).to.equal(true);
+      expect(start).toEqualDateTime(startOfDay(addDays(DEFAULT_TESTING_VISIBLE_DATE, 180)));
+      expect(end).toEqualDateTime(endOfDay(addDays(DEFAULT_TESTING_VISIBLE_DATE, 191)));
 
       // Navigating back to the cached horizon fetches nothing
       store.goToDate(DEFAULT_TESTING_VISIBLE_DATE, noopUIEvent);
@@ -728,20 +775,15 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
 
     it('should keep the same range across the loading flip when the agenda hides empty days and weekends', async () => {
       const dataSource = {
-        getEvents: vi.fn(
-          async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [],
-        ),
+        getEvents: vi.fn(async (_start: Date, _end: Date) => []),
         persistEvents: noopPersistEvents,
       };
-      const store = new EventCalendarPremiumStore(
-        {
-          ...DEFAULT_PARAMS,
-          dataSource,
-          defaultVisibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'), // Tuesday
-          defaultPreferences: { showEmptyDaysInAgenda: false, showWeekends: false },
-        },
-        adapter,
-      );
+      const store = new EventCalendarPremiumStore({
+        ...DEFAULT_PARAMS,
+        dataSource,
+        defaultVisibleDate: createDate('2025-07-01T00:00:00Z'), // Tuesday
+        defaultPreferences: { showEmptyDaysInAgenda: false, showWeekends: false },
+      });
 
       store.setViewDefinition(agendaViewDefinition);
 

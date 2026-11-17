@@ -1,11 +1,6 @@
 import Button from '@mui/material/Button';
-import {
-  DataGrid,
-  GridColDef,
-  gridClasses,
-  useGridApiRef,
-  GridAutosizeOptions,
-} from '@mui/x-data-grid';
+import type { GridColDef, GridAutosizeOptions } from '@mui/x-data-grid';
+import { DataGrid, gridClasses, useGridApiRef } from '@mui/x-data-grid';
 import { randomInt, randomArrayItem } from '@mui/x-data-grid-generator';
 
 const lines = [

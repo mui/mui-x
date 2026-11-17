@@ -1,7 +1,7 @@
-import { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
+import type { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
 import { onTestFinished, vi } from 'vitest';
-import { PickerComponentFamily } from './describe.types';
-import { OpenPickerParams } from './openPicker';
+import type { PickerComponentFamily } from './describe.types';
+import type { OpenPickerParams } from './openPicker';
 
 export const stubMatchMedia = (matches = true) => {
   const original = window.matchMedia;

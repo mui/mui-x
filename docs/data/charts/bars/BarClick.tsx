@@ -8,7 +8,7 @@ import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
-import { BarItemIdentifier, ChartsAxisData } from '@mui/x-charts/models';
+import type { BarItemIdentifier, ChartsAxisData } from '@mui/x-charts/models';
 
 const barChartsParams = {
   series: [

@@ -1,5 +1,4 @@
 import type { BaseUIChangeEventDetails } from '@base-ui/react';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerEventColor,
   SchedulerEventCreationConfig,
@@ -17,25 +16,44 @@ import type {
   SchedulerResourceId,
   SchedulerResourceModelStructure,
   SchedulerSelection,
-  TemporalSupportedObject,
   SchedulerEventSide,
   SchedulerEventDeletionConfig,
   RecurringEventScope,
 } from '../../../models';
-import type { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 
-export interface StoredError {
-  /**
-   * The error itself. Non-Error rejections are wrapped, preserving the original via `cause`.
-   */
-  error: Error;
+/**
+ * The user-facing errors whose message needs no params. Every code is a `localeText` key, so the
+ * UI shows the error in the user's language.
+ */
+export type SchedulerUserFacingErrorCode =
+  | 'somethingWentWrongError'
+  | 'eventNotLoadedError'
+  | 'eventChangedWhileConfirmingError'
+  | 'datesNotWritableError'
+  | 'eventNotCreatableError'
+  | 'dependencyCascadeBlockedError'
+  | 'dependencyDatesNotWritableError'
+  | 'dependencyCycleError'
+  | 'dependencyDuplicateError'
+  | 'dependencyRecurringEventError'
+  | 'dependencyReadOnlyError'
+  | 'dependencyUnknownEventError';
+
+/**
+ * An error to show to the user: a `localeText` key and the params its message needs.
+ */
+export type SchedulerUserFacingErrorDescriptor =
+  | { code: SchedulerUserFacingErrorCode; params?: undefined }
+  | { code: 'readOnlyEventMovedError' | 'unwritableEventMovedError'; params: { title: string } };
+
+export type UserFacingError = SchedulerUserFacingErrorDescriptor & {
   /**
    * Stable identifier assigned at push time. Suitable as a React key and as the
    * argument to `store.dismissError(key)`.
    */
   key: string;
-}
+};
 
 /**
  * Which face the edited occurrence is in:
@@ -66,14 +84,13 @@ export interface SchedulerEditingState {
 
 export interface SchedulerState<TEvent extends object = any> {
   /**
-   * The adapter of the date library.
-   * Not publicly exposed, is only set in state to avoid passing it to the selectors.
+   * The locale the dates are formatted in.
    */
-  adapter: Adapter;
+  dateLocale: string;
   /**
    * The date used to determine the visible date range.
    */
-  visibleDate: TemporalSupportedObject;
+  visibleDate: Date;
   /**
    * The model of the events available in the calendar as provided to props.events.
    */
@@ -164,9 +181,10 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   occurrencePlaceholder: SchedulerOccurrencePlaceholder | null;
   /**
-   * The current date and time, updated every minute.
+   * The timestamp of the current date and time, updated every minute.
+   * Read it in the display timezone.
    */
-  nowUpdatedEveryMinute: TemporalSupportedObject;
+  nowTimestamp: number;
   /**
    * Whether the calendar is in read-only mode.
    * @default false
@@ -192,14 +210,12 @@ export interface SchedulerState<TEvent extends object = any> {
    *
    * Accepts any valid IANA timezone name
    * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
-   * or keywords understood by the adapter, such as
-   * "default" (use the adapter's default timezone),
-   * "locale" (use the user's current locale timezone),
-   * or "UTC".
+   * "default" (the timezone of the system), or "UTC".
    *
-   * This timezone only affects rendering, events keep their original data timezone.
+   * Events keep their original data timezone. The visible range starts on the day of the visible
+   * date in this timezone, and the next and previous navigation move the visible date on its days.
    */
-  displayTimezone: TemporalTimezone;
+  displayTimezone: string;
   /**
    * The occurrence currently being edited (existing or a creation draft), or `null`.
    * Single source of truth for *what* is edited, decoupled from *which* surface is open; surfaces
@@ -225,15 +241,16 @@ export interface SchedulerState<TEvent extends object = any> {
    * Each entry carries a stable `key` assigned at push time so the UI can use it
    * directly as a React key and as the argument to `store.dismissError(key)`.
    */
-  errors: readonly StoredError[];
+  errors: readonly UserFacingError[];
   /**
    * Plugin that provides recurring-events support. `null` when not attached.
    */
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
   /**
    * Configures how events are deleted, normalized from the `eventDeletion` parameter.
+   * `false` when event deletion is disabled.
    */
-  eventDeletion: SchedulerEventDeletionConfig;
+  eventDeletion: SchedulerEventDeletionConfig | false;
   /**
    * The event for which the delete confirmation dialog is open, if any. `null` when the dialog is closed.
    */
@@ -248,12 +265,12 @@ export interface SchedulerPersistEventsResult {
 }
 
 export interface SchedulerDataSource<TEvent extends object> {
-  getEvents: (start: TemporalSupportedObject, end: TemporalSupportedObject) => Promise<TEvent[]>;
+  getEvents: (start: Date, end: Date) => Promise<TEvent[]>;
   /**
    * Called when events are created, updated or deleted so the consumer can persist them.
    *
-   * Throw to surface a custom error in `state.errors`. Return `{ success: false }`
-   * to abort the cache/state update with a generic error.
+   * Throw or return `{ success: false }` to abort the cache/state update. The user then sees a
+   * generic error, and the cause is logged to the console.
    */
   persistEvents: (parameters: {
     deleted: SchedulerEventId[];
@@ -329,20 +346,17 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   /**
    * The date currently used to determine the visible date range.
    */
-  visibleDate?: TemporalSupportedObject;
+  visibleDate?: Date;
   /**
    * The date initially used to determine the visible date range.
    * To render a controlled component, use the `visibleDate` prop.
    * @default today
    */
-  defaultVisibleDate?: TemporalSupportedObject;
+  defaultVisibleDate?: Date;
   /**
    * Event handler called when the visible date changes.
    */
-  onVisibleDateChange?: (
-    visibleDate: TemporalSupportedObject,
-    eventDetails: SchedulerChangeEventDetails,
-  ) => void;
+  onVisibleDateChange?: (visibleDate: Date, eventDetails: SchedulerChangeEventDetails) => void;
   /**
    * Whether the event can be dragged to change its start and end dates without changing the duration.
    * @default true
@@ -414,28 +428,30 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    *
    * Accepts any valid IANA timezone name
    * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
-   * or keywords understood by the adapter, such as
-   * "default" (use the adapter's default timezone),
-   * "locale" (use the user's current locale timezone),
-   * or "UTC".
+   * "default" (the timezone of the system), or "UTC".
    *
-   * This timezone only affects rendering, events keep their original data timezone.
+   * Events keep their original data timezone. The visible range starts on the day of the visible
+   * date in this timezone, and the next and previous navigation move the visible date on its days.
    * @default "default"
    */
-  displayTimezone?: TemporalTimezone;
+  displayTimezone?: string;
   /**
-   * The locale object from `date-fns` used to format dates.
-   * This affects day names, month names, week start day, and other locale-dependent formatting.
-   * Import a locale from `date-fns/locale` and pass it to this prop.
-   * @default enUS (English)
+   * The locale of the dates, as a BCP 47 language tag such as `"fr-FR"`, like the locales of
+   * `Intl.DateTimeFormat`.
+   * This affects day names, month names, the first day of the week, the days of the weekend,
+   * week numbers, the 12-hour or 24-hour clock and the other locale-dependent formatting.
+   * @default "en-US"
    */
-  dateLocale?: DateLocale;
+  dateLocale?: string;
 
   /**
    * Configures how events are deleted.
-   * @default { confirmation: true }
+   * If `false`, event deletion is disabled.
+   * If `true`, event deletion is enabled with default configuration.
+   * If an object, event deletion is enabled with the provided configuration.
+   * @default true
    */
-  eventDeletion?: Partial<SchedulerEventDeletionConfig>;
+  eventDeletion?: Partial<SchedulerEventDeletionConfig> | boolean;
 }
 
 /**
@@ -443,11 +459,9 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
  */
 export type UpdateRecurringEventParameters = {
   /**
-   * The start date of the occurrence affected by the update before the update is applied.
-   * Must be the occurrence's data-timezone start (`occurrence.dataTimezone.start.value`),
-   * the identity the occurrence expansion keys on.
+   * The occurrence affected by the update, before the update is applied.
    */
-  occurrenceStart: TemporalSupportedObject;
+  occurrence: SchedulerEventOccurrence;
   /**
    * The changes to apply.
    */
@@ -463,15 +477,9 @@ export type UpdateRecurringEventParameters = {
  */
 export type DeleteRecurringEventParameters = {
   /**
-   * The start date of the occurrence affected by the deletion.
-   * Must be the occurrence's data-timezone start (`occurrence.dataTimezone.start.value`),
-   * the identity the occurrence expansion keys on.
+   * The occurrence affected by the deletion.
    */
-  occurrenceStart: TemporalSupportedObject;
-  /**
-   * The id of the recurring event to delete.
-   */
-  eventId: SchedulerEventId;
+  occurrence: SchedulerEventOccurrence;
   /**
    * Callback fired when the user submits the recurring scope dialog, with the scope they picked.
    */
@@ -515,15 +523,16 @@ export interface SchedulerParametersToStateMapper<
   getInitialState: (
     schedulerInitialState: Omit<SchedulerState, 'shouldEventRequireResource'>,
     parameters: Parameters,
-    adapter: Adapter,
   ) => State;
   /**
    * Updates the state based on the new parameters.
+   * `currentState` is the state before the update.
    */
   updateStateFromParameters: (
     newState: Partial<SchedulerState>,
     parameters: Parameters,
     updateModel: SchedulerModelUpdater<State, Parameters>,
+    currentState: State,
   ) => Partial<State>;
 }
 
@@ -548,7 +557,7 @@ export interface UpdateEventsParameters {
  */
 export type SchedulerUpdateEventResult =
   | { applied: true; changes: SchedulerEventUpdatedProperties }
-  | { applied: false; rejection: Error };
+  | { applied: false; rejection: SchedulerUserFacingErrorDescriptor };
 
 export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
 

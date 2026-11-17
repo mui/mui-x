@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
+import { useDirection } from '@base-ui/react/direction-provider';
 import { useStore } from '@base-ui/utils/store';
 import { isCoarsePointer, useElementDragMarker } from '@mui/x-scheduler-internals/internals';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
@@ -31,12 +32,10 @@ const DEPENDENCY_DELETE_BUTTON_CROSS_RADIUS = 2.5;
  * The interaction layer: the arrows' invisible click hit-areas and the selected
  * arrow's delete button. Separate from the visual overlay so the pointer-enabled
  * surface stays out of the `pointerEvents: 'none'` svg.
- * TODO(dependencies public flip, #23420): add a `dependencyInteractions` utility class; the
- * layer only carries data attributes while the feature has no public API. Same z-index as the arrows
- * overlay and after it in the DOM, so it paints above the arrow strokes — but before
- * the terminals overlay, whose revealed terminals must win the clicks over a crossing
- * band. Below the pinned title cells (z-index 3), which cover it on horizontal
- * scroll instead of leaking their clicks to the arrows underneath.
+ * Same z-index as the arrows overlay and after it in the DOM, so it paints above the
+ * arrow strokes — but before the terminals overlay, whose revealed terminals must win
+ * the clicks over a crossing band. Below the pinned title cells (z-index 3), which
+ * cover it on horizontal scroll instead of leaking their clicks to the arrows underneath.
  */
 const DependencyInteractionsSvg = styled('svg', {
   name: 'MuiEventTimeline',
@@ -44,7 +43,9 @@ const DependencyInteractionsSvg = styled('svg', {
 })(({ theme }) => ({
   position: 'absolute',
   top: 0,
-  left: 'var(--title-column-width)',
+  insetInlineStart: 'var(--title-column-width)',
+  // Mirrored like the arrows overlay.
+  transform: theme.direction === 'rtl' ? 'scaleX(-1)' : undefined,
   pointerEvents: 'none',
   zIndex: 2,
   '[data-dependency-hit]': {
@@ -95,6 +96,7 @@ function DependencyInteractionsLayer({
   const theme = useTheme();
   const store = useEventTimelinePremiumStoreContext();
   const svgRef = React.useRef<SVGSVGElement>(null);
+  const isRtl = useDirection() === 'rtl';
   const { visibleArrows, eventsWidth, offsetTop, height } = useDependencyGeometry();
   const selectedId = useStore(store, eventTimelinePremiumDependencySelectors.selectedId);
   const setHoveredId = useSetDependencyHoveredId();
@@ -119,7 +121,10 @@ function DependencyInteractionsLayer({
 
   const toOverlayPoint = (event: React.MouseEvent) => {
     const rect = svgRef.current!.getBoundingClientRect();
-    return { x: event.clientX - rect.left, y: event.clientY - rect.top + offsetTop };
+    return {
+      x: isRtl ? rect.right - event.clientX : event.clientX - rect.left,
+      y: event.clientY - rect.top + offsetTop,
+    };
   };
 
   const getResourceIds = (arrow: DependencyArrow) => ({
@@ -140,7 +145,8 @@ function DependencyInteractionsLayer({
     onContextMenu({
       open: true,
       dependencyId: arrow.id,
-      anchorPosition: { top: event.clientY - 4, left: event.clientX - 2 },
+      // Nudged so the pointer lands inside the menu, which opens toward the inline end.
+      anchorPosition: { top: event.clientY - 4, left: event.clientX + (isRtl ? 2 : -2) },
       editorAnchor: toOverlayPoint(event),
       editorResourceIds: getResourceIds(arrow),
     });

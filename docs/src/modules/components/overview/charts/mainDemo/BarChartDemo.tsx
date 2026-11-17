@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 import Typography from '@mui/material/Typography';
-import { AxisConfig } from '@mui/x-charts/models';
+import type { AxisConfig } from '@mui/x-charts/models';
 
 const dataset = [
   { weekDay: 'Monday', value: 400 },
