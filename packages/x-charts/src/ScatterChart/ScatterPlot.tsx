@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
+import useId from '@mui/utils/useId';
 import { Scatter } from './Scatter';
 import type { ScatterProps, ScatterSlotProps, ScatterSlots } from './Scatter';
 import { useScatterSeriesContext } from '../hooks/useScatterSeries';
@@ -25,6 +26,7 @@ const EMPTY_SERIES_IDS: readonly SeriesId[] = [];
 export interface ScatterPlotSlots extends ScatterSlots {
   /**
    * The component that renders the scatter markers.
+   * @default Scatter, BatchScatter with the `svg-batch` renderer, or ScatterAsync with progressive rendering.
    */
   scatter?: React.JSXElementConstructor<ScatterProps & ScatterPropsOverrides>;
 }
@@ -98,11 +100,12 @@ function ScatterPlot(props: ScatterPlotProps) {
 
   const { instance } = useChartsContext<[UseProgressiveRenderingSignature]>();
   const store = useStore<[UseProgressiveRenderingSignature]>();
-  const plotId = React.useId();
+  const plotId = useId();
   const seriesIds = seriesData?.seriesOrder ?? EMPTY_SERIES_IDS;
   const isProgressive = store.use(selectorShouldUseProgressiveRenderer, seriesIds, renderer);
   React.useEffect(
-    () => instance.registerProgressivePlan(plotId, seriesIds, renderer),
+    // `plotId` is `undefined` on the first render in React 17.
+    () => (plotId ? instance.registerProgressivePlan(plotId, seriesIds, renderer) : undefined),
     [instance, plotId, seriesIds, renderer],
   );
 

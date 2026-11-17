@@ -50,10 +50,12 @@ export function fromDayNumber(dayNumber: number): { year: number; month: number;
 }
 
 /**
- * The supported range of day numbers, covering years 0 to 9999.
+ * The supported range of day numbers: the days of `Date`, from -271821-04-20 to +275760-09-13,
+ * 100,000,000 days on each side of 1970-01-01. Temporal also supports -271821-04-19, whose midnight
+ * is before the first instant of `Date`, so `Intl.DateTimeFormat` can't display it.
  */
-export const FIRST_SUPPORTED_DAY = /* @__PURE__ */ toDayNumber(0, 1, 1);
-export const LAST_SUPPORTED_DAY = /* @__PURE__ */ toDayNumber(9999, 12, 31);
+export const FIRST_SUPPORTED_DAY = -100_000_000;
+export const LAST_SUPPORTED_DAY = 100_000_000;
 
 /**
  * The ISO day of the week of a day number, from 1 (Monday) to 7 (Sunday).
@@ -71,14 +73,11 @@ export function getDaysInMonth(year: number, month: number): number {
 }
 
 export function isValidIsoDate(year: number, month: number, day: number): boolean {
-  return (
-    year >= 0 &&
-    year <= 9999 &&
-    month >= 1 &&
-    month <= 12 &&
-    day >= 1 &&
-    day <= getDaysInMonth(year, month)
-  );
+  if (month < 1 || month > 12 || day < 1 || day > getDaysInMonth(year, month)) {
+    return false;
+  }
+  const dayNumber = toDayNumber(year, month, day);
+  return dayNumber >= FIRST_SUPPORTED_DAY && dayNumber <= LAST_SUPPORTED_DAY;
 }
 
 /**
@@ -156,7 +155,7 @@ export function toInteger(value: unknown, field: string): number {
   const number = +(value as number);
   if (!Number.isFinite(number)) {
     throw new Error(
-      `Base UI Plus: A temporal value received ${String(value)} as the ${field}, which isn't a finite number. ` +
+      `MUI X Scheduler: A temporal value received ${String(value)} as the ${field}, which isn't a finite number. ` +
         'A temporal value cannot represent a non-finite field. ' +
         'Pass finite numbers for its date and time fields.',
     );
@@ -177,7 +176,7 @@ export function readOverflow(
   }
   if (typeof options !== 'object' || options === null) {
     throw new TypeError(
-      `Base UI Plus: The options of \`BaseTemporal.${apiName}\` are ${String(options)}, which isn't an object. ` +
+      `MUI X Scheduler: The options of \`BaseTemporal.${apiName}\` are ${String(options)}, which isn't an object. ` +
         "The method can't read the `overflow` option from them. " +
         "Pass an object such as `{ overflow: 'reject' }`, or no options.",
     );
@@ -185,12 +184,54 @@ export function readOverflow(
   const overflow = options.overflow ?? 'constrain';
   if (overflow !== 'constrain' && overflow !== 'reject') {
     throw new Error(
-      `Base UI Plus: The \`overflow\` option of \`BaseTemporal.${apiName}\` is ${String(overflow)}, which isn't supported. ` +
+      `MUI X Scheduler: The \`overflow\` option of \`BaseTemporal.${apiName}\` is ${String(overflow)}, which isn't supported. ` +
         "The method can't tell whether to adjust or reject a field above its range. " +
         "Pass `'constrain'` or `'reject'`.",
     );
   }
   return overflow;
+}
+
+/**
+ * Reads the fields of `fieldNames` that `with()` receives, own or inherited, like Temporal.
+ * Throws like Temporal for temporal values and objects with a calendar or a time zone, and for
+ * objects without any of the fields.
+ */
+export function readWithFields<T extends object>(
+  fields: T,
+  apiName: string,
+  fieldNames: readonly string[],
+): Partial<T> {
+  if (
+    typeof fields !== 'object' ||
+    fields === null ||
+    // Temporal values have a `with()` method, unlike objects of fields.
+    typeof (fields as { with?: unknown }).with === 'function' ||
+    ['calendar', 'calendarId', 'timeZone'].some(
+      (key) => (fields as Record<string, unknown>)[key] !== undefined,
+    )
+  ) {
+    throw new TypeError(
+      `MUI X Scheduler: \`BaseTemporal.${apiName}\` received ${String(fields)}, which isn't an object of fields. ` +
+        '`with()` replaces the fields of an object, and keeps the calendar of the value, so it rejects temporal values and objects with a calendar or a time zone. ' +
+        'Pass only the fields to replace, such as `{ day: 1 }` for a date or `{ hour: 9 }` for a time.',
+    );
+  }
+  const read: Record<string, unknown> = {};
+  for (const name of fieldNames) {
+    const value = (fields as Record<string, unknown>)[name];
+    if (value !== undefined) {
+      read[name] = value;
+    }
+  }
+  if (Object.keys(read).length === 0) {
+    throw new TypeError(
+      `MUI X Scheduler: \`BaseTemporal.${apiName}\` received no field the value reads. ` +
+        "`with()` can't tell which fields to replace. " +
+        'Pass at least one field of the value, such as `{ day: 1 }` for a date or `{ hour: 9 }` for a time. Only calendars with eras, unlike the ISO calendar, read `era` and `eraYear`.',
+    );
+  }
+  return read as Partial<T>;
 }
 
 export function compareOrder(a: number | bigint, b: number | bigint): -1 | 0 | 1 {
@@ -202,7 +243,7 @@ export function compareOrder(a: number | bigint, b: number | bigint): -1 | 0 | 1
 
 export function throwOnPrimitiveConversion(name: string): never {
   throw new TypeError(
-    `Base UI Plus: A \`${name}\` was converted to a primitive value, for example by \`<\`, \`>\` or \`+\`. ` +
+    `MUI X Scheduler: A \`${name}\` was converted to a primitive value, for example by \`<\`, \`>\` or \`+\`. ` +
       "Comparing or adding temporal values this way gives meaningless results, so it isn't allowed. " +
       'Use the static `compare()` method or `equals()` to compare them, and `toString()` to get them as a string.',
   );

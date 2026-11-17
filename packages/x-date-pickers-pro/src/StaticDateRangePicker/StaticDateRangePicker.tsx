@@ -90,6 +90,9 @@ StaticDateRangePicker.propTypes /* remove-proptypes */ = {
    * @default 1 if `displayStaticWrapperAs === 'mobile'`, 2 otherwise.
    */
   calendars: PropTypes.oneOf([1, 2, 3]),
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   /**
    * Position the current month is rendered in.

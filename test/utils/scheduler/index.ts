@@ -3,7 +3,7 @@ import type { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-ca
 export * from './absorb-observer-frames';
 export * from './createSchedulerRenderer';
 export * from './describeConformance';
-export * from './adapters';
+export * from './dates';
 export * from './StateWatcher';
 export * from './SchedulerStoreRunner';
 export * from './StoreSpy';
@@ -17,6 +17,7 @@ export * from './storeClasses';
 export * from './dom-queries';
 export * from './dnd';
 export * from './pointer';
+export * from './preferences-menu';
 export * from './system-timezone';
 
 export type AnyEventCalendarStore = EventCalendarStore<any, any>;

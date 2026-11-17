@@ -1,6 +1,6 @@
 import { screen, within, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
-import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
+import { createDate, createSchedulerRenderer } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 import { HeaderToolbar } from './HeaderToolbar';
@@ -244,7 +244,7 @@ describe('week number badge', () => {
   });
 
   it('shows "Week 1" for Jan 5 2025 when weekStartsOn=1', () => {
-    const visibleDate = adapter.date('2025-01-05T00:00:00Z', 'default');
+    const visibleDate = createDate('2025-01-05T00:00:00Z');
 
     render(
       <EventCalendar
@@ -261,7 +261,7 @@ describe('week number badge', () => {
   });
 
   it('shows "Week 2" for Jan 5 2025 when weekStartsOn=7 (regression)', () => {
-    const visibleDate = adapter.date('2025-01-05T00:00:00Z', 'default');
+    const visibleDate = createDate('2025-01-05T00:00:00Z');
 
     render(
       <EventCalendar
@@ -288,7 +288,7 @@ describe('week number badge', () => {
       render(
         <EventCalendar
           events={[]}
-          visibleDate={adapter.date('2027-01-01T12:00:00Z', 'default')}
+          visibleDate={createDate('2027-01-01T12:00:00Z')}
           view="week"
           dateLocale={dateLocale}
           preferences={{ showWeekNumber: true }}
@@ -306,7 +306,7 @@ describe('week number badge', () => {
     render(
       <EventCalendar
         events={[]}
-        visibleDate={adapter.date('2027-01-01T12:00:00Z', 'default')}
+        visibleDate={createDate('2027-01-01T12:00:00Z')}
         view="week"
         dateLocale="en-US"
         preferences={{ showWeekNumber: true, weekStartsOn: 1 }}
@@ -322,7 +322,7 @@ describe('week number badge', () => {
     render(
       <EventCalendar
         events={[]}
-        visibleDate={adapter.date('2025-07-16T12:00:00Z', 'default')}
+        visibleDate={createDate('2025-07-16T12:00:00Z')}
         view="week"
         dateLocale="ar-EG"
         preferences={{ showWeekNumber: true }}
@@ -339,7 +339,7 @@ describe('week number badge', () => {
     render(
       <EventCalendar
         events={[]}
-        visibleDate={adapter.date('2025-07-31T23:00:00Z', 'default')}
+        visibleDate={createDate('2025-07-31T23:00:00Z')}
         displayTimezone="Asia/Tokyo"
         view="week"
       />,

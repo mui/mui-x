@@ -1,11 +1,13 @@
 import {
-  adapter,
+  addWeeks,
+  createDate,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
   getAllEventsByTitle,
   getEventNamePattern,
   ResourceBuilder,
+  startOfWeek,
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { WeekView } from '@mui/x-scheduler/week-view';
@@ -240,7 +242,7 @@ describe('<WeekView />', () => {
 
       await user.click(screen.getByRole('button', { name: /previous week/i }));
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
-        adapter.addWeeks(adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE), -1),
+        addWeeks(startOfWeek(DEFAULT_TESTING_VISIBLE_DATE), -1),
       );
     });
 
@@ -258,14 +260,14 @@ describe('<WeekView />', () => {
 
       await user.click(screen.getByRole('button', { name: /next week/i }));
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
-        adapter.addWeeks(adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE), 1),
+        addWeeks(startOfWeek(DEFAULT_TESTING_VISIBLE_DATE), 1),
       );
     });
   });
 
   describe('aria semantics', () => {
     it('should mark only the header of today with aria-current="date"', () => {
-      const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
+      const visibleDate = createDate('2025-05-04T00:00:00Z');
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
 
       // The side panel's mini calendar marks today too.
@@ -280,7 +282,7 @@ describe('<WeekView />', () => {
     });
 
     it('should declare 7 navigable columns and index every cell from 1 to 7', () => {
-      const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
+      const visibleDate = createDate('2025-05-04T00:00:00Z');
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
 
       const grids = screen.getAllByRole('grid');
@@ -318,7 +320,7 @@ describe('<WeekView />', () => {
     });
 
     it('should name the day grid cells with a hidden label instead of a visible "All day" label', () => {
-      const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
+      const visibleDate = createDate('2025-05-04T00:00:00Z');
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
 
       expect(screen.queryByText('All day')).to.equal(null);
@@ -350,24 +352,22 @@ describe('<WeekView />', () => {
 
   describe('current time indicator', () => {
     it('renders one indicator per day when today is in view', () => {
-      const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
+      const visibleDate = createDate('2025-05-04T00:00:00Z');
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
 
-      // The current time indicator is rendered once per day column when today is in view
-      // Check that the data-current attribute is on the today column
-      const todayColumn = document.querySelector('[data-current]');
-      expect(todayColumn).not.to.equal(null);
+      // The current time indicator is rendered once per day column when today is in view.
+      expect(
+        document.querySelectorAll(`.${eventCalendarClasses.dayTimeGridCurrentTimeIndicator}`),
+      ).to.have.length(7);
     });
 
     it("doesn't render the current time indicator if today is not in view", () => {
-      const visibleDate = adapter.date('2025-05-18T00:00:00Z', 'default');
+      const visibleDate = createDate('2025-05-18T00:00:00Z');
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
 
-      const indicators = document.querySelectorAll('[data-current-time]');
-      expect(indicators.length).to.equal(0);
-
-      const todayColumn = document.querySelector('[data-current]');
-      expect(todayColumn).to.equal(null);
+      expect(
+        document.querySelectorAll(`.${eventCalendarClasses.dayTimeGridCurrentTimeIndicator}`),
+      ).to.have.length(0);
     });
 
     it('renders the current time indicator in the repeated last hour of a day', () => {
@@ -393,7 +393,7 @@ describe('<WeekView />', () => {
     });
 
     it('respects flag: hides indicator when showCurrentTimeIndicator is false', () => {
-      const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
+      const visibleDate = createDate('2025-05-04T00:00:00Z');
 
       render(
         <EventCalendar
@@ -404,13 +404,14 @@ describe('<WeekView />', () => {
         />,
       );
 
-      const indicators = document.querySelectorAll('[data-current-time]');
-      expect(indicators.length).to.equal(0);
+      expect(
+        document.querySelectorAll(`.${eventCalendarClasses.dayTimeGridCurrentTimeIndicator}`),
+      ).to.have.length(0);
     });
   });
 
   describe('weekStartsOn preference', () => {
-    const visibleDate = adapter.date('2025-01-08T00:00:00Z', 'default');
+    const visibleDate = createDate('2025-01-08T00:00:00Z');
 
     function getFirstDayColumnHeader() {
       const grids = screen.getAllByRole('grid');

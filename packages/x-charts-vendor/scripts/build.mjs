@@ -13,6 +13,7 @@ import { fileURLToPath } from 'url';
 
 import { rimraf } from 'rimraf';
 import { execa } from 'execa';
+import { getVendorEntry } from './getVendorEntry.cjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,11 +39,11 @@ export * from "${pkg.name}";
 const getEsmDefaultExport = (pkg) => `export { default } from "${pkg.name}";
 `;
 
-const getCjsIndex = (pkg, hasSrc) => `// \`x-charts-vendor/${pkg.name}\` (CommonJS)
+const getCjsIndex = (pkg) => `// \`x-charts-vendor/${pkg.name}\` (CommonJS)
 // See upstream license: ${pkg.repository.url.replace(/\.git$/, '')}/blob/main/LICENSE
 //
 // Our CommonJS package relies on transpiled vendor files in \`lib-vendor/${pkg.name}\`
-module.exports = require("./lib-vendor/${pkg.name}/${hasSrc ? 'src/' : ''}index.js");
+module.exports = require("./lib-vendor/${getVendorEntry(pkg.name).output}");
 `;
 
 const getTypeDefinitionFile = (pkg) => `// \`x-charts-vendor/${pkg.name}\` (TypeScript)
@@ -85,16 +86,6 @@ const main = async () => {
   const pkgs = (await fs.readdir(path.resolve(__dirname, '../node_modules/'))).filter((name) =>
     /^(d3-|internmap|flatqueue)/.test(name),
   );
-
-  // Safety check: we assume that **all** are flattened to root level of this
-  // package, and want to make sure there are no nested dependencies.
-  for (const pkgName of pkgs) {
-    const pkgModsPath = path.resolve(__dirname, `../node_modules/git${pkgName}/node_modules`);
-    const stat = await fs.lstat(pkgModsPath).catch(() => null);
-    if (stat) {
-      throw new Error(`Found nested modules: ${pkgModsPath}`);
-    }
-  }
 
   // Clean out and ensure build directory exists
   const VendorBasePath = path.join(BUILD_DIR, 'lib-vendor');
@@ -141,23 +132,12 @@ const main = async () => {
     const pkg = await fs.readFile(pkgPath).then((buf) => JSON.parse(buf.toString()));
     const libVendorPath = path.join(VendorBasePath, pkgName);
 
-    // Check if the vendor package has a src directory
-    let hasSrc = false;
-    await fs
-      .readdir(path.join(libVendorPath, 'src'))
-      .then(() => {
-        hasSrc = true;
-      })
-      .catch(() => {
-        hasSrc = false;
-      });
-
     // Generate ESM index
     const esmContent =
       getEsmIndex(pkg) + (DEFAULT_EXPORT_PKGS.has(pkgName) ? getEsmDefaultExport(pkg) : '');
 
     // Generate CJS index
-    const cjsContent = getCjsIndex(pkg, hasSrc);
+    const cjsContent = getCjsIndex(pkg);
 
     // Generate type definitions
     const typeContent = getTypeDefinitionFile(pkg);
@@ -206,6 +186,39 @@ const main = async () => {
   // Copy README.md to build directory
   log('Copying README.md to build directory.');
   await fs.copyFile(path.resolve(__dirname, '../README.md'), path.join(BUILD_DIR, 'README.md'));
+
+  // Pack the package like the publish does, and require each CommonJS entry of the tarball in a
+  // Node process that cannot `require()` ES modules, like Jest. A broken build or packing fails
+  // here instead of in user code.
+  log('Checking the packed CommonJS entries.');
+  const packDir = path.resolve(__dirname, '../.pack-check');
+  const extractDir = path.join(packDir, 'node_modules/@mui/x-charts-vendor');
+  await rimraf(packDir);
+  await fs.mkdir(extractDir, { recursive: true });
+  try {
+    const { stdout } = await execa('pnpm', ['pack', '--pack-destination', packDir, '--json'], {
+      cwd: path.resolve(__dirname, '..'),
+    });
+    const { filename } = JSON.parse(stdout);
+    // GNU tar reads `C:\...` as a remote `host:file` archive.
+    await execa(
+      'tar',
+      ['-xzf', path.basename(filename), '-C', extractDir, '--strip-components=1'],
+      { cwd: packDir },
+    );
+    const entries = vendorPkgNames.map((pkgName) => `@mui/x-charts-vendor/${pkgName}`);
+    const script = `for (const entry of ${JSON.stringify(entries)}) {
+  if (Object.keys(require(entry)).length === 0) {
+    throw new Error('The CommonJS entry ' + entry + ' has no exports.');
+  }
+}`;
+    await execa(process.execPath, ['--no-experimental-require-module', '-e', script], {
+      cwd: packDir,
+      stdio: 'inherit',
+    });
+  } finally {
+    await rimraf(packDir);
+  }
 };
 
 main()

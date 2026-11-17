@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
+import type { BarChartProps } from '@mui/x-charts/BarChart';
+import { BarChart } from '@mui/x-charts/BarChart';
 import Typography from '@mui/material/Typography';
 
 const dataset = [

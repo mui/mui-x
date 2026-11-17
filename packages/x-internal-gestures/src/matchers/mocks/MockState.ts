@@ -1,4 +1,4 @@
-import { GestureState } from '../../core';
+import type { GestureState } from '../../core';
 
 export type MockState = GestureState & {
   isDragging: boolean;

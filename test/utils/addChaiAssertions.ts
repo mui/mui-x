@@ -44,8 +44,12 @@ chai.use((chaiAPI, utils) => {
     // eslint-disable-next-line no-underscore-dangle
     const actual = this._obj;
     // A string or `undefined` would stringify to the expected value or fail with a vague message.
+    // The check reads the public fields of a plain date, whatever creates it.
     this.assert(
-      typeof actual === 'object' && actual !== null && typeof actual.dayNumber === 'number',
+      typeof actual === 'object' &&
+        actual !== null &&
+        typeof actual.calendarId === 'string' &&
+        typeof actual.daysInMonth === 'number',
       'expected #{this} to be a plain date',
       'expected #{this} not to be a plain date',
       expected,

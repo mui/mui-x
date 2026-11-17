@@ -22,7 +22,8 @@
           "description": "The array of value on which quick filter is applied"
         }
       }
-    }
+    },
+    "slotProps": { "description": "The props used for each slot inside." }
   },
   "classDescriptions": {}
 }

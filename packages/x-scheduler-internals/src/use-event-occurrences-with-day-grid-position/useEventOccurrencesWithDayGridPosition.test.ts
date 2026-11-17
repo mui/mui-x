@@ -1,18 +1,21 @@
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { EventBuilder } from 'test/utils/scheduler';
 import { renderHook } from '@mui/internal-test-utils';
 import { describe, it, expect } from 'vitest';
-import { useEventOccurrencesWithDayGridPosition } from './useEventOccurrencesWithDayGridPosition';
+import {
+  getDayGridCellSpan,
+  useEventOccurrencesWithDayGridPosition,
+} from './useEventOccurrencesWithDayGridPosition';
+import { getDayNumber } from '../internals/utils/plain-date-utils/plainDate';
 import type { SchedulerProcessedEvent } from '../models';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { createEventRangeIndex } from '../internals/utils/event-range-index';
 import { getDayListFromPlainDates } from '../get-day-list';
-import { PlainDate } from '../internals/utils/base-temporal/PlainDate';
+import { BaseTemporal } from '../internals/utils/base-temporal';
 
 describe('useDayListEventOccurrencesWithPosition', () => {
   const days = getDayListFromPlainDates({
-    adapter,
-    firstPlainDate: PlainDate.from('2024-01-15'),
-    lastPlainDate: PlainDate.from('2024-01-17'),
+    firstPlainDate: BaseTemporal.PlainDate.from('2024-01-15'),
+    lastPlainDate: BaseTemporal.PlainDate.from('2024-01-17'),
     timezone: 'default',
   });
 
@@ -23,7 +26,6 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   ) {
     const { result } = renderHook(() => {
       const occurrencesMap = innerGetEventOccurrencesGroupedByDay({
-        adapter,
         days: dayList,
         eventRangeIndex: createEventRangeIndex(events, false),
         visibleResources: {},
@@ -186,9 +188,8 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
     const timezone = 'America/Havana';
     const dayList = getDayListFromPlainDates({
-      adapter,
-      firstPlainDate: PlainDate.from('2026-03-08'),
-      lastPlainDate: PlainDate.from('2026-03-09'),
+      firstPlainDate: BaseTemporal.PlainDate.from('2026-03-08'),
+      lastPlainDate: BaseTemporal.PlainDate.from('2026-03-09'),
       timezone,
     });
     const result = testHook(
@@ -214,9 +215,8 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   it('should span every date an event covers after a DST transition at midnight', () => {
     // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
     const havanaDays = getDayListFromPlainDates({
-      adapter,
-      firstPlainDate: PlainDate.from('2026-03-08'),
-      lastPlainDate: PlainDate.from('2026-03-10'),
+      firstPlainDate: BaseTemporal.PlainDate.from('2026-03-08'),
+      lastPlainDate: BaseTemporal.PlainDate.from('2026-03-10'),
       timezone: 'America/Havana',
     });
     const result = testHook(
@@ -232,5 +232,123 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     );
 
     expect(result.days[1].withPosition[0].position).to.deep.equal({ index: 1, daySpan: 2 });
+  });
+
+  describe('with the weekends hidden', () => {
+    // Wednesday July 9th to Tuesday July 15th, 2025 without the weekend: Wed, Thu, Fri, Mon, Tue.
+    const weekdays = getDayListFromPlainDates({
+      firstPlainDate: BaseTemporal.PlainDate.from('2025-07-09'),
+      lastPlainDate: BaseTemporal.PlainDate.from('2025-07-15'),
+      timezone: 'UTC',
+      excludedWeekdays: [6, 7],
+    });
+
+    it('should span the cells of the dates an event covers', () => {
+      const result = testHook(
+        [
+          EventBuilder.new()
+            .span('2025-07-10T10:00:00Z', '2025-07-14T09:00:00Z') // Thursday to Monday
+            .withDisplayTimezone('UTC')
+            .toProcessed(),
+        ],
+        undefined,
+        { dayList: weekdays, displayTimezone: 'UTC' },
+      );
+
+      expect(result.days[1].withPosition[0].position).to.deep.equal({ index: 1, daySpan: 3 });
+      expect(result.days[2].withPosition[0].position).to.deep.equal({
+        index: 1,
+        daySpan: 1,
+        isInvisible: true,
+      });
+      expect(result.days[3].withPosition[0].position).to.deep.equal({
+        index: 1,
+        daySpan: 1,
+        isInvisible: true,
+      });
+      expect(result.days[4].withPosition).to.have.length(0);
+    });
+
+    it('should not span the cells after a hidden day an event ends on', () => {
+      const result = testHook(
+        [
+          EventBuilder.new()
+            .span('2025-07-10T10:00:00Z', '2025-07-12T09:00:00Z') // Thursday to Saturday
+            .withDisplayTimezone('UTC')
+            .toProcessed(),
+        ],
+        undefined,
+        { dayList: weekdays, displayTimezone: 'UTC' },
+      );
+
+      expect(result.days[1].withPosition[0].position).to.deep.equal({ index: 1, daySpan: 2 });
+      expect(result.days[3].withPosition).to.have.length(0);
+    });
+
+    it('should span the cells left in the row when an event ends after it', () => {
+      const result = testHook(
+        [
+          EventBuilder.new()
+            .span('2025-07-11T10:00:00Z', '2025-07-18T09:00:00Z') // Friday to next Friday
+            .withDisplayTimezone('UTC')
+            .toProcessed(),
+        ],
+        undefined,
+        { dayList: weekdays, displayTimezone: 'UTC' },
+      );
+
+      expect(result.days[2].withPosition[0].position).to.deep.equal({ index: 1, daySpan: 3 });
+    });
+  });
+});
+
+describe('getDayGridCellSpan', () => {
+  const dayNumber = (date: string) => getDayNumber(BaseTemporal.PlainDate.from(date));
+
+  // Wednesday July 9th to Tuesday July 15th, 2025.
+  const week = {
+    firstPlainDate: BaseTemporal.PlainDate.from('2025-07-09'),
+    lastPlainDate: BaseTemporal.PlainDate.from('2025-07-15'),
+    timezone: 'UTC',
+  };
+  const allDays = getDayListFromPlainDates(week);
+  // Wed, Thu, Fri, Mon, Tue.
+  const weekdays = getDayListFromPlainDates({ ...week, excludedWeekdays: [6, 7] });
+
+  it('should count the dates up to the end in a row without hidden days', () => {
+    expect(getDayGridCellSpan(allDays, 1, dayNumber('2025-07-14'))).to.equal(5);
+  });
+
+  it('should count the cells left when the end is after the row', () => {
+    expect(getDayGridCellSpan(allDays, 1, dayNumber('2025-07-20'))).to.equal(6);
+    expect(getDayGridCellSpan(weekdays, 1, dayNumber('2025-07-20'))).to.equal(4);
+  });
+
+  it('should stop at the last cell before a hidden end', () => {
+    // Thursday to Saturday: Thursday and Friday.
+    expect(getDayGridCellSpan(weekdays, 1, dayNumber('2025-07-12'))).to.equal(2);
+  });
+
+  it('should count the cells of the dates up to the end, skipping the hidden ones', () => {
+    // Thursday to Monday: Thursday, Friday and Monday.
+    expect(getDayGridCellSpan(weekdays, 1, dayNumber('2025-07-14'))).to.equal(3);
+  });
+
+  it('should span 1 cell from the last cell of the row', () => {
+    expect(getDayGridCellSpan(weekdays, 4, dayNumber('2025-07-20'))).to.equal(1);
+  });
+
+  it('should span 1 cell when the end is before the day of the cell', () => {
+    expect(getDayGridCellSpan(weekdays, 2, dayNumber('2025-07-10'))).to.equal(1);
+  });
+
+  it('should not count a date the timezone skips', () => {
+    // Pacific/Apia skipped December 30th, 2011: the row holds Dec 29th, Dec 31st and Jan 1st.
+    const apiaDays = getDayListFromPlainDates({
+      firstPlainDate: BaseTemporal.PlainDate.from('2011-12-29'),
+      lastPlainDate: BaseTemporal.PlainDate.from('2012-01-01'),
+      timezone: 'Pacific/Apia',
+    });
+    expect(getDayGridCellSpan(apiaDays, 0, dayNumber('2011-12-31'))).to.equal(2);
   });
 });

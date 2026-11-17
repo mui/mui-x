@@ -172,6 +172,10 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
       if (propsToNotResolve.includes(name)) {
         return false;
       }
+      // The scheduler features are opaque values imported from their entry points.
+      if (name === 'features' && project.name === 'x-scheduler-premium') {
+        return false;
+      }
 
       if (isDateObject(name)) {
         return false;

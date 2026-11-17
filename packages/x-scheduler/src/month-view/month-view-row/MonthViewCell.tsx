@@ -7,6 +7,7 @@ import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import {
   formatDayOfMonth,
   formatMonthShortAndDayOfMonth,
+  getDayNumber,
   isWeekendPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
@@ -18,6 +19,7 @@ import {
 import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
+  schedulerPreferenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
@@ -180,6 +182,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
   const visiblePlainDate = useStore(store, schedulerOtherSelectors.visiblePlainDate);
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
+  const weekend = useStore(store, schedulerPreferenceSelectors.weekend);
   const isCreatingAnEvent = useStore(
     store,
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
@@ -196,7 +199,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const isCurrentMonth =
     day.plainDate.year === visiblePlainDate.year && day.plainDate.month === visiblePlainDate.month;
   const isFirstDayOfMonth = day.plainDate.day === 1;
-  const isToday = day.plainDate.dayNumber === nowDayNumber;
+  const isToday = getDayNumber(day.plainDate) === nowDayNumber;
 
   const inBoundOccurrences = day.withPosition.filter((o) => o.position.index <= maxEvents);
   const hasOverflow = inBoundOccurrences.length < day.withPosition.length;
@@ -237,7 +240,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       data-current={isToday || undefined}
       aria-current={isToday ? 'date' : undefined}
       data-other-month={!isCurrentMonth || undefined}
-      data-weekend={isWeekendPlainDate(day.plainDate) || undefined}
+      data-weekend={isWeekendPlainDate(day.plainDate, weekend) || undefined}
       lockSurfaceType
       style={{ '--row-count': rowCount } as React.CSSProperties}
     >
@@ -245,7 +248,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         <MonthViewCellNumberButton
           type="button"
           className={classes.monthViewCellNumberButton}
-          onClick={(event) => store.switchToDay(day.value, event)}
+          onClick={(event) => store.switchToDay(new Date(day.timestamp), event)}
           tabIndex={-1}
         >
           {cellNumberContent}
@@ -264,7 +267,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
             }
 
             // `day.timestamp` is the first instant of the day.
-            const startsBeforeThisDay = occurrence.displayTimezone.start.timestamp < day.timestamp;
+            const startsBeforeThisDay = occurrence.start.timestamp < day.timestamp;
 
             return (
               <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>

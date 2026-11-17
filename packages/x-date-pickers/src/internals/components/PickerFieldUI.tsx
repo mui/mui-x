@@ -356,6 +356,7 @@ export interface PickerFieldUISlotsFromContext extends PickerFieldUISlots {
   openPickerButton?: React.ElementType<IconButtonProps>;
   /**
    * Icon to display in the button used to open the Picker.
+   * @default CalendarIcon, ClockIcon, or DateRangeIcon, depending on the field.
    */
   openPickerIcon?: React.ElementType;
 }

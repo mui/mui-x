@@ -1,5 +1,10 @@
 import { createRenderer, screen, reactMajor, waitFor, act } from '@mui/internal-test-utils';
-import { DataGrid, GridLogicOperator, getGridStringQuickFilterFn } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridLogicOperator,
+  getGridStringQuickFilterFn,
+  gridClasses,
+} from '@mui/x-data-grid';
 import type { DataGridProps, GetApplyQuickFilterFn, GridFilterModel } from '@mui/x-data-grid';
 import { getColumnValues, sleep } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -60,6 +65,28 @@ describe('<DataGrid /> - Quick filter', () => {
       await waitFor(() => {
         expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
       });
+    });
+
+    // https://github.com/mui/mui-x/issues/23908
+    it('should apply the trigger and control classes', () => {
+      render(
+        <TestCase
+          slotProps={{
+            toolbar: {
+              quickFilterProps: { slotProps: { root: { className: 'custom-control' } } },
+            },
+          }}
+        />,
+      );
+
+      expect(screen.getByRole('button', { name: 'Search' })).to.have.class(
+        gridClasses.toolbarQuickFilterTrigger,
+      );
+      const control = screen
+        .getByRole('searchbox')
+        .closest(`.${gridClasses.toolbarQuickFilterControl}`);
+      expect(control).not.to.equal(null);
+      expect(control).to.have.class('custom-control');
     });
 
     // https://github.com/mui/mui-x/issues/23572

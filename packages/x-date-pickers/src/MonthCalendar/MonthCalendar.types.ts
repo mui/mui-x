@@ -42,8 +42,17 @@ export interface MonthCalendarProps
     BaseDateValidationProps,
     TimezoneProps,
     FormProps {
+  /**
+   * If `true`, the component is focused when it mounts.
+   */
   autoFocus?: boolean;
+  /**
+   * A CSS class name applied to the root element.
+   */
   className?: string;
+  /**
+   * @ignore
+   */
   currentMonth?: PickerValidDate;
   /**
    * Override or extend the styles applied to the component.
@@ -88,8 +97,20 @@ export interface MonthCalendarProps
    * @default false
    */
   disableHighlightToday?: boolean;
+  /**
+   * @ignore
+   */
   onMonthFocus?: (month: number) => void;
+  /**
+   * @ignore
+   */
   hasFocus?: boolean;
+  /**
+   * @ignore
+   */
   onFocusedViewChange?: (hasFocus: boolean) => void;
+  /**
+   * @ignore
+   */
   gridLabelId?: string;
 }

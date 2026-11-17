@@ -5,12 +5,12 @@ import type {
   WeekStartsOn,
 } from '@mui/x-scheduler-internals/models';
 import { getPlainDateWeekStart } from '@mui/x-scheduler-internals/internals';
-import type { PlainDate } from '@mui/x-scheduler-internals/internals';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
 import { getPlainDateWeekDayCode } from './internal-utils';
 
 export function computePresets(
-  plainDate: PlainDate,
+  plainDate: BaseTemporal.PlainDate,
 ): Record<RecurringEventPresetKey, SchedulerProcessedEventRecurrenceRule> {
   return {
     DAILY: { freq: 'DAILY', interval: 1 },
@@ -22,7 +22,7 @@ export function computePresets(
 
 export function getDefaultPresetKey(
   rule: SchedulerProcessedEventRecurrenceRule | undefined,
-  occurrenceStartPlainDate: PlainDate,
+  occurrenceStartPlainDate: BaseTemporal.PlainDate,
 ): RecurringEventPresetKey | 'custom' | null {
   if (!rule) {
     return null;
@@ -77,9 +77,9 @@ export function getDefaultPresetKey(
  * `visiblePlainDate`.
  */
 export function getWeeklyDays(
-  visiblePlainDate: PlainDate,
+  visiblePlainDate: BaseTemporal.PlainDate,
   weekStartsOn: WeekStartsOn,
-): { code: RecurringEventWeekDayCode; date: PlainDate }[] {
+): { code: RecurringEventWeekDayCode; date: BaseTemporal.PlainDate }[] {
   const weekStartPlainDate = getPlainDateWeekStart(visiblePlainDate, weekStartsOn);
   return Array.from({ length: 7 }, (_, i) => {
     const plainDate = weekStartPlainDate.add({ days: i });
@@ -91,7 +91,7 @@ export function getWeeklyDays(
  * Returns the monthly reference of a date: its day of the month, its weekday code and the ordinal
  * of that weekday in the month.
  */
-export function getMonthlyReference(plainDate: PlainDate): {
+export function getMonthlyReference(plainDate: BaseTemporal.PlainDate): {
   dayOfMonth: number;
   code: RecurringEventWeekDayCode;
   ord: number;

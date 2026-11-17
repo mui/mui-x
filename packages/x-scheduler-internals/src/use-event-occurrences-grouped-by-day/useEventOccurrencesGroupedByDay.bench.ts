@@ -1,36 +1,34 @@
 import { describe, test } from 'vitest';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import { adapter, EventBuilder, getEventCalendarStateFromParameters } from 'test/utils/scheduler';
+import {
+  addMinutes,
+  createDate,
+  EventBuilder,
+  getEventCalendarStateFromParameters,
+} from 'test/utils/scheduler';
 import { getDayListFromPlainDates } from '../get-day-list';
 import { isWeekendPlainDate } from '../internals/utils/plain-date-utils/plainDate';
 import { getPlainDateWeekStart } from '../internals/utils/date-utils';
-import {
-  buildTemporalPlainDate,
-  createStartOfPlainDate,
-} from '../internals/utils/plain-date-utils/adapter';
+import { createStartOfPlainDate } from '../internals/utils/plain-date-utils/date';
+import { toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
 import { createEventRangeIndex } from '../internals/utils/event-range-index';
 import { eventCalendarAgendaSelectors } from '../event-calendar-selectors';
 import { innerGetEventOccurrencesGroupedByDay } from './useEventOccurrencesGroupedByDay';
 
 const eventCount = 1_000;
 
-function createMonthViewScenario(displayTimezone: TemporalTimezone) {
-  const visibleDate = adapter.setTimezone(
-    adapter.date('2026-03-15T10:00:00Z', 'default'),
-    displayTimezone,
-  );
+function createMonthViewScenario(displayTimezone: string) {
+  const visibleDate = createDate('2026-03-15T10:00:00Z');
   const gridStart = createStartOfPlainDate(
-    adapter,
-    getPlainDateWeekStart(buildTemporalPlainDate(adapter, visibleDate).with({ day: 1 }), 1),
+    getPlainDateWeekStart(toPlainDate(visibleDate.getTime(), 'default').with({ day: 1 }), 1),
     displayTimezone,
   );
   // Events of 30 minutes to 30 hours, every 53 minutes across the 6 weeks of the grid.
   const events = Array.from({ length: eventCount }, (_, index) => {
-    const start = adapter.addMinutes(gridStart, index * 53);
-    const end = adapter.addMinutes(start, 30 + (index % 7) * 300);
-    return EventBuilder.new(adapter)
+    const start = addMinutes(gridStart, index * 53);
+    const end = addMinutes(start, 30 + (index % 7) * 300);
+    return EventBuilder.new()
       .id(index)
-      .span(adapter.toJsDate(start).toISOString(), adapter.toJsDate(end).toISOString())
+      .span(start.toISOString(), end.toISOString())
       .withDisplayTimezone(displayTimezone)
       .toProcessed();
   });
@@ -43,9 +41,8 @@ function createMonthViewScenario(displayTimezone: TemporalTimezone) {
 
 function runMonthView(scenario: ReturnType<typeof createMonthViewScenario>) {
   const { visibleDate, displayTimezone, eventRangeIndex } = scenario;
-  const visiblePlainDate = buildTemporalPlainDate(adapter, visibleDate);
+  const visiblePlainDate = toPlainDate(visibleDate.getTime(), 'default');
   const days = getDayListFromPlainDates({
-    adapter,
     firstPlainDate: getPlainDateWeekStart(visiblePlainDate.with({ day: 1 }), 1),
     lastPlainDate: getPlainDateWeekStart(
       visiblePlainDate.with({ day: visiblePlainDate.daysInMonth }),
@@ -53,12 +50,12 @@ function runMonthView(scenario: ReturnType<typeof createMonthViewScenario>) {
     ).add({ days: 6 }),
     timezone: displayTimezone,
   });
+  const weekend = [6, 7];
   let weekendCount = 0;
   for (const day of days) {
-    weekendCount += isWeekendPlainDate(day.plainDate) ? 1 : 0;
+    weekendCount += isWeekendPlainDate(day.plainDate, weekend) ? 1 : 0;
   }
   const occurrencesByDay = innerGetEventOccurrencesGroupedByDay({
-    adapter,
     days,
     eventRangeIndex,
     visibleResources: {},
@@ -68,11 +65,11 @@ function runMonthView(scenario: ReturnType<typeof createMonthViewScenario>) {
   return weekendCount + occurrencesByDay.size;
 }
 
-function createAgendaState(displayTimezone: TemporalTimezone) {
+function createAgendaState(displayTimezone: string) {
   // One event every 9 days: filling 12 days with events scans about 108 days.
   const firstDay = Date.UTC(2026, 2, 2, 10);
   const events = Array.from({ length: 30 }, (_, index) =>
-    EventBuilder.new(adapter)
+    EventBuilder.new()
       .id(index)
       .span(
         new Date(firstDay + index * 9 * 86_400_000).toISOString(),
@@ -83,10 +80,7 @@ function createAgendaState(displayTimezone: TemporalTimezone) {
   return getEventCalendarStateFromParameters({
     events,
     displayTimezone,
-    visibleDate: adapter.setTimezone(
-      adapter.date('2026-03-02T12:00:00Z', 'default'),
-      displayTimezone,
-    ),
+    visibleDate: createDate('2026-03-02T12:00:00Z'),
     defaultPreferences: { showEmptyDaysInAgenda: false },
   });
 }

@@ -1,11 +1,14 @@
 import * as React from 'react';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import {
   initialEvents,
   defaultVisibleDate,
   resources,
 } from 'docs/data/scheduler/datasets/recurring-event-durations';
+
+const features = { recurringEvents: recurringEventsFeature };
 
 export default function RecurringEventDurations() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
@@ -13,6 +16,7 @@ export default function RecurringEventDurations() {
   return (
     <div style={{ height: '700px', width: '100%' }}>
       <EventCalendarPremium
+        features={features}
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}

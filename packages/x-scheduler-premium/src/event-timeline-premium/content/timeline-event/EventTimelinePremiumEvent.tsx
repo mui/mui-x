@@ -11,7 +11,7 @@ import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
+import { getOccurrenceInternalInfos } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
@@ -214,8 +214,8 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 
   const sharedProps = {
     id,
-    start: occurrence.displayTimezone.start,
-    end: occurrence.displayTimezone.end,
+    start: occurrence.start,
+    end: occurrence.end,
     ref: forwardedRef,
     className: clsx(className, occurrence.className),
     style: {
@@ -255,7 +255,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
-      dataTimezone={getOccurrenceDataTimezone(occurrence)}
+      internalInfos={getOccurrenceInternalInfos(occurrence)}
       elementPosition={elementPosition}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-label={accessibleName}

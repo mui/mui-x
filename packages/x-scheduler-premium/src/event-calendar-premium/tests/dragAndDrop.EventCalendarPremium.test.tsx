@@ -1,13 +1,15 @@
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import { screen, act } from '@mui/internal-test-utils';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import {
-  adapter,
+  createDate,
   createSchedulerRenderer,
   EventBuilder,
   getMonthViewCell,
-  utcJuly4AllDayBuilder,
-  simulateDragAndDrop,
   mockElementBounds,
+  simulateDragAndDrop,
+  utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
 import { vi, describe, it, expect } from 'vitest';
 
@@ -26,8 +28,9 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
 
     const { user } = await renderSettled(
       <EventCalendarPremium
+        features={{ recurringEvents: recurringEventsFeature }}
         events={[event]}
-        visibleDate={adapter.date('2025-07-03T00:00:00Z', 'default')}
+        visibleDate={createDate('2025-07-03T00:00:00Z')}
         view="month"
         views={['month']}
         displayTimezone="America/New_York"
@@ -51,24 +54,21 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
     await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
     // The exception lands on the occurrence's own July 4th, not the displayed July
-    // 3rd — the day grid threads the occurrence's `dataTimezone` into the drag data.
+    // 3rd — the day grid threads the occurrence's data instants into the drag data.
     const updatedEvents = handleEventsChange.mock.lastCall?.[0];
     const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
     expect(series.exDates).to.have.length(1);
     expect(
-      adapter.formatByString(adapter.date(String(series.exDates[0]), 'UTC'), 'yyyy-MM-dd'),
-    ).to.equal('2025-07-04');
+      toPlainDate(createDate(String(series.exDates[0]), 'UTC').getTime(), 'UTC'),
+    ).toEqualPlainDate('2025-07-04');
 
     // The detached one-off lands on the day the user dropped it on (New York July 8th),
     // not a day shifted by re-reading the display bounds as the base.
     const detached = updatedEvents.find((item: { id: string }) => item.id !== event.id)!;
     expect(detached.rrule).to.equal(undefined);
     expect(
-      adapter.formatByString(
-        adapter.setTimezone(adapter.date(String(detached.start), 'UTC'), 'America/New_York'),
-        'yyyy-MM-dd',
-      ),
-    ).to.equal('2025-07-08');
+      toPlainDate(createDate(String(detached.start), 'UTC').getTime(), 'America/New_York'),
+    ).toEqualPlainDate('2025-07-08');
   });
 
   it('should exclude the dragged occurrence of its own day when a timed one is moved from another timezone', async () => {
@@ -85,8 +85,9 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
 
     const { user } = await renderSettled(
       <EventCalendarPremium
+        features={{ recurringEvents: recurringEventsFeature }}
         events={[event]}
-        visibleDate={adapter.date('2025-07-03T00:00:00Z', 'default')}
+        visibleDate={createDate('2025-07-03T00:00:00Z')}
         view="week"
         views={['week']}
         displayTimezone="UTC"
@@ -112,16 +113,16 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
     await user.click(await screen.findByText(/Only this event/i));
     await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-    // The time grid threads the occurrence's `dataTimezone` too: the exception lands on the
+    // The time grid threads the occurrence's data instants too: the exception lands on the
     // occurrence's own July 3rd, not on the July 4th the column shows it in.
     const updatedEvents = handleEventsChange.mock.lastCall?.[0];
     const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
     expect(series.exDates).to.have.length(1);
     expect(
-      adapter.formatByString(
-        adapter.date(String(series.exDates[0]), 'America/New_York'),
-        'yyyy-MM-dd',
+      toPlainDate(
+        createDate(String(series.exDates[0]), 'America/New_York').getTime(),
+        'America/New_York',
       ),
-    ).to.equal('2025-07-03');
+    ).toEqualPlainDate('2025-07-03');
   });
 });

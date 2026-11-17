@@ -4,5 +4,9 @@ export type {
   EventTimelinePremiumPresetConfig,
   EventTimelinePremiumHourPresetConfig,
   EventTimelinePremiumPreferences,
+  SchedulerDependency,
+  SchedulerDependencyId,
+  SchedulerDependencyLagUnit,
+  SchedulerDependencyType,
 } from '@mui/x-scheduler-internals-premium/models';
 export * from './slots';

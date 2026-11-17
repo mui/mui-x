@@ -215,6 +215,15 @@ const plPLGrid: Partial<GridLocaleText> = {
   columnHeaderFiltersTooltipActive: (count) => `Liczba aktywnych filtrów: ${count}`,
   columnHeaderFiltersLabel: 'Pokaż filtry',
   columnHeaderSortIconLabel: 'Sortuj',
+  // columnHeaderSortIconAriaLabel: (columnName, direction) => {
+  //   if (direction === 'asc') {
+  //     return `Sort ${columnName} in ascending order`;
+  //   }
+  //   if (direction === 'desc') {
+  //     return `Sort ${columnName} in descending order`;
+  //   }
+  //   return `Remove sorting from ${columnName}`;
+  // },
 
   // Rows selected footer text
   footerRowSelected: (count) => `Liczba wybranych wierszy: ${count.toLocaleString()}`,
@@ -236,6 +245,9 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'tak',
   booleanCellFalseLabel: 'nie',
+
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
 
   // Long text cell
   longTextCellExpandLabel: 'Rozwiń',

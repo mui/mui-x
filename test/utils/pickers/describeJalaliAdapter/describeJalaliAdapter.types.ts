@@ -1,4 +1,4 @@
-import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
+import type { MuiPickersAdapter } from '@mui/x-date-pickers/models';
 
 export interface DescribeJalaliAdapterParams {
   before?: () => void;

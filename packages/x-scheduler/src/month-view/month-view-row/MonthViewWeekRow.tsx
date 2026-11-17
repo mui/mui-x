@@ -68,6 +68,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
       className={classes.monthViewRow}
       start={start}
       end={end}
+      days={days}
       rowIndex={rowIndex}
       data-show-week-number={showWeekNumber || undefined}
     >

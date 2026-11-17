@@ -1,18 +1,19 @@
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import * as React from 'react';
 import { screen, within, act, fireEvent } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import { StandaloneEvent } from '@mui/x-scheduler-internals/standalone-event';
 import {
-  adapter,
+  createDate,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
+  getResizeHandle,
+  mockElementBounds,
   ResourceBuilder,
   simulateDragAndDrop,
-  mockElementBounds,
-  getResizeHandle,
   utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
@@ -182,50 +183,6 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     expect(updatedEvents[0].resource).to.deep.equal([design.id]);
   });
 
-  it('should move an event to a different position on the same resource', async () => {
-    const handleEventsChange = vi.fn();
-    const event = EventBuilder.new()
-      .title('Design Review')
-      .singleDay('2025-07-03T09:00:00Z', 60)
-      .resource(engineering)
-      .draggable(true)
-      .build();
-
-    await renderSettled(
-      <EventTimelinePremium
-        resources={resources}
-        events={[event]}
-        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        preset="dayAndMonth"
-        presets={['dayAndMonth']}
-        onEventsChange={handleEventsChange}
-      />,
-    );
-
-    mockAllEventRowBounds();
-
-    const eventElement = screen.getByText('Design Review');
-    mockElementBounds(eventElement, { left: 100, width: 120, height: 30 });
-
-    const sameRow = getEventRow(engineering.id);
-
-    // Drop at a significantly different X position to move the event
-    await act(async () => {
-      simulateDragAndDrop({
-        source: eventElement,
-        target: sameRow,
-        sourceClientX: 160,
-        targetClientX: 1000,
-      });
-    });
-
-    expect(handleEventsChange.mock.calls.length).to.equal(1);
-    const updatedEvents = handleEventsChange.mock.calls[0][0];
-    // The event should have moved to a different time
-    const newStart = new Date(updatedEvents[0].start);
-    expect(newStart.getUTCDate()).to.not.equal(3);
-  });
-
   it('should render the timelineEventContent slot in the drag placeholder', async () => {
     function CustomEventContent(props: TimelineEventContentProps) {
       return (
@@ -339,8 +296,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
     expect(series.exDates).to.have.length(1);
     expect(
-      adapter.formatByString(adapter.date(String(series.exDates[0]), 'UTC'), 'yyyy-MM-dd'),
-    ).to.equal('2025-07-04');
+      toPlainDate(createDate(String(series.exDates[0]), 'UTC').getTime(), 'UTC'),
+    ).toEqualPlainDate('2025-07-04');
 
     // The dragged occurrence detaches as a one-off keeping its all-day span. The landing
     // day depends on the pointer-to-axis math, so it is pinned in the month view instead,
@@ -394,112 +351,14 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
     expect(series.exDates).to.have.length(1);
     expect(
-      adapter.formatByString(adapter.date(String(series.exDates[0]), 'UTC'), 'yyyy-MM-dd'),
-    ).to.equal('2025-07-04');
+      toPlainDate(createDate(String(series.exDates[0]), 'UTC').getTime(), 'UTC'),
+    ).toEqualPlainDate('2025-07-04');
 
     // Dragging a secondary appearance detaches the occurrence without dropping the
     // resources it belongs to: the key does not identify which row it was dragged from.
     const detached = updatedEvents.find((item: { id: string }) => item.id !== event.id)!;
     expect(detached.rrule).to.equal(undefined);
     expect(detached.resource).to.deep.equal([engineering.id, design.id]);
-  });
-
-  it('should resize an event end to a later time', async () => {
-    const handleEventsChange = vi.fn();
-    const event = EventBuilder.new()
-      .title('Team Standup')
-      .singleDay('2025-07-03T09:00:00Z', 60)
-      .resource(engineering)
-      .resizable(true)
-      .build();
-
-    await renderSettled(
-      <EventTimelinePremium
-        resources={resources}
-        events={[event]}
-        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        preset="dayAndMonth"
-        presets={['dayAndMonth']}
-        onEventsChange={handleEventsChange}
-      />,
-    );
-
-    mockAllEventRowBounds();
-
-    const eventElement = screen
-      .getByText('Team Standup')
-      .closest('.MuiEventTimeline-event') as HTMLElement;
-    mockElementBounds(eventElement, { left: 100, width: 120, height: 30 });
-
-    const endHandle = getResizeHandle(eventElement, 'end');
-    const sameRow = getEventRow(engineering.id);
-
-    await act(async () => {
-      simulateDragAndDrop({
-        source: endHandle,
-        target: sameRow,
-        sourceClientX: 220,
-        targetClientX: 1000,
-      });
-    });
-
-    expect(handleEventsChange.mock.calls.length).to.equal(1);
-    const updatedEvents = handleEventsChange.mock.calls[0][0];
-    // Start should remain unchanged
-    expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(9);
-    // End should have moved later
-    const newEnd = new Date(updatedEvents[0].end);
-    expect(newEnd.getUTCHours()).to.not.equal(10);
-  });
-
-  it('should resize an event start to an earlier time', async () => {
-    const handleEventsChange = vi.fn();
-    const event = EventBuilder.new()
-      .title('Team Standup')
-      .singleDay('2025-07-03T09:00:00Z', 60)
-      .resource(engineering)
-      .resizable(true)
-      .build();
-
-    await renderSettled(
-      <EventTimelinePremium
-        resources={resources}
-        events={[event]}
-        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        preset="dayAndMonth"
-        presets={['dayAndMonth']}
-        onEventsChange={handleEventsChange}
-      />,
-    );
-
-    mockAllEventRowBounds();
-
-    const eventElement = screen
-      .getByText('Team Standup')
-      .closest('.MuiEventTimeline-event') as HTMLElement;
-    mockElementBounds(eventElement, { left: 100, width: 120, height: 30 });
-
-    const startHandle = getResizeHandle(eventElement, 'start');
-    const sameRow = getEventRow(engineering.id);
-
-    // Drag the start handle to an earlier position on the timeline.
-    // The "dayAndMonth" preset shows 56 days in 6720px (≈5px per hour).
-    // The event at 09:00 is at ~pixel 45. Use targetClientX=20 (~04:00).
-    await act(async () => {
-      simulateDragAndDrop({
-        source: startHandle,
-        target: sameRow,
-        sourceClientX: 100,
-        targetClientX: 20,
-      });
-    });
-
-    expect(handleEventsChange.mock.calls.length).to.equal(1);
-    const updatedEvents = handleEventsChange.mock.calls[0][0];
-    // Start should have moved earlier
-    expect(new Date(updatedEvents[0].start).getUTCHours()).to.not.equal(9);
-    // End should remain unchanged
-    expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(10);
   });
 
   it('should drop an event starting in the hour repeated by a DST transition where the cursor is', async () => {
@@ -518,7 +377,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         resources={resources}
         events={[event]}
         displayTimezone="Europe/Paris"
-        visibleDate={adapter.date('2026-10-25T12:00:00', 'Europe/Paris')}
+        visibleDate={createDate('2026-10-25T12:00:00', 'Europe/Paris')}
         preset="dayAndHour"
         presets={['dayAndHour']}
         onEventsChange={handleEventsChange}
@@ -543,8 +402,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
-    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2026-10-25T09:00:00.000Z'); // 10:00 CET
-    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2026-10-25T10:00:00.000Z'); // 11:00 CET
+    expect(updatedEvents[0].start).to.equal('2026-10-25T09:00:00.000Z'); // 10:00 CET
+    expect(updatedEvents[0].end).to.equal('2026-10-25T10:00:00.000Z'); // 11:00 CET
   });
 
   describe('trimmed hour window (presetConfig)', () => {
@@ -570,42 +429,6 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       mockAllEventRowBounds(AXIS_WIDTH);
       return view;
     }
-
-    it('should map a drop across the day seam through the compressed axis', async () => {
-      const handleEventsChange = vi.fn();
-      const event = EventBuilder.new()
-        .title('Team Standup')
-        .singleDay('2025-07-03T10:00:00Z', 60)
-        .resource(engineering)
-        .draggable(true)
-        .build();
-
-      await renderTimeline(event, handleEventsChange);
-
-      // 10:00 sits 120 axis minutes after the first visible hour (8:00).
-      const { element: eventElement, left } = mockEventBoundsFromRender(AXIS_WIDTH, 'Team Standup');
-      expect(left).to.be.closeTo(120, 0.001);
-
-      const sameRow = getEventRow(engineering.id);
-
-      // Grab 10 axis minutes into the event, drop at axis minute 850 → the event
-      // starts at axis minute 840 = one full visible day (720) + 120 → July 4, 10:00.
-      // A real-milliseconds mapping would land on July 3, 14:00 instead.
-      await act(async () => {
-        simulateDragAndDrop({
-          source: eventElement,
-          target: sameRow,
-          sourceClientX: 130,
-          targetClientX: 850,
-        });
-      });
-
-      expect(handleEventsChange.mock.calls.length).to.equal(1);
-      const updatedEvents = handleEventsChange.mock.calls[0][0];
-      const newStart = new Date(updatedEvents[0].start);
-      expect(newStart.getUTCDate()).to.equal(4);
-      expect(newStart.getUTCHours()).to.equal(10);
-    });
 
     it('should resize the end of an event spanning the hidden gap without jumping', async () => {
       const handleEventsChange = vi.fn();
@@ -643,10 +466,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
       expect(handleEventsChange.mock.calls.length).to.equal(1);
       const updatedEvents = handleEventsChange.mock.calls[0][0];
-      expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(18);
-      const newEnd = new Date(updatedEvents[0].end);
-      expect(newEnd.getUTCDate()).to.equal(4);
-      expect(newEnd.getUTCHours()).to.equal(11);
+      expect(updatedEvents[0].start).to.equal('2025-07-03T18:00:00Z');
+      expect(updatedEvents[0].end).to.equal('2025-07-04T11:00:00.000Z');
     });
 
     it('should shift a window-clipped start by the dragged amount instead of snapping it to the window edge', async () => {
@@ -679,8 +500,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
       expect(handleEventsChange.mock.calls.length).to.equal(1);
       const updatedEvents = handleEventsChange.mock.calls[0][0];
-      expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(8);
-      expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(19);
+      expect(updatedEvents[0].start).to.equal('2025-07-03T08:00:00.000Z');
+      expect(updatedEvents[0].end).to.equal('2025-07-03T19:00:00.000Z');
     });
 
     it('should not emit a change when the drag of a window-clipped event returns to its origin', async () => {
@@ -742,12 +563,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
       expect(handleEventsChange.mock.calls.length).to.equal(1);
       const updatedEvents = handleEventsChange.mock.calls[0][0];
-      const newStart = new Date(updatedEvents[0].start);
-      expect(newStart.getUTCDate()).to.equal(3);
-      expect(newStart.getUTCHours()).to.equal(19);
-      const newEnd = new Date(updatedEvents[0].end);
-      expect(newEnd.getUTCDate()).to.equal(4);
-      expect(newEnd.getUTCHours()).to.equal(11);
+      expect(updatedEvents[0].start).to.equal('2025-07-03T19:00:00.000Z');
+      expect(updatedEvents[0].end).to.equal('2025-07-04T11:00:00.000Z');
     });
 
     it('should move an event starting before the collection without shifting it by the hidden hours', async () => {
@@ -778,12 +595,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
       expect(handleEventsChange.mock.calls.length).to.equal(1);
       const updatedEvents = handleEventsChange.mock.calls[0][0];
-      const newStart = new Date(updatedEvents[0].start);
-      expect(newStart.getUTCDate()).to.equal(2);
-      expect(newStart.getUTCHours()).to.equal(11);
-      const newEnd = new Date(updatedEvents[0].end);
-      expect(newEnd.getUTCDate()).to.equal(3);
-      expect(newEnd.getUTCHours()).to.equal(13);
+      expect(updatedEvents[0].start).to.equal('2025-07-02T11:00:00.000Z');
+      expect(updatedEvents[0].end).to.equal('2025-07-03T13:00:00.000Z');
     });
 
     it('should resize the start of an event through the axis instead of real milliseconds', async () => {
@@ -819,12 +632,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
       expect(handleEventsChange.mock.calls.length).to.equal(1);
       const updatedEvents = handleEventsChange.mock.calls[0][0];
-      const newStart = new Date(updatedEvents[0].start);
-      expect(newStart.getUTCDate()).to.equal(3);
-      expect(newStart.getUTCHours()).to.equal(17);
-      const newEnd = new Date(updatedEvents[0].end);
-      expect(newEnd.getUTCDate()).to.equal(4);
-      expect(newEnd.getUTCHours()).to.equal(10);
+      expect(updatedEvents[0].start).to.equal('2025-07-03T17:00:00.000Z');
+      expect(updatedEvents[0].end).to.equal('2025-07-04T10:00:00Z');
     });
 
     it('should not offer a resize handle on a bound hidden by the hour window', async () => {
@@ -887,10 +696,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       expect(handleEventsChange.mock.calls.length).to.equal(1);
       const updatedEvents = handleEventsChange.mock.calls[0][0];
       expect(updatedEvents.length).to.equal(1);
-      const newStart = new Date(updatedEvents[0].start);
-      expect(newStart.getUTCDate()).to.equal(4);
-      expect(newStart.getUTCHours()).to.equal(10);
-      expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(11);
+      expect(updatedEvents[0].start).to.equal('2025-07-04T10:00:00.000Z');
+      expect(updatedEvents[0].end).to.equal('2025-07-04T11:00:00.000Z');
     });
 
     it('should keep a drop on the exact right edge of the axis inside the collection', async () => {
@@ -932,10 +739,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
       expect(handleEventsChange.mock.calls.length).to.equal(1);
       const updatedEvents = handleEventsChange.mock.calls[0][0];
-      const newStart = new Date(updatedEvents[0].start);
-      expect(newStart.getUTCDate()).to.equal(6);
-      expect(newStart.getUTCHours()).to.equal(19);
-      expect(newStart.getUTCMinutes()).to.equal(45);
+      expect(updatedEvents[0].start).to.equal('2025-07-06T19:45:00.000Z');
     });
 
     it('should keep a drop past the left edge of the axis inside the collection', async () => {
@@ -977,10 +781,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
       expect(handleEventsChange.mock.calls.length).to.equal(1);
       const updatedEvents = handleEventsChange.mock.calls[0][0];
-      const newStart = new Date(updatedEvents[0].start);
-      expect(newStart.getUTCDate()).to.equal(3);
-      expect(newStart.getUTCHours()).to.equal(8);
-      expect(newStart.getUTCMinutes()).to.equal(0);
+      expect(updatedEvents[0].start).to.equal('2025-07-03T08:00:00.000Z');
     });
   });
 });

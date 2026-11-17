@@ -6,7 +6,7 @@ import transformReplaceTransitionPropsBySlot from '../replace-transition-props-b
 import transformRenameUseTreeItem from '../rename-use-tree-item';
 import transformRenameTreeViewSimpleTreeView from '../rename-tree-view-simple-tree-view';
 
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   file.source = transformRenameExpansionProps(file, api, options);

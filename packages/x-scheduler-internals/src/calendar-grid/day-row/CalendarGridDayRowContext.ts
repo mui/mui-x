@@ -13,6 +13,12 @@ export interface CalendarGridDayRowContext {
    * In month view, this is the week index (0–5).
    */
   rowIndex: number;
+  /**
+   * The date of each cell of the row, as a day number, in the order of the cells.
+   * A row can skip dates (hidden weekends, days a timezone skips), so its cells are not every date
+   * between its start and its end.
+   */
+  dayNumbers: number[];
 }
 
 export const CalendarGridDayRowContext = React.createContext<CalendarGridDayRowContext | undefined>(

@@ -44,6 +44,9 @@ const event = {
 
 {{"demo": "AllDay.js", "bg": "inline", "defaultCodeOpen": false}}
 
+The `end` of an all-day event can be any time on its last day.
+The occurrences the Scheduler provides end at the start of the next day instead: see [Reading occurrence dates](/x/react-scheduler/timezone/#reading-occurrence-dates).
+
 ### Timezone
 
 Use the `timezone` property to specify the timezone for an event's dates:
@@ -163,7 +166,15 @@ const event = {
 };
 ```
 
-The Event Timeline expands recurring events only when the `recurringEvents` feature is enabled through the `features` prop.
+The Event Timeline expands recurring events only when the `recurringEvents` feature is enabled through the `features` prop:
+
+```tsx
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
+
+<EventTimelinePremium features={{ recurringEvents: recurringEventsFeature }} />;
+```
+
 See [Recurring events](/x/react-scheduler/recurring-events/) for details.
 
 ## Store data in custom properties
@@ -193,7 +204,7 @@ function Timeline() {
 
 {{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
 
-A property declared with a `getter` but no `setter` is read-only: the Event Timeline displays it but never writes it back to your model. When `start` or `end` is read-only, events can't be dragged or created, and only the other edge can be resized. Saving an occurrence of a recurring event with the "Only this event" or "This and following events" scope is refused with an error, since it needs to write a new date.
+A property declared with a `getter` but no `setter` is read-only: the Event Timeline displays it but never writes it back to your model. When `start` or `end` is read-only, events can't be dragged or created, and only the other edge can be resized. Saving an occurrence of a recurring event with the "Only this event" or "This and following events" scope is refused with an error, since it needs to write a new date. With [dependencies](/x/react-scheduler/event-timeline/dependencies/), a change whose cascade would need to write such a date is refused as a whole.
 
 ## Custom event content
 

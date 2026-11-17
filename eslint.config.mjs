@@ -71,6 +71,32 @@ function getReactCompilerFilesForPackages(packageInfo) {
     );
 }
 
+const INTERNALS_INDEX_RESTRICTED_ZONES = [
+  ...CHARTS_PACKAGES,
+  ...PICKERS_PACKAGES,
+  ...TREE_VIEW_PACKAGES,
+  ...SCHEDULER_PACKAGES,
+].map((packageName) => ({
+  target: `./packages/${packageName}/src/**/!(*.test.*|*.spec.*)`,
+  from: `./packages/${packageName}/src/internals/index.ts`,
+  message: `Use a more specific import instead. E.g. import { MyInternal } from '../internals/MyInternal';`,
+}));
+
+// The copy of BaseTemporal from the Base UI version.
+const BASE_TEMPORAL_COPY = 'packages/x-scheduler-internals/src/internals/utils/base-temporal';
+
+// The Scheduler only uses the public API of the BaseTemporal copy: the exports of its index. Its
+// other modules are internals of the library.
+const BASE_TEMPORAL_COPY_RESTRICTED_ZONES = [
+  {
+    target: ['./packages', './test'],
+    from: `./${BASE_TEMPORAL_COPY}`,
+    except: ['./index.ts'],
+    message:
+      'Import `BaseTemporal` from the index of the copy, and the day number helpers from `plain-date-utils`.',
+  },
+];
+
 const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/material',
   '@mui/utils',
@@ -87,6 +113,37 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/x-scheduler-internals',
   '@mui/x-scheduler-internals-premium',
 ];
+
+// React APIs missing from React 17, which the peer range still supports.
+const REACT_17_MISSING_APIS = [
+  {
+    property: 'useId',
+    message: 'Use `@mui/utils/useId` or `@base-ui/utils/useId` instead.',
+  },
+  {
+    property: 'useSyncExternalStore',
+    message: "Use `useSyncExternalStore` from 'use-sync-external-store/shim' instead.",
+  },
+  ...[
+    'useInsertionEffect',
+    'useTransition',
+    'startTransition',
+    'useDeferredValue',
+    'use',
+    'useActionState',
+    'useOptimistic',
+    'useEffectEvent',
+    'Activity',
+    'cache',
+  ].map((property) => ({
+    property,
+    message: 'Read it from `SafeReact` (`@base-ui/utils/safeReact`) and add a fallback.',
+  })),
+].map(({ property, message }) => ({
+  object: 'React',
+  property,
+  message: `\`React.${property}\` does not exist in React 17. ${message}`,
+}));
 
 const packageFilesWithReactCompiler = getReactCompilerFilesForPackages([
   {
@@ -117,6 +174,7 @@ export default defineConfig(
     enableReactCompiler: isAnyReactCompilerPluginEnabled,
     materialUi: true,
     markdown: true,
+    consistentTypeImports: true,
   }),
   // eslint-plugin-mdx loads `.remarkrc.mjs` itself, but ESLint doesn't know
   // that file is a config dependency, so `--cache` doesn't invalidate when
@@ -159,16 +217,7 @@ export default defineConfig(
       'import/no-restricted-paths': [
         'error',
         {
-          zones: [
-            ...CHARTS_PACKAGES,
-            ...PICKERS_PACKAGES,
-            ...TREE_VIEW_PACKAGES,
-            ...SCHEDULER_PACKAGES,
-          ].map((packageName) => ({
-            target: `./packages/${packageName}/src/**/!(*.test.*|*.spec.*)`,
-            from: `./packages/${packageName}/src/internals/index.ts`,
-            message: `Use a more specific import instead. E.g. import { MyInternal } from '../internals/MyInternal';`,
-          })),
+          zones: [...INTERNALS_INDEX_RESTRICTED_ZONES, ...BASE_TEMPORAL_COPY_RESTRICTED_ZONES],
         },
       ],
       'no-restricted-imports': 'off',
@@ -259,34 +308,14 @@ export default defineConfig(
     },
   },
   {
-    files: [
-      `packages/x-charts{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-data-grid{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-date-pickers{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-scheduler{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-tree-view{,-*}/**/*${EXTENSION_TS}`,
-      `packages/x-chat{,-*}/**/*${EXTENSION_TS}`,
-      `docs/**/*${EXTENSION_TS}`,
-      `scripts/**/*${EXTENSION_TS}`,
-    ],
-    rules: {
-      '@typescript-eslint/consistent-type-imports': [
-        'error',
-        {
-          fixStyle: 'separate-type-imports',
-        },
-      ],
-      'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
-    },
-  },
-  {
-    // A copy of BaseTemporal from the Base UI version, which keeps its code style.
-    files: [
-      `packages/x-scheduler-internals/src/internals/utils/base-temporal/*${EXTENSION_TS}`,
-      `packages/x-scheduler-internals/src/internals/utils/internals/temporal-utils/*${EXTENSION_TS}`,
-    ],
+    // A copy of BaseTemporal from the Base UI version, which keeps its code style. It leaves out
+    // `ZonedDateTime` and prefixes its errors with "MUI X Scheduler". Change the Base UI version
+    // first, then copy it again.
+    files: [`${BASE_TEMPORAL_COPY}/*${EXTENSION_TS}`],
     rules: {
       'import/consistent-type-specifier-style': 'off',
+      // The copy imports its own modules, so it keeps only the zones of the internals index.
+      'import/no-restricted-paths': ['error', { zones: INTERNALS_INDEX_RESTRICTED_ZONES }],
       'jsdoc/no-bad-blocks': 'off',
     },
   },
@@ -317,6 +346,9 @@ export default defineConfig(
       parserOptions: {
         tsconfigRootDir: dirname,
         projectService: true,
+        // TODO: Remove when https://github.com/typescript-eslint/typescript-eslint/issues/13109 is fixed.
+        // Single-run Programs of typescript-eslint >=8.72.1 double the heap and OOM in CI.
+        disallowAutomaticSingleRunInference: true,
       },
     },
   },
@@ -361,6 +393,7 @@ export default defineConfig(
         },
       ],
       'mui/disallow-react-api-in-server-components': 'error',
+      'no-restricted-properties': ['error', ...REACT_17_MISSING_APIS],
     },
   },
 
@@ -381,6 +414,7 @@ export default defineConfig(
       parserOptions: {
         tsconfigRootDir: dirname,
         projectService: true,
+        disallowAutomaticSingleRunInference: true,
       },
     },
     rules: {

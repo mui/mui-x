@@ -9,7 +9,7 @@ import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
-import type { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
+import type { BaseTemporal } from '../../internals/utils/base-temporal';
 import { plainDateFromDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
 import type { SchedulerEventId, SchedulerEventOccurrence, SchedulerResourceId } from '../../models';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
@@ -21,6 +21,10 @@ import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayCellContext } from '../day-cell/CalendarGridDayCellContext';
 import { useOriginalOccurrence } from '../../internals/utils/useOriginalOccurrence';
+import {
+  getOccurrenceLastDayNumber,
+  getOccurrenceModelEnd,
+} from '../../internals/utils/event-utils';
 
 const overflowStateAttributesMapping = {
   startingBeforeEdge: (value: boolean) => (value ? { 'data-starting-before-edge': '' } : null),
@@ -39,7 +43,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     // Internal props
     start,
     end,
-    dataTimezone,
+    internalInfos,
     eventId,
     occurrenceKey,
     renderDragPreview,
@@ -55,7 +59,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   // Context hooks
   const store = useEventCalendarStoreContext();
-  const { axis: rowAxis } = useCalendarGridDayRowContext();
+  const { axis: rowAxis, dayNumbers } = useCalendarGridDayRowContext();
   const { start: rowStart, end: rowEnd } = rowAxis;
   const { hasFocus: cellHasFocus } = useCalendarGridDayCellContext();
   const isRtl = useDirection() === 'rtl';
@@ -67,17 +71,17 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const hasPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.isDefined);
 
   // Feature hooks
-  const getDraggedDay = useStableCallback((input: { clientX: number }) => {
+  const getDraggedDay = (input: { clientX: number }, occurrence: SchedulerEventOccurrence) => {
     const displayTimezone = schedulerOtherSelectors.displayTimezone(store.state);
     const startDay = toLocalDayNumber(start.timestamp, displayTimezone);
     if (!ref.current) {
       return plainDateFromDayNumber(startDay);
     }
 
-    // The event covers every date from its start to its end in the row, like its cells.
+    // The dates of the event in the row.
     const firstDay = Math.max(startDay, toLocalDayNumber(rowStart, displayTimezone));
     const lastDay = Math.min(
-      toLocalDayNumber(end.timestamp, displayTimezone),
+      getOccurrenceLastDayNumber(occurrence),
       toLocalDayNumber(rowEnd, displayTimezone),
     );
     const elementPosition = ref.current.getBoundingClientRect();
@@ -87,32 +91,45 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
       : input.clientX - elementPosition.left;
     const positionX = offsetFromStart / ref.current.offsetWidth;
 
-    return plainDateFromDayNumber(firstDay + Math.ceil(positionX * (lastDay - firstDay + 1)) - 1);
-  });
+    // The event covers the cells of these dates, and a row can skip dates (hidden weekends).
+    // The event renders in one of them, so there is at least one.
+    const cellDays = dayNumbers.filter((day) => day >= firstDay && day <= lastDay);
+    const cellIndex = Math.min(
+      Math.max(Math.ceil(positionX * cellDays.length) - 1, 0),
+      cellDays.length - 1,
+    );
+    return plainDateFromDayNumber(cellDays[cellIndex]);
+  };
 
   const getOriginalOccurrence = useOriginalOccurrence({
     eventId,
     occurrenceKey,
     start,
     end,
-    dataTimezone,
+    internalInfos,
   });
 
   const getSharedDragData: CalendarGridDayEventContext['getSharedDragData'] = useStableCallback(
-    () => ({
-      eventId,
-      occurrenceKey,
-      originalOccurrence: getOriginalOccurrence(),
-      start: start.timestamp,
-      end: end.timestamp,
-    }),
+    () => {
+      const originalOccurrence = getOriginalOccurrence();
+      return {
+        eventId,
+        occurrenceKey,
+        originalOccurrence,
+        start: start.timestamp,
+        end: getOccurrenceModelEnd(originalOccurrence),
+      };
+    },
   );
 
-  const getDragData = useStableCallback((input) => ({
-    ...getSharedDragData(input),
-    source: 'CalendarGridDayEvent',
-    draggedDay: getDraggedDay(input),
-  }));
+  const getDragData = useStableCallback((input) => {
+    const sharedDragData = getSharedDragData(input);
+    return {
+      ...sharedDragData,
+      source: 'CalendarGridDayEvent',
+      draggedDay: getDraggedDay(input, sharedDragData.originalOccurrence),
+    };
+  });
 
   const elementPosition = useElementPositionInCollection({ start, end, collection: rowAxis });
 
@@ -182,7 +199,7 @@ export namespace CalendarGridDayEvent {
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
       useDraggableEvent.PublicParameters,
-      Pick<useOriginalOccurrence.Parameters, 'dataTimezone'> {}
+      Pick<useOriginalOccurrence.Parameters, 'internalInfos'> {}
 
   export interface SharedDragData {
     eventId: SchedulerEventId;
@@ -204,6 +221,6 @@ export namespace CalendarGridDayEvent {
     /**
      * The grabbed day, in the timezone of `start`.
      */
-    draggedDay: PlainDate;
+    draggedDay: BaseTemporal.PlainDate;
   }
 }

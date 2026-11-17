@@ -242,6 +242,15 @@ const beBYGrid: Partial<GridLocaleText> = {
     }),
   columnHeaderFiltersLabel: 'Паказаць фільтры',
   columnHeaderSortIconLabel: 'Сартыраваць',
+  // columnHeaderSortIconAriaLabel: (columnName, direction) => {
+  //   if (direction === 'asc') {
+  //     return `Sort ${columnName} in ascending order`;
+  //   }
+  //   if (direction === 'desc') {
+  //     return `Sort ${columnName} in descending order`;
+  //   }
+  //   return `Remove sorting from ${columnName}`;
+  // },
 
   // Rows selected footer text
   footerRowSelected: (count) =>
@@ -268,6 +277,9 @@ const beBYGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'праўда',
   booleanCellFalseLabel: 'няпраўда',
+
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
 
   // Long text cell
   longTextCellExpandLabel: 'Разгарнуць',

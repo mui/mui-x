@@ -4,16 +4,13 @@ import { useEventCalendarStoreContext } from '../../use-event-calendar-store-con
 import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import type { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
-import { createProcessedDate } from '../../internals/utils/plain-date-utils/adapter';
-import { useAdapterContext } from '../../use-adapter-context';
+import { createProcessedDate } from '../../internals/utils/plain-date-utils/date';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
 
 export function useCalendarGridPlaceholderInRange(
   parameters: useCalendarGridPlaceholderInRange.Parameters,
 ): useEventOccurrencesWithTimelinePosition.EventOccurrencePlaceholderWithPosition | null {
   const { start, end, occurrences, maxIndex } = parameters;
-
-  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
 
   const rawPlaceholder = useStore(
@@ -38,11 +35,9 @@ export function useCalendarGridPlaceholderInRange(
       key: 'occurrence-placeholder',
       id: originalEventId ?? 'occurrence-placeholder',
       title: originalEvent ? originalEvent.title : '',
-      displayTimezone: {
-        start: createProcessedDate(adapter, rawPlaceholder.start, displayTimezone),
-        end: createProcessedDate(adapter, rawPlaceholder.end, displayTimezone),
-        timezone: displayTimezone,
-      },
+      start: createProcessedDate(rawPlaceholder.start, displayTimezone),
+      end: createProcessedDate(rawPlaceholder.end, displayTimezone),
+      unstable_internalInfos: { displayTimezone },
     };
 
     if (rawPlaceholder.type === 'creation') {
@@ -78,15 +73,7 @@ export function useCalendarGridPlaceholderInRange(
       ...sharedProperties,
       position,
     };
-  }, [
-    rawPlaceholder,
-    adapter,
-    displayTimezone,
-    originalEvent,
-    originalEventId,
-    occurrences,
-    maxIndex,
-  ]);
+  }, [rawPlaceholder, displayTimezone, originalEvent, originalEventId, occurrences, maxIndex]);
 }
 
 export namespace useCalendarGridPlaceholderInRange {
