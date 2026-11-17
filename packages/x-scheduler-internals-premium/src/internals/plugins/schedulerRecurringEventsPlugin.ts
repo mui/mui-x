@@ -1,7 +1,10 @@
 import type { SchedulerRecurringEventsPluginInterface } from '@mui/x-scheduler-internals/internals';
 import { parseRRule, isSameRRule } from '../utils/recurring-events/rRuleString';
 import { getRecurringEventOccurrencesForVisibleDays } from '../utils/recurring-events/getRecurringEventOccurrencesForVisibleDays';
-import { updateRecurringEvent } from '../utils/recurring-events/updateRecurringEvent';
+import {
+  getRecurringAllDayChanges,
+  updateRecurringEvent,
+} from '../utils/recurring-events/updateRecurringEvent';
 import { deleteRecurringEvent } from '../utils/recurring-events/deleteRecurringEvent';
 import { computePresets, getDefaultPresetKey } from '../utils/recurring-events/presets';
 
@@ -9,6 +12,7 @@ export const schedulerRecurringEventsPlugin = {
   parseRRule,
   getOccurrencesForVisibleDays: getRecurringEventOccurrencesForVisibleDays,
   updateRecurringEvent,
+  getRecurringAllDayChanges,
   deleteRecurringEvent,
   computePresets,
   getDefaultPresetKey,

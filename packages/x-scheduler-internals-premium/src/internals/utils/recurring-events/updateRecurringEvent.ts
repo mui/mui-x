@@ -344,6 +344,26 @@ function getSnappedDayCount(start: number, end: number, timezone: string): numbe
 }
 
 /**
+ * The rule and exception dates of a timed series made all-day as a whole, moved by the days its
+ * first occurrence moves from its timezone to the display timezone.
+ */
+export function getRecurringAllDayChanges(
+  event: SchedulerProcessedEvent,
+  displayTimezone: string,
+): Pick<SchedulerEventUpdatedProperties, 'rrule' | 'exDates'> {
+  const fromPlainDate = toPlainDate(event.start.timestamp, event.timezone);
+  const toPlainDateValue = toPlainDate(event.start.timestamp, displayTimezone);
+  return {
+    rrule: shiftRRuleDays(event.rrule!, fromPlainDate, toPlainDateValue),
+    exDates: getShiftedExDates(
+      event,
+      getDayNumber(toPlainDateValue) - getDayNumber(fromPlainDate),
+      displayTimezone,
+    ),
+  };
+}
+
+/**
  * The exception dates of a timed series made all-day: their days moved like its rule, as the first
  * instants of those days in the display timezone.
  */

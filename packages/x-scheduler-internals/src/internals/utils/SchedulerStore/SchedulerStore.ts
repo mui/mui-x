@@ -1274,6 +1274,14 @@ export class SchedulerStore<
         cleanChanges.start.getTime() + original.end.timestamp - original.start.timestamp,
       );
     }
+    const { recurringEventsPlugin } = this.state;
+    if (allDay && !original.allDay && original.rrule != null && recurringEventsPlugin != null) {
+      // A timed series made all-day keeps its occurrences on their displayed days.
+      Object.assign(
+        cleanChanges,
+        recurringEventsPlugin.getRecurringAllDayChanges(original, displayTimezone),
+      );
+    }
     const isMovingDates = cleanChanges.start != null;
 
     const refuse = (reason: string) => {
