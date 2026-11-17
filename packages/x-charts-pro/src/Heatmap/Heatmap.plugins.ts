@@ -1,3 +1,5 @@
+import '../typeOverloads';
+
 import {
   useChartZAxis,
   useChartCartesianAxis,

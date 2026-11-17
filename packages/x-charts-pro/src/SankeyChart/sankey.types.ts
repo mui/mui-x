@@ -1,5 +1,7 @@
 'use client';
 
+import '../typeOverloads';
+
 import type { SeriesId } from '@mui/x-charts/internals';
 import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
 import type { SankeyLink as D3SankeyLink, SankeyNode as D3SankeyNode } from './d3Sankey';
