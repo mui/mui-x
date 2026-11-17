@@ -57,6 +57,18 @@ export function getDayTimezone(
 }
 
 /**
+ * The timezone the day math of an event runs in after an update to `allDay`: an all-day event
+ * made timed moves to the display timezone, where its days were read.
+ */
+export function getNextDayTimezone(
+  event: Pick<SchedulerProcessedEvent, 'allDay' | 'timezone'>,
+  allDay: boolean | undefined,
+  displayTimezone: string,
+): string {
+  return event.allDay || allDay ? displayTimezone : event.timezone;
+}
+
+/**
  * The day of an occurrence, which its recurring key and the recurring edits are based on: the day
  * an all-day occurrence was read on, and the day of a timed one in its timezone.
  */

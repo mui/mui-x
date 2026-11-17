@@ -2341,6 +2341,29 @@ storeClasses.forEach((storeClass) => {
         expect(pasted.end).to.equal('2025-07-21T14:00:00');
       });
 
+      it('should make an all-day event timed on its displayed days in the display timezone', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('holiday')
+          .withDataTimezone('America/New_York')
+          .span('2025-07-04', '2025-07-05', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+
+        store.updateEvent({ id: 'holiday', allDay: false });
+
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated).not.to.have.property('allDay');
+        expect(updated.timezone).to.equal('Asia/Tokyo');
+        expect(updated.start).to.equal('2025-07-04T00:00:00');
+        expect(updated.end).to.equal('2025-07-05T00:00:00');
+      });
+
       it('should duplicate an all-day occurrence as dates', () => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new()

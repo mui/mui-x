@@ -68,6 +68,7 @@ import { addDaysToDayStart, getAllDayDayCount, getOccurrenceEnd } from '../date-
 import {
   getDayTimezone,
   getLastInstant,
+  getNextDayTimezone,
   getOccurrenceKey,
   getRecurringOccurrenceKey,
   isEventOccurrence,
@@ -1593,10 +1594,7 @@ export class SchedulerStore<
     // In place, the pattern decides where a day or rule change lands: only a change that keeps
     // the occurrence on its own day can keep the surface armed.
     const allDay = changes.allDay ?? occurrence.allDay;
-    const nextDayTimezone = getDayTimezone(
-      { allDay, timezone: original.timezone },
-      displayTimezone,
-    );
+    const nextDayTimezone = getNextDayTimezone(original, allDay, displayTimezone);
     const changedStart = changes.start?.getTime();
     const changedEnd = changes.end?.getTime();
     const bounds: [number | undefined, number][] = [

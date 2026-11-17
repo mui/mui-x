@@ -2,13 +2,14 @@ import type { SchedulerEvent, SchedulerEventUpdatedProperties } from '../../mode
 import { resolveEventTimestamp } from '../../process-event/resolveEventTimestamp';
 import { allDayBoundToEventString, timestampToEventString } from './date-utils';
 import { snapAllDayBounds } from './plain-date-utils/date';
-import { moveTimestampToPlainDate, toPlainDate } from './plain-date-utils/timeZone';
+import { moveTimestampToPlainDate, toEpochMs, toPlainDate } from './plain-date-utils/timeZone';
 import { BaseTemporal } from './base-temporal';
 
 export interface EventDateChangeStrings {
   start?: string;
   end?: string;
   exDates?: string[];
+  timezone?: string;
 }
 
 /**
@@ -16,7 +17,8 @@ export interface EventDateChangeStrings {
  * in the display timezone, the instants of a timed event in the format of its stored strings.
  * `bounds` are the instants written when the changes give none. A timed event made all-day gets
  * whole displayed days, and its exception dates move to their displayed days. An all-day event made
- * timed excludes its occurrences at its new time on their displayed days.
+ * timed moves to the display timezone, from 00:00 of its days when the changes give no bounds, and
+ * excludes its occurrences at its new time.
  */
 export function stringifyEventDateChanges(
   changes: Pick<SchedulerEventUpdatedProperties, 'allDay' | 'start' | 'end' | 'exDates'>,
@@ -31,32 +33,33 @@ export function stringifyEventDateChanges(
   let end = changes.end?.getTime() ?? bounds?.end;
 
   if (!allDay) {
+    const becomesTimed = model.allDay === true;
+    const timezone = becomesTimed ? displayTimezone : dataTimezone;
+    if (becomesTimed) {
+      if (timezone !== dataTimezone) {
+        result.timezone = timezone;
+      }
+      start ??= toEpochMs(BaseTemporal.PlainDate.from(model.start), timezone);
+      end ??= toEpochMs(BaseTemporal.PlainDate.from(model.end), timezone);
+    }
     if (start != null) {
-      result.start = timestampToEventString(start, model.start, dataTimezone);
+      result.start = timestampToEventString(start, model.start, timezone);
     }
     if (end != null) {
-      result.end = timestampToEventString(end, model.end, dataTimezone);
+      result.end = timestampToEventString(end, model.end, timezone);
     }
     if (changes.exDates != null) {
       // A new exception date matches the format of the one it replaces, or of start.
       result.exDates = changes.exDates.map((exDate, index) =>
-        timestampToEventString(
-          exDate.getTime(),
-          model.exDates?.[index] ?? model.start,
-          dataTimezone,
-        ),
+        timestampToEventString(exDate.getTime(), model.exDates?.[index] ?? model.start, timezone),
       );
-    } else if (model.allDay && model.exDates != null && start != null) {
+    } else if (becomesTimed && model.exDates != null && start != null) {
       const timedStart = start;
       result.exDates = model.exDates.map((exDate) =>
         timestampToEventString(
-          moveTimestampToPlainDate(
-            timedStart,
-            BaseTemporal.PlainDate.from(exDate),
-            displayTimezone,
-          ),
+          moveTimestampToPlainDate(timedStart, BaseTemporal.PlainDate.from(exDate), timezone),
           model.start,
-          dataTimezone,
+          timezone,
         ),
       );
     }
@@ -84,8 +87,18 @@ export function stringifyEventDateChanges(
       allDayBoundToEventString(exDate.getTime(), displayTimezone),
     );
   } else if (becomesAllDay && model.exDates != null) {
+    // An exception date marks the day of an occurrence in the event timezone: its occurrence is
+    // displayed on the day of the series time on that day.
+    const seriesStart = resolveEventTimestamp(model.start, dataTimezone);
     result.exDates = model.exDates.map((exDate) =>
-      toPlainDate(resolveEventTimestamp(exDate, dataTimezone), displayTimezone).toString(),
+      toPlainDate(
+        moveTimestampToPlainDate(
+          seriesStart,
+          toPlainDate(resolveEventTimestamp(exDate, dataTimezone), dataTimezone),
+          dataTimezone,
+        ),
+        displayTimezone,
+      ).toString(),
     );
   }
   return result;

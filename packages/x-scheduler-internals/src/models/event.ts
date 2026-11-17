@@ -180,7 +180,8 @@ export interface SchedulerEvent {
    * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
    * "default" (the timezone of the system), or "UTC".
    * Ignored for all-day events, which cover the same days in every timezone, except for a
-   * date-time `until` of their recurrence rule.
+   * date-time `until` of their recurrence rule. An all-day event made timed takes the display
+   * timezone.
    * @default "default"
    */
   timezone?: string;

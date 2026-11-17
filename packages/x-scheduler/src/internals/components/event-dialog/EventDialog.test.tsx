@@ -340,15 +340,12 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       await user.click(screen.getByRole('button', { name: 'Save' }));
 
       // The typed times mean the times the user was looking at: the seeded New York day
-      // (July 4th) at 09:00 and 10:00 New York time.
+      // (July 4th) at 09:00 and 10:00 New York time, the timezone the event moves to.
       const updated = getUpdatedEvent();
       expect(Boolean(updated.allDay)).to.equal(false);
-      expect(createDate(String(updated.start), 'UTC').getTime()).to.equal(
-        createDate('2025-07-04T13:00:00', 'UTC').getTime(),
-      );
-      expect(createDate(String(updated.end), 'UTC').getTime()).to.equal(
-        createDate('2025-07-04T14:00:00', 'UTC').getTime(),
-      );
+      expect(updated.timezone).to.equal('America/New_York');
+      expect(updated.start).to.equal('2025-07-04T09:00:00');
+      expect(updated.end).to.equal('2025-07-04T10:00:00');
     });
 
     describe('across DST transitions', () => {
