@@ -181,7 +181,14 @@ export function applyRecurringUpdateAll(
   const occurrencePlainDate = getOccurrencePlainDate(occurrence);
   // The day of the edited occurrence read in the new representation: changing the representation
   // alone moves no day.
-  const nextOccurrencePlainDate = toPlainDate(occurrenceStart, nextDayTimezone);
+  const nextOccurrencePlainDate = getNextOccurrencePlainDate(
+    originalEvent,
+    changes,
+    occurrencePlainDate,
+    occurrenceStart,
+    displayTimezone,
+    nextDayTimezone,
+  );
   const touchedStartDate =
     changes.start != null &&
     !toPlainDate(changes.start.getTime(), nextDayTimezone).equals(nextOccurrencePlainDate);
@@ -339,6 +346,27 @@ function getSnappedDayCount(start: number, end: number, timezone: string): numbe
 }
 
 /**
+ * The day of the edited occurrence in `nextDayTimezone`, without the date move of the changes. An
+ * all-day occurrence made timed takes its new time on its displayed day.
+ */
+function getNextOccurrencePlainDate(
+  originalEvent: SchedulerProcessedEvent,
+  changes: Partial<SchedulerEventUpdatedProperties>,
+  occurrencePlainDate: BaseTemporal.PlainDate,
+  occurrenceStart: number,
+  displayTimezone: string,
+  nextDayTimezone: string,
+): BaseTemporal.PlainDate {
+  if (originalEvent.allDay && changes.allDay === false && changes.start != null) {
+    return toPlainDate(
+      moveTimestampToPlainDate(changes.start.getTime(), occurrencePlainDate, displayTimezone),
+      nextDayTimezone,
+    );
+  }
+  return toPlainDate(occurrenceStart, nextDayTimezone);
+}
+
+/**
  * Re-expresses a rule whose days are now read in another timezone, by the offset between the two
  * readings of one of its days: the weekday codes of a WEEKLY rule shift by it, and a MONTHLY rule
  * is realigned on the new reading.
@@ -472,13 +500,17 @@ export function decideSplitRRule(
   let realignedRule: SchedulerProcessedEventRecurrenceRule = { ...originalRule };
 
   // A series that changes the timezone its days are read in re-expresses its rule there.
-  const nextSplitPlainDate = toPlainDate(splitStart, nextDayTimezone);
+  const splitPlainDate = toPlainDate(splitStart, dayTimezone);
+  const nextSplitPlainDate = getNextOccurrencePlainDate(
+    originalEvent,
+    changes,
+    splitPlainDate,
+    splitStart,
+    displayTimezone,
+    nextDayTimezone,
+  );
   if (nextDayTimezone !== dayTimezone) {
-    realignedRule = shiftRRuleDays(
-      realignedRule,
-      toPlainDate(splitStart, dayTimezone),
-      nextSplitPlainDate,
-    );
+    realignedRule = shiftRRuleDays(realignedRule, splitPlainDate, nextSplitPlainDate);
   }
 
   // Freq WEEKLY: realign BYDAY, swap the old weekday for the new one while preserving the rest of the weekly pattern.
@@ -502,7 +534,6 @@ export function decideSplitRRule(
   if (originalRule.count) {
     // The excluded occurrences still count toward COUNT.
     const series = RecurringSeries.fromEvent(originalEvent, displayTimezone);
-    const splitPlainDate = toPlainDate(splitStart, dayTimezone);
     const remaining = originalRule.count - series.countOccurrencesBefore(splitPlainDate);
     // If no occurrences remain, the split segment is non-recurring.
     if (remaining <= 0) {

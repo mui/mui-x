@@ -1,4 +1,9 @@
-import { BaseTemporal, toEpochMs, toPlainDate } from '@mui/x-scheduler-internals/internals';
+import {
+  BaseTemporal,
+  stringifyEventDateChanges,
+  toEpochMs,
+  toPlainDate,
+} from '@mui/x-scheduler-internals/internals';
 import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
 import {
@@ -1455,6 +1460,124 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(result.updated![0]).not.to.have.property('start');
       expect(result.updated![0].end!.getTime()).to.equal(tokyo('2025-07-09').getTime());
       expect(result.updated![0].rrule).to.deep.equal({ freq: 'WEEKLY', byDay: ['SU'] });
+    });
+
+    describe('made timed in a timezone other than the display one', () => {
+      // A Monday and Friday all-day series of an event in New York, displayed in Tokyo.
+      const buildMondayFridaySeries = () =>
+        EventBuilder.new()
+          .id('gym')
+          .withDataTimezone('America/New_York')
+          .span('2025-07-07', '2025-07-08', { allDay: true })
+          .rrule({ freq: 'WEEKLY', byDay: ['MO', 'FR'] })
+          .withDisplayTimezone('Asia/Tokyo')
+          .toProcessed();
+
+      // A Friday all-day series of an event in New York without July 18th, displayed in Tokyo.
+      const buildFridaySeriesWithException = () =>
+        EventBuilder.new()
+          .id('gym')
+          .withDataTimezone('America/New_York')
+          .span('2025-07-04', '2025-07-05', { allDay: true })
+          .rrule({ freq: 'WEEKLY', byDay: ['FR'] })
+          .exDates(['2025-07-18'])
+          .withDisplayTimezone('Asia/Tokyo')
+          .toProcessed();
+
+      it("should keep the weekdays of a series whose new times stay on the same days in its timezone on a scope 'all' change", () => {
+        const event = buildMondayFridaySeries();
+
+        // Friday July 11th dropped at 17:00 in Tokyo, which is still Friday in New York.
+        const result = applyRecurringUpdateAll(
+          event,
+          createOccurrence(event, tokyo('2025-07-11'), 'Asia/Tokyo'),
+          {
+            id: 'gym',
+            allDay: false,
+            start: createDate('2025-07-11T17:00:00', 'Asia/Tokyo'),
+            end: createDate('2025-07-11T18:00:00', 'Asia/Tokyo'),
+          },
+          'Asia/Tokyo',
+        );
+
+        expect(result.updated![0].rrule ?? event.rrule).to.deep.equal({
+          freq: 'WEEKLY',
+          byDay: ['MO', 'FR'],
+        });
+      });
+
+      it("should keep the weekdays of a series whose new times stay on the same days in its timezone on a 'this and following' change", () => {
+        const event = buildMondayFridaySeries();
+
+        // Friday July 11th dropped at 17:00 in Tokyo, which is still Friday in New York.
+        const result = applyRecurringUpdateFollowing(
+          event,
+          createOccurrence(event, tokyo('2025-07-11'), 'Asia/Tokyo'),
+          {
+            id: 'gym',
+            allDay: false,
+            start: createDate('2025-07-11T17:00:00', 'Asia/Tokyo'),
+            end: createDate('2025-07-11T18:00:00', 'Asia/Tokyo'),
+          },
+          'Asia/Tokyo',
+        );
+
+        expect(result.created![0].start).to.equal('2025-07-11T04:00:00');
+        expect(
+          (result.created![0].rrule as SchedulerProcessedEventRecurrenceRule).byDay,
+        ).to.deep.equal(['MO', 'FR']);
+      });
+
+      it("should move the exceptions of the series to the days of its new times on a 'this and following' change", () => {
+        const event = buildFridaySeriesWithException();
+
+        // Friday July 11th dropped at 09:00 in Tokyo, which is Thursday at 20:00 in New York.
+        const result = applyRecurringUpdateFollowing(
+          event,
+          createOccurrence(event, tokyo('2025-07-11'), 'Asia/Tokyo'),
+          {
+            id: 'gym',
+            allDay: false,
+            start: createDate('2025-07-11T09:00:00', 'Asia/Tokyo'),
+            end: createDate('2025-07-11T10:00:00', 'Asia/Tokyo'),
+          },
+          'Asia/Tokyo',
+        );
+
+        expect(result.created![0].start).to.equal('2025-07-10T20:00:00');
+        expect(
+          (result.created![0].rrule as SchedulerProcessedEventRecurrenceRule).byDay,
+        ).to.deep.equal(['TH']);
+        // The excluded Friday July 18th in Tokyo is Thursday July 17th at 20:00 in New York.
+        expect(result.created![0].exDates).to.deep.equal(['2025-07-17T20:00:00']);
+      });
+
+      it("should move the exceptions of the series to the days of its new times on a scope 'all' change", () => {
+        const event = buildFridaySeriesWithException();
+
+        // Friday July 11th dropped at 09:00 in Tokyo, which is Thursday at 20:00 in New York.
+        const result = applyRecurringUpdateAll(
+          event,
+          createOccurrence(event, tokyo('2025-07-11'), 'Asia/Tokyo'),
+          {
+            id: 'gym',
+            allDay: false,
+            start: createDate('2025-07-11T09:00:00', 'Asia/Tokyo'),
+            end: createDate('2025-07-11T10:00:00', 'Asia/Tokyo'),
+          },
+          'Asia/Tokyo',
+        );
+
+        // The strings the store writes for the changes.
+        const written = stringifyEventDateChanges(
+          result.updated![0],
+          event.modelInBuiltInFormat,
+          'Asia/Tokyo',
+        );
+        expect(written.start).to.equal('2025-07-03T20:00:00');
+        expect(result.updated![0].rrule).to.deep.equal({ freq: 'WEEKLY', byDay: ['TH'] });
+        expect(written.exDates).to.deep.equal(['2025-07-17T20:00:00']);
+      });
     });
   });
 
