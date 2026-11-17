@@ -44,6 +44,9 @@ const event = {
 
 {{"demo": "AllDay.js", "bg": "inline", "defaultCodeOpen": false}}
 
+The `end` of an all-day event can be any time on its last day.
+The occurrences the Scheduler provides end at the start of the next day instead: see [Reading occurrence dates](/x/react-scheduler/timezone/#reading-occurrence-dates).
+
 In the day and week views, all-day events are rendered in the day grid above the time grid.
 See the `timeGridEvents` option of the [Week view](/x/react-scheduler/event-calendar/views/#week-view) to choose where timed events that cross midnight are rendered.
 

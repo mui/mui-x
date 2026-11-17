@@ -1,5 +1,6 @@
 import {
   cartesianSeriesTypes,
+  composableCartesianSeriesTypes,
   identifierSerializerSeriesIdDataIndex,
   identifierCleanerSeriesIdDataIndex,
   createIsHighlighted,
@@ -38,4 +39,5 @@ export const ohlcSeriesConfig: ChartSeriesTypeConfig<'ohlc'> = {
 };
 
 cartesianSeriesTypes.addType('ohlc');
+composableCartesianSeriesTypes.add('ohlc');
 seriesPreviewPlotMap.set('ohlc', CandlestickPreviewPlot);

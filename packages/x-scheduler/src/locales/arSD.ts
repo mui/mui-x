@@ -84,6 +84,7 @@ const arSDDialog: SchedulerDialogTranslations = {
   // startDateLabel: 'Start date',
   // startTimeAfterEndTimeError: 'End time must be after start time.',
   // startTimeLabel: 'Start time',
+
   // RecurringScopeDialog
   // all: 'All events',
   // confirm: 'Confirm',
@@ -91,6 +92,7 @@ const arSDDialog: SchedulerDialogTranslations = {
   // radioGroupAriaLabel: 'Editing recurring events scope',
   // thisAndFollowing: 'This and following events',
   // title: 'Apply this change to:',
+
   // Errors
   // somethingWentWrongError: 'Something went wrong. Try again.',
   // eventNotLoadedError: 'This event is still being saved, so the change was not applied. Try again once it is saved.',
@@ -127,6 +129,7 @@ const arSDEvent: SchedulerEventTranslations = {
 const arSDCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   // resourcesLabel: 'Resources',
+
   // ViewSwitcher
   // agenda: 'Agenda',
   // day: 'Day',
@@ -140,11 +143,14 @@ const arSDCalendar: SchedulerCalendarTranslations = {
   // weeks: 'Weeks',
   // years: 'Years',
   // viewSwitcherAriaLabel: 'Views',
+
   // DateNavigator
   // closeSidePanel: 'Close side panel',
   // openSidePanel: 'Open side panel',
+
   // SidePanelDrawer (small screens)
   // openMenu: 'Open menu',
+
   // Preferences menu
   // amPm12h: '12-hour (1:00PM)',
   // hour24h: '24-hour (13:00)',
@@ -158,6 +164,7 @@ const arSDCalendar: SchedulerCalendarTranslations = {
   // weekdaySunday: 'Sunday',
   // weekdayMonday: 'Monday',
   // weekdaySaturday: 'Saturday',
+
   // WeekView
   // allDay: 'All day',
   // dayGridLabel: 'All-day and multi-day events',
@@ -166,16 +173,21 @@ const arSDCalendar: SchedulerCalendarTranslations = {
   // previousTimeSpan: timeSpan => `Previous ${timeSpan}`,
   // weekAbbreviation: 'W',
   // weekNumberAriaLabel: weekNumber => `Week ${weekNumber}`,
+
   // AgendaView
   // agendaViewEmptyStateLabel: 'No upcoming events',
+
   // EventItem
   // eventItemMultiDayLabel: endDate => `Ends ${endDate}`,
+
   // MiniCalendar
   // miniCalendarLabel: 'Calendar',
   // miniCalendarGoToPreviousMonth: 'Show previous month in calendar',
   // miniCalendarGoToNextMonth: 'Show next month in calendar',
+
   // Main calendar region
   // calendarContentAriaLabel: 'Calendar content',
+
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
 };
@@ -185,6 +197,7 @@ const arSDTimeline: SchedulerTimelineTranslations = {
   // timelineResourceTitleHeader: 'Resource title',
   // timelineResourceExpand: 'Expand resource',
   // timelineResourceCollapse: 'Collapse resource',
+
   // Dependency dialog
   // dependencyEditTitle: 'Edit dependency',
   // dependencyDetailsTitle: 'Dependency details',
@@ -209,11 +222,13 @@ const arSDTimeline: SchedulerTimelineTranslations = {
   // dependencyLagUnitDays: 'days',
   // dependencyLagUnitWeeks: 'weeks',
   // dependencyLag: (amount, unit) => `${amount} ${unit}${amount === 1 ? '' : 's'}`,
+
   // Dependency context menu and dialog actions
   // dependencyActionsAriaLabel: 'Dependency actions',
   // editDependency: 'Edit dependency',
   // showDependencyDetails: 'Show details',
   // deleteDependency: 'Delete',
+
   // Accessible description of an event that waits on dependencies
   // dependencyFinishToStartDescription: ({
   //   title,

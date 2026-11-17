@@ -336,10 +336,7 @@ function computeLayoutQuadratically(
     const usedIndexes = new Set<number>();
     for (let previousIndex = 0; previousIndex < index; previousIndex += 1) {
       const previousOccurrence = sortedOccurrences[previousIndex];
-      if (
-        previousOccurrence.displayTimezone.end.timestamp >
-        occurrence.displayTimezone.start.timestamp
-      ) {
+      if (previousOccurrence.end.timestamp > occurrence.start.timestamp) {
         usedIndexes.add(firstIndexLookup[previousOccurrence.key]);
       }
     }
@@ -359,11 +356,8 @@ function computeLayoutQuadratically(
         sortedOccurrences
           .filter((otherOccurrence, otherIndex) =>
             otherIndex < index
-              ? otherOccurrence.displayTimezone.end.timestamp >
-                occurrence.displayTimezone.start.timestamp
-              : otherIndex > index &&
-                otherOccurrence.displayTimezone.start.timestamp <
-                  occurrence.displayTimezone.end.timestamp,
+              ? otherOccurrence.end.timestamp > occurrence.start.timestamp
+              : otherIndex > index && otherOccurrence.start.timestamp < occurrence.end.timestamp,
           )
           .map((otherOccurrence) => firstIndexLookup[otherOccurrence.key]),
       );

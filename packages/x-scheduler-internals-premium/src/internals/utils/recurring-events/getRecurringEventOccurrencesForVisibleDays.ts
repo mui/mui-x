@@ -1,6 +1,5 @@
 import type {
   SchedulerEventOccurrence,
-  SchedulerProcessedDate,
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
 import {
@@ -9,8 +8,10 @@ import {
   getEndOfDayMs,
   getPlainDateKey,
   getRecurringOccurrenceKeyFromDateKey,
+  getMsInDay,
   getStartOfDayMs,
-  toEpochMs,
+  localToEpochMs,
+  MS_PER_DAY,
   toLocalDayNumber,
   toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
@@ -34,47 +35,34 @@ export function getRecurringEventOccurrencesForVisibleDays(
   // DisplayTimezone is applied only for presentation purposes
   const series = RecurringSeries.fromEvent(event);
   const dataTimezone = series.timezone;
-  const durationMs = event.dataTimezone.end.timestamp - event.dataTimezone.start.timestamp;
+  const { dataStart, dataEnd } = event.unstable_internalInfos;
+  const durationMs = dataEnd - dataStart;
 
   // Adjust scan range to catch multi-day events starting before visible range
   const durationInDays =
-    toLocalDayNumber(event.dataTimezone.end.timestamp, dataTimezone) -
-    getDayNumber(series.startPlainDate) +
-    1;
+    toLocalDayNumber(dataEnd, dataTimezone) - getDayNumber(series.start.toPlainDate()) + 1;
   const scanFirstDay = toPlainDate(start, dataTimezone).add({ days: 1 - durationInDays });
   const scanLastDay = toPlainDate(end, dataTimezone);
 
-  // In the data timezone, a display date at the same instant is a copy of the data date.
-  const processDisplayDate = (epochMs: number, dataDate: SchedulerProcessedDate) =>
-    displayTimezone === dataTimezone && epochMs === dataDate.timestamp
-      ? { ...dataDate }
-      : createProcessedDate(epochMs, displayTimezone);
-
+  // Every occurrence starts at the wall-clock time of DTSTART.
+  const startMsInDay = getMsInDay(series.start);
+  // `exDates` is cleared rather than left out with a rest destructuring, which is about 8 times
+  // slower.
+  const occurrenceProperties = { ...event, exDates: undefined };
   return series.getOccurrenceDays(scanFirstDay, scanLastDay).map((day) => {
-    const startMs = toEpochMs(day, series.startMsInDay, dataTimezone);
+    const startMs = localToEpochMs(getDayNumber(day) * MS_PER_DAY + startMsInDay, dataTimezone);
     const endMs = startMs + durationMs;
 
     // All-day occurrences span the whole day, like the base event in processEvent.
     const displayStartMs = event.allDay ? getStartOfDayMs(startMs, displayTimezone) : startMs;
-    const displayEndMs = event.allDay ? getEndOfDayMs(endMs, displayTimezone) : endMs;
+    const displayEndMs = event.allDay ? getEndOfDayMs(endMs, displayTimezone) + 1 : endMs;
 
-    const dataStart = createProcessedDate(startMs, dataTimezone);
-    const dataEnd = createProcessedDate(endMs, dataTimezone);
     return {
-      ...event,
+      ...occurrenceProperties,
       key: getRecurringOccurrenceKeyFromDateKey(event.id, getPlainDateKey(day)),
-      dataTimezone: {
-        ...event.dataTimezone,
-        start: dataStart,
-        end: dataEnd,
-        timezone: dataTimezone,
-      },
-      displayTimezone: {
-        ...event.displayTimezone,
-        start: processDisplayDate(displayStartMs, dataStart),
-        end: processDisplayDate(displayEndMs, dataEnd),
-        timezone: event.displayTimezone.timezone,
-      },
+      start: createProcessedDate(displayStartMs, displayTimezone),
+      end: createProcessedDate(displayEndMs, displayTimezone),
+      unstable_internalInfos: { displayTimezone, dataStart: startMs, dataEnd: endMs },
     };
   });
 }
