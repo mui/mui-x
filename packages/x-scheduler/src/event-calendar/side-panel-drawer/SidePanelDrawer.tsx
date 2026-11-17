@@ -111,7 +111,7 @@ export const SidePanelDrawer = React.forwardRef(function SidePanelDrawer(
   props: SidePanelDrawerProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { open, onClose, container, className, ...other } = props;
+  const { open, onClose, container, className, sidePanelExtra, ...other } = props;
 
   const store = useEventCalendarStoreContext();
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
@@ -201,6 +201,9 @@ export const SidePanelDrawer = React.forwardRef(function SidePanelDrawer(
       <SidePanelDrawerResources>
         <ResourcesTree />
       </SidePanelDrawerResources>
+      {sidePanelExtra ? (
+        <SidePanelDrawerResources>{sidePanelExtra}</SidePanelDrawerResources>
+      ) : null}
 
       {hasAnyOption && (
         <React.Fragment>

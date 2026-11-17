@@ -78,6 +78,12 @@ export interface EventCalendarClasses
   resourcesTreeItemLabel: string;
   /** Styles applied to resources tree item checkbox elements. */
   resourcesTreeItemCheckbox: string;
+  /** Styles applied to the charts panel element. */
+  chartsPanel: string;
+  /** Styles applied to the charts card elements. */
+  chartsCard: string;
+  /** Styles applied to the charts card title elements. */
+  chartsCardTitle: string;
   /** Styles applied to the agenda view element. */
   agendaView: string;
   /** Styles applied to agenda view row elements. */
@@ -344,6 +350,9 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'resourcesTreeItem',
     'resourcesTreeItemLabel',
     'resourcesTreeItemCheckbox',
+    'chartsPanel',
+    'chartsCard',
+    'chartsCardTitle',
     'agendaView',
     'agendaViewRow',
     'agendaViewDayHeaderCell',
@@ -493,6 +502,9 @@ const slots = {
   resourcesTreeItem: ['resourcesTreeItem'],
   resourcesTreeItemLabel: ['resourcesTreeItemLabel'],
   resourcesTreeItemCheckbox: ['resourcesTreeItemCheckbox'],
+  chartsPanel: ['chartsPanel'],
+  chartsCard: ['chartsCard'],
+  chartsCardTitle: ['chartsCardTitle'],
   agendaView: ['agendaView'],
   agendaViewRow: ['agendaViewRow'],
   agendaViewDayHeaderCell: ['agendaViewDayHeaderCell'],

@@ -18,7 +18,7 @@ import {
  * These are derived from Material UI color palettes but with custom selections
  * for optimal visual appearance in both light and dark modes.
  */
-const eventColorTokens = {
+export const eventColorTokens = {
   red: {
     light: {
       main: red[500],
@@ -363,6 +363,16 @@ export type PaletteName = keyof typeof eventColorTokens;
  */
 export const getCellFocusBackground = (theme: Theme) =>
   theme.alpha((theme.vars || theme).palette.primary.light, 0.12);
+
+/**
+ * Styles of an event dimmed or highlighted by `state.occurrenceHighlight`.
+ * Spread before the root styles so the armed and editing outlines win over the highlight one.
+ */
+export const highlightStyles = {
+  '&[data-highlight]': { transition: 'opacity 150ms' },
+  '&[data-highlight="dimmed"]': { opacity: 0.25 },
+  '&[data-highlight="highlighted"]': { outline: '2px solid var(--event-main)', outlineOffset: 1 },
+};
 
 export const getPaletteVariants = (theme: Theme) => {
   return Object.entries(eventColorTokens).map(([colorName, colorValues]) => ({

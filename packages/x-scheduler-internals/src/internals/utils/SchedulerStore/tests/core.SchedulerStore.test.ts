@@ -225,6 +225,33 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
+    describe('occurrence highlight', () => {
+      const highlight = { resourceId: 'a', range: { start: 1, end: 2 } };
+
+      it('should store the highlight and skip the write when the value is equal', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS);
+
+        store.setOccurrenceHighlight(highlight);
+        expect(store.state.occurrenceHighlight).to.equal(highlight);
+
+        const stateBefore = store.state;
+        store.setOccurrenceHighlight({ resourceId: 'a', range: { start: 1, end: 2 } });
+        expect(store.state).to.equal(stateBefore);
+
+        store.setOccurrenceHighlight(null);
+        expect(store.state.occurrenceHighlight).to.equal(null);
+      });
+
+      it('should clear the highlight when the visible date changes', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS);
+        store.setOccurrenceHighlight(highlight);
+
+        store.goToDate(createDate('2025-07-14T00:00:00Z'), {} as any);
+
+        expect(store.state.occurrenceHighlight).to.equal(null);
+      });
+    });
+
     describe('errors', () => {
       // Pinned to a minute boundary: the store schedules its `nowTimestamp`
       // tick for the next one, counted from wherever the clock starts. On the real

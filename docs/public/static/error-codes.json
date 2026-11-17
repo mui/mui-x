@@ -339,5 +339,6 @@
   "339": "MUI X Scheduler: `BaseTemporal.%s` received no field the value reads. `with()` can't tell which fields to replace. Pass at least one field of the value, such as `{ day: 1 }` for a date or `{ hour: 9 }` for a time. Only calendars with eras, unlike the ISO calendar, read `era` and `eraYear`.",
   "340": "MUI X Scheduler: The timezone \"system\" of the event \"%s\" is not a supported timezone. The \"system\" alias of the timezone of the system was removed, so the dates of the event cannot be read in it. Set its `timezone` to \"default\" instead.",
   "341": "MUI X Scheduler: The `displayTimezone` \"system\" is not a supported timezone. The \"system\" alias of the timezone of the system was removed, so the dates cannot be read in it. Pass `displayTimezone=\"default\"` instead.",
-  "342": "MUI X Scheduler: The \"%s\" calendar isn't supported yet. The Scheduler only implements the ISO and Gregorian calendars, so it cannot create or display its dates. Use the `iso8601` or `gregory` calendar."
+  "342": "MUI X Scheduler: The \"%s\" calendar isn't supported yet. The Scheduler only implements the ISO and Gregorian calendars, so it cannot create or display its dates. Use the `iso8601` or `gregory` calendar.",
+  "343": "MUI X Scheduler: The charts feature was created without a `renderer`. The cards cannot be drawn without it. Pass the `ChartsRenderer` component from `@mui/x-charts-premium/ChartsRenderer` to `createChartsFeature`."
 }

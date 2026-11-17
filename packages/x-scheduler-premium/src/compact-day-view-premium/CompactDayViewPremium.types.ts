@@ -8,7 +8,7 @@ import type {
 import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
 import type { EventCalendarLocaleText, SchedulerSlotsAndSlotProps } from '@mui/x-scheduler/models';
 import type { CompactDayViewProps } from '@mui/x-scheduler/compact-day-view';
-import type { EventCalendarPremiumFeatures } from '../event-calendar-premium/features/EventCalendarPremiumFeatures.types';
+import type { StandaloneViewPremiumFeatures } from '../event-calendar-premium/features/EventCalendarPremiumFeatures.types';
 
 export interface StandaloneCompactDayViewPremiumProps<
   TEvent extends object,
@@ -44,7 +44,7 @@ export interface StandaloneCompactDayViewPremiumProps<
    * They are read once when the component mounts, later changes are ignored.
    * @example { recurringEvents: recurringEventsFeature }
    */
-  features?: EventCalendarPremiumFeatures;
+  features?: StandaloneViewPremiumFeatures;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

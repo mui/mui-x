@@ -54,6 +54,7 @@ const schedulerPages: MuiPage[] = [
             title: 'Responsiveness 🧪',
           },
           { pathname: '/x/react-scheduler/event-calendar/lazy-loading', plan: 'premium' },
+          { pathname: '/x/react-scheduler/event-calendar/charts', plan: 'premium' },
           {
             pathname: '/x/react-scheduler/event-calendar/filtering',
             plan: 'premium',
@@ -797,6 +798,12 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-charts/data-grid-integration',
                 title: 'Data Grid integration',
+                plan: 'premium',
+                newFeature: true,
+              },
+              {
+                pathname: '/x/react-charts/scheduler-integration',
+                title: 'Scheduler integration',
                 plan: 'premium',
                 newFeature: true,
               },

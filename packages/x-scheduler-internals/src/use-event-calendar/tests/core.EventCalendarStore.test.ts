@@ -36,6 +36,7 @@ describe('Core - EventCalendarStore', () => {
         canDropEventsToTheOutside: false,
         copiedEvent: null,
         selection: null,
+        occurrenceHighlight: null,
         eventColor: 'teal',
         eventCreation: true,
         eventDeletion: { confirmation: true },

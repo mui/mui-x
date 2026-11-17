@@ -86,6 +86,11 @@ export interface EventEditingLocaleText extends SchedulerErrorLocaleText {
   generalTabLabel: string;
   labelNoResource: string;
   labelInvalidResource: string;
+  chartsEventsPerDay: string;
+  chartsEventsPerWeek: string;
+  chartsHoursPerDay: string;
+  chartsHoursPerWeek: string;
+  chartsShareByResource: string;
   recurrenceLabel: string;
   recurrenceNoRepeat: string;
   recurrenceCustomRepeat: string;
