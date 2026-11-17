@@ -503,6 +503,24 @@ describe('<DataGridPro /> - Keyboard reorder', () => {
       expect(onRowOrderChange).not.toHaveBeenCalled();
     });
 
+    it('should not move a column when a first columnHeaderKeyDown listener prevents the default behavior', () => {
+      const onColumnOrderChange = vi.fn();
+      render(<ColumnTest onColumnOrderChange={onColumnOrderChange} />);
+      act(() =>
+        apiRef.current!.subscribeEvent(
+          'columnHeaderKeyDown',
+          (params, event) => {
+            event.defaultMuiPrevented = true;
+          },
+          { isFirst: true },
+        ),
+      );
+
+      expect(pressAlt(getColumnHeaderCell(1), 'ArrowRight')).to.equal(true);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['Alpha', 'Bravo', 'Charlie', 'Delta']);
+      expect(onColumnOrderChange).not.toHaveBeenCalled();
+    });
+
     it('should leave the key to a text input inside a cell', async () => {
       const onRowOrderChange = vi.fn();
       render(
