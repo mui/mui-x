@@ -57,6 +57,7 @@ import {
   useGridRowReorder,
   useGridRowReorderPointer,
   useGridKeyboardReorder,
+  keyboardReorderStateInitializer,
   useGridRowReorderPreProcessors,
   useGridRowPinning,
   useGridRowPinningPreProcessors,
@@ -252,6 +253,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(rowSpanningStateInitializer, apiRef, props);
   useGridInitializeState(densityStateInitializer, apiRef, props);
   useGridInitializeState(columnReorderStateInitializer, apiRef, props);
+  useGridInitializeState(keyboardReorderStateInitializer, apiRef, props);
   useGridInitializeState(columnResizeStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props, key);

@@ -19,8 +19,9 @@ import {
   getRowIndexRelativeToAllRows,
   gridEditRowsStateSelector,
   isGroupingColumn,
+  useGridNativeEventListener,
 } from '@mui/x-data-grid/internals';
-import type { RowReorderDragDirection } from '@mui/x-data-grid/internals';
+import type { GridStateInitializer, RowReorderDragDirection } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GRID_REORDER_COL_DEF } from '../rowReorder/gridRowReorderColDef';
@@ -79,6 +80,11 @@ function markAsHandled(event: MuiEvent<React.KeyboardEvent>) {
   event.defaultMuiPrevented = true;
 }
 
+export const keyboardReorderStateInitializer: GridStateInitializer = (state) => ({
+  ...state,
+  keyboardReorder: { showTarget: false },
+});
+
 /**
  * Moves the focused row with `Alt+ArrowUp/Down`, and the focused column with `Alt+ArrowLeft/Right`.
  * `Alt+Home/End` move the row from a cell, and the column from a header, as far as allowed.
@@ -96,6 +102,16 @@ export const useGridKeyboardReorder = (
   const isRowMovePendingRef = React.useRef(false);
 
   const announce = (message: string) => apiRef.current.announce(message);
+
+  const setShowTarget = (showTarget: boolean) => {
+    if (apiRef.current.state.keyboardReorder.showTarget === showTarget) {
+      return;
+    }
+    apiRef.current.setState((state) => ({
+      ...state,
+      keyboardReorder: { ...state.keyboardReorder, showTarget },
+    }));
+  };
 
   const moveRow = async (
     rowId: GridRowId,
@@ -256,6 +272,7 @@ export const useGridKeyboardReorder = (
   };
 
   const handleCellKeyDown: GridEventListener<'cellKeyDown'> = (params, event) => {
+    setShowTarget(true);
     const key = getReorderKey(event);
     if (
       key === null ||
@@ -273,6 +290,7 @@ export const useGridKeyboardReorder = (
   };
 
   const handleColumnHeaderKeyDown: GridEventListener<'columnHeaderKeyDown'> = (params, event) => {
+    setShowTarget(true);
     const key = getReorderKey(event);
     if (
       key === null ||
@@ -290,4 +308,11 @@ export const useGridKeyboardReorder = (
   // Registered before `useGridEvents`, so the `onCellKeyDown` prop still runs first.
   useGridEventPriority(apiRef, 'cellKeyDown', handleCellKeyDown);
   useGridEventPriority(apiRef, 'columnHeaderKeyDown', handleColumnHeaderKeyDown);
+  // Mouse and touch users never see the marker
+  useGridNativeEventListener(
+    apiRef,
+    () => apiRef.current.rootElementRef.current,
+    'pointerdown',
+    () => setShowTarget(false),
+  );
 };

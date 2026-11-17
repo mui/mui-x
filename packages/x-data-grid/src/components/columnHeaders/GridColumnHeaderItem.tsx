@@ -33,6 +33,7 @@ interface GridColumnHeaderItemProps {
   columnMenuOpen: boolean;
   headerHeight: number;
   isDragging: boolean;
+  isReorderTarget?: boolean;
   isResizing: boolean;
   isLast: boolean;
   sortDirection: GridSortDirection;
@@ -62,6 +63,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     colDef,
     classes,
     isDragging,
+    isReorderTarget,
     sortDirection,
     showRightBorder,
     showLeftBorder,
@@ -82,6 +84,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       colDef.headerAlign && `columnHeader--align${capitalize(colDef.headerAlign)}`,
       isColumnSortable && 'columnHeader--sortable',
       isDragging && 'columnHeader--moving',
+      isReorderTarget && 'columnHeader--reorderTarget',
       isColumnSorted && 'columnHeader--sorted',
       isColumnFiltered && 'columnHeader--filtered',
       isColumnNumeric && 'columnHeader--numeric',
@@ -385,6 +388,7 @@ GridColumnHeaderItem.propTypes /* remove-proptypes */ = {
   headerHeight: PropTypes.number.isRequired,
   isDragging: PropTypes.bool.isRequired,
   isLast: PropTypes.bool.isRequired,
+  isReorderTarget: PropTypes.bool,
   isResizing: PropTypes.bool.isRequired,
   isSiblingFocused: PropTypes.bool.isRequired,
   pinnedOffset: PropTypes.number,

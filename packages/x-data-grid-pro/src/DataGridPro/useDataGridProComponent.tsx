@@ -84,7 +84,10 @@ import {
 } from '../hooks/features/rowReorder/useGridRowReorder';
 import { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
 import { useGridRowReorderPointer } from '../hooks/features/rowReorder/useGridRowReorderPointer';
-import { useGridKeyboardReorder } from '../hooks/features/keyboardReorder/useGridKeyboardReorder';
+import {
+  useGridKeyboardReorder,
+  keyboardReorderStateInitializer,
+} from '../hooks/features/keyboardReorder/useGridKeyboardReorder';
 import { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
 import { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
 import {
@@ -150,6 +153,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(rowSpanningStateInitializer, apiRef, props);
   useGridInitializeState(densityStateInitializer, apiRef, props);
   useGridInitializeState(columnReorderStateInitializer, apiRef, props);
+  useGridInitializeState(keyboardReorderStateInitializer, apiRef, props);
   useGridInitializeState(columnResizeStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);

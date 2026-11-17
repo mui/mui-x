@@ -40,6 +40,7 @@ import { getPinnedCellOffset } from '../../../internals/utils/getPinnedCellOffse
 import { GridColumnHeaderSeparatorSides } from '../../../components/columnHeaders/GridColumnHeaderSeparator';
 import { gridClasses } from '../../../constants/gridClasses';
 import { gridColumnReorderDragColDefensiveSelector } from './gridColumnReorderDragColSelector';
+import { gridColumnKeyboardReorderTargetFieldSelector } from '../keyboardReorder/gridKeyboardReorderSelector';
 import {
   shouldCellShowLeftBorder,
   shouldCellShowRightBorder,
@@ -108,6 +109,10 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const rootProps = useGridRootProps();
   // Set by the HTML drag and drop and the pointer events paths of column reordering
   const dragCol = useGridSelector(apiRef, gridColumnReorderDragColDefensiveSelector) ?? '';
+  const keyboardReorderTargetField = useGridSelector(
+    apiRef,
+    gridColumnKeyboardReorderTargetFieldSelector,
+  );
   const columnGroupsModel = useGridSelector(apiRef, gridColumnGroupsUnwrappedModelSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
@@ -270,6 +275,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           }
           headerHeight={headerHeight}
           isDragging={colDef.field === dragCol}
+          isReorderTarget={
+            colDef.field === keyboardReorderTargetField &&
+            !colDef.disableReorder &&
+            !rootProps.disableColumnReorder
+          }
           colDef={colDef}
           colIndex={columnIndex}
           isResizing={resizeCol === colDef.field}

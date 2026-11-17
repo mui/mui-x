@@ -4,13 +4,14 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import {
   DataGridPro,
+  GridRow,
   GRID_CHECKBOX_SELECTION_FIELD,
+  gridClasses,
   gridFocusCellSelector,
   gridFocusColumnHeaderSelector,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import type { DataGridProProps, GridApi, GridColDef } from '@mui/x-data-grid-pro';
-import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
+import type { DataGridProProps, GridApi, GridColDef, GridRowProps } from '@mui/x-data-grid-pro';
 import {
   getCell,
   getColumnHeaderCell,
@@ -19,6 +20,7 @@ import {
 } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
+import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { getKeyboardRowMoveTarget } from '../hooks/features/rowReorder/rowReorderDragUtils';
 
 const rows = [
@@ -540,6 +542,139 @@ describe('<DataGridPro /> - Keyboard reorder', () => {
       pressAlt(getNameCell(1), 'ArrowDown', { metaKey: true });
       await act(() => Promise.resolve());
       expect(onRowOrderChange).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('target marker', () => {
+    const getRowElement = (id: number) => document.querySelector(`[role="row"][data-id="${id}"]`)!;
+    const getHeader = (field: string) =>
+      document.querySelector(`[role="columnheader"][data-field="${field}"]`)!;
+
+    it('should mark the row and the column header of the focused cell after a key press', async () => {
+      const { user } = render(<Test columns={[{ field: 'name' }, { field: 'other' }]} />);
+      await user.click(getNameCell(1));
+      expect(getRowElement(1)).not.to.have.class(gridClasses['row--reorderTarget']);
+      expect(getHeader('name')).not.to.have.class(gridClasses['columnHeader--reorderTarget']);
+
+      await user.keyboard('{ArrowDown}');
+      expect(getRowElement(2)).to.have.class(gridClasses['row--reorderTarget']);
+      expect(getRowElement(1)).not.to.have.class(gridClasses['row--reorderTarget']);
+      expect(getHeader('name')).to.have.class(gridClasses['columnHeader--reorderTarget']);
+      expect(getHeader('other')).not.to.have.class(gridClasses['columnHeader--reorderTarget']);
+    });
+
+    it('should mark the focused column header after a key press', async () => {
+      const { user } = render(<ColumnTest />);
+      focusHeader('b');
+      await user.keyboard('{ArrowRight}');
+      expect(getHeader('c')).to.have.class(gridClasses['columnHeader--reorderTarget']);
+      expect(getHeader('b')).not.to.have.class(gridClasses['columnHeader--reorderTarget']);
+    });
+
+    it('should remove the marker on pointer down', async () => {
+      const { user } = render(<Test />);
+      await user.click(getNameCell(1));
+      await user.keyboard('{ArrowDown}');
+      expect(getRowElement(2)).to.have.class(gridClasses['row--reorderTarget']);
+
+      fireEvent.pointerDown(getNameCell(3));
+      expect(getRowElement(2)).not.to.have.class(gridClasses['row--reorderTarget']);
+      expect(getHeader('name')).not.to.have.class(gridClasses['columnHeader--reorderTarget']);
+    });
+
+    it('should not mark the row when the grid is sorted', async () => {
+      const { user } = render(
+        <Test initialState={{ sorting: { sortModel: [{ field: 'name', sort: 'asc' }] } }} />,
+      );
+      await user.click(getNameCell(1));
+      await user.keyboard('{ArrowDown}');
+      expect(getRowElement(2)).not.to.have.class(gridClasses['row--reorderTarget']);
+    });
+
+    it('should not mark the row while a cell is edited', async () => {
+      const { user } = render(<Test columns={[{ field: 'name', editable: true }]} />);
+      await user.click(getNameCell(1));
+      await user.keyboard('{ArrowDown}');
+      expect(getRowElement(2)).to.have.class(gridClasses['row--reorderTarget']);
+
+      await act(async () => apiRef.current!.startCellEditMode({ id: 2, field: 'name' }));
+      expect(getRowElement(2)).not.to.have.class(gridClasses['row--reorderTarget']);
+    });
+
+    it('should not mark a row that isRowReorderable rejects', async () => {
+      const { user } = render(<Test isRowReorderable={({ row }) => row.id !== 2} />);
+      await user.click(getNameCell(0));
+      await user.keyboard('{ArrowDown}');
+      expect(getRowElement(1)).to.have.class(gridClasses['row--reorderTarget']);
+      await user.keyboard('{ArrowDown}');
+      expect(getRowElement(2)).not.to.have.class(gridClasses['row--reorderTarget']);
+    });
+
+    it('should not mark the header of a column with disableReorder', async () => {
+      const { user } = render(
+        <ColumnTest
+          columns={reorderColumns.map((column) =>
+            column.field === 'b' ? { ...column, disableReorder: true } : column,
+          )}
+        />,
+      );
+      focusHeader('a');
+      await user.keyboard('{ArrowRight}');
+      expect(getHeader('b')).not.to.have.class(gridClasses['columnHeader--reorderTarget']);
+    });
+
+    it.skipIf(isJSDOM)(
+      'should paint the row tint on pinned cells, and the header tint',
+      async () => {
+        const { user } = render(
+          <Test
+            columns={[{ field: 'name' }, { field: 'other' }]}
+            initialState={{ pinnedColumns: { left: ['name'] } }}
+          />,
+        );
+        await user.click(
+          document.querySelector<HTMLElement>('[data-id="1"] [data-field="other"]')!,
+        );
+        await user.keyboard('{ArrowDown}');
+
+        const pinnedCell = document.querySelector('[data-id="2"] [data-field="name"]')!;
+        expect(getComputedStyle(pinnedCell).backgroundImage).to.include('linear-gradient');
+        expect(getComputedStyle(getHeader('other')).backgroundImage).to.include('linear-gradient');
+        expect(getComputedStyle(getHeader('name')).backgroundImage).to.equal('none');
+      },
+    );
+
+    it('should only render the previous and the new focused rows on a focus change', async () => {
+      const renders: Record<string, number> = {};
+      function CountingRow(props: GridRowProps) {
+        return (
+          <React.Profiler
+            id={String(props.rowId)}
+            onRender={(id) => {
+              renders[id] = (renders[id] ?? 0) + 1;
+            }}
+          >
+            <GridRow {...props} />
+          </React.Profiler>
+        );
+      }
+      const { user } = render(<Test slots={{ row: CountingRow }} />);
+      await user.click(getNameCell(1));
+      await user.keyboard('{ArrowDown}');
+      expect(getRowElement(2)).to.have.class(gridClasses['row--reorderTarget']);
+
+      Object.keys(renders).forEach((id) => delete renders[id]);
+      await user.keyboard('{ArrowDown}');
+      expect(getRowElement(3)).to.have.class(gridClasses['row--reorderTarget']);
+      expect(Object.keys(renders).sort()).to.deep.equal(['2', '3']);
+    });
+
+    it('should not mark anything when reordering is off', async () => {
+      const { user } = render(<Test rowReordering={false} disableColumnReorder />);
+      await user.click(getCell(1, 0));
+      await user.keyboard('{ArrowDown}');
+      expect(getRowElement(2)).not.to.have.class(gridClasses['row--reorderTarget']);
+      expect(getHeader('name')).not.to.have.class(gridClasses['columnHeader--reorderTarget']);
     });
   });
 
