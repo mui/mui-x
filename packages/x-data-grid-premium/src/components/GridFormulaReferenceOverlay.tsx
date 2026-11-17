@@ -72,7 +72,9 @@ const selectFirstRenderedRowTop = (
   state: GridPrivateApiPremium['virtualizer']['store']['state'],
   active: boolean,
 ) =>
-  active ? (state.rowsMeta.positions[state.virtualization.renderContext.firstRowIndex] ?? 0) : 0;
+  active
+    ? (RowsMeta.getPosition(state.rowsMeta, state.virtualization.renderContext.firstRowIndex) ?? 0)
+    : 0;
 
 interface OverlayRect {
   key: string;

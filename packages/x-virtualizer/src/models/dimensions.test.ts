@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { RowsMeta, type RowsMetaState } from './dimensions';
+import type { RowsMetaState } from './dimensions';
+import { RowsMeta } from './dimensions';
 
 const createUniform = () =>
   RowsMeta.create({
