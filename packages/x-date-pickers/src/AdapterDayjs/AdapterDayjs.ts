@@ -190,11 +190,11 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
 
     // Strict parsing can return an invalid date that keeps numeric fields, such as `02/31/2026`
     // with those of March 3, so validity is checked first: with `valueOf()`, as `isValid()` calls
-    // `Date#toString()`, which is slow. Two invalid dates are the same.
-    const isValueInvalid = Number.isNaN(value.valueOf());
-    const isComparingInvalid = Number.isNaN(comparingInValueTimezone.valueOf());
-    if (isValueInvalid || isComparingInvalid) {
-      return isValueInvalid && isComparingInvalid;
+    // `Date#toString()`, which is slow. An invalid date only matches another invalid one.
+    const valueTime = value.valueOf();
+    const comparingTime = comparingInValueTimezone.valueOf();
+    if (Number.isNaN(valueTime) || Number.isNaN(comparingTime)) {
+      return Object.is(valueTime, comparingTime);
     }
 
     // Compares the fields that `format('YYYY-MM-DD')` prints, without the cost of formatting, which
