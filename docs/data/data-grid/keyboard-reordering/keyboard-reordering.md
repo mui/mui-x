@@ -12,6 +12,65 @@ Each demo runs on the public API of the Data Grid, so you can try a behavior bef
 Nothing on this page is released.
 :::
 
+## Current favorite solution
+
+This section describes the solution currently favored to move forward.
+The three solutions further down the page are the earlier candidates, kept for reference.
+
+The implementation ships in two parts: moving a single row or column, then moving several rows or columns.
+In both, <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Up/Down</kbd></kbd> moves rows and <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Left/Right</kbd></kbd> moves columns, one position per press.
+<kbd><kbd class="key">Alt</kbd>+<kbd class="key">Home</kbd></kbd> and <kbd><kbd class="key">Alt</kbd>+<kbd class="key">End</kbd></kbd> move as far as allowed. They move rows from a cell, and columns from a column header.
+Moving a single row or column is independent of selection: a press never selects anything.
+Moving several rows or columns uses cell selection to define the block.
+
+The rows that a press would move have a very faint highlight, lighter than the hover state.
+The columns that a press would move are marked on their headers only, with a blue tint.
+The rows and columns slide to their new positions.
+
+### Single row or column
+
+A press moves the row or column of the focused cell, from any cell in the Data Grid.
+From a column header, <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Left/Right</kbd></kbd> moves its column.
+
+{{"demo": "KeyboardReorderingCurrentSingle.js", "bg": "inline", "defaultCodeOpen": false}}
+
+#### Try it
+
+1. Click a cell. Its row gets a very faint highlight, and its column header turns blue.
+2. Press <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Down</kbd></kbd> to move the row down, and <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Right</kbd></kbd> to move the column right.
+3. Press <kbd><kbd class="key">Alt</kbd>+<kbd class="key">End</kbd></kbd> to move the row to the bottom, then focus a column header and press <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Home</kbd></kbd> to move its column to the first position.
+
+### Several rows or columns
+
+<kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow</kbd></kbd> selects a range of cells, as it does today with cell selection: the focused cell and the adjacent cell it navigates to.
+The focus stays on the cell where the range started.
+The rows and columns of the range get the same highlight as a single row or column, on top of the selection, and a press moves all of them.
+
+When the focused cell is outside the selected range, a press moves the focused cell's row or column, as in a single move.
+From a column header, a press moves the columns of the range if they include the header's column.
+
+{{"demo": "KeyboardReorderingCurrentMulti.js", "bg": "inline", "defaultCodeOpen": false}}
+
+#### Try it
+
+1. Click a cell, then press <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow Down</kbd></kbd> twice and <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow Right</kbd></kbd> once. Three rows and two columns of cells are selected: the rows are highlighted and the two headers turn blue.
+2. Press <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Down</kbd></kbd> to move the three rows, and <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Left</kbd></kbd> to move the two columns. The cells stay selected.
+3. Press <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Home</kbd></kbd> to move the three rows to the top.
+4. Press an arrow key without a modifier. The selection clears, and the next press moves only the row or column of the focused cell.
+
+### Keys
+
+|                                                                                                                                             Keys | Single row or column                                         | Several rows or columns                                                                                                                       |
+| -----------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------- |
+|                                                                       <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Up/Down</kbd></kbd> | Moves the row of the focused cell                            | Moves the rows of the selected range if the focused cell is in it, otherwise the row of the focused cell                                      |
+|                                                                    <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Arrow Left/Right</kbd></kbd> | Moves the column of the focused cell or header               | Moves the columns of the selected range if the focused cell or header is in it, otherwise the column of the focused cell or header            |
+|             <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Home</kbd></kbd> / <kbd><kbd class="key">Alt</kbd>+<kbd class="key">End</kbd></kbd> | Moves the row of the focused cell to the top or the bottom   | Moves the rows of the selected range to the top or the bottom if the focused cell is in it, otherwise the row of the focused cell             |
+| <kbd><kbd class="key">Alt</kbd>+<kbd class="key">Home</kbd></kbd> / <kbd><kbd class="key">Alt</kbd>+<kbd class="key">End</kbd></kbd> on a header | Moves the column of the header to the first or last position | Moves the columns of the selected range to the first or last position if they include the header's column, otherwise the column of the header |
+|                                                                             <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow</kbd></kbd> | Moves the focus. Nothing is selected                         | Selects or extends a range of cells, as it does today. The focus stays                                                                        |
+|                                                                                                                                Arrow keys, click | Move the focus                                               | Move the focus and clear the selection, as they do today                                                                                      |
+
+A move that isn't allowed does nothing and announces why: the edge of the Data Grid, a column that can't be reordered, or a sorted Data Grid.
+
 ## The decision
 
 Reordering rows and columns requires dragging today.
