@@ -1,4 +1,4 @@
-// Same as the block period of `font-display: block`.
+// The block period that the CSS spec recommends for `font-display: block`.
 const FONT_TIMEOUT = 3000;
 
 /**
