@@ -50,6 +50,15 @@ export interface SchedulerRecurringEventsPluginInterface {
   ): UpdateEventsParameters;
 
   /**
+   * Returns the rule and the exception dates of a timed recurring event made all-day as a whole,
+   * moved with its days from its timezone to the display timezone.
+   */
+  getRecurringAllDayChanges(
+    event: SchedulerProcessedEvent,
+    displayTimezone: string,
+  ): Pick<SchedulerEventUpdatedProperties, 'rrule' | 'exDates'>;
+
+  /**
    * Generates the update payload to apply when deleting a recurring event, scoped to
    * a single occurrence, the occurrence and the following ones, or the entire series.
    */

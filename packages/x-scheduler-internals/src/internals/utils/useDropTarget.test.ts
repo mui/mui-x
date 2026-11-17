@@ -215,6 +215,44 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(() => processEvent(updated, 'UTC')).not.to.throw();
     });
 
+    it('should make a timed event without duration dropped on the day grid a one-day all-day event', () => {
+      const builder = EventBuilder.new()
+        .id('reminder')
+        .span('2025-07-07T00:00:00Z', '2025-07-07T00:00:00Z')
+        .withDisplayTimezone('UTC');
+      const occurrence = builder.toOccurrence();
+      const onEventsChange = vi.fn();
+      const store = new storeClass.Value({
+        resources: [ResourceBuilder.new().id('r1').title('Resource 1').build()],
+        events: [builder.build()],
+        displayTimezone: 'UTC',
+        onEventsChange,
+      });
+
+      applyInternalDragOrResizeOccurrencePlaceholder(
+        store as unknown as SchedulerStoreInContext<any, any>,
+        {
+          type: 'internal-drag',
+          surfaceType: 'day-grid',
+          eventId: 'reminder',
+          occurrenceKey: occurrence.key,
+          originalOccurrence: occurrence,
+          allDay: true,
+          sourceResourceId: null,
+          resourceId: null,
+          start: createDate('2025-07-09T00:00:00Z').getTime(),
+          end: createDate('2025-07-09T00:00:00Z').getTime(),
+        },
+        () => ({ allDay: true }),
+      );
+
+      const updated = onEventsChange.mock.lastCall![0].find(
+        (item: SchedulerEvent) => item.id === 'reminder',
+      );
+      expect(updated.start).to.equal('2025-07-09');
+      expect(updated.end).to.equal('2025-07-10');
+    });
+
     it('should give an external all-day drop at least one day on the day grid', () => {
       const onEventsChange = vi.fn();
       const store = new storeClass.Value({
@@ -323,7 +361,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
     it('should resend both bounds when the drop toggles all-day off', () => {
       // An all-day event on July 4th displayed in New York, dropped on the time grid at its first
-      // instant: both bounds are written as instants.
+      // instant: both bounds are written in New York, the timezone the event moves to.
       const builder = utcJuly4AllDayBuilder().id('holiday').withDisplayTimezone('America/New_York');
       const occurrence = builder.toOccurrence();
       const onEventsChange = vi.fn();
@@ -357,13 +395,9 @@ premiumStoreClasses.forEach((storeClass) => {
         (item: SchedulerEvent) => item.id === 'holiday',
       );
       expect(updated.allDay).to.not.equal(true);
-      // July 4th 00:00 in New York.
-      expect(createDate(updated.start, 'UTC')).toEqualDateTime(
-        createDate('2025-07-04T04:00:00', 'UTC'),
-      );
-      expect(createDate(updated.end, 'UTC')).toEqualDateTime(
-        createDate('2025-07-04T05:00:00', 'UTC'),
-      );
+      expect(updated.timezone).to.equal('America/New_York');
+      expect(updated.start).to.equal('2025-07-04T00:00:00');
+      expect(updated.end).to.equal('2025-07-04T01:00:00');
     });
 
     it('should make the armed occurrence timed when it is dropped into the time grid', () => {

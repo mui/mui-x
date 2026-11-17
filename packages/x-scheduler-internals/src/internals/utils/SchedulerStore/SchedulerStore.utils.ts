@@ -165,11 +165,11 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
   originalBuiltInModel: SchedulerEvent,
   displayTimezone: string,
 ): TEvent {
-  const dataTimezone = originalBuiltInModel.timezone ?? 'default';
   const stringified: Record<string, any> = {
     ...changes,
     ...stringifyEventDateChanges(changes, originalBuiltInModel, displayTimezone),
   };
+  const dataTimezone = stringified.timezone ?? originalBuiltInModel.timezone ?? 'default';
   if (changes.rrule != null && typeof changes.rrule === 'object' && changes.rrule.until != null) {
     stringified.rrule = {
       ...changes.rrule,
