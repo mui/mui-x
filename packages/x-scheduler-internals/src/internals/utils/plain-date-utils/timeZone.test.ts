@@ -6,6 +6,7 @@ import {
   addDaysOnWallClock,
   differenceInDays,
   getEndOfDayMs,
+  getPlainDateRangeMs,
   getStartOfDayMs,
   toEpochMs,
   toLocalMs,
@@ -180,6 +181,38 @@ describe('timeZone', () => {
       // Pacific/Apia skipped December 30th, 2011, going from -10:00 to +14:00.
       expect(bounds('2011-12-29T12:00:00Z', 'Pacific/Apia')[1]).to.equal(
         '2011-12-30T09:59:59.999Z', // December 29th, 23:59:59.999 -10:00
+      );
+    });
+  });
+
+  describe('getPlainDateRangeMs', () => {
+    const range = (first: string, last: string, timezone: string) => {
+      const { start, end } = getPlainDateRangeMs(
+        BaseTemporal.PlainDate.from(first),
+        BaseTemporal.PlainDate.from(last),
+        timezone,
+      );
+      return [start, end].map((ms) => new Date(ms).toISOString());
+    };
+
+    it('should return the first instant of the first day and the last instant of the last day', () => {
+      expect(range('2025-07-01', '2025-07-07', 'America/New_York')).to.deep.equal([
+        '2025-07-01T04:00:00.000Z',
+        '2025-07-08T03:59:59.999Z',
+      ]);
+    });
+
+    it('should cover a single day across a DST transition', () => {
+      // Europe/Paris springs forward from 02:00 to 03:00 on March 29th, 2026: the day lasts 23 hours.
+      const [start, end] = range('2026-03-29', '2026-03-29', 'Europe/Paris');
+      expect([start, end]).to.deep.equal(['2026-03-28T23:00:00.000Z', '2026-03-29T21:59:59.999Z']);
+      expect(Date.parse(end) - Date.parse(start) + 1).to.equal(23 * HOUR);
+    });
+
+    it('should start on a day whose midnight a DST transition skips at the end of the gap', () => {
+      // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
+      expect(range('2026-03-08', '2026-03-09', 'America/Havana')[0]).to.equal(
+        '2026-03-08T05:00:00.000Z', // 01:00 CDT
       );
     });
   });

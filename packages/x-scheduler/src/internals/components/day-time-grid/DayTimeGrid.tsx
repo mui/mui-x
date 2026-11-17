@@ -28,7 +28,7 @@ import {
   getDisplayedHourRange,
   getInitialScrollTime,
   isWeekendPlainDate,
-  toEpochMs,
+  getPlainDateRangeMs,
 } from '@mui/x-scheduler-internals/internals';
 import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import clsx from 'clsx';
@@ -400,9 +400,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const { start, end, firstDayNumber, lastDayNumber } = React.useMemo(() => {
     const lastDay = days[days.length - 1];
     return {
-      start: toEpochMs(days[0], displayTimezone),
-      // The last instant before the day after the last day.
-      end: toEpochMs(lastDay.add({ days: 1 }), displayTimezone) - 1,
+      ...getPlainDateRangeMs(days[0], lastDay, displayTimezone),
       firstDayNumber: getDayNumber(days[0]),
       lastDayNumber: getDayNumber(lastDay),
     };

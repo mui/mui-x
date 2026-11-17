@@ -2,6 +2,7 @@ export {
   addDaysOnWallClock,
   floorToWallClockMinutes,
   getEndOfDayMs,
+  getPlainDateRangeMs,
   getSkippedDays,
   getStartOfDayMs,
   getTimezoneId,

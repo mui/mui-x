@@ -7,7 +7,7 @@ import {
   getDaysTheOccurrenceIsVisibleOn,
   getOccurrencesFromEvents,
 } from '../internals/utils/event-utils';
-import { toEpochMs } from '../internals/utils/plain-date-utils/timeZone';
+import { getPlainDateRangeMs } from '../internals/utils/plain-date-utils/timeZone';
 import { getDayNumber, getPlainDateKey } from '../internals/utils/plain-date-utils/plainDate';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
 import {
@@ -78,9 +78,7 @@ export function innerGetEventOccurrencesGroupedByDay(
   }
 
   const occurrences = getOccurrencesFromEvents({
-    start: toEpochMs(days[0], displayTimezone),
-    // The last instant before the day after the last day.
-    end: toEpochMs(days[days.length - 1].add({ days: 1 }), displayTimezone) - 1,
+    ...getPlainDateRangeMs(days[0], days[days.length - 1], displayTimezone),
     eventRangeIndex,
     visibleResources,
     displayTimezone,

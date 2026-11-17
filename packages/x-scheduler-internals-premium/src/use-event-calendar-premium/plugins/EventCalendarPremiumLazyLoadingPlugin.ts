@@ -1,10 +1,7 @@
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
-import { toEpochMs } from '@mui/x-scheduler-internals/internals';
+import { getPlainDateRangeMs } from '@mui/x-scheduler-internals/internals';
 import type { EventCalendarFetchRange } from '@mui/x-scheduler-internals/models';
-import {
-  SchedulerLazyLoadingPlugin,
-  toWholeDays,
-} from '../../internals/plugins/SchedulerLazyLoadingPlugin';
+import { SchedulerLazyLoadingPlugin } from '../../internals/plugins/SchedulerLazyLoadingPlugin';
 import { getDateRangeKey } from '../../internals/utils/queue';
 import type { DateRange } from '../../internals/utils/queue';
 import type {
@@ -68,11 +65,5 @@ function getRangeToFetch(state: EventCalendarPremiumState): DateRange | null {
     }
     range = { start: days[0], end: days[days.length - 1] };
   }
-  return toWholeDays(
-    {
-      start: toEpochMs(range.start, displayTimezone),
-      end: toEpochMs(range.end, displayTimezone),
-    },
-    displayTimezone,
-  );
+  return getPlainDateRangeMs(range.start, range.end, displayTimezone);
 }
