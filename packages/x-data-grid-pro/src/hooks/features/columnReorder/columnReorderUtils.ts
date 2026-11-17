@@ -5,16 +5,13 @@ import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 // Column reordering logic shared by the HTML drag and drop path (`useGridColumnReorder`)
 // and the pointer events path.
 
-const CURSOR_MOVE_DIRECTION_LEFT = 'left';
-const CURSOR_MOVE_DIRECTION_RIGHT = 'right';
+export type ColumnReorderDirection = 'left' | 'right';
 
-const getCursorMoveDirectionX = (
+export const getCursorMoveDirectionX = (
   currentCoordinates: CursorCoordinates,
   nextCoordinates: CursorCoordinates,
-) => {
-  return currentCoordinates.x <= nextCoordinates.x
-    ? CURSOR_MOVE_DIRECTION_RIGHT
-    : CURSOR_MOVE_DIRECTION_LEFT;
+): ColumnReorderDirection => {
+  return currentCoordinates.x <= nextCoordinates.x ? 'right' : 'left';
 };
 
 export const hasCursorPositionChanged = (
@@ -108,15 +105,14 @@ export function getColumnReorderForbiddenIndexes(
 }
 
 /**
- * Returns the index the dragged column moves to when the pointer goes over another column.
- * The column only moves when the pointer moves toward the target column, so it doesn't bounce
+ * Returns the index the dragged column moves to when it goes over another column.
+ * The column only moves when it moves toward the target column, so it doesn't bounce
  * back and forth when the columns swap under a still pointer.
  * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
- * @param {object} params The drag.
- * @param {string} params.dragField The dragged column.
- * @param {string} params.targetField The column under the pointer. It must exist and differ from `dragField`.
- * @param {CursorCoordinates} params.previousPosition The pointer position of the last evaluation.
- * @param {CursorCoordinates} params.position The pointer position.
+ * @param {object} params The move.
+ * @param {string} params.dragField The moved column.
+ * @param {string} params.targetField The column to move over. It must exist and differ from `dragField`.
+ * @param {ColumnReorderDirection} params.direction The visual direction of the move.
  * @param {boolean} params.isRtl Whether the grid is right-to-left.
  * @param {ColumnReorderForbiddenIndexes} params.forbiddenIndexes From `getColumnReorderForbiddenIndexes`.
  * @returns {number | null} The new index among all columns, or `null` when the column doesn't move.
@@ -126,13 +122,12 @@ export function getColumnReorderTargetIndex(
   params: {
     dragField: string;
     targetField: string;
-    previousPosition: CursorCoordinates;
-    position: CursorCoordinates;
+    direction: ColumnReorderDirection;
     isRtl: boolean;
     forbiddenIndexes: ColumnReorderForbiddenIndexes;
   },
 ): number | null {
-  const { dragField, targetField, previousPosition, position, isRtl, forbiddenIndexes } = params;
+  const { dragField, targetField, direction, isRtl, forbiddenIndexes } = params;
   const targetColIndex = apiRef.current.getColumnIndex(targetField, false);
   const targetColVisibleIndex = apiRef.current.getColumnIndex(targetField, true);
   const targetCol = apiRef.current.getColumn(targetField);
@@ -140,12 +135,10 @@ export function getColumnReorderTargetIndex(
   const visibleColumns = apiRef.current.getVisibleColumns();
   const allColumns = apiRef.current.getAllColumns();
 
-  const cursorMoveDirectionX = getCursorMoveDirectionX(previousPosition, position);
   const hasMovedLeft =
-    cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_LEFT &&
-    (isRtl ? dragColIndex < targetColIndex : targetColIndex < dragColIndex);
+    direction === 'left' && (isRtl ? dragColIndex < targetColIndex : targetColIndex < dragColIndex);
   const hasMovedRight =
-    cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_RIGHT &&
+    direction === 'right' &&
     (isRtl ? targetColIndex < dragColIndex : dragColIndex < targetColIndex);
 
   // Callers check that the target column exists before calling
