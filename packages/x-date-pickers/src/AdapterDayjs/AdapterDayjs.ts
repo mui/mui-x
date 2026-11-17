@@ -188,12 +188,21 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   private isSame = (value: Dayjs, comparing: Dayjs, precision: Precision) => {
     const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value))!;
 
+    // Strict parsing can return an invalid date that keeps numeric fields, such as `02/31/2026`
+    // with those of March 3, so validity is checked first: with `valueOf()`, as `isValid()` calls
+    // `Date#toString()`, which is slow. Two invalid dates are the same.
+    const isValueInvalid = Number.isNaN(value.valueOf());
+    const isComparingInvalid = Number.isNaN(comparingInValueTimezone.valueOf());
+    if (isValueInvalid || isComparingInvalid) {
+      return isValueInvalid && isComparingInvalid;
+    }
+
     // Compares the fields that `format('YYYY-MM-DD')` prints, without the cost of formatting, which
-    // calendars pay for every day they render. `Object.is` keeps two invalid dates equal.
+    // calendars pay for every day they render.
     return (
-      Object.is(value.year(), comparingInValueTimezone.year()) &&
-      (precision < PRECISION_MONTH || Object.is(value.month(), comparingInValueTimezone.month())) &&
-      (precision < PRECISION_DAY || Object.is(value.date(), comparingInValueTimezone.date()))
+      value.year() === comparingInValueTimezone.year() &&
+      (precision < PRECISION_MONTH || value.month() === comparingInValueTimezone.month()) &&
+      (precision < PRECISION_DAY || value.date() === comparingInValueTimezone.date())
     );
   };
 
