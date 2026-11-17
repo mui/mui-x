@@ -382,6 +382,106 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(occurrence.end.plainDateTime.toString()).to.equal('2025-07-09T00:00:00');
     });
 
+    it("should key the armed occurrence in the display timezone on a scope 'all' change to timed", () => {
+      // Fridays all-day, stored with a New York timezone and displayed in Tokyo: made timed, the
+      // series moves to Tokyo.
+      const store = new storeClass.Value({
+        ...DEFAULT_PARAMS,
+        events: [
+          EventBuilder.new()
+            .id('gym')
+            .withDataTimezone('America/New_York')
+            .span('2025-07-04', '2025-07-05', { allDay: true })
+            .rrule({ freq: 'WEEKLY', byDay: ['FR'] })
+            .build(),
+        ],
+        displayTimezone: 'Asia/Tokyo',
+        onEventsChange: () => {},
+      });
+      const armed = createStoreOccurrence(
+        store,
+        'gym',
+        createDate('2025-07-11T00:00:00', 'Asia/Tokyo'),
+      );
+      store.startEditing(armed, 'armed');
+
+      store.updateRecurringEvent({
+        occurrence: armed,
+        changes: {
+          id: 'gym',
+          allDay: false,
+          start: createDate('2025-07-11T09:00:00', 'Asia/Tokyo'),
+          end: createDate('2025-07-11T10:00:00', 'Asia/Tokyo'),
+        },
+      });
+      store.selectRecurringEventScope('all');
+
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      // The series runs on Tokyo Fridays at 09:00: the occurrence is keyed on that day there.
+      expect(occurrence.key).to.equal(
+        getRecurringOccurrenceKey(
+          'gym',
+          createDate('2025-07-11T09:00:00', 'Asia/Tokyo').getTime(),
+          'Asia/Tokyo',
+        ),
+      );
+      expect(occurrence.timezone).to.equal('Asia/Tokyo');
+    });
+
+    it('should read the armed occurrence again when the display timezone changes', () => {
+      // A one-day all-day July 4th, armed in New York, then displayed in Tokyo.
+      const builder = EventBuilder.new()
+        .id('holiday')
+        .span('2025-07-04', '2025-07-05', { allDay: true })
+        .withDisplayTimezone('America/New_York');
+      const params = {
+        ...DEFAULT_PARAMS,
+        events: [builder.build()],
+        displayTimezone: 'America/New_York',
+        onEventsChange: () => {},
+      };
+      const store = new storeClass.Value(params);
+      store.startEditing(builder.toOccurrence(), 'armed');
+
+      store.updateStateFromParameters({ ...params, displayTimezone: 'Asia/Tokyo' });
+
+      // Still July 4th only, now as the days of Tokyo.
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      expect(occurrence.start.timestamp).to.equal(
+        createDate('2025-07-04T00:00:00', 'Asia/Tokyo').getTime(),
+      );
+      expect(occurrence.end.timestamp).to.equal(
+        createDate('2025-07-05T00:00:00', 'Asia/Tokyo').getTime(),
+      );
+      expect(occurrence.end.plainDateTime.toString()).to.equal('2025-07-05T00:00:00');
+    });
+
+    it('should move the armed occurrence to the display timezone when a drop makes it timed', () => {
+      // An all-day Friday stored with a New York timezone, dropped on the Tokyo time grid.
+      const builder = EventBuilder.new()
+        .id('gym')
+        .withDataTimezone('America/New_York')
+        .span('2025-07-04', '2025-07-05', { allDay: true })
+        .withDisplayTimezone('Asia/Tokyo');
+      const store = new storeClass.Value({
+        ...DEFAULT_PARAMS,
+        events: [builder.build()],
+        displayTimezone: 'Asia/Tokyo',
+        onEventsChange: () => {},
+      });
+      store.startEditing(builder.toOccurrence(), 'armed');
+
+      store.setEditingOccurrenceTimes({
+        allDay: false,
+        start: createDate('2025-07-04T09:00:00', 'Asia/Tokyo'),
+        end: createDate('2025-07-04T10:00:00', 'Asia/Tokyo'),
+      });
+
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      expect(occurrence.allDay).to.equal(false);
+      expect(occurrence.timezone).to.equal('Asia/Tokyo');
+    });
+
     it("should disarm when an end-only scope 'all' change pushes the armed occurrence past its day", () => {
       const store = createStore();
       armOccurrence(store, dayB);

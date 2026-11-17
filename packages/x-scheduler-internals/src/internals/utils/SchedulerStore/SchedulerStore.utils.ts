@@ -154,9 +154,7 @@ export function getProcessedEventFromModel<TEvent extends object>(
 /**
  * Updates an event model based on the provided changes and model structure.
  * Converts the `Date` objects to strings before applying them to the user's model, because
- * `SchedulerEvent` date fields are strings. The dates of an all-day event are the days of its
- * instants in the display timezone; the dates of a timed event respect the original string format
- * (instant vs wall-time).
+ * `SchedulerEvent` date fields are strings, with `stringifyEventDateChanges()`.
  */
 export function getUpdatedEventModelFromChanges<TEvent extends object>(
   oldModel: TEvent,

@@ -187,14 +187,10 @@ const SmallNumberField = styled(TextField, {
 interface RecurrenceTabProps {
   occurrence: SchedulerRenderableEventOccurrence;
   tabValue: string;
-  /**
-   * The display timezone the occurrence was read in when the editing session started.
-   */
-  initialDisplayTimezone: string;
 }
 
 export function RecurrenceTab(props: RecurrenceTabProps) {
-  const { occurrence, tabValue, initialDisplayTimezone } = props;
+  const { occurrence, tabValue } = props;
 
   // Context hooks
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
@@ -231,7 +227,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const rangeValues = useStore(formStore, eventDialogFormSelectors.rangeValues);
   const ruleTimezone = getRuleTimezone(occurrence, rangeValues.allDay, displayTimezone);
   const ruleBounds = React.useMemo(() => {
-    const displayTimezoneMoved = displayTimezone !== initialDisplayTimezone;
+    const displayTimezoneMoved = displayTimezone !== formStore.initialDisplayTimezone;
     const { startResent, endResent } = getResentRangeBounds(
       formStore.getDirtyValues(),
       rangeValues.allDay,
@@ -240,7 +236,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     const bound = (name: 'start' | 'end', resent: boolean) =>
       getRecurrenceRuleBound(occurrence, rangeValues, resent, displayTimezone, name);
     return { start: bound('start', startResent), end: bound('end', endResent) };
-  }, [occurrence, formStore, rangeValues, displayTimezone, initialDisplayTimezone]);
+  }, [occurrence, formStore, rangeValues, displayTimezone]);
   const ruleStart = ruleBounds.start;
   const ruleStartPlainDate = React.useMemo(
     () => toPlainDate(ruleStart, ruleTimezone),

@@ -7,7 +7,6 @@ import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internal
 import {
   createStartOfPlainDate,
   getOccurrencePlainDate,
-  toEpochMs,
 } from '@mui/x-scheduler-internals/internals';
 import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
 import { RecurringSeries } from './RecurringSeries';
@@ -58,10 +57,7 @@ export function applyRecurringDeleteOnlyThis(
   // The exceptions of an all-day series are days, which the store writes back as dates; a timed
   // series keeps the instants of its exceptions.
   const exDates = originalEvent.allDay
-    ? [
-        ...previousExDates.map((exDate) => new Date(toEpochMs(exDate, displayTimezone))),
-        new Date(toEpochMs(occurrenceDay, displayTimezone)),
-      ]
+    ? excludedDays.map((day) => createStartOfPlainDate(day, displayTimezone))
     : [
         ...(originalEvent.modelInBuiltInFormat.exDates ?? []).map(
           (exDate) => new Date(resolveEventTimestamp(exDate, timezone)),

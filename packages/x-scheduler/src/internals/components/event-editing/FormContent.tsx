@@ -27,11 +27,11 @@ import {
 import {
   getCustomEventProperties,
   getEventResourceIds,
-  getLastInstant,
+  getOccurrenceLastDayNumber,
   getResourceSelectionMode,
-  toPlainDateTime,
   isBuiltInEventProperty,
   isEventOccurrence,
+  plainDateFromDayNumber,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
@@ -151,7 +151,9 @@ export function FormContent(props: FormContentProps) {
     // The form shows the last day of an all-day event, the day before its exclusive end.
     const endFields = formatDateAndTimeFields(
       occurrence.allDay
-        ? toPlainDateTime(getLastInstant(occurrence.end.timestamp, true), initialDisplayTimezone)
+        ? plainDateFromDayNumber(
+            getOccurrenceLastDayNumber(occurrence, initialDisplayTimezone),
+          ).toPlainDateTime('23:59')
         : occurrence.end.plainDateTime,
     );
 
@@ -219,23 +221,22 @@ export function FormContent(props: FormContentProps) {
       initialValues={initialValues}
       occurrence={occurrence}
       resourceSelectionMode={resourceSelectionMode}
+      initialDisplayTimezone={initialDisplayTimezone}
       onValuesChange={pushPlaceholder}
     >
-      <FormContentInner {...props} initialDisplayTimezone={initialDisplayTimezone} />
+      <FormContentInner {...props} />
     </EventDialogFormProvider>
   );
 }
 
-function FormContentInner(
-  props: Omit<FormContentProps, 'occurrence'> & { initialDisplayTimezone: string },
-) {
-  const { onClose, dragHandlerRef, isDraggable, anchor, initialDisplayTimezone } = props;
+function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
+  const { onClose, dragHandlerRef, isDraggable, anchor } = props;
 
   // Context hooks
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
-  const { occurrence, resourceSelectionMode } = formStore;
+  const { occurrence, resourceSelectionMode, initialDisplayTimezone } = formStore;
 
   // Selector hooks — only what the render itself needs; the submit continuation
   // reads its own `ResolutionSettings` snapshot instead of subscribing here.
@@ -602,11 +603,7 @@ function FormContentInner(
         )}
         <GeneralTab value={hasTabs ? tabValue : 'general'} hasTabs={hasTabs} />
         {showRecurrence && RecurrenceTabRenderer && (
-          <RecurrenceTabRenderer
-            occurrence={occurrence}
-            tabValue={tabValue}
-            initialDisplayTimezone={initialDisplayTimezone}
-          />
+          <RecurrenceTabRenderer occurrence={occurrence} tabValue={tabValue} />
         )}
         <Divider className={classes.eventDialogFormDivider} />
         <FormActionButtons onDelete={handleDelete} />

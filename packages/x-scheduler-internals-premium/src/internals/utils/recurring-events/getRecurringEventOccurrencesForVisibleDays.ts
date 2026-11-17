@@ -11,7 +11,6 @@ import {
   getMsInDay,
   localToEpochMs,
   MS_PER_DAY,
-  toEpochMs,
   toLocalDayNumber,
   toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
@@ -41,15 +40,18 @@ export function getRecurringEventOccurrencesForVisibleDays(
     // Adjust scan range to catch multi-day events starting before visible range
     const scanFirstDay = toPlainDate(start, displayTimezone).add({ days: 1 - dayCount });
     const scanLastDay = toPlainDate(end, displayTimezone);
-    return series.getOccurrenceDays(scanFirstDay, scanLastDay).map((day) => ({
-      ...occurrenceProperties,
-      key: getRecurringOccurrenceKeyFromDateKey(event.id, getPlainDateKey(day)),
-      start: createProcessedDate(toEpochMs(day, displayTimezone), displayTimezone),
-      end: createProcessedDate(
-        toEpochMs(day.add({ days: dayCount }), displayTimezone),
-        displayTimezone,
-      ),
-    }));
+    return series.getOccurrenceDays(scanFirstDay, scanLastDay).map((day) => {
+      const localStartMs = getDayNumber(day) * MS_PER_DAY;
+      return {
+        ...occurrenceProperties,
+        key: getRecurringOccurrenceKeyFromDateKey(event.id, getPlainDateKey(day)),
+        start: createProcessedDate(localToEpochMs(localStartMs, displayTimezone), displayTimezone),
+        end: createProcessedDate(
+          localToEpochMs(localStartMs + dayCount * MS_PER_DAY, displayTimezone),
+          displayTimezone,
+        ),
+      };
+    });
   }
 
   // The occurrences of a timed event are computed in its timezone to avoid DST issues; the display

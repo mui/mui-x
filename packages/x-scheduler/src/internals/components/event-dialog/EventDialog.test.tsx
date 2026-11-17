@@ -255,6 +255,17 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(getUpdatedEvent().end).to.equal('2025-07-08');
     });
 
+    it('should show the last day of an all-day event whose exclusive end is a skipped day', () => {
+      // Samoa skipped December 30th, 2011: an event stored from the 28th to the 30th covers the
+      // 28th and the 29th.
+      renderEditDialog(
+        EventBuilder.new().title('Trip').span('2011-12-28', '2011-12-30', { allDay: true }),
+        'Pacific/Apia',
+      );
+
+      expect((screen.getByLabelText(/end date/i) as HTMLInputElement).value).to.equal('2011-12-29');
+    });
+
     it('should save a one-day all-day event whose end field equals its start field', async () => {
       const { user, getUpdatedEvent } = renderEditDialog(
         EventBuilder.new().title('Trip').span('2025-07-04', '2025-07-06', { allDay: true }),
@@ -433,6 +444,25 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         expect(updated.allDay).to.equal(true);
         expect(updated.start).to.equal('2025-05-26');
         expect(updated.end).to.equal('2025-05-27');
+      });
+
+      it('should make a timed event all-day on the day the form shows', async () => {
+        // 23:00 in New York on July 4th is displayed on July 5th in Tokyo, the day the form shows.
+        const { user, getUpdatedEvent } = renderEditDialog(
+          EventBuilder.new()
+            .title('Call')
+            .withDataTimezone('America/New_York')
+            .span('2025-07-04T23:00:00', '2025-07-04T23:30:00'),
+          'Asia/Tokyo',
+        );
+
+        await user.click(screen.getByRole('switch', { name: /all day/i }));
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+
+        const updated = getUpdatedEvent();
+        expect(updated.allDay).to.equal(true);
+        expect(updated.start).to.equal('2025-07-05');
+        expect(updated.end).to.equal('2025-07-06');
       });
 
       it('should fill the default times only once in a session', async () => {

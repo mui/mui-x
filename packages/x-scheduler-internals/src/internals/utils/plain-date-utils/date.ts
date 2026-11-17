@@ -1,6 +1,7 @@
-import type { BaseTemporal } from '../base-temporal';
+import { BaseTemporal } from '../base-temporal';
 import type { PlainDateDuration } from './plainDate';
 import {
+  addDaysToDayStart,
   getStartOfDayMs,
   localToEpochMs,
   moveTimestampToPlainDate,
@@ -41,6 +42,22 @@ const ISO_DATE_REGEXP = /^\d{4}(?:-\d{2}){0,2}(?:(T)|$)/i;
  */
 export function isDateOnlyString(value: string): boolean {
   return /^\d{4}-\d{2}-\d{2}$/.test(value);
+}
+
+/**
+ * Reads a `YYYY-MM-DD` string as a plain date, or returns `null` when it isn't an existing date.
+ * `BaseTemporal.PlainDate.from()` rejects the dates that don't exist, like 2025-06-31, but also
+ * reads other formats and calendar annotations, hence the format check first.
+ */
+export function parseDateOnlyString(value: string): BaseTemporal.PlainDate | null {
+  if (!isDateOnlyString(value)) {
+    return null;
+  }
+  try {
+    return BaseTemporal.PlainDate.from(value);
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -88,11 +105,28 @@ export function snapAllDayBounds(
   timezone: string,
 ): { start: number; end: number } {
   const snappedStart = getStartOfDayMs(start, timezone);
-  let snappedEnd = toEpochMs(toPlainDate(end - 1, timezone).add({ days: 1 }), timezone);
+  let snappedEnd = addDaysToDayStart(end - 1, 1, timezone);
   if (snappedEnd <= snappedStart) {
-    snappedEnd = toEpochMs(toPlainDate(snappedStart, timezone).add({ days: 1 }), timezone);
+    snappedEnd = addDaysToDayStart(snappedStart, 1, timezone);
   }
   return { start: snappedStart, end: snappedEnd };
+}
+
+/**
+ * Snaps the bounds of a timed event made all-day to the whole days it covers in its own
+ * `timezone`, as the first instants of those days in `displayTimezone`.
+ */
+export function snapToOwnDays(
+  start: number,
+  end: number,
+  timezone: string,
+  displayTimezone: string,
+): { start: number; end: number } {
+  const ownDays = snapAllDayBounds(start, end, timezone);
+  return {
+    start: toEpochMs(toPlainDate(ownDays.start, timezone), displayTimezone),
+    end: toEpochMs(toPlainDate(ownDays.end, timezone), displayTimezone),
+  };
 }
 
 export { createProcessedDate } from '../../../process-date/processDate';

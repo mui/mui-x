@@ -25,9 +25,9 @@ import {
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
 import type { StandaloneEvent } from '../../standalone-event';
 import { getPrimaryResourceId } from './event-utils';
-import { addDaysToDayStart, getAllDayDayCount } from './date-utils';
+import { getAllDayDayCount } from './date-utils';
 import { snapAllDayBounds } from './plain-date-utils/date';
-import { getStartOfDayMs } from './plain-date-utils/timeZone';
+import { addDaysToDayStart, getStartOfDayMs } from './plain-date-utils/timeZone';
 
 /**
  * The bounds of a drop as whole days of the display timezone when its result is all-day: a move

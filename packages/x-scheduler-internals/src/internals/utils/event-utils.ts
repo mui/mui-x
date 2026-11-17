@@ -48,24 +48,15 @@ export function isEventOccurrence(
 /**
  * The timezone the day math of an event runs in: the display timezone for an all-day event, whose
  * days are the displayed ones, and its own timezone for a timed event.
+ * With `nextAllDay`, the timezone after an update to `allDay`: an all-day event made timed moves to
+ * the display timezone, where its days were read.
  */
 export function getDayTimezone(
   event: Pick<SchedulerProcessedEvent, 'allDay' | 'timezone'>,
   displayTimezone: string,
+  nextAllDay?: boolean,
 ): string {
-  return event.allDay ? displayTimezone : event.timezone;
-}
-
-/**
- * The timezone the day math of an event runs in after an update to `allDay`: an all-day event
- * made timed moves to the display timezone, where its days were read.
- */
-export function getNextDayTimezone(
-  event: Pick<SchedulerProcessedEvent, 'allDay' | 'timezone'>,
-  allDay: boolean | undefined,
-  displayTimezone: string,
-): string {
-  return event.allDay || allDay ? displayTimezone : event.timezone;
+  return event.allDay || nextAllDay ? displayTimezone : event.timezone;
 }
 
 /**

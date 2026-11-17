@@ -47,6 +47,10 @@ export interface EventDialogFormParameters<
    * Captured when the dialog opens.
    */
   resourceSelectionMode: ResourceSelectionMode;
+  /**
+   * The display timezone the occurrence was read in. Captured when the dialog opens.
+   */
+  initialDisplayTimezone: string;
 }
 
 export const eventDialogFormSelectors = {
@@ -72,7 +76,7 @@ export const eventDialogFormSelectors = {
 
 /**
  * Draft store backing the event dialog form, with the constants of the editing session
- * (`occurrence`, `resourceSelectionMode`).
+ * (`occurrence`, `resourceSelectionMode`, `initialDisplayTimezone`).
  */
 export class EventDialogFormStore<
   TValues extends Record<string, unknown> = EventDialogFormValues,
@@ -89,12 +93,19 @@ export class EventDialogFormStore<
    */
   declare public readonly resourceSelectionMode: ResourceSelectionMode;
 
+  /**
+   * The display timezone the occurrence was read in when the editing session started.
+   * Constant for the lifetime of the store.
+   */
+  declare public readonly initialDisplayTimezone: string;
+
   declare private timedValues: boolean;
 
   constructor(initialValues: TValues, parameters: EventDialogFormParameters<TValues>) {
     super(initialValues, parameters);
     this.occurrence = parameters.occurrence;
     this.resourceSelectionMode = parameters.resourceSelectionMode;
+    this.initialDisplayTimezone = parameters.initialDisplayTimezone;
     this.timedValues = !parameters.occurrence.allDay;
   }
 

@@ -270,6 +270,15 @@ export function getEndOfDayMs(epochMs: number, timezone: string): number {
 }
 
 /**
+ * The first instant, in `timezone`, of the day `dayCount` days after the day of an instant. A day
+ * whose midnight a DST transition skips starts at the end of the gap.
+ */
+export function addDaysToDayStart(epochMs: number, dayCount: number, timezone: string): number {
+  const dayNumber = Math.floor(toLocalMs(epochMs, timezone) / MS_PER_DAY);
+  return localToEpochMs((dayNumber + dayCount) * MS_PER_DAY, timezone);
+}
+
+/**
  * Returns the day numbers of the days `timezone` skips from `from` (inclusive) to `to` (exclusive),
  * like December 30th, 2011, which Pacific/Apia skipped when it moved across the date line.
  */

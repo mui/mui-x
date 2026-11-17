@@ -11,9 +11,11 @@ import {
   formatMonthAndDayOfMonth,
   formatWeekday,
   FULL_DAY_MINUTES,
+  getDayTimezone,
   getMinutesInDay,
   getTimezoneId,
   isEventOccurrence,
+  parseDateOnlyString,
   toEpochMs,
   toPlainDate,
   toPlainDateTime,
@@ -138,22 +140,11 @@ function getEditedRangeBounds(
   };
 }
 
-// The documented `yyyy-MM-dd` format. `BaseTemporal.PlainDate.from()` rejects the dates that don't
-// exist, like 2025-06-31, but also reads calendar annotations, which the fields don't use.
-const DATE_VALUE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
-
 /**
  * Reads a `yyyy-MM-dd` field, or returns `null` when it isn't an existing date.
  */
 export function readDateField(raw: string): BaseTemporal.PlainDate | null {
-  if (!DATE_VALUE_REGEX.test(raw)) {
-    return null;
-  }
-  try {
-    return BaseTemporal.PlainDate.from(raw);
-  } catch {
-    return null;
-  }
+  return parseDateOnlyString(raw);
 }
 
 /**
@@ -373,7 +364,8 @@ export function getRecurrenceLabel(
 
 /**
  * The timezone the recurrence rule of the occurrence is expressed in: the display timezone for an
- * all-day event, whose days are the displayed dates, and the timezone of the event otherwise.
+ * all-day event, whose days are the displayed dates, and for an all-day event made timed, which
+ * moves to it. The timezone of the event otherwise.
  * A creation draft has no event yet: it is created in the `default` timezone.
  */
 export function getRuleTimezone(
@@ -381,10 +373,10 @@ export function getRuleTimezone(
   allDay: boolean,
   displayTimezone: string,
 ): string {
-  if (allDay) {
-    return displayTimezone;
+  if (!isEventOccurrence(occurrence)) {
+    return allDay ? displayTimezone : 'default';
   }
-  return isEventOccurrence(occurrence) ? occurrence.timezone : 'default';
+  return getDayTimezone(occurrence, displayTimezone, allDay);
 }
 
 /**

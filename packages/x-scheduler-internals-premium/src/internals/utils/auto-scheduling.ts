@@ -7,11 +7,13 @@ import type {
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
 import {
+  getDayTimezone,
   getLastInstant,
   timestampToEventString,
   localToEpochMs,
   MS_PER_DAY,
   snapAllDayBounds,
+  snapToOwnDays,
   toLocalDayNumber,
 } from '@mui/x-scheduler-internals/internals';
 import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
@@ -102,20 +104,14 @@ function resolveProcessedEventDates(
   processedEvent: SchedulerProcessedEvent,
   displayTimezone: string,
 ): ResolvedDates {
-  if (processedEvent.allDay) {
-    // Whole days of the display timezone, ending on the last instant of the last day.
-    return {
-      start: processedEvent.start.timestamp,
-      end: getLastInstant(processedEvent.end.timestamp, true),
-      timezone: displayTimezone,
-      allDay: true,
-    };
-  }
+  // An all-day event spans whole days of the display timezone, up to the last instant of its last
+  // day.
+  const allDay = !!processedEvent.allDay;
   return {
     start: processedEvent.start.timestamp,
-    end: processedEvent.end.timestamp,
-    timezone: processedEvent.timezone,
-    allDay: false,
+    end: getLastInstant(processedEvent.end.timestamp, allDay),
+    timezone: getDayTimezone(processedEvent, displayTimezone),
+    allDay,
   };
 }
 
@@ -294,10 +290,13 @@ export function computeAutoSchedulingCascade(
       continue;
     }
     const model = processedEvent.modelInBuiltInFormat;
-    const dataTimezone = model.timezone ?? 'default';
+    const allDay = entry.allDay ?? processedEvent.allDay ?? false;
+    // Like the store, an all-day event made timed is written in the display timezone, where it
+    // moves unless the entry gives its own timezone.
+    const becomesTimed = !!processedEvent.allDay && !allDay;
+    const dataTimezone = becomesTimed ? displayTimezone : (model.timezone ?? 'default');
     // An explicit `undefined` clears the property in the store (back to 'default').
     const nextTimezone = 'timezone' in entry ? (entry.timezone ?? 'default') : dataTimezone;
-    const allDay = entry.allDay ?? processedEvent.allDay ?? false;
     // The days of an all-day event do not depend on its timezone.
     const changesTimezone = nextTimezone !== dataTimezone && !allDay;
     if (entry.start == null && entry.end == null && entry.allDay == null && !changesTimezone) {
@@ -322,9 +321,21 @@ export function computeAutoSchedulingCascade(
           : timestampToEventString(value.getTime(), modelString, dataTimezone);
       return resolveEventTimestamp(nextString, nextTimezone, entry.id);
     };
+    let entryStart = resolveEntryTimestamp(
+      entry.start,
+      model.start,
+      processedEvent.start.timestamp,
+    );
+    let entryEnd = resolveEntryTimestamp(entry.end, model.end, processedEvent.end.timestamp);
+    if (allDay && !processedEvent.allDay && entry.start == null && entry.end == null) {
+      // Like the store, a timed event made all-day without bounds keeps the dates of its timezone.
+      const ownDays = snapToOwnDays(entryStart, entryEnd, dataTimezone, displayTimezone);
+      entryStart = ownDays.start;
+      entryEnd = ownDays.end;
+    }
     const dates = resolveDates(
-      resolveEntryTimestamp(entry.start, model.start, processedEvent.start.timestamp),
-      resolveEntryTimestamp(entry.end, model.end, processedEvent.end.timestamp),
+      entryStart,
+      entryEnd,
       allDay ? displayTimezone : nextTimezone,
       allDay,
     );
