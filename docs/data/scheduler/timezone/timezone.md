@@ -69,7 +69,7 @@ The `timezone` field on an event determines:
 
 For instant strings (ending with `"Z"` or an offset), the `timezone` field does not affect how the start/end are resolved—they are already absolute points in time.
 However, it is still used for recurring event calculations.
-An all-day series repeats on dates: its rule is evaluated on the displayed days, not in the event's `timezone`.
+An all-day series repeats on dates: its rule is evaluated on its dates, not in the event's `timezone`.
 
 :::success
 If no `timezone` is set, the component uses the timezone of the system.
@@ -140,7 +140,7 @@ const durationMinutes =
   (occurrence.end.timestamp - occurrence.start.timestamp) / 60_000;
 ```
 
-The occurrence's `timezone` and `rrule` describe the original event; the rule of a timed event is evaluated in its timezone, the rule of an all-day event on the displayed days.
+The occurrence's `timezone` and `rrule` describe the original event; the rule of a timed event is evaluated in its timezone, the rule of an all-day event on its dates.
 The rule's `until` is in the timezone of the event: a `BaseTemporal.PlainDate` includes its whole day, and a `BaseTemporal.PlainDateTime`, used for timed events only, is the latest start of an occurrence.
 Exception dates belong to the series and are available as strings on `occurrence.modelInBuiltInFormat.exDates` for persisted occurrences.
 

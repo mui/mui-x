@@ -82,6 +82,22 @@ import { getStartOfDayMs, toLocalDayNumber } from '../plain-date-utils/timeZone'
 import { MS_PER_MINUTE } from '../plain-date-utils/dayNumber';
 
 /**
+ * The bounds of an edited occurrence after a change: the changed ones, or its own when the change
+ * leaves one out, snapped to whole days when it is all-day.
+ */
+function getEditedBounds(
+  changedStart: number | undefined,
+  changedEnd: number | undefined,
+  occurrence: Pick<SchedulerEventOccurrence, 'start' | 'end'>,
+  allDay: boolean | undefined,
+  displayTimezone: string,
+): { start: number; end: number } {
+  const start = changedStart ?? occurrence.start.timestamp;
+  const end = changedEnd ?? occurrence.end.timestamp;
+  return allDay ? snapAllDayBounds(start, end, displayTimezone) : { start, end };
+}
+
+/**
  * The first instant of today in `timezone`. A day whose midnight a DST transition skips starts at
  * the end of the gap.
  */
@@ -1546,11 +1562,13 @@ export class SchedulerStore<
     const { start, end } = changes;
     const allDay = changes.allDay ?? occurrence.allDay;
     const liveEvent = schedulerEventSelectors.processedEvent(this.state, occurrence.id);
-    const rawStart = start?.getTime() ?? occurrence.start.timestamp;
-    const rawEnd = end?.getTime() ?? occurrence.end.timestamp;
-    const displayBounds = allDay
-      ? snapAllDayBounds(rawStart, rawEnd, displayTimezone)
-      : { start: rawStart, end: rawEnd };
+    const displayBounds = getEditedBounds(
+      start?.getTime(),
+      end?.getTime(),
+      occurrence,
+      allDay,
+      displayTimezone,
+    );
     const bounds = {
       start:
         start == null
@@ -1625,12 +1643,13 @@ export class SchedulerStore<
       return;
     }
 
-    // A bound the submit left out keeps the occurrence's current value.
-    const rawStart = changedStart ?? occurrence.start.timestamp;
-    const rawEnd = changedEnd ?? occurrence.end.timestamp;
-    const displayBounds = allDay
-      ? snapAllDayBounds(rawStart, rawEnd, displayTimezone)
-      : { start: rawStart, end: rawEnd };
+    const displayBounds = getEditedBounds(
+      changedStart,
+      changedEnd,
+      occurrence,
+      allDay,
+      displayTimezone,
+    );
     this.repointEditingOccurrence({
       eventId: targetsCreatedEvent ? createdEventId : original.id,
       start: changedStart == null ? occurrence.start.timestamp : displayBounds.start,

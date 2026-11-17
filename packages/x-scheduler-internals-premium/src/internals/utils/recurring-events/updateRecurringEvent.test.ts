@@ -1712,6 +1712,104 @@ describe('recurring-events/updateRecurringEvent', () => {
         expect(result.updated![0]).not.to.have.property('rrule');
       });
     });
+
+    describe('representation changes of other rules and scopes', () => {
+      // A series at 23:00 in New York, displayed on the next day in Tokyo.
+      const buildLateSeries = (rrule: SchedulerEventRecurrenceRule) =>
+        EventBuilder.new()
+          .id('sync')
+          .withDataTimezone('America/New_York')
+          .span('2025-07-04T23:00:00', '2025-07-04T23:30:00')
+          .rrule(rrule)
+          .withDisplayTimezone('Asia/Tokyo')
+          .toProcessed();
+      const newYorkOccurrence = (event: ReturnType<typeof buildLateSeries>, date: string) =>
+        createOccurrence(event, createDate(`${date}T23:00:00`, 'America/New_York'), 'Asia/Tokyo');
+
+      it("should move the day of the month of a series made all-day on a scope 'all' change", () => {
+        const event = buildLateSeries({ freq: 'MONTHLY', byMonthDay: [4] });
+
+        const result = applyRecurringUpdateAll(
+          event,
+          newYorkOccurrence(event, '2025-08-04'),
+          { id: 'sync', allDay: true, start: tokyo('2025-08-05'), end: tokyo('2025-08-06') },
+          'Asia/Tokyo',
+        );
+
+        expect(result.updated![0].start!.getTime()).to.equal(tokyo('2025-07-05').getTime());
+        expect(result.updated![0].rrule).to.deep.equal({ freq: 'MONTHLY', byMonthDay: [5] });
+      });
+
+      it("should move the ordinal weekday of a series made all-day on a scope 'all' change", () => {
+        // The first Friday at 23:00 in New York is the first Saturday in Tokyo.
+        const event = buildLateSeries({ freq: 'MONTHLY', byDay: ['1FR'] });
+
+        const result = applyRecurringUpdateAll(
+          event,
+          newYorkOccurrence(event, '2025-08-01'),
+          { id: 'sync', allDay: true, start: tokyo('2025-08-02'), end: tokyo('2025-08-03') },
+          'Asia/Tokyo',
+        );
+
+        expect(result.updated![0].rrule).to.deep.equal({ freq: 'MONTHLY', byDay: ['1SA'] });
+      });
+
+      it("should keep the remaining count of a series made all-day on a 'this and following' change", () => {
+        const event = buildLateSeries({ freq: 'DAILY', count: 5 });
+
+        // July 6th in New York, displayed on July 7th in Tokyo.
+        const result = applyRecurringUpdateFollowing(
+          event,
+          newYorkOccurrence(event, '2025-07-06'),
+          { id: 'sync', allDay: true, start: tokyo('2025-07-07'), end: tokyo('2025-07-08') },
+          'Asia/Tokyo',
+        );
+
+        expect(result.created![0].start).to.equal('2025-07-07');
+        expect((result.created![0].rrule as SchedulerEventRecurrenceRule).count).to.equal(3);
+      });
+
+      it('should detach a timed occurrence made all-day without bounds on its displayed day', () => {
+        const event = buildLateSeries({ freq: 'DAILY' });
+
+        const result = applyRecurringUpdateOnlyThis(
+          event,
+          newYorkOccurrence(event, '2025-07-06'),
+          { id: 'sync', allDay: true },
+          'Asia/Tokyo',
+        );
+
+        expect(result.created![0].start).to.equal('2025-07-07');
+        expect(result.created![0].end).to.equal('2025-07-08');
+      });
+
+      it('should detach an all-day occurrence made timed in the display timezone', () => {
+        const event = EventBuilder.new()
+          .id('gym')
+          .withDataTimezone('America/New_York')
+          .span('2025-07-04', '2025-07-05', { allDay: true })
+          .rrule({ freq: 'WEEKLY', byDay: ['FR'] })
+          .withDisplayTimezone('Asia/Tokyo')
+          .toProcessed();
+
+        const result = applyRecurringUpdateOnlyThis(
+          event,
+          createOccurrence(event, tokyo('2025-07-11'), 'Asia/Tokyo'),
+          {
+            id: 'gym',
+            allDay: false,
+            start: createDate('2025-07-11T09:00:00', 'Asia/Tokyo'),
+            end: createDate('2025-07-11T10:00:00', 'Asia/Tokyo'),
+          },
+          'Asia/Tokyo',
+        );
+
+        expect(result.created![0].timezone).to.equal('Asia/Tokyo');
+        expect(result.created![0].start).to.equal('2025-07-11T09:00:00');
+        expect(result.created![0].end).to.equal('2025-07-11T10:00:00');
+        expect(result.updated![0].exDates![0].getTime()).to.equal(tokyo('2025-07-11').getTime());
+      });
+    });
   });
 
   // The DST transitions must resolve the same way whatever the timezone of the system.
