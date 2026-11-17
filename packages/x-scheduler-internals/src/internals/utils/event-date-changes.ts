@@ -2,7 +2,8 @@ import type { SchedulerEvent, SchedulerEventUpdatedProperties } from '../../mode
 import { resolveEventTimestamp } from '../../process-event/resolveEventTimestamp';
 import { allDayBoundToEventString, timestampToEventString } from './date-utils';
 import { snapAllDayBounds } from './plain-date-utils/date';
-import { toPlainDate } from './plain-date-utils/timeZone';
+import { moveTimestampToPlainDate, toPlainDate } from './plain-date-utils/timeZone';
+import { BaseTemporal } from './base-temporal';
 
 export interface EventDateChangeStrings {
   start?: string;
@@ -14,7 +15,8 @@ export interface EventDateChangeStrings {
  * Writes the date changes of an event as the strings of its model: the days of an all-day event
  * in the display timezone, the instants of a timed event in the format of its stored strings.
  * `bounds` are the instants written when the changes give none. A timed event made all-day gets
- * whole displayed days, and its exception dates move to their displayed days.
+ * whole displayed days, and its exception dates move to their displayed days. An all-day event made
+ * timed excludes its occurrences at its new time on their displayed days.
  */
 export function stringifyEventDateChanges(
   changes: Pick<SchedulerEventUpdatedProperties, 'allDay' | 'start' | 'end' | 'exDates'>,
@@ -41,6 +43,19 @@ export function stringifyEventDateChanges(
         timestampToEventString(
           exDate.getTime(),
           model.exDates?.[index] ?? model.start,
+          dataTimezone,
+        ),
+      );
+    } else if (model.allDay && model.exDates != null && start != null) {
+      const timedStart = start;
+      result.exDates = model.exDates.map((exDate) =>
+        timestampToEventString(
+          moveTimestampToPlainDate(
+            timedStart,
+            BaseTemporal.PlainDate.from(exDate),
+            displayTimezone,
+          ),
+          model.start,
           dataTimezone,
         ),
       );
