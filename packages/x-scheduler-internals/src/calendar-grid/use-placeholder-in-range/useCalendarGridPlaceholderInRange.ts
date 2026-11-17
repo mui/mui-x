@@ -4,7 +4,7 @@ import { useEventCalendarStoreContext } from '../../use-event-calendar-store-con
 import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import type { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
-import { createProcessedDate } from '../../internals/utils/plain-date-utils/date';
+import { getPlaceholderOccurrence } from '../../internals/utils/placeholder-occurrence';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
 
 export function useCalendarGridPlaceholderInRange(
@@ -31,49 +31,15 @@ export function useCalendarGridPlaceholderInRange(
       return null;
     }
 
-    const sharedProperties = {
-      key: 'occurrence-placeholder',
-      id: originalEventId ?? 'occurrence-placeholder',
-      title: originalEvent ? originalEvent.title : '',
-      start: createProcessedDate(rawPlaceholder.start, displayTimezone),
-      end: createProcessedDate(rawPlaceholder.end, displayTimezone),
-      unstable_internalInfos: { displayTimezone },
-    };
-
-    if (rawPlaceholder.type === 'creation') {
-      return {
-        ...sharedProperties,
-        title: '',
-        position: {
-          firstIndex: 1,
-          lastIndex: maxIndex,
-        },
-      };
-    }
-
-    if (rawPlaceholder.type === 'external-drag') {
-      return {
-        ...sharedProperties,
-        title: rawPlaceholder.eventData.title ?? '',
-        position: {
-          firstIndex: 1,
-          lastIndex: maxIndex,
-        },
-      };
-    }
-
-    const position = occurrences.find(
-      (occurrence) => occurrence.key === rawPlaceholder.occurrenceKey,
-    )?.position ?? {
-      firstIndex: 1,
-      lastIndex: maxIndex,
-    };
+    const position = (isInternalDragOrResizePlaceholder(rawPlaceholder)
+      ? occurrences.find((occurrence) => occurrence.key === rawPlaceholder.occurrenceKey)?.position
+      : undefined) ?? { firstIndex: 1, lastIndex: maxIndex };
 
     return {
-      ...sharedProperties,
+      ...getPlaceholderOccurrence(rawPlaceholder, originalEvent, displayTimezone),
       position,
     };
-  }, [rawPlaceholder, displayTimezone, originalEvent, originalEventId, occurrences, maxIndex]);
+  }, [rawPlaceholder, displayTimezone, originalEvent, occurrences, maxIndex]);
 }
 
 export namespace useCalendarGridPlaceholderInRange {

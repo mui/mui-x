@@ -6,10 +6,7 @@ import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowConte
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
-import {
-  createProcessedDate,
-  normalizeAllDayBounds,
-} from '../../internals/utils/plain-date-utils/date';
+import { getPlaceholderOccurrence } from '../../internals/utils/placeholder-occurrence';
 import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
 import { getDayGridCellSpan } from '../../use-event-occurrences-with-day-grid-position';
 
@@ -63,17 +60,11 @@ export function useCalendarGridPlaceholderInDay(
 
     // The placeholder can run past the week row: the next rows render their own piece.
     const endInRow = Math.min(rawPlaceholder.end, rowEnd);
-    const allDay =
-      rawPlaceholder.type === 'creation' ||
-      (rawPlaceholder.type === 'external-drag'
-        ? rawPlaceholder.eventData.allDay
-        : originalEvent?.allDay);
-    const bounds = normalizeAllDayBounds(
-      rawPlaceholder.start,
-      rawPlaceholder.end,
-      allDay,
-      displayTimezone,
-    );
+    // A creation renders its piece of this row, from the day of the cell.
+    const placeholder =
+      rawPlaceholder.type === 'creation'
+        ? { ...rawPlaceholder, start: day.timestamp, end: endInRow }
+        : rawPlaceholder;
     // The placeholder covers the cells of every date up to its end, like the occurrences.
     const daySpan = getDayGridCellSpan(
       row.days,
@@ -81,62 +72,16 @@ export function useCalendarGridPlaceholderInDay(
       toLocalDayNumber(endInRow, displayTimezone),
     );
 
-    const sharedProperties = {
-      key: 'occurrence-placeholder',
-      id: originalEventId ?? 'occurrence-placeholder',
-      title: originalEvent ? originalEvent.title : '',
-      allDay,
-    };
-
-    // Creation mode
-    if (rawPlaceholder.type === 'creation') {
-      const creationBounds = normalizeAllDayBounds(day.timestamp, endInRow, true, displayTimezone);
-      return {
-        ...sharedProperties,
-        title: '',
-        allDay: true,
-        start: createProcessedDate(day.timestamp, displayTimezone),
-        end: createProcessedDate(creationBounds.end, displayTimezone),
-        unstable_internalInfos: { displayTimezone },
-        position: {
-          index: findAvailableIndex(),
-          daySpan,
-        },
-      };
-    }
-
-    if (rawPlaceholder.type === 'external-drag') {
-      return {
-        ...sharedProperties,
-        title: rawPlaceholder.eventData.title ?? '',
-        start: createProcessedDate(bounds.start, displayTimezone),
-        end: createProcessedDate(bounds.end, displayTimezone),
-        unstable_internalInfos: { displayTimezone },
-        position: {
-          index: findAvailableIndex(),
-          daySpan,
-        },
-      };
-    }
-
     return {
-      ...sharedProperties,
-      start: createProcessedDate(bounds.start, displayTimezone),
-      end: createProcessedDate(bounds.end, displayTimezone),
-      unstable_internalInfos: { displayTimezone },
+      ...getPlaceholderOccurrence(placeholder, originalEvent, displayTimezone),
       position: {
-        index: findAvailableIndex(rawPlaceholder.occurrenceKey),
+        index: findAvailableIndex(
+          isInternalDragOrResizePlaceholder(rawPlaceholder)
+            ? rawPlaceholder.occurrenceKey
+            : undefined,
+        ),
         daySpan,
       },
     };
-  }, [
-    day,
-    displayTimezone,
-    originalEvent,
-    originalEventId,
-    rawPlaceholder,
-    row.days,
-    rowEnd,
-    findAvailableIndex,
-  ]);
+  }, [day, displayTimezone, originalEvent, rawPlaceholder, row.days, rowEnd, findAvailableIndex]);
 }

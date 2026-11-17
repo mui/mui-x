@@ -6,9 +6,8 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
   computeElementPositionInCollection,
-  createProcessedDate,
+  getPlaceholderOccurrence,
   isInternalDragOrResizePlaceholder,
-  normalizeAllDayBounds,
 } from '@mui/x-scheduler-internals/internals';
 import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -44,84 +43,27 @@ export function usePlaceholderInRow(
       return null;
     }
 
-    const allDay =
-      rawPlaceholder.type === 'external-drag'
-        ? rawPlaceholder.eventData.allDay
-        : originalEvent?.allDay;
-    const bounds = normalizeAllDayBounds(
-      rawPlaceholder.start,
-      rawPlaceholder.end,
-      allDay,
-      displayTimezone,
-    );
-    const startProcessed = createProcessedDate(bounds.start, displayTimezone);
-    const endProcessed = createProcessedDate(bounds.end, displayTimezone);
-
+    const occurrence = getPlaceholderOccurrence(rawPlaceholder, originalEvent, displayTimezone);
     // A placeholder that occupies no space (fully inside the hidden hours while editing
     // the dates in the event dialog, or shorter than the minute the axis is drawn with)
     // would render as a zero-width sliver pinned to the day seam. Measured on the
     // rendered geometry, like the occurrence selector does.
     const renderedPosition = computeElementPositionInCollection({
-      start: startProcessed,
-      end: endProcessed,
+      start: occurrence.start,
+      end: occurrence.end,
       collection: config,
       durationMs: config.durationMs,
     });
     if (renderedPosition.duration === 0) {
       return null;
     }
-    const sharedProperties = {
-      id: originalEventId ?? 'occurrence-placeholder',
-      key: 'occurrence-placeholder',
-      title: originalEvent ? originalEvent.title : '',
-      allDay,
-      resource: rawPlaceholder.resourceId ?? originalEvent?.resource,
-      start: startProcessed,
-      end: endProcessed,
-      unstable_internalInfos: { displayTimezone },
-    };
 
-    if (rawPlaceholder.type === 'creation') {
-      return {
-        ...sharedProperties,
-        position: {
-          firstIndex: 1,
-          lastIndex: maxIndex,
-        },
-      };
-    }
+    const position = (isInternalDragOrResizePlaceholder(rawPlaceholder)
+      ? occurrences.find((item) => item.key === rawPlaceholder.occurrenceKey)?.position
+      : undefined) ?? { firstIndex: 1, lastIndex: maxIndex };
 
-    if (rawPlaceholder.type === 'external-drag') {
-      return {
-        ...sharedProperties,
-        title: rawPlaceholder.eventData.title ?? '',
-        position: {
-          firstIndex: 1,
-          lastIndex: maxIndex,
-        },
-      };
-    }
-
-    const position = occurrences.find(
-      (occurrence) => occurrence.key === rawPlaceholder.occurrenceKey,
-    )?.position ?? {
-      firstIndex: 1,
-      lastIndex: maxIndex,
-    };
-
-    return {
-      ...sharedProperties,
-      position,
-    };
-  }, [
-    rawPlaceholder,
-    config,
-    displayTimezone,
-    originalEvent,
-    originalEventId,
-    occurrences,
-    maxIndex,
-  ]);
+    return { ...occurrence, position };
+  }, [rawPlaceholder, config, displayTimezone, originalEvent, occurrences, maxIndex]);
 }
 
 export namespace usePlaceholderInRow {

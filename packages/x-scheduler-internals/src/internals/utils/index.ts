@@ -2,6 +2,7 @@ export * from './SchedulerStore';
 export * from './event-utils';
 export * from './event-range-index';
 export * from './drag-utils';
+export * from './placeholder-occurrence';
 export * from './pointer-utils';
 export * from './dom-utils';
 export * from './useDropTarget';
