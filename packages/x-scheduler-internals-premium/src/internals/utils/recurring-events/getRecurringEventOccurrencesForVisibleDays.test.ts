@@ -14,7 +14,6 @@ import {
   getMinutesInDay,
   toPlainDate,
   toPlainDateTime,
-  toZonedDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventOccurrencesForVisibleDays';
 import { getPlainDateWeekDayCode } from './internal-utils';
@@ -391,8 +390,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       // And ensure they are strictly increasing (no backwards/duplicates)
       for (let i = 1; i < result.length; i += 1) {
-        expect(result[i].start.epochMilliseconds > result[i - 1].start.epochMilliseconds).to.equal(
-          true,
+        expect(result[i].start.epochMilliseconds).to.be.greaterThan(
+          result[i - 1].start.epochMilliseconds,
         );
       }
     });
@@ -647,8 +646,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       );
 
       // Should appear only on the 11th, 12th and 13th in Europe/Madrid
-      const days = result.map((o) => String(o.start.day));
-      expect(days).to.deep.equal(['11', '12', '13']);
+      expect(result.map((o) => o.start.day)).to.deep.equal([11, 12, 13]);
     });
 
     it('keeps each recurrence tied to the event’s original local day even when display timezone conversion crosses midnight', () => {
@@ -960,7 +958,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
     for (const occurrence of result) {
       for (const bound of ['start', 'end'] as const) {
         const display = occurrence[bound];
-        expect(display).to.deep.equal(toZonedDateTime(display.epochMilliseconds, 'Europe/Paris'));
+        expect(display.timeZoneId).to.equal('Europe/Paris');
         expect(display.epochMilliseconds).to.equal(getDataTimestamp(occurrence, bound));
       }
     }

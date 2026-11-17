@@ -113,22 +113,18 @@ export function plainTimeFromMsInDay(msInDay: number): BaseTemporal.PlainTime {
 }
 
 /**
- * A value with a wall-clock time: a time, a date-time or a zoned date-time.
- */
-type WallClockTime =
-  BaseTemporal.PlainTime | BaseTemporal.PlainDateTime | BaseTemporal.ZonedDateTime;
-
-/**
- * The wall-clock time of a time, a date-time or a zoned date-time, in milliseconds since midnight. The microseconds and
+ * The wall-clock time of a time or date-time, in milliseconds since midnight. The microseconds and
  * nanoseconds are dropped.
  */
-export function getMsInDay(time: WallClockTime): number {
+export function getMsInDay(time: BaseTemporal.PlainTime | BaseTemporal.PlainDateTime): number {
   return ((time.hour * 60 + time.minute) * 60 + time.second) * 1000 + time.millisecond;
 }
 
 /**
  * The number of minutes since midnight of a time, a date-time or a zoned date-time.
  */
-export function getMinutesInDay(time: WallClockTime): number {
+export function getMinutesInDay(
+  time: BaseTemporal.PlainTime | BaseTemporal.PlainDateTime | BaseTemporal.ZonedDateTime,
+): number {
   return time.hour * 60 + time.minute;
 }

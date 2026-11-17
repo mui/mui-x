@@ -30,7 +30,7 @@ export function getOccurrenceLastDayNumber(
 ): number {
   const { end } = occurrence;
   return occurrence.allDay
-    ? toLocalDayNumber(end.epochMilliseconds - 1, end.timeZoneId)
+    ? toLocalDayNumber(getOccurrenceModelEnd(occurrence), end.timeZoneId)
     : getDayNumber(end.toPlainDate());
 }
 

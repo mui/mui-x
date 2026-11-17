@@ -10,7 +10,10 @@ import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
 import type { BaseTemporal } from '../../internals/utils/base-temporal';
-import { plainDateFromDayNumber } from '../../internals/utils/plain-date-utils/plainDate';
+import {
+  getDayNumber,
+  plainDateFromDayNumber,
+} from '../../internals/utils/plain-date-utils/plainDate';
 import type { SchedulerEventId, SchedulerEventOccurrence, SchedulerResourceId } from '../../models';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import {
@@ -73,9 +76,10 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   // Feature hooks
   const getDraggedDay = (input: { clientX: number }, occurrence: SchedulerEventOccurrence) => {
     const displayTimezone = schedulerOtherSelectors.displayTimezone(store.state);
-    const startDay = toLocalDayNumber(start.epochMilliseconds, displayTimezone);
+    const startPlainDate = start.toPlainDate();
+    const startDay = getDayNumber(startPlainDate);
     if (!ref.current) {
-      return plainDateFromDayNumber(startDay);
+      return startPlainDate;
     }
 
     // The dates of the event in the row.

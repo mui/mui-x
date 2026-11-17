@@ -316,9 +316,9 @@ export default defineConfig(
     },
   },
   {
-    // A copy of BaseTemporal from the Base UI version, which keeps its code style. It leaves out
-    // `ZonedDateTime` and prefixes its errors with "MUI X Scheduler". Change the Base UI version
-    // first, then copy it again.
+    // A copy of BaseTemporal and of its zoned date-time helpers from the Base UI version, which
+    // keeps its code style and prefixes its errors with "MUI X Scheduler". Change the Base UI
+    // version first, then copy it again.
     files: [
       `${BASE_TEMPORAL_COPY}/*${EXTENSION_TS}`,
       `${BASE_TEMPORAL_COPY_HELPERS}/*${EXTENSION_TS}`,

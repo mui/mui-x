@@ -1,11 +1,11 @@
 import { createDate, endOfDay } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { computeElementPositionInCollection } from './useElementPositionInCollection';
-import { toZonedDateTime } from '../../internals/utils/plain-date-utils/timeZone';
+import { toZonedDateTime } from './plain-date-utils/timeZone';
 
 describe('computeElementPositionInCollection', () => {
   const date = (value: string) => createDate(value, 'UTC');
-  const processed = (value: string) => toZonedDateTime(date(value).getTime(), 'UTC');
+  const zoned = (value: string) => toZonedDateTime(date(value).getTime(), 'UTC');
 
   // 4-day collection: Jan 5 → Jan 8, like the `dayAndHour` timeline preset.
   const collectionStart = date('2025-01-05T00:00:00.000Z');
@@ -21,8 +21,8 @@ describe('computeElementPositionInCollection', () => {
   describe('full-day window (default)', () => {
     it('should position an event relative to the whole collection', () => {
       const result = computeElementPositionInCollection({
-        start: processed('2025-01-05T12:00:00.000Z'),
-        end: processed('2025-01-05T18:00:00.000Z'),
+        start: zoned('2025-01-05T12:00:00.000Z'),
+        end: zoned('2025-01-05T18:00:00.000Z'),
         collection: fullCollection,
       });
 
@@ -34,8 +34,8 @@ describe('computeElementPositionInCollection', () => {
 
     it('should clamp an event overflowing the collection bounds', () => {
       const result = computeElementPositionInCollection({
-        start: processed('2025-01-04T12:00:00.000Z'),
-        end: processed('2025-01-09T12:00:00.000Z'),
+        start: zoned('2025-01-04T12:00:00.000Z'),
+        end: zoned('2025-01-09T12:00:00.000Z'),
         collection: fullCollection,
       });
 
@@ -53,8 +53,8 @@ describe('computeElementPositionInCollection', () => {
 
     it('should position an event fully inside the window of a later day', () => {
       const result = computeElementPositionInCollection({
-        start: processed('2025-01-06T10:00:00.000Z'),
-        end: processed('2025-01-06T12:00:00.000Z'),
+        start: zoned('2025-01-06T10:00:00.000Z'),
+        end: zoned('2025-01-06T12:00:00.000Z'),
         collection: trimmedCollection,
       });
 
@@ -66,8 +66,8 @@ describe('computeElementPositionInCollection', () => {
 
     it('should clamp an event ending after the window to the day edge without bleeding into the next day', () => {
       const result = computeElementPositionInCollection({
-        start: processed('2025-01-05T18:00:00.000Z'),
-        end: processed('2025-01-05T22:00:00.000Z'),
+        start: zoned('2025-01-05T18:00:00.000Z'),
+        end: zoned('2025-01-05T22:00:00.000Z'),
         collection: trimmedCollection,
       });
 
@@ -78,8 +78,8 @@ describe('computeElementPositionInCollection', () => {
 
     it('should clamp an event starting before the window to the day edge', () => {
       const result = computeElementPositionInCollection({
-        start: processed('2025-01-06T06:00:00.000Z'),
-        end: processed('2025-01-06T10:00:00.000Z'),
+        start: zoned('2025-01-06T06:00:00.000Z'),
+        end: zoned('2025-01-06T10:00:00.000Z'),
         collection: trimmedCollection,
       });
 
@@ -91,8 +91,8 @@ describe('computeElementPositionInCollection', () => {
 
     it('should span the day seam when an event crosses the hidden overnight gap', () => {
       const result = computeElementPositionInCollection({
-        start: processed('2025-01-05T18:00:00.000Z'),
-        end: processed('2025-01-06T10:00:00.000Z'),
+        start: zoned('2025-01-05T18:00:00.000Z'),
+        end: zoned('2025-01-06T10:00:00.000Z'),
         collection: trimmedCollection,
       });
 
@@ -104,8 +104,8 @@ describe('computeElementPositionInCollection', () => {
 
     it('should flag an event ending exactly at midnight as continuing past the day edge', () => {
       const result = computeElementPositionInCollection({
-        start: processed('2025-01-05T18:00:00.000Z'),
-        end: processed('2025-01-06T00:00:00.000Z'),
+        start: zoned('2025-01-05T18:00:00.000Z'),
+        end: zoned('2025-01-06T00:00:00.000Z'),
         collection: trimmedCollection,
       });
 
@@ -116,8 +116,8 @@ describe('computeElementPositionInCollection', () => {
 
     it('should flag an event starting in the hidden evening hours as starting before the day edge', () => {
       const result = computeElementPositionInCollection({
-        start: processed('2025-01-05T22:00:00.000Z'),
-        end: processed('2025-01-06T10:00:00.000Z'),
+        start: zoned('2025-01-05T22:00:00.000Z'),
+        end: zoned('2025-01-06T10:00:00.000Z'),
         collection: trimmedCollection,
       });
 
@@ -130,8 +130,8 @@ describe('computeElementPositionInCollection', () => {
       // A night shift starting at 20:00: the start renders on the day seam (= next day
       // 08:00), so it must be flagged and must not expose its real position.
       const result = computeElementPositionInCollection({
-        start: processed('2025-01-05T20:00:00.000Z'),
-        end: processed('2025-01-06T10:00:00.000Z'),
+        start: zoned('2025-01-05T20:00:00.000Z'),
+        end: zoned('2025-01-06T10:00:00.000Z'),
         collection: trimmedCollection,
       });
 
@@ -143,8 +143,8 @@ describe('computeElementPositionInCollection', () => {
 
     it('should return a zero duration for an event fully inside the hidden hours', () => {
       const result = computeElementPositionInCollection({
-        start: processed('2025-01-05T21:00:00.000Z'),
-        end: processed('2025-01-05T23:00:00.000Z'),
+        start: zoned('2025-01-05T21:00:00.000Z'),
+        end: zoned('2025-01-05T23:00:00.000Z'),
         collection: trimmedCollection,
       });
 
@@ -155,8 +155,8 @@ describe('computeElementPositionInCollection', () => {
       // Ends the next day but never enters the visible window: clamping makes both
       // offsets land on the day seam, collapsing the element instead of stretching it.
       const result = computeElementPositionInCollection({
-        start: processed('2025-01-05T21:00:00.000Z'),
-        end: processed('2025-01-06T07:00:00.000Z'),
+        start: zoned('2025-01-05T21:00:00.000Z'),
+        end: zoned('2025-01-06T07:00:00.000Z'),
         collection: trimmedCollection,
       });
 
@@ -167,8 +167,8 @@ describe('computeElementPositionInCollection', () => {
       // Window 8:00 → 24:00: an 18:00 → 00:00 event fills the window exactly, nothing
       // is hidden. Its end is minute 0 of the next day but closes this one.
       const result = computeElementPositionInCollection({
-        start: processed('2025-01-05T18:00:00.000Z'),
-        end: processed('2025-01-06T00:00:00.000Z'),
+        start: zoned('2025-01-05T18:00:00.000Z'),
+        end: zoned('2025-01-06T00:00:00.000Z'),
         collection: {
           ...fullCollection,
           dayStartMinute: 480,
@@ -185,8 +185,8 @@ describe('computeElementPositionInCollection', () => {
     it('should flag an event ending at midnight as clipped by a morning window', () => {
       // Window 0:00 → 12:00: the 12:00 → 24:00 tail of the event is hidden.
       const result = computeElementPositionInCollection({
-        start: processed('2025-01-05T10:00:00.000Z'),
-        end: processed('2025-01-06T00:00:00.000Z'),
+        start: zoned('2025-01-05T10:00:00.000Z'),
+        end: zoned('2025-01-06T00:00:00.000Z'),
         collection: {
           ...fullCollection,
           dayStartMinute: 0,
@@ -202,8 +202,8 @@ describe('computeElementPositionInCollection', () => {
     it('should keep the calendar single-day column behavior', () => {
       const singleDayEnd = endOfDay(collectionStart, 'UTC');
       const result = computeElementPositionInCollection({
-        start: processed('2025-01-05T06:00:00.000Z'),
-        end: processed('2025-01-05T10:00:00.000Z'),
+        start: zoned('2025-01-05T06:00:00.000Z'),
+        end: zoned('2025-01-05T10:00:00.000Z'),
         collection: { ...fullCollection, end: singleDayEnd.getTime(), ...window },
       });
 
