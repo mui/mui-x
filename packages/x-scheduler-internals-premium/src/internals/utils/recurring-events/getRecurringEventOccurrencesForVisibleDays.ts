@@ -22,13 +22,16 @@ import { RecurringSeries } from './RecurringSeries';
  * `start` to the timestamp `end`, both included.
  *
  * The series finds the days of the occurrences in the data timezone, and each day is translated
- * back to dates.
+ * back to dates. The occurrences that don't overlap the range are left out before their dates are
+ * built, and so are the ones that only cover hidden days when `visibleDayNumbers`, the sorted day
+ * numbers of the visible days in the display timezone, is given.
  */
 export function getRecurringEventOccurrencesForVisibleDays(
   event: SchedulerProcessedEvent,
   start: number,
   end: number,
   displayTimezone: string,
+  visibleDayNumbers?: readonly number[],
 ): SchedulerEventOccurrence[] {
   // Important:
   // Occurrences are always computed in dataTimezone to avoid DST issues
@@ -49,20 +52,57 @@ export function getRecurringEventOccurrencesForVisibleDays(
   // `exDates` is cleared rather than left out with a rest destructuring, which is about 8 times
   // slower.
   const occurrenceProperties = { ...event, exDates: undefined };
-  return series.getOccurrenceDays(scanFirstDay, scanLastDay).map((day) => {
+  const occurrences: SchedulerEventOccurrence[] = [];
+  for (const day of series.getOccurrenceDays(scanFirstDay, scanLastDay)) {
     const startMs = localToEpochMs(getDayNumber(day) * MS_PER_DAY + startMsInDay, dataTimezone);
     const endMs = startMs + durationMs;
 
     // All-day occurrences span the whole day, like the base event in processEvent.
     const displayStartMs = event.allDay ? getStartOfDayMs(startMs, displayTimezone) : startMs;
     const displayEndMs = event.allDay ? getEndOfDayMs(endMs, displayTimezone) + 1 : endMs;
+    // The end of an all-day occurrence is exclusive.
+    const lastInstantMs = event.allDay ? displayEndMs - 1 : displayEndMs;
 
-    return {
+    // The scan covers whole days of the data timezone and starts early for the occurrences that
+    // last several days, so some of its occurrences fall outside the range.
+    if (displayStartMs > end || lastInstantMs < start) {
+      continue;
+    }
+    if (
+      visibleDayNumbers !== undefined &&
+      !hasDayBetween(
+        visibleDayNumbers,
+        toLocalDayNumber(displayStartMs, displayTimezone),
+        toLocalDayNumber(lastInstantMs, displayTimezone),
+      )
+    ) {
+      continue;
+    }
+
+    occurrences.push({
       ...occurrenceProperties,
       key: getRecurringOccurrenceKeyFromDateKey(event.id, getPlainDateKey(day)),
       start: createProcessedDate(displayStartMs, displayTimezone),
       end: createProcessedDate(displayEndMs, displayTimezone),
       unstable_internalInfos: { displayTimezone, dataStart: startMs, dataEnd: endMs },
-    };
-  });
+    });
+  }
+  return occurrences;
+}
+
+/**
+ * Whether one of the sorted `dayNumbers` is between `first` and `last`, both included.
+ */
+function hasDayBetween(dayNumbers: readonly number[], first: number, last: number): boolean {
+  let low = 0;
+  let high = dayNumbers.length;
+  while (low < high) {
+    const middle = Math.floor((low + high) / 2);
+    if (dayNumbers[middle] < first) {
+      low = middle + 1;
+    } else {
+      high = middle;
+    }
+  }
+  return low < dayNumbers.length && dayNumbers[low] <= last;
 }

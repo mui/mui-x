@@ -75,6 +75,7 @@ export function innerGetEventOccurrencesGroupedByDay(
     return occurrenceMap;
   }
 
+  const dayNumbers = days.map((day) => getDayNumber(day.plainDate));
   const occurrences = getOccurrencesFromEvents({
     // The days start on their first instant.
     start: days[0].timestamp,
@@ -83,9 +84,9 @@ export function innerGetEventOccurrencesGroupedByDay(
     visibleResources,
     displayTimezone,
     recurringEventsPlugin,
+    visibleDayNumbers: dayNumbers,
   });
 
-  const dayNumbers = days.map((day) => getDayNumber(day.plainDate));
   for (const occurrence of occurrences) {
     const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, days, dayNumbers);
     for (const dayKey of eventDays) {

@@ -173,8 +173,15 @@ export function getDaysTheOccurrenceIsVisibleOn(
  * Build eventRangeIndex with expandRecurringEvents set to whether recurringEventsPlugin is non-null.
  */
 export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsParameters) {
-  const { start, end, eventRangeIndex, visibleResources, displayTimezone, recurringEventsPlugin } =
-    parameters;
+  const {
+    start,
+    end,
+    eventRangeIndex,
+    visibleResources,
+    displayTimezone,
+    recurringEventsPlugin,
+    visibleDayNumbers,
+  } = parameters;
   const occurrences: SchedulerEventOccurrence[] = [];
   const eventsInRange = eventRangeIndex.getEventsForRange(start, end);
 
@@ -189,9 +196,14 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
 
     // STEP 2: Recurrent event processing, if it is recurrent expand it for the visible days
     if (event.rrule && recurringEventsPlugin != null) {
-      // TODO: Check how this behave when the occurrence is between start and end but not in the visible days (e.g: hidden week end).
       occurrences.push(
-        ...recurringEventsPlugin.getOccurrencesForVisibleDays(event, start, end, displayTimezone),
+        ...recurringEventsPlugin.getOccurrencesForVisibleDays(
+          event,
+          start,
+          end,
+          displayTimezone,
+          visibleDayNumbers,
+        ),
       );
       continue;
     }
@@ -282,4 +294,10 @@ export interface GetOccurrencesFromEventsParameters {
   visibleResources: Record<string, boolean>;
   displayTimezone: string;
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
+  /**
+   * The sorted day numbers of the visible days in the display timezone, when the range has hidden
+   * days, like the weekends of a view that hides them. The occurrences of recurring events that only
+   * cover hidden days are left out.
+   */
+  visibleDayNumbers?: readonly number[];
 }
