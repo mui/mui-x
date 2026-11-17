@@ -84,6 +84,7 @@ import {
 } from '../hooks/features/rowReorder/useGridRowReorder';
 import { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
 import { useGridRowReorderPointer } from '../hooks/features/rowReorder/useGridRowReorderPointer';
+import { useGridKeyboardReorder } from '../hooks/features/keyboardReorder/useGridKeyboardReorder';
 import { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
 import { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
 import {
@@ -183,6 +184,7 @@ export const useDataGridProComponent = (
   useGridPagination(apiRef, props);
   useGridRowReorder(apiRef, props);
   useGridRowReorderPointer(apiRef, props);
+  useGridKeyboardReorder(apiRef, props);
   useGridScroll(apiRef);
   useGridInfiniteLoader(apiRef, props);
   useGridLazyLoader(apiRef, props);
