@@ -28,15 +28,15 @@ export interface SchedulerRecurringEventsPluginInterface {
   /**
    * Expands a recurring event into the occurrences that fall within the visible range, from the
    * timestamp `start` to the timestamp `end`, both included, honoring COUNT/UNTIL boundaries and
-   * EXDATE exclusions. When `visibleDayNumbers`, the sorted day numbers of the visible days in the
-   * display timezone, is given, the occurrences that only cover hidden days are left out too.
+   * EXDATE exclusions. When `visibleRanges`, the sorted and disjoint ranges of the visible days, is
+   * given, the occurrences that don't overlap one of them are left out too.
    */
   getOccurrencesForVisibleDays(
     event: SchedulerProcessedEvent,
     start: number,
     end: number,
     displayTimezone: string,
-    visibleDayNumbers?: readonly number[],
+    visibleRanges?: readonly { start: number; end: number }[],
   ): SchedulerEventOccurrence[];
 
   /**

@@ -180,7 +180,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
     visibleResources,
     displayTimezone,
     recurringEventsPlugin,
-    visibleDayNumbers,
+    visibleRanges,
   } = parameters;
   const occurrences: SchedulerEventOccurrence[] = [];
   const eventsInRange = eventRangeIndex.getEventsForRange(start, end);
@@ -202,7 +202,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
           start,
           end,
           displayTimezone,
-          visibleDayNumbers,
+          visibleRanges,
         ),
       );
       continue;
@@ -295,9 +295,9 @@ export interface GetOccurrencesFromEventsParameters {
   displayTimezone: string;
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
   /**
-   * The sorted day numbers of the visible days in the display timezone, when the range has hidden
-   * days, like the weekends of a view that hides them. The occurrences of recurring events that only
-   * cover hidden days are left out.
+   * The sorted and disjoint ranges of the visible days, from the first instant of a day to the last
+   * instant of a day, when the range has hidden days, like the weekends of a month view that hides
+   * them. The occurrences of recurring events that don't overlap one of them are left out.
    */
-  visibleDayNumbers?: readonly number[];
+  visibleRanges?: readonly { start: number; end: number }[];
 }

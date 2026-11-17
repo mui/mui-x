@@ -23,15 +23,14 @@ import { RecurringSeries } from './RecurringSeries';
  *
  * The series finds the days of the occurrences in the data timezone, and each day is translated
  * back to dates. The occurrences that don't overlap the range are left out before their dates are
- * built, and so are the ones that only cover hidden days when `visibleDayNumbers`, the sorted day
- * numbers of the visible days in the display timezone, is given.
+ * built, and so are the ones that don't overlap `visibleRanges` when it's given.
  */
 export function getRecurringEventOccurrencesForVisibleDays(
   event: SchedulerProcessedEvent,
   start: number,
   end: number,
   displayTimezone: string,
-  visibleDayNumbers?: readonly number[],
+  visibleRanges?: readonly { start: number; end: number }[],
 ): SchedulerEventOccurrence[] {
   // Important:
   // Occurrences are always computed in dataTimezone to avoid DST issues
@@ -59,23 +58,16 @@ export function getRecurringEventOccurrencesForVisibleDays(
 
     // All-day occurrences span the whole day, like the base event in processEvent.
     const displayStartMs = event.allDay ? getStartOfDayMs(startMs, displayTimezone) : startMs;
-    const displayEndMs = event.allDay ? getEndOfDayMs(endMs, displayTimezone) + 1 : endMs;
+    const lastInstantMs = event.allDay ? getEndOfDayMs(endMs, displayTimezone) : endMs;
     // The end of an all-day occurrence is exclusive.
-    const lastInstantMs = event.allDay ? displayEndMs - 1 : displayEndMs;
+    const displayEndMs = event.allDay ? lastInstantMs + 1 : endMs;
 
     // The scan covers whole days of the data timezone and starts early for the occurrences that
     // last several days, so some of its occurrences fall outside the range.
     if (displayStartMs > end || lastInstantMs < start) {
       continue;
     }
-    if (
-      visibleDayNumbers !== undefined &&
-      !hasDayBetween(
-        visibleDayNumbers,
-        toLocalDayNumber(displayStartMs, displayTimezone),
-        toLocalDayNumber(lastInstantMs, displayTimezone),
-      )
-    ) {
+    if (visibleRanges && !overlapsOneOf(visibleRanges, displayStartMs, lastInstantMs)) {
       continue;
     }
 
@@ -91,18 +83,23 @@ export function getRecurringEventOccurrencesForVisibleDays(
 }
 
 /**
- * Whether one of the sorted `dayNumbers` is between `first` and `last`, both included.
+ * Whether the instants from `first` to `last` overlap one of the sorted, disjoint `ranges`.
  */
-function hasDayBetween(dayNumbers: readonly number[], first: number, last: number): boolean {
+function overlapsOneOf(
+  ranges: readonly { start: number; end: number }[],
+  first: number,
+  last: number,
+): boolean {
+  // The first range that ends at or after `first`.
   let low = 0;
-  let high = dayNumbers.length;
+  let high = ranges.length;
   while (low < high) {
     const middle = Math.floor((low + high) / 2);
-    if (dayNumbers[middle] < first) {
+    if (ranges[middle].end < first) {
       low = middle + 1;
     } else {
       high = middle;
     }
   }
-  return low < dayNumbers.length && dayNumbers[low] <= last;
+  return low < ranges.length && ranges[low].start <= last;
 }

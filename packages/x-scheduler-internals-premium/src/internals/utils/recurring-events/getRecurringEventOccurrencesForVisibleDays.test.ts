@@ -12,7 +12,6 @@ import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models
 import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
 import {
   getDataTimestamp,
-  getDayNumber,
   getMinutesInDay,
   toEpochMs,
   toPlainDate,
@@ -268,33 +267,30 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
   });
 
   describe('range edges and hidden days', () => {
-    // From Monday, January 6th, 2025 to Sunday, January 12th, 2025, with the weekend hidden.
-    const weekStart = Date.parse('2025-01-06T00:00:00Z');
-    const weekEnd = Date.parse('2025-01-13T00:00:00Z') - 1;
-    const weekdayNumbers = [
-      '2025-01-06',
-      '2025-01-07',
-      '2025-01-08',
-      '2025-01-09',
-      '2025-01-10',
-    ].map((date) => getDayNumber(toPlainDate(Date.parse(date), 'UTC')));
+    // From Monday, January 6th, 2025 to Friday, January 17th, 2025, with the weekend hidden.
+    const twoWeeksStart = Date.parse('2025-01-06T00:00:00Z');
+    const twoWeeksEnd = Date.parse('2025-01-18T00:00:00Z') - 1;
+    const weekdayRanges = [
+      { start: twoWeeksStart, end: Date.parse('2025-01-11T00:00:00Z') - 1 },
+      { start: Date.parse('2025-01-13T00:00:00Z'), end: twoWeeksEnd },
+    ];
 
     function getStartDates(occurrences: SchedulerEventOccurrence[]) {
       return occurrences.map((o) => toPlainDate(o.start.timestamp, 'UTC').toString());
     }
 
-    function buildDailyEvent() {
-      return EventBuilder.new()
-        .withDataTimezone('UTC')
-        .withDisplayTimezone('UTC')
-        .singleDay('2025-01-06T09:00:00')
-        .rrule({ freq: 'DAILY' })
-        .toProcessed();
+    function buildUtcEvent() {
+      return EventBuilder.new().withDataTimezone('UTC').withDisplayTimezone('UTC');
     }
 
     it('should leave out the occurrences that end before the range or start after it', () => {
+      const event = buildUtcEvent()
+        .singleDay('2025-01-06T09:00:00')
+        .rrule({ freq: 'DAILY' })
+        .toProcessed();
+
       const result = getRecurringEventOccurrencesForVisibleDays(
-        buildDailyEvent(),
+        event,
         Date.parse('2025-01-06T10:30:00Z'),
         Date.parse('2025-01-08T08:00:00Z'),
         'UTC',
@@ -324,12 +320,17 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
     });
 
     it('should leave out the occurrences that only cover hidden days', () => {
+      const event = buildUtcEvent()
+        .singleDay('2025-01-06T09:00:00')
+        .rrule({ freq: 'DAILY' })
+        .toProcessed();
+
       const result = getRecurringEventOccurrencesForVisibleDays(
-        buildDailyEvent(),
-        weekStart,
-        weekEnd,
+        event,
+        twoWeeksStart,
+        twoWeeksEnd,
         'UTC',
-        weekdayNumbers,
+        weekdayRanges,
       );
 
       expect(getStartDates(result)).to.deep.equal([
@@ -338,28 +339,30 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         '2025-01-08',
         '2025-01-09',
         '2025-01-10',
+        '2025-01-13',
+        '2025-01-14',
+        '2025-01-15',
+        '2025-01-16',
+        '2025-01-17',
       ]);
     });
 
     it('should keep an occurrence that starts on a hidden day when it covers a visible one', () => {
       // Every week from Saturday 20:00 to Monday 10:00.
-      const event = EventBuilder.new()
-        .withDataTimezone('UTC')
-        .withDisplayTimezone('UTC')
+      const event = buildUtcEvent()
         .span('2025-01-04T20:00:00', '2025-01-06T10:00:00')
         .rrule({ freq: 'WEEKLY' })
         .toProcessed();
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        weekStart,
-        weekEnd,
+        twoWeeksStart,
+        twoWeeksEnd,
         'UTC',
-        weekdayNumbers,
+        weekdayRanges,
       );
 
-      // The one of January 11th only covers the hidden weekend in the range and the next Monday.
-      expect(getStartDates(result)).to.deep.equal(['2025-01-04']);
+      expect(getStartDates(result)).to.deep.equal(['2025-01-04', '2025-01-11']);
     });
   });
 
