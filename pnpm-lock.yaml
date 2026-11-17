@@ -2408,8 +2408,8 @@ importers:
         specifier: 'catalog:'
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0)
       '@mui/internal-benchmark':
-        specifier: 0.1.1-canary.14
-        version: 0.1.1-canary.14(@playwright/test@1.65.0)(@vitest/browser-playwright@5.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vite@8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.0)
+        specifier: file:./mui-internal-benchmark-0.1.0.tgz
+        version: file:test/benchmark/mui-internal-benchmark-0.1.0.tgz(@playwright/test@1.65.0)(@vitest/browser-playwright@5.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vite@8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.0)
       '@mui/material':
         specifier: 'catalog:'
         version: 9.5.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -4571,8 +4571,9 @@ packages:
     peerDependencies:
       '@babel/core': ^8.0.0
 
-  '@mui/internal-benchmark@0.1.1-canary.14':
-    resolution: {integrity: sha512-Ea6lfH8qi0L5QmtGuLxrN9TCDQt26O95KTDTnxeJ7e3AyIjdFTYbeEy7crFxZWWx3Z53x/kLEiwu3sFmIpnbSA==}
+  '@mui/internal-benchmark@file:test/benchmark/mui-internal-benchmark-0.1.0.tgz':
+    resolution: {integrity: sha512-7BFuzTN9Yt5+rSY/qStT+rtvoJMeK5s4+IddCZrFNacj9dRjVs7cJ70xfRHPlLcxqHtwBuxCq3Rka9mnKxIDqg==, tarball: file:test/benchmark/mui-internal-benchmark-0.1.0.tgz}
+    version: 0.1.0
     hasBin: true
     peerDependencies:
       '@playwright/test': '>=1.50.0'
@@ -13519,7 +13520,7 @@ snapshots:
       '@babel/core': 8.1.0
       resolve: 1.22.14
 
-  '@mui/internal-benchmark@0.1.1-canary.14(@playwright/test@1.65.0)(@vitest/browser-playwright@5.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vite@8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.0)':
+  '@mui/internal-benchmark@file:test/benchmark/mui-internal-benchmark-0.1.0.tgz(@playwright/test@1.65.0)(@vitest/browser-playwright@5.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vite@8.3.6(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.0)':
     dependencies:
       '@babel/runtime': 8.1.0
       '@playwright/test': 1.65.0
