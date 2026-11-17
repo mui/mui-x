@@ -89,9 +89,25 @@ export class EventDialogFormStore<
    */
   declare public readonly resourceSelectionMode: ResourceSelectionMode;
 
+  declare private timedValues: boolean;
+
   constructor(initialValues: TValues, parameters: EventDialogFormParameters<TValues>) {
     super(initialValues, parameters);
     this.occurrence = parameters.occurrence;
     this.resourceSelectionMode = parameters.resourceSelectionMode;
+    this.timedValues = !parameters.occurrence.allDay;
   }
+
+  /**
+   * Whether the time fields hold times of the editing session. An event opened as all-day has
+   * none until it is first made timed, which fills them with defaults.
+   */
+  public hasTimedValues = (): boolean => this.timedValues;
+
+  /**
+   * Records that the time fields now hold times of the editing session.
+   */
+  public markTimedValues = () => {
+    this.timedValues = true;
+  };
 }

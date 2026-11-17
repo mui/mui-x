@@ -16,59 +16,32 @@ import {
 } from './utils';
 
 describe('getDefaultTimedFields', () => {
-  const sameDay = { startDate: '2025-07-04', endDate: '2025-07-04' };
-
-  it('should start at the next hour of the display clock and last the duration', () => {
+  it('should start at the current time of the display timezone rounded up to the hour', () => {
     // 10:20 UTC is 06:20 in New York.
     expect(
-      getDefaultTimedFields(sameDay, Date.UTC(2025, 6, 4, 10, 20), 30, 'America/New_York'),
-    ).to.deep.equal({ startTime: '07:00', endTime: '07:30', endDate: '2025-07-04' });
+      getDefaultTimedFields(Date.UTC(2025, 6, 4, 10, 20), 30, 'America/New_York'),
+    ).to.deep.equal({ startTime: '07:00', endTime: '07:30' });
   });
 
   it('should keep a time on the hour', () => {
-    expect(getDefaultTimedFields(sameDay, Date.UTC(2025, 6, 4, 10), 30, 'UTC')).to.deep.equal({
+    expect(getDefaultTimedFields(Date.UTC(2025, 6, 4, 10), 30, 'UTC')).to.deep.equal({
       startTime: '10:00',
       endTime: '10:30',
-      endDate: '2025-07-04',
     });
   });
 
-  it('should wrap the last hour of the day to midnight of the kept start date', () => {
-    expect(getDefaultTimedFields(sameDay, Date.UTC(2025, 6, 4, 23, 40), 30, 'UTC')).to.deep.equal({
+  it('should wrap the last hour of the day to midnight', () => {
+    expect(getDefaultTimedFields(Date.UTC(2025, 6, 4, 23, 40), 30, 'UTC')).to.deep.equal({
       startTime: '00:00',
       endTime: '00:30',
-      endDate: '2025-07-04',
     });
   });
 
-  it('should move the end date to the next day when the end crosses midnight on a one-day event', () => {
-    expect(getDefaultTimedFields(sameDay, Date.UTC(2025, 6, 4, 22, 10), 90, 'UTC')).to.deep.equal({
+  it('should end at the last minute of the day when the duration would cross midnight', () => {
+    expect(getDefaultTimedFields(Date.UTC(2025, 6, 4, 22, 10), 90, 'UTC')).to.deep.equal({
       startTime: '23:00',
-      endTime: '00:30',
-      endDate: '2025-07-05',
+      endTime: '23:59',
     });
-  });
-
-  it('should keep the end date of a multi-day event when the end crosses midnight', () => {
-    expect(
-      getDefaultTimedFields(
-        { startDate: '2025-07-04', endDate: '2025-07-06' },
-        Date.UTC(2025, 6, 4, 22, 10),
-        90,
-        'UTC',
-      ),
-    ).to.deep.equal({ startTime: '23:00', endTime: '00:30', endDate: '2025-07-06' });
-  });
-
-  it('should leave the end date as given when the start date is empty', () => {
-    expect(
-      getDefaultTimedFields(
-        { startDate: '', endDate: '' },
-        Date.UTC(2025, 6, 4, 22, 10),
-        90,
-        'UTC',
-      ),
-    ).to.deep.equal({ startTime: '23:00', endTime: '00:30', endDate: '' });
   });
 });
 

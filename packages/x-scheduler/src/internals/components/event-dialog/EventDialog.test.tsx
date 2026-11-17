@@ -95,7 +95,11 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   });
 
   describe('events viewed from another display timezone', () => {
-    function renderEditDialog(builder: EventBuilder, displayTimezone: string) {
+    function renderEditDialog(
+      builder: EventBuilder,
+      displayTimezone: string,
+      providerProps?: Partial<React.ComponentProps<typeof EventCalendarProvider>>,
+    ) {
       const onEventsChange = vi.fn();
       const event: SchedulerEvent = builder.withDisplayTimezone(displayTimezone).build();
 
@@ -104,6 +108,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
           events={[event]}
           displayTimezone={displayTimezone}
           onEventsChange={onEventsChange}
+          {...providerProps}
         >
           <EventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
         </EventCalendarProvider>,
@@ -358,13 +363,16 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
           .withDataTimezone('America/New_York')
           .span('2025-05-26T07:30:00', '2025-05-26T08:15:00');
 
+      beforeEach(() => {
+        // 06:20 in New York.
+        vi.setSystemTime(new Date('2025-07-04T10:20:00Z'));
+      });
+
       afterEach(() => {
         vi.useRealTimers();
       });
 
       it('should fill the times of an all-day event made timed with the next display hour and the default duration', async () => {
-        // 06:20 in New York.
-        vi.setSystemTime(new Date('2025-07-04T10:20:00Z'));
         const { user, getUpdatedEvent } = renderEditDialog(
           EventBuilder.new().title('Trip').span('2025-07-04', '2025-07-05', { allDay: true }),
           'America/New_York',
@@ -390,7 +398,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       });
 
       it('should keep both dates of a multi-day all-day event made timed', async () => {
-        vi.setSystemTime(new Date('2025-07-04T10:20:00Z'));
         const { user, getUpdatedEvent } = renderEditDialog(
           EventBuilder.new().title('Trip').span('2025-07-04', '2025-07-06', { allDay: true }),
           'UTC',
@@ -440,7 +447,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       });
 
       it('should fill the default times only once in a session', async () => {
-        vi.setSystemTime(new Date('2025-07-04T10:20:00Z'));
         const { user } = renderEditDialog(
           EventBuilder.new().title('Trip').span('2025-07-04', '2025-07-05', { allDay: true }),
           'UTC',
@@ -450,12 +456,36 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         await user.click(allDaySwitch);
         const startTimeInput = screen.getByLabelText(/start time/i);
         expect(startTimeInput).to.have.value('11:00');
+        expect(screen.getByLabelText(/end time/i)).to.have.value('11:30');
         await user.clear(startTimeInput);
-        await user.type(startTimeInput, '15:00');
+        await user.type(startTimeInput, '15:45');
         await user.click(allDaySwitch);
         await user.click(allDaySwitch);
 
-        expect(screen.getByLabelText(/start time/i)).to.have.value('15:00');
+        expect(screen.getByLabelText(/start time/i)).to.have.value('15:45');
+        expect(screen.getByLabelText(/end time/i)).to.have.value('11:30');
+      });
+
+      it('should keep the dates of an all-day event made timed late in the day and all-day again', async () => {
+        vi.setSystemTime(new Date('2025-07-04T22:10:00Z'));
+        const { user, event, getUpdatedEvent } = renderEditDialog(
+          EventBuilder.new().title('Trip').span('2025-07-04', '2025-07-05', { allDay: true }),
+          'UTC',
+          { eventCreation: { duration: 60 } },
+        );
+
+        const allDaySwitch = screen.getByRole('switch', { name: /all day/i });
+        await user.click(allDaySwitch);
+
+        expect(screen.getByLabelText(/start time/i)).to.have.value('23:00');
+        expect(screen.getByLabelText(/end time/i)).to.have.value('23:59');
+        expect(screen.getByLabelText(/end date/i)).to.have.value('2025-07-04');
+        await user.click(allDaySwitch);
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+
+        const updated = getUpdatedEvent();
+        expect(updated.start).to.equal(event.start);
+        expect(updated.end).to.equal(event.end);
       });
     });
 
@@ -1989,6 +2019,37 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(selects.length).to.equal(2);
       const labelIds = selects.map((select) => select.getAttribute('aria-labelledby'));
       expect(labelIds[0]).not.to.equal(labelIds[1]);
+    });
+
+    it('should fill the default times once per session when the date and time section is rendered twice', async () => {
+      function DuplicatedDateTimeSections() {
+        return (
+          <React.Fragment>
+            <EventDialogDateTimeSection />
+            <EventDialogDateTimeSection />
+          </React.Fragment>
+        );
+      }
+      const trip = EventBuilder.new().title('Trip').span('2025-07-04', '2025-07-05', {
+        allDay: true,
+      });
+      const { user } = renderWithSlot(
+        { eventDialogGeneralTab: DuplicatedDateTimeSections },
+        { events: [trip.build()] },
+        trip.toOccurrence(),
+      );
+
+      const [firstSwitch, secondSwitch] = screen.getAllByRole('switch', { name: /all day/i });
+      await user.click(firstSwitch);
+      const startTimeInput = screen.getAllByLabelText(/start time/i)[0];
+      await user.clear(startTimeInput);
+      await user.type(startTimeInput, '15:45');
+      await user.click(secondSwitch);
+      await user.click(secondSwitch);
+
+      screen.getAllByLabelText(/start time/i).forEach((input) => {
+        expect(input).to.have.value('15:45');
+      });
     });
 
     it('should keep the draft when the slot component identity changes', async () => {

@@ -109,25 +109,21 @@ export function EventDialogDateTimeSection() {
   });
   const allDay = useEventDialogFormField('allDay');
 
-  // An event opened as all-day has no times to come back to: the first untick fills them.
-  const hasTimedValuesRef = React.useRef(!formStore.occurrence.allDay);
-
   const handleAllDayChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     formStore.clearErrors(RANGE_ERROR_KEYS);
-    if (event.target.checked || hasTimedValuesRef.current) {
+    if (event.target.checked || formStore.hasTimedValues()) {
       allDay.setValue(event.target.checked);
       return;
     }
-    hasTimedValuesRef.current = true;
     formStore.setValues({
       allDay: false,
       ...getDefaultTimedFields(
-        formStore.state.values,
         Date.now(),
         schedulerEventSelectors.defaultEventDuration(store.state),
         displayTimezone,
       ),
     });
+    formStore.markTimedValues();
   };
 
   const createHandleChangeDateOrTimeField =

@@ -10,6 +10,7 @@ import {
   BaseTemporal,
   formatMonthAndDayOfMonth,
   formatWeekday,
+  FULL_DAY_MINUTES,
   getMinutesInDay,
   getTimezoneId,
   isEventOccurrence,
@@ -199,41 +200,33 @@ export function formatDateAndTimeFields(value: BaseTemporal.PlainDateTime): {
   date: string;
   time: string;
 } {
-  return { date: value.toPlainDate().toString(), time: value.toPlainTime().toString().slice(0, 5) };
+  return { date: value.toPlainDate().toString(), time: formatTimeField(value.toPlainTime()) };
 }
 
-const MINUTES_IN_DAY = 24 * 60;
+function formatTimeField(time: BaseTemporal.PlainTime): string {
+  return time.toString().slice(0, 5);
+}
 
-function formatTimeField(minutesInDay: number): string {
-  const hour = String(Math.floor(minutesInDay / 60)).padStart(2, '0');
-  const minute = String(minutesInDay % 60).padStart(2, '0');
-  return `${hour}:${minute}`;
+function minutesToTimeField(minutesInDay: number): string {
+  return formatTimeField(
+    new BaseTemporal.PlainTime(Math.floor(minutesInDay / 60), minutesInDay % 60),
+  );
 }
 
 /**
- * The times of an all-day event made timed: the next hour of the display clock, lasting
- * `durationMinutes`, on its dates.
+ * The times of an all-day event made timed: the current time of the display timezone rounded up
+ * to the hour, lasting `durationMinutes` but ending on the same day, so the dates don't change.
  */
 export function getDefaultTimedFields(
-  values: Pick<EventDialogFormValues, 'startDate' | 'endDate'>,
   nowMs: number,
   durationMinutes: number,
   displayTimezone: string,
-): { startTime: string; endTime: string; endDate: string } {
+): { startTime: string; endTime: string } {
   const nowMinutes = getMinutesInDay(toPlainDateTime(nowMs, displayTimezone));
-  const startMinutes = (Math.ceil(nowMinutes / 60) * 60) % MINUTES_IN_DAY;
-  const endMinutes = startMinutes + durationMinutes;
-  const startDate = readDateField(values.startDate);
-  const endDate =
-    endMinutes >= MINUTES_IN_DAY && startDate != null && values.endDate === values.startDate
-      ? startDate.add({ days: 1 }).toString()
-      : values.endDate;
+  const startMinutes = (Math.ceil(nowMinutes / 60) * 60) % FULL_DAY_MINUTES;
+  const endMinutes = Math.min(startMinutes + durationMinutes, FULL_DAY_MINUTES - 1);
 
-  return {
-    startTime: formatTimeField(startMinutes),
-    endTime: formatTimeField(endMinutes % MINUTES_IN_DAY),
-    endDate,
-  };
+  return { startTime: minutesToTimeField(startMinutes), endTime: minutesToTimeField(endMinutes) };
 }
 
 /**
