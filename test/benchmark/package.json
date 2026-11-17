@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "benchmark": "benchmark"
+    "benchmark": "benchmark",
+    "typescript": "tsc -p tsconfig.json"
   },
   "devDependencies": {
     "@emotion/react": "catalog:",
@@ -20,7 +21,6 @@
     "@mui/x-data-grid-pro": "workspace:^",
     "@mui/x-date-pickers": "workspace:^",
     "@mui/x-date-pickers-pro": "workspace:^",
-    "@mui/x-license": "workspace:^",
     "@mui/x-scheduler": "workspace:^",
     "@mui/x-tree-view": "workspace:^",
     "@mui/x-tree-view-pro": "workspace:^",

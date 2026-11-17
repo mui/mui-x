@@ -8,7 +8,6 @@ Render benchmarks, run with the `benchmark` CLI from [`@mui/internal-benchmark`]
 pnpm test:benchmark                                    # everything, as CI runs it, against the parent commit
 pnpm test:benchmark --baseline master                  # against another revision
 pnpm test:benchmark -t "LineChart"                     # only benchmarks whose name matches
-pnpm test:benchmark --sample-size 10 --timeout 0       # a quick, imprecise run
 ```
 
 The run builds the packages itself (`pnpm release:build`), writes `.benchmark/results/report.json` and prints a table per benchmark. While it runs, it pins the packed builds in the repository's `pnpm-workspace.yaml` and puts it back at the end, so don't commit or build in the same checkout meanwhile.

@@ -242,7 +242,7 @@ jobs:
       playwright-img-version: v1.65.0-noble
     # Building both sides is most of the setup time, and more logical CPUs leave the browser less to
     # contend with while sampling. The `benchmark` CLI warns below 3.
-    resource_class: large
+    resource_class: large.gen2
     steps:
       - checkout
       - run:
