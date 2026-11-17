@@ -1268,12 +1268,9 @@ export class SchedulerStore<
         ),
       );
     } else if (cleanChanges.start != null) {
+      // A timed paste keeps the duration of the source, all-day or not.
       cleanChanges.end = new Date(
-        getOccurrenceEnd({
-          event: original,
-          occurrenceStart: cleanChanges.start.getTime(),
-          displayTimezone,
-        }),
+        cleanChanges.start.getTime() + original.end.timestamp - original.start.timestamp,
       );
     }
     const isMovingDates = cleanChanges.start != null;

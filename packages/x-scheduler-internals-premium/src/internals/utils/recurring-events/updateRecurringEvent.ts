@@ -207,29 +207,25 @@ export function applyRecurringUpdateAll(
   // can move DTSTART to another date. Otherwise, the series keeps its first day and takes the
   // representation of the edited occurrence: its times or its day count. Only the bounds in
   // `changes` are written.
-  if (!editedIsDtstart) {
+  // The bounds of the edited occurrence in its new representation: the ones given, or its own.
+  const changedStart = changes.start?.getTime() ?? occurrenceStart;
+  const changedEnd = changes.end?.getTime() ?? occurrenceEnd;
+  if (originalAllDay && !allDay && (!editedIsDtstart || changes.start == null)) {
+    // The times of the edited occurrence in the timezone of the series, on its first day moved by
+    // as many days as the rule.
+    const seriesStartDay = seriesStartPlainDate.add({
+      days: getDayNumber(nextOccurrencePlainDate) - getDayNumber(occurrencePlainDate),
+    });
+    const startMs = moveTimestampToPlainDate(changedStart, seriesStartDay, nextDayTimezone);
+    eventUpdatedProperties.start = new Date(startMs);
+    eventUpdatedProperties.end = new Date(startMs + changedEnd - changedStart);
+  } else if (!editedIsDtstart) {
     if (allDay !== originalAllDay) {
-      // The bounds of the edited occurrence in its new representation: the ones given, or its own.
-      const changedStart = changes.start?.getTime() ?? occurrenceStart;
-      const changedEnd = changes.end?.getTime() ?? occurrenceEnd;
-      if (allDay) {
-        // Whole days from the first displayed day of the series, as many as the edited occurrence.
-        const dayCount = getSnappedDayCount(changedStart, changedEnd, displayTimezone);
-        const startMs = toEpochMs(toPlainDate(seriesStartMs, displayTimezone), displayTimezone);
-        eventUpdatedProperties.start = new Date(startMs);
-        eventUpdatedProperties.end = new Date(
-          addDaysToDayStart(startMs, dayCount, displayTimezone),
-        );
-      } else {
-        // The times of the edited occurrence on the first day of the series.
-        const startMs = moveTimestampToPlainDate(
-          changedStart,
-          seriesStartPlainDate,
-          displayTimezone,
-        );
-        eventUpdatedProperties.start = new Date(startMs);
-        eventUpdatedProperties.end = new Date(startMs + changedEnd - changedStart);
-      }
+      // Whole days from the first displayed day of the series, as many as the edited occurrence.
+      const dayCount = getSnappedDayCount(changedStart, changedEnd, displayTimezone);
+      const startMs = toEpochMs(toPlainDate(seriesStartMs, displayTimezone), displayTimezone);
+      eventUpdatedProperties.start = new Date(startMs);
+      eventUpdatedProperties.end = new Date(addDaysToDayStart(startMs, dayCount, displayTimezone));
     } else if (allDay) {
       // The days of the series stay: only its day count follows the edited occurrence.
       delete eventUpdatedProperties.start;

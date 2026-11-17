@@ -1578,6 +1578,59 @@ describe('recurring-events/updateRecurringEvent', () => {
         expect(result.updated![0].rrule).to.deep.equal({ freq: 'WEEKLY', byDay: ['TH'] });
         expect(written.exDates).to.deep.equal(['2025-07-17T20:00:00']);
       });
+
+      it("should keep the time of the edited occurrence in the timezone of the series on a scope 'all' change across a DST change of the display timezone", () => {
+        // A Monday all-day series of an event in UTC from January 6th, displayed in New York.
+        const event = EventBuilder.new()
+          .id('gym')
+          .withDataTimezone('UTC')
+          .span('2025-01-06', '2025-01-07', { allDay: true })
+          .rrule({ freq: 'WEEKLY', byDay: ['MO'] })
+          .withDisplayTimezone('America/New_York')
+          .toProcessed();
+
+        // Monday July 7th dropped at 19:30 in New York (EDT), which is Monday 23:30 in UTC.
+        const result = applyRecurringUpdateAll(
+          event,
+          createOccurrence(
+            event,
+            createDate('2025-07-07T00:00:00', 'America/New_York'),
+            'America/New_York',
+          ),
+          {
+            id: 'gym',
+            allDay: false,
+            start: createDate('2025-07-07T19:30:00', 'America/New_York'),
+            end: createDate('2025-07-07T20:30:00', 'America/New_York'),
+          },
+          'America/New_York',
+        );
+
+        // Monday January 6th at 23:30 in UTC, not Tuesday January 7th at 00:30.
+        expect(result.updated![0].start!.toISOString()).to.equal('2025-01-06T23:30:00.000Z');
+        expect(result.updated![0].end!.toISOString()).to.equal('2025-01-07T00:30:00.000Z');
+        expect(result.updated![0].rrule ?? event.rrule).to.deep.equal({
+          freq: 'WEEKLY',
+          byDay: ['MO'],
+        });
+      });
+
+      it("should write the bounds of a first occurrence made timed without bounds on a scope 'all' change", () => {
+        const event = buildFridaySeriesWithException();
+
+        // The first occurrence, Friday July 4th in Tokyo, made timed without bounds.
+        const result = applyRecurringUpdateAll(
+          event,
+          createOccurrence(event, tokyo('2025-07-04'), 'Asia/Tokyo'),
+          { id: 'gym', allDay: false },
+          'Asia/Tokyo',
+        );
+
+        // July 4th at 00:00 in Tokyo is Thursday July 3rd at 11:00 in New York.
+        expect(result.updated![0].start!.getTime()).to.equal(tokyo('2025-07-04').getTime());
+        expect(result.updated![0].end!.getTime()).to.equal(tokyo('2025-07-05').getTime());
+        expect(result.updated![0].rrule).to.deep.equal({ freq: 'WEEKLY', byDay: ['TH'] });
+      });
     });
   });
 
