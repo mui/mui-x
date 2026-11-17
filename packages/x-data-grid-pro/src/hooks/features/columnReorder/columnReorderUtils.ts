@@ -219,6 +219,22 @@ export function setColumnReorderDragCol(apiRef: RefObject<GridPrivateApiPro>, dr
 }
 
 /**
+ * Returns what a move of the column needs, without changing the state.
+ * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
+ * @param {string} field The moved column.
+ * @returns {object} The index of the column among all columns, and the indexes it can't move to.
+ */
+export function getColumnReorderContext(
+  apiRef: RefObject<GridPrivateApiPro>,
+  field: string,
+): { originIndex: number; forbiddenIndexes: ColumnReorderForbiddenIndexes } {
+  return {
+    originIndex: apiRef.current.getColumnIndex(field, false),
+    forbiddenIndexes: getColumnReorderForbiddenIndexes(apiRef, field),
+  };
+}
+
+/**
  * Starts a column drag: stores the dragged column, and returns what the drag needs to move it.
  * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
  * @param {string} field The dragged column.
@@ -229,10 +245,33 @@ export function startColumnReorder(
   field: string,
 ): { originIndex: number; forbiddenIndexes: ColumnReorderForbiddenIndexes } {
   setColumnReorderDragCol(apiRef, field);
-  return {
-    originIndex: apiRef.current.getColumnIndex(field, false),
-    forbiddenIndexes: getColumnReorderForbiddenIndexes(apiRef, field),
-  };
+  return getColumnReorderContext(apiRef, field);
+}
+
+/**
+ * Publishes `columnOrderChange` if the column isn't at its origin index anymore.
+ * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
+ * @param {string} field The moved column.
+ * @param {number} originIndex The index of the column, among all columns, before the move.
+ */
+export function publishColumnOrderChange(
+  apiRef: RefObject<GridPrivateApiPro>,
+  field: string,
+  originIndex: number,
+) {
+  const targetIndex = apiRef.current.getColumnIndex(field, false);
+  if (targetIndex === originIndex) {
+    return;
+  }
+  const column = apiRef.current.getColumn(field);
+  if (column) {
+    const columnOrderChangeParams: GridColumnOrderChangeParams = {
+      column,
+      targetIndex,
+      oldIndex: originIndex,
+    };
+    apiRef.current.publishEvent('columnOrderChange', columnOrderChangeParams);
+  }
 }
 
 /**
@@ -252,18 +291,9 @@ export function finishColumnReorder(
   const { dragField, originIndex, restoreOrigin } = params;
   if (restoreOrigin) {
     apiRef.current.setColumnIndex(dragField, originIndex, false);
-  } else if (apiRef.current.getColumnIndex(dragField, false) !== originIndex) {
-    const draggedColumn = apiRef.current.getColumn(dragField);
-    if (draggedColumn) {
-      // Emit the columnOrderChange event only once when the reordering stops.
-      const columnOrderChangeParams: GridColumnOrderChangeParams = {
-        column: draggedColumn,
-        targetIndex: apiRef.current.getColumnIndex(dragField, false),
-        oldIndex: originIndex,
-      };
-
-      apiRef.current.publishEvent('columnOrderChange', columnOrderChangeParams);
-    }
+  } else {
+    // Emit the columnOrderChange event only once when the reordering stops.
+    publishColumnOrderChange(apiRef, dragField, originIndex);
   }
 
   setColumnReorderDragCol(apiRef, '');
