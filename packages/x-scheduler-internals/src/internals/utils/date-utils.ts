@@ -4,6 +4,7 @@ import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/
 import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import type { WeekInfo } from './date-locale';
 import {
+  addDaysToDayStart,
   getStartOfDayMs,
   toEpochMs,
   toPlainDate,
@@ -98,13 +99,6 @@ export function getAllDayDayCount(
     getDayNumber(BaseTemporal.PlainDate.from(model.end)) -
     getDayNumber(BaseTemporal.PlainDate.from(model.start))
   );
-}
-
-/**
- * The first instant, in `timezone`, of the day `days` after the day of `timestamp`.
- */
-export function addDaysToDayStart(timestamp: number, days: number, timezone: string): number {
-  return toEpochMs(toPlainDate(timestamp, timezone).add({ days }), timezone);
 }
 
 /**

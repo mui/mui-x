@@ -7,14 +7,14 @@ import type {
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
 import {
+  getDayTimezone,
   getLastInstant,
   timestampToEventString,
   localToEpochMs,
   MS_PER_DAY,
   snapAllDayBounds,
-  toEpochMs,
+  snapToOwnDays,
   toLocalDayNumber,
-  toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
 import type { SchedulerDependency } from '../../models';
@@ -104,20 +104,14 @@ function resolveProcessedEventDates(
   processedEvent: SchedulerProcessedEvent,
   displayTimezone: string,
 ): ResolvedDates {
-  if (processedEvent.allDay) {
-    // Whole days of the display timezone, ending on the last instant of the last day.
-    return {
-      start: processedEvent.start.timestamp,
-      end: getLastInstant(processedEvent.end.timestamp, true),
-      timezone: displayTimezone,
-      allDay: true,
-    };
-  }
+  // An all-day event spans whole days of the display timezone, up to the last instant of its last
+  // day.
+  const allDay = !!processedEvent.allDay;
   return {
     start: processedEvent.start.timestamp,
-    end: processedEvent.end.timestamp,
-    timezone: processedEvent.timezone,
-    allDay: false,
+    end: getLastInstant(processedEvent.end.timestamp, allDay),
+    timezone: getDayTimezone(processedEvent, displayTimezone),
+    allDay,
   };
 }
 
@@ -335,9 +329,9 @@ export function computeAutoSchedulingCascade(
     let entryEnd = resolveEntryTimestamp(entry.end, model.end, processedEvent.end.timestamp);
     if (allDay && !processedEvent.allDay && entry.start == null && entry.end == null) {
       // Like the store, a timed event made all-day without bounds keeps the dates of its timezone.
-      const ownDays = snapAllDayBounds(entryStart, entryEnd, dataTimezone);
-      entryStart = toEpochMs(toPlainDate(ownDays.start, dataTimezone), displayTimezone);
-      entryEnd = toEpochMs(toPlainDate(ownDays.end, dataTimezone), displayTimezone);
+      const ownDays = snapToOwnDays(entryStart, entryEnd, dataTimezone, displayTimezone);
+      entryStart = ownDays.start;
+      entryEnd = ownDays.end;
     }
     const dates = resolveDates(
       entryStart,

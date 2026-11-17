@@ -43,7 +43,7 @@ import type {
   RequestEventDeletionParameters,
 } from './SchedulerStore.types';
 import { createProcessedDate } from '../../../process-date/processDate';
-import { snapAllDayBounds } from '../plain-date-utils/date';
+import { snapAllDayBounds, snapToOwnDays } from '../plain-date-utils/date';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 import type { SchedulerSchedulingPluginInterface } from '../../plugins/SchedulerSchedulingPlugin.types';
 import type {
@@ -64,11 +64,10 @@ import {
   getCustomEventProperties,
   getUpdatedEventModelFromChanges,
 } from './SchedulerStore.utils';
-import { addDaysToDayStart, getAllDayDayCount, getOccurrenceEnd } from '../date-utils';
+import { getAllDayDayCount, getOccurrenceEnd } from '../date-utils';
 import {
   getDayTimezone,
   getLastInstant,
-  getNextDayTimezone,
   getOccurrenceLastDayNumber,
   getOccurrenceKey,
   getRecurringOccurrenceKey,
@@ -80,6 +79,7 @@ import { stringifyEventDateChanges } from '../event-date-changes';
 import { TimeoutManager } from '../TimeoutManager';
 import { checkDateLocale, DEFAULT_DATE_LOCALE } from '../date-locale';
 import {
+  addDaysToDayStart,
   getStartOfDayMs,
   toEpochMs,
   toLocalDayNumber,
@@ -104,9 +104,7 @@ function getEditedBounds(
   let start = occurrence.start.timestamp;
   let end = occurrence.end.timestamp;
   if (allDay && !occurrence.allDay && changedStart === undefined && changedEnd === undefined) {
-    const ownDays = snapAllDayBounds(start, end, dayTimezone);
-    start = toEpochMs(toPlainDate(ownDays.start, dayTimezone), displayTimezone);
-    end = toEpochMs(toPlainDate(ownDays.end, dayTimezone), displayTimezone);
+    ({ start, end } = snapToOwnDays(start, end, dayTimezone, displayTimezone));
   }
   start = changedStart ?? start;
   end = changedEnd ?? end;
@@ -1328,12 +1326,10 @@ export class SchedulerStore<
     const allDay = cleanChanges.allDay ?? original.allDay ?? false;
     if (allDay && (cleanChanges.start != null || !original.allDay)) {
       // An all-day paste covers the days of an all-day source, or one day for a timed one, from
-      // the pasted day or from the source's own day, in its timezone for a timed source.
+      // the pasted day, or from the own day of a timed source in its timezone.
       const start =
         cleanChanges.start?.getTime() ??
-        (original.allDay
-          ? getStartOfDayMs(original.start.timestamp, displayTimezone)
-          : toEpochMs(toPlainDate(original.start.timestamp, original.timezone), displayTimezone));
+        toEpochMs(toPlainDate(original.start.timestamp, original.timezone), displayTimezone);
       cleanChanges.start = new Date(start);
       cleanChanges.end = new Date(
         addDaysToDayStart(
@@ -1683,7 +1679,7 @@ export class SchedulerStore<
     // In place, the pattern decides where a day or rule change lands: only a change that keeps
     // the occurrence on its own day can keep the surface armed.
     const allDay = changes.allDay ?? occurrence.allDay;
-    const nextDayTimezone = getNextDayTimezone(original, allDay, displayTimezone);
+    const nextDayTimezone = getDayTimezone(original, displayTimezone, allDay);
     const changedStart = changes.start?.getTime();
     const changedEnd = changes.end?.getTime();
     const bounds: [number | undefined, number][] = [

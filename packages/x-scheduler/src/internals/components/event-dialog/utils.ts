@@ -10,8 +10,10 @@ import {
   BaseTemporal,
   formatMonthAndDayOfMonth,
   formatWeekday,
+  getDayTimezone,
   getTimezoneId,
   isEventOccurrence,
+  parseDateOnlyString,
   toEpochMs,
   toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
@@ -135,22 +137,11 @@ function getEditedRangeBounds(
   };
 }
 
-// The documented `yyyy-MM-dd` format. `BaseTemporal.PlainDate.from()` rejects the dates that don't
-// exist, like 2025-06-31, but also reads calendar annotations, which the fields don't use.
-const DATE_VALUE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
-
 /**
  * Reads a `yyyy-MM-dd` field, or returns `null` when it isn't an existing date.
  */
 export function readDateField(raw: string): BaseTemporal.PlainDate | null {
-  if (!DATE_VALUE_REGEX.test(raw)) {
-    return null;
-  }
-  try {
-    return BaseTemporal.PlainDate.from(raw);
-  } catch {
-    return null;
-  }
+  return parseDateOnlyString(raw);
 }
 
 /**
@@ -356,7 +347,7 @@ export function getRuleTimezone(
   if (!isEventOccurrence(occurrence)) {
     return allDay ? displayTimezone : 'default';
   }
-  return allDay || occurrence.allDay ? displayTimezone : occurrence.timezone;
+  return getDayTimezone(occurrence, displayTimezone, allDay);
 }
 
 /**

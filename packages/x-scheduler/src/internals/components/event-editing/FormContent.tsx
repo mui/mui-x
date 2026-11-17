@@ -198,9 +198,12 @@ export function FormContent(props: FormContentProps) {
       recurrenceSelection: schedulerRecurringEventSelectors.defaultPresetKey(
         store.state,
         base,
-        occurrence.allDay
-          ? occurrence.start.plainDateTime.toPlainDate()
-          : getRulePlainDate(occurrence, occurrence.start.timestamp, false, initialDisplayTimezone),
+        getRulePlainDate(
+          occurrence,
+          occurrence.start.timestamp,
+          !!occurrence.allDay,
+          initialDisplayTimezone,
+        ),
       ),
       rruleDraft: {
         freq: (base?.freq ?? 'WEEKLY') as RecurringEventFrequency,
@@ -218,23 +221,22 @@ export function FormContent(props: FormContentProps) {
       initialValues={initialValues}
       occurrence={occurrence}
       resourceSelectionMode={resourceSelectionMode}
+      initialDisplayTimezone={initialDisplayTimezone}
       onValuesChange={pushPlaceholder}
     >
-      <FormContentInner {...props} initialDisplayTimezone={initialDisplayTimezone} />
+      <FormContentInner {...props} />
     </EventDialogFormProvider>
   );
 }
 
-function FormContentInner(
-  props: Omit<FormContentProps, 'occurrence'> & { initialDisplayTimezone: string },
-) {
-  const { onClose, dragHandlerRef, isDraggable, anchor, initialDisplayTimezone } = props;
+function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
+  const { onClose, dragHandlerRef, isDraggable, anchor } = props;
 
   // Context hooks
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
-  const { occurrence, resourceSelectionMode } = formStore;
+  const { occurrence, resourceSelectionMode, initialDisplayTimezone } = formStore;
 
   // Selector hooks — only what the render itself needs; the submit continuation
   // reads its own `ResolutionSettings` snapshot instead of subscribing here.
@@ -601,11 +603,7 @@ function FormContentInner(
         )}
         <GeneralTab value={hasTabs ? tabValue : 'general'} hasTabs={hasTabs} />
         {showRecurrence && RecurrenceTabRenderer && (
-          <RecurrenceTabRenderer
-            occurrence={occurrence}
-            tabValue={tabValue}
-            initialDisplayTimezone={initialDisplayTimezone}
-          />
+          <RecurrenceTabRenderer occurrence={occurrence} tabValue={tabValue} />
         )}
         <Divider className={classes.eventDialogFormDivider} />
         <FormActionButtons onDelete={handleDelete} />

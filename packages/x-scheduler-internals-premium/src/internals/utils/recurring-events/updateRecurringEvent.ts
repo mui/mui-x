@@ -16,10 +16,10 @@ import {
   getAllDayDayCount,
   getDayTimezone,
   getLastInstant,
-  getNextDayTimezone,
   getOccurrenceEnd,
   getOccurrencePlainDate,
   getOccurrenceStart,
+  getStartOfDayMs,
   moveTimestampToPlainDate,
   snapAllDayBounds,
   stringifyEventDateChanges,
@@ -169,7 +169,7 @@ export function applyRecurringUpdateAll(
   const allDay = changes.allDay ?? originalAllDay;
   const dayTimezone = getDayTimezone(originalEvent, displayTimezone);
   // The timezone the days of the series are read in after the update.
-  const nextDayTimezone = getNextDayTimezone(originalEvent, changes.allDay, displayTimezone);
+  const nextDayTimezone = getDayTimezone(originalEvent, displayTimezone, changes.allDay);
   const occurrenceEnd = getOccurrenceEnd({
     occurrenceStart,
     event: originalEvent,
@@ -251,28 +251,22 @@ export function applyRecurringUpdateAll(
     }
   }
 
-  // 4) RRULE adjustment: only if the event is recurring and the user did not provide an explicit
-  // rrule (same hasOwnProperty guard used in decideSplitRRule).
+  // 4) RRULE adjustment: only if day changed, the event is recurring, and the user did not
+  // provide an explicit rrule (same hasOwnProperty guard used in decideSplitRRule).
   const hasExplicitRRule = Object.prototype.hasOwnProperty.call(changes, 'rrule');
-  if (originalEvent.rrule && !hasExplicitRRule) {
-    let rrule = originalEvent.rrule;
-    if (touchedStartDate || touchedEndDate) {
-      // The days of the edited occurrence and of the destination, in the new representation.
-      const nextOccurrenceStart = toEpochMs(occurrencePlainDate, nextDayTimezone);
-      const newOccurrenceStart =
-        changes.start == null
-          ? nextOccurrenceStart
-          : toEpochMs(toPlainDate(changes.start.getTime(), nextDayTimezone), nextDayTimezone);
-      rrule = adjustRRuleForAllMove(
-        rrule,
-        nextOccurrenceStart,
-        newOccurrenceStart,
-        nextDayTimezone,
-      );
-    }
-    if (rrule !== originalEvent.rrule) {
-      eventUpdatedProperties.rrule = rrule;
-    }
+  if ((touchedStartDate || touchedEndDate) && originalEvent.rrule && !hasExplicitRRule) {
+    // The days of the edited occurrence and of the destination, in the new representation.
+    const nextOccurrenceStart = toEpochMs(occurrencePlainDate, nextDayTimezone);
+    const newOccurrenceStart =
+      changes.start == null
+        ? nextOccurrenceStart
+        : getStartOfDayMs(changes.start.getTime(), nextDayTimezone);
+    eventUpdatedProperties.rrule = adjustRRuleForAllMove(
+      originalEvent.rrule,
+      nextOccurrenceStart,
+      newOccurrenceStart,
+      nextDayTimezone,
+    );
   }
 
   // 5) Return the updated event
@@ -400,7 +394,7 @@ export function decideSplitRRule(
   const originalRule = originalEvent.rrule!;
   const dayTimezone = getDayTimezone(originalEvent, displayTimezone);
   // The timezone the days of the new series are read in.
-  const nextDayTimezone = getNextDayTimezone(originalEvent, changes.allDay, displayTimezone);
+  const nextDayTimezone = getDayTimezone(originalEvent, displayTimezone, changes.allDay);
   // Detect whether user touched rrule at all
   const hasRRuleProp = Object.prototype.hasOwnProperty.call(changes, 'rrule');
   const changesRRule = changes.rrule;

@@ -1,26 +1,15 @@
 import type { SchedulerEvent, SchedulerEventId } from '../models';
 import { BaseTemporal } from '../internals/utils/base-temporal';
-import { isDateOnlyString } from '../internals/utils/plain-date-utils/date';
+import { parseDateOnlyString } from '../internals/utils/plain-date-utils/date';
 
 const DOCS_LINK = 'https://mui.com/x/react-scheduler/event-calendar/events/#all-day';
-
-function readPlainDate(value: string): BaseTemporal.PlainDate | null {
-  if (!isDateOnlyString(value)) {
-    return null;
-  }
-  try {
-    return BaseTemporal.PlainDate.from(value);
-  } catch {
-    return null;
-  }
-}
 
 function readAllDayBound(
   bound: 'start' | 'end',
   value: string,
   eventId: SchedulerEventId,
 ): BaseTemporal.PlainDate {
-  const date = readPlainDate(value);
+  const date = parseDateOnlyString(value);
   if (date == null) {
     throw new Error(
       `MUI X Scheduler: The ${bound} "${value}" of the all-day event "${eventId}" is not an existing date in the YYYY-MM-DD format. ` +
@@ -56,7 +45,7 @@ export function readAllDayBounds(model: Pick<SchedulerEvent, 'id' | 'start' | 'e
  * Throws when it is not a `YYYY-MM-DD` date.
  */
 export function readAllDayExDate(value: string, eventId: SchedulerEventId): BaseTemporal.PlainDate {
-  const date = readPlainDate(value);
+  const date = parseDateOnlyString(value);
   if (date == null) {
     throw new Error(
       `MUI X Scheduler: The exception date "${value}" of the all-day event "${eventId}" is not an existing date in the YYYY-MM-DD format. ` +

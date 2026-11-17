@@ -5,10 +5,6 @@ import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-intern
 export interface RecurrenceTabRendererProps {
   occurrence: SchedulerRenderableEventOccurrence;
   tabValue: string;
-  /**
-   * The display timezone the occurrence was read in when the editing session started.
-   */
-  initialDisplayTimezone: string;
 }
 
 /**
