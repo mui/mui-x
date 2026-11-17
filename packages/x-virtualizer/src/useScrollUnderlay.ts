@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import clamp from '@mui/utils/clamp';
 import ownerDocument from '@mui/utils/ownerDocument';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
@@ -20,7 +21,9 @@ import useTimeout from '@mui/utils/useTimeout';
  * flings too close together for the scroll to stop. The content is rebuilt once a vertical scroll
  * stops. Sideways, the content may span only part of the width, such as the items rendered when
  * it was built, so a sideways scroll rebuilds it right away once the area moves past it, and needs
- * no rebuild once it stops.
+ * no rebuild once it stops. Until that scroll event, the content stops at its edge, the way the
+ * items of an inverse-sticky layout stop at the edge of those rendered, so the area never shows
+ * blank.
  */
 
 // How far the underlay moves before it jumps back. It rests halfway through, so what a scroll
@@ -40,7 +43,8 @@ export type UnderlayContent = {
   /**
    * Elements that scroll sideways with the items, laid out from the top of the first item and
    * the left edge of the scrolled content. They can span only part of the width, such as the
-   * rendered items: a sideways scroll that moves the area past them rebuilds them.
+   * rendered items: they stop at their edges, and a sideways scroll that moves the area past them
+   * rebuilds them.
    */
   content: Node[];
   /**
@@ -191,33 +195,59 @@ export function useScrollUnderlay(
 
     const scrollLeftMax = scroller.scrollWidth - scroller.clientWidth;
 
-    // Where the content spans sideways, measured before the animation below translates it. It sits
-    // untranslated at `scrollLeft` 0, or at the far left in right-to-left content. The range always
-    // includes the current `scrollLeft`, so only a sideways scroll can leave it.
+    // The `scrollLeft` range in which the content spans the area sideways, measured before the
+    // animation below translates it. It sits untranslated at `scrollLeft` 0, or at the far left in
+    // right-to-left content.
+    let spansFrom = -Infinity;
+    let spansTo = Infinity;
     const area = layer.element.getBoundingClientRect();
     const contentRange = ownerDocument(underlay).createRange();
     contentRange.selectNodeContents(layer.content);
     const contentBox = contentRange.getBoundingClientRect();
     if (contentBox.width > 0) {
       const untranslatedScrollLeft = isRtl ? -scrollLeftMax : 0;
+      spansFrom = untranslatedScrollLeft + contentBox.left - area.left;
+      spansTo = untranslatedScrollLeft + contentBox.right - area.right;
+      // The range to rebuild outside of always includes the current `scrollLeft`, so only a
+      // sideways scroll can leave it.
       const { scrollLeft } = scroller;
-      layer.coveredFrom = Math.min(
-        untranslatedScrollLeft + contentBox.left - area.left,
-        scrollLeft,
-      );
-      layer.coveredTo = Math.max(
-        untranslatedScrollLeft + contentBox.right - area.right,
-        scrollLeft,
-      );
+      layer.coveredFrom = Math.min(spansFrom, scrollLeft);
+      layer.coveredTo = Math.max(spansTo, scrollLeft);
     }
 
     if (scrollLeftMax > 0) {
-      // The box follows the left edge of the scrolled content, which starts a whole scroll
-      // range left of the viewport in right-to-left content.
-      const keyframes = isRtl
-        ? [{ transform: `translateX(${-scrollLeftMax}px)` }, { transform: 'none' }]
-        : [{ transform: 'none' }, { transform: `translateX(${-scrollLeftMax}px)` }];
-      layer.animations.push(layer.content.animate(keyframes, { timeline: layer.x, fill: 'both' }));
+      // How far the content has scrolled sideways from its inline start, from 0 to
+      // `scrollLeftMax`: `scrollLeft` goes from 0 down to minus the scroll range in right-to-left
+      // content.
+      const toOffset = (scrollLeft: number) => (isRtl ? -scrollLeft : scrollLeft);
+      // The content moves with the scroll, but stops at the edges of where it spans the area, so
+      // a scroll that outruns the next rebuild finds content rather than blank. Content narrower
+      // than the area spans it nowhere, so it only moves.
+      const spans =
+        spansFrom <= spansTo ? [toOffset(spansFrom), toOffset(spansTo)] : [0, scrollLeftMax];
+      const stopFrom = clamp(Math.min(...spans), 0, scrollLeftMax);
+      const stopTo = clamp(Math.max(...spans), 0, scrollLeftMax);
+      // The range ends a pixel past the scroll, as the vertical one ends past it: a finished
+      // animation leaves the compositor, so one that finished at the end of a sideways scroll would
+      // trail the first frames of the scroll back.
+      const rangeEnd = scrollLeftMax + 1;
+      // The box follows the left edge of the scrolled content, which starts a whole scroll range
+      // left of the viewport in right-to-left content.
+      const keyframes = [0, stopFrom, stopTo, rangeEnd].map((offset) => {
+        const stoppedOffset = clamp(offset, stopFrom, stopTo);
+        return {
+          offset: offset / rangeEnd,
+          transform: `translateX(${isRtl ? stoppedOffset - scrollLeftMax : -stoppedOffset}px)`,
+        };
+      });
+      layer.animations.push(
+        layer.content.animate(keyframes, {
+          timeline: layer.x,
+          rangeStart: '0px',
+          rangeEnd: `${rangeEnd}px`,
+          fill: 'both',
+        }),
+      );
     }
   });
 
