@@ -52,6 +52,28 @@ describe('<WeekView /> event creation', () => {
     expect(store!.state.occurrencePlaceholder).to.equal(null);
   });
 
+  it('should restore the slot times of a time grid creation made all-day and timed again', async () => {
+    const { user } = render(
+      <EventCalendarProvider events={[]} resources={[]}>
+        <EventDialogProvider>
+          <WeekView />
+        </EventDialogProvider>
+      </EventCalendarProvider>,
+    );
+
+    act(() => {
+      document.querySelector<HTMLElement>(`.${eventCalendarClasses.dayTimeGridColumn}`)!.focus();
+    });
+    await user.keyboard('{Enter}');
+    const allDaySwitch = await screen.findByRole('switch', { name: /all day/i });
+    await user.click(allDaySwitch);
+    await user.click(allDaySwitch);
+
+    // The keyboard creation starts at noon, while the file's clock is at midnight.
+    expect(screen.getByLabelText(/start time/i)).to.have.value('12:00');
+    expect(screen.getByLabelText(/end time/i)).to.have.value('12:30');
+  });
+
   describe.each([
     // Without a display timezone, the creations keep the `'default'` timezone of the occurrences.
     { displayTimezone: undefined, timezone: 'default' },

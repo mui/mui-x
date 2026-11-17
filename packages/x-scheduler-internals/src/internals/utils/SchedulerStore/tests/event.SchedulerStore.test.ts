@@ -2342,7 +2342,7 @@ storeClasses.forEach((storeClass) => {
         expect(pasted.end).to.equal('2025-07-20T15:00:00');
       });
 
-      it('should paste an all-day event as a timed event on its own day when no start is given', () => {
+      it('should paste an all-day event as a timed event on its first day of the display timezone when no start is given', () => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new()
           .id('trip')
@@ -2351,6 +2351,7 @@ storeClasses.forEach((storeClass) => {
         const store = new storeClass.Value({
           resources: TEST_RESOURCES,
           events: [event],
+          displayTimezone: 'Asia/Tokyo',
           onEventsChange,
         });
         store.cutEvent('trip');
@@ -2359,8 +2360,31 @@ storeClasses.forEach((storeClass) => {
 
         const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
         expect(Boolean(pasted.allDay)).to.equal(false);
-        expect(pasted.start).to.equal('2025-07-04T00:00:00');
-        expect(pasted.end).to.equal('2025-07-04T00:30:00');
+        // 00:00 of July 4th in Tokyo, written as a wall time in the event's timezone.
+        expect(pasted.start).to.equal('2025-07-03T15:00:00');
+        expect(pasted.end).to.equal('2025-07-03T15:30:00');
+      });
+
+      it('should refuse to paste a cut read-only all-day event as a timed event', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .readOnly()
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+        store.cutEvent('trip');
+
+        expect(() => {
+          expect(store.pasteEvent({ allDay: false })).to.equal(null);
+        }).toWarnDev([
+          `MUI X Scheduler: The event with id="trip" was not pasted.\n${READ_ONLY_EVENT_REASON}`,
+        ]);
+        expect(onEventsChange.mock.calls.length).to.equal(0);
       });
 
       it('should duplicate an all-day occurrence as dates', () => {

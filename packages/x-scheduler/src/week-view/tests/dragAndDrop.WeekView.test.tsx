@@ -809,6 +809,7 @@ describe('WeekView - Drag and Drop', () => {
 
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
+    expect(Boolean(updatedEvents[0].allDay)).to.equal(false);
     expect(updatedEvents[0].start).to.equal('2025-07-03T14:00:00');
     expect(updatedEvents[0].end).to.equal('2025-07-03T15:00:00');
   });

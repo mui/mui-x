@@ -918,7 +918,7 @@ describe('<MonthView />', () => {
 
       await user.click(screen.getByRole('switch', { name: /all day/i }));
 
-      // The clock of the file is 2025-05-01 00:00, already on the hour.
+      // The file's clock is 2025-05-01T00:00Z, already on the hour.
       expect(screen.getByLabelText(/start time/i)).to.have.value('00:00');
       expect(screen.getByLabelText(/end time/i)).to.have.value('00:30');
       expect(screen.getByLabelText(/start date/i)).to.have.value(clickedDay);
