@@ -310,6 +310,29 @@ const ptPTGrid: Partial<GridLocaleText> = {
 
   // Row reordering text
   rowReorderingHeaderName: 'Reordenação de linhas',
+  // rowReorderingAnnouncementMoved: ({
+  //   position,
+  //   total
+  // }) => `Row moved to position ${formatNumber(position)} of ${formatNumber(total)}.`,
+  // rowReorderingAnnouncementEdge: ({
+  //   direction
+  // }) => `Can't move the row further ${direction === 'up' ? 'up' : 'down'}.`,
+  // rowReorderingAnnouncementSorted: () => "Rows can't be reordered while the grid is sorted.",
+  // rowReorderingAnnouncementInvalid: () => "The row can't be moved there.",
+
+  // Column reordering text
+  // columnReorderingAnnouncementMoved: ({
+  //   columnName,
+  //   position,
+  //   total
+  // }) => `Column ${columnName} moved to position ${formatNumber(position)} of ${formatNumber(total)}.`,
+  // columnReorderingAnnouncementEdge: ({
+  //   columnName,
+  //   direction
+  // }) => `Can't move column ${columnName} further ${direction === 'left' ? 'left' : 'right'}.`,
+  // columnReorderingAnnouncementDisabled: ({
+  //   columnName
+  // }) => `Column ${columnName} can't be reordered.`,
 
   // Aggregation
   aggregationMenuItemHeader: 'Agregação',
