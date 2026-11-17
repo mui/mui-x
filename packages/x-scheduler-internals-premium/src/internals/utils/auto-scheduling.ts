@@ -12,7 +12,9 @@ import {
   localToEpochMs,
   MS_PER_DAY,
   snapAllDayBounds,
+  toEpochMs,
   toLocalDayNumber,
+  toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
 import type { SchedulerDependency } from '../../models';
@@ -325,9 +327,21 @@ export function computeAutoSchedulingCascade(
           : timestampToEventString(value.getTime(), modelString, dataTimezone);
       return resolveEventTimestamp(nextString, nextTimezone, entry.id);
     };
+    let entryStart = resolveEntryTimestamp(
+      entry.start,
+      model.start,
+      processedEvent.start.timestamp,
+    );
+    let entryEnd = resolveEntryTimestamp(entry.end, model.end, processedEvent.end.timestamp);
+    if (allDay && !processedEvent.allDay && entry.start == null && entry.end == null) {
+      // Like the store, a timed event made all-day without bounds keeps the dates of its timezone.
+      const ownDays = snapAllDayBounds(entryStart, entryEnd, dataTimezone);
+      entryStart = toEpochMs(toPlainDate(ownDays.start, dataTimezone), displayTimezone);
+      entryEnd = toEpochMs(toPlainDate(ownDays.end, dataTimezone), displayTimezone);
+    }
     const dates = resolveDates(
-      resolveEntryTimestamp(entry.start, model.start, processedEvent.start.timestamp),
-      resolveEntryTimestamp(entry.end, model.end, processedEvent.end.timestamp),
+      entryStart,
+      entryEnd,
       allDay ? displayTimezone : nextTimezone,
       allDay,
     );

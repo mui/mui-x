@@ -226,6 +226,30 @@ describe('computeAutoSchedulingCascade', () => {
     expect(result.filter((entry) => entry.id === 'b')).to.deep.equal([]);
   });
 
+  it('should keep the dates of its timezone for a timed event made all-day without bounds', () => {
+    // 20:00 in New York on July 4th is 09:00 in Tokyo on July 5th. Made all-day, the predecessor
+    // stays on July 4th, which ends in Tokyo before the successor starts.
+    const predecessor = EventBuilder.new()
+      .id('a')
+      .withDataTimezone('America/New_York')
+      .span('2025-07-04T20:00:00', '2025-07-04T21:00:00')
+      .withDisplayTimezone('Asia/Tokyo')
+      .toProcessed();
+    const successor = EventBuilder.new()
+      .id('b')
+      .span('2025-07-05T03:00:00Z', '2025-07-05T04:00:00Z')
+      .toProcessed();
+
+    const result = runCascade(
+      [predecessor, successor],
+      [dependency('a', 'b')],
+      [{ id: 'a', allDay: true }],
+      { displayTimezone: 'Asia/Tokyo' },
+    );
+
+    expect(result.filter((entry) => entry.id === 'b')).to.deep.equal([]);
+  });
+
   it('should skip a cascade target missing from the lookup', () => {
     const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
     const eventB = EventBuilder.new()

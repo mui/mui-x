@@ -69,6 +69,7 @@ import {
   getDayTimezone,
   getLastInstant,
   getNextDayTimezone,
+  getOccurrenceLastDayNumber,
   getOccurrenceKey,
   getRecurringOccurrenceKey,
   isEventOccurrence,
@@ -85,6 +86,7 @@ import {
   toPlainDate,
 } from '../plain-date-utils/timeZone';
 import { MS_PER_MINUTE } from '../plain-date-utils/dayNumber';
+import { plainDateFromDayNumber } from '../plain-date-utils/plainDate';
 
 /**
  * The bounds of an edited occurrence after a change: the changed ones, or its own when the change
@@ -109,6 +111,29 @@ function getEditedBounds(
   start = changedStart ?? start;
   end = changedEnd ?? end;
   return allDay ? snapAllDayBounds(start, end, displayTimezone) : { start, end };
+}
+
+/**
+ * The occurrence read again after the display timezone moved from `fromTimezone` to `toTimezone`:
+ * an all-day occurrence keeps its days, a timed one its instants.
+ */
+function reprojectOccurrence<
+  TOccurrence extends Pick<SchedulerEventOccurrence, 'start' | 'end' | 'allDay'>,
+>(occurrence: TOccurrence, fromTimezone: string, toTimezone: string): TOccurrence {
+  if (!occurrence.allDay) {
+    return {
+      ...occurrence,
+      start: createProcessedDate(occurrence.start.timestamp, toTimezone),
+      end: createProcessedDate(occurrence.end.timestamp, toTimezone),
+    };
+  }
+  const firstDay = toPlainDate(occurrence.start.timestamp, fromTimezone);
+  const lastDay = plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence, fromTimezone));
+  return {
+    ...occurrence,
+    start: createProcessedDate(toEpochMs(firstDay, toTimezone), toTimezone),
+    end: createProcessedDate(toEpochMs(lastDay.add({ days: 1 }), toTimezone), toTimezone),
+  };
 }
 
 /**
@@ -416,6 +441,22 @@ export class SchedulerStore<
       parameters.resourceModelStructure !== this.parameters.resourceModelStructure
     ) {
       Object.assign(newSchedulerState, buildResourcesState(parameters));
+    }
+
+    const { editingOccurrence } = this.state;
+    if (
+      editingOccurrence != null &&
+      newSchedulerState.displayTimezone !== this.state.displayTimezone
+    ) {
+      // The surfaces read the edited occurrence in the display timezone.
+      newSchedulerState.editingOccurrence = {
+        ...editingOccurrence,
+        occurrence: reprojectOccurrence(
+          editingOccurrence.occurrence,
+          this.state.displayTimezone,
+          newSchedulerState.displayTimezone!,
+        ),
+      };
     }
 
     updateModel(newSchedulerState, 'visibleDate', 'defaultVisibleDate');
@@ -1596,7 +1637,15 @@ export class SchedulerStore<
         liveEvent == null
           ? undefined
           : { start: liveEvent.start.timestamp, end: liveEvent.end.timestamp },
-      occurrence: { ...occurrence, ...bounds, allDay },
+      occurrence: {
+        ...occurrence,
+        ...bounds,
+        allDay,
+        // An all-day event made timed moves to the display timezone.
+        ...(isEventOccurrence(occurrence) && occurrence.allDay && !allDay
+          ? { timezone: displayTimezone }
+          : {}),
+      },
     });
   };
 

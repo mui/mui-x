@@ -27,9 +27,11 @@ import {
 import {
   getCustomEventProperties,
   getEventResourceIds,
+  getOccurrenceLastDayNumber,
   getResourceSelectionMode,
   isBuiltInEventProperty,
   isEventOccurrence,
+  plainDateFromDayNumber,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
@@ -146,11 +148,12 @@ export function FormContent(props: FormContentProps) {
   // Built once: the provider ignores later values anyway.
   const initialValues = useRefWithInit((): EventDialogFormValues => {
     const startFields = formatDateAndTimeFields(occurrence.start.plainDateTime);
-    // The form shows the last day of an all-day event, the day before its exclusive end. Read on
-    // the dates of the occurrence: the display timezone may have moved since it was read.
+    // The form shows the last day of an all-day event, the day before its exclusive end.
     const endFields = formatDateAndTimeFields(
       occurrence.allDay
-        ? occurrence.end.plainDateTime.toPlainDate().add({ days: -1 }).toPlainDateTime('23:59')
+        ? plainDateFromDayNumber(
+            getOccurrenceLastDayNumber(occurrence, initialDisplayTimezone),
+          ).toPlainDateTime('23:59')
         : occurrence.end.plainDateTime,
     );
 

@@ -250,23 +250,15 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(getUpdatedEvent().end).to.equal('2025-07-08');
     });
 
-    it('should seed the days of an all-day occurrence read in a previous display timezone', () => {
-      // The occurrence was armed in New York, then the display timezone moved to Tokyo.
-      const builder = EventBuilder.new()
-        .title('Trip')
-        .span('2025-07-04', '2025-07-05', { allDay: true })
-        .withDisplayTimezone('America/New_York');
-      const occurrence = builder.toOccurrence();
-      render(
-        <EventCalendarProvider events={[builder.build()]} displayTimezone="Asia/Tokyo">
-          <EventDialogContent open {...defaultProps} occurrence={occurrence} />
-        </EventCalendarProvider>,
+    it('should show the last day of an all-day event whose exclusive end is a skipped day', () => {
+      // Samoa skipped December 30th, 2011: an event stored from the 28th to the 30th covers the
+      // 28th and the 29th.
+      renderEditDialog(
+        EventBuilder.new().title('Trip').span('2011-12-28', '2011-12-30', { allDay: true }),
+        'Pacific/Apia',
       );
 
-      expect((screen.getByLabelText(/start date/i) as HTMLInputElement).value).to.equal(
-        '2025-07-04',
-      );
-      expect((screen.getByLabelText(/end date/i) as HTMLInputElement).value).to.equal('2025-07-04');
+      expect((screen.getByLabelText(/end date/i) as HTMLInputElement).value).to.equal('2011-12-29');
     });
 
     it('should save a one-day all-day event whose end field equals its start field', async () => {

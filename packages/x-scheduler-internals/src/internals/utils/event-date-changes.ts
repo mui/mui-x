@@ -1,7 +1,7 @@
 import type { SchedulerEvent, SchedulerEventUpdatedProperties } from '../../models';
 import { resolveEventTimestamp } from '../../process-event/resolveEventTimestamp';
 import { allDayBoundToEventString, timestampToEventString } from './date-utils';
-import { snapAllDayBounds } from './plain-date-utils/date';
+import { isDateOnlyString, snapAllDayBounds } from './plain-date-utils/date';
 import { moveTimestampToPlainDate, toEpochMs, toPlainDate } from './plain-date-utils/timeZone';
 import { BaseTemporal } from './base-temporal';
 
@@ -9,7 +9,36 @@ export interface EventDateChangeStrings {
   start?: string;
   end?: string;
   exDates?: string[];
+  rrule?: SchedulerEvent['rrule'];
   timezone?: string;
+}
+
+/**
+ * The rule of an all-day event made timed: a date-time `until`, read as its date in the event
+ * timezone while the event is all-day, is written as that date.
+ */
+function getTimedRRule(
+  rrule: NonNullable<SchedulerEvent['rrule']>,
+  dataTimezone: string,
+): NonNullable<SchedulerEvent['rrule']> {
+  if (typeof rrule === 'object') {
+    if (rrule.until == null || isDateOnlyString(rrule.until)) {
+      return rrule;
+    }
+    const until = toPlainDate(resolveEventTimestamp(rrule.until, dataTimezone), dataTimezone);
+    return { ...rrule, until: until.toString() };
+  }
+  // The date-time forms of UNTIL: `20250709T030000Z` (UTC) or `20250709T030000` (event timezone).
+  return rrule.replace(
+    /(UNTIL\s*=\s*)(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z?)/i,
+    (match, prefix, year, month, day, hour, minute, second, utc) => {
+      if (!utc) {
+        return `${prefix}${year}${month}${day}`;
+      }
+      const instant = Date.UTC(+year, +month - 1, +day, +hour, +minute, +second);
+      return `${prefix}${toPlainDate(instant, dataTimezone).toString().replaceAll('-', '')}`;
+    },
+  );
 }
 
 /**
@@ -17,13 +46,13 @@ export interface EventDateChangeStrings {
  * in the display timezone, the instants of a timed event in the format of its stored strings.
  * `bounds` are the instants written when the changes give none. A timed event made all-day without
  * bounds gets the whole days of its timezone, and so do its exception dates. An all-day event made
- * timed moves to the display timezone, from 00:00 of its days when the changes give no bounds, and
- * excludes its occurrences at its new time.
+ * timed moves to the display timezone, from 00:00 of its days when the changes give no bounds,
+ * excludes its occurrences at its new time, and keeps the last day of its rule.
  */
 export function stringifyEventDateChanges(
   changes: Pick<
     SchedulerEventUpdatedProperties,
-    'allDay' | 'start' | 'end' | 'exDates' | 'timezone'
+    'allDay' | 'start' | 'end' | 'exDates' | 'rrule' | 'timezone'
   >,
   model: SchedulerEvent,
   displayTimezone: string,
@@ -66,6 +95,16 @@ export function stringifyEventDateChanges(
           timezone,
         ),
       );
+    }
+    if (
+      becomesTimed &&
+      model.rrule != null &&
+      !Object.prototype.hasOwnProperty.call(changes, 'rrule')
+    ) {
+      const rrule = getTimedRRule(model.rrule, dataTimezone);
+      if (rrule !== model.rrule) {
+        result.rrule = rrule;
+      }
     }
     return result;
   }
