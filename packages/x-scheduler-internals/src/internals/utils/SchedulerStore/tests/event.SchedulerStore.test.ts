@@ -2668,6 +2668,56 @@ premiumStoreClasses.forEach((storeClass) => {
           expect((updated.rrule as SchedulerEventRecurrenceRule).byDay).to.deep.equal(['TH']);
           expect(updated.exDates).to.deep.equal(['2025-07-17']);
         });
+
+        (
+          [
+            { freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-25' },
+            'FREQ=WEEKLY;BYDAY=FR;UNTIL=20250726T030000Z',
+          ] as const
+        ).forEach((rrule) => {
+          it(`should move the last day of a series made all-day on a given day with scope '${scope}' and the rule ${JSON.stringify(rrule)}`, () => {
+            const onEventsChange = vi.fn();
+            // Fridays at 23:00 in New York until July 25th are Saturdays in Tokyo, until July 26th.
+            const event: SchedulerEvent = {
+              ...EventBuilder.new()
+                .id('standup')
+                .withDataTimezone('America/New_York')
+                .singleDay('2025-07-04T23:00:00')
+                .build(),
+              rrule: rrule as SchedulerEvent['rrule'],
+            };
+            const store = new storeClass.Value({
+              resources: TEST_RESOURCES,
+              events: [event],
+              displayTimezone: 'Asia/Tokyo',
+              onEventsChange,
+            });
+
+            // The occurrence shown on Saturday, July 12th, dropped on the all-day row of that day.
+            store.updateRecurringEvent({
+              occurrence: createStoreOccurrence(
+                store,
+                'standup',
+                createDate('2025-07-11T23:00:00', 'America/New_York'),
+              ),
+              changes: {
+                id: 'standup',
+                allDay: true,
+                start: createDate('2025-07-12T00:00:00', 'Asia/Tokyo'),
+                end: createDate('2025-07-13T00:00:00', 'Asia/Tokyo'),
+              },
+            });
+            store.selectRecurringEventScope(scope);
+
+            const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+            const updated = updatedEvents.find((item) =>
+              scope === 'all' ? item.id === 'standup' : item.id !== 'standup',
+            )!;
+            const processed = processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin);
+            expect(processed.rrule!.byDay).to.deep.equal(['SA']);
+            expect(processed.rrule!.until!.toString()).to.match(/^2025-07-26/);
+          });
+        });
       });
 
       it('should keep the stored BYMONTHDAY when only the count changes from another timezone', () => {
