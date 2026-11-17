@@ -1,7 +1,7 @@
 import type * as React from 'react';
 import type {} from '@mui/x-charts/moduleAugmentation/keyboardActivation';
 import type { ChartsActivationEvent } from '@mui/x-charts/models';
-import type { Equal, Expect } from './assertions.js';
+import type { Equal, Expect } from '../../utils/typeUtils.js';
 
 export type KeyboardTypes = [
   Expect<Equal<ChartsActivationEvent, MouseEvent | KeyboardEvent>>,

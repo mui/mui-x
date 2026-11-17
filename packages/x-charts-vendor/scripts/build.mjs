@@ -35,7 +35,7 @@ const getEsmIndex = (pkg) => `// \`x-charts-vendor/${pkg.name}\` (ESM)
 export * from "${pkg.name}";
 `;
 
-const getDefaultExport = (pkg) => `export { default } from "${pkg.name}";
+const getDefaultExport = (source) => `export { default } from "${source}";
 `;
 
 const getCjsIndex = (pkg, hasSrc) => `// \`x-charts-vendor/${pkg.name}\` (CommonJS)
@@ -45,10 +45,10 @@ const getCjsIndex = (pkg, hasSrc) => `// \`x-charts-vendor/${pkg.name}\` (Common
 module.exports = require("./lib-vendor/${pkg.name}/${hasSrc ? 'src/' : ''}index.js");
 `;
 
-const getTypeDefinitionFile = (pkg) => `// \`x-charts-vendor/${pkg.name}\` (TypeScript)
+const getTypeDefinitionFile = (pkg, source) => `// \`x-charts-vendor/${pkg.name}\` (TypeScript)
 //
 // Export the type definitions for this package:
-export * from "${pkg.name}";
+export * from "${source}";
 `;
 
 const DEFAULT_EXPORT_PKGS = new Set(['flatqueue']);
@@ -62,7 +62,7 @@ const generateExports = (pkgNames) => {
   for (const pkgName of pkgNames) {
     exports[`./${pkgName}`] = {
       import: {
-        types: `./${pkgName}.d.ts`,
+        types: `./${pkgName}.d.mts`,
         default: `./${pkgName}.mjs`,
       },
       require: {
@@ -70,7 +70,7 @@ const generateExports = (pkgNames) => {
         default: `./${pkgName}.js`,
       },
       default: {
-        types: `./${pkgName}.d.ts`,
+        types: `./${pkgName}.d.mts`,
         default: `./${pkgName}.mjs`,
       },
     };
@@ -154,14 +154,20 @@ const main = async () => {
 
     // Generate ESM index
     const esmContent =
-      getEsmIndex(pkg) + (DEFAULT_EXPORT_PKGS.has(pkgName) ? getDefaultExport(pkg) : '');
+      getEsmIndex(pkg) + (DEFAULT_EXPORT_PKGS.has(pkgName) ? getDefaultExport(pkg.name) : '');
 
     // Generate CJS index
     const cjsContent = getCjsIndex(pkg, hasSrc);
 
-    // Generate type definitions
-    const typeContent =
-      getTypeDefinitionFile(pkg) + (DEFAULT_EXPORT_PKGS.has(pkgName) ? getDefaultExport(pkg) : '');
+    // Generate type definitions. CommonJS declarations cannot import ESM-only packages with
+    // `module: node16`, so packages that ship their own types get a copy next to the CJS sources.
+    const getTypeContent = (source) =>
+      getTypeDefinitionFile(pkg, source) +
+      (DEFAULT_EXPORT_PKGS.has(pkgName) ? getDefaultExport(source) : '');
+    const ownTypes = pkg.types ?? pkg.typings;
+    if (ownTypes) {
+      await fs.copyFile(path.join(pkgBase, ownTypes), path.join(libVendorPath, 'index.d.ts'));
+    }
 
     // Write files directly to build directory
     await Promise.all([
@@ -170,7 +176,11 @@ const main = async () => {
       // CJS
       fs.writeFile(path.join(BUILD_DIR, `${pkgName}.js`), cjsContent),
       // Types
-      fs.writeFile(path.join(BUILD_DIR, `${pkgName}.d.ts`), typeContent),
+      fs.writeFile(path.join(BUILD_DIR, `${pkgName}.d.mts`), getTypeContent(pkg.name)),
+      fs.writeFile(
+        path.join(BUILD_DIR, `${pkgName}.d.ts`),
+        getTypeContent(ownTypes ? `./lib-vendor/${pkg.name}/index.js` : pkg.name),
+      ),
       // Copy license to lib-vendor
       fs.copyFile(path.join(pkgBase, 'LICENSE'), path.join(libVendorPath, 'LICENSE')).catch(() => {
         // The package has no license file
@@ -200,7 +210,7 @@ const main = async () => {
 
   // Without an allowlist, the packer falls back to inherited ignore files, and the whole build
   // output matches the repository `.gitignore` (`build/`, `dist/`). See https://github.com/pnpm/pnpm/pull/13231
-  buildPkg.files = ['*.js', '*.mjs', '*.d.ts', 'lib-vendor'];
+  buildPkg.files = ['*.js', '*.mjs', '*.d.ts', '*.d.mts', 'lib-vendor'];
 
   await fs.writeFile(path.join(BUILD_DIR, 'package.json'), JSON.stringify(buildPkg, null, 2));
 

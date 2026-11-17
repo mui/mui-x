@@ -75,15 +75,16 @@ This will run only the test that has `it.only` in it and will ignore all other t
 ## Charts consumer declarations
 
 These checks compile isolated consumers against the built Charts packages with `skipLibCheck: false`.
-Each fixture has its own TypeScript program so that Premium and optional module augmentations cannot mask errors in other consumers.
+The consumers are the fixtures and one file for each `exports` entry of the Charts packages.
+Consumers share a TypeScript program only when they load the same module augmentations, so Premium and optional augmentations cannot mask errors in other consumers.
 
 ```bash
 pnpm --filter '@mui/x-charts-premium...' build
 pnpm test:types:charts
 ```
 
-CI runs all fixtures through ESM and CommonJS exports with the native TypeScript 7 compiler, plus a Community ESM smoke check with TypeScript 6.
-For the full compatibility matrix with both compilers, run `pnpm test:types:charts --full`.
+CI runs all consumers through ESM `NodeNext` and CommonJS `Node16` resolution with the native TypeScript 7 compiler, plus a Community bundler smoke check with TypeScript 6.
+For the full matrix with bundler resolution and both compilers, run `pnpm test:types:charts --full`.
 
 ## Regression tests
 

@@ -1,13 +1,20 @@
 import { BarChart } from '@mui/x-charts/BarChart';
+import { useItemHighlightStateGetter } from '@mui/x-charts/hooks';
 import type { useRadiusAxes, useRotationAxes } from '@mui/x-charts/hooks';
 import type { ChartsActivationEvent, ChartsAxisData } from '@mui/x-charts/models';
 import type { ComposableCartesianChartSeriesType } from '@mui/x-charts/internals';
 import FlatQueue from '@mui/x-charts-vendor/flatqueue';
-import type { Equal, Expect } from './assertions.js';
+import type { Equal, Expect } from '../../utils/typeUtils.js';
 
 export const chart = (
   <BarChart height={300} xAxis={[{ data: ['A', 'B', 'C'] }]} series={[{ data: [4, 2, 5] }]} />
 );
+
+export function useBarHighlight() {
+  const getHighlightState = useItemHighlightStateGetter<'bar'>();
+  // The series type argument must not narrow the items the callback accepts.
+  return getHighlightState({ type: 'pie', seriesId: 'pie' });
+}
 
 export type CommunityTypes = [
   Expect<Equal<ComposableCartesianChartSeriesType, 'bar' | 'line' | 'scatter'>>,

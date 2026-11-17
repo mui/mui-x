@@ -44,16 +44,17 @@ describe('Premium composable series', () => {
       </ChartsDataProviderPremium>,
     );
 
-    await waitFor(() => expect(screen.getByTestId('tooltip-values').textContent).not.to.equal(''));
-    expect(JSON.parse(screen.getByTestId('tooltip-values').textContent!)).to.deep.equal([
-      { seriesId: 'bar', value: 2, formattedValue: 'bar: 2' },
-      { seriesId: 'range', value: [1, 4], formattedValue: 'range: 1-4' },
-      {
-        seriesId: 'candle',
-        value: { open: 2, high: 4, low: 1, close: 3 },
-        formattedValue: { open: 'open: 2', high: 'high: 4', low: 'low: 1', close: 'close: 3' },
-      },
-    ]);
+    await waitFor(() =>
+      expect(JSON.parse(screen.getByTestId('tooltip-values').textContent || 'null')).to.deep.equal([
+        { seriesId: 'bar', value: 2, formattedValue: 'bar: 2' },
+        { seriesId: 'range', value: [1, 4], formattedValue: 'range: 1-4' },
+        {
+          seriesId: 'candle',
+          value: { open: 2, high: 4, low: 1, close: 3 },
+          formattedValue: { open: 'open: 2', high: 'high: 4', low: 'low: 1', close: 'close: 3' },
+        },
+      ]),
+    );
   });
 
   it('navigates between community bars and range bars with the keyboard', async () => {

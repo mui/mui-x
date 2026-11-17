@@ -4,7 +4,7 @@ import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium }
 import { useItemHighlightStateGetter } from '@mui/x-charts/hooks';
 import type { ComposableCartesianChartSeriesType } from '@mui/x-charts/internals';
 import type { ChartsActivationEvent, ChartsAxisData } from '@mui/x-charts/models';
-import type { Equal, Expect } from './assertions.js';
+import type { Equal, Expect } from '../../utils/typeUtils.js';
 
 export const rangeChart = <BarChartPremium series={[{ type: 'rangeBar', data: [[1, 4]] }]} />;
 export const candleChart = <CandlestickChart series={[{ data: [[2, 4, 1, 3]] }]} />;

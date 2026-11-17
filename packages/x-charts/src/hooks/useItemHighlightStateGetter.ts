@@ -14,13 +14,11 @@ import type { HighlightState } from './useItemHighlightState';
  *
  * @returns {(item: HighlightItemIdentifierWithType | null) => HighlightState} callback to get the highlight state of an item.
  */
-export function useItemHighlightStateGetter<
-  SeriesType extends ChartSeriesType = ChartSeriesType,
->(): (
-  item: HighlightItemIdentifierWithType<ComposableChartSeriesType<SeriesType>> | null,
+export function useItemHighlightStateGetter<SeriesType extends ChartSeriesType>(): (
+  item: HighlightItemIdentifierWithType<ComposableChartSeriesType<ChartSeriesType>> | null,
 ) => HighlightState {
   const store = useStore<[UseChartHighlightSignature<SeriesType>]>();
 
-  const getHighlightState = store.use(selectorChartsHighlightStateCallback<SeriesType>);
+  const getHighlightState = store.use(selectorChartsHighlightStateCallback);
   return getHighlightState;
 }

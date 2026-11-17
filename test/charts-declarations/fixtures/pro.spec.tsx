@@ -2,7 +2,7 @@ import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import type { ComposableCartesianChartSeriesType } from '@mui/x-charts/internals';
 import { selectorChartsHighlightState } from '@mui/x-charts/internals';
 import type { ChartsActivationEvent, ChartsAxisData } from '@mui/x-charts/models';
-import type { Equal, Expect } from './assertions.js';
+import type { Equal, Expect } from '../../utils/typeUtils.js';
 
 export const chart = <BarChartPro series={[{ data: [1, 2] }]} />;
 declare const state: Parameters<typeof selectorChartsHighlightState>[0];
