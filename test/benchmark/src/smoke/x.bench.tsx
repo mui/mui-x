@@ -42,8 +42,8 @@ import { richTreeView, richTreeViewPro } from '../treeView/scenarios';
 // a page each. To run some of them, filter by name with `-t`.
 
 // They are there to catch big regressions. A round of the whole file is long, so they get few
-// rounds: they alarm past 10%, which those rounds can settle, rather than the default 5%, which
-// they mostly can't.
+// rounds: they alarm past 10% rather than the default 5%, which those rounds mostly can't settle.
+// On CI, noisier, they only settle a change of about 20% or more; see the README.
 const SMOKE_OPTIONS = { sampleSize: 30, alarm: { error: 0.1 } };
 
 /** Registers a scenario as a smoke benchmark. */

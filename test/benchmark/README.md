@@ -16,13 +16,15 @@ The run builds the packages itself (`pnpm release:build`), writes `.benchmark/re
 
 ## Layout
 
-- `src/smoke/x.bench.tsx` holds the benchmarks of all of MUI X, in one page: the runner loads a file's page once per round, so they run warm, and settle in far fewer rounds than in a page each. They are there to catch big regressions: 30 rounds each, alarming past 10%.
+- `src/smoke/x.bench.tsx` holds the benchmarks of all of MUI X, in one page: the runner loads a file's page once per round, so they run warm, and settle in far fewer rounds than in a page each. They are there to catch big regressions: 30 rounds each, alarming once a change is past 10% with 99% confidence.
 - `src/<product>/scenarios.tsx`, and `src/charts/<Chart>/scenarios.tsx` for a chart, named after the folder its source lives in, define the cases with `defineScenario()`, which takes `reactBenchmark()`'s arguments. A scenario module registers nothing itself; the smoke file registers each case with `smokeBenchmark()`.
 - `package.json` also lists dependencies no file imports: `@mui/material` and `@emotion/styled` are peer dependencies of the packages, and `@playwright/test` of `@mui/internal-benchmark`.
 
 ## In CI
 
 `test_benchmark` runs the smoke file. On master, it runs on every commit and compares it against its parent. On a pull request, it runs only when a `packages/x-*` package other than `x-codemod`, this folder or the CircleCI config changes, and compares against where the branch forked.
+
+CI is noisier than a local run. Locally, 30 rounds narrow a difference to a few points, so a change of 10–15% alarms. On CI, its 99% interval is typically 15–25 points wide, so only a change of about 20% or more alarms reliably; a smaller one reads "no change detected". To check a smaller change, run the benchmark locally, filtered with `-t`.
 
 ## Add a benchmark
 

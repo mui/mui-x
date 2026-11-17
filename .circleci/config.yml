@@ -240,9 +240,9 @@ jobs:
     executor:
       name: code-infra/mui-node-browser
       playwright-img-version: v1.65.0-noble
-    # Building both sides is most of the setup time, and more logical CPUs leave the browser less to
-    # contend with while sampling. The `benchmark` CLI warns below 3.
-    resource_class: large.gen2
+    # 2 vCPUs starve V8's background compilers, and the `benchmark` CLI warns below 3. More didn't
+    # narrow the results: on CI, their spread comes from the noise of a shared host, not from cores.
+    resource_class: medium+.gen2
     steps:
       - checkout
       - run:
