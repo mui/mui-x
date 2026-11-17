@@ -1,5 +1,5 @@
 import ownerDocument from '@mui/utils/ownerDocument';
-import { loadStyleSheets } from '@mui/x-internals/export';
+import { loadStyleSheets, waitForFonts } from '@mui/x-internals/export';
 import { copyCanvasesContent, createExportIframe } from './common';
 import type { ChartPrintExportOptions } from './useChartProExport.types';
 import { defaultOnBeforeExport } from './defaults';
@@ -53,10 +53,7 @@ export function printChart(
 
         await onBeforeExport(printWindow);
 
-        // `print()` does not wait for web fonts, so it can use a fallback font.
-        // A layout starts the font loads (jsdom has no `fonts`).
-        printDoc.body.getBoundingClientRect();
-        await printDoc.fonts?.ready;
+        await waitForFonts(printDoc);
 
         printWindow.contentWindow!.print();
       })().then(resolve, reject);

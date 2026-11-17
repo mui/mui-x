@@ -327,6 +327,70 @@ describe('<DataGridPro /> - Print export', () => {
     },
   );
 
+  it.skipIf(isJSDOM)('restores the grid when the font stalls for 3 seconds', async () => {
+    const font = await setupPrintFont();
+    const onColumnVisibilityModelChange = vi.fn();
+    render(
+      <Test
+        initialState={{ columns: { columnVisibilityModel: { currencyPair: true, id: false } } }}
+        onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+      />,
+    );
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    onTestFinished(() => {
+      vi.useRealTimers();
+    });
+
+    let printWindow: HTMLIFrameElement | undefined;
+    const appendChild = document.body.appendChild.bind(document.body);
+    const appendChildSpy = vi.spyOn(document.body, 'appendChild').mockImplementation((child) => {
+      if (child instanceof HTMLIFrameElement) {
+        printWindow = child;
+      }
+      return appendChild(child);
+    });
+    onTestFinished(() => {
+      appendChildSpy.mockRestore();
+    });
+
+    let exportPromise!: Promise<void>;
+    let exportFinished = false;
+    act(() => {
+      exportPromise = apiRef.current!.exportDataAsPrint({
+        copyStyles: false,
+        pageStyle: font.css,
+        fields: ['id'],
+      });
+      exportPromise.then(() => {
+        exportFinished = true;
+      });
+    });
+
+    try {
+      await act(async () => {
+        await expect.poll(() => printWindow?.contentDocument?.fonts.status).to.equal('loading');
+        // `expect.poll` also moves fake timers, so check well before the 3 s mark.
+        await vi.advanceTimersByTimeAsync(2000);
+        expect(exportFinished).to.equal(false);
+
+        await vi.advanceTimersByTimeAsync(1000);
+        await exportPromise;
+      });
+
+      expect(printWindow!.isConnected).to.equal(false);
+      expect(onColumnVisibilityModelChange).toHaveBeenCalledTimes(2);
+      expect(onColumnVisibilityModelChange.mock.calls[1][0]).to.deep.equal({
+        currencyPair: true,
+        id: false,
+      });
+    } finally {
+      await act(async () => {
+        await font.resolve('error');
+        await exportPromise;
+      });
+    }
+  });
+
   describe('stylesheets that fail to load', () => {
     function addMissingStylesheet() {
       const link = document.createElement('link');

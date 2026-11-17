@@ -2,7 +2,7 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import ownerDocument from '@mui/utils/ownerDocument';
-import { loadStyleSheets } from '@mui/x-internals/export';
+import { loadStyleSheets, waitForFonts } from '@mui/x-internals/export';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -249,10 +249,7 @@ export const useGridPrintExport = (
         return false;
       }
 
-      // `print()` does not wait for web fonts, so it can use a fallback font.
-      // A layout starts the font loads (jsdom has no `fonts`).
-      printDoc.body.getBoundingClientRect();
-      await printDoc.fonts?.ready;
+      await waitForFonts(printDoc);
 
       // Trigger print
       if (process.env.NODE_ENV !== 'test' && !DEBUG_MODE) {
