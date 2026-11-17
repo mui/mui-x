@@ -29,6 +29,7 @@ import {
   untilToEventString,
   getUntilReferenceString,
 } from '@mui/x-scheduler-internals/internals';
+import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
 import {
   getPlainDateWeekDayCode,
   getWeekDayCode,
@@ -98,9 +99,16 @@ export function applyRecurringUpdateFollowing(
     occurrenceStart,
     displayTimezone,
   });
+  const shiftedExDates = getShiftedExDates(
+    originalEvent,
+    changes,
+    getDisplayedDaysShift(originalEvent, occurrenceStart, changes, displayTimezone),
+    displayTimezone,
+  );
+  const newChanges = shiftedExDates == null ? changes : { ...changes, exDates: shiftedExDates };
   const stringified: Record<string, any> = {
-    ...changes,
-    ...stringifyEventDateChanges(changes, originalModel, displayTimezone, {
+    ...newChanges,
+    ...stringifyEventDateChanges(newChanges, originalModel, displayTimezone, {
       start: occurrenceStart,
       end: occurrenceEnd,
     }),
@@ -191,6 +199,21 @@ export function applyRecurringUpdateAll(
   const seriesStartMs = originalEvent.start.timestamp;
   const seriesStartPlainDate = toPlainDate(seriesStartMs, dayTimezone);
   const editedIsDtstart = occurrencePlainDate.equals(seriesStartPlainDate);
+  const displayedDaysShift = getDisplayedDaysShift(
+    originalEvent,
+    occurrenceStart,
+    changes,
+    displayTimezone,
+  );
+  const shiftedExDates = getShiftedExDates(
+    originalEvent,
+    changes,
+    displayedDaysShift,
+    displayTimezone,
+  );
+  if (shiftedExDates != null) {
+    eventUpdatedProperties.exDates = shiftedExDates;
+  }
 
   // 3) Decide new start/end: editing the first occurrence keeps the instants of the changes, which
   // can move DTSTART to another date. Otherwise, the series keeps its first day and takes the
@@ -213,7 +236,10 @@ export function applyRecurringUpdateAll(
         changes.start == null && changes.end == null
           ? getSnappedDayCount(occurrenceStart, occurrenceEnd, dayTimezone)
           : getSnappedDayCount(changedStart, changedEnd, displayTimezone);
-      const startMs = toEpochMs(seriesStartPlainDate, displayTimezone);
+      const startMs = toEpochMs(
+        shiftToDisplayedDay(seriesStartPlainDate, displayedDaysShift),
+        displayTimezone,
+      );
       eventUpdatedProperties.start = new Date(startMs);
       eventUpdatedProperties.end = new Date(addDaysToDayStart(startMs, dayCount, displayTimezone));
     } else if (allDay) {
@@ -307,6 +333,71 @@ export function applyRecurringUpdateOnlyThis(
     created: [extractStandaloneEvent(originalEvent, stringifiedChanges)],
     ...applyRecurringDeleteOnlyThis(originalEvent, occurrence, displayTimezone),
   };
+}
+
+interface DisplayedDaysShift {
+  days: number;
+  /**
+   * On a weekly rule, the weekday whose dates move, like its BYDAY.
+   */
+  weekDay: RecurringEventWeekDayCode | null;
+}
+
+/**
+ * How many days the dates of a timed series move when it's made all-day on a given day: from the
+ * days of its timezone to the days it's displayed on, measured on the edited occurrence.
+ * Without a day given, the series keeps the days of its timezone.
+ */
+function getDisplayedDaysShift(
+  originalEvent: SchedulerProcessedEvent,
+  occurrenceStart: number,
+  changes: SchedulerEventUpdatedProperties,
+  displayTimezone: string,
+): DisplayedDaysShift | null {
+  if (originalEvent.allDay || !changes.allDay || (changes.start == null && changes.end == null)) {
+    return null;
+  }
+  const timezone = getDayTimezone(originalEvent, displayTimezone);
+  const days =
+    toLocalDayNumber(occurrenceStart, displayTimezone) -
+    toLocalDayNumber(occurrenceStart, timezone);
+  if (days === 0) {
+    return null;
+  }
+  return {
+    days,
+    weekDay:
+      originalEvent.rrule?.freq === 'WEEKLY' ? getWeekDayCode(occurrenceStart, timezone) : null,
+  };
+}
+
+function shiftToDisplayedDay(
+  day: BaseTemporal.PlainDate,
+  shift: DisplayedDaysShift | null,
+): BaseTemporal.PlainDate {
+  if (shift == null || (shift.weekDay != null && getPlainDateWeekDayCode(day) !== shift.weekDay)) {
+    return day;
+  }
+  return day.add({ days: shift.days });
+}
+
+/**
+ * The exception dates of a timed series made all-day on a given day, on their displayed days.
+ */
+function getShiftedExDates(
+  originalEvent: SchedulerProcessedEvent,
+  changes: SchedulerEventUpdatedProperties,
+  shift: DisplayedDaysShift | null,
+  displayTimezone: string,
+): Date[] | undefined {
+  const { exDates, timezone = 'default' } = originalEvent.modelInBuiltInFormat;
+  if (shift == null || exDates == null || changes.exDates != null) {
+    return undefined;
+  }
+  return exDates.map((exDate) => {
+    const day = toPlainDate(resolveEventTimestamp(exDate, timezone), timezone);
+    return new Date(toEpochMs(shiftToDisplayedDay(day, shift), displayTimezone));
+  });
 }
 
 /**

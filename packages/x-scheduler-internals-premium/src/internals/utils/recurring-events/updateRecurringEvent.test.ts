@@ -1354,7 +1354,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(result.updated![0].end!.toISOString()).to.equal('2025-07-08T00:00:00.000Z');
     });
 
-    it("should keep the days of the exceptions of a timed series made all-day on a 'this and following' change", () => {
+    it("should move the exceptions of a timed series made all-day on a given day to their displayed days on a 'this and following' change", () => {
       // A daily series at 23:00 in New York, displayed in Tokyo on the next day.
       const event = EventBuilder.new()
         .id('standup')
@@ -1379,8 +1379,8 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       expect(result.created![0].start).to.equal('2025-07-06');
       expect(result.created![0].end).to.equal('2025-07-07');
-      // The excluded July 6th at 23:00 in New York stays July 6th.
-      expect(result.created![0].exDates).to.deep.equal(['2025-07-06']);
+      // The excluded July 6th at 23:00 in New York is displayed on July 7th in Tokyo.
+      expect(result.created![0].exDates).to.deep.equal(['2025-07-07']);
     });
 
     it("should move the weekday of a timed series made all-day on the day it is dropped on on a 'this and following' change", () => {
@@ -1418,6 +1418,7 @@ describe('recurring-events/updateRecurringEvent', () => {
         .withDataTimezone('America/New_York')
         .singleDay('2025-07-04T23:00:00')
         .rrule({ freq: 'WEEKLY', byDay: ['MO', 'FR'] })
+        .exDates(['2025-07-07T23:00:00', '2025-07-18T23:00:00'])
         .withDisplayTimezone('Asia/Tokyo')
         .toProcessed();
 
@@ -1434,11 +1435,16 @@ describe('recurring-events/updateRecurringEvent', () => {
         'Asia/Tokyo',
       );
 
-      // The series keeps its first day, Friday July 4th, and its Mondays: only the dropped Friday
-      // moves to the Saturday it was dropped on.
-      expect(result.updated![0].start!.getTime()).to.equal(tokyo('2025-07-04').getTime());
-      expect(result.updated![0].end!.getTime()).to.equal(tokyo('2025-07-05').getTime());
+      // The series keeps its Mondays: only the Fridays, including the first day, move to the
+      // Saturdays they are displayed on.
+      expect(result.updated![0].start!.getTime()).to.equal(tokyo('2025-07-05').getTime());
+      expect(result.updated![0].end!.getTime()).to.equal(tokyo('2025-07-06').getTime());
       expect(result.updated![0].rrule).to.deep.equal({ freq: 'WEEKLY', byDay: ['MO', 'SA'] });
+      // The excluded Monday keeps its day, the excluded Friday moves to its Saturday.
+      expect(result.updated![0].exDates!.map((exDate) => exDate.getTime())).to.deep.equal([
+        tokyo('2025-07-07').getTime(),
+        tokyo('2025-07-19').getTime(),
+      ]);
     });
 
     it("should resize an all-day series from its start on a scope 'all' change of a later occurrence", () => {
