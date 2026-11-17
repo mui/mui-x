@@ -663,6 +663,48 @@ describe('<AdapterDayjs />', () => {
         expect(adapter.getHours(value)).to.equal(1);
         expect(value.toISOString()).to.equal('2026-03-08T09:58:00.000Z');
       });
+
+      it.each([
+        {
+          method: 'startOfWeek',
+          value: '2026-03-09T12:00',
+          offset: -420,
+          expected: '2026-03-08T00:00:00-08:00',
+        },
+        {
+          method: 'endOfWeek',
+          value: '2026-03-08T01:00',
+          offset: -480,
+          expected: '2026-03-14T23:59:59-07:00',
+        },
+        {
+          method: 'startOfMonth',
+          value: '2026-11-15T12:00',
+          offset: -480,
+          expected: '2026-11-01T00:00:00-07:00',
+        },
+        {
+          method: 'endOfMonth',
+          value: '2026-03-01T12:00',
+          offset: -480,
+          expected: '2026-03-31T23:59:59-07:00',
+        },
+      ] as const)(
+        '$method: should update the offset of values without a named timezone without calling `tz()`',
+        ({ method, value, offset, expected }) => {
+          setSystemTimezone('America/Los_Angeles');
+          const adapter = new AdapterDayjs();
+          // `tz()` is slow, and calendars call these methods for each day.
+          const tz = vi.spyOn(dayjs.prototype, 'tz');
+          onTestFinished(() => tz.mockRestore());
+
+          // Same shape as `adapter.date(undefined, 'default')` on a system timezone with DST.
+          const result = adapter[method](dayjs(value).utcOffset(offset, true));
+
+          expect(result.format()).to.equal(expected);
+          expect(tz).not.toHaveBeenCalled();
+        },
+      );
     });
 
     it('should keep small years when setting the year of a plain value', () => {
