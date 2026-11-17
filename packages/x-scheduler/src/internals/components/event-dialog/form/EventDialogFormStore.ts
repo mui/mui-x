@@ -100,9 +100,15 @@ export class EventDialogFormStore<
 
   /**
    * Whether the time fields hold times of the editing session. An event opened as all-day has
-   * none until it is first made timed, which fills them with defaults.
+   * none until it is first made timed, which fills them with defaults, or a field writes them.
    */
-  public hasTimedValues = (): boolean => this.timedValues;
+  public hasTimedValues = (): boolean => {
+    if (this.timedValues) {
+      return true;
+    }
+    const dirtyValues = this.getDirtyValues();
+    return 'startTime' in dirtyValues || 'endTime' in dirtyValues;
+  };
 
   /**
    * Records that the time fields now hold times of the editing session.

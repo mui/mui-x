@@ -2052,6 +2052,50 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       });
     });
 
+    it('should not fill the default times over times written by a custom field', async () => {
+      function WorkHoursButton() {
+        const allDay = useEventDialogFormField('allDay');
+        const startTime = useEventDialogFormField('startTime');
+        const endTime = useEventDialogFormField('endTime');
+        return (
+          <button
+            type="button"
+            onClick={() => {
+              allDay.setValue(false);
+              startTime.setValue('09:15');
+              endTime.setValue('17:15');
+            }}
+          >
+            Work hours
+          </button>
+        );
+      }
+      function TabWithWorkHours() {
+        return (
+          <React.Fragment>
+            <EventDialogDateTimeSection />
+            <WorkHoursButton />
+          </React.Fragment>
+        );
+      }
+      const trip = EventBuilder.new().title('Trip').span('2025-07-04', '2025-07-05', {
+        allDay: true,
+      });
+      const { user } = renderWithSlot(
+        { eventDialogGeneralTab: TabWithWorkHours },
+        { events: [trip.build()] },
+        trip.toOccurrence(),
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Work hours' }));
+      const allDaySwitch = screen.getByRole('switch', { name: /all day/i });
+      await user.click(allDaySwitch);
+      await user.click(allDaySwitch);
+
+      expect(screen.getByLabelText(/start time/i)).to.have.value('09:15');
+      expect(screen.getByLabelText(/end time/i)).to.have.value('17:15');
+    });
+
     it('should keep the draft when the slot component identity changes', async () => {
       function SlotA() {
         return <CustomSection />;
