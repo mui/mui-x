@@ -2490,6 +2490,96 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       await advancePreview();
       expect(getPreviewText()).to.equal('6');
     });
+
+    it.each([
+      {
+        name: 'a cell formula reading the edited column of another row',
+        qty: '=REF(COLUMN("total"), ROW(1))',
+        model: [define('total', '=price * 2')],
+        formula: '=qty + 1',
+        expected: 6,
+      },
+      {
+        name: 'a cell formula reading a computed column that reads the edited one',
+        qty: '=REF(COLUMN("double"), ROW(1))',
+        model: [define('total', '=price * 2'), define('double', '=total * 2')],
+        formula: '=qty + 1',
+        expected: 11,
+      },
+      {
+        name: 'a computed column reading a cell formula that reads the edited column',
+        qty: '=REF(COLUMN("total"), ROW(1))',
+        model: [define('total', '=price * 2'), define('copy', '=qty')],
+        formula: '=copy + 1',
+        expected: 6,
+      },
+    ])('previews the applied result through $name', async ({ qty, model, formula, expected }) => {
+      await render(
+        <Test
+          {...cycleProps}
+          rows={[
+            { id: 1, price: 10, qty: 4 },
+            { id: 2, price: 5, qty },
+          ]}
+          initialState={{ computedColumns: { model } }}
+        />,
+      );
+      await openEditor('total', { sampleRowId: 2 });
+      typeFormula(formula);
+      await advancePreview();
+      expect(getPreviewText()).to.equal(String(expected));
+
+      fireEvent.click(getButton('Apply'));
+      await microtasks();
+      expect(apiRef.current!.getCellValue(2, 'total')).to.equal(expected);
+    });
+
+    const readerRows = [
+      { id: 1, price: 10, qty: 4 },
+      { id: 2, price: 5, qty: '=REF(COLUMN("total"), ROW(1))' },
+    ];
+
+    it('follows the edits of the other rows the draft is evaluated on', async () => {
+      await render(
+        <Test
+          {...cycleProps}
+          rows={readerRows}
+          initialState={{ computedColumns: { model: [define('total', '=price * 2')] } }}
+        />,
+      );
+      await openEditor('total', { sampleRowId: 2 });
+      typeFormula('=qty + 1');
+      await advancePreview();
+      expect(getPreviewText()).to.equal('6');
+
+      await act(async () => apiRef.current!.updateRows([{ id: 1, qty: 9 }]));
+      await microtasks();
+      await advancePreview();
+      expect(getPreviewText()).to.equal('11');
+    });
+
+    it('keeps the inferred type when the draft cells of the other rows would read it', async () => {
+      await render(
+        <Test
+          {...cycleProps}
+          rows={readerRows}
+          initialState={{ computedColumns: { model: [] } }}
+        />,
+      );
+      await openEditor(null, { sampleRowId: 2 });
+      typeName('Total');
+      fireEvent.change(getFieldInput(), { target: { value: 'total' } });
+      typeFormula('=IF(price = 10, "a", IFERROR(LEN(qty), "b"))');
+      await advancePreview();
+      await advancePreview();
+      const states: string[] = [];
+      for (let tick = 0; tick < 2; tick += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        await advancePreview();
+        states.push(`${getTypeSelect().textContent} ${getPreviewText()}`);
+      }
+      expect(states).to.deep.equal(['Number 1', 'Number 1']);
+    });
   });
 
   describe('number format preservation', () => {
