@@ -1,14 +1,14 @@
 {
   "props": {
     "itemId": { "type": { "name": "string" }, "required": true },
-    "children": { "type": { "name": "any" } },
+    "children": { "type": { "name": "node" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
     "id": { "type": { "name": "string" } },
     "label": { "type": { "name": "node" } },
     "onBlur": { "type": { "name": "func" } },
-    "onFocus": { "type": { "name": "custom", "description": "unsupportedProp" } },
+    "onFocus": { "type": { "name": "any" } },
     "onKeyDown": { "type": { "name": "func" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {

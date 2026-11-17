@@ -17,7 +17,7 @@
     "labelPosition": {
       "type": {
         "name": "enum",
-        "description": "'start'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'extremes'"
+        "description": "'end'<br>&#124;&nbsp;'extremes'<br>&#124;&nbsp;'start'"
       },
       "default": "'end'"
     },
@@ -30,7 +30,12 @@
       "default": "formattedValue"
     },
     "reverse": { "type": { "name": "bool" }, "default": "false" },
-    "rotateGradient": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "sx": {
       "type": {
         "name": "union",
@@ -38,6 +43,7 @@
       },
       "additionalInfo": { "sx": true }
     },
+    "tabIndex": { "type": { "name": "number" } },
     "thickness": { "type": { "name": "number" }, "default": "12" }
   },
   "name": "ContinuousColorLegend",

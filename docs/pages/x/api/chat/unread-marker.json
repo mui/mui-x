@@ -1,5 +1,16 @@
 {
-  "props": {},
+  "props": {
+    "messageId": { "type": { "name": "string" }, "required": true },
+    "index": { "type": { "name": "number" } },
+    "items": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "label": { "type": { "name": "node" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "UnreadMarker",
   "imports": ["import { UnreadMarker } from '@mui/x-chat/headless';"],
   "slots": [

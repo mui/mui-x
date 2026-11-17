@@ -10,8 +10,8 @@
     },
     "color": {
       "type": {
-        "name": "enum",
-        "description": "'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'secondary'<br>&#124;&nbsp;'success'<br>&#124;&nbsp;'warning'"
+        "name": "union",
+        "description": "'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'secondary'<br>&#124;&nbsp;'success'<br>&#124;&nbsp;'warning'<br>&#124;&nbsp;string"
       },
       "default": "'primary'"
     },
@@ -23,7 +23,7 @@
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "endAdornment": { "type": { "name": "node" } },
     "error": { "type": { "name": "bool" }, "default": "false" },
-    "fieldRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
+    "fieldRef": { "type": { "name": "custom", "description": "ref" } },
     "focused": { "type": { "name": "bool" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
@@ -95,7 +95,10 @@
     },
     "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "false" },
     "size": {
-      "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" },
+      "type": {
+        "name": "union",
+        "description": "'medium'<br>&#124;&nbsp;'small'<br>&#124;&nbsp;string"
+      },
       "default": "'medium'"
     },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },

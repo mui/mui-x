@@ -77,7 +77,12 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "default": "[]"
     },
-    "features": { "type": { "name": "object" } },
+    "features": {
+      "type": {
+        "name": "shape",
+        "description": "{ dependencies?: { Layer?: elementType, store: { buildState: func, createSchedulingPlugin: func, isDependencyActive: func, useCreationMonitor: func, useEventDropTarget: func }, useDescription: func }, recurringEvents?: { optionalRenderers: { recurrenceTab?: elementType, recurringScopeDialog?: elementType }, store: { computePresets: func, deleteRecurringEvent: func, getDefaultPresetKey: func, getOccurrencesForVisibleDays: func, isSameRRule: func, parseRRule: func, updateRecurringEvent: func } } }"
+      }
+    },
     "getEventAriaLabel": {
       "type": { "name": "func" },
       "signature": {

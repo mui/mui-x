@@ -1,5 +1,20 @@
 {
-  "props": {},
+  "props": {
+    "messageId": { "type": { "name": "string" }, "required": true },
+    "children": { "type": { "name": "node" } },
+    "groupKey": {
+      "type": { "name": "func" },
+      "default": "(message) => message.author?.id ?? message.role ?? ''"
+    },
+    "index": { "type": { "name": "number" } },
+    "items": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "MessageGroup",
   "imports": ["import { MessageGroup } from '@mui/x-chat/headless';"],
   "slots": [

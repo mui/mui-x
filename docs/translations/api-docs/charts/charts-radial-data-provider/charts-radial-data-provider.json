@@ -2,7 +2,6 @@
   "componentDescription": "Orchestrates the data providers for radial chart components and hooks.\n\nSimilar to `ChartsDataProvider`, but uses the radial axis plugin instead of the cartesian one,\nand only supports the line series config.",
   "propDescriptions": {
     "apiRef": { "description": "The ref object that exposes the chart API methods." },
-    "children": { "description": "The content of the component." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."

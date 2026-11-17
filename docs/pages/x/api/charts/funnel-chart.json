@@ -23,7 +23,7 @@
     "categoryAxis": {
       "type": {
         "name": "union",
-        "description": "{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'band', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'linear', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'log', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'pow', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'sqrt', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'symlog', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'time', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'utc', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }"
+        "description": "{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'band', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'log', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'symlog', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'pow', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'sqrt', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'time', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'utc', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'linear', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }"
       },
       "default": "{ position: 'none' }"
     },
@@ -43,21 +43,21 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'funnel' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'funnel' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'funnel' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'funnel' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" }, "default": "false" },
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'funnel' }"
+        "description": "{ dataIndex?: number, seriesId: string, type: 'funnel' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
       }
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'funnel' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'funnel' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'funnel' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'funnel' }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -122,7 +122,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'funnel' }"
+        "description": "{ dataIndex: number, seriesId: string, type: 'funnel' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
       }
     },
     "width": { "type": { "name": "number" } }
