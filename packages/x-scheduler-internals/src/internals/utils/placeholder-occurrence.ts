@@ -53,3 +53,12 @@ export function getPlaceholderOccurrence(
       : {}),
   };
 }
+
+/**
+ * The key of the occurrence a drag or a resize moves, whose position the placeholder takes.
+ */
+export function getPlaceholderOccurrenceKey(
+  placeholder: SchedulerOccurrencePlaceholder,
+): string | undefined {
+  return isInternalDragOrResizePlaceholder(placeholder) ? placeholder.occurrenceKey : undefined;
+}

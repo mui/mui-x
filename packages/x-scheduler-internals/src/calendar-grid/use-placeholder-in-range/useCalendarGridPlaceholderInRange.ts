@@ -4,7 +4,10 @@ import { useEventCalendarStoreContext } from '../../use-event-calendar-store-con
 import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import type { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
-import { getPlaceholderOccurrence } from '../../internals/utils/placeholder-occurrence';
+import {
+  getPlaceholderOccurrence,
+  getPlaceholderOccurrenceKey,
+} from '../../internals/utils/placeholder-occurrence';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
 
 export function useCalendarGridPlaceholderInRange(
@@ -31,9 +34,9 @@ export function useCalendarGridPlaceholderInRange(
       return null;
     }
 
-    const position = (isInternalDragOrResizePlaceholder(rawPlaceholder)
-      ? occurrences.find((occurrence) => occurrence.key === rawPlaceholder.occurrenceKey)?.position
-      : undefined) ?? { firstIndex: 1, lastIndex: maxIndex };
+    const occurrenceKey = getPlaceholderOccurrenceKey(rawPlaceholder);
+    const position = occurrences.find((occurrence) => occurrence.key === occurrenceKey)
+      ?.position ?? { firstIndex: 1, lastIndex: maxIndex };
 
     return {
       ...getPlaceholderOccurrence(rawPlaceholder, originalEvent, displayTimezone),

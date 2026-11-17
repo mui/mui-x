@@ -12,32 +12,38 @@ const TIMEZONE = 'America/New_York';
 const START = Date.parse('2025-07-03T13:00:00Z');
 const END = Date.parse('2025-07-03T14:30:00Z');
 
-function createPlaceholder(
+const INTERNAL_FIELDS = {
+  eventId: 'meeting',
+  occurrenceKey: 'meeting-key',
+  originalOccurrence: {},
+  sourceResourceId: 'room-a',
+};
+
+// The fields of each type of placeholder, on top of the shared ones.
+const FIELDS_BY_TYPE: Record<SchedulerOccurrencePlaceholder['type'], object> = {
+  creation: {},
+  'external-drag': { eventData: { title: 'Dropped', allDay: true } },
+  'internal-drag': INTERNAL_FIELDS,
+  'internal-resize': INTERNAL_FIELDS,
+};
+
+/** The occurrence of a placeholder from July 3rd, 2025, 09:00 to 10:30, dropped on `room-b`. */
+function getOccurrence(
   surfaceType: EventSurfaceType,
   type: SchedulerOccurrencePlaceholder['type'],
+  originalEvent: SchedulerProcessedEvent | null = null,
   overrides: Partial<SchedulerOccurrencePlaceholder> = {},
-): SchedulerOccurrencePlaceholder {
-  const base = { surfaceType, start: START, end: END, resourceId: 'room-b' };
-  if (type === 'creation') {
-    return { ...base, type, ...overrides } as SchedulerOccurrencePlaceholder;
-  }
-  if (type === 'external-drag') {
-    return {
-      ...base,
-      type,
-      eventData: { title: 'Dropped', allDay: true },
-      ...overrides,
-    } as SchedulerOccurrencePlaceholder;
-  }
-  return {
-    ...base,
+) {
+  const placeholder = {
+    surfaceType,
     type,
-    eventId: 'meeting',
-    occurrenceKey: 'meeting-key',
-    originalOccurrence: {} as any,
-    sourceResourceId: 'room-a',
+    start: START,
+    end: END,
+    resourceId: 'room-b',
+    ...FIELDS_BY_TYPE[type],
     ...overrides,
   } as SchedulerOccurrencePlaceholder;
+  return getPlaceholderOccurrence(placeholder, originalEvent, TIMEZONE);
 }
 
 function createOriginalEvent(allDay: boolean): SchedulerProcessedEvent {
@@ -60,11 +66,7 @@ function boundsOf(occurrence: ReturnType<typeof getPlaceholderOccurrence>) {
 describe('getPlaceholderOccurrence', () => {
   describe('day grid', () => {
     it('should render a creation as an all-day placeholder spanning whole days', () => {
-      const occurrence = getPlaceholderOccurrence(
-        createPlaceholder('day-grid', 'creation'),
-        null,
-        TIMEZONE,
-      );
+      const occurrence = getOccurrence('day-grid', 'creation');
 
       expect(occurrence.allDay).to.equal(true);
       expect(occurrence.title).to.equal('');
@@ -76,11 +78,7 @@ describe('getPlaceholderOccurrence', () => {
     });
 
     it('should read the all-day flag and the title of the dragged event', () => {
-      const occurrence = getPlaceholderOccurrence(
-        createPlaceholder('day-grid', 'internal-drag'),
-        createOriginalEvent(false),
-        TIMEZONE,
-      );
+      const occurrence = getOccurrence('day-grid', 'internal-drag', createOriginalEvent(false));
 
       expect(occurrence.allDay).to.equal(false);
       expect(occurrence.title).to.equal('Meeting');
@@ -93,11 +91,7 @@ describe('getPlaceholderOccurrence', () => {
     });
 
     it('should read the all-day flag and the title of an external event', () => {
-      const occurrence = getPlaceholderOccurrence(
-        createPlaceholder('day-grid', 'external-drag'),
-        null,
-        TIMEZONE,
-      );
+      const occurrence = getOccurrence('day-grid', 'external-drag');
 
       expect(occurrence.allDay).to.equal(true);
       expect(occurrence.title).to.equal('Dropped');
@@ -105,11 +99,7 @@ describe('getPlaceholderOccurrence', () => {
     });
 
     it('should keep the id of the dragged event when the store no longer has it', () => {
-      const occurrence = getPlaceholderOccurrence(
-        createPlaceholder('day-grid', 'internal-resize'),
-        null,
-        TIMEZONE,
-      );
+      const occurrence = getOccurrence('day-grid', 'internal-resize');
 
       expect(occurrence.id).to.equal('meeting');
       expect(occurrence.title).to.equal('');
@@ -118,11 +108,7 @@ describe('getPlaceholderOccurrence', () => {
 
   describe('time grid', () => {
     it('should keep the bounds and leave out the all-day flag', () => {
-      const occurrence = getPlaceholderOccurrence(
-        createPlaceholder('time-grid', 'internal-drag'),
-        createOriginalEvent(true),
-        TIMEZONE,
-      );
+      const occurrence = getOccurrence('time-grid', 'internal-drag', createOriginalEvent(true));
 
       expect('allDay' in occurrence).to.equal(false);
       expect(boundsOf(occurrence)).to.deep.equal([
@@ -134,11 +120,7 @@ describe('getPlaceholderOccurrence', () => {
 
   describe('timeline', () => {
     it('should not render a creation as all-day', () => {
-      const occurrence = getPlaceholderOccurrence(
-        createPlaceholder('timeline', 'creation'),
-        null,
-        TIMEZONE,
-      );
+      const occurrence = getOccurrence('timeline', 'creation');
 
       expect(occurrence.allDay).to.equal(undefined);
       expect(boundsOf(occurrence)).to.deep.equal([
@@ -148,11 +130,7 @@ describe('getPlaceholderOccurrence', () => {
     });
 
     it('should span whole days for an all-day event and carry the target resource', () => {
-      const occurrence = getPlaceholderOccurrence(
-        createPlaceholder('timeline', 'internal-drag'),
-        createOriginalEvent(true),
-        TIMEZONE,
-      );
+      const occurrence = getOccurrence('timeline', 'internal-drag', createOriginalEvent(true));
 
       expect(occurrence.allDay).to.equal(true);
       expect(occurrence.resource).to.equal('room-b');
@@ -163,11 +141,9 @@ describe('getPlaceholderOccurrence', () => {
     });
 
     it('should fall back to the resource of the dragged event outside of any resource', () => {
-      const occurrence = getPlaceholderOccurrence(
-        createPlaceholder('timeline', 'internal-drag', { resourceId: null }),
-        createOriginalEvent(false),
-        TIMEZONE,
-      );
+      const occurrence = getOccurrence('timeline', 'internal-drag', createOriginalEvent(false), {
+        resourceId: null,
+      });
 
       expect(occurrence.resource).to.equal('room-a');
     });

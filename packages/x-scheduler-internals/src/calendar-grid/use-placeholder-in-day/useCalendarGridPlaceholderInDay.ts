@@ -6,7 +6,10 @@ import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowConte
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
-import { getPlaceholderOccurrence } from '../../internals/utils/placeholder-occurrence';
+import {
+  getPlaceholderOccurrence,
+  getPlaceholderOccurrenceKey,
+} from '../../internals/utils/placeholder-occurrence';
 import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
 import { getDayGridCellSpan } from '../../use-event-occurrences-with-day-grid-position';
 
@@ -17,28 +20,6 @@ export function useCalendarGridPlaceholderInDay(
 ): useEventOccurrencesWithDayGridPosition.EventOccurrencePlaceholderWithPosition | null {
   const store = useEventCalendarStoreContext();
   const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext().axis;
-
-  const findAvailableIndex = React.useCallback(
-    (excludeKey?: string): number => {
-      let positionIndex = 1;
-      const targetDay = row.days.find((rowDay) => rowDay.key === day.key);
-      if (targetDay) {
-        const usedIndexes = new Set(
-          targetDay.withPosition
-            .filter((occ) => occ.key !== excludeKey)
-            .map((occ) => occ.position.index),
-        );
-        while (usedIndexes.has(positionIndex)) {
-          positionIndex += 1;
-        }
-      }
-      if (maxEvents != null && positionIndex > maxEvents) {
-        positionIndex = maxEvents;
-      }
-      return positionIndex;
-    },
-    [day, maxEvents, row.days],
-  );
 
   const rawPlaceholder = useStore(
     store,
@@ -72,16 +53,24 @@ export function useCalendarGridPlaceholderInDay(
       toLocalDayNumber(endInRow, displayTimezone),
     );
 
+    // The first row of the day that no other occurrence uses, capped to the rows the cell shows.
+    const occurrenceKey = getPlaceholderOccurrenceKey(rawPlaceholder);
+    const usedIndexes = new Set(
+      day.withPosition
+        .filter((occurrence) => occurrence.key !== occurrenceKey)
+        .map((occurrence) => occurrence.position.index),
+    );
+    let index = 1;
+    while (usedIndexes.has(index)) {
+      index += 1;
+    }
+    if (maxEvents != null && index > maxEvents) {
+      index = maxEvents;
+    }
+
     return {
       ...getPlaceholderOccurrence(placeholder, originalEvent, displayTimezone),
-      position: {
-        index: findAvailableIndex(
-          isInternalDragOrResizePlaceholder(rawPlaceholder)
-            ? rawPlaceholder.occurrenceKey
-            : undefined,
-        ),
-        daySpan,
-      },
+      position: { index, daySpan },
     };
-  }, [day, displayTimezone, originalEvent, rawPlaceholder, row.days, rowEnd, findAvailableIndex]);
+  }, [day, displayTimezone, maxEvents, originalEvent, rawPlaceholder, row.days, rowEnd]);
 }

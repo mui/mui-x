@@ -7,6 +7,7 @@ import {
 import {
   computeElementPositionInCollection,
   getPlaceholderOccurrence,
+  getPlaceholderOccurrenceKey,
   isInternalDragOrResizePlaceholder,
 } from '@mui/x-scheduler-internals/internals';
 import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
@@ -58,9 +59,11 @@ export function usePlaceholderInRow(
       return null;
     }
 
-    const position = (isInternalDragOrResizePlaceholder(rawPlaceholder)
-      ? occurrences.find((item) => item.key === rawPlaceholder.occurrenceKey)?.position
-      : undefined) ?? { firstIndex: 1, lastIndex: maxIndex };
+    const occurrenceKey = getPlaceholderOccurrenceKey(rawPlaceholder);
+    const position = occurrences.find((item) => item.key === occurrenceKey)?.position ?? {
+      firstIndex: 1,
+      lastIndex: maxIndex,
+    };
 
     return { ...occurrence, position };
   }, [rawPlaceholder, config, displayTimezone, originalEvent, occurrences, maxIndex]);
