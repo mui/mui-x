@@ -11,6 +11,7 @@ import type { SchedulerRecurringEventsPluginInterface } from '../plugins/Schedul
 import type { BaseTemporal } from './base-temporal';
 import { toEpochMs, toLocalDayNumber, toPlainDate } from './plain-date-utils/timeZone';
 import { getDayNumber, getPlainDateKey } from './plain-date-utils/plainDate';
+import { parseDateOnlyString } from './plain-date-utils/date';
 import type { SchedulerEventRangeIndex } from './event-range-index';
 
 /**
@@ -60,14 +61,22 @@ export function getDayTimezone(
 }
 
 /**
- * The day of an occurrence, which its recurring key and the recurring edits are based on: the day
- * an all-day occurrence was read on, and the day of a timed one in its timezone.
+ * The day of an occurrence, which its recurring key and the recurring edits are based on: the date
+ * of an all-day occurrence, and the day of a timed one in its timezone.
  */
 export function getOccurrencePlainDate(
-  occurrence: Pick<SchedulerProcessedEvent, 'allDay' | 'start' | 'timezone'>,
+  occurrence: Pick<SchedulerProcessedEvent, 'id' | 'allDay' | 'start' | 'timezone'> & {
+    key?: string;
+  },
 ): BaseTemporal.PlainDate {
   if (occurrence.allDay) {
-    return occurrence.start.plainDateTime.toPlainDate();
+    // The key of a recurring occurrence names its date, even one the display timezone skips,
+    // where the occurrence starts on the next day.
+    const keyPrefix = getRecurringOccurrenceKeyFromDateKey(occurrence.id, '');
+    const keyDate = occurrence.key?.startsWith(keyPrefix)
+      ? parseDateOnlyString(occurrence.key.slice(keyPrefix.length))
+      : null;
+    return keyDate ?? occurrence.start.plainDateTime.toPlainDate();
   }
   return toPlainDate(occurrence.start.timestamp, occurrence.timezone);
 }
@@ -182,8 +191,15 @@ export function getDaysTheOccurrenceIsVisibleOn(
  * Build eventRangeIndex with expandRecurringEvents set to whether recurringEventsPlugin is non-null.
  */
 export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsParameters) {
-  const { start, end, eventRangeIndex, visibleResources, displayTimezone, recurringEventsPlugin } =
-    parameters;
+  const {
+    start,
+    end,
+    eventRangeIndex,
+    visibleResources,
+    displayTimezone,
+    recurringEventsPlugin,
+    visibleRanges,
+  } = parameters;
   const occurrences: SchedulerEventOccurrence[] = [];
   const eventsInRange = eventRangeIndex.getEventsForRange(start, end);
 
@@ -198,9 +214,14 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
 
     // STEP 2: Recurrent event processing, if it is recurrent expand it for the visible days
     if (event.rrule && recurringEventsPlugin != null) {
-      // TODO: Check how this behave when the occurrence is between start and end but not in the visible days (e.g: hidden week end).
       occurrences.push(
-        ...recurringEventsPlugin.getOccurrencesForVisibleDays(event, start, end, displayTimezone),
+        ...recurringEventsPlugin.getOccurrencesForVisibleDays(
+          event,
+          start,
+          end,
+          displayTimezone,
+          visibleRanges,
+        ),
       );
       continue;
     }
@@ -291,4 +312,10 @@ export interface GetOccurrencesFromEventsParameters {
   visibleResources: Record<string, boolean>;
   displayTimezone: string;
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
+  /**
+   * The sorted and disjoint ranges of the visible days, from the first instant of a day to the last
+   * instant of a day, when the range has hidden days, like the weekends of a month view that hides
+   * them. The occurrences of recurring events that don't overlap one of them are left out.
+   */
+  visibleRanges?: readonly { start: number; end: number }[];
 }

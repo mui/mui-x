@@ -1113,7 +1113,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       // EXDATE should be the start of the day of the occurrence in America/New_York, the data
       // timezone.
-      expect(updated.updated![0].exDates![0].getTime()).to.equal(
+      expect((updated.updated![0].exDates![0] as Date).getTime()).to.equal(
         startOfDay(occurrenceStart, 'America/New_York').getTime(),
       );
     });
@@ -1184,9 +1184,8 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       expect(result.created![0].start).to.equal('2025-07-10');
       expect(result.created![0].end).to.equal('2025-07-11');
-      // The first instant of the excluded day in the display timezone, which the store writes
-      // as that day.
-      expect(result.updated![0].exDates![0].getTime()).to.equal(tokyo('2025-07-10').getTime());
+      // The excluded date, which the store writes as it is.
+      expect(result.updated![0].exDates).to.deep.equal(['2025-07-10']);
     });
 
     it('should keep the day of an all-day occurrence read before the display timezone changed', () => {
@@ -1203,9 +1202,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       expect(result.created![0].start).to.equal('2025-07-10');
       expect(result.created![0].end).to.equal('2025-07-11');
-      expect(result.updated![0].exDates![0].getTime()).to.equal(
-        createDate('2025-07-10T00:00:00', 'America/New_York').getTime(),
-      );
+      expect(result.updated![0].exDates).to.deep.equal(['2025-07-10']);
     });
 
     it("should move an all-day series as a whole on a scope 'all' day change of its first occurrence", () => {
@@ -1441,10 +1438,9 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(result.updated![0].end!.getTime()).to.equal(tokyo('2025-07-06').getTime());
       expect(result.updated![0].rrule).to.deep.equal({ freq: 'WEEKLY', byDay: ['MO', 'SA'] });
       // The excluded Monday keeps its day, the excluded Friday moves to its Saturday.
-      expect(result.updated![0].exDates!.map((exDate) => exDate.getTime())).to.deep.equal([
-        tokyo('2025-07-07').getTime(),
-        tokyo('2025-07-19').getTime(),
-      ]);
+      expect(result.updated![0].exDates!.map((exDate) => (exDate as Date).getTime())).to.deep.equal(
+        [tokyo('2025-07-07').getTime(), tokyo('2025-07-19').getTime()],
+      );
     });
 
     it("should resize an all-day series from its start on a scope 'all' change of a later occurrence", () => {
@@ -1684,9 +1680,16 @@ describe('recurring-events/updateRecurringEvent', () => {
           'Asia/Tokyo',
         );
 
-        // The series keeps its days in New York, from July 4th to July 8th.
+        // The series keeps its days in New York, from July 4th to July 8th: the store writes the
+        // until of the stored rule as its date.
         expect(result.updated![0].start!.getTime()).to.equal(tokyo('2025-07-04').getTime());
         expect(result.updated![0]).not.to.have.property('rrule');
+        const written = stringifyEventDateChanges(
+          result.updated![0],
+          event.modelInBuiltInFormat,
+          'Asia/Tokyo',
+        );
+        expect(written.rrule).to.deep.equal({ freq: 'DAILY', until: '2025-07-08' });
       });
 
       it("should keep the first day and the rule of a series made all-day across a DST change on a scope 'all' change", () => {
@@ -1813,7 +1816,7 @@ describe('recurring-events/updateRecurringEvent', () => {
         expect(result.created![0].timezone).to.equal('Asia/Tokyo');
         expect(result.created![0].start).to.equal('2025-07-11T09:00:00');
         expect(result.created![0].end).to.equal('2025-07-11T10:00:00');
-        expect(result.updated![0].exDates![0].getTime()).to.equal(tokyo('2025-07-11').getTime());
+        expect(result.updated![0].exDates).to.deep.equal(['2025-07-11']);
       });
     });
   });

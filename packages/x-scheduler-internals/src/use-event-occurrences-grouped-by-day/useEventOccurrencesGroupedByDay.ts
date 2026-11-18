@@ -75,17 +75,19 @@ export function innerGetEventOccurrencesGroupedByDay(
     return occurrenceMap;
   }
 
+  const dayNumbers = days.map((day) => getDayNumber(day.plainDate));
+  const visibleRanges = getVisibleRanges(days, dayNumbers, displayTimezone);
   const occurrences = getOccurrencesFromEvents({
-    // The days start on their first instant.
-    start: days[0].timestamp,
-    end: getEndOfDayMs(days[days.length - 1].timestamp, displayTimezone),
+    start: visibleRanges[0].start,
+    end: visibleRanges[visibleRanges.length - 1].end,
     eventRangeIndex,
     visibleResources,
     displayTimezone,
     recurringEventsPlugin,
+    // Without hidden days, the range is enough.
+    visibleRanges: visibleRanges.length > 1 ? visibleRanges : undefined,
   });
 
-  const dayNumbers = days.map((day) => getDayNumber(day.plainDate));
   for (const occurrence of occurrences) {
     const eventDays = getDaysTheOccurrenceIsVisibleOn(
       occurrence,
@@ -99,4 +101,28 @@ export function innerGetEventOccurrencesGroupedByDay(
   }
 
   return occurrenceMap;
+}
+
+/**
+ * The runs of consecutive days, from the first instant of their first day to the last instant of
+ * their last day.
+ */
+function getVisibleRanges(
+  days: SchedulerProcessedDay[],
+  dayNumbers: number[],
+  displayTimezone: string,
+): { start: number; end: number }[] {
+  const ranges: { start: number; end: number }[] = [];
+  let runStart = 0;
+  for (let i = 1; i <= days.length; i += 1) {
+    if (i === days.length || dayNumbers[i] !== dayNumbers[i - 1] + 1) {
+      // The days start on their first instant.
+      ranges.push({
+        start: days[runStart].timestamp,
+        end: getEndOfDayMs(days[i - 1].timestamp, displayTimezone),
+      });
+      runStart = i;
+    }
+  }
+  return ranges;
 }

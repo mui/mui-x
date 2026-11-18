@@ -448,5 +448,18 @@ describe('event-utils', () => {
         .toOccurrence();
       expect(getOccurrencePlainDate(timed)).toEqualPlainDate('2025-07-04');
     });
+
+    it('should read the date of a recurring all-day occurrence from its key, even on a day the display timezone skips', () => {
+      // December 30th, 2011 does not exist in Pacific/Apia: the occurrence starts on the 31st.
+      const occurrence = {
+        ...EventBuilder.new()
+          .id('trip')
+          .span('2011-12-31', '2012-01-01', { allDay: true })
+          .withDisplayTimezone('Pacific/Apia')
+          .toOccurrence(),
+        key: 'trip::2011-12-30',
+      };
+      expect(getOccurrencePlainDate(occurrence)).toEqualPlainDate('2011-12-30');
+    });
   });
 });
