@@ -13,6 +13,7 @@ import {
   StateWatcher,
   StoreSpy,
   utcJuly4AllDayBuilder,
+  toWallClock,
 } from 'test/utils/scheduler';
 import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import type {
@@ -1945,8 +1946,8 @@ describe('<EventDialogContent open />', () => {
       expect(payload.description).to.equal('Some details');
       expect(payload.allDay).to.equal(false);
       expect(payload.resource).to.deep.equal([workResource.id]);
-      expect(payload.start).toEqualDateTime(start);
-      expect(payload.end).toEqualDateTime(end);
+      expect(payload.start).to.equal(start.toISOString());
+      expect(payload.end).to.equal(end.toISOString());
       expect(payload.rrule).to.deep.equal({ freq: 'DAILY', interval: 1 });
     });
 
@@ -2019,8 +2020,8 @@ describe('<EventDialogContent open />', () => {
       const expectedStart = createDate('2025-06-10T09:00:00', displayTimezone);
       const expectedEnd = createDate('2025-06-10T10:00:00', displayTimezone);
 
-      expect(payload.start.getTime()).to.equal(expectedStart.getTime());
-      expect(payload.end.getTime()).to.equal(expectedEnd.getTime());
+      expect(payload.start).to.equal(expectedStart.toISOString());
+      expect(payload.end).to.equal(expectedEnd.toISOString());
     });
 
     it("should anchor a weekly rule on the created event's own weekday from another timezone", async () => {
@@ -2188,8 +2189,8 @@ describe('<EventDialogContent open />', () => {
         expect(openPayload.changes.title).to.equal('Daily standup');
         expect(openPayload.changes.description).to.equal('sync');
         expect(openPayload.changes.allDay).to.equal(false);
-        expect(openPayload.changes.start).to.toEqualDateTime(createDate('2025-06-11T10:05:00'));
-        expect(openPayload.changes.end).to.toEqualDateTime(createDate('2025-06-11T10:35:00'));
+        expect(String(openPayload.changes.start)).to.equal('2025-06-11T10:05:00');
+        expect(String(openPayload.changes.end)).to.equal('2025-06-11T10:35:00');
         expect(openPayload.changes).to.not.have.property('rrule');
 
         expect(selectRecurringEventScopeSpy?.mock.calls.length).to.equal(1);
@@ -2726,8 +2727,8 @@ describe('<EventDialogContent open />', () => {
         // The range was validated as a pair in New York, so the untouched start follows the
         // edited end instead of keeping its UTC instant next to a New York end.
         const payload = updateRecurringEventSpy!.mock.lastCall![0];
-        expect(payload.changes.start).toEqualDateTime('2025-07-04T04:00:00.000Z'); // July 4th 00:00 EDT
-        expect(payload.changes.end).toEqualDateTime('2025-07-06T04:00:00.000Z'); // July 6th 00:00 EDT
+        expect(String(payload.changes.start)).to.equal('2025-07-04T00:00:00'); // July 4th in New York
+        expect(String(payload.changes.end)).to.equal('2025-07-06T00:00:00'); // Exclusive end in New York
       });
 
       it('should build a preset on the stored start when only the display timezone moved', async () => {
@@ -3009,8 +3010,8 @@ describe('<EventDialogContent open />', () => {
         // the stored model keeps 11:00 until the host answers.
         await act(async () => {
           store.startEditing(resizedOccurrence, 'edit');
-          store.updateEvent({ id: event.id, end: resizedEnd });
-          store.setEditingOccurrenceTimes({ end: resizedEnd });
+          store.updateEvent({ id: event.id, end: toWallClock(resizedEnd, 'UTC') });
+          store.setEditingOccurrenceTimes({ end: toWallClock(resizedEnd, 'UTC') });
         });
         await waitFor(() => expect(persistCalls).to.have.length(1));
 
@@ -4704,8 +4705,15 @@ describe('<EventDialogContent open />', () => {
           onEventsChange,
           commitResize: (store) => {
             store.startEditing(builder.toOccurrence(), 'armed');
-            store.updateEvent({ id: event.id, start: resizedStart, end: resizedEnd });
-            store.setEditingOccurrenceTimes({ start: resizedStart, end: resizedEnd });
+            store.updateEvent({
+              id: event.id,
+              start: toWallClock(resizedStart, 'UTC'),
+              end: toWallClock(resizedEnd, 'UTC'),
+            });
+            store.setEditingOccurrenceTimes({
+              start: toWallClock(resizedStart, 'UTC'),
+              end: toWallClock(resizedEnd, 'UTC'),
+            });
             store.setEditingMode('edit');
           },
         });
@@ -4737,8 +4745,8 @@ describe('<EventDialogContent open />', () => {
           onEventsChange,
           commitResize: (store) => {
             store.startEditing(occurrence, 'armed');
-            store.updateEvent({ id: event.id, end: resizedEnd });
-            store.setEditingOccurrenceTimes({ end: resizedEnd });
+            store.updateEvent({ id: event.id, end: toWallClock(resizedEnd, 'America/New_York') });
+            store.setEditingOccurrenceTimes({ end: toWallClock(resizedEnd, 'America/New_York') });
             store.setEditingMode('edit');
           },
         });

@@ -15,12 +15,8 @@ import type {
 import { processEvent } from '../../../process-event';
 import type { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
-import {
-  allDayBoundToEventString,
-  untilToEventString,
-  getUntilReferenceString,
-} from '../date-utils';
-import { stringifyEventDateChanges } from '../event-date-changes';
+import { untilToEventString } from '../date-utils';
+import { toEventDateStrings } from '../event-date-changes';
 import { schedulerEventSelectors } from '../../../scheduler-selectors/schedulerEventSelectors';
 
 /**
@@ -153,59 +149,32 @@ export function getProcessedEventFromModel<TEvent extends object>(
 
 /**
  * Updates an event model based on the provided changes and model structure.
- * Converts the `Date` objects to strings before applying them to the user's model, because
- * `SchedulerEvent` date fields are strings, with `stringifyEventDateChanges()`.
+ * Converts the plain date-times to strings before applying them to the user's model, because
+ * `SchedulerEvent` date fields are strings, with `toEventDateStrings()`.
  */
 export function getUpdatedEventModelFromChanges<TEvent extends object>(
   oldModel: TEvent,
   changes: SchedulerEventUpdatedProperties,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
-  originalBuiltInModel: SchedulerEvent,
-  displayTimezone: string,
+  originalEvent: SchedulerProcessedEvent,
+  displayTimezone = 'default',
 ): TEvent {
-  const stringified: Record<string, any> = {
-    ...changes,
-    ...stringifyEventDateChanges(changes, originalBuiltInModel, displayTimezone),
-  };
-  const dataTimezone = stringified.timezone ?? originalBuiltInModel.timezone ?? 'default';
-  if (changes.rrule != null && typeof changes.rrule === 'object' && changes.rrule.until != null) {
-    stringified.rrule = {
-      ...changes.rrule,
-      until: untilToEventString(
-        changes.rrule.until,
-        getUntilReferenceString(originalBuiltInModel),
-        dataTimezone,
-      ),
-    };
-  }
-
   return createOrUpdateEventModelFromBuiltInEventModel<TEvent, false>(
     oldModel,
-    stringified as SchedulerEventUpdatedProperties,
+    toEventDateStrings(changes, originalEvent, displayTimezone),
     eventModelStructure,
   );
 }
 
 /**
  * Creates an event model from the creation properties using the provided model structure.
- * The dates of an all-day event are the days of its instants in the display timezone.
+ * The dates are event strings, including floating dates for an all-day event.
  */
 export function createEventModel<TEvent extends object>(
   event: SchedulerEventCreationProperties,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
-  displayTimezone: string,
 ) {
   const id = generateId('event');
-
-  const formatNewDate = (value: string | Date): string => {
-    if (typeof value === 'string') {
-      return value;
-    }
-    return event.allDay
-      ? allDayBoundToEventString(value.getTime(), displayTimezone)
-      : value.toISOString();
-  };
-  const start = formatNewDate(event.start);
 
   // Internal callers (e.g. FormContent) may pass a processed rule, whose `until` is a plain date or date-time.
   // Convert it to a string in the format of `start`, so the built-in model stays in SchedulerEvent
@@ -216,16 +185,16 @@ export function createEventModel<TEvent extends object>(
     typeof event.rrule.until !== 'string'
       ? {
           ...event.rrule,
-          until: untilToEventString(event.rrule.until, start, event.timezone ?? 'default'),
+          until: untilToEventString(event.rrule.until, event.start, event.timezone ?? 'default'),
         }
       : (event.rrule as SchedulerEvent['rrule']);
 
   const builtInEvent: SchedulerEvent = {
     ...event,
     id,
-    start,
-    end: formatNewDate(event.end),
-    exDates: event.exDates?.map(formatNewDate),
+    start: event.start,
+    end: event.end,
+    exDates: event.exDates,
     rrule,
   };
 
@@ -243,7 +212,7 @@ function createOrUpdateEventModelFromBuiltInEventModel<
   TIsCreating extends boolean,
 >(
   oldModel: TIsCreating extends true ? null : TEvent,
-  changes: TIsCreating extends true ? SchedulerEvent : SchedulerEventUpdatedProperties,
+  changes: TIsCreating extends true ? SchedulerEvent : Partial<SchedulerEvent>,
   eventModelStructure: SchedulerEventModelStructure<any> | undefined,
 ) {
   let eventModel = oldModel == null ? {} : { ...oldModel };

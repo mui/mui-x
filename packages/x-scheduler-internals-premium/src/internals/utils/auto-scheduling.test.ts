@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { createDate, EventBuilder, setSystemTimezone } from 'test/utils/scheduler';
+import { createDate, EventBuilder, setSystemTimezone, toWallClock } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
-import type { SchedulerEventId, SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerEventId,
+  SchedulerEventUpdatedProperties,
+  SchedulerProcessedEvent,
+} from '@mui/x-scheduler-internals/models';
+import { resolveEditedBounds, getDayTimezone } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerDependency } from '../../models';
 import { groupByEventId } from './dependency-utils';
 import { computeAutoSchedulingCascade, getDependencyViolation } from './auto-scheduling';
@@ -38,28 +43,63 @@ interface CascadeOverrides {
   displayTimezone?: string;
 }
 
+/**
+ * An entry of the cascade with its dates as instants, which the tests write. The cascade takes and
+ * returns them on the wall clock of the timezone of each event.
+ */
+type InstantEntry = Omit<SchedulerEventUpdatedProperties, 'start' | 'end'> & {
+  start?: Date;
+  end?: Date;
+};
+
 function runCascadeResult(
   events: SchedulerProcessedEvent[],
   dependencies: SchedulerDependency[],
-  updated: Parameters<typeof computeAutoSchedulingCascade>[0]['updated'],
+  updated: InstantEntry[],
   overrides: CascadeOverrides = {},
 ) {
-  return computeAutoSchedulingCascade({
-    processedEventLookup: buildLookup(events),
+  const processedEventLookup = buildLookup(events);
+  const getTimezone = (id: SchedulerEventId) =>
+    getDayTimezone(processedEventLookup.get(id)!, overrides.displayTimezone ?? 'default');
+  const result = computeAutoSchedulingCascade({
+    processedEventLookup,
     activeDependenciesBySource: groupByEventId(dependencies, 'source'),
     activeDependenciesByTarget: groupByEventId(dependencies, 'target'),
     isEventReadOnly: overrides.isEventReadOnly ?? (() => false),
-    updated,
+    updated: updated.map(({ start, end, ...entry }) => ({
+      ...entry,
+      ...(start === undefined ? {} : { start: toWallClock(start, getTimezone(entry.id)) }),
+      ...(end === undefined ? {} : { end: toWallClock(end, getTimezone(entry.id)) }),
+    })),
     deleted: overrides.deleted ?? new Set(),
     enforcedDependencies: overrides.enforcedDependencies,
     displayTimezone: overrides.displayTimezone ?? 'default',
   });
+  // Resolved like the store resolves the dates it writes.
+  return {
+    ...result,
+    updated: result.updated.map(({ start, end, ...entry }): InstantEntry => {
+      const processedEvent = processedEventLookup.get(entry.id)!;
+      const dataStart = processedEvent.start.timestamp;
+      const dataEnd = processedEvent.end.timestamp;
+      const bounds = resolveEditedBounds(
+        { start, end },
+        { start: dataStart, end: dataEnd },
+        getTimezone(entry.id),
+      );
+      return {
+        ...entry,
+        ...(bounds.start === undefined ? {} : { start: new Date(bounds.start) }),
+        ...(bounds.end === undefined ? {} : { end: new Date(bounds.end) }),
+      };
+    }),
+  };
 }
 
 function runCascade(
   events: SchedulerProcessedEvent[],
   dependencies: SchedulerDependency[],
-  updated: Parameters<typeof computeAutoSchedulingCascade>[0]['updated'],
+  updated: InstantEntry[],
   overrides: CascadeOverrides = {},
 ) {
   return runCascadeResult(events, dependencies, updated, overrides).updated;

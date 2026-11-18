@@ -8,6 +8,9 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import {
   getDayTimezone,
+  resolveEditedBounds,
+  toEventDateStrings,
+  toPlainDateTime,
   getLastInstant,
   timestampToEventString,
   localToEpochMs,
@@ -305,28 +308,23 @@ export function computeAutoSchedulingCascade(
     if (changesTimezone) {
       timezoneChanges.set(entry.id, { model, dataTimezone, nextTimezone });
     }
-    // Mirrors the store: the entries of a timed event are serialized in the data timezone
-    // (`timestampToEventString`) and the model is then read in the (new) timezone.
-    const resolveEntryTimestamp = (
-      value: Date | undefined,
-      modelString: string,
-      currentTimestamp: number,
-    ) => {
-      if (!changesTimezone) {
-        return value == null ? currentTimestamp : value.getTime();
-      }
-      const nextString =
-        value == null
-          ? modelString
-          : timestampToEventString(value.getTime(), modelString, dataTimezone);
-      return resolveEventTimestamp(nextString, nextTimezone, entry.id);
-    };
-    let entryStart = resolveEntryTimestamp(
-      entry.start,
-      model.start,
-      processedEvent.start.timestamp,
+    // Resolve the same wall-clock inputs the store will write.
+    const inputTimezone = getDayTimezone(processedEvent, displayTimezone);
+    const resolved = resolveEditedBounds(
+      entry,
+      {
+        start: processedEvent.start.timestamp,
+        end: processedEvent.end.timestamp,
+      },
+      inputTimezone,
     );
-    let entryEnd = resolveEntryTimestamp(entry.end, model.end, processedEvent.end.timestamp);
+    let entryStart = resolved.start ?? processedEvent.start.timestamp;
+    let entryEnd = resolved.end ?? processedEvent.end.timestamp;
+    if (changesTimezone) {
+      const written = toEventDateStrings(entry, processedEvent, displayTimezone);
+      entryStart = resolveEventTimestamp(written.start ?? model.start, nextTimezone, entry.id);
+      entryEnd = resolveEventTimestamp(written.end ?? model.end, nextTimezone, entry.id);
+    }
     if (allDay && !processedEvent.allDay && entry.start == null && entry.end == null) {
       // Like the store, a timed event made all-day without bounds keeps the dates of its timezone.
       const ownDays = snapToOwnDays(entryStart, entryEnd, dataTimezone, displayTimezone);
@@ -470,26 +468,31 @@ export function computeAutoSchedulingCascade(
 
   return { updated: cascaded, blocked };
 
-  // Inverse of `resolveEntryTimestamp` for a seed changing timezone: the store serializes the
-  // entry in the old timezone and the model is then read in the new one, so the entry
-  // carries the instant whose old-zone wall time is the intended new-zone wall time.
+  // Emit the wall-clock values the store reads in the event's original representation.
   function toEntryDates(eventId: SchedulerEventId, dates: ResolvedDates) {
+    const inputTimezone = getDayTimezone(processedEventLookup.get(eventId)!, displayTimezone);
     if (dates.allDay) {
-      // The exclusive end of the occurrences, which the store writes as a date.
-      return { start: new Date(dates.start), end: new Date(dates.end + 1) };
+      return {
+        start: toPlainDateTime(dates.start, inputTimezone),
+        end: toPlainDateTime(dates.end + 1, inputTimezone),
+      };
     }
     const timezoneChange = timezoneChanges.get(eventId);
     if (timezoneChange === undefined) {
-      return { start: new Date(dates.start), end: new Date(dates.end) };
+      return {
+        start: toPlainDateTime(dates.start, inputTimezone),
+        end: toPlainDateTime(dates.end, inputTimezone),
+      };
     }
     const { model, dataTimezone, nextTimezone } = timezoneChange;
     const encode = (epochMs: number, modelString: string) =>
-      new Date(
+      toPlainDateTime(
         resolveEventTimestamp(
           timestampToEventString(epochMs, modelString, nextTimezone),
           dataTimezone,
           eventId,
         ),
+        inputTimezone,
       );
     return { start: encode(dates.start, model.start), end: encode(dates.end, model.end) };
   }

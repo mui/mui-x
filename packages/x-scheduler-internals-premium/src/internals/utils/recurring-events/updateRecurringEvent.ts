@@ -23,7 +23,9 @@ import {
   getStartOfDayMs,
   moveTimestampToPlainDate,
   snapAllDayBounds,
-  stringifyEventDateChanges,
+  toEventDateStrings,
+  resolveEditedBounds,
+  toPlainDateTime,
   toEpochMs,
   toLocalDayNumber,
   toPlainDate,
@@ -34,7 +36,6 @@ import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event'
 import {
   getPlainDateWeekDayCode,
   getWeekDayCode,
-  moveEndToPlainDate,
   NOT_LOCALIZED_WEEK_DAYS,
   parsesByDayForWeeklyFrequency,
 } from './internal-utils';
@@ -109,7 +110,7 @@ export function applyRecurringUpdateFollowing(
   const newChanges = shiftedExDates == null ? changes : { ...changes, exDates: shiftedExDates };
   const stringified: Record<string, any> = {
     ...newChanges,
-    ...stringifyEventDateChanges(newChanges, originalModel, displayTimezone, {
+    ...toEventDateStrings(newChanges, originalEvent, displayTimezone, {
       start: occurrenceStart,
       end: occurrenceEnd,
     }),
@@ -173,6 +174,15 @@ export function applyRecurringUpdateAll(
   const occurrenceStart = getOccurrenceStart(occurrence, displayTimezone);
   const eventUpdatedProperties: SchedulerEventUpdatedProperties = { ...changes };
 
+  const inputTimezone = getDayTimezone(originalEvent, displayTimezone);
+  const resolved = resolveEditedBounds(
+    changes,
+    {
+      start: occurrenceStart,
+      end: getOccurrenceEnd({ event: originalEvent, occurrenceStart, displayTimezone }),
+    },
+    inputTimezone,
+  );
   // 1) Detect if caller changed the date part of start or end (vs only time)
   const originalAllDay = originalEvent.allDay ?? false;
   const allDay = changes.allDay ?? originalAllDay;
@@ -189,10 +199,10 @@ export function applyRecurringUpdateAll(
   const occurrencePlainDate = getOccurrencePlainDate(occurrence);
   const touchedStartDate =
     changes.start != null &&
-    !toPlainDate(changes.start.getTime(), nextDayTimezone).equals(occurrencePlainDate);
+    !toPlainDate(resolved.start!, nextDayTimezone).equals(occurrencePlainDate);
   const touchedEndDate =
     changes.end != null &&
-    !toPlainDate(getLastInstant(changes.end.getTime(), allDay), nextDayTimezone).equals(
+    !toPlainDate(getLastInstant(resolved.end!, allDay), nextDayTimezone).equals(
       toPlainDate(getLastInstant(occurrenceEnd, originalAllDay), dayTimezone),
     );
 
@@ -221,14 +231,17 @@ export function applyRecurringUpdateAll(
   // representation of the edited occurrence: its times or its day count. Only the bounds in
   // `changes` are written.
   // The bounds of the edited occurrence in its new representation: the ones given, or its own.
-  const changedStart = changes.start?.getTime() ?? occurrenceStart;
-  const changedEnd = changes.end?.getTime() ?? occurrenceEnd;
+  const changedStart = resolved.start ?? occurrenceStart;
+  const changedEnd = resolved.end ?? occurrenceEnd;
   if (originalAllDay && !allDay && (!editedIsDtstart || changes.start == null)) {
     // The times of the edited occurrence on the first day of the series, in the display timezone
     // the series moves to.
     const startMs = moveTimestampToPlainDate(changedStart, seriesStartPlainDate, nextDayTimezone);
-    eventUpdatedProperties.start = new Date(startMs);
-    eventUpdatedProperties.end = new Date(startMs + changedEnd - changedStart);
+    eventUpdatedProperties.start = toPlainDateTime(startMs, inputTimezone);
+    eventUpdatedProperties.end = toPlainDateTime(
+      startMs + changedEnd - changedStart,
+      inputTimezone,
+    );
   } else if (!editedIsDtstart) {
     if (allDay !== originalAllDay) {
       // Whole days from the first day of the series, as many as the edited occurrence covers: in
@@ -241,8 +254,11 @@ export function applyRecurringUpdateAll(
         shiftToDisplayedDay(seriesStartPlainDate, displayedDaysShift),
         displayTimezone,
       );
-      eventUpdatedProperties.start = new Date(startMs);
-      eventUpdatedProperties.end = new Date(addDaysToDayStart(startMs, dayCount, displayTimezone));
+      eventUpdatedProperties.start = toPlainDateTime(startMs, inputTimezone);
+      eventUpdatedProperties.end = toPlainDateTime(
+        addDaysToDayStart(startMs, dayCount, displayTimezone),
+        inputTimezone,
+      );
     } else if (allDay) {
       // The days of the series stay: only its day count follows the edited occurrence.
       delete eventUpdatedProperties.start;
@@ -250,30 +266,23 @@ export function applyRecurringUpdateAll(
       if (changes.start != null || changes.end != null) {
         const dayCount = getSnappedDayCount(changedStart, changedEnd, displayTimezone);
         if (dayCount !== getAllDayDayCount(originalEvent)) {
-          eventUpdatedProperties.end = new Date(
+          eventUpdatedProperties.end = toPlainDateTime(
             addDaysToDayStart(seriesStartMs, dayCount, displayTimezone),
+            inputTimezone,
           );
         }
       }
     } else {
       let startMs = seriesStartMs;
       if (changes.start != null) {
-        startMs = moveTimestampToPlainDate(
-          changes.start.getTime(),
-          seriesStartPlainDate,
-          dayTimezone,
-        );
-        eventUpdatedProperties.start = new Date(startMs);
+        startMs = moveTimestampToPlainDate(resolved.start!, seriesStartPlainDate, dayTimezone);
+        eventUpdatedProperties.start = toPlainDateTime(startMs, inputTimezone);
       }
       if (changes.end != null) {
-        eventUpdatedProperties.end = new Date(
-          moveEndToPlainDate(
-            changes.end.getTime(),
-            toPlainDate(originalEvent.end.timestamp, dayTimezone),
-            startMs,
-            dayTimezone,
-          ),
-        );
+        eventUpdatedProperties.end = toPlainDate(
+          originalEvent.end.timestamp,
+          dayTimezone,
+        ).toPlainDateTime(changes.end.toPlainTime());
       }
     }
   }
@@ -289,7 +298,7 @@ export function applyRecurringUpdateAll(
       const newOccurrenceStart =
         changes.start == null
           ? nextOccurrenceStart
-          : getStartOfDayMs(changes.start.getTime(), nextDayTimezone);
+          : getStartOfDayMs(resolved.start!, nextDayTimezone);
       rrule = adjustRRuleForAllMove(
         rrule,
         nextOccurrenceStart,
@@ -329,8 +338,7 @@ export function applyRecurringUpdateOnlyThis(
     displayTimezone,
   });
   const stringifiedChanges: Partial<SchedulerEventCreationProperties> = {
-    ...changes,
-    ...stringifyEventDateChanges(changes, originalEvent.modelInBuiltInFormat, displayTimezone, {
+    ...toEventDateStrings(changes, originalEvent, displayTimezone, {
       start: occurrenceStart,
       end: occurrenceEnd,
     }),
@@ -413,14 +421,17 @@ function getShiftedExDates(
   changes: SchedulerEventUpdatedProperties,
   shift: DisplayedDaysShift | null,
   displayTimezone: string,
-): Date[] | undefined {
+): BaseTemporal.PlainDateTime[] | undefined {
   const { exDates, timezone = 'default' } = originalEvent.modelInBuiltInFormat;
   if (shift == null || exDates == null || changes.exDates != null) {
     return undefined;
   }
   return exDates.map((exDate) => {
     const day = toPlainDate(resolveEventTimestamp(exDate, timezone), timezone);
-    return new Date(toEpochMs(shiftToDisplayedDay(day, shift), displayTimezone));
+    return toPlainDateTime(
+      toEpochMs(shiftToDisplayedDay(day, shift), displayTimezone),
+      getDayTimezone(originalEvent, displayTimezone),
+    );
   });
 }
 
@@ -506,6 +517,14 @@ export function decideSplitRRule(
   changes: Partial<SchedulerEventUpdatedProperties>,
   displayTimezone: string,
 ): SchedulerProcessedEventRecurrenceRule | string | undefined {
+  const resolved = resolveEditedBounds(
+    changes,
+    {
+      start: splitStart,
+      end: getOccurrenceEnd({ event: originalEvent, occurrenceStart: splitStart, displayTimezone }),
+    },
+    getDayTimezone(originalEvent, displayTimezone),
+  );
   const originalRule = originalEvent.rrule!;
   const dayTimezone = getDayTimezone(originalEvent, displayTimezone);
   // The timezone the days of the new series are read in.
@@ -535,7 +554,7 @@ export function decideSplitRRule(
     realignedRule.byDay = realignWeeklyByDay(
       realignedRule.byDay as RecurringEventWeekDayCode[],
       toEpochMs(splitPlainDate, nextDayTimezone),
-      changes.start.getTime(),
+      resolved.start!,
       nextDayTimezone,
     );
   }
@@ -543,7 +562,7 @@ export function decideSplitRRule(
   if (originalRule.freq === 'MONTHLY' && changes.start) {
     realignedRule = realignMonthlyRule(
       realignedRule,
-      toPlainDate(changes.start.getTime(), nextDayTimezone),
+      toPlainDate(resolved.start!, nextDayTimezone),
     );
   }
 

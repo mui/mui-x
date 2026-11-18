@@ -1,6 +1,9 @@
+import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
+import { createDate, toWallClock } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import { createDate } from 'test/utils/scheduler';
 import type { SchedulerEvent, SchedulerEventUpdatedProperties } from '../../../models';
+import { processEvent } from '../../../process-event';
+import { BaseTemporal } from '../base-temporal';
 import { getCustomEventProperties, getUpdatedEventModelFromChanges } from './SchedulerStore.utils';
 
 describe('getCustomEventProperties', () => {
@@ -52,8 +55,7 @@ describe('getUpdatedEventModelFromChanges', () => {
       oldModel,
       changes,
       undefined,
-      oldModel as SchedulerEvent,
-      'default',
+      processEvent(oldModel, 'UTC'),
     );
     expect(Object.getOwnPropertyDescriptor(updated, '__proto__')?.value).to.deep.equal({
       marker: true,
@@ -61,7 +63,7 @@ describe('getUpdatedEventModelFromChanges', () => {
     expect(Object.getPrototypeOf(updated)).to.equal(Object.prototype);
   });
 
-  it('should keep the instant of a date with an offset in a repeated hour', () => {
+  it('should keep the string of an unchanged date in a repeated hour', () => {
     // 02:30+01:00 is the second 02:30 of the DST transition in Paris.
     const oldModel = {
       id: '1',
@@ -72,12 +74,16 @@ describe('getUpdatedEventModelFromChanges', () => {
     };
     const updated = getUpdatedEventModelFromChanges(
       oldModel,
-      { id: '1', start: new Date('2025-10-26T02:45:00+01:00') },
+      {
+        id: '1',
+        start: BaseTemporal.PlainDateTime.from('2025-10-26T02:30'),
+        end: BaseTemporal.PlainDateTime.from('2025-10-26T03:45'),
+      },
       undefined,
-      oldModel as SchedulerEvent,
-      'default',
+      processEvent(oldModel, 'Europe/Paris'),
     );
-    expect(updated.start).to.equal('2025-10-26T01:45:00.000Z');
+    expect(updated.start).to.equal('2025-10-26T02:30:00+01:00');
+    expect(updated.end).to.equal('2025-10-26T02:45:00.000Z');
   });
 
   it('should keep the days of its timezone for a timed event made all-day without bounds', () => {
@@ -93,7 +99,7 @@ describe('getUpdatedEventModelFromChanges', () => {
       oldModel,
       { id: '1', allDay: true },
       undefined,
-      oldModel as SchedulerEvent,
+      processEvent(oldModel, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
       'Asia/Tokyo',
     );
     expect(updated.allDay).to.equal(true);
@@ -116,11 +122,11 @@ describe('getUpdatedEventModelFromChanges', () => {
         id: '1',
         allDay: false,
         timezone: 'Europe/Paris',
-        start: createDate('2025-07-04T09:00:00', 'Asia/Tokyo'),
-        end: createDate('2025-07-04T10:00:00', 'Asia/Tokyo'),
+        start: toWallClock(createDate('2025-07-04T09:00:00', 'Asia/Tokyo'), 'Asia/Tokyo'),
+        end: toWallClock(createDate('2025-07-04T10:00:00', 'Asia/Tokyo'), 'Asia/Tokyo'),
       },
       undefined,
-      oldModel as SchedulerEvent,
+      processEvent(oldModel, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
       'Asia/Tokyo',
     );
     // The wall times are written in the display timezone and read in the given one.
@@ -143,7 +149,7 @@ describe('getUpdatedEventModelFromChanges', () => {
       oldModel,
       { id: '1', allDay: false },
       undefined,
-      oldModel as SchedulerEvent,
+      processEvent(oldModel, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
       'Asia/Tokyo',
     );
     expect(updated.rrule).to.equal('FREQ=DAILY;UNTIL=20250708');
@@ -160,9 +166,13 @@ describe('getUpdatedEventModelFromChanges', () => {
     };
     const updated = getUpdatedEventModelFromChanges(
       oldModel,
-      { id: '1', allDay: true, start: createDate('2025-07-05T00:00:00', 'Asia/Tokyo') },
+      {
+        id: '1',
+        allDay: true,
+        start: toWallClock(createDate('2025-07-05T00:00:00', 'Asia/Tokyo'), 'America/New_York'),
+      },
       undefined,
-      oldModel as SchedulerEvent,
+      processEvent(oldModel, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
       'Asia/Tokyo',
     );
     expect(updated.start).to.equal('2025-07-05');
@@ -183,7 +193,7 @@ describe('getUpdatedEventModelFromChanges', () => {
       oldModel,
       { id: '1', allDay: true },
       undefined,
-      oldModel as SchedulerEvent,
+      processEvent(oldModel, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
       'Asia/Tokyo',
     );
     // The excluded July 6th at 23:00 in New York (July 7th in Tokyo) stays July 6th.

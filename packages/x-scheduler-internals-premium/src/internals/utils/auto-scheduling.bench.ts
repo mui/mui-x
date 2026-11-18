@@ -1,5 +1,5 @@
 import { describe, test } from 'vitest';
-import { addDays, EventBuilder } from 'test/utils/scheduler';
+import { addDays, EventBuilder, toWallClock } from 'test/utils/scheduler';
 import type { SchedulerDependency } from '../../models';
 import { groupByEventId } from './dependency-utils';
 import { computeAutoSchedulingCascade } from './auto-scheduling';
@@ -49,8 +49,8 @@ describe.each([
     updated: [
       {
         id: 0,
-        start: addDays(new Date(events[0].start.timestamp), 3),
-        end: addDays(new Date(events[0].end.timestamp), 3),
+        start: toWallClock(addDays(new Date(events[0].start.timestamp), 3)),
+        end: toWallClock(addDays(new Date(events[0].end.timestamp), 3)),
       },
     ],
   };

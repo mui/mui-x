@@ -9,6 +9,7 @@ import {
   mockElementBounds,
   ResourceBuilder,
   simulateDragAndDrop,
+  toWallClock,
 } from 'test/utils/scheduler';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import {
@@ -205,7 +206,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       act(() => {
         store.updateEvent({
           id: 'event-overflow',
-          end: createDate('2025-07-03T11:00:00Z'),
+          end: toWallClock(createDate('2025-07-03T11:00:00Z')),
         });
       });
       fireEvent.pointerOver(getEventElement('Overflowing event'));

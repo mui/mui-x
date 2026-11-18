@@ -1,4 +1,9 @@
-import type { SchedulerEvent, SchedulerProcessedEvent, WeekStartsOn } from '../../models';
+import type {
+  SchedulerEvent,
+  SchedulerEventUpdatedProperties,
+  SchedulerProcessedEvent,
+  WeekStartsOn,
+} from '../../models';
 import { BaseTemporal } from './base-temporal';
 import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
 import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
@@ -6,6 +11,7 @@ import type { WeekInfo } from './date-locale';
 import {
   addDaysToDayStart,
   getStartOfDayMs,
+  toEditedEpochMs,
   toEpochMs,
   toPlainDate,
   toPlainDateTime,
@@ -73,6 +79,33 @@ export function getUntilReferenceString(event: SchedulerEvent): string {
 }
 
 /**
+ * The instants of the bounds of an event, in milliseconds since the Unix epoch.
+ */
+interface EventBounds {
+  start: number;
+  end: number;
+}
+
+/**
+ * Resolves the dates of an edit to instants with `toEditedEpochMs()`: each one keeps the instant
+ * of `current` when it reads the same, and the end resolves at or after the start. A date missing
+ * from `changes` stays `undefined`. All-day ends are exclusive.
+ */
+export function resolveEditedBounds(
+  changes: Partial<Pick<SchedulerEventUpdatedProperties, 'start' | 'end'>>,
+  current: EventBounds,
+  timezone: string,
+): Partial<EventBounds> {
+  const start =
+    changes.start == null ? undefined : toEditedEpochMs(changes.start, timezone, current.start);
+  if (changes.end == null) {
+    return { start };
+  }
+  const end = toEditedEpochMs(changes.end, timezone, current.end, start ?? current.start);
+  return { start, end };
+}
+
+/**
  * Writes a bound of an all-day event: the date of its instant, which must be the first instant of
  * a day in `timezone`.
  */
@@ -81,7 +114,7 @@ export function allDayBoundToEventString(epochMs: number, timezone: string): str
     throw new Error(
       `MUI X Scheduler: The date ${new Date(epochMs).toISOString()} of the all-day event is not the first instant of a day in the display timezone "${timezone}". ` +
         'The dates of an all-day event are whole days, so an instant inside a day cannot be written as one of them. ' +
-        'Pass a "YYYY-MM-DD" string, or the Date of 00:00 of the day in the display timezone (of the day after the last day for the end). ' +
+        'Pass a PlainDateTime at 00:00 of the day in the display timezone (of the day after the last day for the end). ' +
         'See https://mui.com/x/react-scheduler/event-calendar/events/#all-day.',
     );
   }

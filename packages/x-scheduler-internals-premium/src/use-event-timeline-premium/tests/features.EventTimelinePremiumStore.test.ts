@@ -4,6 +4,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
   ResourceBuilder,
+  toWallClock,
 } from 'test/utils/scheduler';
 import {
   schedulerEventSelectors,
@@ -128,8 +129,8 @@ describe('Features - EventTimelinePremiumStore', () => {
 
       store.updateEvent({
         id: 'a',
-        start: createDate('2025-07-03T11:00:00Z'),
-        end: createDate('2025-07-03T12:00:00Z'),
+        start: toWallClock(createDate('2025-07-03T11:00:00Z')),
+        end: toWallClock(createDate('2025-07-03T12:00:00Z')),
       });
 
       const emittedSuccessor = onEventsChange.mock.lastCall![0].find(

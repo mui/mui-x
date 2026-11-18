@@ -8,6 +8,7 @@ export {
   getTimezoneId,
   localToEpochMs,
   moveTimestampToPlainDate,
+  toEditedEpochMs,
   toEpochMs,
   toLocalDayNumber,
   toLocalMs,

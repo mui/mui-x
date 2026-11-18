@@ -24,10 +24,15 @@ import {
 } from '../../scheduler-selectors';
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
 import type { StandaloneEvent } from '../../standalone-event';
-import { getPrimaryResourceId } from './event-utils';
+import { getPrimaryResourceId, getDayTimezone } from './event-utils';
 import { getAllDayDayCount } from './date-utils';
 import { snapAllDayBounds } from './plain-date-utils/date';
-import { addDaysToDayStart, getStartOfDayMs } from './plain-date-utils/timeZone';
+import {
+  addDaysToDayStart,
+  getStartOfDayMs,
+  toPlainDateTime,
+  toPlainDate,
+} from './plain-date-utils/timeZone';
 
 /**
  * The bounds of a drop as whole days of the display timezone when its result is all-day: a move
@@ -301,12 +306,16 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
   // drop that toggles all-day resends both, since the stored bounds belong to the other
   // representation.
   const allDayToggled = allDay !== (originalOccurrence.allDay ?? false);
+  const inputTimezone = getDayTimezone(
+    originalOccurrence,
+    schedulerOtherSelectors.displayTimezone(store.state),
+  );
   const changes: SchedulerEventUpdatedProperties = { id: eventId };
   if (allDayToggled || originalOccurrence.start.timestamp !== start) {
-    changes.start = new Date(start);
+    changes.start = toPlainDateTime(start, inputTimezone);
   }
   if (allDayToggled || originalOccurrence.end.timestamp !== end) {
-    changes.end = new Date(end);
+    changes.end = toPlainDateTime(end, inputTimezone);
   }
 
   // If `undefined`, we want to set the event resource to `undefined` (no resource).
@@ -395,8 +404,12 @@ export function applyExternalDragOccurrencePlaceholder(
     schedulerOtherSelectors.displayTimezone(store.state),
   );
   const event = {
-    start: new Date(start),
-    end: new Date(end),
+    start: allDay
+      ? toPlainDate(start, schedulerOtherSelectors.displayTimezone(store.state)).toString()
+      : new Date(start).toISOString(),
+    end: allDay
+      ? toPlainDate(end, schedulerOtherSelectors.displayTimezone(store.state)).toString()
+      : new Date(end).toISOString(),
     ...placeholder.eventData,
   };
 

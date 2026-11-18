@@ -199,6 +199,34 @@ function isPlainDateTime(
 }
 
 /**
+ * The instant an edit writes for a date-time in `timezone`. A time that reads the same as
+ * `currentMs`, the instant the edited date has, keeps that instant, which its wall-clock time can't
+ * tell apart in the hour a DST transition repeats. Otherwise, it resolves like `toEpochMs()`, except
+ * that a repeated time resolves to its first instant at or after `notBeforeMs`, so that the end of
+ * an event doesn't come before its start.
+ */
+export function toEditedEpochMs(
+  value: BaseTemporal.PlainDateTime,
+  timezone: string,
+  currentMs: number,
+  notBeforeMs?: number,
+): number {
+  const localMs = getDayNumber(value.toPlainDate()) * MS_PER_DAY + getMsInDay(value);
+  if (toLocalMs(currentMs, timezone) === localMs) {
+    return currentMs;
+  }
+  const epochMs = localToEpochMs(localMs, timezone);
+  if (notBeforeMs !== undefined && epochMs < notBeforeMs) {
+    // The second instant of a repeated time, in the offset after the transition.
+    const laterMs = localMs - getTimezoneOffsetMs(timezone, localMs + MS_PER_DAY);
+    if (laterMs >= notBeforeMs && toLocalMs(laterMs, timezone) === localMs) {
+      return laterMs;
+    }
+  }
+  return epochMs;
+}
+
+/**
  * Moves an instant to `plainDate`, keeping its time of day on the wall clock of `timezone`. The
  * times a DST transition skips or repeats resolve like `toEpochMs()`.
  */

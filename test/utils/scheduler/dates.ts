@@ -7,7 +7,9 @@ import {
   localToEpochMs,
   toLocalDayNumber,
   toPlainDate,
+  toPlainDateTime,
 } from '@mui/x-scheduler-internals/internals';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 
 // Builds and moves the dates of the tests: plain `Date` objects, read with the timezone helpers of
 // the Scheduler. The calendar operations work on the wall clock of a timezone, the timezone of the
@@ -40,6 +42,14 @@ export function createDate(value: string, timezone = 'default'): Date {
     throw new Error(`createDate: "${value}" is not an ISO date.`);
   }
   return new Date(epochMs);
+}
+
+/**
+ * The date and wall-clock time of `date` in `timezone`, the form the edit methods of the store
+ * take dates in, in the timezone of the edited event.
+ */
+export function toWallClock(date: Date, timezone = 'default'): BaseTemporal.PlainDateTime {
+  return toPlainDateTime(date.getTime(), timezone);
 }
 
 function addMilliseconds(date: Date, amount: number): Date {

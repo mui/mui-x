@@ -64,7 +64,7 @@ import {
   getCustomEventProperties,
   getUpdatedEventModelFromChanges,
 } from './SchedulerStore.utils';
-import { getAllDayDayCount, getOccurrenceEnd } from '../date-utils';
+import { getAllDayDayCount, getOccurrenceEnd, resolveEditedBounds } from '../date-utils';
 import {
   getDayTimezone,
   getLastInstant,
@@ -75,7 +75,7 @@ import {
   getPrimaryResourceId,
 } from '../event-utils';
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
-import { stringifyEventDateChanges } from '../event-date-changes';
+import { toEventDateStrings } from '../event-date-changes';
 import { TimeoutManager } from '../TimeoutManager';
 import { checkDateLocale, DEFAULT_DATE_LOCALE } from '../date-locale';
 import {
@@ -84,7 +84,10 @@ import {
   toEpochMs,
   toLocalDayNumber,
   toPlainDate,
+  toPlainDateTime,
+  toEditedEpochMs,
 } from '../plain-date-utils/timeZone';
+import type { BaseTemporal } from '../base-temporal';
 import { MS_PER_MINUTE } from '../plain-date-utils/dayNumber';
 import { plainDateFromDayNumber } from '../plain-date-utils/plainDate';
 
@@ -790,7 +793,7 @@ export class SchedulerStore<
             originalEventModelLookup.get(eventId),
             changes,
             this.state.eventModelStructure,
-            processedEvent.modelInBuiltInFormat,
+            processedEvent,
             this.state.displayTimezone,
           );
           newEvents.push(newEvent);
@@ -826,7 +829,6 @@ export class SchedulerStore<
       const response = createEventModel(
         source ? { ...getCustomEventProperties(source), ...createdEvent } : createdEvent,
         this.state.eventModelStructure,
-        this.state.displayTimezone,
       );
       newEvents.push(response.model);
       createdEvents.push(response.model);
@@ -1270,17 +1272,13 @@ export class SchedulerStore<
    */
   public duplicateEventOccurrence = (
     eventId: SchedulerEventId,
-    start: Date,
-    end: Date,
+    start: BaseTemporal.PlainDateTime,
+    end: BaseTemporal.PlainDateTime,
   ): SchedulerEventId | undefined => {
     const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
     const duplicatedEvent = extractStandaloneEvent(
       original,
-      stringifyEventDateChanges(
-        { start, end },
-        original.modelInBuiltInFormat,
-        this.state.displayTimezone,
-      ),
+      toEventDateStrings({ start, end }, original, this.state.displayTimezone),
     );
     return this.updateEvents({ created: [duplicatedEvent] }).created[0];
   };
@@ -1324,34 +1322,57 @@ export class SchedulerStore<
     const original = schedulerEventSelectors.processedEventRequired(this.state, copiedEvent.id);
     const { displayTimezone } = this.state;
     const cleanChanges: Partial<SchedulerEventUpdatedProperties> = { ...changes };
+    const inputTimezone = getDayTimezone(original, displayTimezone);
+    const pastedStart =
+      cleanChanges.start == null
+        ? undefined
+        : toEditedEpochMs(cleanChanges.start, inputTimezone, original.start.timestamp);
+    let pastedBounds: { start: number; end: number } | undefined;
     const allDay = cleanChanges.allDay ?? original.allDay ?? false;
     if (allDay && (cleanChanges.start != null || !original.allDay)) {
       // An all-day paste covers the days of an all-day source, or one day for a timed one, from
       // the pasted day, or from the own day of a timed source in its timezone.
       const start =
-        cleanChanges.start?.getTime() ??
+        pastedStart ??
         toEpochMs(toPlainDate(original.start.timestamp, original.timezone), displayTimezone);
-      cleanChanges.start = new Date(start);
-      cleanChanges.end = new Date(
+      cleanChanges.start = toPlainDateTime(start, inputTimezone);
+      cleanChanges.end = toPlainDateTime(
         addDaysToDayStart(
           start,
           original.allDay ? getAllDayDayCount(original) : 1,
           displayTimezone,
         ),
+        inputTimezone,
       );
     } else if (!allDay && original.allDay) {
       // An all-day source pasted as timed starts at the pasted instant, or at the first instant of
       // its first day, and lasts the default event duration.
-      const start = cleanChanges.start?.getTime() ?? original.start.timestamp;
-      cleanChanges.start = new Date(start);
-      cleanChanges.end = new Date(
+      const start = pastedStart ?? original.start.timestamp;
+      cleanChanges.start = toPlainDateTime(start, inputTimezone);
+      cleanChanges.end = toPlainDateTime(
         start + schedulerEventSelectors.defaultEventDuration(this.state) * MS_PER_MINUTE,
+        inputTimezone,
       );
     } else if (cleanChanges.start != null) {
       // A timed source pasted as timed keeps its duration.
-      cleanChanges.end = new Date(
-        cleanChanges.start.getTime() + original.end.timestamp - original.start.timestamp,
+      cleanChanges.end = toPlainDateTime(
+        pastedStart! + original.end.timestamp - original.start.timestamp,
+        inputTimezone,
       );
+    }
+    if (cleanChanges.start != null && cleanChanges.end != null) {
+      pastedBounds = {
+        start: toEpochMs(cleanChanges.start, inputTimezone),
+        end: toEpochMs(cleanChanges.end, inputTimezone),
+      };
+      if (pastedStart != null && !allDay) {
+        pastedBounds.start = pastedStart;
+        pastedBounds.end =
+          pastedStart +
+          (original.allDay
+            ? schedulerEventSelectors.defaultEventDuration(this.state) * MS_PER_MINUTE
+            : original.end.timestamp - original.start.timestamp);
+      }
     }
     const isMovingDates = cleanChanges.start != null;
 
@@ -1415,8 +1436,7 @@ export class SchedulerStore<
     const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat;
     const createdEvent: SchedulerEventCreationProperties = {
       ...copiedEventWithoutId,
-      ...cleanChanges,
-      ...stringifyEventDateChanges(cleanChanges, original.modelInBuiltInFormat, displayTimezone),
+      ...toEventDateStrings(cleanChanges, original, displayTimezone, pastedBounds),
       extractedFromId: id,
     };
     return this.updateEvents({ created: [createdEvent] }).created[0];
@@ -1614,12 +1634,22 @@ export class SchedulerStore<
       return;
     }
     const { occurrence } = editingOccurrence;
-    const { start, end } = changes;
+    const inputTimezone = isEventOccurrence(occurrence)
+      ? getDayTimezone(occurrence, displayTimezone)
+      : displayTimezone;
+    const { start, end } = resolveEditedBounds(
+      changes,
+      {
+        start: occurrence.start.timestamp,
+        end: occurrence.end.timestamp,
+      },
+      inputTimezone,
+    );
     const allDay = changes.allDay ?? occurrence.allDay;
     const liveEvent = schedulerEventSelectors.processedEvent(this.state, occurrence.id);
     const displayBounds = getEditedBounds(
-      start?.getTime(),
-      end?.getTime(),
+      start,
+      end,
       occurrence,
       allDay,
       isEventOccurrence(occurrence) ? occurrence.timezone : 'default',
@@ -1689,8 +1719,14 @@ export class SchedulerStore<
     // the occurrence on its own day can keep the surface armed.
     const allDay = changes.allDay ?? occurrence.allDay;
     const nextDayTimezone = getDayTimezone(original, displayTimezone, allDay);
-    const changedStart = changes.start?.getTime();
-    const changedEnd = changes.end?.getTime();
+    const { start: changedStart, end: changedEnd } = resolveEditedBounds(
+      changes,
+      {
+        start: occurrenceStart,
+        end: occurrenceEnd,
+      },
+      dayTimezone,
+    );
     const bounds: [number | undefined, number][] = [
       [changedStart, occurrenceStart],
       [

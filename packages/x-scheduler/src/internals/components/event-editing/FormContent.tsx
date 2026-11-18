@@ -28,6 +28,9 @@ import {
   getCustomEventProperties,
   getEventResourceIds,
   getOccurrenceLastDayNumber,
+  getDayTimezone,
+  toPlainDateTime,
+  toPlainDate,
   getResourceSelectionMode,
   isBuiltInEventProperty,
   isEventOccurrence,
@@ -478,11 +481,26 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         rruleToSubmit = recurrencePresets[values.recurrenceSelection];
       }
 
-      // The store receives the instants of the fields, read in the display timezone.
-      const start = new Date(range.start);
-      const end = new Date(range.end);
+      // Edits are read in the timezone of the event before this update.
+      const inputTimezone = isEventOccurrence(occurrence)
+        ? getDayTimezone(occurrence, current.displayTimezone)
+        : current.displayTimezone;
+      const resentBounds: Pick<SchedulerEventUpdatedProperties, 'start' | 'end'> = {
+        ...(submitStart ? { start: toPlainDateTime(range.start, inputTimezone) } : {}),
+        ...(submitEnd ? { end: toPlainDateTime(range.end, inputTimezone) } : {}),
+      };
+      const { start, end } = resentBounds;
       if (isCreation) {
-        store.createEvent({ ...metaChanges, start, end, rrule: rruleToSubmit });
+        store.createEvent({
+          ...metaChanges,
+          start: values.allDay
+            ? toPlainDate(range.start, current.displayTimezone).toString()
+            : new Date(range.start).toISOString(),
+          end: values.allDay
+            ? toPlainDate(range.end, current.displayTimezone).toString()
+            : new Date(range.end).toISOString(),
+          rrule: rruleToSubmit,
+        });
       } else if (current.showRecurrence && isEventOccurrence(occurrence) && occurrence.rrule) {
         const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
           store.state,
