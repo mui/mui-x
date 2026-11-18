@@ -164,6 +164,27 @@ describe('getUpdatedEventModelFromChanges', () => {
     },
   );
 
+  it('should write the until of a timed series made all-day as the date of its last occurrence across a DST gap', () => {
+    // 02:30 doesn't exist on March 9th, 2025 in New York: that occurrence starts at 03:30, after
+    // the until, so the series ends on March 8th.
+    const oldModel: SchedulerEvent = {
+      id: '1',
+      title: 'Backup',
+      start: '2025-03-05T02:30:00',
+      end: '2025-03-05T03:00:00',
+      timezone: 'America/New_York',
+      rrule: { freq: 'DAILY', until: '2025-03-09T03:00:00' },
+    };
+    const updated = getUpdatedEventModelFromChanges(
+      oldModel,
+      { id: '1', allDay: true },
+      undefined,
+      oldModel,
+      'America/New_York',
+    );
+    expect(updated.rrule).to.deep.equal({ freq: 'DAILY', until: '2025-03-08' });
+  });
+
   it.each<[NonNullable<SchedulerEvent['rrule']>, NonNullable<SchedulerEvent['rrule']>]>([
     [
       { freq: 'DAILY', until: '2025-07-08' },

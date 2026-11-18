@@ -1,11 +1,16 @@
 import type { SchedulerEvent, SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import { BaseTemporal } from './base-temporal';
-import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
-import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
+import {
+  getStartOfWeekDayNumber,
+  isoDateToDayNumber,
+  MS_PER_DAY,
+} from './plain-date-utils/dayNumber';
+import { getDayNumber, getMsInDay, plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import type { WeekInfo } from './date-locale';
 import {
   addDaysToDayStart,
   getStartOfDayMs,
+  localToEpochMs,
   toEpochMs,
   toPlainDate,
   toPlainDateTime,
@@ -57,20 +62,24 @@ export function untilToEventString(
 
 /**
  * The `until` of a timed series made all-day: the last date with an occurrence on or before it.
- * That is the date of a date-time `until`, or the day before when it is earlier in the day than
- * the start of the series.
+ * That is the date of a date-time `until`, or the day before when the occurrence of that date, at
+ * the time of the start of the series in `timezone`, starts after it.
  */
 export function getAllDayUntil(
   until: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime,
   seriesStart: BaseTemporal.PlainDateTime,
+  timezone: string,
 ): BaseTemporal.PlainDate {
   if (!(until instanceof BaseTemporal.PlainDateTime)) {
     return until;
   }
   const date = until.toPlainDate();
-  return BaseTemporal.PlainTime.compare(until.toPlainTime(), seriesStart.toPlainTime()) < 0
-    ? date.add({ days: -1 })
-    : date;
+  // Resolved like the series does, so a time a DST gap skips starts after the gap.
+  const occurrenceStart = localToEpochMs(
+    getDayNumber(date) * MS_PER_DAY + getMsInDay(seriesStart),
+    timezone,
+  );
+  return occurrenceStart > toEpochMs(until, timezone) ? date.add({ days: -1 }) : date;
 }
 
 /**

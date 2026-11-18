@@ -104,9 +104,11 @@ function getAllDayRRule(
       return rrule;
     }
     const until = toPlainDateTime(resolveEventTimestamp(rrule.until, dataTimezone), dataTimezone);
-    return { ...rrule, until: getAllDayUntil(until, seriesStart).toString() };
+    return { ...rrule, until: getAllDayUntil(until, seriesStart, dataTimezone).toString() };
   }
-  return replaceDateTimeUntil(rrule, dataTimezone, (until) => getAllDayUntil(until, seriesStart));
+  return replaceDateTimeUntil(rrule, dataTimezone, (until) =>
+    getAllDayUntil(until, seriesStart, dataTimezone),
+  );
 }
 
 /**

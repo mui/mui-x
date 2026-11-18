@@ -12,14 +12,15 @@ import {
   getUntilReferenceString,
   untilToEventString,
 } from '@mui/x-scheduler-internals/internals';
+import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { describe, it, expect } from 'vitest';
+import { schedulerRecurringEventsPlugin } from '../../plugins/schedulerRecurringEventsPlugin';
 import {
   deleteRecurringEvent,
   applyRecurringDeleteFollowing,
   applyRecurringDeleteOnlyThis,
 } from './deleteRecurringEvent';
 import { RecurringSeries } from './RecurringSeries';
-import { parseRRule } from './rRuleString';
 
 describe('recurring-events/deleteRecurringEvent', () => {
   const defaultEvent = EventBuilder.new()
@@ -338,34 +339,38 @@ describe('recurring-events/deleteRecurringEvent', () => {
         timezone: 'Europe/Paris',
         start: '2026-03-01',
         occurrence: '2026-03-30',
-        lastDay: '2026-03-29',
+        timedLastDay: '2026-03-29',
+        allDayLastDay: '2026-03-29',
       },
       // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026: a 25-hour day.
       {
         timezone: 'Europe/Paris',
         start: '2026-10-01',
         occurrence: '2026-10-26',
-        lastDay: '2026-10-25',
+        timedLastDay: '2026-10-25',
+        allDayLastDay: '2026-10-25',
       },
       // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
       {
         timezone: 'America/Havana',
         start: '2026-03-01',
         occurrence: '2026-03-08',
-        lastDay: '2026-03-07',
+        timedLastDay: '2026-03-07',
+        allDayLastDay: '2026-03-07',
       },
-      // Pacific/Apia skipped December 30th, 2011.
+      // Pacific/Apia skipped December 30th, 2011: a timed series has no occurrence that day, an
+      // all-day series keeps its date.
       {
         timezone: 'Pacific/Apia',
         start: '2011-12-28',
         occurrence: '2011-12-31',
-        lastDay: '2011-12-29',
+        timedLastDay: '2011-12-29',
+        allDayLastDay: '2011-12-30',
       },
     ])(
       'should keep the whole day before $occurrence in $timezone once saved and read back',
-      ({ timezone, start, occurrence, lastDay }) => {
-        // The series of a timed event runs in its timezone, the series of an all-day one in the
-        // display timezone: both are `timezone` here.
+      ({ timezone, start, occurrence, timedLastDay, allDayLastDay }) => {
+        // The saved series is read back like any event, with the display timezone `timezone`.
         const getLastDay = (allDay: boolean) => {
           const builder = EventBuilder.new()
             .withDataTimezone(timezone)
@@ -390,17 +395,23 @@ describe('recurring-events/deleteRecurringEvent', () => {
           );
           const { until, ...rule } = result.updated![0]
             .rrule as SchedulerProcessedEventRecurrenceRule;
-          const savedUntil = untilToEventString(
-            until!,
-            getUntilReferenceString(event.modelInBuiltInFormat),
+          const saved = processEvent(
+            {
+              ...event.modelInBuiltInFormat,
+              rrule: {
+                ...rule,
+                until: untilToEventString(
+                  until!,
+                  getUntilReferenceString(event.modelInBuiltInFormat),
+                  timezone,
+                  allDay,
+                ),
+              },
+            },
             timezone,
-            allDay,
+            schedulerRecurringEventsPlugin,
           );
-          return new RecurringSeries({
-            rule: parseRRule({ ...rule, until: savedUntil }, timezone, allDay),
-            start: event.start.timestamp,
-            timezone,
-          })
+          return RecurringSeries.fromEvent(saved)
             .getOccurrenceDays(
               BaseTemporal.PlainDate.from(start),
               BaseTemporal.PlainDate.from(occurrence).add({ days: 7 }),
@@ -409,8 +420,8 @@ describe('recurring-events/deleteRecurringEvent', () => {
             ?.toString();
         };
 
-        expect(getLastDay(false)).to.equal(lastDay);
-        expect(getLastDay(true)).to.equal(lastDay);
+        expect(getLastDay(false)).to.equal(timedLastDay);
+        expect(getLastDay(true)).to.equal(allDayLastDay);
       },
     );
   });

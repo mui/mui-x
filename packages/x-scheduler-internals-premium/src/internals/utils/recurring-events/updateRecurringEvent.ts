@@ -415,6 +415,7 @@ function shiftUntilToDisplayedDay(
   const untilDay = getAllDayUntil(
     rrule.until,
     toPlainDateTime(originalEvent.start.timestamp, originalEvent.timezone),
+    originalEvent.timezone,
   );
   const shiftedUntilDay = shiftToDisplayedDay(untilDay, shift);
   return !(rrule.until instanceof BaseTemporal.PlainDateTime) && shiftedUntilDay.equals(rrule.until)
