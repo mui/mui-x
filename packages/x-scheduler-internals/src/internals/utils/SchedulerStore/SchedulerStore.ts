@@ -49,7 +49,7 @@ import {
   toEpochMs,
   toLocalDayNumber,
   toPlainDate,
-} from '../../../internals/utils/plain-date-utils/timeZone';
+} from '../plain-date-utils/timeZone';
 import { snapAllDayBounds, snapToOwnDays } from '../plain-date-utils/date';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 import type { SchedulerSchedulingPluginInterface } from '../../plugins/SchedulerSchedulingPlugin.types';
@@ -1327,6 +1327,7 @@ export class SchedulerStore<
 
   /**
    * Pastes the copied or cut event with the provided changes.
+   * An all-day event pasted as timed lasts the default event duration.
    * Returns `null` when nothing was copied, the destination resource is read-only, a cut would
    * move a read-only event's own dates, a date `eventModelStructure` can't write back is
    * involved, or the scheduling plugin vetoes the paste — the clipboard is kept in every case but
@@ -1361,8 +1362,16 @@ export class SchedulerStore<
           displayTimezone,
         ),
       );
+    } else if (!allDay && original.allDay) {
+      // An all-day source pasted as timed starts at the pasted instant, or at the first instant of
+      // its first day, and lasts the default event duration.
+      const start = cleanChanges.start?.getTime() ?? original.start.epochMilliseconds;
+      cleanChanges.start = new Date(start);
+      cleanChanges.end = new Date(
+        start + schedulerEventSelectors.defaultEventDuration(this.state) * MS_PER_MINUTE,
+      );
     } else if (cleanChanges.start != null) {
-      // A timed paste keeps the duration of the source, all-day or not.
+      // A timed source pasted as timed keeps its duration.
       cleanChanges.end = new Date(
         cleanChanges.start.getTime() +
           original.end.epochMilliseconds -

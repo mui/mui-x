@@ -2321,25 +2321,71 @@ storeClasses.forEach((storeClass) => {
         expect(pasted.end).to.equal('2025-07-05');
       });
 
-      it('should paste an all-day event as a timed event with the duration of its days', () => {
+      it('should paste an all-day event as a timed event with the default duration', () => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new()
-          .id('holiday')
-          .span('2025-07-04', '2025-07-05', { allDay: true })
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          eventCreation: { duration: 60 },
+          onEventsChange,
+        });
+        store.copyEvent('trip');
+
+        store.pasteEvent({ start: createDate('2025-07-20T14:00:00'), allDay: false });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.allDay).to.equal(false);
+        expect(pasted.start).to.equal('2025-07-20T14:00:00');
+        expect(pasted.end).to.equal('2025-07-20T15:00:00');
+      });
+
+      it('should paste an all-day event as a timed event on its first day of the display timezone when no start is given', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+        store.cutEvent('trip');
+
+        store.pasteEvent({ allDay: false });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(Boolean(pasted.allDay)).to.equal(false);
+        expect(pasted.timezone).to.equal('Asia/Tokyo');
+        expect(pasted.start).to.equal('2025-07-04T00:00:00');
+        expect(pasted.end).to.equal('2025-07-04T00:30:00');
+      });
+
+      it('should refuse to paste a cut read-only all-day event as a timed event', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .readOnly()
           .build();
         const store = new storeClass.Value({
           resources: TEST_RESOURCES,
           events: [event],
           onEventsChange,
         });
-        store.copyEvent('holiday');
+        store.cutEvent('trip');
 
-        store.pasteEvent({ allDay: false, start: createDate('2025-07-20T14:00:00') });
-
-        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
-        expect(pasted.allDay).to.equal(false);
-        expect(pasted.start).to.equal('2025-07-20T14:00:00');
-        expect(pasted.end).to.equal('2025-07-21T14:00:00');
+        expect(() => {
+          expect(store.pasteEvent({ allDay: false })).to.equal(null);
+        }).toWarnDev([
+          `MUI X Scheduler: The event with id="trip" was not pasted.\n${READ_ONLY_EVENT_REASON}`,
+        ]);
+        expect(onEventsChange.mock.calls.length).to.equal(0);
       });
 
       it('should make an all-day event timed on its displayed days in the display timezone', () => {

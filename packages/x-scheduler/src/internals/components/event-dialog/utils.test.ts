@@ -5,6 +5,7 @@ import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../../constants/defaultLocal
 import {
   computeRange,
   findInvalidRangeField,
+  getDefaultTimedFields,
   getRulePlainDate,
   getRecurrenceLabel,
   getRecurrenceRuleBound,
@@ -13,6 +14,36 @@ import {
   getWeekdayToken,
   validateRange,
 } from './utils';
+
+describe('getDefaultTimedFields', () => {
+  it('should start at the current time of the display timezone rounded up to the hour', () => {
+    // 10:20 UTC is 06:20 in New York.
+    expect(
+      getDefaultTimedFields(Date.UTC(2025, 6, 4, 10, 20), 30, 'America/New_York'),
+    ).to.deep.equal({ startTime: '07:00', endTime: '07:30' });
+  });
+
+  it('should keep a time on the hour', () => {
+    expect(getDefaultTimedFields(Date.UTC(2025, 6, 4, 10), 30, 'UTC')).to.deep.equal({
+      startTime: '10:00',
+      endTime: '10:30',
+    });
+  });
+
+  it('should wrap the last hour of the day to midnight', () => {
+    expect(getDefaultTimedFields(Date.UTC(2025, 6, 4, 23, 40), 30, 'UTC')).to.deep.equal({
+      startTime: '00:00',
+      endTime: '00:30',
+    });
+  });
+
+  it('should end at the last minute of the day when the duration would cross midnight', () => {
+    expect(getDefaultTimedFields(Date.UTC(2025, 6, 4, 22, 10), 90, 'UTC')).to.deep.equal({
+      startTime: '23:00',
+      endTime: '23:59',
+    });
+  });
+});
 
 describe('computeRange', () => {
   it('should read an all-day range with an exclusive end', () => {
