@@ -65,7 +65,8 @@ Without the feature, the `rrule` stays in your data but is ignored:
 
 With the feature, the Scheduler expands recurring events only for the visible range, keeps the original duration, and handles all-day and multi-day spans.
 
-The rule is evaluated in the event's `timezone`, even when it is edited from the event dialog while the calendar displays another timezone.
+The rule of a timed event is evaluated in the event's `timezone`, even when it is edited from the event dialog while the calendar displays another timezone.
+The rule of an all-day event is evaluated on its dates, the same in every timezone.
 See [Recurring events and timezones](/x/react-scheduler/timezone/#recurring-events-and-timezones) for details.
 
 {{"demo": "RecurringEventsDataset.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -163,20 +164,20 @@ Use either the `COUNT` or the `UNTIL` property if you want to put an end boundar
   ```
 
 - Use the `UNTIL` property if you want your event to stop at a given date.
-  Use `YYYYMMDD` for a date, or `YYYYMMDDTHHmmssZ` for a UTC date-time (no dashes or colons):
+  Use `YYYYMMDD`, a date, on an all-day event, and `YYYYMMDDTHHmmssZ`, a UTC date-time, on a timed event (no dashes or colons):
 
   ```ts
-  // Until December 31, 2025, included
+  // An all-day event until December 31, 2025, included
   rrule: 'FREQ=WEEKLY;BYDAY=TU;UNTIL=20251231';
 
-  // Until December 31, 2025 at 09:00 UTC (inclusive)
+  // A timed event until December 31, 2025 at 09:00 UTC, included
   rrule: 'FREQ=WEEKLY;BYDAY=TU;UNTIL=20251231T090000Z';
   ```
 
   :::success
-  The `UNTIL` property is inclusive, and is read in the timezone of the event.
-  A date includes its whole day.
-  For timed events, a UTC date-time is the exact cutoff: an occurrence starting at that instant is included, and one starting later is excluded.
-  For all-day events, only the date of a UTC date-time in the timezone of the event is used: `UNTIL=20251231T235959Z` ends an all-day series in `Asia/Tokyo` on January 1, 2026.
+  The `UNTIL` property is inclusive and has the type of the event's start, as in RFC 5545.
+  On an all-day event, it is a date, which includes its whole day.
+  On a timed event, it is a UTC date-time, read in the timezone of the event: an occurrence starting at that instant is included, and one starting later is excluded.
+  A value of the other type logs a warning in development.
   The event dialog offers a date picker: the chosen day is the last day of the series.
   :::

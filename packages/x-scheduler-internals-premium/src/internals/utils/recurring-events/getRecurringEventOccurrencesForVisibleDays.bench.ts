@@ -21,7 +21,8 @@ const RULES: SchedulerEventRecurrenceRule[] = [
   { freq: 'MONTHLY', byDay: ['2TU'] },
   { freq: 'MONTHLY', byDay: ['-1FR'], count: 60 },
   { freq: 'YEARLY' },
-  { freq: 'DAILY', until: '2026-09-30T23:59:59Z' },
+  // The rule of the all-day series (every tenth one), so its until is a date.
+  { freq: 'DAILY', until: '2026-09-30' },
 ];
 
 /**

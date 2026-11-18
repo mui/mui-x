@@ -224,22 +224,102 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       expect(new Date(occurrence.end.timestamp).toISOString()).to.equal('2026-03-29T22:00:00.000Z');
     });
 
-    it('should skip the day the timezone skips without throwing', () => {
-      // Pacific/Apia skipped December 30th, 2011.
+    it('should keep whole days of a weekly all-day series across a DST transition of the display timezone', () => {
+      // America/New_York springs forward on March 9th, 2025: the day lasts 23 hours.
+      const event = EventBuilder.new()
+        .span('2025-03-02', '2025-03-03', { allDay: true })
+        .rrule({ freq: 'WEEKLY' })
+        .withDisplayTimezone('America/New_York')
+        .toProcessed();
+      const day = startOfDate('2025-03-09', 'America/New_York');
+
+      const result = getRecurringEventOccurrencesForVisibleDays(
+        event,
+        day,
+        day,
+        'America/New_York',
+      );
+
+      const occurrence = result.find((o) => o.key === `${event.id}::2025-03-09`)!;
+      expect(occurrence.start.plainDateTime.toString()).to.equal('2025-03-09T00:00:00');
+      expect(occurrence.end.plainDateTime.toString()).to.equal('2025-03-10T00:00:00');
+      expect(occurrence.end.timestamp - occurrence.start.timestamp).to.equal(23 * 60 * 60 * 1000);
+    });
+
+    // December 30th, 2011 does not exist in Pacific/Apia; it was a Friday.
+    it.each(['UTC', 'Pacific/Apia'])(
+      'should count the same dates of an all-day series displayed in %s',
+      (timezone) => {
+        const event = EventBuilder.new()
+          .span('2011-12-28', '2011-12-29', { allDay: true })
+          .rrule({ freq: 'DAILY', count: 4 })
+          .withDisplayTimezone(timezone)
+          .toProcessed();
+
+        const result = getRecurringEventOccurrencesForVisibleDays(
+          event,
+          startOfDate('2011-12-28', timezone),
+          startOfDate('2012-01-02', timezone),
+          timezone,
+        );
+
+        expect(result.map((occurrence) => occurrence.key)).to.deep.equal(
+          ['2011-12-28', '2011-12-29', '2011-12-30', '2011-12-31'].map(
+            (date) => `${event.id}::${date}`,
+          ),
+        );
+      },
+    );
+
+    it('should give no time to the occurrence on the day the display timezone skips, like a single all-day event', () => {
       const event = EventBuilder.new()
         .span('2011-12-28', '2011-12-29', { allDay: true })
-        .rrule({ freq: 'DAILY' })
+        .rrule({ freq: 'DAILY', count: 4 })
         .withDisplayTimezone('Pacific/Apia')
         .toProcessed();
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
         startOfDate('2011-12-28', 'Pacific/Apia'),
-        startOfDate('2011-12-31', 'Pacific/Apia'),
+        startOfDate('2012-01-02', 'Pacific/Apia'),
         'Pacific/Apia',
       );
 
-      expect(result.map(getDisplayKey)).to.deep.equal(['2011-12-28', '2011-12-29', '2011-12-31']);
+      const occurrence = result.find((o) => o.key === `${event.id}::2011-12-30`)!;
+      expect(occurrence.start.timestamp).to.equal(occurrence.end.timestamp);
+    });
+
+    it('should show the days that exist of an all-day occurrence starting on the day the display timezone skips', () => {
+      // Two days every Friday: the one of December 30th only shows on the 31st.
+      const event = EventBuilder.new()
+        .span('2011-12-23', '2011-12-25', { allDay: true })
+        .rrule({ freq: 'WEEKLY' })
+        .withDisplayTimezone('Pacific/Apia')
+        .toProcessed();
+      const day = startOfDate('2011-12-31', 'Pacific/Apia');
+
+      const result = getRecurringEventOccurrencesForVisibleDays(event, day, day, 'Pacific/Apia');
+
+      expect(result.map((occurrence) => occurrence.key)).to.deep.equal([`${event.id}::2011-12-30`]);
+      expect(result[0].start.plainDateTime.toString()).to.equal('2011-12-31T00:00:00');
+      expect(result[0].end.plainDateTime.toString()).to.equal('2012-01-01T00:00:00');
+    });
+
+    it('should repeat a weekly all-day series from its first date when the display timezone skips it', () => {
+      const event = EventBuilder.new()
+        .span('2011-12-30', '2011-12-31', { allDay: true })
+        .rrule({ freq: 'WEEKLY' })
+        .withDisplayTimezone('Pacific/Apia')
+        .toProcessed();
+
+      const result = getRecurringEventOccurrencesForVisibleDays(
+        event,
+        startOfDate('2012-01-02', 'Pacific/Apia'),
+        startOfDate('2012-01-08', 'Pacific/Apia'),
+        'Pacific/Apia',
+      );
+
+      expect(result.map((occurrence) => occurrence.key)).to.deep.equal([`${event.id}::2012-01-06`]);
     });
 
     it('does not generate occurrences earlier than DTSTART within the first week even if byDay spans the week', () => {
@@ -974,30 +1054,31 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       ]);
     });
 
-    it('should end an all-day series on the day of a date-time UNTIL in the timezone of the event', () => {
-      // Jan 5th 05:00Z is midnight in New York: the series includes January 5th.
-      const event = EventBuilder.new()
-        .withDataTimezone('America/New_York')
-        .span('2025-01-01', '2025-01-02', { allDay: true })
-        .rrule({ freq: 'DAILY', interval: 1, until: '2025-01-05T05:00:00Z' })
-        .toProcessed();
+    it.each(['Asia/Tokyo', 'America/New_York'])(
+      'should end an all-day series on its until date displayed in %s',
+      (timezone) => {
+        const event = EventBuilder.new()
+          .span('2025-01-01', '2025-01-02', { allDay: true })
+          .rrule({ freq: 'DAILY', until: '2025-01-05' })
+          .withDisplayTimezone(timezone)
+          .toProcessed();
 
-      const visibleStart = createDate('2025-01-01T00:00:00Z');
-      const result = getRecurringEventOccurrencesForVisibleDays(
-        event,
-        visibleStart.getTime(),
-        addDays(visibleStart, 9).getTime(),
-        'default',
-      );
+        const result = getRecurringEventOccurrencesForVisibleDays(
+          event,
+          startOfDate('2025-01-01', timezone),
+          startOfDate('2025-01-10', timezone),
+          timezone,
+        );
 
-      expect(result.map(getDisplayKey)).to.deep.equal([
-        '2025-01-01',
-        '2025-01-02',
-        '2025-01-03',
-        '2025-01-04',
-        '2025-01-05',
-      ]);
-    });
+        expect(result.map(getDisplayKey)).to.deep.equal([
+          '2025-01-01',
+          '2025-01-02',
+          '2025-01-03',
+          '2025-01-04',
+          '2025-01-05',
+        ]);
+      },
+    );
   });
 
   it('should keep expanding a monthly rule whose next matching month is decades away', () => {

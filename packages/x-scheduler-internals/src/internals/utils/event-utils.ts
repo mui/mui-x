@@ -11,6 +11,7 @@ import type { SchedulerRecurringEventsPluginInterface } from '../plugins/Schedul
 import type { BaseTemporal } from './base-temporal';
 import { toEpochMs, toLocalDayNumber, toPlainDate } from './plain-date-utils/timeZone';
 import { getDayNumber, getPlainDateKey } from './plain-date-utils/plainDate';
+import { parseDateOnlyString } from './plain-date-utils/date';
 import type { SchedulerEventRangeIndex } from './event-range-index';
 
 /**
@@ -60,14 +61,22 @@ export function getDayTimezone(
 }
 
 /**
- * The day of an occurrence, which its recurring key and the recurring edits are based on: the day
- * an all-day occurrence was read on, and the day of a timed one in its timezone.
+ * The day of an occurrence, which its recurring key and the recurring edits are based on: the date
+ * of an all-day occurrence, and the day of a timed one in its timezone.
  */
 export function getOccurrencePlainDate(
-  occurrence: Pick<SchedulerProcessedEvent, 'allDay' | 'start' | 'timezone'>,
+  occurrence: Pick<SchedulerProcessedEvent, 'id' | 'allDay' | 'start' | 'timezone'> & {
+    key?: string;
+  },
 ): BaseTemporal.PlainDate {
   if (occurrence.allDay) {
-    return occurrence.start.plainDateTime.toPlainDate();
+    // The key of a recurring occurrence names its date, even one the display timezone skips,
+    // where the occurrence starts on the next day.
+    const keyPrefix = getRecurringOccurrenceKeyFromDateKey(occurrence.id, '');
+    const keyDate = occurrence.key?.startsWith(keyPrefix)
+      ? parseDateOnlyString(occurrence.key.slice(keyPrefix.length))
+      : null;
+    return keyDate ?? occurrence.start.plainDateTime.toPlainDate();
   }
   return toPlainDate(occurrence.start.timestamp, occurrence.timezone);
 }

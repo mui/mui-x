@@ -141,7 +141,7 @@ const durationMinutes =
 ```
 
 The occurrence's `timezone` and `rrule` describe the original event; the rule of a timed event is evaluated in its timezone, the rule of an all-day event on its dates.
-The rule's `until` is in the timezone of the event: a `BaseTemporal.PlainDate` includes its whole day, and a `BaseTemporal.PlainDateTime`, used for timed events only, is the latest start of an occurrence.
+The rule's `until` is a `BaseTemporal.PlainDate`, which includes its whole day, for an all-day event or a timed event whose `until` is written as a date, and otherwise a `BaseTemporal.PlainDateTime` in the timezone of the event, the latest start of an occurrence.
 Exception dates belong to the series and are available as strings on `occurrence.modelInBuiltInFormat.exDates` for persisted occurrences.
 
 ## Supported timezones

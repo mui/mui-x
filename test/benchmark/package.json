@@ -10,7 +10,7 @@
   "devDependencies": {
     "@emotion/react": "catalog:",
     "@emotion/styled": "catalog:",
-    "@mui/internal-benchmark": "0.1.1-canary.14",
+    "@mui/internal-benchmark": "0.1.1-canary.15",
     "@mui/material": "catalog:",
     "@mui/x-charts": "workspace:^",
     "@mui/x-charts-premium": "workspace:^",

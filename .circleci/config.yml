@@ -291,12 +291,8 @@ jobs:
       - run:
           name: Run the benchmarks
           no_output_timeout: 30m
-          # The smoke benchmarks of all of MUI X. The run builds and packs both sides itself, at the
-          # same time when the baseline isn't cached: each with as many package builds at once as
-          # there are CPUs ran out of memory, so each gets 2 of the 3.
-          command: >-
-            pnpm test:benchmark smoke/ --baseline "$(cat .benchmark-baseline-sha)"
-            --build-cmd "pnpm release:build --concurrency 2"
+          # The smoke benchmarks of all of MUI X. The run builds and packs both sides itself.
+          command: pnpm test:benchmark smoke/ --baseline "$(cat .benchmark-baseline-sha)"
       - run:
           name: Upload the benchmark report
           # Also after a failed run, so the comment says what happened. A run that fails before
