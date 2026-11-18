@@ -1624,6 +1624,9 @@ importers:
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
+      use-sync-external-store:
+        specifier: 'catalog:'
+        version: 1.7.0(react@19.3.1)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
@@ -1640,6 +1643,9 @@ importers:
       '@types/react-transition-group':
         specifier: 'catalog:'
         version: 4.4.12(@types/react@19.3.0)
+      '@types/use-sync-external-store':
+        specifier: 'catalog:'
+        version: 1.7.0
       react:
         specifier: 'catalog:'
         version: 19.3.1
