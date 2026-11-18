@@ -123,7 +123,9 @@ const MAX_TIMESTAMP = 8.64e15;
 
 /**
  * The earliest instant `dependency` allows for the successor's bounded edge, or `null` when
- * the lag runs past the supported date range. The lag is added in the successor's timezone.
+ * the lag runs past the supported date range. The lag is added in the timezone the bound is read
+ * in: the successor's, or the display timezone for a successor without one after an all-day
+ * predecessor.
  */
 function getDependencyBound(
   dependency: SchedulerDependency,
@@ -133,6 +135,7 @@ function getDependencyBound(
 ): number | null {
   const edges = getDependencyEdges(dependency.type);
   let sourceEdge = sourceDates[edges.source];
+  let lagTimezone = targetDates.timezone;
   if (sourceDates.allDay !== targetDates.allDay) {
     // Between an all-day and a timed event, the dates of the all-day event are read in the
     // timezone of the timed one, or in the display timezone when it has none, like a calendar
@@ -140,14 +143,21 @@ function getDependencyBound(
     // the timed predecessor on the days of the all-day successor.
     const timedTimezone = sourceDates.allDay ? targetDates.timezone : sourceDates.timezone;
     const timezone = timedTimezone === 'default' ? displayTimezone : timedTimezone;
-    sourceEdge = sourceDates.allDay
-      ? getAllDayEdgeMs(toLocalDayNumber(sourceEdge, sourceDates.timezone), edges.source, timezone)
-      : localToEpochMs(toLocalMs(sourceEdge, timezone), targetDates.timezone);
+    if (sourceDates.allDay) {
+      sourceEdge = getAllDayEdgeMs(
+        toLocalDayNumber(sourceEdge, sourceDates.timezone),
+        edges.source,
+        timezone,
+      );
+      lagTimezone = timezone;
+    } else {
+      sourceEdge = localToEpochMs(toLocalMs(sourceEdge, timezone), targetDates.timezone);
+    }
   }
   const timestamp = addDependencyLag(
     sourceEdge,
     getEffectiveDependencyLag(dependency, targetDates.allDay),
-    targetDates.timezone,
+    lagTimezone,
   );
   // `NaN` fails the comparison too.
   return Math.abs(timestamp) <= MAX_TIMESTAMP ? timestamp : null;

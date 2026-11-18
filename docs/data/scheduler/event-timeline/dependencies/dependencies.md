@@ -100,7 +100,7 @@ Auto-scheduling never moves an event earlier than where it's placed, and never p
 - Moving a successor earlier than its dependencies allow places it at the earliest allowed date instead.
 - A dependency that is already broken in your data stays broken until a change acts on it: the successor's start moves, the predecessor moves later, or the dependency becomes stricter.
 - An [all-day](/x/react-scheduler/event-timeline/events/#all-day) successor moves by whole days and stays all-day.
-- Between an all-day event and a timed event, the dates of the all-day event are read in the [timezone](/x/react-scheduler/timezone/) of the timed event, or in the display timezone when the timed event has no `timezone`.
+- Between an all-day event and a timed event, the dates of the all-day event are read in the [timezone](/x/react-scheduler/timezone/) of the timed event, or in the display timezone when the timed event has no `timezone` or has `timezone: 'default'`.
 
 :::info
 [Read-only events](/x/react-scheduler/event-timeline/editing/#only-set-on-some-events) never move.
@@ -120,7 +120,7 @@ An invalid `lag` or `lagUnit` is ignored: the dependency applies with no lag, an
 {{"demo": "DependencyLag.js", "bg": "inline", "defaultCodeOpen": false}}
 
 Days and weeks keep the time of day, even across a daylight saving time change.
-The lag is applied in the successor's [timezone](/x/react-scheduler/timezone/).
+The lag is applied in the successor's [timezone](/x/react-scheduler/timezone/), or in the timezone the dates of an all-day predecessor are read in.
 
 Minutes and hours count elapsed time.
 An all-day successor can only wait whole days, so a lag in minutes or hours is rounded down to whole days, and a lag shorter than a day adds no wait.
