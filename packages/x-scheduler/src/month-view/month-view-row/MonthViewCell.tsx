@@ -5,6 +5,7 @@ import { useStore } from '@base-ui/utils/store';
 import Button from '@mui/material/Button';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import {
+  createStartOfPlainDate,
   formatDayOfMonth,
   formatMonthShortAndDayOfMonth,
   getDayNumber,
@@ -187,7 +188,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const isCreatingAnEvent = useStore(
     store,
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
-    day,
+    day.plainDate,
   );
   const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
@@ -200,7 +201,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const isCurrentMonth =
     day.plainDate.year === visiblePlainDate.year && day.plainDate.month === visiblePlainDate.month;
   const isFirstDayOfMonth = day.plainDate.day === 1;
-  const isToday = getDayNumber(day.plainDate) === nowDayNumber;
+  const dayNumber = getDayNumber(day.plainDate);
+  const isToday = dayNumber === nowDayNumber;
 
   const inBoundOccurrences = day.withPosition.filter((o) => o.position.index <= maxEvents);
   const hasOverflow = inBoundOccurrences.length < day.withPosition.length;
@@ -234,7 +236,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     <MonthViewCellRoot
       className={classes.monthViewCell}
       ref={handleRef}
-      key={day.key}
       value={day.plainDate}
       aria-colindex={colIndex}
       aria-labelledby={ariaLabelledBy}
@@ -249,7 +250,15 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         <MonthViewCellNumberButton
           type="button"
           className={classes.monthViewCellNumberButton}
-          onClick={(event) => store.switchToDay(new Date(day.timestamp), event)}
+          onClick={(event) =>
+            store.switchToDay(
+              createStartOfPlainDate(
+                day.plainDate,
+                schedulerOtherSelectors.displayTimezone(store.state),
+              ),
+              event,
+            )
+          }
           tabIndex={-1}
         >
           {cellNumberContent}
@@ -267,8 +276,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               );
             }
 
-            // `day.timestamp` is the first instant of the day.
-            const startsBeforeThisDay = occurrence.start.timestamp < day.timestamp;
+            const startsBeforeThisDay =
+              getDayNumber(occurrence.start.plainDateTime.toPlainDate()) < dayNumber;
 
             return (
               <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>

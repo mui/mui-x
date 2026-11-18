@@ -37,11 +37,7 @@ describe('<CalendarGrid.DayEvent />', () => {
     return render(
       <EventCalendarProvider events={events} resources={resources}>
         <CalendarGrid.Root>
-          <CalendarGrid.DayRow
-            start={rowStart.getTime()}
-            end={rowEnd.getTime()}
-            days={[{ plainDate: cellDate }]}
-          >
+          <CalendarGrid.DayRow start={rowStart.getTime()} end={rowEnd.getTime()} days={[cellDate]}>
             <CalendarGrid.DayCell value={cellDate}>{node}</CalendarGrid.DayCell>
           </CalendarGrid.DayRow>
         </CalendarGrid.Root>

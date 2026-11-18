@@ -9,7 +9,7 @@ import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/eve
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
   formatWeekNumber,
-  getEndOfDayMs,
+  getPlainDateRangeMs,
   getWeekNumber,
 } from '@mui/x-scheduler-internals/internals';
 import type { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
@@ -50,19 +50,20 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
   const weekInfo = useStore(store, eventCalendarPreferenceSelectors.weekInfo);
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
-  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const occurrences = useEventOccurrencesWithDayGridPosition({
     days,
     occurrencesMap,
     maxEvents,
     displayTimezone,
   });
-  const weekNumber = getWeekNumber(days[0].plainDate, weekInfo);
+  const weekNumber = getWeekNumber(days[0], weekInfo);
 
-  // `days[0].timestamp` is the first instant of the first day.
-  const start = days[0].timestamp;
-  const end = getEndOfDayMs(days[days.length - 1].timestamp, displayTimezone);
+  const { start, end } = React.useMemo(
+    () => getPlainDateRangeMs(days[0], days[days.length - 1], displayTimezone),
+    [days, displayTimezone],
+  );
 
   const weekNumberId = showWeekNumber
     ? `${schedulerId}-MonthViewWeekNumber-${weekNumber}`
@@ -90,7 +91,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
       {occurrences.days.map((day, dayIdx) => (
         <MonthViewCell
           ref={dayIdx === 0 ? firstDayRef : undefined}
-          key={day.key}
+          key={day.plainDate.toString()}
           day={day}
           maxEvents={maxEvents}
           row={occurrences}

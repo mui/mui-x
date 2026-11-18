@@ -199,6 +199,22 @@ function isPlainDateTime(
 }
 
 /**
+ * The instants the days from `first` to `last` cover in `timezone`: the first instant of `first`,
+ * and the last instant before the day after `last` starts. The first instant of a day whose
+ * midnight a DST transition skips is the end of the gap.
+ */
+export function getPlainDateRangeMs(
+  first: BaseTemporal.PlainDate,
+  last: BaseTemporal.PlainDate,
+  timezone: string,
+): { start: number; end: number } {
+  return {
+    start: toEpochMs(first, timezone),
+    end: toEpochMs(last.add({ days: 1 }), timezone) - 1,
+  };
+}
+
+/**
  * Moves an instant to `plainDate`, keeping its time of day on the wall clock of `timezone`. The
  * times a DST transition skips or repeats resolve like `toEpochMs()`.
  */

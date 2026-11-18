@@ -22,7 +22,7 @@ describe('<CalendarGrid.DayEventPlaceholder />', () => {
               <CalendarGrid.DayRow
                 start={eventStart.timestamp}
                 end={eventEnd.timestamp}
-                days={[{ plainDate: cellDate }]}
+                days={[cellDate]}
               >
                 <CalendarGrid.DayCell value={cellDate}>{node}</CalendarGrid.DayCell>
               </CalendarGrid.DayRow>

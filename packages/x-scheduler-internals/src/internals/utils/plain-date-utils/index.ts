@@ -3,6 +3,7 @@ export {
   addDaysToDayStart,
   floorToWallClockMinutes,
   getEndOfDayMs,
+  getPlainDateRangeMs,
   getSkippedDays,
   getStartOfDayMs,
   getTimezoneId,

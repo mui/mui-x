@@ -1,7 +1,6 @@
 import type {
   SchedulerProcessedEvent,
   SchedulerProcessedDate,
-  SchedulerProcessedDay,
   SchedulerEventOccurrence,
   SchedulerEventId,
   SchedulerRenderableEventOccurrence,
@@ -148,20 +147,21 @@ export function generateOccurrenceFromEvent({
 }
 
 /**
- * Returns the key of the days an event occurrence should be visible on.
- * `dayNumbers` are the day numbers of `days`, read once for all the occurrences of the days.
+ * Returns the keys of the days an event occurrence should be visible on.
+ * `dayNumbers` and `dayKeys` are the day numbers and the keys, from `getPlainDateKey()`, of the
+ * days, in their order, read once for all the occurrences of the days.
  */
 export function getDaysTheOccurrenceIsVisibleOn(
   event: SchedulerEventOccurrence,
-  days: SchedulerProcessedDay[],
   dayNumbers: readonly number[],
+  dayKeys: readonly string[],
   displayTimezone: string,
 ) {
   const startDayNumber = getDayNumber(event.start.plainDateTime.toPlainDate());
   const endDayNumber = getOccurrenceLastDayNumber(event, displayTimezone);
 
-  const dayKeys: string[] = [];
-  for (let index = 0; index < days.length; index += 1) {
+  const visibleDayKeys: string[] = [];
+  for (let index = 0; index < dayNumbers.length; index += 1) {
     const dayNumber = dayNumbers[index];
     // If the day is before the event start, skip to the next day
     if (dayNumber < startDayNumber) {
@@ -172,9 +172,9 @@ export function getDaysTheOccurrenceIsVisibleOn(
     if (dayNumber > endDayNumber) {
       break;
     }
-    dayKeys.push(days[index].key);
+    visibleDayKeys.push(dayKeys[index]);
   }
-  return dayKeys;
+  return visibleDayKeys;
 }
 
 /**

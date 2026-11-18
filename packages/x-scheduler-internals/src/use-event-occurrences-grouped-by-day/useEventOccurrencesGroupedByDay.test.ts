@@ -4,7 +4,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { getDayListFromPlainDates } from '../get-day-list';
 import { BaseTemporal } from '../internals/utils/base-temporal';
 import { innerGetEventOccurrencesGroupedByDay } from './useEventOccurrencesGroupedByDay';
-import type { SchedulerProcessedDay, SchedulerProcessedEvent } from '../models';
+import type { SchedulerProcessedEvent } from '../models';
 import { createEventRangeIndex } from '../internals/utils/event-range-index';
 
 describe('innerGetEventOccurrencesGroupedByDay', () => {
@@ -25,7 +25,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     [resourceB.id]: true,
   };
 
-  function run(events: SchedulerProcessedEvent[], visibleDays: SchedulerProcessedDay[] = days) {
+  function run(events: SchedulerProcessedEvent[], visibleDays: BaseTemporal.PlainDate[] = days) {
     return innerGetEventOccurrencesGroupedByDay({
       days: visibleDays,
       eventRangeIndex: createEventRangeIndex(events, false),
@@ -44,9 +44,9 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   it('should return empty arrays when no events exist', () => {
     const result = run([]);
 
-    expect(result.get(days[0].key)).to.have.length(0);
-    expect(result.get(days[1].key)).to.have.length(0);
-    expect(result.get(days[2].key)).to.have.length(0);
+    expect(result.get(days[0].toString())).to.have.length(0);
+    expect(result.get(days[1].toString())).to.have.length(0);
+    expect(result.get(days[2].toString())).to.have.length(0);
   });
 
   it('should place a single-day event on the correct day', () => {
@@ -54,11 +54,11 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
 
     const result = run([event]);
 
-    expect(result.get(days[1].key)).to.have.length(1);
-    expect(result.get(days[1].key)![0].id).to.equal(event.id);
+    expect(result.get(days[1].toString())).to.have.length(1);
+    expect(result.get(days[1].toString())![0].id).to.equal(event.id);
 
-    expect(result.get(days[0].key)).to.have.length(0);
-    expect(result.get(days[2].key)).to.have.length(0);
+    expect(result.get(days[0].toString())).to.have.length(0);
+    expect(result.get(days[2].toString())).to.have.length(0);
   });
 
   it('should expand a multi-day event into each day', () => {
@@ -66,9 +66,9 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
 
     const result = run([event]);
 
-    expect(result.get(days[0].key)).to.have.length(1);
-    expect(result.get(days[1].key)).to.have.length(1);
-    expect(result.get(days[2].key)).to.have.length(1);
+    expect(result.get(days[0].toString())).to.have.length(1);
+    expect(result.get(days[1].toString())).to.have.length(1);
+    expect(result.get(days[2].toString())).to.have.length(1);
   });
 
   it('should handle multi-day all-day events correctly', () => {
@@ -78,9 +78,9 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
 
     const result = run([event]);
 
-    expect(result.get(days[0].key)![0].id).to.equal(event.id);
-    expect(result.get(days[1].key)![0].id).to.equal(event.id);
-    expect(result.get(days[2].key)![0].id).to.equal(event.id);
+    expect(result.get(days[0].toString())![0].id).to.equal(event.id);
+    expect(result.get(days[1].toString())![0].id).to.equal(event.id);
+    expect(result.get(days[2].toString())![0].id).to.equal(event.id);
   });
 
   it('should support multiple events on multiple days', () => {
@@ -90,9 +90,9 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
 
     const result = run([e1, e2, e3]);
 
-    expect(result.get(days[0].key)!.map((o) => o.id)).to.deep.equal([e2.id]);
-    expect(result.get(days[1].key)!.map((o) => o.id)).to.deep.equal([e1.id, e2.id]);
-    expect(result.get(days[2].key)!.map((o) => o.id)).to.deep.equal([e2.id, e3.id]);
+    expect(result.get(days[0].toString())!.map((o) => o.id)).to.deep.equal([e2.id]);
+    expect(result.get(days[1].toString())!.map((o) => o.id)).to.deep.equal([e1.id, e2.id]);
+    expect(result.get(days[2].toString())!.map((o) => o.id)).to.deep.equal([e2.id, e3.id]);
   });
 
   it('should include an event in the repeated last hour of the last day', () => {
@@ -116,7 +116,9 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
       recurringEventsPlugin: null,
     });
 
-    expect(result.get(lastDay.key)!.map((occurrence) => occurrence.id)).to.deep.equal([event.id]);
+    expect(result.get(lastDay.toString())!.map((occurrence) => occurrence.id)).to.deep.equal([
+      event.id,
+    ]);
   });
 
   it('should render a recurring event as a single non-expanded occurrence when no plugin is provided', () => {
@@ -124,10 +126,10 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
 
     const result = run([event]);
 
-    expect(result.get(days[0].key)).to.have.length(0);
-    expect(result.get(days[1].key)).to.have.length(1);
-    expect(result.get(days[1].key)![0].id).to.equal(event.id);
-    expect(result.get(days[2].key)).to.have.length(0);
+    expect(result.get(days[0].toString())).to.have.length(0);
+    expect(result.get(days[1].toString())).to.have.length(1);
+    expect(result.get(days[1].toString())![0].id).to.equal(event.id);
+    expect(result.get(days[2].toString())).to.have.length(0);
   });
 
   it('should expand only visible weekdays and keep late-Friday occurrences when weekends are hidden', () => {
@@ -205,13 +207,13 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     });
 
     // Should NOT appear on Jan 10 in Paris
-    expect(result.get(days[0].key)).to.have.length(0);
+    expect(result.get(days[0].toString())).to.have.length(0);
 
     // Should appear on Jan 11 and Jan 12 in Paris
-    expect(result.get(days[1].key)).to.have.length(1);
-    expect(result.get(days[1].key)![0].id).to.equal(event.id);
+    expect(result.get(days[1].toString())).to.have.length(1);
+    expect(result.get(days[1].toString())![0].id).to.equal(event.id);
 
-    expect(result.get(days[2].key)).to.have.length(1);
-    expect(result.get(days[2].key)![0].id).to.equal(event.id);
+    expect(result.get(days[2].toString())).to.have.length(1);
+    expect(result.get(days[2].toString())![0].id).to.equal(event.id);
   });
 });
