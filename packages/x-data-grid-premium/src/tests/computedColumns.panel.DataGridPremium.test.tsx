@@ -2513,6 +2513,13 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         formula: '=copy + 1',
         expected: 6,
       },
+      {
+        name: 'a computed column on a cycle that the draft breaks',
+        qty: '=REF(COLUMN("copy"), ROW(1))',
+        model: [define('total', '=copy'), define('copy', '=total + 1')],
+        formula: '=qty + 1',
+        expected: 7,
+      },
     ])('previews the applied result through $name', async ({ qty, model, formula, expected }) => {
       await render(
         <Test
@@ -2558,7 +2565,30 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       expect(getPreviewText()).to.equal('11');
     });
 
-    it('keeps the inferred type when the draft cells of the other rows would read it', async () => {
+    it('previews a new column that a stored computed column already reads', async () => {
+      await render(
+        <Test
+          {...cycleProps}
+          rows={[
+            { id: 1, price: 10, qty: 4 },
+            { id: 2, price: 5, qty: '=REF(COLUMN("double"), ROW(1))' },
+          ]}
+          initialState={{ computedColumns: { model: [define('double', '=total * 2')] } }}
+        />,
+      );
+      await openEditor(null, { sampleRowId: 2 });
+      typeName('Total');
+      fireEvent.change(getFieldInput(), { target: { value: 'total' } });
+      typeFormula('=qty + 1');
+      await advancePreview();
+      expect(getPreviewText()).to.equal('11');
+
+      fireEvent.click(getButton('Add column'));
+      await microtasks();
+      expect(apiRef.current!.getCellValue(2, 'total')).to.equal(11);
+    });
+
+    it('previews the draft cells of the other rows with the type Apply infers, without flipping it', async () => {
       await render(
         <Test
           {...cycleProps}
@@ -2578,7 +2608,11 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         await advancePreview();
         states.push(`${getTypeSelect().textContent} ${getPreviewText()}`);
       }
-      expect(states).to.deep.equal(['Number 1', 'Number 1']);
+      expect(states).to.deep.equal(['Number #VALUE!', 'Number #VALUE!']);
+
+      fireEvent.click(getButton('Add column'));
+      await microtasks();
+      expect(apiRef.current!.getCellValue(2, 'total')).to.equal('#VALUE!');
     });
   });
 
