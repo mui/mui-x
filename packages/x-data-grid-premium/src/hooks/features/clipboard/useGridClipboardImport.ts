@@ -348,8 +348,9 @@ export class CellValueUpdater {
       ),
     );
 
-    // Insert the created rows in the order of the paste
-    const createdRowIds = new Set<GridRowId>();
+    // Insert the created rows in the order of the paste.
+    // Do not read them back from the state: on React 17, a pending `rows` prop sync removes them in `updateRows()`.
+    const createdRows = new Map<GridRowId, GridValidRowModel>();
     rowIdsToUpdate.forEach((rowId) => {
       const row = rowsToInsert.get(rowId);
       if (!row) {
@@ -360,7 +361,7 @@ export class CellValueUpdater {
       if (
         finalRowId == null ||
         apiRef.current.getRow(finalRowId) !== null ||
-        createdRowIds.has(finalRowId)
+        createdRows.has(finalRowId)
       ) {
         warnOnce(
           [
@@ -370,22 +371,13 @@ export class CellValueUpdater {
         );
         return;
       }
-      createdRowIds.add(finalRowId);
+      createdRows.set(finalRowId, row);
       rowUpdates.push(row);
     });
 
     // Apply the rows before `clipboardPasteEnd`, so that its listeners (for example,
     // the undo/redo history) see the grid with the pasted values.
     await rowUpdates.flush();
-
-    // A change of the `rows` prop can replace the rows while the paste waits for them
-    const createdRows = new Map<GridRowId, GridValidRowModel>();
-    createdRowIds.forEach((rowId) => {
-      const row = apiRef.current.getRow(rowId);
-      if (row) {
-        createdRows.set(rowId, row);
-      }
-    });
 
     apiRef.current.publishEvent('clipboardPasteEnd', { oldRows, newRows, createdRows });
     this.rowsToUpdate.clear();
