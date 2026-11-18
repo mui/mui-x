@@ -1,4 +1,3 @@
-import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapter-date-fns';
 import {
   EventBuilder,
   ResourceBuilder,
@@ -62,12 +61,6 @@ describe('schedulerEventSelectors', () => {
       expect(schedulerEventSelectors.processedEventRangeIndex(stateInAnotherTimezone)).not.to.equal(
         index,
       );
-      expect(
-        schedulerEventSelectors.processedEventRangeIndex({
-          ...state,
-          adapter: new TemporalAdapterDateFns(),
-        }),
-      ).not.to.equal(index);
     });
   });
 
@@ -159,37 +152,6 @@ describe('schedulerEventSelectors', () => {
   });
 
   describe('deletionConfig', () => {
-    it('should return the default config when props.eventDeletion is not defined', () => {
-      const state = getEventCalendarStateFromParameters({
-        events: [],
-      });
-      expect(schedulerEventSelectors.deletionConfig(state)).to.deep.equal({ confirmation: true });
-    });
-
-    it('should return false when props.eventDeletion is false', () => {
-      const state = getEventCalendarStateFromParameters({
-        events: [],
-        eventDeletion: false,
-      });
-      expect(schedulerEventSelectors.deletionConfig(state)).to.equal(false);
-    });
-
-    it('should return the default config when props.eventDeletion is true', () => {
-      const state = getEventCalendarStateFromParameters({
-        events: [],
-        eventDeletion: true,
-      });
-      expect(schedulerEventSelectors.deletionConfig(state)).to.deep.equal({ confirmation: true });
-    });
-
-    it('should return the provided config when props.eventDeletion is an object', () => {
-      const state = getEventCalendarStateFromParameters({
-        events: [],
-        eventDeletion: { confirmation: false },
-      });
-      expect(schedulerEventSelectors.deletionConfig(state)).to.deep.equal({ confirmation: false });
-    });
-
     it('should return false when the scheduler is read-only', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
@@ -228,24 +190,6 @@ describe('schedulerEventSelectors', () => {
     });
 
     it('should infer from the data when eventCreation is not set', () => {
-      const resource = ResourceBuilder.new().build();
-      const eventWithStringResource = EventBuilder.new().resource(resource).build();
-      const state = getEventCalendarStateFromParameters({
-        events: [eventWithStringResource],
-      });
-      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(false);
-    });
-
-    it('should infer "multiple" from the first event with an array resource', () => {
-      const resource = ResourceBuilder.new().build();
-      const eventWithArrayResource = EventBuilder.new().resources([resource]).build();
-      const state = getEventCalendarStateFromParameters({
-        events: [eventWithArrayResource],
-      });
-      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(true);
-    });
-
-    it('should infer "single" from the first event with a string resource', () => {
       const resource = ResourceBuilder.new().build();
       const eventWithStringResource = EventBuilder.new().resource(resource).build();
       const state = getEventCalendarStateFromParameters({
@@ -1059,34 +1003,40 @@ describe('schedulerEventSelectors', () => {
     });
   });
 
-  describe('isDateWritable', () => {
-    it('should return true by default for both properties', () => {
+  describe('unwritableDates', () => {
+    it('should return no date by default', () => {
       const state = getEventCalendarStateFromParameters({ events: [defaultEvent] });
-      expect(schedulerEventSelectors.isDateWritable(state, 'start')).to.equal(true);
-      expect(schedulerEventSelectors.isDateWritable(state, 'end')).to.equal(true);
+      expect(schedulerEventSelectors.unwritableDates(state)).to.deep.equal([]);
     });
 
     // See `canWriteEventDates` above: a defined structure that only maps an unrelated property
     // is a different input than no structure at all.
-    it('should return true for both properties when eventModelStructure maps only an unrelated property', () => {
+    it('should return no date when eventModelStructure maps only an unrelated property', () => {
       const state = getEventCalendarStateFromParameters({
         events: [defaultEvent],
         eventModelStructure: titleOnlyEventModelStructure,
       });
-      expect(schedulerEventSelectors.isDateWritable(state, 'start')).to.equal(true);
-      expect(schedulerEventSelectors.isDateWritable(state, 'end')).to.equal(true);
+      expect(schedulerEventSelectors.unwritableDates(state)).to.deep.equal([]);
     });
 
     // Per-property, unlike `canWriteEventDates`: a getter-only `start` doesn't affect `end`.
-    it('should return false only for the property declared without a setter', () => {
+    it('should return only the dates declared without a setter', () => {
       const state = getEventCalendarStateFromParameters({
         events: [defaultEvent],
         eventModelStructure: {
           start: { getter: (event) => event.start },
         },
       });
-      expect(schedulerEventSelectors.isDateWritable(state, 'start')).to.equal(false);
-      expect(schedulerEventSelectors.isDateWritable(state, 'end')).to.equal(true);
+      expect(schedulerEventSelectors.unwritableDates(state)).to.deep.equal(['start']);
+
+      const bothState = getEventCalendarStateFromParameters({
+        events: [defaultEvent],
+        eventModelStructure: {
+          start: { getter: (event) => event.start },
+          end: { getter: (event) => event.end },
+        },
+      });
+      expect(schedulerEventSelectors.unwritableDates(bothState)).to.deep.equal(['start', 'end']);
     });
   });
 });

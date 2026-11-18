@@ -9,6 +9,7 @@ import type { ConversationListTimestampOwnerState } from './conversationList.typ
 export interface ConversationListTimestampSlots {
   /**
    * The component that renders the root.
+   * @default 'div'
    */
   root: React.ElementType;
 }

@@ -65,6 +65,7 @@ enum GridRowEditStartReasons {
   cellDoubleClick = 'cellDoubleClick',
   printableKeyDown = 'printableKeyDown',
   deleteKeyDown = 'deleteKeyDown',
+  compositionStart = 'compositionStart',
 }
 
 /**

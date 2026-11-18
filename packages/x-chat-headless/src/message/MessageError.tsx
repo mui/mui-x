@@ -11,6 +11,7 @@ export interface MessageErrorSlots {
   /**
    * The root element of the per-message error primitive.
    * Rendered with `role="alert"` so screen readers announce the error.
+   * @default 'div'; a styled error card with a retry button in `ChatMessageError`
    */
   root: React.ElementType;
 }

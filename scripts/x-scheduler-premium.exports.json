@@ -1,6 +1,7 @@
 [
   { "name": "EventCalendarPremium", "kind": "Variable" },
   { "name": "EventCalendarPremiumApiRef", "kind": "TypeAlias" },
+  { "name": "EventCalendarPremiumFeatures", "kind": "Interface" },
   { "name": "EventCalendarPremiumProps", "kind": "Interface" },
   { "name": "EventDialogGeneralTabPropsOverrides", "kind": "Interface" },
   { "name": "EventTimelineGetEventAriaLabelParameters", "kind": "Interface" },
@@ -11,7 +12,6 @@
   { "name": "EventTimelinePremiumClassKey", "kind": "TypeAlias" },
   { "name": "EventTimelinePremiumFeatures", "kind": "Interface" },
   { "name": "EventTimelinePremiumProps", "kind": "Interface" },
-  { "name": "EventTimelinePremiumRecurringEventsFeature", "kind": "Interface" },
   { "name": "EventTimelinePremiumSlotProps", "kind": "Interface" },
   { "name": "EventTimelinePremiumSlots", "kind": "Interface" },
   { "name": "getEventTimelinePremiumUtilityClass", "kind": "Function" },

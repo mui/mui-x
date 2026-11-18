@@ -1,7 +1,6 @@
-import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { EventCalendarState } from '../use-event-calendar';
 import type { SchedulerProcessedDay } from './event';
-import type { PlainDate } from '../internals/utils/base-temporal/PlainDate';
+import type { BaseTemporal } from '../internals/utils/base-temporal';
 
 export type CalendarView = 'day' | 'week' | 'month' | 'agenda';
 
@@ -15,9 +14,7 @@ export type EventCalendarTimeGridEvents = 'shorter-than-one-day' | 'same-day-onl
  * This is used to determine how the components outside of the view should behave based on the current view.
  */
 export interface EventCalendarViewDefinition {
-  siblingVisibleDateGetter: (
-    parameters: SiblingVisibleDateGetterParameters,
-  ) => TemporalSupportedObject;
+  siblingVisibleDateGetter: (parameters: SiblingVisibleDateGetterParameters) => Date;
   visibleDaysSelector: (state: EventCalendarState) => SchedulerProcessedDay[];
   /**
    * The range to fetch from the data source.
@@ -30,11 +27,11 @@ export interface EventCalendarFetchRange {
   /**
    * The first day to fetch, read in the display timezone.
    */
-  start: PlainDate;
+  start: BaseTemporal.PlainDate;
   /**
    * The last day to fetch, read in the display timezone.
    */
-  end: PlainDate;
+  end: BaseTemporal.PlainDate;
 }
 
 interface SiblingVisibleDateGetterParameters {

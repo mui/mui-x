@@ -3,6 +3,7 @@ productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler-premium'
 githubLabel: 'scope: scheduler'
+components: EventTimelinePremium
 ---
 
 # Event Timeline - Dependencies
@@ -56,7 +57,9 @@ To change them, remount the Event Timeline, for example with a `key`.
 ## Dependency model
 
 ```ts
-const dependency = {
+import type { SchedulerDependency } from '@mui/x-scheduler-premium/models';
+
+const dependency: SchedulerDependency = {
   id: '1',
   source: '12', // The id of the predecessor event
   target: '13', // The id of the successor event
@@ -102,6 +105,7 @@ Auto-scheduling never moves an event earlier than where it's placed, and never p
 [Read-only events](/x/react-scheduler/event-timeline/editing/#only-set-on-some-events) never move.
 A change that would need to move one, whether it moves an event or creates or edits a dependency, isn't applied, and a message explains why.
 Make an event read-only to keep it from being moved by its predecessors.
+The same applies to an event whose `start` or `end` has no [setter](/x/react-scheduler/event-timeline/events/#store-data-in-custom-properties).
 :::
 
 ## Lag
@@ -143,8 +147,10 @@ The Event Timeline doesn't create a dependency that:
 - has the same type, predecessor, and successor as an existing dependency: the existing one is selected instead
 - involves a [recurring event](/x/react-scheduler/recurring-events/)
 - would need to move a read-only event
+- would need to change a date your `eventModelStructure` can't write back (a `getter` without a `setter`)
 
 A message explains why the dependency wasn't created.
+Its text, like every dependency text, comes from the [locale text](/x/react-scheduler/event-timeline/localization/#locale-text).
 
 {{"demo": "DependencyRejections.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -154,4 +160,5 @@ In the demo above, try linking **Testing** to **Wireframes**, linking the end of
 
 - Dependencies on recurring events are ignored: they don't render and don't move events.
 - A negative lag (a lead) isn't supported.
+- Dependencies can't be created, selected, or edited with the keyboard.
 - With [lazy loading](/x/react-scheduler/event-timeline/lazy-loading/), a dependency only applies once both of its events are loaded: until then it has no arrow and doesn't move either event.

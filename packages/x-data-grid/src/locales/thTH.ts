@@ -215,6 +215,15 @@ const thTHGrid: Partial<GridLocaleText> = {
   columnHeaderFiltersTooltipActive: (count) => `ตัวกรองที่ใช้งาน ${count} รายการ`,
   columnHeaderFiltersLabel: 'แสดงตัวกรอง',
   columnHeaderSortIconLabel: 'เรียงลำดับ',
+  columnHeaderSortIconAriaLabel: (columnName, direction) => {
+    if (direction === 'asc') {
+      return `เรียง${columnName}จากน้อยไปมาก`;
+    }
+    if (direction === 'desc') {
+      return `เรียง${columnName}จากมากไปน้อย`;
+    }
+    return `ยกเลิกการเรียง${columnName}`;
+  },
 
   // Rows selected footer text
   footerRowSelected: (count) => `เลือกแล้ว ${count.toLocaleString()} แถว`,
@@ -236,6 +245,9 @@ const thTHGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ใช่',
   booleanCellFalseLabel: 'ไม่ใช่',
+
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
 
   // Long text cell
   longTextCellExpandLabel: 'ขยาย',
@@ -353,8 +365,7 @@ const thTHGrid: Partial<GridLocaleText> = {
   chartsMenuMoveToBottom: 'ย้ายไปล่างสุด',
   chartsMenuOptions: 'ตัวเลือกฟิลด์',
   chartsMenuRemove: 'ลบ',
-  chartsDragToDimensions: (dimensionLabel: string) =>
-    `ลากมาที่นี่เพื่อใช้คอลัมน์เป็น${dimensionLabel}`,
+  chartsDragToDimensions: (dimensionLabel: string) => `ลากมาที่นี่เพื่อใช้คอลัมน์เป็น${dimensionLabel}`,
   chartsDragToValues: (valuesLabel: string) => `ลากมาที่นี่เพื่อใช้คอลัมน์เป็น${valuesLabel}`,
 
   // AI Assistant panel

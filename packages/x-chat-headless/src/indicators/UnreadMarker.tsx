@@ -19,10 +19,12 @@ function resolveMessageIndex(messageId: string, index: number | undefined, items
 export interface UnreadMarkerSlots {
   /**
    * The component that renders the root.
+   * @default 'div'
    */
   root: React.ElementType;
   /**
    * The component that renders the label.
+   * @default 'div'; a styled 'span' in `ChatUnreadMarker`
    */
   label: React.ElementType;
 }

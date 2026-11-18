@@ -18,18 +18,17 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
   formatFullDate,
-  getOccurrenceDataTimezone,
+  getOccurrenceLastDayNumber,
   getPrimaryResourceId,
+  isEventOccurrence,
+  plainDateFromDayNumber,
   toPlainDate,
-  toWallClockIsoString,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import {
-  getEventTimezone,
-  getEventBoundTimestamp,
-  getEventTimezonePlainDate,
   getRecurrenceLabel,
   getRecurrenceTimezoneName,
+  getRuleTimezone,
   hasProp,
 } from '../event-dialog/utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
@@ -129,36 +128,38 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
     schedulerResourceSelectors.processedResource,
     getPrimaryResourceId(occurrence.resource),
   );
-  // The rule is read in the event's timezone, the one it is expressed in.
-  const eventTimezone = getEventTimezone(occurrence);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
+  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
+  // The rule is read in its own timezone.
+  const ruleTimezone = getRuleTimezone(occurrence, !!occurrence.allDay, displayTimezone);
   const startPlainDate = React.useMemo(
-    () => getEventTimezonePlainDate(occurrence, getEventBoundTimestamp(occurrence, 'start')),
-    [occurrence],
+    () => toPlainDate(occurrence.start.timestamp, ruleTimezone),
+    [occurrence, ruleTimezone],
   );
   const defaultRecurrenceKey = useStore(
     store,
     schedulerRecurringEventSelectors.defaultPresetKey,
-    getOccurrenceDataTimezone(occurrence)?.rrule,
+    isEventOccurrence(occurrence) ? occurrence.rrule : undefined,
     startPlainDate,
   );
-  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
-  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
   // Feature hook
   const formatTime = useFormatTime();
-  const { start, end, timezone: boundsTimezone } = occurrence.displayTimezone;
-  const isMultiDay = isOccurrenceMultiDay(occurrence);
-  const formatBound = (date: SchedulerProcessedDate) => {
-    const fullDate = formatFullDate(locale, toPlainDate(date.timestamp, boundsTimezone));
-    return occurrence.allDay ? fullDate : `${fullDate}, ${formatTime(date)}`;
+  const { start, end } = occurrence;
+  // The end of an all-day occurrence is the start of the day after its last day.
+  const endDay = plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence, displayTimezone));
+  const isMultiDay = isOccurrenceMultiDay(occurrence, displayTimezone);
+  const formatBound = (bound: SchedulerProcessedDate, day = bound.plainDateTime.toPlainDate()) => {
+    const fullDate = formatFullDate(locale, day);
+    return occurrence.allDay ? fullDate : `${fullDate}, ${formatTime(bound)}`;
   };
-  const formatBoundDateTime = (bound: SchedulerProcessedDate) =>
-    occurrence.allDay
-      ? toPlainDate(bound.timestamp, boundsTimezone).toString()
-      : toWallClockIsoString(bound.timestamp, boundsTimezone);
+  const formatBoundDateTime = (
+    bound: SchedulerProcessedDate,
+    day = bound.plainDateTime.toPlainDate(),
+  ) => (occurrence.allDay ? day.toString() : bound.plainDateTime.toString());
   const recurrenceTimezoneName = React.useMemo(
-    () => getRecurrenceTimezoneName(locale, eventTimezone, displayTimezone),
-    [locale, eventTimezone, displayTimezone],
+    () => getRecurrenceTimezoneName(locale, ruleTimezone, displayTimezone),
+    [locale, ruleTimezone, displayTimezone],
   );
   const recurrenceLabel = React.useMemo(
     () => getRecurrenceLabel(locale, startPlainDate, defaultRecurrenceKey, localeText),
@@ -192,8 +193,8 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
           {(isMultiDay || !occurrence.allDay) && (
             <React.Fragment>
               {' - '}
-              <time dateTime={formatBoundDateTime(end)}>
-                {isMultiDay ? formatBound(end) : formatTime(end)}
+              <time dateTime={formatBoundDateTime(end, endDay)}>
+                {isMultiDay ? formatBound(end, endDay) : formatTime(end)}
               </time>
             </React.Fragment>
           )}

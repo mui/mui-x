@@ -26,6 +26,7 @@
     {
       "name": "label",
       "description": "The component that renders the label.",
+      "default": "'label'",
       "class": "MuiChatComposerLabel-label"
     }
   ],

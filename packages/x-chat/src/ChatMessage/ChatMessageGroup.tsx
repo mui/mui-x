@@ -10,34 +10,22 @@ import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatMessageUtilityClasses } from './chatMessageClasses';
 import { ChatMessage } from './ChatMessage';
 import type { ChatMessageSlots, ChatMessageSlotProps } from './ChatMessage';
-import type { ChatBoxSlots, ChatBoxSlotProps } from '../ChatBox/ChatBox.types';
+import type {
+  ChatBoxMessageGroupSlots,
+  ChatBoxMessageGroupSlotProps,
+} from '../ChatBox/ChatBox.types';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageGroup');
 
 /**
- * Flat slot keys for `ChatMessageGroup` — part of the message-rendering pipeline
+ * Flat slots of `ChatMessageGroup` — part of the message-rendering pipeline
  * vocabulary. `messageGroup` is the styled group wrapper (wrapper-only); the
  * `message*` keys are mapped onto the inner `ChatMessage`'s short local slots.
  * A subset of the public `ChatBoxSlots`.
  */
-type ChatMessageGroupSlotKeys =
-  | 'messageGroup'
-  | 'messageRoot'
-  | 'messageAvatar'
-  | 'messageContent'
-  | 'messageMeta'
-  | 'messageInlineMeta'
-  | 'messageError'
-  | 'messageActions'
-  | 'messageAuthorName'
-  | 'streamingIndicator';
+export interface ChatMessageGroupSlots extends ChatBoxMessageGroupSlots {}
 
-export interface ChatMessageGroupSlots extends Pick<ChatBoxSlots, ChatMessageGroupSlotKeys> {}
-
-export interface ChatMessageGroupSlotProps extends Pick<
-  ChatBoxSlotProps,
-  ChatMessageGroupSlotKeys
-> {}
+export interface ChatMessageGroupSlotProps extends ChatBoxMessageGroupSlotProps {}
 
 export interface ChatMessageGroupProps extends Omit<MessageGroupProps, 'slots' | 'slotProps'> {
   className?: string;

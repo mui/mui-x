@@ -47,9 +47,24 @@
     "import { ChatDateDivider } from '@mui/x-chat';"
   ],
   "slots": [
-    { "name": "divider", "description": "The component that renders the divider.", "class": null },
-    { "name": "line", "description": "The component that renders the line.", "class": null },
-    { "name": "label", "description": "The component that renders the label.", "class": null }
+    {
+      "name": "divider",
+      "description": "The component that renders the divider.",
+      "default": "'div'",
+      "class": null
+    },
+    {
+      "name": "line",
+      "description": "The component that renders the line.",
+      "default": "'div'",
+      "class": null
+    },
+    {
+      "name": "label",
+      "description": "The component that renders the label.",
+      "default": "'div'",
+      "class": null
+    }
   ],
   "classes": [],
   "spread": true,

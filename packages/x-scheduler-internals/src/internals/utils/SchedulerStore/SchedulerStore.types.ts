@@ -1,5 +1,4 @@
 import type { BaseUIChangeEventDetails } from '@base-ui/react';
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerEventColor,
   SchedulerEventCreationConfig,
@@ -17,12 +16,10 @@ import type {
   SchedulerResourceId,
   SchedulerResourceModelStructure,
   SchedulerSelection,
-  TemporalSupportedObject,
   SchedulerEventSide,
   SchedulerEventDeletionConfig,
   RecurringEventScope,
 } from '../../../models';
-import type { Adapter } from '../../../use-adapter/useAdapter.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 
 /**
@@ -36,6 +33,7 @@ export type SchedulerUserFacingErrorCode =
   | 'datesNotWritableError'
   | 'eventNotCreatableError'
   | 'dependencyCascadeBlockedError'
+  | 'dependencyDatesNotWritableError'
   | 'dependencyCycleError'
   | 'dependencyDuplicateError'
   | 'dependencyRecurringEventError'
@@ -47,7 +45,7 @@ export type SchedulerUserFacingErrorCode =
  */
 export type SchedulerUserFacingErrorDescriptor =
   | { code: SchedulerUserFacingErrorCode; params?: undefined }
-  | { code: 'readOnlyEventMovedError'; params: { title: string } };
+  | { code: 'readOnlyEventMovedError' | 'unwritableEventMovedError'; params: { title: string } };
 
 export type UserFacingError = SchedulerUserFacingErrorDescriptor & {
   /**
@@ -86,18 +84,13 @@ export interface SchedulerEditingState {
 
 export interface SchedulerState<TEvent extends object = any> {
   /**
-   * The adapter of the date library.
-   * Not publicly exposed, is only set in state to avoid passing it to the selectors.
-   */
-  adapter: Adapter;
-  /**
    * The locale the dates are formatted in.
    */
   dateLocale: string;
   /**
    * The date used to determine the visible date range.
    */
-  visibleDate: TemporalSupportedObject;
+  visibleDate: Date;
   /**
    * The model of the events available in the calendar as provided to props.events.
    */
@@ -217,15 +210,12 @@ export interface SchedulerState<TEvent extends object = any> {
    *
    * Accepts any valid IANA timezone name
    * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
-   * or keywords understood by the adapter, such as
-   * "default" (use the adapter's default timezone),
-   * "locale" (use the user's current locale timezone),
-   * or "UTC".
+   * "default" (the timezone of the system), or "UTC".
    *
    * Events keep their original data timezone. The visible range starts on the day of the visible
-   * date in this timezone, and the next and previous navigation return dates in this timezone.
+   * date in this timezone, and the next and previous navigation move the visible date on its days.
    */
-  displayTimezone: TemporalTimezone;
+  displayTimezone: string;
   /**
    * The occurrence currently being edited (existing or a creation draft), or `null`.
    * Single source of truth for *what* is edited, decoupled from *which* surface is open; surfaces
@@ -275,7 +265,7 @@ export interface SchedulerPersistEventsResult {
 }
 
 export interface SchedulerDataSource<TEvent extends object> {
-  getEvents: (start: TemporalSupportedObject, end: TemporalSupportedObject) => Promise<TEvent[]>;
+  getEvents: (start: Date, end: Date) => Promise<TEvent[]>;
   /**
    * Called when events are created, updated or deleted so the consumer can persist them.
    *
@@ -356,20 +346,17 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   /**
    * The date currently used to determine the visible date range.
    */
-  visibleDate?: TemporalSupportedObject;
+  visibleDate?: Date;
   /**
    * The date initially used to determine the visible date range.
    * To render a controlled component, use the `visibleDate` prop.
    * @default today
    */
-  defaultVisibleDate?: TemporalSupportedObject;
+  defaultVisibleDate?: Date;
   /**
    * Event handler called when the visible date changes.
    */
-  onVisibleDateChange?: (
-    visibleDate: TemporalSupportedObject,
-    eventDetails: SchedulerChangeEventDetails,
-  ) => void;
+  onVisibleDateChange?: (visibleDate: Date, eventDetails: SchedulerChangeEventDetails) => void;
   /**
    * Whether the event can be dragged to change its start and end dates without changing the duration.
    * @default true
@@ -441,21 +428,18 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    *
    * Accepts any valid IANA timezone name
    * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
-   * or keywords understood by the adapter, such as
-   * "default" (use the adapter's default timezone),
-   * "locale" (use the user's current locale timezone),
-   * or "UTC".
+   * "default" (the timezone of the system), or "UTC".
    *
    * Events keep their original data timezone. The visible range starts on the day of the visible
-   * date in this timezone, and the next and previous navigation return dates in this timezone.
+   * date in this timezone, and the next and previous navigation move the visible date on its days.
    * @default "default"
    */
-  displayTimezone?: TemporalTimezone;
+  displayTimezone?: string;
   /**
    * The locale of the dates, as a BCP 47 language tag such as `"fr-FR"`, like the locales of
    * `Intl.DateTimeFormat`.
-   * This affects day names, month names, the first day of the week, week numbers, the 12-hour
-   * or 24-hour clock and the other locale-dependent formatting.
+   * This affects day names, month names, the first day of the week, the days of the weekend,
+   * week numbers, the 12-hour or 24-hour clock and the other locale-dependent formatting.
    * @default "en-US"
    */
   dateLocale?: string;
@@ -475,11 +459,9 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
  */
 export type UpdateRecurringEventParameters = {
   /**
-   * The start date of the occurrence affected by the update before the update is applied.
-   * Must be the occurrence's data-timezone start (`occurrence.dataTimezone.start.value`),
-   * the identity the occurrence expansion keys on.
+   * The occurrence affected by the update, before the update is applied.
    */
-  occurrenceStart: TemporalSupportedObject;
+  occurrence: SchedulerEventOccurrence;
   /**
    * The changes to apply.
    */
@@ -495,15 +477,9 @@ export type UpdateRecurringEventParameters = {
  */
 export type DeleteRecurringEventParameters = {
   /**
-   * The start date of the occurrence affected by the deletion.
-   * Must be the occurrence's data-timezone start (`occurrence.dataTimezone.start.value`),
-   * the identity the occurrence expansion keys on.
+   * The occurrence affected by the deletion.
    */
-  occurrenceStart: TemporalSupportedObject;
-  /**
-   * The id of the recurring event to delete.
-   */
-  eventId: SchedulerEventId;
+  occurrence: SchedulerEventOccurrence;
   /**
    * Callback fired when the user submits the recurring scope dialog, with the scope they picked.
    */
@@ -547,7 +523,6 @@ export interface SchedulerParametersToStateMapper<
   getInitialState: (
     schedulerInitialState: Omit<SchedulerState, 'shouldEventRequireResource'>,
     parameters: Parameters,
-    adapter: Adapter,
   ) => State;
   /**
    * Updates the state based on the new parameters.

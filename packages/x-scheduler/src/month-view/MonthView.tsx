@@ -11,7 +11,9 @@ import type {
 import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
 import {
   formatWeekdayShort,
+  getDayNumber,
   getPlainDateWeekStart,
+  getStartOfMonthDayNumber,
   plainDateFromDayNumber,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
@@ -122,24 +124,22 @@ const EVENT_GAP = 4; // theme.spacing(0.5) = 4px
 const MONTH_VIEW_DEFINITION: EventCalendarViewDefinition = {
   siblingVisibleDateGetter: ({ state, delta }) => getSiblingMonthStart(state, delta),
   visibleDaysSelector: createSelectorMemoized(
-    (state: State) => state.adapter,
     // The day number of the first day of the month, so a move inside the month keeps the days.
     (state: State) => {
       const visiblePlainDate = schedulerOtherSelectors.visiblePlainDate(state);
-      return visiblePlainDate.dayNumber - visiblePlainDate.day + 1;
+      return getStartOfMonthDayNumber(getDayNumber(visiblePlainDate));
     },
     schedulerOtherSelectors.displayTimezone,
-    eventCalendarPreferenceSelectors.showWeekends,
+    eventCalendarPreferenceSelectors.hiddenWeekdays,
     eventCalendarPreferenceSelectors.weekStartsOn,
-    (adapter, firstDayNumber, timezone, showWeekends, weekStartsOn) => {
+    (firstDayNumber, timezone, hiddenWeekdays, weekStartsOn) => {
       const firstOfMonth = plainDateFromDayNumber(firstDayNumber);
       const lastOfMonth = firstOfMonth.with({ day: firstOfMonth.daysInMonth });
       return getDayListFromPlainDates({
-        adapter,
         firstPlainDate: getPlainDateWeekStart(firstOfMonth, weekStartsOn),
         lastPlainDate: getPlainDateWeekStart(lastOfMonth, weekStartsOn).add({ days: 6 }),
         timezone,
-        excludeWeekends: !showWeekends,
+        excludedWeekdays: hiddenWeekdays,
       });
     },
   ),
@@ -162,7 +162,7 @@ export const MonthView = React.memo(
 
     // Selector hooks
     const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
-    const showWeekends = useStore(store, eventCalendarPreferenceSelectors.showWeekends);
+    const hiddenWeekdays = useStore(store, eventCalendarPreferenceSelectors.hiddenWeekdays);
     const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
     // State hooks
@@ -172,13 +172,13 @@ export const MonthView = React.memo(
     const { days } = useEventCalendarView(MONTH_VIEW_DEFINITION);
 
     const weeks = React.useMemo(() => {
-      const chunkSize = showWeekends ? 7 : 5;
+      const chunkSize = 7 - hiddenWeekdays.length;
       const result: SchedulerProcessedDay[][] = [];
       for (let i = 0; i < days.length; i += chunkSize) {
         result.push(days.slice(i, i + chunkSize));
       }
       return result;
-    }, [days, showWeekends]);
+    }, [days, hiddenWeekdays]);
 
     const monthViewRowsPerType = React.useMemo(
       () => ({ 'day-grid': weeks.length }) as const,

@@ -213,6 +213,15 @@ const huHUGrid: Partial<GridLocaleText> = {
   columnHeaderFiltersTooltipActive: (count) => `${count} aktív szűrő`,
   columnHeaderFiltersLabel: 'Szűrők megjelenítése',
   columnHeaderSortIconLabel: 'Átrendezés',
+  // columnHeaderSortIconAriaLabel: (columnName, direction) => {
+  //   if (direction === 'asc') {
+  //     return `Sort ${columnName} in ascending order`;
+  //   }
+  //   if (direction === 'desc') {
+  //     return `Sort ${columnName} in descending order`;
+  //   }
+  //   return `Remove sorting from ${columnName}`;
+  // },
 
   // Rows selected footer text
   footerRowSelected: (count) => `${count.toLocaleString()} sor kiválasztva`,
@@ -234,6 +243,9 @@ const huHUGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'igen',
   booleanCellFalseLabel: 'nem',
+
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
 
   // Long text cell
   longTextCellExpandLabel: 'Kibontás',

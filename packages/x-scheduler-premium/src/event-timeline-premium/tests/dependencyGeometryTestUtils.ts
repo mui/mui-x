@@ -1,4 +1,4 @@
-import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
+import { createDate, endOfDay, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import type { SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
 import {
   createEventRangeIndex,
@@ -16,11 +16,11 @@ import { createDependencyAnchorResolver } from '../content/timeline-dependencies
 // the declaration build (which excludes that folder) never follows its `test/utils`
 // import outside the package.
 
-export const collectionStart = adapter.date('2024-01-15', 'default');
-export const collectionEnd = adapter.endOfDay(collectionStart);
+export const collectionStart = createDate('2024-01-15');
+export const collectionEnd = endOfDay(collectionStart);
 export const fullDayAxis: TimelineAxis = {
-  start: adapter.getTime(collectionStart),
-  end: adapter.getTime(collectionEnd),
+  start: collectionStart.getTime(),
+  end: collectionEnd.getTime(),
   timezone: 'default',
   dayStartMinute: 0,
   dayEndMinute: 1440,
@@ -47,9 +47,8 @@ export const eventB = EventBuilder.new()
 
 export function getOccurrences(events: SchedulerProcessedEvent[]) {
   return getOccurrencesFromEvents({
-    adapter,
-    start: adapter.getTime(collectionStart),
-    end: adapter.getTime(collectionEnd),
+    start: collectionStart.getTime(),
+    end: collectionEnd.getTime(),
     eventRangeIndex: createEventRangeIndex(events, false),
     displayTimezone: 'default',
     visibleResources: {},

@@ -337,6 +337,15 @@ export interface GridCellEventLookup {
     event: React.KeyboardEvent<HTMLElement>;
   };
   /**
+   * Fired when an input method editor (IME) starts a composition in the hidden editor of a focused cell.
+   * Requires `experimentalFeatures.imeFastEdit`.
+   * @ignore - do not document.
+   */
+  cellCompositionStart: {
+    params: GridCellParams<any>;
+    event: React.CompositionEvent<HTMLElement>;
+  };
+  /**
    * Fired when the dragged cell enters a valid drop target. It's mapped to the `dragend` DOM event.
    * @ignore - do not document.
    */
@@ -526,7 +535,10 @@ export interface GridEventLookup
    */
   cellEditStart: {
     params: GridCellEditStartParams;
-    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
+    event:
+      | React.MouseEvent<HTMLElement>
+      | React.KeyboardEvent<HTMLElement>
+      | React.CompositionEvent<HTMLElement>;
   };
   /**
    * Fired when the cell turns back to view mode.
@@ -540,7 +552,10 @@ export interface GridEventLookup
    */
   rowEditStart: {
     params: GridRowEditStartParams;
-    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
+    event:
+      | React.MouseEvent<HTMLElement>
+      | React.KeyboardEvent<HTMLElement>
+      | React.CompositionEvent<HTMLElement>;
   };
   /**
    * Fired when the row turns back to view mode.

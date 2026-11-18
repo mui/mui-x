@@ -384,7 +384,9 @@
       "required": true
     },
     "setColumnIndex": {
-      "type": { "description": "(field: string, targetIndexPosition: number) =&gt; void" },
+      "type": {
+        "description": "(field: string, targetIndexPosition: number, useVisibleColumns?: boolean) =&gt; void"
+      },
       "required": true,
       "isProPlan": true
     },

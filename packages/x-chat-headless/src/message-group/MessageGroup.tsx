@@ -60,10 +60,12 @@ function resolveMessageIndex(messageId: string, index: number | undefined, items
 export interface MessageGroupSlots {
   /**
    * The component that renders the group.
+   * @default 'div'
    */
   group: React.ElementType;
   /**
    * The component that renders the author name.
+   * @default 'div'
    */
   authorName: React.ElementType;
   /**

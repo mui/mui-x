@@ -56,7 +56,7 @@
       "description": "Returns the index position of a column. By default, only the visible columns are considered.<br />Pass <code>false</code> to <code>useVisibleColumns</code> to consider all columns."
     },
     "getColumnIndexRelativeToVisibleColumns": {
-      "description": "Gets the index of a column relative to the columns that are reachable by scroll."
+      "description": "Returns the index position of a column among all columns, including the hidden ones."
     },
     "getColumnPosition": {
       "description": "Returns the left-position of a column relative to the inner border of the grid."
@@ -141,7 +141,7 @@
       "description": "Triggers the viewport to scroll to the given positions (in pixels)."
     },
     "scrollToIndexes": {
-      "description": "Triggers the viewport to scroll to the cell at indexes given by <code>params</code>.<br />Returns <code>true</code> if the grid had to scroll to reach the target."
+      "description": "Triggers the viewport to scroll to the cell at indexes given by <code>params</code>.<br /><code>rowIndex</code> is the zero-based index in the full filtered and sorted row list, not the index within the current page.<br />When pagination is enabled, <code>rowIndex</code> must point to a row on the current page. With <code>paginationMode=&quot;server&quot;</code>, only the rows of the current page are loaded, so that index is <code>page * pageSize</code> plus the index of the row within them.<br /><code>colIndex</code> is the zero-based index in the visible columns.<br />An invalid index is ignored, along with the axis it belongs to, and the other axis still scrolls."
     },
     "selectCellRange": {
       "description": "Selects all cells that are inside the range given by <code>start</code> and <code>end</code> coordinates."
@@ -173,7 +173,7 @@
       "description": "Sets the focus to the column header at the given <code>field</code>."
     },
     "setColumnIndex": {
-      "description": "Moves a column from its original position to the position given by <code>targetIndexPosition</code>."
+      "description": "Moves a column from its original position to the position given by <code>targetIndexPosition</code>.<br />By default, the position counts all columns, including the hidden ones, like <code>getColumnIndex(field, false)</code>.<br />Pass <code>true</code> to <code>useVisibleColumns</code> to count only the visible columns."
     },
     "setColumnVisibility": {
       "description": "Changes the visibility of the column referred by <code>field</code>."

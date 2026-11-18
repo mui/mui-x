@@ -8,8 +8,8 @@ export function getUserFacingErrorMessage(
   localeText: SchedulerErrorLocaleText,
   error: SchedulerUserFacingErrorDescriptor,
 ): string {
-  if (error.code === 'readOnlyEventMovedError') {
-    return localeText.readOnlyEventMovedError(error.params.title);
+  if (error.code === 'readOnlyEventMovedError' || error.code === 'unwritableEventMovedError') {
+    return localeText[error.code](error.params.title);
   }
   return localeText[error.code];
 }

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import type { SchedulerEvent } from '@mui/x-scheduler/models';
-import { dependenciesFeature } from '@mui/x-scheduler-premium/internals';
-import { EventTimelinePremium } from './shared/DependenciesTimeline';
+import type { SchedulerEvent } from '@mui/x-scheduler-premium/models';
+import { dependenciesFeature } from '@mui/x-scheduler-premium/dependencies';
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
   defaultVisibleDate,
   initialDependencies,

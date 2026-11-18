@@ -4,17 +4,28 @@ import {
 } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { eventCalendarPreferenceSelectors } from './eventCalendarPreferenceSelectors';
-import {
-  DEFAULT_EVENT_CALENDAR_PREFERENCES,
-  DEFAULT_PREFERENCES_MENU_CONFIG,
-} from '../use-event-calendar';
+
+const DEFAULT_PREFERENCES = {
+  showWeekends: true,
+  showWeekNumber: false,
+  showEmptyDaysInAgenda: true,
+  isSidePanelOpen: true,
+};
+
+const DEFAULT_MENU_CONFIG = {
+  toggleWeekendVisibility: true,
+  toggleWeekNumberVisibility: true,
+  toggleEmptyDaysInAgenda: true,
+  toggleAmpm: true,
+  toggleWeekStartsOn: false,
+};
 
 describe('eventCalendarPreferenceSelectors', () => {
   describe('all', () => {
     it('should return default preferences when none are set in the state', () => {
       const state = DEFAULT_EVENT_CALENDAR_STATE;
       const preferences = eventCalendarPreferenceSelectors.all(state);
-      expect(preferences).to.deep.equal(DEFAULT_EVENT_CALENDAR_PREFERENCES);
+      expect(preferences).to.deep.equal(DEFAULT_PREFERENCES);
     });
 
     it('should return custom preferences when they are set in the state', () => {
@@ -23,60 +34,37 @@ describe('eventCalendarPreferenceSelectors', () => {
         preferences: { ampm: false },
       });
       const preferences = eventCalendarPreferenceSelectors.all(state);
-      expect(preferences).to.deep.equal({ ...DEFAULT_EVENT_CALENDAR_PREFERENCES, ampm: false });
+      expect(preferences).to.deep.equal({ ...DEFAULT_PREFERENCES, ampm: false });
     });
   });
 
-  describe('ampm', () => {
-    it('should follow the hour cycle of the date locale when none is set in the state', () => {
-      const state = getEventCalendarStateFromParameters({ events: [] });
-      expect(eventCalendarPreferenceSelectors.ampm(state)).to.equal(true);
-      const frenchState = getEventCalendarStateFromParameters({ events: [], dateLocale: 'fr-FR' });
-      expect(eventCalendarPreferenceSelectors.ampm(frenchState)).to.equal(false);
+  describe('hiddenWeekdays', () => {
+    it('should return no weekday when none is set in the state, as the weekends are shown by default', () => {
+      const state = getEventCalendarStateFromParameters({ events: [], dateLocale: 'ar-SA' });
+      expect(eventCalendarPreferenceSelectors.hiddenWeekdays(state)).to.deep.equal([]);
     });
 
-    it('should return the custom ampm preference when it is set in the state (false)', () => {
+    it('should return no weekday when the weekends are shown', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
-        preferences: { ampm: false },
+        dateLocale: 'ar-SA',
+        preferences: { showWeekends: true },
       });
-      const ampm = eventCalendarPreferenceSelectors.ampm(state);
-      expect(ampm).to.equal(false);
+      expect(eventCalendarPreferenceSelectors.hiddenWeekdays(state)).to.deep.equal([]);
     });
 
-    it('should return the custom ampm preference when it is set in the state (true)', () => {
-      const state = getEventCalendarStateFromParameters({
-        events: [],
-        preferences: { ampm: true },
-      });
-      const ampm = eventCalendarPreferenceSelectors.ampm(state);
-      expect(ampm).to.equal(true);
-    });
-  });
-
-  describe('showWeekends', () => {
-    it('should return the default showWeekends preference when none is set in the state', () => {
-      const state = getEventCalendarStateFromParameters({ events: [] });
-      const showWeekends = eventCalendarPreferenceSelectors.showWeekends(state);
-      expect(showWeekends).to.equal(DEFAULT_EVENT_CALENDAR_PREFERENCES.showWeekends);
-    });
-
-    it('should return the custom showWeekends preference when it is set in the state (false)', () => {
+    it('should return the weekend of the date locale when the weekends are hidden', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
         preferences: { showWeekends: false },
       });
-      const showWeekends = eventCalendarPreferenceSelectors.showWeekends(state);
-      expect(showWeekends).to.equal(false);
-    });
-
-    it('should return the custom showWeekends preference when it is set in the state (true)', () => {
-      const state = getEventCalendarStateFromParameters({
+      expect(eventCalendarPreferenceSelectors.hiddenWeekdays(state)).to.deep.equal([6, 7]);
+      const iranianState = getEventCalendarStateFromParameters({
         events: [],
-        preferences: { showWeekends: true },
+        dateLocale: 'fa-IR',
+        preferences: { showWeekends: false },
       });
-      const showWeekends = eventCalendarPreferenceSelectors.showWeekends(state);
-      expect(showWeekends).to.equal(true);
+      expect(eventCalendarPreferenceSelectors.hiddenWeekdays(iranianState)).to.deep.equal([5]);
     });
   });
 
@@ -84,7 +72,7 @@ describe('eventCalendarPreferenceSelectors', () => {
     it('should return the default showWeekNumber preference when none is set in the state', () => {
       const state = getEventCalendarStateFromParameters({ events: [] });
       const showWeekNumber = eventCalendarPreferenceSelectors.showWeekNumber(state);
-      expect(showWeekNumber).to.equal(DEFAULT_EVENT_CALENDAR_PREFERENCES.showWeekNumber);
+      expect(showWeekNumber).to.equal(false);
     });
 
     it('should return the custom showWeekNumber preference when it is set in the state (true)', () => {
@@ -110,9 +98,7 @@ describe('eventCalendarPreferenceSelectors', () => {
     it('should return the default showEmptyDaysInAgenda preference when none is set in the state', () => {
       const state = getEventCalendarStateFromParameters({ events: [] });
       const showEmptyDaysInAgenda = eventCalendarPreferenceSelectors.showEmptyDaysInAgenda(state);
-      expect(showEmptyDaysInAgenda).to.equal(
-        DEFAULT_EVENT_CALENDAR_PREFERENCES.showEmptyDaysInAgenda,
-      );
+      expect(showEmptyDaysInAgenda).to.equal(true);
     });
 
     it('should return the custom showEmptyDaysInAgenda preference when it is set in the state (false)', () => {
@@ -138,7 +124,7 @@ describe('eventCalendarPreferenceSelectors', () => {
     it('should return the default isSidePanelOpen preference when none is set in the state', () => {
       const state = getEventCalendarStateFromParameters({ events: [] });
       const isSidePanelOpen = eventCalendarPreferenceSelectors.isSidePanelOpen(state);
-      expect(isSidePanelOpen).to.equal(DEFAULT_EVENT_CALENDAR_PREFERENCES.isSidePanelOpen);
+      expect(isSidePanelOpen).to.equal(true);
     });
 
     it('should return the custom isSidePanelOpen preference when it is set in the state (false)', () => {
@@ -164,7 +150,7 @@ describe('eventCalendarPreferenceSelectors', () => {
     it('should return the default preferences menu config when none is set in the state', () => {
       const state = getEventCalendarStateFromParameters({ events: [] });
       const menuConfig = eventCalendarPreferenceSelectors.menuConfig(state);
-      expect(menuConfig).to.deep.equal(DEFAULT_PREFERENCES_MENU_CONFIG);
+      expect(menuConfig).to.deep.equal(DEFAULT_MENU_CONFIG);
     });
 
     it('should return the custom preferences menu config when it is set in the state', () => {
@@ -176,7 +162,7 @@ describe('eventCalendarPreferenceSelectors', () => {
       });
       const menuConfig = eventCalendarPreferenceSelectors.menuConfig(state);
       expect(menuConfig).to.deep.equal({
-        ...DEFAULT_PREFERENCES_MENU_CONFIG,
+        ...DEFAULT_MENU_CONFIG,
         toggleAmpm: false,
       });
     });

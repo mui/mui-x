@@ -1,6 +1,6 @@
 import { describe, test } from 'vitest';
 import type { SchedulerEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { createDate, createOccurrence, EventBuilder } from 'test/utils/scheduler';
 import { updateRecurringEvent } from './updateRecurringEvent';
 import { deleteRecurringEvent } from './deleteRecurringEvent';
 
@@ -33,12 +33,8 @@ const SERIES: { rule: SchedulerEventRecurrenceRule; start: string; occurrence: s
 ];
 
 const cases = SERIES.map(({ rule, start, occurrence }) => ({
-  event: EventBuilder.new(adapter)
-    .withDataTimezone(TIMEZONE)
-    .singleDay(start)
-    .rrule(rule)
-    .toProcessed(),
-  occurrenceStart: adapter.date(occurrence, TIMEZONE),
+  event: EventBuilder.new().withDataTimezone(TIMEZONE).singleDay(start).rrule(rule).toProcessed(),
+  occurrenceStart: createDate(occurrence, TIMEZONE),
 }));
 
 // The edits run fast, so repeat them to measure more than the timer resolution.
@@ -51,11 +47,11 @@ describe('recurring event edits', () => {
         for (let i = 0; i < REPEAT; i += 1) {
           for (const { event, occurrenceStart } of cases) {
             updateRecurringEvent(
-              adapter,
               event,
-              occurrenceStart,
+              createOccurrence(event, occurrenceStart),
               { id: event.id, title: 'Renamed' },
               'this-and-following',
+              'default',
             );
           }
         }
@@ -63,14 +59,24 @@ describe('recurring event edits', () => {
       bench('delete only this', () => {
         for (let i = 0; i < REPEAT; i += 1) {
           for (const { event, occurrenceStart } of cases) {
-            deleteRecurringEvent(adapter, event, occurrenceStart, 'only-this');
+            deleteRecurringEvent(
+              event,
+              createOccurrence(event, occurrenceStart),
+              'only-this',
+              'default',
+            );
           }
         }
       }),
       bench('delete this and following', () => {
         for (let i = 0; i < REPEAT; i += 1) {
           for (const { event, occurrenceStart } of cases) {
-            deleteRecurringEvent(adapter, event, occurrenceStart, 'this-and-following');
+            deleteRecurringEvent(
+              event,
+              createOccurrence(event, occurrenceStart),
+              'this-and-following',
+              'default',
+            );
           }
         }
       }),

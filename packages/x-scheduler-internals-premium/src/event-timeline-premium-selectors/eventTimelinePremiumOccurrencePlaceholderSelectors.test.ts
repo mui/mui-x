@@ -1,5 +1,4 @@
 import {
-  adapter,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
   getEventTimelinePremiumStateFromParameters,
@@ -31,9 +30,10 @@ function buildPlaceholder(
 ): SchedulerOccurrencePlaceholderInternalDragOrResize {
   return {
     type: 'internal-drag',
+    allDay: false,
     surfaceType: 'timeline',
-    start: adapter.getTime(adapter.date('2025-07-03T10:00:00Z', 'default')),
-    end: adapter.getTime(adapter.date('2025-07-03T11:00:00Z', 'default')),
+    start: Date.parse('2025-07-03T10:00:00Z'),
+    end: Date.parse('2025-07-03T11:00:00Z'),
     eventId: 'event-1',
     occurrenceKey: 'event-1',
     resourceId: resourceB.id,

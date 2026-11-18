@@ -9,6 +9,7 @@ import {
   useGridApiInitialization,
   useGridParamsOverridableMethods,
   useIsCellEditable,
+  pickDataAttributes,
 } from '@mui/x-data-grid/internals';
 import type { GridConfiguration } from '@mui/x-data-grid/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
@@ -71,6 +72,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
         className={props.className}
         style={props.style}
         sx={props.sx}
+        {...pickDataAttributes(props)}
         {...props.slotProps?.root}
         ref={ref}
       >
@@ -311,7 +313,8 @@ DataGridProRaw.propTypes /* remove-proptypes */ = {
   /**
    * The row ids to show the detail panel.
    */
-  detailPanelExpandedRowIds: PropTypes /* @typescript-to-proptypes-ignore */.instanceOf(Set),
+  detailPanelExpandedRowIds: PropTypes /* @typescript-to-proptypes-ignore */
+    .instanceOf(Set),
   /**
    * If `true`, column autosizing on header separator double-click is disabled.
    * @default false
@@ -419,6 +422,7 @@ DataGridProRaw.propTypes /* remove-proptypes */ = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    imeFastEdit: PropTypes.bool,
     virtualizerLayoutMode: PropTypes.oneOf(['controlled', 'uncontrolled']),
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
@@ -1087,10 +1091,11 @@ DataGridProRaw.propTypes /* remove-proptypes */ = {
   /**
    * Sets the row selection model of the Data Grid.
    */
-  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */.shape({
-    ids: PropTypes.instanceOf(Set).isRequired,
-    type: PropTypes.oneOf(['exclude', 'include']).isRequired,
-  }),
+  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */
+    .shape({
+      ids: PropTypes.instanceOf(Set).isRequired,
+      type: PropTypes.oneOf(['exclude', 'include']).isRequired,
+    }),
   /**
    * When `rowSelectionPropagation.descendants` is set to `true`.
    * - Selecting a parent selects all its filtered descendants automatically.

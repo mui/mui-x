@@ -24,7 +24,6 @@ const weekInfoSelector = createSelectorMemoized(
 );
 
 export const schedulerPreferenceSelectors = {
-  all: allSchedulerPreferencesSelector,
   /**
    * Whether the times are on a 12-hour clock: the `ampm` preference, or the hour cycle of the locale
    * of the dates.
@@ -37,4 +36,8 @@ export const schedulerPreferenceSelectors = {
    */
   weekInfo: weekInfoSelector,
   weekStartsOn: (state: State) => weekInfoSelector(state).firstDay,
+  /**
+   * The ISO weekdays of the weekend of the locale of the dates.
+   */
+  weekend: (state: State) => weekInfoSelector(state).weekend,
 };

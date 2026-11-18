@@ -42,54 +42,67 @@ import type {
 export interface ConversationListRootSlots {
   /**
    * The component that renders the root.
+   * @default 'div'
    */
   root: React.ElementType;
   /**
    * The component that renders the scroller.
+   * @default ScrollRoot (Base UI ScrollArea.Root wrapper); a styled 'div' in `ChatConversationList`
    */
   scroller: React.ElementType;
   /**
    * The component that renders the viewport.
+   * @default ScrollViewport (Base UI ScrollArea.Viewport wrapper); a styled 'div' in `ChatConversationList`
    */
   viewport: React.ElementType;
   /**
    * The component that renders the scrollbar.
+   * @default ScrollScrollbar (Base UI ScrollArea.Scrollbar wrapper); `ChatConversationList` renders none
    */
   scrollbar: React.ElementType;
   /**
    * The component that renders the scrollbar thumb.
+   * @default ScrollThumb (Base UI ScrollArea.Thumb wrapper); `ChatConversationList` renders none
    */
   scrollbarThumb: React.ElementType;
   /**
    * The component that renders the item.
+   * @default ConversationListItem; a styled 'div' in `ChatConversationList`
    */
   item: React.JSXElementConstructor<ConversationListItemProps>;
   /**
    * The component that renders the item avatar.
+   * @default ConversationListItemAvatar
    */
   itemAvatar: React.JSXElementConstructor<ConversationListItemAvatarProps>;
   /**
    * The component that renders the item content.
+   * @default ConversationListItemContent
    */
   itemContent: React.JSXElementConstructor<ConversationListItemContentProps>;
   /**
    * The component that renders the title.
+   * @default ConversationListTitle
    */
   title: React.JSXElementConstructor<ConversationListTitleProps>;
   /**
    * The component that renders the preview.
+   * @default ConversationListPreview
    */
   preview: React.JSXElementConstructor<ConversationListPreviewProps>;
   /**
    * The component that renders the timestamp.
+   * @default ConversationListTimestamp
    */
   timestamp: React.JSXElementConstructor<ConversationListTimestampProps>;
   /**
    * The component that renders the unread badge.
+   * @default ConversationListUnreadBadge
    */
   unreadBadge: React.JSXElementConstructor<ConversationListUnreadBadgeProps>;
   /**
    * The component that renders the item actions.
+   * @default ConversationListItemActions
    */
   itemActions: React.JSXElementConstructor<ConversationListItemActionsProps>;
 }

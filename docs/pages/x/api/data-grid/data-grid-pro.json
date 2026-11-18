@@ -88,7 +88,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ virtualizerLayoutMode?: 'controlled'<br>&#124;&nbsp;'uncontrolled', warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ imeFastEdit?: bool, virtualizerLayoutMode?: 'controlled'<br>&#124;&nbsp;'uncontrolled', warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
@@ -748,6 +748,7 @@
     {
       "name": "toolbar",
       "description": "Toolbar component rendered in the grid header.",
+      "default": "GridToolbar",
       "class": "MuiDataGridPro-toolbar"
     },
     {
@@ -2259,6 +2260,12 @@
       "isGlobal": false
     },
     {
+      "key": "pivotPanelField--dragging",
+      "className": "MuiDataGridPro-pivotPanelField--dragging",
+      "description": "Styles applied to the drag preview of a pivot panel field when it's dragged with touch or pen.",
+      "isGlobal": false
+    },
+    {
       "key": "pivotPanelField--sorted",
       "className": "MuiDataGridPro-pivotPanelField--sorted",
       "description": "Styles applied to the pivot panel field when sorted.",
@@ -2460,6 +2467,12 @@
       "key": "root--disableUserSelection",
       "className": "MuiDataGridPro-root--disableUserSelection",
       "description": "Styles applied to the root element when user selection is disabled.",
+      "isGlobal": false
+    },
+    {
+      "key": "root--formulaReferencePicking",
+      "className": "MuiDataGridPro-root--formulaReferencePicking",
+      "description": "Styles applied to the root element while a click on a cell writes a reference into the formula being edited (Premium formulas).",
       "isGlobal": false
     },
     {

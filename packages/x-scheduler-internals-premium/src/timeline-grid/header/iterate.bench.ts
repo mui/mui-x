@@ -1,5 +1,5 @@
 import { describe, test } from 'vitest';
-import { PlainDate } from '@mui/x-scheduler-internals/internals';
+import { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import { iterate } from './iterate';
 import type { IteratedRange } from './iterate';
 
@@ -8,9 +8,12 @@ export const benchmarkResult = { value: undefined as unknown };
 // The walk reads no timezone: the ranges are dates.
 describe('iterate', () => {
   // The header rows of the presets, with the ranges they display.
-  const visiblePlainDate = PlainDate.from('2026-03-04');
+  const visiblePlainDate = BaseTemporal.PlainDate.from('2026-03-04');
   const monthStartPlainDate = visiblePlainDate.with({ day: 1 });
-  const toRange = (startPlainDate: PlainDate, endPlainDate: PlainDate): IteratedRange => ({
+  const toRange = (
+    startPlainDate: BaseTemporal.PlainDate,
+    endPlainDate: BaseTemporal.PlainDate,
+  ): IteratedRange => ({
     startPlainDate,
     endPlainDate,
     dayStartMinute: 0,

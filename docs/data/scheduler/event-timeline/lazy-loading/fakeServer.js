@@ -8,10 +8,14 @@ export { resources, defaultVisibleDate };
 
 const ALL_EVENTS = [...initialEvents];
 
+/** Parses an event date as local time, including the date-only strings of all-day events. */
+const toDate = (value) =>
+  new Date(value.length === 10 ? `${value}T00:00:00` : value);
+
 function getEventsInRange(rangeStart, rangeEnd) {
   return ALL_EVENTS.filter((event) => {
-    const eventStart = new Date(event.start);
-    const eventEnd = new Date(event.end);
+    const eventStart = toDate(event.start);
+    const eventEnd = toDate(event.end);
     return eventEnd > rangeStart && eventStart < rangeEnd;
   });
 }

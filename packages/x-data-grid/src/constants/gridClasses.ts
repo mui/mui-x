@@ -729,6 +729,10 @@ export interface GridClasses {
    */
   'root--disableUserSelection': string;
   /**
+   * Styles applied to the root element while a click on a cell writes a reference into the formula being edited (Premium formulas).
+   */
+  'root--formulaReferencePicking': string;
+  /**
    * Used to fix header outline border radius.
    * @ignore - do not document.
    */
@@ -1015,6 +1019,10 @@ export interface GridClasses {
    */
   'pivotPanelField--sorted': string;
   /**
+   * Styles applied to the drag preview of a pivot panel field when it's dragged with touch or pen.
+   */
+  'pivotPanelField--dragging': string;
+  /**
    * Styles applied to the pivot panel header.
    */
   pivotPanelHeader: string;
@@ -1170,6 +1178,7 @@ export const gridClassesOverrides = {
     'root--densityComfortable',
     'root--densityCompact',
     'root--disableUserSelection',
+    'root--formulaReferencePicking',
     'root--noToolbar',
     'withVerticalBorder',
   ],
@@ -1409,9 +1418,11 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'virtualScrollerContent',
   'virtualScrollerContent--overflowed',
   'virtualScrollerRenderZone',
+  'pivotPanelBody',
   'pivotPanelAvailableFields',
   'pivotPanelField',
   'pivotPanelField--sorted',
+  'pivotPanelField--dragging',
   'pivotPanelFieldActionContainer',
   'pivotPanelFieldCheckbox',
   'pivotPanelFieldDragIcon',

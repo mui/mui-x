@@ -149,7 +149,7 @@
     "axisTickLabel": "Custom component for tick label.",
     "baseButton": "The component used for buttons.",
     "baseIconButton": "The component used for icon buttons.",
-    "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps &amp; BaseToggleButtonPropsOverrides&gt;</code>.",
+    "baseToggleButton": "The component used for toggle buttons. Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps &amp; BaseToggleButtonPropsOverrides&gt;</code>.",
     "baseToggleButtonGroup": "The component used for toggle button groups.",
     "legend": "Custom rendering of the legend.",
     "line": "The component that renders the line.",

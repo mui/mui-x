@@ -21,10 +21,6 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/400-italic.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-// `@date-fns/tz` builds the timezone-aware methods of `TZDate` from the methods of
-// `Date.prototype` when it loads. Load it, with the Scheduler adapter, before the fake clock
-// replaces `Date`, otherwise `TZDate` reads every date in the timezone of the machine.
-import '@mui/x-scheduler-internals/use-adapter';
 import { fakeTimers, flushTimers } from './fakeClock';
 import TestViewer from './TestViewer';
 import OverviewWrapper from './overviews/OverviewWrapper';

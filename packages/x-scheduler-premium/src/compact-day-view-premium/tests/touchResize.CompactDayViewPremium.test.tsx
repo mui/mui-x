@@ -1,22 +1,23 @@
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import * as React from 'react';
 import { screen, act, fireEvent } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
 import { clearLicenseStatusCache } from '@mui/x-license/internals';
 import { TEST_LICENSE_KEY_PREMIUM } from 'test/utils/licenseKeys';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
-import type { TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import {
-  adapter,
-  createSchedulerRenderer,
-  EventBuilder,
-  mockElementBounds,
   clientYForTime,
-  getResizeHandle,
-  simulatePointerResize,
+  createDate,
+  createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
+  EventBuilder,
+  getResizeHandle,
+  mockElementBounds,
+  simulatePointerResize,
 } from 'test/utils/scheduler';
 import { StandaloneCompactDayViewPremium } from '@mui/x-scheduler-premium/compact-day-view-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 /**
@@ -50,11 +51,12 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
   }: {
     initialEvent: SchedulerEvent;
     onChange: (events: SchedulerEvent[]) => void;
-    displayTimezone?: TemporalTimezone;
+    displayTimezone?: string;
   }) {
     const [events, setEvents] = React.useState<SchedulerEvent[]>([initialEvent]);
     return (
       <StandaloneCompactDayViewPremium
+        features={{ recurringEvents: recurringEventsFeature }}
         events={events}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
         displayTimezone={displayTimezone}
@@ -69,7 +71,7 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
   function renderResizableRecurringEvent({
     start = '2025-07-03T10:00:00Z',
     displayTimezone,
-  }: { start?: string; displayTimezone?: TemporalTimezone } = {}) {
+  }: { start?: string; displayTimezone?: string } = {}) {
     const onEventsChange = vi.fn();
     const event = EventBuilder.new()
       .id('event-1')
@@ -159,8 +161,8 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
     const series = updatedEvents.find((item) => item.id === 'event-1')!;
     expect(series.exDates).to.have.length(1);
     expect(
-      adapter.formatByString(adapter.date(String(series.exDates![0]), 'UTC'), 'yyyy-MM-dd'),
-    ).to.equal('2025-07-03');
+      toPlainDate(createDate(String(series.exDates![0]), 'UTC').getTime(), 'UTC'),
+    ).toEqualPlainDate('2025-07-03');
     const detached = updatedEvents.find((item) => item.id !== 'event-1')!;
     expect(detached.rrule).to.equal(undefined);
     expect(new Date(detached.start).toISOString()).to.equal('2025-07-02T20:00:00.000Z');

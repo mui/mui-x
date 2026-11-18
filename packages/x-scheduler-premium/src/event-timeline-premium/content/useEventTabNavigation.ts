@@ -59,8 +59,8 @@ export function useEventTabNavigation(params: {
 
   const computeFractionRange = useStableCallback((occurrence: SchedulerEventOccurrence) => {
     const { position, duration } = computeElementPositionInCollection({
-      start: occurrence.displayTimezone.start,
-      end: occurrence.displayTimezone.end,
+      start: occurrence.start,
+      end: occurrence.end,
       collection: axis,
       durationMs,
     });

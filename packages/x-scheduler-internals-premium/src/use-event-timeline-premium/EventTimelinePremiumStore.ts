@@ -2,7 +2,6 @@ import type * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { EMPTY_ARRAY, EMPTY_OBJECT } from '@base-ui/utils/empty';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { SchedulerParametersToStateMapper } from '@mui/x-scheduler-internals/internals';
 import {
   getDisplayedHourRange,
@@ -140,7 +139,7 @@ const deriveAreDependenciesEnabled = (
         [
           'MUI X Scheduler: A `dependencies` value was provided, but the dependencies feature is missing.',
           'Without it, the dependencies are ignored: no arrows render and events do not move with their predecessors.',
-          'Pass the dependencies feature through the `storeFeatures` parameter.',
+          'Pass `dependenciesFeature` from `@mui/x-scheduler-premium/dependencies` to the `features` prop.',
         ].join('\n'),
       );
     }
@@ -231,13 +230,9 @@ export class EventTimelinePremiumStore<
     EventTimelinePremiumStoreParameters<TEvent, TResource>
   > | null;
 
-  public constructor(
-    parameters: EventTimelinePremiumStoreParameters<TEvent, TResource>,
-    adapter: Adapter,
-  ) {
+  public constructor(parameters: EventTimelinePremiumStoreParameters<TEvent, TResource>) {
     super(
       parameters,
-      adapter,
       'EventTimelinePremiumStore',
       mapper,
       parameters.storeFeatures?.recurringEvents ?? null,
@@ -354,13 +349,12 @@ export class EventTimelinePremiumStore<
   }
 
   private setSiblingVisibleDate = (delta: 1 | -1, event: React.UIEvent) => {
-    const { adapter, preset } = this.state;
+    const { preset, displayTimezone, visibleDate } = this.state;
     const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
     // Moves the days of the display timezone, the ones the preset config reads. Days added in
     // another timezone can skip a day of the display timezone across a DST transition.
-    const visibleDate = schedulerOtherSelectors.visibleDate(this.state);
     this.setVisibleDate({
-      visibleDate: navigate(adapter, visibleDate, delta * unitCount),
+      visibleDate: navigate(visibleDate, delta * unitCount, displayTimezone),
       event,
     });
   };
@@ -400,7 +394,8 @@ export class EventTimelinePremiumStore<
    * Adds a dependency between two events.
    * Rejects every dependency while the scheduler is read-only, and dependencies
    * referencing an unknown or recurring event, duplicates, cycles, and dependencies
-   * needing a read-only event to move — see the returned `SchedulerAddDependencyResult`.
+   * needing a read-only event to move or changing a date `eventModelStructure` can't write
+   * back — see the returned `SchedulerAddDependencyResult`.
    * A dependency the event dates break moves its successor.
    * The guards read the controlled `dependencies` value, so two adds in the same
    * tick are not validated against each other: wait for the updated `dependencies`

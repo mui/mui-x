@@ -26,6 +26,7 @@ import {
   formatTime,
   formatWeekdayMonthAndDayOfMonth,
   formatWeekdayShort,
+  getDayNumber,
   getDisplayedHourRange,
   getEndOfDayMs,
   getInitialScrollTime,
@@ -397,15 +398,18 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
   const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
+  const weekend = useStore(store, schedulerPreferenceSelectors.weekend);
 
   // Feature hooks
   const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
   const occurrences = useEventOccurrencesWithDayGridPosition({
     days,
     occurrencesMap,
+    displayTimezone,
     shouldAddPosition: React.useCallback(
-      (occurrence: SchedulerEventOccurrence) => isOccurrenceInDayGrid(occurrence, timeGridEvents),
-      [timeGridEvents],
+      (occurrence: SchedulerEventOccurrence) =>
+        isOccurrenceInDayGrid(occurrence, timeGridEvents, displayTimezone),
+      [timeGridEvents, displayTimezone],
     ),
   });
 
@@ -417,8 +421,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       // `days[0].timestamp` is the first instant of the first day.
       start: days[0].timestamp,
       end: getEndOfDayMs(lastDay.timestamp, displayTimezone),
-      firstDayNumber: days[0].plainDate.dayNumber,
-      lastDayNumber: lastDay.plainDate.dayNumber,
+      firstDayNumber: getDayNumber(days[0].plainDate),
+      lastDayNumber: getDayNumber(lastDay.plainDate),
     };
   }, [days, displayTimezone]);
 
@@ -465,7 +469,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     applyInitialScroll();
   });
 
-  const lastIsWeekend = isWeekendPlainDate(days[days.length - 1].plainDate);
+  const lastIsWeekend = isWeekendPlainDate(days[days.length - 1].plainDate, weekend);
 
   const renderHeaderContent = (day: SchedulerProcessedDay) => (
     <DayTimeGridHeaderContent className={classes.dayTimeGridHeaderContent}>
@@ -509,7 +513,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
               <DayTimeGridHeaderButton
                 className={classes.dayTimeGridHeaderButton}
                 type="button"
-                onClick={(event) => store.switchToDay(day.value, event)}
+                onClick={(event) => store.switchToDay(new Date(day.timestamp), event)}
                 tabIndex={-1}
               >
                 {renderHeaderContent(day)}
@@ -545,6 +549,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           ref={allDayRowRef}
           start={start}
           end={end}
+          days={days}
           className={classes.dayTimeGridAllDayEventsRow}
         >
           {occurrences.days.map((day, index) => (

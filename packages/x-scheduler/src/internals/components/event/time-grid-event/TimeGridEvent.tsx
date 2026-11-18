@@ -12,7 +12,6 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
 import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
 import type { TimeGridEventProps } from './TimeGridEvent.types';
 import { EventDragPreview } from '../../../components/event-drag-preview';
@@ -435,15 +434,14 @@ const TimeGridEventContent = React.memo(function TimeGridEventContent(props: {
             {occurrence.title}
           </TimeGridEventTitle>
           <TimeGridEventTime className={classes.timeGridEventTime} data-variant="block">
-            {formatTime(occurrence.displayTimezone.start)} -{' '}
-            {formatTime(occurrence.displayTimezone.end)}
+            {formatTime(occurrence.start)} - {formatTime(occurrence.end)}
           </TimeGridEventTime>
         </React.Fragment>
       ) : (
         <TimeGridEventTitle className={classes.timeGridEventTitle}>
           {occurrence.title}{' '}
           <TimeGridEventTime className={classes.timeGridEventTime} data-variant="inline">
-            {formatTime(occurrence.displayTimezone.start)}
+            {formatTime(occurrence.start)}
           </TimeGridEventTime>
         </TimeGridEventTitle>
       )}
@@ -487,7 +485,6 @@ const TimeGridEventPlaceholder = React.forwardRef(function TimeGridEventPlacehol
       isDraggable={false}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
-      dataTimezone={getOccurrenceDataTimezone(occurrence)}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       data-armed={placeholderHasResizeHandles || undefined}
       // Non-interactive keeps the preview out of the tab order without `aria-hidden`, which would
@@ -552,7 +549,6 @@ const TimeGridEventRegular = React.forwardRef(function TimeGridEventRegular(
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
-      dataTimezone={getOccurrenceDataTimezone(occurrence)}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-label={accessibleName}
       data-armed={isArmed || undefined}

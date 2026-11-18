@@ -24,6 +24,7 @@
     {
       "name": "title",
       "description": "The component that renders the title.",
+      "default": "'div'",
       "class": "MuiChatConversationTitle-title"
     }
   ],

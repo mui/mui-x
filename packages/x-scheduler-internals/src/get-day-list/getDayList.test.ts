@@ -1,22 +1,23 @@
 import {
-  adapter,
+  addDays,
   DEFAULT_TESTING_VISIBLE_DATE,
   processDay,
   setSystemTimezone,
+  startOfDay,
+  startOfWeek,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 import { getDayListFromPlainDates } from './getDayList';
-import { isWeekendPlainDate } from '../internals/utils/plain-date-utils/plainDate';
-import { PlainDate } from '../internals/utils/base-temporal/PlainDate';
+import { toMsInDay } from '../internals/utils/plain-date-utils/timeZone';
+import { BaseTemporal } from '../internals/utils/base-temporal';
 
 describe('getDayListFromPlainDates', () => {
   // July 3rd, 2025, a Thursday.
-  const plainDate = PlainDate.from('2025-07-03');
+  const plainDate = BaseTemporal.PlainDate.from('2025-07-03');
 
   it('should return no day when the last date is before the first one', () => {
     const days = getDayListFromPlainDates({
-      adapter,
       firstPlainDate: plainDate,
       lastPlainDate: plainDate.add({ days: -5 }),
       timezone: 'default',
@@ -27,57 +28,84 @@ describe('getDayListFromPlainDates', () => {
 
   it('should return one day when the first and last dates are equal', () => {
     const days = getDayListFromPlainDates({
-      adapter,
       firstPlainDate: plainDate,
       lastPlainDate: plainDate,
       timezone: 'default',
     });
 
-    const expectedDays = [processDay(adapter.startOfDay(DEFAULT_TESTING_VISIBLE_DATE), adapter)];
+    const expectedDays = [processDay(startOfDay(DEFAULT_TESTING_VISIBLE_DATE))];
 
     expect(days).to.deep.equal(expectedDays);
   });
 
   it('should return consecutive days', () => {
     const days = getDayListFromPlainDates({
-      adapter,
       firstPlainDate: plainDate,
       lastPlainDate: plainDate.add({ days: 3 }),
       timezone: 'default',
     });
 
-    const start = adapter.startOfDay(DEFAULT_TESTING_VISIBLE_DATE);
-    const expectedDays = Array.from({ length: 4 }, (_, i) =>
-      processDay(adapter.addDays(start, i), adapter),
-    );
+    const start = startOfDay(DEFAULT_TESTING_VISIBLE_DATE);
+    const expectedDays = Array.from({ length: 4 }, (_, i) => processDay(addDays(start, i)));
 
     expect(days).to.deep.equal(expectedDays);
   });
 
-  it('should exclude weekends when excludeWeekends=true', () => {
+  describe('excludedWeekdays', () => {
     // From Sunday, June 29th to Saturday, July 5th, 2025.
-    const days = getDayListFromPlainDates({
-      adapter,
+    const week = {
       firstPlainDate: plainDate.add({ days: -4 }),
       lastPlainDate: plainDate.add({ days: 2 }),
       timezone: 'default',
-      excludeWeekends: true,
+    };
+
+    it('should leave out Saturday and Sunday', () => {
+      const days = getDayListFromPlainDates({ ...week, excludedWeekdays: [6, 7] });
+
+      // From Monday to Friday.
+      const monday = addDays(startOfWeek(DEFAULT_TESTING_VISIBLE_DATE), 1);
+      const expectedDays = Array.from({ length: 5 }, (_, i) => processDay(addDays(monday, i)));
+
+      expect(days).to.deep.equal(expectedDays);
     });
 
-    const start = adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
-    const expectedDays = Array.from({ length: 7 }, (_, i) =>
-      processDay(adapter.addDays(start, i), adapter),
-    ).filter((day) => !isWeekendPlainDate(day.plainDate));
+    it('should leave out a weekend on Friday and Saturday', () => {
+      const days = getDayListFromPlainDates({ ...week, excludedWeekdays: [5, 6] });
 
-    expect(days).to.deep.equal(expectedDays);
+      expect(days.map((day) => day.key)).to.deep.equal([
+        '2025-06-29',
+        '2025-06-30',
+        '2025-07-01',
+        '2025-07-02',
+        '2025-07-03',
+      ]);
+    });
+
+    it('should leave out a weekend of one day', () => {
+      const days = getDayListFromPlainDates({ ...week, excludedWeekdays: [5] });
+
+      expect(days.map((day) => day.key)).to.deep.equal([
+        '2025-06-29',
+        '2025-06-30',
+        '2025-07-01',
+        '2025-07-02',
+        '2025-07-03',
+        '2025-07-05',
+      ]);
+    });
+
+    it('should keep every day when the list is empty', () => {
+      const days = getDayListFromPlainDates({ ...week, excludedWeekdays: [] });
+
+      expect(days).to.have.length(7);
+    });
   });
 
   it('should skip the days the timezone skips', () => {
     // Pacific/Apia skipped December 30th, 2011.
     const days = getDayListFromPlainDates({
-      adapter,
-      firstPlainDate: PlainDate.from('2011-12-29'),
-      lastPlainDate: PlainDate.from('2011-12-31'),
+      firstPlainDate: BaseTemporal.PlainDate.from('2011-12-29'),
+      lastPlainDate: BaseTemporal.PlainDate.from('2011-12-31'),
       timezone: 'Pacific/Apia',
     });
     expect(days.map((day) => day.key)).to.deep.equal(['2011-12-29', '2011-12-31']);
@@ -85,9 +113,8 @@ describe('getDayListFromPlainDates', () => {
 
   it('should start the days after a DST transition at midnight at midnight', () => {
     // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
-    const firstPlainDate = PlainDate.from('2026-03-07');
+    const firstPlainDate = BaseTemporal.PlainDate.from('2026-03-07');
     const days = getDayListFromPlainDates({
-      adapter,
       firstPlainDate,
       lastPlainDate: firstPlainDate.add({ days: 3 }),
       timezone: 'America/Havana',
@@ -99,7 +126,9 @@ describe('getDayListFromPlainDates', () => {
       '2026-03-10',
     ]);
     // March 8th has no midnight, so it starts at 01:00.
-    expect(days.map((day) => day.minutesInDay)).to.deep.equal([0, 60, 0, 0]);
+    expect(days.map((day) => toMsInDay(day.timestamp, 'America/Havana'))).to.deep.equal([
+      0, 3_600_000, 0, 0,
+    ]);
   });
 
   // Browsers cannot change their timezone through process.env.TZ.
@@ -107,15 +136,14 @@ describe('getDayListFromPlainDates', () => {
     // America/Santiago falls back from 00:00 to 23:00 on April 5th, 2026, the day
     // Australia/Lord_Howe falls back from 02:00 to 01:30.
     setSystemTimezone('Australia/Lord_Howe');
-    const firstPlainDate = PlainDate.from('2026-03-30');
+    const firstPlainDate = BaseTemporal.PlainDate.from('2026-03-30');
     const days = getDayListFromPlainDates({
-      adapter,
       firstPlainDate,
       lastPlainDate: firstPlainDate.add({ days: 34 }),
       timezone: 'America/Santiago',
     });
     expect(days).to.have.length(35);
     expect(new Set(days.map((day) => day.key)).size).to.equal(35);
-    expect(days.every((day) => day.minutesInDay === 0)).to.equal(true);
+    expect(days.every((day) => toMsInDay(day.timestamp, 'America/Santiago') === 0)).to.equal(true);
   });
 });

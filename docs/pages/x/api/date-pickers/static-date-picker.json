@@ -198,6 +198,7 @@
     {
       "name": "layout",
       "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+      "default": "PickersLayout",
       "class": null
     },
     {

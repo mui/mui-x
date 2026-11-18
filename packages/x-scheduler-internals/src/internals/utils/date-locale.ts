@@ -1,7 +1,8 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import type { WeekStartsOn } from '../../models';
-import { MS_PER_DAY } from './base-temporal/iso';
-import type { PlainDate } from './base-temporal/PlainDate';
+import type { BaseTemporal } from './base-temporal';
+import { MS_PER_DAY } from './plain-date-utils/dayNumber';
+import { getDayNumber } from './plain-date-utils/plainDate';
 
 /**
  * The locale of the dates when the `dateLocale` prop isn't set.
@@ -9,13 +10,17 @@ import type { PlainDate } from './base-temporal/PlainDate';
 export const DEFAULT_DATE_LOCALE = 'en-US';
 
 /**
- * The weeks of the views: the day they start on, and the first week of a year.
+ * The weeks of the views: the day they start on, their weekend, and the first week of a year.
  */
 export interface WeekInfo {
   /**
    * The ISO weekday the weeks start on (1 = Monday … 7 = Sunday).
    */
   firstDay: WeekStartsOn;
+  /**
+   * The ISO weekdays of the weekend, in ascending order.
+   */
+  weekend: readonly number[];
   /**
    * The minimal number of days of the first week of a year that are in that year.
    */
@@ -63,9 +68,14 @@ export function checkDateLocale(dateLocale: string) {
 }
 
 // Not in the TypeScript library of every supported version.
+interface IntlWeekInfo {
+  firstDay: number;
+  weekend: number[];
+}
+
 interface IntlLocaleWithWeekInfo {
-  getWeekInfo?: () => { firstDay: number };
-  weekInfo?: { firstDay: number };
+  getWeekInfo?: () => IntlWeekInfo;
+  weekInfo?: IntlWeekInfo;
 }
 
 // The regions whose first week of the year has at least 4 days in that year: `minDays="4"` in
@@ -101,6 +111,32 @@ function getRegionFirstDay(region: string | undefined): WeekStartsOn {
   return region === 'MV' ? 5 : 1;
 }
 
+// The regions whose weekend isn't Saturday and Sunday: `weekendStart` and `weekendEnd` in the same
+// file. Only used by the browsers without `getWeekInfo()`.
+const FRIDAY_SATURDAY_WEEKEND_REGIONS = new Set(
+  'BH DZ EG IL IQ JO KW LY OM QA SA SD SY YE'.split(' '),
+);
+const SATURDAY_SUNDAY_WEEKEND = [6, 7];
+
+function getRegionWeekend(region: string | undefined): readonly number[] {
+  if (region === undefined) {
+    return SATURDAY_SUNDAY_WEEKEND;
+  }
+  if (FRIDAY_SATURDAY_WEEKEND_REGIONS.has(region)) {
+    return [5, 6];
+  }
+  // India and Uganda rest on Sunday.
+  if (region === 'IN' || region === 'UG') {
+    return [7];
+  }
+  // Afghanistan rests on Thursday and Friday.
+  if (region === 'AF') {
+    return [4, 5];
+  }
+  // Iran rests on Friday.
+  return region === 'IR' ? [5] : SATURDAY_SUNDAY_WEEKEND;
+}
+
 // The values of the `fw` extension, in the order of the ISO weekdays.
 const FIRST_DAY_EXTENSION_VALUES = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
@@ -117,8 +153,8 @@ function getUnicodeExtension(tag: string, key: string): string | undefined {
 const weekInfoLookup = new Map<string, WeekInfo>();
 
 /**
- * The first day of the week of `locale`, from `Intl.Locale.prototype.getWeekInfo()`, and the
- * first week of the year of its region.
+ * The first day of the week and the weekend of `locale`, from
+ * `Intl.Locale.prototype.getWeekInfo()`, and the first week of the year of its region.
  */
 export function getLocaleWeekInfo(locale: string): WeekInfo {
   let weekInfo = weekInfoLookup.get(locale);
@@ -140,6 +176,8 @@ export function getLocaleWeekInfo(locale: string): WeekInfo {
           (regionExtension === undefined && intlLocale.calendar === 'iso8601'
             ? 1
             : getRegionFirstDay(region)))) as WeekStartsOn,
+      // The weekend follows the region, whatever the `fw` extension and the calendar.
+      weekend: intlWeekInfo?.weekend ?? getRegionWeekend(region),
       // The ISO 8601 calendar has the ISO 8601 first week, whatever the region.
       minimalDays:
         intlLocale.calendar === 'iso8601' ||
@@ -199,8 +237,8 @@ function toUtcDate(epochMs: number): Date {
 }
 
 // The day number of a date is the number of days from January 1st, 1970 in UTC.
-function toUtcDateOfPlainDate(plainDate: PlainDate): Date {
-  return toUtcDate(plainDate.dayNumber * MS_PER_DAY);
+function toUtcDateOfPlainDate(plainDate: BaseTemporal.PlainDate): Date {
+  return toUtcDate(getDayNumber(plainDate) * MS_PER_DAY);
 }
 
 /**
@@ -208,7 +246,7 @@ function toUtcDateOfPlainDate(plainDate: PlainDate): Date {
  */
 function createDateFormat(options: Intl.DateTimeFormatOptions) {
   const getFormatter = createGetFormatter(options);
-  return (locale: string, plainDate: PlainDate): string =>
+  return (locale: string, plainDate: BaseTemporal.PlainDate): string =>
     getFormatter(locale).format(toUtcDateOfPlainDate(plainDate));
 }
 
@@ -237,7 +275,7 @@ const dayOfMonthLabelLookup = new Map<string, string[]>();
  * formats one.
  * @example "13"
  */
-export function formatDayOfMonth(locale: string, plainDate: PlainDate): string {
+export function formatDayOfMonth(locale: string, plainDate: BaseTemporal.PlainDate): string {
   let labels = dayOfMonthLabelLookup.get(locale);
   if (!labels) {
     labels = [];
@@ -308,8 +346,8 @@ const getWeekdayShortMonthShortAndDayOfMonthFormatter = /* #__PURE__ */ createGe
  */
 export function formatWeekdayShortMonthShortAndDayOfMonthRange(
   locale: string,
-  startPlainDate: PlainDate,
-  endPlainDate: PlainDate,
+  startPlainDate: BaseTemporal.PlainDate,
+  endPlainDate: BaseTemporal.PlainDate,
 ): string {
   return getWeekdayShortMonthShortAndDayOfMonthFormatter(locale).formatRange(
     toUtcDateOfPlainDate(startPlainDate),

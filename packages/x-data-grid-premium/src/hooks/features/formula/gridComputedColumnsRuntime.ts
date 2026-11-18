@@ -41,7 +41,7 @@ import type {
 
 const EMPTY_RESULT: GridFormulaResult = { type: 'value', value: null };
 
-const CYCLE_RESULT: GridFormulaResult = {
+export const CYCLE_RESULT: GridFormulaResult = {
   type: 'error',
   code: '#CYCLE!',
   message: 'The formula is part of a circular reference.',
@@ -433,6 +433,10 @@ export function ensureComputedColumnRecords(
       }
     } else {
       record = buildComputedColumnRecord(apiRef, cache, definition, previous, computedColDef);
+      // `type` is an own property of the computed columns: only the definition changes it.
+      if (previous !== undefined && previous.colDef.type !== record.colDef.type) {
+        runtime.typeChangedFields.add(definition.field);
+      }
       if (record.baseColDef.valueGetter !== previous?.baseColDef.valueGetter) {
         evaluationChanged = true;
       }
