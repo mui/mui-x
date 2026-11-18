@@ -2459,8 +2459,8 @@ premiumStoreClasses.forEach((storeClass) => {
         const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
         expect(pasted.start).to.equal('2025-07-04');
         expect(pasted.end).to.equal('2025-07-05');
-        // The stored until is read as its day in the event timezone, July 25th.
-        expect(pasted.rrule).to.deep.equal(event.rrule);
+        // The until is written as its day in the event timezone, July 25th.
+        expect(pasted.rrule).to.deep.equal({ freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-25' });
         expect(pasted.exDates).to.deep.equal(['2025-07-11']);
       });
     });
@@ -2572,8 +2572,8 @@ premiumStoreClasses.forEach((storeClass) => {
         const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
         expect(updated.start).to.equal('2025-07-04');
         expect(updated.end).to.equal('2025-07-05');
-        // The rule is untouched: its until is read as its day in the event timezone, July 18th.
-        expect(updated.rrule).to.deep.equal(event.rrule);
+        // The rule keeps its days: its until is written as its day in the event timezone, July 18th.
+        expect(updated.rrule).to.deep.equal({ freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-18' });
         expect(updated.exDates).to.deep.equal(['2025-07-11']);
         expect(() =>
           processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
@@ -2670,6 +2670,84 @@ premiumStoreClasses.forEach((storeClass) => {
             const processed = processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin);
             expect(processed.rrule!.byDay).to.deep.equal(['SA']);
             expect(processed.rrule!.until!.toString()).to.match(/^2025-07-26/);
+          });
+        });
+
+        it(`should write the until of a timed series made all-day as its date with scope '${scope}'`, () => {
+          const onEventsChange = vi.fn();
+          const event = EventBuilder.new()
+            .id('standup')
+            .withDataTimezone('America/New_York')
+            .span('2025-07-01T09:00:00', '2025-07-01T09:30:00')
+            .rrule({ freq: 'DAILY', until: '2025-07-08T09:00:00' })
+            .build();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'America/New_York',
+            onEventsChange,
+          });
+
+          store.updateRecurringEvent({
+            occurrence: createStoreOccurrence(
+              store,
+              'standup',
+              createDate('2025-07-03T09:00:00', 'America/New_York'),
+            ),
+            changes: { id: 'standup', allDay: true },
+          });
+          store.selectRecurringEventScope(scope);
+
+          const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+          const updated = updatedEvents.find((item) =>
+            scope === 'all' ? item.id === 'standup' : item.id !== 'standup',
+          )!;
+          expect((updated.rrule as SchedulerEventRecurrenceRule).until).to.equal('2025-07-08');
+        });
+
+        (
+          [
+            { until: '2025-07-25T23:00:00', expected: '2025-07-26' },
+            // Before 23:00, the last Friday is July 18th, July 19th in Tokyo.
+            { until: '2025-07-25T22:00:00', expected: '2025-07-24' },
+          ] as const
+        ).forEach(({ until, expected }) => {
+          it(`should write the moved until ${until} of a series made all-day on a given day as a date with scope '${scope}'`, () => {
+            const onEventsChange = vi.fn();
+            const event = EventBuilder.new()
+              .id('standup')
+              .withDataTimezone('America/New_York')
+              .singleDay('2025-07-04T23:00:00')
+              .rrule({ freq: 'WEEKLY', byDay: ['FR'], until })
+              .build();
+            const store = new storeClass.Value({
+              resources: TEST_RESOURCES,
+              events: [event],
+              displayTimezone: 'Asia/Tokyo',
+              onEventsChange,
+            });
+
+            // The occurrence shown on Saturday, July 12th, dropped on the all-day row of that day.
+            store.updateRecurringEvent({
+              occurrence: createStoreOccurrence(
+                store,
+                'standup',
+                createDate('2025-07-11T23:00:00', 'America/New_York'),
+              ),
+              changes: {
+                id: 'standup',
+                allDay: true,
+                start: createDate('2025-07-12T00:00:00', 'Asia/Tokyo'),
+                end: createDate('2025-07-13T00:00:00', 'Asia/Tokyo'),
+              },
+            });
+            store.selectRecurringEventScope(scope);
+
+            const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+            const updated = updatedEvents.find((item) =>
+              scope === 'all' ? item.id === 'standup' : item.id !== 'standup',
+            )!;
+            expect((updated.rrule as SchedulerEventRecurrenceRule).until).to.equal(expected);
           });
         });
       });

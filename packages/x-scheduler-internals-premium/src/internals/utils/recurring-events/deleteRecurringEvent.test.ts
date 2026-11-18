@@ -403,6 +403,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
             until!,
             getUntilReferenceString(event.modelInBuiltInFormat),
             timezone,
+            allDay,
           );
           return new RecurringSeries({
             rule: parseRRule({ ...rule, until: savedUntil }, timezone, allDay),

@@ -1686,7 +1686,8 @@ describe('recurring-events/updateRecurringEvent', () => {
 
         // The series keeps its days in New York, from July 4th to July 8th.
         expect(result.updated![0].start!.getTime()).to.equal(tokyo('2025-07-04').getTime());
-        expect(result.updated![0]).not.to.have.property('rrule');
+        const rrule = result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule;
+        expect(rrule.until!.toString()).to.equal('2025-07-08');
       });
 
       it("should keep the first day and the rule of a series made all-day across a DST change on a scope 'all' change", () => {

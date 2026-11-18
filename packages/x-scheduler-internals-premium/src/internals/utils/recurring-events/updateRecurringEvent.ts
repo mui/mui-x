@@ -15,6 +15,7 @@ import {
   BaseTemporal,
   extractStandaloneEvent,
   getAllDayDayCount,
+  getAllDayUntil,
   getDayTimezone,
   getLastInstant,
   getOccurrenceEnd,
@@ -27,6 +28,7 @@ import {
   toEpochMs,
   toLocalDayNumber,
   toPlainDate,
+  toPlainDateTime,
   untilToEventString,
   getUntilReferenceString,
 } from '@mui/x-scheduler-internals/internals';
@@ -127,6 +129,7 @@ export function applyRecurringUpdateFollowing(
           newRRule.until,
           getUntilReferenceString(originalModel),
           dataTimezone,
+          newChanges.allDay ?? originalModel.allDay ?? false,
         ),
       };
     } else {
@@ -297,7 +300,9 @@ export function applyRecurringUpdateAll(
         nextDayTimezone,
       );
     }
-    rrule = shiftUntilToDisplayedDay(rrule, displayedDaysShift);
+    if (!originalAllDay && allDay) {
+      rrule = shiftUntilToDisplayedDay(rrule, originalEvent, displayedDaysShift);
+    }
     if (rrule !== originalEvent.rrule) {
       eventUpdatedProperties.rrule = rrule;
     }
@@ -390,19 +395,25 @@ function shiftToDisplayedDay(
 }
 
 /**
- * The rule of a timed series made all-day on a given day, with its last day on its displayed day.
+ * The rule of a timed series made all-day: its `until` becomes the last date it covers, on its
+ * displayed day when the series is made all-day on a given day.
  */
 function shiftUntilToDisplayedDay(
   rrule: SchedulerProcessedEventRecurrenceRule,
+  originalEvent: SchedulerProcessedEvent,
   shift: DisplayedDaysShift | null,
 ): SchedulerProcessedEventRecurrenceRule {
-  if (shift == null || rrule.until == null) {
+  if (rrule.until == null) {
     return rrule;
   }
-  const untilDay =
-    rrule.until instanceof BaseTemporal.PlainDateTime ? rrule.until.toPlainDate() : rrule.until;
+  const untilDay = getAllDayUntil(
+    rrule.until,
+    toPlainDateTime(originalEvent.start.timestamp, originalEvent.timezone),
+  );
   const shiftedUntilDay = shiftToDisplayedDay(untilDay, shift);
-  return shiftedUntilDay.equals(untilDay) ? rrule : { ...rrule, until: shiftedUntilDay };
+  return !(rrule.until instanceof BaseTemporal.PlainDateTime) && shiftedUntilDay.equals(rrule.until)
+    ? rrule
+    : { ...rrule, until: shiftedUntilDay };
 }
 
 /**
@@ -547,10 +558,13 @@ export function decideSplitRRule(
     );
   }
 
-  realignedRule = shiftUntilToDisplayedDay(
-    realignedRule,
-    getDisplayedDaysShift(originalEvent, splitStart, changes, displayTimezone),
-  );
+  if (!originalEvent.allDay && changes.allDay) {
+    realignedRule = shiftUntilToDisplayedDay(
+      realignedRule,
+      originalEvent,
+      getDisplayedDaysShift(originalEvent, splitStart, changes, displayTimezone),
+    );
+  }
 
   // Recalculate COUNT: original minus prior occurrences.
   if (originalRule.count) {

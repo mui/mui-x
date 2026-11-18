@@ -149,6 +149,44 @@ describe('getUpdatedEventModelFromChanges', () => {
     expect(updated.rrule).to.equal('FREQ=DAILY;UNTIL=20250708');
   });
 
+  it.each<[NonNullable<SchedulerEvent['rrule']>, NonNullable<SchedulerEvent['rrule']>]>([
+    [
+      { freq: 'DAILY', until: '2025-07-08T09:00:00' },
+      { freq: 'DAILY', until: '2025-07-08' },
+    ],
+    // 13:00 UTC is 09:00 in New York.
+    ['FREQ=DAILY;UNTIL=20250708T130000Z', 'FREQ=DAILY;UNTIL=20250708'],
+    // Before 09:00, the last occurrence is the one of July 7th.
+    [
+      { freq: 'DAILY', until: '2025-07-08T08:00:00' },
+      { freq: 'DAILY', until: '2025-07-07' },
+    ],
+    [
+      { freq: 'DAILY', until: '2025-07-08' },
+      { freq: 'DAILY', until: '2025-07-08' },
+    ],
+  ])(
+    'should write the until of a timed series made all-day without new dates as its date in its timezone: %s',
+    (rrule, expected) => {
+      const oldModel: SchedulerEvent = {
+        id: '1',
+        title: 'Standup',
+        start: '2025-07-01T09:00:00',
+        end: '2025-07-01T09:30:00',
+        timezone: 'America/New_York',
+        rrule,
+      };
+      const updated = getUpdatedEventModelFromChanges(
+        oldModel,
+        { id: '1', allDay: true },
+        undefined,
+        oldModel,
+        'Asia/Tokyo',
+      );
+      expect(updated.rrule).to.deep.equal(expected);
+    },
+  );
+
   it('should snap the missing bound of a timed event made all-day with only its start', () => {
     // 23:00 in New York on July 4th is 12:00 in Tokyo on July 5th.
     const oldModel: SchedulerEvent = {

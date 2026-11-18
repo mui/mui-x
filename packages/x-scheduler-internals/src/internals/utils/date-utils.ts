@@ -31,19 +31,20 @@ export function timestampToEventString(
 
 /**
  * Writes the `until` of a processed rule in the format of `originalString`, like
- * `timestampToEventString()`. A plain date covers its whole day: it stays date-only after a
- * date-only string, and is written as the last instant of its day otherwise. A plain date-time is
- * written as its instant.
+ * `timestampToEventString()`. A plain date covers its whole day: it stays a date on an all-day
+ * event or after a date-only string, and is written as the last instant of its day otherwise. A
+ * plain date-time is written as its instant.
  */
 export function untilToEventString(
   until: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime,
   originalString: string,
   dataTimezone: string,
+  allDay: boolean,
 ): string {
   if (until instanceof BaseTemporal.PlainDateTime) {
     return timestampToEventString(toEpochMs(until, dataTimezone), originalString, dataTimezone);
   }
-  if (isDateOnlyString(originalString)) {
+  if (allDay || isDateOnlyString(originalString)) {
     return until.toString();
   }
   return timestampToEventString(
@@ -51,6 +52,24 @@ export function untilToEventString(
     originalString,
     dataTimezone,
   );
+}
+
+/**
+ * The `until` of a timed series made all-day: the last date with an occurrence on or before it.
+ * That is the date of a date-time `until`, or the day before when it is earlier in the day than
+ * the start of the series.
+ */
+export function getAllDayUntil(
+  until: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime,
+  seriesStart: BaseTemporal.PlainDateTime,
+): BaseTemporal.PlainDate {
+  if (!(until instanceof BaseTemporal.PlainDateTime)) {
+    return until;
+  }
+  const date = until.toPlainDate();
+  return BaseTemporal.PlainTime.compare(until.toPlainTime(), seriesStart.toPlainTime()) < 0
+    ? date.add({ days: -1 })
+    : date;
 }
 
 /**

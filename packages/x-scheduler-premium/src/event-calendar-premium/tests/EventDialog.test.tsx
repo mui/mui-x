@@ -2338,11 +2338,12 @@ describe('<EventDialogContent open />', () => {
       });
 
       it.each([
-        { allDay: false, until: '2025-07-10T08:00:00' },
-        { allDay: true, until: '2025-07-10' },
+        // The occurrences start at 09:00: the last one before 08:00 on July 10th is on July 9th.
+        { allDay: false, until: '2025-07-10T08:00:00', expectedUntil: '2025-07-09' },
+        { allDay: true, until: '2025-07-10', expectedUntil: '2025-07-10' },
       ])(
-        "should keep the UNTIL of a series when toggling all-day from allDay=$allDay with scope 'all'",
-        async ({ allDay, until }) => {
+        "should keep the last day of a series when toggling all-day from allDay=$allDay with scope 'all'",
+        async ({ allDay, until, expectedUntil }) => {
           const onEventsChange = vi.fn();
           const builder = EventBuilder.new()
             .withDataTimezone('UTC')
@@ -2373,13 +2374,12 @@ describe('<EventDialogContent open />', () => {
           await user.click(screen.getByText(/All events/i));
           await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-          // The stored UNTIL is read again with the new all-day flag: a timed cutoff becomes its
-          // day, and a day stays the whole day.
+          // A timed cutoff becomes the last day it covers, and a day stays the whole day.
           const updated = onEventsChange.mock.lastCall?.[0].find(
             (item: SchedulerEvent) => item.id === event.id,
           )!;
           expect(Boolean(updated.allDay)).to.equal(!allDay);
-          expect(updated.rrule).to.deep.equal(event.rrule);
+          expect(updated.rrule).to.deep.equal({ freq: 'DAILY', until: expectedUntil });
         },
       );
 
