@@ -6,6 +6,7 @@ import {
   createProcessedDate,
   getAllDayDayCount,
   getDayNumber,
+  getLastInstant,
   getPlainDateKey,
   getRecurringOccurrenceKeyFromDateKey,
   getMsInDay,
@@ -49,10 +50,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
       const startMs = localToEpochMs(localStartMs, displayTimezone);
       const endMs = localToEpochMs(localStartMs + dayCount * MS_PER_DAY, displayTimezone);
       // The end of an all-day occurrence is exclusive.
-      const lastInstantMs = endMs - 1;
-      if (startMs > end || lastInstantMs < start) {
-        continue;
-      }
+      const lastInstantMs = getLastInstant(endMs, true);
       if (visibleRanges && !overlapsOneOf(visibleRanges, startMs, lastInstantMs)) {
         continue;
       }

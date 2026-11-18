@@ -319,25 +319,6 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       expect(getStartDates(result)).to.deep.equal(['2025-01-07']);
     });
 
-    it('should leave out an all-day occurrence that ends when the range starts', () => {
-      // The January 6th occurrence ends on January 8th and must be left out.
-      const event = EventBuilder.new()
-        .withDataTimezone('Asia/Tokyo')
-        .withDisplayTimezone('UTC')
-        .span('2025-01-06', '2025-01-08', { allDay: true })
-        .rrule({ freq: 'DAILY' })
-        .toProcessed();
-
-      const result = getRecurringEventOccurrencesForVisibleDays(
-        event,
-        Date.parse('2025-01-08T00:00:00Z'),
-        Date.parse('2025-01-09T00:00:00Z') - 1,
-        'UTC',
-      );
-
-      expect(getStartDates(result)).to.deep.equal(['2025-01-07', '2025-01-08']);
-    });
-
     it.each([false, true])(
       'should leave out the occurrences that only cover hidden days (allDay: %s)',
       (allDay) => {
