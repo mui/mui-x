@@ -191,6 +191,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         store as unknown as SchedulerStoreInContext<any, any>,
         {
           type: 'internal-resize',
+          allDay: false,
           surfaceType: 'timeline',
           eventId: 'b',
           occurrenceKey: occurrenceB.key,
@@ -212,11 +213,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const onEventsChange = vi.fn();
       const allDayA = EventBuilder.new()
         .id('a')
-        .span('2025-07-03T00:00:00', '2025-07-03T23:59:59.999', { allDay: true })
+        .span('2025-07-03', '2025-07-04', { allDay: true })
         .build();
       const allDayB = EventBuilder.new()
         .id('b')
-        .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
+        .span('2025-07-04', '2025-07-05', { allDay: true })
         .build();
       const store = new EventTimelinePremiumStoreWithFeatures({
         ...DEFAULT_PARAMS,
@@ -227,16 +228,16 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       store.updateEvent({
         id: 'a',
         start: date('2025-07-05T00:00:00'),
-        end: date('2025-07-05T23:59:59.999'),
+        end: date('2025-07-06T00:00:00'),
         allDay: true,
       });
 
       const events: SchedulerEvent[] = onEventsChange.mock.calls[0][0];
       const successor = events.find((event) => event.id === 'b')!;
-      // Serialization drops the milliseconds; the model stays all-day on the pushed day.
+      // The model stays all-day on the pushed day, as dates.
       expect(successor.allDay).to.equal(true);
-      expect(successor.start).to.equal('2025-07-06T00:00:00');
-      expect(successor.end).to.equal('2025-07-06T23:59:59');
+      expect(successor.start).to.equal('2025-07-06');
+      expect(successor.end).to.equal('2025-07-07');
     });
 
     it('should emit the clamped dates in the new timezone after a timezone change', () => {
@@ -303,7 +304,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const allDayB = EventBuilder.new()
         .id('b')
         .withDataTimezone('UTC')
-        .span('2025-07-05T00:00:00', '2025-07-05T23:59:59', { allDay: true })
+        .span('2025-07-05', '2025-07-06', { allDay: true })
         .build();
       const store = new EventTimelinePremiumStoreWithFeatures({
         ...DEFAULT_PARAMS,
@@ -312,14 +313,15 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         onEventsChange,
       });
 
-      // All-day, the 36h lag rounds down to one day; timed, it lands at 06:00 on the 5th.
+      // All-day, the 36h lag rounds down to one day; timed, it lands at 06:00 on the 5th and
+      // keeps the 24 hours of its day.
       store.updateEvent({ id: 'b', allDay: false });
 
       const events: SchedulerEvent[] = onEventsChange.mock.calls[0][0];
       const emittedB = events.find((event) => event.id === 'b')!;
       expect(emittedB).not.to.have.property('allDay');
       expect(emittedB.start).to.equal('2025-07-05T06:00:00');
-      expect(emittedB.end).to.equal('2025-07-06T05:59:59');
+      expect(emittedB.end).to.equal('2025-07-06T06:00:00');
     });
 
     it('should cascade a timezone reset', () => {
@@ -551,7 +553,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         rejection: { code: 'unwritableEventMovedError', params: { title: eventB.title } },
       });
       expect(onEventsChange.mock.calls.length).to.equal(0);
-      expect(store.state.processedEventLookup.get('a')!.unstable_internalInfos.dataEnd).to.equal(
+      expect(store.state.processedEventLookup.get('a')!.end.timestamp).to.equal(
         date('2025-07-03T10:00:00Z').getTime(),
       );
     });
@@ -770,18 +772,18 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(store.state.processedEventLookup.get('b')!.allDay).to.equal(false);
     });
 
-    // Mirror of the above: turning `b` back to timed makes it end at noon, before `a` ends, so
-    // the FinishToFinish clamp pushes the unwritable `end` alone.
+    // Mirror of the above: turning `b` back to timed makes it end at the start of July 4th,
+    // before `a` ends, so the FinishToFinish clamp pushes the unwritable `end` alone.
     it('should refuse the whole batch when the cascade clamps a single end that is not writable', () => {
       const onEventsChange = vi.fn();
       const eventModelStructure = { end: { getter: (event: any) => event.end } };
       const lateEndingPredecessor = EventBuilder.new()
         .id('a')
-        .span('2025-07-03T09:00:00Z', '2025-07-03T18:00:00Z')
+        .span('2025-07-03T09:00:00Z', '2025-07-04T06:00:00Z')
         .build();
       const allDaySuccessor = EventBuilder.new()
         .id('b')
-        .span('2025-07-03T00:00:00Z', '2025-07-03T12:00:00Z', { allDay: true })
+        .span('2025-07-03', '2025-07-04', { allDay: true })
         .build();
       const store = new EventTimelinePremiumStoreWithFeatures({
         ...DEFAULT_PARAMS,
@@ -1181,12 +1183,13 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const allDayB = EventBuilder.new()
         .id('b')
         .withDataTimezone('America/New_York')
-        .span('2025-11-02T00:00:00', '2025-11-02T23:59:59', { allDay: true })
+        .span('2025-11-02', '2025-11-03', { allDay: true })
         .build();
       const store = new EventTimelinePremiumStoreWithFeatures({
         ...DEFAULT_PARAMS,
         events: [newYorkA, allDayB],
         dependencies: [{ ...DEP_AB, type: 'StartToStart' }],
+        displayTimezone: 'America/New_York',
         onEventsChange,
       });
 
@@ -1197,8 +1200,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const emittedB = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
         (event) => event.id === 'b',
       )!;
-      expect(emittedB.start).to.equal('2025-11-04T00:00:00');
-      expect(emittedB.end).to.equal('2025-11-04T23:59:59');
+      expect(emittedB.start).to.equal('2025-11-04');
+      expect(emittedB.end).to.equal('2025-11-05');
     });
 
     it('should cascade the push of a stricter type change to the successors of the target', () => {

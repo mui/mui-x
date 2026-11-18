@@ -176,6 +176,7 @@ export const EventItem = React.forwardRef(function EventItem(
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
   const isEditing = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
   // Selector hooks
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
@@ -191,7 +192,7 @@ export const EventItem = React.forwardRef(function EventItem(
   // The processed dates are read in the display timezone, like the day.
   const dayNumber = getDayNumber(date);
   const startsBeforeDay = getDayNumber(occurrence.start.plainDateTime.toPlainDate()) < dayNumber;
-  const endsAfterDay = getOccurrenceLastDayNumber(occurrence) > dayNumber;
+  const endsAfterDay = getOccurrenceLastDayNumber(occurrence, displayTimezone) > dayNumber;
 
   const content = React.useMemo(() => {
     switch (variant) {
@@ -263,7 +264,7 @@ export const EventItem = React.forwardRef(function EventItem(
           // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
           data-event-id={occurrence.id}
           // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
-          data-occurrence-timestamp={occurrence.unstable_internalInfos.dataStart}
+          data-occurrence-timestamp={occurrence.start.timestamp}
           aria-label={accessibleName}
           {...(startsBeforeDay ? { 'data-starting-before-edge': '' } : {})}
           {...(endsAfterDay ? { 'data-ending-after-edge': '' } : {})}
@@ -294,15 +295,16 @@ function MultiDayDateLabel(props: {
 
   const store = useEventCalendarStoreContext();
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const { classes, localeText } = useEventCalendarStyledContext();
 
-  if (isOccurrenceMultiDay(occurrence)) {
+  if (isOccurrenceMultiDay(occurrence, displayTimezone)) {
     return (
       <EventItemTime className={classes.eventItemTime} as="span">
         {localeText.eventItemMultiDayLabel(
           formatMonthShortAndDayOfMonth(
             locale,
-            plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence)),
+            plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence, displayTimezone)),
           ),
         )}
       </EventItemTime>

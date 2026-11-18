@@ -87,7 +87,12 @@ export function innerGetEventOccurrencesGroupedByDay(
 
   const dayNumbers = days.map((day) => getDayNumber(day));
   for (const occurrence of occurrences) {
-    const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, dayNumbers, dayKeys);
+    const eventDays = getDaysTheOccurrenceIsVisibleOn(
+      occurrence,
+      dayNumbers,
+      dayKeys,
+      displayTimezone,
+    );
     for (const dayKey of eventDays) {
       occurrenceMap.get(dayKey)!.push(occurrence);
     }

@@ -87,6 +87,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
   // Context hooks
   const store = useSchedulerStoreContext();
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const { classes } = useEventCalendarStyledContext();
   const isRtl = useRtl();
 
@@ -223,7 +224,9 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
             getFocusFallback={getFocusFallback}
           >
             <EventItem
-              variant={isOccurrenceAllDayOrMultipleDay(occurrence) ? 'filled' : 'compact'}
+              variant={
+                isOccurrenceAllDayOrMultipleDay(occurrence, displayTimezone) ? 'filled' : 'compact'
+              }
               occurrence={occurrence}
               date={day.plainDate}
             />

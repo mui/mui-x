@@ -51,10 +51,15 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const weekInfo = useStore(store, eventCalendarPreferenceSelectors.weekInfo);
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
-  const occurrences = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap, maxEvents });
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
+  const occurrences = useEventOccurrencesWithDayGridPosition({
+    days,
+    occurrencesMap,
+    maxEvents,
+    displayTimezone,
+  });
   const weekNumber = getWeekNumber(days[0], weekInfo);
 
-  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const { start, end } = React.useMemo(
     () => getPlainDateRangeMs(days[0], days[days.length - 1], displayTimezone),
     [days, displayTimezone],

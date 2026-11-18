@@ -389,9 +389,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const occurrences = useEventOccurrencesWithDayGridPosition({
     days,
     occurrencesMap,
+    displayTimezone,
     shouldAddPosition: React.useCallback(
-      (occurrence: SchedulerEventOccurrence) => isOccurrenceInDayGrid(occurrence, timeGridEvents),
-      [timeGridEvents],
+      (occurrence: SchedulerEventOccurrence) =>
+        isOccurrenceInDayGrid(occurrence, timeGridEvents, displayTimezone),
+      [timeGridEvents, displayTimezone],
     ),
   });
 

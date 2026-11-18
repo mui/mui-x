@@ -33,6 +33,7 @@ import {
   BaseTemporal,
   formatWeekday,
   formatWeekdayShort,
+  getLastInstant,
   toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import type { EndsSelection } from '@mui/x-scheduler/internals';
@@ -44,10 +45,9 @@ import {
   EventDialogTabContent,
   getRecurrenceLabel,
   getWeekdayToken,
-  getEventTimezone,
   getResentRangeBounds,
-  getEventTimezonePlainDate,
   getRecurrenceRuleBound,
+  getRuleTimezone,
   getRecurrenceTimezoneName,
   readDateField,
   eventDialogFormSelectors,
@@ -222,13 +222,12 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
-  // The rule lives in the event's timezone, so the days offered here come from the range the
-  // event ends up with, in that timezone (the submit builds the preset on the same start).
-  const eventTimezone = getEventTimezone(occurrence);
+  // The days offered here come from the range the event ends up with, read in the timezone of
+  // its rule (the submit builds the preset on the same start).
   const rangeValues = useStore(formStore, eventDialogFormSelectors.rangeValues);
+  const ruleTimezone = getRuleTimezone(occurrence, rangeValues.allDay, displayTimezone);
   const ruleBounds = React.useMemo(() => {
-    const displayTimezoneMoved =
-      displayTimezone !== occurrence.unstable_internalInfos.displayTimezone;
+    const displayTimezoneMoved = displayTimezone !== formStore.initialDisplayTimezone;
     const { startResent, endResent } = getResentRangeBounds(
       formStore.getDirtyValues(),
       rangeValues.allDay,
@@ -240,12 +239,12 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   }, [occurrence, formStore, rangeValues, displayTimezone]);
   const ruleStart = ruleBounds.start;
   const ruleStartPlainDate = React.useMemo(
-    () => getEventTimezonePlainDate(occurrence, ruleStart),
-    [occurrence, ruleStart],
+    () => toPlainDate(ruleStart, ruleTimezone),
+    [ruleStart, ruleTimezone],
   );
   const recurrenceTimezoneName = React.useMemo(
-    () => getRecurrenceTimezoneName(locale, eventTimezone, displayTimezone),
-    [locale, eventTimezone, displayTimezone],
+    () => getRecurrenceTimezoneName(locale, ruleTimezone, displayTimezone),
+    [locale, ruleTimezone, displayTimezone],
   );
   const monthlyRef = React.useMemo(
     () => getMonthlyReference(ruleStartPlainDate),
@@ -323,8 +322,11 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const handleEndsChange = (endsSelection: EndsSelection) => {
     switch (endsSelection) {
       case 'until': {
-        // The event's last day, in its own timezone.
-        updateCustomDraft({ until: toPlainDate(ruleBounds.end, eventTimezone), count: undefined });
+        // The last day of the event.
+        updateCustomDraft({
+          until: toPlainDate(getLastInstant(ruleBounds.end, rangeValues.allDay), ruleTimezone),
+          count: undefined,
+        });
         break;
       }
       case 'after': {

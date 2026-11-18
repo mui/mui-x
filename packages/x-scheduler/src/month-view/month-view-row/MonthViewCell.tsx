@@ -183,6 +183,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
   const visiblePlainDate = useStore(store, schedulerOtherSelectors.visiblePlainDate);
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const weekend = useStore(store, schedulerPreferenceSelectors.weekend);
   const isCreatingAnEvent = useStore(
     store,
@@ -282,7 +283,11 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
                 <DayGridEvent
                   occurrence={occurrence}
-                  variant={isOccurrenceAllDayOrMultipleDay(occurrence) ? 'filled' : 'compact'}
+                  variant={
+                    isOccurrenceAllDayOrMultipleDay(occurrence, displayTimezone)
+                      ? 'filled'
+                      : 'compact'
+                  }
                   {...(startsBeforeThisDay ? { 'data-starting-before-edge': '' } : {})}
                 />
               </EventContextMenuTrigger>

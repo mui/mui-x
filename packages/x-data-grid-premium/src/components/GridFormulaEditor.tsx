@@ -29,6 +29,7 @@ import {
   parsePlainEditValue,
   shouldIgnorePlainEditInput,
 } from '../hooks/features/formula/gridFormulaPlainEditing';
+import { registerFormulaPickEditable } from '../hooks/features/formula/gridFormulaReferencePicking';
 import { GridFormulaEditable, valueToText } from './GridFormulaEditable';
 import type { GridFormulaEditableHandle } from './GridFormulaEditable';
 
@@ -279,6 +280,19 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
   const text =
     getPlainEditDraftText(apiRef, id, field, editState?.value) ?? valueToText(editState?.value);
   const ownerCell = React.useMemo(() => ({ id, field }), [id, field]);
+
+  // Picked references (a click on a cell while this editor has the focus) are
+  // written into this editable.
+  React.useEffect(
+    () =>
+      registerFormulaPickEditable(apiRef, {
+        kind: 'cell',
+        getHandle: () => coreRef.current,
+        ownerCell,
+        a1Notation,
+      }),
+    [apiRef, ownerCell, a1Notation],
+  );
 
   // Whether the edited row is currently rendered as the zero-size virtual-focus
   // row (it left the vertical render window). The grid hides that row with

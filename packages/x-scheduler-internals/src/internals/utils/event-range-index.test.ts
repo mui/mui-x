@@ -54,6 +54,27 @@ describe('createEventRangeIndex', () => {
     expect(result.map((event) => event.id)).to.deep.equal(['ends-at-start', 'starts-at-end']);
   });
 
+  it('should exclude an all-day event whose exclusive end is the range start', () => {
+    const events = [
+      EventBuilder.new()
+        .id('ends-at-start')
+        .span('2025-01-14', '2025-01-15', { allDay: true })
+        .toProcessed(),
+      EventBuilder.new()
+        .id('starts-at-start')
+        .span('2025-01-15', '2025-01-16', { allDay: true })
+        .toProcessed(),
+    ];
+    const index = createEventRangeIndex(events, false);
+
+    const result = index.getEventsForRange(
+      Date.parse('2025-01-15T00:00:00Z'),
+      Date.parse('2025-01-15T23:59:59.999Z'),
+    );
+
+    expect(result.map((event) => event.id)).to.deep.equal(['starts-at-start']);
+  });
+
   it('should keep recurring events as candidates outside their original range when expansion is enabled', () => {
     const recurringEvent = EventBuilder.new()
       .id('recurring')

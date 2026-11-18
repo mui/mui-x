@@ -32,7 +32,12 @@ describe('useDayListEventOccurrencesWithPosition', () => {
         displayTimezone,
         recurringEventsPlugin: null,
       });
-      return useEventOccurrencesWithDayGridPosition({ days: dayList, occurrencesMap, maxEvents });
+      return useEventOccurrencesWithDayGridPosition({
+        days: dayList,
+        occurrencesMap,
+        maxEvents,
+        displayTimezone,
+      });
     });
 
     return result.current;
