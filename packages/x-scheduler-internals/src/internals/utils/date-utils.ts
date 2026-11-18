@@ -33,7 +33,8 @@ export function timestampToEventString(
  * Writes the `until` of a processed rule with the type of the start of the event: a date on an
  * all-day event, and a date-time on a timed one, in the format of `originalString` like
  * `timestampToEventString()`. A plain date covers its whole day, so on a timed event it is written
- * as the last instant of its day. A plain date-time is written as its instant.
+ * as the last instant of its day. A plain date-time is written as its instant, or as its date on
+ * an all-day event.
  */
 export function untilToEventString(
   until: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime,
@@ -41,11 +42,11 @@ export function untilToEventString(
   dataTimezone: string,
   allDay: boolean,
 ): string {
+  if (allDay) {
+    return (until instanceof BaseTemporal.PlainDateTime ? until.toPlainDate() : until).toString();
+  }
   if (until instanceof BaseTemporal.PlainDateTime) {
     return timestampToEventString(toEpochMs(until, dataTimezone), originalString, dataTimezone);
-  }
-  if (allDay) {
-    return until.toString();
   }
   return timestampToEventString(
     toEpochMs(until.add({ days: 1 }), dataTimezone) - 1,

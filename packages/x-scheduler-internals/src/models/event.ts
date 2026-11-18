@@ -62,7 +62,7 @@ interface SchedulerProcessedEventBase {
  *
  * - `start` and `end` are read in the display timezone, for rendering.
  * - `timezone`, `rrule` and `exDates` are the event's own data, read in its timezone for a timed
- *   event and on the displayed days for an all-day one.
+ *   event and on its dates for an all-day one, the same in every display timezone.
  * - Always includes `modelInBuiltInFormat` (unlike drafts/placeholders).
  */
 export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {

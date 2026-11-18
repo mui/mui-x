@@ -2463,9 +2463,67 @@ premiumStoreClasses.forEach((storeClass) => {
         expect(pasted.rrule).to.deep.equal({ freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-25' });
         expect(pasted.exDates).to.deep.equal(['2025-07-11']);
       });
+
+      it('should paste an all-day series whose rule has time parts as a timed series without them', () => {
+        const onEventsChange = vi.fn();
+        // Calendar apps can export BYHOUR on an all-day rule, where RFC 5545 ignores it.
+        const event: SchedulerEvent = {
+          ...EventBuilder.new()
+            .id('holiday')
+            .span('2025-07-01', '2025-07-02', { allDay: true })
+            .build(),
+          rrule: 'FREQ=DAILY;BYHOUR=9;BYMINUTE=30;COUNT=5',
+        };
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+        store.copyEvent('holiday');
+
+        store.pasteEvent({ allDay: false, start: createDate('2025-07-01T09:00:00') });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.rrule).to.equal('FREQ=DAILY;COUNT=5');
+        expect(() => processEvent(pasted, 'UTC', schedulerRecurringEventsPlugin)).not.to.throw();
+      });
     });
 
     describe('Method: updateRecurringEvent', () => {
+      ['2025-07-01', '2025-07-03'].forEach((day) => {
+        it(`should drop the time parts of the rule of an all-day series dropped on the time grid on ${day}`, () => {
+          const onEventsChange = vi.fn();
+          const event: SchedulerEvent = {
+            ...EventBuilder.new()
+              .id('holiday')
+              .span('2025-07-01', '2025-07-02', { allDay: true })
+              .build(),
+            rrule: 'FREQ=DAILY;BYHOUR=9;COUNT=5',
+          };
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            onEventsChange,
+          });
+
+          store.updateRecurringEvent({
+            occurrence: createStoreOccurrence(store, 'holiday', createDate(`${day}T00:00:00`)),
+            changes: {
+              id: 'holiday',
+              allDay: false,
+              start: createDate(`${day}T09:00:00`),
+              end: createDate(`${day}T09:30:00`),
+            },
+          });
+          store.selectRecurringEventScope('all');
+
+          const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+          // The series keeps its first day, at the time of the drop.
+          expect(updated.start).to.equal('2025-07-01T09:00:00');
+          expect(() => processEvent(updated, 'UTC', schedulerRecurringEventsPlugin)).not.to.throw();
+        });
+      });
+
       it('should rewrite the exception dates when an update makes a series all-day', () => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new()
@@ -2662,6 +2720,49 @@ premiumStoreClasses.forEach((storeClass) => {
             scope === 'all' ? item.id === 'standup' : item.id !== 'standup',
           )!;
           expect((updated.rrule as SchedulerEventRecurrenceRule).until).to.equal('2025-07-08');
+          expect(() =>
+            processEvent(updated, 'America/New_York', schedulerRecurringEventsPlugin),
+          ).not.to.throw();
+        });
+
+        it(`should write the until of a rule given with a timed series made all-day as its date with scope '${scope}'`, () => {
+          const onEventsChange = vi.fn();
+          // Before 09:00, the last occurrence is the one of July 7th.
+          const event = EventBuilder.new()
+            .id('standup')
+            .withDataTimezone('America/New_York')
+            .span('2025-07-01T09:00:00', '2025-07-01T09:30:00')
+            .rrule({ freq: 'DAILY', until: '2025-07-08T08:00:00' })
+            .build();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'America/New_York',
+            onEventsChange,
+          });
+          const rule = schedulerEventSelectors.processedEventRequired(
+            store.state,
+            'standup',
+          ).rrule!;
+
+          // Like the dialog: the rule is edited, its until is the one of the timed series.
+          store.updateRecurringEvent({
+            occurrence: createStoreOccurrence(
+              store,
+              'standup',
+              createDate('2025-07-03T09:00:00', 'America/New_York'),
+            ),
+            changes: { id: 'standup', allDay: true, rrule: { ...rule, interval: 2 } },
+          });
+          store.selectRecurringEventScope(scope);
+
+          const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+          const updated = updatedEvents.find((item) =>
+            scope === 'all' ? item.id === 'standup' : item.id !== 'standup',
+          )!;
+          const written = updated.rrule as SchedulerEventRecurrenceRule;
+          expect(written.interval).to.equal(2);
+          expect(written.until).to.equal('2025-07-07');
           expect(() =>
             processEvent(updated, 'America/New_York', schedulerRecurringEventsPlugin),
           ).not.to.throw();

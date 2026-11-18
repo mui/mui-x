@@ -55,9 +55,13 @@ function replaceDateTimeUntil(
 // The date form of UNTIL, like `20250708`, not followed by a time.
 const UNTIL_DATE_REGEX = /(UNTIL\s*=\s*)(\d{4})(\d{2})(\d{2})(?![T\d])/i;
 
+// The time parts an all-day rule may carry, which a timed rule does not support.
+const ALL_DAY_IGNORED_RRULE_KEYS = new Set(['BYHOUR', 'BYMINUTE', 'BYSECOND']);
+
 /**
  * The rule of an all-day event made timed: a date `until` is written as the last instant of that
- * date in `timezone`, the timezone the event is written in.
+ * date in `timezone`, the timezone the event is written in, and the time parts an all-day RRULE
+ * string ignores are dropped.
  */
 function getTimedRRule(
   rrule: NonNullable<SchedulerEvent['rrule']>,
@@ -71,7 +75,12 @@ function getTimedRRule(
     const until = BaseTemporal.PlainDate.from(rrule.until);
     return { ...rrule, until: untilToEventString(until, start, timezone, false) };
   }
-  return rrule.replace(UNTIL_DATE_REGEX, (match, prefix, year, month, day) => {
+  const parts = rrule.split(';');
+  const timedParts = parts.filter(
+    (part) => !ALL_DAY_IGNORED_RRULE_KEYS.has(part.split('=')[0].trim().toUpperCase()),
+  );
+  const timedRRule = timedParts.length === parts.length ? rrule : timedParts.join(';');
+  return timedRRule.replace(UNTIL_DATE_REGEX, (match, prefix, year, month, day) => {
     const until = BaseTemporal.PlainDate.from({ year: +year, month: +month, day: +day });
     const lastSecond = Math.floor((toEpochMs(until.add({ days: 1 }), timezone) - 1) / 1000);
     // The UTC date-time form, like `20250708T145959Z`.

@@ -306,6 +306,12 @@ export function applyRecurringUpdateAll(
     if (rrule !== originalEvent.rrule) {
       eventUpdatedProperties.rrule = rrule;
     }
+  } else if (hasExplicitRRule && !originalAllDay && allDay) {
+    eventUpdatedProperties.rrule = getAllDayGivenRRule(
+      changes.rrule,
+      originalEvent,
+      displayedDaysShift,
+    );
   }
 
   // 5) Return the updated event
@@ -414,6 +420,24 @@ function shiftUntilToDisplayedDay(
   return !(rrule.until instanceof BaseTemporal.PlainDateTime) && shiftedUntilDay.equals(rrule.until)
     ? rrule
     : { ...rrule, until: shiftedUntilDay };
+}
+
+/**
+ * A rule given with the changes that make a timed series all-day, like the rule the dialog edits:
+ * a date-time `until`, still the one of the timed series, becomes the last date it covers, like
+ * the `until` of the inherited rule. A date picked for it stays.
+ */
+function getAllDayGivenRRule(
+  rrule: SchedulerEventUpdatedProperties['rrule'],
+  originalEvent: SchedulerProcessedEvent,
+  shift: DisplayedDaysShift | null,
+): SchedulerEventUpdatedProperties['rrule'] {
+  if (rrule == null || typeof rrule !== 'object') {
+    return rrule;
+  }
+  return rrule.until instanceof BaseTemporal.PlainDateTime
+    ? shiftUntilToDisplayedDay(rrule, originalEvent, shift)
+    : rrule;
 }
 
 /**
@@ -527,6 +551,13 @@ export function decideSplitRRule(
 
   // Case A — user provided a new RRULE → respect it (including COUNT/UNTIL)
   if (hasRRuleProp && changesRRule) {
+    if (!originalEvent.allDay && changes.allDay) {
+      return getAllDayGivenRRule(
+        changesRRule,
+        originalEvent,
+        getDisplayedDaysShift(originalEvent, splitStart, changes, displayTimezone),
+      );
+    }
     return changesRRule;
   }
 

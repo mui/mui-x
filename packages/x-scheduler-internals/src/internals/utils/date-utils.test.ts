@@ -97,6 +97,17 @@ describe('date-utils', () => {
       ).to.equal(expected);
     });
 
+    it('should write a plain date-time as its date on an all-day event', () => {
+      expect(
+        untilToEventString(
+          BaseTemporal.PlainDateTime.from('2025-01-12T09:15:30'),
+          '2025-01-01T09:00:00',
+          'Europe/Paris',
+          true,
+        ),
+      ).to.equal('2025-01-12');
+    });
+
     it('should write a plain date as a date on an all-day event', () => {
       expect(
         untilToEventString(
