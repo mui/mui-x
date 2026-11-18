@@ -901,6 +901,30 @@ describe('<MonthView />', () => {
       expect(screen.queryByRole('dialog')).not.to.equal(null);
     });
 
+    it('should fill the times of a creation started on the grid when all-day is unticked', async () => {
+      vi.setSystemTime(new Date('2025-05-01T09:20:00Z'));
+      const { user } = render(
+        <EventCalendarProvider events={[]} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      await user.click(screen.getAllByRole('gridcell')[10]);
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      const clickedDay = (screen.getByLabelText(/start date/i) as HTMLInputElement).value;
+
+      await user.click(screen.getByRole('switch', { name: /all day/i }));
+
+      expect(screen.getByLabelText(/start time/i)).to.have.value('10:00');
+      expect(screen.getByLabelText(/end time/i)).to.have.value('10:30');
+      expect(screen.getByLabelText(/start date/i)).to.have.value(clickedDay);
+      expect(screen.getByLabelText(/end date/i)).to.have.value(clickedDay);
+    });
+
     it('should clamp the span of a creation placeholder to each week row', () => {
       // Friday May 9 to Tuesday May 13: two days left in the first week row, three in the next.
       const start = startOfDay(createDate('2025-05-09T00:00:00Z'));

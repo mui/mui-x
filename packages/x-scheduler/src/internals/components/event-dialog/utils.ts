@@ -10,12 +10,16 @@ import {
   BaseTemporal,
   formatMonthAndDayOfMonth,
   formatWeekday,
+  FULL_DAY_MINUTES,
   getDayTimezone,
+  getMinutesInDay,
   getTimezoneId,
   isEventOccurrence,
   parseDateOnlyString,
+  plainTimeFromMsInDay,
   toEpochMs,
   toPlainDate,
+  toPlainDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import type { EventEditingLocaleText, SchedulerWeekday } from '../../../models';
 
@@ -188,7 +192,31 @@ export function formatDateAndTimeFields(value: BaseTemporal.PlainDateTime): {
   date: string;
   time: string;
 } {
-  return { date: value.toPlainDate().toString(), time: value.toPlainTime().toString().slice(0, 5) };
+  return { date: value.toPlainDate().toString(), time: formatTimeField(value.toPlainTime()) };
+}
+
+function formatTimeField(time: BaseTemporal.PlainTime): string {
+  return time.toString().slice(0, 5);
+}
+
+function minutesToTimeField(minutesInDay: number): string {
+  return formatTimeField(plainTimeFromMsInDay(minutesInDay * 60_000));
+}
+
+/**
+ * The times of an all-day event made timed: the current time of the display timezone rounded up
+ * to the hour, lasting `durationMinutes` but ending on the same day, so the dates don't change.
+ */
+export function getDefaultTimedFields(
+  nowMs: number,
+  durationMinutes: number,
+  displayTimezone: string,
+): { startTime: string; endTime: string } {
+  const nowMinutes = getMinutesInDay(toPlainDateTime(nowMs, displayTimezone));
+  const startMinutes = (Math.ceil(nowMinutes / 60) * 60) % FULL_DAY_MINUTES;
+  const endMinutes = Math.min(startMinutes + durationMinutes, FULL_DAY_MINUTES - 1);
+
+  return { startTime: minutesToTimeField(startMinutes), endTime: minutesToTimeField(endMinutes) };
 }
 
 /**

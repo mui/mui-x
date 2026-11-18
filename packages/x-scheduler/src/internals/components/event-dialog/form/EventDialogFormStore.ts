@@ -99,10 +99,32 @@ export class EventDialogFormStore<
    */
   declare public readonly initialDisplayTimezone: string;
 
+  declare private timedValues: boolean;
+
   constructor(initialValues: TValues, parameters: EventDialogFormParameters<TValues>) {
     super(initialValues, parameters);
     this.occurrence = parameters.occurrence;
     this.resourceSelectionMode = parameters.resourceSelectionMode;
     this.initialDisplayTimezone = parameters.initialDisplayTimezone;
+    this.timedValues = !parameters.occurrence.allDay;
   }
+
+  /**
+   * Whether the time fields hold times of this editing session, not the placeholders of an event
+   * opened as all-day.
+   */
+  public hasTimedValues = (): boolean => {
+    if (this.timedValues) {
+      return true;
+    }
+    const dirtyValues = this.getDirtyValues();
+    return 'startTime' in dirtyValues || 'endTime' in dirtyValues;
+  };
+
+  /**
+   * Records that the time fields now hold times of the editing session.
+   */
+  public markTimedValues = () => {
+    this.timedValues = true;
+  };
 }
