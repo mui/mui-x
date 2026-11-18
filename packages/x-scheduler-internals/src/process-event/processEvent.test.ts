@@ -9,6 +9,7 @@ import {
   toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
+import type { SchedulerEvent } from '../models';
 import { BaseTemporal } from '../internals/utils/base-temporal';
 
 describe('processEvent', () => {
@@ -72,7 +73,6 @@ describe('processEvent', () => {
     it.each([
       [true, { freq: 'DAILY' as const, until: '2025-01-11' }, '2025-01-11'],
       [true, 'FREQ=DAILY;UNTIL=20250111', '2025-01-11'],
-      [true, 'FREQ=DAILY;UNTIL=20250111T150000Z', '2025-01-11'],
       [false, { freq: 'DAILY' as const, until: '2025-01-11' }, '2025-01-11'],
       [false, 'FREQ=DAILY;UNTIL=20250111', '2025-01-11'],
       [false, 'FREQ=DAILY;UNTIL=20250111T150000Z', '2025-01-11T10:00:00'],
@@ -96,39 +96,18 @@ describe('processEvent', () => {
       },
     );
 
-    it('should read rrule.until as its day in the timezone of the event when rrule is an object', () => {
-      // The rule is expressed in the timezone the series expands in, not the display one: this
-      // instant is January 10th in New York, but January 11th in UTC and in Tokyo.
-      const event = EventBuilder.new()
-        .withDataTimezone('America/New_York')
-        .span('2025-01-01', '2025-01-02', { allDay: true })
-        .rrule({
-          freq: 'DAILY',
-          until: '2025-01-11T03:00:00Z',
-        })
-        .build();
-
-      const processed = processEvent(event, 'Asia/Tokyo', schedulerRecurringEventsPlugin);
-
-      expect(processed.rrule!.until!.toString()).to.equal('2025-01-10');
-    });
-
-    it('should parse an rrule string and read its UNTIL as its day in the timezone of the event', () => {
+    it.each<NonNullable<SchedulerEvent['rrule']>>([
+      { freq: 'DAILY', until: '2025-01-11T03:00:00Z' },
+      'FREQ=DAILY;UNTIL=20250111T030000Z',
+    ])('should throw when the until of an all-day series is a date-time: %j', (rrule) => {
       const event = EventBuilder.new()
         .withDataTimezone('America/New_York')
         .span('2025-01-01', '2025-01-02', { allDay: true })
         .build();
 
-      const processed = processEvent(
-        {
-          ...event,
-          rrule: 'FREQ=DAILY;UNTIL=20250111T030000Z',
-        },
-        'Pacific/Kiritimati',
-        schedulerRecurringEventsPlugin,
-      );
-
-      expect(processed.rrule!.until!.toString()).to.equal('2025-01-10');
+      expect(() =>
+        processEvent({ ...event, rrule }, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
+      ).to.throw(/of the recurrence rule of an all-day event is not a date/);
     });
   });
 

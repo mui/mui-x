@@ -99,7 +99,7 @@ export type SchedulerEventRecurrenceRule = Omit<SchedulerProcessedEventRecurrenc
    * Same string semantics as `SchedulerEvent.start` / `end`.
    * A date without a time, like "2025-07-10", includes its whole day.
    * For timed events, a date-time is the latest start of an occurrence.
-   * For all-day events, only its date in the timezone of the event is used.
+   * For all-day events, it must be a date.
    */
   until?: string;
 };

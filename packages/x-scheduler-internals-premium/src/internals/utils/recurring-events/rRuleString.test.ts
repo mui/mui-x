@@ -17,7 +17,7 @@ describe('recurring-events/rRuleString', () => {
     });
 
     it('should resolve string until from object input', () => {
-      const result = parseRRule({ freq: 'DAILY', until: '2025-03-15T00:00:00Z' }, 'UTC', true);
+      const result = parseRRule({ freq: 'DAILY', until: '2025-03-15' }, 'UTC', true);
       expect(result.freq).to.equal('DAILY');
       expect(result.until).toEqualPlainDate('2025-03-15');
     });
@@ -54,16 +54,15 @@ describe('recurring-events/rRuleString', () => {
     });
 
     it('should read a UNTIL ending in Z as a UTC instant, like the object input', () => {
-      const fromString = parseRRule('FREQ=DAILY;UNTIL=20250315T000000Z', 'America/New_York', true);
+      const fromString = parseRRule('FREQ=DAILY;UNTIL=20250315T000000Z', 'America/New_York');
       const fromObject = parseRRule(
         { freq: 'DAILY', until: '2025-03-15T00:00:00Z' },
         'America/New_York',
-        true,
       );
 
-      // The day of the instant in the timezone of the event.
-      expect(fromString.until).toEqualPlainDate('2025-03-14');
-      expect(fromObject.until).toEqualPlainDate('2025-03-14');
+      // The wall time of the instant in the timezone of the event: 00:00 UTC is 20:00 EDT.
+      expect(fromString.until?.toString()).to.equal('2025-03-14T20:00:00');
+      expect(fromObject.until?.toString()).to.equal('2025-03-14T20:00:00');
     });
 
     it('should read a UNTIL date as that day', () => {
@@ -117,16 +116,17 @@ describe('recurring-events/rRuleString', () => {
       it.each<string | SchedulerEventRecurrenceRule>([
         { freq: 'DAILY', until: '2025-07-04' },
         'FREQ=DAILY;UNTIL=20250704',
-        { freq: 'DAILY', until: '2025-07-04T00:00:00Z' },
-        'FREQ=DAILY;UNTIL=20250704T120000Z',
       ])('should end an all-day series on the day of UNTIL %s', (rrule) => {
         expect(getLastDay(rrule, true)).to.equal('2025-07-04');
       });
 
-      it('should read a date-time UNTIL of an all-day series on its day in the event timezone', () => {
-        // 23:00 UTC on July 3rd is July 4th in Tokyo.
-        expect(getLastDay('FREQ=DAILY;UNTIL=20250703T230000Z', true, 'Asia/Tokyo')).to.equal(
-          '2025-07-04',
+      it.each<string | SchedulerEventRecurrenceRule>([
+        'FREQ=DAILY;UNTIL=20250703T230000Z',
+        { freq: 'DAILY', until: '2025-07-03T23:00:00Z' },
+        { freq: 'DAILY', until: '2025-07-04T00:00:00' },
+      ])('should throw when the until of an all-day series is a date-time: %s', (rrule) => {
+        expect(() => parseRRule(rrule, 'Asia/Tokyo', true)).to.throw(
+          /of the recurrence rule of an all-day event is not a date/,
         );
       });
 
@@ -152,19 +152,15 @@ describe('recurring-events/rRuleString', () => {
           // 02:30 on March 9th 2025 does not exist in New York (clocks jump from 02:00 to 03:00).
           vi.stubEnv('TZ', 'America/New_York');
 
-          const fromString = parseRRule(
-            'FREQ=DAILY;UNTIL=20250309T023000Z',
-            'America/Sao_Paulo',
-            true,
-          );
+          const fromString = parseRRule('FREQ=DAILY;UNTIL=20250309T023000Z', 'America/Sao_Paulo');
           const fromObject = parseRRule(
             { freq: 'DAILY', until: '2025-03-09T02:30:00Z' },
             'America/Sao_Paulo',
-            true,
           );
 
-          expect(fromString.until).toEqualPlainDate('2025-03-08');
-          expect(fromObject.until).toEqualPlainDate('2025-03-08');
+          // 02:30 UTC is 23:30 the day before in São Paulo.
+          expect(fromString.until?.toString()).to.equal('2025-03-08T23:30:00');
+          expect(fromObject.until?.toString()).to.equal('2025-03-08T23:30:00');
         },
       );
     });

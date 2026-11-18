@@ -862,30 +862,31 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       ]);
     });
 
-    it('should end an all-day series on the day of a date-time UNTIL in the timezone of the event', () => {
-      // Jan 5th 05:00Z is midnight in New York: the series includes January 5th.
-      const event = EventBuilder.new()
-        .withDataTimezone('America/New_York')
-        .span('2025-01-01', '2025-01-02', { allDay: true })
-        .rrule({ freq: 'DAILY', interval: 1, until: '2025-01-05T05:00:00Z' })
-        .toProcessed();
+    it.each(['Asia/Tokyo', 'America/New_York'])(
+      'should end an all-day series on its until date displayed in %s',
+      (timezone) => {
+        const event = EventBuilder.new()
+          .span('2025-01-01', '2025-01-02', { allDay: true })
+          .rrule({ freq: 'DAILY', until: '2025-01-05' })
+          .withDisplayTimezone(timezone)
+          .toProcessed();
 
-      const visibleStart = createDate('2025-01-01T00:00:00Z');
-      const result = getRecurringEventOccurrencesForVisibleDays(
-        event,
-        visibleStart.getTime(),
-        addDays(visibleStart, 9).getTime(),
-        'default',
-      );
+        const result = getRecurringEventOccurrencesForVisibleDays(
+          event,
+          startOfDate('2025-01-01', timezone),
+          startOfDate('2025-01-10', timezone),
+          timezone,
+        );
 
-      expect(result.map(getDisplayKey)).to.deep.equal([
-        '2025-01-01',
-        '2025-01-02',
-        '2025-01-03',
-        '2025-01-04',
-        '2025-01-05',
-      ]);
-    });
+        expect(result.map(getDisplayKey)).to.deep.equal([
+          '2025-01-01',
+          '2025-01-02',
+          '2025-01-03',
+          '2025-01-04',
+          '2025-01-05',
+        ]);
+      },
+    );
   });
 
   it('should keep expanding a monthly rule whose next matching month is decades away', () => {

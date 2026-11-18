@@ -128,27 +128,6 @@ describe('getUpdatedEventModelFromChanges', () => {
     expect(updated.start).to.equal('2025-07-04T09:00:00');
   });
 
-  it('should write the UNTIL of an RRULE string of an all-day event made timed as its date', () => {
-    // 03:00 UTC on July 9th is July 8th in New York, the last day of the series.
-    const oldModel: SchedulerEvent = {
-      id: '1',
-      title: 'Trip',
-      start: '2025-07-04',
-      end: '2025-07-05',
-      allDay: true,
-      timezone: 'America/New_York',
-      rrule: 'FREQ=DAILY;UNTIL=20250709T030000Z',
-    };
-    const updated = getUpdatedEventModelFromChanges(
-      oldModel,
-      { id: '1', allDay: false },
-      undefined,
-      oldModel as SchedulerEvent,
-      'Asia/Tokyo',
-    );
-    expect(updated.rrule).to.equal('FREQ=DAILY;UNTIL=20250708');
-  });
-
   it.each<[NonNullable<SchedulerEvent['rrule']>, NonNullable<SchedulerEvent['rrule']>]>([
     [
       { freq: 'DAILY', until: '2025-07-08T09:00:00' },

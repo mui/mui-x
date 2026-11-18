@@ -2501,47 +2501,6 @@ premiumStoreClasses.forEach((storeClass) => {
         expect(() => processEvent(updated, 'UTC', schedulerRecurringEventsPlugin)).not.to.throw();
       });
 
-      it('should keep the last day of an all-day series made timed in another timezone', () => {
-        const onEventsChange = vi.fn();
-        // Its until, 03:00 UTC on July 9th, is July 8th in New York: the series ends on July 8th.
-        const event = EventBuilder.new()
-          .id('trip')
-          .withDataTimezone('America/New_York')
-          .span('2025-07-04', '2025-07-05', { allDay: true })
-          .rrule({ freq: 'DAILY', until: '2025-07-09T03:00:00Z' })
-          .build();
-        const store = new storeClass.Value({
-          resources: TEST_RESOURCES,
-          events: [event],
-          displayTimezone: 'Asia/Tokyo',
-          onEventsChange,
-        });
-
-        store.updateRecurringEvent({
-          occurrence: createStoreOccurrence(
-            store,
-            'trip',
-            createDate('2025-07-04T00:00:00', 'Asia/Tokyo'),
-          ),
-          changes: {
-            id: 'trip',
-            allDay: false,
-            start: createDate('2025-07-04T09:00:00', 'Asia/Tokyo'),
-            end: createDate('2025-07-04T10:00:00', 'Asia/Tokyo'),
-          },
-        });
-        store.selectRecurringEventScope('all');
-
-        // In Tokyo, 03:00 UTC on July 9th is 12:00, after the occurrence of July 9th at 09:00:
-        // the until is written as the date it meant.
-        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
-        expect(updated.timezone).to.equal('Asia/Tokyo');
-        expect(updated.rrule).to.deep.equal({ freq: 'DAILY', until: '2025-07-08' });
-        expect(() =>
-          processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
-        ).not.to.throw();
-      });
-
       it('should make a series all-day on the days of its timezone when no day is given', () => {
         const onEventsChange = vi.fn();
         // Fridays at 20:00 in New York, until July 18th, are Saturdays in Tokyo.
@@ -2703,6 +2662,9 @@ premiumStoreClasses.forEach((storeClass) => {
             scope === 'all' ? item.id === 'standup' : item.id !== 'standup',
           )!;
           expect((updated.rrule as SchedulerEventRecurrenceRule).until).to.equal('2025-07-08');
+          expect(() =>
+            processEvent(updated, 'America/New_York', schedulerRecurringEventsPlugin),
+          ).not.to.throw();
         });
 
         (
@@ -2748,6 +2710,9 @@ premiumStoreClasses.forEach((storeClass) => {
               scope === 'all' ? item.id === 'standup' : item.id !== 'standup',
             )!;
             expect((updated.rrule as SchedulerEventRecurrenceRule).until).to.equal(expected);
+            expect(() =>
+              processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
+            ).not.to.throw();
           });
         });
       });

@@ -8,7 +8,6 @@ import {
   BaseTemporal,
   isDateOnlyString,
   toEpochMs,
-  toPlainDate,
   toPlainDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
@@ -24,9 +23,9 @@ const UNTIL_REGEX = /^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})Z)?$/;
 
 /**
  * Reads `UNTIL`. The date form covers its whole day. The UTC date-time form is the exact cutoff of
- * a timed series, read on the wall clock of `timezone`; for an all-day series, only its date in
- * `timezone` counts. Returns `null` for a malformed value or a date or time that does not exist,
- * like February 31st.
+ * a timed series, read on the wall clock of `timezone`. On an all-day series, `UNTIL` must be a
+ * date: a date-time throws. Returns `null` for a malformed value or a date or time that does not
+ * exist, like February 31st.
  */
 function parseUntil(
   value: string,
@@ -36,6 +35,9 @@ function parseUntil(
   const match = UNTIL_REGEX.exec(value);
   if (!match) {
     return null;
+  }
+  if (allDay && match[4] !== undefined) {
+    throwAllDayUntilNotDate(value);
   }
   const [year, month, day, hour, minute, second] = match.slice(1).map(Number);
   try {
@@ -47,18 +49,10 @@ function parseUntil(
       { year, month, day, hour, minute, second },
       { overflow: 'reject' },
     );
-    return readUntilTimestamp(toEpochMs(utcDateTime, 'UTC'), timezone, allDay);
+    return toPlainDateTime(toEpochMs(utcDateTime, 'UTC'), timezone);
   } catch {
     return null;
   }
-}
-
-function readUntilTimestamp(
-  epochMs: number,
-  timezone: string,
-  allDay: boolean,
-): BaseTemporal.PlainDate | BaseTemporal.PlainDateTime {
-  return allDay ? toPlainDate(epochMs, timezone) : toPlainDateTime(epochMs, timezone);
 }
 
 const SUPPORTED_RRULE_KEYS = new Set([
@@ -110,6 +104,14 @@ function throwInvalidByMonthDay(value: string): never {
     `MUI X Scheduler: Invalid BYMONTHDAY values "${value}". ` +
       'BYMONTHDAY values must be integers between 1 and 31. ' +
       'Provide valid day of month values.',
+  );
+}
+
+function throwAllDayUntilNotDate(value: string): never {
+  throw new Error(
+    `MUI X Scheduler: The until "${value}" of the recurrence rule of an all-day event is not a date. ` +
+      'The occurrences of an all-day series are dates with no time or timezone, so a date-time cannot tell on which date the series ends. ' +
+      'Write it as a date, like until: "2025-07-10" or UNTIL=20250710. See https://mui.com/x/react-scheduler/recurring-events/#end-boundary.',
   );
 }
 
@@ -199,12 +201,16 @@ function readRuleObject(
   if (input.until != null) {
     // Read first, to throw a clear error for an invalid date.
     const timestamp = resolveEventTimestamp(input.until, timezone);
+    const isDate = isDateOnlyString(input.until);
+    if (allDay && !isDate) {
+      throwAllDayUntilNotDate(input.until);
+    }
     rule = {
       ...rule,
       // A date-only string covers its whole day, even one whose midnight the timezone skips.
-      until: isDateOnlyString(input.until)
+      until: isDate
         ? BaseTemporal.PlainDate.from(input.until)
-        : readUntilTimestamp(timestamp, timezone, allDay),
+        : toPlainDateTime(timestamp, timezone),
     };
   }
   return rule;
@@ -212,7 +218,8 @@ function readRuleObject(
 
 /**
  * Reads and validates a recurrence rule, from an RRULE string or a rule object.
- * The occurrences of the rules it returns can be computed.
+ * The occurrences of the rules it returns can be computed. On an all-day series, `until` must be a
+ * date: a date-time throws.
  */
 export function parseRRule(
   input: string | SchedulerEventRecurrenceRule,
