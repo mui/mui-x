@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { createDate } from 'test/utils/scheduler';
+import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
+import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import type { SchedulerEvent, SchedulerEventUpdatedProperties } from '../../../models';
 import { getCustomEventProperties, getUpdatedEventModelFromChanges } from './SchedulerStore.utils';
 
@@ -140,10 +142,6 @@ describe('getUpdatedEventModelFromChanges', () => {
       { freq: 'DAILY', until: '2025-07-08T08:00:00' },
       { freq: 'DAILY', until: '2025-07-07' },
     ],
-    [
-      { freq: 'DAILY', until: '2025-07-08' },
-      { freq: 'DAILY', until: '2025-07-08' },
-    ],
   ])(
     'should write the until of a timed series made all-day without new dates as its date in its timezone: %s',
     (rrule, expected) => {
@@ -165,6 +163,58 @@ describe('getUpdatedEventModelFromChanges', () => {
       expect(updated.rrule).to.deep.equal(expected);
     },
   );
+
+  it.each<[NonNullable<SchedulerEvent['rrule']>, NonNullable<SchedulerEvent['rrule']>]>([
+    [
+      { freq: 'DAILY', until: '2025-07-08' },
+      { freq: 'DAILY', until: '2025-07-08T23:59:59' },
+    ],
+    // 23:59:59 in Tokyo is 14:59:59 UTC.
+    ['FREQ=DAILY;UNTIL=20250708', 'FREQ=DAILY;UNTIL=20250708T145959Z'],
+  ])(
+    'should write the until of an all-day series made timed as the last instant of its date in the display timezone: %s',
+    (rrule, expected) => {
+      const oldModel: SchedulerEvent = {
+        id: '1',
+        title: 'Holiday',
+        start: '2025-07-01',
+        end: '2025-07-02',
+        allDay: true,
+        rrule,
+      };
+      const updated = getUpdatedEventModelFromChanges(
+        oldModel,
+        { id: '1', allDay: false },
+        undefined,
+        oldModel,
+        'Asia/Tokyo',
+      );
+      expect(updated.rrule).to.deep.equal(expected);
+      expect(() =>
+        processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
+      ).not.to.throw();
+    },
+  );
+
+  it('should write the UNTIL of an all-day series made timed in the timezone given with the changes', () => {
+    const oldModel: SchedulerEvent = {
+      id: '1',
+      title: 'Holiday',
+      start: '2025-07-01',
+      end: '2025-07-02',
+      allDay: true,
+      rrule: 'FREQ=DAILY;UNTIL=20250708',
+    };
+    const updated = getUpdatedEventModelFromChanges(
+      oldModel,
+      { id: '1', allDay: false, timezone: 'Europe/Paris' },
+      undefined,
+      oldModel,
+      'Asia/Tokyo',
+    );
+    // 23:59:59 in Paris is 21:59:59 UTC.
+    expect(updated.rrule).to.equal('FREQ=DAILY;UNTIL=20250708T215959Z');
+  });
 
   it('should snap the missing bound of a timed event made all-day with only its start', () => {
     // 23:00 in New York on July 4th is 12:00 in Tokyo on July 5th.

@@ -73,8 +73,6 @@ describe('processEvent', () => {
     it.each([
       [true, { freq: 'DAILY' as const, until: '2025-01-11' }, '2025-01-11'],
       [true, 'FREQ=DAILY;UNTIL=20250111', '2025-01-11'],
-      [false, { freq: 'DAILY' as const, until: '2025-01-11' }, '2025-01-11'],
-      [false, 'FREQ=DAILY;UNTIL=20250111', '2025-01-11'],
       [false, 'FREQ=DAILY;UNTIL=20250111T150000Z', '2025-01-11T10:00:00'],
     ])(
       'should read the UNTIL of a series with allDay=%s from %j in the timezone of the event',
@@ -108,6 +106,17 @@ describe('processEvent', () => {
       expect(() =>
         processEvent({ ...event, rrule }, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
       ).to.throw(/of the recurrence rule of an all-day event is not a date/);
+    });
+
+    it.each<NonNullable<SchedulerEvent['rrule']>>([
+      { freq: 'DAILY', until: '2025-01-11' },
+      'FREQ=DAILY;UNTIL=20250111',
+    ])('should throw when the until of a timed series is a date: %j', (rrule) => {
+      const event = EventBuilder.new().withDataTimezone('America/New_York').build();
+
+      expect(() =>
+        processEvent({ ...event, rrule }, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
+      ).to.throw(/of the recurrence rule of a timed event is not a date-time/);
     });
   });
 

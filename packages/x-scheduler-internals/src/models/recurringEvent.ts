@@ -95,11 +95,10 @@ export interface SchedulerProcessedEventRecurrenceRule {
  */
 export type SchedulerEventRecurrenceRule = Omit<SchedulerProcessedEventRecurrenceRule, 'until'> & {
   /**
-   * The inclusive end of the recurrence.
+   * The inclusive end of the recurrence, with the type of the event start (RFC 5545).
    * Same string semantics as `SchedulerEvent.start` / `end`.
-   * A date without a time, like "2025-07-10", includes its whole day.
-   * For timed events, a date-time is the latest start of an occurrence.
-   * For all-day events, it must be a date.
+   * For all-day events, it must be a date, like "2025-07-10", which includes its whole day.
+   * For timed events, it must be a date-time, the latest start of an occurrence.
    */
   until?: string;
 };

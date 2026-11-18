@@ -83,7 +83,7 @@ describe('date-utils', () => {
 
   describe('untilToEventString', () => {
     it.each([
-      ['2025-01-01', '2025-01-12'],
+      ['2025-01-01', '2025-01-12T23:59:59'],
       ['2025-01-01T09:00:00', '2025-01-12T23:59:59'],
       ['2025-01-01T08:00:00Z', '2025-01-12T22:59:59.999Z'],
     ])('should write a plain date covering its whole day after %s', (original, expected) => {

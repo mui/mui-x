@@ -2584,7 +2584,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
         (
           [
-            { freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-25' },
+            { freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-25T23:59:59' },
             'FREQ=WEEKLY;BYDAY=FR;UNTIL=20250726T030000Z',
           ] as const
         ).forEach((rrule) => {
@@ -2714,6 +2714,47 @@ premiumStoreClasses.forEach((storeClass) => {
               processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
             ).not.to.throw();
           });
+        });
+
+        it(`should write the until of an all-day series made timed on a given time as a date-time with scope '${scope}'`, () => {
+          const onEventsChange = vi.fn();
+          const event = EventBuilder.new()
+            .id('holiday')
+            .span('2025-07-01', '2025-07-02', { allDay: true })
+            .rrule({ freq: 'DAILY', until: '2025-07-08' })
+            .build();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'Asia/Tokyo',
+            onEventsChange,
+          });
+
+          store.updateRecurringEvent({
+            occurrence: createStoreOccurrence(
+              store,
+              'holiday',
+              createDate('2025-07-03T00:00:00', 'Asia/Tokyo'),
+            ),
+            changes: {
+              id: 'holiday',
+              allDay: false,
+              start: createDate('2025-07-03T09:00:00', 'Asia/Tokyo'),
+              end: createDate('2025-07-03T10:00:00', 'Asia/Tokyo'),
+            },
+          });
+          store.selectRecurringEventScope(scope);
+
+          const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+          const updated = updatedEvents.find((item) =>
+            scope === 'all' ? item.id === 'holiday' : item.id !== 'holiday',
+          )!;
+          expect((updated.rrule as SchedulerEventRecurrenceRule).until).to.equal(
+            '2025-07-08T23:59:59',
+          );
+          expect(() =>
+            processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
+          ).not.to.throw();
         });
       });
 

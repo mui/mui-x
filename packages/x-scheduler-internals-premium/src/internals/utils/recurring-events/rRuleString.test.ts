@@ -94,8 +94,6 @@ describe('recurring-events/rRuleString', () => {
       };
 
       it.each<[string, string | SchedulerEventRecurrenceRule, string]>([
-        ['a date string', { freq: 'DAILY', until: '2025-07-04' }, '2025-07-04'],
-        ['a UNTIL date', 'FREQ=DAILY;UNTIL=20250704', '2025-07-04'],
         ['an instant after the occurrence', 'FREQ=DAILY;UNTIL=20250704T120000Z', '2025-07-04'],
         [
           'the start of the occurrence',
@@ -130,13 +128,19 @@ describe('recurring-events/rRuleString', () => {
         );
       });
 
-      it('should read a date as a plain date and a date-time as a plain date-time for a timed series', () => {
-        const fromDate = parseRRule({ freq: 'DAILY', until: '2025-07-04' }, 'Europe/Paris');
+      it('should read a date-time as a plain date-time for a timed series', () => {
         const fromDateTime = parseRRule('FREQ=DAILY;UNTIL=20250704T080000Z', 'Europe/Paris');
-        expect(fromDate.until).to.be.instanceOf(BaseTemporal.PlainDate);
-        expect(fromDate.until?.toString()).to.equal('2025-07-04');
         expect(fromDateTime.until).to.be.instanceOf(BaseTemporal.PlainDateTime);
         expect(fromDateTime.until?.toString()).to.equal('2025-07-04T10:00:00');
+      });
+
+      it.each<string | SchedulerEventRecurrenceRule>([
+        'FREQ=DAILY;UNTIL=20250704',
+        { freq: 'DAILY', until: '2025-07-04' },
+      ])('should throw when the until of a timed series is a date: %s', (rrule) => {
+        expect(() => parseRRule(rrule, 'Europe/Paris')).to.throw(
+          /of the recurrence rule of a timed event is not a date-time/,
+        );
       });
     });
 

@@ -2340,7 +2340,8 @@ describe('<EventDialogContent open />', () => {
       it.each([
         // The occurrences start at 09:00: the last one before 08:00 on July 10th is on July 9th.
         { allDay: false, until: '2025-07-10T08:00:00', expectedUntil: '2025-07-09' },
-        { allDay: true, until: '2025-07-10', expectedUntil: '2025-07-10' },
+        // The last day becomes its last instant in the display timezone, UTC.
+        { allDay: true, until: '2025-07-10', expectedUntil: '2025-07-10T23:59:59' },
       ])(
         "should keep the last day of a series when toggling all-day from allDay=$allDay with scope 'all'",
         async ({ allDay, until, expectedUntil }) => {

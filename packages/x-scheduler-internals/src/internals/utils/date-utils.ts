@@ -10,7 +10,7 @@ import {
   toPlainDate,
   toPlainDateTime,
 } from './plain-date-utils/timeZone';
-import { isDateOnlyString, isInstantString } from './plain-date-utils/date';
+import { isInstantString } from './plain-date-utils/date';
 
 /**
  * Converts an instant back to an event date string, respecting the format of `originalString`:
@@ -30,10 +30,10 @@ export function timestampToEventString(
 }
 
 /**
- * Writes the `until` of a processed rule in the format of `originalString`, like
- * `timestampToEventString()`. A plain date covers its whole day: it stays a date on an all-day
- * event or after a date-only string, and is written as the last instant of its day otherwise. A
- * plain date-time is written as its instant.
+ * Writes the `until` of a processed rule with the type of the start of the event: a date on an
+ * all-day event, and a date-time on a timed one, in the format of `originalString` like
+ * `timestampToEventString()`. A plain date covers its whole day, so on a timed event it is written
+ * as the last instant of its day. A plain date-time is written as its instant.
  */
 export function untilToEventString(
   until: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime,
@@ -44,7 +44,7 @@ export function untilToEventString(
   if (until instanceof BaseTemporal.PlainDateTime) {
     return timestampToEventString(toEpochMs(until, dataTimezone), originalString, dataTimezone);
   }
-  if (allDay || isDateOnlyString(originalString)) {
+  if (allDay) {
     return until.toString();
   }
   return timestampToEventString(

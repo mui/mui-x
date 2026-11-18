@@ -22,10 +22,10 @@ import {
 const UNTIL_REGEX = /^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})Z)?$/;
 
 /**
- * Reads `UNTIL`. The date form covers its whole day. The UTC date-time form is the exact cutoff of
- * a timed series, read on the wall clock of `timezone`. On an all-day series, `UNTIL` must be a
- * date: a date-time throws. Returns `null` for a malformed value or a date or time that does not
- * exist, like February 31st.
+ * Reads `UNTIL`, which has the type of the start of the series (RFC 5545): a date on an all-day
+ * series, which covers its whole day, and a UTC date-time on a timed one, its exact cutoff read on
+ * the wall clock of `timezone`. The other type throws. Returns `null` for a malformed value or a
+ * date or time that does not exist, like February 31st.
  */
 function parseUntil(
   value: string,
@@ -36,23 +36,30 @@ function parseUntil(
   if (!match) {
     return null;
   }
-  if (allDay && match[4] !== undefined) {
-    throwAllDayUntilNotDate(value);
-  }
+  const isDate = match[4] === undefined;
   const [year, month, day, hour, minute, second] = match.slice(1).map(Number);
+  let until: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime;
   try {
-    if (match[4] === undefined) {
-      return BaseTemporal.PlainDate.from({ year, month, day }, { overflow: 'reject' });
+    if (isDate) {
+      until = BaseTemporal.PlainDate.from({ year, month, day }, { overflow: 'reject' });
+    } else {
+      // The trailing `Z` makes the value a UTC instant (RFC 5545).
+      const utcDateTime = BaseTemporal.PlainDateTime.from(
+        { year, month, day, hour, minute, second },
+        { overflow: 'reject' },
+      );
+      until = toPlainDateTime(toEpochMs(utcDateTime, 'UTC'), timezone);
     }
-    // The trailing `Z` makes the value a UTC instant (RFC 5545).
-    const utcDateTime = BaseTemporal.PlainDateTime.from(
-      { year, month, day, hour, minute, second },
-      { overflow: 'reject' },
-    );
-    return toPlainDateTime(toEpochMs(utcDateTime, 'UTC'), timezone);
   } catch {
     return null;
   }
+  if (allDay && !isDate) {
+    throwAllDayUntilNotDate(value);
+  }
+  if (!allDay && isDate) {
+    throwTimedUntilNotDateTime(value);
+  }
+  return until;
 }
 
 const SUPPORTED_RRULE_KEYS = new Set([
@@ -115,6 +122,14 @@ function throwAllDayUntilNotDate(value: string): never {
     `MUI X Scheduler: The until "${value}" of the recurrence rule of an all-day event is not a date. ` +
       'The occurrences of an all-day series are dates with no time or timezone, so a date-time cannot tell on which date the series ends. ' +
       'Write it as a date, like until: "2025-07-10" or UNTIL=20250710. See https://mui.com/x/react-scheduler/recurring-events/#end-boundary.',
+  );
+}
+
+function throwTimedUntilNotDateTime(value: string): never {
+  throw new Error(
+    `MUI X Scheduler: The until "${value}" of the recurrence rule of a timed event is not a date-time. ` +
+      'RFC 5545 requires the until to have the type of the start: the occurrences of a timed series start at an instant, so a date cannot tell at which instant the series ends. ' +
+      'Write it as a date-time, like until: "2025-07-10T23:59:59" or UNTIL=20250710T235959Z. See https://mui.com/x/react-scheduler/recurring-events/#end-boundary.',
   );
 }
 
@@ -208,6 +223,9 @@ function readRuleObject(
     if (allDay && !isDate) {
       throwAllDayUntilNotDate(input.until);
     }
+    if (!allDay && isDate) {
+      throwTimedUntilNotDateTime(input.until);
+    }
     rule = {
       ...rule,
       // A date-only string covers its whole day, even one whose midnight the timezone skips.
@@ -221,8 +239,8 @@ function readRuleObject(
 
 /**
  * Reads and validates a recurrence rule, from an RRULE string or a rule object.
- * The occurrences of the rules it returns can be computed. On an all-day series, `until` must be a
- * date: a date-time throws.
+ * The occurrences of the rules it returns can be computed. The `until` has the type of the start
+ * of the series: a date on an all-day series, a date-time on a timed one. The other type throws.
  */
 export function parseRRule(
   input: string | SchedulerEventRecurrenceRule,
