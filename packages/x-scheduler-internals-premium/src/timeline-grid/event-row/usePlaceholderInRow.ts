@@ -43,6 +43,10 @@ export function usePlaceholderInRow(
       return null;
     }
 
+    const allDay =
+      rawPlaceholder.type === 'external-drag'
+        ? rawPlaceholder.eventData.allDay
+        : originalEvent?.allDay;
     const startProcessed = createProcessedDate(rawPlaceholder.start, displayTimezone);
     const endProcessed = createProcessedDate(rawPlaceholder.end, displayTimezone);
 
@@ -63,12 +67,10 @@ export function usePlaceholderInRow(
       id: originalEventId ?? 'occurrence-placeholder',
       key: 'occurrence-placeholder',
       title: originalEvent ? originalEvent.title : '',
+      allDay,
       resource: rawPlaceholder.resourceId ?? originalEvent?.resource,
-      displayTimezone: {
-        start: startProcessed,
-        end: endProcessed,
-        timezone: displayTimezone,
-      },
+      start: startProcessed,
+      end: endProcessed,
     };
 
     if (rawPlaceholder.type === 'creation') {

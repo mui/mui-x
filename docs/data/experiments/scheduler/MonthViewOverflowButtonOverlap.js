@@ -8,15 +8,15 @@ const initialEvents = [
   {
     id: 'A',
     title: 'All-day A',
-    start: '2025-07-01T00:00:00',
-    end: '2025-07-31T23:59:59',
+    start: '2025-07-01',
+    end: '2025-08-01',
     allDay: true,
   },
   {
     id: 'B',
     title: 'All-day B',
-    start: '2025-07-01T00:00:00',
-    end: '2025-07-31T23:59:59',
+    start: '2025-07-01',
+    end: '2025-08-01',
     allDay: true,
   },
   {

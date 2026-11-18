@@ -1,5 +1,34 @@
 # Changelog
 
+## 9.18.1
+
+_Nov 16, 2026_
+
+We'd like to extend a big thank you to the 1 contributor who made this release possible. Here are some highlights ✨:
+
+- 🐛 Fix the broken CommonJS entries of the `@mui/x-charts-vendor` package published in v9.18.0
+
+The following team members contributed to this release:
+@LukasTy
+
+### Charts
+
+#### `@mui/x-charts@9.18.1`
+
+- [charts] Fix `@mui/x-charts-vendor` CommonJS entries after the D3 bump (#24218) @LukasTy
+
+#### `@mui/x-charts-pro@9.18.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.18.1`.
+
+#### `@mui/x-charts-premium@9.18.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.18.1`.
+
+#### `@mui/x-charts-vendor@9.18.1`
+
+- [charts] Fix `@mui/x-charts-vendor` CommonJS entries after the D3 bump (#24218) @LukasTy
+
 ## 9.18.0
 
 _Nov 13, 2026_

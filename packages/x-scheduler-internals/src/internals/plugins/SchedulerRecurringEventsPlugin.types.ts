@@ -16,22 +16,27 @@ export interface SchedulerRecurringEventsPluginInterface {
    * Parses a recurrence rule into a canonical `SchedulerProcessedEventRecurrenceRule`
    * expressed in the given timezone. String inputs are validated against RFC5545; object
    * inputs are trusted and normalized.
+   * A date-time `until` is the exact cutoff of a timed series (`allDay` false, the default), and
+   * only its date counts for an all-day one.
    */
   parseRRule(
     input: string | SchedulerEventRecurrenceRule,
     timezone: string,
+    allDay?: boolean,
   ): SchedulerProcessedEventRecurrenceRule;
 
   /**
    * Expands a recurring event into the occurrences that fall within the visible range, from the
    * timestamp `start` to the timestamp `end`, both included, honoring COUNT/UNTIL boundaries and
-   * EXDATE exclusions.
+   * EXDATE exclusions. When `visibleRanges`, the sorted and disjoint ranges of the visible days, is
+   * given, the occurrences that don't overlap one of them are left out too.
    */
   getOccurrencesForVisibleDays(
     event: SchedulerProcessedEvent,
     start: number,
     end: number,
     displayTimezone: string,
+    visibleRanges?: readonly { start: number; end: number }[],
   ): SchedulerEventOccurrence[];
 
   /**
@@ -40,9 +45,10 @@ export interface SchedulerRecurringEventsPluginInterface {
    */
   updateRecurringEvent(
     originalEvent: SchedulerProcessedEvent,
-    occurrenceStart: Date,
+    occurrence: SchedulerEventOccurrence,
     changes: SchedulerEventUpdatedProperties,
     scope: RecurringEventScope,
+    displayTimezone: string,
   ): UpdateEventsParameters;
 
   /**
@@ -51,8 +57,9 @@ export interface SchedulerRecurringEventsPluginInterface {
    */
   deleteRecurringEvent(
     originalEvent: SchedulerProcessedEvent,
-    occurrenceStart: Date,
+    occurrence: SchedulerEventOccurrence,
     scope: RecurringEventScope,
+    displayTimezone: string,
   ): UpdateEventsParameters;
 
   /**

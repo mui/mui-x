@@ -131,7 +131,7 @@ describe('EventTimelinePremium - features', () => {
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const [updatedEvent] = handleEventsChange.mock.calls[0][0];
     expect(updatedEvent.rrule).to.deep.equal(dailyEvent.rrule);
-    expect(new Date(updatedEvent.start).toISOString()).to.equal('2025-07-04T09:00:00.000Z');
+    expect(updatedEvent.start).to.equal('2025-07-04T09:00:00.000Z');
   });
 
   it('should keep the rrule of an event edited in the dialog without the recurring events feature', async () => {

@@ -10,14 +10,17 @@ import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
   SchedulerEventSide,
+  SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models/event';
-import { processEvent, resolveEventDate } from '@mui/x-scheduler-internals/process-event';
+import { processEvent, resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import type { SchedulerState } from '@mui/x-scheduler-internals/internals';
+import { getAllDayDayCount, toPlainDate } from '@mui/x-scheduler-internals/internals';
 import {
   schedulerRecurringEventsPlugin,
   getWeekDayCode,
 } from '@mui/x-scheduler-internals-premium/internals';
-import { toPlainDate } from '@mui/x-scheduler-internals/internals';
-import { addMinutes, createDate, endOfDay, startOfDay } from './dates';
+import { addMinutes, createDate } from './dates';
 
 export const DEFAULT_TESTING_VISIBLE_DATE_STR = '2025-07-03T00:00:00Z';
 export const DEFAULT_TESTING_VISIBLE_DATE = createDate(DEFAULT_TESTING_VISIBLE_DATE_STR);
@@ -174,7 +177,7 @@ export class EventBuilder {
    */
   singleDay(start: string, durationMinutes = 60) {
     const dataTimezone = this.event.timezone ?? 'default';
-    const startDate = resolveEventDate(start, dataTimezone);
+    const startDate = new Date(resolveEventTimestamp(start, dataTimezone));
     const endDate = addMinutes(startDate, durationMinutes);
     this.event.start = start;
     this.event.end = endDate.toISOString();
@@ -182,14 +185,14 @@ export class EventBuilder {
   }
 
   /**
-   * Create an all-day event on the provided calendar day.
+   * Create an all-day event on the provided calendar day, read in the data timezone.
    * Sets `allDay=true`.
    */
   fullDay(date: string) {
     const dataTimezone = this.event.timezone ?? 'default';
-    const d = resolveEventDate(date, dataTimezone);
-    this.event.start = startOfDay(d).toISOString();
-    this.event.end = endOfDay(d).toISOString();
+    const day = toPlainDate(resolveEventTimestamp(date, dataTimezone), dataTimezone);
+    this.event.start = day.toString();
+    this.event.end = day.add({ days: 1 }).toString();
     this.event.allDay = true;
     return this;
   }
@@ -219,8 +222,8 @@ export class EventBuilder {
   recurrent(kind: RecurringEventPresetKey, rrule?: Omit<SchedulerEventRecurrenceRule, 'freq'>) {
     const dataTimezone = this.event.timezone ?? 'default';
     const anchor = this.event.start
-      ? resolveEventDate(this.event.start, dataTimezone)
-      : DEFAULT_TESTING_VISIBLE_DATE;
+      ? resolveEventTimestamp(this.event.start, dataTimezone)
+      : DEFAULT_TESTING_VISIBLE_DATE.getTime();
 
     let base: SchedulerEventRecurrenceRule = { freq: kind, interval: 1 };
 
@@ -228,7 +231,7 @@ export class EventBuilder {
       const code = getWeekDayCode(anchor, dataTimezone);
       base = { ...base, byDay: [code] };
     } else if (kind === 'MONTHLY') {
-      const dayOfMonth = toPlainDate(anchor.getTime(), dataTimezone).day;
+      const dayOfMonth = toPlainDate(anchor, dataTimezone).day;
       base = { ...base, byMonthDay: [dayOfMonth] };
     }
 
@@ -248,29 +251,40 @@ export class EventBuilder {
 
   /**
    * Derives a SchedulerEventOccurrence from the built event.
-   * @param occurrenceStartDate Start date of the recurrence occurrence.
+   * @param occurrenceStartDate Start date of the recurrence occurrence, read in the display
+   * timezone for an all-day event and in the data timezone otherwise.
    * Defaults to the event start date.
    */
   toOccurrence(occurrenceStartDate?: string): SchedulerEventOccurrence {
-    const dataTimezone = this.event.timezone ?? 'default';
-    const rawStart = occurrenceStartDate
-      ? resolveEventDate(occurrenceStartDate, dataTimezone)
-      : resolveEventDate(this.event.start, dataTimezone);
-
     const baseProcessed = processEvent(
       this.event,
       this.displayTimezone,
       schedulerRecurringEventsPlugin,
     );
-    const originalDurationMs =
-      baseProcessed.dataTimezone.end.timestamp - baseProcessed.dataTimezone.start.timestamp;
-    const rawEnd = new Date(rawStart.getTime() + originalDurationMs);
 
-    const occurrenceModel: SchedulerEvent = {
-      ...this.event,
-      start: rawStart.toISOString(),
-      end: rawEnd.toISOString(),
-    };
+    let occurrenceModel: SchedulerEvent;
+    if (this.event.allDay) {
+      const day = toPlainDate(
+        occurrenceStartDate == null
+          ? baseProcessed.start.timestamp
+          : resolveEventTimestamp(occurrenceStartDate, this.displayTimezone),
+        this.displayTimezone,
+      );
+      occurrenceModel = {
+        ...this.event,
+        start: day.toString(),
+        end: day.add({ days: getAllDayDayCount(baseProcessed) }).toString(),
+      };
+    } else {
+      const dataTimezone = this.event.timezone ?? 'default';
+      const rawStart = resolveEventTimestamp(occurrenceStartDate ?? this.event.start, dataTimezone);
+      const originalDurationMs = baseProcessed.end.timestamp - baseProcessed.start.timestamp;
+      occurrenceModel = {
+        ...this.event,
+        start: new Date(rawStart).toISOString(),
+        end: new Date(rawStart + originalDurationMs).toISOString(),
+      };
+    }
 
     const processed = processEvent(
       occurrenceModel,
@@ -278,8 +292,9 @@ export class EventBuilder {
       schedulerRecurringEventsPlugin,
     );
 
+    const { exDates: unusedExDates, ...occurrenceProperties } = processed;
     return {
-      ...processed,
+      ...occurrenceProperties,
       key: crypto.randomUUID(),
     };
   }
@@ -298,4 +313,40 @@ export class EventBuilder {
     const { id, ...rest } = this.event;
     return rest;
   }
+}
+
+/**
+ * The occurrence of a recurring processed event that starts at `occurrenceStart`, as the
+ * recurring-events plugin expands it in `displayTimezone`, the timezone the event was processed in.
+ */
+export function createOccurrence(
+  event: SchedulerProcessedEvent,
+  occurrenceStart: Date,
+  displayTimezone: string = 'default',
+): SchedulerEventOccurrence {
+  const startMs = occurrenceStart.getTime();
+  const occurrence = schedulerRecurringEventsPlugin
+    .getOccurrencesForVisibleDays(event, startMs, startMs, displayTimezone)
+    .find((item) => item.start.timestamp === startMs);
+  if (occurrence == null) {
+    throw new Error(
+      `No occurrence of the event "${event.id}" starts at ${occurrenceStart.toISOString()}.`,
+    );
+  }
+  return occurrence;
+}
+
+/**
+ * The occurrence of an event of a store that starts at `occurrenceStart`.
+ */
+export function createStoreOccurrence(
+  store: { state: SchedulerState },
+  eventId: SchedulerEventId,
+  occurrenceStart: Date,
+): SchedulerEventOccurrence {
+  return createOccurrence(
+    schedulerEventSelectors.processedEvent(store.state, eventId)!,
+    occurrenceStart,
+    store.state.displayTimezone,
+  );
 }
