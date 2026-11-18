@@ -152,10 +152,10 @@ describe('computeAutoSchedulingCascade', () => {
       { displayTimezone: 'America/New_York' },
     );
 
-    // b lands on the first second of New York July 6th.
+    // b lands on the first second of July 6th in its timezone, UTC.
     expect(result).to.have.length(1);
     expect(result[0].id).to.equal('b');
-    expect(result[0].start!.getTime()).to.equal(newYorkDate('2025-07-06T00:00:00').getTime());
+    expect(result[0].start!.getTime()).to.equal(utcDate('2025-07-06T00:00:00').getTime());
   });
 
   it('should count the lag of an all-day event made timed in the display timezone', () => {
@@ -735,6 +735,111 @@ describe('computeAutoSchedulingCascade', () => {
     // serialization).
     expect(result[0].start!.getTime()).to.equal(utcDate('2025-07-05T00:00:00').getTime());
     expect(result[0].end!.getTime()).to.equal(utcDate('2025-07-05T01:00:00').getTime());
+  });
+
+  describe('between an all-day event and a timed event', () => {
+    const DISPLAY_TIMEZONES = ['Asia/Tokyo', 'America/Los_Angeles', 'UTC'];
+
+    // A predecessor on July 4th and a successor at 22:00 in New York on July 4th.
+    const buildAllDayPredecessor = (displayTimezone: string) => {
+      const predecessor = allDayEvent('a', '2025-07-04', displayTimezone);
+      const successor = EventBuilder.new()
+        .id('b')
+        .withDataTimezone('America/New_York')
+        .span('2025-07-04T22:00:00', '2025-07-04T23:00:00')
+        .withDisplayTimezone(displayTimezone)
+        .toProcessed();
+      return { predecessor, successor, link: dependency('a', 'b') };
+    };
+
+    it.each(DISPLAY_TIMEZONES)(
+      "should start a timed successor at the end of its all-day predecessor in the successor's timezone, displayed in %s",
+      (displayTimezone) => {
+        const { predecessor, successor, link } = buildAllDayPredecessor(displayTimezone);
+
+        const result = runCascade([predecessor, successor], [link], [], {
+          displayTimezone,
+          enforcedDependencies: [link],
+        });
+
+        expect(result).to.have.length(1);
+        expectDates(result[0], '2025-07-05T00:00:00', '2025-07-05T01:00:00', 'America/New_York');
+      },
+    );
+
+    it.each(DISPLAY_TIMEZONES)(
+      "should start an all-day successor on the day after its timed predecessor in the predecessor's timezone, displayed in %s",
+      (displayTimezone) => {
+        const predecessor = EventBuilder.new()
+          .id('a')
+          .withDataTimezone('America/New_York')
+          .span('2025-07-04T19:00:00', '2025-07-04T20:00:00')
+          .withDisplayTimezone(displayTimezone)
+          .toProcessed();
+        const successor = allDayEvent('b', '2025-07-04', displayTimezone);
+        const link = dependency('a', 'b');
+
+        const result = runCascade([predecessor, successor], [link], [], {
+          displayTimezone,
+          enforcedDependencies: [link],
+        });
+
+        expect(result).to.have.length(1);
+        expectDates(result[0], '2025-07-05T00:00:00', '2025-07-06T00:00:00', displayTimezone);
+      },
+    );
+
+    it('should count a lag in days from an all-day predecessor on the wall clock of a timed successor', () => {
+      // DST starts on March 9th, 2025 in New York.
+      const predecessor = allDayEvent('a', '2025-03-08', 'Asia/Tokyo');
+      const successor = EventBuilder.new()
+        .id('b')
+        .withDataTimezone('America/New_York')
+        .span('2025-03-09T09:00:00', '2025-03-09T10:00:00')
+        .withDisplayTimezone('Asia/Tokyo')
+        .toProcessed();
+      const link = dependency('a', 'b', { lag: 1, lagUnit: 'day' });
+
+      const result = runCascade([predecessor, successor], [link], [], {
+        displayTimezone: 'Asia/Tokyo',
+        enforcedDependencies: [link],
+      });
+
+      expect(result).to.have.length(1);
+      expectDates(result[0], '2025-03-10T00:00:00', '2025-03-10T01:00:00', 'America/New_York');
+    });
+
+    it('should start a timed successor at the end of a DST gap at midnight after its all-day predecessor', () => {
+      // America/Havana springs forward at midnight on March 8th, 2026: that day starts at 01:00.
+      const predecessor = allDayEvent('a', '2026-03-07', 'UTC');
+      const successor = EventBuilder.new()
+        .id('b')
+        .withDataTimezone('America/Havana')
+        .span('2026-03-07T22:00:00', '2026-03-07T23:00:00')
+        .withDisplayTimezone('UTC')
+        .toProcessed();
+      const link = dependency('a', 'b');
+
+      const result = runCascade([predecessor, successor], [link], [], {
+        displayTimezone: 'UTC',
+        enforcedDependencies: [link],
+      });
+
+      expect(result).to.have.length(1);
+      expectDates(result[0], '2026-03-08T01:00:00', '2026-03-08T02:00:00', 'America/Havana');
+    });
+
+    it.each(DISPLAY_TIMEZONES)(
+      "should measure the violation of a timed successor of an all-day predecessor in the successor's timezone, displayed in %s",
+      (displayTimezone) => {
+        const { predecessor, successor, link } = buildAllDayPredecessor(displayTimezone);
+
+        // Measured from the last instant of the predecessor, 23:59:59.999 in New York.
+        expect(
+          getDependencyViolation(buildLookup([predecessor, successor]), link, displayTimezone),
+        ).to.equal(2 * 60 * 60 * 1000 - 1);
+      },
+    );
   });
 
   it('should preserve the day span of an all-day successor pushed by an all-day predecessor', () => {

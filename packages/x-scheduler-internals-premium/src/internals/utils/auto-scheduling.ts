@@ -15,6 +15,7 @@ import {
   snapAllDayBounds,
   snapToOwnDays,
   toLocalDayNumber,
+  toLocalMs,
 } from '@mui/x-scheduler-internals/internals';
 import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
 import type { SchedulerDependency } from '../../models';
@@ -55,7 +56,9 @@ export interface ComputeAutoSchedulingCascadeParameters {
    */
   enforcedDependencies?: readonly SchedulerDependency[];
   /**
-   * The timezone the days of the all-day events are read in.
+   * The timezone of the store's all-day bounds: the `Date`s of all-day entries are read and
+   * written in it, and an all-day event made timed takes it. The bounds between an all-day and a
+   * timed event don't depend on it.
    */
   displayTimezone: string;
 }
@@ -128,8 +131,21 @@ function getDependencyBound(
   targetDates: ResolvedDates,
 ): number | null {
   const edges = getDependencyEdges(dependency.type);
+  let sourceEdge = sourceDates[edges.source];
+  if (sourceDates.allDay !== targetDates.allDay) {
+    // Between an all-day and a timed event, the dates of the all-day event are read in the
+    // timezone of the timed one: the same edge of its date there, or the wall time of the timed
+    // predecessor on the days of the all-day successor.
+    sourceEdge = sourceDates.allDay
+      ? getAllDayEdgeMs(
+          toLocalDayNumber(sourceEdge, sourceDates.timezone),
+          edges.source,
+          targetDates.timezone,
+        )
+      : localToEpochMs(toLocalMs(sourceEdge, sourceDates.timezone), targetDates.timezone);
+  }
   const timestamp = addDependencyLag(
-    sourceDates[edges.source],
+    sourceEdge,
     getEffectiveDependencyLag(dependency, targetDates.allDay),
     targetDates.timezone,
   );
@@ -216,7 +232,8 @@ export function getDependencyViolation(
  *
  * Each dependency bounds one edge of the successor by one edge of the predecessor plus
  * the lag (FS: `start >= pred.end`, SS: `start >= pred.start`, FF: `end >= pred.end`,
- * SF: `end >= pred.start`), the lag being added in the successor's timezone.
+ * SF: `end >= pred.start`), the lag being added in the successor's timezone. Between an all-day
+ * and a timed event, the dates of the all-day event are read in the timezone of the timed one.
  *
  * Push-only: events only move later, and pre-existing violations stay as-is unless their
  * dependency is enforced. A seed whose entry moves `start` is being placed by the user and
