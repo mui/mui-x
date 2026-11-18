@@ -19,7 +19,7 @@ export function deleteRecurringEvent(
 ): UpdateEventsParameters {
   switch (scope) {
     case 'this-and-following': {
-      return applyRecurringDeleteFollowing(originalEvent, occurrence, displayTimezone);
+      return applyRecurringDeleteFollowing(originalEvent, occurrence);
     }
 
     case 'all': {
@@ -65,7 +65,7 @@ export function applyRecurringDeleteOnlyThis(
         createStartOfPlainDate(occurrenceDay, timezone),
       ];
 
-  if (!RecurringSeries.fromEvent(originalEvent, displayTimezone, excludedDays).hasOccurrence()) {
+  if (!RecurringSeries.fromEvent(originalEvent, excludedDays).hasOccurrence()) {
     return { deleted: [originalEvent.id] };
   }
 
@@ -82,14 +82,9 @@ export function applyRecurringDeleteOnlyThis(
 export function applyRecurringDeleteFollowing(
   originalEvent: SchedulerProcessedEvent,
   occurrence: SchedulerEventOccurrence,
-  displayTimezone: string,
 ): UpdateEventsParameters {
   const occurrencePlainDate = getOccurrencePlainDate(occurrence);
-  if (
-    !RecurringSeries.fromEvent(originalEvent, displayTimezone).hasOccurrenceBefore(
-      occurrencePlainDate,
-    )
-  ) {
+  if (!RecurringSeries.fromEvent(originalEvent).hasOccurrenceBefore(occurrencePlainDate)) {
     return { deleted: [originalEvent.id] };
   }
 

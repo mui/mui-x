@@ -256,7 +256,6 @@ describe('recurring-events/deleteRecurringEvent', () => {
       const result = applyRecurringDeleteFollowing(
         defaultEvent,
         createOccurrence(defaultEvent, occurrenceStart),
-        'default',
       );
 
       expect(result.deleted).to.equal(undefined);
@@ -274,7 +273,6 @@ describe('recurring-events/deleteRecurringEvent', () => {
       const result = applyRecurringDeleteFollowing(
         defaultEvent,
         createOccurrence(defaultEvent, occurrenceStart),
-        'default',
       );
       expect(result).to.deep.equal({ deleted: [defaultEvent.id] });
     });
@@ -292,11 +290,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
         .toProcessed();
       const occurrenceStart = createDate('2025-01-05T09:00:00Z');
 
-      const result = applyRecurringDeleteFollowing(
-        event,
-        createOccurrence(event, occurrenceStart),
-        'default',
-      );
+      const result = applyRecurringDeleteFollowing(event, createOccurrence(event, occurrenceStart));
       expect(result).to.deep.equal({ deleted: [event.id] });
     });
 
@@ -310,7 +304,6 @@ describe('recurring-events/deleteRecurringEvent', () => {
       const result = applyRecurringDeleteFollowing(
         countedEvent,
         createOccurrence(countedEvent, occurrenceStart),
-        'default',
       );
       const rule = result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule;
 
@@ -333,7 +326,6 @@ describe('recurring-events/deleteRecurringEvent', () => {
       const result = applyRecurringDeleteFollowing(
         original,
         createOccurrence(original, occurrenceStart, 'Europe/Madrid'),
-        'Europe/Madrid',
       );
       const until = (result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule).until!;
 
@@ -395,7 +387,6 @@ describe('recurring-events/deleteRecurringEvent', () => {
           const result = applyRecurringDeleteFollowing(
             event,
             createOccurrence(event, occurrenceStart, timezone),
-            timezone,
           );
           const { until, ...rule } = result.updated![0]
             .rrule as SchedulerProcessedEventRecurrenceRule;

@@ -66,7 +66,8 @@ Without the feature, the `rrule` stays in your data but is ignored:
 
 With the feature, the Scheduler expands recurring events only for the visible range, keeps the original duration, and handles all-day and multi-day spans.
 
-The rule is evaluated in the event's `timezone`, even when it is edited from the event dialog while the calendar displays another timezone.
+The rule of a timed event is evaluated in the event's `timezone`, even when it is edited from the event dialog while the calendar displays another timezone.
+The rule of an all-day event is evaluated on its dates, the same in every timezone.
 See [Recurring events and timezones](/x/react-scheduler/timezone/#recurring-events-and-timezones) for details.
 
 {{"demo": "RecurringEventsDataset.js", "bg": "inline", "defaultCodeOpen": false}}

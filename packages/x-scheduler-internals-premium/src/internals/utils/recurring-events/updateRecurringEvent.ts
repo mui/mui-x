@@ -149,7 +149,7 @@ export function applyRecurringUpdateFollowing(
   // 2) Old series: truncated to end the day before the edited occurrence, like a deletion.
   return {
     created: [newEvent],
-    ...applyRecurringDeleteFollowing(originalEvent, occurrence, displayTimezone),
+    ...applyRecurringDeleteFollowing(originalEvent, occurrence),
   };
 }
 
@@ -569,7 +569,7 @@ export function decideSplitRRule(
   // Recalculate COUNT: original minus prior occurrences.
   if (originalRule.count) {
     // The excluded occurrences still count toward COUNT.
-    const series = RecurringSeries.fromEvent(originalEvent, displayTimezone);
+    const series = RecurringSeries.fromEvent(originalEvent);
     const remaining = originalRule.count - series.countOccurrencesBefore(splitPlainDate);
     // If no occurrences remain, the split segment is non-recurring.
     if (remaining <= 0) {
