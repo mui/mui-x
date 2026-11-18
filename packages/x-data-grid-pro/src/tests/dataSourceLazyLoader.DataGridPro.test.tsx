@@ -219,6 +219,74 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         ]);
       },
     );
+
+    it('should run a queued nested viewport fetch when the Activity is hidden', async () => {
+      const rows = Array.from({ length: 30 }, (_, i) => ({
+        id: i,
+        name: `Row ${i}`,
+        childrenCount: 0,
+      }));
+      const getRows = vi.fn(async (params: GridGetRowsParams) => ({
+        rows: rows.slice(params.start as number, (params.end as number) + 1),
+        rowCount: rows.length,
+      }));
+      const dataSource: GridDataSource = {
+        getRows,
+        getGroupKey: (row) => row.name,
+        getChildrenCount: (row) => row.childrenCount,
+      };
+
+      function Test({ mode = 'visible' }: { mode?: 'visible' | 'hidden' }) {
+        apiRef = useGridApiRef();
+        return (
+          <React.Activity mode={mode}>
+            <div style={{ width: 300, height: gridHeight }}>
+              <DataGridPro
+                apiRef={apiRef}
+                columns={[{ field: 'name' }]}
+                dataSource={dataSource}
+                dataSourceCache={null}
+                lazyLoading
+                lazyLoadingRequestThrottleMs={0}
+                treeData
+                initialState={{
+                  pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+                }}
+              />
+            </div>
+          </React.Activity>
+        );
+      }
+
+      const { setProps } = render(<Test />);
+      await waitFor(() => expect(apiRef.current!.getRow(0)).not.to.equal(null));
+      const callCountBeforeScroll = getRows.mock.calls.length;
+
+      vi.useFakeTimers();
+      onTestFinished(() => {
+        vi.useRealTimers();
+      });
+      // Queue the debounced fetch of the next chunk, then hide the grid before it runs.
+      act(() => {
+        apiRef.current!.publishEvent('renderedRowsIntervalChange', {
+          firstRowIndex: 12,
+          lastRowIndex: 18,
+          firstColumnIndex: 0,
+          lastColumnIndex: 0,
+        });
+        vi.advanceTimersByTime(0);
+      });
+      expect(getRows.mock.calls.length).to.equal(callCountBeforeScroll);
+      act(() => {
+        setProps({ mode: 'hidden' });
+      });
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(50);
+      });
+
+      expect(getRows.mock.calls.length).to.equal(callCountBeforeScroll + 1);
+      expect(getRows.mock.lastCall![0].start).to.equal(10);
+    });
   }
 
   it('should load the first page initially', async () => {
