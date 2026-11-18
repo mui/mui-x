@@ -45,13 +45,6 @@ function armRecurringOccurrence(store: any) {
     end,
     timezone: 'default',
     rrule: RRULE,
-    // Present on every real occurrence: without the data instants, the repoint skips the
-    // data-timezone identity branch these tests are about.
-    unstable_internalInfos: {
-      displayTimezone: 'default',
-      dataStart: start.timestamp,
-      dataEnd: end.timestamp,
-    },
   } as any;
   store.startEditing(editedOccurrence, 'armed');
 }
@@ -113,7 +106,6 @@ storeClasses.forEach((storeClass) => {
           key: 'standup::2025-07-07',
           start: createProcessedDate(Date.parse('2025-07-07T09:00:00Z'), 'default'),
           end: createProcessedDate(Date.parse('2025-07-07T10:00:00Z'), 'default'),
-          unstable_internalInfos: { displayTimezone: 'default' },
         } as any;
       }
 
@@ -164,7 +156,6 @@ storeClasses.forEach((storeClass) => {
           key: 'standup::2025-07-07',
           start: createProcessedDate(Date.parse('2025-07-07T09:00:00Z'), 'default'),
           end: createProcessedDate(Date.parse('2025-07-07T10:00:00Z'), 'default'),
-          unstable_internalInfos: { displayTimezone: 'default' },
         } as any;
       }
 
@@ -247,22 +238,7 @@ premiumStoreClasses.forEach((storeClass) => {
     }
 
     function armOccurrence(store: any, occurrenceStart: Date) {
-      store.startEditing(
-        {
-          id: 'standup',
-          key: getRecurringOccurrenceKey('standup', occurrenceStart.getTime(), 'default'),
-          start: createProcessedDate(occurrenceStart.getTime(), 'default'),
-          end: createProcessedDate(addHours(occurrenceStart, 1).getTime(), 'default'),
-          timezone: 'default',
-          rrule: RRULE,
-          unstable_internalInfos: {
-            displayTimezone: 'default',
-            dataStart: occurrenceStart.getTime(),
-            dataEnd: addHours(occurrenceStart, 1).getTime(),
-          },
-        } as any,
-        'armed',
-      );
+      store.startEditing(createStoreOccurrence(store, 'standup', occurrenceStart), 'armed');
     }
 
     it('should keep the armed occurrence when a different occurrence is resized', () => {
@@ -323,8 +299,8 @@ premiumStoreClasses.forEach((storeClass) => {
       // A later edit or delete of the still-armed occurrence targets this identity:
       // left stale, it would anchor the operation on the pre-resize occurrence.
       const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
-      expect(new Date(occurrence!.unstable_internalInfos.dataStart)).toEqualDateTime(resizedStart);
-      expect(new Date(occurrence!.unstable_internalInfos.dataEnd)).toEqualDateTime(resizedEnd);
+      expect(new Date(occurrence!.start.timestamp)).toEqualDateTime(resizedStart);
+      expect(new Date(occurrence!.end.timestamp)).toEqualDateTime(resizedEnd);
     });
 
     it("should disarm when a scope 'all' change moves the armed occurrence to another day", () => {
@@ -360,7 +336,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
       expect(occurrence.key).to.equal(armedKey);
-      expect(new Date(occurrence!.unstable_internalInfos.dataStart)).toEqualDateTime(movedStart);
+      expect(new Date(occurrence!.start.timestamp)).toEqualDateTime(movedStart);
       expect(occurrence.rrule).to.not.equal(undefined);
     });
 
@@ -380,8 +356,8 @@ premiumStoreClasses.forEach((storeClass) => {
 
       const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
       expect(occurrence.key).to.equal(armedKey);
-      expect(new Date(occurrence!.unstable_internalInfos.dataStart)).toEqualDateTime(dayB);
-      expect(new Date(occurrence!.unstable_internalInfos.dataEnd)).toEqualDateTime(extendedEnd);
+      expect(new Date(occurrence!.start.timestamp)).toEqualDateTime(dayB);
+      expect(new Date(occurrence!.end.timestamp)).toEqualDateTime(extendedEnd);
     });
 
     it("should make the armed occurrence all-day on a same-day scope 'all' change to all-day", () => {
@@ -394,7 +370,7 @@ premiumStoreClasses.forEach((storeClass) => {
           id: 'standup',
           allDay: true,
           start: createDate('2025-07-08T00:00:00Z'),
-          end: createDate('2025-07-08T23:59:59.999Z'),
+          end: createDate('2025-07-09T00:00:00Z'),
         },
       });
       store.selectRecurringEventScope('all');
@@ -404,6 +380,106 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(occurrence.allDay).to.equal(true);
       expect(occurrence.start.plainDateTime.toString()).to.equal('2025-07-08T00:00:00');
       expect(occurrence.end.plainDateTime.toString()).to.equal('2025-07-09T00:00:00');
+    });
+
+    it("should key the armed occurrence in the display timezone on a scope 'all' change to timed", () => {
+      // Fridays all-day, stored with a New York timezone and displayed in Tokyo: made timed, the
+      // series moves to Tokyo.
+      const store = new storeClass.Value({
+        ...DEFAULT_PARAMS,
+        events: [
+          EventBuilder.new()
+            .id('gym')
+            .withDataTimezone('America/New_York')
+            .span('2025-07-04', '2025-07-05', { allDay: true })
+            .rrule({ freq: 'WEEKLY', byDay: ['FR'] })
+            .build(),
+        ],
+        displayTimezone: 'Asia/Tokyo',
+        onEventsChange: () => {},
+      });
+      const armed = createStoreOccurrence(
+        store,
+        'gym',
+        createDate('2025-07-11T00:00:00', 'Asia/Tokyo'),
+      );
+      store.startEditing(armed, 'armed');
+
+      store.updateRecurringEvent({
+        occurrence: armed,
+        changes: {
+          id: 'gym',
+          allDay: false,
+          start: createDate('2025-07-11T09:00:00', 'Asia/Tokyo'),
+          end: createDate('2025-07-11T10:00:00', 'Asia/Tokyo'),
+        },
+      });
+      store.selectRecurringEventScope('all');
+
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      // The series runs on Tokyo Fridays at 09:00: the occurrence is keyed on that day there.
+      expect(occurrence.key).to.equal(
+        getRecurringOccurrenceKey(
+          'gym',
+          createDate('2025-07-11T09:00:00', 'Asia/Tokyo').getTime(),
+          'Asia/Tokyo',
+        ),
+      );
+      expect(occurrence.timezone).to.equal('Asia/Tokyo');
+    });
+
+    it('should read the armed occurrence again when the display timezone changes', () => {
+      // A one-day all-day July 4th, armed in New York, then displayed in Tokyo.
+      const builder = EventBuilder.new()
+        .id('holiday')
+        .span('2025-07-04', '2025-07-05', { allDay: true })
+        .withDisplayTimezone('America/New_York');
+      const params = {
+        ...DEFAULT_PARAMS,
+        events: [builder.build()],
+        displayTimezone: 'America/New_York',
+        onEventsChange: () => {},
+      };
+      const store = new storeClass.Value(params);
+      store.startEditing(builder.toOccurrence(), 'armed');
+
+      store.updateStateFromParameters({ ...params, displayTimezone: 'Asia/Tokyo' });
+
+      // Still July 4th only, now as the days of Tokyo.
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      expect(occurrence.start.timestamp).to.equal(
+        createDate('2025-07-04T00:00:00', 'Asia/Tokyo').getTime(),
+      );
+      expect(occurrence.end.timestamp).to.equal(
+        createDate('2025-07-05T00:00:00', 'Asia/Tokyo').getTime(),
+      );
+      expect(occurrence.end.plainDateTime.toString()).to.equal('2025-07-05T00:00:00');
+    });
+
+    it('should move the armed occurrence to the display timezone when a drop makes it timed', () => {
+      // An all-day Friday stored with a New York timezone, dropped on the Tokyo time grid.
+      const builder = EventBuilder.new()
+        .id('gym')
+        .withDataTimezone('America/New_York')
+        .span('2025-07-04', '2025-07-05', { allDay: true })
+        .withDisplayTimezone('Asia/Tokyo');
+      const store = new storeClass.Value({
+        ...DEFAULT_PARAMS,
+        events: [builder.build()],
+        displayTimezone: 'Asia/Tokyo',
+        onEventsChange: () => {},
+      });
+      store.startEditing(builder.toOccurrence(), 'armed');
+
+      store.setEditingOccurrenceTimes({
+        allDay: false,
+        start: createDate('2025-07-04T09:00:00', 'Asia/Tokyo'),
+        end: createDate('2025-07-04T10:00:00', 'Asia/Tokyo'),
+      });
+
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      expect(occurrence.allDay).to.equal(false);
+      expect(occurrence.timezone).to.equal('Asia/Tokyo');
     });
 
     it("should disarm when an end-only scope 'all' change pushes the armed occurrence past its day", () => {
@@ -520,11 +596,7 @@ premiumStoreClasses.forEach((storeClass) => {
         const base = lateBuilder.toOccurrence('2025-07-08T23:00:00Z') as any;
         const armed = {
           ...base,
-          key: getRecurringOccurrenceKey(
-            'late',
-            base.unstable_internalInfos.dataStart,
-            base.timezone,
-          ),
+          key: getRecurringOccurrenceKey('late', base.start.timestamp, base.timezone),
         };
         store.startEditing(armed, 'armed');
         return { store, armed };
@@ -618,15 +690,13 @@ premiumStoreClasses.forEach((storeClass) => {
       // The display timezone is UTC.
       expect(occurrence.start.plainDateTime.toString()).to.equal('2025-07-07T09:00:00');
       expect(occurrence.end.plainDateTime.toString()).to.equal('2025-07-07T10:00:00');
-      expect(occurrence.unstable_internalInfos.dataStart).to.equal(dayA.getTime());
-      expect(new Date(occurrence!.unstable_internalInfos.dataEnd)).toEqualDateTime(
-        addHours(dayA, 1),
-      );
+      expect(occurrence.start.timestamp).to.equal(dayA.getTime());
+      expect(new Date(occurrence!.end.timestamp)).toEqualDateTime(addHours(dayA, 1));
     });
 
-    it('should keep the data-timezone identity on a rename-only scope change from another timezone', () => {
-      // A UTC all-day weekly series whose display bounds normalize to the previous
-      // New York day; the second occurrence is armed so 'this-and-following' splits.
+    it('should re-point a rename-only scope change of an all-day series onto the split series from another timezone', () => {
+      // An all-day weekly series displayed in New York; the second occurrence is armed so
+      // 'this-and-following' splits.
       const weeklyBuilder = utcJuly4AllDayBuilder()
         .id('weekly-tz')
         .recurrent('WEEKLY')
@@ -634,18 +704,15 @@ premiumStoreClasses.forEach((storeClass) => {
       const store = new storeClass.Value({
         ...DEFAULT_PARAMS,
         events: [weeklyBuilder.build()],
+        displayTimezone: 'America/New_York',
         onEventsChange: () => {},
       });
-      const base = weeklyBuilder.toOccurrence('2025-07-11T00:00:00Z') as any;
+      const base = weeklyBuilder.toOccurrence('2025-07-11') as any;
       // `toOccurrence` generates a random render key; the repoint matches on the
-      // expansion key, which derives from the data-timezone day.
+      // expansion key, which derives from the displayed day of an all-day occurrence.
       const armed = {
         ...base,
-        key: getRecurringOccurrenceKey(
-          'weekly-tz',
-          base.unstable_internalInfos.dataStart,
-          base.timezone,
-        ),
+        key: getRecurringOccurrenceKey('weekly-tz', base.start.timestamp, 'America/New_York'),
       };
       store.startEditing(armed, 'armed');
 
@@ -656,19 +723,12 @@ premiumStoreClasses.forEach((storeClass) => {
       store.selectRecurringEventScope('this-and-following');
 
       const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
-      // The split series expands keyed off the data-timezone day (July 11th); the
-      // display bounds sit on July 10th and cannot stand in for the identity.
+      // The split series expands keyed off the displayed day (July 11th).
       expect(occurrence.id).to.not.equal('weekly-tz');
       expect(occurrence.key).to.equal(
-        getRecurringOccurrenceKey(
-          occurrence.id,
-          armed.unstable_internalInfos.dataStart,
-          armed.timezone,
-        ),
+        getRecurringOccurrenceKey(occurrence.id, armed.start.timestamp, 'America/New_York'),
       );
-      expect(occurrence.unstable_internalInfos.dataStart).to.equal(
-        createDate('2025-07-11T00:00:00', 'UTC').getTime(),
-      );
+      expect(occurrence.start.plainDateTime.toString()).to.equal('2025-07-11T00:00:00');
       expect(occurrence.timezone).to.equal('UTC');
       // A 'this-and-following' split stays recurring.
       expect(occurrence.rrule).to.not.equal(undefined);
@@ -710,7 +770,7 @@ premiumStoreClasses.forEach((storeClass) => {
           'default',
         )
         .map((occurrence) =>
-          toPlainDate(occurrence.unstable_internalInfos.dataStart, occurrence.timezone).toString(),
+          toPlainDate(occurrence.start.timestamp, occurrence.timezone).toString(),
         );
 
       expect(days).to.include('2025-02-28');
@@ -744,9 +804,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
         expect(onEventsChange.mock.calls.length).to.equal(0);
         const seriesAfter = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
-        expect(seriesAfter.unstable_internalInfos.dataStart).to.equal(
-          seriesBefore.unstable_internalInfos.dataStart,
-        );
+        expect(seriesAfter.start.timestamp).to.equal(seriesBefore.start.timestamp);
         expect(seriesAfter.rrule).to.deep.equal(seriesBefore.rrule);
         // No surface of its own for this rejection either — pushed as a toast.
         expect(store.state.errors.length).to.equal(1);
@@ -798,10 +856,8 @@ premiumStoreClasses.forEach((storeClass) => {
 
         expect(store.state.errors.length).to.equal(0);
         const series = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
-        expect(new Date(series.unstable_internalInfos.dataStart)).toEqualDateTime(
-          addMinutes(dayA, 30),
-        );
-        expect(new Date(series.unstable_internalInfos.dataEnd)).toEqualDateTime(addHours(dayA, 1));
+        expect(new Date(series.start.timestamp)).toEqualDateTime(addMinutes(dayA, 30));
+        expect(new Date(series.end.timestamp)).toEqualDateTime(addHours(dayA, 1));
       });
 
       // The tests above use the shared, daily `RECURRING_EVENT`, where every occurrence falls on
@@ -858,9 +914,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
           const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
           expect(occurrence?.key).to.equal(armedKey);
-          expect(new Date(occurrence!.unstable_internalInfos.dataStart)).toEqualDateTime(
-            secondMonday,
-          );
+          expect(new Date(occurrence!.start.timestamp)).toEqualDateTime(secondMonday);
         });
       });
     });

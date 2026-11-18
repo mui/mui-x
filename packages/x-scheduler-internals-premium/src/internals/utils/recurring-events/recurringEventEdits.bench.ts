@@ -51,6 +51,7 @@ describe('recurring event edits', () => {
               createOccurrence(event, occurrenceStart),
               { id: event.id, title: 'Renamed' },
               'this-and-following',
+              'default',
             );
           }
         }
@@ -58,7 +59,12 @@ describe('recurring event edits', () => {
       bench('delete only this', () => {
         for (let i = 0; i < REPEAT; i += 1) {
           for (const { event, occurrenceStart } of cases) {
-            deleteRecurringEvent(event, createOccurrence(event, occurrenceStart), 'only-this');
+            deleteRecurringEvent(
+              event,
+              createOccurrence(event, occurrenceStart),
+              'only-this',
+              'default',
+            );
           }
         }
       }),
@@ -69,6 +75,7 @@ describe('recurring event edits', () => {
               event,
               createOccurrence(event, occurrenceStart),
               'this-and-following',
+              'default',
             );
           }
         }
