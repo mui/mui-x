@@ -232,8 +232,8 @@ export function timed(day, minutes, duration) {
 
 function allDay(firstDay, lastDay = firstDay) {
   return {
-    start: formatDateTime(firstDay, 0),
-    end: formatEndOfDay(lastDay),
+    start: formatDay(firstDay),
+    end: formatDay(lastDay + 1),
     allDay: true,
   };
 }

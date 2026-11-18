@@ -3,7 +3,13 @@ import { BaseTemporal } from './base-temporal';
 import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
 import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import type { WeekInfo } from './date-locale';
-import { toEpochMs, toPlainDateTime } from './plain-date-utils/timeZone';
+import {
+  addDaysToDayStart,
+  getStartOfDayMs,
+  toEpochMs,
+  toPlainDate,
+  toPlainDateTime,
+} from './plain-date-utils/timeZone';
 import { isDateOnlyString, isInstantString } from './plain-date-utils/date';
 
 /**
@@ -67,19 +73,51 @@ export function getUntilReferenceString(event: SchedulerEvent): string {
 }
 
 /**
- * Gets the timestamp of the end of an event occurrence from the timestamp of its start.
- * For now, the occurrence always has the same duration as the original event, even when the DST applies between its start and the end.
+ * Writes a bound of an all-day event: the date of its instant, which must be the first instant of
+ * a day in `timezone`.
+ */
+export function allDayBoundToEventString(epochMs: number, timezone: string): string {
+  if (epochMs !== getStartOfDayMs(epochMs, timezone)) {
+    throw new Error(
+      `MUI X Scheduler: The date ${new Date(epochMs).toISOString()} of the all-day event is not the first instant of a day in the display timezone "${timezone}". ` +
+        'The dates of an all-day event are whole days, so an instant inside a day cannot be written as one of them. ' +
+        'Pass a "YYYY-MM-DD" string, or the Date of 00:00 of the day in the display timezone (of the day after the last day for the end). ' +
+        'See https://mui.com/x/react-scheduler/event-calendar/events/#all-day.',
+    );
+  }
+  return toPlainDate(epochMs, timezone).toString();
+}
+
+/**
+ * The number of days an all-day event covers, from the dates of its model.
+ */
+export function getAllDayDayCount(
+  event: Pick<SchedulerProcessedEvent, 'modelInBuiltInFormat'>,
+): number {
+  const model = event.modelInBuiltInFormat;
+  return (
+    getDayNumber(BaseTemporal.PlainDate.from(model.end)) -
+    getDayNumber(BaseTemporal.PlainDate.from(model.start))
+  );
+}
+
+/**
+ * The end of an occurrence from its start: an all-day occurrence ends at the start of the day
+ * after its last day in the display timezone, a timed one keeps the duration of its event.
  */
 export function getOccurrenceEnd({
   event,
   occurrenceStart,
+  displayTimezone,
 }: {
   event: SchedulerProcessedEvent;
   occurrenceStart: number;
+  displayTimezone: string;
 }): number {
-  return (
-    occurrenceStart + event.unstable_internalInfos.dataEnd - event.unstable_internalInfos.dataStart
-  );
+  if (event.allDay) {
+    return addDaysToDayStart(occurrenceStart, getAllDayDayCount(event), displayTimezone);
+  }
+  return occurrenceStart + event.end.timestamp - event.start.timestamp;
 }
 
 function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {

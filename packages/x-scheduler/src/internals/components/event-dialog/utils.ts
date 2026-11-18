@@ -10,11 +10,16 @@ import {
   BaseTemporal,
   formatMonthAndDayOfMonth,
   formatWeekday,
-  getDataTimestamp,
+  FULL_DAY_MINUTES,
+  getDayTimezone,
+  getMinutesInDay,
   getTimezoneId,
   isEventOccurrence,
+  parseDateOnlyString,
+  plainTimeFromMsInDay,
   toEpochMs,
   toPlainDate,
+  toPlainDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import type { EventEditingLocaleText, SchedulerWeekday } from '../../../models';
 
@@ -136,22 +141,11 @@ function getEditedRangeBounds(
   };
 }
 
-// The documented `yyyy-MM-dd` format. `BaseTemporal.PlainDate.from()` rejects the dates that don't
-// exist, like 2025-06-31, but also reads calendar annotations, which the fields don't use.
-const DATE_VALUE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
-
 /**
  * Reads a `yyyy-MM-dd` field, or returns `null` when it isn't an existing date.
  */
 export function readDateField(raw: string): BaseTemporal.PlainDate | null {
-  if (!DATE_VALUE_REGEX.test(raw)) {
-    return null;
-  }
-  try {
-    return BaseTemporal.PlainDate.from(raw);
-  } catch {
-    return null;
-  }
+  return parseDateOnlyString(raw);
 }
 
 /**
@@ -183,13 +177,12 @@ function readDateFieldMs(
 }
 
 /**
- * Reads a `yyyy-MM-dd` field as the last instant of that date in `timezone`, or returns `NaN` like
- * `readDateFieldMs()`. When a DST transition repeats the last hour of the day, it's the later
- * 23:59:59.999.
+ * Reads a `yyyy-MM-dd` field as the first instant of the day after that date in `timezone`, the
+ * exclusive end of an all-day range, or returns `NaN` like `readDateFieldMs()`.
  */
-function readDateFieldEndMs(rawDate: string, timezone: string): number {
+function readDateFieldExclusiveEndMs(rawDate: string, timezone: string): number {
   const plainDate = readDateField(rawDate);
-  return plainDate == null ? NaN : toEpochMs(plainDate.add({ days: 1 }), timezone) - 1;
+  return plainDate == null ? NaN : toEpochMs(plainDate.add({ days: 1 }), timezone);
 }
 
 /**
@@ -199,15 +192,39 @@ export function formatDateAndTimeFields(value: BaseTemporal.PlainDateTime): {
   date: string;
   time: string;
 } {
-  return { date: value.toPlainDate().toString(), time: value.toPlainTime().toString().slice(0, 5) };
+  return { date: value.toPlainDate().toString(), time: formatTimeField(value.toPlainTime()) };
+}
+
+function formatTimeField(time: BaseTemporal.PlainTime): string {
+  return time.toString().slice(0, 5);
+}
+
+function minutesToTimeField(minutesInDay: number): string {
+  return formatTimeField(plainTimeFromMsInDay(minutesInDay * 60_000));
+}
+
+/**
+ * The times of an all-day event made timed: the current time of the display timezone rounded up
+ * to the hour, lasting `durationMinutes` but ending on the same day, so the dates don't change.
+ */
+export function getDefaultTimedFields(
+  nowMs: number,
+  durationMinutes: number,
+  displayTimezone: string,
+): { startTime: string; endTime: string } {
+  const nowMinutes = getMinutesInDay(toPlainDateTime(nowMs, displayTimezone));
+  const startMinutes = (Math.ceil(nowMinutes / 60) * 60) % FULL_DAY_MINUTES;
+  const endMinutes = Math.min(startMinutes + durationMinutes, FULL_DAY_MINUTES - 1);
+
+  return { startTime: minutesToTimeField(startMinutes), endTime: minutesToTimeField(endMinutes) };
 }
 
 /**
  * The instants of the range the fields describe, read in the display timezone. An all-day range
- * goes from the first instant of its first day to the last instant of its last day. A time field
- * that a DST transition skips moves forward by the length of the gap, and one it repeats resolves
- * to its first instant, whatever the timezone of the system. An empty field reads as now, and a
- * field that doesn't parse as `NaN`.
+ * goes from the first instant of its first day to the first instant of the day after its last
+ * day. A time field that a DST transition skips moves forward by the length of the gap, and one it
+ * repeats resolves to its first instant, whatever the timezone of the system. An empty field reads
+ * as now, and a field that doesn't parse as `NaN`.
  */
 export function computeRange(
   next: Pick<EventDialogFormValues, RangeFormKey>,
@@ -218,7 +235,7 @@ export function computeRange(
   if (next.allDay) {
     return {
       start: next.startDate === '' ? now : readDateFieldMs(next.startDate, displayTimezone),
-      end: next.endDate === '' ? now : readDateFieldEndMs(next.endDate, displayTimezone),
+      end: next.endDate === '' ? now : readDateFieldExclusiveEndMs(next.endDate, displayTimezone),
       surfaceType: 'day-grid',
     };
   }
@@ -237,10 +254,10 @@ export function computeRange(
 }
 
 /**
- * Checks the order of the bounds of a range: the end day can't be before the start day, and on the
- * same day, the end of a timed range must be after its start. The days are read in
- * `displayTimezone`, the one the fields are read in. `start` and `end` must be finite: check the
- * fields with `findInvalidRangeField()` first.
+ * Checks the order of the bounds of a range: the exclusive end of an all-day range must be after
+ * its start, the end day of a timed range can't be before its start day, and on the same day its
+ * end must be after its start. The days are read in `displayTimezone`, the one the fields are read
+ * in. `start` and `end` must be finite: check the fields with `findInvalidRangeField()` first.
  */
 export function validateRange(
   start: number,
@@ -248,6 +265,9 @@ export function validateRange(
   allDay: boolean,
   displayTimezone: string,
 ): null | { field: 'endDate' | 'endTime' } {
+  if (allDay) {
+    return end <= start ? { field: 'endDate' } : null;
+  }
   const dayOrder = BaseTemporal.PlainDate.compare(
     toPlainDate(start, displayTimezone),
     toPlainDate(end, displayTimezone),
@@ -257,7 +277,7 @@ export function validateRange(
     return { field: 'endDate' };
   }
   // end <= start → hour error
-  if (dayOrder === 0 && !allDay && end <= start) {
+  if (dayOrder === 0 && end <= start) {
     return { field: 'endTime' };
   }
   return null;
@@ -342,34 +362,32 @@ export function getRecurrenceLabel(
 }
 
 /**
- * The timezone the occurrence's event is stored in, the one its recurrence rule is expressed in.
+ * The timezone the recurrence rule of the occurrence is expressed in: the display timezone for an
+ * all-day event, whose days are the displayed dates, and for an all-day event made timed, which
+ * moves to it. The timezone of the event otherwise.
  * A creation draft has no event yet: it is created in the `default` timezone.
  */
-export function getEventTimezone(occurrence: SchedulerRenderableEventOccurrence): string {
-  return isEventOccurrence(occurrence) ? occurrence.timezone : 'default';
-}
-
-/**
- * The timestamp of a bound of the occurrence's event. All-day display bounds are aligned on the
- * days of the display timezone, so the bound stored in the event's timezone comes first.
- */
-export function getEventBoundTimestamp(
+export function getRuleTimezone(
   occurrence: SchedulerRenderableEventOccurrence,
-  bound: 'start' | 'end',
-): number {
-  return isEventOccurrence(occurrence)
-    ? getDataTimestamp(occurrence, bound)
-    : occurrence[bound].timestamp;
+  allDay: boolean,
+  displayTimezone: string,
+): string {
+  if (!isEventOccurrence(occurrence)) {
+    return allDay ? displayTimezone : 'default';
+  }
+  return getDayTimezone(occurrence, displayTimezone, allDay);
 }
 
 /**
- * The date of an instant in the event's timezone, the one its recurrence rule is expressed in.
+ * The date of an instant in the timezone the recurrence rule of the occurrence is expressed in.
  */
-export function getEventTimezonePlainDate(
+export function getRulePlainDate(
   occurrence: SchedulerRenderableEventOccurrence,
   timestamp: number,
+  allDay: boolean,
+  displayTimezone: string,
 ): BaseTemporal.PlainDate {
-  return toPlainDate(timestamp, getEventTimezone(occurrence));
+  return toPlainDate(timestamp, getRuleTimezone(occurrence, allDay, displayTimezone));
 }
 
 /**
@@ -392,7 +410,7 @@ export function getResentRangeBounds(
 /**
  * The timestamp of a bound of the range the event ends up with: the submitted one when the save
  * resends it, the occurrence's own otherwise (also while an edited date does not parse). The
- * recurrence rule is built on these bounds, read in the event's timezone.
+ * recurrence rule is built on these bounds.
  */
 export function getRecurrenceRuleBound(
   occurrence: SchedulerRenderableEventOccurrence,
@@ -402,7 +420,7 @@ export function getRecurrenceRuleBound(
   bound: 'start' | 'end',
 ): number {
   if (!resent || findInvalidRangeField(values, displayTimezone) != null) {
-    return getEventBoundTimestamp(occurrence, bound);
+    return occurrence[bound].timestamp;
   }
   return computeRange(values, displayTimezone)[bound];
 }

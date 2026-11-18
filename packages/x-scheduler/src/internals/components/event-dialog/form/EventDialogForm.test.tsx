@@ -21,7 +21,11 @@ describe('EventDialogForm', () => {
     renderBase(element, { ...options, wrapper: StoreWrapper });
 
   const occurrence = EventBuilder.new().toOccurrence();
-  const sessionParameters = { occurrence, resourceSelectionMode: 'single' } as const;
+  const sessionParameters = {
+    occurrence,
+    resourceSelectionMode: 'single',
+    initialDisplayTimezone: 'default',
+  } as const;
 
   interface FieldProbeProps {
     fieldKey: string;
