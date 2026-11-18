@@ -27,7 +27,7 @@ export function isFocusLostWith(container: HTMLElement): boolean {
   return isFocusOnDocument(ownerDocument) || contains(container, activeElement(ownerDocument));
 }
 
-const VIEW_SELECTOR = `[role="grid"], .${eventCalendarClasses.agendaView}`;
+const VIEW_SELECTOR = `[role="grid"], [role="treegrid"], .${eventCalendarClasses.agendaView}`;
 const AGENDA_EVENT_SELECTOR = `.${eventCalendarClasses.agendaViewEventListItem} [tabindex]`;
 
 interface AgendaFallbackCandidate {

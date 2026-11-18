@@ -175,6 +175,8 @@ describe('<EventTimelinePremium />', () => {
       document.querySelector(
         `[id$="-EventTimelinePremiumTitleCell-${resourceId}"]`,
       ) as HTMLElement | null;
+    const getRow = (resourceId: string) => getTitleCell(resourceId)!.closest('[role="row"]')!;
+    const getToggle = (resourceId: string) => within(getTitleCell(resourceId)!).getByRole('button');
 
     it('should not mark a leaf resource as collapsible', async () => {
       await renderTimeline({ resources: nestedResources, events: [] });
@@ -182,7 +184,8 @@ describe('<EventTimelinePremium />', () => {
       const childCell = getTitleCell(child.id);
       expect(childCell).not.to.equal(null);
       expect(childCell!.getAttribute('data-collapsible')).to.equal(null);
-      expect(childCell!.getAttribute('aria-expanded')).to.equal(null);
+      expect(getRow(child.id).getAttribute('aria-expanded')).to.equal(null);
+      expect(within(childCell!).queryByRole('button')).to.equal(null);
     });
 
     it('should not mark a parent collapsible when all children are hidden', async () => {
@@ -195,16 +198,80 @@ describe('<EventTimelinePremium />', () => {
       expect(getTitleCell(parent.id)!.getAttribute('data-collapsible')).to.equal(null);
     });
 
-    it('should mark a collapsible parent as expanded', async () => {
+    it('should mark a collapsible parent row as expanded', async () => {
       await renderTimeline({ resources: nestedResources, events: [] });
 
-      expect(getTitleCell(parent.id)!.getAttribute('aria-expanded')).to.equal('true');
+      expect(getRow(parent.id).getAttribute('aria-expanded')).to.equal('true');
+      expect(getTitleCell(parent.id)!.getAttribute('aria-expanded')).to.equal(null);
+    });
+
+    it('should render the title cell as the row header', async () => {
+      await renderTimeline({ resources: nestedResources, events: [] });
+
+      expect(getTitleCell(parent.id)!.getAttribute('role')).to.equal('rowheader');
+      expect(getTitleCell(child.id)!.getAttribute('role')).to.equal('rowheader');
+    });
+
+    it('should expose the nesting level on the rows of a treegrid', async () => {
+      await renderTimeline({ resources: nestedResources, events: [] });
+
+      expect(screen.getByRole('treegrid')).not.to.equal(null);
+      expect(getRow(parent.id).getAttribute('aria-level')).to.equal('1');
+      expect(getRow(child.id).getAttribute('aria-level')).to.equal('2');
+    });
+
+    it('should not expose a nesting level on a flat timeline', async () => {
+      await renderTimeline({ resources: baseResources, events: [] });
+
+      expect(screen.queryByRole('treegrid')).to.equal(null);
+      expect(getRow(baseResources[0].id).getAttribute('aria-level')).to.equal(null);
+    });
+
+    it('should label the collapse toggle and keep it out of the tab order', async () => {
+      const { user } = await renderTimeline({ resources: nestedResources, events: [] });
+
+      const toggle = getToggle(parent.id);
+      expect(toggle.getAttribute('aria-label')).to.equal('Collapse resource');
+      expect(toggle.getAttribute('tabindex')).to.equal('-1');
+
+      await user.click(toggle);
+
+      expect(getToggle(parent.id).getAttribute('aria-label')).to.equal('Expand resource');
+    });
+
+    it('should move the focus back to the cell after a click on the toggle', async () => {
+      const sibling = ResourceBuilder.new().title('Sibling').build();
+      const { user } = await renderTimeline({ resources: [parent, sibling], events: [] });
+
+      await user.click(getToggle(parent.id));
+
+      expect(document.activeElement).to.equal(getTitleCell(parent.id));
+
+      await user.keyboard('{ArrowDown}');
+
+      expect(document.activeElement).to.equal(getTitleCell(sibling.id));
+    });
+
+    it('should not collapse a parent when the rest of the cell is clicked', async () => {
+      const onCollapsedResourcesChange = vi.fn();
+      const { user } = await renderTimeline({
+        resources: nestedResources,
+        events: [],
+        onCollapsedResourcesChange,
+      });
+
+      await user.click(getTitleCell(parent.id)!);
+      await user.click(within(getTitleCell(parent.id)!).getByText(parent.title));
+
+      expect(onCollapsedResourcesChange.mock.calls.length).to.equal(0);
+      expect(screen.getByText(child.title)).not.to.equal(null);
+      expect(getRow(parent.id).getAttribute('aria-expanded')).to.equal('true');
     });
 
     it('should reserve the toggle column when the timeline has nested resources', async () => {
       await renderTimeline({ resources: nestedResources, events: [] });
 
-      expect(screen.getByRole('grid').closest('[data-flat]')).to.equal(null);
+      expect(screen.getByRole('treegrid').closest('[data-flat]')).to.equal(null);
     });
 
     it('should not reserve the toggle column on a flat timeline', async () => {
@@ -213,15 +280,15 @@ describe('<EventTimelinePremium />', () => {
       expect(screen.getByRole('grid').closest('[data-flat]')).not.to.equal(null);
     });
 
-    it('should collapse a parent and hide its children when the cell is clicked', async () => {
+    it('should collapse a parent and hide its children when the toggle is clicked', async () => {
       const { user } = await renderTimeline({ resources: nestedResources, events: [] });
 
       expect(screen.getByText(child.title)).not.to.equal(null);
 
-      await user.click(getTitleCell(parent.id)!);
+      await user.click(getToggle(parent.id));
 
       expect(screen.queryByText(child.title)).to.equal(null);
-      expect(getTitleCell(parent.id)!.getAttribute('aria-expanded')).to.equal('false');
+      expect(getRow(parent.id).getAttribute('aria-expanded')).to.equal('false');
     });
 
     it('should hide children initially when collapsedResources is controlled', async () => {
@@ -244,7 +311,7 @@ describe('<EventTimelinePremium />', () => {
       expect(screen.queryByText(child.title)).to.equal(null);
     });
 
-    it('should call onCollapsedResourcesChange when the cell is clicked', async () => {
+    it('should call onCollapsedResourcesChange when the toggle is clicked', async () => {
       const onCollapsedResourcesChange = vi.fn();
       const { user } = await renderTimeline({
         resources: nestedResources,
@@ -252,7 +319,7 @@ describe('<EventTimelinePremium />', () => {
         onCollapsedResourcesChange,
       });
 
-      await user.click(getTitleCell(parent.id)!);
+      await user.click(getToggle(parent.id));
 
       expect(onCollapsedResourcesChange.mock.calls.length).to.equal(1);
       expect(onCollapsedResourcesChange.mock.lastCall?.[0]).to.deep.equal({ [parent.id]: true });
@@ -289,7 +356,7 @@ describe('<EventTimelinePremium />', () => {
       await waitFor(() => {
         expect(screen.queryByText(child.title)).to.equal(null);
       });
-      expect(parentCell.getAttribute('aria-expanded')).to.equal('false');
+      expect(getRow(parent.id).getAttribute('aria-expanded')).to.equal('false');
       expect(onCollapsedResourcesChange.mock.lastCall?.[0]).to.deep.equal({ [parent.id]: true });
     });
 
@@ -673,7 +740,7 @@ describe('<EventTimelinePremium />', () => {
       expect(screen.queryByText(engineering.title, { exact: true })).to.equal(null);
     });
 
-    it('should toggle the collapse when clicking the text of the timelineResourceTitle slot', async () => {
+    it('should not toggle the collapse when clicking the text of the timelineResourceTitle slot', async () => {
       const onCollapsedResourcesChange = vi.fn();
       function CustomResourceTitle(props: TimelineResourceTitleProps) {
         return (
@@ -690,7 +757,7 @@ describe('<EventTimelinePremium />', () => {
 
       await user.click(screen.getByTestId(`custom-title-${parent.id}`));
 
-      expect(onCollapsedResourcesChange.mock.calls.length).to.equal(1);
+      expect(onCollapsedResourcesChange.mock.calls.length).to.equal(0);
     });
 
     it('should leave clicks and keys to interactive content rendered by the timelineResourceTitle slot', async () => {
@@ -722,7 +789,9 @@ describe('<EventTimelinePremium />', () => {
       expect(onButtonClick.mock.calls.length).to.equal(2);
 
       expect(onCollapsedResourcesChange.mock.calls.length).to.equal(0);
-      expect(getTitleCell(parent.id).getAttribute('aria-expanded')).to.equal('true');
+      expect(
+        getTitleCell(parent.id).closest('[role="row"]')!.getAttribute('aria-expanded'),
+      ).to.equal('true');
     });
 
     it('should not toggle the collapse when clicking the label of an input rendered by the timelineResourceTitle slot', async () => {
@@ -748,7 +817,9 @@ describe('<EventTimelinePremium />', () => {
         within(getTitleCell(parent.id)).getByTestId<HTMLInputElement>('title-checkbox').checked,
       ).to.equal(true);
       expect(onCollapsedResourcesChange.mock.calls.length).to.equal(0);
-      expect(getTitleCell(parent.id).getAttribute('aria-expanded')).to.equal('true');
+      expect(
+        getTitleCell(parent.id).closest('[role="row"]')!.getAttribute('aria-expanded'),
+      ).to.equal('true');
     });
 
     it('should leave the arrow keys to an input rendered by the timelineResourceTitle slot', async () => {

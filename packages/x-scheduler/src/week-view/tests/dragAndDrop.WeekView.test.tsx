@@ -765,7 +765,53 @@ describe('WeekView - Drag and Drop', () => {
 
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
-    expect(updatedEvents[0].allDay).to.not.equal(true);
+    expect(Boolean(updatedEvents[0].allDay)).to.equal(false);
+    // The dropped slot, lasting the default duration, as a wall time in the event's timezone.
+    expect(updatedEvents[0].start).to.equal('2025-07-03T14:00:00');
+    expect(updatedEvents[0].end).to.equal('2025-07-03T14:30:00');
+  });
+
+  it('should give a multi-day all-day event dropped on the time grid the default duration', async () => {
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('All Day Event')
+      .span('2025-07-01', '2025-07-04', { allDay: true })
+      .draggable(true)
+      .build();
+
+    render(
+      <StandaloneWeekView
+        events={[event]}
+        resources={[]}
+        onEventsChange={handleEventsChange}
+        eventCreation={{ duration: 60 }}
+      />,
+    );
+
+    mockAllTimeGridColumnBounds();
+
+    const eventElement = screen.getByRole('button', { name: /All Day Event/i });
+    mockElementBounds(eventElement, { left: 0, width: 100 });
+    const columns = getTimeGridColumns();
+    const july3Column = columns[JULY_3_COLUMN_INDEX];
+
+    const targetClientY = clientYForTime(0, 24, 14);
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: july3Column,
+        sourceClientX: 50,
+        targetClientY,
+      });
+    });
+
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
+    expect(Boolean(updatedEvents[0].allDay)).to.equal(false);
+    expect(updatedEvents[0].start).to.equal('2025-07-03T14:00:00');
+    expect(updatedEvents[0].end).to.equal('2025-07-03T15:00:00');
   });
 
   it('should move an all-day event to the time grid on a different day', async () => {
