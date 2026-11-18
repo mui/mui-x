@@ -100,7 +100,7 @@ Auto-scheduling never moves an event earlier than where it's placed, and never p
 - Moving a successor earlier than its dependencies allow places it at the earliest allowed date instead.
 - A dependency that is already broken in your data stays broken until a change acts on it: the successor's start moves, the predecessor moves later, or the dependency becomes stricter.
 - An [all-day](/x/react-scheduler/event-timeline/events/#all-day) successor moves by whole days and stays all-day.
-- Between an all-day event and a timed event, the dates of the all-day event are read in the timezone of the timed event, whatever the display timezone.
+- Between an all-day event and a timed event, the dates of the all-day event are read in the [timezone](/x/react-scheduler/timezone/) of the timed event, or in the display timezone when the timed event has no `timezone`.
 
 :::info
 [Read-only events](/x/react-scheduler/event-timeline/editing/#only-set-on-some-events) never move.
