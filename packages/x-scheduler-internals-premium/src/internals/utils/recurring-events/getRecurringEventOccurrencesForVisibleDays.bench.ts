@@ -4,8 +4,15 @@ import type {
   SchedulerEventRecurrenceRule,
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
+import {
+  BaseTemporal,
+  createEventRangeIndex,
+  getTimezoneId,
+} from '@mui/x-scheduler-internals/internals';
+import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
+import { innerGetEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { EventBuilder } from 'test/utils/scheduler';
-import { getTimezoneId } from '@mui/x-scheduler-internals/internals';
+import { schedulerRecurringEventsPlugin } from '../../plugins/schedulerRecurringEventsPlugin';
 import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventOccurrencesForVisibleDays';
 
 const RULES: SchedulerEventRecurrenceRule[] = [
@@ -83,6 +90,33 @@ function expandAll(
     ).length;
   }
   return count;
+}
+
+const VIEWS = {
+  week: ['2026-10-19', '2026-10-25'],
+  month: ['2026-09-28', '2026-11-08'],
+} as const;
+
+// The occurrences of the series grouped by the days of a view, like the week and month views do.
+function groupByDay(
+  events: SchedulerProcessedEvent[],
+  [first, last]: readonly [string, string],
+  displayTimezone: string,
+  hideWeekends: boolean,
+) {
+  const days = getDayListFromPlainDates({
+    firstPlainDate: BaseTemporal.PlainDate.from(first),
+    lastPlainDate: BaseTemporal.PlainDate.from(last),
+    timezone: displayTimezone,
+    excludedWeekdays: hideWeekends ? [6, 7] : undefined,
+  });
+  return innerGetEventOccurrencesGroupedByDay({
+    days,
+    eventRangeIndex: createEventRangeIndex(events, true),
+    visibleResources: {},
+    displayTimezone,
+    recurringEventsPlugin: schedulerRecurringEventsPlugin,
+  }).size;
 }
 
 describe('recurring event expansion', () => {
@@ -180,5 +214,32 @@ describe('recurring event expansion', () => {
       }),
       BENCH_OPTIONS,
     );
+  });
+
+  describe.each([
+    ['default', 'default'],
+    ['America/New_York', 'Europe/Paris'],
+  ] as const)('200 series in %s displayed in %s', (dataTimezone, displayTimezone) => {
+    test('grouped by day', { timeout: 0 }, async ({ bench }) => {
+      const events = createRecurringEvents(dataTimezone, displayTimezone);
+      // The store holds the display timezone by its identifier.
+      const displayTimezoneId = getTimezoneId(displayTimezone);
+
+      await bench.compare(
+        bench('week view', () => {
+          groupByDay(events, VIEWS.week, displayTimezoneId, false);
+        }),
+        bench('week view without weekends', () => {
+          groupByDay(events, VIEWS.week, displayTimezoneId, true);
+        }),
+        bench('month view', () => {
+          groupByDay(events, VIEWS.month, displayTimezoneId, false);
+        }),
+        bench('month view without weekends', () => {
+          groupByDay(events, VIEWS.month, displayTimezoneId, true);
+        }),
+        BENCH_OPTIONS,
+      );
+    });
   });
 });
