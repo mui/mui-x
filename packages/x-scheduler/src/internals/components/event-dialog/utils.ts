@@ -186,9 +186,11 @@ function readDateFieldExclusiveEndMs(rawDate: string, timezone: string): number 
 }
 
 /**
- * Formats a date-time for the `yyyy-MM-dd` and `HH:mm` fields.
+ * Formats a date-time or a zoned date-time for the `yyyy-MM-dd` and `HH:mm` fields.
  */
-export function formatDateAndTimeFields(value: BaseTemporal.PlainDateTime): {
+export function formatDateAndTimeFields(
+  value: BaseTemporal.PlainDateTime | BaseTemporal.ZonedDateTime,
+): {
   date: string;
   time: string;
 } {

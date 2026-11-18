@@ -112,20 +112,20 @@ function getEditedBounds(
 }
 
 /**
- * The occurrence read again after the display timezone moved from `fromTimezone` to `toTimezone`:
- * an all-day occurrence keeps its days, a timed one its instants.
+ * The occurrence read again after the display timezone moved to `toTimezone`: an all-day
+ * occurrence keeps its days, a timed one its instants.
  */
 function reprojectOccurrence<
   TOccurrence extends Pick<SchedulerEventOccurrence, 'start' | 'end' | 'allDay'>,
->(occurrence: TOccurrence, fromTimezone: string, toTimezone: string): TOccurrence {
+>(occurrence: TOccurrence, toTimezone: string): TOccurrence {
   if (!occurrence.allDay) {
     return {
       ...occurrence,
-      start: toZonedDateTime(occurrence.start.epochMilliseconds, toTimezone),
-      end: toZonedDateTime(occurrence.end.epochMilliseconds, toTimezone),
+      start: occurrence.start.withTimeZone(toTimezone),
+      end: occurrence.end.withTimeZone(toTimezone),
     };
   }
-  const firstDay = toPlainDate(occurrence.start.epochMilliseconds, fromTimezone);
+  const firstDay = occurrence.start.toPlainDate();
   const lastDay = plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence));
   return {
     ...occurrence,
@@ -471,7 +471,6 @@ export class SchedulerStore<
         ...editingOccurrence,
         occurrence: reprojectOccurrence(
           editingOccurrence.occurrence,
-          this.state.displayTimezone,
           newSchedulerState.displayTimezone!,
         ),
       };

@@ -113,10 +113,12 @@ export function plainTimeFromMsInDay(msInDay: number): BaseTemporal.PlainTime {
 }
 
 /**
- * The wall-clock time of a time or date-time, in milliseconds since midnight. The microseconds and
- * nanoseconds are dropped.
+ * The wall-clock time of a time, a date-time or a zoned date-time, in milliseconds since midnight.
+ * The microseconds and nanoseconds are dropped.
  */
-export function getMsInDay(time: BaseTemporal.PlainTime | BaseTemporal.PlainDateTime): number {
+export function getMsInDay(
+  time: BaseTemporal.PlainTime | BaseTemporal.PlainDateTime | BaseTemporal.ZonedDateTime,
+): number {
   return ((time.hour * 60 + time.minute) * 60 + time.second) * 1000 + time.millisecond;
 }
 

@@ -147,12 +147,12 @@ export function FormContent(props: FormContentProps) {
 
   // Built once: the provider ignores later values anyway.
   const initialValues = useRefWithInit((): EventDialogFormValues => {
-    const startFields = formatDateAndTimeFields(occurrence.start.toPlainDateTime());
+    const startFields = formatDateAndTimeFields(occurrence.start);
     // The form shows the last day of an all-day event, the day before its exclusive end.
     const endFields = formatDateAndTimeFields(
       occurrence.allDay
         ? plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence)).toPlainDateTime('23:59')
-        : occurrence.end.toPlainDateTime(),
+        : occurrence.end,
     );
 
     // The rule is read and written in the event's timezone, not the display one.

@@ -21,9 +21,7 @@ function getDayCount(occurrence: SchedulerEventOccurrence) {
   }
   // A timed occurrence that ends earlier in the day than it starts spans one day less than its dates.
   return (
-    getDayNumber(end.toPlainDate()) -
-    startDayNumber -
-    (getMsInDay(end.toPlainDateTime()) < getMsInDay(start.toPlainDateTime()) ? 1 : 0)
+    getDayNumber(end.toPlainDate()) - startDayNumber - (getMsInDay(end) < getMsInDay(start) ? 1 : 0)
   );
 }
 
