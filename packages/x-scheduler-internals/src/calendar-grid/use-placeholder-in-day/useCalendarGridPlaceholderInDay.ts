@@ -40,14 +40,14 @@ export function useCalendarGridPlaceholderInDay(
       return null;
     }
 
-    // The placeholder can run past the week row: the next rows render their own piece.
-    const endInRow = Math.min(rawPlaceholder.end, rowEnd + 1);
-    // A creation renders its piece of this row, from the day of the cell.
+    // A creation renders its piece of this row, from the day of the cell to the end of the row,
+    // and `getPlaceholderOccurrence()` snaps that piece to whole days.
     const placeholder =
       rawPlaceholder.type === 'creation'
-        ? { ...rawPlaceholder, start: day.timestamp, end: endInRow }
+        ? { ...rawPlaceholder, start: day.timestamp, end: Math.min(rawPlaceholder.end, rowEnd + 1) }
         : rawPlaceholder;
     const occurrence = getPlaceholderOccurrence(placeholder, originalEvent, displayTimezone);
+    // The placeholder can run past the week row: the next rows render their own piece.
     const lastInstantInRow = Math.min(
       getLastInstant(occurrence.end.timestamp, occurrence.allDay),
       rowEnd,
@@ -63,8 +63,8 @@ export function useCalendarGridPlaceholderInDay(
     const occurrenceKey = getPlaceholderOccurrenceKey(rawPlaceholder);
     const usedIndexes = new Set(
       day.withPosition
-        .filter((occurrence) => occurrence.key !== occurrenceKey)
-        .map((occurrence) => occurrence.position.index),
+        .filter((item) => item.key !== occurrenceKey)
+        .map((item) => item.position.index),
     );
     let index = 1;
     while (usedIndexes.has(index)) {

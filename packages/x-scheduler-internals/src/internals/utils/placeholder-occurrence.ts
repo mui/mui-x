@@ -12,13 +12,8 @@ const PLACEHOLDER_KEY = 'occurrence-placeholder';
  * The occurrence a placeholder renders, with its dates read in `displayTimezone`.
  * `originalEvent` is the event a drag or a resize moves, when the store has it.
  *
- * The surface of the placeholder sets its all-day flag and its bounds:
- * - in the day grid, a creation spans whole days, and a drag uses its destination's all-day flag;
- * - in the time grid, the placeholder keeps its bounds and has no all-day flag;
- * - in the timeline, a creation isn't all-day, and a drag keeps the event's all-day flag and
- *   carries the resource it's dropped onto.
- * Drag and resize bounds are already computed for their destination, including exclusive all-day
- * ends, so they are kept as is.
+ * Only a creation in the day grid is snapped to whole days: the bounds of the other placeholders
+ * are already computed for their destination, including the exclusive end of an all-day event.
  */
 export function getPlaceholderOccurrence(
   placeholder: SchedulerOccurrencePlaceholder,
