@@ -221,8 +221,8 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         if (isAborted()) {
           return;
         }
-        if (!gridRowNodeSelector(apiRef, id)) {
-          // The row has been removed from the grid
+        // The row was removed, or a root refresh turned it into a leaf
+        if (gridRowNodeSelector(apiRef, id)?.type !== 'group') {
           nestedDataManager.clearPendingRequest(id);
           return;
         }

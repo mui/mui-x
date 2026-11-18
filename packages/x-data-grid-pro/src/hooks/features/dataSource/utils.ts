@@ -8,7 +8,7 @@ const MAX_CONCURRENT_REQUESTS = Infinity;
 
 /**
  * Fetches row children from the server with option to limit the number of concurrent requests
- * Uses `GridRowId` to uniquely identify a request
+ * Queues requests by `GridRowId`; `getGeneration()` tells the responses of aborted requests apart
  */
 export class NestedDataManager {
   private pendingRequests: Set<GridRowId> = new Set();

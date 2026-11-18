@@ -453,10 +453,6 @@ export const useGridDataSourceNestedLazyLoader = (
 
   const findSkeletonSectionAndFetchRows = React.useCallback(
     (firstRowIndex: number, lastRowIndex: number, options: FetchSkeletonRowsOptions = {}) => {
-      // The indexes would point into the tree that the pending sort or filter response replaces.
-      if (rowsStale.current) {
-        return false;
-      }
       const sortModel = gridSortModelSelector(privateApiRef);
       const filterModel = gridFilterModelSelector(privateApiRef);
       const currentVisibleRows = getVisibleRows(privateApiRef);
@@ -514,6 +510,10 @@ export const useGridDataSourceNestedLazyLoader = (
         }
 
         if (parentId === GRID_ROOT_GROUP_ID) {
+          // The indexes point into the tree that the pending sort or filter response replaces.
+          if (rowsStale.current) {
+            return;
+          }
           debouncedFetchRootRowsIncremental(
             adjustRowParams({
               start: firstSkeletonIdx,
@@ -1153,7 +1153,7 @@ export const useGridDataSourceNestedLazyLoader = (
     rowsStale.current = true;
     renderedRowsIntervalCache.current = INTERVAL_CACHE_INITIAL_STATE;
     throttledHandleRenderedRowsIntervalChange.clear();
-    // Else the queued fetch takes the latest request id and the sort or filter response is dropped.
+    // A queued fetch carries the previous sort or filter model.
     debouncedFetchRootRowsIncremental.clear();
   }, [throttledHandleRenderedRowsIntervalChange, debouncedFetchRootRowsIncremental]);
 

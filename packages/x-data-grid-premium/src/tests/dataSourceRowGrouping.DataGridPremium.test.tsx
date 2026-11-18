@@ -753,7 +753,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
           });
         });
 
-        // An aborted request would have been re-issued by the rebuilt tree
+        // Nothing re-requests an aborted request, so these are the only ones
         expect(countRequestsFor('["Technology"]')).to.equal(1);
         expect(countRequestsFor('["Finance"]')).to.equal(1);
 
