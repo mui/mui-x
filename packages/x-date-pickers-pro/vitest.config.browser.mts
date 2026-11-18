@@ -6,7 +6,6 @@ import { getTestName } from '../../scripts/getTestName.mts';
 export default mergeConfig(
   sharedConfig,
   defineConfig({
-    },
     test: {
       name: getTestName(import.meta.url),
       setupFiles: [fileURLToPath(new URL('../../test/utils/setupPickers.js', import.meta.url))],
