@@ -1,5 +1,6 @@
 export {
   addDaysOnWallClock,
+  addDaysToDayStart,
   floorToWallClockMinutes,
   getEndOfDayMs,
   getSkippedDays,
@@ -20,7 +21,9 @@ export {
   createProcessedDate,
   createStartOfPlainDate,
   isDateOnlyString,
-  normalizeAllDayBounds,
+  parseDateOnlyString,
+  snapAllDayBounds,
+  snapToOwnDays,
 } from './date';
 export {
   getDayNumber,

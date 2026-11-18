@@ -5,14 +5,17 @@ import type {
   WeekStartsOn,
 } from '../../models';
 import { BaseTemporal } from './base-temporal';
-import {
-  getStartOfWeekDayNumber,
-  isoDateToDayNumber,
-  MS_PER_DAY,
-} from './plain-date-utils/dayNumber';
-import { getDayNumber, getMsInDay, plainDateFromDayNumber } from './plain-date-utils/plainDate';
+import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
+import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import type { WeekInfo } from './date-locale';
-import { toEditedEpochMs, toEpochMs, toPlainDateTime } from './plain-date-utils/timeZone';
+import {
+  addDaysToDayStart,
+  getStartOfDayMs,
+  toEditedEpochMs,
+  toEpochMs,
+  toPlainDate,
+  toPlainDateTime,
+} from './plain-date-utils/timeZone';
 import { isDateOnlyString, isInstantString } from './plain-date-utils/date';
 
 /**
@@ -75,15 +78,6 @@ export function getUntilReferenceString(event: SchedulerEvent): string {
   return match[4] === undefined ? date : `${date}T${match[4]}:${match[5]}:${match[6]}Z`;
 }
 
-type EventDateKey = 'start' | 'end' | 'exDates' | 'rrule';
-
-/**
- * `TChanges` with its dates written as event strings.
- */
-type WithEventDateStrings<TChanges> = {
-  [K in keyof TChanges]: K extends EventDateKey ? SchedulerEvent[K] : TChanges[K];
-};
-
 /**
  * The instants of the bounds of an event, in milliseconds since the Unix epoch.
  */
@@ -94,101 +88,69 @@ interface EventBounds {
 
 /**
  * Resolves the dates of an edit to instants with `toEditedEpochMs()`: each one keeps the instant
- * of `current` when it reads the same, and the end resolves at or after the start. The inclusive
- * end of an all-day event, at 23:59:59.999, resolves to the last instant of its day, like
- * `getEndOfDayMs()`. A date missing from `changes` stays `undefined`.
+ * of `current` when it reads the same, and the end resolves at or after the start. A date missing
+ * from `changes` stays `undefined`. All-day ends are exclusive.
  */
 export function resolveEditedBounds(
   changes: Partial<Pick<SchedulerEventUpdatedProperties, 'start' | 'end'>>,
   current: EventBounds,
   timezone: string,
-  allDay: boolean | undefined,
 ): Partial<EventBounds> {
   const start =
     changes.start == null ? undefined : toEditedEpochMs(changes.start, timezone, current.start);
   if (changes.end == null) {
     return { start };
   }
-  const end =
-    allDay && getMsInDay(changes.end) === MS_PER_DAY - 1
-      ? toEpochMs(changes.end.toPlainDate().add({ days: 1 }), timezone) - 1
-      : toEditedEpochMs(changes.end, timezone, current.end, start ?? current.start);
+  const end = toEditedEpochMs(changes.end, timezone, current.end, start ?? current.start);
   return { start, end };
 }
 
 /**
- * Writes the dates of an edit of `event`, or of an event derived from it, as event strings in the
- * format of its own, in a copy of `changes`. The dates resolve with `resolveEditedBounds()` against
- * `current`, the bounds of `event` by default, or of the edited occurrence. A date that resolves to
- * the instant `event` has keeps its string, so an unchanged date keeps its format: `start`, `end`,
- * and for an exception the one at the same index. A new exception takes the format of `start`. A
- * processed `until` takes the format `getUntilReferenceString()` returns.
+ * Writes a bound of an all-day event: the date of its instant, which must be the first instant of
+ * a day in `timezone`.
  */
-export function toEventDateStrings<
-  TChanges extends Partial<Pick<SchedulerEventUpdatedProperties, EventDateKey | 'allDay'>>,
->(
-  changes: TChanges,
-  event: SchedulerProcessedEvent,
-  current?: EventBounds,
-): WithEventDateStrings<TChanges> {
-  const model = event.modelInBuiltInFormat;
-  const { timezone } = event;
-  const { dataStart, dataEnd } = event.unstable_internalInfos;
-  const result: Partial<Pick<SchedulerEvent, EventDateKey>> = {
-    ...(changes as Partial<Pick<SchedulerEvent, EventDateKey>>),
-  };
-
-  const bounds = resolveEditedBounds(
-    changes,
-    current ?? { start: dataStart, end: dataEnd },
-    timezone,
-    changes.allDay ?? event.allDay,
-  );
-  if (bounds.start !== undefined) {
-    result.start =
-      bounds.start === dataStart
-        ? model.start
-        : timestampToEventString(bounds.start, model.start, timezone);
-  }
-  if (bounds.end !== undefined) {
-    result.end =
-      bounds.end === dataEnd ? model.end : timestampToEventString(bounds.end, model.end, timezone);
-  }
-  if (changes.exDates != null) {
-    result.exDates = changes.exDates.map((exDate, index) =>
-      event.exDates?.[index]?.equals(exDate)
-        ? model.exDates![index]
-        : timestampToEventString(
-            toEpochMs(exDate, timezone),
-            model.exDates?.[index] ?? model.start,
-            timezone,
-          ),
+export function allDayBoundToEventString(epochMs: number, timezone: string): string {
+  if (epochMs !== getStartOfDayMs(epochMs, timezone)) {
+    throw new Error(
+      `MUI X Scheduler: The date ${new Date(epochMs).toISOString()} of the all-day event is not the first instant of a day in the display timezone "${timezone}". ` +
+        'The dates of an all-day event are whole days, so an instant inside a day cannot be written as one of them. ' +
+        'Pass a PlainDateTime at 00:00 of the day in the display timezone (of the day after the last day for the end). ' +
+        'See https://mui.com/x/react-scheduler/event-calendar/events/#all-day.',
     );
   }
-  const { rrule } = changes;
-  if (rrule?.until != null) {
-    result.rrule = {
-      ...rrule,
-      until: untilToEventString(rrule.until, getUntilReferenceString(model), timezone),
-    };
-  }
-  return result as WithEventDateStrings<TChanges>;
+  return toPlainDate(epochMs, timezone).toString();
 }
 
 /**
- * Gets the timestamp of the end of an event occurrence from the timestamp of its start.
- * For now, the occurrence always has the same duration as the original event, even when the DST applies between its start and the end.
+ * The number of days an all-day event covers, from the dates of its model.
+ */
+export function getAllDayDayCount(
+  event: Pick<SchedulerProcessedEvent, 'modelInBuiltInFormat'>,
+): number {
+  const model = event.modelInBuiltInFormat;
+  return (
+    getDayNumber(BaseTemporal.PlainDate.from(model.end)) -
+    getDayNumber(BaseTemporal.PlainDate.from(model.start))
+  );
+}
+
+/**
+ * The end of an occurrence from its start: an all-day occurrence ends at the start of the day
+ * after its last day in the display timezone, a timed one keeps the duration of its event.
  */
 export function getOccurrenceEnd({
   event,
   occurrenceStart,
+  displayTimezone,
 }: {
   event: SchedulerProcessedEvent;
   occurrenceStart: number;
+  displayTimezone: string;
 }): number {
-  return (
-    occurrenceStart + event.unstable_internalInfos.dataEnd - event.unstable_internalInfos.dataStart
-  );
+  if (event.allDay) {
+    return addDaysToDayStart(occurrenceStart, getAllDayDayCount(event), displayTimezone);
+  }
+  return occurrenceStart + event.end.timestamp - event.start.timestamp;
 }
 
 function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {

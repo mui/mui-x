@@ -237,9 +237,10 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef, rootRef],
     props: [
+      // Callers can override the default role, e.g. with `treegrid` for nested rows.
+      { role: 'grid' },
       elementProps,
       {
-        role: 'grid',
         onBlur: handleBlur,
         style: {
           [TimelineGridRootCssVars.unitCount]: config.tickCount,

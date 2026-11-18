@@ -175,6 +175,7 @@ export class SchedulerSchedulingPlugin<
         isEventReadOnly: (eventId) => schedulerEventSelectors.isReadOnly(this.store.state, eventId),
         updated,
         deleted: deletedSet,
+        displayTimezone: this.store.state.displayTimezone,
       });
       if (result.blocked.length > 0) {
         const blockedEvent = this.store.state.processedEventLookup.get(result.blocked[0])!;
@@ -318,10 +319,10 @@ export class SchedulerSchedulingPlugin<
     }
 
     // Relaxing a dependency the dates already break moves nothing, so it is never blocked.
-    const { processedEventLookup } = this.store.state;
+    const { processedEventLookup, displayTimezone } = this.store.state;
     const isStricter =
-      getDependencyViolation(processedEventLookup, updated) >
-      getDependencyViolation(processedEventLookup, dependency);
+      getDependencyViolation(processedEventLookup, updated, displayTimezone) >
+      getDependencyViolation(processedEventLookup, dependency, displayTimezone);
     const rejection = this.commitDependencyChange(
       dependencyModelList.map((entry) => (entry.id === dependencyId ? updated : entry)),
       isStricter ? updated : null,
@@ -355,6 +356,7 @@ export class SchedulerSchedulingPlugin<
       deleted: new Set(),
       enforcedDependencies:
         enforced !== null && isDependencyActive(processedEventLookup, enforced) ? [enforced] : [],
+      displayTimezone: this.store.state.displayTimezone,
     });
     if (result.blocked.length > 0) {
       return { status: 'rejected', reason: 'cascadeBlocked', eventId: result.blocked[0] };

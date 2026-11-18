@@ -11,7 +11,6 @@ import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { getOccurrenceInternalInfos } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
@@ -255,7 +254,6 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
-      internalInfos={getOccurrenceInternalInfos(occurrence)}
       elementPosition={elementPosition}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-label={accessibleName}

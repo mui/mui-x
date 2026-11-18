@@ -15,7 +15,8 @@ import type {
 import { processEvent } from '../../../process-event';
 import type { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
-import { toEventDateStrings, untilToEventString } from '../date-utils';
+import { untilToEventString } from '../date-utils';
+import { toEventDateStrings } from '../event-date-changes';
 import { schedulerEventSelectors } from '../../../scheduler-selectors/schedulerEventSelectors';
 
 /**
@@ -148,25 +149,26 @@ export function getProcessedEventFromModel<TEvent extends object>(
 
 /**
  * Updates an event model based on the provided changes and model structure.
- * Writes the dates of `changes` as strings before applying them to the user's model, because
- * `SchedulerEvent` date fields are strings, in the format of the original strings (instant vs
- * wall-time).
+ * Converts the plain date-times to strings before applying them to the user's model, because
+ * `SchedulerEvent` date fields are strings, with `toEventDateStrings()`.
  */
 export function getUpdatedEventModelFromChanges<TEvent extends object>(
   oldModel: TEvent,
   changes: SchedulerEventUpdatedProperties,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
   originalEvent: SchedulerProcessedEvent,
+  displayTimezone = 'default',
 ): TEvent {
   return createOrUpdateEventModelFromBuiltInEventModel<TEvent, false>(
     oldModel,
-    toEventDateStrings(changes, originalEvent),
+    toEventDateStrings(changes, originalEvent, displayTimezone),
     eventModelStructure,
   );
 }
 
 /**
  * Creates an event model from the creation properties using the provided model structure.
+ * The dates are event strings, including floating dates for an all-day event.
  */
 export function createEventModel<TEvent extends object>(
   event: SchedulerEventCreationProperties,
@@ -187,8 +189,14 @@ export function createEventModel<TEvent extends object>(
         }
       : (event.rrule as SchedulerEvent['rrule']);
 
-  // `exDates` and `rrule` stay set when `undefined`, so their setters run on every new event.
-  const builtInEvent: SchedulerEvent = { ...event, id, exDates: event.exDates, rrule };
+  const builtInEvent: SchedulerEvent = {
+    ...event,
+    id,
+    start: event.start,
+    end: event.end,
+    exDates: event.exDates,
+    rrule,
+  };
 
   const model = createOrUpdateEventModelFromBuiltInEventModel<TEvent, true>(
     null,

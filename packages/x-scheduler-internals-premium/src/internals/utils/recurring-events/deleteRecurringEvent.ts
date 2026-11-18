@@ -4,17 +4,18 @@ import type {
   SchedulerEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
 import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
-import { toPlainDate } from '@mui/x-scheduler-internals/internals';
+import { getOccurrencePlainDate } from '@mui/x-scheduler-internals/internals';
 import { RecurringSeries } from './RecurringSeries';
 
 export function deleteRecurringEvent(
   originalEvent: SchedulerProcessedEvent,
   occurrence: SchedulerEventOccurrence,
   scope: RecurringEventScope,
+  displayTimezone: string,
 ): UpdateEventsParameters {
   switch (scope) {
     case 'this-and-following': {
-      return applyRecurringDeleteFollowing(originalEvent, occurrence);
+      return applyRecurringDeleteFollowing(originalEvent, occurrence, displayTimezone);
     }
 
     case 'all': {
@@ -22,7 +23,7 @@ export function deleteRecurringEvent(
     }
 
     case 'only-this': {
-      return applyRecurringDeleteOnlyThis(originalEvent, occurrence);
+      return applyRecurringDeleteOnlyThis(originalEvent, occurrence, displayTimezone);
     }
 
     default: {
@@ -38,21 +39,20 @@ export function deleteRecurringEvent(
 /**
  * Deletes a single occurrence by adding an EXDATE to the series.
  * Drops the whole series when excluding the occurrence would leave no occurrence.
- * Reads `occurrenceStart` in the event's data timezone.
  * @returns The updated list of events.
  */
 export function applyRecurringDeleteOnlyThis(
   originalEvent: SchedulerProcessedEvent,
   occurrence: SchedulerEventOccurrence,
+  displayTimezone: string,
 ): UpdateEventsParameters {
-  const { timezone } = originalEvent;
-  const occurrenceDay = toPlainDate(occurrence.unstable_internalInfos.dataStart, timezone);
-  // The store keeps the strings of the exceptions it already has, and so their instant, which
-  // their wall-clock time can't tell apart in the hour a DST transition repeats.
-  const exDates = [...(originalEvent.exDates ?? []), occurrenceDay.toPlainDateTime()];
-  const excludedDays = exDates.map((exDate) => exDate.toPlainDate());
+  const occurrenceDay = getOccurrencePlainDate(occurrence);
+  const previousExDates = originalEvent.exDates ?? [];
+  const excludedDays = [...previousExDates.map((exDate) => exDate.toPlainDate()), occurrenceDay];
+  // The writer preserves existing exception strings, including repeated-hour instants.
+  const exDates = [...previousExDates, occurrenceDay.toPlainDateTime()];
 
-  if (!RecurringSeries.fromEvent(originalEvent, excludedDays).hasOccurrence()) {
+  if (!RecurringSeries.fromEvent(originalEvent, displayTimezone, excludedDays).hasOccurrence()) {
     return { deleted: [originalEvent.id] };
   }
 
@@ -64,18 +64,19 @@ export function applyRecurringDeleteOnlyThis(
 /**
  * Deletes the edited occurrence and every following one by truncating the rule to end the day
  * before. Drops the whole series when no occurrence remains before the edited one.
- * Reads `occurrenceStart` in the event's data timezone.
  * @returns The updated list of events.
  */
 export function applyRecurringDeleteFollowing(
   originalEvent: SchedulerProcessedEvent,
   occurrence: SchedulerEventOccurrence,
+  displayTimezone: string,
 ): UpdateEventsParameters {
-  const occurrencePlainDate = toPlainDate(
-    occurrence.unstable_internalInfos.dataStart,
-    originalEvent.timezone,
-  );
-  if (!RecurringSeries.fromEvent(originalEvent).hasOccurrenceBefore(occurrencePlainDate)) {
+  const occurrencePlainDate = getOccurrencePlainDate(occurrence);
+  if (
+    !RecurringSeries.fromEvent(originalEvent, displayTimezone).hasOccurrenceBefore(
+      occurrencePlainDate,
+    )
+  ) {
     return { deleted: [originalEvent.id] };
   }
 
