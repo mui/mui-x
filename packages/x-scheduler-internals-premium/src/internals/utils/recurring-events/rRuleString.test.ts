@@ -3,6 +3,7 @@ import type {
   SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
 import { afterEach, describe, it, expect, vi } from 'vitest';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import { isJSDOM } from 'test/utils/skipIf';
 import { BaseTemporal, toEpochMs } from '@mui/x-scheduler-internals/internals';
 import { isSameRRule, parseRRule, serializeRRule } from './rRuleString';
@@ -122,11 +123,18 @@ describe('recurring-events/rRuleString', () => {
         'FREQ=DAILY;UNTIL=20250703T230000Z',
         { freq: 'DAILY', until: '2025-07-03T23:00:00Z' },
         { freq: 'DAILY', until: '2025-07-04T00:00:00' },
-      ])('should throw when the until of an all-day series is a date-time: %s', (rrule) => {
-        expect(() => parseRRule(rrule, 'Asia/Tokyo', true)).to.throw(
-          /of the recurrence rule of an all-day event is not a date/,
-        );
-      });
+      ])(
+        'should read the date-time until of an all-day series as its date in the timezone of the event, with a warning: %s',
+        (rrule) => {
+          clearWarningsCache();
+          let result: ReturnType<typeof parseRRule> | undefined;
+          // 23:00 UTC on July 3rd is July 4th in Tokyo.
+          expect(() => {
+            result = parseRRule(rrule, 'Asia/Tokyo', true);
+          }).toWarnDev('of the recurrence rule of an all-day event is not a date.');
+          expect(result!.until).toEqualPlainDate('2025-07-04');
+        },
+      );
 
       it('should read a date-time as a plain date-time for a timed series', () => {
         const fromDateTime = parseRRule('FREQ=DAILY;UNTIL=20250704T080000Z', 'Europe/Paris');
@@ -137,11 +145,18 @@ describe('recurring-events/rRuleString', () => {
       it.each<string | SchedulerEventRecurrenceRule>([
         'FREQ=DAILY;UNTIL=20250704',
         { freq: 'DAILY', until: '2025-07-04' },
-      ])('should throw when the until of a timed series is a date: %s', (rrule) => {
-        expect(() => parseRRule(rrule, 'Europe/Paris')).to.throw(
-          /of the recurrence rule of a timed event is not a date-time/,
-        );
-      });
+      ])(
+        'should read the date until of a timed series as its whole day, with a warning: %s',
+        (rrule) => {
+          clearWarningsCache();
+          let result: ReturnType<typeof parseRRule> | undefined;
+          expect(() => {
+            result = parseRRule(rrule, 'Europe/Paris');
+          }).toWarnDev('of the recurrence rule of a timed event is not a date-time.');
+          expect(result!.until).to.be.instanceOf(BaseTemporal.PlainDate);
+          expect(result!.until?.toString()).to.equal('2025-07-04');
+        },
+      );
     });
 
     describe('with a host timezone that observes daylight saving time', () => {

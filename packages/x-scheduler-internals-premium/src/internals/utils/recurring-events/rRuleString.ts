@@ -4,10 +4,13 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
+import { warnOnce } from '@mui/x-internals/warning';
 import {
+  ALL_DAY_IGNORED_RRULE_KEYS,
   BaseTemporal,
   isDateOnlyString,
   toEpochMs,
+  toPlainDate,
   toPlainDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import { resolveEventTimestamp } from '@mui/x-scheduler-internals/process-event';
@@ -24,8 +27,10 @@ const UNTIL_REGEX = /^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})Z)?$/;
 /**
  * Reads `UNTIL`, which has the type of the start of the series (RFC 5545): a date on an all-day
  * series, which covers its whole day, and a UTC date-time on a timed one, its exact cutoff read on
- * the wall clock of `timezone`. The other type throws. Returns `null` for a malformed value or a
- * date or time that does not exist, like February 31st.
+ * the wall clock of `timezone`. The other type is read leniently, with a warning: a date-time on an
+ * all-day series counts by its date in `timezone`, and a date on a timed series covers its whole
+ * day. Returns `null` for a malformed value or a date or time that does not exist, like
+ * February 31st.
  */
 function parseUntil(
   value: string,
@@ -48,18 +53,37 @@ function parseUntil(
         { year, month, day, hour, minute, second },
         { overflow: 'reject' },
       );
-      until = toPlainDateTime(toEpochMs(utcDateTime, 'UTC'), timezone);
+      const epochMs = toEpochMs(utcDateTime, 'UTC');
+      until = allDay ? toPlainDate(epochMs, timezone) : toPlainDateTime(epochMs, timezone);
     }
   } catch {
     return null;
   }
-  if (allDay && !isDate) {
-    throwAllDayUntilNotDate(value);
-  }
-  if (!allDay && isDate) {
-    throwTimedUntilNotDateTime(value);
+  if (allDay !== isDate) {
+    warnUntilOfOtherType(value, allDay);
   }
   return until;
+}
+
+/**
+ * Warns about an `until` whose type isn't the one of the start of its series.
+ */
+function warnUntilOfOtherType(value: string, allDay: boolean) {
+  if (process.env.NODE_ENV !== 'production') {
+    warnOnce(
+      allDay
+        ? [
+            `MUI X Scheduler: The until "${value}" of the recurrence rule of an all-day event is not a date.`,
+            'RFC 5545 requires the until to have the type of the start, so other calendars can read it differently. The Scheduler uses its date in the timezone of the event.',
+            'Write it as a date, like until: "2025-07-10" or UNTIL=20250710. See https://mui.com/x/react-scheduler/recurring-events/#end-boundary.',
+          ].join('\n')
+        : [
+            `MUI X Scheduler: The until "${value}" of the recurrence rule of a timed event is not a date-time.`,
+            'RFC 5545 requires the until to have the type of the start, so other calendars can read it differently. The Scheduler includes its whole day.',
+            'Write it as a date-time, like until: "2025-07-10T23:59:59" or UNTIL=20250710T235959Z. See https://mui.com/x/react-scheduler/recurring-events/#end-boundary.',
+          ].join('\n'),
+    );
+  }
 }
 
 const SUPPORTED_RRULE_KEYS = new Set([
@@ -71,9 +95,6 @@ const SUPPORTED_RRULE_KEYS = new Set([
   'UNTIL',
   'COUNT',
 ]);
-
-// RFC 5545 ignores these on a rule whose start is a date.
-const ALL_DAY_IGNORED_RRULE_KEYS = new Set(['BYHOUR', 'BYMINUTE', 'BYSECOND']);
 
 // Fails to compile if `RecurringEventFrequency` gains or loses a member, keeping the runtime check in sync with the type.
 const SUPPORTED_FREQUENCIES: Record<RecurringEventFrequency, true> = {
@@ -114,22 +135,6 @@ function throwInvalidByMonthDay(value: string): never {
     `MUI X Scheduler: Invalid BYMONTHDAY values "${value}". ` +
       'BYMONTHDAY values must be integers between 1 and 31. ' +
       'Provide valid day of month values.',
-  );
-}
-
-function throwAllDayUntilNotDate(value: string): never {
-  throw new Error(
-    `MUI X Scheduler: The until "${value}" of the recurrence rule of an all-day event is not a date. ` +
-      'The occurrences of an all-day series are dates with no time or timezone, so a date-time cannot tell on which date the series ends. ' +
-      'Write it as a date, like until: "2025-07-10" or UNTIL=20250710. See https://mui.com/x/react-scheduler/recurring-events/#end-boundary.',
-  );
-}
-
-function throwTimedUntilNotDateTime(value: string): never {
-  throw new Error(
-    `MUI X Scheduler: The until "${value}" of the recurrence rule of a timed event is not a date-time. ` +
-      'RFC 5545 requires the until to have the type of the start: the occurrences of a timed series start at an instant, so a date cannot tell at which instant the series ends. ' +
-      'Write it as a date-time, like until: "2025-07-10T23:59:59" or UNTIL=20250710T235959Z. See https://mui.com/x/react-scheduler/recurring-events/#end-boundary.',
   );
 }
 
@@ -220,19 +225,17 @@ function readRuleObject(
     // Read first, to throw a clear error for an invalid date.
     const timestamp = resolveEventTimestamp(input.until, timezone);
     const isDate = isDateOnlyString(input.until);
-    if (allDay && !isDate) {
-      throwAllDayUntilNotDate(input.until);
+    if (allDay !== isDate) {
+      warnUntilOfOtherType(input.until, allDay);
     }
-    if (!allDay && isDate) {
-      throwTimedUntilNotDateTime(input.until);
-    }
-    rule = {
-      ...rule,
+    let until: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime;
+    if (isDate) {
       // A date-only string covers its whole day, even one whose midnight the timezone skips.
-      until: isDate
-        ? BaseTemporal.PlainDate.from(input.until)
-        : toPlainDateTime(timestamp, timezone),
-    };
+      until = BaseTemporal.PlainDate.from(input.until);
+    } else {
+      until = allDay ? toPlainDate(timestamp, timezone) : toPlainDateTime(timestamp, timezone);
+    }
+    rule = { ...rule, until };
   }
   return rule;
 }
@@ -240,7 +243,8 @@ function readRuleObject(
 /**
  * Reads and validates a recurrence rule, from an RRULE string or a rule object.
  * The occurrences of the rules it returns can be computed. The `until` has the type of the start
- * of the series: a date on an all-day series, a date-time on a timed one. The other type throws.
+ * of the series: a date on an all-day series, a date-time on a timed one. The other type is read
+ * leniently, with a warning.
  */
 export function parseRRule(
   input: string | SchedulerEventRecurrenceRule,

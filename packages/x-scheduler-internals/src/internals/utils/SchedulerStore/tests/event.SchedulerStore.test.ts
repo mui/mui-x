@@ -2906,6 +2906,38 @@ premiumStoreClasses.forEach((storeClass) => {
         });
       });
 
+      it("should keep the RRULE string of a timed series made all-day with scope 'all'", () => {
+        const onEventsChange = vi.fn();
+        // 13:00 UTC is 09:00 in New York, the time of the series.
+        const event: SchedulerEvent = {
+          ...EventBuilder.new()
+            .id('standup')
+            .withDataTimezone('America/New_York')
+            .span('2025-07-01T09:00:00', '2025-07-01T09:30:00')
+            .build(),
+          rrule: 'FREQ=DAILY;UNTIL=20250708T130000Z',
+        };
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'America/New_York',
+          onEventsChange,
+        });
+
+        store.updateRecurringEvent({
+          occurrence: createStoreOccurrence(
+            store,
+            'standup',
+            createDate('2025-07-03T09:00:00', 'America/New_York'),
+          ),
+          changes: { id: 'standup', allDay: true },
+        });
+        store.selectRecurringEventScope('all');
+
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated.rrule).to.equal('FREQ=DAILY;UNTIL=20250708');
+      });
+
       it('should keep the stored BYMONTHDAY when only the count changes from another timezone', () => {
         // The rule is passed through as is: saving it with a new count keeps the 3rd.
         const event = utcJuly4AllDayBuilder()
@@ -3036,6 +3068,62 @@ premiumStoreClasses.forEach((storeClass) => {
         const updated = deleteSkippedDayOccurrence('this-and-following');
 
         expect((updated.rrule as SchedulerEventRecurrenceRule).until).to.equal('2011-12-29');
+      });
+    });
+
+    describe('Method: updateRecurringEvent on a date the display timezone skips', () => {
+      // A daily series of 6 dates from December 28th, 2011: December 30th doesn't exist in
+      // Pacific/Apia, where its occurrence starts at the same instant as the one of the 31st.
+      const editSkippedDayOccurrence = (scope: RecurringEventScope) => {
+        const onEventsChange = vi.fn();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [
+            EventBuilder.new()
+              .id('trip')
+              .span('2011-12-28', '2011-12-29', { allDay: true })
+              .rrule({ freq: 'DAILY', count: 6 })
+              .build(),
+          ],
+          displayTimezone: 'Pacific/Apia',
+          onEventsChange,
+        });
+        const occurrence = schedulerRecurringEventsPlugin
+          .getOccurrencesForVisibleDays(
+            schedulerEventSelectors.processedEventRequired(store.state, 'trip'),
+            createDate('2011-12-28T00:00:00', 'Pacific/Apia').getTime(),
+            createDate('2012-01-02T00:00:00', 'Pacific/Apia').getTime(),
+            'Pacific/Apia',
+          )
+          .find((item) => item.key === 'trip::2011-12-30')!;
+
+        store.updateRecurringEvent({ occurrence, changes: { id: 'trip', title: 'Renamed' } });
+        store.selectRecurringEventScope(scope);
+
+        const events: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+        return {
+          series: events.find((item) => item.id === 'trip')!,
+          created: events.find((item) => item.id !== 'trip')!,
+        };
+      };
+
+      it("should split the series on the date the display timezone skips with scope 'this-and-following'", () => {
+        const { series, created } = editSkippedDayOccurrence('this-and-following');
+
+        expect((series.rrule as SchedulerEventRecurrenceRule).until).to.equal('2011-12-29');
+        expect(created.start).to.equal('2011-12-30');
+        expect(created.end).to.equal('2011-12-31');
+        // 2 occurrences before the split and 4 after it: the 6 of the series.
+        expect((created.rrule as SchedulerEventRecurrenceRule).count).to.equal(4);
+      });
+
+      it("should detach the occurrence on the date the display timezone skips with scope 'only-this'", () => {
+        const { series, created } = editSkippedDayOccurrence('only-this');
+
+        expect(series.exDates).to.deep.equal(['2011-12-30']);
+        expect(created.start).to.equal('2011-12-30');
+        expect(created.end).to.equal('2011-12-31');
+        expect(created.title).to.equal('Renamed');
       });
     });
 

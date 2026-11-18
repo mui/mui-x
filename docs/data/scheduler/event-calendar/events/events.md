@@ -58,8 +58,7 @@ The Scheduler throws when an all-day event does not follow this format:
 
 - a `start` or `end` that is not a `YYYY-MM-DD` date, a date-time like `2025-07-04T00:00:00` included;
 - an `end` on or before the `start`, which covers no day;
-- an exception date of an all-day series that is not a `YYYY-MM-DD` date;
-- an `until` of the recurrence rule of an all-day series that is not a date: a `YYYY-MM-DD` string, or `UNTIL=YYYYMMDD` in an RRULE string.
+- an exception date of an all-day series that is not a `YYYY-MM-DD` date.
 
 In the day and week views, all-day events are rendered in the day grid above the time grid.
 See the `timeGridEvents` option of the [Week view](/x/react-scheduler/event-calendar/views/#week-view) to choose where timed events that cross midnight are rendered.

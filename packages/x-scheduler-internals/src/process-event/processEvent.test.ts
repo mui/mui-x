@@ -9,6 +9,7 @@ import {
   toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerEvent } from '../models';
 import { BaseTemporal } from '../internals/utils/base-temporal';
 
@@ -94,27 +95,49 @@ describe('processEvent', () => {
     it.each<NonNullable<SchedulerEvent['rrule']>>([
       { freq: 'DAILY', until: '2025-01-11T03:00:00Z' },
       'FREQ=DAILY;UNTIL=20250111T030000Z',
-    ])('should throw when the until of an all-day series is a date-time: %j', (rrule) => {
-      const event = EventBuilder.new()
-        .withDataTimezone('America/New_York')
-        .span('2025-01-01', '2025-01-02', { allDay: true })
-        .build();
+    ])(
+      'should read the date-time until of an all-day series as its date in the timezone of the event, with a warning: %j',
+      (rrule) => {
+        clearWarningsCache();
+        // 03:00 UTC on January 11th is January 10th in New York.
+        const event = EventBuilder.new()
+          .withDataTimezone('America/New_York')
+          .span('2025-01-01', '2025-01-02', { allDay: true })
+          .build();
 
-      expect(() =>
-        processEvent({ ...event, rrule }, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
-      ).to.throw(/of the recurrence rule of an all-day event is not a date/);
-    });
+        let processed: ReturnType<typeof processEvent> | undefined;
+        expect(() => {
+          processed = processEvent(
+            { ...event, rrule },
+            'Asia/Tokyo',
+            schedulerRecurringEventsPlugin,
+          );
+        }).toWarnDev('of the recurrence rule of an all-day event is not a date.');
+        expect(processed!.rrule!.until!.toString()).to.equal('2025-01-10');
+      },
+    );
 
     it.each<NonNullable<SchedulerEvent['rrule']>>([
       { freq: 'DAILY', until: '2025-01-11' },
       'FREQ=DAILY;UNTIL=20250111',
-    ])('should throw when the until of a timed series is a date: %j', (rrule) => {
-      const event = EventBuilder.new().withDataTimezone('America/New_York').build();
+    ])(
+      'should read the date until of a timed series as its whole day, with a warning: %j',
+      (rrule) => {
+        clearWarningsCache();
+        const event = EventBuilder.new().withDataTimezone('America/New_York').build();
 
-      expect(() =>
-        processEvent({ ...event, rrule }, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
-      ).to.throw(/of the recurrence rule of a timed event is not a date-time/);
-    });
+        let processed: ReturnType<typeof processEvent> | undefined;
+        expect(() => {
+          processed = processEvent(
+            { ...event, rrule },
+            'Asia/Tokyo',
+            schedulerRecurringEventsPlugin,
+          );
+        }).toWarnDev('of the recurrence rule of a timed event is not a date-time.');
+        expect(processed!.rrule!.until).to.be.instanceOf(BaseTemporal.PlainDate);
+        expect(processed!.rrule!.until!.toString()).to.equal('2025-01-11');
+      },
+    );
   });
 
   describe('all-day events', () => {

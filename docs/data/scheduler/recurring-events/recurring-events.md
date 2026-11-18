@@ -178,6 +178,6 @@ Use either the `COUNT` or the `UNTIL` property if you want to put an end boundar
   The `UNTIL` property is inclusive and has the type of the event's start, as in RFC 5545.
   On an all-day event, it is a date, which includes its whole day.
   On a timed event, it is a UTC date-time, read in the timezone of the event: an occurrence starting at that instant is included, and one starting later is excluded.
-  A value of the other type throws an error.
+  A value of the other type logs a warning in development.
   The event dialog offers a date picker: the chosen day is the last day of the series.
   :::

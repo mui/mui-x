@@ -92,7 +92,13 @@ export function applyRecurringUpdateFollowing(
   const occurrenceStart = getOccurrenceStart(occurrence, displayTimezone);
 
   // 1) New event: apply changes, decide RRULE for the new series
-  const newRRule = decideSplitRRule(originalEvent, occurrenceStart, changes, displayTimezone);
+  const newRRule = decideSplitRRule(
+    originalEvent,
+    occurrenceStart,
+    changes,
+    displayTimezone,
+    getOccurrencePlainDate(occurrence),
+  );
 
   const originalModel = originalEvent.modelInBuiltInFormat;
   // When start/end are not explicitly changed, the new series must start at the occurrence
@@ -115,6 +121,7 @@ export function applyRecurringUpdateFollowing(
       start: occurrenceStart,
       end: occurrenceEnd,
     }),
+    ...getAllDayOccurrenceDates(originalEvent, occurrence, changes),
   };
   const dataTimezone = stringified.timezone ?? originalModel.timezone ?? 'default';
 
@@ -300,7 +307,13 @@ export function applyRecurringUpdateAll(
         nextDayTimezone,
       );
     }
-    if (!originalAllDay && allDay) {
+    // Without a moved day, the store writes the `until` of the stored rule as a date, in its own
+    // format (`stringifyEventDateChanges()`).
+    if (
+      !originalAllDay &&
+      allDay &&
+      (displayedDaysShift != null || rrule !== originalEvent.rrule)
+    ) {
       rrule = shiftUntilToDisplayedDay(rrule, originalEvent, displayedDaysShift);
     }
     if (rrule !== originalEvent.rrule) {
@@ -345,12 +358,38 @@ export function applyRecurringUpdateOnlyThis(
       start: occurrenceStart,
       end: occurrenceEnd,
     }),
+    ...getAllDayOccurrenceDates(originalEvent, occurrence, changes),
   };
 
   // The original series excludes the occurrence, like a deletion.
   return {
     created: [extractStandaloneEvent(originalEvent, stringifiedChanges)],
     ...applyRecurringDeleteOnlyThis(originalEvent, occurrence),
+  };
+}
+
+/**
+ * The dates of an all-day occurrence that stays all-day and gets no new bounds: its own date and
+ * the day count of its series, even on a date the display timezone skips, where its start is on the
+ * next day.
+ */
+function getAllDayOccurrenceDates(
+  originalEvent: SchedulerProcessedEvent,
+  occurrence: SchedulerEventOccurrence,
+  changes: SchedulerEventUpdatedProperties,
+): { start: string; end: string } | null {
+  if (
+    !originalEvent.allDay ||
+    changes.allDay === false ||
+    changes.start != null ||
+    changes.end != null
+  ) {
+    return null;
+  }
+  const date = getOccurrencePlainDate(occurrence);
+  return {
+    start: date.toString(),
+    end: date.add({ days: getAllDayDayCount(originalEvent) }).toString(),
   };
 }
 
@@ -535,12 +574,16 @@ function realignMonthlyRule(
  *   * Boundaries:
  *       - If original had COUNT: set COUNT = remaining occurrences from the split day.
  *       - If original had UNTIL: keep the same UNTIL.
+ *
+ * The split day is `occurrencePlainDate`, the date of the edited occurrence, or else the day of
+ * `splitStart`.
  */
 export function decideSplitRRule(
   originalEvent: SchedulerProcessedEvent,
   splitStart: number,
   changes: Partial<SchedulerEventUpdatedProperties>,
   displayTimezone: string,
+  occurrencePlainDate?: BaseTemporal.PlainDate,
 ): SchedulerProcessedEventRecurrenceRule | string | undefined {
   const originalRule = originalEvent.rrule!;
   const dayTimezone = getDayTimezone(originalEvent, displayTimezone);
@@ -571,7 +614,7 @@ export function decideSplitRRule(
   let realignedRule: SchedulerProcessedEventRecurrenceRule = { ...originalRule };
 
   // Changing the representation alone moves no day: the new series keeps the days of the rule.
-  const splitPlainDate = toPlainDate(splitStart, dayTimezone);
+  const splitPlainDate = occurrencePlainDate ?? toPlainDate(splitStart, dayTimezone);
 
   // Freq WEEKLY: realign BYDAY, swap the old weekday for the new one while preserving the rest of the weekly pattern.
   if (originalRule.freq === 'WEEKLY' && realignedRule.byDay?.length && changes.start) {

@@ -55,8 +55,15 @@ function replaceDateTimeUntil(
 // The date form of UNTIL, like `20250708`, not followed by a time.
 const UNTIL_DATE_REGEX = /(UNTIL\s*=\s*)(\d{4})(\d{2})(\d{2})(?![T\d])/i;
 
-// The time parts an all-day rule may carry, which a timed rule does not support.
-const ALL_DAY_IGNORED_RRULE_KEYS = new Set(['BYHOUR', 'BYMINUTE', 'BYSECOND']);
+/**
+ * The time parts of an RRULE string that RFC 5545 ignores on a rule whose start is a date, and that
+ * a timed rule does not support.
+ */
+export const ALL_DAY_IGNORED_RRULE_KEYS: ReadonlySet<string> = new Set([
+  'BYHOUR',
+  'BYMINUTE',
+  'BYSECOND',
+]);
 
 /**
  * The rule of an all-day event made timed: a date `until` is written as the last instant of that

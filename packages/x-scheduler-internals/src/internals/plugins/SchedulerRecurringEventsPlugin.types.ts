@@ -17,7 +17,9 @@ export interface SchedulerRecurringEventsPluginInterface {
    * expressed in the given timezone. String inputs are validated against RFC5545; object
    * inputs are trusted and normalized.
    * The `until` has the type of the start of the series: a date on an all-day series, and on a
-   * timed one (`allDay` false, the default) a date-time, its exact cutoff. The other type throws.
+   * timed one (`allDay` false, the default) a date-time, its exact cutoff. The other type is read
+   * leniently, with a warning: a date-time on an all-day series counts by its date in `timezone`,
+   * and a date on a timed series covers its whole day.
    */
   parseRRule(
     input: string | SchedulerEventRecurrenceRule,
