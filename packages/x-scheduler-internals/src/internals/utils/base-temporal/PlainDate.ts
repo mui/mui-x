@@ -24,13 +24,10 @@ import {
 } from './calendar';
 import type { CalendarDate, CalendarImplementation } from './calendar';
 import { mergeDateFields } from './mergeDateFields';
-import {
-  PlainTime,
-  readTime,
-  type BaseTemporal as PlainTimeTypes,
-  type PlainTimeInput,
-} from './PlainTime';
-import { createPlainDateTime, type BaseTemporal as PlainDateTimeTypes } from './PlainDateTime';
+import { PlainTime, readTime } from './PlainTime';
+import type { BaseTemporal as PlainTimeTypes, PlainTimeInput } from './PlainTime';
+import { createPlainDateTime } from './PlainDateTime';
+import type { BaseTemporal as PlainDateTimeTypes } from './PlainDateTime';
 
 export { FIRST_SUPPORTED_DAY, LAST_SUPPORTED_DAY } from './iso';
 

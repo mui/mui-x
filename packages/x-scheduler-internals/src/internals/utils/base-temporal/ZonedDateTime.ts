@@ -350,18 +350,20 @@ export class ZonedDateTime implements BaseTemporal.ZonedDateTime {
       const dateTime = PlainDateTime.from(
         annotated.calendar == null ? match[1] : `${match[1]}[u-ca=${annotated.calendar}]`,
       );
-      return new ZonedDateTime(
-        resolve(dateTime, match[3], match[2], options, /^[-+]\d{2}:\d{2}$/.test(match[2] ?? '')),
+      return fromDateTime(
+        dateTime,
         match[3],
-        dateTime.calendarId,
+        match[2],
+        options,
+        /^[-+]\d{2}:\d{2}$/.test(match[2] ?? ''),
       );
     }
     const fields = item as ZonedDateTimeFields;
-    const dateTime = PlainDateTime.from(fields, { overflow });
-    return new ZonedDateTime(
-      resolve(dateTime, fields.timeZone, fields.offset, options),
+    return fromDateTime(
+      PlainDateTime.from(fields, { overflow }),
       fields.timeZone,
-      dateTime.calendarId,
+      fields.offset,
+      options,
     );
   }
 
@@ -450,18 +452,14 @@ export class ZonedDateTime implements BaseTemporal.ZonedDateTime {
       'ZonedDateTime.prototype.with()',
       ZONED_FIELDS,
     );
-    return new ZonedDateTime(
-      resolve(
-        dateTime,
-        this.timeZoneId,
-        fields.offset === undefined ? this.offset : fields.offset,
-        {
-          ...options,
-          offset: options?.offset ?? 'prefer',
-        },
-      ),
+    return fromDateTime(
+      dateTime,
       this.timeZoneId,
-      this.calendarId,
+      fields.offset === undefined ? this.offset : fields.offset,
+      {
+        ...options,
+        offset: options?.offset ?? 'prefer',
+      },
     );
   }
   withTimeZone(timeZone: string): ZonedDateTime {
@@ -498,6 +496,24 @@ export class ZonedDateTime implements BaseTemporal.ZonedDateTime {
   valueOf(): never {
     return throwOnPrimitiveConversion('ZonedDateTime');
   }
+}
+
+/**
+ * Creates the zoned date-time of a date-time in a timezone, at the instant `resolve()` returns.
+ */
+function fromDateTime(
+  dateTime: PlainDateTime,
+  timeZone: string,
+  offset: string | undefined,
+  options: ZonedDateTimeAssignmentOptions | undefined,
+  matchMinute?: boolean,
+): ZonedDateTime {
+  return createZonedDateTime(
+    resolve(dateTime, timeZone, offset, options, matchMinute),
+    timeZone,
+    dateTime.calendarId,
+    dateTime.microsecond * 1000 + dateTime.nanosecond,
+  );
 }
 
 /**

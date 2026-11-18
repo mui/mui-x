@@ -167,18 +167,6 @@ function readOffset(offset: string): number {
   );
 }
 
-export function epochMilliseconds(nanoseconds: bigint): number {
-  const whole = nanoseconds / NS_PER_MS;
-  return Number(nanoseconds % NS_PER_MS < 0n ? whole - 1n : whole);
-}
-
-function localNanoseconds(value: PlainDateTime): bigint {
-  return (
-    BigInt((value.toPlainDate() as PlainDate).dayNumber * MS_PER_DAY) * NS_PER_MS +
-    BigInt(getTimeNumber(value))
-  );
-}
-
 /**
  * Reads and checks the `disambiguation` and `offset` options, with the defaults of `from()`.
  */
@@ -213,13 +201,18 @@ export function formatRoundedOffset(offset: string): string {
   return `${minutes < 0 ? '-' : '+'}${padNumber(Math.floor(absolute / 60))}:${padNumber(absolute % 60)}`;
 }
 
+/**
+ * Returns the instant of a date-time in a timezone, in milliseconds since 1970-01-01T00:00Z,
+ * rounded down. Offsets are whole milliseconds, so the nanoseconds after the milliseconds are those
+ * of the date-time.
+ */
 export function resolve(
   value: PlainDateTime,
   timeZone: string,
   offset: string | undefined,
   options: ZonedDateTimeAssignmentOptions = {},
   matchMinute = false,
-): bigint {
+): number {
   if (offset !== undefined && typeof offset !== 'string') {
     throw new TypeError(
       `MUI X Scheduler: The \`offset\` field of the zoned date-time is ${String(offset)}, which isn't a string. ` +
@@ -228,59 +221,62 @@ export function resolve(
     );
   }
   const { disambiguation, offsetPolicy } = readZonedOptions(options);
-  const local = localNanoseconds(value);
+  // The clock time, in milliseconds since 1970-01-01T00:00 of the wall clock.
+  const local =
+    (value.toPlainDate() as PlainDate).dayNumber * MS_PER_DAY +
+    Math.floor(getTimeNumber(value) / 1e6);
   if (
     offsetPolicy !== 'ignore' &&
     (offset === 'Z' || (offset !== undefined && offsetPolicy === 'use'))
   ) {
-    return local - BigInt(offset === 'Z' ? 0 : readOffset(offset)) * NS_PER_MS;
+    return local - (offset === 'Z' ? 0 : readOffset(offset));
   }
   const preferred =
     offset !== undefined && offsetPolicy !== 'ignore' ? readOffset(offset) : undefined;
-  if (preferred !== undefined) {
-    const instant = local - BigInt(preferred) * NS_PER_MS;
-    if (offsetMilliseconds(timeZone, epochMilliseconds(instant)) === preferred) {
-      return instant;
+  if (preferred !== undefined && offsetMilliseconds(timeZone, local - preferred) === preferred) {
+    return local - preferred;
+  }
+  // Each offset on both sides of a transition, including a skipped or repeated whole day, gives an
+  // instant of the clock time. The instants the timezone shows it at are possible: a repeated
+  // clock time has two, a skipped one none.
+  const candidates: number[] = [];
+  const possible: number[] = [];
+  let match: number | undefined;
+  for (const day of [-2, 0, 2]) {
+    const candidateOffset = offsetMilliseconds(timeZone, local + day * MS_PER_DAY);
+    const instant = local - candidateOffset;
+    if (!candidates.includes(instant)) {
+      candidates.push(instant);
+      if (offsetMilliseconds(timeZone, instant) === candidateOffset) {
+        possible.push(instant);
+        if (
+          (candidateOffset === preferred ||
+            (matchMinute && roundToMinute(candidateOffset) === preferred)) &&
+          (match === undefined || instant < match)
+        ) {
+          match = instant;
+        }
+      }
     }
   }
-  const milliseconds = epochMilliseconds(local);
-  // Look on both sides of a transition, including a skipped or repeated whole day.
-  const offsets = new Set([
-    offsetMilliseconds(timeZone, milliseconds - 2 * MS_PER_DAY),
-    offsetMilliseconds(timeZone, milliseconds),
-    offsetMilliseconds(timeZone, milliseconds + 2 * MS_PER_DAY),
-  ]);
-  const candidates = [...offsets]
-    .map((candidateOffset) => ({
-      instant: local - BigInt(candidateOffset) * NS_PER_MS,
-      offset: candidateOffset,
-    }))
-    .sort((a, b) => (a.instant < b.instant ? -1 : 1));
-  const possible = candidates.filter(
-    (candidate) =>
-      offsetMilliseconds(timeZone, epochMilliseconds(candidate.instant)) === candidate.offset,
-  );
   if (preferred !== undefined) {
-    const match = possible.find(
-      (candidate) =>
-        candidate.offset === preferred ||
-        (matchMinute && roundToMinute(candidate.offset) === preferred),
-    );
-    if (match) {
-      return match.instant;
+    if (match !== undefined) {
+      return match;
     }
     if (offsetPolicy === 'reject') {
       return fail('the offset does not match the timezone at this clock time');
     }
   }
   if (possible.length === 1) {
-    return possible[0].instant;
+    return possible[0];
   }
   if (disambiguation === 'reject') {
     return fail('the clock time was skipped or repeated');
   }
+  // The earliest instant, or the latest one for `'later'` and for a skipped clock time in
+  // `'compatible'`, which moves it forward.
   const choices = possible.length ? possible : candidates;
-  const chooseLast =
-    disambiguation === 'later' || (possible.length === 0 && disambiguation === 'compatible');
-  return choices[chooseLast ? choices.length - 1 : 0].instant;
+  return disambiguation === 'later' || (possible.length === 0 && disambiguation === 'compatible')
+    ? Math.max(...choices)
+    : Math.min(...choices);
 }
