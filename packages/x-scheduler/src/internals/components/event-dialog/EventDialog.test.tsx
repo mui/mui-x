@@ -376,10 +376,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         vi.setSystemTime(new Date('2025-07-04T10:20:00Z'));
       });
 
-      afterEach(() => {
-        vi.useRealTimers();
-      });
-
       it('should fill the times of an all-day event made timed with the next display hour and the default duration', async () => {
         const { user, getUpdatedEvent } = renderEditDialog(
           EventBuilder.new().title('Trip').span('2025-07-04', '2025-07-05', { allDay: true }),
@@ -474,15 +470,19 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         const allDaySwitch = screen.getByRole('switch', { name: /all day/i });
         await user.click(allDaySwitch);
         const startTimeInput = screen.getByLabelText(/start time/i);
+        const endTimeInput = screen.getByLabelText(/end time/i);
         expect(startTimeInput).to.have.value('11:00');
-        expect(screen.getByLabelText(/end time/i)).to.have.value('11:30');
+        expect(endTimeInput).to.have.value('11:30');
+        // The same times as the placeholders of the all-day event, so they are not dirty values.
         await user.clear(startTimeInput);
-        await user.type(startTimeInput, '15:45');
+        await user.type(startTimeInput, '00:00');
+        await user.clear(endTimeInput);
+        await user.type(endTimeInput, '23:59');
         await user.click(allDaySwitch);
         await user.click(allDaySwitch);
 
-        expect(screen.getByLabelText(/start time/i)).to.have.value('15:45');
-        expect(screen.getByLabelText(/end time/i)).to.have.value('11:30');
+        expect(screen.getByLabelText(/start time/i)).to.have.value('00:00');
+        expect(screen.getByLabelText(/end time/i)).to.have.value('23:59');
       });
 
       it('should keep the dates of an all-day event made timed late in the day and all-day again', async () => {
@@ -505,6 +505,22 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         const updated = getUpdatedEvent();
         expect(updated.start).to.equal(event.start);
         expect(updated.end).to.equal(event.end);
+      });
+
+      it('should save an all-day event made timed late in the day on its own day', async () => {
+        vi.setSystemTime(new Date('2025-07-04T22:10:00Z'));
+        const { user, getUpdatedEvent } = renderEditDialog(
+          EventBuilder.new().title('Trip').span('2025-07-04', '2025-07-05', { allDay: true }),
+          'UTC',
+          { eventCreation: { duration: 60 } },
+        );
+
+        await user.click(screen.getByRole('switch', { name: /all day/i }));
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+
+        const updated = getUpdatedEvent();
+        expect(updated.start).to.equal('2025-07-04T23:00:00');
+        expect(updated.end).to.equal('2025-07-04T23:59:00');
       });
     });
 
@@ -2061,13 +2077,20 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       const [firstSwitch, secondSwitch] = screen.getAllByRole('switch', { name: /all day/i });
       await user.click(firstSwitch);
       const startTimeInput = screen.getAllByLabelText(/start time/i)[0];
+      const endTimeInput = screen.getAllByLabelText(/end time/i)[0];
+      // The same times as the placeholders of the all-day event, so they are not dirty values.
       await user.clear(startTimeInput);
-      await user.type(startTimeInput, '15:45');
+      await user.type(startTimeInput, '00:00');
+      await user.clear(endTimeInput);
+      await user.type(endTimeInput, '23:59');
       await user.click(secondSwitch);
       await user.click(secondSwitch);
 
       screen.getAllByLabelText(/start time/i).forEach((input) => {
-        expect(input).to.have.value('15:45');
+        expect(input).to.have.value('00:00');
+      });
+      screen.getAllByLabelText(/end time/i).forEach((input) => {
+        expect(input).to.have.value('23:59');
       });
     });
 

@@ -2338,7 +2338,7 @@ storeClasses.forEach((storeClass) => {
         store.pasteEvent({ start: createDate('2025-07-20T14:00:00'), allDay: false });
 
         const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
-        expect(Boolean(pasted.allDay)).to.equal(false);
+        expect(pasted.allDay).to.equal(false);
         expect(pasted.start).to.equal('2025-07-20T14:00:00');
         expect(pasted.end).to.equal('2025-07-20T15:00:00');
       });

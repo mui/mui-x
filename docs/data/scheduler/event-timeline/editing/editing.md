@@ -84,8 +84,8 @@ The dialog has two tabs:
 - **Recurrence**: frequency, interval, days of the week, and end condition. Shown when the [`recurringEvents` feature](/x/react-scheduler/recurring-events/) is enabled.
 
 Ticking **All day** keeps the dates shown in the form and hides the times.
-Unticking it shows them again: the ones the event had in this editing session or, for an event that was already all-day, the current time of the display timezone rounded up to the hour, lasting the default event duration (`eventCreation.duration`).
-The dates never change: an end that would cross midnight stops at 23:59.
+Unticking it shows them again.
+For an event that was already all-day, the start time becomes the next hour of the display timezone and the end time the default event duration (`eventCreation.duration`) after it, without changing the dates.
 
 Click any event in the demo below to open the dialog.
 From there you can edit the event details or delete it.

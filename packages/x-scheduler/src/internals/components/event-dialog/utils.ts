@@ -16,6 +16,7 @@ import {
   getTimezoneId,
   isEventOccurrence,
   parseDateOnlyString,
+  plainTimeFromMsInDay,
   toEpochMs,
   toPlainDate,
   toPlainDateTime,
@@ -199,9 +200,7 @@ function formatTimeField(time: BaseTemporal.PlainTime): string {
 }
 
 function minutesToTimeField(minutesInDay: number): string {
-  return formatTimeField(
-    new BaseTemporal.PlainTime(Math.floor(minutesInDay / 60), minutesInDay % 60),
-  );
+  return formatTimeField(plainTimeFromMsInDay(minutesInDay * 60_000));
 }
 
 /**

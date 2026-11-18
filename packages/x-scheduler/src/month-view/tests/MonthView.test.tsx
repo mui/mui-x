@@ -902,6 +902,7 @@ describe('<MonthView />', () => {
     });
 
     it('should fill the times of a creation started on the grid when all-day is unticked', async () => {
+      vi.setSystemTime(new Date('2025-05-01T09:20:00Z'));
       const { user } = render(
         <EventCalendarProvider events={[]} resources={[]}>
           <EventDialogProvider>
@@ -918,9 +919,8 @@ describe('<MonthView />', () => {
 
       await user.click(screen.getByRole('switch', { name: /all day/i }));
 
-      // The file's clock is 2025-05-01T00:00Z, already on the hour.
-      expect(screen.getByLabelText(/start time/i)).to.have.value('00:00');
-      expect(screen.getByLabelText(/end time/i)).to.have.value('00:30');
+      expect(screen.getByLabelText(/start time/i)).to.have.value('10:00');
+      expect(screen.getByLabelText(/end time/i)).to.have.value('10:30');
       expect(screen.getByLabelText(/start date/i)).to.have.value(clickedDay);
       expect(screen.getByLabelText(/end date/i)).to.have.value(clickedDay);
     });
