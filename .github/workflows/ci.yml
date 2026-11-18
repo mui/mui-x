@@ -32,7 +32,7 @@ jobs:
       - run: pnpm install
       - run: pnpm release:build
       - name: Publish packages to pkg.pr.new
-        uses: mui/mui-public/.github/actions/ci-publish@c025608c1f0746d496278aff1317a6ce8e61abde # master
+        uses: mui/mui-public/.github/actions/ci-publish@329dc09d231de32a96eb088fed6e3be35dcdff94 # master
 
   # Mirrors the real publish workflow environment (`publish.yml`) so an env
   # mismatch — e.g. the Node version pinned by `publish-prepare` violating our
@@ -45,7 +45,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Prepare for publishing
-        uses: mui/mui-public/.github/actions/publish-prepare@c025608c1f0746d496278aff1317a6ce8e61abde # master
+        uses: mui/mui-public/.github/actions/publish-prepare@329dc09d231de32a96eb088fed6e3be35dcdff94 # master
         with:
           # Must satisfy the `engines.node` range enforced by pnpm engineStrict
           node-version: '22.23.4'
