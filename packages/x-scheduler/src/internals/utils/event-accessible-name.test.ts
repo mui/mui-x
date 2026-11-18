@@ -52,7 +52,7 @@ describe('getEventAccessibleName', () => {
   it('should announce the date range of a multi-day all-day event', () => {
     const occurrence = EventBuilder.new()
       .title('Conference')
-      .span('2025-07-03', '2025-07-05', { allDay: true })
+      .span('2025-07-03', '2025-07-06', { allDay: true })
       .toOccurrence();
 
     expect(getName(occurrence)).to.equal(

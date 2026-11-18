@@ -87,7 +87,7 @@ describe('EventContextMenu - recurring events (Premium)', () => {
     expect(screen.getByText(/Apply this change to:/i)).not.to.equal(null);
   });
 
-  it('should identify the deleted occurrence by its data-timezone start from another timezone', () => {
+  it('should identify the deleted occurrence by its displayed day from another timezone', () => {
     const weeklyEventBuilder = utcJuly4AllDayBuilder()
       .title('Weekly sync')
       .recurrent('WEEKLY')
@@ -124,12 +124,11 @@ describe('EventContextMenu - recurring events (Premium)', () => {
     fireEvent.contextMenu(screen.getByRole('button', { name: 'Weekly sync' }));
     fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
 
-    // The display bounds of this occurrence normalize to New York July 3rd; the
-    // exception must land on the event's own July 4th.
+    // An all-day occurrence is identified by the day it is displayed on: July 4th in New York.
     expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
-    expect(
-      deleteRecurringEventSpy!.mock.lastCall![0].occurrence.unstable_internalInfos.dataStart,
-    ).to.equal(createDate('2025-07-04T00:00:00', 'UTC').getTime());
+    expect(deleteRecurringEventSpy!.mock.lastCall![0].occurrence.start.epochMilliseconds).to.equal(
+      createDate('2025-07-04T00:00:00', 'America/New_York').getTime(),
+    );
     // The recurring branch defers to the scope dialog instead of deleting right away.
     expect(screen.getByText(/Apply this change to:/i)).not.to.equal(null);
   });

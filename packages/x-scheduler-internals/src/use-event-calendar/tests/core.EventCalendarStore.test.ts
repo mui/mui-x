@@ -262,8 +262,11 @@ describe('Core - EventCalendarStore', () => {
         expect(store.state.editingOccurrence).to.equal(null);
       });
 
-      it('should keep the data bounds on the committed instants', () => {
-        const store = new EventCalendarStore(DEFAULT_PARAMS);
+      it('should keep the bounds on the committed instants', () => {
+        const store = new EventCalendarStore({
+          ...DEFAULT_PARAMS,
+          displayTimezone: 'America/New_York',
+        });
         const edited = EventBuilder.new()
           .withDataTimezone('UTC')
           .withDisplayTimezone('America/New_York')
@@ -278,11 +281,8 @@ describe('Core - EventCalendarStore', () => {
         const editing = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
         expect(editing.start.epochMilliseconds).to.equal(start.getTime());
         expect(editing.end.epochMilliseconds).to.equal(end.getTime());
-        // A rule added from the dialog is built on the data-timezone start.
-        expect(editing.unstable_internalInfos.dataStart).to.equal(start.getTime());
-        expect(editing.unstable_internalInfos.dataEnd).to.equal(end.getTime());
         // Read in the data timezone: 14:00 UTC.
-        expect(toMsInDay(editing.unstable_internalInfos.dataStart, editing.timezone)).to.equal(
+        expect(toMsInDay(editing.start.epochMilliseconds, editing.timezone)).to.equal(
           14 * 3_600_000,
         );
         // Read in the display timezone: 09:00 in New York.
@@ -290,25 +290,25 @@ describe('Core - EventCalendarStore', () => {
         expect(getMinutesInDay(editing.end)).to.equal(11 * 60);
       });
 
-      it('should keep a bound left out on its stored value in both timezones', () => {
-        // July 4 00:00 UTC is displayed on July 3 in New York: an end-only resize must not
-        // re-read the untouched start from its displayed day.
-        const store = new EventCalendarStore(DEFAULT_PARAMS);
+      it('should keep a bound left out on its stored value', () => {
+        // An all-day event on July 4th displayed in New York: an end-only resize keeps the
+        // untouched start.
+        const store = new EventCalendarStore({
+          ...DEFAULT_PARAMS,
+          displayTimezone: 'America/New_York',
+        });
         const edited = utcJuly4AllDayBuilder()
           .withDisplayTimezone('America/New_York')
           .toOccurrence();
         store.startEditing(edited, 'armed');
-        const end = addDays(new Date(edited.end.epochMilliseconds - 1), 1);
+        // One more day: the exclusive end moves from July 5th to July 6th.
+        const end = addDays(new Date(edited.end.epochMilliseconds), 1);
 
         store.setEditingOccurrenceTimes({ end });
 
         const editing = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
         expect(editing.start).to.equal(edited.start);
-        expect(editing.unstable_internalInfos.dataStart).to.equal(
-          edited.unstable_internalInfos.dataStart,
-        );
-        expect(editing.end.epochMilliseconds).to.equal(end.getTime() + 1);
-        expect(editing.unstable_internalInfos.dataEnd).to.equal(end.getTime());
+        expect(editing.end.epochMilliseconds).to.equal(end.getTime());
       });
     });
 

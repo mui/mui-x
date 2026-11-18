@@ -6,9 +6,8 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
   computeElementPositionInCollection,
-  isInternalDragOrResizePlaceholder,
-  normalizeAllDayBounds,
   toZonedDateTime,
+  isInternalDragOrResizePlaceholder,
 } from '@mui/x-scheduler-internals/internals';
 import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -48,22 +47,16 @@ export function usePlaceholderInRow(
       rawPlaceholder.type === 'external-drag'
         ? rawPlaceholder.eventData.allDay
         : originalEvent?.allDay;
-    const bounds = normalizeAllDayBounds(
-      rawPlaceholder.start,
-      rawPlaceholder.end,
-      allDay,
-      displayTimezone,
-    );
-    const start = toZonedDateTime(bounds.start, displayTimezone);
-    const end = toZonedDateTime(bounds.end, displayTimezone);
+    const startProcessed = toZonedDateTime(rawPlaceholder.start, displayTimezone);
+    const endProcessed = toZonedDateTime(rawPlaceholder.end, displayTimezone);
 
     // A placeholder that occupies no space (fully inside the hidden hours while editing
     // the dates in the event dialog, or shorter than the minute the axis is drawn with)
     // would render as a zero-width sliver pinned to the day seam. Measured on the
     // rendered geometry, like the occurrence selector does.
     const renderedPosition = computeElementPositionInCollection({
-      start,
-      end,
+      start: startProcessed,
+      end: endProcessed,
       collection: config,
       durationMs: config.durationMs,
     });
@@ -76,8 +69,8 @@ export function usePlaceholderInRow(
       title: originalEvent ? originalEvent.title : '',
       allDay,
       resource: rawPlaceholder.resourceId ?? originalEvent?.resource,
-      start,
-      end,
+      start: startProcessed,
+      end: endProcessed,
     };
 
     if (rawPlaceholder.type === 'creation') {

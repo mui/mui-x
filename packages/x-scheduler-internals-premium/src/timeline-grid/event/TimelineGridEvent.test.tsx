@@ -34,7 +34,6 @@ describe('<TimelineGrid.Event />', () => {
     <TimelineGrid.Event
       eventId="fake-id"
       occurrenceKey="fake-key"
-      internalInfos={undefined}
       start={start}
       end={end}
       renderDragPreview={() => null}
@@ -52,7 +51,6 @@ describe('<TimelineGrid.Event />', () => {
       <TimelineGrid.Event
         eventId="fake-id"
         occurrenceKey="fake-key"
-        internalInfos={undefined}
         start={start}
         end={end}
         elementPosition={{
@@ -78,7 +76,6 @@ describe('<TimelineGrid.Event />', () => {
       <TimelineGrid.Event
         eventId="fake-id"
         occurrenceKey="fake-key"
-        internalInfos={undefined}
         start={start}
         end={end}
         renderDragPreview={() => null}

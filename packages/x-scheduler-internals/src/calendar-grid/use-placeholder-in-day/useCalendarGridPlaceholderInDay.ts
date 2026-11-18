@@ -6,7 +6,8 @@ import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowConte
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
-import { normalizeAllDayBounds } from '../../internals/utils/plain-date-utils/date';
+import { getLastInstant } from '../../internals/utils/event-utils';
+import { snapAllDayBounds } from '../../internals/utils/plain-date-utils/date';
 import {
   toEpochMs,
   toLocalDayNumber,
@@ -58,24 +59,19 @@ export function useCalendarGridPlaceholderInDay(
       return null;
     }
 
-    // The placeholder can run past the week row: the next rows render their own piece.
-    const endInRow = Math.min(rawPlaceholder.end, rowEnd);
+    // The destination of a drag can change whether the occurrence is all-day.
     const allDay =
       rawPlaceholder.type === 'creation' ||
       (rawPlaceholder.type === 'external-drag'
         ? rawPlaceholder.eventData.allDay
-        : originalEvent?.allDay);
-    const bounds = normalizeAllDayBounds(
-      rawPlaceholder.start,
-      rawPlaceholder.end,
-      allDay,
-      displayTimezone,
-    );
+        : rawPlaceholder.allDay);
+    // The placeholder can run past the week row: the next rows render their own piece.
+    const lastInstantInRow = Math.min(getLastInstant(rawPlaceholder.end, allDay), rowEnd);
     // The placeholder covers the cells of every date up to its end, like the occurrences.
     const daySpan = getDayGridCellSpan(
       dayNumbers,
       row.days.indexOf(day),
-      toLocalDayNumber(endInRow, displayTimezone),
+      toLocalDayNumber(lastInstantInRow, displayTimezone),
     );
 
     const sharedProperties = {
@@ -87,17 +83,16 @@ export function useCalendarGridPlaceholderInDay(
 
     // Creation mode
     if (rawPlaceholder.type === 'creation') {
-      const creationBounds = normalizeAllDayBounds(
+      const creationBounds = snapAllDayBounds(
         toEpochMs(day.plainDate, displayTimezone),
-        endInRow,
-        true,
+        Math.min(rawPlaceholder.end, rowEnd + 1),
         displayTimezone,
       );
       return {
         ...sharedProperties,
         title: '',
         allDay: true,
-        start: toZonedDateTime(creationBounds.start, displayTimezone),
+        start: toZonedDateTime(toEpochMs(day.plainDate, displayTimezone), displayTimezone),
         end: toZonedDateTime(creationBounds.end, displayTimezone),
         position: {
           index: findAvailableIndex(),
@@ -110,8 +105,8 @@ export function useCalendarGridPlaceholderInDay(
       return {
         ...sharedProperties,
         title: rawPlaceholder.eventData.title ?? '',
-        start: toZonedDateTime(bounds.start, displayTimezone),
-        end: toZonedDateTime(bounds.end, displayTimezone),
+        start: toZonedDateTime(rawPlaceholder.start, displayTimezone),
+        end: toZonedDateTime(rawPlaceholder.end, displayTimezone),
         position: {
           index: findAvailableIndex(),
           daySpan,
@@ -121,8 +116,8 @@ export function useCalendarGridPlaceholderInDay(
 
     return {
       ...sharedProperties,
-      start: toZonedDateTime(bounds.start, displayTimezone),
-      end: toZonedDateTime(bounds.end, displayTimezone),
+      start: toZonedDateTime(rawPlaceholder.start, displayTimezone),
+      end: toZonedDateTime(rawPlaceholder.end, displayTimezone),
       position: {
         index: findAvailableIndex(rawPlaceholder.occurrenceKey),
         daySpan,

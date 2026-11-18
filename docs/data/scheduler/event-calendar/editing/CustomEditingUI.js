@@ -49,11 +49,13 @@ export default function CustomEditingUI() {
         {
           id: `custom-${Date.now()}`,
           title,
-          start: new Date(occurrence.start.epochMilliseconds).toISOString(),
-          // An all-day occurrence ends at the start of the next day, its model on its last day.
-          end: new Date(
-            occurrence.end.epochMilliseconds - (occurrence.allDay ? 1 : 0),
-          ).toISOString(),
+          // The dates of an all-day event are `YYYY-MM-DD` strings, with an exclusive end.
+          start: occurrence.allDay
+            ? occurrence.start.toPlainDate().toString()
+            : new Date(occurrence.start.epochMilliseconds).toISOString(),
+          end: occurrence.allDay
+            ? occurrence.end.toPlainDate().toString()
+            : new Date(occurrence.end.epochMilliseconds).toISOString(),
           allDay: occurrence.allDay,
         },
       ]);

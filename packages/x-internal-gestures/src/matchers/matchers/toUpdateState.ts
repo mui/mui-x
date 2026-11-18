@@ -33,8 +33,11 @@ export type ToUpdateState<R = AnyGesture> = {
    * ```
    */
   toUpdateState<
-    G = R extends new (...args: any[]) => infer J ? (J extends Gesture<string> ? J : never) : never,
-    // @ts-expect-error, accessing protected property for testing purposes
+    G extends Gesture<string> = R extends new (...args: any[]) => infer J
+      ? J extends Gesture<string>
+        ? J
+        : never
+      : never,
     ExpectedState extends Partial<G['mutableStateType']> = Partial<G['mutableStateType']>,
   >(
     expectedState: ExpectedState,

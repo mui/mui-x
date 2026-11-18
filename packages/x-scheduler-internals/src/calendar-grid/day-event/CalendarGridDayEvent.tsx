@@ -24,10 +24,7 @@ import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayCellContext } from '../day-cell/CalendarGridDayCellContext';
 import { useOriginalOccurrence } from '../../internals/utils/useOriginalOccurrence';
-import {
-  getOccurrenceLastDayNumber,
-  getOccurrenceModelEnd,
-} from '../../internals/utils/event-utils';
+import { getOccurrenceLastDayNumber } from '../../internals/utils/event-utils';
 
 const overflowStateAttributesMapping = {
   startingBeforeEdge: (value: boolean) => (value ? { 'data-starting-before-edge': '' } : null),
@@ -46,7 +43,6 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     // Internal props
     start,
     end,
-    internalInfos,
     eventId,
     occurrenceKey,
     renderDragPreview,
@@ -110,20 +106,16 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     occurrenceKey,
     start,
     end,
-    internalInfos,
   });
 
   const getSharedDragData: CalendarGridDayEventContext['getSharedDragData'] = useStableCallback(
-    () => {
-      const originalOccurrence = getOriginalOccurrence();
-      return {
-        eventId,
-        occurrenceKey,
-        originalOccurrence,
-        start: start.epochMilliseconds,
-        end: getOccurrenceModelEnd(originalOccurrence),
-      };
-    },
+    () => ({
+      eventId,
+      occurrenceKey,
+      originalOccurrence: getOriginalOccurrence(),
+      start: start.epochMilliseconds,
+      end: end.epochMilliseconds,
+    }),
   );
 
   const getDragData = useStableCallback((input) => {
@@ -202,8 +194,7 @@ export namespace CalendarGridDayEvent {
     extends
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      useDraggableEvent.PublicParameters,
-      Pick<useOriginalOccurrence.Parameters, 'internalInfos'> {}
+      useDraggableEvent.PublicParameters {}
 
   export interface SharedDragData {
     eventId: SchedulerEventId;

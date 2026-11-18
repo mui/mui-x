@@ -3,18 +3,27 @@ import type { SchedulerEventOccurrence, SchedulerEventOccurrencePlaceholder } fr
 import type { BaseTemporal } from '../internals/utils/base-temporal';
 import type { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { sortEventOccurrences } from '../sort-event-occurrences';
-import { differenceInDays } from '../internals/utils/plain-date-utils/timeZone';
-import { getDayNumber, getPlainDateKey } from '../internals/utils/plain-date-utils/plainDate';
-import { getOccurrenceLastDayNumber, getOccurrenceModelEnd } from '../internals/utils/event-utils';
+import {
+  getDayNumber,
+  getPlainDateKey,
+  getMsInDay,
+} from '../internals/utils/plain-date-utils/plainDate';
+import { getOccurrenceLastDayNumber } from '../internals/utils/event-utils';
 
 /**
  * The number of full days an occurrence spans in the display timezone.
  */
 function getDayCount(occurrence: SchedulerEventOccurrence) {
-  return differenceInDays(
-    getOccurrenceModelEnd(occurrence),
-    occurrence.start.epochMilliseconds,
-    occurrence.start.timeZoneId,
+  const { start, end } = occurrence;
+  const startDayNumber = getDayNumber(start.toPlainDate());
+  if (occurrence.allDay) {
+    return getOccurrenceLastDayNumber(occurrence) - startDayNumber;
+  }
+  // A timed occurrence that ends earlier in the day than it starts spans one day less than its dates.
+  return (
+    getDayNumber(end.toPlainDate()) -
+    startDayNumber -
+    (getMsInDay(end.toPlainDateTime()) < getMsInDay(start.toPlainDateTime()) ? 1 : 0)
   );
 }
 

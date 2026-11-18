@@ -2470,6 +2470,12 @@
       "isGlobal": false
     },
     {
+      "key": "root--formulaReferencePicking",
+      "className": "MuiDataGridPro-root--formulaReferencePicking",
+      "description": "Styles applied to the root element while a click on a cell writes a reference into the formula being edited (Premium formulas).",
+      "isGlobal": false
+    },
+    {
       "key": "row--beingDragged",
       "className": "MuiDataGridPro-row--beingDragged",
       "description": "Styles applied to the row element when it is being dragged (entire row).",

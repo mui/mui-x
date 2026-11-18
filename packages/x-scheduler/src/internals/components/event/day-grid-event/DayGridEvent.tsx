@@ -13,7 +13,6 @@ import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-ca
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import { getOccurrenceInternalInfos } from '@mui/x-scheduler-internals/internals';
 import type { DayGridEventProps } from './DayGridEvent.types';
 import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
 import { EventDragPreview } from '../../../components/event-drag-preview';
@@ -402,7 +401,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     <DayGridEventRoot
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
-      internalInfos={getOccurrenceInternalInfos(occurrence)}
       isDraggable={isDraggable}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-hidden={variant === 'invisible'}

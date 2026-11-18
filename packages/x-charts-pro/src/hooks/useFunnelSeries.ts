@@ -1,4 +1,7 @@
 'use client';
+
+import '../typeOverloads';
+
 import { useSeriesOfType, useAllSeriesOfType } from '@mui/x-charts/internals';
 import type { ProcessedSeries, SeriesId, ChartSeriesDefaultized } from '@mui/x-charts/internals';
 

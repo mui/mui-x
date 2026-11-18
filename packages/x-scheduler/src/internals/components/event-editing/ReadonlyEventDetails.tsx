@@ -19,15 +19,14 @@ import {
   getPrimaryResourceId,
   isEventOccurrence,
   plainDateFromDayNumber,
+  toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import {
-  getEventTimezone,
-  getEventBoundTimestamp,
-  getEventTimezonePlainDate,
   getRecurrenceLabel,
   getRecurrenceTimezoneName,
+  getRuleTimezone,
   hasProp,
 } from '../event-dialog/utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
@@ -127,11 +126,13 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
     schedulerResourceSelectors.processedResource,
     getPrimaryResourceId(occurrence.resource),
   );
-  // The rule is read in the event's timezone, the one it is expressed in.
-  const eventTimezone = getEventTimezone(occurrence);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
+  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
+  // The rule is read in its own timezone.
+  const ruleTimezone = getRuleTimezone(occurrence, !!occurrence.allDay, displayTimezone);
   const startPlainDate = React.useMemo(
-    () => getEventTimezonePlainDate(occurrence, getEventBoundTimestamp(occurrence, 'start')),
-    [occurrence],
+    () => toPlainDate(occurrence.start.epochMilliseconds, ruleTimezone),
+    [occurrence, ruleTimezone],
   );
   const defaultRecurrenceKey = useStore(
     store,
@@ -139,8 +140,6 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
     isEventOccurrence(occurrence) ? occurrence.rrule : undefined,
     startPlainDate,
   );
-  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
-  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
   // Feature hook
   const formatTime = useFormatTime();
@@ -155,8 +154,8 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
   const formatBoundDateTime = (bound: BaseTemporal.ZonedDateTime, day = bound.toPlainDate()) =>
     occurrence.allDay ? day.toString() : bound.toPlainDateTime().toString();
   const recurrenceTimezoneName = React.useMemo(
-    () => getRecurrenceTimezoneName(locale, eventTimezone, displayTimezone),
-    [locale, eventTimezone, displayTimezone],
+    () => getRecurrenceTimezoneName(locale, ruleTimezone, displayTimezone),
+    [locale, ruleTimezone, displayTimezone],
   );
   const recurrenceLabel = React.useMemo(
     () => getRecurrenceLabel(locale, startPlainDate, defaultRecurrenceKey, localeText),

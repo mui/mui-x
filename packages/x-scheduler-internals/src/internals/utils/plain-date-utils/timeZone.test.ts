@@ -4,7 +4,6 @@ import { isJSDOM } from 'test/utils/skipIf';
 import { BaseTemporal } from '../base-temporal';
 import {
   addDaysOnWallClock,
-  differenceInDays,
   getEndOfDayMs,
   getPlainDateRangeMs,
   getStartOfDayMs,
@@ -222,29 +221,6 @@ describe('timeZone', () => {
       // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026.
       const secondOccurrence = Date.UTC(2026, 9, 25, 1, 30); // the second 02:30, CET
       expect(addDaysOnWallClock(secondOccurrence, 0, 'Europe/Paris')).to.equal(secondOccurrence);
-    });
-  });
-
-  describe('differenceInDays', () => {
-    const difference = (later: string, earlier: string, timezone: string) =>
-      differenceInDays(new Date(later).getTime(), new Date(earlier).getTime(), timezone);
-
-    it('should count the full days on the wall clock of the timezone', () => {
-      // 2 dates apart, but the last day isn't full.
-      expect(difference('2025-07-06T13:00:00Z', '2025-07-04T14:00:00Z', 'UTC')).to.equal(1);
-      expect(difference('2025-07-04T14:00:00Z', '2025-07-06T13:00:00Z', 'UTC')).to.equal(-1);
-      expect(difference('2025-07-04T14:00:00Z', '2025-07-04T14:00:00Z', 'UTC')).to.equal(0);
-      // 23:00 to 01:00 in New York is 03:00 to 05:00 in UTC.
-      expect(
-        difference('2025-07-06T05:00:00Z', '2025-07-04T03:00:00Z', 'America/New_York'),
-      ).to.equal(2);
-    });
-
-    it('should count a day shortened by a DST transition as a full day', () => {
-      // America/New_York springs forward on March 9th, 2025: noon to noon lasts 23 hours.
-      expect(
-        difference('2025-03-09T16:00:00Z', '2025-03-08T17:00:00Z', 'America/New_York'),
-      ).to.equal(1);
     });
   });
 });

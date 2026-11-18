@@ -1,16 +1,45 @@
 import { EventBuilder } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import { BaseTemporal } from '@mui/x-scheduler-internals/internals';
+import { BaseTemporal, toEpochMs } from '@mui/x-scheduler-internals/internals';
 import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../../constants/defaultLocaleText';
 import {
+  computeRange,
   findInvalidRangeField,
-  getEventTimezonePlainDate,
+  getRulePlainDate,
   getRecurrenceLabel,
   getRecurrenceRuleBound,
   getRecurrenceTimezoneName,
   getResentRangeBounds,
   getWeekdayToken,
+  validateRange,
 } from './utils';
+
+describe('computeRange', () => {
+  it('should read an all-day range with an exclusive end', () => {
+    const range = computeRange(
+      { startDate: '2025-07-04', startTime: '', endDate: '2025-07-05', endTime: '', allDay: true },
+      'America/New_York',
+    );
+
+    expect(range.surfaceType).to.equal('day-grid');
+    expect(range.start).to.equal(
+      toEpochMs(BaseTemporal.PlainDate.from('2025-07-04'), 'America/New_York'),
+    );
+    expect(range.end).to.equal(
+      toEpochMs(BaseTemporal.PlainDate.from('2025-07-06'), 'America/New_York'),
+    );
+  });
+});
+
+describe('validateRange', () => {
+  it('should reject an all-day end day before the start day', () => {
+    const july4 = Date.UTC(2025, 6, 4);
+    const july5 = Date.UTC(2025, 6, 5);
+
+    expect(validateRange(july5, july5, true, 'UTC')).to.deep.equal({ field: 'endDate' });
+    expect(validateRange(july4, july5, true, 'UTC')).to.equal(null);
+  });
+});
 
 describe('findInvalidRangeField', () => {
   const base = {
@@ -220,7 +249,7 @@ describe('getRecurrenceRuleBound', () => {
 
   it("should return the occurrence's own bound when it is not resent", () => {
     const start = getRecurrenceRuleBound(occurrence, seeded, false, 'America/New_York', 'start');
-    expect(start).to.equal(occurrence.unstable_internalInfos.dataStart);
+    expect(start).to.equal(occurrence.start.epochMilliseconds);
   });
 
   it('should return the edited bound when it is resent', () => {
@@ -255,7 +284,7 @@ describe('getRecurrenceRuleBound', () => {
       'America/New_York',
       'start',
     );
-    expect(start).to.equal(occurrence.unstable_internalInfos.dataStart);
+    expect(start).to.equal(occurrence.start.epochMilliseconds);
   });
 
   it('should return the end of an edited all-day range', () => {
@@ -266,8 +295,8 @@ describe('getRecurrenceRuleBound', () => {
       'America/New_York',
       'end',
     );
-    // The end of July 5 in New York is July 6 03:59 UTC.
-    expect(new Date(end).toISOString()).to.equal('2025-07-06T03:59:59.999Z');
+    // The exclusive end of July 5 in New York is July 6 00:00, 04:00 UTC.
+    expect(new Date(end).toISOString()).to.equal('2025-07-06T04:00:00.000Z');
   });
 
   it('should anchor a creation draft on the default timezone', () => {
@@ -276,15 +305,17 @@ describe('getRecurrenceRuleBound', () => {
       .span('2025-07-04T00:00:00Z', '2025-07-04T01:00:00Z')
       .withDisplayTimezone('America/New_York')
       .toOccurrence();
-    const { unstable_internalInfos: draftInternalInfos, ...placeholder } = draft;
+    const { modelInBuiltInFormat, timezone, rrule, ...placeholder } = draft;
     const start = getRecurrenceRuleBound(placeholder, seeded, false, 'America/New_York', 'start');
     // The tests run in UTC, the default timezone: still Friday July 4.
-    expect(getEventTimezonePlainDate(placeholder, start)).toEqualPlainDate('2025-07-04');
+    expect(getRulePlainDate(placeholder, start, false, 'America/New_York')).toEqualPlainDate(
+      '2025-07-04',
+    );
   });
 });
 
-describe('getEventTimezonePlainDate', () => {
-  it('should read the date in the timezone of the event', () => {
+describe('getRulePlainDate', () => {
+  it('should read the date of a timed event in its timezone', () => {
     const occurrence = EventBuilder.new()
       .withDataTimezone('Asia/Tokyo')
       .span('2025-07-07T00:30:00', '2025-07-07T01:30:00')
@@ -292,7 +323,19 @@ describe('getEventTimezonePlainDate', () => {
       .toOccurrence();
     // 15:30 UTC on July 6th is 00:30 on July 7th in Tokyo.
     expect(
-      getEventTimezonePlainDate(occurrence, Date.parse('2025-07-06T15:30:00Z')),
+      getRulePlainDate(occurrence, Date.parse('2025-07-06T15:30:00Z'), false, 'UTC'),
+    ).toEqualPlainDate('2025-07-07');
+  });
+
+  it('should read the date of an all-day event in the display timezone', () => {
+    const occurrence = EventBuilder.new()
+      .withDataTimezone('America/New_York')
+      .span('2025-07-07', '2025-07-08', { allDay: true })
+      .withDisplayTimezone('Europe/Paris')
+      .toOccurrence();
+    // The first instant of July 7th in Paris is still July 6th in New York.
+    expect(
+      getRulePlainDate(occurrence, occurrence.start.epochMilliseconds, true, 'Europe/Paris'),
     ).toEqualPlainDate('2025-07-07');
   });
 });

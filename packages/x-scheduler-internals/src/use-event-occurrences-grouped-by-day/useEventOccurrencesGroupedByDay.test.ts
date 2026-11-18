@@ -72,7 +72,9 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   });
 
   it('should handle multi-day all-day events correctly', () => {
-    const event = EventBuilder.new().span(day0Str, day2Str, { allDay: true }).toProcessed();
+    const event = EventBuilder.new()
+      .span('2024-01-10', '2024-01-13', { allDay: true })
+      .toProcessed();
 
     const result = run([event]);
 

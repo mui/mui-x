@@ -29,10 +29,14 @@ describe('useDayListEventOccurrencesWithPosition', () => {
         days: dayList,
         eventRangeIndex: createEventRangeIndex(events, false),
         visibleResources: {},
-        displayTimezone,
         recurringEventsPlugin: null,
+        displayTimezone,
       });
-      return useEventOccurrencesWithDayGridPosition({ days: dayList, occurrencesMap, maxEvents });
+      return useEventOccurrencesWithDayGridPosition({
+        days: dayList,
+        occurrencesMap,
+        maxEvents,
+      });
     });
 
     return result.current;

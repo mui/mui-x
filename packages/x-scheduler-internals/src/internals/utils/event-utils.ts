@@ -1,6 +1,5 @@
 import type {
   SchedulerProcessedEvent,
-  SchedulerProcessedEventInternalInfos,
   SchedulerEventOccurrence,
   SchedulerEventId,
   SchedulerRenderableEventOccurrence,
@@ -8,9 +7,17 @@ import type {
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
 import type { BaseTemporal } from './base-temporal';
-import { toLocalDayNumber, toPlainDate } from './plain-date-utils/timeZone';
+import { toEpochMs, toLocalDayNumber, toPlainDate } from './plain-date-utils/timeZone';
 import { getDayNumber, getPlainDateKey } from './plain-date-utils/plainDate';
 import type { SchedulerEventRangeIndex } from './event-range-index';
+
+/**
+ * The last instant an event covers: its end for a timed event, and the instant before its end for
+ * an all-day one, whose end is exclusive (the first instant of the day after its last day).
+ */
+export function getLastInstant(end: number, allDay: boolean | undefined): number {
+  return allDay ? end - 1 : end;
+}
 
 /**
  * The day number of the first day an occurrence covers in the display timezone.
@@ -30,47 +37,59 @@ export function getOccurrenceLastDayNumber(
 ): number {
   const { end } = occurrence;
   return occurrence.allDay
-    ? toLocalDayNumber(getOccurrenceModelEnd(occurrence), end.timeZoneId)
+    ? toLocalDayNumber(getLastInstant(end.epochMilliseconds, occurrence.allDay), end.timeZoneId)
     : getDayNumber(end.toPlainDate());
 }
 
 /**
- * The end of an occurrence as the event models write it: an all-day event model ends on the last
- * instant of its last day, where its occurrence's exclusive end is the first instant after it.
- */
-export function getOccurrenceModelEnd(
-  occurrence: Pick<SchedulerRenderableEventOccurrence, 'allDay' | 'end'>,
-): number {
-  return occurrence.end.epochMilliseconds - (occurrence.allDay ? 1 : 0);
-}
-
-/**
  * Whether the occurrence is a persisted event occurrence, as opposed to a
- * placeholder (creation draft, drag preview) that has no data instants.
+ * placeholder (creation draft, drag preview) that has no event model.
  */
 export function isEventOccurrence(
   occurrence: SchedulerRenderableEventOccurrence,
 ): occurrence is SchedulerEventOccurrence {
-  return 'unstable_internalInfos' in occurrence;
+  return 'modelInBuiltInFormat' in occurrence;
 }
 
 /**
- * The internal values of an occurrence, with its instants in the data timezone, the identity
- * recurring drag updates target; placeholders have none.
+ * The timezone the day math of an event runs in: the display timezone for an all-day event, whose
+ * days are the displayed ones, and its own timezone for a timed event.
+ * With `nextAllDay`, the timezone after an update to `allDay`: an all-day event made timed moves to
+ * the display timezone, where its days were read.
  */
-export function getOccurrenceInternalInfos(
-  occurrence: SchedulerRenderableEventOccurrence,
-): SchedulerProcessedEventInternalInfos | undefined {
-  return isEventOccurrence(occurrence) ? occurrence.unstable_internalInfos : undefined;
+export function getDayTimezone(
+  event: Pick<SchedulerProcessedEvent, 'allDay' | 'timezone'>,
+  displayTimezone: string,
+  nextAllDay?: boolean,
+): string {
+  return event.allDay || nextAllDay ? displayTimezone : event.timezone;
 }
 
 /**
- * The timestamp of a bound of an event or occurrence, in its data timezone.
+ * The day of an occurrence, which its recurring key and the recurring edits are based on: the day
+ * an all-day occurrence was read on, and the day of a timed one in its timezone.
  */
-export function getDataTimestamp(event: SchedulerProcessedEvent, bound: 'start' | 'end'): number {
-  return bound === 'start'
-    ? event.unstable_internalInfos.dataStart
-    : event.unstable_internalInfos.dataEnd;
+export function getOccurrencePlainDate(
+  occurrence: Pick<SchedulerProcessedEvent, 'allDay' | 'start' | 'timezone'>,
+): BaseTemporal.PlainDate {
+  if (occurrence.allDay) {
+    return occurrence.start.toPlainDate();
+  }
+  return toPlainDate(occurrence.start.epochMilliseconds, occurrence.timezone);
+}
+
+/**
+ * The first instant of an occurrence in the display timezone. An all-day occurrence keeps its day
+ * when the display timezone changes after it was read.
+ */
+export function getOccurrenceStart(
+  occurrence: Pick<SchedulerProcessedEvent, 'allDay' | 'start'>,
+  displayTimezone: string,
+): number {
+  if (occurrence.allDay) {
+    return toEpochMs(occurrence.start.toPlainDate(), displayTimezone);
+  }
+  return occurrence.start.epochMilliseconds;
 }
 
 /**
@@ -114,18 +133,12 @@ export function generateOccurrenceFromEvent({
   occurrenceKey,
   start,
   end,
-  internalInfos,
 }: {
   event: SchedulerProcessedEvent;
   eventId: SchedulerEventId;
   occurrenceKey: string;
   start: BaseTemporal.ZonedDateTime;
   end: BaseTemporal.ZonedDateTime;
-  /**
-   * The internal values of the occurrence, with its instants in the data timezone. Defaults to the
-   * display `start`/`end`, a fallback only placeholder occurrences may rely on.
-   */
-  internalInfos?: SchedulerProcessedEventInternalInfos;
 }): SchedulerEventOccurrence {
   // `exDates` is cleared rather than left out with a rest destructuring, which is about 8 times
   // slower.
@@ -136,10 +149,6 @@ export function generateOccurrenceFromEvent({
     key: occurrenceKey,
     start,
     end,
-    unstable_internalInfos: internalInfos ?? {
-      dataStart: start.epochMilliseconds,
-      dataEnd: end.epochMilliseconds,
-    },
   };
   return occurrence;
 }
