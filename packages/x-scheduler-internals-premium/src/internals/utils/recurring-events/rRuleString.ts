@@ -65,6 +65,9 @@ const SUPPORTED_RRULE_KEYS = new Set([
   'COUNT',
 ]);
 
+// RFC 5545 ignores these on a rule whose start is a date.
+const ALL_DAY_IGNORED_RRULE_KEYS = new Set(['BYHOUR', 'BYMINUTE', 'BYSECOND']);
+
 // Fails to compile if `RecurringEventFrequency` gains or loses a member, keeping the runtime check in sync with the type.
 const SUPPORTED_FREQUENCIES: Record<RecurringEventFrequency, true> = {
   DAILY: true,
@@ -256,6 +259,10 @@ function readRuleString(
           'Each RRULE part must be in the format "KEY=VALUE". ' +
           'Check the recurrence rule string format.',
       );
+    }
+
+    if (allDay && ALL_DAY_IGNORED_RRULE_KEYS.has(key)) {
+      continue;
     }
 
     if (!SUPPORTED_RRULE_KEYS.has(key)) {

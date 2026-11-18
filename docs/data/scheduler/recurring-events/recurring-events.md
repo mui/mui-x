@@ -36,6 +36,7 @@ rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TH'] }
 :::info
 **Standards compliance**: This scheduler follows the iCalendar RRULE standard from RFC 5545.
 It does not support every rule or combination yet.
+The `BYHOUR`, `BYMINUTE` and `BYSECOND` properties are not supported, except on all-day events, where they are ignored, as in RFC 5545.
 For more information about specific rules, see [RFC 5545 §3.3.10 Recurrence Rule](https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10).
 :::
 

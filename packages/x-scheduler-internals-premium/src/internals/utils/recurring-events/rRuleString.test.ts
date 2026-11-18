@@ -266,6 +266,18 @@ describe('recurring-events/rRuleString', () => {
       );
     });
 
+    it('should ignore BYHOUR, BYMINUTE and BYSECOND in the rule of an all-day series', () => {
+      expect(
+        parseRRule('FREQ=DAILY;BYHOUR=9;BYMINUTE=30;BYSECOND=0;COUNT=3', 'UTC', true),
+      ).to.deep.equal({ freq: 'DAILY', count: 3 });
+    });
+
+    it('should throw on BYHOUR in the rule of a timed series', () => {
+      expect(() => parseRRule('FREQ=DAILY;BYHOUR=9', 'UTC')).to.throw(
+        /Unsupported RRULE property "BYHOUR"/,
+      );
+    });
+
     it('should throw for invalid INTERVAL value', () => {
       expect(() => parseRRule('FREQ=DAILY;INTERVAL=zero', 'default')).to.throw(
         'MUI X Scheduler: Invalid INTERVAL value "ZERO". INTERVAL must be a positive integer (1 or greater). Provide a valid interval value.',
