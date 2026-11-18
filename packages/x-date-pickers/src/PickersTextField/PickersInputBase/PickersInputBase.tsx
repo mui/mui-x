@@ -185,25 +185,25 @@ const PickersInputBaseInput = styled('input', {
 const PickersInputBaseActiveBar = styled('div', {
   name: 'MuiPickersInputBase',
   slot: 'ActiveBar',
-})(({ theme }) => ({
+})<{ ownerState: PickerTextFieldOwnerState }>(({ theme }) => ({
   display: 'none',
   position: 'absolute',
   height: 2,
   bottom: 2,
   borderTopLeftRadius: 2,
   borderTopRightRadius: 2,
-  transition: theme.transitions.create(['width', 'left'], {
+  transition: `${theme.transitions.create(['width', 'left'], {
     duration: theme.transitions.duration.shortest,
-  }),
+  })} /*! @noflip */`,
   backgroundColor: (theme.vars || theme).palette.primary.main,
   '[data-active-range-position="start"] &, [data-active-range-position="end"] &': {
     display: 'block',
   },
   '[data-active-range-position="start"] &': {
-    left: 'var(--PickerInputBase-activeBar-start-offset)',
+    left: 'var(--PickerInputBase-activeBar-start-offset) /*! @noflip */',
   },
   '[data-active-range-position="end"] &': {
-    left: 'var(--PickerInputBase-activeBar-end-offset)',
+    left: 'var(--PickerInputBase-activeBar-end-offset) /*! @noflip */',
   },
 }));
 
@@ -508,7 +508,11 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         ref={handleInputRef}
       />
       {isSingleInputRange && (
-        <PickersInputBaseActiveBar className={classes.activeBar} ref={activeBarRef} />
+        <PickersInputBaseActiveBar
+          className={classes.activeBar}
+          ref={activeBarRef}
+          ownerState={ownerState}
+        />
       )}
     </InputRoot>
   );
