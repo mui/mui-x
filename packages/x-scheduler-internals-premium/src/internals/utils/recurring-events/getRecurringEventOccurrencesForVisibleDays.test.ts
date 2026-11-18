@@ -24,6 +24,16 @@ function formatWallClock(epochMs: number, timezone: string): string {
   return toPlainDateTime(epochMs, timezone).toString().slice(0, 16).replace('T', ' ');
 }
 
+// From the first instant of the day `visibleStart` falls on in `timezone` to the last instant of
+// the day `visibleDays` days later.
+function getWholeDaysRange(visibleStart: string, visibleDays: number, timezone: string) {
+  const firstDay = toPlainDate(Date.parse(visibleStart), timezone);
+  return {
+    start: toEpochMs(firstDay, timezone),
+    end: toEpochMs(firstDay.add({ days: visibleDays + 1 }), timezone) - 1,
+  };
+}
+
 // The date of the start of a timed occurrence in the timezone of its event, as `YYYY-MM-DD`.
 function getDataKey(occurrence: SchedulerEventOccurrence): string {
   return toPlainDate(occurrence.start.timestamp, occurrence.timezone).toString();
@@ -51,7 +61,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
         visibleStart.getTime(),
-        addDays(visibleStart, 4).getTime(),
+        addDays(visibleStart, 5).getTime() - 1,
         'default',
       );
       expect(result).to.have.length(5);
@@ -276,6 +286,108 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
     });
   });
 
+  describe('range edges and hidden days', () => {
+    // From Monday, January 6th, 2025 to Friday, January 17th, 2025, with the weekend hidden.
+    const twoWeeksStart = Date.parse('2025-01-06T00:00:00Z');
+    const twoWeeksEnd = Date.parse('2025-01-18T00:00:00Z') - 1;
+    const weekdayRanges = [
+      { start: twoWeeksStart, end: Date.parse('2025-01-11T00:00:00Z') - 1 },
+      { start: Date.parse('2025-01-13T00:00:00Z'), end: twoWeeksEnd },
+    ];
+
+    function getStartDates(occurrences: SchedulerEventOccurrence[]) {
+      return occurrences.map((o) => toPlainDate(o.start.timestamp, 'UTC').toString());
+    }
+
+    function buildUtcEvent() {
+      return EventBuilder.new().withDataTimezone('UTC').withDisplayTimezone('UTC');
+    }
+
+    it('should leave out the occurrences that end before the range or start after it', () => {
+      const event = buildUtcEvent()
+        .singleDay('2025-01-06T09:00:00')
+        .rrule({ freq: 'DAILY' })
+        .toProcessed();
+
+      const result = getRecurringEventOccurrencesForVisibleDays(
+        event,
+        Date.parse('2025-01-06T10:30:00Z'),
+        Date.parse('2025-01-08T08:00:00Z'),
+        'UTC',
+      );
+
+      expect(getStartDates(result)).to.deep.equal(['2025-01-07']);
+    });
+
+    it.each([false, true])(
+      'should leave out the occurrences that only cover hidden days (allDay: %s)',
+      (allDay) => {
+        const builder = buildUtcEvent();
+        if (allDay) {
+          builder.span('2025-01-06', '2025-01-07', { allDay: true });
+        } else {
+          builder.singleDay('2025-01-06T09:00:00');
+        }
+        const event = builder.rrule({ freq: 'DAILY' }).toProcessed();
+
+        const result = getRecurringEventOccurrencesForVisibleDays(
+          event,
+          twoWeeksStart,
+          twoWeeksEnd,
+          'UTC',
+          weekdayRanges,
+        );
+
+        expect(getStartDates(result)).to.deep.equal([
+          '2025-01-06',
+          '2025-01-07',
+          '2025-01-08',
+          '2025-01-09',
+          '2025-01-10',
+          '2025-01-13',
+          '2025-01-14',
+          '2025-01-15',
+          '2025-01-16',
+          '2025-01-17',
+        ]);
+      },
+    );
+
+    it.each([
+      {
+        start: '2025-01-04T20:00:00',
+        end: '2025-01-06T10:00:00',
+        allDay: false,
+        expected: ['2025-01-04', '2025-01-11'],
+      },
+      {
+        start: '2025-01-04',
+        end: '2025-01-07',
+        allDay: true,
+        expected: ['2025-01-04', '2025-01-11'],
+      },
+      { start: '2025-01-04', end: '2025-01-06', allDay: true, expected: [] },
+    ])(
+      'should keep a hidden-day occurrence only if it covers a visible day ($start to $end)',
+      ({ start, end, allDay, expected }) => {
+        const event = buildUtcEvent()
+          .span(start, end, { allDay })
+          .rrule({ freq: 'WEEKLY' })
+          .toProcessed();
+
+        const result = getRecurringEventOccurrencesForVisibleDays(
+          event,
+          twoWeeksStart,
+          twoWeeksEnd,
+          'UTC',
+          weekdayRanges,
+        );
+
+        expect(getStartDates(result)).to.deep.equal(expected);
+      },
+    );
+  });
+
   describe('daily frequency', () => {
     it('does not generate occurrences before series start', () => {
       const visibleStart = createDate('2025-01-05T00:00:00Z'); // before event start
@@ -287,7 +399,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
         visibleStart.getTime(),
-        addDays(visibleStart, 10).getTime(),
+        addDays(visibleStart, 11).getTime() - 1,
         'default',
       );
       // Should only have occurrences from Jan 10 onwards (6 days: 10,11,12,13,14,15)
@@ -914,11 +1026,16 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         .singleDay(start)
         .rrule({ freq: 'DAILY', count })
         .toProcessed();
-      const rangeStart = createDate(visibleStart);
+      // The 8 days from the one `visibleStart` falls on in Apia.
+      const { start: rangeStart, end: rangeEnd } = getWholeDaysRange(
+        visibleStart,
+        7,
+        'Pacific/Apia',
+      );
       return getRecurringEventOccurrencesForVisibleDays(
         event,
-        rangeStart.getTime(),
-        addDays(rangeStart, 6).getTime(),
+        rangeStart,
+        rangeEnd,
         'Pacific/Apia',
       ).map((o) => formatWallClock(o.start.timestamp, o.timezone));
     }
@@ -932,7 +1049,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         '2012-01-01 09:00',
         '2012-01-02 09:00',
         '2012-01-03 09:00',
-        '2012-01-04 09:00', // The range ends on January 3rd at 12:00 UTC, which is January 4th in Apia.
+        '2012-01-04 09:00',
       ]);
     });
 
@@ -1107,13 +1224,12 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
             builder.singleDay(start);
           }
           const event = builder.rrule({ freq: 'DAILY' }).toProcessed();
-          const rangeStart = createDate(visibleStart);
-          return getRecurringEventOccurrencesForVisibleDays(
-            event,
-            rangeStart.getTime(),
-            addDays(rangeStart, visibleDays).getTime(),
+          const { start: rangeStart, end: rangeEnd } = getWholeDaysRange(
+            visibleStart,
+            visibleDays,
             timezone,
           );
+          return getRecurringEventOccurrencesForVisibleDays(event, rangeStart, rangeEnd, timezone);
         }
 
         it('should start an occurrence on the first instant of a local time repeated by the transition', () => {

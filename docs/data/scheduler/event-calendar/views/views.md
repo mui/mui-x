@@ -30,7 +30,7 @@ Use the `viewConfig` prop to limit the hours displayed in the time grid with `st
 
 By default, the time grid scrolls to 7 AM when it mounts (or to `startTime` when 7 AM isn't a displayed hour).
 Use `initialScrollTime` to scroll to a different hour.
-Navigating to another week keeps the current scroll position; switching to another view and back scrolls again.
+Navigating to another week keeps the time grid's scroll position; switching to another view and back scrolls again.
 
 {{"demo": "WeekViewInitialScrollTime.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -62,7 +62,7 @@ The `viewConfig` prop also limits the hours displayed in the day view with `star
 
 By default, the time grid scrolls to 7 AM when it mounts (or to `startTime` when 7 AM isn't a displayed hour).
 Use `initialScrollTime` to scroll to a different hour.
-Navigating to another day keeps the current scroll position; switching to another view and back scrolls again.
+Navigating to another day keeps the time grid's scroll position; switching to another view and back scrolls again.
 
 {{"demo": "DayViewInitialScrollTime.js", "bg": "inline", "defaultCodeOpen": false}}
 
