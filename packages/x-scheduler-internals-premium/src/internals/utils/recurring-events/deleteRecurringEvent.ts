@@ -15,11 +15,10 @@ export function deleteRecurringEvent(
   originalEvent: SchedulerProcessedEvent,
   occurrence: SchedulerEventOccurrence,
   scope: RecurringEventScope,
-  displayTimezone: string,
 ): UpdateEventsParameters {
   switch (scope) {
     case 'this-and-following': {
-      return applyRecurringDeleteFollowing(originalEvent, occurrence, displayTimezone);
+      return applyRecurringDeleteFollowing(originalEvent, occurrence);
     }
 
     case 'all': {
@@ -27,7 +26,7 @@ export function deleteRecurringEvent(
     }
 
     case 'only-this': {
-      return applyRecurringDeleteOnlyThis(originalEvent, occurrence, displayTimezone);
+      return applyRecurringDeleteOnlyThis(originalEvent, occurrence);
     }
 
     default: {
@@ -48,16 +47,15 @@ export function deleteRecurringEvent(
 export function applyRecurringDeleteOnlyThis(
   originalEvent: SchedulerProcessedEvent,
   occurrence: SchedulerEventOccurrence,
-  displayTimezone: string,
 ): UpdateEventsParameters {
   const { timezone } = originalEvent;
   const occurrenceDay = getOccurrencePlainDate(occurrence);
   const previousExDates = originalEvent.exDates ?? [];
   const excludedDays = [...previousExDates.map((exDate) => exDate.toPlainDate()), occurrenceDay];
-  // The exceptions of an all-day series are days, which the store writes back as dates; a timed
-  // series keeps the instants of its exceptions.
+  // The exceptions of an all-day series are dates, written as they are, even one the display
+  // timezone skips; a timed series keeps the instants of its exceptions.
   const exDates = originalEvent.allDay
-    ? excludedDays.map((day) => createStartOfPlainDate(day, displayTimezone))
+    ? excludedDays.map((day) => day.toString())
     : [
         ...(originalEvent.modelInBuiltInFormat.exDates ?? []).map(
           (exDate) => new Date(resolveEventTimestamp(exDate, timezone)),
@@ -65,7 +63,7 @@ export function applyRecurringDeleteOnlyThis(
         createStartOfPlainDate(occurrenceDay, timezone),
       ];
 
-  if (!RecurringSeries.fromEvent(originalEvent, displayTimezone, excludedDays).hasOccurrence()) {
+  if (!RecurringSeries.fromEvent(originalEvent, excludedDays).hasOccurrence()) {
     return { deleted: [originalEvent.id] };
   }
 
@@ -82,14 +80,9 @@ export function applyRecurringDeleteOnlyThis(
 export function applyRecurringDeleteFollowing(
   originalEvent: SchedulerProcessedEvent,
   occurrence: SchedulerEventOccurrence,
-  displayTimezone: string,
 ): UpdateEventsParameters {
   const occurrencePlainDate = getOccurrencePlainDate(occurrence);
-  if (
-    !RecurringSeries.fromEvent(originalEvent, displayTimezone).hasOccurrenceBefore(
-      occurrencePlainDate,
-    )
-  ) {
+  if (!RecurringSeries.fromEvent(originalEvent).hasOccurrenceBefore(occurrencePlainDate)) {
     return { deleted: [originalEvent.id] };
   }
 
