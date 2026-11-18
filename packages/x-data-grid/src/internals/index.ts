@@ -284,7 +284,7 @@ export { useGridPanelContext } from '../components/panel/GridPanelContext';
 export type { RowReorderDropPosition, RowReorderDragDirection } from '../models/api/gridRowApi';
 
 /**
- * @deprecated Import it from `use-sync-external-store/shim` instead. Kept for older `@mui/x-data-grid-pro` versions.
+ * @deprecated Import it from `use-sync-external-store/shim` instead. Kept for older `@mui/x-data-grid-pro` versions, it will be removed in v10.
  */
 export const useSyncExternalStore: <Snapshot>(
   subscribe: (onStoreChange: () => void) => () => void,
