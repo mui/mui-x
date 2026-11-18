@@ -55,6 +55,7 @@ import {
   TITLE_HEADER_KEY,
 } from './useTitleColumnWidth';
 import { useTitleScrollSync } from './useTitleScrollSync';
+import { observeResizeNextFrame } from './observeResizeNextFrame';
 import { useEventTabNavigation } from './useEventTabNavigation';
 import { getRowHeightForLaneCount } from './rowGeometry';
 import { getVisibleFractionRange } from './getVisibleFractionRange';
@@ -433,11 +434,10 @@ const HeaderRowContent = React.forwardRef<HTMLDivElement, { showCurrentTimeIndic
       if (!cell || !content || typeof ResizeObserver === 'undefined') {
         return undefined;
       }
-      const observer = new ResizeObserver(() => {
-        reportTitleWidth(TITLE_HEADER_KEY, cell.scrollWidth);
-      });
-      observer.observe(content);
-      return () => observer.disconnect();
+      const report = () => reportTitleWidth(TITLE_HEADER_KEY, cell.scrollWidth);
+      // Measure before paint: the observer reports one frame later.
+      report();
+      return observeResizeNextFrame(content, report);
     }, [reportTitleWidth]);
 
     return (
@@ -623,16 +623,11 @@ function useElementSize(
       return undefined;
     }
 
-    const observer = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const box = entry.borderBoxSize[0];
-        setSize(dimension === 'width' ? box.inlineSize : box.blockSize);
-      }
-    });
-
     setSize(measure(element));
-    observer.observe(element);
-    return () => observer.disconnect();
+    return observeResizeNextFrame(element, (entry) => {
+      const box = entry.borderBoxSize[0];
+      setSize(dimension === 'width' ? box.inlineSize : box.blockSize);
+    });
   }, [ref, dimension]);
 
   return size;

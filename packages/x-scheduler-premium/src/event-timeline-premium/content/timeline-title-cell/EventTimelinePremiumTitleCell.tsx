@@ -22,6 +22,7 @@ import type {
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { useEventTimelinePremiumVirtualizerStore } from '../EventTimelinePremiumVirtualizerContext';
 import { useReportTitleWidth } from '../useTitleColumnWidth';
+import { observeResizeNextFrame } from '../observeResizeNextFrame';
 
 // Shared footprint for the collapse toggle and the leaf-row spacer. Also drives
 // the per-depth indent so a child's toggle lines up under its parent's dot.
@@ -174,11 +175,10 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
     // Report the root's scrollWidth: it reflects the natural width of the
     // inner content (rendered with `width: max-content`) plus the cell's
     // depth-dependent horizontal padding, even when overflow is clipped.
-    const observer = new ResizeObserver(() => {
-      reportTitleWidth(resourceId, root.scrollWidth);
-    });
-    observer.observe(content);
-    return () => observer.disconnect();
+    const report = () => reportTitleWidth(resourceId, root.scrollWidth);
+    // Measure before paint: the observer reports one frame later.
+    report();
+    return observeResizeNextFrame(content, report);
   }, [resourceId, reportTitleWidth]);
 
   const ResourceTitle = slots.timelineResourceTitle;

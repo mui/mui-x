@@ -23,14 +23,19 @@ function ResizingBox({
   const [width, setWidth] = React.useState(100);
 
   React.useLayoutEffect(() => {
+    let frame = 0;
     const observer = new ResizeObserver(([entry]) => {
       onResize?.(entry.contentRect.width);
       if (entry.contentRect.width < maximumWidth) {
-        setWidth(entry.contentRect.width + 100);
+        // Next frame: React 17 renders synchronously and would resize inside the delivery.
+        frame = requestAnimationFrame(() => setWidth(entry.contentRect.width + 100));
       }
     });
     observer.observe(ref.current!);
-    return () => observer.disconnect();
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
   }, [maximumWidth, onResize]);
 
   return <div ref={ref} style={{ width, height: 20 }} />;

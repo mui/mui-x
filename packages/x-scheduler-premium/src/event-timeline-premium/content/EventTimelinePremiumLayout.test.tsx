@@ -5,6 +5,7 @@ import {
   eventTimelinePremiumClasses as classes,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
+  absorbObserverFrames,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -26,7 +27,7 @@ function getTitleColumnWidth(): number {
 // title cells; jsdom doesn't implement layout, so these assertions only work in
 // the browser project.
 describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
-  const { renderSettled } = createSchedulerRenderer({
+  const { render, renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
@@ -85,6 +86,25 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
       await waitFor(() => {
         expect(getTitleColumnWidth()).to.be.greaterThan(shortWidth);
       });
+    });
+
+    it('should size the title column before the first paint', async () => {
+      render(
+        <div style={{ width: 1200, height: 600 }}>
+          <EventTimelinePremium
+            resources={[ResourceBuilder.new().title('A longer resource title').build()]}
+            events={[]}
+            visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            preset="dayAndHour"
+            presets={['dayAndHour']}
+          />
+        </div>,
+      );
+
+      // No frame has run yet, so the width comes from the mount measurement only.
+      const widthBeforePaint = getTitleColumnWidth();
+      await absorbObserverFrames();
+      expect(widthBeforePaint).to.equal(getTitleColumnWidth());
     });
 
     it('should cap the title column at one quarter of the container width', async () => {
