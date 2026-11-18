@@ -31,7 +31,7 @@ import type { GridDataSourceBaseOptions, GridStrategyProcessor } from '@mui/x-da
 import { errorOnce } from '@mui/x-internals/warning';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { NestedDataManager, RequestStatus, getGroupKeys } from './utils';
+import { NestedDataManager, getGroupKeys } from './utils';
 import type {
   GridDataSourceApiBasePro,
   GridDataSourceApiPro,
@@ -90,6 +90,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   const {
     api,
     debouncedFetchRows,
+    fetchRootRowsIncremental,
     strategyProcessor: flatTreeStrategyProcessor,
     events,
     startPolling,
@@ -211,15 +212,18 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         apiRef.current.dataSource.setChildrenFetchError(id, null);
       }
 
+      // A request that `clear()` aborted must not touch the state of the one re-issued for `id`.
+      const generation = nestedDataManager.getGeneration();
+      const isAborted = () => generation !== nestedDataManager.getGeneration();
+
       try {
         const getRowsResponse = await getRows(fetchParams);
+        if (isAborted()) {
+          return;
+        }
         if (!gridRowNodeSelector(apiRef, id)) {
           // The row has been removed from the grid
           nestedDataManager.clearPendingRequest(id);
-          return;
-        }
-        if (nestedDataManager.getRequestStatus(id) === RequestStatus.UNKNOWN) {
-          apiRef.current.dataSource.setChildrenLoading(id, false);
           return;
         }
         nestedDataManager.setRequestSettled(id);
@@ -236,6 +240,9 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
           fetchParams,
         });
       } catch (error) {
+        if (isAborted()) {
+          return;
+        }
         const childrenFetchError = error as Error;
         apiRef.current.dataSource.setChildrenFetchError(id, childrenFetchError);
         apiRef.current.applyStrategyProcessor('dataSourceNestedRowsUpdate', {
@@ -262,8 +269,10 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
           );
         }
       } finally {
-        apiRef.current.dataSource.setChildrenLoading(id, false);
-        nestedDataManager.setRequestSettled(id);
+        if (!isAborted()) {
+          apiRef.current.dataSource.setChildrenLoading(id, false);
+          nestedDataManager.setRequestSettled(id);
+        }
       }
     },
     [
@@ -458,6 +467,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
 
   const dataSourcePrivateApi: GridDataSourcePrivateApiPro = {
     fetchRowChildren,
+    fetchRootRowsIncremental,
     resetDataSourceState,
     removeChildrenRows,
   };
