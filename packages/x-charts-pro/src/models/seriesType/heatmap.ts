@@ -1,3 +1,5 @@
+import '../../typeOverloads';
+
 import type { DefaultizedProps } from '@mui/x-internals/types';
 import type {
   CommonDefaultizedProps,

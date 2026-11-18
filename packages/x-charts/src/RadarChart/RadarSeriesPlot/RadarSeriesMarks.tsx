@@ -16,6 +16,9 @@ import {
 
 interface GetCirclePropsParams {
   seriesId: SeriesId;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: RadarClasses;
   getHighlightState: (item: HighlightItemIdentifierWithType<'radar'> | null) => HighlightState;
   point: { x: number; y: number };

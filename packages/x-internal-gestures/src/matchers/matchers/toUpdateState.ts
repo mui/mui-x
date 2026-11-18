@@ -1,7 +1,8 @@
-import { Gesture, KeyboardManager, PointerManager } from '../../core';
+import type { Gesture } from '../../core';
+import { KeyboardManager, PointerManager } from '../../core';
 import { ActiveGesturesRegistry } from '../../core/ActiveGesturesRegistry';
-import { AnyGesture } from '../AnyGesture';
-import { MatcherState, SyncMatcherFn } from '../Matcher.types';
+import type { AnyGesture } from '../AnyGesture';
+import type { MatcherState, SyncMatcherFn } from '../Matcher.types';
 import { messages } from '../messages';
 
 export type ToUpdateState<R = AnyGesture> = {
@@ -32,8 +33,11 @@ export type ToUpdateState<R = AnyGesture> = {
    * ```
    */
   toUpdateState<
-    G = R extends new (...args: any[]) => infer J ? (J extends Gesture<string> ? J : never) : never,
-    // @ts-expect-error, accessing protected property for testing purposes
+    G extends Gesture<string> = R extends new (...args: any[]) => infer J
+      ? J extends Gesture<string>
+        ? J
+        : never
+      : never,
     ExpectedState extends Partial<G['mutableStateType']> = Partial<G['mutableStateType']>,
   >(
     expectedState: ExpectedState,

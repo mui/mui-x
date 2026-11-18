@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
-
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { frFR } from '@mui/x-scheduler/locales';
 import {

@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
+import type { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
 type MuiXProduct = {

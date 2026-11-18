@@ -50,14 +50,26 @@ ToolbarButton.propTypes /* remove-proptypes */ = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   className: PropTypes.string,
+  /**
+   * If `true`, the button is disabled.
+   */
   disabled: PropTypes.bool,
+  /**
+   * The id of the button element.
+   */
   id: PropTypes.string,
   /**
    * A function to customize the rendering of the component.
    */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  /**
+   * The size of the button.
+   */
   size: PropTypes.oneOf(['large', 'medium', 'small']),
   style: PropTypes.object,
+  /**
+   * The `tabIndex` of the button element.
+   */
   tabIndex: PropTypes.number,
 } as any;
 

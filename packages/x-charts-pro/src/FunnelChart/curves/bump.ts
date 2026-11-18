@@ -11,11 +11,11 @@ import type { FunnelCurveGenerator, CurveOptions, Point } from './curve.types';
 export class Bump implements FunnelCurveGenerator {
   declare private context: CanvasRenderingContext2D;
 
-  private isHorizontal: boolean = false;
+  declare private isHorizontal: boolean;
 
-  private min: Point = { x: 0, y: 0 };
+  declare private min: Point;
 
-  private max: Point = { x: 0, y: 0 };
+  declare private max: Point;
 
   private points: Point[] = [];
 

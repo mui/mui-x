@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
   computeElementPositionInCollection,
+  getPlaceholderOccurrence,
+  getPlaceholderOccurrenceKey,
   isInternalDragOrResizePlaceholder,
 } from '@mui/x-scheduler-internals/internals';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import {
@@ -20,7 +23,6 @@ export function usePlaceholderInRow(
   const { occurrences, maxIndex, resourceId } = parameters;
 
   // Context hooks
-  const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
   // Selector hooks
@@ -35,74 +37,36 @@ export function usePlaceholderInRow(
     : null;
   const originalEvent = useStore(store, schedulerEventSelectors.processedEvent, originalEventId);
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
   return React.useMemo(() => {
     if (!rawPlaceholder) {
       return null;
     }
 
-    const startProcessed = processDate(rawPlaceholder.start, adapter);
-    const endProcessed = processDate(rawPlaceholder.end, adapter);
-
+    const occurrence = getPlaceholderOccurrence(rawPlaceholder, originalEvent, displayTimezone);
     // A placeholder that occupies no space (fully inside the hidden hours while editing
     // the dates in the event dialog, or shorter than the minute the axis is drawn with)
     // would render as a zero-width sliver pinned to the day seam. Measured on the
     // rendered geometry, like the occurrence selector does.
-    const renderedPosition = computeElementPositionInCollection(adapter, {
-      start: startProcessed,
-      end: endProcessed,
+    const renderedPosition = computeElementPositionInCollection({
+      start: occurrence.start,
+      end: occurrence.end,
       collection: config,
       durationMs: config.durationMs,
     });
     if (renderedPosition.duration === 0) {
       return null;
     }
-    const timezone = adapter.getTimezone(rawPlaceholder.start);
-    const sharedProperties = {
-      id: originalEventId ?? 'occurrence-placeholder',
-      key: 'occurrence-placeholder',
-      title: originalEvent ? originalEvent.title : '',
-      resource: rawPlaceholder.resourceId ?? originalEvent?.resource,
-      displayTimezone: {
-        start: startProcessed,
-        end: endProcessed,
-        timezone,
-      },
-    };
 
-    if (rawPlaceholder.type === 'creation') {
-      return {
-        ...sharedProperties,
-        position: {
-          firstIndex: 1,
-          lastIndex: maxIndex,
-        },
-      };
-    }
-
-    if (rawPlaceholder.type === 'external-drag') {
-      return {
-        ...sharedProperties,
-        title: rawPlaceholder.eventData.title ?? '',
-        position: {
-          firstIndex: 1,
-          lastIndex: maxIndex,
-        },
-      };
-    }
-
-    const position = occurrences.find(
-      (occurrence) => occurrence.key === rawPlaceholder.occurrenceKey,
-    )?.position ?? {
+    const occurrenceKey = getPlaceholderOccurrenceKey(rawPlaceholder);
+    const position = occurrences.find((item) => item.key === occurrenceKey)?.position ?? {
       firstIndex: 1,
       lastIndex: maxIndex,
     };
 
-    return {
-      ...sharedProperties,
-      position,
-    };
-  }, [rawPlaceholder, adapter, config, originalEvent, originalEventId, occurrences, maxIndex]);
+    return { ...occurrence, position };
+  }, [rawPlaceholder, config, displayTimezone, originalEvent, occurrences, maxIndex]);
 }
 
 export namespace usePlaceholderInRow {

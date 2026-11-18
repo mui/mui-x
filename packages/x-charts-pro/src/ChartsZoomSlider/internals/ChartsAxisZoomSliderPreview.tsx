@@ -40,7 +40,12 @@ export function ChartsAxisZoomSliderPreview({
 }: ChartsAxisZoomSliderPreviewProps) {
   return (
     <g {...props}>
-      <PreviewRectangles {...props} axisId={axisId} axisDirection={axisDirection} />
+      <PreviewRectangles
+        {...props}
+        axisId={axisId}
+        axisDirection={axisDirection}
+        reverse={reverse}
+      />
       <rect {...props} fill="transparent" rx={4} ry={4} />
       <ChartsAxisZoomSliderPreviewContent axisId={axisId} seriesIds={seriesIds} {...props} />
     </g>
@@ -50,12 +55,13 @@ export function ChartsAxisZoomSliderPreview({
 function PreviewRectangles(props: {
   axisId: AxisId;
   axisDirection: 'x' | 'y';
+  reverse: boolean;
   x: number;
   y: number;
   height: number;
   width: number;
 }) {
-  const { axisId, axisDirection } = props;
+  const { axisId, axisDirection, reverse } = props;
   const store = useStore();
 
   const zoomData = store.use(selectorChartAxisZoomData, axisId);
@@ -74,16 +80,19 @@ function PreviewRectangles(props: {
   let height;
 
   const range = zoomOptions.maxEnd - zoomOptions.minStart;
+  const startRatio = (zoomData.start - zoomOptions.minStart) / range;
+  const endRatio = (zoomData.end - zoomOptions.minStart) / range;
+
   if (axisDirection === 'x') {
-    x = props.x + ((zoomData.start - zoomOptions.minStart) / range) * props.width;
+    x = props.x + (reverse ? 1 - endRatio : startRatio) * props.width;
     y = props.y;
-    width = ((zoomData.end - zoomData.start) / range) * props.width;
+    width = (endRatio - startRatio) * props.width;
     height = props.height;
   } else {
     x = props.x;
-    y = props.y + (1 - zoomData.end / range) * props.height;
+    y = props.y + (reverse ? startRatio : 1 - endRatio) * props.height;
     width = props.width;
-    height = ((zoomData.end - zoomData.start) / range) * props.height;
+    height = (endRatio - startRatio) * props.height;
   }
 
   return (

@@ -9,6 +9,8 @@ export interface NavigationOptions {
   rowTypes: GridRowType[];
   /** The number of rows for each row type. Defaults to 1 for unspecified types. */
   rowsPerType: Partial<Record<GridRowType, number>>;
+  /** Whether the grid is right-to-left, in which case ArrowLeft and ArrowRight are swapped. */
+  isRtl: boolean;
 }
 
 function getRowCount(
@@ -29,12 +31,14 @@ export function getNavigationTarget(
   columnIndex: number,
   options: NavigationOptions,
 ): GridCellCoordinates | null {
-  const { columnCount, rowTypes, rowsPerType } = options;
+  const { columnCount, rowTypes, rowsPerType, isRtl } = options;
+  const previousColumnKey = isRtl ? 'ArrowRight' : 'ArrowLeft';
+  const nextColumnKey = isRtl ? 'ArrowLeft' : 'ArrowRight';
 
   switch (key) {
-    case 'ArrowLeft':
+    case previousColumnKey:
       return columnIndex > 0 ? { rowType, rowIndex, columnIndex: columnIndex - 1 } : null;
-    case 'ArrowRight':
+    case nextColumnKey:
       return columnIndex < columnCount - 1
         ? { rowType, rowIndex, columnIndex: columnIndex + 1 }
         : null;

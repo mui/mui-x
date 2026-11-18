@@ -1,23 +1,25 @@
 import * as React from 'react';
+import type {
+  GridColDef,
+  GridRowModel,
+  GridPivotModel,
+  DataGridPremiumProps,
+  GridChartsPanelProps,
+  GridEventListener,
+} from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
   GridChartsPanel,
   GridChartsIntegrationContextProvider,
   GridChartsRendererProxy,
   GridSidebarValue,
-  GridColDef,
-  GridRowModel,
-  GridPivotModel,
-  DataGridPremiumProps,
-  GridChartsPanelProps,
   useGridApiRef,
-  GridEventListener,
   gridColumnGroupsUnwrappedModelSelector,
 } from '@mui/x-data-grid-premium';
+import type { GridChartsConfigurationSection } from '@mui/x-charts-premium/ChartsRenderer';
 import {
   ChartsRenderer,
   configurationOptions,
-  GridChartsConfigurationSection,
 } from '@mui/x-charts-premium/ChartsRenderer';
 import { downloads } from './dataset';
 

@@ -1,4 +1,5 @@
-import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
+import type { DataGridProProps } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];

@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
-import { FunnelChart, FunnelChartProps } from '@mui/x-charts-pro/FunnelChart';
+import type { FunnelChartProps } from '@mui/x-charts-pro/FunnelChart';
+import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 
 export default function FunnelStacked() {
   return (

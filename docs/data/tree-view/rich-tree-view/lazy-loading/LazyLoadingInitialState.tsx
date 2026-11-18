@@ -5,7 +5,8 @@ import {
   randomBoolean,
 } from '@mui/x-data-grid-generator';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
-import { initialItems, ItemType } from './items';
+import type { ItemType } from './items';
+import { initialItems } from './items';
 
 const fetchData = async (): Promise<ItemType[]> => {
   const length: number = randomInt(2, 10);

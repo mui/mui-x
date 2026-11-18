@@ -6,10 +6,17 @@ import { useConversationContext } from './internals/ConversationContext';
 import type { ConversationHeaderOwnerState } from './conversation.types';
 
 export interface ConversationHeaderSlots {
+  /**
+   * The component that renders the header.
+   * @default 'div'; a styled 'header' in `ChatConversationHeader`
+   */
   header: React.ElementType;
 }
 
 export interface ConversationHeaderSlotProps {
+  /**
+   * The props used for the header slot.
+   */
   header?: SlotComponentProps<'div', {}, ConversationHeaderOwnerState>;
 }
 
@@ -17,8 +24,19 @@ export interface ConversationHeaderProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   'children'
 > {
+  /**
+   * The content of the component.
+   */
   children?: React.ReactNode;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<ConversationHeaderSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ConversationHeaderSlotProps;
 }
 

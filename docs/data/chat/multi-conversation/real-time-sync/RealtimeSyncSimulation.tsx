@@ -4,10 +4,12 @@ import {
   useChat,
   useConversation,
   useConversations,
-  type ChatAdapter,
-  type ChatConversation,
-  type ChatMessage,
-  type ChatRealtimeEvent,
+} from '@mui/x-chat/headless';
+import type {
+  ChatAdapter,
+  ChatConversation,
+  ChatMessage,
+  ChatRealtimeEvent,
 } from '@mui/x-chat/headless';
 import { ChatTypingIndicator } from '@mui/x-chat';
 import Box from '@mui/material/Box';

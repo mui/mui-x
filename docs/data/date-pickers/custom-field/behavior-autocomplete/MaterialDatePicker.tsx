@@ -1,5 +1,6 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import useForkRef from '@mui/utils/useForkRef';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
@@ -7,11 +8,11 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { CalendarIcon } from '@mui/x-date-pickers/icons';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import {
-  DatePicker,
+import type {
   DatePickerFieldProps,
   DatePickerProps,
 } from '@mui/x-date-pickers/DatePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import {
   usePickerContext,
   usePickerTranslations,

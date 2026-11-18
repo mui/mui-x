@@ -135,6 +135,22 @@ Object.keys(pickersImports).forEach((path: string) => {
   });
 });
 
+const schedulerImports = import.meta.glob<React.ComponentType>('./scheduler/**/*.{js,tsx}', {
+  eager: true,
+  import: 'default',
+});
+Object.keys(schedulerImports).forEach((path: string) => {
+  const name = removeExtension(path.replace('./scheduler/', ''));
+  const suite = `test-regressions-scheduler`;
+
+  tests.push({
+    path,
+    suite,
+    name,
+    case: schedulerImports[path],
+  });
+});
+
 // Bespoke composites used to assemble the product overview pages
 // (`/x/react-<product>`). They are not picked up by the `docs/data/**` glob
 // above and otherwise have no Argos coverage.

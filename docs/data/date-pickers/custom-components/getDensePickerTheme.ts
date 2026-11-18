@@ -1,5 +1,5 @@
 'use client';
-import { ThemeOptions } from '@mui/material/styles';
+import type { ThemeOptions } from '@mui/material/styles';
 import type {} from '@mui/x-data-grid/themeAugmentation';
 
 export const gray = {

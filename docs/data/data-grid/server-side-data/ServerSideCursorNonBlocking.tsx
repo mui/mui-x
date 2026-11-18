@@ -1,13 +1,13 @@
 import * as React from 'react';
-import {
-  DataGrid,
+import type {
   GridDataSource,
   GridGetRowsParams,
   GridGetRowsResponse,
-  useGridApiRef,
 } from '@mui/x-data-grid';
+import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
 import Snackbar from '@mui/material/Snackbar';
-import Alert, { AlertProps } from '@mui/material/Alert';
+import type { AlertProps } from '@mui/material/Alert';
+import Alert from '@mui/material/Alert';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 function getKeyDefault(params: GridGetRowsParams) {
@@ -20,11 +20,11 @@ function getKeyDefault(params: GridGetRowsParams) {
 }
 
 class Cache {
-  private cache: Record<string, { value: GridGetRowsResponse }>;
+  declare private cache: Record<string, { value: GridGetRowsResponse }>;
 
-  private cacheKeys: Set<string>;
+  declare private cacheKeys: Set<string>;
 
-  private getKey: (params: GridGetRowsParams) => string;
+  declare private getKey: (params: GridGetRowsParams) => string;
 
   constructor() {
     this.cache = {};

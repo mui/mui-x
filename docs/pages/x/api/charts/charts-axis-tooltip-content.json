@@ -7,6 +7,13 @@
         "description": "'asc'<br>&#124;&nbsp;'desc'<br>&#124;&nbsp;'none'"
       },
       "default": "'none'"
+    },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
     }
   },
   "name": "ChartsAxisTooltipContent",

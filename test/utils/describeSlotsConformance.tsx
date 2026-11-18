@@ -1,6 +1,6 @@
 import * as React from 'react';
 import createDescribe from '@mui/internal-test-utils/createDescribe';
-import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
+import type { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 import { describe, it, expect } from 'vitest';
 
 // Intentionally loose: the `props` object is built inside the helper with a dynamic slot-name

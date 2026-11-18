@@ -7,7 +7,7 @@ import { NotRendered, vars } from '@mui/x-data-grid/internals';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { isFormulaSource } from '../hooks/features/formula/engine';
-import type { FormulaCompletionToken } from '../hooks/features/formula/engine';
+import type { FormulaCompletionToken, FormulaSourceSpan } from '../hooks/features/formula/engine';
 import { useGridFormulaAutocomplete } from '../hooks/features/formula/gridFormulaAutocomplete';
 import type { GridFormulaSuggestionState } from '../hooks/features/formula/gridFormulaAutocomplete';
 import {
@@ -21,6 +21,7 @@ import {
   unregisterFormulaFocusSafeElement,
 } from '../hooks/features/formula/gridFormulaBarElements';
 import {
+  FORMULA_ERROR_TOKEN_CLASS,
   FORMULA_REFERENCE_TOKEN_CLASS,
   FORMULA_SYNTAX_TOKEN_CLASS,
   getCaretOffset,
@@ -32,6 +33,10 @@ import {
   setSelectionOffsets,
 } from './formulaEditorCaret';
 import type { FormulaEditorSelection } from './formulaEditorCaret';
+import {
+  isFormulaReferencePickingEnabled,
+  syncFormulaPickFeedback,
+} from '../hooks/features/formula/gridFormulaReferencePicking';
 
 /**
  * The font formula text is rendered in — monospace, so a formula reads as the
@@ -83,6 +88,14 @@ const GridFormulaEditableRoot = styled('div')(({ theme }) => ({
   // Operators, punctuation and the leading `=` step back so the function names,
   // identifiers and literals lead the line.
   [`& .${FORMULA_SYNTAX_TOKEN_CLASS}`]: { color: (theme.vars || theme).palette.text.secondary },
+  // A parse error the host asked to point at (the computed column editor): a
+  // wavy underline, the way code editors mark the offending token.
+  [`& .${FORMULA_ERROR_TOKEN_CLASS}`]: {
+    textDecoration: 'underline wavy',
+    textDecorationColor: (theme.vars || theme).palette.error.main,
+    textDecorationSkipInk: 'none',
+    textUnderlineOffset: '0.2em',
+  },
   // Only formula text is monospace — the formula bar renders plain cell values
   // through this same editable, and the contrast between the two fonts is what
   // makes a formula recognizable at a glance.
@@ -99,6 +112,14 @@ const GridFormulaEditorPopper = styled(NotRendered<GridSlotProps['basePopper']>,
   slot: 'FormulaAutocompletePopper',
 })({
   zIndex: vars.zIndex.menu,
+  // The popup follows the editable when a container scrolls it out of view (the
+  // computed columns panel, the grid), so it hides until the editable is back,
+  // instead of floating over the content. `visibility` rather than the `opacity`
+  // of the long text poppers: the focus never sits in the popup, and its hidden
+  // options must not catch clicks.
+  '&[data-popper-reference-hidden]': {
+    visibility: 'hidden',
+  },
 });
 
 const GridFormulaEditorPanel = styled('div')(({ theme }) => ({
@@ -165,10 +186,21 @@ const GridFormulaEditorOptionDetail = styled('span')(({ theme }) => ({
 }));
 
 /**
+ * Whether a key event belongs to an IME composition. `keyCode === 229` covers
+ * Safari, which fires the confirming keydown after `compositionend` (with
+ * `isComposing` already `false`).
+ */
+export function isComposingKeyEvent(event: React.KeyboardEvent): boolean {
+  return event.nativeEvent.isComposing || event.keyCode === 229;
+}
+
+/**
  * The edit value as the string the editor displays. Non-string values (e.g. a
  * number parsed from a plain edit) render through their string form; the
  * reference model treats them as non-formulas (no coloring).
  */
+const EMPTY_ERROR_SPANS: FormulaSourceSpan[] = [];
+
 export function valueToText(value: unknown): string {
   if (value == null) {
     return '';
@@ -189,7 +221,8 @@ function segmentsEqual(a: FormulaTextSegment[], b: FormulaTextSegment[]): boolea
     if (
       a[index].text !== b[index].text ||
       a[index].colorIndex !== b[index].colorIndex ||
-      Boolean(a[index].syntax) !== Boolean(b[index].syntax)
+      Boolean(a[index].syntax) !== Boolean(b[index].syntax) ||
+      Boolean(a[index].error) !== Boolean(b[index].error)
     ) {
       return false;
     }
@@ -220,6 +253,38 @@ export interface GridFormulaEditableHandle {
   isEngaged: () => boolean;
   setEngaged: (engaged: boolean) => void;
   closeSuggestions: () => void;
+  /**
+   * Splices `text` into the value at the live selection (replacing it), else at
+   * the last caret the editable saw, else at the end — the click-to-insert path
+   * of a reference pane. Reports through `onValueChange` like typing does and
+   * queues the caret right after the insertion for the rebuild.
+   * @param {string} text The text to insert.
+   * @param {React.SyntheticEvent} event The originating event (a click on the pane).
+   */
+  insertText: (text: string, event: React.SyntheticEvent) => void;
+  /**
+   * @returns {string} The text the editable shows.
+   */
+  getText: () => string;
+  /**
+   * @returns {FormulaEditorSelection | null} The live selection in character offsets, or `null` when the editable does not hold it.
+   */
+  getSelection: () => FormulaEditorSelection | null;
+  /**
+   * @returns {boolean} `true` while an IME composition is in flight.
+   */
+  isComposing: () => boolean;
+  /**
+   * Replaces `start..end` of the text with `text` and queues the caret right
+   * after it — the reference picking path. Reports through `onValueChange`
+   * like typing does. Unlike `insertText`, the suggestion popup is not
+   * recomputed: the pointer is on the grid, not in the editor.
+   * @param {number} start The start offset of the replaced range.
+   * @param {number} end The end offset of the replaced range.
+   * @param {string} text The text to write.
+   * @param {React.SyntheticEvent} event The originating event (a mousedown on a cell).
+   */
+  replaceRange: (start: number, end: number, text: string, event: React.SyntheticEvent) => void;
 }
 
 export interface GridFormulaEditableProps {
@@ -245,9 +310,14 @@ export interface GridFormulaEditableProps {
    */
   readOnly?: boolean;
   /** Stable DOM id prefix for the popup's listbox/options (aria wiring). */
-  popupId: string;
+  popupId: string | undefined;
   ariaLabel: string;
   className?: string;
+  /**
+   * Character ranges of the value to underline as errors (a parse error's span,
+   * in editor coordinates including the leading `=`).
+   */
+  errorSpans?: FormulaSourceSpan[];
   /**
    * Called on every user edit (typing, paste, IME commit, accepted suggestion).
    * The host writes the text to its store; the new text flows back through
@@ -318,6 +388,7 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
       popupId,
       ariaLabel,
       className,
+      errorSpans = EMPTY_ERROR_SPANS,
       onValueChange,
       shouldIgnoreInput,
       onCommitKey,
@@ -328,6 +399,7 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
     } = props;
     const apiRef = useGridPrivateApiContext();
     const rootProps = useGridRootProps();
+    const referencePicking = isFormulaReferencePickingEnabled(rootProps);
 
     const editableRef = React.useRef<HTMLDivElement | null>(null);
     // The caret to restore on the next rebuild (set by typing/accepting); `null`
@@ -360,8 +432,8 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
 
     const model = useGridFormulaReferenceModel(apiRef, ownerCell, a1Notation, value);
     const segments = React.useMemo(
-      () => buildFormulaTextSegments(value, model.references),
-      [value, model.references],
+      () => buildFormulaTextSegments(value, model.references, errorSpans),
+      [value, model.references, errorSpans],
     );
 
     const getSuggestions = useGridFormulaAutocomplete(apiRef, a1Notation);
@@ -469,7 +541,10 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
         refreshAfterRebuildRef.current = false;
         refresh(getCaretOffset(root));
       }
-    }, [segments, value, refresh, onAfterRebuild]);
+      // The text and the caret are final: typing ends a pending pick, and the
+      // new caret position decides whether a click picks a reference.
+      syncFormulaPickFeedback(apiRef, referencePicking);
+    }, [segments, value, refresh, onAfterRebuild, apiRef, referencePicking]);
 
     // Keep the highlighted option scrolled into view.
     useEnhancedEffect(() => {
@@ -616,6 +691,26 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
 
     const handleKeyDown = React.useCallback(
       (event: React.KeyboardEvent<HTMLDivElement>) => {
+        // Keys pressed during an IME composition belong to the IME (Enter
+        // confirms the candidate, Escape cancels it, the arrows and Tab walk
+        // the candidates): they neither drive the popup nor commit or cancel.
+        if (isComposingKeyEvent(event)) {
+          return;
+        }
+        // Escape belongs to the popup whenever it shows — the options list or the
+        // signature help alone: the first Escape closes it, a second one reaches the
+        // host and cancels. Keyed on `showPopup`, so a popup that is not rendered
+        // (`popupDisabled`) does not swallow the key.
+        if (event.key === 'Escape') {
+          if (showPopup) {
+            event.preventDefault();
+            event.stopPropagation();
+            setOpen(false);
+            return;
+          }
+          onCancelKey?.(event);
+          return;
+        }
         if (open && hasList) {
           switch (event.key) {
             case 'ArrowDown':
@@ -657,13 +752,6 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
               }
               return;
             }
-            case 'Escape':
-              // First Escape closes the list; a second (list closed) reaches the
-              // host and cancels the edit.
-              event.preventDefault();
-              event.stopPropagation();
-              setOpen(false);
-              return;
             default:
               return;
           }
@@ -674,11 +762,19 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
         if (event.key === 'Enter') {
           event.preventDefault();
           onCommitKey?.(event);
-        } else if (event.key === 'Escape') {
-          onCancelKey?.(event);
         }
       },
-      [acceptOption, activeIndex, hasList, onCancelKey, onCommitKey, open, options, suggestion],
+      [
+        acceptOption,
+        activeIndex,
+        hasList,
+        onCancelKey,
+        onCommitKey,
+        open,
+        options,
+        showPopup,
+        suggestion,
+      ],
     );
 
     const handleKeyUp = React.useCallback(
@@ -686,6 +782,7 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
         // Any key may have moved the caret.
         const root = editableRef.current;
         onInteraction?.(root ? getCaretOffset(root) : null);
+        syncFormulaPickFeedback(apiRef, referencePicking);
         // A caret move without a value change can still change the suggestion
         // context.
         if (
@@ -697,21 +794,80 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
           refresh();
         }
       },
-      [onInteraction, refresh],
+      [apiRef, onInteraction, referencePicking, refresh],
     );
 
     // A click (or a drag-selection ending inside the editable) places the caret.
     const handleMouseUp = React.useCallback(() => {
       const root = editableRef.current;
       onInteraction?.(root ? getCaretOffset(root) : null);
-    }, [onInteraction]);
+      syncFormulaPickFeedback(apiRef, referencePicking);
+    }, [apiRef, onInteraction, referencePicking]);
+
+    // The selection as it stood when focus left the editable — where a
+    // click-to-insert lands when the click did blur the editable (keyboard
+    // activation of a reference pane item). Cleared once the value is reseeded.
+    const lastSelectionRef = React.useRef<FormulaEditorSelection | null>(null);
 
     const handleBlur = React.useCallback(
       (event: React.FocusEvent<HTMLDivElement>) => {
+        const root = editableRef.current;
+        lastSelectionRef.current = root ? getSelectionOffsets(root) : null;
         setOpen(false);
         onBlur?.(event);
+        // Without the focus, a click on a cell is not a pick.
+        syncFormulaPickFeedback(apiRef, referencePicking);
       },
-      [onBlur],
+      [apiRef, onBlur, referencePicking],
+    );
+
+    const insertText = React.useCallback(
+      (text: string, event: React.SyntheticEvent) => {
+        const root = editableRef.current;
+        if (!root || readOnly) {
+          return;
+        }
+        const source = root.textContent ?? '';
+        const isActive = root.ownerDocument.activeElement === root;
+        const selection =
+          (isActive ? getSelectionOffsets(root) : null) ??
+          lastSelectionRef.current ??
+          ({ start: source.length, end: source.length } as FormulaEditorSelection);
+        const start = Math.max(0, Math.min(source.length, selection.start));
+        const end = Math.max(start, Math.min(source.length, selection.end));
+        const nextValue = source.slice(0, start) + text + source.slice(end);
+        engagedRef.current = true;
+        pendingCaretRef.current = start + text.length;
+        lastSelectionRef.current = null;
+        // Recompute the popup after the rebuild, so a function call shows its
+        // signature help right after `NAME(`.
+        refreshAfterRebuildRef.current = true;
+        onValueChange(nextValue, pendingCaretRef.current, event);
+        onInteraction?.(pendingCaretRef.current);
+      },
+      [onInteraction, onValueChange, readOnly],
+    );
+
+    const replaceRange = React.useCallback(
+      (rangeStart: number, rangeEnd: number, text: string, event: React.SyntheticEvent) => {
+        const root = editableRef.current;
+        if (!root || readOnly) {
+          return;
+        }
+        const source = root.textContent ?? '';
+        const start = Math.max(0, Math.min(source.length, rangeStart));
+        const end = Math.max(start, Math.min(source.length, rangeEnd));
+        engagedRef.current = true;
+        pendingCaretRef.current = start + text.length;
+        lastSelectionRef.current = null;
+        onValueChange(
+          source.slice(0, start) + text + source.slice(end),
+          pendingCaretRef.current,
+          event,
+        );
+        onInteraction?.(pendingCaretRef.current);
+      },
+      [onInteraction, onValueChange, readOnly],
     );
 
     const handleEditableRef = React.useCallback((node: HTMLDivElement | null) => {
@@ -762,8 +918,16 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
           engagedRef.current = engaged;
         },
         closeSuggestions: () => setOpen(false),
+        insertText,
+        getText: () => editableRef.current?.textContent ?? '',
+        getSelection: () => {
+          const root = editableRef.current;
+          return root ? getSelectionOffsets(root) : null;
+        },
+        isComposing: () => composingRef.current,
+        replaceRange,
       }),
-      [],
+      [insertText, replaceRange],
     );
 
     return (

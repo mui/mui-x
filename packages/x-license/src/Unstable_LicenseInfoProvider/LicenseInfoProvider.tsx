@@ -1,6 +1,6 @@
 import * as React from 'react';
 import MuiLicenseInfoContext from './MuiLicenseInfoContext';
-import { MuiLicenseInfo } from '../utils/licenseInfo';
+import type { MuiLicenseInfo } from '../utils/licenseInfo';
 
 /**
  * @ignore - do not document.

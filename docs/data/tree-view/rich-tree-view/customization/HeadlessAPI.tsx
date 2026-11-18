@@ -2,8 +2,9 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
-import { useTreeItem, UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
+import type { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
+import type { UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
+import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
 import {
   TreeItemContent,
   TreeItemIconContainer,

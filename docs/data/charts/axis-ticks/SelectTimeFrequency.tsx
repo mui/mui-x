@@ -5,7 +5,7 @@ import FormLabel from '@mui/material/FormLabel';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Slider from '@mui/material/Slider';
-import { TickFrequency } from '@mui/x-charts/models';
+import type { TickFrequency } from '@mui/x-charts/models';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 

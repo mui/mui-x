@@ -5,18 +5,16 @@ import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { usePickerContext, useSplitFieldProps } from '@mui/x-date-pickers/hooks';
-import {
-  DateRangePicker,
+import type {
   DateRangePickerFieldProps,
   DateRangePickerProps,
 } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { useDateRangeManager } from '@mui/x-date-pickers-pro/managers';
-import {
-  unstable_useMultiInputRangeField as useMultiInputRangeField,
-  UseMultiInputRangeFieldTextFieldProps,
-} from '@mui/x-date-pickers-pro/hooks';
+import type { UseMultiInputRangeFieldTextFieldProps } from '@mui/x-date-pickers-pro/hooks';
+import { unstable_useMultiInputRangeField as useMultiInputRangeField } from '@mui/x-date-pickers-pro/hooks';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
-import {
+import type {
   MultiInputFieldSlotTextFieldProps,
   MultiInputFieldRefs,
 } from '@mui/x-date-pickers-pro/models';

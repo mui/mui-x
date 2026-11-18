@@ -8,7 +8,6 @@ import {
   MessageList,
   createTimeWindowGroupKey,
 } from '@mui/x-chat/headless';
-
 import { createEchoAdapter } from 'docs/data/chat/headless/examples/shared/demoUtils';
 import {
   demoUsers,

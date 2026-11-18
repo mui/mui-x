@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { ChartProApi } from '@mui/x-charts-pro/context';
+import type { ChartProApi } from '@mui/x-charts-pro/context';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
-import { ScatterValueType } from '@mui/x-charts/models';
+import type { ScatterValueType } from '@mui/x-charts/models';
 import { continents, countryData } from '../dataset/countryData';
 import { populationGdpPerCapitaData } from './populationGdpPerCapitaData';
 import ExportOptionSelector from './ExportOptionSelector';

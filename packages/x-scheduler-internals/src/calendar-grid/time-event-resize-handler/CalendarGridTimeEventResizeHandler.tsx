@@ -35,7 +35,7 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
 
     // Context hooks
     const contextValue = useCalendarGridTimeEventContext();
-    const { getDateAtPointer } = useCalendarGridTimeColumnContext();
+    const { getTimestampAtPointer } = useCalendarGridTimeColumnContext();
 
     // Ref hooks
     const ref = React.useRef<HTMLDivElement>(null);
@@ -81,7 +81,7 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
       side,
       enabled,
       surfaceType: 'time-grid',
-      getDateAtPointer,
+      getTimestampAtPointer,
       getResizeSession,
       addPropertiesToResizedEvent,
     });

@@ -10,6 +10,11 @@ export { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridPro
  */
 export { useGridColumnHeadersPro } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 export { useGridAriaAttributesPro } from '../hooks/utils/useGridAriaAttributes';
+export {
+  useGridPointerDragRouting,
+  isElementInGrid,
+  isPointerDownOnHandleControl,
+} from '../hooks/utils/useGridPointerDragRouting';
 export { useGridRowAriaAttributesPro } from '../hooks/features/rows/useGridRowAriaAttributes';
 
 export {
@@ -21,6 +26,7 @@ export {
   useGridColumnReorder,
   columnReorderStateInitializer,
 } from '../hooks/features/columnReorder/useGridColumnReorder';
+export { useGridColumnReorderPointer } from '../hooks/features/columnReorder/useGridColumnReorderPointer';
 export { useGridDataSourceTreeDataPreProcessors } from '../hooks/features/serverSideTreeData/useGridDataSourceTreeDataPreProcessors';
 export {
   useGridDetailPanel,
@@ -35,6 +41,7 @@ export {
 } from '../hooks/features/rowReorder/useGridRowReorder';
 export { useGridRowsOverridableMethods as useGridRowsOverridableMethodsPro } from '../hooks/features/rows/useGridRowsOverridableMethods';
 export { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
+export { useGridRowReorderPointer } from '../hooks/features/rowReorder/useGridRowReorderPointer';
 export type { GridRowReorderPrivateApi } from '../models/gridRowReorderApi';
 export { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
 export { useGridTreeDataPreProcessors } from '../hooks/features/treeData/useGridTreeDataPreProcessors';

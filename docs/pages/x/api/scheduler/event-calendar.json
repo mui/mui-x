@@ -15,7 +15,7 @@
     "canDropEventsToTheOutside": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "collapsedResources": { "type": { "name": "object" } },
-    "dateLocale": { "type": { "name": "object" }, "default": "enUS (English)" },
+    "dateLocale": { "type": { "name": "string" }, "default": "\"en-US\"" },
     "defaultCollapsedResources": {
       "type": { "name": "object" },
       "default": "{} - all resources are expanded"
@@ -23,9 +23,9 @@
     "defaultPreferences": {
       "type": {
         "name": "shape",
-        "description": "{ ampm?: bool, isSidePanelOpen?: bool, showEmptyDaysInAgenda?: bool, showWeekends?: bool, showWeekNumber?: bool, weekStartsOn?: 0<br>&#124;&nbsp;1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6 }"
+        "description": "{ ampm?: bool, isSidePanelOpen?: bool, showEmptyDaysInAgenda?: bool, showWeekends?: bool, showWeekNumber?: bool, weekStartsOn?: 1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6<br>&#124;&nbsp;7 }"
       },
-      "default": "{ showWeekends: true, showWeekNumber: false, isSidePanelOpen: true, showEmptyDaysInAgenda: true, ampm: true }"
+      "default": "{ showWeekends: true, showWeekNumber: false, isSidePanelOpen: true, showEmptyDaysInAgenda: true }"
     },
     "defaultView": {
       "type": {
@@ -56,6 +56,10 @@
         "description": "{ canHaveMultipleResources?: bool, duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
       }
     },
+    "eventDeletion": {
+      "type": { "name": "union", "description": "{ confirmation?: bool }<br>&#124;&nbsp;bool" },
+      "default": "true"
+    },
     "eventModelStructure": { "type": { "name": "object" } },
     "events": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
@@ -72,7 +76,7 @@
     "preferences": {
       "type": {
         "name": "shape",
-        "description": "{ ampm?: bool, isSidePanelOpen?: bool, showEmptyDaysInAgenda?: bool, showWeekends?: bool, showWeekNumber?: bool, weekStartsOn?: 0<br>&#124;&nbsp;1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6 }"
+        "description": "{ ampm?: bool, isSidePanelOpen?: bool, showEmptyDaysInAgenda?: bool, showWeekends?: bool, showWeekNumber?: bool, weekStartsOn?: 1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6<br>&#124;&nbsp;7 }"
       }
     },
     "preferencesMenuConfig": {
@@ -109,7 +113,7 @@
     "viewConfig": {
       "type": {
         "name": "shape",
-        "description": "{ day?: { endTime?: number, initialScrollTime?: number, startTime?: number }, week?: { endTime?: number, initialScrollTime?: number, startTime?: number } }"
+        "description": "{ agenda?: { dayCount?: 'month'<br>&#124;&nbsp;number }, day?: { endTime?: number, initialScrollTime?: number, startTime?: number, timeGridEvents?: 'same-day-only'<br>&#124;&nbsp;'shorter-than-one-day' }, week?: { endTime?: number, initialScrollTime?: number, startTime?: number, timeGridEvents?: 'same-day-only'<br>&#124;&nbsp;'shorter-than-one-day' } }"
       }
     },
     "views": {
@@ -152,6 +156,12 @@
       "key": "agendaViewDayNumberCell",
       "className": "MuiEventCalendar-agendaViewDayNumberCell",
       "description": "Styles applied to agenda view day number cell elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "agendaViewEmptyState",
+      "className": "MuiEventCalendar-agendaViewEmptyState",
+      "description": "Styles applied to the agenda view empty state element.",
       "isGlobal": false
     },
     {
@@ -343,7 +353,7 @@
     {
       "key": "dayTimeGridAllDayEventsHeaderCell",
       "className": "MuiEventCalendar-dayTimeGridAllDayEventsHeaderCell",
-      "description": "Styles applied to the day time grid all day events header cell element.",
+      "description": "Styles applied to the day time grid all day events header cell (visually hidden row label).",
       "isGlobal": false
     },
     {
@@ -929,12 +939,6 @@
       "isGlobal": false
     },
     {
-      "key": "headerToolbarLeftElement",
-      "className": "MuiEventCalendar-headerToolbarLeftElement",
-      "description": "Styles applied to the header toolbar left side element.",
-      "isGlobal": false
-    },
-    {
       "key": "headerToolbarNextButton",
       "className": "MuiEventCalendar-headerToolbarNextButton",
       "description": "Styles applied to the header toolbar next button element.",
@@ -950,6 +954,12 @@
       "key": "headerToolbarSidePanelToggle",
       "className": "MuiEventCalendar-headerToolbarSidePanelToggle",
       "description": "Styles applied to the header toolbar side panel toggle button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "headerToolbarStart",
+      "className": "MuiEventCalendar-headerToolbarStart",
+      "description": "Styles applied to the header toolbar start side element.",
       "isGlobal": false
     },
     {
@@ -1232,6 +1242,12 @@
       "key": "resourcesTreeLabel",
       "className": "MuiEventCalendar-resourcesTreeLabel",
       "description": "Styles applied to the resources tree section label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "responsiveTypographyContainer",
+      "className": "MuiEventCalendar-responsiveTypographyContainer",
+      "description": "Styles applied to the element that hosts the responsive typography tokens.",
       "isGlobal": false
     },
     {

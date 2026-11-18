@@ -6,7 +6,7 @@ const CLEANUP_TIMER_LOOP_MILLIS = 1000;
 export class TimerBasedCleanupTracking implements CleanupTracking {
   timeouts? = new Map<number, ReturnType<typeof setTimeout>>();
 
-  cleanupTimeout = CLEANUP_TIMER_LOOP_MILLIS;
+  declare cleanupTimeout: number;
 
   constructor(timeout = CLEANUP_TIMER_LOOP_MILLIS) {
     this.cleanupTimeout = timeout;

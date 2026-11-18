@@ -4,6 +4,7 @@ export {
   createRowEditHistoryHandler,
   createClipboardPasteHistoryHandler,
 } from './defaultHistoryHandlers';
+export { createComputedColumnsHistoryHandler } from '../computedColumns/gridComputedColumnsHistory';
 export {
   gridHistoryCanUndoSelector,
   gridHistoryCanRedoSelector,

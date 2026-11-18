@@ -1,4 +1,4 @@
-import { PointerData } from '../PointerManager';
+import type { PointerData } from '../PointerManager';
 import { getDistance } from './getDistance';
 
 /**

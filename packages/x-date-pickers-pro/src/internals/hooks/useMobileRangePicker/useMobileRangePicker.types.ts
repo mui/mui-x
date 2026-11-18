@@ -28,6 +28,7 @@ export interface UseMobileRangePickerSlots
     PickerFieldUISlotsFromContext {
   /**
    * Component used to enter the date with the keyboard.
+   * @default SingleInputDateRangeField, SingleInputTimeRangeField, or SingleInputDateTimeRangeField, depending on the Picker.
    */
   field: React.ElementType;
 }

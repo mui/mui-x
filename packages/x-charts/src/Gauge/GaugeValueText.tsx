@@ -13,6 +13,10 @@ export interface GaugeFormatterParams {
 }
 
 export interface GaugeValueTextProps extends Omit<ChartsTextProps, 'text'> {
+  /**
+   * The text displayed in the gauge.
+   * A function receives the gauge value and its limits, and returns the text.
+   */
   text?: string | ((params: GaugeFormatterParams) => string | null);
 }
 
@@ -57,11 +61,18 @@ GaugeValueText.propTypes /* remove-proptypes */ = {
    * @default false
    */
   needsComputation: PropTypes.bool,
+  /**
+   * @ignore
+   */
   ownerState: PropTypes.any,
   /**
    * Style applied to text elements.
    */
   style: PropTypes.object,
+  /**
+   * The text displayed in the gauge.
+   * A function receives the gauge value and its limits, and returns the text.
+   */
   text: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
 } as any;
 

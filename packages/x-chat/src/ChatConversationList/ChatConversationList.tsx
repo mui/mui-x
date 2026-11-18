@@ -37,9 +37,17 @@ import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatConversationList');
 
+export interface ChatConversationListSlots extends ConversationListRootSlots {}
+
 export interface ChatConversationListProps extends ConversationListRootProps {
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<ChatConversationListClasses>;
   /**
    * The visual variant of the conversation list.
@@ -342,7 +350,13 @@ ChatConversationListItemSlot.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The content of the component.
+   */
   children: PropTypes.node,
+  /**
+   * The conversation the item renders.
+   */
   conversation: PropTypes.shape({
     avatarUrl: PropTypes.string,
     id: PropTypes.string.isRequired,
@@ -363,10 +377,27 @@ ChatConversationListItemSlot.propTypes /* remove-proptypes */ = {
     title: PropTypes.string,
     unreadCount: PropTypes.number,
   }).isRequired,
+  /**
+   * If `true`, the item has keyboard focus.
+   */
   focused: PropTypes.bool,
+  /**
+   * If `true`, the conversation is selected.
+   */
   selected: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * If `true`, the conversation has unread messages.
+   */
   unread: PropTypes.bool,
 } as any;
 
@@ -388,6 +419,9 @@ ChatConversationListItemAvatarStyled.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The conversation the item renders.
+   */
   conversation: PropTypes.shape({
     avatarUrl: PropTypes.string,
     id: PropTypes.string.isRequired,
@@ -408,10 +442,27 @@ ChatConversationListItemAvatarStyled.propTypes /* remove-proptypes */ = {
     title: PropTypes.string,
     unreadCount: PropTypes.number,
   }).isRequired,
+  /**
+   * If `true`, the item has keyboard focus.
+   */
   focused: PropTypes.bool,
+  /**
+   * If `true`, the conversation is selected.
+   */
   selected: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * If `true`, the conversation has unread messages.
+   */
   unread: PropTypes.bool,
 } as any;
 
@@ -433,6 +484,9 @@ ChatConversationListItemContentStyled.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The conversation the item renders.
+   */
   conversation: PropTypes.shape({
     avatarUrl: PropTypes.string,
     id: PropTypes.string.isRequired,
@@ -453,10 +507,27 @@ ChatConversationListItemContentStyled.propTypes /* remove-proptypes */ = {
     title: PropTypes.string,
     unreadCount: PropTypes.number,
   }).isRequired,
+  /**
+   * If `true`, the item has keyboard focus.
+   */
   focused: PropTypes.bool,
+  /**
+   * If `true`, the conversation is selected.
+   */
   selected: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * If `true`, the conversation has unread messages.
+   */
   unread: PropTypes.bool,
 } as any;
 
@@ -478,6 +549,9 @@ ChatConversationListTitleStyled.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The conversation the item renders.
+   */
   conversation: PropTypes.shape({
     avatarUrl: PropTypes.string,
     id: PropTypes.string.isRequired,
@@ -498,10 +572,27 @@ ChatConversationListTitleStyled.propTypes /* remove-proptypes */ = {
     title: PropTypes.string,
     unreadCount: PropTypes.number,
   }).isRequired,
+  /**
+   * If `true`, the item has keyboard focus.
+   */
   focused: PropTypes.bool,
+  /**
+   * If `true`, the conversation is selected.
+   */
   selected: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * If `true`, the conversation has unread messages.
+   */
   unread: PropTypes.bool,
 } as any;
 
@@ -523,6 +614,9 @@ ChatConversationListPreviewStyled.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The conversation the item renders.
+   */
   conversation: PropTypes.shape({
     avatarUrl: PropTypes.string,
     id: PropTypes.string.isRequired,
@@ -543,10 +637,27 @@ ChatConversationListPreviewStyled.propTypes /* remove-proptypes */ = {
     title: PropTypes.string,
     unreadCount: PropTypes.number,
   }).isRequired,
+  /**
+   * If `true`, the item has keyboard focus.
+   */
   focused: PropTypes.bool,
+  /**
+   * If `true`, the conversation is selected.
+   */
   selected: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * If `true`, the conversation has unread messages.
+   */
   unread: PropTypes.bool,
 } as any;
 
@@ -568,6 +679,9 @@ ChatConversationListTimestampStyled.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The conversation the item renders.
+   */
   conversation: PropTypes.shape({
     avatarUrl: PropTypes.string,
     id: PropTypes.string.isRequired,
@@ -588,10 +702,27 @@ ChatConversationListTimestampStyled.propTypes /* remove-proptypes */ = {
     title: PropTypes.string,
     unreadCount: PropTypes.number,
   }).isRequired,
+  /**
+   * If `true`, the item has keyboard focus.
+   */
   focused: PropTypes.bool,
+  /**
+   * If `true`, the conversation is selected.
+   */
   selected: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * If `true`, the conversation has unread messages.
+   */
   unread: PropTypes.bool,
 } as any;
 
@@ -615,6 +746,9 @@ ChatConversationListUnreadBadgeStyled.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The conversation the item renders.
+   */
   conversation: PropTypes.shape({
     avatarUrl: PropTypes.string,
     id: PropTypes.string.isRequired,
@@ -635,10 +769,27 @@ ChatConversationListUnreadBadgeStyled.propTypes /* remove-proptypes */ = {
     title: PropTypes.string,
     unreadCount: PropTypes.number,
   }).isRequired,
+  /**
+   * If `true`, the item has keyboard focus.
+   */
   focused: PropTypes.bool,
+  /**
+   * If `true`, the conversation is selected.
+   */
   selected: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * If `true`, the conversation has unread messages.
+   */
   unread: PropTypes.bool,
 } as any;
 
@@ -672,6 +823,9 @@ ChatConversationListItemActionsStyled.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The conversation the item renders.
+   */
   conversation: PropTypes.shape({
     avatarUrl: PropTypes.string,
     id: PropTypes.string.isRequired,
@@ -692,10 +846,27 @@ ChatConversationListItemActionsStyled.propTypes /* remove-proptypes */ = {
     title: PropTypes.string,
     unreadCount: PropTypes.number,
   }).isRequired,
+  /**
+   * If `true`, the item has keyboard focus.
+   */
   focused: PropTypes.bool,
+  /**
+   * If `true`, the conversation is selected.
+   */
   selected: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * If `true`, the conversation has unread messages.
+   */
   unread: PropTypes.bool,
 } as any;
 
@@ -802,10 +973,24 @@ ChatConversationList.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

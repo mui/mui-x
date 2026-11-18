@@ -7,7 +7,7 @@ import {
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import MuiPagination from '@mui/material/Pagination';
-import { TablePaginationProps } from '@mui/material/TablePagination';
+import type { TablePaginationProps } from '@mui/material/TablePagination';
 
 function Pagination({
   page,

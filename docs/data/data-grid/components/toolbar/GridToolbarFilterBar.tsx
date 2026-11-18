@@ -1,14 +1,16 @@
 import * as React from 'react';
+import type {
+  GridFilterItem,
+  GridFilterModel,
+  GridToolbarProps,
+} from '@mui/x-data-grid-pro';
 import {
   DataGridPro,
   gridColumnLookupSelector,
   gridFilterActiveItemsSelector,
-  GridFilterItem,
-  GridFilterModel,
   useGridApiContext,
   useGridSelector,
   GridFilterListIcon,
-  GridToolbarProps,
   Toolbar,
   ToolbarButton,
   FilterPanelTrigger,

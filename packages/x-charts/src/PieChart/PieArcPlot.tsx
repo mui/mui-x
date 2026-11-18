@@ -17,10 +17,17 @@ import type { ChartsActivationEvent } from '../models/events';
 import type { PieArcPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface PieArcPlotSlots {
+  /**
+   * The component that renders the pie arcs.
+   * @default PieArc
+   */
   pieArc?: React.JSXElementConstructor<PieArcProps & PieArcPropsOverrides>;
 }
 
 export interface PieArcPlotSlotProps {
+  /**
+   * The props used for the `pieArc` slot.
+   */
   pieArc?: WithDataAttributes<Partial<PieArcProps> & PieArcPropsOverrides>;
 }
 
@@ -167,6 +174,9 @@ PieArcPlot.propTypes /* remove-proptypes */ = {
    * @default 0
    */
   cornerRadius: PropTypes.number,
+  /**
+   * The data of the series, with the default values applied.
+   */
   data: PropTypes.arrayOf(
     PropTypes.shape({
       color: PropTypes.string.isRequired,

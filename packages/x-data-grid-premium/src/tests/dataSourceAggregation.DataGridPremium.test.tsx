@@ -1,7 +1,7 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import { createRenderer, waitFor, screen, within } from '@mui/internal-test-utils';
+import { act, createRenderer, waitFor, screen, within } from '@mui/internal-test-utils';
 import {
   DataGridPremium,
   useGridApiRef,
@@ -14,8 +14,9 @@ import type {
   GridDataSource,
   GridGroupNode,
   GridGetRowsResponse,
+  GridValidRowModel,
 } from '@mui/x-data-grid-premium';
-import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getCell, getColumnValues } from 'test/utils/helperFn';
 import { vi, onTestFinished, describe, it, expect } from 'vitest';
 
 describe('<DataGridPremium /> - Data source aggregation', () => {
@@ -324,6 +325,105 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
     // Two additional calls should be made
     await waitFor(() => {
       expect(fetchRowsSpy.mock.calls.length).to.equal(4);
+    });
+  });
+
+  // https://github.com/mui/mui-x/issues/23931
+  describe('removing the aggregation', () => {
+    const leaves: GridValidRowModel[] = [
+      { id: 1, region: 'North', category: 'Bikes', sales: 10 },
+      { id: 2, region: 'North', category: 'Clothing', sales: 20 },
+      { id: 3, region: 'South', category: 'Bikes', sales: 30 },
+    ];
+    const dataSource: GridDataSource = {
+      getRows: async (params) => {
+        const groupFields = params.groupFields ?? [];
+        const groupKeys = params.groupKeys ?? [];
+        const parentLeaves = leaves.filter((row) =>
+          groupKeys.every((key, i) => row[groupFields[i]] === key),
+        );
+        if (groupKeys.length === groupFields.length) {
+          return { rows: parentLeaves, rowCount: parentLeaves.length };
+        }
+        const field = groupFields[groupKeys.length];
+        const rows = [...new Set(parentLeaves.map((row) => row[field]))].map((key) => {
+          const groupLeaves = parentLeaves.filter((row) => row[field] === key);
+          return {
+            id: [...groupKeys, key].join('/'),
+            group: key,
+            childrenCount: groupLeaves.length,
+            ...(params.aggregationModel?.sales
+              ? { sales: groupLeaves.reduce((acc, row) => acc + row.sales, 0) }
+              : {}),
+          };
+        });
+        return {
+          rows,
+          rowCount: rows.length,
+          aggregateRow: params.aggregationModel?.sales ? { sales: 60 } : {},
+        };
+      },
+      getGroupKey: (row) => row.group,
+      getChildrenCount: (row) => row.childrenCount,
+      getAggregatedValue: (row, field) => row[field],
+    };
+
+    function TestRemoveAggregation(props: Partial<DataGridPremiumProps>) {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 400, height: 400 }}>
+          <DataGridPremium
+            apiRef={apiRef}
+            columns={[
+              { field: 'region' },
+              { field: 'category' },
+              { field: 'sales', type: 'number' },
+            ]}
+            dataSource={dataSource}
+            dataSourceCache={null}
+            disableVirtualization
+            aggregationFunctions={{ sum: { columnTypes: ['number'] } }}
+            initialState={{
+              rowGrouping: { model: ['region', 'category'] },
+              aggregation: { model: { sales: 'sum' } },
+            }}
+            {...props}
+          />
+        </div>
+      );
+    }
+
+    it('should not keep stale aggregated values on group rows', async () => {
+      render(<TestRemoveAggregation defaultGroupingExpansionDepth={1} />);
+      await waitFor(() => {
+        expect(getColumnValues(3)).to.deep.equal(['30', '10', '20', '30', '30', '60']);
+      });
+
+      await act(async () => {
+        apiRef.current!.setAggregationModel({});
+      });
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow('North')).not.to.have.property('sales');
+        expect(apiRef.current!.getRow('North/Bikes')).not.to.have.property('sales');
+        expect(getColumnValues(3)).to.deep.equal(['', '', '', '', '']);
+      });
+    });
+
+    it('should not keep stale aggregated values on lazy loaded group rows', async () => {
+      render(<TestRemoveAggregation lazyLoading />);
+      await waitFor(() => {
+        expect(apiRef.current!.getRow('North')).to.have.property('sales', 30);
+      });
+
+      await act(async () => {
+        apiRef.current!.setAggregationModel({});
+      });
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow('North')).not.to.have.property('sales');
+        expect(apiRef.current!.getRow('South')).not.to.have.property('sales');
+      });
     });
   });
 });

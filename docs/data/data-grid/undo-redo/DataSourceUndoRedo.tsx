@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGridPremium, GridDataSource } from '@mui/x-data-grid-premium';
+import type { GridDataSource } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 export default function DataSourceUndoRedo() {

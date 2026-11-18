@@ -1,14 +1,15 @@
 import path from 'path';
 import fs from 'fs';
 import { LANGUAGES } from '@mui/internal-core-docs/constants';
-import {
+import type {
   ProjectSettings,
   ComponentReactApi,
   HookReactApi,
-  findApiPages,
 } from '@mui/internal-api-docs-builder';
-import generateUtilityClass, { isGlobalState } from '@mui/utils/generateUtilityClass';
+import { findApiPages } from '@mui/internal-api-docs-builder';
+import { isGlobalState } from '@mui/utils/generateUtilityClass';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
+import generateSchedulerClassName from './generateSchedulerClassName';
 
 type PageType = { pathname: string; title: string; plan?: 'community' | 'pro' | 'premium' };
 
@@ -122,10 +123,17 @@ export default schedulerApiPages;
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-event/EventTimelinePremiumEvent.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-title-cell/EventTimelinePremiumTitleCell.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-header/EventTimelinePremiumHeader.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependency-arrows/EventTimelinePremiumDependencyArrows.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependency-arrows/EventTimelinePremiumDependencyGeometry.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependency-arrows/EventTimelinePremiumDependencyInteractions.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependency-arrows/EventTimelinePremiumDependencyTerminals.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/EventTimelinePremiumDependencyArrows.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/EventTimelinePremiumDependencyContextMenu.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/EventTimelinePremiumDependencyLayer.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/dependency-dialog/DependencyDialogFormContent.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/dependency-dialog/DependencyDialogLayout.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/dependency-dialog/DependencyDialogDetails.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/dependency-dialog/DependencyDialogReadonlyContent.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/dependency-dialog/EventTimelinePremiumDependencyDialog.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/EventTimelinePremiumDependencyGeometry.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/EventTimelinePremiumDependencyInteractions.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/EventTimelinePremiumDependencyTerminals.tsx',
       'x-scheduler-premium/src/event-timeline-premium/error-container/EventTimelinePremiumErrorContainer.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
@@ -139,7 +147,7 @@ export default schedulerApiPages;
   sortingStrategies: {
     slotsSort: (a, b) => a.name.localeCompare(b.name),
   },
-  generateClassName: generateUtilityClass,
+  generateClassName: generateSchedulerClassName,
   isGlobalClassName: isGlobalState,
   nonComponentFolders: [...getNonComponentFolders()],
 };

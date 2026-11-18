@@ -1,12 +1,16 @@
 {
   "componentDescription": "Wrapper for the charts components.\nIts main purpose is to position the HTML legend in the correct place.",
   "propDescriptions": {
+    "children": { "description": "The content of the component." },
     "extendVertically": {
       "description": "If <code>true</code>, the chart wrapper set <code>height: 100%</code>."
     },
     "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
     "legendDirection": { "description": "The direction of the legend." },
-    "legendPosition": { "description": "The position of the legend." }
+    "legendPosition": { "description": "The position of the legend." },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    }
   },
   "classDescriptions": {}
 }

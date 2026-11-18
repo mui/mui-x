@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { ConversationHeader } from '@mui/x-chat-headless';
-import type { ConversationHeaderProps } from '@mui/x-chat-headless';
+import type { ConversationHeaderProps, ConversationHeaderSlots } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatConversationUtilityClasses } from './chatConversationClasses';
@@ -11,8 +11,13 @@ import type { ChatConversationClasses } from './chatConversationClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatConversationHeader');
 
+export interface ChatConversationHeaderSlots extends ConversationHeaderSlots {}
+
 export interface ChatConversationHeaderProps extends ConversationHeaderProps {
   className?: string;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<ChatConversationClasses>;
 }
 
@@ -66,10 +71,24 @@ ChatConversationHeader.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The content of the component.
+   */
   children: PropTypes.node,
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
 } as any;
 

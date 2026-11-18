@@ -16,6 +16,10 @@ const dataCache = new LRUCache<string, DemoTreeDataValue>({
   ttl: 60 * 5 * 1e3, // 5 minutes
 });
 
+export function clearDemoDataCache() {
+  dataCache.clear();
+}
+
 export type DemoDataReturnType = {
   data: DemoTreeDataValue;
   loading: boolean;

@@ -8,7 +8,7 @@
  * 4. Distributing events to registered gesture recognizers
  */
 
-import { TargetElement } from './types/TargetElement';
+import type { TargetElement } from './types/TargetElement';
 
 /**
  * Normalized representation of a pointer, containing all relevant information
@@ -126,7 +126,7 @@ export class PointerManager {
   declare private passive: boolean;
 
   /** Whether to prevent interrupt events like blur or contextmenu */
-  private preventEventInterruption: boolean = true;
+  declare private preventEventInterruption: boolean;
 
   /** Map of all currently active pointers by their pointerId */
   private pointers: Map<number, PointerData> = new Map();

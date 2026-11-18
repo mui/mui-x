@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { LineChart, LineChartProps } from '@mui/x-charts/LineChart';
+import type { LineChartProps } from '@mui/x-charts/LineChart';
+import { LineChart } from '@mui/x-charts/LineChart';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
 
 export default function ReferenceLineLabel() {

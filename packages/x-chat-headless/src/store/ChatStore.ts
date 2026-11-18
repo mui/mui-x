@@ -26,14 +26,34 @@ export interface ChatStoreParameters<Cursor = string> extends ChatMessageAuthorG
   currentUser?: ChatUser;
   /** Locale-driven fallback labels for messages without explicit author information. */
   roleDisplayNames?: Partial<Record<ChatRole, string>>;
+  /**
+   * The messages of the active conversation.
+   * Use with `onMessagesChange` to control them.
+   */
   messages?: ChatMessage[];
   /** The initial messages when uncontrolled. Ignored after initialization and when `messages` is provided. */
   initialMessages?: ChatMessage[];
+  /**
+   * Callback fired when the messages change.
+   * @param {ChatMessage[]} messages The new messages.
+   */
   onMessagesChange?: (messages: ChatMessage[]) => void;
+  /**
+   * The conversations.
+   * Use with `onConversationsChange` to control them.
+   */
   conversations?: ChatConversation[];
   /** The initial conversations when uncontrolled. Ignored after initialization and when `conversations` is provided. */
   initialConversations?: ChatConversation[];
+  /**
+   * Callback fired when the conversations change.
+   * @param {ChatConversation[]} conversations The new conversations.
+   */
   onConversationsChange?: (conversations: ChatConversation[]) => void;
+  /**
+   * The id of the active conversation.
+   * Use with `onActiveConversationChange` to control it.
+   */
   activeConversationId?: string;
   /** Internal flag used to distinguish a controlled `undefined` active conversation from an uncontrolled model. */
   activeConversationIdControlled?: boolean;
@@ -44,10 +64,22 @@ export interface ChatStoreParameters<Cursor = string> extends ChatMessageAuthorG
   hasHistoryLoader?: boolean;
   /** The initial active conversation ID when uncontrolled. Ignored after initialization and when `activeConversationId` is provided. */
   initialActiveConversationId?: string;
+  /**
+   * Callback fired when the active conversation changes.
+   * @param {string | undefined} conversationId The id of the new active conversation.
+   */
   onActiveConversationChange?: (conversationId: string | undefined) => void;
+  /**
+   * The value of the composer.
+   * Use with `onComposerValueChange` to control it.
+   */
   composerValue?: string;
   /** The initial composer value when uncontrolled. Ignored after initialization and when `composerValue` is provided. */
   initialComposerValue?: string;
+  /**
+   * Callback fired when the composer value changes.
+   * @param {string} value The new composer value.
+   */
   onComposerValueChange?: (value: string) => void;
 }
 

@@ -1,17 +1,19 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
+import type {
   GridColDef,
   GridRenderCellParams,
   GridEventListener,
-  useGridApiRef,
   GridAggregationFunction,
+  GridRowParams,
+} from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  useGridApiRef,
   GRID_AGGREGATION_FUNCTIONS,
   GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,
   GridDetailPanelToggleCell,
   GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
   isGroupingColumn,
-  GridRowParams,
 } from '@mui/x-data-grid-premium';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -24,7 +26,8 @@ import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import { DemoContainer } from '../DemoContainer';
 import { inventoryTheme } from './theme';
-import { Product, products } from './data/products';
+import type { Product } from './data/products';
+import { products } from './data/products';
 import { ProductDetailPanel } from './DetailPanel';
 import { InventoryToolbar } from './InventoryToolbar';
 import { dataGridStyles } from './styles';

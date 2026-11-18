@@ -1,5 +1,6 @@
-import * as React from 'react';
-import { createRenderer, CreateRendererOptions, RenderOptions } from '@mui/internal-test-utils';
+import type * as React from 'react';
+import type { CreateRendererOptions, RenderOptions } from '@mui/internal-test-utils';
+import { createRenderer } from '@mui/internal-test-utils';
 import { absorbObserverFrames } from './absorb-observer-frames';
 
 interface CreateSchedulerRendererOptions extends Omit<

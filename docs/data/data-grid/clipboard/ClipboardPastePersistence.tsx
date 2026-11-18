@@ -1,9 +1,9 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
+import type {
   GridValidRowModel,
   DataGridPremiumProps,
 } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
 

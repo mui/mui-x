@@ -122,8 +122,8 @@ export const initialEvents = [
   // Holiday events
   {
     id: 'holidays-1',
-    start: '2025-06-25T00:00:00',
-    end: '2025-06-30T00:00:00',
+    start: '2025-06-25',
+    end: '2025-07-01',
     title: 'Out of office',
     resource: 'holidays',
     allDay: true,
@@ -157,8 +157,8 @@ export const initialEvents = [
   // Birthday events
   {
     id: 'birthdays-alice',
-    start: '2025-07-03T03:00:00',
-    end: '2025-07-03T04:00:00',
+    start: '2025-07-03',
+    end: '2025-07-04',
     title: "Alice's Birthday",
     resource: 'birthdays',
     allDay: true,
@@ -167,8 +167,8 @@ export const initialEvents = [
   },
   {
     id: 'birthdays-bob',
-    start: '2025-07-18T03:00:00',
-    end: '2025-07-18T04:00:00',
+    start: '2025-07-18',
+    end: '2025-07-19',
     title: "Bob's Birthday",
     resource: 'birthdays',
     allDay: true,
@@ -177,8 +177,8 @@ export const initialEvents = [
   },
   {
     id: 'birthdays-richard',
-    start: '2025-07-25T03:00:00',
-    end: '2025-07-25T04:00:00',
+    start: '2025-07-25',
+    end: '2025-07-26',
     title: "Richard's Birthday",
     resource: 'birthdays',
     allDay: true,

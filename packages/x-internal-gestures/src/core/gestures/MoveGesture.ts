@@ -12,12 +12,13 @@
  * This gesture only works with mouse pointers, not touch or pen.
  */
 
-import { ActiveGesturesRegistry } from '../ActiveGesturesRegistry';
-import { GesturePhase, GestureState } from '../Gesture';
+import type { ActiveGesturesRegistry } from '../ActiveGesturesRegistry';
+import type { GesturePhase, GestureState } from '../Gesture';
 import type { KeyboardManager } from '../KeyboardManager';
-import { PointerGesture, PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
-import { PointerData, PointerManager } from '../PointerManager';
-import { TargetElement } from '../types/TargetElement';
+import type { PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
+import { PointerGesture } from '../PointerGesture';
+import type { PointerData, PointerManager } from '../PointerManager';
+import type { TargetElement } from '../types/TargetElement';
 import { calculateCentroid, createEventName } from '../utils';
 
 /**
@@ -72,15 +73,15 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
     lastPosition: null,
   };
 
-  declare protected readonly isSinglePhase: false;
+  declare public readonly isSinglePhase: false;
 
-  declare protected readonly eventType: MoveEvent;
+  declare public readonly eventType: MoveEvent;
 
   declare protected readonly optionsType: MoveGestureOptions<GestureName>;
 
-  declare protected readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
+  declare public readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
-  declare protected readonly mutableStateType: never;
+  declare public readonly mutableStateType: never;
 
   /**
    * Movement threshold in pixels that must be exceeded before the gesture activates.

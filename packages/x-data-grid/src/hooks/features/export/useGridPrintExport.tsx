@@ -2,7 +2,7 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import ownerDocument from '@mui/utils/ownerDocument';
-import { loadStyleSheets } from '@mui/x-internals/export';
+import { loadStyleSheets, waitForFonts } from '@mui/x-internals/export';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -193,6 +193,8 @@ export const useGridPrintExport = (
       }
 
       gridClone.style.height = 'auto';
+      gridClone.style.minHeight = '0';
+      gridClone.style.maxHeight = 'none';
       // The height above does not include grid border width, so we need to exclude it
       gridClone.style.boxSizing = 'content-box';
 
@@ -246,6 +248,8 @@ export const useGridPrintExport = (
         // `onStylesheetError` cancelled the print
         return false;
       }
+
+      await waitForFonts(printDoc);
 
       // Trigger print
       if (process.env.NODE_ENV !== 'test' && !DEBUG_MODE) {

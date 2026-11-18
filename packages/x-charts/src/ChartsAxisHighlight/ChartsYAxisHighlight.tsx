@@ -21,6 +21,9 @@ import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins
  */
 export default function ChartsYHighlight(props: {
   type: ChartsAxisHighlightType;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: ChartsAxisHighlightClasses;
 }) {
   const { type, classes } = props;

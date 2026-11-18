@@ -327,7 +327,7 @@ describe('<DataGridPremium /> - Formulas A1 notation', () => {
         await user.click(cell);
 
         const pasteEvent = new Event('paste');
-        // @ts-ignore
+        // @ts-expect-error The synthetic Event supplies clipboardData, which only ClipboardEvent declares.
         pasteEvent.clipboardData = { getData: () => '=B1\n=B1' };
         fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true });
         await act(async () => document.activeElement!.dispatchEvent(pasteEvent));
@@ -338,6 +338,41 @@ describe('<DataGridPremium /> - Formulas A1 notation', () => {
         // The second target shifted its relative row by +1 → frozen to row id 1.
         expect(apiRef.current!.getRow(1).total).to.equal('=REF(COLUMN("price"), ROW(1))');
         expect(getColumnValues(4)).to.deep.equal(['2', '1', '8']);
+      });
+
+      it('should anchor the fill offset to the start cell when the focus moves during the paste', async () => {
+        const { user } = await render(
+          <Test
+            formulaA1Notation
+            cellSelection
+            disableRowSelectionOnClick
+            clipboardPasteOptions={{
+              createRows: async ({ count }) => {
+                await new Promise((resolve) => {
+                  setTimeout(resolve, 100);
+                });
+                return Array.from({ length: count }, (_, index) => ({ id: `new-${index}` }));
+              },
+            }}
+          />,
+        );
+        const cell = getCell(1, 4);
+        await user.click(cell);
+
+        const pasteEvent = new Event('paste');
+        // @ts-expect-error The synthetic Event supplies clipboardData, which only ClipboardEvent declares.
+        pasteEvent.clipboardData = { getData: () => '=B1\n=B1\n=B1' };
+        fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true });
+        await act(async () => document.activeElement!.dispatchEvent(pasteEvent));
+        // Move the focus while `createRows()` runs
+        await user.click(getCell(0, 1));
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRowsCount()).to.equal(4);
+        });
+        // The origin is the start cell (row 1), not the focused cell (row 0)
+        expect(apiRef.current!.getRow(1).total).to.equal('=REF(COLUMN("price"), ROW(0))');
+        expect(apiRef.current!.getRow(2).total).to.equal('=REF(COLUMN("price"), ROW(1))');
       });
 
       it('should anchor the fill offset to the top-left cell even when it is not a formula', async () => {
@@ -351,7 +386,7 @@ describe('<DataGridPremium /> - Formulas A1 notation', () => {
         // Top-left target is a plain literal — it never reaches the A1 paste
         // transform, so the offset origin must still be this cell, not the
         // formula one row below it.
-        // @ts-ignore
+        // @ts-expect-error The synthetic Event supplies clipboardData, which only ClipboardEvent declares.
         pasteEvent.clipboardData = { getData: () => '5\n=B1' };
         fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true });
         await act(async () => document.activeElement!.dispatchEvent(pasteEvent));
@@ -372,7 +407,7 @@ describe('<DataGridPremium /> - Formulas A1 notation', () => {
 
         const pasteEvent = new Event('paste');
         // B is `price`: [2, 1, 4].
-        // @ts-ignore
+        // @ts-expect-error The synthetic Event supplies clipboardData, which only ClipboardEvent declares.
         pasteEvent.clipboardData = { getData: () => '=SUM(B1:B2)\n=SUM($B$1:B2)' };
         fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true });
         await act(async () => document.activeElement!.dispatchEvent(pasteEvent));

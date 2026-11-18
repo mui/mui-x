@@ -223,4 +223,39 @@ describe('<MultiSectionDigitalClock />', () => {
       expect((input as HTMLInputElement).value).to.equal('1');
     });
   });
+
+  describe('scrolling', () => {
+    function mockScrollTop(element: HTMLElement) {
+      const setScrollTop = vi.fn();
+      Object.defineProperty(element, 'scrollTop', {
+        configurable: true,
+        get: () => 0,
+        set: setScrollTop,
+      });
+      return setScrollTop;
+    }
+
+    // https://github.com/mui/mui-x/issues/15758
+    it('should not scroll back to the selected item when it re-renders', () => {
+      const view = render(
+        <MultiSectionDigitalClock value={adapterToUse.date('2018-01-01T11:30:00')} />,
+      );
+      const setScrollTop = mockScrollTop(screen.getByRole('listbox', { name: 'Select hours' }));
+
+      view.setProps({ className: 'foo' });
+
+      expect(setScrollTop).not.toHaveBeenCalled();
+    });
+
+    it('should scroll to the new active item when the value changes', () => {
+      const view = render(
+        <MultiSectionDigitalClock value={adapterToUse.date('2018-01-01T11:30:00')} />,
+      );
+      const setScrollTop = mockScrollTop(screen.getByRole('listbox', { name: 'Select hours' }));
+
+      view.setProps({ value: adapterToUse.date('2018-01-01T03:30:00') });
+
+      expect(setScrollTop).toHaveBeenCalledTimes(1);
+    });
+  });
 });

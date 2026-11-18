@@ -154,13 +154,12 @@ export class AdapterLuxon implements MuiPickersAdapter<string> {
 
     if (typeof value === 'undefined') {
       return DateTime.fromJSDate(new Date(), {
-        // @ts-ignore
+        // @ts-expect-error Luxon accepts locale here at runtime, but fromJSDate only declares zone.
         locale: this.locale,
         zone: timezone,
       }) as unknown as R;
     }
 
-    // @ts-ignore
     return DateTime.fromISO(value, { locale: this.locale, zone: timezone }) as unknown as R;
   };
 

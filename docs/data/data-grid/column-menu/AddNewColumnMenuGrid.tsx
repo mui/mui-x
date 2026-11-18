@@ -2,12 +2,8 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
-import {
-  DataGrid,
-  GridColumnMenu,
-  GridColumnMenuProps,
-  GridColumnMenuItemProps,
-} from '@mui/x-data-grid';
+import type { GridColumnMenuProps, GridColumnMenuItemProps } from '@mui/x-data-grid';
+import { DataGrid, GridColumnMenu } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function CustomUserItem(props: GridColumnMenuItemProps) {

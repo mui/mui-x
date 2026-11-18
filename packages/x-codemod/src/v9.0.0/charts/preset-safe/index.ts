@@ -1,4 +1,4 @@
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import * as renameIdToSeriesId from '../rename-id-to-series-id';
 import * as renameChartApiImport from '../rename-chart-api-import';
 import * as renameChartContainer from '../rename-chart-container';

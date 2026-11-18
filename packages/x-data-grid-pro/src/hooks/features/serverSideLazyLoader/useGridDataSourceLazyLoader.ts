@@ -33,6 +33,7 @@ import {
   DataSourceRowsUpdateStrategy,
   useGridDataSourceFilterModelChange,
   useGridDataSourcePolling,
+  asReplaceUpdates,
 } from '@mui/x-data-grid/internals';
 import type { GridStrategyProcessor, GridPipeProcessor } from '@mui/x-data-grid/internals';
 import type { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
@@ -332,7 +333,7 @@ export const useGridDataSourceLazyLoader = (
             }
 
             // Efficient data-only update — no tree restructuring needed
-            privateApiRef.current.updateRows(changedRows);
+            privateApiRef.current.updateRows(asReplaceUpdates(changedRows));
             // Cache is already updated by fetchRows in useGridDataSourceBase
           } else {
             // DIFFERENT ROW IDs — server returned new rows for this range
@@ -479,19 +480,21 @@ export const useGridDataSourceLazyLoader = (
         return;
       }
 
-      const renderContext = gridRenderContextSelector(privateApiRef);
-      if (previousLastRowIndex.current >= renderContext.lastRowIndex) {
+      // The trigger is placed after the last row, which is not necessarily rendered
+      // when the trigger enters the `scrollEndThreshold` area.
+      const lastRowIndex = getVisibleRows(privateApiRef).rows.length;
+      if (previousLastRowIndex.current >= lastRowIndex) {
         return;
       }
 
-      previousLastRowIndex.current = renderContext.lastRowIndex;
+      previousLastRowIndex.current = lastRowIndex;
 
       const paginationModel = gridPaginationModelSelector(privateApiRef);
       const sortModel = gridSortModelSelector(privateApiRef);
       const filterModel = gridFilterModelSelector(privateApiRef);
       const getRowsParams: GridGetRowsParams = {
-        start: renderContext.lastRowIndex,
-        end: renderContext.lastRowIndex + paginationModel.pageSize - 1,
+        start: lastRowIndex,
+        end: lastRowIndex + paginationModel.pageSize - 1,
         sortModel,
         filterModel,
       };

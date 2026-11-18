@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 
 const resources: SchedulerResource[] = [

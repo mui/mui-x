@@ -2,10 +2,8 @@ import * as React from 'react';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import {
-  PickersTextField,
-  PickersTextFieldProps,
-} from '@mui/x-date-pickers/PickersTextField';
+import type { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
+import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 

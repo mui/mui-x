@@ -41,12 +41,15 @@ export function createGetRangeBarDimensions(params: {
     const maxValueCoord = Math.round(Math.max(...valueCoordinates));
 
     const barSize = maxValueCoord - minValueCoord;
+    // The coordinate of the range start on the value axis, it tells in which direction the bar goes.
+    const startCoordinate = Math.round(valueCoordinates[0]);
 
     return {
       x: verticalLayout ? xScale(baseValue)! + barOffset : minValueCoord,
       y: verticalLayout ? minValueCoord : yScale(baseValue)! + barOffset,
       height: verticalLayout ? barSize : barWidth,
       width: verticalLayout ? barWidth : barSize,
+      startCoordinate,
     };
   };
 }

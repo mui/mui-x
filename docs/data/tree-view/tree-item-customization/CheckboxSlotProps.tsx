@@ -3,11 +3,8 @@ import Box from '@mui/material/Box';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import {
-  TreeItem,
-  TreeItemProps,
-  TreeItemSlotProps,
-} from '@mui/x-tree-view/TreeItem';
+import type { TreeItemProps, TreeItemSlotProps } from '@mui/x-tree-view/TreeItem';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { MUI_X_PRODUCTS } from '../datasets/disabledAndEditableProducts';
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(

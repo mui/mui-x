@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { SxProps, Theme } from '@mui/system';
 import { ComposerLabel } from '@mui/x-chat-headless';
-import type { ComposerLabelProps } from '@mui/x-chat-headless';
+import type { ComposerLabelProps, ComposerLabelSlots } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatComposerUtilityClasses } from './chatComposerClasses';
@@ -12,9 +12,17 @@ import type { ChatComposerClasses } from './chatComposerClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerLabel');
 
+export interface ChatComposerLabelSlots extends ComposerLabelSlots {}
+
 export interface ChatComposerLabelProps extends ComposerLabelProps {
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<ChatComposerClasses>;
 }
 
@@ -70,6 +78,9 @@ ChatComposerLabel.propTypes /* remove-proptypes */ = {
    * omitted, so the default is consistent with the textarea's `aria-label`.
    */
   children: PropTypes.node,
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
@@ -79,8 +90,19 @@ ChatComposerLabel.propTypes /* remove-proptypes */ = {
    * clicking the label focuses the input and screen readers announce it on focus.
    */
   htmlFor: PropTypes.string,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

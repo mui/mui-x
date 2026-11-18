@@ -30,7 +30,7 @@ function CustomToolbar() {
     setNewPanelOpen(false);
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = (event: React.SubmitEvent) => {
     event.preventDefault();
     const formData = new FormData(event.target as HTMLFormElement);
     apiRef.current.updateRows([

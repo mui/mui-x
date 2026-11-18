@@ -27,7 +27,6 @@ export const GRID_FORMULA_ROW_NUMBER_COL_DEF: GridColDef = {
   disableColumnMenu: true,
   disableExport: true,
   disableReorder: true,
-  // @ts-ignore — premium-only flags not on the community `GridColDef` type.
   aggregable: false,
   groupable: false,
   chartable: false,

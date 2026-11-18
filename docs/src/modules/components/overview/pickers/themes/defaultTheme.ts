@@ -1,6 +1,6 @@
-import { ThemeOptions } from '@mui/material/styles';
+import type { ThemeOptions } from '@mui/material/styles';
 import { purple, pink } from '@mui/material/colors';
-import { Config, PaletteMode } from './themes.types';
+import type { Config, PaletteMode } from './themes.types';
 
 declare module '@mui/material/styles' {
   interface Mixins {

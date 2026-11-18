@@ -5,7 +5,8 @@ import traverse from '@babel/traverse';
 import * as prettier from 'prettier';
 import * as babel from '@babel/core';
 import * as babelTypes from '@babel/types';
-import yargs, { ArgumentsCamelCase } from 'yargs';
+import type { ArgumentsCamelCase } from 'yargs';
+import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { Octokit } from '@octokit/rest';
 import { retry } from '@octokit/plugin-retry';
@@ -16,7 +17,6 @@ import {
 } from '../docs/constants';
 import { resolvePrettierConfigPath } from '../docs/scripts/utils';
 
-// @ts-ignore
 const MyOctokit = Octokit.plugin(retry);
 
 const GIT_ORGANIZATION = 'mui';
