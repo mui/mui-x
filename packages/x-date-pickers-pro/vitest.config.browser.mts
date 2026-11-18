@@ -6,12 +6,6 @@ import { getTestName } from '../../scripts/getTestName.mts';
 export default mergeConfig(
   sharedConfig,
   defineConfig({
-    optimizeDeps: {
-      entries: [
-        fileURLToPath(new URL('./src/**/*.test.{ts,tsx}', import.meta.url)),
-        '!**/materialVersion.test.tsx',
-        fileURLToPath(new URL('../../test/utils/RtlProvider.tsx', import.meta.url)),
-      ],
     },
     test: {
       name: getTestName(import.meta.url),
