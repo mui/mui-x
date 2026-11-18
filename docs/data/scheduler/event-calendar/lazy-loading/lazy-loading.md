@@ -21,6 +21,7 @@ To enable lazy loading, pass a `dataSource` object with a `getEvents` method to 
 The `getEvents` method receives a date range and should return a promise that resolves with the events for that range.
 The `start` and `end` of the range are instants that bound the visible days of `displayTimezone`.
 Compare them with the instants of your events, or read their days in `displayTimezone`, as the timezone of the browser can put them on other days.
+The `start` and `end` of an all-day event are `YYYY-MM-DD` dates, `end` being the day after its last day: compare them with the dates of the range in `displayTimezone`.
 
 When you provide `dataSource`, you don't need the `events` prop—events are fetched through the data source instead.
 

@@ -8,7 +8,6 @@
  * get the library in our `node_modules` and appropriately build it.
  */
 import fs from 'fs/promises';
-import { createRequire } from 'module';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -37,7 +36,7 @@ const getEsmIndex = (pkg) => `// \`x-charts-vendor/${pkg.name}\` (ESM)
 export * from "${pkg.name}";
 `;
 
-const getEsmDefaultExport = (pkg) => `export { default } from "${pkg.name}";
+const getDefaultExport = (source) => `export { default } from "${source}";
 `;
 
 const getCjsIndex = (pkg) => `// \`x-charts-vendor/${pkg.name}\` (CommonJS)
@@ -47,10 +46,10 @@ const getCjsIndex = (pkg) => `// \`x-charts-vendor/${pkg.name}\` (CommonJS)
 module.exports = require("./lib-vendor/${getVendorEntry(pkg.name).output}");
 `;
 
-const getTypeDefinitionFile = (pkg) => `// \`x-charts-vendor/${pkg.name}\` (TypeScript)
+const getTypeDefinitionFile = (pkg, source) => `// \`x-charts-vendor/${pkg.name}\` (TypeScript)
 //
 // Export the type definitions for this package:
-export * from "${pkg.name}";
+export * from "${source}";
 `;
 
 const DEFAULT_EXPORT_PKGS = new Set(['flatqueue']);
@@ -64,7 +63,7 @@ const generateExports = (pkgNames) => {
   for (const pkgName of pkgNames) {
     exports[`./${pkgName}`] = {
       import: {
-        types: `./${pkgName}.d.ts`,
+        types: `./${pkgName}.d.mts`,
         default: `./${pkgName}.mjs`,
       },
       require: {
@@ -72,7 +71,7 @@ const generateExports = (pkgNames) => {
         default: `./${pkgName}.js`,
       },
       default: {
-        types: `./${pkgName}.d.ts`,
+        types: `./${pkgName}.d.mts`,
         default: `./${pkgName}.mjs`,
       },
     };
@@ -87,16 +86,6 @@ const main = async () => {
   const pkgs = (await fs.readdir(path.resolve(__dirname, '../node_modules/'))).filter((name) =>
     /^(d3-|internmap|flatqueue)/.test(name),
   );
-
-  // Safety check: we assume that **all** are flattened to root level of this
-  // package, and want to make sure there are no nested dependencies.
-  for (const pkgName of pkgs) {
-    const pkgModsPath = path.resolve(__dirname, `../node_modules/git${pkgName}/node_modules`);
-    const stat = await fs.lstat(pkgModsPath).catch(() => null);
-    if (stat) {
-      throw new Error(`Found nested modules: ${pkgModsPath}`);
-    }
-  }
 
   // Clean out and ensure build directory exists
   const VendorBasePath = path.join(BUILD_DIR, 'lib-vendor');
@@ -145,13 +134,20 @@ const main = async () => {
 
     // Generate ESM index
     const esmContent =
-      getEsmIndex(pkg) + (DEFAULT_EXPORT_PKGS.has(pkgName) ? getEsmDefaultExport(pkg) : '');
+      getEsmIndex(pkg) + (DEFAULT_EXPORT_PKGS.has(pkgName) ? getDefaultExport(pkg.name) : '');
 
     // Generate CJS index
     const cjsContent = getCjsIndex(pkg);
 
-    // Generate type definitions
-    const typeContent = getTypeDefinitionFile(pkg);
+    // Generate type definitions. CommonJS declarations cannot import ESM-only packages with
+    // `module: node16`, so packages that ship their own types get a copy next to the CJS sources.
+    const getTypeContent = (source) =>
+      getTypeDefinitionFile(pkg, source) +
+      (DEFAULT_EXPORT_PKGS.has(pkgName) ? getDefaultExport(source) : '');
+    const ownTypes = pkg.types ?? pkg.typings;
+    if (ownTypes) {
+      await fs.copyFile(path.join(pkgBase, ownTypes), path.join(libVendorPath, 'index.d.ts'));
+    }
 
     // Write files directly to build directory
     await Promise.all([
@@ -160,7 +156,11 @@ const main = async () => {
       // CJS
       fs.writeFile(path.join(BUILD_DIR, `${pkgName}.js`), cjsContent),
       // Types
-      fs.writeFile(path.join(BUILD_DIR, `${pkgName}.d.ts`), typeContent),
+      fs.writeFile(path.join(BUILD_DIR, `${pkgName}.d.mts`), getTypeContent(pkg.name)),
+      fs.writeFile(
+        path.join(BUILD_DIR, `${pkgName}.d.ts`),
+        getTypeContent(ownTypes ? `./lib-vendor/${pkg.name}/index.js` : pkg.name),
+      ),
       // Copy license to lib-vendor
       fs.copyFile(path.join(pkgBase, 'LICENSE'), path.join(libVendorPath, 'LICENSE')).catch(() => {
         // The package has no license file
@@ -190,7 +190,7 @@ const main = async () => {
 
   // Without an allowlist, the packer falls back to inherited ignore files, and the whole build
   // output matches the repository `.gitignore` (`build/`, `dist/`). See https://github.com/pnpm/pnpm/pull/13231
-  buildPkg.files = ['*.js', '*.mjs', '*.d.ts', 'lib-vendor'];
+  buildPkg.files = ['*.js', '*.mjs', '*.d.ts', '*.d.mts', 'lib-vendor'];
 
   await fs.writeFile(path.join(BUILD_DIR, 'package.json'), JSON.stringify(buildPkg, null, 2));
 
@@ -198,14 +198,37 @@ const main = async () => {
   log('Copying README.md to build directory.');
   await fs.copyFile(path.resolve(__dirname, '../README.md'), path.join(BUILD_DIR, 'README.md'));
 
-  // Load each CommonJS entry, so that a broken vendor build fails here instead of in user code.
-  log('Checking CommonJS entries.');
-  const require = createRequire(import.meta.url);
-  for (const pkgName of vendorPkgNames) {
-    const entryPath = path.join(BUILD_DIR, `${pkgName}.js`);
-    if (Object.keys(require(entryPath)).length === 0) {
-      throw new Error(`The CommonJS entry ${entryPath} has no exports.`);
-    }
+  // Pack the package like the publish does, and require each CommonJS entry of the tarball in a
+  // Node process that cannot `require()` ES modules, like Jest. A broken build or packing fails
+  // here instead of in user code.
+  log('Checking the packed CommonJS entries.');
+  const packDir = path.resolve(__dirname, '../.pack-check');
+  const extractDir = path.join(packDir, 'node_modules/@mui/x-charts-vendor');
+  await rimraf(packDir);
+  await fs.mkdir(extractDir, { recursive: true });
+  try {
+    const { stdout } = await execa('pnpm', ['pack', '--pack-destination', packDir, '--json'], {
+      cwd: path.resolve(__dirname, '..'),
+    });
+    const { filename } = JSON.parse(stdout);
+    // GNU tar reads `C:\...` as a remote `host:file` archive.
+    await execa(
+      'tar',
+      ['-xzf', path.basename(filename), '-C', extractDir, '--strip-components=1'],
+      { cwd: packDir },
+    );
+    const entries = vendorPkgNames.map((pkgName) => `@mui/x-charts-vendor/${pkgName}`);
+    const script = `for (const entry of ${JSON.stringify(entries)}) {
+  if (Object.keys(require(entry)).length === 0) {
+    throw new Error('The CommonJS entry ' + entry + ' has no exports.');
+  }
+}`;
+    await execa(process.execPath, ['--no-experimental-require-module', '-e', script], {
+      cwd: packDir,
+      stdio: 'inherit',
+    });
+  } finally {
+    await rimraf(packDir);
   }
 };
 

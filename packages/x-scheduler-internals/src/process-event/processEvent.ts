@@ -1,10 +1,11 @@
 import { warnOnce } from '@mui/x-internals/warning';
-import type { SchedulerEvent, SchedulerProcessedEvent } from '../models';
+import type { SchedulerEvent, SchedulerProcessedDate, SchedulerProcessedEvent } from '../models';
+import type { BaseTemporal } from '../internals/utils/base-temporal';
 import { createProcessedDate } from '../process-date/processDate';
-import { normalizeAllDayBounds } from '../internals/utils/plain-date-utils/date';
-import { toPlainDateTime } from '../internals/utils/plain-date-utils/timeZone';
+import { toEpochMs, toPlainDateTime } from '../internals/utils/plain-date-utils/timeZone';
 import type { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
 import { resolveEventTimestamp } from './resolveEventTimestamp';
+import { readAllDayBounds, readAllDayExDate } from './readAllDayDate';
 
 export function processEvent(
   model: SchedulerEvent,
@@ -20,13 +21,29 @@ export function processEvent(
     );
   }
 
-  const dataStart = resolveEventTimestamp(model.start, dataTimezone, model.id);
-  const dataEnd = resolveEventTimestamp(model.end, dataTimezone, model.id);
-  const exDates = model.exDates?.map((exDate) =>
-    toPlainDateTime(resolveEventTimestamp(exDate, dataTimezone, model.id), dataTimezone),
-  );
-
-  const displayBounds = normalizeAllDayBounds(dataStart, dataEnd, model.allDay, displayTimezone);
+  let start: SchedulerProcessedDate;
+  let end: SchedulerProcessedDate;
+  let exDates: BaseTemporal.PlainDateTime[] | undefined;
+  if (model.allDay) {
+    // An all-day event is a span of dates: it covers the same days in every timezone, so its
+    // bounds are the first instants of those days in the display timezone.
+    const bounds = readAllDayBounds(model);
+    start = createProcessedDate(toEpochMs(bounds.start, displayTimezone), displayTimezone);
+    end = createProcessedDate(toEpochMs(bounds.end, displayTimezone), displayTimezone);
+    exDates = model.exDates?.map((exDate) => readAllDayExDate(exDate, model.id).toPlainDateTime());
+  } else {
+    start = createProcessedDate(
+      resolveEventTimestamp(model.start, dataTimezone, model.id),
+      displayTimezone,
+    );
+    end = createProcessedDate(
+      resolveEventTimestamp(model.end, dataTimezone, model.id),
+      displayTimezone,
+    );
+    exDates = model.exDates?.map((exDate) =>
+      toPlainDateTime(resolveEventTimestamp(exDate, dataTimezone, model.id), dataTimezone),
+    );
+  }
 
   if (recurringEventsPlugin == null && model.rrule != null) {
     if (process.env.NODE_ENV !== 'production') {
@@ -49,8 +66,8 @@ export function processEvent(
     id: model.id,
     title: model.title,
     description: model.description,
-    start: createProcessedDate(displayBounds.start, displayTimezone),
-    end: createProcessedDate(displayBounds.end, displayTimezone),
+    start,
+    end,
     timezone: dataTimezone,
     rrule: parsedDataRRule,
     exDates,
@@ -63,6 +80,5 @@ export function processEvent(
     draggable: model.draggable,
     resizable: model.resizable,
     className: model.className,
-    unstable_internalInfos: { displayTimezone, dataStart, dataEnd },
   };
 }

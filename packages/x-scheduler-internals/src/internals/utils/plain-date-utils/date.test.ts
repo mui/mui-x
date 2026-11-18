@@ -1,7 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { createDate, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
-import { createProcessedDate, isInstantString, parseWallTimeString } from './date';
+import {
+  createProcessedDate,
+  isInstantString,
+  parseWallTimeString,
+  snapAllDayBounds,
+} from './date';
 import { getMinutesInDay } from './plainDate';
 import { toPlainDate } from './timeZone';
 
@@ -180,6 +185,62 @@ describe('plain-date-utils/date', () => {
       expect(resolve('2025-01-01 09:00', 'UTC')).to.equal(null);
       expect(resolve('20250101', 'UTC')).to.equal(null);
       expect(resolve('2025-01-01T09:00', 'Not/A_Timezone')).to.equal(null);
+    });
+  });
+
+  describe('snapAllDayBounds', () => {
+    const read = (bounds: { start: number; end: number }) => [
+      new Date(bounds.start).toISOString(),
+      new Date(bounds.end).toISOString(),
+    ];
+
+    it('should keep day-aligned exclusive bounds', () => {
+      const start = Date.UTC(2025, 6, 4);
+      const end = Date.UTC(2025, 6, 6);
+      expect(snapAllDayBounds(start, end, 'UTC')).to.deep.equal({ start, end });
+    });
+
+    it('should floor the start and ceil the end to the next day', () => {
+      expect(
+        read(snapAllDayBounds(Date.UTC(2025, 6, 4, 10, 30), Date.UTC(2025, 6, 5, 18), 'UTC')),
+      ).to.deep.equal(['2025-07-04T00:00:00.000Z', '2025-07-06T00:00:00.000Z']);
+    });
+
+    it('should give one day to an end on or before the start', () => {
+      const start = Date.UTC(2025, 6, 4, 10);
+      const oneDay = ['2025-07-04T00:00:00.000Z', '2025-07-05T00:00:00.000Z'];
+      expect(read(snapAllDayBounds(start, Date.UTC(2025, 6, 4, 9), 'UTC'))).to.deep.equal(oneDay);
+      expect(read(snapAllDayBounds(start, Date.UTC(2025, 6, 3, 12), 'UTC'))).to.deep.equal(oneDay);
+    });
+
+    it('should keep one day across a 23-hour day', () => {
+      // Europe/Paris springs forward from 02:00 CET to 03:00 CEST on March 29th, 2026.
+      const start = Date.UTC(2026, 2, 28, 23); // March 29th 00:00 CET
+      const end = Date.UTC(2026, 2, 29, 21); // March 29th 23:00 CEST
+      expect(read(snapAllDayBounds(start, end, 'Europe/Paris'))).to.deep.equal([
+        '2026-03-28T23:00:00.000Z',
+        '2026-03-29T22:00:00.000Z', // March 30th 00:00 CEST
+      ]);
+    });
+
+    it('should end at the next midnight when a DST transition repeats the last hour', () => {
+      // America/Santiago falls back from 00:00 -03:00 to 23:00 -04:00 on April 6th, 2024.
+      const start = Date.UTC(2024, 3, 6, 3); // April 6th 00:00 -03:00
+      const end = Date.UTC(2024, 3, 6, 15); // April 6th 12:00 -03:00
+      expect(read(snapAllDayBounds(start, end, 'America/Santiago'))).to.deep.equal([
+        '2024-04-06T03:00:00.000Z',
+        '2024-04-07T04:00:00.000Z', // April 7th 00:00 -04:00
+      ]);
+    });
+
+    it('should start at the first instant of a day without midnight', () => {
+      // America/Havana springs forward at midnight on March 9th, 2025: that day starts at 01:00.
+      const start = Date.UTC(2025, 2, 9, 16); // March 9th 12:00 -04:00
+      const end = Date.UTC(2025, 2, 9, 17); // March 9th 13:00 -04:00
+      expect(read(snapAllDayBounds(start, end, 'America/Havana'))).to.deep.equal([
+        '2025-03-09T05:00:00.000Z', // March 9th 01:00 -04:00
+        '2025-03-10T04:00:00.000Z', // March 10th 00:00 -04:00
+      ]);
     });
   });
 });

@@ -89,7 +89,12 @@ export function innerGetEventOccurrencesGroupedByDay(
   });
 
   for (const occurrence of occurrences) {
-    const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, days, dayNumbers);
+    const eventDays = getDaysTheOccurrenceIsVisibleOn(
+      occurrence,
+      days,
+      dayNumbers,
+      displayTimezone,
+    );
     for (const dayKey of eventDays) {
       occurrenceMap.get(dayKey)!.push(occurrence);
     }
