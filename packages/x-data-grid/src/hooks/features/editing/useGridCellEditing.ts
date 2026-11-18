@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import type { RefObject } from '@mui/x-internals/types';
 import { errorOnce } from '@mui/x-internals/warning';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -126,7 +127,11 @@ export const useGridCellEditing = (
         return;
       }
       const newParams = { ...params, reason: GridCellEditStopReasons.cellFocusOut };
-      apiRef.current.publishEvent('cellEditStop', newParams, event);
+      // React 17 does not batch updates in native listeners. Without the batch, the row
+      // commits before the other `cellEditStop` listeners run, for example the undo history.
+      ReactDOM.unstable_batchedUpdates(() => {
+        apiRef.current.publishEvent('cellEditStop', newParams, event);
+      });
     },
     [apiRef],
   );

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import type { RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
@@ -181,7 +182,11 @@ export const useGridRowEditing = (
             field: params.field,
             reason: GridRowEditStopReasons.rowFocusOut,
           };
-          apiRef.current.publishEvent('rowEditStop', newParams, event);
+          // React 17 does not batch updates in timeouts. Without the batch, the row commits
+          // before the other `rowEditStop` listeners run, for example the undo history.
+          ReactDOM.unstable_batchedUpdates(() => {
+            apiRef.current.publishEvent('rowEditStop', newParams, event);
+          });
         }
       });
     },

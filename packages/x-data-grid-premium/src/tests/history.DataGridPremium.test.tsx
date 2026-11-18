@@ -120,6 +120,26 @@ describe('<DataGridPremium /> - History', () => {
       expect(result).to.equal(true);
       expect(apiRef.current!.getRow(3).currencyPair).to.equal(originalValue);
     });
+
+    it('should undo a row edit that stops on a click in another row', async () => {
+      const { user } = render(<Test editMode="row" />);
+      const originalValue = apiRef.current!.getRow(0).price1M;
+
+      await user.dblClick(getCell(0, 2));
+      await user.keyboard('10000');
+      await user.click(getCell(1, 2));
+      // The row edit stops in a timeout after the focus leaves the row
+      await waitFor(() => {
+        expect(apiRef.current!.getRow(0).price1M).not.to.equal(originalValue);
+      });
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+
+      expect(apiRef.current!.getRow(0).price1M).to.equal(originalValue);
+    });
   });
 
   describe('Row updates through API', () => {
