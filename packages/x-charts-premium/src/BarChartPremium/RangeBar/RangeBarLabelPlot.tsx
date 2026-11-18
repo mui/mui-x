@@ -32,6 +32,13 @@ export function RangeBarLabelPlot(props: RangeBarLabelPlotProps) {
   return (
     <g className={className} data-series={seriesId}>
       {data.map(({ dataIndex, color, value, x, y, width, height, hidden, startCoordinate }) => {
+        // `barLabel` gets the size of the whole bar, even when the slot only gets half of it.
+        const label = getRangeBarLabel({ barLabel, value, dataIndex, seriesId, height, width });
+
+        if (!label) {
+          return null;
+        }
+
         // Range bars grow from their center, so it is the label origin.
         // `outside` labels get the half of the bar that contains the end of the range, to follow its edge.
         const centerX = x + width / 2;
@@ -70,8 +77,7 @@ export function RangeBarLabelPlot(props: RangeBarLabelPlotProps) {
             hidden={hidden}
             slots={slots}
             slotProps={slotProps}
-            // `barLabel` gets the size of the whole bar, even when the slot only gets half of it.
-            label={getRangeBarLabel({ barLabel, value, dataIndex, seriesId, height, width })}
+            label={label}
             barLabelPlacement={barLabelPlacement}
           />
         );

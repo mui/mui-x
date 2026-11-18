@@ -40,27 +40,27 @@ export type BarLabelItemProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighligh
      */
     slots?: BarLabelSlots;
     /**
-     * The position in the x-axis of the stack this bar label belongs to.
+     * The position in the x-axis of the origin the bar grows from.
      */
     xOrigin: number;
     /**
-     * The position in the y-axis of the stack this bar label belongs to.
+     * The position in the y-axis of the origin the bar grows from.
      */
     yOrigin: number;
     /**
-     * The position of the bar in the x-axis.
+     * The position of the box the label is placed in, in the x-axis.
      */
     x: number;
     /**
-     * The position of the bar in the y-axis.
+     * The position of the box the label is placed in, in the y-axis.
      */
     y: number;
     /**
-     * The height of the bar.
+     * The height of the box the label is placed in.
      */
     height: number;
     /**
-     * The width of the bar.
+     * The width of the box the label is placed in.
      */
     width: number;
     /**
@@ -81,7 +81,7 @@ export type BarLabelItemProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighligh
      * The text of the label, formatted from the `barLabel` property of the series.
      * Nothing is rendered if it is empty.
      */
-    label: string | null | undefined;
+    label: string | number | null | undefined;
     /**
      * The placement of the bar label.
      * It controls whether the label is rendered in the center or outside the bar.
@@ -178,14 +178,14 @@ BarLabelItem.propTypes = {
   color: PropTypes.string.isRequired,
   dataIndex: PropTypes.number.isRequired,
   /**
-   * The height of the bar.
+   * The height of the box the label is placed in.
    */
   height: PropTypes.number.isRequired,
   /**
    * The text of the label, formatted from the `barLabel` property of the series.
    * Nothing is rendered if it is empty.
    */
-  label: PropTypes.string,
+  label: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * The type of the series the bar belongs to.
@@ -204,7 +204,7 @@ BarLabelItem.propTypes = {
    */
   slots: PropTypes.object,
   /**
-   * The width of the bar.
+   * The width of the box the label is placed in.
    */
   width: PropTypes.number.isRequired,
 } as any;
