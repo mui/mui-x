@@ -2520,6 +2520,13 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         formula: '=qty + 1',
         expected: 7,
       },
+      {
+        name: 'a cell formula reading a draft cell of another row of another type',
+        qty: '=IFERROR(REF(COLUMN("total"), ROW(1)), 99)',
+        model: [define('total', '=price * 2')],
+        formula: '=IF(price = 10, "a", qty + 1)',
+        expected: 100,
+      },
     ])('previews the applied result through $name', async ({ qty, model, formula, expected }) => {
       await render(
         <Test
@@ -2539,6 +2546,27 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       fireEvent.click(getButton('Apply'));
       await microtasks();
       expect(apiRef.current!.getCellValue(2, 'total')).to.equal(expected);
+    });
+
+    it('previews a long chain of cell formulas across the rows', async () => {
+      const length = 2000;
+      await render(
+        <Test
+          {...cycleProps}
+          autoHeight={false}
+          disableVirtualization={false}
+          rows={Array.from({ length }, (_, index) => ({
+            id: index + 1,
+            price: 1,
+            qty: index === 0 ? 1 : `=REF(COLUMN("total"), ROW(${index}))`,
+          }))}
+          initialState={{ computedColumns: { model: [define('total', '=qty + 1')] } }}
+        />,
+      );
+      await openEditor('total', { sampleRowId: length });
+      typeFormula('=qty + 2');
+      await advancePreview();
+      expect(getPreviewText()).to.equal('4,001');
     });
 
     const readerRows = [

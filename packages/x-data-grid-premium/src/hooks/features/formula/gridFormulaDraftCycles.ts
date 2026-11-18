@@ -367,11 +367,12 @@ export function isDraftCellCyclic(
 }
 
 /**
- * The nodes of the draft graph from `cell` that read the computed column draft, directly or not.
+ * The cells that `cell` reads and that read the computed column draft, directly or not,
+ * the cells of the draft included, each after the cells it reads.
  * @param {RefObject<GridPrivateApiPremium>} apiRef The private grid api.
  * @param {{ field: string; fieldRefs: ReadonlySet<string> }} owner The computed column draft.
  * @param {FormulaCellRef} cell A cell of the column.
- * @returns {Set<FormulaCellKey> | null} The nodes, or `null` when `cell` would be `#CYCLE!`.
+ * @returns {Set<FormulaCellKey> | null} The cells, or `null` when `cell` would be `#CYCLE!`.
  */
 export function getComputedColumnDraftReaders(
   apiRef: RefObject<GridPrivateApiPremium>,
@@ -384,16 +385,22 @@ export function getComputedColumnDraftReaders(
     return readers;
   }
   const key = createFormulaCellKey(cell.id, cell.field);
-  const { graph, order, cyclic, ownerNodes } = buildDraftGraph(apiRef, cache, owner, [key]);
+  const { graph, order, cyclic, ownerNodes, rangeFields } = buildDraftGraph(apiRef, cache, owner, [
+    key,
+  ]);
   if (cyclic.has(key)) {
     return null;
   }
+  const readerNodes = new Set<FormulaCellKey>();
   for (const node of order) {
     if (
       ownerNodes.has(node) ||
-      Array.from(graph.get(node) ?? []).some((successor) => readers.has(successor))
+      Array.from(graph.get(node) ?? []).some((successor) => readerNodes.has(successor))
     ) {
-      readers.add(node);
+      readerNodes.add(node);
+      if (!rangeFields.has(node)) {
+        readers.add(node);
+      }
     }
   }
   return readers;

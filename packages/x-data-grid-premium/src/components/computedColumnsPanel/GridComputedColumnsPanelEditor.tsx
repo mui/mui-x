@@ -668,7 +668,8 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
   // A new column before it has a name: the reference model and the preview need an owner cell.
   const ownerField = draftDefinition.field === '' ? DRAFT_COMPUTED_FIELD : draftDefinition.field;
 
-  // A type that follows the preview is inferred without it: inferring could flip it back and forth.
+  // A type that follows the preview is inferred without coercing the other rows to it:
+  // inferring could flip it back and forth.
   const previewType = typeTouched ? draftDefinition.type : undefined;
   const computePreview = React.useCallback(
     (rowId: GridRowId, type?: GridComputedColumnType, onOtherRowEvaluated?: () => void) =>
@@ -690,7 +691,7 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
   // editor tells by itself:
   // - the data of the preview row (`updateRows`, a replaced `rows` prop) — the
   //   row-scoped selector ignores the updates of the other rows;
-  // - the data of every row, once the draft is evaluated on other rows for the
+  // - the data of the other rows, once the draft is evaluated on them for the
   //   cell formulas that read it;
   // - the revision: the getters of the referenced columns (computed or not) and
   //   the function registry;
@@ -698,8 +699,7 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
   //   touched, and the revision only follows the fields the STORED computed
   //   columns reference.
   const previewRow = useGridSelector(apiRef, gridRowSelector, previewRowId as GridRowId);
-  const [readsOtherRows, setReadsOtherRows] = React.useState(false);
-  const followedRowsLookup = readsOtherRows ? rowsLookup : null;
+  const readsOtherRowsRef = React.useRef(false);
   const revision = useGridSelector(apiRef, gridComputedColumnsRevisionSelector);
   const [evaluationTick, setEvaluationTick] = React.useState(0);
   const handleFormulaEvaluated: GridEventListener<'formulaEvaluated'> = ({ changedCells }) => {
@@ -708,9 +708,16 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
     }
   };
   useGridEvent(apiRef, 'formulaEvaluated', handleFormulaEvaluated);
+  const handleRowsSet = () => {
+    if (readsOtherRowsRef.current) {
+      setEvaluationTick((prev) => prev + 1);
+    }
+  };
+  useGridEvent(apiRef, 'rowsSet', handleRowsSet);
 
   React.useEffect(() => {
     if (previewRowId === null || expression === '') {
+      readsOtherRowsRef.current = false;
       setRawPreview(null);
       setAppliedPreview(null);
       return undefined;
@@ -720,8 +727,8 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
       const result = computePreview(previewRowId, previewType, () => {
         otherRowEvaluated = true;
       });
+      readsOtherRowsRef.current = otherRowEvaluated;
       setRawPreview(result);
-      setReadsOtherRows(otherRowEvaluated);
       setAppliedPreview(
         otherRowEvaluated && previewType === undefined
           ? computePreview(previewRowId, getInferredType(result))
@@ -736,7 +743,6 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
     previewType,
     getInferredType,
     previewRow,
-    followedRowsLookup,
     revision,
     evaluationTick,
   ]);
