@@ -350,7 +350,7 @@ export function applyRecurringUpdateOnlyThis(
   // The original series excludes the occurrence, like a deletion.
   return {
     created: [extractStandaloneEvent(originalEvent, stringifiedChanges)],
-    ...applyRecurringDeleteOnlyThis(originalEvent, occurrence, displayTimezone),
+    ...applyRecurringDeleteOnlyThis(originalEvent, occurrence),
   };
 }
 

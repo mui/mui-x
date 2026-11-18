@@ -10,6 +10,7 @@ import {
   utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
 import type {
+  RecurringEventScope,
   SchedulerEvent,
   SchedulerEventId,
   SchedulerEventModelStructure,
@@ -2980,6 +2981,61 @@ premiumStoreClasses.forEach((storeClass) => {
             updatedEvents.find((item) => item.id === 'report')!;
           expect(updated.rrule).to.deep.equal({ freq: 'MONTHLY', interval: 1, byMonthDay: [20] });
         });
+      });
+    });
+
+    describe('Method: deleteRecurringEvent', () => {
+      // December 30th, 2011 does not exist in Pacific/Apia: the two-day occurrence of that date,
+      // from a weekly series of Fridays, only shows on December 31st.
+      const createApiaStore = (onEventsChange: (events: SchedulerEvent[]) => void) =>
+        new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [
+            EventBuilder.new()
+              .id('trip')
+              .span('2011-12-23', '2011-12-25', { allDay: true })
+              .rrule({ freq: 'WEEKLY' })
+              .build(),
+          ],
+          displayTimezone: 'Pacific/Apia',
+          onEventsChange,
+        });
+
+      const deleteSkippedDayOccurrence = (scope: RecurringEventScope) => {
+        const onEventsChange = vi.fn();
+        const store = createApiaStore(onEventsChange);
+        const occurrence = createStoreOccurrence(
+          store,
+          'trip',
+          createDate('2011-12-31T00:00:00', 'Pacific/Apia'),
+        );
+        expect(occurrence.key).to.equal('trip::2011-12-30');
+
+        store.deleteRecurringEvent({ occurrence });
+        store.selectRecurringEventScope(scope);
+
+        return onEventsChange.mock.lastCall![0][0] as SchedulerEvent;
+      };
+
+      it("should exclude the occurrence of a date the display timezone skips with scope 'only-this'", () => {
+        const updated = deleteSkippedDayOccurrence('only-this');
+
+        expect(updated.exDates).to.deep.equal(['2011-12-30']);
+        const keys = schedulerRecurringEventsPlugin
+          .getOccurrencesForVisibleDays(
+            processEvent(updated, 'Pacific/Apia', schedulerRecurringEventsPlugin),
+            createDate('2011-12-31T00:00:00', 'Pacific/Apia').getTime(),
+            createDate('2011-12-31T00:00:00', 'Pacific/Apia').getTime(),
+            'Pacific/Apia',
+          )
+          .map((occurrence) => occurrence.key);
+        expect(keys).to.deep.equal([]);
+      });
+
+      it("should end the series before the occurrence of a date the display timezone skips with scope 'this-and-following'", () => {
+        const updated = deleteSkippedDayOccurrence('this-and-following');
+
+        expect((updated.rrule as SchedulerEventRecurrenceRule).until).to.equal('2011-12-29');
       });
     });
 

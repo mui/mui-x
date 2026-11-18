@@ -185,6 +185,45 @@ describe('getUpdatedEventModelFromChanges', () => {
     expect(updated.rrule).to.deep.equal({ freq: 'DAILY', until: '2025-03-08' });
   });
 
+  it.each<{ kind: string; model: SchedulerEvent; exDate: string }>([
+    {
+      kind: 'an all-day',
+      model: {
+        id: '1',
+        title: 'Holiday',
+        start: '2025-07-04',
+        end: '2025-07-05',
+        allDay: true,
+        rrule: { freq: 'WEEKLY' },
+      },
+      exDate: '2025-07-11',
+    },
+    {
+      kind: 'a timed',
+      model: {
+        id: '1',
+        title: 'Standup',
+        start: '2025-07-04T20:00:00',
+        end: '2025-07-04T21:00:00',
+        timezone: 'America/New_York',
+        rrule: { freq: 'WEEKLY' },
+      },
+      exDate: '2025-07-11T20:00:00',
+    },
+  ])(
+    'should write the exception dates of $kind series given as strings as they are',
+    ({ model, exDate }) => {
+      const updated = getUpdatedEventModelFromChanges(
+        model,
+        { id: '1', exDates: [exDate] },
+        undefined,
+        model,
+        'Asia/Tokyo',
+      );
+      expect(updated.exDates).to.deep.equal([exDate]);
+    },
+  );
+
   it.each<[NonNullable<SchedulerEvent['rrule']>, NonNullable<SchedulerEvent['rrule']>]>([
     [
       { freq: 'DAILY', until: '2025-07-08' },

@@ -57,7 +57,6 @@ export interface SchedulerRecurringEventsPluginInterface {
     originalEvent: SchedulerProcessedEvent,
     occurrence: SchedulerEventOccurrence,
     scope: RecurringEventScope,
-    displayTimezone: string,
   ): UpdateEventsParameters;
 
   /**

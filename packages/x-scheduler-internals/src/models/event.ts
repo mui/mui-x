@@ -432,9 +432,10 @@ export type SchedulerEventUpdatedProperties = Omit<
    */
   end?: Date;
   /**
-   * For an all-day event, the first instants of its days in the display timezone.
+   * For an all-day event, the first instants of its days in the display timezone, or its
+   * `YYYY-MM-DD` dates. A string is written as is.
    */
-  exDates?: Date[];
+  exDates?: (string | Date)[];
   rrule?: SchedulerProcessedEventRecurrenceRule | string;
 };
 

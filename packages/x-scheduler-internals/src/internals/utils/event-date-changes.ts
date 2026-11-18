@@ -153,9 +153,16 @@ export function stringifyEventDateChanges(
       result.end = timestampToEventString(end, model.end, timezone);
     }
     if (changes.exDates != null) {
-      // A new exception date matches the format of the one it replaces, or of start.
+      // A new exception date matches the format of the one it replaces, or of start. A string is
+      // written as is.
       result.exDates = changes.exDates.map((exDate, index) =>
-        timestampToEventString(exDate.getTime(), model.exDates?.[index] ?? model.start, timezone),
+        typeof exDate === 'string'
+          ? exDate
+          : timestampToEventString(
+              exDate.getTime(),
+              model.exDates?.[index] ?? model.start,
+              timezone,
+            ),
       );
     } else if (becomesTimed && model.exDates != null && start != null) {
       const timedStart = start;
@@ -206,7 +213,9 @@ export function stringifyEventDateChanges(
   }
   if (changes.exDates != null) {
     result.exDates = changes.exDates.map((exDate) =>
-      allDayBoundToEventString(exDate.getTime(), displayTimezone),
+      typeof exDate === 'string'
+        ? exDate
+        : allDayBoundToEventString(exDate.getTime(), displayTimezone),
     );
   } else if (becomesAllDay && model.exDates != null) {
     // An exception date keeps its day in the event timezone.
