@@ -232,8 +232,8 @@ catalogs:
       specifier: ^9.5.0
       version: 9.5.0
     '@mui/x-internal-exceljs-fork':
-      specifier: 5.0.0
-      version: 5.0.0
+      specifier: 5.0.1
+      version: 5.0.1
     '@playwright/test':
       specifier: 1.65.0
       version: 1.65.0
@@ -1066,7 +1066,7 @@ importers:
         version: link:../x-charts-vendor/build
       '@mui/x-internal-exceljs-fork':
         specifier: 'catalog:'
-        version: 5.0.0
+        version: 5.0.1
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -1546,7 +1546,7 @@ importers:
         version: link:../x-data-grid-pro/build
       '@mui/x-internal-exceljs-fork':
         specifier: 'catalog:'
-        version: 5.0.0
+        version: 5.0.1
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -4816,8 +4816,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/x-internal-exceljs-fork@5.0.0':
-    resolution: {integrity: sha512-gn73zruZbZFspNDRGVxhXG500VNHvCUrqTk/pL9c4Jh7NX/O2wg1OCBl73jxAjZgwP4QAVX/4LnjVIQlM/RWNA==}
+  '@mui/x-internal-exceljs-fork@5.0.1':
+    resolution: {integrity: sha512-xVTYBRo5CA90gCX8/XMQ8KiA7ksXgCF9hPLupzfnwjxVzdHK045ux9BvnzsCTwbXawMNXrAPn+iSpNyXmZzMlQ==}
     engines: {node: '>=14.17.0'}
 
   '@mui/x-internals@7.29.0':
@@ -5828,8 +5828,8 @@ packages:
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
-  '@types/node@14.18.63':
-    resolution: {integrity: sha512-fAtCfv4jJg+ExtXhvCkCqUKZ+4ok/JQk01qDKhL5BDDoS3AxKXhV5/MAVUZyQnSEd2GT92fkgZl0pz0Q0AzcIQ==}
+  '@types/node@20.19.43':
+    resolution: {integrity: sha512-6oYBAi5ikg4Pl+kGsoYtawUMBT2zZMCvPNF7pVLnHZfd1zf38DRiWn/gT01RYCdUqkv7Fhr+C9ot4/tb+2sVvA==}
 
   '@types/node@22.20.5':
     resolution: {integrity: sha512-U2+DNr+wSjpsTS/wZGYHq7GcwfuSmKiKvoPvK22zwTlRhU91yOniN4qRR5KhIjvif7ysw/dz/hKmfDH0Ris4aA==}
@@ -13976,9 +13976,9 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.3.0
 
-  '@mui/x-internal-exceljs-fork@5.0.0':
+  '@mui/x-internal-exceljs-fork@5.0.1':
     dependencies:
-      '@types/node': 14.18.63
+      '@types/node': 20.19.43
       dayjs: 1.11.23
       fast-csv: 5.0.8
       jszip: 3.10.2
@@ -14945,7 +14945,9 @@ snapshots:
 
   '@types/ms@2.1.0': {}
 
-  '@types/node@14.18.63': {}
+  '@types/node@20.19.43':
+    dependencies:
+      undici-types: 6.21.0
 
   '@types/node@22.20.5':
     dependencies:
