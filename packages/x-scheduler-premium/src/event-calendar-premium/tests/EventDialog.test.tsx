@@ -1945,8 +1945,8 @@ describe('<EventDialogContent open />', () => {
       expect(payload.description).to.equal('Some details');
       expect(payload.allDay).to.equal(false);
       expect(payload.resource).to.deep.equal([workResource.id]);
-      expect(payload.start).toEqualDateTime(start);
-      expect(payload.end).toEqualDateTime(end);
+      expect(new Date(payload.start)).toEqualDateTime(start);
+      expect(new Date(payload.end)).toEqualDateTime(end);
       expect(payload.rrule).to.deep.equal({ freq: 'DAILY', interval: 1 });
     });
 
@@ -2019,8 +2019,8 @@ describe('<EventDialogContent open />', () => {
       const expectedStart = createDate('2025-06-10T09:00:00', displayTimezone);
       const expectedEnd = createDate('2025-06-10T10:00:00', displayTimezone);
 
-      expect(payload.start.getTime()).to.equal(expectedStart.getTime());
-      expect(payload.end.getTime()).to.equal(expectedEnd.getTime());
+      expect(payload.start).to.equal(expectedStart.getTime());
+      expect(payload.end).to.equal(expectedEnd.getTime());
     });
 
     it("should anchor a weekly rule on the created event's own weekday from another timezone", async () => {
@@ -2188,8 +2188,12 @@ describe('<EventDialogContent open />', () => {
         expect(openPayload.changes.title).to.equal('Daily standup');
         expect(openPayload.changes.description).to.equal('sync');
         expect(openPayload.changes.allDay).to.equal(false);
-        expect(openPayload.changes.start).to.toEqualDateTime(createDate('2025-06-11T10:05:00'));
-        expect(openPayload.changes.end).to.toEqualDateTime(createDate('2025-06-11T10:35:00'));
+        expect(new Date(openPayload.changes.start)).to.toEqualDateTime(
+          createDate('2025-06-11T10:05:00'),
+        );
+        expect(new Date(openPayload.changes.end)).to.toEqualDateTime(
+          createDate('2025-06-11T10:35:00'),
+        );
         expect(openPayload.changes).to.not.have.property('rrule');
 
         expect(selectRecurringEventScopeSpy?.mock.calls.length).to.equal(1);
@@ -2726,8 +2730,8 @@ describe('<EventDialogContent open />', () => {
         // The range was validated as a pair in New York, so the untouched start follows the
         // edited end instead of keeping its UTC instant next to a New York end.
         const payload = updateRecurringEventSpy!.mock.lastCall![0];
-        expect(payload.changes.start).toEqualDateTime('2025-07-04T04:00:00.000Z'); // July 4th 00:00 EDT
-        expect(payload.changes.end).toEqualDateTime('2025-07-06T04:00:00.000Z'); // July 6th 00:00 EDT
+        expect(new Date(payload.changes.start)).toEqualDateTime('2025-07-04T04:00:00.000Z'); // 00:00 EDT
+        expect(new Date(payload.changes.end)).toEqualDateTime('2025-07-06T04:00:00.000Z'); // 00:00 EDT, exclusive
       });
 
       it('should build a preset on the stored start when only the display timezone moved', async () => {
@@ -3009,8 +3013,8 @@ describe('<EventDialogContent open />', () => {
         // the stored model keeps 11:00 until the host answers.
         await act(async () => {
           store.startEditing(resizedOccurrence, 'edit');
-          store.updateEvent({ id: event.id, end: resizedEnd });
-          store.setEditingOccurrenceTimes({ end: resizedEnd });
+          store.updateEvent({ id: event.id, end: resizedEnd.getTime() });
+          store.setEditingOccurrenceTimes({ end: resizedEnd.getTime() });
         });
         await waitFor(() => expect(persistCalls).to.have.length(1));
 
@@ -4695,8 +4699,8 @@ describe('<EventDialogContent open />', () => {
           .withDisplayTimezone('America/New_York')
           .singleDay('2025-07-08T23:00:00Z', 60);
         const event = builder.build();
-        const resizedStart = createDate('2025-07-08T21:00:00', 'America/New_York');
-        const resizedEnd = createDate('2025-07-08T22:00:00', 'America/New_York');
+        const resizedStart = createDate('2025-07-08T21:00:00', 'America/New_York').getTime();
+        const resizedEnd = createDate('2025-07-08T22:00:00', 'America/New_York').getTime();
         const onEventsChange = vi.fn();
 
         const { user } = renderEditedAfterResize({
@@ -4728,8 +4732,8 @@ describe('<EventDialogContent open />', () => {
           .withDisplayTimezone('America/New_York');
         const event = builder.build();
         const occurrence = builder.toOccurrence();
-        // One more day.
-        const resizedEnd = addDays(new Date(occurrence.end.timestamp), 1);
+        // One more day, from the exclusive end.
+        const resizedEnd = addDays(new Date(occurrence.end.timestamp), 1).getTime();
         const onEventsChange = vi.fn();
 
         const { user } = renderEditedAfterResize({

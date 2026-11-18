@@ -1,6 +1,11 @@
-import type { SchedulerEvent, SchedulerEventUpdatedProperties } from '../../models';
+import type { SchedulerEvent, SchedulerEventCreationProperties } from '../../models';
 import { resolveEventTimestamp } from '../../process-event/resolveEventTimestamp';
-import { allDayBoundToEventString, timestampToEventString } from './date-utils';
+import {
+  allDayBoundToEventString,
+  timestampToEventString,
+  untilToEventString,
+  getUntilReferenceString,
+} from './date-utils';
 import { isDateOnlyString, snapAllDayBounds } from './plain-date-utils/date';
 import { moveTimestampToPlainDate, toEpochMs, toPlainDate } from './plain-date-utils/timeZone';
 import { BaseTemporal } from './base-temporal';
@@ -41,28 +46,74 @@ function getTimedRRule(
   );
 }
 
+type EventDateKey = 'start' | 'end' | 'exDates' | 'rrule';
+type EventDateInputs = Partial<
+  Pick<SchedulerEventCreationProperties, EventDateKey | 'timezone' | 'allDay'>
+>;
+type WithEventDateStrings<TChanges> = {
+  [K in keyof TChanges]: K extends EventDateKey ? SchedulerEvent[K] : TChanges[K];
+};
+
 /**
- * Writes the date changes of an event as the strings of its model: the days of an all-day event
- * in the display timezone, the instants of a timed event in the format of its stored strings.
- * `bounds` are the instants written when the changes give none. A timed event made all-day without
- * bounds gets the whole days of its timezone, and so do its exception dates. An all-day event made
- * timed moves to the display timezone, from 00:00 of its days when the changes give no bounds,
- * excludes its occurrences at its new time, and keeps the last day of its rule.
+ * Writes timestamp edits in the event's format. All-day dates use the display timezone and an
+ * exclusive end. A new event has no format to follow: its timed instants become ISO strings.
+ * Strings are preserved. `bounds` supplies defaults when deriving an event from an occurrence.
  */
-export function stringifyEventDateChanges(
-  changes: Pick<
-    SchedulerEventUpdatedProperties,
-    'allDay' | 'start' | 'end' | 'exDates' | 'rrule' | 'timezone'
-  >,
-  model: SchedulerEvent,
-  displayTimezone: string,
+export function toEventDateStrings<TChanges extends EventDateInputs>(
+  changes: TChanges,
+  model: SchedulerEvent | null,
+  displayTimezone = 'default',
   bounds?: { start: number; end: number },
-): EventDateChangeStrings {
-  const dataTimezone = model.timezone ?? 'default';
-  const allDay = changes.allDay ?? model.allDay ?? false;
+): WithEventDateStrings<TChanges> & EventDateChangeStrings {
   const result: EventDateChangeStrings = {};
-  let start = changes.start?.getTime() ?? bounds?.start;
-  let end = changes.end?.getTime() ?? bounds?.end;
+  const dataTimezone = model?.timezone ?? changes.timezone ?? 'default';
+  const finish = () => {
+    if (typeof changes.start === 'string') {
+      result.start = changes.start;
+    }
+    if (typeof changes.end === 'string') {
+      result.end = changes.end;
+    }
+    const rrule = changes.rrule;
+    if (typeof rrule === 'object' && rrule.until != null && typeof rrule.until !== 'string') {
+      result.rrule = {
+        ...rrule,
+        until: untilToEventString(
+          rrule.until,
+          model == null ? result.start! : getUntilReferenceString(model),
+          result.timezone ?? changes.timezone ?? dataTimezone,
+        ),
+      };
+    }
+    return { ...changes, ...result } as WithEventDateStrings<TChanges> & EventDateChangeStrings;
+  };
+  if (model == null) {
+    const formatNewDate = (value: string | number) => {
+      if (typeof value === 'string') {
+        return value;
+      }
+      return changes.allDay
+        ? allDayBoundToEventString(value, displayTimezone)
+        : new Date(value).toISOString();
+    };
+    if (changes.start != null) {
+      result.start = formatNewDate(changes.start);
+    }
+    if (changes.end != null) {
+      result.end = formatNewDate(changes.end);
+    }
+    if (changes.exDates != null) {
+      result.exDates = changes.exDates.map(formatNewDate);
+    }
+    return finish();
+  }
+  const allDay = changes.allDay ?? model.allDay ?? false;
+  const read = (value: string | number | undefined) =>
+    typeof value === 'string'
+      ? resolveEventTimestamp(value, allDay ? displayTimezone : dataTimezone)
+      : value;
+  let start = read(changes.start) ?? bounds?.start;
+  let end = read(changes.end) ?? bounds?.end;
 
   if (!allDay) {
     const becomesTimed = model.allDay === true;
@@ -84,7 +135,9 @@ export function stringifyEventDateChanges(
     if (changes.exDates != null) {
       // A new exception date matches the format of the one it replaces, or of start.
       result.exDates = changes.exDates.map((exDate, index) =>
-        timestampToEventString(exDate.getTime(), model.exDates?.[index] ?? model.start, timezone),
+        typeof exDate === 'string'
+          ? exDate
+          : timestampToEventString(exDate, model.exDates?.[index] ?? model.start, timezone),
       );
     } else if (becomesTimed && model.exDates != null && start != null) {
       const timedStart = start;
@@ -106,7 +159,7 @@ export function stringifyEventDateChanges(
         result.rrule = rrule;
       }
     }
-    return result;
+    return finish();
   }
 
   const becomesAllDay = !model.allDay;
@@ -122,8 +175,8 @@ export function stringifyEventDateChanges(
     if (becomesAllDay && (changes.start == null || changes.end == null)) {
       // With one bound given, the other is snapped to the displayed days like it.
       const snapped = snapAllDayBounds(ownStart, ownEnd, displayTimezone);
-      start = changes.start?.getTime() ?? snapped.start;
-      end = changes.end?.getTime() ?? snapped.end;
+      start = read(changes.start) ?? snapped.start;
+      end = read(changes.end) ?? snapped.end;
     }
     if (start != null) {
       result.start = allDayBoundToEventString(start, displayTimezone);
@@ -134,7 +187,7 @@ export function stringifyEventDateChanges(
   }
   if (changes.exDates != null) {
     result.exDates = changes.exDates.map((exDate) =>
-      allDayBoundToEventString(exDate.getTime(), displayTimezone),
+      typeof exDate === 'string' ? exDate : allDayBoundToEventString(exDate, displayTimezone),
     );
   } else if (becomesAllDay && model.exDates != null) {
     // An exception date keeps its day in the event timezone.
@@ -142,5 +195,5 @@ export function stringifyEventDateChanges(
       toPlainDate(resolveEventTimestamp(exDate, dataTimezone), dataTimezone).toString(),
     );
   }
-  return result;
+  return finish();
 }

@@ -308,17 +308,15 @@ export function computeAutoSchedulingCascade(
     // Mirrors the store: the entries of a timed event are serialized in the data timezone
     // (`timestampToEventString`) and the model is then read in the (new) timezone.
     const resolveEntryTimestamp = (
-      value: Date | undefined,
+      value: number | undefined,
       modelString: string,
       currentTimestamp: number,
     ) => {
       if (!changesTimezone) {
-        return value == null ? currentTimestamp : value.getTime();
+        return value == null ? currentTimestamp : value;
       }
       const nextString =
-        value == null
-          ? modelString
-          : timestampToEventString(value.getTime(), modelString, dataTimezone);
+        value == null ? modelString : timestampToEventString(value, modelString, dataTimezone);
       return resolveEventTimestamp(nextString, nextTimezone, entry.id);
     };
     let entryStart = resolveEntryTimestamp(
@@ -476,20 +474,18 @@ export function computeAutoSchedulingCascade(
   function toEntryDates(eventId: SchedulerEventId, dates: ResolvedDates) {
     if (dates.allDay) {
       // The exclusive end of the occurrences, which the store writes as a date.
-      return { start: new Date(dates.start), end: new Date(dates.end + 1) };
+      return { start: dates.start, end: dates.end + 1 };
     }
     const timezoneChange = timezoneChanges.get(eventId);
     if (timezoneChange === undefined) {
-      return { start: new Date(dates.start), end: new Date(dates.end) };
+      return { start: dates.start, end: dates.end };
     }
     const { model, dataTimezone, nextTimezone } = timezoneChange;
     const encode = (epochMs: number, modelString: string) =>
-      new Date(
-        resolveEventTimestamp(
-          timestampToEventString(epochMs, modelString, nextTimezone),
-          dataTimezone,
-          eventId,
-        ),
+      resolveEventTimestamp(
+        timestampToEventString(epochMs, modelString, nextTimezone),
+        dataTimezone,
+        eventId,
       );
     return { start: encode(dates.start, model.start), end: encode(dates.end, model.end) };
   }

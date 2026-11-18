@@ -72,7 +72,7 @@ describe('getUpdatedEventModelFromChanges', () => {
     };
     const updated = getUpdatedEventModelFromChanges(
       oldModel,
-      { id: '1', start: new Date('2025-10-26T02:45:00+01:00') },
+      { id: '1', start: new Date('2025-10-26T02:45:00+01:00').getTime() },
       undefined,
       oldModel as SchedulerEvent,
       'default',
@@ -116,8 +116,8 @@ describe('getUpdatedEventModelFromChanges', () => {
         id: '1',
         allDay: false,
         timezone: 'Europe/Paris',
-        start: createDate('2025-07-04T09:00:00', 'Asia/Tokyo'),
-        end: createDate('2025-07-04T10:00:00', 'Asia/Tokyo'),
+        start: createDate('2025-07-04T09:00:00', 'Asia/Tokyo').getTime(),
+        end: createDate('2025-07-04T10:00:00', 'Asia/Tokyo').getTime(),
       },
       undefined,
       oldModel as SchedulerEvent,
@@ -160,7 +160,7 @@ describe('getUpdatedEventModelFromChanges', () => {
     };
     const updated = getUpdatedEventModelFromChanges(
       oldModel,
-      { id: '1', allDay: true, start: createDate('2025-07-05T00:00:00', 'Asia/Tokyo') },
+      { id: '1', allDay: true, start: createDate('2025-07-05T00:00:00', 'Asia/Tokyo').getTime() },
       undefined,
       oldModel as SchedulerEvent,
       'Asia/Tokyo',

@@ -75,7 +75,7 @@ import {
   getPrimaryResourceId,
 } from '../event-utils';
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
-import { stringifyEventDateChanges } from '../event-date-changes';
+import { toEventDateStrings } from '../event-date-changes';
 import { TimeoutManager } from '../TimeoutManager';
 import { checkDateLocale, DEFAULT_DATE_LOCALE } from '../date-locale';
 import {
@@ -1270,17 +1270,13 @@ export class SchedulerStore<
    */
   public duplicateEventOccurrence = (
     eventId: SchedulerEventId,
-    start: Date,
-    end: Date,
+    start: number,
+    end: number,
   ): SchedulerEventId | undefined => {
     const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
     const duplicatedEvent = extractStandaloneEvent(
       original,
-      stringifyEventDateChanges(
-        { start, end },
-        original.modelInBuiltInFormat,
-        this.state.displayTimezone,
-      ),
+      toEventDateStrings({ start, end }, original.modelInBuiltInFormat, this.state.displayTimezone),
     );
     return this.updateEvents({ created: [duplicatedEvent] }).created[0];
   };
@@ -1329,29 +1325,24 @@ export class SchedulerStore<
       // An all-day paste covers the days of an all-day source, or one day for a timed one, from
       // the pasted day, or from the own day of a timed source in its timezone.
       const start =
-        cleanChanges.start?.getTime() ??
+        cleanChanges.start ??
         toEpochMs(toPlainDate(original.start.timestamp, original.timezone), displayTimezone);
-      cleanChanges.start = new Date(start);
-      cleanChanges.end = new Date(
-        addDaysToDayStart(
-          start,
-          original.allDay ? getAllDayDayCount(original) : 1,
-          displayTimezone,
-        ),
+      cleanChanges.start = start;
+      cleanChanges.end = addDaysToDayStart(
+        start,
+        original.allDay ? getAllDayDayCount(original) : 1,
+        displayTimezone,
       );
     } else if (!allDay && original.allDay) {
       // An all-day source pasted as timed starts at the pasted instant, or at the first instant of
       // its first day, and lasts the default event duration.
-      const start = cleanChanges.start?.getTime() ?? original.start.timestamp;
-      cleanChanges.start = new Date(start);
-      cleanChanges.end = new Date(
-        start + schedulerEventSelectors.defaultEventDuration(this.state) * MS_PER_MINUTE,
-      );
+      const start = cleanChanges.start ?? original.start.timestamp;
+      cleanChanges.start = start;
+      cleanChanges.end =
+        start + schedulerEventSelectors.defaultEventDuration(this.state) * MS_PER_MINUTE;
     } else if (cleanChanges.start != null) {
       // A timed source pasted as timed keeps its duration.
-      cleanChanges.end = new Date(
-        cleanChanges.start.getTime() + original.end.timestamp - original.start.timestamp,
-      );
+      cleanChanges.end = cleanChanges.start + original.end.timestamp - original.start.timestamp;
     }
     const isMovingDates = cleanChanges.start != null;
 
@@ -1416,7 +1407,7 @@ export class SchedulerStore<
     const createdEvent: SchedulerEventCreationProperties = {
       ...copiedEventWithoutId,
       ...cleanChanges,
-      ...stringifyEventDateChanges(cleanChanges, original.modelInBuiltInFormat, displayTimezone),
+      ...toEventDateStrings(cleanChanges, original.modelInBuiltInFormat, displayTimezone),
       extractedFromId: id,
     };
     return this.updateEvents({ created: [createdEvent] }).created[0];
@@ -1618,8 +1609,8 @@ export class SchedulerStore<
     const allDay = changes.allDay ?? occurrence.allDay;
     const liveEvent = schedulerEventSelectors.processedEvent(this.state, occurrence.id);
     const displayBounds = getEditedBounds(
-      start?.getTime(),
-      end?.getTime(),
+      start,
+      end,
       occurrence,
       allDay,
       isEventOccurrence(occurrence) ? occurrence.timezone : 'default',
@@ -1689,8 +1680,8 @@ export class SchedulerStore<
     // the occurrence on its own day can keep the surface armed.
     const allDay = changes.allDay ?? occurrence.allDay;
     const nextDayTimezone = getDayTimezone(original, displayTimezone, allDay);
-    const changedStart = changes.start?.getTime();
-    const changedEnd = changes.end?.getTime();
+    const changedStart = changes.start;
+    const changedEnd = changes.end;
     const bounds: [number | undefined, number][] = [
       [changedStart, occurrenceStart],
       [

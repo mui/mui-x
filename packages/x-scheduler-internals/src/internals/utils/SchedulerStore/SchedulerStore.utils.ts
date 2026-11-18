@@ -15,12 +15,7 @@ import type {
 import { processEvent } from '../../../process-event';
 import type { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
-import {
-  allDayBoundToEventString,
-  untilToEventString,
-  getUntilReferenceString,
-} from '../date-utils';
-import { stringifyEventDateChanges } from '../event-date-changes';
+import { toEventDateStrings } from '../event-date-changes';
 import { schedulerEventSelectors } from '../../../scheduler-selectors/schedulerEventSelectors';
 
 /**
@@ -153,8 +148,8 @@ export function getProcessedEventFromModel<TEvent extends object>(
 
 /**
  * Updates an event model based on the provided changes and model structure.
- * Converts the `Date` objects to strings before applying them to the user's model, because
- * `SchedulerEvent` date fields are strings, with `stringifyEventDateChanges()`.
+ * Converts the timestamps to strings before applying them to the user's model, because
+ * `SchedulerEvent` date fields are strings, with `toEventDateStrings()`.
  */
 export function getUpdatedEventModelFromChanges<TEvent extends object>(
   oldModel: TEvent,
@@ -163,25 +158,9 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
   originalBuiltInModel: SchedulerEvent,
   displayTimezone: string,
 ): TEvent {
-  const stringified: Record<string, any> = {
-    ...changes,
-    ...stringifyEventDateChanges(changes, originalBuiltInModel, displayTimezone),
-  };
-  const dataTimezone = stringified.timezone ?? originalBuiltInModel.timezone ?? 'default';
-  if (changes.rrule != null && typeof changes.rrule === 'object' && changes.rrule.until != null) {
-    stringified.rrule = {
-      ...changes.rrule,
-      until: untilToEventString(
-        changes.rrule.until,
-        getUntilReferenceString(originalBuiltInModel),
-        dataTimezone,
-      ),
-    };
-  }
-
   return createOrUpdateEventModelFromBuiltInEventModel<TEvent, false>(
     oldModel,
-    stringified as SchedulerEventUpdatedProperties,
+    toEventDateStrings(changes, originalBuiltInModel, displayTimezone),
     eventModelStructure,
   );
 }
@@ -197,37 +176,8 @@ export function createEventModel<TEvent extends object>(
 ) {
   const id = generateId('event');
 
-  const formatNewDate = (value: string | Date): string => {
-    if (typeof value === 'string') {
-      return value;
-    }
-    return event.allDay
-      ? allDayBoundToEventString(value.getTime(), displayTimezone)
-      : value.toISOString();
-  };
-  const start = formatNewDate(event.start);
-
-  // Internal callers (e.g. FormContent) may pass a processed rule, whose `until` is a plain date or date-time.
-  // Convert it to a string in the format of `start`, so the built-in model stays in SchedulerEvent
-  // format.
-  const rrule: SchedulerEvent['rrule'] =
-    typeof event.rrule === 'object' &&
-    event.rrule.until != null &&
-    typeof event.rrule.until !== 'string'
-      ? {
-          ...event.rrule,
-          until: untilToEventString(event.rrule.until, start, event.timezone ?? 'default'),
-        }
-      : (event.rrule as SchedulerEvent['rrule']);
-
-  const builtInEvent: SchedulerEvent = {
-    ...event,
-    id,
-    start,
-    end: formatNewDate(event.end),
-    exDates: event.exDates?.map(formatNewDate),
-    rrule,
-  };
+  const { exDates, rrule, ...rest } = toEventDateStrings(event, null, displayTimezone);
+  const builtInEvent: SchedulerEvent = { ...rest, id, exDates, rrule };
 
   const model = createOrUpdateEventModelFromBuiltInEventModel<TEvent, true>(
     null,
@@ -243,7 +193,7 @@ function createOrUpdateEventModelFromBuiltInEventModel<
   TIsCreating extends boolean,
 >(
   oldModel: TIsCreating extends true ? null : TEvent,
-  changes: TIsCreating extends true ? SchedulerEvent : SchedulerEventUpdatedProperties,
+  changes: TIsCreating extends true ? SchedulerEvent : Partial<SchedulerEvent>,
   eventModelStructure: SchedulerEventModelStructure<any> | undefined,
 ) {
   let eventModel = oldModel == null ? {} : { ...oldModel };

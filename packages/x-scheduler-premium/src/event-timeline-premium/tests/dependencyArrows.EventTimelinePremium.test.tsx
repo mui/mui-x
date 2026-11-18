@@ -292,8 +292,8 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     act(() => {
       store.updateEvent({
         id: 'event-a',
-        start: createDate('2025-07-03T09:30:00Z'),
-        end: createDate('2025-07-03T10:30:00Z'),
+        start: createDate('2025-07-03T09:30:00Z').getTime(),
+        end: createDate('2025-07-03T10:30:00Z').getTime(),
       });
     });
 

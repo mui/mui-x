@@ -240,7 +240,7 @@ describe('Core - EventCalendarStore', () => {
         const start = createDate('2024-01-15T10:00:00');
         const end = createDate('2024-01-15T11:30:00');
 
-        store.setEditingOccurrenceTimes({ start, end });
+        store.setEditingOccurrenceTimes({ start: start.getTime(), end: end.getTime() });
 
         const editing = store.state.editingOccurrence!;
         expect(editing.occurrence.start.plainDateTime.toString()).to.equal('2024-01-15T10:00:00');
@@ -252,8 +252,8 @@ describe('Core - EventCalendarStore', () => {
         const store = new EventCalendarStore(DEFAULT_PARAMS);
 
         store.setEditingOccurrenceTimes({
-          start: createDate('2024-01-15T10:00:00'),
-          end: createDate('2024-01-15T11:30:00'),
+          start: createDate('2024-01-15T10:00:00').getTime(),
+          end: createDate('2024-01-15T11:30:00').getTime(),
         });
 
         expect(store.state.editingOccurrence).to.equal(null);
@@ -273,7 +273,7 @@ describe('Core - EventCalendarStore', () => {
         const start = createDate('2024-01-15T14:00:00Z');
         const end = createDate('2024-01-15T16:00:00Z');
 
-        store.setEditingOccurrenceTimes({ start, end });
+        store.setEditingOccurrenceTimes({ start: start.getTime(), end: end.getTime() });
 
         const editing = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
         expect(editing.start.timestamp).to.equal(start.getTime());
@@ -299,7 +299,7 @@ describe('Core - EventCalendarStore', () => {
         // One more day: the exclusive end moves from July 5th to July 6th.
         const end = addDays(new Date(edited.end.timestamp), 1);
 
-        store.setEditingOccurrenceTimes({ end });
+        store.setEditingOccurrenceTimes({ end: end.getTime() });
 
         const editing = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
         expect(editing.start).to.equal(edited.start);

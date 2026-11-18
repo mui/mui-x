@@ -303,10 +303,10 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
   const allDayToggled = allDay !== (originalOccurrence.allDay ?? false);
   const changes: SchedulerEventUpdatedProperties = { id: eventId };
   if (allDayToggled || originalOccurrence.start.timestamp !== start) {
-    changes.start = new Date(start);
+    changes.start = start;
   }
   if (allDayToggled || originalOccurrence.end.timestamp !== end) {
-    changes.end = new Date(end);
+    changes.end = end;
   }
 
   // If `undefined`, we want to set the event resource to `undefined` (no resource).
@@ -395,8 +395,8 @@ export function applyExternalDragOccurrencePlaceholder(
     schedulerOtherSelectors.displayTimezone(store.state),
   );
   const event = {
-    start: new Date(start),
-    end: new Date(end),
+    start,
+    end,
     ...placeholder.eventData,
   };
 
