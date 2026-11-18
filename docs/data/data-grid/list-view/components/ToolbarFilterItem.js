@@ -20,7 +20,6 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import { Drawer, DrawerHeader } from './Drawer';
-
 import { FILE_TYPES } from '../constants';
 
 const DATE_MODIFIED_FILTERS = [

@@ -2,9 +2,17 @@
   "props": {
     "message": { "type": { "name": "string" }, "required": true },
     "cancelLabel": { "type": { "name": "string" }, "default": "'Cancel'" },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "confirmLabel": { "type": { "name": "string" }, "default": "'Confirm'" },
     "onCancel": { "type": { "name": "func" } },
-    "onConfirm": { "type": { "name": "func" } }
+    "onConfirm": { "type": { "name": "func" } },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    }
   },
   "name": "ChatConfirmation",
   "imports": [

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGrid, GridDataSource } from '@mui/x-data-grid';
+import type { GridDataSource } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 export default function ServerSideDataGrid() {

@@ -1,14 +1,15 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import InputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
+import type { InputAdornmentProps } from '@mui/material/InputAdornment';
+import InputAdornment from '@mui/material/InputAdornment';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { DateRangeValidationError } from '@mui/x-date-pickers-pro/models';
+import type { DateRangeValidationError } from '@mui/x-date-pickers-pro/models';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
-import { FieldOwnerState } from '@mui/x-date-pickers/models';
+import type { FieldOwnerState } from '@mui/x-date-pickers/models';
 
 function CustomInputAdornment(props: InputAdornmentProps & { hasError?: boolean }) {
   const { hasError, children, sx, ...other } = props;

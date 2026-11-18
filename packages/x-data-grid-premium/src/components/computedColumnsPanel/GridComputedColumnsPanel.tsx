@@ -11,6 +11,7 @@ import {
 import type { GridEventListener, GridRowId } from '@mui/x-data-grid-pro';
 import { isRedoShortcut, isUndoShortcut } from '@mui/x-data-grid-pro/internals';
 import composeClasses from '@mui/utils/composeClasses';
+import useId from '@mui/utils/useId';
 import type { RefObject } from '@mui/x-internals/types';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -205,7 +206,7 @@ function GridComputedColumnsPanel() {
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
-  const titleId = React.useId();
+  const titleId = useId();
 
   const [view, setView] = React.useState<PanelView>(() => readEditorRequest(apiRef, 0));
   const editorKeyRef = React.useRef(0);

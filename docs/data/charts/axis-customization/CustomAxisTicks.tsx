@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
-import { ChartsYAxisProps } from '@mui/x-charts/models';
+import type { BarChartProps } from '@mui/x-charts/BarChart';
+import { BarChart } from '@mui/x-charts/BarChart';
+import type { ChartsYAxisProps } from '@mui/x-charts/models';
 import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
 import { useYAxes, useYAxisCoordinates, useYAxisTicks } from '@mui/x-charts/hooks';
 

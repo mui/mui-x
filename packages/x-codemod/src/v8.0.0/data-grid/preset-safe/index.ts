@@ -5,7 +5,7 @@ import reformRowSelectionModel from '../reform-row-selection-model';
 import renameImports from '../rename-imports';
 import renamePackage from '../rename-package';
 import addShowToolbarProp from '../add-showToolbar-prop';
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   file.source = removeExperimentalFeatures(file, api, options);

@@ -1,14 +1,9 @@
-import { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
-import {
-  Gesture,
-  GestureEventData,
-  GestureOptions,
-  type BaseGestureOptions,
-  type PointerMode,
-} from './Gesture';
+import type { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
+import type { GestureEventData, GestureOptions, BaseGestureOptions, PointerMode } from './Gesture';
+import { Gesture } from './Gesture';
 import type { KeyboardManager } from './KeyboardManager';
-import { PointerData, PointerManager } from './PointerManager';
-import { TargetElement } from './types/TargetElement';
+import type { PointerData, PointerManager } from './PointerManager';
+import type { TargetElement } from './types/TargetElement';
 
 /**
  * Base configuration options that can be overridden per pointer mode.
@@ -92,7 +87,7 @@ export abstract class PointerGesture<GestureName extends string> extends Gesture
 
   protected abstract readonly optionsType: PointerGestureOptions<GestureName>;
 
-  protected abstract readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
+  public abstract readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
   /**
    * Minimum number of simultaneous pointers required to activate the gesture.

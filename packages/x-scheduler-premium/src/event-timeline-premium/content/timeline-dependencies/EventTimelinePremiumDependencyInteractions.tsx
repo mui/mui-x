@@ -32,12 +32,10 @@ const DEPENDENCY_DELETE_BUTTON_CROSS_RADIUS = 2.5;
  * The interaction layer: the arrows' invisible click hit-areas and the selected
  * arrow's delete button. Separate from the visual overlay so the pointer-enabled
  * surface stays out of the `pointerEvents: 'none'` svg.
- * TODO(dependencies public flip, #23420): add a `dependencyInteractions` utility class; the
- * layer only carries data attributes while the feature has no public API. Same z-index as the arrows
- * overlay and after it in the DOM, so it paints above the arrow strokes — but before
- * the terminals overlay, whose revealed terminals must win the clicks over a crossing
- * band. Below the pinned title cells (z-index 3), which cover it on horizontal
- * scroll instead of leaking their clicks to the arrows underneath.
+ * Same z-index as the arrows overlay and after it in the DOM, so it paints above the
+ * arrow strokes — but before the terminals overlay, whose revealed terminals must win
+ * the clicks over a crossing band. Below the pinned title cells (z-index 3), which
+ * cover it on horizontal scroll instead of leaking their clicks to the arrows underneath.
  */
 const DependencyInteractionsSvg = styled('svg', {
   name: 'MuiEventTimeline',

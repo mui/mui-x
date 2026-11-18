@@ -14,6 +14,9 @@ export interface ResolvedScatterItem {
    * The resolved marker size of the scatter point, accounting for any size axis.
    */
   markerSize: number;
+  /**
+   * The scatter series to render.
+   */
   series: DefaultizedScatterSeriesType;
   scatterPoint: ScatterValueType;
 }

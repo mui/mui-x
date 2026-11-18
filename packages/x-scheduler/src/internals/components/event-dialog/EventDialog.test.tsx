@@ -1,22 +1,22 @@
 import * as React from 'react';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
-  adapter,
+  createDate,
   createMatchMedia,
   createSchedulerRenderer,
   EventBuilder,
-  utcJuly4AllDayBuilder,
   ResourceBuilder,
   SchedulerStoreRunner,
   setSystemTimezone,
+  utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
-import type { SchedulerResource, TemporalTimezone } from '@mui/x-scheduler-internals/models';
+import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
-import { createAdapterDate } from '@mui/x-scheduler-internals/internals';
+import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
+import { toPlainDate } from '@mui/x-scheduler-internals/internals';
 import { schedulerOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import {
@@ -95,7 +95,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   });
 
   describe('events viewed from another display timezone', () => {
-    function renderEditDialog(builder: EventBuilder, displayTimezone: TemporalTimezone) {
+    function renderEditDialog(builder: EventBuilder, displayTimezone: string) {
       const onEventsChange = vi.fn();
       const event: SchedulerEvent = builder.withDisplayTimezone(displayTimezone).build();
 
@@ -144,7 +144,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         EventBuilder.new()
           .title('Conference')
           .withDataTimezone('UTC')
-          .span('2025-07-04T00:00:00', '2025-07-05T23:59:59.999', { allDay: true }),
+          .span('2025-07-04', '2025-07-06', { allDay: true }),
         'Asia/Tokyo',
       );
 
@@ -164,19 +164,16 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       const builder = EventBuilder.new()
         .title('Offsite')
         .withDataTimezone('UTC')
-        .span('2025-07-04T01:15:00', '2025-07-04T02:15:00', { allDay: true });
+        .span('2025-07-04', '2025-07-05', { allDay: true });
       const onEventsChange = vi.fn();
       const event: SchedulerEvent = builder.withDisplayTimezone(displayTimezone).build();
       const occurrence = builder.toOccurrence();
-      const rawStart = adapter.setTimezone(occurrence.dataTimezone.start.value, displayTimezone);
-      const rawEnd = adapter.setTimezone(occurrence.dataTimezone.end.value, displayTimezone);
+      // The drop landed at 10:15 in Tokyo.
+      const dropInstant = occurrence.start.timestamp + (10 * 60 + 15) * 60_000;
       const snapshot = {
         ...occurrence,
-        displayTimezone: {
-          ...occurrence.displayTimezone,
-          start: processDate(rawStart, adapter),
-          end: processDate(rawEnd, adapter),
-        },
+        start: createProcessedDate(dropInstant, displayTimezone),
+        end: createProcessedDate(occurrence.end.timestamp, displayTimezone),
       };
 
       const { user } = render(
@@ -233,14 +230,49 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       // The picked day means the day the user was looking at (New York's July 5th),
       // matching how the grid renders all-day events in the display timezone.
       const updated = getUpdatedEvent();
-      expect(adapter.getTime(adapter.date(String(updated.start), 'UTC'))).to.equal(
-        adapter.getTime(adapter.date('2025-07-05T04:00:00', 'UTC')),
+      expect(updated.start).to.equal('2025-07-05');
+      // The end field shows the last day; the model stores the day after it.
+      expect(updated.end).to.equal('2025-07-06');
+    });
+
+    it('should show the last day of an all-day event and save the day after it', async () => {
+      const { user, getUpdatedEvent } = renderEditDialog(
+        EventBuilder.new().title('Trip').span('2025-07-04', '2025-07-06', { allDay: true }),
+        'America/New_York',
       );
-      // Wall-time serialization has second resolution; the read-time normalization
-      // restores the inclusive end-of-day.
-      expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
-        adapter.getTime(adapter.date('2025-07-06T03:59:59', 'UTC')),
+
+      const endDateInput = screen.getByLabelText(/end date/i) as HTMLInputElement;
+      expect(endDateInput.value).to.equal('2025-07-05');
+      await user.clear(endDateInput);
+      await user.type(endDateInput, '2025-07-07');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      expect(getUpdatedEvent().end).to.equal('2025-07-08');
+    });
+
+    it('should show the last day of an all-day event whose exclusive end is a skipped day', () => {
+      // Samoa skipped December 30th, 2011: an event stored from the 28th to the 30th covers the
+      // 28th and the 29th.
+      renderEditDialog(
+        EventBuilder.new().title('Trip').span('2011-12-28', '2011-12-30', { allDay: true }),
+        'Pacific/Apia',
       );
+
+      expect((screen.getByLabelText(/end date/i) as HTMLInputElement).value).to.equal('2011-12-29');
+    });
+
+    it('should save a one-day all-day event whose end field equals its start field', async () => {
+      const { user, getUpdatedEvent } = renderEditDialog(
+        EventBuilder.new().title('Trip').span('2025-07-04', '2025-07-06', { allDay: true }),
+        'America/New_York',
+      );
+
+      const endDateInput = screen.getByLabelText(/end date/i);
+      await user.clear(endDateInput);
+      await user.type(endDateInput, '2025-07-04');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      expect(getUpdatedEvent().end).to.equal('2025-07-05');
     });
 
     it('should ignore a time edit orphaned by toggling all-day back on', async () => {
@@ -280,9 +312,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       const updated = getUpdatedEvent();
       expect(updated.end).to.equal(event.end);
       // The picked day means the day the user was looking at (New York July 2nd).
-      expect(adapter.getTime(adapter.date(String(updated.start), 'UTC'))).to.equal(
-        adapter.getTime(adapter.date('2025-07-02T04:00:00', 'UTC')),
-      );
+      expect(updated.start).to.equal('2025-07-02');
     });
 
     it('should submit only the edited bound of the displayed range', async () => {
@@ -300,10 +330,9 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       // The untouched start keeps its stored value: re-anchoring it to the display
       // timezone would move the event for anyone reading it from another one.
       expect(updated.start).to.equal(event.start);
-      // The edited end applies as the day the user was looking at (New York July 5th).
-      expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
-        adapter.getTime(adapter.date('2025-07-06T03:59:59', 'UTC')),
-      );
+      // The edited end applies as the day the user was looking at (New York July 5th), stored
+      // as the day after it.
+      expect(updated.end).to.equal('2025-07-06');
       // The built-in form keys never leak onto the event model as custom fields.
       expect(updated).to.not.have.property('startDate');
       expect(updated).to.not.have.property('endDate');
@@ -321,16 +350,32 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       await user.type(endTimeInput, '10:00');
       await user.click(screen.getByRole('button', { name: 'Save' }));
 
-      // The typed times mean the times the user was looking at: the seeded New York
-      // days (July 3rd → 4th) at 09:00 and 10:00 New York time.
+      // The typed times mean the times the user was looking at: the seeded New York day
+      // (July 4th) at 09:00 and 10:00 New York time, the timezone the event moves to.
       const updated = getUpdatedEvent();
       expect(Boolean(updated.allDay)).to.equal(false);
-      expect(adapter.getTime(adapter.date(String(updated.start), 'UTC'))).to.equal(
-        adapter.getTime(adapter.date('2025-07-03T13:00:00', 'UTC')),
+      expect(updated.timezone).to.equal('America/New_York');
+      expect(updated.start).to.equal('2025-07-04T09:00:00');
+      expect(updated.end).to.equal('2025-07-04T10:00:00');
+    });
+
+    it('should make a timed event all-day on the day the form shows', async () => {
+      // 23:00 in New York on July 4th is displayed on July 5th in Tokyo, the day the form shows.
+      const { user, getUpdatedEvent } = renderEditDialog(
+        EventBuilder.new()
+          .title('Call')
+          .withDataTimezone('America/New_York')
+          .span('2025-07-04T23:00:00', '2025-07-04T23:30:00'),
+        'Asia/Tokyo',
       );
-      expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
-        adapter.getTime(adapter.date('2025-07-04T14:00:00', 'UTC')),
-      );
+
+      await user.click(screen.getByRole('switch', { name: /all day/i }));
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updated = getUpdatedEvent();
+      expect(updated.allDay).to.equal(true);
+      expect(updated.start).to.equal('2025-07-05');
+      expect(updated.end).to.equal('2025-07-06');
     });
 
     describe('across DST transitions', () => {
@@ -349,18 +394,17 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       }
 
       // Santiago leaves summer time at the end of April 4th, 2026, when 24:00 becomes 23:00.
-      it('should end an all-day day on the second occurrence of its repeated last hour', async () => {
+      it('should end an all-day event on the day after a day whose last hour is repeated', async () => {
         const { user, getUpdatedEvent } = renderEditDialog(
           EventBuilder.new()
             .withDataTimezone('UTC')
-            .span('2026-04-02T12:00:00', '2026-04-03T12:00:00', { allDay: true }),
+            .span('2026-04-02', '2026-04-04', { allDay: true }),
           'America/Santiago',
         );
 
         await editAndSave(user, [[/end date/i, '2026-04-04']]);
 
-        // 23:59:59 -04, the later 23:59:59 of April 4th in Santiago.
-        expect(getUpdatedEvent().end).to.equal('2026-04-05T03:59:59');
+        expect(getUpdatedEvent().end).to.equal('2026-04-05');
       });
 
       it.skipIf(!isJSDOM)(
@@ -370,7 +414,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
           const { user, getUpdatedEvent } = renderEditDialog(
             EventBuilder.new()
               .withDataTimezone('UTC')
-              .span('2026-04-02T12:00:00', '2026-04-03T12:00:00', { allDay: true }),
+              .span('2026-04-02', '2026-04-04', { allDay: true }),
             'America/Santiago',
           );
 
@@ -379,10 +423,10 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
             [/start date/i, '2026-04-05'],
           ]);
 
-          // April 5th in Santiago, from 00:00 -04 to 23:59:59 -04.
+          // April 5th in Santiago.
           const updated = getUpdatedEvent();
-          expect(updated.start).to.equal('2026-04-05T04:00:00');
-          expect(updated.end).to.equal('2026-04-06T03:59:59');
+          expect(updated.start).to.equal('2026-04-05');
+          expect(updated.end).to.equal('2026-04-06');
         },
       );
 
@@ -401,32 +445,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         expect(getUpdatedEvent().start).to.equal('2026-10-25T00:30:00');
       });
     });
-  });
-
-  it('should delete the event and close the dialog when Delete is pressed on a non-recurring event, with confirmation off', async () => {
-    // `EventDialogContent` doesn't mount `DeleteConfirmationDialog` (that only happens through
-    // `EventDialogProvider`), so the confirmation is opted out of here to keep testing this
-    // component's own direct wiring to the store. See the `Deletion` suite below for the
-    // confirmation dialog itself, exercised through the full `EventDialogProvider`.
-    const onEventsChange = vi.fn();
-    const onClose = vi.fn();
-    const { user } = render(
-      <EventCalendarProvider
-        events={[DEFAULT_EVENT]}
-        resources={resources}
-        onEventsChange={onEventsChange}
-        eventDeletion={{ confirmation: false }}
-      >
-        <EventDialogContent open {...defaultProps} onClose={onClose} />
-      </EventCalendarProvider>,
-    );
-
-    await user.click(screen.getByRole('button', { name: 'Delete event' }));
-
-    // Without the recurring plugin the delete applies immediately and the dialog closes.
-    expect(onEventsChange.mock.calls.length).to.equal(1);
-    expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
-    expect(onClose.mock.calls.length).to.equal(1);
   });
 
   it('should not render the resource select when there are no resources, but should keep the color picker', () => {
@@ -508,7 +526,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       <EventCalendarProvider
         events={[DEFAULT_EVENT]}
         resources={resources}
-        visibleDate={adapter.date('2025-05-26T00:00:00Z', 'default')}
+        visibleDate={createDate('2025-05-26T00:00:00Z')}
       >
         <EventDialogProvider>
           <MonthView />
@@ -541,7 +559,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         <EventCalendarProvider
           events={[DEFAULT_EVENT]}
           resources={resources}
-          visibleDate={adapter.date('2025-05-26T00:00:00Z', 'default')}
+          visibleDate={createDate('2025-05-26T00:00:00Z')}
           {...providerProps}
         >
           <EventDialogProvider>
@@ -562,7 +580,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
             events={events}
             onEventsChange={setEvents}
             resources={resources}
-            visibleDate={adapter.date('2025-05-26T00:00:00Z', 'default')}
+            visibleDate={createDate('2025-05-26T00:00:00Z')}
             {...providerProps}
           >
             <EventDialogProvider>
@@ -706,17 +724,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         `${DEFAULT_EVENT.title} (renamed)`,
       );
     });
-
-    it('should render the Delete event button when `eventDeletion` is an object', async () => {
-      const { user } = renderDialogProvider({
-        onEventsChange: vi.fn(),
-        eventDeletion: { confirmation: true },
-      });
-
-      await user.click(screen.getByText(DEFAULT_EVENT.title));
-
-      expect(await screen.findByRole('button', { name: 'Delete event' })).not.to.equal(null);
-    });
   });
 
   it('should not render the recurrence tab when no slot is provided', () => {
@@ -750,12 +757,13 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
               .title(readonlyRecurringEvent.title)
               .span(readonlyRecurringEvent.start, readonlyRecurringEvent.end)
               .resource(personalResource)
+              .recurrent('DAILY')
               .toOccurrence()}
           />
         </EventCalendarProvider>,
       );
     }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+      'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
     ]);
 
     expect(screen.queryByText(/repeats/i)).to.equal(null);
@@ -791,7 +799,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         </EventCalendarProvider>,
       ));
     }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+      'MUI X Scheduler: Recurring events are not enabled. The `rrule` property will be ignored.',
     ]);
 
     await user.type(screen.getByRole('textbox', { name: /event title/i }), ' (renamed)');
@@ -801,53 +809,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     const [updated] = onEventsChange.mock.calls[0][0];
     expect(updated.title).to.equal('Weekly standup (renamed)');
     expect(updated.rrule).to.deep.equal(recurringEvent.rrule);
-  });
-
-  it('should warn and strip the rrule when createEvent is called with one', () => {
-    expect(() => {
-      render(
-        <EventCalendarProvider
-          events={[DEFAULT_EVENT]}
-          resources={resources}
-          onEventsChange={() => {}}
-        >
-          <SchedulerStoreRunner<AnyEventCalendarStore>
-            context={SchedulerStoreContext}
-            onMount={(store) => {
-              store.createEvent({
-                title: 'New recurring',
-                start: '2025-05-26T07:30:00Z',
-                end: '2025-05-26T08:30:00Z',
-                rrule: 'FREQ=DAILY',
-              });
-            }}
-          />
-        </EventCalendarProvider>,
-      );
-    }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-    ]);
-  });
-
-  it('should warn and strip the rrule when updateEvent is called with one', () => {
-    expect(() => {
-      render(
-        <EventCalendarProvider
-          events={[DEFAULT_EVENT]}
-          resources={resources}
-          onEventsChange={() => {}}
-        >
-          <SchedulerStoreRunner<AnyEventCalendarStore>
-            context={SchedulerStoreContext}
-            onMount={(store) => {
-              store.updateEvent({ id: DEFAULT_EVENT.id, rrule: 'FREQ=DAILY' });
-            }}
-          />
-        </EventCalendarProvider>,
-      );
-    }).toWarnDev([
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-    ]);
   });
 
   it('should warn when a custom event property collides with a built-in form key', () => {
@@ -867,26 +828,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     ]);
   });
 
-  it('should warn when updateRecurringEvent is called without a plugin', () => {
-    expect(() => {
-      render(
-        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-          <SchedulerStoreRunner<AnyEventCalendarStore>
-            context={SchedulerStoreContext}
-            onMount={(store) => {
-              store.updateRecurringEvent({
-                occurrenceStart: new Date('2025-05-26T07:30:00Z'),
-                changes: { id: DEFAULT_EVENT.id, start: new Date(), end: new Date() },
-              });
-            }}
-          />
-        </EventCalendarProvider>,
-      );
-    }).toWarnDev(['MUI X Scheduler: Recurring event updates are a premium feature.']);
-  });
-
   describe('read-only date and time', () => {
-    function renderReadonlyDetails(builder: EventBuilder, displayTimezone?: TemporalTimezone) {
+    function renderReadonlyDetails(builder: EventBuilder, displayTimezone?: string) {
       if (displayTimezone) {
         builder.withDisplayTimezone(displayTimezone);
       }
@@ -912,7 +855,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         EventBuilder.new().span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z'),
       );
 
-      expect(text).to.equal('Monday, May 26th, 2025, 7:30 AM - 8:15 AM');
+      expect(text).to.equal('Monday, May 26, 2025, 7:30 AM - 8:15 AM');
       expect(times).to.deep.equal(['2025-05-26T07:30:00', '2025-05-26T08:15:00']);
     });
 
@@ -921,7 +864,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         EventBuilder.new().span('2025-05-03T13:30:00Z', '2025-05-05T14:15:00Z'),
       );
 
-      expect(text).to.equal('Saturday, May 3rd, 2025, 1:30 PM - Monday, May 5th, 2025, 2:15 PM');
+      expect(text).to.equal('Saturday, May 3, 2025, 1:30 PM - Monday, May 5, 2025, 2:15 PM');
       expect(times).to.deep.equal(['2025-05-03T13:30:00', '2025-05-05T14:15:00']);
     });
 
@@ -930,7 +873,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         EventBuilder.new().span('2025-05-26T22:00:00Z', '2025-05-27T00:00:00Z'),
       );
 
-      expect(text).to.equal('Monday, May 26th, 2025, 10:00 PM - Tuesday, May 27th, 2025, 12:00 AM');
+      expect(text).to.equal('Monday, May 26, 2025, 10:00 PM - Tuesday, May 27, 2025, 12:00 AM');
     });
 
     it('should show the dates and times in the display timezone', () => {
@@ -939,7 +882,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         'Asia/Tokyo',
       );
 
-      expect(text).to.equal('Monday, May 26th, 2025, 4:30 PM - 5:15 PM');
+      expect(text).to.equal('Monday, May 26, 2025, 4:30 PM - 5:15 PM');
       expect(times).to.deep.equal(['2025-05-26T16:30:00', '2025-05-26T17:15:00']);
     });
 
@@ -949,15 +892,14 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         'Asia/Tokyo',
       );
 
-      expect(text).to.equal('Monday, May 26th, 2025, 11:30 PM - Tuesday, May 27th, 2025, 12:15 AM');
+      expect(text).to.equal('Monday, May 26, 2025, 11:30 PM - Tuesday, May 27, 2025, 12:15 AM');
     });
 
     // Browsers cannot change their timezone through process.env.TZ.
     it.skipIf(!isJSDOM)(
       'should show both dates of an event on two days of the display timezone, whatever the timezone of the system',
       () => {
-        // Pacific/Apia skipped December 30th, 2011. On a system there, `adapter.isSameDay()` reads
-        // December 30th and 31st as the same day in the other timezones.
+        // Pacific/Apia skipped December 30th, 2011.
         setSystemTimezone('Pacific/Apia');
         const { text } = renderReadonlyDetails(
           EventBuilder.new().span('2011-12-30T15:00:00Z', '2011-12-31T15:00:00Z'),
@@ -965,7 +907,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         );
 
         expect(text).to.equal(
-          'Friday, December 30th, 2011, 10:00 AM - Saturday, December 31st, 2011, 10:00 AM',
+          'Friday, December 30, 2011, 10:00 AM - Saturday, December 31, 2011, 10:00 AM',
         );
       },
     );
@@ -976,24 +918,24 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         'Asia/Tokyo',
       );
 
-      expect(text).to.equal('Tuesday, May 27th, 2025, 8:30 AM - 9:15 AM');
+      expect(text).to.equal('Tuesday, May 27, 2025, 8:30 AM - 9:15 AM');
     });
 
     it('should show the date of a single-day all-day event', () => {
       const { text, times } = renderReadonlyDetails(
-        EventBuilder.new().span('2025-05-26T00:00:00Z', '2025-05-26T23:59:59Z', { allDay: true }),
+        EventBuilder.new().span('2025-05-26', '2025-05-27', { allDay: true }),
       );
 
-      expect(text).to.equal('Monday, May 26th, 2025, All Day');
+      expect(text).to.equal('Monday, May 26, 2025, All Day');
       expect(times).to.deep.equal(['2025-05-26']);
     });
 
     it('should show the date range of a multi-day all-day event', () => {
       const { text, times } = renderReadonlyDetails(
-        EventBuilder.new().span('2025-05-03T00:00:00Z', '2025-05-05T23:59:59Z', { allDay: true }),
+        EventBuilder.new().span('2025-05-03', '2025-05-06', { allDay: true }),
       );
 
-      expect(text).to.equal('Saturday, May 3rd, 2025 - Monday, May 5th, 2025, All Day');
+      expect(text).to.equal('Saturday, May 3, 2025 - Monday, May 5, 2025, All Day');
       expect(times).to.deep.equal(['2025-05-03', '2025-05-05']);
     });
   });
@@ -1034,14 +976,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       );
     }
 
-    it('should render the default sections when the slot is not provided', () => {
-      renderWithSlot({});
-
-      expect(screen.getByText('Date & time')).not.to.equal(null);
-      expect(screen.getByText('Resource & color')).not.to.equal(null);
-      expect(screen.getByRole('textbox', { name: 'Description' })).not.to.equal(null);
-    });
-
     it('should render the slot content instead of the default sections', () => {
       renderWithSlot({ eventDialogGeneralTab: CustomSection });
 
@@ -1054,8 +988,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       generalTab: React.ComponentType,
       onEventsChange: (events: SchedulerEvent[]) => void = () => {},
     ) {
-      const start = adapter.date('2025-05-26T07:30:00Z', 'default');
-      const end = adapter.date('2025-05-26T08:15:00Z', 'default');
+      const start = createDate('2025-05-26T07:30:00Z');
+      const end = createDate('2025-05-26T08:15:00Z');
       const creationOccurrence = EventBuilder.new()
         .id('placeholder-id')
         .title('')
@@ -1072,8 +1006,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start: adapter.getTime(start),
-                end: adapter.getTime(end),
+                start: start.getTime(),
+                end: end.getTime(),
                 lockSurfaceType: false,
                 resourceId: null,
               });
@@ -1151,12 +1085,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.getByLabelText(/start date/i)).to.have.value('2025-05-27');
       expect(onRender.mock.calls.length).to.equal(rendersBefore);
 
-      expect(
-        adapter.formatByString(
-          createAdapterDate(adapter, getPlaceholder().start, 'default'),
-          'yyyy-MM-dd',
-        ),
-      ).to.equal('2025-05-27');
+      expect(toPlainDate(getPlaceholder().start, 'default')).toEqualPlainDate('2025-05-27');
     });
 
     it('should keep the placeholder in place while a custom field holds a date that does not exist', () => {
@@ -1610,6 +1539,43 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         expect(onEventsChange.mock.calls.length).to.equal(0);
         expect(screen.getByRole('alert')).to.have.text(alert);
       });
+    });
+
+    it('should block the submit of a start after the untouched end of an all-day event when the slot omits the date and time section', async () => {
+      const onEventsChange = vi.fn();
+      const builder = EventBuilder.new()
+        .title('Trip')
+        .span('2025-05-26', '2025-05-28', { allDay: true });
+      const allDayEvent = builder.build();
+
+      function CustomStartDateField() {
+        const field = useEventDialogFormField('startDate');
+        return (
+          <input
+            aria-label="Start date"
+            value={field.value}
+            onChange={(event) => field.setValue(event.target.value)}
+          />
+        );
+      }
+
+      await expect(async () => {
+        const { user } = renderWithSlot(
+          { eventDialogGeneralTab: CustomStartDateField },
+          { events: [allDayEvent], onEventsChange },
+          builder.toOccurrence(),
+        );
+
+        // The untouched end is the day after the last day, May 28: a start on May 28 leaves no day.
+        const input = screen.getByRole('textbox', { name: 'Start date' });
+        await user.clear(input);
+        await user.type(input, '2025-05-28');
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+      }).toWarnDev([
+        'MUI X Scheduler: The date range is invalid but no field of the event dialog validates the "endDate" field.',
+      ]);
+
+      expect(onEventsChange.mock.calls.length).to.equal(0);
     });
 
     async function submitInvertedRange(user: ReturnType<typeof render>['user']) {
@@ -2110,10 +2076,10 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
         const updated = onEventsChange.mock.calls[0][0][0];
-        expect(new Date(updated.start).toISOString()).to.equal('2025-05-26T11:45:00.000Z');
+        expect(updated.start).to.equal('2025-05-26T11:45:00.000Z');
         // The untouched end was validated as a New York time too: persisting its stored
         // 08:15Z would invert the range, so it follows the start into the new timezone.
-        expect(new Date(updated.end).toISOString()).to.equal('2025-05-26T12:15:00.000Z');
+        expect(updated.end).to.equal('2025-05-26T12:15:00.000Z');
       });
 
       it('should keep an untouched range byte-identical when the display timezone changes while the async validation is pending', async () => {

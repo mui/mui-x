@@ -1,4 +1,3 @@
-import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   RecurringEventPresetKey,
   RecurringEventScope,
@@ -8,8 +7,7 @@ import type {
   SchedulerProcessedEvent,
   SchedulerProcessedEventRecurrenceRule,
 } from '../../models';
-import type { Adapter } from '../../use-adapter/useAdapter.types';
-import type { PlainDate } from '../utils/base-temporal/PlainDate';
+import type { BaseTemporal } from '../utils/base-temporal';
 import type { UpdateEventsParameters } from '../utils/SchedulerStore/SchedulerStore.types';
 
 /** Contract implemented by the premium recurring-events plugin. */
@@ -18,11 +16,13 @@ export interface SchedulerRecurringEventsPluginInterface {
    * Parses a recurrence rule into a canonical `SchedulerProcessedEventRecurrenceRule`
    * expressed in the given timezone. String inputs are validated against RFC5545; object
    * inputs are trusted and normalized.
+   * A date-time `until` is the exact cutoff of a timed series (`allDay` false, the default), and
+   * only its date counts for an all-day one.
    */
   parseRRule(
-    adapter: Adapter,
     input: string | SchedulerEventRecurrenceRule,
-    timezone: TemporalTimezone,
+    timezone: string,
+    allDay?: boolean,
   ): SchedulerProcessedEventRecurrenceRule;
 
   /**
@@ -34,8 +34,7 @@ export interface SchedulerRecurringEventsPluginInterface {
     event: SchedulerProcessedEvent,
     start: number,
     end: number,
-    adapter: Adapter,
-    displayTimezone: TemporalTimezone,
+    displayTimezone: string,
   ): SchedulerEventOccurrence[];
 
   /**
@@ -43,11 +42,11 @@ export interface SchedulerRecurringEventsPluginInterface {
    * a single occurrence, the occurrence and the following ones, or the entire series.
    */
   updateRecurringEvent(
-    adapter: Adapter,
     originalEvent: SchedulerProcessedEvent,
-    occurrenceStart: TemporalSupportedObject,
+    occurrence: SchedulerEventOccurrence,
     changes: SchedulerEventUpdatedProperties,
     scope: RecurringEventScope,
+    displayTimezone: string,
   ): UpdateEventsParameters;
 
   /**
@@ -55,21 +54,11 @@ export interface SchedulerRecurringEventsPluginInterface {
    * a single occurrence, the occurrence and the following ones, or the entire series.
    */
   deleteRecurringEvent(
-    adapter: Adapter,
     originalEvent: SchedulerProcessedEvent,
-    occurrenceStart: TemporalSupportedObject,
+    occurrence: SchedulerEventOccurrence,
     scope: RecurringEventScope,
+    displayTimezone: string,
   ): UpdateEventsParameters;
-
-  /**
-   * Relabels the display-timezone dates of an update (start/end/exDates) into the event's
-   * data timezone before they are persisted. The rule is already expressed there.
-   */
-  applyDataTimezoneToEventUpdate(params: {
-    adapter: Adapter;
-    originalEvent: SchedulerProcessedEvent;
-    changes: SchedulerEventUpdatedProperties;
-  }): SchedulerEventUpdatedProperties;
 
   /**
    * Builds the recurrence presets (Daily / Weekly / Monthly / Yearly)
@@ -77,7 +66,7 @@ export interface SchedulerRecurringEventsPluginInterface {
    * `plainDate` is the date of the event's start in its own timezone.
    */
   computePresets(
-    plainDate: PlainDate,
+    plainDate: BaseTemporal.PlainDate,
   ): Record<RecurringEventPresetKey, SchedulerProcessedEventRecurrenceRule>;
 
   /**
@@ -87,14 +76,13 @@ export interface SchedulerRecurringEventsPluginInterface {
    */
   getDefaultPresetKey(
     rule: SchedulerProcessedEventRecurrenceRule | undefined,
-    occurrenceStartPlainDate: PlainDate,
+    occurrenceStartPlainDate: BaseTemporal.PlainDate,
   ): RecurringEventPresetKey | 'custom' | null;
 
   /**
    * Returns `true` if both recurrence rules serialize to the same RRULE string.
    */
   isSameRRule(
-    adapter: Adapter,
     rruleA: SchedulerProcessedEventRecurrenceRule | undefined,
     rruleB: SchedulerProcessedEventRecurrenceRule | undefined,
   ): boolean;

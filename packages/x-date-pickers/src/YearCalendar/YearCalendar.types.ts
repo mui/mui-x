@@ -49,7 +49,13 @@ export interface YearCalendarProps
     BaseDateValidationProps,
     TimezoneProps,
     FormProps {
+  /**
+   * If `true`, the component is focused when it mounts.
+   */
   autoFocus?: boolean;
+  /**
+   * A CSS class name applied to the root element.
+   */
   className?: string;
   /**
    * Override or extend the styles applied to the component.
@@ -94,8 +100,20 @@ export interface YearCalendarProps
    * @default false
    */
   disableHighlightToday?: boolean;
+  /**
+   * @ignore
+   */
   onYearFocus?: (year: number) => void;
+  /**
+   * @ignore
+   */
   hasFocus?: boolean;
+  /**
+   * @ignore
+   */
   onFocusedViewChange?: (hasFocus: boolean) => void;
+  /**
+   * @ignore
+   */
   gridLabelId?: string;
 }

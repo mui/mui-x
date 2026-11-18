@@ -1,10 +1,13 @@
 {
   "props": {
+    "apiRef": { "type": { "name": "shape", "description": "{ current?: { setZoomData: func } }" } },
+    "children": { "type": { "name": "node" } },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "blueberryTwilightPalette"
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "desc": { "type": { "name": "string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "height": { "type": { "name": "number" } },
     "highlightedItem": {
@@ -42,6 +45,15 @@
     },
     "series": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "skipAnimation": { "type": { "name": "bool" } },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "theme": { "type": { "name": "enum", "description": "'dark'<br>&#124;&nbsp;'light'" } },
+    "title": { "type": { "name": "string" } },
     "width": { "type": { "name": "number" } },
     "xAxis": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "yAxis": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },

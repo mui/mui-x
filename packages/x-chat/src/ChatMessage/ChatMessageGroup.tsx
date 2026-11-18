@@ -10,39 +10,38 @@ import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatMessageUtilityClasses } from './chatMessageClasses';
 import { ChatMessage } from './ChatMessage';
 import type { ChatMessageSlots, ChatMessageSlotProps } from './ChatMessage';
-import type { ChatBoxSlots, ChatBoxSlotProps } from '../ChatBox/ChatBox.types';
+import type {
+  ChatBoxMessageGroupSlots,
+  ChatBoxMessageGroupSlotProps,
+} from '../ChatBox/ChatBox.types';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageGroup');
 
 /**
- * Flat slot keys for `ChatMessageGroup` — part of the message-rendering pipeline
+ * Flat slots of `ChatMessageGroup` — part of the message-rendering pipeline
  * vocabulary. `messageGroup` is the styled group wrapper (wrapper-only); the
  * `message*` keys are mapped onto the inner `ChatMessage`'s short local slots.
  * A subset of the public `ChatBoxSlots`.
  */
-type ChatMessageGroupSlotKeys =
-  | 'messageGroup'
-  | 'messageRoot'
-  | 'messageAvatar'
-  | 'messageContent'
-  | 'messageMeta'
-  | 'messageInlineMeta'
-  | 'messageError'
-  | 'messageActions'
-  | 'messageAuthorName'
-  | 'streamingIndicator';
+export interface ChatMessageGroupSlots extends ChatBoxMessageGroupSlots {}
 
-export interface ChatMessageGroupSlots extends Pick<ChatBoxSlots, ChatMessageGroupSlotKeys> {}
-
-export interface ChatMessageGroupSlotProps extends Pick<
-  ChatBoxSlotProps,
-  ChatMessageGroupSlotKeys
-> {}
+export interface ChatMessageGroupSlotProps extends ChatBoxMessageGroupSlotProps {}
 
 export interface ChatMessageGroupProps extends Omit<MessageGroupProps, 'slots' | 'slotProps'> {
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: ChatMessageGroupSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ChatMessageGroupSlotProps;
 }
 
@@ -250,6 +249,9 @@ ChatMessageGroup.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The content of the component.
+   */
   children: PropTypes.node,
   className: PropTypes.string,
   /**
@@ -259,11 +261,31 @@ ChatMessageGroup.propTypes /* remove-proptypes */ = {
    * @default (message) => message.author?.id ?? message.role ?? ''
    */
   groupKey: PropTypes.func,
+  /**
+   * The index of the row in `items`.
+   */
   index: PropTypes.number,
+  /**
+   * The ids of the messages in the list, in order.
+   */
   items: PropTypes.arrayOf(PropTypes.string),
+  /**
+   * The id of the message this row belongs to.
+   */
   messageId: PropTypes.string.isRequired,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

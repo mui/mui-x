@@ -41,6 +41,11 @@ export const itemsReorderingSelectors = {
    */
   isDragging: (state: RichTreeViewProState<any, any>) => !!state.currentReorder?.draggedItemId,
   /**
+   * Gets the id of the dragged item.
+   */
+  draggedItemId: (state: RichTreeViewProState<any, any>) =>
+    state.currentReorder?.draggedItemId ?? null,
+  /**
    * Checks whether an item can be reordered.
    */
   canItemBeReordered: (state: RichTreeViewProState<any, any>, itemId: TreeViewItemId) =>

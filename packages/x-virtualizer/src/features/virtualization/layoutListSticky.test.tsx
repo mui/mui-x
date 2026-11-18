@@ -1,7 +1,8 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
-import { useVirtualizer, LayoutListSticky, type RowEntry } from '@mui/x-virtualizer';
+import { useVirtualizer, LayoutListSticky } from '@mui/x-virtualizer';
+import type { RowEntry } from '@mui/x-virtualizer';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 
@@ -183,11 +184,6 @@ describe.skipIf(isJSDOM)('<LayoutListSticky />', () => {
     await act(async () => {
       scroller.scrollTop = 55 * ROW_HEIGHT;
       scroller.dispatchEvent(new Event('scroll'));
-    });
-    // On a fast scroll the advance is deferred a few frames, so wait for the rendered
-    // set to actually change rather than for a row the leading buffer already holds.
-    await waitFor(() => {
-      expect([...localOffsets().keys()]).to.not.deep.equal(beforeKeys);
     });
     const after = localOffsets();
 

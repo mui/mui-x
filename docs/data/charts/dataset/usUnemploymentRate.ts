@@ -3,7 +3,7 @@
  * Updated: Jun 6, 2025 7:46 AM CDT
  */
 
-import { AxisValueFormatterContext } from '@mui/x-charts/models';
+import type { AxisValueFormatterContext } from '@mui/x-charts/models';
 
 export const dateAxisFormatter = (value: Date, context: AxisValueFormatterContext<'time'>) =>
   value.toLocaleDateString(undefined, {

@@ -6,15 +6,30 @@ import { useConversationContext } from './internals/ConversationContext';
 import type { ConversationSubtitleOwnerState } from './conversation.types';
 
 export interface ConversationSubtitleSlots {
+  /**
+   * The component that renders the subtitle.
+   * @default 'div'; a styled 'p' in `ChatConversationSubtitle`
+   */
   subtitle: React.ElementType;
 }
 
 export interface ConversationSubtitleSlotProps {
+  /**
+   * The props used for the subtitle slot.
+   */
   subtitle?: SlotComponentProps<'div', {}, ConversationSubtitleOwnerState>;
 }
 
 export interface ConversationSubtitleProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<ConversationSubtitleSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ConversationSubtitleSlotProps;
 }
 

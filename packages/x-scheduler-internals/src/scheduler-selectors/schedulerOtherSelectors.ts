@@ -1,9 +1,8 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
-import { createAdapterDate } from '../internals/utils/plain-date-utils/adapter';
 
-const visibleTimestamp = (state: State) => state.adapter.getTime(state.visibleDate);
+const visibleTimestamp = (state: State) => state.visibleDate.getTime();
 
 // Warning: Only add selectors here that do not belong to any specific feature.
 export const schedulerOtherSelectors = {
@@ -38,14 +37,9 @@ export const schedulerOtherSelectors = {
    */
   visibleTimestamp,
   /**
-   * `visibleDate` in the display timezone, for the code that formats it or passes it on.
+   * The locale the dates are formatted in.
    */
-  visibleDate: createSelectorMemoized(
-    (state: State) => state.adapter,
-    visibleTimestamp,
-    (state: State) => state.displayTimezone,
-    createAdapterDate,
-  ),
+  dateLocale: (state: State) => state.dateLocale,
   /**
    * The date of `visibleDate` in the display timezone, for the code that works on plain dates.
    */

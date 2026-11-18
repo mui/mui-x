@@ -1,6 +1,16 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "conversation": { "description": "The conversation the item renders." },
+    "focused": { "description": "If <code>true</code>, the item has keyboard focus." },
+    "selected": { "description": "If <code>true</code>, the conversation is selected." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "unread": { "description": "If <code>true</code>, the conversation has unread messages." }
+  },
   "classDescriptions": {},
-  "slotDescriptions": { "image": "", "root": "" }
+  "slotDescriptions": {
+    "image": "The component that renders the image.",
+    "root": "The component that renders the root."
+  }
 }

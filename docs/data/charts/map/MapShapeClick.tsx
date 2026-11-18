@@ -11,8 +11,8 @@ import { GeoDataPlot, MapShapePlot } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsTooltip } from '@mui/x-charts-premium/ChartsTooltip';
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
-import { type MapShapeItemIdentifier } from '@mui/x-charts-premium/models';
-import { type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
+import type { MapShapeItemIdentifier } from '@mui/x-charts-premium/models';
+import type { ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
 import { EU_COUNTRIES, countryData } from '../dataset/countryData';
 
 const countries = topojsonFeature(

@@ -1,6 +1,7 @@
-import { act, screen, MuiRenderResult } from '@mui/internal-test-utils';
+import type { MuiRenderResult } from '@mui/internal-test-utils';
+import { act, screen } from '@mui/internal-test-utils';
 import { fireClockPointerEvent, getClockTouchEvent, formatFullTimeValue } from 'test/utils/pickers';
-import { MuiPickersAdapter, PickerValidDate, TimeView } from '@mui/x-date-pickers/models';
+import type { MuiPickersAdapter, PickerValidDate, TimeView } from '@mui/x-date-pickers/models';
 import { formatMeridiem } from '@mui/x-date-pickers/internals';
 
 interface ViewHandler<TView> {

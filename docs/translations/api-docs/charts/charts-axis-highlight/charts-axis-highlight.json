@@ -1,5 +1,8 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "x": { "description": "The type of highlight for the x-axis." },
+    "y": { "description": "The type of highlight for the y-axis." }
+  },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } }
 }

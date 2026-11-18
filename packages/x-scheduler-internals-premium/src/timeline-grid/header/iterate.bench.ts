@@ -1,6 +1,5 @@
 import { describe, test } from 'vitest';
-import { adapter } from 'test/utils/scheduler';
-import { PlainDate } from '@mui/x-scheduler-internals/internals';
+import { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import { iterate } from './iterate';
 import type { IteratedRange } from './iterate';
 
@@ -9,9 +8,12 @@ export const benchmarkResult = { value: undefined as unknown };
 // The walk reads no timezone: the ranges are dates.
 describe('iterate', () => {
   // The header rows of the presets, with the ranges they display.
-  const visiblePlainDate = PlainDate.from('2026-03-04');
+  const visiblePlainDate = BaseTemporal.PlainDate.from('2026-03-04');
   const monthStartPlainDate = visiblePlainDate.with({ day: 1 });
-  const toRange = (startPlainDate: PlainDate, endPlainDate: PlainDate): IteratedRange => ({
+  const toRange = (
+    startPlainDate: BaseTemporal.PlainDate,
+    endPlainDate: BaseTemporal.PlainDate,
+  ): IteratedRange => ({
     startPlainDate,
     endPlainDate,
     dayStartMinute: 0,
@@ -20,15 +22,15 @@ describe('iterate', () => {
   const presets = {
     dayAndHour: () => {
       const range = toRange(visiblePlainDate, visiblePlainDate.add({ days: 4 }));
-      return [iterate(adapter, 'day', 'hour', range), iterate(adapter, 'hour', 'hour', range)];
+      return [iterate('day', 'hour', range, 1), iterate('hour', 'hour', range, 1)];
     },
     dayAndMonth: () => {
       const range = toRange(visiblePlainDate, visiblePlainDate.add({ days: 8 * 7 }));
-      return [iterate(adapter, 'month', 'day', range), iterate(adapter, 'day', 'day', range)];
+      return [iterate('month', 'day', range, 1), iterate('day', 'day', range, 1)];
     },
     monthAndYear: () => {
       const range = toRange(monthStartPlainDate, monthStartPlainDate.add({ months: 3 * 12 }));
-      return [iterate(adapter, 'year', 'day', range), iterate(adapter, 'month', 'day', range)];
+      return [iterate('year', 'day', range, 1), iterate('month', 'day', range, 1)];
     },
   };
 

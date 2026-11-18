@@ -1,6 +1,7 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import { ThemeOptions, ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
+import type { ThemeOptions } from '@mui/material/styles';
+import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
@@ -23,7 +24,7 @@ import CustomLayoutRangePicker from './CustomLayoutRangePicker';
 import { getMD3Theme } from './themes/md3';
 import { getCustomTheme } from './themes/customTheme';
 import ConfigToggleButtons from '../ConfigToggleButtons';
-import {
+import type {
   Config,
   Themes,
   TypographyType,

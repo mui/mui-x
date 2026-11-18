@@ -13,9 +13,10 @@ import {
   showNotAvailableInInitialProPlanError,
   showLicenseKeyVersionMismatchError,
 } from '../utils/licenseErrorMessageUtils';
-import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
+import type { LicenseStatus } from '../utils/licenseStatus';
+import { LICENSE_STATUS } from '../utils/licenseStatus';
 import MuiLicenseInfoContext from '../Unstable_LicenseInfoProvider/MuiLicenseInfoContext';
-import { MuiCommercialPackageName, CommercialPackageInfo } from '../utils/commercialPackages';
+import type { MuiCommercialPackageName, CommercialPackageInfo } from '../utils/commercialPackages';
 
 export const sharedLicenseStatuses: {
   [packageName in MuiCommercialPackageName]?: {

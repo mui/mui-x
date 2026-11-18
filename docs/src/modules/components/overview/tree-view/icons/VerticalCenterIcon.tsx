@@ -1,4 +1,5 @@
-import SvgIcon, { SvgIconOwnProps } from '@mui/material/SvgIcon';
+import type { SvgIconOwnProps } from '@mui/material/SvgIcon';
+import SvgIcon from '@mui/material/SvgIcon';
 
 export default function VerticalCenterIcon(props: SvgIconOwnProps) {
   return (

@@ -323,7 +323,9 @@ describe('<EventTimelinePremium /> - RTL', () => {
       const { event, onEventsChange } = await renderMeeting();
 
       // Grab 10 minutes into the event and drop at axis minute 850: the event starts at
-      // axis minute 840 = one visible day (720) + 120 → July 4, 10:00.
+      // axis minute 840 = one visible day (720) + 120 → July 4, 10:00. A real-milliseconds
+      // mapping would land on July 3, 14:00 instead. The LTR run is the only drop across the
+      // day seam of the trimmed axis, so keep it when changing this suite.
       await act(async () => {
         simulateDragAndDrop({
           source: event,
@@ -334,12 +336,8 @@ describe('<EventTimelinePremium /> - RTL', () => {
       });
 
       expect(onEventsChange.mock.calls.length).to.equal(1);
-      expect(new Date(onEventsChange.mock.calls[0][0][0].start).toISOString()).to.equal(
-        '2025-07-04T10:00:00.000Z',
-      );
-      expect(new Date(onEventsChange.mock.calls[0][0][0].end).toISOString()).to.equal(
-        '2025-07-04T11:00:00.000Z',
-      );
+      expect(onEventsChange.mock.calls[0][0][0].start).to.equal('2025-07-04T10:00:00.000Z');
+      expect(onEventsChange.mock.calls[0][0][0].end).to.equal('2025-07-04T11:00:00.000Z');
     });
 
     it('should resize the start of an event to the pointer', async () => {
@@ -355,12 +353,8 @@ describe('<EventTimelinePremium /> - RTL', () => {
       });
 
       expect(onEventsChange.mock.calls.length).to.equal(1);
-      expect(new Date(onEventsChange.mock.calls[0][0][0].start).toISOString()).to.equal(
-        '2025-07-03T09:00:00.000Z',
-      );
-      expect(new Date(onEventsChange.mock.calls[0][0][0].end).toISOString()).to.equal(
-        '2025-07-03T11:00:00.000Z',
-      );
+      expect(onEventsChange.mock.calls[0][0][0].start).to.equal('2025-07-03T09:00:00.000Z');
+      expect(onEventsChange.mock.calls[0][0][0].end).to.equal('2025-07-03T11:00:00.000Z');
     });
 
     it('should resize the end of an event to the pointer', async () => {
@@ -376,12 +370,8 @@ describe('<EventTimelinePremium /> - RTL', () => {
       });
 
       expect(onEventsChange.mock.calls.length).to.equal(1);
-      expect(new Date(onEventsChange.mock.calls[0][0][0].start).toISOString()).to.equal(
-        '2025-07-03T10:00:00.000Z',
-      );
-      expect(new Date(onEventsChange.mock.calls[0][0][0].end).toISOString()).to.equal(
-        '2025-07-03T13:00:00.000Z',
-      );
+      expect(onEventsChange.mock.calls[0][0][0].start).to.equal('2025-07-03T10:00:00Z');
+      expect(onEventsChange.mock.calls[0][0][0].end).to.equal('2025-07-03T13:00:00.000Z');
     });
 
     it('should create an event at the clicked time', async () => {

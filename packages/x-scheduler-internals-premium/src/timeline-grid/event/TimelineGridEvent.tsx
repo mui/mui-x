@@ -48,7 +48,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     // Internal props
     start,
     end,
-    dataTimezone,
     eventId,
     occurrenceKey,
     renderDragPreview,
@@ -88,7 +87,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     occurrenceKey,
     start,
     end,
-    dataTimezone,
   });
 
   const getSharedDragData: TimelineGridEventContext['getSharedDragData'] = useStableCallback(
@@ -208,8 +206,7 @@ export namespace TimelineGridEvent {
     extends
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      useDraggableEvent.PublicParameters,
-      Pick<useOriginalOccurrence.Parameters, 'dataTimezone'> {
+      useDraggableEvent.PublicParameters {
     elementPosition?: useElementPositionInCollection.ReturnValue;
   }
 

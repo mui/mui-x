@@ -1,6 +1,5 @@
 'use client';
 import { ChatBox } from '@mui/x-chat';
-
 import { createChunkStream } from 'docs/data/chat/core/examples/shared/demoUtils';
 
 const CONVERSATION_ID = 'reasoning-demo';

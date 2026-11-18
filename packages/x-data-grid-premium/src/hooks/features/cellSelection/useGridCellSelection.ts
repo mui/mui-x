@@ -6,6 +6,7 @@ import ownerDocument from '@mui/utils/ownerDocument';
 import useEventCallback from '@mui/utils/useEventCallback';
 import {
   getGridCellElement,
+  getRowIndexRelativeToAllRows,
   getTotalHeaderHeight,
   getVisibleRows,
   isEventTargetInPortal,
@@ -60,6 +61,29 @@ function isKeyboardEvent(event: any): event is React.KeyboardEvent {
 const AUTO_SCROLL_SENSITIVITY = 50; // The distance from the edge to start scrolling
 const AUTO_SCROLL_SPEED = 20; // The speed to scroll once the mouse enters the sensitivity area
 const FILL_HANDLE_HIT_AREA = 16; // px — size of the interactive hit area for the fill handle
+
+/**
+ * `true` when the pointer is on the fill handle of the cell: the cell shows
+ * the handle (`::after` pseudo-element) and the pointer is near its inline-end
+ * bottom corner, within the hit area.
+ */
+export function isPointerOnFillHandle(
+  cellElement: Element | null,
+  event: { clientX: number; clientY: number },
+  isRtl: boolean,
+): boolean {
+  if (!cellElement || !cellElement.classList.contains(gridClasses['cell--withFillHandle'])) {
+    return false;
+  }
+  const rect = cellElement.getBoundingClientRect();
+  return (
+    (isRtl
+      ? event.clientX <= rect.left + FILL_HANDLE_HIT_AREA
+      : event.clientX >= rect.right - FILL_HANDLE_HIT_AREA) &&
+    event.clientY >= rect.bottom - FILL_HANDLE_HIT_AREA &&
+    event.clientY >= rect.top // Ensure the pointer is within the cell bounds
+  );
+}
 
 function getSelectedOrFocusedCells(
   apiRef: RefObject<GridPrivateApiPremium>,
@@ -634,7 +658,10 @@ export const useGridCellSelection = (
       field: visibleColumns[endColumnIndex].field,
     };
 
-    apiRef.current.scrollToIndexes({ rowIndex: endRowIndex, colIndex: endColumnIndex });
+    apiRef.current.scrollToIndexes({
+      rowIndex: getRowIndexRelativeToAllRows(apiRef, visibleRows.rows[endRowIndex].id),
+      colIndex: endColumnIndex,
+    });
 
     const { id, field } = params;
     apiRef.current.selectCellRange({ id, field }, cellWithVirtualFocus.current);
@@ -903,25 +930,7 @@ export const useGridCellSelection = (
         return;
       }
       const cellElement = apiRef.current.getCellElement(params.id, params.field);
-      if (!cellElement || !cellElement.classList.contains(gridClasses['cell--withFillHandle'])) {
-        return;
-      }
-
-      const rect = cellElement.getBoundingClientRect();
-      const clickX = event.clientX;
-      const clickY = event.clientY;
-
-      const isRtl = apiRef.current.state.isRtl;
-
-      // Check if click is near the inline-end bottom corner (within hit area)
-      const isNearHandle =
-        (isRtl
-          ? clickX <= rect.left + FILL_HANDLE_HIT_AREA
-          : clickX >= rect.right - FILL_HANDLE_HIT_AREA) &&
-        clickY >= rect.bottom - FILL_HANDLE_HIT_AREA &&
-        clickY >= rect.top; // Ensure click is within cell bounds
-
-      if (!isNearHandle) {
+      if (!isPointerOnFillHandle(cellElement, event, apiRef.current.state.isRtl)) {
         return;
       }
 
@@ -1273,7 +1282,10 @@ export const useGridCellSelection = (
       // Move selection and focus to the filled cell
       apiRef.current.setCellSelectionModel({ [nextRowId]: { [cell.field]: true } });
       const colIndex = apiRef.current.getColumnIndex(cell.field);
-      apiRef.current.scrollToIndexes({ rowIndex: nextRowIndex, colIndex });
+      apiRef.current.scrollToIndexes({
+        rowIndex: getRowIndexRelativeToAllRows(apiRef, nextRowId),
+        colIndex: colIndex === -1 ? undefined : colIndex,
+      });
       apiRef.current.setCellFocus(nextRowId, cell.field);
       cellWithVirtualFocus.current = { id: nextRowId, field: cell.field };
       return;
@@ -1333,7 +1345,10 @@ export const useGridCellSelection = (
       );
       if (firstEditableField) {
         const colIndex = apiRef.current.getColumnIndex(firstEditableField);
-        apiRef.current.scrollToIndexes({ rowIndex: nextRowIndex, colIndex });
+        apiRef.current.scrollToIndexes({
+          rowIndex: getRowIndexRelativeToAllRows(apiRef, nextRowId),
+          colIndex: colIndex === -1 ? undefined : colIndex,
+        });
         apiRef.current.setCellFocus(nextRowId, firstEditableField);
         cellWithVirtualFocus.current = { id: nextRowId, field: firstEditableField };
       }
@@ -1462,7 +1477,7 @@ export const useGridCellSelection = (
 
       // Move selection and focus to the filled cell
       apiRef.current.setCellSelectionModel({ [cell.id]: { [nextField]: true } });
-      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(cell.id);
+      const rowIndex = getRowIndexRelativeToAllRows(apiRef, cell.id);
       apiRef.current.scrollToIndexes({ rowIndex, colIndex: nextColIndex });
       apiRef.current.setCellFocus(cell.id, nextField);
       cellWithVirtualFocus.current = { id: cell.id, field: nextField };

@@ -7,7 +7,7 @@ import { ChatDateDivider } from '../ChatMessage/ChatDateDivider';
 import { ChatUnreadMarker } from '../ChatIndicators/ChatUnreadMarker';
 import { ChatStreamingIndicatorRow } from '../ChatIndicators/ChatStreamingIndicatorRow';
 import { useChatSlots } from '../internals/ChatSlotsContext';
-import type { ChatBoxSlots, ChatBoxSlotProps } from '../ChatBox/ChatBox.types';
+import type { ChatBoxMessageRowSlots, ChatBoxMessageRowSlotProps } from '../ChatBox/ChatBox.types';
 
 function warnIfHostElementRowSlot(
   slotName: 'dateDivider' | 'unreadMarker' | 'streamingIndicator',
@@ -78,27 +78,13 @@ export interface ChatMessageListFeatures {
 }
 
 /**
- * Flat per-row slot keys shared by `ChatBox` and `ChatMessageList` — the
+ * Flat per-row slots shared by `ChatBox` and `ChatMessageList` — the
  * message-rendering pipeline vocabulary (group wrapper, dividers, and the
  * per-row `message*` parts). A subset of the public `ChatBoxSlots`.
  */
-type ChatMessageRowSlotKeys =
-  | 'messageGroup'
-  | 'dateDivider'
-  | 'unreadMarker'
-  | 'streamingIndicator'
-  | 'messageRoot'
-  | 'messageAvatar'
-  | 'messageContent'
-  | 'messageMeta'
-  | 'messageInlineMeta'
-  | 'messageError'
-  | 'messageActions'
-  | 'messageAuthorName';
+export interface ChatMessageRowSlots extends ChatBoxMessageRowSlots {}
 
-export interface ChatMessageRowSlots extends Pick<ChatBoxSlots, ChatMessageRowSlotKeys> {}
-
-export interface ChatMessageRowSlotProps extends Pick<ChatBoxSlotProps, ChatMessageRowSlotKeys> {}
+export interface ChatMessageRowSlotProps extends ChatBoxMessageRowSlotProps {}
 
 export interface DefaultMessageItemProps {
   id: string;
@@ -110,7 +96,15 @@ export interface DefaultMessageItemProps {
   index?: number;
   /** The rendered list's message ids. Forwarded to the group alongside `index`. */
   items?: string[];
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: ChatMessageRowSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: ChatMessageRowSlotProps;
   /**
    * Opt-in row dividers. Both are disabled by default; pass `{ dateDivider: true }`

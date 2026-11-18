@@ -74,7 +74,10 @@ export function EventCalendarProvider<TEvent extends object, TResource extends o
     }),
     [schedulerId, mergedLocaleText],
   );
-  const sharedComponentsStyledValue = React.useMemo(() => ({ classes: eventCalendarClasses }), []);
+  const sharedComponentsStyledValue = React.useMemo(
+    () => ({ classes: eventCalendarClasses, localeText: mergedLocaleText }),
+    [mergedLocaleText],
+  );
 
   return (
     <UnstyledEventCalendarProvider {...other}>

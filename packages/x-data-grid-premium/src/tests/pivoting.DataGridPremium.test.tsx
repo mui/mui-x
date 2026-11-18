@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
+import { act, createRenderer, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { DataGridPremium, gridClasses } from '@mui/x-data-grid-premium';
 import type {
   DataGridPremiumProps,
@@ -144,6 +144,50 @@ describe('<DataGridPremium /> - Pivoting', () => {
       </div>
     );
   }
+
+  it('should name a derived pivot sort button while pivoting is inactive', async () => {
+    render(
+      <Test
+        columns={COLUMNS.map((column) =>
+          column.field === 'date' ? { ...column, headerName: 'Shipped' } : column,
+        )}
+        pivotActive={false}
+        pivotPanelOpen
+        initialState={{
+          pivoting: { model: { rows: [], columns: [{ field: 'date-year' }], values: [] } },
+        }}
+      />,
+    );
+
+    expect(
+      await screen.findByRole('button', { name: 'Sort Shipped (Year) in ascending order' }),
+    ).not.to.equal(null);
+  });
+
+  it('should sort pivot columns in the order announced by the button', async () => {
+    const onPivotModelChange = vi.fn();
+    const { user } = render(
+      <Test
+        pivotActive={false}
+        pivotPanelOpen
+        sortingOrder={['desc', 'asc']}
+        onPivotModelChange={onPivotModelChange}
+        initialState={{
+          pivoting: { model: { rows: [], columns: [{ field: 'type' }], values: [] } },
+        }}
+      />,
+    );
+    const checkbox = await screen.findByRole('checkbox', { name: 'Type' });
+    const field = checkbox.closest<HTMLElement>(`.${gridClasses.pivotPanelField}`)!;
+    const button = within(field).getByRole('button', { name: 'Sort Type in descending order' });
+
+    await user.click(button);
+    expect(onPivotModelChange.mock.lastCall?.[0].columns[0].sort).to.equal('desc');
+    expect(button).to.have.attribute('aria-label', 'Sort Type in ascending order');
+    await user.click(button);
+    expect(onPivotModelChange.mock.lastCall?.[0].columns[0].sort).to.equal('asc');
+    expect(button).to.have.attribute('aria-label', 'Sort Type in descending order');
+  });
 
   it('should pivot the data without pivot columns', async () => {
     const { user } = render(

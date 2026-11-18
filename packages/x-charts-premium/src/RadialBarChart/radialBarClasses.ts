@@ -24,6 +24,9 @@ export const radialBarClasses: RadialBarClasses = generateUtilityClasses('MuiRad
 ]);
 
 interface UseUtilityClassesOptions {
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<RadialBarClasses>;
 }
 

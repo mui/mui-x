@@ -1,5 +1,8 @@
 {
   "componentDescription": "",
-  "propDescriptions": { "localeText": { "description": "Localized text for chart components." } },
+  "propDescriptions": {
+    "children": { "description": "The content of the component." },
+    "localeText": { "description": "Localized text for chart components." }
+  },
   "classDescriptions": {}
 }

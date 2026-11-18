@@ -1,5 +1,8 @@
 {
-  "props": { "skipAnimation": { "type": { "name": "bool" }, "default": "false" } },
+  "props": {
+    "d": { "type": { "name": "string" }, "required": true },
+    "skipAnimation": { "type": { "name": "bool" }, "default": "false" }
+  },
   "name": "AnimatedLine",
   "imports": [
     "import { AnimatedLine } from '@mui/x-charts/LineChart';",

@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
-import type { EventTimelinePremiumInternalFeatures } from './EventTimelinePremiumFeatures.types';
+import type { EventTimelinePremiumFeatures } from './EventTimelinePremiumFeatures.types';
 
 export const EventTimelinePremiumFeaturesContext =
-  React.createContext<EventTimelinePremiumInternalFeatures>(EMPTY_OBJECT);
+  React.createContext<EventTimelinePremiumFeatures>(EMPTY_OBJECT);
 
-export function useEventTimelinePremiumFeatures(): EventTimelinePremiumInternalFeatures {
+export function useEventTimelinePremiumFeatures(): EventTimelinePremiumFeatures {
   return React.useContext(EventTimelinePremiumFeaturesContext);
 }

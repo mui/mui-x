@@ -20,6 +20,9 @@ export interface GaugeContainerProps
     >,
     Omit<GaugeProviderProps, 'children'>,
     Omit<React.SVGProps<SVGSVGElement>, 'width' | 'height'> {
+  /**
+   * The content of the component.
+   */
   children?: React.ReactNode;
 }
 
@@ -100,6 +103,9 @@ GaugeContainer.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The content of the component.
+   */
   children: PropTypes.node,
   className: PropTypes.string,
   /**
@@ -178,6 +184,9 @@ GaugeContainer.propTypes /* remove-proptypes */ = {
    * @default 0
    */
   startAngle: PropTypes.number,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

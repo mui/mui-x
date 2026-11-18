@@ -1,8 +1,10 @@
 import {
-  adapter,
+  addWeeks,
+  createDate,
   getEventTimelinePremiumStateFromParameters,
   ResourceBuilder,
   setSystemTimezone,
+  startOfWeek,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import type {
@@ -13,7 +15,7 @@ import { clearWarningsCache } from '@mui/x-internals/warning';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { eventTimelinePremiumPresetSelectors } from './eventTimelinePremiumPresetSelectors';
 
-const VISIBLE_DATE = adapter.date('2025-07-03T00:00:00Z', 'default');
+const VISIBLE_DATE = createDate('2025-07-03T00:00:00Z');
 const TEST_RESOURCES = [ResourceBuilder.new().build()];
 
 const PRESET_SHAPE: Record<
@@ -30,30 +32,6 @@ const PRESET_SHAPE: Record<
 describe('eventTimelinePremiumPresetSelectors', () => {
   beforeEach(() => {
     clearWarningsCache();
-  });
-
-  describe('preset', () => {
-    it('should return the preset from state', () => {
-      const state = getEventTimelinePremiumStateFromParameters({
-        resources: TEST_RESOURCES,
-        events: [],
-        preset: 'monthAndYear',
-      });
-      const preset = eventTimelinePremiumPresetSelectors.preset(state);
-      expect(preset).to.equal('monthAndYear');
-    });
-  });
-
-  describe('presets', () => {
-    it('should return the presets from state', () => {
-      const state = getEventTimelinePremiumStateFromParameters({
-        resources: TEST_RESOURCES,
-        events: [],
-        presets: ['dayAndHour', 'dayAndMonth'],
-      });
-      const presets = eventTimelinePremiumPresetSelectors.presets(state);
-      expect(presets).to.deep.equal(['dayAndHour', 'dayAndMonth']);
-    });
   });
 
   describe('config', () => {
@@ -100,10 +78,9 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       // CSS ticks use the preset's `timeResolution` (days here); 16 weeks → 112 days.
       expect(config.tickCount).to.equal(16 * 7);
       // July 3, 2025 is a Thursday → week starts Monday June 30
-      expect(new Date(config.start)).toEqualDateTime(adapter.startOfWeek(VISIBLE_DATE));
-      expect(new Date(config.end)).toEqualDateTime(
-        adapter.endOfWeek(adapter.addWeeks(adapter.startOfWeek(VISIBLE_DATE), 15)),
-      );
+      expect(new Date(config.start)).toEqualDateTime(startOfWeek(VISIBLE_DATE));
+      // The last instant of the 16th week.
+      expect(config.end).to.equal(addWeeks(startOfWeek(VISIBLE_DATE), 16).getTime() - 1);
     });
 
     it('should return the configuration for the monthAndYear preset', () => {
@@ -130,13 +107,13 @@ describe('eventTimelinePremiumPresetSelectors', () => {
         resources: TEST_RESOURCES,
         events: [],
         preset: 'monthAndYear',
-        visibleDate: adapter.date('2024-01-15T00:00:00Z', 'default'),
+        visibleDate: createDate('2024-01-15T00:00:00Z'),
       });
       const nonLeapStart = getEventTimelinePremiumStateFromParameters({
         resources: TEST_RESOURCES,
         events: [],
         preset: 'monthAndYear',
-        visibleDate: adapter.date('2025-01-15T00:00:00Z', 'default'),
+        visibleDate: createDate('2025-01-15T00:00:00Z'),
       });
 
       const leapConfig = eventTimelinePremiumPresetSelectors.config(leapStart);
@@ -280,7 +257,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
         events: [],
         preset: 'dayAndMonth',
         // July 1st at midnight in UTC is June 30th at 20:00 in New York.
-        visibleDate: adapter.date('2025-07-01T00:00:00', 'UTC'),
+        visibleDate: createDate('2025-07-01T00:00:00', 'UTC'),
         displayTimezone: 'America/New_York',
       });
 
@@ -305,7 +282,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
           events: [],
           preset,
           // January 1st, 2023 at midnight in UTC is December 31st, 2022 at 19:00 in New York.
-          visibleDate: adapter.date('2023-01-01T00:00:00', 'UTC'),
+          visibleDate: createDate('2023-01-01T00:00:00', 'UTC'),
           displayTimezone: 'America/New_York',
         });
 
@@ -326,7 +303,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
           resources: TEST_RESOURCES,
           events: [],
           preset,
-          visibleDate: adapter.date(visibleDate, displayTimezone),
+          visibleDate: createDate(visibleDate, displayTimezone),
           displayTimezone,
         });
         const config = eventTimelinePremiumPresetSelectors.config(state);
@@ -377,7 +354,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
           resources: TEST_RESOURCES,
           events: [],
           preset: 'dayAndHour',
-          visibleDate: adapter.date('1994-12-28T12:00:00', 'Pacific/Kiritimati'),
+          visibleDate: createDate('1994-12-28T12:00:00', 'Pacific/Kiritimati'),
           displayTimezone: 'Pacific/Kiritimati',
         });
         const config = eventTimelinePremiumPresetSelectors.config(state);

@@ -4,6 +4,7 @@ import { act, screen } from '@mui/internal-test-utils';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { WeekView } from '@mui/x-scheduler/week-view';
 import { vi, describe, it, expect } from 'vitest';
+import { getMinutesInDay } from '@mui/x-scheduler-internals/internals';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 import { eventCalendarClasses } from '../../event-calendar';
 import { EventDialogProvider } from '../../internals/components/event-dialog';
@@ -55,7 +56,7 @@ describe('<WeekView /> event creation', () => {
     // Without a display timezone, the creations keep the `'default'` timezone of the occurrences.
     { displayTimezone: undefined, timezone: 'default' },
     { displayTimezone: 'America/New_York', timezone: 'America/New_York' },
-  ])('in the $timezone display timezone', ({ displayTimezone, timezone }) => {
+  ])('in the $timezone display timezone', ({ displayTimezone }) => {
     async function createWithKeyboard(className: string) {
       const onEventEditingStart = vi.fn((_occurrence: any, eventDetails: any) =>
         eventDetails.cancel(),
@@ -85,17 +86,18 @@ describe('<WeekView /> event creation', () => {
     it('should pass a creation in the time grid to `onEventEditingStart` in the display timezone', async () => {
       const occurrence = await createWithKeyboard(eventCalendarClasses.dayTimeGridColumn);
 
-      expect(occurrence.displayTimezone.timezone).to.equal(timezone);
       // The creation starts at noon.
-      expect(occurrence.displayTimezone.start.minutesInDay).to.equal(12 * 60);
+      expect(getMinutesInDay(occurrence.start.plainDateTime)).to.equal(12 * 60);
     });
 
     it('should pass a creation in the day grid to `onEventEditingStart` in the display timezone', async () => {
       const occurrence = await createWithKeyboard(eventCalendarClasses.dayTimeGridAllDayEventsCell);
 
-      expect(occurrence.displayTimezone.timezone).to.equal(timezone);
-      // The creation ends on the last minute of its day.
-      expect(occurrence.displayTimezone.end.minutesInDay).to.equal(24 * 60 - 1);
+      // The all-day creation ends at the start of the next day.
+      expect(getMinutesInDay(occurrence.end.plainDateTime)).to.equal(0);
+      expect(occurrence.end.plainDateTime.toPlainDate().toString()).to.equal(
+        occurrence.start.plainDateTime.toPlainDate().add({ days: 1 }).toString(),
+      );
     });
   });
 });

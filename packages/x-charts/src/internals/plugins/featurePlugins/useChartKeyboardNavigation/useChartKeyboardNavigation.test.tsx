@@ -115,6 +115,74 @@ describe('useChartKeyboardNavigation', () => {
     },
   );
 
+  it.skipIf(isJSDOM)(
+    'should remove focus indicator when the focus moves to another element of the chart',
+    async () => {
+      const { container, user } = render(
+        <BarChart
+          height={100}
+          width={100}
+          skipAnimation
+          margin={0}
+          series={[{ id: 'A', data: [50, 100] }]}
+        >
+          <foreignObject width={10} height={10}>
+            <button type="button">inside</button>
+          </foreignObject>
+        </BarChart>,
+      );
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('[ArrowRight]');
+
+      expect(container.querySelector(FOCUSED_BAR_SELECTOR)).not.to.equal(null);
+
+      await user.keyboard('{Tab}');
+
+      expect(document.activeElement).to.equal(container.querySelector('button'));
+      expect(container.querySelector(FOCUSED_BAR_SELECTOR)).to.equal(null);
+
+      await user.keyboard('{Shift>}{Tab}{/Shift}');
+
+      expect(container.querySelector(FOCUSED_BAR_SELECTOR)).not.to.equal(null);
+    },
+  );
+
+  it.skipIf(isJSDOM)(
+    'should not move the focused item with the keys pressed on another element of the chart',
+    async () => {
+      const { container, user } = render(
+        <BarChart
+          height={100}
+          width={100}
+          skipAnimation
+          margin={0}
+          series={[{ id: 'A', data: [50, 100] }]}
+        >
+          <foreignObject width={10} height={10}>
+            <button type="button">inside</button>
+          </foreignObject>
+        </BarChart>,
+      );
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('[ArrowRight]');
+
+      const focusedBarX = container.querySelector(FOCUSED_BAR_SELECTOR)!.getAttribute('x');
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('[ArrowRight]');
+
+      expect(container.querySelector(FOCUSED_BAR_SELECTOR)).to.equal(null);
+
+      await user.keyboard('{Shift>}{Tab}{/Shift}');
+
+      expect(container.querySelector(FOCUSED_BAR_SELECTOR)!.getAttribute('x')).to.equal(
+        focusedBarX,
+      );
+    },
+  );
+
   it.skipIf(isJSDOM)('should not focus a hidden series via keyboard navigation', async () => {
     const { container, user } = render(
       <BarChart

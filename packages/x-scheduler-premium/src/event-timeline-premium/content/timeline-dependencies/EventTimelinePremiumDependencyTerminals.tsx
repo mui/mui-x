@@ -16,6 +16,7 @@ import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-intern
 import { getDependencyEdges } from '@mui/x-scheduler-internals-premium/internals';
 import type { SchedulerDependencyCreation } from '@mui/x-scheduler-internals-premium/models';
 import { getPaletteVariants } from '@mui/x-scheduler/internals';
+import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { useDependencyGeometry } from './EventTimelinePremiumDependencyGeometry';
 
 /**
@@ -53,10 +54,6 @@ const DependencyTerminalsLayer = styled('div', {
   zIndex: 2,
 });
 
-// TODO(dependencies public flip, #23420): add an `eventDependencyTerminal` utility class (the
-// key paired with the `EventDependencyTerminal` slot, like `eventResizeHandler`) and a
-// `dependencyTerminals` one for the layer; both only carry data attributes while the
-// feature has no public API.
 const EventTimelinePremiumDependencyTerminal = styled(TimelineGrid.EventDependencyTerminal, {
   name: 'MuiEventTimeline',
   slot: 'EventDependencyTerminal',
@@ -129,6 +126,7 @@ const TERMINAL_SIDES: readonly SchedulerEventSide[] = ['start', 'end'];
 type TerminalGestureRole = 'source' | 'target' | 'drop' | null;
 
 interface DependencyTerminalProps {
+  className: string;
   eventId: SchedulerEventId;
   occurrenceKey: string;
   resourceId: SchedulerResourceId;
@@ -143,10 +141,21 @@ interface DependencyTerminalProps {
 // Primitive props only, so the memo holds: a creation transition re-renders the
 // layer, and only the gesture's terminals (whose role changed) re-render with it.
 const DependencyTerminal = React.memo(function DependencyTerminal(props: DependencyTerminalProps) {
-  const { eventId, occurrenceKey, resourceId, side, color, inlineStart, top, gestureRole, muted } =
-    props;
+  const {
+    className,
+    eventId,
+    occurrenceKey,
+    resourceId,
+    side,
+    color,
+    inlineStart,
+    top,
+    gestureRole,
+    muted,
+  } = props;
   return (
     <EventTimelinePremiumDependencyTerminal
+      className={className}
       eventId={eventId}
       occurrenceKey={occurrenceKey}
       resourceId={resourceId}
@@ -192,6 +201,7 @@ export function EventTimelinePremiumDependencyTerminals() {
 
 function DependencyTerminalsLayerImpl() {
   const store = useEventTimelinePremiumStoreContext();
+  const { classes } = useEventTimelinePremiumStyledContext();
 
   const creation = useStore(store, eventTimelinePremiumDependencySelectors.creation);
   const selected = useStore(store, eventTimelinePremiumDependencySelectors.selectedModel);
@@ -398,6 +408,7 @@ function DependencyTerminalsLayerImpl() {
             // The occurrence key repeats on every row of a multi-resource event: only
             // the row disambiguates the appearance.
             key={`${rowIndex}:${occurrence.key}:${side}`}
+            className={classes.eventDependencyTerminal}
             eventId={occurrence.id}
             occurrenceKey={occurrence.key}
             resourceId={rowResourceId}
@@ -423,7 +434,11 @@ function DependencyTerminalsLayerImpl() {
   }
 
   return (
-    <DependencyTerminalsLayer ref={layerRef} style={{ width: eventsWidth, height }}>
+    <DependencyTerminalsLayer
+      ref={layerRef}
+      className={classes.dependencyTerminals}
+      style={{ width: eventsWidth, height }}
+    >
       {terminals}
     </DependencyTerminalsLayer>
   );

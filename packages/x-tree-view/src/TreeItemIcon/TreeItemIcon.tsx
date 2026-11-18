@@ -92,6 +92,9 @@ TreeItemIcon.propTypes /* remove-proptypes */ = {
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * The status of the item, used to pick the icon (for example expanded or collapsed).
+   */
   status: PropTypes.shape({
     disabled: PropTypes.bool.isRequired,
     editable: PropTypes.bool.isRequired,

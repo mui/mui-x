@@ -1,4 +1,4 @@
-import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import removeProps from '../../../util/removeProps';
 
 const componentNames = ['DataGrid', 'DataGridPro', 'DataGridPremium'];

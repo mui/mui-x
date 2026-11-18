@@ -1,4 +1,4 @@
-import { StatCardProps } from './StatCard';
+import type { StatCardProps } from './StatCard';
 
 export const statCardData: StatCardProps[] = [
   {

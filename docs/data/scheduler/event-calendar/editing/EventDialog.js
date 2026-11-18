@@ -1,6 +1,8 @@
 import * as React from 'react';
-
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
+
+const features = { recurringEvents: recurringEventsFeature };
 
 const defaultVisibleDate = new Date('2025-07-01T00:00:00');
 
@@ -23,8 +25,8 @@ const initialEvents = [
   {
     id: 'birthday',
     title: "Alice's Birthday",
-    start: '2025-07-03T00:00:00',
-    end: '2025-07-04T00:00:00',
+    start: '2025-07-03',
+    end: '2025-07-05',
     resource: 'personal',
     allDay: true,
     readOnly: true,
@@ -42,6 +44,7 @@ export default function EventDialog() {
   return (
     <div style={{ height: '600px', width: '100%' }}>
       <EventCalendarPremium
+        features={features}
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}

@@ -59,9 +59,10 @@ export interface GridColumnApi {
    */
   setColumnWidth: (field: string, width: number) => void;
   /**
-   * Gets the index of a column relative to the columns that are reachable by scroll.
+   * Returns the index position of a column among all columns, including the hidden ones.
    * @param {string} field The column field.
    * @returns {number} The index of the column.
+   * @deprecated Use `getColumnIndex(field, false)` instead.
    */
   getColumnIndexRelativeToVisibleColumns: (field: string) => number;
 }
@@ -69,8 +70,11 @@ export interface GridColumnApi {
 export interface GridColumnReorderApi {
   /**
    * Moves a column from its original position to the position given by `targetIndexPosition`.
+   * By default, the position counts all columns, including the hidden ones, like `getColumnIndex(field, false)`.
+   * Pass `true` to `useVisibleColumns` to count only the visible columns.
    * @param {string} field The field name
    * @param {number} targetIndexPosition The new position (0-based).
+   * @param {boolean} useVisibleColumns Determines if all columns or the visible ones should be considered. Default is `false`, `true` in v10.
    */
-  setColumnIndex: (field: string, targetIndexPosition: number) => void;
+  setColumnIndex: (field: string, targetIndexPosition: number, useVisibleColumns?: boolean) => void;
 }

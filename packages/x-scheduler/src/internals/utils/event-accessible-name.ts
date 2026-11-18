@@ -1,16 +1,24 @@
 import type {
+  SchedulerProcessedDate,
   SchedulerRenderableEventOccurrence,
-  TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import { formatHourAndMinutes } from '@mui/x-scheduler-internals/internals';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
+import {
+  formatFullDate,
+  formatTime,
+  getMinutesInDay,
+  getOccurrenceLastDayNumber,
+  plainDateFromDayNumber,
+} from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEventLocaleText } from '../../models/translations';
-import { formatFullDate } from './date-utils';
 import { isOccurrenceMultiDay } from './event-utils';
 
 export interface GetEventAccessibleNameParameters {
   occurrence: SchedulerRenderableEventOccurrence;
-  adapter: Adapter;
+  /**
+   * The locale the dates are formatted in.
+   */
+  locale: string;
   ampm: boolean;
   localeText: SchedulerEventLocaleText;
   isRecurring: boolean;
@@ -18,22 +26,26 @@ export interface GetEventAccessibleNameParameters {
    * Name of the resource to announce, or `null` to announce none.
    */
   resourceName: string | null;
+  /**
+   * The timezone the occurrence is displayed in.
+   */
+  displayTimezone: string;
 }
 
 /**
  * Builds the accessible name of an event from its title, when it happens, its resource, and
  * whether it recurs.
- * @example "Running, 7:30 AM to 8:30 AM, Monday, May 26th, 2025, Resource: Sport, Recurring"
+ * @example "Running, 7:30 AM to 8:30 AM, Monday, May 26, 2025, Resource: Sport, Recurring"
  */
 export function getEventAccessibleName(parameters: GetEventAccessibleNameParameters): string {
-  const { occurrence, adapter, ampm, localeText, isRecurring, resourceName } = parameters;
-  const start = occurrence.displayTimezone.start.value;
-  const end = occurrence.displayTimezone.end.value;
-  const isMultiDay = isOccurrenceMultiDay(occurrence);
+  const { occurrence, locale, ampm, localeText, isRecurring, resourceName, displayTimezone } =
+    parameters;
+  const { start, end } = occurrence;
+  const isMultiDay = isOccurrenceMultiDay(occurrence, displayTimezone);
 
-  const formatDate = (date: TemporalSupportedObject) => formatFullDate(date, adapter);
-  const formatDateTime = (date: TemporalSupportedObject) =>
-    `${formatDate(date)} ${formatHourAndMinutes(adapter, date, ampm)}`;
+  const formatDate = (date: BaseTemporal.PlainDate) => formatFullDate(locale, date);
+  const formatDateTime = (date: SchedulerProcessedDate) =>
+    `${formatDate(date.plainDateTime.toPlainDate())} ${formatTime(locale, getMinutesInDay(date.plainDateTime), ampm)}`;
 
   // A multi-day timed event carries its times inside the date range, since they belong to
   // different days, so it has no separate `when`.
@@ -45,15 +57,23 @@ export function getEventAccessibleName(parameters: GetEventAccessibleNameParamet
       return undefined;
     }
     return localeText.eventAriaLabelTimeRange(
-      formatHourAndMinutes(adapter, start, ampm),
-      formatHourAndMinutes(adapter, end, ampm),
+      formatTime(locale, getMinutesInDay(start.plainDateTime), ampm),
+      formatTime(locale, getMinutesInDay(end.plainDateTime), ampm),
     );
   })();
 
-  const formatBound = occurrence.allDay ? formatDate : formatDateTime;
-  const date = isMultiDay
-    ? localeText.eventAriaLabelDateRange(formatBound(start), formatBound(end))
-    : formatDate(start);
+  let date: string;
+  if (!isMultiDay) {
+    date = formatDate(start.plainDateTime.toPlainDate());
+  } else if (occurrence.allDay) {
+    // The end of an all-day occurrence is the start of the day after its last day.
+    date = localeText.eventAriaLabelDateRange(
+      formatDate(start.plainDateTime.toPlainDate()),
+      formatDate(plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence, displayTimezone))),
+    );
+  } else {
+    date = localeText.eventAriaLabelDateRange(formatDateTime(start), formatDateTime(end));
+  }
 
   return localeText.eventAriaLabel({
     title: occurrence.title,

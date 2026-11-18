@@ -1,8 +1,8 @@
 import * as React from 'react';
+import type { GridApiPremium } from '@mui/x-data-grid-premium';
 import {
   gridRowSelectionIdsSelector,
   DataGridPremium,
-  GridApiPremium,
   gridFocusCellSelector,
   gridSortedRowIdsSelector,
   useGridApiRef,

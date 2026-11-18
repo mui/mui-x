@@ -10,10 +10,12 @@ import type {
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
-import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import { getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
 import type { DayGridEventProps } from './DayGridEvent.types';
 import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
 import { EventDragPreview } from '../../../components/event-drag-preview';
@@ -267,7 +269,10 @@ const isResizableSelector = (
 
   // In month view, only multi-day and all-day events can be resized
   if (view === 'month') {
-    return isOccurrenceAllDayOrMultipleDay(occurrence);
+    return isOccurrenceAllDayOrMultipleDay(
+      occurrence,
+      schedulerOtherSelectors.displayTimezone(state),
+    );
   }
 
   return true;
@@ -336,8 +341,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
                 style={{ '--number-of-lines': 1 } as React.CSSProperties}
               >
                 <DayGridEventTime className={classes.dayGridEventTime}>
-                  <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
-                  <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
+                  <span>{formatTime(occurrence.start)}</span>
+                  <span> - {formatTime(occurrence.end)}</span>
                 </DayGridEventTime>
                 <DayGridEventTitle className={classes.dayGridEventTitle} as="span">
                   {occurrence.title}
@@ -364,16 +369,16 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   }, [
     variant,
     occurrence.title,
-    occurrence.displayTimezone.start.value,
-    occurrence.displayTimezone.end.value,
+    occurrence.start,
+    occurrence.end,
     isRecurring,
     formatTime,
     classes,
   ]);
 
   const sharedProps = {
-    start: occurrence.displayTimezone.start,
-    end: occurrence.displayTimezone.end,
+    start: occurrence.start,
+    end: occurrence.end,
     ref: forwardedRef,
     'data-variant': variant,
     'data-palette': color,
@@ -402,7 +407,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     <DayGridEventRoot
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
-      dataTimezone={getOccurrenceDataTimezone(occurrence)}
       isDraggable={isDraggable}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-hidden={variant === 'invisible'}

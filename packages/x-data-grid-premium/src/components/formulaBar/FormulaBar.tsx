@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import {
   gridClasses,
@@ -31,6 +32,10 @@ import {
   unregisterFormulaFocusSafeElement,
 } from '../../hooks/features/formula/gridFormulaBarElements';
 import type { GridFormulaResult } from '../../hooks/features/formula/gridFormulaInterfaces';
+import {
+  clearFormulaPickSession,
+  registerFormulaPickEditable,
+} from '../../hooks/features/formula/gridFormulaReferencePicking';
 import {
   getPlainEditDraftText,
   getPlainEditParserInput,
@@ -126,7 +131,7 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
   const { className, onKeyDown, onMouseDown, ...other } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
-  const popupId = React.useId();
+  const popupId = useId();
   const rootRef = React.useRef<HTMLDivElement | null>(null);
   // Registration for the `canUpdateFocus` veto follows the ELEMENT lifecycle
   // through this callback ref, not the component's: the bar stays mounted while
@@ -223,6 +228,33 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
     apiRef.current.isCellEditable(apiRef.current.getCellParams(cell.id, cell.field));
   const readOnly = !isEditable || (isMirror && rootProps.editMode === 'row');
 
+  // Picked references (a click on a cell while the bar has the focus) are written
+  // into the bar: into its draft, or into the cell edit it mirrors. Only a
+  // formula column can hold them, and a read-only bar takes no text.
+  const canReceivePicks = cell !== null && allowFormulas && !readOnly;
+  // What a plain click compares the text with (it only replaces a reference written in
+  // this edit): the text the draft started from, which is the displayed value while there
+  // is no draft. A mirrored cell edit has the baseline of that edit, kept by the session.
+  const pickBaselineRef = React.useRef<() => string | undefined>(() => undefined);
+  pickBaselineRef.current = () => {
+    if (isMirror) {
+      return undefined;
+    }
+    return draftRef.current === null ? displayValue : draftSeedRef.current;
+  };
+  React.useEffect(() => {
+    if (!canReceivePicks || cell === null) {
+      return undefined;
+    }
+    return registerFormulaPickEditable(apiRef, {
+      kind: 'bar',
+      getHandle: () => coreRef.current,
+      ownerCell: cell,
+      a1Notation: a1Enabled,
+      getBaseline: () => pickBaselineRef.current(),
+    });
+  }, [apiRef, canReceivePicks, cell, a1Enabled]);
+
   // ----- Draft lifecycle helpers -----
 
   const clearPreview = React.useCallback(() => {
@@ -276,11 +308,17 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
     // The ref clears synchronously: the commit flow triggers `cellFocusIn` and
     // `blur` in the same tick, and their dirty checks must not see the old
     // draft (a stale ref would double-commit).
+    const hadDraft = draftRef.current !== null;
     draftRef.current = null;
     setDraft(null);
     draftSeedRef.current = '';
     clearPreview();
     coreRef.current?.setEngaged(false);
+    // A reference picked into the draft ends with it. A mirrored cell edit keeps
+    // its picking session: it ends with the edit.
+    if (hadDraft) {
+      clearFormulaPickSession(apiRef);
+    }
     const current = gridFormulaActiveEditSelector(apiRef);
     if (current !== null && current.draft !== undefined) {
       apiRef.current.setFormulaActiveEdit!(null);

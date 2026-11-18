@@ -8,7 +8,13 @@ import { getSymbol } from '../internals/getSymbol';
 import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 
 interface LineHighlightElementCommonProps {
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: SeriesId;
+  /**
+   * The color of the element.
+   */
   color: string;
   x: number;
   y: number;
@@ -20,6 +26,9 @@ export type LineHighlightElementProps =
         'ref'
       >)
   | (LineHighlightElementCommonProps & {
+      /**
+       * The shape of the marker.
+       */
       shape: 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
     } & Omit<React.SVGProps<SVGPathElement>, 'ref'>);
 
@@ -70,7 +79,13 @@ LineHighlightElement.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: PropTypes.string.isRequired,
+  /**
+   * The shape of the marker.
+   */
   shape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye'])
     .isRequired,
 } as any;

@@ -1,13 +1,12 @@
 import * as React from 'react';
-import {
-  DataGridPro,
+import type {
   GridRenderCellParams,
   GridListViewColDef,
   GridColDef,
   GridRowParams,
   GridRowsProp,
-  useGridApiContext,
 } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiContext } from '@mui/x-data-grid-pro';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';

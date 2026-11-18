@@ -33,6 +33,7 @@ export interface RichTreeViewSlots extends TreeViewSlots, Omit<RichTreeViewItems
    * `role="tree"` and `aria-busy` attributes, and inside a lazily loading item
    * while its children load.
    * Compose it with `TreeItemLoader` to keep the rows semantically correct.
+   * @default TreeItemLoader rows.
    */
   loading?: React.ElementType;
   /**

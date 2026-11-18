@@ -9,7 +9,6 @@ import {
   createProcessedDate,
   isInternalDragOrResizePlaceholder,
 } from '@mui/x-scheduler-internals/internals';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import {
@@ -23,7 +22,6 @@ export function usePlaceholderInRow(
   const { occurrences, maxIndex, resourceId } = parameters;
 
   // Context hooks
-  const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
   // Selector hooks
@@ -45,8 +43,12 @@ export function usePlaceholderInRow(
       return null;
     }
 
-    const startProcessed = createProcessedDate(adapter, rawPlaceholder.start, displayTimezone);
-    const endProcessed = createProcessedDate(adapter, rawPlaceholder.end, displayTimezone);
+    const allDay =
+      rawPlaceholder.type === 'external-drag'
+        ? rawPlaceholder.eventData.allDay
+        : originalEvent?.allDay;
+    const startProcessed = createProcessedDate(rawPlaceholder.start, displayTimezone);
+    const endProcessed = createProcessedDate(rawPlaceholder.end, displayTimezone);
 
     // A placeholder that occupies no space (fully inside the hidden hours while editing
     // the dates in the event dialog, or shorter than the minute the axis is drawn with)
@@ -65,12 +67,10 @@ export function usePlaceholderInRow(
       id: originalEventId ?? 'occurrence-placeholder',
       key: 'occurrence-placeholder',
       title: originalEvent ? originalEvent.title : '',
+      allDay,
       resource: rawPlaceholder.resourceId ?? originalEvent?.resource,
-      displayTimezone: {
-        start: startProcessed,
-        end: endProcessed,
-        timezone: displayTimezone,
-      },
+      start: startProcessed,
+      end: endProcessed,
     };
 
     if (rawPlaceholder.type === 'creation') {
@@ -107,7 +107,6 @@ export function usePlaceholderInRow(
     };
   }, [
     rawPlaceholder,
-    adapter,
     config,
     displayTimezone,
     originalEvent,

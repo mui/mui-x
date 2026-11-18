@@ -1,11 +1,10 @@
-import {
+import type {
   GridColDef,
   GridRowsProp,
-  DataGrid,
   GridCellEditStopParams,
-  GridCellEditStopReasons,
   MuiEvent,
 } from '@mui/x-data-grid';
+import { DataGrid, GridCellEditStopReasons } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
   randomTraderName,

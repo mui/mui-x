@@ -5,8 +5,12 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeItem, TreeItemContent, TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import { UseTreeItemContentSlotOwnProps, UseTreeItemStatus } from '@mui/x-tree-view/useTreeItem';
+import type { TreeItemProps } from '@mui/x-tree-view/TreeItem';
+import { TreeItem, TreeItemContent } from '@mui/x-tree-view/TreeItem';
+import type {
+  UseTreeItemContentSlotOwnProps,
+  UseTreeItemStatus,
+} from '@mui/x-tree-view/useTreeItem';
 import { MUI_X_PRODUCTS } from './products';
 import DemoWrapper from '../../DemoWrapper';
 

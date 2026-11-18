@@ -19,10 +19,10 @@ import MenuList from '@mui/material/MenuList';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { formatMonthAndYear } from '@mui/x-scheduler-internals/internals';
 import { ResourcesTree } from '../resources-tree';
 import { usePreferencesMenuItems } from '../header-toolbar/preferences-menu';
 import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
@@ -114,12 +114,12 @@ export const SidePanelDrawer = React.forwardRef(function SidePanelDrawer(
   const { open, onClose, container, className, ...other } = props;
 
   const store = useEventCalendarStoreContext();
-  const adapter = useAdapterContext();
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
 
   const views = useStore(store, eventCalendarViewSelectors.views);
   const view = useStore(store, eventCalendarViewSelectors.view);
-  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  const visiblePlainDate = useStore(store, schedulerOtherSelectors.visiblePlainDate);
+  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
   const { hasAnyOption, items: preferencesItems } = usePreferencesMenuItems();
 
@@ -166,8 +166,7 @@ export const SidePanelDrawer = React.forwardRef(function SidePanelDrawer(
     >
       <SidePanelDrawerHeader className={classes.sidePanelDrawerHeader}>
         <SidePanelDrawerTitle id={titleId} className={classes.sidePanelDrawerTitle}>
-          {adapter.format(visibleDate, 'monthFullLetter')}{' '}
-          {adapter.format(visibleDate, 'yearPadded')}
+          {formatMonthAndYear(locale, visiblePlainDate)}
         </SidePanelDrawerTitle>
         <IconButton
           className={classes.sidePanelDrawerCloseButton}
@@ -179,14 +178,17 @@ export const SidePanelDrawer = React.forwardRef(function SidePanelDrawer(
       </SidePanelDrawerHeader>
 
       {showViewSwitcher && (
-        <SidePanelDrawerViewList className={classes.sidePanelDrawerViewList} role="listbox">
+        <SidePanelDrawerViewList
+          className={classes.sidePanelDrawerViewList}
+          aria-label={localeText.viewSwitcherAriaLabel}
+        >
           {views.map((viewItem) => (
             <MenuItem
               key={viewItem}
               className={classes.sidePanelDrawerViewItem}
-              role="option"
+              role="menuitemradio"
               selected={view === viewItem}
-              aria-selected={view === viewItem}
+              aria-checked={view === viewItem}
               onClick={(event) => store.setView(viewItem, event.nativeEvent)}
             >
               <ListItemIcon>{VIEW_ICONS[viewItem]}</ListItemIcon>

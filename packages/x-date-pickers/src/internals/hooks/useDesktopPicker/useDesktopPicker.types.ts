@@ -26,6 +26,7 @@ export interface UseDesktopPickerSlots
     PickerFieldUISlotsFromContext {
   /**
    * Component used to enter the date with the keyboard.
+   * @default DateField, TimeField, or DateTimeField, depending on the Picker.
    */
   field: React.ElementType;
 }

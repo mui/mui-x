@@ -1,6 +1,6 @@
 import { Gesture } from '../../core';
-import { AnyGesture } from '../AnyGesture';
-import { MatcherState, SyncMatcherFn } from '../Matcher.types';
+import type { AnyGesture } from '../AnyGesture';
+import type { MatcherState, SyncMatcherFn } from '../Matcher.types';
 import { messages } from '../messages';
 
 export type ToBeClonable<R = AnyGesture> = {
@@ -38,8 +38,11 @@ export type ToBeClonable<R = AnyGesture> = {
    * ```
    */
   toBeClonable<
-    G = R extends new (...args: any[]) => infer J ? (J extends Gesture<string> ? J : never) : never,
-    // @ts-expect-error, accessing protected property for testing purposes
+    G extends Gesture<string> = R extends new (...args: any[]) => infer J
+      ? J extends Gesture<string>
+        ? J
+        : never
+      : never,
     OverrideOptions extends Partial<G['mutableOptionsType']> = Partial<G['mutableOptionsType']>,
   >(
     overrides?: OverrideOptions,

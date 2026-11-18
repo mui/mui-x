@@ -5,9 +5,25 @@ import type { PickerOwnerState } from '../models';
 import type { UseFieldDOMGetters } from '../internals/hooks/useField/useField.types';
 
 export interface PickersSectionListSlots {
+  /**
+   * The component that renders the root.
+   * @default PickersSectionListRoot
+   */
   root: React.ElementType;
+  /**
+   * The component that renders a section.
+   * @default PickersSectionListSection
+   */
   section: React.ElementType;
+  /**
+   * The component that renders the separator before or after a section.
+   * @default PickersSectionListSectionSeparator
+   */
   sectionSeparator: React.ElementType;
+  /**
+   * The component that renders the editable content of a section.
+   * @default PickersSectionListSectionContent
+   */
   sectionContent: React.ElementType;
 }
 
@@ -45,6 +61,9 @@ export interface ExportedPickersSectionListProps extends Pick<
    * Each element contains the prop to edit a section of the value.
    */
   elements: PickersSectionElement[];
+  /**
+   * The ref used to access the DOM elements of the sections.
+   */
   sectionListRef: React.Ref<PickersSectionListRef>;
   /**
    * If true, the whole element is editable.

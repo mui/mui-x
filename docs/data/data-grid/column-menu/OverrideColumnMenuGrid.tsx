@@ -3,13 +3,8 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import IconFilter from '@mui/icons-material/FilterAlt';
-import {
-  DataGrid,
-  GridColumnMenu,
-  GridColumnMenuProps,
-  GridColumnMenuItemProps,
-  useGridApiContext,
-} from '@mui/x-data-grid';
+import type { GridColumnMenuProps, GridColumnMenuItemProps } from '@mui/x-data-grid';
+import { DataGrid, GridColumnMenu, useGridApiContext } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function CustomFilterItem(props: GridColumnMenuItemProps) {
