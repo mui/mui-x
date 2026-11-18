@@ -185,7 +185,7 @@ const PickersInputBaseInput = styled('input', {
 const PickersInputBaseActiveBar = styled('div', {
   name: 'MuiPickersInputBase',
   slot: 'ActiveBar',
-})<{ ownerState: { sectionOffsets: number[] } }>(({ theme, ownerState }) => ({
+})(({ theme }) => ({
   display: 'none',
   position: 'absolute',
   height: 2,
@@ -200,10 +200,10 @@ const PickersInputBaseActiveBar = styled('div', {
     display: 'block',
   },
   '[data-active-range-position="start"] &': {
-    left: ownerState.sectionOffsets[0],
+    left: 'var(--PickerInputBase-activeBar-start-offset)',
   },
   '[data-active-range-position="end"] &': {
-    left: ownerState.sectionOffsets[1],
+    left: 'var(--PickerInputBase-activeBar-end-offset)',
   },
 }));
 
@@ -340,7 +340,6 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   const ownerStateContext = usePickerTextFieldOwnerState();
   const rootRef = React.useRef<HTMLDivElement>(null);
   const activeBarRef = React.useRef<HTMLDivElement>(null);
-  const sectionOffsetsRef = React.useRef<number[]>([]);
   const handleRootRef = useForkRef(ref, rootRef);
   const muiFormControl = useFormControl();
   if (!muiFormControl) {
@@ -435,9 +434,16 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
       return;
     }
     const { activeBarWidth, sectionOffsets } = resolveSectionWidthAndOffsets(elements, rootRef);
-    sectionOffsetsRef.current = [sectionOffsets[0], sectionOffsets[1]];
     if (activeBarRef.current) {
       activeBarRef.current.style.width = `${activeBarWidth}px`;
+      activeBarRef.current.style.setProperty(
+        '--PickerInputBase-activeBar-start-offset',
+        `${sectionOffsets[0]}px`,
+      );
+      activeBarRef.current.style.setProperty(
+        '--PickerInputBase-activeBar-end-offset',
+        `${sectionOffsets[1]}px`,
+      );
     }
   }, [elements, isSingleInputRange, ownerState.isPickerOpen]);
 
@@ -502,11 +508,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         ref={handleInputRef}
       />
       {isSingleInputRange && (
-        <PickersInputBaseActiveBar
-          className={classes.activeBar}
-          ref={activeBarRef}
-          ownerState={{ sectionOffsets: sectionOffsetsRef.current }}
-        />
+        <PickersInputBaseActiveBar className={classes.activeBar} ref={activeBarRef} />
       )}
     </InputRoot>
   );

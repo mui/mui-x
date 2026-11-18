@@ -127,6 +127,50 @@ describe('<DateRangePicker />', () => {
     const getPickerDay = (name: string, picker = 'January 2018') =>
       within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });
 
+    describe.each(['start', 'end'] as const)('opening button at the %s', (buttonPosition) => {
+      it.skipIf(isJSDOM).each(['start', 'end'] as const)(
+        'should align the active bar with the %s date on the first opening',
+        async (rangePosition) => {
+          stubMatchMedia(true);
+          const { user } = renderWithProps({
+            defaultRangePosition: rangePosition,
+            slotProps: { field: { openPickerButtonPosition: buttonPosition } },
+          });
+
+          await openPicker(user, {
+            type: 'date-range',
+            initialFocus: rangePosition,
+            fieldType: 'single-input',
+          });
+
+          const fieldRoot = document.querySelector<HTMLElement>('[data-active-range-position]')!;
+          const activeBar = fieldRoot.querySelector<HTMLElement>(
+            `.${pickersInputBaseClasses.activeBar}`,
+          )!;
+          const firstSection = fieldRoot.querySelector<HTMLElement>(
+            `[data-sectionindex="${rangePosition === 'start' ? 0 : 3}"]`,
+          )!;
+
+          expect(fieldRoot).to.have.attribute('data-active-range-position', rangePosition);
+          await waitFor(() => {
+            expect(activeBar.offsetWidth).to.be.greaterThan(0);
+            expect(activeBar.offsetLeft).to.equal(firstSection.offsetLeft);
+          });
+
+          await user.keyboard('{Escape}');
+          await openPicker(user, {
+            type: 'date-range',
+            initialFocus: rangePosition,
+            fieldType: 'single-input',
+          });
+
+          await waitFor(() => {
+            expect(activeBar.offsetLeft).to.equal(firstSection.offsetLeft);
+          });
+        },
+      );
+    });
+
     it.skipIf(isJSDOM)(
       'should render the active bar with a non-zero width for the focused range position',
       async () => {
