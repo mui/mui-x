@@ -2,7 +2,7 @@ import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { ZoomData } from '@mui/x-charts-pro/models';
+import type { ZoomData } from '@mui/x-charts-pro/models';
 import { useChartProApiRef } from '@mui/x-charts-pro/hooks';
 import { randomData } from './randomData';
 

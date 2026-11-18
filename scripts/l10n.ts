@@ -5,7 +5,8 @@ import traverse from '@babel/traverse';
 import * as prettier from 'prettier';
 import * as babel from '@babel/core';
 import * as babelTypes from '@babel/types';
-import yargs, { ArgumentsCamelCase } from 'yargs';
+import type { ArgumentsCamelCase } from 'yargs';
+import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { Octokit } from '@octokit/rest';
 import { retry } from '@octokit/plugin-retry';
@@ -16,7 +17,6 @@ import {
 } from '../docs/constants';
 import { resolvePrettierConfigPath } from '../docs/scripts/utils';
 
-// @ts-ignore
 const MyOctokit = Octokit.plugin(retry);
 
 const GIT_ORGANIZATION = 'mui';
@@ -53,7 +53,7 @@ const packagesWithL10n = [
     constantsRelativePath: 'packages/x-scheduler/src/locales/enUS.ts',
     localesRelativePath: 'packages/x-scheduler/src/locales',
     documentationReportPath: 'docs/data/scheduler/localization/data.json',
-    objectNames: ['Dialog', 'Calendar', 'Timeline'],
+    objectNames: ['Dialog', 'Event', 'Calendar', 'Timeline'],
   },
 ];
 
@@ -75,7 +75,7 @@ function git(args: any) {
   });
 }
 
-function plugin(existingTranslations: Translations): babel.PluginObj {
+function plugin(existingTranslations: Translations): babel.PluginObject {
   return {
     visitor: {
       VariableDeclarator: {

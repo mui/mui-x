@@ -9,11 +9,11 @@ export interface GridColumnOrderChangeParams {
    */
   column: GridColDef;
   /**
-   * The target column index.
+   * The target column index, among all columns, including the hidden ones.
    */
   targetIndex: number;
   /**
-   * The old column index.
+   * The old column index, among all columns, including the hidden ones.
    */
   oldIndex: number;
 }

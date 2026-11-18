@@ -407,6 +407,21 @@ This is the recommended way to define actions in the column definition starting 
 The `getActions()` method that returned an array of actions is deprecated, and will be removed in a future version.
 :::
 
+To render an action as a link, pass the `href` prop to `GridActionsCellItem`.
+It renders the action as an anchor tag, which keeps the link keyboard-accessible and correctly announced by screen readers.
+Add `target="_blank"` to open the link in a new tab, and set `rel="noopener noreferrer"` to avoid a security issue:
+
+```tsx
+<GridActionsCellItem
+  icon={...}
+  label="Open details"
+  href={`/details/${params.id}`}
+  target="_blank"
+  rel="noopener noreferrer"
+  showInMenu
+/>
+```
+
 By default, actions shown in the menu will close the menu on click.
 But in some cases, you might want to keep the menu open after clicking an action.
 You can achieve this by setting the `closeMenuOnClick` prop to `false`.

@@ -1,5 +1,16 @@
 {
-  "props": { "desc": { "type": { "name": "string" } }, "title": { "type": { "name": "string" } } },
+  "props": {
+    "children": { "type": { "name": "node" } },
+    "desc": { "type": { "name": "string" } },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "title": { "type": { "name": "string" } }
+  },
   "name": "ChartsSurface",
   "imports": [
     "import { ChartsSurface } from '@mui/x-charts/ChartsSurface';",

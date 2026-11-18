@@ -1,5 +1,19 @@
 {
   "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
     "variant": {
       "type": { "name": "enum", "description": "'compact'<br>&#124;&nbsp;'default'" },
       "default": "'default'"
@@ -10,35 +24,91 @@
     "import { ChatConversationList } from '@mui/x-chat/ChatConversationList';",
     "import { ChatConversationList } from '@mui/x-chat';"
   ],
+  "slots": [
+    {
+      "name": "root",
+      "description": "The component that renders the root.",
+      "default": "'div'",
+      "class": "MuiChatConversationList-root"
+    },
+    {
+      "name": "scroller",
+      "description": "The component that renders the scroller.",
+      "default": "ScrollRoot (Base UI ScrollArea.Root wrapper); a styled 'div' in `ChatConversationList`",
+      "class": "MuiChatConversationList-scroller"
+    },
+    {
+      "name": "viewport",
+      "description": "The component that renders the viewport.",
+      "default": "ScrollViewport (Base UI ScrollArea.Viewport wrapper); a styled 'div' in `ChatConversationList`",
+      "class": null
+    },
+    {
+      "name": "scrollbar",
+      "description": "The component that renders the scrollbar.",
+      "default": "ScrollScrollbar (Base UI ScrollArea.Scrollbar wrapper); `ChatConversationList` renders none",
+      "class": null
+    },
+    {
+      "name": "scrollbarThumb",
+      "description": "The component that renders the scrollbar thumb.",
+      "default": "ScrollThumb (Base UI ScrollArea.Thumb wrapper); `ChatConversationList` renders none",
+      "class": null
+    },
+    {
+      "name": "item",
+      "description": "The component that renders the item.",
+      "default": "ConversationListItem; a styled 'div' in `ChatConversationList`",
+      "class": "MuiChatConversationList-item"
+    },
+    {
+      "name": "itemAvatar",
+      "description": "The component that renders the item avatar.",
+      "default": "ConversationListItemAvatar",
+      "class": "MuiChatConversationList-itemAvatar"
+    },
+    {
+      "name": "itemContent",
+      "description": "The component that renders the item content.",
+      "default": "ConversationListItemContent",
+      "class": "MuiChatConversationList-itemContent"
+    },
+    {
+      "name": "title",
+      "description": "The component that renders the title.",
+      "default": "ConversationListTitle",
+      "class": null
+    },
+    {
+      "name": "preview",
+      "description": "The component that renders the preview.",
+      "default": "ConversationListPreview",
+      "class": null
+    },
+    {
+      "name": "timestamp",
+      "description": "The component that renders the timestamp.",
+      "default": "ConversationListTimestamp",
+      "class": null
+    },
+    {
+      "name": "unreadBadge",
+      "description": "The component that renders the unread badge.",
+      "default": "ConversationListUnreadBadge",
+      "class": null
+    },
+    {
+      "name": "itemActions",
+      "description": "The component that renders the item actions.",
+      "default": "ConversationListItemActions",
+      "class": "MuiChatConversationList-itemActions"
+    }
+  ],
   "classes": [
     {
       "key": "compact",
       "className": "MuiChatConversationList-compact",
       "description": "Applied when variant=\"compact\"",
-      "isGlobal": false
-    },
-    {
-      "key": "item",
-      "className": "MuiChatConversationList-item",
-      "description": "Styles applied to the list item element.",
-      "isGlobal": false
-    },
-    {
-      "key": "itemActions",
-      "className": "MuiChatConversationList-itemActions",
-      "description": "Styles applied to the item actions element.",
-      "isGlobal": false
-    },
-    {
-      "key": "itemAvatar",
-      "className": "MuiChatConversationList-itemAvatar",
-      "description": "Styles applied to the item avatar element.",
-      "isGlobal": false
-    },
-    {
-      "key": "itemContent",
-      "className": "MuiChatConversationList-itemContent",
-      "description": "Styles applied to the item content element.",
       "isGlobal": false
     },
     {
@@ -81,18 +151,6 @@
       "key": "itemUnreadBadge",
       "className": "MuiChatConversationList-itemUnreadBadge",
       "description": "Styles applied to the item unread badge element.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiChatConversationList-root",
-      "description": "Styles applied to the conversation list root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "scroller",
-      "className": "MuiChatConversationList-scroller",
-      "description": "Styles applied to the scroller element.",
       "isGlobal": false
     }
   ],

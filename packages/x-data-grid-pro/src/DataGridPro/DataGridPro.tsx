@@ -9,6 +9,7 @@ import {
   useGridApiInitialization,
   useGridParamsOverridableMethods,
   useIsCellEditable,
+  pickDataAttributes,
 } from '@mui/x-data-grid/internals';
 import type { GridConfiguration } from '@mui/x-data-grid/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
@@ -71,6 +72,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
         className={props.className}
         style={props.style}
         sx={props.sx}
+        {...pickDataAttributes(props)}
         {...props.slotProps?.root}
         ref={ref}
       >
@@ -247,6 +249,10 @@ DataGridProRaw.propTypes /* remove-proptypes */ = {
    * Inherits the `columnHeaderHeight` value if not set.
    */
   columnGroupHeaderHeight: PropTypes.number,
+  /**
+   * The column groups of the header.
+   * @see See {@link https://mui.com/x/react-data-grid/column-groups/ column grouping docs} for more details.
+   */
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
    * Sets the height in pixel of the column headers in the Data Grid.
@@ -307,7 +313,8 @@ DataGridProRaw.propTypes /* remove-proptypes */ = {
   /**
    * The row ids to show the detail panel.
    */
-  detailPanelExpandedRowIds: PropTypes /* @typescript-to-proptypes-ignore */.instanceOf(Set),
+  detailPanelExpandedRowIds: PropTypes /* @typescript-to-proptypes-ignore */
+    .instanceOf(Set),
   /**
    * If `true`, column autosizing on header separator double-click is disabled.
    * @default false
@@ -415,6 +422,7 @@ DataGridProRaw.propTypes /* remove-proptypes */ = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    imeFastEdit: PropTypes.bool,
     virtualizerLayoutMode: PropTypes.oneOf(['controlled', 'uncontrolled']),
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
@@ -519,6 +527,14 @@ DataGridProRaw.propTypes /* remove-proptypes */ = {
    * @default false
    */
   headerFilters: PropTypes.bool,
+  /**
+   * The fixed height of the Data Grid.
+   * Accepts a number (pixels), a CSS length (for example `'50vh'`), a percentage, or a CSS calculation.
+   * Percentage values require a parent with an explicit height.
+   * Content-based values such as `'auto'`, `'min-content'`, `'max-content'`, and `'fit-content'` are not supported.
+   * For content-based sizing, use a flex parent container instead.
+   */
+  height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * If `true`, the footer component is hidden.
    * @default false
@@ -832,14 +848,16 @@ DataGridProRaw.propTypes /* remove-proptypes */ = {
    */
   onFilterModelChange: PropTypes.func,
   /**
-   * Callback fired when the menu is closed.
+   * Callback fired when a grid menu is closed.
+   * This includes the column menu, the actions cell menu, and the toolbar menus.
    * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onMenuClose: PropTypes.func,
   /**
-   * Callback fired when the menu is opened.
+   * Callback fired when a grid menu is opened.
+   * This includes the column menu, the actions cell menu, and the toolbar menus.
    * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -1073,10 +1091,11 @@ DataGridProRaw.propTypes /* remove-proptypes */ = {
   /**
    * Sets the row selection model of the Data Grid.
    */
-  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */.shape({
-    ids: PropTypes.instanceOf(Set).isRequired,
-    type: PropTypes.oneOf(['exclude', 'include']).isRequired,
-  }),
+  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */
+    .shape({
+      ids: PropTypes.instanceOf(Set).isRequired,
+      type: PropTypes.oneOf(['exclude', 'include']).isRequired,
+    }),
   /**
    * When `rowSelectionPropagation.descendants` is set to `true`.
    * - Selecting a parent selects all its filtered descendants automatically.

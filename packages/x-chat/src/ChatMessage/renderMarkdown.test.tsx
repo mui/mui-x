@@ -127,7 +127,7 @@ describe('renderMarkdown', () => {
 
     it('renders a footnote reference with a superscript marker', () => {
       const { container } = render(
-        <React.Fragment>{renderMarkdown('See here[^1]')}</React.Fragment>,
+        <React.Fragment>{renderMarkdown('See here[^1]\n\n[^1]: The note.')}</React.Fragment>,
       );
       expect(container.textContent).toContain('See here');
       const sup = document.querySelector('sup');
@@ -358,6 +358,34 @@ describe('renderMarkdown', () => {
       expect(anchor).not.toBeNull();
       expect(anchor.getAttribute('href')).toBe(null);
       expect(anchor.textContent).toContain('label');
+    });
+
+    it('hides a remend incomplete-image placeholder instead of a broken image', () => {
+      const { container } = render(
+        <React.Fragment>
+          {renderMarkdown('Here is ![a chart](streamdown:incomplete-image)')}
+        </React.Fragment>,
+      );
+      expect(document.querySelector('img')).toBeNull();
+      expect(container.textContent).toContain('Here is');
+      expect(container.textContent).not.toContain('a chart');
+    });
+
+    it('keeps the incomplete-image placeholder out of link hrefs', () => {
+      render(
+        <React.Fragment>{renderMarkdown('[label](streamdown:incomplete-image)')}</React.Fragment>,
+      );
+      expect(document.querySelector('a')!.getAttribute('href')).toBe(null);
+    });
+  });
+
+  describe('large input', () => {
+    it('renders an oversized message as plain text instead of parsing markdown', () => {
+      // Over the length cap, so the markdown is not parsed (markdown-to-jsx is super-linear here).
+      const huge = '**bold** '.repeat(7000);
+      const { container } = render(<React.Fragment>{renderMarkdown(huge)}</React.Fragment>);
+      expect(document.querySelector('strong')).toBeNull();
+      expect(container.textContent).toContain('**bold**');
     });
   });
 });

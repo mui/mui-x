@@ -2,10 +2,8 @@ import * as React from 'react';
 import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import {
-  TreeItemLoader,
-  TreeItemLoaderProps,
-} from '@mui/x-tree-view/TreeItemLoader';
+import type { TreeItemLoaderProps } from '@mui/x-tree-view/TreeItemLoader';
+import { TreeItemLoader } from '@mui/x-tree-view/TreeItemLoader';
 
 function CustomItemLoader(props: TreeItemLoaderProps) {
   const { ownerState, ...other } = props;

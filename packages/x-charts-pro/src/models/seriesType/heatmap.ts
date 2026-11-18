@@ -1,3 +1,5 @@
+import '../../typeOverloads';
+
 import type { DefaultizedProps } from '@mui/x-internals/types';
 import type {
   CommonDefaultizedProps,
@@ -79,10 +81,9 @@ export type HeatmapItemIdentifierWithData = HeatmapItemIdentifier & {
 };
 
 export class HeatmapData {
-  private valueLookup: Map<number, Map<number, number>>;
+  private valueLookup: Map<number, Map<number, number>> = new Map();
 
   constructor(data: readonly HeatmapValueType[]) {
-    this.valueLookup = new Map();
     for (const [xIndex, yIndex, value] of data) {
       let column = this.valueLookup.get(xIndex);
       if (!column) {

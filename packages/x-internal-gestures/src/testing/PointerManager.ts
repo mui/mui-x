@@ -1,4 +1,4 @@
-import { Pointer, PointerAmount, Pointers, PointerType } from './types/Pointers';
+import type { Pointer, PointerAmount, Pointers, PointerType } from './types/Pointers';
 
 export type PointerState = {
   id: number;
@@ -18,7 +18,7 @@ export class PointerManager {
 
   protected count = 0;
 
-  public readonly mode: PointerType;
+  declare public readonly mode: PointerType;
 
   constructor(mode: PointerType) {
     this.mode = mode;

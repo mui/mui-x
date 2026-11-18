@@ -19,7 +19,7 @@ import type { MinimalTreeViewStore } from '../../MinimalTreeViewStore/MinimalTre
 import type { TreeViewSelectionValue } from '../../MinimalTreeViewStore/MinimalTreeViewStore.types';
 
 export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
-  private store: MinimalTreeViewStore<any, Multiple>;
+  declare private store: MinimalTreeViewStore<any, Multiple>;
 
   private lastSelectedItem: TreeViewItemId | null = null;
 

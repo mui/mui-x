@@ -1,4 +1,4 @@
-import { createSelector } from '@mui/x-internals/store';
+import { createSelector } from '@base-ui/utils/store';
 import { selectorChartZoomState } from './useChartProZoom.selectors';
 import type { ZoomInteractionName, PanInteractionName } from './ZoomInteractionConfig.types';
 

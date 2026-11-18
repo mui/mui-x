@@ -1,7 +1,7 @@
 // Timezone Events Dataset — Instant-Based (Community)
 // Simple events using instant strings (Z suffix) across multiple timezones.
 
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 
 export const resources: SchedulerResource[] = [
   { id: 'ny', title: 'New York', eventColor: 'purple' },

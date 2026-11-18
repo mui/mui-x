@@ -51,7 +51,8 @@ export const GRID_SINGLE_SELECT_COL_DEF: Omit<GridSingleSelectColDef, 'field'> =
   },
   renderEditCell: renderEditSingleSelectCell,
   filterOperators: getGridSingleSelectOperators(),
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Premium augmentation adds pastedValueParser only when the Premium package is included.
+  // @ts-ignore Premium augmentation adds pastedValueParser only when the Premium package is included.
   pastedValueParser: (value, row, column) => {
     const colDef = column as GridSingleSelectColDef;
     const valueOptions = getValueOptions(colDef) || [];

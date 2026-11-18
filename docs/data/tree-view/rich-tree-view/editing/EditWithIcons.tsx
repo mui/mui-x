@@ -6,9 +6,10 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import CheckIcon from '@mui/icons-material/Check';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
-import { TreeItem, TreeItemLabel, TreeItemProps } from '@mui/x-tree-view/TreeItem';
+import type { TreeItemProps } from '@mui/x-tree-view/TreeItem';
+import { TreeItem, TreeItemLabel } from '@mui/x-tree-view/TreeItem';
 import { TreeItemLabelInput } from '@mui/x-tree-view/TreeItemLabelInput';
-import {
+import type {
   UseTreeItemLabelInputSlotOwnProps,
   UseTreeItemLabelSlotOwnProps,
 } from '@mui/x-tree-view/useTreeItem';

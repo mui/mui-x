@@ -1,11 +1,11 @@
 import * as React from 'react';
-import {
-  DataGrid,
+import type {
   GridColDef,
   GridDataSource,
   GridGetRowsParams,
   GridRenderCellParams,
 } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import Typography from '@mui/material/Typography';
 import { alpha } from '@mui/material/styles';
 import { Chance } from 'chance';

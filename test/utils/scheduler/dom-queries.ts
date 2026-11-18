@@ -1,4 +1,4 @@
-import { within } from '@mui/internal-test-utils';
+import { screen, within } from '@mui/internal-test-utils';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 
 /**
@@ -35,4 +35,34 @@ export function withinMonthView() {
   }
 
   return within(monthView as HTMLElement);
+}
+
+/**
+ * Returns the month grid cell for a given day-of-month number, scoped to the month view
+ * so the side panel's mini calendar (same day numbers) cannot match.
+ */
+export function getMonthViewCell(dayOfMonth: number): HTMLElement {
+  const cells = withinMonthView().getAllByRole('gridcell');
+  const cell = cells.find((c) => within(c).queryByText(new RegExp(`^${dayOfMonth}$`)));
+  if (!cell) {
+    throw new Error(`Could not find month view cell for day ${dayOfMonth}`);
+  }
+  return cell;
+}
+
+/**
+ * Matches the accessible name of a rendered event with the default English composition, which
+ * starts with the title. The lookups below also match `aria-hidden` copies of multi-day events;
+ * use `getByRole('button', { name })` to assert on the exposed name.
+ */
+export function getEventNamePattern(title: string) {
+  return new RegExp(`^${title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')},`);
+}
+
+export function getEventByTitle(title: string) {
+  return screen.getByLabelText(getEventNamePattern(title));
+}
+
+export function getAllEventsByTitle(title: string) {
+  return screen.getAllByLabelText(getEventNamePattern(title));
 }

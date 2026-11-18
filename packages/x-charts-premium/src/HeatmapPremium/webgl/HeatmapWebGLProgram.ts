@@ -33,19 +33,19 @@ type ProgramVariant = {
 export class HeatmapWebGLProgram {
   private readonly shaders: WebGLShader[] = [];
 
-  private readonly quadBuffer: WebGLBuffer;
+  declare private readonly quadBuffer: WebGLBuffer;
 
-  private readonly centers: GrowableBuffer;
+  declare private readonly centers: GrowableBuffer;
 
-  private readonly colors: GrowableBuffer;
+  declare private readonly colors: GrowableBuffer;
 
-  private readonly saturations: GrowableBuffer;
+  declare private readonly saturations: GrowableBuffer;
 
-  private readonly flatVariant: ProgramVariant;
+  declare private readonly flatVariant: ProgramVariant;
 
-  private readonly roundedVariant: ProgramVariant;
+  declare private readonly roundedVariant: ProgramVariant;
 
-  private active: ProgramVariant;
+  declare private active: ProgramVariant;
 
   constructor(private gl: WebGL2RenderingContext) {
     /* These are global to the WebGL context and need to be set only once. */

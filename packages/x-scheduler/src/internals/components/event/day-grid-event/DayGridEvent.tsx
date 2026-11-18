@@ -12,26 +12,20 @@ import type {
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
 import {
   schedulerEventSelectors,
-  schedulerResourceSelectors,
+  schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import { getPrimaryResourceId } from '@mui/x-scheduler-internals/internals';
 import type { DayGridEventProps } from './DayGridEvent.types';
 import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
+import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
 import type { PaletteName } from '../../../utils/tokens';
 import { getPaletteVariants } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
-import {
-  ARROW_DEPTH,
-  LEFT_ARROW_CLIP,
-  RIGHT_ARROW_CLIP,
-  BOTH_ARROWS_CLIP,
-  getArrowFocusVisibleStyles,
-} from '../arrowClips';
+import { getArrowEdgeStyles, getArrowFocusVisibleStyles } from '../arrowClips';
 
 const DayGridEventBaseStyles = (theme: any) => ({
   containerType: 'inline-size',
@@ -79,21 +73,7 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
       [`& .${eventCalendarClasses.dayGridEventRecurringIcon}`]: {
         color: 'var(--event-on-surface-bold)',
       },
-      '&[data-starting-before-edge]': {
-        borderTopLeftRadius: 0,
-        borderBottomLeftRadius: 0,
-        clipPath: LEFT_ARROW_CLIP,
-        paddingLeft: ARROW_DEPTH + 8,
-      },
-      '&[data-ending-after-edge]': {
-        borderTopRightRadius: 0,
-        borderBottomRightRadius: 0,
-        clipPath: RIGHT_ARROW_CLIP,
-        paddingRight: ARROW_DEPTH + 8,
-      },
-      '&[data-starting-before-edge][data-ending-after-edge]': {
-        clipPath: BOTH_ARROWS_CLIP,
-      },
+      ...getArrowEdgeStyles(theme, 8),
       ...getArrowFocusVisibleStyles((theme.shape.borderRadius as number) * 0.75),
     },
     '&[data-variant="invisible"]': {
@@ -212,10 +192,10 @@ const DayGridEventResizeHandler = styled(CalendarGrid.DayEventResizeHandler, {
     opacity: 1,
   },
   '&[data-start]': {
-    left: 0,
+    insetInlineStart: 0,
   },
   '&[data-end]': {
-    right: 0,
+    insetInlineEnd: 0,
   },
 });
 
@@ -289,7 +269,10 @@ const isResizableSelector = (
 
   // In month view, only multi-day and all-day events can be resized
   if (view === 'month') {
-    return isOccurrenceAllDayOrMultipleDay(occurrence, state.adapter);
+    return isOccurrenceAllDayOrMultipleDay(
+      occurrence,
+      schedulerOtherSelectors.displayTimezone(state),
+    );
   }
 
   return true;
@@ -310,15 +293,15 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const isEndResizable = useStore(store, isResizableSelector, 'end', occurrence);
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
 
-  const resource = useStore(
-    store,
-    schedulerResourceSelectors.processedResource,
-    getPrimaryResourceId(occurrence.resource),
-  );
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
 
   // Feature hooks
   const formatTime = useFormatTime();
+  const accessibleName = useEventAccessibleName({
+    occurrence,
+    isRecurring,
+    localeText,
+  });
 
   const content = React.useMemo(() => {
     switch (variant) {
@@ -350,15 +333,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       case 'compact':
         return (
           <DayGridEventCardWrapper className={classes.dayGridEventCardWrapper}>
-            <EventColorIndicator
-              className={classes.eventColorIndicator}
-              role="img"
-              aria-label={
-                resource?.title
-                  ? localeText.resourceAriaLabel(resource.title)
-                  : localeText.noResourceAriaLabel
-              }
-            />
+            <EventColorIndicator className={classes.eventColorIndicator} aria-hidden="true" />
 
             <DayGridEventCardContent className={classes.dayGridEventCardContent}>
               <DayGridEventLinesClamp
@@ -366,8 +341,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
                 style={{ '--number-of-lines': 1 } as React.CSSProperties}
               >
                 <DayGridEventTime className={classes.dayGridEventTime}>
-                  <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
-                  <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
+                  <span>{formatTime(occurrence.start)}</span>
+                  <span> - {formatTime(occurrence.end)}</span>
                 </DayGridEventTime>
                 <DayGridEventTitle className={classes.dayGridEventTitle} as="span">
                   {occurrence.title}
@@ -394,18 +369,16 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   }, [
     variant,
     occurrence.title,
-    occurrence.displayTimezone.start.value,
-    occurrence.displayTimezone.end.value,
+    occurrence.start,
+    occurrence.end,
     isRecurring,
-    resource?.title,
-    localeText,
     formatTime,
     classes,
   ]);
 
   const sharedProps = {
-    start: occurrence.displayTimezone.start,
-    end: occurrence.displayTimezone.end,
+    start: occurrence.start,
+    end: occurrence.end,
     ref: forwardedRef,
     'data-variant': variant,
     'data-palette': color,
@@ -437,6 +410,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       isDraggable={isDraggable}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-hidden={variant === 'invisible'}
+      aria-label={accessibleName}
       {...sharedProps}
       className={clsx(classes.dayGridEvent, sharedProps.className)}
     >

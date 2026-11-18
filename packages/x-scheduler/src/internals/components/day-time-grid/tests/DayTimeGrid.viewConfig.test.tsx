@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
-import { adapter, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
+import { createDate, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { describe, it, expect, beforeEach } from 'vitest';
 
@@ -9,7 +9,7 @@ describe('<DayTimeGrid /> - viewConfig (startTime / endTime)', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03') });
 
   // 2025-07-03 is a Thursday.
-  const visibleDate = adapter.date('2025-07-03T00:00:00Z', 'default');
+  const visibleDate = createDate('2025-07-03T00:00:00Z');
 
   function getTimeAxisCells() {
     return document.querySelectorAll(`.${eventCalendarClasses.dayTimeGridTimeAxisCell}`);
@@ -71,6 +71,26 @@ describe('<DayTimeGrid /> - viewConfig (startTime / endTime)', () => {
       const event = screen.getByRole('button', { name: /Early/ });
       expect(event.style.getPropertyValue('--y-position')).to.equal('0%');
       expect(event.style.getPropertyValue('--height')).to.equal(`${(1 / 12) * 100}%`);
+    });
+
+    it('should lay out events clipped by the window from their visible part', () => {
+      const clippedEvent = EventBuilder.new()
+        .title('Clipped')
+        .span('2025-07-03T07:00:00Z', '2025-07-03T08:30:00Z')
+        .build();
+      render(
+        <EventCalendar
+          events={[clippedEvent]}
+          visibleDate={visibleDate}
+          view="week"
+          viewConfig={{ week: { startTime: 8, endTime: 20 } }}
+        />,
+      );
+      // Only 08:00 → 08:30 is visible, so the event gets the compact layout of a 30-minute event.
+      expect(screen.getByRole('button', { name: /Clipped/ })).to.have.attribute(
+        'data-under-hour',
+        'true',
+      );
     });
 
     describe('resize handles on clipped edges', () => {

@@ -1,7 +1,7 @@
 import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
-import { getCell, getActiveCell, getColumnHeaderCell } from 'test/utils/helperFn';
+import { getCell, getActiveCell, getColumnHeaderCell, getRow } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 
@@ -116,6 +116,17 @@ describe('<DataGrid /> - Column spanning', () => {
       { field: 'price', colSpan: (value, row) => (row.brand === 'Puma' ? 2 : 1) },
       { field: 'rating' },
     ];
+
+    it('should focus the spanning cell after a click on the empty space of a row', async () => {
+      const { user } = render(
+        <div style={{ width: 500, height: 300 }}>
+          <DataGrid {...baselineProps} columns={columns} />
+        </div>,
+      );
+
+      await user.click(getRow(2).querySelector(`.${gridClasses.cellEmpty}`)!);
+      expect(getActiveCell()).to.equal('2-2');
+    });
 
     it('should move to the cell right when pressing "ArrowRight"', async () => {
       const { user } = render(

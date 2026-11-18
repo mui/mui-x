@@ -1,4 +1,4 @@
-import { GesturePhase } from '../Gesture';
+import type { GesturePhase } from '../Gesture';
 
 /**
  * Creates the event name for a specific gesture and phase

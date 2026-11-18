@@ -641,7 +641,7 @@ describe('createSendMessageActions', () => {
 
   describe('regenerate', () => {
     beforeEach(() => {
-      // `warnOnce` dedupes by message across the process; reset so each
+      // The logger dedupes by message across the process; reset so each
       // warning-asserting test observes its own warning.
       clearWarningsCache();
     });

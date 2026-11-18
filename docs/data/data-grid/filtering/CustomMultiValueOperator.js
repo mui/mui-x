@@ -7,7 +7,7 @@ import SyncIcon from '@mui/icons-material/Sync';
 
 function InputNumberInterval(props) {
   const rootProps = useGridRootProps();
-  const { item, applyValue, focusElementRef = null } = props;
+  const { item, applyValue } = props;
 
   const filterTimeout = React.useRef(undefined);
   const [filterValueState, setFilterValueState] = React.useState(
@@ -64,7 +64,6 @@ function InputNumberInterval(props) {
         value={Number(filterValueState[0])}
         onChange={handleLowerFilterChange}
         type="number"
-        inputRef={focusElementRef}
         sx={{ mr: 2 }}
       />
       <TextField

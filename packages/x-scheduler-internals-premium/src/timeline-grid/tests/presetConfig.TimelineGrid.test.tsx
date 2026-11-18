@@ -5,7 +5,9 @@ import { EventTimelinePremiumProvider } from '@mui/x-scheduler-internals-premium
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
-  adapter,
+  addDays,
+  addHours,
+  addMinutes,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -18,7 +20,7 @@ import { describe, it, expect } from 'vitest';
 
 describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
   const resource = ResourceBuilder.new().id('r1').build();
-  const at = (hours: number) => adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, hours).toISOString();
+  const at = (hours: number) => addHours(DEFAULT_TESTING_VISIBLE_DATE, hours).toISOString();
 
   // dayAndHour: 4 days × 12 visible hours (8:00 → 20:00) = 2880 axis minutes.
   const PRESET_CONFIG = { dayAndHour: { startTime: 8, endTime: 20 } };
@@ -51,8 +53,8 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
                       key={occurrence.key}
                       eventId={occurrence.id}
                       occurrenceKey={occurrence.key}
-                      start={occurrence.displayTimezone.start}
-                      end={occurrence.displayTimezone.end}
+                      start={occurrence.start}
+                      end={occurrence.end}
                       elementPosition={occurrence.timelinePosition}
                       renderDragPreview={() => null}
                       data-testid={`event-${occurrence.id}`}
@@ -69,8 +71,8 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
                   ))}
                   {placeholder != null && (
                     <TimelineGrid.EventPlaceholder
-                      start={placeholder.displayTimezone.start}
-                      end={placeholder.displayTimezone.end}
+                      start={placeholder.start}
+                      end={placeholder.end}
                       data-testid="placeholder"
                     />
                   )}
@@ -254,8 +256,8 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
         store!.set('occurrencePlaceholder', {
           type: 'creation',
           surfaceType: 'timeline',
-          start: adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 10),
-          end: adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 12),
+          start: addHours(DEFAULT_TESTING_VISIBLE_DATE, 10).getTime(),
+          end: addHours(DEFAULT_TESTING_VISIBLE_DATE, 12).getTime(),
           resourceId: resource.id,
           lockSurfaceType: true,
         });
@@ -291,8 +293,8 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
           store!.set('occurrencePlaceholder', {
             type: 'creation',
             surfaceType: 'timeline',
-            start: adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, startHour),
-            end: adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, endHour),
+            start: addHours(DEFAULT_TESTING_VISIBLE_DATE, startHour).getTime(),
+            end: addHours(DEFAULT_TESTING_VISIBLE_DATE, endHour).getTime(),
             resourceId: resource.id,
             lockSurfaceType: true,
           });
@@ -320,13 +322,13 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
 
       // 07:59:30 → 08:00:30 against an 08:00 window start. Both bounds render at minute
       // 480, so the placeholder occupies no space at the precision it is drawn with.
-      const windowStart = adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 8);
+      const windowStart = addHours(DEFAULT_TESTING_VISIBLE_DATE, 8);
       act(() => {
         store!.set('occurrencePlaceholder', {
           type: 'creation',
           surfaceType: 'timeline',
-          start: adapter.addMilliseconds(windowStart, -30_000),
-          end: adapter.addMilliseconds(windowStart, 30_000),
+          start: windowStart.getTime() - 30_000,
+          end: windowStart.getTime() + 30_000,
           resourceId: resource.id,
           lockSurfaceType: true,
         });
@@ -356,11 +358,8 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
       fireEvent.click(row, { clientX: AXIS_MINUTES });
 
       expect(store!.state.occurrencePlaceholder?.type).to.equal('creation');
-      expect(store!.state.occurrencePlaceholder?.start).toEqualDateTime(
-        adapter.addMinutes(
-          adapter.addHours(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 3), 19),
-          30,
-        ),
+      expect(store!.state.occurrencePlaceholder?.start).to.equal(
+        addMinutes(addHours(addDays(DEFAULT_TESTING_VISIBLE_DATE, 3), 19), 30).getTime(),
       );
     });
 
@@ -383,8 +382,8 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
       await user.keyboard('{Enter}');
 
       expect(store!.state.occurrencePlaceholder?.type).to.equal('creation');
-      expect(store!.state.occurrencePlaceholder?.start).toEqualDateTime(
-        adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 8),
+      expect(store!.state.occurrencePlaceholder?.start).to.equal(
+        addHours(DEFAULT_TESTING_VISIBLE_DATE, 8).getTime(),
       );
     });
   });

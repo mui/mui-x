@@ -6,7 +6,13 @@ import { useAnimateLine } from '../hooks';
 import { AppearingMask } from './AppearingMask';
 
 export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'> {
+  /**
+   * @ignore
+   */
   ownerState: LineElementOwnerState;
+  /**
+   * The SVG path of the element.
+   */
   d: string;
   /**
    * If `true`, animations are skipped.
@@ -57,7 +63,13 @@ AnimatedLine.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The SVG path of the element.
+   */
   d: PropTypes.string.isRequired,
+  /**
+   * @ignore
+   */
   ownerState: PropTypes.shape({
     classes: PropTypes.object,
     color: PropTypes.string.isRequired,

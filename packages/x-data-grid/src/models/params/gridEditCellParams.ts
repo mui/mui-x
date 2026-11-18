@@ -33,6 +33,7 @@ enum GridCellEditStartReasons {
   printableKeyDown = 'printableKeyDown',
   deleteKeyDown = 'deleteKeyDown',
   pasteKeyDown = 'pasteKeyDown',
+  compositionStart = 'compositionStart',
 }
 
 /**

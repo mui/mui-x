@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {
+  gridRowSelectionIdsSelector,
   DataGridPremium,
   gridFocusCellSelector,
   gridSortedRowIdsSelector,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
-
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
@@ -40,7 +40,7 @@ function getSelectionAsText(apiRef) {
       .join('\n');
   }
 
-  const selectedRowIds = api.getSelectedRows();
+  const selectedRowIds = gridRowSelectionIdsSelector({ current: api });
   if (selectedRowIds.size > 0) {
     return api.getDataAsCsv({
       includeHeaders: false,

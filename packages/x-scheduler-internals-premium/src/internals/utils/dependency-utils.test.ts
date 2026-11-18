@@ -1,5 +1,21 @@
 import { describe, it, expect } from 'vitest';
-import { getDependencyEdges, getDependencyType } from './dependency-utils';
+import type { SchedulerDependency } from '../../models';
+import {
+  addDependencyLag,
+  getDependencyEdges,
+  getDependencyLag,
+  getDependencyLagIssue,
+  getEffectiveDependencyLag,
+  getDependencyType,
+} from './dependency-utils';
+
+const dependency = (overrides: Partial<SchedulerDependency> = {}): SchedulerDependency => ({
+  id: 'dep',
+  source: 'a',
+  target: 'b',
+  type: 'FinishToStart',
+  ...overrides,
+});
 
 describe('dependency-utils', () => {
   describe('getDependencyEdges', () => {
@@ -23,6 +39,159 @@ describe('dependency-utils', () => {
       expect(getDependencyType('start', 'start')).to.equal('StartToStart');
       expect(getDependencyType('end', 'end')).to.equal('FinishToFinish');
       expect(getDependencyType('start', 'end')).to.equal('StartToFinish');
+    });
+  });
+
+  describe('getDependencyLagIssue', () => {
+    it('should accept a missing lag', () => {
+      expect(getDependencyLagIssue(dependency())).to.equal(null);
+    });
+
+    it('should accept a positive whole lag with a supported unit', () => {
+      expect(getDependencyLagIssue(dependency({ lag: 2, lagUnit: 'hour' }))).to.equal(null);
+    });
+
+    it('should flag a negative lag', () => {
+      expect(getDependencyLagIssue(dependency({ lag: -1 }))).to.equal('negative');
+    });
+
+    it('should flag a fractional lag', () => {
+      expect(getDependencyLagIssue(dependency({ lag: 0.5 }))).to.equal('notAWholeNumber');
+    });
+
+    it('should not flag anything when there is no lag to apply', () => {
+      expect(getDependencyLagIssue(dependency({ lagUnit: 'fortnight' as any }))).to.equal(null);
+      expect(getDependencyLagIssue(dependency({ lag: 0, lagUnit: 'fortnight' as any }))).to.equal(
+        null,
+      );
+    });
+
+    it('should flag a non-finite lag', () => {
+      expect(getDependencyLagIssue(dependency({ lag: Number.NaN }))).to.equal('notAWholeNumber');
+      expect(getDependencyLagIssue(dependency({ lag: Number.POSITIVE_INFINITY }))).to.equal(
+        'notAWholeNumber',
+      );
+    });
+
+    it('should flag a lag that is not a number', () => {
+      expect(getDependencyLagIssue(dependency({ lag: '2' as any }))).to.equal('notAWholeNumber');
+    });
+
+    it('should flag an unknown unit', () => {
+      expect(getDependencyLagIssue(dependency({ lag: 2, lagUnit: 'fortnight' as any }))).to.equal(
+        'unknownUnit',
+      );
+    });
+  });
+
+  describe('getDependencyLag', () => {
+    it('should return no lag by default', () => {
+      expect(getDependencyLag(dependency())).to.equal(null);
+    });
+
+    it('should return no lag for a zero amount', () => {
+      expect(getDependencyLag(dependency({ lag: 0, lagUnit: 'hour' }))).to.equal(null);
+    });
+
+    it('should keep a positive lag with its unit', () => {
+      expect(getDependencyLag(dependency({ lag: 2, lagUnit: 'hour' }))).to.deep.equal({
+        amount: 2,
+        unit: 'hour',
+      });
+    });
+
+    it('should apply a lag without a unit in days', () => {
+      expect(getDependencyLag(dependency({ lag: 3 }))).to.deep.equal({ amount: 3, unit: 'day' });
+    });
+
+    it('should return no lag for a negative amount', () => {
+      expect(getDependencyLag(dependency({ lag: -1 }))).to.equal(null);
+    });
+
+    it('should return no lag for a fractional amount', () => {
+      expect(getDependencyLag(dependency({ lag: 1.5, lagUnit: 'hour' }))).to.equal(null);
+    });
+
+    it('should return no lag for an unknown unit', () => {
+      expect(getDependencyLag(dependency({ lag: 2, lagUnit: 'fortnight' as any }))).to.equal(null);
+    });
+  });
+
+  describe('getEffectiveDependencyLag', () => {
+    it('should resolve the lag of a timed successor unchanged', () => {
+      expect(
+        getEffectiveDependencyLag(dependency({ lag: 2, lagUnit: 'hour' }), false),
+      ).to.deep.equal({
+        amount: 2,
+        unit: 'hour',
+      });
+    });
+
+    it('should drop a lag shorter than a day on an all-day successor', () => {
+      expect(getEffectiveDependencyLag(dependency({ lag: 2, lagUnit: 'hour' }), true)).to.equal(
+        null,
+      );
+    });
+
+    it('should round a longer lag down to whole days on an all-day successor', () => {
+      expect(
+        getEffectiveDependencyLag(dependency({ lag: 36, lagUnit: 'hour' }), true),
+      ).to.deep.equal({
+        amount: 1,
+        unit: 'day',
+      });
+    });
+
+    it('should convert weeks to days on an all-day successor', () => {
+      expect(
+        getEffectiveDependencyLag(dependency({ lag: 2, lagUnit: 'week' }), true),
+      ).to.deep.equal({
+        amount: 14,
+        unit: 'day',
+      });
+    });
+
+    it('should return no lag for an invalid one, whatever the successor', () => {
+      expect(getEffectiveDependencyLag(dependency({ lag: -1 }), true)).to.equal(null);
+      expect(getEffectiveDependencyLag(dependency({ lag: -1 }), false)).to.equal(null);
+    });
+  });
+
+  describe('addDependencyLag', () => {
+    const timestamp = Date.UTC(2025, 6, 3, 9);
+    const expectShifted = (lag: Parameters<typeof addDependencyLag>[1], expected: string) => {
+      expect(addDependencyLag(timestamp, lag, 'UTC')).to.equal(Date.parse(`${expected}Z`));
+    };
+
+    it('should return the same date for no lag', () => {
+      expect(addDependencyLag(timestamp, null, 'UTC')).to.equal(timestamp);
+    });
+
+    it('should add minutes', () => {
+      expectShifted({ amount: 30, unit: 'minute' }, '2025-07-03T09:30:00');
+    });
+
+    it('should add hours', () => {
+      expectShifted({ amount: 2, unit: 'hour' }, '2025-07-03T11:00:00');
+    });
+
+    it('should add days', () => {
+      expectShifted({ amount: 1, unit: 'day' }, '2025-07-04T09:00:00');
+    });
+
+    it('should add weeks', () => {
+      expectShifted({ amount: 1, unit: 'week' }, '2025-07-10T09:00:00');
+    });
+
+    it('should return NaN for a lag in days or weeks past the range of Date', () => {
+      for (const timezone of ['UTC', 'America/New_York']) {
+        expect(
+          addDependencyLag(timestamp, { amount: 100_000_000, unit: 'day' }, timezone),
+        ).toBeNaN();
+        expect(
+          addDependencyLag(timestamp, { amount: 20_000_000, unit: 'week' }, timezone),
+        ).toBeNaN();
+      }
     });
   });
 });

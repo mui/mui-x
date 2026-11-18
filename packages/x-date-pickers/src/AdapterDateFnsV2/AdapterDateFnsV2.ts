@@ -2,6 +2,7 @@
 // See https://github.com/date-fns/date-fns/issues/1781
 /* eslint-disable import/extensions */
 /* v8 ignore start */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- This v2 adapter is tested with v2 aliases; the workspace installs v4 imports.
 // @ts-nocheck
 import addDays from 'date-fns/addDays/index.js';
 import addSeconds from 'date-fns/addSeconds/index.js';

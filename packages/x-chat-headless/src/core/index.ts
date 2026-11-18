@@ -18,6 +18,7 @@ export {
   selectIsStreaming,
   selectHasMoreHistory,
   selectIsLoadingHistory,
+  selectHistoryStatus,
   selectError,
   selectMessages,
   selectMessage,
@@ -107,7 +108,7 @@ export type {
 
 export type { ChatRealtimeEvent } from '../types/chat-realtime';
 
-export type { ChatPublicState } from '../types/chat-state';
+export type { ChatHistoryStatus, ChatPublicState } from '../types/chat-state';
 
 export type { ChatMessageChunk, ChatStreamEnvelope } from '../types/chat-stream';
 

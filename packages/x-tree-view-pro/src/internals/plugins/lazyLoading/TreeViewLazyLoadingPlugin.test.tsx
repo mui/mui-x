@@ -1,6 +1,6 @@
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import * as React from 'react';
-import { Store } from '@mui/x-internals/store';
+import { Store } from '@base-ui/utils/store';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { vi, describe, it, expect } from 'vitest';

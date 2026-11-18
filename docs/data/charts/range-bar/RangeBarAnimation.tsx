@@ -4,12 +4,10 @@ import Typography from '@mui/material/Typography';
 import Slider from '@mui/material/Slider';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { HighlightScope } from '@mui/x-charts-pro/context';
-import {
-  BarChartPremium,
-  RangeBarSeries,
-} from '@mui/x-charts-premium/BarChartPremium';
-import { RangeBarValueType } from '@mui/x-charts-premium/models';
+import type { HighlightScope } from '@mui/x-charts-pro/context';
+import type { RangeBarSeries } from '@mui/x-charts-premium/BarChartPremium';
+import { BarChartPremium } from '@mui/x-charts-premium/BarChartPremium';
+import type { RangeBarValueType } from '@mui/x-charts-premium/models';
 
 export default function RangeBarAnimation() {
   const [seriesNb, setSeriesNb] = React.useState(2);

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { adapterToUse, getAllFieldInputRoot } from 'test/utils/pickers';
 import { act } from '@mui/internal-test-utils/createRenderer';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
+import type { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
 const testInvalidStatus = (
   expectedAnswer: boolean[],

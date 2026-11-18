@@ -16,7 +16,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import TableChartRoundedIcon from '@mui/icons-material/TableChartRounded';
-import { TEMPLATES, TEMPLATE_IDS, TemplateId } from './playgroundData';
+import type { TemplateId } from './playgroundData';
+import { TEMPLATES, TEMPLATE_IDS } from './playgroundData';
 import type { RefPaletteId } from './sheetsStyles';
 
 export interface PlaygroundToggles {

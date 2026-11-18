@@ -129,7 +129,7 @@ describe('<DataGridPremium /> - Formulas feature integration', () => {
       await user.click(cell);
 
       const pasteEvent = new Event('paste');
-      // @ts-ignore
+      // @ts-expect-error The synthetic Event supplies clipboardData, which only ClipboardEvent declares.
       pasteEvent.clipboardData = { getData: () => '=price + quantity' };
       fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true });
       await act(async () => document.activeElement!.dispatchEvent(pasteEvent));
@@ -147,7 +147,7 @@ describe('<DataGridPremium /> - Formulas feature integration', () => {
       await user.click(cell);
 
       const pasteEvent = new Event('paste');
-      // @ts-ignore
+      // @ts-expect-error The synthetic Event supplies clipboardData, which only ClipboardEvent declares.
       pasteEvent.clipboardData = { getData: () => '42' };
       fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true });
       await act(async () => document.activeElement!.dispatchEvent(pasteEvent));

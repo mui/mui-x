@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import type { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import { ChatBox } from '@mui/x-chat';
 import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {

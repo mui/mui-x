@@ -255,6 +255,11 @@ async function generateChangelog({
     .filter((item) => !item.labels?.some((label) => excludeLabels.includes(label)))
     .filter((item) => !excludeTitleTags.some((tag) => item.commit.message.includes(tag)))
     .forEach((commitItem) => {
+      // the `package: codemod` label wins over the title tag
+      if (commitItem.labels?.includes('package: codemod')) {
+        codemodCommits.push(commitItem);
+        return;
+      }
       const tags = parseTags(commitItem.commit.message).split(',');
       // a `docs` tag wins over the product one: `[docs][charts]` is a docs change
       if (tags.includes('docs')) {
@@ -402,6 +407,7 @@ async function generateChangelog({
    * @param {import('@octokit/rest').Octokit.ReposCompareCommitsResponseCommitsItem[]} [options.proCommits] - The commits for the Pro package (if applicable)
    * @param {import('@octokit/rest').Octokit.ReposCompareCommitsResponseCommitsItem[]} [options.premiumCommits] - The commits for the Premium package (if applicable)
    * @param {string} [options.changelogKey] - The key to use for changelog messages (e.g., 'DataGrid', 'charts')
+   * @param {boolean} [options.internal] - Whether to omit the section when there are no commits
    * @returns {string} The formatted changelog section for the product
    */
   const logProductSection = ({
@@ -411,6 +417,7 @@ async function generateChangelog({
     proCommits = null,
     premiumCommits = null,
     changelogKey,
+    internal = false,
   }) => {
     const hasProVersion = proCommits !== null;
     const hasPremiumVersion = premiumCommits !== null;
@@ -421,9 +428,9 @@ async function generateChangelog({
       (proCommits?.length ?? 0) === 0 &&
       (premiumCommits?.length ?? 0) === 0;
 
-    // Keep rendering `Internal changes.` when a package is bumped without
+    // Keep rendering `Internal changes.` when a regular package is bumped without
     // commits (e.g. an `x-internals` update propagating a version bump).
-    if (hasNoCommits && !isPackageBumped(packageName, packageVersion)) {
+    if (hasNoCommits && (internal || !isPackageBumped(packageName, packageVersion))) {
       return '';
     }
 
@@ -591,6 +598,7 @@ ${logProductSection({
   packageName: 'x-codemod',
   baseCommits: codemodCommits,
   changelogKey: 'codemod',
+  internal: true,
 })}
 
 ${logOtherSection({
@@ -628,32 +636,25 @@ ${logOtherSection({
 }
 
 /**
- * Fetches and returns the latest tagged version for a given major version.
+ * Fetches and returns the latest tagged version for a given major version, as seen from the release base.
  * @param {string | undefined} majorVersion
- * @param {string} [upstreamRemote]
+ * @param {string} releaseBase The ref the release is created from (e.g. `upstream/master` or `upstream/v8.x`).
  */
-async function findLatestTaggedVersionForMajor(majorVersion, upstreamRemote = 'origin') {
+async function findLatestTaggedVersionForMajor(majorVersion, releaseBase) {
   // Fetch all tags from all remotes to ensure we have the latest tags.
   await $`git fetch --tags --all`;
   const match = `v${majorVersion || ''}*`; // only include "version-tags"
-  // Tags for an older major are created on its `vN.x` version branch and are not ancestors of
-  // master, so they are invisible to `git describe` from HEAD. Describe from that branch when it
-  // exists. The current major releases from master (its version branch may not exist yet), so fall
-  // back to describing from HEAD, where its tags are reachable.
-  const versionBranch = `${upstreamRemote}/v${majorVersion}.x`;
-  try {
-    const { stdout } = await $`git describe --tags --abbrev=0 --match ${match} ${versionBranch}`;
-    return stdout.trim();
-  } catch {
-    const { stdout } = await $`git describe --tags --abbrev=0 --match ${match}`;
-    return stdout.trim();
-  }
+  // Describe from the release base rather than guessing from which branches exist: tags for an
+  // older major live on its `vN.x` branch and aren't ancestors of master, while a `vN.x` branch of
+  // the current major can exist and lag behind master, where that major is still being released.
+  const { stdout } = await $`git describe --tags --abbrev=0 --match ${match} ${releaseBase}`;
+  return stdout.trim();
 }
 
 /**
  * Used to pass in the octokit instance from outside the module and return ready to use functions
  * @param {import('@octokit/rest').Octokit} octokitInstance - The Octokit instance to use for GitHub API calls
- * @returns {{generateChangelog: ((function({octokit: import('@octokit/rest').Octokit, lastRelease?: string, release: string, nextVersion?: string, returnEntry?: boolean}): Promise<string|null>)|*), findLatestTaggedVersionForMajor: (function(): Promise<string>)}}
+ * @returns {{generateChangelog: ((function({octokit: import('@octokit/rest').Octokit, lastRelease?: string, release: string, nextVersion?: string, returnEntry?: boolean}): Promise<string|null>)|*), findLatestTaggedVersionForMajor: (function(string | undefined, string): Promise<string>)}}
  */
 export function getChangelogUtils(octokitInstance) {
   octokit = octokitInstance;

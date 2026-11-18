@@ -6,15 +6,30 @@ import { useMessageContext } from './internals/MessageContext';
 import type { MessageAuthorLabelOwnerState } from './message.types';
 
 export interface MessageAuthorLabelSlots {
+  /**
+   * The component that renders the author label.
+   * @default 'span'
+   */
   authorLabel: React.ElementType;
 }
 
 export interface MessageAuthorLabelSlotProps {
+  /**
+   * The props used for the author label slot.
+   */
   authorLabel?: SlotComponentProps<'span', {}, MessageAuthorLabelOwnerState>;
 }
 
 export interface MessageAuthorLabelProps extends React.HTMLAttributes<HTMLSpanElement> {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
   slots?: Partial<MessageAuthorLabelSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   slotProps?: MessageAuthorLabelSlotProps;
 }
 

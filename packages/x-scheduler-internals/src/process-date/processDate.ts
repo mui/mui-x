@@ -1,21 +1,9 @@
-import type { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
-import type { Adapter } from '../use-adapter';
-import { getDateKey } from '../internals/utils/date-utils';
+import type { SchedulerProcessedDate } from '../models';
+import { toPlainDateTime } from '../internals/utils/plain-date-utils/timeZone';
 
 /**
- * Creates a processed date object from a date object.
+ * Returns the processed date of an instant in `timezone`, read from the offsets of the timezone.
  */
-export function processDate(
-  date: TemporalSupportedObject,
-  adapter: Adapter,
-): SchedulerProcessedDate {
-  const hours = adapter.getHours(date);
-  const minutes = adapter.getMinutes(date);
-
-  return {
-    value: date,
-    key: getDateKey(date, adapter),
-    timestamp: adapter.getTime(date),
-    minutesInDay: hours * 60 + minutes,
-  };
+export function createProcessedDate(epochMs: number, timezone: string): SchedulerProcessedDate {
+  return { plainDateTime: toPlainDateTime(epochMs, timezone), timestamp: epochMs };
 }

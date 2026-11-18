@@ -9,8 +9,8 @@ import {
   useXAxis,
   useYAxisCoordinates,
   useYAxis,
-  type AxisCoordinates,
 } from '@mui/x-charts/hooks';
+import type { AxisCoordinates } from '@mui/x-charts/hooks';
 
 export default function GroupedAxesAutoSize() {
   const [useAutoSize, setUseAutoSize] = React.useState(true);

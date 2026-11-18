@@ -68,8 +68,11 @@ export default function getBabelConfig(api) {
     }
   }
 
-  baseConfig.plugins.unshift(['@babel/plugin-transform-object-rest-spread', { loose: true }]);
-  delete baseConfig.assumptions.setSpreadProperties;
+  // Babel 8 deprecates the plugin's `loose` option in favour of the four assumptions it used to
+  // set. `objectRestNoSymbols` and `setSpreadProperties` already come from the base config.
+  baseConfig.plugins.unshift('@babel/plugin-transform-object-rest-spread');
+  baseConfig.assumptions.ignoreFunctionLength = true;
+  baseConfig.assumptions.pureGetters = true;
 
   return baseConfig;
 }

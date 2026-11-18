@@ -1,7 +1,8 @@
 import { vi } from 'vitest';
 import type { Mock } from 'vitest';
 import { act, screen, waitFor } from '@mui/internal-test-utils';
-import { gridClasses, GridRowId } from '@mui/x-data-grid';
+import type { GridRowId } from '@mui/x-data-grid';
+import { gridClasses } from '@mui/x-data-grid';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import type { GridApiCommon } from '@mui/x-data-grid/models/api/gridApiCommon';
 

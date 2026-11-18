@@ -48,9 +48,9 @@ const RANGE_REF_ONLY_NAMES = new Set([
 const MAX_FORMULA_DEPTH = 500;
 
 class ParseFailure {
-  message: string;
+  declare message: string;
 
-  span: FormulaSourceSpan;
+  declare span: FormulaSourceSpan;
 
   constructor(message: string, span: FormulaSourceSpan) {
     this.message = message;
@@ -59,11 +59,11 @@ class ParseFailure {
 }
 
 class Parser {
-  private tokens: FormulaToken[];
+  declare private tokens: FormulaToken[];
 
   private index = 0;
 
-  private endSpan: FormulaSourceSpan;
+  declare private endSpan: FormulaSourceSpan;
 
   private recursionDepth = 0;
 

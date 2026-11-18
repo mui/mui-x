@@ -5,9 +5,16 @@ import type {
   EventTimelinePremiumStore,
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import type { SchedulerPublicAPI } from '@mui/x-scheduler-internals/internals';
+import type {
+  SchedulerRenderableEventOccurrence,
+  SchedulerResource,
+} from '@mui/x-scheduler-internals/models';
 import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 import type { EventTimelinePremiumSlotsAndSlotProps } from '../models/slots';
 import type { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses';
+import type { EventTimelinePremiumFeatures } from './features/EventTimelinePremiumFeatures.types';
+
+export type { EventTimelinePremiumFeatures } from './features/EventTimelinePremiumFeatures.types';
 
 export type EventTimelinePremiumApiRef<
   TEvent extends object = any,
@@ -15,6 +22,21 @@ export type EventTimelinePremiumApiRef<
 > = React.RefObject<
   Partial<SchedulerPublicAPI<EventTimelinePremiumStore<TEvent, TResource>>> | undefined
 >;
+
+export interface EventTimelineGetEventAriaLabelParameters {
+  /**
+   * The occurrence rendered by the event block.
+   */
+  occurrence: SchedulerRenderableEventOccurrence;
+  /**
+   * The resource of the row the block is rendered in, without its `children`.
+   */
+  resource: Omit<SchedulerResource, 'children'>;
+  /**
+   * The accessible name built from the occurrence and the `localeText`.
+   */
+  defaultAriaLabel: string;
+}
 
 export interface EventTimelinePremiumProps<TEvent extends object, TResource extends object>
   extends
@@ -46,6 +68,20 @@ export interface EventTimelinePremiumProps<TEvent extends object, TResource exte
    * When provided, this takes priority over `localeText.timelineResourceTitleHeader`.
    */
   resourceColumnLabel?: string;
+  /**
+   * Returns the accessible name of an event block.
+   * Use it to announce details rendered through the `timelineEventContent` slot.
+   * @param {EventTimelineGetEventAriaLabelParameters} parameters The occurrence, its row resource and the default name.
+   * @returns {string} The accessible name of the event block.
+   */
+  getEventAriaLabel?: (parameters: EventTimelineGetEventAriaLabelParameters) => string;
+  /**
+   * The optional features of the Event Timeline: `recurringEvents` from `@mui/x-scheduler-premium/recurring-events`
+   * and `dependencies` from `@mui/x-scheduler-premium/dependencies`.
+   * They are read once when the component mounts, later changes are ignored.
+   * @example { recurringEvents: recurringEventsFeature, dependencies: dependenciesFeature }
+   */
+  features?: EventTimelinePremiumFeatures;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

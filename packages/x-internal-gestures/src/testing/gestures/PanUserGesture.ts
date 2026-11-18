@@ -1,6 +1,6 @@
-import { PointerManager } from '../PointerManager';
+import type { PointerManager } from '../PointerManager';
 import type { PointerType } from '../types/Pointers';
-import { PanUserGestureOptions } from './PanUserGesture.types';
+import type { PanUserGestureOptions } from './PanUserGesture.types';
 
 /**
  * Implementation of the pan gesture.

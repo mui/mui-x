@@ -41,7 +41,9 @@ const ChartsToolbarImageExportTrigger = forwardRef<
   const apiRef = useChartProApiContext();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    apiRef.current.exportAsImage(options);
+    apiRef.current.exportAsImage(options).catch((error) => {
+      console.error('MUI X Charts: Error exporting chart as image:', error);
+    });
     onClick?.(event);
   };
 
@@ -61,7 +63,13 @@ ChartsToolbarImageExportTrigger.propTypes /* remove-proptypes */ = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   className: PropTypes.string,
+  /**
+   * If `true`, the button is disabled.
+   */
   disabled: PropTypes.bool,
+  /**
+   * The id of the button element.
+   */
   id: PropTypes.string,
   /**
    * The options to apply on the image export.
@@ -73,6 +81,7 @@ ChartsToolbarImageExportTrigger.propTypes /* remove-proptypes */ = {
     fileName: PropTypes.string,
     nonce: PropTypes.string,
     onBeforeExport: PropTypes.func,
+    onStylesheetError: PropTypes.func,
     pixelRatio: PropTypes.number,
     quality: PropTypes.number,
     type: PropTypes.string.isRequired,
@@ -81,8 +90,14 @@ ChartsToolbarImageExportTrigger.propTypes /* remove-proptypes */ = {
    * A function to customize the rendering of the component.
    */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  /**
+   * The size of the button.
+   */
   size: PropTypes.oneOf(['large', 'medium', 'small']),
   style: PropTypes.object,
+  /**
+   * The `tabIndex` of the button element.
+   */
   tabIndex: PropTypes.number,
 } as any;
 

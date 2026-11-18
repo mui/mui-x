@@ -3,15 +3,22 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import type { Theme } from '@mui/material/styles';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
-  adapter,
+  addMonths,
+  createDate,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
+  endOfDay,
   EventBuilder,
+  getAllEventsByTitle,
   ResourceBuilder,
   SchedulerStoreRunner,
+  setSystemTimezone,
+  startOfDay,
+  startOfMonth,
   withinEventCalendarToolbar,
 } from 'test/utils/scheduler';
 import { act, screen, within, waitFor } from '@mui/internal-test-utils';
+import { isJSDOM } from 'test/utils/skipIf';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { MonthView } from '@mui/x-scheduler/month-view';
 import { vi, describe, it, expect } from 'vitest';
@@ -39,6 +46,13 @@ describe('<MonthView />', () => {
     EventBuilder.new().singleDay('2025-05-01T11:00:00Z').title('Event 4').build(),
     EventBuilder.new().singleDay('2025-05-01T12:00:00Z').title('Event 5').build(),
     EventBuilder.new().singleDay('2025-05-01T13:00:00Z').title('Event 6').build(),
+  ];
+
+  const nextDayEvents = [
+    EventBuilder.new().singleDay('2025-05-02T08:00:00Z').title('Next day 1').build(),
+    EventBuilder.new().singleDay('2025-05-02T09:00:00Z').title('Next day 2').build(),
+    EventBuilder.new().singleDay('2025-05-02T10:00:00Z').title('Next day 3').build(),
+    EventBuilder.new().singleDay('2025-05-02T11:00:00Z').title('Next day 4').build(),
   ];
 
   it('should render the weekday headers, a cell for each day, and show the abbreviated month for day 1', () => {
@@ -95,7 +109,7 @@ describe('<MonthView />', () => {
     expect(handleViewChange.mock.calls[0][0]).to.equal('day');
     expect(handleVisibleDateChange.mock.calls.length).to.equal(1);
     expect(handleVisibleDateChange.mock.calls[0][0]).toEqualDateTime(
-      adapter.date('2025-05-15T00:00:00Z', 'default'),
+      createDate('2025-05-15T00:00:00Z'),
     );
   });
 
@@ -122,6 +136,53 @@ describe('<MonthView />', () => {
     expect(screen.getByText(/more/i)).not.to.equal(null);
   });
 
+  describe('focus when an event is removed', () => {
+    const singleDayEvents = [
+      EventBuilder.new().singleDay('2025-05-01T09:00:00Z').title('Meeting').build(),
+      EventBuilder.new().singleDay('2025-05-15T14:00:00Z').title('Doctor Appointment').build(),
+    ];
+
+    function renderMonthView() {
+      return render(
+        <EventCalendarProvider events={singleDayEvents} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+    }
+
+    it('should move focus to the day cell when the focused event is removed', async () => {
+      const { setProps } = renderMonthView();
+      const eventButton = screen.getByRole('button', { name: /^Meeting,/ });
+      const cell = eventButton.closest<HTMLElement>('[role="gridcell"]')!;
+      await act(async () => {
+        eventButton.focus();
+      });
+
+      setProps({ events: singleDayEvents.slice(1) });
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(cell);
+      });
+    });
+
+    it('should leave focus alone when an event is removed while another one is focused', async () => {
+      const { setProps } = renderMonthView();
+      const otherEvent = screen.getByRole('button', { name: /^Doctor Appointment,/ });
+      await act(async () => {
+        otherEvent.focus();
+      });
+
+      setProps({ events: singleDayEvents.slice(1) });
+
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /^Meeting,/ })).to.equal(null);
+      });
+      expect(document.activeElement).to.equal(otherEvent);
+    });
+  });
+
   describe('Event keyboard accessibility in "more events" popover', () => {
     async function renderAndOpenPopover({
       theme,
@@ -140,10 +201,61 @@ describe('<MonthView />', () => {
           ? ({ children }) => <ThemeProvider theme={theme}>{children}</ThemeProvider>
           : undefined,
       });
-      const moreButton = await screen.findByRole('button', { name: /more/i });
+      // The first "+N more" button is May 1st's.
+      const [moreButton] = await screen.findAllByRole('button', { name: /more/i });
       await user.click(moreButton);
       const popover = await screen.findByRole('presentation');
       return { user, setProps, popover };
+    }
+
+    // Feeds `onEventsChange` back into `events`, so a delete actually removes the event.
+    async function renderAndOpenStatefulPopover(initialEvents = manyEvents) {
+      let applyChange: (events: object[]) => void = () => {};
+      const { setProps, ...other } = await renderAndOpenPopover({
+        events: initialEvents,
+        onEventsChange: (events) => applyChange(events),
+      });
+      applyChange = (events) => setProps({ events });
+
+      async function openMenu(title: string) {
+        await act(async () => {
+          getPopoverEvent(other.popover, title).focus();
+        });
+        await other.user.keyboard(' ');
+        await screen.findByRole('menu');
+      }
+
+      async function deleteEvent(title: string) {
+        await openMenu(title);
+        await other.user.click(screen.getByRole('menuitem', { name: /delete/i }));
+        await other.user.click(await screen.findByRole('button', { name: 'Delete event' }));
+        // The confirmation dialog hides the popover from queries until it is gone.
+        await waitFor(() => {
+          expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+        });
+      }
+
+      return { setProps, openMenu, deleteEvent, ...other };
+    }
+
+    function getPopoverEvent(popover: HTMLElement, title: string) {
+      return within(popover).getByRole('button', { name: new RegExp(`^${title},`) });
+    }
+
+    function getMoreButtonLabels() {
+      return screen
+        .queryAllByRole('button', { name: /more/i, hidden: true })
+        .map((button) => button.textContent);
+    }
+
+    function getMay1Cell() {
+      return screen.getAllByRole('gridcell').find((cell) => within(cell).queryByText(/may 1/i));
+    }
+
+    function getPopoverEventTitles(popover: HTMLElement) {
+      return within(popover)
+        .getAllByRole('button')
+        .map((button) => button.getAttribute('aria-label')!.split(',')[0]);
     }
 
     it('should have tabindex and role="button" on events in the popover', async () => {
@@ -193,20 +305,21 @@ describe('<MonthView />', () => {
       });
     });
 
-    it('should reference resolvable header IDs in each event aria-labelledby', async () => {
+    it('should name each event in the popover with its title, time range and date', async () => {
       const { popover } = await renderAndOpenPopover();
 
       const eventButtons = within(popover).getAllByRole('button');
-      expect(eventButtons.length).to.be.greaterThan(0);
 
+      expect(eventButtons.map((button) => button.getAttribute('aria-label'))).to.deep.equal([
+        'Event 1, 8:00 AM to 9:00 AM, Thursday, May 1, 2025',
+        'Event 2, 9:00 AM to 10:00 AM, Thursday, May 1, 2025',
+        'Event 3, 10:00 AM to 11:00 AM, Thursday, May 1, 2025',
+        'Event 4, 11:00 AM to 12:00 PM, Thursday, May 1, 2025',
+        'Event 5, 12:00 PM to 1:00 PM, Thursday, May 1, 2025',
+        'Event 6, 1:00 PM to 2:00 PM, Thursday, May 1, 2025',
+      ]);
       eventButtons.forEach((button) => {
-        const tokens = (button.getAttribute('aria-labelledby') ?? '').split(' ').filter(Boolean);
-        expect(tokens.length).to.be.greaterThan(0);
-        tokens.forEach((token) => {
-          expect(document.getElementById(token), `aria-labelledby token "${token}"`).not.to.equal(
-            null,
-          );
-        });
+        expect(button).not.to.have.attribute('aria-labelledby');
       });
     });
 
@@ -384,6 +497,359 @@ describe('<MonthView />', () => {
       expect(document.activeElement).to.equal(movedTo);
     });
 
+    it('should stop listing an event once it is deleted from the popover', async () => {
+      const { popover, deleteEvent } = await renderAndOpenStatefulPopover();
+
+      await deleteEvent('Event 3');
+
+      await waitFor(() => {
+        expect(getPopoverEventTitles(popover)).to.deep.equal([
+          'Event 1',
+          'Event 2',
+          'Event 4',
+          'Event 5',
+          'Event 6',
+        ]);
+      });
+      expect(document.body.contains(popover)).to.equal(true);
+    });
+
+    it('should move focus to the next event after deleting one from the popover', async () => {
+      const { popover, deleteEvent } = await renderAndOpenStatefulPopover();
+
+      await deleteEvent('Event 3');
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(
+          within(popover).getByRole('button', { name: /^Event 4,/ }),
+        );
+      });
+    });
+
+    it('should move focus to the previous event after deleting the last one from the popover', async () => {
+      const { popover, deleteEvent } = await renderAndOpenStatefulPopover();
+
+      await deleteEvent('Event 6');
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(
+          within(popover).getByRole('button', { name: /^Event 5,/ }),
+        );
+      });
+    });
+
+    it('should close the popover and focus the day cell once every event fits in it', async () => {
+      const { popover, deleteEvent } = await renderAndOpenStatefulPopover();
+
+      // How many events fit in a cell depends on its measured height, which differs between
+      // jsdom and the browser. `hidden` because the open popover hides the page from queries.
+      while (screen.queryByRole('button', { name: /more/i, hidden: true })) {
+        // eslint-disable-next-line no-await-in-loop
+        await deleteEvent(getPopoverEventTitles(popover).at(-1)!);
+      }
+
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getMay1Cell());
+      });
+    });
+
+    it('should move focus to the next event when the focused event is removed', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover();
+      await act(async () => {
+        getPopoverEvent(popover, 'Event 3').focus();
+      });
+
+      setProps({ events: manyEvents.filter((event) => event.title !== 'Event 3') });
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getPopoverEvent(popover, 'Event 4'));
+      });
+    });
+
+    it('should not move focus when an event is removed while the popover itself is focused', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover();
+      const paper = popover.querySelector(
+        `.${eventCalendarClasses.moreEventsPopoverBody}`,
+      )!.parentElement!;
+      await act(async () => {
+        paper.focus();
+      });
+
+      setProps({ events: manyEvents.filter((event) => event.title !== 'Event 3') });
+
+      await waitFor(() => {
+        expect(getPopoverEventTitles(popover)).not.to.include('Event 3');
+      });
+      expect(document.activeElement).to.equal(paper);
+    });
+
+    // jsdom doesn't lay out the page, so every position is the same.
+    it.skipIf(isJSDOM)(
+      'should keep the popover in place while it closes once every event fits in the cell',
+      async () => {
+        const { popover, deleteEvent } = await renderAndOpenStatefulPopover();
+        const paper = popover.querySelector(
+          `.${eventCalendarClasses.moreEventsPopoverBody}`,
+        )!.parentElement!;
+        const getPosition = () => `${paper.style.top} ${paper.style.left}`;
+        // The popover moves while the list shrinks, so only the closing delete is checked.
+        let positionBeforeDelete = getPosition();
+        let positions: string[] = [];
+        const observer = new MutationObserver(() => {
+          positions.push(getPosition());
+        });
+        observer.observe(paper, { attributes: true, attributeFilter: ['style'] });
+
+        try {
+          while (screen.queryByRole('button', { name: /more/i, hidden: true })) {
+            positionBeforeDelete = getPosition();
+            positions = [];
+            // eslint-disable-next-line no-await-in-loop
+            await deleteEvent(getPopoverEventTitles(popover).at(-1)!);
+          }
+          await waitFor(() => {
+            expect(document.body.contains(popover)).to.equal(false);
+          });
+        } finally {
+          observer.disconnect();
+        }
+
+        expect(positions).to.deep.equal(positions.map(() => positionBeforeDelete));
+      },
+    );
+
+    it('should move focus past every removed event when several are removed at once', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover();
+      await act(async () => {
+        getPopoverEvent(popover, 'Event 4').focus();
+      });
+
+      setProps({
+        events: manyEvents.filter(
+          (event) => event.title !== 'Event 1' && event.title !== 'Event 4',
+        ),
+      });
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getPopoverEvent(popover, 'Event 5'));
+      });
+    });
+
+    it('should move focus past every removed event when several are removed under an open context menu', async () => {
+      const { popover, setProps, openMenu } = await renderAndOpenStatefulPopover();
+      await openMenu('Event 4');
+
+      setProps({
+        events: manyEvents.filter(
+          (event) => event.title !== 'Event 1' && event.title !== 'Event 4',
+        ),
+      });
+
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getPopoverEvent(popover, 'Event 5'));
+      });
+    });
+
+    it('should open the popover in the document the calendar is rendered in', async () => {
+      const iframe = document.createElement('iframe');
+      iframe.style.width = '1000px';
+      iframe.style.height = '800px';
+      document.body.appendChild(iframe);
+      const iframeBody = iframe.contentDocument!.body;
+      const { unmount } = render(
+        <EventCalendarProvider events={manyEvents} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+        { container: iframeBody.appendChild(iframe.contentDocument!.createElement('div')) },
+      );
+
+      try {
+        const [moreButton] = await within(iframeBody).findAllByRole('button', { name: /more/i });
+        await act(async () => {
+          moreButton.click();
+        });
+
+        expect(await within(iframeBody).findByRole('presentation')).not.to.equal(null);
+      } finally {
+        unmount();
+        iframe.remove();
+      }
+    });
+
+    it('should not move focus when an event is removed while another one is focused', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover();
+      const firstEvent = getPopoverEvent(popover, 'Event 1');
+      await act(async () => {
+        firstEvent.focus();
+      });
+
+      setProps({ events: manyEvents.filter((event) => event.title !== 'Event 3') });
+
+      await waitFor(() => {
+        expect(getPopoverEventTitles(popover)).not.to.include('Event 3');
+      });
+      expect(document.activeElement).to.equal(firstEvent);
+    });
+
+    it('should ignore changes to the events of another day that still overflows', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover([
+        ...manyEvents,
+        ...nextDayEvents,
+      ]);
+      const labelsBefore = getMoreButtonLabels();
+
+      setProps({ events: [...manyEvents, ...nextDayEvents.slice(1)] });
+
+      await waitFor(() => {
+        expect(getMoreButtonLabels()).not.to.deep.equal(labelsBefore);
+      });
+      expect(getMoreButtonLabels()).to.have.length(2);
+      expect(getPopoverEventTitles(popover)).to.deep.equal([
+        'Event 1',
+        'Event 2',
+        'Event 3',
+        'Event 4',
+        'Event 5',
+        'Event 6',
+      ]);
+    });
+
+    it('should ignore the "+N more" button of another day unmounting', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover([
+        ...manyEvents,
+        ...nextDayEvents,
+      ]);
+      const labelsBefore = getMoreButtonLabels();
+
+      // One event left, so the next day's "+N more" button unmounts.
+      setProps({ events: [...manyEvents, ...nextDayEvents.slice(3)] });
+
+      await waitFor(() => {
+        expect(getMoreButtonLabels()).not.to.deep.equal(labelsBefore);
+      });
+      expect(document.body.contains(popover)).to.equal(true);
+      expect(getPopoverEventTitles(popover)).to.deep.equal([
+        'Event 1',
+        'Event 2',
+        'Event 3',
+        'Event 4',
+        'Event 5',
+        'Event 6',
+      ]);
+    });
+
+    it('should not focus an event when the popover is reopened for another day', async () => {
+      const { user } = await renderAndOpenPopover({
+        events: [...manyEvents, ...nextDayEvents],
+      });
+      // Reopened right away, while the previous popover is still on its way out.
+      await user.keyboard('{Escape}');
+      const nextDayMoreButton = screen.getAllByRole('button', { name: /more/i })[1];
+      // Some browsers (Safari) don't focus a button on click, so focus stays on the document.
+      await act(async () => {
+        (document.activeElement as HTMLElement | null)?.blur();
+      });
+      const focusedElements: Element[] = [];
+      const recordFocus = (event: FocusEvent) => {
+        focusedElements.push(event.target as Element);
+      };
+      document.addEventListener('focusin', recordFocus);
+
+      try {
+        await act(async () => {
+          nextDayMoreButton.click();
+        });
+
+        const nextDayPopover = await screen.findByRole('presentation');
+        await waitFor(() => {
+          expect(nextDayPopover.contains(document.activeElement)).to.equal(true);
+        });
+        // Not even briefly on an event or the "+N more" button.
+        expect(
+          focusedElements.filter((element) => !nextDayPopover.contains(element)),
+        ).to.deep.equal([]);
+        expect(within(nextDayPopover).getAllByRole('button')).not.to.include(
+          document.activeElement,
+        );
+      } finally {
+        document.removeEventListener('focusin', recordFocus);
+      }
+    });
+
+    it('should list an event added to the day while the popover is open', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover();
+
+      setProps({
+        events: [
+          ...manyEvents,
+          EventBuilder.new().singleDay('2025-05-01T14:00:00Z').title('Event 7').build(),
+        ],
+      });
+
+      await waitFor(() => {
+        expect(getPopoverEventTitles(popover)).to.include('Event 7');
+      });
+    });
+
+    it('should move focus to the next event when the event of an open context menu is removed', async () => {
+      const { popover, setProps, openMenu } = await renderAndOpenStatefulPopover();
+      await openMenu('Event 3');
+
+      setProps({ events: manyEvents.filter((event) => event.title !== 'Event 3') });
+
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getPopoverEvent(popover, 'Event 4'));
+      });
+    });
+
+    it('should keep the next event as the focus target when another event is removed while the context menu closes', async () => {
+      const { popover, setProps, openMenu } = await renderAndOpenStatefulPopover();
+      await openMenu('Event 3');
+
+      setProps({ events: manyEvents.filter((event) => event.title !== 'Event 3') });
+      setProps({
+        events: manyEvents.filter(
+          (event) => event.title !== 'Event 3' && event.title !== 'Event 6',
+        ),
+      });
+
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getPopoverEvent(popover, 'Event 4'));
+      });
+    });
+
+    it('should focus the day cell when the popover closes under an open context menu', async () => {
+      const { popover, setProps, openMenu } = await renderAndOpenStatefulPopover();
+      await openMenu('Event 2');
+
+      setProps({ events: manyEvents.slice(0, 1) });
+
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getMay1Cell());
+      });
+    });
+
     it('should return focus to the trigger when the popover is dismissed without editing', async () => {
       const { user, popover } = await renderAndOpenPopover();
 
@@ -427,43 +893,148 @@ describe('<MonthView />', () => {
       await act(async () => {
         store!.setOccurrencePlaceholder({
           ...placeholder,
-          end: adapter.addHours(placeholder.end, -1),
+          end: placeholder.end - 60 * 60_000,
         });
       });
 
       expect(onEventEditingStart.mock.calls.length).to.equal(1);
       expect(screen.queryByRole('dialog')).not.to.equal(null);
     });
+
+    it('should clamp the span of a creation placeholder to each week row', () => {
+      // Friday May 9 to Tuesday May 13: two days left in the first week row, three in the next.
+      const start = startOfDay(createDate('2025-05-09T00:00:00Z'));
+      const end = endOfDay(createDate('2025-05-13T00:00:00Z'));
+
+      render(
+        <EventCalendarProvider events={[]} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
+            onMount={(store) =>
+              store.setOccurrencePlaceholder({
+                type: 'creation',
+                surfaceType: 'day-grid',
+                start: start.getTime(),
+                end: end.getTime(),
+                lockSurfaceType: false,
+                resourceId: null,
+              })
+            }
+          />
+        </EventCalendarProvider>,
+      );
+
+      const spans = Array.from(
+        document.querySelectorAll<HTMLElement>('[style*="--grid-column-span"]'),
+      ).map((element) => element.style.getPropertyValue('--grid-column-span'));
+      expect(spans).to.deep.equal(['2', '3']);
+    });
+
+    it('should span the cells of a creation placeholder in a row without weekends', () => {
+      // Thursday July 10th to Monday July 14th, in the row Wed 9th, Thu 10th, Fri 11th, Mon 14th and Tue 15th.
+      render(
+        <EventCalendarProvider
+          events={[]}
+          resources={[]}
+          displayTimezone="UTC"
+          visibleDate={new Date('2025-07-15T00:00:00Z')}
+          defaultPreferences={{ showWeekends: false, weekStartsOn: 3 }}
+        >
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
+            onMount={(store) =>
+              store.setOccurrencePlaceholder({
+                type: 'creation',
+                surfaceType: 'day-grid',
+                start: Date.parse('2025-07-10T00:00:00Z'),
+                end: Date.parse('2025-07-15T00:00:00Z'),
+                lockSurfaceType: false,
+                resourceId: null,
+              })
+            }
+          />
+        </EventCalendarProvider>,
+      );
+
+      // Thursday, Friday and Monday.
+      const spans = Array.from(
+        document.querySelectorAll<HTMLElement>('[style*="--grid-column-span"]'),
+      ).map((element) => element.style.getPropertyValue('--grid-column-span'));
+      expect(spans).to.deep.equal(['3']);
+    });
   });
 
   describe('All day events', () => {
     const allDayEvents = [
       EventBuilder.new()
-        .span('2025-05-05T00:00:00Z', '2025-05-07T23:59:59Z', { allDay: true })
+        .span('2025-05-05', '2025-05-08', { allDay: true })
         .title('Multi-day Conference')
         .build(),
       EventBuilder.new()
-        .span('2025-04-28T00:00:00Z', '2025-05-06T23:59:59Z', { allDay: true }) // Previos week - Current week
+        .span('2025-04-28', '2025-05-07', { allDay: true }) // Previos week - Current week
         .title('Long Event')
         .build(),
       EventBuilder.new()
-        .span('2025-05-12T00:00:00Z', '2025-05-14T23:59:59Z', { allDay: true })
+        .span('2025-05-12', '2025-05-15', { allDay: true })
         .title('Grid Row Test')
         .build(),
       EventBuilder.new()
-        .span('2025-05-08T00:00:00Z', '2025-05-10T23:59:59Z', { allDay: true })
+        .span('2025-05-08', '2025-05-11', { allDay: true })
         .title('Three Day Event')
         .build(),
       EventBuilder.new()
-        .span('2025-05-19T00:00:00Z', '2025-05-27T23:59:59Z', { allDay: true })
+        .span('2025-05-19', '2025-05-28', { allDay: true })
         .title('Multiple week event')
         .build(),
     ];
 
+    it('should announce a multi-day timed event as a single date and time range', () => {
+      const trip = EventBuilder.new()
+        .title('Trip')
+        .span('2025-05-05T07:30:00Z', '2025-05-07T17:00:00Z')
+        .build();
+
+      render(
+        <EventCalendarProvider events={[trip]} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      expect(
+        screen.getByRole('button', {
+          name: 'Trip, From Monday, May 5, 2025 7:30 AM to Wednesday, May 7, 2025 5:00 PM',
+        }),
+      ).not.to.equal(null);
+    });
+
+    it('should announce an all-day event as a date range instead of a time range', () => {
+      render(
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      expect(
+        screen.getByRole('button', {
+          name: 'Multi-day Conference, All day, From Monday, May 5, 2025 to Wednesday, May 7, 2025',
+        }),
+      ).not.to.equal(null);
+    });
+
     it('should render all-day events correctly with main event in start date cell', () => {
       render(
         <EventCalendarProvider
-          events={[EventBuilder.new().span('2025-05-04Z', '2025-05-07Z', { allDay: true }).build()]}
+          events={[EventBuilder.new().span('2025-05-04', '2025-05-08', { allDay: true }).build()]}
           resources={[]}
         >
           <EventDialogProvider>
@@ -516,7 +1087,7 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const allEventOccurrences = screen.getAllByLabelText('Grid Row Test');
+      const allEventOccurrences = getAllEventsByTitle('Grid Row Test');
       const mainEvent = allEventOccurrences.find(
         (event) => event.getAttribute('aria-hidden') !== 'true',
       );
@@ -538,15 +1109,15 @@ describe('<MonthView />', () => {
     it('should handle multiple overlapping all-day events with different grid rows', () => {
       const overlappingEvents = [
         EventBuilder.new()
-          .span('2025-05-12T00:00:00Z', '2025-05-14T23:59:59Z', { allDay: true })
+          .span('2025-05-12', '2025-05-15', { allDay: true })
           .title('Event 1')
           .build(),
         EventBuilder.new()
-          .span('2025-05-13T00:00:00Z', '2025-05-15T23:59:59Z', { allDay: true })
+          .span('2025-05-13', '2025-05-16', { allDay: true })
           .title('Event 2')
           .build(),
         EventBuilder.new()
-          .span('2025-05-16T00:00:00Z', '2025-05-17T23:59:59Z', { allDay: true })
+          .span('2025-05-16', '2025-05-18', { allDay: true })
           .title('Event 3')
           .build(),
       ];
@@ -559,9 +1130,9 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const event1Elements = screen.getAllByLabelText('Event 1');
-      const event2Elements = screen.getAllByLabelText('Event 2');
-      const event3Elements = screen.getAllByLabelText('Event 3');
+      const event1Elements = getAllEventsByTitle('Event 1');
+      const event2Elements = getAllEventsByTitle('Event 2');
+      const event3Elements = getAllEventsByTitle('Event 3');
 
       const event1Main = event1Elements.find((el) => el.getAttribute('aria-hidden') !== 'true');
       const event2Main = event2Elements.find((el) => el.getAttribute('aria-hidden') !== 'true');
@@ -589,9 +1160,9 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const mainEvent = screen
-        .getAllByLabelText('Three Day Event')
-        .find((el) => el.getAttribute('aria-hidden') !== 'true');
+      const mainEvent = getAllEventsByTitle('Three Day Event').find(
+        (el) => el.getAttribute('aria-hidden') !== 'true',
+      );
       const eventStyle = mainEvent?.getAttribute('style') || '';
       const gridColumnSpan = eventStyle.match(/--grid-column-span:\s*(\d+)/)?.[1];
 
@@ -608,13 +1179,20 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const eventInstances = screen.getAllByLabelText('Multiple week event');
+      const eventInstances = getAllEventsByTitle('Multiple week event');
 
       const visibleInstances = eventInstances.filter(
         (el) => el.getAttribute('aria-hidden') !== 'true',
       );
 
       expect(visibleInstances).toHaveLength(2);
+      // Each segment announces the whole event, not the slice of it that its row shows.
+      visibleInstances.forEach((instance) => {
+        expect(instance).to.have.attribute(
+          'aria-label',
+          'Multiple week event, All day, From Monday, May 19, 2025 to Tuesday, May 27, 2025',
+        );
+      });
     });
   });
 
@@ -684,7 +1262,7 @@ describe('<MonthView />', () => {
       // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within toolbar
       await user.click(toolbar.getByRole('button', { name: /previous month/i }));
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
-        adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), -1),
+        addMonths(startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), -1),
       );
     });
 
@@ -704,12 +1282,31 @@ describe('<MonthView />', () => {
       // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within toolbar
       await user.click(toolbar.getByRole('button', { name: /next month/i }));
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
-        adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), 1),
+        addMonths(startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), 1),
       );
     });
   });
 
   describe('aria semantics', () => {
+    it('should mark only the cell of today with aria-current="date"', () => {
+      render(
+        <EventCalendarProvider {...standaloneDefaults}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      const currentElements = document.querySelectorAll('[aria-current]');
+      expect(currentElements.length).to.equal(1);
+      expect(currentElements[0]).to.have.attribute('role', 'gridcell');
+      expect(
+        currentElements[0].querySelector(`.${eventCalendarClasses.monthViewCellNumber}`),
+      ).to.have.text('May 1');
+      expect(currentElements[0]).to.have.attribute('aria-current', 'date');
+      expect(currentElements[0]).to.have.attribute('data-current');
+    });
+
     it('should set aria-rowcount and aria-colcount on the grid root and aria indexes on cells', () => {
       render(
         <EventCalendarProvider {...standaloneDefaults}>
@@ -796,6 +1393,115 @@ describe('<MonthView />', () => {
     });
   });
 
+  describe('weekend of the date locale', () => {
+    function getDataRows() {
+      return within(screen.getByRole('grid'))
+        .getAllByRole('row')
+        .filter((row) => row.getAttribute('aria-rowindex') !== '1');
+    }
+
+    function getHeaderTexts() {
+      return screen.getAllByRole('columnheader').map((header) => header.textContent);
+    }
+
+    function formatWeekdays(dateLocale: string, dates: string[]) {
+      const formatter = new Intl.DateTimeFormat(dateLocale, { weekday: 'short', timeZone: 'UTC' });
+      return dates.map((date) => formatter.format(new Date(date)));
+    }
+
+    function renderMonthView(dateLocale: string, showWeekends: boolean) {
+      render(
+        <EventCalendarProvider
+          {...standaloneDefaults}
+          dateLocale={dateLocale}
+          defaultPreferences={{ showWeekends }}
+        >
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+    }
+
+    it('should mark Saturday and Sunday as the weekend in the United States', () => {
+      renderMonthView('en-US', true);
+
+      // The weeks start on Sunday.
+      getDataRows().forEach((row) => {
+        const cells = within(row).getAllByRole('gridcell');
+        expect(cells.map((cell) => cell.hasAttribute('data-weekend'))).to.deep.equal([
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+        ]);
+      });
+    });
+
+    it('should mark Friday and Saturday as the weekend in Saudi Arabia', () => {
+      renderMonthView('ar-SA', true);
+
+      // The weeks start on Sunday.
+      getDataRows().forEach((row) => {
+        const cells = within(row).getAllByRole('gridcell');
+        expect(cells.map((cell) => cell.hasAttribute('data-weekend'))).to.deep.equal([
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          true,
+        ]);
+      });
+    });
+
+    it('should hide Friday and Saturday in Saudi Arabia when showWeekends=false', () => {
+      renderMonthView('ar-SA', false);
+
+      expect(screen.getByRole('grid')).to.have.attribute('aria-colcount', '5');
+      getDataRows().forEach((row) => {
+        const cells = within(row).getAllByRole('gridcell');
+        expect(cells.length).to.equal(5);
+        cells.forEach((cell) => expect(cell).not.to.have.attribute('data-weekend'));
+      });
+      // From Sunday, April 27th to Thursday, May 1st, 2025.
+      expect(getHeaderTexts()).to.deep.equal(
+        formatWeekdays('ar-SA', [
+          '2025-04-27',
+          '2025-04-28',
+          '2025-04-29',
+          '2025-04-30',
+          '2025-05-01',
+        ]),
+      );
+    });
+
+    it('should keep 6 days per week when the weekend has one day and showWeekends=false', () => {
+      // Iran: the weeks start on Saturday, and the weekend is Friday only.
+      renderMonthView('fa-IR', false);
+
+      expect(screen.getByRole('grid')).to.have.attribute('aria-colcount', '6');
+      getDataRows().forEach((row) => {
+        expect(within(row).getAllByRole('gridcell').length).to.equal(6);
+      });
+      // From Saturday, April 26th to Thursday, May 1st, 2025.
+      expect(getHeaderTexts()).to.deep.equal(
+        formatWeekdays('fa-IR', [
+          '2025-04-26',
+          '2025-04-27',
+          '2025-04-28',
+          '2025-04-29',
+          '2025-04-30',
+          '2025-05-01',
+        ]),
+      );
+    });
+  });
+
   describe('weekStartsOn preference', () => {
     it('should start each week row on Monday when weekStartsOn=1', () => {
       // May 2025: With weekStartsOn=1 the first week row starts on Monday Apr 28.
@@ -813,32 +1519,66 @@ describe('<MonthView />', () => {
         .getAllByRole('row')
         .filter((row) => row.getAttribute('aria-rowindex') !== '1');
 
-      // Every row must have exactly 7 gridcells — not 6 (the old getWeekNumber bug).
+      // Every row must have exactly 7 gridcells — not 6 (the old getWeekNumber bug) — and end
+      // on the Saturday and Sunday of the weekend of the United States.
       dataRows.forEach((row) => {
         const cells = within(row).getAllByRole('gridcell');
-        expect(cells.length).to.equal(7);
+        expect(cells.map((cell) => cell.hasAttribute('data-weekend'))).to.deep.equal([
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          true,
+        ]);
       });
     });
 
-    it('should start each week row on Sunday when weekStartsOn=0', () => {
+    it('should end on the week of the last day of the month when the timezone skips that day', () => {
+      // Pacific/Kiritimati skipped Saturday, December 31st, 1994, the last day of its week.
       render(
-        <EventCalendarProvider {...standaloneDefaults} defaultPreferences={{ weekStartsOn: 0 }}>
-          <EventDialogProvider>
-            <MonthView />
-          </EventDialogProvider>
-        </EventCalendarProvider>,
+        <EventCalendar
+          events={[]}
+          view="month"
+          visibleDate={new Date('1994-12-15T00:00:00Z')}
+          displayTimezone="Pacific/Kiritimati"
+        />,
       );
 
-      const grid = screen.getByRole('grid');
-      const dataRows = within(grid)
-        .getAllByRole('row')
-        .filter((row) => row.getAttribute('aria-rowindex') !== '1');
-
-      dataRows.forEach((row) => {
-        const cells = within(row).getAllByRole('gridcell');
-        expect(cells.length).to.equal(7);
-      });
+      const cellNumbers = document.querySelectorAll(
+        `.${eventCalendarClasses.monthView} .${eventCalendarClasses.monthViewCellNumber}`,
+      );
+      expect(cellNumbers[cellNumbers.length - 1]).to.have.text('30');
     });
+
+    // Browsers cannot change their timezone through process.env.TZ.
+    it.skipIf(!isJSDOM)(
+      'should fill an event on two days of the display timezone, whatever the timezone of the system',
+      () => {
+        // Pacific/Apia skipped December 30th, 2011.
+        setSystemTimezone('Pacific/Apia');
+        const event = EventBuilder.new()
+          .title('Trip')
+          .span('2011-12-30T15:00:00Z', '2011-12-31T15:00:00Z')
+          .build();
+
+        render(
+          <EventCalendar
+            events={[event]}
+            view="month"
+            visibleDate={new Date('2011-12-15T00:00:00Z')}
+            displayTimezone="America/New_York"
+          />,
+        );
+
+        // The day after the first one only holds the space of the event.
+        const variants = getAllEventsByTitle('Trip').map((part) =>
+          part.getAttribute('data-variant'),
+        );
+        expect(variants).to.deep.equal(['filled', 'invisible']);
+      },
+    );
 
     it('should display correct ISO week numbers when weekStartsOn=1 and showWeekNumber=true', () => {
       // May 2025 week 1 starts Mon Apr 28.

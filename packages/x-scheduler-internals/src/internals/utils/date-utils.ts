@@ -1,220 +1,171 @@
-import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
-import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
-import type { Adapter } from '../../use-adapter/useAdapter.types';
+import type { SchedulerEvent, SchedulerProcessedEvent, WeekStartsOn } from '../../models';
+import { BaseTemporal } from './base-temporal';
+import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
+import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
+import type { WeekInfo } from './date-locale';
+import {
+  addDaysToDayStart,
+  getStartOfDayMs,
+  toEpochMs,
+  toPlainDate,
+  toPlainDateTime,
+} from './plain-date-utils/timeZone';
+import { isDateOnlyString, isInstantString } from './plain-date-utils/date';
 
 /**
- * Builds an adapter-agnostic format string that produces an ISO 8601 date-time
- * **without** the trailing `Z` (wall-time representation).
- * Produces e.g. `yyyy'-'MM'-'dd'T'HH':'mm':'ss` for date-fns.
+ * Converts an instant back to an event date string, respecting the format of `originalString`:
+ * after an instant string (ending with `Z` or an offset), a UTC ISO string, and after a wall-time
+ * string, the wall-clock time in the event's data timezone, without the `Z` suffix.
  */
-export function getWallTimeIsoFormat(adapter: Adapter): string {
-  const f = adapter.formats;
-  const esc = adapter.escapedCharacters;
-  return [
-    f.yearPadded,
-    esc.start,
-    '-',
-    esc.end,
-    f.monthPadded,
-    esc.start,
-    '-',
-    esc.end,
-    f.dayOfMonthPadded,
-    esc.start,
-    'T',
-    esc.end,
-    f.hours24hPadded,
-    esc.start,
-    ':',
-    esc.end,
-    f.minutesPadded,
-    esc.start,
-    ':',
-    esc.end,
-    f.secondsPadded,
-  ].join('');
-}
-
-/**
- * Converts a `TemporalSupportedObject` back to a string, respecting the
- * original date format: instant strings (ending with `Z`) stay as UTC ISO
- * strings, while wall-time strings (no `Z`) are formatted in the event's
- * data timezone without the `Z` suffix.
- */
-export function dateToEventString(
-  adapter: Adapter,
-  date: TemporalSupportedObject,
+export function timestampToEventString(
+  epochMs: number,
   originalString: string,
-  dataTimezone: TemporalTimezone,
+  dataTimezone: string,
 ): string {
-  if (originalString.endsWith('Z')) {
-    return adapter.toJsDate(date).toISOString();
+  if (isInstantString(originalString)) {
+    return new Date(epochMs).toISOString();
   }
-  const dateInDataTz = adapter.setTimezone(date, dataTimezone);
-  return adapter.formatByString(dateInDataTz, getWallTimeIsoFormat(adapter));
-}
-
-export function mergeDateAndTime(
-  adapter: Adapter,
-  dateParam: TemporalSupportedObject,
-  timeParam: TemporalSupportedObject,
-): TemporalSupportedObject {
-  let mergedDate = dateParam;
-  mergedDate = adapter.setHours(mergedDate, adapter.getHours(timeParam));
-  mergedDate = adapter.setMinutes(mergedDate, adapter.getMinutes(timeParam));
-  mergedDate = adapter.setSeconds(mergedDate, adapter.getSeconds(timeParam));
-  mergedDate = adapter.setMilliseconds(mergedDate, adapter.getMilliseconds(timeParam));
-
-  return mergedDate;
+  // Like the strings of the events, without milliseconds.
+  return toPlainDateTime(Math.floor(epochMs / 1000) * 1000, dataTimezone).toString();
 }
 
 /**
- * Snaps an all-day event's bounds to span the whole day; non-all-day bounds are returned unchanged.
+ * Writes the `until` of a processed rule in the format of `originalString`, like
+ * `timestampToEventString()`. A plain date covers its whole day: it stays date-only after a
+ * date-only string, and is written as the last instant of its day otherwise. A plain date-time is
+ * written as its instant.
  */
-export function normalizeAllDayBounds(
-  adapter: Adapter,
-  start: TemporalSupportedObject,
-  end: TemporalSupportedObject,
-  allDay: boolean | undefined,
-): { start: TemporalSupportedObject; end: TemporalSupportedObject } {
-  if (!allDay) {
-    return { start, end };
+export function untilToEventString(
+  until: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime,
+  originalString: string,
+  dataTimezone: string,
+): string {
+  if (until instanceof BaseTemporal.PlainDateTime) {
+    return timestampToEventString(toEpochMs(until, dataTimezone), originalString, dataTimezone);
   }
-  return { start: adapter.startOfDay(start), end: adapter.endOfDay(end) };
+  if (isDateOnlyString(originalString)) {
+    return until.toString();
+  }
+  return timestampToEventString(
+    toEpochMs(until.add({ days: 1 }), dataTimezone) - 1,
+    originalString,
+    dataTimezone,
+  );
 }
 
 /**
- * Returns a string representation of the date.
- * It can be used as key in Maps or passed to the React `key` property when looping through days.
- * It only contains date information, two dates representing the same day but with different time will have the same key.
+ * The string whose format the `until` written to an event follows: its current `until`, including
+ * the UNTIL of an RRULE string, or else its start.
  */
-export function getDateKey(day: TemporalSupportedObject, adapter: Adapter): string {
-  return adapter.format(day, 'localizedNumericDate');
+export function getUntilReferenceString(event: SchedulerEvent): string {
+  if (typeof event.rrule === 'object') {
+    return event.rrule.until ?? event.start;
+  }
+  // The date form of UNTIL, like `20250110`, or its UTC date-time form, like `20250110T090000Z`.
+  const match = event.rrule?.match(
+    /(?:^|;)\s*UNTIL\s*=\s*(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})Z)?\s*(?:;|$)/i,
+  );
+  if (match == null) {
+    return event.start;
+  }
+  const date = `${match[1]}-${match[2]}-${match[3]}`;
+  return match[4] === undefined ? date : `${date}T${match[4]}:${match[5]}:${match[6]}Z`;
 }
 
 /**
- * Gets the end date of an event occurrence based on its start date.
- * For now, the occurrence always has the same duration as the original event, even when the DST applies between its start and the end.
+ * Writes a bound of an all-day event: the date of its instant, which must be the first instant of
+ * a day in `timezone`.
+ */
+export function allDayBoundToEventString(epochMs: number, timezone: string): string {
+  if (epochMs !== getStartOfDayMs(epochMs, timezone)) {
+    throw new Error(
+      `MUI X Scheduler: The date ${new Date(epochMs).toISOString()} of the all-day event is not the first instant of a day in the display timezone "${timezone}". ` +
+        'The dates of an all-day event are whole days, so an instant inside a day cannot be written as one of them. ' +
+        'Pass a "YYYY-MM-DD" string, or the Date of 00:00 of the day in the display timezone (of the day after the last day for the end). ' +
+        'See https://mui.com/x/react-scheduler/event-calendar/events/#all-day.',
+    );
+  }
+  return toPlainDate(epochMs, timezone).toString();
+}
+
+/**
+ * The number of days an all-day event covers, from the dates of its model.
+ */
+export function getAllDayDayCount(
+  event: Pick<SchedulerProcessedEvent, 'modelInBuiltInFormat'>,
+): number {
+  const model = event.modelInBuiltInFormat;
+  return (
+    getDayNumber(BaseTemporal.PlainDate.from(model.end)) -
+    getDayNumber(BaseTemporal.PlainDate.from(model.start))
+  );
+}
+
+/**
+ * The end of an occurrence from its start: an all-day occurrence ends at the start of the day
+ * after its last day in the display timezone, a timed one keeps the duration of its event.
  */
 export function getOccurrenceEnd({
   event,
   occurrenceStart,
-  adapter,
+  displayTimezone,
 }: {
   event: SchedulerProcessedEvent;
-  occurrenceStart: TemporalSupportedObject;
-  adapter: Adapter;
-}): TemporalSupportedObject {
-  const durationMs = event.dataTimezone.end.timestamp - event.dataTimezone.start.timestamp;
-  return adapter.addMilliseconds(occurrenceStart, durationMs);
+  occurrenceStart: number;
+  displayTimezone: string;
+}): number {
+  if (event.allDay) {
+    return addDaysToDayStart(occurrenceStart, getAllDayDayCount(event), displayTimezone);
+  }
+  return occurrenceStart + event.end.timestamp - event.start.timestamp;
 }
 
-/**
- * Maps a known-Sunday reference date through adapter.getDayOfWeek to anchor
- * the 1..7 adapter day-number to JS weekdays (0=Sun … 6=Sat). Cached per
- * adapter instance.
- */
-const sundayDayNumberCache = new WeakMap<Adapter, number>();
-
-function getSundayDayNumber(adapter: Adapter): number {
-  let cached = sundayDayNumberCache.get(adapter);
-  if (cached === undefined) {
-    // 2025-01-05 is a Sunday; use UTC noon to survive any timezone offset
-    const knownSunday = adapter.date('2025-01-05', 'UTC');
-    cached = adapter.getDayOfWeek(knownSunday);
-    if (process.env.NODE_ENV !== 'production') {
-      if (!Number.isInteger(cached) || cached < 1 || cached > 7) {
-        // eslint-disable-next-line mui/no-guarded-throw
-        throw new Error(
-          `MUI X Scheduler: adapter.getDayOfWeek returned an unexpected value (${cached}).` +
-            ' Expected an integer in the range 1–7.' +
-            ' Check that your adapter implements getDayOfWeek correctly.',
-        );
-      }
-    }
-    sundayDayNumberCache.set(adapter, cached);
-  }
-  return cached;
-}
-
-/**
- * Returns the start of the week for `date`, using `weekStartsOn` as the first
- * day of the week (0 = Sunday … 6 = Saturday).
- *
- * When `weekStartsOn` is `undefined` the locale default (adapter.startOfWeek)
- * is used unchanged.
- */
-export function getStartOfWeek(
-  adapter: Adapter,
-  date: TemporalSupportedObject,
-  weekStartsOn: WeekStartsOn | undefined,
-): TemporalSupportedObject {
-  if (weekStartsOn === undefined) {
-    return adapter.startOfWeek(date);
-  }
-
+function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {
   if (process.env.NODE_ENV !== 'production') {
     if (
       !Number.isInteger(weekStartsOn) ||
-      (weekStartsOn as number) < 0 ||
-      (weekStartsOn as number) > 6
+      (weekStartsOn as number) < 1 ||
+      (weekStartsOn as number) > 7
     ) {
       // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
-        `MUI X Scheduler: weekStartsOn must be an integer between 0 (Sunday) and 6 (Saturday),` +
+        `MUI X Scheduler: weekStartsOn must be an integer between 1 (Monday) and 7 (Sunday),` +
           ` but received ${weekStartsOn}.`,
       );
     }
   }
-
-  // getDayOfWeek(Sunday) = s  =>  getDayOfWeek(Sunday + k) = ((s - 1 + k) % 7) + 1
-  const s = getSundayDayNumber(adapter);
-  const targetDayNumber = ((s - 1 + weekStartsOn) % 7) + 1;
-
-  const currentDayNumber = adapter.getDayOfWeek(date); // 1..7
-  const delta = (currentDayNumber - targetDayNumber + 7) % 7; // days since target weekday
-  return adapter.startOfDay(adapter.addDays(date, -delta));
 }
 
 /**
- * Returns the end of the week for `date` (inclusive last moment of the 7th day),
- * using `weekStartsOn` as the first day of the week.
- *
- * When `weekStartsOn` is `undefined` the locale default (adapter.endOfWeek) is used.
+ * The first day of the week of `plainDate`.
  */
-export function getEndOfWeek(
-  adapter: Adapter,
-  date: TemporalSupportedObject,
-  weekStartsOn: WeekStartsOn | undefined,
-): TemporalSupportedObject {
-  if (weekStartsOn === undefined) {
-    return adapter.endOfWeek(date);
-  }
-
-  const weekStart = getStartOfWeek(adapter, date, weekStartsOn);
-  return adapter.endOfDay(adapter.addDays(weekStart, 6));
+export function getPlainDateWeekStart(
+  plainDate: BaseTemporal.PlainDate,
+  weekStartsOn: WeekStartsOn,
+): BaseTemporal.PlainDate {
+  checkWeekStartsOn(weekStartsOn);
+  return plainDateFromDayNumber(getStartOfWeekDayNumber(getDayNumber(plainDate), weekStartsOn));
 }
 
 /**
- * Returns the week number for `date`, using `weekStartsOn` as the first day of
- * the week (0 = Sunday … 6 = Saturday).
+ * Returns the week number of `plainDate`, with weeks starting on `weekInfo.firstDay`
+ * (1 = Monday … 7 = Sunday).
  *
- * Applies the ISO 8601 "4-day minimum" rule (the Thursday of each week
- * determines its year) with a parametric first day of the week. When
- * `weekStartsOn` is 1 the result is a standard ISO 8601 week number; for
- * other values it is the same algorithm with a shifted origin.
+ * The first week of a year is the first one with at least `weekInfo.minimalDays` days in that
+ * year. With weeks starting on Monday and 4 minimal days, the result is the ISO 8601 week number.
  */
 export function getWeekNumber(
-  adapter: Adapter,
-  date: TemporalSupportedObject,
-  weekStartsOn: WeekStartsOn | undefined,
+  plainDate: BaseTemporal.PlainDate,
+  weekInfo: Pick<WeekInfo, 'firstDay' | 'minimalDays'>,
 ): number {
-  if (weekStartsOn === undefined) {
-    return adapter.getWeekNumber(date);
-  }
-  const weekStart = getStartOfWeek(adapter, date, weekStartsOn);
-  const midWeek = adapter.addDays(weekStart, 3);
-  const jan4 = adapter.addDays(adapter.startOfYear(midWeek), 3);
-  const week1Start = getStartOfWeek(adapter, jan4, weekStartsOn);
-  return adapter.differenceInDays(weekStart, week1Start) / 7 + 1;
+  const { firstDay: weekStartsOn, minimalDays } = weekInfo;
+  const weekStartPlainDate = getPlainDateWeekStart(plainDate, weekStartsOn);
+  // A week belongs to the year of its last `minimalDays` days, and the first week of a year holds
+  // its `minimalDays`-th day.
+  const year = weekStartPlainDate.add({ days: 7 - minimalDays }).year;
+  const firstWeekStart = getStartOfWeekDayNumber(
+    isoDateToDayNumber(year, 1, minimalDays),
+    weekStartsOn,
+  );
+  return (getDayNumber(weekStartPlainDate) - firstWeekStart) / 7 + 1;
 }

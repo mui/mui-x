@@ -7,16 +7,13 @@ import ToggleButton from '@mui/material/ToggleButton';
 import { feature as topojsonFeature } from 'topojson-client';
 import countriesTopology from 'visionscarto-world-atlas/world/110m.json';
 import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
-import {
-  MapShapePlot,
-  Graticule,
-  D3NamedProjection,
-} from '@mui/x-charts-premium/Map';
+import type { D3NamedProjection } from '@mui/x-charts-premium/Map';
+import { MapShapePlot, Graticule } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsTooltip } from '@mui/x-charts-premium/ChartsTooltip';
-import {
-  type ExtendedFeature,
-  type ExtendedFeatureCollection,
+import type {
+  ExtendedFeature,
+  ExtendedFeatureCollection,
 } from '@mui/x-charts-vendor/d3-geo';
 import tectonicPlates from '../dataset/tectonicPlates.json';
 

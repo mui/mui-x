@@ -1,7 +1,10 @@
 import { expect } from 'vitest';
-import { ToBeClonable, toBeClonable } from './matchers/toBeClonable';
-import { ToUpdateOptions, toUpdateOptions } from './matchers/toUpdateOptions';
-import { ToUpdateState, toUpdateState } from './matchers/toUpdateState';
+import type { ToBeClonable } from './matchers/toBeClonable';
+import { toBeClonable } from './matchers/toBeClonable';
+import type { ToUpdateOptions } from './matchers/toUpdateOptions';
+import { toUpdateOptions } from './matchers/toUpdateOptions';
+import type { ToUpdateState } from './matchers/toUpdateState';
+import { toUpdateState } from './matchers/toUpdateState';
 
 declare module 'vitest' {
   // Type parameters must stay identical to Vitest's own `Matchers` declaration,

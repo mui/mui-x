@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { warnOnce } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
 import { isOrdinalScale } from '../internals/scaleGuards';
@@ -31,9 +31,22 @@ import { DEFAULT_X_AXIS_KEY } from '../constants';
 import type { SeriesId } from '../models/seriesType/common';
 
 interface LinePlotDataPoint {
+  /**
+   * The SVG path of the element.
+   */
   d: string;
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: SeriesId;
+  /**
+   * The color of the element.
+   */
   color: string;
+  /**
+   * The id of the gradient used to color the element.
+   * The `gradientId` is used as `url(#gradientId)`.
+   */
   gradientId?: string;
   hidden: boolean;
   /** Skip the path animation: morphing between different sampled point counts looks wrong. */
@@ -130,9 +143,8 @@ export function useLinePlotData(
             );
           }
           if (xData.length < stackedData.length) {
-            warnOnce(
+            errorOnce(
               `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
-              'error',
             );
           }
         }

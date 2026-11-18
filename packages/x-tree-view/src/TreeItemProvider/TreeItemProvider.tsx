@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import type { TreeItemProviderProps } from './TreeItemProvider.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
 import { idSelectors } from '../internals/plugins/id';
@@ -20,8 +20,17 @@ TreeItemProvider.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The content of the component.
+   */
   children: PropTypes.node,
+  /**
+   * The id attribute of the item.
+   */
   id: PropTypes.string,
+  /**
+   * The id of the item.
+   */
   itemId: PropTypes.string.isRequired,
 } as any;
 

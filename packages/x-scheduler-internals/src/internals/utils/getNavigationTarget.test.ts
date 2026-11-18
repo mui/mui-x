@@ -9,6 +9,7 @@ const weekViewOptions: NavigationOptions = {
   columnCount: 7,
   rowTypes: DEFAULT_ROW_TYPES,
   rowsPerType: {},
+  isRtl: false,
 };
 
 /**
@@ -18,6 +19,7 @@ const monthViewOptions: NavigationOptions = {
   columnCount: 7,
   rowTypes: ['header', 'day-grid'],
   rowsPerType: { 'day-grid': 5 },
+  isRtl: false,
 };
 
 /**
@@ -27,6 +29,7 @@ const dayViewOptions: NavigationOptions = {
   columnCount: 1,
   rowTypes: DEFAULT_ROW_TYPES,
   rowsPerType: {},
+  isRtl: false,
 };
 
 describe('getNavigationTarget', () => {
@@ -154,6 +157,7 @@ describe('getNavigationTarget', () => {
         columnCount: 7,
         rowTypes: ['header', 'day-grid', 'time-grid'],
         rowsPerType: { 'day-grid': 5 },
+        isRtl: false,
       };
       const result = getNavigationTarget('ArrowUp', 'time-grid', 0, 3, options);
       expect(result).to.deep.equal({ rowType: 'day-grid', rowIndex: 4, columnIndex: 3 });
@@ -166,6 +170,7 @@ describe('getNavigationTarget', () => {
         columnCount: 7,
         rowTypes: ['header', 'day-grid', 'time-grid'],
         rowsPerType: { 'day-grid': 3 },
+        isRtl: false,
       };
       const result = getNavigationTarget('ArrowDown', 'day-grid', 2, 5, options);
       expect(result).to.deep.equal({ rowType: 'time-grid', rowIndex: 0, columnIndex: 5 });
@@ -186,6 +191,7 @@ describe('getNavigationTarget', () => {
         columnCount: 7,
         rowTypes: ['header', 'day-grid'],
         rowsPerType: {},
+        isRtl: false,
       };
       const result = getNavigationTarget('ArrowDown', 'time-grid', 0, 3, options);
       expect(result).to.equal(null);
@@ -196,6 +202,7 @@ describe('getNavigationTarget', () => {
         columnCount: 7,
         rowTypes: ['header', 'day-grid'],
         rowsPerType: {},
+        isRtl: false,
       };
       const result = getNavigationTarget('ArrowUp', 'time-grid', 0, 3, options);
       expect(result).to.equal(null);
@@ -204,6 +211,30 @@ describe('getNavigationTarget', () => {
     it('should handle columnCount of 1 (day view)', () => {
       expect(getNavigationTarget('ArrowLeft', 'header', 0, 0, dayViewOptions)).to.equal(null);
       expect(getNavigationTarget('ArrowRight', 'header', 0, 0, dayViewOptions)).to.equal(null);
+    });
+  });
+
+  describe('right-to-left', () => {
+    const rtlOptions: NavigationOptions = { ...weekViewOptions, isRtl: true };
+
+    it('should move to the previous column on ArrowRight', () => {
+      const result = getNavigationTarget('ArrowRight', 'header', 0, 3, rtlOptions);
+      expect(result).to.deep.equal({ rowType: 'header', rowIndex: 0, columnIndex: 2 });
+    });
+
+    it('should move to the next column on ArrowLeft', () => {
+      const result = getNavigationTarget('ArrowLeft', 'header', 0, 3, rtlOptions);
+      expect(result).to.deep.equal({ rowType: 'header', rowIndex: 0, columnIndex: 4 });
+    });
+
+    it('should return null on ArrowRight at the first column', () => {
+      const result = getNavigationTarget('ArrowRight', 'header', 0, 0, rtlOptions);
+      expect(result).to.equal(null);
+    });
+
+    it('should return null on ArrowLeft at the last column', () => {
+      const result = getNavigationTarget('ArrowLeft', 'header', 0, 6, rtlOptions);
+      expect(result).to.equal(null);
     });
   });
 });

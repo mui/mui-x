@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import type { SeriesId } from '../../../../models/seriesType/common';
 import type { HighlightItemIdentifierWithType } from '../../../../models/seriesType';
 import type { ChartSeriesType, HighlightScope } from '../../../../models/seriesType/config';
@@ -141,7 +141,7 @@ const selectorChartsHighlightStateImpl = createSelectorMemoized(
  */
 export function selectorChartsHighlightState(
   state: Parameters<typeof selectorChartsHighlightStateImpl>[0],
-  item: Parameters<typeof selectorChartsHighlightStateImpl>[1],
+  item: HighlightItemIdentifierWithType<ChartSeriesType> | null,
 ): HighlightState {
   return selectorChartsHighlightStateImpl(state, item);
 }

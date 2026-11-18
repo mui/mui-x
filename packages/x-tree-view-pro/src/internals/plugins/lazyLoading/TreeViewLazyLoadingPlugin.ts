@@ -19,11 +19,11 @@ export const TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE = {
 };
 
 export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
-  private store: RichTreeViewProStore<R, any>;
+  declare private store: RichTreeViewProStore<R, any>;
 
   private nestedDataManager = new NestedDataManager(this);
 
-  private cache: DataSourceCache<R>;
+  declare private cache: DataSourceCache<R>;
 
   private isInsideOnItemsLazyLoaded = false;
 

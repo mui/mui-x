@@ -17,7 +17,13 @@ import {
   useGridApiRef,
   GridLogicOperator,
 } from '@mui/x-data-grid-premium';
-import type { DataGridPremiumProps, GridApi, GridRowsProp } from '@mui/x-data-grid-premium';
+import type {
+  DataGridPremiumProps,
+  GridApi,
+  GridGroupNode,
+  GridRowsProp,
+  GridSortDirection,
+} from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
 
@@ -862,6 +868,67 @@ describe('<DataGridPremium /> - Row grouping', () => {
           '5',
           '4',
         ]);
+      });
+
+      it('should not pass the grouping values to the `getSortComparator` of the column', async () => {
+        // Written for the dates of the cells, not for the years of `groupingValueGetter`
+        const getSortComparator =
+          (sortDirection: GridSortDirection) => (value1: Date, value2: Date) =>
+            (sortDirection === 'desc' ? -1 : 1) * (value1.getTime() - value2.getTime());
+        render(
+          <Test
+            rows={[
+              { id: 0, date: new Date(2020, 1, 1) },
+              { id: 1, date: new Date(2021, 1, 1) },
+              { id: 2, date: new Date(2019, 1, 1) },
+            ]}
+            columns={[
+              {
+                field: 'date',
+                type: 'date',
+                groupingValueGetter: (value: Date) => value.getFullYear(),
+                getSortComparator,
+              },
+            ]}
+            initialState={{ rowGrouping: { model: ['date'] } }}
+            sortModel={[{ field: '__row_group_by_columns_group__', sort: 'desc' }]}
+          />,
+        );
+        await microtasks();
+
+        expect(
+          apiRef
+            .current!.getSortedRowIds()
+            .map((id) => apiRef.current!.getRowNode(id) as GridGroupNode)
+            .filter((node) => node.type === 'group' && node.depth === 0)
+            .map((node) => node.groupingKey),
+        ).to.deep.equal([2021, 2020, 2019]);
+      });
+
+      it('should sort the leaves with the `sortComparator` of the leaf column', async () => {
+        // Reversed, to tell it apart from the `sortComparator` of the type
+        const getSortComparator = vi.fn(() => (value1: number, value2: number) => value2 - value1);
+        render(
+          <Test
+            columns={[{ field: 'id', type: 'number', getSortComparator }, { field: 'category1' }]}
+            initialState={{ rowGrouping: { model: ['category1'] } }}
+            sortModel={[{ field: '__row_group_by_columns_group__', sort: 'asc' }]}
+            defaultGroupingExpansionDepth={-1}
+            groupingColDef={{ leafField: 'id' }}
+          />,
+        );
+        await microtasks();
+
+        expect(getColumnValues(0)).to.deep.equal([
+          'Cat A (3)',
+          '0',
+          '1',
+          '2',
+          'Cat B (2)',
+          '3',
+          '4',
+        ]);
+        expect(getSortComparator.mock.calls.length).to.equal(0);
       });
     });
 

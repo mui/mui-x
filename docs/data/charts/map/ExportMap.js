@@ -11,7 +11,6 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useChartRootRef } from '@mui/x-charts/hooks';
 import { useChartPremiumApiRef } from '@mui/x-charts-premium/hooks';
 import { PiecewiseColorLegend } from '@mui/x-charts-premium/ChartsLegend';
-
 import { countryData } from '../dataset/countryData';
 import { internetUsageByCountry } from '../dataset/internetUsageByCountry';
 
@@ -37,11 +36,22 @@ export default function ExportMap() {
       <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
         <Button
           variant="contained"
-          onClick={() => apiRef.current?.exportAsImage({ type: 'image/png' })}
+          onClick={() =>
+            apiRef.current?.exportAsImage({ type: 'image/png' }).catch((error) => {
+              console.error(error);
+            })
+          }
         >
           Export as PNG
         </Button>
-        <Button variant="outlined" onClick={() => apiRef.current?.exportAsPrint()}>
+        <Button
+          variant="outlined"
+          onClick={() =>
+            apiRef.current?.exportAsPrint().catch((error) => {
+              console.error(error);
+            })
+          }
+        >
           Print / Export as PDF
         </Button>
       </Stack>

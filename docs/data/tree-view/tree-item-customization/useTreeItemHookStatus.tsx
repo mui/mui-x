@@ -14,11 +14,12 @@ import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DrawOutlinedIcon from '@mui/icons-material/DrawOutlined';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { useTreeItem, UseTreeItemStatus } from '@mui/x-tree-view/useTreeItem';
+import type { UseTreeItemStatus } from '@mui/x-tree-view/useTreeItem';
+import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
+import type { TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import {
   TreeItemContent,
   TreeItemRoot,
-  TreeItemProps,
   TreeItemGroupTransition,
   TreeItemIconContainer,
   TreeItemLabel,

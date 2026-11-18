@@ -1,5 +1,4 @@
 import type * as React from 'react';
-import type { HasProperty } from '@mui/x-internals/types';
 import type { ChartsTypeFeatureFlags } from './featureFlags';
 
 /**
@@ -11,7 +10,7 @@ import type { ChartsTypeFeatureFlags } from './featureFlags';
  */
 export type ChartsActivationEvent<Element = never> =
   | ([Element] extends [never] ? MouseEvent : React.MouseEvent<Element, MouseEvent>)
-  | (HasProperty<ChartsTypeFeatureFlags, 'keyboardActivationOverride'> extends true
-      ? // @ts-ignore this property is added through module augmentation
-        ChartsTypeFeatureFlags['keyboardActivationOverride']
+  // The optional keyboard augmentation adds this property only in consumers that import it.
+  | (ChartsTypeFeatureFlags extends { keyboardActivationOverride: infer KeyboardActivationEvent }
+      ? KeyboardActivationEvent
       : never);

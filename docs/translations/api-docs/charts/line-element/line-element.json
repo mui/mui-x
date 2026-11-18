@@ -1,7 +1,14 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "color": { "description": "The color of the line." },
+    "d": { "description": "The SVG path of the element." },
+    "gradientId": {
+      "description": "The id of the gradient used to color the element. The <code>gradientId</code> is used as <code>url(#gradientId)</code>."
+    },
     "hidden": { "description": "If <code>true</code>, the line is hidden." },
+    "seriesId": { "description": "The id of the series the element belongs to." },
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }

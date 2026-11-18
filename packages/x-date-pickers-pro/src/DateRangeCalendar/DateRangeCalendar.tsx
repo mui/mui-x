@@ -568,10 +568,12 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   const visibleMonths = React.useMemo(() => {
     if (process.env.NODE_ENV !== 'production') {
       if (currentMonthCalendarPosition > calendars || currentMonthCalendarPosition < 1) {
-        warnOnce([
-          'MUI X: The `currentMonthCalendarPosition` prop must be an integer between `1` and the amount of calendars rendered.',
-          'For example if you have 2 calendars rendered, it should be equal to either 1 or 2.',
-        ]);
+        warnOnce(
+          [
+            'MUI X: The `currentMonthCalendarPosition` prop must be an integer between `1` and the amount of calendars rendered.',
+            'For example if you have 2 calendars rendered, it should be equal to either 1 or 2.',
+          ].join('\n'),
+        );
       }
     }
 
@@ -687,6 +689,9 @@ DateRangeCalendar.propTypes /* remove-proptypes */ = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   /**
    * Position the current month is rendered in.

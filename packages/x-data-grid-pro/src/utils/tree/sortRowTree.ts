@@ -16,9 +16,9 @@ interface SortRowTreeParams {
 
 // Single-linked list node
 class Node<T> {
-  next: null | Node<T>;
+  declare next: null | Node<T>;
 
-  data: T;
+  declare data: T;
 
   constructor(data: T, next: null | Node<T>) {
     this.next = next;
@@ -37,9 +37,9 @@ class Node<T> {
 
 // Single-linked list container
 class List<T> {
-  first: Node<T> | null;
+  declare first: Node<T> | null;
 
-  last: Node<T> | null;
+  declare last: Node<T> | null;
 
   constructor(first: Node<T> | null, last: Node<T> | null) {
     this.first = first;

@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import { useChatRuntimeContext } from '../internals/useChatRuntimeContext';
 import { chatSelectors } from '../selectors';
 import type { ChatAddToolApproveResponseInput } from '../types';
 import type { ChatConversation, ChatMessage } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
-import type { ChatInternalState } from '../types/chat-state';
+import type { ChatHistoryStatus, ChatInternalState } from '../types/chat-state';
 import { useChatStore } from './useChatStore';
 import type { UseChatSendMessageInput } from '../types/chat-callbacks';
 
@@ -21,6 +21,8 @@ export interface UseChatValue<Cursor = string> {
   hasMoreHistory: boolean;
   /** Whether a history fetch (initial page or older messages) is currently in flight for the active conversation. */
   isLoadingHistory: boolean;
+  /** Lifecycle of the initial history page for the active conversation. Distinguishes "not loaded yet" from "loaded and empty". */
+  historyStatus: ChatHistoryStatus;
   /** Unified error from any operation (send, load history, realtime). */
   error: ChatError | null;
   sendMessage(input: UseChatSendMessageInput): Promise<void>;
@@ -71,6 +73,9 @@ export function useChat<Cursor = string>(): UseChatValue<Cursor> {
   const selectIsLoadingHistory = chatSelectors.isLoadingHistory as (
     state: ChatInternalState<Cursor>,
   ) => ReturnType<typeof chatSelectors.isLoadingHistory>;
+  const selectHistoryStatus = chatSelectors.historyStatus as (
+    state: ChatInternalState<Cursor>,
+  ) => ReturnType<typeof chatSelectors.historyStatus>;
   const selectError = chatSelectors.error as (
     state: ChatInternalState<Cursor>,
   ) => ReturnType<typeof chatSelectors.error>;
@@ -80,6 +85,7 @@ export function useChat<Cursor = string>(): UseChatValue<Cursor> {
   const isStreaming = useStore(store, selectIsStreaming);
   const hasMoreHistory = useStore(store, selectHasMoreHistory);
   const isLoadingHistory = useStore(store, selectIsLoadingHistory);
+  const historyStatus = useStore(store, selectHistoryStatus);
   const error = useStore(store, selectError);
 
   return React.useMemo(
@@ -90,6 +96,7 @@ export function useChat<Cursor = string>(): UseChatValue<Cursor> {
       isStreaming,
       hasMoreHistory,
       isLoadingHistory,
+      historyStatus,
       error,
       sendMessage: actions.sendMessage,
       stopStreaming: actions.stopStreaming,
@@ -140,6 +147,7 @@ export function useChat<Cursor = string>(): UseChatValue<Cursor> {
       conversations,
       error,
       hasMoreHistory,
+      historyStatus,
       isLoadingHistory,
       isStreaming,
       messages,

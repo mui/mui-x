@@ -24,6 +24,9 @@ export const PickerAdapterContext = React.createContext<PickerAdapterContextNull
 );
 
 export interface LocalizationProviderProps<TLocale> {
+  /**
+   * The components that use the localization settings.
+   */
   children?: React.ReactNode;
   /**
    * Date library adapter class function.
@@ -155,6 +158,9 @@ LocalizationProvider.propTypes /* remove-proptypes */ = {
    * Locale for the date library you are using
    */
   adapterLocale: PropTypes.any,
+  /**
+   * The components that use the localization settings.
+   */
   children: PropTypes.node,
   /**
    * Date library adapter class function.

@@ -2,20 +2,22 @@ import { screen } from '@mui/internal-test-utils';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { EventTimelinePremiumProvider } from '@mui/x-scheduler-internals-premium/event-timeline-premium-provider';
 import {
-  adapter,
+  addHours,
   createSchedulerRenderer,
-  describeConformance,
   DEFAULT_TESTING_VISIBLE_DATE,
+  describeConformance,
+  endOfDay,
   ResourceBuilder,
+  startOfDay,
 } from 'test/utils/scheduler';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
 import { describe, it, expect } from 'vitest';
 
 describe('<TimelineGrid.EventResizeHandler />', () => {
   const { render } = createSchedulerRenderer();
 
-  const start = processDate(adapter.startOfDay(adapter.now('default')), adapter);
-  const end = processDate(adapter.endOfDay(adapter.now('default')), adapter);
+  const start = createProcessedDate(startOfDay(new Date()).getTime(), 'default');
+  const end = createProcessedDate(endOfDay(new Date()).getTime(), 'default');
 
   describeConformance(<TimelineGrid.EventResizeHandler side="start" />, () => ({
     refInstanceof: window.HTMLDivElement,
@@ -46,7 +48,7 @@ describe('<TimelineGrid.EventResizeHandler />', () => {
 
   describe('clipped bound gating', () => {
     // dayAndHour collection: Jul 3 → Jul 6 2025.
-    const at = (hours: number) => adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, hours);
+    const at = (hours: number) => addHours(DEFAULT_TESTING_VISIBLE_DATE, hours);
 
     function renderEvent(eventStart: ReturnType<typeof at>, eventEnd: ReturnType<typeof at>) {
       return render(
@@ -62,8 +64,8 @@ describe('<TimelineGrid.EventResizeHandler />', () => {
                   <TimelineGrid.Event
                     eventId="fake-id"
                     occurrenceKey="fake-key"
-                    start={processDate(eventStart, adapter)}
-                    end={processDate(eventEnd, adapter)}
+                    start={createProcessedDate(eventStart.getTime(), 'default')}
+                    end={createProcessedDate(eventEnd.getTime(), 'default')}
                     renderDragPreview={() => null}
                   >
                     <TimelineGrid.EventResizeHandler side="end" data-testid="resize-end" />

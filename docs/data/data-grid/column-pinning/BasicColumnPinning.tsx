@@ -1,9 +1,8 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import type { GridColDef, GridRowsProp } from '@mui/x-data-grid-pro';
 import {
   DataGridPro,
-  GridColDef,
-  GridRowsProp,
   GridActionsCellItem,
   GridActionsCell,
 } from '@mui/x-data-grid-pro';

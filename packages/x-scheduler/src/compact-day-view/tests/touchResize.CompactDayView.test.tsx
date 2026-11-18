@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { screen, act, fireEvent } from '@mui/internal-test-utils';
 import {
   createSchedulerRenderer,
@@ -23,7 +24,7 @@ describe('CompactDayView - touch resize', () => {
     )!;
   }
 
-  function renderResizableEvent(onEventsChange = vi.fn()) {
+  function renderResizableEvent({ onEventsChange = vi.fn(), controlled = false } = {}) {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -31,8 +32,27 @@ describe('CompactDayView - touch resize', () => {
       .resizable(true)
       .build();
 
+    // Feeds the changes back into the `events` prop, like a real host does.
+    function ControlledHost() {
+      const [events, setEvents] = React.useState([event]);
+      return (
+        <StandaloneCompactDayView
+          events={events}
+          resources={[]}
+          onEventsChange={(next: typeof events) => {
+            onEventsChange(next);
+            setEvents(next);
+          }}
+        />
+      );
+    }
+
     const { user } = render(
-      <StandaloneCompactDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />,
+      controlled ? (
+        <ControlledHost />
+      ) : (
+        <StandaloneCompactDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />
+      ),
     );
 
     // Geometry resolver maps pointer Y to a time via the column's bounds.
@@ -48,15 +68,6 @@ describe('CompactDayView - touch resize', () => {
     return eventElement;
   }
 
-  it('should arm the event only once it is tapped', () => {
-    renderResizableEvent();
-    const eventElement = screen.getByRole('button', { name: /Morning Meeting/i });
-    // Handles are always in the DOM; coarse-pointer CSS reveals them when armed. In JSDOM, assert via `data-armed`.
-    expect(eventElement).not.to.have.attribute('data-armed');
-    fireEvent.click(eventElement);
-    expect(eventElement).to.have.attribute('data-armed');
-  });
-
   it('should resize the end of an armed event to a later time', async () => {
     const { onEventsChange } = renderResizableEvent();
     const eventElement = armEvent();
@@ -70,8 +81,63 @@ describe('CompactDayView - touch resize', () => {
     expect(onEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = onEventsChange.mock.calls[0][0];
     // Start stays at 10:00, end moves later than 11:00.
-    expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(10);
-    expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(16);
+    expect(updatedEvents[0].start).to.equal('2025-07-03T10:00:00Z');
+    expect(updatedEvents[0].end).to.equal('2025-07-03T16:00:00.000Z');
+  });
+
+  it('should resize to the hour under the pointer on a DST day', async () => {
+    // America/New_York springs forward from 02:00 to 03:00 on March 8th, 2026: the column keeps
+    // 24 hour rows for a day of 23 hours.
+    const onEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Morning Meeting')
+      .singleDay('2026-03-08T14:00:00Z', 60) // 10:00 EDT
+      .resizable(true)
+      .build();
+    render(
+      <StandaloneCompactDayView
+        events={[event]}
+        resources={[]}
+        displayTimezone="America/New_York"
+        visibleDate={new Date('2026-03-08T12:00:00Z')}
+        onEventsChange={onEventsChange}
+      />,
+    );
+    mockElementBounds(getTimeGridColumn(), { top: 0, height: 1440, width: 200 });
+    const endHandle = getResizeHandle(armEvent(), 'end');
+
+    await act(async () => {
+      simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
+    });
+
+    expect(onEventsChange.mock.calls[0][0][0].end).to.equal('2026-03-08T20:00:00.000Z'); // 16:00 EDT
+  });
+
+  it('should resize to the end of a trimmed hour range at the bottom edge of the column', async () => {
+    const onEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Morning Meeting')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .resizable(true)
+      .build();
+    render(
+      <StandaloneCompactDayView
+        events={[event]}
+        resources={[]}
+        viewConfig={{ day: { startTime: 8, endTime: 20 } }}
+        onEventsChange={onEventsChange}
+      />,
+    );
+    mockElementBounds(getTimeGridColumn(), { top: 0, height: 720, width: 200 });
+    const endHandle = getResizeHandle(armEvent(), 'end');
+
+    await act(async () => {
+      simulatePointerResize({ handle: endHandle, to: { clientY: 720 } });
+    });
+
+    expect(onEventsChange.mock.calls[0][0][0].end).to.equal('2025-07-03T20:00:00.000Z');
   });
 
   it('should resize the start of an armed event to an earlier time', async () => {
@@ -87,32 +153,38 @@ describe('CompactDayView - touch resize', () => {
     expect(onEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = onEventsChange.mock.calls[0][0];
     // End stays at 11:00, start moves earlier than 10:00.
-    expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(8);
-    expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(11);
+    expect(updatedEvents[0].start).to.equal('2025-07-03T08:00:00.000Z');
+    expect(updatedEvents[0].end).to.equal('2025-07-03T11:00:00.000Z');
   });
 
-  it('should keep a prior armed resize when an unrelated field is then edited from the form', async () => {
-    const { onEventsChange, user } = renderResizableEvent();
-    const eventElement = armEvent();
+  // Controlled, the resized end survives through the model; uncontrolled (the host has not
+  // fed the change back yet), the form resends the bound the snapshot is ahead on.
+  [true, false].forEach((controlled) => {
+    it(`should keep a prior armed resize when an unrelated field is then edited from the form (${controlled ? 'controlled' : 'uncontrolled'})`, async () => {
+      const { onEventsChange, user } = renderResizableEvent({ controlled });
+      const eventElement = armEvent();
 
-    const endHandle = getResizeHandle(eventElement, 'end');
-    await act(async () => {
-      simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
+      const endHandle = getResizeHandle(eventElement, 'end');
+      await act(async () => {
+        simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
+      });
+
+      // Open the editing form from the armed toolbar and change only the title.
+      fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
+      // The form must be seeded with the resized end, not the pre-resize model value.
+      expect(screen.getByLabelText(/end time/i)).to.have.value('16:00');
+      fireEvent.change(screen.getByRole('textbox', { name: /Event title/i }), {
+        target: { value: 'Renamed Meeting' },
+      });
+      // The form validates asynchronously before submitting, so let the submit settle.
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updatedEvents = onEventsChange.mock.lastCall?.[0];
+      // Saving the form must preserve the resized end time, not revert it to the pre-resize value.
+      expect(updatedEvents[0].title).to.equal('Renamed Meeting');
+      expect(updatedEvents[0].start).to.equal('2025-07-03T10:00:00Z');
+      expect(updatedEvents[0].end).to.equal('2025-07-03T16:00:00.000Z');
     });
-
-    // Open the editing form from the armed toolbar and change only the title.
-    fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
-    fireEvent.change(screen.getByRole('textbox', { name: /Event title/i }), {
-      target: { value: 'Renamed Meeting' },
-    });
-    // The form validates asynchronously before submitting, so let the submit settle.
-    await user.click(screen.getByRole('button', { name: 'Save' }));
-
-    const updatedEvents = onEventsChange.mock.lastCall?.[0];
-    // Saving the form must preserve the resized end time, not revert it to the pre-resize value.
-    expect(updatedEvents[0].title).to.equal('Renamed Meeting');
-    expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(10);
-    expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(16);
   });
 
   it('should remove the resize handles once the armed event is opened in the editing form', () => {

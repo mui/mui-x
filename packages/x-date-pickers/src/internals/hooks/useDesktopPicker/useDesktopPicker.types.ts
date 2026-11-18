@@ -26,6 +26,7 @@ export interface UseDesktopPickerSlots
     PickerFieldUISlotsFromContext {
   /**
    * Component used to enter the date with the keyboard.
+   * @default DateField, TimeField, or DateTimeField, depending on the Picker.
    */
   field: React.ElementType;
 }
@@ -74,7 +75,7 @@ export interface UseDesktopPickerParams<
   TExternalProps extends UseDesktopPickerProps<TView, any, TExternalProps>,
 > extends Pick<
   UsePickerParameters<PickerValue, TView, TExternalProps>,
-  'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor' | 'ref'
+  'manager' | 'rendererInterceptor' | 'ref'
 > {
   props: TExternalProps;
   /**

@@ -1,5 +1,5 @@
 import { Gesture } from '../../core';
-import { MockState } from './MockState';
+import type { MockState } from './MockState';
 
 export class MockGoodGesture extends Gesture<string> {
   // Define state for the gesture
@@ -10,13 +10,13 @@ export class MockGoodGesture extends Gesture<string> {
     customValue: '',
   };
 
-  protected readonly isSinglePhase!: false;
+  declare public readonly isSinglePhase: false;
 
-  protected readonly eventType!: never;
+  declare public readonly eventType: never;
 
-  protected readonly optionsType!: never;
+  declare protected readonly optionsType: never;
 
-  protected readonly mutableOptionsType!: {
+  declare public readonly mutableOptionsType: {
     preventDefault?: boolean;
     stopPropagation?: boolean;
     preventIf?: string[];
@@ -24,7 +24,7 @@ export class MockGoodGesture extends Gesture<string> {
     arrayOption?: string[];
   };
 
-  protected readonly mutableStateType!: MockState;
+  declare public readonly mutableStateType: MockState;
 
   protected resetState(): void {
     this.state = {
@@ -39,9 +39,9 @@ export class MockGoodGesture extends Gesture<string> {
   public extra = () => {};
 
   // Add custom properties for testing complex options
-  public complexOption?: { nestedValue: number; enabled: boolean };
+  declare public complexOption?: { nestedValue: number; enabled: boolean };
 
-  public arrayOption?: string[];
+  declare public arrayOption?: string[];
 
   public clone(overrides?: Record<string, unknown>): MockGoodGesture {
     return new MockGoodGesture({

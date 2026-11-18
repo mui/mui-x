@@ -26,6 +26,7 @@ export interface UseMobilePickerSlots
     PickerFieldUISlotsFromContext {
   /**
    * Component used to enter the date with the keyboard.
+   * @default DateField, TimeField, or DateTimeField, depending on the Picker.
    */
   field: React.ElementType;
 }
@@ -66,10 +67,7 @@ export interface UseMobilePickerProps<
 export interface UseMobilePickerParams<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseMobilePickerProps<TView, any, TExternalProps>,
-> extends Pick<
-  UsePickerParameters<PickerValue, TView, TExternalProps>,
-  'valueManager' | 'valueType' | 'validator' | 'ref'
-> {
+> extends Pick<UsePickerParameters<PickerValue, TView, TExternalProps>, 'manager' | 'ref'> {
   props: TExternalProps;
   /**
    * Steps available for the picker.

@@ -2,6 +2,7 @@ import { createRenderer, screen, waitFor } from '@mui/internal-test-utils/create
 import { describeConformance } from 'test/utils/charts/describeConformance';
 import { RadarChart } from '@mui/x-charts/RadarChart';
 import type { RadarChartProps } from '@mui/x-charts/RadarChart';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { vi, describe, it, expect } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { chartsTooltipClasses } from '../ChartsTooltip';
@@ -176,4 +177,23 @@ describe('<RadarChart />', () => {
       });
     },
   );
+
+  // https://github.com/mui/mui-x/issues/23697
+  it('should not warn when the theme typography has responsive styles', () => {
+    const baseTheme = createTheme();
+    const theme = createTheme(baseTheme, {
+      typography: {
+        caption: { [baseTheme.breakpoints.up('md')]: { fontSize: '0.875rem' } },
+        body1: { [baseTheme.breakpoints.up('md')]: { fontSize: '1.125rem' } },
+      },
+    });
+
+    expect(() =>
+      render(
+        <ThemeProvider theme={theme}>
+          <RadarChart {...radarConfig} />
+        </ThemeProvider>,
+      ),
+    ).not.toErrorDev();
+  });
 });

@@ -1,36 +1,30 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-} from '../models/translations';
+import type { SchedulerWeekday } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerDialogTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-// Callbacks receive both stable English tokens and date-locale weekday strings.
-const weekdays = [
-  ['sunday', 'sun', 'ראשון', 'א'],
-  ['monday', 'mon', 'שני', 'ב'],
-  ['tuesday', 'tue', 'שלישי', 'ג'],
-  ['wednesday', 'wed', 'רביעי', 'ד'],
-  ['thursday', 'thu', 'חמישי', 'ה'],
-  ['friday', 'fri', 'שישי', 'ו'],
-  ['saturday', 'sat', 'שבת', 'ש'],
-];
+// Saturday has no letter form, so it is always written in full.
+const weekdays: Record<SchedulerWeekday, { full: string; letter?: string }> = {
+  sunday: { full: 'ראשון', letter: 'א' },
+  monday: { full: 'שני', letter: 'ב' },
+  tuesday: { full: 'שלישי', letter: 'ג' },
+  wednesday: { full: 'רביעי', letter: 'ד' },
+  thursday: { full: 'חמישי', letter: 'ה' },
+  friday: { full: 'שישי', letter: 'ו' },
+  saturday: { full: 'שבת' },
+};
 
-function localizeWeekday(value: string, abbreviated = false): string {
-  const normalized = value
-    .trim()
-    .toLowerCase()
-    .replace(/^יום\s+/, '')
-    .replace(/['’׳.]/g, '');
-  const weekday = weekdays.filter((names) => names.indexOf(normalized) !== -1)[0];
-  if (!weekday) {
-    return value;
-  }
-  return abbreviated && weekday[2] !== 'שבת' ? `יום ${weekday[3]}׳` : `יום ${weekday[2]}`;
+function localizeWeekday(weekday: SchedulerWeekday, abbreviated = false): string {
+  const { full, letter } = weekdays[weekday];
+  return abbreviated && letter ? `יום ${letter}׳` : `יום ${full}`;
 }
 
-function monthlyWeekday(ord: number, weekday: string, abbreviated = false): string {
+function monthlyWeekday(ord: number, weekday: SchedulerWeekday, abbreviated = false): string {
   const ordinals: Record<number, string> = {
     1: 'הראשון',
     2: 'השני',
@@ -71,7 +65,7 @@ const viewNames = {
   agenda: 'סדר יום',
 };
 
-const heILDialog: Partial<EventEditingLocaleText> = {
+const heILDialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: 'צבע האירוע',
   colorSectionLabel: 'צבע',
@@ -84,6 +78,9 @@ const heILDialog: Partial<EventEditingLocaleText> = {
   deleteEventButtonAriaLabel: 'מחיקת האירוע',
   eventActionsToolbarAriaLabel: 'פעולות באירוע',
   deleteEvent: 'מחיקת האירוע',
+  deleteConfirmationTitle: 'למחוק את האירוע הזה?',
+  deleteConfirmationMessage: 'פעולה זו אינה הפיכה. האם ברצונך להמשיך?',
+  cancel: 'ביטול',
   editEvent: 'עריכת האירוע',
   showEventDetails: 'הצגת פרטים',
   eventContextMenuAriaLabel: 'פעולות באירוע',
@@ -107,16 +104,18 @@ const heILDialog: Partial<EventEditingLocaleText> = {
   recurrenceEveryLabel: 'כל',
   recurrenceRepeatLabel: 'תדירות החזרה',
   recurrenceTabLabel: 'חזרה',
+  recurrenceTimezoneLabel: (timezone) => `אזור זמן: ${timezone}`,
+  recurrenceLabelTimezoneSuffix: (timezone) => `(${timezone})`,
   recurrenceMainSelectCustomLabel: 'חזרה',
   recurrenceWeeklyFrequencyLabel: 'שבועות',
   recurrenceWeeklyPresetLabel: ({ weekday }) => `מדי שבוע ב${localizeWeekday(weekday)}`,
   recurrenceMonthlyFrequencyLabel: 'חודשים',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `ב־${dayNumber} בחודש`,
-  recurrenceMonthlyLastWeekAriaLabel: (weekDay) => monthlyWeekday(-1, weekDay),
-  recurrenceMonthlyLastWeekLabel: (weekDay) => monthlyWeekday(-1, weekDay, true),
+  recurrenceMonthlyLastWeekAriaLabel: ({ weekday }) => monthlyWeekday(-1, weekday),
+  recurrenceMonthlyLastWeekLabel: ({ weekday }) => monthlyWeekday(-1, weekday, true),
   recurrenceMonthlyPresetLabel: (dayNumber) => `ב־${dayNumber} בכל חודש`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) => monthlyWeekday(ord, weekDay),
-  recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => monthlyWeekday(ord, weekDay, true),
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekday }) => monthlyWeekday(ord, weekday),
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekday }) => monthlyWeekday(ord, weekday, true),
   recurrenceWeeklyMonthlySpecificInputsLabel: 'מועד החזרה',
   recurrenceYearlyFrequencyLabel: 'שנים',
   recurrenceYearlyPresetLabel: (date) => `מדי שנה ב־${localizeDate(date)}`,
@@ -134,15 +133,46 @@ const heILDialog: Partial<EventEditingLocaleText> = {
 
   // RecurringScopeDialog
   all: 'כל האירועים בסדרה',
-  cancel: 'ביטול',
   confirm: 'אישור',
   onlyThis: 'האירוע הזה בלבד',
   radioGroupAriaLabel: 'בחירת האירועים בסדרה שעליהם יחול השינוי',
   thisAndFollowing: 'האירוע הזה והאירועים הבאים בסדרה',
   title: 'על אילו אירועים להחיל את השינוי?',
+
+  // Errors
+  // somethingWentWrongError: 'Something went wrong. Try again.',
+  // eventNotLoadedError: 'This event is still being saved, so the change was not applied. Try again once it is saved.',
+  // eventChangedWhileConfirmingError: 'This event changed while the delete confirmation was open, so the deletion was not applied. Try deleting it again.',
+  // datesNotWritableError: "This date can't be changed, so the change was not applied.",
+  // eventNotCreatableError: "This can't be saved as a new event, so the change was not applied.",
+  // readOnlyEventMovedError: title => `This change would move the read-only event "${title}", so it was not applied.`,
+  // unwritableEventMovedError: title => `This change would move the event "${title}", whose dates can't be changed, so it was not applied.`,
+  // dependencyCascadeBlockedError: 'This dependency would move a read-only event, so it was not created.',
+  // dependencyDatesNotWritableError: "This dependency would move an event whose dates can't be changed, so it was not created.",
+  // dependencyCycleError: 'This dependency would create a cycle between events.',
+  // dependencyDuplicateError: 'A dependency of this type already exists between these two events.',
+  // dependencyRecurringEventError: 'Dependencies cannot involve recurring events.',
+  // dependencyReadOnlyError: 'Dependencies cannot be changed while the scheduler is read-only.',
+  // dependencyUnknownEventError: 'This dependency cannot be created because one of its events no longer exists.',
 };
 
-const heILCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const heILEvent: SchedulerEventTranslations = {
+  // Event accessible name
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `משאב: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const heILCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'משאבים',
 
@@ -158,6 +188,7 @@ const heILCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   months: 'חודשים',
   weeks: 'שבועות',
   years: 'שנים',
+  // viewSwitcherAriaLabel: 'Views',
 
   // DateNavigator
   closeSidePanel: 'סגירת חלונית הצד',
@@ -182,6 +213,7 @@ const heILCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
 
   // WeekView
   allDay: 'כל היום',
+  // dayGridLabel: 'All-day and multi-day events',
   hiddenEvents: (count) => (count === 1 ? 'אירוע נוסף' : `עוד ${count} אירועים`),
   nextTimeSpan: (view) =>
     ({
@@ -197,9 +229,11 @@ const heILCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
       month: 'החודש הקודם',
       agenda: 'התקופה הקודמת',
     })[view],
-  resourceAriaLabel: (resourceName) => `משאב: ${resourceName}`,
   weekAbbreviation: 'שב׳',
   weekNumberAriaLabel: (weekNumber) => `שבוע ${weekNumber}`,
+
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
 
   // EventItem
   eventItemMultiDayLabel: (endDate) => `מסתיים ב־${localizeDate(endDate)}`,
@@ -216,13 +250,63 @@ const heILCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'שם המשאב',
 };
 
-const heILTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const heILTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'שם המשאב',
+
+  // Dependency dialog
+  // dependencyEditTitle: 'Edit dependency',
+  // dependencyDetailsTitle: 'Dependency details',
+  // dependencySourceLabel: 'From',
+  // dependencyTargetLabel: 'To',
+  // dependencyTypeLabel: 'Type',
+  // dependencyLagLabel: 'Lag',
+  // dependencyLagUnitAriaLabel: 'Lag unit',
+  // dependencyNoLag: 'None',
+  // dependencyInvalidLagError: 'Enter a whole number, 0 or more.',
+  // dependencyAllDayLagIgnored: 'An all-day event can only wait whole days, so this lag adds no wait.',
+  // dependencyAllDayLagRounded: lag => `An all-day event can only wait whole days: ${lag}.`,
+  // dependencyUpdateCascadeBlockedError: 'This change would move a read-only event, so it was not applied.',
+  // dependencyUpdateDatesNotWritableError: "This change would move an event whose dates can't be changed, so it was not applied.",
+  // dependencyUpdateNotFoundError: 'This dependency no longer exists.',
+  // dependencyTypeFinishToStart: 'Finish to start',
+  // dependencyTypeStartToStart: 'Start to start',
+  // dependencyTypeFinishToFinish: 'Finish to finish',
+  // dependencyTypeStartToFinish: 'Start to finish',
+  // dependencyLagUnitMinutes: 'minutes',
+  // dependencyLagUnitHours: 'hours',
+  // dependencyLagUnitDays: 'days',
+  // dependencyLagUnitWeeks: 'weeks',
+  // dependencyLag: (amount, unit) => `${amount} ${unit}${amount === 1 ? '' : 's'}`,
+
+  // Dependency context menu and dialog actions
+  // dependencyActionsAriaLabel: 'Dependency actions',
+  // editDependency: 'Edit dependency',
+  // showDependencyDetails: 'Show details',
+  // deleteDependency: 'Delete',
+
+  // Accessible description of an event that waits on dependencies
+  // dependencyFinishToStartDescription: ({
+  //   title,
+  //   lag
+  // }) => `Cannot start until ${lag === null ? '' : `${lag} after `}${title} finishes.`,
+  // dependencyStartToStartDescription: ({
+  //   title,
+  //   lag
+  // }) => `Cannot start until ${lag === null ? '' : `${lag} after `}${title} starts.`,
+  // dependencyFinishToFinishDescription: ({
+  //   title,
+  //   lag
+  // }) => `Cannot finish until ${lag === null ? '' : `${lag} after `}${title} finishes.`,
+  // dependencyStartToFinishDescription: ({
+  //   title,
+  //   lag
+  // }) => `Cannot finish until ${lag === null ? '' : `${lag} after `}${title} starts.`,
 };
 
 export const heIL: SchedulerLocalization = getSchedulerLocalization({
   dialog: heILDialog,
+  event: heILEvent,
   calendar: heILCalendar,
   timeline: heILTimeline,
 });

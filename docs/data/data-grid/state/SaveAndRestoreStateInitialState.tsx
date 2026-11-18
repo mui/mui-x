@@ -2,11 +2,8 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import {
-  GridInitialState,
-  DataGridPremium,
-  useGridApiRef,
-} from '@mui/x-data-grid-premium';
+import type { GridInitialState } from '@mui/x-data-grid-premium';
+import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
 
 export default function SaveAndRestoreStateInitialState() {
   const apiRef = useGridApiRef();

@@ -2,14 +2,15 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
-import { DataGridPro, useGridApiRef, GridColDef } from '@mui/x-data-grid-pro';
+import type { GridColDef } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import {
   randomInt,
   randomRating,
   randomTraderName,
 } from '@mui/x-data-grid-generator';
 import * as ReactDOM from 'react-dom';
-import { GridData } from 'docs/data/data-grid/virtualization/ColumnVirtualizationGrid';
+import type { GridData } from 'docs/data/data-grid/virtualization/ColumnVirtualizationGrid';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'Brand ID' },

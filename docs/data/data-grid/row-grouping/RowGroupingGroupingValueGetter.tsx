@@ -1,8 +1,8 @@
 import * as React from 'react';
+import type { GridColDef } from '@mui/x-data-grid-premium';
 import {
   DataGridPremium,
   useGridApiRef,
-  GridColDef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';

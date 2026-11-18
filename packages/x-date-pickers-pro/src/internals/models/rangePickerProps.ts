@@ -49,7 +49,7 @@ export interface NonStaticRangePickerHookParameters<
   TExternalProps extends UseRangePickerProps<TView, any, TExternalProps>,
 > extends Pick<
   UsePickerParameters<PickerRangeValue, TView, TExternalProps>,
-  'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor' | 'ref'
+  'manager' | 'rendererInterceptor' | 'ref'
 > {
   props: TExternalProps;
   /**

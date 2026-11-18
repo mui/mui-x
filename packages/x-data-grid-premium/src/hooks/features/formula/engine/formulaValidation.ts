@@ -12,7 +12,12 @@ export interface ValidateFormulaExpressionOptions {
   functions?: FormulaFunctionRegistry;
 }
 
-function collectFunctionCallIssues(
+/**
+ * Function-name resolution and argument arity of an already parsed formula:
+ * unknown names are reported as `#NAME?` issues (once per name), arity
+ * violations as `#VALUE!` issues.
+ */
+export function collectFunctionCallIssues(
   ast: FormulaAstNode,
   functions: FormulaFunctionRegistry,
 ): FormulaValidationIssue[] {

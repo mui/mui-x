@@ -6,13 +6,12 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { useForm, Controller } from 'react-hook-form';
-import {
-  DataGridPro,
+import type {
   GridColDef,
   GridRowModelUpdate,
-  useGridApiContext,
   GridRowParams,
 } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiContext } from '@mui/x-data-grid-pro';
 import { randomEmail } from '@mui/x-data-grid-generator';
 
 function DetailPanelContent({ row }: { row: Customer }) {

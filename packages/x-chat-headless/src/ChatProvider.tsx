@@ -43,19 +43,44 @@ export interface ChatFeatures {
 
 export interface ChatProviderProps<Cursor = string> extends Omit<
   ChatStoreParameters<Cursor>,
-  'activeConversationIdControlled'
+  'activeConversationIdControlled' | 'hasHistoryLoader'
 > {
+  /**
+   * The content of the component.
+   */
   children?: React.ReactNode;
+  /**
+   * The adapter that connects the chat to your backend.
+   */
   adapter: ChatAdapter<Cursor>;
+  /**
+   * Callback fired when the assistant calls a tool.
+   * @param {ChatOnToolCallPayload} payload The tool call.
+   */
   onToolCall?: ChatOnToolCall;
+  /**
+   * Callback fired when the assistant finishes a response, including when it is aborted, disconnected, or fails.
+   * @param {ChatOnFinishPayload} payload The final message and how the response ended.
+   */
   onFinish?: ChatOnFinish;
+  /**
+   * Callback fired when a data part is received.
+   * @param {ChatDataMessagePart} part The data part.
+   */
   onData?: ChatOnData;
+  /**
+   * Callback fired when an error occurs.
+   * @param {ChatError} error The error.
+   */
   onError?: ChatOnError;
   /**
    * Flush interval in milliseconds for batching rapid streaming deltas before applying them to the store.
    * @default 16
    */
   streamFlushInterval?: number;
+  /**
+   * Custom renderers for message parts, by part type.
+   */
   partRenderers?: ChatPartRendererMap;
   /**
    * The store class to use for this provider.
@@ -104,6 +129,7 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
     onComposerValueChange,
   } = props;
 
+  const hasHistoryLoader = adapter.listMessages != null;
   const parameters = React.useMemo(
     () => ({
       members,
@@ -118,6 +144,7 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
       initialConversations,
       activeConversationId,
       activeConversationIdControlled: isActiveConversationIdControlled,
+      hasHistoryLoader,
       initialActiveConversationId,
       composerValue,
       initialComposerValue,
@@ -139,6 +166,7 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
       initialConversations,
       activeConversationId,
       isActiveConversationIdControlled,
+      hasHistoryLoader,
       initialActiveConversationId,
       composerValue,
       initialComposerValue,

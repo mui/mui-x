@@ -85,19 +85,55 @@ describe('<SidePanelDrawer />', () => {
     const { user } = renderCompact(<EventCalendar events={[]} />);
     await openDrawer(user);
 
-    const drawer = getDrawer()!;
-    const options = within(drawer).getAllByRole('option');
-    expect(options.map((option) => option.textContent)).to.deep.equal([
-      'Day',
-      'Week',
-      'Month',
-      'Agenda',
+    // Same semantics and name as the toolbar's view switcher menu.
+    const viewList = within(getDrawer()!).getByRole('menu', { name: 'Views' });
+    const items = within(viewList).getAllByRole('menuitemradio');
+    expect(items.map((item) => item.textContent)).to.deep.equal(['Day', 'Week', 'Month', 'Agenda']);
+    expect(items.map((item) => item.getAttribute('aria-checked'))).to.deep.equal([
+      'false',
+      'true',
+      'false',
+      'false',
     ]);
 
-    await user.click(within(drawer).getByRole('option', { name: 'Month' }));
+    await user.click(within(viewList).getByRole('menuitemradio', { name: 'Month' }));
 
-    expect(within(getDrawer()!).getByRole('option', { name: 'Month' })).to.have.attribute(
-      'aria-selected',
+    expect(within(getDrawer()!).getByRole('menuitemradio', { name: 'Month' })).to.have.attribute(
+      'aria-checked',
+      'true',
+    );
+  });
+
+  it('should take the view list accessible name from the localeText', async () => {
+    const { user } = renderCompact(
+      <EventCalendar events={[]} localeText={{ viewSwitcherAriaLabel: 'Calendar views' }} />,
+    );
+    await openDrawer(user);
+
+    expect(within(getDrawer()!).getByRole('menu')).toHaveAccessibleName('Calendar views');
+  });
+
+  it('should move between the views with the arrow keys and pick one with Enter', async () => {
+    const { user } = renderCompact(<EventCalendar events={[]} />);
+    await openDrawer(user);
+
+    const viewList = within(getDrawer()!).getByRole('menu', { name: 'Views' });
+
+    // Tab past the close button: the focus lands on the checked view, not on the first one.
+    await user.tab();
+    expect(within(getDrawer()!).getByRole('button', { name: 'Close side panel' })).toHaveFocus();
+    await user.tab();
+    expect(within(viewList).getByRole('menuitemradio', { name: 'Week' })).toHaveFocus();
+
+    await user.keyboard('{ArrowUp}');
+    expect(within(viewList).getByRole('menuitemradio', { name: 'Day' })).toHaveFocus();
+
+    await user.keyboard('{ArrowDown}{ArrowDown}');
+    expect(within(viewList).getByRole('menuitemradio', { name: 'Month' })).toHaveFocus();
+
+    await user.keyboard('{Enter}');
+    expect(within(getDrawer()!).getByRole('menuitemradio', { name: 'Month' })).to.have.attribute(
+      'aria-checked',
       'true',
     );
   });

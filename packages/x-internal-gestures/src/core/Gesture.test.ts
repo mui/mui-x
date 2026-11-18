@@ -4,15 +4,15 @@ import { Gesture } from '.';
 export class MockGesture extends Gesture<string> {
   protected state = {};
 
-  protected readonly isSinglePhase!: false;
+  declare public readonly isSinglePhase: false;
 
-  protected readonly eventType!: never;
+  declare public readonly eventType: never;
 
-  protected readonly optionsType!: never;
+  declare protected readonly optionsType: never;
 
-  protected readonly mutableOptionsType!: never;
+  declare public readonly mutableOptionsType: never;
 
-  protected readonly mutableStateType!: never;
+  declare public readonly mutableStateType: never;
 
   protected resetState(): void {}
 

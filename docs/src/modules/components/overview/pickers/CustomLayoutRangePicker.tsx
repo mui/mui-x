@@ -1,17 +1,17 @@
-import dayjs, { Dayjs } from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { styled } from '@mui/material/styles';
+import type { PickersLayoutProps, PickerLayoutOwnerState } from '@mui/x-date-pickers/PickersLayout';
 import {
-  PickersLayoutProps,
   usePickerLayout,
   pickersLayoutClasses,
   PickersLayoutRoot,
   PickersLayoutContentWrapper,
-  PickerLayoutOwnerState,
 } from '@mui/x-date-pickers/PickersLayout';
-import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts';
+import type { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
-import { DateRange } from '@mui/x-date-pickers-pro/models';
-import { Layout } from './themes/themes.types';
+import type { DateRange } from '@mui/x-date-pickers-pro/models';
+import type { Layout } from './themes/themes.types';
 
 const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   {

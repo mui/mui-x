@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
-import { DataGrid, DataGridProps, GridColDef } from '@mui/x-data-grid';
+import type { DataGridProps, GridColDef } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 
 const items = [
   { id: 1, item: 'Paperclip', quantity: 100, price: 1.99 },

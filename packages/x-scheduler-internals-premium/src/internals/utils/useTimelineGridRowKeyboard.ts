@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { useDirection } from '@base-ui/react/direction-provider';
 import type { TimelineGridColumnType } from '../../models/timelineGrid';
 import { useTimelineGridRootContext } from '../../timeline-grid/root/TimelineGridRootContext';
 import { useTimelineGridBodyRowContext } from '../../timeline-grid/body-row/TimelineGridBodyRowContext';
@@ -22,10 +23,19 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
   handleFocus: (event: React.FocusEvent<HTMLDivElement>) => void;
 } {
   const { columnType } = params;
-  const { focusedCell, setFocusedCell, clearFocusedCellIfMatches, columnTypes, totalRowCount } =
-    useTimelineGridRootContext();
+  const {
+    focusedCell,
+    setFocusedCell,
+    moveFocusToRow,
+    clearFocusedCellIfMatches,
+    columnTypes,
+    totalRowCount,
+  } = useTimelineGridRootContext();
 
   const bodyRowContext = useTimelineGridBodyRowContext();
+  const isRtl = useDirection() === 'rtl';
+  const previousColumnKey = isRtl ? 'ArrowRight' : 'ArrowLeft';
+  const nextColumnKey = isRtl ? 'ArrowLeft' : 'ArrowRight';
   const index = bodyRowContext.index;
 
   if (process.env.NODE_ENV !== 'production') {
@@ -65,33 +75,37 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
       return false;
     }
 
-    const typeIndex = columnTypes.indexOf(columnType);
+    // A repeated key can still fire on this cell before the next one mounts, so start from the
+    // focused cell.
+    const currentColumnType = focusedCell?.columnType ?? columnType;
+    const typeIndex = columnTypes.indexOf(currentColumnType);
+    const rowIndex = focusedCell?.rowIndex ?? index;
 
     if (event.key === 'ArrowUp') {
       event.preventDefault();
-      if (index > 0) {
-        setFocusedCell({ columnType, rowIndex: index - 1 });
+      if (rowIndex > 0) {
+        moveFocusToRow({ columnType: currentColumnType, rowIndex: rowIndex - 1 });
       }
       return true;
     }
     if (event.key === 'ArrowDown') {
       event.preventDefault();
-      if (index < totalRowCount - 1) {
-        setFocusedCell({ columnType, rowIndex: index + 1 });
+      if (rowIndex < totalRowCount - 1) {
+        moveFocusToRow({ columnType: currentColumnType, rowIndex: rowIndex + 1 });
       }
       return true;
     }
-    if (event.key === 'ArrowLeft') {
+    if (event.key === previousColumnKey) {
       event.preventDefault();
       if (typeIndex > 0) {
-        setFocusedCell({ columnType: columnTypes[typeIndex - 1], rowIndex: index });
+        setFocusedCell({ columnType: columnTypes[typeIndex - 1], rowIndex });
       }
       return true;
     }
-    if (event.key === 'ArrowRight') {
+    if (event.key === nextColumnKey) {
       event.preventDefault();
       if (typeIndex < columnTypes.length - 1) {
-        setFocusedCell({ columnType: columnTypes[typeIndex + 1], rowIndex: index });
+        setFocusedCell({ columnType: columnTypes[typeIndex + 1], rowIndex });
       }
       return true;
     }

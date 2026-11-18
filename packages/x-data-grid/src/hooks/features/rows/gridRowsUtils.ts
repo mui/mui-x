@@ -287,6 +287,14 @@ For more detail, see https://mui.com/x/react-data-grid/row-updates/.`,
 };
 
 /**
+ * Wraps rows into `{ _action: 'replace', row }` updates, so they are stored as-is instead of merged.
+ * @param {GridRowModel[]} rows The rows to store.
+ * @returns {GridRowModelReplace[]} The replace updates.
+ */
+export const asReplaceUpdates = (rows: GridRowModel[]): GridRowModelReplace[] =>
+  rows.map((row) => ({ _action: 'replace', row }));
+
+/**
  * Merges a partial update into the existing row.
  * Prototype-preservation rules:
  *   1. If partialRow is a class instance (non-plain object), use its prototype — the
@@ -342,12 +350,14 @@ export const warnIfReplaceLosesPrototype = (
 
   // The message must stay free of row-specific details: `warnOnce()` caches by message, so
   // interpolating the id would log once per row and grow the cache with every update.
-  warnOnce([
-    "MUI X Data Grid: A plain object was provided as the `row` of a `_action: 'replace'` update, but the row it replaces is a class instance.",
-    "Building the replacement with a spread (`{ _action: 'replace', row: { ...row } }`) creates a plain object, dropping the prototype chain and the private fields that `_action: 'replace'` exists to preserve.",
-    "Pass the instance itself instead, for example `{ _action: 'replace', row }`.",
-    'For more detail, see https://mui.com/x/react-data-grid/row-updates/.',
-  ]);
+  warnOnce(
+    [
+      "MUI X Data Grid: A plain object was provided as the `row` of a `_action: 'replace'` update, but the row it replaces is a class instance.",
+      "Building the replacement with a spread (`{ _action: 'replace', row: { ...row } }`) creates a plain object, dropping the prototype chain and the private fields that `_action: 'replace'` exists to preserve.",
+      "Pass the instance itself instead, for example `{ _action: 'replace', row }`.",
+      'For more detail, see https://mui.com/x/react-data-grid/row-updates/.',
+    ].join('\n'),
+  );
 };
 
 export const updateCacheWithNewRows = ({
@@ -355,11 +365,13 @@ export const updateCacheWithNewRows = ({
   getRowId,
   updates,
   groupKeys,
+  replaceChildrenOf,
 }: {
   previousCache: GridRowsInternalCache;
   getRowId: DataGridProcessedProps['getRowId'];
   updates: Array<GridRowModelUpdate | GridRowModelReplace>;
   groupKeys?: string[];
+  replaceChildrenOf?: GridRowId;
 }): GridRowsInternalCache => {
   if (previousCache.updates.type === 'full') {
     throw new Error(
@@ -394,12 +406,14 @@ export const updateCacheWithNewRows = ({
     } else if (uniqueUpdates.has(id)) {
       const accumulatedUpdate = uniqueUpdates.get(id)!;
       if (process.env.NODE_ENV !== 'production' && replaceIds.has(id)) {
-        warnOnce([
-          "MUI X Data Grid: A row was provided with `_action: 'replace'` but it is not the last update for that row in this batch.",
-          'The remaining updates are merged onto the replacement, so the row keeps its prototype but is neither the same object nor carries its `#private` fields, which a merge cannot copy.',
-          'Make the replace the last update for that row if `apiRef.current.getRow(id)` must return the object you passed in.',
-          'For more detail, see https://mui.com/x/react-data-grid/row-updates/.',
-        ]);
+        warnOnce(
+          [
+            "MUI X Data Grid: A row was provided with `_action: 'replace'` but it is not the last update for that row in this batch.",
+            'The remaining updates are merged onto the replacement, so the row keeps its prototype but is neither the same object nor carries its `#private` fields, which a merge cannot copy.',
+            'Make the replace the last update for that row if `apiRef.current.getRow(id)` must return the object you passed in.',
+            'For more detail, see https://mui.com/x/react-data-grid/row-updates/.',
+          ].join('\n'),
+        );
       }
       // The merge keeps the accumulated entry's prototype and the id stays in `replaceIds`,
       // so the result is still applied as a replace.
@@ -408,6 +422,18 @@ export const updateCacheWithNewRows = ({
       uniqueUpdates.set(id, update);
     }
   });
+
+  let childrenOrder = previousCache.updates.childrenOrder;
+  if (replaceChildrenOf !== undefined) {
+    const ids: GridRowId[] = [];
+    uniqueUpdates.forEach((row, id) => {
+      // eslint-disable-next-line no-underscore-dangle
+      if (row._action !== 'delete') {
+        ids.push(id);
+      }
+    });
+    childrenOrder = { parentId: replaceChildrenOf, ids };
+  }
 
   const partialUpdates: GridRowsPartialUpdates = {
     type: 'partial',
@@ -418,6 +444,7 @@ export const updateCacheWithNewRows = ({
     },
     idToActionLookup: { ...previousCache.updates.idToActionLookup },
     groupKeys,
+    childrenOrder,
   };
   const dataRowIdToModelLookup = { ...previousCache.dataRowIdToModelLookup };
 
@@ -545,7 +572,7 @@ export function computeRowsUpdates(
 
     const rowNode = gridRowNodeSelector(apiRef, id);
     if (rowNode?.type === 'pinnedRow') {
-      // @ts-ignore because otherwise `release:build` doesn't work
+      // @ts-expect-error The public API type omits private caches used by this internal row update.
       const pinnedRowsCache = apiRef.current.caches.pinnedRows;
       const prevModel = pinnedRowsCache.idLookup[id];
       if (prevModel) {

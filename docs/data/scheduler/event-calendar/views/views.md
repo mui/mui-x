@@ -38,6 +38,14 @@ Navigating to another week keeps the current scroll position; switching to anoth
 `initialScrollTime` must be a displayed hour (`startTime` to `endTime - 1`). An invalid value falls back to the default and logs a warning in development.
 :::
 
+Use `timeGridEvents` to choose which timed events are rendered in the time grid.
+The other events, including all-day events, are rendered in the day grid above it:
+
+- `'shorter-than-one-day'` (default): timed events shorter than one day, split across the days they cover.
+- `'same-day-only'`: timed events that start and end on the same day.
+
+{{"demo": "WeekViewTimeGridEvents.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Day view
 
 The `day` view lets users manage events for a single day.
@@ -62,6 +70,10 @@ Navigating to another day keeps the current scroll position; switching to anothe
 `initialScrollTime` must be a displayed hour (`startTime` to `endTime - 1`). An invalid value falls back to the default and logs a warning in development.
 :::
 
+The `timeGridEvents` option also sets which timed events are rendered in the time grid of the day view:
+
+{{"demo": "DayViewTimeGridEvents.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Month view
 
 The `month` view lets users manage events for an entire month.
@@ -73,6 +85,13 @@ The `month` view lets users manage events for an entire month.
 The `agenda` view lets users manage events in a list layout.
 
 {{"demo": "BasicAgendaView.js", "bg": "inline", "defaultCodeOpen": false}}
+
+The agenda displays 12 days at a time by default, and the navigation moves by the same amount.
+Use the `viewConfig` prop to change it with `dayCount`, either to another number of days or to `'month'` to display the month of the visible date and navigate one month at a time:
+
+{{"demo": "AgendaViewDayCount.js", "bg": "inline", "defaultCodeOpen": false}}
+
+When the empty days are hidden, the `'month'` mode only lists the days of that month that have events, instead of continuing into the next month.
 
 ### Year view 🚧
 

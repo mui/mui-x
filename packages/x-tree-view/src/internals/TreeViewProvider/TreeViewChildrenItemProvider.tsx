@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { useTreeViewContext } from './TreeViewContext';
 import { escapeOperandAttributeSelector } from '../utils/utils';
 import { itemsSelectors } from '../plugins/items/selectors';
+import type { TreeViewItemId } from '../../models';
 import type { SimpleTreeViewStore } from '../SimpleTreeViewStore';
 
 export const TreeViewChildrenItemContext =
@@ -20,6 +21,7 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
 
   const { store, rootRef } = useTreeViewContext<SimpleTreeViewStore<any>>();
   const childrenIdAttrToIdRef = React.useRef<Map<string, string>>(new Map());
+  const [, refreshChildrenIds] = React.useReducer((version: number) => version + 1, 0);
 
   React.useEffect(() => {
     if (!rootRef.current) {
@@ -43,9 +45,16 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
     const childrenElements = rootRef.current.querySelectorAll(
       `${itemId == null ? '' : `*[id="${escapedIdAttr}"] `}[role="treeitem"]:not(*[id="${escapedIdAttr}"] [role="treeitem"] [role="treeitem"])`,
     );
-    const childrenIds = Array.from(childrenElements).map((child) =>
-      childrenIdAttrToIdRef.current.get(child.id)!,
-    );
+    // An element whose id is missing from the map is not currently a child: React
+    // destroys the layout effect that registers it when it hides a suspended
+    // subtree, but leaves the element in the DOM, so the query above still finds
+    // it. Keeping the resulting `undefined` would be fatal, because
+    // `itemsSelectors.itemOrderedChildrenIds` resolves a nullish item id to the
+    // root of the tree, which makes the descendant traversals built on top of it
+    // cycle back to the root and recurse until the stack overflows.
+    const childrenIds = Array.from(childrenElements)
+      .map((child) => childrenIdAttrToIdRef.current.get(child.id))
+      .filter((childId): childId is TreeViewItemId => childId != null);
 
     const hasChanged =
       childrenIds.length !== previousChildrenIds.length ||
@@ -57,9 +66,18 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
 
   const value = React.useMemo<TreeViewChildrenItemContextValue>(
     () => ({
-      registerChild: (childIdAttribute, childItemId) =>
-        childrenIdAttrToIdRef.current.set(childIdAttribute, childItemId),
-      unregisterChild: (childIdAttribute) => childrenIdAttrToIdRef.current.delete(childIdAttribute),
+      // React hides a suspended subtree and reveals it again without rerendering this
+      // provider, so writing to the ref is not enough: the rerender is what makes the
+      // effect above recompute the order. Without it, a child that comes back is on
+      // the screen but missing from the order, and keyboard navigation skips over it.
+      registerChild: (childIdAttribute, childItemId) => {
+        childrenIdAttrToIdRef.current.set(childIdAttribute, childItemId);
+        refreshChildrenIds();
+      },
+      unregisterChild: (childIdAttribute) => {
+        childrenIdAttrToIdRef.current.delete(childIdAttribute);
+        refreshChildrenIds();
+      },
       parentId: itemId,
     }),
     [itemId],

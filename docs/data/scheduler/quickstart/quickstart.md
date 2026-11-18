@@ -19,21 +19,21 @@ Install the Scheduler package that best suits your needs—Community or Premium:
 
 #### Material UI
 
-The Scheduler packages have a peer dependency on `@mui/material`.
-If you're not already using it, install it now:
+The Scheduler packages have peer dependencies on `@mui/material` and `@mui/icons-material`.
+If you're not already using them, install them now:
 
 <codeblock storageKey="package-manager">
 
 ```bash npm
-npm install @mui/material @emotion/react @emotion/styled
+npm install @mui/material @mui/icons-material @emotion/react @emotion/styled
 ```
 
 ```bash pnpm
-pnpm add @mui/material @emotion/react @emotion/styled
+pnpm add @mui/material @mui/icons-material @emotion/react @emotion/styled
 ```
 
 ```bash yarn
-yarn add @mui/material @emotion/react @emotion/styled
+yarn add @mui/material @mui/icons-material @emotion/react @emotion/styled
 ```
 
 </codeblock>
@@ -57,11 +57,7 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 Import the Event Calendar component that corresponds to the version you're using, along with the `SchedulerEvent` type:
 
-```js
-import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { EventCalendarPremium } from '@mui/x-scheduler/event-calendar-premium';
-import { SchedulerEvent } from '@mui/x-scheduler/models';
-```
+{{"component": "modules/components/SchedulerImportInstructions.js"}}
 
 ### Define events
 
@@ -74,20 +70,20 @@ const events: SchedulerEvent[] = [
   {
     id: 1,
     title: 'Team Meeting',
-    start: new Date(2024, 0, 15, 10, 0),
-    end: new Date(2024, 0, 15, 11, 0),
+    start: '2024-01-15T10:00:00',
+    end: '2024-01-15T11:00:00',
   },
   {
     id: 2,
     title: 'Project Review',
-    start: new Date(2024, 0, 16, 14, 0),
-    end: new Date(2024, 0, 16, 15, 30),
+    start: '2024-01-16T14:00:00',
+    end: '2024-01-16T15:30:00',
   },
   {
     id: 3,
     title: 'Client Call',
-    start: new Date(2024, 0, 17, 9, 0),
-    end: new Date(2024, 0, 17, 10, 0),
+    start: '2024-01-17T09:00:00',
+    end: '2024-01-17T10:00:00',
   },
 ];
 ```
@@ -104,31 +100,34 @@ With the component imported and events defined, you're now ready to render the E
 
 Import the `EventTimelinePremium` component along with the `SchedulerEvent` and `SchedulerResource` types:
 
-```js
+```ts
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import type {
+  SchedulerEvent,
+  SchedulerResource,
+} from '@mui/x-scheduler-premium/models';
 ```
 
 ### Define events and resources
 
 Each event in the Event Timeline is an object with properties that define when it occurs and what it displays.
 
-The code snippet below defines three events with `id`, `title`, `start`, and `end` properties:
+The code snippet below defines two events with `id`, `title`, `start`, `end`, and `resource` properties:
 
 ```ts
 const events: SchedulerEvent[] = [
   {
     id: 1,
     title: 'Project Kickoff',
-    start: new Date(2024, 0, 15, 9, 0),
-    end: new Date(2024, 0, 15, 17, 0),
+    start: '2024-01-15T09:00:00',
+    end: '2024-01-15T17:00:00',
     resource: 'team-a',
   },
   {
     id: 2,
     title: 'Development Phase',
-    start: new Date(2024, 0, 16, 9, 0),
-    end: new Date(2024, 0, 19, 17, 0),
+    start: '2024-01-16T09:00:00',
+    end: '2024-01-19T17:00:00',
     resource: 'team-b',
   },
 ];
@@ -156,30 +155,13 @@ With the component imported and events and resources defined, you're now ready t
 To benefit from [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users must import the following types.
 These types use module augmentation to extend the default theme structure.
 
-```tsx
-// Premium users: add `-premium` suffix to package name
-import type {} from '@mui/x-scheduler/themeAugmentation';
-
-const theme = createTheme({
-  components: {
-    MuiEventCalendar: {
-      styleOverrides: {
-        root: {
-          backgroundColor: 'lightblue',
-        },
-      },
-    },
-  },
-});
-```
+{{"component": "modules/components/SchedulerThemeAugmentationInstructions.js"}}
 
 ## API
 
-TODO: Uncomment once available
-
-<!-- - [EventCalendar](/x/api/scheduler/event-calendar/)
- - [EventCalendarPremium](/x/api/scheduler/event-calendar-premium/)
-- [EventTimelinePremium](/x/api/scheduler/event-timeline-premium/) -->
+- [EventCalendar](/x/api/scheduler/event-calendar/)
+- [EventCalendarPremium](/x/api/scheduler/event-calendar-premium/)
+- [EventTimelinePremium](/x/api/scheduler/event-timeline-premium/)
 
 ## Using this documentation
 

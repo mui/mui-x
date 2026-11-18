@@ -8,7 +8,7 @@ export interface ValidationRule {
 }
 
 export class RowReorderValidator {
-  private rules: ValidationRule[];
+  declare private rules: ValidationRule[];
 
   constructor(rules: ValidationRule[]) {
     this.rules = rules;

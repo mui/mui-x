@@ -1,24 +1,15 @@
 'use client';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getPrimaryResourceId } from '@mui/x-scheduler-internals/internals';
-import type { EventDialogBuiltInFormValues, EventDialogFormValues } from './utils';
-import { computeRange } from './utils';
+import type { EventDialogFormValues } from './utils';
+import { computeRange, RANGE_FORM_KEYS } from './utils';
 
 // Gate on the whole hook: only writes to these keys reach the placeholder.
-// Must stay in sync with what `computeRange` reads, plus `resourceIds`.
-const PLACEHOLDER_KEYS: ReadonlySet<string> = new Set<keyof EventDialogBuiltInFormValues>([
-  'startDate',
-  'startTime',
-  'endDate',
-  'endTime',
-  'allDay',
-  'resourceIds',
-]);
+const PLACEHOLDER_KEYS: ReadonlySet<string> = new Set([...RANGE_FORM_KEYS, 'resourceIds']);
 
 /**
  * Returns a function that live-updates the creation placeholder in the store
@@ -26,7 +17,6 @@ const PLACEHOLDER_KEYS: ReadonlySet<string> = new Set<keyof EventDialogBuiltInFo
  * none of the written keys affects the placeholder.
  */
 export function usePushPlaceholder() {
-  const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
 
   return function pushPlaceholder(values: EventDialogFormValues, changedKeys: string[]) {
@@ -41,7 +31,12 @@ export function usePushPlaceholder() {
     }
 
     const displayTimezone = schedulerOtherSelectors.displayTimezone(store.state);
-    const { start, end, surfaceType } = computeRange(adapter, values, displayTimezone);
+    const { start, end, surfaceType } = computeRange(values, displayTimezone);
+    // A custom field can hold a date that doesn't exist, like 2025-06-31: the placeholder stays
+    // where it was, since the grids can't place a bound that isn't an instant.
+    if (!Number.isFinite(start) || !Number.isFinite(end)) {
+      return;
+    }
     const surfaceTypeToUse = rawPlaceholder.lockSurfaceType
       ? rawPlaceholder.surfaceType
       : surfaceType;

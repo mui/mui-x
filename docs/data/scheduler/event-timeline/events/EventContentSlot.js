@@ -1,9 +1,7 @@
 import * as React from 'react';
 import FlagRounded from '@mui/icons-material/FlagRounded';
 import BuildRounded from '@mui/icons-material/BuildRounded';
-
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-
 import { defaultVisibleDate } from '../../datasets/company-roadmap';
 
 const resources = [
@@ -14,8 +12,8 @@ const resources = [
 const initialEvents = [
   {
     id: 'web-1',
-    start: '2025-07-01T00:00:00',
-    end: '2025-07-11T00:00:00',
+    start: '2025-07-01',
+    end: '2025-07-12',
     title: 'Dashboard redesign',
     resource: 'web-app',
     allDay: true,
@@ -24,8 +22,8 @@ const initialEvents = [
   },
   {
     id: 'web-2',
-    start: '2025-07-11T00:00:00',
-    end: '2025-07-12T00:00:00',
+    start: '2025-07-11',
+    end: '2025-07-13',
     title: 'Beta release',
     resource: 'web-app',
     allDay: true,
@@ -34,8 +32,8 @@ const initialEvents = [
   },
   {
     id: 'api-1',
-    start: '2025-07-03T00:00:00',
-    end: '2025-07-15T00:00:00',
+    start: '2025-07-03',
+    end: '2025-07-16',
     title: 'Rate limiting',
     resource: 'api-team',
     allDay: true,
@@ -59,6 +57,11 @@ function EventContent({ occurrence }) {
   );
 }
 
+function getEventAriaLabel({ occurrence, defaultAriaLabel }) {
+  const event = eventLookup.get(occurrence.id);
+  return event ? `${defaultAriaLabel}, ${event.code}` : defaultAriaLabel;
+}
+
 export default function EventContentSlot() {
   const [events, setEvents] = React.useState(initialEvents);
 
@@ -71,6 +74,7 @@ export default function EventContentSlot() {
         onEventsChange={setEvents}
         defaultPreset="dayAndMonth"
         slots={{ timelineEventContent: EventContent }}
+        getEventAriaLabel={getEventAriaLabel}
       />
     </div>
   );

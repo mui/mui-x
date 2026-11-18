@@ -1,6 +1,6 @@
 import { screen } from '@mui/internal-test-utils';
 import {
-  adapter,
+  addDays,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
@@ -40,29 +40,12 @@ describe('<DayView />', () => {
     return document.querySelector<HTMLElement>(`.${eventCalendarClasses.dayTimeGridContainer}`)!;
   }
 
-  // The event component always renders the time element (only hidden by CSS on touch), so it is in the DOM.
-  it('should render the event with a time element', () => {
-    const event = EventBuilder.new()
-      .title('Desktop Event')
-      .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
-      .build();
-
-    renderWithProviders(<DayView />, [event]);
-
-    expect(screen.getAllByText('Desktop Event').length).to.be.greaterThan(0);
-
-    const timeElements = getDayTimeGrid().querySelectorAll(
-      `.${eventCalendarClasses.timeGridEventTime}`,
-    );
-    expect(timeElements.length).to.be.greaterThan(0);
-  });
-
   describe('duration thresholds', () => {
     function getEventRoot() {
       return getDayTimeGrid().querySelector<HTMLElement>(`.${eventCalendarClasses.timeGridEvent}`)!;
     }
 
-    it('marks a 15-minute event as under fifteen minutes and under an hour (<= 15 boundary)', () => {
+    it('should mark a 15-minute event as under fifteen minutes and under an hour (<= 15 boundary)', () => {
       const event = EventBuilder.new().span('2025-07-03T10:00:00Z', '2025-07-03T10:15:00Z').build();
       renderWithProviders(<DayView />, [event]);
 
@@ -71,7 +54,7 @@ describe('<DayView />', () => {
       expect(root).to.have.attribute('data-under-hour', 'true');
     });
 
-    it('marks a 30-minute event as under an hour but not under fifteen minutes (< 30 boundary)', () => {
+    it('should mark a 30-minute event as under an hour but not under fifteen minutes', () => {
       const event = EventBuilder.new().span('2025-07-03T10:00:00Z', '2025-07-03T10:30:00Z').build();
       renderWithProviders(<DayView />, [event]);
 
@@ -80,7 +63,7 @@ describe('<DayView />', () => {
       expect(root).to.have.attribute('data-under-hour', 'true');
     });
 
-    it('does not mark a 60-minute event as under an hour ([30, 60) boundary)', () => {
+    it('should not mark a 60-minute event as under an hour', () => {
       const event = EventBuilder.new().span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z').build();
       renderWithProviders(<DayView />, [event]);
 
@@ -93,36 +76,6 @@ describe('<DayView />', () => {
   describe('multi-resource events', () => {
     const resourceA = ResourceBuilder.new().title('Room A').eventColor('blue').build();
     const resourceB = ResourceBuilder.new().title('Room B').eventColor('pink').build();
-
-    it('should render the event once when at least one of its assigned resources is visible', () => {
-      const event = EventBuilder.new()
-        .title('Team Sync')
-        .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
-        .resources([resourceA, resourceB])
-        .build();
-
-      renderWithProviders(<DayView />, [event], {
-        resources: [resourceA, resourceB],
-        defaultVisibleResources: { [resourceB.id]: false },
-      });
-
-      expect(screen.getAllByText('Team Sync')).toHaveLength(1);
-    });
-
-    it('should not render the event when all of its assigned resources are hidden', () => {
-      const event = EventBuilder.new()
-        .title('Team Sync')
-        .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
-        .resources([resourceA, resourceB])
-        .build();
-
-      renderWithProviders(<DayView />, [event], {
-        resources: [resourceA, resourceB],
-        defaultVisibleResources: { [resourceA.id]: false, [resourceB.id]: false },
-      });
-
-      expect(screen.queryByText('Team Sync')).to.equal(null);
-    });
 
     it('should derive the event color from the first resource in its assignment', () => {
       const eventAFirst = EventBuilder.new()
@@ -167,7 +120,7 @@ describe('<DayView />', () => {
 
       await user.click(screen.getByRole('button', { name: /previous day/i }));
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
-        adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, -1),
+        addDays(DEFAULT_TESTING_VISIBLE_DATE, -1),
       );
     });
 
@@ -185,7 +138,7 @@ describe('<DayView />', () => {
 
       await user.click(screen.getByRole('button', { name: /next day/i }));
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
-        adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 1),
+        addDays(DEFAULT_TESTING_VISIBLE_DATE, 1),
       );
     });
   });

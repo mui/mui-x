@@ -1,0 +1,313 @@
+import type { BaseTemporal } from '../base-temporal';
+import { isoDateToDayNumber, MS_PER_DAY } from './dayNumber';
+import {
+  getDayNumber,
+  getMsInDay,
+  plainDateFromDayNumber,
+  plainTimeFromMsInDay,
+} from './plainDate';
+
+interface TimezoneOffsets {
+  format: (epochMs: number) => string;
+  /**
+   * The offset of each UTC day without a transition, keyed by day number.
+   */
+  days: Map<number, number>;
+}
+
+const MAX_CACHED_DAYS_PER_TIMEZONE = 20_000;
+const timezoneOffsets = new Map<string, TimezoneOffsets | null>();
+const OFFSET_REGEXP = /^([+-])(\d{2}):?(\d{2})?(?::?(\d{2}))?$/;
+
+function parseOffset(offset: string): number {
+  const match = OFFSET_REGEXP.exec(offset);
+  return match
+    ? (match[1] === '-' ? -1 : 1) *
+        (Number(match[2]) * 3_600_000 +
+          Number(match[3] ?? 0) * 60_000 +
+          Number(match[4] ?? 0) * 1000)
+    : NaN;
+}
+
+function getTimezoneOffsets(timezone: string): TimezoneOffsets | null {
+  let offsets = timezoneOffsets.get(timezone);
+  if (offsets === undefined) {
+    try {
+      // `longOffset` formats the offset like `GMT+05:30`, or `GMT` when it is zero.
+      const { format } = new Intl.DateTimeFormat('en-US', {
+        timeZone: timezone,
+        timeZoneName: 'longOffset',
+      });
+      offsets = { format, days: new Map() };
+    } catch {
+      offsets = null;
+    }
+    timezoneOffsets.set(timezone, offsets);
+  }
+  return offsets;
+}
+
+function readOffset(format: TimezoneOffsets['format'], epochMs: number): number {
+  const offset = format(epochMs).split('GMT')[1];
+  return offset ? parseOffset(offset) : 0;
+}
+
+/**
+ * The IANA identifier of a timezone, the timezone of the system for `'default'`.
+ */
+export function getTimezoneId(timezone: string): string {
+  return timezone === 'default' ? Intl.DateTimeFormat().resolvedOptions().timeZone : timezone;
+}
+
+function getSystemTimezoneOffsetMs(epochMs: number): number {
+  const date = new Date(epochMs);
+  // `getTimezoneOffset()` drops the seconds of the local mean time offsets used before standard
+  // time, such as +00:09:21 in Paris until 1911. These seconds also shift the local seconds.
+  if (date.getSeconds() === date.getUTCSeconds()) {
+    return -date.getTimezoneOffset() * 60_000;
+  }
+  const localMs =
+    isoDateToDayNumber(date.getFullYear(), date.getMonth() + 1, date.getDate()) * MS_PER_DAY +
+    ((date.getHours() * 60 + date.getMinutes()) * 60 + date.getSeconds()) * 1000 +
+    date.getMilliseconds();
+  return localMs - epochMs;
+}
+
+/**
+ * The offset of `timezone` from UTC at an instant, in milliseconds.
+ * `'default'` reads the timezone of the system.
+ */
+function getTimezoneOffsetMs(timezone: string, epochMs: number): number {
+  if (timezone === 'default') {
+    return getSystemTimezoneOffsetMs(epochMs);
+  }
+  if (timezone === 'UTC') {
+    return 0;
+  }
+  const offsets = getTimezoneOffsets(timezone);
+  if (offsets === null) {
+    // Engines without fixed-offset support in Intl, such as `+02:00`.
+    return parseOffset(timezone);
+  }
+
+  // Formatting with Intl is slow, and offsets only change at the few transitions of a year.
+  // A UTC day that starts and ends with the same offset keeps it throughout, as no timezone
+  // has two transitions in a day that cancel out.
+  const day = Math.floor(epochMs / MS_PER_DAY);
+  const cached = offsets.days.get(day);
+  if (cached !== undefined) {
+    return cached;
+  }
+  const offsetAtDayStart = readOffset(offsets.format, day * MS_PER_DAY);
+  if (offsetAtDayStart !== readOffset(offsets.format, (day + 1) * MS_PER_DAY - 1)) {
+    return readOffset(offsets.format, epochMs);
+  }
+  if (offsets.days.size >= MAX_CACHED_DAYS_PER_TIMEZONE) {
+    offsets.days.clear();
+  }
+  offsets.days.set(day, offsetAtDayStart);
+  return offsetAtDayStart;
+}
+
+/**
+ * The wall-clock time of an instant in `timezone`, in milliseconds since 1970-01-01T00:00 of the
+ * wall clock.
+ */
+export function toLocalMs(epochMs: number, timezone: string): number {
+  return epochMs + getTimezoneOffsetMs(timezone, epochMs);
+}
+
+/**
+ * The date of an instant in `timezone`.
+ */
+export function toPlainDate(epochMs: number, timezone: string): BaseTemporal.PlainDate {
+  return plainDateFromDayNumber(toLocalDayNumber(epochMs, timezone));
+}
+
+/**
+ * The date and wall-clock time of an instant in `timezone`.
+ */
+export function toPlainDateTime(epochMs: number, timezone: string): BaseTemporal.PlainDateTime {
+  const localMs = toLocalMs(epochMs, timezone);
+  const dayNumber = Math.floor(localMs / MS_PER_DAY);
+  return plainDateFromDayNumber(dayNumber).toPlainDateTime(
+    plainTimeFromMsInDay(localMs - dayNumber * MS_PER_DAY),
+  );
+}
+
+/**
+ * The wall-clock time of an instant in `timezone`, in milliseconds since midnight.
+ */
+export function toMsInDay(epochMs: number, timezone: string): number {
+  const localMs = toLocalMs(epochMs, timezone);
+  return localMs - Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY;
+}
+
+/**
+ * The instant of a wall-clock time in `timezone`, given in milliseconds since 1970-01-01T00:00 of
+ * the wall clock.
+ *
+ * Resolves the wall-clock times a DST transition skips or repeats like RFC 5545 §3.3.5, whatever
+ * the timezone of the system: a skipped time moves forward by the length of the gap, and a
+ * repeated time resolves to its first instant, like the `'compatible'` disambiguation of Temporal.
+ */
+export function localToEpochMs(localMs: number, timezone: string): number {
+  // Offsets are below a day, so the instant lies between these two.
+  const offsetBefore = getTimezoneOffsetMs(timezone, localMs - MS_PER_DAY);
+  const offsetAfter = getTimezoneOffsetMs(timezone, localMs + MS_PER_DAY);
+  if (offsetBefore === offsetAfter) {
+    return localMs - offsetBefore;
+  }
+
+  // A transition happens around this wall-clock time.
+  const instantBefore = localMs - offsetBefore;
+  const instantAfter = localMs - offsetAfter;
+  const isValidBefore = getTimezoneOffsetMs(timezone, instantBefore) === offsetBefore;
+  const isValidAfter = getTimezoneOffsetMs(timezone, instantAfter) === offsetAfter;
+  if (isValidBefore && isValidAfter) {
+    // Repeated time: both instants show it.
+    return Math.min(instantBefore, instantAfter);
+  }
+  if (isValidAfter) {
+    return instantAfter;
+  }
+  // Valid with the earlier offset only, or skipped time, which the earlier offset moves forward.
+  return instantBefore;
+}
+
+/**
+ * The instant of a date-time in `timezone`, or of the start of a date, resolved like
+ * `localToEpochMs()`.
+ */
+export function toEpochMs(
+  value: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime,
+  timezone: string,
+): number {
+  if (isPlainDateTime(value)) {
+    return localToEpochMs(
+      getDayNumber(value.toPlainDate()) * MS_PER_DAY + getMsInDay(value),
+      timezone,
+    );
+  }
+  return localToEpochMs(getDayNumber(value) * MS_PER_DAY, timezone);
+}
+
+function isPlainDateTime(
+  value: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime,
+): value is BaseTemporal.PlainDateTime {
+  return 'hour' in value;
+}
+
+/**
+ * Moves an instant to `plainDate`, keeping its time of day on the wall clock of `timezone`. The
+ * times a DST transition skips or repeats resolve like `toEpochMs()`.
+ */
+export function moveTimestampToPlainDate(
+  epochMs: number,
+  plainDate: BaseTemporal.PlainDate,
+  timezone: string,
+): number {
+  return localToEpochMs(
+    getDayNumber(plainDate) * MS_PER_DAY + toMsInDay(epochMs, timezone),
+    timezone,
+  );
+}
+
+/**
+ * Adds days to an instant on the wall clock of `timezone`, keeping its time of day. The times a
+ * DST transition skips or repeats resolve like `localToEpochMs()`. Returns the instant unchanged
+ * for 0 days, even in the second occurrence of a repeated time.
+ */
+export function addDaysOnWallClock(epochMs: number, dayCount: number, timezone: string): number {
+  if (dayCount === 0) {
+    return epochMs;
+  }
+  return localToEpochMs(toLocalMs(epochMs, timezone) + dayCount * MS_PER_DAY, timezone);
+}
+
+/**
+ * Moves an instant back by the minutes past the last multiple of `stepMinutes` in its hour, on the
+ * wall clock of `timezone`. Returns a non-finite instant unchanged, like the one of a surface
+ * without a size.
+ */
+export function floorToWallClockMinutes(
+  epochMs: number,
+  stepMinutes: number,
+  timezone: string,
+): number {
+  if (!Number.isFinite(epochMs)) {
+    return epochMs;
+  }
+  const localMinutes = Math.floor(toLocalMs(epochMs, timezone) / 60_000);
+  const minutesInHour = localMinutes - Math.floor(localMinutes / 60) * 60;
+  return epochMs - (minutesInHour % stepMinutes) * 60_000;
+}
+
+/**
+ * The day number of the date of an instant in `timezone`. For the loops that compare many dates, a
+ * day number is cheaper than `toPlainDate()`.
+ */
+export function toLocalDayNumber(epochMs: number, timezone: string): number {
+  return Math.floor(toLocalMs(epochMs, timezone) / MS_PER_DAY);
+}
+
+/**
+ * The first instant of the day of an instant in `timezone`. A day whose midnight a DST transition
+ * skips starts at the end of the gap.
+ */
+export function getStartOfDayMs(epochMs: number, timezone: string): number {
+  const dayNumber = Math.floor(toLocalMs(epochMs, timezone) / MS_PER_DAY);
+  return localToEpochMs(dayNumber * MS_PER_DAY, timezone);
+}
+
+/**
+ * The last instant of the day of an instant in `timezone`, just before the next day starts.
+ * When a DST transition repeats the last hour of the day, it's the later 23:59:59.999.
+ */
+export function getEndOfDayMs(epochMs: number, timezone: string): number {
+  const dayNumber = Math.floor(toLocalMs(epochMs, timezone) / MS_PER_DAY);
+  return localToEpochMs((dayNumber + 1) * MS_PER_DAY, timezone) - 1;
+}
+
+/**
+ * The first instant, in `timezone`, of the day `dayCount` days after the day of an instant. A day
+ * whose midnight a DST transition skips starts at the end of the gap.
+ */
+export function addDaysToDayStart(epochMs: number, dayCount: number, timezone: string): number {
+  const dayNumber = Math.floor(toLocalMs(epochMs, timezone) / MS_PER_DAY);
+  return localToEpochMs((dayNumber + dayCount) * MS_PER_DAY, timezone);
+}
+
+/**
+ * Returns the day numbers of the days `timezone` skips from `from` (inclusive) to `to` (exclusive),
+ * like December 30th, 2011, which Pacific/Apia skipped when it moved across the date line.
+ */
+export function getSkippedDays(
+  from: BaseTemporal.PlainDate,
+  to: BaseTemporal.PlainDate,
+  timezone: string,
+): Set<number> {
+  const skippedDays = new Set<number>();
+  const getStartMs = (dayNumber: number) => localToEpochMs(dayNumber * MS_PER_DAY, timezone);
+
+  // A skipped day makes the days of a period last a day longer than the time elapsed between their
+  // starts, when DST transitions change it by hours. The periods are a month long, as a timezone
+  // never skipped and repeated a day within a month, which would cancel out.
+  const fromDayNumber = getDayNumber(from);
+  const endDayNumber = getDayNumber(to);
+  let periodStartMs = getStartMs(fromDayNumber);
+  for (let start = fromDayNumber; start < endDayNumber; start += 31) {
+    const end = Math.min(start + 31, endDayNumber);
+    const periodEndMs = getStartMs(end);
+    if ((end - start) * MS_PER_DAY - (periodEndMs - periodStartMs) >= MS_PER_DAY / 2) {
+      for (let dayNumber = start; dayNumber < end; dayNumber += 1) {
+        // The start of a skipped day resolves to an instant of the next day.
+        if (toLocalMs(getStartMs(dayNumber), timezone) >= (dayNumber + 1) * MS_PER_DAY) {
+          skippedDays.add(dayNumber);
+        }
+      }
+    }
+    periodStartMs = periodEndMs;
+  }
+  return skippedDays;
+}

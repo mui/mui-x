@@ -1,15 +1,22 @@
 /**
  * Transform d3 ESM libraries to vendored CommonJS libraries
  *
- * This produces `lib-vendor/d3-<package name>/src` files that have
- * internally consistent references to other d3 packages. It is only meant
+ * This transpiles the ESM entry of each package to `lib-vendor/<package name>`,
+ * with internally consistent references to other d3 packages. It is only meant
  * to be used for the CommonJS import path.
  */
 const path = require('path');
 const fs = require('fs');
+const { getVendorEntry } = require('./scripts/getVendorEntry.cjs');
 
 const packageJsonPath = path.resolve('./package.json');
 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, { encoding: 'utf8' }));
+
+const vendorEntrySources = new Set(
+  Object.keys(packageJson.dependencies)
+    .filter((name) => /^(d3-|internmap|flatqueue)/.test(name))
+    .map((name) => getVendorEntry(name).source),
+);
 let babelRuntimeVersion = packageJson.dependencies['@babel/runtime'];
 
 if (!babelRuntimeVersion) {
@@ -24,10 +31,12 @@ if (!babelRuntimeVersion) {
 }
 
 module.exports = function getBabelConfig(api) {
-  const useESModules = api.env(['stable', 'rollup']);
+  // The config no longer varies by env, so it can be cached for the whole run.
+  api.cache(true);
 
   return {
-    only: [/node_modules\/(d3-.*|internmap|flatqueue)\/.*\.js/],
+    // Only the entries: the UMD and minified copies in `dist/` are not used.
+    only: [(filename) => vendorEntrySources.has(filename)],
     plugins: [
       [
         '@babel/plugin-transform-modules-commonjs',
@@ -53,14 +62,14 @@ module.exports = function getBabelConfig(api) {
               }
 
               // Get Vendor package path (just the package structure, no lib-vendor prefix).
-              const vendorPkg = `${match.groups.pkg}/src/index.js`;
+              const vendorPkg = getVendorEntry(match.groups.pkg).output;
 
               // Derive relative path to vendor lib to have a file like move from:
-              // - 'node_modules/d3-interpolate/src/rgb.js'
-              // - 'd3-interpolate/src/rgb.js'
+              // - 'node_modules/d3-interpolate/dist/d3-interpolate.mjs'
+              // - 'd3-interpolate/dist/d3-interpolate.mjs'
               // and have an import transform like:
               // - `d3-color` (d3 color is imported by d3-interpolate)
-              // - `../../d3-color/src/index.js`
+              // - `../../d3-color/dist/d3-color.js`
               // Extract just the package-relative path from the full file path
               const nodeModulesIndex = currentFile.indexOf('node_modules/');
               const relativePath =
@@ -81,9 +90,8 @@ module.exports = function getBabelConfig(api) {
       [
         '@babel/plugin-transform-runtime',
         {
-          useESModules,
-          // any package needs to declare 7.25.0 as a runtime dependency. default is ^7.0.0
-          version: babelRuntimeVersion || '^7.25.0',
+          // Let the plugin use all the helpers available in the installed runtime version.
+          version: babelRuntimeVersion,
         },
       ],
     ],

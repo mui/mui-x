@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { ScatterChart, ScatterMarkerProps } from '@mui/x-charts/ScatterChart';
+import type { ScatterMarkerProps } from '@mui/x-charts/ScatterChart';
+import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { ChartsTooltipContainer, useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';

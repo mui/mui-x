@@ -131,6 +131,7 @@ export {
   getRowValue,
   isReplaceUpdate,
   getReplaceRow,
+  asReplaceUpdates,
   warnIfReplaceLosesPrototype,
 } from '../hooks/features/rows/gridRowsUtils';
 export {
@@ -155,6 +156,7 @@ export type { GridRowReorderState } from '../hooks/features/rowReorder/gridRowRe
 export { useGridRowSelectionPreProcessors } from '../hooks/features/rowSelection/useGridRowSelectionPreProcessors';
 export { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
 export type { GridSortingModelApplier } from '../hooks/features/sorting/gridSortingState';
+export { getNextGridSortDirection } from '../hooks/features/sorting/gridSortingUtils';
 export { gridSortedRowIndexLookupSelector } from '../hooks/features/sorting/gridSortingSelector';
 export { useGridScroll } from '../hooks/features/scroll/useGridScroll';
 export { useGridEvents } from '../hooks/features/events/useGridEvents';
@@ -177,10 +179,27 @@ export {
 } from '../hooks/features/listView/useGridListView';
 
 export { useTimeout } from '../hooks/utils/useTimeout';
-export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
+export {
+  useGridVisibleRows,
+  getVisibleRows,
+  getRowIndexRelativeToAllRows,
+} from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 export { usePinnedScrollOffset } from '../hooks/utils/usePinnedScrollOffset';
+export { usePointerDrag, getElementAtPoint } from '../hooks/utils/usePointerDrag';
+export {
+  createDragPreview,
+  getEdgeScrollDelta,
+  getVisibleViewportBounds,
+  hasReachedAutoScrollDistance,
+} from '../hooks/utils/pointerDragUtils';
+export type { DragPreview, VisibleViewportBounds } from '../hooks/utils/pointerDragUtils';
+export type {
+  PointerDragPosition,
+  UsePointerDragOptions,
+  UsePointerDragReturnValue,
+} from '../hooks/utils/usePointerDrag';
 
 export type * as BaseSlots from '../models/gridBaseSlots';
 export type { TextFieldProps, AutocompleteProps, SelectProps } from '../models/gridBaseSlots';
@@ -198,6 +217,7 @@ export { useGridDataSourceBase } from '../hooks/features/dataSource/useGridDataS
 export { CacheChunkManager } from '../hooks/features/dataSource/utils';
 export { gridGetRowsParamsSelector } from '../hooks/features/dataSource/gridDataSourceSelector';
 export { useGridDataSourceFilterModelChange } from '../hooks/features/dataSource/useGridDataSourceFilterModelChange';
+export { useGridDataSourcePolling } from '../hooks/features/dataSource/useGridDataSourcePolling';
 
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export * from '../utils/createControllablePromise';
@@ -214,7 +234,9 @@ export {
   findParentElementFromClassName,
   getActiveElement,
   getGridCellElement,
+  getGridRowElement,
   isEventTargetInPortal,
+  isEventTargetTextEntryElement,
 } from '../utils/domUtils';
 export {
   isNavigationKey,

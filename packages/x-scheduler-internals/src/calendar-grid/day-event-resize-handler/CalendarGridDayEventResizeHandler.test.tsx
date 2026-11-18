@@ -1,7 +1,7 @@
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
-import { adapter, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
+import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
 import { describe } from 'vitest';
 
 describe('<CalendarGrid.DayEventResizeHandler />', () => {
@@ -10,13 +10,18 @@ describe('<CalendarGrid.DayEventResizeHandler />', () => {
   describeConformance(<CalendarGrid.DayEventResizeHandler side="start" />, () => ({
     refInstanceof: window.HTMLDivElement,
     render(node) {
-      const eventStart = processDate(adapter.now('default'), adapter);
-      const eventEnd = processDate(adapter.addHours(eventStart.value, 1), adapter);
+      const eventStart = createProcessedDate(Date.now(), 'default');
+      const eventEnd = createProcessedDate(eventStart.timestamp + 3_600_000, 'default');
+      const cellDate = eventStart.plainDateTime.toPlainDate();
       return render(
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
-            <CalendarGrid.DayRow start={eventStart.value} end={eventEnd.value}>
-              <CalendarGrid.DayCell value={eventStart.value}>
+            <CalendarGrid.DayRow
+              start={eventStart.timestamp}
+              end={eventEnd.timestamp}
+              days={[{ plainDate: cellDate }]}
+            >
+              <CalendarGrid.DayCell value={cellDate}>
                 <CalendarGrid.DayEvent
                   eventId="fake-id"
                   occurrenceKey="fake-key"

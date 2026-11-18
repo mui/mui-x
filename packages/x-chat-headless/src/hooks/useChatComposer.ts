@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
-import { useStore, useStoreEffect } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
+import { useStoreEffect } from '@mui/x-internals/useStoreEffect';
 import { useChatRuntimeContext } from '../internals/useChatRuntimeContext';
 import { chatSelectors } from '../selectors';
 import type { ChatDraftAttachment } from '../types/chat-entities';

@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import {
   ChatProvider,
   chatSelectors,
   useChat,
   useChatComposer,
   useChatStore,
-  type ChatAdapter,
 } from '@mui/x-chat/headless';
+import type { ChatAdapter } from '@mui/x-chat/headless';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';

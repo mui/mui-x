@@ -1,6 +1,8 @@
+import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { createSelectorMemoized } from '@base-ui/utils/store';
 import type { EventCalendarState as State } from '../use-event-calendar';
 import { DEFAULT_EVENT_CALENDAR_PREFERENCES } from '../use-event-calendar/EventCalendarStore';
+import { schedulerPreferenceSelectors } from '../scheduler-selectors/schedulerPreferenceSelectors';
 
 const allPreferencesSelector = createSelectorMemoized(
   (state: State) => state.preferences,
@@ -13,10 +15,18 @@ const allPreferencesSelector = createSelectorMemoized(
 export const eventCalendarPreferenceSelectors = {
   all: allPreferencesSelector,
   menuConfig: (state: State) => state.preferencesMenuConfig,
-  ampm: (state: State) => allPreferencesSelector(state).ampm,
-  showWeekends: (state: State) => allPreferencesSelector(state).showWeekends,
+  ampm: schedulerPreferenceSelectors.ampm,
   showWeekNumber: (state: State) => allPreferencesSelector(state).showWeekNumber,
   showEmptyDaysInAgenda: (state: State) => allPreferencesSelector(state).showEmptyDaysInAgenda,
   isSidePanelOpen: (state: State) => allPreferencesSelector(state).isSidePanelOpen,
-  weekStartsOn: (state: State) => allPreferencesSelector(state).weekStartsOn,
+  weekInfo: schedulerPreferenceSelectors.weekInfo,
+  weekStartsOn: schedulerPreferenceSelectors.weekStartsOn,
+  /**
+   * The ISO weekdays the views leave out: the weekend of the locale of the dates when the
+   * `showWeekends` preference is off.
+   */
+  hiddenWeekdays: (state: State): readonly number[] =>
+    allPreferencesSelector(state).showWeekends
+      ? EMPTY_ARRAY
+      : schedulerPreferenceSelectors.weekend(state),
 };

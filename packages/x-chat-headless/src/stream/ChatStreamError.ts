@@ -6,7 +6,7 @@ import type { ChatError } from '../types/chat-error';
  * Callers can distinguish stream failures from unexpected bugs via `instanceof ChatStreamError`.
  */
 export class ChatStreamError extends Error {
-  public readonly chatError: ChatError;
+  declare public readonly chatError: ChatError;
 
   constructor(chatError: ChatError) {
     super(chatError.message);

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import type { GridApi } from '@mui/x-data-grid';
 import {
   DataGrid,
   useGridApiContext,
   gridFilteredSortedRowIdsSelector,
   gridVisibleColumnFieldsSelector,
-  GridApi,
   Toolbar,
   ExportCsv,
   ToolbarButton,
