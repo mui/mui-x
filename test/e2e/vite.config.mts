@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 // eslint-disable-next-line import/extensions
 import generateReleaseInfo from '../../scripts/generateReleaseInfo.mjs';
-import { alias } from '../../vitest.shared.mts';
+import { alias, react17InlineDeps } from '../../vitest.shared.mts';
 
 export default defineConfig({
   build: {
@@ -28,5 +28,10 @@ export default defineConfig({
     globalSetup: ['./globalSetup.ts'],
     testTimeout: 20000,
     hookTimeout: 20000,
+    server: {
+      deps: {
+        inline: react17InlineDeps,
+      },
+    },
   },
 });

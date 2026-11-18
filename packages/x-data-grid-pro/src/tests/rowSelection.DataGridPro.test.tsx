@@ -7,7 +7,7 @@ import {
   includeRowSelection,
   excludeRowSelection,
 } from 'test/utils/helperFn';
-import { createRenderer, screen, act, fireEvent } from '@mui/internal-test-utils';
+import { createRenderer, screen, act, fireEvent, reactMajor } from '@mui/internal-test-utils';
 import { useGridApiRef, DataGridPro, gridRowSelectionIdsSelector } from '@mui/x-data-grid-pro';
 import type {
   GridApi,
@@ -815,7 +815,8 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(3);
+      // React 17 StrictMode does not replay effects.
+      expect(onRowSelectionModelChange.mock.calls.length).to.equal(reactMajor >= 18 ? 3 : 1);
       expect(onRowSelectionModelChange.mock.lastCall?.[0]).to.deep.equal(
         includeRowSelection([2, 3, 4, 5, 6, 7, 1]),
       );

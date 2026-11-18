@@ -1,4 +1,11 @@
-import { createRenderer, fireEvent, screen, act, within } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  within,
+  reactMajor,
+} from '@mui/internal-test-utils';
 import type { RefObject } from '@mui/x-internals/types';
 import {
   getActiveCell,
@@ -758,13 +765,15 @@ describe('<DataGrid /> - Keyboard', () => {
         <DataGrid rows={rows} columns={columns} />
       </div>,
     );
-    expect(renderCell.mock.calls.length).to.equal(2);
+    // React 17 renders the cell once more on mount.
+    const mountRenders = reactMajor >= 18 ? 2 : 4;
+    expect(renderCell.mock.calls.length).to.equal(mountRenders);
     const input = screen.getByTestId('custom-input');
     input.focus();
     fireEvent.keyDown(input, { key: 'a' });
-    expect(renderCell.mock.calls.length).to.equal(4);
+    expect(renderCell.mock.calls.length).to.equal(mountRenders + 2);
     fireEvent.keyDown(input, { key: 'b' });
-    expect(renderCell.mock.calls.length).to.equal(4);
+    expect(renderCell.mock.calls.length).to.equal(mountRenders + 2);
   });
 
   it('should not scroll horizontally when cell is wider than viewport', async () => {

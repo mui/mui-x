@@ -314,7 +314,8 @@ describe('<DataGrid /> - Pagination', () => {
         );
       }).toWarnDev([
         `MUI X: The page size \`${pageSize}\` is not present in the \`pageSizeOptions\``,
-        reactMajor < 19 &&
+        // React 18 warns in both StrictMode renders. React 17 silences the second render.
+        reactMajor === 18 &&
           `MUI X: The page size \`${pageSize}\` is not present in the \`pageSizeOptions\``,
       ]);
     });
@@ -343,7 +344,8 @@ describe('<DataGrid /> - Pagination', () => {
         render(<BaselineTestCase paginationModel={{ pageSize, page: 0 }} />);
       }).toWarnDev([
         `MUI X: The page size \`${pageSize}\` is not present in the \`pageSizeOptions\``,
-        reactMajor < 19 &&
+        // React 18 warns in both StrictMode renders. React 17 silences the second render.
+        reactMajor === 18 &&
           `MUI X: The page size \`${pageSize}\` is not present in the \`pageSizeOptions\``,
       ]);
     });
@@ -353,7 +355,9 @@ describe('<DataGrid /> - Pagination', () => {
         render(<BaselineTestCase pageSizeOptions={[25, 50]} />);
       }).toWarnDev([
         `MUI X: The page size \`100\` is not present in the \`pageSizeOptions\``,
-        reactMajor < 19 && `MUI X: The page size \`100\` is not present in the \`pageSizeOptions\``,
+        // React 18 warns in both StrictMode renders. React 17 silences the second render.
+        reactMajor === 18 &&
+          `MUI X: The page size \`100\` is not present in the \`pageSizeOptions\``,
       ]);
     });
 

@@ -1,4 +1,4 @@
-import { createRenderer, screen } from '@mui/internal-test-utils';
+import { createRenderer, reactMajor, screen } from '@mui/internal-test-utils';
 import { describe, it, expect } from 'vitest';
 import { useChartGradientId, useChartGradientIdObjectBound } from './useChartGradientId';
 import { ChartsDataProvider } from '../ChartsDataProvider';
@@ -13,6 +13,9 @@ function UseGradientIdObjectBound() {
   return <div>{id}</div>;
 }
 
+// React 17 has no `useId`, so the fallback generates `mui-<number>` ids.
+const ID_PREFIX = reactMajor >= 18 ? '[«|:|_]\\w+[»|:|_]' : 'mui-\\d+';
+
 describe('useChartGradientId', () => {
   const { render } = createRenderer();
 
@@ -23,7 +26,7 @@ describe('useChartGradientId', () => {
       </ChartsDataProvider>,
     );
 
-    expect(screen.getByText(/[«|:|_]\w+[»|:|_]-gradient-test-id/)).toBeVisible();
+    expect(screen.getByText(new RegExp(`${ID_PREFIX}-gradient-test-id`))).toBeVisible();
   });
 
   describe('useChartGradientIdObjectBound', () => {
@@ -34,7 +37,9 @@ describe('useChartGradientId', () => {
         </ChartsDataProvider>,
       );
 
-      expect(screen.getByText(/[«|:|_]\w+[»|:|_]-gradient-test-id-object-bound/)).toBeVisible();
+      expect(
+        screen.getByText(new RegExp(`${ID_PREFIX}-gradient-test-id-object-bound`)),
+      ).toBeVisible();
     });
   });
 });

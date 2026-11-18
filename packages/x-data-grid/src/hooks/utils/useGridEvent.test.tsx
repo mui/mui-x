@@ -70,7 +70,8 @@ describe('useGridEvent', () => {
       // unable to unsubscribe the last listener using the cleanup function.
       // Since React 19, StrictMode works differently
       // https://react.dev/blog/2024/04/25/react-19-upgrade-guide#strict-mode-improvements
-      const expectedCallCount = reactMajor >= 19 ? 2 : 3;
+      // React 17 StrictMode does not replay effects.
+      const expectedCallCount = reactMajor === 18 ? 3 : 2;
       expect(apiRef.current.subscribeEvent.mock.calls.length).to.equal(expectedCallCount);
 
       unmount();

@@ -28,19 +28,26 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
   describe.skipIf(componentFamily !== 'field' || !setValue)('text field keyboard:', () => {
     const setValue = getOptions().setValue!;
 
+    // One `act()` per field: inside `act()`, React 17 defers the controlled input update,
+    // so the second change would read a stale value.
+    const setStartAndEndValues = (start: any, end: any) => {
+      act(() => {
+        setValue(start);
+      });
+      act(() => {
+        setValue(end, { setEndDate: true });
+      });
+    };
+
     it('should not accept end date prior to start state', () => {
       const onErrorMock = vi.fn();
       render(<ElementToTest onError={onErrorMock} />);
 
       expect(onErrorMock.mock.calls.length).to.equal(0);
-      act(() => {
-        [
-          adapterToUse.date('2018-01-02T12:00:00'),
-          adapterToUse.date('2018-01-01T11:00:00'),
-        ].forEach((date, index) => {
-          setValue(date, { setEndDate: index === 1 });
-        });
-      });
+      setStartAndEndValues(
+        adapterToUse.date('2018-01-02T12:00:00'),
+        adapterToUse.date('2018-01-01T11:00:00'),
+      );
       expect(onErrorMock.mock.calls.length).to.equal(1);
       expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['invalidRange', 'invalidRange']);
       testInvalidStatus([true, true], fieldType);
@@ -56,13 +63,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
           }
         />,
       );
-      act(() => {
-        [adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')].forEach(
-          (date, index) => {
-            setValue(date, { setEndDate: index === 1 });
-          },
-        );
-      });
+      setStartAndEndValues(adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10'));
 
       expect(onErrorMock.mock.calls.length).to.equal(0);
       testInvalidStatus([false, false], fieldType);
@@ -191,13 +192,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       const onErrorMock = vi.fn();
       render(<ElementToTest onError={onErrorMock} minDate={adapterToUse.date('2018-03-15')} />);
 
-      act(() => {
-        [adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')].forEach(
-          (date, index) => {
-            setValue(date, { setEndDate: index === 1 });
-          },
-        );
-      });
+      setStartAndEndValues(adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10'));
 
       expect(onErrorMock.mock.calls.length).to.equal(2);
       expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['minDate', 'minDate']);
@@ -224,13 +219,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       const onErrorMock = vi.fn();
       render(<ElementToTest onError={onErrorMock} maxDate={adapterToUse.date('2018-03-15')} />);
 
-      act(() => {
-        [adapterToUse.date('2018-03-15'), adapterToUse.date('2018-03-17')].forEach(
-          (date, index) => {
-            setValue(date, { setEndDate: index === 1 });
-          },
-        );
-      });
+      setStartAndEndValues(adapterToUse.date('2018-03-15'), adapterToUse.date('2018-03-17'));
 
       expect(onErrorMock.mock.calls.length).to.equal(1);
       expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal([null, 'maxDate']);
@@ -251,14 +240,10 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
         <ElementToTest onError={onErrorMock} minTime={adapterToUse.date('2018-03-10T12:00:00')} />,
       );
 
-      act(() => {
-        [
-          adapterToUse.date('2018-03-10T09:00:00'),
-          adapterToUse.date('2018-03-10T10:00:00'),
-        ].forEach((date, index) => {
-          setValue(date, { setEndDate: index === 1 });
-        });
-      });
+      setStartAndEndValues(
+        adapterToUse.date('2018-03-10T09:00:00'),
+        adapterToUse.date('2018-03-10T10:00:00'),
+      );
 
       expect(onErrorMock.mock.calls.length).to.equal(2);
       expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['minTime', 'minTime']);
@@ -287,14 +272,10 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
         <ElementToTest onError={onErrorMock} maxTime={adapterToUse.date('2018-03-10T12:00:00')} />,
       );
 
-      act(() => {
-        [
-          adapterToUse.date('2018-03-10T09:00:00'),
-          adapterToUse.date('2018-03-10T12:15:00'),
-        ].forEach((date, index) => {
-          setValue(date, { setEndDate: index === 1 });
-        });
-      });
+      setStartAndEndValues(
+        adapterToUse.date('2018-03-10T09:00:00'),
+        adapterToUse.date('2018-03-10T12:15:00'),
+      );
 
       expect(onErrorMock.mock.calls.length).to.equal(1);
       expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal([null, 'maxTime']);

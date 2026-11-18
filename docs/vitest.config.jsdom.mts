@@ -1,5 +1,5 @@
 import { mergeConfig, defineProject } from 'vitest/config';
-import sharedConfig from '../vitest.shared.mts';
+import sharedConfig, { REACT_MAJOR } from '../vitest.shared.mts';
 import { getTestName } from '../scripts/getTestName.mts';
 
 export default mergeConfig(
@@ -8,6 +8,8 @@ export default mergeConfig(
     test: {
       name: getTestName(import.meta.url),
       environment: 'jsdom',
+      // The docs need React 18+ and do not ship, so the React 17 jobs skip their tests.
+      exclude: REACT_MAJOR < 18 ? ['**'] : [],
     },
   }),
 );

@@ -1,6 +1,13 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  waitFor,
+  reactMajor,
+} from '@mui/internal-test-utils';
 import type { RefObject } from '@mui/x-internals/types';
 import {
   useGridApiRef,
@@ -58,10 +65,12 @@ describe('<DataGridPro /> - Columns', () => {
       expect(screen.queryByRole('menu')).to.equal(null);
       await act(() => apiRef.current?.showColumnMenu('brand'));
       const menu = screen.getByRole('menu');
+      // React 17 has no `useId`, so the fallback generates `mui-<number>` ids.
+      const idPattern = reactMajor >= 18 ? /[«|:|_]r_?[0-9a-z]+[»|:|_]/ : /mui-\d+/;
       await waitFor(() => {
-        expect(menu.id).to.match(/[«|:|_]r_?[0-9a-z]+[»|:|_]/);
+        expect(menu.id).to.match(idPattern);
       });
-      expect(menu.getAttribute('aria-labelledby')).to.match(/[«|:|_]r_?[0-9a-z]+[»|:|_]/);
+      expect(menu.getAttribute('aria-labelledby')).to.match(idPattern);
     });
   });
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, act, fireEvent, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, act, fireEvent, waitFor, reactMajor } from '@mui/internal-test-utils';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import type { RefObject } from '@mui/x-internals/types';
 import {
@@ -416,7 +416,8 @@ describe('<DataGridPro /> - Rows', () => {
       }
 
       render(<Test />);
-      const initialRendersCount = 2;
+      // React 17 renders the cell once more on mount.
+      const initialRendersCount = reactMajor >= 18 ? 2 : 4;
       expect(renderCellSpy.mock.calls.length).to.equal(initialRendersCount);
 
       act(() => apiRef.current?.updateRows([{ id: 1, name: 'John' }]));
