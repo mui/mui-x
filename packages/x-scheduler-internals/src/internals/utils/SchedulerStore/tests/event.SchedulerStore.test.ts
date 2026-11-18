@@ -19,6 +19,7 @@ import type {
 import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
 import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import { vi, describe, it, expect } from 'vitest';
 import { schedulerEventSelectors } from '../../../../scheduler-selectors';
 
@@ -2904,6 +2905,94 @@ premiumStoreClasses.forEach((storeClass) => {
             processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
           ).not.to.throw();
         });
+      });
+
+      it('should keep the last day of an all-day series with a date-time until made timed in another timezone', () => {
+        const onEventsChange = vi.fn();
+        // Its until, 03:00 UTC on July 9th, is July 8th in New York: the series ends on July 8th.
+        const event = EventBuilder.new()
+          .id('trip')
+          .withDataTimezone('America/New_York')
+          .span('2025-07-04', '2025-07-05', { allDay: true })
+          .rrule({ freq: 'DAILY', until: '2025-07-09T03:00:00Z' })
+          .build();
+        const createStore = () =>
+          new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'Asia/Tokyo',
+            onEventsChange,
+          });
+        clearWarningsCache();
+        let store!: ReturnType<typeof createStore>;
+        expect(() => {
+          store = createStore();
+        }).toWarnDev('of the recurrence rule of an all-day event is not a date.');
+
+        store.updateRecurringEvent({
+          occurrence: createStoreOccurrence(
+            store,
+            'trip',
+            createDate('2025-07-04T00:00:00', 'Asia/Tokyo'),
+          ),
+          changes: {
+            id: 'trip',
+            allDay: false,
+            start: createDate('2025-07-04T09:00:00', 'Asia/Tokyo'),
+            end: createDate('2025-07-04T10:00:00', 'Asia/Tokyo'),
+          },
+        });
+        store.selectRecurringEventScope('all');
+
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated.timezone).to.equal('Asia/Tokyo');
+        expect((updated.rrule as SchedulerEventRecurrenceRule).until).to.equal(
+          '2025-07-08T23:59:59',
+        );
+      });
+
+      it('should keep the last day of an all-day RRULE string with a date-time until made timed in another timezone', () => {
+        const onEventsChange = vi.fn();
+        // 00:00 UTC on July 19th is July 18th in New York: the series ends on Friday, July 18th.
+        const event: SchedulerEvent = {
+          ...EventBuilder.new()
+            .id('review')
+            .withDataTimezone('America/New_York')
+            .span('2025-07-04', '2025-07-05', { allDay: true })
+            .build(),
+          rrule: 'FREQ=WEEKLY;BYDAY=FR;UNTIL=20250719T000000Z',
+        };
+        const createStore = () =>
+          new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'America/Los_Angeles',
+            onEventsChange,
+          });
+        clearWarningsCache();
+        let store!: ReturnType<typeof createStore>;
+        expect(() => {
+          store = createStore();
+        }).toWarnDev('of the recurrence rule of an all-day event is not a date.');
+
+        store.updateRecurringEvent({
+          occurrence: createStoreOccurrence(
+            store,
+            'review',
+            createDate('2025-07-11T00:00:00', 'America/Los_Angeles'),
+          ),
+          changes: {
+            id: 'review',
+            allDay: false,
+            start: createDate('2025-07-11T18:00:00', 'America/Los_Angeles'),
+            end: createDate('2025-07-11T19:00:00', 'America/Los_Angeles'),
+          },
+        });
+        store.selectRecurringEventScope('all');
+
+        // The last instant of July 18th in Los Angeles, after its occurrence at 18:00.
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated.rrule).to.equal('FREQ=WEEKLY;BYDAY=FR;UNTIL=20250719T065959Z');
       });
 
       it("should keep the RRULE string of a timed series made all-day with scope 'all'", () => {

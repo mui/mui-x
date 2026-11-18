@@ -73,7 +73,7 @@ export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
 
   /**
    * The timezone of the event, which its recurrence rule and exception dates are read in.
-   * Ignored for all-day events.
+   * An all-day event only uses it to read a date-time `until` as its date.
    */
   timezone: string;
 
@@ -179,8 +179,8 @@ export interface SchedulerEvent {
    * Accepts any valid IANA timezone name
    * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
    * "default" (the timezone of the system), or "UTC".
-   * Ignored for all-day events, which cover the same days in every timezone. An all-day event made
-   * timed takes the display timezone.
+   * All-day events cover the same days in every timezone: they only use it to read a date-time
+   * `until` as its date. An all-day event made timed takes the display timezone.
    * @default "default"
    */
   timezone?: string;

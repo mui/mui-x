@@ -51,7 +51,7 @@ const event = {
 
 The occurrences the Scheduler provides end at the start of the day after the last day too: see [Reading occurrence dates](/x/react-scheduler/timezone/#reading-occurrence-dates).
 The `exDates` and the `until` of the rule of a recurring all-day event are dates as well.
-The `timezone` property of an all-day event has no effect: when the event becomes timed, its `timezone` becomes the display timezone.
+The `timezone` property of an all-day event doesn't move its dates: it's only used to read a date-time `until` as its date. When the event becomes timed, its `timezone` becomes the display timezone.
 A timed event made all-day without new dates keeps the dates of its timezone: its recurrence rule and exception dates stay valid, and a date-time `until` becomes the last date it covers.
 
 The Scheduler throws when an all-day event does not follow this format:

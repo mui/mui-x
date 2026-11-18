@@ -66,27 +66,35 @@ export const ALL_DAY_IGNORED_RRULE_KEYS: ReadonlySet<string> = new Set([
 ]);
 
 /**
- * The rule of an all-day event made timed: a date `until` is written as the last instant of that
- * date in `timezone`, the timezone the event is written in, and the time parts an all-day RRULE
- * string ignores are dropped.
+ * The rule of an all-day event made timed: the date of its `until` is written as the last instant
+ * of that date in `timezone`, the timezone the event is written in, and the time parts an all-day
+ * RRULE string ignores are dropped. A date-time `until` counts by its date in `dataTimezone`, like
+ * the all-day series reads it.
  */
 function getTimedRRule(
   rrule: NonNullable<SchedulerEvent['rrule']>,
   start: string,
+  dataTimezone: string,
   timezone: string,
 ): NonNullable<SchedulerEvent['rrule']> {
   if (typeof rrule === 'object') {
-    if (rrule.until == null || !isDateOnlyString(rrule.until)) {
+    if (rrule.until == null) {
       return rrule;
     }
-    const until = BaseTemporal.PlainDate.from(rrule.until);
+    const until = isDateOnlyString(rrule.until)
+      ? BaseTemporal.PlainDate.from(rrule.until)
+      : toPlainDate(resolveEventTimestamp(rrule.until, dataTimezone), dataTimezone);
     return { ...rrule, until: untilToEventString(until, start, timezone, false) };
   }
   const parts = rrule.split(';');
   const timedParts = parts.filter(
     (part) => !ALL_DAY_IGNORED_RRULE_KEYS.has(part.split('=')[0].trim().toUpperCase()),
   );
-  const timedRRule = timedParts.length === parts.length ? rrule : timedParts.join(';');
+  const timedRRule = replaceDateTimeUntil(
+    timedParts.length === parts.length ? rrule : timedParts.join(';'),
+    dataTimezone,
+    (until) => until.toPlainDate(),
+  );
   return timedRRule.replace(UNTIL_DATE_REGEX, (match, prefix, year, month, day) => {
     const until = BaseTemporal.PlainDate.from({ year: +year, month: +month, day: +day });
     const lastSecond = Math.floor((toEpochMs(until.add({ days: 1 }), timezone) - 1) / 1000);
@@ -187,7 +195,12 @@ export function stringifyEventDateChanges(
       !Object.prototype.hasOwnProperty.call(changes, 'rrule')
     ) {
       // In the timezone the written wall times are read in, a given one included.
-      const rrule = getTimedRRule(model.rrule, model.start, changes.timezone ?? timezone);
+      const rrule = getTimedRRule(
+        model.rrule,
+        model.start,
+        dataTimezone,
+        changes.timezone ?? timezone,
+      );
       if (rrule !== model.rrule) {
         result.rrule = rrule;
       }
