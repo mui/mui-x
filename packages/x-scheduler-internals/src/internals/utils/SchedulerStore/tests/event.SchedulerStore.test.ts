@@ -13,8 +13,11 @@ import type {
   SchedulerEvent,
   SchedulerEventId,
   SchedulerEventModelStructure,
+  SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
 import { createProcessedDate } from '@mui/x-scheduler-internals/process-date';
+import { processEvent } from '@mui/x-scheduler-internals/process-event';
+import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { vi, describe, it, expect } from 'vitest';
 import { schedulerEventSelectors } from '../../../../scheduler-selectors';
 
@@ -162,8 +165,8 @@ storeClasses.forEach((storeClass) => {
         store.updateEvent({
           id: '1',
           title: 'Event 1 updated',
-          start: createDate('2025-07-01T09:30:00.000Z').getTime(),
-          end: createDate('2025-07-01T10:30:00.000Z').getTime(),
+          start: createDate('2025-07-01T00:00:00.000Z').getTime(),
+          end: createDate('2025-07-02T00:00:00.000Z').getTime(),
           allDay: true,
         });
 
@@ -173,8 +176,8 @@ storeClasses.forEach((storeClass) => {
           {
             myId: '1',
             myTitle: 'Event 1 updated',
-            myStart: '2025-07-01T09:30:00.000Z',
-            myEnd: '2025-07-01T10:30:00.000Z',
+            myStart: '2025-07-01',
+            myEnd: '2025-07-02',
             allDay: true,
           },
         ]);
@@ -378,17 +381,16 @@ storeClasses.forEach((storeClass) => {
             displayTimezone: 'America/New_York',
             onEventsChange,
           });
-          const dataStart = new Date(
-            schedulerEventSelectors.processedEvent(store.state, '1')!.unstable_internalInfos
-              .dataStart,
+          const start = new Date(
+            schedulerEventSelectors.processedEvent(store.state, '1')!.start.timestamp,
           );
 
           let result: ReturnType<typeof store.updateEvent>;
           expect(() => {
             result = store.updateEvent({
               id: '1',
-              start: dataStart.getTime(),
-              end: addDays(dataStart, 2).getTime(),
+              start: start.getTime(),
+              end: addDays(start, 2).getTime(),
             });
           }).toWarnDev([
             `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON_START}`,
@@ -530,12 +532,12 @@ storeClasses.forEach((storeClass) => {
           store.cutEvent('1');
 
           expect(() => {
-            store.pasteEvent({ allDay: true });
+            store.pasteEvent({ resource: null });
           }).not.toWarnDev();
 
           expect(onEventsChange.mock.calls.length).to.equal(1);
           expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
-            { ...unchangedEvent, allDay: true },
+            { ...unchangedEvent, resource: null },
           ]);
         });
 
@@ -1739,6 +1741,7 @@ storeClasses.forEach((storeClass) => {
           allDay: true,
         });
 
+        // A timed event pasted as all-day covers its own day.
         expect(onEventsChange.mock.calls.length).to.equal(1);
         expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
           event,
@@ -1746,6 +1749,8 @@ storeClasses.forEach((storeClass) => {
             ...event,
             id: createdEventId,
             allDay: true,
+            start: '2025-07-03',
+            end: '2025-07-04',
             extractedFromId: event.id,
           },
         ]);
@@ -1819,12 +1824,15 @@ storeClasses.forEach((storeClass) => {
           allDay: true,
         });
 
+        // A timed event pasted as all-day covers its own day.
         expect(onEventsChange.mock.calls.length).to.equal(1);
         expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
           {
             ...event,
             id: createdEventId,
             allDay: true,
+            start: '2025-07-03',
+            end: '2025-07-04',
           },
         ]);
       });
@@ -1940,10 +1948,10 @@ storeClasses.forEach((storeClass) => {
           store.cutEvent('1');
 
           expect(() => {
-            store.pasteEvent({ allDay: true });
+            store.pasteEvent({ resource: null });
           }).not.toWarnDev();
 
-          expect(onEventsChange.mock.lastCall?.[0][0].allDay).to.equal(true);
+          expect(onEventsChange.mock.lastCall?.[0][0].resource).to.equal(null);
         });
 
         // A copy never touches the source event, so its own `readOnly` flag doesn't gate it.
@@ -2146,6 +2154,299 @@ storeClasses.forEach((storeClass) => {
       );
     });
 
+    describe('all-day events', () => {
+      it('should write an all-day update as dates in the display timezone with an exclusive end', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-05', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+
+        store.updateEvent({
+          id: 'trip',
+          start: createDate('2025-07-10T00:00:00', 'Asia/Tokyo').getTime(),
+          end: createDate('2025-07-12T00:00:00', 'Asia/Tokyo').getTime(),
+        });
+
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated.start).to.equal('2025-07-10');
+        expect(updated.end).to.equal('2025-07-12');
+        expect(processEvent(updated, 'Asia/Tokyo').start.plainDateTime.toString()).to.equal(
+          '2025-07-10T00:00:00',
+        );
+      });
+
+      it('should create an all-day event from dates read in the display timezone', () => {
+        const onEventsChange = vi.fn();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          displayTimezone: 'America/New_York',
+          onEventsChange,
+        });
+
+        store.createEvent({
+          title: 'Trip',
+          allDay: true,
+          start: createDate('2025-07-04T00:00:00', 'America/New_York').getTime(),
+          end: createDate('2025-07-05T00:00:00', 'America/New_York').getTime(),
+        });
+
+        const created: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(created.start).to.equal('2025-07-04');
+        expect(created.end).to.equal('2025-07-05');
+      });
+
+      it('should keep date-only creation strings as they are', () => {
+        const onEventsChange = vi.fn();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          displayTimezone: 'America/New_York',
+          onEventsChange,
+        });
+
+        store.createEvent({ title: 'Trip', allDay: true, start: '2025-07-04', end: '2025-07-05' });
+
+        const created: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(created.start).to.equal('2025-07-04');
+        expect(created.end).to.equal('2025-07-05');
+      });
+
+      it('should refuse an all-day timestamp that is not the first instant of a day', () => {
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [],
+          displayTimezone: 'America/New_York',
+          onEventsChange: vi.fn(),
+        });
+
+        // `new Date('YYYY-MM-DD')` is midnight in UTC: 20:00 of the previous day in New York.
+        expect(() =>
+          store.createEvent({
+            title: 'Trip',
+            allDay: true,
+            start: new Date('2025-07-04').getTime(),
+            end: new Date('2025-07-06').getTime(),
+          }),
+        ).to.throw(/first instant of a day/);
+      });
+
+      it('should refuse the inclusive end of the last day of an all-day event', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-06', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+
+        expect(() =>
+          store.updateEvent({ id: 'trip', end: createDate('2025-07-05T23:59:59.999Z').getTime() }),
+        ).to.throw(/first instant of a day/);
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+      });
+
+      it('should paste an all-day event on the pasted day with its day count', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+        store.copyEvent('trip');
+
+        store.pasteEvent({ start: createDate('2025-07-20T00:00:00').getTime() });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.start).to.equal('2025-07-20');
+        expect(pasted.end).to.equal('2025-07-23');
+      });
+
+      it('should paste an all-day event on the pasted day of the display timezone', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+        store.copyEvent('trip');
+
+        store.pasteEvent({ start: createDate('2025-07-20T00:00:00', 'Asia/Tokyo').getTime() });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.start).to.equal('2025-07-20');
+        expect(pasted.end).to.equal('2025-07-23');
+      });
+
+      it('should paste a timed event as a one-day all-day event', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new().id('standup').singleDay('2025-07-04T09:00:00Z').build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+        store.copyEvent('standup');
+
+        store.pasteEvent({ start: createDate('2025-07-20T00:00:00').getTime(), allDay: true });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.allDay).to.equal(true);
+        expect(pasted.start).to.equal('2025-07-20');
+        expect(pasted.end).to.equal('2025-07-21');
+      });
+
+      it('should paste a timed event as an all-day event on its own day when no start is given', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new().id('standup').singleDay('2025-07-04T09:00:00Z').build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+        store.cutEvent('standup');
+
+        store.pasteEvent({ allDay: true });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(pasted.allDay).to.equal(true);
+        expect(pasted.start).to.equal('2025-07-04');
+        expect(pasted.end).to.equal('2025-07-05');
+      });
+
+      it('should paste an all-day event as a timed event with the default duration', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          eventCreation: { duration: 60 },
+          onEventsChange,
+        });
+        store.copyEvent('trip');
+
+        store.pasteEvent({ start: createDate('2025-07-20T14:00:00').getTime(), allDay: false });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.allDay).to.equal(false);
+        expect(pasted.start).to.equal('2025-07-20T14:00:00');
+        expect(pasted.end).to.equal('2025-07-20T15:00:00');
+      });
+
+      it('should paste an all-day event as a timed event on its first day of the display timezone when no start is given', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+        store.cutEvent('trip');
+
+        store.pasteEvent({ allDay: false });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(Boolean(pasted.allDay)).to.equal(false);
+        expect(pasted.timezone).to.equal('Asia/Tokyo');
+        expect(pasted.start).to.equal('2025-07-04T00:00:00');
+        expect(pasted.end).to.equal('2025-07-04T00:30:00');
+      });
+
+      it('should refuse to paste a cut read-only all-day event as a timed event', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .readOnly()
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+        store.cutEvent('trip');
+
+        expect(() => {
+          expect(store.pasteEvent({ allDay: false })).to.equal(null);
+        }).toWarnDev([
+          `MUI X Scheduler: The event with id="trip" was not pasted.\n${READ_ONLY_EVENT_REASON}`,
+        ]);
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+      });
+
+      it('should make an all-day event timed on its displayed days in the display timezone', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('holiday')
+          .withDataTimezone('America/New_York')
+          .span('2025-07-04', '2025-07-05', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+
+        store.updateEvent({ id: 'holiday', allDay: false });
+
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated).not.to.have.property('allDay');
+        expect(updated.timezone).to.equal('Asia/Tokyo');
+        expect(updated.start).to.equal('2025-07-04T00:00:00');
+        expect(updated.end).to.equal('2025-07-05T00:00:00');
+      });
+
+      it('should duplicate an all-day occurrence as dates', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('trip')
+          .span('2025-07-04', '2025-07-07', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+
+        store.duplicateEventOccurrence(
+          'trip',
+          createDate('2025-07-20T00:00:00').getTime(),
+          createDate('2025-07-23T00:00:00').getTime(),
+        );
+
+        const duplicated: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(duplicated.start).to.equal('2025-07-20');
+        expect(duplicated.end).to.equal('2025-07-23');
+      });
+    });
+
     describe('dev warnings', () => {
       it('should warn in dev when events are updated without onEventsChange nor dataSource', () => {
         const event = EventBuilder.new().build();
@@ -2165,7 +2466,272 @@ storeClasses.forEach((storeClass) => {
 // plugin, so the community store is not expected to honor it.
 premiumStoreClasses.forEach((storeClass) => {
   describe(`Event - ${storeClass.name}`, () => {
+    describe('Method: pasteEvent', () => {
+      it('should paste a copy of a timed series as an all-day series with its exceptions as dates', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('standup')
+          .withDataTimezone('UTC')
+          .singleDay('2025-07-04T09:00:00Z')
+          .rrule({ freq: 'DAILY' })
+          .exDates(['2025-07-05T09:00:00Z'])
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'UTC',
+          onEventsChange,
+        });
+        store.copyEvent('standup');
+
+        store.pasteEvent({ allDay: true });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.allDay).to.equal(true);
+        expect(pasted.start).to.equal('2025-07-04');
+        expect(pasted.end).to.equal('2025-07-05');
+        expect(pasted.exDates).to.deep.equal(['2025-07-05']);
+        expect(() => processEvent(pasted, 'UTC', schedulerRecurringEventsPlugin)).not.to.throw();
+      });
+
+      it('should paste a timed series as an all-day series on the days of its timezone', () => {
+        const onEventsChange = vi.fn();
+        // Fridays at 20:00 in New York are Saturdays in Tokyo: the series stays on Fridays.
+        const event = EventBuilder.new()
+          .id('standup')
+          .withDataTimezone('America/New_York')
+          .singleDay('2025-07-04T20:00:00')
+          .rrule({ freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-25T20:00:00' })
+          .exDates(['2025-07-11T20:00:00'])
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+        store.copyEvent('standup');
+
+        store.pasteEvent({ allDay: true });
+
+        const pasted: SchedulerEvent = onEventsChange.mock.lastCall![0][1];
+        expect(pasted.start).to.equal('2025-07-04');
+        expect(pasted.end).to.equal('2025-07-05');
+        // The stored until is read as its day in the event timezone, July 25th.
+        expect(pasted.rrule).to.deep.equal(event.rrule);
+        expect(pasted.exDates).to.deep.equal(['2025-07-11']);
+      });
+    });
+
     describe('Method: updateRecurringEvent', () => {
+      it('should rewrite the exception dates when an update makes a series all-day', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('standup')
+          .withDataTimezone('UTC')
+          .singleDay('2025-07-04T09:00:00Z')
+          .rrule({ freq: 'DAILY' })
+          .exDates(['2025-07-11T09:00:00Z'])
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'UTC',
+          onEventsChange,
+        });
+
+        store.updateRecurringEvent({
+          occurrence: createStoreOccurrence(store, 'standup', createDate('2025-07-04T09:00:00Z')),
+          changes: {
+            id: 'standup',
+            allDay: true,
+            start: createDate('2025-07-04T00:00:00', 'UTC').getTime(),
+            end: createDate('2025-07-05T00:00:00', 'UTC').getTime(),
+          },
+        });
+        store.selectRecurringEventScope('all');
+
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated.allDay).to.equal(true);
+        expect(updated.start).to.equal('2025-07-04');
+        expect(updated.end).to.equal('2025-07-05');
+        expect(updated.exDates).to.deep.equal(['2025-07-11']);
+        expect(() => processEvent(updated, 'UTC', schedulerRecurringEventsPlugin)).not.to.throw();
+      });
+
+      it('should keep the last day of an all-day series made timed in another timezone', () => {
+        const onEventsChange = vi.fn();
+        // Its until, 03:00 UTC on July 9th, is July 8th in New York: the series ends on July 8th.
+        const event = EventBuilder.new()
+          .id('trip')
+          .withDataTimezone('America/New_York')
+          .span('2025-07-04', '2025-07-05', { allDay: true })
+          .rrule({ freq: 'DAILY', until: '2025-07-09T03:00:00Z' })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+
+        store.updateRecurringEvent({
+          occurrence: createStoreOccurrence(
+            store,
+            'trip',
+            createDate('2025-07-04T00:00:00', 'Asia/Tokyo'),
+          ),
+          changes: {
+            id: 'trip',
+            allDay: false,
+            start: createDate('2025-07-04T09:00:00', 'Asia/Tokyo').getTime(),
+            end: createDate('2025-07-04T10:00:00', 'Asia/Tokyo').getTime(),
+          },
+        });
+        store.selectRecurringEventScope('all');
+
+        // In Tokyo, 03:00 UTC on July 9th is 12:00, after the occurrence of July 9th at 09:00:
+        // the until is written as the date it meant.
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated.timezone).to.equal('Asia/Tokyo');
+        expect(updated.rrule).to.deep.equal({ freq: 'DAILY', until: '2025-07-08' });
+        expect(() =>
+          processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
+        ).not.to.throw();
+      });
+
+      it('should make a series all-day on the days of its timezone when no day is given', () => {
+        const onEventsChange = vi.fn();
+        // Fridays at 20:00 in New York, until July 18th, are Saturdays in Tokyo.
+        const event = EventBuilder.new()
+          .id('standup')
+          .withDataTimezone('America/New_York')
+          .singleDay('2025-07-04T20:00:00')
+          .rrule({ freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-18T20:00:00' })
+          .exDates(['2025-07-11T20:00:00'])
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          displayTimezone: 'Asia/Tokyo',
+          onEventsChange,
+        });
+
+        store.updateRecurringEvent({
+          occurrence: createStoreOccurrence(
+            store,
+            'standup',
+            createDate('2025-07-18T20:00:00', 'America/New_York'),
+          ),
+          changes: { id: 'standup', allDay: true },
+        });
+        store.selectRecurringEventScope('all');
+
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated.start).to.equal('2025-07-04');
+        expect(updated.end).to.equal('2025-07-05');
+        // The rule is untouched: its until is read as its day in the event timezone, July 18th.
+        expect(updated.rrule).to.deep.equal(event.rrule);
+        expect(updated.exDates).to.deep.equal(['2025-07-11']);
+        expect(() =>
+          processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
+        ).not.to.throw();
+      });
+
+      (['all', 'this-and-following'] as const).forEach((scope) => {
+        it(`should make a series all-day on its displayed days when a day is given with scope '${scope}'`, () => {
+          const onEventsChange = vi.fn();
+          // Fridays at 08:00 in Tokyo are Thursdays in New York; July 18th is July 17th there.
+          const event = EventBuilder.new()
+            .id('standup')
+            .withDataTimezone('Asia/Tokyo')
+            .singleDay('2025-07-04T08:00:00')
+            .rrule({ freq: 'WEEKLY', byDay: ['FR'] })
+            .exDates(['2025-07-18T08:00:00'])
+            .build();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'America/New_York',
+            onEventsChange,
+          });
+
+          // The occurrence shown on Thursday, July 10th, dropped on the all-day row of that day.
+          store.updateRecurringEvent({
+            occurrence: createStoreOccurrence(
+              store,
+              'standup',
+              createDate('2025-07-11T08:00:00', 'Asia/Tokyo'),
+            ),
+            changes: {
+              id: 'standup',
+              allDay: true,
+              start: createDate('2025-07-10T00:00:00', 'America/New_York').getTime(),
+              end: createDate('2025-07-11T00:00:00', 'America/New_York').getTime(),
+            },
+          });
+          store.selectRecurringEventScope(scope);
+
+          const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+          const updated = updatedEvents.find((item) =>
+            scope === 'all' ? item.id === 'standup' : item.id !== 'standup',
+          )!;
+          expect(updated.start).to.equal(scope === 'all' ? '2025-07-03' : '2025-07-10');
+          expect((updated.rrule as SchedulerEventRecurrenceRule).byDay).to.deep.equal(['TH']);
+          expect(updated.exDates).to.deep.equal(['2025-07-17']);
+        });
+
+        (
+          [
+            { freq: 'WEEKLY', byDay: ['FR'], until: '2025-07-25' },
+            'FREQ=WEEKLY;BYDAY=FR;UNTIL=20250726T030000Z',
+          ] as const
+        ).forEach((rrule) => {
+          it(`should move the last day of a series made all-day on a given day with scope '${scope}' and the rule ${JSON.stringify(rrule)}`, () => {
+            const onEventsChange = vi.fn();
+            // Fridays at 23:00 in New York until July 25th are Saturdays in Tokyo, until July 26th.
+            const event: SchedulerEvent = {
+              ...EventBuilder.new()
+                .id('standup')
+                .withDataTimezone('America/New_York')
+                .singleDay('2025-07-04T23:00:00')
+                .build(),
+              rrule: rrule as SchedulerEvent['rrule'],
+            };
+            const store = new storeClass.Value({
+              resources: TEST_RESOURCES,
+              events: [event],
+              displayTimezone: 'Asia/Tokyo',
+              onEventsChange,
+            });
+
+            // The occurrence shown on Saturday, July 12th, dropped on the all-day row of that day.
+            store.updateRecurringEvent({
+              occurrence: createStoreOccurrence(
+                store,
+                'standup',
+                createDate('2025-07-11T23:00:00', 'America/New_York'),
+              ),
+              changes: {
+                id: 'standup',
+                allDay: true,
+                start: createDate('2025-07-12T00:00:00', 'Asia/Tokyo').getTime(),
+                end: createDate('2025-07-13T00:00:00', 'Asia/Tokyo').getTime(),
+              },
+            });
+            store.selectRecurringEventScope(scope);
+
+            const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+            const updated = updatedEvents.find((item) =>
+              scope === 'all' ? item.id === 'standup' : item.id !== 'standup',
+            )!;
+            const processed = processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin);
+            expect(processed.rrule!.byDay).to.deep.equal(['SA']);
+            expect(processed.rrule!.until!.toString()).to.match(/^2025-07-26/);
+          });
+        });
+      });
+
       it('should keep the stored BYMONTHDAY when only the count changes from another timezone', () => {
         // The rule is passed through as is: saving it with a new count keeps the 3rd.
         const event = utcJuly4AllDayBuilder()

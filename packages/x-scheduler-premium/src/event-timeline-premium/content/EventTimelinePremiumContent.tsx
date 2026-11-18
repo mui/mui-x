@@ -476,6 +476,33 @@ const HeaderRowContent = React.forwardRef<HTMLDivElement, { showCurrentTimeIndic
   },
 );
 
+function EventTimelinePremiumResourceRow(props: {
+  resourceId: SchedulerResourceId;
+  index: number;
+  children: React.ReactNode;
+}) {
+  const { resourceId, index, children } = props;
+  const store = useEventTimelinePremiumStoreContext();
+  const hasNestedResources = useStore(store, schedulerResourceSelectors.hasNestedResources);
+  const depth = useStore(store, schedulerResourceSelectors.resourceDepth, resourceId);
+  const hasVisibleChildren = useStore(
+    store,
+    schedulerResourceSelectors.resourceHasVisibleChildren,
+    resourceId,
+  );
+  const isCollapsed = useStore(store, schedulerResourceSelectors.isResourceCollapsed, resourceId);
+
+  return (
+    <EventTimelinePremiumBodyRow
+      index={index}
+      aria-level={hasNestedResources ? depth + 1 : undefined}
+      aria-expanded={hasVisibleChildren ? !isCollapsed : undefined}
+    >
+      {children}
+    </EventTimelinePremiumBodyRow>
+  );
+}
+
 function FillerRow() {
   const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
   const pinnedLeftOffset = virtualizerStore.use(Virtualization.selectors.pinnedLeftOffsetSelector);
@@ -713,7 +740,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
 
   const renderRow = React.useCallback(
     ({ id, rowIndex }: { id: any; rowIndex: number }) => (
-      <EventTimelinePremiumBodyRow key={id} index={rowIndex}>
+      <EventTimelinePremiumResourceRow key={id} resourceId={id} index={rowIndex}>
         <EventTimelinePremiumTitleCell resourceId={id} />
         <div role="none" style={{ width: titleColumnWidth }} />
         <EventTimelinePremiumEventsCell resourceId={id} className={classes.eventsCell}>
@@ -722,7 +749,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
           )}
         </EventTimelinePremiumEventsCell>
         <EventTimelinePremiumBodyRowFiller role="none" />
-      </EventTimelinePremiumBodyRow>
+      </EventTimelinePremiumResourceRow>
     ),
     [classes.eventsCell, titleColumnWidth],
   );
@@ -923,6 +950,9 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
             <EventTimelinePremiumGrid
               className={classes.grid}
               {...scrollerProps}
+              // Overrides the scroller's `presentation` role. Nested resources form a tree:
+              // rows carry `aria-level` and `aria-expanded`.
+              role={hasNestedResources ? 'treegrid' : 'grid'}
               ref={gridMergedRef}
               onKeyDown={handleEventTabKeyDown}
               scrollRowIntoView={scrollRowIntoView}

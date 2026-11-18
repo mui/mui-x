@@ -50,11 +50,16 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
   const weekInfo = useStore(store, eventCalendarPreferenceSelectors.weekInfo);
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
-  const occurrences = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap, maxEvents });
+  const occurrences = useEventOccurrencesWithDayGridPosition({
+    days,
+    occurrencesMap,
+    maxEvents,
+    displayTimezone,
+  });
   const weekNumber = getWeekNumber(days[0].plainDate, weekInfo);
 
-  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   // `days[0].timestamp` is the first instant of the first day.
   const start = days[0].timestamp;
   const end = getEndOfDayMs(days[days.length - 1].timestamp, displayTimezone);

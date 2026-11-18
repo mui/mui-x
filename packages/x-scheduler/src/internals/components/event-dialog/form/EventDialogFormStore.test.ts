@@ -15,7 +15,7 @@ describe('EventDialogFormStore', () => {
         endTime: '10:00',
         allDay: false,
       },
-      { occurrence, resourceSelectionMode: 'single' },
+      { occurrence, resourceSelectionMode: 'single', initialDisplayTimezone: 'default' },
     );
 
     const range = eventDialogFormSelectors.rangeValues(store.state as any);

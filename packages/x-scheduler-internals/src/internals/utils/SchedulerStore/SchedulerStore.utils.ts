@@ -15,7 +15,7 @@ import type {
 import { processEvent } from '../../../process-event';
 import type { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
-import { toEventDateStrings } from '../date-utils';
+import { toEventDateStrings } from '../event-date-changes';
 import { schedulerEventSelectors } from '../../../scheduler-selectors/schedulerEventSelectors';
 
 /**
@@ -148,35 +148,35 @@ export function getProcessedEventFromModel<TEvent extends object>(
 
 /**
  * Updates an event model based on the provided changes and model structure.
- * Writes the dates of `changes` as strings before applying them to the user's model, because
- * `SchedulerEvent` date fields are strings, in the format of the original strings (instant vs
- * wall-time).
+ * Converts the timestamps to strings before applying them to the user's model, because
+ * `SchedulerEvent` date fields are strings, with `toEventDateStrings()`.
  */
 export function getUpdatedEventModelFromChanges<TEvent extends object>(
   oldModel: TEvent,
   changes: SchedulerEventUpdatedProperties,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
   originalBuiltInModel: SchedulerEvent,
+  displayTimezone: string,
 ): TEvent {
   return createOrUpdateEventModelFromBuiltInEventModel<TEvent, false>(
     oldModel,
-    toEventDateStrings(changes, originalBuiltInModel),
+    toEventDateStrings(changes, originalBuiltInModel, displayTimezone),
     eventModelStructure,
   );
 }
 
 /**
  * Creates an event model from the creation properties using the provided model structure.
+ * The dates of an all-day event are the days of its instants in the display timezone.
  */
 export function createEventModel<TEvent extends object>(
   event: SchedulerEventCreationProperties,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
+  displayTimezone: string,
 ) {
   const id = generateId('event');
-  // Internal callers (e.g. FormContent) may pass instants, and a processed rule whose `until` is a
-  // plain date or date-time, so the built-in model is brought back to the SchedulerEvent format.
-  const { exDates, rrule, ...rest } = toEventDateStrings(event, null);
-  // `exDates` and `rrule` stay set when `undefined`, so their setters run on every new event.
+
+  const { exDates, rrule, ...rest } = toEventDateStrings(event, null, displayTimezone);
   const builtInEvent: SchedulerEvent = { ...rest, id, exDates, rrule };
 
   const model = createOrUpdateEventModelFromBuiltInEventModel<TEvent, true>(

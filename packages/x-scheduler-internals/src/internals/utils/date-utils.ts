@@ -1,14 +1,15 @@
-import type {
-  SchedulerEvent,
-  SchedulerEventCreationProperties,
-  SchedulerProcessedEvent,
-  WeekStartsOn,
-} from '../../models';
+import type { SchedulerEvent, SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import { BaseTemporal } from './base-temporal';
 import { getStartOfWeekDayNumber, isoDateToDayNumber } from './plain-date-utils/dayNumber';
 import { getDayNumber, plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import type { WeekInfo } from './date-locale';
-import { toEpochMs, toPlainDateTime } from './plain-date-utils/timeZone';
+import {
+  addDaysToDayStart,
+  getStartOfDayMs,
+  toEpochMs,
+  toPlainDate,
+  toPlainDateTime,
+} from './plain-date-utils/timeZone';
 import { isDateOnlyString, isInstantString } from './plain-date-utils/date';
 
 /**
@@ -71,92 +72,52 @@ export function getUntilReferenceString(event: SchedulerEvent): string {
   return match[4] === undefined ? date : `${date}T${match[4]}:${match[5]}:${match[6]}Z`;
 }
 
-type EventDateKey = 'start' | 'end' | 'exDates' | 'rrule';
-
 /**
- * The dates of an event edit: instants in milliseconds since the Unix epoch, or event strings.
+ * Writes a bound of an all-day event: the date of its instant, which must be the first instant of
+ * a day in `timezone`.
  */
-type EventDateInputs = Partial<Pick<SchedulerEventCreationProperties, EventDateKey | 'timezone'>>;
-
-/**
- * `TChanges` with its dates written as event strings.
- */
-type WithEventDateStrings<TChanges> = {
-  [K in keyof TChanges]: K extends EventDateKey ? SchedulerEvent[K] : TChanges[K];
-};
-
-function toEventString(
-  value: string | number,
-  referenceString: string | undefined,
-  dataTimezone: string,
-) {
-  if (typeof value === 'string') {
-    return value;
-  }
-  return referenceString == null
-    ? new Date(value).toISOString()
-    : timestampToEventString(value, referenceString, dataTimezone);
-}
-
-/**
- * Writes the dates of an event edit as event strings, in a copy of `changes`.
- * An instant takes the format of the matching string of `referenceModel`, the event it is written
- * to or derived from, in the timezone of that event: `start`, `end`, and for an exception the one
- * at the same index, or else `start`. A processed `until` takes the format
- * `getUntilReferenceString()` returns. Without `referenceModel`, for a new event, an instant is
- * written as an ISO instant, and `until` takes the format of the written `start`, in the timezone
- * of `changes`. Strings are kept as they are.
- */
-export function toEventDateStrings<TChanges extends EventDateInputs>(
-  changes: TChanges,
-  referenceModel: SchedulerEvent | null,
-): WithEventDateStrings<TChanges> {
-  const dataTimezone =
-    (referenceModel == null ? changes.timezone : referenceModel.timezone) ?? 'default';
-  const result: EventDateInputs = { ...changes };
-  if (changes.start != null) {
-    result.start = toEventString(changes.start, referenceModel?.start, dataTimezone);
-  }
-  if (changes.end != null) {
-    result.end = toEventString(changes.end, referenceModel?.end, dataTimezone);
-  }
-  if (changes.exDates != null) {
-    result.exDates = changes.exDates.map((exDate, index) =>
-      toEventString(
-        exDate,
-        referenceModel?.exDates?.[index] ?? referenceModel?.start,
-        dataTimezone,
-      ),
+export function allDayBoundToEventString(epochMs: number, timezone: string): string {
+  if (epochMs !== getStartOfDayMs(epochMs, timezone)) {
+    throw new Error(
+      `MUI X Scheduler: The date ${new Date(epochMs).toISOString()} of the all-day event is not the first instant of a day in the display timezone "${timezone}". ` +
+        'The dates of an all-day event are whole days, so an instant inside a day cannot be written as one of them. ' +
+        'Pass the timestamp of the first instant of the day in the display timezone (of the day after the last day for the end). ' +
+        'See https://mui.com/x/react-scheduler/event-calendar/events/#all-day.',
     );
   }
-  const { rrule } = changes;
-  if (typeof rrule === 'object' && rrule.until != null && typeof rrule.until !== 'string') {
-    result.rrule = {
-      ...rrule,
-      until: untilToEventString(
-        rrule.until,
-        referenceModel == null ? (result.start as string) : getUntilReferenceString(referenceModel),
-        dataTimezone,
-      ),
-    };
-  }
-  return result as WithEventDateStrings<TChanges>;
+  return toPlainDate(epochMs, timezone).toString();
 }
 
 /**
- * Gets the timestamp of the end of an event occurrence from the timestamp of its start.
- * For now, the occurrence always has the same duration as the original event, even when the DST applies between its start and the end.
+ * The number of days an all-day event covers, from the dates of its model.
+ */
+export function getAllDayDayCount(
+  event: Pick<SchedulerProcessedEvent, 'modelInBuiltInFormat'>,
+): number {
+  const model = event.modelInBuiltInFormat;
+  return (
+    getDayNumber(BaseTemporal.PlainDate.from(model.end)) -
+    getDayNumber(BaseTemporal.PlainDate.from(model.start))
+  );
+}
+
+/**
+ * The end of an occurrence from its start: an all-day occurrence ends at the start of the day
+ * after its last day in the display timezone, a timed one keeps the duration of its event.
  */
 export function getOccurrenceEnd({
   event,
   occurrenceStart,
+  displayTimezone,
 }: {
   event: SchedulerProcessedEvent;
   occurrenceStart: number;
+  displayTimezone: string;
 }): number {
-  return (
-    occurrenceStart + event.unstable_internalInfos.dataEnd - event.unstable_internalInfos.dataStart
-  );
+  if (event.allDay) {
+    return addDaysToDayStart(occurrenceStart, getAllDayDayCount(event), displayTimezone);
+  }
+  return occurrenceStart + event.end.timestamp - event.start.timestamp;
 }
 
 function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {
