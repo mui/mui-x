@@ -4,7 +4,7 @@ import type {
   SchedulerProcessedEvent,
 } from '../../models';
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
-import { createProcessedDate, normalizeAllDayBounds } from './plain-date-utils/date';
+import { createProcessedDate, snapAllDayBounds } from './plain-date-utils/date';
 
 const PLACEHOLDER_KEY = 'occurrence-placeholder';
 
@@ -13,10 +13,12 @@ const PLACEHOLDER_KEY = 'occurrence-placeholder';
  * `originalEvent` is the event a drag or a resize moves, when the store has it.
  *
  * The surface of the placeholder sets its all-day flag and its bounds:
- * - in the day grid, a creation is all-day, and an all-day placeholder spans whole days;
+ * - in the day grid, a creation spans whole days, and a drag uses its destination's all-day flag;
  * - in the time grid, the placeholder keeps its bounds and has no all-day flag;
- * - in the timeline, a creation isn't all-day, an all-day placeholder spans whole days, and the
- *   placeholder carries the resource it's dropped onto.
+ * - in the timeline, a creation isn't all-day, and a drag keeps the event's all-day flag and
+ *   carries the resource it's dropped onto.
+ * Drag and resize bounds are already computed for their destination, including exclusive all-day
+ * ends, so they are kept as is.
  */
 export function getPlaceholderOccurrence(
   placeholder: SchedulerOccurrencePlaceholder,
@@ -28,7 +30,6 @@ export function getPlaceholderOccurrence(
     key: PLACEHOLDER_KEY,
     id: isInternalDragOrResizePlaceholder(placeholder) ? placeholder.eventId : PLACEHOLDER_KEY,
     title: isExternalDrag ? (placeholder.eventData.title ?? '') : (originalEvent?.title ?? ''),
-    unstable_internalInfos: { displayTimezone },
   };
 
   if (placeholder.surfaceType === 'time-grid') {
@@ -39,10 +40,22 @@ export function getPlaceholderOccurrence(
     };
   }
 
-  const allDay =
-    (placeholder.surfaceType === 'day-grid' && placeholder.type === 'creation') ||
-    (isExternalDrag ? placeholder.eventData.allDay : originalEvent?.allDay);
-  const bounds = normalizeAllDayBounds(placeholder.start, placeholder.end, allDay, displayTimezone);
+  const isDayGridCreation =
+    placeholder.surfaceType === 'day-grid' && placeholder.type === 'creation';
+  let allDay = originalEvent?.allDay;
+  if (isDayGridCreation) {
+    allDay = true;
+  } else if (isExternalDrag) {
+    allDay = placeholder.eventData.allDay;
+  } else if (
+    placeholder.surfaceType === 'day-grid' &&
+    isInternalDragOrResizePlaceholder(placeholder)
+  ) {
+    allDay = placeholder.allDay;
+  }
+  const bounds = isDayGridCreation
+    ? snapAllDayBounds(placeholder.start, placeholder.end, displayTimezone)
+    : placeholder;
   return {
     ...properties,
     allDay,

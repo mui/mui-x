@@ -111,14 +111,14 @@ describe('<StandaloneMonthView /> - RTL', () => {
 
   describe.each([
     // The pointer is on the inline-end day (July 3) in LTR and on the inline-start day (July 1) in RTL.
-    ['ltr', { start: '2025-07-08T00:00:00.000Z', end: '2025-07-10T23:59:59.999Z' }],
-    ['rtl', { start: '2025-07-10T00:00:00.000Z', end: '2025-07-12T23:59:59.999Z' }],
+    ['ltr', { start: '2025-07-08', end: '2025-07-11' }],
+    ['rtl', { start: '2025-07-10', end: '2025-07-13' }],
   ] as const)('drag and drop in %s', (direction, expected) => {
     it('should move a multi-day event by the distance from the grabbed day', async () => {
       const handleEventsChange = vi.fn();
       const event = EventBuilder.new()
         .title('Multi Day Conference')
-        .span('2025-07-01T00:00:00Z', '2025-07-03T23:59:59Z', { allDay: true })
+        .span('2025-07-01', '2025-07-04', { allDay: true })
         .draggable(true)
         .build();
 

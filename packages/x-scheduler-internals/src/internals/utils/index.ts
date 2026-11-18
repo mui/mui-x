@@ -18,6 +18,7 @@ export * from './useTimelineDragAutoScroll';
 export * from './TimeoutManager';
 export * from './date-locale';
 export * from './date-utils';
+export * from './event-date-changes';
 export * from './plain-date-utils';
 export * from './base-temporal';
 export * from './extractStandaloneEvent';

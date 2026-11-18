@@ -110,15 +110,15 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
     deltaScale: 0,
   };
 
-  declare protected readonly isSinglePhase: false;
+  declare public readonly isSinglePhase: false;
 
-  declare protected readonly eventType: PinchEvent;
+  declare public readonly eventType: PinchEvent;
 
   declare protected readonly optionsType: PinchGestureOptions<GestureName>;
 
-  declare protected readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
+  declare public readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
-  declare protected readonly mutableStateType: Omit<
+  declare public readonly mutableStateType: Omit<
     Partial<typeof this.state>,
     'startDistance' | 'lastDistance' | 'lastScale' | 'lastTime' | 'velocity'
   >;

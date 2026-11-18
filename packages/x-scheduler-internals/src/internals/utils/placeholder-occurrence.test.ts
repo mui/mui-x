@@ -13,6 +13,7 @@ const START = Date.parse('2025-07-03T13:00:00Z');
 const END = Date.parse('2025-07-03T14:30:00Z');
 
 const INTERNAL_FIELDS = {
+  allDay: false,
   eventId: 'meeting',
   occurrenceKey: 'meeting-key',
   originalOccurrence: {},
@@ -51,7 +52,11 @@ function createOriginalEvent(allDay: boolean): SchedulerProcessedEvent {
     .id('meeting')
     .title('Meeting')
     .resource({ id: 'room-a', title: 'Room A' })
-    .span('2025-07-01T13:00:00Z', '2025-07-01T14:00:00Z', { allDay })
+    .span(
+      allDay ? '2025-07-01' : '2025-07-01T13:00:00Z',
+      allDay ? '2025-07-02' : '2025-07-01T14:00:00Z',
+      { allDay },
+    )
     .withDisplayTimezone(TIMEZONE)
     .toProcessed();
 }
@@ -77,25 +82,43 @@ describe('getPlaceholderOccurrence', () => {
       ]);
     });
 
-    it('should read the all-day flag and the title of the dragged event', () => {
-      const occurrence = getOccurrence('day-grid', 'internal-drag', createOriginalEvent(false));
+    it.each([false, true])(
+      'should use the destination all-day flag %s and the dragged title',
+      (allDay) => {
+        const occurrence = getOccurrence(
+          'day-grid',
+          'internal-drag',
+          createOriginalEvent(!allDay),
+          {
+            allDay,
+            start: Date.parse('2025-07-03T04:00:00Z'),
+            end: Date.parse('2025-07-04T04:00:00Z'),
+          },
+        );
 
-      expect(occurrence.allDay).to.equal(false);
-      expect(occurrence.title).to.equal('Meeting');
-      expect(occurrence.id).to.equal('meeting');
-      expect(boundsOf(occurrence)).to.deep.equal([
-        '2025-07-03T13:00:00.000Z',
-        '2025-07-03T14:30:00.000Z',
-      ]);
-      expect('resource' in occurrence).to.equal(false);
-    });
+        expect(occurrence.allDay).to.equal(allDay);
+        expect(occurrence.title).to.equal('Meeting');
+        expect(occurrence.id).to.equal('meeting');
+        expect(boundsOf(occurrence)).to.deep.equal([
+          '2025-07-03T04:00:00.000Z',
+          '2025-07-04T04:00:00.000Z',
+        ]);
+        expect('resource' in occurrence).to.equal(false);
+      },
+    );
 
     it('should read the all-day flag and the title of an external event', () => {
-      const occurrence = getOccurrence('day-grid', 'external-drag');
+      const occurrence = getOccurrence('day-grid', 'external-drag', null, {
+        start: Date.parse('2025-07-03T04:00:00Z'),
+        end: Date.parse('2025-07-04T04:00:00Z'),
+      });
 
       expect(occurrence.allDay).to.equal(true);
       expect(occurrence.title).to.equal('Dropped');
-      expect(boundsOf(occurrence)[0]).to.equal('2025-07-03T04:00:00.000Z');
+      expect(boundsOf(occurrence)).to.deep.equal([
+        '2025-07-03T04:00:00.000Z',
+        '2025-07-04T04:00:00.000Z',
+      ]);
     });
 
     it('should keep the id of the dragged event when the store no longer has it', () => {
@@ -129,8 +152,12 @@ describe('getPlaceholderOccurrence', () => {
       ]);
     });
 
-    it('should span whole days for an all-day event and carry the target resource', () => {
-      const occurrence = getOccurrence('timeline', 'internal-drag', createOriginalEvent(true));
+    it('should keep the exclusive bounds of an all-day event and carry the target resource', () => {
+      const occurrence = getOccurrence('timeline', 'internal-drag', createOriginalEvent(true), {
+        allDay: true,
+        start: Date.parse('2025-07-03T04:00:00Z'),
+        end: Date.parse('2025-07-04T04:00:00Z'),
+      });
 
       expect(occurrence.allDay).to.equal(true);
       expect(occurrence.resource).to.equal('room-b');

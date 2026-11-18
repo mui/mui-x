@@ -10,6 +10,7 @@ import {
   getPlaceholderOccurrence,
   getPlaceholderOccurrenceKey,
 } from '../../internals/utils/placeholder-occurrence';
+import { getLastInstant } from '../../internals/utils/event-utils';
 import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
 import { getDayGridCellSpan } from '../../use-event-occurrences-with-day-grid-position';
 
@@ -40,17 +41,22 @@ export function useCalendarGridPlaceholderInDay(
     }
 
     // The placeholder can run past the week row: the next rows render their own piece.
-    const endInRow = Math.min(rawPlaceholder.end, rowEnd);
+    const endInRow = Math.min(rawPlaceholder.end, rowEnd + 1);
     // A creation renders its piece of this row, from the day of the cell.
     const placeholder =
       rawPlaceholder.type === 'creation'
         ? { ...rawPlaceholder, start: day.timestamp, end: endInRow }
         : rawPlaceholder;
+    const occurrence = getPlaceholderOccurrence(placeholder, originalEvent, displayTimezone);
+    const lastInstantInRow = Math.min(
+      getLastInstant(occurrence.end.timestamp, occurrence.allDay),
+      rowEnd,
+    );
     // The placeholder covers the cells of every date up to its end, like the occurrences.
     const daySpan = getDayGridCellSpan(
       row.days,
       row.days.indexOf(day),
-      toLocalDayNumber(endInRow, displayTimezone),
+      toLocalDayNumber(lastInstantInRow, displayTimezone),
     );
 
     // The first row of the day that no other occurrence uses, capped to the rows the cell shows.
@@ -69,7 +75,7 @@ export function useCalendarGridPlaceholderInDay(
     }
 
     return {
-      ...getPlaceholderOccurrence(placeholder, originalEvent, displayTimezone),
+      ...occurrence,
       position: { index, daySpan },
     };
   }, [day, displayTimezone, maxEvents, originalEvent, rawPlaceholder, row.days, rowEnd]);

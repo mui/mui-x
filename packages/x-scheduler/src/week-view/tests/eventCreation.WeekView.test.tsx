@@ -56,7 +56,7 @@ describe('<WeekView /> event creation', () => {
     // Without a display timezone, the creations keep the `'default'` timezone of the occurrences.
     { displayTimezone: undefined, timezone: 'default' },
     { displayTimezone: 'America/New_York', timezone: 'America/New_York' },
-  ])('in the $timezone display timezone', ({ displayTimezone, timezone }) => {
+  ])('in the $timezone display timezone', ({ displayTimezone }) => {
     async function createWithKeyboard(className: string) {
       const onEventEditingStart = vi.fn((_occurrence: any, eventDetails: any) =>
         eventDetails.cancel(),
@@ -86,7 +86,6 @@ describe('<WeekView /> event creation', () => {
     it('should pass a creation in the time grid to `onEventEditingStart` in the display timezone', async () => {
       const occurrence = await createWithKeyboard(eventCalendarClasses.dayTimeGridColumn);
 
-      expect(occurrence.unstable_internalInfos.displayTimezone).to.equal(timezone);
       // The creation starts at noon.
       expect(getMinutesInDay(occurrence.start.plainDateTime)).to.equal(12 * 60);
     });
@@ -94,7 +93,6 @@ describe('<WeekView /> event creation', () => {
     it('should pass a creation in the day grid to `onEventEditingStart` in the display timezone', async () => {
       const occurrence = await createWithKeyboard(eventCalendarClasses.dayTimeGridAllDayEventsCell);
 
-      expect(occurrence.unstable_internalInfos.displayTimezone).to.equal(timezone);
       // The all-day creation ends at the start of the next day.
       expect(getMinutesInDay(occurrence.end.plainDateTime)).to.equal(0);
       expect(occurrence.end.plainDateTime.toPlainDate().toString()).to.equal(

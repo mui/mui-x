@@ -36,14 +36,17 @@ function createRecurringEvents(
       .withDataTimezone(dataTimezone)
       .withDisplayTimezone(displayTimezone);
 
-    if (index % 10 === 9) {
-      builder.span(`2024-01-${day}T00:00:00`, `2024-01-${day}T23:59:59`, { allDay: true });
+    const allDay = index % 10 === 9;
+    if (allDay) {
+      const nextDay = String((index % 28) + 2).padStart(2, '0');
+      builder.span(`2024-01-${day}`, `2024-01-${nextDay}`, { allDay: true });
     } else {
       builder.singleDay(`2024-01-${day}T${hour}:30:00`, 45 + (index % 4) * 30);
     }
 
     if (index % 7 === 0) {
-      builder.exDates([`2026-10-${day}T${hour}:30:00`]);
+      // The exceptions of an all-day series are dates.
+      builder.exDates([allDay ? `2026-10-${day}` : `2026-10-${day}T${hour}:30:00`]);
     }
 
     return builder.rrule(RULES[index % RULES.length]).toProcessed();
