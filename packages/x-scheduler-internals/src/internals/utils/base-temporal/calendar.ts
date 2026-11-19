@@ -343,114 +343,21 @@ export function resolveIsoFields(
 
 const ISO_CALENDAR = /* @__PURE__ */ createIsoCalendar(ISO_CALENDAR_ID, false);
 
-const registry = new Map<string, CalendarImplementation>([
-  [ISO_CALENDAR_ID, ISO_CALENDAR],
-  ['gregory', /* @__PURE__ */ createIsoCalendar('gregory', true)],
-]);
-
+// The Scheduler only uses the ISO calendar: in place of the calendar registry of the Base UI
+// version, its copy only implements this calendar (see the notes on the copy in
+// `eslint.config.mjs`).
 /**
- * The calendars `@base-ui/plus/calendar-systems` exports.
- */
-const CALENDAR_IDS = new Set(
-  'buddhist japanese roc persian indian hebrew coptic ethiopic ethioaa islamic-civil islamic-tbla islamic-umalqura'.split(
-    ' ',
-  ),
-);
-
-const CALENDAR_ALIASES: Record<string, string> = {
-  islamicc: 'islamic-civil',
-  'ethiopic-amete-alem': 'ethioaa',
-};
-
-/**
- * Lowercases a calendar identifier and replaces deprecated aliases, like `Intl.Locale`.
- */
-export function canonicalizeCalendarId(id: string) {
-  const lowerCase = id.toLowerCase();
-  return CALENDAR_ALIASES[lowerCase] ?? lowerCase;
-}
-
-/**
- * Whether a canonical identifier names a calendar that BaseTemporal implements, registered or not.
- */
-export function isCalendarSupported(canonicalId: string): boolean {
-  return registry.has(canonicalId) || CALENDAR_IDS.has(canonicalId);
-}
-
-/**
- * Returns the implementation of a registered calendar.
+ * Returns the implementation of a calendar: the ISO one.
  */
 export function getCalendar(id: unknown): CalendarImplementation {
-  // Most values are in the ISO calendar, which `registerCalendar()` can't replace.
-  if (id === ISO_CALENDAR_ID) {
+  if (id === ISO_CALENDAR_ID || (typeof id === 'string' && id.toLowerCase() === ISO_CALENDAR_ID)) {
     return ISO_CALENDAR;
   }
-  if (typeof id !== 'string') {
-    throw new TypeError(
-      `MUI X Scheduler: A temporal value received ${String(id)} as its calendar, which isn't a string. ` +
-        'Calendars are identified by their name. ' +
-        "Pass a calendar identifier such as `'iso8601'`, `'gregory'` or `'hebrew'`.",
-    );
-  }
-  // Values keep the canonical identifier of their calendar, so most lookups find it as is.
-  const registered = registry.get(id);
-  if (registered != null) {
-    return registered;
-  }
-  const canonicalId = canonicalizeCalendarId(id);
-  const calendar = registry.get(canonicalId);
-  if (calendar != null) {
-    return calendar;
-  }
-  if (!CALENDAR_IDS.has(canonicalId)) {
-    throw new Error(
-      `MUI X Scheduler: The "${id}" calendar isn't supported. ` +
-        'The Scheduler has no arithmetic for it, so it cannot create or display its dates. ' +
-        'Use the `iso8601` or `gregory` calendar.',
-    );
-  }
   throw new Error(
-    `MUI X Scheduler: The "${canonicalId}" calendar isn't supported yet. ` +
-      'The Scheduler only implements the ISO and Gregorian calendars, so it cannot create or display its dates. ' +
-      'Use the `iso8601` or `gregory` calendar.',
+    `MUI X Scheduler: The "${String(id)}" calendar isn't supported. ` +
+      'The Scheduler has no arithmetic for it, so it cannot create or display its dates. ' +
+      'Use the `iso8601` calendar.',
   );
-}
-
-/**
- * Makes calendars available to every `BaseTemporal` value and component.
- * Registering the same calendar again does nothing.
- * @param calendars The calendars to register, such as `hebrewCalendar`.
- */
-export function registerCalendar(...calendars: CalendarSystem[]): void {
-  // Checks every calendar before registering any, so a rejected call registers none.
-  calendars.forEach(checkCalendarRegistration);
-  for (const calendar of calendars) {
-    registry.set(calendar.id, calendar as CalendarImplementation);
-  }
-}
-
-function checkCalendarRegistration(calendar: CalendarSystem) {
-  const implementation = calendar as Partial<CalendarImplementation> | null;
-  if (
-    typeof implementation !== 'object' ||
-    implementation === null ||
-    typeof implementation.resolveFields !== 'function' ||
-    !CALENDAR_IDS.has(implementation.id!)
-  ) {
-    throw new TypeError(
-      `MUI X Scheduler: \`registerCalendar()\` received ${String(calendar)}, which isn't a calendar implementation. ` +
-        'Only the implementations of the supported calendars can be registered. ' +
-        'Pass one of these implementations.',
-    );
-  }
-  const registered = registry.get(calendar.id);
-  if (registered != null && registered !== calendar) {
-    throw new Error(
-      `MUI X Scheduler: \`registerCalendar()\` received a second implementation of the "${calendar.id}" calendar. ` +
-        'Two implementations could give different dates for the same values, so the first registration stays. ' +
-        'Make sure a single copy of `@mui/x-scheduler-internals` is installed, and register each calendar once.',
-    );
-  }
 }
 
 type MonthCodesSource = Pick<

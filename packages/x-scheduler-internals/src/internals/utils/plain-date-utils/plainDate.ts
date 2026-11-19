@@ -6,8 +6,6 @@ import { dayNumberToIsoDate, isoDateToDayNumber } from './dayNumber';
  */
 export type PlainDateDuration = Parameters<BaseTemporal.PlainDate['add']>[0];
 
-const ISO_CALENDAR_ID = 'iso8601';
-
 const MAX_CACHED_PLAIN_DATES = 10_000;
 // The plain dates are immutable, so a day number keeps its plain date: the views build the same
 // days on every render, and a lookup is faster than creating one. Emptied at 10,000 entries.
@@ -45,11 +43,8 @@ export function plainDateFromDayNumber(dayNumber: number): BaseTemporal.PlainDat
 export function getDayNumber(plainDate: BaseTemporal.PlainDate): number {
   let dayNumber = dayNumberLookup.get(plainDate);
   if (dayNumber === undefined) {
-    const isoPlainDate =
-      plainDate.calendarId === ISO_CALENDAR_ID
-        ? plainDate
-        : plainDate.withCalendar(ISO_CALENDAR_ID);
-    dayNumber = isoDateToDayNumber(isoPlainDate.year, isoPlainDate.month, isoPlainDate.day);
+    // The copy of BaseTemporal only implements the ISO calendar.
+    dayNumber = isoDateToDayNumber(plainDate.year, plainDate.month, plainDate.day);
     dayNumberLookup.set(plainDate, dayNumber);
   }
   return dayNumber;
