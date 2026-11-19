@@ -614,22 +614,6 @@ describe('<DataGridPremium /> - History', () => {
         : column,
     ) as DataGridPremiumProps['columns'];
 
-    function columnsWithPendingValidation(
-      validation: Promise<void>,
-    ): DataGridPremiumProps['columns'] {
-      return [
-        {
-          field: 'price1M',
-          type: 'number',
-          editable: true,
-          preProcessEditCellProps: async ({ props }) => {
-            await validation;
-            return props;
-          },
-        },
-      ];
-    }
-
     it.each(['cell', 'row'] as const)(
       'should keep the redo steps when an edit is canceled with Escape in %s mode',
       async (editMode) => {
@@ -662,27 +646,25 @@ describe('<DataGridPremium /> - History', () => {
       },
     );
 
-    it.each(['cell', 'row'] as const)(
-      'should keep history empty when a %s edit stops during validation',
-      async (editMode) => {
-        const validation = Promise.withResolvers<void>();
-        const { user } = render(
-          <Test columns={columnsWithPendingValidation(validation.promise)} editMode={editMode} />,
-        );
+    it('should undo a row edit that commits on a click in another row during the validation', async () => {
+      const { user } = render(<Test columns={validatedColumns} editMode="row" />);
+      const originalValue = apiRef.current!.getRow(0).price1M;
 
-        await user.dblClick(getCell(0, 0));
-        await user.keyboard('42');
-        await waitFor(() => {
-          expect(apiRef.current!.state.editRows[0].price1M.isProcessingProps).to.equal(true);
-        });
-        await user.click(getCell(1, 0));
-        await act(() => raf());
+      await user.dblClick(getCell(0, 2));
+      // The click comes before the end of the input debounce, so the stop starts the validation
+      await user.keyboard('5');
+      await user.click(getCell(1, 2));
+      // The row edit stops in a timeout after the focus leaves the row
+      await waitFor(() => {
+        expect(apiRef.current!.getRow(0).price1M).not.to.equal(originalValue);
+      });
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
 
-        expect(apiRef.current!.getCellMode(0, 'price1M')).to.equal('edit');
-        expect(apiRef.current!.history.canUndo()).to.equal(false);
-        await act(async () => validation.resolve());
-      },
-    );
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+      expect(apiRef.current!.getRow(0).price1M).to.equal(originalValue);
+    });
 
     it.each(['cell', 'row'] as const)(
       'should leave an imperative %s edit out of history',

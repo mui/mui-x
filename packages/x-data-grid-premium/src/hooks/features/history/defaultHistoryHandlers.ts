@@ -70,12 +70,12 @@ export const createCellEditHistoryHandler = (
     store: (params: GridCellEditStopParams) => {
       const { id, field } = params;
 
-      // Escape discards the value, and an error or a pending validation keeps the cell in edit mode
+      // Escape discards the value, and a validation error keeps the cell in edit mode.
+      // A stop during the validation can still commit, so only a settled error counts.
       const editCellState = gridEditCellStateSelector(apiRef, { rowId: id, field });
       if (
         params.reason === GridCellEditStopReasons.escapeKeyDown ||
-        editCellState?.error ||
-        editCellState?.isProcessingProps
+        (editCellState?.error && !editCellState.isProcessingProps)
       ) {
         return null;
       }
@@ -195,12 +195,13 @@ export const createRowEditHistoryHandler = (
     store: (params: GridRowEditStopParams) => {
       const { id } = params;
 
-      // Escape discards the values, and an error or a pending validation keeps the row in edit mode
+      // Escape discards the values, and a validation error keeps the row in edit mode.
+      // A stop during the validation can still commit, so only a settled error counts.
       const editRowState = gridEditRowsStateSelector(apiRef)[id] ?? {};
       if (
         params.reason === GridRowEditStopReasons.escapeKeyDown ||
         Object.values(editRowState).some(
-          (fieldProps) => fieldProps.error || fieldProps.isProcessingProps,
+          (fieldProps) => fieldProps.error && !fieldProps.isProcessingProps,
         )
       ) {
         return null;
