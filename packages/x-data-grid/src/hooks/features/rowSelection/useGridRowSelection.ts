@@ -184,6 +184,8 @@ export const useGridRowSelection = (
       if (parent?.type !== 'group' || parent.children.length === 0) {
         return;
       }
+      // Keep unselected descendants too: selection can change while the group is collapsed,
+      // and propagation needs all known selectable descendants.
       const retained = new Map(gridRowSelectionRetentionSelector(apiRef));
       const visit = (id: GridRowId) => {
         const node = tree[id];
@@ -1097,10 +1099,6 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
    * EFFECTS
    */
   useGridEvent(apiRef, 'rowsSet', () => {
-    if (gridDataRowIdsSelector(apiRef).length === 0) {
-      clearRowSelectionRetention();
-      return;
-    }
     const retained = gridRowSelectionRetentionSelector(apiRef);
     if (retained.size === 0) {
       return;
