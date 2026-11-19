@@ -19,9 +19,9 @@ export interface ChartsComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiChartsGrid'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChartsGrid'];
   };
-  MuiRadialChartsGrid?: {
-    defaultProps?: ComponentsProps['MuiRadialChartsGrid'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiRadialChartsGrid'];
+  MuiChartsRadialGrid?: {
+    defaultProps?: ComponentsProps['MuiChartsRadialGrid'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChartsRadialGrid'];
   };
   MuiChartsLegend?: {
     defaultProps?: ComponentsProps['MuiChartsLegend'];
@@ -38,11 +38,26 @@ export interface ChartsComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiChartsSurface'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChartsSurface'];
   };
+  MuiChartsLayerContainer?: {
+    defaultProps?: ComponentsProps['MuiChartsLayerContainer'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChartsLayerContainer'];
+  };
+  MuiChartsSvgLayer?: {
+    defaultProps?: ComponentsProps['MuiChartsSvgLayer'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChartsSvgLayer'];
+  };
   MuiChartsDataProvider?: {
     defaultProps?: ComponentsProps['MuiChartsDataProvider'];
   };
+  MuiChartsRadialDataProvider?: {
+    defaultProps?: ComponentsProps['MuiChartsRadialDataProvider'];
+  };
   MuiBarChart?: {
     defaultProps?: ComponentsProps['MuiBarChart'];
+  };
+  MuiBarLabel?: {
+    defaultProps?: ComponentsProps['MuiBarLabel'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiBarLabel'];
   };
   MuiBarPlot?: {
     styleOverrides?: ComponentsOverrides<Theme>['MuiBarPlot'];
@@ -58,6 +73,9 @@ export interface ChartsComponents<Theme = unknown> {
   };
   MuiMarkPlot?: {
     styleOverrides?: ComponentsOverrides<Theme>['MuiMarkPlot'];
+  };
+  MuiPieChart?: {
+    defaultProps?: ComponentsProps['MuiPieChart'];
   };
   MuiPieArcPlot?: {
     styleOverrides?: ComponentsOverrides<Theme>['MuiPieArcPlot'];

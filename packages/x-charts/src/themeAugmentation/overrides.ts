@@ -14,13 +14,16 @@ export interface ChartsComponentNameToClassKey {
   MuiChartsAxisHighlight: ChartsAxisHighlightClassKey;
   MuiChartsLegend: 'root';
   MuiChartsGrid: ChartsGridClassKey;
-  MuiRadialChartsGrid: ChartsRadialGridClassKey;
+  MuiChartsRadialGrid: ChartsRadialGridClassKey;
   MuiChartsTooltip: ChartsTooltipClassKey;
 
   MuiChartsSurface: 'root';
+  MuiChartsLayerContainer: 'root';
+  MuiChartsSvgLayer: 'root';
 
   // BarChart components
   MuiBarPlot: 'root';
+  MuiBarLabel: 'root';
 
   // PieChart components
   MuiPieArcPlot: 'root';

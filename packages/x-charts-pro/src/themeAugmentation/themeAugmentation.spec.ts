@@ -23,6 +23,20 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiPieChartPro: {
+      defaultProps: {
+        title: 'toto',
+        // @ts-expect-error invalid MuiPieChartPro prop
+        someRandomProp: true,
+      },
+    },
+    MuiRadarChartPro: {
+      defaultProps: {
+        title: 'toto',
+        // @ts-expect-error invalid MuiRadarChartPro prop
+        someRandomProp: true,
+      },
+    },
     MuiHeatmap: {
       defaultProps: {
         title: 'toto',

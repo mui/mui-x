@@ -10,6 +10,7 @@ import type { PieChartProps } from '../PieChart/PieChart';
 import type { ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
 import type { ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
 import type { ChartsDataProviderProps } from '../ChartsDataProvider';
+import type { ChartsRadialDataProviderProps } from '../ChartsRadialDataProvider';
 import type { ChartsLayerContainerProps } from '../ChartsLayerContainer';
 import type { ChartsSvgLayerProps } from '../ChartsSvgLayer';
 import type { ChartsRadialGridProps } from '../ChartsRadialGrid';
@@ -18,7 +19,7 @@ export interface ChartsComponentsPropsList {
   MuiChartsXAxis: ChartsXAxisProps;
   MuiChartsYAxis: ChartsYAxisProps;
   MuiChartsGrid: ChartsGridProps;
-  MuiRadialChartsGrid: ChartsRadialGridProps;
+  MuiChartsRadialGrid: ChartsRadialGridProps;
   MuiChartsLegend: ChartsLegendProps;
   MuiChartsLocalizationProvider: ChartsLocalizationProviderProps;
   MuiChartsTooltip: ChartsTooltipProps;
@@ -27,6 +28,7 @@ export interface ChartsComponentsPropsList {
   MuiChartsSvgLayer: ChartsSvgLayerProps;
 
   MuiChartsDataProvider: ChartsDataProviderProps;
+  MuiChartsRadialDataProvider: ChartsRadialDataProviderProps;
 
   // BarChart components
   MuiBarChart: BarChartProps;

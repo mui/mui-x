@@ -22,6 +22,16 @@ export interface ChartsProComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiLineChartPro'];
   };
 
+  // PieChartPro components
+  MuiPieChartPro?: {
+    defaultProps?: ComponentsProps['MuiPieChartPro'];
+  };
+
+  // RadarChartPro components
+  MuiRadarChartPro?: {
+    defaultProps?: ComponentsProps['MuiRadarChartPro'];
+  };
+
   // Heatmap components
   MuiHeatmap?: {
     defaultProps?: ComponentsProps['MuiHeatmap'];
