@@ -8,17 +8,7 @@ export default mergeConfig(
     test: {
       name: getTestName(import.meta.url),
       // Keep animation frames native so observer-driven layout settles while the clock is frozen.
-      fakeTimers: {
-        toFake: [
-          'Date',
-          'Intl',
-          'performance',
-          'setTimeout',
-          'clearTimeout',
-          'setInterval',
-          'clearInterval',
-        ],
-      },
+      fakeTimers: { toNotFake: ['requestAnimationFrame', 'cancelAnimationFrame'] },
       browser: {
         enabled: true,
         instances: [{ browser: 'chromium' }],
