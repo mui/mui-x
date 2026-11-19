@@ -97,7 +97,7 @@ Read its day in `displayTimezone`, as the timezone of the browser can put it on 
 Callbacks such as `onEventEditingStart` and hooks such as `useEventDialogOccurrence()` provide an occurrence with resolved `start` and `end` values.
 Each bound is a `BaseTemporal.ZonedDateTime` in `displayTimezone`:
 
-- its date and time fields, such as `year`, `month`, `day`, `hour` and `minute`, are the wall-clock time in `displayTimezone`.
+- Its date and time fields, such as `year`, `month`, `day`, `hour` and `minute`, are the wall-clock time in `displayTimezone`.
 - `epochMilliseconds` is the instant, in milliseconds since the Unix epoch.
 - `timeZoneId` is the display timezone, which is the timezone of the system for `"default"`, and `offset` is its offset from UTC at this instant.
 
