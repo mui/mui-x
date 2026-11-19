@@ -59,4 +59,12 @@ describe('getVisibleGroupedLabels', () => {
       'b',
     ]);
   });
+
+  it('should handle reversed axes', () => {
+    const ticks = [tick(0, 100, 'a'), tick(0, 90, 'b'), tick(0, 80, 'c')];
+
+    expect(
+      visibleValues(ticks, getVisibleGroupedLabels(ticks, groups, { ...options, reverse: true })),
+    ).to.deep.equal(['a', 'c']);
+  });
 });

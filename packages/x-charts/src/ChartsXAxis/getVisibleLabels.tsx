@@ -53,7 +53,7 @@ export function getVisibleLabels<T extends TickItem>(
 
       if (
         labelIndex > 0 &&
-        direction * textPosition < direction * (previousTextLimit + tickLabelMinGap)
+        direction * textPosition < direction * previousTextLimit + tickLabelMinGap
       ) {
         return false;
       }
@@ -67,7 +67,7 @@ export function getVisibleLabels<T extends TickItem>(
       const currentTextLimit = textPosition - (direction * distance) / 2;
       if (
         labelIndex > 0 &&
-        direction * currentTextLimit < direction * (previousTextLimit + tickLabelMinGap)
+        direction * currentTextLimit < direction * previousTextLimit + tickLabelMinGap
       ) {
         // Except for the first label, we skip all label that overlap with the last accepted.
         // Notice that the early return prevents `previousTextLimit` from being updated.
