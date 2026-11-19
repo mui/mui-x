@@ -1,6 +1,7 @@
 'use client';
 import type { TickItem } from '../hooks/useTicks';
-import type { ChartsXAxisProps, ComputedXAxis } from '../models/axis';
+import type { GroupedTickItemType } from '../hooks/useTicksGrouped';
+import type { AxisGroup, ChartsXAxisProps, ComputedXAxis } from '../models/axis';
 import { getMinXTranslation } from '../internals/geometry';
 import type { ChartsTextStyle } from '../internals/getWordsByLines';
 import { batchMeasureStrings } from '../internals/domUtils';
@@ -77,6 +78,28 @@ export function getVisibleLabels<T extends TickItem>(
       return true;
     }),
   );
+}
+
+/* Returns the visible tick labels of a grouped axis. Overlap is resolved per group level. */
+export function getVisibleGroupedLabels(
+  ticks: GroupedTickItemType[],
+  groups: AxisGroup[],
+  { tickLabelStyle, ...options }: Omit<Parameters<typeof getVisibleLabels>[1], 'tickLabelInterval'>,
+): Set<GroupedTickItemType> {
+  const visibleLabels = new Set<GroupedTickItemType>();
+
+  groups.forEach((group, groupIndex) => {
+    const groupTicks = ticks.filter(
+      (tick) => tick.groupIndex === groupIndex && tick.formattedValue !== undefined,
+    );
+
+    getVisibleLabels(groupTicks, {
+      ...options,
+      tickLabelStyle: { ...tickLabelStyle, ...group.tickLabelStyle },
+    }).forEach((tick) => visibleLabels.add(tick));
+  });
+
+  return visibleLabels;
 }
 
 function getTickLabelSize<T extends TickItem>(

@@ -10,6 +10,8 @@ import { useStore } from '../internals/store/useStore';
 import { selectorChartXAxisAutoSizeResults } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartAxisAutoSize.selectors';
 import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { getGroupingConfig } from '../internals/getGroupingConfig';
+import { useMounted } from '../hooks/useMounted';
+import { getVisibleGroupedLabels } from './getVisibleLabels';
 
 interface ChartsGroupedXAxisProps extends ChartsXAxisProps {}
 
@@ -26,7 +28,9 @@ function ChartsGroupedXAxisTicks(inProps: ChartsGroupedXAxisProps) {
     Tick,
     TickLabel,
     axisTickLabelProps,
+    reverse,
   } = useAxisTicksProps(inProps);
+  const isMounted = useMounted();
 
   if (!isOrdinalScale(xScale)) {
     throw new Error(
@@ -44,6 +48,7 @@ function ChartsGroupedXAxisTicks(inProps: ChartsGroupedXAxisProps) {
     tickInterval,
     tickPlacement,
     tickLabelPlacement,
+    tickLabelMinGap,
   } = defaultizedProps;
 
   const groups = (defaultizedProps as { groups: AxisGroup[] }).groups;
@@ -66,6 +71,14 @@ function ChartsGroupedXAxisTicks(inProps: ChartsGroupedXAxisProps) {
     tickLabelPlacement,
     direction: 'x',
     groups,
+  });
+
+  const visibleLabels = getVisibleGroupedLabels(xTicks, groups, {
+    tickLabelStyle: axisTickLabelProps.style,
+    tickLabelMinGap,
+    reverse,
+    isMounted,
+    isXInside: instance.isXInside,
   });
 
   return (
@@ -94,7 +107,7 @@ function ChartsGroupedXAxisTicks(inProps: ChartsGroupedXAxisProps) {
               <Tick y2={tickYSize} className={classes.tick} {...slotProps?.axisTick} />
             )}
 
-            {tickLabel !== undefined && (
+            {tickLabel !== undefined && visibleLabels.has(item) && (
               <TickLabel
                 x={xTickLabel}
                 y={labelPositionY}
