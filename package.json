@@ -79,16 +79,16 @@
     "@emotion/cache": "catalog:",
     "@eslint/compat": "2.1.1",
     "@inquirer/prompts": "8.7.5",
-    "@mui/internal-api-docs-builder": "2.0.1-canary.0",
+    "@mui/internal-api-docs-builder": "2.0.1-canary.1",
     "@mui/internal-babel-plugin-display-name": "2.0.1-canary.2",
     "@mui/internal-babel-plugin-minify-errors": "3.0.1-canary.2",
     "@mui/internal-bundle-size-checker": "1.1.1-canary.6",
     "@mui/internal-code-infra": "0.1.1-canary.29",
     "@mui/internal-core-docs": "catalog:",
     "@mui/internal-docs-infra": "0.13.1-canary.33",
-    "@mui/internal-markdown": "4.0.1-canary.0",
+    "@mui/internal-markdown": "4.0.1-canary.1",
     "@mui/internal-netlify-cache": "0.1.1-canary.2",
-    "@mui/internal-scripts": "4.0.1-canary.0",
+    "@mui/internal-scripts": "4.0.1-canary.1",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/utils": "catalog:",
@@ -128,6 +128,7 @@
     "globby": "16.2.4",
     "jsdom": "catalog:",
     "lerna": "10.1.1",
+    "lz-string": "1.5.0",
     "moment": "catalog:",
     "moment-timezone": "catalog:",
     "picomatch": "4.0.7",
@@ -159,6 +160,6 @@
   "packageManager": "pnpm@12.18.0",
   "engines": {
     "pnpm": "12.18.0",
-    "node": ">=22.23.4"
+    "node": ">=22.23.5"
   }
 }
