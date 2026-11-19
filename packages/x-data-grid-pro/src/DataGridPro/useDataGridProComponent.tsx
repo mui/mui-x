@@ -15,6 +15,8 @@ import {
   filterStateInitializer,
   useGridFocus,
   useGridKeyboardNavigation,
+  useGridKeyboardUse,
+  keyboardUseStateInitializer,
   useGridPagination,
   paginationStateInitializer,
   useGridPreferencesPanel,
@@ -84,10 +86,7 @@ import {
 } from '../hooks/features/rowReorder/useGridRowReorder';
 import { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
 import { useGridRowReorderPointer } from '../hooks/features/rowReorder/useGridRowReorderPointer';
-import {
-  useGridKeyboardReorder,
-  keyboardReorderStateInitializer,
-} from '../hooks/features/keyboardReorder/useGridKeyboardReorder';
+import { useGridKeyboardReorder } from '../hooks/features/keyboardReorder/useGridKeyboardReorder';
 import { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
 import { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
 import {
@@ -147,13 +146,13 @@ export const useDataGridProComponent = (
   useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(editingStateInitializer, apiRef, props);
   useGridInitializeState(focusStateInitializer, apiRef, props);
+  useGridInitializeState(keyboardUseStateInitializer, apiRef, props);
   useGridInitializeState(sortingStateInitializer, apiRef, props);
   useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
   useGridInitializeState(filterStateInitializer, apiRef, props);
   useGridInitializeState(rowSpanningStateInitializer, apiRef, props);
   useGridInitializeState(densityStateInitializer, apiRef, props);
   useGridInitializeState(columnReorderStateInitializer, apiRef, props);
-  useGridInitializeState(keyboardReorderStateInitializer, apiRef, props);
   useGridInitializeState(columnResizeStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
@@ -166,6 +165,7 @@ export const useDataGridProComponent = (
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
+  useGridKeyboardUse(apiRef);
   useGridRowSelection(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridRowPinning(apiRef, props);

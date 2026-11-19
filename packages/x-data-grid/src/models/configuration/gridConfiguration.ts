@@ -10,6 +10,7 @@ import type { GridPrivateApiCommon } from '../api/gridApiCommon';
 import type { GridPrivateApiCommunity } from '../api/gridApiCommunity';
 import type { DataGridProcessedProps } from '../props/DataGridProps';
 import type { GridParamsOverridableMethodsInternalHook } from './gridParamsConfiguration';
+import type { GridKeyboardReorderInternalHooks } from './gridKeyboardReorderConfiguration';
 
 export interface GridAriaAttributesInternalHook {
   useGridAriaAttributes: () => React.HTMLAttributes<HTMLElement>;
@@ -35,6 +36,7 @@ export interface GridInternalHook<Api, Props>
     GridCellEditableInternalHook<Api, Props>,
     GridAggregationInternalHooks<Api, Props>,
     GridColumnHeaderAdornmentInternalHook,
+    GridKeyboardReorderInternalHooks,
     GridRowsOverridableMethodsInternalHook<Api, Props>,
     GridParamsOverridableMethodsInternalHook<Api> {
   useCSSVariables: () => { id: string; variables: GridCSSVariablesInterface };

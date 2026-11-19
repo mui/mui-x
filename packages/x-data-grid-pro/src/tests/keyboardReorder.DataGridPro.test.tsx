@@ -21,7 +21,7 @@ import {
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
-import { getKeyboardRowMoveTarget } from '../hooks/features/rowReorder/rowReorderDragUtils';
+import { getRowMoveTarget } from '../hooks/features/rowReorder/rowReorderDragUtils';
 
 const rows = [
   { id: 0, name: 'A' },
@@ -536,6 +536,24 @@ describe('<DataGridPro /> - Keyboard reorder', () => {
       expect(getAnnouncement()).to.equal('');
     });
 
+    it('should move the row from the pre-mounted editor of imeFastEdit', async () => {
+      const { user } = render(
+        <Test
+          columns={[{ field: 'name', editable: true }]}
+          experimentalFeatures={{ imeFastEdit: true }}
+        />,
+      );
+      await user.click(getNameCell(1));
+      // The hidden editor of the cell has the DOM focus
+      const editorInput = getNameCell(1).querySelector('[data-cell-editor="preMounted"] input')!;
+      expect(document.activeElement).to.equal(editorInput);
+
+      fireEvent.keyDown(editorInput, { key: 'ArrowDown', altKey: true });
+      await waitFor(() =>
+        expect(getRowsFieldContent('name')).to.deep.equal(['A', 'C', 'B', 'D', 'E']),
+      );
+    });
+
     it('should not move during a drag', async () => {
       let privateApi: ReturnType<typeof useGridPrivateApiContext>;
       function Footer() {
@@ -563,6 +581,43 @@ describe('<DataGridPro /> - Keyboard reorder', () => {
     });
   });
 
+  describe('private API', () => {
+    let privateApi: ReturnType<typeof useGridPrivateApiContext>;
+
+    function Footer() {
+      privateApi = useGridPrivateApiContext();
+      return null;
+    }
+
+    it('should move a row without a key press', async () => {
+      const onRowOrderChange = vi.fn();
+      render(<Test onRowOrderChange={onRowOrderChange} slots={{ footer: Footer }} />);
+
+      await act(() => privateApi.current.stepRowReorder(1, 'down', { toEdge: false }));
+      expect(getRowsFieldContent('name')).to.deep.equal(['A', 'C', 'B', 'D', 'E']);
+      expect(onRowOrderChange).toHaveBeenCalledTimes(1);
+      expect(getAnnouncement()).to.equal('Row moved to position 3 of 5.');
+    });
+
+    it('should move a column without a key press', () => {
+      const onColumnOrderChange = vi.fn();
+      render(<ColumnTest onColumnOrderChange={onColumnOrderChange} slots={{ footer: Footer }} />);
+
+      act(() => privateApi.current.stepColumnReorder('a', 'right', { toEdge: true }));
+      expect(getColumnHeadersTextContent()).to.deep.equal(['Bravo', 'Charlie', 'Delta', 'Alpha']);
+      expect(onColumnOrderChange).toHaveBeenCalledTimes(1);
+      expect(getAnnouncement()).to.equal('Column Alpha moved to position 4 of 4.');
+    });
+
+    it('should do nothing when row reordering is off', async () => {
+      render(<Test rowReordering={false} slots={{ footer: Footer }} />);
+
+      await act(() => privateApi.current.stepRowReorder(1, 'down', { toEdge: false }));
+      expect(getRowsFieldContent('name')).to.deep.equal(['A', 'B', 'C', 'D', 'E']);
+      expect(getAnnouncement()).to.equal('');
+    });
+  });
+
   describe('target marker', () => {
     const getRowElement = (id: number) => document.querySelector(`[role="row"][data-id="${id}"]`)!;
     const getHeader = (field: string) =>
@@ -587,6 +642,19 @@ describe('<DataGridPro /> - Keyboard reorder', () => {
       await user.keyboard('{ArrowRight}');
       expect(getHeader('c')).to.have.class(gridClasses['columnHeader--reorderTarget']);
       expect(getHeader('b')).not.to.have.class(gridClasses['columnHeader--reorderTarget']);
+    });
+
+    it('should mark the moved row after the first Alt+ArrowDown', async () => {
+      const { user } = render(<Test />);
+      await user.click(getNameCell(1));
+      expect(getRowElement(1)).not.to.have.class(gridClasses['row--reorderTarget']);
+
+      // The reorder marks the key as handled, the marker still turns on
+      pressAlt(getNameCell(1), 'ArrowDown');
+      await waitFor(() =>
+        expect(getRowsFieldContent('name')).to.deep.equal(['A', 'C', 'B', 'D', 'E']),
+      );
+      expect(getRowElement(1)).to.have.class(gridClasses['row--reorderTarget']);
     });
 
     it('should remove the marker on pointer down', async () => {
@@ -734,13 +802,13 @@ describe('<DataGridPro /> - Keyboard reorder', () => {
     });
   });
 
-  describe('getKeyboardRowMoveTarget', () => {
+  describe('getRowMoveTarget', () => {
     const getTarget = (
       rowId: number,
       direction: 'up' | 'down',
       toEdge: boolean,
       hasCustomValidation = false,
-    ) => getKeyboardRowMoveTarget(apiRef as any, { rowId, direction, toEdge, hasCustomValidation });
+    ) => getRowMoveTarget(apiRef as any, { rowId, direction, toEdge, hasCustomValidation });
 
     it('should target the previous row above, and the next row below', () => {
       render(<Test />);

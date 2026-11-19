@@ -8,7 +8,7 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import { vars } from '../constants/cssVariables';
 import type { GridRowEventLookup } from '../models/events';
-import type { GridRowId, GridRowModel, GridTreeNode } from '../models/gridRows';
+import type { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditModes, GridCellModes } from '../models/gridEditRowModel';
 import { gridClasses } from '../constants/gridClasses';
 import { composeGridClasses } from '../utils/composeGridClasses';
@@ -31,7 +31,6 @@ import {
   gridRowIsEditingSelector,
 } from '../hooks/features/editing/gridEditingSelectors';
 import { gridIsRowDragActiveSelector } from '../hooks/features/rowReorder/gridRowReorderSelector';
-import { gridRowKeyboardReorderTargetSelector } from '../hooks/features/keyboardReorder/gridKeyboardReorderSelector';
 import { GridRowDragAndDropOverlay } from './GridRowDragAndDropOverlay';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
@@ -139,18 +138,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   });
   const editable = rootProps.editMode === GridEditModes.Row;
   const hasFocusCell = focusedColumnIndex !== undefined;
-  const isKeyboardReorderCandidate = useGridSelector(
-    apiRef,
-    gridRowKeyboardReorderTargetSelector,
-    rowId,
-  );
-  const isRowReorderable = (rootProps as any).isRowReorderable as
-    ((params: { row: GridRowModel; rowNode: GridTreeNode }) => boolean) | undefined;
-  const isKeyboardReorderTarget =
-    isKeyboardReorderCandidate &&
-    rowReordering &&
-    rowNode?.type === 'leaf' &&
-    (!isRowReorderable || isRowReorderable({ row, rowNode }));
+  const isKeyboardReorderTarget = configuration.hooks.useIsRowKeyboardReorderTarget(rowId);
   const hasVirtualFocusCellLeft =
     hasFocusCell &&
     focusedColumnIndex >= pinnedColumns.left.length &&

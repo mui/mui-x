@@ -1,9 +1,10 @@
 import type { RefObject } from '@mui/x-internals/types';
+import { gridVisibleColumnFieldsSelector } from '@mui/x-data-grid';
 import type { CursorCoordinates, GridColumnOrderChangeParams } from '@mui/x-data-grid';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 
-// Column reordering logic shared by the HTML drag and drop path (`useGridColumnReorder`)
-// and the pointer events path.
+// Column reordering logic shared by the HTML drag and drop path (`useGridColumnReorder`),
+// the pointer events path, and the keyboard.
 
 export type ColumnReorderDirection = 'left' | 'right';
 
@@ -232,6 +233,50 @@ export function getColumnReorderContext(
     originIndex: apiRef.current.getColumnIndex(field, false),
     forbiddenIndexes: getColumnReorderForbiddenIndexes(apiRef, field),
   };
+}
+
+/**
+ * Returns where a step moves a column: one visible position, or as far as allowed.
+ * Each column on the way is validated like a drag over it, so the column stops before the first one it can't pass.
+ * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
+ * @param {object} params The move.
+ * @param {string} params.field The moved column.
+ * @param {ColumnReorderDirection} params.direction The visual direction of the move.
+ * @param {boolean} params.toEdge Whether to move as far as allowed instead of one position.
+ * @param {boolean} params.isRtl Whether the grid is right-to-left.
+ * @returns {number | null} The new index among all columns, or `null` when the column can't move that way.
+ */
+export function getColumnMoveTarget(
+  apiRef: RefObject<GridPrivateApiPro>,
+  params: { field: string; direction: ColumnReorderDirection; toEdge: boolean; isRtl: boolean },
+): number | null {
+  const { field, direction, toEdge, isRtl } = params;
+  const visibleFields = gridVisibleColumnFieldsSelector(apiRef);
+  const step = (direction === 'left') !== isRtl ? -1 : 1;
+  const { forbiddenIndexes } = getColumnReorderContext(apiRef, field);
+  const getTargetIndex = (targetField: string | undefined) =>
+    targetField === undefined
+      ? null
+      : getColumnReorderTargetIndex(apiRef, {
+          dragField: field,
+          targetField,
+          direction,
+          isRtl,
+          forbiddenIndexes,
+        });
+
+  let neighbourIndex = apiRef.current.getColumnIndex(field, true) + step;
+  let targetIndex = getTargetIndex(visibleFields[neighbourIndex]);
+  // Validates each column on the way, the column moves once
+  while (toEdge && targetIndex !== null) {
+    const nextTargetIndex = getTargetIndex(visibleFields[neighbourIndex + step]);
+    if (nextTargetIndex === null) {
+      break;
+    }
+    targetIndex = nextTargetIndex;
+    neighbourIndex += step;
+  }
+  return targetIndex;
 }
 
 /**

@@ -93,6 +93,11 @@ export type {
 export { useGridFocus, focusStateInitializer } from '../hooks/features/focus/useGridFocus';
 export { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
 export {
+  useGridKeyboardUse,
+  keyboardUseStateInitializer,
+} from '../hooks/features/keyboardUse/useGridKeyboardUse';
+export { gridKeyboardUseActiveSelector } from '../hooks/features/keyboardUse/gridKeyboardUseSelector';
+export {
   useGridPagination,
   paginationStateInitializer,
 } from '../hooks/features/pagination/useGridPagination';
@@ -235,6 +240,7 @@ export {
   getActiveElement,
   getGridCellElement,
   getGridRowElement,
+  isEventForCellContent,
   isEventTargetInPortal,
   isEventTargetTextEntryElement,
 } from '../utils/domUtils';

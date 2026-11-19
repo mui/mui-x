@@ -33,7 +33,6 @@ interface GridColumnHeaderItemProps {
   columnMenuOpen: boolean;
   headerHeight: number;
   isDragging: boolean;
-  isReorderTarget?: boolean;
   isResizing: boolean;
   isLast: boolean;
   sortDirection: GridSortDirection;
@@ -52,6 +51,7 @@ interface GridColumnHeaderItemProps {
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
+  isReorderTarget: boolean;
   showRightBorder: boolean;
   showLeftBorder: boolean;
   classes?: DataGridProcessedProps['classes'];
@@ -130,6 +130,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const rootProps = useGridRootProps();
   const isRtl = useRtl();
   const adornment = configuration.hooks.useColumnHeaderAdornment(colDef.field);
+  const isReorderTarget = configuration.hooks.useIsColumnKeyboardReorderTarget(colDef.field);
   const headerCellRef = React.useRef<HTMLDivElement>(null);
   const columnMenuId = useId();
   const columnMenuButtonId = useId();
@@ -179,6 +180,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const ownerState = {
     ...props,
+    isReorderTarget,
     classes: rootProps.classes,
     showRightBorder,
     showLeftBorder,
@@ -388,7 +390,6 @@ GridColumnHeaderItem.propTypes /* remove-proptypes */ = {
   headerHeight: PropTypes.number.isRequired,
   isDragging: PropTypes.bool.isRequired,
   isLast: PropTypes.bool.isRequired,
-  isReorderTarget: PropTypes.bool,
   isResizing: PropTypes.bool.isRequired,
   isSiblingFocused: PropTypes.bool.isRequired,
   pinnedOffset: PropTypes.number,

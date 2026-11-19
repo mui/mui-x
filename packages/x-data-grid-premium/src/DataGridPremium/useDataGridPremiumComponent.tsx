@@ -15,6 +15,8 @@ import {
   filterStateInitializer,
   useGridFocus,
   useGridKeyboardNavigation,
+  useGridKeyboardUse,
+  keyboardUseStateInitializer,
   useGridPagination,
   paginationStateInitializer,
   useGridPreferencesPanel,
@@ -57,7 +59,6 @@ import {
   useGridRowReorder,
   useGridRowReorderPointer,
   useGridKeyboardReorder,
-  keyboardReorderStateInitializer,
   useGridRowReorderPreProcessors,
   useGridRowPinning,
   useGridRowPinningPreProcessors,
@@ -247,13 +248,13 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(editingStateInitializer, apiRef, props);
   useGridInitializeState(focusStateInitializer, apiRef, props);
+  useGridInitializeState(keyboardUseStateInitializer, apiRef, props);
   useGridInitializeState(sortingStateInitializer, apiRef, props);
   useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
   useGridInitializeState(filterStateInitializer, apiRef, props);
   useGridInitializeState(rowSpanningStateInitializer, apiRef, props);
   useGridInitializeState(densityStateInitializer, apiRef, props);
   useGridInitializeState(columnReorderStateInitializer, apiRef, props);
-  useGridInitializeState(keyboardReorderStateInitializer, apiRef, props);
   useGridInitializeState(columnResizeStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props, key);
@@ -277,6 +278,7 @@ export const useDataGridPremiumComponent = (
   // run before filtering and sorting read cell values in the same cascade.
   useFormulaFeature(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
+  useGridKeyboardUse(apiRef);
   // Before `useGridRowSelection`: the select-all shortcut of the cell selection feature
   // must run first and block the row selection listener with `defaultMuiPrevented`.
   useGridCellSelection(apiRef, props);

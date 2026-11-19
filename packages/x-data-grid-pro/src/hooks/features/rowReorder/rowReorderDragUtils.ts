@@ -20,8 +20,8 @@ import type { GridRowOrderChangeParams } from '../../../models/gridRowOrderChang
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { gridColumnReorderDragColSelector } from '../columnReorder/columnReorderSelector';
 
-// Row reordering logic shared by the HTML drag and drop path (`useGridRowReorder`)
-// and the pointer events path (`useGridRowReorderPointer`).
+// Row reordering logic shared by the HTML drag and drop path (`useGridRowReorder`),
+// the pointer events path (`useGridRowReorderPointer`), and the keyboard.
 
 /**
  * Time in ms a dragged row must hover a collapsed group before the group expands.
@@ -324,11 +324,12 @@ export function isReorderSessionActive(apiRef: RefObject<GridPrivateApiPro>): bo
   return gridIsRowDragActiveSelector(apiRef) || gridColumnReorderDragColSelector(apiRef) !== '';
 }
 
-export type KeyboardRowMoveResult =
+export type RowMoveTargetResult =
   { target: RowReorderDropTarget; targetIndex: number } | { refusal: 'edge' | 'invalid' };
 
 /**
- * Returns where a keyboard move puts a row of a flat tree, within the current page.
+ * Returns where a step moves a row of a flat tree, within the current page.
+ * A step is one position, or as far as allowed, from the keyboard or any other input that isn't a drag.
  * Pinned rows and footers are never targets.
  * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
  * @param {object} params The move.
@@ -336,9 +337,9 @@ export type KeyboardRowMoveResult =
  * @param {RowReorderDragDirection} params.direction The direction of the move.
  * @param {boolean} params.toEdge Whether to move as far as allowed instead of one row.
  * @param {boolean} params.hasCustomValidation Whether `isValidRowReorder` is set. Then a move to the edge stops before the first rejected row.
- * @returns {KeyboardRowMoveResult} The drop target and its index among the sorted rows, or why the row can't move.
+ * @returns {RowMoveTargetResult} The drop target and its index among the sorted rows, or why the row can't move.
  */
-export function getKeyboardRowMoveTarget(
+export function getRowMoveTarget(
   apiRef: RefObject<GridPrivateApiPro>,
   params: {
     rowId: GridRowId;
@@ -346,7 +347,7 @@ export function getKeyboardRowMoveTarget(
     toEdge: boolean;
     hasCustomValidation: boolean;
   },
-): KeyboardRowMoveResult {
+): RowMoveTargetResult {
   const { rowId, direction, toEdge, hasCustomValidation } = params;
   const rowIds = gridExpandedSortedRowIdsSelector(apiRef);
   const sourceIndex = gridExpandedSortedRowIndexLookupSelector(apiRef)[rowId];
