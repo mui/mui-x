@@ -1,6 +1,11 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { useGridApiRef, DataGridPremium } from '@mui/x-data-grid-premium';
+import {
+  useGridApiRef,
+  DataGridPremium,
+  GridCellModes,
+  GridRowModes,
+} from '@mui/x-data-grid-premium';
 import type {
   GridApi,
   DataGridPremiumProps,
@@ -601,7 +606,7 @@ describe('<DataGridPremium /> - History', () => {
     });
   });
 
-  describe('Edits that do not commit', () => {
+  describe('Edit validation and cancellation', () => {
     const validatedColumns = data.columns.map((column) =>
       column.field === 'price1M'
         ? {
@@ -613,6 +618,22 @@ describe('<DataGridPremium /> - History', () => {
           }
         : column,
     ) as DataGridPremiumProps['columns'];
+
+    function columnsWithPendingValidation(
+      validation: Promise<void>,
+    ): DataGridPremiumProps['columns'] {
+      return [
+        {
+          field: 'price1M',
+          type: 'number',
+          editable: true,
+          preProcessEditCellProps: async ({ props }) => {
+            await validation;
+            return props;
+          },
+        },
+      ];
+    }
 
     it.each(['cell', 'row'] as const)(
       'should keep the redo steps when an edit is canceled with Escape in %s mode',
@@ -647,20 +668,102 @@ describe('<DataGridPremium /> - History', () => {
     );
 
     it.each(['cell', 'row'] as const)(
-      'should not store an edit that stops while its value is validated in %s mode',
+      'should keep history empty when a %s edit stops during validation',
       async (editMode) => {
-        const { user } = render(<Test columns={validatedColumns} editMode={editMode} />);
+        const validation = Promise.withResolvers<void>();
+        const { user } = render(
+          <Test columns={columnsWithPendingValidation(validation.promise)} editMode={editMode} />,
+        );
 
-        await user.dblClick(getCell(0, 2));
-        // The click comes before the end of the input debounce, so the stop starts the validation
-        await user.keyboard('99999');
-        await user.click(getCell(1, 2));
+        await user.dblClick(getCell(0, 0));
+        await user.keyboard('42');
+        await waitFor(() => {
+          expect(apiRef.current!.state.editRows[0].price1M.isProcessingProps).to.equal(true);
+        });
+        await user.click(getCell(1, 0));
         await act(() => raf());
 
         expect(apiRef.current!.getCellMode(0, 'price1M')).to.equal('edit');
         expect(apiRef.current!.history.canUndo()).to.equal(false);
+        await act(async () => validation.resolve());
       },
     );
+
+    it.each(['cell', 'row'] as const)(
+      'should undo a %s edit when validation finishes before the requested mode change',
+      async (editMode) => {
+        const validation = Promise.withResolvers<void>();
+        const onModeChange = vi.fn();
+        const { setProps } = render(
+          <Test
+            columns={columnsWithPendingValidation(validation.promise)}
+            editMode={editMode}
+            {...(editMode === 'cell'
+              ? {
+                  cellModesModel: { 0: { price1M: { mode: GridCellModes.Edit } } },
+                  onCellModesModelChange: onModeChange,
+                }
+              : {
+                  rowModesModel: { 0: { mode: GridRowModes.Edit, fieldToFocus: 'price1M' } },
+                  onRowModesModelChange: onModeChange,
+                })}
+          />,
+        );
+        const originalValue = apiRef.current!.getRow(0).price1M;
+
+        act(() => {
+          apiRef.current!.setEditCellValue({ id: 0, field: 'price1M', value: 42 });
+        });
+        expect(apiRef.current!.state.editRows[0].price1M.isProcessingProps).to.equal(true);
+        fireEvent.keyDown(getCell(0, 0).querySelector('input')!, { key: 'Enter' });
+        const requestedModel = onModeChange.mock.lastCall![0];
+        await act(async () => validation.resolve());
+        setProps(
+          editMode === 'cell'
+            ? { cellModesModel: requestedModel }
+            : { rowModesModel: requestedModel },
+        );
+
+        expect(apiRef.current!.getRow(0).price1M).to.equal(42);
+        await act(async () => {
+          expect(await apiRef.current!.history.undo()).to.equal(true);
+          await raf();
+        });
+        expect(apiRef.current!.getRow(0).price1M).to.equal(originalValue);
+      },
+    );
+
+    it.each(['cell', 'row'] as const)(
+      'should leave an imperative %s edit out of history',
+      async (editMode) => {
+        const { user } = render(<Test editMode={editMode} />);
+        await user.dblClick(getCell(0, 2));
+        await act(async () => {
+          await apiRef.current!.setEditCellValue({ id: 0, field: 'price1M', value: 42 });
+          if (editMode === 'cell') {
+            apiRef.current!.stopCellEditMode({ id: 0, field: 'price1M' });
+          } else {
+            apiRef.current!.stopRowEditMode({ id: 0 });
+          }
+        });
+        expect(apiRef.current!.getRow(0).price1M).to.equal(42);
+        expect(apiRef.current!.history.canUndo()).to.equal(false);
+      },
+    );
+
+    it('should pass a canceled edit to a custom stop handler', async () => {
+      const store = vi.fn<GridHistoryEventHandler['store']>(() => null);
+      const handler: GridHistoryEventHandler = { store, undo: () => {}, redo: () => {} };
+      const historyEventHandlers = { cellEditStop: handler } as Record<
+        GridEvents,
+        GridHistoryEventHandler
+      >;
+      const { user } = render(<Test historyEventHandlers={historyEventHandlers} />);
+      await user.dblClick(getCell(0, 2));
+      await user.keyboard('{Escape}');
+      expect(store.mock.calls).to.have.length(1);
+      expect(store.mock.calls[0][0].reason).to.equal('escapeKeyDown');
+    });
 
     it('should not store an edit with an invalid value in cell mode', async () => {
       const { user } = render(<Test columns={validatedColumns} />);

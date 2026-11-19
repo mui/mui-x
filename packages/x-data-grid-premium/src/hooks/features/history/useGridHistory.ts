@@ -27,7 +27,7 @@ import {
   gridHistoryCanUndoSelector,
   gridHistoryCanRedoSelector,
 } from './gridHistorySelectors';
-import { createDefaultHistoryHandlers } from './defaultHistoryHandlers';
+import { createDefaultHistoryHandlers, editHistoryStoreEvents } from './defaultHistoryHandlers';
 
 export const historyStateInitializer: GridStateInitializer = (state) => {
   return {
@@ -405,29 +405,37 @@ export const useGridHistory = (
       return () => {};
     }
 
+    const validatedEvents: Partial<Record<GridEvents, GridEvents>> = {
+      cellEditStop: 'cellEditValidated',
+      rowEditStop: 'rowEditValidated',
+    };
     const events = eventNamesKey.split('|') as GridEvents[];
-    // Subscribe to all events in the map
     events.forEach((eventName) => {
-      const unsubscribe = apiRef.current.subscribeEvent(eventName, (...params: any[]) => {
-        // Don't store if the event was triggered by undo/redo
-        if (operationStateRef.current !== 'idle') {
-          return;
-        }
+      const validatedEvent = validatedEvents[eventName];
+      const subscribe = (source: GridEvents) => {
+        const unsubscribe = apiRef.current.subscribeEvent(source, (...params: any[]) => {
+          const handler = handlersRef.current[eventName];
+          if (!handler || operationStateRef.current !== 'idle') {
+            return;
+          }
+          const storeOnValidation =
+            validatedEvent && editHistoryStoreEvents.get(handler.store) === validatedEvent;
+          if (source !== (storeOnValidation ? validatedEvent : eventName)) {
+            return;
+          }
 
-        // The handler of the current map; gone when a render dropped it and the
-        // re-subscription is still pending.
-        const handler = handlersRef.current[eventName];
-        if (!handler) {
-          return;
-        }
+          const data = handler.store(...params);
+          if (data !== null) {
+            addToStack({ eventName, data });
+          }
+        });
+        eventUnsubscribersRef.current.push(unsubscribe);
+      };
 
-        const data = handler.store(...params);
-        if (data !== null) {
-          addToStack({ eventName, data });
-        }
-      });
-
-      eventUnsubscribersRef.current.push(unsubscribe);
+      subscribe(eventName);
+      if (validatedEvent) {
+        subscribe(validatedEvent);
+      }
     });
 
     return () => {

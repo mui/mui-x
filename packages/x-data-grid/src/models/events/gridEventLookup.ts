@@ -565,6 +565,17 @@ export interface GridEventLookup
     event: MuiBaseEvent;
   };
 
+  /**
+   * Fired after edit validation and before the cell update is applied.
+   * @ignore - do not document.
+   */
+  cellEditValidated: { params: Pick<GridCellEditStopParams, 'id' | 'field'> };
+  /**
+   * Fired after edit validation and before the row update is applied.
+   * @ignore - do not document.
+   */
+  rowEditValidated: { params: Pick<GridRowEditStopParams, 'id'> };
+
   // Focus
   /**
    * Fired when a cell gains focus.

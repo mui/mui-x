@@ -60,13 +60,20 @@ const rowsBeforeEdit = new WeakMap<object, GridValidRowModel>();
  */
 const rowsAfterEdit = new WeakMap<object, GridValidRowModel>();
 
+// A custom store receives the original stop event. The built-in stores read the draft
+// only once the editing hook has accepted it, while the previous row is still available.
+export const editHistoryStoreEvents = new WeakMap<
+  GridHistoryEventHandler['store'],
+  'cellEditValidated' | 'rowEditValidated'
+>();
+
 /**
  * Create the default handler for cellEditStop events.
  */
 export const createCellEditHistoryHandler = (
   apiRef: RefObject<GridApiPremium>,
 ): GridHistoryEventHandler<GridCellEditHistoryData> => {
-  return {
+  const handler: GridHistoryEventHandler<GridCellEditHistoryData> = {
     store: (params: GridCellEditStopParams) => {
       const { id, field } = params;
 
@@ -183,6 +190,8 @@ export const createCellEditHistoryHandler = (
       });
     },
   };
+  editHistoryStoreEvents.set(handler.store, 'cellEditValidated');
+  return handler;
 };
 
 /**
@@ -191,7 +200,7 @@ export const createCellEditHistoryHandler = (
 export const createRowEditHistoryHandler = (
   apiRef: RefObject<GridApiPremium>,
 ): GridHistoryEventHandler<GridRowEditHistoryData> => {
-  return {
+  const handler: GridHistoryEventHandler<GridRowEditHistoryData> = {
     store: (params: GridRowEditStopParams) => {
       const { id } = params;
 
@@ -305,6 +314,8 @@ export const createRowEditHistoryHandler = (
       });
     },
   };
+  editHistoryStoreEvents.set(handler.store, 'rowEditValidated');
+  return handler;
 };
 
 /**
