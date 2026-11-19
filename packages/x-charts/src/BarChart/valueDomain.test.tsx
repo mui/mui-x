@@ -109,6 +109,37 @@ describe('<BarChart /> - value domain', () => {
 
       expect(yAxisDomainRef.current).to.deep.equal([0.01, 10000]);
     });
+
+    it("should keep zero values in the domain with `baseline: 'min'`", () => {
+      const yAxisDomainRef = getYAxisDomain({
+        series: [{ data: [0, 5, 10], baseline: 'min' }],
+        xAxis: [{ data: ['A', 'B', 'C'] }],
+      });
+
+      expect(yAxisDomainRef.current).to.deep.equal([0, 10]);
+    });
+
+    it('should leave zero values out of a log domain', () => {
+      const yAxisDomainRef = getYAxisDomain({
+        series: [{ data: [0, 12, 1500], baseline: 'min' }],
+        xAxis: [{ data: ['A', 'B', 'C'] }],
+        yAxis: [{ scaleType: 'log' }],
+      });
+
+      expect(yAxisDomainRef.current).to.deep.equal([10, 10000]);
+    });
+
+    it('should share the baseline across the series of a stack', () => {
+      const yAxisDomainRef = getYAxisDomain({
+        series: [
+          { data: [null, 12], stack: 'a', baseline: 'min' },
+          { data: [100, 100], stack: 'a' },
+        ],
+        yAxis: [{ scaleType: 'log' }],
+      });
+
+      expect(yAxisDomainRef.current).to.deep.equal([10, 1000]);
+    });
   });
 
   describe('domainLimit', () => {

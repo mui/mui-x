@@ -1,3 +1,4 @@
+import { warnOnce } from '@mui/x-internals/warning';
 import type { ChartsXAxisProps, ChartsYAxisProps, ComputedAxis, ScaleName } from '../models/axis';
 import type { BarSeriesType } from '../models/seriesType/bar';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
@@ -34,13 +35,15 @@ export function getBarBaselineValue(
 }
 
 /**
- * The `[start, end]` values of a bar.
- * Bars at the stack origin (0) start at `baselineValue`, and collapse on it when they have no length.
+ * The `[start, end]` values of a bar. Bars at the stack origin (0) start at `baselineValue`.
+ * In a stack, that start is clamped between 0 and the bar end so stacked bars never overlap.
+ * @param {number | null} value The series value, `null` when missing or hidden.
  */
 export function getBarExtent(
   stacked: readonly [number, number],
   value: number | null,
   baselineValue: number,
+  isStacked: boolean,
 ): [number, number] {
   const low = Math.min(stacked[0], stacked[1]);
   const high = Math.max(stacked[0], stacked[1]);
@@ -50,7 +53,25 @@ export function getBarExtent(
   if (start !== 0) {
     return [start, end];
   }
-  return [baselineValue, end === 0 ? baselineValue : end];
+  // The diverging stack offset puts zero values at [0, 0] anywhere in the stack.
+  if (value === null || (isStacked && end === 0)) {
+    return [baselineValue, baselineValue];
+  }
+  if (!isStacked || !Number.isFinite(baselineValue)) {
+    return [baselineValue, end];
+  }
+
+  const clamped = Math.min(Math.max(baselineValue, Math.min(0, end)), Math.max(0, end));
+  if (process.env.NODE_ENV !== 'production' && clamped !== baselineValue) {
+    warnOnce(
+      [
+        'MUI X Charts: A stacked bar series has a `baseline` outside the range between 0 and the value of a bar at the bottom of the stack.',
+        'The bar start is clamped to that range so stacked bars do not overlap.',
+        'Use a baseline between 0 and the values at the bottom of the stack, or remove the `stack` property.',
+      ].join('\n'),
+    );
+  }
+  return [clamped, end];
 }
 
 export function createGetBarDimensions(params: {
@@ -87,15 +108,21 @@ export function createGetBarDimensions(params: {
 
     const [start, end] = getBarExtent(
       series.visibleStackedData[dataIndex],
-      seriesValue,
+      series.hidden ? null : seriesValue,
       baselineValue,
+      series.stack !== undefined,
     );
-    const valueCoordinates = [valueScale(start)!, valueScale(end)!];
+    const valueCoordinates = [valueScale(start) ?? NaN, valueScale(end) ?? NaN];
+
+    // For example a value of 0 on a log scale.
+    if (!valueCoordinates.every(Number.isFinite)) {
+      return null;
+    }
 
     const [minValueCoord, maxValueCoord] = findMinMax(valueCoordinates).map((v) => Math.round(v));
 
     let barSize = 0;
-    if (seriesValue !== 0) {
+    if (start !== end) {
       if (!series.hidden) {
         barSize = Math.max(series.minBarSize, maxValueCoord - minValueCoord);
       }

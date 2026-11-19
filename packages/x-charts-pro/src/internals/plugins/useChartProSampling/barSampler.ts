@@ -11,14 +11,21 @@ import type { SamplingPyramid } from './sampling.pyramid.types';
  */
 export const barSampler: SamplingStrategy<'bar', SamplingPyramid> = {
   build: (series) => {
+    const { visibleStackedData, data, hidden, stack } = series;
     const baselineValue = getBarBaselineValue(series.baseline);
-    const extents = series.visibleStackedData.map((point, index) =>
-      getBarExtent(point, series.data[index], baselineValue),
-    );
-    return buildSamplingPyramid(
-      Float64Array.from(extents, (extent) => Math.min(extent[0], extent[1])),
-      Float64Array.from(extents, (extent) => Math.max(extent[0], extent[1])),
-    );
+    const low = new Float64Array(visibleStackedData.length);
+    const high = new Float64Array(visibleStackedData.length);
+    for (let index = 0; index < visibleStackedData.length; index += 1) {
+      const [start, end] = getBarExtent(
+        visibleStackedData[index],
+        hidden ? null : data[index],
+        baselineValue,
+        stack !== undefined,
+      );
+      low[index] = Math.min(start, end);
+      high[index] = Math.max(start, end);
+    }
+    return buildSamplingPyramid(low, high);
   },
 
   sample,

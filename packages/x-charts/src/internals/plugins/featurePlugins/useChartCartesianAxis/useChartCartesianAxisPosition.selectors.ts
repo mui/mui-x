@@ -100,8 +100,9 @@ export const selectorBarItemAtPosition = createSelector(
         // The point is inside the band for this series
         const [startValue, endValue] = getBarExtent(
           aSeries.visibleStackedData[dataIndex],
-          aSeries.data[dataIndex],
+          aSeries.hidden ? null : aSeries.data[dataIndex],
           getBarBaselineValue(aSeries.baseline, continuousAxis.scale.domain()),
+          aSeries.stack !== undefined,
         );
         const start = continuousAxis.scale(startValue);
         const end = continuousAxis.scale(endValue);

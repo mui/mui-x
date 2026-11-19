@@ -85,6 +85,20 @@ Bar plots only support numeric and null values.`,
 
   stackingGroups.forEach((stackingGroup) => {
     const { ids, stackingOffset, stackingOrder } = stackingGroup;
+    // The stack bottom changes per index, so all series of a stack share one baseline.
+    const baseline = ids.map((id) => series[id].baseline).find((value) => value !== undefined);
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      ids.some((id) => series[id].baseline !== undefined && series[id].baseline !== baseline)
+    ) {
+      warnOnce(
+        [
+          `MUI X Charts: The bar series of the stack "${series[ids[0]].stack}" have different \`baseline\` values.`,
+          'A stack can only start from one baseline, so the first one is used for every series of the stack.',
+          'Set the same `baseline` on all the series of the stack.',
+        ].join('\n'),
+      );
+    }
     const keys = ids.map((id) => {
       // Use dataKey if needed and available
       const dataKey = series[id].dataKey;
@@ -137,6 +151,7 @@ Bar plots only support numeric and null values.`,
         minBarSize: 0,
         valueFormatter: series[id].valueFormatter ?? barValueFormatter,
         ...series[id],
+        ...(baseline === undefined ? {} : { baseline }),
         data,
         hidden,
         stackedData: stackedData[index] as [number, number][],

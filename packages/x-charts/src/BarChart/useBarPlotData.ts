@@ -139,13 +139,19 @@ export function processBarDataForPlot(
 
       const xScale = xAxisConfig.scale;
       const yScale = yAxisConfig.scale;
-      const baselineValue = getBarBaselineValue(
-        series[seriesId].baseline,
-        (verticalLayout ? yScale : xScale).domain(),
-      );
+      const valueScale = verticalLayout ? yScale : xScale;
+      const baselineValue = getBarBaselineValue(series[seriesId].baseline, valueScale.domain());
       const xOrigin = Math.round(xScale(verticalLayout ? 0 : baselineValue) ?? 0);
       const yOrigin = Math.round(yScale(verticalLayout ? baselineValue : 0) ?? 0);
       const stacked = series[seriesId].visibleStackedData;
+      const isStacked = series[seriesId].stack !== undefined;
+      const getExtent = (dataIndex: number) =>
+        getBarExtent(
+          stacked[dataIndex],
+          series[seriesId].hidden ? null : series[seriesId].data[dataIndex],
+          baselineValue,
+          isStacked,
+        );
 
       const colorGetter = getColor(series[seriesId], xAxes[xAxisId], yAxes[yAxisId]);
       const stackId = series[seriesId].stack;
@@ -165,7 +171,7 @@ export function processBarDataForPlot(
 
         const lastNegative = lastNegativePerIndex.get(dataIndex);
         const lastPositive = lastPositivePerIndex.get(dataIndex);
-        const [start, end] = getBarExtent(stacked[dataIndex], result.value, baselineValue);
+        const [start, end] = getExtent(dataIndex);
         const sign = (reverse ? -1 : 1) * Math.sign(end - start || (result.value ?? 0));
         if (sign > 0) {
           if (lastPositive) {
@@ -243,17 +249,21 @@ export function processBarDataForPlot(
           series: series[seriesId],
           numberOfGroups: stackingGroups.length,
         });
-        const seriesData = series[seriesId].data;
 
         for (const { startIndex, endIndex, indices } of sampledBuckets) {
           let low = Infinity;
           let high = -Infinity;
           for (let k = 0; k < indices.length; k += 1) {
-            const index = indices[k];
-            const [start, end] = getBarExtent(stacked[index], seriesData[index], baselineValue);
+            const [start, end] = getExtent(indices[k]);
+            if (!Number.isFinite(valueScale(start)) || !Number.isFinite(valueScale(end))) {
+              continue;
+            }
             // Both coords, so diverging/negative bars (`[0, -5]`, base > top) keep their full extent.
             low = Math.min(low, start, end);
             high = Math.max(high, start, end);
+          }
+          if (low > high) {
+            continue;
           }
           const dimensions = getBucketBarDimensions(startIndex, endIndex, low, high, groupIndex);
           registerResult(makeResult(startIndex, dimensions), startIndex);

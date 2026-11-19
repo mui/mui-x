@@ -72,7 +72,9 @@ export interface BarSeriesType
    */
   barLabelPlacement?: 'center' | 'outside';
   /**
-   * The value the bars start from. With stacking, only bars at the bottom of the stack start from it.
+   * The value the bars start from.
+   * In a stack, only the bars at the bottom use it, and their start stays between 0 and their value so bars never overlap.
+   * Series of the same stack share one baseline.
    *
    * - `'min'` bars start from the axis minimum. Useful with a log scale.
    * - `'max'` bars start from the axis maximum.
