@@ -7,6 +7,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { describe, it, expect } from 'vitest';
+import type { AxisGroup, XAxis } from '../models/axis';
 
 describe('<ChartsXAxis />', () => {
   const { render } = createRenderer();
@@ -74,7 +75,7 @@ describe('<ChartsXAxis />', () => {
   });
 
   // https://github.com/mui/mui-x/issues/19452
-  it.skipIf(isJSDOM)('should hide overlapping grouped tick labels per group level', () => {
+  describe.skipIf(isJSDOM)('grouped axis tick labels', () => {
     const months = [
       'Jan',
       'Feb',
@@ -91,38 +92,64 @@ describe('<ChartsXAxis />', () => {
     ];
     const data = Array.from({ length: 24 }, (_, index) => index);
 
-    const { container } = render(
-      <BarChart
-        width={250}
-        height={150}
-        series={[{ data: data.map(() => 1) }]}
-        xAxis={[
-          {
-            scaleType: 'band',
-            data,
-            groups: [
-              { getValue: (index: number) => months[index % 12] },
-              { getValue: (index: number) => 2020 + Math.floor(index / 12) },
-            ],
-          },
-        ]}
-        hideLegend
-      />,
-    );
+    const renderGroupedChart = (
+      xAxis: Partial<XAxis<'band'>> = {},
+      monthGroup: Partial<AxisGroup> = {},
+    ) =>
+      render(
+        <BarChart
+          width={250}
+          height={150}
+          series={[{ data: data.map(() => 1) }]}
+          xAxis={[
+            {
+              scaleType: 'band',
+              data,
+              groups: [
+                { getValue: (index: number) => months[index % 12], ...monthGroup },
+                { getValue: (index: number) => 2020 + Math.floor(index / 12) },
+              ],
+              ...xAxis,
+            },
+          ]}
+          hideLegend
+        />,
+      );
 
-    const getLabelRects = (groupIndex: number) =>
+    const getLabelRects = (container: HTMLElement, groupIndex: number) =>
       Array.from(
         container.querySelectorAll(`[data-group-index="${groupIndex}"] .${axisClasses.tickLabel}`),
         (label) => label.getBoundingClientRect(),
       ).sort((a, b) => a.left - b.left);
 
-    const monthRects = getLabelRects(0);
-    expect(monthRects.length).to.be.greaterThan(0);
-    expect(monthRects.length).to.be.lessThan(data.length);
-    monthRects.slice(1).forEach((rect, index) => {
-      expect(rect.left).to.be.greaterThanOrEqual(monthRects[index].right);
+    it('should hide overlapping labels per group level', () => {
+      const { container } = renderGroupedChart();
+
+      const monthRects = getLabelRects(container, 0);
+      expect(monthRects.length).to.be.greaterThan(0);
+      expect(monthRects.length).to.be.lessThan(data.length);
+      monthRects.slice(1).forEach((rect, index) => {
+        expect(rect.left).to.be.greaterThanOrEqual(monthRects[index].right);
+      });
+
+      expect(getLabelRects(container, 1).length).to.equal(2);
     });
 
-    expect(getLabelRects(1).length).to.equal(2);
+    it('should measure each level with its own tickLabelStyle', () => {
+      const defaultCount = getLabelRects(renderGroupedChart().container, 0).length;
+      const largeCount = getLabelRects(
+        renderGroupedChart({}, { tickLabelStyle: { fontSize: 24 } }).container,
+        0,
+      ).length;
+
+      expect(largeCount).to.be.lessThan(defaultCount);
+    });
+
+    it('should show every label with tickLabelInterval: () => true', () => {
+      const { container } = renderGroupedChart({ tickLabelInterval: () => true });
+
+      expect(getLabelRects(container, 0).length).to.equal(data.length);
+      expect(getLabelRects(container, 1).length).to.equal(2);
+    });
   });
 });

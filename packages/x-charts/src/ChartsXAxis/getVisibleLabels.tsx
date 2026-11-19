@@ -84,7 +84,7 @@ export function getVisibleLabels<T extends TickItem>(
 export function getVisibleGroupedLabels(
   ticks: GroupedTickItemType[],
   groups: AxisGroup[],
-  { tickLabelStyle, ...options }: Omit<Parameters<typeof getVisibleLabels>[1], 'tickLabelInterval'>,
+  { tickLabelStyle, ...options }: Parameters<typeof getVisibleLabels>[1],
 ): Set<GroupedTickItemType> {
   const visibleLabels = new Set<GroupedTickItemType>();
 

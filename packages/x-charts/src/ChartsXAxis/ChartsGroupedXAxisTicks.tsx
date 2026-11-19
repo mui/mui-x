@@ -48,6 +48,7 @@ function ChartsGroupedXAxisTicks(inProps: ChartsGroupedXAxisProps) {
     tickInterval,
     tickPlacement,
     tickLabelPlacement,
+    tickLabelInterval,
     tickLabelMinGap,
   } = defaultizedProps;
 
@@ -75,6 +76,7 @@ function ChartsGroupedXAxisTicks(inProps: ChartsGroupedXAxisProps) {
 
   const visibleLabels = getVisibleGroupedLabels(xTicks, groups, {
     tickLabelStyle: axisTickLabelProps.style,
+    tickLabelInterval,
     tickLabelMinGap,
     reverse,
     isMounted,

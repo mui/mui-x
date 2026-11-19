@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import type { GroupedTickItemType } from '../hooks/useTicksGrouped';
-import { getVisibleGroupedLabels } from './getVisibleLabels';
+import { getVisibleGroupedLabels, getVisibleLabels } from './getVisibleLabels';
 
 const tick = (
   groupIndex: number,
@@ -22,6 +22,16 @@ const options = {
 
 const visibleValues = (ticks: GroupedTickItemType[], set: Set<GroupedTickItemType>) =>
   ticks.filter((item) => set.has(item)).map((item) => item.formattedValue);
+
+describe('getVisibleLabels', () => {
+  it('should apply tickLabelMinGap on reversed axes', () => {
+    const ticks = [tick(0, 100, 'a'), tick(0, 90, 'b'), tick(0, 80, 'c')];
+
+    expect(
+      visibleValues(ticks, getVisibleLabels(ticks, { ...options, reverse: true })),
+    ).to.deep.equal(['a', 'c']);
+  });
+});
 
 describe('getVisibleGroupedLabels', () => {
   const groups = [{ getValue: () => '' }, { getValue: () => '' }];
@@ -66,5 +76,23 @@ describe('getVisibleGroupedLabels', () => {
     expect(
       visibleValues(ticks, getVisibleGroupedLabels(ticks, groups, { ...options, reverse: true })),
     ).to.deep.equal(['a', 'c']);
+  });
+
+  it('should apply a tickLabelInterval function per level with the index within the level', () => {
+    const ticks = [
+      tick(0, 0, 'a'),
+      tick(0, 30, 'b'),
+      tick(0, 60, 'c'),
+      tick(1, 15, 'X'),
+      tick(1, 45, 'Y'),
+    ];
+    const tickLabelInterval = (_: unknown, index: number) => index % 2 === 0;
+
+    expect(
+      visibleValues(
+        ticks,
+        getVisibleGroupedLabels(ticks, groups, { ...options, tickLabelInterval }),
+      ),
+    ).to.deep.equal(['a', 'c', 'X']);
   });
 });
