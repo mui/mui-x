@@ -349,7 +349,6 @@ export class CellValueUpdater {
     );
 
     // Insert the created rows in the order of the paste.
-    // Do not read them back from the state: on React 17, a pending `rows` prop sync removes them in `updateRows()`.
     const createdRows = new Map<GridRowId, GridValidRowModel>();
     rowIdsToUpdate.forEach((rowId) => {
       const row = rowsToInsert.get(rowId);
@@ -375,9 +374,25 @@ export class CellValueUpdater {
       rowUpdates.push(row);
     });
 
-    // Apply the rows before `clipboardPasteEnd`, so that its listeners (for example,
-    // the undo/redo history) see the grid with the pasted values.
+    // Track this batch through throttled updates. A controlled `rows` prop can replace
+    // the grid state before `clipboardPasteEnd`, including during `updateRows()` on React 17.
+    const cache = apiRef.current.caches.rows;
+    const batchModels =
+      createdRows.size > 0 && cache.updates.type === 'partial'
+        ? (cache.updates.modelLookupRef ??= { current: cache.dataRowIdToModelLookup })
+        : undefined;
     await rowUpdates.flush();
+
+    if (batchModels) {
+      for (const rowId of createdRows.keys()) {
+        const row = batchModels.current[rowId];
+        if (row) {
+          createdRows.set(rowId, row);
+        } else {
+          createdRows.delete(rowId);
+        }
+      }
+    }
 
     apiRef.current.publishEvent('clipboardPasteEnd', { oldRows, newRows, createdRows });
     this.rowsToUpdate.clear();
