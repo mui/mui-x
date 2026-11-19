@@ -1,11 +1,6 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import {
-  useGridApiRef,
-  DataGridPremium,
-  GridCellModes,
-  GridRowModes,
-} from '@mui/x-data-grid-premium';
+import { useGridApiRef, DataGridPremium } from '@mui/x-data-grid-premium';
 import type {
   GridApi,
   DataGridPremiumProps,
@@ -686,50 +681,6 @@ describe('<DataGridPremium /> - History', () => {
         expect(apiRef.current!.getCellMode(0, 'price1M')).to.equal('edit');
         expect(apiRef.current!.history.canUndo()).to.equal(false);
         await act(async () => validation.resolve());
-      },
-    );
-
-    it.each(['cell', 'row'] as const)(
-      'should undo a %s edit when validation finishes before the requested mode change',
-      async (editMode) => {
-        const validation = Promise.withResolvers<void>();
-        const onModeChange = vi.fn();
-        const { setProps } = render(
-          <Test
-            columns={columnsWithPendingValidation(validation.promise)}
-            editMode={editMode}
-            {...(editMode === 'cell'
-              ? {
-                  cellModesModel: { 0: { price1M: { mode: GridCellModes.Edit } } },
-                  onCellModesModelChange: onModeChange,
-                }
-              : {
-                  rowModesModel: { 0: { mode: GridRowModes.Edit, fieldToFocus: 'price1M' } },
-                  onRowModesModelChange: onModeChange,
-                })}
-          />,
-        );
-        const originalValue = apiRef.current!.getRow(0).price1M;
-
-        act(() => {
-          apiRef.current!.setEditCellValue({ id: 0, field: 'price1M', value: 42 });
-        });
-        expect(apiRef.current!.state.editRows[0].price1M.isProcessingProps).to.equal(true);
-        fireEvent.keyDown(getCell(0, 0).querySelector('input')!, { key: 'Enter' });
-        const requestedModel = onModeChange.mock.lastCall![0];
-        await act(async () => validation.resolve());
-        setProps(
-          editMode === 'cell'
-            ? { cellModesModel: requestedModel }
-            : { rowModesModel: requestedModel },
-        );
-
-        expect(apiRef.current!.getRow(0).price1M).to.equal(42);
-        await act(async () => {
-          expect(await apiRef.current!.history.undo()).to.equal(true);
-          await raf();
-        });
-        expect(apiRef.current!.getRow(0).price1M).to.equal(originalValue);
       },
     );
 

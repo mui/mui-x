@@ -3,7 +3,6 @@ import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { errorOnce } from '@mui/x-internals/warning';
 import useEventCallback from '@mui/utils/useEventCallback';
-import useLazyRef from '@mui/utils/useLazyRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { useGridEvent, useGridEventPriority } from '../../utils/useGridEvent';
@@ -58,8 +57,6 @@ export const useGridCellEditing = (
 ) => {
   const [cellModesModel, setCellModesModel] = React.useState<GridCellModesModel>({});
   const cellModesModelRef = React.useRef(cellModesModel);
-  // Match a user's stop request to its mode transition, including a later controlled update.
-  const userStopRequests = useLazyRef(() => new Map<string, GridStopCellEditModeParams>());
   const prevCellModesModel = React.useRef<GridCellModesModel>({});
   const {
     processRowUpdate,
@@ -250,16 +247,14 @@ export const useGridCellEditing = (
 
       const ignoreModifications = reason === 'escapeKeyDown';
 
-      const stopParams = {
+      apiRef.current.stopCellEditMode({
         id,
         field,
         ignoreModifications,
         cellToFocusAfter,
-      };
-      userStopRequests.current.set(JSON.stringify([id, field]), stopParams);
-      apiRef.current.stopCellEditMode(stopParams);
+      });
     },
-    [apiRef, userStopRequests],
+    [apiRef],
   );
 
   const runIfNoFieldErrors =
@@ -425,14 +420,10 @@ export const useGridCellEditing = (
       const { id, field, ...other } = params;
 
       throwIfNotInMode(id, field, GridCellModes.Edit);
-      const key = JSON.stringify([id, field]);
-      if (userStopRequests.current.get(key) !== params) {
-        userStopRequests.current.delete(key);
-      }
 
       updateFieldInCellModesModel(id, field, { mode: GridCellModes.View, ...other });
     },
-    [throwIfNotInMode, updateFieldInCellModesModel, userStopRequests],
+    [throwIfNotInMode, updateFieldInCellModesModel],
   );
 
   const updateStateToStopCellEditMode = useEventCallback<[GridStopCellEditModeParams], void>(
@@ -441,7 +432,6 @@ export const useGridCellEditing = (
 
       throwIfNotInMode(id, field, GridCellModes.Edit);
 
-      const isUserStop = userStopRequests.current.delete(JSON.stringify([id, field]));
       apiRef.current.runPendingEditCellValueMutation(id, field);
 
       const finishCellEditMode = () => {
@@ -468,10 +458,6 @@ export const useGridCellEditing = (
         // Revert the mode in the cellModesModel prop back to "edit"
         updateFieldInCellModesModel(id, field, { mode: GridCellModes.Edit });
         return;
-      }
-
-      if (isUserStop) {
-        apiRef.current.publishEvent('cellEditValidated', { id, field });
       }
 
       const rowUpdate = apiRef.current.getRowWithUpdatedValuesFromCellEditing(id, field);

@@ -2,7 +2,6 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
-import useLazyRef from '@mui/utils/useLazyRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { errorOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
@@ -68,8 +67,6 @@ export const useGridRowEditing = (
 ) => {
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
   const rowModesModelRef = React.useRef(rowModesModel);
-  // Match a user's stop request to its mode transition, including a later controlled update.
-  const userStopRequests = useLazyRef(() => new Map<GridRowId, GridStopRowEditModeParams>());
   const prevRowModesModel = React.useRef<GridRowModesModel>({});
   const prevRowValuesLookup = React.useRef<Record<GridRowId, GridValidRowModel>>({});
   const focusTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -349,11 +346,9 @@ export const useGridRowEditing = (
 
       const ignoreModifications = reason === 'escapeKeyDown';
 
-      const stopParams = { id, ignoreModifications, field, cellToFocusAfter };
-      userStopRequests.current.set(id, stopParams);
-      apiRef.current.stopRowEditMode(stopParams);
+      apiRef.current.stopRowEditMode({ id, ignoreModifications, field, cellToFocusAfter });
     },
-    [apiRef, userStopRequests],
+    [apiRef],
   );
 
   useGridEvent(apiRef, 'cellDoubleClick', runIfEditModeIsRow(handleCellDoubleClick));
@@ -540,20 +535,15 @@ export const useGridRowEditing = (
 
       throwIfNotInMode(id, GridRowModes.Edit);
 
-      if (userStopRequests.current.get(id) !== params) {
-        userStopRequests.current.delete(id);
-      }
-
       updateRowInRowModesModel(id, { mode: GridRowModes.View, ...other });
     },
-    [throwIfNotInMode, updateRowInRowModesModel, userStopRequests],
+    [throwIfNotInMode, updateRowInRowModesModel],
   );
 
   const updateStateToStopRowEditMode = useEventCallback<[GridStopRowEditModeParams], void>(
     async (params) => {
       const { id, ignoreModifications, field: focusedField, cellToFocusAfter = 'none' } = params;
 
-      const isUserStop = userStopRequests.current.delete(id);
       apiRef.current.runPendingEditCellValueMutation(id);
 
       const finishRowEditMode = () => {
@@ -591,10 +581,6 @@ export const useGridRowEditing = (
         // Revert the mode in the rowModesModel prop back to "edit"
         updateRowInRowModesModel(id, { mode: GridRowModes.Edit });
         return;
-      }
-
-      if (isUserStop) {
-        apiRef.current.publishEvent('rowEditValidated', { id });
       }
 
       const rowUpdate = apiRef.current.getRowWithUpdatedValuesFromRowEditing(id);
