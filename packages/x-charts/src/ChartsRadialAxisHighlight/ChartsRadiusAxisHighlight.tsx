@@ -17,7 +17,7 @@ import {
 } from './ChartsRadialAxisHighlightPath';
 import { getRingPath } from '../internals/getRingPath';
 import { isOrdinalScale } from '../internals/scaleGuards';
-import { getOrdinalPosition } from '../internals/getOrdinalPosition';
+import { getOrdinalBandStartMapper } from '../internals/getOrdinalBandStartMapper';
 
 function polarToSvg(cx: number, cy: number, radius: number, angle: number) {
   return [cx + radius * Math.sin(angle), cy - radius * Math.cos(angle)] as const;
@@ -93,7 +93,10 @@ export default function ChartsRadiusAxisHighlight(props: {
   if (!isOrdinalScale(radiusAxis.scale)) {
     return null;
   }
-  const radius = getOrdinalPosition(radiusAxis.scale, radiusAxis.data ?? [], radiusIndex ?? -1);
+  const radius = getOrdinalBandStartMapper(
+    radiusAxis.scale,
+    radiusAxis.data ?? [],
+  )(radiusIndex ?? -1);
   if (radius === undefined) {
     return null;
   }

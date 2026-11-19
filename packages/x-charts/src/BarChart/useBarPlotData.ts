@@ -4,7 +4,7 @@ import getColor from './seriesConfig/bar/getColor';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
 import type { MaskData, ProcessedBarData, ProcessedBarSeriesData } from './types';
 import { checkBarChartScaleErrors } from './checkBarChartScaleErrors';
-import { getOrdinalPosition } from '../internals/getOrdinalPosition';
+import { getOrdinalBandStartMapper } from '../internals/getOrdinalBandStartMapper';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
 import type { SeriesProcessorResult } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import type { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
@@ -269,8 +269,9 @@ export function processBarDataForPlot(
         let lastIndex = dataLength - 1;
         if (dataLength > 1) {
           const baseScale = baseScaleConfig.scale;
-          const p0 = getOrdinalPosition(baseScale, baseData, 0);
-          const p1 = getOrdinalPosition(baseScale, baseData, 1);
+          const getBandStart = getOrdinalBandStartMapper(baseScale, baseData);
+          const p0 = getBandStart(0);
+          const p1 = getBandStart(1);
           if (p0 !== undefined && p1 !== undefined && p1 !== p0) {
             const slope = p1 - p0; // signed px per index (handles reversed axis)
             const winLo = verticalLayout ? xMin : yMin;

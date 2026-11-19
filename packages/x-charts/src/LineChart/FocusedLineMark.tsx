@@ -2,7 +2,7 @@
 import { useTheme } from '@mui/material/styles';
 import { useFocusedItem } from '../hooks/useFocusedItem';
 import { useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
-import { getIndexToPositionMapper } from '../internals/getOrdinalPosition';
+import { getIndexToPositionMapper } from '../internals/getOrdinalBandStartMapper';
 
 const RADIUS = 6;
 export function FocusedLineMark() {

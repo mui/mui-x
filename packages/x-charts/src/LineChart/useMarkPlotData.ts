@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useChartId } from '../hooks/useChartId';
 import { useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
 import { cleanId } from '../internals/cleanId';
-import { getIndexToPositionMapper } from '../internals/getOrdinalPosition';
+import { getIndexToPositionMapper } from '../internals/getOrdinalBandStartMapper';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import type { SeriesId } from '../models/seriesType/common';
 import type {

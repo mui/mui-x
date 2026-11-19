@@ -3,7 +3,7 @@ import { useRadiusAxes, useRotationAxes } from '@mui/x-charts/hooks';
 import {
   findMinMax,
   getBandSize,
-  getOrdinalPosition,
+  getOrdinalBandStartMapper,
   useAllSeriesOfType,
 } from '@mui/x-charts/internals';
 import type {
@@ -115,6 +115,7 @@ function processRadialBarDataForPlot(
         );
 
         const seriesDataPoints: ProcessedRadialBarData[] = [];
+        const getBandStart = getOrdinalBandStartMapper(baseScale, baseAxisConfig.data ?? []);
 
         for (let dataIndex = 0; dataIndex < baseAxisConfig.data!.length; dataIndex += 1) {
           const seriesValue = seriesItem.data[dataIndex];
@@ -136,7 +137,7 @@ function processRadialBarDataForPlot(
           const valueStart = isPositive ? maxValueCoord - barSize : minValueCoord;
           const valueEnd = isPositive ? maxValueCoord : minValueCoord + barSize;
 
-          const bandStart = getOrdinalPosition(baseScale, baseAxisConfig.data ?? [], dataIndex);
+          const bandStart = getBandStart(dataIndex);
           if (bandStart === undefined) {
             continue;
           }

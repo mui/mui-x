@@ -8,7 +8,7 @@ import { tickFrequencies } from '../utils/timeTicks';
 import { isDateData } from '../internals/dateHelpers';
 import { useChartsContext } from '../context/ChartsProvider/useChartsContext';
 import { EPSILON } from '../utils/epsilon';
-import { getOrdinalPosition } from '../internals/getOrdinalPosition';
+import { getOrdinalBandStartMapper } from '../internals/getOrdinalBandStartMapper';
 
 export interface TickParams {
   /**
@@ -133,18 +133,24 @@ export function getOrdinalTickValues<T extends { toString(): string }>(
     return { values: tickInterval, getBandStart: (tickIndex) => scale(tickInterval[tickIndex]) };
   }
 
+  const getBandStart = getOrdinalBandStartMapper(scale, domain);
+  const hasSpacing = tickSpacing !== undefined && tickSpacing > 0;
+  if (typeof tickInterval !== 'function' && !hasSpacing) {
+    return { values: domain, getBandStart };
+  }
+
   let indexes = domain.map((_, index) => index);
   if (typeof tickInterval === 'function') {
     indexes = indexes.filter((index) => tickInterval(domain[index], index));
   }
 
-  if (tickSpacing !== undefined && tickSpacing > 0) {
+  if (hasSpacing) {
     indexes = applyTickSpacing(indexes, scale.range(), tickSpacing);
   }
 
   return {
     values: indexes.map((index) => domain[index]),
-    getBandStart: (tickIndex) => getOrdinalPosition(scale, domain, indexes[tickIndex]),
+    getBandStart: (tickIndex) => getBandStart(indexes[tickIndex]),
   };
 }
 
@@ -161,7 +167,7 @@ function getTimeTicks<T extends { toString(): string }>(
 
   const isReversed = scale.range()[0] > scale.range()[1];
   // Indexes are inclusive regarding the entire band.
-  const getBandStart = (index: number) => getOrdinalPosition(scale, domain, index);
+  const getBandStart = getOrdinalBandStartMapper(scale, domain);
   const startIndex = domain.findIndex((_, index) => {
     return isInside(getTickPosition(scale, getBandStart(index), isReversed ? 'start' : 'end'));
   });
@@ -267,13 +273,14 @@ export function getTicks(options: GetTicksOptions) {
       isInside,
     );
 
+    const getBandStart = getOrdinalBandStartMapper(scale, domain);
     return ticksIndexes.map(({ index, formatter }) => {
       const value = domain[index];
       const formattedValue = formatter(value as Date);
       return {
         value,
         formattedValue,
-        offset: getTickPosition(scale, getOrdinalPosition(scale, domain, index), tickPlacement),
+        offset: getTickPosition(scale, getBandStart(index), tickPlacement),
         labelOffset: 0,
       };
     });

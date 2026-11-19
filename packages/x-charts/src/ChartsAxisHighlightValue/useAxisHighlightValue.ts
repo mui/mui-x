@@ -1,5 +1,5 @@
 import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
-import { getIndexToPositionMapper } from '../internals/getOrdinalPosition';
+import { getIndexToPositionMapper } from '../internals/getOrdinalBandStartMapper';
 import { useDrawingArea } from '../hooks';
 import { useStore } from '../internals/store/useStore';
 import {

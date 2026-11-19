@@ -10,7 +10,7 @@ import { getAxisIndex } from '../../internals/plugins/featurePlugins/useChartCar
 import type { SeriesItemIdentifierWithType } from '../../models/seriesType';
 import { isOrdinalScale } from '../../internals/scaleGuards';
 import { getAsNumber } from '../../internals/getAsNumber';
-import { getIndexToPositionMapper } from '../../internals/getOrdinalPosition';
+import { getIndexToPositionMapper } from '../../internals/getOrdinalBandStartMapper';
 import type { ComputedAxis } from '../../models/axis';
 import { evaluateCurveY } from './curveEvaluation';
 

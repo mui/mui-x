@@ -1,4 +1,4 @@
-import { getBandSize, getOrdinalPosition } from '@mui/x-charts/internals';
+import { getBandSize, getOrdinalBandStartMapper } from '@mui/x-charts/internals';
 import type {
   ChartSeriesDefaultized,
   ChartsXAxisProps,
@@ -25,15 +25,13 @@ export function createGetRangeBarDimensions(params: {
 
   const { barWidth, offset } = getBandSize(bandWidth, numberOfGroups, baseScaleConfig.barGapRatio);
 
+  const getBandStart = getOrdinalBandStartMapper(baseScaleConfig.scale, baseScaleConfig.data ?? []);
+
   return function getBarDimensions(dataIndex: number, groupIndex: number) {
     const barOffset = groupIndex * (barWidth + offset);
 
     const seriesValue = series.data[dataIndex];
-    const bandStart = getOrdinalPosition(
-      baseScaleConfig.scale,
-      baseScaleConfig.data ?? [],
-      dataIndex,
-    );
+    const bandStart = getBandStart(dataIndex);
 
     if (seriesValue == null || bandStart === undefined) {
       return null;

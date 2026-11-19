@@ -1,21 +1,21 @@
 import { describe, it, expect } from 'vitest';
 import { scaleLinear } from '@mui/x-charts-vendor/d3-scale';
 import { scaleBand, scalePoint } from './scales';
-import { getIndexToPositionMapper, getOrdinalPosition } from './getOrdinalPosition';
+import { getIndexToPositionMapper, getOrdinalBandStartMapper } from './getOrdinalBandStartMapper';
 
-describe('getOrdinalPosition', () => {
+describe('getOrdinalBandStartMapper', () => {
   const data = ['a', 'b', 'a', 'a'];
 
   it('resolves duplicated values by index', () => {
     const scale = scaleBand(data, [0, 400]);
-    expect(data.map((_, i) => getOrdinalPosition(scale, data, i))).to.deep.equal([
+    expect(data.map((_, i) => getOrdinalBandStartMapper(scale, data)(i))).to.deep.equal([
       0, 100, 200, 300,
     ]);
   });
 
   it('handles reversed ranges', () => {
     const scale = scaleBand(data, [400, 0]);
-    expect(data.map((_, i) => getOrdinalPosition(scale, data, i))).to.deep.equal([
+    expect(data.map((_, i) => getOrdinalBandStartMapper(scale, data)(i))).to.deep.equal([
       300, 200, 100, 0,
     ]);
   });
@@ -23,15 +23,15 @@ describe('getOrdinalPosition', () => {
   it('matches scale(value) for unique values', () => {
     const unique = ['a', 'b', 'c'];
     const scale = scaleBand(unique, [0, 120]).padding(0.2);
-    expect(unique.map((_, i) => getOrdinalPosition(scale, unique, i))).to.deep.equal(
+    expect(unique.map((_, i) => getOrdinalBandStartMapper(scale, unique)(i))).to.deep.equal(
       unique.map((value) => scale(value)),
     );
   });
 
   it('returns undefined for out of range indexes', () => {
     const scale = scaleBand(data, [0, 400]);
-    expect(getOrdinalPosition(scale, data, -1)).to.equal(undefined);
-    expect(getOrdinalPosition(scale, data, 4)).to.equal(undefined);
+    expect(getOrdinalBandStartMapper(scale, data)(-1)).to.equal(undefined);
+    expect(getOrdinalBandStartMapper(scale, data)(4)).to.equal(undefined);
   });
 });
 

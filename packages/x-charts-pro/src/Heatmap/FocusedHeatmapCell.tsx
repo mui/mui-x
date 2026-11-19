@@ -1,5 +1,5 @@
 import { useTheme } from '@mui/material/styles';
-import { getOrdinalPosition } from '@mui/x-charts/internals';
+import { getOrdinalBandStartMapper } from '@mui/x-charts/internals';
 import { useFocusedItem, useXScale, useYScale } from '../hooks';
 
 export function FocusedHeatmapCell(props: React.SVGAttributes<SVGRectElement>) {
@@ -17,8 +17,8 @@ export function FocusedHeatmapCell(props: React.SVGAttributes<SVGRectElement>) {
   const { xIndex, yIndex } = focusedItem;
   return (
     <rect
-      x={getOrdinalPosition(xScale, xDomain, xIndex)}
-      y={getOrdinalPosition(yScale, yDomain, yIndex)}
+      x={getOrdinalBandStartMapper(xScale, xDomain)(xIndex)}
+      y={getOrdinalBandStartMapper(yScale, yDomain)(yIndex)}
       width={xScale.bandwidth()}
       height={yScale.bandwidth()}
       fill="none"

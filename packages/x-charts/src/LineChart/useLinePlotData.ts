@@ -19,7 +19,7 @@ import {
 import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { useStore } from '../internals/store/useStore';
 import { getCurveFactory } from '../internals/getCurve';
-import { getIndexToPositionMapper } from '../internals/getOrdinalPosition';
+import { getIndexToPositionMapper } from '../internals/getOrdinalBandStartMapper';
 import type { ChartsXAxisProps, ChartsYAxisProps } from '../models';
 import { useDrawingArea, useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
 import { DEFAULT_X_AXIS_KEY } from '../constants';

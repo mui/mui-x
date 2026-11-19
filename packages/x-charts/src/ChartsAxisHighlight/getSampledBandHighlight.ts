@@ -1,6 +1,6 @@
 import type { D3OrdinalScale } from '../models/axis';
 import { getSampledBucketRegion } from '../internals/getSampledBucketRegion';
-import { getOrdinalPosition } from '../internals/getOrdinalPosition';
+import { getOrdinalBandStartMapper } from '../internals/getOrdinalBandStartMapper';
 
 function findDataIndex(data: readonly unknown[], value: unknown): number {
   if (value instanceof Date) {
@@ -37,7 +37,7 @@ export function getSampledBandHighlight({
   const halfPadding = (step - scale.bandwidth()) / 2;
   const index = data ? (dataIndex ?? findDataIndex(data, value)) : -1;
 
-  const position = data ? getOrdinalPosition(scale, data, index) : undefined;
+  const position = data ? getOrdinalBandStartMapper(scale, data)(index) : undefined;
 
   let bandStart = (position ?? scale(value)!) - halfPadding;
   let bandSize = step;

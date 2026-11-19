@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { isOrdinalScale } from '../internals/scaleGuards';
-import { getOrdinalPosition } from '../internals/getOrdinalPosition';
+import { getOrdinalBandStartMapper } from '../internals/getOrdinalBandStartMapper';
 import { useStore } from '../internals/store/useStore';
 import {
   selectorChartPolarCenter,
@@ -60,7 +60,7 @@ export default function ChartsRotationAxisHighlight(props: {
   const outerRadius = radiusScale.range()[1];
 
   const angle = isOrdinalScale(rotationScale)
-    ? getOrdinalPosition(rotationScale, rotationAxis.data ?? [], rotationIndex)
+    ? getOrdinalBandStartMapper(rotationScale, rotationAxis.data ?? [])(rotationIndex)
     : rotationScale(rotationValue as never);
   if (angle === undefined) {
     return null;

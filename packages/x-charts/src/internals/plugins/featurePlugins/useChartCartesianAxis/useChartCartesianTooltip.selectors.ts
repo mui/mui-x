@@ -24,7 +24,7 @@ import type {
   ChartsYAxisProps,
 } from '../../../../models/axis';
 import type { ComputeResult } from './computeAxisValue';
-import { getIndexToPositionMapper } from '../../../getOrdinalPosition';
+import { getIndexToPositionMapper } from '../../../getOrdinalBandStartMapper';
 import type { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 

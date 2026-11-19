@@ -4,7 +4,7 @@ import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
 import { isOrdinalScale } from '../internals/scaleGuards';
 import type { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { getCurveFactory } from '../internals/getCurve';
-import { getIndexToPositionMapper } from '../internals/getOrdinalPosition';
+import { getIndexToPositionMapper } from '../internals/getOrdinalBandStartMapper';
 import type { ChartsXAxisProps, ChartsYAxisProps } from '../models';
 import { useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
 import { DEFAULT_X_AXIS_KEY } from '../constants';

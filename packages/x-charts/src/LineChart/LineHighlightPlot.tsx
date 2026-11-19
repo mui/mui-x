@@ -5,7 +5,7 @@ import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useStore } from '../internals/store/useStore';
 import { LineHighlightElement } from './LineHighlightElement';
 import type { LineHighlightElementProps } from './LineHighlightElement';
-import { getIndexToPositionMapper } from '../internals/getOrdinalPosition';
+import { getIndexToPositionMapper } from '../internals/getOrdinalBandStartMapper';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { useLineSeriesContext } from '../hooks/useLineSeries';
 import getColor from './seriesConfig/getColor';

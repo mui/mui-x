@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
-import { getIndexToPositionMapper } from '../internals/getOrdinalPosition';
+import { getIndexToPositionMapper } from '../internals/getOrdinalBandStartMapper';
 import { isOrdinalScale } from '../internals/scaleGuards';
 import { useStore } from '../internals/store/useStore';
 import {

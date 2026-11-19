@@ -1,7 +1,7 @@
 import * as React from 'react';
 import type { ScaleBand } from '@mui/x-charts-vendor/d3-scale';
 import {
-  getOrdinalPosition,
+  getOrdinalBandStartMapper,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
   useStore,
@@ -43,7 +43,7 @@ export function CandlestickPreviewPlot(props: PreviewPlotProps) {
 
         const xScale = xAxis.scale as ScaleBand<{ toString(): string }>;
         const yScale = yAxis.scale as D3ContinuousScale;
-        const xDomain = xScale.domain();
+        const getBandStart = getOrdinalBandStartMapper(xScale, xScale.domain());
         const bandWidth = xScale.bandwidth();
 
         // Build a line path from the close prices
@@ -53,7 +53,7 @@ export function CandlestickPreviewPlot(props: PreviewPlotProps) {
             return;
           }
 
-          const scaledX = getOrdinalPosition(xScale, xDomain, dataIndex);
+          const scaledX = getBandStart(dataIndex);
           if (scaledX === undefined) {
             return;
           }

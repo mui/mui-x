@@ -6,7 +6,7 @@ import {
   selectorChartYAxis,
 } from '../../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import type { TooltipItemPositionSelector } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
-import { getIndexToPositionMapper } from '../../internals/getOrdinalPosition';
+import { getIndexToPositionMapper } from '../../internals/getOrdinalBandStartMapper';
 
 export const selectorTooltipItemPosition: TooltipItemPositionSelector<'line'> =
   createSelectorMemoized(

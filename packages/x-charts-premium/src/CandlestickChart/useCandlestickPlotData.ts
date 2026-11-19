@@ -2,7 +2,7 @@
 import * as React from 'react';
 import type { ScaleBand } from '@mui/x-charts-vendor/d3-scale';
 import {
-  getOrdinalPosition,
+  getOrdinalBandStartMapper,
   selectorChartsHighlightStateCallback,
   useStore,
 } from '@mui/x-charts/internals';
@@ -140,7 +140,7 @@ export function useCandlestickPlotData(
     /* Hoist drawing-area offsets into scalars so the loop body doesn't re-read them. */
     const left = drawingArea.left;
     const top = drawingArea.top;
-    const xDomain = xScale.domain();
+    const getBandStart = getOrdinalBandStartMapper(xScale, xScale.domain());
 
     for (let dataIndex = 0; dataIndex < n; dataIndex += 1) {
       const datum = series.data[dataIndex];
@@ -159,7 +159,7 @@ export function useCandlestickPlotData(
         continue;
       }
 
-      const scaledX = getOrdinalPosition(xScale, xDomain, dataIndex) ?? NaN;
+      const scaledX = getBandStart(dataIndex) ?? NaN;
       const open = datum[0];
       const high = datum[1];
       const low = datum[2];

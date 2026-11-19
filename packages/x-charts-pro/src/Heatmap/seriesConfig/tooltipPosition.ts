@@ -1,6 +1,6 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
 import {
-  getOrdinalPosition,
+  getOrdinalBandStartMapper,
   isBandScaleConfig,
   selectorChartsTooltipItem,
   selectorChartSeriesProcessed,
@@ -49,8 +49,8 @@ export const selectorTooltipItemPosition: TooltipItemPositionSelector<'heatmap'>
         return null;
       }
 
-      const x = getOrdinalPosition(xAxis.scale, xAxis.data ?? [], identifier.xIndex);
-      const y = getOrdinalPosition(yAxis.scale, yAxis.data ?? [], identifier.yIndex);
+      const x = getOrdinalBandStartMapper(xAxis.scale, xAxis.data ?? [])(identifier.xIndex);
+      const y = getOrdinalBandStartMapper(yAxis.scale, yAxis.data ?? [])(identifier.yIndex);
 
       if (x === undefined || y === undefined) {
         return null;
