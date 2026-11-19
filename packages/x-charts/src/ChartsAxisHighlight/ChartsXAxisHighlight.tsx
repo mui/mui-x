@@ -79,7 +79,7 @@ export default function ChartsXHighlight(props: {
     }
 
     return (
-      <React.Fragment key={`${axisId}-${value}`}>
+      <React.Fragment key={`${axisId}-${axisValue.dataIndex ?? value}`}>
         {isXScaleOrdinal && xScale(value) !== undefined && (
           <ChartsAxisHighlightPath
             d={`M ${bandStart} ${top} l ${bandSize} 0 l 0 ${height} l ${-bandSize} 0 Z`}

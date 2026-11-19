@@ -4,6 +4,7 @@ import { describeConformance } from 'test/utils/charts/describeConformance';
 import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { useYAxis } from '@mui/x-charts/hooks';
 import { chartsAxisHighlightClasses } from '@mui/x-charts/ChartsAxisHighlight';
+import { chartsGridClasses } from '@mui/x-charts/ChartsGrid';
 import { screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
@@ -331,6 +332,49 @@ describe('<BarChart />', () => {
 
       expect(screen.getAllByText('A')).to.have.length(3);
       expect(screen.getAllByText('B')).to.have.length(1);
+    });
+
+    it('renders reversed bars at distinct positions', () => {
+      const { container } = render(
+        <BarChart {...duplicatedProps} xAxis={[{ ...duplicatedProps.xAxis[0], reverse: true }]} />,
+      );
+
+      const xs = Array.from(container.querySelectorAll(`.${barClasses.element}`), (bar) =>
+        Number(bar.getAttribute('x')),
+      );
+      expect(xs).to.have.length(4);
+      expect(xs).to.deep.equal([...new Set(xs)].sort((a, b) => b - a));
+      expect(screen.getAllByText('A')).to.have.length(3);
+    });
+
+    it('renders one vertical grid line per tick', () => {
+      const { container } = render(<BarChart {...duplicatedProps} grid={{ vertical: true }} />);
+
+      const xs = Array.from(
+        container.querySelectorAll(`.${chartsGridClasses.verticalLine}`),
+        (line) => Number(line.getAttribute('x1')),
+      );
+      expect(xs).to.have.length(5);
+      expect(new Set(xs).size).to.equal(5);
+    });
+
+    it('highlights two indexes sharing a value', () => {
+      const { container } = render(
+        <BarChart
+          {...duplicatedProps}
+          highlightedAxis={[
+            { axisId: 'x', dataIndex: 0 },
+            { axisId: 'x', dataIndex: 1 },
+          ]}
+        />,
+      );
+
+      const paths = Array.from(
+        container.querySelectorAll(`.${chartsAxisHighlightClasses.root}`),
+        (path) => path.getAttribute('d'),
+      );
+      expect(paths).to.have.length(2);
+      expect(paths[0]).not.to.equal(paths[1]);
     });
 
     it('highlights the band of the highlighted index', () => {

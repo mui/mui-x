@@ -78,7 +78,7 @@ export default function ChartsYHighlight(props: {
     }
 
     return (
-      <React.Fragment key={`${axisId}-${value}`}>
+      <React.Fragment key={`${axisId}-${axisValue.dataIndex ?? value}`}>
         {isYScaleOrdinal && yScale(value) !== undefined && (
           <ChartsAxisHighlightPath
             d={`M ${left} ${bandStart} l 0 ${bandSize} l ${width} 0 l 0 ${-bandSize} Z`}

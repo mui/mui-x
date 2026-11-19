@@ -102,7 +102,7 @@ export function useAxisHighlightValue(
     if (axisDirection === 'x') {
       if (labelPosition === 'start' || labelPosition === 'both') {
         result.push({
-          key: `${itemAxisId}-${String(itemValue)}-start`,
+          key: `${itemAxisId}-${dataIndex ?? String(itemValue)}-start`,
           x: position,
           y: top,
           formattedValue,
@@ -114,7 +114,7 @@ export function useAxisHighlightValue(
       }
       if (labelPosition === 'end' || labelPosition === 'both') {
         result.push({
-          key: `${itemAxisId}-${String(itemValue)}-end`,
+          key: `${itemAxisId}-${dataIndex ?? String(itemValue)}-end`,
           x: position,
           y: top + height,
           formattedValue,
@@ -127,7 +127,7 @@ export function useAxisHighlightValue(
     } else {
       if (labelPosition === 'start' || labelPosition === 'both') {
         result.push({
-          key: `${itemAxisId}-${String(itemValue)}-start`,
+          key: `${itemAxisId}-${dataIndex ?? String(itemValue)}-start`,
           x: left,
           y: position,
           formattedValue,
@@ -139,7 +139,7 @@ export function useAxisHighlightValue(
       }
       if (labelPosition === 'end' || labelPosition === 'both') {
         result.push({
-          key: `${itemAxisId}-${String(itemValue)}-end`,
+          key: `${itemAxisId}-${dataIndex ?? String(itemValue)}-end`,
           x: left + width,
           y: position,
           formattedValue,

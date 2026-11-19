@@ -37,7 +37,7 @@ export function ChartsRotationGrid(props: ChartsRotationGridProps) {
 
   return (
     <React.Fragment>
-      {ticks.map(({ value, offset }) => {
+      {ticks.map(({ offset }, index) => {
         const angle = offset - Math.PI / 2;
 
         const dx = Math.cos(angle);
@@ -48,14 +48,7 @@ export function ChartsRotationGrid(props: ChartsRotationGridProps) {
         const x2 = cx + outerRadius * dx;
         const y2 = cy + outerRadius * dy;
         return (
-          <GridLine
-            key={`rotation-${value?.getTime?.() ?? value}`}
-            x1={x1}
-            y1={y1}
-            x2={x2}
-            y2={y2}
-            className={classes.rotationLine}
-          />
+          <GridLine key={index} x1={x1} y1={y1} x2={x2} y2={y2} className={classes.rotationLine} />
         );
       })}
     </React.Fragment>
