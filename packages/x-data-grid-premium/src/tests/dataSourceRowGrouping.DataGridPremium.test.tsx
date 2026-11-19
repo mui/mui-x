@@ -118,6 +118,71 @@ describe('<DataGridPremium /> - Data source row grouping selection', () => {
     expect(checkbox('G')).to.have.attribute('data-indeterminate', 'true');
   });
 
+  it('should apply a controlled selection after collapsing with an empty selection', async () => {
+    const { apiRef, setProps, checkbox, toggle, getRows } = await renderGroupedGrid({
+      rowSelectionModel: { type: 'include', ids: new Set() },
+    });
+    await toggle('G');
+    const callsBeforeSelection = getRows.mock.calls.length;
+
+    setProps({ rowSelectionModel: { type: 'include', ids: new Set(['L1']) } });
+
+    expect(checkbox('G')).to.have.attribute('data-indeterminate', 'true');
+    expect(checkbox('G').checked).to.equal(false);
+    expect(apiRef.current!.getRow('L1')).to.equal(null);
+    expect(apiRef.current!.getRow('L2')).to.equal(null);
+    expect(getRows.mock.calls.length).to.equal(callsBeforeSelection);
+  });
+
+  it.each([null, 'P', 'G'])(
+    'should preserve partial selection when sorting (collapsed group: %s)',
+    async (collapsedGroup) => {
+      const { user, apiRef, checkbox, toggle, getRows } = await renderGroupedGrid();
+      await user.click(checkbox('L1'));
+      if (collapsedGroup !== null) {
+        await toggle(collapsedGroup);
+      }
+      const selection = apiRef.current!.state.rowSelection;
+      const callsBeforeSort = getRows.mock.calls.length;
+      const sortModel = [{ field: 'name', sort: 'desc' as const }];
+
+      act(() => apiRef.current!.setSortModel(sortModel));
+
+      await waitFor(() => {
+        expect(getRows.mock.calls.length).to.be.greaterThan(callsBeforeSort);
+        expect(apiRef.current!.getRowElement('G')).not.to.equal(null);
+      });
+      expect(getRows.mock.calls.at(-1)![0].sortModel).to.deep.equal(sortModel);
+      expect(checkbox('G')).to.have.attribute('data-indeterminate', 'true');
+      expect(apiRef.current!.state.rowSelection).to.deep.equal(selection);
+
+      await toggle('G');
+      await waitFor(() => expect(apiRef.current!.getRowElement('P')).not.to.equal(null));
+      expect(checkbox('P')).to.have.attribute('data-indeterminate', 'true');
+      await toggle('P');
+      await waitFor(() => expect(apiRef.current!.getRowElement('L2')).not.to.equal(null));
+      expect(checkbox('L1').checked).to.equal(true);
+      expect(checkbox('L2').checked).to.equal(false);
+    },
+  );
+
+  it('should discard retained relationships when sorting returns no root rows', async () => {
+    const { user, apiRef, checkbox, toggle, rowsByPath, getRows } = await renderGroupedGrid();
+    await user.click(checkbox('L1'));
+    await toggle('G');
+    rowsByPath[''] = [];
+    const callsBeforeSort = getRows.mock.calls.length;
+
+    act(() => apiRef.current!.setSortModel([{ field: 'name', sort: 'desc' }]));
+
+    await waitFor(() => {
+      expect(getRows.mock.calls.length).to.be.greaterThan(callsBeforeSort);
+      expect(apiRef.current!.state.rows.loading).to.equal(false);
+    });
+    expect(apiRef.current!.state.rowSelectionRetention.size).to.equal(0);
+    expect(apiRef.current!.isRowSelected('L1')).to.equal(true);
+  });
+
   it('should preserve retained selection when isRowSelectable gets a new reference', async () => {
     const { user, apiRef, checkbox, toggle, setProps } = await renderGroupedGrid({
       isRowSelectable: () => true,
