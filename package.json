@@ -128,6 +128,7 @@
     "globby": "16.2.4",
     "jsdom": "catalog:",
     "lerna": "10.1.3",
+    "lz-string": "1.5.0",
     "moment": "catalog:",
     "moment-timezone": "catalog:",
     "picomatch": "4.0.7",
