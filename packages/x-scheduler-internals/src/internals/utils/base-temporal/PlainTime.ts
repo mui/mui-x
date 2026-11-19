@@ -1,4 +1,6 @@
 import type { AssignmentOptions } from './PlainDate';
+import { ISO_CALENDAR_ID } from './calendar';
+import { formatPlainValue } from './locale';
 import {
   compareOrder,
   formatIsoTime,
@@ -182,6 +184,11 @@ export declare namespace BaseTemporal {
      * Returns the time as an `HH:mm:ss` string, followed by the fraction of a second when it isn't 0.
      */
     toJSON(): string;
+    /**
+     * Returns the time formatted for a locale with `Intl.DateTimeFormat`: its hour, minute and
+     * second by default.
+     */
+    toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
   }
 }
 
@@ -189,25 +196,45 @@ export declare namespace BaseTemporal {
  * A time without a date or timezone.
  */
 export class PlainTime implements BaseTemporal.PlainTime {
-  declare readonly hour: number;
-  declare readonly minute: number;
-  declare readonly second: number;
-  declare readonly millisecond: number;
-  declare readonly microsecond: number;
-  declare readonly nanosecond: number;
+  // Private like the internal slots of Temporal, so the value has no own properties.
+  readonly #hour: number;
+  readonly #minute: number;
+  readonly #second: number;
+  readonly #millisecond: number;
+  readonly #microsecond: number;
+  readonly #nanosecond: number;
 
   constructor(hour = 0, minute = 0, second = 0, millisecond = 0, microsecond = 0, nanosecond = 0) {
     const fields = readTime(
       { hour, minute, second, millisecond, microsecond, nanosecond },
       { overflow: 'reject' },
     );
-    this.hour = fields.hour;
-    this.minute = fields.minute;
-    this.second = fields.second;
-    this.millisecond = fields.millisecond;
-    this.microsecond = fields.microsecond;
-    this.nanosecond = fields.nanosecond;
+    this.#hour = fields.hour;
+    this.#minute = fields.minute;
+    this.#second = fields.second;
+    this.#millisecond = fields.millisecond;
+    this.#microsecond = fields.microsecond;
+    this.#nanosecond = fields.nanosecond;
     Object.freeze(this);
+  }
+
+  get hour(): number {
+    return this.#hour;
+  }
+  get minute(): number {
+    return this.#minute;
+  }
+  get second(): number {
+    return this.#second;
+  }
+  get millisecond(): number {
+    return this.#millisecond;
+  }
+  get microsecond(): number {
+    return this.#microsecond;
+  }
+  get nanosecond(): number {
+    return this.#nanosecond;
   }
 
   static from(item: PlainTimeInput, options?: AssignmentOptions): PlainTime {
@@ -248,7 +275,20 @@ export class PlainTime implements BaseTemporal.PlainTime {
   toJSON(): string {
     return this.toString();
   }
+  toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string {
+    return formatPlainValue(
+      'PlainTime',
+      'time',
+      Math.floor(getTimeNumber(this) / 1e6),
+      ISO_CALENDAR_ID,
+      locales,
+      options,
+    );
+  }
   valueOf(): never {
     return throwOnPrimitiveConversion('PlainTime');
+  }
+  get [Symbol.toStringTag](): string {
+    return 'Temporal.PlainTime';
   }
 }

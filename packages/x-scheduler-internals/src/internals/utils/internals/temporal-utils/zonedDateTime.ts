@@ -1,5 +1,5 @@
 import { getTimeNumber, LAST_SUPPORTED_DAY, MS_PER_DAY, padNumber } from '../../base-temporal/iso';
-import type { PlainDate } from '../../base-temporal/PlainDate';
+import { getDayNumber } from '../../base-temporal/PlainDate';
 import type { PlainDateTime } from '../../base-temporal/PlainDateTime';
 import type { ZonedDateTimeAssignmentOptions } from '../../base-temporal/ZonedDateTime';
 
@@ -223,8 +223,7 @@ export function resolve(
   const { disambiguation, offsetPolicy } = readZonedOptions(options);
   // The clock time, in milliseconds since 1970-01-01T00:00 of the wall clock.
   const local =
-    (value.toPlainDate() as PlainDate).dayNumber * MS_PER_DAY +
-    Math.floor(getTimeNumber(value) / 1e6);
+    getDayNumber(value.toPlainDate()) * MS_PER_DAY + Math.floor(getTimeNumber(value) / 1e6);
   if (
     offsetPolicy !== 'ignore' &&
     (offset === 'Z' || (offset !== undefined && offsetPolicy === 'use'))

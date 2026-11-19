@@ -1,6 +1,18 @@
 export const MS_PER_DAY = 86_400_000;
 
 /**
+ * Reads the private fields of a `PlainDate` for the code that receives dates of any
+ * implementation, without importing the class, which the bundles that create no dates leave out.
+ * Set by the class.
+ */
+export const plainDateInternals: {
+  /**
+   * Returns the day number of a `PlainDate`, and `undefined` for another value.
+   */
+  getDayNumber?: ((value: object) => number | undefined) | undefined;
+} = {};
+
+/**
  * `HH:mm`, `HH:mm:ss` or `HH:mm:ss` with up to nine fractional digits.
  */
 export const ISO_TIME_REGEXP = /^(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{1,9}))?)?$/;

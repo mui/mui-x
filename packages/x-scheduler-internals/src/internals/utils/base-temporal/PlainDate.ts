@@ -5,6 +5,8 @@ import {
   getDaysInMonth as getIsoDaysInMonth,
   getIsoDayOfWeek,
   isValidIsoDate,
+  MS_PER_DAY,
+  plainDateInternals,
   readOverflow,
   throwOnPrimitiveConversion,
   toDayNumber,
@@ -28,8 +30,14 @@ import { PlainTime, readTime } from './PlainTime';
 import type { BaseTemporal as PlainTimeTypes, PlainTimeInput } from './PlainTime';
 import { createPlainDateTime } from './PlainDateTime';
 import type { BaseTemporal as PlainDateTimeTypes } from './PlainDateTime';
+import { formatPlainValue } from './locale';
 
 export { FIRST_SUPPORTED_DAY, LAST_SUPPORTED_DAY } from './iso';
+
+// Read the private fields of a date for the code outside the class. The class sets them before
+// any date exists.
+let readDayNumber: (date: PlainDate) => number;
+let readCalendarDate: (date: PlainDate) => CalendarDate | undefined;
 
 // Declared apart from the class, whose `toString()` and `valueOf()` the API generator cannot handle,
 // and inside a namespace, which the API generator uses to name the type in arrays and tuples.
@@ -148,6 +156,11 @@ export declare namespace BaseTemporal {
      * followed by a `[u-ca=…]` annotation outside the ISO calendar.
      */
     toJSON(): string;
+    /**
+     * Returns the date formatted for a locale with `Intl.DateTimeFormat`: its year, month and day
+     * by default.
+     */
+    toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
   }
 }
 
@@ -322,8 +335,9 @@ function addYearsAndMonths(
   months: number,
   overflow: 'constrain' | 'reject',
 ): number {
-  const fields = date.calendarDate ?? fromDayNumber(date.dayNumber);
-  const monthCode = date.calendarDate?.monthCode ?? ISO_MONTH_CODES[fields.month - 1];
+  const calendarDate = readCalendarDate(date);
+  const fields = calendarDate ?? fromDayNumber(readDayNumber(date));
+  const monthCode = calendarDate?.monthCode ?? ISO_MONTH_CODES[fields.month - 1];
   // Bounds the loops below: longer durations leave the supported days anyway.
   let year = fields.year + Math.max(-MAX_YEARS, Math.min(years, MAX_YEARS));
   const monthOfCode = getMonthOfCode(calendar, year, monthCode, overflow);
@@ -362,20 +376,29 @@ function addYearsAndMonths(
  * A date without a time or timezone, in the ISO calendar or another calendar system.
  */
 export class PlainDate implements BaseTemporal.PlainDate {
-  declare public readonly calendarId: string;
+  // Private like the internal slots of Temporal, so the value has no own properties. The other
+  // modules read the day number with `getDayNumber()`.
+  readonly #calendarId: string;
 
   /**
-   * The number of days since 1970-01-01. Omitted from the public type.
+   * The number of days since 1970-01-01.
    */
-  declare public readonly dayNumber: number;
+  readonly #dayNumber: number;
 
   /**
    * The calendar fields of a date in another calendar than ISO, read from its calendar once, when
-   * the date is created, and `undefined` in the ISO calendar. Omitted from the public type. A date
-   * in the ISO calendar computes its fields from its day number when they're read: most dates are
-   * only compared and moved, so a date is cheaper to create this way.
+   * the date is created, and `undefined` in the ISO calendar. A date in the ISO calendar computes
+   * its fields from its day number when they're read: most dates are only compared and moved, so a
+   * date is cheaper to create this way.
    */
-  declare public readonly calendarDate: CalendarDate | undefined;
+  readonly #calendarDate: CalendarDate | undefined;
+
+  static {
+    readDayNumber = (date) => date.#dayNumber;
+    readCalendarDate = (date) => date.#calendarDate;
+    plainDateInternals.getDayNumber = (value) =>
+      #dayNumber in value ? value.#dayNumber : undefined;
+  }
 
   constructor(
     isoYear: number,
@@ -400,67 +423,71 @@ export class PlainDate implements BaseTemporal.PlainDate {
       dayNumber = toDayNumber(year, month, day);
       checkCalendarRange(implementation, dayNumber);
     }
-    this.calendarId = implementation.id;
-    this.dayNumber = dayNumber;
-    this.calendarDate =
+    this.#calendarId = implementation.id;
+    this.#dayNumber = dayNumber;
+    this.#calendarDate =
       implementation.id === ISO_CALENDAR_ID
         ? undefined
         : Object.freeze(implementation.getDate(dayNumber));
     Object.freeze(this);
   }
 
+  public get calendarId(): string {
+    return this.#calendarId;
+  }
+
   public get era(): string | undefined {
-    return this.calendarDate?.era;
+    return this.#calendarDate?.era;
   }
 
   public get eraYear(): number | undefined {
-    return this.calendarDate?.eraYear;
+    return this.#calendarDate?.eraYear;
   }
 
   public get year(): number {
-    const calendarDate = this.calendarDate;
-    return calendarDate === undefined ? fromDayNumber(this.dayNumber).year : calendarDate.year;
+    const calendarDate = this.#calendarDate;
+    return calendarDate === undefined ? fromDayNumber(this.#dayNumber).year : calendarDate.year;
   }
 
   public get month(): number {
-    const calendarDate = this.calendarDate;
-    return calendarDate === undefined ? fromDayNumber(this.dayNumber).month : calendarDate.month;
+    const calendarDate = this.#calendarDate;
+    return calendarDate === undefined ? fromDayNumber(this.#dayNumber).month : calendarDate.month;
   }
 
   public get monthCode(): string {
-    return this.calendarDate === undefined
-      ? ISO_MONTH_CODES[fromDayNumber(this.dayNumber).month - 1]
-      : this.calendarDate.monthCode;
+    return this.#calendarDate === undefined
+      ? ISO_MONTH_CODES[fromDayNumber(this.#dayNumber).month - 1]
+      : this.#calendarDate.monthCode;
   }
 
   public get day(): number {
-    const calendarDate = this.calendarDate;
-    return calendarDate === undefined ? fromDayNumber(this.dayNumber).day : calendarDate.day;
+    const calendarDate = this.#calendarDate;
+    return calendarDate === undefined ? fromDayNumber(this.#dayNumber).day : calendarDate.day;
   }
 
   public get dayOfWeek(): number {
-    return getIsoDayOfWeek(this.dayNumber);
+    return getIsoDayOfWeek(this.#dayNumber);
   }
 
   public get daysInMonth(): number {
-    const calendarDate = this.calendarDate;
+    const calendarDate = this.#calendarDate;
     if (calendarDate === undefined) {
-      const isoDate = fromDayNumber(this.dayNumber);
+      const isoDate = fromDayNumber(this.#dayNumber);
       return getIsoDaysInMonth(isoDate.year, isoDate.month);
     }
     return getCalendar(this.calendarId).getDaysInMonth(calendarDate.year, calendarDate.month);
   }
 
   public get monthsInYear(): number {
-    return this.calendarDate === undefined
+    return this.#calendarDate === undefined
       ? ISO_MONTH_CODES.length
-      : getMonthCodes(getCalendar(this.calendarId), this.calendarDate.year).length;
+      : getMonthCodes(getCalendar(this.calendarId), this.#calendarDate.year).length;
   }
 
   public static from(item: PlainDateItem, options?: AssignmentOptions): PlainDate {
     const overflow = readOverflow(options, 'PlainDate.from()');
     if (item instanceof PlainDate) {
-      return createPlainDate(item.dayNumber, item.calendarId);
+      return createPlainDate(item.#dayNumber, item.#calendarId);
     }
     const { dayNumber, calendar } = readDate(item, overflow, 'PlainDate.from()');
     return createPlainDate(dayNumber, calendar.id);
@@ -477,7 +504,7 @@ export class PlainDate implements BaseTemporal.PlainDate {
     const { years, months, weeks, days } = readDuration(duration);
     const overflow = readOverflow(options, 'PlainDate.prototype.add()');
     const calendar = getCalendar(this.calendarId);
-    let dayNumber = this.dayNumber;
+    let dayNumber = this.#dayNumber;
     if (years !== 0 || months !== 0) {
       dayNumber = addYearsAndMonths(calendar, this, years, months, overflow);
     }
@@ -498,13 +525,13 @@ export class PlainDate implements BaseTemporal.PlainDate {
 
   public equals(other: PlainDateItem): boolean {
     const date = other instanceof PlainDate ? other : PlainDate.from(other);
-    return date.dayNumber === this.dayNumber && date.calendarId === this.calendarId;
+    return date.#dayNumber === this.#dayNumber && date.#calendarId === this.#calendarId;
   }
 
   public withCalendar(calendar: string): PlainDate {
     const implementation = getCalendar(calendar);
-    checkCalendarRange(implementation, this.dayNumber);
-    return createPlainDate(this.dayNumber, implementation.id);
+    checkCalendarRange(implementation, this.#dayNumber);
+    return createPlainDate(this.#dayNumber, implementation.id);
   }
 
   public toPlainDateTime(time?: PlainTime | PlainTimeInput): PlainDateTimeTypes.PlainDateTime {
@@ -516,16 +543,39 @@ export class PlainDate implements BaseTemporal.PlainDate {
   }
 
   public toString(): string {
-    return `${formatIsoDate(this.dayNumber)}${formatCalendarAnnotation(this.calendarId)}`;
+    return `${formatIsoDate(this.#dayNumber)}${formatCalendarAnnotation(this.calendarId)}`;
   }
 
   public toJSON(): string {
     return this.toString();
   }
 
+  public toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string {
+    return formatPlainValue(
+      'PlainDate',
+      'date',
+      this.#dayNumber * MS_PER_DAY,
+      this.#calendarId,
+      locales,
+      options,
+    );
+  }
+
   public valueOf(): never {
     return throwOnPrimitiveConversion('PlainDate');
   }
+
+  public get [Symbol.toStringTag](): string {
+    return 'Temporal.PlainDate';
+  }
+}
+
+/**
+ * Returns the calendar fields of a date in another calendar than ISO, and `undefined` in the ISO
+ * calendar.
+ */
+export function getCalendarDate(date: PlainDate): CalendarDate | undefined {
+  return readCalendarDate(date);
 }
 
 /**
@@ -546,7 +596,7 @@ export function createPlainDate(dayNumber: number, calendar: string): PlainDate 
  */
 export function getDayNumber(day: PlainDateFields): number {
   if (day instanceof PlainDate) {
-    return day.dayNumber;
+    return readDayNumber(day);
   }
   if (
     typeof day !== 'object' ||
@@ -623,7 +673,7 @@ export function readDate(
 
 function getItemDayNumber(item: PlainDateItem) {
   if (item instanceof PlainDate) {
-    return item.dayNumber;
+    return readDayNumber(item);
   }
   return readDate(item, 'constrain', 'PlainDate.compare()').dayNumber;
 }

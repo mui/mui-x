@@ -1,3 +1,4 @@
+import { getCalendarDate, getDayNumber } from './PlainDate';
 import type { PlainDate, PlainDateFields, PlainDateWithFields } from './PlainDate';
 import { getCalendar } from './calendar';
 import { readWithFields } from './iso';
@@ -27,7 +28,7 @@ export function mergeDateFields(
     partial.year !== undefined || partial.era !== undefined || partial.eraYear !== undefined;
   const replacesMonth = partial.month !== undefined || partial.monthCode !== undefined;
   // Read once: a date in the ISO calendar computes each field when it's read.
-  const calendarDate = base.calendarDate ?? calendar.getDate(base.dayNumber);
+  const calendarDate = getCalendarDate(base) ?? calendar.getDate(getDayNumber(base));
   return {
     calendar: base.calendarId,
     era: replacesYear ? partial.era : calendarDate.era,
