@@ -22,7 +22,8 @@ import { RecurringSeries } from './RecurringSeries';
  * `start` to the timestamp `end`, both included.
  *
  * The series of a timed event finds the days of the occurrences in the event timezone, and each
- * day is translated back to dates. The series of an all-day event runs on the displayed days.
+ * day is translated back to dates. The series of an all-day event runs on its dates, the same in
+ * every display timezone.
  * The occurrences that don't overlap the range are left out before their dates are built, and so
  * are the ones that don't overlap `visibleRanges` when it's given.
  */
@@ -33,7 +34,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
   displayTimezone: string,
   visibleRanges?: readonly { start: number; end: number }[],
 ): SchedulerEventOccurrence[] {
-  const series = RecurringSeries.fromEvent(event, displayTimezone);
+  const series = RecurringSeries.fromEvent(event);
   // `exDates` is cleared rather than left out with a rest destructuring, which is about 8 times
   // slower.
   const occurrenceProperties = { ...event, exDates: undefined };

@@ -175,6 +175,7 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
         changes.rrule.until,
         getUntilReferenceString(originalBuiltInModel),
         dataTimezone,
+        changes.allDay ?? originalBuiltInModel.allDay ?? false,
       ),
     };
   }
@@ -216,7 +217,12 @@ export function createEventModel<TEvent extends object>(
     typeof event.rrule.until !== 'string'
       ? {
           ...event.rrule,
-          until: untilToEventString(event.rrule.until, start, event.timezone ?? 'default'),
+          until: untilToEventString(
+            event.rrule.until,
+            start,
+            event.timezone ?? 'default',
+            !!event.allDay,
+          ),
         }
       : (event.rrule as SchedulerEvent['rrule']);
 

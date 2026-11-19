@@ -9,6 +9,8 @@ import {
   toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
+import { clearWarningsCache } from '@mui/x-internals/warning';
+import type { SchedulerEvent } from '../models';
 import { BaseTemporal } from '../internals/utils/base-temporal';
 
 describe('processEvent', () => {
@@ -72,64 +74,70 @@ describe('processEvent', () => {
     it.each([
       [true, { freq: 'DAILY' as const, until: '2025-01-11' }, '2025-01-11'],
       [true, 'FREQ=DAILY;UNTIL=20250111', '2025-01-11'],
-      [true, 'FREQ=DAILY;UNTIL=20250111T150000Z', '2025-01-11'],
-      [false, { freq: 'DAILY' as const, until: '2025-01-11' }, '2025-01-11'],
-      [false, 'FREQ=DAILY;UNTIL=20250111', '2025-01-11'],
       [false, 'FREQ=DAILY;UNTIL=20250111T150000Z', '2025-01-11T10:00:00'],
+    ])('should read the UNTIL of a series with allDay=%s from %j', (allDay, rrule, expected) => {
+      const builder = EventBuilder.new().withDataTimezone('America/New_York');
+      const event = allDay
+        ? builder.span('2025-01-01', '2025-01-02', { allDay: true }).build()
+        : builder.build();
+      const processed = processEvent(
+        { ...event, rrule },
+        'Asia/Tokyo',
+        schedulerRecurringEventsPlugin,
+      );
+      // A plain date covers its whole day; a plain date-time is the exact cutoff of a timed series.
+      expect(processed.rrule!.until).to.be.instanceOf(
+        expected.includes('T') ? BaseTemporal.PlainDateTime : BaseTemporal.PlainDate,
+      );
+      expect(processed.rrule!.until!.toString()).to.equal(expected);
+    });
+
+    it.each<NonNullable<SchedulerEvent['rrule']>>([
+      { freq: 'DAILY', until: '2025-01-11T03:00:00Z' },
+      'FREQ=DAILY;UNTIL=20250111T030000Z',
     ])(
-      'should read the UNTIL of a series with allDay=%s from %j in the timezone of the event',
-      (allDay, rrule, expected) => {
-        const builder = EventBuilder.new().withDataTimezone('America/New_York');
-        const event = allDay
-          ? builder.span('2025-01-01', '2025-01-02', { allDay: true }).build()
-          : builder.build();
-        const processed = processEvent(
-          { ...event, rrule },
-          'Asia/Tokyo',
-          schedulerRecurringEventsPlugin,
-        );
-        // A plain date covers its whole day; a plain date-time is the exact cutoff of a timed series.
-        expect(processed.rrule!.until).to.be.instanceOf(
-          expected.includes('T') ? BaseTemporal.PlainDateTime : BaseTemporal.PlainDate,
-        );
-        expect(processed.rrule!.until!.toString()).to.equal(expected);
+      'should read the date-time until of an all-day series as its date in the timezone of the event, with a warning: %j',
+      (rrule) => {
+        clearWarningsCache();
+        // 03:00 UTC on January 11th is January 10th in New York.
+        const event = EventBuilder.new()
+          .withDataTimezone('America/New_York')
+          .span('2025-01-01', '2025-01-02', { allDay: true })
+          .build();
+
+        let processed: ReturnType<typeof processEvent> | undefined;
+        expect(() => {
+          processed = processEvent(
+            { ...event, rrule },
+            'Asia/Tokyo',
+            schedulerRecurringEventsPlugin,
+          );
+        }).toWarnDev('of the recurrence rule of an all-day event is not a date.');
+        expect(processed!.rrule!.until!.toString()).to.equal('2025-01-10');
       },
     );
 
-    it('should read rrule.until as its day in the timezone of the event when rrule is an object', () => {
-      // The rule is expressed in the timezone the series expands in, not the display one: this
-      // instant is January 10th in New York, but January 11th in UTC and in Tokyo.
-      const event = EventBuilder.new()
-        .withDataTimezone('America/New_York')
-        .span('2025-01-01', '2025-01-02', { allDay: true })
-        .rrule({
-          freq: 'DAILY',
-          until: '2025-01-11T03:00:00Z',
-        })
-        .build();
+    it.each<NonNullable<SchedulerEvent['rrule']>>([
+      { freq: 'DAILY', until: '2025-01-11' },
+      'FREQ=DAILY;UNTIL=20250111',
+    ])(
+      'should read the date until of a timed series as its whole day, with a warning: %j',
+      (rrule) => {
+        clearWarningsCache();
+        const event = EventBuilder.new().withDataTimezone('America/New_York').build();
 
-      const processed = processEvent(event, 'Asia/Tokyo', schedulerRecurringEventsPlugin);
-
-      expect(processed.rrule!.until!.toString()).to.equal('2025-01-10');
-    });
-
-    it('should parse an rrule string and read its UNTIL as its day in the timezone of the event', () => {
-      const event = EventBuilder.new()
-        .withDataTimezone('America/New_York')
-        .span('2025-01-01', '2025-01-02', { allDay: true })
-        .build();
-
-      const processed = processEvent(
-        {
-          ...event,
-          rrule: 'FREQ=DAILY;UNTIL=20250111T030000Z',
-        },
-        'Pacific/Kiritimati',
-        schedulerRecurringEventsPlugin,
-      );
-
-      expect(processed.rrule!.until!.toString()).to.equal('2025-01-10');
-    });
+        let processed: ReturnType<typeof processEvent> | undefined;
+        expect(() => {
+          processed = processEvent(
+            { ...event, rrule },
+            'Asia/Tokyo',
+            schedulerRecurringEventsPlugin,
+          );
+        }).toWarnDev('of the recurrence rule of a timed event is not a date-time.');
+        expect(processed!.rrule!.until).to.be.instanceOf(BaseTemporal.PlainDate);
+        expect(processed!.rrule!.until!.toString()).to.equal('2025-01-11');
+      },
+    );
   });
 
   describe('all-day events', () => {

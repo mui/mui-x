@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { createDate } from 'test/utils/scheduler';
+import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
+import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import type { SchedulerEvent, SchedulerEventUpdatedProperties } from '../../../models';
 import { getCustomEventProperties, getUpdatedEventModelFromChanges } from './SchedulerStore.utils';
 
@@ -128,25 +130,150 @@ describe('getUpdatedEventModelFromChanges', () => {
     expect(updated.start).to.equal('2025-07-04T09:00:00');
   });
 
-  it('should write the UNTIL of an RRULE string of an all-day event made timed as its date', () => {
-    // 03:00 UTC on July 9th is July 8th in New York, the last day of the series.
+  it.each<[NonNullable<SchedulerEvent['rrule']>, NonNullable<SchedulerEvent['rrule']>]>([
+    [
+      { freq: 'DAILY', until: '2025-07-08T09:00:00' },
+      { freq: 'DAILY', until: '2025-07-08' },
+    ],
+    // 13:00 UTC is 09:00 in New York.
+    ['FREQ=DAILY;UNTIL=20250708T130000Z', 'FREQ=DAILY;UNTIL=20250708'],
+    // Before 09:00, the last occurrence is the one of July 7th.
+    [
+      { freq: 'DAILY', until: '2025-07-08T08:00:00' },
+      { freq: 'DAILY', until: '2025-07-07' },
+    ],
+  ])(
+    'should write the until of a timed series made all-day without new dates as its date in its timezone: %s',
+    (rrule, expected) => {
+      const oldModel: SchedulerEvent = {
+        id: '1',
+        title: 'Standup',
+        start: '2025-07-01T09:00:00',
+        end: '2025-07-01T09:30:00',
+        timezone: 'America/New_York',
+        rrule,
+      };
+      const updated = getUpdatedEventModelFromChanges(
+        oldModel,
+        { id: '1', allDay: true },
+        undefined,
+        oldModel,
+        'Asia/Tokyo',
+      );
+      expect(updated.rrule).to.deep.equal(expected);
+    },
+  );
+
+  it('should write the until of a timed series made all-day as the date of its last occurrence across a DST gap', () => {
+    // 02:30 doesn't exist on March 9th, 2025 in New York: that occurrence starts at 03:30, after
+    // the until, so the series ends on March 8th.
     const oldModel: SchedulerEvent = {
       id: '1',
-      title: 'Trip',
-      start: '2025-07-04',
-      end: '2025-07-05',
-      allDay: true,
+      title: 'Backup',
+      start: '2025-03-05T02:30:00',
+      end: '2025-03-05T03:00:00',
       timezone: 'America/New_York',
-      rrule: 'FREQ=DAILY;UNTIL=20250709T030000Z',
+      rrule: { freq: 'DAILY', until: '2025-03-09T03:00:00' },
     };
     const updated = getUpdatedEventModelFromChanges(
       oldModel,
-      { id: '1', allDay: false },
+      { id: '1', allDay: true },
       undefined,
-      oldModel as SchedulerEvent,
+      oldModel,
+      'America/New_York',
+    );
+    expect(updated.rrule).to.deep.equal({ freq: 'DAILY', until: '2025-03-08' });
+  });
+
+  it.each<{ kind: string; model: SchedulerEvent; exDate: string }>([
+    {
+      kind: 'an all-day',
+      model: {
+        id: '1',
+        title: 'Holiday',
+        start: '2025-07-04',
+        end: '2025-07-05',
+        allDay: true,
+        rrule: { freq: 'WEEKLY' },
+      },
+      exDate: '2025-07-11',
+    },
+    {
+      kind: 'a timed',
+      model: {
+        id: '1',
+        title: 'Standup',
+        start: '2025-07-04T20:00:00',
+        end: '2025-07-04T21:00:00',
+        timezone: 'America/New_York',
+        rrule: { freq: 'WEEKLY' },
+      },
+      exDate: '2025-07-11T20:00:00',
+    },
+  ])(
+    'should write the exception dates of $kind series given as strings as they are',
+    ({ model, exDate }) => {
+      const updated = getUpdatedEventModelFromChanges(
+        model,
+        { id: '1', exDates: [exDate] },
+        undefined,
+        model,
+        'Asia/Tokyo',
+      );
+      expect(updated.exDates).to.deep.equal([exDate]);
+    },
+  );
+
+  it.each<[NonNullable<SchedulerEvent['rrule']>, NonNullable<SchedulerEvent['rrule']>]>([
+    [
+      { freq: 'DAILY', until: '2025-07-08' },
+      { freq: 'DAILY', until: '2025-07-08T23:59:59' },
+    ],
+    // 23:59:59 in Tokyo is 14:59:59 UTC.
+    ['FREQ=DAILY;UNTIL=20250708', 'FREQ=DAILY;UNTIL=20250708T145959Z'],
+  ])(
+    'should write the until of an all-day series made timed as the last instant of its date in the display timezone: %s',
+    (rrule, expected) => {
+      const oldModel: SchedulerEvent = {
+        id: '1',
+        title: 'Holiday',
+        start: '2025-07-01',
+        end: '2025-07-02',
+        allDay: true,
+        rrule,
+      };
+      const updated = getUpdatedEventModelFromChanges(
+        oldModel,
+        { id: '1', allDay: false },
+        undefined,
+        oldModel,
+        'Asia/Tokyo',
+      );
+      expect(updated.rrule).to.deep.equal(expected);
+      expect(() =>
+        processEvent(updated, 'Asia/Tokyo', schedulerRecurringEventsPlugin),
+      ).not.to.throw();
+    },
+  );
+
+  it('should write the UNTIL of an all-day series made timed in the timezone given with the changes', () => {
+    const oldModel: SchedulerEvent = {
+      id: '1',
+      title: 'Holiday',
+      start: '2025-07-01',
+      end: '2025-07-02',
+      allDay: true,
+      rrule: 'FREQ=DAILY;UNTIL=20250708',
+    };
+    const updated = getUpdatedEventModelFromChanges(
+      oldModel,
+      { id: '1', allDay: false, timezone: 'Europe/Paris' },
+      undefined,
+      oldModel,
       'Asia/Tokyo',
     );
-    expect(updated.rrule).to.equal('FREQ=DAILY;UNTIL=20250708');
+    // 23:59:59 in Paris is 21:59:59 UTC.
+    expect(updated.rrule).to.equal('FREQ=DAILY;UNTIL=20250708T215959Z');
   });
 
   it('should snap the missing bound of a timed event made all-day with only its start', () => {

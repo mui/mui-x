@@ -53,6 +53,39 @@ const cascadeNotWritableWarning = (property: 'start' | 'end') =>
 
 describe('Auto-scheduling - EventTimelinePremiumStore', () => {
   describe('method: updateEvent', () => {
+    it("should push a timed successor to the end of its all-day predecessor in the successor's timezone", () => {
+      const onEventsChange = vi.fn();
+      const allDayA = EventBuilder.new()
+        .id('a')
+        .span('2025-07-03', '2025-07-04', { allDay: true })
+        .build();
+      const newYorkB = EventBuilder.new()
+        .id('b')
+        .withDataTimezone('America/New_York')
+        .span('2025-07-04T22:00:00', '2025-07-04T23:00:00')
+        .build();
+      const store = new EventTimelinePremiumStoreWithFeatures({
+        ...DEFAULT_PARAMS,
+        events: [allDayA, newYorkB],
+        displayTimezone: 'Asia/Tokyo',
+        onEventsChange,
+      });
+
+      // Moved to July 4th, the predecessor ends at 00:00 on July 5th in New York.
+      store.updateEvent({
+        id: 'a',
+        start: createDate('2025-07-04T00:00:00', 'Asia/Tokyo'),
+        end: createDate('2025-07-05T00:00:00', 'Asia/Tokyo'),
+      });
+
+      const emittedB = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
+        (event) => event.id === 'b',
+      )!;
+      expect(emittedB.start).to.equal('2025-07-05T00:00:00');
+      expect(emittedB.end).to.equal('2025-07-05T01:00:00');
+      expect(emittedB.timezone).to.equal('America/New_York');
+    });
+
     it('should emit onEventsChange once with the cascaded events included', () => {
       const onEventsChange = vi.fn();
       const store = new EventTimelinePremiumStoreWithFeatures({

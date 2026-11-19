@@ -1168,12 +1168,7 @@ export class SchedulerStore<
     // with.
     let changes: SchedulerEventUpdatedProperties | null = null;
     if (pendingRecurringEventOperation.kind === 'delete') {
-      updatedEvents = recurringEventsPlugin.deleteRecurringEvent(
-        original,
-        occurrence,
-        scope,
-        this.state.displayTimezone,
-      );
+      updatedEvents = recurringEventsPlugin.deleteRecurringEvent(original, occurrence, scope);
     } else {
       changes = pendingRecurringEventOperation.changes;
       // "all" edits the series in place off `changes.start` / `.end` (e.g. realigning `byDay`),

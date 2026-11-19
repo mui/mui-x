@@ -67,7 +67,6 @@ describe('recurring event edits', () => {
               event,
               createOccurrence(event, occurrenceStart, DISPLAY_TIMEZONE),
               'only-this',
-              DISPLAY_TIMEZONE,
             );
           }
         }
@@ -79,7 +78,6 @@ describe('recurring event edits', () => {
               event,
               createOccurrence(event, occurrenceStart, DISPLAY_TIMEZONE),
               'this-and-following',
-              DISPLAY_TIMEZONE,
             );
           }
         }

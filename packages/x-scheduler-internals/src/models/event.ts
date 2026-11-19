@@ -62,7 +62,7 @@ interface SchedulerProcessedEventBase {
  *
  * - `start` and `end` are read in the display timezone, for rendering.
  * - `timezone`, `rrule` and `exDates` are the event's own data, read in its timezone for a timed
- *   event and on the displayed days for an all-day one.
+ *   event and on its dates for an all-day one, the same in every display timezone.
  * - Always includes `modelInBuiltInFormat` (unlike drafts/placeholders).
  */
 export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
@@ -73,7 +73,7 @@ export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
 
   /**
    * The timezone of the event, which its recurrence rule and exception dates are read in.
-   * Ignored for all-day events, except for a date-time `until` of their rule.
+   * An all-day event only uses it to read a date-time `until` as its date.
    */
   timezone: string;
 
@@ -179,9 +179,8 @@ export interface SchedulerEvent {
    * Accepts any valid IANA timezone name
    * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
    * "default" (the timezone of the system), or "UTC".
-   * Ignored for all-day events, which cover the same days in every timezone, except for a
-   * date-time `until` of their recurrence rule. An all-day event made timed takes the display
-   * timezone.
+   * All-day events cover the same days in every timezone: they only use it to read a date-time
+   * `until` as its date. An all-day event made timed takes the display timezone.
    * @default "default"
    */
   timezone?: string;
@@ -401,9 +400,10 @@ export type SchedulerEventUpdatedProperties = Omit<
    */
   end?: Date;
   /**
-   * For an all-day event, the first instants of its days in the display timezone.
+   * For an all-day event, the first instants of its days in the display timezone, or its
+   * `YYYY-MM-DD` dates. A string is written as is.
    */
-  exDates?: Date[];
+  exDates?: (string | Date)[];
   rrule?: SchedulerProcessedEventRecurrenceRule | string;
 };
 
