@@ -7,8 +7,10 @@ import {
   gridFocusColumnHeaderSelector,
   gridRowMaximumTreeDepthSelector,
   gridRowTreeSelector,
+  gridRowsLoadingSelector,
   gridRowsLookupSelector,
   gridSortModelSelector,
+  gridVisiblePinnedColumnDefinitionsSelector,
 } from '@mui/x-data-grid';
 import type {
   GridColDef,
@@ -24,6 +26,7 @@ import {
   createSelector,
   gridEditRowsStateSelector,
   gridKeyboardUseActiveSelector,
+  gridRowsStateSelector,
   isGroupingColumn,
 } from '@mui/x-data-grid/internals';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -53,16 +56,30 @@ function getRowStepStatus(
   params: RowReorderStepProps & {
     sortModel: GridSortModel;
     editRowsState: GridEditingState;
+    loading: boolean | undefined;
     maxTreeDepth: number;
     rowNode: GridTreeNode | undefined;
     row: GridRowModel | undefined;
   },
 ): ReorderStepStatus {
-  const { rowReordering, isRowReorderable, sortModel, editRowsState, maxTreeDepth, rowNode, row } =
-    params;
+  const {
+    rowReordering,
+    isRowReorderable,
+    sortModel,
+    editRowsState,
+    loading,
+    maxTreeDepth,
+    rowNode,
+    row,
+  } = params;
   // Only flat rows move with the keyboard for now
   if (!rowReordering || maxTreeDepth > 1 || !isObjectEmpty(editRowsState)) {
     return 'off';
+  }
+  // Like a drag, which the loading overlay blocks.
+  // For example while `onRowOrderChange` saves the previous move.
+  if (loading) {
+    return 'silent';
   }
   if (
     rowNode?.type !== 'leaf' ||
@@ -78,6 +95,9 @@ function getRowStepStatus(
   return 'allowed';
 }
 
+// `GRID_FORMULA_ROW_NUMBER_FIELD` of Premium, which Pro can't import
+const FORMULA_ROW_NUMBER_FIELD = '__formula_row_number__';
+
 // The columns the grid adds itself. They all have `disableReorder`.
 function isSpecialColumn(field: string) {
   return (
@@ -85,18 +105,30 @@ function isSpecialColumn(field: string) {
     field === GRID_REORDER_COL_DEF.field ||
     field === GRID_DETAIL_PANEL_TOGGLE_FIELD ||
     field === GRID_TREE_DATA_GROUPING_FIELD ||
+    field === FORMULA_ROW_NUMBER_FIELD ||
     isGroupingColumn(field)
+  );
+}
+
+type VisiblePinnedColumns = ReturnType<typeof gridVisiblePinnedColumnDefinitionsSelector>;
+
+// The pinned columns as rendered, which `disableColumnPinning` and the list view turn off
+function isColumnPinned(pinnedColumns: VisiblePinnedColumns, field: string) {
+  return (
+    pinnedColumns.left.some((column) => column.field === field) ||
+    pinnedColumns.right.some((column) => column.field === field)
   );
 }
 
 function getColumnStepStatus(
   params: ColumnReorderStepProps & {
     editRowsState: GridEditingState;
+    pinnedColumns: VisiblePinnedColumns;
     field: string;
     column: GridColDef | undefined;
   },
 ): ReorderStepStatus {
-  const { disableColumnReorder, editRowsState, field, column } = params;
+  const { disableColumnReorder, editRowsState, pinnedColumns, field, column } = params;
   if (disableColumnReorder || !isObjectEmpty(editRowsState)) {
     return 'off';
   }
@@ -106,6 +138,10 @@ function getColumnStepStatus(
   if (column.disableReorder) {
     // "Column __check__ can't be reordered" means nothing to a user
     return isSpecialColumn(field) ? 'silent' : 'disabled';
+  }
+  // Like a drag, which can't start from a pinned header
+  if (isColumnPinned(pinnedColumns, field)) {
+    return 'disabled';
   }
   return 'allowed';
 }
@@ -127,6 +163,7 @@ export function getRowReorderStepStatus(
     isRowReorderable: props.isRowReorderable,
     sortModel: gridSortModelSelector(apiRef),
     editRowsState: gridEditRowsStateSelector(apiRef),
+    loading: gridRowsLoadingSelector(apiRef),
     maxTreeDepth: gridRowMaximumTreeDepthSelector(apiRef),
     rowNode: gridRowTreeSelector(apiRef)[rowId],
     row: gridRowsLookupSelector(apiRef)[rowId],
@@ -148,6 +185,7 @@ export function getColumnReorderStepStatus(
   return getColumnStepStatus({
     disableColumnReorder: props.disableColumnReorder,
     editRowsState: gridEditRowsStateSelector(apiRef),
+    pinnedColumns: gridVisiblePinnedColumnDefinitionsSelector(apiRef),
     field,
     column: gridColumnLookupSelector(apiRef)[field],
   });
@@ -163,16 +201,14 @@ export const gridRowKeyboardReorderTargetSelector = createSelector(
   gridSortModelSelector,
   gridEditRowsStateSelector,
   gridRowMaximumTreeDepthSelector,
-  gridRowTreeSelector,
-  gridRowsLookupSelector,
+  gridRowsStateSelector,
   (
     isKeyboardInUse,
     focusedCell,
     sortModel,
     editRowsState,
     maxTreeDepth,
-    tree,
-    rowsLookup,
+    rowsState,
     { rowId, rowReordering, isRowReorderable }: RowReorderStepProps & { rowId: GridRowId },
   ) =>
     isKeyboardInUse &&
@@ -182,9 +218,10 @@ export const gridRowKeyboardReorderTargetSelector = createSelector(
       isRowReorderable,
       sortModel,
       editRowsState,
+      loading: rowsState.loading,
       maxTreeDepth,
-      rowNode: tree[rowId],
-      row: rowsLookup[rowId],
+      rowNode: rowsState.tree[rowId],
+      row: rowsState.dataRowIdToModelLookup[rowId],
     }) === 'allowed',
 );
 
@@ -197,12 +234,14 @@ export const gridColumnKeyboardReorderTargetSelector = createSelector(
   gridFocusCellSelector,
   gridFocusColumnHeaderSelector,
   gridEditRowsStateSelector,
+  gridVisiblePinnedColumnDefinitionsSelector,
   gridColumnLookupSelector,
   (
     isKeyboardInUse,
     focusedCell,
     focusedHeader,
     editRowsState,
+    pinnedColumns,
     columnLookup,
     { field, disableColumnReorder }: ColumnReorderStepProps & { field: string },
   ) =>
@@ -211,6 +250,7 @@ export const gridColumnKeyboardReorderTargetSelector = createSelector(
     getColumnStepStatus({
       disableColumnReorder,
       editRowsState,
+      pinnedColumns,
       field,
       column: columnLookup[field],
     }) === 'allowed',

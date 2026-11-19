@@ -5,6 +5,7 @@ import { useRtl } from '@mui/system/RtlProvider';
 import {
   gridExpandedRowCountSelector,
   gridExpandedSortedRowIndexLookupSelector,
+  gridPaginationSelector,
   gridVisibleColumnFieldsSelector,
   useGridApiMethod,
   useGridEventPriority,
@@ -72,7 +73,12 @@ export const useGridKeyboardReorder = (
     { toEdge },
   ) => {
     const status = getRowReorderStepStatus(apiRef, props, rowId);
-    if (status === 'off' || isRowMovePendingRef.current || isReorderSessionActive(apiRef)) {
+    if (
+      status === 'off' ||
+      status === 'silent' ||
+      isRowMovePendingRef.current ||
+      isReorderSessionActive(apiRef)
+    ) {
       return;
     }
     if (status === 'invalid') {
@@ -119,11 +125,17 @@ export const useGridKeyboardReorder = (
       announce(apiRef.current.getLocaleText('rowReorderingAnnouncementInvalid')());
       return;
     }
-    apiRef.current.scrollToIndexes({ rowIndex: getRowIndexRelativeToAllRows(apiRef, rowId) });
+    const rowIndex = getRowIndexRelativeToAllRows(apiRef, rowId)!;
+    apiRef.current.scrollToIndexes({ rowIndex });
+    // With server-side pagination, only the rows of the page are loaded.
+    // The position is among all rows when their count is known, and in the page otherwise.
+    const pagination = gridPaginationSelector(apiRef);
+    const hasKnownServerRowCount =
+      pagination.enabled && pagination.paginationMode === 'server' && pagination.rowCount >= 0;
     announce(
       apiRef.current.getLocaleText('rowReorderingAnnouncementMoved')({
-        position: newIndex + 1,
-        total: gridExpandedRowCountSelector(apiRef),
+        position: (hasKnownServerRowCount ? rowIndex : newIndex) + 1,
+        total: hasKnownServerRowCount ? pagination.rowCount : gridExpandedRowCountSelector(apiRef),
         rowId,
       }),
     );
@@ -139,7 +151,7 @@ export const useGridKeyboardReorder = (
       return;
     }
     // The status is only `disabled` or `allowed` for a column that exists
-    const columnName = apiRef.current.getColumn(field)!.headerName ?? field;
+    const columnName = apiRef.current.getColumn(field)!.headerName || field;
     if (status === 'disabled') {
       announce(
         apiRef.current.getLocaleText('columnReorderingAnnouncementDisabled')({ columnName }),

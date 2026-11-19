@@ -36,7 +36,7 @@ Users can also move columns with the keyboard:
 On macOS, use <kbd class="key">⌥ Option</kbd> instead of <kbd class="key">Alt</kbd>.
 In right-to-left layouts, the arrow keys follow the visual direction.
 
-A keyboard move follows the same rules as a drag: a column stays in its [pinned](/x/react-data-grid/column-pinning/) section, doesn't leave its [column group](/x/react-data-grid/column-groups/) unless the group allows `freeReordering`, and columns with `disableReorder` don't move.
+A keyboard move follows the same rules as a drag: [pinned](/x/react-data-grid/column-pinning/) columns and columns with `disableReorder` can't be moved, and a column doesn't enter a pinned section or leave its [column group](/x/react-data-grid/column-groups/) unless the group allows `freeReordering`.
 `onColumnOrderChange` is called once per key press.
 
 While the keyboard is in use, the header of the column that a key press would move has a blue tint, with the `columnHeader--reorderTarget` class.

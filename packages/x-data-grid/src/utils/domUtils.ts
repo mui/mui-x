@@ -101,10 +101,13 @@ export function isEventTargetTextEntryElement(event: React.SyntheticEvent | Even
 
 /**
  * Checks if a key press in a cell or a header belongs to its content instead of to a grid shortcut:
+ * a key that the content already handled, like `Alt+ArrowDown` opening a Select,
  * a text field, a native select, or an element rendered in a portal, like a menu.
+ * Call it from the cell or header `keydown` handler, so `currentTarget` is the cell or the header.
  */
 export function isEventForCellContent(event: React.SyntheticEvent) {
   return (
+    (event.defaultPrevented && event.target !== event.currentTarget) ||
     isEventTargetInPortal(event) ||
     isEventTargetTextEntryElement(event) ||
     (event.target as HTMLElement).tagName === 'SELECT'

@@ -9,6 +9,16 @@ export const keyboardUseStateInitializer: GridStateInitializer = (state) => ({
   keyboardUse: { active: false },
 });
 
+const MODIFIER_KEYS = new Set(['Alt', 'AltGraph', 'CapsLock', 'Control', 'Meta', 'Shift']);
+
+// A modifier alone, or a shortcut like `Ctrl+C`, is also how a pointer user works.
+function isKeyboardNavigation(event: KeyboardEvent) {
+  if (MODIFIER_KEYS.has(event.key)) {
+    return false;
+  }
+  return !((event.ctrlKey || event.metaKey) && event.key.length === 1);
+}
+
 /**
  * Tracks whether the user is using the keyboard or a pointer in the grid.
  */
@@ -22,7 +32,35 @@ export const useGridKeyboardUse = (apiRef: RefObject<GridPrivateApiCommunity>): 
 
   const getRootElement = () => apiRef.current.rootElementRef.current;
 
+  // A `Tab` counts on `keyup`, which only fires inside when the focus lands in the grid
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key !== 'Tab' && isKeyboardNavigation(event)) {
+      setActive(true);
+    }
+  };
+  const handleKeyUp = (event: KeyboardEvent) => {
+    if (event.key === 'Tab') {
+      setActive(true);
+    }
+  };
+
+  // The grid keeps its focused cell when the focus leaves it
+  const handleFocusOut = (event: FocusEvent) => {
+    const root = getRootElement();
+    if (!root || root.contains(event.relatedTarget as Node | null)) {
+      return;
+    }
+    // Moving the focused row or column blurs it until React restores the focus
+    setTimeout(() => {
+      if (!root.contains(root.ownerDocument.activeElement)) {
+        setActive(false);
+      }
+    });
+  };
+
   // Native listeners, so a key that a feature marks as handled still counts
-  useGridNativeEventListener(apiRef, getRootElement, 'keydown', () => setActive(true));
+  useGridNativeEventListener(apiRef, getRootElement, 'keydown', handleKeyDown);
+  useGridNativeEventListener(apiRef, getRootElement, 'keyup', handleKeyUp);
+  useGridNativeEventListener(apiRef, getRootElement, 'focusout', handleFocusOut);
   useGridNativeEventListener(apiRef, getRootElement, 'pointerdown', () => setActive(false));
 };

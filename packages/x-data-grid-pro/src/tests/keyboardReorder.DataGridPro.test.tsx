@@ -168,6 +168,40 @@ describe('<DataGridPro /> - Keyboard reorder', () => {
       expect(onRowOrderChange).toHaveBeenCalledTimes(1);
     });
 
+    it('should announce the position among all the rows with server-side pagination', async () => {
+      render(
+        <Test
+          rows={rows.slice(2, 4)}
+          pagination
+          paginationMode="server"
+          rowCount={rows.length}
+          pageSizeOptions={[2]}
+          initialState={{ pagination: { paginationModel: { page: 1, pageSize: 2 } } }}
+        />,
+      );
+
+      pressAlt(document.querySelector('[data-id="2"] [data-field="name"]')!, 'ArrowDown');
+      await waitFor(() => expect(getRowsFieldContent('name')).to.deep.equal(['D', 'C']));
+      expect(getAnnouncement()).to.equal('Row moved to position 4 of 5.');
+    });
+
+    it('should announce the position in the page with server-side pagination and an unknown row count', async () => {
+      render(
+        <Test
+          rows={rows.slice(2, 4)}
+          pagination
+          paginationMode="server"
+          rowCount={-1}
+          pageSizeOptions={[2]}
+          initialState={{ pagination: { paginationModel: { page: 1, pageSize: 2 } } }}
+        />,
+      );
+
+      pressAlt(document.querySelector('[data-id="2"] [data-field="name"]')!, 'ArrowDown');
+      await waitFor(() => expect(getRowsFieldContent('name')).to.deep.equal(['D', 'C']));
+      expect(getAnnouncement()).to.equal('Row moved to position 2 of 2.');
+    });
+
     it('should refuse to move the first row up and the last row down', async () => {
       const onRowOrderChange = vi.fn();
       render(<Test onRowOrderChange={onRowOrderChange} />);
@@ -364,6 +398,38 @@ describe('<DataGridPro /> - Keyboard reorder', () => {
       expect(getAnnouncement()).to.equal("Can't move column Delta further left.");
     });
 
+    it('should not move a pinned column, like a drag', () => {
+      const onColumnOrderChange = vi.fn();
+      render(
+        <ColumnTest
+          onColumnOrderChange={onColumnOrderChange}
+          initialState={{ pinnedColumns: { left: ['a'], right: ['d'] } }}
+        />,
+      );
+      focusHeader('a');
+      pressAlt(getColumnHeaderCell(0), 'ArrowRight');
+      expect(getAnnouncement()).to.equal("Column Alpha can't be reordered.");
+
+      focusHeader('d');
+      pressAlt(getColumnHeaderCell(3), 'ArrowLeft');
+      expect(getColumnHeadersTextContent()).to.deep.equal(['Alpha', 'Bravo', 'Charlie', 'Delta']);
+      expect(apiRef.current!.getPinnedColumns()).to.deep.equal({ left: ['a'], right: ['d'] });
+      expect(onColumnOrderChange).not.toHaveBeenCalled();
+    });
+
+    it('should name a column without a header name by its field', () => {
+      render(
+        <ColumnTest
+          columns={reorderColumns.map((column) =>
+            column.field === 'b' ? { ...column, headerName: '' } : column,
+          )}
+        />,
+      );
+      focusHeader('b');
+      pressAlt(getColumnHeaderCell(1), 'ArrowRight');
+      expect(getAnnouncement()).to.equal('Column b moved to position 3 of 4.');
+    });
+
     it('should move toward the visual direction in RTL', () => {
       render(
         <ThemeProvider theme={createTheme({ direction: 'rtl' })}>
@@ -487,6 +553,54 @@ describe('<DataGridPro /> - Keyboard reorder', () => {
   });
 
   describe('guards', () => {
+    it('should swallow a row move while the rows are loading, like a drag', async () => {
+      const onRowOrderChange = vi.fn();
+      render(<Test loading onRowOrderChange={onRowOrderChange} />);
+
+      expect(pressAlt(getNameCell(1), 'ArrowDown')).to.equal(false);
+      await act(() => Promise.resolve());
+      expect(onRowOrderChange).not.toHaveBeenCalled();
+      expect(getAnnouncement()).to.equal('');
+      expect(document.activeElement).to.equal(getNameCell(1));
+    });
+
+    it('should move when onCellKeyDown only prevents the browser default', async () => {
+      const onRowOrderChange = vi.fn();
+      render(
+        <Test
+          onRowOrderChange={onRowOrderChange}
+          onCellKeyDown={(params, event) => event.preventDefault()}
+        />,
+      );
+
+      pressAlt(getNameCell(1), 'ArrowDown');
+      await waitFor(() => expect(onRowOrderChange).toHaveBeenCalledTimes(1));
+    });
+
+    it('should not move when the cell content handles the key', async () => {
+      const onRowOrderChange = vi.fn();
+      render(
+        <Test
+          onRowOrderChange={onRowOrderChange}
+          columns={[
+            {
+              field: 'name',
+              // Like a Select, which opens on `Alt+ArrowDown`
+              renderCell: () => (
+                <button type="button" onKeyDown={(event) => event.preventDefault()}>
+                  open
+                </button>
+              ),
+            },
+          ]}
+        />,
+      );
+
+      pressAlt(screen.getAllByRole('button', { name: 'open' })[1], 'ArrowDown');
+      await act(() => Promise.resolve());
+      expect(onRowOrderChange).not.toHaveBeenCalled();
+    });
+
     it('should not move when onCellKeyDown prevents the default behavior', async () => {
       const onRowOrderChange = vi.fn();
       render(
@@ -666,6 +780,55 @@ describe('<DataGridPro /> - Keyboard reorder', () => {
       fireEvent.pointerDown(getNameCell(3));
       expect(getRowElement(2)).not.to.have.class(gridClasses['row--reorderTarget']);
       expect(getHeader('name')).not.to.have.class(gridClasses['columnHeader--reorderTarget']);
+    });
+
+    it('should remove the marker when the focus leaves the grid', async () => {
+      const { user } = render(
+        <React.Fragment>
+          <Test />
+          <button type="button">after</button>
+        </React.Fragment>,
+      );
+      await user.click(getNameCell(1));
+      await user.keyboard('{ArrowDown}');
+      expect(getRowElement(2)).to.have.class(gridClasses['row--reorderTarget']);
+
+      act(() => screen.getByRole('button', { name: 'after' }).focus());
+      await waitFor(() =>
+        expect(getRowElement(2)).not.to.have.class(gridClasses['row--reorderTarget']),
+      );
+      expect(getHeader('name')).not.to.have.class(gridClasses['columnHeader--reorderTarget']);
+    });
+
+    it('should not mark the row on a modifier key or a shortcut', async () => {
+      const { user } = render(<Test />);
+      await user.click(getNameCell(1));
+
+      await user.keyboard('{Shift}{Control>}c{/Control}');
+      expect(getRowElement(1)).not.to.have.class(gridClasses['row--reorderTarget']);
+      await user.keyboard('{Control>}{Home}{/Control}');
+      expect(getRowElement(0)).to.have.class(gridClasses['row--reorderTarget']);
+    });
+
+    it('should not mark the row on the release of a shortcut key', async () => {
+      const { user } = render(<Test />);
+      await user.click(getNameCell(1));
+
+      // `Ctrl` released first, so the `keyup` of `c` has no modifier
+      await user.keyboard('{Control>}{c>}{/Control}{/c}');
+      expect(getRowElement(1)).not.to.have.class(gridClasses['row--reorderTarget']);
+    });
+
+    it('should mark the column header when the focus enters the grid with Tab', async () => {
+      const { user } = render(
+        <React.Fragment>
+          <button type="button">before</button>
+          <ColumnTest />
+        </React.Fragment>,
+      );
+      await user.click(screen.getByRole('button', { name: 'before' }));
+      await user.tab();
+      expect(getHeader('a')).to.have.class(gridClasses['columnHeader--reorderTarget']);
     });
 
     it('should not mark the row when the grid is sorted', async () => {

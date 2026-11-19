@@ -143,6 +143,7 @@ export {
   gridAdditionalRowGroupsSelector,
   gridPinnedRowsSelector,
   gridRowSelector,
+  gridRowsStateSelector,
 } from '../hooks/features/rows/gridRowsSelector';
 export {
   headerFilteringStateInitializer,
