@@ -57,30 +57,47 @@ interface ParsedProperty {
   projects: XProjectNames[];
 }
 
+const MAX_DOCUMENTED_MEMBERS = 100;
+
 /**
  * Returns the type to document, with generic aliases expanded over their union type parameters.
  * For example `AxisConfig` becomes `AxisConfig<'band', V, ChartsXAxisProps> | ...`.
  */
-const getDocumentedType = (symbol: Symbol, project: XTypeScriptProject): Type => {
+export const getDocumentedType = (symbol: Symbol, project: XTypeScriptProject): Type => {
   const { checker } = project;
   const declaredType = checker.getDeclaredTypeOfSymbol(symbol);
   const declaration = symbol.declarations?.find(isTypeAliasDeclaration);
   const typeParameters = declaration?.typeParameters ?? [];
-  const distributed = typeParameters
-    .filter((parameter) =>
-      checker.getBaseConstraintOfType(checker.getTypeAtLocation(parameter))?.isUnion(),
-    )
-    .map((parameter) => parameter.name.text);
+  const distributed = typeParameters.flatMap((parameter) => {
+    const constraint = checker.getBaseConstraintOfType(checker.getTypeAtLocation(parameter));
+    return constraint?.isUnion()
+      ? [{ name: parameter.name.text, size: constraint.types.length }]
+      : [];
+  });
   if (!declaration || distributed.length === 0) {
     return declaredType;
   }
 
+  const memberCount = distributed.reduce((count, { size }) => count * size, 1);
+  if (memberCount > MAX_DOCUMENTED_MEMBERS) {
+    throw new Error(
+      `Expanding "${declaration.name.text}" over its union type parameters gives ${memberCount} members, ` +
+        `above the limit of ${MAX_DOCUMENTED_MEMBERS}. ` +
+        'Narrow the type parameter constraints or document a specific instantiation instead.',
+    );
+  }
+
   // TS has no public API to instantiate a generic: evaluate a distributive conditional
   // inside the alias body so its type parameters resolve, then take its constraint.
-  const typeArguments = typeParameters.map((parameter) => parameter.name.text).join(', ');
-  const source = `type T = ${distributed.map((name) => `${name} extends any ? `).join('')}${declaration.name.text}<${typeArguments}>${' : never'.repeat(distributed.length)};`;
+  // For AxisConfig: `S extends any ? AxisProps extends any ? AxisConfig<S, V, AxisProps> : never : never`.
+  const reference = `${declaration.name.text}<${typeParameters.map((parameter) => parameter.name.text).join(', ')}>`;
+  const conditional = distributed.reduceRight(
+    (body, { name }) => `${name} extends any ? ${body} : never`,
+    reference,
+  );
   const node = (
-    createSourceFile('', source, ScriptTarget.Latest, true).statements[0] as TypeAliasDeclaration
+    createSourceFile('', `type T = ${conditional};`, ScriptTarget.Latest, true)
+      .statements[0] as TypeAliasDeclaration
   ).type;
   (node as { parent: Node }).parent = declaration.type;
   return checker.getBaseConstraintOfType(checker.getTypeFromTypeNode(node)) ?? declaredType;
@@ -88,47 +105,72 @@ const getDocumentedType = (symbol: Symbol, project: XTypeScriptProject): Type =>
 
 const getMembers = (type: Type) => (type.isUnion() ? type.types : [type]);
 
-const getPropertyType = (member: Type, name: string, project: XTypeScriptProject) => {
+/**
+ * Union members of `type` without `undefined`, keeping named aliases such as `NumberValue` whole.
+ */
+const getDefinedMembers = (type: Type, project: XTypeScriptProject) => {
+  const members = getMembers(type).filter(
+    (member) => member.flags !== TypeFlags.Undefined && member.flags !== TypeFlags.Never,
+  );
+  const definedType = project.checker.getNonNullableType(type);
+  return definedType.aliasSymbol
+    ? [definedType, ...members.filter((member) => member.flags === TypeFlags.Null)]
+    : members;
+};
+
+const getPropertyMembers = (member: Type, name: string, project: XTypeScriptProject) => {
   const property = member.getProperty(name);
-  return property
-    ? project.checker.getNonNullableType(project.checker.getTypeOfSymbol(property))
-    : project.checker.getNeverType();
+  return property ? getDefinedMembers(project.checker.getTypeOfSymbol(property), project) : [];
+};
+
+const getStringLiteral = (member: Type, name: string, project: XTypeScriptProject) => {
+  const [type, ...others] = getPropertyMembers(member, name, project);
+  return type?.isStringLiteral() && others.length === 0 ? type.value : undefined;
 };
 
 /**
- * Describes which union members have the property, for example "Only applies to `scaleType: 'band'`."
+ * Describes which union members have the property, for example "Only applies to `scaleType: 'band'`".
+ * Returns an empty string when no exact description exists.
  */
-const getAvailability = (name: string, type: Type, project: XTypeScriptProject) => {
+export const getAvailability = (name: string, type: Type, project: XTypeScriptProject) => {
   const members = getMembers(type);
-  const owners = members.filter(
-    (member) => getPropertyType(member, name, project).flags !== TypeFlags.Never,
-  );
+  const owners = members.filter((member) => getPropertyMembers(member, name, project).length > 0);
   if (owners.length === members.length) {
     return '';
   }
 
-  const conditions = members[0].getProperties().flatMap(({ name: discriminant }) => {
-    const values = new Set(owners.map((owner) => getPropertyType(owner, discriminant, project)));
-    const allValues = new Set(
-      members.map((member) => getPropertyType(member, discriminant, project)),
-    );
-    const literals = Array.from(values).filter((value) => value.isStringLiteral());
-    if (discriminant === name || values.size === allValues.size || literals.length < values.size) {
-      return [];
-    }
-    const literalsStr = literals
-      .map((value) => `'${value.value}'`)
+  const conditions = owners[0].getProperties().flatMap(({ name: discriminant }) => {
+    const values = new Set(owners.map((owner) => getStringLiteral(owner, discriminant, project)));
+    const isRestrictive =
+      discriminant !== name &&
+      !values.has(undefined) &&
+      members.some((member) => !values.has(getStringLiteral(member, discriminant, project)));
+    return isRestrictive ? [{ discriminant, values }] : [];
+  });
+  const isExact = members.every(
+    (member) =>
+      owners.includes(member) ===
+      conditions.every(({ discriminant, values }) =>
+        values.has(getStringLiteral(member, discriminant, project)),
+      ),
+  );
+  if (conditions.length === 0 || !isExact) {
+    return '';
+  }
+
+  const descriptions = conditions.map(({ discriminant, values }) => {
+    const valuesStr = Array.from(values, (value) => `'${value}'`)
       .sort()
       .join(' | ');
-    return [`\`${discriminant}: ${literalsStr}\``];
+    return `\`${discriminant}: ${valuesStr}\``;
   });
-  return conditions.length > 0 ? `Only applies to ${conditions.join(' and ')}.` : '';
+  return `Only applies to ${descriptions.join(' and ')}.`;
 };
 
 const hasConditionalType = (node: Node): boolean =>
   isConditionalTypeNode(node) || !!forEachChild(node, hasConditionalType);
 
-const stringifyProperty = async (symbols: Symbol[], project: XTypeScriptProject) => {
+export const stringifyProperty = async (symbols: Symbol[], project: XTypeScriptProject) => {
   const declarations = new Set(symbols.flatMap((symbol) => symbol.declarations ?? []));
   const [declaration] = declarations;
   if (declarations.size <= 1 && !(declaration && hasConditionalType(declaration))) {
@@ -140,10 +182,14 @@ const stringifyProperty = async (symbols: Symbol[], project: XTypeScriptProject)
   const { checker } = project;
   const typeStrs = new Set(
     symbols
-      .map((symbol) => checker.getNonNullableType(checker.getTypeOfSymbol(symbol)))
-      .flatMap((type) => (type.aliasSymbol ? [type] : getMembers(type)))
+      .flatMap((symbol) => getDefinedMembers(checker.getTypeOfSymbol(symbol), project))
       .map((type) => checker.typeToString(type, undefined, TypeFormatFlags.NoTruncation)),
   );
+  if (typeStrs.has('false') && typeStrs.has('true')) {
+    typeStrs.delete('false');
+    typeStrs.delete('true');
+    typeStrs.add('boolean');
+  }
   return formatType(
     Array.from(typeStrs, (typeStr) => `(${typeStr})`)
       .sort()
