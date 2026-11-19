@@ -70,7 +70,7 @@
     "@babel/plugin-syntax-typescript": "8.0.3",
     "@babel/plugin-transform-object-rest-spread": "8.0.1",
     "@babel/traverse": "catalog:",
-    "@babel/types": "8.1.0",
+    "@babel/types": "8.1.2",
     "@base-ui/utils": "catalog:",
     "@emotion/cache": "catalog:",
     "@eslint/compat": "2.1.1",
