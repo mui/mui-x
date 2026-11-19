@@ -20,7 +20,11 @@ export function getBandIndex(
   if (!isBandScale(bandAxis.scale)) {
     return -1;
   }
-  const dataIndex = getDataIndexForOrdinalScaleValue(bandAxis.scale, coordinate);
+  const data = bandAxis.data ?? [];
+  const [r0, r1] = bandAxis.scale.range();
+  // Slots count from the range minimum, which holds the last item on a descending range.
+  const slot = getDataIndexForOrdinalScaleValue(bandAxis.scale, coordinate);
+  const dataIndex = r1 < r0 ? data.length - 1 - slot : slot;
 
   const { barWidth, offset } = getBandSize(
     bandAxis.scale.bandwidth(),
@@ -30,7 +34,7 @@ export function getBandIndex(
   );
 
   const barOffset = stackConfig.groupIndex * (barWidth + offset);
-  const bandStart = getOrdinalBandStartMapper(bandAxis.scale, bandAxis.data ?? [])(dataIndex);
+  const bandStart = getOrdinalBandStartMapper(bandAxis.scale, data)(dataIndex);
 
   if (bandStart === undefined) {
     return -1;
