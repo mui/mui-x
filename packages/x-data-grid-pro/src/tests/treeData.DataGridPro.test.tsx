@@ -391,6 +391,70 @@ describe('<DataGridPro /> - Tree data', () => {
     });
   });
 
+  describe('apiRef: setRowsExpansion', () => {
+    it('should expand the group rows up to a given depth', () => {
+      render(<Test />);
+      expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
+
+      act(() => apiRef.current?.setRowsExpansion((node) => node.depth < 1));
+      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'B.A', 'B.B', 'C']);
+
+      act(() => apiRef.current?.setRowsExpansion((node) => node.depth < 0));
+      expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
+    });
+
+    it('should call the callback with each group row and its current expansion', () => {
+      render(<Test isGroupExpandedByDefault={(node) => node.id === 'B'} />);
+      const shouldExpand = vi.fn((_node: GridGroupNode, isExpanded: boolean) => isExpanded);
+
+      act(() => apiRef.current?.setRowsExpansion(shouldExpand));
+      expect(
+        shouldExpand.mock.calls.map(([node, isExpanded]) => [node.id, isExpanded]),
+      ).to.deep.equal([
+        ['A', false],
+        ['B', true],
+        ['B.B', false],
+        ['B.B.A', false],
+      ]);
+    });
+
+    it('should keep the expansion of the group rows for which the callback returns their current expansion', () => {
+      render(<Test defaultGroupingExpansionDepth={-1} />);
+
+      act(() =>
+        apiRef.current?.setRowsExpansion((node, isExpanded) =>
+          node.id === 'B.B' ? false : isExpanded,
+        ),
+      );
+      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'B.A', 'B.B', 'C']);
+
+      act(() => apiRef.current?.setRowChildrenExpansion('B.B', true));
+      expect(getColumnValues(1)).to.deep.equal([
+        'A',
+        'A.A',
+        'A.B',
+        'B',
+        'B.A',
+        'B.B',
+        'B.B.A',
+        'B.B.A.A',
+        'C',
+      ]);
+    });
+
+    it('should publish the `rowExpansionChange` event only when the expansion changes', () => {
+      render(<Test />);
+      const handleRowExpansionChange = vi.fn();
+      act(() => apiRef.current?.subscribeEvent('rowExpansionChange', handleRowExpansionChange));
+
+      act(() => apiRef.current?.setRowsExpansion(() => false));
+      expect(handleRowExpansionChange).toHaveBeenCalledTimes(0);
+
+      act(() => apiRef.current?.setRowsExpansion(() => true));
+      expect(handleRowExpansionChange).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('apiRef: scrollToIndexes', () => {
     it('should scroll to an absolute row index in a paginated tree', () => {
       render(

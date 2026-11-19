@@ -510,6 +510,11 @@
       },
       "required": true
     },
+    "setRowsExpansion": {
+      "type": { "description": "(shouldExpand: GridRowExpansionSetter) =&gt; void" },
+      "required": true,
+      "isProPlan": true
+    },
     "setSortModel": {
       "type": { "description": "(model: GridSortModel) =&gt; void" },
       "required": true
