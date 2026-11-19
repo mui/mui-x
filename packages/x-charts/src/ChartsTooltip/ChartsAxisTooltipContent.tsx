@@ -146,18 +146,27 @@ DefaultContent.propTypes /* remove-proptypes */ = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  item: PropTypes /* @typescript-to-proptypes-ignore */.shape({
-    color: PropTypes.string.isRequired,
-    formattedLabel: PropTypes.string,
-    formattedValue: PropTypes.string.isRequired,
-    markShape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye']),
-    markType: PropTypes.oneOfType([
-      PropTypes.oneOf(['circle', 'line', 'line+mark', 'square']),
-      PropTypes.func,
-    ]),
-    seriesId: PropTypes.string.isRequired,
-    value: PropTypes.any,
-  }).isRequired,
+  item: PropTypes /* @typescript-to-proptypes-ignore */
+    .shape({
+      color: PropTypes.string.isRequired,
+      formattedLabel: PropTypes.string,
+      formattedValue: PropTypes.string.isRequired,
+      markShape: PropTypes.oneOf([
+        'circle',
+        'cross',
+        'diamond',
+        'square',
+        'star',
+        'triangle',
+        'wye',
+      ]),
+      markType: PropTypes.oneOfType([
+        PropTypes.oneOf(['circle', 'line', 'line+mark', 'square']),
+        PropTypes.func,
+      ]),
+      seriesId: PropTypes.string.isRequired,
+      value: PropTypes.any,
+    }).isRequired,
 } as any;
 
 ChartsAxisTooltipContent.propTypes /* remove-proptypes */ = {

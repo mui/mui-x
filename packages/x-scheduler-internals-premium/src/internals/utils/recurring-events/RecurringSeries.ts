@@ -359,7 +359,8 @@ export class RecurringSeries {
   }
 
   /**
-   * Returns the series of a processed event, in its data timezone.
+   * Returns the series of a processed event: in its timezone for a timed event, and on its dates
+   * for an all-day one, the same in every display timezone.
    * `excludedDays` replaces the days of the excluded occurrences of the event.
    */
   public static fromEvent(
@@ -368,9 +369,19 @@ export class RecurringSeries {
       exDate.toPlainDate(),
     ),
   ): RecurringSeries {
+    if (event.allDay) {
+      // From the first date of the model, which a skipped day can't move, in a timezone with
+      // neither DST nor skipped days: the series counts the dates as they are.
+      return new RecurringSeries({
+        rule: event.rrule!,
+        start: toEpochMs(BaseTemporal.PlainDate.from(event.modelInBuiltInFormat.start), 'UTC'),
+        timezone: 'UTC',
+        excludedDays,
+      });
+    }
     return new RecurringSeries({
       rule: event.rrule!,
-      start: event.unstable_internalInfos.dataStart,
+      start: event.start.timestamp,
       timezone: event.timezone,
       excludedDays,
     });

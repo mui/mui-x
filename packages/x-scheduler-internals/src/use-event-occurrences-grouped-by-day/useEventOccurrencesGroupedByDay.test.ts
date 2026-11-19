@@ -1,6 +1,6 @@
 import { EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { getDayListFromPlainDates } from '../get-day-list';
 import { BaseTemporal } from '../internals/utils/base-temporal';
 import { innerGetEventOccurrencesGroupedByDay } from './useEventOccurrencesGroupedByDay';
@@ -72,7 +72,9 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   });
 
   it('should handle multi-day all-day events correctly', () => {
-    const event = EventBuilder.new().span(day0Str, day2Str, { allDay: true }).toProcessed();
+    const event = EventBuilder.new()
+      .span('2024-01-10', '2024-01-13', { allDay: true })
+      .toProcessed();
 
     const result = run([event]);
 
@@ -126,6 +128,58 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     expect(result.get(days[1].key)).to.have.length(1);
     expect(result.get(days[1].key)![0].id).to.equal(event.id);
     expect(result.get(days[2].key)).to.have.length(0);
+  });
+
+  it('should expand only visible weekdays and keep late-Friday occurrences when weekends are hidden', () => {
+    const visibleDays = getDayListFromPlainDates({
+      firstPlainDate: BaseTemporal.PlainDate.from('2025-01-06'),
+      lastPlainDate: BaseTemporal.PlainDate.from('2025-01-19'),
+      timezone: 'Europe/Paris',
+      excludedWeekdays: [6, 7],
+    });
+    const event = EventBuilder.new()
+      .withDataTimezone('UTC')
+      .withDisplayTimezone('Europe/Paris')
+      .singleDay('2025-01-06T22:30:00Z', 15)
+      .rrule({ freq: 'DAILY' })
+      .toProcessed();
+    const getOccurrencesForVisibleDays = vi.fn(
+      schedulerRecurringEventsPlugin.getOccurrencesForVisibleDays,
+    );
+
+    const result = innerGetEventOccurrencesGroupedByDay({
+      days: visibleDays,
+      eventRangeIndex: createEventRangeIndex([event], true),
+      visibleResources: visible,
+      displayTimezone: 'Europe/Paris',
+      recurringEventsPlugin: { ...schedulerRecurringEventsPlugin, getOccurrencesForVisibleDays },
+    });
+
+    const expectedDates = [
+      '2025-01-06',
+      '2025-01-07',
+      '2025-01-08',
+      '2025-01-09',
+      '2025-01-10',
+      '2025-01-13',
+      '2025-01-14',
+      '2025-01-15',
+      '2025-01-16',
+      '2025-01-17',
+    ];
+    expect(
+      Array.from(result, ([key, occurrences]) => [
+        key,
+        occurrences.map((occurrence) => occurrence.start.timestamp),
+      ]),
+    ).to.deep.equal(expectedDates.map((date) => [date, [Date.parse(`${date}T22:30:00Z`)]]));
+    // Grouping already drops hidden days. Check expansion too, so omitting the ranges cannot
+    // silently restore the work this optimization avoids.
+    expect(
+      getOccurrencesForVisibleDays.mock.results[0].value.map(
+        (occurrence) => occurrence.start.timestamp,
+      ),
+    ).to.deep.equal(expectedDates.map((date) => Date.parse(`${date}T22:30:00Z`)));
   });
 
   it('should convert recurring event occurrences to the display timezone before grouping', () => {

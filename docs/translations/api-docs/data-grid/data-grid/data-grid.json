@@ -1523,6 +1523,10 @@
       "nodeName": "the root element",
       "conditions": "user selection is disabled"
     },
+    "root--formulaReferencePicking": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element while a click on a cell writes a reference into the formula being edited (Premium formulas)"
+    },
     "row--beingDragged": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the row element",

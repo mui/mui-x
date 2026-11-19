@@ -1,69 +1,122 @@
 import { describe, it, expect } from 'vitest';
-import { createDate } from 'test/utils/scheduler';
+import { EventBuilder } from 'test/utils/scheduler';
 import { BaseTemporal } from './base-temporal';
 import {
+  allDayBoundToEventString,
+  getAllDayDayCount,
+  getOccurrenceEnd,
   getPlainDateWeekStart,
   getUntilReferenceString,
   getWeekNumber,
   untilToEventString,
 } from './date-utils';
-import { normalizeAllDayBounds } from './plain-date-utils/date';
-import { toPlainDateTime } from './plain-date-utils/timeZone';
+import { toEpochMs } from './plain-date-utils/timeZone';
 
 const wednesdayPlainDate = BaseTemporal.PlainDate.from('2025-01-08');
 
 describe('date-utils', () => {
-  describe('normalizeAllDayBounds', () => {
-    const start = createDate('2025-01-08T09:00:00').getTime();
-    const end = createDate('2025-01-08T18:00:00').getTime();
-    const read = (bounds: { start: number; end: number }) => [
-      toPlainDateTime(bounds.start, 'default').toString(),
-      toPlainDateTime(bounds.end, 'default').toString(),
-    ];
-
-    it('returns the bounds unchanged when allDay is false', () => {
-      expect(normalizeAllDayBounds(start, end, false, 'default')).to.deep.equal({ start, end });
+  describe('allDayBoundToEventString', () => {
+    it('should write the first instant of a day as its date in the timezone', () => {
+      expect(
+        allDayBoundToEventString(
+          toEpochMs(BaseTemporal.PlainDate.from('2025-07-04'), 'Asia/Tokyo'),
+          'Asia/Tokyo',
+        ),
+      ).to.equal('2025-07-04');
+      expect(
+        allDayBoundToEventString(
+          toEpochMs(BaseTemporal.PlainDate.from('2025-07-04'), 'America/New_York'),
+          'America/New_York',
+        ),
+      ).to.equal('2025-07-04');
     });
 
-    it('returns the bounds unchanged when allDay is undefined', () => {
-      expect(normalizeAllDayBounds(start, end, undefined, 'default')).to.deep.equal({ start, end });
-    });
-
-    it('snaps an all-day event to the whole day', () => {
-      expect(read(normalizeAllDayBounds(start, end, true, 'default'))).to.deep.equal([
-        '2025-01-08T00:00:00',
-        '2025-01-09T00:00:00',
-      ]);
-    });
-
-    it('preserves the span when flattening a multi-day all-day event', () => {
-      const multiDayEnd = createDate('2025-01-10T18:00:00').getTime();
-      expect(read(normalizeAllDayBounds(start, multiDayEnd, true, 'default'))).to.deep.equal([
-        '2025-01-08T00:00:00',
-        '2025-01-11T00:00:00',
-      ]);
+    it('should refuse an instant inside a day', () => {
+      // Midnight in UTC is 20:00 of the previous day in New York.
+      expect(() => allDayBoundToEventString(Date.UTC(2025, 6, 4), 'America/New_York')).to.throw(
+        /first instant of a day/,
+      );
     });
   });
 
-  describe('normalizeAllDayBounds across DST transitions', () => {
-    it('should end at the next midnight when a DST transition repeats the last hour', () => {
-      // America/Santiago falls back from 00:00 -03:00 to 23:00 -04:00 on April 6th, 2024.
-      const day = createDate('2024-04-06T12:00:00', 'America/Santiago').getTime();
-      const result = normalizeAllDayBounds(day, day, true, 'America/Santiago');
-      expect(new Date(result.start).toISOString()).to.equal('2024-04-06T03:00:00.000Z');
-      expect(new Date(result.end).toISOString()).to.equal('2024-04-07T04:00:00.000Z');
+  describe('getAllDayDayCount', () => {
+    it('should count the days of an all-day model', () => {
+      const model = EventBuilder.new().span('2025-07-04', '2025-07-07', { allDay: true }).build();
+      expect(getAllDayDayCount({ modelInBuiltInFormat: model })).to.equal(3);
+    });
+  });
+
+  describe('getOccurrenceEnd', () => {
+    it('should end an all-day occurrence after its day count on the wall clock', () => {
+      // Europe/Paris springs forward on March 29th, 2026: two days from March 28th last 47 hours.
+      const event = EventBuilder.new()
+        .span('2026-03-28', '2026-03-30', { allDay: true })
+        .withDisplayTimezone('Europe/Paris')
+        .toProcessed();
+      const occurrenceStart = toEpochMs(BaseTemporal.PlainDate.from('2026-03-28'), 'Europe/Paris');
+      const end = getOccurrenceEnd({ event, occurrenceStart, displayTimezone: 'Europe/Paris' });
+      expect(new Date(end).toISOString()).to.equal('2026-03-29T22:00:00.000Z'); // March 30th 00:00
+    });
+
+    it('should end an all-day occurrence starting on a day without midnight at the start of the next day', () => {
+      // America/Havana springs forward at midnight on March 9th, 2025: that day starts at 01:00.
+      const event = EventBuilder.new()
+        .span('2025-03-09', '2025-03-10', { allDay: true })
+        .withDisplayTimezone('America/Havana')
+        .toProcessed();
+      const occurrenceStart = toEpochMs(
+        BaseTemporal.PlainDate.from('2025-03-09'),
+        'America/Havana',
+      );
+      const end = getOccurrenceEnd({ event, occurrenceStart, displayTimezone: 'America/Havana' });
+      expect(end).to.equal(toEpochMs(BaseTemporal.PlainDate.from('2025-03-10'), 'America/Havana'));
+    });
+
+    it('should keep the duration of a timed occurrence', () => {
+      const event = EventBuilder.new().singleDay('2025-07-04T09:00:00Z', 90).toProcessed();
+      const occurrenceStart = Date.UTC(2025, 6, 11, 9);
+      expect(getOccurrenceEnd({ event, occurrenceStart, displayTimezone: 'UTC' })).to.equal(
+        Date.UTC(2025, 6, 11, 10, 30),
+      );
     });
   });
 
   describe('untilToEventString', () => {
     it.each([
-      ['2025-01-01', '2025-01-12'],
+      ['2025-01-01', '2025-01-12T23:59:59'],
       ['2025-01-01T09:00:00', '2025-01-12T23:59:59'],
       ['2025-01-01T08:00:00Z', '2025-01-12T22:59:59.999Z'],
     ])('should write a plain date covering its whole day after %s', (original, expected) => {
       expect(
-        untilToEventString(BaseTemporal.PlainDate.from('2025-01-12'), original, 'Europe/Paris'),
+        untilToEventString(
+          BaseTemporal.PlainDate.from('2025-01-12'),
+          original,
+          'Europe/Paris',
+          false,
+        ),
       ).to.equal(expected);
+    });
+
+    it('should write a plain date-time as its date on an all-day event', () => {
+      expect(
+        untilToEventString(
+          BaseTemporal.PlainDateTime.from('2025-01-12T09:15:30'),
+          '2025-01-01T09:00:00',
+          'Europe/Paris',
+          true,
+        ),
+      ).to.equal('2025-01-12');
+    });
+
+    it('should write a plain date as a date on an all-day event', () => {
+      expect(
+        untilToEventString(
+          BaseTemporal.PlainDate.from('2025-01-12'),
+          '2025-01-01T09:00:00',
+          'Europe/Paris',
+          true,
+        ),
+      ).to.equal('2025-01-12');
     });
 
     it.each([
@@ -76,6 +129,7 @@ describe('date-utils', () => {
           BaseTemporal.PlainDateTime.from('2025-01-12T09:15:30'),
           original,
           'Europe/Paris',
+          false,
         ),
       ).to.equal(expected);
     });
@@ -87,6 +141,7 @@ describe('date-utils', () => {
           BaseTemporal.PlainDate.from('2024-04-06'),
           '2024-04-01T09:00:00Z',
           'America/Santiago',
+          false,
         ),
       ).to.equal('2024-04-07T03:59:59.999Z');
     });

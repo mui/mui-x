@@ -217,19 +217,19 @@ export abstract class Gesture<GestureName extends string> {
   protected abstract state: GestureState;
 
   /** @internal For types. If false enables phases (xStart, x, xEnd) */
-  protected abstract readonly isSinglePhase: boolean;
+  public abstract readonly isSinglePhase: boolean;
 
   /** @internal For types. The event type this gesture is associated with */
-  protected abstract readonly eventType: CustomEvent;
+  public abstract readonly eventType: CustomEvent;
 
   /** @internal For types. The options type for this gesture */
   protected abstract readonly optionsType: GestureOptions<GestureName>;
 
   /** @internal For types. The options that can be changed at runtime */
-  protected abstract readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
+  public abstract readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
   /** @internal For types. The state that can be changed at runtime */
-  protected abstract readonly mutableStateType: Partial<typeof this.state>;
+  public abstract readonly mutableStateType: Partial<typeof this.state>;
 
   /**
    * Create a new gesture instance with the specified options

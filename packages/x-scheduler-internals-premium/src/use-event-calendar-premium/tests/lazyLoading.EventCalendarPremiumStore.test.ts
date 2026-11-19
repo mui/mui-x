@@ -20,6 +20,7 @@ interface TestEvent {
   start: string;
   end: string;
   title: string;
+  allDay?: boolean;
 }
 
 const noopPersistEvents = async () => ({ success: true });
@@ -145,6 +146,37 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       '2026-04-05T03:59:59.999Z',
     ]);
   });
+
+  it.each(['Asia/Tokyo', 'America/Los_Angeles'])(
+    'should load an all-day event on its dates displayed in %s',
+    async (displayTimezone) => {
+      const dataSource = {
+        getEvents: vi.fn(async (): Promise<TestEvent[]> => [
+          { id: '1', title: 'Holiday', start: '2025-07-01', end: '2025-07-02', allDay: true },
+        ]),
+        persistEvents: noopPersistEvents,
+      };
+      const store = new EventCalendarPremiumStore({
+        ...DEFAULT_PARAMS,
+        dataSource,
+        displayTimezone,
+        defaultVisibleDate: createDate('2025-07-01T00:00:00', displayTimezone),
+      });
+      store.setViewDefinition(buildViewDefinition(1));
+
+      await flushEffect();
+      await flushDebounce();
+
+      // The whole July 1st of the display timezone.
+      expect(getFetchedRange(dataSource.getEvents)).to.deep.equal([
+        createDate('2025-07-01T00:00:00', displayTimezone).toISOString(),
+        new Date(createDate('2025-07-02T00:00:00', displayTimezone).getTime() - 1).toISOString(),
+      ]);
+      expect(store.state.processedEventLookup.get('1')!.start.plainDateTime.toString()).to.equal(
+        '2025-07-01T00:00:00',
+      );
+    },
+  );
 
   it('should fire the initial fetch without waiting for the debounce window', async () => {
     const dataSource = {

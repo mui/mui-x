@@ -3,6 +3,7 @@ export * from './components/ChartsAxesGradients';
 export * from '../ChartsLabel/ChartsLabelMark';
 export * from './components/NotRendered';
 export * from '../BarChart/BarLabel/BarLabelPlot';
+export { BarLabelItem } from '../BarChart/BarLabel/BarLabelItem';
 export * from '../BarChart/BarClipPath';
 
 // hooks

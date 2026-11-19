@@ -365,8 +365,7 @@ const thTHGrid: Partial<GridLocaleText> = {
   chartsMenuMoveToBottom: 'ย้ายไปล่างสุด',
   chartsMenuOptions: 'ตัวเลือกฟิลด์',
   chartsMenuRemove: 'ลบ',
-  chartsDragToDimensions: (dimensionLabel: string) =>
-    `ลากมาที่นี่เพื่อใช้คอลัมน์เป็น${dimensionLabel}`,
+  chartsDragToDimensions: (dimensionLabel: string) => `ลากมาที่นี่เพื่อใช้คอลัมน์เป็น${dimensionLabel}`,
   chartsDragToValues: (valuesLabel: string) => `ลากมาที่นี่เพื่อใช้คอลัมน์เป็น${valuesLabel}`,
 
   // AI Assistant panel

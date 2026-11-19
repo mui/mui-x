@@ -27,7 +27,7 @@ catalog:
   '@mui/system': 9.5.0
   '@mui/types': 9.5.0
   '@mui/utils': ^9.5.0
-  '@mui/x-internal-exceljs-fork': 5.0.0
+  '@mui/x-internal-exceljs-fork': 5.0.1
   '@playwright/test': 1.65.0
   '@react-spring/web': ^10.1.2
   '@types/chance': ^1.1.8
@@ -84,6 +84,9 @@ catalog:
 engineStrict: true
 updateNotifier: false
 autoDedupe: true
+# Peer suffixes list only name@version, so a peer's own peers (e.g. the optional yaml of vite)
+# do not split one package into several lockfile entries.
+dedupePeers: true
 blockExoticSubdeps: true
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:

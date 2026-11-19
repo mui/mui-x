@@ -49,11 +49,13 @@ export default function CustomEditingUI() {
         {
           id: `custom-${Date.now()}`,
           title,
-          start: new Date(occurrence.start.timestamp).toISOString(),
-          // An all-day occurrence ends at the start of the next day, its model on its last day.
-          end: new Date(
-            occurrence.end.timestamp - (occurrence.allDay ? 1 : 0),
-          ).toISOString(),
+          // The dates of an all-day event are `YYYY-MM-DD` strings, with an exclusive end.
+          start: occurrence.allDay
+            ? occurrence.start.plainDateTime.toPlainDate().toString()
+            : new Date(occurrence.start.timestamp).toISOString(),
+          end: occurrence.allDay
+            ? occurrence.end.plainDateTime.toPlainDate().toString()
+            : new Date(occurrence.end.timestamp).toISOString(),
           allDay: occurrence.allDay,
         },
       ]);

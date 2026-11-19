@@ -26,8 +26,8 @@ const initialEvents: SchedulerEvent[] = [
   {
     id: 'birthday',
     title: "Alice's Birthday",
-    start: '2025-07-03T00:00:00',
-    end: '2025-07-04T00:00:00',
+    start: '2025-07-03',
+    end: '2025-07-05',
     resource: 'personal',
     allDay: true,
     readOnly: true,
