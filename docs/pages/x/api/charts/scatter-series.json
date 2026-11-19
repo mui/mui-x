@@ -6,7 +6,6 @@
     "import { ScatterSeries } from '@mui/x-charts'"
   ],
   "properties": {
-    "type": { "type": { "description": "'scatter'" }, "required": true },
     "color": { "type": { "description": "string" } },
     "colorAxisId": { "type": { "description": "string" } },
     "colorGetter": {
@@ -31,6 +30,7 @@
       }
     },
     "sizeAxisId": { "type": { "description": "string" } },
+    "type": { "type": { "description": "'scatter'" } },
     "valueFormatter": {
       "type": {
         "description": "SeriesValueFormatter&lt;ChartsSeriesConfig[SeriesType]['valueType']&gt;"

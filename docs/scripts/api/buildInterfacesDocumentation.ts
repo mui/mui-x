@@ -1,11 +1,28 @@
-import type { Symbol, JSDocTagInfo, Type, InterfaceDeclaration } from 'typescript';
-import { isPropertySignature } from 'typescript';
+import type {
+  Symbol,
+  JSDocTagInfo,
+  Type,
+  InterfaceDeclaration,
+  Node,
+  TypeAliasDeclaration,
+} from 'typescript';
+import {
+  createSourceFile,
+  forEachChild,
+  isConditionalTypeNode,
+  isTypeAliasDeclaration,
+  ScriptTarget,
+  SymbolFlags,
+  TypeFlags,
+  TypeFormatFlags,
+} from 'typescript';
 import { EOL } from 'os';
 import { kebabCase } from 'es-toolkit/string';
 import path from 'path';
 import { renderMarkdown } from '@mui/internal-markdown';
 import type { DocumentedInterfaces } from './utils';
 import {
+  formatType,
   getSymbolDescription,
   getSymbolJSDocTags,
   linkify,
@@ -40,17 +57,122 @@ interface ParsedProperty {
   projects: XProjectNames[];
 }
 
+/**
+ * Returns the type to document, with generic aliases expanded over their union type parameters.
+ * For example `AxisConfig` becomes `AxisConfig<'band', V, ChartsXAxisProps> | ...`.
+ */
+const getDocumentedType = (symbol: Symbol, project: XTypeScriptProject): Type => {
+  const { checker } = project;
+  const declaredType = checker.getDeclaredTypeOfSymbol(symbol);
+  const declaration = symbol.declarations?.find(isTypeAliasDeclaration);
+  const typeParameters = declaration?.typeParameters ?? [];
+  const distributed = typeParameters
+    .filter((parameter) =>
+      checker.getBaseConstraintOfType(checker.getTypeAtLocation(parameter))?.isUnion(),
+    )
+    .map((parameter) => parameter.name.text);
+  if (!declaration || distributed.length === 0) {
+    return declaredType;
+  }
+
+  // TS has no public API to instantiate a generic: evaluate a distributive conditional
+  // inside the alias body so its type parameters resolve, then take its constraint.
+  const typeArguments = typeParameters.map((parameter) => parameter.name.text).join(', ');
+  const source = `type T = ${distributed.map((name) => `${name} extends any ? `).join('')}${declaration.name.text}<${typeArguments}>${' : never'.repeat(distributed.length)};`;
+  const node = (
+    createSourceFile('', source, ScriptTarget.Latest, true).statements[0] as TypeAliasDeclaration
+  ).type;
+  (node as { parent: Node }).parent = declaration.type;
+  return checker.getBaseConstraintOfType(checker.getTypeFromTypeNode(node)) ?? declaredType;
+};
+
+const getMembers = (type: Type) => (type.isUnion() ? type.types : [type]);
+
+const getPropertyType = (member: Type, name: string, project: XTypeScriptProject) => {
+  const property = member.getProperty(name);
+  return property
+    ? project.checker.getNonNullableType(project.checker.getTypeOfSymbol(property))
+    : project.checker.getNeverType();
+};
+
+/**
+ * Describes which union members have the property, for example "Only applies to `scaleType: 'band'`."
+ */
+const getAvailability = (name: string, type: Type, project: XTypeScriptProject) => {
+  const members = getMembers(type);
+  const owners = members.filter(
+    (member) => getPropertyType(member, name, project).flags !== TypeFlags.Never,
+  );
+  if (owners.length === members.length) {
+    return '';
+  }
+
+  const conditions = members[0].getProperties().flatMap(({ name: discriminant }) => {
+    const values = new Set(owners.map((owner) => getPropertyType(owner, discriminant, project)));
+    const allValues = new Set(
+      members.map((member) => getPropertyType(member, discriminant, project)),
+    );
+    const literals = Array.from(values).filter((value) => value.isStringLiteral());
+    if (discriminant === name || values.size === allValues.size || literals.length < values.size) {
+      return [];
+    }
+    const literalsStr = literals
+      .map((value) => `'${value.value}'`)
+      .sort()
+      .join(' | ');
+    return [`\`${discriminant}: ${literalsStr}\``];
+  });
+  return conditions.length > 0 ? `Only applies to ${conditions.join(' and ')}.` : '';
+};
+
+const hasConditionalType = (node: Node): boolean =>
+  isConditionalTypeNode(node) || !!forEachChild(node, hasConditionalType);
+
+const stringifyProperty = async (symbols: Symbol[], project: XTypeScriptProject) => {
+  const declarations = new Set(symbols.flatMap((symbol) => symbol.declarations ?? []));
+  const [declaration] = declarations;
+  if (declarations.size <= 1 && !(declaration && hasConditionalType(declaration))) {
+    return stringifySymbol(symbols[0], project);
+  }
+
+  // The source text would only show one union member or an unresolved conditional type.
+  // Constituents are sorted because the checker orders unions by creation order.
+  const { checker } = project;
+  const typeStrs = new Set(
+    symbols
+      .map((symbol) => checker.getNonNullableType(checker.getTypeOfSymbol(symbol)))
+      .flatMap((type) => (type.aliasSymbol ? [type] : getMembers(type)))
+      .map((type) => checker.typeToString(type, undefined, TypeFormatFlags.NoTruncation)),
+  );
+  return formatType(
+    Array.from(typeStrs, (typeStr) => `(${typeStr})`)
+      .sort()
+      .join(' | '),
+  );
+};
+
 const parseProperty = async (
-  propertySymbol: Symbol,
+  name: string,
+  type: Type,
   project: XTypeScriptProject,
-): Promise<ParsedProperty> => ({
-  name: propertySymbol.name,
-  description: getSymbolDescription(propertySymbol, project),
-  tags: getSymbolJSDocTags(propertySymbol),
-  required: !propertySymbol.declarations?.find(isPropertySignature)?.questionToken,
-  typeStr: await stringifySymbol(propertySymbol, project),
-  projects: [project.name],
-});
+): Promise<ParsedProperty> => {
+  const commonProperty = type.getProperty(name);
+  const symbols = commonProperty
+    ? [commonProperty]
+    : getMembers(type).flatMap((member) => member.getProperty(name) ?? []);
+
+  return {
+    name,
+    description: [getSymbolDescription(symbols[0], project), getAvailability(name, type, project)]
+      .filter(Boolean)
+      .join('\n\n'),
+    tags: getSymbolJSDocTags(symbols[0]),
+    // eslint-disable-next-line no-bitwise
+    required: !!commonProperty && !(commonProperty.flags & SymbolFlags.Optional),
+    typeStr: await stringifyProperty(symbols, project),
+    projects: [project.name],
+  };
+};
 
 interface ProjectInterface {
   project: XTypeScriptProject;
@@ -74,8 +196,8 @@ const parseInterfaceSymbol = async (
       }
 
       const exportedSymbol = project.exports[interfaceName];
-      const type = project.checker.getDeclaredTypeOfSymbol(exportedSymbol);
       const symbol = resolveExportSpecifier(exportedSymbol, project);
+      const type = getDocumentedType(symbol, project);
 
       return {
         symbol,
@@ -105,14 +227,16 @@ const parseInterfaceSymbol = async (
 
   const properties: Record<string, ParsedProperty> = {};
   for (const { type, project } of projectInterfaces) {
-    const propertiesOnProject = type.getProperties();
+    const propertyNames = new Set(
+      getMembers(type).flatMap((member) => member.getProperties().map(({ name }) => name)),
+    );
 
-    for (const propertySymbol of propertiesOnProject) {
-      if (properties[propertySymbol.name]) {
-        properties[propertySymbol.name].projects.push(project.name);
+    for (const name of propertyNames) {
+      if (properties[name]) {
+        properties[name].projects.push(project.name);
       } else {
         // eslint-disable-next-line no-await-in-loop
-        properties[propertySymbol.name] = await parseProperty(propertySymbol, project);
+        properties[name] = await parseProperty(name, type, project);
       }
     }
   }
