@@ -1,4 +1,4 @@
-import { isOrdinalScale } from '@mui/x-charts/internals';
+import { getOrdinalPosition, isOrdinalScale } from '@mui/x-charts/internals';
 import type { D3Scale } from '@mui/x-charts/internals';
 import type { PositionGetter } from './curves/curve.types';
 
@@ -11,7 +11,7 @@ export const createPositionGetter: (
   (scale, isCategoryDirection, gap, ordinalScaleData) =>
   (value, bandIndex, stackOffset, useBand) => {
     if (isOrdinalScale(scale)) {
-      const position = scale(ordinalScaleData?.[bandIndex])!;
+      const position = getOrdinalPosition(scale, ordinalScaleData ?? [], bandIndex) ?? NaN;
       return useBand ? position + scale.bandwidth() : position;
     }
     if (isCategoryDirection) {

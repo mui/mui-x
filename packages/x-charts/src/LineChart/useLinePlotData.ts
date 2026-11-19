@@ -19,14 +19,9 @@ import {
 import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { useStore } from '../internals/store/useStore';
 import { getCurveFactory } from '../internals/getCurve';
+import { getIndexToPositionMapper } from '../internals/getOrdinalPosition';
 import type { ChartsXAxisProps, ChartsYAxisProps } from '../models';
-import {
-  getValueToPositionMapper,
-  useDrawingArea,
-  useLineSeriesContext,
-  useXAxes,
-  useYAxes,
-} from '../hooks';
+import { useDrawingArea, useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import type { SeriesId } from '../models/seriesType/common';
 
@@ -119,9 +114,9 @@ export function useLinePlotData(
         }
 
         const xScale = xAxes[xAxisId].scale;
-        const xPosition = getValueToPositionMapper(xScale);
         const yScale = yAxes[yAxisId].scale;
         const xData = xAxes[xAxisId].data;
+        const xPosition = getIndexToPositionMapper(xScale, xData ?? []);
 
         const gradientId: string | undefined =
           (yAxes[yAxisId].colorScale && getGradientId(yAxisId)) ||
@@ -169,7 +164,7 @@ export function useLinePlotData(
         }
 
         type FormattedPoint = {
-          x: any;
+          x: number;
           y: [number, number];
           nullData: boolean;
           isExtension?: boolean;
@@ -180,20 +175,21 @@ export function useLinePlotData(
           // Buckets already hold the indices to render; flatten them.
           formattedData = sampledBuckets.flatMap((bucket) =>
             Array.from(bucket.indices, (index) => ({
-              x: xData![index],
+              x: xPosition(index),
               y: visibleStackedData[index],
               nullData: data[index] == null,
             })),
           );
         } else {
           formattedData =
-            xData?.flatMap((x, index) => {
+            xData?.flatMap((_, index) => {
               const nullData = data[index] == null;
+              const x = xPosition(index);
               if (shouldExpand) {
                 const rep = [{ x, y: visibleStackedData[index], nullData, isExtension: false }];
                 if (!nullData && (index === 0 || data[index - 1] == null)) {
                   rep.unshift({
-                    x: (xScale(x) ?? 0) - (xScale.step() - xScale.bandwidth()) / 2,
+                    x: x - xScale.step() / 2,
                     y: visibleStackedData[index],
                     nullData,
                     isExtension: true,
@@ -201,7 +197,7 @@ export function useLinePlotData(
                 }
                 if (!nullData && (index === data.length - 1 || data[index + 1] == null)) {
                   rep.push({
-                    x: (xScale(x) ?? 0) + (xScale.step() + xScale.bandwidth()) / 2,
+                    x: x + xScale.step() / 2,
                     y: visibleStackedData[index],
                     nullData,
                     isExtension: true,
@@ -217,7 +213,7 @@ export function useLinePlotData(
         const hidden = series[seriesId].hidden;
 
         const linePath = d3Line<FormattedPoint>()
-          .x((d) => (d.isExtension ? d.x : xPosition(d.x)))
+          .x((d) => d.x)
           .defined((d) => connectNulls || !d.nullData || !!d.isExtension)
           .y((d) => {
             if (hidden) {

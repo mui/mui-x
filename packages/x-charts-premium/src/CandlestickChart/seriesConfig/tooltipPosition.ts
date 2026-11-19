@@ -1,5 +1,6 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
 import {
+  getOrdinalPosition,
   isBandScale,
   isOrdinalScale,
   selectorChartsTooltipItem,
@@ -59,7 +60,11 @@ export const selectorTooltipItemPosition: TooltipItemPositionSelector<'ohlc'> =
 
       const [, high, low] = datum;
 
-      const x = xScale(xScale.domain()[identifier.dataIndex])!;
+      const x = getOrdinalPosition(xScale, xAxis.data ?? [], identifier.dataIndex);
+      if (x === undefined) {
+        return null;
+      }
+
       const width = xScale.bandwidth();
       const y = yScale(high);
       const height = yScale(low) - yScale(high);

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { ScaleBand } from '@mui/x-charts-vendor/d3-scale';
 import {
+  getOrdinalPosition,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
   useStore,
@@ -52,7 +53,7 @@ export function CandlestickPreviewPlot(props: PreviewPlotProps) {
             return;
           }
 
-          const scaledX = xScale(xDomain[dataIndex]);
+          const scaledX = getOrdinalPosition(xScale, xDomain, dataIndex);
           if (scaledX === undefined) {
             return;
           }

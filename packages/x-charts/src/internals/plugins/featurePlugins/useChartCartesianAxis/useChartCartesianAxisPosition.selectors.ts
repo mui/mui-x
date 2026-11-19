@@ -4,6 +4,7 @@ import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { getBandSize } from '../../../../internals/getBandSize';
 import { isBandScale } from '../../../../internals/scaleGuards';
 import { getDataIndexForOrdinalScaleValue } from '../../../../internals/invertScale';
+import { getOrdinalPosition } from '../../../../internals/getOrdinalPosition';
 import type {
   ChartsRadialAxisProps,
   ChartsCartesianAxisProps,
@@ -29,15 +30,9 @@ export function getBandIndex(
   );
 
   const barOffset = stackConfig.groupIndex * (barWidth + offset);
-  const bandValue = bandAxis.data?.[dataIndex];
+  const bandStart = getOrdinalPosition(bandAxis.scale, bandAxis.data ?? [], dataIndex);
 
-  if (bandValue == null) {
-    return -1;
-  }
-
-  const bandStart = bandAxis.scale(bandValue);
-
-  if (bandStart == null) {
+  if (bandStart === undefined) {
     return -1;
   }
 

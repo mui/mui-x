@@ -1,4 +1,5 @@
 import type { D3OrdinalScale } from '../models/axis';
+import { getOrdinalPosition } from './getOrdinalPosition';
 
 /**
  * Computes the band region covered by a sampled bucket spanning `data[startIndex..endIndex]`.
@@ -16,8 +17,8 @@ export function getSampledBucketRegion(
   const step = scale.step();
   const halfPadding = (step - scale.bandwidth()) / 2;
 
-  const startPos = scale(data[startIndex])!;
-  const endPos = scale(data[endIndex])!;
+  const startPos = getOrdinalPosition(scale, data, startIndex) ?? NaN;
+  const endPos = getOrdinalPosition(scale, data, endIndex) ?? NaN;
 
   return {
     regionStart: Math.min(startPos, endPos) - halfPadding,

@@ -24,7 +24,7 @@ import type {
   ChartsYAxisProps,
 } from '../../../../models/axis';
 import type { ComputeResult } from './computeAxisValue';
-import { getValueToPositionMapper } from '../../../../hooks/getValueToPositionMapper';
+import { getIndexToPositionMapper } from '../../../getOrdinalPosition';
 import type { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 
@@ -155,11 +155,11 @@ function getCoordinatesFromAxis(
   if (!axis) {
     return null;
   }
-  const value = axis.data?.[identifier.dataIndex];
-  if (value == null) {
+  const { data } = axis;
+  if (!data || data[identifier.dataIndex] == null) {
     return null;
   }
-  const coordinate = getValueToPositionMapper(axis.scale)(value);
+  const coordinate = getIndexToPositionMapper(axis.scale, data)(identifier.dataIndex);
   if (coordinate === undefined) {
     return null;
   }

@@ -91,10 +91,10 @@ function createScaleBand(seed?: ScaleBandState): ScaleBand<any> {
     // @ts-expect-error, InternMap accepts two arguments.
     index = new InternMap(undefined, keyof);
     for (const value of _!) {
-      if (index.has(value)) {
-        continue;
+      domain.push(value);
+      if (!index.has(value)) {
+        index.set(value, domain.length - 1);
       }
-      index.set(value, domain.push(value) - 1);
     }
     return rescale();
   };
@@ -190,6 +190,7 @@ export function scaleBand<Domain extends { toString(): string } = string>(
 ): ScaleBand<Domain>;
 /**
  * Constructs a new band scale with the specified domain and range, no padding, no rounding and center alignment.
+ * Unlike d3, duplicated domain values are kept; `scale(value)` returns the first matching band.
  *
  * The generic corresponds to the data type of domain elements.
  *

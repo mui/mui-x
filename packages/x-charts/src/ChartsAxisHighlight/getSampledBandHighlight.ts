@@ -1,5 +1,6 @@
 import type { D3OrdinalScale } from '../models/axis';
 import { getSampledBucketRegion } from '../internals/getSampledBucketRegion';
+import { getOrdinalPosition } from '../internals/getOrdinalPosition';
 
 function findDataIndex(data: readonly unknown[], value: unknown): number {
   if (value instanceof Date) {
@@ -34,24 +35,19 @@ export function getSampledBandHighlight({
 }: SampledBandHighlightParams): { bandStart: number; bandSize: number } {
   const step = scale.step();
   const halfPadding = (step - scale.bandwidth()) / 2;
+  const index = data ? (dataIndex ?? findDataIndex(data, value)) : -1;
 
-  let bandStart = scale(value)! - halfPadding;
+  const position = data ? getOrdinalPosition(scale, data, index) : undefined;
+
+  let bandStart = (position ?? scale(value)!) - halfPadding;
   let bandSize = step;
 
-  if (bucketSize > 1 && data) {
-    const index = dataIndex ?? findDataIndex(data, value);
-    if (index >= 0) {
-      const bucketStart = Math.floor(index / bucketSize) * bucketSize;
-      const bucketEnd = Math.min(bucketStart + bucketSize - 1, data.length - 1);
-      const { regionStart, regionSize } = getSampledBucketRegion(
-        scale,
-        data,
-        bucketStart,
-        bucketEnd,
-      );
-      bandStart = regionStart;
-      bandSize = regionSize;
-    }
+  if (bucketSize > 1 && data && index >= 0) {
+    const bucketStart = Math.floor(index / bucketSize) * bucketSize;
+    const bucketEnd = Math.min(bucketStart + bucketSize - 1, data.length - 1);
+    const { regionStart, regionSize } = getSampledBucketRegion(scale, data, bucketStart, bucketEnd);
+    bandStart = regionStart;
+    bandSize = regionSize;
   }
 
   return { bandStart, bandSize };

@@ -100,6 +100,14 @@ describe('scaleBand', () => {
     expect(s.bandwidth()).to.equal(25);
   });
 
+  it('band.domain(values) keeps duplicated values', () => {
+    const s = scaleBand(['a', 'b', 'a'], [0, 120]);
+    expect(s.domain()).to.deep.equal(['a', 'b', 'a']);
+    expect(s.step()).to.equal(40);
+    expect(s('a')).to.equal(0);
+    expect(s('b')).to.equal(40);
+  });
+
   it('band.domain(domain) accepts an iterable', () => {
     expect(
       scaleBand()

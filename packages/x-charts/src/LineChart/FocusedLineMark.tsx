@@ -2,6 +2,7 @@
 import { useTheme } from '@mui/material/styles';
 import { useFocusedItem } from '../hooks/useFocusedItem';
 import { useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
+import { getIndexToPositionMapper } from '../internals/getOrdinalPosition';
 
 const RADIUS = 6;
 export function FocusedLineMark() {
@@ -35,7 +36,12 @@ export function FocusedLineMark() {
       fill="none"
       stroke={(theme.vars ?? theme).palette.text.primary}
       strokeWidth={2}
-      x={xAxis[xAxisId].scale(xAxis[xAxisId].data![focusedItem.dataIndex])! - RADIUS}
+      x={
+        getIndexToPositionMapper(
+          xAxis[xAxisId].scale,
+          xAxis[xAxisId].data ?? [],
+        )(focusedItem.dataIndex) - RADIUS
+      }
       y={yAxis[yAxisId].scale(series.visibleStackedData[focusedItem.dataIndex][1])! - RADIUS}
       width={2 * RADIUS}
       height={2 * RADIUS}

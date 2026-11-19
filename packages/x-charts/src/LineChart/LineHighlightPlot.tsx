@@ -5,7 +5,7 @@ import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useStore } from '../internals/store/useStore';
 import { LineHighlightElement } from './LineHighlightElement';
 import type { LineHighlightElementProps } from './LineHighlightElement';
-import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
+import { getIndexToPositionMapper } from '../internals/getOrdinalPosition';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { useLineSeriesContext } from '../hooks/useLineSeries';
 import getColor from './seriesConfig/getColor';
@@ -127,7 +127,6 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
             return null;
           }
 
-          const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
           const yScale = yAxis[yAxisId].scale;
           const xData = xAxis[xAxisId].data;
 
@@ -143,7 +142,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
             );
           }
 
-          const x = xScale(xData[highlightedIndex]);
+          const x = getIndexToPositionMapper(xAxis[xAxisId].scale, xData)(highlightedIndex);
           const y = yScale(visibleStackedData[highlightedIndex][1])!; // This should not be undefined since y should not be a band scale
           if (!instance.isPointInside(x, y)) {
             return null;

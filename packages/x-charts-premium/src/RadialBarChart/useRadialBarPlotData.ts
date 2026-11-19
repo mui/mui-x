@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { useRadiusAxes, useRotationAxes } from '@mui/x-charts/hooks';
-import { findMinMax, getBandSize, useAllSeriesOfType } from '@mui/x-charts/internals';
+import {
+  findMinMax,
+  getBandSize,
+  getOrdinalPosition,
+  useAllSeriesOfType,
+} from '@mui/x-charts/internals';
 import type {
   AxisId,
   ChartSeriesDefaultized,
@@ -131,8 +136,11 @@ function processRadialBarDataForPlot(
           const valueStart = isPositive ? maxValueCoord - barSize : minValueCoord;
           const valueEnd = isPositive ? maxValueCoord : minValueCoord + barSize;
 
-          const baseStart =
-            baseScale(baseAxisConfig.data![dataIndex])! + groupIndex * (bandSlice + offset);
+          const bandStart = getOrdinalPosition(baseScale, baseAxisConfig.data ?? [], dataIndex);
+          if (bandStart === undefined) {
+            continue;
+          }
+          const baseStart = bandStart + groupIndex * (bandSlice + offset);
           const baseEnd = baseStart + bandSlice;
 
           seriesDataPoints.push({

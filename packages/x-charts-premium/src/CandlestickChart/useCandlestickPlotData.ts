@@ -1,7 +1,11 @@
 'use client';
 import * as React from 'react';
 import type { ScaleBand } from '@mui/x-charts-vendor/d3-scale';
-import { selectorChartsHighlightStateCallback, useStore } from '@mui/x-charts/internals';
+import {
+  getOrdinalPosition,
+  selectorChartsHighlightStateCallback,
+  useStore,
+} from '@mui/x-charts/internals';
 import type { D3ContinuousScale } from '@mui/x-charts/internals';
 import type { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { useTheme } from '@mui/material/styles';
@@ -155,7 +159,7 @@ export function useCandlestickPlotData(
         continue;
       }
 
-      const scaledX = xScale(xDomain[dataIndex])!;
+      const scaledX = getOrdinalPosition(xScale, xDomain, dataIndex) ?? NaN;
       const open = datum[0];
       const high = datum[1];
       const low = datum[2];

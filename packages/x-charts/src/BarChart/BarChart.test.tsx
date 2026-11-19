@@ -3,6 +3,7 @@ import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/charts/describeConformance';
 import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { useYAxis } from '@mui/x-charts/hooks';
+import { chartsAxisHighlightClasses } from '@mui/x-charts/ChartsAxisHighlight';
 import { screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
@@ -307,5 +308,64 @@ describe('<BarChart />', () => {
     setProps({ hiddenItems: [{ type: 'bar', seriesId: 'a2' }] });
 
     expect(yAxisDomainRef.current).to.deep.equal([0, 500]);
+  });
+
+  describe('duplicated band values', () => {
+    const duplicatedProps = {
+      width: 400,
+      height: 300,
+      xAxis: [{ id: 'x', scaleType: 'band' as const, data: ['A', 'A', 'B', 'A'] }],
+      series: [{ data: [10, 20, 30, 40] }],
+      hideLegend: true,
+      skipAnimation: true,
+    };
+
+    it('renders one bar and one tick label per data point', () => {
+      const { container } = render(<BarChart {...duplicatedProps} />);
+
+      const xs = Array.from(container.querySelectorAll(`.${barClasses.element}`), (bar) =>
+        Number(bar.getAttribute('x')),
+      );
+      expect(xs).to.have.length(4);
+      expect(xs).to.deep.equal([...new Set(xs)].sort((a, b) => a - b));
+
+      expect(screen.getAllByText('A')).to.have.length(3);
+      expect(screen.getAllByText('B')).to.have.length(1);
+    });
+
+    it('highlights the band of the highlighted index', () => {
+      const { container } = render(
+        <BarChart {...duplicatedProps} highlightedAxis={[{ axisId: 'x', dataIndex: 3 }]} />,
+      );
+
+      const bars = container.querySelectorAll(`.${barClasses.element}`);
+      const [, start, , , size] =
+        container
+          .querySelector(`.${chartsAxisHighlightClasses.root}`)
+          ?.getAttribute('d')
+          ?.split(' ') ?? [];
+      const barX = Number(bars[3].getAttribute('x'));
+      const barWidth = Number(bars[3].getAttribute('width'));
+
+      expect(Number(start)).to.be.greaterThan(Number(bars[0].getAttribute('x')));
+      expect(Number(start)).to.be.at.most(barX);
+      expect(Number(start) + Number(size)).to.be.at.least(barX + barWidth);
+    });
+
+    // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+    it.skipIf(isJSDOM)('resolves the hovered index in the axis tooltip', async () => {
+      const { user, container } = render(<BarChart {...duplicatedProps} />, { wrapper });
+
+      const lastBar = container.querySelectorAll(`.${barClasses.element}`)[3];
+      const rect = lastBar.getBoundingClientRect();
+      await user.pointer({
+        target: lastBar,
+        coords: { clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 },
+      });
+
+      const tooltip = await screen.findByRole('tooltip');
+      expect(tooltip.textContent).to.contain('40');
+      expect(tooltip.textContent).not.to.contain('20');
+    });
   });
 });

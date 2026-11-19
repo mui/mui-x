@@ -3,6 +3,7 @@ import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import { findMinMax } from './findMinMax';
 import { getBandSize } from './getBandSize';
 import { getSampledBucketRegion } from './getSampledBucketRegion';
+import { getOrdinalPosition } from './getOrdinalPosition';
 
 /** Minimum on-screen gap (px) kept between merged (sampled) bars so they stay distinguishable. */
 const MIN_SAMPLED_BAR_GAP_PX = 2;
@@ -38,10 +39,14 @@ export function createGetBarDimensions(params: {
 
   return function getBarDimensions(dataIndex: number, groupIndex: number) {
     const barOffset = groupIndex * (barWidth + offset);
-    const baseValue = baseScaleConfig.data![dataIndex];
     const seriesValue = series.data[dataIndex];
+    const bandStart = getOrdinalPosition(
+      baseScaleConfig.scale,
+      baseScaleConfig.data ?? [],
+      dataIndex,
+    );
 
-    if (seriesValue == null) {
+    if (seriesValue == null || bandStart === undefined) {
       return null;
     }
 
@@ -68,8 +73,8 @@ export function createGetBarDimensions(params: {
     }
 
     return {
-      x: verticalLayout ? xScale(baseValue)! + barOffset : startCoordinate,
-      y: verticalLayout ? startCoordinate : yScale(baseValue)! + barOffset,
+      x: verticalLayout ? bandStart + barOffset : startCoordinate,
+      y: verticalLayout ? startCoordinate : bandStart + barOffset,
       height: verticalLayout ? barSize : barWidth,
       width: verticalLayout ? barWidth : barSize,
     };

@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
+import { getIndexToPositionMapper } from '../internals/getOrdinalPosition';
 import { isOrdinalScale } from '../internals/scaleGuards';
 import { useStore } from '../internals/store/useStore';
 import {
@@ -43,7 +44,10 @@ export default function ChartsYHighlight(props: {
     const { axisId, value } = axisValue;
     const yAxis = yAxes.axis[axisId];
     const yScale = yAxis.scale;
-    const getYPosition = getValueToPositionMapper(yScale);
+    const yPosition =
+      axisValue.dataIndex !== undefined && yAxis.data
+        ? getIndexToPositionMapper(yScale, yAxis.data)(axisValue.dataIndex)
+        : getValueToPositionMapper(yScale)(value);
 
     const isYScaleOrdinal = type === 'band' && value !== null && isOrdinalScale(yScale);
 
@@ -85,7 +89,7 @@ export default function ChartsYHighlight(props: {
 
         {type === 'line' && value !== null && (
           <ChartsAxisHighlightPath
-            d={`M ${left} ${getYPosition(value)} L ${left + width} ${getYPosition(value)}`}
+            d={`M ${left} ${yPosition} L ${left + width} ${yPosition}`}
             className={classes.root}
             ownerState={{ axisHighlight: 'line' }}
           />
