@@ -6,7 +6,6 @@ import ChevronLeftRounded from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightRounded from '@mui/icons-material/ChevronRightRounded';
 import ExpandMoreRounded from '@mui/icons-material/ExpandMoreRounded';
 import { useStore } from '@base-ui/utils/store';
-import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
@@ -21,8 +20,7 @@ import type {
 } from '../../../models/slots';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { useEventTimelinePremiumVirtualizerStore } from '../EventTimelinePremiumVirtualizerContext';
-import { useReportTitleWidth } from '../useTitleColumnWidth';
-import { observeResizeNextFrame } from '../observeResizeNextFrame';
+import { useTitleCellMeasurement } from '../useTitleColumnWidth';
 
 // Shared footprint for the collapse toggle and the leaf-row spacer. Also drives
 // the per-depth indent so a child's toggle lines up under its parent's dot.
@@ -140,7 +138,6 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
   const store = useEventTimelinePremiumStoreContext();
   const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
   const { schedulerId, classes } = useEventTimelinePremiumStyledContext();
-  const reportTitleWidth = useReportTitleWidth();
   const { slots, slotProps } = useSchedulerSlots<
     EventTimelinePremiumSlots,
     EventTimelinePremiumSlotProps
@@ -162,24 +159,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
   const pinnedLeftOffset = virtualizerStore.use(Virtualization.selectors.pinnedLeftOffsetSelector);
 
   // Ref hooks
-  const rootRef = React.useRef<HTMLDivElement | null>(null);
-  const contentRef = React.useRef<HTMLSpanElement | null>(null);
-
-  useIsoLayoutEffect(() => {
-    const root = rootRef.current;
-    const content = contentRef.current;
-    if (!root || !content || typeof ResizeObserver === 'undefined') {
-      return undefined;
-    }
-
-    // Report the root's scrollWidth: it reflects the natural width of the
-    // inner content (rendered with `width: max-content`) plus the cell's
-    // depth-dependent horizontal padding, even when overflow is clipped.
-    const report = () => reportTitleWidth(resourceId, root.scrollWidth);
-    // Measure before paint: the observer reports one frame later.
-    report();
-    return observeResizeNextFrame(content, report);
-  }, [resourceId, reportTitleWidth]);
+  const { cellRef, contentRef } = useTitleCellMeasurement(resourceId);
 
   const ResourceTitle = slots.timelineResourceTitle;
 
@@ -204,7 +184,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
 
   return (
     <EventTimelinePremiumTitleCellRoot
-      ref={rootRef}
+      ref={cellRef}
       id={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
       className={classes.titleCell}
       style={

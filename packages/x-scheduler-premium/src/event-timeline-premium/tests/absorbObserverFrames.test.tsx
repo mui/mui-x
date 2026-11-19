@@ -85,11 +85,14 @@ describe('absorbObserverFrames', () => {
     }
   });
 
-  it.skipIf(isJSDOM)('should resolve while fake timers are installed', async () => {
-    // Fake timers replace the global rAF; the absorb must ride the capture instead.
+  it.skipIf(isJSDOM)('should settle observer-driven resizes while time is frozen', async () => {
+    const widths: number[] = [];
     vi.useFakeTimers();
     try {
-      await absorbObserverFrames();
+      const now = Date.now();
+      await renderSettled(<ResizingBox maximumWidth={200} onResize={(w) => widths.push(w)} />);
+      expect(widths).to.deep.equal([100, 200]);
+      expect(Date.now()).to.equal(now);
     } finally {
       vi.useRealTimers();
     }
