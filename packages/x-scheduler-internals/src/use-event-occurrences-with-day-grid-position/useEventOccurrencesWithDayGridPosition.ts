@@ -8,14 +8,17 @@ import {
   getPlainDateKey,
   getMsInDay,
 } from '../internals/utils/plain-date-utils/plainDate';
-import { getOccurrenceLastDayNumber } from '../internals/utils/event-utils';
+import {
+  getOccurrenceFirstDayNumber,
+  getOccurrenceLastDayNumber,
+} from '../internals/utils/event-utils';
 
 /**
  * The number of full days an occurrence spans in the display timezone.
  */
 function getDayCount(occurrence: SchedulerEventOccurrence) {
   const { start, end } = occurrence;
-  const startDayNumber = getDayNumber(start.toPlainDate());
+  const startDayNumber = getOccurrenceFirstDayNumber(occurrence);
   if (occurrence.allDay) {
     return getOccurrenceLastDayNumber(occurrence) - startDayNumber;
   }
