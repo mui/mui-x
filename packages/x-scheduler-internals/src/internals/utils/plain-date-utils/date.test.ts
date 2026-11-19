@@ -107,6 +107,16 @@ describe('plain-date-utils/date', () => {
     },
   );
 
+  it('should tell apart the two instances of the hour that a DST transition repeats by their offset', () => {
+    // New York repeats 01:00 to 02:00 on November 2nd, 2025: 05:30Z and 06:30Z are both 01:30.
+    const first = toZonedDateTime(Date.UTC(2025, 10, 2, 5, 30), 'America/New_York');
+    const second = toZonedDateTime(Date.UTC(2025, 10, 2, 6, 30), 'America/New_York');
+    expect(first.toPlainDateTime().toString()).to.equal('2025-11-02T01:30:00');
+    expect(second.toPlainDateTime().toString()).to.equal('2025-11-02T01:30:00');
+    expect(first.offset).to.equal('-04:00');
+    expect(second.offset).to.equal('-05:00');
+  });
+
   it('should read an instant with an offset between -01:00 and 00:00', () => {
     // Africa/Monrovia used -00:44:30 until 1972: the epoch is 23:15:30 on December 31st, 1969.
     const value = toZonedDateTime(0, 'Africa/Monrovia');
