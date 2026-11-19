@@ -12,7 +12,7 @@ import type {
 } from '@mui/x-data-grid-premium';
 import { createRenderer, waitFor, act, fireEvent, screen } from '@mui/internal-test-utils';
 import type { MuiRenderResult } from '@mui/internal-test-utils';
-import { getCell, getColumnValues, sleep } from 'test/utils/helperFn';
+import { getCell, getColumnValues, raf, sleep } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
@@ -106,11 +106,12 @@ describe('<DataGridPremium /> - History', () => {
           pageSizeOptions={[3]}
         />,
       );
-      const originalValue = apiRef.current!.getRow(3).currencyPair;
+      const originalValue = apiRef.current!.getRow(3).price1M;
       const cell = getCell(3, 2);
       await user.dblClick(cell);
       await user.keyboard('10000');
       await user.click(getCell(4, 2));
+      expect(apiRef.current!.getRow(3).price1M).not.to.equal(originalValue);
 
       let result: boolean | undefined;
       await act(async () => {
@@ -118,7 +119,7 @@ describe('<DataGridPremium /> - History', () => {
       });
 
       expect(result).to.equal(true);
-      expect(apiRef.current!.getRow(3).currencyPair).to.equal(originalValue);
+      expect(apiRef.current!.getRow(3).price1M).to.equal(originalValue);
     });
 
     it('should undo a row edit that stops on a click in another row', async () => {
@@ -140,6 +141,55 @@ describe('<DataGridPremium /> - History', () => {
 
       expect(apiRef.current!.getRow(0).price1M).to.equal(originalValue);
     });
+
+    it.each(['cell', 'row'] as const)(
+      'should preserve undo and redo history when a %s edit is discarded on focus-out',
+      async (editMode) => {
+        const { user } = render(
+          <Test
+            editMode={editMode}
+            onCellEditStop={({ id, field, reason }, event) => {
+              if (reason === 'cellFocusOut') {
+                event.defaultMuiPrevented = true;
+                apiRef.current!.stopCellEditMode({ id, field, ignoreModifications: true });
+              }
+            }}
+            onRowEditStop={({ id, reason }, event) => {
+              if (reason === 'rowFocusOut') {
+                event.defaultMuiPrevented = true;
+                apiRef.current!.stopRowEditMode({ id, ignoreModifications: true });
+              }
+            }}
+          />,
+        );
+
+        const originalValue = apiRef.current!.getRow(0).price1M;
+        await user.dblClick(getCell(0, 2));
+        await user.keyboard('123{Enter}');
+        await user.dblClick(getCell(1, 2));
+        await user.keyboard('456{Enter}');
+        // Leave one committed edit on each side of the history cursor.
+        await act(async () => {
+          expect(await apiRef.current!.history.undo()).to.equal(true);
+          await raf();
+        });
+
+        const beforeDiscard = apiRef.current!.getRow(2).price1M;
+        await user.dblClick(getCell(2, 2));
+        await act(async () => {
+          await apiRef.current!.setEditCellValue({ id: 2, field: 'price1M', value: 789 });
+        });
+        await user.click(getCell(3, 2));
+        await waitFor(() => expect(apiRef.current!.getCellMode(2, 'price1M')).to.equal('view'));
+        expect(apiRef.current!.getRow(2).price1M).to.equal(beforeDiscard);
+        expect(apiRef.current!.history.canRedo()).to.equal(true);
+
+        await act(async () => {
+          expect(await apiRef.current!.history.undo()).to.equal(true);
+        });
+        expect(apiRef.current!.getRow(0).price1M).to.equal(originalValue);
+      },
+    );
   });
 
   describe('Row updates through API', () => {
