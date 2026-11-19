@@ -1,4 +1,4 @@
-import { PlainDate, createPlainDate, getDayNumber, readDate } from './PlainDate';
+import { PlainDate, createPlainDate, readDate } from './PlainDate';
 import type {
   BaseTemporal as PlainDateTypes,
   PlainDateFields,
@@ -194,17 +194,16 @@ const TRUSTED = Symbol('trusted');
  * A date and time without a timezone, in the ISO calendar or another calendar system.
  */
 export class PlainDateTime implements BaseTemporal.PlainDateTime {
-  // Private like the internal slots of Temporal, so the value has no own properties.
   /**
    * The date, which holds the calendar and the ISO fields.
    */
-  readonly #date: PlainDate;
-  readonly #hour: number;
-  readonly #minute: number;
-  readonly #second: number;
-  readonly #millisecond: number;
-  readonly #microsecond: number;
-  readonly #nanosecond: number;
+  declare private readonly date: PlainDate;
+  declare readonly hour: number;
+  declare readonly minute: number;
+  declare readonly second: number;
+  declare readonly millisecond: number;
+  declare readonly microsecond: number;
+  declare readonly nanosecond: number;
 
   constructor(
     isoYear: number,
@@ -226,70 +225,51 @@ export class PlainDateTime implements BaseTemporal.PlainDateTime {
       date = new PlainDate(isoYear, isoMonth, isoDay, calendar);
       time = readTime(time, { overflow: 'reject' });
     }
-    this.#date = date;
-    this.#hour = time.hour;
-    this.#minute = time.minute;
-    this.#second = time.second;
-    this.#millisecond = time.millisecond;
-    this.#microsecond = time.microsecond;
-    this.#nanosecond = time.nanosecond;
+    this.date = date;
+    this.hour = time.hour;
+    this.minute = time.minute;
+    this.second = time.second;
+    this.millisecond = time.millisecond;
+    this.microsecond = time.microsecond;
+    this.nanosecond = time.nanosecond;
     Object.freeze(this);
   }
 
-  get hour(): number {
-    return this.#hour;
-  }
-  get minute(): number {
-    return this.#minute;
-  }
-  get second(): number {
-    return this.#second;
-  }
-  get millisecond(): number {
-    return this.#millisecond;
-  }
-  get microsecond(): number {
-    return this.#microsecond;
-  }
-  get nanosecond(): number {
-    return this.#nanosecond;
-  }
-
   get calendarId(): string {
-    return this.#date.calendarId;
+    return this.date.calendarId;
   }
   get era(): string | undefined {
-    return this.#date.era;
+    return this.date.era;
   }
   get eraYear(): number | undefined {
-    return this.#date.eraYear;
+    return this.date.eraYear;
   }
   get year(): number {
-    return this.#date.year;
+    return this.date.year;
   }
   get month(): number {
-    return this.#date.month;
+    return this.date.month;
   }
   get monthCode(): string {
-    return this.#date.monthCode;
+    return this.date.monthCode;
   }
   get day(): number {
-    return this.#date.day;
+    return this.date.day;
   }
   get dayOfWeek(): number {
-    return this.#date.dayOfWeek;
+    return this.date.dayOfWeek;
   }
   get daysInMonth(): number {
-    return this.#date.daysInMonth;
+    return this.date.daysInMonth;
   }
   get monthsInYear(): number {
-    return this.#date.monthsInYear;
+    return this.date.monthsInYear;
   }
 
   static from(item: PlainDateTimeInput, options?: AssignmentOptions): PlainDateTime {
     const overflow = readOverflow(options, 'PlainDateTime.from()');
     if (item instanceof PlainDateTime) {
-      return createPlainDateTime(item.#date, item);
+      return createPlainDateTime(item.date, item);
     }
     let date: PlainDate;
     let time: Required<PlainTimeFields>;
@@ -323,7 +303,7 @@ export class PlainDateTime implements BaseTemporal.PlainDateTime {
     const a = one instanceof PlainDateTime ? one : PlainDateTime.from(one);
     const b = two instanceof PlainDateTime ? two : PlainDateTime.from(two);
     return (
-      compareOrder(getDayNumber(a.#date), getDayNumber(b.#date)) ||
+      compareOrder(a.date.dayNumber, b.date.dayNumber) ||
       compareOrder(getTimeNumber(a), getTimeNumber(b))
     );
   }
@@ -337,13 +317,13 @@ export class PlainDateTime implements BaseTemporal.PlainDateTime {
   }
   withPlainTime(time: PlainTimeInput = new PlainTime()): PlainDateTime {
     // A `PlainTime` already holds valid fields.
-    return createPlainDateTime(this.#date, time instanceof PlainTime ? time : readTime(time));
+    return createPlainDateTime(this.date, time instanceof PlainTime ? time : readTime(time));
   }
   withCalendar(calendar: string): PlainDateTime {
-    return createPlainDateTime(this.#date.withCalendar(calendar), this);
+    return createPlainDateTime(this.date.withCalendar(calendar), this);
   }
   toPlainDate(): PlainDate {
-    return this.#date;
+    return this.date;
   }
   toPlainTime(): PlainTime {
     return PlainTime.from(this);
@@ -356,9 +336,6 @@ export class PlainDateTime implements BaseTemporal.PlainDateTime {
   }
   valueOf(): never {
     return throwOnPrimitiveConversion('PlainDateTime');
-  }
-  get [Symbol.toStringTag](): string {
-    return 'Temporal.PlainDateTime';
   }
 }
 
@@ -407,5 +384,5 @@ export function createPlainDateTime(date: PlainDate, time: Required<PlainTimeFie
  * Formats the ISO fields of a date-time as `YYYY-MM-DDTHH:mm:ss`, without a calendar annotation.
  */
 export function formatIsoDateTime(value: PlainDateTime): string {
-  return `${formatIsoDate(getDayNumber(value.toPlainDate()))}T${formatIsoTime(value)}`;
+  return `${formatIsoDate(value.toPlainDate().dayNumber)}T${formatIsoTime(value)}`;
 }

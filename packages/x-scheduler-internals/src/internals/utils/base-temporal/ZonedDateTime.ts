@@ -243,21 +243,20 @@ export declare namespace BaseTemporal {
  * A date and time in a specific timezone, in the ISO calendar or another calendar system.
  */
 export class ZonedDateTime implements BaseTemporal.ZonedDateTime {
-  // Private like the internal slots of Temporal, so the value has no own properties.
-  readonly #dateTime: PlainDateTime;
-  readonly #offset: string;
-  readonly #timeZoneId: string;
+  declare private readonly dateTime: PlainDateTime;
+  declare readonly offset: string;
+  declare readonly timeZoneId: string;
 
   /**
    * The instant, in milliseconds since 1970-01-01T00:00Z, rounded down. The instant is kept as
    * numbers rather than as its `bigint`, which is slow to create and to read the milliseconds of.
    */
-  readonly #milliseconds: number;
+  declare private readonly milliseconds: number;
 
   /**
-   * The nanoseconds of the instant after `#milliseconds`, from 0 to 999,999.
+   * The nanoseconds of the instant after `milliseconds`, from 0 to 999,999.
    */
-  readonly #nanosecondsInMillisecond: number;
+  declare private readonly nanosecondsInMillisecond: number;
 
   constructor(
     epochNanoseconds: bigint,
@@ -289,7 +288,7 @@ export class ZonedDateTime implements BaseTemporal.ZonedDateTime {
     // Like Temporal, the calendar is checked before the range.
     const implementation = getCalendar(calendar);
     const offset = getOffset(normalizedTimeZone, milliseconds);
-    this.#offset = offset;
+    this.offset = offset;
     const local = milliseconds + readCachedOffset(offset);
     const dayNumber = Math.floor(local / MS_PER_DAY);
     if (
@@ -308,7 +307,7 @@ export class ZonedDateTime implements BaseTemporal.ZonedDateTime {
     }
     const clock = local - dayNumber * MS_PER_DAY;
     checkCalendarRange(implementation, dayNumber);
-    this.#dateTime = createPlainDateTime(createPlainDate(dayNumber, implementation.id), {
+    this.dateTime = createPlainDateTime(createPlainDate(dayNumber, implementation.id), {
       hour: Math.floor(clock / 3600000),
       minute: Math.floor(clock / 60000) % 60,
       second: Math.floor(clock / 1000) % 60,
@@ -316,9 +315,9 @@ export class ZonedDateTime implements BaseTemporal.ZonedDateTime {
       microsecond: Math.floor(fraction / 1000),
       nanosecond: fraction % 1000,
     });
-    this.#milliseconds = milliseconds;
-    this.#nanosecondsInMillisecond = fraction;
-    this.#timeZoneId = normalizedTimeZone;
+    this.milliseconds = milliseconds;
+    this.nanosecondsInMillisecond = fraction;
+    this.timeZoneId = normalizedTimeZone;
     Object.freeze(this);
   }
 
@@ -375,76 +374,70 @@ export class ZonedDateTime implements BaseTemporal.ZonedDateTime {
     const first = one instanceof ZonedDateTime ? one : ZonedDateTime.from(one);
     const second = two instanceof ZonedDateTime ? two : ZonedDateTime.from(two);
     return (
-      compareOrder(first.#milliseconds, second.#milliseconds) ||
-      compareOrder(first.#nanosecondsInMillisecond, second.#nanosecondsInMillisecond)
+      compareOrder(first.milliseconds, second.milliseconds) ||
+      compareOrder(first.nanosecondsInMillisecond, second.nanosecondsInMillisecond)
     );
   }
-  get offset(): string {
-    return this.#offset;
-  }
-  get timeZoneId(): string {
-    return this.#timeZoneId;
-  }
   get calendarId() {
-    return this.#dateTime.calendarId;
+    return this.dateTime.calendarId;
   }
   get era() {
-    return this.#dateTime.era;
+    return this.dateTime.era;
   }
   get eraYear() {
-    return this.#dateTime.eraYear;
+    return this.dateTime.eraYear;
   }
   get year() {
-    return this.#dateTime.year;
+    return this.dateTime.year;
   }
   get monthCode() {
-    return this.#dateTime.monthCode;
+    return this.dateTime.monthCode;
   }
   get daysInMonth() {
-    return this.#dateTime.daysInMonth;
+    return this.dateTime.daysInMonth;
   }
   get monthsInYear() {
-    return this.#dateTime.monthsInYear;
+    return this.dateTime.monthsInYear;
   }
   get month() {
-    return this.#dateTime.month;
+    return this.dateTime.month;
   }
   get day() {
-    return this.#dateTime.day;
+    return this.dateTime.day;
   }
   get dayOfWeek() {
-    return this.#dateTime.dayOfWeek;
+    return this.dateTime.dayOfWeek;
   }
   get hour() {
-    return this.#dateTime.hour;
+    return this.dateTime.hour;
   }
   get minute() {
-    return this.#dateTime.minute;
+    return this.dateTime.minute;
   }
   get second() {
-    return this.#dateTime.second;
+    return this.dateTime.second;
   }
   get millisecond() {
-    return this.#dateTime.millisecond;
+    return this.dateTime.millisecond;
   }
   get microsecond() {
-    return this.#dateTime.microsecond;
+    return this.dateTime.microsecond;
   }
   get nanosecond() {
-    return this.#dateTime.nanosecond;
+    return this.dateTime.nanosecond;
   }
   get epochMilliseconds() {
-    return this.#milliseconds;
+    return this.milliseconds;
   }
   get epochNanoseconds() {
-    return BigInt(this.#milliseconds) * NS_PER_MS + BigInt(this.#nanosecondsInMillisecond);
+    return BigInt(this.milliseconds) * NS_PER_MS + BigInt(this.nanosecondsInMillisecond);
   }
   equals(other: ZonedDateTime | ZonedDateTimeFields | string): boolean {
     const value = other instanceof ZonedDateTime ? other : ZonedDateTime.from(other);
     return (
-      this.#milliseconds === value.#milliseconds &&
-      this.#nanosecondsInMillisecond === value.#nanosecondsInMillisecond &&
-      isSameTimeZone(this.#timeZoneId, value.#timeZoneId) &&
+      this.milliseconds === value.milliseconds &&
+      this.nanosecondsInMillisecond === value.nanosecondsInMillisecond &&
+      isSameTimeZone(this.timeZoneId, value.timeZoneId) &&
       this.calendarId === value.calendarId
     );
   }
@@ -453,7 +446,7 @@ export class ZonedDateTime implements BaseTemporal.ZonedDateTime {
     options?: ZonedDateTimeAssignmentOptions,
   ): ZonedDateTime {
     const dateTime = withFields(
-      this.#dateTime,
+      this.dateTime,
       fields,
       options,
       'ZonedDateTime.prototype.with()',
@@ -461,8 +454,8 @@ export class ZonedDateTime implements BaseTemporal.ZonedDateTime {
     );
     return fromDateTime(
       dateTime,
-      this.#timeZoneId,
-      fields.offset === undefined ? this.#offset : fields.offset,
+      this.timeZoneId,
+      fields.offset === undefined ? this.offset : fields.offset,
       {
         ...options,
         offset: options?.offset ?? 'prefer',
@@ -471,40 +464,37 @@ export class ZonedDateTime implements BaseTemporal.ZonedDateTime {
   }
   withTimeZone(timeZone: string): ZonedDateTime {
     return createZonedDateTime(
-      this.#milliseconds,
+      this.milliseconds,
       timeZone,
       this.calendarId,
-      this.#nanosecondsInMillisecond,
+      this.nanosecondsInMillisecond,
     );
   }
   withCalendar(calendar: string): ZonedDateTime {
     return createZonedDateTime(
-      this.#milliseconds,
-      this.#timeZoneId,
+      this.milliseconds,
+      this.timeZoneId,
       calendar,
-      this.#nanosecondsInMillisecond,
+      this.nanosecondsInMillisecond,
     );
   }
   toPlainDate(): PlainDate {
-    return this.#dateTime.toPlainDate();
+    return this.dateTime.toPlainDate();
   }
   toPlainTime(): PlainTime {
-    return this.#dateTime.toPlainTime();
+    return this.dateTime.toPlainTime();
   }
   toPlainDateTime(): PlainDateTime {
-    return this.#dateTime;
+    return this.dateTime;
   }
   toString(): string {
-    return `${formatIsoDateTime(this.#dateTime)}${formatRoundedOffset(this.#offset)}[${this.#timeZoneId}]${formatCalendarAnnotation(this.calendarId)}`;
+    return `${formatIsoDateTime(this.dateTime)}${formatRoundedOffset(this.offset)}[${this.timeZoneId}]${formatCalendarAnnotation(this.calendarId)}`;
   }
   toJSON(): string {
     return this.toString();
   }
   valueOf(): never {
     return throwOnPrimitiveConversion('ZonedDateTime');
-  }
-  get [Symbol.toStringTag](): string {
-    return 'Temporal.ZonedDateTime';
   }
 }
 

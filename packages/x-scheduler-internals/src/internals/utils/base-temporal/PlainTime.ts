@@ -189,45 +189,25 @@ export declare namespace BaseTemporal {
  * A time without a date or timezone.
  */
 export class PlainTime implements BaseTemporal.PlainTime {
-  // Private like the internal slots of Temporal, so the value has no own properties.
-  readonly #hour: number;
-  readonly #minute: number;
-  readonly #second: number;
-  readonly #millisecond: number;
-  readonly #microsecond: number;
-  readonly #nanosecond: number;
+  declare readonly hour: number;
+  declare readonly minute: number;
+  declare readonly second: number;
+  declare readonly millisecond: number;
+  declare readonly microsecond: number;
+  declare readonly nanosecond: number;
 
   constructor(hour = 0, minute = 0, second = 0, millisecond = 0, microsecond = 0, nanosecond = 0) {
     const fields = readTime(
       { hour, minute, second, millisecond, microsecond, nanosecond },
       { overflow: 'reject' },
     );
-    this.#hour = fields.hour;
-    this.#minute = fields.minute;
-    this.#second = fields.second;
-    this.#millisecond = fields.millisecond;
-    this.#microsecond = fields.microsecond;
-    this.#nanosecond = fields.nanosecond;
+    this.hour = fields.hour;
+    this.minute = fields.minute;
+    this.second = fields.second;
+    this.millisecond = fields.millisecond;
+    this.microsecond = fields.microsecond;
+    this.nanosecond = fields.nanosecond;
     Object.freeze(this);
-  }
-
-  get hour(): number {
-    return this.#hour;
-  }
-  get minute(): number {
-    return this.#minute;
-  }
-  get second(): number {
-    return this.#second;
-  }
-  get millisecond(): number {
-    return this.#millisecond;
-  }
-  get microsecond(): number {
-    return this.#microsecond;
-  }
-  get nanosecond(): number {
-    return this.#nanosecond;
   }
 
   static from(item: PlainTimeInput, options?: AssignmentOptions): PlainTime {
@@ -270,8 +250,5 @@ export class PlainTime implements BaseTemporal.PlainTime {
   }
   valueOf(): never {
     return throwOnPrimitiveConversion('PlainTime');
-  }
-  get [Symbol.toStringTag](): string {
-    return 'Temporal.PlainTime';
   }
 }
