@@ -1,6 +1,13 @@
 import type { RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { gridVisibleRowsSelector, gridVisibleColumnFieldsSelector } from '@mui/x-data-grid-pro';
+import {
+  gridVisibleRowsSelector,
+  gridVisibleColumnFieldsSelector,
+  gridEditCellStateSelector,
+  gridEditRowsStateSelector,
+  GridCellEditStopReasons,
+  GridRowEditStopReasons,
+} from '@mui/x-data-grid-pro';
 import { asReplaceUpdates, getRowIndexRelativeToAllRows } from '@mui/x-data-grid-pro/internals';
 import type {
   GridCellEditStopParams,
@@ -62,6 +69,16 @@ export const createCellEditHistoryHandler = (
   return {
     store: (params: GridCellEditStopParams) => {
       const { id, field } = params;
+
+      // Escape discards the value, and an error or a pending validation keeps the cell in edit mode
+      const editCellState = gridEditCellStateSelector(apiRef, { rowId: id, field });
+      if (
+        params.reason === GridCellEditStopReasons.escapeKeyDown ||
+        editCellState?.error ||
+        editCellState?.isProcessingProps
+      ) {
+        return null;
+      }
 
       const oldRow = apiRef.current.getRow(id);
       const oldValue = oldRow[field];
@@ -177,6 +194,17 @@ export const createRowEditHistoryHandler = (
   return {
     store: (params: GridRowEditStopParams) => {
       const { id } = params;
+
+      // Escape discards the values, and an error or a pending validation keeps the row in edit mode
+      const editRowState = gridEditRowsStateSelector(apiRef)[id] ?? {};
+      if (
+        params.reason === GridRowEditStopReasons.escapeKeyDown ||
+        Object.values(editRowState).some(
+          (fieldProps) => fieldProps.error || fieldProps.isProcessingProps,
+        )
+      ) {
+        return null;
+      }
 
       const oldRow = apiRef.current.getRow(id) || {};
       const newRow = apiRef.current.getRowWithUpdatedValues(id, '');
