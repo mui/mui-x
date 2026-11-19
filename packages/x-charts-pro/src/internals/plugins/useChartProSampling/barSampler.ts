@@ -1,4 +1,5 @@
 import type { SamplingStrategy } from '@mui/x-charts/internals';
+import { getBarBaselineValue, getBarExtent } from '@mui/x-charts/internals';
 import { buildSamplingPyramid, getSamplingBucketSize } from './sampling';
 import { sample } from './sampling.line';
 import type { SamplingPyramid } from './sampling.pyramid.types';
@@ -9,11 +10,16 @@ import type { SamplingPyramid } from './sampling.pyramid.types';
  * i.e. base > top) keep their full extent instead of being truncated.
  */
 export const barSampler: SamplingStrategy<'bar', SamplingPyramid> = {
-  build: (series) =>
-    buildSamplingPyramid(
-      Float64Array.from(series.visibleStackedData, (point) => Math.min(point[0], point[1])),
-      Float64Array.from(series.visibleStackedData, (point) => Math.max(point[0], point[1])),
-    ),
+  build: (series) => {
+    const baselineValue = getBarBaselineValue(series.baseline);
+    const extents = series.visibleStackedData.map((point, index) =>
+      getBarExtent(point, series.data[index], baselineValue),
+    );
+    return buildSamplingPyramid(
+      Float64Array.from(extents, (extent) => Math.min(extent[0], extent[1])),
+      Float64Array.from(extents, (extent) => Math.max(extent[0], extent[1])),
+    );
+  },
 
   sample,
 

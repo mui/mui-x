@@ -1,4 +1,5 @@
 import type { ChartsXAxisProps, ChartsYAxisProps, ComputedAxis, ScaleName } from '../models/axis';
+import type { BarSeriesType } from '../models/seriesType/bar';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import { findMinMax } from './findMinMax';
 import { getBandSize } from './getBandSize';
@@ -13,6 +14,43 @@ function shouldInvertStartCoordinate(verticalLayout: boolean, baseValue: number,
   const invertStartCoordinate = isVerticalAndPositive || isHorizontalAndNegative;
 
   return reverse ? !invertStartCoordinate : invertStartCoordinate;
+}
+
+/**
+ * Resolves a bar series `baseline` to a value-axis value.
+ * Without `domain`, `'min'` and `'max'` resolve to `-Infinity` and `Infinity`.
+ */
+export function getBarBaselineValue(
+  baseline: BarSeriesType['baseline'],
+  domain?: readonly unknown[],
+): number {
+  if (baseline === 'min') {
+    return domain ? Number(domain[0]) : -Infinity;
+  }
+  if (baseline === 'max') {
+    return domain ? Number(domain[1]) : Infinity;
+  }
+  return baseline ?? 0;
+}
+
+/**
+ * The `[start, end]` values of a bar.
+ * Bars at the stack origin (0) start at `baselineValue`, and collapse on it when they have no length.
+ */
+export function getBarExtent(
+  stacked: readonly [number, number],
+  value: number | null,
+  baselineValue: number,
+): [number, number] {
+  const low = Math.min(stacked[0], stacked[1]);
+  const high = Math.max(stacked[0], stacked[1]);
+  const start = value !== null && value < 0 ? high : low;
+  const end = start === low ? high : low;
+
+  if (start !== 0) {
+    return [start, end];
+  }
+  return [baselineValue, end === 0 ? baselineValue : end];
 }
 
 export function createGetBarDimensions(params: {
@@ -35,6 +73,8 @@ export function createGetBarDimensions(params: {
 
   const xScale = xAxisConfig.scale;
   const yScale = yAxisConfig.scale;
+  const valueScale = verticalLayout ? yScale : xScale;
+  const baselineValue = getBarBaselineValue(series.baseline, valueScale.domain());
 
   return function getBarDimensions(dataIndex: number, groupIndex: number) {
     const barOffset = groupIndex * (barWidth + offset);
@@ -45,8 +85,12 @@ export function createGetBarDimensions(params: {
       return null;
     }
 
-    const values = series.visibleStackedData[dataIndex];
-    const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
+    const [start, end] = getBarExtent(
+      series.visibleStackedData[dataIndex],
+      seriesValue,
+      baselineValue,
+    );
+    const valueCoordinates = [valueScale(start)!, valueScale(end)!];
 
     const [minValueCoord, maxValueCoord] = findMinMax(valueCoordinates).map((v) => Math.round(v));
 
@@ -57,7 +101,11 @@ export function createGetBarDimensions(params: {
       }
     }
 
-    const shouldInvert = shouldInvertStartCoordinate(verticalLayout, seriesValue, reverse);
+    const shouldInvert = shouldInvertStartCoordinate(
+      verticalLayout,
+      end - start || seriesValue,
+      reverse,
+    );
 
     let startCoordinate = 0;
 

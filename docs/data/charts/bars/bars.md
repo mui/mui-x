@@ -108,11 +108,25 @@ It also doesn't work with stacked series.
 
 {{"demo": "MinBarSize.js"}}
 
+### Baseline
+
+Bars start from the value `0` by default.
+Set the series `baseline` property to start them from another value:
+
+- `'min'` starts bars from the axis minimum.
+- `'max'` starts bars from the axis maximum.
+- A number starts bars from this value.
+
+With stacked series, only the bars at the bottom of the stack start from the baseline.
+
 ### Log scale
 
-A bar chart renders a bar from 0 to the value of a data point. However, the logarithm of zero is undefined, meaning that a y-axis with a log scale cannot plot the bar.
+The logarithm of zero is undefined, so a y-axis with a log scale cannot plot bars that start from 0.
+Set `baseline: 'min'` to start bars from the axis minimum instead.
 
-You can work around this limitation by using a [symlog scale](/x/react-charts/axis/#symlog-scale).
+{{"demo": "LogScaleBars.js"}}
+
+If your data contains zero or negative values, use a [symlog scale](/x/react-charts/axis/#symlog-scale) instead.
 
 ## Customization
 

@@ -72,6 +72,16 @@ export interface BarSeriesType
    */
   barLabelPlacement?: 'center' | 'outside';
   /**
+   * The value the bars start from. With stacking, only bars at the bottom of the stack start from it.
+   *
+   * - `'min'` bars start from the axis minimum. Useful with a log scale.
+   * - `'max'` bars start from the axis maximum.
+   * - `number` bars start from this value.
+   *
+   * @default 0
+   */
+  baseline?: number | 'min' | 'max';
+  /**
    * Defines how stacked series handle negative values.
    * @default 'diverging'
    */

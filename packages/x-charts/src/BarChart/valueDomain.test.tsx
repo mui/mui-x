@@ -87,6 +87,30 @@ describe('<BarChart /> - value domain', () => {
     });
   });
 
+  describe('baseline', () => {
+    it('should include a number `baseline` instead of 0', () => {
+      const yAxisDomainRef = getYAxisDomain({ series: [{ data: [100, 200], baseline: 50 }] });
+
+      expect(yAxisDomainRef.current).to.deep.equal([50, 200]);
+    });
+
+    it("should not include 0 with `baseline: 'min'`", () => {
+      const yAxisDomainRef = getYAxisDomain({ series: [{ data: [120, 200], baseline: 'min' }] });
+
+      expect(yAxisDomainRef.current).to.deep.equal([120, 200]);
+    });
+
+    it("should compute a valid log domain with `baseline: 'min'`", () => {
+      const yAxisDomainRef = getYAxisDomain({
+        series: [{ data: [0.0123, 1500, null], baseline: 'min' }],
+        xAxis: [{ data: ['A', 'B', 'C'] }],
+        yAxis: [{ scaleType: 'log' }],
+      });
+
+      expect(yAxisDomainRef.current).to.deep.equal([0.01, 10000]);
+    });
+  });
+
   describe('domainLimit', () => {
     it("should round the domain to nice values with `domainLimit: 'nice'`", () => {
       const yAxisDomainRef = getYAxisDomain({

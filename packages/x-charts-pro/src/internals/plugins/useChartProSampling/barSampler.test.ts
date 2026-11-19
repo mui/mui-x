@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { barSampler } from './barSampler';
 import { sampleBuckets } from './sampling.line';
 import { MIN_ELEMENT_SIZE_PX } from './sampling';
+import type { SamplingPyramid } from './sampling.pyramid.types';
 
 // Pixel size for which the screen-derived min span equals `minSpan` (so tests speak in spans).
 const pxFor = (minSpan: number, dataLength: number) =>
@@ -12,7 +13,7 @@ describe('barSampler', () => {
     // Stacked `[base, top]`; a negative bar emits base(0) > top, so the envelope must look at both
     // coords. Deepest bar (-8) is at index 5.
     const tops = [-1, -2, -3, -4, -1, -8, -2, -1];
-    const series = { visibleStackedData: tops.map((t) => [0, t]) } as any;
+    const series = { data: tops, visibleStackedData: tops.map((t) => [0, t]) } as any;
     const pyramid = barSampler.build(series)!;
 
     // span 80 -> bucketSize 8 -> a single bucket over all 8 points.
@@ -22,5 +23,20 @@ describe('barSampler', () => {
     // The -8 bar must survive the merge; before the fix the low channel tracked base (0) only and
     // dropped it, truncating the merged bar.
     expect(indices).to.include(5);
+  });
+
+  it('keeps bars below a number `baseline` when buckets merge', () => {
+    const values = [6, 7, 8, 2, 9, 7, 6, 8];
+    const series = {
+      data: values,
+      baseline: 5,
+      visibleStackedData: values.map((v) => [0, v]),
+    } as any;
+    const pyramid = barSampler.build(series) as SamplingPyramid;
+
+    const buckets = sampleBuckets(pyramid, 80, pxFor(10, 8), 0) ?? [];
+    const indices = buckets.flatMap((bucket) => Array.from(bucket.indices));
+
+    expect(indices).to.include(3);
   });
 });
