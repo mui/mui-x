@@ -1,6 +1,11 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { useGridApiRef, DataGridPremium } from '@mui/x-data-grid-premium';
+import {
+  useGridApiRef,
+  DataGridPremium,
+  GridCellEditStopReasons,
+  GridRowEditStopReasons,
+} from '@mui/x-data-grid-premium';
 import type {
   GridApi,
   DataGridPremiumProps,
@@ -646,25 +651,40 @@ describe('<DataGridPremium /> - History', () => {
       },
     );
 
-    it('should undo a row edit that commits on a click in another row during the validation', async () => {
-      const { user } = render(<Test columns={validatedColumns} editMode="row" />);
-      const originalValue = apiRef.current!.getRow(0).price1M;
+    it.each(['cell', 'row'] as const)(
+      'should undo a %s edit that commits after its validation ends',
+      async (editMode) => {
+        const { user } = render(<Test columns={validatedColumns} editMode={editMode} />);
+        const originalValue = apiRef.current!.getRow(0).price1M;
+        await user.dblClick(getCell(0, 2));
 
-      await user.dblClick(getCell(0, 2));
-      // The click comes before the end of the input debounce, so the stop starts the validation
-      await user.keyboard('5');
-      await user.click(getCell(1, 2));
-      // The row edit stops in a timeout after the focus leaves the row
-      await waitFor(() => {
-        expect(apiRef.current!.getRow(0).price1M).not.to.equal(originalValue);
-      });
-      expect(apiRef.current!.history.canUndo()).to.equal(true);
+        // The stop applies the debounced value, so the validation runs while the edit stops.
+        // The grid checks the stop in a later render, after the synchronous validation ends.
+        await act(async () => {
+          apiRef.current!.setEditCellValue({ id: 0, field: 'price1M', value: 5, debounceMs: 200 });
+          if (editMode === 'cell') {
+            apiRef.current!.publishEvent('cellEditStop', {
+              ...apiRef.current!.getCellParams(0, 'price1M'),
+              reason: GridCellEditStopReasons.cellFocusOut,
+            });
+          } else {
+            apiRef.current!.publishEvent('rowEditStop', {
+              ...apiRef.current!.getRowParams(0),
+              field: 'price1M',
+              reason: GridRowEditStopReasons.rowFocusOut,
+            });
+          }
+        });
 
-      await act(async () => {
-        await apiRef.current!.history.undo();
-      });
-      expect(apiRef.current!.getRow(0).price1M).to.equal(originalValue);
-    });
+        expect(apiRef.current!.getRow(0).price1M).to.equal(5);
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        expect(apiRef.current!.getRow(0).price1M).to.equal(originalValue);
+      },
+    );
 
     it.each(['cell', 'row'] as const)(
       'should leave an imperative %s edit out of history',
