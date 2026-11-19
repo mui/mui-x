@@ -4,9 +4,11 @@ import {
   createDate,
   EventBuilder,
   ResourceBuilder,
+  setSystemTimezone,
   startOfDay,
   utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { vi, describe, it, expect } from 'vitest';
@@ -24,6 +26,46 @@ describe('Core - EventCalendarStore', () => {
         () => new EventCalendarStore({ ...DEFAULT_PARAMS, displayTimezone: 'system' }),
       ).to.throw('MUI X Scheduler: The `displayTimezone` "system" is not a supported timezone.');
     });
+
+    it.each(['IST', 'Not/A_Timezone'])(
+      'should throw an error naming the display timezone %s when it is not a timezone identifier',
+      (displayTimezone) => {
+        const message = `MUI X Scheduler: The \`displayTimezone\` "${displayTimezone}" is not a supported timezone.`;
+        expect(() => new EventCalendarStore({ ...DEFAULT_PARAMS, displayTimezone })).to.throw(
+          message,
+        );
+        const store = new EventCalendarStore(DEFAULT_PARAMS);
+        expect(() =>
+          store.updateStateFromParameters({ ...DEFAULT_PARAMS, displayTimezone }),
+        ).to.throw(message);
+      },
+    );
+
+    it('should hold the display timezone by its identifier', () => {
+      const store = new EventCalendarStore({
+        ...DEFAULT_PARAMS,
+        displayTimezone: 'america/new_york',
+      });
+      expect(store.state.displayTimezone).to.equal('America/New_York');
+
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, displayTimezone: '+05:30' });
+      expect(store.state.displayTimezone).to.equal('+05:30');
+    });
+
+    it.skipIf(!isJSDOM)(
+      'should read the default display timezone and the occurrences in the timezone of the system',
+      () => {
+        setSystemTimezone('America/New_York');
+        const store = new EventCalendarStore({
+          events: [EventBuilder.new().id('meeting').singleDay('2025-07-04T09:00:00').build()],
+        });
+
+        expect(store.state.displayTimezone).to.equal('America/New_York');
+        const { start } = store.state.processedEventLookup.get('meeting')!;
+        expect(start.timeZoneId).to.equal('America/New_York');
+        expect(start.toPlainDateTime().toString()).to.equal('2025-07-04T09:00:00');
+      },
+    );
 
     it('should initialize default state', () => {
       const store = new EventCalendarStore(DEFAULT_PARAMS);

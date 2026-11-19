@@ -192,7 +192,9 @@ function getEventDeletionState(
 /**
  * The display timezone of the state: the identifier of the timezone, as the zoned date-times of the
  * occurrences spell it, where `default` becomes the timezone of the system. `Intl` reads it in tens
- * of microseconds, so `previous` is kept while the parameter doesn't change.
+ * of microseconds, so `previous` is kept while the parameter doesn't change: when the timezone of
+ * the system changes afterwards, the display keeps the previous one, while the events without a
+ * timezone, read through `Date`, follow it.
  */
 function getDisplayTimezoneState(
   parameter: string | undefined,
@@ -209,7 +211,15 @@ function getDisplayTimezoneState(
         'Pass `displayTimezone="default"` instead.',
     );
   }
-  return toZonedDateTime(0, displayTimezone).timeZoneId;
+  try {
+    return toZonedDateTime(0, displayTimezone).timeZoneId;
+  } catch {
+    throw new Error(
+      `MUI X Scheduler: The \`displayTimezone\` "${displayTimezone}" is not a supported timezone. ` +
+        'The dates of the occurrences are read in it, so the Scheduler cannot display them. ' +
+        'Pass an IANA timezone identifier such as "America/New_York", "UTC", an offset such as "+05:30", or "default" for the timezone of the system.',
+    );
+  }
 }
 
 function toUpdateEventResult(result: {
@@ -378,6 +388,14 @@ export class SchedulerStore<
       eventCreation: parameters.eventCreation ?? true,
     };
   }
+
+  /**
+   * The `displayTimezone` parameter as given, `"default"` when it's left out, which the writes
+   * use: an all-day event made timed moves to the display timezone, and with the default one, it
+   * keeps no `timezone` and follows the timezone of the system like the other events.
+   * `state.displayTimezone` holds the identifier of the timezone instead.
+   */
+  public getDisplayTimezoneParameter = (): string => this.parameters.displayTimezone ?? 'default';
 
   /**
    * Updates the state of the calendar based on the new parameters provided to the root component.
@@ -810,7 +828,7 @@ export class SchedulerStore<
             changes,
             this.state.eventModelStructure,
             processedEvent.modelInBuiltInFormat,
-            this.state.displayTimezone,
+            this.getDisplayTimezoneParameter(),
           );
           newEvents.push(newEvent);
           updatedEvents.push(newEvent);
@@ -1190,7 +1208,7 @@ export class SchedulerStore<
         occurrence,
         changes,
         scope,
-        this.state.displayTimezone,
+        this.getDisplayTimezoneParameter(),
       );
     }
     const { created: createdIds, rejection } = this.updateEvents(updatedEvents);
@@ -1293,7 +1311,7 @@ export class SchedulerStore<
       stringifyEventDateChanges(
         { start, end },
         original.modelInBuiltInFormat,
-        this.state.displayTimezone,
+        this.getDisplayTimezoneParameter(),
       ),
     );
     return this.updateEvents({ created: [duplicatedEvent] }).created[0];
@@ -1435,7 +1453,11 @@ export class SchedulerStore<
     const createdEvent: SchedulerEventCreationProperties = {
       ...copiedEventWithoutId,
       ...cleanChanges,
-      ...stringifyEventDateChanges(cleanChanges, original.modelInBuiltInFormat, displayTimezone),
+      ...stringifyEventDateChanges(
+        cleanChanges,
+        original.modelInBuiltInFormat,
+        this.getDisplayTimezoneParameter(),
+      ),
       extractedFromId: id,
     };
     return this.updateEvents({ created: [createdEvent] }).created[0];
@@ -1667,7 +1689,7 @@ export class SchedulerStore<
         allDay,
         // An all-day event made timed moves to the display timezone.
         ...(isEventOccurrence(occurrence) && occurrence.allDay && !allDay
-          ? { timezone: displayTimezone }
+          ? { timezone: this.getDisplayTimezoneParameter() }
           : {}),
       },
     });
@@ -1775,7 +1797,7 @@ export class SchedulerStore<
     let timezone = isEventOccurrence(occurrence) ? occurrence.timezone : 'default';
     if (occurrence.allDay && !allDay) {
       // An all-day event made timed moves to the display timezone.
-      timezone = displayTimezone;
+      timezone = this.getDisplayTimezoneParameter();
     }
     const repointed = {
       id: eventId,

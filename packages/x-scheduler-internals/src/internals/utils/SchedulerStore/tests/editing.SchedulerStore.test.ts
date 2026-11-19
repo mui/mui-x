@@ -455,6 +455,29 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(occurrence.end.toPlainDateTime().toString()).to.equal('2025-07-05T00:00:00');
     });
 
+    it('should read an armed timed occurrence again at its instants when the display timezone changes', () => {
+      const builder = EventBuilder.new()
+        .id('meeting')
+        .span('2025-07-04T09:00:00Z', '2025-07-04T10:00:00Z')
+        .withDisplayTimezone('UTC');
+      const params = {
+        ...DEFAULT_PARAMS,
+        events: [builder.build()],
+        displayTimezone: 'UTC',
+        onEventsChange: () => {},
+      };
+      const store = new storeClass.Value(params);
+      store.startEditing(builder.toOccurrence(), 'armed');
+
+      store.updateStateFromParameters({ ...params, displayTimezone: 'Asia/Tokyo' });
+
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      expect(occurrence.start.timeZoneId).to.equal('Asia/Tokyo');
+      expect(occurrence.start.epochMilliseconds).to.equal(Date.parse('2025-07-04T09:00:00Z'));
+      expect(occurrence.start.toPlainDateTime().toString()).to.equal('2025-07-04T18:00:00');
+      expect(occurrence.end.toPlainDateTime().toString()).to.equal('2025-07-04T19:00:00');
+    });
+
     it('should move the armed occurrence to the display timezone when a drop makes it timed', () => {
       // An all-day Friday stored with a New York timezone, dropped on the Tokyo time grid.
       const builder = EventBuilder.new()
@@ -479,6 +502,28 @@ premiumStoreClasses.forEach((storeClass) => {
       const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
       expect(occurrence.allDay).to.equal(false);
       expect(occurrence.timezone).to.equal('Asia/Tokyo');
+    });
+
+    it('should keep the armed occurrence without a timezone when a drop makes it timed in the default display timezone', () => {
+      const builder = EventBuilder.new()
+        .id('gym')
+        .span('2025-07-04', '2025-07-05', { allDay: true });
+      const store = new storeClass.Value({
+        ...DEFAULT_PARAMS,
+        events: [builder.build()],
+        onEventsChange: () => {},
+      });
+      store.startEditing(builder.toOccurrence(), 'armed');
+
+      store.setEditingOccurrenceTimes({
+        allDay: false,
+        start: createDate('2025-07-04T09:00:00'),
+        end: createDate('2025-07-04T10:00:00'),
+      });
+
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      expect(occurrence.allDay).to.equal(false);
+      expect(occurrence.timezone).to.equal('default');
     });
 
     it("should disarm when an end-only scope 'all' change pushes the armed occurrence past its day", () => {

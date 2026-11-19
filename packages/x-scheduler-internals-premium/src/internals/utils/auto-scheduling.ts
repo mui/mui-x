@@ -56,9 +56,10 @@ export interface ComputeAutoSchedulingCascadeParameters {
    */
   enforcedDependencies?: readonly SchedulerDependency[];
   /**
-   * The timezone of the store's all-day bounds: the `Date`s of all-day entries are read and
-   * written in it, and an all-day event made timed takes it. Between an all-day event and a timed
-   * event, the dates of the all-day event are read in it only when the timed event has no timezone.
+   * The display timezone as the `displayTimezone` parameter gives it, `"default"` included: the
+   * `Date`s of all-day entries are read and written in it, and an all-day event made timed takes
+   * it. Between an all-day event and a timed event, the dates of the all-day event are read in it
+   * only when the timed event has no timezone.
    */
   displayTimezone: string;
 }

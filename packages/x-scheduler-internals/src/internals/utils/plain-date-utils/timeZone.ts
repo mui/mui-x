@@ -56,7 +56,13 @@ function readOffset(format: TimezoneOffsets['format'], epochMs: number): number 
  * The IANA identifier of a timezone, the timezone of the system for `'default'`.
  */
 export function getTimezoneId(timezone: string): string {
-  return timezone === 'default' ? Intl.DateTimeFormat().resolvedOptions().timeZone : timezone;
+  if (timezone !== 'default') {
+    return timezone;
+  }
+  const systemTimezone: string | undefined = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  // An unknown `TZ`, on a server for example, leaves the timezone of the system without an
+  // identifier, and `Date` reads it as UTC.
+  return systemTimezone == null || systemTimezone === 'Etc/Unknown' ? 'UTC' : systemTimezone;
 }
 
 function getSystemTimezoneOffsetMs(epochMs: number): number {

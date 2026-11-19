@@ -2343,6 +2343,8 @@ storeClasses.forEach((storeClass) => {
         expect(pasted.allDay).to.equal(false);
         expect(pasted.start).to.equal('2025-07-20T14:00:00');
         expect(pasted.end).to.equal('2025-07-20T15:00:00');
+        // The default display timezone follows the timezone of the system, like the source.
+        expect(pasted).not.to.have.property('timezone');
       });
 
       it('should paste an all-day event as a timed event on its first day of the display timezone when no start is given', () => {
@@ -2409,6 +2411,27 @@ storeClasses.forEach((storeClass) => {
         const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
         expect(updated).not.to.have.property('allDay');
         expect(updated.timezone).to.equal('Asia/Tokyo');
+        expect(updated.start).to.equal('2025-07-04T00:00:00');
+        expect(updated.end).to.equal('2025-07-05T00:00:00');
+      });
+
+      it('should keep no timezone on an all-day event made timed in the default display timezone', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new()
+          .id('holiday')
+          .span('2025-07-04', '2025-07-05', { allDay: true })
+          .build();
+        const store = new storeClass.Value({
+          resources: TEST_RESOURCES,
+          events: [event],
+          onEventsChange,
+        });
+
+        store.updateEvent({ id: 'holiday', allDay: false });
+
+        // It follows the timezone of the system, like the other events without a timezone.
+        const updated: SchedulerEvent = onEventsChange.mock.lastCall![0][0];
+        expect(updated).not.to.have.property('timezone');
         expect(updated.start).to.equal('2025-07-04T00:00:00');
         expect(updated.end).to.equal('2025-07-05T00:00:00');
       });
@@ -2646,6 +2669,39 @@ premiumStoreClasses.forEach((storeClass) => {
       });
 
       (['all', 'this-and-following'] as const).forEach((scope) => {
+        it(`should keep no timezone on an all-day series made timed in the default display timezone with scope '${scope}'`, () => {
+          const onEventsChange = vi.fn();
+          const event = EventBuilder.new()
+            .id('holiday')
+            .span('2025-07-01', '2025-07-02', { allDay: true })
+            .rrule({ freq: 'DAILY' })
+            .build();
+          const store = new storeClass.Value({
+            resources: TEST_RESOURCES,
+            events: [event],
+            onEventsChange,
+          });
+
+          store.updateRecurringEvent({
+            occurrence: createStoreOccurrence(store, 'holiday', createDate('2025-07-03T00:00:00')),
+            changes: {
+              id: 'holiday',
+              allDay: false,
+              start: createDate('2025-07-03T09:00:00'),
+              end: createDate('2025-07-03T10:00:00'),
+            },
+          });
+          store.selectRecurringEventScope(scope);
+
+          const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+          const updated = updatedEvents.find((item) =>
+            scope === 'all' ? item.id === 'holiday' : item.id !== 'holiday',
+          )!;
+          expect(updated).not.to.have.property('timezone');
+          // The whole series starts on its first day, the split one on the changed occurrence.
+          expect(updated.start).to.equal(`2025-07-0${scope === 'all' ? 1 : 3}T09:00:00`);
+        });
+
         it(`should make a series all-day on its displayed days when a day is given with scope '${scope}'`, () => {
           const onEventsChange = vi.fn();
           // Fridays at 08:00 in Tokyo are Thursdays in New York; July 18th is July 17th there.
