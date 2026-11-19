@@ -1,6 +1,4 @@
 import type { AssignmentOptions } from './PlainDate';
-import { ISO_CALENDAR_ID } from './calendar';
-import { formatPlainValue } from './locale';
 import {
   compareOrder,
   formatIsoTime,
@@ -184,11 +182,6 @@ export declare namespace BaseTemporal {
      * Returns the time as an `HH:mm:ss` string, followed by the fraction of a second when it isn't 0.
      */
     toJSON(): string;
-    /**
-     * Returns the time formatted for a locale with `Intl.DateTimeFormat`: its hour, minute and
-     * second by default.
-     */
-    toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
   }
 }
 
@@ -274,16 +267,6 @@ export class PlainTime implements BaseTemporal.PlainTime {
   }
   toJSON(): string {
     return this.toString();
-  }
-  toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string {
-    return formatPlainValue(
-      'PlainTime',
-      'time',
-      Math.floor(getTimeNumber(this) / 1e6),
-      ISO_CALENDAR_ID,
-      locales,
-      options,
-    );
   }
   valueOf(): never {
     return throwOnPrimitiveConversion('PlainTime');

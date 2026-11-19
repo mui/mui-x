@@ -11,7 +11,6 @@ import {
   NS_PER_MS,
 } from '../internals/temporal-utils/zonedDateTime';
 import { createPlainDate } from './PlainDate';
-import { formatZonedValue } from './locale';
 import type { PlainDate, BaseTemporal as PlainDateTypes } from './PlainDate';
 import {
   compareOrder,
@@ -237,11 +236,6 @@ export declare namespace BaseTemporal {
      * followed by a `[u-ca=…]` annotation outside the ISO calendar.
      */
     toJSON(): string;
-    /**
-     * Returns the date-time formatted for a locale with `Intl.DateTimeFormat`, in its timezone: its
-     * date, its hour, minute and second, and the short name of its timezone by default.
-     */
-    toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
   }
 }
 
@@ -505,15 +499,6 @@ export class ZonedDateTime implements BaseTemporal.ZonedDateTime {
   }
   toJSON(): string {
     return this.toString();
-  }
-  toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string {
-    return formatZonedValue(
-      this.#milliseconds,
-      this.#timeZoneId,
-      this.calendarId,
-      locales,
-      options,
-    );
   }
   valueOf(): never {
     return throwOnPrimitiveConversion('ZonedDateTime');

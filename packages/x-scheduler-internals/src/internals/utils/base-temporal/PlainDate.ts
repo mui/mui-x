@@ -5,7 +5,6 @@ import {
   getDaysInMonth as getIsoDaysInMonth,
   getIsoDayOfWeek,
   isValidIsoDate,
-  MS_PER_DAY,
   plainDateInternals,
   readOverflow,
   throwOnPrimitiveConversion,
@@ -30,7 +29,6 @@ import { PlainTime, readTime } from './PlainTime';
 import type { BaseTemporal as PlainTimeTypes, PlainTimeInput } from './PlainTime';
 import { createPlainDateTime } from './PlainDateTime';
 import type { BaseTemporal as PlainDateTimeTypes } from './PlainDateTime';
-import { formatPlainValue } from './locale';
 
 export { FIRST_SUPPORTED_DAY, LAST_SUPPORTED_DAY } from './iso';
 
@@ -156,11 +154,6 @@ export declare namespace BaseTemporal {
      * followed by a `[u-ca=…]` annotation outside the ISO calendar.
      */
     toJSON(): string;
-    /**
-     * Returns the date formatted for a locale with `Intl.DateTimeFormat`: its year, month and day
-     * by default.
-     */
-    toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
   }
 }
 
@@ -548,17 +541,6 @@ export class PlainDate implements BaseTemporal.PlainDate {
 
   public toJSON(): string {
     return this.toString();
-  }
-
-  public toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string {
-    return formatPlainValue(
-      'PlainDate',
-      'date',
-      this.#dayNumber * MS_PER_DAY,
-      this.#calendarId,
-      locales,
-      options,
-    );
   }
 
   public valueOf(): never {

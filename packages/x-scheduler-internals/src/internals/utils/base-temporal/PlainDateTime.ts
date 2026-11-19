@@ -11,13 +11,11 @@ import {
   formatIsoDate,
   formatIsoTime,
   getTimeNumber,
-  MS_PER_DAY,
   readOverflow,
   throwOnPrimitiveConversion,
   TIME_FIELDS,
 } from './iso';
 import { formatCalendarAnnotation, readCalendarAnnotation } from './calendar';
-import { formatPlainValue } from './locale';
 import { mergeDateFields } from './mergeDateFields';
 
 /**
@@ -186,11 +184,6 @@ export declare namespace BaseTemporal {
      * outside the ISO calendar.
      */
     toJSON(): string;
-    /**
-     * Returns the date-time formatted for a locale with `Intl.DateTimeFormat`: its date and its
-     * hour, minute and second by default.
-     */
-    toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
   }
 }
 
@@ -360,16 +353,6 @@ export class PlainDateTime implements BaseTemporal.PlainDateTime {
   }
   toJSON(): string {
     return this.toString();
-  }
-  toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string {
-    return formatPlainValue(
-      'PlainDateTime',
-      'dateTime',
-      getDayNumber(this.#date) * MS_PER_DAY + Math.floor(getTimeNumber(this) / 1e6),
-      this.calendarId,
-      locales,
-      options,
-    );
   }
   valueOf(): never {
     return throwOnPrimitiveConversion('PlainDateTime');
