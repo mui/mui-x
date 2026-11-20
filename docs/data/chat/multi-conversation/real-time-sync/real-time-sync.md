@@ -262,7 +262,7 @@ subscribe({ onEvent }) {
 
 Re-delivering events after a reconnect is safe: `*-added` and `*-updated` events with an already-known `id` update the existing record instead of duplicating it, so backends can replay a window of recent events on reconnect without deduplication on the client.
 
-Message events are applied to the thread store regardless of their `conversationId`. If your backend streams events for many conversations over one connection, filter message events to the active conversation before calling `onEvent` (for example, read the active id from your own state, or only subscribe to the active conversation's channel). Conversation, typing, presence, and read events carry their own ids and are always safe to forward.
+When a conversation is active, `message-added` and `message-updated` events whose `message.conversationId` names a different conversation are ignored, unless the message is already in the store. If the adapter implements `listMessages`, those messages load when the user opens that conversation; otherwise, stream only the active conversation. Set `message.conversationId` on every message, and use `conversation-updated` (for example, `unreadCount`) to show activity in other threads. Conversation, typing, presence, and read events carry their own ids and are always safe to forward.
 
 ## Sending typing indicators
 
