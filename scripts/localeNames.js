@@ -51,5 +51,6 @@ module.exports = {
   'tr-TR': 'Turkish',
   'uk-UA': 'Ukrainian',
   'ur-PK': 'Urdu (Pakistan)',
+  'uz-UZ': 'Uzbek',
   'vi-VN': 'Vietnamese',
 };
