@@ -37,7 +37,12 @@ import {
   gridPivotActiveSelector,
   gridPivotPanelOpenSelector,
 } from './gridPivotingSelectors';
-import { getInitialColumns, getPivotForcedProps, createPivotPropsFromRows } from './utils';
+import {
+  getInitialColumns,
+  getPivotForcedProps,
+  createPivotPropsFromRows,
+  mergeColumnDefinition,
+} from './utils';
 import { getAvailableAggregationFunctions } from '../aggregation/gridAggregationUtils';
 import { GridSidebarValue } from '../sidebar';
 
@@ -452,8 +457,9 @@ export const useGridPivoting = (
       }
 
       if (keepPreviousColumns) {
+        const previousColumns = nonPivotDataRef.current.columns;
         getInitialColumns(
-          columns,
+          columns.map((column) => mergeColumnDefinition(previousColumns.get(column.field), column)),
           props.getPivotDerivedColumns,
           apiRef.current.getLocaleText,
         ).forEach((col) => {
