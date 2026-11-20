@@ -1,20 +1,18 @@
 import type { RefObject } from '@mui/x-internals/types';
+import { gridVisibleColumnFieldsSelector } from '@mui/x-data-grid';
 import type { CursorCoordinates, GridColumnOrderChangeParams } from '@mui/x-data-grid';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 
-// Column reordering logic shared by the HTML drag and drop path (`useGridColumnReorder`)
-// and the pointer events path.
+// Column reordering logic shared by the HTML drag and drop path (`useGridColumnReorder`),
+// the pointer events path, and the keyboard.
 
-const CURSOR_MOVE_DIRECTION_LEFT = 'left';
-const CURSOR_MOVE_DIRECTION_RIGHT = 'right';
+export type ColumnReorderDirection = 'left' | 'right';
 
-const getCursorMoveDirectionX = (
+export const getCursorMoveDirectionX = (
   currentCoordinates: CursorCoordinates,
   nextCoordinates: CursorCoordinates,
-) => {
-  return currentCoordinates.x <= nextCoordinates.x
-    ? CURSOR_MOVE_DIRECTION_RIGHT
-    : CURSOR_MOVE_DIRECTION_LEFT;
+): ColumnReorderDirection => {
+  return currentCoordinates.x <= nextCoordinates.x ? 'right' : 'left';
 };
 
 export const hasCursorPositionChanged = (
@@ -108,15 +106,14 @@ export function getColumnReorderForbiddenIndexes(
 }
 
 /**
- * Returns the index the dragged column moves to when the pointer goes over another column.
- * The column only moves when the pointer moves toward the target column, so it doesn't bounce
+ * Returns the index the dragged column moves to when it goes over another column.
+ * The column only moves when it moves toward the target column, so it doesn't bounce
  * back and forth when the columns swap under a still pointer.
  * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
- * @param {object} params The drag.
- * @param {string} params.dragField The dragged column.
- * @param {string} params.targetField The column under the pointer. It must exist and differ from `dragField`.
- * @param {CursorCoordinates} params.previousPosition The pointer position of the last evaluation.
- * @param {CursorCoordinates} params.position The pointer position.
+ * @param {object} params The move.
+ * @param {string} params.dragField The moved column.
+ * @param {string} params.targetField The column to move over. It must exist and differ from `dragField`.
+ * @param {ColumnReorderDirection} params.direction The visual direction of the move.
  * @param {boolean} params.isRtl Whether the grid is right-to-left.
  * @param {ColumnReorderForbiddenIndexes} params.forbiddenIndexes From `getColumnReorderForbiddenIndexes`.
  * @returns {number | null} The new index among all columns, or `null` when the column doesn't move.
@@ -126,13 +123,12 @@ export function getColumnReorderTargetIndex(
   params: {
     dragField: string;
     targetField: string;
-    previousPosition: CursorCoordinates;
-    position: CursorCoordinates;
+    direction: ColumnReorderDirection;
     isRtl: boolean;
     forbiddenIndexes: ColumnReorderForbiddenIndexes;
   },
 ): number | null {
-  const { dragField, targetField, previousPosition, position, isRtl, forbiddenIndexes } = params;
+  const { dragField, targetField, direction, isRtl, forbiddenIndexes } = params;
   const targetColIndex = apiRef.current.getColumnIndex(targetField, false);
   const targetColVisibleIndex = apiRef.current.getColumnIndex(targetField, true);
   const targetCol = apiRef.current.getColumn(targetField);
@@ -140,12 +136,10 @@ export function getColumnReorderTargetIndex(
   const visibleColumns = apiRef.current.getVisibleColumns();
   const allColumns = apiRef.current.getAllColumns();
 
-  const cursorMoveDirectionX = getCursorMoveDirectionX(previousPosition, position);
   const hasMovedLeft =
-    cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_LEFT &&
-    (isRtl ? dragColIndex < targetColIndex : targetColIndex < dragColIndex);
+    direction === 'left' && (isRtl ? dragColIndex < targetColIndex : targetColIndex < dragColIndex);
   const hasMovedRight =
-    cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_RIGHT &&
+    direction === 'right' &&
     (isRtl ? targetColIndex < dragColIndex : dragColIndex < targetColIndex);
 
   // Callers check that the target column exists before calling
@@ -226,6 +220,66 @@ export function setColumnReorderDragCol(apiRef: RefObject<GridPrivateApiPro>, dr
 }
 
 /**
+ * Returns what a move of the column needs, without changing the state.
+ * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
+ * @param {string} field The moved column.
+ * @returns {object} The index of the column among all columns, and the indexes it can't move to.
+ */
+export function getColumnReorderContext(
+  apiRef: RefObject<GridPrivateApiPro>,
+  field: string,
+): { originIndex: number; forbiddenIndexes: ColumnReorderForbiddenIndexes } {
+  return {
+    originIndex: apiRef.current.getColumnIndex(field, false),
+    forbiddenIndexes: getColumnReorderForbiddenIndexes(apiRef, field),
+  };
+}
+
+/**
+ * Returns where a step moves a column: one visible position, or as far as allowed.
+ * Each column on the way is validated like a drag over it, so the column stops before the first one it can't pass.
+ * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
+ * @param {object} params The move.
+ * @param {string} params.field The moved column.
+ * @param {ColumnReorderDirection} params.direction The visual direction of the move.
+ * @param {boolean} params.toEdge Whether to move as far as allowed instead of one position.
+ * @param {boolean} params.isRtl Whether the grid is right-to-left.
+ * @returns {number | null} The new index among all columns, or `null` when the column can't move that way.
+ */
+export function getColumnMoveTarget(
+  apiRef: RefObject<GridPrivateApiPro>,
+  params: { field: string; direction: ColumnReorderDirection; toEdge: boolean; isRtl: boolean },
+): number | null {
+  const { field, direction, toEdge, isRtl } = params;
+  const visibleFields = gridVisibleColumnFieldsSelector(apiRef);
+  const step = (direction === 'left') !== isRtl ? -1 : 1;
+  const { forbiddenIndexes } = getColumnReorderContext(apiRef, field);
+  const getTargetIndex = (targetField: string | undefined) =>
+    targetField === undefined
+      ? null
+      : getColumnReorderTargetIndex(apiRef, {
+          dragField: field,
+          targetField,
+          direction,
+          isRtl,
+          forbiddenIndexes,
+        });
+
+  let neighbourIndex = apiRef.current.getColumnIndex(field, true) + step;
+  let targetIndex = getTargetIndex(visibleFields[neighbourIndex]);
+  // Validates each column on the way, the column moves once
+  while (toEdge && targetIndex !== null) {
+    const nextTargetIndex = getTargetIndex(visibleFields[neighbourIndex + step]);
+    if (nextTargetIndex === null) {
+      break;
+    }
+    targetIndex = nextTargetIndex;
+    neighbourIndex += step;
+  }
+  return targetIndex;
+}
+
+/**
  * Starts a column drag: stores the dragged column, and returns what the drag needs to move it.
  * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
  * @param {string} field The dragged column.
@@ -236,10 +290,33 @@ export function startColumnReorder(
   field: string,
 ): { originIndex: number; forbiddenIndexes: ColumnReorderForbiddenIndexes } {
   setColumnReorderDragCol(apiRef, field);
-  return {
-    originIndex: apiRef.current.getColumnIndex(field, false),
-    forbiddenIndexes: getColumnReorderForbiddenIndexes(apiRef, field),
-  };
+  return getColumnReorderContext(apiRef, field);
+}
+
+/**
+ * Publishes `columnOrderChange` if the column isn't at its origin index anymore.
+ * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
+ * @param {string} field The moved column.
+ * @param {number} originIndex The index of the column, among all columns, before the move.
+ */
+export function publishColumnOrderChange(
+  apiRef: RefObject<GridPrivateApiPro>,
+  field: string,
+  originIndex: number,
+) {
+  const targetIndex = apiRef.current.getColumnIndex(field, false);
+  if (targetIndex === originIndex) {
+    return;
+  }
+  const column = apiRef.current.getColumn(field);
+  if (column) {
+    const columnOrderChangeParams: GridColumnOrderChangeParams = {
+      column,
+      targetIndex,
+      oldIndex: originIndex,
+    };
+    apiRef.current.publishEvent('columnOrderChange', columnOrderChangeParams);
+  }
 }
 
 /**
@@ -259,18 +336,9 @@ export function finishColumnReorder(
   const { dragField, originIndex, restoreOrigin } = params;
   if (restoreOrigin) {
     apiRef.current.setColumnIndex(dragField, originIndex, false);
-  } else if (apiRef.current.getColumnIndex(dragField, false) !== originIndex) {
-    const draggedColumn = apiRef.current.getColumn(dragField);
-    if (draggedColumn) {
-      // Emit the columnOrderChange event only once when the reordering stops.
-      const columnOrderChangeParams: GridColumnOrderChangeParams = {
-        column: draggedColumn,
-        targetIndex: apiRef.current.getColumnIndex(dragField, false),
-        oldIndex: originIndex,
-      };
-
-      apiRef.current.publishEvent('columnOrderChange', columnOrderChangeParams);
-    }
+  } else {
+    // Emit the columnOrderChange event only once when the reordering stops.
+    publishColumnOrderChange(apiRef, dragField, originIndex);
   }
 
   setColumnReorderDragCol(apiRef, '');

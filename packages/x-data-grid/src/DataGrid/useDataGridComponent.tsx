@@ -19,6 +19,10 @@ import { useGridFilter, filterStateInitializer } from '../hooks/features/filter/
 import { focusStateInitializer, useGridFocus } from '../hooks/features/focus/useGridFocus';
 import { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
 import {
+  keyboardUseStateInitializer,
+  useGridKeyboardUse,
+} from '../hooks/features/keyboardUse/useGridKeyboardUse';
+import {
   useGridPagination,
   paginationStateInitializer,
 } from '../hooks/features/pagination/useGridPagination';
@@ -92,6 +96,7 @@ export const useDataGridComponent = (
   useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(editingStateInitializer, apiRef, props);
   useGridInitializeState(focusStateInitializer, apiRef, props);
+  useGridInitializeState(keyboardUseStateInitializer, apiRef, props);
   useGridInitializeState(sortingStateInitializer, apiRef, props);
   useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
   useGridInitializeState(filterStateInitializer, apiRef, props);
@@ -106,6 +111,7 @@ export const useDataGridComponent = (
   useGridInitializeState(listViewStateInitializer, apiRef, props);
 
   useGridKeyboardNavigation(apiRef, props);
+  useGridKeyboardUse(apiRef);
   useGridRowSelection(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props, configuration);
