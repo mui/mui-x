@@ -12,5 +12,5 @@
     "types": ["../../mui-env.d.ts"]
   },
   "include": ["src/**/*.ts*", "src/compiled/**/*.js*"],
-  "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*", "src/postinstall/**"]
+  "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
 }
