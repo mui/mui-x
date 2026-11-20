@@ -30,10 +30,6 @@ const StandaloneViewRoot = styled('div', {
 })(({ theme }) => ({
   display: 'contents',
   fontFamily: theme.typography.fontFamily,
-  boxSizing: 'border-box',
-  '*, *::before, *::after': {
-    boxSizing: 'inherit',
-  },
   ...responsiveTypographyContainerQueries,
 }));
 

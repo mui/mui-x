@@ -96,9 +96,6 @@ const EventTimelinePremiumRoot = styled('div', {
   slot: 'Root',
 })(({ theme }) => ({
   boxSizing: 'border-box',
-  '*, *::before, *::after': {
-    boxSizing: 'inherit',
-  },
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',

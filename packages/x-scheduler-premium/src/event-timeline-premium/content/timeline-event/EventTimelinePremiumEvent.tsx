@@ -38,6 +38,7 @@ const EventTimelinePremiumEventRoot = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'Event',
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   borderRadius: theme.shape.borderRadius,
   backgroundColor: 'var(--event-surface-subtle)',
   color: 'var(--event-on-surface-subtle-primary)',
