@@ -2,6 +2,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useForkRef from '@mui/utils/useForkRef';
 import type { SxProps, Theme } from '@mui/system';
 import { ComposerTextArea } from '@mui/x-chat-headless';
 import type { ComposerTextAreaProps, ComposerTextAreaSlots } from '@mui/x-chat-headless';
@@ -13,6 +15,8 @@ import type { ChatComposerClasses } from './chatComposerClasses';
 const useThemeProps = createUseThemeProps('MuiChatComposerTextArea');
 
 const MAX_ROWS_STYLE = { minHeight: 'unset', margin: 'auto 0px', height: '28px' } as const;
+// Theme spacing factor for the text area padding, shared with the `maxRows` height cap.
+const TEXT_AREA_PADDING = 0.5;
 
 export interface ChatComposerTextAreaSlots extends ComposerTextAreaSlots {}
 
@@ -42,7 +46,7 @@ const ChatComposerTextAreaStyled = styled('textarea', {
   resize: 'none',
   border: 'none',
   borderRadius: 0,
-  padding: theme.spacing(0.5),
+  padding: theme.spacing(TEXT_AREA_PADDING),
   fontFamily: theme.typography.fontFamily,
   fontSize: theme.typography.body2.fontSize,
   lineHeight: theme.typography.body2.lineHeight,
@@ -51,7 +55,10 @@ const ChatComposerTextAreaStyled = styled('textarea', {
   outline: 'none',
   boxSizing: 'border-box',
   minHeight: 40,
-  maxHeight: 200,
+  // `maxRows` lines plus the rendered vertical padding (measured, as `sx` can change it). Without
+  // `--ChatComposer-maxRows`, this custom property is invalid and `maxHeight` falls back to 200px.
+  '--ChatComposer-maxRowsHeight': `calc(var(--ChatComposer-maxRows) * 1lh + var(--ChatComposer-paddingBlock, 2 * ${theme.spacing(TEXT_AREA_PADDING)}))`,
+  maxHeight: 'var(--ChatComposer-maxRowsHeight, 200px)',
   overflowY: 'auto',
   scrollbarWidth: 'thin',
   '&:disabled': {
@@ -68,10 +75,23 @@ const ChatComposerTextArea = React.forwardRef<HTMLTextAreaElement, ChatComposerT
     const props = useThemeProps({ props: inProps, name: 'MuiChatComposerTextArea' });
     const { slots, slotProps, className, classes: classesProp, sx, maxRows, ...other } = props;
     const classes = useChatComposerUtilityClasses(classesProp);
+    const inputRef = React.useRef<HTMLTextAreaElement | null>(null);
+    const handleRef = useForkRef(ref, inputRef);
+
+    // Runs after every render because `sx` or theme changes can update the padding.
+    useEnhancedEffect(() => {
+      const textarea = inputRef.current;
+      if (maxRows == null || !textarea) {
+        return;
+      }
+      const style = getComputedStyle(textarea);
+      const paddingBlock = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+      textarea.style.setProperty('--ChatComposer-paddingBlock', `${paddingBlock}px`);
+    });
 
     return (
       <ComposerTextArea
-        ref={ref}
+        ref={handleRef}
         {...other}
         slots={{
           ...slots,
@@ -85,7 +105,7 @@ const ChatComposerTextArea = React.forwardRef<HTMLTextAreaElement, ChatComposerT
               sx,
               ...(maxRows != null
                 ? {
-                    style: MAX_ROWS_STYLE,
+                    style: { ...MAX_ROWS_STYLE, '--ChatComposer-maxRows': maxRows },
                     rows: 1,
                   }
                 : {}),

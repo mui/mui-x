@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { isJSDOM } from 'test/utils/skipIf';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from '../ChatBox/ChatBox';
 
@@ -202,5 +204,69 @@ describe('ChatComposerTextArea', () => {
     // eslint-disable-next-line testing-library/no-unnecessary-act
     await act(async () => {});
     expect(sendMessage).toHaveBeenCalledTimes(0);
+  });
+
+  it.skipIf(isJSDOM)('caps the auto-grow height at maxRows lines', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        variant="compact"
+        slotProps={{ composerInput: { maxRows: 2 } }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    const textbox = screen.getByRole('textbox') as HTMLTextAreaElement;
+    fireEvent.change(textbox, { target: { value: Array(8).fill('line').join('\n') } });
+
+    const style = getComputedStyle(textbox);
+    const lineHeight = parseFloat(style.lineHeight);
+    const padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+    expect(textbox.getBoundingClientRect().height).to.be.closeTo(2 * lineHeight + padding, 1);
+    expect(textbox.scrollHeight).to.be.greaterThan(textbox.clientHeight);
+  });
+
+  it.skipIf(isJSDOM)('includes custom vertical padding in the maxRows cap', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        variant="compact"
+        slotProps={{ composerInput: { maxRows: 2, sx: { py: 2 } } }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    const textbox = screen.getByRole('textbox') as HTMLTextAreaElement;
+    fireEvent.change(textbox, { target: { value: Array(8).fill('line').join('\n') } });
+
+    const style = getComputedStyle(textbox);
+    const lineHeight = parseFloat(style.lineHeight);
+    expect(parseFloat(style.paddingTop) + parseFloat(style.paddingBottom)).to.equal(32);
+    expect(textbox.getBoundingClientRect().height).to.be.closeTo(2 * lineHeight + 32, 1);
+  });
+
+  it.skipIf(isJSDOM)('lets a theme styleOverrides maxHeight win over the maxRows cap', () => {
+    const theme = createTheme({
+      components: {
+        MuiChatComposer: { styleOverrides: { textArea: { maxHeight: 50 } } },
+      },
+    } as any);
+
+    render(
+      <ThemeProvider theme={theme}>
+        <ChatBox
+          adapter={createAdapter()}
+          variant="compact"
+          slotProps={{ composerInput: { maxRows: 5 } }}
+        >
+          {null}
+        </ChatBox>
+      </ThemeProvider>,
+    );
+
+    const textbox = screen.getByRole('textbox') as HTMLTextAreaElement;
+    expect(getComputedStyle(textbox).maxHeight).to.equal('50px');
   });
 });
