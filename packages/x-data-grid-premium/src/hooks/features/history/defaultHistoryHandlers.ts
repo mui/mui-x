@@ -1,4 +1,4 @@
-import type { RefObject } from '@mui/x-internals/types';
+import type { MuiEvent, RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
   gridVisibleRowsSelector,
@@ -67,7 +67,11 @@ export const createCellEditHistoryHandler = (
   apiRef: RefObject<GridApiPremium>,
 ): GridHistoryEventHandler<GridCellEditHistoryData> => {
   return {
-    store: (params: GridCellEditStopParams) => {
+    store: (params: GridCellEditStopParams, event?: MuiEvent) => {
+      if (event?.defaultMuiPrevented) {
+        return null;
+      }
+
       const { id, field } = params;
 
       // Escape discards the value, and a validation error keeps the cell in edit mode.
@@ -192,7 +196,11 @@ export const createRowEditHistoryHandler = (
   apiRef: RefObject<GridApiPremium>,
 ): GridHistoryEventHandler<GridRowEditHistoryData> => {
   return {
-    store: (params: GridRowEditStopParams) => {
+    store: (params: GridRowEditStopParams, event?: MuiEvent) => {
+      if (event?.defaultMuiPrevented) {
+        return null;
+      }
+
       const { id } = params;
 
       // Escape discards the values, and a validation error keeps the row in edit mode.
