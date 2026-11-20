@@ -1,6 +1,12 @@
 import type { MuiEvent, RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { gridVisibleRowsSelector, gridVisibleColumnFieldsSelector } from '@mui/x-data-grid-pro';
+import {
+  gridVisibleRowsSelector,
+  gridVisibleColumnFieldsSelector,
+  gridEditCellStateSelector,
+  GridCellEditStopReasons,
+  GridRowEditStopReasons,
+} from '@mui/x-data-grid-pro';
 import { asReplaceUpdates, getRowIndexRelativeToAllRows } from '@mui/x-data-grid-pro/internals';
 import type {
   GridCellEditStopParams,
@@ -66,6 +72,16 @@ export const createCellEditHistoryHandler = (
       }
 
       const { id, field } = params;
+
+      // Escape discards the value, and a validation error keeps the cell in edit mode.
+      // A stop during the validation can still commit, so only a settled error counts.
+      const editCellState = gridEditCellStateSelector(apiRef, { rowId: id, field });
+      if (
+        params.reason === GridCellEditStopReasons.escapeKeyDown ||
+        (editCellState?.error && !editCellState.isProcessingProps)
+      ) {
+        return null;
+      }
 
       const oldRow = apiRef.current.getRow(id);
       const oldValue = oldRow[field];
@@ -185,6 +201,11 @@ export const createRowEditHistoryHandler = (
       }
 
       const { id } = params;
+
+      // Escape discards the values. The grid does not stop a row while a field has an error.
+      if (params.reason === GridRowEditStopReasons.escapeKeyDown) {
+        return null;
+      }
 
       const oldRow = apiRef.current.getRow(id) || {};
       const newRow = apiRef.current.getRowWithUpdatedValues(id, '');
