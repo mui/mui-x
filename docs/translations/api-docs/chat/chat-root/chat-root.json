@@ -1,22 +1,102 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "activeConversationId": {
+      "description": "The id of the active conversation. Use with <code>onActiveConversationChange</code> to control it."
+    },
     "adapter": { "description": "The adapter that connects the chat to your backend." },
     "children": { "description": "The content of the component." },
+    "composerValue": {
+      "description": "The value of the composer. Use with <code>onComposerValueChange</code> to control it."
+    },
+    "conversations": {
+      "description": "The conversations. Use with <code>onConversationsChange</code> to control them."
+    },
+    "currentUser": {
+      "description": "The local user sending messages. If omitted, derived from <code>members</code> by finding the entry with <code>role === &#39;user&#39;</code>. Also used to enrich message authors when a rendered message resolves to <code>currentUser.id</code>."
+    },
     "density": {
       "description": "The vertical spacing density of chat messages. When provided, wraps descendant components with <code>ChatDensityProvider</code>. - <code>&#39;compact&#39;</code> – Reduced vertical spacing between messages. - <code>&#39;standard&#39;</code> – Default spacing. - <code>&#39;comfortable&#39;</code> – Increased vertical spacing between messages."
     },
     "features": {
       "description": "Runtime feature flags for the chat controller (e.g. outbound typing signals)."
     },
-    "localeText": { "description": "The props used for the locale text slot." },
-    "onData": { "description": "Callback fired when a data part is received." },
-    "onError": { "description": "Callback fired when an error occurs." },
-    "onFinish": {
-      "description": "Callback fired when the assistant finishes a response, including when it is aborted, disconnected, or fails."
+    "getMessageAuthorAvatarUrl": {
+      "description": "Used to determine the avatar URL for a given message author. Falls back to <code>message.author?.avatarUrl</code>, then to the matched member&#39;s <code>avatarUrl</code>."
     },
-    "onToolCall": { "description": "Callback fired when the assistant calls a tool." },
+    "getMessageAuthorDisplayName": {
+      "description": "Used to determine the display name for a given message author. Falls back to <code>message.author?.displayName</code>, then to the matched member&#39;s <code>displayName</code>."
+    },
+    "getMessageAuthorId": {
+      "description": "Used to determine the author id for a given message. The resolved id is used to match message authors against <code>currentUser</code>, <code>members</code>, and active conversation participants."
+    },
+    "initialActiveConversationId": {
+      "description": "The initial active conversation ID when uncontrolled. Ignored after initialization and when <code>activeConversationId</code> is provided."
+    },
+    "initialComposerValue": {
+      "description": "The initial composer value when uncontrolled. Ignored after initialization and when <code>composerValue</code> is provided."
+    },
+    "initialConversations": {
+      "description": "The initial conversations when uncontrolled. Ignored after initialization and when <code>conversations</code> is provided."
+    },
+    "initialMessages": {
+      "description": "The initial messages when uncontrolled. Ignored after initialization and when <code>messages</code> is provided."
+    },
+    "localeText": { "description": "The props used for the locale text slot." },
+    "members": {
+      "description": "Known chat participants. Used to derive the local user / assistant user when explicit props are omitted, and to enrich message authors by resolved author id at render time."
+    },
+    "messages": {
+      "description": "The messages of the active conversation. Use with <code>onMessagesChange</code> to control them."
+    },
+    "onActiveConversationChange": {
+      "description": "Callback fired when the active conversation changes.",
+      "typeDescriptions": {
+        "conversationId": {
+          "name": "conversationId",
+          "description": "The id of the new active conversation."
+        }
+      }
+    },
+    "onComposerValueChange": {
+      "description": "Callback fired when the composer value changes.",
+      "typeDescriptions": { "value": { "name": "value", "description": "The new composer value." } }
+    },
+    "onConversationsChange": {
+      "description": "Callback fired when the conversations change.",
+      "typeDescriptions": {
+        "conversations": { "name": "conversations", "description": "The new conversations." }
+      }
+    },
+    "onData": {
+      "description": "Callback fired when a data part is received.",
+      "typeDescriptions": { "part": { "name": "part", "description": "The data part." } }
+    },
+    "onError": {
+      "description": "Callback fired when an error occurs.",
+      "typeDescriptions": { "error": { "name": "error", "description": "The error." } }
+    },
+    "onFinish": {
+      "description": "Callback fired when the assistant finishes a response, including when it is aborted, disconnected, or fails.",
+      "typeDescriptions": {
+        "payload": {
+          "name": "payload",
+          "description": "The final message and how the response ended."
+        }
+      }
+    },
+    "onMessagesChange": {
+      "description": "Callback fired when the messages change.",
+      "typeDescriptions": { "messages": { "name": "messages", "description": "The new messages." } }
+    },
+    "onToolCall": {
+      "description": "Callback fired when the assistant calls a tool.",
+      "typeDescriptions": { "payload": { "name": "payload", "description": "The tool call." } }
+    },
     "partRenderers": { "description": "Custom renderers for message parts, by part type." },
+    "roleDisplayNames": {
+      "description": "Locale-driven fallback labels for messages without explicit author information."
+    },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "storeClass": { "description": "The store class to use for this provider." },

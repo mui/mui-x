@@ -1,5 +1,13 @@
 {
-  "props": {},
+  "props": {
+    "children": { "type": { "name": "node" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ConversationHeaderActions",
   "imports": ["import { ConversationHeaderActions } from '@mui/x-chat/headless';"],
   "slots": [

@@ -1,5 +1,39 @@
 {
-  "props": {},
+  "props": {
+    "apiRef": { "type": { "name": "shape", "description": "{ current?: any }" } },
+    "colors": {
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
+      "default": "rainbowSurgePalette"
+    },
+    "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "desc": { "type": { "name": "string" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
+    },
+    "height": { "type": { "name": "number" } },
+    "id": { "type": { "name": "string" } },
+    "localeText": { "type": { "name": "object" } },
+    "margin": {
+      "type": {
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+      }
+    },
+    "series": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "skipAnimation": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "object" } },
+    "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "theme": { "type": { "name": "enum", "description": "'dark'<br>&#124;&nbsp;'light'" } },
+    "title": { "type": { "name": "string" } },
+    "width": { "type": { "name": "number" } }
+  },
   "name": "ChartsContainerPremium",
   "imports": [
     "import { ChartsContainerPremium } from '@mui/x-charts-premium/ChartsContainerPremium';",

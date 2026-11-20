@@ -1,5 +1,5 @@
 {
-  "componentDescription": "",
+  "componentDescription": "Demos:\n- [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/)\n\nAPI:\n- [DateRangePickerDay API](https://mui.com/x/api/date-pickers/date-range-picker-day/)",
   "propDescriptions": {
     "action": {
       "description": "A ref for imperative actions. It currently only supports <code>focusVisible()</code> action."

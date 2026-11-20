@@ -1,5 +1,20 @@
 {
-  "props": {},
+  "props": {
+    "attachmentConfig": {
+      "type": {
+        "name": "shape",
+        "description": "{ acceptedMimeTypes?: Array&lt;string&gt;, maxFileCount?: number, maxFileSize?: number, onAttachmentReject?: func }"
+      }
+    },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "onSubmit": { "type": { "name": "func" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ComposerRoot",
   "imports": ["import { ComposerRoot } from '@mui/x-chat/headless';"],
   "slots": [

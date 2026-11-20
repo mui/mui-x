@@ -126,6 +126,13 @@ export interface MessageListRootProps extends Omit<
    * @default null
    */
   overlay?: React.ReactNode;
+  /**
+   * Renders the row of a message.
+   * @param {object} params The message to render.
+   * @param {string} params.id The id of the message.
+   * @param {number} params.index The position of the message in `items`.
+   * @returns {React.ReactNode} The rendered row.
+   */
   renderItem(params: { id: string; index: number }): React.ReactNode;
   /**
    * Returns the React key of a row.

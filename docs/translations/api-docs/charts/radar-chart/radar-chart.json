@@ -2,7 +2,6 @@
   "componentDescription": "",
   "propDescriptions": {
     "apiRef": { "description": "The ref object that exposes the chart API methods." },
-    "className": { "description": "A CSS class name applied to the root element." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "desc": {
       "description": "The description of the chart. Used to provide an accessible description for the chart."
@@ -103,7 +102,7 @@
     },
     "radar": { "description": "The configuration of the radar scales." },
     "series": {
-      "description": "The series to display in the bar chart. An array of <a href='/x/api/charts/radar-series/'>RadarSeries</a> objects."
+      "description": "The series to display in the bar chart. An array of [[RadarSeries]] objects."
     },
     "shape": { "description": "The grid shape." },
     "showToolbar": { "description": "If true, shows the default chart toolbar." },

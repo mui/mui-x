@@ -8,6 +8,7 @@ import type {
 } from '@mui/internal-api-docs-builder';
 import { findApiPages } from '@mui/internal-api-docs-builder';
 import { isGlobalState } from '@mui/utils/generateUtilityClass';
+import { createXPropsSettings } from '../xPropsSettings';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
 import generateSchedulerClassName from './generateSchedulerClassName';
 
@@ -142,6 +143,7 @@ export default schedulerApiPages;
   importTranslationPagesDirectory: 'docs/translations/api-docs/scheduler',
   getComponentImports,
   propsSettings: {
+    ...createXPropsSettings(),
     propsWithoutDefaultVerification: [],
   },
   sortingStrategies: {

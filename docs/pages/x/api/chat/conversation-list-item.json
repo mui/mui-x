@@ -1,5 +1,23 @@
 {
-  "props": {},
+  "props": {
+    "conversation": {
+      "type": {
+        "name": "shape",
+        "description": "{ avatarUrl?: string, id: string, lastMessageAt?: string, metadata?: object, participants?: Array&lt;{ avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: object, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }&gt;, readState?: 'read'<br>&#124;&nbsp;'unread', subtitle?: string, title?: string, unreadCount?: number }"
+      },
+      "required": true
+    },
+    "children": { "type": { "name": "node" } },
+    "focused": { "type": { "name": "bool" } },
+    "selected": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "unread": { "type": { "name": "bool" } }
+  },
   "name": "ConversationListItem",
   "imports": ["import { ConversationListItem } from '@mui/x-chat/headless';"],
   "slots": [

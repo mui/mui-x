@@ -1,5 +1,18 @@
 {
-  "props": {},
+  "props": {
+    "scrollBehavior": {
+      "type": {
+        "name": "enum",
+        "description": "'auto'<br>&#124;&nbsp;'instant'<br>&#124;&nbsp;'smooth'"
+      }
+    },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ScrollToBottomAffordance",
   "imports": ["import { ScrollToBottomAffordance } from '@mui/x-chat/headless';"],
   "slots": [

@@ -6,12 +6,7 @@
       "required": true,
       "signature": { "type": "function(day: PickerValidDate) => void", "describedArgs": ["day"] }
     },
-    "action": {
-      "type": {
-        "name": "union",
-        "description": "func<br>&#124;&nbsp;{ current?: { focusVisible: func } }"
-      }
-    },
+    "action": { "type": { "name": "custom", "description": "ref" } },
     "centerRipple": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
@@ -87,12 +82,7 @@
     },
     "today": { "type": { "name": "bool" }, "default": "false" },
     "TouchRippleProps": { "type": { "name": "object" } },
-    "touchRippleRef": {
-      "type": {
-        "name": "union",
-        "description": "func<br>&#124;&nbsp;{ current?: { pulsate: func, start: func, stop: func } }"
-      }
-    },
+    "touchRippleRef": { "type": { "name": "custom", "description": "ref" } },
     "type": { "type": { "name": "string" }, "default": "'button'" }
   },
   "name": "PickerDay",

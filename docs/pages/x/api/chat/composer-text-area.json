@@ -1,5 +1,12 @@
 {
-  "props": {},
+  "props": {
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ComposerTextArea",
   "imports": ["import { ComposerTextArea } from '@mui/x-chat/headless';"],
   "slots": [
