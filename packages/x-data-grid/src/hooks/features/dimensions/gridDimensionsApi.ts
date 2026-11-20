@@ -2,6 +2,10 @@ import type { DimensionsState } from '@mui/x-virtualizer/models';
 
 export interface GridDimensions extends DimensionsState {
   /**
+   * Size of all the columns.
+   */
+  columnsTotalWidth: number;
+  /**
    * Height of one column header.
    */
   headerHeight: number;

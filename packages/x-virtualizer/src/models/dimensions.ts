@@ -18,7 +18,8 @@ export interface DimensionsState {
    */
   viewportInnerSize: Size;
   /**
-   * The size of the main content (unpinned rows & columns).
+   * The size of the main content: the width of all the columns, the pinned columns included,
+   * and the height of the current page rows, the pinned rows excluded.
    */
   contentSize: Size;
   /**
@@ -47,15 +48,11 @@ export interface DimensionsState {
    */
   rowHeight: number;
   /**
-   * Size of all the columns.
-   */
-  columnsTotalWidth: number;
-  /**
-   * Size of left pinned columns.
+   * Width of the pinned left columns.
    */
   leftPinnedWidth: number;
   /**
-   * Size of right pinned columns.
+   * Width of the pinned right columns.
    */
   rightPinnedWidth: number;
   /**
@@ -91,11 +88,33 @@ export interface RowsMetaState {
   /**
    * The total height of the pinned top rows.
    */
-  pinnedTopRowsTotalHeight: number;
+  topPinnedHeight: number;
   /**
    * The total height of the pinned bottom rows.
    */
-  pinnedBottomRowsTotalHeight: number;
+  bottomPinnedHeight: number;
+}
+
+/**
+ * The columns total width and positions.
+ */
+export interface ColumnsMetaState {
+  /**
+   * The columns positions.
+   */
+  positions: number[];
+  /**
+   * The sum of all column widths, the pinned columns included, rounded to one decimal place.
+   */
+  totalWidth: number;
+  /**
+   * The total width of the pinned left columns.
+   */
+  leftPinnedWidth: number;
+  /**
+   * The total width of the pinned right columns.
+   */
+  rightPinnedWidth: number;
 }
 
 export interface RowSpacing {

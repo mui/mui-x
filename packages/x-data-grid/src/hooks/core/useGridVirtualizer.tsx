@@ -2,7 +2,6 @@ import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
-import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { lruMemoize } from '@mui/x-internals/lruMemoize';
 import { useStoreEffect } from '@mui/x-internals/useStoreEffect';
 import {
@@ -15,7 +14,6 @@ import {
 import type { VirtualizerParams } from '@mui/x-virtualizer';
 import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import type { GridStateColDef } from '../../models/colDef/gridColDef';
-import { createSelector } from '../../utils/createSelector';
 import { useGridSelector } from '../utils/useGridSelector';
 import {
   gridHasFillerSelector,
@@ -25,7 +23,6 @@ import { gridDensityFactorSelector } from '../features/density';
 import {
   gridVisibleColumnDefinitionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
-  gridColumnPositionsSelector,
   gridHasColSpanSelector,
 } from '../features/columns/gridColumnsSelector';
 import { gridPinnedRowsSelector, gridRowCountSelector } from '../features/rows/gridRowsSelector';
@@ -45,22 +42,8 @@ import { useGridOverlays } from '../features/overlays/useGridOverlays';
 import { useGridRootProps } from '../utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../utils/useGridPrivateApiContext';
 import { useGridRowsMeta } from '../features/rows/useGridRowsMeta';
+import type { GridRowsMetaState } from '../features/rows/gridRowsMetaState';
 import { eslintUseValue } from '../../utils/utils';
-
-const columnsTotalWidthSelector = createSelector(
-  gridVisibleColumnDefinitionsSelector,
-  gridColumnPositionsSelector,
-  (visibleColumns, positions) => {
-    const colCount = visibleColumns.length;
-    if (colCount === 0) {
-      return 0;
-    }
-    return roundToDecimalPlaces(
-      positions[colCount - 1] + visibleColumns[colCount - 1].computedWidth,
-      1,
-    );
-  },
-);
 
 /** Translates virtualizer state to grid state */
 const addGridDimensionsCreator = () =>
@@ -74,12 +57,24 @@ const addGridDimensionsCreator = () =>
     ) => {
       return {
         ...dimensions,
+        columnsTotalWidth: dimensions.contentSize.width,
         headerHeight,
         groupHeaderHeight,
         headerFilterHeight,
         headersTotalHeight,
       };
     },
+    { maxSize: 1 },
+  );
+
+/** Adds the deprecated rows meta names to the virtualizer rows meta */
+const addGridRowsMetaCreator = () =>
+  lruMemoize(
+    (rowsMeta: Dimensions.State['rowsMeta']): GridRowsMetaState => ({
+      ...rowsMeta,
+      pinnedTopRowsTotalHeight: rowsMeta.topPinnedHeight,
+      pinnedBottomRowsTotalHeight: rowsMeta.bottomPinnedHeight,
+    }),
     { maxSize: 1 },
   );
 
@@ -140,24 +135,16 @@ export function useGridVirtualizer() {
   const headerFilterHeight = Math.floor(
     (rootProps.headerFilterHeight ?? rootProps.columnHeaderHeight) * density,
   );
-  const columnsTotalWidth = useGridSelector(apiRef, columnsTotalWidthSelector);
   // `getTotalHeaderHeight` reads the group depth imperatively, subscribe so it re-renders when it changes.
   eslintUseValue(useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector));
   const headersTotalHeight = getTotalHeaderHeight(apiRef, rootProps);
-
-  const leftPinnedWidth = pinnedColumns.left.reduce((w, col) => w + col.computedWidth, 0);
-  const rightPinnedWidth = pinnedColumns.right.reduce((w, col) => w + col.computedWidth, 0);
 
   const overlayState = useGridOverlays(apiRef, rootProps);
 
   const dimensionsParams = {
     rowHeight,
-    headerHeight,
-    columnsTotalWidth,
-    leftPinnedWidth,
-    rightPinnedWidth,
-    topPinnedHeight: headersTotalHeight,
-    bottomPinnedHeight: 0,
+    headerHeight: headersTotalHeight,
+    footerHeight: 0,
     autoHeight,
     minimalContentHeight,
     scrollbarSize: rootProps.scrollbarSize,
@@ -175,6 +162,8 @@ export function useGridVirtualizer() {
     dataRowCount,
   );
   const { getRowHeight, getEstimatedRowHeight, getRowSpacing } = rootProps;
+
+  const addGridRowsMeta = useLazyRef(addGridRowsMetaCreator).current;
   // </ROWS_META>
 
   const RowSlot = rootProps.slots.row;
@@ -311,7 +300,7 @@ export function useGridVirtualizer() {
           index={params.rowIndex}
           selected={isRowSelected(params.id)}
           offsetLeft={params.offsetLeft}
-          columnsTotalWidth={columnsTotalWidth}
+          columnsTotalWidth={params.columnsTotalWidth}
           rowHeight={params.baseRowHeight}
           pinnedColumns={pinnedColumns}
           visibleColumns={visibleColumns}
@@ -329,7 +318,6 @@ export function useGridVirtualizer() {
         />
       ),
       [
-        columnsTotalWidth,
         hasFiller,
         isRowSelected,
         pinnedColumns,
@@ -361,7 +349,7 @@ export function useGridVirtualizer() {
       headerFilterHeight,
       headersTotalHeight,
     );
-    apiRef.current.store.state.rowsMeta = virtualizerStore.state.rowsMeta;
+    apiRef.current.store.state.rowsMeta = addGridRowsMeta(virtualizerStore.state.rowsMeta);
     apiRef.current.store.state.virtualization = virtualizerStore.state.virtualization;
   });
 
@@ -382,10 +370,11 @@ export function useGridVirtualizer() {
   });
 
   useStoreEffect(virtualizer.store, Dimensions.selectors.rowsMeta, (_, rowsMeta) => {
-    if (rowsMeta !== apiRef.current.state.rowsMeta) {
+    const gridRowsMeta = addGridRowsMeta(rowsMeta);
+    if (gridRowsMeta !== apiRef.current.state.rowsMeta) {
       apiRef.current.setState((gridState) => ({
         ...gridState,
-        rowsMeta,
+        rowsMeta: gridRowsMeta,
       }));
     }
   });
