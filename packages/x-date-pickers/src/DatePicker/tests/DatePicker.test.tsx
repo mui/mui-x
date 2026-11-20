@@ -102,6 +102,24 @@ describe('<DatePicker />', () => {
     expect(hiddenInput.value).not.to.contain('12');
   });
 
+  it('should clear the field when calling clearValue from context and a fieldRef is passed', async () => {
+    const fieldRef = React.createRef<any>();
+    const { user } = render(
+      <DatePicker open slotProps={{ field: { fieldRef }, actionBar: { actions: ['clear'] } }} />,
+    );
+
+    const monthSection = screen.getByRole('spinbutton', { name: 'Month' });
+    await user.click(monthSection);
+    await user.keyboard('12');
+
+    const hiddenInput = screen.getByRole('textbox', { hidden: true }) as HTMLInputElement;
+    expect(hiddenInput.value).to.contain('12');
+
+    await user.click(screen.getByRole('button', { name: 'Clear' }));
+
+    expect(hiddenInput.value).not.to.contain('12');
+  });
+
   it('should clear the field when calling clearValue from fieldRef', async () => {
     const fieldRef = React.createRef<any>();
     const { user } = render(<DatePicker slotProps={{ field: { fieldRef } }} />);

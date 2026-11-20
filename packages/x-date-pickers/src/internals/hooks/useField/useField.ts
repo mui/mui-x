@@ -128,10 +128,9 @@ export const useField = <
       return;
     }
 
-    const newParsedSelectedSections = parseSelectedSections(
-      newSelectedSections,
-      state.sections,
-    ) as number;
+    // Fall back to the first section when the format has no section of the requested type.
+    const newParsedSelectedSections =
+      (parseSelectedSections(newSelectedSections, state.sections) as number | null) ?? 0;
 
     setFocused(true);
     sectionListRef.current.getSectionContent(newParsedSelectedSections).focus();
