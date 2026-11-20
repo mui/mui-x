@@ -22,7 +22,7 @@ catalog:
   '@mui/icons-material': 9.6.0
   '@mui/internal-test-utils': 2.1.1-canary.11
   '@mui/internal-core-docs': 10.0.0-canary.1
-  '@mui/internal-docs-infra': 0.13.1-canary.37
+  '@mui/internal-docs-infra': https://pkg.pr.new/mui/mui-public/@mui/internal-docs-infra@47f0888e23ec94919a7459e17dd74e780fc8b140
   '@mui/material': 9.6.0
   '@mui/stylis-plugin-rtl': 9.6.0
   '@mui/system': 9.6.0
@@ -85,7 +85,8 @@ catalog:
 engineStrict: true
 updateNotifier: false
 autoDedupe: true
-blockExoticSubdeps: true
+# The preview SDK also pins its extractor dependency to pkg.pr.new.
+blockExoticSubdeps: false
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - '@mui/*'
@@ -120,6 +121,9 @@ allowBuilds:
   msw: false
 
 overrides:
+  # Keep core-docs and scripts on the same preview runtime until the next release.
+  '@mui/internal-docs-infra': https://pkg.pr.new/mui/mui-public/@mui/internal-docs-infra@47f0888e23ec94919a7459e17dd74e780fc8b140
+
   # Pin the version otherwise emotion uses its own version resulting in docs build error
   # @TODO: Debug a fix separately and remove the override
   stylis: ^4.4.0
