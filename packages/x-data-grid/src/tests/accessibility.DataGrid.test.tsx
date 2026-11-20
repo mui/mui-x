@@ -241,6 +241,119 @@ describe('<DataGrid /> - Accessibility', () => {
       const dialog = screen.getByRole('dialog', { name: 'Select columns' });
       expect(dialog).not.to.have.attribute('aria-labelledby');
     });
+
+    it('should keep trigger aria-controls valid across API and menu entry points', async () => {
+      let apiRef: RefObject<GridApi | null>;
+      function Test(props: { initialState?: any }) {
+        apiRef = useGridApiRef();
+        return <DataGrid {...baselineProps} apiRef={apiRef} showToolbar {...props} />;
+      }
+
+      const expectControlsDialog = (triggerName: string) => {
+        const trigger = screen.getByRole('button', { name: triggerName });
+        const dialog = screen.getByRole('dialog');
+        expect(trigger).to.have.attribute('aria-expanded', 'true');
+        expect(dialog.id).not.to.equal('');
+        expect(trigger).to.have.attribute('aria-controls', dialog.id);
+        expect(document.getElementById(dialog.id)).to.equal(dialog);
+        return { trigger, dialog };
+      };
+
+      const expectFallbackControls = (triggerName: string, expectedLabel: string) => {
+        const { dialog } = expectControlsDialog(triggerName);
+        expect(dialog).to.have.attribute('aria-label', expectedLabel);
+        expect(dialog).not.to.have.attribute('aria-labelledby');
+      };
+
+      const { user } = render(<Test />);
+
+      await act(async () => apiRef.current?.showPreferences(GridPreferencePanelsValue.columns));
+      expectFallbackControls('Columns', 'Select columns');
+
+      await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
+      await user.click(screen.getByRole('menuitem', { name: 'Filter' }));
+      expectFallbackControls('Filters', 'Show filters');
+
+      await act(async () => apiRef.current?.hidePreferences());
+      await act(async () => apiRef.current?.showFilterPanel());
+      expectFallbackControls('Filters', 'Show filters');
+
+      await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
+      await user.click(screen.getByRole('menuitem', { name: 'Manage columns' }));
+      expectFallbackControls('Columns', 'Select columns');
+
+      await act(async () => apiRef.current?.hidePreferences());
+      const columnsTrigger = screen.getByRole('button', { name: 'Columns' });
+      await user.click(columnsTrigger);
+      await act(async () => apiRef.current?.showPreferences(GridPreferencePanelsValue.columns));
+      const { dialog: sameDialog } = expectControlsDialog('Columns');
+      expect(sameDialog).to.have.attribute('aria-labelledby', columnsTrigger.id);
+
+      await act(async () => apiRef.current?.showPreferences(GridPreferencePanelsValue.filters));
+      expectFallbackControls('Filters', 'Show filters');
+
+      await act(async () => apiRef.current?.hidePreferences());
+      await act(async () =>
+        apiRef.current?.restoreState({
+          preferencePanel: { open: true, openedPanelValue: GridPreferencePanelsValue.filters },
+        }),
+      );
+      expectFallbackControls('Filters', 'Show filters');
+    });
+
+    it('should keep trigger aria-controls valid when opened from GridNoColumnsOverlay or initialState', async () => {
+      const expectFallbackControls = (triggerName: string, expectedLabel: string) => {
+        const trigger = screen.getByRole('button', { name: triggerName });
+        const dialog = screen.getByRole('dialog');
+        expect(trigger).to.have.attribute('aria-expanded', 'true');
+        expect(dialog.id).not.to.equal('');
+        expect(trigger).to.have.attribute('aria-controls', dialog.id);
+        expect(document.getElementById(dialog.id)).to.equal(dialog);
+        expect(dialog).to.have.attribute('aria-label', expectedLabel);
+        expect(dialog).not.to.have.attribute('aria-labelledby');
+      };
+
+      const { user, unmount } = render(
+        <DataGrid
+          {...baselineProps}
+          showToolbar
+          initialState={{ columns: { columnVisibilityModel: { id: false } } }}
+        />,
+      );
+      await user.click(screen.getByRole('button', { name: 'Manage columns' }));
+      expectFallbackControls('Columns', 'Select columns');
+      unmount();
+
+      render(
+        <DataGrid
+          {...baselineProps}
+          showToolbar
+          initialState={{
+            preferencePanel: { open: true, openedPanelValue: GridPreferencePanelsValue.columns },
+          }}
+        />,
+      );
+      expectFallbackControls('Columns', 'Select columns');
+    });
+
+    it('should give each grid instance its own preference panel id', async () => {
+      render(
+        <div>
+          <DataGrid {...baselineProps} showToolbar />
+          <DataGrid {...baselineProps} showToolbar />
+        </div>,
+      );
+
+      const [firstTrigger, secondTrigger] = screen.getAllByRole('button', { name: 'Filters' });
+      fireEvent.click(firstTrigger);
+      const firstId = firstTrigger.getAttribute('aria-controls');
+      expect(firstId).not.to.equal(null);
+
+      fireEvent.click(secondTrigger);
+      const secondId = secondTrigger.getAttribute('aria-controls');
+      expect(secondId).not.to.equal(null);
+      expect(secondId).not.to.equal(firstId);
+    });
   });
 
   describe('column type: longText', () => {

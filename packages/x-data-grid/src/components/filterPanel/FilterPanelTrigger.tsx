@@ -54,8 +54,7 @@ const FilterPanelTrigger = forwardRef<HTMLButtonElement, FilterPanelTriggerProps
   function FilterPanelTrigger(props, ref) {
     const { render, className, onClick, onPointerUp, ...other } = props;
     const rootProps = useGridRootProps();
-    const buttonId = useId();
-    const panelId = useId();
+    const buttonId = useId(other.id);
     const apiRef = useGridApiContext();
     const panelState = useGridSelector(apiRef, gridPreferencePanelStateSelector);
     const open =
@@ -71,7 +70,7 @@ const FilterPanelTrigger = forwardRef<HTMLButtonElement, FilterPanelTriggerProps
       if (open) {
         apiRef.current.hidePreferences();
       } else {
-        apiRef.current.showPreferences(GridPreferencePanelsValue.filters, panelId, buttonId);
+        apiRef.current.showPreferences(GridPreferencePanelsValue.filters, undefined, buttonId);
       }
       onClick?.(event);
     };
@@ -91,7 +90,7 @@ const FilterPanelTrigger = forwardRef<HTMLButtonElement, FilterPanelTriggerProps
         id: buttonId,
         'aria-haspopup': 'dialog',
         'aria-expanded': open ? 'true' : undefined,
-        'aria-controls': open ? panelId : undefined,
+        'aria-controls': open ? panelState.panelId : undefined,
         onClick: handleClick,
         onPointerUp: handlePointerUp,
         className: resolvedClassName,

@@ -1,6 +1,12 @@
 import * as React from 'react';
+import type { RefObject } from '@mui/x-internals/types';
 import { act, createRenderer, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
-import { DataGridPremium, gridClasses } from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  gridClasses,
+  GridSidebarValue,
+  useGridApiRef,
+} from '@mui/x-data-grid-premium';
 import type {
   DataGridPremiumProps,
   GridColDef,
@@ -253,6 +259,54 @@ describe('<DataGridPremium /> - Pivoting', () => {
     expect(sidebar.id).not.to.equal('');
     expect(pivotButton.getAttribute('aria-controls')).to.equal(sidebar.id);
     expect(sidebar.getAttribute('aria-labelledby')).to.equal(pivotButton.id);
+  });
+
+  it('should keep PivotPanelTrigger aria-controls valid across API and menu entry points', async () => {
+    let apiRef: RefObject<GridApi | null> = { current: null };
+    function PivotTest(props: Partial<DataGridPremiumProps>) {
+      apiRef = useGridApiRef();
+      return <Test apiRef={apiRef} {...props} />;
+    }
+
+    const expectControlsSidebar = () => {
+      const trigger = screen.getByRole('button', { name: 'Pivot' });
+      const sidebar = document.querySelector<HTMLElement>(`.${gridClasses.sidebar}`)!;
+      expect(trigger.getAttribute('aria-expanded')).to.equal('true');
+      expect(sidebar.id).not.to.equal('');
+      expect(trigger.getAttribute('aria-controls')).to.equal(sidebar.id);
+      expect(document.getElementById(sidebar.id)).to.equal(sidebar);
+      return { trigger, sidebar };
+    };
+
+    const { user } = render(<PivotTest />);
+
+    act(() => apiRef.current!.setPivotPanelOpen(true));
+    expectControlsSidebar();
+
+    act(() => apiRef.current!.hideSidebar());
+    act(() => apiRef.current!.showSidebar(GridSidebarValue.Pivot));
+    expectControlsSidebar();
+
+    act(() => apiRef.current!.hideSidebar());
+    await user.click(within(getColumnHeaderCell(0)).getByLabelText('ID column menu'));
+    await user.click(screen.getByRole('menuitem', { name: 'Manage pivot' }));
+    expectControlsSidebar();
+
+    act(() => apiRef.current!.hideSidebar());
+    await user.click(screen.getByRole('button', { name: 'Pivot' }));
+    act(() => apiRef.current!.setPivotPanelOpen(true));
+    const { trigger, sidebar } = expectControlsSidebar();
+    expect(sidebar.getAttribute('aria-labelledby')).to.equal(trigger.id);
+  });
+
+  it('should keep PivotPanelTrigger aria-controls valid when opened via initialState', () => {
+    render(<Test initialState={{ pivoting: { panelOpen: true } }} />);
+    const trigger = screen.getByRole('button', { name: 'Pivot' });
+    const sidebar = document.querySelector<HTMLElement>(`.${gridClasses.sidebar}`)!;
+    expect(trigger.getAttribute('aria-expanded')).to.equal('true');
+    expect(sidebar.id).not.to.equal('');
+    expect(trigger.getAttribute('aria-controls')).to.equal(sidebar.id);
+    expect(document.getElementById(sidebar.id)).to.equal(sidebar);
   });
 
   it('should pivot the data with 2 pivot values', async () => {

@@ -1,3 +1,7 @@
 export * from './gridSidebarInterfaces';
-export * from './gridSidebarSelector';
+export {
+  gridSidebarStateSelector,
+  gridSidebarOpenSelector,
+  gridSidebarContentSelector,
+} from './gridSidebarSelector';
 export * from './gridSidebarState';

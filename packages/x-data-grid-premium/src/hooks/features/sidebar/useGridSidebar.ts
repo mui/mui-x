@@ -16,12 +16,26 @@ import { gridSidebarStateSelector } from './gridSidebarSelector';
 import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import type { GridSidebarApi } from './gridSidebarInterfaces';
 
+export const getDefaultSidebarId = (apiRef: RefObject<GridPrivateApiPremium>) =>
+  `mui-x-sidebar-${apiRef.current.instanceId.id}`;
+
 export const sidebarStateInitializer: GridStateInitializer<
-  Pick<DataGridPremiumProcessedProps, 'initialState'>
-> = (state, props) => ({
-  ...state,
-  sidebar: props.initialState?.sidebar ?? { open: false },
-});
+  Pick<DataGridPremiumProcessedProps, 'initialState'>,
+  GridPrivateApiPremium
+> = (state, props, apiRef) => {
+  const initialSidebar = props.initialState?.sidebar;
+  return {
+    ...state,
+    sidebar: initialSidebar
+      ? {
+          ...initialSidebar,
+          ...(initialSidebar.open && {
+            sidebarId: initialSidebar.sidebarId ?? getDefaultSidebarId(apiRef),
+          }),
+        }
+      : { open: false },
+  };
+};
 
 export const useGridSidebar = (
   apiRef: RefObject<GridPrivateApiPremium>,
@@ -45,14 +59,18 @@ export const useGridSidebar = (
       apiRef.current.setState((state) => {
         // A panel shown again from an entry point without ids (a column menu, the API)
         // keeps the ids its trigger registered: `aria-controls` stays valid.
-        const keepIds = state.sidebar.value === newValue;
+        const keepIds = state.sidebar.open && state.sidebar.value === newValue;
         return {
           ...state,
           sidebar: {
             ...state.sidebar,
             open: true,
             value: newValue,
-            sidebarId: sidebarId ?? (keepIds ? state.sidebar.sidebarId : undefined),
+            sidebarId:
+              sidebarId ??
+              (keepIds && state.sidebar.sidebarId
+                ? state.sidebar.sidebarId
+                : getDefaultSidebarId(apiRef)),
             labelId: labelId ?? (keepIds ? state.sidebar.labelId : undefined),
           },
         };
@@ -109,11 +127,20 @@ export const useGridSidebar = (
           // its own snapshot when pivoting is turned off and after printing) keeps the ids of its
           // elements, like a panel shown again.
           const keepIds =
-            sidebar.open && sidebar.value !== undefined && sidebar.value === state.sidebar.value;
+            sidebar.open &&
+            state.sidebar.open &&
+            sidebar.value !== undefined &&
+            sidebar.value === state.sidebar.value;
           return {
             ...state,
-            sidebar: keepIds
-              ? { sidebarId: state.sidebar.sidebarId, labelId: state.sidebar.labelId, ...sidebar }
+            sidebar: sidebar.open
+              ? {
+                  ...sidebar,
+                  sidebarId:
+                    (keepIds ? state.sidebar.sidebarId : sidebar.sidebarId) ??
+                    getDefaultSidebarId(apiRef),
+                  labelId: keepIds ? state.sidebar.labelId : sidebar.labelId,
+                }
               : sidebar,
           };
         });

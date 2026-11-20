@@ -1,5 +1,6 @@
 import { createRootSelector, createSelector } from '@mui/x-data-grid-pro/internals';
 import type { GridStatePremium } from '../../../models/gridStatePremium';
+import type { GridSidebarValue } from './gridSidebarInterfaces';
 
 export const gridSidebarStateSelector = createRootSelector(
   (state: GridStatePremium) => state.sidebar,
@@ -17,4 +18,14 @@ export const gridSidebarContentSelector = createSelector(
     labelId,
     value,
   }),
+);
+
+/**
+ * Get the id of the sidebar element when it is open with the given panel value.
+ * @ignore - do not document.
+ */
+export const gridSidebarPanelIdSelector = createSelector(
+  gridSidebarStateSelector,
+  (sidebarState, value: GridSidebarValue) =>
+    sidebarState.open && sidebarState.value === value ? sidebarState.sidebarId : undefined,
 );
