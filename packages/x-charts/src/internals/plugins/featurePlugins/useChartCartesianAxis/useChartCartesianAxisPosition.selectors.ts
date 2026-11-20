@@ -2,6 +2,7 @@ import { createSelector } from '@base-ui/utils/store';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { getBandSize } from '../../../../internals/getBandSize';
+import { getBarBaselineValue, getBarExtent } from '../../../../internals/createGetBarDimensions';
 import { isBandScale } from '../../../../internals/scaleGuards';
 import { getDataIndexForOrdinalScaleValue } from '../../../../internals/invertScale';
 import type {
@@ -97,9 +98,14 @@ export const selectorBarItemAtPosition = createSelector(
         }
 
         // The point is inside the band for this series
-        const bar = aSeries.visibleStackedData[dataIndex];
-        const start = continuousAxis.scale(bar[0]);
-        const end = continuousAxis.scale(bar[1]);
+        const [startValue, endValue] = getBarExtent(
+          aSeries.visibleStackedData[dataIndex],
+          aSeries.hidden ? null : aSeries.data[dataIndex],
+          getBarBaselineValue(aSeries.baseline, continuousAxis.scale.domain()),
+          aSeries.stack !== undefined,
+        );
+        const start = continuousAxis.scale(startValue);
+        const end = continuousAxis.scale(endValue);
 
         if (start == null || end == null) {
           continue;

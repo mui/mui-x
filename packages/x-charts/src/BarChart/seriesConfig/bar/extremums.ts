@@ -1,5 +1,6 @@
 import type { CartesianExtremumGetter } from '../../../internals/plugins/corePlugins/useChartSeriesConfig';
 import { findMinMax } from '../../../internals/findMinMax';
+import { getBarBaselineValue, getBarExtent } from '../../../internals/createGetBarDimensions';
 
 const createResult = (data: any, direction: 'x' | 'y') => {
   if (direction === 'x') {
@@ -37,7 +38,11 @@ const getValueExtremum =
       })
       .reduce(
         (acc, seriesId) => {
-          const { stackedData, visibleStackedData } = series[seriesId];
+          const { stackedData, visibleStackedData, data, baseline, stack } = series[seriesId];
+          // `'min'`/`'max'` give infinite bar starts, which are left out of the domain.
+          const baselineValue = getBarBaselineValue(baseline);
+          const isInDomain = (v: number) =>
+            Number.isFinite(v) && (axis.scaleType !== 'log' || v > 0);
 
           const filter = getFilters?.({
             currentAxisId: axis.id,
@@ -58,7 +63,13 @@ const getValueExtremum =
                 return seriesAcc;
               }
 
-              return [Math.min(...values, seriesAcc[0]), Math.max(...values, seriesAcc[1])];
+              const extent = getBarExtent(
+                values,
+                data[index],
+                baselineValue,
+                stack !== undefined,
+              ).filter(isInDomain);
+              return [Math.min(...extent, seriesAcc[0]), Math.max(...extent, seriesAcc[1])];
             },
             [Infinity, -Infinity],
           ) ?? [Infinity, -Infinity];
