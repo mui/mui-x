@@ -35,9 +35,6 @@ const ChatBoxStyled = styled('div', {
   fontSize: theme.typography.body2.fontSize,
   color: (theme.vars || theme).palette.text.primary,
   backgroundColor: (theme.vars || theme).palette.background.default,
-  '*, *::before, *::after': {
-    boxSizing: 'inherit',
-  },
   ...(ownerState.variant === 'compact' && {
     '--ChatBox-conversationListWidth': '220px',
   }),

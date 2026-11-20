@@ -77,6 +77,7 @@ const ChatConversationListScrollerStyled = styled('div', {
   slot: 'Scroller',
   overridesResolver: (_, styles) => styles.scroller,
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   borderRight: '1px solid',
@@ -278,6 +279,7 @@ const ChatConversationListUnreadBadgeRoot = styled('div', {
   shouldForwardProp: itemSlotShouldForwardProp,
   overridesResolver: (_, styles) => styles.itemUnreadBadge,
 })<{ ownerState?: { variant?: ConversationListVariant } }>(({ theme, ownerState }) => ({
+  boxSizing: 'border-box',
   minWidth: 18,
   height: 18,
   borderRadius: 9,
