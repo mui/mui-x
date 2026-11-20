@@ -195,6 +195,9 @@ const ruRUCalendar: SchedulerCalendarTranslations = {
   // WeekView
   allDay: 'Весь день',
   // dayGridLabel: 'All-day and multi-day events',
+
+  // MonthView
+  // goToDay: date => `Go to ${date}`,
   hiddenEvents: (hiddenEventsCount) => `Ещё ${hiddenEventsCount}…`,
   nextTimeSpan: (timeSpan) => {
     const labels = {

@@ -198,6 +198,9 @@ const idIDCalendar: SchedulerCalendarTranslations = {
   // WeekView
   allDay: 'Sepanjang hari',
   dayGridLabel: 'Acara sepanjang hari dan beberapa hari',
+
+  // MonthView
+  // goToDay: date => `Go to ${date}`,
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} lainnya..`,
   nextTimeSpan: (timeSpan) => `${timeSpanNames[timeSpan] ?? timeSpan} berikutnya`,
   previousTimeSpan: (timeSpan) => `${timeSpanNames[timeSpan] ?? timeSpan} sebelumnya`,

@@ -266,6 +266,7 @@ export interface EventCalendarLocaleText extends EventEditingLocaleText, Schedul
   dayGridLabel: string;
 
   // MonthView
+  goToDay: (date: string) => string;
   hiddenEvents: (hiddenEventsCount: number) => string;
   nextTimeSpan: (view: CalendarView) => string;
   previousTimeSpan: (view: CalendarView) => string;

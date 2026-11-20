@@ -158,6 +158,9 @@ const roROCalendar: SchedulerCalendarTranslations = {
   // WeekView
   allDay: 'Toată ziua',
   // dayGridLabel: 'All-day and multi-day events',
+
+  // MonthView
+  // goToDay: date => `Go to ${date}`,
   hiddenEvents: (hiddenEventsCount) => `Încă ${hiddenEventsCount}..`,
   nextTimeSpan: (timeSpan) => `${timeSpan} următoare`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterioară`,

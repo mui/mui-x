@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import {
   formatDayOfMonth,
+  formatMonthAndDayOfMonth,
   formatMonthShortAndDayOfMonth,
   getDayNumber,
   isWeekendPlainDate,
@@ -175,7 +176,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 
   // Context hooks
   const store = useEventCalendarStoreContext();
-  const { classes, localeText } = useEventCalendarStyledContext();
+  const { classes, localeText, schedulerId } = useEventCalendarStyledContext();
   const { startEditing } = useEventEditingContext();
 
   // Selector hooks
@@ -211,6 +212,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 
   const hiddenCount = day.withPosition.length - visibleOccurrences.length;
 
+  const dateLabel = formatMonthAndDayOfMonth(locale, day.plainDate);
+  const dateLabelId = schedulerId ? `${schedulerId}-MonthViewDate-${day.key}` : undefined;
   const cellNumberContent = (
     <MonthViewCellNumber className={classes.monthViewCellNumber}>
       {isFirstDayOfMonth
@@ -237,7 +240,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       key={day.key}
       value={day.plainDate}
       aria-colindex={colIndex}
-      aria-labelledby={ariaLabelledBy}
+      aria-labelledby={[dateLabelId, ariaLabelledBy].filter(Boolean).join(' ') || undefined}
       data-current={isToday || undefined}
       aria-current={isToday ? 'date' : undefined}
       data-other-month={!isCurrentMonth || undefined}
@@ -245,10 +248,14 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       lockSurfaceType
       style={{ '--row-count': rowCount } as React.CSSProperties}
     >
+      <span id={dateLabelId} hidden>
+        {dateLabel}
+      </span>
       {hasDayView ? (
         <MonthViewCellNumberButton
           type="button"
           className={classes.monthViewCellNumberButton}
+          aria-label={localeText.goToDay(dateLabel)}
           onClick={(event) => store.switchToDay(new Date(day.timestamp), event)}
           tabIndex={-1}
         >

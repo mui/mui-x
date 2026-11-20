@@ -174,6 +174,9 @@ const arSDCalendar: SchedulerCalendarTranslations = {
   // WeekView
   allDay: 'طوال اليوم',
   dayGridLabel: 'الأحداث التي تستمر طوال اليوم والأحداث الممتدة على عدة أيام',
+
+  // MonthView
+  // goToDay: date => `Go to ${date}`,
   hiddenEvents: (hiddenEventsCount) => {
     if (hiddenEventsCount === 1) {
       return 'حدث آخر..';
