@@ -157,7 +157,8 @@ export const useGridCellEditing = (
           apiRef.current.publishEvent('cellEditStop', newParams, event);
         }
       } else if (params.isEditable) {
-        // The composition starts edit mode instead, see `handleCellCompositionStart`.
+        // The composition or the inserted text starts edit mode instead,
+        // see `startEditFromPreMountedEditor`.
         if (isEventFromPreMountedEditor(event) && isImeKeyDown(event)) {
           return;
         }
@@ -171,6 +172,12 @@ export const useGridCellEditing = (
         );
 
         if (!canStartEditing) {
+          // The browser would insert the key into the hidden editor, see `cellInput`.
+          // Space is checked on its own, so that Ctrl+Shift+Space, which `isPrintableKey` excludes,
+          // does not insert a space either.
+          if (isEventFromPreMountedEditor(event) && (isPrintableKey(event) || event.key === ' ')) {
+            event.preventDefault();
+          }
           return;
         }
         if (isPrintableKey(event)) {
@@ -193,20 +200,19 @@ export const useGridCellEditing = (
     [apiRef],
   );
 
-  const handleCellCompositionStart = React.useCallback<GridEventListener<'cellCompositionStart'>>(
-    (params, event) => {
-      if (params.cellMode !== GridCellModes.View || !params.isEditable) {
-        return;
-      }
-      if (apiRef.current.getCellMode(params.id, params.field) !== GridCellModes.View) {
-        return;
-      }
-      const newParams: GridCellEditStartParams = {
-        ...params,
-        reason: GridCellEditStartReasons.compositionStart,
-      };
-      apiRef.current.publishEvent('cellEditStart', newParams, event);
-    },
+  // Starts edit mode from the pre-mounted editor (`imeFastEdit`): a composition or inserted text.
+  const startEditFromPreMountedEditor = React.useCallback(
+    (reason: GridCellEditStartReasons): GridEventListener<'cellCompositionStart' | 'cellInput'> =>
+      (params, event) => {
+        if (params.cellMode !== GridCellModes.View || !params.isEditable) {
+          return;
+        }
+        if (apiRef.current.getCellMode(params.id, params.field) !== GridCellModes.View) {
+          return;
+        }
+        const newParams: GridCellEditStartParams = { ...params, reason };
+        apiRef.current.publishEvent('cellEditStart', newParams, event);
+      },
     [apiRef],
   );
 
@@ -275,7 +281,16 @@ export const useGridCellEditing = (
   useGridEvent(apiRef, 'cellDoubleClick', runIfEditModeIsCell(handleCellDoubleClick));
   useGridEvent(apiRef, 'cellFocusOut', runIfEditModeIsCell(handleCellFocusOut));
   useGridEvent(apiRef, 'cellKeyDown', runIfEditModeIsCell(handleCellKeyDown));
-  useGridEvent(apiRef, 'cellCompositionStart', runIfEditModeIsCell(handleCellCompositionStart));
+  useGridEvent(
+    apiRef,
+    'cellCompositionStart',
+    runIfEditModeIsCell(startEditFromPreMountedEditor(GridCellEditStartReasons.compositionStart)),
+  );
+  useGridEvent(
+    apiRef,
+    'cellInput',
+    runIfEditModeIsCell(startEditFromPreMountedEditor(GridCellEditStartReasons.printableKeyDown)),
+  );
 
   useGridEvent(apiRef, 'cellEditStart', runIfEditModeIsCell(handleCellEditStart));
   useGridEvent(apiRef, 'cellEditStop', runIfEditModeIsCell(handleCellEditStop));

@@ -204,7 +204,7 @@
     "onCellEditStart": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: GridCellParams, event: MuiEvent<React.KeyboardEvent | React.MouseEvent>) => void",
+        "type": "function(params: GridCellParams, event: MuiEvent<React.KeyboardEvent | React.MouseEvent | React.CompositionEvent | React.ChangeEvent>) => void",
         "describedArgs": ["params", "event"]
       }
     },
@@ -405,7 +405,7 @@
     "onRowEditStart": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: GridRowParams, event: MuiEvent<React.KeyboardEvent | React.MouseEvent>) => void",
+        "type": "function(params: GridRowParams, event: MuiEvent<React.KeyboardEvent | React.MouseEvent | React.CompositionEvent | React.ChangeEvent>) => void",
         "describedArgs": ["params", "event"]
       }
     },

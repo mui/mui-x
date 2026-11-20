@@ -451,6 +451,31 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
       expect(document.querySelectorAll('.Mui-selected')).to.have.length(2);
     });
+
+    // With `imeFastEdit`, the hidden editor receives Shift+Space. Keyboard navigation yields to the
+    // cell selection, and the row selection is off, so nothing else prevents the inserted space.
+    it('should not start edit mode with Shift+Space in the hidden editor of `imeFastEdit`', async () => {
+      const columns = [{ field: 'id' }, { field: 'name', editable: true }];
+      const rows = [{ id: 0, name: 'Alice' }];
+      const { user } = render(
+        <TestDataGridSelection
+          columns={columns}
+          rows={rows}
+          experimentalFeatures={{ imeFastEdit: true }}
+        />,
+      );
+      const cell = getCell(0, 1);
+      await user.click(cell);
+      const input = cell.querySelector('input')!;
+      expect(document.activeElement).to.equal(input);
+
+      await user.keyboard('{Shift>} {/Shift}');
+      await microtasks();
+
+      expect(cell).not.to.have.class(gridClasses['cell--editing']);
+      expect(input.value).to.equal('');
+      expect(cell.textContent).to.equal('Alice');
+    });
   });
 
   describe('Shift + arrow keys', () => {
