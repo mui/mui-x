@@ -8,7 +8,10 @@ import DialogActions from '@mui/material/DialogActions';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { usePickerContext } from '../hooks';
 import type { PickerLayoutOwnerState } from '../PickersLayout/PickersLayout.types';
-import { usePickerLayoutOwnerState } from '../PickersLayout/usePickerLayoutOwnerState';
+import {
+  PickerLayoutOwnerStateContext,
+  usePickerLayoutOwnerState,
+} from '../PickersLayout/usePickerLayoutOwnerState';
 
 export type PickersActionBarAction =
   'clear' | 'cancel' | 'accept' | 'today' | 'next' | 'nextOrAccept';
@@ -43,7 +46,9 @@ function PickersActionBarComponent(props: PickersActionBarProps) {
   const { actions, ...other } = props;
 
   const translations = usePickerTranslations();
-  const ownerState = usePickerLayoutOwnerState();
+  const layoutOwnerState = React.useContext(PickerLayoutOwnerStateContext);
+  const fallbackOwnerState = usePickerLayoutOwnerState();
+  const ownerState = layoutOwnerState ?? fallbackOwnerState;
   const {
     clearValue,
     setValueToToday,

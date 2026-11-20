@@ -56,6 +56,16 @@ describe('<DateCalendar />', () => {
     expect(screen.getByRole('button', { name: /calendar view is open/ })).toBeVisible();
   });
 
+  it('should not pass the owner state to a custom switch view icon', () => {
+    function SwitchViewIcon(props: React.SVGProps<SVGSVGElement>) {
+      return <svg data-testid="switch-view-icon" {...props} />;
+    }
+
+    render(<DateCalendar slots={{ switchViewIcon: SwitchViewIcon }} />);
+
+    expect(screen.getByTestId('switch-view-icon')).not.to.have.attribute('ownerState');
+  });
+
   it('switches between views uncontrolled', async () => {
     const handleViewChange = vi.fn();
     const { user } = render(

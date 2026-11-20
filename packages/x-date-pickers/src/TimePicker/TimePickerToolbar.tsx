@@ -189,9 +189,9 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
     <TimePickerToolbarRoot
       landscapeDirection="row"
       toolbarTitle={translations.timePickerToolbarTitle}
-      ownerState={ownerState}
       className={clsx(classes.root, className)}
       {...other}
+      ownerState={ownerState}
     >
       <TimePickerToolbarHourMinuteLabel className={classes.hourMinuteLabel} ownerState={ownerState}>
         {arrayIncludes(views, 'hours') && (

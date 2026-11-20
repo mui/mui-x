@@ -16,14 +16,46 @@ import { vi, describe, it, expect } from 'vitest';
 describe('<MobileDatePicker />', () => {
   const { render } = createPickerRenderer();
 
-  it('should pass the owner state to every layout slot', () => {
+  it('should pass the layout owner state to every layout slot', () => {
+    const layoutFlags: string[] = [];
     const theme = createTheme({
       components: {
         MuiPickersLayout: {
           styleOverrides: {
-            root: ({ ownerState }) => ({
-              direction: ownerState.layoutDirection,
-            }),
+            root: ({ ownerState }) => {
+              layoutFlags.push(
+                `toolbar: ${ownerState.hasToolbar}, shortcuts: ${ownerState.hasShortcuts}`,
+              );
+              return {};
+            },
+          },
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <MobileDatePicker
+          open
+          slotProps={{ shortcuts: { items: [{ label: 'Reset', getValue: () => null }] } }}
+        />
+      </ThemeProvider>,
+    );
+
+    expect(screen.getByRole('button', { name: 'OK' })).toBeVisible();
+    expect(Array.from(new Set(layoutFlags))).to.deep.equal(['toolbar: true, shortcuts: true']);
+  });
+
+  it('should pass the toolbar owner state to every toolbar slot', () => {
+    const toolbarDirections: Array<string | undefined> = [];
+    const theme = createTheme({
+      components: {
+        MuiDatePickerToolbar: {
+          styleOverrides: {
+            root: ({ ownerState }) => {
+              toolbarDirections.push(ownerState.toolbarDirection);
+              return {};
+            },
           },
         },
       },
@@ -35,7 +67,8 @@ describe('<MobileDatePicker />', () => {
       </ThemeProvider>,
     );
 
-    expect(screen.getByRole('button', { name: 'OK' })).toBeVisible();
+    expect(toolbarDirections).not.to.have.length(0);
+    expect(toolbarDirections).not.to.include(undefined);
   });
   const { renderWithProps } = buildFieldInteractions({
     render,

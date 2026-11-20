@@ -13,14 +13,16 @@ import { vi, describe, it, expect } from 'vitest';
 describe('<MobileTimePicker />', () => {
   const { render } = createPickerRenderer();
 
-  it('should pass the owner state to every toolbar slot', () => {
+  it('should pass the toolbar owner state to every toolbar slot', () => {
+    const toolbarDirections: Array<string | undefined> = [];
     const theme = createTheme({
       components: {
         MuiTimePickerToolbar: {
           styleOverrides: {
-            root: ({ ownerState }) => ({
-              direction: ownerState.toolbarDirection,
-            }),
+            root: ({ ownerState }) => {
+              toolbarDirections.push(ownerState.toolbarDirection);
+              return {};
+            },
           },
         },
       },
@@ -32,7 +34,8 @@ describe('<MobileTimePicker />', () => {
       </ThemeProvider>,
     );
 
-    expect(screen.getByText('Select time')).toBeVisible();
+    expect(toolbarDirections).not.to.have.length(0);
+    expect(toolbarDirections).not.to.include(undefined);
   });
 
   describe('picker state', () => {

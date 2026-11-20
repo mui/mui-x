@@ -70,4 +70,29 @@ describe('<MobileDateTimeRangePicker />', () => {
 
     expect(screen.getByRole('button', { name: 'Start date' })).toBeVisible();
   });
+
+  it('should pass the toolbar owner state to every toolbar slot', () => {
+    const toolbarDirections: Array<string | undefined> = [];
+    const theme = createTheme({
+      components: {
+        MuiDateTimeRangePickerToolbar: {
+          styleOverrides: {
+            root: ({ ownerState }) => {
+              toolbarDirections.push(ownerState.toolbarDirection);
+              return {};
+            },
+          },
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <MobileDateTimeRangePicker open />
+      </ThemeProvider>,
+    );
+
+    expect(toolbarDirections).not.to.have.length(0);
+    expect(toolbarDirections).not.to.include(undefined);
+  });
 });

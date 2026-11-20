@@ -37,16 +37,18 @@ describe('<MobileTimeRangePicker />', () => {
       expect(screen.getAllByRole('tab')).to.have.length(2);
     });
 
-    it('should pass the owner state to every toolbar slot', () => {
+    it('should pass the toolbar owner state to every toolbar slot', () => {
+      const toolbarDirections: Array<string | undefined> = [];
       const theme = createTheme(
         {},
         {
           components: {
             MuiTimeRangePickerToolbar: {
               styleOverrides: {
-                root: ({ ownerState }: { ownerState: PickerToolbarOwnerState }) => ({
-                  direction: ownerState.toolbarDirection,
-                }),
+                root: ({ ownerState }: { ownerState: PickerToolbarOwnerState }) => {
+                  toolbarDirections.push(ownerState.toolbarDirection);
+                  return {};
+                },
               },
             },
           },
@@ -59,7 +61,8 @@ describe('<MobileTimeRangePicker />', () => {
         </ThemeProvider>,
       );
 
-      expect(screen.getByText('Select time range')).toBeVisible();
+      expect(toolbarDirections).not.to.have.length(0);
+      expect(toolbarDirections).not.to.include(undefined);
     });
   });
 

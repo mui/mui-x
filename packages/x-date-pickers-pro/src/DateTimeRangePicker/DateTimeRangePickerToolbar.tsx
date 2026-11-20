@@ -177,10 +177,10 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
   return (
     <DateTimeRangePickerToolbarRoot
       className={clsx(classes.root, className)}
-      ownerState={ownerState}
       ref={ref}
       sx={sx}
       {...other}
+      ownerState={ownerState}
     >
       <DateTimePickerToolbarOverrideContext.Provider value={startOverrides}>
         <DateTimeRangePickerToolbarStart

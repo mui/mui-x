@@ -49,15 +49,44 @@ const usePickerLayout = <TValue extends PickerValidValue>(
 ): UsePickerLayoutResponse<TValue> => {
   const { defaultActionBarActions } = usePickerPrivateContext();
   const { view } = usePickerContext();
-  const ownerState = usePickerLayoutOwnerState();
+  const baseOwnerState = usePickerLayoutOwnerState();
 
   const { children, slots, slotProps, classes: classesProp } = props;
-  const classes = useUtilityClasses(classesProp, ownerState);
+  const classes = useUtilityClasses(classesProp, baseOwnerState);
+
+  // Toolbar
+  const Toolbar = slots?.toolbar;
+  const toolbarProps = useSlotProps({
+    elementType: Toolbar!,
+    externalSlotProps: slotProps?.toolbar,
+    className: classes.toolbar,
+    ownerState: baseOwnerState,
+  });
+  const toolbar = toolbarHasView(toolbarProps) && !!Toolbar ? <Toolbar {...toolbarProps} /> : null;
+  const hasToolbar = toolbar !== null && !(toolbarProps as BaseToolbarProps).hidden;
+
+  // Shortcuts
+  const Shortcuts = slots?.shortcuts ?? PickersShortcuts;
+  const shortcutsProps = useSlotProps({
+    elementType: Shortcuts!,
+    externalSlotProps: slotProps?.shortcuts,
+    className: classes.shortcuts,
+    ownerState: baseOwnerState,
+  }) as PickersShortcutsProps<TValue>;
+  const hasShortcuts = Array.isArray(shortcutsProps?.items) && shortcutsProps.items.length > 0;
+
+  const ownerState = React.useMemo<PickerLayoutOwnerState>(
+    () => ({ ...baseOwnerState, hasShortcuts, hasToolbar }),
+    [baseOwnerState, hasShortcuts, hasToolbar],
+  );
+
+  const shortcutsPropsWithOwnerState = { ...shortcutsProps, ownerState };
+  const shortcuts = view && !!Shortcuts ? <Shortcuts {...shortcutsPropsWithOwnerState} /> : null;
 
   // Action bar
   const ActionBar = slots?.actionBar ?? PickersActionBar;
   const {
-    // PickersActionBar does not use it and providing it breaks memoization
+    // A prop breaks the memoization. PickersActionBar reads `PickerLayoutOwnerStateContext` instead.
     ownerState: destructuredOwnerState,
     ...actionBarProps
   } = useSlotProps({
@@ -71,17 +100,6 @@ const usePickerLayout = <TValue extends PickerValidValue>(
   });
   const actionBar = <ActionBar {...actionBarProps} />;
 
-  // Toolbar
-  const Toolbar = slots?.toolbar;
-  const toolbarProps = useSlotProps({
-    elementType: Toolbar!,
-    externalSlotProps: slotProps?.toolbar,
-    className: classes.toolbar,
-    ownerState,
-  });
-  const toolbar = toolbarHasView(toolbarProps) && !!Toolbar ? <Toolbar {...toolbarProps} /> : null;
-  const hasToolbar = toolbar !== null && !(toolbarProps as BaseToolbarProps).hidden;
-
   // Content
   const content = children;
 
@@ -89,26 +107,13 @@ const usePickerLayout = <TValue extends PickerValidValue>(
   const Tabs = slots?.tabs;
   const tabs = view && Tabs ? <Tabs className={classes.tabs} {...slotProps?.tabs} /> : null;
 
-  // Shortcuts
-  const Shortcuts = slots?.shortcuts ?? PickersShortcuts;
-  const shortcutsProps = useSlotProps({
-    elementType: Shortcuts!,
-    externalSlotProps: slotProps?.shortcuts,
-    className: classes.shortcuts,
-    ownerState,
-  }) as PickersShortcutsProps<TValue>;
-
-  const hasShortcuts = Array.isArray(shortcutsProps?.items) && shortcutsProps.items.length > 0;
-
-  const shortcuts = view && !!Shortcuts ? <Shortcuts {...shortcutsProps} /> : null;
-
   return {
     toolbar,
     content,
     tabs,
     actionBar,
     shortcuts,
-    ownerState: { ...ownerState, hasShortcuts, hasToolbar },
+    ownerState,
   };
 };
 
