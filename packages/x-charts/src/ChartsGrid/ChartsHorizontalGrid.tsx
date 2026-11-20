@@ -35,10 +35,10 @@ export function ChartsGridHorizontal(props: ChartsGridHorizontalProps) {
 
   return (
     <React.Fragment>
-      {yTicks.map(({ value, offset }) =>
+      {yTicks.map(({ offset }, index) =>
         !instance.isYInside(offset) ? null : (
           <GridLine
-            key={`horizontal-${value?.getTime?.() ?? value}`}
+            key={index}
             y1={offset}
             y2={offset}
             x1={start}

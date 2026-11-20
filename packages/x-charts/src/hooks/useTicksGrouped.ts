@@ -4,6 +4,7 @@ import type { ScaleBand, ScalePoint } from '@mui/x-charts-vendor/d3-scale';
 import type { AxisConfig, D3Scale, AxisGroup } from '../models/axis';
 import { isOrdinalScale } from '../internals/scaleGuards';
 import type { TickParams } from './useTicks';
+import { getOrdinalTickValues } from './useTicks';
 
 const offsetRatio = {
   start: 0,
@@ -50,16 +51,17 @@ export function useTicksGrouped(
   } = options;
 
   return React.useMemo(() => {
-    const domain = scale.domain();
-    const filteredDomain =
-      (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
-      (typeof tickInterval === 'object' && tickInterval) ||
-      domain;
+    const { values: filteredDomain, getBandStart } = getOrdinalTickValues(
+      scale,
+      scale.domain(),
+      tickInterval,
+    );
 
     if (scale.bandwidth() > 0) {
       // scale type = 'band'
       const entries = mapToGrouping(
         filteredDomain,
+        getBandStart,
         groups,
         tickPlacement,
         tickLabelPlacement,
@@ -91,12 +93,20 @@ export function useTicksGrouped(
     }
 
     // scale type = 'point'
-    return mapToGrouping(filteredDomain, groups, tickPlacement, tickLabelPlacement, scale);
+    return mapToGrouping(
+      filteredDomain,
+      getBandStart,
+      groups,
+      tickPlacement,
+      tickLabelPlacement,
+      scale,
+    );
   }, [scale, tickInterval, groups, tickPlacement, tickLabelPlacement]);
 }
 
 function mapToGrouping(
   tickValues: any[],
+  getBandStart: (tickIndex: number) => number | undefined,
   groups: AxisGroup[],
   tickPlacement: Exclude<TickParams['tickPlacement'], undefined>,
   tickLabelPlacement: Exclude<TickParams['tickLabelPlacement'], undefined>,
@@ -122,7 +132,7 @@ function mapToGrouping(
         currentValueCount = 1;
         // Calculate tick offset
         const tickOffset = isOrdinalScale(scale)
-          ? scale(tickValue)! -
+          ? (getBandStart(dataIndex) ?? NaN) -
             (scale.step() - scale.bandwidth()) / 2 +
             offsetRatio[tickPlacement] * scale.step()
           : scale(tickValue);

@@ -142,4 +142,22 @@ describe('getTicks', () => {
       '909',
     ]);
   });
+
+  it('places duplicated band values at their own index', () => {
+    const scale = scaleBand<{ toString(): string }>(['A', 'A', 'B', 'A'], [0, 400]);
+
+    const ticks = getTicks({
+      scale,
+      tickPlacement: 'start',
+      tickInterval: (_, index) => index !== 1,
+      tickNumber: 5,
+      isInside: () => true,
+    });
+
+    expect(ticks.map((t) => [t.value, t.offset])).to.deep.equal([
+      ['A', 0],
+      ['B', 200],
+      ['A', 300],
+    ]);
+  });
 });

@@ -10,7 +10,7 @@ import { getAxisIndex } from '../../internals/plugins/featurePlugins/useChartCar
 import type { SeriesItemIdentifierWithType } from '../../models/seriesType';
 import { isOrdinalScale } from '../../internals/scaleGuards';
 import { getAsNumber } from '../../internals/getAsNumber';
-import { getValueToPositionMapper } from '../../hooks/getValueToPositionMapper';
+import { getIndexToPositionMapper } from '../../internals/getOrdinalBandStartMapper';
 import type { ComputedAxis } from '../../models/axis';
 import { evaluateCurveY } from './curveEvaluation';
 
@@ -35,7 +35,7 @@ function getBracketIndices(
       return null;
     }
 
-    const axisPointValue = getValueToPositionMapper(xAxis.scale)(axisData[index]);
+    const axisPointValue = getIndexToPositionMapper(xAxis.scale, axisData)(index);
 
     if (axisPointValue <= pointX) {
       return index === axisData.length - 1 ? null : { left: index, right: index + 1 };
@@ -230,8 +230,7 @@ export default function getItemAtPosition(
       continue;
     }
 
-    const xPosition = getValueToPositionMapper(xAxis.scale);
-    const getPixelX = (idx: number) => xPosition(xData[idx]);
+    const getPixelX = getIndexToPositionMapper(xAxis.scale, xData);
 
     const curvePoints = collectCurvePoints(
       data,
@@ -311,14 +310,13 @@ export default function getItemAtPosition(
 
       const xScale = xAxis.scale;
       const yScale = yAxis.scale;
-      const xPosition = getValueToPositionMapper(xScale);
       const xData = xAxis.data;
 
       if (!xData) {
         continue;
       }
 
-      const getPixelX = (idx: number) => xPosition(xData[idx]);
+      const getPixelX = getIndexToPositionMapper(xScale, xData);
 
       // Build pixel-coordinate points for the top and bottom curves,
       // then evaluate them at the pointer's x using the actual d3 curve.

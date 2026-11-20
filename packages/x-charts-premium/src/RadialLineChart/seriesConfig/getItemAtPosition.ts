@@ -1,6 +1,5 @@
 import '../../typeOverloads';
 
-import { getValueToPositionMapper } from '@mui/x-charts/hooks';
 import {
   selectorAllSeriesOfType,
   selectorChartPolarCenter,
@@ -11,6 +10,7 @@ import {
   evaluateCurveAtAngle,
   clampAngleRad,
   getAsNumber,
+  getIndexToPositionMapper,
 } from '@mui/x-charts/internals';
 import type {
   ChartState,
@@ -43,7 +43,7 @@ function getBracketIndices(
       return null;
     }
 
-    const valueAngle = getValueToPositionMapper(scale)(axisData[index]);
+    const valueAngle = getIndexToPositionMapper(scale, axisData)(index);
     const gapAngle = clampAngleRad(angle - valueAngle);
 
     if (gapAngle > Math.PI) {
@@ -236,8 +236,7 @@ export default function getItemAtPosition(
       continue;
     }
 
-    const rotationPosition = getValueToPositionMapper(rotationAxis.scale);
-    const getRotation = (idx: number) => rotationPosition(rotationData[idx]);
+    const getRotation = getIndexToPositionMapper(rotationAxis.scale, rotationData);
     const getRadius = (idx: number) => {
       const stacked = visibleStackedData[idx];
       return stacked ? (radiusAxis.scale(stacked[1]) as number) : null;
@@ -324,14 +323,13 @@ export default function getItemAtPosition(
 
       const rotationScale = rotationAxis.scale;
       const radiusScale = radiusAxis.scale;
-      const rotationPosition = getValueToPositionMapper(rotationScale);
       const rotationData = rotationAxis.data;
 
       if (!rotationData) {
         continue;
       }
 
-      const getRotation = (idx: number) => rotationPosition(rotationData[idx]);
+      const getRotation = getIndexToPositionMapper(rotationScale, rotationData);
 
       const getRadius = (idx: number, position: 0 | 1) => {
         const stacked = visibleStackedData[idx];

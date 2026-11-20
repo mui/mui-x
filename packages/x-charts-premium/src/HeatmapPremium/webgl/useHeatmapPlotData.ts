@@ -4,7 +4,11 @@ import type { ScaleBand } from '@mui/x-charts-vendor/d3-scale';
 import type { DefaultizedHeatmapSeriesType } from '@mui/x-charts-pro/models';
 import { useZColorScale } from '@mui/x-charts/hooks';
 import type { ChartDrawingArea } from '@mui/x-charts/hooks';
-import { selectorChartsHighlightStateCallback, useStore } from '@mui/x-charts/internals';
+import {
+  getOrdinalBandStartMapper,
+  selectorChartsHighlightStateCallback,
+  useStore,
+} from '@mui/x-charts/internals';
 import { parseColor } from '../../utils/webgl/parseColor';
 import { ensurePool } from '../../utils/webgl/utils';
 
@@ -84,13 +88,13 @@ export function useHeatmapPlotData(
     const top = drawingArea.top;
     const halfWidth = width / 2;
     const halfHeight = height / 2;
-    const xDomain = xScale.domain();
-    const yDomain = yScale.domain();
+    const getXBandStart = getOrdinalBandStartMapper(xScale, xScale.domain());
+    const getYBandStart = getOrdinalBandStartMapper(yScale, yScale.domain());
 
     for (let dataIndex = 0; dataIndex < n; dataIndex += 1) {
       const item = series.data[dataIndex];
-      const x = xScale(xDomain[item[0]]);
-      const y = yScale(yDomain[item[1]]);
+      const x = getXBandStart(item[0]);
+      const y = getYBandStart(item[1]);
       if (x === undefined || y === undefined) {
         pool[dataIndex * 2] = OFFSCREEN;
         pool[dataIndex * 2 + 1] = OFFSCREEN;

@@ -6,6 +6,7 @@ import {
   selectorChartYAxis,
 } from '../../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import type { TooltipItemPositionSelector } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import { getIndexToPositionMapper } from '../../internals/getOrdinalBandStartMapper';
 
 export const selectorTooltipItemPosition: TooltipItemPositionSelector<'line'> =
   createSelectorMemoized(
@@ -31,18 +32,19 @@ export const selectorTooltipItemPosition: TooltipItemPositionSelector<'line'> =
         return null;
       }
 
-      const xValue = xAxis.data?.[identifier.dataIndex];
+      const xData = xAxis.data;
+      const xValue = xData?.[identifier.dataIndex];
       const yValue =
         itemSeries.data[identifier.dataIndex] == null
           ? null
           : itemSeries.visibleStackedData[identifier.dataIndex][1];
 
-      if (xValue == null || yValue == null) {
+      if (!xData || xValue == null || yValue == null) {
         return null;
       }
 
       return {
-        x: xAxis.scale(xValue)!,
+        x: getIndexToPositionMapper(xAxis.scale, xData)(identifier.dataIndex),
         y: yAxis.scale(yValue)!,
       };
     },
