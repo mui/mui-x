@@ -1,4 +1,5 @@
 import { screen } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import {
   createPickerRenderer,
@@ -11,6 +12,28 @@ import { vi, describe, it, expect } from 'vitest';
 
 describe('<MobileTimePicker />', () => {
   const { render } = createPickerRenderer();
+
+  it('should pass the owner state to every toolbar slot', () => {
+    const theme = createTheme({
+      components: {
+        MuiTimePickerToolbar: {
+          styleOverrides: {
+            root: ({ ownerState }) => ({
+              direction: ownerState.toolbarDirection,
+            }),
+          },
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <MobileTimePicker open />
+      </ThemeProvider>,
+    );
+
+    expect(screen.getByText('Select time')).toBeVisible();
+  });
 
   describe('picker state', () => {
     it('should fire a change event when meridiem changes', async () => {

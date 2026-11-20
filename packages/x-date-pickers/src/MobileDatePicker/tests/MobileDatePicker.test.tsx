@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { PickerDay } from '@mui/x-date-pickers/PickerDay';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
@@ -14,6 +15,28 @@ import { vi, describe, it, expect } from 'vitest';
 
 describe('<MobileDatePicker />', () => {
   const { render } = createPickerRenderer();
+
+  it('should pass the owner state to every layout slot', () => {
+    const theme = createTheme({
+      components: {
+        MuiPickersLayout: {
+          styleOverrides: {
+            root: ({ ownerState }) => ({
+              direction: ownerState.layoutDirection,
+            }),
+          },
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <MobileDatePicker open />
+      </ThemeProvider>,
+    );
+
+    expect(screen.getByRole('button', { name: 'OK' })).toBeVisible();
+  });
   const { renderWithProps } = buildFieldInteractions({
     render,
     Component: MobileDatePicker,

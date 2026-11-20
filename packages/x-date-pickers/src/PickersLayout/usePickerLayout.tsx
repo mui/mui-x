@@ -2,7 +2,6 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
-import { useRtl } from '@mui/system/RtlProvider';
 import { PickersActionBar } from '../PickersActionBar';
 import type {
   PickerLayoutOwnerState,
@@ -17,6 +16,7 @@ import type { BaseToolbarProps } from '../internals/models/props/toolbar';
 import type { PickerValidValue } from '../internals/models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { usePickerContext } from '../hooks';
+import { usePickerLayoutOwnerState } from './usePickerLayoutOwnerState';
 
 function toolbarHasView(toolbarProps: BaseToolbarProps | any): toolbarProps is BaseToolbarProps {
   return toolbarProps.view !== null;
@@ -47,21 +47,11 @@ interface UsePickerLayoutResponse<TValue extends PickerValidValue> extends SubCo
 const usePickerLayout = <TValue extends PickerValidValue>(
   props: PickersLayoutProps<TValue>,
 ): UsePickerLayoutResponse<TValue> => {
-  const { ownerState: pickerOwnerState, defaultActionBarActions } = usePickerPrivateContext();
+  const { defaultActionBarActions } = usePickerPrivateContext();
   const { view } = usePickerContext();
-  const isRtl = useRtl();
+  const ownerState = usePickerLayoutOwnerState();
 
   const { children, slots, slotProps, classes: classesProp } = props;
-
-  const ownerState = React.useMemo<PickerLayoutOwnerState>(
-    () => ({
-      ...pickerOwnerState,
-      layoutDirection: isRtl ? 'rtl' : 'ltr',
-      hasShortcuts: false,
-      hasToolbar: false,
-    }),
-    [pickerOwnerState, isRtl],
-  );
   const classes = useUtilityClasses(classesProp, ownerState);
 
   // Action bar

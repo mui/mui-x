@@ -55,7 +55,7 @@ export interface PickerComponents<Theme = unknown> {
   };
   MuiDayCalendar?: {
     defaultProps?: ComponentsProps['MuiDayCalendar'];
-    styleOverrides?: ComponentsOverrides<Theme, PickerDayOwnerState>['MuiDayCalendar'];
+    styleOverrides?: ComponentsOverrides<Theme, PickerOwnerState>['MuiDayCalendar'];
   };
   MuiDayCalendarSkeleton?: {
     defaultProps?: ComponentsProps['MuiDayCalendarSkeleton'];

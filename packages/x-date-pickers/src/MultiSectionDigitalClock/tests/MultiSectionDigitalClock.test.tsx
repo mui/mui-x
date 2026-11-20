@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import type { MultiSectionDigitalClockProps } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import {
@@ -11,6 +12,28 @@ import { vi, describe, it, expect } from 'vitest';
 
 describe('<MultiSectionDigitalClock />', () => {
   const { render } = createPickerRenderer();
+
+  it('should pass the owner state to every section slot', () => {
+    const theme = createTheme({
+      components: {
+        MuiMultiSectionDigitalClockSection: {
+          styleOverrides: {
+            root: ({ ownerState }) => ({
+              scrollBehavior: ownerState.hasDigitalClockAlreadyBeenRendered ? 'smooth' : 'auto',
+            }),
+          },
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <MultiSectionDigitalClock />
+      </ThemeProvider>,
+    );
+
+    expect(screen.getAllByRole('listbox')).to.have.length(3);
+  });
 
   describe('Reference date', () => {
     it('should use `referenceDate` when no value defined', async () => {

@@ -170,8 +170,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader(
   });
 
   const SwitchViewIcon = slots?.switchViewIcon ?? PickersCalendarHeaderSwitchViewIcon;
-  // The spread is here to avoid this bug mui/material-ui#34056
-  const { ownerState: switchViewIconOwnerState, ...switchViewIconProps } = useSlotProps({
+  const switchViewIconProps = useSlotProps({
     elementType: SwitchViewIcon,
     externalSlotProps: slotProps?.switchViewIcon,
     ownerState,

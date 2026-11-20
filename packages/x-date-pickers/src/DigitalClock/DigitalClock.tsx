@@ -62,7 +62,7 @@ const DigitalClockRoot = styled(PickerViewRoot, {
 const DigitalClockList = styled(MenuList, {
   name: 'MuiDigitalClock',
   slot: 'List',
-})({
+})<{ ownerState: DigitalClockOwnerState }>({
   padding: 0,
 });
 
@@ -361,6 +361,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
         aria-label={translations.timePickerToolbarTitle}
         className={classes.list}
         onKeyDown={handleKeyDown}
+        ownerState={ownerState}
       >
         {timeOptions.map((option, index) => {
           const optionDisabled = isTimeDisabled(option);
