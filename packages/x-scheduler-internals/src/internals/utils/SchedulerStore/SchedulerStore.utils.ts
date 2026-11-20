@@ -15,7 +15,12 @@ import type {
 import { processEvent } from '../../../process-event';
 import type { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
-import { dateToEventString } from '../date-utils';
+import {
+  allDayBoundToEventString,
+  untilToEventString,
+  getUntilReferenceString,
+} from '../date-utils';
+import { stringifyEventDateChanges } from '../event-date-changes';
 import { schedulerEventSelectors } from '../../../scheduler-selectors/schedulerEventSelectors';
 
 /**
@@ -149,40 +154,29 @@ export function getProcessedEventFromModel<TEvent extends object>(
 /**
  * Updates an event model based on the provided changes and model structure.
  * Converts the `Date` objects to strings before applying them to the user's model, because
- * `SchedulerEvent` date fields are strings. Respects the original string format (instant vs
- * wall-time).
+ * `SchedulerEvent` date fields are strings, with `stringifyEventDateChanges()`.
  */
 export function getUpdatedEventModelFromChanges<TEvent extends object>(
   oldModel: TEvent,
   changes: SchedulerEventUpdatedProperties,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
   originalBuiltInModel: SchedulerEvent,
+  displayTimezone: string,
 ): TEvent {
-  const dataTimezone = originalBuiltInModel.timezone ?? 'default';
-  const stringified: Record<string, any> = { ...changes };
-  if (changes.start != null) {
-    stringified.start = dateToEventString(changes.start, originalBuiltInModel.start, dataTimezone);
-  }
-  if (changes.end != null) {
-    stringified.end = dateToEventString(changes.end, originalBuiltInModel.end, dataTimezone);
-  }
-  if (changes.exDates != null) {
-    stringified.exDates = changes.exDates.map((d, i) => {
-      const originalExDate = originalBuiltInModel.exDates?.[i];
-      if (originalExDate) {
-        return dateToEventString(d, originalExDate, dataTimezone);
-      }
-      // New exDate — match the format of start
-      return dateToEventString(d, originalBuiltInModel.start, dataTimezone);
-    });
-  }
+  const stringified: Record<string, any> = {
+    ...changes,
+    ...stringifyEventDateChanges(changes, originalBuiltInModel, displayTimezone),
+  };
+  const dataTimezone = stringified.timezone ?? originalBuiltInModel.timezone ?? 'default';
   if (changes.rrule != null && typeof changes.rrule === 'object' && changes.rrule.until != null) {
-    const originalRRule = originalBuiltInModel.rrule;
-    const originalUntilString = typeof originalRRule === 'object' ? originalRRule.until : undefined;
-    const referenceString = originalUntilString ?? originalBuiltInModel.start;
     stringified.rrule = {
       ...changes.rrule,
-      until: dateToEventString(changes.rrule.until, referenceString, dataTimezone),
+      until: untilToEventString(
+        changes.rrule.until,
+        getUntilReferenceString(originalBuiltInModel),
+        dataTimezone,
+        changes.allDay ?? originalBuiltInModel.allDay ?? false,
+      ),
     };
   }
 
@@ -195,10 +189,12 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
 
 /**
  * Creates an event model from the creation properties using the provided model structure.
+ * The dates of an all-day event are the days of its instants in the display timezone.
  */
 export function createEventModel<TEvent extends object>(
   event: SchedulerEventCreationProperties,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
+  displayTimezone: string,
 ) {
   const id = generateId('event');
 
@@ -206,22 +202,34 @@ export function createEventModel<TEvent extends object>(
     if (typeof value === 'string') {
       return value;
     }
-    return new Date(value.getTime()).toISOString();
+    return event.allDay
+      ? allDayBoundToEventString(value.getTime(), displayTimezone)
+      : value.toISOString();
   };
+  const start = formatNewDate(event.start);
 
-  // Internal callers (e.g. FormContent) may pass rrule.until as a Date.
-  // Convert it to a string so the built-in model stays in SchedulerEvent format.
+  // Internal callers (e.g. FormContent) may pass a processed rule, whose `until` is a plain date or date-time.
+  // Convert it to a string in the format of `start`, so the built-in model stays in SchedulerEvent
+  // format.
   const rrule: SchedulerEvent['rrule'] =
     typeof event.rrule === 'object' &&
     event.rrule.until != null &&
     typeof event.rrule.until !== 'string'
-      ? { ...event.rrule, until: formatNewDate(event.rrule.until) }
+      ? {
+          ...event.rrule,
+          until: untilToEventString(
+            event.rrule.until,
+            start,
+            event.timezone ?? 'default',
+            !!event.allDay,
+          ),
+        }
       : (event.rrule as SchedulerEvent['rrule']);
 
   const builtInEvent: SchedulerEvent = {
     ...event,
     id,
-    start: formatNewDate(event.start),
+    start,
     end: formatNewDate(event.end),
     exDates: event.exDates?.map(formatNewDate),
     rrule,

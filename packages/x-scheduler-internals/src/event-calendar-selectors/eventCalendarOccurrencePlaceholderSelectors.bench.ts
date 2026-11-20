@@ -1,6 +1,5 @@
 import { describe, test } from 'vitest';
 import {
-  addHours,
   createDate,
   getEventCalendarStateFromParameters,
   startOfMonth,
@@ -31,8 +30,8 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
       type: 'internal-drag',
       surfaceType: 'day-grid',
       isHidden: false,
-      start: addHours(days[16].value, 10).getTime(),
-      end: addHours(days[18].value, 9).getTime(),
+      start: days[16].timestamp + 10 * 3_600_000,
+      end: days[18].timestamp + 9 * 3_600_000,
       eventId: 'event',
       occurrenceKey: 'event',
       originalOccurrence: null,

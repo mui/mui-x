@@ -238,6 +238,8 @@ const ruRUCalendar: SchedulerCalendarTranslations = {
 const ruRUTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Название ресурса',
+  // timelineResourceExpand: 'Expand resource',
+  // timelineResourceCollapse: 'Collapse resource',
 
   // Dependency dialog
   // dependencyEditTitle: 'Edit dependency',

@@ -92,6 +92,8 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
         surfaceType,
         start,
         end,
+        // A resize never changes the surface, so the occurrence keeps its all-day-ness.
+        allDay: session.originalOccurrence.allDay ?? false,
         eventId: session.eventId,
         occurrenceKey: session.occurrenceKey,
         originalOccurrence: session.originalOccurrence,

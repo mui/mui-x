@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import {
   gridClasses,
   gridResizingColumnFieldSelector,
@@ -11,7 +12,7 @@ import {
   useGridSelector,
 } from '@mui/x-data-grid';
 import type { GridSlotProps, ValueOptions } from '@mui/x-data-grid';
-import { NotRendered, useSyncExternalStore, useTimeout } from '@mui/x-data-grid/internals';
+import { NotRendered, useTimeout } from '@mui/x-data-grid/internals';
 import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import {
   DEFAULT_GAP,

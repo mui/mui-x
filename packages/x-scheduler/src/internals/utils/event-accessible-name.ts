@@ -2,7 +2,14 @@ import type {
   SchedulerProcessedDate,
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
-import { formatFullDate, formatTime, toPlainDate } from '@mui/x-scheduler-internals/internals';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
+import {
+  formatFullDate,
+  formatTime,
+  getMinutesInDay,
+  getOccurrenceLastDayNumber,
+  plainDateFromDayNumber,
+} from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEventLocaleText } from '../../models/translations';
 import { isOccurrenceMultiDay } from './event-utils';
 
@@ -19,6 +26,10 @@ export interface GetEventAccessibleNameParameters {
    * Name of the resource to announce, or `null` to announce none.
    */
   resourceName: string | null;
+  /**
+   * The timezone the occurrence is displayed in.
+   */
+  displayTimezone: string;
 }
 
 /**
@@ -27,14 +38,14 @@ export interface GetEventAccessibleNameParameters {
  * @example "Running, 7:30 AM to 8:30 AM, Monday, May 26, 2025, Resource: Sport, Recurring"
  */
 export function getEventAccessibleName(parameters: GetEventAccessibleNameParameters): string {
-  const { occurrence, locale, ampm, localeText, isRecurring, resourceName } = parameters;
-  const { start, end, timezone } = occurrence.displayTimezone;
-  const isMultiDay = isOccurrenceMultiDay(occurrence);
+  const { occurrence, locale, ampm, localeText, isRecurring, resourceName, displayTimezone } =
+    parameters;
+  const { start, end } = occurrence;
+  const isMultiDay = isOccurrenceMultiDay(occurrence, displayTimezone);
 
-  const formatDate = (date: SchedulerProcessedDate) =>
-    formatFullDate(locale, toPlainDate(date.timestamp, timezone));
+  const formatDate = (date: BaseTemporal.PlainDate) => formatFullDate(locale, date);
   const formatDateTime = (date: SchedulerProcessedDate) =>
-    `${formatDate(date)} ${formatTime(locale, date.minutesInDay, ampm)}`;
+    `${formatDate(date.plainDateTime.toPlainDate())} ${formatTime(locale, getMinutesInDay(date.plainDateTime), ampm)}`;
 
   // A multi-day timed event carries its times inside the date range, since they belong to
   // different days, so it has no separate `when`.
@@ -46,15 +57,23 @@ export function getEventAccessibleName(parameters: GetEventAccessibleNameParamet
       return undefined;
     }
     return localeText.eventAriaLabelTimeRange(
-      formatTime(locale, start.minutesInDay, ampm),
-      formatTime(locale, end.minutesInDay, ampm),
+      formatTime(locale, getMinutesInDay(start.plainDateTime), ampm),
+      formatTime(locale, getMinutesInDay(end.plainDateTime), ampm),
     );
   })();
 
-  const formatBound = occurrence.allDay ? formatDate : formatDateTime;
-  const date = isMultiDay
-    ? localeText.eventAriaLabelDateRange(formatBound(start), formatBound(end))
-    : formatDate(start);
+  let date: string;
+  if (!isMultiDay) {
+    date = formatDate(start.plainDateTime.toPlainDate());
+  } else if (occurrence.allDay) {
+    // The end of an all-day occurrence is the start of the day after its last day.
+    date = localeText.eventAriaLabelDateRange(
+      formatDate(start.plainDateTime.toPlainDate()),
+      formatDate(plainDateFromDayNumber(getOccurrenceLastDayNumber(occurrence, displayTimezone))),
+    );
+  } else {
+    date = localeText.eventAriaLabelDateRange(formatDateTime(start), formatDateTime(end));
+  }
 
   return localeText.eventAriaLabel({
     title: occurrence.title,

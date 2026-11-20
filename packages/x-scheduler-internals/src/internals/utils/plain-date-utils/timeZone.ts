@@ -1,6 +1,11 @@
 import type { BaseTemporal } from '../base-temporal';
 import { isoDateToDayNumber, MS_PER_DAY } from './dayNumber';
-import { getDayNumber, plainDateFromDayNumber } from './plainDate';
+import {
+  getDayNumber,
+  getMsInDay,
+  plainDateFromDayNumber,
+  plainTimeFromMsInDay,
+} from './plainDate';
 
 interface TimezoneOffsets {
   format: (epochMs: number) => string;
@@ -45,6 +50,13 @@ function getTimezoneOffsets(timezone: string): TimezoneOffsets | null {
 function readOffset(format: TimezoneOffsets['format'], epochMs: number): number {
   const offset = format(epochMs).split('GMT')[1];
   return offset ? parseOffset(offset) : 0;
+}
+
+/**
+ * The IANA identifier of a timezone, the timezone of the system for `'default'`.
+ */
+export function getTimezoneId(timezone: string): string {
+  return timezone === 'default' ? Intl.DateTimeFormat().resolvedOptions().timeZone : timezone;
 }
 
 function getSystemTimezoneOffsetMs(epochMs: number): number {
@@ -113,29 +125,22 @@ export function toPlainDate(epochMs: number, timezone: string): BaseTemporal.Pla
 }
 
 /**
+ * The date and wall-clock time of an instant in `timezone`.
+ */
+export function toPlainDateTime(epochMs: number, timezone: string): BaseTemporal.PlainDateTime {
+  const localMs = toLocalMs(epochMs, timezone);
+  const dayNumber = Math.floor(localMs / MS_PER_DAY);
+  return plainDateFromDayNumber(dayNumber).toPlainDateTime(
+    plainTimeFromMsInDay(localMs - dayNumber * MS_PER_DAY),
+  );
+}
+
+/**
  * The wall-clock time of an instant in `timezone`, in milliseconds since midnight.
  */
 export function toMsInDay(epochMs: number, timezone: string): number {
   const localMs = toLocalMs(epochMs, timezone);
   return localMs - Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY;
-}
-
-/**
- * The date and wall-clock time of an instant in `timezone`, as `YYYY-MM-DDTHH:mm:ss`. The
- * milliseconds are dropped, like in the strings of the events.
- */
-export function toWallClockIsoString(epochMs: number, timezone: string): string {
-  const localMs = toLocalMs(epochMs, timezone);
-  const dayNumber = Math.floor(localMs / MS_PER_DAY);
-  const msInDay = localMs - dayNumber * MS_PER_DAY;
-  const time = [
-    Math.floor(msInDay / 3_600_000),
-    Math.floor(msInDay / 60_000) % 60,
-    Math.floor(msInDay / 1000) % 60,
-  ]
-    .map((part) => String(part).padStart(2, '0'))
-    .join(':');
-  return `${plainDateFromDayNumber(dayNumber).toString()}T${time}`;
 }
 
 /**
@@ -171,10 +176,26 @@ export function localToEpochMs(localMs: number, timezone: string): number {
 }
 
 /**
- * The instant of a date and wall-clock time in `timezone`, resolved like `localToEpochMs()`.
+ * The instant of a date-time in `timezone`, or of the start of a date, resolved like
+ * `localToEpochMs()`.
  */
-export function toEpochMs(date: BaseTemporal.PlainDate, msInDay: number, timezone: string): number {
-  return localToEpochMs(getDayNumber(date) * MS_PER_DAY + msInDay, timezone);
+export function toEpochMs(
+  value: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime,
+  timezone: string,
+): number {
+  if (isPlainDateTime(value)) {
+    return localToEpochMs(
+      getDayNumber(value.toPlainDate()) * MS_PER_DAY + getMsInDay(value),
+      timezone,
+    );
+  }
+  return localToEpochMs(getDayNumber(value) * MS_PER_DAY, timezone);
+}
+
+function isPlainDateTime(
+  value: BaseTemporal.PlainDate | BaseTemporal.PlainDateTime,
+): value is BaseTemporal.PlainDateTime {
+  return 'hour' in value;
 }
 
 /**
@@ -186,7 +207,10 @@ export function moveTimestampToPlainDate(
   plainDate: BaseTemporal.PlainDate,
   timezone: string,
 ): number {
-  return toEpochMs(plainDate, toMsInDay(epochMs, timezone), timezone);
+  return localToEpochMs(
+    getDayNumber(plainDate) * MS_PER_DAY + toMsInDay(epochMs, timezone),
+    timezone,
+  );
 }
 
 /**
@@ -246,15 +270,12 @@ export function getEndOfDayMs(epochMs: number, timezone: string): number {
 }
 
 /**
- * The number of full days from `earlierMs` to `laterMs` on the wall clock of `timezone`: the days
- * between the two dates, minus one when the time of `laterMs` is before the time of `earlierMs`.
- * Negative when `laterMs` is before `earlierMs`.
+ * The first instant, in `timezone`, of the day `dayCount` days after the day of an instant. A day
+ * whose midnight a DST transition skips starts at the end of the gap.
  */
-export function differenceInDays(laterMs: number, earlierMs: number, timezone: string): number {
-  // A wall-clock day always lasts 24 hours, whatever the DST transitions.
-  return (
-    Math.trunc((toLocalMs(laterMs, timezone) - toLocalMs(earlierMs, timezone)) / MS_PER_DAY) || 0
-  );
+export function addDaysToDayStart(epochMs: number, dayCount: number, timezone: string): number {
+  const dayNumber = Math.floor(toLocalMs(epochMs, timezone) / MS_PER_DAY);
+  return localToEpochMs((dayNumber + dayCount) * MS_PER_DAY, timezone);
 }
 
 /**

@@ -238,7 +238,7 @@ describe('eventTimelinePremiumDependencySelectors', () => {
   });
 
   it('should describe an all-day successor with the lag it can actually carry', () => {
-    const allDayTarget = EventBuilder.new().id('event-all-day').allDay().build();
+    const allDayTarget = EventBuilder.new().id('event-all-day').fullDay('2025-07-03').build();
     const state = getEventTimelinePremiumStateFromParameters({
       resources: TEST_RESOURCES,
       events: [eventA, allDayTarget],

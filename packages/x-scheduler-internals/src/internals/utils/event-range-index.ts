@@ -1,4 +1,12 @@
 import type { SchedulerProcessedEvent } from '../../models';
+import { getLastInstant } from './event-utils';
+
+/**
+ * The last instant of an event: the index works on inclusive instants.
+ */
+function getEventLastInstant(event: SchedulerProcessedEvent): number {
+  return getLastInstant(event.end.timestamp, event.allDay);
+}
 
 export const EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD = 0.25;
 
@@ -109,11 +117,11 @@ export function createEventRangeIndex(
     const entry: EventRangeEntry = [
       event,
       index,
-      event.displayTimezone.start.timestamp,
-      event.displayTimezone.end.timestamp,
+      event.start.timestamp,
+      getEventLastInstant(event),
     ];
 
-    if (expandRecurringEvents && event.dataTimezone.rrule) {
+    if (expandRecurringEvents && event.rrule) {
       recurringEntries.push(entry);
     } else {
       rangeEntries.push(entry);
@@ -145,9 +153,8 @@ export function createEventRangeIndex(
       if (matches.length > rangeEntries.length * EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD) {
         return events.filter(
           (event) =>
-            (expandRecurringEvents && Boolean(event.dataTimezone.rrule)) ||
-            (event.displayTimezone.start.timestamp <= endTimestamp &&
-              event.displayTimezone.end.timestamp >= startTimestamp),
+            (expandRecurringEvents && Boolean(event.rrule)) ||
+            (event.start.timestamp <= endTimestamp && getEventLastInstant(event) >= startTimestamp),
         );
       }
 

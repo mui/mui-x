@@ -5,8 +5,9 @@ import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import {
   createProcessedDate,
-  useElementPositionInCollection,
+  getMinutesInDay,
   isStartMinuteOutsideAxisWindow,
+  useElementPositionInCollection,
 } from '@mui/x-scheduler-internals/internals';
 import {
   schedulerNowSelectors,
@@ -51,7 +52,7 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
     const isOutOfRange =
       nowTimestamp < config.start ||
       nowTimestamp > config.end ||
-      isStartMinuteOutsideAxisWindow(config, processedNow.minutesInDay);
+      isStartMinuteOutsideAxisWindow(config, getMinutesInDay(processedNow.plainDateTime));
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef],
