@@ -238,10 +238,24 @@ describe('<DataGridPro /> - Keyboard reorder', () => {
       );
 
       expect(pressAlt(getNameCell(1), 'ArrowDown')).to.equal(false);
-      expect(getAnnouncement()).to.equal("The row can't be moved there.");
+      expect(getAnnouncement()).to.equal("This row can't be reordered.");
       await act(() => Promise.resolve());
       expect(getRowsFieldContent('name')).to.deep.equal(['A', 'B', 'C', 'D', 'E']);
       expect(onRowOrderChange).not.toHaveBeenCalled();
+    });
+
+    it('should clear the announcement after a while', () => {
+      vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+      try {
+        render(<Test isRowReorderable={({ row }) => row.id !== 1} />);
+        pressAlt(getNameCell(1), 'ArrowDown');
+        expect(getAnnouncement()).to.equal("This row can't be reordered.");
+
+        act(() => vi.advanceTimersByTime(5000));
+        expect(getAnnouncement()).to.equal('');
+      } finally {
+        vi.useRealTimers();
+      }
     });
 
     it('should refuse to move a pinned row', async () => {
@@ -256,7 +270,7 @@ describe('<DataGridPro /> - Keyboard reorder', () => {
 
       const pinnedCell = document.querySelector('[data-id="0"] [data-field="name"]')!;
       expect(pressAlt(pinnedCell, 'ArrowDown')).to.equal(false);
-      expect(getAnnouncement()).to.equal("The row can't be moved there.");
+      expect(getAnnouncement()).to.equal("This row can't be reordered.");
       await act(() => Promise.resolve());
       expect(onRowOrderChange).not.toHaveBeenCalled();
     });
@@ -798,6 +812,46 @@ describe('<DataGridPro /> - Keyboard reorder', () => {
         expect(getRowElement(2)).not.to.have.class(gridClasses['row--reorderTarget']),
       );
       expect(getHeader('name')).not.to.have.class(gridClasses['columnHeader--reorderTarget']);
+    });
+
+    it('should remove the marker when the focus moves to the footer', async () => {
+      const { user } = render(
+        <Test slots={{ footer: () => <button type="button">footer</button> }} />,
+      );
+      await user.click(getNameCell(1));
+      await user.keyboard('{ArrowDown}');
+      expect(getRowElement(2)).to.have.class(gridClasses['row--reorderTarget']);
+
+      await user.tab();
+      expect(screen.getByRole('button', { name: 'footer' })).toHaveFocus();
+      expect(getRowElement(2)).not.to.have.class(gridClasses['row--reorderTarget']);
+      expect(getHeader('name')).not.to.have.class(gridClasses['columnHeader--reorderTarget']);
+    });
+
+    it('should not mark the clicked cell when Tab moves the focus to the footer', async () => {
+      const { user } = render(
+        <Test slots={{ footer: () => <button type="button">footer</button> }} />,
+      );
+      await user.click(getNameCell(1));
+      await user.tab();
+      expect(screen.getByRole('button', { name: 'footer' })).toHaveFocus();
+      expect(getRowElement(1)).not.to.have.class(gridClasses['row--reorderTarget']);
+      expect(getHeader('name')).not.to.have.class(gridClasses['columnHeader--reorderTarget']);
+    });
+
+    it('should mark the column header again when the column menu closes with Escape', async () => {
+      const { user } = render(<ColumnTest />);
+      focusHeader('b');
+      await user.keyboard('{ArrowRight}{ArrowLeft}');
+      expect(getHeader('b')).to.have.class(gridClasses['columnHeader--reorderTarget']);
+
+      await user.keyboard('{Control>}{Enter}{/Control}');
+      await waitFor(() => expect(screen.getByRole('menu')).toHaveFocus());
+      expect(getHeader('b')).not.to.have.class(gridClasses['columnHeader--reorderTarget']);
+
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(getColumnHeaderCell(1)).toHaveFocus());
+      expect(getHeader('b')).to.have.class(gridClasses['columnHeader--reorderTarget']);
     });
 
     it('should not mark the row on a modifier key or a shortcut', async () => {

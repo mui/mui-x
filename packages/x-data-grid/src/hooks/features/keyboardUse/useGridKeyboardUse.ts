@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -31,20 +32,34 @@ export const useGridKeyboardUse = (apiRef: RefObject<GridPrivateApiCommunity>): 
   };
 
   const getRootElement = () => apiRef.current.rootElementRef.current;
+  const getDocumentElement = () => getRootElement()?.ownerDocument.documentElement;
 
-  // A `Tab` counts on `keyup`, which only fires inside when the focus lands in the grid
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key !== 'Tab' && isKeyboardNavigation(event)) {
+  // The headers and the rows, where the keys act. Not the toolbar or the footer.
+  const isInMain = (target: EventTarget | null) =>
+    !!apiRef.current.mainElementRef.current?.contains(target as Node | null);
+
+  // The last input anywhere in the page, like `:focus-visible`.
+  // For example the `Escape` that closes the column menu, which is in a portal.
+  const lastInputRef = React.useRef<'keyboard' | 'pointer'>('pointer');
+
+  const handleDocumentKeyDown = (event: KeyboardEvent) => {
+    if (!isKeyboardNavigation(event)) {
+      return;
+    }
+    lastInputRef.current = 'keyboard';
+    if (isInMain(event.target)) {
       setActive(true);
     }
   };
-  const handleKeyUp = (event: KeyboardEvent) => {
-    if (event.key === 'Tab') {
-      setActive(true);
-    }
+  const handleDocumentPointerDown = () => {
+    lastInputRef.current = 'pointer';
+    setActive(false);
   };
 
-  // The grid keeps its focused cell when the focus leaves it
+  // The grid keeps its focused cell when the focus moves to the toolbar, the footer, or out
+  const handleFocusIn = (event: FocusEvent) => {
+    setActive(isInMain(event.target) && lastInputRef.current === 'keyboard');
+  };
   const handleFocusOut = (event: FocusEvent) => {
     const root = getRootElement();
     if (!root || root.contains(event.relatedTarget as Node | null)) {
@@ -52,15 +67,19 @@ export const useGridKeyboardUse = (apiRef: RefObject<GridPrivateApiCommunity>): 
     }
     // Moving the focused row or column blurs it until React restores the focus
     setTimeout(() => {
-      if (!root.contains(root.ownerDocument.activeElement)) {
+      if (!isInMain(root.ownerDocument.activeElement)) {
         setActive(false);
       }
     });
   };
 
-  // Native listeners, so a key that a feature marks as handled still counts
-  useGridNativeEventListener(apiRef, getRootElement, 'keydown', handleKeyDown);
-  useGridNativeEventListener(apiRef, getRootElement, 'keyup', handleKeyUp);
+  // Native listeners in the capture phase, so a key that a feature handles still counts
+  useGridNativeEventListener(apiRef, getDocumentElement, 'keydown', handleDocumentKeyDown, {
+    capture: true,
+  });
+  useGridNativeEventListener(apiRef, getDocumentElement, 'pointerdown', handleDocumentPointerDown, {
+    capture: true,
+  });
+  useGridNativeEventListener(apiRef, getRootElement, 'focusin', handleFocusIn);
   useGridNativeEventListener(apiRef, getRootElement, 'focusout', handleFocusOut);
-  useGridNativeEventListener(apiRef, getRootElement, 'pointerdown', () => setActive(false));
 };

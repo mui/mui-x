@@ -311,6 +311,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   // }) => `Can't move the row further ${direction === 'up' ? 'up' : 'down'}.`,
   // rowReorderingAnnouncementSorted: () => "Rows can't be reordered while the grid is sorted.",
   // rowReorderingAnnouncementInvalid: () => "The row can't be moved there.",
+  // rowReorderingAnnouncementDisabled: () => "This row can't be reordered.",
 
   // Column reordering text
   // columnReorderingAnnouncementMoved: ({

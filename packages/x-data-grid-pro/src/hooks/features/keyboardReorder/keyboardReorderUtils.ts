@@ -39,11 +39,11 @@ import { isRowReorderAllowed } from '../rowReorder/rowReorderDragUtils';
 
 /**
  * - `off`: the feature doesn't apply, and the keyboard navigation keeps the key.
- * - `sorted`, `invalid`, `disabled`: the step is refused and the reason is announced.
+ * - `sorted`, `disabled`: the step is refused and the reason is announced.
  * - `silent`: the step is refused without an announcement.
  * - `allowed`: the row or the column can move. Its neighbours decide how far.
  */
-export type ReorderStepStatus = 'off' | 'sorted' | 'invalid' | 'disabled' | 'silent' | 'allowed';
+export type ReorderStepStatus = 'off' | 'sorted' | 'disabled' | 'silent' | 'allowed';
 
 export type RowReorderStepProps = Pick<
   DataGridProProcessedProps,
@@ -86,7 +86,7 @@ function getRowStepStatus(
     !row ||
     (isRowReorderable && !isRowReorderable({ row, rowNode }))
   ) {
-    return 'invalid';
+    return 'disabled';
   }
   // Editing is checked above, so the sort model is the only reason left
   if (!isRowReorderAllowed({ rowReordering, sortModel, editRowsState })) {
