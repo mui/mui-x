@@ -92,6 +92,14 @@ export interface GridDataSourcePrivateApiPro {
    */
   fetchRowChildren: (id: GridRowId, fetchParams?: GridGetRowsParamsPro) => void;
   /**
+   * Fetches the root rows without aborting the in-flight children requests.
+   * @param {GridDataSourceFetchRowsParams<GridGetRowsParamsPro>} params Request parameters override.
+   * @returns {Promise<void>} A promise that resolves when the rows are fetched.
+   */
+  fetchRootRowsIncremental: (
+    params?: GridDataSourceFetchRowsParams<GridGetRowsParamsPro>,
+  ) => Promise<void>;
+  /**
    * Resets the data source state.
    */
   resetDataSourceState: () => void;

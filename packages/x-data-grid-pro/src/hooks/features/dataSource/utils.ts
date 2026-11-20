@@ -6,24 +6,17 @@ import type { GridGetRowsParamsPro } from './models';
 
 const MAX_CONCURRENT_REQUESTS = Infinity;
 
-export enum RequestStatus {
-  QUEUED,
-  PENDING,
-  SETTLED,
-  UNKNOWN,
-}
-
 /**
  * Fetches row children from the server with option to limit the number of concurrent requests
- * Determines the status of a request based on the enum `RequestStatus`
- * Uses `GridRowId` to uniquely identify a request
+ * Queues requests by `GridRowId`; `getGeneration()` tells the responses of aborted requests apart
  */
 export class NestedDataManager {
   private pendingRequests: Set<GridRowId> = new Set();
 
   private queuedRequests: Set<GridRowId> = new Set();
 
-  private settledRequests: Set<GridRowId> = new Set();
+  // Bumped by `clear()`, so the responses of the aborted requests can be told apart.
+  private generation = 0;
 
   private fetchParams: Map<GridRowId, GridGetRowsParamsPro> = new Map();
 
@@ -94,11 +87,11 @@ export class NestedDataManager {
 
   public setRequestSettled = (id: GridRowId) => {
     this.pendingRequests.delete(id);
-    this.settledRequests.add(id);
     this.processQueue();
   };
 
   public clear = () => {
+    this.generation += 1;
     this.queuedRequests.clear();
     Array.from(this.pendingRequests).forEach((id) => this.clearPendingRequest(id));
   };
@@ -109,18 +102,7 @@ export class NestedDataManager {
     this.processQueue();
   };
 
-  public getRequestStatus = (id: GridRowId) => {
-    if (this.pendingRequests.has(id)) {
-      return RequestStatus.PENDING;
-    }
-    if (this.queuedRequests.has(id)) {
-      return RequestStatus.QUEUED;
-    }
-    if (this.settledRequests.has(id)) {
-      return RequestStatus.SETTLED;
-    }
-    return RequestStatus.UNKNOWN;
-  };
+  public getGeneration = () => this.generation;
 
   public getActiveRequestsCount = () => this.pendingRequests.size + this.queuedRequests.size;
 }
