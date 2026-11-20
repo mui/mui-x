@@ -41,8 +41,9 @@ let showSystemTimezoneCalendar: (() => void) | undefined;
 function SystemTimezoneCalendar() {
   const [value, setValue] = React.useState<dayjs.Dayjs | null>(null);
   React.useLayoutEffect(() => {
-    // Without a timezone name, `dayjs.tz()` gives the value of an empty picker: the system offset.
-    showSystemTimezoneCalendar = () => setValue(dayjs.tz('2025-07-15'));
+    // The value of an empty picker in New York: the system offset, without a timezone name. Not
+    // `dayjs.tz()`: Day.js keeps the formatter from its first call, made in the host timezone.
+    showSystemTimezoneCalendar = () => setValue(dayjs('2025-07-15').utcOffset(-240, true));
   }, []);
 
   if (!value) {
