@@ -17,6 +17,7 @@ import { isNavigationKey, isPasteShortcut } from '../../../utils/keyboardUtils';
 import {
   gridFocusCellSelector,
   gridFocusColumnGroupHeaderSelector,
+  gridTabIndexCellSelector,
 } from './gridFocusStateSelector';
 import { focusElement } from '../../../utils/focusElement';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -570,8 +571,8 @@ export const useGridFocus = (
   const debouncedHandleRowsSet = React.useMemo(() => debounce(handleRowsSet, 0), [handleRowsSet]);
 
   const handlePaginationModelChange = useEventCallback(() => {
-    const currentFocusedCell = gridFocusCellSelector(apiRef);
-    if (!currentFocusedCell) {
+    const currentTabIndexCell = gridTabIndexCellSelector(apiRef);
+    if (!currentTabIndexCell) {
       return;
     }
 
@@ -580,18 +581,25 @@ export const useGridFocus = (
       paginationMode: props.paginationMode,
     });
 
-    const rowIsInCurrentPage = currentPage.rows.find((row) => row.id === currentFocusedCell.id);
-    if (rowIsInCurrentPage || currentPage.rows.length === 0) {
+    const rowIsInCurrentPage = currentPage.rows.some((row) => row.id === currentTabIndexCell.id);
+    const pinnedRows = gridPinnedRowsSelector(apiRef);
+    const rowIsPinned =
+      pinnedRows.top?.some((row) => row.id === currentTabIndexCell.id) ||
+      pinnedRows.bottom?.some((row) => row.id === currentTabIndexCell.id);
+    if (rowIsInCurrentPage || rowIsPinned || currentPage.rows.length === 0) {
       return;
     }
 
-    const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
+    const columnToFocus = gridVisibleColumnDefinitionsSelector(apiRef)[0];
+    if (!columnToFocus) {
+      return;
+    }
 
     apiRef.current.setState((state) => {
       return {
         ...state,
         tabIndex: {
-          cell: { id: currentPage.rows[0].id, field: visibleColumns[0].field },
+          cell: { id: currentPage.rows[0].id, field: columnToFocus.field },
           columnGroupHeader: null,
           columnHeader: null,
           columnHeaderFilter: null,
