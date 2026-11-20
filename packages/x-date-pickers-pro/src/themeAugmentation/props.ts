@@ -17,6 +17,11 @@ import type { MobileDateTimeRangePickerProps } from '../MobileDateTimeRangePicke
 import type { ExportedDateTimeRangePickerTabsProps } from '../DateTimeRangePicker/DateTimeRangePickerTabs';
 import type { ExportedDateTimeRangePickerToolbarProps } from '../DateTimeRangePicker/DateTimeRangePickerToolbar';
 import type { ExportedPickersRangeCalendarHeaderProps } from '../PickersRangeCalendarHeader';
+import type { TimeRangePickerProps } from '../TimeRangePicker';
+import type { DesktopTimeRangePickerProps } from '../DesktopTimeRangePicker';
+import type { MobileTimeRangePickerProps } from '../MobileTimeRangePicker';
+import type { ExportedTimeRangePickerTabsProps } from '../TimeRangePicker/TimeRangePickerTabs';
+import type { ExportedTimeRangePickerToolbarProps } from '../TimeRangePicker/TimeRangePickerToolbar';
 
 export interface PickersProComponentsPropsList {
   MuiDateRangeCalendar: DateRangeCalendarProps;
@@ -24,6 +29,8 @@ export interface PickersProComponentsPropsList {
   MuiDateTimeRangePickerTabs: ExportedDateTimeRangePickerTabsProps;
   MuiDateRangePickerToolbar: ExportedDateRangePickerToolbarProps;
   MuiDateTimeRangePickerToolbar: ExportedDateTimeRangePickerToolbarProps;
+  MuiTimeRangePickerTabs: ExportedTimeRangePickerTabsProps;
+  MuiTimeRangePickerToolbar: ExportedTimeRangePickerToolbarProps;
   MuiPickersRangeCalendarHeader: ExportedPickersRangeCalendarHeaderProps;
 
   // Multi input range fields
@@ -46,6 +53,11 @@ export interface PickersProComponentsPropsList {
   MuiDateTimeRangePicker: DateTimeRangePickerProps;
   MuiDesktopDateTimeRangePicker: DesktopDateTimeRangePickerProps;
   MuiMobileDateTimeRangePicker: MobileDateTimeRangePickerProps;
+
+  // Time Range Pickers
+  MuiTimeRangePicker: TimeRangePickerProps;
+  MuiDesktopTimeRangePicker: DesktopTimeRangePickerProps;
+  MuiMobileTimeRangePicker: MobileTimeRangePickerProps;
 }
 
 declare module '@mui/material/styles' {
