@@ -39,8 +39,17 @@
     "filterable": { "description": "If <code>true</code>, the column is filterable." },
     "filterOperators": { "description": "Allows setting the filter operators for this column." },
     "flex": { "description": "The flex grow factor of the column. Must be a positive number." },
+    "getActions": {
+      "description": "Function that returns the actions to be shown.<br /><br />Only applies to <code>type: &#39;actions&#39;</code>."
+    },
     "getApplyQuickFilterFn": {
       "description": "The callback that generates a filtering function for a given quick filter value.<br />This function can return <code>null</code> to skip filtering for this value and column."
+    },
+    "getOptionLabel": {
+      "description": "Used to determine the label displayed for a given value option.<br /><br />Only applies to <code>type: &#39;multiSelect&#39; | &#39;singleSelect&#39;</code>."
+    },
+    "getOptionValue": {
+      "description": "Used to determine the value used for a value option.<br /><br />Only applies to <code>type: &#39;multiSelect&#39; | &#39;singleSelect&#39;</code>."
     },
     "getSortComparator": {
       "description": "Provide an alternative comparator function for sorting.<br />Takes precedence over <code>sortComparator</code>."
@@ -88,6 +97,9 @@
     "rowSpanValueGetter": {
       "description": "Function that returns a specific value to be used in row spanning."
     },
+    "separator": {
+      "description": "The separator used to join array values for display and export.<br /><br />Only applies to <code>type: &#39;multiSelect&#39;</code>."
+    },
     "sortable": { "description": "If <code>false</code>, disables sorting for this column." },
     "sortComparator": { "description": "A comparator function used to sort rows." },
     "sortingOrder": { "description": "The order of the sorting sequence." },
@@ -95,6 +107,9 @@
     "valueFormatter": { "description": "Formats the cell value before rendering." },
     "valueGetter": {
       "description": "Function that returns specific data to render in the cell instead of using the field value."
+    },
+    "valueOptions": {
+      "description": "To be used in combination with <code>type: &#39;singleSelect&#39;</code>. This is an array (or a function returning an array) of the possible cell values and labels.<br /><br />Only applies to <code>type: &#39;multiSelect&#39; | &#39;singleSelect&#39;</code>."
     },
     "valueParser": {
       "description": "Function that takes the user-entered value and converts it to a value used internally."
