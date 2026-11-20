@@ -77,7 +77,6 @@ describe('TimelineGrid keyboard navigation', () => {
                     <TimelineGrid.Event
                       eventId={`event-${resourceId}`}
                       occurrenceKey={`occ-${resourceId}`}
-                      internalInfos={undefined}
                       start={createProcessedDate(DEFAULT_TESTING_VISIBLE_DATE.getTime(), 'default')}
                       end={createProcessedDate(
                         addHours(DEFAULT_TESTING_VISIBLE_DATE, 1).getTime(),

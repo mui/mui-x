@@ -30,6 +30,7 @@ function buildPlaceholder(
 ): SchedulerOccurrencePlaceholderInternalDragOrResize {
   return {
     type: 'internal-drag',
+    allDay: false,
     surfaceType: 'timeline',
     start: Date.parse('2025-07-03T10:00:00Z'),
     end: Date.parse('2025-07-03T11:00:00Z'),

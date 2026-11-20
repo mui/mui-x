@@ -1,4 +1,4 @@
-import { screen, act } from '@mui/internal-test-utils';
+import { screen, act, fireEvent } from '@mui/internal-test-utils';
 import {
   createSchedulerRenderer,
   EventBuilder,
@@ -118,8 +118,43 @@ describe('WeekView - Drag and Drop', () => {
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
     expect(updatedEvents[0].allDay).to.equal(true);
-    // The event should have moved to the next day
-    expect(updatedEvents[0].start).to.equal('2025-07-04T10:00:00.000Z');
+    // The event becomes a one-day all-day event on the drop day.
+    expect(updatedEvents[0].start).to.equal('2025-07-04');
+    expect(updatedEvents[0].end).to.equal('2025-07-05');
+  });
+
+  it('should preview a time event held over the day grid on the day of the cell only', async () => {
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Morning Meeting')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .draggable(true)
+      .build();
+
+    render(<StandaloneWeekView events={[event]} resources={[]} onEventsChange={vi.fn()} />);
+
+    mockAllTimeGridColumnBounds();
+
+    const eventElement = screen.getByRole('button', { name: /Morning Meeting/i });
+    const dayGridCell = getDayGridCell(2); // July 2
+
+    await act(async () => {
+      simulateDragAndDrop({ source: eventElement, target: dayGridCell, hold: true });
+      // pragmatic-drag-and-drop delivers `onDrag` on the next animation frame.
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
+
+    try {
+      // The only element positioned in the day grid is the placeholder.
+      const placeholder = document.querySelector<HTMLElement>('[style*="--grid-column-span"]');
+      expect(placeholder).not.to.equal(null);
+      expect(placeholder!.style.getPropertyValue('--grid-column-span')).to.equal('1');
+    } finally {
+      // Finish the held drag even when an assertion fails, so it does not leak into the next test.
+      fireEvent.dragEnd(eventElement);
+    }
   });
 
   it('should move a time event to a different time on the same day', async () => {
@@ -354,7 +389,7 @@ describe('WeekView - Drag and Drop', () => {
     const parts = screen.getAllByRole('button', { name: /Night shift/i });
     expect(parts).to.have.length(2);
 
-    // The July 4 part is dropped on July 5: the event moves by one day.
+    // The July 4 part is dropped on July 5: the event becomes a one-day all-day event there.
     await act(async () => {
       simulateDragAndDrop({ source: parts[1], target: getDayGridCell(5) });
     });
@@ -362,8 +397,8 @@ describe('WeekView - Drag and Drop', () => {
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
     expect(updatedEvents[0].allDay).to.equal(true);
-    expect(updatedEvents[0].start).to.equal('2025-07-04T22:00:00.000Z');
-    expect(updatedEvents[0].end).to.equal('2025-07-05T06:00:00.000Z');
+    expect(updatedEvents[0].start).to.equal('2025-07-05');
+    expect(updatedEvents[0].end).to.equal('2025-07-06');
   });
 
   it('should resize the end of the part of a time event crossing midnight on its end day', async () => {
@@ -693,7 +728,8 @@ describe('WeekView - Drag and Drop', () => {
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
     expect(updatedEvents[0].allDay).to.equal(true);
-    expect(updatedEvents[0].start).to.equal('2025-07-04T00:00:00.000Z');
+    expect(updatedEvents[0].start).to.equal('2025-07-04');
+    expect(updatedEvents[0].end).to.equal('2025-07-05');
   });
 
   it('should move an all-day event to the time grid on the same day', async () => {
@@ -729,7 +765,53 @@ describe('WeekView - Drag and Drop', () => {
 
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
-    expect(updatedEvents[0].allDay).to.not.equal(true);
+    expect(Boolean(updatedEvents[0].allDay)).to.equal(false);
+    // The dropped slot, lasting the default duration, as a wall time in the event's timezone.
+    expect(updatedEvents[0].start).to.equal('2025-07-03T14:00:00');
+    expect(updatedEvents[0].end).to.equal('2025-07-03T14:30:00');
+  });
+
+  it('should give a multi-day all-day event dropped on the time grid the default duration', async () => {
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('All Day Event')
+      .span('2025-07-01', '2025-07-04', { allDay: true })
+      .draggable(true)
+      .build();
+
+    render(
+      <StandaloneWeekView
+        events={[event]}
+        resources={[]}
+        onEventsChange={handleEventsChange}
+        eventCreation={{ duration: 60 }}
+      />,
+    );
+
+    mockAllTimeGridColumnBounds();
+
+    const eventElement = screen.getByRole('button', { name: /All Day Event/i });
+    mockElementBounds(eventElement, { left: 0, width: 100 });
+    const columns = getTimeGridColumns();
+    const july3Column = columns[JULY_3_COLUMN_INDEX];
+
+    const targetClientY = clientYForTime(0, 24, 14);
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: july3Column,
+        sourceClientX: 50,
+        targetClientY,
+      });
+    });
+
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
+    expect(Boolean(updatedEvents[0].allDay)).to.equal(false);
+    expect(updatedEvents[0].start).to.equal('2025-07-03T14:00:00');
+    expect(updatedEvents[0].end).to.equal('2025-07-03T15:00:00');
   });
 
   it('should move an all-day event to the time grid on a different day', async () => {
@@ -766,7 +848,8 @@ describe('WeekView - Drag and Drop', () => {
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
     expect(updatedEvents[0].allDay).to.not.equal(true);
-    expect(updatedEvents[0].start).to.equal('2025-07-04T14:00:00.000Z');
+    // A timed event written after a date-only start keeps the wall-time format.
+    expect(updatedEvents[0].start).to.equal('2025-07-04T14:00:00');
   });
 
   it('should resize a time event end to a later time', async () => {
@@ -849,7 +932,7 @@ describe('WeekView - Drag and Drop', () => {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Multi Day Event')
-      .span('2025-07-03T00:00:00Z', '2025-07-04T23:59:59Z', { allDay: true })
+      .span('2025-07-03', '2025-07-05', { allDay: true })
       .resizable(true)
       .build();
 
@@ -870,8 +953,8 @@ describe('WeekView - Drag and Drop', () => {
 
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
-    expect(updatedEvents[0].start).to.equal('2025-07-03T00:00:00Z');
-    expect(updatedEvents[0].end).to.equal('2025-07-05T23:59:59.999Z');
+    expect(updatedEvents[0].start).to.equal('2025-07-03');
+    expect(updatedEvents[0].end).to.equal('2025-07-06');
   });
 
   it('should resize an all-day event start to a different day', async () => {
@@ -879,7 +962,7 @@ describe('WeekView - Drag and Drop', () => {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Multi Day Event')
-      .span('2025-07-02T00:00:00Z', '2025-07-04T23:59:59Z', { allDay: true })
+      .span('2025-07-02', '2025-07-05', { allDay: true })
       .resizable(true)
       .build();
 
@@ -900,7 +983,7 @@ describe('WeekView - Drag and Drop', () => {
 
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
-    expect(updatedEvents[0].start).to.equal('2025-07-01T00:00:00.000Z');
-    expect(updatedEvents[0].end).to.equal('2025-07-04T23:59:59Z');
+    expect(updatedEvents[0].start).to.equal('2025-07-01');
+    expect(updatedEvents[0].end).to.equal('2025-07-05');
   });
 });

@@ -25,8 +25,8 @@ const events = [
   {
     id: 'trip',
     title: 'Trip',
-    start: '2025-07-04T00:00:00',
-    end: '2025-07-08T00:00:00',
+    start: '2025-07-04',
+    end: '2025-07-09',
     allDay: true,
     resource: 'personal',
   },

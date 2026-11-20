@@ -46,6 +46,19 @@ describe('<AdapterDayjs />', () => {
     },
   });
 
+  it('isSameDay: should not match an invalid date from strict parsing', () => {
+    const adapter = new AdapterDayjs();
+    // Strict parsing invalidates `02/31/2026`, but the value keeps the fields of March 3.
+    const invalidDate = adapter.parse('02/31/2026', 'MM/DD/YYYY')!;
+    const validDate = adapter.parse('03/03/2026', 'MM/DD/YYYY')!;
+
+    expect(adapter.isSameDay(invalidDate, validDate)).to.equal(false);
+    expect(adapter.isSameDay(validDate, invalidDate)).to.equal(false);
+    expect(adapter.isSameMonth(invalidDate, validDate)).to.equal(false);
+    expect(adapter.isSameYear(invalidDate, validDate)).to.equal(false);
+    expect(adapter.isSameDay(invalidDate, adapter.getInvalidDate())).to.equal(true);
+  });
+
   describe('Adapter timezone', () => {
     const setSystemTimezone = (timezone: string) => {
       const previousTimezone = process.env.TZ;
@@ -224,6 +237,15 @@ describe('<AdapterDayjs />', () => {
           expect(adapterAr.getDaysInMonth(value)).to.equal(31);
           expect(value.locale()).to.equal('ar');
           expect(value.format('YYYY-MM-DD')).to.equal('١٩٦٠-٠٨-١٥');
+        });
+
+        it('isSameDay: should ignore the locale of the values', () => {
+          const value = getValue();
+          const earlierValueEn = dayjs.tz('1960-08-15 08:00', 'America/New_York').locale('en');
+
+          expect(adapterAr.isSameDay(value, earlierValueEn)).to.equal(true);
+          expect(adapterAr.isSameDay(earlierValueEn, value)).to.equal(true);
+          expect(adapterAr.isAfterDay(value, earlierValueEn)).to.equal(false);
         });
 
         it('should add elapsed time without parsing localized digits or changing the locale', () => {
