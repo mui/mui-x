@@ -124,7 +124,7 @@ Without this prop, collapsing a group removes its child rows from the Grid and c
 With it enabled, a partially selected group and its ancestors keep their indeterminate checkboxes, even while the selected descendants are not loaded.
 
 The Grid remembers the parent-child relationships of previously loaded rows for the current filters and grouping.
-Sorting preserves these relationships; changing the filters or grouping clears them.
+Sorting and switching pages preserve these relationships; changing the filters or grouping clears them.
 It cannot derive a group's partial-selection state from selected IDs whose rows have never been loaded.
 When a group is fetched again, the Grid updates its known descendants from the response.
 This does not require fetching additional rows.
