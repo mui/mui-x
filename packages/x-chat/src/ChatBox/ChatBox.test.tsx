@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createEchoAdapter, useChatStatus } from '@mui/x-chat-headless';
 import type { ChatAdapter } from '@mui/x-chat-headless';
@@ -235,6 +236,23 @@ describe('ChatBox', () => {
         'src',
         'https://example.com/support-bot.png',
       );
+    });
+
+    it.skipIf(isJSDOM)('does not change the box-sizing of nested content', () => {
+      // The first TextField inserts the input class before the ChatBox class.
+      // The `sx` gives the ChatBox a new class, so earlier tests do not change this order.
+      render(
+        <React.Fragment>
+          <TextField size="small" />
+          <ChatBox adapter={createAdapter()} sx={{ '--box-sizing-test': 1 }}>
+            <TextField size="small" slotProps={{ htmlInput: { 'data-testid': 'inner' } }} />
+            <div data-testid="plain" />
+          </ChatBox>
+        </React.Fragment>,
+      );
+
+      expect(window.getComputedStyle(screen.getByTestId('inner')).boxSizing).toBe('content-box');
+      expect(window.getComputedStyle(screen.getByTestId('plain')).boxSizing).toBe('content-box');
     });
   });
 

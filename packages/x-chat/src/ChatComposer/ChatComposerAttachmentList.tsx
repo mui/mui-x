@@ -46,6 +46,7 @@ const AttachmentChip = styled('div', {
   slot: 'AttachmentChip',
   skipVariantsResolver: true,
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   display: 'inline-flex',
   alignItems: 'center',
   gap: 4,
