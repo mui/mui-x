@@ -17,7 +17,7 @@ With the Data Grid Premium, you can apply the `cellSelection` prop to let users 
 
 ## Selecting cells
 
-With the `cellSelection` prop applied, users can select a single cell by clicking on it, or by pressing <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> when the cell is in focus.
+With the `cellSelection` prop applied, users can select a single cell by clicking on it, or by pressing <kbd class="key">Space</kbd> when the cell is in focus.
 Select multiple cells by holding <kbd class="key">Cmd</kbd> (or <kbd class="key">Ctrl</kbd> on Windows) while clicking on them.
 Hold <kbd class="key">Cmd</kbd> (or <kbd class="key">Ctrl</kbd> on Windows) and click on a selected cell to deselect it.
 
@@ -25,7 +25,8 @@ To select a range of cells, users can:
 
 - Click on a cell, drag the mouse over nearby cells, and then release.
 - Click on a cell, then hold <kbd class="key">Shift</kbd> and click on another cell. If a third cell is clicked then the selection will restart from the last clicked cell.
-- Use the arrow keys to focus on a cell, then hold <kbd class="key">Shift</kbd> and navigate to another cell—if <kbd class="key">Shift</kbd> is released and pressed again then the selection will restart from the last focused cell.
+- Use the arrow keys to focus on a cell, then hold <kbd class="key">Shift</kbd> and press the arrow keys to extend the selection.
+  <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Home</kbd></kbd> and <kbd><kbd class="key">Shift</kbd>+<kbd class="key">End</kbd></kbd> extend it to the first or last cell of the row, and <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Page Up</kbd></kbd> and <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Page Down</kbd></kbd> by one scrollable page.
 
 To select all cells, press <kbd><kbd class="key">Cmd</kbd>+<kbd class="key">A</kbd></kbd> (or <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">A</kbd></kbd> on Windows) while a cell is in focus.
 The shortcut selects the cells of all rows on the current page.
@@ -35,6 +36,20 @@ When both cell selection and row selection are enabled, this shortcut selects ce
 Try out the various actions to select cells in the demo below—you can toggle [row selection](/x/react-data-grid/row-selection/) on and off to see how these two selection features can work in parallel.
 
 {{"demo": "CellSelectionGrid.js", "bg": "inline"}}
+
+### Selecting rows with the keyboard
+
+When both cell selection and row selection are enabled, pressing <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> selects the focused cell and selects or deselects its row.
+To act on the rows only, also hold <kbd class="key">Cmd</kbd> (or <kbd class="key">Ctrl</kbd> on Windows):
+
+- <kbd><kbd class="key">Cmd</kbd>+<kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> selects or deselects the focused row.
+- <kbd><kbd class="key">Cmd</kbd>+<kbd class="key">Shift</kbd>+<kbd class="key">Arrow Up</kbd></kbd> and <kbd><kbd class="key">Cmd</kbd>+<kbd class="key">Shift</kbd>+<kbd class="key">Arrow Down</kbd></kbd> extend the selected rows to the row above or below.
+  With <kbd class="key">Page Up</kbd>, <kbd class="key">Page Down</kbd>, <kbd class="key">Home</kbd>, and <kbd class="key">End</kbd>, they extend by one scrollable page, or to the first or last row.
+
+The selected cells are kept when rows are selected.
+When row selection is disabled, these shortcuts select all the cells of the rows.
+
+See the [accessibility](/x/react-data-grid/accessibility/#selection) page for the full list of keyboard shortcuts.
 
 ## Controlling cell selection
 

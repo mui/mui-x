@@ -167,6 +167,10 @@ export interface GridClasses {
    */
   'cell--rangeRight': string;
   /**
+   * Styles applied to the cell element at the corner of a cell selection range that moves when the range is extended.
+   */
+  'cell--rangeEnd': string;
+  /**
    * Styles applied to the cell element when it displays the fill handle.
    */
   'cell--withFillHandle': string;
@@ -1189,6 +1193,7 @@ export const gridClassesOverrides = {
     'cell--pinnedLeft',
     'cell--pinnedRight',
     'cell--rangeBottom',
+    'cell--rangeEnd',
     'cell--rangeLeft',
     'cell--rangeRight',
     'cell--rangeTop',

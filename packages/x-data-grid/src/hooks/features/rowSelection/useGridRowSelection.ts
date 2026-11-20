@@ -21,6 +21,7 @@ import {
   gridRowMaximumTreeDepthSelector,
   gridRowNodeSelector,
   gridRowTreeSelector,
+  gridPinnedRowsSelector,
 } from '../rows/gridRowsSelector';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import {
@@ -47,14 +48,52 @@ import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../internals/constants';
 import { gridClasses } from '../../../constants/gridClasses';
-import { isEventTargetInPortal } from '../../../utils/domUtils';
-import { isMultipleRowSelectionEnabled, findRowsToSelect, findRowsToDeselect } from './utils';
+import { isEventForCellContent } from '../../../utils/domUtils';
+import {
+  areRowSelectionModelsEqual,
+  isMultipleRowSelectionEnabled,
+  findRowsToSelect,
+  findRowsToDeselect,
+} from './utils';
 import { runIf } from '../../../utils/utils';
 import type { GridRowSelectionModel } from '../../../models/gridRowSelectionModel';
 import { createRowSelectionManager } from '../../../models/gridRowSelectionManager';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 
 const emptyModel = { type: 'include', ids: new Set<GridRowId>() } as const;
+
+/**
+ * Range of rows extended with Shift + navigation keys.
+ * The rows between `anchorId` and `focusId` have the `isSelected` state,
+ * the other rows have the state they had in `baseModel` when the range was created.
+ */
+interface KeyboardRowRange {
+  anchorId: GridRowId;
+  /**
+   * The row focused after the last range update.
+   * The range is restarted if the navigation starts from another row.
+   */
+  focusId: GridRowId;
+  /**
+   * The indexes of `anchorId` and `focusId` in the visible rows when the range was updated.
+   * The range is restarted if one of them changed, for example, after a row was moved, sorted, or filtered,
+   * because the rows between them are not the ones the user went over.
+   */
+  anchorIndex: number;
+  focusIndex: number;
+  isSelected: boolean;
+  /**
+   * `null` if the state was not up to date yet when the range was created (for example, with a controlled model).
+   * The first range update then uses the current state.
+   */
+  baseModel: GridRowSelectionModel | null;
+  /**
+   * The model set by the last selection update of the range.
+   * The range is restarted if the selection has been changed by something else in the meantime.
+   * `null` if it is not known yet, then only the selection state of the anchor row is checked.
+   */
+  appliedModel: GridRowSelectionModel | null;
+}
 
 export const rowSelectionStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'rowSelectionModel' | 'rowSelection'>
@@ -106,6 +145,7 @@ export const useGridRowSelection = (
   }, [props.rowSelectionModel]);
 
   const lastRowToggled = React.useRef<GridRowId | null>(null);
+  const keyboardRange = React.useRef<KeyboardRowRange | null>(null);
 
   apiRef.current.registerControlState({
     stateId: 'rowSelection',
@@ -144,7 +184,27 @@ export const useGridRowSelection = (
 
       lastRowToggled.current = id;
 
+      const baseModel = gridRowSelectionStateSelector(apiRef);
       apiRef.current.selectRowRange({ startId, endId }, !isSelected);
+      // With a controlled model, the state is only updated once the prop is, so it can still be the previous model
+      const appliedModel = gridRowSelectionStateSelector(apiRef);
+
+      // Shift + navigation keys keep extending the same range
+      const { rowIdToIndexMap } = getVisibleRows(apiRef);
+      const anchorIndex = rowIdToIndexMap.get(startId);
+      const focusIndex = rowIdToIndexMap.get(id);
+      keyboardRange.current =
+        isSelected || anchorIndex === undefined || focusIndex === undefined
+          ? null
+          : {
+              anchorId: startId,
+              focusId: id,
+              anchorIndex,
+              focusIndex,
+              isSelected: true,
+              baseModel,
+              appliedModel: appliedModel === baseModel ? null : appliedModel,
+            };
     },
     [apiRef],
   );
@@ -333,6 +393,87 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
     ],
   );
 
+  const getSelectableIds = React.useCallback(
+    (ids: GridRowId[]) => {
+      const selectableIds = new Set<GridRowId>();
+      for (let i = 0; i < ids.length; i += 1) {
+        const id = ids[i];
+        if (apiRef.current.isRowSelectable(id)) {
+          selectableIds.add(id);
+        }
+      }
+      return selectableIds;
+    },
+    [apiRef],
+  );
+
+  /**
+   * Returns a copy of `baseModel` with the selection state of `selectableIds` (and of the rows
+   * impacted by the selection propagation) set to `isSelected`.
+   * @param {boolean} propagateFromNewModel If `true`, the propagation reads the selection state from the model being built
+   * instead of the current state, for example, when `baseModel` is not the current state.
+   */
+  const getModelWithRowsSelection = React.useCallback(
+    (
+      baseModel: GridRowSelectionModel,
+      selectableIds: Set<GridRowId>,
+      isSelected: boolean,
+      propagateFromNewModel = false,
+    ) => {
+      const tree = gridRowTreeSelector(apiRef);
+      const newSelectionModel: GridRowSelectionModel = {
+        type: baseModel.type,
+        ids: new Set(baseModel.ids),
+      };
+      const selectionManager = createRowSelectionManager(newSelectionModel);
+      const addRow = (rowId: GridRowId) => {
+        selectionManager.select(rowId);
+      };
+      const removeRow = (rowId: GridRowId) => {
+        selectionManager.unselect(rowId);
+      };
+      const propagationSelectionManager = propagateFromNewModel ? selectionManager : undefined;
+
+      for (const id of selectableIds) {
+        if (isSelected) {
+          selectionManager.select(id);
+          if (applyAutoSelection) {
+            findRowsToSelect(
+              apiRef,
+              tree,
+              id,
+              props.rowSelectionPropagation?.descendants ?? false,
+              props.rowSelectionPropagation?.parents ?? false,
+              addRow,
+              propagationSelectionManager,
+            );
+          }
+        } else {
+          removeRow(id);
+          if (applyAutoSelection) {
+            findRowsToDeselect(
+              apiRef,
+              tree,
+              id,
+              props.rowSelectionPropagation?.descendants ?? false,
+              props.rowSelectionPropagation?.parents ?? false,
+              removeRow,
+              propagationSelectionManager,
+            );
+          }
+        }
+      }
+
+      return newSelectionModel;
+    },
+    [
+      apiRef,
+      applyAutoSelection,
+      props.rowSelectionPropagation?.descendants,
+      props.rowSelectionPropagation?.parents,
+    ],
+  );
+
   const selectRows = React.useCallback<GridRowMultiSelectionApi['selectRows']>(
     (ids: GridRowId[], isSelected = true, resetSelection = false) => {
       logger.debug(`Setting selection for several rows`);
@@ -343,14 +484,7 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
 
       const tree = gridRowTreeSelector(apiRef);
 
-      const selectableIds = new Set<GridRowId>();
-
-      for (let i = 0; i < ids.length; i += 1) {
-        const id = ids[i];
-        if (apiRef.current.isRowSelectable(id)) {
-          selectableIds.add(id);
-        }
-      }
+      const selectableIds = getSelectableIds(ids);
 
       const currentSelectionModel = gridRowSelectionStateSelector(apiRef);
       let newSelectionModel: GridRowSelectionModel | undefined;
@@ -384,45 +518,11 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
           return;
         }
       } else {
-        newSelectionModel = {
-          type: currentSelectionModel.type,
-          ids: new Set(currentSelectionModel.ids),
-        };
-        const selectionManager = createRowSelectionManager(newSelectionModel);
-        const addRow = (rowId: GridRowId) => {
-          selectionManager.select(rowId);
-        };
-        const removeRow = (rowId: GridRowId) => {
-          selectionManager.unselect(rowId);
-        };
-
-        for (const id of selectableIds) {
-          if (isSelected) {
-            selectionManager.select(id);
-            if (applyAutoSelection) {
-              findRowsToSelect(
-                apiRef,
-                tree,
-                id,
-                props.rowSelectionPropagation?.descendants ?? false,
-                props.rowSelectionPropagation?.parents ?? false,
-                addRow,
-              );
-            }
-          } else {
-            removeRow(id);
-            if (applyAutoSelection) {
-              findRowsToDeselect(
-                apiRef,
-                tree,
-                id,
-                props.rowSelectionPropagation?.descendants ?? false,
-                props.rowSelectionPropagation?.parents ?? false,
-                removeRow,
-              );
-            }
-          }
-        }
+        newSelectionModel = getModelWithRowsSelection(
+          currentSelectionModel,
+          selectableIds,
+          isSelected,
+        );
       }
 
       const isSelectionValid =
@@ -437,6 +537,8 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
       applyAutoSelection,
       canHaveMultipleSelection,
       apiRef,
+      getSelectableIds,
+      getModelWithRowsSelection,
       props.rowSelectionPropagation?.descendants,
       props.rowSelectionPropagation?.parents,
       props.rowSelection,
@@ -747,6 +849,8 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
 
   const handleSingleRowSelection = React.useCallback(
     (id: GridRowId, event: React.MouseEvent | React.KeyboardEvent) => {
+      // A new range starts from the next selection
+      keyboardRange.current = null;
       const hasCtrlKey = event.metaKey || event.ctrlKey;
 
       // multiple selection is only allowed if:
@@ -766,6 +870,7 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
       const newSelectionState = shouldStaySelected || !isSelected;
 
       apiRef.current.selectRow(id, newSelectionState, resetSelection);
+      return newSelectionState;
     },
     [apiRef, canHaveMultipleSelection, checkboxSelection],
   );
@@ -834,6 +939,7 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
       if (canHaveMultipleSelection && (event.nativeEvent as any).shiftKey) {
         expandMouseRowRangeSelection(params.id);
       } else {
+        keyboardRange.current = null;
         apiRef.current.selectRow(params.id, params.value, !canHaveMultipleSelection);
       }
     },
@@ -842,6 +948,7 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
 
   const toggleAllRows = React.useCallback(
     (value: boolean) => {
+      keyboardRange.current = null;
       const filterModel = gridFilterModelSelector(apiRef);
       const quickFilterModel = gridQuickFilterValuesSelector(apiRef);
       const hasFilters =
@@ -885,6 +992,110 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
     [toggleAllRows],
   );
 
+  const extendKeyboardRowRange = React.useCallback(
+    (previousFocusId: GridRowId, newFocusId: GridRowId) => {
+      const { rows, rowIdToIndexMap } = getVisibleRows(apiRef);
+      const pinnedRows = gridPinnedRowsSelector(apiRef);
+      const currentModel = gridRowSelectionStateSelector(apiRef);
+
+      // The pinned rows are not part of the range.
+      // When one is focused, for example, the aggregation footer after Shift+End, it counts as the closest row.
+      const getRangeIndex = (id: GridRowId) => {
+        const index = rowIdToIndexMap.get(id);
+        if (index !== undefined || rows.length === 0) {
+          return index;
+        }
+        if (pinnedRows.top?.some((row) => row.id === id)) {
+          return 0;
+        }
+        if (pinnedRows.bottom?.some((row) => row.id === id)) {
+          return rows.length - 1;
+        }
+        return undefined;
+      };
+
+      const getRangeModel = (
+        range: KeyboardRowRange,
+        focusIndex: number,
+        baseModel: GridRowSelectionModel,
+      ) => {
+        const [start, end] =
+          range.anchorIndex < focusIndex
+            ? [range.anchorIndex, focusIndex]
+            : [focusIndex, range.anchorIndex];
+        const rangeIds: GridRowId[] = [];
+        for (let i = start; i <= end; i += 1) {
+          rangeIds.push(rows[i].id);
+        }
+        return getModelWithRowsSelection(
+          baseModel,
+          getSelectableIds(rangeIds),
+          range.isSelected,
+          true,
+        );
+      };
+
+      const previousFocusIndex = getRangeIndex(previousFocusId);
+      const newFocusIndex = getRangeIndex(newFocusId);
+      if (previousFocusIndex === undefined || newFocusIndex === undefined) {
+        keyboardRange.current = null;
+        return;
+      }
+
+      const canContinueRange = (range: KeyboardRowRange | null): range is KeyboardRowRange => {
+        if (range === null || range.focusId !== previousFocusId) {
+          return false;
+        }
+        if (
+          getRangeIndex(range.anchorId) !== range.anchorIndex ||
+          previousFocusIndex !== range.focusIndex
+        ) {
+          return false;
+        }
+        // The selection must not have been changed by something else since the range was updated
+        if (range.appliedModel !== null) {
+          return areRowSelectionModelsEqual(range.appliedModel, currentModel);
+        }
+        if (range.baseModel !== null) {
+          // Shift+click with a controlled model: compare with the model the range applied
+          return areRowSelectionModelsEqual(
+            getRangeModel(range, range.focusIndex, range.baseModel),
+            currentModel,
+          );
+        }
+        return apiRef.current.isRowSelected(range.anchorId) === range.isSelected;
+      };
+
+      const range: KeyboardRowRange = canContinueRange(keyboardRange.current)
+        ? keyboardRange.current
+        : {
+            anchorId: previousFocusId,
+            focusId: previousFocusId,
+            anchorIndex: previousFocusIndex,
+            focusIndex: previousFocusIndex,
+            isSelected: true,
+            baseModel: currentModel,
+            appliedModel: currentModel,
+          };
+
+      const baseModel = range.baseModel ?? currentModel;
+      const newModel = getRangeModel(range, newFocusIndex, baseModel);
+
+      keyboardRange.current = {
+        ...range,
+        focusId: newFocusId,
+        focusIndex: newFocusIndex,
+        baseModel,
+        appliedModel: newModel,
+      };
+
+      if (!areRowSelectionModelsEqual(newModel, currentModel)) {
+        apiRef.current.setRowSelectionModel(newModel, 'multipleRowsSelection');
+      }
+    },
+    [apiRef, getModelWithRowsSelection, getSelectableIds],
+  );
+
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       // Get the most recent cell mode because it may have been changed by another listener
@@ -892,9 +1103,8 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
         return;
       }
 
-      // Ignore portal
-      // Do not apply shortcuts if the focus is not on the cell root component
-      if (isEventTargetInPortal(event)) {
+      // The keys belong to the content of the cell, for example, to type in a text field
+      if (isEventForCellContent(event)) {
         return;
       }
 
@@ -904,54 +1114,38 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
         if (focusCell && focusCell.id !== params.id) {
           event.preventDefault();
 
-          const isNextRowSelected = apiRef.current.isRowSelected(focusCell.id);
           if (!canHaveMultipleSelection) {
+            const isNextRowSelected = apiRef.current.isRowSelected(focusCell.id);
             apiRef.current.selectRow(focusCell.id, !isNextRowSelected, true);
             return;
           }
 
-          const newRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(focusCell.id);
-          const previousRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
-
-          let start: number;
-          let end: number;
-
-          if (newRowIndex > previousRowIndex) {
-            if (isNextRowSelected) {
-              // We are navigating to the bottom of the page and adding selected rows
-              start = previousRowIndex;
-              end = newRowIndex - 1;
-            } else {
-              // We are navigating to the bottom of the page and removing selected rows
-              start = previousRowIndex;
-              end = newRowIndex;
-            }
-          } else {
-            // eslint-disable-next-line no-lonely-if
-            if (isNextRowSelected) {
-              // We are navigating to the top of the page and removing selected rows
-              start = newRowIndex + 1;
-              end = previousRowIndex;
-            } else {
-              // We are navigating to the top of the page and adding selected rows
-              start = newRowIndex;
-              end = previousRowIndex;
-            }
-          }
-
-          const visibleRows = getVisibleRows(apiRef);
-          const rowsBetweenStartAndEnd: GridRowId[] = [];
-          for (let i = start; i <= end; i += 1) {
-            rowsBetweenStartAndEnd.push(visibleRows.rows[i].id);
-          }
-          apiRef.current.selectRows(rowsBetweenStartAndEnd, !isNextRowSelected);
+          extendKeyboardRowRange(params.id, focusCell.id);
           return;
         }
       }
 
       if (event.key === ' ' && event.shiftKey) {
         event.preventDefault();
-        handleSingleRowSelection(params.id, event);
+        const modelBefore = gridRowSelectionStateSelector(apiRef);
+        const isSelected = handleSingleRowSelection(params.id, event);
+        // With a controlled model, the state is only updated once the prop is, so it can still be the previous model
+        const modelAfter = gridRowSelectionStateSelector(apiRef);
+        const appliedModel = modelAfter === modelBefore ? null : modelAfter;
+        // The next Shift + navigation extends the range from this row, with its new selection state
+        const rowIndex = getVisibleRows(apiRef).rowIdToIndexMap.get(params.id);
+        keyboardRange.current =
+          rowIndex === undefined
+            ? null
+            : {
+                anchorId: params.id,
+                focusId: params.id,
+                anchorIndex: rowIndex,
+                focusIndex: rowIndex,
+                isSelected,
+                baseModel: appliedModel,
+                appliedModel,
+              };
         return;
       }
 
@@ -962,7 +1156,13 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
         }
       }
     },
-    [apiRef, canHaveMultipleSelection, handleSingleRowSelection, toggleAllRows],
+    [
+      apiRef,
+      canHaveMultipleSelection,
+      extendKeyboardRowRange,
+      handleSingleRowSelection,
+      toggleAllRows,
+    ],
   );
 
   const syncControlledState = useEventCallback(() => {

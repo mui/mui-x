@@ -235,9 +235,11 @@ export {
   getActiveElement,
   getGridCellElement,
   getGridRowElement,
+  isEventForCellContent,
   isEventTargetInPortal,
   isEventTargetTextEntryElement,
 } from '../utils/domUtils';
+export { isEventFromPreMountedEditor } from '../utils/cellEditor';
 export {
   isNavigationKey,
   isPasteShortcut,

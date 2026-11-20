@@ -1957,6 +1957,12 @@
       "isGlobal": false
     },
     {
+      "key": "cell--rangeEnd",
+      "className": "MuiDataGridPremium-cell--rangeEnd",
+      "description": "Styles applied to the cell element at the corner of a cell selection range that moves when the range is extended.",
+      "isGlobal": false
+    },
+    {
       "key": "cell--rangeLeft",
       "className": "MuiDataGridPremium-cell--rangeLeft",
       "description": "Styles applied to the cell element if it is at the left edge of a cell selection range.",
