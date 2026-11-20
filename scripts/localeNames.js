@@ -31,6 +31,7 @@ module.exports = {
   'it-IT': 'Italian',
   'ja-JP': 'Japanese',
   'kh-KH': 'Khmer',
+  'kk-KZ': 'Kazakh',
   'kz-KZ': 'Kazakh',
   'ko-KR': 'Korean',
   mk: 'Macedonian',

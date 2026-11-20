@@ -40,3 +40,4 @@ export * from './ptPT';
 export * from './zhHK';
 export * from './isIS';
 export * from './idID';
+export * from './kkKZ';
