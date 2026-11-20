@@ -36,6 +36,7 @@ const MonthViewRoot = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'MonthView',
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   width: '100%',
   height: '100%',
   borderRadius: theme.shape.borderRadius,

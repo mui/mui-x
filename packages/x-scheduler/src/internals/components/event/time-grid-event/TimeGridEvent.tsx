@@ -314,6 +314,7 @@ const TimeGridEventRecurringIcon = styled(RepeatRounded, {
   name: 'MuiEventCalendar',
   slot: 'TimeGridEventRecurringIcon',
 })(({ theme }) => ({
+  boxSizing: 'border-box',
   position: 'absolute',
   insetInlineEnd: 3,
   bottom: 3,
