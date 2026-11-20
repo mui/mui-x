@@ -524,7 +524,14 @@ const transferDateSectionValue = (
       const dayInWeekOfActiveDate = formattedDaysInWeek.indexOf(dayInWeekStrOfActiveDate);
       const dayInWeekOfNewSectionValue = formattedDaysInWeek.indexOf(section.value);
       const diff = dayInWeekOfNewSectionValue - dayInWeekOfActiveDate;
-      return adapter.addDays(dateToTransferFrom, diff);
+      const newDate = adapter.addDays(dateToTransferFrom, diff);
+
+      // Only transfer the date part, so the time of the reference date is kept.
+      // The day is reset first to avoid overflowing into the next month.
+      let mergedDate = adapter.setDate(dateToTransferTo, 1);
+      mergedDate = adapter.setYear(mergedDate, adapter.getYear(newDate));
+      mergedDate = adapter.setMonth(mergedDate, adapter.getMonth(newDate));
+      return adapter.setDate(mergedDate, adapter.getDate(newDate));
     }
 
     case 'day': {
