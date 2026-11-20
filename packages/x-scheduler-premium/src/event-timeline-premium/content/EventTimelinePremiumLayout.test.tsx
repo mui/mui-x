@@ -5,6 +5,7 @@ import {
   eventTimelinePremiumClasses as classes,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
+  absorbObserverFrames,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -26,11 +27,11 @@ function getTitleColumnWidth(): number {
 // title cells; jsdom doesn't implement layout, so these assertions only work in
 // the browser project.
 describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
-  const { renderSettled } = createSchedulerRenderer({
+  const { render, renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
-  async function renderTimeline(
+  function timeline(
     resources: SchedulerResource[],
     hostWidth: number = 1200,
     options: {
@@ -38,7 +39,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
       presetConfig?: EventTimelinePremiumPresetConfig;
     } = {},
   ) {
-    const view = await renderSettled(
+    return (
       <div style={{ width: hostWidth, height: 600 }}>
         <EventTimelinePremium
           resources={resources}
@@ -48,16 +49,15 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
           presets={['dayAndHour']}
           presetConfig={options.presetConfig}
         />
-      </div>,
+      </div>
     );
-    return view;
   }
 
   describe('title column auto-sizing', () => {
     it('should grow the title column to fit a longer resource title', async () => {
       const short = ResourceBuilder.new().title('A').build();
 
-      const { rerender } = await renderTimeline([short]);
+      const { rerender } = await renderSettled(timeline([short]));
 
       let shortWidth = 0;
       await waitFor(() => {
@@ -66,25 +66,39 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
         expect(shortWidth).to.be.greaterThan(0);
       });
 
-      rerender(
-        <div style={{ width: 1200, height: 600 }}>
-          <EventTimelinePremium
-            resources={[
-              ResourceBuilder.new()
-                .title('A very long resource title that should expand the title column')
-                .build(),
-            ]}
-            events={[]}
-            visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-            preset="dayAndHour"
-            presets={['dayAndHour']}
-          />
-        </div>,
-      );
+      const long = ResourceBuilder.new()
+        .title('A very long resource title that should expand the title column')
+        .build();
+      rerender(timeline([long]));
 
       await waitFor(() => {
         expect(getTitleColumnWidth()).to.be.greaterThan(shortWidth);
       });
+    });
+
+    it('should shrink the title column after removing the widest resource', async () => {
+      const short = ResourceBuilder.new().title('A').build();
+      const long = ResourceBuilder.new().title('A longer resource title').build();
+      const { rerender, unmount } = await renderSettled(timeline([short, long]));
+      const wide = getTitleColumnWidth();
+
+      rerender(timeline([short]));
+      await absorbObserverFrames();
+      const afterRemoval = getTitleColumnWidth();
+      unmount();
+
+      await renderSettled(timeline([short]));
+      expect(getTitleColumnWidth()).to.be.lessThan(wide);
+      expect(afterRemoval).to.equal(getTitleColumnWidth());
+    });
+
+    it('should size the title column before the first paint', async () => {
+      render(timeline([ResourceBuilder.new().title('A longer resource title').build()]));
+
+      // No frame has run yet, so the width comes from the mount measurement only.
+      const widthBeforePaint = getTitleColumnWidth();
+      await absorbObserverFrames();
+      expect(widthBeforePaint).to.equal(getTitleColumnWidth());
     });
 
     it('should cap the title column at one quarter of the container width', async () => {
@@ -92,13 +106,11 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
       const huge = ResourceBuilder.new().title('X'.repeat(500)).build();
 
       const hostWidth = 1200;
-      await renderTimeline([huge], hostWidth);
+      await renderSettled(timeline([huge], hostWidth));
 
       await waitFor(() => {
         // Cap is containerWidth / 4. Allow a small tolerance: containerWidth is the
-        // measured section width which can be slightly less than the host due to
-        // borders, and the title column may also fall short of the cap when the
-        // header title contributes a wider scrollWidth than the resource title.
+        // measured section width which can be slightly less than the host due to borders.
         const width = getTitleColumnWidth();
         const expectedCap = hostWidth / 4;
         expect(width).to.be.greaterThan(0);
@@ -109,7 +121,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
     it('should keep the title column at the minimum width for empty/short titles', async () => {
       const tiny = ResourceBuilder.new().title('A').build();
 
-      await renderTimeline([tiny]);
+      await renderSettled(timeline([tiny]));
 
       await waitFor(() => {
         // The minWidth wired into useTitleColumnWidth is 50; the header label
@@ -136,7 +148,9 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
         .span('2025-07-04T08:00:00', '2025-07-04T12:00:00')
         .build();
 
-      await renderTimeline([resource], 1200, { events: [fullDay], presetConfig: PRESET_CONFIG });
+      await renderSettled(
+        timeline([resource], 1200, { events: [fullDay], presetConfig: PRESET_CONFIG }),
+      );
 
       await waitFor(() => {
         expect(getTitleColumnWidth()).to.be.greaterThan(0);
