@@ -23,6 +23,7 @@ import {
 import { createRealtimeActions } from './realtimeActions';
 import { createConversationActions } from './conversationActions';
 import { createSendMessageActions } from './sendMessageActions';
+import type { InFlightRun } from './sendMessageActions';
 import { createTypingActions } from './typingActions';
 import type { ChatFeatures } from '../../ChatProvider';
 
@@ -71,6 +72,7 @@ export function useChatController<Cursor = string>({
     features,
   });
   const assistantMessageIdByUserMessageIdRef = React.useRef(new Map<string, string>());
+  const inFlightRunRef = React.useRef<InFlightRun | null>(null);
   const conversationNavigationRequestIdRef = React.useRef(0);
   const conversationLoadRequestIdRef = React.useRef(0);
   const historyLoadRequestIdRef = React.useRef(0);
@@ -131,6 +133,7 @@ export function useChatController<Cursor = string>({
         runtimeRef,
         setRuntimeError,
         assistantMessageIdByUserMessageIdRef,
+        inFlightRunRef,
       }),
 
     [setRuntimeError, store, storeUnknown],
@@ -224,9 +227,10 @@ export function useChatController<Cursor = string>({
     () =>
       createRealtimeActions({
         store: storeUnknown,
+        stopStreaming,
         conversationNavigationRequestIdRef,
       }),
-    [storeUnknown, conversationNavigationRequestIdRef],
+    [storeUnknown, stopStreaming, conversationNavigationRequestIdRef],
   );
 
   const {
@@ -331,6 +335,24 @@ export function useChatController<Cursor = string>({
         return;
       }
 
+      const { isStreaming, streamingConversationId, messagesById } = store.state;
+      if (isStreaming && streamingConversationId !== nextActiveConversationId) {
+        // An unscoped stream adopts the id the parent assigns to the new chat: a conversation that
+        // did not exist when the run started, while the messages still hold the run.
+        const run = inFlightRunRef.current;
+        const adoptsInFlightRun =
+          streamingConversationId == null &&
+          nextActiveConversationId != null &&
+          run != null &&
+          !run.existingConversationIds.has(nextActiveConversationId) &&
+          messagesById[run.userMessageId] !== undefined;
+        if (adoptsInFlightRun) {
+          run.conversationId = nextActiveConversationId;
+          store.setStreaming(true, nextActiveConversationId);
+          return;
+        }
+        stopStreaming();
+      }
       void loadConversationMessages(nextActiveConversationId);
     },
   );

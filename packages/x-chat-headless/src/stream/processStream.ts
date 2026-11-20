@@ -201,7 +201,8 @@ export async function processStream<Cursor = string>(
 
     if (!didStartMessage) {
       didStartMessage = true;
-      store.setStreaming(true, options.conversationId);
+      // Keep a scope the controller assigned to an unscoped stream before its first chunk.
+      store.setStreaming(true, options.conversationId ?? store.state.streamingConversationId);
       store.setError(null);
 
       if (targetMessageId) {
@@ -654,6 +655,9 @@ export async function processStream<Cursor = string>(
     expectedSequence += 1;
 
     while (bufferedChunksBySequence.has(expectedSequence)) {
+      if (aborted) {
+        return;
+      }
       const nextChunk = bufferedChunksBySequence.get(expectedSequence)!;
       bufferedChunksBySequence.delete(expectedSequence);
       // eslint-disable-next-line no-await-in-loop
@@ -667,6 +671,9 @@ export async function processStream<Cursor = string>(
     void reader.cancel().catch((error) => {
       abortCancelError = error;
     });
+    // Flush now so a later flush cannot re-add the message after a reset. With controlled messages
+    // already swapped out, the re-added message is dropped by the controlled-model resync.
+    flushPendingTextLikeDelta();
   };
 
   options.signal?.addEventListener('abort', abortListener, { once: true });

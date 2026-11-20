@@ -51,6 +51,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await sendMessage(userMessageInput);
@@ -73,6 +74,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await sendMessage({
@@ -101,6 +103,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await sendMessage({ parts: [{ type: 'text', text: 'Hi' }] });
@@ -138,6 +141,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await sendMessage({ conversationId: 'c1', parts: [{ type: 'text', text: '1' }] });
@@ -168,6 +172,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await sendMessage(userMessageInput);
@@ -202,6 +207,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await sendMessage(userMessageInput);
@@ -221,6 +227,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await sendMessage(userMessageInput);
@@ -250,6 +257,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef,
+        inFlightRunRef: { current: null },
       });
 
       await sendMessage({ id: 'user-msg-1', parts: [{ type: 'text', text: 'Hello' }] });
@@ -300,6 +308,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter, onFinish } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await sendMessage(userMessageInput);
@@ -342,6 +351,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter, onError } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await sendMessage(userMessageInput);
@@ -370,6 +380,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await sendMessage(userMessageInput);
@@ -390,6 +401,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await sendMessage(userMessageInput);
@@ -413,6 +425,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError,
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await sendMessage(userMessageInput);
@@ -433,6 +446,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await sendMessage(userMessageInput);
@@ -453,6 +467,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await sendMessage({
@@ -483,6 +498,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await retry('nonexistent-id');
@@ -506,6 +522,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await retry('a1');
@@ -546,6 +563,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef,
+        inFlightRunRef: { current: null },
       });
 
       await retry('u1');
@@ -587,6 +605,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef,
+        inFlightRunRef: { current: null },
       });
 
       await retry('u1');
@@ -623,6 +642,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await sendMessage({
@@ -676,6 +696,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
+        inFlightRunRef: { current: null },
       });
 
       await regenerate('a1');
@@ -727,6 +748,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       // Clicking the first assistant message of a multi-message run removes BOTH.
@@ -773,6 +795,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a2']]) },
+        inFlightRunRef: { current: null },
       });
 
       await regenerate('a1');
@@ -799,6 +822,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await regenerate('u1');
@@ -824,6 +848,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
+        inFlightRunRef: { current: null },
       });
 
       await regenerate('a1');
@@ -845,6 +870,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await regenerate('a1');
@@ -871,6 +897,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
+        inFlightRunRef: { current: null },
       });
 
       // Fire twice without awaiting — the second must be a no-op because
@@ -900,6 +927,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await expect(() => regenerate('nope')).toWarnDev([
@@ -928,6 +956,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
+        inFlightRunRef: { current: null },
       });
 
       await expect(() => regenerate('a1')).toWarnDev([
@@ -953,6 +982,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter, onError } },
         setRuntimeError,
         assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
+        inFlightRunRef: { current: null },
       });
 
       await regenerate('a1');
@@ -982,6 +1012,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter, onError } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
+        inFlightRunRef: { current: null },
       });
 
       await regenerate('a1');
@@ -1015,6 +1046,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError,
         assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
+        inFlightRunRef: { current: null },
       });
 
       const promise = regenerate('a1');
@@ -1047,6 +1079,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: ref,
+        inFlightRunRef: { current: null },
       });
 
       await regenerate('a1');
@@ -1072,6 +1105,7 @@ describe('createSendMessageActions', () => {
         runtimeRef: { current: { adapter } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
+        inFlightRunRef: { current: null },
       });
 
       await regenerate('a1');
@@ -1125,6 +1159,7 @@ describe('createSendMessageActions', () => {
             ['u2', 'a2'],
           ]),
         },
+        inFlightRunRef: { current: null },
       });
 
       await regenerate('a1');
