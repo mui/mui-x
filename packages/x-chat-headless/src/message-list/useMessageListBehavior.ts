@@ -99,6 +99,8 @@ export function useMessageListBehavior(parameters: {
   const isMountedRef = React.useRef(true);
   const isStreamingRef = React.useRef(isStreaming);
   isStreamingRef.current = isStreaming;
+  const autoScrollEnabledRef = React.useRef(autoScrollEnabled);
+  autoScrollEnabledRef.current = autoScrollEnabled;
   const [isAtBottom, setIsAtBottom] = React.useState(true);
   const [unseenMessageCount, setUnseenMessageCount] = React.useState(0);
   const isAtBottomRef = React.useRef(true);
@@ -359,6 +361,31 @@ export function useMessageListBehavior(parameters: {
     updateIsAtBottom,
     updateUnseenMessageCount,
   ]);
+
+  React.useEffect(() => {
+    const root = rootRef.current;
+
+    if (!root || typeof globalThis.ResizeObserver === 'undefined') {
+      return undefined;
+    }
+
+    // A viewport resize (e.g. a widget mounting above the composer) fires no scroll
+    // event, so re-pin to the bottom here or the newest message ends up clipped.
+    let previousHeight = root.clientHeight;
+    const observer = new globalThis.ResizeObserver(() => {
+      if (root.clientHeight !== previousHeight) {
+        if (autoScrollEnabledRef.current && isAtBottomRef.current) {
+          root.scrollTop = root.scrollHeight;
+        }
+        // The anchor offset is measured from the viewport bottom, so a resize invalidates it.
+        anchorRef.current = captureAnchor(itemIdsRef.current);
+      }
+      previousHeight = root.clientHeight;
+    });
+    observer.observe(root);
+
+    return () => observer.disconnect();
+  }, [captureAnchor]);
 
   React.useEffect(() => {
     // Restore on (re)mount so the resize-driven auto-scroll keeps working after

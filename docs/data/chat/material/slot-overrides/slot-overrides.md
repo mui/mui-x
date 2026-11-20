@@ -76,13 +76,13 @@ Use `slotProps` to pass additional props to either the default or a custom slot 
 
 | Slot name         | Default component              | Element    | Description                                              |
 | :---------------- | :----------------------------- | :--------- | :------------------------------------------------------- |
-| `typingIndicator` | `ChatTypingIndicator`          | `<div>`    | Animated dots while assistant responds                   |
+| `typingIndicator` | `ChatTypingIndicator`          | `<div>`    | Who is typing, between the message list and composer     |
 | `unreadMarker`    | `ChatUnreadMarker`             | `<div>`    | "New messages" marker (requires `features.unreadMarker`) |
 | `scrollToBottom`  | `ChatScrollToBottomAffordance` | `<button>` | Floating scroll-to-bottom button                         |
 | `suggestions`     | `ChatSuggestions`              | `<div>`    | Prompt suggestion chips                                  |
 
 :::info
-The `dateDivider` and `unreadMarker` slots are opt-in: `ChatBox` only renders them when the matching `features.dateDivider` / `features.unreadMarker` flag is enabled. The `typingIndicator` slot is defined in the type interface but is not currently consumed by `ChatBox`'s internal composition—use the standalone component directly in a custom layout with `ChatProvider`.
+The `dateDivider` and `unreadMarker` slots are opt-in: `ChatBox` only renders them when the matching `features.dateDivider` / `features.unreadMarker` flag is enabled. The default `typingIndicator` renders nothing while no one is typing in the active conversation. A custom `typingIndicator` component is always rendered, so read `useChatStatus().typingUserIds` to hide it when the list is empty.
 :::
 
 ## Hiding a slot
