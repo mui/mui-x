@@ -1,4 +1,5 @@
 import { screen } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
   createPickerRenderer,
   openPicker,
@@ -46,5 +47,27 @@ describe('<MobileDateTimeRangePicker />', () => {
       const sectionsContainer = getFieldSectionsContainer();
       expectFieldValue(sectionsContainer, '01/10/2018 12:00 AM – MM/DD/YYYY hh:mm aa');
     });
+  });
+
+  it('should pass the owner state to every tabs slot', () => {
+    const theme = createTheme({
+      components: {
+        MuiDateTimeRangePickerTabs: {
+          styleOverrides: {
+            root: ({ ownerState }) => ({
+              opacity: ownerState.pickerVariant === 'mobile' ? 1 : 0.5,
+            }),
+          },
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <MobileDateTimeRangePicker open slotProps={{ tabs: { hidden: false } }} />
+      </ThemeProvider>,
+    );
+
+    expect(screen.getByRole('button', { name: 'Start date' })).toBeVisible();
   });
 });

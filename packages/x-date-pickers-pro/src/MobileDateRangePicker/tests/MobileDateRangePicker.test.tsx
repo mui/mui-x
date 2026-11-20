@@ -1,4 +1,5 @@
 import { screen, fireEvent } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import {
   createPickerRenderer,
@@ -331,6 +332,28 @@ describe('<MobileDateRangePicker />', () => {
 
     expect(screen.getByText('Apr 3')).not.to.equal(null);
     expect(screen.getByText('Apr 5')).not.to.equal(null);
+  });
+
+  it('should pass the owner state to every toolbar slot', () => {
+    const theme = createTheme({
+      components: {
+        MuiDateRangePickerToolbar: {
+          styleOverrides: {
+            root: ({ ownerState }) => ({
+              direction: ownerState.toolbarDirection,
+            }),
+          },
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <MobileDateRangePicker open />
+      </ThemeProvider>,
+    );
+
+    expect(screen.getByText('Select date range')).toBeVisible();
   });
 
   it.todo(

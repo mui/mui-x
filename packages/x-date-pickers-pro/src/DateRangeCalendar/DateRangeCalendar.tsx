@@ -81,7 +81,7 @@ const DateRangeCalendarMonthContainer = styled('div', {
   name: 'MuiDateRangeCalendar',
   slot: 'Container',
   overridesResolver: (_, styles) => styles.monthContainer, // FIXME: Inconsistent naming with slot
-})(({ theme }) => ({
+})<{ ownerState: DateRangeCalendarOwnerState }>(({ theme }) => ({
   '&:not(:last-of-type)': {
     borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
@@ -617,7 +617,11 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
           const labelId = `${id}-grid-${monthIndex}-label`;
 
           return (
-            <DateRangeCalendarMonthContainer key={monthIndex} className={classes.monthContainer}>
+            <DateRangeCalendarMonthContainer
+              key={monthIndex}
+              className={classes.monthContainer}
+              ownerState={ownerState}
+            >
               <CalendarHeader
                 {...calendarHeaderProps}
                 month={month}
