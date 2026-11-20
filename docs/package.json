@@ -85,7 +85,7 @@
     "topojson-client": "^3.1.0",
     "us-atlas": "^3.0.1",
     "visionscarto-world-atlas": "^1.0.0",
-    "webpack-bundle-analyzer": "^5.4.2"
+    "webpack-bundle-analyzer": "^5.4.3"
   },
   "devDependencies": {
     "@babel/preset-typescript": "catalog:",

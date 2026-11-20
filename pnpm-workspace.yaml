@@ -51,7 +51,7 @@ catalog:
   chance: ^1.1.13
   clsx: ^2.1.1
   cross-env: ^10.1.0
-  csstype: ^3.2.3
+  csstype: ^3.2.4
   date-fns: ^4.4.0
   date-fns-jalali: ^4.1.0-0
   dayjs: ^1.11.23
@@ -73,7 +73,7 @@ catalog:
   react-router: ^8.5.1
   react-transition-group: ^4.4.5
   rimraf: ^6.1.4
-  serve: ^14.2.7
+  serve: ^14.2.8
   stylis: ^4.4.0
   tsx: ^4.23.15
   use-sync-external-store: ^1.7.0
@@ -122,7 +122,7 @@ overrides:
   # Pin the version otherwise emotion uses its own version resulting in docs build error
   # @TODO: Debug a fix separately and remove the override
   stylis: ^4.4.0
-  caniuse-lite: ^1.0.30001823
+  caniuse-lite: ^1.0.30001826
 
 lockfile:
   includeResolutionSettings: true
